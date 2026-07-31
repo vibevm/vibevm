@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 391,
+ "drift_verdicts": 366,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -802,110 +802,6 @@
     "file+type"
    ],
    "packages": [
-    "packages/org.vibevm.world/managed-blocks"
-   ],
-   "files": [
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#ROW-REPORT-WHAT-I-FOUND",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#ROW-REPORT-HOW-TO-UNBLOCK",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#THREE-PROPERTIES-MAKE-THIS-DRILL-CORRECT",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#DRILL-IT-IS-SPECIFIC",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#DRILL-IT-NAMES-THE-UNBLOCKING-ACTION",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#SUM-MALFORMED-GOES-TO-THE-DRILL"
-   ],
-   "drift_count": 7,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "crates",
-    "packages/org.vibevm.world/managed-blocks",
-    "spec"
-   ],
-   "evidence_refs": [
-    "crates/vibe-check/src/checks/redirect_block.rs:38                  report.err(",
-    "crates/vibe-check/src/checks/redirect_block.rs:39                      CheckId::RedirectBlock,",
-    "crates/vibe-check/src/checks/redirect_block.rs:40                      Some(PathBuf::from(name)),",
-    "crates/vibe-check/src/checks/redirect_block.rs:41                      None,",
-    "crates/vibe-check/src/checks/redirect_block.rs:42                      format!(\"`{name}` has a malformed <vibevm> block: {reason}\"),",
-    "crates/vibe-check/src/checks/redirect_block.rs:60      for (i, line) in content.lines().enumerate() {",
-    "crates/vibe-check/src/checks/redirect_block.rs:63                  opens += 1;",
-    "crates/vibe-check/src/checks/redirect_block.rs:64                  first_open.get_or_insert(i);",
-    "crates/vibe-check/src/checks/redirect_block.rs:67                  closes += 1;",
-    "crates/vibe-check/src/checks/redirect_block.rs:68                  first_close.get_or_insert(i);",
-    "crates/vibe-cli/src/exit_code.rs:74      }",
-    "crates/vibe-cli/src/exit_code.rs:75      // A malformed `<vibevm>` block (PROP-012 §2.3) is conflict-shaped —",
-    "crates/vibe-workspace/src/boot_artifacts.rs:336              open.get_or_insert((offset, offset + line.len()));",
-    "crates/vibe-workspace/src/boot_artifacts.rs:339              close.get_or_insert((offset, offset + line.len()));",
-    "crates/vibe-workspace/src/boot_artifacts.rs:361          (opens, closes, _, _) => BlockLocation::Malformed(format!(",
-    "crates/vibe-workspace/src/boot_artifacts.rs:362              \"expected exactly one `<vibevm>` … `</vibevm>` pair, found {opens} `<vibevm>` \\",
-    "crates/vibe-workspace/src/boot_artifacts.rs:363               and {closes} `</vibevm>` marker line(s)\"",
-    "crates/vibe-workspace/src/boot_artifacts.rs:396          Some(content) => match locate_block(content) {",
-    "crates/vibe-workspace/src/install.rs:117      // 0. Validate every node's `<vibevm>` instruction-file block before",
-    "crates/vibe-workspace/src/install.rs:120      validate_redirect_blocks(workspace)?;",
-    "crates/vibe-workspace/src/install/bootgen.rs:416                  return Err(WorkspaceError::MalformedRedirectBlock { path, reason });",
-    "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
-    "crates/vibe-workspace/src/lib.rs:233      #[error(",
-    "crates/vibe-workspace/src/lib.rs:234          \"malformed <vibevm> block in `{}`: {reason} \\",
-    "crates/vibe-workspace/src/lib.rs:235           (violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; \\",
-    "crates/vibe-workspace/src/lib.rs:239      MalformedRedirectBlock { path: PathBuf, reason: String },",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:149  ##ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT When classification (see",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:150  [`MANAGED-BLOCKS-PROTOCOL.md`](MANAGED-BLOCKS-PROTOCOL.md#state-machine))",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:151  returns *malformed*, the tool aborts the whole operation and prints a",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:152  report with three parts. @impl/done",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:158  | ##ROW-REPORT-WHAT-I-FOUND **What I found** @impl/done | The file path and the exact defect, with line numbers: \"two `<toolname>` opening markers, at lines 12 and 40.\" @impl/done |",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:160  | ##ROW-REPORT-HOW-TO-UNBLOCK **How to unblock** @impl/done | The precise human action: \"keep the block you want, delete the other opening marker and its closing marker, then re-run.\" @impl/done |",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:176  ##THREE-PROPERTIES-MAKE-THIS-DRILL-CORRECT Three properties make this drill correct: @impl/done",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:177  ",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:178  - ##DRILL-IT-CHANGES-NOTHING **It changes nothing.** The file is left exactly as found, so the",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:180  - ##DRILL-IT-IS-SPECIFIC **It is specific.** Line numbers and the exact defect mean the human",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:181    fixes it in seconds, without opening the tool's source. @impl/done",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:182  - ##DRILL-IT-NAMES-THE-UNBLOCKING-ACTION **It names the unblocking action.** The report ends by telling the",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:183    human precisely what to do, so a hard stop is a thirty-second detour,",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:184    not a support ticket. @impl/done",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:198  - ##SUM-MALFORMED-GOES-TO-THE-DRILL **Malformed → the drill**: change nothing, report what was found vs",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:199    expected, name the exact human action that unblocks. @impl/done",
-    "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:82  - ##CLASS-MALFORMED **Malformed** (§2.2) — `vibe` **aborts the whole operation** with an error naming the file and the exact defect, and changes nothing. It does not proceed until the user repairs the file by hand. vibevm **never guesses** which of two blocks is canonical and **never auto-deletes** a stray marker — a malformed managed block is always a human's call. @impl/done"
-   ],
-   "cites": [],
-   "reason": "DRIFT at two and a half of three parts. ABORT: yes, and at the earliest possible point — `validate_redirect_blocks` is step 0 of `apply_resolution` (`install.rs:117-120`) and returns before materialisation (`bootgen.rs:416`). The REPORT: «what I found» is present but without line numbers; «what I expected» is present only as an implied clause inside the reason string («expected exactly one `<vibevm>` … `</vibevm>` pair, found {opens} … and {closes} …», `boot_artifacts.rs:362-363`) rather than as its own part; «how to unblock» is present on the install path and absent on `vibe check`. Three parts specified, two and a half delivered, and the halves that are missing are the ones a human needs to act. Root at `##ROW-REPORT-WHAT-I-FOUND`.",
-   "reasons": [
-    "DRIFT on the third of three, and this is the ROOT of the malformed-report family: the host reports counts and never line numbers. Path: carried as a typed field, `MalformedRedirectBlock { path: PathBuf, reason: String }` (`lib.rs:239`) and rendered at `lib.rs:232`. Defect: named with counts at `boot_artifacts.rs:362-363`. LINE NUMBERS: absent from every message, and the reason is visible in the code — `locate_block` tracks BYTE offsets (`open.get_or_insert((offset, offset + line.len()))` at 336, the same at 339) and never converts them to lines, while the linter DOES track true line indices (`first_open.get_or_insert(i)`) and uses them only to compare order, never to report. So both surfaces hold the information and neither emits it. Carried onward at `##DRILL-IT-IS-SPECIFIC`, `##a-worked-message`, `##HARD-STOP-PRECISE-REPORT-HUMAN-DECIDES`, `##ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT`, `##THREE-PROPERTIES-MAKE-THIS-DRILL-CORRECT` and `##SUM-MALFORMED-GOES-TO-THE-DRILL`.",
-    "DRIFT: present on one of the two surfaces and less specific than the row's own example where it is present. `vibe install` carries a fix clause in the Class-F tail — `lib.rs:234-235`, «(violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; fix: repair the file by hand to exactly one <vibevm>/</vibevm> pair)» — which names the GOAL STATE but not the action or the re-run step, where the row's example says which marker to delete and to re-run afterwards. `vibe check` carries no fix clause at all, and that is the surface `PROP-012:122` designates for exactly this diagnosis.",
-    "DRIFT at two of three. CHANGES NOTHING: fully met — the Malformed arm returns before `fs::write` (`boot_artifacts.rs:396-401`) and the plan-time pass only reads (`bootgen.rs:408`). SPECIFIC: partly — file and defect class with counts, no line numbers. NAMES THE UNBLOCKING ACTION: partly — a `fix:` tail on `vibe install` (`lib.rs:234`) and none on `vibe check`. The three rows below carry each measurement separately; this one is ruled on the conjunction it asserts.",
-    "DRIFT on the line-number half; the exact-defect half is met. DEFECT: the message reports the marker counts and, for the reversed case, a dedicated sentence (`boot_artifacts.rs:356-358`) — enough to know which of the four malformed shapes occurred. LINE NUMBERS: absent everywhere. `locate_block` stores byte offsets and discards them on the Malformed path (336, 339, 361); `vibe check` computes real line indices via `content.lines().enumerate()` (`redirect_block.rs:60`) and uses them only to compare ordering. Being specific about WHAT without being specific about WHERE is what this drill exists to prevent. Root at `##ROW-REPORT-WHAT-I-FOUND`.",
-    "DRIFT because the surface designated for the diagnosis is the one without the clause. `vibe install` / `reinstall` / `update` end with the repository's standard `(violates …; fix: …)` grammar at `lib.rs:234-235`, so that path does say what to do. The `vibe check` finding emits only the defect (`redirect_block.rs:38-43`) — no fix clause — and `PROP-012:122` designates check as the surface that reports this. A user who runs the tool built to find the problem is told what is wrong and not what to do about it.",
-    "DRIFT, carrying the body rows per W1's summary-restatement precedent. CHANGE NOTHING: fully met (early `return Err` at `boot_artifacts.rs:396-401`; the plan-time pass only reads, `bootgen.rs:408-416`). FOUND VERSUS EXPECTED: met in substance — `boot_artifacts.rs:362-363` puts both in one sentence — but without the line numbers the drill's own table specifies at `rejected-designs.md:158`. NAME THE EXACT HUMAN ACTION: met on the install path (`lib.rs:234-235`) and absent on `vibe check` (`redirect_block.rs:42`), and less precise than the drill's example on either."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:149  ##ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT When classification (see",
-   "falsifier": "mixed",
-   "routed_out": [
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#ROW-REPORT-WHAT-I-FOUND",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#SUM-MALFORMED-GOES-TO-THE-DRILL"
-   ],
-   "owed": 4,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-148",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
     "packages/org.vibevm.world/manual-tests"
    ],
    "files": [
@@ -1538,10 +1434,7 @@
     "crates/progress-core/src/evidence.rs:61  (Stage::Test, State::Done) if ev.verifies == 0 => { Some(\"marked test/done but no verifying evidence (0 `verifies` edges)\".into())",
     "crates/vibe-cli/src/commands/install/flag_tests.rs:97  #[test] #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
     "crates/vibe-cli/src/commands/trace.rs:9  specmark::scope!(\"spec://core-ai-native/mechanisms/PROP-014#index\");",
-    "spec/common/PROP-029-fully-qualified-addresses.md:47  ## Changelog {#changelog}",
-    "spec/common/PROP-029-fully-qualified-addresses.md:49  - ##CHANGELOG-CREATED [2026-07-12] Created — ratified alongside the `org.vibevm` → `org.vibevm.ai-native` / `org.vibevm.world` group restructure, the first refactor performed under §3. @spec/done",
     "spec/common/PROP-029-fully-qualified-addresses.md:50  - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite it and keep only…",
-    "spec/common/PROP-029-fully-qualified-addresses.md:50  - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite…",
     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:8  ##related **Related:** [PROP-028](../../common/PROP-028-package-families.md) (families — the aggregator role), [PROP-029](../../common/PROP-029-fully-qualified-addresses.md) (`spec://` addressing, the `/` group↔name joiner),…",
     "specmap.json:1  { \"code_items\": [ {",
     "specmap.toml:55  # Installed packages' spec trees, read for URI RESOLUTION only (PROP-014 # §7.1): edges into `spec://org.vibevm.ai-native/core-ai-native/…` — the shipped mechanism specs # this repo's tags cite — resolve through the materialised slot instead of # dangling. Units found here never enter the committed specmap.json."
@@ -1549,10 +1442,10 @@
    "cites": [],
    "reason": "DRIFT: `grep -rn '^Test:' spec/` returns 0. The line the fact prescribes — half of the bidirectional graph the protocol describes — is written nowhere in the host's spec tree. The edge exists anyway: 223 `verifies` edges in specmap.json, all sourced from code annotations rather than from the spec side.",
    "reasons": [
-    "DRIFT: exercised ONCE across 42 PROP documents. `grep -rn '## Changelog' spec/` returns a single hit, PROP-029:47, and it is in exactly the prescribed format — one dated line, the section, the change, the reason. Every other semantic change in the tree went unrecorded in its own document, leaving the reader the fact predicts — the one who last saw the file a week ago — with nothing but a diff.",
+    "the honest gap that keeps this drift: 28 of 42 PROPs carry no per-document dated change record in any form, so 'each semantic change appends one dated line' is kept by a third of the tree — a real, smaller defect than the one previously recorded",
     "DRIFT at 2 of 2. Both host moves left the old address bare: PROP-014 moved from `spec/discipline/` into the core-ai-native package and PROP-029's addressing principle moved out of its former home, and neither old location carries a `<!-- RETIRED` line. Continuity came from rewriting every citer by hand instead — which works once and does not scale, and is what the tombstone exists to replace.",
     "DRIFT on the second clause. «Every contract implies a test» is ENFORCED here — `progress-core/src/evidence.rs` fails a unit marked done without evidence. «The unit names it» is not: zero `Test:` lines in `spec/`.",
-    "DRIFT for the same count as EACH-SEMANTIC-CHANGE-APPENDS-A-DATED-LINE: one changelog in 42 PROPs. The one that exists is a model of the form, which is what makes the other 41 a measurement rather than a style difference."
+    "the prior 'one changelog in 42 PROPs' count was the heading string, not the practice, and is corrected here"
    ],
    "status": "open",
    "wave": 1,
@@ -2511,68 +2404,6 @@
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
-    "reason-text j=1.00"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native",
-    "packages/org.vibevm.ai-native/rust-ai-native",
-    "packages/org.vibevm.ai-native/typescript-ai-native"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/go-ai-native/v0.1.0/README.md",
-    "packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md",
-    "packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native/v0.1.0/README.md#AGG-FRONT-DOOR",
-    "packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md#AGG-FRONT-DOOR",
-    "packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md#AGG-FRONT-DOOR"
-   ],
-   "drift_count": 3,
-   "cross_package": true,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": true,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/go-ai-native",
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang",
-    "packages/org.vibevm.ai-native/typescript-ai-native",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md:1  # AI-Native Go (stack:org.vibevm.ai-native/go-ai-native-lang) {#root}",
-    "packages/org.vibevm.ai-native/go-ai-native/v0.1.0/README.md:17  ##AGG-FRONT-DOOR No code, no boot snippet, no policy lives here; see the `-lang` stack's",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md:1  # AI-Native Rust (stack:org.vibevm.ai-native/rust-ai-native-lang) {#root}",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:24  ## 0. The law, applied to Rust {#law}",
-    "packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md:21  ##AGG-FRONT-DOOR The consumer front door — wiring, floor, sweep — is documented in",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:31  ## 0. Why TypeScript is special — and the law applied to TS {#law}",
-    "packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md:22  ##AGG-FRONT-DOOR The consumer front door — wiring, floor, sweep — is"
-   ],
-   "cites": [
-    "F-115"
-   ],
-   "reason": "the front door points at the `-lang` package's README and **`typescript-ai-native-lang` ships no README.md at all**. This is F-115, now confirmed against the tree",
-   "reasons": [
-    "the front door points at the `-lang` package's README and **`typescript-ai-native-lang` ships no README.md at all**. This is F-115, now confirmed against the tree",
-    "the front door points at the `-lang` package's README and **`typescript-ai-native-lang` ships no README.md at all**. This is F-115, now confirmed against the tree"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "release",
-   "fact": "packages/org.vibevm.ai-native/go-ai-native/v0.1.0/README.md:17  ##AGG-FRONT-DOOR No code, no boot snippet, no policy lives here; see the `-lang` stack's",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 3,
-   "id": "F-115",
-   "id_source": "adopted (plan LOG)",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
     "file+type"
    ],
    "packages": [
@@ -2622,126 +2453,8 @@
    "carried": true
   },
   {
-   "type": "contradiction",
-   "rule": "r-contradiction",
-   "merged_by": [
-    "shared anchor #EVIDENCE-AND-TRANSFER-STRENGTH"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-g-doctests.md",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-g-doctests.md",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-g-doctests.md#EVIDENCE-AND-TRANSFER-STRENGTH",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-g-doctests.md#EVIDENCE-AND-TRANSFER-STRENGTH",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md#EVIDENCE-AND-TRANSFER-STRENGTH"
-   ],
-   "drift_count": 3,
-   "cross_package": true,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": true,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/core-ai-native",
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:143  - ##FINDING-R2C-006 **R2C-006** — Rust benchmark contradiction resolved: difficulty mix, not Rust-unfriendliness",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:181  - ##FINDING-DR1-015 **DR1-015** — Constrained decoding helps weak models most; can hurt strong ones",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:197  - ##FINDING-R2C-008 **R2C-008 *** — The real mechanism: executable scaffolds transfer capability; written strategy d ...",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:197  - ##FINDING-R2C-008 **R2C-008 *** — The real mechanism: executable scaffolds transfer capability; written strategy do...",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:203  - ##FINDING-R3-013 **R3-013** — Swarm contention: ownership aligns with file boundaries; deterministic toolchain kil ...",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:37  - ##FINDING-R3-006 **R3-006** — The codebase is the few-shot prompt: uniformity is load-bearing, exceptions must be ...",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:37  - ##FINDING-R3-006 **R3-006** — The codebase is the few-shot prompt: uniformity is load-bearing, exceptions must be m...",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-g-doctests.md:33  ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R2C-008 (executable reference material transformative,...",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:16  | `scaffold-g-doctests` | C+G | scaffold G | gate | [E-strong] | shipped (`seam-has-doctest` + `pub-doctest`, rust-a ..."
-   ],
-   "cites": [],
-   "reason": "**H4 resolves nowhere.** The fact cites three evidence ids; R2C-008 and R3-006 are ATLAS records (packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:197 and :37) and **H4 is in no register in this repository** — the ATLAS's 87 records are BLD-/DR1-/DR2-/R2C-/R3-, and no H-series roster exists anywhere. H1, H5 and H6 are used the same way in packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:13-16,46 and are likewise undefined. Cited by two language stacks (this line and packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-g-doctests.md:33)",
-   "reasons": [
-    "**H4 resolves nowhere** — the same broken citation as the Go twin at packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-g-doctests.md:33. R2C-008 and R3-006 resolve (ATLAS:197 and :37); H4 is in no register in this repository. The ATLAS's 87 records are BLD-/DR1-/DR2-/R2C-/R3-, and no H-series roster exists — H1, H5 and H6 are used the same way in packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:13-16,46 and are likewise undefined",
-    "**`DL1-015` resolves nowhere.** R3-013 and R2C-006 are ATLAS records (:203 and :143); the third id is written `DL1-015` and the ATLAS carries `DR1-015` (:181). The typo survives in this card and its TypeScript twin and nowhere else, so nothing has ever resolved it. Second member of the unresolvable-evidence-id family, with H4"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "release",
-   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-g-doctests.md:33  ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R2C-008 (executable reference material transformative,...",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 3,
-   "id": "F-186",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "missing-support",
-   "rule": "r-nothing-exists",
-   "merged_by": [
-    "reason-text j=1.00"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md#PROCEDURES-AS-AGENT-SKILLS",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md#PROCEDURES-AS-AGENT-SKILLS",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md#PROCEDURES-AS-AGENT-SKILLS"
-   ],
-   "drift_count": 3,
-   "cross_package": true,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": true,
-   "evidence_spans": [
-    ".claude",
-    "crates",
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
-   ],
-   "evidence_refs": [
-    ".claude/skills/typescript-ai-native-terraform/SKILL.md:2  name: typescript-ai-native-terraform",
-    "crates/vibe-cli/src/cli/skill.rs:31      Install(SkillInstallArgs),",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:80  ##PROCEDURES-AS-AGENT-SKILLS Procedures as agent skills: `/go-ai-native-sweep`",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/vibe.toml:50  name = \"go-ai-native-sweep\"",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md:65  `/rust-ai-native-sweep` (recurring), `/rust-ai-native-terraform` (brownfield",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibe.toml:50  name = \"rust-ai-native-sweep\"",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md:91  ##PROCEDURES-AS-AGENT-SKILLS Procedures as agent skills: `/typescript-ai-native-sweep` (recurring),",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/vibe.toml:50  name = \"typescript-ai-native-sweep\""
-   ],
-   "cites": [],
-   "reason": "the two Go skills are **not installed**: `.claude/skills/` carries `rust-ai-native-sweep`, `rust-ai-native-terraform`, `typescript-ai-native-sweep`, `typescript-ai-native-terraform` and `vibevm` — four of the six, and no Go pair. `vibe.lock` carries no `go-ai-native` entry and `vibedeps/` no `stack-go-ai-native-lang` slot",
-   "reasons": [
-    "the two Go skills are **not installed**: `.claude/skills/` carries `rust-ai-native-sweep`, `rust-ai-native-terraform`, `typescript-ai-native-sweep`, `typescript-ai-native-terraform` and `vibevm` — four of the six, and no Go pair. `vibe.lock` carries no `go-ai-native` entry and `vibedeps/` no `stack-go-ai-native-lang` slot",
-    "the two Go skills are **not installed**: `.claude/skills/` carries `rust-ai-native-sweep`, `rust-ai-native-terraform`, `typescript-ai-native-sweep`, `typescript-ai-native-terraform` and `vibevm` — four of the six, and no Go pair. `vibe.lock` carries no `go-ai-native` entry and `vibedeps/` no `stack-go-ai-native-lang` slot"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "release",
-   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:80  ##PROCEDURES-AS-AGENT-SKILLS Procedures as agent skills: `/go-ai-native-sweep`",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 3,
-   "id": "F-187",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "missing-support",
-   "rule": "r-nothing-exists",
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
    "merged_by": [
     "shared anchor #MOTIVATION"
    ],
@@ -2765,33 +2478,19 @@
    "installed": true,
    "installed_differs": true,
    "release_event": true,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/core-ai-native",
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang",
-    "xtask"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:181  - ##FINDING-DR1-015 **DR1-015** — Constrained decoding helps weak models most; can hurt strong ones",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/codemod.rs:108  let created = || -> Result<()> { write(\"doc.go\", doc_source(cell, spec_uri))?; write(&format!(\"{cell}.go\"), cell_sour...",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/main.rs:153  AddCell {",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-i-codemods.md:19  ##MOTIVATION Motivation: A weak agent asked to \"add a planner variant\" must create the cell package, the conformance...",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs:181      AddCell {",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.md:19  ##MOTIVATION Motivation: ... `vibe codemod rename-seam --from X --to Y`, built on `ts-morph`, performs the change ...",
-    "xtask/src/main.rs:238      /// Fixed-parameter example (the weakest-tier invocation shape):"
-   ],
+   "evidence_spans": [],
+   "evidence_refs": [],
    "cites": [],
-   "reason": "**the CLI signature the fact prints does not exist.** It names `go-ai-native codemod add-cell <pkg> <cell> <seam> <variant> <spec-uri>` performing a FIVE-file change from FIVE parameters. The shipped verb takes TWO parameters — cell and spec_uri (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/main.rs:153-158) — and writes THREE files: doc.go, <cell>.go, <cell>_test.go (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/codemod.rs:109-114). No registry arm and no Example stub is written. A reader typing the documented command gets an argument error",
+   "reason": "RESTATED — drift is real but the recorded reason needs two corrections: the five-parameter signature the go card prints is the RUST CLI's shape (rust-ai-native-cli/src/main.rs:181 AddCell), while the shipped go verb takes two parameters (go-ai-native-cli/src/main.rs:153-158) and writes three files (codemod.rs:109-114); and the recorded 'no Example stub is written' clause is false — the stub IS written; a reader typing the documented command still gets an argument error; harvest d8a #f-188",
    "reasons": [
-    "**the command does not exist.** The fact prints `vibe codemod rename-seam --from X --to Y` performing the change «atomically and verifiably». There is no `rename-seam` anywhere and no `vibe codemod` subcommand: the shipped codemod enum carries one variant, `add-cell` (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs:181). **The TypeScript twin of this exact fact was recorded drift in this same batch** — packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.md#MOTIVATION, «`vibe codemod rename-seam` has no implementation anywhere» — and the Rust one was confirmed. One claim, two languages, two verdicts",
-    "`vibe codemod rename-seam` has no implementation anywhere — not in the stack, the host, xtask or the demo consumer"
+    "RESTATED — the recorded reason is the GO card's (add-cell five-parameter signature) and does not describe this sentence: the rust card's Motivation cites `vibe codemod rename-seam --from X --to Y`, and `vibe` ships no `codemod` subcommand at all (27 subcommands at HEAD, none codemod; rename-seam has zero implementations tree-wide); the same unbuilt command is load-bearing in the host's own PROP-031:21 ##BEACHHEAD-SCAFFOLD-I, corrected one line down at ##BEACHHEAD-LIMITS; harvest d8a #f-188",
+    "RESTATED on the package's own bench (§3.8): the TS card's Motivation cites `vibe codemod rename-seam` built on `ts-morph` — and both are absent from the TypeScript package's own tree (no codemod verb, no rename-seam, no ts-morph dependency anywhere in its crates or tools); the recorded Go add-cell reason does not describe this sentence; harvest d8a #f-188"
    ],
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-i-codemods.md:19  ##MOTIVATION Motivation: A weak agent asked to \"add a planner variant\" must create the cell package, the conformance...",
-   "falsifier": "mixed",
+   "fact": "",
+   "falsifier": "self",
    "routed_out": [],
    "owed": 3,
    "id": "F-188",
@@ -2824,98 +2523,22 @@
    "installed": true,
    "installed_differs": true,
    "release_event": true,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/go-ai-native-mcp",
-    "packages/org.vibevm.ai-native/rust-ai-native-mcp",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:127  - ##COMPONENT-THE-PRODUCT-SEAM **The product seam** (vibevm, PROP-026): the SAME four `tcg_*` tools; `language: \"go\"`...",
-    "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/lib.rs:60  \"tcg_complete\", \"tcg_scope\", \"tcg_type\", \"tcg_validate\",",
-    "packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/tools_discipline.rs:19  pub(crate) fn language_mismatch(args: &Value) -> Option<ToolOutput> { let asked = args.get(\"language\").and_then(Value...",
-    "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/lib.rs:60      \"tcg_complete\",",
-    "packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/tools_discipline.rs:22      if asked == \"rust\" {",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md:130  - ##COMPONENT-THE-PRODUCT-SEAM **The product seam** (vibevm, PROP-026): the `vibe-tcg` crate — tool",
-    "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:10  no schema shape change. **Superseded in topology** (MCP-SOVEREIGNTY wave 6):",
-    "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:11  the standalone `vibe-tcg` crate was deleted whole and the tool grammar below",
-    "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:39  - ##LANGUAGE-COMPAT-PARAM `language` survives as a validated"
-   ],
+   "evidence_spans": [],
+   "evidence_refs": [],
    "cites": [],
-   "reason": "**the host does not dispatch `go`.** The fact says the same four `tcg_*` tools take `language: \"go\"` and dispatch through the lockfile to this slot. The host's PROP-026 accepts `\"typescript\"` and `\"rust\"` and names **`\"go\"` as the example of an unsupported value** (spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:71-73 and :169-171). The Go tools ship in their own MCP package, where `language` is a compat parameter that must equal `go` (packages/org.vibevm.ai-native/go-ai-native-mcp/v0.1.0/crates/go-ai-native-mcp/src/tools_tcg.rs:268). «The enum-value promise, cashed a second time» has not been cashed",
+   "reason": "the same document already states the new topology correctly at ##STAGE-A-CONSULTATION-ORACLE (:141-144, 'the MCP delivery half ships in the go-ai-native-mcp package') — nothing here rests on whether this repository consumes Go; harvest d8b #f-189",
    "reasons": [
-    "**the dispatch named was deleted.** «`language: \"rust\"` dispatches through the lockfile to this package's slot artifact» — the vibe-tcg crate and the vibe-mcp `tcg_*` adapters are DELETED (spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42), the tools ship in the per-family server (:33), and `language` survives only as a validated compat parameter (:39). The TypeScript twin was recorded drift for the same reason in this same batch, and so was the Go one. «The enum-value promise, cashed» describes a mechanism that was retired",
-    "the `vibe-tcg` crate does not exist, and the corpus records why in its own words: `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:11` says it «was deleted whole», the grammar now served by the per-family MCP servers. The seam this fact names was retired by a decision two documents over"
+    "the Rust stack's own boot snippet names the new home: spec/boot/20-stack-rust-ai-native-lang.md:46 'served over MCP by mcp:org.vibevm.ai-native/rust-ai-native-mcp — PROP-027'; harvest d8b #f-189",
+    "the row's last clause came TRUE and any correction must keep it: the portability amendment was cashed — all three per-family mcp servers have zero vibe-mcp imports (grep over packages/org.vibevm.ai-native/*-ai-native-mcp/v*/crates/*/Cargo.toml: no output; typescript-ai-native-mcp depends on mcp-core); harvest d8b #f-189"
    ],
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:127  - ##COMPONENT-THE-PRODUCT-SEAM **The product seam** (vibevm, PROP-026): the SAME four `tcg_*` tools; `language: \"go\"`...",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 3,
-   "id": "F-189",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "reason-text j=0.74",
-    "reason-text j=1.00"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md#CHECK-THE-PRINTED-POLICY-LINES",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md#CHECK-THE-PRINTED-POLICY-ORIGIN-LINES",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md#CHECK-THE-PRINTED-POLICY-LINES"
-   ],
-   "drift_count": 3,
-   "cross_package": true,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": true,
-   "evidence_spans": [
-    "campaigns",
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "campaigns/packages-2026-09/harvest/go-ai-native-lang-floor.md:29  go-ai-native-conform: NO conform.toml — topology default in force (roots = [\".\"], no cells gate); run `go-ai-native init",
-    "campaigns/packages-2026-09/harvest/rust-ai-native-lang-floor.md:184  conform: NO conform.toml — topology default in force, nothing is gated; run `rust-ai-native init` to write a starting po",
-    "campaigns/packages-2026-09/harvest/typescript-ai-native-lang-floor.md:31  typescript-ai-native-conform: NO conform.toml — topology default in force (roots = [\"src\"], no cells gate); run `typescr",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs:220              \"\\nfloor: all green ({} step(s) run, {} disabled by policy).\",",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md:47  ##CHECK-THE-PRINTED-POLICY-LINES Check the printed policy lines: a `Defaulted` conform policy",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:47  the printed policy-origin lines: a `Defaulted` policy means the project is",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/config.rs:173      pub floor_disable: Vec<FloorDisable>,",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md:48  ##CHECK-THE-PRINTED-POLICY-LINES Check the printed policy lines: a `Defaulted` conform policy means"
-   ],
-   "cites": [],
-   "reason": "the two strings the sweep tells a reader to look for — `Defaulted` and `DISABLED by policy` — appear in **no shipped string and in no captured run** of any of the three stacks",
-   "reasons": [
-    "the two strings the sweep tells a reader to look for — `Defaulted` and `DISABLED by policy` — appear in **no shipped string and in no captured run** of any of the three stacks. A diagnostic step keyed on output that is never printed",
-    "the two strings the sweep tells a reader to look for — `Defaulted` and `DISABLED by policy` — appear in **no shipped string and in no captured run** of any of the three stacks"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "release",
-   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md:47  ##CHECK-THE-PRINTED-POLICY-LINES Check the printed policy lines: a `Defaulted` conform policy",
+   "fact": "",
    "falsifier": "self",
    "routed_out": [],
    "owed": 3,
-   "id": "F-190",
+   "id": "F-189",
    "id_source": "minted",
    "carried": true
   },
@@ -3403,21 +3026,17 @@
    "installed_differs": true,
    "release_event": true,
    "evidence_spans": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
    ],
    "evidence_refs": [
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:294  if op == \"init\" { // Re-init: a fresh gopls session (overlays cleared). match GoOracle::spawn(&root, READINESS_BUDGET) {",
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:74  fn init_result(oracle: &GoOracle<ChildTransport>) -> serde_json::Value { serde_json::json!({ \"gopls_version\": oracle....",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:57  - ##OP-INIT **`init`** `{root}` → `{gopls_version, gopls_path, go_version, root_files, ready}` — resolves and spawns...",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:282          if op == \"init\" {",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:284              match RustOracle::spawn(&root, QUIESCENCE_BUDGET) {",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:76  fn init_result(oracle: &RustOracle<ChildTransport>) -> serde_json::Value {"
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:57  - ##OP-INIT **`init`** `{root}` → `{gopls_version, gopls_path, go_version, root_files, ready}` — resolves and spawns..."
    ],
    "cites": [],
    "reason": "**three of five keys and the one parameter are absent.** The protocol prints `init {root}` → `{gopls_version, gopls_path, go_version, root_files, ready}`. The shipped op takes no params — the root is the process root (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/serve.rs:294) — and returns gopls_version, position_encoding, pull_diagnostics, ready (serve.rs:74-84). `gopls_path`, `go_version` and `root_files` are never produced; `position_encoding` and `pull_diagnostics` are produced and undocumented",
    "reasons": [
-    "**three of five keys never exist.** The op is printed as `init {root}` → `{ra_version, ra_path, toolchain, root_files, quiescent}`; the shipped `init_result` emits ra_version, position_encoding, pull_diagnostics, quiescent (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:76-84). `ra_path`, `toolchain` and `root_files` occur zero times in the Rust crates, and two shipped keys are undocumented. Identical shape to the Go twin's OP-INIT"
+    "RESTATED with Rust's own key names: the recorded reason lists Go's gopls keys (gopls_version/gopls_path/go_version), which this protocol does not print; the rust protocol's documented init return names ra_path / toolchain / root_files, and the shipped op produces none of them (rust-ai-native-tcg/src/serve.rs:76 init_result; :282-284 re-init takes no params) — drift real, the parameter-and-keys gap is Rust-shaped, not Go-shaped; harvest d8a #f-211"
    ],
    "status": "open",
    "wave": 1,
@@ -3434,101 +3053,40 @@
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
-    "reason-text j=1.00"
+    "shared anchor #CHECK-THE-PRINTED-POLICY-LINES"
    ],
    "packages": [
     "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
    ],
    "files": [
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md"
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md"
    ],
    "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md#RATCHET-CENSUS-REGRESSIONS",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md#RATCHET-CENSUS-REGRESSIONS"
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md#CHECK-THE-PRINTED-POLICY-LINES",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md#CHECK-THE-PRINTED-POLICY-LINES"
    ],
    "drift_count": 2,
    "cross_package": true,
    "installed": true,
    "installed_differs": true,
    "release_event": true,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-conform/src/config.rs:44      pub gated_crates: Vec<String>,",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-conform/src/rules/go.rs:130                      \"error_string_match\" => (",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md:79  5. ##RATCHET-CENSUS-REGRESSIONS **census regressions** (`init_in_cell` / `ambient_call_in_cell` /",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/health.rs:229                  \"unwrap_domain\": h.unwrap_domain,",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/config.rs:44      pub gated_crates: Vec<String>,",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:75  5. ##RATCHET-CENSUS-REGRESSIONS **Census regressions** (`unwrap_domain` / `env_nonroot` /"
-   ],
+   "evidence_spans": [],
+   "evidence_refs": [],
    "cites": [],
-   "reason": "the config field is `gated_crates`, not `gated_packages`, and the three kind strings are wrong too — the shipped values are `init_decl`, `ambient_call`, `naked_go`, not `init_in_cell` / `ambient_call_in_cell` / `naked_go_in_cell`. Four names in one fact, none of them the shipped one",
+   "reason": "`Defaulted` is a ConfigOrigin enum variant (vendor core-ai-native-conform/src/config.rs:231) and never reaches stderr — on a defaulted policy the tool prints 'go-ai-native-conform: NO conform.toml — topology default in force (roots = [\".\"], no cells gate); run go-ai-native init …' (go-ai-native-conform/src/lib.rs:31-35); drift is real in the first clause only; harvest d8b #f-190",
    "reasons": [
-    "the config field is `gated_crates`, not `gated_packages`, and the three kind strings are wrong too — the shipped values are `init_decl`, `ambient_call`, `naked_go`, not `init_in_cell` / `ambient_call_in_cell` / `naked_go_in_cell`. Four names in one fact, none of them the shipped one"
+    "the prior reason cited vendor config.rs:173 pub floor_disable — the field that DRIVES the disabled-print — as evidence the print does not exist; drift is real in the first clause only; harvest d8b #f-190"
    ],
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md:79  5. ##RATCHET-CENSUS-REGRESSIONS **census regressions** (`init_in_cell` / `ambient_call_in_cell` /",
+   "fact": "",
    "falsifier": "self",
    "routed_out": [],
    "owed": 2,
-   "id": "F-212",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "reason-text j=1.00"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md#DRIFT-GOLDEN-TRANSCRIPTS",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md#DRIFT-GOLDEN-TRANSCRIPTS"
-   ],
-   "drift_count": 2,
-   "cross_package": true,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": true,
-   "evidence_spans": [
-    "discipline",
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang",
-    "vibedeps"
-   ],
-   "evidence_refs": [
-    "discipline/golden/capture.sh:2  # discipline/golden/capture.sh — Phase −1 characterization capture",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md:96  - ##DRIFT-GOLDEN-TRANSCRIPTS Golden transcripts (`discipline/golden/`, `testdata/` goldens): must",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:96  - ##DRIFT-GOLDEN-TRANSCRIPTS Golden transcripts (`discipline/golden/`): must fail loudly, re-captured",
-    "vibedeps/flow-core-ai-native/0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md:77  At inventory time, capture golden transcripts for currently-passing observable flows (the `manual-tests/` scenarios + fi"
-   ],
-   "cites": [],
-   "reason": "`capture.sh` exists only at the HOST's `discipline/golden/capture.sh`; **no ai-native package carries a `discipline/` directory at all**, so the re-capture step has no script where the skill puts it",
-   "reasons": [
-    "`capture.sh` exists only at the HOST's `discipline/golden/capture.sh`; **no ai-native package carries a `discipline/` directory at all**, so the re-capture step has no script where the skill puts it"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "release",
-   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md:96  - ##DRIFT-GOLDEN-TRANSCRIPTS Golden transcripts (`discipline/golden/`, `testdata/` goldens): must",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-213",
+   "id": "F-190",
    "id_source": "minted",
    "carried": true
   },
@@ -3740,64 +3298,8 @@
    "carried": true
   },
   {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "shared anchor #COMPOSES-ATOMIC-COMMITS"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/addressable-specs",
-    "packages/org.vibevm.world/campaign-plans"
-   ],
-   "files": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md",
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md#COMPOSES-ATOMIC-COMMITS",
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md#COMPOSES-ATOMIC-COMMITS"
-   ],
-   "drift_count": 2,
-   "cross_package": true,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": true,
-   "evidence_spans": [
-    "legacy-spec",
-    "packages/org.vibevm.world/campaign-plans",
-    "packages/org.vibevm.world/git-atomic-commits",
-    "packages/org.vibevm.world/git-conventional-commits",
-    "spec",
-    "vibe.lock"
-   ],
-   "evidence_refs": [
-    "legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:298    runnable); host floor green. *Commit:* `feat(ai-native): go-ai-native family skeletons`.",
-    "legacy-spec/terraforms/SELF-SUFFICIENCY-PLAN-v0.1.md:374  **Commits:** `build(packages): bump the discipline packages to 0.3.0` +",
-    "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/phase-gates.md:67  | ##ROW-ELEMENT-COMMIT-SET **Commit set** @impl/done | the planned commits, subjects spelled in advance @impl/done |",
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md:22  ##COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW Commit messages follow the **git-conventional-commits** flow — a sibling package:",
-    "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md:24  ##CITE-SPEC-URIS-WHERE-RELEVANT Cite `spec://…` URIs where relevant. @impl/done",
-    "spec/boot/STATIC.md:25  The same contract binds the agent: when citing the spec — in chat, commit bodies, code markers, review notes — cite the anchor, never a paraphrase and never a line number.",
-    "vibe.lock:293      \"flow:org.vibevm.world/git-atomic-commits@=0.1.0\","
-   ],
-   "cites": [],
-   "reason": "DRIFT: the behaviour is real and the attribution is wrong. 515 commits in this repository carry a `spec://` URI in their message, so commit bodies do cite anchors. But the RULE requiring it lives in `flow:git-conventional-commits` (31-flow-conventional-commits.md:24), not in `flow:git-atomic-commits` — and git-atomic-commits' own boot snippet says so at its line 22, drawing the format/atomicity line this claim erases. Both flows are installed, so the misattribution is checkable against the shipped payload. Same defect W2d found in sync-from-code's BOUNDARY-FLOW-ATOMIC-COMMITS.",
-   "reasons": [
-    "DRIFT on the two clauses that are measurable, over a window where they fail completely. The member flow is installed and pinned, and «one idea per commit» is kept — that half stands. But «subjects are spelled in the plan» has NO live instance: `grep -rlE '\\*Commits' legacy-spec/terraforms/*.md` finds 4 archived plans and the same grep over `spec/terraforms/*.md` and `campaigns/packages-2026-09/*.md` returns 0, with `grep -ciE 'commits:'` returning 0 for both live plans. And «the ledger binds hashes to the planned subjects» has none either: `grep -niE 'commit map|commit-map'` over the live plans and campaign zones returns 0 hits, against 3 in the archive. This is not non-adoption — the host adopted the practice, wrote four plans that spell subjects in advance, and stopped: 0 of 2 live campaigns do it, which is the whole live window. The harvest's related count is the same defect from the other side, 17 unique hashes cited against 189 commits in the wave-2 zone."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "release",
-   "fact": "legacy-spec/terraforms/GO-AI-NATIVE-PLAN-v0.1.md:298    runnable); host floor green. *Commit:* `feat(ai-native): go-ai-native family skeletons`.",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-219",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
+   "type": "missing-support",
+   "rule": "r-nothing-exists",
    "merged_by": [
     "shared anchor #COMPOSES-WAL"
    ],
@@ -3818,33 +3320,25 @@
    "installed": true,
    "installed_differs": true,
    "release_event": true,
-   "evidence_spans": [
-    "CLAUDE.md",
-    "packages/org.vibevm.world/source-mirrors",
-    "packages/org.vibevm.world/wal",
-    "spec"
-   ],
-   "evidence_refs": [
-    "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
-    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md:42  | ##ROW-MOMENT-END-OF-A-WORK-SESSION End of a work session @impl/done | Fan out as the wind-down step @impl/done |",
-    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:83  3. ##SECTION-CONSTRAINTS **Constraints** — the \"do not touch\" list; each entry carries a brief *why*, citing a spec anchor or issue: `match_by_hash(): DO NOT TOUCH — fragile reconnection logic, issue #12`. The most valuable",
-    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/WAL-PROTOCOL.md:91  5. ##SECTION-IN-PROGRESS **In progress** — what is open, with enough detail that the next session can pick it up. Cite spec anchors (`spec://…`). @impl/done",
-    "spec/WAL.md:209  ## Next",
-    "spec/WAL.md:69  ## Constraints — do not violate",
-    "spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md:77  describes; fan-out via `cargo xtask mirror` at phase checkpoints. `run/` of a"
-   ],
+   "evidence_spans": [],
+   "evidence_refs": [],
    "cites": [],
-   "reason": "DRIFT: the composition is specified on both sides and does not happen. `flow:wal`'s WAL-PROTOCOL.md:83 does require each Constraints entry to carry a why «citing a spec anchor or issue», and this README claims the resumed session therefore lands on the exact unit. Measured on the host's own WAL: `spec://` occurs 0 times in `spec/WAL.md` (2 today, both campaign prose ABOUT the absence), and 4 of its 26 constraint entries cite an anchor in any notation. The Next section cites repository paths, not anchors.",
+   "reason": "one recorded measurement corrected in passing: 'the Next section cites repository paths' tested a rule that does not exist — flow:wal ##SECTION-NEXT :93 imposes no citation requirement; the section the rule binds is In-progress, and the host fails that one; the package does not move; harvest d8c #f-220",
    "reasons": [
-    "DRIFT on the «fan out at wind-down» half, contradicted by the host's own wind-down contract in writing. `flow:wal` IS installed. But `CLAUDE.md`'s END SESSION command, step 4, prescribes «Push to `origin/main`» — the bare named-remote push that `spec/boot/90-user.md:35` and `PROP-016:59` BOTH name as not the standard rollout. So the host's session-end procedure instructs the opposite of what this composition claims happens at wind-down, and the two host documents disagree with each other about it. One host document does state the checkpoint cadence in this flow's terms: the terraform campaign plan at line 77. The «fanned out at <checkpoint>» WAL-entry half can only be observed inside `spec/WAL.md`, which this batch's citation rule excludes as a target; it was read and no entry uses that form, reported here as prose rather than as a ref."
+    "what does not hold: no WAL entry notes 'fanned out at <checkpoint>' — grep -niE 'fanned out|fan out|fan-out|xtask mirror' spec/WAL.md returns 0, and over the standing perimeter every 'fanned out' hit outside this README and its two vendored copies is the delegation sense of the word; and flow:wal's eight-section grammar has no slot for such an entry (grep -rni 'mirror|fan.out' over wal/v0.2.0/ returns nothing) — prescribed on one side, unexercised everywhere [1][2][3]; the (a)/(b) reading goes to the which-side ruling the queue schedules; harvest d8c #f-220"
    ],
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "fact": "CLAUDE.md:191  4. **Push to `origin/main`** — routine per Rule 4, since the user invoked the wind-down explicitly. (If push would be non-fast-forward or otherwise risky, stop and ask first per Rule 4's escape hatch.)",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
+   "fact": "",
+   "falsifier": "self",
+   "routed_out": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md#COMPOSES-WAL"
+   ],
+   "owed": 1,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-220",
    "id_source": "minted",
    "carried": true
@@ -4332,33 +3826,26 @@
    "installed": true,
    "installed_differs": true,
    "release_event": true,
-   "evidence_spans": [
-    "packages/org.vibevm.world/decision-records",
-    "packages/org.vibevm.world/git-attribution-policy",
-    "spec",
-    "vibedeps"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/vibe.toml:16  source = \"spec/boot/25-flow-decision-records.md\"",
-    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:70  - ##COMPOSES-DECISION-RECORDS `flow:decision-records` (`25-…`): the posture choice is a recorded",
-    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md:82  1. ##SWITCH-EDIT-THE-SINGLE-POLICY-PLACE The owner edits the single policy place (the boot snippet) to the",
-    "spec/common/PROP-016-source-mirrors.md:5  ##status-line **Status:** accepted 2026-06-14 — owner-requested; in force. The target set (§2) is **living** — it grows as hosts are added.",
-    "spec/common/PROP-016-source-mirrors.md:78  - ##HIST-AUTHORED **2026-06-14 — authored, in force.** Owner decision: the source becomes multi-homed (GitVerse + GitHub `vibevm/vibevm`, both public, canonical for reading; US↔GitHub, RU↔GitVerse), kept in sync by the maintainer's fan-out. The `mirrors.toml` registry and `cargo xtask mirror` (`--check`, `--from`) plus the off-by-default `health --mirrors` probe are defined here. Supersedes the interim multi-push-remote and the abandoned bidirectional-multi-master sketch. @spec/done",
-    "vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md:1  # Flow: Decision Records {#root}",
-    "vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md:19  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |"
-   ],
+   "evidence_spans": [],
+   "evidence_refs": [],
    "cites": [],
-   "reason": "the flow states a composition whose whole point is that the choice is recorded as a decision; in the one consumer that installs both flows, it is not",
+   "reason": "same forbidden-artefact search as the sibling anchor (spec/decisions/ hunt against ##NO-SEPARATE-ADR-DIRECTORY); the record the flow asks for lives at the governing section or nowhere, and today it is nowhere — a host obligation, not a package edit; harvest d8c #f-233",
    "reasons": [
-    "DRIFT on the revisit-trigger half, and the composed flow's own installed snippet is what makes it decidable rather than a preference. Recorded correctly: `PROP-016` carries an acceptance date, an in-force status, and a version history whose `##HIST-AUTHORED` entry states the owner decision, what it supersedes and its scope. Missing: `grep -n -i 'revisit\\|parallel\\|integrator' spec/common/PROP-016-source-mirrors.md` returns 0 hits over all 81 lines — so neither the host's mirror SET nor the single-writer choice carries a measurable revisit trigger, while `vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md:63` forbids recording a decision with a missing one. The host installed the flow that forbids this and then did it. RECORDED, because it settles a question left open in `spec-genres`: two searches there disagreed about whether revisit triggers are a standard host field, and this is a second PROP without one, which makes `PROP-000` §3's fired-and-spent trigger the exception rather than the rule."
+    "the prior verdict's leading search looked for the artefact the composed flow forbids — git ls-files | grep -iE 'decision|adr' plus 'there is no spec/decisions/' — while the flow's own snippet says 'There is no separate ADR directory and no immutable numbered log. The spec section that governs the value IS the record' (##NO-SEPARATE-ADR-DIRECTORY); the package does not move; harvest d8c #f-233"
    ],
    "status": "open",
    "wave": 1,
    "closure_route": "release",
-   "fact": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:70  - ##COMPOSES-DECISION-RECORDS `flow:decision-records` (`25-…`): the posture choice is a recorded",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
+   "fact": "",
+   "falsifier": "self",
+   "routed_out": [
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md#COMPOSES-DECISION-RECORDS",
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/README.md#COMPOSES-DECISION-RECORDS"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-233",
    "id_source": "minted",
    "carried": true
@@ -4547,123 +4034,6 @@
     "host"
    ],
    "id": "F-236",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "relocation",
-   "rule": "r-dangling-flows",
-   "merged_by": [
-    "shared anchor #re-derive-prompt-lead"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/licensing",
-    "packages/org.vibevm.world/spec-genres"
-   ],
-   "files": [
-    "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md",
-    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md#re-derive-prompt-lead",
-    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md#re-derive-prompt-lead"
-   ],
-   "drift_count": 2,
-   "cross_package": true,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": true,
-   "evidence_spans": [
-    "packages/org.vibevm.world/spec-genres",
-    "spec",
-    "vibedeps"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:180  Read spec/flows/spec-genres/ in full, then adapt it to this project:",
-    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:193  5. Show me the genre map and the misfilings as a plan. Change",
-    "spec/design/README.md:13  ##genre-table-lead vibevm's instance of the genre table — the general taxonomy (each genre's charter, mutability, reader, and authority-on-conflict) is the flow's `spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#genres`: @doc/done",
-    "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md:106  Copy the prompt-task, not the prompt-implementation. Paste this to",
-    "vibedeps/flow-licensing/0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md:110  Read spec/flows/licensing/ end to end. Then establish THIS project's"
-   ],
-   "cites": [],
-   "reason": "DRIFT for the same reason as `spec-genres`' re-derive prompt, ruled the same way: the prompt's FIRST instruction cannot be followed where it is meant to be run. It opens «Read `spec/flows/licensing/` end to end», and a consuming host has no `spec/flows/` directory — the path resolves only inside the package or the `vibedeps/` slot. Root-relative rather than `../`-relative, so the campaign's own `\\.\\./flows/` scan does not see it; that makes two such prompts across two packages. RECORDED on the rest: no host artefact shows the prompt having been run, and that is expected rather than damning — this host is the extraction SOURCE, not a re-derivation target, and its three asks were all satisfied months before the package existed. Ask (2), «list any current dependencies that violate it», is the one thing this host cannot produce.",
-   "reasons": [
-    "DRIFT on the prompt this anchor delivers: its FIRST instruction cannot be followed where it is meant to be run. The block opens «Read `spec/flows/spec-genres/` in full», and a consuming host has no `spec/flows/` directory — it resolves only inside the package or the `vibedeps/` slot. This is the fourth dangling pointer in this package and the one the campaign's own `\\.\\./flows/` scan cannot see, because it is root-relative rather than `../`-relative. RECORDED on the rest, which is sound: the block is five numbered steps ending «Change nothing until I approve», and the host has the first of its two outputs — `spec/design/README.md` publishes an instance map with charters and authority per row. The second output has no instance: no misfiling list exists in the durable perimeter, and the closest artefacts are the actualisation campaign's per-fact drift findings, which are a different genre of finding."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "release",
-   "fact": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:180  Read spec/flows/spec-genres/ in full, then adapt it to this project:",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-240",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "missing-support",
-   "rule": "r-no-checker",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/managed-blocks"
-   ],
-   "files": [
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#HARD-STOP-PRECISE-REPORT-HUMAN-DECIDES",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#a-worked-message"
-   ],
-   "drift_count": 2,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "crates",
-    "packages/org.vibevm.world/managed-blocks",
-    "spec"
-   ],
-   "evidence_refs": [
-    "crates/vibe-check/src/checks/redirect_block.rs:42                      format!(\"`{name}` has a malformed <vibevm> block: {reason}\"),",
-    "crates/vibe-workspace/src/boot_artifacts.rs:396          Some(content) => match locate_block(content) {",
-    "crates/vibe-workspace/src/install/bootgen.rs:416                  return Err(WorkspaceError::MalformedRedirectBlock { path, reason });",
-    "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
-    "crates/vibe-workspace/src/lib.rs:233      #[error(",
-    "crates/vibe-workspace/src/lib.rs:234          \"malformed <vibevm> block in `{}`: {reason} \\",
-    "crates/vibe-workspace/src/lib.rs:235           (violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; \\",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:112  ##HARD-STOP-PRECISE-REPORT-HUMAN-DECIDES Hard stop, precise report, human decides (§drill). @impl/done",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:113  ",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:147  ## The malformed-state drill {#drill}",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:162  ##a-worked-message A worked message: @impl/done",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:165  error: managed block in CLAUDE.md is malformed — aborting, nothing written.",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:167    found:    two opening markers <toolname> at lines 12 and 40",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:169    expected: zero markers, or one <toolname> … </toolname> pair in order",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:170    fix:      decide which block is canonical, delete the other opener",
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:173  No files were changed.",
-    "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:82  - ##CLASS-MALFORMED **Malformed** (§2.2) — `vibe` **aborts the whole operation** with an error naming the file and the exact defect, and changes nothing. It does not proceed until the user repairs the file by hand. vibevm **never guesses** which of two blocks is canonical and **never auto-deletes** a stray marker — a malformed managed block is always a human's call. @impl/done"
-   ],
-   "cites": [],
-   "reason": "DRIFT at one of three, and the two that hold are the safety-critical ones. HARD STOP: `Err` before any write, twice over (`boot_artifacts.rs:396-401`, `bootgen.rs:416`). HUMAN DECIDES: `lib.rs:230-231` and `PROP-012:82` — nothing auto-repairs. PRECISE REPORT: the message names the file and the defect class with counts and carries NO line numbers, which is what this drill's own §d specifies as the precision. Root at `##ROW-REPORT-WHAT-I-FOUND`.",
-   "reasons": [
-    "DRIFT: the host's message carries the same three FIELDS and none of the shape the worked example demonstrates. The example (`rejected-designs.md:165-173`) is a multi-line block with labelled `found:` / `expected:` / `fix:` lines, explicit line numbers («at lines 12 and 40»), and a closing «No files were changed.» The host's is a SINGLE LINE (`lib.rs:232-235`) with the fix as a parenthetical tail — no labels, no line numbers, and no explicit no-files-changed statement (the fact is true and unstated). A worked message is a specification of the output's shape, and this one specifies a shape the reference implementation does not produce."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "build-or-demote",
-   "fact": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:112  ##HARD-STOP-PRECISE-REPORT-HUMAN-DECIDES Hard stop, precise report, human decides (§drill). @impl/done",
-   "falsifier": "mixed",
-   "routed_out": [
-    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#a-worked-message"
-   ],
-   "owed": 1,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-241",
    "id_source": "minted",
    "carried": true
   },
@@ -5690,6 +5060,42 @@
    "carried": true
   },
   {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md#RATCHET-CENSUS-REGRESSIONS"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": false,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [],
+   "evidence_refs": [],
+   "cites": [],
+   "reason": "RESTATED — the real gap is deeper than wrong names: the go collector emits no per-kind, per-package census at all, so the step's five names have no output to match; where names can be checked against shipped kind strings, three are wrong (init_in_cell/ambient_call_in_cell/naked_go_in_cell vs shipped init_decl/ambient_call/naked_go) and two ship (error_string_match — vendor rules/go.rs:130 — and seam_error_missing_req); the recorded 'gated_packages' clause convicts a config key the sentence does not name — its 'on a gated package' is prose; harvest d8a #f-212",
+   "reasons": [],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-212",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "contradiction",
    "rule": "r-contradiction",
    "merged_by": [
@@ -5784,6 +5190,42 @@
     "packages/org.vibevm.ai-native/rust-ai-native-lang"
    ],
    "files": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md#EVIDENCE-AND-TRANSFER-STRENGTH"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [],
+   "evidence_refs": [],
+   "cites": [],
+   "reason": "RESTATED — this anchor's defect is not H4: it cites the evidence id DL1-015, and the ATLAS files that record as DR1-015 (a typo'd register id, one letter off); the obligation's recorded H4 reason does not describe this sentence; drift real, one-character repair on the release route; harvest d8a #f-186",
+   "reasons": [],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-186",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "files": [
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md"
    ],
    "anchors": [
@@ -5855,6 +5297,77 @@
    "owed": 1,
    "id": "F-281",
    "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md#CHECK-THE-PRINTED-POLICY-ORIGIN-LINES"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [],
+   "evidence_refs": [],
+   "cites": [],
+   "reason": "the `Defaulted` token is a ConfigOrigin enum variant and is never printed — the policy-origin line reads 'conform: NO conform.toml — topology default in force, nothing is gated; run rust-ai-native init …' (rust-ai-native-conform/src/lib.rs:33-36, captured verbatim in the package's own floor run) — the step's guidance is right, the token it names is not matchable in the output; a family-wide edit must NOT push a DISABLED clause onto this correct sentence; harvest d8b #f-190",
+   "reasons": [],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-132",
+   "id_source": "minted"
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/typescript-ai-native"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0/README.md#AGG-FRONT-DOOR"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [],
+   "evidence_refs": [],
+   "cites": [],
+   "reason": "the closure is a BUILD (write the -lang README) or a repoint, not a demotion of this sentence; release-route repair; harvest d8a #f-115",
+   "reasons": [],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-115",
+   "id_source": "adopted (plan LOG)",
    "carried": true
   },
   {
@@ -5991,49 +5504,6 @@
   },
   {
    "type": "missing-support",
-   "rule": "r-nothing-exists",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/addressable-specs"
-   ],
-   "files": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md#CODE-MARKS-WHAT-IT-IMPLEMENTS-THE-SPEC-WHAT-VERIFIES-IT"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "crates",
-    "spec"
-   ],
-   "evidence_refs": [
-    "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
-    "crates/vibe-cli/src/commands/install/flag_tests.rs:97  #[test] #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
-    "spec/common/PROP-031-algorithmic-refactoring.md:103  2. ##ANT-STABLE-IDENTITY **Stable identity for anything that can move.** Spec units keep immutable `{#anchor}`s; code carries `#[spec]`/`scope!`; packages carry FQIDs; boot entries carry INDEX ids. Renaming preserves the anchor; retiring tombstones…"
-   ],
-   "cites": [],
-   "reason": "DRIFT on the second half. Code marking what it implements is here at scale — 677 `implements` edges in `specmap.json` — though written as `#[spec(...)]` attributes (224 sites) rather than the `// Implements: spec://…` comment the fact shows, which occurs exactly ONCE in the whole tree. The spec recording what verifies it is inverted: the 223 `verifies` edges also come from code annotations, and the `Test:` line the fact prescribes for the spec side does not exist in the host's spec tree. Both directions are marked from the code; the spec marks neither.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "build-or-demote",
-   "fact": "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
-   "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-287",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "missing-support",
    "rule": "r-no-checker",
    "merged_by": [
     "single row"
@@ -6077,6 +5547,42 @@
     "host"
    ],
    "id": "F-288",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/addressable-specs"
+   ],
+   "files": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/README.md#COMPOSES-ATOMIC-COMMITS"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [],
+   "evidence_refs": [],
+   "cites": [],
+   "reason": "the practice itself is real and re-measured: 581 of 2 216 commits cite a spec:// URI at HEAD 45cd30b0 (git log --grep=spec:// --oneline | wc -l) [2]; the queue's restated '716' was a LINE count (735 lines via git log --format=%B | grep -c at the same HEAD) mistaken for a commit count — a commit count cannot fall, so 716 was self-refuting against the earlier 515/579; harvest d8c #f-219",
+   "reasons": [],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-219",
    "id_source": "minted",
    "carried": true
   },
@@ -6645,95 +6151,6 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-302",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "missing-support",
-   "rule": "r-no-checker",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/git-atomic-commits"
-   ],
-   "files": [
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md#SUM-THE-NO-ALSO-TEST"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "campaigns",
-    "packages/org.vibevm.world/git-atomic-commits"
-   ],
-   "evidence_refs": [
-    "campaigns/packages-2026-09/harvest/world-w1-git-family.md:130  names, not capitalised words. *The check that would enforce this rule has to know",
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:134  ##THE-WORD-ALSO-IS-STILL-THE-TEST The word \"also\" is still the test …",
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:91  ##THE-TEST-IS-MECHANICAL-THE-WORD-ALSO The test is mechanical: can the commit body be written without using the word \"also\"? @impl/done"
-   ],
-   "cites": [],
-   "reason": "the same shape the harvest recorded for the capitalisation rule — a rule whose checker would have to make a judgement is a rule with no checker",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "build-or-demote",
-   "fact": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:134  ##THE-WORD-ALSO-IS-STILL-THE-TEST The word \"also\" is still the test …",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-303",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/git-atomic-commits"
-   ],
-   "files": [
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md#THE-TEST-IS-MECHANICAL-THE-WORD-ALSO"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/git-atomic-commits"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:21  - ##FRAMING-ONE-INTENT-PER-MESSAGE **One intent per message.** If the body needs to say \"also, while",
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:213  - ##SUM-THE-NO-ALSO-TEST The \"no 'also' in the body\" test catches violations mechanically. @impl/done"
-   ],
-   "cites": [],
-   "reason": "the mechanical form was run and returns 43 of 400 bodies, 10.8 % — a number that cannot be turned into a violation count without exactly the judgement the word «mechanical» denies. No commit-message check of any kind exists in this repository, and the boot snippet does not carry the test at all, so a session reading only the boot lane never sees it",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:21  - ##FRAMING-ONE-INTENT-PER-MESSAGE **One intent per message.** If the body needs to say \"also, while",
-   "falsifier": "self",
-   "routed_out": [
-    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md#THE-TEST-IS-MECHANICAL-THE-WORD-ALSO"
-   ],
-   "owed": 0,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-175",
    "id_source": "minted",
    "carried": true
   },
@@ -9485,6 +8902,57 @@
    "carried": true
   },
   {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/managed-blocks"
+   ],
+   "files": [
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT",
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#ROW-REPORT-WHAT-I-FOUND",
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#ROW-REPORT-HOW-TO-UNBLOCK",
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#THREE-PROPERTIES-MAKE-THIS-DRILL-CORRECT",
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#DRILL-IT-IS-SPECIFIC",
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#DRILL-IT-NAMES-THE-UNBLOCKING-ACTION",
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#SUM-MALFORMED-GOES-TO-THE-DRILL"
+   ],
+   "drift_count": 7,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "crates",
+    "packages/org.vibevm.world/managed-blocks",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT at two and a half of three parts. ABORT: yes, and at the earliest possible point — `validate_redirect_blocks` is step 0 of `apply_resolution` (`install.rs:117-120`) and returns before materialisation (`bootgen.rs:416`). The REPORT: «what I found» is present but without line numbers; «what I expected» is present only as an implied clause inside the reason string («expected exactly one `<vibevm>` … `</vibevm>` pair, found {opens} … and {closes} …», `boot_artifacts.rs:362-363`) rather than as its own part; «how to unblock» is present on the install path and absent on `vibe check`. Three parts specified, two and a half delivered, and the halves that are missing are the ones a human needs to act. Root at `##ROW-REPORT-WHAT-I-FOUND`.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:149  ##ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT When classification (see",
+   "falsifier": "mixed",
+   "routed_out": [
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT",
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#ROW-REPORT-WHAT-I-FOUND",
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#SUM-MALFORMED-GOES-TO-THE-DRILL"
+   ],
+   "owed": 4,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-148",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "missing-support",
    "rule": "r-no-checker",
    "merged_by": [
@@ -9905,6 +9373,47 @@
    "carried": true
   },
   {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/git-atomic-commits"
+   ],
+   "files": [
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md#THE-TEST-IS-MECHANICAL-THE-WORD-ALSO"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/git-atomic-commits"
+   ],
+   "cites": [],
+   "reason": "the mechanical form was run and returns 43 of 400 bodies, 10.8 % — a number that cannot be turned into a violation count without exactly the judgement the word «mechanical» denies. No commit-message check of any kind exists in this repository, and the boot snippet does not carry the test at all, so a session reading only the boot lane never sees it",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:21  - ##FRAMING-ONE-INTENT-PER-MESSAGE **One intent per message.** If the body needs to say \"also, while",
+   "falsifier": "self",
+   "routed_out": [
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md#THE-TEST-IS-MECHANICAL-THE-WORD-ALSO"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-175",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "missing-support",
    "rule": "r-nothing-exists",
    "merged_by": [
@@ -10100,6 +9609,52 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-184",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "missing-support",
+   "rule": "r-nothing-exists",
+   "merged_by": [
+    "reason-text j=1.00"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md#PROCEDURES-AS-AGENT-SKILLS",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/boot/20-stack-rust-ai-native-lang.md#PROCEDURES-AS-AGENT-SKILLS",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md#PROCEDURES-AS-AGENT-SKILLS"
+   ],
+   "drift_count": 3,
+   "cross_package": true,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": true,
+   "evidence_spans": [
+    ".claude",
+    "crates",
+    "packages/org.vibevm.ai-native/go-ai-native-lang",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
+   ],
+   "cites": [],
+   "reason": "the two Go skills are **not installed**: `.claude/skills/` carries `rust-ai-native-sweep`, `rust-ai-native-terraform`, `typescript-ai-native-sweep`, `typescript-ai-native-terraform` and `vibevm` — four of the six, and no Go pair. `vibe.lock` carries no `go-ai-native` entry and `vibedeps/` no `stack-go-ai-native-lang` slot",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "release",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/boot/20-stack-go-ai-native-lang.md:80  ##PROCEDURES-AS-AGENT-SKILLS Procedures as agent skills: `/go-ai-native-sweep`",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 3,
+   "id": "F-187",
    "id_source": "minted",
    "carried": true
   },
@@ -10340,6 +9895,48 @@
    "carried": true
   },
   {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "reason-text j=1.00"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md#DRIFT-GOLDEN-TRANSCRIPTS",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md#DRIFT-GOLDEN-TRANSCRIPTS"
+   ],
+   "drift_count": 2,
+   "cross_package": true,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": true,
+   "evidence_spans": [
+    "discipline",
+    "packages/org.vibevm.ai-native/go-ai-native-lang",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang",
+    "vibedeps"
+   ],
+   "cites": [],
+   "reason": "`capture.sh` exists only at the HOST's `discipline/golden/capture.sh`; **no ai-native package carries a `discipline/` directory at all**, so the re-capture step has no script where the skill puts it",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "release",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md:96  - ##DRIFT-GOLDEN-TRANSCRIPTS Golden transcripts (`discipline/golden/`, `testdata/` goldens): must",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 2,
+   "id": "F-213",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "missing-support",
    "rule": "r-nothing-exists",
    "merged_by": [
@@ -10489,6 +10086,91 @@
    "routed_out": [],
    "owed": 2,
    "id": "F-238",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "relocation",
+   "rule": "r-dangling-flows",
+   "merged_by": [
+    "shared anchor #re-derive-prompt-lead"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/licensing",
+    "packages/org.vibevm.world/spec-genres"
+   ],
+   "files": [
+    "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md",
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/licensing/v0.1.0/spec/flows/licensing/LICENSING-PROTOCOL.md#re-derive-prompt-lead",
+    "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md#re-derive-prompt-lead"
+   ],
+   "drift_count": 2,
+   "cross_package": true,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": true,
+   "evidence_spans": [
+    "packages/org.vibevm.world/spec-genres",
+    "spec",
+    "vibedeps"
+   ],
+   "cites": [],
+   "reason": "DRIFT for the same reason as `spec-genres`' re-derive prompt, ruled the same way: the prompt's FIRST instruction cannot be followed where it is meant to be run. It opens «Read `spec/flows/licensing/` end to end», and a consuming host has no `spec/flows/` directory — the path resolves only inside the package or the `vibedeps/` slot. Root-relative rather than `../`-relative, so the campaign's own `\\.\\./flows/` scan does not see it; that makes two such prompts across two packages. RECORDED on the rest: no host artefact shows the prompt having been run, and that is expected rather than damning — this host is the extraction SOURCE, not a re-derivation target, and its three asks were all satisfied months before the package existed. Ask (2), «list any current dependencies that violate it», is the one thing this host cannot produce.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "release",
+   "fact": "packages/org.vibevm.world/spec-genres/v0.1.0/spec/flows/spec-genres/SPEC-GENRES-PROTOCOL.md:180  Read spec/flows/spec-genres/ in full, then adapt it to this project:",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 2,
+   "id": "F-240",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "missing-support",
+   "rule": "r-no-checker",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/managed-blocks"
+   ],
+   "files": [
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#HARD-STOP-PRECISE-REPORT-HUMAN-DECIDES",
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#a-worked-message"
+   ],
+   "drift_count": 2,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "crates",
+    "packages/org.vibevm.world/managed-blocks",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT at one of three, and the two that hold are the safety-critical ones. HARD STOP: `Err` before any write, twice over (`boot_artifacts.rs:396-401`, `bootgen.rs:416`). HUMAN DECIDES: `lib.rs:230-231` and `PROP-012:82` — nothing auto-repairs. PRECISE REPORT: the message names the file and the defect class with counts and carries NO line numbers, which is what this drill's own §d specifies as the precision. Root at `##ROW-REPORT-WHAT-I-FOUND`.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "build-or-demote",
+   "fact": "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:112  ##HARD-STOP-PRECISE-REPORT-HUMAN-DECIDES Hard stop, precise report, human decides (§drill). @impl/done",
+   "falsifier": "mixed",
+   "routed_out": [
+    "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md#a-worked-message"
+   ],
+   "owed": 1,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-241",
    "id_source": "minted",
    "carried": true
   },
@@ -11181,6 +10863,43 @@
    "id_source": "minted"
   },
   {
+   "type": "missing-support",
+   "rule": "r-nothing-exists",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/addressable-specs"
+   ],
+   "files": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md#CODE-MARKS-WHAT-IT-IMPLEMENTS-THE-SPEC-WHAT-VERIFIES-IT"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "crates",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT on the second half. Code marking what it implements is here at scale — 677 `implements` edges in `specmap.json` — though written as `#[spec(...)]` attributes (224 sites) rather than the `// Implements: spec://…` comment the fact shows, which occurs exactly ONCE in the whole tree. The spec recording what verifies it is inverted: the 223 `verifies` edges also come from code annotations, and the `Test:` line the fact prescribes for the spec side does not exist in the host's spec tree. Both directions are marked from the code; the spec marks neither.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "build-or-demote",
+   "fact": "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
+   "falsifier": "host",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-287",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "duplication",
    "rule": "r-duplication",
    "merged_by": [
@@ -11315,6 +11034,43 @@
    "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:71  case-insensitive (like #superthink). Bare words \"hot\"/\"cold\" in ordinary prose NEVER fire this",
    "falsifier": "self",
    "id": "F-301",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "missing-support",
+   "rule": "r-no-checker",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/git-atomic-commits"
+   ],
+   "files": [
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md#SUM-THE-NO-ALSO-TEST"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "campaigns",
+    "packages/org.vibevm.world/git-atomic-commits"
+   ],
+   "cites": [],
+   "reason": "the same shape the harvest recorded for the capitalisation rule — a rule whose checker would have to make a judgement is a rule with no checker",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "build-or-demote",
+   "fact": "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:134  ##THE-WORD-ALSO-IS-STILL-THE-TEST The word \"also\" is still the test …",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-303",
    "id_source": "minted",
    "carried": true
   },
