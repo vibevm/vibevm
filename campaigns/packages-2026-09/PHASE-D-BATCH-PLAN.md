@@ -558,6 +558,25 @@ owner routes and had to be reverted wholesale by owner ruling.*
   and once for its own risk id. `merge-verdicts.py` caught all three with «not an
   addressable anchor of this file», which is its third useful refusal in this
   phase.
+- ##A-REAL-DEFECT-CONVICTING-THE-WRONG-SENTENCE **The commonest false verdict on the sync route is not a
+  mis-measurement — it is a misattribution.** Wave 7's tail batch: **all three of
+  its false verdicts were a sentence convicted of its neighbour's defect**, and
+  two more anchors survived on evidence belonging to a different rule. The
+  defect was real every time; the anchor was not its owner. The shapes recur:
+  a fact convicted on a clause its own first sentence concedes; a summary
+  convicted on a measurement that its body rows are `confirmed` against; a
+  pointer row convicted for the failure of the rule beside it; a *capability*
+  sentence («the prompt **can** point at a real path») convicted of a *practice*
+  failure.
+
+  **Two cheap checks catch nearly all of it.** *(i)* Read the neighbouring
+  anchors' verdicts before accepting one — the cache already holds them, and if
+  the same evidence appears under a `confirmed` neighbour, one of the two
+  attributions is wrong. `tasks/summary-vs-body.py` automates the summary case
+  and finds 17 candidates. *(ii)* Ask whether the sentence asserts a
+  **capability**, a **practice**, or a **rule**: an unexercised capability is
+  not a false capability, and a rule the consumer breaks is §3.6(b), not a
+  wrong sentence.
 - ##READ-FURTHER-BEFORE-SEARCHING-WIDER **The cheapest disproof is usually twelve lines down, not in
   another directory.** §3.7 and its wave-6 mirror both say *widen the
   perimeter*, and that is right — but wave 7 found the complement, and it is
