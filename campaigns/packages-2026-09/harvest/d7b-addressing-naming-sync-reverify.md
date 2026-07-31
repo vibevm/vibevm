@@ -84,13 +84,15 @@ citation count, 1 384 → 1 385) moved by exactly one campaign sentence.
 
 ## F-147 — the `spec-tree-layout` seven: one verdict false on its own terms, one false twice over, and five that measure a divergence the host wrote down first
 
-**Outcome:** MIXED — 2 FALSE / 4 SURVIVE under a §3.6(c) exception already recorded / 1 SURVIVES — ROUTE (b)
+**Outcome:** MIXED — 3 FALSE / 3 SURVIVE under a §3.6(c) exception already recorded / 1 SURVIVES — ROUTE (b)
 **Anchors:** 7 of 7, each with its own outcome —
 `##NUMBER-PER-MODULE-AND-NEVER-RENUMBER` → **FALSE**;
 `##DO-NOT-WRITE-A-NEVER-READ-LINE-IN-THE-BOOT-FILE` → **FALSE** (twice over);
+`##KEEP-THE-MAPPING-ONE-TO-ONE` → **FALSE** — the verdict reads a fulfilled
+prediction as a falsification;
 `##ROW-HOME-FEATURE-SCOPE` → **SURVIVES — ROUTE (b)**;
 `##SEGMENT-MODULE-IS-THE-DIRECTORY`, `##SEGMENT-DOC-IS-THE-FILE-NAME`,
-`##KEEP-THE-MAPPING-ONE-TO-ONE`, `##SUM-NAMES-ARE-THE-URI-SEGMENTS` →
+`##SUM-NAMES-ARE-THE-URI-SEGMENTS` →
 **SURVIVE as measurements, but the divergence is a §3.6(c) marked exception
 already written down on the host side**, which §3.6(c) re-judges confirmed with
 the exception named.

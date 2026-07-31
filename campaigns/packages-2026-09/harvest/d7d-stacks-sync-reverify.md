@@ -1877,3 +1877,340 @@ seven-step list, **after that anchor is re-judged.**
 the package's own README.
 
 ---
+
+# The TypeScript stack — judged under the [owner ruling](#ruling)
+
+_`typescript-ai-native-lang` is not adopted by this host and must not be, so
+`research/ts-demo`, the host's `crates/` and `.claude/skills/` are **not evidence
+about it**. The legitimate bench is the package's own tree and its own tests:
+`tools/ts-extract/test/fixtures/{clean,dirty}/` and `tools/ts-extract/test/extract.test.ts`,
+`tools/ts-oracle/test/fixtures/proj/` and `tools/ts-oracle/test/oracle.test.ts`,
+the ten `crates/**` test modules, and the package's own guide, cards and `vibe.toml`._
+
+---
+
+## F-140 — the largest obligation in the batch, and **all ten anchors are FALSE**: the verdict is one measurement over `research/ts-demo`
+
+**Outcome:** **FALSE ×10** — the whole obligation. Every one of the ten anchors
+carries the *same* verdict reason, and that reason is a tool-count over the host's
+demo project. Under [the ruling](#ruling) point 1 that is measuring the wrong
+consumer, and the obligation falls on that ground alone.
+**Anchors:** 10 of 10, all in `typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md`
+— `##SCAFFOLD-E-PER-CELL-FAST-LOOP` (`:140`), `##SCAFFOLD-G-EXECUTABLE-EXAMPLES` (`:142`),
+`##SCAFFOLD-I-CODEMODS` (`:144`), `##EXHAUSTIVENESS-OVER-E-IS-ENFORCED` (`:154`),
+`##RULE-BEHAVIORAL-CLAIMS-ARE-MACHINE-CHECKED` (`:209`),
+`##REPLACEMENT-SHIPS-A-DIFFERENTIAL-ORACLE` (`:217`),
+`##CHARACTERIZATION-GOLDENS-PIN-LEGACY-BEHAVIOR` (`:219`), `##MATRIX-TOOLING` (`:229`),
+`##TYPE-LEVEL-TEST-TOOLING` (`:235`), `##RULE-PUBLIC-SURFACES-CARRY-TYPE-LEVEL-TESTS` (`:237`).
+
+**The verdict, verbatim and identical on all ten:**
+
+> **restated 2026-07-28, and the first verdict was mine to get wrong.** It was
+> confirmed on a count of the named tooling in `research/ts-demo/` that had not
+> excluded `node_modules`, `.vibe/cache/` or `vibedeps/` … Measured over the
+> demo's own sources only, **every one of the named tools returns zero**: vitest,
+> fast-check, expectTypeOf, tsd, Twoslash, ts-morph, jscodeshift, assertNever.
+> Its `package.json` devDependencies are `@types/node`, `eslint`, `prettier`,
+> `typescript`, `typescript-eslint` and its test script is literally
+> `node --test`; its two test files are `src/cells/{farewell,greeting}/index.test.ts`.
+
+**Every clause of that is a measurement of `research/ts-demo`.** There is no
+second ground. The obligation was already restated once for a measurement error
+inside that same demo (a `node_modules` / `.vibe/cache` leak); the ruling says the
+demo was never the bench.
+
+**Perimeter searched (the legitimate one):** the package's own tree for each of
+the eight named tools over `*.ts`, `*.json` and `*.rs`, excluding `target/`,
+`node_modules/` and `spec/` (so that the guide's own prose could not answer for
+itself); plus the package's own test harnesses and fixture `package.json` /
+`tsconfig.json`.
+
+**What the ten anchors actually say, and why the demo could not falsify them
+even if it were the bench.** They are descriptions of the *TypeScript ecosystem's*
+tooling and of rules the discipline imposes on a **consuming** project:
+
+- `##SCAFFOLD-E-PER-CELL-FAST-LOOP` — «`tsc --noEmit` per project … + `vitest` for
+  the cell; the agent loop is edit → `tsc --noEmit -p <cell>` + `vitest run <cell>`».
+- `##SCAFFOLD-G-EXECUTABLE-EXAMPLES` — «**Twoslash** … `@example` JSDoc blocks …
+  `expectTypeOf`/`tsd` for type-level examples». *Rule:* every public seam carries
+  ≥1 type-checked example.
+- `##SCAFFOLD-I-CODEMODS` — «`ts-morph` / `jscodeshift` codemods for "add a cell," …».
+- `##MATRIX-TOOLING`, `##TYPE-LEVEL-TEST-TOOLING`, `##REPLACEMENT-SHIPS-A-DIFFERENTIAL-ORACLE`,
+  `##CHARACTERIZATION-GOLDENS-PIN-LEGACY-BEHAVIOR` — the same shape: named,
+  publicly available npm packages offered to a consumer, plus a rule.
+- `##EXHAUSTIVENESS-OVER-E-IS-ENFORCED`, `##RULE-BEHAVIORAL-CLAIMS-ARE-MACHINE-CHECKED`,
+  `##RULE-PUBLIC-SURFACES-CARRY-TYPE-LEVEL-TESTS` — pure `*Rule:*` statements.
+
+**Not one of them says «this repository uses X» or «this package ships X».** A
+count of what `research/ts-demo` has installed is orthogonal to every one.
+
+**And the package's own bench does not contradict them either** — which is worth
+recording, because it is the search that would have mattered:
+
+```
+$ for t in vitest fast-check expectTypeOf tsd Twoslash ts-morph jscodeshift assertNever; do
+    grep -rl "$t" .../typescript-ai-native-lang/v0.6.0 --include=*.ts --include=*.json --include=*.rs \
+      | grep -v "/target/" | grep -v node_modules | grep -v "/spec/"; done
+(no output for any of the eight)
+```
+
+The package's own harness is deliberately dependency-free — its extractor
+contract tests run on the Node built-in runner:
+
+```
+$ head -9 .../tools/ts-extract/test/extract.test.ts
+/**
+ * Contract tests for the ts-extract NDJSON protocol (protocol 1).
+ * Run the extractor as a child process over the committed fixture tree —
+ * the exact invocation shape the Rust bridge uses …
+ */
+import { test } from "node:test";
+$ grep -n '"test"' .../tools/ts-extract/package.json
+7:    "test": "node --test \"test/*.test.ts\""
+```
+
+**That is a deliberate posture, not a violation.** A package whose job is to
+*specify* a discipline for other people's trees has every reason to keep its own
+internal harness free of the very devDependencies it recommends to consumers —
+and, per the ruling, its own tests are the bench for *what it ships*, not a
+sample of *how a consumer should build*. Nothing in these ten sentences is
+falsified by it.
+
+**Per stack:** the Rust guide carries structurally identical scaffold-E/G/I and
+matrix/type-level entries naming Rust tooling; the Go guide likewise. **None of
+the three is convicted here**, and the Rust twins are not carried across — point
+3 of the ruling.
+
+**Proposed correction (NOT APPLIED):** **none — correct as written**, all ten.
+
+**Recommendation per anchor:** all ten `##SCAFFOLD-E-PER-CELL-FAST-LOOP`,
+`##SCAFFOLD-G-EXECUTABLE-EXAMPLES`, `##SCAFFOLD-I-CODEMODS`,
+`##EXHAUSTIVENESS-OVER-E-IS-ENFORCED`, `##RULE-BEHAVIORAL-CLAIMS-ARE-MACHINE-CHECKED`,
+`##REPLACEMENT-SHIPS-A-DIFFERENTIAL-ORACLE`, `##CHARACTERIZATION-GOLDENS-PIN-LEGACY-BEHAVIOR`,
+`##MATRIX-TOOLING`, `##TYPE-LEVEL-TEST-TOOLING`,
+`##RULE-PUBLIC-SURFACES-CARRY-TYPE-LEVEL-TESTS` → **re-judge `confirmed`.** Ten
+verdicts, no edit, no spec diff, no owner approval.
+
+**One consequence the boss should see, because it is not this obligation's to
+fix.** The *closed* D5 obligation F-168 wrote demotion clauses into this same
+document that rest on the same void bench — `##FLAG-REGISTRY-IS-TYPED-DATA-WITH-PROVENANCE`
+(`:175`) now reads «*Specified, not built: no such table exists in the stack, in
+the host or in `research/ts-demo`…*», and the two `##TIER-*` clauses name the
+demo's devDependency list. Those clauses are already published prose in a shipped
+package and are host-grounded. Recorded, not touched.
+
+---
+
+## F-161 — five TypeScript facts: one falls with the ruling, two survive on the package's own gate, one is another package's defect, one is a broken cross-reference
+
+**Outcome:** MIXED — 3 SURVIVES · 1 **FALSE** · 1 SURVIVES — ROUTE (b)
+**Anchors:** 5 of 5, all in `typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md`
+
+| anchor | line | outcome | bench |
+|---|---:|---|---|
+| `##TSCONFIG-DEFECT-CATCHERS` | 90 | **FALSE** | the verdict is one read of `research/ts-demo/tsconfig.json` |
+| `##NO-IF-FLAG-IN-DOMAIN-CELLS` | 167 | SURVIVES | the package's own `build_rules` |
+| `##RULE-FLAGS-READ-AT-THE-ROOT-AND-DISPATCHED` | 177 | SURVIVES | the package's own `build_rules` |
+| `##TOOLING-ASYMMETRY-STATED-HONESTLY` | 258 | SURVIVES — **ROUTE (b)** | `core-ai-native` contradicts itself |
+| `##AGENTIC-BATTERY-IS-THE-FIRST-MEASUREMENT` | 274 | SURVIVES | the package's own sibling brief |
+
+### `##TSCONFIG-DEFECT-CATCHERS` (`:90`) → **FALSE**
+
+The verdict, whole: «five flags named as defect-catchers and marked @impl/done,
+and **the discipline's own demonstration project sets none of them:
+`research/ts-demo/tsconfig.json` carries the four mandatory beyond-strict flags
+and neither `noUnusedLocals`, `noUnusedParameters` nor
+`noFallthroughCasesInSwitch`.** Nothing else enforces them either.»
+
+**That is one read of one host file.** Under the ruling it is measuring the wrong
+consumer, and the anchor is in any case a **prescription for a consumer's
+tsconfig**, sitting in a list of them:
+
+```
+$ sed -n '88,90p' .../spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md
+- ##TSCONFIG-STRICT-TRUE `"strict": true` — bundles the eight base flags …
+- ##TSCONFIG-BEYOND-STRICT **Beyond `strict` (NOT included, all mandatory here):** …
+- ##TSCONFIG-DEFECT-CATCHERS **Defect-catchers:** `noUnusedLocals`, `noUnusedParameters`,
+  `noFallthroughCasesInSwitch`, `noImplicitReturns`, `allowUnreachableCode: false`. @impl/done
+```
+
+Five real `tsc` compiler options, named as a mandate. Nothing claims any
+particular tsconfig in this repository sets them.
+
+**On the legitimate bench there is nothing to contradict it either.** The package
+generates no tsconfig — `grep -rn "noUnusedLocals\|noUncheckedIndexedAccess\|exactOptionalPropertyTypes\|noFallthroughCasesInSwitch\|noImplicitOverride"`
+over `crates/` returns no output, so `typescript-ai-native init` writes no
+compiler options a reader could check the list against. The package's one
+`tsconfig.json` is a **language-service test fixture**, not a discipline exemplar
+(`tools/ts-oracle/test/fixtures/proj/tsconfig.json`: `"include": ["src"]`,
+`"types": []`), and it sets `strict`, `noUncheckedIndexedAccess`,
+`exactOptionalPropertyTypes` and `erasableSyntaxOnly` — the beyond-strict tier —
+without the defect-catchers, which is what a minimal oracle fixture would do.
+
+**Proposed correction (NOT APPLIED):** none — correct as written.
+**Recommendation:** → **re-judge `confirmed`.**
+
+### `##NO-IF-FLAG-IN-DOMAIN-CELLS` (`:167`) and `##RULE-FLAGS-READ-AT-THE-ROOT-AND-DISPATCHED` (`:177`) → SURVIVES ×2
+
+Both name **R-001** as the enforcing rule, and both are settled entirely inside
+the package — the ruling does not touch them.
+
+```
+$ sed -n '48,61p' .../crates/typescript-ai-native-conform/src/lib.rs
+pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
+    let mut out: Vec<Box<dyn Rule>> = Vec::new();
+    out.push(Box::new(rules::TsUnsafeInDomain));
+    if let Some(cells_dir) = &config.typescript.cells_dir {
+        out.push(Box::new(rules::TsCellIsolation::new(cells_dir, &config.typescript.seam)));
+    }
+    out.push(Box::new(rules::FileLength { max_lines: config.max_file_lines }));
+    out
+}
+```
+
+Three rules. `FlagSites` — the rule whose `id()` **is** `"R-001"`
+(`crates/vendor/core-ai-native-conform/src/rules/structure.rs:33-35`) — is
+exported by the vendored engine (`rules/mod.rs:24`) and constructed **only in
+that engine's own tests** (`rules/tests.rs:51`, `:238`). It is never mounted on
+this language, and — unlike Rust — **no configuration could mount it**: the TS
+`build_rules` has no `registry_file` branch at all, whereas the Rust gate has one
+(`rust-ai-native-conform/src/lib.rs:55-63`, gated on `config.registry_file` +
+`config.registry_gated_crate`). So `##NO-IF-FLAG-IN-DOMAIN-CELLS`'s «(R-001)»
+names a rule the TypeScript gate cannot run, and
+`##RULE-FLAGS-READ-AT-THE-ROOT-AND-DISPATCHED`'s «else `deviates` + reason» clause
+has nothing to fire against.
+
+**Per stack — and this correction matters beyond this obligation.** D5's F-168
+recorded that `FlagSites` «is constructed **only in the engine's own tests** — a
+repo-wide search for `FlagSites {` outside `rules/tests.rs` returns nothing in
+any stack or `mcp` package». **That is true of the TypeScript package and false
+repo-wide**: the search was package-scoped. The Rust gate mounts it at
+`rust-ai-native-conform/src/lib.rs:59`. So R-001 is a *TypeScript-and-Go* gap,
+not a family-wide one, and the Rust twins D5 flagged as «knowingly half-demoted»
+(`GUIDE-AI-NATIVE-RUST#FLAG-REGISTRY-IS-DATA-WITH-PROVENANCE`, `#TWO-TIERS-OF-FLAGS`)
+may be correct as written. Recorded; neither is in this batch and neither was
+touched.
+
+**Proposed correction (NOT APPLIED):** for `:167`, qualify the rule id — «(R-001;
+the `FlagSites` rule exists in the shared engine and is not mounted on the
+TypeScript gate, which registers `ts-unsafe-in-domain`, `ts-cell-isolation` and
+`file-length`)». For `:177`, mark the `deviates` clause as the unenforced half.
+Rust → **none, pending re-verification of its own twins.**
+
+### `##TOOLING-ASYMMETRY-STATED-HONESTLY` (`:258`) → SURVIVES — **ROUTE (b)**, §3.6(b)
+
+The anchor cites «~74.8% compile-error reduction; ~94% of TS compile errors are
+type-level». The verdict's own restatement already concedes the framing was
+wrong — «**the verdict stands and its REASON was wrong.** The «~74.8 %» is not a
+cache artefact» — and re-measurement confirms what it then found:
+
+- **`~74.8 %` is published by `core-ai-native` v0.8.0 in a live slot** —
+  `spec/appendix/CONTRADICTION-MAP.md:28` heads section C-4 «"Type-constrained
+  decoding cuts errors **74.8%**" vs "no Rust implementation exists"».
+- **The same package's ATLAS gives different figures for the same result** —
+  `spec/appendix/ATLAS.md:105` `##FINDING-DR2-012`: «reduces compilation errors by
+  **75.3%** (synthesis) and **70.2%** (translation)».
+- **The `~94 %` is the corpus's own number, quoted correctly** — ATLAS `:105`:
+  «on average 94% of compilation errors result from failing type checks».
+
+So `core-ai-native` disagrees with itself across its own two appendices, and the
+TypeScript guide is faithful to one of them. **The defect is not this package's**
+— it is a `contradiction` inside `core-ai-native`, and repairing the TypeScript
+sentence alone would make the family disagree in a new place. §3.6(b): the
+consuming document does not move; a host/other-package obligation is recorded.
+
+**Proposed correction (NOT APPLIED):** none in this package. The obligation
+belongs on `core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:28` and
+`…/ATLAS.md:105`, which must agree on one figure before any projection is edited.
+
+**Recommendation:** → **drift stands, route (b)** — record a `core-ai-native`
+obligation; do not edit this package.
+
+### `##AGENTIC-BATTERY-IS-THE-FIRST-MEASUREMENT` (`:274`) → SURVIVES
+
+Purely package-internal, and settled by reading the two documents:
+
+```
+$ grep -n "##AGENTIC-BATTERY-IS-THE-FIRST-MEASUREMENT" .../GUIDE-AI-NATIVE-TYPESCRIPT.md
+274:… (two arms, weak model, mechanical verification — see the sibling brief §6) …
+
+$ grep -n "^## " .../spec/typescript/tools/vibe-agentic-tcg-ts.md
+140:## 4. Staged ambition {#staged-ambition}
+158:## 5. Licensing posture {#licensing}
+169:## 6. The honest risk register {#risk-register}
+```
+
+The pointer says §6; §6 is «The honest risk register». The two-arm battery it
+means is at `:144` — «MCP + one-shot delivery, measured by the two-arm battery» —
+inside **§4, Staged ambition**. A cross-reference two sections off, and the kind
+of defect an external consumer meets immediately.
+
+**Proposed correction (NOT APPLIED):** «see the sibling brief §4» — or, better and
+rename-proof, cite the anchor rather than the section number, which is the same
+lesson D5's F-282 drew from the Go card that carried no tool name.
+
+**Recommendation per anchor:** `##TSCONFIG-DEFECT-CATCHERS` → **re-judge
+`confirmed`** · `##NO-IF-FLAG-IN-DOMAIN-CELLS` → drift stands, correction
+prepared · `##RULE-FLAGS-READ-AT-THE-ROOT-AND-DISPATCHED` → drift stands,
+correction prepared · `##TOOLING-ASYMMETRY-STATED-HONESTLY` → **drift stands,
+route (b)** · `##AGENTIC-BATTERY-IS-THE-FIRST-MEASUREMENT` → drift stands,
+correction prepared.
+
+---
+
+## F-284 — the TypeScript `complete` target has no instrument, on the package's own bench
+
+**Outcome:** SURVIVES — and it is the third member of the three-stack family
+reported under F-215. **The ruling does not touch it:** the evidence is this
+package's own `bench.rs`.
+**Anchors:** 1 of 1 —
+`typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md#TARGET-WARM-VALIDATE-AND-COMPLETE` (`:153`)
+
+The anchor is a conjunction: «warm `validate` p50 < 150 ms **and** `complete` p50
+< 200 ms on demo-class trees. @impl/done». **Half of it is measured and met; half
+has no instrument.**
+
+```
+$ grep -ci "complete" .../crates/typescript-ai-native-tcg/src/bench.rs
+0
+$ sed -n '43,49p' .../crates/typescript-ai-native-tcg/src/bench.rs
+struct BenchReport {
+    …
+    cold_init_ms: f64,
+    validate_p50_ms: f64,
+    validate_p95_ms: f64,
+}
+```
+
+The harness times `oracle.validate(…)` alone (`bench.rs:100-101`) and emits three
+fields (`:132-134`). The `complete` verb ships — `Cmd::Complete` at
+`crates/typescript-ai-native-tcg/src/main.rs:59` — so this is a missing
+instrument for a real op, not a target on a phantom verb.
+
+**Per stack:** identical in all three; rust `##TARGET-WARM-COMPLETE` and go
+`##TARGET-COMPLETE` are F-215 and F-167 above, and the word `complete` is absent
+from all three `bench.rs` files. **This is the batch's one family where all three
+copies are equally wrong**, which is worth saying because it is the exception to
+the release queue's warning rather than an instance of it.
+
+**Proposed correction (NOT APPLIED)** — and unlike its two siblings, **do not
+demote the whole anchor**: the `validate` half is measured and comfortably met.
+
+```
+- ##TARGET-WARM-VALIDATE-AND-COMPLETE warm `validate` p50 < 150 ms — measured at
+  19.3 ms on the committed battery — and `complete` p50 < 200 ms, posted but not
+  yet measured: the bench harness times `validate` only
+  (`crates/typescript-ai-native-tcg/src/bench.rs` emits `cold_init_ms`,
+  `validate_p50_ms`, `validate_p95_ms` and no `complete` field). @spec/done
+```
+
+*(The 19.3 ms figure is from the host's `research/tcg-bench/reports/bench-2026-07-07-baseline.json`
+— host corroboration, offered because it is the only recorded run of this
+package's own harness. If the boss prefers the clause to rest on nothing outside
+the package, drop the parenthetical and keep the second half of the sentence.)*
+
+**Recommendation:** `##TARGET-WARM-VALIDATE-AND-COMPLETE` → **drift stands,
+correction prepared** — as part of the three-stack family, and with the
+`validate` half kept.
+
+---

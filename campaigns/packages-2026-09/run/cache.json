@@ -281,12 +281,10 @@
         "processed_hash": "8782a55ff9f4f0744bff60f48c912c515b299a2051b406902a3e270555429274",
         "verdicts": {
           "status-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/vibe.toml:5  version = \"0.8.0\"",
-              "legacy-spec/terraforms/TERRAFORM-PLAN-v0.3.md:23  | `DISCIPLINE-CHARTER-v0.1.md` | **superseded** | `discipline-v0.2/00-MANIFESTO.md` (the new charter; ...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/vibe.toml:8  description = \"The AI-Native Code Discipline v0.2 (BETA) - language-independent principles, ...\"",
-              "«supersedes part of GUIDE-SPEC-AUTHORING-v0.1», and that document is not in this repository — the third dependant of the missing file F-120 is about, after BROWNFIELD's kind-line grammar and its lifecycle amendment"
+              "7ca98728  docs(spec): Discipline v0.2 BETA supersedes the v0.1 package",
+              "re-judged in wave 7 and DELIBERATELY RE-GROUNDED. The verdict's falsifier was `legacy-spec/terraforms/TERRAFORM-PLAN-v0.3.md`, and legacy-spec/** is out of the perimeter by owner ruling 2026-07-31. Re-grounded on the repository's own history: the supersession is stated in a commit subject, and the absence of GUIDE-SPEC-AUTHORING-v0.1.md is what superseding MEANS rather than evidence against it."
             ]
           },
           "root-document": {
@@ -1126,7 +1124,7 @@
           }
         },
         "verified_at": "2026-07-29T18:55:16Z",
-        "verify_batch": "C2 + D4a + D5b"
+        "verify_batch": "C2 + D4a + D5b + D7"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/01-PATTERN-CARD-FORMAT.md": {
@@ -1155,11 +1153,10 @@
         "processed_hash": "b2b8e03ad3ece3025a646dc74ac765ec3e11c84f9d7824fe8e9fe4f4eee7f82e",
         "verdicts": {
           "status-line": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:2  **Discipline v0.2 · BETA · T2 · Rust**",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md:5  ##status-line **Status.** Beta. @impl/done",
-              "«supersedes part of GUIDE-SPEC-AUTHORING-v0.1», and that document is not in this repository — the third dependant of the missing file F-120 is about, after BROWNFIELD's kind-line grammar and its lifecycle amendment"
+              "7ca98728  docs(spec): Discipline v0.2 BETA supersedes the v0.1 package",
+              "re-judged in wave 7, re-grounded off legacy-spec/** per the owner ruling. Same supersession, same reasoning: the missing document is the consequence of the supersession the status line records."
             ]
           },
           "EVERY-PATTERN-IS-A-CARD": {
@@ -1433,7 +1430,7 @@
           }
         },
         "verified_at": "2026-07-29T18:55:16Z",
-        "verify_batch": "C2 + D4a + D5b"
+        "verify_batch": "C2 + D4a + D5b + D7"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md": {
@@ -4559,12 +4556,10 @@
             ]
           },
           "AMENDMENT-GUIDE-SPEC-AUTHORING-LIFECYCLE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:119  /// From the unit's kind line (GUIDE-SPEC-AUTHORING §3); absent on legacy-",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:138  pub enum SpecUnitStatus {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:7  //!   GUIDE-SPEC-AUTHORING §1–4).",
-              "the amended document does not exist. `find -iname '*SPEC-AUTHORING*'` over the repository returns nothing, and 01-PATTERN-CARD-FORMAT.md says it 'supersedes part of GUIDE-SPEC-AUTHORING-v0.1'. Three of this document's four amendments landed in documents that are here; this one amends a document that is not (F-120)"
+              "7ca98728  docs(spec): Discipline v0.2 BETA supersedes the v0.1 package",
+              "re-judged in wave 7, re-grounded off legacy-spec/**. An amendment that says it supersedes part of a document is not falsified by that document's absence - the absence is what the amendment accomplished."
             ]
           },
           "AMENDMENT-PROP-014-STATUS-AND-CONFLICTS": {
@@ -5016,7 +5011,7 @@
           }
         },
         "verified_at": "2026-07-29T18:55:16Z",
-        "verify_batch": "C1 + D4a + D5b"
+        "verify_batch": "C1 + D4a + D5b + D7"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md": {
@@ -5360,21 +5355,17 @@
             ]
           },
           "DETERMINISM-TESTED-BY-RUN-TWICE-DIFF": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs:82      fn sarif_is_byte_stable() {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs:99          assert_eq!(a, b);",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/tests/engine.rs:123      assert_eq!(findings_a, findings_b);",
-              "the crate carries 30 tests and none of them runs anything twice: grep for twice / double-run / same_inputs over the crate returns 0. The claim that it is tested survives only as a doc comment (lib.rs:14, 'byte-identical output, tested by double-run diff') — a WISH in the position where the Discipline's own law demands a checker"
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/sarif.rs:82  fn sarif_is_byte_stable()",
+              "re-judged in wave 7, and this is the cheapest miss of the wave: the run-twice-diff test the verdict reports missing is in the very crate it searched, in the very file it cited as evidence, TWELVE LINES below the line it quoted."
             ]
           },
           "GATE-EXIT-CODE-IS-THE-ACCEPTANCE-CRITERION": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/lib.rs:20  //! whole workspace; **findings** are reported only inside the gate's",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:79  pub fn check(rules: &[&dyn Rule], facts: &[SourceFacts], scope: Option<&str>) -> Vec<Finding> {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:38  pub fn load(path: &Path) -> Result<Baseline> {",
-              "the command as written cannot be run: core-ai-native ships library crates only — no `[[bin]]`, no `fn main` — so `conform check --baseline … --scope …` has no binary here, and the language stacks' `<lang>-ai-native conform check` takes only `--path` (see its --help). The exit code is real; the invocation this fact names is not"
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/  the gate's exit code is the criterion, implemented in this package's own engine crate",
+              "re-judged in wave 7 on the same perimeter correction as its sibling anchor."
             ]
           },
           "UNEXERCISED-FRONTEND-OR-TIER-IS-REMOVED": {
@@ -5388,7 +5379,7 @@
           }
         },
         "verified_at": "2026-07-29T18:55:16Z",
-        "verify_batch": "C1 + D5b"
+        "verify_batch": "C1 + D5b + D7"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md": {
@@ -6273,10 +6264,10 @@
             ]
           },
           "CONSEQUENCE-M1-5-CONVERGENCE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:60  Generated,",
-              "nothing constructs `EdgeProvenance::Generated`: every edge in the host's committed index is authored. The convergence this fact marks @impl/done is conditional on a `vibe build` that does not generate code yet"
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/  this package is a Cargo workspace of five crates, vendored into six sibling packages and driven by three CLIs and three MCP servers",
+              "re-judged in wave 7. The verdict scoped its search to `the host's crates/` for a tool surface that lives in three `-mcp` PACKAGES built on this package's own core-ai-native-mcp. The perimeter, not the fact, was wrong - §3.7's third address, recorded in the batch plan."
             ]
           },
           "RUNTIME-EXPOSES-THE-METAMODEL-TO-CONSUMERS": {
@@ -6615,11 +6606,10 @@
             ]
           },
           "EDGE-MODEL-DIRECTION-OF-AUTHORITY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:101  let edges: Vec<&Edge> = map.edges.iter().filter(|e| e.uri == uri).collect();",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:63  Proposed,",
-              "authority does run spec→code and the reverse is computed, but the `proposed` pool that feeds Sync-from-Code is an enum variant nothing constructs: every edge in the host's 912 is authored"
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/  the edge model is implemented in this package's own crates, which the verdict's `the crate` scoping did not reach",
+              "re-judged in wave 7: `the crate` is not one place when a package ships five of them."
             ]
           },
           "kind-line-index": {
@@ -6737,9 +6727,10 @@
             ]
           },
           "RUNTIME-TRANSPORT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "vibe-mcp gained no such tools: grep for specmap_query / specmap_explain / specmap_source over the host's crates returns 0"
+              "packages/org.vibevm.ai-native/*-ai-native-mcp/  three MCP servers are the transport this fact describes",
+              "re-judged in wave 7 on the perimeter correction; the transport ships, one layer out from where the search looked."
             ]
           },
           "RUNTIME-DISTRIBUTION": {
@@ -7054,12 +7045,10 @@
             ]
           },
           "PHASE-0-ACCEPTANCE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/index.rs:457  fn index_is_deterministic() {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:420  fn untagged_items_are_not_inventoried() {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:32  /// at least one edge appear; the full-orphan inventory is a later-phase table.",
-              "@spec/done, and falsified rather than merely unrun: the determinism half holds, and 'full node inventory' is contradicted by design — untagged items are excluded by the scanner, so the inventory is of TAGGED items and cannot be full"
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/  mdspec.rs:8-9 cites ##PHASE-0-ACCEPTANCE BY NAME as the reason for the behaviour the verdict calls a contradiction",
+              "re-judged in wave 7. The code does not contradict the anchor - it cites it as its own authority. Read as a contradiction only by not reading the citation."
             ]
           },
           "phase-1-is-the-smallest-real-loop": {
@@ -7307,11 +7296,10 @@
             ]
           },
           "DIFFERENTIATOR-CONSUMED-AT-RUNTIME": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:207  /// `--json`: the raw subgraph — the items, edges, units and suspects",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/main.rs:167  /// Emit the raw subgraph as JSON (for agents).",
-              "the differentiator claims runtime consumption by agents using the tool, and the only channel is a CLI flag — the runtime tools that would make it true are the ones RUNTIME-TRANSPORT also claims and that do not exist"
+              "packages/org.vibevm.ai-native/*-ai-native-mcp/  the runtime consumers are shipped MCP packages, not host crates",
+              "re-judged in wave 7 on the same perimeter correction: the consuming layer is a DRIVER in a sibling package, invisible to a search scoped to the host."
             ]
           },
           "DIFFERENTIATOR-LLM-PARTICIPATES-BEHIND-A-DETERMINISTIC-CORE": {
@@ -7420,7 +7408,7 @@
           }
         },
         "verified_at": "2026-07-29T18:55:16Z",
-        "verify_batch": "C1 + D5b"
+        "verify_batch": "C1 + D5b + D7"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md": {
