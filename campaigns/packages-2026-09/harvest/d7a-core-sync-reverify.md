@@ -353,6 +353,19 @@ a **pointer** to a document that no longer resolves. That is a `relocation`-shap
 defect in a different anchor, not in any of the three here, and the honest repair
 is re-pointing it at `01-PATTERN-CARD-FORMAT.md`. It is noted, not acted on.
 
+**Re-read under the ruling:** outcome unchanged, **evidence re-grounded** under
+point 5. The `legacy-spec/terraforms/TERRAFORM-PLAN-v0.3.md` rows at `:23` and
+`:25` are now **corroboration only** and are excluded from any count. The load is
+carried entirely by read-only `git log`, which is not `legacy-spec/` and is the
+strongest evidence available for a supersession anyway: the document existed at
+`spec/neworder/GUIDE-SPEC-AUTHORING-v0.1.md` (added `689113ad`) and was removed
+by **`7ca98728`, whose commit subject is «docs(spec): Discipline v0.2 BETA
+supersedes the v0.1 package»**. Both `##status-line`s stand on that alone. The
+third anchor stands on the package's own parser (`mdspec.rs:98-113`), which is
+point 3's bench; its supporting host-spec-unit examples are Rust-stack spec units
+in a repository that is a genuine AI-Native Rust consumer (point 2), so they
+count normally — but they are not load-bearing either way.
+
 **Recommendation per anchor:**
 `spec/00-MANIFESTO.md#status-line` → **re-judge confirmed**; the reason quotes a
 sentence this anchor does not contain, and the claim it does make is stated by
@@ -514,6 +527,28 @@ on all three as a set, because they are one rule written three times. §3.7's
 corollary cuts both ways: a repair landed in one of three is precisely the
 `duplication` obligation the registry will mint on the next run.
 
+**Re-read under the ruling:** outcomes unchanged, **argument re-ordered** under
+points 1 and 3, and the change is worth stating because it makes the finding
+stronger rather than weaker.
+
+Section (1) above — the deadline — rests on `terraform/REPORT.md`, i.e. on **this
+host's** execution of `PLAYBOOK-TERRAFORM-VIBEVM-v0.2.md`, which is a
+vibevm-specific playbook. Under ruling point 1 that is the wrong instrument to
+convict an externally-aimed package with: an external adopter's «Phase 2» is its
+own date, or has not happened at all. **So the deadline argument is demoted to
+corroboration**, and it corroborates only that the rule has had at least one
+consumer reach its trigger.
+
+**Section (2) carries the whole finding, and it needs no consumer at all.** Nine
+passages in the package's own three documents carry a mechanism *and say in the
+same breath that it is not built* — `PROP-014-…:120`, `:242`, `LEDGER-INTENT-…:78`,
+`BROWNFIELD-…:132` among them. A rule saying such content «is removed rather than
+carried as aspiration», sitting in a document that carries nine such passages, is
+falsified by the document itself. That is ruling point 3's bench in its purest
+form: the package's own tree against the package's own sentence, with this
+repository playing no part. `##ENTRY-CARRIES-FOUR-PARTS` is the same — one
+48-line file read against itself.
+
 **Recommendation per anchor:**
 `##UNEXERCISED-FIELD-STATUS-OR-POLICY-IS-REMOVED` → **drift stands, correction
 prepared (owner picks (i) or (ii))**; deadline fired at `terraform/REPORT.md:18`,
@@ -655,6 +690,24 @@ presented together.
 
 For `##PHASE-0-ACCEPTANCE`: **none — the fact is correct as written**, with the
 CI half standing as a §3.6(c) marked exception.
+
+**Re-read under the ruling:** both outcomes unchanged; the FALSE one gets
+**stronger** and the SURVIVES one is untouched.
+
+`##EDGE-MODEL-EDGES` is decided entirely inside the package's own engine crates —
+`generated/specmap/mod.rs`, `mdspec.rs`, `index.rs`, `explain.rs`, `ratchet.rs` —
+plus the Rust stack's CLI, which ruling point 2 makes a genuine consumer. Nothing
+rests on host adoption.
+
+`##PHASE-0-ACCEPTANCE`'s decisive evidence is `mdspec.rs:8-9`, the package's own
+scanner citing this exact acceptance clause as the reason for its behaviour —
+point 3's bench. **The CI half moves from «marked exception» to «doubly not
+drift».** It was already a §3.6(c) marked exception on the host's recorded no-CI
+decision; ruling point 1 adds that «CI job wired but non-blocking» describes what
+an **adopting project** wires, so *this* host having no CI is weak-to-void
+evidence about the package in the first place. An external adopter with CI would
+satisfy the clause unchanged. `terraform/REPORT.md:16` stays as corroboration
+that one consumer discharged the acceptance, not as the proof.
 
 **Recommendation per anchor:**
 `##EDGE-MODEL-EDGES` → **drift stands, correction prepared**; two clauses unbuilt,
@@ -837,7 +890,22 @@ and no signing path exists anywhere in the tree.»*
 kind is a string constant in a function body (`ledger.rs:132`), which is the
 under-specification this entry claims to have closed.»*
 
-**Recommendation per anchor:** all five → **drift stands, correction prepared**.
+**Re-read under the ruling:** all five outcomes unchanged; two citations demoted.
+
+Every one of the five is decided by **the package's own `ledger.rs`** — no entry
+type (`:155`), the key composition (`:136`), the `Telemetry` struct (`:83-88`),
+the module header (`:17`), the `const PRODUCER` string (`:132`). That is ruling
+point 3's bench, and it is sufficient on its own for all five.
+
+Two host observations are therefore demoted to corroboration: `.ledger/objects/`
+holding one uncollected object, and `.gitignore:49-50`. Both are «this host's
+deployment», which ruling point 1 makes weak evidence about an externally-aimed
+package — though neither was load-bearing, since the engine contains no eviction
+code and the module header already says «never shipped, never signed» in the
+package's own words. `terraform/REPORT.md`'s «LLM-$ … not instrumented» row is
+corroboration for the same reason. The DRIVER-layer file I checked and rejected
+(`rust-ai-native-cli/src/ledger.rs`) is Rust-stack and counts fully under point
+2 — it simply turns out to be a different ledger.
 `##ENTRY-CARRIES-ITS-PROVENANCE-FIELDS` — 3 of 8 fields survive only inside the
 cache key, 5 have no representation on any layer.
 `##GC-IS-LRU-WITH-A-PIN-SET` — zero eviction machinery on four layers; 1 object
@@ -1123,6 +1191,29 @@ suppresses the finding at rule time (`in_deviation`, `facts.rs:62`) rather than
 downgrading an emitted one, so nothing is ever labelled
 `deviation-acknowledged`.»*
 
+**Re-read under the ruling:** all seven outcomes unchanged, and the two FALSE
+ones are **exactly what ruling point 3 predicts**.
+
+Point 3 says the bench for the externally-aimed parts is the package's own
+artefacts and **its tests** — and both falls here are tests and CLI surfaces
+inside the package family: `sarif.rs:81-101` (a test in `core-ai-native`'s own
+crate), `tests/engine.rs:121-124` (a test in the Rust stack), and the
+`ConformCmd` / `go-ai-native-conform` flag definitions. Nothing rests on host
+adoption.
+
+**A caution the ruling forces, and it does not change the answer.** Point 2 says
+Go and TypeScript are not host consumers, so an *absence observed in a host Go or
+TypeScript deployment* would prove nothing. Three of the five survivors —
+`##ROW-FRONTEND-TS-JS`, `##ROW-FRONTEND-PYTHON`,
+`##FRONTEND-CRASH-DEGRADES-VISIBLY-NEVER-SILENTLY` — touch those languages, so
+the distinction has to be drawn explicitly: **none of them rests on a host
+deployment.** They rest on what the **package family ships** — whether a
+tree-sitter or SWC frontend exists as a crate or a manifest dependency anywhere
+(it does not), whether a Python stack package exists at all (it does not), and
+whether `Finding` carries a status field (it does not). Those are package
+artefacts under point 3, not deployments under point 1, and they would read the
+same in any external consumer's tree.
+
 **Recommendation per anchor:**
 `##ROW-FRONTEND-TS-JS` → **drift stands, correction prepared** (T-syn only).
 `##ROW-FRONTEND-PYTHON` → **drift stands, correction prepared** (whole row).
@@ -1285,6 +1376,23 @@ run. The `(ii)` text for this instance:
 ##UNEXERCISED-FRONTEND-OR-TIER-IS-REMOVED *Any frontend or tier specified here that is not exercised by Playbook Phase 4 is either removed from this document or annotated in place as **specified, not built** — never carried as unmarked aspiration.* @impl/done
 ```
 
+**Re-read under the ruling:** both outcomes unchanged; the second is re-ordered
+the same way F-121's three were.
+
+`##FOREIGN-LINTERS-ARE-EVIDENCE-PROVIDERS` is decided inside the package:
+`sarif.rs` exposes exactly one public function, `render`, and no layer contains a
+SARIF parser. The floor-step citations (`floor.rs` in the Rust and TypeScript
+stacks) are **package artefacts** — the shipped floor definitions, not this
+host's practice — so point 2's Go/TypeScript caution does not reach them.
+
+`##UNEXERCISED-FRONTEND-OR-TIER-IS-REMOVED` now **leads with the eight «Specified,
+not built» annotations in this document**, three of them inside the frontend
+table the rule governs, plus the fact that `enum Tier` and `enum Lang` do not
+exist in the engine at all. The `terraform/REPORT.md:20` Phase-4 deadline is
+demoted to corroboration for the reason given under F-121: a different consumer's
+Phase 4 is a different date, and this package is written for consumers we cannot
+see.
+
 **Recommendation per anchor:**
 `##FOREIGN-LINTERS-ARE-EVIDENCE-PROVIDERS` → **drift stands, correction
 prepared**; clause 1 true, clause 2 inverted — SARIF is rendered, never parsed,
@@ -1295,3 +1403,466 @@ prepared, decided together with F-121's three**; deadline fired at
 no type in the engine at all.
 
 ---
+
+## F-132 — the batch's biggest obligation, worked after the owner ruling landed: four false, one route (b), nine survive
+
+**Outcome:** MIXED — 4/14 FALSE, 1/14 SURVIVES BUT IS NOT THE PACKAGE'S DEFECT (route (b)), 9/14 SURVIVE
+**Anchors:** 14 of 14, each with its own outcome (all in
+`spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md`)
+
+| anchor | outcome |
+|---|---|
+| `##CONSEQUENCE-M1-5-CONVERGENCE` | **FALSE** — a future-conditional convicted for its antecedent not having fired |
+| `##RUNTIME-TRANSPORT` | **FALSE** — the tools exist, in the discipline MCP packages the search never entered |
+| `##DIFFERENTIATOR-CONSUMED-AT-RUNTIME` | **FALSE** — same evidence; runtime agent consumption is an MCP tool |
+| `##EDGE-MODEL-DIRECTION-OF-AUTHORITY` | **FALSE** — the `proposed` pool is a file by design, and the file exists with 54 entries |
+| `##RUST-PRINCIPLE-GENERATOR-INPUT-IS-TAGGED` | **SURVIVES — ROUTE (b)** |
+| `##DISTRIBUTION-RIDES-THE-EXISTING-REGISTRY` | SURVIVES |
+| `##RULE-MULTIPLICITY-LINT` | SURVIVES |
+| `##EDGE-MODEL-NODES` | SURVIVES |
+| `##QUERY-ERROR-PROVENANCE` | SURVIVES (mechanism absent; the practice it exists for is live and tested) |
+| `##LLM-AS-RENDERER` | SURVIVES |
+| `##RUNTIME-PROFILES` | SURVIVES |
+| `##SPEC-PRINCIPLE-UNITS-FIT-A-PAGE` | SURVIVES |
+| `##RUST-PRINCIPLE-RUSTDOC-IS-THE-DETAIL-LAYER` | SURVIVES |
+| `##ROW-PRIOR-ART-SYN-TREE-SITTER` | SURVIVES (half — `syn` is real, tree-sitter is not) |
+
+**Perimeter searched:** the standing perimeter, and for this obligation
+specifically **all four `-mcp` packages** (`core-ai-native-mcp` inside the subject
+itself, plus `rust-`, `typescript-` and `go-ai-native-mcp`), all three `-lang`
+stacks, the host's `crates/` and `xtask/`, `schemas/`, and `terraform/`. Terms:
+`specmap_query`, `specmap_explain`, `specmap_source`, `trace_explain`,
+`EdgeProvenance`, `Proposed`, `Generated`, `multiplicity`, `max_edges`,
+`edge_budget`, `more than 3`, `120`, `metamodel`, `tree.sitter`, `violates spec`,
+`vibe-llm`, `ErrorVariant`, `Command`, `content_hash`, `/generated/`,
+`fetch.*fragment`.
+**The verdict's own commands, re-run:** two are quoted and both reproduce as
+strings — `specmap_query|specmap_explain|specmap_source` over the tree returns
+**0**, and `tree-sitter` in any `Cargo.toml`/`package.json` returns **0**. The
+first one reproducing is *why* it is wrong: it searched for the names, not the
+thing, and the thing ships under another name in another package.
+
+**This entry was measured after the owner ruling arrived**, so points 1–3 are
+applied inline rather than in a re-read note.
+
+### The four that are FALSE
+
+**`##RUNTIME-TRANSPORT`** (`:239`) — *«`vibe-mcp` (M1.7) gains tools:
+`specmap_query(query) -> subgraph`, `specmap_explain(target, format)`,
+`specmap_source(content_hash) -> fragment` … An agent that drives `vibe` as a
+CLI gets the same via `vibe explain --json`.»* The verdict: *«vibe-mcp gained no
+such tools: grep for specmap_query / specmap_explain / specmap_source **over the
+host's crates** returns 0.»*
+
+**The host's crates are the wrong project, and this is the wave-6 error in its
+purest form.** The discipline's MCP surface is not in `vibe-mcp` — PROP-028 put it
+in family-prefixed **packages**, three of them, and the subject package itself
+authors the neutral server crate they build on (`core-ai-native-mcp`, 1 035 lines).
+Their declared inventory:
+
+```console
+$ sed -n '48,67p' packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0/crates/rust-ai-native-mcp/src/lib.rs
+pub const TOOL_NAMES: [&str; 18] = [
+    "codemod_add_cell", "conform_check", "conform_freeze", "fast_loop",
+    "floor", "health", "init", "ledger_render",
+    "specmap_check", "specmap_write",
+    "tcg_bench", "tcg_complete", "tcg_scope", "tcg_type", "tcg_validate",
+    "test_gate", "trace_explain", "tripwire",
+];
+```
+
+Eighteen tools, three of them specmap tools, and the middle one of the fact's
+three is there under the CLI's name for it:
+
+```console
+$ sed -n '206,216p' .../rust-ai-native-mcp/src/tools_discipline.rs
+        t(
+            "trace_explain",
+            "Explain one symbol or spec unit through the index: what implements, \
+             verifies, documents it. = `rust-ai-native trace <target>`.",
+            properties! {
+                "target": {"type": "string", "description": "a symbol or spec:// URI (required)"},
+                "json": {"type": "boolean"},
+                "prose": {"type": "boolean"},
+            },
+```
+
+`trace_explain(target, {json|prose})` **is** `specmap_explain(target, format)`,
+argument for argument. It is registered in all three MCP packages
+(`typescript-ai-native-mcp/.../tools_discipline.rs`,
+`go-ai-native-mcp/.../lib.rs`) and pinned by a test that asserts `tools/list` is
+exactly the declared inventory (`lib.rs:76`,
+`fn the_tool_set_is_exactly_the_declared_inventory`). That test is ruling point
+3's bench: the package's own tree, exercised by the package's own test.
+
+The fact is not wholly right — `specmap_source(content_hash) -> fragment` has no
+tool, and there is no general `specmap_query`; the closest is `trace_explain`'s
+`--json` subgraph. But the verdict's claim is *«gained no such tools»*, and the
+transport, the server crate and two of the three capabilities ship. The residue
+is a naming-and-one-missing-tool correction, not the absence the verdict records
+— and it is what the prepared text below says.
+
+**`##DIFFERENTIATOR-CONSUMED-AT-RUNTIME`** (`:403`) — *«the map is consumed at
+runtime by agents using the tool, not only at audit time»*. The verdict rests
+entirely on `##RUNTIME-TRANSPORT`: *«the only channel is a CLI flag — the runtime
+tools that would make it true are the ones RUNTIME-TRANSPORT also claims and that
+do not exist»*. They exist. **An MCP tool an agent calls mid-session is the
+definition of runtime consumption by an agent**, and there are three of them
+(`trace_explain`, `specmap_check`, `specmap_write`) in three servers. This is
+also §3.7's corollary again — one premise, propagated to a second verdict, both
+falling together.
+
+**`##EDGE-MODEL-DIRECTION-OF-AUTHORITY`** (`:200`) — *«…plus one social channel: a
+`proposed` edge pool (§4, Phase 2) feeding the Sync-from-Code protocol»*. The
+verdict: *«the `proposed` pool that feeds Sync-from-Code is an enum variant
+nothing constructs: every edge in the host's 912 is authored»*.
+
+**The pool is not supposed to be an edge in the index, and this document says so
+two hundred lines earlier.** `##LLM-AS-PROPOSER` (`:233`): *«Link mining (Phase 2)
+produces edges with provenance `proposed`, stored in `specmap-proposals.json`,
+**never in code**. A human … *affirms* a proposal by writing the actual `#[spec]`
+attribute — the affirmation IS the code change.»* An affirmed proposal becomes an
+**authored** edge by construction. So «every edge in the index is authored» is not
+evidence against the pool — **it is the pool working as specified.**
+
+And the pool exists, as the file the design names:
+
+```console
+$ ls -l terraform/specmap-proposals.json
+-rw-r--r-- … 40058 … terraform/specmap-proposals.json
+$ python -c "import json;d=json.load(open('terraform/specmap-proposals.json',encoding='utf-8'));print(list(d.keys()))"
+['schema', 'scope', 'note', 'mined_commits', 'proposals', 'candidate_orphans']
+```
+
+with `mined_commits` and `candidate_orphans` — the two artefacts
+`##PHASE-2-LATENT-CORPUS-MINING` and `##PHASE-2-CRATE-SWEEP-PROMPT` specify.
+Wave 5 already confirmed the loop end-to-end with **54 owner-approved proposals**
+(F-139), and `terraform/REPORT.md:18` books Phase 2 on them. The `Proposed` enum
+variant being unconstructed in the *index* is the design, not the defect.
+
+**`##CONSEQUENCE-M1-5-CONVERGENCE`** (`:52`) — read it whole: *«**M1.5
+convergence.** **Once** `vibe build` generates code from specs, the generator
+emits specmap edges as a true compiler byproduct — the analogy becomes literal.
+Hand-authored tags remain as the human-override lane. **This PROP defines the
+format that the future generator will target.**»*
+
+The verdict: *«nothing constructs `EdgeProvenance::Generated` … The convergence
+this fact marks @impl/done is **conditional on** a `vibe build` that does not
+generate code yet.»* **The verdict states the sentence's own antecedent and files
+it as the defect.** «Once X, then Y» is not falsified by ¬X; the sentence
+explicitly calls the generator *future* and claims only that the format is
+defined for it. And the format *is* defined — `EdgeProvenance::Generated` exists
+as a variant (`generated/specmap/mod.rs:60`), which is precisely «this PROP
+defines the format that the future generator will target», discharged.
+
+*What may remain is a marker question, not a prose one.* `@impl/done` on a
+sentence about a future milestone is arguable, but that is a different defect on a
+different route, and `reality-mismatch`/`sync-from-code` is not the instrument for
+it. Recorded for the boss rather than acted on.
+
+### The one that survives but is not the package's defect
+
+**`##RUST-PRINCIPLE-GENERATOR-INPUT-IS-TAGGED`** (`:284`) — *«Generated code is
+excluded; its generator input is tagged. Schema files and macro definitions carry
+the edges; expansion output is marked generated.»*
+
+The verdict grants half and rejects half: *«the exclusion of generated code is
+real; the tagging of generator input is not — **the host's schemas carry no spec
+tags**, so the edges the generated code would inherit do not exist.»*
+
+Both halves check out as measurements. Exclusion is real and doubled:
+
+```console
+$ sed -n '313,315p' .../core-ai-native-specmap/src/rscan.rs
+            // Generated trees are excluded from scanning wholesale.
+            if fwd(rel_in_crate).contains("/generated/") {
+                continue;
+$ sed -n '81,83p' .../core-ai-native-specmap/src/ratchet.rs
+            if fwd(rel_in_crate).contains("/generated/") {
+                continue;
+```
+
+And `schemas/specmap.jtd.json` carries `spec://` only inside two `description`
+strings (`:17`, `:23`) — prose about the URI format, not a tag. So the host's
+schemas are untagged.
+
+**But this is a rule addressed to the adopting project, and the only evidence
+against it is that this host does not keep it** — which is exactly ruling point
+1. A `rust-ai-native` principle telling a project to tag its schema files and
+macro definitions is not falsified by *this* project not having done so; an
+external adopter tags its own. Under §3.6(b) the rule is sound and the consumer
+does not keep it, so **the package does not move** and the compliance work is a
+host obligation.
+
+*Two things push the same way.* The macro half is **kept** in the package's own
+tree — `core-ai-native-specmark/src/lib.rs` is the macro definition crate, and its
+`spec` attribute macro carries the grammar and worked examples at `:13`, `:62`,
+`:71-78`. And this repository is a genuine AI-Native **Rust** consumer under
+ruling point 2, so its untagged `schemas/` is a real compliance gap worth
+booking — as a **host** obligation, in
+`PHASE-D-HOST-OBLIGATIONS.md`, not as a package edit.
+
+### The nine that SURVIVE
+
+Each is decided on the **package's own tree** (ruling point 3) or on the Rust
+stack (point 2). None rests on a Go or TypeScript deployment, and none rests on a
+skills directory or on `legacy-spec/`.
+
+**`##DISTRIBUTION-RIDES-THE-EXISTING-REGISTRY`** (`:58`) — *«the metamodel index
+ships with the package; source fragments are fetched by content hash.»* No
+package's `vibe.toml` lists `specmap.json` in a payload —
+`grep -rn 'specmap.json' --include=vibe.toml packages/` returns nothing — and the
+only `specmap.json` files under `packages/` are four extractor **test fixtures**
+and the `fractality` specspace's own project index, i.e. a consumer's artefact,
+not a shipped package payload. Clause two has no implementation at all: no
+fetch-by-content-hash path exists (`content_hash` is a hashing function, never a
+retrieval).
+
+**`##RULE-MULTIPLICITY-LINT`** (`:190`) — *«An item carrying more than 3 spec
+edges is flagged by `vibe check`.»* Searched for the **thing**, not the string:
+`multiplicity`, `max_edges`, `edge_budget`, `more than 3` over every package,
+`crates/`, `xtask/` — **0**. No checker in any layer counts edges per item.
+
+**`##SPEC-PRINCIPLE-UNITS-FIT-A-PAGE`** (`:272`) — *«Soft target ≤ 120 lines per
+unit; `vibe check` warns beyond.»* `120` over the engine, the Rust stack and
+`crates/vibe-check/` returns only two unrelated doctest literals in
+`conform/src/rules/budget.rs`. There is a file-length budget rule for **code**;
+there is no length warning for **spec units** anywhere.
+
+**`##EDGE-MODEL-NODES`** (`:198`) — *«`SpecUnit { uri, kind, r, content_hash }`,
+`CodeItem { symbol_path, item_kind, crate, content_hash }`, plus derived
+`Command`, `ErrorVariant` views.»* `CodeItem` in the package's own wire type
+(`generated/specmap/mod.rs:34-52`) is `{ crateName, file, itemKind, line, symbol }`
+— **no content hash**, which is exactly what the document itself already concedes
+elsewhere (`:141`, `##INVALIDATION-CODE-CHANGE-KEEPS-EDGES-VALID`: *«`CodeItem` in the
+committed index carries `crate_name`, `file`, `item_kind`, `line`, `symbol` and
+**no content hash**»*). No `Command` node type exists.
+
+*One precision the verdict missed and the correction must keep.* `ErrorVariant`
+**does** exist — as a `Fact` variant in the **conform** engine
+(`core-ai-native-conform/src/facts.rs:66`) with two rules over it in
+`rules/diagnostics.rs`. That is a different graph from the specmap node model, so
+the verdict's conclusion holds; but a repair written as «ErrorVariant does not
+exist» would be false about a live type in a sibling crate of the same package.
+
+**`##QUERY-ERROR-PROVENANCE`** (`:226`) — *«`vibe`'s error rendering looks up the
+failing error variant **in the index** and appends `violates spec://…#req-… (r2)
+— run: vibe explain <uri>`.»* The named mechanism is absent: no error rendering
+performs an index lookup, and no rendered error carries a revision or a
+`run: vibe explain` hint.
+
+**But the verdict's flat *«No error rendering consults the map»* understates what
+ships, and the correction must not delete it.** The package's own MCP crate
+renders **every** transport error with spec provenance, and a doctest pins it:
+
+```console
+$ sed -n '14,20p;23,28p' .../core-ai-native-mcp/src/error.rs
+/// let e = core_ai_native_mcp::McpCoreError::Io { … };
+/// assert!(e.to_string().contains("MCP-CORE-v0.1#wire"));
+    #[error(
+        "stdio transport {op} failed: {source} \
+         (violates spec://org.vibevm.ai-native/core-ai-native/mechanisms/MCP-CORE-v0.1#wire; \
+          fix surface: the host closed the pipe — check the agent host's \
+          server log, then the [[mcp_server]] command line it launched)"
+    )]
+```
+
+with the module header stating the intent this fact is about — *«every variant
+cites the MCP-CORE requirement it guards and names a fix surface, so a failing
+server run is navigable without this crate's source»*. Conform does the same for
+rule findings (`rules/mod.rs:49-50`, `req_message`). So *«every failure becomes a
+doorway into the metamodel»* is **live and tested in the package**; the URIs are
+compile-time constants rather than index lookups, and that is the whole defect.
+
+**`##LLM-AS-RENDERER`** (`:234`) — *«`vibe explain --prose` feeds the subgraph …
+to the provider behind `vibe-llm`.»* Decided package-internally: `ledger.rs:8-11`
+says the producer *«is a deterministic template (the tool MUST be fully useful
+without an LLM; an LLM prose producer **slots in later** under its own producer id
++ model id)»*, and `render_prose` (`:168`) is that template. The host crate the
+fact names is a stub — `crates/vibe-llm/src/lib.rs` is **9 lines**, header
+*«**STATUS: M0 stub.** Concrete providers (Anthropic, OpenAI, OpenRouter, …»* —
+which corroborates without being needed.
+
+**`##RUNTIME-PROFILES`** (`:241`) — *«`open` / `contract` / `none`. Declared in
+`vibe.toml` `[metamodel] profile = "open"`.»* `[metamodel]` appears in no
+manifest, no schema and no parser across every package, `crates/` and `schemas/`;
+the only `metamodel` hits in the tree are one doc-comment phrase in `ledger.rs:34`
+and its vendored copies. The three profile values have no representation.
+
+**`##RUST-PRINCIPLE-RUSTDOC-IS-THE-DETAIL-LAYER`** (`:282`) — *«`vibe explain`
+composes spec (contract) + rustdoc (detail)»*. `explain.rs` contains **no `doc`
+field access at all**, and `CodeItem` (above) carries none to access; the renderer
+emits symbol, kind, crate, file, line and edges. The first half of the sentence —
+that every tagged item's doc comment states the practically important behaviour —
+is a rule for the adopting project and is **not** what fails; the composition
+claim is.
+
+**`##ROW-PRIOR-ART-SYN-TREE-SITTER`** (`:398`) — *«syn / tree-sitter | MIT/Apache-2.0;
+MIT | Implementation dependencies for the scanner»*. `syn` is real and load-bearing
+(`Cargo.toml:44`, `core-ai-native-specmap/Cargo.toml:16`, `rscan.rs:243`
+`syn::parse_file`). `tree-sitter` appears in **no `Cargo.toml` or `package.json`
+anywhere in the tree** — 0. Half the row is a present-tense claim about a
+dependency that is not one. Already `@spec/done`.
+
+**`refs/**`, reported separately:** `tree.sitter` matches 17 files and
+`conflicts_with` 328, all third-party; `specmap_query` / `specmap_explain` /
+`specmap_source` / `metamodel` return nothing there. None is ours.
+
+**Proposed corrections (NOT APPLIED)** — nine anchors plus the naming half of
+`##RUNTIME-TRANSPORT`. All follow the document's own established «Specified, not
+built» form, and all are coupled to F-121's decision exactly as F-207's and
+F-146's are.
+
+*`:239` `##RUNTIME-TRANSPORT` — the one FALSE anchor that still needs a text
+change, because the tool names and the server are wrong even though the capability
+is built:*
+
+```
+##RUNTIME-TRANSPORT **Transport.** Each stack's discipline MCP server (`rust-ai-native-mcp`, `typescript-ai-native-mcp`, `go-ai-native-mcp`, all built on this package's `core-ai-native-mcp`) exposes `trace_explain(target, {json|prose})` — the subgraph and the prose render — alongside `specmap_check` and `specmap_write`. An agent that drives the stack CLI gets the same via `<lang>-ai-native trace <target> --json`. *Specified, not built: there is no `specmap_source(content_hash) -> fragment` tool and no general `specmap_query`.* @impl/done
+```
+
+*`:58`:* append — *«Specified, not built: no package ships an index (no `vibe.toml` lists `specmap.json` in a payload), and there is no fetch-by-content-hash path — `content_hash` hashes, it does not retrieve.»*
+*`:190`:* append — *«Specified, not built: no checker in any layer counts edges per item; `vibe check`'s checks do not include a multiplicity lint.»*
+*`:198`:* replace the node list with *«`SpecUnit { uri, kind, r, content_hash }`, `CodeItem { symbol, item_kind, crate_name, file, line }`»* and append — *«Specified, not built: `CodeItem` carries no content hash (see §2.2's own note), and there are no derived `Command` or `ErrorVariant` node views. (`ErrorVariant` exists as a conform **fact** — `conform/src/facts.rs:66` — which is a different graph.)»*
+*`:226`:* append — *«Specified, not built as an index lookup: error renderings cite `violates spec://…` from compile-time constants — `core-ai-native-mcp/src/error.rs:25`, `:37`, `:48`, pinned by a doctest, and conform's `req_message` (`rules/mod.rs:49`) — with no revision and no `run: vibe explain` hint. The doorway is real; the lookup is not.»*
+*`:234`:* append — *«Specified, not built: the prose producer is a deterministic template (`ledger.rs:168`) and the crate's own header says an LLM producer slots in later.»*
+*`:241`:* append — *«Specified, not built: `[metamodel]` is in no manifest, no schema and no parser; the three profile values have no representation.»*
+*`:272`:* append — *«Specified, not built: no checker warns on spec-unit length; the 120-line figure is a target with no enforcement.»*
+*`:282`:* append — *«Specified, not built: `explain` cannot compose rustdoc — `CodeItem` carries no doc field and the renderer emits symbol, kind, crate, file, line and edges only.»*
+*`:398`:* append to the row — *«`syn` is the live scanner dependency (`Cargo.toml:44`); tree-sitter is in no manifest in this repository.»*
+
+**Recommendation per anchor:**
+`##RUNTIME-TRANSPORT` → **re-judge confirmed on the absence claim; drift stands
+on the names** — the correction above is a *renaming*, not a demotion. If the
+boss prefers one verdict per anchor, the honest call is **drift stands, correction
+prepared**, with the record showing the verdict's stated reason («gained no such
+tools») is false.
+`##DIFFERENTIATOR-CONSUMED-AT-RUNTIME` → **re-judge confirmed**; three MCP tools
+in three servers are runtime consumption by agents.
+`##EDGE-MODEL-DIRECTION-OF-AUTHORITY` → **re-judge confirmed**; the pool is a
+file by design (`##LLM-AS-PROPOSER`, «never in code») and the file holds 54
+approved proposals.
+`##CONSEQUENCE-M1-5-CONVERGENCE` → **re-judge confirmed**; the verdict states the
+sentence's own antecedent as its defect, and the format the sentence promises to
+define exists.
+`##RUST-PRINCIPLE-GENERATOR-INPUT-IS-TAGGED` → **drift stands, route (b)**; book
+the untagged host `schemas/` in `PHASE-D-HOST-OBLIGATIONS.md`. **No package edit.**
+`##DISTRIBUTION-RIDES-THE-EXISTING-REGISTRY` · `##RULE-MULTIPLICITY-LINT` ·
+`##EDGE-MODEL-NODES` · `##QUERY-ERROR-PROVENANCE` · `##LLM-AS-RENDERER` ·
+`##RUNTIME-PROFILES` · `##SPEC-PRINCIPLE-UNITS-FIT-A-PAGE` ·
+`##RUST-PRINCIPLE-RUSTDOC-IS-THE-DETAIL-LAYER` · `##ROW-PRIOR-ART-SYN-TREE-SITTER`
+→ **drift stands, correction prepared** (nine).
+
+---
+
+## Summary of dispositions
+
+| obligation | anchors | FALSE | route (b) | SURVIVES | outcome |
+|---|---:|---:|---:|---:|---|
+| F-132 | 14 | 4 | 1 | 9 | MIXED |
+| F-146 | 7 | 2 | 0 | 5 | MIXED |
+| F-159 | 5 | 0 | 0 | 5 | SURVIVES |
+| F-121 | 4 | 0 | 0 | 4 | SURVIVES |
+| F-120 | 3 | 3 | 0 | 0 | FALSE |
+| F-206 | 2 | 0 | 0 | 2 | SURVIVES |
+| F-207 | 2 | 1 | 0 | 1 | MIXED |
+| F-263 | 1 | 0 | 0 | 1 | SURVIVES |
+| **total** | **38** | **9** | **1** | **28** | |
+
+**Nine verdicts turned out FALSE** — the number this wave exists to produce.
+**Nine of thirty-eight is 23.7 %**, against wave 6's 31 of 59 (52.5 %) and wave
+7's sibling batch d6a at 16 of 16. The rate falls because this route is different
+in kind: `sync-from-code` obligations are **discrepancies about things that
+exist**, and a discrepancy is much harder to be wrong about than an absence. Four
+of the nine are still perimeter misses of exactly the §3.7 shape; the other five
+are the four cheaper classes the brief named.
+
+**No file under `packages/` was edited.** No verdict JSON was written, nothing
+under `campaigns/packages-2026-09/run/` was touched, and no `git` command that
+writes was run — only `log`, `show`, `status` and `check-ignore`.
+
+### The nine, and what killed each
+
+| anchor | why it fell |
+|---|---|
+| `PROP-014#RUNTIME-TRANSPORT` | searched **the host's `crates/`** for a tool surface that lives in three `-mcp` **packages** |
+| `PROP-014#DIFFERENTIATOR-CONSUMED-AT-RUNTIME` | inherited that premise verbatim |
+| `PROP-014#EDGE-MODEL-DIRECTION-OF-AUTHORITY` | «every edge is authored» **is** the design (`##LLM-AS-PROPOSER`: proposals live in a file, «never in code»); the file exists with 54 approved entries |
+| `PROP-014#CONSEQUENCE-M1-5-CONVERGENCE` | a future-conditional («**Once** `vibe build` generates code…») convicted for its antecedent not having fired |
+| `ENGINE-CONFORM#DETERMINISM-TESTED-BY-RUN-TWICE-DIFF` | grepped `twice` / `same_inputs`; the test is `sarif_is_byte_stable` **in the crate searched**, and the driver's message reads `"same inputs — byte-identical SARIF"` with a space |
+| `ENGINE-CONFORM#GATE-EXIT-CODE-IS-THE-ACCEPTANCE-CRITERION` | «the CLI takes only `--path`» — every driver takes `--scope` and `--baseline`, and Go ships a standalone `conform` binary |
+| `PROP-014#PHASE-0-ACCEPTANCE` | the scanner cites this clause **by name** (`mdspec.rs:8-9`) as the reason for the behaviour called a contradiction |
+| `00-MANIFESTO#status-line` | the reason quotes a sentence this anchor does not contain, and the claim it does make is stated by the verdict's own evidence ref |
+| `01-PATTERN-CARD-FORMAT#status-line` | «X supersedes Y» is a lineage claim; Y's absence is what supersession *means*, and `7ca98728`'s subject line is the event |
+
+### Three patterns the boss should carry forward
+
+**1. On this route the perimeter miss has a new address, and it is inside the
+subject.** §3.7 says «search the host too»; wave 6 says «search `packages/` too».
+This batch found the third case: **`core-ai-native` is simultaneously the SPEC
+layer and the ENGINE layer**, a Cargo workspace with five crates of its own, and
+its capabilities are then vendored into six sibling packages and driven by three
+CLIs and three MCP servers. Eight of these thirty-eight verdicts scoped to «the
+host's crates» or «the crate», and **six of the nine falls came from that one
+move**. The invariant that would have caught all six: *before recording an
+absence about a mechanism, name which of the four layers you searched — and if
+the answer is fewer than all four, you have not measured it.*
+
+**2. Re-running the verdict's own command is still the cheapest check there is,
+and it caught two here.** `sarif_is_byte_stable` sits in the file the verdict
+cited as evidence, twelve lines from the line number it quoted. The `--path`-only
+claim is refuted by a `clap` enum. Neither needed any widening at all.
+
+**3. A conditional is not a claim, and this route is full of them.** Three of the
+nine — `##CONSEQUENCE-M1-5-CONVERGENCE`, and (by the same logic, though they
+survived on other grounds) the three F-121 closing rules — are sentences of the
+form «once X, then Y» or «any X not done by phase N is removed». A verdict that
+proves ¬X has proved the sentence's own premise, not its falsehood. Worth a line
+in §3.7 next to the perimeter rule.
+
+### What the boss owes the queues if these are accepted
+
+**Nine re-judges, no diff, no owner read.** That is the whole point of this pass:
+a re-judge that edits nothing produces no spec diff and therefore needs no
+approval on the `sync-from-code` route.
+
+**One route-(b) record**, and one only:
+`PROP-014#RUST-PRINCIPLE-GENERATOR-INPUT-IS-TAGGED` → `run/state/routing.json`,
+plus a host obligation in `PHASE-D-HOST-OBLIGATIONS.md`: **this repository's
+`schemas/*.jtd.json` carry no spec tags**, so generated code inherits no edges.
+The rule is sound; under the owner ruling the host is a genuine AI-Native Rust
+consumer, so the gap is real — and it is the *host's*, not the package's. The
+macro half of the same rule is already kept, in
+`core-ai-native-specmark/src/lib.rs`.
+
+**Twenty-eight prepared corrections in five documents, and they must go to the
+owner as three coupled groups, not twenty-eight rows:**
+
+- **Group A — the closing-rule family (4 anchors, 4 documents).** F-121's three
+  plus F-206's `##UNEXERCISED-FRONTEND-OR-TIER-IS-REMOVED`. One rule written four
+  times, falsified four times by its own documents' **eighteen** «Specified, not
+  built» annotations (5 + 3 + 1 + 8 + 1 in CONTRADICTION-MAP's neighbourhood).
+  The owner picks **(i) demote the markers** or **(ii) legalise the annotation
+  form**, and the answer applies to all four. **Nothing else can be decided
+  first**, because —
+- **Group B — the twenty-three annotate-in-place corrections** (F-132's nine,
+  F-146's five, F-159's five, F-207's one, F-206's one, F-263's one, F-121's
+  `##ENTRY-CARRIES-FOUR-PARTS`) are all written in the «Specified, not built»
+  form that Group A's rule currently forbids. **If the owner picks (i), every one
+  of them must be re-cast as a marker demotion.** Present A first.
+- **Group C — F-263 alone**, `README.md#PROMPT-CONTENT-ONLY`. Independent of A
+  and B, one sentence, the package's front door, wrong for four minor versions
+  over 10 072 lines of its own Rust. The cheapest approval in the batch and the
+  one a consumer meets first.
+
+### One measurement worth re-taking elsewhere
+
+`PROP-014`'s §3 `trait Frontend` sketch and `ENGINE-CONFORM`'s §2 sketch both
+show `fn lang(&self) -> Lang; fn tier(&self) -> Tier`. **Neither `enum Tier` nor
+`enum Lang` exists in the engine** — the shipped trait is
+`{ id, version, extract, warm }` (`conform/src/facts.rs:176-189`). The T-syn /
+T-sem tier split that four documents reason over is a **document-only taxonomy**
+with no type behind it. Those trait blocks are fenced code, carry no anchor, and
+so were never judged — which is B-004's problem shape (a claim inside a fenced
+block that no anchor covers) at a new site. Worth booking rather than
+re-deriving.

@@ -34,9 +34,9 @@ the repository root:
 ```
 packages/**  (INCLUDING packages/org.vibevm.fractality/**)
 vibedeps/**  crates/**  xtask/**  tools/**  spec/**  discipline/**  terraform/**
-research/**  campaigns/**  legacy-spec/**  fixtures/**  schemas/**  docs/**
-manual-tests/**  and the repository root's own *.md / *.toml / *.json / *.sh / *.ps1
-minus  **/target/**  .git/**  **/node_modules/**  campaigns/*/run/**
+research/**  campaigns/**  fixtures/**  schemas/**  docs/**  manual-tests/**
+and the repository root's own *.md / *.toml / *.json / *.sh / *.ps1
+minus  **/target/**  .git/**  **/node_modules/**  campaigns/*/run/**  legacy-spec/**
 ```
 
 `refs/**` is searched but reported **separately** — third-party study corpus, not
@@ -54,6 +54,31 @@ earlier waves kept missing: the **host** (`spec/`, `crates/`, `discipline/`,
 own `spec/` tree and its own `vibedeps/`. All four matter to this batch: the
 numbering rule, the FEAT roster and the tombstone rule are all measured over
 «the projects that adopted this discipline», and that is four trees, not one.
+
+**Three rulings landed while this batch was running, and each is honoured
+below.** *(i)* **`legacy-spec/**` is excluded** (owner, 2026-07-31: it is not
+evidence of practice in either direction). It has been struck from the perimeter
+above, and the two places in this record where it carried a conclusion —
+F-147's live-plan count and F-162's first tombstone — are re-stated without it and
+flagged where the flag changes the reading. *(ii)* **§3.8** rules that
+`ai-native` packages are written for external consumers and host silence does not
+convict them; **both packages in this batch are `world`**, where the host is
+genuinely the consumer, so host evidence counts normally here and §3.8 changes
+nothing in this record. *(iii)* §6.1's new
+`##A-REAL-DEFECT-CONVICTING-THE-WRONG-SENTENCE` and
+`##READ-FURTHER-BEFORE-SEARCHING-WIDER` were written from a sibling batch and
+this one reached the same two conclusions independently — F-285 is a real defect
+convicting the wrong rule, and three of the seven falsifications below were
+settled by reading further down the subject document rather than by searching
+anywhere at all.
+
+**HEAD advanced during the run** — from `9f79acf1` to `70162f61`, four commits,
+all of them this campaign's own bookkeeping. `git diff --name-only
+9f79acf1..HEAD` touches **nothing** under `spec/`, `crates/`, `packages/` or
+`specmap.json`, so every measurement below holds unchanged at the later HEAD. It
+is recorded because §6.1's `##THE-CAMPAIGN-IS-INSIDE-ITS-OWN-CORPUS` says a
+figure must name its HEAD, and because one figure here (the `spec://vibevm/…`
+citation count, 1 384 → 1 385) moved by exactly one campaign sentence.
 
 ---
 
@@ -134,7 +159,7 @@ purpose.
 `PROP-014` is the strongest single case: it moved out of the host's tree into
 `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/` and **kept
 its number** under a different authority, while the host's own space simply has a
-hole at 014 (and at 004, now in `legacy-spec/research/`). Numbers are never
+hole at 014 (and at 004, which left the live tree entirely). Numbers are never
 reassigned, and they travel with the unit across authorities. That is the anchor,
 executed.
 
@@ -301,11 +326,13 @@ two-flows-one-home question below, which no single table row should decide.
 **New obligations noticed.** (1) **Two shipped flows in one group offer two homes
 for one genre of fact** — `addressable-specs`' `##ROW-HOME-FEATURE-SCOPE` routes a
 feature slice to `spec/modules/<m>/FEAT-*`, `campaign-plans` routes it to a
-campaign plan, and neither names the other. Measured at HEAD, `FEAT-*` has **zero**
-instances across four adopters while the plan format has **8 live**
-(`spec/terraforms/*.md` ×2 +
-`packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/*.md` ×6) and **25
-archived** in `legacy-spec/terraforms/`, so practice has already chosen. That is a
+campaign plan, and neither names the other. Measured at HEAD over the live
+perimeter only (`legacy-spec/**` excluded per the 2026-07-31 ruling), `FEAT-*` has
+**zero** instances across four adopters while the plan format has **8 live** —
+`spec/terraforms/*.md` ×2 plus
+`packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/*.md` ×6 — so
+practice has already chosen, and dropping the archive column strengthens rather
+than weakens that: 8 to 0 among documents anyone is still writing. That is a
 `duplication` across a package boundary and therefore §4.5 — a release event, not
 an edit. (2) **Ten `spec://core-ai-native/…` citations in host lanes use
 a bare authority**, which `ADDRESSABLE-SPECS-PROTOCOL.md:148`
@@ -611,7 +638,7 @@ that is one of two legal authoring sides — this anchor was not brought along.
 
 ## F-169 — the protocol's own four: the «third form the row omits» is defined 68 lines below it, and the summary wave 6 should have amended is 65 lines below the unit it amended
 
-**Outcome:** MIXED — 1 FALSE / 1 FALSE PREMISE, DIFFERENT DEFECT / 2 SURVIVE, one of them under a §3.6(c) exception already recorded
+**Outcome:** MIXED — 1 FALSE / 1 FALSE PREMISE, DIFFERENT DEFECT / 2 SURVIVE under §3.6(c) exceptions already recorded on the host side
 **Anchors:** 4 of 4, each with its own outcome —
 `##SUM-THE-URI-SCHEME` → **FALSE** (the clause the verdict drifts is conditional,
 and the condition is the host's case);
@@ -619,9 +646,10 @@ and the condition is the host's case);
 under-propagated wave-6 amendment as F-162, 65 lines below the unit it amended, in
 the same file;
 `##ROW-SEGMENT-MODULE` → **SURVIVES**, but not for the reason given, and the
-divergence is the §3.6(c) exception already recorded at PROP-029 `##SCOPE-HOST`;
+divergence is the §3.6(c) exception already recorded at PROP-029 `##SCOPE-HOST`
+— so the recommendation is **re-judge confirmed with the exception named**;
 `##ROW-SEGMENT-DOC` → **SURVIVES** under the same recorded exception
-(PROP-035 `##ROUTER-DOC-ID`).
+(PROP-035 `##ROUTER-DOC-ID`), same recommendation.
 **Perimeter searched:** the standing perimeter, for `spec://<authority>/`
 citation census, `{#anchor}` heading definitions in host `spec/` with and without
 the generated `spec/boot/STATIC.md`, and the `specmap.json` edge census. Plus a
@@ -817,11 +845,15 @@ owner and a **release event** if answered yes, since `redbook` restates the
 package's version of the scheme in two chapters.
 
 **Recommendation per anchor:**
-`##ROW-SEGMENT-MODULE` → **drift stands, route (b)/(c)** — the mismatch is real,
-the exception is `spec/common/PROP-029-fully-qualified-addresses.md:44`
-`##SCOPE-HOST`; the correction is prepared and must move with its three siblings.
-`##ROW-SEGMENT-DOC` → **drift stands, route (c)** — named exception
-`spec/modules/vibe-workspace/PROP-035-spec-compiler.md:105` `##ROUTER-DOC-ID`.
+`##ROW-SEGMENT-MODULE` → **re-judge confirmed under §3.6(c)**, naming
+`spec/common/PROP-029-fully-qualified-addresses.md:44` `##SCOPE-HOST` — the same
+disposition as F-147's `##SEGMENT-MODULE-IS-THE-DIRECTORY`, which is the same
+statement in the sibling document; if the owner rules the exception a note rather
+than a policy choice, both fall back to route (b) together and the prepared
+correction moves with all four siblings.
+`##ROW-SEGMENT-DOC` → **re-judge confirmed under §3.6(c)**, naming
+`spec/modules/vibe-workspace/PROP-035-spec-compiler.md:105` `##ROUTER-DOC-ID` —
+same disposition as F-147's `##SEGMENT-DOC-IS-THE-FILE-NAME`.
 `##SUM-THE-URI-SCHEME` → **re-judge confirmed**; the module clause is a
 conditional and the host is inside its second branch, which
 `spec-tree-layout.md:146` states outright.
@@ -1076,3 +1108,387 @@ warning can arise there. `refs/book/` carries seven `{#anchor}` headings —
 grammar, in one book, with no collision among them. Reported, not counted.
 
 ---
+
+## F-178 — `qualified-naming`: the `KindMismatch` gap holds a third time, the CLI gap is four verbs wide rather than one, and the restatement count is eight
+
+**Outcome:** MIXED — 4/4 survive as measurements, but two of the four are worse
+than recorded and one is a §3.6(b) host gap the verdict half-saw
+**Anchors:** 4 of 4 —
+`##ROW-FORM-KIND-AND-NAME` → **SURVIVES** (its validation column only);
+`##THE-RESOLVER-CHECKS-THE-TYPE-AND-ERRORS-ON-A-MISMATCH` → **SURVIVES**,
+re-verified a third time on the widened perimeter;
+`##RULE-THE-CLI-ACCEPTS-ALL-FORMS` → **SURVIVES — ROUTE (b)**, and the gap is
+**four** user-facing verbs, not one;
+`##the-single-storage-rule-stated-once` → **SURVIVES**, at **eight** statements,
+not six.
+**Perimeter searched:** the standing perimeter, for `KindMismatch` ·
+`TYPE_MISMATCH` · `require_group` · `short_name::qualify` · `is_qualified` ·
+`qualified-only` · `[Nn]ever stor(e|ed)` · `rewritten to the qualified`, plus a
+full read of `crates/vibe-cli/src/commands/short_name.rs`,
+`crates/vibe-cli/src/commands/uninstall.rs`, `crates/vibe-cli/src/commands/update.rs`,
+`crates/vibe-cli/src/commands/registry/redirect/mod.rs`,
+`crates/vibe-resolver/src/naive.rs`, `crates/vibe-cli/src/exit_code.rs` and
+PROP-008 §2.4 / §2.6 / §2.7. `refs/**` reported separately.
+
+**The verdict's own command, re-run verbatim:**
+
+```console
+$ grep -rn 'KindMismatch' --include='*.rs' --include='*.md' . | grep -v '/target/' | grep -v '/\.vibe/' | grep -v campaigns/
+./crates/vibe-core/src/package_ref.rs:428:    /// one; it is validated against the resolved manifest (a `KindMismatch`)
+./spec/design/workspace-and-qualified-naming.md:81:- ##fork-kind-prefix-optional …a present prefix is checked (`KindMismatch` on mismatch)…
+./spec/modules/vibe-registry/PROP-008-qualified-naming.md:97:- ##KIND-VALIDATION …mismatch is a `KindMismatch` error…
+```
+
+**Exactly the three recorded hits, and none is code** — a doc comment, a design
+record, a spec. (The remaining hits are this campaign's own harvest records and
+§7 LOG, i.e. the campaign quoting itself.) The brief's standing instruction not to
+re-derive this is respected: it is re-run because re-running a verdict's own
+command is the cheapest check there is, and the answer at HEAD `9f79acf1` is the
+same as wave 6's.
+
+### `##THE-RESOLVER-CHECKS-THE-TYPE-AND-ERRORS-ON-A-MISMATCH` and `##ROW-FORM-KIND-AND-NAME` — SURVIVE; the tag is parsed, carried, and checked by nothing
+
+The chain reproduces end to end. `crates/vibe-core/src/package_ref/tests.rs:117-124`
+`parse_short_with_kind` pins `kind: Some(PackageKind::Flow)` for `flow:wal`;
+`crates/vibe-cli/src/commands/short_name.rs:135` `qualify()` **copies** the kind
+onto the qualified ref (`kind: pkgref.kind`) rather than dropping it; and no code
+anywhere compares that kind against the resolved manifest's. The declared error
+type does not exist, and `crates/vibe-core/src/package_ref.rs:428`'s own doc
+comment asserts the validation happens:
+
+```
+/// Optional `kind` prefix. Present only when the pkgref was written with
+/// one; it is validated against the resolved manifest (a `KindMismatch`)
+/// but never disambiguates — `(group, name)` is already unique
+/// (PROP-008 §2.3 / §2.4).
+```
+
+**One clause of the verdict is weaker than it reads.** It offers as corroboration
+that *«the reserved exit code is dead: `TYPE_MISMATCH: u8 = 4` carries
+`#[allow(dead_code)]` and is referenced exactly once, at its own declaration»*.
+That reproduces (`crates/vibe-cli/src/exit_code.rs:24`, one reference in the whole
+tree) — but it is the house pattern for the reserved-code table, not a signal
+about this gap: `OK`, `USAGE`, `USER_DECLINED` and `LLM_PROVIDER` all carry the
+same attribute for the same reason, stated in the file's own comment at `:11-15`. The
+absence stands on the `KindMismatch` search alone, which is enough.
+
+`##ROW-FORM-KIND-AND-NAME` survives only in its third column. Its **Where legal**
+column — *«CLI input only»* — is correct: `flow:wal` parses
+(`display_round_trips_every_form`, `crates/vibe-core/src/package_ref/tests.rs:256-269`,
+carrying `#[verifies("spec://vibevm/modules/vibe-registry/PROP-008#pkgref", r = 1)]`),
+and `##RULE-MANIFESTS-ACCEPT-QUALIFIED-FORMS-ONLY` holds — every entry in
+`vibe.lock` carries both `name` and `group`. Only *«kind is validated after
+resolution»* is false, and it is false in the same one place as the anchor above.
+
+### `##RULE-THE-CLI-ACCEPTS-ALL-FORMS` — SURVIVES, and the gap is four verbs, not one
+
+The verdict: *«`vibe uninstall` REJECTS the two unqualified forms outright via
+`require_group`. So the host is «boundary only» for install and «nowhere» for
+uninstall.»* Measured at HEAD, the split is wider in both directions.
+
+**Short-name resolution has exactly one caller in the whole tree:**
+
+```console
+$ grep -rn 'short_name::qualify' crates/ --include='*.rs' | grep -v '/target/'
+crates/vibe-cli/src/commands/install/mod.rs:139:        .map(|r| short_name::qualify(&resolver, r, &lockfile_snapshot))
+```
+
+**`require_group` has five, of which four are user-facing verbs:**
+
+```console
+$ grep -rn 'fn require_group' crates/ --include='*.rs' | grep -v '/target/'
+crates/vibe-cli/src/commands/registry/redirect/mod.rs:127:fn require_group(pkgref: &vibe_core::PackageRef) -> Result<&Group> {
+crates/vibe-cli/src/commands/uninstall.rs:153:fn require_group(pkgref: &PackageRef) -> Result<&Group> {
+crates/vibe-cli/src/commands/update.rs:445:fn require_group(pkgref: &PackageRef) -> Result<&Group> {
+crates/vibe-resolver/src/naive.rs:23:fn require_group(pkgref: &PackageRef) -> Result<&Group, SolveError> {
+```
+
+`vibe uninstall` (`uninstall.rs:38`), `vibe update` (`update.rs:82`) and the three
+`vibe registry redirect` verbs (`create.rs:41`, `sync.rs:65`, `update.rs:50`, all
+through `redirect/mod.rs:127`) each reject a bare or kind-only argument with
+*«package reference `…` is not group-qualified — write `<group>/<name>`»*. The
+fifth, `crates/vibe-resolver/src/naive.rs:23`, is **the rule working**, not
+breaking it: the dependency graph is built from qualified names, which is this
+package's own `##CONSEQUENCE-THE-GRAPH-IS-BUILT-FROM-QUALIFIED-NAMES`.
+
+So the sentence *«The CLI accepts all forms»* is false about this consumer for
+**four** verbs, and a user who may type `vibe install wal` may type neither
+`vibe uninstall wal` nor `vibe update wal` nor `vibe registry redirect create wal`.
+
+**And the host's own written justification does not cover the two that matter.**
+All three doc comments cite the same anchor — *«rejecting an unqualified
+`vibe uninstall` argument (PROP-008 §2.4)»* (`uninstall.rs:152`), the same for
+`update.rs:444` and `redirect/mod.rs:124`. **PROP-008 §2.4 does not say that.**
+Its own table routes the short form the other way — `##ROW-SHORT` *«short — CLI
+sugar | resolved via the index (§2.6)»* — and `##SHORT-CLI-ONLY` is about
+*storage*, not about which verbs accept it. The nearest real support is §2.6
+`##INDEX-DEPENDENCY`: *«Without an index, a registry's short names are unavailable
+and the qualified form is required.»*
+
+**That support does not reach `uninstall` or `update`, and the code proves it.**
+`short_name::resolve` consults the **lockfile first** and returns on a single hit
+without touching a registry at all (`crates/vibe-cli/src/commands/short_name.rs:76-79`):
+
+```rust
+let locked = locked_groups(lockfile, name);
+if let [only] = locked.as_slice() {
+    return Ok(ShortNameOutcome::Resolved(only.clone()));
+}
+```
+
+A package being uninstalled or updated is by definition already in `vibe.lock`, so
+`vibe uninstall wal` and `vibe update wal` could resolve with **zero index and zero
+network** using code that already exists and is already tested. The rule is sound,
+the host does not keep it, and the repair is a host change of a few lines —
+§3.6(b), and a cheap one.
+
+### `##the-single-storage-rule-stated-once` — SURVIVES; the count is eight, and the package's own governing rule is the one to judge it by
+
+The anchor (`ref-grammar.md:108`): *«The single storage rule, stated once so it
+cannot drift:»*, introducing the `##PERSISTED-STATE-IS-QUALIFIED-ONLY` blockquote.
+The verdict counts six statements across the package. Measured at HEAD there are
+**eight**:
+
+| # | where | form |
+|---|---|---|
+| 1 | `ref-grammar.md:110` `##PERSISTED-STATE-IS-QUALIFIED-ONLY` | the blockquote this anchor introduces |
+| 2 | `ref-grammar.md:59` `##RULE-MANIFESTS-ACCEPT-QUALIFIED-FORMS-ONLY` | normative, **and it points at §storage** |
+| 3 | `ref-grammar.md:184` `##SUM-PERSISTED-STATE-IS-QUALIFIED-ONLY` | summary |
+| 4 | `QUALIFIED-NAMING-PROTOCOL.md:131` `##SHORT-NAMES-ARE-NEVER-STORED` | normative |
+| 5 | `QUALIFIED-NAMING-PROTOCOL.md:205` `##SUM-SHORT-NAMES-LIVE-ONLY-AT-THE-BOUNDARY` | summary |
+| 6 | `spec/boot/67-flow-qualified-naming.md:41` `##NEVER-STORE-A-SHORT-NAME-IN-PERSISTED-STATE` | boot-lane Never |
+| 7 | `README.md:11` `##LAW-SHORT-NAMES-ONLY-AT-THE-CLI-BOUNDARY` | law bullet |
+| 8 | `naming-forks.md:112` `##A-SHORT-NAME-NEVER-RECURSES-INTO-THE-GRAPH` | *«Because persisted state is qualified-only…»* |
+
+**Only #2 names the anchor it echoes**, and it names the *section* (`[§storage](#storage)`)
+rather than the fact — which is what this package's sibling flow requires of a
+legitimate restatement: `ADDRESSABLE-SPECS-PROTOCOL.md:195`
+`##A-RESTATEMENT-NAMES-ITS-ANCHOR`, *«the restatement names its anchor in the same
+sentence, marking which copy is the echo»*.
+
+The verdict's own framing is the fair one and is worth preserving verbatim into
+the record: *«the restatements are not a defect in themselves: a flow that ships a
+README, a snippet and three documents will restate its laws by design, and what
+this anchor claims is the one thing that arrangement makes false.»* The eight have
+**not** drifted — all eight say the same thing — so the rule's purpose is served
+and only its self-description is wrong. This is the identical question F-218 raises
+for `addressable-specs` (five statements of one-fact-one-anchor across three
+documents, none naming another's anchor), and the two should be answered together.
+
+**Which layer has it:** SPEC in the package; ENGINE and DRIVER in `crates/vibe-cli`
+and `crates/vibe-core`; DEPLOYMENT in `vibe.lock`, where the storage rule is kept
+without exception — every entry carries `name` **and** `group`. The kind-validation
+gap is a missing ENGINE, and the CLI gap is a missing DRIVER wiring over an ENGINE
+that already exists.
+
+**`refs/**`, reported separately:** `grep -rn 'KindMismatch\|require_group' refs/`
+returns nothing; the pkgref grammar has no third-party instance. Nothing in the
+study corpus bears on this obligation.
+
+**Proposed correction (NOT APPLIED).** Three of the four anchors are the rule the
+consumer should keep and want no edit. The fourth,
+`##the-single-storage-rule-stated-once`, is the only self-falsifying sentence in
+this batch — the count it asserts is about its own package and is wrong there. The
+minimal true form, `ref-grammar.md:108`:
+
+> ##the-single-storage-rule-stated-once The single storage rule, stated here as the
+> anchor every restatement echoes: @impl/done
+
+That preserves the intent (one authoritative home, the reason being drift) without
+asserting a count the package's own arrangement contradicts. **Not applied**: it is
+a shipped-prose edit on a `sync-from-code` obligation, so it is the owner's to
+approve, and it should land with whatever is decided for F-218's identical
+question rather than before it.
+
+**New obligation noticed.** Four host `require_group` call sites cite **PROP-008
+§2.4** as the authority for rejecting an unqualified pkgref, and §2.4 authorises no
+such thing — its own table sends the short form to §2.6 for index resolution. A
+mis-cited anchor in shipped host code is precisely the failure
+`##A-CITED-ANCHOR-IS-A-PUBLIC-SYMBOL` exists to prevent, and it is separable from
+the behaviour: even if the owner rules the rejection correct, the citation is
+wrong. Files: `crates/vibe-cli/src/commands/uninstall.rs:152`,
+`crates/vibe-cli/src/commands/update.rs:444`,
+`crates/vibe-cli/src/commands/registry/redirect/mod.rs:124`, and
+`crates/vibe-cli/src/commands/uninstall.rs:36`'s inline comment.
+
+**Recommendation per anchor:**
+`##ROW-FORM-KIND-AND-NAME` → **drift stands, route (b)**; only the validation
+column is false, and the missing check is host work (Phase E).
+`##RULE-THE-CLI-ACCEPTS-ALL-FORMS` → **drift stands, route (b)**; book a host
+obligation naming **four** verbs, and note that `short_name::resolve`'s
+lockfile-first path already makes two of them a few lines' work.
+`##THE-RESOLVER-CHECKS-THE-TYPE-AND-ERRORS-ON-A-MISMATCH` → **drift stands, route
+(b)**; `KindMismatch` re-verified absent a third time at HEAD `9f79acf1`.
+`##the-single-storage-rule-stated-once` → **drift stands, correction prepared**;
+eight statements, not six, and the correction must move with F-218's identical
+question.
+
+---
+
+## Summary of dispositions
+
+| obligation | anchors | FALSE | FALSE PREMISE | SURVIVES | recommended re-judge confirmed |
+|---|---:|---:|---:|---:|---:|
+| F-147 `spec-tree-layout` | 7 | 3 | — | 4 | 6 |
+| F-162 `authoring-rules` | 5 | 3 | 2 | — | 3 |
+| F-169 `ADDRESSABLE-SPECS-PROTOCOL` | 4 | 1 | 1 | 2 | 3 |
+| F-217 `15-flow-addressable-specs` | 2 | — | — | 2 | 0 |
+| F-218 `ADDRESSABLE-SPECS-PROTOCOL` | 2 | — | — | 2 | 0 |
+| F-285 `authoring-rules` | 1 | — | 1 | — | 1 |
+| F-178 `ref-grammar` | 4 | — | — | 4 | 0 |
+| **total** | **25** | **7** | **4** | **14** | **13** |
+
+**Eleven of twenty-five verdicts do not survive as stated** — seven outright
+FALSE, four resting on a premise that does not hold. **Thirteen are recommended
+for re-judge confirmed**, which under §5.1 is the outcome that costs the owner
+nothing: no edit, no spec diff, no approval. Of the remaining twelve, **four**
+carry a prepared correction the owner must approve as a diff, and **eight** are
+§3.6(b) host obligations where the rule is sound and the consumer does not keep
+it.
+
+**No file was edited.** No package file was touched, no verdict JSON was written,
+nothing under `campaigns/packages-2026-09/run/` was touched, and no `git` command
+that writes was run. Every correction in this record is written out as proposed
+text and left unapplied.
+
+### The dispositions, per anchor
+
+**Re-judge confirmed, unconditionally (8).**
+`##NUMBER-PER-MODULE-AND-NEVER-RENUMBER` ·
+`##DO-NOT-WRITE-A-NEVER-READ-LINE-IN-THE-BOOT-FILE` ·
+`##KEEP-THE-MAPPING-ONE-TO-ONE` · `##EACH-SEMANTIC-CHANGE-APPENDS-A-DATED-LINE` ·
+`##SUM-THE-CHANGELOG-LINE` · `##A-MOVED-UNIT-LEAVES-A-TOMBSTONE` ·
+`##SUM-THE-URI-SCHEME` · `##NEVER-REUSE-AN-ANCHOR-FOR-A-DIFFERENT-MEANING`.
+
+**Re-judge confirmed under §3.6(c), the exception named (5) — the owner rules
+whether these are policy choices or notes.**
+`##SEGMENT-MODULE-IS-THE-DIRECTORY` · `##SEGMENT-DOC-IS-THE-FILE-NAME` ·
+`##SUM-NAMES-ARE-THE-URI-SEGMENTS` · `##ROW-SEGMENT-MODULE` · `##ROW-SEGMENT-DOC`
+— all five falsified only by the host's `spec://` superset, which is written down
+before the fact at `spec/common/PROP-029-fully-qualified-addresses.md:44`
+`##SCOPE-HOST` and `spec/modules/vibe-workspace/PROP-035-spec-compiler.md:95`/`:105`
+`##UNIFIED-GRAMMAR` / `##ROUTER-DOC-ID`. If the owner rules them notes rather than
+policy, all five fall to route (b) **together** — they are one statement written
+in two documents of one package, and a ruling that splits them mints a
+`duplication` obligation on the next registry run.
+
+**Drift stands, correction prepared — owner approves the diff (4).**
+`##RECORD-THE-TEST-NAME-IN-THE-UNIT` · `##SUM-EVERY-CONTRACT-IMPLIES-A-TEST` ·
+`##SUM-THE-BIDIRECTIONAL-GRAPH` — the wave-6 §graph amendment, carried across ·
+`##the-single-storage-rule-stated-once` — the one self-falsifying count in the
+batch.
+
+**Drift stands, route (b) — host obligations (8).**
+`##ROW-HOME-FEATURE-SCOPE` · `##EACH-FACT-HAS-EXACTLY-ONE-AUTHORITATIVE-ANCHOR` ·
+`##NEVER-DUPLICATE-A-NORMATIVE-VALUE` ·
+`##EVERY-FACT-HAS-EXACTLY-ONE-AUTHORITATIVE-ANCHOR` · `##SUM-ONE-FACT-ONE-ANCHOR` ·
+`##ROW-FORM-KIND-AND-NAME` · `##RULE-THE-CLI-ACCEPTS-ALL-FORMS` ·
+`##THE-RESOLVER-CHECKS-THE-TYPE-AND-ERRORS-ON-A-MISMATCH`.
+
+### Why the rate is 11/25 and not wave 6's 31/59
+
+These verdicts are better than the absence verdicts were, and the reason is
+structural: **an absence is falsified by one file anywhere in a perimeter, so a
+narrow perimeter fails catastrophically; a discrepancy is falsified only by
+re-measuring the same thing, so a narrow perimeter fails gently.** Only two of the
+eleven turned on the perimeter at all (`##NUMBER-PER-MODULE-AND-NEVER-RENUMBER`,
+which needed the fractality specspace and the three research demos, and
+`##ROW-HOME-FEATURE-SCOPE`, which the wider perimeter *confirmed*). The other nine
+were reachable from where the verdict already stood.
+
+**What did the work instead, in order of yield:**
+
+1. **Searching for the thing, not the string — 3 verdicts.** The changelog family
+   is the clean case: `grep '## Changelog' spec/` returns 1, and the practice is
+   alive in **15 of 42 PROPs with 33 dated entries**, under the heading
+   `## Version history`. The tombstone verdict is the same error against a sibling
+   anchor's string: it searched `<!-- RETIRED` and both moves are tombstoned, one
+   of them by a whole-directory record mapping every anchor 1:1
+   (`legacy-spec/discipline/README.md:25`).
+2. **Reading the rest of the document — 3 verdicts.** *«The third form the row
+   omits»* is defined 68 lines below the row, in a MUST
+   (`ADDRESSABLE-SPECS-PROTOCOL.md:148`). *«The scheme has no place for
+   `spec://vibevm/…`»* is refuted by the summary's own conditional and by
+   `spec-tree-layout.md:146`. *«A never-read line in the boot file»* is a
+   do-not-**write** line eight lines above the section that tells the session to
+   read that very directory.
+3. **Checking whether the correction already landed — 3 verdicts.** Wave 6 amended
+   `##CODE-MARKS-WHAT-IT-IMPLEMENTS-THE-SPEC-WHAT-VERIFIES-IT` (commit
+   `24c0629e`) to say the verification edge may be authored code-side and rendered
+   back. Three anchors that restate or cite it were left behind — one of them 65
+   lines below it in the same file.
+4. **Reading the anchor's own sentence — 1 verdict.** `##NEVER-REUSE-AN-ANCHOR-FOR-A-DIFFERENT-MEANING`
+   names a **temporal** failure (*«once meant one thing and now means another»*);
+   `spec/boot/STATIC.md`'s 59 warnings are a **simultaneous** collision the
+   compiler manufactures. Right measurement, wrong rule — the measurement belongs
+   to F-217/F-218, where it is already open.
+
+### Numbers: what moved and what did not
+
+| figure | as recorded | at HEAD `9f79acf1` | verdict |
+|---|---:|---:|---|
+| `duplicate-anchor` warnings, all in `spec/boot/STATIC.md` | 59 | **59** | holds |
+| specmap edges: implements / verifies / deviates / units | 677 / 223 / 12 / 5 266 | **identical** | holds |
+| `spec://vibevm/…` host citations | 1 384 | **1 385** | holds (+1) |
+| `find spec -name 'FEAT-*'` | 0 | **0** | holds |
+| `grep -rn '^Test:' spec/` | 0 | **0** | holds |
+| `KindMismatch` in `.rs` | 0 | **0** | holds (third re-verification) |
+| `<group>/<name>` citations, host lanes | 68 | **91** | **+34 %** |
+| anchors in use in host `spec/` | 519 | **859** | **+65 %** |
+| `{#root}` definitions in `STATIC.md` | «27, one per package» | **26** (and `{#never}` **17**, and **11** distinct names duplicated) | shape wrong |
+| statements of the storage rule in `qualified-naming` | 6 | **8** | **+2** |
+| `require_group` rejection sites | «`vibe uninstall`» | **4 user-facing verbs** + 1 correct internal | **4×** |
+
+Six figures reproduce exactly and five moved. The two that moved most — the
+anchor census and the package-coordinate census — are both counts over a corpus
+this campaign is itself writing into, which is the wave-6 lesson repeating: **a
+figure taken over an actively-edited window must name its HEAD or it decays inside
+a week.**
+
+### What the boss owes the routing record and the host queue
+
+**Nothing is routed out of a package by this batch** — routing is the boss's, and
+this record only recommends. If the recommendations are accepted, thirteen anchors
+re-judge (five of them contingent on the §3.6(c) ruling), four go to the owner as
+prepared diffs, and eight enter `PHASE-D-HOST-OBLIGATIONS.md`, of which these are
+new:
+
+1. **The boot compiler manufactures 59 ambiguous addresses.** `render_static`
+   (`crates/vibe-workspace/src/boot_artifacts.rs:220`, splice at `:259`)
+   concatenates 31 snippet bodies from 27 packages verbatim, so 26 documents'
+   `{#root}` land in one namespace. Every snippet is correct in isolation; only
+   the compiler can fix it. **Same mechanism as the address family**, and it
+   should be decided in the same breath — Phase E.
+2. **`CLAUDE.md` / `AGENTS.md` / `GEMINI.md` are byte-identical 228-line copies
+   with a writer for one section and none for the rest.** The `<vibevm>` block is
+   regenerated (PROP-012) and checked
+   (`crates/vibe-check/src/checks/redirect_block.rs:31`); the ~200 hand-authored
+   lines are copied by hand and nothing compares the three files.
+3. **Four verbs reject a short name that the lockfile could resolve.**
+   `vibe uninstall`, `vibe update` and three `vibe registry redirect` verbs call
+   `require_group`; `short_name::resolve` already returns from `vibe.lock` with no
+   index and no network (`crates/vibe-cli/src/commands/short_name.rs:76-79`).
+4. **Four host call sites cite PROP-008 §2.4 for a rejection §2.4 does not
+   authorise** — `uninstall.rs:36` and `:152`, `update.rs:444`,
+   `redirect/mod.rs:124`. Separable from (3): even if the rejection is ruled
+   correct, the citation is wrong.
+5. **Ten `spec://core-ai-native/…` citations use a bare authority**, forbidden by
+   `ADDRESSABLE-SPECS-PROTOCOL.md:148`'s MUST and PROP-029 `##ADDR-LAW` — including
+   `crates/vibe-cli/src/commands/trace.rs:9`.
+6. **Five committed code edges resolve to nothing.** PROP-043's `{#report}`,
+   `{#seal}` and `{#weave}` are written on list-item lines
+   (`spec/modules/vibe-progress/PROP-043-progress-markup.md:390`, `:398`, `:419`),
+   which the doctree does not register — five `dangling-edge` warnings in
+   `specmap.json`, in the discipline whose subject is that an address resolves.
+
+And **two questions this batch found and cannot answer**:
+
+- **Two shipped flows in one group offer two homes for one genre of fact.**
+  `addressable-specs` routes a feature slice to `spec/modules/<m>/FEAT-*`
+  (0 instances across four adopters); `campaign-plans` routes it to a campaign plan
+  (8 live, 25 archived). Neither names the other. §4.5 — a release event.
+- **The published URI grammar is a strict subset of the implemented one**, missing
+  the optional version, the multi-segment doc-path and the revision pin. The
+  package is not wrong; it publishes a subset as though it were the whole grammar,
+  and `redbook` restates that subset in two chapters — so any change is a release
+  event across at least two packages.

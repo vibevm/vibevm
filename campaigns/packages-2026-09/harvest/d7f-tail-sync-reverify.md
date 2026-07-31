@@ -1308,3 +1308,215 @@ name different sets (`git-atomic-commits` / `git-attribution-policy` versus
 re-measured here and unchanged.
 
 ---
+
+## Batch summary
+
+| id | package | outcome | anchors | FALSE | route (b) | route (a) |
+|---|---|---|---:|---:|---:|---:|
+| F-097 | `health-audit` | SURVIVES — ROUTE (b) | 4 | 0 | 4 | 0 |
+| F-203 | `secrets-hygiene` | MIXED — 1/3 FALSE | 3 | **1** | 2 | 0 |
+| F-330 | `secrets-hygiene` | SURVIVES — ROUTE (b) | 1 | 0 | 1 | 0 |
+| F-236 | `licensing` | SURVIVES — ROUTE (b) | 2 | 0 | 2 | 0 |
+| F-239 | `licensing` | MIXED — 1/2 FALSE PREMISE | 2 | **1** | 1 | 0 |
+| F-227 | `dev-runtime-docs` | MIXED — evidence substituted | 2 | 0 | 2 | 0 |
+| F-114 | `redbook` | MIXED — 1/2 FALSE | 2 | **1** | 0 | **1** |
+| **total** | | | **16** | **3** | **12** | **1** |
+
+**Three of sixteen verdicts turned out FALSE — 19 %.** That is below both
+`build-or-demote` waves (wave 5: 18 of 76, 24 %; wave 6: 31 of 59, 53 %), and
+the reason is structural rather than lucky. A `build-or-demote` verdict asserts
+an **absence**, which a wider perimeter can overturn wholesale. A
+`sync-from-code` verdict asserts a **discrepancy**, and a discrepancy measured
+correctly on Monday is usually still a discrepancy on Thursday. What decays here
+is the **number**, not the finding — and what turns out false is a
+**misattribution**. All three falses below are misattributions, not
+mis-measurements.
+
+**Zero edits.** No file under `packages/` was touched, no verdict JSON written,
+nothing under `campaigns/packages-2026-09/run/` modified, no writing `git`
+command run, no credential file read or printed. **One correction is prepared
+and not applied** (F-114's edition clause) — the only anchor in the batch whose
+defect is the package's own.
+
+### The three that are FALSE, and each is the same shape
+
+**A sentence was convicted of its neighbour's defect.** In every case the
+measurement the verdict took was correct; the anchor it attached that
+measurement to was wrong.
+
+1. **`third-party-code-consent.md#the-prompt-points-at-a-real-path`** (F-203) —
+   the sentence is a **modal capability** claim: «The consent prompt *can* point
+   at a real path.» The capability is built and spec-marked
+   (`crates/vibe-workspace/src/hooks.rs:323-353`, `select_invocation` under
+   `#[spec(implements = "…PROP-020#script-selection")]`). **The verdict concedes
+   this in its own first clause** — *«the anchor's claim that a prompt can point
+   at something openable is true of the design»* — then rules drift because the
+   capability is unused. «The prompt *does* print the path» is a different
+   sentence, `##GATE-EVERYONE-ELSE-GETS-FIRST-RUN-CONSENT` (line 46), which
+   carries its own drift verdict in the same obligation. One defect, filed twice.
+
+2. **`LICENSING-PROTOCOL.md#A-SKELETON-OF-THIS-TEXT-SHIPS-WITH-THE-DRAFT-EULA-SKILL`**
+   (F-239) — «ships with» is **delivery**, and the skeleton is delivered: same
+   package, same install slot, enumerated in the package's own contents roster.
+   All three roster anchors are `confirmed`, and
+   `##CONTENT-THE-DRAFT-EULA-SKILL`'s confirmation states the governing
+   principle in its own words — **«delivered is not installed, and the fact only
+   claims the former»** — on the identical question of a shipped thing that
+   reaches no agent. F-239 reads the same verb the opposite way on the same
+   package. The real defect is `SKILL.md:25`'s package-relative path, and it is
+   **three-for-three across the `world` flow skills** (`health-audit`,
+   `draft-eula`, `wal-status`) while the six `ai-native` stack skills already use
+   the consumer-resolvable `vibedeps/…` form.
+
+3. **`redbook/README.md#UNINSTALLING-THE-UMBRELLA-REMOVES-ONLY-ITS-OWN-FILES`**
+   (F-114) — judged against the host's *written contract*
+   (`PROP-002 ##LF-ROOT-DEPENDENCIES`: «a pure transitive is rejected with an
+   explanation», `@impl/done`) rather than against the host's *code*. **`vibe
+   uninstall` has no root/transitive branch at all**
+   (`crates/vibe-cli/src/commands/uninstall.rs:27-149`): the `root_dependencies`
+   `retain` and the manifest drop are no-ops for a transitive and the command
+   proceeds to remove the slot. Its own integration test says a pure transitive's
+   uninstall leaves the manifest untouched
+   (`crates/vibe-cli/tests/cli_pkg_cycle.rs:719`). **The code agrees with the
+   package; the unbuilt thing is the host contract the package was measured
+   against.**
+
+### Two more where the verdict's stated evidence is false and the anchor survives anyway
+
+Recorded separately because the boss's action differs: the **record** needs
+correcting, not the verdict reversing.
+
+- **`58-flow-dev-runtime-docs.md#NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN`**
+  (F-227). Both exhibits — «three invariants versus ten» and «81 tests green
+  versus 2 075» — are *staleness and incompleteness*, which is the **sibling
+  rule's** failure; the three invariants the guide names are all still run and
+  its account of the run semantics is still exactly right. The instance that fits
+  *this* anchor was one paragraph away and no verdict had found it:
+  **`DEV-GUIDE.md:265` still names `apps/` among the trees the repo-root
+  workspace indexes** — a directory emptied on 2026-07-22 by `7e46d841` when the
+  terminal products moved to `vibevm-term`, untracked by git, and not a Cargo
+  workspace member. `tools/self-check.sh:406-410` records the extraction.
+- **`LICENSING-PROTOCOL.md#SUM-KEEP-EVERY-STATEMENT-IN-SYNC`** (F-236). Its
+  verdict rests half its case on «the manifest half is in sync BY CONSTRUCTION
+  and cannot fail». It already has: the workspace is **19 members**, 18 declare
+  `license-file.workspace = true`, and **`crates/vibe-index/Cargo.toml` declares
+  no licence at all** — it opted out of the construction, and only
+  `publish = false` keeps `cargo` quiet about it.
+
+### Every count re-measured, and which ones moved
+
+| figure | as recorded | at `HEAD = 596588fb` | |
+|---|---|---|---|
+| commits since the last audit (F-097) | 1 546 | **1 659** | moved +113 |
+| `#[test]` / `#[tokio::test]` (F-227) | 2 075 | **2 100** | moved +25 |
+| host manifests declaring a licence (F-236) | «all 18 … cannot fail» | **19 declarations; 1 member declares none** | premise false |
+| redbook exact pins (F-114) | 22 | **22, all `=X.Y.Z`, 0 caret** | exact |
+| redbook members that are lockfile roots (F-114) | 4 of 22 | **4 of 22** | exact |
+| `run_step` in `self-check.sh` (F-227) | 37 | **37** (36 invocations + the definition) | exact |
+| deferral gap on 2026-07-20 (F-227) | 49 and 50 minutes | **49 and 50 minutes** | exact to the minute |
+| self-check invariants vs the guide (F-227) | 10 vs 3 | **10 vs 3** | exact |
+| skill homes (F-097) | 5 / 4 / 4, none `health-audit` | **5 / 4 / 4, none** | exact |
+| `DEFAULT_ALLOWED_GROUPS` (F-203) | `["org.vibevm"]`, no config key | **identical** | exact |
+| `LICENSE.md:3` vs `README.md:164` (F-236) | UPL-1.0 vs «proprietary EULA placeholder» | **unchanged, 19 days on** | exact |
+
+**The two figures that moved are age, not error** — both of the genre wave 6
+named: a count over a live window that decays within the week unless it names
+its HEAD. Every figure in this record names one.
+
+**A count no verdict took, and it is the sharpest thing in the batch.**
+`redbook`'s edition 0.2.0 has carried **four different member sets** —
+21 → 22 → 21 → 22 pins across `69708287` (2026-07-12), `041ef527` and
+`c939951a` (both 2026-07-14) and `093c053c` (2026-07-15) — with
+`version = "0.2.0"` written once and never changed, and with two members
+(`atomic-commits`, `attribution-policy`) **removed**, not merely added. Two
+projects that installed the same edition four days apart hold different practice
+text, and one holds flows the current edition does not contain.
+
+### The perimeter earned its keep twice, in opposite directions
+
+- **Widening into `packages/`** (the wave-6 extension): the `fractality`
+  specspace **installs `flow-health-audit`** (its `vibe.lock:30`) and
+  **compiles this very snippet into its own boot lane** (its
+  `spec/boot/INDEX.md:57`) while keeping **no `AUDIT.md` at all**. A second
+  consumer failing the same rule — F-097 widens rather than falls.
+- **Widening into `packages/` again, and it narrowed a finding:** the sixteen
+  `vibe.toml` manifests still reading `license = "EULA"` are **all** inside that
+  specspace's `.vibe/cache/` and `vibedeps/` — exactly the two categories
+  `CLAUDE.md:131-133` declares off-limits. No canonical package manifest names
+  the old licence.
+
+### The consistency corollary fired three times, and twice it argued for FALSE
+
+- **F-330** — six of the seven anchors in `scope-discipline.md`'s section are
+  `confirmed`, and **two say in their own verdict text that the `push_url`
+  failure was deliberately filed onto the drifting row**
+  (`##GUARDED-ACTION-MODIFY`: «carried as drift at the every-action row rather
+  than counted twice here»; `##AN-UNGUARDED-CODE-PATH-IS-A-BUG`: «the failure
+  itself is carried by `the-check-runs-on-every-action-lead`»). That anchor is a
+  designated accumulator, exactly as F-287 was in wave 6, and cannot be re-judged
+  apart from the six confirmations leaning on it.
+- **F-239** — the package's three contents anchors are `confirmed` on the very
+  principle F-239 contradicts; two of the four rows are already recorded the way
+  this entry recommends.
+- **F-097** — all four anchors state one rule at four strengths and fail on the
+  same two ship lines; judged as one set and ruled identically.
+
+### Host obligations this batch opens, in the order they deserve attention
+
+1. **The tool's own printed fix breaks the user's config** (F-203).
+   `crates/vibe-workspace/src/hooks.rs:126` and
+   `crates/vibe-cli/src/commands/install/mod.rs:263` tell the operator to
+   allow-list a group in `[hooks].allowed_groups`;
+   `crates/vibe-core/src/user_config.rs:63`'s `deny_unknown_fields` plus the
+   `?` at `:212` turn doing so into `UserConfigError::Parse`. Worse than a
+   missing feature.
+2. **`push_url` is unguarded on both adapters** (F-330) —
+   `crates/vibe-publish/src/github.rs:156`, `gitverse.rs:135`; and
+   `creator.rs:141` returns `String`, so `ScopeViolation` has no channel. A
+   trait-signature change across two impls and four call sites. Two host
+   statements also disagree about whether the guard already runs everywhere
+   (`registry/publish.rs:125-126` «every method call» vs `creator.rs:154-155`
+   «`repo_exists` / `create_repo`»).
+3. **`spec/modules/vibe-registry/PROP-002-decentralized-registry.md:530` is
+   `@impl/done` over a refusal no code performs** (F-114), repeated as a doc
+   comment at `crates/vibe-core/src/manifest/lockfile.rs:120`. If it were built,
+   **18 of `redbook`'s 22 members become uninstallable in this repository** — a
+   product decision, not a bug fix.
+4. **`README.md:164` still names the proprietary EULA placeholder** (F-236),
+   unmarked in `CLAUDE.md`'s off-limits ledger while its neighbour
+   `VIBEVM-SPEC.md:8` is correctly on it. Nineteen days on.
+5. **`DEV-GUIDE.md:265` names an emptied `apps/`** (F-227) — the one genuine
+   instance of the abandoned-toolchain rule anywhere in this batch.
+6. **Six of ten package-declared skills are projected into no harness home**
+   (F-097) — `health-audit`, `draft-eula`, `wal-status`, `go-ai-native-sweep`,
+   `go-ai-native-terraform`, `fractality-delegate`. Six boot-lane instructions
+   fail when followed; one `vibe skill install` closes all six.
+7. **Three `world` flow `SKILL.md` files cite package-root-relative
+   `spec/flows/…` paths** resolving from neither a projected skill home nor the
+   consumer root — the host has no `spec/flows/` (F-239). The six `ai-native`
+   stack skills already use the resolvable `vibedeps/<slot>/…` form. This is a
+   **package** edit in three packages, so §4.5 makes it a release event.
+8. **Two milestones declared done on an un-audited base** (F-097) — M1.26 and
+   M1.24, both `SHIPPED (2026-07-07)`, now 1 659 commits past the last audit;
+   and the `fractality` specspace boots the same flow with no `AUDIT.md`.
+9. **`crates/vibe-index/Cargo.toml` declares no licence** (F-236) — one line,
+   invisible only because `publish = false`.
+10. **`DEV-GUIDE.md:330` (three invariants vs ten) and `:84` (81 tests vs
+    2 100)** (F-227) — in the guide `tools/self-check.sh:4` points its reader at.
+
+### What was deliberately not done
+
+- **No package file was edited.** F-114's correction is written out in its entry
+  and **not applied**; it is the only anchor in the batch whose defect is the
+  package's own, and on `sync-from-code` its diff needs the owner.
+- **No verdict JSON was written and nothing under
+  `campaigns/packages-2026-09/run/` was touched.** Twelve anchors are
+  recommended for route (b) and three for re-judging `confirmed`; recording
+  either is the boss's, per §7's exit gate.
+- **`vibe progress check` was not run** — it writes the campaign cache, which
+  this worker is forbidden to touch, and no document changed for it to check.
+- **No `git` command that writes was run.** Every history read is
+  `log` / `show` / `ls-files`.
+- **No credential file was read, opened, listed, printed or copied**, and no
+  permission was inspected or changed. Wave 6's `~/.vibe` ACL exposure is cited,
+  not re-derived.

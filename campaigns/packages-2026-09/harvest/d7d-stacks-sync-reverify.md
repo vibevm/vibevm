@@ -51,6 +51,72 @@ by default** — F-166 rests on it explicitly.
 
 ---
 
+## Owner ruling received mid-batch {#ruling}
+
+_Received 2026-07-31, after the Rust stack had been written and while the Go
+entries were being drafted. It changes what may count as evidence at all, so it
+is recorded here with the point at which it arrived, and every Go and TypeScript
+outcome below was written or re-checked against it._
+
+1. **The `-lang` packages are built first and foremost for EXTERNAL consumers** —
+   language support that VibeVM's clients will use in other trees we cannot see.
+   **`go-ai-native-lang` and `typescript-ai-native-lang` are NOT adopted by this
+   host and must not be**; Go in particular is a deliberately unused prototype
+   specification. **This repository is therefore not a valid test bench for
+   them.** A verdict that convicts a Go or TypeScript sentence because *this
+   repo* does not do, dispatch, install or instantiate the thing **is measuring
+   the wrong consumer and is FALSE on that ground alone.**
+2. **The legitimate bench for those two is the package's own tree and its own
+   tests** — «we can only check our Go packages by tests». Concretely:
+   `tools/go-extract/test/fixtures/{clean,dirty}/`,
+   `tools/ts-extract/test/fixtures/{clean,dirty}/`,
+   `tools/ts-oracle/test/fixtures/proj/`, every `crates/*/tests/*.rs` and in-`src`
+   test module, and the package's own cards, guides and `vibe.toml`.
+3. **`rust-ai-native-lang` is the exception.** Part of VibeVM itself is written in
+   AI-Native Rust, so for the Rust stack the host genuinely is a consumer and
+   host evidence counts. It is judged as before — **and its reasoning is not
+   carried across to Go or TypeScript**, which is the parallel-corpus trap
+   running in the other direction.
+4. **Skill-directory evidence is void** for this purpose: `.claude/skills/`,
+   `.agents/skills/`, `.opencode/skills/` hold whatever this host's agents use,
+   and an absent Go skill says nothing about the Go package.
+5. **`legacy-spec/**` is legacy** — excluded from the perimeter and from every
+   count below.
+
+**Re-check of the Rust entries written before the ruling arrived.** Points 1–2
+bear on three passages, and none of them changes a *Rust* outcome — the Rust
+findings all rest on package-own artefacts (each stack's `bench.rs`, its own
+tests, its own conform gate, its own `vibe.toml`, the core ATLAS) plus, legitimately
+per point 3, the host:
+
+- **F-154 `##SCAFFOLD-F-STRUCTURED-DIAGNOSTICS`** — the *TypeScript* note cited
+  `research/ts-demo/eslint.config.js`. **That ground is now void.** Re-checked on
+  the legitimate bench: `grep -rn "createRule\|ESLintUtils"` over the TypeScript
+  package's own tree returns nothing either, so the observation survives on
+  package-own evidence — but the TS copy is **not** convicted here and is left
+  to a re-judgement, not an edit. The *Rust* outcome (no `dylint`,
+  `declare_lint` or `LateLintPass` anywhere, including the Rust package's own
+  crates) is unaffected.
+- **F-154 `##NAMES-ARE-TOKEN-PROGRAMS`** — the *Go* note rested on
+  `research/go-demo` instantiating `{Batch}{Planner}`. Void as a ground, benign
+  in direction: it was cited to show the Go sentence is **not** drift, and the Go
+  copy carries no verdict here in any case. The Rust conviction stands on
+  package-own evidence: `{Variant}{Seam}` appears in no file under
+  `packages/org.vibevm.ai-native/rust-ai-native-lang/**`, only in
+  `core-ai-native`'s `legacy-projections/`.
+- **F-154 `##PROSE-NEAR-CODE-…`** — «no adopter authors a `#[spec(documents)]`
+  edge» is legitimate for Rust (point 3). The `ts-demo` and fractality legs of
+  that count are corroboration only and are not load-bearing.
+- **F-215 `##TARGET-WARM-COMPLETE`** — the primary evidence is each package's
+  **own** `bench.rs` having no `complete` field, which is exactly point 2's bench.
+  The `research/tcg-bench/reports/` leg is host corroboration for Go and
+  TypeScript and is not needed for the finding.
+
+No other appended passage rests on host adoption, host dispatch, host
+installation or a host-side instance count.
+
+---
+
 ## F-215 — the `complete` target has no instrument in any of the three stacks; the large-workspace warning does exist and the verdict said it did not
 
 **Outcome:** MIXED — 1 SURVIVES (and survives in **all three** stacks, not one) · 1 FALSE PREMISE, DIFFERENT DEFECT
