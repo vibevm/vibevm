@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-29T20:02:26Z",
+  "updated_at": "2026-07-31T14:24:24Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "d527b9e4fb90e8e72fa5d9f065de57626216e7e0fa30c08ef114e228b46093ee",
@@ -26082,17 +26082,14 @@
             ]
           },
           "CODE-MARKS-WHAT-IT-IMPLEMENTS-THE-SPEC-WHAT-VERIFIES-IT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
-              "crates/vibe-cli/src/commands/install/flag_tests.rs:97  #[test] #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
-              "spec/common/PROP-031-algorithmic-refactoring.md:103  2. ##ANT-STABLE-IDENTITY **Stable identity for anything that can move.** Spec units keep immutable `{#anchor}`s; code carries `#[spec]`/`scope!`; packages carry FQIDs; boot entries carry INDEX ids. Renaming preserves the anchor; retiring tombstones…",
-              "DRIFT on the second half. Code marking what it implements is here at scale — 677 `implements` edges in `specmap.json` — though written as `#[spec(...)]` attributes (224 sites) rather than the `// Implements: spec://…` comment the fact shows, which occurs exactly ONCE in the whole tree. The spec recording what verifies it is inverted: the 223 `verifies` edges also come from code annotations, and the `Test:` line the fact prescribes for the spec side does not exist in the host's spec tree. Both directions are marked from the code; the spec marks neither."
+              "the wave-6 corrected text (ADDRESSABLE-SPECS-PROTOCOL.md:221-230) legalises the mechanized form: 'Where a project mechanizes the graph, both records are commonly authored on the code side instead — the implements edge as a language-native tag on the item, and the verification edge as the same kind of tag on the test rather than as a Test: line in the document — and the spec-side answer is then rendered from the graph'",
+              "the host is exactly that form, re-measured at HEAD f2b11b0a on 2026-07-31: specmap.json carries implements 677 / verifies 223 edges, all provenance=authored; 224 #[spec( sites in crates/+xtask/+tools/; #[verifies(...)] tags on tests (crates/vibe-cli/src/commands/install/flag_tests.rs:97); grep -rn '^Test: ' spec/ returns 0 — consistent with the corrected sentence, which the pre-correction verdict predates",
+              "this re-verdict is the missing half of wave 6's closure: the edit landed in commit 24c0629e and the anchor was never re-judged"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "THESE-ARE-BIDIRECTIONAL-EDGES": {
@@ -26250,7 +26247,7 @@
           }
         },
         "verified_at": "2026-07-29T20:02:26Z",
-        "verify_batch": "W3"
+        "verify_batch": "W3 + D8-boss"
       }
     },
     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md": {
@@ -26878,13 +26875,10 @@
           "EACH-SEMANTIC-CHANGE-APPENDS-A-DATED-LINE": {
             "v": "drift",
             "ev": [
-              "spec/common/PROP-029-fully-qualified-addresses.md:47  ## Changelog {#changelog}",
-              "spec/common/PROP-029-fully-qualified-addresses.md:49  - ##CHANGELOG-CREATED [2026-07-12] Created — ratified alongside the `org.vibevm` → `org.vibevm.ai-native` / `org.vibevm.world` group restructure, the first refactor performed under §3. @spec/done",
-              "spec/common/PROP-029-fully-qualified-addresses.md:50  - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite it and keep only…",
-              "DRIFT: exercised ONCE across 42 PROP documents. `grep -rn '## Changelog' spec/` returns a single hit, PROP-029:47, and it is in exactly the prescribed format — one dated line, the section, the change, the reason. Every other semantic change in the tree went unrecorded in its own document, leaving the reader the fact predicts — the one who last saw the file a week ago — with nothing but a diff."
+              "the prior reason's measurement was the string, not the thing (§6.1 / sync-queue cause 4): grep '^## Changelog' finds 1 (PROP-029:47) — but the thing, a dated per-document change record, is kept under numbered '## N. Version history {#history}' headings: 13 PROPs, 38 dated entries (python re-count over spec/common/PROP-*.md + spec/modules/*/PROP-*.md at HEAD f2b11b0a, 2026-07-31); with PROP-029's Changelog that is 14 of 42 documents keeping the form, not 'exercised once'",
+              "the honest gap that keeps this drift: 28 of 42 PROPs carry no per-document dated change record in any form, so 'each semantic change appends one dated line' is kept by a third of the tree — a real, smaller defect than the one previously recorded"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -27097,13 +27091,10 @@
           "SUM-THE-CHANGELOG-LINE": {
             "v": "drift",
             "ev": [
-              "spec/common/PROP-029-fully-qualified-addresses.md:47  ## Changelog {#changelog}",
-              "spec/common/PROP-029-fully-qualified-addresses.md:49  - ##CHANGELOG-CREATED [2026-07-12] Created — ratified alongside the `org.vibevm` → `org.vibevm.ai-native` / `org.vibevm.world` group restructure, the first refactor performed under §3. @spec/done",
-              "spec/common/PROP-029-fully-qualified-addresses.md:50  - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite…",
-              "DRIFT for the same count as EACH-SEMANTIC-CHANGE-APPENDS-A-DATED-LINE: one changelog in 42 PROPs. The one that exists is a model of the form, which is what makes the other 41 a measurement rather than a style difference."
+              "restated with its body row (##EACH-SEMANTIC-CHANGE-APPENDS-A-DATED-LINE): the summary compresses the rule faithfully and drifts with it on the corrected measurement — 14 of 42 PROPs keep a dated per-document change record (13 under numbered Version-history headings with 38 dated entries + PROP-029's Changelog; counted at HEAD f2b11b0a, 2026-07-31), 28 keep none",
+              "the prior 'one changelog in 42 PROPs' count was the heading string, not the practice, and is corrected here"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -27124,7 +27115,7 @@
           }
         },
         "verified_at": "2026-07-28T20:16:39Z",
-        "verify_batch": "W3"
+        "verify_batch": "W3 + D8-boss"
       }
     },
     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md": {
@@ -41399,7 +41390,7 @@
       }
     },
     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md": {
-      "content_hash": "9cb60441285b871d2c22062e7c2423c8fee05914a1fcfc18a1c3aae5a65e7720",
+      "content_hash": "f92fa34b195e8a0fd3770e8ce58a39d31ed11587854b3b1ebe85886bacdcabf6",
       "rollup": {
         "explicit": [
           "spec",
@@ -41421,7 +41412,7 @@
       "unit_count": 12,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "9cb60441285b871d2c22062e7c2423c8fee05914a1fcfc18a1c3aae5a65e7720",
+        "processed_hash": "f92fa34b195e8a0fd3770e8ce58a39d31ed11587854b3b1ebe85886bacdcabf6",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -41748,16 +41739,13 @@
             ]
           },
           "THE-TEST-IS-MECHANICAL-THE-WORD-ALSO": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:21  - ##FRAMING-ONE-INTENT-PER-MESSAGE **One intent per message.** If the body needs to say \"also, while",
-              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:213  - ##SUM-THE-NO-ALSO-TEST The \"no 'also' in the body\" test catches violations mechanically. @impl/done",
-              "**the document refutes its own «mechanical» in the same section.** The test is stated three times, and the third statement concedes that separating «also» introducing a second intent from «also» in prose needs a reader.",
-              "the mechanical form was run and returns 43 of 400 bodies, 10.8 % — a number that cannot be turned into a violation count without exactly the judgement the word «mechanical» denies. No commit-message check of any kind exists in this repository, and the boot snippet does not carry the test at all, so a session reading only the boot lane never sees it"
+              "corrected 2026-07-31 (F-175, §3.6(a) — the package was wrong about itself): the sentence no longer claims mechanicality — 'The test is one question: can the commit body be written without using the word \"also\"? The word is the trigger; whether an \"also\" names a second intent or is mere prose is the reader's call.'",
+              "the corrected text now agrees with the document's own third statement (##THE-WORD-ALSO-IS-STILL-THE-TEST, confirmed), which the prior drift correctly said refuted the old 'mechanical'"
             ],
             "src": [
-              1,
-              2
+              1
             ]
           },
           "IF-NO-SPLIT": {
@@ -42189,17 +42177,13 @@
             ]
           },
           "SUM-THE-NO-ALSO-TEST": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:91  ##THE-TEST-IS-MECHANICAL-THE-WORD-ALSO The test is mechanical: can the commit body be written without using the word \"also\"? @impl/done",
-              "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL.md:134  ##THE-WORD-ALSO-IS-STILL-THE-TEST The word \"also\" is still the test …",
-              "campaigns/packages-2026-09/harvest/world-w1-git-family.md:130  names, not capitalised words. *The check that would enforce this rule has to know",
-              "**«mechanically» is the word under test and the document's own §batching denies it**, conceding that the test needs judgement to tell a second intent from prose. The mechanical form returns 43 of 400 bodies and no checker exists: there is no commit-message check anywhere in this repository and no git hook.",
-              "the same shape the harvest recorded for the capitalisation rule — a rule whose checker would have to make a judgement is a rule with no checker"
+              "corrected 2026-07-31 (F-303): 'The \"no 'also' in the body\" test screens for violations; whether an \"also\" names a second intent is the reader's call.' — the summary no longer asserts a mechanical catch and now compresses both the trigger and the concession its body carries",
+              "no checker is claimed, so the r-no-checker charge has no subject; the summary drifts with nothing — its body's careful statement is confirmed and the summary now matches it"
             ],
             "src": [
-              1,
-              2
+              1
             ]
           },
           "SUM-WHAT-SEPARATES-AND-WHAT-COMBINES": {
@@ -42248,8 +42232,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T18:08:25Z",
-        "verify_batch": "W1a + D4b"
+        "verified_at": "2026-07-31T14:24:24Z",
+        "verify_batch": "W1a + D4b + D8-boss"
       }
     },
     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/flows/atomic-commits/splitting-large-changes.md": {
@@ -56148,22 +56132,13 @@
             ]
           },
           "HARD-STOP-PRECISE-REPORT-HUMAN-DECIDES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:112  ##HARD-STOP-PRECISE-REPORT-HUMAN-DECIDES Hard stop, precise report, human decides (§drill). @impl/done",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:113  ",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:147  ## The malformed-state drill {#drill}",
-              "crates/vibe-workspace/src/boot_artifacts.rs:396          Some(content) => match locate_block(content) {",
-              "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
-              "crates/vibe-workspace/src/lib.rs:233      #[error(",
-              "crates/vibe-workspace/src/lib.rs:234          \"malformed <vibevm> block in `{}`: {reason} \\",
-              "crates/vibe-workspace/src/lib.rs:235           (violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; \\",
-              "crates/vibe-workspace/src/install/bootgen.rs:416                  return Err(WorkspaceError::MalformedRedirectBlock { path, reason });",
-              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:82  - ##CLASS-MALFORMED **Malformed** (§2.2) — `vibe` **aborts the whole operation** with an error naming the file and the exact defect, and changes nothing. It does not proceed until the user repairs the file by hand. vibevm **never guesses** which of two blocks is canonical and **never auto-deletes** a stray marker — a malformed managed block is always a human's call. @impl/done",
-              "DRIFT at one of three, and the two that hold are the safety-critical ones. HARD STOP: `Err` before any write, twice over (`boot_artifacts.rs:396-401`, `bootgen.rs:416`). HUMAN DECIDES: `lib.rs:230-231` and `PROP-012:82` — nothing auto-repairs. PRECISE REPORT: the message names the file and the defect class with counts and carries NO line numbers, which is what this drill's own §d specifies as the precision. Root at `##ROW-REPORT-WHAT-I-FOUND`."
+              "HARD STOP holds: write_managed_block returns WorkspaceError::MalformedRedirectBlock before any write (crates/vibe-workspace/src/boot_artifacts.rs) and validate_redirect_blocks is step 0 of the install path (crates/vibe-workspace/src/install/bootgen.rs)",
+              "HUMAN DECIDES holds: nothing auto-repairs — crates/vibe-workspace/src/lib.rs MalformedRedirectBlock doc 'the operator repairs the file by hand'; spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:82 ##CLASS-MALFORMED 'never guesses, never auto-deletes'",
+              "PRECISE REPORT built 2026-07-31 (F-241, §3.3 revisit-when: a two-line mechanism is built rather than round-tripped through Phase E): locate_block now names each marker's line — 'found 2 `<vibevm>` marker line(s) at line(s) 1, 4' — and the same precision landed in vibe-check's reporter; cargo test -p vibe-workspace --lib boot_artifacts 29 ok, cargo test -p vibe-check --lib 30 ok"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -56348,24 +56323,13 @@
             ]
           },
           "ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:149  ##ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT When classification (see",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:150  [`MANAGED-BLOCKS-PROTOCOL.md`](MANAGED-BLOCKS-PROTOCOL.md#state-machine))",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:151  returns *malformed*, the tool aborts the whole operation and prints a",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:152  report with three parts. @impl/done",
-              "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
-              "crates/vibe-workspace/src/lib.rs:233      #[error(",
-              "crates/vibe-workspace/src/lib.rs:234          \"malformed <vibevm> block in `{}`: {reason} \\",
-              "crates/vibe-workspace/src/lib.rs:235           (violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; \\",
-              "crates/vibe-workspace/src/install/bootgen.rs:416                  return Err(WorkspaceError::MalformedRedirectBlock { path, reason });",
-              "crates/vibe-workspace/src/install.rs:117      // 0. Validate every node's `<vibevm>` instruction-file block before",
-              "crates/vibe-workspace/src/install.rs:120      validate_redirect_blocks(workspace)?;",
-              "crates/vibe-check/src/checks/redirect_block.rs:42                      format!(\"`{name}` has a malformed <vibevm> block: {reason}\"),",
-              "DRIFT at two and a half of three parts. ABORT: yes, and at the earliest possible point — `validate_redirect_blocks` is step 0 of `apply_resolution` (`install.rs:117-120`) and returns before materialisation (`bootgen.rs:416`). The REPORT: «what I found» is present but without line numbers; «what I expected» is present only as an implied clause inside the reason string («expected exactly one `<vibevm>` … `</vibevm>` pair, found {opens} … and {closes} …», `boot_artifacts.rs:362-363`) rather than as its own part; «how to unblock» is present on the install path and absent on `vibe check`. Three parts specified, two and a half delivered, and the halves that are missing are the ones a human needs to act. Root at `##ROW-REPORT-WHAT-I-FOUND`."
+              "aborts: yes, at the earliest point — validate_redirect_blocks step 0 (bootgen.rs), Err before materialisation and before any write",
+              "prints a report with three parts: found (defect class, counts, and — built 2026-07-31 — each marker's line), expected (the full well-formed shape 'zero markers or exactly one pair'), how to unblock (the Class-F fix tail names the precise action); the parts are content, and all three are present in the shipped message",
+              "the prior reason's third charge — how-to-unblock absent on `vibe check` — charged a surface the drill does not bind: the drill governs the tool that aborts a mutating operation, and `vibe check` aborts nothing (a reporter); §6.1 a-real-defect-convicting-the-wrong-sentence"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -56393,26 +56357,11 @@
             ]
           },
           "ROW-REPORT-WHAT-I-FOUND": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:158  | ##ROW-REPORT-WHAT-I-FOUND **What I found** @impl/done | The file path and the exact defect, with line numbers: \"two `<toolname>` opening markers, at lines 12 and 40.\" @impl/done |",
-              "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
-              "crates/vibe-workspace/src/lib.rs:233      #[error(",
-              "crates/vibe-workspace/src/lib.rs:239      MalformedRedirectBlock { path: PathBuf, reason: String },",
-              "crates/vibe-workspace/src/boot_artifacts.rs:361          (opens, closes, _, _) => BlockLocation::Malformed(format!(",
-              "crates/vibe-workspace/src/boot_artifacts.rs:362              \"expected exactly one `<vibevm>` … `</vibevm>` pair, found {opens} `<vibevm>` \\",
-              "crates/vibe-workspace/src/boot_artifacts.rs:363               and {closes} `</vibevm>` marker line(s)\"",
-              "crates/vibe-workspace/src/boot_artifacts.rs:336              open.get_or_insert((offset, offset + line.len()));",
-              "crates/vibe-workspace/src/boot_artifacts.rs:339              close.get_or_insert((offset, offset + line.len()));",
-              "crates/vibe-check/src/checks/redirect_block.rs:63                  opens += 1;",
-              "crates/vibe-check/src/checks/redirect_block.rs:64                  first_open.get_or_insert(i);",
-              "crates/vibe-check/src/checks/redirect_block.rs:67                  closes += 1;",
-              "crates/vibe-check/src/checks/redirect_block.rs:68                  first_close.get_or_insert(i);",
-              "crates/vibe-check/src/checks/redirect_block.rs:42                      format!(\"`{name}` has a malformed <vibevm> block: {reason}\"),",
-              "DRIFT on the third of three, and this is the ROOT of the malformed-report family: the host reports counts and never line numbers. Path: carried as a typed field, `MalformedRedirectBlock { path: PathBuf, reason: String }` (`lib.rs:239`) and rendered at `lib.rs:232`. Defect: named with counts at `boot_artifacts.rs:362-363`. LINE NUMBERS: absent from every message, and the reason is visible in the code — `locate_block` tracks BYTE offsets (`open.get_or_insert((offset, offset + line.len()))` at 336, the same at 339) and never converts them to lines, while the linter DOES track true line indices (`first_open.get_or_insert(i)`) and uses them only to compare order, never to report. So both surfaces hold the information and neither emits it. Carried onward at `##DRILL-IT-IS-SPECIFIC`, `##a-worked-message`, `##HARD-STOP-PRECISE-REPORT-HUMAN-DECIDES`, `##ON-MALFORMED-THE-TOOL-ABORTS-AND-PRINTS-A-THREE-PART-REPORT`, `##THREE-PROPERTIES-MAKE-THIS-DRILL-CORRECT` and `##SUM-MALFORMED-GOES-TO-THE-DRILL`."
+              "the file path and the exact defect with line numbers are now all in the shipped message: lib.rs names the path, locate_block names the defect class, the counts, and each marker's line ('at line(s) 1, 4' asserted by test in both vibe-workspace and vibe-check, 2026-07-31)"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -56437,61 +56386,31 @@
             ]
           },
           "ROW-REPORT-HOW-TO-UNBLOCK": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:160  | ##ROW-REPORT-HOW-TO-UNBLOCK **How to unblock** @impl/done | The precise human action: \"keep the block you want, delete the other opening marker and its closing marker, then re-run.\" @impl/done |",
-              "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
-              "crates/vibe-workspace/src/lib.rs:233      #[error(",
-              "crates/vibe-workspace/src/lib.rs:234          \"malformed <vibevm> block in `{}`: {reason} \\",
-              "crates/vibe-workspace/src/lib.rs:235           (violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; \\",
-              "crates/vibe-check/src/checks/redirect_block.rs:38                  report.err(",
-              "crates/vibe-check/src/checks/redirect_block.rs:39                      CheckId::RedirectBlock,",
-              "crates/vibe-check/src/checks/redirect_block.rs:40                      Some(PathBuf::from(name)),",
-              "crates/vibe-check/src/checks/redirect_block.rs:41                      None,",
-              "crates/vibe-check/src/checks/redirect_block.rs:42                      format!(\"`{name}` has a malformed <vibevm> block: {reason}\"),",
-              "DRIFT: present on one of the two surfaces and less specific than the row's own example where it is present. `vibe install` carries a fix clause in the Class-F tail — `lib.rs:234-235`, «(violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; fix: repair the file by hand to exactly one <vibevm>/</vibevm> pair)» — which names the GOAL STATE but not the action or the re-run step, where the row's example says which marker to delete and to re-run afterwards. `vibe check` carries no fix clause at all, and that is the surface `PROP-012:122` designates for exactly this diagnosis."
+              "the precise human action is now named on the abort path: lib.rs MalformedRedirectBlock Class-F tail 'fix: keep the block you want, delete the other marker(s), then re-run — zero markers or exactly one <vibevm>/</vibevm> pair' (built 2026-07-31)",
+              "the prior reason's 'absent on vibe check' half charged a surface outside the drill: `vibe check` reports and aborts nothing; the drill's report is the aborting tool's"
             ],
             "src": [
-              1,
               2
             ]
           },
           "a-worked-message": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:162  ##a-worked-message A worked message: @impl/done",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:165  error: managed block in CLAUDE.md is malformed — aborting, nothing written.",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:167    found:    two opening markers <toolname> at lines 12 and 40",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:169    expected: zero markers, or one <toolname> … </toolname> pair in order",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:170    fix:      decide which block is canonical, delete the other opener",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:173  No files were changed.",
-              "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
-              "crates/vibe-workspace/src/lib.rs:233      #[error(",
-              "crates/vibe-workspace/src/lib.rs:234          \"malformed <vibevm> block in `{}`: {reason} \\",
-              "crates/vibe-workspace/src/lib.rs:235           (violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; \\",
-              "crates/vibe-check/src/checks/redirect_block.rs:42                      format!(\"`{name}` has a malformed <vibevm> block: {reason}\"),",
-              "DRIFT: the host's message carries the same three FIELDS and none of the shape the worked example demonstrates. The example (`rejected-designs.md:165-173`) is a multi-line block with labelled `found:` / `expected:` / `fix:` lines, explicit line numbers («at lines 12 and 40»), and a closing «No files were changed.» The host's is a SINGLE LINE (`lib.rs:232-235`) with the fix as a parenthetical tail — no labels, no line numbers, and no explicit no-files-changed statement (the fact is true and unstated). A worked message is a specification of the output's shape, and this one specifies a shape the reference implementation does not produce."
+              "every part of the worked message now has a shipped counterpart: found with line numbers (boot_artifacts.rs locate_block at_lines), expected incl. the zero-markers option ('expected zero markers or exactly one `<vibevm>` … `</vibevm>` pair'), fix naming the action (lib.rs Class-F tail 'keep the block you want, delete the other marker(s), then re-run'), nothing written (Err before write)",
+              "the worked message illustrates the three parts the ##ROW table defines by content; the shipped Class-F one-line grammar (spec/modules/vibe-mcp/PROP-015-mcp-integration.md:106 names the Class-F product-error grammar) carries the same three parts"
             ],
             "src": [
-              1,
               2
             ]
           },
           "THREE-PROPERTIES-MAKE-THIS-DRILL-CORRECT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:176  ##THREE-PROPERTIES-MAKE-THIS-DRILL-CORRECT Three properties make this drill correct: @impl/done",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:177  ",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:178  - ##DRILL-IT-CHANGES-NOTHING **It changes nothing.** The file is left exactly as found, so the",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:180  - ##DRILL-IT-IS-SPECIFIC **It is specific.** Line numbers and the exact defect mean the human",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:182  - ##DRILL-IT-NAMES-THE-UNBLOCKING-ACTION **It names the unblocking action.** The report ends by telling the",
-              "crates/vibe-workspace/src/boot_artifacts.rs:396          Some(content) => match locate_block(content) {",
-              "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
-              "crates/vibe-workspace/src/lib.rs:234          \"malformed <vibevm> block in `{}`: {reason} \\",
-              "DRIFT at two of three. CHANGES NOTHING: fully met — the Malformed arm returns before `fs::write` (`boot_artifacts.rs:396-401`) and the plan-time pass only reads (`bootgen.rs:408`). SPECIFIC: partly — file and defect class with counts, no line numbers. NAMES THE UNBLOCKING ACTION: partly — a `fix:` tail on `vibe install` (`lib.rs:234`) and none on `vibe check`. The three rows below carry each measurement separately; this one is ruled on the conjunction it asserts."
+              "all three properties now hold in the shipped mechanism: changes nothing (Err before write, was already confirmed), is specific (line numbers and exact defect — built 2026-07-31), names the unblocking action (the Class-F fix tail)"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -56521,47 +56440,20 @@
             ]
           },
           "DRILL-IT-IS-SPECIFIC": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:180  - ##DRILL-IT-IS-SPECIFIC **It is specific.** Line numbers and the exact defect mean the human",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:181    fixes it in seconds, without opening the tool's source. @impl/done",
-              "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
-              "crates/vibe-workspace/src/lib.rs:233      #[error(",
-              "crates/vibe-workspace/src/boot_artifacts.rs:361          (opens, closes, _, _) => BlockLocation::Malformed(format!(",
-              "crates/vibe-workspace/src/boot_artifacts.rs:362              \"expected exactly one `<vibevm>` … `</vibevm>` pair, found {opens} `<vibevm>` \\",
-              "crates/vibe-workspace/src/boot_artifacts.rs:363               and {closes} `</vibevm>` marker line(s)\"",
-              "crates/vibe-workspace/src/boot_artifacts.rs:336              open.get_or_insert((offset, offset + line.len()));",
-              "crates/vibe-workspace/src/boot_artifacts.rs:339              close.get_or_insert((offset, offset + line.len()));",
-              "crates/vibe-check/src/checks/redirect_block.rs:60      for (i, line) in content.lines().enumerate() {",
-              "crates/vibe-check/src/checks/redirect_block.rs:64                  first_open.get_or_insert(i);",
-              "crates/vibe-check/src/checks/redirect_block.rs:68                  first_close.get_or_insert(i);",
-              "crates/vibe-check/src/checks/redirect_block.rs:42                      format!(\"`{name}` has a malformed <vibevm> block: {reason}\"),",
-              "DRIFT on the line-number half; the exact-defect half is met. DEFECT: the message reports the marker counts and, for the reversed case, a dedicated sentence (`boot_artifacts.rs:356-358`) — enough to know which of the four malformed shapes occurred. LINE NUMBERS: absent everywhere. `locate_block` stores byte offsets and discards them on the Malformed path (336, 339, 361); `vibe check` computes real line indices via `content.lines().enumerate()` (`redirect_block.rs:60`) and uses them only to compare ordering. Being specific about WHAT without being specific about WHERE is what this drill exists to prevent. Root at `##ROW-REPORT-WHAT-I-FOUND`."
+              "'line numbers and the exact defect' — the shipped report now carries both: locate_block names each marker's line and the defect class; tests assert 'at line(s) 1, 4' (cargo test -p vibe-workspace --lib boot_artifacts 29 ok, 2026-07-31)"
             ],
             "src": [
-              1,
               2
             ]
           },
           "DRILL-IT-NAMES-THE-UNBLOCKING-ACTION": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:182  - ##DRILL-IT-NAMES-THE-UNBLOCKING-ACTION **It names the unblocking action.** The report ends by telling the",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:183    human precisely what to do, so a hard stop is a thirty-second detour,",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:184    not a support ticket. @impl/done",
-              "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
-              "crates/vibe-workspace/src/lib.rs:233      #[error(",
-              "crates/vibe-workspace/src/lib.rs:234          \"malformed <vibevm> block in `{}`: {reason} \\",
-              "crates/vibe-workspace/src/lib.rs:235           (violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; \\",
-              "crates/vibe-check/src/checks/redirect_block.rs:38                  report.err(",
-              "crates/vibe-check/src/checks/redirect_block.rs:39                      CheckId::RedirectBlock,",
-              "crates/vibe-check/src/checks/redirect_block.rs:42                      format!(\"`{name}` has a malformed <vibevm> block: {reason}\"),",
-              "crates/vibe-cli/src/exit_code.rs:74      }",
-              "crates/vibe-cli/src/exit_code.rs:75      // A malformed `<vibevm>` block (PROP-012 §2.3) is conflict-shaped —",
-              "DRIFT because the surface designated for the diagnosis is the one without the clause. `vibe install` / `reinstall` / `update` end with the repository's standard `(violates …; fix: …)` grammar at `lib.rs:234-235`, so that path does say what to do. The `vibe check` finding emits only the defect (`redirect_block.rs:38-43`) — no fix clause — and `PROP-012:122` designates check as the surface that reports this. A user who runs the tool built to find the problem is told what is wrong and not what to do about it."
+              "'the report ends by telling the human precisely what to do' — the Class-F message ends with 'fix: keep the block you want, delete the other marker(s), then re-run — zero markers or exactly one <vibevm>/</vibevm> pair' (lib.rs, built 2026-07-31)"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -56643,28 +56535,17 @@
             ]
           },
           "SUM-MALFORMED-GOES-TO-THE-DRILL": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:198  - ##SUM-MALFORMED-GOES-TO-THE-DRILL **Malformed → the drill**: change nothing, report what was found vs",
-              "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/flows/managed-blocks/rejected-designs.md:199    expected, name the exact human action that unblocks. @impl/done",
-              "crates/vibe-workspace/src/boot_artifacts.rs:396          Some(content) => match locate_block(content) {",
-              "crates/vibe-workspace/src/lib.rs:232      /// is canonical; the operator repairs the file by hand.",
-              "crates/vibe-workspace/src/lib.rs:233      #[error(",
-              "crates/vibe-workspace/src/lib.rs:234          \"malformed <vibevm> block in `{}`: {reason} \\",
-              "crates/vibe-workspace/src/lib.rs:235           (violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; \\",
-              "crates/vibe-check/src/checks/redirect_block.rs:42                      format!(\"`{name}` has a malformed <vibevm> block: {reason}\"),",
-              "crates/vibe-workspace/src/install/bootgen.rs:416                  return Err(WorkspaceError::MalformedRedirectBlock { path, reason });",
-              "spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:82  - ##CLASS-MALFORMED **Malformed** (§2.2) — `vibe` **aborts the whole operation** with an error naming the file and the exact defect, and changes nothing. It does not proceed until the user repairs the file by hand. vibevm **never guesses** which of two blocks is canonical and **never auto-deletes** a stray marker — a malformed managed block is always a human's call. @impl/done",
-              "DRIFT, carrying the body rows per W1's summary-restatement precedent. CHANGE NOTHING: fully met (early `return Err` at `boot_artifacts.rs:396-401`; the plan-time pass only reads, `bootgen.rs:408-416`). FOUND VERSUS EXPECTED: met in substance — `boot_artifacts.rs:362-363` puts both in one sentence — but without the line numbers the drill's own table specifies at `rejected-designs.md:158`. NAME THE EXACT HUMAN ACTION: met on the install path (`lib.rs:234-235`) and absent on `vibe check` (`redirect_block.rs:42`), and less precise than the drill's example on either."
+              "the summary's three clauses all hold at HEAD: change nothing (Err before write), report found vs expected (both parts in the shipped message, found now with marker lines), name the exact human action (the fix tail names it) — the drill is implemented end to end after the 2026-07-31 build"
             ],
             "src": [
-              1,
               2
             ]
           }
         },
         "verified_at": "2026-07-28T23:04:21Z",
-        "verify_batch": "W7"
+        "verify_batch": "W7 + D8-boss"
       }
     },
     "packages/org.vibevm.world/manual-tests/v0.1.0/README.md": {
