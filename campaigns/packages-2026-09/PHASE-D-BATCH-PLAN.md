@@ -506,6 +506,20 @@ owner routes and had to be reverted wholesale by owner ruling.*
   and once for its own risk id. `merge-verdicts.py` caught all three with «not an
   addressable anchor of this file», which is its third useful refusal in this
   phase.
+- ##READ-FURTHER-BEFORE-SEARCHING-WIDER **The cheapest disproof is usually twelve lines down, not in
+  another directory.** §3.7 and its wave-6 mirror both say *widen the
+  perimeter*, and that is right — but wave 7 found the complement, and it is
+  cheaper. **Three of one batch's four false verdicts were settled by reading
+  the subject document further, not by searching anywhere at all.** The sharpest:
+  a fact was convicted on evidence the verdict itself described as
+  «configuration or product data», which is verbatim the exemption
+  `##SCOPE-PRODUCT-IS-CARVED-OUT` states *twelve lines above it in the same
+  document*. Another was convicted on a reading that makes the section
+  contradict its own next rule fifteen lines later. A third imported a stronger
+  clause from a neighbouring PROP than the document's own text carries.
+  **Before widening: read the whole section, its scope carve-outs, and the rules
+  on either side of the anchor.** A document that contradicts itself under your
+  reading is telling you the reading is wrong.
 - ##THE-CAMPAIGN-IS-INSIDE-ITS-OWN-CORPUS **A search over this repository finds this campaign's own
   records, and they are not evidence about the subject.** The campaign writes
   its findings into `campaigns/**`, into `spec/terraforms/`'s §7 LOG, and into
@@ -521,6 +535,16 @@ owner routes and had to be reverted wholesale by owner ruling.*
   evidence, open the hits and confirm they are instances of the form rather than
   prose about it.** The trap is worst exactly where the campaign has been most
   thorough, because that is where its own footprint is largest.
+
+  **And it does not merely match its own searches — it moves its own
+  measurements, inside a single session.** Wave 7 measured a commit-subject
+  breach at the start of a batch and again at its end: HEAD had advanced six
+  commits, every one of them this campaign's own bookkeeping, and the figure
+  moved **1.2 points on commits that touched no code**. Over a 400-commit window
+  in a four-day repository, this campaign is the dominant contributor to the very
+  practice `git-conventional-commits` and `git-atomic-commits` are judged
+  against. **Any figure over `git log` names the HEAD it was taken at, and a
+  figure quoted from an earlier wave is re-measured rather than carried.**
 - ##ABSENCE-NAMES-ITS-PERIMETER **A demotion whose whole basis is an absence
   must name the perimeter it searched, in the record, before the marker moves.**
   Two demotions in the first wave rested on «nothing captures a golden
