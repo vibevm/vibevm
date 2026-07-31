@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-31T20:39:23Z",
+  "updated_at": "2026-07-31T21:37:29Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "d527b9e4fb90e8e72fa5d9f065de57626216e7e0fa30c08ef114e228b46093ee",
@@ -49692,7 +49692,7 @@
       }
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md": {
-      "content_hash": "9ff19490ad21b6e0cd5bee163bc0d8b191fa3dca79567b89dbc0467361edd4c0",
+      "content_hash": "577c1e6e0b3d0298563b65c5ee81b2937ad7cb234fc6163bca996d3622c11f54",
       "rollup": {
         "explicit": [
           "impl",
@@ -49714,7 +49714,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "9ff19490ad21b6e0cd5bee163bc0d8b191fa3dca79567b89dbc0467361edd4c0",
+        "processed_hash": "577c1e6e0b3d0298563b65c5ee81b2937ad7cb234fc6163bca996d3622c11f54",
         "verdicts": {
           "RUNNING-ONE-PERIODIC-HEALTH-AUDIT": {
             "v": "confirmed",
@@ -49732,16 +49732,12 @@
             ]
           },
           "full-protocol-pointer": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:1  # Health Audit Protocol {#root}",
-              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md:1  # The audit category checklist {#root}",
-              "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md:1  # Running an audit {#root}",
-              "DRIFT: the fact's subject is the pointer, and the directory it names does not exist in the consuming project. `ls -d spec/flows` returns «No such file or directory»; the host's spec/ holds WAL.md, boot, common, design, manual-tests, modules, terraforms. The three documents DO ship, in the package and at `vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/`. An agent that read this skill inside this repository and followed the pointer literally would find nothing — which the skill's own step-1 fallback half anticipates. W1's 69-dangling family."
+              "closed as волна 9's straggler (2026-08-01): the pointer was the F-240 root-relative variant — prose path, not a ../flows/ link — so address-repair.py legitimately did not transform it and the mirror-span join did not see it; found by the d12 health-audit pass as one of two unrouted survivors. The pointer now reads @spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#root — the same position-independent form the owner ruled for the family — and resolves from the package, the slot and the compiled lane; rides the tail re-vendor with batches 1a-1d"
             ],
             "src": [
               1,
-              2,
               3
             ]
           },
@@ -49913,8 +49909,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T21:58:39Z",
-        "verify_batch": "W5"
+        "verified_at": "2026-07-31T21:37:29Z",
+        "verify_batch": "W5 + D12-straggler"
       }
     },
     "packages/org.vibevm.world/licensing/v0.1.0/README.md": {

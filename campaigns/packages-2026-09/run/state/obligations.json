@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 272,
+ "drift_verdicts": 271,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -4999,7 +4999,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": false,
+   "installed_differs": true,
    "release_event": false,
    "evidence_spans": [
     "AUDIT.md",
@@ -5028,48 +5028,6 @@
     "host"
    ],
    "id": "F-312",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "relocation",
-   "rule": "r-dangling-flows",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/health-audit"
-   ],
-   "files": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md#full-protocol-pointer"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/health-audit"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:1  # Health Audit Protocol {#root}",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md:1  # The audit category checklist {#root}",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md:1  # Running an audit {#root}"
-   ],
-   "cites": [],
-   "reason": "DRIFT: the fact's subject is the pointer, and the directory it names does not exist in the consuming project. `ls -d spec/flows` returns «No such file or directory»; the host's spec/ holds WAL.md, boot, common, design, manual-tests, modules, terraforms. The three documents DO ship, in the package and at `vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/`. An agent that read this skill inside this repository and followed the pointer literally would find nothing — which the skill's own step-1 fallback half anticipates. W1's 69-dangling family.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:1  # Health Audit Protocol {#root}",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-136",
    "id_source": "minted",
    "carried": true
   },
@@ -6862,6 +6820,42 @@
    "owed": 4,
    "id": "F-121",
    "id_source": "adopted (plan LOG)",
+   "carried": true
+  },
+  {
+   "type": "relocation",
+   "rule": "r-dangling-flows",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/health-audit"
+   ],
+   "files": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md#full-protocol-pointer"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/health-audit"
+   ],
+   "cites": [],
+   "reason": "DRIFT: the fact's subject is the pointer, and the directory it names does not exist in the consuming project. `ls -d spec/flows` returns «No such file or directory»; the host's spec/ holds WAL.md, boot, common, design, manual-tests, modules, terraforms. The three documents DO ship, in the package and at `vibedeps/flow-health-audit/0.1.0/spec/flows/health-audit/`. An agent that read this skill inside this repository and followed the pointer literally would find nothing — which the skill's own step-1 fallback half anticipates. W1's 69-dangling family.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md:1  # Health Audit Protocol {#root}",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-136",
+   "id_source": "minted",
    "carried": true
   },
   {
