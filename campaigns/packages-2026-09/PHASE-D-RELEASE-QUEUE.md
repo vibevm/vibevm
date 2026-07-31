@@ -43,8 +43,17 @@ the correct intra-package path.
 
 ### A.1 The group is larger than three obligations, and the measurement says why {#addresses-scope}
 
-_Measured 2026-07-29, wave 6. Reproduce the lane counts with
-[`tasks/address-repair.py`](tasks/address-repair.py)._
+_Measured 2026-07-29, wave 6. **The size of this ask moves as routing proceeds,
+so it is printed rather than written down** — the figures below were true when
+written and the command is the authority:_
+
+```bash
+python campaigns/packages-2026-09/tasks/address-repair.py --family
+```
+
+```bash
+python campaigns/packages-2026-09/tasks/address-repair.py --verify
+```
 
 **The package is not the broken side.** The same link resolves or dangles
 depending only on which lane you read it in:

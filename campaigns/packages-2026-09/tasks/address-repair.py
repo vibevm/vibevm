@@ -164,14 +164,86 @@ def apply(repairs: list[Repair]) -> int:
     return written
 
 
+ANCHOR_DEF = re.compile(r"##([A-Za-z0-9][A-Za-z0-9._-]*)")
+
+
+def governing_anchor(path: Path, line_no: int) -> str | None:
+    """The anchor whose fact a given line belongs to.
+
+    Walks backwards to the nearest `##NAME` **definition**, with backticked
+    spans stripped first — an `##ANCHOR` inside backticks is a citation, not a
+    definition, and attributing to one has already cost three merge refusals.
+    """
+    lines = path.read_text(encoding="utf-8").splitlines()
+    for i in range(line_no - 1, -1, -1):
+        m = ANCHOR_DEF.search(re.sub(r"`[^`]*`", "", lines[i]))
+        if m:
+            return m.group(1)
+    return None
+
+
+def family(repairs: list[Repair]) -> int:
+    """Join the repaired links to the open registry, by governing anchor.
+
+    This is the number the owner's release-queue ask rests on, and it moves as
+    routing proceeds — so it is printed rather than written down.
+    """
+    import json as _json
+
+    zone = Path(__file__).resolve().parents[1]
+    obligations = _json.loads((zone / "run/state/obligations.json").read_text(encoding="utf-8"))
+    rows = obligations["obligations"] if isinstance(obligations, dict) and "obligations" in obligations else obligations
+    routed = {
+        e["anchor"]
+        for e in _json.loads((zone / "run/state/routing.json").read_text(encoding="utf-8"))["entries"]
+    }
+
+    touched: set[tuple[str, str]] = set()
+    for r in repairs:
+        anchor = governing_anchor(r.file, r.line_no)
+        if anchor:
+            touched.add((r.file.relative_to(ROOT).as_posix(), anchor))
+
+    hits: list[tuple[dict, list[str]]] = []
+    for row in rows:
+        on_link = [
+            a
+            for a in row["anchors"]
+            if (a.split("#")[0], a.split("#")[-1]) in touched and a not in routed
+        ]
+        if on_link:
+            hits.append((row, on_link))
+
+    by_route: dict[str, int] = {}
+    for row, _ in hits:
+        by_route[row["closure_route"]] = by_route.get(row["closure_route"], 0) + 1
+    packages = {p for row, _ in hits for p in row["packages"]}
+
+    print("THE ADDRESS FAMILY, joined to the open registry by governing anchor")
+    print(f"  obligations touching a repaired link : {len(hits)}")
+    print(f"  verdicts on a repaired link, open    : {sum(len(h) for _, h in hits)}")
+    print(f"  packages                             : {len(packages)}")
+    for route, n in sorted(by_route.items(), key=lambda kv: -kv[1]):
+        print(f"    {route:16s} {n}")
+    print()
+    print("  Every one of these closes through publication, whatever route the")
+    print("  registry assigns it: the links dangle only in the compiled lane,")
+    print("  which is generated from vibedeps/ and reached only by a re-vendor.")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--apply", action="store_true", help="rewrite the files (owner-gated)")
     ap.add_argument("--verify", action="store_true", help="resolve every emitted address")
     ap.add_argument("--all", action="store_true", help="include out-of-campaign-scope groups")
+    ap.add_argument("--family", action="store_true",
+                    help="print the obligations this repair would unblock, and stop")
     args = ap.parse_args()
 
     repairs = plan(include_out_of_scope=args.all)
+    if args.family:
+        return family(repairs)
     files = {r.file for r in repairs}
     packages = {(r.group, r.name) for r in repairs}
 
