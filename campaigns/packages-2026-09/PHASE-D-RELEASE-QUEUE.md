@@ -142,9 +142,9 @@ family-wide edit would break two working sentences to fix one.
 | `F-153` | 6 | go, rust, typescript `-lang` | boot snippet cites `rust/…`, `go/…`, `cards/INDEX.md`; all live under `spec/` |
 | `F-115` | 3 | the three umbrella packages | the front door points at the `-lang` README and `typescript-ai-native-lang` ships **no README.md** |
 | `F-186` | 3 | go, rust `-lang` | the fact cites three evidence ids; `H4` is in **no** register in this repository |
-| `F-187` | 3 | go, rust, typescript `-lang` | the two **Go** skills are not installed — `.claude/skills/` carries four of six |
+| `F-187` | 3 | go, rust, typescript `-lang` | the two **Go** skills are not installed — and the surface is **three homes, not one**: `.claude/skills/`, `.agents/skills/`, `.opencode/skills/`. The first two each carry the same four (rust ×2, typescript ×2); no Go skill is in any of them |
 | `F-188` | 3 | go, rust, typescript `-lang` | the printed CLI signature takes five parameters; the shipped verb takes two |
-| `F-189` | 3 | go, rust, typescript `-lang` | the host does not dispatch `go` — PROP-026 accepts `typescript` and `rust` |
+| `F-189` | 3 | go, rust, typescript `-lang` | the host does not dispatch `go` — and it is **stronger than «not yet supported»**: `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:170` names an unsupported `language` «(e.g. `"go"`)» as returning the supported-set error, so the consumer's own spec designates Go unsupported *by name* while three shipped packages claim it |
 | `F-190` | 3 | go, rust, typescript `-lang` | **the verdict is half false**: `DISABLED by policy` IS shipped; only `Defaulted` is wrong, and the three sentences are not word-identical |
 | `F-211` | 2 | go, rust `-lang` | `init` prints one parameter and five keys; the shipped op takes none and returns four |
 | `F-212` | 2 | go, rust `-lang` | `gated_packages` → `gated_crates`, and three kind strings are wrong |
