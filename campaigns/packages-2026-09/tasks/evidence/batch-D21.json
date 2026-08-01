@@ -1,0 +1,10 @@
+{
+  "batch": "D21",
+  "cluster": "ai-native",
+  "files": {
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md": {
+      "FRONTEND-CRASH-DEGRADES-VISIBLY-NEVER-SILENTLY": {"v": "confirmed", "ev": ["repaired under F-146 item 3, owner answer (а) 2026-08-01: the text now describes the built behaviour — hard-error probe before extraction (typescript-ai-native-conform/src/lib.rs:66-70, its own comment: fail HARD on a broken toolchain before the gate can run on zero facts; the frontend header at conform-frontend/src/lib.rs:47-50 states the same policy), per-file failures to stderr + empty fact set — and annotates the unbuilt skipped-status half in the sanctioned form (Finding carries no status field, finding.rs:27-36; frontend unavailable greps 0 on every layer); the never-silent promise the anchor name carries is kept by the stronger mechanism; marker @impl/done → @spec/done per RULE-UPDATE-MARKERS"]},
+      "UNEXERCISED-FRONTEND-OR-TIER-IS-REMOVED": {"v": "confirmed", "ev": ["repaired under F-206 item 7, owner answer (а) 2026-08-01: the closing rule takes the identical form its four siblings took under the group-A ruling (commit 8eee125c — CONTRADICTION-MAP, BROWNFIELD, LEDGER-INTENT, PROP-014: either removed or annotated in place as specified-not-built, never unmarked aspiration), so one rule reads one way in all five documents and no duplication row is minted; under the amended text the document complies — its eight standing annotations, three inside the frontend table this rule governs, are exactly the annotate-in-place branch being exercised; marker stays @impl/done family-consistent (the amended rule is genuinely in force), with the cross-family marker-semantics audit filed as BACKLOG B-027 to revisit all five together"]}
+    }
+  }
+}

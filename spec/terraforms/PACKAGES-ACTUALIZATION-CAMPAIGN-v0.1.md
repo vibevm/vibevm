@@ -4211,6 +4211,28 @@ aspirational — and every one is still live for the phases that remain.
   The owner's remaining queue: партія 1b's five unruled corrections, and the
   sync queue's group C and beyond.
 
+- **2026-08-01 · волна 11, второй заход — партія 1b's five rule themselves
+  into two edits and three builds.** The owner ruled the re-presented five
+  (problem/options/recommendation form): **item 3 (а)** — the crash fact now
+  describes the built hard-error probe and annotates the unbuilt
+  skipped-status; **item 7 (а)** — the closing rule takes the exact form its
+  four siblings took under the group-A ruling, one rule one form in five
+  documents (both applied, D21 merged 2, sealed 1/0). **Item 5 → B-025
+  (planned)**: downgrade-not-suppress — the owner's ground recorded verbatim
+  (visualisation tools need everything visible; suppressed findings vanish
+  from the IR); **item 6 → B-026 (planned, high priority)**: SARIF ingest —
+  foreign linters' diagnostics become facts. **Item 4 became a question, not
+  a ruling** (what does specmap track; are facts addressable; how do the two
+  maps cooperate) — answered in chat, the trait-signature correction stays
+  presented and unruled. **Item 7's own follow-up question became B-027**:
+  the «Specified, not built» facts carry markers inconsistently (@spec/done
+  vs @impl/done — партія 1a's own mix), the owner's guessed `@impl/planned`
+  exists in the grammar as `@impl/plan`, and the proposed audit rule
+  (not-planned → @spec/done; planned-with-backlog-entry → @impl/plan) waits
+  for his word before the sweep. F-206 `deferred` naming B-026; F-146 stays
+  open on the one unruled item. Registry **105 / 226 — 18 deferred, 87 open;
+  owed 69, every one on the sync route**.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
