@@ -208,9 +208,10 @@ D17 → sealed; registry back at 108 / 232 with F-133 resolved to history). @imp
    → build B-025 (mark-not-suppress, owner's visualisation ground), item 6 →
    build B-026 (SARIF ingest, high priority; F-206 deferred naming it), item
    7 applied (the five-sibling closing-rule form) + B-027 filed (the
-   marker-semantics audit). **One item remains unruled: the trait-signature
-   correction (партия 1b item 4)** — re-presented alongside the owner's
-   specmap questions. Then group C. @spec/done
+   marker-semantics audit). **Item 4 applied at the third sitting (D22) —
+   group B is drained whole.** Presented next in chat: group C singles
+   (F-180, F-166), group D / F-169's four, with F-147's segment twins riding
+   the same §3.6(c) ruling. @spec/done
 2. ##WAL-NEXT-ADR **B+A′ is fully executed** — the §3.13 carve-out landed as
    (ii): census 35→36, the four-field record at PROP-000 §7
    (`##split-host-decision…`) carrying the owner's updated split-host posture
