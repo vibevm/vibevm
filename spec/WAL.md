@@ -212,11 +212,13 @@ D17 → sealed; registry back at 108 / 232 with F-133 resolved to history). @imp
    `##SPLIT-HOST-POSTURE` carve-out** (claim-vs-section unit question,
    census 35→36) — an owner choice; everything else of B-007 is executed
    and sealed. @spec/done
-3. ##WAL-NEXT-B012 **The B-012 study is done and awaits the owner's ruling**
-   (`harvest/d14-b012-prop014-feasibility.md`): four owner points — the
-   signing scheme (key 1, unlocks M4→M3→M1), M9's grain, key-2 scheduling
-   (kind-line authoring), M7(b)'s stays-annotated-or-removed. No Phase E
-   scheduling before the ruling. @spec/done
+3. ##WAL-NEXT-B012 **B-012 is ruled and drained (2026-08-01, same day):** the
+   owner ruled on the whole set — everything builds (`BACKLOG.md`
+   B-016…B-021, disposition `planned`; B-018 wide form, high priority),
+   security is protocolled and parked (B-015 — nothing until the owner's
+   explicit notice, no code triggers), B-012 itself is `done`. The study's
+   recommendation column is superseded by its `#rulings` section. Scheduling
+   the builds is a later owner call; nothing starts from this entry. @spec/done
 4. ##WAL-NEXT-EXIT **Run the exit gate when the queues drain**: registry
    CONVERGENCE (owed → 0 or every survivor owner-ruled — today all 73 owed sit
    on the owner's sync route), `progress check` green over both corpora
@@ -255,7 +257,11 @@ D17 → sealed; registry back at 108 / 232 with F-133 resolved to history). @imp
   general fenced-content shape (the 17 first lines are fixed; fences stay
   unaddressable by construction), B-005 (ancestry probe), B-006 (double
   git-family emission), B-007 (ruled B+A′, executing), B-008 (vibe-index
-  licence line), B-010 (check-that-writes), B-011 (marker aliasing design). @impl/done
+  licence line), B-010 (check-that-writes), B-011 (marker aliasing design),
+  B-013 (broken specmap schema-bump route), B-014 (host index drifts
+  ungated) — plus the B-012 drain of 2026-08-01: B-015 (security programme,
+  parked until the owner's notice), B-016…B-021 (the PROP-014 builds, all
+  `planned` by owner ruling; B-018 wide form, high priority). @impl/done
 
 ## Session context {#session-context}
 
