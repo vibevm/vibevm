@@ -81,7 +81,7 @@ trait Frontend {
 
 ## 4. Rules as queries {#rules}
 
-##RULES-ARE-RUST-TRAIT-IMPLS-COMPILED-IN v0.1: rules are Rust implementations of one trait — `fn check(&self, facts: &FactStore, specmap: &Index) -> Vec<Finding>` — compiled into the engine. @impl/done
+##RULES-ARE-RUST-TRAIT-IMPLS-COMPILED-IN v0.1: rules are Rust implementations of one trait — `fn check(&self, facts: &[SourceFacts]) -> Vec<Finding>`, alongside `fn id()` and `fn why()` (`core-ai-native-conform/src/finding.rs:51-56`) — compiled into the engine. *The earlier sketch's `specmap: &Index` parameter is dropped: the conform crate carries no dependency on the specmap crate, so the parameter was impossible, not merely absent.* @impl/done
 
 ##QUERY-DSL-IS-DELIBERATELY-DEFERRED A declarative query DSL (datalog-flavored) is deliberately deferred: we will know its right shape after ~30 real rules exist, not before (Open Question 2). @spec/done
 
