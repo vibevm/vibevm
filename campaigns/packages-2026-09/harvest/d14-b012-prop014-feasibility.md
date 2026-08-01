@@ -19,6 +19,40 @@ unblocked slices a Phase E could take now**, and **six that are gated on
 exactly three keys**, two of which are the owner's to turn and one of which is
 spec-authoring, not code.
 
+## SUPERSEDED IN PART — owner rulings, 2026-08-01, same day {#rulings}
+
+The owner ruled on the whole set the day the study landed; **the
+recommendation column of the verdict table below is superseded by these
+rulings** and survives only as the reasoning trail. The rulings, executed as
+`BACKLOG.md` entries with full plain-language descriptions:
+
+- **Security (key 1) → [B-015](../../../BACKLOG.md#b-015), parked**: protocol
+  the tasks in detail, build nothing until the owner's explicit notice — usage
+  of the product is observable only from the owner's seat, not from the tree,
+  so re-opening is his call alone; no code-observable trigger is assigned.
+  The «build the channel before the signature» re-sequencing this implies is
+  recorded there (task 6: the PROP's ships-signed-or-not-at-all sentences get
+  an owner-approved amendment when B-018 is built).
+- **Labels (key 2)**: the recommendation stands as ruled — the ~80-section
+  targeted set + label-new-sections-forward, and only when the dependent
+  features are revived; folded into B-019's (a) as its spec-side twin.
+- **Thresholds (key 3) + the multiplicity lint → [B-021](../../../BACKLOG.md#b-021),
+  build both warnings**: zero findings on this corpus is not an argument —
+  «мы пишем систему для всех, а не только для нас»; thresholds configurable,
+  placeholders until the warnings themselves collect real statistics.
+- **M1 → [B-016](../../../BACKLOG.md#b-016), build** (both halves, ordered).
+- **M3 → [B-017](../../../BACKLOG.md#b-017), build.**
+- **M4 → [B-018](../../../BACKLOG.md#b-018), build — high priority, wide form**
+  (including answers about installed/foreign packages).
+- **M7 → [B-019](../../../BACKLOG.md#b-019), build all three parts,
+  algorithmic, no LLM**; the (c) system-boundary question is written out there
+  and is the mandatory first step of that implementation.
+- **M8 → [B-020](../../../BACKLOG.md#b-020), build** — the owner's direction:
+  a light client for external non-local LLMs, possibly through fractality,
+  settled at build time.
+- **B-012 itself → `done`**: the research question is answered; the backlog
+  entries above are the drain.
+
 ## The three keys that gate everything else {#keys}
 
 1. **The signing-scheme decision** (`#OPEN-SIGNING-SCHEME`, PROP-014 :415 —
