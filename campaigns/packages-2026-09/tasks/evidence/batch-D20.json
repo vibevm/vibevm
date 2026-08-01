@@ -1,0 +1,13 @@
+{
+  "batch": "D20",
+  "cluster": "host",
+  "files": {
+    "spec/common/PROP-000.md": {
+      "split-host-decision": {"v": "confirmed", "ev": ["owner ruling recorded verbatim-in-substance 2026-08-01 (the carve-out of d12-adr §3.13, census 35→36): GitHub leads both surfaces, GitVerse is supplementary — full source mirror plus deliberately-published-to registry storage, never blanket-mirrored; coherent with PROP-016's single-writer law (mainline stays local main, fan-out unchanged — the record says so explicitly) and with the section's own migration history above it"]},
+      "split-host-why": {"v": "confirmed", "ev": ["both grounds resolve: the technical one cites ##REG-MIGRATION-WHY in the same section (the documented POST /orgs/{org}/repos 404/WAF-403 gap, PROP-002 §2.10 + crates/vibe-publish/src/gitverse.rs); the observational one is the owner's stated 2026-08-01 ground — audience visibility is external-world knowledge, exactly the B-015-pattern reasoning he established the same day"]},
+      "split-host-rejected": {"v": "confirmed", "ev": ["three alternatives, each with its recorded reason: equal-canonical (the section's own prior reading — superseded by this ruling, kept as mirror mechanics), GitVerse-led (blocked by the documented endpoint gap while it stands), blanket-mirroring the registry (rejected in the owner's own quoted words — deliberate per-package publication); no invented rejection, every reason sourced from the section or the ruling"]},
+      "split-host-revisit": {"v": "confirmed", "ev": ["both halves carry real observation points: the publish-loop half is a one-request probe (POST /orgs/{org}/repos → 2xx) whose failure codes are documented at the cited PROP-002 §2.10; the leading-role half deliberately has no code trigger — owner's notice from external observation, the same-day B-015 precedent named in the text; no unobservable trigger, no invented threshold"]},
+      "ATTRIBUTION-ENFORCEMENT-EXCEPTION": {"v": "confirmed", "ev": ["the §3.6(c)-form marked exception, owner ruling 2026-08-01 (F-230 answer (в)): tree-verified that the state it records is real — no tracked hooks (.git/hooks has samples only), no .github/, no CI config, no trailer scanner; the boot contract does carry the rules every session reads; the no-CI decision it cites is the standing owner decision already on record in terraform/REPORT.md's findings; placed inside PROP-000 §12, the host's commit-discipline section, where the enforcement question lives"]}
+    }
+  }
+}

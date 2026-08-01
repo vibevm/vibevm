@@ -1,0 +1,12 @@
+{
+  "batch": "D18",
+  "cluster": "ai-native",
+  "files": {
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
+      "EDGE-MODEL-EDGES": {"v": "confirmed", "ev": ["repaired under F-207 (партія 1d, owner «согласен» 2026-08-01) and re-verified against the engine: the base clause is built exactly as stated (Edge { file, fromSymbol, line, provenance, uri, verb } in generated/specmap/mod.rs:87-105, deviates-reason mandatory); the amendment now says what ships — planned|disputed statuses (SpecUnitStatus, mod.rs:138-144; ratified = absent default per mod.rs:202; retired = tombstone comment), the disputes pairing as a first-class unit FIELD (mod.rs:184-187, parsed mdspec.rs:101-108, rendered explain.rs:49-54) — and annotates the two unbuilt halves in the sanctioned form (no conflicts_with edge; no freeze — index.rs:118-131 reads only the pinned revision; no coverage math over spec units); marker moved @impl/done → @spec/done per RULE-UPDATE-MARKERS"]}
+    },
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
+      "PROMPT-CONTENT-ONLY": {"v": "confirmed", "ev": ["repaired under F-263 (партія 1d, owner «согласен» 2026-08-01) and tree-verified: the front door now states what the package's own Cargo.toml has said since 0.4.0 — it authors five library crates (core-ai-native-conform, -mcp, -specmap, -specmark, -specmark-grammar; 37 rs files, 10 072 lines, zero [[bin]]) alongside the prompt content; the ships-no-binary clause preserves the contrast the neighbouring RUNNABLE-HALF-IN-STACKS anchor draws (the CLI drivers ship in the stacks), which stays confirmed on its own claim; the superseded v0.7.0 slot and the vibedeps copies are out of scope per the campaign's §3.3/§3.5"]}
+    }
+  }
+}

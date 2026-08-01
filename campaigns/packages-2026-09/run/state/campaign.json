@@ -1,12 +1,12 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-01T06:32:53Z",
+  "updated_at": "2026-08-01T12:52:30Z",
   "campaign_id": "packages-2026-09",
   "phase": "C",
   "wave": 0,
   "counters": {
     "files": 260,
-    "facts": 12612,
+    "facts": 12617,
     "unmarked": 0,
     "issues": 0
   }

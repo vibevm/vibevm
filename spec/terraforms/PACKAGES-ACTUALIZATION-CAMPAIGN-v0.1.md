@@ -4172,6 +4172,45 @@ aspirational — and every one is still live for the phases that remain.
   это» closed them by adoption — every health-audit file reads 0 drift in
   the cache, the ev refs carry the ruling verbatim.
 
+- **2026-08-01 · волна 11 — the owner drains his whole queue in one sitting,
+  and the per-anchor rule catches a strike-by-ruling before it lands.** The
+  full decision package presented in plain language (his format feedback of
+  the same day applied: essence first, spec specifics as supplementary
+  material) came back ruled end to end. **Партія 1d applied** — F-207's
+  amendment sentence now says which thirds of the brownfield edge model ship
+  (the `disputes` pairing is a first-class field, not «a doc comment»; the
+  freeze and the coverage math annotated in the sanctioned form) and F-263's
+  front door stops claiming «prompt content only» over five authored library
+  crates; both re-judged and sealed (D18). **Партія 1c routed to research
+  instead of edits** — `BACKLOG.md` B-022, F-159 `deferred` pending it; партія
+  1b's two frontend rows likewise → B-023 (its other five corrections remain
+  presented, unruled). **The carve-out executed as (ii)** — census 35→36:
+  `##split-host-decision/-why/-rejected/-revisit` land at PROP-000 §7 carrying
+  the owner's updated posture verbatim in substance (GitHub leads both
+  surfaces; GitVerse supplementary — full source mirror plus
+  deliberately-published-to registry storage, never blanket-mirrored; the
+  leading-role half re-opens only by the owner's notice, the same-day B-015
+  pattern). **The build-or-demote tail closed as owner-ruled deferrals** —
+  15 rows answer (б) with their host debts named in
+  [`PHASE-D-HOST-OBLIGATIONS.md#rulings-2026-08-01`](../../campaigns/packages-2026-09/PHASE-D-HOST-OBLIGATIONS.md);
+  F-351 closed outright (the wind-down's step 2 says «Rewrite … wholesale» in
+  all three instruction files — the B-009 shape, second run); **F-230 split
+  per-anchor**: the enforcement anchor closed by the (в) exception now
+  recorded at PROP-000 `##ATTRIBUTION-ENFORCEMENT-EXCEPTION`, and the
+  one-place anchor — whose cached reason is a different defect (ten
+  restatements, two drifted, a dead «§12.1» pointer) — was **not** closed on
+  that ruling, per `##WAL-C-STRIKE-PER-ANCHOR`, and stays `deferred` with its
+  own debt. B-024 filed from the owner's own question (two tombstones, one
+  concept: `retired` vs `void`). Merges D18+D19+D20 = 2+2+5, 0 refusals;
+  seals 4 + 1 already current.
+
+  **State at wave 11's close** (commands at this HEAD supersede): corpus
+  **11 147 / 228 / 44 — 97.6 %** of 11 419; registry **105 obligations / 228
+  drifts — 17 deferred by owner ruling, 88 open**; owed **71 of 228, every
+  one on the owner's sync route**; F-207, F-263, F-351 resolved to history.
+  The owner's remaining queue: партія 1b's five unruled corrections, and the
+  sync queue's group C and beyond.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:

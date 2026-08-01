@@ -1,0 +1,12 @@
+{
+  "batch": "D19",
+  "cluster": "world",
+  "files": {
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md": {
+      "A-POSTURE-IS-CHOSEN-ONCE-RECORDED-AND-ENFORCED": {"v": "confirmed", "src": [1, 2], "ev": ["closed by a §3.6(c) marked exception, owner ruling 2026-08-01 (F-230, answer (в)): the posture IS chosen and recorded, and its enforcement in this consumer is procedural by deliberate choice — the exception is written on the host side at spec/common/PROP-000.md ##ATTRIBUTION-ENFORCEMENT-EXCEPTION (rules live in the boot contract, sessions hold them; no hook/scanner/CI exists or is planned, consistent with the standing no-CI decision). Phase C's own ruling: a marked exception is not drift. The anchor's enforced-clause is satisfied by the recorded procedural mechanism; the flow's a-policy-with-no-checker-is-a-wish sentence remains true as a general law and is exactly why the exception is now a written record rather than silence"]}
+    },
+    "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/cold-resume.md": {
+      "STEP-REWRITE-THE-WAL": {"v": "confirmed", "src": [1, 2], "ev": ["closed by host compliance, owner ruling 2026-08-01 (F-351, «привести к переписыванию целиком»): the wind-down's step 2 in all three instruction files (CLAUDE.md / AGENTS.md / GEMINI.md, kept identical) now reads «Rewrite spec/WAL.md wholesale … rewrite, not append and not a section-by-section refresh», matching this step's own semantics — the host instruction no longer contradicts the flow; the B-009 precedent (step 4, same three files) is the worked shape this repair repeats"]}
+    }
+  }
+}

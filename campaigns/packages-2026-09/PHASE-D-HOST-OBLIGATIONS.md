@@ -191,3 +191,52 @@ host adopts the practice* before anyone writes a hundred-odd records.
 > `campaigns/` row is broken out rather than folded into a host-wide total. A
 > figure that silently included them would have reported the host's adoption as
 > half again what it is.*
+
+---
+
+## Rulings of 2026-08-01 — the build-or-demote tail closes as owner-ruled deferrals {#rulings-2026-08-01}
+
+The owner ruled the whole 17-row tail in one sitting (chat, plain-language
+presentation; per-row recommendations accepted as listed, two policy rows ruled
+individually). Registry rows carry `status: deferred`; this section is the
+durable why, one line per row. **No package moved** — the one answer §3.6
+forbids stayed off the table.
+
+**Answer (1)/(3) — the rule is sound, the host owes the work (15 rows):**
+
+| row | the host debt recorded |
+|---|---|
+| F-200 | add the empty-body fixture test the `managed-blocks` table prescribes (the state machine already handles the case) |
+| F-204 | the ancestry-gate fix — already on file as `BACKLOG.md` B-005; this row names it |
+| F-234 | commit-subject mood/case discipline going forward; history stands, the LOG carries the measurements |
+| F-237 | correct PROP-003's libsolv licence line (owner-diff when presented) |
+| F-244 | build the kind-tag validation half (Phase E candidate) |
+| F-258 | bring `SPECSPACES.md`'s status field to the one-line form at the next fractality wind-down |
+| F-288 | walk the nine over-budget documents as split candidates; journal genres expected exceptions |
+| F-322 | the five-part codeword instruction sleeps until a second codeword is proposed |
+| F-327 + F-328 | assert/verify the token file's ACL explicitly (one debt covers both rows) |
+| F-336 | move the normative must/shall out of the one offending `spec/design/` file |
+| F-338 + F-339 | covered forward by the landed B+A′ criterion (four fields at minting, triggers included); recorded as satisfied-going-forward |
+| F-342 | build the hook-output variable (Phase E candidate; specified in two PROPs) |
+| F-343 | bring the self-update consent/honesty path up to the lesson's three clauses (Phase E candidate) |
+
+**Answer (2) — a deliberate exception, recorded (F-230, first anchor):** the
+attribution posture is enforced procedurally, not mechanically — the exception
+lives at `spec/common/PROP-000.md` `##ATTRIBUTION-ENFORCEMENT-EXCEPTION`, and
+the anchor re-judged `confirmed` with the exception named. **The row's second
+anchor carried a different defect** (the posture restated in ~ten places, two
+copies drifted, a dead «PROP-000 §12.1» pointer) — closing it on this ruling
+would have been the strike-by-ruling error the campaign already paid for, so it
+stays `deferred` with its own debt: collapse the restatements, fix the dead
+pointer.
+
+**Closed outright the same day (left the registry):** F-351 — the wind-down's
+step 2 now says «Rewrite … wholesale» in all three instruction files, and the
+`wal` flow's step re-judged `confirmed` (the B-009 shape, second run). Plus the
+партія-1d pair F-207 / F-263 (owner: «согласен») — both applied and re-judged.
+
+**Routed to research instead of edits (owner, same sitting):** партія 1c's five
+LEDGER-INTENT corrections → `BACKLOG.md` **B-022** (F-159 `deferred` pending
+it); партія 1b's frontend rows (TS/JS + Python) → **B-023** (F-146's two
+row-anchors wait on it; its other three corrections remain presented and
+unruled). The lifecycle-status-vs-markers question the owner raised → **B-024**.

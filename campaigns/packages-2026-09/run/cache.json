@@ -1,9 +1,9 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-01T07:54:34Z",
+  "updated_at": "2026-08-01T12:54:05Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
-      "content_hash": "d527b9e4fb90e8e72fa5d9f065de57626216e7e0fa30c08ef114e228b46093ee",
+      "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
       "rollup": {
         "explicit": [
           "doc",
@@ -25,7 +25,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "d527b9e4fb90e8e72fa5d9f065de57626216e7e0fa30c08ef114e228b46093ee",
+        "processed_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
         "verdicts": {
           "core-contents-lead": {
             "v": "confirmed",
@@ -88,12 +88,9 @@
             ]
           },
           "PROMPT-CONTENT-ONLY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md:19  ##PROMPT-CONTENT-ONLY This package is prompt content only. @impl/done",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/Cargo.toml:2  name = \"core-ai-native-conform\"",
-              "campaigns/packages-2026-09/harvest/core-ai-native-floor-by-hand.md:5  **`core-ai-native` ships library crates only** — `-conform` and `-specmap` build to rlibs and `-specmark` to a proc-m...",
-              "the package's front door says it ships prompt content only, and **five Rust crates ship inside it** — core-ai-native-conform, -mcp, -specmap, -specmark, -specmark-grammar, all workspace members of its own Cargo.toml. They are library crates rather than binaries, which is why the claim is nearly true and still wrong in the sentence a consumer reads first"
+              "repaired under F-263 (партія 1d, owner «согласен» 2026-08-01) and tree-verified: the front door now states what the package's own Cargo.toml has said since 0.4.0 — it authors five library crates (core-ai-native-conform, -mcp, -specmap, -specmark, -specmark-grammar; 37 rs files, 10 072 lines, zero [[bin]]) alongside the prompt content; the ships-no-binary clause preserves the contrast the neighbouring RUNNABLE-HALF-IN-STACKS anchor draws (the CLI drivers ship in the stacks), which stays confirmed on its own claim; the superseded v0.7.0 slot and the vibedeps copies are out of scope per the campaign's §3.3/§3.5"
             ]
           },
           "RUNNABLE-HALF-IN-STACKS": {
@@ -251,8 +248,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T18:55:16Z",
-        "verify_batch": "C2 + D4a + D5b"
+        "verified_at": "2026-08-01T12:54:05Z",
+        "verify_batch": "C2 + D4a + D5b + D18"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md": {
@@ -6049,7 +6046,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
-      "content_hash": "aef0652181e004519e59bef85865c909c93bdb247071581fe281bf599f3a642e",
+      "content_hash": "0caa0448f953504c65320dc5d70b2e44532d377acf45f739a2c22b072c4a6b37",
       "rollup": {
         "explicit": [
           "spec",
@@ -6071,7 +6068,7 @@
       "unit_count": 27,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "aef0652181e004519e59bef85865c909c93bdb247071581fe281bf599f3a642e",
+        "processed_hash": "0caa0448f953504c65320dc5d70b2e44532d377acf45f739a2c22b072c4a6b37",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -6586,12 +6583,9 @@
             ]
           },
           "EDGE-MODEL-EDGES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:98  pub provenance: EdgeProvenance,",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:138  pub enum SpecUnitStatus {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:184  /// For `disputed` status: the other anchor of the conflicts_with pair.",
-              "the edge model is real — provenance and the deviates reason are both in the wire type — and the BROWNFIELD amendment is not built: `conflicts_with` survives as a doc comment, there is no spec↔spec edge type, and no suspect-freeze for a disputed unit. The amendment landed in this DOCUMENT (BROWNFIELD's own claim, confirmed there) and not in the code, which is why the two verdicts differ without contradicting"
+              "repaired under F-207 (партія 1d, owner «согласен» 2026-08-01) and re-verified against the engine: the base clause is built exactly as stated (Edge { file, fromSymbol, line, provenance, uri, verb } in generated/specmap/mod.rs:87-105, deviates-reason mandatory); the amendment now says what ships — planned|disputed statuses (SpecUnitStatus, mod.rs:138-144; ratified = absent default per mod.rs:202; retired = tombstone comment), the disputes pairing as a first-class unit FIELD (mod.rs:184-187, parsed mdspec.rs:101-108, rendered explain.rs:49-54) — and annotates the two unbuilt halves in the sanctioned form (no conflicts_with edge; no freeze — index.rs:118-131 reads only the pinned revision; no coverage math over spec units); marker moved @impl/done → @spec/done per RULE-UPDATE-MARKERS"
             ]
           },
           "EDGE-MODEL-DIRECTION-OF-AUTHORITY": {
@@ -7381,8 +7375,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-01T07:54:34Z",
-        "verify_batch": "C1 + D5b + D7 + D10-groupA + D13-1a + D16 + D17"
+        "verified_at": "2026-08-01T12:54:05Z",
+        "verify_batch": "C1 + D5b + D7 + D10-groupA + D13-1a + D16 + D17 + D18"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md": {
@@ -43385,7 +43379,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "94de27b95debb4ee7c2eb48bb87b7134eed54811a0b1023347797561ae2d1129",
+        "processed_hash": "7d31376c42cd13f52966fcfe502d85a2495c8197ea74de4680c55bf72c421d32",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -43507,18 +43501,13 @@
             ]
           },
           "A-POSTURE-IS-CHOSEN-ONCE-RECORDED-AND-ENFORCED": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:47  ##A-POSTURE-IS-CHOSEN-ONCE-RECORDED-AND-ENFORCED Whatever posture a project wants, it must be chosen once,",
-              "spec/boot/STATIC.md:425  This project keeps its repository **human-authored on every",
-              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
-              "AUDIT.md:1  # AUDIT.md — project health inventory",
-              "chosen and recorded, yes, and more than once. **Enforced, no.** **nothing enforces it in this consumer.** `ls .git/hooks/ | grep -v sample` returns nothing, there is no `.github/` and no tracked CI file of any kind, AUDIT.md is 458 lines and carries no attribution line, and `git config --local --list` shows no trailer setting. The flow's own law names the state: «A policy with no checker is a wish»."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "closed by a §3.6(c) marked exception, owner ruling 2026-08-01 (F-230, answer (в)): the posture IS chosen and recorded, and its enforcement in this consumer is procedural by deliberate choice — the exception is written on the host side at spec/common/PROP-000.md ##ATTRIBUTION-ENFORCEMENT-EXCEPTION (rules live in the boot contract, sessions hold them; no hook/scanner/CI exists or is planned, consistent with the standing no-CI decision). Phase C's own ruling: a marked exception is not drift. The anchor's enforced-clause is satisfied by the recorded procedural mechanism; the flow's a-policy-with-no-checker-is-a-wish sentence remains true as a general law and is exactly why the exception is now a written record rather than silence"
             ]
           },
           "CONCEALMENT-IS-A-HUMAN-AUTHORED-SURFACE-ON-EVERY-ARTIFACT": {
@@ -43879,8 +43868,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T13:57:48Z",
-        "verify_batch": "W1c"
+        "verified_at": "2026-08-01T12:54:05Z",
+        "verify_batch": "W1c + D19"
       }
     },
     "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md": {
@@ -83941,17 +83930,13 @@
             ]
           },
           "STEP-REWRITE-THE-WAL": {
-            "v": "drift",
-            "ev": [
-              "CLAUDE.md:189  2. **Update `spec/WAL.md`** with the current checkpoint — bump the date line, refresh the \"Current phase\" / \"Next\" / \"Known issues\" sections, record any new findings or commits since the last WAL update.",
-              "vibedeps/flow-wal/0.2.0/spec/flows/wal/cold-resume.md:73  2. **Rewrite `spec/WAL.md`** per",
-              "spec/boot/STATIC.md:1404     Rewrite, not append — the WAL must reflect the **current** state,",
-              "spec/WAL.md:56  ## Constraints — do not violate",
-              "DRIFT: the host's step 2 says 'Update … bump the date line, refresh the Current phase / Next / Known issues sections' where the flow says Rewrite, and the flow's own session-end-hook.md:51 is emphatic that patching is wrong. Its section list is also a different four: CONSTRAINTS — the section WAL-PROTOCOL §sections calls the most valuable content in the WAL — is absent from the host's refresh list, and Known issues is added."
-            ],
+            "v": "confirmed",
             "src": [
-              2,
-              3
+              1,
+              2
+            ],
+            "ev": [
+              "closed by host compliance, owner ruling 2026-08-01 (F-351, «привести к переписыванию целиком»): the wind-down's step 2 in all three instruction files (CLAUDE.md / AGENTS.md / GEMINI.md, kept identical) now reads «Rewrite spec/WAL.md wholesale … rewrite, not append and not a section-by-section refresh», matching this step's own semantics — the host instruction no longer contradicts the flow; the B-009 precedent (step 4, same three files) is the worked shape this repair repeats"
             ]
           },
           "STEP-COMMIT-IN-TOPIC-GROUPED-COMMITS": {
@@ -84345,7 +84330,7 @@
           }
         },
         "verified_at": "2026-07-28T18:59:06Z",
-        "verify_batch": "W2b"
+        "verify_batch": "W2b + D19"
       }
     },
     "packages/org.vibevm.world/wal/v0.2.0/spec/flows/wal/morning-routine.md": {
@@ -86096,7 +86081,7 @@
       }
     },
     "spec/common/PROP-000.md": {
-      "content_hash": "889cba6ec06f808d2cd44db66764c608736fdd269bd5509e22b409fcdaaa93ae",
+      "content_hash": "484d066f3cbe607730f5620a557f6e0846926ef1b12867b11bca961e66433c91",
       "rollup": {
         "explicit": [
           "spec",
@@ -86110,11 +86095,11 @@
           "spec",
           "done"
         ],
-        "marker_count": 172,
-        "fact_count": 171,
+        "marker_count": 177,
+        "fact_count": 176,
         "unmarked_facts": 0
       },
-      "marker_count": 172,
+      "marker_count": 177,
       "unit_count": 22,
       "issue_count": 0,
       "campaign": {
@@ -86122,7 +86107,7 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 161,
         "marker_count": 162,
-        "processed_hash": "889cba6ec06f808d2cd44db66764c608736fdd269bd5509e22b409fcdaaa93ae",
+        "processed_hash": "484d066f3cbe607730f5620a557f6e0846926ef1b12867b11bca961e66433c91",
         "verdicts": {
           "DOC-PINS": {
             "v": "confirmed",
@@ -87168,10 +87153,40 @@
             "ev": [
               "referents resolve 2026-08-01: tools/jtd-codegen/ exists (pin per ##TC-BINARY, which resolves); ##JTD-IN-SCOPE resolves; schemas/ exists with *.jtd.json; both clauses carry checkable observation points (upstream release clock on the pinned repo; the first inexpressible schema in schemas/)"
             ]
+          },
+          "split-host-decision": {
+            "v": "confirmed",
+            "ev": [
+              "owner ruling recorded verbatim-in-substance 2026-08-01 (the carve-out of d12-adr §3.13, census 35→36): GitHub leads both surfaces, GitVerse is supplementary — full source mirror plus deliberately-published-to registry storage, never blanket-mirrored; coherent with PROP-016's single-writer law (mainline stays local main, fan-out unchanged — the record says so explicitly) and with the section's own migration history above it"
+            ]
+          },
+          "split-host-why": {
+            "v": "confirmed",
+            "ev": [
+              "both grounds resolve: the technical one cites ##REG-MIGRATION-WHY in the same section (the documented POST /orgs/{org}/repos 404/WAF-403 gap, PROP-002 §2.10 + crates/vibe-publish/src/gitverse.rs); the observational one is the owner's stated 2026-08-01 ground — audience visibility is external-world knowledge, exactly the B-015-pattern reasoning he established the same day"
+            ]
+          },
+          "split-host-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "three alternatives, each with its recorded reason: equal-canonical (the section's own prior reading — superseded by this ruling, kept as mirror mechanics), GitVerse-led (blocked by the documented endpoint gap while it stands), blanket-mirroring the registry (rejected in the owner's own quoted words — deliberate per-package publication); no invented rejection, every reason sourced from the section or the ruling"
+            ]
+          },
+          "split-host-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "both halves carry real observation points: the publish-loop half is a one-request probe (POST /orgs/{org}/repos → 2xx) whose failure codes are documented at the cited PROP-002 §2.10; the leading-role half deliberately has no code trigger — owner's notice from external observation, the same-day B-015 precedent named in the text; no unobservable trigger, no invented threshold"
+            ]
+          },
+          "ATTRIBUTION-ENFORCEMENT-EXCEPTION": {
+            "v": "confirmed",
+            "ev": [
+              "the §3.6(c)-form marked exception, owner ruling 2026-08-01 (F-230 answer (в)): tree-verified that the state it records is real — no tracked hooks (.git/hooks has samples only), no .github/, no CI config, no trailer scanner; the boot contract does carry the rules every session reads; the no-CI decision it cites is the standing owner decision already on record in terraform/REPORT.md's findings; placed inside PROP-000 §12, the host's commit-discipline section, where the enforcement question lives"
+            ]
           }
         },
-        "verified_at": "2026-08-01T07:27:17Z",
-        "verify_batch": "c3b-prop-000 + d1 + D14"
+        "verified_at": "2026-08-01T12:54:05Z",
+        "verify_batch": "c3b-prop-000 + d1 + D14 + D20"
       }
     },
     "spec/common/PROP-006-operating-modes.md": {
