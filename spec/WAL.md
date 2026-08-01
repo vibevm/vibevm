@@ -202,13 +202,15 @@ D17 → sealed; registry back at 108 / 232 with F-133 resolved to history). @imp
 
 ## Next {#next}
 
-1. ##WAL-NEXT-GROUP-B **Group B state after волна 11:** партия 1d — applied
-   and closed (F-207, F-263); партия 1c — routed to research (B-022, F-159
-   `deferred`); партия 1b — two frontend rows routed to research (B-023),
-   **five corrections remain presented in chat and unruled** (F-146's crash /
-   trait-signature / A1-chain, F-206's foreign-linters / closing rule). Group
-   C and the rest of the sync queue follow the same per-document format
-   (owner's (ii)). @spec/done
+1. ##WAL-NEXT-GROUP-B **Group B state after волна 11 (both sittings):** партия
+   1d — applied (F-207, F-263 closed); 1c → research B-022 (F-159 deferred);
+   1b — items 1–2 → research B-023, item 3 applied (crash hard-error), item 5
+   → build B-025 (mark-not-suppress, owner's visualisation ground), item 6 →
+   build B-026 (SARIF ingest, high priority; F-206 deferred naming it), item
+   7 applied (the five-sibling closing-rule form) + B-027 filed (the
+   marker-semantics audit). **One item remains unruled: the trait-signature
+   correction (партия 1b item 4)** — re-presented alongside the owner's
+   specmap questions. Then group C. @spec/done
 2. ##WAL-NEXT-ADR **B+A′ is fully executed** — the §3.13 carve-out landed as
    (ii): census 35→36, the four-field record at PROP-000 §7
    (`##split-host-decision…`) carrying the owner's updated split-host posture
@@ -267,7 +269,10 @@ D17 → sealed; registry back at 108 / 232 with F-133 resolved to history). @imp
   11's research trio: B-022 (LEDGER-INTENT mechanisms, F-159 waits on it),
   B-023 (JS/TS syntactic tier + Python frontend, two F-146 anchors wait),
   B-024 (do @stage/state markers subsume specmap lifecycle statuses — the
-  owner's two-tombstones question). @impl/done
+  owner's two-tombstones question), B-025 (mark-not-suppress acknowledged
+  deviations, planned), B-026 (SARIF ingest, planned, high priority), B-027
+  (the Specified-not-built marker-semantics audit; proposed rule awaits the
+  owner). @impl/done
 
 ## Session context {#session-context}
 
