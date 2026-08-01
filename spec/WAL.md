@@ -187,17 +187,17 @@ owner's six decisions of 2026-07-31/08-01. Phase C closed 2026-07-28 at 6 847 /
 
 ## In progress {#in-progress}
 
-##WAL-INFLIGHT **Two delegated B-012 evidence passes are out** (launched
-2026-08-01, second checkpoint; commit-on-notification): **d14-b012-part-A**
-(the runtime/distribution family — index shipping, error-lookup, profiles,
-MCP tools, the trust-layer rider) and **d14-b012-part-B** (the
-graph/check/explain family — multiplicity lint, node views, LLM prose
-producer, length warning, rustdoc composition, the `decides`-verb rider).
-Both are evidence-gathering only (no edits, no vibe commands), each writes
-one harvest file; the boss synthesises
-`harvest/d14-b012-prop014-feasibility.md` with the recommendations. The d12
-passes of the previous checkpoint returned and their material landed
-(commits `c3b3fe19` / `e6f53d5d` / `eccb1499`). @impl/done
+##WAL-INFLIGHT **Nothing is in flight.** The two B-012 evidence passes
+returned the same day (2026-08-01) and their material landed boss-reviewed:
+`harvest/d14-b012-part-A.md` + `part-B.md` (evidence) and
+`harvest/d14-b012-prop014-feasibility.md` (the boss synthesis — verdict table
+over all ten mechanisms, the four-item Phase-E-ready shortlist, the three
+gating keys, four owner decision points). The pass also surfaced and filed
+`BACKLOG.md` **B-013** (broken specmap schema-bump route) and **B-014** (host
+`specmap.json` drifted ungated, 599/5266 stale spec-side lines), and caught
+one false clause in the партія-1a annotation at PROP-014 :56 — repaired
+verdict-first as **F-133** (minted D16 → §3.6(a) one-clause fix → confirmed
+D17 → sealed; registry back at 108 / 232 with F-133 resolved to history). @impl/done
 
 ## Next {#next}
 
@@ -212,9 +212,10 @@ passes of the previous checkpoint returned and their material landed
    `##SPLIT-HOST-POSTURE` carve-out** (claim-vs-section unit question,
    census 35→36) — an owner choice; everything else of B-007 is executed
    and sealed. @spec/done
-3. ##WAL-NEXT-B012 **Boss-synthesise the B-012 feasibility study** when the
-   two evidence passes return; recommendations per mechanism
-   (build / defer / retire, each with a trigger) go to the owner; no Phase E
+3. ##WAL-NEXT-B012 **The B-012 study is done and awaits the owner's ruling**
+   (`harvest/d14-b012-prop014-feasibility.md`): four owner points — the
+   signing scheme (key 1, unlocks M4→M3→M1), M9's grain, key-2 scheduling
+   (kind-line authoring), M7(b)'s stays-annotated-or-removed. No Phase E
    scheduling before the ruling. @spec/done
 4. ##WAL-NEXT-EXIT **Run the exit gate when the queues drain**: registry
    CONVERGENCE (owed → 0 or every survivor owner-ruled — today all 73 owed sit
