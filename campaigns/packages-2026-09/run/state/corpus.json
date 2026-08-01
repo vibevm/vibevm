@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-01T06:32:52Z",
+  "updated_at": "2026-08-01T07:16:17Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -19,10 +19,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d527b9e4fb90e8e72fa5d9f065de57626216e7e0fa30c08ef114e228b46093ee",
-        "summary": {
-          "confirmed": 25,
-          "drift": 1
-        },
         "verdicts": {
           "core-contents-lead": {
             "v": "confirmed",
@@ -269,10 +265,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "8782a55ff9f4f0744bff60f48c912c515b299a2051b406902a3e270555429274",
-        "summary": {
-          "confirmed": 99,
-          "unverifiable": 1
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -1138,9 +1130,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "b2b8e03ad3ece3025a646dc74ac765ec3e11c84f9d7824fe8e9fe4f4eee7f82e",
-        "summary": {
-          "confirmed": 36
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -1440,10 +1429,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "70a8158485bf4ace4d9dc4a193ea35becf3a34011c4a3fe45f94ab6b0a5e6ce2",
-        "summary": {
-          "confirmed": 39,
-          "unverifiable": 1
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -1809,9 +1794,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "8f6ee7227dd1c4dd3a705865514ce5ec21a142b40939d860ab7f9d4fe139730d",
-        "summary": {
-          "confirmed": 27
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -2068,9 +2050,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d13976f8125cfdb7cf5c9f319cdb53c2c21c7d11f4f8d59503e25c52f67acf8b",
-        "summary": {
-          "confirmed": 57
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -2581,9 +2560,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "b97b1fec890ea65ce2abfc2c167f845860c95f0040b980de14627621a65a4f73",
-        "summary": {
-          "confirmed": 36
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -2923,9 +2899,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "99bb51affd762bc903bc7fd570097e0f8a9fa49988483a25ade1e4450ff173ac",
-        "summary": {
-          "confirmed": 28
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -3188,9 +3161,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d09c56dbaafa4fd28b124a909141b87dac01f0e7483fe470121717f01cf8878d",
-        "summary": {
-          "confirmed": 93
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -4046,10 +4016,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "3fc38a8663355577ae9a76804dda5a2e10209292fceb5cf0a4999f175049a292",
-        "summary": {
-          "confirmed": 25,
-          "unverifiable": 1
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -4296,9 +4262,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "6b72508ecc7f7527993d4c214d1eb2cfc18ace5ad8ad160d1aac0092d7bd7f57",
-        "summary": {
-          "confirmed": 16
-        },
         "verdicts": {
           "FOLLOWS-DISCIPLINE": {
             "v": "confirmed",
@@ -4461,10 +4424,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5518bab664216e79ab250d9a7c94eadc459cefd9f336e287a55d602fcb1aaa4d",
-        "summary": {
-          "confirmed": 60,
-          "unverifiable": 3
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -4983,10 +4942,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "90c9092d565acffe1ad0bae48dc0f87e1582f56e68c943cbb74d8bafd510dc0a",
-        "summary": {
-          "confirmed": 36,
-          "drift": 7
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -5348,11 +5303,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1ad512c96d0c33368c5a09cd7249d2ae16e7bc8c1643b0af2879f8da721be676",
-        "summary": {
-          "confirmed": 33,
-          "drift": 5,
-          "unverifiable": 2
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -5709,9 +5659,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "74fdf8fef163f367e8a7b491a4285beb9aafdcc1730f76b4e837e88cba50ad13",
-        "summary": {
-          "confirmed": 34
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -6012,12 +5959,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "3a055cf0d1335eec8028679c33394b9748df24d1f6de9ae175d2c0b91fe84c45",
-        "summary": {
-          "confirmed": 156,
-          "drift": 11,
-          "unverifiable": 6
-        },
+        "processed_hash": "0f517ab8fd729f080c13adedebc098ddce2ca97381d69e820dfdebcb46e1390a",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -6216,10 +6158,9 @@
             ]
           },
           "DISTRIBUTION-RIDES-THE-EXISTING-REGISTRY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:54  pub fn content_hash(text: &str) -> String {",
-              "no package ships an index. The host commits `specmap.json` and is not a published package; no `packages/**` slot carries one, and there is no content-hash fragment fetch anywhere"
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "CLOSED-SOURCE-PROJECTS-SHIP-A-REDACTED-PROFILE": {
@@ -6505,9 +6446,9 @@
             ]
           },
           "RULE-MULTIPLICITY-LINT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "`vibe check` carries eleven checks — activation_conflict, boot_directory, features_graph, i18n_coverage, lockfile_files, manifest_validity, redirect_block, review_aging, subskill_structure, wal_freshness, wal_wellformed — and no multiplicity lint among them"
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "kind-line-edges": {
@@ -6527,12 +6468,9 @@
             ]
           },
           "EDGE-MODEL-NODES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:150  pub struct SpecUnit {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:34  pub struct CodeItem {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:43  pub itemKind: String,",
-              "read from the host's committed index 2026-07-28: `spec_unit` carries a content_hash, `code_item` does not (crate_name, file, item_kind, line, symbol). The derived Command and ErrorVariant nodes do not exist at all"
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "EDGE-MODEL-EDGES": {
@@ -6619,11 +6557,9 @@
             ]
           },
           "QUERY-ERROR-PROVENANCE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:49  pub fn req_message(uri: &str, why: &str, fix_surface: &str) -> String {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:50  format!(\"violates REQ {uri}: {why}; fix surface: {fix_surface}\")",
-              "the `violates spec://…` string that exists is conform's rule-finding grammar with a hardcoded URI, not an index lookup of a failing error variant. No error rendering consults the map"
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "QUERIES-LIVE-BEHIND-XTASK-DURING-THE-PILOT": {
@@ -6649,12 +6585,9 @@
             ]
           },
           "LLM-AS-RENDERER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:133  let subgraph = crate::explain::explain_json(map, target)?;",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:168  fn render_prose(",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:10  //! LLM; an LLM prose producer slots in later under its own producer",
-              "`explain --prose` has no provider to feed: the prose producer is a deterministic template and the ledger's own header says an LLM producer 'slots in later'"
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "LLM-NEVER-SILENTLY-WRITES-EDGES": {
@@ -6668,8 +6601,7 @@
           "RUNTIME-TRANSPORT": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/*-ai-native-mcp/  three MCP servers are the transport this fact describes",
-              "re-judged in wave 7 on the perimeter correction; the transport ships, one layer out from where the search looked."
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "RUNTIME-DISTRIBUTION": {
@@ -6679,10 +6611,9 @@
             ]
           },
           "RUNTIME-PROFILES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/vibe.toml:11  [compatibility]",
-              "`[metamodel] profile` is in no manifest schema and no parser; the three profile values have no representation"
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "RUNTIME-SECURITY-IS-NON-OPTIONAL": {
@@ -6811,9 +6742,9 @@
             ]
           },
           "SPEC-PRINCIPLE-UNITS-FIT-A-PAGE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "the fact names a specific checker behaviour — `vibe check` warns beyond ~120 lines — and `vibe check` has no such warning in any of its eleven checks"
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "RUST-PRINCIPLES-ARE-NOT-A-GENERAL-STYLE-GUIDE": {
@@ -6858,11 +6789,9 @@
             ]
           },
           "RUST-PRINCIPLE-RUSTDOC-IS-THE-DETAIL-LAYER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/src/lib.rs:43  #[doc = #doc]",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:123  fn explain_symbol(map: &Specmap, target: &str) -> Result<String> {",
-              "`explain` cannot compose rustdoc detail: `code_item` carries no doc field in the index, and the renderer emits symbol, kind, crate, file, line and edges only"
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "RUST-PRINCIPLE-NO-ORPHAN-PUBLIC-API": {
@@ -7214,12 +7143,9 @@
             ]
           },
           "ROW-PRIOR-ART-SYN-TREE-SITTER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:44  syn = { version = \"2\", features = [\"full\", \"visit\"] }",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/Cargo.toml:16  syn.workspace = true",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:243  match syn::parse_file(text) {",
-              "@spec/done, and half of it is wrong about the present: `syn` is a real implementation dependency; tree-sitter is not a dependency of anything in this repository"
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "ROW-PRIOR-ART-SIGSTORE": {
@@ -7343,8 +7269,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T15:54:43Z",
-        "verify_batch": "C1 + D5b + D7 + D10-groupA"
+        "verified_at": "2026-08-01T06:34:21Z",
+        "verify_batch": "C1 + D5b + D7 + D10-groupA + D13-1a"
       }
     },
     {
@@ -7364,9 +7290,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "0bb204d621551276a7e07d540ac48c1b6e29bbd1731d19ac6f2ba53f4757a299",
-        "summary": {
-          "confirmed": 30
-        },
         "verdicts": {
           "GO-PROJECTION-SHIPS-A-RUNNABLE-TOOLCHAIN": {
             "v": "confirmed",
@@ -7651,9 +7574,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "bed3c82e97af2dc526a06a1d369870751387d0ddc0917929d00036af0077cdd1",
-        "summary": {
-          "confirmed": 18
-        },
         "verdicts": {
           "GO-CODE-FOLLOWS-THE-GO-GUIDE": {
             "v": "confirmed",
@@ -7827,9 +7747,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "ea3dd504db114a93dba96108dc37ce915b37054db09ea63c52bea7109ed6d8df",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -7958,9 +7875,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "7e00772932a6189add5d4f0903c4125189409a435687f3a532b5f54bc49b3b7f",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -8092,9 +8006,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "37d30201591def68acd3bbe8c943b38c95eea8fd2f448d632b1f0f924dfae6de",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -8224,9 +8135,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "dabd1d40db070028c345e4d580df3810916ad3150a34f1d0d8e59b071207aa15",
-        "summary": {
-          "confirmed": 52
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -8679,9 +8587,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "357e719ca549bc15e919efdfc749a827a1bd3c1493c04e070c73161b5153be8c",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -8814,9 +8719,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "ccafcff42a4d55bb286ff0b87bb86b5ca54373cf1671cc7ae65b6438e550dd2e",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -8953,9 +8855,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "9f83982e17e8a42c8d49c985f76a6e8f0d394048108ee6d01139787d21c65c9c",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -9086,9 +8985,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "14b2604c3a394ffee31fc3a65059fc6cdeadd56cbbc90e8ae1a3ce101010f480",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -9222,9 +9118,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "b017335b5e11696c4fa72dc96d54cca623f0d38c3e5e12d77c294421359b7c6f",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -9353,11 +9246,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "0dd793c0c17e968ca707f396410db3d117062595937932c53cad1bed91fdb91a",
-        "summary": {
-          "confirmed": 144,
-          "drift": 3,
-          "unverifiable": 2
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -10621,11 +10509,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "0ce2921f9088a1609c79d3d9adb19b7bdc4de1e77b051848347a939a80b07013",
-        "summary": {
-          "confirmed": 64,
-          "drift": 5,
-          "unverifiable": 2
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -11240,10 +11123,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "a6e5656919f575f3e3956ab696b10dfb6c6f68eb8dca84edf9518530a643445d",
-        "summary": {
-          "confirmed": 39,
-          "drift": 2
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -11622,10 +11501,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "ec144d917d989ae9bfb31f06511d8788cfb6cd4bd4cd7e054b12b96b356ab4d3",
-        "summary": {
-          "confirmed": 26,
-          "drift": 3
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -11900,9 +11775,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5855f5128468cb5c93ea12d4ebf9728fa3adae50f8fc490abfd5d629f4010572",
-        "summary": {
-          "confirmed": 25
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -12133,10 +12005,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1447f48a9af677ed231a2a18feb5d95b3166f89491103dc7bc6cc67d3d01c3bd",
-        "summary": {
-          "confirmed": 36,
-          "drift": 1
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -12472,9 +12340,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "85a5d8ac2d74bd0bf84064515cdcd8bde3648679d901558de98bc861158cbf56",
-        "summary": {
-          "confirmed": 34
-        },
         "verdicts": {
           "RUNNING-THE-STANDING-SWEEP": {
             "v": "confirmed",
@@ -12783,9 +12648,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "824b69588c4a3ed0f0a6c92d906e4d480ae6884fa669d31666e95a132da28bba",
-        "summary": {
-          "confirmed": 35
-        },
         "verdicts": {
           "EXECUTING-THE-BROWNFIELD-PROTOCOL": {
             "v": "confirmed",
@@ -13105,9 +12967,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "8efe2c3f54507f8f3d9f1e69db1766636340e896e9e07f6c57b2b0f7e13e161b",
-        "summary": {
-          "confirmed": 3
-        },
         "verdicts": {
           "SERVED-OVER-MCP-AS-ONE-STDIO-BINARY": {
             "v": "confirmed",
@@ -13155,9 +13014,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "e2c83fbfe0a8aeb2806ceb198861f721026f5d0c15956bfaf971f25a0b41572b",
-        "summary": {
-          "confirmed": 34
-        },
         "verdicts": {
           "SERVED-OVER-MCP-AS-ONE-STDIO-BINARY": {
             "v": "confirmed",
@@ -13453,9 +13309,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1056b506ebb5c71eea6422568e42e816296f41f223ca8965a57890907f523d12",
-        "summary": {
-          "confirmed": 5
-        },
         "verdicts": {
           "AGG-ROLE": {
             "v": "confirmed",
@@ -13521,10 +13374,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "bd1b2f3c8fd115dcd283b48d567ae2af94f89562af863d72c3b8cb8fd544c994",
-        "summary": {
-          "confirmed": 15,
-          "drift": 1
-        },
         "verdicts": {
           "RUST-PROJECTION-SHIPS-A-RUNNABLE-TOOLCHAIN": {
             "v": "confirmed",
@@ -13690,9 +13539,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d8f954e93fd3da2ca4fc6cb6b0118be9547b0ae5a5fcfac412f30c3ecad5b8f8",
-        "summary": {
-          "confirmed": 17
-        },
         "verdicts": {
           "RUST-CODE-FOLLOWS-THE-RUST-GUIDE": {
             "v": "confirmed",
@@ -13856,9 +13702,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "fc678589ba5c62ffe693bc7f6ba6bd7a03e78c82ee7064d0ad5e40c65bbfabfc",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -13990,9 +13833,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "a11c0f18c00ccb53c3bd9f1a973b404c7201c319cdd72152438e5c1047b980b0",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -14124,9 +13964,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "17df090e1077a37cb44ff22d2fcd58453e6781e2572e8800f0e5d8a0937e9881",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -14260,10 +14097,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "4fc8272e5822f7f60c82a682a3a62d1e2d71163901f9325b5aa437aef0316f42",
-        "summary": {
-          "confirmed": 50,
-          "drift": 1
-        },
         "verdicts": {
           "reference-instance-note": {
             "v": "confirmed",
@@ -14702,9 +14535,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "b5b64df6a800d6601f40463f30a782e7845eadc2994ed4905f5fd653fc18ce75",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -14841,9 +14671,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1bff0d5268448ebc4e8129faa32f6da7ef92d873a34eba5ab0c20e99057685cc",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -14980,9 +14807,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d1f483b15abb5acff9035d6c1cc17318154ad866fae67e6c2fc454ccb148a9d5",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -15114,9 +14938,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5f882f326ff4c4e80d254f103704689cd0e8acc901a895569fe38e9cb064275d",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -15253,9 +15074,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "a4d1220f998b13c9adae81757d80d600e1fa92a3a9abe89a67073025958f1be8",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -15386,10 +15204,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "ffb67c1df8b1bb77115f91067fc91b4b6ba320aaea7c0e094f3494d66ee1f396",
-        "summary": {
-          "confirmed": 83,
-          "drift": 5
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -16185,10 +15999,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "37608f267410d260c52255755e1b57640c0ab45cf4564f6a36c21b448443afe8",
-        "summary": {
-          "confirmed": 69,
-          "drift": 2
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -16804,10 +16614,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "08e5f5c729852ce6b83a477a7e3f08bc0942488eb6f4b1a063e7fe7008c471fa",
-        "summary": {
-          "confirmed": 41,
-          "drift": 1
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -17184,10 +16990,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "bd6f5fa179306439a43d3e65f0f0c632474cb4caea99cef8ea9d3dfe5e13854c",
-        "summary": {
-          "confirmed": 34,
-          "drift": 2
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -17497,10 +17299,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "b503d8f1d2f8c9d5d2b44d425a9a2a8d51b8558e6f6131c552b4372ecfc6037d",
-        "summary": {
-          "confirmed": 39,
-          "drift": 1
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -17868,9 +17666,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "6746d59a193a64405d109a6a15e3b306d14e1c6b9f573f939b8076b75d2e15f8",
-        "summary": {
-          "confirmed": 35
-        },
         "verdicts": {
           "RUNNING-THE-STANDING-SWEEP": {
             "v": "confirmed",
@@ -18188,9 +17983,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "8d86b781cbbfb07b6423abe3c1ea458faa8f211938dc441bf64bc6f83f00e6a3",
-        "summary": {
-          "confirmed": 34
-        },
         "verdicts": {
           "EXECUTING-THE-BROWNFIELD-PROTOCOL": {
             "v": "confirmed",
@@ -18503,9 +18295,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "da9030e48d68f72e4d8a79b0c408c66eef1d6b4e04c7227d922b7c1d76af28c2",
-        "summary": {
-          "confirmed": 6
-        },
         "verdicts": {
           "SERVED-OVER-MCP-AS-ONE-STDIO-BINARY": {
             "v": "confirmed",
@@ -18581,9 +18370,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "167ad4d101b7d33b33903b0069873a14f3bffad1c58564346d3349870af807a7",
-        "summary": {
-          "confirmed": 33
-        },
         "verdicts": {
           "SERVED-OVER-MCP-AS-ONE-STDIO-BINARY": {
             "v": "confirmed",
@@ -18871,9 +18657,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "538a94f3409c696f8c7af85851337a8c5ef6d1dd82674a831b77fecf18ae7110",
-        "summary": {
-          "confirmed": 6
-        },
         "verdicts": {
           "AGG-ROLE": {
             "v": "confirmed",
@@ -18965,9 +18748,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1615bece3a3918b4bc82676dec3b049bad0ebd8ddcfd74036a0a4f308298d8cc",
-        "summary": {
-          "confirmed": 22
-        },
         "verdicts": {
           "TYPESCRIPT-CODE-FOLLOWS-THE-TYPESCRIPT-GUIDE": {
             "v": "confirmed",
@@ -19175,9 +18955,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "dc455dfe96bd840ffc61fcbf62f4274c6589fec7837aa7770c03cceff63e8770",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -19294,9 +19071,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "3113cd984f56c78765f73cedcdb71d05decad883b89e711da9cd3f2fc7483297",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -19414,9 +19188,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "885cebc915491b841fad0f6556d17752267effb0eab891aedf73ec518f289c06",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -19532,9 +19303,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "e088f68842b7f549d5d98343dbb894623b629d03d698bd2e3808ef68ce5165be",
-        "summary": {
-          "confirmed": 52
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -19930,9 +19698,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "ac74ce165b46cba560d626a7a9be0c42183fc9ac14efa4864af4613cd60c89d3",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -20048,9 +19813,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "17ce96669f86eabf3aebc8568ee1e50a2bc93e56b853847b553c305214e2d5d2",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -20169,9 +19931,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "78279d152089c8e54cdae95ef4bc63c9c36e80a5ea23545bc1dc24653d207a51",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -20287,9 +20046,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "49d0fd5720131de9f781e237021f1d5ef6753ab3be645d98ab34a5e6aac67b40",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -20404,9 +20160,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "f2983377b0c20eb862a448ef207d8d5a4c01b200af7d127aa06f6a7a082bcea2",
-        "summary": {
-          "confirmed": 13
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -20519,9 +20272,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "6cee59e5f9cf0a518c58a3a38ab2ff164c4658a0669fdad4f803b3afa80c6221",
-        "summary": {
-          "confirmed": 27
-        },
         "verdicts": {
           "RUNNING-THE-STANDING-SWEEP": {
             "v": "confirmed",
@@ -20775,9 +20525,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "a27728eb3d392c4ce7bdbdef2c63ba26199add5699433088c3a7b8235462311e",
-        "summary": {
-          "confirmed": 30
-        },
         "verdicts": {
           "EXECUTING-THE-BROWNFIELD-PROTOCOL": {
             "v": "confirmed",
@@ -21058,11 +20805,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "f73d76c107b170884facf3259ca6a1e63ad2227496b83a4978d66042dab2146e",
-        "summary": {
-          "confirmed": 148,
-          "drift": 4,
-          "unverifiable": 1
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -22333,10 +22075,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1a451863c2a7c10913a101577da43f226c4ea24da8cc6b79e7edc0650c5a5fd6",
-        "summary": {
-          "confirmed": 39,
-          "drift": 1
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -22696,9 +22434,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "614b746844d803edec398680e62a258503ce86c755314bc2e976bf24ffb083c9",
-        "summary": {
-          "confirmed": 39
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -23049,9 +22784,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "6dcc151777cbd0856fe80d247e123e943265b1eacc162495fc73022549b05d4c",
-        "summary": {
-          "confirmed": 34
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -23364,9 +23096,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "b757b3c7483484f2a329f4c8fc620422781d1af6bb1b035a95ea57281219cb9c",
-        "summary": {
-          "confirmed": 27
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -23611,9 +23340,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "a13e921ed6297add2888743f62e7cfad2ee66ad68629593c9893e6a762b6e332",
-        "summary": {
-          "confirmed": 41
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -23975,9 +23701,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "8f5c5c7d3d4a9205f84843678699608c30721f2ad6cccfa5a822167faeed96ff",
-        "summary": {
-          "confirmed": 6
-        },
         "verdicts": {
           "SERVED-OVER-MCP-AS-ONE-STDIO-BINARY": {
             "v": "confirmed",
@@ -24053,9 +23776,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1b51f505a3fa474375e7c4024a65001e325ee6552f21ee5e5fd30cb9daba958d",
-        "summary": {
-          "confirmed": 32
-        },
         "verdicts": {
           "SERVED-OVER-MCP-AS-ONE-STDIO-BINARY": {
             "v": "confirmed",
@@ -24335,9 +24055,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "2adbf3408d880eea04649e2328a8e6b37d5d79a858cfbc6c9ab9ab22f2026b9e",
-        "summary": {
-          "confirmed": 6
-        },
         "verdicts": {
           "AGG-ROLE": {
             "v": "confirmed",
@@ -24413,10 +24130,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "01e9a34ec895f7d6ea7758261ed5c3a70a9efe8270a6e1d59262a894d0b6d81f",
-        "summary": {
-          "confirmed": 19,
-          "drift": 1
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-ADDRESSABLE-SPECIFICATIONS-PRACTICE": {
             "v": "confirmed",
@@ -24715,10 +24428,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "85e9a192168af21a46fcaeabc49148b3a312440be19816f90f6d95b686080466",
-        "summary": {
-          "confirmed": 15,
-          "drift": 3
-        },
         "verdicts": {
           "EVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE": {
             "v": "drift",
@@ -24986,10 +24695,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "fc6f60c68b3f1c07f23d154b4a6e83567b1642e61d904b0dea2b2cddb4122e0f",
-        "summary": {
-          "confirmed": 58,
-          "drift": 6
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -25880,10 +25585,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "04cd260ab5ec52dab9e962efe8ad1348e6366c8ceb463594d5210365c6d1155e",
-        "summary": {
-          "confirmed": 52,
-          "drift": 11
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -26745,10 +26446,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "13ce5b8084cec3b79665ee9f34dafff35a0e9c53126e843104085b7c73da586f",
-        "summary": {
-          "confirmed": 41,
-          "drift": 9
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -27433,9 +27130,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "db347569068e99f882c39a93e002f29cfccfc61a56199c3788ac3f1a3a821014",
-        "summary": {
-          "confirmed": 23
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-CAMPAIGN-PLAN-FORMAT": {
             "v": "confirmed",
@@ -27773,9 +27467,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "06037791eb4377b612595e33fc9ee54790a672597e582fbc0d43090da6177186",
-        "summary": {
-          "confirmed": 29
-        },
         "verdicts": {
           "LARGE-CHANGES-ARE-EXECUTED-AS-CAMPAIGNS": {
             "v": "confirmed",
@@ -28171,10 +27862,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "c71f34595f5b66b3a06b11ca117ff87af8af56b616d5145b213f931ec20d0106",
-        "summary": {
-          "confirmed": 60,
-          "drift": 4
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -29069,10 +28756,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "4aec81d89199b3cacc0345d386c84a93abb6080670c4ea694e34175f9b35035f",
-        "summary": {
-          "confirmed": 44,
-          "drift": 4
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -29720,9 +29403,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "c25c2527385d8dec5803d15edc3fb29e45afa44ade727bd9353e398ca926229e",
-        "summary": {
-          "confirmed": 54
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -30460,9 +30140,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "4e3d391a4c327a5a45b02c0a58b51edd2b1b7dadaf3ba4c8117bd87dc8c708e8",
-        "summary": {
-          "confirmed": 21
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-COMPARATIVE-RESEARCH-GENRE": {
             "v": "confirmed",
@@ -30772,10 +30449,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "e2fbfe8a945780e268e32414672819306653cbd11483290cfb1512a162f1e423",
-        "summary": {
-          "confirmed": 8,
-          "drift": 4
-        },
         "verdicts": {
           "THE-PROJECT-HAS-A-GENRE-FOR-STUDYING-EXTERNAL-SYSTEMS": {
             "v": "confirmed",
@@ -30976,10 +30649,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "b1310825173a10ac2751eb4931db1c53582d620c79f15e73067c697f926b6dc3",
-        "summary": {
-          "confirmed": 48,
-          "drift": 12
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -31797,10 +31466,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "f0fcb508ee7fd223e02e0b3de273e5c55a22f156aad256aebc22ddaa6c3e4f15",
-        "summary": {
-          "confirmed": 55,
-          "drift": 6
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -32592,10 +32257,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "e6b8915bdda5bc8b973b9e71d74ac8623e3d2c74cb3bc9ff2d9d54445437c11a",
-        "summary": {
-          "confirmed": 25,
-          "drift": 1
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -32962,9 +32623,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "4bba86eadbc8817423cf149675e4978879ba9e45ea505d2ede7d45d4e5198231",
-        "summary": {
-          "confirmed": 21
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-A-CONFLICT-RESOLUTION-DISCIPLINE": {
             "v": "confirmed",
@@ -33272,9 +32930,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "6631e8677e8fb13727cab5b18400df14bb3c2c6902e3347a7801f7f43ba76e88",
-        "summary": {
-          "confirmed": 22
-        },
         "verdicts": {
           "PROJECT-RUNS-TWO-WRITERS-OVER-ONE-FILE-SET": {
             "v": "confirmed",
@@ -33593,9 +33248,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "951dd530a7ed50d38c49ca51662ed3d06215fdc4e86d677ef4b646c831d3ee81",
-        "summary": {
-          "confirmed": 65
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -34458,9 +34110,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "0945aed1ab5fc2af65a77baa904d04b7cad765011ac543d39c41382aeda0afe0",
-        "summary": {
-          "confirmed": 50
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -35130,10 +34779,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "7860349feb503892e50fa667f2fdcc4d197b44aa84130e237a46b199b5ac6dbf",
-        "summary": {
-          "confirmed": 45,
-          "drift": 1
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -35758,10 +35403,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "17f15c4e9a554da8fd56873b9d93c92bca377a981788619d5ab461190f9853a3",
-        "summary": {
-          "confirmed": 22,
-          "drift": 1
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-DECISIONS-NOT-FACTS-DISCIPLINE": {
             "v": "confirmed",
@@ -35792,18 +35433,12 @@
             ]
           },
           "FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:12  ##FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR So every choice a future reader could plausibly",
-              "spec/boot/STATIC.md:248  gets a **four-field record at the spec anchor that governs the value**:",
-              "spec/modules/vibe-progress/PROP-043-progress-markup.md:91  ##DECISION-ELEMENT-NAME **Decision — element name `status`, not `progress`.** @impl/done",
-              "spec/modules/vibe-cli/PROP-036-package-tree.md:88  ##DECISION-ARTIFACTS-CANONICAL **Decision — read the effective type from the artifacts, not a fresh recompute.** @spec/done",
-              "DRIFT on completeness, not on placement. 153 sections in `spec/common/` + `spec/modules/**` carry a bolded Decision label; 4 carry all four fields, 3 carry three, 19 carry two, 127 carry the Decision line alone. Counted twice — the delegated worker's scan and my own independent re-count — agreeing exactly. The anchor half holds — all 153 sit in the section governing the value and no ADR directory exists — so the claim's «at the governing anchor» is right and its «four-field record» is met 2.6 % of the time."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "tribal-knowledge-in-a-pure-human-team": {
@@ -36078,7 +35713,7 @@
           }
         },
         "verified_at": "2026-07-28T20:04:56Z",
-        "verify_batch": "W3"
+        "verify_batch": "W3 + D13-adopt"
       }
     },
     {
@@ -36098,10 +35733,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d54fa8d3d30fd32e80778a0642597025fc48a321e4872ef66e1a6f4514327264",
-        "summary": {
-          "confirmed": 21,
-          "drift": 4
-        },
         "verdicts": {
           "PROJECT-RECORDS-DECISIONS-NOT-FACTS": {
             "v": "confirmed",
@@ -36142,18 +35773,12 @@
             ]
           },
           "ANY-REOPENABLE-CHOICE-GETS-A-RECORD": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:16  ##ANY-REOPENABLE-CHOICE-GETS-A-RECORD Any choice a future reader could plausibly re-open — a library pick,",
-              "spec/boot/STATIC.md:246  Any choice a future reader could plausibly re-open — a library pick,",
-              "spec/boot/STATIC.md:248  gets a **four-field record at the spec anchor that governs the value**:",
-              "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:42  ##IDENTITY-TUPLE **Decision.** A package's identity is the tuple `(kind, name, version, content_hash)`. The `content_hash` is `sha256:<hex>` over the deterministically-ordered concatenation of `(rel_path_bytes || 0x00 || file_bytes || 0x00)` for every file in the package directory (the existing scheme from `compute_content_hash` in `vibe-registry`). [PROP-024 §2.2](../../common/PROP-024-code-bearing-packages.md#shippable-tree) re-scopes this to the package's **shippable tree** — its source, minus build output (`.git/`, `.vibe/`, `target/`, `node_modules/`, `.vibeignore` globs) — so a code-bearing package's identity is its source, not its build state; that exclusion lands with the code that implements it. The URL used to fetch the content is **informational** — recorded in the lockfile for debuggability, not for identity. @impl/done",
-              "DRIFT: the host writes at the reopenable choices and writes a RECORD at four of them. 153 sections in `spec/common/` + `spec/modules/**` carry a bolded Decision label; 4 carry all four fields, 3 carry three, 19 carry two, 127 carry the Decision line alone. Counted twice — the delegated worker's scan and my own independent re-count — agreeing exactly."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "ROW-FIELD-DECISION": {
@@ -36201,18 +35826,12 @@
             ]
           },
           "ROW-FIELD-WHEN-TO-REVISIT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:25  | ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | A measurable trigger: metric + threshold + where it is observed. @impl/done |",
-              "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would",
-              "spec/common/PROP-000.md:23  ##LANG-REVISIT **When to revisit:** Never, in the scope of v1. If Rust proves inadequate for a future milestone, open a new PROP superseding this one. @spec/done",
-              "DRIFT on the field's own definition — «a measurable trigger: metric + threshold + where it is observed». Applied to all 11 host revisit lines individually: 1 carries metric + threshold, 1 names an observation point, NONE carries all three. Eight are event-shaped without a threshold; two refuse revisiting outright. 142 of 153 Decision sections carry no revisit condition at all."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "NO-SEPARATE-ADR-DIRECTORY": {
@@ -36282,17 +35901,12 @@
             ]
           },
           "ASK-RATHER-THAN-INVENT-DATA": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:42  2. ##ASK-RATHER-THAN-INVENT-DATA If the why or the trigger is not known, ask. Do not invent data;",
-              "spec/boot/STATIC.md:271  2. If the why or the trigger is not known, ask. Do not invent data;",
-              "spec/common/PROP-000.md:29  ##WORKSPACE-LAYOUT **Decision:** Single Cargo workspace at repo root. Crates live under `crates/` per `VIBEVM-SPEC.md` §10.2: @spec/done",
-              "DRIFT on its second clause, which is countable: «do not record a two-field stub» — the host records 19 of them in `spec/common/` + `spec/modules/**`, plus 3 three-field records, against 4 complete ones. The do-not-invent-data half holds: no fabricated measurement was found in any host why."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "READ-THE-RECORD-BEFORE-CHANGING-THE-VALUE": {
@@ -36425,23 +36039,17 @@
             ]
           },
           "NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:77  - ##NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER Never record a decision with a missing reason or a missing revisit",
-              "spec/boot/STATIC.md:299  - Never record a decision with a missing reason or a missing revisit",
-              "spec/common/PROP-000.md:100  - ##REG-M0 **Decision:** **M0:** local-directory registry only. No git. Registry is a path on disk with the layout from `VIBEVM-SPEC.md` §8.2. @spec/done",
-              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:157  ##RE-DERIVE-THE-SPLIT-WHEN-CAPABILITIES-MOVE Re-derive the split when the underlying capabilities move —",
-              "DRIFT, and this is the never the host breaks most often: «a fact with decoration, not a record» is precisely what 149 of its 153 Decision sections are. 153 sections in `spec/common/` + `spec/modules/**` carry a bolded Decision label; 4 carry all four fields, 3 carry three, 19 carry two, 127 carry the Decision line alone. Counted twice — the delegated worker's scan and my own independent re-count — agreeing exactly. The rule names the failure exactly and the corpus is made of it."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           }
         },
         "verified_at": "2026-07-31T20:38:28Z",
-        "verify_batch": "W3 + D11-address"
+        "verify_batch": "W3 + D11-address + D13-adopt"
       }
     },
     {
@@ -36460,11 +36068,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "fc347433b5c71707cec90d03a6027c104d9e1479d95fab83605c18af9d4d275c",
-        "summary": {
-          "confirmed": 60,
-          "drift": 3
-        },
+        "processed_hash": "5ef39412a555b6b100790d78b33120dd2a0b62f4fdbdc1a6a4ea7939f62b11a2",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -36678,18 +36282,12 @@
             ]
           },
           "EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:71  ##EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS Every record carries exactly four fields: @impl/done",
-              "spec/boot/STATIC.md:250  | Field | Requirement |",
-              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:83  **Decision.** The verdict object grows a third key: `{v, ev[], src:[…]}`, where",
-              "spec/modules/vibe-actions/PROP-039-action-system.md:339  - ##decision-records-home The load-bearing decisions (four-field: Decision · Why · Rejected · Revisit) are recorded at their",
-              "DRIFT, and it is the batch's headline: 4 of 153. counted twice by two instruments that agree byte for byte — the delegated worker's scan and my own independent re-count. A section-scoped sweep of every markdown file under `spec/common/` and `spec/modules/**` for a bolded Decision label finds 153 sections. Of those: 4 carry all four fields, 3 carry three, 19 carry two, and 127 carry the Decision line ALONE. `spec/common/` contributes 0 of the four; all four are in `spec/modules/` (PROP-036 §2.3, PROP-043 §§3.1, 3.3, 3.8). The word is «every»; the measured rate is 2.6 %. Placement, which the same protocol also requires, is obeyed almost everywhere — all 153 sit inside the section that governs the value — so what fails is completeness, not location."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "ROW-FIELD-DECISION": {
@@ -36737,18 +36335,12 @@
             ]
           },
           "ROW-FIELD-WHEN-TO-REVISIT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:78  | ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | A measurable trigger: metric + threshold + where it is observed. \"Later\" is not a trigger. @impl/done |",
-              "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would",
-              "spec/modules/vibe-registry/PROP-001-git-backend.md:113  ##revisit-lead **When to revisit:** if and when we need one of: @spec/done",
-              "DRIFT on the field's own definition — «a measurable trigger: metric + threshold + where it is observed» — measured against every host instance individually rather than by rule. Eleven revisit lines exist across `spec/`. ONE carries a metric and a threshold (PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116, «a third of `world`'s units land `unverifiable`»); eight are event-shaped with no threshold; two refuse revisiting outright (PROP-000.md:23 «Never, in the scope of v1»; PROP-043:141 «never expected»). NONE carries all three parts, and only PROP-043:255 names a place to look. 142 of the 153 Decision-bearing sections carry no revisit condition at all."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "why-three-of-the-four-fields-exist": {
@@ -37216,17 +36808,12 @@
             ]
           },
           "SUM-FOUR-FIELDS-ALWAYS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:228  - ##SUM-FOUR-FIELDS-ALWAYS Four fields, always: Decision / Why (measured, cited) / Considered",
-              "spec/boot/STATIC.md:248  gets a **four-field record at the spec anchor that governs the value**:",
-              "spec/modules/vibe-cli/PROP-036-package-tree.md:95  - ##decision-artifacts-revisit **When to revisit:** if the artifacts stop being committed (generated",
-              "DRIFT on «always», the same census as EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS. counted twice by two instruments that agree byte for byte — the delegated worker's scan and my own independent re-count. A section-scoped sweep of every markdown file under `spec/common/` and `spec/modules/**` for a bolded Decision label finds 153 sections. Of those: 4 carry all four fields, 3 carry three, 19 carry two, and 127 carry the Decision line ALONE. `spec/common/` contributes 0 of the four; all four are in `spec/modules/` (PROP-036 §2.3, PROP-043 §§3.1, 3.3, 3.8). W1's precedent judges a summary restatement of a broken rule with the rule."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "SUM-RECORDS-LIVE-AT-THE-ANCHOR": {
@@ -37285,8 +36872,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T20:01:39Z",
-        "verify_batch": "W3"
+        "verified_at": "2026-08-01T06:34:21Z",
+        "verify_batch": "W3 + D13-adopt"
       }
     },
     {
@@ -37306,10 +36893,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "a83f90f87632ac1a1f76771fe69a7971bd503c33355a3b8687390345b0426cbb",
-        "summary": {
-          "confirmed": 27,
-          "drift": 2
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -37408,18 +36991,12 @@
             ]
           },
           "ROW-FIELD-WHEN-TO-REVISIT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:45  | ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | Metric + threshold + observation point; a stranger can answer \"has it fired?\". @impl/done | \"Later\", \"when it breaks\", \"when we refactor\". @impl/done |",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would",
-              "spec/common/PROP-000.md:23  ##LANG-REVISIT **When to revisit:** Never, in the scope of v1. If Rust proves inadequate for a future milestone, open a new PROP superseding this one. @spec/done",
-              "spec/modules/vibe-registry/PROP-001-git-backend.md:113  ##revisit-lead **When to revisit:** if and when we need one of: @spec/done",
-              "DRIFT on the field's own definition — «a measurable trigger: metric + threshold + where it is observed». Applied to all 11 host revisit lines individually: 1 carries metric + threshold, 1 names an observation point, NONE carries all three. Eight are event-shaped without a threshold; two refuse revisiting outright. 142 of 153 Decision sections carry no revisit condition at all."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "worked-example-session-narration": {
@@ -37645,17 +37222,12 @@
             ]
           },
           "SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:149  - ##SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER Why with data; rejections with reasons; trigger with metric,",
-              "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would",
-              "DRIFT on all three clauses, each measured. Why with data: 0 of the 22 whys in `spec/common/` + `spec/modules/**` names a log path, a sample size or a benchmark run. Rejections with reasons: the field appears 6 times against 153 records. Trigger with metric + threshold + observation point: 0 of 11. The one place all three land is the campaign's own batch plan §2, outside the spec tree this summary governs."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "SUM-THE-BEFORE-AFTER-TEST": {
@@ -37688,7 +37260,7 @@
           }
         },
         "verified_at": "2026-07-29T17:25:49Z",
-        "verify_batch": "W3 + D3b"
+        "verify_batch": "W3 + D3b + D13-adopt"
       }
     },
     {
@@ -37708,9 +37280,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "2bebf0743365006bb5b8038d5472decd1c548d2334f21d031109956835cae7fd",
-        "summary": {
-          "confirmed": 56
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -38442,9 +38011,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "df4d7bf0a90fdaa24e10113cde280fa291b40ddf25fefac410ea0750cc0f895e",
-        "summary": {
-          "confirmed": 9
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-SAME-COMMIT-DOC-DISCIPLINE": {
             "v": "confirmed",
@@ -38594,10 +38160,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "43e2aa1b991ffdd9029cc13bd95f230c9f33f253f08d316c5e6867cee33189fe",
-        "summary": {
-          "confirmed": 2,
-          "drift": 4
-        },
         "verdicts": {
           "SETUP-AND-RUNTIME-DOCUMENTATION-IS-LOAD-BEARING": {
             "v": "confirmed",
@@ -38701,10 +38263,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5c96bd002d990c5a8fdd263bfb8a9735c70c0b3814a42bbd51151730cff0f1a7",
-        "summary": {
-          "confirmed": 13,
-          "drift": 2
-        },
         "verdicts": {
           "SETUP-AND-RUNTIME-DOCUMENTATION-IS-LOAD-BEARING": {
             "v": "confirmed",
@@ -38933,9 +38491,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "7d4d22d0b5b1fc2942b8375f2eee746669282eefc18482404a3def33fd8d29dd",
-        "summary": {
-          "confirmed": 19
-        },
         "verdicts": {
           "PACKAGE-SHIPS-THE-DISCOVERY-PROMPT": {
             "v": "confirmed",
@@ -39239,9 +38794,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "9507100a873ff6439305a6c9f84856803b516d58f3dac8c3f9b6f9ad1b536b2d",
-        "summary": {
-          "confirmed": 10
-        },
         "verdicts": {
           "PROJECT-SHIPS-THE-DISCOVERY-PROMPT": {
             "v": "confirmed",
@@ -39406,10 +38958,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "2dfd25b0b7e920a7e89afd5f70b4734e04571fa9ec24192a523a3febf1e496b6",
-        "summary": {
-          "confirmed": 53,
-          "unverifiable": 1
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -40157,9 +39705,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "9d3496481efe946ea66bc7babe65fbaa437df1a0925a22a1866e9f767df84a9f",
-        "summary": {
-          "confirmed": 16
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-ATOMIC-COMMITS-DISCIPLINE": {
             "v": "confirmed",
@@ -40410,9 +39955,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "f963e8874b3d0ff02be7b85b21c501bdff3c7d4c6f50a006712026dc9d4e0c88",
-        "summary": {
-          "confirmed": 21
-        },
         "verdicts": {
           "THE-PROJECT-USES-THE-ATOMIC-COMMITS-DISCIPLINE": {
             "v": "confirmed",
@@ -40744,9 +40286,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "f92fa34b195e8a0fd3770e8ce58a39d31ed11587854b3b1ebe85886bacdcabf6",
-        "summary": {
-          "confirmed": 64
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -41587,9 +41126,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "01fae6ce386a718cf4f0955ae2ea354767c1110923a0bf34e20c666f628a37e7",
-        "summary": {
-          "confirmed": 52
-        },
         "verdicts": {
           "a-long-session-leaves-the-tree-looking-like-a-weather-map": {
             "v": "confirmed",
@@ -42343,11 +41879,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "9dc11f88e01b678cd61c2b3a335561b25012685f3ed6b8523a7b9780265bc7b3",
-        "summary": {
-          "confirmed": 17,
-          "drift": 2,
-          "unverifiable": 1
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-A-DELIBERATE-ATTRIBUTION-POSTURE": {
             "v": "confirmed",
@@ -42657,11 +42188,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d624cef159ced10523737520a1362dafe6b53b54c10980d3c6f54e2039d73867",
-        "summary": {
-          "confirmed": 12,
-          "drift": 2,
-          "unverifiable": 2
-        },
         "verdicts": {
           "THE-REPOSITORY-IS-HUMAN-AUTHORED-ON-EVERY-SURFACE": {
             "v": "confirmed",
@@ -42919,11 +42445,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "94de27b95debb4ee7c2eb48bb87b7134eed54811a0b1023347797561ae2d1129",
-        "summary": {
-          "confirmed": 28,
-          "drift": 6,
-          "unverifiable": 1
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -43438,11 +42959,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "3db4408a1ef8e7c683aa371e73056e7859b06b4cef6384b0846cc20f85a8f908",
-        "summary": {
-          "confirmed": 27,
-          "drift": 1,
-          "unverifiable": 3
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -43873,9 +43389,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "62556b017f70c386220bb7c978b546a81fb9e475db6a3e82dc0c5b8373ca437d",
-        "summary": {
-          "confirmed": 30
-        },
         "verdicts": {
           "A-POLICY-WITH-NO-CHECKER-IS-A-WISH": {
             "v": "confirmed",
@@ -44310,9 +43823,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "42b025697efe36a0b3e620d121ff13f777091988e4a574978413d960e6c9e421",
-        "summary": {
-          "confirmed": 7
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-COMMIT-PUSH-AUTONOMY-POSTURE": {
             "v": "confirmed",
@@ -44443,9 +43953,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "e35afbd96259bf07fa9c1a4f0b564e08dfce34b4f318c6f2177a45de055cbc14",
-        "summary": {
-          "confirmed": 14
-        },
         "verdicts": {
           "THE-DEFAULT-POSTURE-ON-THE-COMMIT-AND-PUSH-SURFACE": {
             "v": "confirmed",
@@ -44669,9 +44176,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "023d3eaaa64ff3144e77a9e050e823f7b07fda12343ed334553d7aa7e9ff19b4",
-        "summary": {
-          "confirmed": 24
-        },
         "verdicts": {
           "an-agent-is-constantly-deciding-whether-to-ask": {
             "v": "confirmed",
@@ -45039,9 +44543,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "dfd0f2e39a19cc7ad2f22be3b90fb6d435f206d64a7d3247218e7bffab052b8b",
-        "summary": {
-          "confirmed": 9
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-CONVENTIONAL-COMMITS-MESSAGE-FORMAT": {
             "v": "confirmed",
@@ -45201,10 +44702,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "0b69bed96447eae39aa25b94ee8b7da21c9a8a6ae4a4fa2028f934f2eac71277",
-        "summary": {
-          "confirmed": 10,
-          "drift": 2
-        },
         "verdicts": {
           "EVERY-COMMIT-MESSAGE-FOLLOWS-CONVENTIONAL-COMMITS": {
             "v": "confirmed",
@@ -45408,10 +44905,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "75cfebaf5998c0fbc28288657ef276ef5c6a378ae14101b10e53082331f7d17e",
-        "summary": {
-          "confirmed": 44,
-          "drift": 3
-        },
         "verdicts": {
           "ALL-COMMITS-FOLLOW-THE-CONVENTIONAL-COMMITS-SPECIFICATION": {
             "v": "confirmed",
@@ -46090,10 +45583,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "128cd2b381c7d9add73d3656fff82203ab675a22a318ca0faf6eb1c12a292023",
-        "summary": {
-          "confirmed": 8,
-          "drift": 1
-        },
         "verdicts": {
           "AGG-ROLE": {
             "v": "confirmed",
@@ -46254,10 +45743,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5153595e4fd86e82d5e93955cd79c2b1d4174872e1370357af28e5f6a2590ef0",
-        "summary": {
-          "confirmed": 19,
-          "drift": 1
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-PERIODIC-HEALTH-AUDIT": {
             "v": "confirmed",
@@ -46309,15 +45794,11 @@
             ]
           },
           "A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
-              "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-              "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
-              "DRIFT, and the worker's own evidence settles it against the claim — this row was returned `located` because the search DID answer the question. The last audit run in `AUDIT.md` is 2026-06-12 (`git log -1 --date=short -- AUDIT.md` → `3656f362 2026-06-12`, and `grep -nE '^## ' AUDIT.md` shows no later section). `grep -noE '(SHIPPED|COMPLETE)[^)]*\\(20[0-9]{2}-[0-9]{2}-[0-9]{2}\\)' ROADMAP.md` returns 15 dated ship lines, and **the two most recent — M1.26 and M1.24 — are both SHIPPED (2026-07-07), after the last audit, with no audit section between**. `git log --oneline --since=2026-06-12 | wc -l` is 1 546. Two milestones declared done on an un-audited base is the flow's own `#never` broken twice, on the artefact the flow itself specifies."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -46549,7 +46030,7 @@
           }
         },
         "verified_at": "2026-07-28T21:51:30Z",
-        "verify_batch": "W5"
+        "verify_batch": "W5 + D13-adopt"
       }
     },
     {
@@ -46569,10 +46050,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "ad7973e40c36533330f7aa8f3eb8eeb09dfd23d7c0d4bfa664e42524e17b0073",
-        "summary": {
-          "confirmed": 13,
-          "drift": 4
-        },
         "verdicts": {
           "PROJECT-RUNS-A-PERIODIC-HEALTH-AUDIT": {
             "v": "confirmed",
@@ -46636,33 +46113,20 @@
             ]
           },
           "AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:16  The audit is **owner-triggered**, with a floor of **at least once per",
-              "spec/boot/STATIC.md:762  The audit is **owner-triggered**, with a floor of **at least once per",
-              "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
-              "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
-              "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
-              "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-              "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
-              "DRIFT on the floor, confirmed on the trigger. Owner-triggered holds: `AUDIT.md:193` records the 2026-06-12 run as «Owner-requested» with the instruction quoted, and the absence of an audit trigger phrase in the agent contracts (`grep -ni 'audit' CLAUDE.md` → zero) is consistent with an owner-narrated trigger rather than an automated one. The FLOOR does not: the 2026-06-10 run was a milestone close-out and met it, but since 2026-06-12 the two most recent ROADMAP ship lines — M1.26 and M1.24, both SHIPPED (2026-07-07) — carry no audit section between them and the last run, across 1 546 commits. «At least once per milestone» is the flow's own word for a minimum, and it has been missed twice."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
           "A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:18  milestone is never declared done on an un-audited base. The owner",
-              "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
-              "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-              "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
-              "DRIFT, the same measurement as this fact's twin in the package README and ruled identically. Last audit 2026-06-12; M1.26 and M1.24 both SHIPPED (2026-07-07) with no audit section between; 1 546 commits in the gap. Two milestones declared done on an un-audited base, in the file this flow itself specifies."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -46736,18 +46200,12 @@
             ]
           },
           "USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:31  Use the **`health-audit`** skill: it reads the category checklist,",
-              "spec/boot/STATIC.md:777  Use the **`health-audit`** skill: it reads the category checklist,",
-              "packages/org.vibevm.world/health-audit/v0.1.0/vibe.toml:20  name = \"health-audit\"",
-              "packages/org.vibevm.world/health-audit/v0.1.0/vibe.toml:21  path = \"spec/skills/health-audit\"",
-              "DRIFT of the genre F-097 named — an instruction that fails when followed. The skill ships and installs: `packages/…/spec/skills/health-audit/SKILL.md` and `vibedeps/flow-health-audit/0.1.0/spec/skills/health-audit/SKILL.md` both exist. It reaches no harness the host runs. The worker widened past the harvest, which checked only `.claude/skills/`, and found **three** skill homes — `.claude/skills/` (5 skills), `.agents/skills/` (4), `.opencode/skills/` (4) — with `health-audit` in none; `find . -maxdepth 4 -path '*skills/health-audit*'` returns nothing outside the package and vibedeps, and `grep -rn 'health-audit' .claude/` returns nothing. A session that reads this instruction in the compiled boot lane and tries to follow it cannot. `vibe skill install` is the projection step and the lockfile records no skill projection for this package."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "flow-document-pointers": {
@@ -46761,17 +46219,11 @@
             ]
           },
           "NEVER-DECLARE-A-MILESTONE-DONE-ON-AN-UN-AUDITED-BASE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:42  - Never declare a milestone done on an un-audited base — the audit is",
-              "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
-              "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-              "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
-              "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
-              "DRIFT — the `#never` restatement of the rule two rows above, carrying its verdict per W1's summary-restatement precedent, and sharpened by its own added clause: «the audit is part of the close-out, not an optional extra». Two milestone close-outs since 2026-06-12 shipped without one. Three facts in this package assert the same rule and all three fail on the same two ship lines."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -46848,7 +46300,7 @@
           }
         },
         "verified_at": "2026-07-31T20:38:28Z",
-        "verify_batch": "W5 + D11-address"
+        "verify_batch": "W5 + D11-address + D13-adopt"
       }
     },
     {
@@ -46867,11 +46319,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "fee85116f5511638646081b0eaff08efabf993f925dbffd622a33acda52881a9",
-        "summary": {
-          "confirmed": 63,
-          "drift": 8
-        },
+        "processed_hash": "e8fb9569d55776e72177f8371857d04db664dc9cff53724b7d0a7b9b2bdbee04",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -46943,16 +46391,11 @@
             ]
           },
           "THE-AUDIT-IS-A-DIFFERENT-KIND-OF-CHECK": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:191  ## Audit run — 2026-06-12 (discipline depth — the full AI-Native sweep)",
-              "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
-              "AUDIT.md:202  **12 findings** — 1 P1 (fixed in-run), 7 P2 (filed), 4 P3. **Headline:",
-              "spec/common/PROP-013-periodic-health-audit.md:62  - ##INVENTORY-AUDIT-MD Findings live in **`AUDIT.md`** at the repo root — the append-only chronicle whose history is vibevm's health trend (the flow's `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#audit-md`; the five-field record `…#finding`; disposition and carry-forward `…#disposition`). @spec/done",
-              "DRIFT on «breadth-first», which is the leg the artefact does not carry. Deliberate, judgment-heavy and durably recorded all hold — the 2026-06-12 run is owner-requested, describes its method as three structural deep-reads plus one empirical gate probe, and wrote 12 findings. But two of the three runs disclaim a full sweep IN THEIR OWN TEXT: `AUDIT.md:23` «it is **not** a fresh full sweep of the PROP-013 §2.2 checklist» and `:158` «It is **not** the full §2.2 breadth sweep». The third claims a sweep and is scoped to the new category E. No run in the artefact records walking A, B, C and D breadth-first."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -47107,17 +46550,11 @@
             ]
           },
           "AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/common/PROP-013-periodic-health-audit.md:26  ##CHECKLIST-WALK vibevm walks the flow's category checklist (`spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#categories`) breadth-first. The categories below carry vibevm's **known instances** — the findings that made each line permanent … @spec/done",
-              "AUDIT.md:14  run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot",
-              "AUDIT.md:15  outside the gate, **C** drift, **D** debt, **E** discipline depth",
-              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-              "DRIFT on the walking, not on the mapping. The mapping is adopted — PROP-013's `##CHECKLIST-WALK` says vibevm walks the checklist breadth-first and cites this document's own anchor, and AUDIT.md's header enumerates the same A/B/C/D groups. The walking never happened: two of three runs disclaim it in their own text, and of the 29 finding headings the sub-rows that have ever produced a finding are A1, A2, A3, B1, B2, C1, C2, C3, C4, D1 plus two group-level entries — **nothing has ever been filed under D2, D3 or D4**."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -47312,16 +46749,11 @@
             ]
           },
           "ROW-FIELD-ID": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
-              "AUDIT.md:187  | AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |",
-              "AUDIT.md:365  - **2026-05-23-01** (A1, git-registry path under-tested) — **reduced**:",
-              "AUDIT.md:381  - **AUD-0014 / AUD-0015** (doc-string one-liners) — open; cheap, fix on",
-              "DRIFT on the format, in one run of three. The 2026-05-23 and 2026-06-12 runs both use `<run-date>-NN`, unique within the run. The 2026-06-10 run numbers its four findings AUD-0014 … AUD-0017 — a repository-wide sequence, not a run-date — and a third id space runs alongside all of them in `discipline/registry/debt.json` as DBT-0001…DBT-0022. Stability across carry-forward does hold for both schemes, and that half is confirmed by the 2026-06-12 carry-forward re-listing originals under their own ids."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -47400,17 +46832,11 @@
             ]
           },
           "SEVERITY-P1-BLOCKER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:9  **Severity** — `P1` blocker (resolve before the next milestone ships) ·",
-              "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
-              "AUDIT.md:46  ### 2026-05-23-02 · A1 · P1 · fixed (`cc32d7e`)",
-              "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
-              "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-              "DRIFT on «resolve before the next milestone ships», and the record disagrees with itself about the finding that proves it. The definition is adopted verbatim in AUDIT.md's header. Three P1s exist; two were fixed in-run. The third, 2026-05-23-01, was never fixed — it was re-judged DOWN to P3 at AUDIT.md:369 and survives as DBT-0001 carrying **[P1]** in `discipline/DEBT.md:29`, still «filed as INT-0002» — while M1.26 and M1.24 were both declared SHIPPED on 2026-07-07. So a P1 outlived two milestones, and the two durable records carry different severities for it today."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -47486,16 +46912,11 @@
             ]
           },
           "ROW-DISP-FILED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:12  `filed` (became tracked work — WAL / `TASKS.md` / a PROP) · `accepted`",
-              "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
-              "AUDIT.md:187  | AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |",
-              "discipline/DEBT.md:29  - **DBT-0001** `coverage-gap` [P1] — Production git-registry + naming path is under-tested _(filed as INT-0002 (the test-hardening work))_",
-              "DRIFT on the destination the row names. Nine findings are `filed` and where-it-went is recorded for three of them (AUD-0017 «filed — DBT-0019», 2026-06-12-03 «filed (DBT-0019, escalated P3→P2)», and the registry's typed `filed_as` field); the other six are bare «filed» in their headings with the destination only in body prose. On the named destinations: **`TASKS.md` contains ZERO occurrences of «audit»**, so no finding has ever been filed as a TASKS.md line. The destination the host actually uses is `discipline/registry/debt.json`, which this flow does not name."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -47683,17 +47104,11 @@
             ]
           },
           "AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
-              "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
-              "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
-              "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-              "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
-              "DRIFT on the floor, confirmed on the trigger — the same ruling as this fact's twin in the boot snippet. Owner-triggered holds (the 2026-06-12 run is recorded «Owner-requested» with the instruction quoted). The floor does not: M1.26 and M1.24 both SHIPPED (2026-07-07) against a last audit of 2026-06-12, with 1 546 commits in the gap and no audit section between."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -47713,16 +47128,11 @@
             ]
           },
           "A-RUN-MUST-FINISH-THE-INVENTORY-NOT-EVERY-FIX": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-              "AUDIT.md:202  **12 findings** — 1 P1 (fixed in-run), 7 P2 (filed), 4 P3. **Headline:",
-              "AUDIT.md:29  **13 findings** — 2 P1, 4 P2, 7 P3. Disposition: 2 fixed, 1 filed,",
-              "DRIFT on the half the sentence insists on. The fix half holds cleanly — the seed run left 9 of 13 open and the 2026-06-12 run filed 7 P2s rather than fixing them in-run, which is the rule working. The INVENTORY half fails in two of three runs, by their own admission: «it is **not** a fresh full sweep … The first full sweep is the next invocation» and «It is **not** the full §2.2 breadth sweep (INT-0001 stays rescoped to the next audit window)». INT-0001 is the full-sweep window both runs name, and no run has closed it."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -47884,22 +47294,17 @@
             ]
           },
           "SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
-              "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
-              "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-              "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
-              "DRIFT, carrying its clause's verdict per W1's summary-restatement precedent. Five facts across this package now assert the once-per-milestone floor or its `#never`, and all five fail on the same two ship lines."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           }
         },
-        "verified_at": "2026-07-29T16:50:24Z",
-        "verify_batch": "W5 + D2a"
+        "verified_at": "2026-08-01T06:34:21Z",
+        "verify_batch": "W5 + D2a + D13-adopt"
       }
     },
     {
@@ -47919,10 +47324,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "009dd2b994279ec28dcf689450419f6edde9d6473fc2efcf132c51a67681c94b",
-        "summary": {
-          "confirmed": 64,
-          "drift": 1
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -48723,16 +48124,11 @@
             ]
           },
           "SUM-FOUR-GROUPS-WALKED-BREADTH-FIRST": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:14  run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot",
-              "AUDIT.md:15  outside the gate, **C** drift, **D** debt, **E** discipline depth",
-              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-              "DRIFT on «walked breadth-first», carrying the verdict of the two rules it summarises. The four groups are adopted verbatim in AUDIT.md's header and in PROP-013 §2 — that half is real. The walk is not: the seed run says «it is **not** a fresh full sweep», the 2026-06-10 run says «it is **not** the full §2.2 breadth sweep» and was scoped to C plus the gate panel, and the 2026-06-12 run was the INT-0001 window run scoped to the category it had just added. No run's text records touching A, B, C and D once each before going deep."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -48781,7 +48177,7 @@
           }
         },
         "verified_at": "2026-07-29T16:50:24Z",
-        "verify_batch": "W5 + D2a"
+        "verify_batch": "W5 + D2a + D13-adopt"
       }
     },
     {
@@ -48801,10 +48197,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "b8ba17597e0f129b4d6b3b4b21ffd04f2ff7cfabb523e0c7a18190a5cbd62920",
-        "summary": {
-          "confirmed": 25,
-          "drift": 5
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -48831,15 +48223,11 @@
             ]
           },
           "A-RUN-MUST-FINISH-THE-INVENTORY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-              "AUDIT.md:24  §2.2 checklist. The first full sweep is the next invocation; this seed",
-              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-              "DRIFT, stated by the artefact against itself. Two of three runs record in their own text that they did not finish the inventory — «it is **not** a fresh full sweep of the PROP-013 §2.2 checklist. The first full sweep is the next invocation» and «It is **not** the full §2.2 breadth sweep (INT-0001 stays rescoped to the next audit window)». The third finished the inventory of category E specifically. INT-0001 is the named full-sweep window and no run has closed it."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -48872,16 +48260,11 @@
             ]
           },
           "STEP-WALK-THE-CHECKLIST-BREADTH-FIRST": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-              "AUDIT.md:195  category **E (discipline depth)** this run adds to PROP-013 §2.2.",
-              "spec/common/PROP-013-periodic-health-audit.md:26  ##CHECKLIST-WALK vibevm walks the flow's category checklist (`spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#categories`) breadth-first. The categories below carry vibevm's **known instances** — the findings that made each line permanent … @spec/done",
-              "DRIFT: the instruction is adopted verbatim by the host — PROP-013's `##CHECKLIST-WALK` — and **no run has performed it.** Two disclaim the full sweep in their own text; the third went deep on one category by design («the INT-0001 audit window, run under the new category **E (discipline depth)** this run adds»). The seed run's findings do span A, B, C and D, but the run says they came from the M1.19 work and the checkpoint's known-issues list, not from a walk."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -48944,13 +48327,11 @@
             ]
           },
           "STEP-COMMIT-THE-SECTION-AND-EACH-FIX-SEPARATELY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:1  # AUDIT.md — project health inventory",
-              "DRIFT in one run of three, verified commit by commit. Four of the five AUDIT.md commits are `docs(audit): …` and AUDIT.md-only — `b98227ce` 1 file +149, `21d47694` 1 file +199/-1, `f11ed38a` 1 file +52, `3656f362` 1 file +24/-2. The exception is the 2026-06-10 run: `9283132f docs(terraform): Phase 6 close-out` touches FIVE files — AUDIT.md plus the terraform LOG, REPORT, INTENT.md and intent.json — so that run's section is neither its own commit nor under an audit subject. The separate-fix half holds throughout: `9f06fbf2` and `be4aaef7` are standalone fix commits."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -48994,17 +48375,11 @@
             ]
           },
           "EVERY-FINDING-IS-ONE-TABLE-ROW-CARRYING-THE-FIVE-FIELDS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:182  | id | cat | sev | finding | disposition |",
-              "AUDIT.md:184  | AUD-0014 | C | P3 | `expand_features` doc-string says cycles are \"rejected\"; the seen-set silently terminates them (test `cycles_terminate` pins the actual behaviour) | open — one-line doc fix, flagged in the Phase 2 proposals note |",
-              "AUDIT.md:187  | AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |",
-              "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
-              "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
-              "DRIFT on the row shape, confirmed on the fields. One of three runs uses the prescribed table — the 2026-06-10 run has the header `| id | cat | sev | finding | disposition |` with four rows. The other two give each finding its own `### <id> · <cat> · <sev> · <disp>` heading plus a multi-paragraph body: **25 findings that way against 4 in tables.** All five fields survive in both forms, so what fails is «one table row» and not the record's content. Nothing in PROP-013 prescribes either shape, which is why the fields hold and the form does not."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -49132,16 +48507,11 @@
             ]
           },
           "OWES-A-COMPLETE-INVENTORY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-              "AUDIT.md:363  ### Carry-forward (2026-05-23 series + 2026-06-10), re-judged",
-              "AUDIT.md:29  **13 findings** — 2 P1, 4 P2, 7 P3. Disposition: 2 fixed, 1 filed,",
-              "DRIFT on one of its four sub-obligations. Recorded-and-dispositioned holds for all 29 findings. Checkpoint-reconciled is adopted as a rule in PROP-013 and exercised once. Carried-forward-and-re-judged is done at one of two opportunities. **Every-category-walked is claimed by no run**, with two disclaiming the full sweep outright and the named window INT-0001 never closing. A rule that owes four things and gets three is drift on the list, per W1's precedent for enumerated obligations."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -49216,7 +48586,7 @@
           }
         },
         "verified_at": "2026-07-28T21:57:52Z",
-        "verify_batch": "W5"
+        "verify_batch": "W5 + D13-adopt"
       }
     },
     {
@@ -49236,10 +48606,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "577c1e6e0b3d0298563b65c5ee81b2937ad7cb234fc6163bca996d3622c11f54",
-        "summary": {
-          "confirmed": 13,
-          "drift": 1
-        },
         "verdicts": {
           "RUNNING-ONE-PERIODIC-HEALTH-AUDIT": {
             "v": "confirmed",
@@ -49322,17 +48688,11 @@
             ]
           },
           "WALK-THE-CHECKLIST-BREADTH-FIRST-AND-RUN-EACH-AID": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/common/PROP-013-periodic-health-audit.md:26  ##CHECKLIST-WALK vibevm walks the flow's category checklist (`spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#categories`) breadth-first. The categories below carry vibevm's **known instances** — the findings that made each line permanent … @spec/done",
-              "spec/common/PROP-013-periodic-health-audit.md:53  ##CAT-E **E — Discipline depth (AI-Native).** vibevm's own category, added 2026-06-12: it measures how deep the Discipline v0.2 adoption actually goes (the flow's corollary — audit *depth* of adoption, not merely that it exists), against vibevm's specific machinery: @spec/done",
-              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-              "spec/common/PROP-013-periodic-health-audit.md:32  - ##A3-WRONG-BEHAVIOR **A3 · Tests that encode the wrong behavior.** Detectable only by reading the assertion against the spec. *Known:* `cli_init` asserted `naming == kind-name`. @spec/done",
-              "DRIFT on the walk, split on the aids. The project-specific-rows clause is well served — PROP-013 §2 carries E1-E4 with their own aids. The breadth-first walk is unconfirmed by any of the three runs, two of which disclaim it in their own text, which is the same measurement ruled at four other facts in this package. The named aids split four ways: the grep-based ones were run and reported at 2026-06-12-11; the CI-config-versus-tree diff exists as self-check.sh step 0b; the coverage tool has no host equivalent; and the dependency audit has never been invoked anywhere."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -49435,7 +48795,7 @@
           }
         },
         "verified_at": "2026-07-31T21:37:29Z",
-        "verify_batch": "W5 + D12-straggler"
+        "verify_batch": "W5 + D12-straggler + D13-adopt"
       }
     },
     {
@@ -49455,9 +48815,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "e4b4efaa704886e5ae943e98c942162000d69f851d75fb5387b47ba31a66c0de",
-        "summary": {
-          "confirmed": 24
-        },
         "verdicts": {
           "package-installs-a-licensing-posture-lead": {
             "v": "confirmed",
@@ -49857,11 +49214,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "2d07070caac7c3162aabb2cfa6d8f050ae71c25e2879e42fa618d1cdeb6ca096",
-        "summary": {
-          "confirmed": 14,
-          "drift": 2,
-          "unverifiable": 1
-        },
         "verdicts": {
           "THE-PROJECT-HAS-A-DELIBERATE-LICENSING-POSTURE": {
             "v": "confirmed",
@@ -50164,11 +49516,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "3fd232eb75bc20bcee9c0a721fb5fb4a5c42aa5c0a20bf7224e03549b90feb15",
-        "summary": {
-          "confirmed": 43,
-          "drift": 3,
-          "unverifiable": 2
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -50917,9 +50264,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "cba36d2263486802ddb40eea437917f5de59698648373c36c264b9a6cf62c975",
-        "summary": {
-          "confirmed": 30
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -51392,9 +50736,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "c87c14b0fb88520ff1a497b1d5db6bab7b0df490af5fc639b505085cf50201b5",
-        "summary": {
-          "confirmed": 18
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -51686,9 +51027,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "284026e41462e23b89e59d9cadb9377ed3517c9283aa6ac9e7fde329ca4e88a9",
-        "summary": {
-          "confirmed": 14
-        },
         "verdicts": {
           "DRAFTING-OR-REVIEWING-A-LICENSING-POSTURE": {
             "v": "confirmed",
@@ -51930,9 +51268,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "6aef0751e63222195b04fc4ac762ec38363487b4913848ff7748a572caca81f8",
-        "summary": {
-          "confirmed": 19
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-MANAGED-BLOCKS-DISCIPLINE": {
             "v": "confirmed",
@@ -52306,9 +51641,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "8a25137a47bcf8a4b21bee4631be55076fca41ad36742896f9a27f71a1ef57f9",
-        "summary": {
-          "confirmed": 9
-        },
         "verdicts": {
           "PROJECT-SHIPS-THE-MANAGED-BLOCKS-PRACTICE": {
             "v": "confirmed",
@@ -52496,9 +51828,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "a0d5f7e270d26a52a6e66362698b9a38e993028e4191521e178eb5d026309440",
-        "summary": {
-          "confirmed": 74
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -53955,10 +53284,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "923bd9392a9e3c43ac56fdd28ef54fc9bad2f8a1e035999d1fb9d48e13d9414c",
-        "summary": {
-          "confirmed": 39,
-          "drift": 5
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -54804,9 +54129,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "c0636ad3471015f3c0026ee941bbcd3321d1c6f78c297c984cc4d1e38a0c74cc",
-        "summary": {
-          "confirmed": 52
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -55736,9 +55058,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "3c6ed891d520198c57af2d49c4002da9ae5fe4987ad443054d5609be5d8323e2",
-        "summary": {
-          "confirmed": 18
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-A-SECOND-TEST-TIER": {
             "v": "confirmed",
@@ -56013,10 +55332,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "14baaf6cbd3f48ba5423cfd7733187bcb5817a7e76caabf136e598c8c7c497a3",
-        "summary": {
-          "confirmed": 14,
-          "drift": 2
-        },
         "verdicts": {
           "THE-PROJECT-KEEPS-A-SECOND-TEST-TIER": {
             "v": "confirmed",
@@ -56272,10 +55587,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5414aab581d54282c5e4cab2a20f9fe8fcf08c19663443053539e54fab34ca98",
-        "summary": {
-          "confirmed": 30,
-          "drift": 7
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -56815,10 +56126,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "740faa44ff2f001b5f8dddf4f6f35210a8ed54f050db68e615b516897e47074f",
-        "summary": {
-          "confirmed": 34,
-          "drift": 1
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -57331,10 +56638,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "821150a0f7c20fe7b92bcd899720f05ff1aca409123d7bebf67dcb1d961a224c",
-        "summary": {
-          "confirmed": 16,
-          "drift": 1
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -57599,9 +56902,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d237a53f2209ee78087618a80e40acc4dc6d31e8a2ee387d83a402249dff6c59",
-        "summary": {
-          "confirmed": 20
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-OPERATING-MODES": {
             "v": "confirmed",
@@ -57922,9 +57222,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "bb273abf6c1200f91d615ce7d5f0d011758904c73b061c6c6fdfb0763b113d9f",
-        "summary": {
-          "confirmed": 24
-        },
         "verdicts": {
           "THIS-PROJECT-USES-CODEWORD-TRIGGERED-OPERATING-MODES": {
             "v": "confirmed",
@@ -58289,10 +57586,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "34f934d610a6a07999a483986a98d6025dacdaab50151d463c987be76ec06434",
-        "summary": {
-          "confirmed": 47,
-          "drift": 5
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -59041,10 +58334,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d26192485a924037827147d104eecb5ae6c6c9072907362915c5174c377119f1",
-        "summary": {
-          "confirmed": 32,
-          "drift": 1
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -59527,10 +58816,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d0e6fe8f66b6f4ff270e8027bc7569af8f5da780d3add2a63f2659f392019e9f",
-        "summary": {
-          "confirmed": 33,
-          "drift": 4
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -60061,9 +59346,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d6003091ae2a56d1528a5d6b88c91c1c0ed430884757492c5a61b99c89ebd317",
-        "summary": {
-          "confirmed": 29
-        },
         "verdicts": {
           "package-installs-the-qualified-naming-discipline": {
             "v": "confirmed",
@@ -60488,9 +59770,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "21fdbd7b4cfcae0aba505b89cd79708077c5a954fabff7866d52e9d36b5c4a19",
-        "summary": {
-          "confirmed": 14
-        },
         "verdicts": {
           "PROJECT-SHIPS-THE-QUALIFIED-NAMING-PRACTICE": {
             "v": "confirmed",
@@ -60697,9 +59976,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1b506ae082ac082cbdf1a188de26e5cba74df3c4ba975928ba7c8449e0f32a11",
-        "summary": {
-          "confirmed": 48
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -61381,9 +60657,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "f8dd2d1eb418bcfde0b1ee679ce844280da47421bd0676b43617ec056773be98",
-        "summary": {
-          "confirmed": 52
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -62075,10 +61348,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "3a4869c348da5f28f84e56a040c9709e444ad695fd5f79d40f12b3c87104c267",
-        "summary": {
-          "confirmed": 41,
-          "drift": 6
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -62761,10 +62030,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "a8fee43a4f6fe8a0efd31b6ab2ae8bbdceda90d84f185630f614b51165fe7578",
-        "summary": {
-          "confirmed": 43,
-          "drift": 1
-        },
         "verdicts": {
           "REDBOOK-IS-A-CURATED-COLLECTION-OF-PRACTICES": {
             "v": "confirmed",
@@ -63459,9 +62724,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "c7a537841f69c8d1c7e6e10a3479ab946d0d732b6e0b531a9d632a9090339bb7",
-        "summary": {
-          "confirmed": 39
-        },
         "verdicts": {
           "PROJECT-FOLLOWS-THE-REDBOOK": {
             "v": "confirmed",
@@ -64096,9 +63358,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "bb83343c2ba4a674754d806f3d57908fc0f98c5b7cf2042030d6703316f30af2",
-        "summary": {
-          "confirmed": 20
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-A-DEFENSIVE-SECRETS-POSTURE": {
             "v": "confirmed",
@@ -64383,10 +63642,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "42c8ed93b007a456495927062df966e04ddcfbde906a89b97de876a0a4797adc",
-        "summary": {
-          "confirmed": 20,
-          "drift": 1
-        },
         "verdicts": {
           "the-repository-is-worked-by-a-recordable-agent-session": {
             "v": "confirmed",
@@ -64680,10 +63935,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "042263ea44a5c7e7fb5b451a7316f5738dd28b9b13ddfaafe6f396764fa8f3ba",
-        "summary": {
-          "confirmed": 62,
-          "drift": 1
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -65485,10 +64736,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "fd08437073f465ebc0ff26b0e91f8d0ee6993d93420c26b789f24effa60804fe",
-        "summary": {
-          "confirmed": 46,
-          "drift": 1
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -66104,10 +65351,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "538b4d0c45cbda9727aef0a5f3c0b751b0fa603bdf71a013a228ddcafe2639a7",
-        "summary": {
-          "confirmed": 38,
-          "drift": 2
-        },
         "verdicts": {
           "installing-a-dependency-often-runs-its-own-code": {
             "v": "confirmed",
@@ -66657,10 +65900,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "6554df1615a106c2bc0e7d7e335ed71c39158a30029b415ffa8f6f36c3c042b3",
-        "summary": {
-          "confirmed": 21,
-          "drift": 2
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-SINGLE-WRITER-SOURCE-MIRRORS-DISCIPLINE": {
             "v": "confirmed",
@@ -67011,10 +66250,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5024a7bb30bb9911ce8edab50e7aee1666b47717c9f0c932365c230ae6aa74c9",
-        "summary": {
-          "confirmed": 15,
-          "drift": 1
-        },
         "verdicts": {
           "PROJECT-SOURCE-IS-MULTI-HOMED": {
             "v": "confirmed",
@@ -67270,9 +66505,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "8d3cad84987576f2dbd523c83b2dfe95511cafac783c166d19805954105f34e1",
-        "summary": {
-          "confirmed": 52
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -67982,10 +67214,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "2b5b0930a3d7a3cc1bd8fc50b1ffa92edc496f932875975c21dc99f519a6b022",
-        "summary": {
-          "confirmed": 51,
-          "drift": 1
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -68706,10 +67934,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "cc28a7cce4e372518da822051b8d421fc497c950d7fb03f892a6207f477d8468",
-        "summary": {
-          "confirmed": 52,
-          "drift": 5
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -69531,9 +68755,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "319f689d33c327cb9f71ac58a79819d91d118a152c04a18617fd7e7a9a762bed",
-        "summary": {
-          "confirmed": 26
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-A-GENRE-TAXONOMY": {
             "v": "confirmed",
@@ -69908,10 +69129,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "8169a00ed4013f6224cd95ad221ebafe0467df751365cc975661a0c6aee84a1f",
-        "summary": {
-          "confirmed": 22,
-          "drift": 1
-        },
         "verdicts": {
           "PROJECT-DOCUMENTS-ARE-GENRE-TYPED": {
             "v": "confirmed",
@@ -70237,10 +69454,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "0176779ee22c4ff769ffe6cb7fadd8a5328d7882e72ce407d2b97c1eec407313",
-        "summary": {
-          "confirmed": 56,
-          "drift": 3
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -71026,10 +70239,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "6dfcb110d2b1f3ef32d3a9390930361a3efa8b7cbc0fdc67dd6835db20ef661a",
-        "summary": {
-          "confirmed": 39,
-          "drift": 2
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -71574,10 +70783,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1262489dd458e5f39d66628242931d8a4e61224cde0070f44cc9e3910bcfc4e3",
-        "summary": {
-          "confirmed": 40,
-          "drift": 2
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -72139,9 +71344,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "eb41606593d89516d99c14d29387c9b12ee2fd020b5e714adb31979819e192d4",
-        "summary": {
-          "confirmed": 20
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-SYNC-FROM-CODE-PROTOCOL": {
             "v": "confirmed",
@@ -72450,10 +71652,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "0ffd9dc06a41138bbff35ddc8710ebf9477ca8ff49ee87bc760b4d53556bbb70",
-        "summary": {
-          "confirmed": 17,
-          "drift": 2
-        },
         "verdicts": {
           "THE-PROJECT-USES-SYNC-FROM-CODE": {
             "v": "confirmed",
@@ -72746,10 +71944,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "db55a7f66f31a63f82d9e90e6084fe82744f9bb4d160fd2ad9685f3b1fbc19a0",
-        "summary": {
-          "confirmed": 51,
-          "drift": 2
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -73491,10 +72685,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "80c2c50ef2ab95440cd9c877cc5ae9d5543dcf4fc655d3c0d95c2d5136159c72",
-        "summary": {
-          "confirmed": 46,
-          "drift": 2
-        },
         "verdicts": {
           "SYNC-ALWAYS-ENDS-WITH-A-HUMAN-APPROVAL-STEP": {
             "v": "confirmed",
@@ -74138,10 +73328,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5ae1c2526ebf574b898804bced03e2663724fb9c754ee8dec971a4254c1bd50d",
-        "summary": {
-          "confirmed": 35,
-          "drift": 1
-        },
         "verdicts": {
           "SYNC-FROM-CODE-IS-AN-EXCEPTIONAL-PROTOCOL-NOT-A-DEFAULT": {
             "v": "confirmed",
@@ -74629,10 +73815,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "e0fccd1532b363e9232253dcdf0b10721cb7919b08e75156ef005f0cf7bc7e07",
-        "summary": {
-          "confirmed": 18,
-          "unverifiable": 1
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-A-LESSONS-CATALOG-FOR-TOOL-AUTHORS": {
             "v": "confirmed",
@@ -74942,9 +74124,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "81e36861497cd1d4e4f5339e94c007ab1e6cdf83f4b966681863958711adcbda",
-        "summary": {
-          "confirmed": 12
-        },
         "verdicts": {
           "PROJECT-BUILDS-A-TOOL-THAT-MANAGES-ITSELF": {
             "v": "confirmed",
@@ -75146,9 +74325,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "db953f92f66c2172d8bfcb9fb6a0acdb9e24ab3b322985c4c9d6fc70f298fd2d",
-        "summary": {
-          "confirmed": 43
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -75821,10 +74997,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5b46bf5ce930e664a0d0eb51a58f2fc1f95ee7682e18d3eb9fb70099cf487d4c",
-        "summary": {
-          "confirmed": 62,
-          "drift": 1
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -76745,10 +75917,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "4a9cb7bcf952009218c870b90b5b956889fae284e5599fef3db8e69b0fccdeae",
-        "summary": {
-          "confirmed": 73,
-          "drift": 5
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -77917,9 +77085,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "21472167edcc822f486f386f6ce15bf181ba31df985419c32bf79eb75dbcf1ae",
-        "summary": {
-          "confirmed": 22
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-TWO-PROCESS-MODEL": {
             "v": "confirmed",
@@ -78238,9 +77403,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "992ba6cee071c5a8d12976a73393e26e2da3a0647d3fca8beecfe3d2b07347ed",
-        "summary": {
-          "confirmed": 17
-        },
         "verdicts": {
           "THIS-PROJECT-RUNS-ON-THE-TWO-PROCESS-MODEL": {
             "v": "confirmed",
@@ -78492,9 +77654,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1b8bfd391e63718d519439db77367b2d186d49685d921ad2ded68a2ffbadf2c3",
-        "summary": {
-          "confirmed": 49
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -79125,10 +78284,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "3d24734e76f5064f879063064319a3f99678db25f97b10ba79478743ca9e28b2",
-        "summary": {
-          "confirmed": 49,
-          "unverifiable": 1
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -79766,10 +78921,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "435b720e8b356b069eca43b2f38947b0f19aa715b51a90e843638a78b4814f3b",
-        "summary": {
-          "confirmed": 40,
-          "drift": 1
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -80298,9 +79449,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "28440e90f03214ba37d6ddf475086e13b58eb6346f1b7393385be772e8c2ab9c",
-        "summary": {
-          "confirmed": 10
-        },
         "verdicts": {
           "NON-CENTRAL-WALS-FOR-MULTI-PROJECT-REPOSITORIES": {
             "v": "confirmed",
@@ -80462,9 +79610,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "db1e68a85ef8769b3ca9845ef95717172a89ac9ccbb9f0db715b31d5a0d4d734",
-        "summary": {
-          "confirmed": 22
-        },
         "verdicts": {
           "THE-PROJECT-MAY-HOST-SPECSPACES": {
             "v": "confirmed",
@@ -80811,11 +79956,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "76552896e51943dbe5726dc100f3ed79a4636d157b49c9750ea2a48b0b2ed225",
-        "summary": {
-          "confirmed": 41,
-          "drift": 3,
-          "unverifiable": 1
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -81464,11 +80604,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "a84f93c981aa146a04d9a2d3cf0acd928275c8e21d02a40c95ff178147a8b3c3",
-        "summary": {
-          "confirmed": 25,
-          "drift": 1,
-          "unverifiable": 1
-        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-WAL-PROTOCOL": {
             "v": "confirmed",
@@ -81863,10 +80998,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "fbc2a08aef71b84d719a9f92b0ad53e7681a9ea874f51513d1ab55c9fc84be14",
-        "summary": {
-          "confirmed": 14,
-          "drift": 1
-        },
         "verdicts": {
           "PROJECT-USES-WAL-DISCIPLINE-FOR-SESSION-CONTINUITY": {
             "v": "confirmed",
@@ -82104,11 +81235,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "0224a8990b6e4f52f3d21ab20a1f539ab568e9edcac3f31b90dc0e1beb66eaa6",
-        "summary": {
-          "confirmed": 46,
-          "drift": 10,
-          "unverifiable": 4
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -82923,10 +82049,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "16bbe83655ee55403290a83bada738734ef274c9d2f84b3f4eeb65b53ebd7d59",
-        "summary": {
-          "confirmed": 59,
-          "drift": 3
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -83742,11 +82864,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "00da8876c563b54594241beefa6411a7a9046a451b2521d361d4cd04f1dd49c5",
-        "summary": {
-          "confirmed": 39,
-          "drift": 2,
-          "unverifiable": 1
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -84294,11 +83411,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "ea8bb8a9858e9be9ac8efb81b19f7f565c49af42fedf533f5015d9e798cf52da",
-        "summary": {
-          "confirmed": 37,
-          "drift": 6,
-          "unverifiable": 2
-        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -84894,9 +84006,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "c62ba56a17746f9a25c2c5a8afc4e2d035fbd7b8be805428ceb69317427e0e92",
-        "summary": {
-          "confirmed": 9
-        },
         "verdicts": {
           "PRODUCING-THE-FAST-MORNING-READ": {
             "v": "confirmed",
@@ -85039,9 +84148,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "27697df5871b7e4831d1ae9db525ff6a93c0b124fcc90afa3d02047dfee9c511",
-        "summary": {
-          "confirmed": 33
-        },
         "verdicts": {
           "project-identity": {
             "v": "confirmed",
@@ -85263,10 +84369,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "da61458f26f58261927c4112dacce002662f15ee24308b48d802ff96ab25cee1",
-        "summary": {
-          "confirmed": 29,
-          "unverifiable": 2
-        },
         "verdicts": {
           "user-overrides-intro": {
             "v": "confirmed",
@@ -85480,10 +84582,6 @@
         "fact_count": 161,
         "marker_count": 162,
         "processed_hash": "dc343dad5b950ce23f51f3b94c08387c23ffe92f0bed1c2fd6e2e720407107b8",
-        "summary": {
-          "confirmed": 161,
-          "unverifiable": 1
-        },
         "verdicts": {
           "DOC-PINS": {
             "v": "confirmed",
@@ -86496,9 +85594,6 @@
         "fact_count": 9,
         "marker_count": 11,
         "processed_hash": "bf798b01c38fb700c3a7d9fa40ad5bb7c21601ca2cce51b6b99c4b81f0cf6d8f",
-        "summary": {
-          "confirmed": 10
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -86586,9 +85681,6 @@
         "fact_count": 43,
         "marker_count": 45,
         "processed_hash": "966695c7f83560f4f38cfbb01247f3c02529383a9882af1bcbfa6d37ea36ae27",
-        "summary": {
-          "confirmed": 44
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -86880,9 +85972,6 @@
         "fact_count": 29,
         "marker_count": 31,
         "processed_hash": "c6592a970be72b92ec5f995139652d11499e30c1c02fc63334a6b951be69fb94",
-        "summary": {
-          "confirmed": 30
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -87090,9 +86179,6 @@
         "fact_count": 112,
         "marker_count": 113,
         "processed_hash": "6f0cdc165d1208b475749507386865039b029994f6b1ac24cb4248f9332398dd",
-        "summary": {
-          "confirmed": 113
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -87799,9 +86885,6 @@
         "fact_count": 208,
         "marker_count": 209,
         "processed_hash": "9d179b5dffb4fc850e88d39cdf1577d534484aa1356feeb9d55235ab1b470dd3",
-        "summary": {
-          "confirmed": 209
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -89084,9 +88167,6 @@
         "fact_count": 76,
         "marker_count": 77,
         "processed_hash": "cfaa3c9b4d0530f780db587eadfc67ef4cfbb1da4b4be7870892b4a6e53910f7",
-        "summary": {
-          "confirmed": 77
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -89581,9 +88661,6 @@
         "fact_count": 40,
         "marker_count": 42,
         "processed_hash": "d84af88d9fc2529e7d0bd104a3a628ffc9d033758a967e652b49a5d5fb20535d",
-        "summary": {
-          "confirmed": 41
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -89858,9 +88935,6 @@
         "fact_count": 30,
         "marker_count": 32,
         "processed_hash": "884c6b872ba4833b3608abd9862bf7c88fdc2e6b4de6bb0db52f5c4debb9c405",
-        "summary": {
-          "confirmed": 25
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -90038,9 +89112,6 @@
         "fact_count": 94,
         "marker_count": 96,
         "processed_hash": "a9a4a9ddea1568bebaef341c37fc0b2c142a04be20c989b73eda6a7a18beda2d",
-        "summary": {
-          "confirmed": 75
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -90518,9 +89589,6 @@
         "fact_count": 126,
         "marker_count": 128,
         "processed_hash": "b8bd5b21c508b0693e3e58929d008ef365fa09137755c14518ec0d0d7661f771",
-        "summary": {
-          "confirmed": 107
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -91190,9 +90258,6 @@
         "fact_count": 81,
         "marker_count": 83,
         "processed_hash": "781411de33b4434ad1ae7113ccc9272973c9f944faf85a77b6a4be5f836956a9",
-        "summary": {
-          "confirmed": 68
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -91628,9 +90693,6 @@
         "fact_count": 29,
         "marker_count": 34,
         "processed_hash": "3d0268e76f05dcdb7b8b6c8240509c36382a767966a7bf904b80cbf79dd6d70f",
-        "summary": {
-          "confirmed": 18
-        },
         "verdicts": {
           "genre-definition": {
             "v": "confirmed",
@@ -91763,9 +90825,6 @@
         "fact_count": 78,
         "marker_count": 78,
         "processed_hash": "5ed13c61b05d66a48b3cb5579e59dfc3eb0db65c837178d1972c95aa065e18f5",
-        "summary": {
-          "confirmed": 59
-        },
         "verdicts": {
           "genre-line": {
             "v": "confirmed",
@@ -92151,9 +91210,6 @@
         "fact_count": 75,
         "marker_count": 76,
         "processed_hash": "346279d5d1c2f87bc27bbe9e5c8677d55f59b77e361ebe8ddb53b29e74ba39c1",
-        "summary": {
-          "confirmed": 60
-        },
         "verdicts": {
           "companion-line": {
             "v": "confirmed",
@@ -92549,9 +91605,6 @@
         "fact_count": 20,
         "marker_count": 21,
         "processed_hash": "8cba6169f825b9a5a6ceaf228caac49c2201c82052dda30df941759da9d86723",
-        "summary": {
-          "confirmed": 21
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -92705,9 +91758,6 @@
         "fact_count": 175,
         "marker_count": 176,
         "processed_hash": "a27b95ee35e289f3ac149be96121a413b3a8d5f2d330306d288e4b5e836d5c5f",
-        "summary": {
-          "confirmed": 71
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -93163,9 +92213,6 @@
         "fact_count": 99,
         "marker_count": 100,
         "processed_hash": "0dbdd3b2653908418911c036da3f4bc18c239fb95bb0745f8203589332a13bcd",
-        "summary": {
-          "confirmed": 78
-        },
         "verdicts": {
           "companion-line": {
             "v": "confirmed",
@@ -93655,9 +92702,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "8aa920ab86a36b0723b1a5440d0adb31c3f0490eb78b174b9f361310f28dd755",
-        "summary": {
-          "confirmed": 28
-        },
         "verdicts": {
           "purpose": {
             "v": "confirmed",
@@ -93851,9 +92895,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "2388051c281032c1174d668a76ad19cf66e7794fceee8554b9bf03bd4d632add",
-        "summary": {
-          "confirmed": 23
-        },
         "verdicts": {
           "purpose": {
             "v": "confirmed",
@@ -94013,9 +93054,6 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "be2077f10ab9b5695bf870f56f7b66edc841e3868b1d8559c1e50fcb8525c1fa",
-        "summary": {
-          "confirmed": 16
-        },
         "verdicts": {
           "purpose": {
             "v": "confirmed",
@@ -94139,9 +93177,6 @@
         "fact_count": 44,
         "marker_count": 45,
         "processed_hash": "5910b10816793785f6cb21cbb096f7eb5d3f522a083c58c588b331c796e29e7b",
-        "summary": {
-          "confirmed": 45
-        },
         "verdicts": {
           "modules-purpose": {
             "v": "confirmed",
@@ -94445,9 +93480,6 @@
         "fact_count": 51,
         "marker_count": 52,
         "processed_hash": "11ed95bb2f854fa300c635668b6e855a1161d10e10a5e5a1a3b92cdc4bbbd28f",
-        "summary": {
-          "confirmed": 52
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -94790,9 +93822,6 @@
         "fact_count": 80,
         "marker_count": 81,
         "processed_hash": "b86f273c7fce0d9bda7533f30bd4c27fff19ca92707c164c62b0daed97a99418",
-        "summary": {
-          "confirmed": 81
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -95312,9 +94341,6 @@
         "fact_count": 136,
         "marker_count": 137,
         "processed_hash": "8ba9828249c828aceddd46ff0d94f58eab1aa675fa6f645876c95e9b04b47363",
-        "summary": {
-          "confirmed": 110
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -96003,9 +95029,6 @@
         "fact_count": 61,
         "marker_count": 62,
         "processed_hash": "94c63143b2c7874ceb35ca36ef763dbf15d5fa3a478dc1f7d2c97a54104dd652",
-        "summary": {
-          "confirmed": 62
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -96405,9 +95428,6 @@
         "fact_count": 278,
         "marker_count": 279,
         "processed_hash": "dc156b690a46e7c409a2e729791ef471aa66e43f8cbc80ec49327bd102ac4157",
-        "summary": {
-          "confirmed": 279
-        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -98109,9 +97129,6 @@
         "fact_count": 64,
         "marker_count": 65,
         "processed_hash": "e147967cbaa3494c8c6a16a198a048113cf659d4cef1f8567260937c2a2d9636",
-        "summary": {
-          "confirmed": 65
-        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -98529,9 +97546,6 @@
         "fact_count": 46,
         "marker_count": 47,
         "processed_hash": "a2efd8745749be8707ad93362bc3ff557ffbebff33f939b2dc85ccfb9b642abb",
-        "summary": {
-          "confirmed": 47
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -98842,9 +97856,6 @@
         "fact_count": 75,
         "marker_count": 76,
         "processed_hash": "9f7c54fcb9d7fd20488b8bc1705e5f5e18c12778470a69568e5ab243d0b37148",
-        "summary": {
-          "confirmed": 58
-        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -99220,9 +98231,6 @@
         "fact_count": 69,
         "marker_count": 70,
         "processed_hash": "351b6bb9d888a9c29a4d2e279528572c19664d61665f503c4880b6d4c8c485e3",
-        "summary": {
-          "confirmed": 59
-        },
         "verdicts": {
           "guide-purpose": {
             "v": "confirmed",
@@ -99608,9 +98616,6 @@
         "fact_count": 158,
         "marker_count": 159,
         "processed_hash": "fb4291462f199c9e144e521ad7d8652d9c7d95eedaebeca418209dd15fd2e685",
-        "summary": {
-          "confirmed": 152
-        },
         "verdicts": {
           "self-uri": {
             "v": "confirmed",
@@ -100561,9 +99566,6 @@
         "fact_count": 9,
         "marker_count": 10,
         "processed_hash": "f854794e0ca29a21b4874a7d28b8f9a9565545ebe6b391b45e60eabf9fea4baf",
-        "summary": {
-          "confirmed": 10
-        },
         "verdicts": {
           "CARD-ONE-PROMISE": {
             "v": "confirmed",
@@ -100651,9 +99653,6 @@
         "fact_count": 22,
         "marker_count": 23,
         "processed_hash": "9f85265c1a8e0111664f74f5d7f0addbdddcbc7fc49de38ea100bd617b97805d",
-        "summary": {
-          "confirmed": 23
-        },
         "verdicts": {
           "status-legend": {
             "v": "confirmed",
@@ -100819,9 +99818,6 @@
         "fact_count": 15,
         "marker_count": 16,
         "processed_hash": "91768f4f76c270cdd4c6ec34b021647af6f771500b04fc22e537b36835e9259b",
-        "summary": {
-          "confirmed": 16
-        },
         "verdicts": {
           "status-legend": {
             "v": "confirmed",
@@ -100945,9 +99941,6 @@
         "fact_count": 92,
         "marker_count": 93,
         "processed_hash": "78efc2f8dca1c4951cf6f2ea098fbef228124a06c1b6a5878b106446b5561e07",
-        "summary": {
-          "confirmed": 93
-        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -101536,9 +100529,6 @@
         "fact_count": 359,
         "marker_count": 360,
         "processed_hash": "a4aa3c9909ffe89ead7c9ed3c71e25799810eb28b870a16a9bacd070d52a7f85",
-        "summary": {
-          "confirmed": 288
-        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -103300,9 +102290,6 @@
         "fact_count": 99,
         "marker_count": 100,
         "processed_hash": "281c74bb6c891b02729d113da9ded346b14c18ca9277c98ac9897962602763b2",
-        "summary": {
-          "confirmed": 92
-        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -103883,9 +102870,6 @@
         "fact_count": 92,
         "marker_count": 93,
         "processed_hash": "16b4c47e68cdc8f18c14dbd429cf65789578c6077d870b6e1f308a525c259fd2",
-        "summary": {
-          "confirmed": 93
-        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -104473,9 +103457,6 @@
         "fact_count": 37,
         "marker_count": 38,
         "processed_hash": "c94b2a6794dee360ec49179b01af90626922bb4b5a4c78c68869335fc3df5300",
-        "summary": {
-          "confirmed": 38
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -104755,9 +103736,6 @@
         "fact_count": 45,
         "marker_count": 46,
         "processed_hash": "ea93a3ed159488ee2de216e6e8e4f033a6cc6bd4aea939512154e044e96b2c0f",
-        "summary": {
-          "confirmed": 46
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -105096,9 +104074,6 @@
         "fact_count": 75,
         "marker_count": 76,
         "processed_hash": "58d2569e3e769e56c001ec98527400a0a3515188dcaa79f505623fce6ca984aa",
-        "summary": {
-          "confirmed": 76
-        },
         "verdicts": {
           "self-uri": {
             "v": "confirmed",
@@ -105645,9 +104620,6 @@
         "fact_count": 313,
         "marker_count": 314,
         "processed_hash": "f115c8843cea8e511beaa503059941de29bb20baab1f055e882f7ff88baada0c",
-        "summary": {
-          "confirmed": 292
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -107440,9 +106412,6 @@
         "fact_count": 105,
         "marker_count": 106,
         "processed_hash": "3c6d6bd69b62a56684b7ccc4113e61851bd02eecede004c5763871d601705b9b",
-        "summary": {
-          "confirmed": 80
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -107952,9 +106921,6 @@
         "fact_count": 73,
         "marker_count": 74,
         "processed_hash": "7858318e90c4e16cbb3cd7106a589959c131b764cb92c2c5c28408d4bb790c1e",
-        "summary": {
-          "confirmed": 65
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -108373,9 +107339,6 @@
         "fact_count": 43,
         "marker_count": 44,
         "processed_hash": "dd3c69c5baeed751d77e854903dae5189f4d4d667063cec152bf967e4b79509d",
-        "summary": {
-          "confirmed": 44
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -108668,9 +107631,6 @@
         "fact_count": 146,
         "marker_count": 147,
         "processed_hash": "b940150108bf0ce4e70140970e45f5eec269723686cb98f46a6b8c6e3481c2ed",
-        "summary": {
-          "confirmed": 121
-        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -109428,9 +108388,6 @@
         "fact_count": 103,
         "marker_count": 104,
         "processed_hash": "abecd46d4e84b936f5f6bd4240f397f89067b905e6b2b7938652087555903444",
-        "summary": {
-          "confirmed": 104
-        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -110085,9 +109042,6 @@
         "fact_count": 96,
         "marker_count": 97,
         "processed_hash": "f3f38fc6ea2d128a3e2e9172a87b7522a60ab02724d567408863330bf3499296",
-        "summary": {
-          "confirmed": 97
-        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -110697,9 +109651,6 @@
         "fact_count": 83,
         "marker_count": 84,
         "processed_hash": "2e00d2aab2e0007ad20916d6e76a933a8f331a043f7c4cf1ef39d9641c320b32",
-        "summary": {
-          "confirmed": 84
-        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -111231,9 +110182,6 @@
         "fact_count": 49,
         "marker_count": 50,
         "processed_hash": "9f092c76471e158b4bb04c5744ced93d245bce5a509864804c10d1035a28f09e",
-        "summary": {
-          "confirmed": 50
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -111602,9 +110550,6 @@
         "fact_count": 52,
         "marker_count": 53,
         "processed_hash": "27f1bad149d671ea82ae3e1bcec989cd35194721d97a49f9bda474803abc0e7f",
-        "summary": {
-          "confirmed": 53
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -111987,9 +110932,6 @@
         "fact_count": 45,
         "marker_count": 46,
         "processed_hash": "8d50a37b2c4e3b8421b60f9e912fb9ae726ed88e0a1d72e1fb95bfd0b2d8b8b1",
-        "summary": {
-          "confirmed": 46
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -112293,9 +111235,6 @@
         "fact_count": 65,
         "marker_count": 66,
         "processed_hash": "4150b1a3d9e61ce8fbe60099fccff098d31a0e9a00ba233585de2efe9e765405",
-        "summary": {
-          "confirmed": 66
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -112720,9 +111659,6 @@
         "fact_count": 134,
         "marker_count": 135,
         "processed_hash": "16f282502a1076facfeb02a35cf10791ad611ad62e4512a2c805e0c5c47aa1ff",
-        "summary": {
-          "confirmed": 135
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -113562,9 +112498,6 @@
         "fact_count": 85,
         "marker_count": 86,
         "processed_hash": "f8c3799d364dc48ba8fe3eeb1e2d5865b9b44b28f2e5dc79fe9929bbb6262386",
-        "summary": {
-          "confirmed": 78
-        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",

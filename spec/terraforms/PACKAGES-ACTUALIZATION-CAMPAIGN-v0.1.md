@@ -4115,6 +4115,63 @@ aspirational — and every one is still live for the phases that remain.
   queue's group B (23, unblocked, awaiting per-batch presentation) and the
   boss-route tail.
 
+- **2026-08-01 · волна 10 / D13 — the three rulings execute, and the record
+  form the campaign preached lands in the host's own specs.** The owner ruled
+  three times in one sitting and every ruling was executed the same day
+  (commits `c3b3fe19`, `e6f53d5d`, `eccb1499`): **B + A′** — the
+  three-question criterion (Q1 condition · Q2 observation point · Q3 loser;
+  R1–R3 pass, N1–N3 fail, every verdict citing its clause) landed in
+  `spec/design/README.md` where the genre lives, with the forward-only rule,
+  the `##ROW-NO-DECISIONS` genre-table row and the `spec/decisions/`-is-never-
+  created statement — and **twelve four-field records** were backfilled inside
+  their owning sections from their own recorded prose (PROP-000 ×5, PROP-018
+  ×3 + the `Rationale:`→`Why:` relabel, PROP-024 ×4; census 35 `Decision`
+  labels → 12 reopenable by the criterion; the two numeric thresholds the
+  owner declined to invent are event-shaped until numbers exist). **Партия
+  1a** — PROP-014's nine «Specified, not built» annotations plus
+  RUNTIME-TRANSPORT's real per-family tool names, with the ten unbuilt
+  mechanisms filed as `B-012` (owner: «провести исследование, можно ли
+  реализовать»). **Health-audit adopted whole** («Проведи всё это»):
+  `AUDIT.md`'s header carries the five clauses, DBT-0001 reconciled P1→P3
+  with the audit's later evidenced judgement winning, the skill installed (5
+  projections), the wind-down contract now points at `AUDIT.md`'s active
+  subset in all three instruction files, and the A–D inventory is scheduled
+  at the phase's exit gate. Merges D13: 30 + 10 confirmed, 0 refusals.
+
+  **The tail the session left, and what it turned out to be.** `progress
+  seal` refused 4 of the 5 record-bearing paths and the wind-down recorded
+  the guess «the new `##record` anchors changed the anchor sets». The
+  next-session re-run (mirror → seal → read) found the true cause one notch
+  simpler: **the refusals were 51 brand-new record anchors carrying no
+  verdict at all** (10 + 8 + 11 in the three PROPs, 22 in
+  `spec/design/README.md` — the criterion's own units), and seal refuses a
+  file that mixes vouched and unjudged markers, which is its safe mode
+  working as designed; the package-side PROP-014 was already sealed against
+  its bytes. The 51 were judged boss-side after a referent-by-referent
+  verification (97 checks: every cited anchor resolves — including
+  `#NO-SEPARATE-ADR-DIRECTORY` living in the flow's *boot snippet*, not the
+  protocol, and `{#shippable-tree}` being a heading anchor; every quote
+  verbatim against its source down to two sanctioned adaptations, a
+  case-adapted «Document…» and a number-adapted silos clause with the anchor
+  cited adjacent; `spec/decisions/` absent; the genre-map mutability rows
+  exact), merged as **D14: 51 confirmed over 4 files, 0 refusals**, and
+  sealed clean — **4 sealed, 0 refused**. The registry regenerated with
+  nothing new minted: the records the campaign wrote about the tree hold
+  against the tree.
+
+  **State at wave 10's close** (HEAD `22d6ff7f` + this entry): corpus
+  **11 121 / 232 / 44 — 97.6 %** of 11 397 (the +51 is exactly D14; wave 9
+  closed at 11 030 / 272); registry **108 obligations / 232 drifts**;
+  CONVERGENCE **73 of 232 still owe a package repair, 159 routed out, 77
+  obligations nothing left owed, 5 partly routed**. The owner's queue is
+  unchanged and is the whole remainder: sync group B партии 1b–1d
+  (F-146 ×5 + F-206 ×2 ENGINE-CONFORM, F-159 ×5 LEDGER-INTENT, F-207,
+  F-263 — texts final in `harvest/d7a-core-sync-reverify.md`), the d12-adr
+  §3.13 `##SPLIT-HOST-POSTURE` carve-out (35→36), and the build-or-demote
+  tail (~17 of 21). The health-audit 16 are NOT in the queue: «Проведи всё
+  это» closed them by adoption — every health-audit file reads 0 drift in
+  the cache, the ev refs carry the ruling verbatim.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
