@@ -58,7 +58,7 @@ trait Frontend {
 
 ##SIDECAR-PROTOCOL-IS-NDJSON-OVER-STDIO Sidecar protocol: newline-delimited JSON over stdio, versioned; sidecars emit Facts, nothing else. @impl/done
 
-##FRONTEND-CRASH-DEGRADES-VISIBLY-NEVER-SILENTLY A frontend crash degrades that language's T-sem rules to `skipped (frontend unavailable)` — visible in the report, never silent. @impl/done
+##FRONTEND-CRASH-DEGRADES-VISIBLY-NEVER-SILENTLY A frontend whose toolchain is broken is a **hard error**: each stack's driver probes its frontend before extraction and fails the run (`typescript-ai-native-conform/src/lib.rs:66-70`), so the gate can never report green over zero facts. A per-file extraction failure surfaces on stderr and yields an empty fact set for that file. *Specified, not built: there is no `skipped (frontend unavailable)` report status — `Finding` carries no status field.* @spec/done
 
 ##FOREIGN-LINTERS-ARE-EVIDENCE-PROVIDERS **Foreign linters as evidence providers.** clippy, eslint, ruff, clang-tidy run as-is; their output is ingested as facts via **SARIF** (the OASIS static-analysis interchange format). @impl/done
 
@@ -106,4 +106,4 @@ trait Frontend {
 
 ---
 
-##UNEXERCISED-FRONTEND-OR-TIER-IS-REMOVED *Any frontend or tier specified here that is not exercised by Playbook Phase 4 is removed from this document rather than carried as aspiration.* @impl/done
+##UNEXERCISED-FRONTEND-OR-TIER-IS-REMOVED *Any frontend or tier specified here that is not exercised by Playbook Phase 4 is either removed from this document or annotated in place as **specified, not built** — never carried as unmarked aspiration.* @impl/done
