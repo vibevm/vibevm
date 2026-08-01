@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-01T07:16:17Z",
+  "updated_at": "2026-08-01T07:40:33Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -18729,7 +18729,115 @@
       "facts": 17,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "processed_hash": "ac95aef09accdd404f63b3b362e5bf1c7080e75a425ac7a5e7e8008725c46049",
+        "verdicts": {
+          "TYPESCRIPT-PROJECTION-SHIPS-A-RUNNABLE-TOOLCHAIN": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01 (the D9-created front door, §3.8 bench = the package's own artefacts): the stack ships a runnable toolchain, not descriptions — its own Cargo workspace under crates/ with four [[binary]] rows in vibe.toml, per PROP-024 code-bearing packages"
+            ]
+          },
+          "NEUTRAL-METHOD-COMES-FROM-THE-CORE-DEPENDENCY": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: vibe.toml declares the core-ai-native dependency; the manifesto/playbooks/mechanism specs are not duplicated into this package — the neutral method arrives through the dependency exactly as stated"
+            ]
+          },
+          "SHIPS-FOUR-BINARIES": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: vibe.toml carries exactly four [[binary]] rows — typescript-ai-native, typescript-ai-native-conform, typescript-ai-native-specmap, typescript-ai-native-tcg — and crates/ is the package's own Cargo workspace (PROP-025 lockfile dispatch)"
+            ]
+          },
+          "SHIPS-TYPESCRIPT-AI-NATIVE-UMBRELLA": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: typescript-ai-native-cli/src/main.rs carries all ten named subcommands (init, floor, conform, specmap, trace, test-gate, tripwire, health, fast-loop, codemod); the floor's step order is the boot snippet's prettier→tsc→tests→eslint→conform→specmap→test-gate"
+            ]
+          },
+          "SHIPS-TYPESCRIPT-AI-NATIVE-CONFORM": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: crates/typescript-ai-native-conform exists as its own binary crate — the conformance gate alone, the ENGINE-CONFORM driver for this stack"
+            ]
+          },
+          "SHIPS-TYPESCRIPT-AI-NATIVE-SPECMAP": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: crates/typescript-ai-native-specmap exists as its own binary crate — the traceability engine alone (PROP-014 driver)"
+            ]
+          },
+          "SHIPS-TYPESCRIPT-AI-NATIVE-TCG": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: crates/typescript-ai-native-tcg ships all six verbs the fact names (serve, validate, scope, complete, type, bench) in its main.rs; the node ≥ 22.6 + consumer-typescript prerequisite matches the package's own tools contract (ts-oracle resolves the consumer's typescript at runtime)"
+            ]
+          },
+          "SHIPS-GUIDE-AND-CARDS": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md exists and spec/cards/INDEX.md carries the registry (the nine scaffolds A–I in TypeScript shape, per the stack's boot snippet)"
+            ]
+          },
+          "SHIPS-TWO-AGENT-SKILLS": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: spec/skills/ holds exactly two skills — typescript-ai-native-terraform and typescript-ai-native-sweep — matching the two procedures named"
+            ]
+          },
+          "SHIPS-TWO-NODE-SIDE-TOOLS": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: tools/ts-extract and tools/ts-oracle both exist in the package; extractor drives the conform frontend and the specmap scanner, oracle backs the tcg — both node-side as stated"
+            ]
+          },
+          "SHIPS-MECHANISM-SPECS": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: spec/typescript/mechanisms/TCG-ORACLE-v0.1.md and TCG-PROTOCOL-v0.1.md both exist, and spec/typescript/tools/ is present — the mechanism specs and tool briefs ship as named"
+            ]
+          },
+          "NEUTRAL-ENGINES-RIDE-ALONG-VENDORED": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: crates/vendor/ carries all four named vendored copies — core-ai-native-conform, -specmap, -specmark, -specmark-grammar — so the slot is its own standalone-buildable Cargo workspace (the sync-engines vendoring surface, 51 pairs green at волна 9)"
+            ]
+          },
+          "running-forms-lead": {
+            "v": "confirmed",
+            "ev": [
+              "coherence-verified 2026-08-01: the three run forms (vibe bin exec / cargo install --path / cargo run --manifest-path) are the same trio the stack's boot snippet prescribes and PROP-025 specifies for lockfile dispatch; prescriptive lead, referents resolve"
+            ]
+          },
+          "STACK-SLOT-IS-THE-MATERIALISED-DIRECTORY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-08-01: the slot naming the fact illustrates is real — vibedeps/stack-typescript-ai-native-lang/0.6.0 exists in this very tree and vibe.lock names the stack, so the check-your-vibe.lock instruction resolves exactly as written (install-convention description, not host-adoption evidence — §3.8 caution held)"
+            ]
+          },
+          "SLOT-BUILD-DROPS-A-TARGET-DIRECTORY": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: build output is excluded from the package's content hash by PROP-024 §2.2's denylist (target/ is one of the four names; ##ACC-HASH-EXCLUDES asserts it), and the [workspace] exclude advice matches the standard consumer resolution PROP-024 §2.4 records — prescriptive advice, coherent, every referent resolves"
+            ]
+          },
+          "wiring-and-sweep-pointers": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: GUIDE §15 is «Wiring a consumer (the shipped toolchain)» and §16 is «Sweep idioms» — both pointers land on sections carrying exactly the promised content"
+            ]
+          },
+          "POLICIES-STAY-WITH-THE-CONSUMER-PROJECT": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: the package ships no conform.toml and no specmap.toml outside test fixtures (rglob over the package, fixtures excluded — zero policy files), so engines-never-policy holds in the shipped tree exactly as PROP-024 §2.2 prescribes"
+            ]
+          }
+        },
+        "verified_at": "2026-08-01T07:39:11Z",
+        "verify_batch": "D15"
+      }
     },
     {
       "path": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md",
@@ -84581,7 +84689,7 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 161,
         "marker_count": 162,
-        "processed_hash": "dc343dad5b950ce23f51f3b94c08387c23ffe92f0bed1c2fd6e2e720407107b8",
+        "processed_hash": "889cba6ec06f808d2cd44db66764c608736fdd269bd5509e22b409fcdaaa93ae",
         "verdicts": {
           "DOC-PINS": {
             "v": "confirmed",
@@ -85567,10 +85675,70 @@
             "ev": [
               "doc status tag consistent (foundational decisions in force; fact grain 2026-07-24)"
             ]
+          },
+          "license-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-08-01 @ HEAD 22d6ff7f: all four cited anchors resolve in this file (##LICENSE-EULA, ##LICENSE-OWNER-CALL, ##COPYLEFT-FORBIDDEN, ##PROPRIETARY-TIGHTENS); the quote «that phase is over» is verbatim at ##LICENSE-EULA; the 2026-07-12 supersession date matches the licence ledger in CLAUDE.md (MT-05 firing, host LICENSE.md relicensed same day); each rejected alternative carries its reason, sourced from the section's own recorded prose, not invented"
+            ]
+          },
+          "graph-nodes-why": {
+            "v": "confirmed",
+            "ev": [
+              "quote-verified 2026-08-01 against VIBEVM-SPEC.md §5.4 {#plugin-contribution-model}: «a package materialises as a verbatim vibedeps/ subtree and contributes a boot snippet, but does not contribute executable nodes. This keeps v1 small.» is verbatim source text; the why cites the frozen spec section that states both the constraint and its reason"
+            ]
+          },
+          "graph-nodes-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "quote-verified 2026-08-01 against VIBEVM-SPEC.md §5.4: «Document the extension point but do not implement it in v1.» verbatim (initial capital adapted inside the record's sentence); §5.4 names v1.5 as the extension target and the record's wal:checkpoint-after-build:compile example is the SPEC's own; the deferred-not-rejected labelling follows the flow's ##MARK-HONEST-DEFERRALS-AS-DEFERRED-NOT-REJECTED"
+            ]
+          },
+          "graph-nodes-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: v1.5 is named by VIBEVM-SPEC.md §5.4; spec/WAL.md exists and is the live phase/milestone checkpoint where a v1.5 open would surface (observation-point wording is role-accurate; the WAL's current revision tracks phases at #current-phase); second clause's referents resolve as declared-future observables — [hooks].post-install is specified (PROP-020-install-hooks.md) and requires is a manifest field; both-clauses adoption 2026-08-01 matches the executing commit eccb1499"
+            ]
+          },
+          "mirror-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-08-01: cited anchors ##NO-TARGET-FIELD, ##MIRROR-WHY-DRIFT, ##MIRROR-WHY-READABLE, ##BOOT-SNIPPET-EXCEPTION all resolve in this file; the one-retained-exception claim restates ##BOOT-SNIPPET-EXCEPTION's own fixed-target rule (spec/boot/<filename>), so the rejection reasons are the section's recorded ones"
+            ]
+          },
+          "mirror-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: observation point crates/vibe-core exists and carries the manifest schema; ##MIRROR-LAYOUT resolves; the trigger is decidable by inspection (a second per-entry source/target exception appearing in the schema is the fired state), no unobservable clause"
+            ]
+          },
+          "dep-weight-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-08-01: ##READMISSIBLE and ##PROP-001-PRUNE resolve and carry the executed consequences the record cites; the four-grounds bracket ##REJECT-LICENSE…##REJECT-ERGONOMICS resolves; ##TOO-HEAVY-NOT-REASON resolves with the quoted clause; the record documents the predecessor policy's rejection with the section's own reasons"
+            ]
+          },
+          "dep-weight-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: ##WHY-PRECEDENT resolves; both observation points are runnable today (release artefact size, cargo build --timings); the event-shaped trigger with «numeric thresholds were offered and not set (owner, 2026-08-01)» matches the executing commit eccb1499's record of the owner leaving two thresholds unset — the honest form per ##ASK-RATHER-THAN-INVENT-DATA rather than an invented number"
+            ]
+          },
+          "jtd-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "quote-verified 2026-08-01: «deliberately narrower: its schema grammar is constructed so every JTD schema maps to a clean static type in every target language, with no language-specific escape hatches» verbatim at ##JTD-OVER-JSONSCHEMA; «JTD is for wire, not for configs humans hand-edit» verbatim at ##JTD-OUT-OF-SCOPE; ##JTD-WHY-SKEW and ##NO-DUPLICATION resolve; the TOML-boundary clause is correctly framed as scope, not rejection"
+            ]
+          },
+          "jtd-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: tools/jtd-codegen/ exists (pin per ##TC-BINARY, which resolves); ##JTD-IN-SCOPE resolves; schemas/ exists with *.jtd.json; both clauses carry checkable observation points (upstream release clock on the pinned repo; the first inexpressible schema in schemas/)"
+            ]
           }
         },
-        "verified_at": "2026-07-25T13:25:30Z",
-        "verify_batch": "c3b-prop-000 + d1"
+        "verified_at": "2026-08-01T07:27:17Z",
+        "verify_batch": "c3b-prop-000 + d1 + D14"
       }
     },
     {
@@ -86178,7 +86346,7 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 112,
         "marker_count": 113,
-        "processed_hash": "6f0cdc165d1208b475749507386865039b029994f6b1ac24cb4248f9332398dd",
+        "processed_hash": "9e6169003cd13590a204fe3008e9204f8de741de189414aa3f7a01562a3d7247",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -86858,10 +87026,58 @@
             "ev": [
               "the doc <status> tag mirrors the proposed-era header (stage=spec) - superseded together with it, carried by F-013"
             ]
+          },
+          "mode-inferred-why": {
+            "v": "confirmed",
+            "ev": [
+              "quote-verified 2026-08-01: «a mode is a choice of inference backend» verbatim at §1.2 ##UNIFYING-STATEMENT; «Affinity is a property of the work, not a user choice.» verbatim at §2.3 ##AFFINITY-OF-WORK; the why derives mode-by-inference from the two quoted fixed points, no new claim smuggled in"
+            ]
+          },
+          "mode-inferred-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-08-01: ##DISPATCHER-REFUSES and ##REACH-STANDALONE-NO-ENGINE resolve in this file; the rejection argument is entailed by them (a user-set flag could only name a backend the dispatcher must refuse or one that does not exist on this machine), so the rejected alternative carries a sourced reason"
+            ]
+          },
+          "mode-inferred-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: ##FB-BUILTIN-BACKEND resolves; VIBEVM-SPEC.md §10.4 {#llm-provider-integration} is the vibe-llm provider-integration section (v1.5) the trigger names; ##FB-CONSOLE resolves; both clauses carry observation points (a vibe-llm inference path appearing in the workspace; a mis-chosen backend in a bug report)"
+            ]
+          },
+          "skill-decl-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-08-01: ##OOS-FIFTH-KIND, ##ANY-KIND-RATIONALE, ##MCP-HALF-SUPERSEDED resolve; PROP-027 exists (spec/modules/vibe-mcp/); the superseded-MCP-half counter-example matches ##MCP-HALF-SUPERSEDED's own recorded owner resolution of 2026-07-07; kind-vs-projection line restates the section's recorded rationale"
+            ]
+          },
+          "skill-decl-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: the worked precedent (MCP servers, 2026-07-07) is recorded at ##MCP-HALF-SUPERSEDED; observation point resolves — crates/vibe-core/src/package_ref.rs exists and ##INV-VOCABULARY (the §4.1 register rule) already anticipates app; the register growing is a decidable fired state"
+            ]
+          },
+          "relay-why": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-08-01: ##two-step-lead, ##SEAM-UNIFORMITY, ##SEAM-DECOUPLING resolve in this file; the two properties the why claims are exactly the two the cited lead states (one drain verb; producer/consumer decoupling), sourced not invented"
+            ]
+          },
+          "relay-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-08-01: ##NO-WRITE-BACK, ##AGENT-ORCHESTRATES, §6 ##FB-CONVERSATIONS resolve; direct-print rejection carries the two sourced reasons; the return channel is correctly labelled deferred-not-rejected with its parking place (§6) named"
+            ]
+          },
+          "relay-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: ##FILE-COMMAND-MD defines the .vibe/agentic/command.md mailbox (a runtime-created path — its absence in a tree at rest is the specified state, not a dangling referent); ##SKILL-STATES-NO-CHANNEL resolves; both trigger clauses are mechanically observable (undrained slot on produce; a follow-up command whose only purpose is hand-back), and either fires the named §6 ##FB-CONVERSATIONS"
+            ]
           }
         },
-        "verified_at": "2026-07-25T13:28:04Z",
-        "verify_batch": "c3c-prop-018-019 + d2a"
+        "verified_at": "2026-08-01T07:27:17Z",
+        "verify_batch": "c3c-prop-018-019 + d2a + D14"
       }
     },
     {
@@ -88166,7 +88382,7 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 76,
         "marker_count": 77,
-        "processed_hash": "cfaa3c9b4d0530f780db587eadfc67ef4cfbb1da4b4be7870892b4a6e53910f7",
+        "processed_hash": "7d36407b80c1154a2834b3da74f0400ad71a1e2ab8151f347c6b67a0a83b585b",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -88634,10 +88850,76 @@
             "ev": [
               "doc <status> tag mirrors the proposed-era header - carried by F-006"
             ]
+          },
+          "shippable-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-08-01: ##REJ-HASH-BUILD-OUTPUT and ##REJ-ALLOW-LIST resolve in §4 {#rejected} (L290, L308), ##VERBATIM-PRESERVED resolves; PROP-022 §1.1 and PROP-009 §2.6 exist as cited; both rejected alternatives carry the §4-recorded reasons verbatim in substance"
+            ]
+          },
+          "shippable-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: ##ACC-HASH-EXCLUDES resolves and is the named acceptance check; the fired state (content_hash differing between clean and built checkout) is mechanically observable and already asserted by that acceptance; near-candidate toolchains named without inventing thresholds"
+            ]
+          },
+          "own-workspace-why": {
+            "v": "confirmed",
+            "ev": [
+              "quote-verified 2026-08-01: «Cargo forbids a directory living in two workspaces, and this is the standard resolution for a repo that contains a sub-project with its own workspace» verbatim at ##WORKSPACE-EXCLUDE; ##OWN-WORKSPACE and ##PIN-ONCE resolve; the why is the recorded external constraint, correctly labelled as such"
+            ]
+          },
+          "own-workspace-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-08-01: ##REJ-CONSUMER-MEMBERS resolves in §4 (L293); ##SPIKE-FALLBACK resolves and the record's retained-not-discarded framing matches its chosen-only-on-evidence clause verbatim"
+            ]
+          },
+          "own-workspace-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: ##SPIKE-FALLBACK names the condition, PROP-000 ##PLATFORMS-TRIO and ##SPIKE-FIRST resolve; the observation point (clean-checkout cargo build failing to resolve vibedeps/<slot>/crates/<crate> on any trio platform) is runnable; the fired state has its landing place already specified"
+            ]
+          },
+          "bootstrap-why": {
+            "v": "confirmed",
+            "ev": [
+              "quote-verified 2026-08-01: «from a clean checkout with no prior vibe install» verbatim at ##CLEAN-CLONE-BUILDS; ##NO-CHICKEN-EGG and ##ACC-CLEAN-CLONE resolve; the why is the section's recorded guarantee with its acceptance named"
+            ]
+          },
+          "bootstrap-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "quote-verified 2026-08-01: «the installed package is the distribution» and «an optional later convenience for non-vibe Rust consumers, not a requirement of this model» both verbatim at ##REJ-CRATES-IO (§4 L304); ##REJ-IN-PLACE resolves (§4 L300); PROP-022 §2.4/§2.7 exist as cited; in-place rejection and crates-io deferral each carry their recorded reason"
+            ]
+          },
+          "bootstrap-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: git count-objects -vH is runnable today and the slot size is measurable; the numeric threshold honestly unset (owner 2026-08-01, matches executing commit eccb1499) — event-shaped rather than invented; the deferred-demand clause names its observation place (the campaign's F-NNN finding space, §3.4 of the batch plan — the project's one finding-id space)"
+            ]
+          },
+          "placement-why": {
+            "v": "confirmed",
+            "ev": [
+              "quote-verified 2026-08-01: «centre of gravity is Rust, and shipping the toolchain whole avoids carving language-neutral cores out under time pressure» verbatim at ##THIS-PASS-WHOLE-TOOLCHAIN; §7 ##HIST-DRAFT-1 resolves and is dated 2026-06-27 as the record claims — the same-session recording claim checks out"
+            ]
+          },
+          "placement-rejected": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-08-01: ##DEFERRED-ENGINE-SPLIT resolves with «taken when the first non-Rust pilot needs it (YAGNI until then)» verbatim; ##CORE-STAYS-PROMPT-ONLY resolves; the honoured-deferral claim matches the section's own Executed note (TypeScript pilot fired the condition; neutral engines vendored by cargo xtask sync-engines — xtask/src/sync_engines.rs exists)"
+            ]
+          },
+          "placement-revisit": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: the successor-trigger honesty is correct (the previous trigger fired with the TS pilot and is spent — recorded in ##placement-rejected beside it); observation points resolve: the sync-engines xtask task exists and the *-ai-native-lang / *-ai-native-mcp package set is enumerable in packages/org.vibevm.ai-native/; byte-identical-vendor failure is a decidable fired state"
+            ]
           }
         },
-        "verified_at": "2026-07-25T13:32:18Z",
-        "verify_batch": "c3d-common-tail + d2d"
+        "verified_at": "2026-08-01T07:27:17Z",
+        "verify_batch": "c3d-common-tail + d2d + D14"
       }
     },
     {
@@ -90692,7 +90974,7 @@
         "coverage_note": "verdicts keyed by fact anchors; table cell-markers inherit their row anchor; <status> elements judged as _elements",
         "fact_count": 29,
         "marker_count": 34,
-        "processed_hash": "3d0268e76f05dcdb7b8b6c8240509c36382a767966a7bf904b80cbf79dd6d70f",
+        "processed_hash": "9d1a5790394672fa323f7a230f7781697ad7d982ad78975fcbebd9b79a69953d",
         "verdicts": {
           "genre-definition": {
             "v": "confirmed",
@@ -90801,10 +91083,142 @@
             "ev": [
               "5 status tags accurate: doc-level living guide; Index state=work living-and-complete (checked against dir 2026-07-25)"
             ]
+          },
+          "ROW-NO-DECISIONS": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-08-01: spec/decisions/ does not exist (the row's absence-is-the-design claim is the tree's state); both cited units resolve — #NO-SEPARATE-ADR-DIRECTORY in the installed flow's boot snippet (vibedeps/flow-decision-records/0.1.0/spec/boot/25-…, compiled into spec/boot/STATIC.md) and #SUM-RECORDS-LIVE-AT-THE-ANCHOR in DECISION-RECORDS-PROTOCOL.md"
+            ]
+          },
+          "NO-DECISIONS-DIRECTORY": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: DECISION-RECORDS-PROTOCOL#placement exists; the silo quote is the ##SILOS-PRESERVE-TECHNICALLY-AND-LOSE-PRACTICALLY sentence with number adapted to the record's singular subject (silos preserve/lose → a silo preserves/loses), anchor cited adjacent so the reader lands on the exact text in one hop; genre-map claims verified against the installed spec-genres flow — Foundational decisions row carries «Amended by decision record» and Module contracts «Edit + changelog line» verbatim; the criterion cross-reference (#owed-a-record) resolves below"
+            ]
+          },
+          "criterion-lead": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: DECISION-RECORDS-PROTOCOL#when exists; the boot-lane claim is true (the decision-records boot snippet is a static contribution compiled into spec/boot/STATIC.md, read at session boot); the iff-rule is this section's own prescriptive definition and is internally coherent with the three Q-rows it governs"
+            ]
+          },
+          "Q1-CONDITION": {
+            "v": "confirmed",
+            "ev": [
+              "coherence-verified 2026-08-01: the row's pass/fail split (X outside our own definitions vs X a term we defined) is decidable and consistent with N1's migration-not-re-decision reading; prescriptive definition, no external referent beyond the criterion it belongs to"
+            ]
+          },
+          "Q2-OBSERVATION-POINT": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: the fails-when clause cites #UNOBSERVABLE-TRIGGERS-ARE-AS-BAD-AS-NONE, which resolves in the flow's revisit-triggers.md; the could-a-stranger-check-today test restates that unit's own law at the classification stage"
+            ]
+          },
+          "Q3-LOSER": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: the fails-when clause cites #DO-NOT-RECORD-WHAT-HAS-NO-PLAUSIBLE-ALTERNATIVE, which resolves in DECISION-RECORDS-PROTOCOL.md; the named-alternative-with-reason requirement is the flow's own Considered-and-rejected field applied as a gate"
+            ]
+          },
+          "CRITERION-IS-THE-RECORD-SHAPE": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: #A-TRIGGER-HAS-THREE-PARTS (revisit-triggers.md), #ROW-FIELD-CONSIDERED-AND-REJECTED and #ASK-RATHER-THAN-INVENT-DATA (boot snippet, in STATIC.md) all resolve; the reduction claim (Q1+Q2 = trigger anatomy, Q3 = the rejected field) is structurally accurate against those units' texts"
+            ]
+          },
+          "CRITERION-UNIT-IS-THE-CLAIM": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-08-01: the worked in-sentence example is accurate — PROP-002 §2.1 {#identity} fixes the identity tuple (kind, name, version, content_hash) and fixes content_hash as sha256:<hex> in the same section; the classify-each-claim rule is the prescriptive consequence"
+            ]
+          },
+          "criterion-pass-lead": {
+            "v": "confirmed",
+            "ev": [
+              "coherence-verified 2026-08-01: lead for the three R-rows; the three ways are exhaustive of the criterion's own Q1–Q3 structure and each R-row beneath resolves its citations"
+            ]
+          },
+          "R1-EXTERNAL": {
+            "v": "confirmed",
+            "ev": [
+              "coherence-verified 2026-08-01: third-party-can-change-without-asking is a decidable external-dependency test consistent with Q1's outside-our-definitions requirement; prescriptive definition, internally consistent"
+            ]
+          },
+          "R2-MEASURED-THRESHOLD": {
+            "v": "confirmed",
+            "ev": [
+              "coherence-verified 2026-08-01: value-chosen-against-observation with new-measurement-moves-it is decidable and matches Q2's checkable-today requirement; prescriptive definition, internally consistent"
+            ]
+          },
+          "R3-LIVE-ALTERNATIVE": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: #MARK-HONEST-DEFERRALS-AS-DEFERRED-NOT-REJECTED resolves in DECISION-RECORDS-PROTOCOL.md; the an-explicit-deferral-is-always-R3 rule follows from that unit (a deferral has a built-in revisit), so the row's strongest clause is sourced"
+            ]
+          },
+          "criterion-fail-lead": {
+            "v": "confirmed",
+            "ev": [
+              "coherence-verified 2026-08-01: lead for the three N-rows; the classifier-cites-its-clause requirement makes the negative verdicts auditable, consistent with COUNT-IS-DERIVED-NOT-MAINTAINED below"
+            ]
+          },
+          "N1-DEFINITIONAL": {
+            "v": "confirmed",
+            "ev": [
+              "coherence-verified 2026-08-01: fails-Q1 attribution is correct (X is ours → migration, not re-decision); consistent with the worked HONEST-NEVER example (PROP-000 ##LANG-REVISIT) which this file classifies N1"
+            ]
+          },
+          "N2-DOWNSTREAM": {
+            "v": "confirmed",
+            "ev": [
+              "coherence-verified 2026-08-01: fails-Q3 attribution is correct (the loser belongs to the upstream section); the second-writer-for-one-fact rationale is the project's own single-source law applied to records"
+            ]
+          },
+          "N3-DESCRIPTIVE": {
+            "v": "confirmed",
+            "ev": [
+              "coherence-verified 2026-08-01: fails-Q3 attribution is correct (a Decision label doing a heading's work has nothing in contention); the worked ex-layout example below instantiates exactly this clause"
+            ]
+          },
+          "criterion-worked-lead": {
+            "v": "confirmed",
+            "ev": [
+              "coherence-verified 2026-08-01: lead sentence; both promised examples (one R, one N) exist directly beneath and check out against their sources"
+            ]
+          },
+          "ex-shippable-tree": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-08-01: PROP-024 §2.2 {#shippable-tree} exists; the denylist is exactly .git/ .vibe/ target/ node_modules/ as the example states; Q3's two losers are both already written in §4 {#rejected} — ##REJ-HASH-BUILD-OUTPUT (L290) and ##REJ-ALLOW-LIST (L308) — so every clause of the worked example is tree-true"
+            ]
+          },
+          "ex-layout": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-08-01: PROP-000 ##LAYOUT-PER-SPEC reads verbatim «**Decision:** Per VIBEVM-SPEC.md §4.2.» — a delegation with nothing in contention; the N3 classification and the raw-count-overstates-the-debt moral follow directly"
+            ]
+          },
+          "COUNT-IS-DERIVED-NOT-MAINTAINED": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: #ROW-TRIGGER-LATER resolves in revisit-triggers.md (the never-reads-as-defect argument is that row's own content); BACKLOG.md #ENTRY-PREFER-GENERATED resolves; the derived-not-recorded rule is prescriptive and coherent — the executing pass itself reported «35 labels, 12 reopenable» as a derived census, not a maintained marker set"
+            ]
+          },
+          "HONEST-NEVER-IS-NOT-A-DEFECT": {
+            "v": "confirmed",
+            "ev": [
+              "quote-verified 2026-08-01: «Never, in the scope of v1. If Rust proves inadequate for a future milestone, open a new PROP superseding this one» verbatim at PROP-000 ##LANG-REVISIT; the two-readings contrast (anti-pattern under #ROW-TRIGGER-LATER, correct answer under this criterion) resolves both citations and scores the case out of the debt correctly"
+            ]
+          },
+          "FORWARD-ONLY-FROM-THE-RULING": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: #WRITE-IN-THE-SESSION-THAT-DECIDES and #backfilled-reasoning-is-fiction resolve in DECISION-RECORDS-PROTOCOL.md («fiction with confidence» verbatim there), #ROW-ANTI-BACKFILLED-MEMORY in record-template.md, #RHYTHM-OPPORTUNISTIC in revisit-triggers.md, #ASK-RATHER-THAN-INVENT-DATA in the boot snippet; the scheduled-exception claim is tree-true — common/'s reopenable sections were classified and backfilled in one pass (twelve records: PROP-000 ×5, PROP-018 ×3, PROP-024 ×4, commit eccb1499, census 35 labels → 12 reopenable in harvest/d12-adr-execution-material.md); the pending §3.13 ##SPLIT-HOST-POSTURE carve-out (35→36) is an owner question about one unit's boundary and does not contradict the executed pass; the genre-map quote «amended by decision record» is the installed spec-genres row verbatim"
+            ]
           }
         },
-        "verified_at": "2026-07-25T13:00:46Z",
-        "verify_batch": "c2-design"
+        "verified_at": "2026-08-01T07:27:17Z",
+        "verify_batch": "c2-design + D14"
       }
     },
     {

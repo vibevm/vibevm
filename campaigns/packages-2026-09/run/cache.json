@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-01T07:39:11Z",
+  "updated_at": "2026-08-01T07:54:34Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "d527b9e4fb90e8e72fa5d9f065de57626216e7e0fa30c08ef114e228b46093ee",
@@ -6049,7 +6049,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
-      "content_hash": "0f517ab8fd729f080c13adedebc098ddce2ca97381d69e820dfdebcb46e1390a",
+      "content_hash": "aef0652181e004519e59bef85865c909c93bdb247071581fe281bf599f3a642e",
       "rollup": {
         "explicit": [
           "spec",
@@ -6071,7 +6071,7 @@
       "unit_count": 27,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "0f517ab8fd729f080c13adedebc098ddce2ca97381d69e820dfdebcb46e1390a",
+        "processed_hash": "aef0652181e004519e59bef85865c909c93bdb247071581fe281bf599f3a642e",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -6266,7 +6266,7 @@
           "RUNTIME-EXPOSES-THE-METAMODEL-TO-CONSUMERS": {
             "v": "confirmed",
             "ev": [
-              "MIXED (Phase D wave 5). Eight demoted, one corrected, and `##LLM-AS-PROPOSER` RE-JUDGED confirmed: the loop ran end to end and `terraform/specmap-proposals.json` carries 54 owner-approved proposals. Error provenance ships too, so two of the three forces hold rather than one."
+              "repaired under F-133 route §3.6(a) (falsifier=self, no demote choice pending — the marker stays @spec/done) and re-verified 2026-08-01: the false clause is gone — the text now says core-ai-native-mcp ships no tools at all with echo named as the #[cfg(test)] fixture it is (server.rs, mod tests, struct Echo inside), which is the tree's exact state; the added scoping sentence is tree-true (trace_explain ships in all three stack MCP rosters — rust-ai-native-mcp/src/lib.rs:55-67, pinned by the_tool_set_is_exactly_the_declared_inventory — as the discipline's per-project channel over a checkout, rust-ai-native-cli/src/trace.rs:11-12, foreign units excluded index.rs:70-75, so it is not vibe's metamodel channel); every pre-existing clause re-verified unchanged: specmap_query/specmap_explain/specmap_source absent from every roster, vibe-mcp explain is PROP-018's README relay, and an agent driving vibe still cannot ask the running tool anything"
             ]
           },
           "DISTRIBUTION-RIDES-THE-EXISTING-REGISTRY": {
@@ -7381,8 +7381,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-01T06:34:21Z",
-        "verify_batch": "C1 + D5b + D7 + D10-groupA + D13-1a"
+        "verified_at": "2026-08-01T07:54:34Z",
+        "verify_batch": "C1 + D5b + D7 + D10-groupA + D13-1a + D16 + D17"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md": {

@@ -1,0 +1,9 @@
+{
+  "batch": "D16",
+  "cluster": "ai-native",
+  "files": {
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
+      "RUNTIME-EXPOSES-THE-METAMODEL-TO-CONSUMERS": {"v": "drift", "ev": ["B-012 evidence pass, boss-reviewed 2026-08-01: one clause of the партія-1a annotation is false — «core-ai-native-mcp is a transport whose only shipped tool is echo». Echo lives inside #[cfg(test)] mod tests (core-ai-native-mcp/src/server.rs:187-193, struct Echo two lines below the mod header), so the transport ships ZERO tools and no consumer ever sees echo. The correction runs TOWARD the annotation's own point (the shipped channel is even emptier than stated), not against it. Every other clause of the annotation holds and was re-verified at HEAD ed0abbab: specmap_query/specmap_explain/specmap_source return no hit and are absent from the stack MCP rosters (rust-ai-native-mcp/src/lib.rs:55-67, roster pinned by the_tool_set_is_exactly_the_declared_inventory); vibe-mcp's explain op is PROP-018's README relay; the stacks' trace_explain is the discipline's per-project channel, checkout-scoped (rust-ai-native-cli/src/trace.rs:11-12) with foreign units excluded (index.rs:70-75), so it is not vibe's metamodel channel and «an agent driving vibe cannot ask the running tool anything» stands. DRIFT: the fact's own text carries one false factual clause; repair is a sync-from-code spec diff for the owner (the fixed sentence: the transport ships no tools at all — its echo is a test fixture)."]}
+    }
+  }
+}

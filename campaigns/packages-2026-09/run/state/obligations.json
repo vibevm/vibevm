@@ -3208,7 +3208,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": false,
+   "installed_differs": true,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.ai-native/core-ai-native"
@@ -3293,7 +3293,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": false,
+   "installed_differs": true,
    "release_event": false,
    "evidence_spans": [
     "packages/org.vibevm.ai-native/core-ai-native"

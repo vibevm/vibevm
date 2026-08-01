@@ -1,0 +1,9 @@
+{
+  "batch": "D17",
+  "cluster": "ai-native",
+  "files": {
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
+      "RUNTIME-EXPOSES-THE-METAMODEL-TO-CONSUMERS": {"v": "confirmed", "ev": ["repaired under F-133 route §3.6(a) (falsifier=self, no demote choice pending — the marker stays @spec/done) and re-verified 2026-08-01: the false clause is gone — the text now says core-ai-native-mcp ships no tools at all with echo named as the #[cfg(test)] fixture it is (server.rs, mod tests, struct Echo inside), which is the tree's exact state; the added scoping sentence is tree-true (trace_explain ships in all three stack MCP rosters — rust-ai-native-mcp/src/lib.rs:55-67, pinned by the_tool_set_is_exactly_the_declared_inventory — as the discipline's per-project channel over a checkout, rust-ai-native-cli/src/trace.rs:11-12, foreign units excluded index.rs:70-75, so it is not vibe's metamodel channel); every pre-existing clause re-verified unchanged: specmap_query/specmap_explain/specmap_source absent from every roster, vibe-mcp explain is PROP-018's README relay, and an agent driving vibe still cannot ask the running tool anything"]}
+    }
+  }
+}
