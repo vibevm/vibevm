@@ -1,8 +1,9 @@
 # WAL — Project Continuation State {#root}
 
-_Updated: 2026-08-01 (**PHASE D NEAR ITS EXIT — волна 9 published: the address
-family closed whole, corpus 97.2 %, registry 121 obligations / 272 drifts, 84
-verdicts still owed a package**)_
+_Updated: 2026-08-01, второй чекпойнт дня (**PHASE D NEAR ITS EXIT — волна 10
+sealed: the D13 tail closed as 51 judged record anchors, the 260-vs-259 flag
+closed by judging the D9 README, corpus 97.6 %, registry 108 obligations / 232
+drifts, 73 verdicts still owed a package — all on the owner's sync route**)_
 
 ##WAL-NUMBERS-COME-FROM-COMMANDS **Every number below is reproduced by two
 commands; run them rather than quoting this file** (why:
@@ -35,24 +36,35 @@ aliasing design (`BACKLOG.md` B-011) makes stripping safe. Verification:
 `self-check.sh` EXIT=0, `sync-engines --check` green (51 pairs),
 `address-repair.py --verify` 0 remaining. @impl/done
 
-##WAL-STATE **State at the last regeneration** (2026-07-31, HEAD `96b5b55f`;
-the commands supersede): corpus **11 030 / 272 / 44 — 97.2 %**; registry **121
-obligations / 272 drifts**; **84 verdicts still owe a package repair, 188
-routed out, 87 obligations nothing left owed**. `release` reads 2 / 4 and both
-rows' anchors are wholly routed — **the route's owed remainder is zero**;
-F-136 and F-145, the phase's two largest obligations, are resolved whole. @impl/done
+##WAL-STATE **State at the last regeneration** (2026-08-01, HEAD `800e0fce`;
+the commands supersede): corpus **11 138 / 232 / 44 — 97.6 %** over **260 of
+260 files** (the acceptance's 260-vs-259 flag is closed: the one unjudged file
+was the D9-created TS front-door README, judged 17/17 and sealed as D15);
+registry **108 obligations / 232 drifts**; **73 drift verdicts still owe a
+package repair — every one of them on `sync-from-code`, the owner's route; 159
+routed out, 77 obligations nothing left owed**. The boss-owed remainder is
+**zero** on every route (`prose-edit` 0, `build-or-demote` 0, `release` 0
+owed). `progress check` clean, `self-check.sh` all green, cargo-audit 0.22.2 /
+cargo-outdated 0.19.0 installed. @impl/done
 
 ##WAL-RULINGS-IN-FORCE **Owner rulings taken 2026-07-31/08-01 and in force:**
 sync-queue group A = answer (2) — «specified, not built» annotate-in-place is
 the sanctioned form, the four closing rules amended, group B's 23 corrections
-unblocked; B-007 = **B + A′** (four-field records inside the owning section,
-forward-only, backfill `spec/common/` only, `spec/decisions/` closed in the
-genre table); F-220's WAL-entry half = reading **(b)** (sound-but-unexercised
-prescription; the package does not move); B-004 = **(i)** (all seventeen fence
-first lines repaired in the publication); B-009 closed (the wind-down's step 4
-names `cargo xtask mirror` in all three instruction files); the campaign-plans
-practice adopted — both live plans carry the six flow forms and 21 of 29
-routed anchors re-judged `confirmed`. @impl/done
+unblocked; B-007 = **B + A′** — **executed 2026-08-01**: the three-question
+criterion lives at `spec/design/README.md#owed-a-record`, twelve four-field
+records sit inside their owning `spec/common` sections (PROP-000 ×5, PROP-018
+×3, PROP-024 ×4), `spec/decisions/` closed in the genre table; the 51 new
+record anchors judged confirmed and their four files sealed (batch D14,
+2026-08-01); **health-audit adopted whole** («Проведи всё это») — the 16
+routed anchors closed by adoption, `AUDIT.md` carries the five clauses, the
+skill installed; **партия 1a applied** (PROP-014's nine annotations +
+RUNTIME-TRANSPORT, the ten unbuilt mechanisms filed as B-012 with «провести
+исследование, можно ли реализовать»); F-220's WAL-entry half = reading **(b)**
+(sound-but-unexercised prescription; the package does not move); B-004 =
+**(i)** (all seventeen fence first lines repaired in the publication); B-009
+closed (the wind-down's step 4 names `cargo xtask mirror` in all three
+instruction files); the campaign-plans practice adopted — both live plans
+carry the six flow forms and 21 of 29 routed anchors re-judged `confirmed`. @impl/done
 
 ## Constraints — do not violate {#constraints}
 
@@ -160,8 +172,11 @@ routed anchors re-judged `confirmed`. @impl/done
 
 ## Done (collapsed — see `git log` and the §7 LOG) {#done}
 
-##WAL-DONE **Phase D, waves 1–9 — the whole arc from 601 drift verdicts to 272,
-94.3 % → 97.2 %.** Waves 5–8 re-verified every route (18/76, 31/59, 47/171 and
+##WAL-DONE **Phase D, waves 1–10 — the whole arc from 601 drift verdicts to
+232, 94.3 % → 97.6 %.** Волна 10 (2026-08-01): the three rulings executed
+(twelve decision records + criterion, партия 1a, health-audit adoption), the
+D13 seal tail closed as 51 judged record anchors (D14), the 260-vs-259
+acceptance flag closed by judging the D9 README (D15). Waves 5–8 re-verified every route (18/76, 31/59, 47/171 and
 16/40 verdicts did not survive as stated — the four named causes are batch plan
 §6.1); волна 9 published. The boss lane closed F-241 and F-148 by building the
 malformed-report precision, F-287/F-175/F-303 by correction, the campaign-plans
@@ -172,35 +187,46 @@ owner's six decisions of 2026-07-31/08-01. Phase C closed 2026-07-28 at 6 847 /
 
 ## In progress {#in-progress}
 
-##WAL-INFLIGHT **Two delegated preparation passes are out** (launched
-2026-08-01, commit-on-notification): **d12-health-audit-rulings** — the 16
-routed `health-audit` anchors turned into one-read-one-ruling material per
-`spec://vibevm/terraforms/packages-actualization#log`'s D10 pattern; and
-**d12-adr-execution-material** — B+A′'s criterion text, genre-table row,
-`spec/common` classification (35 labels) and the ~10 backfill records with
-owner-confirm triggers. Both write single harvest files and nothing else. @impl/done
+##WAL-INFLIGHT **Two delegated B-012 evidence passes are out** (launched
+2026-08-01, second checkpoint; commit-on-notification): **d14-b012-part-A**
+(the runtime/distribution family — index shipping, error-lookup, profiles,
+MCP tools, the trust-layer rider) and **d14-b012-part-B** (the
+graph/check/explain family — multiplicity lint, node views, LLM prose
+producer, length warning, rustdoc composition, the `decides`-verb rider).
+Both are evidence-gathering only (no edits, no vibe commands), each writes
+one harvest file; the boss synthesises
+`harvest/d14-b012-prop014-feasibility.md` with the recommendations. The d12
+passes of the previous checkpoint returned and their material landed
+(commits `c3b3fe19` / `e6f53d5d` / `eccb1499`). @impl/done
 
 ## Next {#next}
 
 1. ##WAL-NEXT-GROUP-B **Present sync-queue group B to the owner in batches**
    (per `spec://vibevm/terraforms/packages-actualization#phase-d` §1.2: the
-   owner approves every spec diff; ruled format — batches with full texts,
-   owner's (ii) of 2026-08-01). The 23 corrections live in the wave-7
-   harvests; batch 1 is `core-ai-native`. @spec/done
-2. ##WAL-NEXT-ADR **Land B+A′ after the d12 material returns and is
-   boss-reviewed**: criterion + genre row + forward rule are boss-applied;
-   the ~10 records' triggers go to the owner marked one by one. @spec/done
-3. ##WAL-NEXT-HEALTH **Put the health-audit 16 to the owner** from the d12
-   material — three §3.6 answers costed per anchor. @spec/done
+   owner approves every spec diff; ruled format — per document, full texts in
+   chat, owner's (ii) of 2026-08-01). **Партия 1b (ENGINE-CONFORM: F-146 ×5 +
+   F-206 ×2) is prepared and presented in chat 2026-08-01 — awaiting the
+   ruling.** Then 1c (LEDGER-INTENT: F-159 ×5), 1d (F-207, F-263); texts
+   final in `harvest/d7a-core-sync-reverify.md`. @spec/done
+2. ##WAL-NEXT-ADR **B+A′'s one open tail: the d12-adr §3.13
+   `##SPLIT-HOST-POSTURE` carve-out** (claim-vs-section unit question,
+   census 35→36) — an owner choice; everything else of B-007 is executed
+   and sealed. @spec/done
+3. ##WAL-NEXT-B012 **Boss-synthesise the B-012 feasibility study** when the
+   two evidence passes return; recommendations per mechanism
+   (build / defer / retire, each with a trigger) go to the owner; no Phase E
+   scheduling before the ruling. @spec/done
 4. ##WAL-NEXT-EXIT **Run the exit gate when the queues drain**: registry
-   CONVERGENCE (owed → 0 or every survivor owner-ruled), `progress check`
-   green over both corpora, `summary.py` arithmetic shown, `baseline.json`
-   written (amendment A6). The 260-vs-259 file-count discrepancy the new
-   acceptance §11 flagged must be reconciled before it is quoted. @spec/done
+   CONVERGENCE (owed → 0 or every survivor owner-ruled — today all 73 owed sit
+   on the owner's sync route), `progress check` green over both corpora
+   (clean at this checkpoint), `summary.py` arithmetic shown, `baseline.json`
+   written (amendment A6), the A–D health-audit inventory (adoption clause).
+   The 260-vs-259 file-count discrepancy is **reconciled and closed** —
+   judged, not footnoted (D15). @spec/done
 5. ##WAL-NEXT-PHASES **Phases T and G are designed and unrun; neither starts
    without an explicit instruction.** Phase E inherits the recorded builds
    (F-211 route-(a) option, B-010's check fix, B-011's aliasing design,
-   B-005's ancestry probe). @spec/done
+   B-005's ancestry probe, B-012's feasibility verdicts once ruled). @spec/done
 
 ## Known issues {#known-issues}
 
