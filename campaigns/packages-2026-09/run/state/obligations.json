@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 271,
+ "drift_verdicts": 232,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -118,86 +118,6 @@
     "host"
    ],
    "id": "F-135",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/core-ai-native"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md#DISTRIBUTION-RIDES-THE-EXISTING-REGISTRY",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md#RULE-MULTIPLICITY-LINT",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md#EDGE-MODEL-NODES",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md#QUERY-ERROR-PROVENANCE",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md#LLM-AS-RENDERER",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md#RUNTIME-PROFILES",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md#SPEC-PRINCIPLE-UNITS-FIT-A-PAGE",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md#RUST-PRINCIPLE-RUSTDOC-IS-THE-DETAIL-LAYER",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md#RUST-PRINCIPLE-GENERATOR-INPUT-IS-TAGGED",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md#ROW-PRIOR-ART-SYN-TREE-SITTER"
-   ],
-   "drift_count": 10,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/core-ai-native"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:44  syn = { version = \"2\", features = [\"full\", \"visit\"] }",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:49  pub fn req_message(uri: &str, why: &str, fix_surface: &str) -> String {",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:50  format!(\"violates REQ {uri}: {why}; fix surface: {fix_surface}\")",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/Cargo.toml:16  syn.workspace = true",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:123  fn explain_symbol(map: &Specmap, target: &str) -> Result<String> {",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:150  pub struct SpecUnit {",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:34  pub struct CodeItem {",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:43  pub itemKind: String,",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:10  //! LLM; an LLM prose producer slots in later under its own producer",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:133  let subgraph = crate::explain::explain_json(map, target)?;",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:168  fn render_prose(",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:54  pub fn content_hash(text: &str) -> String {",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:82  if fwd(rel_in_crate).contains(\"/generated/\") {",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:243  match syn::parse_file(text) {",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:313  // Generated trees are excluded from scanning wholesale.",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/src/lib.rs:43  #[doc = #doc]",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/vibe.toml:11  [compatibility]"
-   ],
-   "cites": [],
-   "reason": "no package ships an index. The host commits `specmap.json` and is not a published package; no `packages/**` slot carries one, and there is no content-hash fragment fetch anywhere",
-   "reasons": [
-    "`vibe check` carries eleven checks — activation_conflict, boot_directory, features_graph, i18n_coverage, lockfile_files, manifest_validity, redirect_block, review_aging, subskill_structure, wal_freshness, wal_wellformed — and no multiplicity lint among them",
-    "read from the host's committed index 2026-07-28: `spec_unit` carries a content_hash, `code_item` does not (crate_name, file, item_kind, line, symbol). The derived Command and ErrorVariant nodes do not exist at all",
-    "the `violates spec://…` string that exists is conform's rule-finding grammar with a hardcoded URI, not an index lookup of a failing error variant. No error rendering consults the map",
-    "`explain --prose` has no provider to feed: the prose producer is a deterministic template and the ledger's own header says an LLM producer 'slots in later'",
-    "`[metamodel] profile` is in no manifest schema and no parser; the three profile values have no representation",
-    "the fact names a specific checker behaviour — `vibe check` warns beyond ~120 lines — and `vibe check` has no such warning in any of its eleven checks",
-    "`explain` cannot compose rustdoc detail: `code_item` carries no doc field in the index, and the renderer emits symbol, kind, crate, file, line and edges only",
-    "the exclusion of generated code is real; the tagging of generator input is not — the host's schemas carry no spec tags, so the edges the generated code would inherit do not exist",
-    "@spec/done, and half of it is wrong about the present: `syn` is a real implementation dependency; tree-sitter is not a dependency of anything in this repository"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:44  syn = { version = \"2\", features = [\"full\", \"visit\"] }",
-   "falsifier": "self",
-   "routed_out": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md#RUST-PRINCIPLE-GENERATOR-INPUT-IS-TAGGED"
-   ],
-   "owed": 9,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-132",
    "id_source": "minted",
    "carried": true
   },
@@ -369,92 +289,6 @@
     "host"
    ],
    "id": "F-147",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/health-audit"
-   ],
-   "files": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#THE-AUDIT-IS-A-DIFFERENT-KIND-OF-CHECK",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#ROW-FIELD-ID",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#ROW-DISP-FILED",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#A-RUN-MUST-FINISH-THE-INVENTORY-NOT-EVERY-FIX",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE"
-   ],
-   "drift_count": 7,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "AUDIT.md",
-    "ROADMAP.md",
-    "discipline",
-    "spec"
-   ],
-   "evidence_refs": [
-    "AUDIT.md:12  `filed` (became tracked work — WAL / `TASKS.md` / a PROP) · `accepted`",
-    "AUDIT.md:14  run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot",
-    "AUDIT.md:15  outside the gate, **C** drift, **D** debt, **E** discipline depth",
-    "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
-    "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-    "AUDIT.md:187  | AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |",
-    "AUDIT.md:191  ## Audit run — 2026-06-12 (discipline depth — the full AI-Native sweep)",
-    "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
-    "AUDIT.md:202  **12 findings** — 1 P1 (fixed in-run), 7 P2 (filed), 4 P3. **Headline:",
-    "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-    "AUDIT.md:29  **13 findings** — 2 P1, 4 P2, 7 P3. Disposition: 2 fixed, 1 filed,",
-    "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
-    "AUDIT.md:365  - **2026-05-23-01** (A1, git-registry path under-tested) — **reduced**:",
-    "AUDIT.md:381  - **AUD-0014 / AUD-0015** (doc-string one-liners) — open; cheap, fix on",
-    "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-    "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
-    "discipline/DEBT.md:29  - **DBT-0001** `coverage-gap` [P1] — Production git-registry + naming path is under-tested _(filed as INT-0002 (the test-hardening work))_",
-    "spec/common/PROP-013-periodic-health-audit.md:26  ##CHECKLIST-WALK vibevm walks the flow's category checklist (`spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#categories`) breadth-first. The categories below carry vibevm's **known instances** — the findings that made each line permanent … @spec/done",
-    "spec/common/PROP-013-periodic-health-audit.md:62  - ##INVENTORY-AUDIT-MD Findings live in **`AUDIT.md`** at the repo root — the append-only chronicle whose history is vibevm's health trend (the flow's `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#audit-md`; the five-field record `…#finding`; disposition and carry-forward `…#disposition`). @spec/done",
-    "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done"
-   ],
-   "cites": [],
-   "reason": "DRIFT on «breadth-first», which is the leg the artefact does not carry. Deliberate, judgment-heavy and durably recorded all hold — the 2026-06-12 run is owner-requested, describes its method as three structural deep-reads plus one empirical gate probe, and wrote 12 findings. But two of the three runs disclaim a full sweep IN THEIR OWN TEXT: `AUDIT.md:23` «it is **not** a fresh full sweep of the PROP-013 §2.2 checklist» and `:158` «It is **not** the full §2.2 breadth sweep». The third claims a sweep and is scoped to the new category E. No run in the artefact records walking A, B, C and D breadth-first.",
-   "reasons": [
-    "DRIFT on the walking, not on the mapping. The mapping is adopted — PROP-013's `##CHECKLIST-WALK` says vibevm walks the checklist breadth-first and cites this document's own anchor, and AUDIT.md's header enumerates the same A/B/C/D groups. The walking never happened: two of three runs disclaim it in their own text, and of the 29 finding headings the sub-rows that have ever produced a finding are A1, A2, A3, B1, B2, C1, C2, C3, C4, D1 plus two group-level entries — **nothing has ever been filed under D2, D3 or D4**.",
-    "DRIFT on the format, in one run of three. The 2026-05-23 and 2026-06-12 runs both use `<run-date>-NN`, unique within the run. The 2026-06-10 run numbers its four findings AUD-0014 … AUD-0017 — a repository-wide sequence, not a run-date — and a third id space runs alongside all of them in `discipline/registry/debt.json` as DBT-0001…DBT-0022. Stability across carry-forward does hold for both schemes, and that half is confirmed by the 2026-06-12 carry-forward re-listing originals under their own ids.",
-    "DRIFT on the destination the row names. Nine findings are `filed` and where-it-went is recorded for three of them (AUD-0017 «filed — DBT-0019», 2026-06-12-03 «filed (DBT-0019, escalated P3→P2)», and the registry's typed `filed_as` field); the other six are bare «filed» in their headings with the destination only in body prose. On the named destinations: **`TASKS.md` contains ZERO occurrences of «audit»**, so no finding has ever been filed as a TASKS.md line. The destination the host actually uses is `discipline/registry/debt.json`, which this flow does not name.",
-    "DRIFT on the floor, confirmed on the trigger — the same ruling as this fact's twin in the boot snippet. Owner-triggered holds (the 2026-06-12 run is recorded «Owner-requested» with the instruction quoted). The floor does not: M1.26 and M1.24 both SHIPPED (2026-07-07) against a last audit of 2026-06-12, with 1 546 commits in the gap and no audit section between.",
-    "DRIFT on the half the sentence insists on. The fix half holds cleanly — the seed run left 9 of 13 open and the 2026-06-12 run filed 7 P2s rather than fixing them in-run, which is the rule working. The INVENTORY half fails in two of three runs, by their own admission: «it is **not** a fresh full sweep … The first full sweep is the next invocation» and «It is **not** the full §2.2 breadth sweep (INT-0001 stays rescoped to the next audit window)». INT-0001 is the full-sweep window both runs name, and no run has closed it.",
-    "DRIFT, carrying its clause's verdict per W1's summary-restatement precedent. Five facts across this package now assert the once-per-milestone floor or its `#never`, and all five fail on the same two ship lines."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "AUDIT.md:12  `filed` (became tracked work — WAL / `TASKS.md` / a PROP) · `accepted`",
-   "falsifier": "host",
-   "routed_out": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#THE-AUDIT-IS-A-DIFFERENT-KIND-OF-CHECK",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#ROW-FIELD-ID",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#ROW-DISP-FILED",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#A-RUN-MUST-FINISH-THE-INVENTORY-NOT-EVERY-FIX",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE"
-   ],
-   "owed": 0,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-141",
    "id_source": "minted",
    "carried": true
   },
@@ -879,77 +713,6 @@
    "routed_out": [],
    "owed": 5,
    "id": "F-162",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/health-audit"
-   ],
-   "files": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#A-RUN-MUST-FINISH-THE-INVENTORY",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#STEP-WALK-THE-CHECKLIST-BREADTH-FIRST",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#STEP-COMMIT-THE-SECTION-AND-EACH-FIX-SEPARATELY",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#EVERY-FINDING-IS-ONE-TABLE-ROW-CARRYING-THE-FIVE-FIELDS",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#OWES-A-COMPLETE-INVENTORY"
-   ],
-   "drift_count": 5,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "AUDIT.md",
-    "spec"
-   ],
-   "evidence_refs": [
-    "AUDIT.md:1  # AUDIT.md — project health inventory",
-    "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-    "AUDIT.md:182  | id | cat | sev | finding | disposition |",
-    "AUDIT.md:184  | AUD-0014 | C | P3 | `expand_features` doc-string says cycles are \"rejected\"; the seen-set silently terminates them (test `cycles_terminate` pins the actual behaviour) | open — one-line doc fix, flagged in the Phase 2 proposals note |",
-    "AUDIT.md:187  | AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |",
-    "AUDIT.md:195  category **E (discipline depth)** this run adds to PROP-013 §2.2.",
-    "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
-    "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-    "AUDIT.md:24  §2.2 checklist. The first full sweep is the next invocation; this seed",
-    "AUDIT.md:29  **13 findings** — 2 P1, 4 P2, 7 P3. Disposition: 2 fixed, 1 filed,",
-    "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
-    "AUDIT.md:363  ### Carry-forward (2026-05-23 series + 2026-06-10), re-judged",
-    "spec/common/PROP-013-periodic-health-audit.md:26  ##CHECKLIST-WALK vibevm walks the flow's category checklist (`spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#categories`) breadth-first. The categories below carry vibevm's **known instances** — the findings that made each line permanent … @spec/done"
-   ],
-   "cites": [],
-   "reason": "DRIFT, stated by the artefact against itself. Two of three runs record in their own text that they did not finish the inventory — «it is **not** a fresh full sweep of the PROP-013 §2.2 checklist. The first full sweep is the next invocation» and «It is **not** the full §2.2 breadth sweep (INT-0001 stays rescoped to the next audit window)». The third finished the inventory of category E specifically. INT-0001 is the named full-sweep window and no run has closed it.",
-   "reasons": [
-    "DRIFT: the instruction is adopted verbatim by the host — PROP-013's `##CHECKLIST-WALK` — and **no run has performed it.** Two disclaim the full sweep in their own text; the third went deep on one category by design («the INT-0001 audit window, run under the new category **E (discipline depth)** this run adds»). The seed run's findings do span A, B, C and D, but the run says they came from the M1.19 work and the checkpoint's known-issues list, not from a walk.",
-    "DRIFT in one run of three, verified commit by commit. Four of the five AUDIT.md commits are `docs(audit): …` and AUDIT.md-only — `b98227ce` 1 file +149, `21d47694` 1 file +199/-1, `f11ed38a` 1 file +52, `3656f362` 1 file +24/-2. The exception is the 2026-06-10 run: `9283132f docs(terraform): Phase 6 close-out` touches FIVE files — AUDIT.md plus the terraform LOG, REPORT, INTENT.md and intent.json — so that run's section is neither its own commit nor under an audit subject. The separate-fix half holds throughout: `9f06fbf2` and `be4aaef7` are standalone fix commits.",
-    "DRIFT on the row shape, confirmed on the fields. One of three runs uses the prescribed table — the 2026-06-10 run has the header `| id | cat | sev | finding | disposition |` with four rows. The other two give each finding its own `### <id> · <cat> · <sev> · <disp>` heading plus a multi-paragraph body: **25 findings that way against 4 in tables.** All five fields survive in both forms, so what fails is «one table row» and not the record's content. Nothing in PROP-013 prescribes either shape, which is why the fields hold and the form does not.",
-    "DRIFT on one of its four sub-obligations. Recorded-and-dispositioned holds for all 29 findings. Checkpoint-reconciled is adopted as a rule in PROP-013 and exercised once. Carried-forward-and-re-judged is done at one of two opportunities. **Every-category-walked is claimed by no run**, with two disclaiming the full sweep outright and the named window INT-0001 never closing. A rule that owes four things and gets three is drift on the list, per W1's precedent for enumerated obligations."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "AUDIT.md:1  # AUDIT.md — project health inventory",
-   "falsifier": "host",
-   "routed_out": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#A-RUN-MUST-FINISH-THE-INVENTORY",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#STEP-WALK-THE-CHECKLIST-BREADTH-FIRST",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#STEP-COMMIT-THE-SECTION-AND-EACH-FIX-SEPARATELY",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#EVERY-FINDING-IS-ONE-TABLE-ROW-CARRYING-THE-FIVE-FIELDS",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#OWES-A-COMPLETE-INVENTORY"
-   ],
-   "owed": 0,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-164",
    "id_source": "minted",
    "carried": true
   },
@@ -1399,78 +1162,6 @@
    ],
    "id": "F-133",
    "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/health-audit"
-   ],
-   "files": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#NEVER-DECLARE-A-MILESTONE-DONE-ON-AN-UN-AUDITED-BASE"
-   ],
-   "drift_count": 4,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "AUDIT.md",
-    "ROADMAP.md",
-    "packages/org.vibevm.world/health-audit",
-    "spec",
-    "vibedeps"
-   ],
-   "evidence_refs": [
-    "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
-    "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
-    "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-    "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
-    "packages/org.vibevm.world/health-audit/v0.1.0/vibe.toml:20  name = \"health-audit\"",
-    "packages/org.vibevm.world/health-audit/v0.1.0/vibe.toml:21  path = \"spec/skills/health-audit\"",
-    "spec/boot/STATIC.md:762  The audit is **owner-triggered**, with a floor of **at least once per",
-    "spec/boot/STATIC.md:777  Use the **`health-audit`** skill: it reads the category checklist,",
-    "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
-    "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:16  The audit is **owner-triggered**, with a floor of **at least once per",
-    "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:18  milestone is never declared done on an un-audited base. The owner",
-    "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:31  Use the **`health-audit`** skill: it reads the category checklist,",
-    "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:42  - Never declare a milestone done on an un-audited base — the audit is"
-   ],
-   "cites": [
-    "F-097"
-   ],
-   "reason": "DRIFT on the floor, confirmed on the trigger. Owner-triggered holds: `AUDIT.md:193` records the 2026-06-12 run as «Owner-requested» with the instruction quoted, and the absence of an audit trigger phrase in the agent contracts (`grep -ni 'audit' CLAUDE.md` → zero) is consistent with an owner-narrated trigger rather than an automated one. The FLOOR does not: the 2026-06-10 run was a milestone close-out and met it, but since 2026-06-12 the two most recent ROADMAP ship lines — M1.26 and M1.24, both SHIPPED (2026-07-07) — carry no audit section between them and the last run, across 1 546 commits. «At least once per milestone» is the flow's own word for a minimum, and it has been missed twice.",
-   "reasons": [
-    "DRIFT, the same measurement as this fact's twin in the package README and ruled identically. Last audit 2026-06-12; M1.26 and M1.24 both SHIPPED (2026-07-07) with no audit section between; 1 546 commits in the gap. Two milestones declared done on an un-audited base, in the file this flow itself specifies.",
-    "DRIFT of the genre F-097 named — an instruction that fails when followed. The skill ships and installs: `packages/…/spec/skills/health-audit/SKILL.md` and `vibedeps/flow-health-audit/0.1.0/spec/skills/health-audit/SKILL.md` both exist. It reaches no harness the host runs. The worker widened past the harvest, which checked only `.claude/skills/`, and found **three** skill homes — `.claude/skills/` (5 skills), `.agents/skills/` (4), `.opencode/skills/` (4) — with `health-audit` in none; `find . -maxdepth 4 -path '*skills/health-audit*'` returns nothing outside the package and vibedeps, and `grep -rn 'health-audit' .claude/` returns nothing. A session that reads this instruction in the compiled boot lane and tries to follow it cannot. `vibe skill install` is the projection step and the lockfile records no skill projection for this package.",
-    "DRIFT — the `#never` restatement of the rule two rows above, carrying its verdict per W1's summary-restatement precedent, and sharpened by its own added clause: «the audit is part of the close-out, not an optional extra». Two milestone close-outs since 2026-06-12 shipped without one. Three facts in this package assert the same rule and all three fail on the same two ship lines."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
-   "falsifier": "mixed",
-   "routed_out": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE",
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#NEVER-DECLARE-A-MILESTONE-DONE-ON-AN-UN-AUDITED-BASE"
-   ],
-   "owed": 1,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-097",
-   "id_source": "adopted (plan LOG)",
    "carried": true
   },
   {
@@ -2005,134 +1696,6 @@
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/decision-records"
-   ],
-   "files": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#ANY-REOPENABLE-CHOICE-GETS-A-RECORD",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#ASK-RATHER-THAN-INVENT-DATA",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER"
-   ],
-   "drift_count": 3,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/decision-records",
-    "packages/org.vibevm.world/two-process-model",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:16  ##ANY-REOPENABLE-CHOICE-GETS-A-RECORD Any choice a future reader could plausibly re-open — a library pick,",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:42  2. ##ASK-RATHER-THAN-INVENT-DATA If the why or the trigger is not known, ask. Do not invent data;",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:77  - ##NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER Never record a decision with a missing reason or a missing revisit",
-    "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:157  ##RE-DERIVE-THE-SPLIT-WHEN-CAPABILITIES-MOVE Re-derive the split when the underlying capabilities move —",
-    "spec/boot/STATIC.md:246  Any choice a future reader could plausibly re-open — a library pick,",
-    "spec/boot/STATIC.md:248  gets a **four-field record at the spec anchor that governs the value**:",
-    "spec/boot/STATIC.md:271  2. If the why or the trigger is not known, ask. Do not invent data;",
-    "spec/boot/STATIC.md:299  - Never record a decision with a missing reason or a missing revisit",
-    "spec/common/PROP-000.md:100  - ##REG-M0 **Decision:** **M0:** local-directory registry only. No git. Registry is a path on disk with the layout from `VIBEVM-SPEC.md` §8.2. @spec/done",
-    "spec/common/PROP-000.md:29  ##WORKSPACE-LAYOUT **Decision:** Single Cargo workspace at repo root. Crates live under `crates/` per `VIBEVM-SPEC.md` §10.2: @spec/done",
-    "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:42  ##IDENTITY-TUPLE **Decision.** A package's identity is the tuple `(kind, name, version, content_hash)`. The `content_hash` is `sha256:<hex>` over the deterministically-ordered concatenation of `(rel_path_bytes || 0x00 || file_bytes || 0x00)` for every file in the package directory (the existing scheme from `compute_content_hash` in `vibe-registry`). [PROP-024 §2.2](../../common/PROP-024-code-bearing-packages.md#shippable-tree) re-scopes this to the package's **shippable tree** — its source, minus build output (`.git/`, `.vibe/`, `target/`, `node_modules/`, `.vibeignore` globs) — so a code-bearing package's identity is its source, not its build state; that exclusion lands with the code that implements it. The URL used to fetch the content is **informational** — recorded in the lockfile for debuggability, not for identity. @impl/done"
-   ],
-   "cites": [],
-   "reason": "DRIFT: the host writes at the reopenable choices and writes a RECORD at four of them. 153 sections in `spec/common/` + `spec/modules/**` carry a bolded Decision label; 4 carry all four fields, 3 carry three, 19 carry two, 127 carry the Decision line alone. Counted twice — the delegated worker's scan and my own independent re-count — agreeing exactly.",
-   "reasons": [
-    "DRIFT on its second clause, which is countable: «do not record a two-field stub» — the host records 19 of them in `spec/common/` + `spec/modules/**`, plus 3 three-field records, against 4 complete ones. The do-not-invent-data half holds: no fabricated measurement was found in any host why.",
-    "DRIFT, and this is the never the host breaks most often: «a fact with decoration, not a record» is precisely what 149 of its 153 Decision sections are. 153 sections in `spec/common/` + `spec/modules/**` carry a bolded Decision label; 4 carry all four fields, 3 carry three, 19 carry two, 127 carry the Decision line alone. Counted twice — the delegated worker's scan and my own independent re-count — agreeing exactly. The rule names the failure exactly and the corpus is made of it."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:16  ##ANY-REOPENABLE-CHOICE-GETS-A-RECORD Any choice a future reader could plausibly re-open — a library pick,",
-   "falsifier": "mixed",
-   "routed_out": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#ANY-REOPENABLE-CHOICE-GETS-A-RECORD",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#ASK-RATHER-THAN-INVENT-DATA",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER"
-   ],
-   "owed": 0,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-197",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/decision-records"
-   ],
-   "files": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md#EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md#ROW-FIELD-WHEN-TO-REVISIT",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md#SUM-FOUR-FIELDS-ALWAYS"
-   ],
-   "drift_count": 3,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "campaigns",
-    "packages/org.vibevm.world/decision-records",
-    "spec"
-   ],
-   "evidence_refs": [
-    "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:83  **Decision.** The verdict object grows a third key: `{v, ev[], src:[…]}`, where",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:228  - ##SUM-FOUR-FIELDS-ALWAYS Four fields, always: Decision / Why (measured, cited) / Considered",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:71  ##EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS Every record carries exactly four fields: @impl/done",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:78  | ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | A measurable trigger: metric + threshold + where it is observed. \"Later\" is not a trigger. @impl/done |",
-    "spec/boot/STATIC.md:248  gets a **four-field record at the spec anchor that governs the value**:",
-    "spec/boot/STATIC.md:250  | Field | Requirement |",
-    "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
-    "spec/modules/vibe-actions/PROP-039-action-system.md:339  - ##decision-records-home The load-bearing decisions (four-field: Decision · Why · Rejected · Revisit) are recorded at their",
-    "spec/modules/vibe-cli/PROP-036-package-tree.md:95  - ##decision-artifacts-revisit **When to revisit:** if the artifacts stop being committed (generated",
-    "spec/modules/vibe-registry/PROP-001-git-backend.md:113  ##revisit-lead **When to revisit:** if and when we need one of: @spec/done",
-    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would"
-   ],
-   "cites": [],
-   "reason": "DRIFT, and it is the batch's headline: 4 of 153. counted twice by two instruments that agree byte for byte — the delegated worker's scan and my own independent re-count. A section-scoped sweep of every markdown file under `spec/common/` and `spec/modules/**` for a bolded Decision label finds 153 sections. Of those: 4 carry all four fields, 3 carry three, 19 carry two, and 127 carry the Decision line ALONE. `spec/common/` contributes 0 of the four; all four are in `spec/modules/` (PROP-036 §2.3, PROP-043 §§3.1, 3.3, 3.8). The word is «every»; the measured rate is 2.6 %. Placement, which the same protocol also requires, is obeyed almost everywhere — all 153 sit inside the section that governs the value — so what fails is completeness, not location.",
-   "reasons": [
-    "DRIFT on the field's own definition — «a measurable trigger: metric + threshold + where it is observed» — measured against every host instance individually rather than by rule. Eleven revisit lines exist across `spec/`. ONE carries a metric and a threshold (PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116, «a third of `world`'s units land `unverifiable`»); eight are event-shaped with no threshold; two refuse revisiting outright (PROP-000.md:23 «Never, in the scope of v1»; PROP-043:141 «never expected»). NONE carries all three parts, and only PROP-043:255 names a place to look. 142 of the 153 Decision-bearing sections carry no revisit condition at all.",
-    "DRIFT on «always», the same census as EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS. counted twice by two instruments that agree byte for byte — the delegated worker's scan and my own independent re-count. A section-scoped sweep of every markdown file under `spec/common/` and `spec/modules/**` for a bolded Decision label finds 153 sections. Of those: 4 carry all four fields, 3 carry three, 19 carry two, and 127 carry the Decision line ALONE. `spec/common/` contributes 0 of the four; all four are in `spec/modules/` (PROP-036 §2.3, PROP-043 §§3.1, 3.3, 3.8). W1's precedent judges a summary restatement of a broken rule with the rule."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:228  - ##SUM-FOUR-FIELDS-ALWAYS Four fields, always: Decision / Why (measured, cited) / Considered",
-   "falsifier": "mixed",
-   "routed_out": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md#EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md#ROW-FIELD-WHEN-TO-REVISIT",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md#SUM-FOUR-FIELDS-ALWAYS"
-   ],
-   "owed": 0,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-198",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
     "reason-text j=0.74"
    ],
    "packages": [
@@ -2605,62 +2168,6 @@
     "host"
    ],
    "id": "F-220",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "reason-text j=1.00"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/decision-records"
-   ],
-   "files": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#ROW-FIELD-WHEN-TO-REVISIT",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md#ROW-FIELD-WHEN-TO-REVISIT"
-   ],
-   "drift_count": 2,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/decision-records",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:25  | ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | A measurable trigger: metric + threshold + where it is observed. @impl/done |",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:45  | ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | Metric + threshold + observation point; a stranger can answer \"has it fired?\". @impl/done | \"Later\", \"when it breaks\", \"when we refactor\". @impl/done |",
-    "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
-    "spec/common/PROP-000.md:23  ##LANG-REVISIT **When to revisit:** Never, in the scope of v1. If Rust proves inadequate for a future milestone, open a new PROP superseding this one. @spec/done",
-    "spec/modules/vibe-registry/PROP-001-git-backend.md:113  ##revisit-lead **When to revisit:** if and when we need one of: @spec/done",
-    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would"
-   ],
-   "cites": [],
-   "reason": "DRIFT on the field's own definition — «a measurable trigger: metric + threshold + where it is observed». Applied to all 11 host revisit lines individually: 1 carries metric + threshold, 1 names an observation point, NONE carries all three. Eight are event-shaped without a threshold; two refuse revisiting outright. 142 of 153 Decision sections carry no revisit condition at all.",
-   "reasons": [
-    "DRIFT on the field's own definition — «a measurable trigger: metric + threshold + where it is observed». Applied to all 11 host revisit lines individually: 1 carries metric + threshold, 1 names an observation point, NONE carries all three. Eight are event-shaped without a threshold; two refuse revisiting outright. 142 of 153 Decision sections carry no revisit condition at all."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:25  | ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | A measurable trigger: metric + threshold + where it is observed. @impl/done |",
-   "falsifier": "mixed",
-   "routed_out": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#ROW-FIELD-WHEN-TO-REVISIT",
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md#ROW-FIELD-WHEN-TO-REVISIT"
-   ],
-   "owed": 0,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-224",
    "id_source": "minted",
    "carried": true
   },
@@ -3769,6 +3276,52 @@
    "carried": true
   },
   {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/core-ai-native"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md#RUST-PRINCIPLE-GENERATOR-INPUT-IS-TAGGED"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/core-ai-native"
+   ],
+   "evidence_refs": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:82  if fwd(rel_in_crate).contains(\"/generated/\") {",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:313  // Generated trees are excluded from scanning wholesale."
+   ],
+   "cites": [],
+   "reason": "the exclusion of generated code is real; the tagging of generator input is not — the host's schemas carry no spec tags, so the edges the generated code would inherit do not exist",
+   "reasons": [],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:82  if fwd(rel_in_crate).contains(\"/generated/\") {",
+   "falsifier": "self",
+   "routed_out": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md#RUST-PRINCIPLE-GENERATOR-INPUT-IS-TAGGED"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-132",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "contradiction",
    "rule": "r-contradiction",
    "merged_by": [
@@ -4486,103 +4039,6 @@
    "carried": true
   },
   {
-   "type": "missing-support",
-   "rule": "r-nothing-exists",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/decision-records"
-   ],
-   "files": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/README.md#FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/decision-records",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/README.md:12  ##FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR So every choice a future reader could plausibly",
-    "spec/boot/STATIC.md:248  gets a **four-field record at the spec anchor that governs the value**:",
-    "spec/modules/vibe-cli/PROP-036-package-tree.md:88  ##DECISION-ARTIFACTS-CANONICAL **Decision — read the effective type from the artifacts, not a fresh recompute.** @spec/done",
-    "spec/modules/vibe-progress/PROP-043-progress-markup.md:91  ##DECISION-ELEMENT-NAME **Decision — element name `status`, not `progress`.** @impl/done"
-   ],
-   "cites": [],
-   "reason": "DRIFT on completeness, not on placement. 153 sections in `spec/common/` + `spec/modules/**` carry a bolded Decision label; 4 carry all four fields, 3 carry three, 19 carry two, 127 carry the Decision line alone. Counted twice — the delegated worker's scan and my own independent re-count — agreeing exactly. The anchor half holds — all 153 sit in the section governing the value and no ADR directory exists — so the claim's «at the governing anchor» is right and its «four-field record» is met 2.6 % of the time.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "build-or-demote",
-   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/README.md:12  ##FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR So every choice a future reader could plausibly",
-   "falsifier": "mixed",
-   "routed_out": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/README.md#FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR"
-   ],
-   "owed": 0,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-299",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/decision-records"
-   ],
-   "files": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md#SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/decision-records",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:149  - ##SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER Why with data; rejections with reasons; trigger with metric,",
-    "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
-    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would"
-   ],
-   "cites": [],
-   "reason": "DRIFT on all three clauses, each measured. Why with data: 0 of the 22 whys in `spec/common/` + `spec/modules/**` names a log path, a sample size or a benchmark run. Rejections with reasons: the field appears 6 times against 153 records. Trigger with metric + threshold + observation point: 0 of 11. The one place all three land is the campaign's own batch plan §2, outside the spec tree this summary governs.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:149  - ##SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER Why with data; rejections with reasons; trigger with metric,",
-   "falsifier": "mixed",
-   "routed_out": [
-    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md#SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER"
-   ],
-   "owed": 0,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-225",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -4832,202 +4288,6 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-309",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "contradiction",
-   "rule": "r-contradiction",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/health-audit"
-   ],
-   "files": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#SEVERITY-P1-BLOCKER"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "AUDIT.md",
-    "ROADMAP.md"
-   ],
-   "evidence_refs": [
-    "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
-    "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
-    "AUDIT.md:46  ### 2026-05-23-02 · A1 · P1 · fixed (`cc32d7e`)",
-    "AUDIT.md:9  **Severity** — `P1` blocker (resolve before the next milestone ships) ·",
-    "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)"
-   ],
-   "cites": [],
-   "reason": "DRIFT on «resolve before the next milestone ships», and the record disagrees with itself about the finding that proves it. The definition is adopted verbatim in AUDIT.md's header. Three P1s exist; two were fixed in-run. The third, 2026-05-23-01, was never fixed — it was re-judged DOWN to P3 at AUDIT.md:369 and survives as DBT-0001 carrying **[P1]** in `discipline/DEBT.md:29`, still «filed as INT-0002» — while M1.26 and M1.24 were both declared SHIPPED on 2026-07-07. So a P1 outlived two milestones, and the two durable records carry different severities for it today.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
-   "falsifier": "host",
-   "routed_out": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#SEVERITY-P1-BLOCKER"
-   ],
-   "owed": 0,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-310",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/health-audit"
-   ],
-   "files": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/README.md#A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "ROADMAP.md",
-    "spec"
-   ],
-   "evidence_refs": [
-    "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-    "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
-    "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done"
-   ],
-   "cites": [],
-   "reason": "DRIFT, and the worker's own evidence settles it against the claim — this row was returned `located` because the search DID answer the question. The last audit run in `AUDIT.md` is 2026-06-12 (`git log -1 --date=short -- AUDIT.md` → `3656f362 2026-06-12`, and `grep -nE '^## ' AUDIT.md` shows no later section). `grep -noE '(SHIPPED|COMPLETE)[^)]*\\(20[0-9]{2}-[0-9]{2}-[0-9]{2}\\)' ROADMAP.md` returns 15 dated ship lines, and **the two most recent — M1.26 and M1.24 — are both SHIPPED (2026-07-07), after the last audit, with no audit section between**. `git log --oneline --since=2026-06-12 | wc -l` is 1 546. Two milestones declared done on an un-audited base is the flow's own `#never` broken twice, on the artefact the flow itself specifies.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-   "falsifier": "host",
-   "routed_out": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/README.md#A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE"
-   ],
-   "owed": 0,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-311",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/health-audit"
-   ],
-   "files": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md#SUM-FOUR-GROUPS-WALKED-BREADTH-FIRST"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "AUDIT.md"
-   ],
-   "evidence_refs": [
-    "AUDIT.md:14  run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot",
-    "AUDIT.md:15  outside the gate, **C** drift, **D** debt, **E** discipline depth",
-    "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-    "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013"
-   ],
-   "cites": [],
-   "reason": "DRIFT on «walked breadth-first», carrying the verdict of the two rules it summarises. The four groups are adopted verbatim in AUDIT.md's header and in PROP-013 §2 — that half is real. The walk is not: the seed run says «it is **not** a fresh full sweep», the 2026-06-10 run says «it is **not** the full §2.2 breadth sweep» and was scoped to C plus the gate panel, and the 2026-06-12 run was the INT-0001 window run scoped to the category it had just added. No run's text records touching A, B, C and D once each before going deep.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "AUDIT.md:14  run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot",
-   "falsifier": "host",
-   "routed_out": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md#SUM-FOUR-GROUPS-WALKED-BREADTH-FIRST"
-   ],
-   "owed": 0,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-235",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/health-audit"
-   ],
-   "files": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md#WALK-THE-CHECKLIST-BREADTH-FIRST-AND-RUN-EACH-AID"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "AUDIT.md",
-    "spec"
-   ],
-   "evidence_refs": [
-    "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-    "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-    "spec/common/PROP-013-periodic-health-audit.md:26  ##CHECKLIST-WALK vibevm walks the flow's category checklist (`spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#categories`) breadth-first. The categories below carry vibevm's **known instances** — the findings that made each line permanent … @spec/done",
-    "spec/common/PROP-013-periodic-health-audit.md:32  - ##A3-WRONG-BEHAVIOR **A3 · Tests that encode the wrong behavior.** Detectable only by reading the assertion against the spec. *Known:* `cli_init` asserted `naming == kind-name`. @spec/done",
-    "spec/common/PROP-013-periodic-health-audit.md:53  ##CAT-E **E — Discipline depth (AI-Native).** vibevm's own category, added 2026-06-12: it measures how deep the Discipline v0.2 adoption actually goes (the flow's corollary — audit *depth* of adoption, not merely that it exists), against vibevm's specific machinery: @spec/done"
-   ],
-   "cites": [],
-   "reason": "DRIFT on the walk, split on the aids. The project-specific-rows clause is well served — PROP-013 §2 carries E1-E4 with their own aids. The breadth-first walk is unconfirmed by any of the three runs, two of which disclaim it in their own text, which is the same measurement ruled at four other facts in this package. The named aids split four ways: the grep-based ones were run and reported at 2026-06-12-11; the CI-config-versus-tree diff exists as self-check.sh step 0b; the coverage tool has no host equivalent; and the dependency audit has never been invoked anywhere.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "prose-edit",
-   "fact": "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-   "falsifier": "host",
-   "routed_out": [
-    "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md#WALK-THE-CHECKLIST-BREADTH-FIRST-AND-RUN-EACH-AID"
-   ],
-   "owed": 0,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-312",
    "id_source": "minted",
    "carried": true
   },
@@ -6703,6 +5963,58 @@
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/health-audit"
+   ],
+   "files": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#NEVER-DECLARE-A-MILESTONE-DONE-ON-AN-UN-AUDITED-BASE"
+   ],
+   "drift_count": 4,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "AUDIT.md",
+    "ROADMAP.md",
+    "packages/org.vibevm.world/health-audit",
+    "spec",
+    "vibedeps"
+   ],
+   "cites": [
+    "F-097"
+   ],
+   "reason": "DRIFT on the floor, confirmed on the trigger. Owner-triggered holds: `AUDIT.md:193` records the 2026-06-12 run as «Owner-requested» with the instruction quoted, and the absence of an audit trigger phrase in the agent contracts (`grep -ni 'audit' CLAUDE.md` → zero) is consistent with an owner-narrated trigger rather than an automated one. The FLOOR does not: the 2026-06-10 run was a milestone close-out and met it, but since 2026-06-12 the two most recent ROADMAP ship lines — M1.26 and M1.24, both SHIPPED (2026-07-07) — carry no audit section between them and the last run, across 1 546 commits. «At least once per milestone» is the flow's own word for a minimum, and it has been missed twice.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
+   "falsifier": "mixed",
+   "routed_out": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md#NEVER-DECLARE-A-MILESTONE-DONE-ON-AN-UN-AUDITED-BASE"
+   ],
+   "owed": 1,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-097",
+   "id_source": "adopted (plan LOG)",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
     "single row"
    ],
    "packages": [
@@ -6993,6 +6305,62 @@
    "routed_out": [],
    "owed": 10,
    "id": "F-140",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/health-audit"
+   ],
+   "files": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#THE-AUDIT-IS-A-DIFFERENT-KIND-OF-CHECK",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#ROW-FIELD-ID",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#ROW-DISP-FILED",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#A-RUN-MUST-FINISH-THE-INVENTORY-NOT-EVERY-FIX",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE"
+   ],
+   "drift_count": 7,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "AUDIT.md",
+    "ROADMAP.md",
+    "discipline",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT on «breadth-first», which is the leg the artefact does not carry. Deliberate, judgment-heavy and durably recorded all hold — the 2026-06-12 run is owner-requested, describes its method as three structural deep-reads plus one empirical gate probe, and wrote 12 findings. But two of the three runs disclaim a full sweep IN THEIR OWN TEXT: `AUDIT.md:23` «it is **not** a fresh full sweep of the PROP-013 §2.2 checklist» and `:158` «It is **not** the full §2.2 breadth sweep». The third claims a sweep and is scoped to the new category E. No run in the artefact records walking A, B, C and D breadth-first.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "AUDIT.md:12  `filed` (became tracked work — WAL / `TASKS.md` / a PROP) · `accepted`",
+   "falsifier": "host",
+   "routed_out": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#THE-AUDIT-IS-A-DIFFERENT-KIND-OF-CHECK",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#ROW-FIELD-ID",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#ROW-DISP-FILED",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#A-RUN-MUST-FINISH-THE-INVENTORY-NOT-EVERY-FIX",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-141",
    "id_source": "minted",
    "carried": true
   },
@@ -7464,6 +6832,56 @@
    "routed_out": [],
    "owed": 5,
    "id": "F-163",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/health-audit"
+   ],
+   "files": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#A-RUN-MUST-FINISH-THE-INVENTORY",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#STEP-WALK-THE-CHECKLIST-BREADTH-FIRST",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#STEP-COMMIT-THE-SECTION-AND-EACH-FIX-SEPARATELY",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#EVERY-FINDING-IS-ONE-TABLE-ROW-CARRYING-THE-FIVE-FIELDS",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#OWES-A-COMPLETE-INVENTORY"
+   ],
+   "drift_count": 5,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "AUDIT.md",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT, stated by the artefact against itself. Two of three runs record in their own text that they did not finish the inventory — «it is **not** a fresh full sweep of the PROP-013 §2.2 checklist. The first full sweep is the next invocation» and «It is **not** the full §2.2 breadth sweep (INT-0001 stays rescoped to the next audit window)». The third finished the inventory of category E specifically. INT-0001 is the named full-sweep window and no run has closed it.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "AUDIT.md:1  # AUDIT.md — project health inventory",
+   "falsifier": "host",
+   "routed_out": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#A-RUN-MUST-FINISH-THE-INVENTORY",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#STEP-WALK-THE-CHECKLIST-BREADTH-FIRST",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#STEP-COMMIT-THE-SECTION-AND-EACH-FIX-SEPARATELY",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#EVERY-FINDING-IS-ONE-TABLE-ROW-CARRYING-THE-FIVE-FIELDS",
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md#OWES-A-COMPLETE-INVENTORY"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-164",
    "id_source": "minted",
    "carried": true
   },
@@ -8312,6 +7730,100 @@
    "carried": true
   },
   {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/decision-records"
+   ],
+   "files": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#ANY-REOPENABLE-CHOICE-GETS-A-RECORD",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#ASK-RATHER-THAN-INVENT-DATA",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER"
+   ],
+   "drift_count": 3,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/decision-records",
+    "packages/org.vibevm.world/two-process-model",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT: the host writes at the reopenable choices and writes a RECORD at four of them. 153 sections in `spec/common/` + `spec/modules/**` carry a bolded Decision label; 4 carry all four fields, 3 carry three, 19 carry two, 127 carry the Decision line alone. Counted twice — the delegated worker's scan and my own independent re-count — agreeing exactly.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:16  ##ANY-REOPENABLE-CHOICE-GETS-A-RECORD Any choice a future reader could plausibly re-open — a library pick,",
+   "falsifier": "mixed",
+   "routed_out": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#ANY-REOPENABLE-CHOICE-GETS-A-RECORD",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#ASK-RATHER-THAN-INVENT-DATA",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-197",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/decision-records"
+   ],
+   "files": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md#EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md#ROW-FIELD-WHEN-TO-REVISIT",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md#SUM-FOUR-FIELDS-ALWAYS"
+   ],
+   "drift_count": 3,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "campaigns",
+    "packages/org.vibevm.world/decision-records",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT, and it is the batch's headline: 4 of 153. counted twice by two instruments that agree byte for byte — the delegated worker's scan and my own independent re-count. A section-scoped sweep of every markdown file under `spec/common/` and `spec/modules/**` for a bolded Decision label finds 153 sections. Of those: 4 carry all four fields, 3 carry three, 19 carry two, and 127 carry the Decision line ALONE. `spec/common/` contributes 0 of the four; all four are in `spec/modules/` (PROP-036 §2.3, PROP-043 §§3.1, 3.3, 3.8). The word is «every»; the measured rate is 2.6 %. Placement, which the same protocol also requires, is obeyed almost everywhere — all 153 sit inside the section that governs the value — so what fails is completeness, not location.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:228  - ##SUM-FOUR-FIELDS-ALWAYS Four fields, always: Decision / Why (measured, cited) / Considered",
+   "falsifier": "mixed",
+   "routed_out": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md#EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md#ROW-FIELD-WHEN-TO-REVISIT",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md#SUM-FOUR-FIELDS-ALWAYS"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-198",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "missing-support",
    "rule": "r-no-checker",
    "merged_by": [
@@ -8662,6 +8174,93 @@
    "carried": true
   },
   {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "reason-text j=1.00"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/decision-records"
+   ],
+   "files": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#ROW-FIELD-WHEN-TO-REVISIT",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md#ROW-FIELD-WHEN-TO-REVISIT"
+   ],
+   "drift_count": 2,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/decision-records",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT on the field's own definition — «a measurable trigger: metric + threshold + where it is observed». Applied to all 11 host revisit lines individually: 1 carries metric + threshold, 1 names an observation point, NONE carries all three. Eight are event-shaped without a threshold; two refuse revisiting outright. 142 of 153 Decision sections carry no revisit condition at all.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:25  | ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | A measurable trigger: metric + threshold + where it is observed. @impl/done |",
+   "falsifier": "mixed",
+   "routed_out": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md#ROW-FIELD-WHEN-TO-REVISIT",
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md#ROW-FIELD-WHEN-TO-REVISIT"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-224",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/decision-records"
+   ],
+   "files": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md#SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/decision-records",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT on all three clauses, each measured. Why with data: 0 of the 22 whys in `spec/common/` + `spec/modules/**` names a log path, a sample size or a benchmark run. Rejections with reasons: the field appears 6 times against 153 records. Trigger with metric + threshold + observation point: 0 of 11. The one place all three land is the campaign's own batch plan §2, outside the spec tree this summary governs.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:149  - ##SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER Why with data; rejections with reasons; trigger with metric,",
+   "falsifier": "mixed",
+   "routed_out": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md#SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-225",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "contradiction",
    "rule": "r-contradiction",
    "merged_by": [
@@ -8693,6 +8292,47 @@
    "fact": "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:152  <MAIN>",
    "falsifier": "self",
    "id": "F-229",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/health-audit"
+   ],
+   "files": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md#SUM-FOUR-GROUPS-WALKED-BREADTH-FIRST"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "AUDIT.md"
+   ],
+   "cites": [],
+   "reason": "DRIFT on «walked breadth-first», carrying the verdict of the two rules it summarises. The four groups are adopted verbatim in AUDIT.md's header and in PROP-013 §2 — that half is real. The walk is not: the seed run says «it is **not** a fresh full sweep», the 2026-06-10 run says «it is **not** the full §2.2 breadth sweep» and was scoped to C plus the gate panel, and the 2026-06-12 run was the INT-0001 window run scoped to the category it had just added. No run's text records touching A, B, C and D once each before going deep.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "AUDIT.md:14  run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot",
+   "falsifier": "host",
+   "routed_out": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md#SUM-FOUR-GROUPS-WALKED-BREADTH-FIRST"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-235",
    "id_source": "minted",
    "carried": true
   },
@@ -10002,6 +9642,48 @@
    "carried": true
   },
   {
+   "type": "missing-support",
+   "rule": "r-nothing-exists",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/decision-records"
+   ],
+   "files": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/README.md#FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/decision-records",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT on completeness, not on placement. 153 sections in `spec/common/` + `spec/modules/**` carry a bolded Decision label; 4 carry all four fields, 3 carry three, 19 carry two, 127 carry the Decision line alone. Counted twice — the delegated worker's scan and my own independent re-count — agreeing exactly. The anchor half holds — all 153 sit in the section governing the value and no ADR directory exists — so the claim's «at the governing anchor» is right and its «four-field record» is met 2.6 % of the time.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "build-or-demote",
+   "fact": "packages/org.vibevm.world/decision-records/v0.1.0/README.md:12  ##FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR So every choice a future reader could plausibly",
+   "falsifier": "mixed",
+   "routed_out": [
+    "packages/org.vibevm.world/decision-records/v0.1.0/README.md#FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-299",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -10259,6 +9941,132 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-306",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "contradiction",
+   "rule": "r-contradiction",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/health-audit"
+   ],
+   "files": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#SEVERITY-P1-BLOCKER"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "AUDIT.md",
+    "ROADMAP.md"
+   ],
+   "cites": [],
+   "reason": "DRIFT on «resolve before the next milestone ships», and the record disagrees with itself about the finding that proves it. The definition is adopted verbatim in AUDIT.md's header. Three P1s exist; two were fixed in-run. The third, 2026-05-23-01, was never fixed — it was re-judged DOWN to P3 at AUDIT.md:369 and survives as DBT-0001 carrying **[P1]** in `discipline/DEBT.md:29`, still «filed as INT-0002» — while M1.26 and M1.24 were both declared SHIPPED on 2026-07-07. So a P1 outlived two milestones, and the two durable records carry different severities for it today.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
+   "falsifier": "host",
+   "routed_out": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md#SEVERITY-P1-BLOCKER"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-310",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/health-audit"
+   ],
+   "files": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/README.md#A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "ROADMAP.md",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT, and the worker's own evidence settles it against the claim — this row was returned `located` because the search DID answer the question. The last audit run in `AUDIT.md` is 2026-06-12 (`git log -1 --date=short -- AUDIT.md` → `3656f362 2026-06-12`, and `grep -nE '^## ' AUDIT.md` shows no later section). `grep -noE '(SHIPPED|COMPLETE)[^)]*\\(20[0-9]{2}-[0-9]{2}-[0-9]{2}\\)' ROADMAP.md` returns 15 dated ship lines, and **the two most recent — M1.26 and M1.24 — are both SHIPPED (2026-07-07), after the last audit, with no audit section between**. `git log --oneline --since=2026-06-12 | wc -l` is 1 546. Two milestones declared done on an un-audited base is the flow's own `#never` broken twice, on the artefact the flow itself specifies.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
+   "falsifier": "host",
+   "routed_out": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/README.md#A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-311",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/health-audit"
+   ],
+   "files": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md#WALK-THE-CHECKLIST-BREADTH-FIRST-AND-RUN-EACH-AID"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "AUDIT.md",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "DRIFT on the walk, split on the aids. The project-specific-rows clause is well served — PROP-013 §2 carries E1-E4 with their own aids. The breadth-first walk is unconfirmed by any of the three runs, two of which disclaim it in their own text, which is the same measurement ruled at four other facts in this package. The named aids split four ways: the grep-based ones were run and reported at 2026-06-12-11; the CI-config-versus-tree diff exists as self-check.sh step 0b; the coverage tool has no host equivalent; and the dependency audit has never been invoked anywhere.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "prose-edit",
+   "fact": "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
+   "falsifier": "host",
+   "routed_out": [
+    "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md#WALK-THE-CHECKLIST-BREADTH-FIRST-AND-RUN-EACH-AID"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-312",
    "id_source": "minted",
    "carried": true
   },

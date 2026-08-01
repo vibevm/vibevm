@@ -15,6 +15,21 @@ run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot
 outside the gate, **C** drift, **D** debt, **E** discipline depth
 (added 2026-06-12).
 
+**Adopted 2026-08-01 (owner ruling, health-audit flow — the five clauses that
+close F-097/F-141/F-164/F-310/F-311):** finding ids are `YYYY-MM-DD-NN` and
+every new finding carries one (forward-only; pre-2026-06 sections are frozen
+history). `filed` means the finding became a `discipline/registry/debt.json`
+entry (the register, not `TASKS.md`, is the tracked-work home; earlier `filed`
+rows are frozen). New runs record findings as one table row per finding with
+notes below the table — the flow's own shape. **Exception (P1 carry):** a
+vibevm P1 may cross a milestone boundary when it is registered in
+`discipline/registry/debt.json` with an owning `INT-` intent; the register,
+not the milestone, is then its schedule (`DBT-0001`/`INT-0002` is the standing
+instance). **Exception (milestone floor, past):** pre-2026-08 milestones
+shipped without a per-milestone audit run by deliberate practice; forward, «a
+milestone is never declared shipped without one» binds with *milestone* =
+an `M1.NN` line entering the shipped list.
+
 ---
 
 ## Audit run — 2026-05-23 (seed)

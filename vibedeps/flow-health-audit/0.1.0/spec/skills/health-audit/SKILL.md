@@ -10,8 +10,8 @@ description: Run one periodic health audit: walk the category checklist, record 
 ##RUNNING-ONE-PERIODIC-HEALTH-AUDIT You are running one periodic health audit: a breadth-first judgment
 sweep over what the per-commit gate cannot see. @impl/done
 
-##full-protocol-pointer Full protocol in
-`spec/flows/health-audit/`. @impl/done
+##full-protocol-pointer Full protocol:
+@spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#root. @impl/done
 
 ##PRODUCE-A-DRAFT-AND-DO-NOT-COMMIT-WITHOUT-APPROVAL You produce a **draft** `AUDIT.md`
 section; you do not commit without approval. @impl/done

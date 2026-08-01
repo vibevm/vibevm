@@ -26,7 +26,7 @@
 
 ## filed (1)
 
-- **DBT-0001** `coverage-gap` [P1] — Production git-registry + naming path is under-tested _(filed as INT-0002 (the test-hardening work))_
+- **DBT-0001** `coverage-gap` [P3] — Production git-registry + naming path is under-tested _(filed as INT-0002 (the test-hardening work); re-judged P1 → P3 with `AUDIT.md`'s 2026-06-12 carry-forward — the records reconciled 2026-08-01, the audit's later evidenced judgement winning; residual: the `vibe init` default-path e2e)_
 
 ## fixed (7)
 

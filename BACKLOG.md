@@ -448,6 +448,23 @@ already written from it is the specification of the work.)*
   the authoring tokens (the house grammar every agent here reads), and the
   strip waits for the aliasing design rather than shipping half-safe.
 
+### B-012 — PROP-014's specified-not-built mechanism set: research feasibility {#b-012}
+
+| | |
+|---|---|
+| ##B012-ANCHOR **anchor** | the ten annotated facts of `spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014-specmap-bidirectional-traceability` — each now carries its «Specified, not built» clause naming exactly what is absent |
+| ##B012-LOCATOR **locator** | the mechanisms, in one list: package-shipped `specmap.json` index + fetch-by-content-hash; the per-item edge-multiplicity lint in `vibe check`; `CodeItem.content_hash` + derived `Command`/`ErrorVariant` node views; error-rendering **index lookup** with revision + `run: vibe explain` hint (the compile-time-constant doorway ships); the LLM prose producer behind `vibe explain --prose` (deterministic template ships); `[metamodel] profile` runtime profiles; the spec-unit length warning (≤ 120); rustdoc composition in `explain`; `specmap_query` / `specmap_source` MCP tools |
+| ##B012-SEVERITY **severity** | P2 |
+| ##B012-DISPOSITION **disposition** | `open` — **owner directive 2026-08-01: провести исследование, можно ли реализовать** — a feasibility pass per mechanism (each is independently buildable; the annotations name the exact gap), before any Phase E scheduling |
+| ##B012-FILED **filed by** | the packages-actualization campaign, партия 1a, 2026-08-01 |
+
+- ##B012-WHY-RESEARCH-FIRST **Why research-first.** Wave 8/D9 established the corpus-side truth
+  (the annotations); the product-side question — which of the ten are worth
+  building, in what order, and which are better retired from the spec — is a
+  design pass over PROP-014's §13-era ambitions against today's shipped
+  surface. B-001 (the link tables) is the same family and the same trigger
+  logic; the two studies should run together.
+
 ## P3 — accepted, no action planned {#p3}
 
 *(empty)*

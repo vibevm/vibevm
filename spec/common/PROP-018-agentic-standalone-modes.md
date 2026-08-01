@@ -109,6 +109,9 @@ operation's reasoning happen?** @spec/done
   **fails loud** with "this needs an inference backend; run me under an
   agent, or wait for the built-in engine," and a non-reasoning operation
   runs normally. @spec/done
+- ##mode-inferred-why **Why:** §1.2 `##UNIFYING-STATEMENT` fixes what a mode is — *"a mode is a choice of inference backend"* — and §2.3 `##AFFINITY-OF-WORK` fixes who chooses: *"Affinity is a property of the work, not a user choice."* Mode-by-inference is that same principle one level up: which backend can serve a call is a fact about the call's reach, not a preference. @spec/done
+- ##mode-inferred-rejected **Considered and rejected:** **a global mode flag the user sets** (`--mode agentic|standalone` or a `vibe.toml` key) — rejected: a user could then name a backend the operation has no affinity for, which the dispatcher must refuse anyway (`##DISPATCHER-REFUSES`), or name one that does not exist on this machine, which today is every standalone reasoning call (`##REACH-STANDALONE-NO-ENGINE`). The flag would be a way to ask for a refusal. @spec/done
+- ##mode-inferred-revisit **Revisit when:** `BuiltinBackend` ships over `vibe-llm` (`##FB-BUILTIN-BACKEND`, `VIBEVM-SPEC.md` §10.4) — from that day two backends can both serve one standalone call, and *"what backend is available"* stops determining the answer on its own. Observation point: the far-backlog item closing, i.e. a `vibe-llm` inference path in the workspace. Second clause: a reach appears that the inference cannot classify — a persistent console (`##FB-CONSOLE`) or an invocation through a wrapper that hides the agent parentage — observed as a mis-chosen backend in a bug report. @spec/done
 
 ### 2.2 The pluggable inference backend {#pluggable-backend}
 
@@ -157,7 +160,7 @@ operation's reasoning happen?** @spec/done
   agents in a dedicated manifest section — **not** by introducing a
   package kind of its own. The kind register (`package_ref.rs`,
   `VIBEVM-SPEC.md` §4.1) stays closed to skills. @spec/done
-- ##ANY-KIND-RATIONALE Rationale: skills can
+- ##ANY-KIND-RATIONALE **Why:** skills can
   live inside a package of *any* kind and be structured any way. A `tool`
   package `vim` can ship the tool itself **plus** a skill for driving vim
   — one self-contained package, two artefact classes. Kind answers "what
@@ -168,6 +171,8 @@ operation's reasoning happen?** @spec/done
   `mcp` kind with their own laws, owner resolution 2026-07-07:
   [PROP-027](../modules/vibe-mcp/PROP-027-mcp-packages.md). The skill law
   here is unchanged. @spec/done
+- ##skill-decl-rejected **Considered and rejected:** **a fifth package kind for skills** — explicitly rejected (`##OOS-FIFTH-KIND`): kind answers *"what is this package"* while the section answers *"what does it project into an agent"*, and skills can live inside a package of any kind (`##ANY-KIND-RATIONALE`). **MCP servers as a second any-kind section** — proposed in this unit's original text and **superseded**: they became their own `mcp` kind with their own laws, owner resolution 2026-07-07 ([PROP-027](../modules/vibe-mcp/PROP-027-mcp-packages.md), `##MCP-HALF-SUPERSEDED`). The skill law is unchanged; the MCP half is the counter-example that shows where the line falls. @spec/done
+- ##skill-decl-revisit **Revisit when:** an agent-installable artefact class arrives that needs **its own lifecycle laws** — install / uninstall semantics, resolution or conflict rules of its own — rather than only a projection path. That is exactly the state that fired for MCP servers on 2026-07-07 (`##MCP-HALF-SUPERSEDED`), so the trigger has a worked precedent. Observation point: the kind register in `crates/vibe-core` (`package_ref.rs`) and `VIBEVM-SPEC.md` §4.1 — whose `##INV-VOCABULARY` already anticipates `app`; the register growing is the fired state. @spec/done
 
 ##SKILL-TABLE-SHAPE The MVP section is an array-of-tables, matching the manifest's existing
 `[[requires_any]]` / `[[registry]]` / `[[mirror]]` shape: @spec/done
@@ -253,6 +258,9 @@ seam rather than just printing the intent from the producer: @spec/done
 - ##SKILL-STATES-NO-CHANNEL The installed skill (§2.9) states this contract explicitly so agents do
   not wait for a channel that is not there. (Full bidirectional
   conversations are §6.) @spec/done
+- ##relay-why **Why:** the two-step seam buys two properties a direct print cannot, both stated at `##two-step-lead`: **uniformity** — any command that discovers mid-run it needs reasoning parks an intent the same way, so an agent learns one drain verb rather than per-command stdout parsing (`##SEAM-UNIFORMITY`); and **decoupling** — producer and consumer need not be the same invocation, which is what lets a future deterministic command park a reasoning step and exit (`##SEAM-DECOUPLING`). @spec/done
+- ##relay-rejected **Considered and rejected:** **printing the intent directly from the producer**, with no `vibe command` seam — rejected for the two reasons above; it is cheaper by one command and forfeits both. **A return channel (write-back)** — **deferred, not rejected**: the MVP relay is fire-and-forget (`##NO-WRITE-BACK`), the calling agent orchestrates (`##AGENT-ORCHESTRATES`), and full bidirectional conversations are parked at §6 `##FB-CONVERSATIONS`. @spec/done
+- ##relay-revisit **Revisit when:** either the **single slot overflows** — a producer runs while `.vibe/agentic/command.md` already holds an undrained intent, which the mailbox's own shape makes mechanically observable (`##FILE-COMMAND-MD`) — **or** the fire-and-forget contract starts costing a round trip, observed as an agent issuing a follow-up `vibe …` command whose only purpose is to hand a result back (the case `##SKILL-STATES-NO-CHANNEL` tells agents not to expect). Either fires §6's `##FB-CONVERSATIONS`. @spec/done
 
 ### 2.8 One operation, two transports {#transports}
 

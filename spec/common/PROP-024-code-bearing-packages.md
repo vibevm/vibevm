@@ -141,6 +141,8 @@ build-output denylist: @spec/done
   too). @spec/done
 - ##DENYLIST-NOT-SELECTION The denylist formalises "what was never source", it does not introduce
   selection. @spec/done
+- ##shippable-rejected **Considered and rejected:** **hashing and copying build output too** — rejected: non-deterministic and potentially gigabytes, the file-count/byte-count failure PROP-022 §1.1 exists to avoid (`##REJ-HASH-BUILD-OUTPUT`); **a per-file `[ship]` / `[files]` allow-list in the manifest** — rejected: it resurrects the per-file write list PROP-009 §2.6 retired, and a denylist keeps *"what ships" == "the source"*, preserving the verbatim guarantee (`##REJ-ALLOW-LIST`, `##VERBATIM-PRESERVED`). @spec/done
+- ##shippable-revisit **Revisit when:** a package ships in a language whose build output the four-name denylist does not cover and `.vibeignore` alone cannot carry — Python (`__pycache__/`, `.venv/`), JVM (`build/`), Go (`vendor/`) are the near candidates. **The fired state is mechanically observable and already asserted:** a package whose `content_hash` differs between a clean and a built checkout, which is exactly what `##ACC-HASH-EXCLUDES` tests. Observation point: that acceptance check, run over the published package set. @spec/done
 
 ### 2.3 Code materialises, then builds consumer-side into a gitignored target {#build}
 
@@ -209,6 +211,9 @@ neither the slot nor the consumer's own `target/`. @spec/done
 - ##SPIKE-FALLBACK The fallback, if cross-workspace path-deps prove unworkable on a host, is §4's
   rejected-but-retained alternative (the consumer adds the slot crates as its
   own workspace members) — chosen only on evidence. @spec/done
+- ##own-workspace-why **Why:** an external constraint, not a preference — *"Cargo forbids a directory living in two workspaces, and this is the standard resolution for a repo that contains a sub-project with its own workspace"* (`##WORKSPACE-EXCLUDE`). Giving the package its own workspace is what makes it *"a standalone, independently-buildable project"* (`##OWN-WORKSPACE`) and keeps a version bump to one pinned line (`##PIN-ONCE`). @spec/done
+- ##own-workspace-rejected **Considered and rejected:** **the consumer adding the slot crates as its own workspace members** (no package workspace, no cross-workspace path-dep) — *considered*, and rejected as the **primary** model because it denies the package standalone-buildability and couples the consumer's workspace membership to generated `vibedeps/` state (`##REJ-CONSUMER-MEMBERS`). **Retained, not discarded**: it is the §2.4 fallback, *"chosen only on evidence"* (`##SPIKE-FALLBACK`). @spec/done
+- ##own-workspace-revisit **Revisit when:** cross-workspace path-deps prove unworkable on a supported host — the condition `##SPIKE-FALLBACK` already names, here given its observation point: a clean-checkout `cargo build` failing to resolve `vibedeps/<slot>/crates/<crate>` on any of the three platforms of PROP-000 §11 `##PLATFORMS-TRIO`, Windows first (`##SPIKE-FIRST`). The fired state has a landing place already specified, so reopening is a switch, not a redesign. @spec/done
 
 ### 2.5 Self-hosting bootstrap — the toolchain is vendored {#bootstrap}
 
@@ -222,6 +227,9 @@ neither the slot nor the consumer's own `target/`. @spec/done
   in the tree. @spec/done
 - ##NO-CHICKEN-EGG There is no chicken-and-egg: the toolchain a build needs is vendored
   beside the code that needs it. @spec/done
+- ##bootstrap-why **Why:** committing the slot is what makes a fresh clone build *"from a clean checkout with no prior `vibe install`"* — the path-dep target already exists in the tree (`##CLEAN-CLONE-BUILDS`), so there is no chicken-and-egg between the toolchain a build needs and the build that would fetch it (`##NO-CHICKEN-EGG`). Acceptance already asserts it: `##ACC-CLEAN-CLONE`. @spec/done
+- ##bootstrap-rejected **Considered and rejected:** **`materialization = "in-place"` for the tool packages** — rejected: `in-place` slots are `.gitignore`d and unversioned (PROP-022 §2.4/§2.7), and the toolchain must be vendored and versioned so a clone is buildable offline (`##REJ-IN-PLACE`). **Publishing the tool crates to crates.io and depending on the published versions** — **deferred, not rejected**: *"the installed package is the distribution"*, and crates.io publication is *"an optional later convenience for non-vibe Rust consumers, not a requirement of this model"* (`##REJ-CRATES-IO`). @spec/done
+- ##bootstrap-revisit **Revisit when:** the committed slot's cost outgrows its guarantee — `git count-objects -vH` and the slot's on-disk size showing a clean clone expensive enough to outweigh the offline-buildability it buys (numeric threshold unset — owner 2026-08-01; event-shaped until set) — **or** the deferred demand arrives: a Rust consumer outside the vibe ecosystem needs `conform` / `specmap` without installing a vibe package, recorded in the `F-NNN` findings ledger so the signal has a place to be observed (`##REJ-CRATES-IO`). @spec/done
 
 ##DEV-LOOP-MUTABLE The development loop stays ergonomic: editing the in-repo package source under
 `packages/org.vibevm.ai-native/rust-ai-native/…` re-materialises the slot automatically on
@@ -257,6 +265,9 @@ L4 (implemented checkers) ships in the package whose language they check. @spec/
   ordering is driven by real second-language demand, not built speculatively.
   **Executed** — the TypeScript pilot was that demand, and the neutral halves now live
   in core-ai-native, vendored into each family by `cargo xtask sync-engines`. @impl/done
+- ##placement-why **Why:** the toolchain's *"centre of gravity is Rust, and shipping the toolchain whole avoids carving language-neutral cores out under time pressure"* (`##THIS-PASS-WHOLE-TOOLCHAIN`); the layer model then decides placement rather than convenience — L4 ships with the language it checks. Recorded the same session the decision was taken (§7 `##HIST-DRAFT-1`, 2026-06-27). @spec/done
+- ##placement-rejected **Considered and rejected:** **extracting the language-neutral cores (`conform-core`, the neutral half of `specmap-core`) up into core-ai-native in the same pass** — **deferred, not rejected**, with its condition stated: *"taken when the first non-Rust pilot needs it (YAGNI until then)"* (`##DEFERRED-ENGINE-SPLIT`). **The deferral has since been honoured**: the TypeScript pilot was that demand, the condition fired, and the neutral engines now live in core-ai-native, vendored by `cargo xtask sync-engines` (`##CORE-STAYS-PROMPT-ONLY`). @spec/done
+- ##placement-revisit **Revisit when:** *(a successor trigger — the previous one fired with the TypeScript pilot and is spent)* a **third** language family arrives and the neutral engines do not cover it — observed as `cargo xtask sync-engines` being unable to vendor a core byte-identically into the new `-lang` package, or a third family needing a core the two existing ones do not share. Observation point: the `sync-engines` task and the set of `*-ai-native-lang` / `*-ai-native-mcp` packages. @spec/done
 
 ---
 

@@ -177,6 +177,7 @@ When the user issues any of the trigger phrases below, treat it as a structured 
 
 1. **Overwrite `CONTINUE.md` at repo root** with a comprehensive cold-resume document. If the file exists, replace it wholesale (do not append — staleness compounds otherwise). The body must include, at minimum:
    - A short TL;DR / executive summary at the top.
+   - The open health-audit findings: a pointer at `AUDIT.md`'s active subset (never a mirror — `AUDIT.md` is the durable home).
    - Where work currently stands (branch, ahead/behind origin, working tree status).
    - The active blocker (if any) and the exact human action that unblocks it.
    - Exact next-steps recipe (commands, file paths, line numbers) for whoever picks up cold.

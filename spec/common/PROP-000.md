@@ -49,6 +49,7 @@
 
 - ##LICENSE-OWNER-CALL **Why:** Owner's call, taken 2026-07-12 and executed the same day: the whole shipped surface — the host tree and every `packages/org.vibevm.*` package — carries UPL-1.0, so a consumer of any part of vibevm gets one permissive licence and no per-package archaeology. @spec/done
 - ##LICENSE-SPEC-DEFERS `VIBEVM-SPEC.md` §1 explicitly defers the *produced* software's license to the owner; the owner's choice is UPL-1.0. @spec/done
+- ##license-rejected **Considered and rejected:** the placeholder **proprietary EULA** of the project's first phase — superseded 2026-07-12, *"that phase is over"* (`##LICENSE-EULA`); **per-package licensing** across the shipped surface — rejected because a consumer of any part of vibevm would then face per-package archaeology instead of one permissive licence (`##LICENSE-OWNER-CALL`); **any copyleft licence** (GPL / AGPL / LGPL) — never in contention, for the same reason it is forbidden in dependencies: it would force the whole product to relicense, *"which is exactly what UPL-1.0 exists to prevent"* (`##COPYLEFT-FORBIDDEN`, `##PROPRIETARY-TIGHTENS`). @spec/done
 
 - ##DEPS-PERMISSIVE-ONLY **Third-party dependencies remain permissive-only.** Per `VIBEVM-SPEC.md` §10.3: every crate we depend on must be MIT / Apache-2.0 / BSD or equivalent. @spec/done
 - ##COPYLEFT-FORBIDDEN GPL / AGPL / LGPL are forbidden, period. @spec/done
@@ -124,6 +125,9 @@
 - ##GRAPH-BUILTIN-NODES **Decision:** Built-in nodes only in v1 (content-only plugin contribution model per `VIBEVM-SPEC.md` §5.4). @spec/done
 - ##RUNNER-SEQUENTIAL Runner is sequential (no parallelism) in v1 per §5.2. @spec/done
 - ##TYPED-VALUES Typed value system per §5.3. @spec/done
+- ##graph-nodes-why **Why:** the frozen `VIBEVM-SPEC.md` §5.4 states the constraint and its reason: v1's contribution model is *content-only* — *"a package materialises as a verbatim `vibedeps/` subtree and contributes a boot snippet, but does not contribute executable nodes. This keeps v1 small."* @spec/done
+- ##graph-nodes-rejected **Considered and rejected:** **packages contributing executable / LLM nodes** (e.g. a flow adding a `wal:checkpoint` node bound after `build:compile`) — **deferred, not rejected**: `VIBEVM-SPEC.md` §5.4 targets v1.5 and directs *"document the extension point but do not implement it in v1."* Plugins influence the graph in v1 only by changing what content the built-in nodes operate on. @spec/done
+- ##graph-nodes-revisit **Revisit when:** the v1.5 milestone opens — `VIBEVM-SPEC.md` §5.4 names it as the target for the extension point (observation point: the milestone list in `spec/WAL.md`) — or earlier, when a published package needs a graph node the built-in set does not provide, observed as a `[hooks].post-install` doing work a node should do or a `requires` no built-in node can satisfy (adopted with both clauses, owner 2026-08-01). @spec/done
 
 ##WORKFLOWS-QUERIES Workflows are graph queries (target node + transitive dependencies) per §5.5. @spec/done
 
@@ -176,6 +180,8 @@
 
 - ##MIRROR-WHY-DRIFT **Why:** a single source of truth for source-and-target paths eliminates a whole class of authoring bug where the package layout drifts from the declared writes. @spec/done
 - ##MIRROR-WHY-READABLE It also makes a package directory instantly readable — a human looking at the tree knows exactly what will appear in a consumer's project without cross-referencing a separate mapping table. @spec/done
+- ##mirror-rejected **Considered and rejected:** a **per-entry `target = "…"` field** in `writes.files` — rejected because `writes.files` would stop being the single source of truth for *"where does this file go?"* (`##NO-TARGET-FIELD`), reviving the authoring-drift bug `##MIRROR-WHY-DRIFT` names and costing the package directory its at-a-glance readability (`##MIRROR-WHY-READABLE`). `[boot_snippet].source` is the **one retained exception**, not a rejection: its target is the fixed `spec/boot/<filename>` (`##BOOT-SNIPPET-EXCEPTION`). @spec/done
+- ##mirror-revisit **Revisit when:** a **second** source/target exception is proposed — i.e. any manifest table beyond `[boot_snippet]` needing an install path that differs from its in-package path. Observation point: the manifest schema in [`crates/vibe-core`](../../crates/vibe-core/) — a per-entry target field appearing there *is* the fired state. One exception stands today; a second means the mirror rule is carrying less than `##MIRROR-LAYOUT` claims. @spec/done
 
 - ##MIRROR-PINNED **Where pinned:** `VIBEVM-SPEC.md` §13.1 shows the mirror-layout diagram and §13.2 the matching manifest. This PROP-000 entry is the decision record; the spec carries the operational definition. @spec/done
 - ##INSTALL-RELIES `vibe-install` relies on this convention — the source path of a planned write is computed by joining `cache_dir` with the manifest's declared target path. @spec/done
@@ -222,6 +228,8 @@
 
 - ##READMISSIBLE **Concrete consequences:** libraries previously rejected on footprint grounds are re-admissible. Notable: `libsolv` (C, with Rust bindings), `git2` (wrapping `libgit2`), bundled native C deps, embedded interpreters when justified. @spec/done
 - ##PROP-001-PRUNE The size-based argument in [PROP-001 §2.1](../modules/vibe-registry/PROP-001-git-backend.md#backend) against `git2` is to be pruned — the remaining arguments (Windows SSH auth, shell-out diagnostic clarity) may still carry that decision, but not the size one. @spec/done
+- ##dep-weight-rejected **Considered and rejected:** the **predecessor policy — reject a dependency on footprint** (binary size, crate count, transitive weight) — rejected, and its consequences already executed in this section: libraries previously refused on footprint grounds are re-admissible, `libsolv` and `git2` named (`##READMISSIBLE`), and PROP-001 §2.1's size-based argument against `git2` is marked for pruning (`##PROP-001-PRUNE`). Four grounds survive and are the *only* ones — licence, abandonment, demonstrated security issues, API ergonomics (`##REJECT-LICENSE` … `##REJECT-ERGONOMICS`); *"too heavy" alone is not a reason* (`##TOO-HEAVY-NOT-REASON`). @spec/done
+- ##dep-weight-revisit **Revisit when:** the premise of `##WHY-PRECEDENT` — that weight does not cost us — stops holding: a dependency is admitted whose weight measurably degrades a user-visible surface (install time, first-run latency, release binary size), recorded as a finding. Observation points exist today — the release artefact's size and `cargo build --timings`; numeric thresholds were offered and not set (owner, 2026-08-01), so the trigger is event-shaped until numbers exist. @spec/done
 
 ---
 
@@ -233,6 +241,8 @@
 
 - ##JTD-WHY-SKEW **Why:** duplication between a server contract and a hand-written client is a classic source of version-skew bugs; schema-first codegen eliminates that class of bug categorically. @spec/done
 - ##JTD-OVER-JSONSCHEMA JTD specifically (over JSON Schema / OpenAPI alone) because JTD is deliberately narrower: its schema grammar is constructed so every JTD schema maps to a clean static type in every target language, with no language-specific escape hatches. @spec/done
+- ##jtd-rejected **Considered and rejected:** **JSON Schema / OpenAPI alone** — rejected: JTD is *"deliberately narrower: its schema grammar is constructed so every JTD schema maps to a clean static type in every target language, with no language-specific escape hatches"* (`##JTD-OVER-JSONSCHEMA`); **a hand-written client against each server contract** — rejected: that duplication is *"a classic source of version-skew bugs"* which codegen eliminates categorically (`##JTD-WHY-SKEW`, `##NO-DUPLICATION`). The boundary in the other direction is not a rejection: human-edited manifests stay TOML via `serde` — *"JTD is for wire, not for configs humans hand-edit"* (`##JTD-OUT-OF-SCOPE`). @spec/done
+- ##jtd-revisit **Revisit when:** either upstream fails us — **`jtd-codegen` ships no release for 24 months** (observation point: its upstream repository, version-pinned in `tools/jtd-codegen/` per `##TC-BINARY`) — **or** a contract listed in `##JTD-IN-SCOPE` proves inexpressible in JTD's grammar and would need an escape hatch, which is the property `##JTD-OVER-JSONSCHEMA` bought the narrowness for. Observation point for the second: the first schema in `schemas/` that cannot be written. @spec/done
 
 ##JTD-IN-SCOPE **In scope:** LLM provider API wrappers (Anthropic, OpenAI, OpenRouter, Ollama), GitVerse public-API client, `vibe --json` CLI output, telemetry / event log formats, future hosted-registry HTTP surface. @spec/done
 

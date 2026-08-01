@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-07-31T21:37:29Z",
+  "updated_at": "2026-08-01T06:34:21Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "d527b9e4fb90e8e72fa5d9f065de57626216e7e0fa30c08ef114e228b46093ee",
@@ -6049,7 +6049,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
-      "content_hash": "3a055cf0d1335eec8028679c33394b9748df24d1f6de9ae175d2c0b91fe84c45",
+      "content_hash": "0f517ab8fd729f080c13adedebc098ddce2ca97381d69e820dfdebcb46e1390a",
       "rollup": {
         "explicit": [
           "spec",
@@ -6071,7 +6071,7 @@
       "unit_count": 27,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "3a055cf0d1335eec8028679c33394b9748df24d1f6de9ae175d2c0b91fe84c45",
+        "processed_hash": "0f517ab8fd729f080c13adedebc098ddce2ca97381d69e820dfdebcb46e1390a",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -6270,10 +6270,9 @@
             ]
           },
           "DISTRIBUTION-RIDES-THE-EXISTING-REGISTRY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/lib.rs:54  pub fn content_hash(text: &str) -> String {",
-              "no package ships an index. The host commits `specmap.json` and is not a published package; no `packages/**` slot carries one, and there is no content-hash fragment fetch anywhere"
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "CLOSED-SOURCE-PROJECTS-SHIP-A-REDACTED-PROFILE": {
@@ -6559,9 +6558,9 @@
             ]
           },
           "RULE-MULTIPLICITY-LINT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "`vibe check` carries eleven checks — activation_conflict, boot_directory, features_graph, i18n_coverage, lockfile_files, manifest_validity, redirect_block, review_aging, subskill_structure, wal_freshness, wal_wellformed — and no multiplicity lint among them"
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "kind-line-edges": {
@@ -6581,12 +6580,9 @@
             ]
           },
           "EDGE-MODEL-NODES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:150  pub struct SpecUnit {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:34  pub struct CodeItem {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs:43  pub itemKind: String,",
-              "read from the host's committed index 2026-07-28: `spec_unit` carries a content_hash, `code_item` does not (crate_name, file, item_kind, line, symbol). The derived Command and ErrorVariant nodes do not exist at all"
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "EDGE-MODEL-EDGES": {
@@ -6673,11 +6669,9 @@
             ]
           },
           "QUERY-ERROR-PROVENANCE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:49  pub fn req_message(uri: &str, why: &str, fix_surface: &str) -> String {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:50  format!(\"violates REQ {uri}: {why}; fix surface: {fix_surface}\")",
-              "the `violates spec://…` string that exists is conform's rule-finding grammar with a hardcoded URI, not an index lookup of a failing error variant. No error rendering consults the map"
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "QUERIES-LIVE-BEHIND-XTASK-DURING-THE-PILOT": {
@@ -6703,12 +6697,9 @@
             ]
           },
           "LLM-AS-RENDERER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:133  let subgraph = crate::explain::explain_json(map, target)?;",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:168  fn render_prose(",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:10  //! LLM; an LLM prose producer slots in later under its own producer",
-              "`explain --prose` has no provider to feed: the prose producer is a deterministic template and the ledger's own header says an LLM producer 'slots in later'"
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "LLM-NEVER-SILENTLY-WRITES-EDGES": {
@@ -6722,8 +6713,7 @@
           "RUNTIME-TRANSPORT": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/*-ai-native-mcp/  three MCP servers are the transport this fact describes",
-              "re-judged in wave 7 on the perimeter correction; the transport ships, one layer out from where the search looked."
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "RUNTIME-DISTRIBUTION": {
@@ -6733,10 +6723,9 @@
             ]
           },
           "RUNTIME-PROFILES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/vibe.toml:11  [compatibility]",
-              "`[metamodel] profile` is in no manifest schema and no parser; the three profile values have no representation"
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "RUNTIME-SECURITY-IS-NON-OPTIONAL": {
@@ -6865,9 +6854,9 @@
             ]
           },
           "SPEC-PRINCIPLE-UNITS-FIT-A-PAGE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "the fact names a specific checker behaviour — `vibe check` warns beyond ~120 lines — and `vibe check` has no such warning in any of its eleven checks"
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "RUST-PRINCIPLES-ARE-NOT-A-GENERAL-STYLE-GUIDE": {
@@ -6912,11 +6901,9 @@
             ]
           },
           "RUST-PRINCIPLE-RUSTDOC-IS-THE-DETAIL-LAYER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmark/src/lib.rs:43  #[doc = #doc]",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/explain.rs:123  fn explain_symbol(map: &Specmap, target: &str) -> Result<String> {",
-              "`explain` cannot compose rustdoc detail: `code_item` carries no doc field in the index, and the renderer emits symbol, kind, crate, file, line and edges only"
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "RUST-PRINCIPLE-NO-ORPHAN-PUBLIC-API": {
@@ -7268,12 +7255,9 @@
             ]
           },
           "ROW-PRIOR-ART-SYN-TREE-SITTER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:44  syn = { version = \"2\", features = [\"full\", \"visit\"] }",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/Cargo.toml:16  syn.workspace = true",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:243  match syn::parse_file(text) {",
-              "@spec/done, and half of it is wrong about the present: `syn` is a real implementation dependency; tree-sitter is not a dependency of anything in this repository"
+              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
             ]
           },
           "ROW-PRIOR-ART-SIGSTORE": {
@@ -7397,8 +7381,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T15:54:43Z",
-        "verify_batch": "C1 + D5b + D7 + D10-groupA"
+        "verified_at": "2026-08-01T06:34:21Z",
+        "verify_batch": "C1 + D5b + D7 + D10-groupA + D13-1a"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md": {
@@ -36162,18 +36146,12 @@
             ]
           },
           "FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/README.md:12  ##FOUR-FIELD-RECORD-AT-THE-GOVERNING-ANCHOR So every choice a future reader could plausibly",
-              "spec/boot/STATIC.md:248  gets a **four-field record at the spec anchor that governs the value**:",
-              "spec/modules/vibe-progress/PROP-043-progress-markup.md:91  ##DECISION-ELEMENT-NAME **Decision — element name `status`, not `progress`.** @impl/done",
-              "spec/modules/vibe-cli/PROP-036-package-tree.md:88  ##DECISION-ARTIFACTS-CANONICAL **Decision — read the effective type from the artifacts, not a fresh recompute.** @spec/done",
-              "DRIFT on completeness, not on placement. 153 sections in `spec/common/` + `spec/modules/**` carry a bolded Decision label; 4 carry all four fields, 3 carry three, 19 carry two, 127 carry the Decision line alone. Counted twice — the delegated worker's scan and my own independent re-count — agreeing exactly. The anchor half holds — all 153 sit in the section governing the value and no ADR directory exists — so the claim's «at the governing anchor» is right and its «four-field record» is met 2.6 % of the time."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "tribal-knowledge-in-a-pure-human-team": {
@@ -36448,7 +36426,7 @@
           }
         },
         "verified_at": "2026-07-28T20:04:56Z",
-        "verify_batch": "W3"
+        "verify_batch": "W3 + D13-adopt"
       }
     },
     "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md": {
@@ -36515,18 +36493,12 @@
             ]
           },
           "ANY-REOPENABLE-CHOICE-GETS-A-RECORD": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:16  ##ANY-REOPENABLE-CHOICE-GETS-A-RECORD Any choice a future reader could plausibly re-open — a library pick,",
-              "spec/boot/STATIC.md:246  Any choice a future reader could plausibly re-open — a library pick,",
-              "spec/boot/STATIC.md:248  gets a **four-field record at the spec anchor that governs the value**:",
-              "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:42  ##IDENTITY-TUPLE **Decision.** A package's identity is the tuple `(kind, name, version, content_hash)`. The `content_hash` is `sha256:<hex>` over the deterministically-ordered concatenation of `(rel_path_bytes || 0x00 || file_bytes || 0x00)` for every file in the package directory (the existing scheme from `compute_content_hash` in `vibe-registry`). [PROP-024 §2.2](../../common/PROP-024-code-bearing-packages.md#shippable-tree) re-scopes this to the package's **shippable tree** — its source, minus build output (`.git/`, `.vibe/`, `target/`, `node_modules/`, `.vibeignore` globs) — so a code-bearing package's identity is its source, not its build state; that exclusion lands with the code that implements it. The URL used to fetch the content is **informational** — recorded in the lockfile for debuggability, not for identity. @impl/done",
-              "DRIFT: the host writes at the reopenable choices and writes a RECORD at four of them. 153 sections in `spec/common/` + `spec/modules/**` carry a bolded Decision label; 4 carry all four fields, 3 carry three, 19 carry two, 127 carry the Decision line alone. Counted twice — the delegated worker's scan and my own independent re-count — agreeing exactly."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "ROW-FIELD-DECISION": {
@@ -36574,18 +36546,12 @@
             ]
           },
           "ROW-FIELD-WHEN-TO-REVISIT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:25  | ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | A measurable trigger: metric + threshold + where it is observed. @impl/done |",
-              "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would",
-              "spec/common/PROP-000.md:23  ##LANG-REVISIT **When to revisit:** Never, in the scope of v1. If Rust proves inadequate for a future milestone, open a new PROP superseding this one. @spec/done",
-              "DRIFT on the field's own definition — «a measurable trigger: metric + threshold + where it is observed». Applied to all 11 host revisit lines individually: 1 carries metric + threshold, 1 names an observation point, NONE carries all three. Eight are event-shaped without a threshold; two refuse revisiting outright. 142 of 153 Decision sections carry no revisit condition at all."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "NO-SEPARATE-ADR-DIRECTORY": {
@@ -36655,17 +36621,12 @@
             ]
           },
           "ASK-RATHER-THAN-INVENT-DATA": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:42  2. ##ASK-RATHER-THAN-INVENT-DATA If the why or the trigger is not known, ask. Do not invent data;",
-              "spec/boot/STATIC.md:271  2. If the why or the trigger is not known, ask. Do not invent data;",
-              "spec/common/PROP-000.md:29  ##WORKSPACE-LAYOUT **Decision:** Single Cargo workspace at repo root. Crates live under `crates/` per `VIBEVM-SPEC.md` §10.2: @spec/done",
-              "DRIFT on its second clause, which is countable: «do not record a two-field stub» — the host records 19 of them in `spec/common/` + `spec/modules/**`, plus 3 three-field records, against 4 complete ones. The do-not-invent-data half holds: no fabricated measurement was found in any host why."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "READ-THE-RECORD-BEFORE-CHANGING-THE-VALUE": {
@@ -36798,23 +36759,17 @@
             ]
           },
           "NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md:77  - ##NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER Never record a decision with a missing reason or a missing revisit",
-              "spec/boot/STATIC.md:299  - Never record a decision with a missing reason or a missing revisit",
-              "spec/common/PROP-000.md:100  - ##REG-M0 **Decision:** **M0:** local-directory registry only. No git. Registry is a path on disk with the layout from `VIBEVM-SPEC.md` §8.2. @spec/done",
-              "packages/org.vibevm.world/two-process-model/v0.1.0/spec/flows/two-process-model/TWO-PROCESS-MODEL.md:157  ##RE-DERIVE-THE-SPLIT-WHEN-CAPABILITIES-MOVE Re-derive the split when the underlying capabilities move —",
-              "DRIFT, and this is the never the host breaks most often: «a fact with decoration, not a record» is precisely what 149 of its 153 Decision sections are. 153 sections in `spec/common/` + `spec/modules/**` carry a bolded Decision label; 4 carry all four fields, 3 carry three, 19 carry two, 127 carry the Decision line alone. Counted twice — the delegated worker's scan and my own independent re-count — agreeing exactly. The rule names the failure exactly and the corpus is made of it."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           }
         },
         "verified_at": "2026-07-31T20:38:28Z",
-        "verify_batch": "W3 + D11-address"
+        "verify_batch": "W3 + D11-address + D13-adopt"
       }
     },
     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md": {
@@ -36840,7 +36795,7 @@
       "unit_count": 10,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "fc347433b5c71707cec90d03a6027c104d9e1479d95fab83605c18af9d4d275c",
+        "processed_hash": "5ef39412a555b6b100790d78b33120dd2a0b62f4fdbdc1a6a4ea7939f62b11a2",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -37054,18 +37009,12 @@
             ]
           },
           "EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:71  ##EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS Every record carries exactly four fields: @impl/done",
-              "spec/boot/STATIC.md:250  | Field | Requirement |",
-              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:83  **Decision.** The verdict object grows a third key: `{v, ev[], src:[…]}`, where",
-              "spec/modules/vibe-actions/PROP-039-action-system.md:339  - ##decision-records-home The load-bearing decisions (four-field: Decision · Why · Rejected · Revisit) are recorded at their",
-              "DRIFT, and it is the batch's headline: 4 of 153. counted twice by two instruments that agree byte for byte — the delegated worker's scan and my own independent re-count. A section-scoped sweep of every markdown file under `spec/common/` and `spec/modules/**` for a bolded Decision label finds 153 sections. Of those: 4 carry all four fields, 3 carry three, 19 carry two, and 127 carry the Decision line ALONE. `spec/common/` contributes 0 of the four; all four are in `spec/modules/` (PROP-036 §2.3, PROP-043 §§3.1, 3.3, 3.8). The word is «every»; the measured rate is 2.6 %. Placement, which the same protocol also requires, is obeyed almost everywhere — all 153 sit inside the section that governs the value — so what fails is completeness, not location."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "ROW-FIELD-DECISION": {
@@ -37113,18 +37062,12 @@
             ]
           },
           "ROW-FIELD-WHEN-TO-REVISIT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:78  | ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | A measurable trigger: metric + threshold + where it is observed. \"Later\" is not a trigger. @impl/done |",
-              "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would",
-              "spec/modules/vibe-registry/PROP-001-git-backend.md:113  ##revisit-lead **When to revisit:** if and when we need one of: @spec/done",
-              "DRIFT on the field's own definition — «a measurable trigger: metric + threshold + where it is observed» — measured against every host instance individually rather than by rule. Eleven revisit lines exist across `spec/`. ONE carries a metric and a threshold (PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116, «a third of `world`'s units land `unverifiable`»); eight are event-shaped with no threshold; two refuse revisiting outright (PROP-000.md:23 «Never, in the scope of v1»; PROP-043:141 «never expected»). NONE carries all three parts, and only PROP-043:255 names a place to look. 142 of the 153 Decision-bearing sections carry no revisit condition at all."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "why-three-of-the-four-fields-exist": {
@@ -37592,17 +37535,12 @@
             ]
           },
           "SUM-FOUR-FIELDS-ALWAYS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/DECISION-RECORDS-PROTOCOL.md:228  - ##SUM-FOUR-FIELDS-ALWAYS Four fields, always: Decision / Why (measured, cited) / Considered",
-              "spec/boot/STATIC.md:248  gets a **four-field record at the spec anchor that governs the value**:",
-              "spec/modules/vibe-cli/PROP-036-package-tree.md:95  - ##decision-artifacts-revisit **When to revisit:** if the artifacts stop being committed (generated",
-              "DRIFT on «always», the same census as EVERY-RECORD-CARRIES-EXACTLY-FOUR-FIELDS. counted twice by two instruments that agree byte for byte — the delegated worker's scan and my own independent re-count. A section-scoped sweep of every markdown file under `spec/common/` and `spec/modules/**` for a bolded Decision label finds 153 sections. Of those: 4 carry all four fields, 3 carry three, 19 carry two, and 127 carry the Decision line ALONE. `spec/common/` contributes 0 of the four; all four are in `spec/modules/` (PROP-036 §2.3, PROP-043 §§3.1, 3.3, 3.8). W1's precedent judges a summary restatement of a broken rule with the rule."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "SUM-RECORDS-LIVE-AT-THE-ANCHOR": {
@@ -37661,8 +37599,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T20:01:39Z",
-        "verify_batch": "W3"
+        "verified_at": "2026-08-01T06:34:21Z",
+        "verify_batch": "W3 + D13-adopt"
       }
     },
     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md": {
@@ -37787,18 +37725,12 @@
             ]
           },
           "ROW-FIELD-WHEN-TO-REVISIT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:45  | ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | Metric + threshold + observation point; a stranger can answer \"has it fired?\". @impl/done | \"Later\", \"when it breaks\", \"when we refactor\". @impl/done |",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would",
-              "spec/common/PROP-000.md:23  ##LANG-REVISIT **When to revisit:** Never, in the scope of v1. If Rust proves inadequate for a future milestone, open a new PROP superseding this one. @spec/done",
-              "spec/modules/vibe-registry/PROP-001-git-backend.md:113  ##revisit-lead **When to revisit:** if and when we need one of: @spec/done",
-              "DRIFT on the field's own definition — «a measurable trigger: metric + threshold + where it is observed». Applied to all 11 host revisit lines individually: 1 carries metric + threshold, 1 names an observation point, NONE carries all three. Eight are event-shaped without a threshold; two refuse revisiting outright. 142 of 153 Decision sections carry no revisit condition at all."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "worked-example-session-narration": {
@@ -38024,17 +37956,12 @@
             ]
           },
           "SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/record-template.md:149  - ##SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER Why with data; rejections with reasons; trigger with metric,",
-              "spec/boot/STATIC.md:255  | **When to revisit** | A measurable trigger: metric + threshold + where it is observed. |",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:116  **Revisit when:** a third of `world`'s units land `unverifiable` — that would",
-              "DRIFT on all three clauses, each measured. Why with data: 0 of the 22 whys in `spec/common/` + `spec/modules/**` names a log path, a sample size or a benchmark run. Rejections with reasons: the field appears 6 times against 153 records. Trigger with metric + threshold + observation point: 0 of 11. The one place all three land is the campaign's own batch plan §2, outside the spec tree this summary governs."
+              "closed by adoption, owner ruling B+A' executed 2026-08-01: the four-field form is live in the host — the criterion and forward-only rule at spec/design/README.md#owed-a-record, the genre row ##ROW-NO-DECISIONS, and twelve complete records now inside their owning spec/common sections (PROP-000 x5, PROP-018 x3 with the Rationale->Why relabel, PROP-024 x4), every why sourced from the record and every trigger carrying an observation point; harvest d12-adr-execution-material.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "SUM-THE-BEFORE-AFTER-TEST": {
@@ -38067,7 +37994,7 @@
           }
         },
         "verified_at": "2026-07-29T17:25:49Z",
-        "verify_batch": "W3 + D3b"
+        "verify_batch": "W3 + D3b + D13-adopt"
       }
     },
     "packages/org.vibevm.world/decision-records/v0.1.0/spec/flows/decision-records/revisit-triggers.md": {
@@ -46769,15 +46696,11 @@
             ]
           },
           "A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
-              "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-              "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
-              "DRIFT, and the worker's own evidence settles it against the claim — this row was returned `located` because the search DID answer the question. The last audit run in `AUDIT.md` is 2026-06-12 (`git log -1 --date=short -- AUDIT.md` → `3656f362 2026-06-12`, and `grep -nE '^## ' AUDIT.md` shows no later section). `grep -noE '(SHIPPED|COMPLETE)[^)]*\\(20[0-9]{2}-[0-9]{2}-[0-9]{2}\\)' ROADMAP.md` returns 15 dated ship lines, and **the two most recent — M1.26 and M1.24 — are both SHIPPED (2026-07-07), after the last audit, with no audit section between**. `git log --oneline --since=2026-06-12 | wc -l` is 1 546. Two milestones declared done on an un-audited base is the flow's own `#never` broken twice, on the artefact the flow itself specifies."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -47009,7 +46932,7 @@
           }
         },
         "verified_at": "2026-07-28T21:51:30Z",
-        "verify_batch": "W5"
+        "verify_batch": "W5 + D13-adopt"
       }
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md": {
@@ -47099,33 +47022,20 @@
             ]
           },
           "AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:16  The audit is **owner-triggered**, with a floor of **at least once per",
-              "spec/boot/STATIC.md:762  The audit is **owner-triggered**, with a floor of **at least once per",
-              "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
-              "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
-              "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
-              "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-              "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
-              "DRIFT on the floor, confirmed on the trigger. Owner-triggered holds: `AUDIT.md:193` records the 2026-06-12 run as «Owner-requested» with the instruction quoted, and the absence of an audit trigger phrase in the agent contracts (`grep -ni 'audit' CLAUDE.md` → zero) is consistent with an owner-narrated trigger rather than an automated one. The FLOOR does not: the 2026-06-10 run was a milestone close-out and met it, but since 2026-06-12 the two most recent ROADMAP ship lines — M1.26 and M1.24, both SHIPPED (2026-07-07) — carry no audit section between them and the last run, across 1 546 commits. «At least once per milestone» is the flow's own word for a minimum, and it has been missed twice."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
           "A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:18  milestone is never declared done on an un-audited base. The owner",
-              "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
-              "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-              "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
-              "DRIFT, the same measurement as this fact's twin in the package README and ruled identically. Last audit 2026-06-12; M1.26 and M1.24 both SHIPPED (2026-07-07) with no audit section between; 1 546 commits in the gap. Two milestones declared done on an un-audited base, in the file this flow itself specifies."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -47199,18 +47109,12 @@
             ]
           },
           "USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:31  Use the **`health-audit`** skill: it reads the category checklist,",
-              "spec/boot/STATIC.md:777  Use the **`health-audit`** skill: it reads the category checklist,",
-              "packages/org.vibevm.world/health-audit/v0.1.0/vibe.toml:20  name = \"health-audit\"",
-              "packages/org.vibevm.world/health-audit/v0.1.0/vibe.toml:21  path = \"spec/skills/health-audit\"",
-              "DRIFT of the genre F-097 named — an instruction that fails when followed. The skill ships and installs: `packages/…/spec/skills/health-audit/SKILL.md` and `vibedeps/flow-health-audit/0.1.0/spec/skills/health-audit/SKILL.md` both exist. It reaches no harness the host runs. The worker widened past the harvest, which checked only `.claude/skills/`, and found **three** skill homes — `.claude/skills/` (5 skills), `.agents/skills/` (4), `.opencode/skills/` (4) — with `health-audit` in none; `find . -maxdepth 4 -path '*skills/health-audit*'` returns nothing outside the package and vibedeps, and `grep -rn 'health-audit' .claude/` returns nothing. A session that reads this instruction in the compiled boot lane and tries to follow it cannot. `vibe skill install` is the projection step and the lockfile records no skill projection for this package."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "flow-document-pointers": {
@@ -47224,17 +47128,11 @@
             ]
           },
           "NEVER-DECLARE-A-MILESTONE-DONE-ON-AN-UN-AUDITED-BASE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "vibedeps/flow-health-audit/0.1.0/spec/boot/42-flow-health-audit.md:42  - Never declare a milestone done on an un-audited base — the audit is",
-              "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
-              "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-              "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
-              "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
-              "DRIFT — the `#never` restatement of the rule two rows above, carrying its verdict per W1's summary-restatement precedent, and sharpened by its own added clause: «the audit is part of the close-out, not an optional extra». Two milestone close-outs since 2026-06-12 shipped without one. Three facts in this package assert the same rule and all three fail on the same two ship lines."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -47311,7 +47209,7 @@
           }
         },
         "verified_at": "2026-07-31T20:38:28Z",
-        "verify_batch": "W5 + D11-address"
+        "verify_batch": "W5 + D11-address + D13-adopt"
       }
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/HEALTH-AUDIT-PROTOCOL.md": {
@@ -47337,7 +47235,7 @@
       "unit_count": 12,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "fee85116f5511638646081b0eaff08efabf993f925dbffd622a33acda52881a9",
+        "processed_hash": "e8fb9569d55776e72177f8371857d04db664dc9cff53724b7d0a7b9b2bdbee04",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -47409,16 +47307,11 @@
             ]
           },
           "THE-AUDIT-IS-A-DIFFERENT-KIND-OF-CHECK": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:191  ## Audit run — 2026-06-12 (discipline depth — the full AI-Native sweep)",
-              "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
-              "AUDIT.md:202  **12 findings** — 1 P1 (fixed in-run), 7 P2 (filed), 4 P3. **Headline:",
-              "spec/common/PROP-013-periodic-health-audit.md:62  - ##INVENTORY-AUDIT-MD Findings live in **`AUDIT.md`** at the repo root — the append-only chronicle whose history is vibevm's health trend (the flow's `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#audit-md`; the five-field record `…#finding`; disposition and carry-forward `…#disposition`). @spec/done",
-              "DRIFT on «breadth-first», which is the leg the artefact does not carry. Deliberate, judgment-heavy and durably recorded all hold — the 2026-06-12 run is owner-requested, describes its method as three structural deep-reads plus one empirical gate probe, and wrote 12 findings. But two of the three runs disclaim a full sweep IN THEIR OWN TEXT: `AUDIT.md:23` «it is **not** a fresh full sweep of the PROP-013 §2.2 checklist» and `:158` «It is **not** the full §2.2 breadth sweep». The third claims a sweep and is scoped to the new category E. No run in the artefact records walking A, B, C and D breadth-first."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -47573,17 +47466,11 @@
             ]
           },
           "AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/common/PROP-013-periodic-health-audit.md:26  ##CHECKLIST-WALK vibevm walks the flow's category checklist (`spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#categories`) breadth-first. The categories below carry vibevm's **known instances** — the findings that made each line permanent … @spec/done",
-              "AUDIT.md:14  run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot",
-              "AUDIT.md:15  outside the gate, **C** drift, **D** debt, **E** discipline depth",
-              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-              "DRIFT on the walking, not on the mapping. The mapping is adopted — PROP-013's `##CHECKLIST-WALK` says vibevm walks the checklist breadth-first and cites this document's own anchor, and AUDIT.md's header enumerates the same A/B/C/D groups. The walking never happened: two of three runs disclaim it in their own text, and of the 29 finding headings the sub-rows that have ever produced a finding are A1, A2, A3, B1, B2, C1, C2, C3, C4, D1 plus two group-level entries — **nothing has ever been filed under D2, D3 or D4**."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -47778,16 +47665,11 @@
             ]
           },
           "ROW-FIELD-ID": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
-              "AUDIT.md:187  | AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |",
-              "AUDIT.md:365  - **2026-05-23-01** (A1, git-registry path under-tested) — **reduced**:",
-              "AUDIT.md:381  - **AUD-0014 / AUD-0015** (doc-string one-liners) — open; cheap, fix on",
-              "DRIFT on the format, in one run of three. The 2026-05-23 and 2026-06-12 runs both use `<run-date>-NN`, unique within the run. The 2026-06-10 run numbers its four findings AUD-0014 … AUD-0017 — a repository-wide sequence, not a run-date — and a third id space runs alongside all of them in `discipline/registry/debt.json` as DBT-0001…DBT-0022. Stability across carry-forward does hold for both schemes, and that half is confirmed by the 2026-06-12 carry-forward re-listing originals under their own ids."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -47866,17 +47748,11 @@
             ]
           },
           "SEVERITY-P1-BLOCKER": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:9  **Severity** — `P1` blocker (resolve before the next milestone ships) ·",
-              "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
-              "AUDIT.md:46  ### 2026-05-23-02 · A1 · P1 · fixed (`cc32d7e`)",
-              "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
-              "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-              "DRIFT on «resolve before the next milestone ships», and the record disagrees with itself about the finding that proves it. The definition is adopted verbatim in AUDIT.md's header. Three P1s exist; two were fixed in-run. The third, 2026-05-23-01, was never fixed — it was re-judged DOWN to P3 at AUDIT.md:369 and survives as DBT-0001 carrying **[P1]** in `discipline/DEBT.md:29`, still «filed as INT-0002» — while M1.26 and M1.24 were both declared SHIPPED on 2026-07-07. So a P1 outlived two milestones, and the two durable records carry different severities for it today."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -47952,16 +47828,11 @@
             ]
           },
           "ROW-DISP-FILED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:12  `filed` (became tracked work — WAL / `TASKS.md` / a PROP) · `accepted`",
-              "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
-              "AUDIT.md:187  | AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |",
-              "discipline/DEBT.md:29  - **DBT-0001** `coverage-gap` [P1] — Production git-registry + naming path is under-tested _(filed as INT-0002 (the test-hardening work))_",
-              "DRIFT on the destination the row names. Nine findings are `filed` and where-it-went is recorded for three of them (AUD-0017 «filed — DBT-0019», 2026-06-12-03 «filed (DBT-0019, escalated P3→P2)», and the registry's typed `filed_as` field); the other six are bare «filed» in their headings with the destination only in body prose. On the named destinations: **`TASKS.md` contains ZERO occurrences of «audit»**, so no finding has ever been filed as a TASKS.md line. The destination the host actually uses is `discipline/registry/debt.json`, which this flow does not name."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -48149,17 +48020,11 @@
             ]
           },
           "AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
-              "AUDIT.md:154  ## Audit run — 2026-06-10 (terraform close-out, instrumented category C)",
-              "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
-              "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-              "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
-              "DRIFT on the floor, confirmed on the trigger — the same ruling as this fact's twin in the boot snippet. Owner-triggered holds (the 2026-06-12 run is recorded «Owner-requested» with the instruction quoted). The floor does not: M1.26 and M1.24 both SHIPPED (2026-07-07) against a last audit of 2026-06-12, with 1 546 commits in the gap and no audit section between."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -48179,16 +48044,11 @@
             ]
           },
           "A-RUN-MUST-FINISH-THE-INVENTORY-NOT-EVERY-FIX": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-              "AUDIT.md:202  **12 findings** — 1 P1 (fixed in-run), 7 P2 (filed), 4 P3. **Headline:",
-              "AUDIT.md:29  **13 findings** — 2 P1, 4 P2, 7 P3. Disposition: 2 fixed, 1 filed,",
-              "DRIFT on the half the sentence insists on. The fix half holds cleanly — the seed run left 9 of 13 open and the 2026-06-12 run filed 7 P2s rather than fixing them in-run, which is the rule working. The INVENTORY half fails in two of three runs, by their own admission: «it is **not** a fresh full sweep … The first full sweep is the next invocation» and «It is **not** the full §2.2 breadth sweep (INT-0001 stays rescoped to the next audit window)». INT-0001 is the full-sweep window both runs name, and no run has closed it."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -48350,22 +48210,17 @@
             ]
           },
           "SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/common/PROP-013-periodic-health-audit.md:63  - ##CADENCE-FLOOR Cadence is **owner-triggered, floor once per milestone** (`…#cadence`) — a vibevm milestone is never declared done on an un-audited base. @spec/done",
-              "AUDIT.md:193  Owner-requested («полный аудит кода — насколько хорошо он соответствует",
-              "ROADMAP.md:661  ### M1.26 — MCP sovereignty (the `mcp` kind + standalone discipline servers) — SHIPPED (2026-07-07)",
-              "ROADMAP.md:707  ### M1.24 — the agentic tcg line (`vibe-agentic-tcg-ts`) — SHIPPED (2026-07-07)",
-              "DRIFT, carrying its clause's verdict per W1's summary-restatement precedent. Five facts across this package now assert the once-per-milestone floor or its `#never`, and all five fail on the same two ship lines."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           }
         },
-        "verified_at": "2026-07-29T16:50:24Z",
-        "verify_batch": "W5 + D2a"
+        "verified_at": "2026-08-01T06:34:21Z",
+        "verify_batch": "W5 + D2a + D13-adopt"
       }
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/audit-checklist.md": {
@@ -49192,16 +49047,11 @@
             ]
           },
           "SUM-FOUR-GROUPS-WALKED-BREADTH-FIRST": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:14  run). **Categories** are PROP-013 §2.2: **A** test integrity, **B** rot",
-              "AUDIT.md:15  outside the gate, **C** drift, **D** debt, **E** discipline depth",
-              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-              "DRIFT on «walked breadth-first», carrying the verdict of the two rules it summarises. The four groups are adopted verbatim in AUDIT.md's header and in PROP-013 §2 — that half is real. The walk is not: the seed run says «it is **not** a fresh full sweep», the 2026-06-10 run says «it is **not** the full §2.2 breadth sweep» and was scoped to C plus the gate panel, and the 2026-06-12 run was the INT-0001 window run scoped to the category it had just added. No run's text records touching A, B, C and D once each before going deep."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -49250,7 +49100,7 @@
           }
         },
         "verified_at": "2026-07-29T16:50:24Z",
-        "verify_batch": "W5 + D2a"
+        "verify_batch": "W5 + D2a + D13-adopt"
       }
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/flows/health-audit/running-an-audit.md": {
@@ -49303,15 +49153,11 @@
             ]
           },
           "A-RUN-MUST-FINISH-THE-INVENTORY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-              "AUDIT.md:24  §2.2 checklist. The first full sweep is the next invocation; this seed",
-              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-              "DRIFT, stated by the artefact against itself. Two of three runs record in their own text that they did not finish the inventory — «it is **not** a fresh full sweep of the PROP-013 §2.2 checklist. The first full sweep is the next invocation» and «It is **not** the full §2.2 breadth sweep (INT-0001 stays rescoped to the next audit window)». The third finished the inventory of category E specifically. INT-0001 is the named full-sweep window and no run has closed it."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -49344,16 +49190,11 @@
             ]
           },
           "STEP-WALK-THE-CHECKLIST-BREADTH-FIRST": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-              "AUDIT.md:195  category **E (discipline depth)** this run adds to PROP-013 §2.2.",
-              "spec/common/PROP-013-periodic-health-audit.md:26  ##CHECKLIST-WALK vibevm walks the flow's category checklist (`spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#categories`) breadth-first. The categories below carry vibevm's **known instances** — the findings that made each line permanent … @spec/done",
-              "DRIFT: the instruction is adopted verbatim by the host — PROP-013's `##CHECKLIST-WALK` — and **no run has performed it.** Two disclaim the full sweep in their own text; the third went deep on one category by design («the INT-0001 audit window, run under the new category **E (discipline depth)** this run adds»). The seed run's findings do span A, B, C and D, but the run says they came from the M1.19 work and the checkpoint's known-issues list, not from a walk."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -49416,13 +49257,11 @@
             ]
           },
           "STEP-COMMIT-THE-SECTION-AND-EACH-FIX-SEPARATELY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:1  # AUDIT.md — project health inventory",
-              "DRIFT in one run of three, verified commit by commit. Four of the five AUDIT.md commits are `docs(audit): …` and AUDIT.md-only — `b98227ce` 1 file +149, `21d47694` 1 file +199/-1, `f11ed38a` 1 file +52, `3656f362` 1 file +24/-2. The exception is the 2026-06-10 run: `9283132f docs(terraform): Phase 6 close-out` touches FIVE files — AUDIT.md plus the terraform LOG, REPORT, INTENT.md and intent.json — so that run's section is neither its own commit nor under an audit subject. The separate-fix half holds throughout: `9f06fbf2` and `be4aaef7` are standalone fix commits."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -49466,17 +49305,11 @@
             ]
           },
           "EVERY-FINDING-IS-ONE-TABLE-ROW-CARRYING-THE-FIVE-FIELDS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:182  | id | cat | sev | finding | disposition |",
-              "AUDIT.md:184  | AUD-0014 | C | P3 | `expand_features` doc-string says cycles are \"rejected\"; the seen-set silently terminates them (test `cycles_terminate` pins the actual behaviour) | open — one-line doc fix, flagged in the Phase 2 proposals note |",
-              "AUDIT.md:187  | AUD-0017 | D | P3 | vibe-core leaf trio without scannable spec home | filed — DBT-0019 |",
-              "AUDIT.md:32  ### 2026-05-23-01 · A1 · P1 · filed",
-              "AUDIT.md:217  ### 2026-06-12-01 · E4/B2 · P1 · fixed (`9f06fbf`)",
-              "DRIFT on the row shape, confirmed on the fields. One of three runs uses the prescribed table — the 2026-06-10 run has the header `| id | cat | sev | finding | disposition |` with four rows. The other two give each finding its own `### <id> · <cat> · <sev> · <disp>` heading plus a multi-paragraph body: **25 findings that way against 4 in tables.** All five fields survive in both forms, so what fails is «one table row» and not the record's content. Nothing in PROP-013 prescribes either shape, which is why the fields hold and the form does not."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -49604,16 +49437,11 @@
             ]
           },
           "OWES-A-COMPLETE-INVENTORY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-              "AUDIT.md:363  ### Carry-forward (2026-05-23 series + 2026-06-10), re-judged",
-              "AUDIT.md:29  **13 findings** — 2 P1, 4 P2, 7 P3. Disposition: 2 fixed, 1 filed,",
-              "DRIFT on one of its four sub-obligations. Recorded-and-dispositioned holds for all 29 findings. Checkpoint-reconciled is adopted as a rule in PROP-013 and exercised once. Carried-forward-and-re-judged is done at one of two opportunities. **Every-category-walked is claimed by no run**, with two disclaiming the full sweep outright and the named window INT-0001 never closing. A rule that owes four things and gets three is drift on the list, per W1's precedent for enumerated obligations."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -49688,7 +49516,7 @@
           }
         },
         "verified_at": "2026-07-28T21:57:52Z",
-        "verify_batch": "W5"
+        "verify_batch": "W5 + D13-adopt"
       }
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/skills/health-audit/SKILL.md": {
@@ -49797,17 +49625,11 @@
             ]
           },
           "WALK-THE-CHECKLIST-BREADTH-FIRST-AND-RUN-EACH-AID": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/common/PROP-013-periodic-health-audit.md:26  ##CHECKLIST-WALK vibevm walks the flow's category checklist (`spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#categories`) breadth-first. The categories below carry vibevm's **known instances** — the findings that made each line permanent … @spec/done",
-              "spec/common/PROP-013-periodic-health-audit.md:53  ##CAT-E **E — Discipline depth (AI-Native).** vibevm's own category, added 2026-06-12: it measures how deep the Discipline v0.2 adoption actually goes (the flow's corollary — audit *depth* of adoption, not merely that it exists), against vibevm's specific machinery: @spec/done",
-              "AUDIT.md:23  of the M1.19 session — it is **not** a fresh full sweep of the PROP-013",
-              "AUDIT.md:158  plus the gate panel. It is **not** the full §2.2 breadth sweep",
-              "spec/common/PROP-013-periodic-health-audit.md:32  - ##A3-WRONG-BEHAVIOR **A3 · Tests that encode the wrong behavior.** Detectable only by reading the assertion against the spec. *Known:* `cli_init` asserted `naming == kind-name`. @spec/done",
-              "DRIFT on the walk, split on the aids. The project-specific-rows clause is well served — PROP-013 §2 carries E1-E4 with their own aids. The breadth-first walk is unconfirmed by any of the three runs, two of which disclaim it in their own text, which is the same measurement ruled at four other facts in this package. The named aids split four ways: the grep-based ones were run and reported at 2026-06-12-11; the CI-config-versus-tree diff exists as self-check.sh step 0b; the coverage tool has no host equivalent; and the dependency audit has never been invoked anywhere."
+              "closed by adoption, owner 'Проведи всё это' (2026-08-01): the host keeps the flow — AUDIT.md's header now carries the five adopted clauses (id form forward-only, filed->debt.json, table+notes shape, the P1-carry exception through the register, the milestone-floor exception for the frozen past and the forward definition), the P1/P3 divergence is reconciled (DBT-0001 -> P3 with the audit's later evidenced judgement winning), the health-audit skill is installed (5 projections), the two audit aids are installing, and the one A-D inventory run is scheduled at the campaign's exit gate; harvest d12-health-audit-rulings.md"
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -49910,7 +49732,7 @@
           }
         },
         "verified_at": "2026-07-31T21:37:29Z",
-        "verify_batch": "W5 + D12-straggler"
+        "verify_batch": "W5 + D12-straggler + D13-adopt"
       }
     },
     "packages/org.vibevm.world/licensing/v0.1.0/README.md": {
@@ -86165,7 +85987,7 @@
       }
     },
     "spec/common/PROP-000.md": {
-      "content_hash": "dc343dad5b950ce23f51f3b94c08387c23ffe92f0bed1c2fd6e2e720407107b8",
+      "content_hash": "889cba6ec06f808d2cd44db66764c608736fdd269bd5509e22b409fcdaaa93ae",
       "rollup": {
         "explicit": [
           "spec",
@@ -86179,11 +86001,11 @@
           "spec",
           "done"
         ],
-        "marker_count": 162,
-        "fact_count": 161,
+        "marker_count": 172,
+        "fact_count": 171,
         "unmarked_facts": 0
       },
-      "marker_count": 162,
+      "marker_count": 172,
       "unit_count": 22,
       "issue_count": 0,
       "campaign": {
@@ -87790,7 +87612,7 @@
       }
     },
     "spec/common/PROP-018-agentic-standalone-modes.md": {
-      "content_hash": "6f0cdc165d1208b475749507386865039b029994f6b1ac24cb4248f9332398dd",
+      "content_hash": "9e6169003cd13590a204fe3008e9204f8de741de189414aa3f7a01562a3d7247",
       "rollup": {
         "explicit": [
           "impl",
@@ -87804,11 +87626,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 113,
-        "fact_count": 112,
+        "marker_count": 121,
+        "fact_count": 120,
         "unmarked_facts": 0
       },
-      "marker_count": 113,
+      "marker_count": 121,
       "unit_count": 21,
       "issue_count": 0,
       "campaign": {
@@ -89792,7 +89614,7 @@
       }
     },
     "spec/common/PROP-024-code-bearing-packages.md": {
-      "content_hash": "cfaa3c9b4d0530f780db587eadfc67ef4cfbb1da4b4be7870892b4a6e53910f7",
+      "content_hash": "7d36407b80c1154a2834b3da74f0400ad71a1e2ab8151f347c6b67a0a83b585b",
       "rollup": {
         "explicit": [
           "spec",
@@ -89806,11 +89628,11 @@
           "spec",
           "done"
         ],
-        "marker_count": 77,
-        "fact_count": 76,
+        "marker_count": 88,
+        "fact_count": 87,
         "unmarked_facts": 0
       },
-      "marker_count": 77,
+      "marker_count": 88,
       "unit_count": 16,
       "issue_count": 0,
       "campaign": {
@@ -92360,7 +92182,7 @@
       }
     },
     "spec/design/README.md": {
-      "content_hash": "3d0268e76f05dcdb7b8b6c8240509c36382a767966a7bf904b80cbf79dd6d70f",
+      "content_hash": "9d1a5790394672fa323f7a230f7781697ad7d982ad78975fcbebd9b79a69953d",
       "rollup": {
         "explicit": [
           "doc",
@@ -92374,12 +92196,12 @@
           "doc",
           "done"
         ],
-        "marker_count": 34,
-        "fact_count": 29,
+        "marker_count": 68,
+        "fact_count": 62,
         "unmarked_facts": 0
       },
-      "marker_count": 34,
-      "unit_count": 5,
+      "marker_count": 68,
+      "unit_count": 6,
       "issue_count": 0,
       "campaign": {
         "anchors_judged": 17,
