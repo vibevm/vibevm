@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-01T07:27:17Z",
+  "updated_at": "2026-08-01T07:39:11Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "d527b9e4fb90e8e72fa5d9f065de57626216e7e0fa30c08ef114e228b46093ee",
@@ -19148,7 +19148,116 @@
       },
       "marker_count": 18,
       "unit_count": 4,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "ac95aef09accdd404f63b3b362e5bf1c7080e75a425ac7a5e7e8008725c46049",
+        "verdicts": {
+          "TYPESCRIPT-PROJECTION-SHIPS-A-RUNNABLE-TOOLCHAIN": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01 (the D9-created front door, §3.8 bench = the package's own artefacts): the stack ships a runnable toolchain, not descriptions — its own Cargo workspace under crates/ with four [[binary]] rows in vibe.toml, per PROP-024 code-bearing packages"
+            ]
+          },
+          "NEUTRAL-METHOD-COMES-FROM-THE-CORE-DEPENDENCY": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: vibe.toml declares the core-ai-native dependency; the manifesto/playbooks/mechanism specs are not duplicated into this package — the neutral method arrives through the dependency exactly as stated"
+            ]
+          },
+          "SHIPS-FOUR-BINARIES": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: vibe.toml carries exactly four [[binary]] rows — typescript-ai-native, typescript-ai-native-conform, typescript-ai-native-specmap, typescript-ai-native-tcg — and crates/ is the package's own Cargo workspace (PROP-025 lockfile dispatch)"
+            ]
+          },
+          "SHIPS-TYPESCRIPT-AI-NATIVE-UMBRELLA": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: typescript-ai-native-cli/src/main.rs carries all ten named subcommands (init, floor, conform, specmap, trace, test-gate, tripwire, health, fast-loop, codemod); the floor's step order is the boot snippet's prettier→tsc→tests→eslint→conform→specmap→test-gate"
+            ]
+          },
+          "SHIPS-TYPESCRIPT-AI-NATIVE-CONFORM": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: crates/typescript-ai-native-conform exists as its own binary crate — the conformance gate alone, the ENGINE-CONFORM driver for this stack"
+            ]
+          },
+          "SHIPS-TYPESCRIPT-AI-NATIVE-SPECMAP": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: crates/typescript-ai-native-specmap exists as its own binary crate — the traceability engine alone (PROP-014 driver)"
+            ]
+          },
+          "SHIPS-TYPESCRIPT-AI-NATIVE-TCG": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: crates/typescript-ai-native-tcg ships all six verbs the fact names (serve, validate, scope, complete, type, bench) in its main.rs; the node ≥ 22.6 + consumer-typescript prerequisite matches the package's own tools contract (ts-oracle resolves the consumer's typescript at runtime)"
+            ]
+          },
+          "SHIPS-GUIDE-AND-CARDS": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md exists and spec/cards/INDEX.md carries the registry (the nine scaffolds A–I in TypeScript shape, per the stack's boot snippet)"
+            ]
+          },
+          "SHIPS-TWO-AGENT-SKILLS": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: spec/skills/ holds exactly two skills — typescript-ai-native-terraform and typescript-ai-native-sweep — matching the two procedures named"
+            ]
+          },
+          "SHIPS-TWO-NODE-SIDE-TOOLS": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: tools/ts-extract and tools/ts-oracle both exist in the package; extractor drives the conform frontend and the specmap scanner, oracle backs the tcg — both node-side as stated"
+            ]
+          },
+          "SHIPS-MECHANISM-SPECS": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: spec/typescript/mechanisms/TCG-ORACLE-v0.1.md and TCG-PROTOCOL-v0.1.md both exist, and spec/typescript/tools/ is present — the mechanism specs and tool briefs ship as named"
+            ]
+          },
+          "NEUTRAL-ENGINES-RIDE-ALONG-VENDORED": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: crates/vendor/ carries all four named vendored copies — core-ai-native-conform, -specmap, -specmark, -specmark-grammar — so the slot is its own standalone-buildable Cargo workspace (the sync-engines vendoring surface, 51 pairs green at волна 9)"
+            ]
+          },
+          "running-forms-lead": {
+            "v": "confirmed",
+            "ev": [
+              "coherence-verified 2026-08-01: the three run forms (vibe bin exec / cargo install --path / cargo run --manifest-path) are the same trio the stack's boot snippet prescribes and PROP-025 specifies for lockfile dispatch; prescriptive lead, referents resolve"
+            ]
+          },
+          "STACK-SLOT-IS-THE-MATERIALISED-DIRECTORY": {
+            "v": "confirmed",
+            "ev": [
+              "tree-verified 2026-08-01: the slot naming the fact illustrates is real — vibedeps/stack-typescript-ai-native-lang/0.6.0 exists in this very tree and vibe.lock names the stack, so the check-your-vibe.lock instruction resolves exactly as written (install-convention description, not host-adoption evidence — §3.8 caution held)"
+            ]
+          },
+          "SLOT-BUILD-DROPS-A-TARGET-DIRECTORY": {
+            "v": "confirmed",
+            "ev": [
+              "referents resolve 2026-08-01: build output is excluded from the package's content hash by PROP-024 §2.2's denylist (target/ is one of the four names; ##ACC-HASH-EXCLUDES asserts it), and the [workspace] exclude advice matches the standard consumer resolution PROP-024 §2.4 records — prescriptive advice, coherent, every referent resolves"
+            ]
+          },
+          "wiring-and-sweep-pointers": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: GUIDE §15 is «Wiring a consumer (the shipped toolchain)» and §16 is «Sweep idioms» — both pointers land on sections carrying exactly the promised content"
+            ]
+          },
+          "POLICIES-STAY-WITH-THE-CONSUMER-PROJECT": {
+            "v": "confirmed",
+            "ev": [
+              "package-verified 2026-08-01: the package ships no conform.toml and no specmap.toml outside test fixtures (rglob over the package, fixtures excluded — zero policy files), so engines-never-policy holds in the shipped tree exactly as PROP-024 §2.2 prescribes"
+            ]
+          }
+        },
+        "verified_at": "2026-08-01T07:39:11Z",
+        "verify_batch": "D15"
+      }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/boot/20-stack-typescript-ai-native-lang.md": {
       "content_hash": "1615bece3a3918b4bc82676dec3b049bad0ebd8ddcfd74036a0a4f308298d8cc",
