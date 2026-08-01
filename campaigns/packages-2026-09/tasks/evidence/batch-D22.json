@@ -1,0 +1,9 @@
+{
+  "batch": "D22",
+  "cluster": "ai-native",
+  "files": {
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md": {
+      "RULES-ARE-RUST-TRAIT-IMPLS-COMPILED-IN": {"v": "confirmed", "ev": ["repaired under F-146 item 4, owner «пока просто поправь формулировку» 2026-08-01: the quoted signature now matches the shipped trait exactly — fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> alongside fn id() and fn why() (core-ai-native-conform/src/finding.rs:51-56, re-read at HEAD) — and the note explains why the earlier sketch's specmap parameter was impossible, not merely absent: the conform crate's Cargo.toml carries no dependency on the specmap crate, the deliberate separability seam both engines state; the shape claim (rules are Rust impls of one trait, compiled in) was always true and stays; marker @impl/done stands — the fact is now true and built"]}
+    }
+  }
+}

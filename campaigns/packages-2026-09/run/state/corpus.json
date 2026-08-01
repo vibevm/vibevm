@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-01T13:26:22Z",
+  "updated_at": "2026-08-01T14:15:59Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -4938,7 +4938,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "90c9092d565acffe1ad0bae48dc0f87e1582f56e68c943cbb74d8bafd510dc0a",
+        "processed_hash": "75306f1b13ab064eaa48e139863080b8fa1566e386eb4904956f85f1bec1a761",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -5214,12 +5214,9 @@
             ]
           },
           "FRONTEND-CRASH-DEGRADES-VISIBLY-NEVER-SILENTLY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:47      /// lowered facts. Failures surface on stderr here and again as an",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:59                  eprintln!(\"conform ts-tsc: extraction failed — {error}\");",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:4  //! sites, and `unsafe` uses. B5: an unparseable file yields zero facts",
-              "the degradation the fact promises has no representation: `Finding` (finding.rs:27-36) carries no status field, and grep for 'frontend unavailable' / 'skipped (' over the engine and both named frontends returns 0. A crash cannot produce the report line this fact says it produces"
+              "repaired under F-146 item 3, owner answer (а) 2026-08-01: the text now describes the built behaviour — hard-error probe before extraction (typescript-ai-native-conform/src/lib.rs:66-70, its own comment: fail HARD on a broken toolchain before the gate can run on zero facts; the frontend header at conform-frontend/src/lib.rs:47-50 states the same policy), per-file failures to stderr + empty fact set — and annotates the unbuilt skipped-status half in the sanctioned form (Finding carries no status field, finding.rs:27-36; frontend unavailable greps 0 on every layer); the never-silent promise the anchor name carries is kept by the stronger mechanism; marker @impl/done → @spec/done per RULE-UPDATE-MARKERS"
             ]
           },
           "FOREIGN-LINTERS-ARE-EVIDENCE-PROVIDERS": {
@@ -5270,17 +5267,14 @@
             ]
           },
           "UNEXERCISED-FRONTEND-OR-TIER-IS-REMOVED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:82              // Never produced by rust-syn — the ts-tsc and go frontends own",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/Cargo.toml:11  members = [",
-              "THIS FACT IS FALSIFIED BY THE DOCUMENT THAT STATES IT. It says an unexercised frontend or tier is removed rather than carried as aspiration, and it is marked @impl/done. The same document still carries three tiers that do not exist, a C++ frontend, a Python frontend, tree-sitter, SWC, rust-analyzer, rustc_driver, gopls and SARIF linter ingestion — none of which the engine exercises. Nothing enforces the rule either: no test, gate or lint checks it"
+              "repaired under F-206 item 7, owner answer (а) 2026-08-01: the closing rule takes the identical form its four siblings took under the group-A ruling (commit 8eee125c — CONTRADICTION-MAP, BROWNFIELD, LEDGER-INTENT, PROP-014: either removed or annotated in place as specified-not-built, never unmarked aspiration), so one rule reads one way in all five documents and no duplication row is minted; under the amended text the document complies — its eight standing annotations, three inside the frontend table this rule governs, are exactly the annotate-in-place branch being exercised; marker stays @impl/done family-consistent (the amended rule is genuinely in force), with the cross-family marker-semantics audit filed as BACKLOG B-027 to revisit all five together"
             ]
           }
         },
-        "verified_at": "2026-07-29T18:55:16Z",
-        "verify_batch": "C1 + D5b + D7"
+        "verified_at": "2026-08-01T13:26:46Z",
+        "verify_batch": "C1 + D5b + D7 + D21"
       }
     },
     {

@@ -4233,6 +4233,21 @@ aspirational — and every one is still live for the phases that remain.
   open on the one unruled item. Registry **105 / 226 — 18 deferred, 87 open;
   owed 69, every one on the sync route**.
 
+  **Third sitting, same day.** «Пока просто поправь формулировку» — item 4
+  applied as **D22** (the quoted trait signature now matches the shipped
+  `finding.rs:51-56`, with the impossible `specmap` parameter explained by
+  the separability seam), which makes F-146 fully owner-ruled → `deferred`
+  (two anchors on B-023's research, one on B-025's build). **Group B is
+  drained.** And the lifecycle question graduated: **B-024 raised to
+  `planned`** — the owner's «свести стадии жизненного цикла в specmap к
+  аналогичным в progress» fixes the direction (derive from the host's
+  markers; only `disputed` has no analog), the research narrows to the
+  mechanics. Registry **105 / 225 — 19 deferred, 86 open; owed 68, every one
+  on the sync route**. Next presented: the sync queue's group C singles
+  (F-180's one-clause-in-three-places, F-166's three), group D (the
+  campaign's own summary debt, inside F-169's four), and F-169's §3.6(c)
+  pair riding with F-147's twins.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:

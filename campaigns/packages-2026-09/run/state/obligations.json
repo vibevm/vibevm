@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 226,
+ "drift_verdicts": 225,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -719,66 +719,6 @@
     "host"
    ],
    "id": "F-165",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/core-ai-native"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md#ROW-FRONTEND-TS-JS",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md#ROW-FRONTEND-PYTHON",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md#RULES-ARE-RUST-TRAIT-IMPLS-COMPILED-IN",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md#FINDINGS-CARRY-THE-A1-CHAIN"
-   ],
-   "drift_count": 4,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/core-ai-native",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:185      /// overhead (`ts-tsc` spawns node) extracts the whole pending set",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:56      /// a matching deviates record downgrades the finding). Fn-grain",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:27  pub struct Finding {",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:53  pub trait Rule {",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:56      fn check(&self, facts: &[SourceFacts]) -> Vec<Finding>;",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/budget.rs:93                      if *in_deviation {",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:105      pub fn extract_typescript(",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:118      pub fn extract_go(",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:82              // Never produced by rust-syn — the ts-tsc and go frontends own",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:12  //! Process economics: `warm()` (the store's batch hook) runs ONE node",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:3  //! TypeScript Compiler API, via the packaged `tools/ts-extract`"
-   ],
-   "cites": [],
-   "reason": "the T-sem column is right — the TypeScript Compiler API through a node child process — and the T-syn column names tree-sitter / SWC, of which grep finds neither",
-   "reasons": [
-    "there is no Python frontend. grep for rustpython / python / symtable / cpython over the engine, its manifests and both named frontends returns 0",
-    "the shape is right and the quoted signature is wrong. Read directly 2026-07-28: `fn check(&self, facts: &[SourceFacts]) -> Vec<Finding>` (finding.rs:56) against the document's `fn check(&self, facts: &FactStore, specmap: &Index) -> Vec<Finding>` — both parameters differ, and the specmap argument could not exist because the conform crate does not depend on the specmap crate",
-    "three of the five links are there — rule id, why, span (finding.rs:28-35: rule, file, line, message, why, fingerprint) — and the last two are not: there is no involved-facts field and no deviation status, so nothing can be downgraded to `deviation-acknowledged`"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:185      /// overhead (`ts-tsc` spawns node) extracts the whole pending set",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 4,
-   "id": "F-146",
    "id_source": "minted",
    "carried": true
   },
@@ -1508,6 +1448,61 @@
     "host"
    ],
    "id": "F-157",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/core-ai-native"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md#ROW-FRONTEND-TS-JS",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md#ROW-FRONTEND-PYTHON",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md#FINDINGS-CARRY-THE-A1-CHAIN"
+   ],
+   "drift_count": 3,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/core-ai-native",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
+   ],
+   "evidence_refs": [
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:185      /// overhead (`ts-tsc` spawns node) extracts the whole pending set",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:56      /// a matching deviates record downgrades the finding). Fn-grain",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:27  pub struct Finding {",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/budget.rs:93                      if *in_deviation {",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:105      pub fn extract_typescript(",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:118      pub fn extract_go(",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:82              // Never produced by rust-syn — the ts-tsc and go frontends own",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:12  //! Process economics: `warm()` (the store's batch hook) runs ONE node",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:3  //! TypeScript Compiler API, via the packaged `tools/ts-extract`"
+   ],
+   "cites": [],
+   "reason": "the T-sem column is right — the TypeScript Compiler API through a node child process — and the T-syn column names tree-sitter / SWC, of which grep finds neither",
+   "reasons": [
+    "there is no Python frontend. grep for rustpython / python / symtable / cpython over the engine, its manifests and both named frontends returns 0",
+    "three of the five links are there — rule id, why, span (finding.rs:28-35: rule, file, line, message, why, fingerprint) — and the last two are not: there is no involved-facts field and no deviation status, so nothing can be downgraded to `deviation-acknowledged`"
+   ],
+   "status": "deferred",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:185      /// overhead (`ts-tsc` spawns node) extracts the whole pending set",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 3,
+   "id": "F-146",
    "id_source": "minted",
    "carried": true
   },
