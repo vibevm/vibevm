@@ -1,9 +1,10 @@
 # WAL — Project Continuation State {#root}
 
-_Updated: 2026-08-01, второй чекпойнт дня (**PHASE D NEAR ITS EXIT — волна 10
-sealed: the D13 tail closed as 51 judged record anchors, the 260-vs-259 flag
-closed by judging the D9 README, corpus 97.6 %, registry 108 obligations / 232
-drifts, 73 verdicts still owed a package — all on the owner's sync route**)_
+_Updated: 2026-08-01, третий чекпойнт дня (**PHASE D AT ITS EXIT RAMP — волна
+11: the owner drained his queue in one sitting; corpus 97.6 %, registry 105
+obligations / 228 drifts, 17 owner-ruled deferrals, owed 71 — every one on the
+sync route; the whole build-or-demote tail is closed, партія 1d applied, the
+carve-out recorded, three new research entries B-022…B-024**)_
 
 ##WAL-NUMBERS-COME-FROM-COMMANDS **Every number below is reproduced by two
 commands; run them rather than quoting this file** (why:
@@ -36,16 +37,16 @@ aliasing design (`BACKLOG.md` B-011) makes stripping safe. Verification:
 `self-check.sh` EXIT=0, `sync-engines --check` green (51 pairs),
 `address-repair.py --verify` 0 remaining. @impl/done
 
-##WAL-STATE **State at the last regeneration** (2026-08-01, HEAD `800e0fce`;
-the commands supersede): corpus **11 138 / 232 / 44 — 97.6 %** over **260 of
-260 files** (the acceptance's 260-vs-259 flag is closed: the one unjudged file
-was the D9-created TS front-door README, judged 17/17 and sealed as D15);
-registry **108 obligations / 232 drifts**; **73 drift verdicts still owe a
-package repair — every one of them on `sync-from-code`, the owner's route; 159
-routed out, 77 obligations nothing left owed**. The boss-owed remainder is
-**zero** on every route (`prose-edit` 0, `build-or-demote` 0, `release` 0
-owed). `progress check` clean, `self-check.sh` all green, cargo-audit 0.22.2 /
-cargo-outdated 0.19.0 installed. @impl/done
+##WAL-STATE **State at the last regeneration** (2026-08-01, after волна 11;
+the commands supersede): corpus **11 147 / 228 / 44 — 97.6 %** over 260 files;
+registry **105 obligations / 228 drifts — 17 `deferred` by owner ruling, 88
+open**; **owed 71 of 228, every one on `sync-from-code`, the owner's route**;
+F-207 / F-263 / F-351 resolved to history this wave. The boss-owed remainder
+is **zero** on every route; the whole `build-or-demote` tail is owner-ruled
+(the rulings ledger:
+`campaigns/packages-2026-09/PHASE-D-HOST-OBLIGATIONS.md#rulings-2026-08-01`).
+`progress check` clean at the wave-10 checkpoint, `self-check.sh` all green,
+cargo-audit 0.22.2 / cargo-outdated 0.19.0 installed. @impl/done
 
 ##WAL-RULINGS-IN-FORCE **Owner rulings taken 2026-07-31/08-01 and in force:**
 sync-queue group A = answer (2) — «specified, not built» annotate-in-place is
@@ -201,17 +202,18 @@ D17 → sealed; registry back at 108 / 232 with F-133 resolved to history). @imp
 
 ## Next {#next}
 
-1. ##WAL-NEXT-GROUP-B **Present sync-queue group B to the owner in batches**
-   (per `spec://vibevm/terraforms/packages-actualization#phase-d` §1.2: the
-   owner approves every spec diff; ruled format — per document, full texts in
-   chat, owner's (ii) of 2026-08-01). **Партия 1b (ENGINE-CONFORM: F-146 ×5 +
-   F-206 ×2) is prepared and presented in chat 2026-08-01 — awaiting the
-   ruling.** Then 1c (LEDGER-INTENT: F-159 ×5), 1d (F-207, F-263); texts
-   final in `harvest/d7a-core-sync-reverify.md`. @spec/done
-2. ##WAL-NEXT-ADR **B+A′'s one open tail: the d12-adr §3.13
-   `##SPLIT-HOST-POSTURE` carve-out** (claim-vs-section unit question,
-   census 35→36) — an owner choice; everything else of B-007 is executed
-   and sealed. @spec/done
+1. ##WAL-NEXT-GROUP-B **Group B state after волна 11:** партия 1d — applied
+   and closed (F-207, F-263); партия 1c — routed to research (B-022, F-159
+   `deferred`); партия 1b — two frontend rows routed to research (B-023),
+   **five corrections remain presented in chat and unruled** (F-146's crash /
+   trait-signature / A1-chain, F-206's foreign-linters / closing rule). Group
+   C and the rest of the sync queue follow the same per-document format
+   (owner's (ii)). @spec/done
+2. ##WAL-NEXT-ADR **B+A′ is fully executed** — the §3.13 carve-out landed as
+   (ii): census 35→36, the four-field record at PROP-000 §7
+   (`##split-host-decision…`) carrying the owner's updated split-host posture
+   of 2026-08-01 (GitHub leads; GitVerse supplementary — source mirror +
+   deliberately-published registry storage). Nothing of B-007 remains open. @spec/done
 3. ##WAL-NEXT-B012 **B-012 is ruled and drained (2026-08-01, same day):** the
    owner ruled on the whole set — everything builds (`BACKLOG.md`
    B-016…B-021, disposition `planned`; B-018 wide form, high priority),
@@ -261,7 +263,11 @@ D17 → sealed; registry back at 108 / 232 with F-133 resolved to history). @imp
   B-013 (broken specmap schema-bump route), B-014 (host index drifts
   ungated) — plus the B-012 drain of 2026-08-01: B-015 (security programme,
   parked until the owner's notice), B-016…B-021 (the PROP-014 builds, all
-  `planned` by owner ruling; B-018 wide form, high priority). @impl/done
+  `planned` by owner ruling; B-018 wide form, high priority) — plus волна
+  11's research trio: B-022 (LEDGER-INTENT mechanisms, F-159 waits on it),
+  B-023 (JS/TS syntactic tier + Python frontend, two F-146 anchors wait),
+  B-024 (do @stage/state markers subsume specmap lifecycle statuses — the
+  owner's two-tombstones question). @impl/done
 
 ## Session context {#session-context}
 
