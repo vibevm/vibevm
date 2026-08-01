@@ -465,6 +465,59 @@ already written from it is the specification of the work.)*
   surface. B-001 (the link tables) is the same family and the same trigger
   logic; the two studies should run together.
 
+### B-013 — the specmap schema-bump path is broken before anyone needs it {#b-013}
+
+| | |
+|---|---|
+| ##B013-ANCHOR **anchor** | none — found by the B-012 evidence pass, not against a marked fact; the nearest law is `dev-runtime-docs`' never-describe-an-abandoned-toolchain |
+| ##B013-LOCATOR **locator** | `xtask/src/codegen.rs:50-52` routes the `specmap` schema's codegen to `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.5.0/crates/specmap-core/src/generated` — a slot that does not exist (only `v0.7.0` does); repeated for the drift check at `codegen.rs:215`. Two more coordinates of the same stale relocation: `schemas/specmap.jtd.json` metadata still names `crates/specmap-core/...` / `specmap_core::specmap`, and `core-ai-native-specmap/src/lib.rs:24-27` names a package-local `schemas/specmap.jtd.json` that is absent from the repository |
+| ##B013-SEVERITY **severity** | P2 |
+| ##B013-DISPOSITION **disposition** | `open` |
+| ##B013-FILED **filed by** | the B-012 feasibility study (`campaigns/packages-2026-09/harvest/d14-b012-part-B.md` §B2, part A cross-cutting note), 2026-08-01 |
+
+- ##B013-WHY-IT-BITES **Why it bites.** Every serialised-index evolution in the B-012 set —
+  `CodeItem.content_hash` (M7a), a serialised `doc` field (M10), signatures for
+  the `contract` profile (M3) — is a `SCHEMA` 2→3 bump that must go through
+  jtd-codegen, and the route 404s on first use. The engine relocated into
+  `core-ai-native/v0.8.0` and the codegen plumbing did not move with it.
+- ##B013-WHY-P2 **Why P2.** Nothing lies: the checked-in generated module is current and
+  the gate byte-compares real artefacts. The defect is a dev-op that fails on
+  first invocation — noise at the exact moment someone attempts a planned
+  evolution, plus two documentation surfaces describing a pre-relocation world.
+- ##B013-FIX-SHAPE **The fix shape.** Point `generated_dir_for` at the authored engine
+  (`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated`),
+  fix the drift-check twin, refresh the schema file's metadata, and either add
+  the package-local schema copy the engine header promises or reword the header.
+
+### B-014 — the committed host specmap.json drifts with no freshness gate {#b-014}
+
+| | |
+|---|---|
+| ##B014-ANCHOR **anchor** | none — measured by the B-012 evidence pass; the class is the health-audit's out-of-gate drift, `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#root`'s own subject |
+| ##B014-LOCATOR **locator** | root `specmap.json`: **599 of 5266** spec units' recorded `line` no longer lands on that unit's anchor at HEAD (concentrated: PROP-000 ×137, PROP-043 ×112, PROP-018 ×92, PROP-009 ×91); the code side holds (898/912 edges land on a marker line). No gate covers it: `tools/self-check.sh:366-375`'s specmap steps are the packages' own `--gate` self-traces, and no host-index regeneration or byte-compare runs anywhere in the panel |
+| ##B014-SEVERITY **severity** | P2 |
+| ##B014-DISPOSITION **disposition** | `open` |
+| ##B014-FILED **filed by** | the B-012 feasibility study (`campaigns/packages-2026-09/harvest/d14-b012-part-B.md` §B4 freshness caveat), 2026-08-01 |
+
+- ##B014-WHY-NOT-P1 **Why P2 and not P1.** `##SEV-GATE-BLINDNESS-IS-P1` covers a gate that
+  reports green *because it is not looking while claiming to look*. No gate
+  claims to check the host index — self-check's specmap steps name the package
+  slots they trace, truthfully. This is a committed derived artefact whose
+  producer is never re-run: out-of-gate drift, the exact class the periodic
+  audit exists for, not a lying panel.
+- ##B014-COST **What it costs today.** Any consumer of the committed index inherits
+  stale spec-side coordinates — including the M2 доorway slice the B-012 study
+  shortlists (its 81/81 URI-resolution measurement holds, but a printed
+  `file:line` would be wrong for ~11 % of units) — and every index-derived
+  distribution must carry a freshness caveat, as the study's own tables do.
+- ##B014-FIX-SHAPE **The fix shape, two independent halves.** (i) Regenerate the index and
+  commit it (one command, one churny diff). (ii) Decide whether the host wants
+  a freshness gate at all — a `--check`-style byte-compare in self-check, a
+  WalFreshness-style staleness warning in `vibe check`, or a deliberate
+  «regenerated on demand only» posture recorded as a decision. The A–D
+  health-audit inventory scheduled at the Phase D exit gate should meet this
+  entry there.
+
 ## P3 — accepted, no action planned {#p3}
 
 *(empty)*
