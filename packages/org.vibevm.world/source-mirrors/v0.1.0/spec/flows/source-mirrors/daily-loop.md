@@ -161,8 +161,9 @@ model was built for the host set to be *living*. @spec/done
 2. ##OFFBOARD-STEP-OPTIONALLY-ARCHIVE-THE-HOST-COPY **Optionally archive the host copy** — leave it read-only as a
    historical mirror, or delete the repo on that host. @impl/done
 
-##NOTHING-IS-LOST-EITHER-WAY Nothing is lost either way: **every remaining host, and mainline, holds
-the full history.** @impl/done
+##NOTHING-IS-LOST-EITHER-WAY Nothing is lost either way: **every remaining host
+holds the full history of the declared refs, and mainline holds the whole
+tree.** @impl/done
 
 ##OFFBOARDING-NEVER-SUBTRACTS-A-COMMIT Offboarding a mirror never subtracts a commit from
 the project — it only stops one replica from being kept current. @impl/done
@@ -181,5 +182,8 @@ shrink as freely as it grew. @spec/done
   never cleared by clobbering the host. @impl/done
 - ##SUM-ONBOARD-AND-OFFBOARD Onboard a host: empty repo → one manifest entry → first fan-out.
   Offboard: remove the entry, optionally archive the copy. @impl/done
-- ##SUM-EVERY-HOST-HOLDS-THE-FULL-HISTORY Every host holds the full history, so the set grows and shrinks
-  without data loss. @impl/done
+- ##SUM-EVERY-HOST-HOLDS-THE-FULL-HISTORY Every host holds the full history of
+  the refs the manifest declares for it (`main` + tags today; any deliberately
+  declared branch later), so the set grows and shrinks without data loss. Refs
+  outside that set live only where they were authored — the fan-out is
+  replication of a declared line, not a backup of the whole tree. @impl/done
