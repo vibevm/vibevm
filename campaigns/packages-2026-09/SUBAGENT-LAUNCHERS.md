@@ -354,3 +354,18 @@ before blaming the harness.
 — the rework changed state homes and headers, not the owner's daily use;
 `claudez2`'s history before 2026-08-03 remains under `~/.claude-glm` (the
 old shared dir) and is reachable by pointing `CLAUDEZ2_CONFIG_DIR` there.
+
+##fact-first-live-fanout **First mandate-work fan-out (2026-08-03, E1 —
+the B-022/B-023 evidence sweeps, one worker per lane):** both artifacts
+accepted; but one of two workers **skipped the mandated closing
+`WORKER-REPORT` outright** — echoed `TASK-DONE` with no report file —
+despite the packet's emphatic clause and inlined template. The `-c`
+rework wrote a correct report in one pass, **except** it ignored the
+rework message's explicit instruction to log the miss under
+«Deviations» and re-filled the template's happy-path text instead.
+Two operational rules bought: *(i)* the report-file existence check is
+part of the mechanical set-compare, never assumed from `TASK-DONE`;
+*(ii)* a rework that must land in a specific report section **dictates
+that section's replacement text verbatim** — a template-following weak
+writer re-fills the template as-is and treats surrounding instructions
+as soft asks. Runs and meta: `cache/agents/sorted/E1-B023-SWEEP/`.
