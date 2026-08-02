@@ -1,6 +1,9 @@
 //! `cargo xtask codegen` / `check-codegen` — regenerate the Rust types
-//! under each owning crate's `src/generated/` from the JTD schemas under
-//! `schemas/`, and the CI drift check over the result.
+//! under each owning crate's `src/generated/` from the JTD schemas, and
+//! the CI drift check over the result. Schemas live in two homes: the
+//! host wire contracts under `schemas/` at the repo root, and the
+//! specmap schema inside the `core-ai-native` package (the traceability
+//! engine owns its own data model, schema included).
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -40,16 +43,28 @@ fn find_jtd_codegen(root: &Path) -> Result<PathBuf> {
     }
 }
 
+/// The authored specmap engine package: both the `specmap` schema and the
+/// generated types live inside `core-ai-native` (vendored stack copies catch
+/// up at release events, never from here).
+const SPECMAP_ENGINE_SLOT: &str = "packages/org.vibevm.ai-native/core-ai-native/v0.8.0";
+
+/// The engine package's own `schemas/` — the second schema home the
+/// codegen scans besides the host `schemas/` at the repo root.
+fn specmap_schema_dir(root: &Path) -> PathBuf {
+    root.join(SPECMAP_ENGINE_SLOT).join("schemas")
+}
+
 /// Per-schema output routing: a schema's generated types live in the crate
 /// that owns them. Most wire contracts live in `vibe-wire` (the shared
-/// wire-format crate); `specmap` owns its own data model in `specmap-core`, so
-/// the traceability engine carries its types and can relocate without a
-/// `specmap-core → vibe-wire` edge (Traceability Relocation Plan, Phase 1).
+/// wire-format crate); `specmap` owns its own data model in the engine crate
+/// `core-ai-native-specmap`, so the traceability engine carries its types and
+/// can relocate without an engine → `vibe-wire` edge (Traceability Relocation
+/// Plan, Phase 1).
 fn generated_dir_for(stem: &str, root: &Path) -> PathBuf {
     match stem {
-        "specmap" => root.join(
-            "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.5.0/crates/specmap-core/src/generated",
-        ),
+        "specmap" => root
+            .join(SPECMAP_ENGINE_SLOT)
+            .join("crates/core-ai-native-specmap/src/generated"),
         _ => root.join("crates/vibe-wire/src/generated"),
     }
 }
@@ -64,22 +79,10 @@ fn schema_stem(schema: &Path) -> Result<String> {
         .with_context(|| format!("schema name not `*.jtd.json`: {}", schema.display()))
 }
 
-pub(crate) fn run_codegen() -> Result<()> {
-    let root = repo_root()?;
-    let schemas_dir = root.join("schemas");
-
-    if !schemas_dir.exists() {
-        bail!(
-            "`schemas/` directory not found at {}",
-            schemas_dir.display()
-        );
-    }
-
-    let binary = find_jtd_codegen(&root)?;
-
-    // Find every `*.jtd.json` under `schemas/`.
-    let schemas: Vec<PathBuf> = std::fs::read_dir(&schemas_dir)
-        .with_context(|| format!("reading {}", schemas_dir.display()))?
+/// Every `*.jtd.json` directly under `dir`.
+fn schemas_under(dir: &Path) -> Result<Vec<PathBuf>> {
+    Ok(std::fs::read_dir(dir)
+        .with_context(|| format!("reading {}", dir.display()))?
         .filter_map(|e| e.ok())
         .map(|e| e.path())
         .filter(|p| {
@@ -89,13 +92,26 @@ pub(crate) fn run_codegen() -> Result<()> {
                     .map(|n| n.ends_with(".jtd.json"))
                     .unwrap_or(false)
         })
-        .collect();
+        .collect())
+}
+
+pub(crate) fn run_codegen() -> Result<()> {
+    let root = repo_root()?;
+
+    let binary = find_jtd_codegen(&root)?;
+
+    // Both schema homes are committed; a missing one is a broken checkout,
+    // not an empty state.
+    let mut schemas: Vec<PathBuf> = Vec::new();
+    for dir in [root.join("schemas"), specmap_schema_dir(&root)] {
+        if !dir.exists() {
+            bail!("schema directory not found at {}", dir.display());
+        }
+        schemas.extend(schemas_under(&dir)?);
+    }
 
     if schemas.is_empty() {
-        eprintln!(
-            "no `*.jtd.json` schemas under `{}` — nothing to do.",
-            schemas_dir.display()
-        );
+        eprintln!("no `*.jtd.json` schemas found — nothing to do.");
         return Ok(());
     }
 
@@ -118,7 +134,7 @@ pub(crate) fn run_codegen() -> Result<()> {
     );
 
     for (out_dir, group) in &by_dir {
-        generate_into(&binary, out_dir, group)?;
+        generate_into(&binary, &root, out_dir, group)?;
     }
     Ok(())
 }
@@ -129,7 +145,7 @@ pub(crate) fn run_codegen() -> Result<()> {
 /// keeps `check-codegen` exact: what's on disk is exactly what the generator
 /// would produce from *only* the schemas routed to this dir, so a removed or
 /// rerouted schema cannot leave a stale submodule behind.
-fn generate_into(binary: &Path, out_dir: &Path, schemas: &[PathBuf]) -> Result<()> {
+fn generate_into(binary: &Path, root: &Path, out_dir: &Path, schemas: &[PathBuf]) -> Result<()> {
     std::fs::create_dir_all(out_dir)
         .with_context(|| format!("creating output dir {}", out_dir.display()))?;
 
@@ -182,11 +198,26 @@ fn generate_into(binary: &Path, out_dir: &Path, schemas: &[PathBuf]) -> Result<(
     // Module names sorted for determinism so `check-codegen` stays stable
     // across platforms (filesystem read order is not guaranteed).
     module_names.sort();
+    // The header names the tree's actual schema home(s), repo-relative —
+    // the two generated trees read their schemas from different places.
+    let mut sources: Vec<String> = schemas
+        .iter()
+        .filter_map(|s| s.parent())
+        .map(|d| {
+            let rel = d.strip_prefix(root).unwrap_or(d);
+            format!("`{}/`", rel.display().to_string().replace('\\', "/"))
+        })
+        .collect();
+    sources.sort();
+    sources.dedup();
+    let sources = sources.join(" / ");
     let mut top = String::new();
     top.push_str("// Generated by `cargo xtask codegen`. DO NOT EDIT.\n");
     top.push_str("//\n");
     top.push_str("// Each submodule is generated by `jtd-codegen` from the matching\n");
-    top.push_str("// `*.jtd.json` schema under `schemas/` at the repo root. Editing\n");
+    top.push_str(&format!(
+        "// `*.jtd.json` schema under {sources}. Editing\n"
+    ));
     top.push_str("// this file by hand will be overwritten on the next codegen run.\n\n");
     for name in &module_names {
         top.push_str(&format!("pub mod {name};\n"));
@@ -207,13 +238,12 @@ pub(crate) fn run_check_codegen() -> Result<()> {
     run_codegen()?;
     let root = repo_root()?;
     // Diff every generated tree codegen may write, so drift in any owning
-    // crate is caught (the routing fans `specmap` out to specmap-core, the
-    // rest to vibe-wire).
+    // crate is caught (the routing fans `specmap` out to the engine crate
+    // `core-ai-native-specmap`, the rest to vibe-wire).
     let out_dirs = [
         root.join("crates/vibe-wire/src/generated"),
-        root.join(
-            "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.5.0/crates/specmap-core/src/generated",
-        ),
+        root.join(SPECMAP_ENGINE_SLOT)
+            .join("crates/core-ai-native-specmap/src/generated"),
     ];
     let mut cmd = Command::new("git");
     cmd.arg("diff").arg("--exit-code").arg("--");
@@ -226,8 +256,8 @@ pub(crate) fn run_check_codegen() -> Result<()> {
         .context("spawning git diff")?;
     if !status.success() {
         bail!(
-            "generated code under {} is out of date relative to `schemas/`. \
-             Run `cargo xtask codegen` and commit the result.",
+            "generated code under {} is out of date relative to the JTD \
+             schemas. Run `cargo xtask codegen` and commit the result.",
             out_dirs
                 .iter()
                 .map(|d| d.display().to_string())

@@ -1,0 +1,79 @@
+{
+  "code_items": [
+    {
+      "crate_name": "demo-core",
+      "file": "crates/demo-core/src/parse.rs",
+      "item_kind": "fn",
+      "line": 41,
+      "symbol": "demo_core::parse::Timeout::parse"
+    },
+    {
+      "crate_name": "demo-core",
+      "file": "crates/demo-core/src/parse.rs",
+      "item_kind": "fn",
+      "line": 88,
+      "symbol": "demo_core::parse::tests::rejects_negative"
+    }
+  ],
+  "edges": [
+    {
+      "file": "crates/demo-core/src/parse.rs",
+      "from_symbol": "demo_core::parse::Timeout::parse",
+      "line": 41,
+      "pinned_r": 2,
+      "provenance": "authored",
+      "uri": "spec://demo/PROP-001#req-parse",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/demo-core/src/parse.rs",
+      "from_symbol": "demo_core::parse::tests::rejects_negative",
+      "line": 88,
+      "pinned_r": 1,
+      "provenance": "authored",
+      "uri": "spec://demo/PROP-001#req-parse",
+      "verb": "verifies"
+    }
+  ],
+  "schema": 2,
+  "spec_units": [
+    {
+      "anchor": "root",
+      "content_hash": "sha256:0f3d418f2cc32233753f395349b700c160738e7aa51a613d081051c74a8ccd34",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "PROP-001 — the demo contract",
+      "line": 1,
+      "uri": "spec://demo/PROP-001#root"
+    },
+    {
+      "anchor": "req-parse",
+      "content_hash": "sha256:e830489a10618c22a97eb919ba7987328d4dc8cf9e7185117e296ed2db5213ab",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "Parse timeouts",
+      "kind": "req",
+      "line": 5,
+      "revision": 2,
+      "uri": "spec://demo/PROP-001#req-parse"
+    }
+  ],
+  "suspects": [
+    {
+      "current_r": 2,
+      "file": "crates/demo-core/src/parse.rs",
+      "from_symbol": "demo_core::parse::tests::rejects_negative",
+      "line": 88,
+      "pinned_r": 1,
+      "uri": "spec://demo/PROP-001#req-parse"
+    }
+  ],
+  "warnings": [
+    {
+      "code": "duplicate-anchor",
+      "file": "spec/PROP-002.md",
+      "line": 17,
+      "message": "anchor `req-parse` is already defined at spec/PROP-001.md:5"
+    }
+  ]
+}

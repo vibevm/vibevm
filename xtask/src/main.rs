@@ -3,10 +3,12 @@
 //! Subcommands:
 //!
 //! - `codegen` — regenerate the Rust types under each owning crate's
-//!   `src/generated/` from the JTD schemas under `schemas/` (most in
-//!   `vibe-wire`; `specmap` in `specmap-core`). Calls the locally-vendored
-//!   `jtd-codegen` binary (see `tools/jtd-codegen/README.md`); errors
-//!   actionably when the binary is missing.
+//!   `src/generated/` from the JTD schemas (host wire contracts under
+//!   `schemas/` into `vibe-wire`; the `specmap` schema lives inside the
+//!   `core-ai-native` package and generates into its engine crate
+//!   `core-ai-native-specmap`). Calls the locally-vendored `jtd-codegen`
+//!   binary (see `tools/jtd-codegen/README.md`); errors actionably when
+//!   the binary is missing.
 //! - `check-codegen` — `codegen`, then run `git diff --exit-code` over
 //!   the generated dirs. Used by CI to assert no schema drift.
 //! - `specmap` — regenerate the canonical `specmap.json` traceability

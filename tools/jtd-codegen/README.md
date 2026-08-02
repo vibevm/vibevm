@@ -2,7 +2,11 @@
 
 `jtd-codegen` generates strictly-typed, language-specific code from JTD
 ([JSON Type Definition, RFC 8927](https://www.rfc-editor.org/rfc/rfc8927))
-schemas. We use it to derive Rust types under [`crates/vibe-wire/src/generated/`](../../crates/vibe-wire/src/generated/) from the schemas in [`schemas/`](../../schemas/) at the repo root.
+schemas. We use it to derive Rust types from the project's JTD schemas: the wire
+contracts in [`schemas/`](../../schemas/) at the repo root generate into
+[`crates/vibe-wire/src/generated/`](../../crates/vibe-wire/src/generated/),
+and the specmap schema inside the `core-ai-native` package generates into
+that package's own engine crate (`core-ai-native-specmap`).
 
 Per [PROP-000 §16](../../spec/common/PROP-000.md#jtd) JTD is the source of
 truth for every wire contract in the project; per [PROP-000 §15](../../spec/common/PROP-000.md#dep-weight) we
