@@ -40,9 +40,11 @@ comes from its dependency `flow:org.vibevm.ai-native/core-ai-native`. @impl/done
   (`crates/vendor/core-ai-native-specmark`, taken under the dependency alias
   `specmark`, which is the name your code writes) — the inert
   `#[spec]`/`scope!` tags your code carries. @impl/done
-- ##SHIPS-SPECMAP-WIRE-SCHEMA `schemas/specmap.jtd.json` — the wire schema of `specmap.json` (the
-  generated types in `specmap-core/src/generated/` derive from it;
-  regeneration is a maintainer dev-op in the package's dev repo). @impl/done
+- ##SHIPS-SPECMAP-WIRE-SCHEMA **The specmap wire types**
+  (`crates/vendor/core-ai-native-specmap/src/generated/`) — generated from
+  `specmap.jtd.json`, whose home is the `core-ai-native` package's
+  `schemas/` (a canonical `specmap.example.json` sits beside it);
+  regeneration is a maintainer dev-op in the dev repo. @impl/done
 
 ## Running the tools {#running-the-tools}
 
