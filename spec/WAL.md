@@ -209,15 +209,16 @@ D17 → sealed; registry back at 108 / 232 with F-133 resolved to history). @imp
    → build B-025 (mark-not-suppress, owner's visualisation ground), item 6 →
    build B-026 (SARIF ingest, high priority; F-206 deferred naming it), item
    7 applied (the five-sibling closing-rule form) + B-027 filed (the
-   marker-semantics audit). **Item 4 applied (D22); F-180 closed; F-166
-   closed whole 2026-08-02** — the gated-key ruling (а)+(б) → B-029, the
-   assertion ruling (а)+(б) → B-030 (incl. the owner's Rust/TS survey
-   extension), the owner-confirmed ##TIER-VOCABULARY legend landed and
-   TWO-TIERS re-judged. **3.2 became B-031 (planned): the root project
-   takes a fully-qualified name (`org.vibevm.core`), host addressing
-   exceptions die** — the F-169/F-147 segment family closes through it.
-   Awaiting the owner: SUM-THE-BIDIRECTIONAL-GRAPH's «применяй» (group D).
-   Then the rest of the sync queue per document. @spec/done
+   marker-semantics audit). **The addressing family is drained: F-180,
+   F-166, F-162 closed whole; F-169 and F-147 deferred onto B-031** (their
+   segment anchors close when the root becomes a fully-qualified package).
+   The 2026-08-02 sittings also produced B-029 (gate-key rename), B-030
+   (assertion checks + Rust/TS survey), B-032 (planning-granularity
+   protocol: FEAT files as addressable units composed into plans), the
+   B-018 canonical query («which test verifies this rule»), and the
+   dead-alias fix (five code tags now cite ##CMD-* facts; PROP-043's four
+   trap-tokens removed). **Next presentations: F-132's nine, F-185, the
+   duplication family F-217/218/285.** @spec/done
 2. ##WAL-NEXT-ADR **B+A′ is fully executed** — the §3.13 carve-out landed as
    (ii): census 35→36, the four-field record at PROP-000 §7
    (`##split-host-decision…`) carrying the owner's updated split-host posture
