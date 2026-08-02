@@ -4827,6 +4827,28 @@ aspirational — and every one is still live for the phases that remain.
   long-run account throttling, visible in the stream-json logs if
   it ever appears.
 
+- **2026-08-03/04 · Phase E opens — the first slice executes, and the
+  owner rules on it.** The mandate's first slice ran end to end on the
+  claudez transport: the **B-011 design** (boss-authored,
+  `spec/design/deterministic-loading-aliasing.md` — qualified
+  rename-on-splice, `#use … as X` / `@!X` aliases, the two-scope
+  lookup rule, the append-only dynamic-lane case) went to the owner
+  and was **APPROVED 2026-08-04** with every fork's recommended
+  option, after one design probe (the stale-short-address case →
+  §6.1's four defence layers, layers 1–3 in-slice) and one owner
+  addition (resolution rules are priority-placed: the lane-header
+  preamble + PROP-035 §13's first-instructions, design §5.1). The
+  **research pair landed**: B-022 evidence + synthesis (one unblocked
+  slice — the query-kind enum; everything else behind B-020/B-015) —
+  **owner agreed 2026-08-04**; B-023 evidence + synthesis (the shipped
+  «T-sem» TS frontend never calls the type checker — parser-depth in
+  substance) — the owner **counter-probed the depth verdict** («а ты
+  уверен, что это приемлемая глубина?»), re-opening T2's passive
+  trigger for re-judgement. **Transport first-blood:** one of two
+  workers skipped the mandated WORKER-REPORT while echoing TASK-DONE;
+  one `-c` rework fixed it; two rework rules paid for and recorded in
+  the law's `#fact-first-live-fanout`. @spec/done
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
