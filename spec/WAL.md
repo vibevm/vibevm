@@ -1,32 +1,20 @@
 # WAL — Project Continuation State {#root}
 
-_Updated: 2026-08-02, ситтинг предъявлений, четыре обмена (**PHASE D AT ITS
-EXIT RAMP + THE BUILD-FIRST PIVOT: правила дисциплины не выключаются за
-неиспользование — «спроектировать и потом построить»; F-185 / F-218 /
-F-132 / F-217 / F-154 / F-355 / F-181 deferred onto recorded-or-built work
-(B-033…B-041 filed, B-011 at Самый Высокий Приоритет, self-check step 0c
-built, F-167 applied D31, TS-близнецы починены вердикт-сначала D30, F-285
-resolved D29); corpus 97.8 %, registry 102 obligations / 209 drifts, 28
-owner-ruled deferrals, 74 open, owed 41 — every one on the owner's sync
-route, boss-owed zero everywhere; the backlog stands at B-044; **B-027's
-sweep EXECUTED under the approved rule (19 flips to @impl/plan naming
-entries, D34), the no-measurements standing answer recorded (D33 + B-042),
-the zombie-test build filed (B-044, D32 verdict-first ×3), the 74.8 canon
-fixed to 75.3/70.2 (F-161 drained), the B-041 map APPROVED and INTEGRATED
-as `TOOLING-MAP.md`**; the ninth exchange drained the LAST sync portion nine-for-nine —
-the pin build landed (build.rs + RUST_PIN, hardcodes dead), nine
-documents repaired over D39/D40/D41 (four verdict-first twins including
-a fourth found mid-pass), the real `progress mirror` subcommand learned,
-a 58-row bulk deferred-flip made and REVERTED (deferred = owner-ruled,
-not boss-routed); registry 91 / 191 — owed 18 = 17 owner-ruled build
-deferrals + F-279; resolved 138; ai-native 98.3 %; on the owner: the
-F-279 schema-home ruling, then THE EXIT GATE**)_
+_Updated: 2026-08-02, session end №2 (**PHASE D: THE APPROVAL QUEUE IS
+DRAINED WHOLE — the presentation sitting ran ~ten owner exchanges and closed
+every sync-route presentation; on the table: ONE already-given ruling to
+execute (F-279 — вариант (а) + the new `org.vibevm.ai-native/jtd-codegen`
+package), then THE EXIT GATE. Corpus 97.9 % (`ai-native` 98.3 %), registry
+91 obligations / 191 drifts — 32 owner-ruled deferrals, 59 open, owed 18 =
+17 on owner-ruled builds + F-279's 1; resolved 138; boss-owed zero; the
+backlog stands at B-047; B-027's sweep done; the map lives at
+`TOOLING-MAP.md`**)_
 
 ##WAL-NUMBERS-COME-FROM-COMMANDS **Every number below is reproduced by two
 commands; run them rather than quoting this file** (why:
 `spec://vibevm/terraforms/packages-actualization#quick-start` — every line of
 the quick-start prints a number; a figure quoted from a checkpoint decays,
-proved twice by the registry snapshot reading as open work). @impl/done
+proved again this sitting by the stale «F-132's nine» queue line). @impl/done
 
 ```bash
 python campaigns/packages-2026-09/tasks/drift-registry.py   # obligations, routes, convergence
@@ -36,356 +24,189 @@ python campaigns/packages-2026-09/tasks/summary.py          # what the verdicts 
 ## Current phase {#current-phase}
 
 ##WAL-PHASE **Progress Control (PROP-043) — wave 2, `packages-2026-09`, Phase D
-(Stitching), near its exit gate.** Live zone `campaigns/packages-2026-09/`;
-`campaigns/progress-2026-08/` is archival and its state files are never pointed
-at (`BACKLOG.md` B-010). @impl/done
+(Stitching), at the exit gate's doorstep.** Live zone
+`campaigns/packages-2026-09/`; `campaigns/progress-2026-08/` is archival and
+its state files are never pointed at (`BACKLOG.md` B-010). @impl/done
 
-##WAL-WAVE9 **Волна 9 (2026-07-31) was THE PUBLICATION**, executed through
-[`PHASE-D-PUBLICATION-RUNBOOK.md`](../campaigns/packages-2026-09/PHASE-D-PUBLICATION-RUNBOOK.md)
-under the owner's «Публикуй»: the event was **local** (lockfile all-local since
-2026-07-26, no version bumps — `vibe reinstall --force` re-fetched every pinned
-version from `packages/`), the address family took `@spec://` (62 constructs,
-25 files, `../flows/` in the compiled lane 69 → 0), the release batch landed
-with its lane twins and the three redrawn topology diagrams, and all seventeen
-fenced re-derive prompts now name the install slot. Marker fork ruled **(а)** —
-the lane carries authoring markup until the `#use spec://… as SOMETHING`
-aliasing design (`BACKLOG.md` B-011) makes stripping safe. Verification:
-`self-check.sh` EXIT=0, `sync-engines --check` green (51 pairs),
-`address-repair.py --verify` 0 remaining. @impl/done
-
-##WAL-STATE **State at the last regeneration** (2026-08-02, presentation
-sitting, sixth exchange; the commands supersede): corpus **11 169 / 207 /
-44 — 97.8 %** over 260 files; registry **101 obligations / 207 drifts — 31
-`deferred` by owner ruling, 70 open**; **owed 34 of 207, every one on
-`sync-from-code`, the owner's route**; resolved to history across the
-sittings: **128 total** (F-284 and F-161's substance joined the list this
-exchange; earlier: F-207, F-263, F-351, F-180, F-166, F-162, F-285,
-F-133's loop). The boss-owed remainder is **zero** on every route; the
-rulings ledger:
+##WAL-STATE **State at the last regeneration** (2026-08-02, session end №2;
+the commands supersede): corpus **11 187 / 191 / 44 — 97.9 %** over 260
+files and 11 422 units (`ai-native` **98.3 %**, `host` 99.9 %, `world`
+95.5 %); registry **91 obligations / 191 drifts — 32 `deferred` by owner
+ruling, 59 open**; **owed 18 = 17 on owner-ruled build deferrals
+(B-022/023/025/026/029/031/033/034) + 1 on the open F-279, whose ruling IS
+ALREADY GIVEN and awaits execution**; resolved to history **138**. The
+boss-owed remainder is **zero** on every route. The rulings chronicle:
 `campaigns/packages-2026-09/PHASE-D-HOST-OBLIGATIONS.md#rulings-2026-08-01`
-and `#rulings-2026-08-02-2` (six exchanges). `progress check` clean —
-re-run at every mirror step of the sitting (260 files), `self-check.sh`
-all green — full run EXIT=0 twice today (sitting open + after step 0c),
-**панель перегоняется на чекпойнте ситтинга**, cargo-audit 0.22.2 /
-cargo-outdated 0.19.0 installed. @impl/done
+and `#rulings-2026-08-02-2` (~ten exchanges). Panel all green многократно
+(последний прогон — со стройкой пина); `progress check --campaign` clean
+(260 files); cargo-audit 0.22.2 / cargo-outdated 0.19.0 installed. @impl/done
 
-##WAL-RULINGS-IN-FORCE **Owner rulings taken 2026-07-31/08-01 and in force:**
-sync-queue group A = answer (2) — «specified, not built» annotate-in-place is
-the sanctioned form, the four closing rules amended, group B's 23 corrections
-unblocked; B-007 = **B + A′** — **executed 2026-08-01**: the three-question
-criterion lives at `spec/design/README.md#owed-a-record`, twelve four-field
-records sit inside their owning `spec/common` sections (PROP-000 ×5, PROP-018
-×3, PROP-024 ×4), `spec/decisions/` closed in the genre table; the 51 new
-record anchors judged confirmed and their four files sealed (batch D14,
-2026-08-01); **health-audit adopted whole** («Проведи всё это») — the 16
-routed anchors closed by adoption, `AUDIT.md` carries the five clauses, the
-skill installed; **партия 1a applied** (PROP-014's nine annotations +
-RUNTIME-TRANSPORT, the ten unbuilt mechanisms filed as B-012 with «провести
-исследование, можно ли реализовать»); F-220's WAL-entry half = reading **(b)**
-(sound-but-unexercised prescription; the package does not move); B-004 =
-**(i)** (all seventeen fence first lines repaired in the publication); B-009
-closed (the wind-down's step 4 names `cargo xtask mirror` in all three
-instruction files); the campaign-plans practice adopted — both live plans
-carry the six flow forms and 21 of 29 routed anchors re-judged `confirmed`.
-**Ситтинг 2026-08-02 (предъявления):** F-185 → стройки вместо смягчения
-(B-033 выделенное seam-error-правило Go; B-029 обогащён до пер-языковой
-поверхности `conform.toml`; B-034 инвариант gated-or-exempt для Go/TS;
-B-035 паритет-аудит с принципом «не слабее Rust без записанной причины»;
-рамка семьи — «мы не можем писать на Typescript и Go пока не поправим»);
-остаток F-132 = ответ (1) — долг «spec-метки в `schemas/specmap.jtd.json`»
-(попутчики B-013 / B-019(а)); F-218 → B-011, поднятый до Самого Высокого
-Приоритета с направлениями qualified-rewrite / ADL / `@!X` / динамические
-STATIC.md. **Формат предъявлений уточнён и обязателен вперёд:** сначала
-суть по-человечески, затем точные технические имена (настройки, файлы,
-поведение) — точность не теряется; спец-жаргон только приложением.
-**Третий обмен того же ситтинга:** тройка CLAUDE/AGENTS/GEMINI получает
-алгоритмическую сверку («добавь проверку… алгоритмическую, а не через
-LLM») — построена шагом 0c в `tools/self-check.sh` (пофайловый
-байт-компаратор, полный файл сознательно); F-217 → `deferred` (обе
-половины построены или запланированы); F-285 снят по слову «сними пока.
-Угроза реальная, но пока это не приоритет» — D29 re-judge confirmed,
-реальная половина угрозы и есть предмет B-011.
-**Четвёртый обмен — THE BUILD-FIRST PIVOT (стоячее правило вперёд):**
-для механизмов дисциплины дефолт «аннотировать отсутствие» умер — «Я
-против чтобы ты выключал правила только потому, что они нигде пока не
-используются… нужно это спроектировать и потом построить»; «Система не
-заморожена, она должна развиваться»; о собственном коде — «похоже на
-причину всё отрефакторить и начать применять». Аннотация легитимна
-только как интерим, называющий записанную стройку. Исполнено: F-154 →
-B-036/B-037/B-038/B-040 (deferred); TS-близнецы — вердикт-сначала D30 →
-F-355 → B-036/B-037 (deferred; дубль id генератора разведён вручную,
-дефект — B-043); F-161's R-001-пара → B-039 (строка open на двух
-несуженных якорях); F-167 применён D31 + B-042 (accepted, дальняя
-тестовая база — LLM/фаззер); F-181 → вариант (1), к семье F-204/B-005
-(deferred); B-041 — карта развития инструментария, прямой запрос
-владельца, следующая работа boss-lane.
-**Пятый обмен:** карта одобрена («мне нравится этот документ») и
-интегрирована — `TOOLING-MAP.md` в корне + раздел `#map` бэклога;
-рамка кампании записана в `##frame-line` дословно. **Шестой обмен
-(четыре рулинга):** ссылка §6→§4 и канон 75.3/70.2 применены (D33,
-F-161 осушен; продуктовый первоисточник C-4 согласован с ATLAS);
-**свип B-027 исполнен** (19 флипов `@impl/plan` с именами записей,
-D34 19/19, B-027 → done); стоячий ответ «замеров нет и нескоро будет»
-записан в три complete-цели + карту + B-042 — вопрос владельцу больше
-не задаётся; **B-044** («тест на зомби лучше написать») зафайлен,
-шесть копий клятвы объединены (D32 вердикт-сначала ×3 — включая
-пер-якорную поимку: носитель в ts-оракуле `RUST-SIDE-OWNS-TERMINATION`,
-не SHUTDOWN-якорь таблицы harvest'а), F-281/F-167/F-161 deferred,
-F-284 resolved. @impl/done
+## Next — the two steps, in order {#next}
+
+1. ##WAL-NEXT-F279 **Execute the already-given F-279 ruling** («Вариант a +
+   … jtd генератор в tools/jtd-codegen … в отдельный пакет
+   org.vibevm.ai-native/jtd-codegen»): the full verified recipe is
+   `CONTINUE.md` §«ПЕРВОЕ ДЕЛО» — schema `schemas/specmap.jtd.json` moves
+   into `core-ai-native/v0.8.0/schemas/` (+ canonical example), `xtask
+   codegen` re-routes off the dead v0.5.0 slot (closes **B-013** whole),
+   the rust-stack README's `##SHIPS-SPECMAP-WIRE-SCHEMA` tells the
+   post-move truth (D42 → merge → seal → F-279 resolves → CONVERGENCE
+   satisfied), and `tools/jtd-codegen/` (README.md + jtd-codegen.exe)
+   becomes the `tool`-kind package `org.vibevm.ai-native/jtd-codegen` —
+   **read its README first; the checked-in .exe raises the binary-payload
+   question (Rule 4 borderline): one short options question to the owner
+   if the form is not obvious.** @spec/done
+2. ##WAL-NEXT-EXIT **Run the exit gate** (the standing instruction fires
+   once F-279 lands): acceptance §11 steps 0–4 (panel; exhaustive check
+   `--campaign`; per-namespace summary; CONVERGENCE owed-0-or-ruled +
+   `routing.json`; **write `baseline.json`**, amendment A6), plus the
+   **A–D health-audit inventory** (adoption clause of 2026-08-01), the
+   phase-close LOG entry and the commit-map trio (§7.1 `#cm-planned`).
+   **Phases E/T/F/G are designed and do not start without the owner's
+   word.** Phase E's mandate drains the recorded builds per the map's
+   frame. @spec/done
 
 ## Constraints — do not violate {#constraints}
 
-- ##WAL-C-VERDICT-STANDARD **The verdict standard.** A fact that PRESCRIBES is
-  confirmed when coherent and every referent resolves, including
-  declared-future ones; a fact that DESCRIBES is checked against the tree; a
-  fact whose subject cannot be exercised here is unverifiable in its own
-  words. For `world` add source 2 — the host's observed conformance (why:
-  `spec://vibevm/terraforms/packages-actualization#world-verdicts`). **§3.8
-  bounds source 2:** for `ai-native-lang` packages the audience is external —
-  Go/TS are checked only by their own artefacts and tests, Rust is the
-  exception (why: batch plan `#audience`, owner ruling 2026-07-31). @impl/done
-- ##WAL-C-NON-ADOPTION **Non-adoption is not drift; a marked exception is not
-  drift.** Drift is the host's own written contract contradicting the flow, or
-  a measurable rule broken over a double-digit share of its window. Each fact
-  is judged on its own sentence, never on its family (why: batch plan
-  `#which-side` routes (b)/(c); the capability/practice/rule test is §6.1
-  `##A-REAL-DEFECT-CONVICTING-THE-WRONG-SENTENCE`). @impl/done
+- ##WAL-C-VERDICT-STANDARD **The verdict standard.** PRESCRIBES → confirmed
+  when coherent and every referent resolves (declared-future included);
+  DESCRIBES → checked against the tree; unexercisable subject →
+  unverifiable. `world` adds source 2 (host conformance); **§3.8 bounds
+  source 2**: Go/TS are checked only by their own artefacts and tests, Rust
+  is the exception (why: batch plan `#audience`). @impl/done
+- ##WAL-C-BUILD-FIRST **BUILD-FIRST (owner, 2026-08-02).** For discipline
+  mechanisms the annotate-absence default is dead: a rule is never weakened
+  for being unused; an annotation is legitimate only as an interim naming a
+  recorded build («Specified, not built (→ B-nnn)», marker `@impl/plan` per
+  the executed B-027 rule). «Система не заморожена, она должна развиваться»
+  (why: ledger, four rulings of the fourth exchange). @impl/done
+- ##WAL-C-CAMPAIGN-FRAME **The campaign frame (owner, 2026-08-02).** The
+  map's waves (`TOOLING-MAP.md`) execute through the campaign's phases (E
+  after D's gate); nothing starts from the map; what a mandate does not
+  cover waits (why: the map's `##frame-line`, his words verbatim). @impl/done
+- ##WAL-C-PRESENTATION-FORMAT **Presentation format** (refined 2026-08-02,
+  binding): суть по-человечески first, then the EXACT technical names —
+  settings, files, behaviour — precision never lost; spec jargon only as
+  appendix. «Две настройки» без имён — недопустимо (why: the owner's
+  rebuke, second exchange). @impl/done
+- ##WAL-C-NO-MEASUREMENTS-ANSWER **The no-measurements standing answer:**
+  «замеров нет и нескоро будет» — recorded in B-042, the map, and all three
+  stacks' complete-targets. **The question is never raised to the owner
+  again** (why: his exact words, sixth exchange). @impl/done
+- ##WAL-C-DEFERRED-IS-OWNER-RULED **`deferred` in the registry = an
+  owner-ruled row**, never a boss-side routing record: the 58-row bulk flip
+  was made and REVERTED within the hour; the gate reads owed + rulings, not
+  status counts (why: the ninth exchange's recorded near-miss). @impl/done
+- ##WAL-C-REAL-MIRROR **The real mirror is `vibe progress mirror --campaign
+  <zone>`** (per-file views under `run/mirror/`) — `progress check` is NOT
+  it; any anchor-set change requires the mirror before `merge-verdicts.py`
+  (why: F-309's two new roster anchors, merge-verdicts' fifth useful
+  refusal). @impl/done
 - ##WAL-C-VERDICT-FIRST **A false `confirmed` is repaired verdict-first:**
-  re-judge it `drift`, let the registry mint the obligation and assign its
-  route, and only then edit. First live test 2026-07-31: the Go GUIDE's
-  `gated_packages` clustered to F-166 on the owner's sync route instead of
-  landing as an unapproved diff (why:
-  `spec://vibevm/terraforms/packages-actualization#log`, the D9-rulings
-  entry). @impl/done
+  re-judge to drift, let the registry mint, then edit — executed five times
+  this sitting (D30 ×2, D39 ×4, incl. a fourth family member found
+  mid-pass) (why: `#log`, the sitting's entries). @impl/done
 - ##WAL-C-STRIKE-PER-ANCHOR **A strike-by-ruling checks each anchor's own
-  recorded reason, never the obligation row's** — a row merged by shared
-  anchor carries per-anchor reasons, and §B.1's F-189 strike hit two anchors
-  the ruling never examined (why: release queue `#stacks-audience`, wave-8
-  note). @impl/done
-- ##WAL-C-PERIMETER **The perimeter law.** SPEC in `core-ai-native`, ENGINE in
-  its five crates (vendored into six siblings), DRIVER in each stack's CLI,
-  DEPLOYMENT in a consuming project — and the tree holds at least two adopters
-  (the host and the `fractality` specspace). A `not-found` is a fact about the
-  search perimeter until the perimeter has been checked; `legacy-spec/**` is
-  excluded and is not evidence of practice in either direction (why: batch
-  plan `#compliance-blindness`, owner ruling 2026-07-31). @impl/done
-- ##WAL-C-READ-FURTHER **Read the document further before searching wider** —
-  the cheapest disproof is usually twelve lines down; a document that
-  contradicts itself under your reading is telling you the reading is wrong
-  (why: batch plan §6.1 `##READ-FURTHER-BEFORE-SEARCHING-WIDER`). @impl/done
-- ##WAL-C-OWN-CORPUS **The campaign is inside its own corpus.** Exclude
-  `campaigns/*/run/**` from evidence; open `campaigns/`/`spec/terraforms/`
-  hits and confirm they are instances, not prose about the finding; any git
-  figure names the HEAD it was taken at (why: batch plan §6.1
-  `##THE-CAMPAIGN-IS-INSIDE-ITS-OWN-CORPUS`; the string-vs-thing fourth cause
-  is the sync queue `#reverify-first`). @impl/done
-- ##WAL-C-JOIN-BY-INSTRUMENT **A bulk re-judge goes through the instrument's
-  own join, never a substring filter.** Волна 9's naive marker filter matched
-  104 anchors — more than double the family — and was discarded; the honest
-  join (repaired diff lines → governing anchor via the mirror's fact spans)
-  landed at 46, exactly the measured family (why: §7 LOG, волна-9 entry;
-  blanket confirmation is the softening §3.6 forbids, by script). @impl/done
-- ##WAL-C-WRONG-REASON **A wrong REASON is worse than a wrong verdict** — when
-  restating, restate the reason and say which way the correction runs (why:
-  batch plan §6.1; the queue's own «716» was a line count read as a commit
-  count and self-refuting). @impl/done
-- ##WAL-C-CACHE-MERGE-ONLY **`run/cache.json` is mutated by load-and-merge
-  only**; never chain `merge-verdicts.py` with `progress seal`; never
-  hand-write `verified_at`/`processed_hash` (why: batch plan `#closure` and
-  §6.1 `##NEVER-CHAIN-MERGE-AND-SEAL`; seal's UNSAFE note in
-  `tasks/merge-verdicts.py`'s own docstring). @impl/done
+  recorded reason** — the ts-oracle zombie claim lived in
+  `RUST-SIDE-OWNS-TERMINATION`, not the harvest table's SHUTDOWN anchor
+  (why: the sixth exchange's per-anchor catch; F-230 precedent). @impl/done
+- ##WAL-C-QUEUE-FROM-REGISTRY **The owner's queue derives from the
+  registry, never from a harvest snapshot** (why: the stale «F-132's nine»
+  line — партия 1a had drained it a day earlier). @impl/done
+- ##WAL-C-PERIMETER **The perimeter law.** SPEC in `core-ai-native`, ENGINE
+  in its five crates (vendored ×6), DRIVER per stack CLI, DEPLOYMENT in the
+  consumer; ≥2 adopters in-tree (host + fractality); `legacy-spec/**`
+  excluded; a `not-found` is a fact about the perimeter until checked
+  (why: batch plan `#compliance-blindness`). @impl/done
+- ##WAL-C-READ-FURTHER **Read the document further before searching wider**
+  (why: batch plan §6.1). @impl/done
+- ##WAL-C-OWN-CORPUS **The campaign is inside its own corpus:** exclude
+  `campaigns/*/run/**` from evidence; git figures name their HEAD (why:
+  batch plan §6.1). @impl/done
+- ##WAL-C-CACHE-MERGE-ONLY **`run/cache.json` is load-and-merge only; never
+  chain merge and seal; never hand-write `verified_at`/`processed_hash`.**
+  Merge may hit a transient WinError 5 on the cache swap — retry, it is
+  idempotent. Verdict shape: `files.<path>.campaign.verdicts.<A>.v`; print
+  via `PYTHONIOENCODING=utf-8` (why: §6.1 + this sitting's lock races). @impl/done
 - ##WAL-C-PROGRESS-WRITES **Every parsing `vibe progress` subcommand writes
-  zone state — `check --exhaustive` included — and `--campaign` selects the
-  state zone, not the read perimeter.** Always pass `--campaign`; never point
-  any of them at `campaigns/progress-2026-08` (why: `BACKLOG.md` B-010, paid
-  2026-07-31 — six state files of the closed zone rewritten by a delegated
-  «read»). @impl/done
+  zone state; always pass `--campaign`; never point at
+  `campaigns/progress-2026-08`** (why: B-010). @impl/done
 - ##WAL-C-SELF-CHECK-EXCLUSION **No real `vibe` command while
-  `tools/self-check.sh` runs** — the floor snapshots the real `~/.vibe` (why:
-  the floor's own capture step; turned a green panel red once). @impl/done
+  `tools/self-check.sh` runs** (why: the floor's capture step). Step 0c
+  (CLAUDE/AGENTS/GEMINI byte-compare) is part of the panel since
+  2026-08-02. @impl/done
 - ##WAL-C-STAGE-EXPLICIT **Never `git add -A` while a worker is out**; stage
-  explicit paths; commit delegated work on the completion notification, never
-  on a filled-in journal (why: `spec://vibevm/terraforms/packages-actualization#log`
-  Phase C delegation lessons; a worker's untracked harvest rode along once in
-  rehearsal). @impl/done
-- ##WAL-C-DURABLE-CITATIONS **A wind-down invalidates any evidence table
-  citing `CONTINUE.md` or `spec/WAL.md`** — briefs cite durable files only;
-  re-run `verify-evidence.py` before reading any table (why: batch plan §6
-  delegation rules; the controlled experiment is 116 dead refs in the one
-  pre-rule batch against zero after). @impl/done
+  explicit paths (why: Phase C lessons). @impl/done
+- ##WAL-C-DURABLE-CITATIONS **Briefs cite durable files only; a wind-down
+  invalidates evidence tables citing `CONTINUE.md`/`spec/WAL.md`** (why:
+  batch plan §6; 116 dead refs in the one pre-rule batch). @impl/done
 - ##WAL-C-SHELL-TRAPS **Shell traps that already fired:** `grep -v '\.vibe'`
-  deletes this repo's own `org.vibevm` packages — anchor filters on a path
-  segment; PowerShell `-match` is case-insensitive; Python `str.replace` with
-  `\n` silently no-ops on this CRLF working copy — use an editor tool that
-  errors on a missed match; never trust a substring match about a data file
-  (why: each recorded in the §7 LOG the day it bit). @impl/done
+  deletes our own `org.vibevm` packages; PowerShell `-match` is
+  case-insensitive; Python `str.replace` with `\n` no-ops on CRLF — use
+  editor tools; Git Bash heredocs eat `\\` in inline python — use script
+  files; `git commit -q` глотает вывод — контроль `echo $?` (why: each
+  recorded the day it bit). @impl/done
 - ##WAL-C-BOOT-PAIR **Boot pair marking:** `spec/boot/00-core.md` /
-  `90-user.md` carry the owner's machine facts — mark additively, do not
-  re-form; `90-user.md` mixes project and machine scope deliberately («оставь
-  пока», owner 2026-07-26); `refs/book/` stays NOTOUCH (why: owner rulings on
-  record in the boot files themselves). @impl/done
+  `90-user.md` carry owner machine facts — mark additively; `refs/book/`
+  NOTOUCH (why: owner rulings in the boot files). @impl/done
 - ##WAL-C-DELEGATION **Delegation goes to the harness's built-in `opus5`
-  subagents, not fractality; the verdict and the routing of an anchor are
-  never delegated, and neither is review** (why:
-  batch plan `#delegation`, owner ruling carried from Phase C §6). @impl/done
-- ##WAL-C-MISC **Small standing facts:** the parse payload lives at
-  `~/.vibe/progress-cache/…` and never carries a verdict; vvm manifest mtime
-  units differ across ports (`mtime_ms` TS / `mtime_nanos` Rust, PROP-019
-  §2.15); electron-packager temp cache races on concurrent self-installs —
-  run sequentially; `CI`/`VIBE_NO_DEFAULT_REGISTRY` suppresses vibe-embedded
-  but not project-local (PROP-030); `crates/vibe-cli/src/registry.rs` is the
-  only sanctioned constructor site for embedded/local-composite providers;
-  MT-02 and MT-03 await the owner's manual sign-off. @impl/done
+  subagents, not fractality; verdicts, anchor routing and review are never
+  delegated** (why: batch plan `#delegation`). This sitting ran all
+  boss-side (judgement work). @impl/done
+- ##WAL-C-MISC **Small standing facts:** parse payload at
+  `~/.vibe/progress-cache/…` carries no verdicts; `vibe.lock` +
+  `[[mcp_server]]`/`[[binary]]` tables are the autodiscovery rails B-046
+  rides; MT-02/MT-03 await the owner's manual sign-off; the redbook
+  manifest carries the standing edition rule (next roster change bumps the
+  version). @impl/done
 
 ## Done (collapsed — see `git log` and the §7 LOG) {#done}
 
-##WAL-DONE **Phase D, waves 1–11 — the whole arc from 601 drift verdicts to
-210, 94.3 % → 97.8 %.** Волна 10 (2026-08-01): the three rulings executed
-(twelve decision records + criterion, партия 1a, health-audit adoption), the
-D13 seal tail closed as 51 judged record anchors (D14), the 260-vs-259
-acceptance flag closed by judging the D9 README (D15), the B-012 study
-landed and was ruled the same day (B-015 parked, B-016…B-021 planned).
-Волна 11 (2026-08-01/02): the owner drained group B and the whole addressing
-family across four sittings — партии 1c/1d/1b, the carve-out record
-(split-host at PROP-000 §7), the build-or-demote tail as owner-ruled
-deferrals, F-180 / F-166 / F-162 closed whole, F-169 / F-147 deferred onto
-B-031 (root-as-package), the dead-alias fix (five code tags → live ##CMD-*
-facts), and the backlog grew to B-032. Waves 5–8 re-verified every route (18/76, 31/59, 47/171 and
-16/40 verdicts did not survive as stated — the four named causes are batch plan
-§6.1); волна 9 published. The boss lane closed F-241 and F-148 by building the
-malformed-report precision, F-287/F-175/F-303 by correction, the campaign-plans
-practice by adoption (21 anchors), and the D9/D10 rulings passes executed the
-owner's six decisions of 2026-07-31/08-01. Phase C closed 2026-07-28 at 6 847 /
-6 847; Phase B at zero unmarked; wave 1 (`progress-2026-08`) is archival with
-`baseline.json` (921 units). @impl/done
+##WAL-DONE **Phase D, waves 1–12: 601 drift verdicts → 191, 94.3 % →
+97.9 %.** The 2026-08-02 presentation sitting (~ten exchanges, batches
+D29–D41, twenty-plus commits) drained the whole approval queue: builds
+B-033…B-047 filed under the BUILD-FIRST pivot; B-011 raised to Самый
+Высокий Приоритет; B-027's marker sweep executed (19 flips to
+`@impl/plan`, B-027 done); the tooling map approved and integrated as
+`TOOLING-MAP.md` (+ `#map` in BACKLOG); self-check step 0c built; the pin
+build landed (`crates/vibe-cli/build.rs` + `RUST_PIN` from workspace
+`rust-version`); PROP-000 gained the boot-surface attribution exception;
+the 74.8 % canon fell to ATLAS's 75.3/70.2 pair; nine documents of the
+final portion repaired incl. four floor-gloss copies and the three-stack
+replay split; F-285 снят; F-210 closed with the OracleRegistry history
+(the owner's own MCP-SOVEREIGNTY resolution) and B-046/B-047 filed from
+his architecture direction. Earlier waves: см. §7 LOG. Phase C closed
+2026-07-28 at 6 847/6 847; Phase B at zero unmarked. @impl/done
 
 ## In progress {#in-progress}
 
-##WAL-INFLIGHT **Nothing is in flight.** No delegated passes out, no unsealed
+##WAL-INFLIGHT **Nothing is in flight.** No delegated passes, no unsealed
 merges, no seal refusals, no uncommitted state; both mirrors synced at the
-session-end fan-out. The B-012 evidence passes and their aftermath (B-013 /
-B-014 filed, F-133's verdict-first loop) are history in the §7 LOG. @impl/done
-
-## Next {#next}
-
-1. ##WAL-NEXT-GROUP-B **Group B state after волна 11 (both sittings):** партия
-   1d — applied (F-207, F-263 closed); 1c → research B-022 (F-159 deferred);
-   1b — items 1–2 → research B-023, item 3 applied (crash hard-error), item 5
-   → build B-025 (mark-not-suppress, owner's visualisation ground), item 6 →
-   build B-026 (SARIF ingest, high priority; F-206 deferred naming it), item
-   7 applied (the five-sibling closing-rule form) + B-027 filed (the
-   marker-semantics audit). **The addressing family is drained: F-180,
-   F-166, F-162 closed whole; F-169 and F-147 deferred onto B-031** (their
-   segment anchors close when the root becomes a fully-qualified package).
-   The 2026-08-02 sittings also produced B-029 (gate-key rename), B-030
-   (assertion checks + Rust/TS survey), B-032 (planning-granularity
-   protocol: FEAT files as addressable units composed into plans), the
-   B-018 canonical query («which test verifies this rule»), and the
-   dead-alias fix (five code tags now cite ##CMD-* facts; PROP-043's four
-   trap-tokens removed). **The 2026-08-02 presentation sitting is ruled and
-   executed WHOLE, four exchanges** (F-185 / F-218 / F-132 / F-217 / F-154 /
-   F-355 / F-181 deferred onto recorded-or-built work, F-167 applied D31,
-   F-285 resolved D29, the triple byte-compare built as step 0c, the TS
-   twins repaired verdict-first D30 — the ledger's `#rulings-2026-08-02-2`;
-   the stale «F-132's nine» queue line diagnosed and the rule recorded:
-   **the owner's queue is derived from the registry, never from a harvest
-   snapshot**; the fourth exchange set the standing **build-first default**
-   for discipline mechanisms; the fifth integrated the **B-041 map** as
-   `TOOLING-MAP.md` with the campaign frame; the sixth executed **all four
-   rulings** — the link and canon fixes (D33), the **B-027 sweep** (D34,
-   B-027 done), the no-measurements standing answer (B-042), and the
-   zombie-family unification onto **B-044** (D32)). **The ninth
-   exchange drained the last sync portion whole (nine rulings): the pin
-   build (vibe-cli build.rs → `VIBE_MSRV` from workspace `rust-version`,
-   `RUST_PIN` replaces both literals, the table test pins the
-   derivation, S6 synced to the built truth), nine documents repaired
-   (git-practices roster complete + two new judged anchors; redbook
-   edition split + the standing bump rule in the manifest; the rust
-   card, tcg brief, Go overlay truth, floor seven-step ×4, replay
-   inner/outer ×3 — D39 ×4 verdict-first, D40 ×5, D41 ×10, eleven
-   seals); the REAL `vibe progress mirror` subcommand learned (per-file
-   views under `run/mirror/`; `progress check` is not it); the 58-row
-   bulk deferred-flip made and reverted (near-miss recorded). On the
-   owner now: **the F-279 schema-home ruling** (the analysis is in the
-   chat: the engine crate's header expects a package-local
-   `schemas/specmap.jtd.json`; options — move it into `core-ai-native`
-   with the codegen re-route (B-013's fix, recommended) / host-dev
-   artefact + honest README / + a worked example); **then the exit
-   gate** (owed 18 = 17 owner-ruled build deferrals + F-279's 1).** @spec/done
-2. ##WAL-NEXT-ADR **B+A′ is fully executed** — the §3.13 carve-out landed as
-   (ii): census 35→36, the four-field record at PROP-000 §7
-   (`##split-host-decision…`) carrying the owner's updated split-host posture
-   of 2026-08-01 (GitHub leads; GitVerse supplementary — source mirror +
-   deliberately-published registry storage). Nothing of B-007 remains open. @spec/done
-3. ##WAL-NEXT-B012 **B-012 is ruled and drained (2026-08-01, same day):** the
-   owner ruled on the whole set — everything builds (`BACKLOG.md`
-   B-016…B-021, disposition `planned`; B-018 wide form, high priority),
-   security is protocolled and parked (B-015 — nothing until the owner's
-   explicit notice, no code triggers), B-012 itself is `done`. The study's
-   recommendation column is superseded by its `#rulings` section. Scheduling
-   the builds is a later owner call; nothing starts from this entry. @spec/done
-4. ##WAL-NEXT-EXIT **Run the exit gate when the queues drain**: registry
-   CONVERGENCE (owed → 0 or every survivor owner-ruled — today all 73 owed sit
-   on the owner's sync route), `progress check` green over both corpora
-   (clean at this checkpoint), `summary.py` arithmetic shown, `baseline.json`
-   written (amendment A6), the A–D health-audit inventory (adoption clause).
-   The 260-vs-259 file-count discrepancy is **reconciled and closed** —
-   judged, not footnoted (D15). @spec/done
-5. ##WAL-NEXT-PHASES **Phases T and G are designed and unrun; neither starts
-   without an explicit instruction.** Phase E inherits the recorded builds
-   (F-211 route-(a) option, B-010's check fix, B-011's aliasing design,
-   B-005's ancestry probe, B-012's feasibility verdicts once ruled). @spec/done
+session-end fan-out. The one pending EXECUTION is the already-ruled F-279
+recipe (`#next` step 1); the owner owes nothing until the jtd-codegen
+package-form question, if it arises. @impl/done
 
 ## Known issues {#known-issues}
 
-- ##WAL-KI-OPEN **Open on the owner, none blocking:** **F-129** (the wal
-  package's two contradictory wind-downs, `@impl/done` ×3 — a release-event
-  edit); **F-122** (one `name@version`, two contents, 173 files — Phase B
-  marked inside published slots; the публикация of волна 9 re-vendored the
-  marked content, which REALISES the install-side half: slots now match their
-  packages again); **F-125** (one PLDI'25 measurement, three numbers);
-  **F-126** (tcg names a shipped oracle and an unbuilt masker in one family);
-  **F-127** (Go prescribes `-race` 15×, runs it 0×); **F-128**
-  (`spec/boot/INLINE.md` named by line 5 of the instruction files, `link =
-  "inline"` zero occurrences); **F-120** (the kind-line notation's absent
-  guide); the **H-роster** (H1–H6 cited ~49× corpus-wide, defined nowhere —
-  owner: `core-ai-native/appendix/`, found волной 8 — supersedes F-124's
-  framing); **F-069** (aggregator grammar); the `specmap` ratchet's 37 gated
-  orphans. @impl/done
-- ##WAL-KI-CLOSED-THIS-ARC **Closed since the last checkpoint and worth not
-  re-deriving:** F-121 (group A answer (2)), F-136/F-145 (the публикация),
-  F-240/F-187/F-213 (волна 8), F-241/F-148 (built), F-303/F-175 («mechanical»
-  removed), B-009 (wind-down step 4). F-123's commit-length figure and F-087's
-  measurement are wave-6-era numbers — re-measure at HEAD before citing. @impl/done
-- ##WAL-KI-BACKLOG **The backlog carries the designed-and-deferred work:**
-  B-001 (link tables), B-002 (budget row), B-003 (Go floor fixtures), B-004's
-  general fenced-content shape (the 17 first lines are fixed; fences stay
-  unaddressable by construction), B-005 (ancestry probe), B-006 (double
-  git-family emission), B-007 (ruled B+A′, executing), B-008 (vibe-index
-  licence line), B-010 (check-that-writes), B-011 (marker aliasing design),
-  B-013 (broken specmap schema-bump route), B-014 (host index drifts
-  ungated) — plus the B-012 drain of 2026-08-01: B-015 (security programme,
-  parked until the owner's notice), B-016…B-021 (the PROP-014 builds, all
-  `planned` by owner ruling; B-018 wide form, high priority) — plus волна
-  11's research trio: B-022 (LEDGER-INTENT mechanisms, F-159 waits on it),
-  B-023 (JS/TS syntactic tier + Python frontend, two F-146 anchors wait),
-  B-024 (do @stage/state markers subsume specmap lifecycle statuses — the
-  owner's two-tombstones question), B-025 (mark-not-suppress acknowledged
-  deviations, planned), B-026 (SARIF ingest, planned, high priority), B-027
-  (the Specified-not-built marker-semantics audit; proposed rule awaits the
-  owner). @impl/done
+- ##WAL-KI-OPEN **Open on the owner, none blocking:** F-129 (wal package's
+  two wind-downs); F-122 (realised by волна 9's re-vendor); F-126 (tcg
+  naming family — partially superseded by the F-216 repair); F-127 (Go
+  `-race` 15×/0×); F-128 (`spec/boot/INLINE.md` naming); F-120 (kind-line
+  guide); the H-roster (owner: `core-ai-native/appendix/`); F-069
+  (aggregator grammar); the specmap ratchet's 37 gated orphans. F-125's
+  three-numbers question is **likely closed** by the 75.3/70.2 canon —
+  verify before citing. @impl/done
+- ##WAL-KI-BACKLOG **The backlog carries the designed-and-deferred work
+  B-001…B-047** (see `BACKLOG.md` and its `#map` section; the drainage
+  shape is `TOOLING-MAP.md`'s waves А–Г under the campaign frame). B-015
+  security stays parked until the owner's explicit notice. @impl/done
 
 ## Session context {#session-context}
 
 ##WAL-CTX-BOOT **A cold session starts at the campaign quick-start**
-(`spec://vibevm/terraforms/packages-actualization#quick-start`), reads the
-batch plan for the phase in flight and §7's LOG from the end, and takes every
-number from the two commands at the top of this file. `CONTINUE.md` is the
-cold-resume snapshot; this file supersedes it wherever they diverge. @impl/done
-
-##WAL-CTX-ADDRESSABLE **This file's own addressability debt is paid:** every
-heading carries an anchor, every constraint entry carries an id and a why
-citing a spec anchor or issue, and the in-progress and next entries cite
-`spec://` — the three gaps the campaign measured against its own WAL
-(`spec/WAL.md:335-337` of the previous revision) and the F-220(b) host
-obligation recorded in `run/state/routing.json`. @impl/done
+(`spec://vibevm/terraforms/packages-actualization#quick-start`), reads
+`CONTINUE.md` (the F-279 recipe lives there), the batch plan §§3.6/3.7/3.8
++ §6.1 twice, §7's LOG from the end (the ~ten 2026-08-02 entries), and
+takes every number from the two commands at the top of this file.
+`CONTINUE.md` is the cold-resume snapshot; this file supersedes it wherever
+they diverge. @impl/done
