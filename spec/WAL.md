@@ -138,10 +138,17 @@ units). Panel green including the NEW step 6b (`cargo xtask check-codegen`
 - ##WAL-C-BOOT-PAIR **Boot pair marking:** `spec/boot/00-core.md` /
   `90-user.md` carry owner machine facts — mark additively; `refs/book/`
   NOTOUCH. @impl/done
-- ##WAL-C-DELEGATION **Delegation goes to the harness's built-in `opus5`
-  subagents, not fractality; verdicts, anchor routing and review are never
-  delegated** (batch plan `#delegation`). The close-out session ran all
-  boss-side (judgement work end to end). @impl/done
+- ##WAL-C-DELEGATION **Delegated execution for phases E/T follows the
+  owner-owned switch `campaigns/packages-2026-09/SUBAGENT-MODE.toml`
+  (directive 2026-08-03):** `claudez` → Claude-Code-on-GLM workers via the
+  reworked claudez/claudez2 launchers (`-c`/`-p` verified — the ALPHA/BRAVO
+  matrix; two parallel lanes in worktrees for disjoint-perimeter tasks, ONE
+  thread for conflict-prone many-place edits; effort max built in), `native`
+  → the harness's built-in `opus5` subagents; fractality stays out (batch
+  plan `#delegation`). The boss re-reads the switch before EVERY fan-out —
+  a flip acts immediately. Verdicts, anchor routing and review are never
+  delegated in either mode. Mechanics:
+  `campaigns/packages-2026-09/SUBAGENT-LAUNCHERS.md`. @impl/done
 - ##WAL-C-MISC **Small standing facts:** parse payload at
   `~/.vibe/progress-cache/…` carries no verdicts; `vibe.lock` +
   `[[mcp_server]]`/`[[binary]]` tables are the autodiscovery rails B-046
