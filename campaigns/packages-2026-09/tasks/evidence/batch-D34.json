@@ -1,0 +1,132 @@
+{
+ "batch": "D34",
+ "cluster": "ai-native",
+ "files": {
+  "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
+   "RUNTIME-EXPOSES-THE-METAMODEL-TO-CONSUMERS": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-018 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   },
+   "DISTRIBUTION-RIDES-THE-EXISTING-REGISTRY": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-016 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   },
+   "CLOSED-SOURCE-PROJECTS-SHIP-A-REDACTED-PROFILE": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-017 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   },
+   "RULE-MULTIPLICITY-LINT": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-021 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   },
+   "EDGE-MODEL-NODES": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-019 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   },
+   "QUERY-ERROR-PROVENANCE": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-019/B-018 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   },
+   "LLM-AS-RENDERER": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-020 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   },
+   "RUNTIME-TRANSPORT": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-018 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   },
+   "RUNTIME-DISTRIBUTION": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-016 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   },
+   "RUNTIME-PROFILES": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-017 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   },
+   "SPEC-PRINCIPLE-UNITS-FIT-A-PAGE": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-021 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   },
+   "RUST-PRINCIPLE-RUSTDOC-IS-THE-DETAIL-LAYER": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-020 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   }
+  },
+  "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md": {
+   "EXAMPLE-R-021-FORBIDDEN-IDIOM": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-038 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   },
+   "EXAMPLE-R-020-NAMING-VS-MANIFEST": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-038 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   }
+  },
+  "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md": {
+   "CONFORMANCE-IS-MADE-LOUD": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-030 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   }
+  },
+  "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md": {
+   "GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-044 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   }
+  },
+  "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md": {
+   "CONTRACT-FIRST-ORDERING-WITHIN-AN-ITEM": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-038 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   },
+   "BAN-HIDDEN-CONTROL-FLOW": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-038 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   }
+  },
+  "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md": {
+   "FLAG-REGISTRY-IS-TYPED-DATA-WITH-PROVENANCE": {
+    "v": "confirmed",
+    "ev": [
+     "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-039 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+    ]
+   }
+  }
+ }
+}

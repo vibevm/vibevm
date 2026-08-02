@@ -352,3 +352,29 @@ map's `##frame-line`** — «действовать в рамках этого �
 не хватает — отложить на потом»: the waves execute through the
 campaign's own phases (E after D's exit gate), never as a parallel
 programme.
+
+**Sixth exchange — four rulings in one message, all executed the same
+sitting.** *(1)* The broken cross-reference and the 74.8 % figure — «согласен,
+применяй»: the TS GUIDE cites the sibling brief's «Staged ambition» by name,
+and the canon became ATLAS DR2-012's pair (75.3 %/70.2 %) — the first source
+(`CONTRADICTION-MAP` C-4) and the projection now agree (D33); **F-161
+resolved... its last two anchors confirmed, row deferred onto B-039 for its
+routed pair.** *(2)* **The B-027 sweep ran under the approved rule**: 48
+annotated facts inventoried, 19 flipped to `@impl/plan` naming their build
+entries in-text, 29 correct as they stood, all re-judged (D34, 19/19), six
+files sealed. *(3)* **The no-measurements standing answer**: «замеров нет и
+нескоро будет … больше не кошмарить меня вопросами» — all three stacks'
+complete-targets annotated naming their bench harness and B-042 (D33),
+`TOOLING-MAP.md` carries the standing answer, and the question is never
+raised to the owner again. *(4)* **«Тест на зомби лучше написать» — B-044
+filed** (process-table assertion for all three oracles; the fractality pod
+test is the in-tree pattern); the three false-confirmed copies of the claim
+repaired verdict-first (D32 — including the per-anchor catch that the ts
+oracle's claim lives in `RUST-SIDE-OWNS-TERMINATION`, not the
+`SHUTDOWN-…-EXIT` anchor the harvest table named), all five open copies
+routed onto B-044, **F-281 / F-167 / F-161 deferred, F-284 resolved**.
+Still one open mini-question from this family's neighbour: the rust
+`LARGE-WORKSPACE-CONSUMERS-ARE-WARNED` ceiling — 45 s shipped
+(`QUIESCENCE_BUDGET`, `lib.rs:33`) vs < 15 s posted vs 60 s asserted — the
+60→45 repair awaits the owner, in the same form the Go twin already took
+(D5/F-160).

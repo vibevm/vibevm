@@ -4467,6 +4467,42 @@ aspirational — and every one is still live for the phases that remain.
   and nothing starts from the map. Pointers repointed everywhere (B-041,
   WAL, CONTINUE, README index); `vibe check` clean over the moved tree.
 
+- **2026-08-02 · шестой обмен — четыре рулинга одним сообщением, и свип
+  B-027 наконец бежит.** «1 и 2 — согласен, применяй; 3 — …положить
+  куда-нибудь в роадмап и больше не кошмарить меня вопросами "почему нет
+  замеров"; 4 — тест на зомби лучше написать». Executed whole:
+  **(1)** the TS GUIDE's cross-reference names «Staged ambition» by section
+  title, and the 74.8 % figure fell to ATLAS DR2-012's canonical pair
+  (75.3 %/70.2 %) in both carriers — the first source's `CONTRADICTION-MAP`
+  C-4 and the projection now agree (batch **D33**, 6 confirmed over 5
+  files); **F-161's last two anchors confirmed → row deferred (B-039),
+  F-284 resolved, F-167 deferred** (its target annotated, its no-zombie
+  anchor routed). **(2)** the **B-027 sweep** under the approved rule: 48
+  annotated facts inventoried over 16 package files, **19 flipped to
+  `@impl/plan` naming their build entry in-text** («Specified, not built
+  (→ B-nnn)»), 29 correct as they stood (research-pending and parked
+  entries do not count as planned — LEDGER-INTENT's trio and
+  RUNTIME-SECURITY stay `@spec/done`), each flip re-judged (**D34**, 19/19
+  confirmed, 0 refusals), six files sealed; the host tree carries no
+  instances (grep). **(3)** the no-measurements standing answer recorded
+  in all three stacks' complete-targets (naming their own bench harness
+  and B-042), in `TOOLING-MAP.md` and in B-042 itself — the question is
+  closed for good. **(4)** **B-044 filed** («тест на зомби лучше
+  написать»; the fractality pod probe is the in-tree pattern) and the
+  claim's six copies unified: three false confirmeds repaired
+  verdict-first (**D32** — with the per-anchor catch that the ts oracle's
+  claim lives in `RUST-SIDE-OWNS-TERMINATION`, not the harvest table's
+  `SHUTDOWN-…-EXIT`), five open copies routed onto B-044, **F-281
+  deferred**. Mirror before every merge; merge and seal never chained.
+
+  **State after the sixth exchange** (commands supersede): corpus
+  **11 169 / 207 / 44 — 97.8 %**; registry **101 / 207 — 31 deferred, 70
+  open; owed 34, every one on the sync route; resolved to history 128**.
+  The backlog stands at **B-044**; B-027 is `done`. On the owner: one
+  mini-question (the rust `LARGE-WORKSPACE` ceiling — 45 s shipped vs
+  < 15 s posted vs 60 s asserted; the 60→45 repair in the Go twin's
+  already-taken form), then the registry's sync-queue remainder.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:

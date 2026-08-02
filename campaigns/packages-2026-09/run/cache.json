@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-02T18:08:06Z",
+  "updated_at": "2026-08-02T19:06:18Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -4060,7 +4060,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md": {
-      "content_hash": "3fc38a8663355577ae9a76804dda5a2e10209292fceb5cf0a4999f175049a292",
+      "content_hash": "b8174c14354e73924c0b7685de3b88fe4f90234ac5fea5dbaf69bc3b5cdb90fd",
       "rollup": {
         "explicit": [
           "spec",
@@ -4082,7 +4082,7 @@
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "3fc38a8663355577ae9a76804dda5a2e10209292fceb5cf0a4999f175049a292",
+        "processed_hash": "b8174c14354e73924c0b7685de3b88fe4f90234ac5fea5dbaf69bc3b5cdb90fd",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -4216,10 +4216,7 @@
           "C-4-RESOLUTION": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:31  - ##C-4-RESOLUTION **Resolution:** route the oracle to where it exists — **post-generation `cargo check` loop** (Clas...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:45  | ##ROW-CLASS-E **E** @impl/done | Per-cell fast verification loop @impl/done | the substrate that makes all signals ...",
-              "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42  - ##TCG-CRATE-DELETED `vibe-tcg` and the vibe-mcp `tcg_*` adapters are",
-              "the resolution says `vibe-tcg` was deleted, and it was: `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42` records the deletion, `crates/` carries no tcg member, and `36461ba8 refactor(mcp)!: retire the tcg adapters and delete vibe-tcg` is the commit. The same fact confirmed independently in C1a"
+              "re-vouched after the canon alignment of 2026-08-02 (owner option (а)): the resolution line now carries 75.3%/70.2% naming DR2-012 as the canonical pair instead of the 74.8% figure that disagreed with the package's own ATLAS; the resolution's substance (route the oracle to cargo check today, constrained decoding staged as a future tool) is unchanged and still matches Guide §12 and the tcg spec"
             ]
           },
           "c-5-side-a": {
@@ -4308,8 +4305,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T15:54:43Z",
-        "verify_batch": "C2 + D3c + D5b + D10-groupA"
+        "verified_at": "2026-08-02T19:00:29Z",
+        "verify_batch": "C2 + D3c + D5b + D10-groupA + D33"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/boot/10-flow-core-ai-native.md": {
@@ -5007,7 +5004,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md": {
-      "content_hash": "efb66f0095465bb64894cc57b836e2cca3d196af280ea566305bc7a078fc2d66",
+      "content_hash": "443fcb2c5279fb8aab12d4eb4020ad49e516776a18a4aaf43cfeca4004200e45",
       "rollup": {
         "explicit": [
           "spec",
@@ -5029,7 +5026,7 @@
       "unit_count": 7,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "efb66f0095465bb64894cc57b836e2cca3d196af280ea566305bc7a078fc2d66",
+        "processed_hash": "443fcb2c5279fb8aab12d4eb4020ad49e516776a18a4aaf43cfeca4004200e45",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -5253,7 +5250,7 @@
           "EXAMPLE-R-021-FORBIDDEN-IDIOM": {
             "v": "confirmed",
             "ev": [
-              "DEMOTED 10/10 (Phase D wave 5, §3.3). The escalation-tier vocabulary is genuinely unbuilt across the full perimeter — no `Tier` type, no `tier` field, no escalation logic in core-ai-native-conform. Four of the ten are written as PARTIALS because half of each runs: `syn` is a real Rust frontend, R-002 is real as `CellIsolation`, go-extract is stdlib-only exactly as claimed, and the linter posture is as described. Prescriptions kept word for word; only the markers moved."
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-038 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "EXAMPLE-R-002-IMPORT-GRAPH-ISOLATION": {
@@ -5265,7 +5262,7 @@
           "EXAMPLE-R-020-NAMING-VS-MANIFEST": {
             "v": "confirmed",
             "ev": [
-              "DEMOTED 10/10 (Phase D wave 5, §3.3). The escalation-tier vocabulary is genuinely unbuilt across the full perimeter — no `Tier` type, no `tier` field, no escalation logic in core-ai-native-conform. Four of the ten are written as PARTIALS because half of each runs: `syn` is a real Rust frontend, R-002 is real as `CellIsolation`, go-extract is stdlib-only exactly as claimed, and the linter posture is as described. Prescriptions kept word for word; only the markers moved."
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-038 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "ROW-FRONTEND-RUST": {
@@ -5367,8 +5364,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T14:10:28Z",
-        "verify_batch": "C1 + D5b + D7 + D21 + D22 + D24"
+        "verified_at": "2026-08-02T19:06:18Z",
+        "verify_batch": "C1 + D5b + D7 + D21 + D22 + D24 + D34"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md": {
@@ -6043,7 +6040,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
-      "content_hash": "0caa0448f953504c65320dc5d70b2e44532d377acf45f739a2c22b072c4a6b37",
+      "content_hash": "09986074d347e43e094b7d58fa93cd3716c02f800b5dadcb0f3ccce6f0000643",
       "rollup": {
         "explicit": [
           "spec",
@@ -6065,7 +6062,7 @@
       "unit_count": 27,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "0caa0448f953504c65320dc5d70b2e44532d377acf45f739a2c22b072c4a6b37",
+        "processed_hash": "09986074d347e43e094b7d58fa93cd3716c02f800b5dadcb0f3ccce6f0000643",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -6260,19 +6257,19 @@
           "RUNTIME-EXPOSES-THE-METAMODEL-TO-CONSUMERS": {
             "v": "confirmed",
             "ev": [
-              "repaired under F-133 route §3.6(a) (falsifier=self, no demote choice pending — the marker stays @spec/done) and re-verified 2026-08-01: the false clause is gone — the text now says core-ai-native-mcp ships no tools at all with echo named as the #[cfg(test)] fixture it is (server.rs, mod tests, struct Echo inside), which is the tree's exact state; the added scoping sentence is tree-true (trace_explain ships in all three stack MCP rosters — rust-ai-native-mcp/src/lib.rs:55-67, pinned by the_tool_set_is_exactly_the_declared_inventory — as the discipline's per-project channel over a checkout, rust-ai-native-cli/src/trace.rs:11-12, foreign units excluded index.rs:70-75, so it is not vibe's metamodel channel); every pre-existing clause re-verified unchanged: specmap_query/specmap_explain/specmap_source absent from every roster, vibe-mcp explain is PROP-018's README relay, and an agent driving vibe still cannot ask the running tool anything"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-018 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "DISTRIBUTION-RIDES-THE-EXISTING-REGISTRY": {
             "v": "confirmed",
             "ev": [
-              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-016 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "CLOSED-SOURCE-PROJECTS-SHIP-A-REDACTED-PROFILE": {
             "v": "confirmed",
             "ev": [
-              "MIXED (Phase D wave 5). Eight demoted, one corrected, and `##LLM-AS-PROPOSER` RE-JUDGED confirmed: the loop ran end to end and `terraform/specmap-proposals.json` carries 54 owner-approved proposals. Error provenance ships too, so two of the three forces hold rather than one."
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-017 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "DECISIONS-SECTION-IS-THE-BINDING-MODEL": {
@@ -6554,7 +6551,7 @@
           "RULE-MULTIPLICITY-LINT": {
             "v": "confirmed",
             "ev": [
-              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-021 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "kind-line-edges": {
@@ -6576,7 +6573,7 @@
           "EDGE-MODEL-NODES": {
             "v": "confirmed",
             "ev": [
-              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-019 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "EDGE-MODEL-EDGES": {
@@ -6662,7 +6659,7 @@
           "QUERY-ERROR-PROVENANCE": {
             "v": "confirmed",
             "ev": [
-              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-019/B-018 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "QUERIES-LIVE-BEHIND-XTASK-DURING-THE-PILOT": {
@@ -6690,7 +6687,7 @@
           "LLM-AS-RENDERER": {
             "v": "confirmed",
             "ev": [
-              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-020 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "LLM-NEVER-SILENTLY-WRITES-EDGES": {
@@ -6704,19 +6701,19 @@
           "RUNTIME-TRANSPORT": {
             "v": "confirmed",
             "ev": [
-              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-018 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "RUNTIME-DISTRIBUTION": {
             "v": "confirmed",
             "ev": [
-              "MIXED (Phase D wave 5). Eight demoted, one corrected, and `##LLM-AS-PROPOSER` RE-JUDGED confirmed: the loop ran end to end and `terraform/specmap-proposals.json` carries 54 owner-approved proposals. Error provenance ships too, so two of the three forces hold rather than one."
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-016 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "RUNTIME-PROFILES": {
             "v": "confirmed",
             "ev": [
-              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-017 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "RUNTIME-SECURITY-IS-NON-OPTIONAL": {
@@ -6847,7 +6844,7 @@
           "SPEC-PRINCIPLE-UNITS-FIT-A-PAGE": {
             "v": "confirmed",
             "ev": [
-              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-021 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "RUST-PRINCIPLES-ARE-NOT-A-GENERAL-STYLE-GUIDE": {
@@ -6894,7 +6891,7 @@
           "RUST-PRINCIPLE-RUSTDOC-IS-THE-DETAIL-LAYER": {
             "v": "confirmed",
             "ev": [
-              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-020 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "RUST-PRINCIPLE-NO-ORPHAN-PUBLIC-API": {
@@ -7372,8 +7369,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-01T12:54:05Z",
-        "verify_batch": "C1 + D5b + D7 + D10-groupA + D13-1a + D16 + D17 + D18"
+        "verified_at": "2026-08-02T19:06:18Z",
+        "verify_batch": "C1 + D5b + D7 + D10-groupA + D13-1a + D16 + D17 + D18 + D34"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md": {
@@ -9410,7 +9407,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md": {
-      "content_hash": "7ddc4ab6dbd08ba517c21adce279587b8a69c225abe04322bba8e6226e2834b7",
+      "content_hash": "bbd9bbfc58eec9f924fb043689377eb2bdae6a0779760578445f4b8bac85bf45",
       "rollup": {
         "explicit": [
           "spec",
@@ -9432,7 +9429,7 @@
       "unit_count": 17,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "7ddc4ab6dbd08ba517c21adce279587b8a69c225abe04322bba8e6226e2834b7",
+        "processed_hash": "bbd9bbfc58eec9f924fb043689377eb2bdae6a0779760578445f4b8bac85bf45",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -9935,7 +9932,7 @@
           "CONFORMANCE-IS-MADE-LOUD": {
             "v": "confirmed",
             "ev": [
-              "repaired under F-166, owner ruling 2026-08-02 answer 2.2(а): the fact now carries the sanctioned annotation — the Go gate registers exactly three rules (GoUnsafeInDomain, GoCellIsolation, FileLength; build_rules, lib.rs:53-60, re-read at HEAD) and none parses for the assertion — while keeping what is true: the assertion idiom itself and the example below it; determined on the §3.8 bench (the package's own rule roster), not on host usage; the build of the missing check, plus the Rust/TS family survey for the same promise-vs-gate gap, is the owner's recorded backlog build B-030; marker @impl/done → @spec/done"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-030 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "PROMOTION-TO-A-SEPARATE-MODULE": {
@@ -10668,12 +10665,12 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T14:10:28Z",
-        "verify_batch": "C3 + D5a + D6 + D7 + D9-boss-a + D24"
+        "verified_at": "2026-08-02T19:06:18Z",
+        "verify_batch": "C3 + D5a + D6 + D7 + D9-boss-a + D24 + D34"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md": {
-      "content_hash": "12575ca7d6826212cc2cc053b6c41f72f599ab0de7ee2a9dde30eca1650d3bf4",
+      "content_hash": "9697f61cfa68ac871cd6ef00ce053b7740d8716c374ec2441a22c1d5fbddcad8",
       "rollup": {
         "explicit": [
           "spec",
@@ -10695,7 +10692,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "12575ca7d6826212cc2cc053b6c41f72f599ab0de7ee2a9dde30eca1650d3bf4",
+        "processed_hash": "9697f61cfa68ac871cd6ef00ce053b7740d8716c374ec2441a22c1d5fbddcad8",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -11260,10 +11257,9 @@
             ]
           },
           "TARGET-COMPLETE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:225  - ##TARGET-COMPLETE `complete` p50 < 300 ms, @impl/done",
-              "the bench cannot measure it: `bench.rs` records **`warm_ms` alone** — no complete latency, no p50, no threshold — so a «complete p50 under 300 ms» target has no instrument in the harness written to instrument it"
+              "owner ruling 2026-08-02 point 3: the target now says posted-not-measured with the instrument named — crates/go-ai-native-tcg/src/bench.rs records per-case warm_ms for validate only and computes no percentile of any kind (grep for pct/percentile/p50/p95/sort returns nothing) — and cites BACKLOG.md B-042; marker @spec/done"
             ]
           },
           "TARGET-COLD-INIT": {
@@ -11285,8 +11281,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T18:08:06Z",
-        "verify_batch": "C4+C5 + C45-go-review + D5a + D31"
+        "verified_at": "2026-08-02T19:00:29Z",
+        "verify_batch": "C4+C5 + C45-go-review + D5a + D31 + D33"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md": {
@@ -12504,12 +12500,9 @@
             ]
           },
           "RISK-WINDOWS-CHILD-LIFECYCLE": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:190  - ##RISK-WINDOWS-CHILD-LIFECYCLE **Windows child lifecycle.** The house lesson set applies (verbatim-free paths into...",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/lib.rs:124  pub fn verbatim_free(path: &Path) -> PathBuf { let s = path.to_string_lossy(); match s.strip_prefix(r\"\\\\?\\\") { Some(s...",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client.rs:357  impl Drop for ChildTransport { fn drop(&mut self) { let _ = self.child.kill(); let _ = self.child.wait(); }",
-              "located in the perimeter on the refs above, machine-verified against the files they cite"
+              "verdict-first repair of a false confirmed (boss re-judge 2026-08-02, F-281 family measurement): the fact lists «no-zombie assertions» among the applied house-lesson set — no test in the Go stack probes the process table for a surviving gopls child: the family-wide sweep for surviving-pid/no-zombie/process_table/sysinfo/tasklist/OpenProcess/try_wait over *.rs/*.go/*.ts finds in this stack only the doc comment on go-ai-native-tcg-bridge/tests/live_oracle.rs:3 («shutdown with no zombie») — a comment, not an assertion; the only real process-table assertion in the repository belongs to fractality's pod/worker pair (fractality-pod/tests/loopback.rs:288-299) and asserts a different product's child; resolution per owner ruling 2026-08-02 «тест на зомби лучше написать» — the test is the recorded build BACKLOG.md B-044, the text stays as the target"
             ]
           },
           "RISK-SCOPE-CREEP-TOWARD-AN-LSP-RELAY": {
@@ -12531,7 +12524,7 @@
           }
         },
         "verified_at": "2026-07-31T20:39:23Z",
-        "verify_batch": "C4+C5 + C45-go-review + D5a + D8b + D11-release-a"
+        "verify_batch": "C4+C5 + C45-go-review + D5a + D8b + D11-release-a + D32"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md": {
@@ -15511,7 +15504,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md": {
-      "content_hash": "ffb67c1df8b1bb77115f91067fc91b4b6ba320aaea7c0e094f3494d66ee1f396",
+      "content_hash": "a67f7129859287c5e182d9e7c6e2c41402637ed50d25a2b3a56dba64ded697d6",
       "rollup": {
         "explicit": [
           "spec",
@@ -15533,7 +15526,7 @@
       "unit_count": 16,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "ffb67c1df8b1bb77115f91067fc91b4b6ba320aaea7c0e094f3494d66ee1f396",
+        "processed_hash": "a67f7129859287c5e182d9e7c6e2c41402637ed50d25a2b3a56dba64ded697d6",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -15785,8 +15778,7 @@
           "CONTRACT-FIRST-ORDERING-WITHIN-AN-ITEM": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md  lists `rule-contract-first-ordering` as PENDING - the card is unauthored",
-              "CLOSED F-191 partially (Phase D wave 5, demotion per §3.3). The rule stands word for word; the card that would carry it is listed pending in the stack's own registry, so it is specified and not built. Marker `@impl/done` -> `@spec/done`. The Go and TypeScript twins carry no verdict and were NOT touched - see the batch note on half-demoted families."
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-038 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "POSITION-IS-A-RESOURCE": {
@@ -15986,8 +15978,7 @@
           "BAN-HIDDEN-CONTROL-FLOW": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md  R-021 is absent from the roster",
-              "CLOSED F-191 partially (Phase D wave 5, demotion). The rule the fact cites as its authority is not in the ATLAS roster it points at."
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-038 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "BAN-STRINGLY-TYPED-SURFACES": {
@@ -16308,12 +16299,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C3 + D5a + D7"
+        "verified_at": "2026-08-02T19:06:18Z",
+        "verify_batch": "C3 + D5a + D7 + D34"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md": {
-      "content_hash": "37608f267410d260c52255755e1b57640c0ab45cf4564f6a36c21b448443afe8",
+      "content_hash": "78507cdd396c424262f9e848bf737814f653b490d128c60f73412bbf1afa4fa5",
       "rollup": {
         "explicit": [
           "spec",
@@ -16335,7 +16326,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "37608f267410d260c52255755e1b57640c0ab45cf4564f6a36c21b448443afe8",
+        "processed_hash": "78507cdd396c424262f9e848bf737814f653b490d128c60f73412bbf1afa4fa5",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -16796,7 +16787,7 @@
           "GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY": {
             "v": "confirmed",
             "ev": [
-              "CLOSED F-192 partially (Phase D wave 5, demotion, partial). The no-zombie MECHANISM ships; the ASSERTION does not - no test inspects the process table. The mechanism half was kept as true."
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-044 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "PATHS-BECOME-URIS-AFTER-PREFIX-STRIPPING": {
@@ -16897,10 +16888,9 @@
             ]
           },
           "TARGET-WARM-COMPLETE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:719     `complete` p50 < 300 ms. Falsified → the §13 R1 ladder, targets",
-              "**no instrument measures it.** §8 posts three targets; the committed bench measures two of them — cold init → quiescent and warm `validate` p50/p95 (research/tcg-bench/reports/REPORT-2026-07-07-rust-baseline.md:49-53) — and records **no `complete` row at all**, because the harness times `validate` only. rust-analyzer is installed here, so this is a missing instrument rather than an unexercisable claim. The TypeScript twin was already recorded drift for exactly this — packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md#TARGET-WARM-VALIDATE-AND-COMPLETE — and so was the Go one"
+              "owner ruling 2026-08-02 point 3 (замеров нет и нескоро будет — пометить и не возвращаться): the target now says posted-not-measured with the instrument named — crates/rust-ai-native-tcg/src/bench.rs emits cold_init_ms/validate_p50_ms/validate_p95_ms and no complete field (grep -ci complete = 0) — and cites BACKLOG.md B-042 (the far-future measurement corpus, owner-accepted); marker @spec/done per the same ruling"
             ]
           },
           "TARGET-COLD-INIT-TO-QUIESCENT": {
@@ -16930,8 +16920,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C4+C5 + C45-rust-review + D5a"
+        "verified_at": "2026-08-02T19:06:18Z",
+        "verify_batch": "C4+C5 + C45-rust-review + D5a + D33 + D34"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md": {
@@ -21381,7 +21371,7 @@
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md": {
-      "content_hash": "f73d76c107b170884facf3259ca6a1e63ad2227496b83a4978d66042dab2146e",
+      "content_hash": "abd6dca703f86d3ebeb71ee28df1fd283efd8d017102c78e2aec7bbdb8924101",
       "rollup": {
         "explicit": [
           "spec",
@@ -21403,7 +21393,7 @@
       "unit_count": 18,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "f73d76c107b170884facf3259ca6a1e63ad2227496b83a4978d66042dab2146e",
+        "processed_hash": "abd6dca703f86d3ebeb71ee28df1fd283efd8d017102c78e2aec7bbdb8924101",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -22134,7 +22124,7 @@
           "FLAG-REGISTRY-IS-TYPED-DATA-WITH-PROVENANCE": {
             "v": "confirmed",
             "ev": [
-              "CLOSED F-168 partially (Phase D wave 5, demotion). `FlagSites` exists in the engine and is constructed only in tests, so the type ships and the registry does not."
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-039 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "RULE-FLAGS-READ-AT-THE-ROOT-AND-DISPATCHED": {
@@ -22438,12 +22428,9 @@
             ]
           },
           "TOOLING-ASYMMETRY-STATED-HONESTLY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:258  ##TOOLING-ASYMMETRY-STATED-HONESTLY … (~74.8% compile-error reduction; ~94% of TS compile errors are type-level) … @spec/done",
-              "**the verdict stands and its REASON was wrong.** The «~74.8 %» is not a cache artefact: packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:28,31 publishes it in the live v0.8.0 slot, and packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105-106 records 75.3 % / 70.2 % for the same result. The package contradicts itself across its own two appendices; this document is faithful to one of them.",
-              "the other half of the fact is exactly right and resolves: ATLAS:105-106 states «Only 3.5% of functional errors and 6% of compile errors are syntactic; on average 94% of compilation errors result from failing type checks» — the ~94 % is the corpus's own number, quoted correctly",
-              "the clean-room posture the anchor is named for holds unchanged (spec/boot/90-user.md's CLEAN-ROOM-RULE)"
+              "owner ruling 2026-08-02 «1 и 2 — согласен, применяй», option (а): the canonical figure is ATLAS DR2-012's pair — 75.3% (synthesis) / 70.2% (translation) — and the fact now cites it verbatim; the first source was aligned in the same pass (CONTRADICTION-MAP C-4 heading and resolution now carry the pair, naming DR2-012 as canon), so the projection and both appendices agree; the ~94% type-level figure was already canon-consistent (ATLAS:105 quotes it from the paper)"
             ]
           },
           "TYPESCRIPT-EXPOSES-ITS-CHECKER-PROGRAMMATICALLY": {
@@ -22505,12 +22492,9 @@
             ]
           },
           "AGENTIC-BATTERY-IS-THE-FIRST-MEASUREMENT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md:144    MCP + one-shot delivery, measured by the two-arm battery. @impl/done",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md:169  ## 6. The honest risk register {#risk-register}",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg/src/main.rs:89      /// Run the differential/latency corpus and write a report",
-              "the cross-reference does not resolve: it points at «the sibling brief §6», and §6 of `spec/typescript/tools/vibe-agentic-tcg-ts.md` is «The honest risk register». The two-arm battery it means is at line 144 of that file, inside §4"
+              "owner ruling 2026-08-02 «1 и 2 — согласен, применяй»: the cross-reference now names the section by title and file — «see the sibling brief's «Staged ambition», vibe-agentic-tcg-ts.md §4» — matching the two-arm battery's real home (vibe-agentic-tcg-ts.md:144 inside §4 Staged ambition; §6 is the risk register), rename-resistant per the D5/F-282 lesson"
             ]
           },
           "wires-it-in-five-moves-lead": {
@@ -22647,12 +22631,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C3 + C45-cross-language + D5a + D7 + D30"
+        "verified_at": "2026-08-02T19:06:18Z",
+        "verify_batch": "C3 + C45-cross-language + D5a + D7 + D30 + D33 + D34"
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md": {
-      "content_hash": "1a451863c2a7c10913a101577da43f226c4ea24da8cc6b79e7edc0650c5a5fd6",
+      "content_hash": "92b277b7a9d665b8d563a5e7e5545d481e018d6a71f87b6cb81a9529f029d714",
       "rollup": {
         "explicit": [
           "spec",
@@ -22674,7 +22658,7 @@
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "1a451863c2a7c10913a101577da43f226c4ea24da8cc6b79e7edc0650c5a5fd6",
+        "processed_hash": "92b277b7a9d665b8d563a5e7e5545d481e018d6a71f87b6cb81a9529f029d714",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -22945,12 +22929,9 @@
             ]
           },
           "RUST-SIDE-OWNS-TERMINATION": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg-bridge/src/transport.rs:221  impl Drop for SystemOracle {",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg-bridge/src/transport.rs:223          // Kill-on-drop: no zombie node children (TCG-ORACLE §6). A child",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg-bridge/src/transport.rs:225          let _ = self.child.kill();",
-              "located in the perimeter on the refs above, machine-verified against the files they cite"
+              "verdict-first repair of a false confirmed (boss re-judge 2026-08-02, F-281 family measurement; the harvest table named the neighbouring SHUTDOWN-IS-THE-ONLY-SANCTIONED-EXIT — per-anchor re-read shows THIS anchor carries the claim, the neighbour prescribes the exit path and stays confirmed): «the no-zombie property is asserted by test (the Phase-0 spike proved spawn/roundtrip/kill with no surviving pid on this box)» — a spike is not a test surface, exactly the ruling D5/F-192 already applied to the Rust twin's identical wording (TCG-ORACLE-RUST GRACEFUL-EXIT annotation: «the live test checks only that shutdown() returned … no surviving-pid or process-table probe exists»); no TS test asserts the property; resolution per owner ruling 2026-08-02 «тест на зомби лучше написать» — BACKLOG.md B-044, the text stays as the target"
             ]
           },
           "NODE-IS-RESOLVED-FROM-PATH-BY-THE-BRIDGE": {
@@ -22978,11 +22959,9 @@
             ]
           },
           "TARGET-WARM-VALIDATE-AND-COMPLETE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md:153  - ##TARGET-WARM-VALIDATE-AND-COMPLETE warm `validate` p50 < 150 ms and",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg/src/bench.rs:48      validate_p50_ms: f64,",
-              "the bench records `cold_init_ms`, `validate_p50_ms` and `validate_p95_ms` and **no complete-latency field and no threshold constants**, so the target this fact sets cannot be measured by the harness that is supposed to measure it"
+              "owner ruling 2026-08-02 point 3, split-clause form per the F-284 harvest recommendation: the validate half is measured and met — 19.32 ms p50 against the posted < 150 ms (research/tcg-bench/reports/bench-2026-07-07-baseline.json) — and stays; the complete half now says posted-not-measured with the instrument named (crates/typescript-ai-native-tcg/src/bench.rs emits cold_init_ms/validate_p50_ms/validate_p95_ms) and cites BACKLOG.md B-042; marker stays @impl/done on the measured half's strength"
             ]
           },
           "TARGET-COLD-INIT": {
@@ -23013,8 +22992,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:58:29Z",
-        "verify_batch": "C4+C5"
+        "verified_at": "2026-08-02T19:00:29Z",
+        "verify_batch": "C4+C5 + D32 + D33"
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-PROTOCOL-v0.1.md": {
@@ -24275,12 +24254,9 @@
             ]
           },
           "RISK-WINDOWS-CHILD-LIFECYCLE": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md:184  - ##RISK-WINDOWS-CHILD-LIFECYCLE **Windows child lifecycle.** Junction/verbatim/PATH quirks are known",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg-bridge/src/transport.rs:223          // Kill-on-drop: no zombie node children (TCG-ORACLE §6). A child",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg/tests/oracle_e2e.rs:82  fn the_real_chain_validates_enriches_scopes_and_completes() {",
-              "located in the perimeter on the refs above, machine-verified against the files they cite"
+              "verdict-first repair of a false confirmed (boss re-judge 2026-08-02, F-281 family measurement): the fact claims no-zombie is «re-asserted in the hermetic test» — no TypeScript-stack test probes the process table for a surviving node child: transport.rs:206 try_wait under the «Kill-on-drop: no zombie node children» comment (:223) is implementation-side reaping, not a test assertion, and the family-wide sweep finds no assertion in any stack (the one real process-table assertion in the tree is fractality's pod/worker pair, a different product); resolution per owner ruling 2026-08-02 «тест на зомби лучше написать» — BACKLOG.md B-044, the text stays as the target"
             ]
           },
           "RISK-STRONG-MODEL-INDIFFERENCE": {
@@ -24309,7 +24285,7 @@
           }
         },
         "verified_at": "2026-07-31T20:39:23Z",
-        "verify_batch": "C4+C5 + D8b + D11-release-a"
+        "verify_batch": "C4+C5 + D8b + D11-release-a + D32"
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/README.md": {
@@ -92411,7 +92387,7 @@
       }
     },
     "spec/design/README.md": {
-      "content_hash": "9d1a5790394672fa323f7a230f7781697ad7d982ad78975fcbebd9b79a69953d",
+      "content_hash": "cb384e0db167ec8292522e88b23246778577f7a0bed2221e64fa11a891ddc4d6",
       "rollup": {
         "explicit": [
           "doc",
@@ -92425,11 +92401,11 @@
           "doc",
           "done"
         ],
-        "marker_count": 68,
-        "fact_count": 62,
+        "marker_count": 69,
+        "fact_count": 63,
         "unmarked_facts": 0
       },
-      "marker_count": 68,
+      "marker_count": 69,
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {

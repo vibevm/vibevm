@@ -1817,6 +1817,46 @@
    "obligation": "F-355",
    "why": "verdict-first repair completed: the false-confirmed TS twin was re-judged drift (D30) and its resolution is the same owner ruling of 2026-08-02 as the Rust original — build, don't soften: the middle-third position check is BACKLOG.md B-036, the REQ-citing custom lint layer is B-037. The guide text stays as the target; the anchors re-judge when the mechanisms land.",
    "recorded": "2026-08-02"
+  },
+  {
+   "anchor": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md#RISK-WINDOWS-CHILD-LIFECYCLE",
+   "route": "host",
+   "wave": 12,
+   "obligation": "F-281",
+   "why": "owner ruling 2026-08-02 on the F-281 family: «тест на зомби лучше написать» — the no-zombie claim becomes true by building the process-table assertion for all three oracles, not by softening six copies of the promise. The recorded build is BACKLOG.md B-044 (pattern proven in-tree by fractality-pod/tests/loopback.rs:288-299); the texts stay as targets and re-judge when the tests land, riding the campaign's test phase per the map's frame.",
+   "recorded": "2026-08-02"
+  },
+  {
+   "anchor": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#GRACEFUL-EXIT-IS-THE-LSP-DANCE",
+   "route": "host",
+   "wave": 12,
+   "obligation": "F-167",
+   "why": "owner ruling 2026-08-02 on the F-281 family: «тест на зомби лучше написать» — the no-zombie claim becomes true by building the process-table assertion for all three oracles, not by softening six copies of the promise. The recorded build is BACKLOG.md B-044 (pattern proven in-tree by fractality-pod/tests/loopback.rs:288-299); the texts stay as targets and re-judge when the tests land, riding the campaign's test phase per the map's frame.",
+   "recorded": "2026-08-02"
+  },
+  {
+   "anchor": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md#RISK-WINDOWS-CHILD-LIFECYCLE",
+   "route": "host",
+   "wave": 12,
+   "obligation": "D32",
+   "why": "owner ruling 2026-08-02 on the F-281 family: «тест на зомби лучше написать» — the no-zombie claim becomes true by building the process-table assertion for all three oracles, not by softening six copies of the promise. The recorded build is BACKLOG.md B-044 (pattern proven in-tree by fractality-pod/tests/loopback.rs:288-299); the texts stay as targets and re-judge when the tests land, riding the campaign's test phase per the map's frame.",
+   "recorded": "2026-08-02"
+  },
+  {
+   "anchor": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md#RISK-WINDOWS-CHILD-LIFECYCLE",
+   "route": "host",
+   "wave": 12,
+   "obligation": "D32",
+   "why": "owner ruling 2026-08-02 on the F-281 family: «тест на зомби лучше написать» — the no-zombie claim becomes true by building the process-table assertion for all three oracles, not by softening six copies of the promise. The recorded build is BACKLOG.md B-044 (pattern proven in-tree by fractality-pod/tests/loopback.rs:288-299); the texts stay as targets and re-judge when the tests land, riding the campaign's test phase per the map's frame.",
+   "recorded": "2026-08-02"
+  },
+  {
+   "anchor": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md#RUST-SIDE-OWNS-TERMINATION",
+   "route": "host",
+   "wave": 12,
+   "obligation": "D32",
+   "why": "owner ruling 2026-08-02 on the F-281 family: «тест на зомби лучше написать» — the no-zombie claim becomes true by building the process-table assertion for all three oracles, not by softening six copies of the promise. The recorded build is BACKLOG.md B-044 (pattern proven in-tree by fractality-pod/tests/loopback.rs:288-299); the texts stay as targets and re-judge when the tests land, riding the campaign's test phase per the map's frame.",
+   "recorded": "2026-08-02"
   }
  ]
 }

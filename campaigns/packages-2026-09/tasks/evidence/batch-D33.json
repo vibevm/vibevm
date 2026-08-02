@@ -1,0 +1,52 @@
+{
+ "batch": "D33",
+ "cluster": "ai-native",
+ "files": {
+  "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md": {
+   "TOOLING-ASYMMETRY-STATED-HONESTLY": {
+    "v": "confirmed",
+    "ev": [
+     "owner ruling 2026-08-02 «1 и 2 — согласен, применяй», option (а): the canonical figure is ATLAS DR2-012's pair — 75.3% (synthesis) / 70.2% (translation) — and the fact now cites it verbatim; the first source was aligned in the same pass (CONTRADICTION-MAP C-4 heading and resolution now carry the pair, naming DR2-012 as canon), so the projection and both appendices agree; the ~94% type-level figure was already canon-consistent (ATLAS:105 quotes it from the paper)"
+    ]
+   },
+   "AGENTIC-BATTERY-IS-THE-FIRST-MEASUREMENT": {
+    "v": "confirmed",
+    "ev": [
+     "owner ruling 2026-08-02 «1 и 2 — согласен, применяй»: the cross-reference now names the section by title and file — «see the sibling brief's «Staged ambition», vibe-agentic-tcg-ts.md §4» — matching the two-arm battery's real home (vibe-agentic-tcg-ts.md:144 inside §4 Staged ambition; §6 is the risk register), rename-resistant per the D5/F-282 lesson"
+    ]
+   }
+  },
+  "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md": {
+   "C-4-RESOLUTION": {
+    "v": "confirmed",
+    "ev": [
+     "re-vouched after the canon alignment of 2026-08-02 (owner option (а)): the resolution line now carries 75.3%/70.2% naming DR2-012 as the canonical pair instead of the 74.8% figure that disagreed with the package's own ATLAS; the resolution's substance (route the oracle to cargo check today, constrained decoding staged as a future tool) is unchanged and still matches Guide §12 and the tcg spec"
+    ]
+   }
+  },
+  "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md": {
+   "TARGET-WARM-COMPLETE": {
+    "v": "confirmed",
+    "ev": [
+     "owner ruling 2026-08-02 point 3 (замеров нет и нескоро будет — пометить и не возвращаться): the target now says posted-not-measured with the instrument named — crates/rust-ai-native-tcg/src/bench.rs emits cold_init_ms/validate_p50_ms/validate_p95_ms and no complete field (grep -ci complete = 0) — and cites BACKLOG.md B-042 (the far-future measurement corpus, owner-accepted); marker @spec/done per the same ruling"
+    ]
+   }
+  },
+  "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md": {
+   "TARGET-COMPLETE": {
+    "v": "confirmed",
+    "ev": [
+     "owner ruling 2026-08-02 point 3: the target now says posted-not-measured with the instrument named — crates/go-ai-native-tcg/src/bench.rs records per-case warm_ms for validate only and computes no percentile of any kind (grep for pct/percentile/p50/p95/sort returns nothing) — and cites BACKLOG.md B-042; marker @spec/done"
+    ]
+   }
+  },
+  "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md": {
+   "TARGET-WARM-VALIDATE-AND-COMPLETE": {
+    "v": "confirmed",
+    "ev": [
+     "owner ruling 2026-08-02 point 3, split-clause form per the F-284 harvest recommendation: the validate half is measured and met — 19.32 ms p50 against the posted < 150 ms (research/tcg-bench/reports/bench-2026-07-07-baseline.json) — and stays; the complete half now says posted-not-measured with the instrument named (crates/typescript-ai-native-tcg/src/bench.rs emits cold_init_ms/validate_p50_ms/validate_p95_ms) and cites BACKLOG.md B-042; marker stays @impl/done on the measured half's strength"
+    ]
+   }
+  }
+ }
+}
