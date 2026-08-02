@@ -29,16 +29,23 @@ pub(crate) const REQUIRED_TOOLS: &[ToolSpec] = &[
     ToolSpec {
         name: "cargo",
         check: &["cargo", "--version"],
-        min_version: "1.93.0",
+        min_version: RUST_PIN,
         help_url: "https://rustup.rs",
     },
     ToolSpec {
         name: "rustc",
         check: &["rustc", "--version"],
-        min_version: "1.93.0",
+        min_version: RUST_PIN,
         help_url: "https://rustup.rs",
     },
 ];
+
+/// The language pin, read from the workspace manifest rather than
+/// hard-coded: `[workspace.package] rust-version` reaches this crate through
+/// `rust-version.workspace = true`, and `build.rs` normalises it to full
+/// semver (`VIBE_MSRV`). One authoritative number; cargo enforces the same
+/// value as the MSRV on every build.
+pub(crate) const RUST_PIN: &str = env!("VIBE_MSRV");
 
 /// The platform linker / C toolchain hint for `man doctor` (PROP-019 §2.8).
 pub(crate) fn linker_hint() -> (&'static str, &'static str) {
@@ -154,6 +161,14 @@ mod tests {
                 t.name
             );
         }
+        // The pin is READ from the workspace manifest, never hard-coded:
+        // the derived full-semver form must extend the manifest's own value
+        // verbatim, so the two can never disagree.
+        assert!(
+            RUST_PIN.starts_with(env!("CARGO_PKG_RUST_VERSION")),
+            "VIBE_MSRV ({RUST_PIN}) derives from workspace rust-version ({})",
+            env!("CARGO_PKG_RUST_VERSION")
+        );
     }
 
     #[test]
