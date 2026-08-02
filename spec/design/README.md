@@ -140,3 +140,5 @@ answer, and it is not scored as debt. @doc/done
 - ##idx-tui-visual [TUI visual language](tui-visual-language.md) — the shared visual conventions of the `vibe` TUIs. @doc/done
 
 - ##idx-structural-loader [Structural loader](structural-loader.md) — provisional loader instructions held for PROP-035; not yet wired into any live boot. @spec/hold
+
+- ##idx-tooling-map [The tooling development map](tooling-development-map.md) — the B-041 synthesis: the four planes of the discipline tooling (loading/addressing, the conform gate, specmap, the agent runtime, plus the parked security overlay), each mechanism's measured state against its backlog build entry, the dependency spine, the proposed waves А–Г, the ten owner forks, and the five observable «system is good» milestones. Commissioned by the owner 2026-08-02 («Мне нужно понимание, как развивать вообще наш инструментарий»); waves and forks are proposals until ruled. Captured 2026-08-02. @doc/work
