@@ -1,10 +1,11 @@
 # WAL — Project Continuation State {#root}
 
-_Updated: 2026-08-01, третий чекпойнт дня (**PHASE D AT ITS EXIT RAMP — волна
-11: the owner drained his queue in one sitting; corpus 97.6 %, registry 105
-obligations / 228 drifts, 17 owner-ruled deferrals, owed 71 — every one on the
-sync route; the whole build-or-demote tail is closed, партія 1d applied, the
-carve-out recorded, three new research entries B-022…B-024**)_
+_Updated: 2026-08-02 (**PHASE D AT ITS EXIT RAMP — group B drained whole,
+group C opened: F-180 closed by the owner's repl-policy diff in three places;
+registry 104 obligations / 224 drifts, 19 owner-ruled deferrals, owed 67 —
+every one on the sync route; his two challenges (the gated-key word, the tier
+vocabulary) verified and returned as decision menus; B-028 filed high
+priority**)_
 
 ##WAL-NUMBERS-COME-FROM-COMMANDS **Every number below is reproduced by two
 commands; run them rather than quoting this file** (why:
@@ -209,9 +210,13 @@ D17 → sealed; registry back at 108 / 232 with F-133 resolved to history). @imp
    build B-026 (SARIF ingest, high priority; F-206 deferred naming it), item
    7 applied (the five-sibling closing-rule form) + B-027 filed (the
    marker-semantics audit). **Item 4 applied at the third sitting (D22) —
-   group B is drained whole.** Presented next in chat: group C singles
-   (F-180, F-166), group D / F-169's four, with F-147's segment twins riding
-   the same §3.6(c) ruling. @spec/done
+   group B is drained whole. F-180 closed 2026-08-02** (the owner's
+   repl-policy qualifier in three places, D23). In chat awaiting his word:
+   the gated-key menu (document `gated_crates` now + neutral-key backlog
+   build — the three Go docs disagree two-against-one today), the
+   assertion-check annotate-or-build pair, the tier-vocabulary legend draft
+   (define, don't strip), group D's summary fix, and the F-169/F-147
+   §3.6(c) segment ruling. @spec/done
 2. ##WAL-NEXT-ADR **B+A′ is fully executed** — the §3.13 carve-out landed as
    (ii): census 35→36, the four-field record at PROP-000 §7
    (`##split-host-decision…`) carrying the owner's updated split-host posture
