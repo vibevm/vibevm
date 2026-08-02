@@ -1,11 +1,11 @@
 # WAL — Project Continuation State {#root}
 
-_Updated: 2026-08-02 (**PHASE D AT ITS EXIT RAMP — group B drained whole,
-group C opened: F-180 closed by the owner's repl-policy diff in three places;
-registry 104 obligations / 224 drifts, 19 owner-ruled deferrals, owed 67 —
-every one on the sync route; his two challenges (the gated-key word, the tier
-vocabulary) verified and returned as decision menus; B-028 filed high
-priority**)_
+_Updated: 2026-08-02, session end (**PHASE D AT ITS EXIT RAMP — the whole
+group B AND the addressing family are drained: F-180 / F-166 / F-162 closed
+whole, F-169 / F-147 deferred onto B-031; corpus 97.8 %, registry 102
+obligations / 210 drifts, 21 owner-ruled deferrals, owed 54 — every one on
+the owner's sync route, boss-owed zero everywhere; the backlog grew to B-032;
+next presentations: F-132's nine, F-185, the duplication family**)_
 
 ##WAL-NUMBERS-COME-FROM-COMMANDS **Every number below is reproduced by two
 commands; run them rather than quoting this file** (why:
@@ -38,16 +38,19 @@ aliasing design (`BACKLOG.md` B-011) makes stripping safe. Verification:
 `self-check.sh` EXIT=0, `sync-engines --check` green (51 pairs),
 `address-repair.py --verify` 0 remaining. @impl/done
 
-##WAL-STATE **State at the last regeneration** (2026-08-01, after волна 11;
-the commands supersede): corpus **11 147 / 228 / 44 — 97.6 %** over 260 files;
-registry **105 obligations / 228 drifts — 17 `deferred` by owner ruling, 88
-open**; **owed 71 of 228, every one on `sync-from-code`, the owner's route**;
-F-207 / F-263 / F-351 resolved to history this wave. The boss-owed remainder
-is **zero** on every route; the whole `build-or-demote` tail is owner-ruled
+##WAL-STATE **State at the last regeneration** (2026-08-02, session end; the
+commands supersede): corpus **11 166 / 210 / 44 — 97.8 %** over 260 files;
+registry **102 obligations / 210 drifts — 21 `deferred` by owner ruling, 81
+open**; **owed 54 of 210, every one on `sync-from-code`, the owner's route**;
+resolved to history across the two sittings: F-207, F-263, F-351, F-180,
+F-166, F-162 (plus F-133's same-day loop). The boss-owed remainder is
+**zero** on every route; the `build-or-demote` tail is owner-ruled whole
 (the rulings ledger:
 `campaigns/packages-2026-09/PHASE-D-HOST-OBLIGATIONS.md#rulings-2026-08-01`).
-`progress check` clean at the wave-10 checkpoint, `self-check.sh` all green,
-cargo-audit 0.22.2 / cargo-outdated 0.19.0 installed. @impl/done
+`progress check` clean (wave-10 checkpoint), `self-check.sh` all green
+(2026-08-01; the later edits are prose + string-only tag repointing,
+`cargo check` green 2026-08-02 — re-run the panel before the next commit
+day), cargo-audit 0.22.2 / cargo-outdated 0.19.0 installed. @impl/done
 
 ##WAL-RULINGS-IN-FORCE **Owner rulings taken 2026-07-31/08-01 and in force:**
 sync-queue group A = answer (2) — «specified, not built» annotate-in-place is
@@ -174,11 +177,18 @@ carry the six flow forms and 21 of 29 routed anchors re-judged `confirmed`. @imp
 
 ## Done (collapsed — see `git log` and the §7 LOG) {#done}
 
-##WAL-DONE **Phase D, waves 1–10 — the whole arc from 601 drift verdicts to
-232, 94.3 % → 97.6 %.** Волна 10 (2026-08-01): the three rulings executed
+##WAL-DONE **Phase D, waves 1–11 — the whole arc from 601 drift verdicts to
+210, 94.3 % → 97.8 %.** Волна 10 (2026-08-01): the three rulings executed
 (twelve decision records + criterion, партия 1a, health-audit adoption), the
 D13 seal tail closed as 51 judged record anchors (D14), the 260-vs-259
-acceptance flag closed by judging the D9 README (D15). Waves 5–8 re-verified every route (18/76, 31/59, 47/171 and
+acceptance flag closed by judging the D9 README (D15), the B-012 study
+landed and was ruled the same day (B-015 parked, B-016…B-021 planned).
+Волна 11 (2026-08-01/02): the owner drained group B and the whole addressing
+family across four sittings — партии 1c/1d/1b, the carve-out record
+(split-host at PROP-000 §7), the build-or-demote tail as owner-ruled
+deferrals, F-180 / F-166 / F-162 closed whole, F-169 / F-147 deferred onto
+B-031 (root-as-package), the dead-alias fix (five code tags → live ##CMD-*
+facts), and the backlog grew to B-032. Waves 5–8 re-verified every route (18/76, 31/59, 47/171 and
 16/40 verdicts did not survive as stated — the four named causes are batch plan
 §6.1); волна 9 published. The boss lane closed F-241 and F-148 by building the
 malformed-report precision, F-287/F-175/F-303 by correction, the campaign-plans
@@ -189,17 +199,10 @@ owner's six decisions of 2026-07-31/08-01. Phase C closed 2026-07-28 at 6 847 /
 
 ## In progress {#in-progress}
 
-##WAL-INFLIGHT **Nothing is in flight.** The two B-012 evidence passes
-returned the same day (2026-08-01) and their material landed boss-reviewed:
-`harvest/d14-b012-part-A.md` + `part-B.md` (evidence) and
-`harvest/d14-b012-prop014-feasibility.md` (the boss synthesis — verdict table
-over all ten mechanisms, the four-item Phase-E-ready shortlist, the three
-gating keys, four owner decision points). The pass also surfaced and filed
-`BACKLOG.md` **B-013** (broken specmap schema-bump route) and **B-014** (host
-`specmap.json` drifted ungated, 599/5266 stale spec-side lines), and caught
-one false clause in the партія-1a annotation at PROP-014 :56 — repaired
-verdict-first as **F-133** (minted D16 → §3.6(a) one-clause fix → confirmed
-D17 → sealed; registry back at 108 / 232 with F-133 resolved to history). @impl/done
+##WAL-INFLIGHT **Nothing is in flight.** No delegated passes out, no unsealed
+merges, no seal refusals, no uncommitted state; both mirrors synced at the
+session-end fan-out. The B-012 evidence passes and their aftermath (B-013 /
+B-014 filed, F-133's verdict-first loop) are history in the §7 LOG. @impl/done
 
 ## Next {#next}
 
