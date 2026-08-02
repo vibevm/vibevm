@@ -26931,17 +26931,13 @@
             ]
           },
           "NEVER-REUSE-AN-ANCHOR-FOR-A-DIFFERENT-MEANING": {
-            "v": "drift",
-            "ev": [
-              "specmap.json:62437  \"code\": \"duplicate-anchor\", \"file\": \"spec/boot/STATIC.md\", \"line\": 67, \"message\": \"anchor `{#root}` already used earlier in this file — spec://…#root is ambiguous\"",
-              "crates/vibe-spec/src/doctree.rs:244  pub fn duplicate_anchors(&self) -> &[String] { &self.duplicate_anchors",
-              "spec/boot/00-core.md:32  - ##VOID-NOT-WORK A unit whose state is `void` (`@spec/void`, or `state=\"void\"` in a `<status>` element) **asserts nothing** and is not work. It was either split into heirs and left as a pointer to them, or cancelled with no replacement; its text…",
-              "DRIFT, reported by the host's own detector: 59 `duplicate-anchor` warnings, every one in the generated `spec/boot/STATIC.md`, where `{#root}` and `{#never}` each mean twenty-seven different things — one address, many meanings, which is the exact failure this never names. That the reuse is produced by the boot compiler rather than typed by hand makes it systematic, not accidental."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "wave-7 re-verification (d7b, F-285), boss-merged 2026-08-02 under the owner's ruling «сними пока. Угроза реальная, но пока это не приоритет»: the rule the anchor states is TEMPORAL — an address that once meant one thing and now means another — and the 59 duplicate-anchor warnings the W-verdict convicted on are SIMULTANEOUS compile-time collisions manufactured by the boot compiler flattening 27 packages' snippets into spec/boot/STATIC.md ({#root} ×26), a different defect already owned by F-217/F-218 and deferred onto B-011 (highest priority); the temporal failure has no instance on the widened perimeter — retired sections keep their anchors (PROP-026 ##RETIRED-SECTIONS-KEPT practises it at HEAD) and no anchor shows evidence of repurposing"
             ]
           },
           "RETIRE-WITH-A-TOMBSTONE-DO-NOT-DELETE": {
@@ -27087,7 +27083,7 @@
           }
         },
         "verified_at": "2026-08-02T14:53:46Z",
-        "verify_batch": "W3 + D8-boss + D27 + D28"
+        "verify_batch": "W3 + D8-boss + D27 + D28 + D29"
       }
     },
     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md": {

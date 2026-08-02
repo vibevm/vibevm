@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 210,
+ "drift_verdicts": 209,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -1790,7 +1790,7 @@
    "reasons": [
     "DRIFT, with two live duplications and a third measured by W1. `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` are byte-identical copies of one 228-line contract — three copies, no reconciliation mechanism, which is exactly what the protocol calls «duplication is not redundancy». And the attribution flow's single-place law is stated in six host locations, 88 lines across 50 files. Both are deliberate and recorded, which makes them measured rather than accidental."
    ],
-   "status": "open",
+   "status": "deferred",
    "wave": 1,
    "closure_route": "sync-from-code",
    "fact": "CLAUDE.md:150  - `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` (kept identical; the four rules and the few directives that must hit every harness on session boot).",
@@ -3301,50 +3301,6 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-284",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "duplication",
-   "rule": "r-duplication",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/addressable-specs"
-   ],
-   "files": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md#NEVER-REUSE-AN-ANCHOR-FOR-A-DIFFERENT-MEANING"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "crates",
-    "spec",
-    "specmap.json"
-   ],
-   "evidence_refs": [
-    "crates/vibe-spec/src/doctree.rs:244  pub fn duplicate_anchors(&self) -> &[String] { &self.duplicate_anchors",
-    "spec/boot/00-core.md:32  - ##VOID-NOT-WORK A unit whose state is `void` (`@spec/void`, or `state=\"void\"` in a `<status>` element) **asserts nothing** and is not work. It was either split into heirs and left as a pointer to them, or cancelled with no replacement; its text…",
-    "specmap.json:62437  \"code\": \"duplicate-anchor\", \"file\": \"spec/boot/STATIC.md\", \"line\": 67, \"message\": \"anchor `{#root}` already used earlier in this file — spec://…#root is ambiguous\""
-   ],
-   "cites": [],
-   "reason": "DRIFT, reported by the host's own detector: 59 `duplicate-anchor` warnings, every one in the generated `spec/boot/STATIC.md`, where `{#root}` and `{#never}` each mean twenty-seven different things — one address, many meanings, which is the exact failure this never names. That the reuse is produced by the boot compiler rather than typed by hand makes it systematic, not accidental.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "crates/vibe-spec/src/doctree.rs:244  pub fn duplicate_anchors(&self) -> &[String] { &self.duplicate_anchors",
-   "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-285",
    "id_source": "minted",
    "carried": true
   },
@@ -9257,6 +9213,44 @@
    "falsifier": "self",
    "id": "F-283",
    "id_source": "minted"
+  },
+  {
+   "type": "duplication",
+   "rule": "r-duplication",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/addressable-specs"
+   ],
+   "files": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md#NEVER-REUSE-AN-ANCHOR-FOR-A-DIFFERENT-MEANING"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "crates",
+    "spec",
+    "specmap.json"
+   ],
+   "cites": [],
+   "reason": "DRIFT, reported by the host's own detector: 59 `duplicate-anchor` warnings, every one in the generated `spec/boot/STATIC.md`, where `{#root}` and `{#never}` each mean twenty-seven different things — one address, many meanings, which is the exact failure this never names. That the reuse is produced by the boot compiler rather than typed by hand makes it systematic, not accidental.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "crates/vibe-spec/src/doctree.rs:244  pub fn duplicate_anchors(&self) -> &[String] { &self.duplicate_anchors",
+   "falsifier": "host",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-285",
+   "id_source": "minted",
+   "carried": true
   },
   {
    "type": "missing-support",

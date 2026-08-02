@@ -1,0 +1,18 @@
+{
+ "batch": "D29",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md": {
+   "NEVER-REUSE-AN-ANCHOR-FOR-A-DIFFERENT-MEANING": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "wave-7 re-verification (d7b, F-285), boss-merged 2026-08-02 under the owner's ruling «сними пока. Угроза реальная, но пока это не приоритет»: the rule the anchor states is TEMPORAL — an address that once meant one thing and now means another — and the 59 duplicate-anchor warnings the W-verdict convicted on are SIMULTANEOUS compile-time collisions manufactured by the boot compiler flattening 27 packages' snippets into spec/boot/STATIC.md ({#root} ×26), a different defect already owned by F-217/F-218 and deferred onto B-011 (highest priority); the temporal failure has no instance on the widened perimeter — retired sections keep their anchors (PROP-026 ##RETIRED-SECTIONS-KEPT practises it at HEAD) and no anchor shows evidence of repurposing"
+    ]
+   }
+  }
+ }
+}

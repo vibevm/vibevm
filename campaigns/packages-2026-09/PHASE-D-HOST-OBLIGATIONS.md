@@ -280,10 +280,21 @@ own STATIC.md; qualified-rewrite at materialization; the C++ ADL analogy;
 вещи зависит как вообще работает загрузка, насколько детерминированно и
 хорошо».
 
-**Pending the owner (per-anchor discipline, nothing struck by adjacency):**
-**F-217** stays `open` — its `NEVER-DUPLICATE-A-NORMATIVE-VALUE` anchor carries
-a second, unruled defect (the hand-copied `CLAUDE.md`/`AGENTS.md`/`GEMINI.md`
-triple, byte-identical today, with no mechanism comparing the three outside the
-generated `<vibevm>` block); **F-285** stays `open` — the «снять обвинение»
-question (temporal-reuse rule convicted of a simultaneous compile-time
-collision) is not yet answered.
+**The two halves that were pending closed the same day, third exchange:**
+
+- **F-217's triple half — the owner ordered the check built** («добавь
+  проверку, желательно какую-то алгоритмическую, а не через LLM»), and it
+  was built in the same sitting: `tools/self-check.sh` step 0c byte-compares
+  `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` and fails the floor naming the
+  diverging pair. Deliberately a full-file `cmp` — the `<vibevm>` block is
+  generated identically into all three, so any divergence is a hand-edit
+  that missed a sibling. With the collision half already on B-011 (highest
+  priority), **F-217 goes `deferred`** — both its anchors' defects are now
+  either built or planned; the anchors re-judge when B-011 lands.
+- **F-285 — «сними пока. Угроза реальная, но пока это не приоритет»:** the
+  anchor re-judged `confirmed` (batch **D29**, merged 1/1, seal already
+  current — no bytes moved): the temporal-reuse rule was convicted of a
+  simultaneous compile-time collision that F-217/F-218 already own, and the
+  temporal failure has no instance on the widened perimeter. The owner's
+  «угроза реальная» half is not lost: the collision threat itself is exactly
+  B-011's subject, at highest priority. **F-285 resolved to history.**

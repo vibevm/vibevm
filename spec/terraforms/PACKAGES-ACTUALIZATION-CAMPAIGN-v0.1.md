@@ -4391,6 +4391,23 @@ aspirational — and every one is still live for the phases that remain.
   (temporal-reuse rule convicted of a simultaneous compile collision), and
   **B-027's sweep rule**. The backlog stands at **B-035**.
 
+  **Third exchange, same sitting — the two halves close, one by a build.**
+  The owner ordered the triple check built, algorithmic and never an LLM
+  judgement — landed the same hour as `tools/self-check.sh` **step 0c**: a
+  full-file byte-compare of `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` that
+  fails the floor naming the diverging pair (full-file deliberately — the
+  `<vibevm>` block is generated identically into all three, so any
+  divergence is a hand-edit that missed a sibling). **F-217 → `deferred`**,
+  both halves now built or planned. And **F-285 came off** («сними пока.
+  Угроза реальная, но пока это не приоритет») — batch **D29** re-judged the
+  temporal-reuse anchor `confirmed` (merge 1/1, seal already current, no
+  bytes moved); the real half of the threat is precisely B-011's subject,
+  already at highest priority. **State after the third exchange** (commands
+  supersede): corpus **11 167 / 209 / 44 — 97.8 %**; registry **101 / 209 —
+  25 deferred, 76 open; owed 53, every one on the sync route; F-285
+  resolved to history (127 total)**. On the owner: **B-027's sweep rule**,
+  then the registry's sync-queue remainder.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
