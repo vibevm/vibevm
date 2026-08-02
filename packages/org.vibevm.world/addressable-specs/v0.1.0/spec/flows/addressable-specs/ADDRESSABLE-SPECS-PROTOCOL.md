@@ -283,5 +283,7 @@ project:
 - ##SUM-ONE-FACT-ONE-ANCHOR One fact, one anchor. Copies diverge silently; cite instead. @impl/done
 - ##SUM-INVARIANTS-AT-THE-EDGES Invariants live at the start or end of a file — the middle is
   where models stop reading. @impl/done
-- ##SUM-THE-BIDIRECTIONAL-GRAPH `Implements:` markers plus `Test:` lines form a bidirectional
-  graph that pays off with zero tooling. @impl/done
+- ##SUM-THE-BIDIRECTIONAL-GRAPH `Implements:` markers plus `Test:` lines form a
+  bidirectional graph that pays off with zero tooling — and where the graph is
+  mechanized, the same two edges are authored as code-side tags and the
+  spec-side view is rendered (§[graph](#graph)). @impl/done
