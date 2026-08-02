@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-02T19:37:24Z",
+  "updated_at": "2026-08-02T19:57:39Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -11286,7 +11286,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md": {
-      "content_hash": "a6e5656919f575f3e3956ab696b10dfb6c6f68eb8dca84edf9518530a643445d",
+      "content_hash": "335ba3a1f6331655c98caa2a47f1808ec0cda29c5c46d72d36c2d6443b796818",
       "rollup": {
         "explicit": [
           "spec",
@@ -11308,7 +11308,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "a6e5656919f575f3e3956ab696b10dfb6c6f68eb8dca84edf9518530a643445d",
+        "processed_hash": "335ba3a1f6331655c98caa2a47f1808ec0cda29c5c46d72d36c2d6443b796818",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -11397,11 +11397,9 @@
             ]
           },
           "ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:34  ##ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS One language-generic product client (`vibe-tcg`'s `OracleRegistry` link)...",
-              "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:110  ##ORACLE-REGISTRY `OracleRegistry`: interior-mutable (the MCP tool seam hands out shared refs), lazily populated per...",
-              "the named artifact was not located on the wide perimeter, which includes research/go-demo, the real Go consumer"
+              "owner ruling 2026-08-02 after the OracleRegistry investigation: the fact now records the truth whole — the client is gone by the owner's own MCP-SOVEREIGNTY resolution (2026-07-07, commit 36461ba8; PROP-026 ##TOPOLOGY-RETIRED / ##TCG-CRATE-DELETED), neither Go pinning mechanism exists (no live_chain.rs — server_replay.rs only; no outer-frame golden), the surviving posture is TcgSession (tools_tcg.rs:32), and the planned successor is the multi-language composition layer B-046 (autodiscovery over the sovereign servers, autonomy preserved — his direction verbatim in the entry); marker @impl/plan per the B-027 rule, the build is planned. The verdict's original usage-absence ground is not relied on — voided by the §3.8 bench"
             ]
           },
           "RESTATES-RATHER-THAN-INCLUDES-THE-SIBLING-TEXTS": {
@@ -11648,12 +11646,9 @@
             ]
           },
           "REPLAY-GOLDENS-PIN-BOTH-HOPS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:158  ##REPLAY-GOLDENS-PIN-BOTH-HOPS Replay goldens pin the CURRENT outer shape in this package's tests; recorded LSP trans...",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client/tests.rs:14  pub(crate) struct Script { pub sent: Vec<serde_json::Value>,",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-extract-bridge/src/lib.rs:300  r#\"{\"protocol\":1,\"file\":\"internal/cells/plan/plan.go\",\"in_test\":false,\"degraded\":false,\"#,",
-              "**the outer hop has no replay goldens.** The inner hop is real: recorded LSP transcripts drive a scripted transport (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client/tests.rs:14). Nothing drives `run_serve` over recorded frames — the outer-hop tests are unit tests of helper functions plus a finding-parity test (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/tests/finding_parity.rs). «Both hops» is one hop"
+              "owner ruling 2026-08-02 (the F-210 portion): annotated in the sanctioned form on the package's own bench — the inner hop is real and gopls-free (client/tests.rs Script), the outer hop the document owns (##DOCUMENT-OWNS-THE-OUTER-HOP-GRAMMAR) is pinned by nothing (run_serve called from main.rs alone, no test builds a {proto,id,op,params} frame, no recorded stream checked in); marker @spec/done — no entry plans the outer goldens today, and the no-measurements standing answer does not cover protocol pinning (a different genre, left honest)"
             ]
           },
           "MARKERS-FIELD-IS-FILLED-HERE": {
@@ -11666,8 +11661,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T20:39:23Z",
-        "verify_batch": "C4+C5 + C45-go-review + D11-release-a"
+        "verified_at": "2026-08-02T19:57:39Z",
+        "verify_batch": "C4+C5 + C45-go-review + D11-release-a + D38"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md": {

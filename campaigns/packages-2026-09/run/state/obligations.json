@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 202,
+ "drift_verdicts": 200,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -1558,54 +1558,6 @@
     "host"
    ],
    "id": "F-178",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md#ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md#REPLAY-GOLDENS-PIN-BOTH-HOPS"
-   ],
-   "drift_count": 2,
-   "cross_package": false,
-   "installed": false,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-extract-bridge/src/lib.rs:300  r#\"{\"protocol\":1,\"file\":\"internal/cells/plan/plan.go\",\"in_test\":false,\"degraded\":false,\"#,",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client/tests.rs:14  pub(crate) struct Script { pub sent: Vec<serde_json::Value>,",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:158  ##REPLAY-GOLDENS-PIN-BOTH-HOPS Replay goldens pin the CURRENT outer shape in this package's tests; recorded LSP trans...",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:34  ##ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS One language-generic product client (`vibe-tcg`'s `OracleRegistry` link)...",
-    "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:110  ##ORACLE-REGISTRY `OracleRegistry`: interior-mutable (the MCP tool seam hands out shared refs), lazily populated per..."
-   ],
-   "cites": [],
-   "reason": "the named artifact was not located on the wide perimeter, which includes research/go-demo, the real Go consumer",
-   "reasons": [
-    "**the outer hop has no replay goldens.** The inner hop is real: recorded LSP transcripts drive a scripted transport (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client/tests.rs:14). Nothing drives `run_serve` over recorded frames — the outer-hop tests are unit tests of helper functions plus a finding-parity test (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/tests/finding_parity.rs). «Both hops» is one hop"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:158  ##REPLAY-GOLDENS-PIN-BOTH-HOPS Replay goldens pin the CURRENT outer shape in this package's tests; recorded LSP trans...",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-210",
    "id_source": "minted",
    "carried": true
   },
@@ -7622,6 +7574,44 @@
    "routed_out": [],
    "owed": 2,
    "id": "F-209",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md#ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md#REPLAY-GOLDENS-PIN-BOTH-HOPS"
+   ],
+   "drift_count": 2,
+   "cross_package": false,
+   "installed": false,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "the named artifact was not located on the wide perimeter, which includes research/go-demo, the real Go consumer",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:158  ##REPLAY-GOLDENS-PIN-BOTH-HOPS Replay goldens pin the CURRENT outer shape in this package's tests; recorded LSP trans...",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 2,
+   "id": "F-210",
    "id_source": "minted",
    "carried": true
   },

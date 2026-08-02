@@ -4530,6 +4530,31 @@ aspirational — and every one is still live for the phases that remain.
   202 — 32 deferred, 67 open; owed 29; resolved 130**. The backlog
   stands at **B-045**.
 
+- **2026-08-02 · восьмой обмен — история прочитана, ложится
+  архитектурное направление, F-210 осушен.** The owner's read of the
+  OracleRegistry history came back as a direction, not a revert: MCP
+  servers as the *foundation* is the wrong framing — the shared logic
+  lives in a library/crate and CLI + MCP are thin surfaces over it («у
+  нас постоянно недостаточный уровень абстракции, всё прибивается
+  гвоздями»); the mcp packages stay; and the multi-language composition
+  story gets planned immediately — autodiscovery over installed
+  AI-Native languages, autonomy never broken. Executed: **B-046**
+  (composition layer — three options with a recommendation to start
+  from the vibe-served discovery roster, the rails being the lockfile's
+  `[[mcp_server]]`/`[[binary]]` tables; the autonomy law verbatim) and
+  **B-047** (the surface norm + the nailed-down audit; the stacks
+  verified already conformant — bridge crates as shared logic, MCP
+  descriptions relaying CLI verbs; the host side is the audit's
+  subject, B-018's MCP half the first known gap) filed; the map gains
+  both in plane 2.4 and fork 11; fork 10 marked taken. **F-210 applied
+  as D38 and resolved** — the one-client anchor carries the full
+  history with `@impl/plan (→ B-046)`, the goldens anchor the honest
+  package-bench annotation `@spec/done`. **State** (commands
+  supersede): corpus **11 176 / 200 / 44 — 97.9 %**; registry **98 /
+  200 — 32 deferred, 66 open; owed 27; resolved 131**. The backlog
+  stands at **B-047**. On the owner: the sync-queue remainder (14 open
+  rows), presented per the refined format.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:

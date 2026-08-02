@@ -410,3 +410,26 @@ the package slot; the tool grammar stayed normative, the per-family MCP
 servers carry the same tools). The F-210 texts rest on that recorded
 resolution and the package's own tests, not on usage-absence; they wait
 for the owner's word after he reads the history.
+
+**Eighth exchange — the history read, the architecture direction lands,
+F-210 drains.** The owner: MCP servers as the *foundation* is the wrong
+framing — «Нужен какой-то код, доступный из разных поверхностей. MCP —
+одна поверхность, инструменты командной строки — другая… логика, общая
+между MCP и CLI, должна быть сформулирована абстрактно в какой-то
+библиотеке или крейте»; the mcp packages stay; and the multi-language
+composition story is to be planned now — a clear way for an agent to
+assemble several AI-Native languages in one project, «общий реестр …
+на основе autodiscovery подключенных AI-Native языков, не нарушая их
+автономность». Executed: **B-046** (composition layer; three options,
+the autonomy law verbatim; the autodiscovery rails already exist —
+lockfile + `[[mcp_server]]` + `[[binary]]`) and **B-047** (the surface
+norm: shared-crate logic, thin CLI+MCP surfaces; verified already kept
+by the stacks — the bridge crates ARE the shared logic and the MCP tool
+descriptions literally relay the CLI verbs; the audit closes the host
+side, B-018's MCP half first) filed; the map's plane 2.4 and fork 11
+carry both. **F-210 applied and drained (D38):** the one-client anchor
+annotated with the full history (the owner's own resolution named) and
+`@impl/plan` pointing at B-046; the goldens anchor annotated on the
+package's own bench, `@spec/done` (no entry plans outer goldens; the
+no-measurements answer deliberately does not cover protocol pinning).
+**F-210 resolved — 131 total; the corpus crossed 97.9 %.**

@@ -1,0 +1,20 @@
+{
+ "batch": "D38",
+ "cluster": "ai-native",
+ "files": {
+  "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md": {
+   "ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS": {
+    "v": "confirmed",
+    "ev": [
+     "owner ruling 2026-08-02 after the OracleRegistry investigation: the fact now records the truth whole — the client is gone by the owner's own MCP-SOVEREIGNTY resolution (2026-07-07, commit 36461ba8; PROP-026 ##TOPOLOGY-RETIRED / ##TCG-CRATE-DELETED), neither Go pinning mechanism exists (no live_chain.rs — server_replay.rs only; no outer-frame golden), the surviving posture is TcgSession (tools_tcg.rs:32), and the planned successor is the multi-language composition layer B-046 (autodiscovery over the sovereign servers, autonomy preserved — his direction verbatim in the entry); marker @impl/plan per the B-027 rule, the build is planned. The verdict's original usage-absence ground is not relied on — voided by the §3.8 bench"
+    ]
+   },
+   "REPLAY-GOLDENS-PIN-BOTH-HOPS": {
+    "v": "confirmed",
+    "ev": [
+     "owner ruling 2026-08-02 (the F-210 portion): annotated in the sanctioned form on the package's own bench — the inner hop is real and gopls-free (client/tests.rs Script), the outer hop the document owns (##DOCUMENT-OWNS-THE-OUTER-HOP-GRAMMAR) is pinned by nothing (run_serve called from main.rs alone, no test builds a {proto,id,op,params} frame, no recorded stream checked in); marker @spec/done — no entry plans the outer goldens today, and the no-measurements standing answer does not cover protocol pinning (a different genre, left honest)"
+    ]
+   }
+  }
+ }
+}
