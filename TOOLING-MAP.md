@@ -54,7 +54,7 @@
 
 ##agent-gaps Measured gaps: vibe's own MCP carries no map tools (the B-012 annotation at PROP-014's runtime section); installed packages are deliberately outside the project map (reproducibility), so «объясни чужой пакет» has no data path; no LLM prose producer (`vibe-llm` is a 9-line stub); fragments cannot be fetched by hash. @doc/done
 
-##agent-builds Builds: **B-018** (high priority, owner's wide form) in its four parts — explain over vibe's agent interface; map search (query language v0 is a fork below); fragments-by-hash with B-016 half 2; the second non-committed resolver map for installed packages fed by B-016 half 1. Then **B-020** (light client to external LLMs — possibly through fractality, owner's direction) and **B-021**'s warnings surfacing through the same tools. **B-044** (the no-zombie process-table assertion for all three oracles — «тест на зомби лучше написать», owner 2026-08-02; the pattern is proven in-tree by fractality's pod test) rides the campaign's test phase. Acceptance for the whole plane is the owner's canonical query: *«какой тест проверяет это правило спеки»* answered by a running vibe for an installed package. @doc/done
+##agent-builds Builds: **B-018** (high priority, owner's wide form) in its four parts — explain over vibe's agent interface; map search (query language v0 is a fork below); fragments-by-hash with B-016 half 2; the second non-committed resolver map for installed packages fed by B-016 half 1. Then **B-020** (light client to external LLMs — possibly through fractality, owner's direction) and **B-021**'s warnings surfacing through the same tools. **B-044** (the no-zombie process-table assertion for all three oracles — «тест на зомби лучше написать», owner 2026-08-02; the pattern is proven in-tree by fractality's pod test) rides the campaign's test phase. **B-046** (multi-language composition over the sovereign servers: autodiscovery via the lockfile's `[[mcp_server]]`/`[[binary]]` rails, autonomy preserved — the planned successor to the retired one-client story) and **B-047** (the surface norm: capability logic in a shared crate, CLI and MCP as thin surfaces over it — «всё прибивается гвоздями к конкретной реализации» dies as a class; the stacks already conform, the audit closes the host side) joined the plane 2026-08-02. Acceptance for the whole plane is the owner's canonical query: *«какой тест проверяет это правило спеки»* answered by a running vibe for an installed package. @doc/done
 
 ### 2.5 The security overlay — parked {#plane-security}
 
@@ -85,7 +85,7 @@
 
 ## 5. The forks only the owner can take {#forks}
 
-##forks-lead Ten named decisions, each waiting inside its entry; the waves above cannot finish without them: @doc/done
+##forks-lead Eleven named decisions, each waiting inside its entry; the waves above cannot finish without them: @doc/done
 
 1. ##FORK-COMPUTED-NAMES Rust cell naming — adopt computed `{Variant}{Seam}` (as Go practises) or free naming + vocabulary lint (B-038). @doc/done
 2. ##FORK-GATE-UNIT The gate unit per language (crate / package / cell) and where gating lists live (root table with aliases vs per-language sections) (B-029 / B-034). @doc/done
@@ -96,7 +96,8 @@
 7. ##FORK-DISPUTED `disputed`'s fate when the lifecycle vocabularies merge (B-024). @doc/done
 8. ##FORK-B027-RULE The B-027 marker rule («не планируется → `@spec/done`; запланировано записью → `@impl/plan`») — awaiting «да, свипуй». @doc/done
 9. ##FORK-PARITY-HOME The spec home of the «не слабее Rust без записанной причины» principle (B-035). @doc/done
-10. ##FORK-FIRST-SOURCE The 74.8 % first-source reconciliation inside `core-ai-native`'s appendices (the F-161 tail). @doc/done
+10. ##FORK-FIRST-SOURCE The 74.8 % first-source reconciliation inside `core-ai-native`'s appendices (the F-161 tail) — **taken 2026-08-02:** the ATLAS pair 75.3 %/70.2 % is canon; carriers aligned. @doc/done
+11. ##FORK-COMPOSITION-SHAPE The multi-language composition shape — a thin MCP+CLI aggregator, a discovery roster served by `vibe`, or the hybrid (B-046's options 1/2/3; the autonomy law binds all three). @doc/done
 
 ## 6. When the system is «good» — observable milestones {#milestones}
 
