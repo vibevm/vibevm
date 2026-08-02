@@ -8,12 +8,13 @@ F-132 / F-217 / F-154 / F-355 / F-181 deferred onto recorded-or-built work
 built, F-167 applied D31, TS-близнецы починены вердикт-сначала D30, F-285
 resolved D29); corpus 97.8 %, registry 102 obligations / 209 drifts, 28
 owner-ruled deferrals, 74 open, owed 41 — every one on the owner's sync
-route, boss-owed zero everywhere; the backlog stands at B-043; **the B-041
-map is APPROVED and INTEGRATED — `TOOLING-MAP.md` at the root beside the
-backlog («мне нравится этот документ»), framed by the owner's word:
-волны исполняются фазами кампании, недостающее откладывается**; on the
-owner: B-027's rule, F-161's two mini-questions, the F-215/F-281
-families**)_
+route, boss-owed zero everywhere; the backlog stands at B-044; **B-027's
+sweep EXECUTED under the approved rule (19 flips to @impl/plan naming
+entries, D34), the no-measurements standing answer recorded (D33 + B-042),
+the zombie-test build filed (B-044, D32 verdict-first ×3), the 74.8 canon
+fixed to 75.3/70.2 (F-161 drained), the B-041 map APPROVED and INTEGRATED
+as `TOOLING-MAP.md`**; on the owner: ONE mini-question (the rust
+large-workspace ceiling 60→45) and the sync-queue remainder**)_
 
 ##WAL-NUMBERS-COME-FROM-COMMANDS **Every number below is reproduced by two
 commands; run them rather than quoting this file** (why:
@@ -47,17 +48,17 @@ aliasing design (`BACKLOG.md` B-011) makes stripping safe. Verification:
 `address-repair.py --verify` 0 remaining. @impl/done
 
 ##WAL-STATE **State at the last regeneration** (2026-08-02, presentation
-sitting, fourth exchange; the commands supersede): corpus **11 167 / 209 /
-44 — 97.8 %** over 260 files; registry **102 obligations / 209 drifts — 28
-`deferred` by owner ruling, 74 open**; **owed 41 of 209, every one on
-`sync-from-code`, the owner's route** (the +1 obligation is F-355, the
-verdict-first split of the TS twins — not new work); resolved to history
-across the sittings: F-207, F-263, F-351, F-180, F-166, F-162, F-285 (127
-total; plus F-133's same-day loop). The boss-owed remainder is **zero** on
-every route; the rulings ledger:
+sitting, sixth exchange; the commands supersede): corpus **11 169 / 207 /
+44 — 97.8 %** over 260 files; registry **101 obligations / 207 drifts — 31
+`deferred` by owner ruling, 70 open**; **owed 34 of 207, every one on
+`sync-from-code`, the owner's route**; resolved to history across the
+sittings: **128 total** (F-284 and F-161's substance joined the list this
+exchange; earlier: F-207, F-263, F-351, F-180, F-166, F-162, F-285,
+F-133's loop). The boss-owed remainder is **zero** on every route; the
+rulings ledger:
 `campaigns/packages-2026-09/PHASE-D-HOST-OBLIGATIONS.md#rulings-2026-08-01`
-and `#rulings-2026-08-02-2` (four exchanges). `progress check` clean —
-re-run at the fourth exchange's mirror step (260 files), `self-check.sh`
+and `#rulings-2026-08-02-2` (six exchanges). `progress check` clean —
+re-run at every mirror step of the sitting (260 files), `self-check.sh`
 all green — full run EXIT=0 twice today (sitting open + after step 0c),
 **панель перегоняется на чекпойнте ситтинга**, cargo-audit 0.22.2 /
 cargo-outdated 0.19.0 installed. @impl/done
@@ -111,7 +112,20 @@ F-355 → B-036/B-037 (deferred; дубль id генератора развед
 несуженных якорях); F-167 применён D31 + B-042 (accepted, дальняя
 тестовая база — LLM/фаззер); F-181 → вариант (1), к семье F-204/B-005
 (deferred); B-041 — карта развития инструментария, прямой запрос
-владельца, следующая работа boss-lane. @impl/done
+владельца, следующая работа boss-lane.
+**Пятый обмен:** карта одобрена («мне нравится этот документ») и
+интегрирована — `TOOLING-MAP.md` в корне + раздел `#map` бэклога;
+рамка кампании записана в `##frame-line` дословно. **Шестой обмен
+(четыре рулинга):** ссылка §6→§4 и канон 75.3/70.2 применены (D33,
+F-161 осушен; продуктовый первоисточник C-4 согласован с ATLAS);
+**свип B-027 исполнен** (19 флипов `@impl/plan` с именами записей,
+D34 19/19, B-027 → done); стоячий ответ «замеров нет и нескоро будет»
+записан в три complete-цели + карту + B-042 — вопрос владельцу больше
+не задаётся; **B-044** («тест на зомби лучше написать») зафайлен,
+шесть копий клятвы объединены (D32 вердикт-сначала ×3 — включая
+пер-якорную поимку: носитель в ts-оракуле `RUST-SIDE-OWNS-TERMINATION`,
+не SHUTDOWN-якорь таблицы harvest'а), F-281/F-167/F-161 deferred,
+F-284 resolved. @impl/done
 
 ## Constraints — do not violate {#constraints}
 
@@ -270,15 +284,16 @@ B-014 filed, F-133's verdict-first loop) are history in the §7 LOG. @impl/done
    the stale «F-132's nine» queue line diagnosed and the rule recorded:
    **the owner's queue is derived from the registry, never from a harvest
    snapshot**; the fourth exchange set the standing **build-first default**
-   for discipline mechanisms; the fifth drafted, got approved and
-   integrated the **B-041 map** — now **`TOOLING-MAP.md` at the repo root**
-   beside the backlog (its `#map` section digests the waves), carrying the
-   owner's frame verbatim: **волны исполняются фазами кампании (E после
-   выходного гейта D), недостающее откладывается — карта не стартует
-   работ**). **On the owner now: B-027's sweep rule («да, свипуй»);
-   F-161's two mini-questions (битая ссылка §6→§4 — да/нет; цифра 74.8 —
-   (а)/(б)/(в), семья F-125); the F-215/F-281 families; then the
-   registry's sync-queue remainder.** @spec/done
+   for discipline mechanisms; the fifth integrated the **B-041 map** as
+   `TOOLING-MAP.md` with the campaign frame; the sixth executed **all four
+   rulings** — the link and canon fixes (D33), the **B-027 sweep** (D34,
+   B-027 done), the no-measurements standing answer (B-042), and the
+   zombie-family unification onto **B-044** (D32)). **On the owner now:
+   ONE mini-question — the rust `LARGE-WORKSPACE-CONSUMERS-ARE-WARNED`
+   ceiling: 45 s shipped (`QUIESCENCE_BUDGET`, `lib.rs:33`) vs < 15 s
+   posted vs 60 s asserted; предлагается 60→45 в форме, которую Go-близнец
+   уже принял (D5/F-160). Then the registry's sync-queue remainder (18
+   open sync-route rows, owed 34), presented per the refined format.** @spec/done
 2. ##WAL-NEXT-ADR **B+A′ is fully executed** — the §3.13 carve-out landed as
    (ii): census 35→36, the four-field record at PROP-000 §7
    (`##split-host-decision…`) carrying the owner's updated split-host posture
