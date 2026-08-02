@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 225,
+ "drift_verdicts": 224,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -5034,49 +5034,6 @@
    "carried": true
   },
   {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/source-mirrors"
-   ],
-   "files": [
-    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md#SUM-EVERY-HOST-HOLDS-THE-FULL-HISTORY"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "mirrors.toml",
-    "xtask"
-   ],
-   "evidence_refs": [
-    "mirrors.toml:28  refs = [\"main\", \"tags\"]",
-    "mirrors.toml:35  refs = [\"main\", \"tags\"]",
-    "xtask/src/mirror.rs:321      println!(\"mirror: all push targets synced.\");"
-   ],
-   "cites": [],
-   "reason": "DRIFT, and it is the clearest statement of this package's one operationally consequential gap. Both hosts hold `main` at cd376302 equal to local `main`, so for MAINLINE the premise holds today. Two limits on «the full history»: (1) `refs = [\"main\", \"tags\"]` in both target blocks, so every other local branch exists on no host — this repository carries `cultural-backup`, `cultural-refactor`, `refactor/qualified-address-restructure` and a set of `fractality/*` branches, none mirrored anywhere; (2) the repository has exactly ONE tag, so the tags half carries almost nothing. Neither growth nor shrinkage of the host set has been exercised — the target set has been the same two entries since `mirrors.toml` was created on 2026-06-14.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "mirrors.toml:28  refs = [\"main\", \"tags\"]",
-   "falsifier": "host",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-180",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "contradiction",
    "rule": "r-contradiction",
    "merged_by": [
@@ -7012,6 +6969,43 @@
    "routed_out": [],
    "owed": 4,
    "id": "F-179",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/source-mirrors"
+   ],
+   "files": [
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md#SUM-EVERY-HOST-HOLDS-THE-FULL-HISTORY"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "mirrors.toml",
+    "xtask"
+   ],
+   "cites": [],
+   "reason": "DRIFT, and it is the clearest statement of this package's one operationally consequential gap. Both hosts hold `main` at cd376302 equal to local `main`, so for MAINLINE the premise holds today. Two limits on «the full history»: (1) `refs = [\"main\", \"tags\"]` in both target blocks, so every other local branch exists on no host — this repository carries `cultural-backup`, `cultural-refactor`, `refactor/qualified-address-restructure` and a set of `fractality/*` branches, none mirrored anywhere; (2) the repository has exactly ONE tag, so the tags half carries almost nothing. Neither growth nor shrinkage of the host set has been exercised — the target set has been the same two entries since `mirrors.toml` was created on 2026-06-14.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "mirrors.toml:28  refs = [\"main\", \"tags\"]",
+   "falsifier": "host",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-180",
    "id_source": "minted",
    "carried": true
   },

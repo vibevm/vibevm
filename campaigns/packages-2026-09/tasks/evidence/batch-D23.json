@@ -1,0 +1,13 @@
+{
+  "batch": "D23",
+  "cluster": "world",
+  "files": {
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md": {
+      "SUM-EVERY-HOST-HOLDS-THE-FULL-HISTORY": {"v": "confirmed", "src": [1, 2], "ev": ["repaired under F-180, owner ruling 2026-08-02 («нам нужна репликация только ветки main+теги и других специально заявленных веток, если они появятся»): the summary now says what the fan-out does — full history OF THE DECLARED REFS (main + tags today; deliberately declared branches later), refs outside the set live where authored, replication of a declared line rather than a whole-tree backup; the qualifier ADDS a sentence rather than weakening the rule (the harvest's own §3.6-softening check); host evidence unchanged and re-verified in wave 7: refs = [main, tags] in both mirrors.toml target blocks, local branches live on no host by design"]},
+      "NOTHING-IS-LOST-EITHER-WAY": {"v": "confirmed", "src": [1, 2], "ev": ["re-vouched against the amended text (the same owner-approved one-clause diff, third of three places): the offboarding claim this anchor was confirmed on in wave 7 is unchanged — removing a host subtracts nothing — and the amended bold now states the true invariant precisely: remaining hosts hold the declared refs' history, mainline holds the whole tree"]}
+    },
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL.md": {
+      "BUYS-ANY-HOST-CAN-VANISH-WITHOUT-DATA-LOSS": {"v": "confirmed", "src": [1, 2], "ev": ["re-vouched against the amended text (the same owner-approved one-clause diff, second of three places): the vanish-safety claim survives with the honest qualifier — a host's loss costs a manifest line because the declared refs' history lives on every host and the whole tree lives on mainline; the unqualified «full history» that overstated the fan-out into a backup is gone from all three carriers"]}
+    }
+  }
+}

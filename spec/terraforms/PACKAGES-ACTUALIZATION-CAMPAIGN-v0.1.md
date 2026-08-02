@@ -4248,6 +4248,33 @@ aspirational — and every one is still live for the phases that remain.
   campaign's own summary debt, inside F-169's four), and F-169's §3.6(c)
   pair riding with F-147's twins.
 
+- **2026-08-02 · группа C открывается — F-180 закрыт одним диффом в трёх
+  местах, а два черновика возвращены владельцем на перепроверку и
+  перепроверка меняет рекомендации.** The owner's repl-policy phrasing
+  («main + теги + специально заявленные ветки») is exactly the prepared
+  qualifier, applied to all three carriers of the unqualified «full history»
+  (the summary, the offboarding bold, the protocol's vanish-safety bullet) —
+  D23 merged 3 (one drift→confirmed, two re-vouches of amended confirmed
+  anchors), both files sealed, **F-180 resolved**. His two challenges both
+  paid: **(2.1)** the shipped engine reads exactly one key — the
+  Rust-flavoured `gated_crates` (`config.rs:44`, `deny_unknown_fields`, so
+  the Go-idiomatic word errors loudly) — and the three Go docs now disagree
+  two-against-one *because the D9 correction itself wrote the Rust word into
+  the Go skill*; the honest menu is document-the-shipped-key now + an
+  engine-side neutral/per-language key as a backlog build. **(2.3)** the
+  tier vocabulary (T-lex/T-syn/T-sem) is used across the live slot — the
+  MISRA guide even sketches the future rule-registry column — and defined
+  nowhere: the H-roster shape again; the recommendation flips from
+  strip-the-parentheses to add-a-legend-anchor and re-judge, and the W2-era
+  verdict is recorded as the capability/practice misattribution it was.
+  **(2.2)** answered on the §3.8 bench: the claim fails on the package's own
+  rule roster (three rules, none parses the assertion), not on host
+  non-usage — and the Rust gate carries no such rule either, so the promise
+  is aspirational family-wide. **B-028 filed high-priority** (the package
+  publishes a subset of the URI grammar the host implements). Registry
+  **104 / 224 — 19 deferred, 85 open; owed 67, every one on the sync
+  route**.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:

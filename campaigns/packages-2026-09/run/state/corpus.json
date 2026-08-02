@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-01T14:15:59Z",
+  "updated_at": "2026-08-02T13:53:35Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -4938,7 +4938,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "75306f1b13ab064eaa48e139863080b8fa1566e386eb4904956f85f1bec1a761",
+        "processed_hash": "d837022feb1307cea24f5359df0d2c2100192edc4cbe41a145321ceba7247219",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -5235,12 +5235,9 @@
             ]
           },
           "RULES-ARE-RUST-TRAIT-IMPLS-COMPILED-IN": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:53  pub trait Rule {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/finding.rs:56      fn check(&self, facts: &[SourceFacts]) -> Vec<Finding>;",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/mod.rs:21  pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};",
-              "the shape is right and the quoted signature is wrong. Read directly 2026-07-28: `fn check(&self, facts: &[SourceFacts]) -> Vec<Finding>` (finding.rs:56) against the document's `fn check(&self, facts: &FactStore, specmap: &Index) -> Vec<Finding>` — both parameters differ, and the specmap argument could not exist because the conform crate does not depend on the specmap crate"
+              "repaired under F-146 item 4, owner «пока просто поправь формулировку» 2026-08-01: the quoted signature now matches the shipped trait exactly — fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> alongside fn id() and fn why() (core-ai-native-conform/src/finding.rs:51-56, re-read at HEAD) — and the note explains why the earlier sketch's specmap parameter was impossible, not merely absent: the conform crate's Cargo.toml carries no dependency on the specmap crate, the deliberate separability seam both engines state; the shape claim (rules are Rust impls of one trait, compiled in) was always true and stays; marker @impl/done stands — the fact is now true and built"
             ]
           },
           "FINDINGS-CARRY-THE-A1-CHAIN": {
@@ -5273,8 +5270,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-01T13:26:46Z",
-        "verify_batch": "C1 + D5b + D7 + D21"
+        "verified_at": "2026-08-01T14:16:52Z",
+        "verify_batch": "C1 + D5b + D7 + D21 + D22"
       }
     },
     {
