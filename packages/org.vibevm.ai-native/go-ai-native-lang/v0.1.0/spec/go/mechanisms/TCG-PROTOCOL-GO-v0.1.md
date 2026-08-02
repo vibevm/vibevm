@@ -33,7 +33,20 @@ TCG-PROTOCOL-RUST v0.1 §1: @impl/done
 
 ##ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS One language-generic product client (`vibe-tcg`'s
 `OracleRegistry` link) drives all three relays with the same frames;
-the parity is pinned per-package by outer-frame replay goldens. @impl/done
+the parity is pinned per-package by outer-frame replay goldens.
+*Specified, not built (→ B-046) — the client named is gone by the owner's
+own MCP-SOVEREIGNTY resolution (2026-07-07), and on the Go side neither
+pinning mechanism exists. The `vibe-tcg` registry crate was retired with
+the whole multiplexed-product topology and DELETED (PROP-026 in
+vibe-mcp, `##TOPOLOGY-RETIRED` and `##TCG-CRATE-DELETED`);
+`OracleRegistry` appears in no source file of any language. There is no
+Go `live_chain.rs` (`go-ai-native-mcp`'s tests carry `server_replay.rs`
+only) and no outer-frame golden (`##REPLAY-GOLDENS-PIN-BOTH-HOPS`). The
+surviving posture is one layer up — `pub struct TcgSession`
+(`go-ai-native-mcp/crates/go-ai-native-mcp/src/tools_tcg.rs:32`) — and
+the planned successor to the one-client story is the multi-language
+composition layer over the sovereign servers (`BACKLOG.md` B-046:
+autodiscovery, autonomy preserved).* @impl/plan
 
 ##RESTATES-RATHER-THAN-INCLUDES-THE-SIBLING-TEXTS This
 document restates rather than includes the sibling texts
@@ -159,7 +172,14 @@ proved, so the renames ride WITHOUT a product edit. @impl/done
 
 ##REPLAY-GOLDENS-PIN-BOTH-HOPS Replay goldens pin the
 CURRENT outer shape in this package's tests; recorded LSP transcripts
-pin the inner hop the same way (both gopls-free in the unit suite). @impl/done
+pin the inner hop the same way (both gopls-free in the unit suite).
+*Specified, not built — the outer half. The inner hop is real and
+gopls-free (`crates/go-ai-native-tcg-bridge/src/client/tests.rs`,
+`Script`); the outer hop — `host ⇄ go-ai-native-tcg serve`, the grammar
+this document owns (`##DOCUMENT-OWNS-THE-OUTER-HOP-GRAMMAR`) — is pinned
+by nothing: `run_serve` (`serve.rs:227`) is called from `main.rs` alone,
+no test constructs a `{proto, id, op, params}` frame, and no recorded
+stream is checked in.* @spec/done
 
 ##MARKERS-FIELD-IS-FILLED-HERE The `markers` field is FILLED here (unlike the Rust relay's reserved
 empty array) — that is a per-language capability difference inside the
