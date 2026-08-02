@@ -1,0 +1,15 @@
+{
+  "batch": "D42",
+  "cluster": "ai-native",
+  "files": {
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md": {
+      "SHIPS-SPECMAP-WIRE-SCHEMA": {
+        "v": "confirmed",
+        "ev": [
+          "owner ruling F-279 variant (a) executed at commit a6bb261e: schemas/specmap.jtd.json moved from the host root into packages/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/ (canonical specmap.example.json beside it), xtask codegen + drift-check re-routed off the dead rust-ai-native-lang/v0.5.0 slot onto crates/core-ai-native-specmap/src/generated — cargo xtask check-codegen clean",
+          "the bullet now names what this package actually ships: the vendored generated types at crates/vendor/core-ai-native-specmap/src/generated/ (present at HEAD, mod.rs + specmap/), and points the schema home at the core-ai-native package — every referent resolves"
+        ]
+      }
+    }
+  }
+}
