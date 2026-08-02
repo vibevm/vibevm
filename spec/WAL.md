@@ -147,8 +147,15 @@ units). Panel green including the NEW step 6b (`cargo xtask check-codegen`
   → the harness's built-in `opus5` subagents; fractality stays out (batch
   plan `#delegation`). The boss re-reads the switch before EVERY fan-out —
   a flip acts immediately. Verdicts, anchor routing and review are never
-  delegated in either mode. Mechanics:
-  `campaigns/packages-2026-09/SUBAGENT-LAUNCHERS.md`. @impl/done
+  delegated in either mode. **Every claudez worker runs under the
+  observability contract (owner, 2026-08-03):** `--output-format
+  stream-json --verbose` logged DIRECTLY into the archive
+  `C:\Users\olegc\git\v\cache\agents\` (`sorted/<task-id>/` +
+  `unsorted/`), packet-mandated `PROGRESS:`/`TASK-DONE` heartbeats, the
+  boss polls ~every 30 s (log growth is the primary liveness signal —
+  heartbeats are best-effort, measured), `meta.md` finalisation at
+  completion; acceptance by artifacts, never by the final string.
+  Mechanics: `campaigns/packages-2026-09/SUBAGENT-LAUNCHERS.md`. @impl/done
 - ##WAL-C-MISC **Small standing facts:** parse payload at
   `~/.vibe/progress-cache/…` carries no verdicts; `vibe.lock` +
   `[[mcp_server]]`/`[[binary]]` tables are the autodiscovery rails B-046
