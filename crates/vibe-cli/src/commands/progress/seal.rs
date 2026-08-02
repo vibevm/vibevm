@@ -14,7 +14,7 @@
 //! is the one the bytes on disk produce and never the one the cache was
 //! already carrying (DRIFT-026 §4.1).
 
-specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#seal");
+specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#CMD-SEAL");
 
 use std::path::Path;
 

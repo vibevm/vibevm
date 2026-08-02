@@ -387,15 +387,15 @@ include = ["spec/**/*.md", "packages/**/*.md"]   # the default when absent
   non-collision, lossless folds. `--exhaustive` additionally requires **zero
   unmarked paragraphs** in scope — the campaign gate. Exit codes are stable
   for CI. @impl/done
-- ##CMD-REPORT **`report`** {#report} — the tree status: XML native, `--md` table,
+- ##CMD-REPORT **`report`** — the tree status: XML native, `--md` table,
   `--json`. Filters: `--view done|todo|qa|remove|doc` (the five resolution
   views: `state=done` · `action=continue` · `stage=test&state=plan|work` ·
   `action=remove` · `actionstage=doc`), `--audience user|author|dev`,
   per-file and whole-project rollups, explicit-vs-computed columns, and the
   evidence column when a provider is wired (§6). @impl/done
-- ##CMD-MIRROR **`mirror`** {#mirror} — materialize the per-file cache view (campaign
+- ##CMD-MIRROR **`mirror`** — materialize the per-file cache view (campaign
   working representation; §7.1) under the campaign zone. @impl/done
-- ##CMD-WEAVE **`weave`** {#weave} — algorithmic stitch of the observed corpus into one
+- ##CMD-WEAVE **`weave`** — algorithmic stitch of the observed corpus into one
   document for whole-context LLM loading. `--digest` emits the map form
   (headings + markers + unmarked counts — always fits); `--max-tokens N`
   shards the full form with a shard manifest. **Measured 2026-07-26** on the
@@ -416,7 +416,7 @@ include = ["spec/**/*.md", "packages/**/*.md"]   # the default when absent
   unit with no judged fact is omitted rather than filled in, so the artifact
   fails toward re-verifying. Default output is `campaigns/<id>/baseline.json`.
   @impl/done
-- ##CMD-SEAL **`seal <path>…`** {#seal} — record that a file's verdicts hold for
+- ##CMD-SEAL **`seal <path>…`** — record that a file's verdicts hold for
   its **current** text: sets `content_hash` and `campaign.processed_hash` to the
   digest **recomputed from disk**, plus `verified_at`. Same shape as
   `##CMD-GATE` — the caller did the real re-derivation and this records it;
