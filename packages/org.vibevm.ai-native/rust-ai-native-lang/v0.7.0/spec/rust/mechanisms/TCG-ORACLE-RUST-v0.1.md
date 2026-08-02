@@ -260,7 +260,12 @@ committed REPORT with a reason — and per the owner's resolution a miss
 CANCELS NOTHING: the campaign proceeds and the miss is reported
 prominently. @impl/done
 
-##LARGE-WORKSPACE-CONSUMERS-ARE-WARNED Large-workspace consumers are warned about the product's
-60 s first-request ceiling; the relay's eager init at `serve` start
-(before the host's first frame) spends the cold cost as early as
-possible. @impl/done
+##LARGE-WORKSPACE-CONSUMERS-ARE-WARNED Large-workspace consumers are warned —
+the tcg brief's `##RISK-COLD-INIT-ON-LARGE-WORKSPACES` carries the
+spec-layer warning (14.7 s cache-cold on a minimal crate; a big consumer
+tree may exceed the first-request budget) — and the relay's eager init at
+`serve` start (before the host's first frame) spends the cold cost as
+early as possible. The shipped ceiling is the **45 s** quiescence budget
+(`QUIESCENCE_BUDGET`, `crates/rust-ai-native-tcg/src/lib.rs:33`, used by
+`spawn_oracle` and `serve`); this document's own
+`##TARGET-COLD-INIT-TO-QUIESCENT` posts < 15 s for demo-class trees. @impl/done

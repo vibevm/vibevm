@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 207,
+ "drift_verdicts": 206,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -3253,48 +3253,6 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-279",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md#LARGE-WORKSPACE-CONSUMERS-ARE-WARNED"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": true,
-   "release_event": false,
-   "evidence_spans": [
-    "legacy-spec",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:884  reason. The product's 60 s first-request cap is the hard ceiling —",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:220      // The relay owns the session: boot the analyzer up front so the"
-   ],
-   "cites": [],
-   "reason": "**no consumer is warned.** The eager-init half holds (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:220). The 60 s first-request ceiling lives only in plan prose at legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:884, and the product registry that would have enforced and surfaced it was deleted whole (spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42). Nothing warns anybody, and legacy-spec/ is an archive no living contract may rest on",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:884  reason. The product's 60 s first-request cap is the hard ceiling —",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-215",
    "id_source": "minted",
    "carried": true
   },
@@ -7847,6 +7805,43 @@
    "routed_out": [],
    "owed": 2,
    "id": "F-214",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md#LARGE-WORKSPACE-CONSUMERS-ARE-WARNED"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "legacy-spec",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "cites": [],
+   "reason": "**no consumer is warned.** The eager-init half holds (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:220). The 60 s first-request ceiling lives only in plan prose at legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:884, and the product registry that would have enforced and surfaced it was deleted whole (spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42). Nothing warns anybody, and legacy-spec/ is an archive no living contract may rest on",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:884  reason. The product's 60 s first-request cap is the hard ceiling —",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-215",
    "id_source": "minted",
    "carried": true
   },

@@ -13,8 +13,9 @@ sweep EXECUTED under the approved rule (19 flips to @impl/plan naming
 entries, D34), the no-measurements standing answer recorded (D33 + B-042),
 the zombie-test build filed (B-044, D32 verdict-first ×3), the 74.8 canon
 fixed to 75.3/70.2 (F-161 drained), the B-041 map APPROVED and INTEGRATED
-as `TOOLING-MAP.md`**; on the owner: ONE mini-question (the rust
-large-workspace ceiling 60→45) and the sync-queue remainder**)_
+as `TOOLING-MAP.md`**; the ceiling 60→45 ruled «да» and executed (D35, F-215 resolved —
+129 total); on the owner: the next portion — F-210 / F-178 / F-199,
+presented; then the sync-queue remainder**)_
 
 ##WAL-NUMBERS-COME-FROM-COMMANDS **Every number below is reproduced by two
 commands; run them rather than quoting this file** (why:
@@ -288,12 +289,14 @@ B-014 filed, F-133's verdict-first loop) are history in the §7 LOG. @impl/done
    `TOOLING-MAP.md` with the campaign frame; the sixth executed **all four
    rulings** — the link and canon fixes (D33), the **B-027 sweep** (D34,
    B-027 done), the no-measurements standing answer (B-042), and the
-   zombie-family unification onto **B-044** (D32)). **On the owner now:
-   ONE mini-question — the rust `LARGE-WORKSPACE-CONSUMERS-ARE-WARNED`
-   ceiling: 45 s shipped (`QUIESCENCE_BUDGET`, `lib.rs:33`) vs < 15 s
-   posted vs 60 s asserted; предлагается 60→45 в форме, которую Go-близнец
-   уже принял (D5/F-160). Then the registry's sync-queue remainder (18
-   open sync-route rows, owed 34), presented per the refined format.** @spec/done
+   zombie-family unification onto **B-044** (D32)). **The ceiling
+   ruled «да» and executed (D35) — F-215 resolved, 129 total. On the owner
+   now: the next presented portion — F-210 (Go-протокол, два текста),
+   F-178 (qualified-naming: стройка B-045 + самоописание «stated once»),
+   F-199 (attribution: пересказы постуры — исключение для boot-поверхностей
+   или свёртка); then the registry's sync-queue remainder (17 open
+   sync-route rows, owed 33 → commands supersede), per the refined
+   format.** @spec/done
 2. ##WAL-NEXT-ADR **B+A′ is fully executed** — the §3.13 carve-out landed as
    (ii): census 35→36, the four-field record at PROP-000 §7
    (`##split-host-decision…`) carrying the owner's updated split-host posture

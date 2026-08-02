@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-02T19:06:18Z",
+  "updated_at": "2026-08-02T19:23:04Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -16304,7 +16304,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md": {
-      "content_hash": "78507cdd396c424262f9e848bf737814f653b490d128c60f73412bbf1afa4fa5",
+      "content_hash": "847ce53a21b366ece8cf7532814416197417d47d451878310feabbddc773e1a7",
       "rollup": {
         "explicit": [
           "spec",
@@ -16326,7 +16326,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "78507cdd396c424262f9e848bf737814f653b490d128c60f73412bbf1afa4fa5",
+        "processed_hash": "847ce53a21b366ece8cf7532814416197417d47d451878310feabbddc773e1a7",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -16912,16 +16912,14 @@
             ]
           },
           "LARGE-WORKSPACE-CONSUMERS-ARE-WARNED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:884  reason. The product's 60 s first-request cap is the hard ceiling —",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:220      // The relay owns the session: boot the analyzer up front so the",
-              "**no consumer is warned.** The eager-init half holds (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:220). The 60 s first-request ceiling lives only in plan prose at legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:884, and the product registry that would have enforced and surfaced it was deleted whole (spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42). Nothing warns anybody, and legacy-spec/ is an archive no living contract may rest on"
+              "owner ruling 2026-08-02 («да» to 60->45 in the Go twin's already-taken form, D5/F-160): the fact now names the real carriers — the warning lives at the spec layer in the sibling brief's RISK-COLD-INIT-ON-LARGE-WORKSPACES (vibe-agentic-tcg-rust.md:190-195, with the 14.7 s cache-cold measurement), the eager init is real (serve.rs:220-223 boots the analyzer before the host's first frame), and the ceiling cited is the shipped 45 s QUIESCENCE_BUDGET (lib.rs:33, used by spawn_oracle at lib.rs:381 and serve at serve.rs:223) with the < 15 s posted target attributed to its own TARGET-COLD-INIT-TO-QUIESCENT anchor; the unsupported 60 s figure — which matched nothing in the stack (the only 60 is a test's spawn budget, live_oracle.rs:44) — is gone, so the family now carries one ceiling story consistent with the Go twin's F-160 clause"
             ]
           }
         },
-        "verified_at": "2026-08-02T19:06:18Z",
-        "verify_batch": "C4+C5 + C45-rust-review + D5a + D33 + D34"
+        "verified_at": "2026-08-02T19:23:04Z",
+        "verify_batch": "C4+C5 + C45-rust-review + D5a + D33 + D34 + D35"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md": {

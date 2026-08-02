@@ -373,8 +373,10 @@ repaired verdict-first (D32 — including the per-anchor catch that the ts
 oracle's claim lives in `RUST-SIDE-OWNS-TERMINATION`, not the
 `SHUTDOWN-…-EXIT` anchor the harvest table named), all five open copies
 routed onto B-044, **F-281 / F-167 / F-161 deferred, F-284 resolved**.
-Still one open mini-question from this family's neighbour: the rust
-`LARGE-WORKSPACE-CONSUMERS-ARE-WARNED` ceiling — 45 s shipped
-(`QUIESCENCE_BUDGET`, `lib.rs:33`) vs < 15 s posted vs 60 s asserted — the
-60→45 repair awaits the owner, in the same form the Go twin already took
-(D5/F-160).
+The ceiling mini-question came back **«да»** the same day and was executed
+as **D35**: the fact now names the real warning carrier (the brief's
+`##RISK-COLD-INIT-ON-LARGE-WORKSPACES`), the shipped **45 s**
+`QUIESCENCE_BUDGET` as the ceiling, and its own < 15 s posted target — the
+unsupported 60 s (matched by nothing but a test's spawn budget) is gone,
+and the family carries one ceiling story on both sides of the Go/Rust
+pair. **F-215 resolved to history (129 total).**

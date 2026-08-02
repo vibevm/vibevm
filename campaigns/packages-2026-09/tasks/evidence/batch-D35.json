@@ -1,0 +1,14 @@
+{
+ "batch": "D35",
+ "cluster": "ai-native",
+ "files": {
+  "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md": {
+   "LARGE-WORKSPACE-CONSUMERS-ARE-WARNED": {
+    "v": "confirmed",
+    "ev": [
+     "owner ruling 2026-08-02 («да» to 60->45 in the Go twin's already-taken form, D5/F-160): the fact now names the real carriers — the warning lives at the spec layer in the sibling brief's RISK-COLD-INIT-ON-LARGE-WORKSPACES (vibe-agentic-tcg-rust.md:190-195, with the 14.7 s cache-cold measurement), the eager init is real (serve.rs:220-223 boots the analyzer before the host's first frame), and the ceiling cited is the shipped 45 s QUIESCENCE_BUDGET (lib.rs:33, used by spawn_oracle at lib.rs:381 and serve at serve.rs:223) with the < 15 s posted target attributed to its own TARGET-COLD-INIT-TO-QUIESCENT anchor; the unsupported 60 s figure — which matched nothing in the stack (the only 60 is a test's spawn budget, live_oracle.rs:44) — is gone, so the family now carries one ceiling story consistent with the Go twin's F-160 clause"
+    ]
+   }
+  }
+ }
+}
