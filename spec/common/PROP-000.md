@@ -173,6 +173,8 @@
 
 ##ATTRIBUTION-ENFORCEMENT-EXCEPTION **Marked exception (owner ruling, 2026-08-01):** the attribution posture is enforced **procedurally, not mechanically** — the rules live in the boot contract and every session holds them; no commit hook, trailer scanner, or CI check exists or is planned, consistent with the standing no-CI decision. Recorded so the absence of machinery reads as a deliberate choice, not an oversight. @spec/done
 
+##ATTRIBUTION-BOOT-SURFACE-EXCEPTION **Marked exception (owner ruling, 2026-08-02):** the installed flow's single-place law (`spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root`, its boot snippet's `#SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED`) is deliberately not kept literally by this host's **boot surfaces**: `spec/boot/00-core.md` (Rule 1's summary), the `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` triple (byte-identical by contract, gated by self-check step 0c), and the agent instruction files under `.claude/agents/` each carry a short digest of the four rules **by design** — «правила обязаны доезжать до каждого агента на старте»: a session reads its boot files and does not resolve links at boot, so boot reliability wins over single-statement purity. The legal restatement set is exactly: the boot surfaces above; this §12, the host's authoritative record; and the invariant roster's one-line echo (`##INV-HUMAN-AUTHORSHIP`), which names its source in the same sentence. Everything else cites the flow or this section; a new restatement outside a boot surface is a defect. @spec/done
+
 ---
 
 ## 13. Package layout convention {#package-layout}
