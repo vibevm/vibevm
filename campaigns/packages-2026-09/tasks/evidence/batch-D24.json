@@ -1,0 +1,14 @@
+{
+  "batch": "D24",
+  "cluster": "ai-native",
+  "files": {
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md": {
+      "TIER-VOCABULARY": {"v": "confirmed", "ev": ["the legend anchor the owner confirmed verbatim 2026-08-02 (his challenge: the vocabulary references sensible things, badly introduced): defines T-lex/T-syn/T-sem as analysis-depth tiers at the frontend table where the columns already use two of the three; tree-true — the taxonomy is used across the live slot (legacy-projections guides: «conform's T-lex sweep», «tier (T-lex/T-syn/T-sem)» as the future rule-registry column; the Go GUIDE's parentheticals) and the deliberately-not-a-type clause matches the engine (no Tier type anywhere — the earlier F-206 measurement, re-confirmed); closes the H-roster-shaped used-everywhere-defined-nowhere gap for this vocabulary"]}
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md": {
+      "SWEEP-FLIP-ONLY-AFTER-DRAIN": {"v": "confirmed", "ev": ["repaired under F-166, owner ruling 2026-08-02 answer (а): the key now names the one the shipped engine reads — gated_crates (config.rs:44, the only spelling, deny_unknown_fields makes any other word a loud parse error) — with the honest parenthetical that the spelling is the shared neutral engine's; the Rust-flavoured word is recorded as a planned engine-side rename (neutral/per-language key, BACKLOG B-029), and the doc will follow the engine when it lands; the flip-only-after-drain practice claim itself was never in dispute"]},
+      "TWO-TIERS-NEVER-CONFUSED": {"v": "confirmed", "ev": ["re-judged under the owner's 2.3 ruling 2026-08-02: the sentence is a taxonomy classification, not a mechanism claim — build tags as T-lex (lexical, file-level marks) and runtime flags as the selection axis are both true practices of the guide's own examples, and the tier vocabulary the parenthetical cites is now DEFINED at the engine document's frontend table (##TIER-VOCABULARY, owner-confirmed legend); the W2-era drift convicted the taxonomy of the engine's missing enum — the capability/practice misattribution §6.1's test exists to catch — and falls with the definition in place"]},
+      "CONFORMANCE-IS-MADE-LOUD": {"v": "confirmed", "ev": ["repaired under F-166, owner ruling 2026-08-02 answer 2.2(а): the fact now carries the sanctioned annotation — the Go gate registers exactly three rules (GoUnsafeInDomain, GoCellIsolation, FileLength; build_rules, lib.rs:53-60, re-read at HEAD) and none parses for the assertion — while keeping what is true: the assertion idiom itself and the example below it; determined on the §3.8 bench (the package's own rule roster), not on host usage; the build of the missing check, plus the Rust/TS family survey for the same promise-vs-gate gap, is the owner's recorded backlog build B-030; marker @impl/done → @spec/done"]}
+    }
+  }
+}

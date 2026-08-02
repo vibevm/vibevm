@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 224,
+ "drift_verdicts": 220,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -833,70 +833,6 @@
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/addressable-specs"
-   ],
-   "files": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md#ROW-SEGMENT-MODULE",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md#ROW-SEGMENT-DOC",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md#SUM-THE-URI-SCHEME",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md#SUM-THE-BIDIRECTIONAL-GRAPH"
-   ],
-   "drift_count": 4,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "crates",
-    "packages/org.vibevm.world/addressable-specs",
-    "spec",
-    "specmap.json",
-    "specmap.toml"
-   ],
-   "evidence_refs": [
-    "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
-    "crates/vibe-cli/src/commands/install/flag_tests.rs:98  #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
-    "crates/vibe-spec/src/address.rs:5  //! ```text //! spec://<group>/<name>[@<version>]/<doc-path>#<anchor>[.<sub>…][~r<N>] //! ```",
-    "crates/vibe-spec/src/address.rs:9  //! - **authority** — either a package coordinate `<group>/<name>` or the host //!   project's reserved single-token namespace (e.g. `vibevm`). The two are //!   told apart syntactically: a first segment containing a `.` is a //!   reverse-DNS **group** (so `<group>/<name>` follows); a first segment",
-    "crates/vibe-spec/src/resolver.rs:112  /// Resolve a doc-path (relative to a `spec/` root) to a `.md` file, inverting /// the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan.",
-    "crates/vibe-spec/src/resolver.rs:150  /// Does a file stem equal `id` or start with `id-` (the descriptive-slug form)? fn id_file_matches(path: &Path, id: &str) -> bool {",
-    "crates/vibe-spec/src/resolver.rs:164  /// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail). fn is_id_stem(s: &str) -> bool {",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:80  | ##ROW-SEGMENT-MODULE `<module>` @impl/done | spec module — a directory under `spec/modules/`, or `common` @impl/done | `com.example.shop` @impl/done |",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:81  | ##ROW-SEGMENT-DOC `<doc>` @impl/done | document name, extension dropped @impl/done | `PROP-001` @impl/done |",
-    "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:80  - ##IR-ADDRESS-DEPTH **Addressing depth.** A `spec://…#a.b.c` fragment is a **path down the tree** (`a` → `b` → `c`), which already matches addressable-specs' dotted anchors…",
-    "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:97  spec://<group>/<name>[@<version>]/<doc-path>#<anchor>[.<sub>…][~r<N>]",
-    "specmap.json:1  { \"code_items\": [ {",
-    "specmap.toml:13  # `<package>` segment of every `spec://vibevm/…` URI (PROP-014 §2.1). namespace = \"vibevm\"",
-    "specmap.toml:16  # Code roots scanned for #[spec]/#[verifies]/scope! tags. A `<dir>/*` entry # scans each subdir of <dir> as one crate; any other entry is a literal dir. scan_roots = [\"crates/*\", \"xtask\"]"
-   ],
-   "cites": [],
-   "reason": "DRIFT: the host's `<module>` position holds something the row does not describe. The row defines it as «a directory under `spec/modules/`, or `common`»; the host mints a single namespace instead — `specmap.toml:14` sets `namespace = \"vibevm\"` and 1 384 host citations read `spec://vibevm/<doc>#<anchor>`, with the document carrying the module distinction rather than the authority. Packages use the third form the row also omits, `<group>/<name>` (68 citations).",
-   "reasons": [
-    "DRIFT: «document name, extension dropped» is not what the host does, and the host's code says so. Its documents are named `PROP-043-progress-markup.md` and cited as `PROP-043` — the descriptive tail is dropped too — and `crates/vibe-spec/src/resolver.rs:112-113` exists to «invert the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan», a directory read per resolution. The row describes a pure string operation; the consumer implements a lookup.",
-    "DRIFT on the module clause, confirmed on the rest. Anchors are `{#id}` — 519 in use, 0 non-kebab. Dots are hierarchy — implemented, if unused. Modules reverse-DNS when specs can be shared — true for the 36 packages. But the scheme as stated has no place for the host's own `spec://vibevm/…` namespace, which carries 1 384 of its citations. Detail on ROW-SEGMENT-MODULE.",
-    "DRIFT for the same reason as CODE-MARKS-WHAT-IT-IMPLEMENTS: the graph exists and is genuinely bidirectional — 677 implements + 223 verifies + 12 deviates over 5 266 units — but neither half uses the notation this summary names. `Implements:` markers: one in the tree. `Test:` lines in the spec: none."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:80  | ##ROW-SEGMENT-MODULE `<module>` @impl/done | spec module — a directory under `spec/modules/`, or `common` @impl/done | `com.example.shop` @impl/done |",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 4,
-   "id": "F-169",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
     "reason-text j=0.79",
     "reason-text j=0.81",
     "reason-text j=0.84"
@@ -1516,61 +1452,6 @@
     "packages/org.vibevm.ai-native/go-ai-native-lang"
    ],
    "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md#CONFORMANCE-IS-MADE-LOUD",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md#TWO-TIERS-NEVER-CONFUSED",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md#SWEEP-FLIP-ONLY-AFTER-DRAIN"
-   ],
-   "drift_count": 3,
-   "cross_package": false,
-   "installed": false,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/core-ai-native",
-    "packages/org.vibevm.ai-native/go-ai-native-lang",
-    "research"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md:47  - Every cell carries the compile-time conformance assertion (`var _ Seam = (*Impl)(nil)`); conform checks its presence (T-syn)",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md:67  - **Two tiers, never confused:** build tags (`//go:build`) answer *\"is the code in the binary\"* ... confined to registry/adapter files",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go:462  continue // conformance assertions et al.",
-    "research/go-demo/cmd/reconcile/main.go:17  cfg := registry.Config{Planner: registry.PlannerNaive}",
-    "research/go-demo/internal/cells/batchplanner/planner.go:14  var _ seams.Planner = (*BatchPlanner)(nil) // silent conformance made loud",
-    "research/go-demo/internal/registry/registry.go:26  type Config struct {"
-   ],
-   "cites": [
-    "F-185",
-    "F-212"
-   ],
-   "reason": "the Go gate registers exactly three rules — `GoUnsafeInDomain`, `GoCellIsolation`, `FileLength` (build_rules, lib.rs:53-60) — and none of them checks for the compile-time assertion this fact says conform checks the presence of",
-   "reasons": [
-    "the two tiers rest on the tier vocabulary C1a found unbuilt — there is no `Tier` type, no `tier` field and no escalation anywhere in the conform engine, so «T-lex» names nothing that exists",
-    "the prior confirm cited go-ai-native-sweep/SKILL.md:83's gated_packages line as support — a line that was itself drift (F-212) and is now corrected to gated_crates, so the confirm's evidence no longer says what it cited; §6.1's neighbouring-verdicts check, run in reverse; the conform-frontend-go.md:110 sibling stays with open F-185 on the sync route and is NOT touched; harvest d9 #rulings"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md:47  - Every cell carries the compile-time conformance assertion (`var _ Seam = (*Impl)(nil)`); conform checks its presence (T-syn)",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 3,
-   "id": "F-166",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang"
-   ],
-   "files": [
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md"
    ],
    "anchors": [
@@ -1610,6 +1491,64 @@
    "routed_out": [],
    "owed": 3,
    "id": "F-185",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/addressable-specs"
+   ],
+   "files": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md#ROW-SEGMENT-MODULE",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md#ROW-SEGMENT-DOC",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md#SUM-THE-BIDIRECTIONAL-GRAPH"
+   ],
+   "drift_count": 3,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "crates",
+    "packages/org.vibevm.world/addressable-specs",
+    "specmap.json",
+    "specmap.toml"
+   ],
+   "evidence_refs": [
+    "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
+    "crates/vibe-cli/src/commands/install/flag_tests.rs:98  #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
+    "crates/vibe-spec/src/address.rs:9  //! - **authority** — either a package coordinate `<group>/<name>` or the host //!   project's reserved single-token namespace (e.g. `vibevm`). The two are //!   told apart syntactically: a first segment containing a `.` is a //!   reverse-DNS **group** (so `<group>/<name>` follows); a first segment",
+    "crates/vibe-spec/src/resolver.rs:112  /// Resolve a doc-path (relative to a `spec/` root) to a `.md` file, inverting /// the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan.",
+    "crates/vibe-spec/src/resolver.rs:150  /// Does a file stem equal `id` or start with `id-` (the descriptive-slug form)? fn id_file_matches(path: &Path, id: &str) -> bool {",
+    "crates/vibe-spec/src/resolver.rs:164  /// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail). fn is_id_stem(s: &str) -> bool {",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:80  | ##ROW-SEGMENT-MODULE `<module>` @impl/done | spec module — a directory under `spec/modules/`, or `common` @impl/done | `com.example.shop` @impl/done |",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:81  | ##ROW-SEGMENT-DOC `<doc>` @impl/done | document name, extension dropped @impl/done | `PROP-001` @impl/done |",
+    "specmap.json:1  { \"code_items\": [ {",
+    "specmap.toml:13  # `<package>` segment of every `spec://vibevm/…` URI (PROP-014 §2.1). namespace = \"vibevm\"",
+    "specmap.toml:16  # Code roots scanned for #[spec]/#[verifies]/scope! tags. A `<dir>/*` entry # scans each subdir of <dir> as one crate; any other entry is a literal dir. scan_roots = [\"crates/*\", \"xtask\"]"
+   ],
+   "cites": [],
+   "reason": "DRIFT: the host's `<module>` position holds something the row does not describe. The row defines it as «a directory under `spec/modules/`, or `common`»; the host mints a single namespace instead — `specmap.toml:14` sets `namespace = \"vibevm\"` and 1 384 host citations read `spec://vibevm/<doc>#<anchor>`, with the document carrying the module distinction rather than the authority. Packages use the third form the row also omits, `<group>/<name>` (68 citations).",
+   "reasons": [
+    "DRIFT: «document name, extension dropped» is not what the host does, and the host's code says so. Its documents are named `PROP-043-progress-markup.md` and cited as `PROP-043` — the descriptive tail is dropped too — and `crates/vibe-spec/src/resolver.rs:112-113` exists to «invert the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan», a directory read per resolution. The row describes a pure string operation; the consumer implements a lookup.",
+    "DRIFT for the same reason as CODE-MARKS-WHAT-IT-IMPLEMENTS: the graph exists and is genuinely bidirectional — 677 implements + 223 verifies + 12 deviates over 5 266 units — but neither half uses the notation this summary names. `Implements:` markers: one in the tree. `Test:` lines in the spec: none."
+   ],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:80  | ##ROW-SEGMENT-MODULE `<module>` @impl/done | spec module — a directory under `spec/modules/`, or `common` @impl/done | `com.example.shop` @impl/done |",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 3,
+   "id": "F-169",
    "id_source": "minted",
    "carried": true
   },
@@ -6679,6 +6618,49 @@
     "host"
    ],
    "id": "F-164",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md#CONFORMANCE-IS-MADE-LOUD",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md#TWO-TIERS-NEVER-CONFUSED",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md#SWEEP-FLIP-ONLY-AFTER-DRAIN"
+   ],
+   "drift_count": 3,
+   "cross_package": false,
+   "installed": false,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/core-ai-native",
+    "packages/org.vibevm.ai-native/go-ai-native-lang",
+    "research"
+   ],
+   "cites": [
+    "F-185",
+    "F-212"
+   ],
+   "reason": "the Go gate registers exactly three rules — `GoUnsafeInDomain`, `GoCellIsolation`, `FileLength` (build_rules, lib.rs:53-60) — and none of them checks for the compile-time assertion this fact says conform checks the presence of",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md:47  - Every cell carries the compile-time conformance assertion (`var _ Seam = (*Impl)(nil)`); conform checks its presence (T-syn)",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 3,
+   "id": "F-166",
    "id_source": "minted",
    "carried": true
   },

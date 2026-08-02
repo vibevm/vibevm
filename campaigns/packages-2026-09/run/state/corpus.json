@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-02T13:53:35Z",
+  "updated_at": "2026-08-02T14:09:43Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -4932,9 +4932,9 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 68,
+      "markers": 69,
       "units": 7,
-      "facts": 67,
+      "facts": 68,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -66592,7 +66592,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "8d3cad84987576f2dbd523c83b2dfe95511cafac783c166d19805954105f34e1",
+        "processed_hash": "6335d44bbfc5ef509d2545c347d7c1a68c70dbd3de008a6bfb1bcffd8fc071b8",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -67034,8 +67034,7 @@
               2
             ],
             "ev": [
-              "xtask/src/mirror.rs  the fan-out pushes mainline to every target; no target originates history",
-              "re-judged in wave 7. The claim is about what the MODEL buys, and the two `only write path` anchors are about the path INTO mainline - both concede it. Convicted of a neighbouring sentence's defect."
+              "re-vouched against the amended text (the same owner-approved one-clause diff, second of three places): the vanish-safety claim survives with the honest qualifier — a host's loss costs a manifest line because the declared refs' history lives on every host and the whole tree lives on mainline; the unqualified «full history» that overstated the fan-out into a backup is gone from all three carriers"
             ]
           },
           "BUYS-AUDIENCE-AND-JURISDICTION-PER-HOST": {
@@ -67281,8 +67280,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T22:57:38Z",
-        "verify_batch": "W6 + D6 + D7"
+        "verified_at": "2026-08-02T13:54:03Z",
+        "verify_batch": "W6 + D6 + D7 + D23"
       }
     },
     {
@@ -67301,7 +67300,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "2b5b0930a3d7a3cc1bd8fc50b1ffa92edc496f932875975c21dc99f519a6b022",
+        "processed_hash": "4983b1a7dcd89f08c4e99bf7993ff7d53d30d8c00f120255ba6191c564d82dff",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -67906,8 +67905,7 @@
               2
             ],
             "ev": [
-              "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/daily-loop.md  ##OFFBOARDING-NEVER-SUBTRACTS-A-COMMIT and ##the-host-set-can-shrink-as-freely-as-it-grew both confirmed",
-              "re-judged in wave 7: offboarding subtracts no commit, which is the same fact these three anchors share, and only this one was drifted."
+              "re-vouched against the amended text (the same owner-approved one-clause diff, third of three places): the offboarding claim this anchor was confirmed on in wave 7 is unchanged — removing a host subtracts nothing — and the amended bold now states the true invariant precisely: remaining hosts hold the declared refs' history, mainline holds the whole tree"
             ]
           },
           "OFFBOARDING-NEVER-SUBTRACTS-A-COMMIT": {
@@ -67988,21 +67986,18 @@
             ]
           },
           "SUM-EVERY-HOST-HOLDS-THE-FULL-HISTORY": {
-            "v": "drift",
-            "ev": [
-              "mirrors.toml:28  refs = [\"main\", \"tags\"]",
-              "mirrors.toml:35  refs = [\"main\", \"tags\"]",
-              "xtask/src/mirror.rs:321      println!(\"mirror: all push targets synced.\");",
-              "DRIFT, and it is the clearest statement of this package's one operationally consequential gap. Both hosts hold `main` at cd376302 equal to local `main`, so for MAINLINE the premise holds today. Two limits on «the full history»: (1) `refs = [\"main\", \"tags\"]` in both target blocks, so every other local branch exists on no host — this repository carries `cultural-backup`, `cultural-refactor`, `refactor/qualified-address-restructure` and a set of `fractality/*` branches, none mirrored anywhere; (2) the repository has exactly ONE tag, so the tags half carries almost nothing. Neither growth nor shrinkage of the host set has been exercised — the target set has been the same two entries since `mirrors.toml` was created on 2026-06-14."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               2
+            ],
+            "ev": [
+              "repaired under F-180, owner ruling 2026-08-02 («нам нужна репликация только ветки main+теги и других специально заявленных веток, если они появятся»): the summary now says what the fan-out does — full history OF THE DECLARED REFS (main + tags today; deliberately declared branches later), refs outside the set live where authored, replication of a declared line rather than a whole-tree backup; the qualifier ADDS a sentence rather than weakening the rule (the harvest's own §3.6-softening check); host evidence unchanged and re-verified in wave 7: refs = [main, tags] in both mirrors.toml target blocks, local branches live on no host by design"
             ]
           }
         },
-        "verified_at": "2026-07-28T22:57:38Z",
-        "verify_batch": "W6 + D7"
+        "verified_at": "2026-08-02T13:54:03Z",
+        "verify_batch": "W6 + D7 + D23"
       }
     },
     {

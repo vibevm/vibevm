@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-02T13:54:03Z",
+  "updated_at": "2026-08-02T14:10:28Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -5007,7 +5007,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md": {
-      "content_hash": "d837022feb1307cea24f5359df0d2c2100192edc4cbe41a145321ceba7247219",
+      "content_hash": "efb66f0095465bb64894cc57b836e2cca3d196af280ea566305bc7a078fc2d66",
       "rollup": {
         "explicit": [
           "spec",
@@ -5021,15 +5021,15 @@
           "spec",
           "done"
         ],
-        "marker_count": 68,
-        "fact_count": 67,
+        "marker_count": 69,
+        "fact_count": 68,
         "unmarked_facts": 0
       },
-      "marker_count": 68,
+      "marker_count": 69,
       "unit_count": 7,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "d837022feb1307cea24f5359df0d2c2100192edc4cbe41a145321ceba7247219",
+        "processed_hash": "efb66f0095465bb64894cc57b836e2cca3d196af280ea566305bc7a078fc2d66",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -5359,10 +5359,16 @@
             "ev": [
               "repaired under F-206 item 7, owner answer (а) 2026-08-01: the closing rule takes the identical form its four siblings took under the group-A ruling (commit 8eee125c — CONTRADICTION-MAP, BROWNFIELD, LEDGER-INTENT, PROP-014: either removed or annotated in place as specified-not-built, never unmarked aspiration), so one rule reads one way in all five documents and no duplication row is minted; under the amended text the document complies — its eight standing annotations, three inside the frontend table this rule governs, are exactly the annotate-in-place branch being exercised; marker stays @impl/done family-consistent (the amended rule is genuinely in force), with the cross-family marker-semantics audit filed as BACKLOG B-027 to revisit all five together"
             ]
+          },
+          "TIER-VOCABULARY": {
+            "v": "confirmed",
+            "ev": [
+              "the legend anchor the owner confirmed verbatim 2026-08-02 (his challenge: the vocabulary references sensible things, badly introduced): defines T-lex/T-syn/T-sem as analysis-depth tiers at the frontend table where the columns already use two of the three; tree-true — the taxonomy is used across the live slot (legacy-projections guides: «conform's T-lex sweep», «tier (T-lex/T-syn/T-sem)» as the future rule-registry column; the Go GUIDE's parentheticals) and the deliberately-not-a-type clause matches the engine (no Tier type anywhere — the earlier F-206 measurement, re-confirmed); closes the H-roster-shaped used-everywhere-defined-nowhere gap for this vocabulary"
+            ]
           }
         },
-        "verified_at": "2026-08-01T14:16:52Z",
-        "verify_batch": "C1 + D5b + D7 + D21 + D22"
+        "verified_at": "2026-08-02T14:10:28Z",
+        "verify_batch": "C1 + D5b + D7 + D21 + D22 + D24"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md": {
@@ -9404,7 +9410,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md": {
-      "content_hash": "0dd793c0c17e968ca707f396410db3d117062595937932c53cad1bed91fdb91a",
+      "content_hash": "7ddc4ab6dbd08ba517c21adce279587b8a69c225abe04322bba8e6226e2834b7",
       "rollup": {
         "explicit": [
           "spec",
@@ -9426,7 +9432,7 @@
       "unit_count": 17,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "0dd793c0c17e968ca707f396410db3d117062595937932c53cad1bed91fdb91a",
+        "processed_hash": "7ddc4ab6dbd08ba517c21adce279587b8a69c225abe04322bba8e6226e2834b7",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -9927,12 +9933,9 @@
             ]
           },
           "CONFORMANCE-IS-MADE-LOUD": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "research/go-demo/internal/cells/batchplanner/planner.go:14  var _ seams.Planner = (*BatchPlanner)(nil) // silent conformance made loud",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/tools/go-extract/extract.go:462  continue // conformance assertions et al.",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md:47  - Every cell carries the compile-time conformance assertion (`var _ Seam = (*Impl)(nil)`); conform checks its presence (T-syn)",
-              "the Go gate registers exactly three rules — `GoUnsafeInDomain`, `GoCellIsolation`, `FileLength` (build_rules, lib.rs:53-60) — and none of them checks for the compile-time assertion this fact says conform checks the presence of"
+              "repaired under F-166, owner ruling 2026-08-02 answer 2.2(а): the fact now carries the sanctioned annotation — the Go gate registers exactly three rules (GoUnsafeInDomain, GoCellIsolation, FileLength; build_rules, lib.rs:53-60, re-read at HEAD) and none parses for the assertion — while keeping what is true: the assertion idiom itself and the example below it; determined on the §3.8 bench (the package's own rule roster), not on host usage; the build of the missing check, plus the Rust/TS family survey for the same promise-vs-gate gap, is the owner's recorded backlog build B-030; marker @impl/done → @spec/done"
             ]
           },
           "PROMOTION-TO-A-SEPARATE-MODULE": {
@@ -10176,12 +10179,9 @@
             ]
           },
           "TWO-TIERS-NEVER-CONFUSED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/legacy-projections/GUIDE-GO-v0.1.md:67  - **Two tiers, never confused:** build tags (`//go:build`) answer *\"is the code in the binary\"* ... confined to registry/adapter files",
-              "research/go-demo/cmd/reconcile/main.go:17  cfg := registry.Config{Planner: registry.PlannerNaive}",
-              "research/go-demo/internal/registry/registry.go:26  type Config struct {",
-              "the two tiers rest on the tier vocabulary C1a found unbuilt — there is no `Tier` type, no `tier` field and no escalation anywhere in the conform engine, so «T-lex» names nothing that exists"
+              "re-judged under the owner's 2.3 ruling 2026-08-02: the sentence is a taxonomy classification, not a mechanism claim — build tags as T-lex (lexical, file-level marks) and runtime flags as the selection axis are both true practices of the guide's own examples, and the tier vocabulary the parenthetical cites is now DEFINED at the engine document's frontend table (##TIER-VOCABULARY, owner-confirmed legend); the W2-era drift convicted the taxonomy of the engine's missing enum — the capability/practice misattribution §6.1's test exists to catch — and falls with the definition in place"
             ]
           },
           "DELIVERY-MODE-HONESTY": {
@@ -10662,15 +10662,14 @@
             ]
           },
           "SWEEP-FLIP-ONLY-AFTER-DRAIN": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "a false confirm, re-judged verdict-first (D9 rulings, 2026-07-31): the sentence tells adopters a package enters `gated_packages` — a key that exists in three documents and zero code; the shipped gating key is the shared top-level gated_crates (vendor core-ai-native-conform/src/config.rs:44), and GoConfig (config.rs:106-140) carries no gating key of its own",
-              "the prior confirm cited go-ai-native-sweep/SKILL.md:83's gated_packages line as support — a line that was itself drift (F-212) and is now corrected to gated_crates, so the confirm's evidence no longer says what it cited; §6.1's neighbouring-verdicts check, run in reverse; the conform-frontend-go.md:110 sibling stays with open F-185 on the sync route and is NOT touched; harvest d9 #rulings"
+              "repaired under F-166, owner ruling 2026-08-02 answer (а): the key now names the one the shipped engine reads — gated_crates (config.rs:44, the only spelling, deny_unknown_fields makes any other word a loud parse error) — with the honest parenthetical that the spelling is the shared neutral engine's; the Rust-flavoured word is recorded as a planned engine-side rename (neutral/per-language key, BACKLOG B-029), and the doc will follow the engine when it lands; the flip-only-after-drain practice claim itself was never in dispute"
             ]
           }
         },
-        "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C3 + D5a + D6 + D7 + D9-boss-a"
+        "verified_at": "2026-08-02T14:10:28Z",
+        "verify_batch": "C3 + D5a + D6 + D7 + D9-boss-a + D24"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md": {
@@ -11680,7 +11679,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md": {
-      "content_hash": "ec144d917d989ae9bfb31f06511d8788cfb6cd4bd4cd7e054b12b96b356ab4d3",
+      "content_hash": "efd7da05501b8e4ec3d5f60ba84fae3a6329e9f29647da0db98c74ce2c124fcf",
       "rollup": {
         "explicit": [
           "spec",
@@ -11702,7 +11701,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "ec144d917d989ae9bfb31f06511d8788cfb6cd4bd4cd7e054b12b96b356ab4d3",
+        "processed_hash": "efd7da05501b8e4ec3d5f60ba84fae3a6329e9f29647da0db98c74ce2c124fcf",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -11956,7 +11955,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:59:36Z",
+        "verified_at": "2026-08-02T14:10:28Z",
         "verify_batch": "C4+C5 + C45-go-review"
       }
     },
@@ -25375,7 +25374,7 @@
       "unit_count": 11,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "fc6f60c68b3f1c07f23d154b4a6e83567b1642e61d904b0dea2b2cddb4122e0f",
+        "processed_hash": "bd23b8d8d8847b7c7cf14eb97fd5bec6452bd8605bc520d693c5657394fecea6",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -26187,18 +26186,13 @@
             ]
           },
           "SUM-THE-URI-SCHEME": {
-            "v": "drift",
-            "ev": [
-              "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:97  spec://<group>/<name>[@<version>]/<doc-path>#<anchor>[.<sub>…][~r<N>]",
-              "crates/vibe-spec/src/address.rs:5  //! ```text //! spec://<group>/<name>[@<version>]/<doc-path>#<anchor>[.<sub>…][~r<N>] //! ```",
-              "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:80  - ##IR-ADDRESS-DEPTH **Addressing depth.** A `spec://…#a.b.c` fragment is a **path down the tree** (`a` → `b` → `c`), which already matches addressable-specs' dotted anchors…",
-              "crates/vibe-spec/src/address.rs:9  //! - **authority** — either a package coordinate `<group>/<name>` or the host //!   project's reserved single-token namespace (e.g. `vibevm`). The two are //!   told apart syntactically: a first segment containing a `.` is a //!   reverse-DNS **group** (so `<group>/<name>` follows); a first segment",
-              "DRIFT on the module clause, confirmed on the rest. Anchors are `{#id}` — 519 in use, 0 non-kebab. Dots are hierarchy — implemented, if unused. Modules reverse-DNS when specs can be shared — true for the 36 packages. But the scheme as stated has no place for the host's own `spec://vibevm/…` namespace, which carries 1 384 of its citations. Detail on ROW-SEGMENT-MODULE."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "re-judged per the wave-7 harvest recommendation (d7b, F-169), boss review 2026-08-02: the summary's module clause is a CONDITIONAL — reverse-DNS «when specs can be shared» — and every clause verifies: anchors are {#id} (519 in use, 0 non-kebab), dots-as-hierarchy implemented, reverse-DNS true for all 36 packages; the host's own single-namespace form sits in the conditional's other branch, which spec-tree-layout.md:146 states outright; and the owner's 2026-08-02 direction (the root project becomes a fully-qualified package, B-031) moves the host INTO the reverse-DNS branch when built, making the summary truer still; the subset-vs-superset grammar question is filed separately as B-028 and does not convict this sentence"
             ]
           },
           "SUM-ONE-FACT-ONE-ANCHOR": {
@@ -26245,8 +26239,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T20:02:26Z",
-        "verify_batch": "W3 + D8-boss"
+        "verified_at": "2026-08-02T14:10:28Z",
+        "verify_batch": "W3 + D8-boss + D25"
       }
     },
     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md": {

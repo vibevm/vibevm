@@ -1,0 +1,9 @@
+{
+  "batch": "D25",
+  "cluster": "world",
+  "files": {
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md": {
+      "SUM-THE-URI-SCHEME": {"v": "confirmed", "src": [1, 2], "ev": ["re-judged per the wave-7 harvest recommendation (d7b, F-169), boss review 2026-08-02: the summary's module clause is a CONDITIONAL — reverse-DNS «when specs can be shared» — and every clause verifies: anchors are {#id} (519 in use, 0 non-kebab), dots-as-hierarchy implemented, reverse-DNS true for all 36 packages; the host's own single-namespace form sits in the conditional's other branch, which spec-tree-layout.md:146 states outright; and the owner's 2026-08-02 direction (the root project becomes a fully-qualified package, B-031) moves the host INTO the reverse-DNS branch when built, making the summary truer still; the subset-vs-superset grammar question is filed separately as B-028 and does not convict this sentence"]}
+    }
+  }
+}

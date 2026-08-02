@@ -4275,6 +4275,28 @@ aspirational — and every one is still live for the phases that remain.
   **104 / 224 — 19 deferred, 85 open; owed 67, every one on the sync
   route**.
 
+  **The rulings landed the same day, and F-166 closed whole.** 2.1 (а)+(б):
+  both Go docs now name the key the shipped engine reads, with the honest
+  parenthetical, and the engine-side neutral/per-language rename is
+  **B-029** (planned); 2.2 (а)+(б): the assertion fact carries the sanctioned
+  annotation on the §3.8 bench, and **B-030** (planned) builds the Go check
+  and surveys Rust/TS for the same promise-vs-gate gap — the owner's own
+  extension; 2.3: the owner-confirmed **##TIER-VOCABULARY legend** landed at
+  the frontend table and TWO-TIERS re-judged confirmed — the W2-era
+  taxonomy-convicted-of-a-missing-enum misattribution falls with the
+  definition in place. SUM-THE-URI-SCHEME confirmed per the wave-7
+  recommendation. **3.2 became the owner's own architecture direction:
+  B-031 (planned)** — the root project takes a fully-qualified name
+  (his word: `org.vibevm.core`), the resolver reads vibe.toml addressing
+  everywhere including the root, the host exceptions die with the short
+  notation — and the segment family (F-169's two rows, F-147's twins)
+  closes through host conformance when it lands. Merges D24+D25 = 4+1
+  confirmed, 0 refusals; seals 4/0. Registry **103 / 220 — 19 deferred, 84
+  open; owed 63, every one on the sync route**. Awaiting the owner:
+  SUM-THE-BIDIRECTIONAL-GRAPH's «применяй» (his 3.1 question answered in
+  chat: the graph lives in specmap.json + the code-side tags; the user tags
+  code, never writes Implements:/Test: prose).
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
