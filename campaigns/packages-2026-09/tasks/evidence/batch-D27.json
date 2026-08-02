@@ -1,0 +1,16 @@
+{
+  "batch": "D27",
+  "cluster": "world",
+  "files": {
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md": {
+      "NUMBER-PER-MODULE-AND-NEVER-RENUMBER": {"v": "confirmed", "src": [1, 2], "ev": ["wave-7 re-verification (d7b, F-147), boss-merged 2026-08-02: the W2 verdict's «unique repository-wide» premise is false — numbering is per-module by the rule's own words, and the tree holds five projects each minting their own PROP-001 (host, fractality, and the three research demos) with no collision because the module segment disambiguates; PROP-014 kept its number across an authority move, which is the never-renumber half exercised, not broken"]},
+      "DO-NOT-WRITE-A-NEVER-READ-LINE-IN-THE-BOOT-FILE": {"v": "confirmed", "src": [1, 2], "ev": ["wave-7 re-verification (d7b, F-147), boss-merged 2026-08-02 with the spot-check re-run: no .human/ exists anywhere (re-checked at HEAD), refs/book/ is a do-not-write line the boot contract elsewhere instructs sessions to READ (NOTOUCH ≠ never-read), and the host has no agent-ignore file at all — the never-read premise the W2 verdict convicted on has no instance in this consumer"]},
+      "KEEP-THE-MAPPING-ONE-TO-ONE": {"v": "confirmed", "src": [1, 2], "ev": ["wave-7 re-verification (d7b, F-147), boss-merged 2026-08-02: the verdict read a fulfilled prediction as a falsification — the anchor PREDICTED the cost of breaking one-to-one, the host paid it knowingly and specified the router (PROP-035's prefix-scan), and 21 of 63 host spec docs still resolve with zero index; a rule whose stated cost was accepted and recorded is exercised, not drifted"]}
+    },
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md": {
+      "EACH-SEMANTIC-CHANGE-APPENDS-A-DATED-LINE": {"v": "confirmed", "src": [1, 2], "ev": ["wave-7 re-verification (d7b, F-162), boss-merged 2026-08-02: the W2 grep searched for the string «## Changelog» where the host writes the thing under another name — 15 of 42 host PROPs carry a per-document dated change record, 33 entries, in the prescribed dated-line form under the heading «Version history» (PROP-024 §7 spot-checked at HEAD); the rule's substance is practised, the heading spelling was never normative"]},
+      "A-MOVED-UNIT-LEAVES-A-TOMBSTONE": {"v": "confirmed", "src": [1, 2], "ev": ["wave-7 re-verification (d7b, F-162), boss-merged 2026-08-02: the verdict asserted both recorded moves left the old address bare and one refuted half already falsifies a «2 of 2» — PROP-029's move carries three pointers to the new address inside spec/ alone; the PROP-014 half is tombstoned too, in the legacy lane the owner excluded 2026-07-31, which is flagged and unneeded for the outcome"]},
+      "SUM-THE-CHANGELOG-LINE": {"v": "confirmed", "src": [1, 2], "ev": ["wave-7 re-verification (d7b, F-162), boss-merged 2026-08-02: the summary restates the dated-line rule and inherits its disposition — the body anchor confirms on the 15-of-42 Version-history measurement, so the summary confirms with it; no separate defect of its own was recorded"]}
+    }
+  }
+}

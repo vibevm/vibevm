@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 220,
+ "drift_verdicts": 213,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -214,81 +214,6 @@
     "host"
    ],
    "id": "F-137",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/addressable-specs"
-   ],
-   "files": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md#NUMBER-PER-MODULE-AND-NEVER-RENUMBER",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md#ROW-HOME-FEATURE-SCOPE",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md#DO-NOT-WRITE-A-NEVER-READ-LINE-IN-THE-BOOT-FILE",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md#SEGMENT-MODULE-IS-THE-DIRECTORY",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md#SEGMENT-DOC-IS-THE-FILE-NAME",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md#KEEP-THE-MAPPING-ONE-TO-ONE",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md#SUM-NAMES-ARE-THE-URI-SEGMENTS"
-   ],
-   "drift_count": 7,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "CLAUDE.md",
-    "campaigns",
-    "crates",
-    "spec",
-    "specmap.toml"
-   ],
-   "evidence_refs": [
-    "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and…",
-    "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:1  # Phase C — the batch plan {#root}",
-    "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
-    "crates/vibe-spec/src/address.rs:9  //! - **authority** — either a package coordinate `<group>/<name>` or the host //!   project's reserved single-token namespace (e.g. `vibevm`). The two are //!   told apart syntactically: a first segment containing a `.` is a //!   reverse-DNS **group** (so `<group>/<name>` follows); a first segment",
-    "crates/vibe-spec/src/resolver.rs:112  /// Resolve a doc-path (relative to a `spec/` root) to a `.md` file, inverting /// the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan.",
-    "crates/vibe-spec/src/resolver.rs:150  /// Does a file stem equal `id` or start with `id-` (the descriptive-slug form)? fn id_file_matches(path: &Path, id: &str) -> bool {",
-    "crates/vibe-spec/src/resolver.rs:164  /// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail). fn is_id_stem(s: &str) -> bool {",
-    "spec/boot/00-core.md:26  ## Files you MUST NOT touch without explicit instruction  - ##NOTOUCH-REFS-BOOK `refs/book/` — the user's book, read-only reference material. @impl/done",
-    "spec/boot/STATIC.md:54  ## Never {#never}",
-    "spec/common/PROP-029-fully-qualified-addresses.md:32  - ##ADDR-RENAME-IS-LOOKUP Change a name, a group, or an anchor, then rewrite every occurrence, and the inverse — a table lookup, not the judgment call a resolver-dependent short address would need. @spec/done",
-    "spec/common/PROP-029-fully-qualified-addresses.md:5  ##status-line **Status:** accepted 2026-07-12 (owner-ratified). **Builds on:** [`spec://vibevm/modules/vibe-registry/PROP-008#group`](../modules/vibe-registry/PROP-008-qualified-naming.md#group) (the…",
-    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1  # Packages-Actualization Campaign v0.1 — wave 2: the authored packages measure themselves {#root}",
-    "specmap.toml:13  # `<package>` segment of every `spec://vibevm/…` URI (PROP-014 §2.1). namespace = \"vibevm\"",
-    "specmap.toml:55  # Installed packages' spec trees, read for URI RESOLUTION only (PROP-014 # §7.1): edges into `spec://org.vibevm.ai-native/core-ai-native/…` — the shipped mechanism specs # this repo's tags cite — resolve through the materialised slot instead of # dangling. Units found here never enter the committed specmap.json."
-   ],
-   "cites": [],
-   "reason": "DRIFT on the first clause, confirmed on the second. Never renumber holds absolutely — all 42 PROP numbers are unique repository-wide and no renumbering appears in history. Number PER MODULE does not: the host's numbering is GLOBAL, which is stricter than the rule and differently shaped, so `PROP-043` names one document across ten module directories rather than one per module.",
-   "reasons": [
-    "DRIFT: the row routes a feature's scope and acceptance criteria to `spec/modules/<m>/FEAT-*`, and `find spec -name 'FEAT-*'` returns 0 against 42 PROP documents. The host routes them elsewhere — feature slices run as plans under `campaigns/**`, with their own scope, phases and acceptance gates. The destination the row names is empty and a different one is in use.",
-    "DRIFT: the host writes exactly the forbidden line, in exactly the forbidden place. `spec/boot/00-core.md:26-28` is a section headed «Files you MUST NOT touch without explicit instruction», naming `refs/book/` — a never-read line in the boot file, read by every session forever, which is the cost this fact exists to avoid. The host also has the physical form available (`.gitignore` carries `/refs/`), so the written line is additional rather than a substitute.",
-    "DRIFT: the directory name is in the host's addresses, one segment further right than this mapping places it. Host citations read `spec://vibevm/modules/<module>/<doc>#<anchor>` — the authority is a minted namespace (`specmap.toml:14`, `namespace = \"vibevm\"`), and the module directory has moved into the path. The mapping as stated does not describe the consumer's addresses.",
-    "DRIFT, and the host keeps a resolver that exists because of it. Host files carry a descriptive slug — `PROP-043-progress-markup.md` — and are cited as `PROP-043`, so the doc segment is the file name minus the extension AND minus the tail. `crates/vibe-spec/src/resolver.rs:112-113` inverts that truncation by a prefix-scan.",
-    "DRIFT: the mapping is not one-to-one here and the host bought the warned-of cost knowingly. Descriptive slugs mean `PROP-043` does not name a file, so resolution needs a directory prefix-scan; package addresses need the lockfile. The fact's own prediction — «the moment resolution needs a lookup table, every citation costs a search, and the twenty-token correction stops being twenty tokens» — is realised, and the code that realises it is committed.",
-    "DRIFT on the file-name segment and on the zero-index claim it pairs with, for the reasons filed on SEGMENT-DOC-IS-THE-FILE-NAME and KEEP-THE-MAPPING-ONE-TO-ONE. Directory names ARE segments here (`spec/modules/vibe-progress` appears verbatim in host addresses); file names are not."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and…",
-   "falsifier": "host",
-   "routed_out": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md#ROW-HOME-FEATURE-SCOPE"
-   ],
-   "owed": 6,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-147",
    "id_source": "minted",
    "carried": true
   },
@@ -599,65 +524,6 @@
     "file+type"
    ],
    "packages": [
-    "packages/org.vibevm.world/addressable-specs"
-   ],
-   "files": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md#RECORD-THE-TEST-NAME-IN-THE-UNIT",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md#EACH-SEMANTIC-CHANGE-APPENDS-A-DATED-LINE",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md#A-MOVED-UNIT-LEAVES-A-TOMBSTONE",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md#SUM-EVERY-CONTRACT-IMPLIES-A-TEST",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md#SUM-THE-CHANGELOG-LINE"
-   ],
-   "drift_count": 5,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "crates",
-    "spec",
-    "specmap.json",
-    "specmap.toml"
-   ],
-   "evidence_refs": [
-    "crates/progress-core/src/evidence.rs:17  /// e.g. specmap `verifies` edge count. pub verifies: usize,",
-    "crates/progress-core/src/evidence.rs:61  (Stage::Test, State::Done) if ev.verifies == 0 => { Some(\"marked test/done but no verifying evidence (0 `verifies` edges)\".into())",
-    "crates/vibe-cli/src/commands/install/flag_tests.rs:97  #[test] #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
-    "crates/vibe-cli/src/commands/trace.rs:9  specmark::scope!(\"spec://core-ai-native/mechanisms/PROP-014#index\");",
-    "spec/common/PROP-029-fully-qualified-addresses.md:50  - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite it and keep only…",
-    "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:8  ##related **Related:** [PROP-028](../../common/PROP-028-package-families.md) (families — the aggregator role), [PROP-029](../../common/PROP-029-fully-qualified-addresses.md) (`spec://` addressing, the `/` group↔name joiner),…",
-    "specmap.json:1  { \"code_items\": [ {",
-    "specmap.toml:55  # Installed packages' spec trees, read for URI RESOLUTION only (PROP-014 # §7.1): edges into `spec://org.vibevm.ai-native/core-ai-native/…` — the shipped mechanism specs # this repo's tags cite — resolve through the materialised slot instead of # dangling. Units found here never enter the committed specmap.json."
-   ],
-   "cites": [],
-   "reason": "DRIFT: `grep -rn '^Test:' spec/` returns 0. The line the fact prescribes — half of the bidirectional graph the protocol describes — is written nowhere in the host's spec tree. The edge exists anyway: 223 `verifies` edges in specmap.json, all sourced from code annotations rather than from the spec side.",
-   "reasons": [
-    "the honest gap that keeps this drift: 28 of 42 PROPs carry no per-document dated change record in any form, so 'each semantic change appends one dated line' is kept by a third of the tree — a real, smaller defect than the one previously recorded",
-    "DRIFT at 2 of 2. Both host moves left the old address bare: PROP-014 moved from `spec/discipline/` into the core-ai-native package and PROP-029's addressing principle moved out of its former home, and neither old location carries a `<!-- RETIRED` line. Continuity came from rewriting every citer by hand instead — which works once and does not scale, and is what the tombstone exists to replace.",
-    "DRIFT on the second clause. «Every contract implies a test» is ENFORCED here — `progress-core/src/evidence.rs` fails a unit marked done without evidence. «The unit names it» is not: zero `Test:` lines in `spec/`.",
-    "the prior 'one changelog in 42 PROPs' count was the heading string, not the practice, and is corrected here"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "crates/progress-core/src/evidence.rs:17  /// e.g. specmap `verifies` edge count. pub verifies: usize,",
-   "falsifier": "host",
-   "routed_out": [],
-   "owed": 5,
-   "id": "F-162",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
     "packages/org.vibevm.world/wal"
    ],
    "files": [
@@ -892,6 +758,69 @@
     "host"
    ],
    "id": "F-170",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/addressable-specs"
+   ],
+   "files": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md#ROW-HOME-FEATURE-SCOPE",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md#SEGMENT-MODULE-IS-THE-DIRECTORY",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md#SEGMENT-DOC-IS-THE-FILE-NAME",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md#SUM-NAMES-ARE-THE-URI-SEGMENTS"
+   ],
+   "drift_count": 4,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "campaigns",
+    "crates",
+    "spec",
+    "specmap.toml"
+   ],
+   "evidence_refs": [
+    "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:1  # Phase C — the batch plan {#root}",
+    "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
+    "crates/vibe-spec/src/address.rs:9  //! - **authority** — either a package coordinate `<group>/<name>` or the host //!   project's reserved single-token namespace (e.g. `vibevm`). The two are //!   told apart syntactically: a first segment containing a `.` is a //!   reverse-DNS **group** (so `<group>/<name>` follows); a first segment",
+    "crates/vibe-spec/src/resolver.rs:112  /// Resolve a doc-path (relative to a `spec/` root) to a `.md` file, inverting /// the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan.",
+    "crates/vibe-spec/src/resolver.rs:150  /// Does a file stem equal `id` or start with `id-` (the descriptive-slug form)? fn id_file_matches(path: &Path, id: &str) -> bool {",
+    "crates/vibe-spec/src/resolver.rs:164  /// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail). fn is_id_stem(s: &str) -> bool {",
+    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1  # Packages-Actualization Campaign v0.1 — wave 2: the authored packages measure themselves {#root}",
+    "specmap.toml:13  # `<package>` segment of every `spec://vibevm/…` URI (PROP-014 §2.1). namespace = \"vibevm\"",
+    "specmap.toml:55  # Installed packages' spec trees, read for URI RESOLUTION only (PROP-014 # §7.1): edges into `spec://org.vibevm.ai-native/core-ai-native/…` — the shipped mechanism specs # this repo's tags cite — resolve through the materialised slot instead of # dangling. Units found here never enter the committed specmap.json."
+   ],
+   "cites": [],
+   "reason": "DRIFT: the row routes a feature's scope and acceptance criteria to `spec/modules/<m>/FEAT-*`, and `find spec -name 'FEAT-*'` returns 0 against 42 PROP documents. The host routes them elsewhere — feature slices run as plans under `campaigns/**`, with their own scope, phases and acceptance gates. The destination the row names is empty and a different one is in use.",
+   "reasons": [
+    "DRIFT: the directory name is in the host's addresses, one segment further right than this mapping places it. Host citations read `spec://vibevm/modules/<module>/<doc>#<anchor>` — the authority is a minted namespace (`specmap.toml:14`, `namespace = \"vibevm\"`), and the module directory has moved into the path. The mapping as stated does not describe the consumer's addresses.",
+    "DRIFT, and the host keeps a resolver that exists because of it. Host files carry a descriptive slug — `PROP-043-progress-markup.md` — and are cited as `PROP-043`, so the doc segment is the file name minus the extension AND minus the tail. `crates/vibe-spec/src/resolver.rs:112-113` inverts that truncation by a prefix-scan.",
+    "DRIFT on the file-name segment and on the zero-index claim it pairs with, for the reasons filed on SEGMENT-DOC-IS-THE-FILE-NAME and KEEP-THE-MAPPING-ONE-TO-ONE. Directory names ARE segments here (`spec/modules/vibe-progress` appears verbatim in host addresses); file names are not."
+   ],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:1  # Phase C — the batch plan {#root}",
+   "falsifier": "host",
+   "routed_out": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md#ROW-HOME-FEATURE-SCOPE"
+   ],
+   "owed": 3,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-147",
    "id_source": "minted",
    "carried": true
   },
@@ -1501,64 +1430,6 @@
     "file+type"
    ],
    "packages": [
-    "packages/org.vibevm.world/addressable-specs"
-   ],
-   "files": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md#ROW-SEGMENT-MODULE",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md#ROW-SEGMENT-DOC",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md#SUM-THE-BIDIRECTIONAL-GRAPH"
-   ],
-   "drift_count": 3,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "crates",
-    "packages/org.vibevm.world/addressable-specs",
-    "specmap.json",
-    "specmap.toml"
-   ],
-   "evidence_refs": [
-    "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
-    "crates/vibe-cli/src/commands/install/flag_tests.rs:98  #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
-    "crates/vibe-spec/src/address.rs:9  //! - **authority** — either a package coordinate `<group>/<name>` or the host //!   project's reserved single-token namespace (e.g. `vibevm`). The two are //!   told apart syntactically: a first segment containing a `.` is a //!   reverse-DNS **group** (so `<group>/<name>` follows); a first segment",
-    "crates/vibe-spec/src/resolver.rs:112  /// Resolve a doc-path (relative to a `spec/` root) to a `.md` file, inverting /// the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan.",
-    "crates/vibe-spec/src/resolver.rs:150  /// Does a file stem equal `id` or start with `id-` (the descriptive-slug form)? fn id_file_matches(path: &Path, id: &str) -> bool {",
-    "crates/vibe-spec/src/resolver.rs:164  /// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail). fn is_id_stem(s: &str) -> bool {",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:80  | ##ROW-SEGMENT-MODULE `<module>` @impl/done | spec module — a directory under `spec/modules/`, or `common` @impl/done | `com.example.shop` @impl/done |",
-    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:81  | ##ROW-SEGMENT-DOC `<doc>` @impl/done | document name, extension dropped @impl/done | `PROP-001` @impl/done |",
-    "specmap.json:1  { \"code_items\": [ {",
-    "specmap.toml:13  # `<package>` segment of every `spec://vibevm/…` URI (PROP-014 §2.1). namespace = \"vibevm\"",
-    "specmap.toml:16  # Code roots scanned for #[spec]/#[verifies]/scope! tags. A `<dir>/*` entry # scans each subdir of <dir> as one crate; any other entry is a literal dir. scan_roots = [\"crates/*\", \"xtask\"]"
-   ],
-   "cites": [],
-   "reason": "DRIFT: the host's `<module>` position holds something the row does not describe. The row defines it as «a directory under `spec/modules/`, or `common`»; the host mints a single namespace instead — `specmap.toml:14` sets `namespace = \"vibevm\"` and 1 384 host citations read `spec://vibevm/<doc>#<anchor>`, with the document carrying the module distinction rather than the authority. Packages use the third form the row also omits, `<group>/<name>` (68 citations).",
-   "reasons": [
-    "DRIFT: «document name, extension dropped» is not what the host does, and the host's code says so. Its documents are named `PROP-043-progress-markup.md` and cited as `PROP-043` — the descriptive tail is dropped too — and `crates/vibe-spec/src/resolver.rs:112-113` exists to «invert the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan», a directory read per resolution. The row describes a pure string operation; the consumer implements a lookup.",
-    "DRIFT for the same reason as CODE-MARKS-WHAT-IT-IMPLEMENTS: the graph exists and is genuinely bidirectional — 677 implements + 223 verifies + 12 deviates over 5 266 units — but neither half uses the notation this summary names. `Implements:` markers: one in the tree. `Test:` lines in the spec: none."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:80  | ##ROW-SEGMENT-MODULE `<module>` @impl/done | spec module — a directory under `spec/modules/`, or `common` @impl/done | `com.example.shop` @impl/done |",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 3,
-   "id": "F-169",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
     "packages/org.vibevm.world/comparative-research"
    ],
    "files": [
@@ -1966,7 +1837,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": false,
+   "installed_differs": true,
    "release_event": false,
    "evidence_spans": [
     "CLAUDE.md",
@@ -2001,6 +1872,107 @@
     "host"
    ],
    "id": "F-218",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/addressable-specs"
+   ],
+   "files": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md#ROW-SEGMENT-MODULE",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md#ROW-SEGMENT-DOC"
+   ],
+   "drift_count": 2,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "crates",
+    "packages/org.vibevm.world/addressable-specs",
+    "specmap.toml"
+   ],
+   "evidence_refs": [
+    "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
+    "crates/vibe-spec/src/address.rs:9  //! - **authority** — either a package coordinate `<group>/<name>` or the host //!   project's reserved single-token namespace (e.g. `vibevm`). The two are //!   told apart syntactically: a first segment containing a `.` is a //!   reverse-DNS **group** (so `<group>/<name>` follows); a first segment",
+    "crates/vibe-spec/src/resolver.rs:112  /// Resolve a doc-path (relative to a `spec/` root) to a `.md` file, inverting /// the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan.",
+    "crates/vibe-spec/src/resolver.rs:150  /// Does a file stem equal `id` or start with `id-` (the descriptive-slug form)? fn id_file_matches(path: &Path, id: &str) -> bool {",
+    "crates/vibe-spec/src/resolver.rs:164  /// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail). fn is_id_stem(s: &str) -> bool {",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:80  | ##ROW-SEGMENT-MODULE `<module>` @impl/done | spec module — a directory under `spec/modules/`, or `common` @impl/done | `com.example.shop` @impl/done |",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:81  | ##ROW-SEGMENT-DOC `<doc>` @impl/done | document name, extension dropped @impl/done | `PROP-001` @impl/done |",
+    "specmap.toml:13  # `<package>` segment of every `spec://vibevm/…` URI (PROP-014 §2.1). namespace = \"vibevm\""
+   ],
+   "cites": [],
+   "reason": "DRIFT: the host's `<module>` position holds something the row does not describe. The row defines it as «a directory under `spec/modules/`, or `common`»; the host mints a single namespace instead — `specmap.toml:14` sets `namespace = \"vibevm\"` and 1 384 host citations read `spec://vibevm/<doc>#<anchor>`, with the document carrying the module distinction rather than the authority. Packages use the third form the row also omits, `<group>/<name>` (68 citations).",
+   "reasons": [
+    "DRIFT: «document name, extension dropped» is not what the host does, and the host's code says so. Its documents are named `PROP-043-progress-markup.md` and cited as `PROP-043` — the descriptive tail is dropped too — and `crates/vibe-spec/src/resolver.rs:112-113` exists to «invert the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan», a directory read per resolution. The row describes a pure string operation; the consumer implements a lookup."
+   ],
+   "status": "deferred",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:80  | ##ROW-SEGMENT-MODULE `<module>` @impl/done | spec module — a directory under `spec/modules/`, or `common` @impl/done | `com.example.shop` @impl/done |",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 2,
+   "id": "F-169",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/addressable-specs"
+   ],
+   "files": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md#RECORD-THE-TEST-NAME-IN-THE-UNIT",
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md#SUM-EVERY-CONTRACT-IMPLIES-A-TEST"
+   ],
+   "drift_count": 2,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "crates",
+    "spec",
+    "specmap.json"
+   ],
+   "evidence_refs": [
+    "crates/progress-core/src/evidence.rs:17  /// e.g. specmap `verifies` edge count. pub verifies: usize,",
+    "crates/progress-core/src/evidence.rs:61  (Stage::Test, State::Done) if ev.verifies == 0 => { Some(\"marked test/done but no verifying evidence (0 `verifies` edges)\".into())",
+    "crates/vibe-cli/src/commands/install/flag_tests.rs:97  #[test] #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
+    "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:8  ##related **Related:** [PROP-028](../../common/PROP-028-package-families.md) (families — the aggregator role), [PROP-029](../../common/PROP-029-fully-qualified-addresses.md) (`spec://` addressing, the `/` group↔name joiner),…",
+    "specmap.json:1  { \"code_items\": [ {"
+   ],
+   "cites": [],
+   "reason": "DRIFT: `grep -rn '^Test:' spec/` returns 0. The line the fact prescribes — half of the bidirectional graph the protocol describes — is written nowhere in the host's spec tree. The edge exists anyway: 223 `verifies` edges in specmap.json, all sourced from code annotations rather than from the spec side.",
+   "reasons": [
+    "DRIFT on the second clause. «Every contract implies a test» is ENFORCED here — `progress-core/src/evidence.rs` fails a unit marked done without evidence. «The unit names it» is not: zero `Test:` lines in `spec/`."
+   ],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "crates/progress-core/src/evidence.rs:17  /// e.g. specmap `verifies` edge count. pub verifies: usize,",
+   "falsifier": "host",
+   "routed_out": [],
+   "owed": 2,
+   "id": "F-162",
    "id_source": "minted",
    "carried": true
   },

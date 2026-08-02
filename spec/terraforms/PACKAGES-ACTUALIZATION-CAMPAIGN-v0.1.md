@@ -4297,6 +4297,25 @@ aspirational — and every one is still live for the phases that remain.
   chat: the graph lives in specmap.json + the code-side tags; the user tags
   code, never writes Implements:/Test: prose).
 
+  **The «применяй» came, and the boss lane drained what needed no one.**
+  Group D's summary fix applied and re-judged (D26); F-169 `deferred` — its
+  two segment rows ride B-031 with F-147's twins, consistently. Then the six
+  wave-7 re-judge recommendations that involve no edit merged as **D27**
+  (F-147's three: per-module numbering with five PROP-001s coexisting, the
+  never-read premise with no instance, the one-to-one prediction read as
+  fulfilled; F-162's three: «Version history» is the changelog rule
+  practised under another heading — 15 of 42 PROPs, 33 dated entries — the
+  tombstone «2 of 2» falsified by PROP-029's three pointers, and the summary
+  inheriting). Corpus **11 163 / 213 / 44 — 97.7 %**; registry **103 / 213 —
+  20 deferred, 83 open; owed 56, every one on the sync route** (no row fully
+  resolved this pass — the six confirms shrank rows, F-147 and F-162 stay
+  open on their presented remainders). Presented
+  and awaiting the owner: F-162's two graph-anchor texts (+ the NO-TOOLING
+  rider applied in the same pass), F-147's ROW-HOME cell with the
+  two-flows-one-home question (FEAT-* 0 live instances vs 8 live plans —
+  practice has chosen), and the five dangling PROP-043 anchors as a
+  host-fix candidate.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:

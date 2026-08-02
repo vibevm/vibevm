@@ -1,0 +1,9 @@
+{
+  "batch": "D26",
+  "cluster": "world",
+  "files": {
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md": {
+      "SUM-THE-BIDIRECTIONAL-GRAPH": {"v": "confirmed", "src": [1, 2], "ev": ["repaired under F-169 (group D — the campaign's own partial-closure debt), owner «применяй» 2026-08-02 after the 3.1 explanation: the summary now carries the same amendment wave 6 landed on the body anchor 65 lines above it (commit 24c0629e) — where the graph is mechanized, both edges are authored as code-side tags and the spec-side view is rendered; the census the sentence summarises reproduces at HEAD (677 implements + 223 verifies + 12 deviates over the committed specmap.json; Implements: prose markers 1 in the tree, Test: lines 0), so body and summary finally agree inside one document and the duplication the phase authored is repaid"]}
+    }
+  }
+}
