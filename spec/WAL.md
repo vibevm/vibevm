@@ -13,12 +13,14 @@ sweep EXECUTED under the approved rule (19 flips to @impl/plan naming
 entries, D34), the no-measurements standing answer recorded (D33 + B-042),
 the zombie-test build filed (B-044, D32 verdict-first ×3), the 74.8 canon
 fixed to 75.3/70.2 (F-161 drained), the B-041 map APPROVED and INTEGRATED
-as `TOOLING-MAP.md`**; the eighth exchange landed the ARCHITECTURE DIRECTION — logic in
-shared crates, CLI + MCP as thin surfaces (B-047), the multi-language
-composition layer planned (B-046, autodiscovery + autonomy law), F-210
-drained (D38, resolved — 131 total); corpus crossed 97.9 %; registry
-98 / 200, owed 27; the backlog stands at B-047; on the owner: the
-sync-queue remainder (14 open rows)**)_
+as `TOOLING-MAP.md`**; the ninth exchange drained the LAST sync portion nine-for-nine —
+the pin build landed (build.rs + RUST_PIN, hardcodes dead), nine
+documents repaired over D39/D40/D41 (four verdict-first twins including
+a fourth found mid-pass), the real `progress mirror` subcommand learned,
+a 58-row bulk deferred-flip made and REVERTED (deferred = owner-ruled,
+not boss-routed); registry 91 / 191 — owed 18 = 17 owner-ruled build
+deferrals + F-279; resolved 138; ai-native 98.3 %; on the owner: the
+F-279 schema-home ruling, then THE EXIT GATE**)_
 
 ##WAL-NUMBERS-COME-FROM-COMMANDS **Every number below is reproduced by two
 commands; run them rather than quoting this file** (why:
@@ -292,18 +294,24 @@ B-014 filed, F-133's verdict-first loop) are history in the §7 LOG. @impl/done
    `TOOLING-MAP.md` with the campaign frame; the sixth executed **all four
    rulings** — the link and canon fixes (D33), the **B-027 sweep** (D34,
    B-027 done), the no-measurements standing answer (B-042), and the
-   zombie-family unification onto **B-044** (D32)). **The eighth
-   exchange landed the owner's architecture direction and drained F-210:
-   the surface norm (logic in shared crates; CLI and MCP thin surfaces —
-   «всё прибивается гвоздями» dies as a class) is B-047 with the
-   nailed-down audit (stacks verified conformant; B-018's MCP half the
-   first host gap), the multi-language composition layer is B-046
-   (three options over the lockfile's autodiscovery rails, autonomy law
-   verbatim), and F-210's two anchors applied as D38 — the one-client
-   history with `@impl/plan (→ B-046)`, the goldens honesty
-   `@spec/done` — row resolved (131 total, corpus 97.9 %). On the owner
-   now: the registry's sync-queue remainder (14 open sync-route rows,
-   owed 27 — commands supersede), per the refined format.** @spec/done
+   zombie-family unification onto **B-044** (D32)). **The ninth
+   exchange drained the last sync portion whole (nine rulings): the pin
+   build (vibe-cli build.rs → `VIBE_MSRV` from workspace `rust-version`,
+   `RUST_PIN` replaces both literals, the table test pins the
+   derivation, S6 synced to the built truth), nine documents repaired
+   (git-practices roster complete + two new judged anchors; redbook
+   edition split + the standing bump rule in the manifest; the rust
+   card, tcg brief, Go overlay truth, floor seven-step ×4, replay
+   inner/outer ×3 — D39 ×4 verdict-first, D40 ×5, D41 ×10, eleven
+   seals); the REAL `vibe progress mirror` subcommand learned (per-file
+   views under `run/mirror/`; `progress check` is not it); the 58-row
+   bulk deferred-flip made and reverted (near-miss recorded). On the
+   owner now: **the F-279 schema-home ruling** (the analysis is in the
+   chat: the engine crate's header expects a package-local
+   `schemas/specmap.jtd.json`; options — move it into `core-ai-native`
+   with the codegen re-route (B-013's fix, recommended) / host-dev
+   artefact + honest README / + a worked example); **then the exit
+   gate** (owed 18 = 17 owner-ruled build deferrals + F-279's 1).** @spec/done
 2. ##WAL-NEXT-ADR **B+A′ is fully executed** — the §3.13 carve-out landed as
    (ii): census 35→36, the four-field record at PROP-000 §7
    (`##split-host-decision…`) carrying the owner's updated split-host posture
