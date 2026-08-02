@@ -227,8 +227,11 @@ asserts the table is well-formed, so it cannot rot unnoticed. @impl/done
 
 ##S6-MECHANICS-RELATED-KNOWLEDGE-FOLLOWS-THE-SAME-RULE Related
 knowledge follows the same rule: the default build profile is a single
-constant, and the language pin is **read** from the toolchain file, not
-hard-coded. @impl/done
+constant, and the language pin lives **once, in the workspace manifest**
+(`rust-version`) and is **read** from it at build time — never repeated
+in the tool table by hand. (The toolchain file keeps its own job — the
+channel; the manifest's pin is what the tool checks against, and the
+enforcing compiler reads the same key.) @impl/done
 
 ##S6-MECHANICS-THE-DOCTOR-AND-THE-TEST-MOVE-FOR-FREE When the stack moves you edit the table, and the doctor and
 the test move with it for free. @impl/done

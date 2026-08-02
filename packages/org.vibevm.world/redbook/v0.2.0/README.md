@@ -23,8 +23,12 @@ boot snippet and its own `spec/flows/<name>/` documents. @impl/done
 ##THE-UMBRELLAS-VERSION-IS-THE-EDITION-NUMBER The umbrella's version is the **edition number**. @impl/done
 
 ##AN-EDITION-IS-A-TESTED-SET-OF-EXACT-PINS An edition is a
-tested set: every member is pinned exactly (`=X.Y.Z`), so two
-projects on the same edition run byte-identical practice text. @impl/done
+tested set: every member is pinned exactly (`=X.Y.Z`), so no member's
+version can skew inside an edition. The *roster* is a second question —
+while a wave settles, members are accumulated in place and the edition
+number moves once at the end (see the manifest's own note above the
+cultural-extraction wave), so two projects on the same edition run
+byte-identical text of every member they share. @impl/done
 
 ##MEMBERS-EVOLVE-BETWEEN-EDITIONS Members evolve on their own version lines between editions; a new
 edition is a new umbrella version with refreshed pins. @impl/done
