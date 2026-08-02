@@ -1,11 +1,13 @@
 # WAL — Project Continuation State {#root}
 
-_Updated: 2026-08-02, session end (**PHASE D AT ITS EXIT RAMP — the whole
-group B AND the addressing family are drained: F-180 / F-166 / F-162 closed
-whole, F-169 / F-147 deferred onto B-031; corpus 97.8 %, registry 102
-obligations / 210 drifts, 21 owner-ruled deferrals, owed 54 — every one on
-the owner's sync route, boss-owed zero everywhere; the backlog grew to B-032;
-next presentations: F-132's nine, F-185, the duplication family**)_
+_Updated: 2026-08-02, ситтинг предъявлений (**PHASE D AT ITS EXIT RAMP —
+group B, the addressing family AND the presentation sitting are drained:
+F-185 / F-218 / F-132 deferred onto recorded builds (B-033 / B-034 / B-035
+filed, B-029 enriched, B-011 raised to Самый Высокий Приоритет, the schemas
+debt recorded); corpus 97.8 %, registry 102 obligations / 210 drifts, 24
+owner-ruled deferrals, 78 open, owed 54 — every one on the owner's sync
+route, boss-owed zero everywhere; the backlog stands at B-035; on the owner:
+F-217's triple half, F-285's «снять?», B-027's rule**)_
 
 ##WAL-NUMBERS-COME-FROM-COMMANDS **Every number below is reproduced by two
 commands; run them rather than quoting this file** (why:
@@ -38,19 +40,19 @@ aliasing design (`BACKLOG.md` B-011) makes stripping safe. Verification:
 `self-check.sh` EXIT=0, `sync-engines --check` green (51 pairs),
 `address-repair.py --verify` 0 remaining. @impl/done
 
-##WAL-STATE **State at the last regeneration** (2026-08-02, session end; the
-commands supersede): corpus **11 166 / 210 / 44 — 97.8 %** over 260 files;
-registry **102 obligations / 210 drifts — 21 `deferred` by owner ruling, 81
-open**; **owed 54 of 210, every one on `sync-from-code`, the owner's route**;
-resolved to history across the two sittings: F-207, F-263, F-351, F-180,
-F-166, F-162 (plus F-133's same-day loop). The boss-owed remainder is
-**zero** on every route; the `build-or-demote` tail is owner-ruled whole
-(the rulings ledger:
-`campaigns/packages-2026-09/PHASE-D-HOST-OBLIGATIONS.md#rulings-2026-08-01`).
-`progress check` clean (wave-10 checkpoint), `self-check.sh` all green
-(2026-08-01; the later edits are prose + string-only tag repointing,
-`cargo check` green 2026-08-02 — re-run the panel before the next commit
-day), cargo-audit 0.22.2 / cargo-outdated 0.19.0 installed. @impl/done
+##WAL-STATE **State at the last regeneration** (2026-08-02, presentation
+sitting; the commands supersede): corpus **11 166 / 210 / 44 — 97.8 %** over
+260 files; registry **102 obligations / 210 drifts — 24 `deferred` by owner
+ruling, 78 open**; **owed 54 of 210, every one on `sync-from-code`, the
+owner's route** (the sitting moved statuses, not verdicts — deferral is
+bookkeeping, not repair); resolved to history across the sittings: F-207,
+F-263, F-351, F-180, F-166, F-162 (plus F-133's same-day loop). The
+boss-owed remainder is **zero** on every route; the `build-or-demote` tail
+and the presentation sitting are owner-ruled whole (the rulings ledger:
+`campaigns/packages-2026-09/PHASE-D-HOST-OBLIGATIONS.md#rulings-2026-08-01`
+and `#rulings-2026-08-02-2`). `progress check` clean (wave-10 checkpoint),
+`self-check.sh` all green — **re-run full at this sitting's open, EXIT=0**
+(2026-08-02), cargo-audit 0.22.2 / cargo-outdated 0.19.0 installed. @impl/done
 
 ##WAL-RULINGS-IN-FORCE **Owner rulings taken 2026-07-31/08-01 and in force:**
 sync-queue group A = answer (2) — «specified, not built» annotate-in-place is
@@ -69,7 +71,18 @@ RUNTIME-TRANSPORT, the ten unbuilt mechanisms filed as B-012 with «провес
 **(i)** (all seventeen fence first lines repaired in the publication); B-009
 closed (the wind-down's step 4 names `cargo xtask mirror` in all three
 instruction files); the campaign-plans practice adopted — both live plans
-carry the six flow forms and 21 of 29 routed anchors re-judged `confirmed`. @impl/done
+carry the six flow forms and 21 of 29 routed anchors re-judged `confirmed`.
+**Ситтинг 2026-08-02 (предъявления):** F-185 → стройки вместо смягчения
+(B-033 выделенное seam-error-правило Go; B-029 обогащён до пер-языковой
+поверхности `conform.toml`; B-034 инвариант gated-or-exempt для Go/TS;
+B-035 паритет-аудит с принципом «не слабее Rust без записанной причины»;
+рамка семьи — «мы не можем писать на Typescript и Go пока не поправим»);
+остаток F-132 = ответ (1) — долг «spec-метки в `schemas/specmap.jtd.json`»
+(попутчики B-013 / B-019(а)); F-218 → B-011, поднятый до Самого Высокого
+Приоритета с направлениями qualified-rewrite / ADL / `@!X` / динамические
+STATIC.md. **Формат предъявлений уточнён и обязателен вперёд:** сначала
+суть по-человечески, затем точные технические имена (настройки, файлы,
+поведение) — точность не теряется; спец-жаргон только приложением. @impl/done
 
 ## Constraints — do not violate {#constraints}
 
@@ -220,13 +233,16 @@ B-014 filed, F-133's verdict-first loop) are history in the §7 LOG. @impl/done
    protocol: FEAT files as addressable units composed into plans), the
    B-018 canonical query («which test verifies this rule»), and the
    dead-alias fix (five code tags now cite ##CMD-* facts; PROP-043's four
-   trap-tokens removed). **Next presentations: F-185, the duplication family
-   F-217/218/285, and F-132's one residual route-(b) anchor
-   (`##RUST-PRINCIPLE-GENERATOR-INPUT-IS-TAGGED`). The «F-132's nine» this
-   line used to name was stale: партия 1a (commit `eccb1499`, D13) applied
-   and re-judged the nine + RUNTIME-TRANSPORT on 2026-08-01 — the queue
-   line had carried the harvest's pre-1a «NOT APPLIED» state; verified
-   against `run/cache.json` (PROP-014: one drift) 2026-08-02.** @spec/done
+   trap-tokens removed). **The 2026-08-02 presentation sitting is ruled and
+   executed** (F-185 / F-218 / F-132 deferred onto recorded builds — the
+   ledger's `#rulings-2026-08-02-2`; the stale «F-132's nine» queue line
+   diagnosed — партия 1a / `eccb1499` had drained it 2026-08-01 — and the
+   rule recorded: **the owner's queue is derived from the registry, never
+   from a harvest snapshot**). **On the owner now: F-217's second anchor
+   (the hand-copied CLAUDE/AGENTS/GEMINI triple — reconciler check vs
+   recorded exception), F-285's «снять обвинение», and B-027's sweep rule;
+   then the registry's sync-queue remainder, presented per the refined
+   format.** @spec/done
 2. ##WAL-NEXT-ADR **B+A′ is fully executed** — the §3.13 carve-out landed as
    (ii): census 35→36, the four-field record at PROP-000 §7
    (`##split-host-decision…`) carrying the owner's updated split-host posture
