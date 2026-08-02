@@ -54,7 +54,7 @@
 
 ##agent-gaps Measured gaps: vibe's own MCP carries no map tools (the B-012 annotation at PROP-014's runtime section); installed packages are deliberately outside the project map (reproducibility), so «объясни чужой пакет» has no data path; no LLM prose producer (`vibe-llm` is a 9-line stub); fragments cannot be fetched by hash. @doc/done
 
-##agent-builds Builds: **B-018** (high priority, owner's wide form) in its four parts — explain over vibe's agent interface; map search (query language v0 is a fork below); fragments-by-hash with B-016 half 2; the second non-committed resolver map for installed packages fed by B-016 half 1. Then **B-020** (light client to external LLMs — possibly through fractality, owner's direction) and **B-021**'s warnings surfacing through the same tools. Acceptance for the whole plane is the owner's canonical query: *«какой тест проверяет это правило спеки»* answered by a running vibe for an installed package. @doc/done
+##agent-builds Builds: **B-018** (high priority, owner's wide form) in its four parts — explain over vibe's agent interface; map search (query language v0 is a fork below); fragments-by-hash with B-016 half 2; the second non-committed resolver map for installed packages fed by B-016 half 1. Then **B-020** (light client to external LLMs — possibly through fractality, owner's direction) and **B-021**'s warnings surfacing through the same tools. **B-044** (the no-zombie process-table assertion for all three oracles — «тест на зомби лучше написать», owner 2026-08-02; the pattern is proven in-tree by fractality's pod test) rides the campaign's test phase. Acceptance for the whole plane is the owner's canonical query: *«какой тест проверяет это правило спеки»* answered by a running vibe for an installed package. @doc/done
 
 ### 2.5 The security overlay — parked {#plane-security}
 
@@ -81,6 +81,7 @@
 - ##WAVE-V **Волна В — карта и её потребители:** B-013 → the one format change (B-019а + B-016.1 + B-017; B-024 decided alongside) → B-018.1/.2 → B-018.4 + B-016.2 → B-020 + B-021; B-014 decided here. Feeder: B-022 (ledger mechanisms). Exit: M-ASK + M-DRIFT. @doc/work
 - ##WAVE-G **Волна Г — хост догоняет собственную дисциплину** (parallel, opportunistic): B-040 (seam refactor survey), B-005 (ancestry gate), the F-132 schemas debt, B-010's check-verb fix. @doc/work
 - ##WAVE-PARKED **Вне волн:** B-042 (far-future measurement corpus, LLM/fuzzer-generated), B-015 (parked until the owner's notice), B-032 (planning-granularity protocol — fires on the next big feature's planning), B-043 (instrument fix, next campaign-tooling touch). @doc/work
+- ##NO-MEASUREMENTS-STANDING-ANSWER **Стоячий ответ про замеры (владелец, 2026-08-02):** «замеров нет и нескоро будет» — the TCG bench targets stay *posted, not measured* until B-042's far-future corpus exists; all three stacks' complete-targets carry the annotation naming their harness and B-042. **The question «почему нет замеров» is answered here and is not raised to the owner again.** @doc/done
 
 ## 5. The forks only the owner can take {#forks}
 
