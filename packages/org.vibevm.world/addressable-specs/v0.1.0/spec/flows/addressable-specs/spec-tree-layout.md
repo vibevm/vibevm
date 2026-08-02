@@ -81,7 +81,7 @@ the number is part of the URI, and URIs are forever
 |------|------|
 | ##ROW-HOME-ARCHITECTURE Architecture, stack, cross-module decision @impl/done | `spec/common/PROP-*` @impl/done |
 | ##ROW-HOME-MODULE-CONTRACT One module's contract or invariant @impl/done | `spec/modules/<m>/PROP-*` @impl/done |
-| ##ROW-HOME-FEATURE-SCOPE A feature's scope and acceptance criteria @impl/done | `spec/modules/<m>/FEAT-*` @impl/done |
+| ##ROW-HOME-FEATURE-SCOPE A feature's scope and acceptance criteria @impl/done | `spec/modules/<m>/FEAT-*` — or a campaign plan where the project runs slices as plans (`flow:campaign-plans`) @impl/done |
 | ##ROW-HOME-NEXT-SESSION-STEP What the next session must do first @impl/done | `spec/WAL.md` @impl/done |
 | ##ROW-HOME-SPEC-PROTOCOL How specs are updated, conflict rules @impl/done | protocol docs at the spec root @impl/done |
 | ##ROW-HOME-BOOT-MINIMUM The session-boot minimum @impl/done | boot entry file (≤ 500 tokens) @impl/done |

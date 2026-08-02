@@ -244,7 +244,9 @@ be re-checked. @impl/done
 ##NO-TOOLING-IS-REQUIRED-TO-BENEFIT No tooling is required to benefit — a plain
 `grep -rn "PROP-001#verification.timeout"` answers "which code
 implements this unit", the `Test:` line answers "which test verifies
-it", and a failing test carries the address of the violated unit. @impl/done
+it", and a failing test carries the address of the violated unit. Where
+the graph is mechanized, the same two questions are answered by the
+rendered view over the code-side tags instead (§[graph](#graph)). @impl/done
 
 ##the-graph-pays-off-from-the-first-marker Tools can mechanize the check later; the graph is useful the day
 the first marker lands. @impl/done
