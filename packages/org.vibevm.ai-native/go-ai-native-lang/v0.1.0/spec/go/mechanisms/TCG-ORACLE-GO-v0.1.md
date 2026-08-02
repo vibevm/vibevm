@@ -16,9 +16,13 @@ quiescence, the fidelity posture, and latency. @impl/done
 
 ##QUANTITIES-ARE-CAMPAIGN-MEASURED Where the sibling Rust
 mechanism cites measured spike facts, this one names the same
-quantities as campaign-measured: the Phase-7 live chain and the bench
-harness record them; a target moves only with a committed REPORT
-reason. @impl/done
+quantities as campaign-measured — *the bench harness
+(`go-ai-native-tcg bench`) is the instrument; no Go corpus or baseline
+has yet been taken, so the figures below are posted targets rather
+than measured ones. Creating the Go test codebase to measure against
+is deliberately far-future work (the corpus could be LLM-generated or
+fuzzer-generated); it is not being built now* — a target moves only
+with a committed REPORT reason. @spec/done
 
 ## 1. The process and its resolution {#resolution}
 
@@ -31,7 +35,7 @@ never bundles, links, or vendors an analyzer. @impl/done
 from the project root so `go.work`/module context is honoured, each
 failure recipe-carrying and never silently skipped: @impl/done
 
-1. ##RESOLUTION-GOPLS-ON-PATH `gopls` on PATH; @impl/done
+1. ##RESOLUTION-GOPLS-ON-PATH the `GO_AI_NATIVE_GOPLS` env override when set (a set-but-not-a-file value refuses with the recipe, without probing further), then `gopls` on PATH; @impl/done
 2. ##RESOLUTION-GOBIN `$GOBIN/gopls`, then `$(go env GOBIN)/gopls`; @impl/done
 3. ##RESOLUTION-GOPATH-BIN `$(go env GOPATH)/bin/gopls`; @impl/done
 4. ##RESOLUTION-HARD-FAILURE hard failure: the bridge's `gopls-missing` error with the recipe
