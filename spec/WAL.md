@@ -102,11 +102,16 @@ units); panel green incl. step 6b. Mirrors synced at every checkpoint. @impl/don
   ≈ mtime ≳5 min), `meta.md` + stamped report at finalisation. **Every
   packet mandates the closing `WORKER-REPORT-<task-id>.md`** (inlined
   template; files list for the mechanical `git status` cross-check,
-  acceptance with `file:line` evidence, verbatim self-verify, mandatory
-  deviations) — the review map, never the review's replacement.
-  Acceptance by artifacts, never by the final string. Verdicts, anchor
-  routing, review and commits are never delegated in either mode; workers
-  get no git verbs; briefs cite durable files only. @impl/done
+  acceptance with `file:line` evidence, verbatim self-verify, **mandatory
+  «Decisions taken (each with why)»** and deviations) — the review map,
+  never the review's replacement. **Fable's drafts are scaffolds with
+  embedded refinement/verification points the worker fills; Fable holds
+  the explicit rejection right** — ПРИНЯТО · НЕ ПРИНЯТО → доработка via
+  `-c` naming the wrong decision/implementation · re-commission (ceiling:
+  two reworks) · discard, every cycle in `meta.md`. Acceptance by
+  artifacts, never by the final string. Verdicts, anchor routing, review
+  and commits are never delegated in either mode; workers get no git
+  verbs; briefs cite durable files only. @impl/done
 - ##WAL-C-SYNC-ENGINES **A fix inside a package's crates is vendored
   forward the same pass** — `cargo xtask sync-engines` (the panel gates
   it; §5-E's law). @impl/done

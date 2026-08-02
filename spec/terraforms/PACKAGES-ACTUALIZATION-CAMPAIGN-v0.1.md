@@ -4787,6 +4787,27 @@ aspirational — and every one is still live for the phases that remain.
   message: WAL/CONTINUE rewritten, the start prompt handed to the
   owner in chat.
 
+- **2026-08-03 · шестой обмен — драфты-скаффолды, решения-с-почему,
+  право НЕ ПРИНЯТЬ.** Three closing refinements from the owner,
+  recorded into the transport law the same hour: **(i)**
+  высокоуровневые драфты может делать Fable — «внедряя внутрь
+  инструкции, которые позволят делать более подробные уточнения и
+  проверки»: the boss's design-grade skeleton embeds named
+  refinement/verification points («уточни здесь», «проверь, что»),
+  the worker fills them and never redraws the skeleton
+  (`#e-draft-scaffold`); **(ii)** the worker «должен вернуться с
+  описанием принятых решений и почему они приняты» — the
+  WORKER-REPORT template gained the mandatory **«Decisions taken
+  (each with why)»** section, covering every choice inside the
+  packet's latitude including every filled refinement point; wrong
+  judgement there is reviewable material; **(iii)** «Fable должен
+  мочь НЕ ПРИНЯТЬ работу и отправить её на доработку» — acceptance
+  now has four explicit verdicts (ПРИНЯТО · НЕ ПРИНЯТО → доработка
+  through the `-c` loop naming the wrong decision/implementation
+  precisely · re-commission, with the two-rework economics ceiling ·
+  discard), every verdict and rework cycle recorded in `meta.md`
+  (`#report-rejection`).
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:

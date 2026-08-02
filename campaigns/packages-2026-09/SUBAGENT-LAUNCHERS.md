@@ -80,6 +80,17 @@ cites durable files only, and ALWAYS carries the heartbeat clause
 (`#obs-heartbeats`) and the report template (`#worker-report`) with the
 task-id substituted.
 
+##e-draft-scaffold **1b · High-level drafts are Fable's — with embedded
+refinement points (owner, 2026-08-03).** Where a task needs a design-grade
+skeleton, the boss authors the high-level draft itself (never delegated)
+and **embeds, inside the draft, named instructions for the worker to
+elaborate and verify**: «уточни здесь: …», «проверь, что …», «измерь и
+подставь: …» — each a named input with its own acceptance line. The worker
+fills the named points and checks the named checks; it never redraws the
+skeleton. This keeps the expensive judgement in the strong author and the
+detailed elaboration in the cheap writer — and every filled point comes
+back accounted for in the report's Decisions section.
+
 ##e-parallel-routing **2 · Route the parallelism (boss, owner's rule
 2026-08-03).** Intersect the candidate tasks' file perimeters BEFORE
 spawning: **disjoint perimeters → two lanes in parallel** (`claudez` →
@@ -254,6 +265,10 @@ measured; they skim citations).
 - <criterion from the packet> -> DONE | NOT DONE - evidence: <file:line or command output>
 ## Self-verify
 - <command> -> <exit code + the decisive output lines, verbatim>
+## Decisions taken (each with why)
+- <every choice made within the packet's latitude - incl. every filled
+  refinement point of the boss's draft - stated as: decision -> why;
+  otherwise: none>
 ## Deviations and resolved ambiguities
 - <anything done differently, any ambiguity resolved silently; otherwise: none>
 ## Not done / leftovers
@@ -264,12 +279,26 @@ measured; they skim citations).
 it:** *(i)* cross-check «Changed files» against `git -C <worktree> status`
 — a mechanical set-compare: a file in the diff but not in the report, or
 claimed but absent, is an instant red flag; *(ii)* read the diff WITH the
-report as the map — attention goes to the claimed acceptance evidence and
-the Deviations section first (silent ambiguity resolution is the
-weak-writer failure the section exists to surface — mandatory even when
+report as the map — attention goes to the claimed acceptance evidence, then
+the **Decisions** and Deviations sections (silent ambiguity resolution is
+the weak-writer failure they exist to surface — mandatory even when
 «none»); *(iii)* re-run the self-verify command; *(iv)* verdict. **The
 report routes the review; it never replaces it** — the diff stays the
 ground truth and review stays the boss's (the never-delegate law).
+
+##report-rejection **The boss's rejection right (owner, 2026-08-03,
+near-verbatim: Fable должен мочь НЕ ПРИНЯТЬ работу и отправить на
+доработку, если суждения в любой части или реализация покажутся
+неверными).** Acceptance has four verdicts, and «accepted» is not the
+default: **ПРИНЯТО** (apply → gates → commit) · **НЕ ПРИНЯТО → доработка**
+(the `-c` loop: `claudez -c -p "НЕ ПРИНЯТО: <what is wrong and why> —
+переделай <exactly what>"` — the worker continues with full context; wrong
+JUDGEMENT in the Decisions section is as rejectable as wrong code) ·
+**re-commission** (a fresh worker when the thread itself went wrong; past
+two failed reworks the economics have inverted — reclaim boss-side) ·
+**discard**. Every verdict and every rework cycle is recorded in
+`meta.md`; a rejection names the wrong decision/implementation precisely —
+«переделай» without the what-and-why is not a review.
 
 ##report-no-conflict **No cross-worker conflicts, by construction and by
 name** (owner's question, 2026-08-03): parallel workers live in SEPARATE
