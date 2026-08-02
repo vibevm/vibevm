@@ -209,14 +209,15 @@ D17 → sealed; registry back at 108 / 232 with F-133 resolved to history). @imp
    → build B-025 (mark-not-suppress, owner's visualisation ground), item 6 →
    build B-026 (SARIF ingest, high priority; F-206 deferred naming it), item
    7 applied (the five-sibling closing-rule form) + B-027 filed (the
-   marker-semantics audit). **Item 4 applied at the third sitting (D22) —
-   group B is drained whole. F-180 closed 2026-08-02** (the owner's
-   repl-policy qualifier in three places, D23). In chat awaiting his word:
-   the gated-key menu (document `gated_crates` now + neutral-key backlog
-   build — the three Go docs disagree two-against-one today), the
-   assertion-check annotate-or-build pair, the tier-vocabulary legend draft
-   (define, don't strip), group D's summary fix, and the F-169/F-147
-   §3.6(c) segment ruling. @spec/done
+   marker-semantics audit). **Item 4 applied (D22); F-180 closed; F-166
+   closed whole 2026-08-02** — the gated-key ruling (а)+(б) → B-029, the
+   assertion ruling (а)+(б) → B-030 (incl. the owner's Rust/TS survey
+   extension), the owner-confirmed ##TIER-VOCABULARY legend landed and
+   TWO-TIERS re-judged. **3.2 became B-031 (planned): the root project
+   takes a fully-qualified name (`org.vibevm.core`), host addressing
+   exceptions die** — the F-169/F-147 segment family closes through it.
+   Awaiting the owner: SUM-THE-BIDIRECTIONAL-GRAPH's «применяй» (group D).
+   Then the rest of the sync queue per document. @spec/done
 2. ##WAL-NEXT-ADR **B+A′ is fully executed** — the §3.13 carve-out landed as
    (ii): census 35→36, the four-field record at PROP-000 §7
    (`##split-host-decision…`) carrying the owner's updated split-host posture
