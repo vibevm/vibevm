@@ -1,10 +1,12 @@
-# Design rationale: The tooling development map
+# The tooling development map
 
-<status stage="doc" state="work" comment="B-041 first draft 2026-08-02: boss-authored synthesis for owner review; the waves and forks are proposals until ruled"/>
+<status stage="doc" state="work" comment="B-041: drafted 2026-08-02, approved by the owner the same day («мне нравится этот документ») and integrated beside the backlog by his direction; the waves and forks remain proposals framed by the running campaign"/>
 
-##companion-line **Companion to:** [`BACKLOG.md` B-041](../../BACKLOG.md#b-041) (the commissioning entry); the atoms it arranges are the backlog's build entries B-001…B-043 and the campaign's «Specified, not built» annotations. @doc/done
+##companion-line **Companion to:** [`BACKLOG.md` B-041](BACKLOG.md#b-041) (the commissioning entry) and the backlog's own [`#map` section](BACKLOG.md#map); the atoms this map arranges are the backlog's build entries B-001…B-043 and the campaign's «Specified, not built» annotations. Genre-wise this is a design-rationale document living beside the backlog it arranges — the [`spec/design/` index](spec/design/README.md) carries its row. [`ROADMAP.md`](ROADMAP.md) is a different document: the **product** milestone roadmap (M0/M1.x…); this map covers the **discipline tooling**, and the two do not compete. @doc/done
 
 ##mandate-line **The owner's mandate, verbatim (2026-08-02):** «Мне нужно понимание, как развивать вообще наш инструментарий, чтобы оно стало хорошей системой. Система не заморожена, она должна развиваться» — and, of the method: «Построение ai-native дисциплин сложная штука, ее нужно делать, а не отказываться. Там могут быть правки компилятора, изобретение новых инструментов, да что угодно». @doc/done
+
+##frame-line **The frame (owner, 2026-08-02, same sitting):** «мы сейчас находимся в процессе более большого рефакторинга… нам надо действовать в рамках этого процесса, а то чего не хватает — отложить на потом». The running process is the **PROP-043 Progress-Control programme, wave 2** — the packages-actualization campaign ([`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`](spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md)), Phase D at its exit ramp, Phases E/T/F/G designed ahead. **This map does not start work; the campaign's phases do.** Phase E's mandate drains the recorded builds it inherits; what a phase mandate does not cover waits for the next owner mandate. The waves below are the *shape* of that drainage, not a parallel programme. @doc/done
 
 ##authority-line **Authority:** non-normative. The backlog entries carry the owner's rulings and win over this map wherever they diverge; the PROPs stay the contract. The wave ordering and the fork list below are **proposals** — nothing starts from this document. @doc/done
 
@@ -72,7 +74,7 @@
 
 ## 4. The proposed waves {#waves}
 
-##waves-lead A proposal for the owner, not a schedule — each wave is one coherent release batch (the engine vendors into six packages, so gate-plane changes are release events and batch naturally): @doc/work
+##waves-lead A proposal for the owner, not a schedule — each wave is one coherent release batch (the engine vendors into six packages, so gate-plane changes are release events and batch naturally). **Framed by `##frame-line`:** the vehicle for these waves is the campaign's own phase sequence — Phase E's mandate first, later mandates after it; while Phase D's queues drain, nothing below starts. @doc/work
 
 - ##WAVE-A **Волна А — детерминированная загрузка:** B-011 (highest), then B-006, B-031, B-028; B-004 and B-001 ride as design permits. Exit: the M-LOAD milestone below. @doc/work
 - ##WAVE-B **Волна Б — паритет гейтов и новые классы правил:** (B-029 + B-034 + B-039) → (B-033 + B-030) → (B-036 + B-037 + B-038) → (B-025 + B-026); B-003 rides; B-035 loops after each batch. Feeder: B-023 (syntactic tiers, Python frontend). Exit: M-PARITY. @doc/work
