@@ -189,7 +189,7 @@ full semantic dependency set so a pager can assemble sufficient context mechanic
   nothing else beyond seam-required types. Exported-but-unreferenced identifiers are
   findings. @impl/done
 - ##CONFORMANCE-IS-MADE-LOUD **Conformance is made loud** — every cell carries the compile-time assertion, and
-  conform checks its presence (T-syn): *Specified, not built: the Go gate registers exactly three rules — `GoUnsafeInDomain`, `GoCellIsolation`, `FileLength` (`build_rules`, `lib.rs:53-60`) — and none parses for the assertion's presence; the assertion itself is real, idiomatic Go and the pattern below is correct.* @spec/done
+  conform checks its presence (T-syn): *Specified, not built (→ B-030): the Go gate registers exactly three rules — `GoUnsafeInDomain`, `GoCellIsolation`, `FileLength` (`build_rules`, `lib.rs:53-60`) — and none parses for the assertion's presence; the assertion itself is real, idiomatic Go and the pattern below is correct.* @impl/plan
 
 ```go
 // internal/cells/batchplanner/planner.go

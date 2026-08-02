@@ -33,9 +33,9 @@
 
 ##rule-examples-lead Rule examples: @impl/done
 
-- ##EXAMPLE-R-021-FORBIDDEN-IDIOM R-021 forbidden-idiom scan → T-lex/T-syn; *Specified, not built: R-021 is not a rule in this engine. `R-021` returns zero hits across every crate in the repository, and no forbidden-idiom scan of any kind ships. It is cited as a ban in the language guides and authored nowhere.* @spec/done
+- ##EXAMPLE-R-021-FORBIDDEN-IDIOM R-021 forbidden-idiom scan → T-lex/T-syn; *Specified, not built (→ B-038): R-021 is not a rule in this engine. `R-021` returns zero hits across every crate in the repository, and no forbidden-idiom scan of any kind ships. It is cited as a ban in the language guides and authored nowhere.* @impl/plan
 - ##EXAMPLE-R-002-IMPORT-GRAPH-ISOLATION R-002 import-graph isolation → T-syn (Rust) / T-sem (C++ where headers lie); *The rule is real; the mapping is not. `CellIsolation` carries id `"R-002"` (`conform/src/rules/structure.rs:77-91`) and is projected per language as `TsCellIsolation` and `GoCellIsolation`. What does not exist is either side of the arrow — no tier assigns it a depth, and there is no C++ frontend to escalate to.* @spec/done
-- ##EXAMPLE-R-020-NAMING-VS-MANIFEST R-020 naming-vs-manifest → T-syn + specmap index; *Specified, not built: neither the rule nor the join. `R-020` returns zero hits across every crate, and the conform engine does not depend on the specmap crate at all — no manifest lists it — so a rule combining structural facts with the specmap index cannot be written today without a new dependency edge.* @spec/done
+- ##EXAMPLE-R-020-NAMING-VS-MANIFEST R-020 naming-vs-manifest → T-syn + specmap index; *Specified, not built (→ B-038): neither the rule nor the join. `R-020` returns zero hits across every crate, and the conform engine does not depend on the specmap crate at all — no manifest lists it — so a rule combining structural facts with the specmap index cannot be written today without a new dependency edge.* @impl/plan
 - ##EXAMPLE-TYPE-FLOW-RULES type-flow rules (future) → T-sem. @spec/done
 
 ## 2. Frontends — borrowed, behind one trait {#frontends}

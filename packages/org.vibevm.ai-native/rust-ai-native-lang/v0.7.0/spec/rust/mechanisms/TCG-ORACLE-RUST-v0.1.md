@@ -200,7 +200,7 @@ session: @impl/done
 ##GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY Graceful exit is the LSP
 dance — `shutdown` request, `exit` notification — with kill-on-drop as
 the backstop; the no-zombie property is test-asserted (spike-proven:
-clean exit code 0, no surviving pid). *Specified, not built — the
+clean exit code 0, no surviving pid). *Specified, not built (→ B-044) — the
 mechanism, not the proof. The dance ships (`shutdown` at
 `crates/rust-ai-native-tcg-bridge/src/oracle.rs:356`) and so does the
 backstop (`Drop for ChildTransport` → `kill()` then `wait()`,
@@ -208,7 +208,7 @@ backstop (`Drop for ChildTransport` → `kill()` then `wait()`,
 checks only that `shutdown()` returned (`tests/live_oracle.rs:116`), and no
 exit-code check and no surviving-pid or process-table probe exists in this
 stack's test surface. «Test-asserted» and «spike-proven» describe a spike,
-not a test in the tree.* @spec/done
+not a test in the tree.* @impl/plan
 
 ##PATHS-BECOME-URIS-AFTER-PREFIX-STRIPPING Paths become URIs only after
 verbatim-prefix stripping (`\\?\` breaks child argv and URI builders —
@@ -246,7 +246,12 @@ crate, this box: @impl/done
 ##posted-targets-lead Posted targets for demo-class trees: @impl/done
 
 - ##TARGET-WARM-VALIDATE warm `validate` p50 < 500 ms, @impl/done
-- ##TARGET-WARM-COMPLETE `complete` p50 < 300 ms, @impl/done
+- ##TARGET-WARM-COMPLETE `complete` p50 < 300 ms — posted, not yet
+  measured: the bench harness times `validate` only
+  (`crates/rust-ai-native-tcg/src/bench.rs` emits `cold_init_ms`,
+  `validate_p50_ms`, `validate_p95_ms` and no `complete` field); the
+  measurement corpus is deliberately far-future work (`BACKLOG.md`
+  B-042), @spec/done
 - ##TARGET-COLD-INIT-TO-QUIESCENT cold init-to-quiescent < 15 s. @impl/done
 
 ##BENCH-HARNESS-RECORDS-DISTRIBUTIONS The bench

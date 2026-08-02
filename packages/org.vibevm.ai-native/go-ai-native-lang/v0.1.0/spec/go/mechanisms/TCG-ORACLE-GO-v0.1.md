@@ -244,8 +244,11 @@ gate what cannot flake, record what can). @impl/done
 demo-class trees: @impl/done
 
 - ##TARGET-WARM-VALIDATE warm `validate` p50 < 500 ms, @impl/done
-- ##TARGET-COMPLETE `complete` p50 <
-  300 ms, @impl/done
+- ##TARGET-COMPLETE `complete` p50 < 300 ms — posted, not yet measured:
+  the bench harness (`crates/go-ai-native-tcg/src/bench.rs`) records
+  per-case `warm_ms` for `validate` only and computes no percentile of
+  any kind; the measurement corpus is deliberately far-future work
+  (`BACKLOG.md` B-042), @spec/done
 - ##TARGET-COLD-INIT cold init-to-ready < 15 s. @impl/done
 
 ##BENCH-HARNESS-RECORDS-DISTRIBUTIONS The bench harness
