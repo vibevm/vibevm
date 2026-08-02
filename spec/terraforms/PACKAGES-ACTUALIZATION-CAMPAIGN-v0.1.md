@@ -1,8 +1,8 @@
 # Packages-Actualization Campaign v0.1 — wave 2: the authored packages measure themselves {#root}
 
-<status stage="impl" state="work" comment="RATIFIED 2026-07-26 with all six §4.5 amendments adopted; Phase D closed 2026-08-03 at a green floor; E/T/F/G designed and awaiting the owner's word"/>
+<status stage="impl" state="work" comment="RATIFIED 2026-07-26 with all six §4.5 amendments adopted; Phase D closed 2026-08-03 at a green floor; PHASE E AUTHORIZED 2026-08-03 («даю добро») — first slice wave А (B-011) + research pair B-022/B-023, claudez workers, boss Fable; starts next session"/>
 
-**status: RATIFIED 2026-07-26 · PHASE D CLOSED 2026-08-03 (A+B closed 2026-07-27, C closed 2026-07-29, D closed 2026-08-03 — floor green, CONVERGENCE met: 17 owed drifts, every one on an owner-ruled build; next: Phase E on the owner's word) · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`, closed out 2026-07-26)**
+**status: RATIFIED 2026-07-26 · PHASE D CLOSED 2026-08-03 (floor green, CONVERGENCE met: 17 owed drifts, every one on an owner-ruled build) · PHASE E AUTHORIZED 2026-08-03 — the owner's «даю добро»: first slice = wave А (B-011, самый высокий приоритет) + the research pair B-022/B-023 in a parallel lane; executor = claudez workers per SUBAGENT-MODE.toml, boss = Fable; T/F/G still wait for their own word · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`, closed out 2026-07-26)**
 
 Contract for everything used here: [PROP-043](../modules/vibe-progress/PROP-043-progress-markup.md).
 Owner's manual: [OWNER-GUIDE](../modules/vibe-progress/OWNER-GUIDE.md).
@@ -4751,6 +4751,41 @@ aspirational — and every one is still live for the phases that remain.
   per-point acceptance with coordinates, verbatim grep output with
   exit code, explicit «none» — the cross-check against the tree took
   seconds. Log: `unsorted/2026-08-03-report-probe-claudez2.jsonl`.
+
+- **2026-08-03 · пятый обмен — ДОБРО НА ФАЗУ E.** The owner:
+  «сохрани состояние и напиши промт, чтобы можно было начать фазу E
+  в новой сессии (даю добро). Выполняться все должно на claudez
+  воркерах, при этом босс - это Fable». **The mandate, recorded:**
+  Phase E starts in the next session; the first slice follows the
+  presented-and-blessed recommendation — **wave А** (B-011, the
+  owner's «Самый Высокий Приоритет»: deterministic loading —
+  rename-on-splice, `#use spec://… as X` + `@!X`, the ADL analogy,
+  the dynamic-STATIC.md case; his design directions live verbatim in
+  the B-011 entry) **plus the research pair B-022/B-023** in a
+  parallel lane (изолированные периметры — two lanes per the
+  transport's parallelism law). B-011's DESIGN is boss work
+  (never-delegate) and returns to the owner before implementation;
+  implementation and evidence sweeps go to claudez workers under the
+  full transport contract (worktrees, stream-json logs into the
+  archive, 30-second polls, WORKER-REPORT, meta finalisation).
+  B-006/B-031/B-028 follow B-011 inside wave А; waves Б/В/Г wait;
+  release events go to the owner before publication; **phases T/F/G
+  are NOT covered by this добро** and wait for their own word. The
+  executor pin: `SUBAGENT-MODE.toml` stays `mode = "claudez"` (the
+  owner's switch, re-read before every fan-out); the boss session
+  runs on Fable. **The economics, in the owner's follow-up words
+  (same exchange, verbatim):** «моя задача в минимизации нагрузки на
+  Fable и максимизации кодинговой работы на claudez субагенты» and
+  «чем меньше работы приходится на Fable тем лучше, однако работа по
+  сшивке-приемке-суждениям высокоуровневым никто лучше не сделает» —
+  so the standing split for E: **Fable never types code it can hand
+  off** — task cutting, design judgement, review over the
+  WORKER-REPORT map, stitching/merges, verdicts, commits and owner
+  communication stay Fable's; ALL code writing, evidence sweeps and
+  mechanical legwork (including spike prototypes for the B-011
+  design) go to claudez workers. Wind-down executed the same
+  message: WAL/CONTINUE rewritten, the start prompt handed to the
+  owner in chat.
 
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
