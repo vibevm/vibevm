@@ -92,8 +92,11 @@ units); panel green incl. step 6b. Mirrors synced at every checkpoint. @impl/don
   Claude-Code-on-GLM workers via the reworked claudez/claudez2 launchers
   (`-c`/`-p` verified — the ALPHA/BRAVO matrix; per-launcher state dirs;
   effort max built in); `native` → the harness's `opus5` subagents;
-  fractality stays out. **Parallelism:** disjoint file perimeters → two
-  lanes (claudez + claudez2) in separate worktrees, merged after review;
+  fractality stays out. **Parallelism:** disjoint file perimeters →
+  parallel workers, **up to 5 per launcher / 10 total** (probed: five
+  concurrent on one account, 0 errors, 15 s wall; thread isolation holds
+  at any count — conversations key on state-dir + cwd, one worker = one
+  worktree; cargo-heavy packets practically 2–3 at a time — box weight);
   conflict-prone many-place edits → ONE thread. **Observability:**
   stream-json logs written DIRECTLY into
   `C:\Users\olegc\git\v\cache\agents\{sorted/<task-id>,unsorted}/`,

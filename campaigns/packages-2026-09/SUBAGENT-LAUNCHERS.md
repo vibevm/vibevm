@@ -91,13 +91,28 @@ skeleton. This keeps the expensive judgement in the strong author and the
 detailed elaboration in the cheap writer — and every filled point comes
 back accounted for in the report's Decisions section.
 
-##e-parallel-routing **2 · Route the parallelism (boss, owner's rule
+##e-parallel-routing **2 · Route the parallelism (boss, owner's rules
 2026-08-03).** Intersect the candidate tasks' file perimeters BEFORE
-spawning: **disjoint perimeters → two lanes in parallel** (`claudez` →
-worktree A, `claudez2` → worktree B), merged after review; **a many-place,
-cross-cutting edit (perimeters intersect or the edit sprawls) → one
-thread**, no parallelism. When in doubt, one thread — a serialized hour is
-cheaper than an interleaved conflict.
+spawning: **disjoint perimeters → parallel workers**, merged after review;
+**a many-place, cross-cutting edit (perimeters intersect or the edit
+sprawls) → one thread**, no parallelism. When in doubt, one thread — a
+serialized hour is cheaper than an interleaved conflict.
+
+##e-parallel-coefficient **The parallelism coefficient (owner, 2026-08-03):
+up to 5 workers per launcher — 10 total across the two lanes.** Thread
+isolation holds at any count by construction: claude keys conversations by
+(state dir, cwd), and one worker = one worktree = one cwd, so N workers of
+one launcher never cross `-c` threads. **Verified 2026-08-03:** five
+concurrent one-shots on the single `claudez` account — five correct
+results, zero errors, 15 s wall (parallel, not queued); logs
+`unsorted/2026-08-03-conc-w{1..5}-claudez.jsonl`. What still governs the
+NUMBER actually spawned: *(i)* the disjoint-perimeter law above — ten
+workers need ten disjoint perimeters; *(ii)* box weight — each worktree's
+self-verify is a cold `cargo check`, and this box does not enjoy 10
+concurrent cargo builds: cargo-heavy packets practically 2–3 at a time,
+doc/test-text packets parallelize freely; *(iii)* account throttling on
+long sustained runs is unprobed — the stream-json logs make it visible
+(429s / stalls), and the boss thins the fleet if it appears.
 
 ##e-worktree **3 · Provision (boss).** One worktree per worker:
 `git worktree add .wt/<task-id> -b wt/<task-id>` — own cwd, own thread, own
@@ -154,14 +169,16 @@ runs every cargo invocation, performs every red exhibit, makes every
 commit; writers only write test text; §13.1's collision list governs the
 file split.
 
-##t-fanout **Fan-out shape:** N packets → up to two lanes × one packet at a
-time per lane (`claudez` lane + `claudez2` lane), each in its own worktree
-per §13's file-split law; `-c` serves the per-packet correction loop
-exactly as in Phase E. Isolated test-file packets are the parallel-friendly
-default; a packet touching shared registries/goldens runs alone (the same
-owner rule as `#e-parallel-routing`). Every packet run logs and archives
-per §5 — `sorted/<T-packet-id>/`, stream-json, heartbeats, the 30-second
-poll.
+##t-fanout **Fan-out shape:** N packets → up to **5 workers per lane, 10
+total** (`claudez` lane + `claudez2` lane — `#e-parallel-coefficient`),
+each in its own worktree per §13's file-split law; `-c` serves the
+per-packet correction loop exactly as in Phase E. Isolated test-file
+packets are the parallel-friendly default (and being test-text, they are
+exactly the packets that CAN run ten-wide — no cargo per worker until the
+boss's own red-exhibit step); a packet touching shared registries/goldens
+runs alone (the same owner rule as `#e-parallel-routing`). Every packet
+run logs and archives per §5 — `sorted/<T-packet-id>/`, stream-json,
+heartbeats, the 30-second poll.
 
 ## 5. Observability and the log archive — the 30-second contract {#observability}
 

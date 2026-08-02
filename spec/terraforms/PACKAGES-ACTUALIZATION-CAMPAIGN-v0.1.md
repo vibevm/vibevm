@@ -4808,6 +4808,25 @@ aspirational — and every one is still live for the phases that remain.
   discard), every verdict and rework cycle recorded in `meta.md`
   (`#report-rejection`).
 
+- **2026-08-03 · седьмой обмен — коэффициент параллельности: до 5 на
+  запускалку, 10 суммарно.** The owner's question: сейчас один воркер
+  на запускалку? можно вплоть до 5 — две запускалки = максимум 10?
+  Answered and raised the same hour: the old «one packet at a time
+  per lane» was the boss's conservative wording, not a technical
+  limit — thread isolation holds at any count by construction
+  (conversations key on state-dir + cwd; one worker = one worktree),
+  so the coefficient became **up to 5 per launcher / 10 total**
+  (`#e-parallel-coefficient`). **Probed live: five concurrent
+  one-shots on the single claudez account — five correct results,
+  zero errors, 15 s wall** (parallel, not queued; logs
+  `unsorted/2026-08-03-conc-w{1..5}-claudez.jsonl`). What still
+  governs the spawned number: the disjoint-perimeter law (ten
+  workers need ten disjoint perimeters), box weight (cargo-heavy
+  packets practically 2–3 concurrent — cold worktree builds thrash
+  the disk; doc/test-text packets go ten-wide), and unprobed
+  long-run account throttling, visible in the stream-json logs if
+  it ever appears.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
