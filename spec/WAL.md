@@ -220,8 +220,13 @@ B-014 filed, F-133's verdict-first loop) are history in the §7 LOG. @impl/done
    protocol: FEAT files as addressable units composed into plans), the
    B-018 canonical query («which test verifies this rule»), and the
    dead-alias fix (five code tags now cite ##CMD-* facts; PROP-043's four
-   trap-tokens removed). **Next presentations: F-132's nine, F-185, the
-   duplication family F-217/218/285.** @spec/done
+   trap-tokens removed). **Next presentations: F-185, the duplication family
+   F-217/218/285, and F-132's one residual route-(b) anchor
+   (`##RUST-PRINCIPLE-GENERATOR-INPUT-IS-TAGGED`). The «F-132's nine» this
+   line used to name was stale: партия 1a (commit `eccb1499`, D13) applied
+   and re-judged the nine + RUNTIME-TRANSPORT on 2026-08-01 — the queue
+   line had carried the harvest's pre-1a «NOT APPLIED» state; verified
+   against `run/cache.json` (PROP-014: one drift) 2026-08-02.** @spec/done
 2. ##WAL-NEXT-ADR **B+A′ is fully executed** — the §3.13 carve-out landed as
    (ii): census 35→36, the four-field record at PROP-000 §7
    (`##split-host-decision…`) carrying the owner's updated split-host posture
