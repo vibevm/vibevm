@@ -21,6 +21,12 @@
 #                                          source in core-ai-native, so a
 #                                          vendored copy can never diverge
 #                                          silently (DEFERRALS-CLOSEOUT D1).
+#   6b. `cargo xtask check-codegen`       — the generated JTD wire types
+#                                          (vibe-wire + the specmap engine
+#                                          crate) byte-match their schemas;
+#                                          needs the project-local
+#                                          jtd-codegen binary, installed per
+#                                          tool:org.vibevm.ai-native/jtd-codegen.
 #   7. the core-ai-native package gate    — fmt + test + clippy on the
 #                                          AUTHORED neutral engine crates,
 #                                          which ship in their own excluded
@@ -324,6 +330,16 @@ run_step "cargo xtask conform check" cargo xtask conform check || OVERALL=$?
 # match the authored source, so "fixing" a vendored file — the wrong surface —
 # cannot land.
 run_step "cargo xtask sync-engines --check" cargo xtask sync-engines --check || OVERALL=$?
+
+# 6b. Codegen drift gate. The generated JTD wire types — vibe-wire's and the
+# specmap engine crate's — must byte-match their schemas (the two schema
+# homes: schemas/ at the root, and the core-ai-native package's schemas/).
+# Regeneration is `cargo xtask codegen`; the step fails actionably when the
+# project-local jtd-codegen binary is missing (install per the
+# tool:org.vibevm.ai-native/jtd-codegen package README). Added at the
+# phase-D exit-gate audit: the byte-compare existed and no panel step named
+# it, so schema-vs-generated drift had nothing to catch it.
+run_step "cargo xtask check-codegen" cargo xtask check-codegen || OVERALL=$?
 
 # 7. The AUTHORED neutral engines — conform-core, specmap-core, specmark,
 # specmark-grammar — ship in flow:org.vibevm.ai-native/core-ai-native as its OWN Cargo
