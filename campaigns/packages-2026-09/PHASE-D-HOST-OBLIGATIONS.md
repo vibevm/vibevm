@@ -240,3 +240,50 @@ LEDGER-INTENT corrections → `BACKLOG.md` **B-022** (F-159 `deferred` pending
 it); партія 1b's frontend rows (TS/JS + Python) → **B-023** (F-146's two
 row-anchors wait on it; its other three corrections remain presented and
 unruled). The lifecycle-status-vs-markers question the owner raised → **B-024**.
+
+## Rulings of 2026-08-02, second sitting — builds over softening {#rulings-2026-08-02-2}
+
+The owner ruled the three items of the presentation sitting (chat, plain
+language; his format refinement of the same day applied and binding forward:
+**essence first, then the exact technical names — settings, files, behaviours —
+precision never lost**). **No package moved**; where the doc and the engine
+disagreed, the engine grows to the doc.
+
+**F-185 (`conform-frontend-go.md`, three anchors) — routed to builds, row
+`deferred`:** instead of softening the doc to the shipped engine, the three
+promises become recorded builds — the dedicated seam-error rule → `BACKLOG.md`
+**B-033**, the config-surface enrichment → **B-029** (`##B029-CONFIG-SURFACE`),
+the gated-or-exempt invariant for Go/TS → **B-034**; plus the parity audit the
+owner ordered alongside → **B-035** («мы не должны делать поддержку других
+языков хуже, чем это сделано для Rust»). His frame for the family: *«По сути мы
+не можем писать на Typescript и Go пока не поправим вот это.»* The prepared
+annotate-texts stay in `harvest/d7d-stacks-sync-reverify.md` and ride the
+builds; the anchors re-judge when the engine catches up (or by an
+annotate-in-place the owner approves earlier).
+
+**F-132 (residual anchor `RUST-PRINCIPLE-GENERATOR-INPUT-IS-TAGGED`) — answer
+(1), row `deferred`:** the host debt is **«проставить spec-метки в
+`schemas/specmap.jtd.json`»** — the generator input carries `spec://` only
+inside two prose `description` strings, so the generated specmap types inherit
+no traceability. Companions already on file: **B-013** (the broken jtd-codegen
+regeneration path of the same schema) and **B-019(а)** (the map-format change);
+the debt drains together with them. Owner: *«Сделать как будет возможность.»*
+
+**F-218 (both anchors) — `deferred` onto B-011, raised to highest priority:**
+the 59-collision measurement is the boot compiler's flattening
+(`{#root}` ×26 in the compiled `spec/boot/STATIC.md`), both anchors were routed
+out at the wave-2 review, and the fix is B-011's aliasing/renaming design —
+today enriched with the owner's directions (labels renamed so every reference
+stays valid document-wide; the dynamic-loading case of libraries carrying their
+own STATIC.md; qualified-rewrite at materialization; the C++ ADL analogy;
+`#use spec://… as X` + `@!X`) and set to **Самый Высокий Приоритет**: «От этой
+вещи зависит как вообще работает загрузка, насколько детерминированно и
+хорошо».
+
+**Pending the owner (per-anchor discipline, nothing struck by adjacency):**
+**F-217** stays `open` — its `NEVER-DUPLICATE-A-NORMATIVE-VALUE` anchor carries
+a second, unruled defect (the hand-copied `CLAUDE.md`/`AGENTS.md`/`GEMINI.md`
+triple, byte-identical today, with no mechanism comparing the three outside the
+generated `<vibevm>` block); **F-285** stays `open` — the «снять обвинение»
+question (temporal-reuse rule convicted of a simultaneous compile-time
+collision) is not yet answered.

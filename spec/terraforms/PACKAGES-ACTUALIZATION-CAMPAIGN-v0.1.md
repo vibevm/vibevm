@@ -4338,6 +4338,59 @@ aspirational — and every one is still live for the phases that remain.
   97.8 %**; registry **102 / 210 — 21 deferred, 81 open; owed 54, every one
   on the sync route**.
 
+- **2026-08-02 · ситтинг предъявлений — очередь оказалась на одну девятку
+  короче, а стройки берут верх над смягчением.** The sitting opened with the
+  standing panel (`self-check.sh` EXIT=0, re-run after the string-only tag
+  edits) and a preparation find: **the queue line «F-132's nine await texts»
+  had been stale for two checkpoints** — партия 1a (`eccb1499`, D13's +10)
+  applied and re-judged the nine + RUNTIME-TRANSPORT already on 2026-08-01,
+  and the queue had quoted the harvest's pre-1a «NOT APPLIED» snapshot instead
+  of the registry. Caught by taking every queue item from `run/cache.json` +
+  the generator before presenting; WAL/CONTINUE repaired (`5223ea2e`). The
+  lesson is `##WAL-C-DURABLE-CITATIONS` from the other side: **the owner's
+  queue is derived from the registry, never from a harvest snapshot.** The
+  presentations then went out twice — the first draft bounced off the owner's
+  format bar, refined the same sitting and **binding forward: essence in plain
+  language first, then the exact technical names (settings, files,
+  behaviours), precision never lost; spec jargon only as appendix.**
+
+  **The rulings came back builds-over-softening, end to end.** F-185's three
+  Go-frontend promises stop being false by the engine growing to them:
+  **B-033** (the dedicated seam-error rule; the owner's «имеет ли смысл —
+  или особенность языка?» answered: the rule architecture is neutral, only
+  the detector is language-shaped, so a dedicated id is sensible and cheap —
+  detection already ships as the census kind), **B-029 enriched** («обогатить
+  это обещание … расширить или улучшить то, что мы сохраняем в conform.toml»
+  — the entry grows from a key rename to the per-language config surface),
+  **B-034** (the gated-or-exempt invariant implemented for Go and TS —
+  «похоже на задачу»), and **B-035** (the parity audit, carrying his
+  principle verbatim: support for other languages — especially TypeScript —
+  must not be weaker than Rust without a recorded reason). His frame for the
+  family: *«По сути мы не можем писать на Typescript и Go пока не поправим
+  вот это.»* The first parity pass ran in-sitting: **TS has no REQ-citation
+  check at all** (five unsafe census kinds, none about seam errors, against
+  its guide's own prescription), the invariant runs nowhere but Rust, and the
+  TS docs are honest about it — the weakening is engine-side, undocumented.
+  F-132's residual anchor took answer (1) — the host debt «проставить
+  spec-метки в `schemas/specmap.jtd.json`» recorded with companions B-013 /
+  B-019(а), «сделать как будет возможность». F-218 deferred onto **B-011,
+  raised to Самый Высокий Приоритет** and enriched with the owner's design
+  directions (rename-on-splice with every reference staying valid, the
+  dynamic-STATIC.md loading case, qualified-rewrite at materialization, the
+  C++ ADL analogy, `#use spec://… as X` + `@!X`): «От этой вещи зависит как
+  вообще работает загрузка, насколько детерминированно и хорошо». Rulings
+  recorded in `PHASE-D-HOST-OBLIGATIONS.md#rulings-2026-08-02-2`; statuses
+  flipped in `run/state/obligations.json`, registry regenerated.
+
+  **State after the sitting** (commands supersede): corpus unchanged
+  **11 166 / 210 / 44 — 97.8 %** (no verdict moved — deferral is
+  bookkeeping, not repair); registry **102 / 210 — 24 deferred, 78 open;
+  owed 54, every one on the sync route**. Still pending the owner:
+  **F-217's second anchor** (the hand-copied CLAUDE/AGENTS/GEMINI triple —
+  reconciler check vs recorded exception), **F-285's «снять обвинение»**
+  (temporal-reuse rule convicted of a simultaneous compile collision), and
+  **B-027's sweep rule**. The backlog stands at **B-035**.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:

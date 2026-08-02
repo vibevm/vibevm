@@ -1349,7 +1349,7 @@
     "**two of the documented keys would fail to parse.** `GoConfig` is `deny_unknown_fields` and declares roots, exclude_substrings, cells_dir, seams_pkg, registry_pkg, floor_disable (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/vendor/core-ai-native-conform/src/config.rs:106-131). The fact documents `gated_packages`, `[[exempt]]` and a file budget under `[go]`: `gated_packages` has zero code hits repo-wide, and a consumer who writes the section as documented gets a hard config error. The real pilot section carries only the declared keys (research/go-demo/conform.toml:12)",
     "the invariant is stated over `gated_packages` and the shipped config field is **`gated_crates`** — the same wrong name C6 found in the Go sweep's census, in a second document"
    ],
-   "status": "open",
+   "status": "deferred",
    "wave": 1,
    "closure_route": "sync-from-code",
    "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md:107  ##CONFORM-TOML-GAINS-A-GO-SECTION `conform.toml` gains a `[go]` section, written by `go-ai-native init` from the modu...",
@@ -1847,7 +1847,7 @@
    "reasons": [
     "DRIFT: restates EVERY-FACT-HAS-EXACTLY-ONE-AUTHORITATIVE-ANCHOR and falls with it — 59 duplicate-anchor warnings in the compiled lane, and one law stated in six host places across 88 lines. W1's precedent judges a summary restatement with the rule."
    ],
-   "status": "open",
+   "status": "deferred",
    "wave": 1,
    "closure_route": "sync-from-code",
    "fact": "CLAUDE.md:150  - `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` (kept identical; the four rules and the few directives that must hit every harness on session boot).",
@@ -2996,7 +2996,7 @@
    "cites": [],
    "reason": "the exclusion of generated code is real; the tagging of generator input is not — the host's schemas carry no spec tags, so the edges the generated code would inherit do not exist",
    "reasons": [],
-   "status": "open",
+   "status": "deferred",
    "wave": 1,
    "closure_route": "sync-from-code",
    "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:82  if fwd(rel_in_crate).contains(\"/generated/\") {",
