@@ -1,8 +1,8 @@
 # Packages-Actualization Campaign v0.1 — wave 2: the authored packages measure themselves {#root}
 
-<status stage="impl" state="work" comment="RATIFIED 2026-07-26 with all six §4.5 amendments adopted; Phase A open"/>
+<status stage="impl" state="work" comment="RATIFIED 2026-07-26 with all six §4.5 amendments adopted; Phase D closed 2026-08-03 at a green floor; E/T/F/G designed and awaiting the owner's word"/>
 
-**status: RATIFIED 2026-07-26 · PHASE D IN FLIGHT (A+B closed 2026-07-27, C closed 2026-07-29; status refreshed 2026-07-31) · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`, closed out 2026-07-26)**
+**status: RATIFIED 2026-07-26 · PHASE D CLOSED 2026-08-03 (A+B closed 2026-07-27, C closed 2026-07-29, D closed 2026-08-03 — floor green, CONVERGENCE met: 17 owed drifts, every one on an owner-ruled build; next: Phase E on the owner's word) · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`, closed out 2026-07-26)**
 
 Contract for everything used here: [PROP-043](../modules/vibe-progress/PROP-043-progress-markup.md).
 Owner's manual: [OWNER-GUIDE](../modules/vibe-progress/OWNER-GUIDE.md).
@@ -4588,6 +4588,67 @@ aspirational — and every one is still live for the phases that remain.
   **98.3 %**. On the owner: the F-279 schema-home ruling; then the
   exit gate.
 
+- **2026-08-03 · фаза D закрывается — рулинг F-279 исполнен, гейт
+  пройден, панель выросла на шаг.** The already-given ruling («вариант
+  (а) + отдельный пакет org.vibevm.ai-native/jtd-codegen») executed
+  whole, no owner question needed: **the schema moved home**
+  (`schemas/specmap.jtd.json` → `core-ai-native/v0.8.0/schemas/`, a
+  canonical `specmap.example.json` beside it whose lagging-pin edge
+  produces exactly the suspect entry it shows), **both xtask codegen
+  routes re-targeted** off the dead `rust-ai-native-lang/v0.5.0` slot
+  onto the engine crate — `cargo xtask check-codegen` byte-clean,
+  **B-013 closed on all four fix-shape coordinates** (`a6bb261e`);
+  the stack README's ships-line tells the post-move truth, re-judged
+  **D42: confirmed 1/1, seal 1 — F-279 resolved, 139 to history**
+  (`ad3547f1`, `1ac1734e`); the binary-payload fork dissolved on facts
+  — the exe was never in git (`tools/.gitignore` law), so
+  **`tool:org.vibevm.ai-native/jtd-codegen` ships the provisioning
+  recipe, not the binary** (`b4c48aa0`; the package README marked in
+  house grammar joined the observed corpus — 261 files, exhaustive
+  clean); the host `tools/jtd-codegen/README.md` became a pointer (one
+  pin, one home); B-013's backlog row flipped `done` and the map's
+  plane 2.3 re-drawn per its supersession rule (`7e1bdf74`). The
+  panel's own catch en route: the regenerated engine tree left six
+  vendored copies behind — `sync-engines --check` refused on 12
+  drift items, the write-through carried the fix to every family
+  member (`7441e7e9`), §4.5's «fix landed in one consumer» closed by
+  the gate that exists for it. **The exit gate, measured:**
+  self-check EXIT=0 (twice — before and after the audit's in-run
+  fixes; the second run includes the new step); exhaustive
+  `progress check --campaign` clean, 261 files; per-namespace
+  summary `host 4552/0/3 — 99.9 %` · `ai-native 2669/27/19 —
+  98.3 %` · `world 3967/163/22 — 95.5 %` (src=[1] 269, 6.5 %),
+  **ALL 11 188 / 190 / 44 = 11 422 — 98.0 %**; CONVERGENCE **173
+  routed / 17 owed of 190 / 0 partial**, the 17 on six deferred rows
+  each naming its build and its ruling (the ledger's
+  [`#close-2026-08-03`](../../campaigns/packages-2026-09/PHASE-D-HOST-OBLIGATIONS.md#close-2026-08-03)
+  table); `routing.json` non-empty; **`baseline.json` written per A6**
+  (2 221 units with verdicts). Arithmetic per §7-gate check 3: D42
+  carried 1 verdict, drift 191 → 190. **The A–D health-audit
+  inventory ran at the gate** (the 2026-08-01 adoption clause): five
+  findings — the codegen byte-compare ran in no panel step (**fixed
+  in-run, step 6b**, `1218c429` — the checklist's mechanisable-row
+  rule applied at discovery), `quinn-proto` RUSTSEC-2026-0185 in two
+  lockfiles (**host fixed** `1db359d0` → 0.11.16; the fractality
+  specspace's lock **filed as DBT-0023** — its workspace, its
+  session), `cargo-outdated` unrunnable over this layout (open), the
+  `dead_code`-allow shadow 28 → 79 since June (open, triage next),
+  census rows clean (accepted); AUD-0014/0015 found already fixed by
+  passing work and closed (`c4e804e0`). **Convergence verdict per
+  §7: registry non-empty, nothing new minted — converged with a
+  stated remainder** (58 open non-sync rows + 32 owner-ruled
+  deferrals, the remainder stated in the ledger's close table).
+  Prediction scoring, the countable parts: the geometric fall held
+  in substance (601 → 191 drifts, recent regenerations mint zero new
+  obligations); «≤3 waves» did not survive contact if a wave is a
+  work batch (twelve ran); the escalation count is scored at §9
+  against §5's two-consecutive-waves definition, not guessed here.
+  State at HEAD `dcc23250`: corpus **98.0 %**, registry **90 / 190 —
+  32 deferred, 58 open, owed 17 all ruled**, resolved **139**.
+  **Phases E/T/F/G stand designed and do not start without the
+  owner's word; Phase E's mandate drains the recorded builds under
+  the map's frame.**
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
@@ -4656,15 +4717,23 @@ own. *Confirmed by amendment:* **A2**'s self-referential count is real and small
 *Method that made it hold:* the per-file slice as the unit of work, and two
 instruments that refuse rather than guess (`make-slice.py`, `merge-verdicts.py`).
 
-#### Phase D — IN FLIGHT since 2026-07-29; 63 commits so far {#cm-d}
+#### Phase D — EXECUTED 2026-07-29 → 2026-08-03; 93 zone commits {#cm-d}
 
-`ef40a1ce`..HEAD `fffcb494`. Opens `6072033a` (601 drifts become 228
-obligations, by a script that says how) and `33bd5b1e`. Landmarks: `d7803b97`
-the routing record, without which the phase cannot converge · `8b7f240f` what
-the host owes — the other half of the exit gate · `4206c61b` waves 2–4 ·
-`b0a8b0d4` wave 5 and §3.7 · `1c1a3865` wave 6 · `3dab12a3` wave 7 closes ·
-`3c14d6af` wave 8 · `91ebf1fd` the D9 rulings · `fffcb494` the rulings of
-2026-07-31 and the publication runbook.
+`ef40a1ce`..`dcc23250` (93 commits over the zone perimeter; the zone's
+lifetime total stands at 366 of the repository's 563 since the plan).
+Opens `6072033a` (601 drifts become 228 obligations, by a script that
+says how) and `33bd5b1e`. Landmarks: `d7803b97` the routing record,
+without which the phase cannot converge · `8b7f240f` what the host owes
+— the other half of the exit gate · `4206c61b` waves 2–4 · `b0a8b0d4`
+wave 5 and §3.7 · `1c1a3865` wave 6 · `3dab12a3` wave 7 closes ·
+`3c14d6af` wave 8 · `91ebf1fd` the D9 rulings · `fffcb494` the rulings
+of 2026-07-31 and the publication runbook · the 2026-08-02 presentation
+sitting's ~ten exchanges (D29–D41, builds B-033…B-047, the map, the pin
+build, step 0c) · `a6bb261e` the F-279 ruling executed, B-013 closed ·
+`b4c48aa0` the jtd-codegen tool package · `7441e7e9` sync-engines
+carries the regen to all six vendored copies · `1218c429` the panel
+gains the codegen gate · `c4e804e0` the A–D audit at the gate ·
+`755d664a`/`dcc23250` the close trio's first two.
 
 *Falsified at the opening, and it killed the obvious plan:* drifts were expected
 to cluster by reason text; measured, only **16 texts repeat at all over 54
@@ -4672,11 +4741,15 @@ rows** and text-only clustering returns 552 groups for 601 rows — a reduction 
 1.1×. What groups them is the **subject**: one document, one kind of defect, one
 edit pass. *Falsified mid-phase, twice:* wave 5 found 18 claimed absences false;
 wave 6 found the perimeter blind to a second adopter inside `packages/`.
-*State at HEAD:* corpus **10 945 / 357 / 44 = 11 346, 96.5 %**, up from 94.3 %
-at the Phase C gate; registry **152 obligations / 357 drifts**; **210 of 357
-routed out, 147 still owed a package repair, 91 obligations with nothing left
-owed**. Reproduce with `tasks/summary.py` and `tasks/drift-registry.py`; both
-supersede every figure written here.
+*State at close (HEAD `dcc23250`):* corpus **11 188 / 190 / 44 = 11 422,
+98.0 %**, up from 94.3 % at the Phase C gate; registry **90 obligations /
+190 drifts — 32 owner-ruled deferrals, 58 open; 173 routed out with a
+recorded determination, 17 still owed and every one on an owner-ruled
+build; resolved to history 139**. Reproduce with `tasks/summary.py` and
+`tasks/drift-registry.py`; both supersede every figure written here.
+*Gate at the boundary:* `self-check` green (the panel one step richer),
+exhaustive `progress check` clean over 261 files, `baseline.json`
+written per **A6**, the A–D audit section in `AUDIT.md`.
 
 #### Phases D-close, E, T, F, G — PLANNED; subjects spelled in advance {#cm-planned}
 
@@ -4684,9 +4757,18 @@ supersede every figure written here.
 hashes to them as each phase lands, and any drift between the two is itself a
 recorded finding.*
 
-- **D close** — `feat(campaign): the routing record closes, and every survivor
-  carries an owner ruling` · `docs(campaign): phase D closes — the remainder,
-  and who owns each row` · `chore(campaign): the phase boundary's baseline`.
+- **D close** — **EXECUTED 2026-08-03, hashes bound:** `755d664a`
+  `feat(campaign): the routing record closes, and every survivor
+  carries an owner ruling` · `docs(campaign): phase D closes — the
+  remainder, and who owns each row` (the commit carrying this very
+  entry — the LOG close, the status line, this map) · `dcc23250`
+  `chore(campaign): the phase boundary's baseline`. One stated
+  deviation from the planned trio: the order ran feat → chore → docs,
+  so the docs commit could bind both sibling hashes; and the
+  2026-08-01 audit-adoption clause added a fourth commit beside the
+  trio — `c4e804e0` `docs(audit)` — plus its two in-run fixes
+  (`1218c429`, `1db359d0`), none of which the trio was planned to
+  carry.
 - **E** — one `fix(<package>): <the drift the task closes>` per DRIFT task, each
   whose fix touches a package's crates followed by
   `chore(ai-native): sync-engines vendors the fix forward to every family
