@@ -1,14 +1,16 @@
 # WAL — Project Continuation State {#root}
 
-_Updated: 2026-08-02, ситтинг предъявлений, три обмена (**PHASE D AT ITS
-EXIT RAMP — the presentation sitting is drained WHOLE: F-185 / F-218 /
-F-132 / F-217 deferred onto recorded-or-built work (B-033 / B-034 / B-035
-filed, B-029 enriched, B-011 at Самый Высокий Приоритет, the schemas debt
-recorded, the CLAUDE/AGENTS/GEMINI byte-compare BUILT as self-check step
-0c), F-285 resolved by D29; corpus 97.8 %, registry 101 obligations / 209
-drifts, 25 owner-ruled deferrals, 76 open, owed 53 — every one on the
-owner's sync route, boss-owed zero everywhere; the backlog stands at B-035;
-on the owner: B-027's sweep rule, then the sync-queue remainder**)_
+_Updated: 2026-08-02, ситтинг предъявлений, четыре обмена (**PHASE D AT ITS
+EXIT RAMP + THE BUILD-FIRST PIVOT: правила дисциплины не выключаются за
+неиспользование — «спроектировать и потом построить»; F-185 / F-218 /
+F-132 / F-217 / F-154 / F-355 / F-181 deferred onto recorded-or-built work
+(B-033…B-041 filed, B-011 at Самый Высокий Приоритет, self-check step 0c
+built, F-167 applied D31, TS-близнецы починены вердикт-сначала D30, F-285
+resolved D29); corpus 97.8 %, registry 102 obligations / 209 drifts, 28
+owner-ruled deferrals, 74 open, owed 41 — every one on the owner's sync
+route, boss-owed zero everywhere; the backlog stands at B-043; on the
+owner: B-027's rule, F-161's two re-presentations, the F-215/F-281
+families; boss lane next: the B-041 development map**)_
 
 ##WAL-NUMBERS-COME-FROM-COMMANDS **Every number below is reproduced by two
 commands; run them rather than quoting this file** (why:
@@ -42,20 +44,20 @@ aliasing design (`BACKLOG.md` B-011) makes stripping safe. Verification:
 `address-repair.py --verify` 0 remaining. @impl/done
 
 ##WAL-STATE **State at the last regeneration** (2026-08-02, presentation
-sitting, third exchange; the commands supersede): corpus **11 167 / 209 /
-44 — 97.8 %** over 260 files; registry **101 obligations / 209 drifts — 25
-`deferred` by owner ruling, 76 open**; **owed 53 of 209, every one on
-`sync-from-code`, the owner's route**; resolved to history across the
-sittings: F-207, F-263, F-351, F-180, F-166, F-162, F-285 (127 total; plus
-F-133's same-day loop). The boss-owed remainder is **zero** on every route;
-the `build-or-demote` tail and the presentation sitting are owner-ruled
-whole (the rulings ledger:
+sitting, fourth exchange; the commands supersede): corpus **11 167 / 209 /
+44 — 97.8 %** over 260 files; registry **102 obligations / 209 drifts — 28
+`deferred` by owner ruling, 74 open**; **owed 41 of 209, every one on
+`sync-from-code`, the owner's route** (the +1 obligation is F-355, the
+verdict-first split of the TS twins — not new work); resolved to history
+across the sittings: F-207, F-263, F-351, F-180, F-166, F-162, F-285 (127
+total; plus F-133's same-day loop). The boss-owed remainder is **zero** on
+every route; the rulings ledger:
 `campaigns/packages-2026-09/PHASE-D-HOST-OBLIGATIONS.md#rulings-2026-08-01`
-and `#rulings-2026-08-02-2`). `progress check` clean (wave-10 checkpoint),
-`self-check.sh` all green — full run EXIT=0 at the sitting's open
-(2026-08-02), **step 0c added the same day (CLAUDE/AGENTS/GEMINI
-byte-compare) — панель перегоняется на чекпойнте ситтинга**, cargo-audit
-0.22.2 / cargo-outdated 0.19.0 installed. @impl/done
+and `#rulings-2026-08-02-2` (four exchanges). `progress check` clean —
+re-run at the fourth exchange's mirror step (260 files), `self-check.sh`
+all green — full run EXIT=0 twice today (sitting open + after step 0c),
+**панель перегоняется на чекпойнте ситтинга**, cargo-audit 0.22.2 /
+cargo-outdated 0.19.0 installed. @impl/done
 
 ##WAL-RULINGS-IN-FORCE **Owner rulings taken 2026-07-31/08-01 and in force:**
 sync-queue group A = answer (2) — «specified, not built» annotate-in-place is
@@ -92,7 +94,21 @@ LLM») — построена шагом 0c в `tools/self-check.sh` (пофай
 байт-компаратор, полный файл сознательно); F-217 → `deferred` (обе
 половины построены или запланированы); F-285 снят по слову «сними пока.
 Угроза реальная, но пока это не приоритет» — D29 re-judge confirmed,
-реальная половина угрозы и есть предмет B-011. @impl/done
+реальная половина угрозы и есть предмет B-011.
+**Четвёртый обмен — THE BUILD-FIRST PIVOT (стоячее правило вперёд):**
+для механизмов дисциплины дефолт «аннотировать отсутствие» умер — «Я
+против чтобы ты выключал правила только потому, что они нигде пока не
+используются… нужно это спроектировать и потом построить»; «Система не
+заморожена, она должна развиваться»; о собственном коде — «похоже на
+причину всё отрефакторить и начать применять». Аннотация легитимна
+только как интерим, называющий записанную стройку. Исполнено: F-154 →
+B-036/B-037/B-038/B-040 (deferred); TS-близнецы — вердикт-сначала D30 →
+F-355 → B-036/B-037 (deferred; дубль id генератора разведён вручную,
+дефект — B-043); F-161's R-001-пара → B-039 (строка open на двух
+несуженных якорях); F-167 применён D31 + B-042 (accepted, дальняя
+тестовая база — LLM/фаззер); F-181 → вариант (1), к семье F-204/B-005
+(deferred); B-041 — карта развития инструментария, прямой запрос
+владельца, следующая работа boss-lane. @impl/done
 
 ## Constraints — do not violate {#constraints}
 
@@ -244,15 +260,17 @@ B-014 filed, F-133's verdict-first loop) are history in the §7 LOG. @impl/done
    B-018 canonical query («which test verifies this rule»), and the
    dead-alias fix (five code tags now cite ##CMD-* facts; PROP-043's four
    trap-tokens removed). **The 2026-08-02 presentation sitting is ruled and
-   executed WHOLE, three exchanges** (F-185 / F-218 / F-132 / F-217
-   deferred onto recorded-or-built work, F-285 resolved by D29, the triple
-   byte-compare built as self-check step 0c — the ledger's
-   `#rulings-2026-08-02-2`; the stale «F-132's nine» queue line diagnosed —
-   партия 1a / `eccb1499` had drained it 2026-08-01 — and the rule
-   recorded: **the owner's queue is derived from the registry, never from a
-   harvest snapshot**). **On the owner now: B-027's sweep rule («да,
-   свипуй»), then the registry's sync-queue remainder, presented per the
-   refined format.** @spec/done
+   executed WHOLE, four exchanges** (F-185 / F-218 / F-132 / F-217 / F-154 /
+   F-355 / F-181 deferred onto recorded-or-built work, F-167 applied D31,
+   F-285 resolved D29, the triple byte-compare built as step 0c, the TS
+   twins repaired verdict-first D30 — the ledger's `#rulings-2026-08-02-2`;
+   the stale «F-132's nine» queue line diagnosed and the rule recorded:
+   **the owner's queue is derived from the registry, never from a harvest
+   snapshot**; the fourth exchange set the standing **build-first default**
+   for discipline mechanisms). **On the owner now: B-027's sweep rule («да,
+   свипуй»), F-161's two re-presentations (первоисточник 74.8 и битая
+   ссылка), the F-215/F-281 families; boss lane next: the B-041 development
+   map, then the registry's sync-queue remainder.** @spec/done
 2. ##WAL-NEXT-ADR **B+A′ is fully executed** — the §3.13 carve-out landed as
    (ii): census 35→36, the four-field record at PROP-000 §7
    (`##split-host-decision…`) carrying the owner's updated split-host posture
