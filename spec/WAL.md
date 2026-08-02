@@ -1,13 +1,14 @@
 # WAL — Project Continuation State {#root}
 
-_Updated: 2026-08-02, ситтинг предъявлений (**PHASE D AT ITS EXIT RAMP —
-group B, the addressing family AND the presentation sitting are drained:
-F-185 / F-218 / F-132 deferred onto recorded builds (B-033 / B-034 / B-035
-filed, B-029 enriched, B-011 raised to Самый Высокий Приоритет, the schemas
-debt recorded); corpus 97.8 %, registry 102 obligations / 210 drifts, 24
-owner-ruled deferrals, 78 open, owed 54 — every one on the owner's sync
-route, boss-owed zero everywhere; the backlog stands at B-035; on the owner:
-F-217's triple half, F-285's «снять?», B-027's rule**)_
+_Updated: 2026-08-02, ситтинг предъявлений, три обмена (**PHASE D AT ITS
+EXIT RAMP — the presentation sitting is drained WHOLE: F-185 / F-218 /
+F-132 / F-217 deferred onto recorded-or-built work (B-033 / B-034 / B-035
+filed, B-029 enriched, B-011 at Самый Высокий Приоритет, the schemas debt
+recorded, the CLAUDE/AGENTS/GEMINI byte-compare BUILT as self-check step
+0c), F-285 resolved by D29; corpus 97.8 %, registry 101 obligations / 209
+drifts, 25 owner-ruled deferrals, 76 open, owed 53 — every one on the
+owner's sync route, boss-owed zero everywhere; the backlog stands at B-035;
+on the owner: B-027's sweep rule, then the sync-queue remainder**)_
 
 ##WAL-NUMBERS-COME-FROM-COMMANDS **Every number below is reproduced by two
 commands; run them rather than quoting this file** (why:
@@ -41,18 +42,20 @@ aliasing design (`BACKLOG.md` B-011) makes stripping safe. Verification:
 `address-repair.py --verify` 0 remaining. @impl/done
 
 ##WAL-STATE **State at the last regeneration** (2026-08-02, presentation
-sitting; the commands supersede): corpus **11 166 / 210 / 44 — 97.8 %** over
-260 files; registry **102 obligations / 210 drifts — 24 `deferred` by owner
-ruling, 78 open**; **owed 54 of 210, every one on `sync-from-code`, the
-owner's route** (the sitting moved statuses, not verdicts — deferral is
-bookkeeping, not repair); resolved to history across the sittings: F-207,
-F-263, F-351, F-180, F-166, F-162 (plus F-133's same-day loop). The
-boss-owed remainder is **zero** on every route; the `build-or-demote` tail
-and the presentation sitting are owner-ruled whole (the rulings ledger:
+sitting, third exchange; the commands supersede): corpus **11 167 / 209 /
+44 — 97.8 %** over 260 files; registry **101 obligations / 209 drifts — 25
+`deferred` by owner ruling, 76 open**; **owed 53 of 209, every one on
+`sync-from-code`, the owner's route**; resolved to history across the
+sittings: F-207, F-263, F-351, F-180, F-166, F-162, F-285 (127 total; plus
+F-133's same-day loop). The boss-owed remainder is **zero** on every route;
+the `build-or-demote` tail and the presentation sitting are owner-ruled
+whole (the rulings ledger:
 `campaigns/packages-2026-09/PHASE-D-HOST-OBLIGATIONS.md#rulings-2026-08-01`
 and `#rulings-2026-08-02-2`). `progress check` clean (wave-10 checkpoint),
-`self-check.sh` all green — **re-run full at this sitting's open, EXIT=0**
-(2026-08-02), cargo-audit 0.22.2 / cargo-outdated 0.19.0 installed. @impl/done
+`self-check.sh` all green — full run EXIT=0 at the sitting's open
+(2026-08-02), **step 0c added the same day (CLAUDE/AGENTS/GEMINI
+byte-compare) — панель перегоняется на чекпойнте ситтинга**, cargo-audit
+0.22.2 / cargo-outdated 0.19.0 installed. @impl/done
 
 ##WAL-RULINGS-IN-FORCE **Owner rulings taken 2026-07-31/08-01 and in force:**
 sync-queue group A = answer (2) — «specified, not built» annotate-in-place is
@@ -82,7 +85,14 @@ B-035 паритет-аудит с принципом «не слабее Rust �
 Приоритета с направлениями qualified-rewrite / ADL / `@!X` / динамические
 STATIC.md. **Формат предъявлений уточнён и обязателен вперёд:** сначала
 суть по-человечески, затем точные технические имена (настройки, файлы,
-поведение) — точность не теряется; спец-жаргон только приложением. @impl/done
+поведение) — точность не теряется; спец-жаргон только приложением.
+**Третий обмен того же ситтинга:** тройка CLAUDE/AGENTS/GEMINI получает
+алгоритмическую сверку («добавь проверку… алгоритмическую, а не через
+LLM») — построена шагом 0c в `tools/self-check.sh` (пофайловый
+байт-компаратор, полный файл сознательно); F-217 → `deferred` (обе
+половины построены или запланированы); F-285 снят по слову «сними пока.
+Угроза реальная, но пока это не приоритет» — D29 re-judge confirmed,
+реальная половина угрозы и есть предмет B-011. @impl/done
 
 ## Constraints — do not violate {#constraints}
 
@@ -234,15 +244,15 @@ B-014 filed, F-133's verdict-first loop) are history in the §7 LOG. @impl/done
    B-018 canonical query («which test verifies this rule»), and the
    dead-alias fix (five code tags now cite ##CMD-* facts; PROP-043's four
    trap-tokens removed). **The 2026-08-02 presentation sitting is ruled and
-   executed** (F-185 / F-218 / F-132 deferred onto recorded builds — the
-   ledger's `#rulings-2026-08-02-2`; the stale «F-132's nine» queue line
-   diagnosed — партия 1a / `eccb1499` had drained it 2026-08-01 — and the
-   rule recorded: **the owner's queue is derived from the registry, never
-   from a harvest snapshot**). **On the owner now: F-217's second anchor
-   (the hand-copied CLAUDE/AGENTS/GEMINI triple — reconciler check vs
-   recorded exception), F-285's «снять обвинение», and B-027's sweep rule;
-   then the registry's sync-queue remainder, presented per the refined
-   format.** @spec/done
+   executed WHOLE, three exchanges** (F-185 / F-218 / F-132 / F-217
+   deferred onto recorded-or-built work, F-285 resolved by D29, the triple
+   byte-compare built as self-check step 0c — the ledger's
+   `#rulings-2026-08-02-2`; the stale «F-132's nine» queue line diagnosed —
+   партия 1a / `eccb1499` had drained it 2026-08-01 — and the rule
+   recorded: **the owner's queue is derived from the registry, never from a
+   harvest snapshot**). **On the owner now: B-027's sweep rule («да,
+   свипуй»), then the registry's sync-queue remainder, presented per the
+   refined format.** @spec/done
 2. ##WAL-NEXT-ADR **B+A′ is fully executed** — the §3.13 carve-out landed as
    (ii): census 35→36, the four-field record at PROP-000 §7
    (`##split-host-decision…`) carrying the owner's updated split-host posture
