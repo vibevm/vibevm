@@ -154,7 +154,12 @@ units). Panel green including the NEW step 6b (`cargo xtask check-codegen`
   `unsorted/`), packet-mandated `PROGRESS:`/`TASK-DONE` heartbeats, the
   boss polls ~every 30 s (log growth is the primary liveness signal —
   heartbeats are best-effort, measured), `meta.md` finalisation at
-  completion; acceptance by artifacts, never by the final string.
+  completion; acceptance by artifacts, never by the final string. **Every
+  packet mandates the closing `WORKER-REPORT-<task-id>.md`** (inlined
+  template: files list, acceptance with `file:line` evidence, verbatim
+  self-verify, mandatory deviations) — the boss's review map, moved to the
+  archive stamped at finalisation; no cross-worker conflicts (separate
+  worktrees + task-id in the name).
   Mechanics: `campaigns/packages-2026-09/SUBAGENT-LAUNCHERS.md`. @impl/done
 - ##WAL-C-MISC **Small standing facts:** parse payload at
   `~/.vibe/progress-cache/…` carries no verdicts; `vibe.lock` +
