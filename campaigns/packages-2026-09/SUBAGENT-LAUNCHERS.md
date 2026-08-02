@@ -75,8 +75,10 @@ prior thread errors — expected, same as plain `claude`.
 ##e-task-cut **1 · Cut the task (boss).** One E-task = one build/fix with an
 explicit file perimeter, acceptance, and a self-verify command (`cargo
 check -p …` class, never the full floor — cold worktree economics). The
-packet inlines everything derivable (paths, names, exact edits where known)
-and cites durable files only.
+packet inlines everything derivable (paths, names, exact edits where known),
+cites durable files only, and ALWAYS carries the heartbeat clause
+(`#obs-heartbeats`) and the report template (`#worker-report`) with the
+task-id substituted.
 
 ##e-parallel-routing **2 · Route the parallelism (boss, owner's rule
 2026-08-03).** Intersect the candidate tasks' file perimeters BEFORE
@@ -172,11 +174,12 @@ growing log is NOT a stall; a silent log is.
 
 ##obs-heartbeats **The heartbeat clause every packet carries (emphatic —
 weak writers skip soft asks):** «Перед КАЖДЫМ шагом, без исключений,
-выполни shell-командой: `echo "PROGRESS: <номер и суть шага>"`. Последним
-действием выполни: `echo "TASK-DONE"`. Это команды, не текст ответа.»
-`Bash(echo:*)` therefore always sits in `--allowedTools`. Heartbeats land
-inside tool-result events in the JSONL and are grepped out by the status
-one-liner below.
+выполни shell-командой: `echo "PROGRESS: <номер и суть шага>"`.
+Предпоследним действием напиши файл `WORKER-REPORT-<task-id>.md` (шаблон —
+`#worker-report`), последним — выполни: `echo "TASK-DONE"`. Это команды,
+не текст ответа.» `Bash(echo:*)` therefore always sits in
+`--allowedTools`. Heartbeats land inside tool-result events in the JSONL
+and are grepped out by the status one-liner below.
 
 ##obs-status-oneliner **The boss's status poll (~every 30 s per live
 worker, and always before assuming anything):**
@@ -215,16 +218,76 @@ worker's log is.
 `meta.md` beside the log — task id + one-line goal, worktree/branch,
 launcher and lane, start/end (the first/last event timestamps are already
 in the JSONL), exit status, the review verdict (applied / corrected via
-`-c` / re-commissioned / discarded), and the resulting commit hashes. The
-JSONL holds every event; `meta.md` holds the judgement — together they are
-the traceability the directive asks for.
+`-c` / re-commissioned / discarded), and the resulting commit hashes —
+and move the worker's `WORKER-REPORT-<task-id>.md` out of the worktree
+into the same directory under a stamped name
+(`<YYYY-MM-DD-HH-MM>-<launcher>-report.md`). The JSONL holds every event;
+the report holds the worker's account; `meta.md` holds the judgement —
+together they are the traceability the directive asks for.
 
 ##obs-verify-by-artifacts **Acceptance is by artifacts, never by the final
 string** — measured the same day: asked to reply exactly `FINISHED`, the
 GLM worker replied «ЗАВЕРШЕНО»; its files were nonetheless correct. The
 boss verifies the diff/files/gates; the result text is colour, not signal.
 
-## 6. Secrets and safety {#safety}
+## 6. The worker report — the acceptance-cost minimiser {#worker-report}
+
+##report-directive **The owner's directive (2026-08-03, fourth message,
+near-verbatim):** минифицировать усилия босса на приёмку — при составлении
+задачи вписывать, чтобы субагент в конце исполнения написал подробный отчёт
+о сделанном в виде, удобном босс-модели для ревью.
+
+##report-contract **The contract: every packet ends with a report file.**
+The worker's last two actions, in order: write
+**`WORKER-REPORT-<task-id>.md`** at the worktree root per the template
+below, then `echo "TASK-DONE"`. The template is INLINED into every packet
+with the task-id substituted (weak writers follow inlined templates —
+measured; they skim citations).
+
+```markdown
+# WORKER-REPORT
+## Task
+<task-id> - one line on what was asked
+## Changed files (each with why)
+- <path> - <what changed, why>   (EVERY file created or modified, this report included)
+## Acceptance, point by point
+- <criterion from the packet> -> DONE | NOT DONE - evidence: <file:line or command output>
+## Self-verify
+- <command> -> <exit code + the decisive output lines, verbatim>
+## Deviations and resolved ambiguities
+- <anything done differently, any ambiguity resolved silently; otherwise: none>
+## Not done / leftovers
+- <or: none>
+```
+
+##report-why-cheap **Why this makes acceptance cheap — the boss's flow over
+it:** *(i)* cross-check «Changed files» against `git -C <worktree> status`
+— a mechanical set-compare: a file in the diff but not in the report, or
+claimed but absent, is an instant red flag; *(ii)* read the diff WITH the
+report as the map — attention goes to the claimed acceptance evidence and
+the Deviations section first (silent ambiguity resolution is the
+weak-writer failure the section exists to surface — mandatory even when
+«none»); *(iii)* re-run the self-verify command; *(iv)* verdict. **The
+report routes the review; it never replaces it** — the diff stays the
+ground truth and review stays the boss's (the never-delegate law).
+
+##report-no-conflict **No cross-worker conflicts, by construction and by
+name** (owner's question, 2026-08-03): parallel workers live in SEPARATE
+worktrees — two reports never share a directory; the per-task-id filename
+makes the file self-identifying even outside that discipline; and at
+finalisation the boss moves it to `sorted/<task-id>/` under a stamped name
+(`<YYYY-MM-DD-HH-MM>-<launcher>-report.md`), so repeat runs of one task
+never clobber each other. The report file NEVER merges into the host tree
+— it is a worktree artifact bound for the archive.
+
+##report-probe **Measured 2026-08-03 (probe-report-01, claudez2 lane, log
+`unsorted/2026-08-03-report-probe-claudez2.jsonl`):** a GLM worker filled
+the template exactly — exhaustive file list including the report itself,
+per-point acceptance with `file:line` evidence, verbatim self-verify output
+with exit code, explicit «none» in Deviations — and the acceptance
+cross-check against the tree took seconds.
+
+## 7. Secrets and safety {#safety}
 
 ##safety-tokens The bearer tokens live in `~/.vibe/zai.api.token{,.2}` —
 the launchers read them themselves; the boss never prints them, never
@@ -235,7 +298,7 @@ reference worktree-relative paths only.
 gates are green — in both modes, always. A `failed`/non-zero worker exit
 does not mean discard: read the worktree first (the fractality lesson).
 
-## 7. Standing facts {#facts}
+## 8. Standing facts {#facts}
 
 ##fact-verified-date Launchers reworked + full matrix verified 2026-08-03;
 if a launcher regresses, re-run the ALPHA/BRAVO matrix from `#launchers-verified`

@@ -4728,6 +4728,30 @@ aspirational — and every one is still live for the phases that remain.
   constraint carries the contract; `cache/agents/` got its pointer
   README. The boss owns knowing every worker's log path.
 
+- **2026-08-03 · четвёртый обмен — отчёт воркера как карта приёмки.**
+  The owner's directive: минифицировать усилия босса на приёмку —
+  every packet must make the worker end with a detailed report of what
+  it did, in a form convenient for the boss-model's review. Landed as
+  the instruction's §6 `#worker-report`: the worker's last two actions
+  are writing **`WORKER-REPORT-<task-id>.md`** at the worktree root
+  (a fixed inlined template: exhaustive changed-files list, acceptance
+  point-by-point with `file:line` evidence, verbatim self-verify
+  output, a MANDATORY deviations section even when «none», leftovers)
+  and `echo "TASK-DONE"`. The boss's flow over it: mechanical
+  report-vs-`git status` set-compare → diff read routed by the report
+  (deviations first) → re-run self-verify → verdict; the report
+  routes the review and never replaces it. The owner's mid-turn
+  question — не конфликтуют ли отчёты при нескольких воркерах —
+  answered by construction and hardened by name: parallel workers
+  live in separate worktrees, the filename carries the task-id, and
+  finalisation moves the report to `sorted/<task-id>/` under a
+  stamped name, so repeat runs never clobber. **Measured the same
+  hour (probe-report-01, claudez2 lane):** a GLM worker filled the
+  template exactly — file list including the report itself,
+  per-point acceptance with coordinates, verbatim grep output with
+  exit code, explicit «none» — the cross-check against the tree took
+  seconds. Log: `unsorted/2026-08-03-report-probe-claudez2.jsonl`.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
