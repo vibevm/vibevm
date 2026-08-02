@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-02T21:12:00Z",
+  "updated_at": "2026-08-02T21:14:46Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -13585,6 +13585,29 @@
         "verified_at": "2026-07-28T11:29:33Z",
         "verify_batch": "C6 + D8a"
       }
+    },
+    "packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md": {
+      "content_hash": "128cc60167cb77b1385936b50fb62a39ae76a88ae9b34c88c89d12c748ce9e22",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "impl",
+          "done"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 12,
+        "fact_count": 11,
+        "unmarked_facts": 0
+      },
+      "marker_count": 12,
+      "unit_count": 8,
+      "issue_count": 0
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/README.md": {
       "content_hash": "8d283f8e016f1d93ba480a3c5864041872258a61904ac43bd7a64fc8d32c6566",
