@@ -380,3 +380,33 @@ as **D35**: the fact now names the real warning carrier (the brief's
 unsupported 60 s (matched by nothing but a test's spawn budget) is gone,
 and the family carries one ceiling story on both sides of the Go/Rust
 pair. **F-215 resolved to history (129 total).**
+
+**Seventh exchange — two of the three portion questions ruled (1) and
+executed; the third became an investigation.** *(Q2, F-178 — «(1) записать
+B-045 + применить однострочный фикс»):* **B-045** filed (kind-validation
+build with the reserved `TYPE_MISMATCH=4` exit, short-name acceptance for
+`uninstall`/`update` over the lockfile-first resolver, the four mis-cited
+§2.4 call sites), the `ref-grammar.md:108` self-description now reads
+«stated here as the anchor every restatement echoes» (D36 confirmed), the
+resolver anchor routed onto B-045 — **F-178 `deferred`, owed 0.**
+*(Q3, F-199 — answer (1)):* the host records the **boot-surface marked
+exception** at `spec/common/PROP-000.md` `##ATTRIBUTION-BOOT-SURFACE-EXCEPTION`
+— 00-core's Rule 1, the CLAUDE/AGENTS/GEMINI triple (0c-gated) and
+`.claude/agents/` carry the four-rules digest by design («правила обязаны
+доезжать до каждого агента на старте»); §12 stays the authoritative
+record, `##INV-HUMAN-AUTHORSHIP` names its source in-sentence, everything
+else cites, strays are defects. All three F-199 anchors re-judged
+confirmed-with-exception (D36 ×2 + D37 for the conditional README bullet)
+— **F-199 resolved whole (130 total)**; F-230's collapse-debt narrows to
+its dead-«§12.1»-pointer half (the pointer verified dead at HEAD: PROP-000
+carries no §12.1) plus any non-boot strays. *(Q1, F-210):* **not executed
+— the owner challenged the ground** («Что такое OracleRegistry? Почему его
+удалили? Возможно, нам нужно его вернуть?» + the standing reminder that
+no-usage evidence is void for TS/Go). Investigated instead: the deletion
+was the owner's own **MCP-SOVEREIGNTY campaign** (2026-07-07, mandate of
+four resolutions + the kind amendment; `36461ba8` deleted `vibe-tcg`
+whole — ~1082 lines that existed only because the server lived outside
+the package slot; the tool grammar stayed normative, the per-family MCP
+servers carry the same tools). The F-210 texts rest on that recorded
+resolution and the package's own tests, not on usage-absence; they wait
+for the owner's word after he reads the history.

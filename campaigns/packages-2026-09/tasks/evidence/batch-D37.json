@@ -1,0 +1,18 @@
+{
+ "batch": "D37",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md": {
+   "CONTENT-THE-BOOT-SNIPPET": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "owner ruling 2026-08-02 (F-199 answer (1)), same family, same exception: the bullet's last sentence is explicitly conditional — «Under the single-place law, this snippet is the one place in a consuming project where the topic lives» — and the host now carries the marked boot-surface exception (spec/common/PROP-000.md ##ATTRIBUTION-BOOT-SURFACE-EXCEPTION) that bounds its deliberate deviation from that law; the first half re-verified true (the snippet ships, link = static in vibe.toml:16-18, lands in the always-loaded lane). A marked exception is not drift; the wave-2 routing record stays as history of the determination"
+    ]
+   }
+  }
+ }
+}

@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-02T19:23:04Z",
+  "updated_at": "2026-08-02T19:37:24Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -42872,19 +42872,13 @@
             ]
           },
           "CONTENT-THE-BOOT-SNIPPET": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:43  - ##CONTENT-THE-BOOT-SNIPPET `spec/boot/55-flow-attribution-policy.md` — boot snippet loaded at",
-              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/vibe.toml:16  source = \"spec/boot/55-flow-attribution-policy.md\"",
-              "spec/boot/STATIC.md:421  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
-              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
-              "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), … is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here.",
-              "the snippet exists, is declared `link = \"static\"`, and is compiled into the always-loaded lane — that half holds. **The «one place in a consuming project» half does not.** **the single-place law is broken by the consumer, measured.** The snippet is compiled into the host's always-loaded lane TWICE — spec/boot/STATIC.md:421 directly and :615 through the git-practices umbrella entry at :551 — and the policy is restated in at least eight further host locations: spec/boot/00-core.md:21, spec/common/PROP-000.md:161 and :323, CLAUDE.md:5, AGENTS.md:5, GEMINI.md:5, .claude/agents/opus5.md:15 and README.md:158. A repo-wide grep for the topic returns **88 lines across 50 files** outside vibedeps/, .vibe/, refs/ and the package itself."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "owner ruling 2026-08-02 (F-199 answer (1)), same family, same exception: the bullet's last sentence is explicitly conditional — «Under the single-place law, this snippet is the one place in a consuming project where the topic lives» — and the host now carries the marked boot-surface exception (spec/common/PROP-000.md ##ATTRIBUTION-BOOT-SURFACE-EXCEPTION) that bounds its deliberate deviation from that law; the first half re-verified true (the snippet ships, link = static in vibe.toml:16-18, lands in the always-loaded lane). A marked exception is not drift; the wave-2 routing record stays as history of the determination"
             ]
           },
           "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE": {
@@ -42999,7 +42993,7 @@
           }
         },
         "verified_at": "2026-07-29T19:59:26Z",
-        "verify_batch": "W1c + D6 + D8c"
+        "verify_batch": "W1c + D6 + D8c + D37"
       }
     },
     "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md": {
@@ -43144,22 +43138,13 @@
             ]
           },
           "SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED": {
-            "v": "drift",
-            "ev": [
-              "spec/boot/STATIC.md:457  - This snippet and `spec/flows/attribution-policy/` are the **only**",
-              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
-              "spec/common/PROP-000.md:161  - ##GP-ATTRIBUTION human-authored **attribution** — `spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root`; @spec/done",
-              "spec/common/PROP-000.md:323  6. ##INV-HUMAN-AUTHORSHIP **Human authorship is the only attribution.** The posture is the `attribution-policy` flow (a git-practices member, §12); everywhere else assume human authorship only. @spec/done",
-              "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), … is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here.",
-              ".claude/agents/opus5.md:15  reviews and commits. Never mark any artifact as machine-authored.",
-              "README.md:158  Read [`CLAUDE.md`](CLAUDE.md) before your first commit — the four non-negotiable rules (attribution, Conventional Commits, group by meaning, autonomy on routine changes only) apply to every contribution.",
-              "spec/boot/STATIC.md:615  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
-              "**the claim is that this snippet and the flow's documents are the ONLY places the topic is discussed, and eight further host locations discuss it.** **the single-place law is broken by the consumer, measured.** The snippet is compiled into the host's always-loaded lane TWICE — spec/boot/STATIC.md:421 directly and :615 through the git-practices umbrella entry at :551 — and the policy is restated in at least eight further host locations: spec/boot/00-core.md:21, spec/common/PROP-000.md:161 and :323, CLAUDE.md:5, AGENTS.md:5, GEMINI.md:5, .claude/agents/opus5.md:15 and README.md:158. A repo-wide grep for the topic returns **88 lines across 50 files** outside vibedeps/, .vibe/, refs/ and the package itself."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "owner ruling 2026-08-02 (F-199 answer (1)) — confirmed with the exception named: the host records a deliberate boot-surface exception at spec/common/PROP-000.md ##ATTRIBUTION-BOOT-SURFACE-EXCEPTION — 00-core Rule 1, the byte-identical CLAUDE/AGENTS/GEMINI triple (gated by self-check step 0c) and .claude/agents/ instruction files carry the four-rules digest by design («правила обязаны доезжать до каждого агента на старте»), §12 is the authoritative record, INV-HUMAN-AUTHORSHIP names its source in-sentence; everything else cites, and a new restatement outside a boot surface is declared a defect. Per Phase C's own law a marked exception is not drift; the second consumer (fractality) nearly keeps the literal law (two mentions, none in its own boot contract), so the rule stands unsoftened"
             ]
           },
           "SCOPE-PRODUCT-IS-CARVED-OUT": {
@@ -43263,7 +43248,7 @@
           }
         },
         "verified_at": "2026-07-31T20:38:28Z",
-        "verify_batch": "W1c + D7 + D11-address"
+        "verify_batch": "W1c + D7 + D11-address + D36"
       }
     },
     "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md": {
@@ -43518,18 +43503,13 @@
             ]
           },
           "HONEST-THE-POLICY-IS-RECORDED-OPENLY": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:79  2. ##HONEST-THE-POLICY-IS-RECORDED-OPENLY **The policy itself is recorded openly.** The repository states,",
-              "spec/boot/STATIC.md:457  - This snippet and `spec/flows/attribution-policy/` are the **only**",
-              "README.md:158  Read [`CLAUDE.md`](CLAUDE.md) before your first commit — the four non-negotiable rules (attribution, Conventional Commits, group by meaning, autonomy on routine changes only) apply to every contribution.",
-              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
-              "«recorded openly» holds without qualification. **«In exactly one place» does not.** **the single-place law is broken by the consumer, measured.** The snippet is compiled into the host's always-loaded lane TWICE — spec/boot/STATIC.md:421 directly and :615 through the git-practices umbrella entry at :551 — and the policy is restated in at least eight further host locations: spec/boot/00-core.md:21, spec/common/PROP-000.md:161 and :323, CLAUDE.md:5, AGENTS.md:5, GEMINI.md:5, .claude/agents/opus5.md:15 and README.md:158. A repo-wide grep for the topic returns **88 lines across 50 files** outside vibedeps/, .vibe/, refs/ and the package itself."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "owner ruling 2026-08-02 (F-199 answer (1)) — confirmed with the same exception: «recorded openly» holds without qualification, and the «exactly one place» half is now covered by the host's marked boot-surface exception (PROP-000 ##ATTRIBUTION-BOOT-SURFACE-EXCEPTION) which bounds the legal restatement set and declares strays defects; the honest host surface re-measured at 98 lines / 41 files on a named basis (campaign records and install slots excluded), with B-006's two compiled copies separated as a boot-compiler defect, not discipline"
             ]
           },
           "before-adopting-verify-lead": {
@@ -43779,7 +43759,7 @@
           }
         },
         "verified_at": "2026-08-01T12:54:05Z",
-        "verify_batch": "W1c + D19"
+        "verify_batch": "W1c + D19 + D36"
       }
     },
     "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/disclosure-alternative.md": {
@@ -62452,7 +62432,7 @@
       }
     },
     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md": {
-      "content_hash": "3a4869c348da5f28f84e56a040c9709e444ad695fd5f79d40f12b3c87104c267",
+      "content_hash": "b8e5eaaf77723ddbd250a67e4ec851cead902e35d136e5d9095d881398ae2c3a",
       "rollup": {
         "explicit": [
           "spec",
@@ -62474,7 +62454,7 @@
       "unit_count": 7,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "3a4869c348da5f28f84e56a040c9709e444ad695fd5f79d40f12b3c87104c267",
+        "processed_hash": "b8e5eaaf77723ddbd250a67e4ec851cead902e35d136e5d9095d881398ae2c3a",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -62812,16 +62792,13 @@
             ]
           },
           "the-single-storage-rule-stated-once": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:110  > ##PERSISTED-STATE-IS-QUALIFIED-ONLY **Persisted state is qualified-only.** Every reference written to a",
-              "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:131  - ##SHORT-NAMES-ARE-NEVER-STORED **Never stored.** The moment a short name is resolved, the tool",
-              "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:41  - ##NEVER-STORE-A-SHORT-NAME-IN-PERSISTED-STATE Never store a short (unqualified) name in a manifest, lockfile,",
-              "DRIFT on «stated once», counted within the package itself. The blockquote here is a single normative statement and the intent is sound, but the same rule is also stated at `QUALIFIED-NAMING-PROTOCOL.md` `##SHORT-NAMES-ARE-NEVER-STORED`, at the boot snippet's `##NEVER-STORE-A-SHORT-NAME-IN-PERSISTED-STATE`, in the README's law bullet, and twice more in the two summaries — six statements of one rule across the package. RECORDED, because the restatements are not a defect in themselves: a flow that ships a README, a snippet and three documents will restate its laws by design, and what this anchor claims is the one thing that arrangement makes false."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               2
+            ],
+            "ev": [
+              "owner ruling 2026-08-02 (F-178 answer (1)): the lead now reads «stated here as the anchor every restatement echoes» — the one-authoritative-home intent survives, the self-count that its own package contradicted (eight statements across five documents at HEAD, all agreeing in substance) is gone; the restatement census and the naming-your-anchor observation stay recorded in harvest d7b for the F-218-adjacent principle question"
             ]
           },
           "PERSISTED-STATE-IS-QUALIFIED-ONLY": {
@@ -63136,8 +63113,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T23:21:05Z",
-        "verify_batch": "W7"
+        "verified_at": "2026-08-02T19:37:24Z",
+        "verify_batch": "W7 + D36"
       }
     },
     "packages/org.vibevm.world/redbook/v0.2.0/README.md": {
@@ -85986,7 +85963,7 @@
       }
     },
     "spec/common/PROP-000.md": {
-      "content_hash": "484d066f3cbe607730f5620a557f6e0846926ef1b12867b11bca961e66433c91",
+      "content_hash": "c045a7c8529db4646e4633120d5383766e5b652585d6be812596ebdb9703e2e7",
       "rollup": {
         "explicit": [
           "spec",
@@ -86000,11 +85977,11 @@
           "spec",
           "done"
         ],
-        "marker_count": 177,
-        "fact_count": 176,
+        "marker_count": 178,
+        "fact_count": 177,
         "unmarked_facts": 0
       },
-      "marker_count": 177,
+      "marker_count": 178,
       "unit_count": 22,
       "issue_count": 0,
       "campaign": {

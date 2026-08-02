@@ -1857,6 +1857,14 @@
    "obligation": "D32",
    "why": "owner ruling 2026-08-02 on the F-281 family: «тест на зомби лучше написать» — the no-zombie claim becomes true by building the process-table assertion for all three oracles, not by softening six copies of the promise. The recorded build is BACKLOG.md B-044 (pattern proven in-tree by fractality-pod/tests/loopback.rs:288-299); the texts stay as targets and re-judge when the tests land, riding the campaign's test phase per the map's frame.",
    "recorded": "2026-08-02"
+  },
+  {
+   "anchor": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md#THE-RESOLVER-CHECKS-THE-TYPE-AND-ERRORS-ON-A-MISMATCH",
+   "route": "host",
+   "wave": 12,
+   "obligation": "F-178",
+   "why": "owner ruling 2026-08-02 (F-178 answer (1)): the rule is sound and the host builds up to it — the kind-validation build (KindMismatch after resolution, the reserved TYPE_MISMATCH=4 exit, short-name acceptance for uninstall/update via the lockfile-first resolver, and the four mis-cited §2.4 call sites) is BACKLOG.md B-045, riding Phase E per the map's frame. The package text stays as the target.",
+   "recorded": "2026-08-02"
   }
  ]
 }

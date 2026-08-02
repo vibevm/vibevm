@@ -1,0 +1,42 @@
+{
+ "batch": "D36",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md": {
+   "the-single-storage-rule-stated-once": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "owner ruling 2026-08-02 (F-178 answer (1)): the lead now reads «stated here as the anchor every restatement echoes» — the one-authoritative-home intent survives, the self-count that its own package contradicted (eight statements across five documents at HEAD, all agreeing in substance) is gone; the restatement census and the naming-your-anchor observation stay recorded in harvest d7b for the F-218-adjacent principle question"
+    ]
+   }
+  },
+  "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md": {
+   "SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "owner ruling 2026-08-02 (F-199 answer (1)) — confirmed with the exception named: the host records a deliberate boot-surface exception at spec/common/PROP-000.md ##ATTRIBUTION-BOOT-SURFACE-EXCEPTION — 00-core Rule 1, the byte-identical CLAUDE/AGENTS/GEMINI triple (gated by self-check step 0c) and .claude/agents/ instruction files carry the four-rules digest by design («правила обязаны доезжать до каждого агента на старте»), §12 is the authoritative record, INV-HUMAN-AUTHORSHIP names its source in-sentence; everything else cites, and a new restatement outside a boot surface is declared a defect. Per Phase C's own law a marked exception is not drift; the second consumer (fractality) nearly keeps the literal law (two mentions, none in its own boot contract), so the rule stands unsoftened"
+    ]
+   }
+  },
+  "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md": {
+   "HONEST-THE-POLICY-IS-RECORDED-OPENLY": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "owner ruling 2026-08-02 (F-199 answer (1)) — confirmed with the same exception: «recorded openly» holds without qualification, and the «exactly one place» half is now covered by the host's marked boot-surface exception (PROP-000 ##ATTRIBUTION-BOOT-SURFACE-EXCEPTION) which bounds the legal restatement set and declares strays defects; the honest host surface re-measured at 98 lines / 41 files on a named basis (campaign records and install slots excluded), with B-006's two compiled copies separated as a boot-compiler defect, not discipline"
+    ]
+   }
+  }
+ }
+}

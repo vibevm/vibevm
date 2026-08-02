@@ -4503,6 +4503,33 @@ aspirational — and every one is still live for the phases that remain.
   < 15 s posted vs 60 s asserted; the 60→45 repair in the Go twin's
   already-taken form), then the registry's sync-queue remainder.
 
+- **2026-08-02 · седьмой обмен — потолок «да» (D35), порция
+  F-210/F-178/F-199, и OracleRegistry уходит в раскопки вместо правки.**
+  The ceiling executed (D35, **F-215 resolved**, 129). The next portion
+  went out per the refined format and came back: **F-178 = (1)** —
+  **B-045** filed (kind-validation + short names for `uninstall`/`update`
+  over the lockfile-first resolver + four mis-cited §2.4 call sites), the
+  «stated once» self-description fixed (D36), resolver anchor routed,
+  **row deferred, owed 0**; **F-199 = (1)** — the **boot-surface marked
+  exception** recorded at PROP-000 `##ATTRIBUTION-BOOT-SURFACE-EXCEPTION`
+  (boot surfaces carry the four-rules digest by design; §12 the record;
+  the invariant echo names its source; strays are defects), all three
+  anchors confirmed-with-exception (D36 ×2, D37), **row resolved whole
+  (130 total)**, F-230's debt narrowed to the dead-«§12.1»-pointer half
+  (verified dead at HEAD). **F-210 — not applied:** the owner challenged
+  the ground and asked what `OracleRegistry` was, why it was deleted,
+  whether to bring it back — investigated: the deletion is his own
+  **MCP-SOVEREIGNTY** resolution (2026-07-07, four-resolution mandate +
+  the `mcp`-kind amendment; commit `36461ba8` deleted `vibe-tcg` whole,
+  ~1082 lines that existed only because the server lived outside the
+  package slot; the tool grammar stayed normative and the per-family
+  servers ship the same tools). The prepared texts rest on that recorded
+  resolution + the package's own tests — never on usage-absence — and
+  wait for his word. **State** (commands supersede): corpus **11 174 /
+  202 / 44 — 97.8 %** (`ai-native` crossed to 98.0 %); registry **99 /
+  202 — 32 deferred, 67 open; owed 29; resolved 130**. The backlog
+  stands at **B-045**.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:

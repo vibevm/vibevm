@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 206,
+ "drift_verdicts": 202,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -1019,72 +1019,6 @@
     "file+type"
    ],
    "packages": [
-    "packages/org.vibevm.world/qualified-naming"
-   ],
-   "files": [
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md#ROW-FORM-KIND-AND-NAME",
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md#RULE-THE-CLI-ACCEPTS-ALL-FORMS",
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md#THE-RESOLVER-CHECKS-THE-TYPE-AND-ERRORS-ON-A-MISMATCH",
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md#the-single-storage-rule-stated-once"
-   ],
-   "drift_count": 4,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "crates",
-    "packages/org.vibevm.world/qualified-naming",
-    "spec"
-   ],
-   "evidence_refs": [
-    "crates/vibe-cli/src/commands/short_name.rs:125  pub fn qualify(",
-    "crates/vibe-cli/src/commands/short_name.rs:135              kind: pkgref.kind,",
-    "crates/vibe-cli/src/commands/uninstall.rs:153  fn require_group(pkgref: &PackageRef) -> Result<&Group> {",
-    "crates/vibe-core/src/package_ref.rs:428      /// one; it is validated against the resolved manifest (a `KindMismatch`)",
-    "crates/vibe-core/src/package_ref/tests.rs:118  fn parse_short_with_kind() {",
-    "crates/vibe-core/src/package_ref/tests.rs:256  fn display_round_trips_every_form() {",
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:41  - ##NEVER-STORE-A-SHORT-NAME-IN-PERSISTED-STATE Never store a short (unqualified) name in a manifest, lockfile,",
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:131  - ##SHORT-NAMES-ARE-NEVER-STORED **Never stored.** The moment a short name is resolved, the tool",
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:110  > ##PERSISTED-STATE-IS-QUALIFIED-ONLY **Persisted state is qualified-only.** Every reference written to a",
-    "spec/design/workspace-and-qualified-naming.md:81  - ##fork-kind-prefix-optional **`kind` prefix in pkgref — keep or drop?** Chosen: **optional but allowed,",
-    "spec/modules/vibe-registry/PROP-008-qualified-naming.md:95  | ##ROW-SHORT-KIND `flow:wal` @impl/done | short + kind @impl/done | resolved via the index; kind validated",
-    "spec/modules/vibe-registry/PROP-008-qualified-naming.md:97  - ##KIND-VALIDATION **kind validation.** If the `kind` prefix is present, after resolution the resolver asserts"
-   ],
-   "cites": [],
-   "reason": "DRIFT on the row's validation column. The form parses and is carried through resolution — `parse_short_with_kind` pins `kind Some(Flow)` for `flow:wal`, and `qualify()` COPIES the kind onto the qualified ref rather than dropping it, so the tag survives all the way to a resolved reference. What never happens is the check the row promises: nothing compares that kind against the resolved manifest's kind, and `KindMismatch` appears in no `.rs` file. The tag is carried faithfully to a destination that ignores it.",
-   "reasons": [
-    "DRIFT on «the CLI», which is not uniform in this host. The PARSER does accept all five forms and round-trips each — `display_round_trips_every_form` iterates `wal`, `flow:wal`, `org.vibevm/wal`, `flow:org.vibevm/wal`, `org.vibevm/wal@^0.3` and `flow:org.vibevm/wal@=0.3.0`, and carries `#[verifies(\"spec://vibevm/modules/vibe-registry/PROP-008#pkgref\", r = 1)]`. But `vibe uninstall` REJECTS the two unqualified forms outright via `require_group`. So the host is «boundary only» for install and «nowhere» for uninstall — a split neither this rule nor Fork 3 anticipates, and a user who may type `vibe install wal` may not type `vibe uninstall wal`.",
-    "DRIFT: stated three times in this repository and implemented zero times, with the search widened twice and the widening stated. `grep -rn 'KindMismatch' --include='*.rs' --include='*.md' .` (excluding `target/` and `.vibe/cache/`) returns 3 hits and NONE is code — a doc comment in `crates/vibe-core/src/package_ref.rs`, `PROP-008` `##KIND-VALIDATION`, and a design record. No code anywhere compares a pkgref's kind prefix against the resolved manifest's kind. And the reserved exit code is dead: `TYPE_MISMATCH: u8 = 4` carries `#[allow(dead_code)]` and is referenced exactly once, at its own declaration. So the kind tag is parsed, carried through resolution and never checked against anything. This is the root of three drifts in this file; the neighbouring «never disambiguates» half is settled in the types and confirmed separately.",
-    "DRIFT on «stated once», counted within the package itself. The blockquote here is a single normative statement and the intent is sound, but the same rule is also stated at `QUALIFIED-NAMING-PROTOCOL.md` `##SHORT-NAMES-ARE-NEVER-STORED`, at the boot snippet's `##NEVER-STORE-A-SHORT-NAME-IN-PERSISTED-STATE`, in the README's law bullet, and twice more in the two summaries — six statements of one rule across the package. RECORDED, because the restatements are not a defect in themselves: a flow that ships a README, a snippet and three documents will restate its laws by design, and what this anchor claims is the one thing that arrangement makes false."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:110  > ##PERSISTED-STATE-IS-QUALIFIED-ONLY **Persisted state is qualified-only.** Every reference written to a",
-   "falsifier": "mixed",
-   "routed_out": [
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md#ROW-FORM-KIND-AND-NAME",
-    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md#RULE-THE-CLI-ACCEPTS-ALL-FORMS"
-   ],
-   "owed": 2,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-178",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
     "packages/org.vibevm.world/source-mirrors"
    ],
    "files": [
@@ -1509,73 +1443,6 @@
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
-    "reason-text j=0.74"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/git-attribution-policy"
-   ],
-   "files": [
-    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md",
-    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md",
-    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md#CONTENT-THE-BOOT-SNIPPET",
-    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md#SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED",
-    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md#HONEST-THE-POLICY-IS-RECORDED-OPENLY"
-   ],
-   "drift_count": 3,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    ".claude",
-    "CLAUDE.md",
-    "README.md",
-    "packages/org.vibevm.world/git-attribution-policy",
-    "spec"
-   ],
-   "evidence_refs": [
-    ".claude/agents/opus5.md:15  reviews and commits. Never mark any artifact as machine-authored.",
-    "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), … is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here.",
-    "README.md:158  Read [`CLAUDE.md`](CLAUDE.md) before your first commit — the four non-negotiable rules (attribution, Conventional Commits, group by meaning, autonomy on routine changes only) apply to every contribution.",
-    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:43  - ##CONTENT-THE-BOOT-SNIPPET `spec/boot/55-flow-attribution-policy.md` — boot snippet loaded at",
-    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:79  2. ##HONEST-THE-POLICY-IS-RECORDED-OPENLY **The policy itself is recorded openly.** The repository states,",
-    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/vibe.toml:16  source = \"spec/boot/55-flow-attribution-policy.md\"",
-    "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
-    "spec/boot/STATIC.md:421  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
-    "spec/boot/STATIC.md:457  - This snippet and `spec/flows/attribution-policy/` are the **only**",
-    "spec/boot/STATIC.md:615  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
-    "spec/common/PROP-000.md:161  - ##GP-ATTRIBUTION human-authored **attribution** — `spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root`; @spec/done",
-    "spec/common/PROP-000.md:323  6. ##INV-HUMAN-AUTHORSHIP **Human authorship is the only attribution.** The posture is the `attribution-policy` flow (a git-practices member, §12); everywhere else assume human authorship only. @spec/done"
-   ],
-   "cites": [],
-   "reason": "the snippet exists, is declared `link = \"static\"`, and is compiled into the always-loaded lane — that half holds. **The «one place in a consuming project» half does not.** **the single-place law is broken by the consumer, measured.** The snippet is compiled into the host's always-loaded lane TWICE — spec/boot/STATIC.md:421 directly and :615 through the git-practices umbrella entry at :551 — and the policy is restated in at least eight further host locations: spec/boot/00-core.md:21, spec/common/PROP-000.md:161 and :323, CLAUDE.md:5, AGENTS.md:5, GEMINI.md:5, .claude/agents/opus5.md:15 and README.md:158. A repo-wide grep for the topic returns **88 lines across 50 files** outside vibedeps/, .vibe/, refs/ and the package itself.",
-   "reasons": [
-    "**the claim is that this snippet and the flow's documents are the ONLY places the topic is discussed, and eight further host locations discuss it.** **the single-place law is broken by the consumer, measured.** The snippet is compiled into the host's always-loaded lane TWICE — spec/boot/STATIC.md:421 directly and :615 through the git-practices umbrella entry at :551 — and the policy is restated in at least eight further host locations: spec/boot/00-core.md:21, spec/common/PROP-000.md:161 and :323, CLAUDE.md:5, AGENTS.md:5, GEMINI.md:5, .claude/agents/opus5.md:15 and README.md:158. A repo-wide grep for the topic returns **88 lines across 50 files** outside vibedeps/, .vibe/, refs/ and the package itself.",
-    "«recorded openly» holds without qualification. **«In exactly one place» does not.** **the single-place law is broken by the consumer, measured.** The snippet is compiled into the host's always-loaded lane TWICE — spec/boot/STATIC.md:421 directly and :615 through the git-practices umbrella entry at :551 — and the policy is restated in at least eight further host locations: spec/boot/00-core.md:21, spec/common/PROP-000.md:161 and :323, CLAUDE.md:5, AGENTS.md:5, GEMINI.md:5, .claude/agents/opus5.md:15 and README.md:158. A repo-wide grep for the topic returns **88 lines across 50 files** outside vibedeps/, .vibe/, refs/ and the package itself."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:43  - ##CONTENT-THE-BOOT-SNIPPET `spec/boot/55-flow-attribution-policy.md` — boot snippet loaded at",
-   "falsifier": "mixed",
-   "routed_out": [
-    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md#CONTENT-THE-BOOT-SNIPPET"
-   ],
-   "owed": 2,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-199",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
     "file+type"
    ],
    "packages": [
@@ -1630,6 +1497,67 @@
     "host"
    ],
    "id": "F-201",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/qualified-naming"
+   ],
+   "files": [
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md#ROW-FORM-KIND-AND-NAME",
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md#RULE-THE-CLI-ACCEPTS-ALL-FORMS",
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md#THE-RESOLVER-CHECKS-THE-TYPE-AND-ERRORS-ON-A-MISMATCH"
+   ],
+   "drift_count": 3,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": true,
+   "release_event": false,
+   "evidence_spans": [
+    "crates",
+    "spec"
+   ],
+   "evidence_refs": [
+    "crates/vibe-cli/src/commands/short_name.rs:125  pub fn qualify(",
+    "crates/vibe-cli/src/commands/short_name.rs:135              kind: pkgref.kind,",
+    "crates/vibe-cli/src/commands/uninstall.rs:153  fn require_group(pkgref: &PackageRef) -> Result<&Group> {",
+    "crates/vibe-core/src/package_ref.rs:428      /// one; it is validated against the resolved manifest (a `KindMismatch`)",
+    "crates/vibe-core/src/package_ref/tests.rs:118  fn parse_short_with_kind() {",
+    "crates/vibe-core/src/package_ref/tests.rs:256  fn display_round_trips_every_form() {",
+    "spec/design/workspace-and-qualified-naming.md:81  - ##fork-kind-prefix-optional **`kind` prefix in pkgref — keep or drop?** Chosen: **optional but allowed,",
+    "spec/modules/vibe-registry/PROP-008-qualified-naming.md:95  | ##ROW-SHORT-KIND `flow:wal` @impl/done | short + kind @impl/done | resolved via the index; kind validated",
+    "spec/modules/vibe-registry/PROP-008-qualified-naming.md:97  - ##KIND-VALIDATION **kind validation.** If the `kind` prefix is present, after resolution the resolver asserts"
+   ],
+   "cites": [],
+   "reason": "DRIFT on the row's validation column. The form parses and is carried through resolution — `parse_short_with_kind` pins `kind Some(Flow)` for `flow:wal`, and `qualify()` COPIES the kind onto the qualified ref rather than dropping it, so the tag survives all the way to a resolved reference. What never happens is the check the row promises: nothing compares that kind against the resolved manifest's kind, and `KindMismatch` appears in no `.rs` file. The tag is carried faithfully to a destination that ignores it.",
+   "reasons": [
+    "DRIFT on «the CLI», which is not uniform in this host. The PARSER does accept all five forms and round-trips each — `display_round_trips_every_form` iterates `wal`, `flow:wal`, `org.vibevm/wal`, `flow:org.vibevm/wal`, `org.vibevm/wal@^0.3` and `flow:org.vibevm/wal@=0.3.0`, and carries `#[verifies(\"spec://vibevm/modules/vibe-registry/PROP-008#pkgref\", r = 1)]`. But `vibe uninstall` REJECTS the two unqualified forms outright via `require_group`. So the host is «boundary only» for install and «nowhere» for uninstall — a split neither this rule nor Fork 3 anticipates, and a user who may type `vibe install wal` may not type `vibe uninstall wal`.",
+    "DRIFT: stated three times in this repository and implemented zero times, with the search widened twice and the widening stated. `grep -rn 'KindMismatch' --include='*.rs' --include='*.md' .` (excluding `target/` and `.vibe/cache/`) returns 3 hits and NONE is code — a doc comment in `crates/vibe-core/src/package_ref.rs`, `PROP-008` `##KIND-VALIDATION`, and a design record. No code anywhere compares a pkgref's kind prefix against the resolved manifest's kind. And the reserved exit code is dead: `TYPE_MISMATCH: u8 = 4` carries `#[allow(dead_code)]` and is referenced exactly once, at its own declaration. So the kind tag is parsed, carried through resolution and never checked against anything. This is the root of three drifts in this file; the neighbouring «never disambiguates» half is settled in the types and confirmed separately."
+   ],
+   "status": "deferred",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "crates/vibe-cli/src/commands/short_name.rs:125  pub fn qualify(",
+   "falsifier": "host",
+   "routed_out": [
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md#ROW-FORM-KIND-AND-NAME",
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md#RULE-THE-CLI-ACCEPTS-ALL-FORMS",
+    "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md#THE-RESOLVER-CHECKS-THE-TYPE-AND-ERRORS-ON-A-MISMATCH"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-178",
    "id_source": "minted",
    "carried": true
   },
@@ -2475,7 +2403,7 @@
    "drift_count": 2,
    "cross_package": false,
    "installed": true,
-   "installed_differs": false,
+   "installed_differs": true,
    "release_event": false,
    "evidence_spans": [
     "crates",
@@ -7536,6 +7464,49 @@
     "host"
    ],
    "id": "F-198",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/git-attribution-policy"
+   ],
+   "files": [
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md#CONTENT-THE-BOOT-SNIPPET"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "CLAUDE.md",
+    "packages/org.vibevm.world/git-attribution-policy",
+    "spec"
+   ],
+   "cites": [],
+   "reason": "the snippet exists, is declared `link = \"static\"`, and is compiled into the always-loaded lane — that half holds. **The «one place in a consuming project» half does not.** **the single-place law is broken by the consumer, measured.** The snippet is compiled into the host's always-loaded lane TWICE — spec/boot/STATIC.md:421 directly and :615 through the git-practices umbrella entry at :551 — and the policy is restated in at least eight further host locations: spec/boot/00-core.md:21, spec/common/PROP-000.md:161 and :323, CLAUDE.md:5, AGENTS.md:5, GEMINI.md:5, .claude/agents/opus5.md:15 and README.md:158. A repo-wide grep for the topic returns **88 lines across 50 files** outside vibedeps/, .vibe/, refs/ and the package itself.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:43  - ##CONTENT-THE-BOOT-SNIPPET `spec/boot/55-flow-attribution-policy.md` — boot snippet loaded at",
+   "falsifier": "mixed",
+   "routed_out": [
+    "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md#CONTENT-THE-BOOT-SNIPPET"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-199",
    "id_source": "minted",
    "carried": true
   },
