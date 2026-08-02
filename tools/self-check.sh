@@ -43,6 +43,11 @@
 # (F-086); a count with no denominator cannot be wrong. The sync gate's
 # half of the same lesson lives in `cargo xtask sync-engines --check`.
 #
+# Step 0c asserts the three agent instruction files (CLAUDE.md / AGENTS.md /
+# GEMINI.md) are byte-identical — they are hand-copied triplets whose only
+# verified part used to be the generated <vibevm> block, so a hand-edit
+# that missed a sibling had nothing to catch it (F-217).
+#
 # Wrapped around all of it: the user-home tripwire. The real per-user
 # settings home (`~/.vibe`, or `$VIBE_SETTINGS`) is hashed path-by-path
 # before the first step, and compared twice — right after the workspace
@@ -184,6 +189,29 @@ check_floor_denominator() {
 }
 run_step "the floor builds every live package workspace" \
   check_floor_denominator || OVERALL=$?
+
+# 0c. The three agent instruction files are hand-copied triplets. The boot
+# contract says «kept identical»; the generated <vibevm> block is written
+# identically into all three by `vibe install` and checked per-file by
+# `vibe check`, but everything OUTSIDE the markers — the four rules, the
+# delegation directive, the operating-facts ledger, the session commands —
+# had no reconciler until 2026-08-02 (campaign finding F-217). Byte-compare
+# is the whole check, deliberately: any divergence anywhere in the files is
+# a hand-edit that missed a sibling. Algorithmic by owner ruling — never an
+# LLM judgement.
+check_instruction_triple() {
+  local rc=0 f
+  for f in AGENTS.md GEMINI.md; do
+    if ! cmp -s CLAUDE.md "$f"; then
+      echo "self-check: CLAUDE.md and $f differ — the instruction files are" >&2
+      echo "self-check: kept identical; reconcile the hand-edit into all three." >&2
+      rc=1
+    fi
+  done
+  return "$rc"
+}
+run_step "instruction files identical (CLAUDE.md = AGENTS.md = GEMINI.md)" \
+  check_instruction_triple || OVERALL=$?
 
 # Machine obligations the stacks declare. The go stack's live oracle
 # needs gopls (TCG-ORACLE-GO §1) and the TS stack's structural gate
