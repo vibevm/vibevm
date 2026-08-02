@@ -341,3 +341,14 @@ build.** Executed:
   понимание, как развивать вообще наш инструментарий, чтобы оно стало
   хорошей системой»); the map is boss-authored design work, next in the
   boss lane.
+
+**Fifth exchange — the map approved and integrated; the campaign frame
+restated by the owner.** The B-041 draft came back «Да, мне нравится этот
+документ» with two directions, both executed: the map lives at the
+repository root as **`TOOLING-MAP.md`** beside the backlog (which carries
+the `#map` pointer section; the product `ROADMAP.md` is untouched and
+named as non-competing), and the **frame is recorded verbatim in the
+map's `##frame-line`** — «действовать в рамках этого процесса, а то чего
+не хватает — отложить на потом»: the waves execute through the
+campaign's own phases (E after D's exit gate), never as a parallel
+programme.

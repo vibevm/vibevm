@@ -4445,6 +4445,28 @@ aspirational — and every one is still live for the phases that remain.
   − 12 = 41). The backlog stands at **B-043**. On the owner: **B-027's sweep rule**, F-161's two
   re-presentations, the F-215/F-281 families, then the registry remainder.
 
+- **2026-08-02 · пятый обмен — карта одобрена и переезжает к бэклогу, а
+  рамка кампании восстанавливается словом владельца.** The B-041 map
+  drafted on «да, продолжай» (`61db0918`,
+  `spec/design/tooling-development-map.md`: four planes, the dependency
+  spine, waves А–Г, ten forks, five milestones) came back approved — «Да,
+  мне нравится этот документ» — with two directions, both executed the
+  same sitting. **(i) Integrate with the backlog** («или положить рядом,
+  или сделать отдельным разделом»): the map moved to the repository root
+  as **`TOOLING-MAP.md`** beside `BACKLOG.md`, which gained the `#map`
+  pointer section with the wave digest; the root `ROADMAP.md` discovered
+  in the way is the **product** milestone roadmap (1 071 lines, living
+  since April) — untouched, and the map now states in its companion line
+  that the two documents do not compete; the `spec/design/` index row
+  repoints at the root as the genre's one out-of-directory member.
+  **(ii) The frame:** «мы сейчас находимся в процессе более большого
+  рефакторинга… нам надо действовать в рамках этого процесса, а то чего
+  не хватает — отложить на потом» — recorded verbatim as the map's
+  `##frame-line`: the waves are the *shape* of the backlog's drainage,
+  the campaign's phases (E/T/F/G after D's exit gate) are the *vehicle*,
+  and nothing starts from the map. Pointers repointed everywhere (B-041,
+  WAL, CONTINUE, README index); `vibe check` clean over the moved tree.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
