@@ -189,7 +189,7 @@ full semantic dependency set so a pager can assemble sufficient context mechanic
   nothing else beyond seam-required types. Exported-but-unreferenced identifiers are
   findings. @impl/done
 - ##CONFORMANCE-IS-MADE-LOUD **Conformance is made loud** — every cell carries the compile-time assertion, and
-  conform checks its presence (T-syn): @impl/done
+  conform checks its presence (T-syn): *Specified, not built: the Go gate registers exactly three rules — `GoUnsafeInDomain`, `GoCellIsolation`, `FileLength` (`build_rules`, `lib.rs:53-60`) — and none parses for the assertion's presence; the assertion itself is real, idiomatic Go and the pattern below is correct.* @spec/done
 
 ```go
 // internal/cells/batchplanner/planner.go
@@ -623,6 +623,6 @@ moves: @impl/done
   `init_in_cell` is `init_decl`, `ambient_call_in_cell` is `ambient_call`,
   `naked_go_in_cell` is `naked_go` — because the engine expresses "in a cell" as
   a scope predicate over `cells_dir` rather than as part of the name.* @impl/done
-- ##SWEEP-FLIP-ONLY-AFTER-DRAIN **Flip-only-after-drain:** a package enters `gated_packages` only at zero findings;
+- ##SWEEP-FLIP-ONLY-AFTER-DRAIN **Flip-only-after-drain:** a package enters `gated_crates` only at zero findings (the key is the shared neutral engine's — one spelling across the language stacks today);
   the collector (`go-ai-native health`) names promotion candidates and ranks the drain
   backlog smallest-gap-first; a flip must never widen a baseline. @impl/done

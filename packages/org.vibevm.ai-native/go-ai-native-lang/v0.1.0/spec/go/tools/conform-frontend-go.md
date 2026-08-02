@@ -107,7 +107,7 @@ content-addressed store — a 1-file diff re-extracts 1 file (A2). @impl/done
 ##CONFORM-TOML-GAINS-A-GO-SECTION `conform.toml` gains a `[go]` section, written by `go-ai-native init`
 from the module layout: `roots` (source roots to scan), `cells_dir`
 (default `internal/cells`), `seams_pkg` (default `internal/seams`),
-`registry_pkg` (default `internal/registry`), `gated_packages` /
+`registry_pkg` (default `internal/registry`), `gated_crates` /
 `[[exempt]]` (the expand-as-you-conform ratchet — a package enters the
 gate only at zero findings), and the file budget. @impl/done
 
