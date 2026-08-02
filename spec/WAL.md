@@ -9,10 +9,11 @@ built, F-167 applied D31, TS-близнецы починены вердикт-с
 resolved D29); corpus 97.8 %, registry 102 obligations / 209 drifts, 28
 owner-ruled deferrals, 74 open, owed 41 — every one on the owner's sync
 route, boss-owed zero everywhere; the backlog stands at B-043; **the B-041
-development map is DRAFTED — `spec/design/tooling-development-map.md`,
-four planes / dependency spine / waves А–Г / ten forks / five milestones —
-awaiting the owner's read**; on the owner also: B-027's rule, F-161's two
-re-presentations, the F-215/F-281 families**)_
+map is APPROVED and INTEGRATED — `TOOLING-MAP.md` at the root beside the
+backlog («мне нравится этот документ»), framed by the owner's word:
+волны исполняются фазами кампании, недостающее откладывается**; on the
+owner: B-027's rule, F-161's two mini-questions, the F-215/F-281
+families**)_
 
 ##WAL-NUMBERS-COME-FROM-COMMANDS **Every number below is reproduced by two
 commands; run them rather than quoting this file** (why:
@@ -269,12 +270,15 @@ B-014 filed, F-133's verdict-first loop) are history in the §7 LOG. @impl/done
    the stale «F-132's nine» queue line diagnosed and the rule recorded:
    **the owner's queue is derived from the registry, never from a harvest
    snapshot**; the fourth exchange set the standing **build-first default**
-   for discipline mechanisms; the fifth drafted the **B-041 map** —
-   `spec/design/tooling-development-map.md`, README-indexed, `vibe check`
-   clean). **On the owner now: read the map (waves and ten forks are
-   proposals); B-027's sweep rule («да, свипуй»); F-161's two
-   re-presentations (первоисточник 74.8 и битая ссылка); the F-215/F-281
-   families; then the registry's sync-queue remainder.** @spec/done
+   for discipline mechanisms; the fifth drafted, got approved and
+   integrated the **B-041 map** — now **`TOOLING-MAP.md` at the repo root**
+   beside the backlog (its `#map` section digests the waves), carrying the
+   owner's frame verbatim: **волны исполняются фазами кампании (E после
+   выходного гейта D), недостающее откладывается — карта не стартует
+   работ**). **On the owner now: B-027's sweep rule («да, свипуй»);
+   F-161's two mini-questions (битая ссылка §6→§4 — да/нет; цифра 74.8 —
+   (а)/(б)/(в), семья F-125); the F-215/F-281 families; then the
+   registry's sync-queue remainder.** @spec/done
 2. ##WAL-NEXT-ADR **B+A′ is fully executed** — the §3.13 carve-out landed as
    (ii): census 35→36, the four-field record at PROP-000 §7
    (`##split-host-decision…`) carrying the owner's updated split-host posture
