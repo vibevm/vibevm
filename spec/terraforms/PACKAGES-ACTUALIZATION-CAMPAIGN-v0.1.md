@@ -4697,6 +4697,37 @@ aspirational — and every one is still live for the phases that remain.
   the boss's in both modes; briefs cite durable files; fractality
   stays out.
 
+- **2026-08-03 · третий обмен — наблюдаемость воркеров и архив логов
+  (traceability всего, что происходило).** The owner's directive:
+  status of a running claudez worker must be readable every ~30
+  seconds, not at the end of a multi-hour task (heartbeat and/or a log
+  whose freshness shows when something last happened), and after a
+  worker finishes its ENTIRE log is preserved under
+  `C:\Users\olegc\git\v\cache\agents` — `unsorted/` for runs bound to
+  no task, `sorted/<task-id>/` (id derived from the campaign task's
+  anchor) for bound ones — so «мы потом всегда могли понять — откуда
+  что произошло». Executed and MEASURED live the same hour: the
+  transport's native channel is `--output-format stream-json
+  --verbose` — one JSONL line per turn and per tool call, each with a
+  wall-clock `timestamp`, written DIRECTLY into the archive path at
+  spawn (so «пересохранение» is finalisation, not rescue — no crash
+  can lose logged bytes); layer 2 is packet-mandated
+  `PROGRESS:`/`TASK-DONE` echo heartbeats. The end-to-end probe (a
+  3-step worker, 6 turns, 37.9 s, exit 0, log
+  `unsorted/2026-08-03-obs-test-claudez.jsonl`) proved mid-run
+  visibility (step-1 heartbeat read while running) and bought two
+  weak-writer lessons at full price: **the worker skipped one of
+  three mandated heartbeats while working correctly** — so log
+  growth is the PRIMARY liveness signal and a missing heartbeat with
+  a growing log is not a stall (stall ≈ mtime ≳5 min; GLM turn
+  latency legitimately reaches 2–3 min) — and **asked to reply
+  exactly `FINISHED` it replied «ЗАВЕРШЕНО» with both artifacts
+  correct** — acceptance is by artifacts, never by the final string.
+  The instruction gained §5 (the 30-second contract, the status
+  one-liner, the archive table, `meta.md` finalisation); the WAL
+  constraint carries the contract; `cache/agents/` got its pointer
+  README. The boss owns knowing every worker's log path.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:

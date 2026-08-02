@@ -91,21 +91,29 @@ cheaper than an interleaved conflict.
 branch. Workers never run git; `-c core.longpaths=true` if provisioning
 trips MAX_PATH (the F19 lesson).
 
-##e-spawn **4 · Spawn (boss, background, log captured).** Bash form:
+##e-spawn **4 · Spawn (boss, background, live log straight into the
+archive).** Bash form — note `--output-format stream-json --verbose` and
+the log path (§5's contract: the live log is written DIRECTLY into the
+durable archive, so a crash of anything can lose nothing):
 
 ```sh
+LOG=/c/Users/olegc/git/v/cache/agents/sorted/<task-id>/$(date +%F-%H-%M)-claudez-run.jsonl
+mkdir -p "$(dirname "$LOG")"
 ( cd .wt/<task-id> && claudez -p "$(cat <packet-file>)" \
+    --output-format stream-json --verbose \
     --allowedTools "Read" "Glob" "Grep" "Edit" "Write" \
-      "Bash(cargo check:*)" "Bash(cargo test:*)" "Bash(cargo fmt:*)" \
-    --output-format text ) > run/wt-<task-id>.log 2>&1 &
+      "Bash(echo:*)" "Bash(cargo check:*)" "Bash(cargo test:*)" "Bash(cargo fmt:*)" \
+  ) > "$LOG" 2>&1 &
 ```
 
 The second lane is identical with `claudez2` and its own worktree. Headless
 `-p` auto-denies anything not in `--allowedTools` — no git verbs in the
 list, ever; `--dangerously-skip-permissions` is the owner's explicit opt-in
-only. Liveness = log growth + `git -C .wt/<task-id> status`, never a blind
-timeout; a worker silent for several times its sibling's runtime is stuck —
-re-commission.
+only. `stream-json --verbose` emits one JSONL line per model turn and per
+tool call, each carrying a wall-clock `timestamp` — the log grows with
+every action the worker takes, which is what §5's 30-second status contract
+polls. Every packet also MANDATES heartbeats (emphatically — see
+`#obs-heartbeats`).
 
 ##e-correction-loop **5 · The `-c` correction loop (what the rework
 bought).** The boss reads `git -C .wt/<task-id> diff` as a PR. Small
@@ -138,9 +146,85 @@ time per lane (`claudez` lane + `claudez2` lane), each in its own worktree
 per §13's file-split law; `-c` serves the per-packet correction loop
 exactly as in Phase E. Isolated test-file packets are the parallel-friendly
 default; a packet touching shared registries/goldens runs alone (the same
-owner rule as `#e-parallel-routing`).
+owner rule as `#e-parallel-routing`). Every packet run logs and archives
+per §5 — `sorted/<T-packet-id>/`, stream-json, heartbeats, the 30-second
+poll.
 
-## 5. Secrets and safety {#safety}
+## 5. Observability and the log archive — the 30-second contract {#observability}
+
+##obs-directive **The owner's directive (2026-08-03, second message,
+near-verbatim):** статус воркера должен быть доступен по ходу работы — раз
+в ~30 секунд, не по завершении многочасовой задачи; heartbeat и/или лог, по
+которому видно, когда последний раз что-то происходило; после отработки
+агента весь лог пересохраняется в `C:\Users\olegc\git\v\cache\agents`,
+чтобы всегда можно было понять, откуда что произошло — **traceability
+всего, что происходило**.
+
+##obs-two-layers **Two liveness layers, and which one is primary.**
+*Layer 1 (always-on, free):* the `stream-json --verbose` log — one
+timestamped JSONL line per turn and per tool call. File growth = activity;
+the last event's `timestamp` (or the file's mtime) = «when did something
+last happen». *Layer 2 (packet-mandated, best-effort):* `PROGRESS:` /
+`TASK-DONE` heartbeat markers the worker emits via `echo`. **Layer 1 is
+primary** — measured 2026-08-03: a GLM worker skipped one of three
+mandated heartbeats while working correctly, so a missing heartbeat with a
+growing log is NOT a stall; a silent log is.
+
+##obs-heartbeats **The heartbeat clause every packet carries (emphatic —
+weak writers skip soft asks):** «Перед КАЖДЫМ шагом, без исключений,
+выполни shell-командой: `echo "PROGRESS: <номер и суть шага>"`. Последним
+действием выполни: `echo "TASK-DONE"`. Это команды, не текст ответа.»
+`Bash(echo:*)` therefore always sits in `--allowedTools`. Heartbeats land
+inside tool-result events in the JSONL and are grepped out by the status
+one-liner below.
+
+##obs-status-oneliner **The boss's status poll (~every 30 s per live
+worker, and always before assuming anything):**
+
+```sh
+L=<log-path>
+ls -l --time-style=+%H:%M:%S "$L"; \
+grep -o 'PROGRESS: [^"\\]*\|TASK-DONE' "$L" | tail -3; \
+tail -c 300 "$L"
+```
+
+Reading it: mtime fresh / lines growing → alive (report the newest
+`PROGRESS:`); mtime stale ≳5 min → stall (GLM turn latency reaches
+minutes — 2–3 min of silence is normal, the fractality-measured fact);
+on stall: read the tail, then kill / correct via the `-c` loop /
+re-commission. Never a blind multi-hour wait — the cadence is the
+owner's ~30 s.
+
+##obs-archive **The archive — where every log lives and stays.** Root:
+`C:\Users\olegc\git\v\cache\agents\` (machine-local, OUTSIDE the repo,
+sibling of the checkout):
+
+| path | what goes there |
+|---|---|
+| `sorted/<task-id>/` | everything bound to a task: one directory per task, named by its campaign id/anchor (`E-…`, `T-…`, `F-…`, `B-…`) so it is findable later; inside — the run log(s) `<YYYY-MM-DD-HH-MM>-<launcher>-run.jsonl` and `meta.md` |
+| `unsorted/` | runs bound to no task — probes, matrix checks, ad-hoc experiments (`<YYYY-MM-DD>-<slug>-<launcher>.jsonl`) |
+
+##obs-write-directly **Live logs are written DIRECTLY into the archive
+path** (the spawn form above) — «пересохранение» is then a finalisation,
+not a rescue copy, and no crash of the boss, the worker, or the box can
+lose a byte already logged. If a log was ever started elsewhere, the boss
+moves it into the tree at completion — the boss OWNS knowing where every
+worker's log is.
+
+##obs-meta **Finalisation (boss, at worker completion):** write
+`meta.md` beside the log — task id + one-line goal, worktree/branch,
+launcher and lane, start/end (the first/last event timestamps are already
+in the JSONL), exit status, the review verdict (applied / corrected via
+`-c` / re-commissioned / discarded), and the resulting commit hashes. The
+JSONL holds every event; `meta.md` holds the judgement — together they are
+the traceability the directive asks for.
+
+##obs-verify-by-artifacts **Acceptance is by artifacts, never by the final
+string** — measured the same day: asked to reply exactly `FINISHED`, the
+GLM worker replied «ЗАВЕРШЕНО»; its files were nonetheless correct. The
+boss verifies the diff/files/gates; the result text is colour, not signal.
+
+## 6. Secrets and safety {#safety}
 
 ##safety-tokens The bearer tokens live in `~/.vibe/zai.api.token{,.2}` —
 the launchers read them themselves; the boss never prints them, never
@@ -151,7 +235,7 @@ reference worktree-relative paths only.
 gates are green — in both modes, always. A `failed`/non-zero worker exit
 does not mean discard: read the worktree first (the fractality lesson).
 
-## 6. Standing facts {#facts}
+## 7. Standing facts {#facts}
 
 ##fact-verified-date Launchers reworked + full matrix verified 2026-08-03;
 if a launcher regresses, re-run the ALPHA/BRAVO matrix from `#launchers-verified`
