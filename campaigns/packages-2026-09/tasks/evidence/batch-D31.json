@@ -1,0 +1,20 @@
+{
+ "batch": "D31",
+ "cluster": "ai-native",
+ "files": {
+  "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md": {
+   "QUANTITIES-ARE-CAMPAIGN-MEASURED": {
+    "v": "confirmed",
+    "ev": [
+     "owner ruling 2026-08-02 («Я в целом согласен» + the far-future note dictated verbatim in substance): the fact now names the instrument (go-ai-native-tcg bench, Cmd::Bench at crates/go-ai-native-tcg/src/main.rs:77-84 -> run_bench bench.rs:106), states that no Go corpus or baseline has been taken (find over the package returns only the harness and the conform ratchet's baseline.rs — a different artefact), and records the owner's decision that creating the Go measurement codebase is deliberately far-future work (LLM- or fuzzer-generated corpus), not being built now; the figures are posted targets, matching the document's own §8 which carries no spike section"
+    ]
+   },
+   "RESOLUTION-GOPLS-ON-PATH": {
+    "v": "confirmed",
+    "ev": [
+     "owner ruling 2026-08-02: step 1 now names the GO_AI_NATIVE_GOPLS env override first — matching the shipped resolver resolve_gopls (crates/go-ai-native-tcg-bridge/src/lib.rs:139-155), whose own doc comment reads «the env override, then PATH, then $GOBIN, then $(go env GOPATH)/bin, then the recipe-carrying refusal» and whose first branch refuses a set-but-not-a-file override without probing PATH — exactly what the amended step states; the Rust sibling's three-step list stays untouched because its resolver has no override and matches its own spec"
+    ]
+   }
+  }
+ }
+}

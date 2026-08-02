@@ -4408,6 +4408,43 @@ aspirational — and every one is still live for the phases that remain.
   resolved to history (127 total)**. On the owner: **B-027's sweep rule**,
   then the registry's sync-queue remainder.
 
+- **2026-08-02 · четвёртый обмен — the build-first pivot: правила не
+  выключаются за неиспользование, система развивается.** The next portion
+  (F-154 / F-161 / F-167 / F-181, 15 anchors over four documents) came back
+  with a standing re-ruling: for discipline mechanisms the annotate-absence
+  default dies — *«Я против чтобы ты выключал правила только потому, что
+  они нигде пока не используются … нужно это спроектировать и потом
+  построить … Система не заморожена, она должна развиваться»*, and of the
+  host's own code: *«похоже на причину по которой нужно всё отрефакторить
+  и начать их применять»*. Executed the same sitting: **F-154's five →
+  builds B-036 (middle-third position check) / B-037 (REQ-citing custom
+  lints: dylint + typescript-eslint) / B-038 (pending rule cards R-060 +
+  closed-vocabulary-naming, with the Rust computed-name design question) /
+  B-040 (host seam refactor survey), row deferred, texts stay as targets;
+  the two TS false-confirmed twins repaired verdict-first (D30 → drift),
+  their cross-file cluster split off as F-355** (the generator inherited
+  one id into two clusters — instrument defect filed as **B-043**, hand-split
+  same day), routed onto B-036/B-037, deferred. **F-161's R-001 pair →
+  B-039** (mount FlagSites on the TS gate), row open on its two unruled
+  anchors (first-source 74.8-контрадикция + cross-ref fix — re-present).
+  **F-167 — «Я в целом согласен», applied as D31** (merge 2/2, seal 1 +
+  1 current): the quantities fact now names the instrument and carries the
+  owner's far-future note verbatim (**B-042** accepted: measurement corpus
+  LLM- or fuzzer-generated, not now); the gopls step names the env override
+  first, matching the shipped resolver. **F-181 — option (1):** three
+  anchors joined to the F-204/B-005 ancestry family in routing.json, row
+  deferred, nothing edited. **B-041 filed** — the owner's development-map
+  directive verbatim; the map is the boss lane's next work. Zone mirror
+  refreshed before the merges (`progress check` clean, 260 files).
+
+  **State after the fourth exchange** (commands supersede): corpus
+  **11 167 / 209 / 44 — 97.8 %**; registry **102 / 209 — 28 deferred, 74
+  open; owed 41, every one on the sync route** (the +1 obligation is
+  F-355's split, not new work; owed fell 53 → 41 by twelve routings and
+  two D31 confirms, offset by the twins' two honest drifts: 53 − 2 + 2
+  − 12 = 41). The backlog stands at **B-043**. On the owner: **B-027's sweep rule**, F-161's two
+  re-presentations, the F-215/F-281 families, then the registry remainder.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:

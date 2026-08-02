@@ -1,0 +1,20 @@
+{
+ "batch": "D30",
+ "cluster": "ai-native",
+ "files": {
+  "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md": {
+   "POSITION-IS-A-RESOURCE": {
+    "v": "drift",
+    "ev": [
+     "verdict-first repair of a false confirmed (WAL #constraints, boss re-judge 2026-08-02, recorded in d7d F-154 anchor 2 per-stack note): the anchor claims «a conform check warns on files over a length threshold AND on invariant-bearing comments in the diluted middle third» — the length half ships (FileLength mounted at typescript-ai-native-conform/src/lib.rs:57), the middle-third half has no implementation in any frontend: the only «middle third» strings in the engine are the file-length rule's own doc comment and message text (core-ai-native-conform/src/rules/budget.rs:119, :147), and nothing inspects comment position; same defect as the Rust twin GUIDE-AI-NATIVE-RUST.md:59, judged drift in wave 2 — one claim, two copies, opposite verdicts until now; resolution direction per owner ruling 2026-08-02: build the check (backlog), the text stays as the target"
+    ]
+   },
+   "SCAFFOLD-F-STRUCTURED-DIAGNOSTICS": {
+    "v": "drift",
+    "ev": [
+     "verdict-first repair of a false confirmed (WAL #constraints, boss re-judge 2026-08-02, recorded in d7d F-154 anchor 4 per-stack note): the anchor claims «Custom @typescript-eslint rules whose messages cite the violated spec:// REQ and the fix surface» — no such rule exists: grep for createRule/ESLintUtils over the TypeScript stack and research/ts-demo returns nothing, and the demo's eslint.config.js is stock typescript-eslint recommended whose own comment concedes the discipline rules live in conform, not eslint; same defect as the Rust twin's custom-clippy-lints clause (GUIDE-AI-NATIVE-RUST.md:72), judged drift in wave 2; resolution direction per owner ruling 2026-08-02: build the REQ-citing custom lint layer (backlog), the text stays as the target"
+    ]
+   }
+  }
+ }
+}

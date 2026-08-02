@@ -458,72 +458,6 @@
     "file+type"
    ],
    "packages": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#NAMES-ARE-TOKEN-PROGRAMS",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#POSITION-IS-A-RESOURCE",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#SCAFFOLD-B-TYPED-BUILDERS",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#SCAFFOLD-F-STRUCTURED-DIAGNOSTICS",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#DECLARED-TEST-MATRICES-NEVER-EXPONENTIAL"
-   ],
-   "drift_count": 5,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "conform.toml",
-    "crates",
-    "packages/org.vibevm.ai-native/core-ai-native",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "conform.toml:36  max_file_lines = 600",
-    "crates/vibe-actions/src/action.rs:362      #[must_use]",
-    "crates/vibe-cli/src/registry.rs:63  /// the R-060 flag-matrix generator is its Phase 4+ runtime consumer.",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:55  - ##FINDING-R3-004 **R3-004** — Names are token programs: closed-vocabulary composition, one name one referent, no shadowing",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/codemod.rs:14      pub fn pascal(cell: &str) -> String {",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs:137      let report = sarif::render(&rule_refs, &findings);",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/budget.rs:143          \"file-length\"",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/budget.rs:146          \"position is a resource: past the budget a file pages badly and \\",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/mod.rs:50      format!(\"violates REQ {uri}: {why}; fix surface: {fix_surface}\")",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:11  | `scaffold-b-typed-builders` | E | scaffold B | gate | [E-mid] | specified |",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:15  | `scaffold-f-structured-diagnostics` | E+C | scaffold F | inline | [E-mid] | shipped (`error-enum/message-cites-req`, rust-ai-native-conform) |",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:37  - `rule-closed-vocabulary-naming` (R3-004) — names from a closed vocabulary; no shadowing.",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-b-typed-builders.md:1  # CARD: scaffold-b-typed-builders — Typed Builders / Typestate {#root}",
-    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:231  ##MATRIX-IS-AUTHORED-DATA The matrix is authored data, not a combinatorial explosion the reader must hold in their head (R-060, projected). @impl/done"
-   ],
-   "cites": [],
-   "reason": "the computed `{Variant}{Seam}` name form exists only in core-ai-native's `legacy-projections/`, not in the Rust stack, the host or the demo. re-searched over the wider perimeter that C3a's TypeScript batch established — the host's crates AND `research/rust-demo/`, the discipline's own Rust demonstration project, which carries conform.toml, specmap.toml and all three discipline/registry files. The gap holds on both",
-   "reasons": [
-    "half enforced: the file-length budget is a registered rule, and the middle-third comment check the fact also promises exists only as rationale prose in `budget.rs`. Conform warns on one of the two things this fact says it warns on",
-    "typestate and newtypes are real; **sealed traits and `PhantomData` appear zero times** across the host's crates and the demo. re-searched over the wider perimeter that C3a's TypeScript batch established — the host's crates AND `research/rust-demo/`, the discipline's own Rust demonstration project, which carries conform.toml, specmap.toml and all three discipline/registry files. The gap holds on both",
-    "two of three: REQ-citing messages are live in the captured runs (`violates REQ discipline://…`) and SARIF is emitted (`SARIF at target/conform/report-go.sarif`). **Custom clippy lints are not**: zero `dylint` or `declare_lint` anywhere, and the floor's clippy step is stock",
-    "names **R-060**, whose card is unauthored, and the same rule id is cited by the TypeScript guide's `MATRIX-IS-AUTHORED-DATA` — two projections citing a rule neither ships"
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "conform.toml:36  max_file_lines = 600",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 5,
-   "id": "F-154",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
     "packages/org.vibevm.world/wal"
    ],
    "files": [
@@ -592,53 +526,65 @@
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
-    "file+type"
+    "cites F-154",
+    "shared anchor #POSITION-IS-A-RESOURCE"
    ],
    "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang"
+    "packages/org.vibevm.ai-native/rust-ai-native-lang",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
    ],
    "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md"
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md"
    ],
    "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#QUANTITIES-ARE-CAMPAIGN-MEASURED",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#RESOLUTION-GOPLS-ON-PATH",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#GRACEFUL-EXIT-IS-THE-LSP-DANCE",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#TARGET-COMPLETE"
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#POSITION-IS-A-RESOURCE",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#SCAFFOLD-F-STRUCTURED-DIAGNOSTICS",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md#POSITION-IS-A-RESOURCE",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md#SCAFFOLD-F-STRUCTURED-DIAGNOSTICS"
    ],
    "drift_count": 4,
-   "cross_package": false,
-   "installed": false,
+   "cross_package": true,
+   "installed": true,
    "installed_differs": false,
-   "release_event": false,
+   "release_event": true,
    "evidence_spans": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang"
+    "conform.toml",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
    ],
    "evidence_refs": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client.rs:357  impl Drop for ChildTransport { fn drop(&mut self) { let _ = self.child.kill(); let _ = self.child.wait(); }",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/lib.rs:155  // PATH: probe the bare name. let probe = std::process::Command::new(\"gopls\")",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle.rs:360  pub fn shutdown(mut self) -> Result<(), TcgBridgeError> { let _ = self .client .request(\"shutdown\", serde_json::Value...",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:1  //! `go-ai-native-tcg bench` — the differential/latency harness //! (ORACLE-GO §5, §8): every corpus case runs throug...",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:17  ##QUANTITIES-ARE-CAMPAIGN-MEASURED Where the sibling Rust mechanism cites measured spike facts, this one names the sa...",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:201  ##GRACEFUL-EXIT-IS-THE-LSP-DANCE Graceful exit is the LSP dance — `shutdown` request, `exit` notification — with kill...",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:225  - ##TARGET-COMPLETE `complete` p50 < 300 ms, @impl/done",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:34  1. ##RESOLUTION-GOPLS-ON-PATH `gopls` on PATH; @impl/done"
+    "conform.toml:36  max_file_lines = 600",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs:137      let report = sarif::render(&rule_refs, &findings);",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/budget.rs:143          \"file-length\"",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/budget.rs:146          \"position is a resource: past the budget a file pages badly and \\",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/mod.rs:50      format!(\"violates REQ {uri}: {why}; fix surface: {fix_surface}\")",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:15  | `scaffold-f-structured-diagnostics` | E+C | scaffold F | inline | [E-mid] | shipped (`error-enum/message-cites-req`, rust-ai-native-conform) |"
    ],
-   "cites": [],
-   "reason": "**the quantities are recorded nowhere.** The fact says the Phase-7 live chain and the bench harness record them. The harness exists (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:1) and there is **no Go corpus, no Go bench report and no ledger entry**: research/tcg-bench/reports/ carries bench-2026-07-07-baseline.json (TypeScript) and bench-rust-2026-07-07-baseline.json only. This is checkable without gopls, which is why it is drift rather than unverifiable",
+   "cites": [
+    "F-154"
+   ],
+   "reason": "half enforced: the file-length budget is a registered rule, and the middle-third comment check the fact also promises exists only as rationale prose in `budget.rs`. Conform warns on one of the two things this fact says it warns on",
    "reasons": [
-    "**PATH is not the first probe.** The fact is step 1 of §1's ordered resolution list, and the shipped resolver tries the `GO_AI_NATIVE_GOPLS` env override BEFORE PATH — and hard-fails on it when the override is not a file, without ever probing PATH (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/lib.rs:149-157). The implementation's own doc comment names the real order — «the env override, then PATH, then $GOBIN…» (lib.rs:141-143) — so the code documents a step the mechanism spec does not list",
-    "**the no-zombie property is not test-asserted.** The dance is implemented — `shutdown` at packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle.rs:360, kill-on-drop at client.rs:357 — but the only occurrence of «zombie» in the whole stack is a doc comment in packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/tests/live_oracle.rs:3. The test body asserts `oracle.shutdown()` succeeded and checks no process table. Reading the test settles this without running it",
-    "the bench cannot measure it: `bench.rs` records **`warm_ms` alone** — no complete latency, no p50, no threshold — so a «complete p50 under 300 ms» target has no instrument in the harness written to instrument it"
+    "two of three: REQ-citing messages are live in the captured runs (`violates REQ discipline://…`) and SARIF is emitted (`SARIF at target/conform/report-go.sarif`). **Custom clippy lints are not**: zero `dylint` or `declare_lint` anywhere, and the floor's clippy step is stock",
+    "verdict-first repair of a false confirmed (WAL #constraints, boss re-judge 2026-08-02, recorded in d7d F-154 anchor 2 per-stack note): the anchor claims «a conform check warns on files over a length threshold AND on invariant-bearing comments in the diluted middle third» — the length half ships (FileLength mounted at typescript-ai-native-conform/src/lib.rs:57), the middle-third half has no implementation in any frontend: the only «middle third» strings in the engine are the file-length rule's own doc comment and message text (core-ai-native-conform/src/rules/budget.rs:119, :147), and nothing inspects comment position; same defect as the Rust twin GUIDE-AI-NATIVE-RUST.md:59, judged drift in wave 2 — one claim, two copies, opposite verdicts until now; resolution direction per owner ruling 2026-08-02: build the check (backlog), the text stays as the target",
+    "verdict-first repair of a false confirmed (WAL #constraints, boss re-judge 2026-08-02, recorded in d7d F-154 anchor 4 per-stack note): the anchor claims «Custom @typescript-eslint rules whose messages cite the violated spec:// REQ and the fix surface» — no such rule exists: grep for createRule/ESLintUtils over the TypeScript stack and research/ts-demo returns nothing, and the demo's eslint.config.js is stock typescript-eslint recommended whose own comment concedes the discipline rules live in conform, not eslint; same defect as the Rust twin's custom-clippy-lints clause (GUIDE-AI-NATIVE-RUST.md:72), judged drift in wave 2; resolution direction per owner ruling 2026-08-02: build the REQ-citing custom lint layer (backlog), the text stays as the target"
    ],
-   "status": "open",
+   "status": "deferred",
    "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:17  ##QUANTITIES-ARE-CAMPAIGN-MEASURED Where the sibling Rust mechanism cites measured spike facts, this one names the sa...",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 4,
-   "id": "F-167",
+   "closure_route": "release",
+   "fact": "conform.toml:36  max_file_lines = 600",
+   "falsifier": "mixed",
+   "routed_out": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#POSITION-IS-A-RESOURCE",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#SCAFFOLD-F-STRUCTURED-DIAGNOSTICS",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md#POSITION-IS-A-RESOURCE",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md#SCAFFOLD-F-STRUCTURED-DIAGNOSTICS"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-355",
    "id_source": "minted",
    "carried": true
   },
@@ -689,8 +635,14 @@
    "closure_route": "sync-from-code",
    "fact": "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:258  ##TOOLING-ASYMMETRY-STATED-HONESTLY … (~74.8% compile-error reduction; ~94% of TS compile errors are type-level) … @spec/done",
    "falsifier": "self",
-   "routed_out": [],
-   "owed": 4,
+   "routed_out": [
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md#NO-IF-FLAG-IN-DOMAIN-CELLS",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md#RULE-FLAGS-READ-AT-THE-ROOT-AND-DISPATCHED"
+   ],
+   "owed": 2,
+   "routed_to": [
+    "host"
+   ],
    "id": "F-161",
    "id_source": "minted",
    "carried": true
@@ -1165,15 +1117,18 @@
     "DRIFT at one of two, on the only port available to check — this repository. PRESERVED: the absence of a force path, and hardened beyond the flow's ask into a unit test (`push_args_never_force`), which `PROP-016:64` calls «runnable capital, not prose». NOT PRESERVED: the ancestry gate — `grep -rn 'merge-base' xtask/src/` → 0 hits, and the `Mode::Push` arm goes straight from `push_args` to `git push` where the script does an `ls-remote` and an ancestor test (`fanout-mechanics.md:180-184`). RECORDED, and it is the honest frame for this whole file: the port predates the document stating these invariants by 23 days, so it was never in a position to follow it. What this measures is not a port that ignored its instructions but a document that generalised an origin and then asked for more than the origin does.",
     "DRIFT at two of four, carrying the body rows it summarises per W1's summary-restatement precedent. PRESENT: push fast-forward-only by URL (`push_args` takes `t.url` straight from the manifest with no force spelling anywhere), and report (`ok` / `FAIL`). ABSENT from the push path: fetch (`remote_main` is never called from the `Mode::Push` arm) and verify-ancestry (`grep -rn 'merge-base' xtask/src/` → 0 hits). The host relies on git's server-side non-fast-forward refusal in place of a client-side gate, so the summary asserts a four-step shape the origin implementation runs as two."
    ],
-   "status": "open",
+   "status": "deferred",
    "wave": 1,
    "closure_route": "sync-from-code",
    "fact": "xtask/src/mirror.rs:284              Mode::Push => {",
    "falsifier": "host",
    "routed_out": [
-    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md#the-two-invariants-to-preserve-when-you-port-it"
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md#the-shape-is-always-the-same-four-steps",
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md#STEP-VERIFY-ANCESTRY",
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md#the-two-invariants-to-preserve-when-you-port-it",
+    "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/flows/source-mirrors/fanout-mechanics.md#SUM-FAN-OUT-PER-TARGET-IS-FETCH-VERIFY-PUSH-REPORT"
    ],
-   "owed": 3,
+   "owed": 0,
    "routed_to": [
     "host"
    ],
@@ -1357,6 +1312,68 @@
    "routed_out": [],
    "owed": 3,
    "id": "F-185",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#NAMES-ARE-TOKEN-PROGRAMS",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#SCAFFOLD-B-TYPED-BUILDERS",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#DECLARED-TEST-MATRICES-NEVER-EXPONENTIAL"
+   ],
+   "drift_count": 3,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "crates",
+    "packages/org.vibevm.ai-native/core-ai-native",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang"
+   ],
+   "evidence_refs": [
+    "crates/vibe-actions/src/action.rs:362      #[must_use]",
+    "crates/vibe-cli/src/registry.rs:63  /// the R-060 flag-matrix generator is its Phase 4+ runtime consumer.",
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:55  - ##FINDING-R3-004 **R3-004** — Names are token programs: closed-vocabulary composition, one name one referent, no shadowing",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/codemod.rs:14      pub fn pascal(cell: &str) -> String {",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:11  | `scaffold-b-typed-builders` | E | scaffold B | gate | [E-mid] | specified |",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:37  - `rule-closed-vocabulary-naming` (R3-004) — names from a closed vocabulary; no shadowing.",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-b-typed-builders.md:1  # CARD: scaffold-b-typed-builders — Typed Builders / Typestate {#root}",
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:231  ##MATRIX-IS-AUTHORED-DATA The matrix is authored data, not a combinatorial explosion the reader must hold in their head (R-060, projected). @impl/done"
+   ],
+   "cites": [],
+   "reason": "the computed `{Variant}{Seam}` name form exists only in core-ai-native's `legacy-projections/`, not in the Rust stack, the host or the demo. re-searched over the wider perimeter that C3a's TypeScript batch established — the host's crates AND `research/rust-demo/`, the discipline's own Rust demonstration project, which carries conform.toml, specmap.toml and all three discipline/registry files. The gap holds on both",
+   "reasons": [
+    "typestate and newtypes are real; **sealed traits and `PhantomData` appear zero times** across the host's crates and the demo. re-searched over the wider perimeter that C3a's TypeScript batch established — the host's crates AND `research/rust-demo/`, the discipline's own Rust demonstration project, which carries conform.toml, specmap.toml and all three discipline/registry files. The gap holds on both",
+    "names **R-060**, whose card is unauthored, and the same rule id is cited by the TypeScript guide's `MATRIX-IS-AUTHORED-DATA` — two projections citing a rule neither ships"
+   ],
+   "status": "deferred",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "crates/vibe-actions/src/action.rs:362      #[must_use]",
+   "falsifier": "mixed",
+   "routed_out": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#NAMES-ARE-TOKEN-PROGRAMS",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#SCAFFOLD-B-TYPED-BUILDERS",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md#DECLARED-TEST-MATRICES-NEVER-EXPONENTIAL"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-154",
    "id_source": "minted",
    "carried": true
   },
@@ -1606,6 +1623,52 @@
     "host"
    ],
    "id": "F-201",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#GRACEFUL-EXIT-IS-THE-LSP-DANCE",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#TARGET-COMPLETE"
+   ],
+   "drift_count": 2,
+   "cross_package": false,
+   "installed": false,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
+   ],
+   "evidence_refs": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client.rs:357  impl Drop for ChildTransport { fn drop(&mut self) { let _ = self.child.kill(); let _ = self.child.wait(); }",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle.rs:360  pub fn shutdown(mut self) -> Result<(), TcgBridgeError> { let _ = self .client .request(\"shutdown\", serde_json::Value...",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:201  ##GRACEFUL-EXIT-IS-THE-LSP-DANCE Graceful exit is the LSP dance — `shutdown` request, `exit` notification — with kill...",
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:225  - ##TARGET-COMPLETE `complete` p50 < 300 ms, @impl/done"
+   ],
+   "cites": [],
+   "reason": "**the no-zombie property is not test-asserted.** The dance is implemented — `shutdown` at packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle.rs:360, kill-on-drop at client.rs:357 — but the only occurrence of «zombie» in the whole stack is a doc comment in packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/tests/live_oracle.rs:3. The test body asserts `oracle.shutdown()` succeeded and checks no process table. Reading the test settles this without running it",
+   "reasons": [
+    "the bench cannot measure it: `bench.rs` records **`warm_ms` alone** — no complete latency, no p50, no threshold — so a «complete p50 under 300 ms» target has no instrument in the harness written to instrument it"
+   ],
+   "status": "open",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:201  ##GRACEFUL-EXIT-IS-THE-LSP-DANCE Graceful exit is the LSP dance — `shutdown` request, `exit` notification — with kill...",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 2,
+   "id": "F-167",
    "id_source": "minted",
    "carried": true
   },

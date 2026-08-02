@@ -298,3 +298,46 @@ own STATIC.md; qualified-rewrite at materialization; the C++ ADL analogy;
   temporal failure has no instance on the widened perimeter. The owner's
   «угроза реальная» half is not lost: the collision threat itself is exactly
   B-011's subject, at highest priority. **F-285 resolved to history.**
+
+**Fourth exchange, same day — the build-first pivot, and it re-rules two
+whole presentations.** On the F-154/F-161 presentation the owner flipped the
+standing default for discipline mechanisms: *«Я против чтобы ты выключал
+правила только потому, что они нигде пока не используются. Если для их
+работы нужно что-то построить — нужно это спроектировать и потом построить,
+а не отказываться просто потому что так проще … Построение ai-native
+дисциплин сложная штука, ее нужно делать, а не отказываться … Система не
+заморожена, она должна развиваться»* — and, of the host's own code, *«это
+похоже на причину по которой нужно всё отрефакторить и начать их
+применять»*. **Softening a guide because the mechanism is unused is off the
+table; an annotation is legitimate only as an interim that names a planned
+build.** Executed:
+
+- **F-154 (Rust GUIDE, five anchors) — routed onto builds, row `deferred`:**
+  the middle-third position check → **B-036**, the REQ-citing custom lint
+  layer → **B-037**, the pending rule cards R-060 +
+  `rule-closed-vocabulary-naming` with the Rust computed-name design
+  question → **B-038**, the host seam refactor survey (sealed traits /
+  `PhantomData` where they pay) → **B-040**. Texts stay as targets.
+- **The two TS false-confirmed twins repaired verdict-first (D30):**
+  re-judged `drift` per `##WAL-C-VERDICT-FIRST`, the minted cross-file
+  cluster split off as **F-355** (the generator inherited one id into two
+  clusters — the instrument defect is **B-043**), both anchors routed onto
+  B-036/B-037, row `deferred`.
+- **F-161's R-001 pair → B-039** (mount `FlagSites` on the TS gate, config
+  branch included), row stays `open` on its two unruled anchors: the
+  first-source contradiction record (74.8 % vs 75.3/70.2 in
+  `core-ai-native`'s own appendices) and the one-line cross-ref fix, both
+  to be re-presented.
+- **F-167 — «Я в целом согласен», applied as D31** with the owner's
+  far-future note recorded verbatim in the annotation and as **B-042**
+  (accepted): the measurement codebase is deliberately far-future
+  (LLM- or fuzzer-generated corpus), not built now. Row stays `open`
+  owed 2 — the no-zombie-test and complete-target families (F-281 /
+  F-215) present separately.
+- **F-181 — option (1):** three remaining anchors joined to the
+  F-204/B-005 ancestry-gate family in `run/state/routing.json`, row
+  `deferred`, nothing edited.
+- **B-041 filed** — the development-map directive verbatim («Мне нужно
+  понимание, как развивать вообще наш инструментарий, чтобы оно стало
+  хорошей системой»); the map is boss-authored design work, next in the
+  boss lane.

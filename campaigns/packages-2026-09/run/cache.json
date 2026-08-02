@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-02T14:53:46Z",
+  "updated_at": "2026-08-02T18:08:06Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -10673,7 +10673,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md": {
-      "content_hash": "0ce2921f9088a1609c79d3d9adb19b7bdc4de1e77b051848347a939a80b07013",
+      "content_hash": "12575ca7d6826212cc2cc053b6c41f72f599ab0de7ee2a9dde30eca1650d3bf4",
       "rollup": {
         "explicit": [
           "spec",
@@ -10695,7 +10695,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "0ce2921f9088a1609c79d3d9adb19b7bdc4de1e77b051848347a939a80b07013",
+        "processed_hash": "12575ca7d6826212cc2cc053b6c41f72f599ab0de7ee2a9dde30eca1650d3bf4",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -10723,11 +10723,9 @@
             ]
           },
           "QUANTITIES-ARE-CAMPAIGN-MEASURED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:17  ##QUANTITIES-ARE-CAMPAIGN-MEASURED Where the sibling Rust mechanism cites measured spike facts, this one names the sa...",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:1  //! `go-ai-native-tcg bench` — the differential/latency harness //! (ORACLE-GO §5, §8): every corpus case runs throug...",
-              "**the quantities are recorded nowhere.** The fact says the Phase-7 live chain and the bench harness record them. The harness exists (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:1) and there is **no Go corpus, no Go bench report and no ledger entry**: research/tcg-bench/reports/ carries bench-2026-07-07-baseline.json (TypeScript) and bench-rust-2026-07-07-baseline.json only. This is checkable without gopls, which is why it is drift rather than unverifiable"
+              "owner ruling 2026-08-02 («Я в целом согласен» + the far-future note dictated verbatim in substance): the fact now names the instrument (go-ai-native-tcg bench, Cmd::Bench at crates/go-ai-native-tcg/src/main.rs:77-84 -> run_bench bench.rs:106), states that no Go corpus or baseline has been taken (find over the package returns only the harness and the conform ratchet's baseline.rs — a different artefact), and records the owner's decision that creating the Go measurement codebase is deliberately far-future work (LLM- or fuzzer-generated corpus), not being built now; the figures are posted targets, matching the document's own §8 which carries no spike section"
             ]
           },
           "kind-line-resolution": {
@@ -10757,11 +10755,9 @@
             ]
           },
           "RESOLUTION-GOPLS-ON-PATH": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:34  1. ##RESOLUTION-GOPLS-ON-PATH `gopls` on PATH; @impl/done",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/lib.rs:155  // PATH: probe the bare name. let probe = std::process::Command::new(\"gopls\")",
-              "**PATH is not the first probe.** The fact is step 1 of §1's ordered resolution list, and the shipped resolver tries the `GO_AI_NATIVE_GOPLS` env override BEFORE PATH — and hard-fails on it when the override is not a file, without ever probing PATH (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/lib.rs:149-157). The implementation's own doc comment names the real order — «the env override, then PATH, then $GOBIN…» (lib.rs:141-143) — so the code documents a step the mechanism spec does not list"
+              "owner ruling 2026-08-02: step 1 now names the GO_AI_NATIVE_GOPLS env override first — matching the shipped resolver resolve_gopls (crates/go-ai-native-tcg-bridge/src/lib.rs:139-155), whose own doc comment reads «the env override, then PATH, then $GOBIN, then $(go env GOPATH)/bin, then the recipe-carrying refusal» and whose first branch refuses a set-but-not-a-file override without probing PATH — exactly what the amended step states; the Rust sibling's three-step list stays untouched because its resolver has no override and matches its own spec"
             ]
           },
           "RESOLUTION-GOBIN": {
@@ -11289,8 +11285,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C4+C5 + C45-go-review + D5a"
+        "verified_at": "2026-08-02T18:08:06Z",
+        "verify_batch": "C4+C5 + C45-go-review + D5a + D31"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md": {
@@ -21923,12 +21919,9 @@
             ]
           },
           "POSITION-IS-A-RESOURCE": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/budget.rs:147           its middle third buries invariants — prefer more, smaller, \\",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform/src/lib.rs:57      out.push(Box::new(rules::FileLength {",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:1  //! `typescript-ai-native-conform-frontend` — the `ts-tsc` frontend the Ф6 brief",
-              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+              "verdict-first repair of a false confirmed (WAL #constraints, boss re-judge 2026-08-02, recorded in d7d F-154 anchor 2 per-stack note): the anchor claims «a conform check warns on files over a length threshold AND on invariant-bearing comments in the diluted middle third» — the length half ships (FileLength mounted at typescript-ai-native-conform/src/lib.rs:57), the middle-third half has no implementation in any frontend: the only «middle third» strings in the engine are the file-length rule's own doc comment and message text (core-ai-native-conform/src/rules/budget.rs:119, :147), and nothing inspects comment position; same defect as the Rust twin GUIDE-AI-NATIVE-RUST.md:59, judged drift in wave 2 — one claim, two copies, opposite verdicts until now; resolution direction per owner ruling 2026-08-02: build the check (backlog), the text stays as the target"
             ]
           },
           "UNIFORMITY-IS-LOAD-BEARING": {
@@ -21999,12 +21992,9 @@
             ]
           },
           "SCAFFOLD-F-STRUCTURED-DIAGNOSTICS": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/mod.rs:50      format!(\"violates REQ {uri}: {why}; fix surface: {fix_surface}\")",
-              "campaigns/packages-2026-09/harvest/typescript-ai-native-lang-conform.md:12  ... fix surface: `npm install -D typescript` in the project root — the tsc floor step needs the same install",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:15  | `scaffold-f-structured-diagnostics` | E+C | scaffold F | inline | [E-mid] | shipped (`ts-unsafe-in-domain` / `ts- ...",
-              "located in the perimeter on the refs above, machine-verified against the files they cite"
+              "verdict-first repair of a false confirmed (WAL #constraints, boss re-judge 2026-08-02, recorded in d7d F-154 anchor 4 per-stack note): the anchor claims «Custom @typescript-eslint rules whose messages cite the violated spec:// REQ and the fix surface» — no such rule exists: grep for createRule/ESLintUtils over the TypeScript stack and research/ts-demo returns nothing, and the demo's eslint.config.js is stock typescript-eslint recommended whose own comment concedes the discipline rules live in conform, not eslint; same defect as the Rust twin's custom-clippy-lints clause (GUIDE-AI-NATIVE-RUST.md:72), judged drift in wave 2; resolution direction per owner ruling 2026-08-02: build the REQ-citing custom lint layer (backlog), the text stays as the target"
             ]
           },
           "SCAFFOLD-G-EXECUTABLE-EXAMPLES": {
@@ -22658,7 +22648,7 @@
           }
         },
         "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C3 + C45-cross-language + D5a + D7"
+        "verify_batch": "C3 + C45-cross-language + D5a + D7 + D30"
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md": {
