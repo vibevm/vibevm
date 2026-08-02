@@ -2,7 +2,7 @@
      edit the registry and re-render. `ledger render --check` gates drift. -->
 # Debt registry — human view
 
-22 entr(ies).
+23 entr(ies).
 
 ## open (12)
 
@@ -24,9 +24,10 @@
 - **DBT-0006** `external-drift` [P3] — Legacy vibespecs/flow-* repos archived, not deleted
 - **DBT-0022** `stale-doc` [P3] — agent-mcp-quickstart-opencode.md was rewritten by a stray test/xtask run (dormant)
 
-## filed (1)
+## filed (2)
 
-- **DBT-0001** `coverage-gap` [P3] — Production git-registry + naming path is under-tested _(filed as INT-0002 (the test-hardening work); re-judged P1 → P3 with `AUDIT.md`'s 2026-06-12 carry-forward — the records reconciled 2026-08-01, the audit's later evidenced judgement winning; residual: the `vibe init` default-path e2e)_
+- **DBT-0001** `coverage-gap` [P3] — Production git-registry + naming path is under-tested _(filed as INT-0002 (the test-hardening work))_
+- **DBT-0023** `dependency-advisory` [P2] — fractality specspace lockfile pins quinn-proto 0.11.14 (RUSTSEC-2026-0185, high 7.5)
 
 ## fixed (7)
 

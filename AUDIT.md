@@ -471,3 +471,88 @@ The owner directed the three moves v0.1 §8 had reserved
   unsoundness). Baseline 10 → 2: every unsafe-gate fingerprint left
   by drain, none by freeze-widening; the residual 2 is the DBT-0020
   MCP pair, untouched by owner instruction.
+
+---
+
+## Audit run — 2026-08-03 (A–D inventory at the packages-2026-09 phase-D exit gate)
+
+_Run by: agent, per the owner's 2026-08-01 adoption ruling («the A–D
+inventory is scheduled at the phase's exit gate»). Scope: categories A–D
+breadth-first; category E's depth program ran 2026-06-12 and is not this
+run's subject. Prior sections' open rows re-judged below. Gate at run
+time: `tools/self-check.sh` all green (before the in-run fixes; re-run
+green after); campaign corpus 11 188 / 190 / 44 — 98.0 %, exhaustive
+`progress check` clean over 261 files._
+
+| ID | Cat | Finding | Sev | Disp |
+|---|---|---|---|---|
+| 2026-08-03-01 | B2 | `cargo xtask check-codegen` (byte-compare of generated JTD wire types) ran in no panel step — schema-vs-generated drift had nothing to catch it; bit the same day (the F-279 regen drift was caught by a hand-run, not the gate) | P2 | fixed `1218c429` (panel step 6b) |
+| 2026-08-03-02 | D4 | `quinn-proto` 0.11.14 — RUSTSEC-2026-0185, remote memory exhaustion, high 7.5 — pinned in BOTH the host `Cargo.lock` and the fractality specspace's lock | P2 | fixed `1db359d0` (host → 0.11.16) · filed DBT-0023 (fractality lock, specspace-owned) |
+| 2026-08-03-03 | D4 | `cargo outdated` 0.19.0 cannot run over this workspace at all — its temp-copy resolution breaks on the path-dep into the excluded package workspace (`progress-core` → vendored `core-ai-native-specmark`); the staleness half of the D4 aid is unavailable | P3 | open |
+| 2026-08-03-04 | D3 | src-side `#[allow]` grew 28 → 79 since 2026-06-12; by kind: `dead_code` 62 + `unused_imports` 9; by crate: vibe-cli 69 (TUI theme / prefs / tree modules) — a dead-code shadow this size hides rot from the compiler | P2 | open |
+| 2026-08-03-05 | D2/A2 | census refresh, clean: `#[ignore]` steady at 5 (the cli_live_e2e quartet + 1 specmap-core); TODO-family 11 src hits = 10 detector-pattern strings/fixtures + 1 deliberate PROP-citing forward pointer (`vibe-actions/src/i18n.rs`, Fluent, PROP-039 §8.1) | P3 | accepted |
+
+**Notes.**
+
+- **-01 fixed in-run:** the checklist's own growth rule («a mechanisable
+  row migrates into the gate») applied at the moment of discovery; the
+  step fails actionably when the machine-local `jtd-codegen` binary is
+  absent, pointing at `tool:org.vibevm.ai-native/jtd-codegen`.
+- **-02:** cargo audit also reports three warning-class advisories, all
+  transitive, none with a compatible upgrade today: `fxhash`
+  unmaintained (RUSTSEC-2025-0057), `anyhow` `downcast_mut` unsoundness
+  (RUSTSEC-2026-0190), `event-listener` `!Send` unsoundness
+  (RUSTSEC-2026-0221). Recorded; re-checked next run. On the host,
+  `quinn-proto` is absent from the default-target compile graph
+  (`cargo tree -i` finds nothing) — the exposure was the lock entry.
+- **-03 open:** staleness signal until then: `cargo update --dry-run`
+  reading, or per-crate checks; the layout (path-deps into excluded
+  package workspaces) is deliberate, so this may end as `accepted` with
+  a named alternative aid.
+- **-04 open:** needs a triage pass — which `dead_code` allows guard
+  work-in-progress TUI surfaces (keep, with a reason) and which cover
+  genuinely dead code (delete the code). Escalate or accept next run;
+  do not let it ride.
+- **C-group — no new findings.** C1/C2: today's F-279/B-013 closure
+  removed the known stale coordinates (dead v0.5.0 codegen route, README
+  ships-line, schema metadata); PROP-014's two schema anchors re-checked
+  against the moved schema — both `confirmed` verdicts survive (their
+  recorded reading already stood on the deployment perimeter, and every
+  referent resolves package-locally after the move). C3: WAL/CONTINUE
+  are rewritten at this session's close per protocol. C4: rollout runs
+  the mirror fan-out at close; B-005 (ancestry-vs-equality probe noise)
+  stands filed in `BACKLOG.md`.
+- **A3 honestly bounded:** no fresh deep read this run beyond the
+  session's own touched tests (the pin-derivation table test asserts
+  pin-extends-manifest — sound); the standing A3 example (`-03` of
+  2026-05-23) remains the canonical instance, fixed long ago.
+
+**Carry-forward, re-judged (A–D rows only).**
+
+- **2026-05-23-01** (A1, `vibe init` default-path e2e) — open, P3,
+  unchanged.
+- **2026-05-23-04** (A2, live e2e quartet ignored+red) — open, P2,
+  unchanged; still coupled to `-07`.
+- **2026-05-23-05** (B1, manual-test fixture rot) — open, P3.
+- **2026-05-23-06 / -07** (C4, GitVerse / GitHub test orgs un-migrated)
+  — open, P2, owner-court; unchanged.
+- **2026-05-23-08** (C4, legacy repos archived) — accepted, stands.
+- **2026-05-23-09** (C2, PROP-005 cites a `crates/vibe-index/schemas/`
+  that does not exist) — open, P3. Unaffected by today's specmap schema
+  move (different schema, different crate).
+- **2026-05-23-10** (C1, doc requalification sweep) — open, P3.
+- **2026-05-23-11 / -12 / -13** (D1 family: PROP-011 refinements,
+  parked backlog, solver selection via R-001) — open, P3; `-12`'s
+  modern home is `BACKLOG.md` (the owner-directed registry that did not
+  exist when the row was filed).
+- **AUD-0014 / AUD-0015** (C, resolver doc one-liners) — **fixed by
+  prior resolver touches, closed this run**: `features.rs` now documents
+  the terminate-silently behaviour naming AUD-0014 in-text, and
+  `ResolvedNode` cites PROP-008 §2.2 (#identity). The D1-shape «resolved
+  by unrelated work, still sits open» — exactly what this walk exists to
+  close.
+- **2026-06-12-11** (D, hygiene census) — superseded by this run's
+  `-04`/`-05` refresh.
+- **2026-06-12-01's rider** (owner to confirm the 2026-06-11 history
+  rewrite was intentional) — open, owner-court, P3 by age; third run
+  carrying it.
