@@ -4,7 +4,7 @@
  "generated_by": "campaigns/packages-2026-09/tasks/drift-registry.py",
  "generated_from": "campaigns/packages-2026-09/run/cache.json",
  "threshold": 0.65,
- "drift_verdicts": 200,
+ "drift_verdicts": 191,
  "obligations": [
   {
    "type": "reality-mismatch",
@@ -1084,78 +1084,6 @@
     "file+type"
    ],
    "packages": [
-    "packages/org.vibevm.world/tool-design-lessons"
-   ],
-   "files": [
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md#S5-LAW-EDIT-DURABLE-STATE-IDEMPOTENTLY-AND-ADDITIVELY",
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md#S5-MECHANICS-FIVE-RULES-NONE-OPTIONAL",
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md#S6-MECHANICS-RELATED-KNOWLEDGE-FOLLOWS-THE-SAME-RULE",
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md#SUM-S5-DURABLE-ENV-EDITS"
-   ],
-   "drift_count": 4,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "crates",
-    "rust-toolchain.toml",
-    "spec"
-   ],
-   "evidence_refs": [
-    "crates/vibe-cli/src/commands/vvm/env.rs:164  pub(crate) trait EnvPersister {",
-    "crates/vibe-cli/src/commands/vvm/env.rs:171  const BLOCK_BEGIN: &str = \"# >>> vibevm (VVM) — managed, do not edit by hand >>>\";",
-    "crates/vibe-cli/src/commands/vvm/env.rs:312      parts.retain(|p| !p.eq_ignore_ascii_case(target));",
-    "crates/vibe-cli/src/commands/vvm/mod.rs:310      let persister = make_persister(env, shell)?;",
-    "crates/vibe-cli/src/commands/vvm/mod.rs:428      if cfg!(windows) {",
-    "crates/vibe-cli/src/commands/vvm/model.rs:129  pub const DEFAULT_PROFILE: Profile = Profile::Debug;",
-    "crates/vibe-cli/src/commands/vvm/model.rs:325          assert_eq!(DEFAULT_PROFILE, Profile::Debug);",
-    "crates/vibe-cli/src/commands/vvm/tools.rs:33          help_url: \"https://rustup.rs\",",
-    "rust-toolchain.toml:2  channel = \"stable\"",
-    "spec/common/PROP-019-version-manager.md:213  ##env-rules-lead Rules: @spec/done",
-    "spec/common/PROP-019-version-manager.md:215  - ##RULE-IDEMPOTENT **idempotent** (a marker guards the edit; no duplicate lines/entries), @spec/done",
-    "spec/common/PROP-019-version-manager.md:216  - ##RULE-NEVER-CLOBBER **never clobber** (only our entry is added; the rest of `PATH` is",
-    "spec/common/PROP-019-version-manager.md:218  - ##RULE-OS-AWARE **OS/shell-aware** (Windows: `HKCU\\Environment` via PowerShell's",
-    "spec/common/PROP-019-version-manager.md:221  - ##RULE-CONSENT and **consent + honesty** (mutating edits need a confirm / `-y` /",
-    "spec/common/PROP-019-version-manager.md:224  - ##RULE-INJECTABLE-SEAM The durable writer is an injectable seam so tests exercise the POSIX rc",
-    "spec/common/PROP-019-version-manager.md:542  - ##MAINT-TOOLS-TABLE the **required tools** are the `REQUIRED_TOOLS` table (§2.8, asserted by a",
-    "spec/common/PROP-019-version-manager.md:543    test); @spec/done"
-   ],
-   "cites": [],
-   "reason": "DRIFT at one of five, and the law is otherwise the host's own — `PROP-019` §2.6 lists the identical five rules at 215-226: idempotent, never clobber, OS/shell-aware, consent + honesty, injectable seam. Four are implemented and verified in code (marker-guarded idempotence, PATH-preserving additivity, the Windows/POSIX branch, the `EnvPersister` seam). The consent clause is the gap and it is real: `run_use_cmd` writes durable environment state at `mod.rs:310-312` with no confirmation and no printed diff. Detail at `##S5-MECHANICS-CONSENT-AND-HONESTY`.",
-   "reasons": [
-    "DRIFT on «none optional». The five rules match `PROP-019` §2.6's list one-for-one and in the same order (215, 216, 218, 221, 224), so the enumeration is exact. Rule 4 — consent and honesty, «mutating edits need a confirm / `-y` / `self doctor --fix`, print the diff» — is enforced on exactly ONE path, `self doctor --fix` (`doctor.rs:103`), and not on `self use`, which is the ordinary way a user changes the active version. A rule enforced on the rare path and skipped on the common one is optional in practice, which is the word this fact rules out.",
-    "DRIFT on the second clause, and it is the sharpest self-referential failure in the package. FIRST CLAUSE holds cleanly: `DEFAULT_PROFILE` is one `pub const` (`model.rs:129`), asserted by a test (`assert_eq!(DEFAULT_PROFILE, Profile::Debug)` at 325), with `resolve_profile` its only consumer (`mod.rs:269-277`). SECOND CLAUSE is false: NOTHING reads `rust-toolchain.toml`. `grep -rn 'rust-toolchain\\|toolchain.toml' crates/ xtask/ --include='*.rs'` returns exactly one hit and it is a doc comment at `builder.rs:38`; the file itself pins no version (`channel = \"stable\"`); and 1.93 is hard-coded in three places — `tools.rs:33`, `tools.rs:38` and `Cargo.toml:53`. So the single-source-of-truth rule holds for the profile and fails for the language pin, in the same crate.",
-    "DRIFT, carrying the body rows per W1's summary-restatement precedent: four of the five restated properties are verified in code and «consented» is not. `self use` writes durable environment state at `mod.rs:310-312` with no confirmation and no printed diff, so the summary overstates what the implementation guarantees on its most-used path."
-   ],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "crates/vibe-cli/src/commands/vvm/env.rs:164  pub(crate) trait EnvPersister {",
-   "falsifier": "host",
-   "routed_out": [
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md#S5-LAW-EDIT-DURABLE-STATE-IDEMPOTENTLY-AND-ADDITIVELY",
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md#S5-MECHANICS-FIVE-RULES-NONE-OPTIONAL",
-    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md#SUM-S5-DURABLE-ENV-EDITS"
-   ],
-   "owed": 1,
-   "routed_to": [
-    "host"
-   ],
-   "id": "F-157",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "file+type"
-   ],
-   "packages": [
     "packages/org.vibevm.ai-native/core-ai-native"
    ],
    "files": [
@@ -1568,44 +1496,59 @@
     "file+type"
    ],
    "packages": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+    "packages/org.vibevm.world/tool-design-lessons"
    ],
    "files": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md"
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md"
    ],
    "anchors": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md#DERIVED-FROM-THE-EVIDENCE",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md#RUST-AI-NATIVE-TCG-IS-THAT-MISSING-TOOL"
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md#S5-LAW-EDIT-DURABLE-STATE-IDEMPOTENTLY-AND-ADDITIVELY",
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md#S5-MECHANICS-FIVE-RULES-NONE-OPTIONAL",
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md#SUM-S5-DURABLE-ENV-EDITS"
    ],
-   "drift_count": 2,
+   "drift_count": 3,
    "cross_package": false,
    "installed": true,
-   "installed_differs": false,
+   "installed_differs": true,
    "release_event": false,
    "evidence_spans": [
-    "packages/org.vibevm.ai-native/core-ai-native",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+    "crates",
+    "spec"
    ],
    "evidence_refs": [
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105  - ##FINDING-DR2-012 **DR2-012** — Type-constrained decoding cuts compile errors ~75%, lifts correctness",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:107  - ##FINDING-R2C-005 **R2C-005** — Type-constrained decoding is PER-LANGUAGE manual work; no Rust impl exists",
-    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:184    _manifesto · med · refines:H3_ — ... using guided decoding (XGrammar, Outlines), strict schemas, and validator-fir ...",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/main.rs:1  //! bin `rust-ai-native-tcg` — the agentic type oracle's CLI face",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibe.toml:45  name = \"rust-ai-native-tcg\""
+    "crates/vibe-cli/src/commands/vvm/env.rs:164  pub(crate) trait EnvPersister {",
+    "crates/vibe-cli/src/commands/vvm/env.rs:171  const BLOCK_BEGIN: &str = \"# >>> vibevm (VVM) — managed, do not edit by hand >>>\";",
+    "crates/vibe-cli/src/commands/vvm/env.rs:312      parts.retain(|p| !p.eq_ignore_ascii_case(target));",
+    "crates/vibe-cli/src/commands/vvm/mod.rs:310      let persister = make_persister(env, shell)?;",
+    "crates/vibe-cli/src/commands/vvm/mod.rs:428      if cfg!(windows) {",
+    "spec/common/PROP-019-version-manager.md:213  ##env-rules-lead Rules: @spec/done",
+    "spec/common/PROP-019-version-manager.md:215  - ##RULE-IDEMPOTENT **idempotent** (a marker guards the edit; no duplicate lines/entries), @spec/done",
+    "spec/common/PROP-019-version-manager.md:216  - ##RULE-NEVER-CLOBBER **never clobber** (only our entry is added; the rest of `PATH` is",
+    "spec/common/PROP-019-version-manager.md:218  - ##RULE-OS-AWARE **OS/shell-aware** (Windows: `HKCU\\Environment` via PowerShell's",
+    "spec/common/PROP-019-version-manager.md:221  - ##RULE-CONSENT and **consent + honesty** (mutating edits need a confirm / `-y` /",
+    "spec/common/PROP-019-version-manager.md:224  - ##RULE-INJECTABLE-SEAM The durable writer is an injectable seam so tests exercise the POSIX rc"
    ],
    "cites": [],
-   "reason": "**`DR1-014` resolves nowhere.** R2C-005 (ATLAS:107) and DR2-012 (ATLAS:105) resolve; `DR1-014` has no `##FINDING-` anchor in the ATLAS and survives only in this brief and the TypeScript guide. Third member of the unresolvable-evidence-id family, with H4 and DL1-015 — three different ids, three documents, none of them checked by anything",
+   "reason": "DRIFT at one of five, and the law is otherwise the host's own — `PROP-019` §2.6 lists the identical five rules at 215-226: idempotent, never clobber, OS/shell-aware, consent + honesty, injectable seam. Four are implemented and verified in code (marker-guarded idempotence, PATH-preserving additivity, the Windows/POSIX branch, the `EnvPersister` seam). The consent clause is the gap and it is real: `run_use_cmd` writes durable environment state at `mod.rs:310-312` with no confirmation and no printed diff. Detail at `##S5-MECHANICS-CONSENT-AND-HONESTY`.",
    "reasons": [
-    "**the name is taken, by a shipped binary that does something else.** The fact says `rust-ai-native-tcg` «is that missing tool» — the token-level constrained generator. A binary of exactly that name ships and is the CONSULTATION oracle: packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibe.toml:45 declares it and packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/main.rs:1 calls itself «the agentic type oracle's CLI face», with a serve/validate/scope/complete/type/bench surface and no masking anywhere. One name, two tools, one of them shipped — the same collision class as the TypeScript card's `vibe-tcg-ts`, already recorded drift in this batch"
+    "DRIFT on «none optional». The five rules match `PROP-019` §2.6's list one-for-one and in the same order (215, 216, 218, 221, 224), so the enumeration is exact. Rule 4 — consent and honesty, «mutating edits need a confirm / `-y` / `self doctor --fix`, print the diff» — is enforced on exactly ONE path, `self doctor --fix` (`doctor.rs:103`), and not on `self use`, which is the ordinary way a user changes the active version. A rule enforced on the rare path and skipped on the common one is optional in practice, which is the word this fact rules out.",
+    "DRIFT, carrying the body rows per W1's summary-restatement precedent: four of the five restated properties are verified in code and «consented» is not. `self use` writes durable environment state at `mod.rs:310-312` with no confirmation and no printed diff, so the summary overstates what the implementation guarantees on its most-used path."
    ],
    "status": "open",
    "wave": 1,
    "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105  - ##FINDING-DR2-012 **DR2-012** — Type-constrained decoding cuts compile errors ~75%, lifts correctness",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 2,
-   "id": "F-216",
+   "fact": "crates/vibe-cli/src/commands/vvm/env.rs:164  pub(crate) trait EnvPersister {",
+   "falsifier": "host",
+   "routed_out": [
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md#S5-LAW-EDIT-DURABLE-STATE-IDEMPOTENTLY-AND-ADDITIVELY",
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md#S5-MECHANICS-FIVE-RULES-NONE-OPTIONAL",
+    "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md#SUM-S5-DURABLE-ENV-EDITS"
+   ],
+   "owed": 0,
+   "routed_to": [
+    "host"
+   ],
+   "id": "F-157",
    "id_source": "minted",
    "carried": true
   },
@@ -2922,48 +2865,6 @@
    "carried": true
   },
   {
-   "type": "contradiction",
-   "rule": "r-contradiction",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": false,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle.rs:143  Some(doc) => { doc.version += 1; doc.text = text.clone();",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle/tests.rs:30  fn overlay_versions_are_monotonic_and_close_resets() {",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:123  - ##OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET versions never repeat or reset within a session (a monotonic counter per d..."
-   ],
-   "cites": [],
-   "reason": "**the counter does reset within a session.** `update {content: null}` removes the document from the overlay map (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle.rs:183-193), so a reopened file starts again at version 1. The bridge's own test says so in its name: `overlay_versions_are_monotonic_and_close_resets` (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle/tests.rs:30). The implementation and its test agree with each other and disagree with the spec line",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:123  - ##OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET versions never repeat or reset within a session (a monotonic counter per d...",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-270",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
@@ -3017,89 +2918,6 @@
     "single row"
    ],
    "packages": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md#FLOOR-REMAINS-THE-TRUTH"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": false,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs:28  const STEPS: &[&str] = &[ \"gofmt\", \"vet\", \"tests\", \"staticcheck\", \"conform\", \"specmap\", \"test-gate\", ];",
-    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:48  ##FLOOR-REMAINS-THE-TRUTH The floor (`go-ai-native floor` → gofmt/vet/build/test) remains the truth, verbatim. @impl/..."
-   ],
-   "cites": [],
-   "reason": "**the floor named is not the floor shipped.** The fact glosses it as gofmt/vet/build/test. The shipped step list is seven long — gofmt, vet, tests, staticcheck, conform, specmap, test-gate (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs:28-36) — and carries **no `build` step** at all; the compile rides inside `go test ./...` (floor.rs:127-128). A reader told the floor is four steps will not look for the three discipline steps that decide its verdict",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:48  ##FLOOR-REMAINS-THE-TRUTH The floor (`go-ai-native floor` → gofmt/vet/build/test) remains the truth, verbatim. @impl/...",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-273",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "contradiction",
-   "rule": "r-contradiction",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md#card-is-beta"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:175          \"cell-has-oracle\"",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:13  | `scaffold-d-differential-oracle` | E | scaffold D | gate | [E-mid] | shipped: oracle-presence (`cell-has-oracle`, ...",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md:78  ##CHECKER **Checker:** conform T-sem rule `replacement-has-oracle` ... *(Status: specified, NOT yet implemented in p ..."
-   ],
-   "cites": [],
-   "reason": "**the card and its own registry disagree.** The fact says «this card is itself BETA (its checker is specified but the conform rule is not yet implemented in the pilot)». The registry row for the same card reads «**shipped**: oracle-presence (`cell-has-oracle`, rust-ai-native-conform); the oracle itself stays authored» (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:13), and that rule is registered in the shipped gate (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs:77, defined at crates/vendor/core-ai-native-conform/src/rules/structure.rs:148-175). A conform rule for this card IS implemented; the unimplemented one is `replacement-has-oracle`, and the CHECKER row says so correctly while this one does not",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md:78  ##CHECKER **Checker:** conform T-sem rule `replacement-has-oracle` ... *(Status: specified, NOT yet implemented in p ...",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-275",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
     "packages/org.vibevm.ai-native/rust-ai-native-lang"
    ],
    "files": [
@@ -3133,47 +2951,6 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-279",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "files": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md#REPLAY-GOLDENS-AND-RECORDED-TRANSCRIPTS-PIN-BOTH-HOPS"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client/tests.rs:1  //! Replay tests: the whole client layer against scripted transports —",
-    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs:1  //! Oracle-layer replay tests: op semantics over scripted transports —"
-   ],
-   "cites": [],
-   "reason": "**one hop, not both.** The inner hop is real — the client and oracle layers replay against scripted transports (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client/tests.rs:1 and src/oracle/tests.rs:1). No test drives `run_serve` over recorded outer frames: rust-ai-native-tcg has no tests/ file exercising the serve loop, only finding_parity.rs. The Go twin fails identically",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client/tests.rs:1  //! Replay tests: the whole client layer against scripted transports —",
-   "falsifier": "self",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-280",
    "id_source": "minted",
    "carried": true
   },
@@ -3817,51 +3594,6 @@
    "carried": true
   },
   {
-   "type": "reality-mismatch",
-   "rule": "r-default-described-wrongly",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/git-practices"
-   ],
-   "files": [
-    "packages/org.vibevm.world/git-practices/v0.1.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/git-practices/v0.1.0/README.md#THE-FAMILY-GROWS-TO-INCLUDE-ATTRIBUTION-AND-AUTONOMY"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/git-practices",
-    "spec",
-    "vibe.lock"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml:27  \"flow:org.vibevm.world/git-autonomy\" = \"=0.1.0\"",
-    "packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml:31  \"flow:org.vibevm.world/git-attribution-policy\" = \"=0.1.0\"",
-    "spec/boot/STATIC.md:421  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
-    "vibe.lock:294      \"flow:org.vibevm.world/git-attribution-policy@=0.1.0\","
-   ],
-   "cites": [],
-   "reason": "The README body still lists **two** members at :14-17 and defers the other two to this sentence, while the manifest ships four and the host's own PROP-000:159-164 lists all four as current. A reader of the umbrella's README is told two of its four members are pending",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml:27  \"flow:org.vibevm.world/git-autonomy\" = \"=0.1.0\"",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-309",
-   "id_source": "minted",
-   "carried": true
-  },
-  {
    "type": "contradiction",
    "rule": "r-contradiction",
    "merged_by": [
@@ -4421,54 +4153,6 @@
    ],
    "id": "F-202",
    "id_source": "minted",
-   "carried": true
-  },
-  {
-   "type": "contradiction",
-   "rule": "r-contradiction",
-   "merged_by": [
-    "single row"
-   ],
-   "packages": [
-    "packages/org.vibevm.world/redbook"
-   ],
-   "files": [
-    "packages/org.vibevm.world/redbook/v0.2.0/README.md"
-   ],
-   "anchors": [
-    "packages/org.vibevm.world/redbook/v0.2.0/README.md#AN-EDITION-IS-A-TESTED-SET-OF-EXACT-PINS"
-   ],
-   "drift_count": 1,
-   "cross_package": false,
-   "installed": true,
-   "installed_differs": false,
-   "release_event": false,
-   "evidence_spans": [
-    "packages/org.vibevm.world/redbook",
-    "spec"
-   ],
-   "evidence_refs": [
-    "packages/org.vibevm.world/redbook/v0.2.0/README.md:25  ##AN-EDITION-IS-A-TESTED-SET-OF-EXACT-PINS An edition is a",
-    "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:48  # The cultural-extraction wave (edition bump to a clean 0.3.0 lands when the",
-    "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:49  # full new practice set has settled; accumulated here in place meanwhile).",
-    "spec/common/PROP-028-package-families.md:161  - ##REJ-CARET-PINS **Caret pins in the aggregator**: a caret would let members skew within a",
-    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1693  - **2026-07-28 · F-114 — the edition contract is falsified by the manifest that",
-    "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1701  **So the umbrella accumulates members inside 0.2.0 without an edition bump, and"
-   ],
-   "cites": [
-    "F-114"
-   ],
-   "reason": "DRIFT on its causal clause, confirming the host's already-filed F-114 rather than opening anything new. The exact-pin half holds arithmetically — all 22 pins parse as `=X.Y.Z`, none caret, none range, and PROP-028 §REJ-CARET-PINS records the host's rationale for that rule. What fails is the «so»: «two projects on the same edition run byte-identical practice text» is falsified by the manifest three lines below the last pin, which I read directly — vibe.toml:48-49 reads «# The cultural-extraction wave (edition bump to a clean 0.3.0 lands when the full new practice set has settled; accumulated here in place meanwhile)». Members were added to 0.2.0 without the version moving, so two projects that installed 0.2.0 on either side of that commit receive different member sets. F-114 (campaign plan, 2026-07-28) quotes the same comment against the same sentence.",
-   "reasons": [],
-   "status": "open",
-   "wave": 1,
-   "closure_route": "sync-from-code",
-   "fact": "packages/org.vibevm.world/redbook/v0.2.0/README.md:25  ##AN-EDITION-IS-A-TESTED-SET-OF-EXACT-PINS An edition is a",
-   "falsifier": "mixed",
-   "routed_out": [],
-   "owed": 1,
-   "id": "F-114",
-   "id_source": "adopted (plan LOG)",
    "carried": true
   },
   {
@@ -5120,7 +4804,7 @@
    "drift_count": 1,
    "cross_package": false,
    "installed": true,
-   "installed_differs": false,
+   "installed_differs": true,
    "release_event": false,
    "evidence_spans": [
     "crates",
@@ -5485,6 +5169,45 @@
     "host"
    ],
    "id": "F-097",
+   "id_source": "adopted (plan LOG)",
+   "carried": true
+  },
+  {
+   "type": "contradiction",
+   "rule": "r-contradiction",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/redbook"
+   ],
+   "files": [
+    "packages/org.vibevm.world/redbook/v0.2.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/redbook/v0.2.0/README.md#AN-EDITION-IS-A-TESTED-SET-OF-EXACT-PINS"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/redbook",
+    "spec"
+   ],
+   "cites": [
+    "F-114"
+   ],
+   "reason": "DRIFT on its causal clause, confirming the host's already-filed F-114 rather than opening anything new. The exact-pin half holds arithmetically — all 22 pins parse as `=X.Y.Z`, none caret, none range, and PROP-028 §REJ-CARET-PINS records the host's rationale for that rule. What fails is the «so»: «two projects on the same edition run byte-identical practice text» is falsified by the manifest three lines below the last pin, which I read directly — vibe.toml:48-49 reads «# The cultural-extraction wave (edition bump to a clean 0.3.0 lands when the full new practice set has settled; accumulated here in place meanwhile)». Members were added to 0.2.0 without the version moving, so two projects that installed 0.2.0 on either side of that commit receive different member sets. F-114 (campaign plan, 2026-07-28) quotes the same comment against the same sentence.",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.world/redbook/v0.2.0/README.md:25  ##AN-EDITION-IS-A-TESTED-SET-OF-EXACT-PINS An edition is a",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-114",
    "id_source": "adopted (plan LOG)",
    "carried": true
   },
@@ -7810,6 +7533,44 @@
    "type": "reality-mismatch",
    "rule": "r-default-described-wrongly",
    "merged_by": [
+    "file+type"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md#DERIVED-FROM-THE-EVIDENCE",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md#RUST-AI-NATIVE-TCG-IS-THAT-MISSING-TOOL"
+   ],
+   "drift_count": 2,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/core-ai-native",
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "cites": [],
+   "reason": "**`DR1-014` resolves nowhere.** R2C-005 (ATLAS:107) and DR2-012 (ATLAS:105) resolve; `DR1-014` has no `##FINDING-` anchor in the ATLAS and survives only in this brief and the TypeScript guide. Third member of the unresolvable-evidence-id family, with H4 and DL1-015 — three different ids, three documents, none of them checked by anything",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105  - ##FINDING-DR2-012 **DR2-012** — Type-constrained decoding cuts compile errors ~75%, lifts correctness",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 2,
+   "id": "F-216",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
     "single row"
    ],
    "packages": [
@@ -8921,6 +8682,42 @@
    "carried": true
   },
   {
+   "type": "contradiction",
+   "rule": "r-contradiction",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md#OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": false,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
+   ],
+   "cites": [],
+   "reason": "**the counter does reset within a session.** `update {content: null}` removes the document from the overlay map (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle.rs:183-193), so a reopened file starts again at version 1. The bridge's own test says so in its name: `overlay_versions_are_monotonic_and_close_resets` (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle/tests.rs:30). The implementation and its test agree with each other and disagree with the spec line",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:123  - ##OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET versions never repeat or reset within a session (a monotonic counter per d...",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-270",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
    "type": "missing-support",
    "rule": "r-nothing-exists",
    "merged_by": [
@@ -8997,6 +8794,42 @@
     "single row"
    ],
    "packages": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md#FLOOR-REMAINS-THE-TRUTH"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": false,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/go-ai-native-lang"
+   ],
+   "cites": [],
+   "reason": "**the floor named is not the floor shipped.** The fact glosses it as gofmt/vet/build/test. The shipped step list is seven long — gofmt, vet, tests, staticcheck, conform, specmap, test-gate (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs:28-36) — and carries **no `build` step** at all; the compile rides inside `go test ./...` (floor.rs:127-128). A reader told the floor is four steps will not look for the three discipline steps that decide its verdict",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:48  ##FLOOR-REMAINS-THE-TRUTH The floor (`go-ai-native floor` → gofmt/vet/build/test) remains the truth, verbatim. @impl/...",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-273",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
     "packages/org.vibevm.ai-native/go-ai-native-mcp"
    ],
    "files": [
@@ -9024,6 +8857,42 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-274",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "contradiction",
+   "rule": "r-contradiction",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md#card-is-beta"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "cites": [],
+   "reason": "**the card and its own registry disagree.** The fact says «this card is itself BETA (its checker is specified but the conform rule is not yet implemented in the pilot)». The registry row for the same card reads «**shipped**: oracle-presence (`cell-has-oracle`, rust-ai-native-conform); the oracle itself stays authored» (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:13), and that rule is registered in the shipped gate (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs:77, defined at crates/vendor/core-ai-native-conform/src/rules/structure.rs:148-175). A conform rule for this card IS implemented; the unimplemented one is `replacement-has-oracle`, and the CHECKER row says so correctly while this one does not",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md:78  ##CHECKER **Checker:** conform T-sem rule `replacement-has-oracle` ... *(Status: specified, NOT yet implemented in p ...",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-275",
    "id_source": "minted",
    "carried": true
   },
@@ -9132,6 +9001,42 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-278",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "files": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md#REPLAY-GOLDENS-AND-RECORDED-TRANSCRIPTS-PIN-BOTH-HOPS"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.ai-native/rust-ai-native-lang"
+   ],
+   "cites": [],
+   "reason": "**one hop, not both.** The inner hop is real — the client and oracle layers replay against scripted transports (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client/tests.rs:1 and src/oracle/tests.rs:1). No test drives `run_serve` over recorded outer frames: rust-ai-native-tcg has no tests/ file exercising the serve loop, only finding_parity.rs. The Go twin fails identically",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client/tests.rs:1  //! Replay tests: the whole client layer against scripted transports —",
+   "falsifier": "self",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-280",
    "id_source": "minted",
    "carried": true
   },
@@ -9802,6 +9707,44 @@
    "routed_out": [],
    "owed": 1,
    "id": "F-306",
+   "id_source": "minted",
+   "carried": true
+  },
+  {
+   "type": "reality-mismatch",
+   "rule": "r-default-described-wrongly",
+   "merged_by": [
+    "single row"
+   ],
+   "packages": [
+    "packages/org.vibevm.world/git-practices"
+   ],
+   "files": [
+    "packages/org.vibevm.world/git-practices/v0.1.0/README.md"
+   ],
+   "anchors": [
+    "packages/org.vibevm.world/git-practices/v0.1.0/README.md#THE-FAMILY-GROWS-TO-INCLUDE-ATTRIBUTION-AND-AUTONOMY"
+   ],
+   "drift_count": 1,
+   "cross_package": false,
+   "installed": true,
+   "installed_differs": false,
+   "release_event": false,
+   "evidence_spans": [
+    "packages/org.vibevm.world/git-practices",
+    "spec",
+    "vibe.lock"
+   ],
+   "cites": [],
+   "reason": "The README body still lists **two** members at :14-17 and defers the other two to this sentence, while the manifest ships four and the host's own PROP-000:159-164 lists all four as current. A reader of the umbrella's README is told two of its four members are pending",
+   "status": "resolved",
+   "wave": 1,
+   "closure_route": "sync-from-code",
+   "fact": "packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml:27  \"flow:org.vibevm.world/git-autonomy\" = \"=0.1.0\"",
+   "falsifier": "mixed",
+   "routed_out": [],
+   "owed": 1,
+   "id": "F-309",
    "id_source": "minted",
    "carried": true
   },

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-02T14:53:11Z",
+  "updated_at": "2026-08-02T20:24:18Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -19,6 +19,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
+        "summary": {
+          "confirmed": 26
+        },
         "verdicts": {
           "core-contents-lead": {
             "v": "confirmed",
@@ -262,6 +265,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "8782a55ff9f4f0744bff60f48c912c515b299a2051b406902a3e270555429274",
+        "summary": {
+          "confirmed": 99,
+          "unverifiable": 1
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -1127,6 +1134,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "b2b8e03ad3ece3025a646dc74ac765ec3e11c84f9d7824fe8e9fe4f4eee7f82e",
+        "summary": {
+          "confirmed": 36
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -1426,6 +1436,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "70a8158485bf4ace4d9dc4a193ea35becf3a34011c4a3fe45f94ab6b0a5e6ce2",
+        "summary": {
+          "confirmed": 39,
+          "unverifiable": 1
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -1791,6 +1805,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "8f6ee7227dd1c4dd3a705865514ce5ec21a142b40939d860ab7f9d4fe139730d",
+        "summary": {
+          "confirmed": 27
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -2047,6 +2064,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d13976f8125cfdb7cf5c9f319cdb53c2c21c7d11f4f8d59503e25c52f67acf8b",
+        "summary": {
+          "confirmed": 57
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -2557,6 +2577,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "b97b1fec890ea65ce2abfc2c167f845860c95f0040b980de14627621a65a4f73",
+        "summary": {
+          "confirmed": 36
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -2896,6 +2919,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "99bb51affd762bc903bc7fd570097e0f8a9fa49988483a25ade1e4450ff173ac",
+        "summary": {
+          "confirmed": 28
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -3158,6 +3184,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d09c56dbaafa4fd28b124a909141b87dac01f0e7483fe470121717f01cf8878d",
+        "summary": {
+          "confirmed": 93
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -4012,7 +4041,11 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "3fc38a8663355577ae9a76804dda5a2e10209292fceb5cf0a4999f175049a292",
+        "processed_hash": "b8174c14354e73924c0b7685de3b88fe4f90234ac5fea5dbaf69bc3b5cdb90fd",
+        "summary": {
+          "confirmed": 25,
+          "unverifiable": 1
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -4146,10 +4179,7 @@
           "C-4-RESOLUTION": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:31  - ##C-4-RESOLUTION **Resolution:** route the oracle to where it exists — **post-generation `cargo check` loop** (Clas...",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/02-EXECUTABLE-SCAFFOLDS.md:45  | ##ROW-CLASS-E **E** @impl/done | Per-cell fast verification loop @impl/done | the substrate that makes all signals ...",
-              "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42  - ##TCG-CRATE-DELETED `vibe-tcg` and the vibe-mcp `tcg_*` adapters are",
-              "the resolution says `vibe-tcg` was deleted, and it was: `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42` records the deletion, `crates/` carries no tcg member, and `36461ba8 refactor(mcp)!: retire the tcg adapters and delete vibe-tcg` is the commit. The same fact confirmed independently in C1a"
+              "re-vouched after the canon alignment of 2026-08-02 (owner option (а)): the resolution line now carries 75.3%/70.2% naming DR2-012 as the canonical pair instead of the 74.8% figure that disagreed with the package's own ATLAS; the resolution's substance (route the oracle to cargo check today, constrained decoding staged as a future tool) is unchanged and still matches Guide §12 and the tcg spec"
             ]
           },
           "c-5-side-a": {
@@ -4238,8 +4268,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T15:54:43Z",
-        "verify_batch": "C2 + D3c + D5b + D10-groupA"
+        "verified_at": "2026-08-02T19:00:29Z",
+        "verify_batch": "C2 + D3c + D5b + D10-groupA + D33"
       }
     },
     {
@@ -4259,6 +4289,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "6b72508ecc7f7527993d4c214d1eb2cfc18ace5ad8ad160d1aac0092d7bd7f57",
+        "summary": {
+          "confirmed": 16
+        },
         "verdicts": {
           "FOLLOWS-DISCIPLINE": {
             "v": "confirmed",
@@ -4421,6 +4454,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5518bab664216e79ab250d9a7c94eadc459cefd9f336e287a55d602fcb1aaa4d",
+        "summary": {
+          "confirmed": 60,
+          "unverifiable": 3
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -4938,7 +4975,11 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "efb66f0095465bb64894cc57b836e2cca3d196af280ea566305bc7a078fc2d66",
+        "processed_hash": "443fcb2c5279fb8aab12d4eb4020ad49e516776a18a4aaf43cfeca4004200e45",
+        "summary": {
+          "confirmed": 40,
+          "drift": 4
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -5162,7 +5203,7 @@
           "EXAMPLE-R-021-FORBIDDEN-IDIOM": {
             "v": "confirmed",
             "ev": [
-              "DEMOTED 10/10 (Phase D wave 5, §3.3). The escalation-tier vocabulary is genuinely unbuilt across the full perimeter — no `Tier` type, no `tier` field, no escalation logic in core-ai-native-conform. Four of the ten are written as PARTIALS because half of each runs: `syn` is a real Rust frontend, R-002 is real as `CellIsolation`, go-extract is stdlib-only exactly as claimed, and the linter posture is as described. Prescriptions kept word for word; only the markers moved."
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-038 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "EXAMPLE-R-002-IMPORT-GRAPH-ISOLATION": {
@@ -5174,7 +5215,7 @@
           "EXAMPLE-R-020-NAMING-VS-MANIFEST": {
             "v": "confirmed",
             "ev": [
-              "DEMOTED 10/10 (Phase D wave 5, §3.3). The escalation-tier vocabulary is genuinely unbuilt across the full perimeter — no `Tier` type, no `tier` field, no escalation logic in core-ai-native-conform. Four of the ten are written as PARTIALS because half of each runs: `syn` is a real Rust frontend, R-002 is real as `CellIsolation`, go-extract is stdlib-only exactly as claimed, and the linter posture is as described. Prescriptions kept word for word; only the markers moved."
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-038 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "ROW-FRONTEND-RUST": {
@@ -5276,8 +5317,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T14:10:28Z",
-        "verify_batch": "C1 + D5b + D7 + D21 + D22 + D24"
+        "verified_at": "2026-08-02T19:06:18Z",
+        "verify_batch": "C1 + D5b + D7 + D21 + D22 + D24 + D34"
       }
     },
     {
@@ -5297,6 +5338,11 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1ad512c96d0c33368c5a09cd7249d2ae16e7bc8c1643b0af2879f8da721be676",
+        "summary": {
+          "confirmed": 33,
+          "drift": 5,
+          "unverifiable": 2
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -5653,6 +5699,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "74fdf8fef163f367e8a7b491a4285beb9aafdcc1730f76b4e837e88cba50ad13",
+        "summary": {
+          "confirmed": 34
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -5953,7 +6002,12 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "0caa0448f953504c65320dc5d70b2e44532d377acf45f739a2c22b072c4a6b37",
+        "processed_hash": "09986074d347e43e094b7d58fa93cd3716c02f800b5dadcb0f3ccce6f0000643",
+        "summary": {
+          "confirmed": 166,
+          "drift": 1,
+          "unverifiable": 6
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -6148,19 +6202,19 @@
           "RUNTIME-EXPOSES-THE-METAMODEL-TO-CONSUMERS": {
             "v": "confirmed",
             "ev": [
-              "repaired under F-133 route §3.6(a) (falsifier=self, no demote choice pending — the marker stays @spec/done) and re-verified 2026-08-01: the false clause is gone — the text now says core-ai-native-mcp ships no tools at all with echo named as the #[cfg(test)] fixture it is (server.rs, mod tests, struct Echo inside), which is the tree's exact state; the added scoping sentence is tree-true (trace_explain ships in all three stack MCP rosters — rust-ai-native-mcp/src/lib.rs:55-67, pinned by the_tool_set_is_exactly_the_declared_inventory — as the discipline's per-project channel over a checkout, rust-ai-native-cli/src/trace.rs:11-12, foreign units excluded index.rs:70-75, so it is not vibe's metamodel channel); every pre-existing clause re-verified unchanged: specmap_query/specmap_explain/specmap_source absent from every roster, vibe-mcp explain is PROP-018's README relay, and an agent driving vibe still cannot ask the running tool anything"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-018 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "DISTRIBUTION-RIDES-THE-EXISTING-REGISTRY": {
             "v": "confirmed",
             "ev": [
-              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-016 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "CLOSED-SOURCE-PROJECTS-SHIP-A-REDACTED-PROFILE": {
             "v": "confirmed",
             "ev": [
-              "MIXED (Phase D wave 5). Eight demoted, one corrected, and `##LLM-AS-PROPOSER` RE-JUDGED confirmed: the loop ran end to end and `terraform/specmap-proposals.json` carries 54 owner-approved proposals. Error provenance ships too, so two of the three forces hold rather than one."
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-017 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "DECISIONS-SECTION-IS-THE-BINDING-MODEL": {
@@ -6442,7 +6496,7 @@
           "RULE-MULTIPLICITY-LINT": {
             "v": "confirmed",
             "ev": [
-              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-021 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "kind-line-edges": {
@@ -6464,7 +6518,7 @@
           "EDGE-MODEL-NODES": {
             "v": "confirmed",
             "ev": [
-              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-019 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "EDGE-MODEL-EDGES": {
@@ -6550,7 +6604,7 @@
           "QUERY-ERROR-PROVENANCE": {
             "v": "confirmed",
             "ev": [
-              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-019/B-018 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "QUERIES-LIVE-BEHIND-XTASK-DURING-THE-PILOT": {
@@ -6578,7 +6632,7 @@
           "LLM-AS-RENDERER": {
             "v": "confirmed",
             "ev": [
-              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-020 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "LLM-NEVER-SILENTLY-WRITES-EDGES": {
@@ -6592,19 +6646,19 @@
           "RUNTIME-TRANSPORT": {
             "v": "confirmed",
             "ev": [
-              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-018 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "RUNTIME-DISTRIBUTION": {
             "v": "confirmed",
             "ev": [
-              "MIXED (Phase D wave 5). Eight demoted, one corrected, and `##LLM-AS-PROPOSER` RE-JUDGED confirmed: the loop ran end to end and `terraform/specmap-proposals.json` carries 54 owner-approved proposals. Error provenance ships too, so two of the three forces hold rather than one."
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-016 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "RUNTIME-PROFILES": {
             "v": "confirmed",
             "ev": [
-              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-017 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "RUNTIME-SECURITY-IS-NON-OPTIONAL": {
@@ -6735,7 +6789,7 @@
           "SPEC-PRINCIPLE-UNITS-FIT-A-PAGE": {
             "v": "confirmed",
             "ev": [
-              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-021 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "RUST-PRINCIPLES-ARE-NOT-A-GENERAL-STYLE-GUIDE": {
@@ -6782,7 +6836,7 @@
           "RUST-PRINCIPLE-RUSTDOC-IS-THE-DETAIL-LAYER": {
             "v": "confirmed",
             "ev": [
-              "closed by the applied 1a corrections under group A's sanctioned form, owner approval 2026-08-01 ('1' + blanket): the fact now carries its Specified-not-built annotation naming exactly what ships and what does not (or, for RUNTIME-TRANSPORT, the real per-family MCP tool names); the unbuilt mechanisms are tracked for feasibility research in BACKLOG B-012; harvest d7a + the D9/1a presentation"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-020 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "RUST-PRINCIPLE-NO-ORPHAN-PUBLIC-API": {
@@ -7260,8 +7314,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-01T12:54:05Z",
-        "verify_batch": "C1 + D5b + D7 + D10-groupA + D13-1a + D16 + D17 + D18"
+        "verified_at": "2026-08-02T19:06:18Z",
+        "verify_batch": "C1 + D5b + D7 + D10-groupA + D13-1a + D16 + D17 + D18 + D34"
       }
     },
     {
@@ -7281,6 +7335,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "0bb204d621551276a7e07d540ac48c1b6e29bbd1731d19ac6f2ba53f4757a299",
+        "summary": {
+          "confirmed": 30
+        },
         "verdicts": {
           "GO-PROJECTION-SHIPS-A-RUNNABLE-TOOLCHAIN": {
             "v": "confirmed",
@@ -7565,6 +7622,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "bed3c82e97af2dc526a06a1d369870751387d0ddc0917929d00036af0077cdd1",
+        "summary": {
+          "confirmed": 18
+        },
         "verdicts": {
           "GO-CODE-FOLLOWS-THE-GO-GUIDE": {
             "v": "confirmed",
@@ -7738,6 +7798,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "ea3dd504db114a93dba96108dc37ce915b37054db09ea63c52bea7109ed6d8df",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -7866,6 +7929,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "7e00772932a6189add5d4f0903c4125189409a435687f3a532b5f54bc49b3b7f",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -7997,6 +8063,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "37d30201591def68acd3bbe8c943b38c95eea8fd2f448d632b1f0f924dfae6de",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -8126,6 +8195,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "dabd1d40db070028c345e4d580df3810916ad3150a34f1d0d8e59b071207aa15",
+        "summary": {
+          "confirmed": 52
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -8578,6 +8650,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "357e719ca549bc15e919efdfc749a827a1bd3c1493c04e070c73161b5153be8c",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -8710,6 +8785,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "ccafcff42a4d55bb286ff0b87bb86b5ca54373cf1671cc7ae65b6438e550dd2e",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -8846,6 +8924,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "9f83982e17e8a42c8d49c985f76a6e8f0d394048108ee6d01139787d21c65c9c",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -8976,6 +9057,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "14b2604c3a394ffee31fc3a65059fc6cdeadd56cbbc90e8ae1a3ce101010f480",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -9109,6 +9193,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "b017335b5e11696c4fa72dc96d54cca623f0d38c3e5e12d77c294421359b7c6f",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -9236,7 +9323,11 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "7ddc4ab6dbd08ba517c21adce279587b8a69c225abe04322bba8e6226e2834b7",
+        "processed_hash": "bbd9bbfc58eec9f924fb043689377eb2bdae6a0779760578445f4b8bac85bf45",
+        "summary": {
+          "confirmed": 147,
+          "unverifiable": 2
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -9739,7 +9830,7 @@
           "CONFORMANCE-IS-MADE-LOUD": {
             "v": "confirmed",
             "ev": [
-              "repaired under F-166, owner ruling 2026-08-02 answer 2.2(а): the fact now carries the sanctioned annotation — the Go gate registers exactly three rules (GoUnsafeInDomain, GoCellIsolation, FileLength; build_rules, lib.rs:53-60, re-read at HEAD) and none parses for the assertion — while keeping what is true: the assertion idiom itself and the example below it; determined on the §3.8 bench (the package's own rule roster), not on host usage; the build of the missing check, plus the Rust/TS family survey for the same promise-vs-gate gap, is the owner's recorded backlog build B-030; marker @impl/done → @spec/done"
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-030 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "PROMOTION-TO-A-SEPARATE-MODULE": {
@@ -10472,8 +10563,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T14:10:28Z",
-        "verify_batch": "C3 + D5a + D6 + D7 + D9-boss-a + D24"
+        "verified_at": "2026-08-02T19:06:18Z",
+        "verify_batch": "C3 + D5a + D6 + D7 + D9-boss-a + D24 + D34"
       }
     },
     {
@@ -10492,7 +10583,12 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "0ce2921f9088a1609c79d3d9adb19b7bdc4de1e77b051848347a939a80b07013",
+        "processed_hash": "9697f61cfa68ac871cd6ef00ce053b7740d8716c374ec2441a22c1d5fbddcad8",
+        "summary": {
+          "confirmed": 67,
+          "drift": 2,
+          "unverifiable": 2
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -10520,11 +10616,9 @@
             ]
           },
           "QUANTITIES-ARE-CAMPAIGN-MEASURED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:17  ##QUANTITIES-ARE-CAMPAIGN-MEASURED Where the sibling Rust mechanism cites measured spike facts, this one names the sa...",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:1  //! `go-ai-native-tcg bench` — the differential/latency harness //! (ORACLE-GO §5, §8): every corpus case runs throug...",
-              "**the quantities are recorded nowhere.** The fact says the Phase-7 live chain and the bench harness record them. The harness exists (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/src/bench.rs:1) and there is **no Go corpus, no Go bench report and no ledger entry**: research/tcg-bench/reports/ carries bench-2026-07-07-baseline.json (TypeScript) and bench-rust-2026-07-07-baseline.json only. This is checkable without gopls, which is why it is drift rather than unverifiable"
+              "owner ruling 2026-08-02 («Я в целом согласен» + the far-future note dictated verbatim in substance): the fact now names the instrument (go-ai-native-tcg bench, Cmd::Bench at crates/go-ai-native-tcg/src/main.rs:77-84 -> run_bench bench.rs:106), states that no Go corpus or baseline has been taken (find over the package returns only the harness and the conform ratchet's baseline.rs — a different artefact), and records the owner's decision that creating the Go measurement codebase is deliberately far-future work (LLM- or fuzzer-generated corpus), not being built now; the figures are posted targets, matching the document's own §8 which carries no spike section"
             ]
           },
           "kind-line-resolution": {
@@ -10554,11 +10648,9 @@
             ]
           },
           "RESOLUTION-GOPLS-ON-PATH": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:34  1. ##RESOLUTION-GOPLS-ON-PATH `gopls` on PATH; @impl/done",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/lib.rs:155  // PATH: probe the bare name. let probe = std::process::Command::new(\"gopls\")",
-              "**PATH is not the first probe.** The fact is step 1 of §1's ordered resolution list, and the shipped resolver tries the `GO_AI_NATIVE_GOPLS` env override BEFORE PATH — and hard-fails on it when the override is not a file, without ever probing PATH (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/lib.rs:149-157). The implementation's own doc comment names the real order — «the env override, then PATH, then $GOBIN…» (lib.rs:141-143) — so the code documents a step the mechanism spec does not list"
+              "owner ruling 2026-08-02: step 1 now names the GO_AI_NATIVE_GOPLS env override first — matching the shipped resolver resolve_gopls (crates/go-ai-native-tcg-bridge/src/lib.rs:139-155), whose own doc comment reads «the env override, then PATH, then $GOBIN, then $(go env GOPATH)/bin, then the recipe-carrying refusal» and whose first branch refuses a set-but-not-a-file override without probing PATH — exactly what the amended step states; the Rust sibling's three-step list stays untouched because its resolver has no override and matches its own spec"
             ]
           },
           "RESOLUTION-GOBIN": {
@@ -11061,10 +11153,9 @@
             ]
           },
           "TARGET-COMPLETE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:225  - ##TARGET-COMPLETE `complete` p50 < 300 ms, @impl/done",
-              "the bench cannot measure it: `bench.rs` records **`warm_ms` alone** — no complete latency, no p50, no threshold — so a «complete p50 under 300 ms» target has no instrument in the harness written to instrument it"
+              "owner ruling 2026-08-02 point 3: the target now says posted-not-measured with the instrument named — crates/go-ai-native-tcg/src/bench.rs records per-case warm_ms for validate only and computes no percentile of any kind (grep for pct/percentile/p50/p95/sort returns nothing) — and cites BACKLOG.md B-042; marker @spec/done"
             ]
           },
           "TARGET-COLD-INIT": {
@@ -11086,8 +11177,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C4+C5 + C45-go-review + D5a"
+        "verified_at": "2026-08-02T19:00:29Z",
+        "verify_batch": "C4+C5 + C45-go-review + D5a + D31 + D33"
       }
     },
     {
@@ -11106,7 +11197,10 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "a6e5656919f575f3e3956ab696b10dfb6c6f68eb8dca84edf9518530a643445d",
+        "processed_hash": "335ba3a1f6331655c98caa2a47f1808ec0cda29c5c46d72d36c2d6443b796818",
+        "summary": {
+          "confirmed": 41
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -11195,11 +11289,9 @@
             ]
           },
           "ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:34  ##ONE-PRODUCT-CLIENT-DRIVES-ALL-THREE-RELAYS One language-generic product client (`vibe-tcg`'s `OracleRegistry` link)...",
-              "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:110  ##ORACLE-REGISTRY `OracleRegistry`: interior-mutable (the MCP tool seam hands out shared refs), lazily populated per...",
-              "the named artifact was not located on the wide perimeter, which includes research/go-demo, the real Go consumer"
+              "owner ruling 2026-08-02 after the OracleRegistry investigation: the fact now records the truth whole — the client is gone by the owner's own MCP-SOVEREIGNTY resolution (2026-07-07, commit 36461ba8; PROP-026 ##TOPOLOGY-RETIRED / ##TCG-CRATE-DELETED), neither Go pinning mechanism exists (no live_chain.rs — server_replay.rs only; no outer-frame golden), the surviving posture is TcgSession (tools_tcg.rs:32), and the planned successor is the multi-language composition layer B-046 (autodiscovery over the sovereign servers, autonomy preserved — his direction verbatim in the entry); marker @impl/plan per the B-027 rule, the build is planned. The verdict's original usage-absence ground is not relied on — voided by the §3.8 bench"
             ]
           },
           "RESTATES-RATHER-THAN-INCLUDES-THE-SIBLING-TEXTS": {
@@ -11446,12 +11538,9 @@
             ]
           },
           "REPLAY-GOLDENS-PIN-BOTH-HOPS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:158  ##REPLAY-GOLDENS-PIN-BOTH-HOPS Replay goldens pin the CURRENT outer shape in this package's tests; recorded LSP trans...",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client/tests.rs:14  pub(crate) struct Script { pub sent: Vec<serde_json::Value>,",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-extract-bridge/src/lib.rs:300  r#\"{\"protocol\":1,\"file\":\"internal/cells/plan/plan.go\",\"in_test\":false,\"degraded\":false,\"#,",
-              "**the outer hop has no replay goldens.** The inner hop is real: recorded LSP transcripts drive a scripted transport (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client/tests.rs:14). Nothing drives `run_serve` over recorded frames — the outer-hop tests are unit tests of helper functions plus a finding-parity test (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg/tests/finding_parity.rs). «Both hops» is one hop"
+              "owner ruling 2026-08-02 (the F-210 portion): annotated in the sanctioned form on the package's own bench — the inner hop is real and gopls-free (client/tests.rs Script), the outer hop the document owns (##DOCUMENT-OWNS-THE-OUTER-HOP-GRAMMAR) is pinned by nothing (run_serve called from main.rs alone, no test builds a {proto,id,op,params} frame, no recorded stream checked in); marker @spec/done — no entry plans the outer goldens today, and the no-measurements standing answer does not cover protocol pinning (a different genre, left honest)"
             ]
           },
           "MARKERS-FIELD-IS-FILLED-HERE": {
@@ -11464,8 +11553,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T20:39:23Z",
-        "verify_batch": "C4+C5 + C45-go-review + D11-release-a"
+        "verified_at": "2026-08-02T19:57:39Z",
+        "verify_batch": "C4+C5 + C45-go-review + D11-release-a + D38"
       }
     },
     {
@@ -11485,6 +11574,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "efd7da05501b8e4ec3d5f60ba84fae3a6329e9f29647da0db98c74ce2c124fcf",
+        "summary": {
+          "confirmed": 26,
+          "drift": 3
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -11759,6 +11852,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5855f5128468cb5c93ea12d4ebf9728fa3adae50f8fc490abfd5d629f4010572",
+        "summary": {
+          "confirmed": 25
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -11989,6 +12085,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1447f48a9af677ed231a2a18feb5d95b3166f89491103dc7bc6cc67d3d01c3bd",
+        "summary": {
+          "confirmed": 35,
+          "drift": 2
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -12277,12 +12377,9 @@
             ]
           },
           "RISK-WINDOWS-CHILD-LIFECYCLE": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:190  - ##RISK-WINDOWS-CHILD-LIFECYCLE **Windows child lifecycle.** The house lesson set applies (verbatim-free paths into...",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/lib.rs:124  pub fn verbatim_free(path: &Path) -> PathBuf { let s = path.to_string_lossy(); match s.strip_prefix(r\"\\\\?\\\") { Some(s...",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client.rs:357  impl Drop for ChildTransport { fn drop(&mut self) { let _ = self.child.kill(); let _ = self.child.wait(); }",
-              "located in the perimeter on the refs above, machine-verified against the files they cite"
+              "verdict-first repair of a false confirmed (boss re-judge 2026-08-02, F-281 family measurement): the fact lists «no-zombie assertions» among the applied house-lesson set — no test in the Go stack probes the process table for a surviving gopls child: the family-wide sweep for surviving-pid/no-zombie/process_table/sysinfo/tasklist/OpenProcess/try_wait over *.rs/*.go/*.ts finds in this stack only the doc comment on go-ai-native-tcg-bridge/tests/live_oracle.rs:3 («shutdown with no zombie») — a comment, not an assertion; the only real process-table assertion in the repository belongs to fractality's pod/worker pair (fractality-pod/tests/loopback.rs:288-299) and asserts a different product's child; resolution per owner ruling 2026-08-02 «тест на зомби лучше написать» — the test is the recorded build BACKLOG.md B-044, the text stays as the target"
             ]
           },
           "RISK-SCOPE-CREEP-TOWARD-AN-LSP-RELAY": {
@@ -12304,7 +12401,7 @@
           }
         },
         "verified_at": "2026-07-31T20:39:23Z",
-        "verify_batch": "C4+C5 + C45-go-review + D5a + D8b + D11-release-a"
+        "verify_batch": "C4+C5 + C45-go-review + D5a + D8b + D11-release-a + D32"
       }
     },
     {
@@ -12324,6 +12421,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "85a5d8ac2d74bd0bf84064515cdcd8bde3648679d901558de98bc861158cbf56",
+        "summary": {
+          "confirmed": 34
+        },
         "verdicts": {
           "RUNNING-THE-STANDING-SWEEP": {
             "v": "confirmed",
@@ -12632,6 +12732,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "824b69588c4a3ed0f0a6c92d906e4d480ae6884fa669d31666e95a132da28bba",
+        "summary": {
+          "confirmed": 35
+        },
         "verdicts": {
           "EXECUTING-THE-BROWNFIELD-PROTOCOL": {
             "v": "confirmed",
@@ -12951,6 +13054,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "8efe2c3f54507f8f3d9f1e69db1766636340e896e9e07f6c57b2b0f7e13e161b",
+        "summary": {
+          "confirmed": 3
+        },
         "verdicts": {
           "SERVED-OVER-MCP-AS-ONE-STDIO-BINARY": {
             "v": "confirmed",
@@ -12998,6 +13104,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "e2c83fbfe0a8aeb2806ceb198861f721026f5d0c15956bfaf971f25a0b41572b",
+        "summary": {
+          "confirmed": 34
+        },
         "verdicts": {
           "SERVED-OVER-MCP-AS-ONE-STDIO-BINARY": {
             "v": "confirmed",
@@ -13293,6 +13402,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1056b506ebb5c71eea6422568e42e816296f41f223ca8965a57890907f523d12",
+        "summary": {
+          "confirmed": 5
+        },
         "verdicts": {
           "AGG-ROLE": {
             "v": "confirmed",
@@ -13358,6 +13470,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "bd1b2f3c8fd115dcd283b48d567ae2af94f89562af863d72c3b8cb8fd544c994",
+        "summary": {
+          "confirmed": 15,
+          "drift": 1
+        },
         "verdicts": {
           "RUST-PROJECTION-SHIPS-A-RUNNABLE-TOOLCHAIN": {
             "v": "confirmed",
@@ -13523,6 +13639,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d8f954e93fd3da2ca4fc6cb6b0118be9547b0ae5a5fcfac412f30c3ecad5b8f8",
+        "summary": {
+          "confirmed": 17
+        },
         "verdicts": {
           "RUST-CODE-FOLLOWS-THE-RUST-GUIDE": {
             "v": "confirmed",
@@ -13686,6 +13805,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "fc678589ba5c62ffe693bc7f6ba6bd7a03e78c82ee7064d0ad5e40c65bbfabfc",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -13817,6 +13939,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "a11c0f18c00ccb53c3bd9f1a973b404c7201c319cdd72152438e5c1047b980b0",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -13948,6 +14073,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "17df090e1077a37cb44ff22d2fcd58453e6781e2572e8800f0e5d8a0937e9881",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -14081,6 +14209,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "4fc8272e5822f7f60c82a682a3a62d1e2d71163901f9325b5aa437aef0316f42",
+        "summary": {
+          "confirmed": 50,
+          "drift": 1
+        },
         "verdicts": {
           "reference-instance-note": {
             "v": "confirmed",
@@ -14519,6 +14651,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "b5b64df6a800d6601f40463f30a782e7845eadc2994ed4905f5fd653fc18ce75",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -14655,6 +14790,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1bff0d5268448ebc4e8129faa32f6da7ef92d873a34eba5ab0c20e99057685cc",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -14791,6 +14929,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d1f483b15abb5acff9035d6c1cc17318154ad866fae67e6c2fc454ccb148a9d5",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -14922,6 +15063,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5f882f326ff4c4e80d254f103704689cd0e8acc901a895569fe38e9cb064275d",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -15058,6 +15202,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "a4d1220f998b13c9adae81757d80d600e1fa92a3a9abe89a67073025958f1be8",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -15187,7 +15334,11 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "ffb67c1df8b1bb77115f91067fc91b4b6ba320aaea7c0e094f3494d66ee1f396",
+        "processed_hash": "a67f7129859287c5e182d9e7c6e2c41402637ed50d25a2b3a56dba64ded697d6",
+        "summary": {
+          "confirmed": 83,
+          "drift": 5
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -15439,8 +15590,7 @@
           "CONTRACT-FIRST-ORDERING-WITHIN-AN-ITEM": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md  lists `rule-contract-first-ordering` as PENDING - the card is unauthored",
-              "CLOSED F-191 partially (Phase D wave 5, demotion per §3.3). The rule stands word for word; the card that would carry it is listed pending in the stack's own registry, so it is specified and not built. Marker `@impl/done` -> `@spec/done`. The Go and TypeScript twins carry no verdict and were NOT touched - see the batch note on half-demoted families."
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-038 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "POSITION-IS-A-RESOURCE": {
@@ -15640,8 +15790,7 @@
           "BAN-HIDDEN-CONTROL-FLOW": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md  R-021 is absent from the roster",
-              "CLOSED F-191 partially (Phase D wave 5, demotion). The rule the fact cites as its authority is not in the ATLAS roster it points at."
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-038 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "BAN-STRINGLY-TYPED-SURFACES": {
@@ -15962,8 +16111,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C3 + D5a + D7"
+        "verified_at": "2026-08-02T19:06:18Z",
+        "verify_batch": "C3 + D5a + D7 + D34"
       }
     },
     {
@@ -15982,7 +16131,11 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "37608f267410d260c52255755e1b57640c0ab45cf4564f6a36c21b448443afe8",
+        "processed_hash": "847ce53a21b366ece8cf7532814416197417d47d451878310feabbddc773e1a7",
+        "summary": {
+          "confirmed": 69,
+          "drift": 2
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -16235,12 +16388,9 @@
             ]
           },
           "OVERLAY-RULE-VERSIONS-NEVER-REPEAT": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs:145                  doc.version += 1;",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs:67  fn validate_opens_v1_then_changes_v2_never_reuses() {",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs:92      assert_eq!(changes[0][\"params\"][\"textDocument\"][\"version\"], 2);",
-              "located in the perimeter on the refs above, machine-verified against the files they cite"
+              "verdict-first repair of a false confirmed (F-270 family, owner «пересуд» 2026-08-02): the sentence claimed versions never repeat OR RESET within a session over the very code whose docs.remove branch resets the counter (oracle.rs:184 — identical to the Go twin's oracle.rs:186-193), and the Go twin's own test name states the behaviour: overlay_versions_are_monotonic_and_close_resets; the family text lands in the same pass"
             ]
           },
           "OVERLAY-RULE-VALIDATE-WITHOUT-CONTENT-READS-DISK": {
@@ -16295,12 +16445,9 @@
             ]
           },
           "CLEAN-VALIDATE-DOES-NOT-CERTIFY-A-CLEAN-FLOOR": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/main.rs:21               The floor stays the truth (TCG-ORACLE-RUST §5).\"",
-              "research/tcg-bench/reports/REPORT-2026-07-07-rust-baseline.md:66    set, deliberately enabled (ORACLE-RUST §3); the floor",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs:197      /// (ORACLE-RUST §5: the oracle's answer is r-a's view — the floor",
-              "located in the perimeter on the refs above, machine-verified against the files they cite"
+              "verdict-first repair of a false confirmed (F-273 family, owner «пересуд и семерка» 2026-08-02): the parenthetical glossed the floor as «cargo check» — the shipped floor is seven steps (fmt, test, clippy, conform, specmap, test-gate, fast-loop; floor.rs:57-125) and cargo check is not among them; the third family member found during the pass — the brief's copy and the Go copy carried the same defect; the seven-step text lands in the same pass"
             ]
           },
           "DIFFERENTIAL-CORPUS-CURATES-NATIVE-COMPETENCE": {
@@ -16443,7 +16590,7 @@
           "GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY": {
             "v": "confirmed",
             "ev": [
-              "CLOSED F-192 partially (Phase D wave 5, demotion, partial). The no-zombie MECHANISM ships; the ASSERTION does not - no test inspects the process table. The mechanism half was kept as true."
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-044 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "PATHS-BECOME-URIS-AFTER-PREFIX-STRIPPING": {
@@ -16544,10 +16691,9 @@
             ]
           },
           "TARGET-WARM-COMPLETE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:719     `complete` p50 < 300 ms. Falsified → the §13 R1 ladder, targets",
-              "**no instrument measures it.** §8 posts three targets; the committed bench measures two of them — cold init → quiescent and warm `validate` p50/p95 (research/tcg-bench/reports/REPORT-2026-07-07-rust-baseline.md:49-53) — and records **no `complete` row at all**, because the harness times `validate` only. rust-analyzer is installed here, so this is a missing instrument rather than an unexercisable claim. The TypeScript twin was already recorded drift for exactly this — packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md#TARGET-WARM-VALIDATE-AND-COMPLETE — and so was the Go one"
+              "owner ruling 2026-08-02 point 3 (замеров нет и нескоро будет — пометить и не возвращаться): the target now says posted-not-measured with the instrument named — crates/rust-ai-native-tcg/src/bench.rs emits cold_init_ms/validate_p50_ms/validate_p95_ms and no complete field (grep -ci complete = 0) — and cites BACKLOG.md B-042 (the far-future measurement corpus, owner-accepted); marker @spec/done per the same ruling"
             ]
           },
           "TARGET-COLD-INIT-TO-QUIESCENT": {
@@ -16569,16 +16715,14 @@
             ]
           },
           "LARGE-WORKSPACE-CONSUMERS-ARE-WARNED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:884  reason. The product's 60 s first-request cap is the hard ceiling —",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:220      // The relay owns the session: boot the analyzer up front so the",
-              "**no consumer is warned.** The eager-init half holds (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/serve.rs:220). The 60 s first-request ceiling lives only in plan prose at legacy-spec/terraforms/AGENTIC-TCG-RUST-PLAN-v0.1.md:884, and the product registry that would have enforced and surfaced it was deleted whole (spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:42). Nothing warns anybody, and legacy-spec/ is an archive no living contract may rest on"
+              "owner ruling 2026-08-02 («да» to 60->45 in the Go twin's already-taken form, D5/F-160): the fact now names the real carriers — the warning lives at the spec layer in the sibling brief's RISK-COLD-INIT-ON-LARGE-WORKSPACES (vibe-agentic-tcg-rust.md:190-195, with the 14.7 s cache-cold measurement), the eager init is real (serve.rs:220-223 boots the analyzer before the host's first frame), and the ceiling cited is the shipped 45 s QUIESCENCE_BUDGET (lib.rs:33, used by spawn_oracle at lib.rs:381 and serve at serve.rs:223) with the < 15 s posted target attributed to its own TARGET-COLD-INIT-TO-QUIESCENT anchor; the unsupported 60 s figure — which matched nothing in the stack (the only 60 is a test's spawn budget, live_oracle.rs:44) — is gone, so the family now carries one ceiling story consistent with the Go twin's F-160 clause"
             ]
           }
         },
-        "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C4+C5 + C45-rust-review + D5a"
+        "verified_at": "2026-08-02T19:23:04Z",
+        "verify_batch": "C4+C5 + C45-rust-review + D5a + D33 + D34 + D35 + D39"
       }
     },
     {
@@ -16598,6 +16742,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "08e5f5c729852ce6b83a477a7e3f08bc0942488eb6f4b1a063e7fe7008c471fa",
+        "summary": {
+          "confirmed": 41,
+          "drift": 1
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -16974,6 +17122,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "bd6f5fa179306439a43d3e65f0f0c632474cb4caea99cef8ea9d3dfe5e13854c",
+        "summary": {
+          "confirmed": 34,
+          "drift": 2
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -17283,6 +17435,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "b503d8f1d2f8c9d5d2b44d425a9a2a8d51b8558e6f6131c552b4372ecfc6037d",
+        "summary": {
+          "confirmed": 38,
+          "drift": 2
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -17361,12 +17517,9 @@
             ]
           },
           "FLOOR-REMAINS-THE-TRUTH": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs:2  //! Playbook Tier 0): format → tests → lints → the conform gate → the",
-              "campaigns/packages-2026-09/harvest/rust-ai-native-lang-floor.md:6  $ rust-ai-native floor --keep-going",
-              "research/tcg-bench/reports/REPORT-2026-07-07-rust-baseline.md:67    (`discipline-rust floor` → cargo check) remains the truth.",
-              "located in the perimeter on the refs above, machine-verified against the files they cite"
+              "verdict-first repair of a false confirmed (F-273 family, owner «пересуд и семерка» 2026-08-02): «rust-ai-native floor → cargo check» — the shipped step list is seven long (floor.rs:57 fmt, :64 test, :78/:87 clippy, :92 conform, :99 specmap, :111 test-gate, :125 fast-loop) and cargo check is not among them; an external consumer told the floor is cargo check will not look for the discipline steps that decide the verdict; the seven-step text lands in the same pass"
             ]
           },
           "STANCE-STAND-ON-THE-CONSUMERS-RUST-ANALYZER": {
@@ -17630,7 +17783,7 @@
           }
         },
         "verified_at": "2026-07-31T20:39:23Z",
-        "verify_batch": "C4+C5 + C45-rust-review + D8b + D11-release-a"
+        "verify_batch": "C4+C5 + C45-rust-review + D8b + D11-release-a + D39"
       }
     },
     {
@@ -17650,6 +17803,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "6746d59a193a64405d109a6a15e3b306d14e1c6b9f573f939b8076b75d2e15f8",
+        "summary": {
+          "confirmed": 35
+        },
         "verdicts": {
           "RUNNING-THE-STANDING-SWEEP": {
             "v": "confirmed",
@@ -17967,6 +18123,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "8d86b781cbbfb07b6423abe3c1ea458faa8f211938dc441bf64bc6f83f00e6a3",
+        "summary": {
+          "confirmed": 34
+        },
         "verdicts": {
           "EXECUTING-THE-BROWNFIELD-PROTOCOL": {
             "v": "confirmed",
@@ -18279,6 +18438,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "da9030e48d68f72e4d8a79b0c408c66eef1d6b4e04c7227d922b7c1d76af28c2",
+        "summary": {
+          "confirmed": 6
+        },
         "verdicts": {
           "SERVED-OVER-MCP-AS-ONE-STDIO-BINARY": {
             "v": "confirmed",
@@ -18354,6 +18516,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "167ad4d101b7d33b33903b0069873a14f3bffad1c58564346d3349870af807a7",
+        "summary": {
+          "confirmed": 33
+        },
         "verdicts": {
           "SERVED-OVER-MCP-AS-ONE-STDIO-BINARY": {
             "v": "confirmed",
@@ -18641,6 +18806,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "538a94f3409c696f8c7af85851337a8c5ef6d1dd82674a831b77fecf18ae7110",
+        "summary": {
+          "confirmed": 6
+        },
         "verdicts": {
           "AGG-ROLE": {
             "v": "confirmed",
@@ -18715,6 +18883,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "ac95aef09accdd404f63b3b362e5bf1c7080e75a425ac7a5e7e8008725c46049",
+        "summary": {
+          "confirmed": 17
+        },
         "verdicts": {
           "TYPESCRIPT-PROJECTION-SHIPS-A-RUNNABLE-TOOLCHAIN": {
             "v": "confirmed",
@@ -18840,6 +19011,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1615bece3a3918b4bc82676dec3b049bad0ebd8ddcfd74036a0a4f308298d8cc",
+        "summary": {
+          "confirmed": 22
+        },
         "verdicts": {
           "TYPESCRIPT-CODE-FOLLOWS-THE-TYPESCRIPT-GUIDE": {
             "v": "confirmed",
@@ -19047,6 +19221,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "dc455dfe96bd840ffc61fcbf62f4274c6589fec7837aa7770c03cceff63e8770",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -19163,6 +19340,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "3113cd984f56c78765f73cedcdb71d05decad883b89e711da9cd3f2fc7483297",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -19280,6 +19460,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "885cebc915491b841fad0f6556d17752267effb0eab891aedf73ec518f289c06",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -19395,6 +19578,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "e088f68842b7f549d5d98343dbb894623b629d03d698bd2e3808ef68ce5165be",
+        "summary": {
+          "confirmed": 52
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -19790,6 +19976,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "ac74ce165b46cba560d626a7a9be0c42183fc9ac14efa4864af4613cd60c89d3",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -19905,6 +20094,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "17ce96669f86eabf3aebc8568ee1e50a2bc93e56b853847b553c305214e2d5d2",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -20023,6 +20215,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "78279d152089c8e54cdae95ef4bc63c9c36e80a5ea23545bc1dc24653d207a51",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -20138,6 +20333,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "49d0fd5720131de9f781e237021f1d5ef6753ab3be645d98ab34a5e6aac67b40",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -20252,6 +20450,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "f2983377b0c20eb862a448ef207d8d5a4c01b200af7d127aa06f6a7a082bcea2",
+        "summary": {
+          "confirmed": 13
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -20364,6 +20565,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "6cee59e5f9cf0a518c58a3a38ab2ff164c4658a0669fdad4f803b3afa80c6221",
+        "summary": {
+          "confirmed": 27
+        },
         "verdicts": {
           "RUNNING-THE-STANDING-SWEEP": {
             "v": "confirmed",
@@ -20617,6 +20821,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "a27728eb3d392c4ce7bdbdef2c63ba26199add5699433088c3a7b8235462311e",
+        "summary": {
+          "confirmed": 30
+        },
         "verdicts": {
           "EXECUTING-THE-BROWNFIELD-PROTOCOL": {
             "v": "confirmed",
@@ -20896,7 +21103,12 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "f73d76c107b170884facf3259ca6a1e63ad2227496b83a4978d66042dab2146e",
+        "processed_hash": "abd6dca703f86d3ebeb71ee28df1fd283efd8d017102c78e2aec7bbdb8924101",
+        "summary": {
+          "confirmed": 148,
+          "drift": 4,
+          "unverifiable": 1
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -21412,12 +21624,9 @@
             ]
           },
           "POSITION-IS-A-RESOURCE": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/budget.rs:147           its middle third buries invariants — prefer more, smaller, \\",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform/src/lib.rs:57      out.push(Box::new(rules::FileLength {",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:1  //! `typescript-ai-native-conform-frontend` — the `ts-tsc` frontend the Ф6 brief",
-              "the guide's consumer is `research/ts-demo/`, which no brief named and which is where these rules are actually in force: it carries `conform.toml`, `specmap.toml`, `specmap.json`, the three `discipline/registry/` files, and a `tsconfig.json` setting **all four** of the guide's mandatory beyond-strict flags — strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes, erasableSyntaxOnly. The named tooling is there too: vitest in 46 files, tsd 43, fast-check 36, twoslash 35, expectTypeOf 30, ts-morph 25, assertNever 21. The stack package is a Rust workspace that ANALYSES TypeScript, so its own lack of a tsconfig is not the discipline's absence — it is the wrong place to look"
+              "verdict-first repair of a false confirmed (WAL #constraints, boss re-judge 2026-08-02, recorded in d7d F-154 anchor 2 per-stack note): the anchor claims «a conform check warns on files over a length threshold AND on invariant-bearing comments in the diluted middle third» — the length half ships (FileLength mounted at typescript-ai-native-conform/src/lib.rs:57), the middle-third half has no implementation in any frontend: the only «middle third» strings in the engine are the file-length rule's own doc comment and message text (core-ai-native-conform/src/rules/budget.rs:119, :147), and nothing inspects comment position; same defect as the Rust twin GUIDE-AI-NATIVE-RUST.md:59, judged drift in wave 2 — one claim, two copies, opposite verdicts until now; resolution direction per owner ruling 2026-08-02: build the check (backlog), the text stays as the target"
             ]
           },
           "UNIFORMITY-IS-LOAD-BEARING": {
@@ -21488,12 +21697,9 @@
             ]
           },
           "SCAFFOLD-F-STRUCTURED-DIAGNOSTICS": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/rules/mod.rs:50      format!(\"violates REQ {uri}: {why}; fix surface: {fix_surface}\")",
-              "campaigns/packages-2026-09/harvest/typescript-ai-native-lang-conform.md:12  ... fix surface: `npm install -D typescript` in the project root — the tsc floor step needs the same install",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/INDEX.md:15  | `scaffold-f-structured-diagnostics` | E+C | scaffold F | inline | [E-mid] | shipped (`ts-unsafe-in-domain` / `ts- ...",
-              "located in the perimeter on the refs above, machine-verified against the files they cite"
+              "verdict-first repair of a false confirmed (WAL #constraints, boss re-judge 2026-08-02, recorded in d7d F-154 anchor 4 per-stack note): the anchor claims «Custom @typescript-eslint rules whose messages cite the violated spec:// REQ and the fix surface» — no such rule exists: grep for createRule/ESLintUtils over the TypeScript stack and research/ts-demo returns nothing, and the demo's eslint.config.js is stock typescript-eslint recommended whose own comment concedes the discipline rules live in conform, not eslint; same defect as the Rust twin's custom-clippy-lints clause (GUIDE-AI-NATIVE-RUST.md:72), judged drift in wave 2; resolution direction per owner ruling 2026-08-02: build the REQ-citing custom lint layer (backlog), the text stays as the target"
             ]
           },
           "SCAFFOLD-G-EXECUTABLE-EXAMPLES": {
@@ -21633,7 +21839,7 @@
           "FLAG-REGISTRY-IS-TYPED-DATA-WITH-PROVENANCE": {
             "v": "confirmed",
             "ev": [
-              "CLOSED F-168 partially (Phase D wave 5, demotion). `FlagSites` exists in the engine and is constructed only in tests, so the type ships and the registry does not."
+              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-039 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
             ]
           },
           "RULE-FLAGS-READ-AT-THE-ROOT-AND-DISPATCHED": {
@@ -21937,12 +22143,9 @@
             ]
           },
           "TOOLING-ASYMMETRY-STATED-HONESTLY": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:258  ##TOOLING-ASYMMETRY-STATED-HONESTLY … (~74.8% compile-error reduction; ~94% of TS compile errors are type-level) … @spec/done",
-              "**the verdict stands and its REASON was wrong.** The «~74.8 %» is not a cache artefact: packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/CONTRADICTION-MAP.md:28,31 publishes it in the live v0.8.0 slot, and packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105-106 records 75.3 % / 70.2 % for the same result. The package contradicts itself across its own two appendices; this document is faithful to one of them.",
-              "the other half of the fact is exactly right and resolves: ATLAS:105-106 states «Only 3.5% of functional errors and 6% of compile errors are syntactic; on average 94% of compilation errors result from failing type checks» — the ~94 % is the corpus's own number, quoted correctly",
-              "the clean-room posture the anchor is named for holds unchanged (spec/boot/90-user.md's CLEAN-ROOM-RULE)"
+              "owner ruling 2026-08-02 «1 и 2 — согласен, применяй», option (а): the canonical figure is ATLAS DR2-012's pair — 75.3% (synthesis) / 70.2% (translation) — and the fact now cites it verbatim; the first source was aligned in the same pass (CONTRADICTION-MAP C-4 heading and resolution now carry the pair, naming DR2-012 as canon), so the projection and both appendices agree; the ~94% type-level figure was already canon-consistent (ATLAS:105 quotes it from the paper)"
             ]
           },
           "TYPESCRIPT-EXPOSES-ITS-CHECKER-PROGRAMMATICALLY": {
@@ -22004,12 +22207,9 @@
             ]
           },
           "AGENTIC-BATTERY-IS-THE-FIRST-MEASUREMENT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md:144    MCP + one-shot delivery, measured by the two-arm battery. @impl/done",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md:169  ## 6. The honest risk register {#risk-register}",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg/src/main.rs:89      /// Run the differential/latency corpus and write a report",
-              "the cross-reference does not resolve: it points at «the sibling brief §6», and §6 of `spec/typescript/tools/vibe-agentic-tcg-ts.md` is «The honest risk register». The two-arm battery it means is at line 144 of that file, inside §4"
+              "owner ruling 2026-08-02 «1 и 2 — согласен, применяй»: the cross-reference now names the section by title and file — «see the sibling brief's «Staged ambition», vibe-agentic-tcg-ts.md §4» — matching the two-arm battery's real home (vibe-agentic-tcg-ts.md:144 inside §4 Staged ambition; §6 is the risk register), rename-resistant per the D5/F-282 lesson"
             ]
           },
           "wires-it-in-five-moves-lead": {
@@ -22146,8 +22346,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C3 + C45-cross-language + D5a + D7"
+        "verified_at": "2026-08-02T19:06:18Z",
+        "verify_batch": "C3 + C45-cross-language + D5a + D7 + D30 + D33 + D34"
       }
     },
     {
@@ -22166,7 +22366,11 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "1a451863c2a7c10913a101577da43f226c4ea24da8cc6b79e7edc0650c5a5fd6",
+        "processed_hash": "92b277b7a9d665b8d563a5e7e5545d481e018d6a71f87b6cb81a9529f029d714",
+        "summary": {
+          "confirmed": 39,
+          "drift": 1
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -22437,12 +22641,9 @@
             ]
           },
           "RUST-SIDE-OWNS-TERMINATION": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg-bridge/src/transport.rs:221  impl Drop for SystemOracle {",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg-bridge/src/transport.rs:223          // Kill-on-drop: no zombie node children (TCG-ORACLE §6). A child",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg-bridge/src/transport.rs:225          let _ = self.child.kill();",
-              "located in the perimeter on the refs above, machine-verified against the files they cite"
+              "verdict-first repair of a false confirmed (boss re-judge 2026-08-02, F-281 family measurement; the harvest table named the neighbouring SHUTDOWN-IS-THE-ONLY-SANCTIONED-EXIT — per-anchor re-read shows THIS anchor carries the claim, the neighbour prescribes the exit path and stays confirmed): «the no-zombie property is asserted by test (the Phase-0 spike proved spawn/roundtrip/kill with no surviving pid on this box)» — a spike is not a test surface, exactly the ruling D5/F-192 already applied to the Rust twin's identical wording (TCG-ORACLE-RUST GRACEFUL-EXIT annotation: «the live test checks only that shutdown() returned … no surviving-pid or process-table probe exists»); no TS test asserts the property; resolution per owner ruling 2026-08-02 «тест на зомби лучше написать» — BACKLOG.md B-044, the text stays as the target"
             ]
           },
           "NODE-IS-RESOLVED-FROM-PATH-BY-THE-BRIDGE": {
@@ -22470,11 +22671,9 @@
             ]
           },
           "TARGET-WARM-VALIDATE-AND-COMPLETE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md:153  - ##TARGET-WARM-VALIDATE-AND-COMPLETE warm `validate` p50 < 150 ms and",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg/src/bench.rs:48      validate_p50_ms: f64,",
-              "the bench records `cold_init_ms`, `validate_p50_ms` and `validate_p95_ms` and **no complete-latency field and no threshold constants**, so the target this fact sets cannot be measured by the harness that is supposed to measure it"
+              "owner ruling 2026-08-02 point 3, split-clause form per the F-284 harvest recommendation: the validate half is measured and met — 19.32 ms p50 against the posted < 150 ms (research/tcg-bench/reports/bench-2026-07-07-baseline.json) — and stays; the complete half now says posted-not-measured with the instrument named (crates/typescript-ai-native-tcg/src/bench.rs emits cold_init_ms/validate_p50_ms/validate_p95_ms) and cites BACKLOG.md B-042; marker stays @impl/done on the measured half's strength"
             ]
           },
           "TARGET-COLD-INIT": {
@@ -22505,8 +22704,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:58:29Z",
-        "verify_batch": "C4+C5"
+        "verified_at": "2026-08-02T19:00:29Z",
+        "verify_batch": "C4+C5 + D32 + D33"
       }
     },
     {
@@ -22526,6 +22725,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "614b746844d803edec398680e62a258503ce86c755314bc2e976bf24ffb083c9",
+        "summary": {
+          "confirmed": 38,
+          "drift": 1
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -22846,17 +23049,14 @@
             ]
           },
           "REPLAY-GOLDENS-PIN-BOTH-SIDES": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg-bridge/src/transport.rs:312      /// A no-node double: scripted responses per op.",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg-bridge/src/transport.rs:330      fn typed_ops_shape_their_requests_and_parse_their_results() {",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-oracle/test/oracle.test.ts:381  test(\"fact parity with ts-extract on the same fixture file (D1)\", async () => {",
-              "located in the perimeter on the refs above, machine-verified against the files they cite"
+              "verdict-first repair of a false confirmed (F-280 family, owner «пересуд» 2026-08-02): the anchor claims replay goldens with recorded streams pin BOTH sides — the Phase C confirmation rested on inner-side evidence only (transport.rs:312 no-node double + the fact-parity test), no recorded stream is checked into the package (the family-wide find over *.jsonl/*transcript*/*golden*/*.snap/*recorded* returns nothing) and no test constructs an outer frame; the honest inner/outer split text lands in the same pass"
             ]
           }
         },
         "verified_at": "2026-07-28T11:58:29Z",
-        "verify_batch": "C4+C5"
+        "verify_batch": "C4+C5 + D39"
       }
     },
     {
@@ -22876,6 +23076,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "6dcc151777cbd0856fe80d247e123e943265b1eacc162495fc73022549b05d4c",
+        "summary": {
+          "confirmed": 34
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -23188,6 +23391,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "b757b3c7483484f2a329f4c8fc620422781d1af6bb1b035a95ea57281219cb9c",
+        "summary": {
+          "confirmed": 27
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -23432,6 +23638,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "a13e921ed6297add2888743f62e7cfad2ee66ad68629593c9893e6a762b6e332",
+        "summary": {
+          "confirmed": 40,
+          "drift": 1
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -23739,12 +23949,9 @@
             ]
           },
           "RISK-WINDOWS-CHILD-LIFECYCLE": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md:184  - ##RISK-WINDOWS-CHILD-LIFECYCLE **Windows child lifecycle.** Junction/verbatim/PATH quirks are known",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg-bridge/src/transport.rs:223          // Kill-on-drop: no zombie node children (TCG-ORACLE §6). A child",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg/tests/oracle_e2e.rs:82  fn the_real_chain_validates_enriches_scopes_and_completes() {",
-              "located in the perimeter on the refs above, machine-verified against the files they cite"
+              "verdict-first repair of a false confirmed (boss re-judge 2026-08-02, F-281 family measurement): the fact claims no-zombie is «re-asserted in the hermetic test» — no TypeScript-stack test probes the process table for a surviving node child: transport.rs:206 try_wait under the «Kill-on-drop: no zombie node children» comment (:223) is implementation-side reaping, not a test assertion, and the family-wide sweep finds no assertion in any stack (the one real process-table assertion in the tree is fractality's pod/worker pair, a different product); resolution per owner ruling 2026-08-02 «тест на зомби лучше написать» — BACKLOG.md B-044, the text stays as the target"
             ]
           },
           "RISK-STRONG-MODEL-INDIFFERENCE": {
@@ -23773,7 +23980,7 @@
           }
         },
         "verified_at": "2026-07-31T20:39:23Z",
-        "verify_batch": "C4+C5 + D8b + D11-release-a"
+        "verify_batch": "C4+C5 + D8b + D11-release-a + D32"
       }
     },
     {
@@ -23793,6 +24000,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "8f5c5c7d3d4a9205f84843678699608c30721f2ad6cccfa5a822167faeed96ff",
+        "summary": {
+          "confirmed": 6
+        },
         "verdicts": {
           "SERVED-OVER-MCP-AS-ONE-STDIO-BINARY": {
             "v": "confirmed",
@@ -23868,6 +24078,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1b51f505a3fa474375e7c4024a65001e325ee6552f21ee5e5fd30cb9daba958d",
+        "summary": {
+          "confirmed": 32
+        },
         "verdicts": {
           "SERVED-OVER-MCP-AS-ONE-STDIO-BINARY": {
             "v": "confirmed",
@@ -24147,6 +24360,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "2adbf3408d880eea04649e2328a8e6b37d5d79a858cfbc6c9ab9ab22f2026b9e",
+        "summary": {
+          "confirmed": 6
+        },
         "verdicts": {
           "AGG-ROLE": {
             "v": "confirmed",
@@ -24222,6 +24438,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "01e9a34ec895f7d6ea7758261ed5c3a70a9efe8270a6e1d59262a894d0b6d81f",
+        "summary": {
+          "confirmed": 19,
+          "drift": 1
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-ADDRESSABLE-SPECIFICATIONS-PRACTICE": {
             "v": "confirmed",
@@ -24520,6 +24740,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "85e9a192168af21a46fcaeabc49148b3a312440be19816f90f6d95b686080466",
+        "summary": {
+          "confirmed": 15,
+          "drift": 3
+        },
         "verdicts": {
           "EVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE": {
             "v": "drift",
@@ -24786,7 +25010,11 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "8b8f6d9a11515e5a22774e682798670d87d4cda32bac0f96b69d4a5367ca5228",
+        "processed_hash": "dd0c9734eb4c87a01971648fd2925a5249affe4189ad8c9578decab6523946c6",
+        "summary": {
+          "confirmed": 60,
+          "drift": 4
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -25518,16 +25746,12 @@
           },
           "NO-TOOLING-IS-REQUIRED-TO-BENEFIT": {
             "v": "confirmed",
-            "ev": [
-              "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
-              "crates/vibe-cli/src/commands/install/flag_tests.rs:98  #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
-              "specmap.toml:16  # Code roots scanned for #[spec]/#[verifies]/scope! tags. A `<dir>/*` entry # scans each subdir of <dir> as one crate; any other entry is a literal dir. scan_roots = [\"crates/*\", \"xtask\"]",
-              "the grep half works exactly as described: `grep -rn 'PROP-043#baseline' crates/ --include=*.rs` returns ten lines naming every implementing site, with no tooling in the loop. Recorded: the `Test:` line half has no host instance, so the reverse lookup the fact offers runs through specmap rather than through grep — filed on CODE-MARKS-WHAT-IT-IMPLEMENTS."
-            ],
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "re-vouched against the amended text (the rider the harvest said must move in the same pass or the propagation gap relocates): the zero-tooling claim stands untouched — grep still answers implements, the Test: line still answers verifies — and the added sentence points at the mechanized alternative the protocol's own §graph defines; no clause weakened, the anchor's original confirmation grounds remain"
             ]
           },
           "the-graph-pays-off-from-the-first-marker": {
@@ -25646,8 +25870,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T14:29:55Z",
-        "verify_batch": "W3 + D8-boss + D25 + D26"
+        "verified_at": "2026-08-02T14:53:46Z",
+        "verify_batch": "W3 + D8-boss + D25 + D26 + D28"
       }
     },
     {
@@ -25666,7 +25890,11 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "04cd260ab5ec52dab9e962efe8ad1348e6366c8ceb463594d5210365c6d1155e",
+        "processed_hash": "2445a6ce89fc1b9b1a2bc74c598a17407b3a790507292f27b4a098f170efbb38",
+        "summary": {
+          "confirmed": 58,
+          "drift": 5
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -26027,17 +26255,13 @@
             ]
           },
           "RECORD-THE-TEST-NAME-IN-THE-UNIT": {
-            "v": "drift",
-            "ev": [
-              "crates/vibe-cli/src/commands/install/flag_tests.rs:97  #[test] #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
-              "crates/progress-core/src/evidence.rs:17  /// e.g. specmap `verifies` edge count. pub verifies: usize,",
-              "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:8  ##related **Related:** [PROP-028](../../common/PROP-028-package-families.md) (families — the aggregator role), [PROP-029](../../common/PROP-029-fully-qualified-addresses.md) (`spec://` addressing, the `/` group↔name joiner),…",
-              "DRIFT: `grep -rn '^Test:' spec/` returns 0. The line the fact prescribes — half of the bidirectional graph the protocol describes — is written nowhere in the host's spec tree. The edge exists anyway: 223 `verifies` edges in specmap.json, all sourced from code annotations rather than from the spec side."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "repaired under F-162, owner «применяй» 2026-08-02: the rule now names both legal authoring sides — the Test: line for the zero-tooling form, and the tag-on-the-test with the rendered-back view where the graph is mechanized — the same wave-6 amendment its own protocol §graph has carried since; the host is the mechanized instance (223 verifies-edges authored as test-side tags, rendered by trace explain), so the sentence is true of both forms it now describes"
             ]
           },
           "A-DEVIATION-IS-RECORDED-WHERE-IT-HAPPENS": {
@@ -26344,17 +26568,13 @@
             ]
           },
           "NEVER-REUSE-AN-ANCHOR-FOR-A-DIFFERENT-MEANING": {
-            "v": "drift",
-            "ev": [
-              "specmap.json:62437  \"code\": \"duplicate-anchor\", \"file\": \"spec/boot/STATIC.md\", \"line\": 67, \"message\": \"anchor `{#root}` already used earlier in this file — spec://…#root is ambiguous\"",
-              "crates/vibe-spec/src/doctree.rs:244  pub fn duplicate_anchors(&self) -> &[String] { &self.duplicate_anchors",
-              "spec/boot/00-core.md:32  - ##VOID-NOT-WORK A unit whose state is `void` (`@spec/void`, or `state=\"void\"` in a `<status>` element) **asserts nothing** and is not work. It was either split into heirs and left as a pointer to them, or cancelled with no replacement; its text…",
-              "DRIFT, reported by the host's own detector: 59 `duplicate-anchor` warnings, every one in the generated `spec/boot/STATIC.md`, where `{#root}` and `{#never}` each mean twenty-seven different things — one address, many meanings, which is the exact failure this never names. That the reuse is produced by the boot compiler rather than typed by hand makes it systematic, not accidental."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "wave-7 re-verification (d7b, F-285), boss-merged 2026-08-02 under the owner's ruling «сними пока. Угроза реальная, но пока это не приоритет»: the rule the anchor states is TEMPORAL — an address that once meant one thing and now means another — and the 59 duplicate-anchor warnings the W-verdict convicted on are SIMULTANEOUS compile-time collisions manufactured by the boot compiler flattening 27 packages' snippets into spec/boot/STATIC.md ({#root} ×26), a different defect already owned by F-217/F-218 and deferred onto B-011 (highest priority); the temporal failure has no instance on the widened perimeter — retired sections keep their anchors (PROP-026 ##RETIRED-SECTIONS-KEPT practises it at HEAD) and no anchor shows evidence of repurposing"
             ]
           },
           "RETIRE-WITH-A-TOMBSTONE-DO-NOT-DELETE": {
@@ -26435,17 +26655,13 @@
             ]
           },
           "SUM-EVERY-CONTRACT-IMPLIES-A-TEST": {
-            "v": "drift",
-            "ev": [
-              "crates/progress-core/src/evidence.rs:61  (Stage::Test, State::Done) if ev.verifies == 0 => { Some(\"marked test/done but no verifying evidence (0 `verifies` edges)\".into())",
-              "crates/vibe-cli/src/commands/install/flag_tests.rs:97  #[test] #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
-              "specmap.json:1  { \"code_items\": [ {",
-              "DRIFT on the second clause. «Every contract implies a test» is ENFORCED here — `progress-core/src/evidence.rs` fails a unit marked done without evidence. «The unit names it» is not: zero `Test:` lines in `spec/`."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "repaired under F-162, owner «применяй» 2026-08-02: the summary names both carriers (Test: line or rendered edge), matching the amended body rule and the protocol; the first clause was always mechanically enforced host-side (the campaign's evidence gate at evidence.rs:60-64 refuses a verdict without refs), and the naming clause is now true in whichever form a project authors"
             ]
           },
           "SUM-DEVIATIONS-ARE-RECORDED-WHERE-THEY-HAPPEN": {
@@ -26503,8 +26719,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T20:16:39Z",
-        "verify_batch": "W3 + D8-boss + D27"
+        "verified_at": "2026-08-02T14:53:46Z",
+        "verify_batch": "W3 + D8-boss + D27 + D28 + D29"
       }
     },
     {
@@ -26523,7 +26739,11 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "13ce5b8084cec3b79665ee9f34dafff35a0e9c53126e843104085b7c73da586f",
+        "processed_hash": "d6f25e9b1c935bf8003a1f03fb30f2a4817bfd87af7778402e9f7284ed44c0d7",
+        "summary": {
+          "confirmed": 45,
+          "drift": 5
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -26757,16 +26977,13 @@
             ]
           },
           "ROW-HOME-FEATURE-SCOPE": {
-            "v": "drift",
-            "ev": [
-              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:1  # Phase C — the batch plan {#root}",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1  # Packages-Actualization Campaign v0.1 — wave 2: the authored packages measure themselves {#root}",
-              "crates/vibe-spec/src/resolver.rs:164  /// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail). fn is_id_stem(s: &str) -> bool {",
-              "DRIFT: the row routes a feature's scope and acceptance criteria to `spec/modules/<m>/FEAT-*`, and `find spec -name 'FEAT-*'` returns 0 against 42 PROP documents. The host routes them elsewhere — feature slices run as plans under `campaigns/**`, with their own scope, phases and acceptance gates. The destination the row names is empty and a different one is in use."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               2
+            ],
+            "ev": [
+              "repaired under F-147, owner answer (а) 2026-08-02: the Home cell now names both homes — FEAT-* files, or a campaign plan where the project runs slices as plans — which is the tree's measured truth (FEAT-*: zero live instances across four adopters; live plans: 8 — two host terraforms + six fractality), so the row stops routing a genre to its empty home only; the granularity-protocol extension (ask the user; FEAT files as addressable units composed into plans; big features only) is the owner's recorded backlog design B-032"
             ]
           },
           "ROW-HOME-NEXT-SESSION-STEP": {
@@ -27176,8 +27393,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T20:14:33Z",
-        "verify_batch": "W3 + D27"
+        "verified_at": "2026-08-02T14:53:46Z",
+        "verify_batch": "W3 + D27 + D28"
       }
     },
     {
@@ -27197,6 +27414,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "db347569068e99f882c39a93e002f29cfccfc61a56199c3788ac3f1a3a821014",
+        "summary": {
+          "confirmed": 23
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-CAMPAIGN-PLAN-FORMAT": {
             "v": "confirmed",
@@ -27534,6 +27754,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "06037791eb4377b612595e33fc9ee54790a672597e582fbc0d43090da6177186",
+        "summary": {
+          "confirmed": 29
+        },
         "verdicts": {
           "LARGE-CHANGES-ARE-EXECUTED-AS-CAMPAIGNS": {
             "v": "confirmed",
@@ -27929,6 +28152,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "c71f34595f5b66b3a06b11ca117ff87af8af56b616d5145b213f931ec20d0106",
+        "summary": {
+          "confirmed": 60,
+          "drift": 4
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -28823,6 +29050,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "4aec81d89199b3cacc0345d386c84a93abb6080670c4ea694e34175f9b35035f",
+        "summary": {
+          "confirmed": 44,
+          "drift": 4
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -29470,6 +29701,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "c25c2527385d8dec5803d15edc3fb29e45afa44ade727bd9353e398ca926229e",
+        "summary": {
+          "confirmed": 54
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -30207,6 +30441,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "4e3d391a4c327a5a45b02c0a58b51edd2b1b7dadaf3ba4c8117bd87dc8c708e8",
+        "summary": {
+          "confirmed": 21
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-COMPARATIVE-RESEARCH-GENRE": {
             "v": "confirmed",
@@ -30516,6 +30753,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "e2fbfe8a945780e268e32414672819306653cbd11483290cfb1512a162f1e423",
+        "summary": {
+          "confirmed": 8,
+          "drift": 4
+        },
         "verdicts": {
           "THE-PROJECT-HAS-A-GENRE-FOR-STUDYING-EXTERNAL-SYSTEMS": {
             "v": "confirmed",
@@ -30716,6 +30957,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "b1310825173a10ac2751eb4931db1c53582d620c79f15e73067c697f926b6dc3",
+        "summary": {
+          "confirmed": 48,
+          "drift": 12
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -31533,6 +31778,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "f0fcb508ee7fd223e02e0b3de273e5c55a22f156aad256aebc22ddaa6c3e4f15",
+        "summary": {
+          "confirmed": 55,
+          "drift": 6
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -32324,6 +32573,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "e6b8915bdda5bc8b973b9e71d74ac8623e3d2c74cb3bc9ff2d9d54445437c11a",
+        "summary": {
+          "confirmed": 25,
+          "drift": 1
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -32690,6 +32943,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "4bba86eadbc8817423cf149675e4978879ba9e45ea505d2ede7d45d4e5198231",
+        "summary": {
+          "confirmed": 21
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-A-CONFLICT-RESOLUTION-DISCIPLINE": {
             "v": "confirmed",
@@ -32997,6 +33253,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "6631e8677e8fb13727cab5b18400df14bb3c2c6902e3347a7801f7f43ba76e88",
+        "summary": {
+          "confirmed": 22
+        },
         "verdicts": {
           "PROJECT-RUNS-TWO-WRITERS-OVER-ONE-FILE-SET": {
             "v": "confirmed",
@@ -33315,6 +33574,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "951dd530a7ed50d38c49ca51662ed3d06215fdc4e86d677ef4b646c831d3ee81",
+        "summary": {
+          "confirmed": 65
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -34177,6 +34439,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "0945aed1ab5fc2af65a77baa904d04b7cad765011ac543d39c41382aeda0afe0",
+        "summary": {
+          "confirmed": 50
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -34846,6 +35111,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "7860349feb503892e50fa667f2fdcc4d197b44aa84130e237a46b199b5ac6dbf",
+        "summary": {
+          "confirmed": 45,
+          "drift": 1
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -35470,6 +35739,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "17f15c4e9a554da8fd56873b9d93c92bca377a981788619d5ab461190f9853a3",
+        "summary": {
+          "confirmed": 23
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-DECISIONS-NOT-FACTS-DISCIPLINE": {
             "v": "confirmed",
@@ -35800,6 +36072,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d54fa8d3d30fd32e80778a0642597025fc48a321e4872ef66e1a6f4514327264",
+        "summary": {
+          "confirmed": 25
+        },
         "verdicts": {
           "PROJECT-RECORDS-DECISIONS-NOT-FACTS": {
             "v": "confirmed",
@@ -36136,6 +36411,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5ef39412a555b6b100790d78b33120dd2a0b62f4fdbdc1a6a4ea7939f62b11a2",
+        "summary": {
+          "confirmed": 63
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -36960,6 +37238,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "a83f90f87632ac1a1f76771fe69a7971bd503c33355a3b8687390345b0426cbb",
+        "summary": {
+          "confirmed": 29
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -37347,6 +37628,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "2bebf0743365006bb5b8038d5472decd1c548d2334f21d031109956835cae7fd",
+        "summary": {
+          "confirmed": 56
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -38078,6 +38362,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "df4d7bf0a90fdaa24e10113cde280fa291b40ddf25fefac410ea0750cc0f895e",
+        "summary": {
+          "confirmed": 9
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-SAME-COMMIT-DOC-DISCIPLINE": {
             "v": "confirmed",
@@ -38227,6 +38514,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "43e2aa1b991ffdd9029cc13bd95f230c9f33f253f08d316c5e6867cee33189fe",
+        "summary": {
+          "confirmed": 2,
+          "drift": 4
+        },
         "verdicts": {
           "SETUP-AND-RUNTIME-DOCUMENTATION-IS-LOAD-BEARING": {
             "v": "confirmed",
@@ -38330,6 +38621,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5c96bd002d990c5a8fdd263bfb8a9735c70c0b3814a42bbd51151730cff0f1a7",
+        "summary": {
+          "confirmed": 13,
+          "drift": 2
+        },
         "verdicts": {
           "SETUP-AND-RUNTIME-DOCUMENTATION-IS-LOAD-BEARING": {
             "v": "confirmed",
@@ -38558,6 +38853,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "7d4d22d0b5b1fc2942b8375f2eee746669282eefc18482404a3def33fd8d29dd",
+        "summary": {
+          "confirmed": 19
+        },
         "verdicts": {
           "PACKAGE-SHIPS-THE-DISCOVERY-PROMPT": {
             "v": "confirmed",
@@ -38861,6 +39159,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "9507100a873ff6439305a6c9f84856803b516d58f3dac8c3f9b6f9ad1b536b2d",
+        "summary": {
+          "confirmed": 10
+        },
         "verdicts": {
           "PROJECT-SHIPS-THE-DISCOVERY-PROMPT": {
             "v": "confirmed",
@@ -39025,6 +39326,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "2dfd25b0b7e920a7e89afd5f70b4734e04571fa9ec24192a523a3febf1e496b6",
+        "summary": {
+          "confirmed": 53,
+          "unverifiable": 1
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -39772,6 +40077,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "9d3496481efe946ea66bc7babe65fbaa437df1a0925a22a1866e9f767df84a9f",
+        "summary": {
+          "confirmed": 16
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-ATOMIC-COMMITS-DISCIPLINE": {
             "v": "confirmed",
@@ -40022,6 +40330,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "f963e8874b3d0ff02be7b85b21c501bdff3c7d4c6f50a006712026dc9d4e0c88",
+        "summary": {
+          "confirmed": 21
+        },
         "verdicts": {
           "THE-PROJECT-USES-THE-ATOMIC-COMMITS-DISCIPLINE": {
             "v": "confirmed",
@@ -40353,6 +40664,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "f92fa34b195e8a0fd3770e8ce58a39d31ed11587854b3b1ebe85886bacdcabf6",
+        "summary": {
+          "confirmed": 64
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -41193,6 +41507,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "01fae6ce386a718cf4f0955ae2ea354767c1110923a0bf34e20c666f628a37e7",
+        "summary": {
+          "confirmed": 52
+        },
         "verdicts": {
           "a-long-session-leaves-the-tree-looking-like-a-weather-map": {
             "v": "confirmed",
@@ -41946,6 +42263,11 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "9dc11f88e01b678cd61c2b3a335561b25012685f3ed6b8523a7b9780265bc7b3",
+        "summary": {
+          "confirmed": 18,
+          "drift": 1,
+          "unverifiable": 1
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-A-DELIBERATE-ATTRIBUTION-POSTURE": {
             "v": "confirmed",
@@ -42108,19 +42430,13 @@
             ]
           },
           "CONTENT-THE-BOOT-SNIPPET": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/README.md:43  - ##CONTENT-THE-BOOT-SNIPPET `spec/boot/55-flow-attribution-policy.md` — boot snippet loaded at",
-              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/vibe.toml:16  source = \"spec/boot/55-flow-attribution-policy.md\"",
-              "spec/boot/STATIC.md:421  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
-              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
-              "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), … is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here.",
-              "the snippet exists, is declared `link = \"static\"`, and is compiled into the always-loaded lane — that half holds. **The «one place in a consuming project» half does not.** **the single-place law is broken by the consumer, measured.** The snippet is compiled into the host's always-loaded lane TWICE — spec/boot/STATIC.md:421 directly and :615 through the git-practices umbrella entry at :551 — and the policy is restated in at least eight further host locations: spec/boot/00-core.md:21, spec/common/PROP-000.md:161 and :323, CLAUDE.md:5, AGENTS.md:5, GEMINI.md:5, .claude/agents/opus5.md:15 and README.md:158. A repo-wide grep for the topic returns **88 lines across 50 files** outside vibedeps/, .vibe/, refs/ and the package itself."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "owner ruling 2026-08-02 (F-199 answer (1)), same family, same exception: the bullet's last sentence is explicitly conditional — «Under the single-place law, this snippet is the one place in a consuming project where the topic lives» — and the host now carries the marked boot-surface exception (spec/common/PROP-000.md ##ATTRIBUTION-BOOT-SURFACE-EXCEPTION) that bounds its deliberate deviation from that law; the first half re-verified true (the snippet ships, link = static in vibe.toml:16-18, lands in the always-loaded lane). A marked exception is not drift; the wave-2 routing record stays as history of the determination"
             ]
           },
           "UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE": {
@@ -42235,7 +42551,7 @@
           }
         },
         "verified_at": "2026-07-29T19:59:26Z",
-        "verify_batch": "W1c + D6 + D8c"
+        "verify_batch": "W1c + D6 + D8c + D37"
       }
     },
     {
@@ -42255,6 +42571,11 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d624cef159ced10523737520a1362dafe6b53b54c10980d3c6f54e2039d73867",
+        "summary": {
+          "confirmed": 13,
+          "drift": 1,
+          "unverifiable": 2
+        },
         "verdicts": {
           "THE-REPOSITORY-IS-HUMAN-AUTHORED-ON-EVERY-SURFACE": {
             "v": "confirmed",
@@ -42373,22 +42694,13 @@
             ]
           },
           "SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED": {
-            "v": "drift",
-            "ev": [
-              "spec/boot/STATIC.md:457  - This snippet and `spec/flows/attribution-policy/` are the **only**",
-              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
-              "spec/common/PROP-000.md:161  - ##GP-ATTRIBUTION human-authored **attribution** — `spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root`; @spec/done",
-              "spec/common/PROP-000.md:323  6. ##INV-HUMAN-AUTHORSHIP **Human authorship is the only attribution.** The posture is the `attribution-policy` flow (a git-practices member, §12); everywhere else assume human authorship only. @spec/done",
-              "CLAUDE.md:5  The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), … is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here.",
-              ".claude/agents/opus5.md:15  reviews and commits. Never mark any artifact as machine-authored.",
-              "README.md:158  Read [`CLAUDE.md`](CLAUDE.md) before your first commit — the four non-negotiable rules (attribution, Conventional Commits, group by meaning, autonomy on routine changes only) apply to every contribution.",
-              "spec/boot/STATIC.md:615  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
-              "**the claim is that this snippet and the flow's documents are the ONLY places the topic is discussed, and eight further host locations discuss it.** **the single-place law is broken by the consumer, measured.** The snippet is compiled into the host's always-loaded lane TWICE — spec/boot/STATIC.md:421 directly and :615 through the git-practices umbrella entry at :551 — and the policy is restated in at least eight further host locations: spec/boot/00-core.md:21, spec/common/PROP-000.md:161 and :323, CLAUDE.md:5, AGENTS.md:5, GEMINI.md:5, .claude/agents/opus5.md:15 and README.md:158. A repo-wide grep for the topic returns **88 lines across 50 files** outside vibedeps/, .vibe/, refs/ and the package itself."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "owner ruling 2026-08-02 (F-199 answer (1)) — confirmed with the exception named: the host records a deliberate boot-surface exception at spec/common/PROP-000.md ##ATTRIBUTION-BOOT-SURFACE-EXCEPTION — 00-core Rule 1, the byte-identical CLAUDE/AGENTS/GEMINI triple (gated by self-check step 0c) and .claude/agents/ instruction files carry the four-rules digest by design («правила обязаны доезжать до каждого агента на старте»), §12 is the authoritative record, INV-HUMAN-AUTHORSHIP names its source in-sentence; everything else cites, and a new restatement outside a boot surface is declared a defect. Per Phase C's own law a marked exception is not drift; the second consumer (fractality) nearly keeps the literal law (two mentions, none in its own boot contract), so the rule stands unsoftened"
             ]
           },
           "SCOPE-PRODUCT-IS-CARVED-OUT": {
@@ -42492,7 +42804,7 @@
           }
         },
         "verified_at": "2026-07-31T20:38:28Z",
-        "verify_batch": "W1c + D7 + D11-address"
+        "verify_batch": "W1c + D7 + D11-address + D36"
       }
     },
     {
@@ -42512,6 +42824,11 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "7d31376c42cd13f52966fcfe502d85a2495c8197ea74de4680c55bf72c421d32",
+        "summary": {
+          "confirmed": 30,
+          "drift": 4,
+          "unverifiable": 1
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -42740,18 +43057,13 @@
             ]
           },
           "HONEST-THE-POLICY-IS-RECORDED-OPENLY": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/flows/attribution-policy/ATTRIBUTION-POLICY.md:79  2. ##HONEST-THE-POLICY-IS-RECORDED-OPENLY **The policy itself is recorded openly.** The repository states,",
-              "spec/boot/STATIC.md:457  - This snippet and `spec/flows/attribution-policy/` are the **only**",
-              "README.md:158  Read [`CLAUDE.md`](CLAUDE.md) before your first commit — the four non-negotiable rules (attribution, Conventional Commits, group by meaning, autonomy on routine changes only) apply to every contribution.",
-              "spec/boot/00-core.md:21  1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done",
-              "«recorded openly» holds without qualification. **«In exactly one place» does not.** **the single-place law is broken by the consumer, measured.** The snippet is compiled into the host's always-loaded lane TWICE — spec/boot/STATIC.md:421 directly and :615 through the git-practices umbrella entry at :551 — and the policy is restated in at least eight further host locations: spec/boot/00-core.md:21, spec/common/PROP-000.md:161 and :323, CLAUDE.md:5, AGENTS.md:5, GEMINI.md:5, .claude/agents/opus5.md:15 and README.md:158. A repo-wide grep for the topic returns **88 lines across 50 files** outside vibedeps/, .vibe/, refs/ and the package itself."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "owner ruling 2026-08-02 (F-199 answer (1)) — confirmed with the same exception: «recorded openly» holds without qualification, and the «exactly one place» half is now covered by the host's marked boot-surface exception (PROP-000 ##ATTRIBUTION-BOOT-SURFACE-EXCEPTION) which bounds the legal restatement set and declares strays defects; the honest host surface re-measured at 98 lines / 41 files on a named basis (campaign records and install slots excluded), with B-006's two compiled copies separated as a boot-compiler defect, not discipline"
             ]
           },
           "before-adopting-verify-lead": {
@@ -43001,7 +43313,7 @@
           }
         },
         "verified_at": "2026-08-01T12:54:05Z",
-        "verify_batch": "W1c + D19"
+        "verify_batch": "W1c + D19 + D36"
       }
     },
     {
@@ -43021,6 +43333,11 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "3db4408a1ef8e7c683aa371e73056e7859b06b4cef6384b0846cc20f85a8f908",
+        "summary": {
+          "confirmed": 27,
+          "drift": 1,
+          "unverifiable": 3
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -43451,6 +43768,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "62556b017f70c386220bb7c978b546a81fb9e475db6a3e82dc0c5b8373ca437d",
+        "summary": {
+          "confirmed": 30
+        },
         "verdicts": {
           "A-POLICY-WITH-NO-CHECKER-IS-A-WISH": {
             "v": "confirmed",
@@ -43885,6 +44205,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "42b025697efe36a0b3e620d121ff13f777091988e4a574978413d960e6c9e421",
+        "summary": {
+          "confirmed": 7
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-COMMIT-PUSH-AUTONOMY-POSTURE": {
             "v": "confirmed",
@@ -44015,6 +44338,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "e35afbd96259bf07fa9c1a4f0b564e08dfce34b4f318c6f2177a45de055cbc14",
+        "summary": {
+          "confirmed": 14
+        },
         "verdicts": {
           "THE-DEFAULT-POSTURE-ON-THE-COMMIT-AND-PUSH-SURFACE": {
             "v": "confirmed",
@@ -44238,6 +44564,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "023d3eaaa64ff3144e77a9e050e823f7b07fda12343ed334553d7aa7e9ff19b4",
+        "summary": {
+          "confirmed": 24
+        },
         "verdicts": {
           "an-agent-is-constantly-deciding-whether-to-ask": {
             "v": "confirmed",
@@ -44605,6 +44934,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "dfd0f2e39a19cc7ad2f22be3b90fb6d435f206d64a7d3247218e7bffab052b8b",
+        "summary": {
+          "confirmed": 9
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-CONVENTIONAL-COMMITS-MESSAGE-FORMAT": {
             "v": "confirmed",
@@ -44764,6 +45096,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "0b69bed96447eae39aa25b94ee8b7da21c9a8a6ae4a4fa2028f934f2eac71277",
+        "summary": {
+          "confirmed": 10,
+          "drift": 2
+        },
         "verdicts": {
           "EVERY-COMMIT-MESSAGE-FOLLOWS-CONVENTIONAL-COMMITS": {
             "v": "confirmed",
@@ -44967,6 +45303,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "75cfebaf5998c0fbc28288657ef276ef5c6a378ae14101b10e53082331f7d17e",
+        "summary": {
+          "confirmed": 44,
+          "drift": 3
+        },
         "verdicts": {
           "ALL-COMMITS-FOLLOW-THE-CONVENTIONAL-COMMITS-SPECIFICATION": {
             "v": "confirmed",
@@ -45638,13 +45978,17 @@
         "stage": "doc",
         "state": "done"
       },
-      "markers": 10,
+      "markers": 12,
       "units": 3,
-      "facts": 9,
+      "facts": 11,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
         "processed_hash": "128cd2b381c7d9add73d3656fff82203ab675a22a318ca0faf6eb1c12a292023",
+        "summary": {
+          "confirmed": 8,
+          "drift": 1
+        },
         "verdicts": {
           "AGG-ROLE": {
             "v": "confirmed",
@@ -45805,6 +46149,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5153595e4fd86e82d5e93955cd79c2b1d4174872e1370357af28e5f6a2590ef0",
+        "summary": {
+          "confirmed": 20
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-PERIODIC-HEALTH-AUDIT": {
             "v": "confirmed",
@@ -46112,6 +46459,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "ad7973e40c36533330f7aa8f3eb8eeb09dfd23d7c0d4bfa664e42524e17b0073",
+        "summary": {
+          "confirmed": 17
+        },
         "verdicts": {
           "PROJECT-RUNS-A-PERIODIC-HEALTH-AUDIT": {
             "v": "confirmed",
@@ -46382,6 +46732,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "e8fb9569d55776e72177f8371857d04db664dc9cff53724b7d0a7b9b2bdbee04",
+        "summary": {
+          "confirmed": 71
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -47386,6 +47739,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "009dd2b994279ec28dcf689450419f6edde9d6473fc2efcf132c51a67681c94b",
+        "summary": {
+          "confirmed": 65
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -48259,6 +48615,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "b8ba17597e0f129b4d6b3b4b21ffd04f2ff7cfabb523e0c7a18190a5cbd62920",
+        "summary": {
+          "confirmed": 30
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -48668,6 +49027,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "577c1e6e0b3d0298563b65c5ee81b2937ad7cb234fc6163bca996d3622c11f54",
+        "summary": {
+          "confirmed": 14
+        },
         "verdicts": {
           "RUNNING-ONE-PERIODIC-HEALTH-AUDIT": {
             "v": "confirmed",
@@ -48877,6 +49239,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "e4b4efaa704886e5ae943e98c942162000d69f851d75fb5387b47ba31a66c0de",
+        "summary": {
+          "confirmed": 24
+        },
         "verdicts": {
           "package-installs-a-licensing-posture-lead": {
             "v": "confirmed",
@@ -49276,6 +49641,11 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "2d07070caac7c3162aabb2cfa6d8f050ae71c25e2879e42fa618d1cdeb6ca096",
+        "summary": {
+          "confirmed": 14,
+          "drift": 2,
+          "unverifiable": 1
+        },
         "verdicts": {
           "THE-PROJECT-HAS-A-DELIBERATE-LICENSING-POSTURE": {
             "v": "confirmed",
@@ -49578,6 +49948,11 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "3fd232eb75bc20bcee9c0a721fb5fb4a5c42aa5c0a20bf7224e03549b90feb15",
+        "summary": {
+          "confirmed": 43,
+          "drift": 3,
+          "unverifiable": 2
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -50326,6 +50701,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "cba36d2263486802ddb40eea437917f5de59698648373c36c264b9a6cf62c975",
+        "summary": {
+          "confirmed": 30
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -50798,6 +51176,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "c87c14b0fb88520ff1a497b1d5db6bab7b0df490af5fc639b505085cf50201b5",
+        "summary": {
+          "confirmed": 18
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -51089,6 +51470,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "284026e41462e23b89e59d9cadb9377ed3517c9283aa6ac9e7fde329ca4e88a9",
+        "summary": {
+          "confirmed": 14
+        },
         "verdicts": {
           "DRAFTING-OR-REVIEWING-A-LICENSING-POSTURE": {
             "v": "confirmed",
@@ -51330,6 +51714,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "6aef0751e63222195b04fc4ac762ec38363487b4913848ff7748a572caca81f8",
+        "summary": {
+          "confirmed": 19
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-MANAGED-BLOCKS-DISCIPLINE": {
             "v": "confirmed",
@@ -51703,6 +52090,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "8a25137a47bcf8a4b21bee4631be55076fca41ad36742896f9a27f71a1ef57f9",
+        "summary": {
+          "confirmed": 9
+        },
         "verdicts": {
           "PROJECT-SHIPS-THE-MANAGED-BLOCKS-PRACTICE": {
             "v": "confirmed",
@@ -51890,6 +52280,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "a0d5f7e270d26a52a6e66362698b9a38e993028e4191521e178eb5d026309440",
+        "summary": {
+          "confirmed": 74
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -53346,6 +53739,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "923bd9392a9e3c43ac56fdd28ef54fc9bad2f8a1e035999d1fb9d48e13d9414c",
+        "summary": {
+          "confirmed": 39,
+          "drift": 5
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -54191,6 +54588,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "c0636ad3471015f3c0026ee941bbcd3321d1c6f78c297c984cc4d1e38a0c74cc",
+        "summary": {
+          "confirmed": 52
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -55120,6 +55520,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "3c6ed891d520198c57af2d49c4002da9ae5fe4987ad443054d5609be5d8323e2",
+        "summary": {
+          "confirmed": 18
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-A-SECOND-TEST-TIER": {
             "v": "confirmed",
@@ -55394,6 +55797,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "14baaf6cbd3f48ba5423cfd7733187bcb5817a7e76caabf136e598c8c7c497a3",
+        "summary": {
+          "confirmed": 14,
+          "drift": 2
+        },
         "verdicts": {
           "THE-PROJECT-KEEPS-A-SECOND-TEST-TIER": {
             "v": "confirmed",
@@ -55649,6 +56056,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5414aab581d54282c5e4cab2a20f9fe8fcf08c19663443053539e54fab34ca98",
+        "summary": {
+          "confirmed": 30,
+          "drift": 7
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -56188,6 +56599,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "740faa44ff2f001b5f8dddf4f6f35210a8ed54f050db68e615b516897e47074f",
+        "summary": {
+          "confirmed": 34,
+          "drift": 1
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -56700,6 +57115,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "821150a0f7c20fe7b92bcd899720f05ff1aca409123d7bebf67dcb1d961a224c",
+        "summary": {
+          "confirmed": 16,
+          "drift": 1
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -56964,6 +57383,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d237a53f2209ee78087618a80e40acc4dc6d31e8a2ee387d83a402249dff6c59",
+        "summary": {
+          "confirmed": 20
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-OPERATING-MODES": {
             "v": "confirmed",
@@ -57284,6 +57706,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "bb273abf6c1200f91d615ce7d5f0d011758904c73b061c6c6fdfb0763b113d9f",
+        "summary": {
+          "confirmed": 24
+        },
         "verdicts": {
           "THIS-PROJECT-USES-CODEWORD-TRIGGERED-OPERATING-MODES": {
             "v": "confirmed",
@@ -57648,6 +58073,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "34f934d610a6a07999a483986a98d6025dacdaab50151d463c987be76ec06434",
+        "summary": {
+          "confirmed": 47,
+          "drift": 5
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -58396,6 +58825,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d26192485a924037827147d104eecb5ae6c6c9072907362915c5174c377119f1",
+        "summary": {
+          "confirmed": 32,
+          "drift": 1
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -58878,6 +59311,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d0e6fe8f66b6f4ff270e8027bc7569af8f5da780d3add2a63f2659f392019e9f",
+        "summary": {
+          "confirmed": 33,
+          "drift": 4
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -59408,6 +59845,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "d6003091ae2a56d1528a5d6b88c91c1c0ed430884757492c5a61b99c89ebd317",
+        "summary": {
+          "confirmed": 29
+        },
         "verdicts": {
           "package-installs-the-qualified-naming-discipline": {
             "v": "confirmed",
@@ -59832,6 +60272,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "21fdbd7b4cfcae0aba505b89cd79708077c5a954fabff7866d52e9d36b5c4a19",
+        "summary": {
+          "confirmed": 14
+        },
         "verdicts": {
           "PROJECT-SHIPS-THE-QUALIFIED-NAMING-PRACTICE": {
             "v": "confirmed",
@@ -60038,6 +60481,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1b506ae082ac082cbdf1a188de26e5cba74df3c4ba975928ba7c8449e0f32a11",
+        "summary": {
+          "confirmed": 48
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -60719,6 +61165,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "f8dd2d1eb418bcfde0b1ee679ce844280da47421bd0676b43617ec056773be98",
+        "summary": {
+          "confirmed": 52
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -61409,7 +61858,11 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "3a4869c348da5f28f84e56a040c9709e444ad695fd5f79d40f12b3c87104c267",
+        "processed_hash": "b8e5eaaf77723ddbd250a67e4ec851cead902e35d136e5d9095d881398ae2c3a",
+        "summary": {
+          "confirmed": 42,
+          "drift": 5
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -61747,16 +62200,13 @@
             ]
           },
           "the-single-storage-rule-stated-once": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md:110  > ##PERSISTED-STATE-IS-QUALIFIED-ONLY **Persisted state is qualified-only.** Every reference written to a",
-              "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md:131  - ##SHORT-NAMES-ARE-NEVER-STORED **Never stored.** The moment a short name is resolved, the tool",
-              "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md:41  - ##NEVER-STORE-A-SHORT-NAME-IN-PERSISTED-STATE Never store a short (unqualified) name in a manifest, lockfile,",
-              "DRIFT on «stated once», counted within the package itself. The blockquote here is a single normative statement and the intent is sound, but the same rule is also stated at `QUALIFIED-NAMING-PROTOCOL.md` `##SHORT-NAMES-ARE-NEVER-STORED`, at the boot snippet's `##NEVER-STORE-A-SHORT-NAME-IN-PERSISTED-STATE`, in the README's law bullet, and twice more in the two summaries — six statements of one rule across the package. RECORDED, because the restatements are not a defect in themselves: a flow that ships a README, a snippet and three documents will restate its laws by design, and what this anchor claims is the one thing that arrangement makes false."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               2
+            ],
+            "ev": [
+              "owner ruling 2026-08-02 (F-178 answer (1)): the lead now reads «stated here as the anchor every restatement echoes» — the one-authoritative-home intent survives, the self-count that its own package contradicted (eight statements across five documents at HEAD, all agreeing in substance) is gone; the restatement census and the naming-your-anchor observation stay recorded in harvest d7b for the F-218-adjacent principle question"
             ]
           },
           "PERSISTED-STATE-IS-QUALIFIED-ONLY": {
@@ -62071,8 +62521,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T23:21:05Z",
-        "verify_batch": "W7"
+        "verified_at": "2026-08-02T19:37:24Z",
+        "verify_batch": "W7 + D36"
       }
     },
     {
@@ -62092,6 +62542,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "a8fee43a4f6fe8a0efd31b6ab2ae8bbdceda90d84f185630f614b51165fe7578",
+        "summary": {
+          "confirmed": 43,
+          "drift": 1
+        },
         "verdicts": {
           "REDBOOK-IS-A-CURATED-COLLECTION-OF-PRACTICES": {
             "v": "confirmed",
@@ -62786,6 +63240,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "c7a537841f69c8d1c7e6e10a3479ab946d0d732b6e0b531a9d632a9090339bb7",
+        "summary": {
+          "confirmed": 39
+        },
         "verdicts": {
           "PROJECT-FOLLOWS-THE-REDBOOK": {
             "v": "confirmed",
@@ -63420,6 +63877,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "bb83343c2ba4a674754d806f3d57908fc0f98c5b7cf2042030d6703316f30af2",
+        "summary": {
+          "confirmed": 20
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-A-DEFENSIVE-SECRETS-POSTURE": {
             "v": "confirmed",
@@ -63704,6 +64164,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "42c8ed93b007a456495927062df966e04ddcfbde906a89b97de876a0a4797adc",
+        "summary": {
+          "confirmed": 20,
+          "drift": 1
+        },
         "verdicts": {
           "the-repository-is-worked-by-a-recordable-agent-session": {
             "v": "confirmed",
@@ -63997,6 +64461,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "042263ea44a5c7e7fb5b451a7316f5738dd28b9b13ddfaafe6f396764fa8f3ba",
+        "summary": {
+          "confirmed": 62,
+          "drift": 1
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -64798,6 +65266,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "fd08437073f465ebc0ff26b0e91f8d0ee6993d93420c26b789f24effa60804fe",
+        "summary": {
+          "confirmed": 46,
+          "drift": 1
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -65413,6 +65885,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "538b4d0c45cbda9727aef0a5f3c0b751b0fa603bdf71a013a228ddcafe2639a7",
+        "summary": {
+          "confirmed": 38,
+          "drift": 2
+        },
         "verdicts": {
           "installing-a-dependency-often-runs-its-own-code": {
             "v": "confirmed",
@@ -65962,6 +66438,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "6554df1615a106c2bc0e7d7e335ed71c39158a30029b415ffa8f6f36c3c042b3",
+        "summary": {
+          "confirmed": 21,
+          "drift": 2
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-SINGLE-WRITER-SOURCE-MIRRORS-DISCIPLINE": {
             "v": "confirmed",
@@ -66312,6 +66792,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5024a7bb30bb9911ce8edab50e7aee1666b47717c9f0c932365c230ae6aa74c9",
+        "summary": {
+          "confirmed": 15,
+          "drift": 1
+        },
         "verdicts": {
           "PROJECT-SOURCE-IS-MULTI-HOMED": {
             "v": "confirmed",
@@ -66567,6 +67051,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "6335d44bbfc5ef509d2545c347d7c1a68c70dbd3de008a6bfb1bcffd8fc071b8",
+        "summary": {
+          "confirmed": 52
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -67275,6 +67762,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "4983b1a7dcd89f08c4e99bf7993ff7d53d30d8c00f120255ba6191c564d82dff",
+        "summary": {
+          "confirmed": 52
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -67991,6 +68481,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "cc28a7cce4e372518da822051b8d421fc497c950d7fb03f892a6207f477d8468",
+        "summary": {
+          "confirmed": 52,
+          "drift": 5
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -68812,6 +69306,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "319f689d33c327cb9f71ac58a79819d91d118a152c04a18617fd7e7a9a762bed",
+        "summary": {
+          "confirmed": 26
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-A-GENRE-TAXONOMY": {
             "v": "confirmed",
@@ -69186,6 +69683,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "8169a00ed4013f6224cd95ad221ebafe0467df751365cc975661a0c6aee84a1f",
+        "summary": {
+          "confirmed": 22,
+          "drift": 1
+        },
         "verdicts": {
           "PROJECT-DOCUMENTS-ARE-GENRE-TYPED": {
             "v": "confirmed",
@@ -69511,6 +70012,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "0176779ee22c4ff769ffe6cb7fadd8a5328d7882e72ce407d2b97c1eec407313",
+        "summary": {
+          "confirmed": 56,
+          "drift": 3
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -70296,6 +70801,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "6dfcb110d2b1f3ef32d3a9390930361a3efa8b7cbc0fdc67dd6835db20ef661a",
+        "summary": {
+          "confirmed": 39,
+          "drift": 2
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -70840,6 +71349,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1262489dd458e5f39d66628242931d8a4e61224cde0070f44cc9e3910bcfc4e3",
+        "summary": {
+          "confirmed": 40,
+          "drift": 2
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -71401,6 +71914,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "eb41606593d89516d99c14d29387c9b12ee2fd020b5e714adb31979819e192d4",
+        "summary": {
+          "confirmed": 20
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-SYNC-FROM-CODE-PROTOCOL": {
             "v": "confirmed",
@@ -71709,6 +72225,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "0ffd9dc06a41138bbff35ddc8710ebf9477ca8ff49ee87bc760b4d53556bbb70",
+        "summary": {
+          "confirmed": 17,
+          "drift": 2
+        },
         "verdicts": {
           "THE-PROJECT-USES-SYNC-FROM-CODE": {
             "v": "confirmed",
@@ -72001,6 +72521,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "db55a7f66f31a63f82d9e90e6084fe82744f9bb4d160fd2ad9685f3b1fbc19a0",
+        "summary": {
+          "confirmed": 51,
+          "drift": 2
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -72742,6 +73266,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "80c2c50ef2ab95440cd9c877cc5ae9d5543dcf4fc655d3c0d95c2d5136159c72",
+        "summary": {
+          "confirmed": 46,
+          "drift": 2
+        },
         "verdicts": {
           "SYNC-ALWAYS-ENDS-WITH-A-HUMAN-APPROVAL-STEP": {
             "v": "confirmed",
@@ -73385,6 +73913,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5ae1c2526ebf574b898804bced03e2663724fb9c754ee8dec971a4254c1bd50d",
+        "summary": {
+          "confirmed": 35,
+          "drift": 1
+        },
         "verdicts": {
           "SYNC-FROM-CODE-IS-AN-EXCEPTIONAL-PROTOCOL-NOT-A-DEFAULT": {
             "v": "confirmed",
@@ -73872,6 +74404,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "e0fccd1532b363e9232253dcdf0b10721cb7919b08e75156ef005f0cf7bc7e07",
+        "summary": {
+          "confirmed": 18,
+          "unverifiable": 1
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-A-LESSONS-CATALOG-FOR-TOOL-AUTHORS": {
             "v": "confirmed",
@@ -74181,6 +74717,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "81e36861497cd1d4e4f5339e94c007ab1e6cdf83f4b966681863958711adcbda",
+        "summary": {
+          "confirmed": 12
+        },
         "verdicts": {
           "PROJECT-BUILDS-A-TOOL-THAT-MANAGES-ITSELF": {
             "v": "confirmed",
@@ -74382,6 +74921,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "db953f92f66c2172d8bfcb9fb6a0acdb9e24ab3b322985c4c9d6fc70f298fd2d",
+        "summary": {
+          "confirmed": 43
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -75054,6 +75596,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "5b46bf5ce930e664a0d0eb51a58f2fc1f95ee7682e18d3eb9fb70099cf487d4c",
+        "summary": {
+          "confirmed": 62,
+          "drift": 1
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -75974,6 +76520,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "4a9cb7bcf952009218c870b90b5b956889fae284e5599fef3db8e69b0fccdeae",
+        "summary": {
+          "confirmed": 73,
+          "drift": 5
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -77142,6 +77692,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "21472167edcc822f486f386f6ce15bf181ba31df985419c32bf79eb75dbcf1ae",
+        "summary": {
+          "confirmed": 22
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-TWO-PROCESS-MODEL": {
             "v": "confirmed",
@@ -77460,6 +78013,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "992ba6cee071c5a8d12976a73393e26e2da3a0647d3fca8beecfe3d2b07347ed",
+        "summary": {
+          "confirmed": 17
+        },
         "verdicts": {
           "THIS-PROJECT-RUNS-ON-THE-TWO-PROCESS-MODEL": {
             "v": "confirmed",
@@ -77711,6 +78267,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "1b8bfd391e63718d519439db77367b2d186d49685d921ad2ded68a2ffbadf2c3",
+        "summary": {
+          "confirmed": 49
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -78341,6 +78900,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "3d24734e76f5064f879063064319a3f99678db25f97b10ba79478743ca9e28b2",
+        "summary": {
+          "confirmed": 49,
+          "unverifiable": 1
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -78978,6 +79541,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "435b720e8b356b069eca43b2f38947b0f19aa715b51a90e843638a78b4814f3b",
+        "summary": {
+          "confirmed": 40,
+          "drift": 1
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -79506,6 +80073,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "28440e90f03214ba37d6ddf475086e13b58eb6346f1b7393385be772e8c2ab9c",
+        "summary": {
+          "confirmed": 10
+        },
         "verdicts": {
           "NON-CENTRAL-WALS-FOR-MULTI-PROJECT-REPOSITORIES": {
             "v": "confirmed",
@@ -79667,6 +80237,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "db1e68a85ef8769b3ca9845ef95717172a89ac9ccbb9f0db715b31d5a0d4d734",
+        "summary": {
+          "confirmed": 22
+        },
         "verdicts": {
           "THE-PROJECT-MAY-HOST-SPECSPACES": {
             "v": "confirmed",
@@ -80013,6 +80586,11 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "76552896e51943dbe5726dc100f3ed79a4636d157b49c9750ea2a48b0b2ed225",
+        "summary": {
+          "confirmed": 41,
+          "drift": 3,
+          "unverifiable": 1
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -80661,6 +81239,11 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "a84f93c981aa146a04d9a2d3cf0acd928275c8e21d02a40c95ff178147a8b3c3",
+        "summary": {
+          "confirmed": 25,
+          "drift": 1,
+          "unverifiable": 1
+        },
         "verdicts": {
           "PACKAGE-INSTALLS-THE-WAL-PROTOCOL": {
             "v": "confirmed",
@@ -81055,6 +81638,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "fbc2a08aef71b84d719a9f92b0ad53e7681a9ea874f51513d1ab55c9fc84be14",
+        "summary": {
+          "confirmed": 14,
+          "drift": 1
+        },
         "verdicts": {
           "PROJECT-USES-WAL-DISCIPLINE-FOR-SESSION-CONTINUITY": {
             "v": "confirmed",
@@ -81292,6 +81879,11 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "0224a8990b6e4f52f3d21ab20a1f539ab568e9edcac3f31b90dc0e1beb66eaa6",
+        "summary": {
+          "confirmed": 46,
+          "drift": 10,
+          "unverifiable": 4
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -82106,6 +82698,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "16bbe83655ee55403290a83bada738734ef274c9d2f84b3f4eeb65b53ebd7d59",
+        "summary": {
+          "confirmed": 60,
+          "drift": 2
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -82917,6 +83513,11 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "00da8876c563b54594241beefa6411a7a9046a451b2521d361d4cd04f1dd49c5",
+        "summary": {
+          "confirmed": 39,
+          "drift": 2,
+          "unverifiable": 1
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -83464,6 +84065,11 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "ea8bb8a9858e9be9ac8efb81b19f7f565c49af42fedf533f5015d9e798cf52da",
+        "summary": {
+          "confirmed": 37,
+          "drift": 6,
+          "unverifiable": 2
+        },
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -84059,6 +84665,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "c62ba56a17746f9a25c2c5a8afc4e2d035fbd7b8be805428ceb69317427e0e92",
+        "summary": {
+          "confirmed": 9
+        },
         "verdicts": {
           "PRODUCING-THE-FAST-MORNING-READ": {
             "v": "confirmed",
@@ -84201,6 +84810,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "27697df5871b7e4831d1ae9db525ff6a93c0b124fcc90afa3d02047dfee9c511",
+        "summary": {
+          "confirmed": 33
+        },
         "verdicts": {
           "project-identity": {
             "v": "confirmed",
@@ -84422,6 +85034,10 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "da61458f26f58261927c4112dacce002662f15ee24308b48d802ff96ab25cee1",
+        "summary": {
+          "confirmed": 29,
+          "unverifiable": 2
+        },
         "verdicts": {
           "user-overrides-intro": {
             "v": "confirmed",
@@ -84624,9 +85240,9 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 177,
+      "markers": 178,
       "units": 22,
-      "facts": 176,
+      "facts": 177,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -84635,6 +85251,10 @@
         "fact_count": 161,
         "marker_count": 162,
         "processed_hash": "484d066f3cbe607730f5620a557f6e0846926ef1b12867b11bca961e66433c91",
+        "summary": {
+          "confirmed": 176,
+          "unverifiable": 1
+        },
         "verdicts": {
           "DOC-PINS": {
             "v": "confirmed",
@@ -85737,6 +86357,9 @@
         "fact_count": 9,
         "marker_count": 11,
         "processed_hash": "bf798b01c38fb700c3a7d9fa40ad5bb7c21601ca2cce51b6b99c4b81f0cf6d8f",
+        "summary": {
+          "confirmed": 10
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -85824,6 +86447,9 @@
         "fact_count": 43,
         "marker_count": 45,
         "processed_hash": "966695c7f83560f4f38cfbb01247f3c02529383a9882af1bcbfa6d37ea36ae27",
+        "summary": {
+          "confirmed": 44
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -86115,6 +86741,9 @@
         "fact_count": 29,
         "marker_count": 31,
         "processed_hash": "c6592a970be72b92ec5f995139652d11499e30c1c02fc63334a6b951be69fb94",
+        "summary": {
+          "confirmed": 30
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -86322,6 +86951,9 @@
         "fact_count": 112,
         "marker_count": 113,
         "processed_hash": "9e6169003cd13590a204fe3008e9204f8de741de189414aa3f7a01562a3d7247",
+        "summary": {
+          "confirmed": 121
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -87076,6 +87708,9 @@
         "fact_count": 208,
         "marker_count": 209,
         "processed_hash": "9d179b5dffb4fc850e88d39cdf1577d534484aa1356feeb9d55235ab1b470dd3",
+        "summary": {
+          "confirmed": 209
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -88358,6 +88993,9 @@
         "fact_count": 76,
         "marker_count": 77,
         "processed_hash": "7d36407b80c1154a2834b3da74f0400ad71a1e2ab8151f347c6b67a0a83b585b",
+        "summary": {
+          "confirmed": 88
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -88918,6 +89556,9 @@
         "fact_count": 40,
         "marker_count": 42,
         "processed_hash": "d84af88d9fc2529e7d0bd104a3a628ffc9d033758a967e652b49a5d5fb20535d",
+        "summary": {
+          "confirmed": 41
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -89192,6 +89833,9 @@
         "fact_count": 30,
         "marker_count": 32,
         "processed_hash": "884c6b872ba4833b3608abd9862bf7c88fdc2e6b4de6bb0db52f5c4debb9c405",
+        "summary": {
+          "confirmed": 25
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -89369,6 +90013,9 @@
         "fact_count": 94,
         "marker_count": 96,
         "processed_hash": "a9a4a9ddea1568bebaef341c37fc0b2c142a04be20c989b73eda6a7a18beda2d",
+        "summary": {
+          "confirmed": 75
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -89846,6 +90493,9 @@
         "fact_count": 126,
         "marker_count": 128,
         "processed_hash": "b8bd5b21c508b0693e3e58929d008ef365fa09137755c14518ec0d0d7661f771",
+        "summary": {
+          "confirmed": 107
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -90515,6 +91165,9 @@
         "fact_count": 81,
         "marker_count": 83,
         "processed_hash": "781411de33b4434ad1ae7113ccc9272973c9f944faf85a77b6a4be5f836956a9",
+        "summary": {
+          "confirmed": 68
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -90939,9 +91592,9 @@
         "stage": "doc",
         "state": "done"
       },
-      "markers": 68,
+      "markers": 69,
       "units": 6,
-      "facts": 62,
+      "facts": 63,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -90950,6 +91603,9 @@
         "fact_count": 29,
         "marker_count": 34,
         "processed_hash": "9d1a5790394672fa323f7a230f7781697ad7d982ad78975fcbebd9b79a69953d",
+        "summary": {
+          "confirmed": 40
+        },
         "verdicts": {
           "genre-definition": {
             "v": "confirmed",
@@ -91214,6 +91870,9 @@
         "fact_count": 78,
         "marker_count": 78,
         "processed_hash": "5ed13c61b05d66a48b3cb5579e59dfc3eb0db65c837178d1972c95aa065e18f5",
+        "summary": {
+          "confirmed": 59
+        },
         "verdicts": {
           "genre-line": {
             "v": "confirmed",
@@ -91599,6 +92258,9 @@
         "fact_count": 75,
         "marker_count": 76,
         "processed_hash": "346279d5d1c2f87bc27bbe9e5c8677d55f59b77e361ebe8ddb53b29e74ba39c1",
+        "summary": {
+          "confirmed": 60
+        },
         "verdicts": {
           "companion-line": {
             "v": "confirmed",
@@ -91994,6 +92656,9 @@
         "fact_count": 20,
         "marker_count": 21,
         "processed_hash": "8cba6169f825b9a5a6ceaf228caac49c2201c82052dda30df941759da9d86723",
+        "summary": {
+          "confirmed": 21
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -92147,6 +92812,9 @@
         "fact_count": 175,
         "marker_count": 176,
         "processed_hash": "a27b95ee35e289f3ac149be96121a413b3a8d5f2d330306d288e4b5e836d5c5f",
+        "summary": {
+          "confirmed": 71
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -92602,6 +93270,9 @@
         "fact_count": 99,
         "marker_count": 100,
         "processed_hash": "0dbdd3b2653908418911c036da3f4bc18c239fb95bb0745f8203589332a13bcd",
+        "summary": {
+          "confirmed": 78
+        },
         "verdicts": {
           "companion-line": {
             "v": "confirmed",
@@ -93091,6 +93762,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "8aa920ab86a36b0723b1a5440d0adb31c3f0490eb78b174b9f361310f28dd755",
+        "summary": {
+          "confirmed": 28
+        },
         "verdicts": {
           "purpose": {
             "v": "confirmed",
@@ -93284,6 +93958,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "2388051c281032c1174d668a76ad19cf66e7794fceee8554b9bf03bd4d632add",
+        "summary": {
+          "confirmed": 23
+        },
         "verdicts": {
           "purpose": {
             "v": "confirmed",
@@ -93443,6 +94120,9 @@
       "issues": 0,
       "campaign": {
         "processed_hash": "be2077f10ab9b5695bf870f56f7b66edc841e3868b1d8559c1e50fcb8525c1fa",
+        "summary": {
+          "confirmed": 16
+        },
         "verdicts": {
           "purpose": {
             "v": "confirmed",
@@ -93566,6 +94246,9 @@
         "fact_count": 44,
         "marker_count": 45,
         "processed_hash": "5910b10816793785f6cb21cbb096f7eb5d3f522a083c58c588b331c796e29e7b",
+        "summary": {
+          "confirmed": 45
+        },
         "verdicts": {
           "modules-purpose": {
             "v": "confirmed",
@@ -93869,6 +94552,9 @@
         "fact_count": 51,
         "marker_count": 52,
         "processed_hash": "11ed95bb2f854fa300c635668b6e855a1161d10e10a5e5a1a3b92cdc4bbbd28f",
+        "summary": {
+          "confirmed": 52
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -94211,6 +94897,9 @@
         "fact_count": 80,
         "marker_count": 81,
         "processed_hash": "b86f273c7fce0d9bda7533f30bd4c27fff19ca92707c164c62b0daed97a99418",
+        "summary": {
+          "confirmed": 81
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -94730,6 +95419,9 @@
         "fact_count": 136,
         "marker_count": 137,
         "processed_hash": "8ba9828249c828aceddd46ff0d94f58eab1aa675fa6f645876c95e9b04b47363",
+        "summary": {
+          "confirmed": 110
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -95418,6 +96110,9 @@
         "fact_count": 61,
         "marker_count": 62,
         "processed_hash": "94c63143b2c7874ceb35ca36ef763dbf15d5fa3a478dc1f7d2c97a54104dd652",
+        "summary": {
+          "confirmed": 62
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -95817,6 +96512,9 @@
         "fact_count": 278,
         "marker_count": 279,
         "processed_hash": "dc156b690a46e7c409a2e729791ef471aa66e43f8cbc80ec49327bd102ac4157",
+        "summary": {
+          "confirmed": 279
+        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -97518,6 +98216,9 @@
         "fact_count": 64,
         "marker_count": 65,
         "processed_hash": "e147967cbaa3494c8c6a16a198a048113cf659d4cef1f8567260937c2a2d9636",
+        "summary": {
+          "confirmed": 65
+        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -97935,6 +98636,9 @@
         "fact_count": 46,
         "marker_count": 47,
         "processed_hash": "a2efd8745749be8707ad93362bc3ff557ffbebff33f939b2dc85ccfb9b642abb",
+        "summary": {
+          "confirmed": 47
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -98245,6 +98949,9 @@
         "fact_count": 75,
         "marker_count": 76,
         "processed_hash": "9f7c54fcb9d7fd20488b8bc1705e5f5e18c12778470a69568e5ab243d0b37148",
+        "summary": {
+          "confirmed": 58
+        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -98620,6 +99327,9 @@
         "fact_count": 69,
         "marker_count": 70,
         "processed_hash": "351b6bb9d888a9c29a4d2e279528572c19664d61665f503c4880b6d4c8c485e3",
+        "summary": {
+          "confirmed": 59
+        },
         "verdicts": {
           "guide-purpose": {
             "v": "confirmed",
@@ -99004,7 +99714,10 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (14 cells); document <status> judged as _elements",
         "fact_count": 158,
         "marker_count": 159,
-        "processed_hash": "fb4291462f199c9e144e521ad7d8652d9c7d95eedaebeca418209dd15fd2e685",
+        "processed_hash": "3cbe93c09e79d4d550effe2929c2d72aa1fc0a0d6c74f0b8aa8d7841f81e0753",
+        "summary": {
+          "confirmed": 152
+        },
         "verdicts": {
           "self-uri": {
             "v": "confirmed",
@@ -99930,7 +100643,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T06:03:18Z",
+        "verified_at": "2026-08-02T14:53:46Z",
         "verify_batch": "c4a-vibe-progress + d2f + E"
       }
     },
@@ -99955,6 +100668,9 @@
         "fact_count": 9,
         "marker_count": 10,
         "processed_hash": "f854794e0ca29a21b4874a7d28b8f9a9565545ebe6b391b45e60eabf9fea4baf",
+        "summary": {
+          "confirmed": 10
+        },
         "verdicts": {
           "CARD-ONE-PROMISE": {
             "v": "confirmed",
@@ -100042,6 +100758,9 @@
         "fact_count": 22,
         "marker_count": 23,
         "processed_hash": "9f85265c1a8e0111664f74f5d7f0addbdddcbc7fc49de38ea100bd617b97805d",
+        "summary": {
+          "confirmed": 23
+        },
         "verdicts": {
           "status-legend": {
             "v": "confirmed",
@@ -100207,6 +100926,9 @@
         "fact_count": 15,
         "marker_count": 16,
         "processed_hash": "91768f4f76c270cdd4c6ec34b021647af6f771500b04fc22e537b36835e9259b",
+        "summary": {
+          "confirmed": 16
+        },
         "verdicts": {
           "status-legend": {
             "v": "confirmed",
@@ -100330,6 +101052,9 @@
         "fact_count": 92,
         "marker_count": 93,
         "processed_hash": "78efc2f8dca1c4951cf6f2ea098fbef228124a06c1b6a5878b106446b5561e07",
+        "summary": {
+          "confirmed": 93
+        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -100918,6 +101643,9 @@
         "fact_count": 359,
         "marker_count": 360,
         "processed_hash": "a4aa3c9909ffe89ead7c9ed3c71e25799810eb28b870a16a9bacd070d52a7f85",
+        "summary": {
+          "confirmed": 288
+        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -102679,6 +103407,9 @@
         "fact_count": 99,
         "marker_count": 100,
         "processed_hash": "281c74bb6c891b02729d113da9ded346b14c18ca9277c98ac9897962602763b2",
+        "summary": {
+          "confirmed": 92
+        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -103259,6 +103990,9 @@
         "fact_count": 92,
         "marker_count": 93,
         "processed_hash": "16b4c47e68cdc8f18c14dbd429cf65789578c6077d870b6e1f308a525c259fd2",
+        "summary": {
+          "confirmed": 93
+        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -103846,6 +104580,9 @@
         "fact_count": 37,
         "marker_count": 38,
         "processed_hash": "c94b2a6794dee360ec49179b01af90626922bb4b5a4c78c68869335fc3df5300",
+        "summary": {
+          "confirmed": 38
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -104125,6 +104862,9 @@
         "fact_count": 45,
         "marker_count": 46,
         "processed_hash": "ea93a3ed159488ee2de216e6e8e4f033a6cc6bd4aea939512154e044e96b2c0f",
+        "summary": {
+          "confirmed": 46
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -104463,6 +105203,9 @@
         "fact_count": 75,
         "marker_count": 76,
         "processed_hash": "58d2569e3e769e56c001ec98527400a0a3515188dcaa79f505623fce6ca984aa",
+        "summary": {
+          "confirmed": 76
+        },
         "verdicts": {
           "self-uri": {
             "v": "confirmed",
@@ -105009,6 +105752,9 @@
         "fact_count": 313,
         "marker_count": 314,
         "processed_hash": "f115c8843cea8e511beaa503059941de29bb20baab1f055e882f7ff88baada0c",
+        "summary": {
+          "confirmed": 292
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -106801,6 +107547,9 @@
         "fact_count": 105,
         "marker_count": 106,
         "processed_hash": "3c6d6bd69b62a56684b7ccc4113e61851bd02eecede004c5763871d601705b9b",
+        "summary": {
+          "confirmed": 80
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -107310,6 +108059,9 @@
         "fact_count": 73,
         "marker_count": 74,
         "processed_hash": "7858318e90c4e16cbb3cd7106a589959c131b764cb92c2c5c28408d4bb790c1e",
+        "summary": {
+          "confirmed": 65
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -107728,6 +108480,9 @@
         "fact_count": 43,
         "marker_count": 44,
         "processed_hash": "dd3c69c5baeed751d77e854903dae5189f4d4d667063cec152bf967e4b79509d",
+        "summary": {
+          "confirmed": 44
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -108020,6 +108775,9 @@
         "fact_count": 146,
         "marker_count": 147,
         "processed_hash": "b940150108bf0ce4e70140970e45f5eec269723686cb98f46a6b8c6e3481c2ed",
+        "summary": {
+          "confirmed": 121
+        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -108777,6 +109535,9 @@
         "fact_count": 103,
         "marker_count": 104,
         "processed_hash": "abecd46d4e84b936f5f6bd4240f397f89067b905e6b2b7938652087555903444",
+        "summary": {
+          "confirmed": 104
+        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -109431,6 +110192,9 @@
         "fact_count": 96,
         "marker_count": 97,
         "processed_hash": "f3f38fc6ea2d128a3e2e9172a87b7522a60ab02724d567408863330bf3499296",
+        "summary": {
+          "confirmed": 97
+        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -110040,6 +110804,9 @@
         "fact_count": 83,
         "marker_count": 84,
         "processed_hash": "2e00d2aab2e0007ad20916d6e76a933a8f331a043f7c4cf1ef39d9641c320b32",
+        "summary": {
+          "confirmed": 84
+        },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -110571,6 +111338,9 @@
         "fact_count": 49,
         "marker_count": 50,
         "processed_hash": "9f092c76471e158b4bb04c5744ced93d245bce5a509864804c10d1035a28f09e",
+        "summary": {
+          "confirmed": 50
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -110939,6 +111709,9 @@
         "fact_count": 52,
         "marker_count": 53,
         "processed_hash": "27f1bad149d671ea82ae3e1bcec989cd35194721d97a49f9bda474803abc0e7f",
+        "summary": {
+          "confirmed": 53
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -111321,6 +112094,9 @@
         "fact_count": 45,
         "marker_count": 46,
         "processed_hash": "8d50a37b2c4e3b8421b60f9e912fb9ae726ed88e0a1d72e1fb95bfd0b2d8b8b1",
+        "summary": {
+          "confirmed": 46
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -111624,6 +112400,9 @@
         "fact_count": 65,
         "marker_count": 66,
         "processed_hash": "4150b1a3d9e61ce8fbe60099fccff098d31a0e9a00ba233585de2efe9e765405",
+        "summary": {
+          "confirmed": 66
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -112048,6 +112827,9 @@
         "fact_count": 134,
         "marker_count": 135,
         "processed_hash": "16f282502a1076facfeb02a35cf10791ad611ad62e4512a2c805e0c5c47aa1ff",
+        "summary": {
+          "confirmed": 135
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -112887,6 +113669,9 @@
         "fact_count": 85,
         "marker_count": 86,
         "processed_hash": "f8c3799d364dc48ba8fe3eeb1e2d5865b9b44b28f2e5dc79fe9929bbb6262386",
+        "summary": {
+          "confirmed": 78
+        },
         "verdicts": {
           "status-line": {
             "v": "confirmed",

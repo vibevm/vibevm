@@ -1,0 +1,62 @@
+{
+ "batch": "D40",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md": {
+   "S6-MECHANICS-RELATED-KNOWLEDGE-FOLLOWS-THE-SAME-RULE": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "owner ruling 2026-08-02 point 9 («хардкод убрать, сделать нормально, недостающую функциональность доделать») — the mechanism was BUILT and the sentence synced to the built truth: the pin's single source is the workspace manifest's rust-version (the cargo-canonical MSRV home, enforced by the compiler itself), vibe-cli's new build.rs derives VIBE_MSRV from the inherited CARGO_PKG_RUST_VERSION, tools.rs's two 1.93.0 literals died into RUST_PIN = env!(VIBE_MSRV), and the table test now asserts the derived pin extends the manifest value verbatim (required_tools_table_is_well_formed, 3/3 green); the sentence now names the manifest as the read source and the toolchain file keeps its channel job"
+    ]
+   }
+  },
+  "packages/org.vibevm.world/git-practices/v0.1.0/README.md": {
+   "THE-FAMILY-GROWS-TO-INCLUDE-ATTRIBUTION-AND-AUTONOMY": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "owner ruling 2026-08-02 (item 1, «согласен» with the fuller repair): the sentence now states the family complete at four, matching the package's own manifest (vibe.toml:25-31 pins all four =0.1.0), vibe.lock, and PROP-000 §12's member list; marker @spec/done → @impl/done because the sentence stops describing a plan and starts describing the manifest"
+    ]
+   },
+   "AGG-MEMBER-ATTRIBUTION-POLICY": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "new anchor of the same repair (the bullet roster completed to four): the member ships (packages/org.vibevm.world/git-attribution-policy, pinned =0.1.0 in this package's vibe.toml:25-31, installed at vibedeps/flow-git-attribution-policy), and the bullet's description matches the member's own boot snippet (human-authored surface, one always-loaded statement, the disclosure alternative)"
+    ]
+   },
+   "AGG-MEMBER-AUTONOMY": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "new anchor of the same repair: the member ships (packages/org.vibevm.world/git-autonomy, pinned =0.1.0, installed at vibedeps/flow-git-autonomy), and the bullet matches its boot snippet (routine proceeds; the red-line list stops and asks)"
+    ]
+   }
+  },
+  "packages/org.vibevm.world/redbook/v0.2.0/README.md": {
+   "AN-EDITION-IS-A-TESTED-SET-OF-EXACT-PINS": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "owner ruling 2026-08-02 (item 2 = (а) prose now + (б) the standing rule): the sentence now separates the exact-pin claim (true — 22 pins, 22 exact, 0 ranges at HEAD) from the roster question (four member sets shipped under 0.2.0 across three days, measured over the manifest's own history), citing the manifest's own accumulate-in-place note; the causal «so» now claims byte-identity only of shared members, which the exact pins genuinely guarantee; the (б) rule is recorded in the manifest comment — the next roster change bumps the edition"
+    ]
+   }
+  }
+ }
+}

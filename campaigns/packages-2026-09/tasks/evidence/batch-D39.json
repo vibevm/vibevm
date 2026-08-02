@@ -1,0 +1,36 @@
+{
+ "batch": "D39",
+ "cluster": "ai-native",
+ "files": {
+  "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md": {
+   "OVERLAY-RULE-VERSIONS-NEVER-REPEAT": {
+    "v": "drift",
+    "ev": [
+     "verdict-first repair of a false confirmed (F-270 family, owner «пересуд» 2026-08-02): the sentence claimed versions never repeat OR RESET within a session over the very code whose docs.remove branch resets the counter (oracle.rs:184 — identical to the Go twin's oracle.rs:186-193), and the Go twin's own test name states the behaviour: overlay_versions_are_monotonic_and_close_resets; the family text lands in the same pass"
+    ]
+   },
+   "CLEAN-VALIDATE-DOES-NOT-CERTIFY-A-CLEAN-FLOOR": {
+    "v": "drift",
+    "ev": [
+     "verdict-first repair of a false confirmed (F-273 family, owner «пересуд и семерка» 2026-08-02): the parenthetical glossed the floor as «cargo check» — the shipped floor is seven steps (fmt, test, clippy, conform, specmap, test-gate, fast-loop; floor.rs:57-125) and cargo check is not among them; the third family member found during the pass — the brief's copy and the Go copy carried the same defect; the seven-step text lands in the same pass"
+    ]
+   }
+  },
+  "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md": {
+   "FLOOR-REMAINS-THE-TRUTH": {
+    "v": "drift",
+    "ev": [
+     "verdict-first repair of a false confirmed (F-273 family, owner «пересуд и семерка» 2026-08-02): «rust-ai-native floor → cargo check» — the shipped step list is seven long (floor.rs:57 fmt, :64 test, :78/:87 clippy, :92 conform, :99 specmap, :111 test-gate, :125 fast-loop) and cargo check is not among them; an external consumer told the floor is cargo check will not look for the discipline steps that decide the verdict; the seven-step text lands in the same pass"
+    ]
+   }
+  },
+  "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-PROTOCOL-v0.1.md": {
+   "REPLAY-GOLDENS-PIN-BOTH-SIDES": {
+    "v": "drift",
+    "ev": [
+     "verdict-first repair of a false confirmed (F-280 family, owner «пересуд» 2026-08-02): the anchor claims replay goldens with recorded streams pin BOTH sides — the Phase C confirmation rested on inner-side evidence only (transport.rs:312 no-node double + the fact-parity test), no recorded stream is checked into the package (the family-wide find over *.jsonl/*transcript*/*golden*/*.snap/*recorded* returns nothing) and no test constructs an outer frame; the honest inner/outer split text lands in the same pass"
+    ]
+   }
+  }
+ }
+}

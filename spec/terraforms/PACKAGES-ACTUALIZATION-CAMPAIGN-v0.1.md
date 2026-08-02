@@ -4555,6 +4555,39 @@ aspirational — and every one is still live for the phases that remain.
   stands at **B-047**. On the owner: the sync-queue remainder (14 open
   rows), presented per the refined format.
 
+- **2026-08-02 · девятый обмен — последняя порция очереди уходит девятью
+  рулингами, и в ней прячется одна стройка.** The nine-document portion
+  came back ruled whole: 1/2/3 «согласен», 5 «согласен» (токены — очень
+  далёкое будущее), 6/7/8 «пересуд» (+«семёрка»), 9 — the build order
+  («хардкод убрать, сделать нормально, недостающую функциональность
+  доделать»), 4 — «подумай и вернись рассказать» (returned as the
+  schema-home analysis, below). Executed: **the pin build** — vibe-cli
+  gained `build.rs` deriving `VIBE_MSRV` from the workspace
+  `rust-version` (the cargo-canonical MSRV home the compiler itself
+  enforces), the two hard-coded `1.93.0` died into `RUST_PIN`, the
+  tools-table test asserts pin-extends-manifest (3/3), and the S6
+  lesson synced to the built truth. **Twenty verdicts moved in three
+  batches** (D39 verdict-first ×4 — including the fourth floor-gloss
+  family member found mid-pass — D40 world ×5 with F-309's two new
+  roster anchors judged, D41 ai-native ×10), eleven files sealed, 0
+  refusals after the pass met the REAL `vibe progress mirror` (the
+  per-file views under `run/mirror/` — the D14 lesson's «mirror» is
+  this subcommand, not `progress check`; F-309's new anchors were the
+  first anchor-set addition to hit it, and merge-verdicts' refusal
+  named it). **Rows resolved: F-114, F-157→(routed set), F-216, F-270,
+  F-273, F-275, F-280, F-309 — 138 total.** The redbook manifest now
+  carries the standing edition rule (next roster change bumps the
+  version). **A bulk deferred-flip of 58 routed-out rows was made and
+  reverted within the hour** — `deferred` means owner-ruled; the flip
+  conflated boss-side routing records with rulings, bought the gate
+  nothing (it reads owed + rulings), and is recorded as the near-miss
+  it was. **State** (commands supersede): corpus **11 187 / 191 / 44 —
+  97.9 %** over 11 422 (+2 units — the roster anchors); registry
+  **91 / 191 — 32 deferred, 59 open; owed 18 = 17 on owner-ruled
+  build deferrals + F-279's 1**; resolved **138**; `ai-native`
+  **98.3 %**. On the owner: the F-279 schema-home ruling; then the
+  exit gate.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:

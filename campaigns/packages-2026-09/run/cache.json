@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-02T19:57:39Z",
+  "updated_at": "2026-08-02T20:25:43Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -10670,7 +10670,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md": {
-      "content_hash": "9697f61cfa68ac871cd6ef00ce053b7740d8716c374ec2441a22c1d5fbddcad8",
+      "content_hash": "a71d376f83e9baaa1e3586da224bb61b5d8549b1038bef9cd1041ae2a1443678",
       "rollup": {
         "explicit": [
           "spec",
@@ -10692,7 +10692,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "9697f61cfa68ac871cd6ef00ce053b7740d8716c374ec2441a22c1d5fbddcad8",
+        "processed_hash": "a71d376f83e9baaa1e3586da224bb61b5d8549b1038bef9cd1041ae2a1443678",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -11003,12 +11003,9 @@
             ]
           },
           "OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:123  - ##OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET versions never repeat or reset within a session (a monotonic counter per d...",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle.rs:143  Some(doc) => { doc.version += 1; doc.text = text.clone();",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle/tests.rs:30  fn overlay_versions_are_monotonic_and_close_resets() {",
-              "**the counter does reset within a session.** `update {content: null}` removes the document from the overlay map (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle.rs:183-193), so a reopened file starts again at version 1. The bridge's own test says so in its name: `overlay_versions_are_monotonic_and_close_resets` (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle/tests.rs:30). The implementation and its test agree with each other and disagree with the spec line"
+              "owner ruling 2026-08-02 (item 6, «пересуд»): the fact now states the shipped behaviour — monotonic per open document, close resets, reopen starts at 1 — matching update/open_or_update (oracle.rs docs.remove branch) and named by the bridge's own test overlay_versions_are_monotonic_and_close_resets; implementation, test and sentence now agree"
             ]
           },
           "VALIDATE-WITHOUT-CONTENT-READS-DISK": {
@@ -11281,8 +11278,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T19:00:29Z",
-        "verify_batch": "C4+C5 + C45-go-review + D5a + D31 + D33"
+        "verified_at": "2026-08-02T20:25:43Z",
+        "verify_batch": "C4+C5 + C45-go-review + D5a + D31 + D33 + D41"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md": {
@@ -12184,7 +12181,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md": {
-      "content_hash": "1447f48a9af677ed231a2a18feb5d95b3166f89491103dc7bc6cc67d3d01c3bd",
+      "content_hash": "1d0bc188ee4397eec7447156127675a3152cc918027c1382759e301debb3004c",
       "rollup": {
         "explicit": [
           "spec",
@@ -12206,7 +12203,7 @@
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "1447f48a9af677ed231a2a18feb5d95b3166f89491103dc7bc6cc67d3d01c3bd",
+        "processed_hash": "1d0bc188ee4397eec7447156127675a3152cc918027c1382759e301debb3004c",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -12276,11 +12273,9 @@
             ]
           },
           "FLOOR-REMAINS-THE-TRUTH": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md:48  ##FLOOR-REMAINS-THE-TRUTH The floor (`go-ai-native floor` → gofmt/vet/build/test) remains the truth, verbatim. @impl/...",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs:28  const STEPS: &[&str] = &[ \"gofmt\", \"vet\", \"tests\", \"staticcheck\", \"conform\", \"specmap\", \"test-gate\", ];",
-              "**the floor named is not the floor shipped.** The fact glosses it as gofmt/vet/build/test. The shipped step list is seven long — gofmt, vet, tests, staticcheck, conform, specmap, test-gate (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs:28-36) — and carries **no `build` step** at all; the compile rides inside `go test ./...` (floor.rs:127-128). A reader told the floor is four steps will not look for the three discipline steps that decide its verdict"
+              "owner ruling 2026-08-02 (item 7, «пересуд и семерка»): the gloss now names the seven shipped steps (floor.rs STEPS: gofmt, vet, tests, staticcheck, conform, specmap, test-gate — staticcheck runs with exhaustive) and says the compile rides inside go test ./..., transcribed from the package's own README (##SHIPS-GO-AI-NATIVE-UMBRELLA)"
             ]
           },
           "STANCE-STAND-ON-THE-CONSUMERS-GOPLS": {
@@ -12518,8 +12513,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T20:39:23Z",
-        "verify_batch": "C4+C5 + C45-go-review + D5a + D8b + D11-release-a + D32"
+        "verified_at": "2026-08-02T20:25:43Z",
+        "verify_batch": "C4+C5 + C45-go-review + D5a + D8b + D11-release-a + D32 + D41"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md": {
@@ -14350,7 +14345,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md": {
-      "content_hash": "4fc8272e5822f7f60c82a682a3a62d1e2d71163901f9325b5aa437aef0316f42",
+      "content_hash": "1c3f74d1ed873d0cf518535d8de17c42cbf6a2091158eb41b6c55f5589fbc735",
       "rollup": {
         "explicit": [
           "spec",
@@ -14372,7 +14367,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "4fc8272e5822f7f60c82a682a3a62d1e2d71163901f9325b5aa437aef0316f42",
+        "processed_hash": "1c3f74d1ed873d0cf518535d8de17c42cbf6a2091158eb41b6c55f5589fbc735",
         "verdicts": {
           "reference-instance-note": {
             "v": "confirmed",
@@ -14392,12 +14387,9 @@
             ]
           },
           "card-is-beta": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md:78  ##CHECKER **Checker:** conform T-sem rule `replacement-has-oracle` ... *(Status: specified, NOT yet implemented in p ...",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:13  | `scaffold-d-differential-oracle` | E | scaffold D | gate | [E-mid] | shipped: oracle-presence (`cell-has-oracle`, ...",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/vendor/core-ai-native-conform/src/rules/structure.rs:175          \"cell-has-oracle\"",
-              "**the card and its own registry disagree.** The fact says «this card is itself BETA (its checker is specified but the conform rule is not yet implemented in the pilot)». The registry row for the same card reads «**shipped**: oracle-presence (`cell-has-oracle`, rust-ai-native-conform); the oracle itself stays authored» (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/INDEX.md:13), and that rule is registered in the shipped gate (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform/src/lib.rs:77, defined at crates/vendor/core-ai-native-conform/src/rules/structure.rs:148-175). A conform rule for this card IS implemented; the unimplemented one is `replacement-has-oracle`, and the CHECKER row says so correctly while this one does not"
+              "owner ruling 2026-08-02 (item 3): the BETA reason now matches the card's own ##CHECKER row and the gate — cell-has-oracle ships mounted (rust-ai-native-conform/src/lib.rs:77, rules/structure.rs:175, the card's own INDEX row says shipped), replacement-has-oracle is the specified-unbuilt half (zero hits repo-wide); Go and TS sibling cards verified correct as written, untouched"
             ]
           },
           "CLASSIFICATION": {
@@ -14790,8 +14782,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T12:01:00Z",
-        "verify_batch": "C4+C5 + C45-rust-review"
+        "verified_at": "2026-08-02T20:25:43Z",
+        "verify_batch": "C4+C5 + C45-rust-review + D41"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-e-fast-loop.md": {
@@ -16299,7 +16291,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md": {
-      "content_hash": "847ce53a21b366ece8cf7532814416197417d47d451878310feabbddc773e1a7",
+      "content_hash": "013e097fce72ea475992095be4c0d2c4643c881243c089fa0fbfbcf59f648a7e",
       "rollup": {
         "explicit": [
           "spec",
@@ -16321,7 +16313,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "847ce53a21b366ece8cf7532814416197417d47d451878310feabbddc773e1a7",
+        "processed_hash": "013e097fce72ea475992095be4c0d2c4643c881243c089fa0fbfbcf59f648a7e",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -16576,10 +16568,7 @@
           "OVERLAY-RULE-VERSIONS-NEVER-REPEAT": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs:145                  doc.version += 1;",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs:67  fn validate_opens_v1_then_changes_v2_never_reuses() {",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs:92      assert_eq!(changes[0][\"params\"][\"textDocument\"][\"version\"], 2);",
-              "located in the perimeter on the refs above, machine-verified against the files they cite"
+              "family text applied after the D39 verdict-first repair: monotonic per open document, close resets, reopen at 1 — matching oracle.rs:184's docs.remove branch, the identical code the Go twin's test names; one family, one answer"
             ]
           },
           "OVERLAY-RULE-VALIDATE-WITHOUT-CONTENT-READS-DISK": {
@@ -16636,10 +16625,7 @@
           "CLEAN-VALIDATE-DOES-NOT-CERTIFY-A-CLEAN-FLOOR": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/main.rs:21               The floor stays the truth (TCG-ORACLE-RUST §5).\"",
-              "research/tcg-bench/reports/REPORT-2026-07-07-rust-baseline.md:66    set, deliberately enabled (ORACLE-RUST §3); the floor",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle.rs:197      /// (ORACLE-RUST §5: the oracle's answer is r-a's view — the floor",
-              "located in the perimeter on the refs above, machine-verified against the files they cite"
+              "family text applied after the D39 verdict-first repair: the floor gloss names the seven shipped steps (floor.rs:57-125) with the compile riding inside the test step; the approximation posture's substance (validate does not certify the floor) unchanged and true"
             ]
           },
           "DIFFERENTIAL-CORPUS-CURATES-NATIVE-COMPETENCE": {
@@ -16913,12 +16899,12 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T19:23:04Z",
-        "verify_batch": "C4+C5 + C45-rust-review + D5a + D33 + D34 + D35"
+        "verified_at": "2026-08-02T20:25:43Z",
+        "verify_batch": "C4+C5 + C45-rust-review + D5a + D33 + D34 + D35 + D39 + D41"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md": {
-      "content_hash": "08e5f5c729852ce6b83a477a7e3f08bc0942488eb6f4b1a063e7fe7008c471fa",
+      "content_hash": "e8f02ce71e795298703f8ef883511871b7f012798dc6cdec21414c4b48a8db85",
       "rollup": {
         "explicit": [
           "spec",
@@ -16940,7 +16926,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "08e5f5c729852ce6b83a477a7e3f08bc0942488eb6f4b1a063e7fe7008c471fa",
+        "processed_hash": "e8f02ce71e795298703f8ef883511871b7f012798dc6cdec21414c4b48a8db85",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -17280,11 +17266,9 @@
             ]
           },
           "REPLAY-GOLDENS-AND-RECORDED-TRANSCRIPTS-PIN-BOTH-HOPS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client/tests.rs:1  //! Replay tests: the whole client layer against scripted transports —",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs:1  //! Oracle-layer replay tests: op semantics over scripted transports —",
-              "**one hop, not both.** The inner hop is real — the client and oracle layers replay against scripted transports (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client/tests.rs:1 and src/oracle/tests.rs:1). No test drives `run_serve` over recorded outer frames: rust-ai-native-tcg has no tests/ file exercising the serve loop, only finding_parity.rs. The Go twin fails identically"
+              "owner ruling 2026-08-02 (item 8, «пересуд»): the fact now pins the true split — inner hop replayed r-a-free (client/tests.rs, oracle/tests.rs), outer shape not yet pinned (run_serve called from main.rs alone; the driver crate carries finding_parity.rs and unit tests only); the Go copy took the same form under F-210 earlier today"
             ]
           },
           "MARKERS-RESERVATION-MAY-BE-FILLED-IN-A-FUTURE-MINOR": {
@@ -17296,12 +17280,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T20:39:23Z",
-        "verify_batch": "C4+C5 + C45-rust-review + D5a + D8a + D11-release-a"
+        "verified_at": "2026-08-02T20:25:43Z",
+        "verify_batch": "C4+C5 + C45-rust-review + D5a + D8a + D11-release-a + D41"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md": {
-      "content_hash": "bd6f5fa179306439a43d3e65f0f0c632474cb4caea99cef8ea9d3dfe5e13854c",
+      "content_hash": "a049809975a4968990b3d60886a58a7a8ee43300c7585df1b3ab5402ab04d274",
       "rollup": {
         "explicit": [
           "spec",
@@ -17323,7 +17307,7 @@
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "bd6f5fa179306439a43d3e65f0f0c632474cb4caea99cef8ea9d3dfe5e13854c",
+        "processed_hash": "a049809975a4968990b3d60886a58a7a8ee43300c7585df1b3ab5402ab04d274",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -17349,12 +17333,9 @@
             ]
           },
           "DERIVED-FROM-THE-EVIDENCE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:107  - ##FINDING-R2C-005 **R2C-005** — Type-constrained decoding is PER-LANGUAGE manual work; no Rust impl exists",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:105  - ##FINDING-DR2-012 **DR2-012** — Type-constrained decoding cuts compile errors ~75%, lifts correctness",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/appendix/ATLAS.md:184    _manifesto · med · refines:H3_ — ... using guided decoding (XGrammar, Outlines), strict schemas, and validator-fir ...",
-              "**`DR1-014` resolves nowhere.** R2C-005 (ATLAS:107) and DR2-012 (ATLAS:105) resolve; `DR1-014` has no `##FINDING-` anchor in the ATLAS and survives only in this brief and the TypeScript guide. Third member of the unresolvable-evidence-id family, with H4 and DL1-015 — three different ids, three documents, none of them checked by anything"
+              "owner ruling 2026-08-02 (item 5): the dead-id clause lands as the TS twin's mirror (D5/F-168 wording) — R2C-005 and DR2-012 authored, DR1-014 the roster's one gap (001-013, 015-024) defined nowhere — and the figure takes the canonical DR2-012 pair 75.3%/70.2% per the taken fork 10; the derivation stands on DR2-012 and the paper"
             ]
           },
           "AGENTIC-SIBLING-SHIPPED": {
@@ -17391,11 +17372,9 @@
             ]
           },
           "RUST-AI-NATIVE-TCG-IS-THAT-MISSING-TOOL": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibe.toml:45  name = \"rust-ai-native-tcg\"",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/main.rs:1  //! bin `rust-ai-native-tcg` — the agentic type oracle's CLI face",
-              "**the name is taken, by a shipped binary that does something else.** The fact says `rust-ai-native-tcg` «is that missing tool» — the token-level constrained generator. A binary of exactly that name ships and is the CONSULTATION oracle: packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/vibe.toml:45 declares it and packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg/src/main.rs:1 calls itself «the agentic type oracle's CLI face», with a serve/validate/scope/complete/type/bench surface and no masking anywhere. One name, two tools, one of them shipped — the same collision class as the TypeScript card's `vibe-tcg-ts`, already recorded drift in this batch"
+              "owner ruling 2026-08-02 (item 5, «уровень токенов — это очень далекое будущее»): the sentence now reserves the name instead of asserting present-tense identity, names the shipped binary under that name (the AGENTIC consultation oracle, vibe.toml [[binary]], crates/rust-ai-native-tcg) and holds the token-level tier VERY-FAR-FUTURE per its own ##status-line — the document no longer contradicts itself four lines apart; siblings already carry the stub-depth posture and needed nothing"
             ]
           },
           "STRATEGIC-PLACEMENT-IN-THE-CATALOG": {
@@ -17612,12 +17591,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T18:48:47Z",
-        "verify_batch": "C4+C5 + C45-rust-review + D4a + D5a"
+        "verified_at": "2026-08-02T20:25:43Z",
+        "verify_batch": "C4+C5 + C45-rust-review + D4a + D5a + D41"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md": {
-      "content_hash": "b503d8f1d2f8c9d5d2b44d425a9a2a8d51b8558e6f6131c552b4372ecfc6037d",
+      "content_hash": "577eec666e5323c7f0c5ef57e2c3a1b3d77c1a6ff8bc296a7d4847b928860197",
       "rollup": {
         "explicit": [
           "spec",
@@ -17639,7 +17618,7 @@
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "b503d8f1d2f8c9d5d2b44d425a9a2a8d51b8558e6f6131c552b4372ecfc6037d",
+        "processed_hash": "577eec666e5323c7f0c5ef57e2c3a1b3d77c1a6ff8bc296a7d4847b928860197",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -17720,10 +17699,7 @@
           "FLOOR-REMAINS-THE-TRUTH": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-cli/src/floor.rs:2  //! Playbook Tier 0): format → tests → lints → the conform gate → the",
-              "campaigns/packages-2026-09/harvest/rust-ai-native-lang-floor.md:6  $ rust-ai-native floor --keep-going",
-              "research/tcg-bench/reports/REPORT-2026-07-07-rust-baseline.md:67    (`discipline-rust floor` → cargo check) remains the truth.",
-              "located in the perimeter on the refs above, machine-verified against the files they cite"
+              "family text applied after the D39 verdict-first repair: the seven-step list replaces «cargo check» (floor.rs:57 fmt, :64 test, :78/:87 clippy, :92 conform, :99 specmap, :111 test-gate, :125 fast-loop); parallel to the Go copy's transcription"
             ]
           },
           "STANCE-STAND-ON-THE-CONSUMERS-RUST-ANALYZER": {
@@ -17986,8 +17962,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T20:39:23Z",
-        "verify_batch": "C4+C5 + C45-rust-review + D8b + D11-release-a"
+        "verified_at": "2026-08-02T20:25:43Z",
+        "verify_batch": "C4+C5 + C45-rust-review + D8b + D11-release-a + D39 + D41"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md": {
@@ -22990,7 +22966,7 @@
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-PROTOCOL-v0.1.md": {
-      "content_hash": "614b746844d803edec398680e62a258503ce86c755314bc2e976bf24ffb083c9",
+      "content_hash": "a760fb83fc521bbda7f6857b117dff4e7d7b148af2d1b291de65d20b0d5e0689",
       "rollup": {
         "explicit": [
           "spec",
@@ -23012,7 +22988,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "614b746844d803edec398680e62a258503ce86c755314bc2e976bf24ffb083c9",
+        "processed_hash": "a760fb83fc521bbda7f6857b117dff4e7d7b148af2d1b291de65d20b0d5e0689",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -23335,15 +23311,12 @@
           "REPLAY-GOLDENS-PIN-BOTH-SIDES": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg-bridge/src/transport.rs:312      /// A no-node double: scripted responses per op.",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-tcg-bridge/src/transport.rs:330      fn typed_ops_shape_their_requests_and_parse_their_results() {",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/ts-oracle/test/oracle.test.ts:381  test(\"fact parity with ts-extract on the same fixture file (D1)\", async () => {",
-              "located in the perimeter on the refs above, machine-verified against the files they cite"
+              "family text applied after the D39 verdict-first repair: the inner side is pinned by the no-node scripted double (transport.rs:312) and the fact-parity test; the outer shape honestly unpinned — no recorded stream in the package, no test builds an outer frame; the three stacks now carry one answer to one question"
             ]
           }
         },
-        "verified_at": "2026-07-28T11:58:29Z",
-        "verify_batch": "C4+C5"
+        "verified_at": "2026-08-02T20:25:43Z",
+        "verify_batch": "C4+C5 + D39 + D41"
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.md": {
@@ -46438,29 +46411,29 @@
       }
     },
     "packages/org.vibevm.world/git-practices/v0.1.0/README.md": {
-      "content_hash": "128cd2b381c7d9add73d3656fff82203ab675a22a318ca0faf6eb1c12a292023",
+      "content_hash": "af30b73415094851413a898ee34990d7b6e078b97487a8e5c8de667199fa98d2",
       "rollup": {
         "explicit": [
           "doc",
           "done"
         ],
         "computed": [
-          "spec",
+          "impl",
           "done"
         ],
         "effective": [
           "doc",
           "done"
         ],
-        "marker_count": 10,
-        "fact_count": 9,
+        "marker_count": 12,
+        "fact_count": 11,
         "unmarked_facts": 0
       },
-      "marker_count": 10,
+      "marker_count": 12,
       "unit_count": 3,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "128cd2b381c7d9add73d3656fff82203ab675a22a318ca0faf6eb1c12a292023",
+        "processed_hash": "af30b73415094851413a898ee34990d7b6e078b97487a8e5c8de667199fa98d2",
         "verdicts": {
           "AGG-ROLE": {
             "v": "confirmed",
@@ -46554,19 +46527,13 @@
             ]
           },
           "THE-FAMILY-GROWS-TO-INCLUDE-ATTRIBUTION-AND-AUTONOMY": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml:27  \"flow:org.vibevm.world/git-autonomy\" = \"=0.1.0\"",
-              "packages/org.vibevm.world/git-practices/v0.1.0/vibe.toml:31  \"flow:org.vibevm.world/git-attribution-policy\" = \"=0.1.0\"",
-              "vibe.lock:294      \"flow:org.vibevm.world/git-attribution-policy@=0.1.0\",",
-              "spec/boot/STATIC.md:421  <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->",
-              "**the future tense is already spent.** «The family grows to include human-authored attribution and commit autonomy **as those members land**» — both have landed: the umbrella's own manifest pins them (vibe.toml:27 and :31), the lockfile records all four (vibe.lock:293-296), and both snippets are compiled into the host boot lane (spec/boot/STATIC.md:421 and :486, and again at :615 and :680).",
-              "The README body still lists **two** members at :14-17 and defers the other two to this sentence, while the manifest ships four and the host's own PROP-000:159-164 lists all four as current. A reader of the umbrella's README is told two of its four members are pending"
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "owner ruling 2026-08-02 (item 1, «согласен» with the fuller repair): the sentence now states the family complete at four, matching the package's own manifest (vibe.toml:25-31 pins all four =0.1.0), vibe.lock, and PROP-000 §12's member list; marker @spec/done → @impl/done because the sentence stops describing a plan and starts describing the manifest"
             ]
           },
           "CONTENT-MINIMAL-NO-BOOT-SNIPPET-OF-ITS-OWN": {
@@ -46598,10 +46565,30 @@
               2,
               3
             ]
+          },
+          "AGG-MEMBER-ATTRIBUTION-POLICY": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "new anchor of the same repair (the bullet roster completed to four): the member ships (packages/org.vibevm.world/git-attribution-policy, pinned =0.1.0 in this package's vibe.toml:25-31, installed at vibedeps/flow-git-attribution-policy), and the bullet's description matches the member's own boot snippet (human-authored surface, one always-loaded statement, the disclosure alternative)"
+            ]
+          },
+          "AGG-MEMBER-AUTONOMY": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "new anchor of the same repair: the member ships (packages/org.vibevm.world/git-autonomy, pinned =0.1.0, installed at vibedeps/flow-git-autonomy), and the bullet matches its boot snippet (routine proceeds; the red-line list stops and asks)"
+            ]
           }
         },
-        "verified_at": "2026-07-28T13:49:53Z",
-        "verify_batch": "W1d"
+        "verified_at": "2026-08-02T20:25:43Z",
+        "verify_batch": "W1d + D40"
       }
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/README.md": {
@@ -63113,7 +63100,7 @@
       }
     },
     "packages/org.vibevm.world/redbook/v0.2.0/README.md": {
-      "content_hash": "a8fee43a4f6fe8a0efd31b6ab2ae8bbdceda90d84f185630f614b51165fe7578",
+      "content_hash": "c504a27dbaac34311b5c2add88b6a7238297e4b1953ea6af7c0c62adccde1408",
       "rollup": {
         "explicit": [
           "doc",
@@ -63135,7 +63122,7 @@
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "a8fee43a4f6fe8a0efd31b6ab2ae8bbdceda90d84f185630f614b51165fe7578",
+        "processed_hash": "c504a27dbaac34311b5c2add88b6a7238297e4b1953ea6af7c0c62adccde1408",
         "verdicts": {
           "REDBOOK-IS-A-CURATED-COLLECTION-OF-PRACTICES": {
             "v": "confirmed",
@@ -63216,19 +63203,13 @@
             ]
           },
           "AN-EDITION-IS-A-TESTED-SET-OF-EXACT-PINS": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/redbook/v0.2.0/README.md:25  ##AN-EDITION-IS-A-TESTED-SET-OF-EXACT-PINS An edition is a",
-              "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:48  # The cultural-extraction wave (edition bump to a clean 0.3.0 lands when the",
-              "packages/org.vibevm.world/redbook/v0.2.0/vibe.toml:49  # full new practice set has settled; accumulated here in place meanwhile).",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1693  - **2026-07-28 · F-114 — the edition contract is falsified by the manifest that",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1701  **So the umbrella accumulates members inside 0.2.0 without an edition bump, and",
-              "spec/common/PROP-028-package-families.md:161  - ##REJ-CARET-PINS **Caret pins in the aggregator**: a caret would let members skew within a",
-              "DRIFT on its causal clause, confirming the host's already-filed F-114 rather than opening anything new. The exact-pin half holds arithmetically — all 22 pins parse as `=X.Y.Z`, none caret, none range, and PROP-028 §REJ-CARET-PINS records the host's rationale for that rule. What fails is the «so»: «two projects on the same edition run byte-identical practice text» is falsified by the manifest three lines below the last pin, which I read directly — vibe.toml:48-49 reads «# The cultural-extraction wave (edition bump to a clean 0.3.0 lands when the full new practice set has settled; accumulated here in place meanwhile)». Members were added to 0.2.0 without the version moving, so two projects that installed 0.2.0 on either side of that commit receive different member sets. F-114 (campaign plan, 2026-07-28) quotes the same comment against the same sentence."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               2
+            ],
+            "ev": [
+              "owner ruling 2026-08-02 (item 2 = (а) prose now + (б) the standing rule): the sentence now separates the exact-pin claim (true — 22 pins, 22 exact, 0 ranges at HEAD) from the roster question (four member sets shipped under 0.2.0 across three days, measured over the manifest's own history), citing the manifest's own accumulate-in-place note; the causal «so» now claims byte-identity only of shared members, which the exact pins genuinely guarantee; the (б) rule is recorded in the manifest comment — the next roster change bumps the edition"
             ]
           },
           "MEMBERS-EVOLVE-BETWEEN-EDITIONS": {
@@ -63809,8 +63790,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T18:08:25Z",
-        "verify_batch": "W4 + D4b + D7"
+        "verified_at": "2026-08-02T20:25:43Z",
+        "verify_batch": "W4 + D4b + D7 + D40"
       }
     },
     "packages/org.vibevm.world/redbook/v0.2.0/spec/boot/03-flow-redbook.md": {
@@ -77177,7 +77158,7 @@
       }
     },
     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/flows/tool-design-lessons/self-updating-tools.md": {
-      "content_hash": "4a9cb7bcf952009218c870b90b5b956889fae284e5599fef3db8e69b0fccdeae",
+      "content_hash": "369beb4ce6e731a2d36acaf1d09c992f434321cf96bce0b51db03611f67d55d0",
       "rollup": {
         "explicit": [
           "spec",
@@ -77199,7 +77180,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "4a9cb7bcf952009218c870b90b5b956889fae284e5599fef3db8e69b0fccdeae",
+        "processed_hash": "369beb4ce6e731a2d36acaf1d09c992f434321cf96bce0b51db03611f67d55d0",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -78049,19 +78030,13 @@
             ]
           },
           "S6-MECHANICS-RELATED-KNOWLEDGE-FOLLOWS-THE-SAME-RULE": {
-            "v": "drift",
-            "ev": [
-              "crates/vibe-cli/src/commands/vvm/model.rs:129  pub const DEFAULT_PROFILE: Profile = Profile::Debug;",
-              "crates/vibe-cli/src/commands/vvm/model.rs:325          assert_eq!(DEFAULT_PROFILE, Profile::Debug);",
-              "spec/common/PROP-019-version-manager.md:542  - ##MAINT-TOOLS-TABLE the **required tools** are the `REQUIRED_TOOLS` table (§2.8, asserted by a",
-              "spec/common/PROP-019-version-manager.md:543    test); @spec/done",
-              "rust-toolchain.toml:2  channel = \"stable\"",
-              "crates/vibe-cli/src/commands/vvm/tools.rs:33          help_url: \"https://rustup.rs\",",
-              "DRIFT on the second clause, and it is the sharpest self-referential failure in the package. FIRST CLAUSE holds cleanly: `DEFAULT_PROFILE` is one `pub const` (`model.rs:129`), asserted by a test (`assert_eq!(DEFAULT_PROFILE, Profile::Debug)` at 325), with `resolve_profile` its only consumer (`mod.rs:269-277`). SECOND CLAUSE is false: NOTHING reads `rust-toolchain.toml`. `grep -rn 'rust-toolchain\\|toolchain.toml' crates/ xtask/ --include='*.rs'` returns exactly one hit and it is a doc comment at `builder.rs:38`; the file itself pins no version (`channel = \"stable\"`); and 1.93 is hard-coded in three places — `tools.rs:33`, `tools.rs:38` and `Cargo.toml:53`. So the single-source-of-truth rule holds for the profile and fails for the language pin, in the same crate."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               2
+            ],
+            "ev": [
+              "owner ruling 2026-08-02 point 9 («хардкод убрать, сделать нормально, недостающую функциональность доделать») — the mechanism was BUILT and the sentence synced to the built truth: the pin's single source is the workspace manifest's rust-version (the cargo-canonical MSRV home, enforced by the compiler itself), vibe-cli's new build.rs derives VIBE_MSRV from the inherited CARGO_PKG_RUST_VERSION, tools.rs's two 1.93.0 literals died into RUST_PIN = env!(VIBE_MSRV), and the table test now asserts the derived pin extends the manifest value verbatim (required_tools_table_is_well_formed, 3/3 green); the sentence now names the manifest as the read source and the toolchain file keeps its channel job"
             ]
           },
           "S6-MECHANICS-THE-DOCTOR-AND-THE-TEST-MOVE-FOR-FREE": {
@@ -78347,8 +78322,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T23:13:27Z",
-        "verify_batch": "W7 + D7"
+        "verified_at": "2026-08-02T20:25:43Z",
+        "verify_batch": "W7 + D7 + D40"
       }
     },
     "packages/org.vibevm.world/two-process-model/v0.1.0/README.md": {

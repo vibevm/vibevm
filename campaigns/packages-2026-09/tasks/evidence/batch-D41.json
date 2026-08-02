@@ -1,0 +1,82 @@
+{
+ "batch": "D41",
+ "cluster": "ai-native",
+ "files": {
+  "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md": {
+   "card-is-beta": {
+    "v": "confirmed",
+    "ev": [
+     "owner ruling 2026-08-02 (item 3): the BETA reason now matches the card's own ##CHECKER row and the gate — cell-has-oracle ships mounted (rust-ai-native-conform/src/lib.rs:77, rules/structure.rs:175, the card's own INDEX row says shipped), replacement-has-oracle is the specified-unbuilt half (zero hits repo-wide); Go and TS sibling cards verified correct as written, untouched"
+    ]
+   }
+  },
+  "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md": {
+   "DERIVED-FROM-THE-EVIDENCE": {
+    "v": "confirmed",
+    "ev": [
+     "owner ruling 2026-08-02 (item 5): the dead-id clause lands as the TS twin's mirror (D5/F-168 wording) — R2C-005 and DR2-012 authored, DR1-014 the roster's one gap (001-013, 015-024) defined nowhere — and the figure takes the canonical DR2-012 pair 75.3%/70.2% per the taken fork 10; the derivation stands on DR2-012 and the paper"
+    ]
+   },
+   "RUST-AI-NATIVE-TCG-IS-THAT-MISSING-TOOL": {
+    "v": "confirmed",
+    "ev": [
+     "owner ruling 2026-08-02 (item 5, «уровень токенов — это очень далекое будущее»): the sentence now reserves the name instead of asserting present-tense identity, names the shipped binary under that name (the AGENTIC consultation oracle, vibe.toml [[binary]], crates/rust-ai-native-tcg) and holds the token-level tier VERY-FAR-FUTURE per its own ##status-line — the document no longer contradicts itself four lines apart; siblings already carry the stub-depth posture and needed nothing"
+    ]
+   }
+  },
+  "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md": {
+   "OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET": {
+    "v": "confirmed",
+    "ev": [
+     "owner ruling 2026-08-02 (item 6, «пересуд»): the fact now states the shipped behaviour — monotonic per open document, close resets, reopen starts at 1 — matching update/open_or_update (oracle.rs docs.remove branch) and named by the bridge's own test overlay_versions_are_monotonic_and_close_resets; implementation, test and sentence now agree"
+    ]
+   }
+  },
+  "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md": {
+   "FLOOR-REMAINS-THE-TRUTH": {
+    "v": "confirmed",
+    "ev": [
+     "owner ruling 2026-08-02 (item 7, «пересуд и семерка»): the gloss now names the seven shipped steps (floor.rs STEPS: gofmt, vet, tests, staticcheck, conform, specmap, test-gate — staticcheck runs with exhaustive) and says the compile rides inside go test ./..., transcribed from the package's own README (##SHIPS-GO-AI-NATIVE-UMBRELLA)"
+    ]
+   }
+  },
+  "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md": {
+   "REPLAY-GOLDENS-AND-RECORDED-TRANSCRIPTS-PIN-BOTH-HOPS": {
+    "v": "confirmed",
+    "ev": [
+     "owner ruling 2026-08-02 (item 8, «пересуд»): the fact now pins the true split — inner hop replayed r-a-free (client/tests.rs, oracle/tests.rs), outer shape not yet pinned (run_serve called from main.rs alone; the driver crate carries finding_parity.rs and unit tests only); the Go copy took the same form under F-210 earlier today"
+    ]
+   }
+  },
+  "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md": {
+   "OVERLAY-RULE-VERSIONS-NEVER-REPEAT": {
+    "v": "confirmed",
+    "ev": [
+     "family text applied after the D39 verdict-first repair: monotonic per open document, close resets, reopen at 1 — matching oracle.rs:184's docs.remove branch, the identical code the Go twin's test names; one family, one answer"
+    ]
+   },
+   "CLEAN-VALIDATE-DOES-NOT-CERTIFY-A-CLEAN-FLOOR": {
+    "v": "confirmed",
+    "ev": [
+     "family text applied after the D39 verdict-first repair: the floor gloss names the seven shipped steps (floor.rs:57-125) with the compile riding inside the test step; the approximation posture's substance (validate does not certify the floor) unchanged and true"
+    ]
+   }
+  },
+  "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md": {
+   "FLOOR-REMAINS-THE-TRUTH": {
+    "v": "confirmed",
+    "ev": [
+     "family text applied after the D39 verdict-first repair: the seven-step list replaces «cargo check» (floor.rs:57 fmt, :64 test, :78/:87 clippy, :92 conform, :99 specmap, :111 test-gate, :125 fast-loop); parallel to the Go copy's transcription"
+    ]
+   }
+  },
+  "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-PROTOCOL-v0.1.md": {
+   "REPLAY-GOLDENS-PIN-BOTH-SIDES": {
+    "v": "confirmed",
+    "ev": [
+     "family text applied after the D39 verdict-first repair: the inner side is pinned by the no-node scripted double (transport.rs:312) and the fact-parity test; the outer shape honestly unpinned — no recorded stream in the package, no test builds an outer frame; the three stacks now carry one answer to one question"
+    ]
+   }
+  }
+ }
+}

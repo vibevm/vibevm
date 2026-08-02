@@ -433,3 +433,37 @@ annotated with the full history (the owner's own resolution named) and
 package's own bench, `@spec/done` (no entry plans outer goldens; the
 no-measurements answer deliberately does not cover protocol pinning).
 **F-210 resolved — 131 total; the corpus crossed 97.9 %.**
+
+**Ninth exchange — the last sync portion ruled nine-for-nine and executed;
+the queue is drained to one analysis.** The owner: 1/2/3 «согласен» (with
+the fuller F-309 repair and the F-114 (а)+(б) form), 5 «согласен, уровень
+токенов — это очень далекое будущее», 6/7/8 «пересуд» (+ «и семерка»),
+9 «хардкод убрать, сделать нормально, недостающую функциональность
+доделать», 4 «подумай и вернись рассказать». Executed: **the pin build**
+(9) — `crates/vibe-cli/build.rs` derives `VIBE_MSRV` from the inherited
+workspace `rust-version`, the two `1.93.0` literals died into
+`RUST_PIN = env!("VIBE_MSRV")`, the table test asserts the derived pin
+extends the manifest value (3/3 green), and the S6 lesson synced to the
+built truth (the manifest is the single source; the toolchain file keeps
+the channel). **Nine documents repaired** (D40 world 5 + D41 ai-native
+10, after D39's four verdict-first repairs — the three known false
+confirmeds plus a FOURTH family member found mid-pass:
+`CLEAN-VALIDATE-…-FLOOR`'s own «cargo check» gloss): the git-practices
+roster complete at four (two new AGG anchors judged), the redbook
+edition claim split pin/roster with the **standing rule recorded in the
+manifest** (next roster change bumps the edition), the rust card's BETA
+reason, the tcg brief's dead id + reserved name (canon pair 75.3/70.2
+carried in), the Go overlay-reset truth + its Rust twin, the floor
+seven-step gloss ×4 copies, the replay-goldens inner/outer split ×3
+stacks. **F-279 not touched** — the owner challenged the softening and
+asked where `specmap.jtd.json` belongs; the analysis (the engine crate's
+own header promises a package-local schema; the relocation left it
+behind twice — B-013's subject) returns to him with options. **A bulk
+status flip of 58 routed-out rows to `deferred` was made and REVERTED
+the same hour** — `deferred` in this ledger means owner-ruled, and the
+58 carry boss-side routing records of mixed ruling coverage; the gate
+reads owed + rulings, not status counts, so the flip bought nothing and
+overstated. State: registry **91 / 191 — 32 deferred, 59 open; owed 18
+= 17 on owner-ruled deferrals (builds B-022/B-023/B-025/B-026/B-029/
+B-031/B-033/B-034) + F-279's 1**; resolved **138**; corpus **97.9 %**
+(`ai-native` 98.3 %).
