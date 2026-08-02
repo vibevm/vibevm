@@ -137,8 +137,12 @@ as content): @impl/done
 ##proven-rules-are-law-here-lead The rules the TS and Rust campaigns proved are law here and the bridge
 enforces them structurally: @impl/done
 
-- ##OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET versions never repeat or reset within a session (a monotonic counter
-  per document, never derived from content); @impl/done
+- ##OVERLAY-VERSIONS-NEVER-REPEAT-OR-RESET versions never repeat within an
+  overlay's lifetime (a monotonic counter per open document, never derived
+  from content); clearing an overlay (`update {content: null}`) closes the
+  document and a later reopen starts again at 1 —
+  `crates/go-ai-native-tcg-bridge/src/oracle.rs`, and the bridge's own
+  `overlay_versions_are_monotonic_and_close_resets` test; @impl/done
 - ##VALIDATE-WITHOUT-CONTENT-READS-DISK `validate` WITHOUT inline content reads the disk file and opens it
   with that text, so version bookkeeping has exactly one owner (the
   bridge) and a later disk edit is picked up by the next validate's

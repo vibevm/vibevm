@@ -182,9 +182,12 @@ because no product remains to edit.* @spec/done
   semantic changes bump `ORACLE_PROTOCOL` and the bridge treats the
   mismatch as its own error class. @impl/done
 
-##REPLAY-GOLDENS-AND-RECORDED-TRANSCRIPTS-PIN-BOTH-HOPS Replay goldens pin the CURRENT outer
-shape in this package's tests; recorded LSP transcripts pin the inner
-hop the same way (both r-a-free in the unit suite). @impl/done
+##REPLAY-GOLDENS-AND-RECORDED-TRANSCRIPTS-PIN-BOTH-HOPS Recorded LSP
+transcripts pin the INNER hop in this package's tests (r-a-free in the
+unit suite: `crates/rust-ai-native-tcg-bridge/src/client/tests.rs`,
+`src/oracle/tests.rs`). The OUTER shape is not yet pinned — no test
+drives `run_serve` over recorded frames; `crates/rust-ai-native-tcg`
+carries `tests/finding_parity.rs` and unit tests only. @spec/done
 
 ##MARKERS-RESERVATION-MAY-BE-FILLED-IN-A-FUTURE-MINOR The `markers: []`
 reservation (§2) may be filled in a future minor by the specmark tag

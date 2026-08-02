@@ -45,8 +45,10 @@ port. @spec/done
 than rust-analyzer is to rustc, and one honest step short of the TS
 oracle (which IS tsc's engine). @spec/done
 
-##FLOOR-REMAINS-THE-TRUTH The floor (`go-ai-native floor` →
-gofmt/vet/build/test) remains the truth, verbatim. @impl/done
+##FLOOR-REMAINS-THE-TRUTH The floor (`go-ai-native floor` — the seven
+steps: gofmt → vet → tests → staticcheck+exhaustive → conform → specmap
+→ test-gate; the compile rides inside `go test ./...`) remains the
+truth, verbatim. @impl/done
 
 ## 2. Design stance (consequences of what we know) {#design-stance}
 

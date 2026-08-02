@@ -115,8 +115,11 @@ per-document version replaces it, `didClose` releases it back to disk. @impl/don
 ##rules-are-lsp-native-law-lead The rules the TS campaign learned the hard way are LSP-native law
 here and the bridge enforces them structurally: @impl/done
 
-- ##OVERLAY-RULE-VERSIONS-NEVER-REPEAT versions never repeat or reset within a session (a monotonic counter
-  per document, never derived from content); @impl/done
+- ##OVERLAY-RULE-VERSIONS-NEVER-REPEAT versions never repeat within an
+  overlay's lifetime (a monotonic counter per open document, never derived
+  from content); clearing an overlay closes the document and a later
+  reopen starts again at 1 —
+  `crates/rust-ai-native-tcg-bridge/src/oracle.rs:184` (`docs.remove`); @impl/done
 - ##OVERLAY-RULE-VALIDATE-WITHOUT-CONTENT-READS-DISK `validate` WITHOUT inline content reads the disk file and opens it
   with that text, so version bookkeeping has exactly one owner (the
   bridge) and a later disk edit is picked up by the next validate's
@@ -136,8 +139,10 @@ rust-analyzer's independent analysis, which is deliberately partial. @spec/done
 ##consequences-all-normative-lead Consequences, all normative: @impl/done
 
 - ##CLEAN-VALIDATE-DOES-NOT-CERTIFY-A-CLEAN-FLOOR A clean `validate` does NOT certify a clean floor. The floor
-  (`rust-ai-native floor` → cargo check) remains the truth;
-  consumer-facing docs repeat it. @impl/done
+  (`rust-ai-native floor` — the seven steps: cargo fmt → cargo test →
+  clippy → conform → specmap → test-gate → fast-loop; the compile rides
+  inside the test step) remains the truth; consumer-facing docs repeat
+  it. @impl/done
 - ##DIFFERENTIAL-CORPUS-CURATES-NATIVE-COMPETENCE The differential corpus curates classes INSIDE r-a's native
   competence; each class is pinned to cargo check through the
   committed mapping table (1.93.1 rows: E0308↔E0308, E0425↔E0425,
