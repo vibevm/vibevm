@@ -467,3 +467,38 @@ overstated. State: registry **91 / 191 — 32 deferred, 59 open; owed 18
 = 17 on owner-ruled deferrals (builds B-022/B-023/B-025/B-026/B-029/
 B-031/B-033/B-034) + F-279's 1**; resolved **138**; corpus **97.9 %**
 (`ai-native` 98.3 %).
+
+---
+
+## Phase D closes — the routing record's final state, and every survivor's ruling {#close-2026-08-03}
+
+_Written 2026-08-03 at the exit gate, after the already-given F-279
+ruling was executed (schema → `core-ai-native/v0.8.0/schemas/`, xtask
+codegen re-routed, B-013 closed whole, `tool:org.vibevm.ai-native/jtd-codegen`
+minted; batch D42 re-judged the README anchor `confirmed`, F-279
+resolved — 139 to history). Counts regenerate, never re-type:
+`python campaigns/packages-2026-09/tasks/drift-registry.py`._
+
+**The gate's CONVERGENCE block at close: 190 drift verdicts — 173
+routed out with a recorded determination, 17 still owed a package
+repair, 0 partly routed — and every one of the 17 sits on an
+owner-ruled `deferred` row naming its build.** The six surviving rows,
+each with its ruling's chronicle entry:
+
+| row | drifts owed | build(s) it waits on | ruled |
+|---|---:|---|---|
+| F-159 (LEDGER-INTENT's five cache mechanisms) | 5 | B-022 (research) | [`#rulings-2026-08-01`](#rulings-2026-08-01) |
+| F-146 (ENGINE-CONFORM frontends + the five-link chain) | 3 | B-023 (syntactic tiers research) · B-025 (mark-don't-suppress) | [`#rulings-2026-08-01`](#rulings-2026-08-01) |
+| F-185 (`conform-frontend-go`'s three promises) | 3 | B-033 · B-029 · B-034 (the parity family, B-035 alongside) | [`#rulings-2026-08-02-2`](#rulings-2026-08-02-2) |
+| F-147 (segment twins + the two-homes row) | 3 | B-031 (root as `org.vibevm.core`) · B-032 (planning granularity) | rulings of 2026-08-02 (group C/D presentation) |
+| F-169 (the addressing rows' segment facts) | 2 | B-031 (adjacent: B-028) | rulings of 2026-08-02 (group C/D presentation) |
+| F-206 (foreign linters as evidence providers) | 1 | B-026 (SARIF ingest, high priority) | [`#rulings-2026-08-01`](#rulings-2026-08-01) |
+
+**Nothing else is owed.** The remaining 58 open registry rows are
+non-sync routes — the boss's prose-edit queue (49 rows), release (2)
+and the build-or-demote remainder — every one carrying its routing
+record in `run/state/routing.json`; the 32 `deferred` rows are owner
+rulings by definition of the word in this ledger. The anchors of the
+six rows above re-judge as their builds land — Phase E's mandate, and
+the `TOOLING-MAP.md` waves under the campaign frame, drain from
+exactly this table plus `BACKLOG.md`.
