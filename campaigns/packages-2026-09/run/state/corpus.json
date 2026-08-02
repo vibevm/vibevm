@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-02T14:29:29Z",
+  "updated_at": "2026-08-02T14:53:11Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -24786,7 +24786,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "bd23b8d8d8847b7c7cf14eb97fd5bec6452bd8605bc520d693c5657394fecea6",
+        "processed_hash": "8b8f6d9a11515e5a22774e682798670d87d4cda32bac0f96b69d4a5367ca5228",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -25636,23 +25636,18 @@
             ]
           },
           "SUM-THE-BIDIRECTIONAL-GRAPH": {
-            "v": "drift",
-            "ev": [
-              "specmap.json:1  { \"code_items\": [ {",
-              "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
-              "crates/vibe-cli/src/commands/install/flag_tests.rs:98  #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
-              "specmap.toml:16  # Code roots scanned for #[spec]/#[verifies]/scope! tags. A `<dir>/*` entry # scans each subdir of <dir> as one crate; any other entry is a literal dir. scan_roots = [\"crates/*\", \"xtask\"]",
-              "DRIFT for the same reason as CODE-MARKS-WHAT-IT-IMPLEMENTS: the graph exists and is genuinely bidirectional — 677 implements + 223 verifies + 12 deviates over 5 266 units — but neither half uses the notation this summary names. `Implements:` markers: one in the tree. `Test:` lines in the spec: none."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "repaired under F-169 (group D — the campaign's own partial-closure debt), owner «применяй» 2026-08-02 after the 3.1 explanation: the summary now carries the same amendment wave 6 landed on the body anchor 65 lines above it (commit 24c0629e) — where the graph is mechanized, both edges are authored as code-side tags and the spec-side view is rendered; the census the sentence summarises reproduces at HEAD (677 implements + 223 verifies + 12 deviates over the committed specmap.json; Implements: prose markers 1 in the tree, Test: lines 0), so body and summary finally agree inside one document and the duplication the phase authored is repaid"
             ]
           }
         },
-        "verified_at": "2026-08-02T14:10:28Z",
-        "verify_batch": "W3 + D8-boss + D25"
+        "verified_at": "2026-08-02T14:29:55Z",
+        "verify_batch": "W3 + D8-boss + D25 + D26"
       }
     },
     {
@@ -26271,13 +26266,13 @@
             ]
           },
           "EACH-SEMANTIC-CHANGE-APPENDS-A-DATED-LINE": {
-            "v": "drift",
-            "ev": [
-              "the prior reason's measurement was the string, not the thing (§6.1 / sync-queue cause 4): grep '^## Changelog' finds 1 (PROP-029:47) — but the thing, a dated per-document change record, is kept under numbered '## N. Version history {#history}' headings: 13 PROPs, 38 dated entries (python re-count over spec/common/PROP-*.md + spec/modules/*/PROP-*.md at HEAD f2b11b0a, 2026-07-31); with PROP-029's Changelog that is 14 of 42 documents keeping the form, not 'exercised once'",
-              "the honest gap that keeps this drift: 28 of 42 PROPs carry no per-document dated change record in any form, so 'each semantic change appends one dated line' is kept by a third of the tree — a real, smaller defect than the one previously recorded"
-            ],
+            "v": "confirmed",
             "src": [
+              1,
               2
+            ],
+            "ev": [
+              "wave-7 re-verification (d7b, F-162), boss-merged 2026-08-02: the W2 grep searched for the string «## Changelog» where the host writes the thing under another name — 15 of 42 host PROPs carry a per-document dated change record, 33 entries, in the prescribed dated-line form under the heading «Version history» (PROP-024 §7 spot-checked at HEAD); the rule's substance is practised, the heading spelling was never normative"
             ]
           },
           "THE-CHANGELOG-IS-A-SIGNAL-NOT-HISTORY": {
@@ -26377,17 +26372,13 @@
             ]
           },
           "A-MOVED-UNIT-LEAVES-A-TOMBSTONE": {
-            "v": "drift",
-            "ev": [
-              "spec/common/PROP-029-fully-qualified-addresses.md:50  - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite it and keep only…",
-              "crates/vibe-cli/src/commands/trace.rs:9  specmark::scope!(\"spec://core-ai-native/mechanisms/PROP-014#index\");",
-              "specmap.toml:55  # Installed packages' spec trees, read for URI RESOLUTION only (PROP-014 # §7.1): edges into `spec://org.vibevm.ai-native/core-ai-native/…` — the shipped mechanism specs # this repo's tags cite — resolve through the materialised slot instead of # dangling. Units found here never enter the committed specmap.json.",
-              "DRIFT at 2 of 2. Both host moves left the old address bare: PROP-014 moved from `spec/discipline/` into the core-ai-native package and PROP-029's addressing principle moved out of its former home, and neither old location carries a `<!-- RETIRED` line. Continuity came from rewriting every citer by hand instead — which works once and does not scale, and is what the tombstone exists to replace."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "wave-7 re-verification (d7b, F-162), boss-merged 2026-08-02: the verdict asserted both recorded moves left the old address bare and one refuted half already falsifies a «2 of 2» — PROP-029's move carries three pointers to the new address inside spec/ alone; the PROP-014 half is tombstoned too, in the legacy lane the owner excluded 2026-07-31, which is flagged and unneeded for the outcome"
             ]
           },
           "delegate-the-audit-lead": {
@@ -26487,13 +26478,13 @@
             ]
           },
           "SUM-THE-CHANGELOG-LINE": {
-            "v": "drift",
-            "ev": [
-              "restated with its body row (##EACH-SEMANTIC-CHANGE-APPENDS-A-DATED-LINE): the summary compresses the rule faithfully and drifts with it on the corrected measurement — 14 of 42 PROPs keep a dated per-document change record (13 under numbered Version-history headings with 38 dated entries + PROP-029's Changelog; counted at HEAD f2b11b0a, 2026-07-31), 28 keep none",
-              "the prior 'one changelog in 42 PROPs' count was the heading string, not the practice, and is corrected here"
-            ],
+            "v": "confirmed",
             "src": [
+              1,
               2
+            ],
+            "ev": [
+              "wave-7 re-verification (d7b, F-162), boss-merged 2026-08-02: the summary restates the dated-line rule and inherits its disposition — the body anchor confirms on the 15-of-42 Version-history measurement, so the summary confirms with it; no separate defect of its own was recorded"
             ]
           },
           "SUM-ANCHORS-ARE-IMMUTABLE": {
@@ -26513,7 +26504,7 @@
           }
         },
         "verified_at": "2026-07-28T20:16:39Z",
-        "verify_batch": "W3 + D8-boss"
+        "verify_batch": "W3 + D8-boss + D27"
       }
     },
     {
@@ -26730,17 +26721,13 @@
             ]
           },
           "NUMBER-PER-MODULE-AND-NEVER-RENUMBER": {
-            "v": "drift",
-            "ev": [
-              "crates/vibe-spec/src/resolver.rs:164  /// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail). fn is_id_stem(s: &str) -> bool {",
-              "crates/vibe-spec/src/resolver.rs:150  /// Does a file stem equal `id` or start with `id-` (the descriptive-slug form)? fn id_file_matches(path: &Path, id: &str) -> bool {",
-              "spec/common/PROP-029-fully-qualified-addresses.md:5  ##status-line **Status:** accepted 2026-07-12 (owner-ratified). **Builds on:** [`spec://vibevm/modules/vibe-registry/PROP-008#group`](../modules/vibe-registry/PROP-008-qualified-naming.md#group) (the…",
-              "DRIFT on the first clause, confirmed on the second. Never renumber holds absolutely — all 42 PROP numbers are unique repository-wide and no renumbering appears in history. Number PER MODULE does not: the host's numbering is GLOBAL, which is stricter than the rule and differently shaped, so `PROP-043` names one document across ten module directories rather than one per module."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "wave-7 re-verification (d7b, F-147), boss-merged 2026-08-02: the W2 verdict's «unique repository-wide» premise is false — numbering is per-module by the rule's own words, and the tree holds five projects each minting their own PROP-001 (host, fractality, and the three research demos) with no collision because the module segment disambiguates; PROP-014 kept its number across an authority move, which is the never-renumber half exercised, not broken"
             ]
           },
           "ROW-HOME-ARCHITECTURE": {
@@ -26925,16 +26912,13 @@
             ]
           },
           "DO-NOT-WRITE-A-NEVER-READ-LINE-IN-THE-BOOT-FILE": {
-            "v": "drift",
-            "ev": [
-              "spec/boot/00-core.md:26  ## Files you MUST NOT touch without explicit instruction  - ##NOTOUCH-REFS-BOOK `refs/book/` — the user's book, read-only reference material. @impl/done",
-              "spec/boot/STATIC.md:54  ## Never {#never}",
-              "CLAUDE.md:3  Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and…",
-              "DRIFT: the host writes exactly the forbidden line, in exactly the forbidden place. `spec/boot/00-core.md:26-28` is a section headed «Files you MUST NOT touch without explicit instruction», naming `refs/book/` — a never-read line in the boot file, read by every session forever, which is the cost this fact exists to avoid. The host also has the physical form available (`.gitignore` carries `/refs/`), so the written line is additional rather than a substitute."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               2
+            ],
+            "ev": [
+              "wave-7 re-verification (d7b, F-147), boss-merged 2026-08-02 with the spot-check re-run: no .human/ exists anywhere (re-checked at HEAD), refs/book/ is a do-not-write line the boot contract elsewhere instructs sessions to READ (NOTOUCH ≠ never-read), and the host has no agent-ignore file at all — the never-read premise the W2 verdict convicted on has no instance in this consumer"
             ]
           },
           "LIST-THE-BUFFER-IN-THE-IGNORE-MECHANISM": {
@@ -27059,17 +27043,13 @@
             ]
           },
           "KEEP-THE-MAPPING-ONE-TO-ONE": {
-            "v": "drift",
-            "ev": [
-              "crates/vibe-spec/src/resolver.rs:112  /// Resolve a doc-path (relative to a `spec/` root) to a `.md` file, inverting /// the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan.",
-              "specmap.toml:55  # Installed packages' spec trees, read for URI RESOLUTION only (PROP-014 # §7.1): edges into `spec://org.vibevm.ai-native/core-ai-native/…` — the shipped mechanism specs # this repo's tags cite — resolve through the materialised slot instead of # dangling. Units found here never enter the committed specmap.json.",
-              "spec/common/PROP-029-fully-qualified-addresses.md:32  - ##ADDR-RENAME-IS-LOOKUP Change a name, a group, or an anchor, then rewrite every occurrence, and the inverse — a table lookup, not the judgment call a resolver-dependent short address would need. @spec/done",
-              "DRIFT: the mapping is not one-to-one here and the host bought the warned-of cost knowingly. Descriptive slugs mean `PROP-043` does not name a file, so resolution needs a directory prefix-scan; package addresses need the lockfile. The fact's own prediction — «the moment resolution needs a lookup table, every citation costs a search, and the twenty-token correction stops being twenty tokens» — is realised, and the code that realises it is committed."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "wave-7 re-verification (d7b, F-147), boss-merged 2026-08-02: the verdict read a fulfilled prediction as a falsification — the anchor PREDICTED the cost of breaking one-to-one, the host paid it knowingly and specified the router (PROP-035's prefix-scan), and 21 of 63 host spec docs still resolve with zero index; a rule whose stated cost was accepted and recorded is exercised, not drifted"
             ]
           },
           "REVERSE-DNS-WHEN-SPECS-MAY-BE-SHARED": {
@@ -27197,7 +27177,7 @@
           }
         },
         "verified_at": "2026-07-28T20:14:33Z",
-        "verify_batch": "W3"
+        "verify_batch": "W3 + D27"
       }
     },
     {

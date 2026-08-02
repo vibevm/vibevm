@@ -4316,6 +4316,28 @@ aspirational — and every one is still live for the phases that remain.
   practice has chosen), and the five dangling PROP-043 anchors as a
   host-fix candidate.
 
+  **All three ruled the same day, and the owner's question out-diagnosed the
+  presenter twice.** F-162's pair + the NO-TOOLING rider applied and merged
+  (D28) — **F-162 resolved whole**; ROW-HOME's cell now names both homes per
+  answer (а), F-147 fully ruled → `deferred` (its three segment anchors ride
+  B-031), and the granularity-protocol extension he dictated (ask the user;
+  FEAT files as addressable units composed into plans; big features only)
+  is **B-032** (planned — not elementary: a new norm across two packages).
+  His agent-navigation question landed in **B-018 as the canonical
+  acceptance query** («which test verifies this rule» — CLI and stack-MCP
+  answer it today per checkout; vibe's own MCP cannot, which is exactly
+  B-018 part (i)). And the dangling-anchors framing was WRONG the way he
+  suspected: the three lines are fact-anchored already (##CMD-REPORT/-SEAL/
+  -WEAVE, judged confirmed) — the dead half was the `{#report}`-style
+  pseudo-anchors beside them, heading syntax on list items that no reader
+  registers, and **the code cited the dead aliases**. Fix executed in his
+  direction: the five code tags now cite the live fact anchors
+  (`#CMD-REPORT`/`#CMD-SEAL`/`#CMD-WEAVE`; cargo check green), the four
+  trap-tokens removed from PROP-043, and the five dangling edges die at the
+  next index regeneration (B-014's question). Corpus **11 166 / 210 / 44 —
+  97.8 %**; registry **102 / 210 — 21 deferred, 81 open; owed 54, every one
+  on the sync route**.
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:

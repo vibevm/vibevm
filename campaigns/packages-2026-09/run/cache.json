@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-02T14:29:55Z",
+  "updated_at": "2026-08-02T14:53:46Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -25352,7 +25352,7 @@
       }
     },
     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md": {
-      "content_hash": "8b8f6d9a11515e5a22774e682798670d87d4cda32bac0f96b69d4a5367ca5228",
+      "content_hash": "dd0c9734eb4c87a01971648fd2925a5249affe4189ad8c9578decab6523946c6",
       "rollup": {
         "explicit": [
           "spec",
@@ -25374,7 +25374,7 @@
       "unit_count": 11,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "8b8f6d9a11515e5a22774e682798670d87d4cda32bac0f96b69d4a5367ca5228",
+        "processed_hash": "dd0c9734eb4c87a01971648fd2925a5249affe4189ad8c9578decab6523946c6",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -26106,16 +26106,12 @@
           },
           "NO-TOOLING-IS-REQUIRED-TO-BENEFIT": {
             "v": "confirmed",
-            "ev": [
-              "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
-              "crates/vibe-cli/src/commands/install/flag_tests.rs:98  #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
-              "specmap.toml:16  # Code roots scanned for #[spec]/#[verifies]/scope! tags. A `<dir>/*` entry # scans each subdir of <dir> as one crate; any other entry is a literal dir. scan_roots = [\"crates/*\", \"xtask\"]",
-              "the grep half works exactly as described: `grep -rn 'PROP-043#baseline' crates/ --include=*.rs` returns ten lines naming every implementing site, with no tooling in the loop. Recorded: the `Test:` line half has no host instance, so the reverse lookup the fact offers runs through specmap rather than through grep — filed on CODE-MARKS-WHAT-IT-IMPLEMENTS."
-            ],
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "re-vouched against the amended text (the rider the harvest said must move in the same pass or the propagation gap relocates): the zero-tooling claim stands untouched — grep still answers implements, the Test: line still answers verifies — and the added sentence points at the mechanized alternative the protocol's own §graph defines; no clause weakened, the anchor's original confirmation grounds remain"
             ]
           },
           "the-graph-pays-off-from-the-first-marker": {
@@ -26234,12 +26230,12 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T14:29:55Z",
-        "verify_batch": "W3 + D8-boss + D25 + D26"
+        "verified_at": "2026-08-02T14:53:46Z",
+        "verify_batch": "W3 + D8-boss + D25 + D26 + D28"
       }
     },
     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md": {
-      "content_hash": "04cd260ab5ec52dab9e962efe8ad1348e6366c8ceb463594d5210365c6d1155e",
+      "content_hash": "2445a6ce89fc1b9b1a2bc74c598a17407b3a790507292f27b4a098f170efbb38",
       "rollup": {
         "explicit": [
           "spec",
@@ -26261,7 +26257,7 @@
       "unit_count": 12,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "04cd260ab5ec52dab9e962efe8ad1348e6366c8ceb463594d5210365c6d1155e",
+        "processed_hash": "2445a6ce89fc1b9b1a2bc74c598a17407b3a790507292f27b4a098f170efbb38",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -26622,17 +26618,13 @@
             ]
           },
           "RECORD-THE-TEST-NAME-IN-THE-UNIT": {
-            "v": "drift",
-            "ev": [
-              "crates/vibe-cli/src/commands/install/flag_tests.rs:97  #[test] #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
-              "crates/progress-core/src/evidence.rs:17  /// e.g. specmap `verifies` edge count. pub verifies: usize,",
-              "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:8  ##related **Related:** [PROP-028](../../common/PROP-028-package-families.md) (families — the aggregator role), [PROP-029](../../common/PROP-029-fully-qualified-addresses.md) (`spec://` addressing, the `/` group↔name joiner),…",
-              "DRIFT: `grep -rn '^Test:' spec/` returns 0. The line the fact prescribes — half of the bidirectional graph the protocol describes — is written nowhere in the host's spec tree. The edge exists anyway: 223 `verifies` edges in specmap.json, all sourced from code annotations rather than from the spec side."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "repaired under F-162, owner «применяй» 2026-08-02: the rule now names both legal authoring sides — the Test: line for the zero-tooling form, and the tag-on-the-test with the rendered-back view where the graph is mechanized — the same wave-6 amendment its own protocol §graph has carried since; the host is the mechanized instance (223 verifies-edges authored as test-side tags, rendered by trace explain), so the sentence is true of both forms it now describes"
             ]
           },
           "A-DEVIATION-IS-RECORDED-WHERE-IT-HAPPENS": {
@@ -27030,17 +27022,13 @@
             ]
           },
           "SUM-EVERY-CONTRACT-IMPLIES-A-TEST": {
-            "v": "drift",
-            "ev": [
-              "crates/progress-core/src/evidence.rs:61  (Stage::Test, State::Done) if ev.verifies == 0 => { Some(\"marked test/done but no verifying evidence (0 `verifies` edges)\".into())",
-              "crates/vibe-cli/src/commands/install/flag_tests.rs:97  #[test] #[verifies(\"spec://vibevm/modules/vibe-registry/PROP-030#knob\")]",
-              "specmap.json:1  { \"code_items\": [ {",
-              "DRIFT on the second clause. «Every contract implies a test» is ENFORCED here — `progress-core/src/evidence.rs` fails a unit marked done without evidence. «The unit names it» is not: zero `Test:` lines in `spec/`."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "repaired under F-162, owner «применяй» 2026-08-02: the summary names both carriers (Test: line or rendered edge), matching the amended body rule and the protocol; the first clause was always mechanically enforced host-side (the campaign's evidence gate at evidence.rs:60-64 refuses a verdict without refs), and the naming clause is now true in whichever form a project authors"
             ]
           },
           "SUM-DEVIATIONS-ARE-RECORDED-WHERE-THEY-HAPPEN": {
@@ -27098,12 +27086,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T20:16:39Z",
-        "verify_batch": "W3 + D8-boss + D27"
+        "verified_at": "2026-08-02T14:53:46Z",
+        "verify_batch": "W3 + D8-boss + D27 + D28"
       }
     },
     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md": {
-      "content_hash": "13ce5b8084cec3b79665ee9f34dafff35a0e9c53126e843104085b7c73da586f",
+      "content_hash": "d6f25e9b1c935bf8003a1f03fb30f2a4817bfd87af7778402e9f7284ed44c0d7",
       "rollup": {
         "explicit": [
           "spec",
@@ -27125,7 +27113,7 @@
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "13ce5b8084cec3b79665ee9f34dafff35a0e9c53126e843104085b7c73da586f",
+        "processed_hash": "d6f25e9b1c935bf8003a1f03fb30f2a4817bfd87af7778402e9f7284ed44c0d7",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -27359,16 +27347,13 @@
             ]
           },
           "ROW-HOME-FEATURE-SCOPE": {
-            "v": "drift",
-            "ev": [
-              "campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md:1  # Phase C — the batch plan {#root}",
-              "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md:1  # Packages-Actualization Campaign v0.1 — wave 2: the authored packages measure themselves {#root}",
-              "crates/vibe-spec/src/resolver.rs:164  /// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail). fn is_id_stem(s: &str) -> bool {",
-              "DRIFT: the row routes a feature's scope and acceptance criteria to `spec/modules/<m>/FEAT-*`, and `find spec -name 'FEAT-*'` returns 0 against 42 PROP documents. The host routes them elsewhere — feature slices run as plans under `campaigns/**`, with their own scope, phases and acceptance gates. The destination the row names is empty and a different one is in use."
-            ],
+            "v": "confirmed",
             "src": [
               1,
               2
+            ],
+            "ev": [
+              "repaired under F-147, owner answer (а) 2026-08-02: the Home cell now names both homes — FEAT-* files, or a campaign plan where the project runs slices as plans — which is the tree's measured truth (FEAT-*: zero live instances across four adopters; live plans: 8 — two host terraforms + six fractality), so the row stops routing a genre to its empty home only; the granularity-protocol extension (ask the user; FEAT files as addressable units composed into plans; big features only) is the owner's recorded backlog design B-032"
             ]
           },
           "ROW-HOME-NEXT-SESSION-STEP": {
@@ -27778,8 +27763,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T20:14:33Z",
-        "verify_batch": "W3 + D27"
+        "verified_at": "2026-08-02T14:53:46Z",
+        "verify_batch": "W3 + D27 + D28"
       }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md": {
@@ -100624,7 +100609,7 @@
       }
     },
     "spec/modules/vibe-progress/PROP-043-progress-markup.md": {
-      "content_hash": "fb4291462f199c9e144e521ad7d8652d9c7d95eedaebeca418209dd15fd2e685",
+      "content_hash": "3cbe93c09e79d4d550effe2929c2d72aa1fc0a0d6c74f0b8aa8d7841f81e0753",
       "rollup": {
         "explicit": [
           "impl",
@@ -100650,7 +100635,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (14 cells); document <status> judged as _elements",
         "fact_count": 158,
         "marker_count": 159,
-        "processed_hash": "fb4291462f199c9e144e521ad7d8652d9c7d95eedaebeca418209dd15fd2e685",
+        "processed_hash": "3cbe93c09e79d4d550effe2929c2d72aa1fc0a0d6c74f0b8aa8d7841f81e0753",
         "verdicts": {
           "self-uri": {
             "v": "confirmed",
@@ -101576,7 +101561,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T06:03:18Z",
+        "verified_at": "2026-08-02T14:53:46Z",
         "verify_batch": "c4a-vibe-progress + d2f + E"
       }
     },
