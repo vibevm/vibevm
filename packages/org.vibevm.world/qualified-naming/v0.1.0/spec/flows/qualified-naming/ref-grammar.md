@@ -105,7 +105,7 @@ those, the tool stored the qualified forms. @impl/done
 
 ## What gets stored {#storage}
 
-##the-single-storage-rule-stated-once The single storage rule, stated once so it cannot drift: @impl/done
+##the-single-storage-rule-stated-once The single storage rule, stated here as the anchor every restatement echoes: @impl/done
 
 > ##PERSISTED-STATE-IS-QUALIFIED-ONLY **Persisted state is qualified-only.** Every reference written to a
 > manifest, a lockfile, or a dependency edge carries its group. Short
