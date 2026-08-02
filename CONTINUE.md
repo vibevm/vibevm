@@ -1,81 +1,182 @@
-# CONTINUE — cold-resume snapshot (2026-08-01, session end)
+# CONTINUE — cold-resume snapshot (2026-08-02, session end)
 
-**Do not quote the numbers in this file. Measure them:**
-`python campaigns/packages-2026-09/tasks/drift-registry.py` ·
-`python campaigns/packages-2026-09/tasks/summary.py`.
-`spec/WAL.md` was rewritten this session (anchored, whys cited) and supersedes
-this snapshot wherever they diverge.
+**Не цитируй числа из этого файла — меряй:**
+`python campaigns/packages-2026-09/tasks/summary.py` ·
+`python campaigns/packages-2026-09/tasks/drift-registry.py`.
+`spec/WAL.md` переписан этой же сессией и **суперсидит** этот снапшот везде,
+где они разойдутся.
 
-**TL;DR.** PROP-043 wave 2, Phase D, near its exit. This session ran waves 8–10:
-re-verified the release route (16/40 fell), executed THE PUBLICATION (local, no
-bumps — `vibe reinstall --force`; the address family closed whole, `../flows/`
-in STATIC.md 69→0), landed six owner rulings (group A=(2), B+A′, F-220(b),
-B-004(i), marker fork (а)+B-011, «Проведи всё это» for health-audit), applied
-the twelve spec/common decision records, партия 1a, and the health-audit
-adoption. Corpus **11 070 / 232 / 44 — 97.6 %** (session start: 96.2 % / 391);
-registry **108 obligations / 232 drifts** (start: 165/391). Everything committed
-and fanned out to both mirrors (`cargo xtask mirror` — the B-009-fixed standard
-rollout).
+**TL;DR.** PROP-043 wave 2, Phase D — у выходного пандуса. За две даты
+(2026-08-01/02) сессия закрыла seal-хвост D13 (оказался 51 несудимым якорем
+decision-records — отсужены, D14), закрыла флаг 260-vs-259 судом D9-README
+(D15), провела вердикт-сначала цикл F-133, посадила исследование B-012 двумя
+opus5-evidence-проходами и синтезом босса, и исполнила ЧЕТЫРЕ сессии решений
+владельца подряд: B-012-десятка (всё строится, безопасность запаркована),
+партии 1c/1d/1b целиком, carve-out (запись split-host в PROP-000, 35→36),
+хвост build-or-demote (15×(б) + F-230(в) с пер-якорным расщеплением + F-351
+«перепиши»), и вся адресная семья группы C/D: F-180, F-166, F-162 закрыты
+целиком, F-169/F-147 отложены на B-031. Бэклог вырос B-013…B-032 (три
+исследования, десяток plann-строек, две паркованные программы). Последний
+замер: корпус **11 166 / 210 / 44 — 97.8 %** из 11 420; реестр **102
+обязательства / 210 дрейфов — 21 отложено решениями владельца, 81 открыто;
+owed 54, ВСЕ на sync-маршруте владельца**. Boss-owed — ноль по всем маршрутам.
+Всё закоммичено и на обоих зеркалах (HEAD `832de75b` на момент записи; этот
+файл и WAL едут следом).
 
-## THE ONE OPEN TAIL (first action next session)
+## Открытых технических хвостов НЕТ
 
-`vibe progress seal --campaign campaigns/packages-2026-09 <4 files>` **refused
-4 paths** after the decision-record insertions (among PROP-000, PROP-018,
-PROP-024, spec/design/README.md, PROP-014 — read the refusal output). Nothing
-was written — refusal is the tool's safe mode. The D13 merges (30+10 confirmed,
-0 merge refusals) stand in `run/cache.json` unsealed. **Fix:** run
-`vibe progress mirror --campaign campaigns/packages-2026-09`, re-run the seal
-on those files, READ THE REASONS (likely: the new `##record` anchors changed
-the anchor sets), then `drift-registry.py --write`.
+Первое действие новой сессии — не ремонт, а подготовка следующего
+предъявления. Очередь — ниже.
 
-## Where work stands
+## Health-audit
 
-- Branch `main`, synced to both mirrors (GitVerse=origin + GitHub); tree clean
-  at session end except scratch.
-- `cargo install cargo-audit cargo-outdated --locked` was running in background
-  at wind-down — verify `cargo audit --version`; re-run if absent.
-- Health-audit skill installed (5 projections, incl. `.agents/skills/`).
-- The волна-10/D13 §7 LOG entry is NOT yet written — write it from this file +
-  `git log` before other work.
+Принят целиком 2026-08-01 («Проведи всё это»): активное подмножество находок —
+в [`AUDIT.md`](AUDIT.md) (durable-дом, здесь не зеркалится); A–D
+инвентаризация назначена на exit gate фазы D.
 
-## Owner's queue (nothing here proceeds without him)
+## Где стоит работа
 
-1. **Sync group B, партии 1b–1d** — 1a applied; remaining: F-146×5 + F-206×2
-   (ENGINE-CONFORM), F-159×5 (LEDGER-INTENT), F-207, F-263. Prepared texts in
-   `harvest/d7a-core-sync-reverify.md`; present per document, full texts in
-   chat (owner's format ruling (ii), 2026-08-01).
-2. **B-004 carve-out choice** (d12-adr §3.13: `##SPLIT-HOST-POSTURE` — the
-   claim-vs-section unit question; changes the census 35→36).
-3. **Build-or-demote tail** (~17/21) and the rest of the owed set — registry.
-4. **Phase D exit gate** when the queues drain: CONVERGENCE owed→0-or-ruled,
-   `progress check` green over both corpora, `baseline.json` (A6), and the
-   260-vs-259 file-count discrepancy reconciled (plan §11's own flag).
+- Ветка `main`, синхронна с обоими зеркалами (GitVerse=origin + GitHub),
+  роллаут — только `cargo xtask mirror` (B-009). Дерево чистое.
+- `tools/self-check.sh` — all green (последний прогон 2026-08-01, после — только
+  прозаические правки + строковые правки тегов, `cargo check -p progress-core
+  -p vibe-cli` зелёный 2026-08-02). Перегони панель перед следующим коммитным
+  днём.
+- cargo-audit 0.22.2 / cargo-outdated 0.19.0 установлены.
+- `vibe progress check --campaign campaigns/packages-2026-09` — clean
+  (260 files) на чекпойнте волны 10; сикай `--campaign` ВСЕГДА.
 
-## Rules that bit this session (law: batch plan §3.6/§3.7/§3.8/§6.1 + WAL #constraints)
+## Очередь владельца (без него не двигать)
 
-verdict-first for false confirms · a strike-by-ruling checks each anchor's own
-cache reason, never the row's · bulk re-judges go through the instrument's join
-(a naive filter matched 104 vs the true 46) · `progress check --exhaustive
---campaign` WRITES zone state (B-010); never point anything at
-`campaigns/progress-2026-08` · briefs cite durable files only (never this file
-or the WAL) · merge-verdicts and seal never chained · §3.8 audiences (Go/TS =
-package-own bench only) · `legacy-spec/**` excluded · every number names its
-command; git figures name their HEAD.
+1. **Следующие предъявления sync-очереди** (формат-ruling (ii): по документу,
+   полные тексты в чате; проблема/варианты/рекомендация — «человеческим
+   языком», спецтерминологию только приложением — его прямое требование
+   2026-08-01): **девятка F-132** (harvest
+   `campaigns/packages-2026-09/harvest/d7a-core-sync-reverify.md`, раздел
+   F-132 — 4 false уже пере-суждены волной 7, ДЕВЯТЬ переживших ждут текстов),
+   **F-185** (conform-frontend-go: три якоря, включая «conform.toml gains a Go
+   section»), **семья дупликаций F-217/F-218/F-285** (d7b, одно измерение «59»
+   на троих). Дальше — остатки sync-очереди по registry.
+2. **Правило аудита B-027** ждёт его «да, свипуй»: «задумано-не-построено,
+   стройка не планируется» → `@spec/done`; «стройка запланирована записью» →
+   `@impl/plan`. После утверждения — механический свип с пере-судом по
+   D14-порядку.
+3. **Exit gate фазы D**, когда osушатся очереди: CONVERGENCE owed→0-или-ruled
+   (сегодня все 54 owed на sync-маршруте), `progress check` зелёный по обоим
+   корпусам, арифметика `summary.py` показана, `baseline.json` (A6), A–D
+   инвентаризация health-audit. Роллаут только `cargo xtask mirror`.
 
-## Map
+## Неочевидные находки этой сессии (не переоткрывать)
 
-`campaigns/packages-2026-09/`: PHASE-D-BATCH-PLAN.md (the law), the executed
-PHASE-D-PUBLICATION-RUNBOOK.md (fork ruled (а); B-011 = the `#use spec://… as
-SOMETHING` aliasing design), the three queues, `harvest/d7a…d13-*`,
-`tasks/*.py`. `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md` §7 LOG
-— read from the end. `BACKLOG.md` B-001…B-012 (B-012 = PROP-014's ten unbuilt
-mechanisms, «провести исследование, можно ли реализовать»). `spec/WAL.md` —
-current and anchored.
+- **Seal отказывает файлу с несудимыми маркерами** — это его штатный режим;
+  «anchor-set сменился» был неточным прогнозом. Лечение: judge → merge → seal
+  (D14-порядок), mirror перед merge обязателен.
+- **Вопрос владельца бывает точнее предъявления — проверяй его гипотезу
+  первой.** Дважды за сессию: (1) «crates — не Go-термин» вскрыл, что D9-правка
+  сама вписала растовое слово в Go-скилл, а дефект — в едином ключе движка
+  (B-029); (2) «это же facts, в чём проблема?» вскрыл, что строки PROP-043 УЖЕ
+  факт-адресованы (##CMD-*), а висели псевдо-якоря `{#…}` на списочных строках,
+  и код цитировал именно их (починено: пять тегов → живые имена).
+- **Пер-якорная проверка спасает от strike-by-ruling живьём**: у F-230 два
+  якоря несли разные дефекты — (в)-исключение закрыло один; второй (десять
+  пересказов постуры + мёртвая ссылка «PROP-000 §12.1») остался deferred со
+  своим долгом.
+- **Числа в LOG — только из команд**: дважды предсказанные значения (101/81)
+  разошлись с фактом (103/83) — оба раза чинил до пуша.
+- **`git commit -q` глотает вывод** — контроль по `echo C1=$?`.
+- **Config гейта — `deny_unknown_fields`**: слово `gated_packages` в Go-доке
+  вело пользователя в громкий parse error (потому (а) и был обязателен).
+- **Словарь тиров T-lex/T-syn/T-sem** был «H-roster shape» (везде используется,
+  нигде не определён) — теперь определён легендой `##TIER-VOCABULARY` в
+  ENGINE-CONFORM у таблицы фронтендов.
+
+## Решения владельца в силе (полный список этой сессии — сверх прежних)
+
+- **B-012-десятка**: всё реализуемо; строятся B-016…B-021 (B-018 — широкий
+  вариант с «объяснением чужих пакетов», высокий приоритет; канонический
+  приёмочный запрос — «какой тест проверяет это правило»); **безопасность —
+  B-015, запаркована**: «ничего не строить до специального уведомления»,
+  триггер — ТОЛЬКО слово владельца (наблюдение внешнего мира), кодовых
+  триггеров нет; при постройке B-018 позиция PROP-014 «ships signed or not at
+  all» правится owner-диффом (задача 6 в B-015).
+- **Партия 1c → B-022** (исследование ledger-механизмов; F-159 deferred);
+  **1b(1,2) → B-023** (синтаксический tier JS/TS + Python-фронтенд); **B-024 —
+  planned**: «свести стадии жизненного цикла в specmap к аналогичным в
+  progress» (derive, not declare; уникален только `disputed`).
+- **Carve-out = (ii)**: запись `##split-host-decision/-why/-rejected/-revisit`
+  в PROP-000 §7 — **GitHub ведёт обе поверхности; GitVerse — дополнительный:
+  полное зеркало исходников + хранилище реестра, куда выкладываются
+  специально, не зеркалятся скопом**; leading-role половина переоткрывается
+  только словом владельца.
+- **Хвост build-or-demote**: 15×(б) с долгами в
+  `campaigns/packages-2026-09/PHASE-D-HOST-OBLIGATIONS.md#rulings-2026-08-01`;
+  F-230(в) — исключение `##ATTRIBUTION-ENFORCEMENT-EXCEPTION` в PROP-000 §12;
+  F-351 — wind-down говорит «Rewrite wholesale» во всех трёх
+  файлах-инструкциях (ЭТОТ файл написан уже по той норме).
+- **2026-08-02, адресная семья**: F-180 — «полная история» с оговоркой
+  манифест-declared refs в трёх местах; F-166 — ключ `gated_crates` в Go-доках
+  (правда кода) + B-029 (нейтральный ключ, стройка), аннотация ассерции +
+  B-030 (стройка Go-проверки + обследование Rust/TS — его расширение),
+  легенда тиров; **B-031 — корень как пакет** («я бы назвал корневой пакет
+  spec://org.vibevm.core», резолвер учитывает vibe.toml ВЕЗДЕ, короткая
+  нотация умирает) — сегментные семьи F-169/F-147 закрываются через неё;
+  **B-032** — протокол гранулярности планирования (спросить пользователя;
+  большие фичи — адресуемыми FEAT-файлами; планы собираются из ссылок);
+  **B-028** — суперсет URI-грамматики (высокий приоритет).
+- Прежние (2026-07-31/08-01) — в WAL `#constraints` и `##WAL-RULINGS-IN-FORCE`:
+  группа A=(2), B+A′ исполнен, F-220(b), B-004(i), маркер-форк (а)+B-011,
+  health-audit целиком, формат (ii), §3.8-скамьи, legacy-spec исключён.
+
+## Карта
+
+`campaigns/packages-2026-09/`: PHASE-D-BATCH-PLAN.md (закон; §3.6/3.7/3.8 +
+§6.1 — читать дважды), PHASE-D-SYNC-QUEUE.md (группы A–D — все решены,
+остаток очереди в registry), PHASE-D-HOST-OBLIGATIONS.md (+ секция
+`#rulings-2026-08-01`), harvest/d7a|d7b|d7c (тексты sync-переживших),
+harvest/d14-b012-* (исследование B-012 + синтез с `#rulings`),
+tasks/*.py (инструменты; merge → seal НЕ сцеплять), tasks/evidence/batch-D14…
+D28 (батчи этой сессии). `spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md`
+§7 LOG — с конца (записи 2026-08-01/02). `BACKLOG.md` B-001…B-032.
+`AUDIT.md` — активные находки аудита. `spec/WAL.md` — канон текущего
+состояния.
+
+## Последние 26 коммитов (свежие сверху; полнее — git log)
+
+```
+832de75b docs(wal): адресная семья закрыта; на столе — девятка F-132, F-185 и дупликации
+225a8a89 docs(backlog): B-032 — протокол гранулярности; B-018 получает приёмочный запрос
+2efe08d3 docs(campaign): адресная семья осушена — F-162 закрыт, F-147 отложен на B-031
+627bf759 fix(progress): пять тегов целятся в живые факты, четыре токена-ловушки удалены
+050d14ce fix(world): волна-6 поправка доезжает до трёх последних носителей, и ряд-дом называет оба дома
+826a3f96 docs(campaign): шесть пере-судов без единой правки — грепы искали строку, хост писал вещь
+1359bd51 fix(world): сводка догоняет собственный документ — долг волны 6 оплачен
+af14d529 docs(wal): день двух закрытий — F-180 и F-166; на столе одна сводка
+1ef63a37 docs(backlog): B-029 нейтральный ключ, B-030 проверки ассерций, B-031 корень-как-пакет
+be2b15c0 docs(campaign): F-166 закрыт целиком, а 3.2 стало архитектурным решением владельца
+7aa7d261 fix(ai-native): ключ гейта говорит правду кода, ассерция аннотирована, тиры получают легенду
+535a479f docs(wal): чекпойнт нового дня — группа C в работе, меню решений в чате
+93d92ec9 docs(backlog): B-028 — URI-грамматика: подмножество продаётся как целое
+69218b48 docs(campaign): группа C открыта — F-180 закрыт, два вызова владельца окупились
+9c7484d9 fix(world): «полная история» получает свою оговорку во всех трёх местах
+626bfb6e docs(wal): group B reads drained; group C and D are on the table
+03af849a docs(backlog): B-024 graduates to planned — свести словари, не сравнивать
+a3fd9f46 docs(campaign): группа B осушена — третья сессия решений в LOG
+3339eb40 fix(ai-native): the trait quote matches the shipped code — 1b item 4
+95a255bb docs(wal): group B is one text away from empty
+245aedd6 docs(backlog): B-025 mark-not-suppress, B-026 SARIF ingest, B-027 marker audit
+3c7fd185 docs(campaign): волна 11, второй заход — пять пунктов 1b решены на два и три
+fcd36f51 fix(ai-native): партия 1b lands its two ruled edits — items 3 and 7
+131d4ada docs(wal): третий чекпойнт дня — очередь владельца осушена
+0c9c97dc docs(backlog): волна-11's research trio — B-022, B-023, B-024
+edf337ea docs(campaign): волна 11 — the owner's queue drains, deferrals become records
+```
 
 ## Quick-start
 
 ```sh
 python campaigns/packages-2026-09/tasks/summary.py
 python campaigns/packages-2026-09/tasks/drift-registry.py
-bash tools/self-check.sh   # last known green pre-D13; re-run
+bash tools/self-check.sh   # реальный exit-код; никаких vibe-команд параллельно
 ```
+
+_WAL — канон живого состояния; при расхождении верить ему, не этому файлу._
