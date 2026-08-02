@@ -490,7 +490,16 @@ edit; it is closed by a published version.
 
 ### Phase E — Coding {#phase-e}
 
-*Entry:* per IMPL task, unit stability. Opus executes; Fable reviews.
+*Entry:* per IMPL task, unit stability. *Executor (amended 2026-08-03 by
+owner directive):* the worker transport follows the owner-owned switch
+[`campaigns/packages-2026-09/SUBAGENT-MODE.toml`](../../campaigns/packages-2026-09/SUBAGENT-MODE.toml)
+— `claudez` (Claude Code workers on GLM-5.2 via the claudez/claudez2
+launchers: two parallel lanes in worktrees for disjoint-perimeter tasks,
+ONE thread for conflict-prone many-place edits, effort max built in) or
+`native` (the harness's built-in subagents, as Phase D ran); mechanics and
+the verified `-c` correction loop:
+[`SUBAGENT-LAUNCHERS.md`](../../campaigns/packages-2026-09/SUBAGENT-LAUNCHERS.md).
+The boss reviews every diff and makes every commit in either mode.
 Wave-2 DRIFT tasks differ from wave 1's in one way that matters: a fix inside
 a package's crates must be **vendored forward** to every family member that
 copies it (`cargo xtask sync-engines`), and the task's acceptance says so
@@ -498,9 +507,15 @@ explicitly or the fix ships to one consumer and not the others.
 
 ### Phase T — Test coverage by swarm (owner amendment, 2026-07-26) {#phase-t}
 
-*Entry:* E closed. *Executor:* a swarm of the **running harness's own**
-subagents — a deliberate exception to §2's «no fractality», ruled by the owner
-2026-07-26 and recorded rather than assumed. *Reviewer:* the boss, per packet.
+*Entry:* E closed. *Executor:* per the T-spec's own header — GLM writers,
+one packet per writer; **the transport is concrete since 2026-08-03**: the
+owner-owned switch
+[`campaigns/packages-2026-09/SUBAGENT-MODE.toml`](../../campaigns/packages-2026-09/SUBAGENT-MODE.toml)
+routes packets to Claude-Code-on-GLM workers via claudez/claudez2 (two
+verified lanes) or back to the harness's native subagents — mechanics:
+[`SUBAGENT-LAUNCHERS.md`](../../campaigns/packages-2026-09/SUBAGENT-LAUNCHERS.md).
+Fractality stays out either way (§2's «no fractality», owner 2026-07-26).
+*Reviewer:* the boss, per packet.
 
 **≥3 tests of distinct kinds per testable assertion.** Full specification:
 [`campaigns/packages-2026-09/PHASE-T-SPEC.md`](../../campaigns/packages-2026-09/PHASE-T-SPEC.md).
@@ -4648,6 +4663,39 @@ aspirational — and every one is still live for the phases that remain.
   **Phases E/T/F/G stand designed and do not start without the
   owner's word; Phase E's mandate drains the recorded builds under
   the map's frame.**
+
+- **2026-08-03 · второй обмен — E/T получают переключаемый
+  claudez-транспорт субагентов.** The owner's directive: rework the
+  machine-local `claudez`/`claudez2` launchers (Claude Code → GLM-5.2
+  via the z.ai gateway, two accounts) so `-c` works exactly as with
+  plain `claude`, use them as the E/T subagent transport instead of
+  native agents, **keep the native↔claudez switch in the owner's
+  hands**, effort always max, and parallelise across BOTH launchers
+  in worktrees where edits are isolated — one thread where a
+  many-place edit would conflict. Executed the same hour: the
+  launchers' siamese state was split — before the rework both shared
+  one `CLAUDE_CONFIG_DIR` (`~/.claude-glm`) and one override var, so
+  `-c` in a shared cwd stole the sibling's thread, fatal for subagent
+  use; now `claudez2` owns `~/.claude-glm2` +
+  `ZAI_API_TOKEN_FILE_2`/`CLAUDEZ2_CONFIG_DIR`, headers and error
+  prefixes de-copy-pasted, and all four variants (bash + PowerShell ×
+  two launchers) export `MAX_THINKING_TOKENS=32000` (the effort-max
+  lever; `CLAUDEZ_MAX_THINKING` overrides). **Verified — the
+  ALPHA/BRAVO matrix, eight runs, exit 0 each:** in one scratch cwd
+  claudez seeded codeword ALPHA and claudez2 seeded BRAVO (fresh
+  `~/.claude-glm2` bootstrapped headless, second token live), then
+  each launcher's `-c -p` returned its OWN codeword — from bash and
+  from PowerShell both (`Get-Command` resolves both names to the
+  `.ps1` scripts). The instruction landed as
+  `campaigns/packages-2026-09/SUBAGENT-LAUNCHERS.md` + the owner's
+  switch `SUBAGENT-MODE.toml` (`mode = "claudez"`; the boss re-reads
+  it before every fan-out, so a flip acts immediately); §5-E/§5-T
+  executor lines and the T-spec's executor header amended to point at
+  it — §13.0.1's «ZCode-class harness, not verified» bet is now a
+  verified concrete transport with two non-colliding lanes and a `-c`
+  correction loop. Review, verdicts, anchor routing and commits stay
+  the boss's in both modes; briefs cite durable files; fractality
+  stays out.
 
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 

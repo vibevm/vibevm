@@ -12,6 +12,12 @@ realistic for it).
 **Reviewer:** the boss agent, on every packet. The boss also provisions every
 worktree, runs every cargo invocation, performs every red exhibit, and makes
 every commit — the writers only write test text (§13.0, §13.4, §13.5).
+**Transport, made concrete 2026-08-03 (owner directive):** the GLM sessions
+are Claude Code on GLM-5.2 via the `claudez`/`claudez2` launchers — §13.0.1's
+«not verified» harness bet is now a verified transport with two non-colliding
+lanes and a `-c` continuation loop; the owner's native↔claudez switch and all
+mechanics: [`SUBAGENT-LAUNCHERS.md`](SUBAGENT-LAUNCHERS.md) +
+[`SUBAGENT-MODE.toml`](SUBAGENT-MODE.toml).
 
 ---
 
