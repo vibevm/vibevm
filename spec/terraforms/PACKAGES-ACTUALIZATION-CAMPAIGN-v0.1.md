@@ -5186,6 +5186,53 @@ aspirational — and every one is still live for the phases that remain.
   батч 2 (B-033 + B-030) — и развилка №9 карты (дом
   паритет-принципа) уходит владельцу вместе с кандидатами лупа.** @spec/done
 
+- **2026-08-04 · БАТЧ 2 ВОЛНЫ Б ПОСТРОЕН ЦЕЛИКОМ — B-033 + B-030 + B-049 +
+  подъём принципа паритета.** One long autonomous run (the continuation
+  prompt lifted the pause) built the parity batch across 21 green commits,
+  the panel read at every landing. **Design** (`3c5f51e5`) → **the parity
+  principle LIFTED into the manifesto** (`8e03348a`, `core-ai-native`
+  `##PARITY-ACROSS-PROJECTIONS` — fork №9 «Ядро дисциплины»: no projection
+  weaker than another without a recorded reason, the projection-level twin
+  of `##BAN-WITHOUT-HATCH-IS-A-BUG`) → **S1 engine spine**
+  (`ae927800`…`c0f99902`: `go-seam-error-cites-req` [one rule, both halves,
+  per-half fingerprints], `ts-seam-error-cites-req`, `go-conformance-assertion`,
+  two new `Fact` variants + the `seam_error_message_no_req` kind + `[rust]
+  floor_disable` field; the Fact-variant ripple across the Rust FE sort +
+  health census; the go-seam mount to hold the gate count when the umbrella
+  arm was removed) → **S2 extractors** (`8f1fc914` go reads `Error()` bodies
+  + `var _` assertions, `a5ba2b0b` ts detects discriminated-union errors,
+  `0393ce91` sync) → **S3 mounts + B-049** (`bd4291d5` the conformance rule
+  scopes to the GATE LIST so seam-less/exempt cells are never falsely
+  flagged, `d09e2a19` the go gate mounts it + the clean fixture asserts,
+  `f63c1d32` the ts gate mounts the seam-error rule, `32aba0ab` the Rust
+  floor honours `floor_disable` [B-049], `94e6db0e` sync) → **S4 docs**
+  (`docs(packages)`: the three guides describe the built rules + the message
+  marker `spec://`-or-`violates REQ` + the TS honest limits, and cite the
+  manifesto parity law) → **B-035 loop pass №2**
+  (`harvest/e12-b035-parity-pass.md`: rows 1 [seam-error, both halves ×3]
+  and 13 [floor-disable ×3] PARITY ACHIEVED; row 7 [conformance] Go built /
+  Rust reason / TS routed; the two Go-only gaps — row 6 flag rule, rows 8/12
+  floor `./...` residual — recorded and routed to later batches).
+  **Delegation:** 4 claudez build workers, all ПРИНЯТО (2 with boss
+  corrections that were the worker's own CORRECT escalations — the go worker
+  caught the packet's `spec://`-only marker and its `Vec<String>` floor
+  contradiction; B-049 caught `tests` vs `test`; the ts worker recorded its
+  limits + cleaned `package-lock.json`); the S4 doc worker hit a
+  worktree-write anomaly, fell back to the main repo transparently, and
+  surfaced an adjacent stale claim. **Panel earned its keep** on the go
+  characterization coupling (moving the seam-error kind out of the umbrella
+  broke the gate count + TCG parity three times — each a same-landing fix;
+  the message-half anchor moved to the `Error()` method line so the two
+  halves key separately; a within-frontend-version extraction-cache staleness
+  paid once). **NOT yet closed:** the F-185 family re-judgement (`vibe
+  progress mirror --campaign` → `merge-verdicts.py --force` → seal — the
+  guides now describe the built rule, so F-185's «`seam-error-cites-req` is
+  not a rule» drift closes) and the batch's BACKLOG-row dispositions.
+  **Mirrors are behind** (21 commits local `main`; the fan-out held for an
+  explicit wind-down). **Next:** the F-185 re-judge + backlog rows CLOSE batch
+  2; then батч 3 (B-036 + B-037 + B-038, map fork №1 with B-038) → батч 4
+  (B-025 + B-026) → M-PARITY → волны В/Г. @spec/done
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
