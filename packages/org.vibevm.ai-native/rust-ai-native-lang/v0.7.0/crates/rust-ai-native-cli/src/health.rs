@@ -173,6 +173,7 @@ pub fn run_health(root: &Path, out_rel: &str, extra_sections: &[(String, Value)]
                 Fact::Import { .. }
                 | Fact::Ctor { .. }
                 | Fact::TsUnsafe { .. }
+                | Fact::TsEnvRead { .. }
                 | Fact::GoUnsafe { .. } => {}
             }
         }

@@ -82,6 +82,7 @@ impl Frontend for RustFrontend {
             // Never produced by rust-syn — the ts-tsc and go frontends own
             // these — but the sort is total over the shared fact model.
             | Fact::TsUnsafe { line, .. }
+            | Fact::TsEnvRead { line, .. }
             | Fact::GoUnsafe { line, .. } => *line,
         });
         v.facts
