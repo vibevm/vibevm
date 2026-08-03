@@ -189,7 +189,7 @@ full semantic dependency set so a pager can assemble sufficient context mechanic
   nothing else beyond seam-required types. Exported-but-unreferenced identifiers are
   findings. @impl/done
 - ##CONFORMANCE-IS-MADE-LOUD **Conformance is made loud** — every cell carries the compile-time assertion, and
-  conform checks its presence (T-syn): *Specified, not built (→ B-030): the Go gate registers exactly three rules — `GoUnsafeInDomain`, `GoCellIsolation`, `FileLength` (`build_rules`, `lib.rs:53-60`) — and none parses for the assertion's presence; the assertion itself is real, idiomatic Go and the pattern below is correct.* @impl/plan
+  conform checks its presence (T-syn): the `go-conformance-assertion` rule polices the **gated** cells — a package in `[go] gated` that declares a seam impl must carry its `var _ seams.<Seam> = (*<Impl>)(nil)`, and a gated cell missing the assertion is a finding; exempt and ungated cells (the genuinely seamless ones included) are out of scope and are never falsely flagged. The assertion itself is real, idiomatic Go and the pattern below is correct. The parity this rests on — no projection enforces the discipline more weakly than another without a recorded reason — is a discipline law in the manifesto (`spec://org.vibevm.ai-native/core-ai-native/00-MANIFESTO#parity-across-projections`). @impl/done
 
 ```go
 // internal/cells/batchplanner/planner.go
@@ -616,8 +616,10 @@ moves: @impl/done
   `seam_error_missing_req` — restructure beats testify: encode the invariant in a type
   or constructor rather than recording an excuse. *Where these live in the
   shipped tooling: `go-extract` emits the kinds, the `go-unsafe-in-domain`
-  conform rule reports them, and `go-ai-native health` summarises them into the
-  snapshot's `ban_census` block. Two names above are the shipped kinds verbatim
+  conform rule reports them — except `seam_error_missing_req`, which since
+  B-033 is owned by the dedicated `go-seam-error-cites-req` rule (its structure
+  half) — and `go-ai-native health` summarises them into the snapshot's
+  `ban_census` block. Two names above are the shipped kinds verbatim
   (`error_string_match`, `seam_error_missing_req`); the other three are this
   guide's cell-scoped reading of kinds the extractor names without the suffix —
   `init_in_cell` is `init_decl`, `ambient_call_in_cell` is `ambient_call`,

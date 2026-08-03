@@ -158,6 +158,8 @@
 
 ##RULE-FAILURE-ON-A-SEAM-IS-A-TYPED-VALUE *Rule:* failure on a seam is a typed value with REQ-citing variants; the exhaustive `switch` over the error union is checked at compile time (R-010, projected). @impl/done
 
+##TS-SEAM-ERROR-CITES-REQ-IS-BUILT *The gate now checks this* — the `ts-seam-error-cites-req` rule flags a discriminated-union error type alias `E` whose variants carry no `spec://` REQ. Honest limits, recorded (never a silent claim): it detects **Form-1** only — a `type` alias whose RHS is a union of object-literal members, each carrying a discriminant property from the closed set `{ kind, tag, _tag }`; the error position is taken from the alias **name** (`*Error` / `E`), NOT from the second argument of `Result<T, E>` (the single-file extractor does not resolve references); and the discriminant set is closed to `{ kind, tag, _tag }`, so a union discriminated any other way is not matched — what the heuristic cannot see is recorded here, not claimed. The parity behind it — no projection enforces the discipline more weakly than another without a recorded reason — is a discipline law in the manifesto (`spec://org.vibevm.ai-native/core-ai-native/00-MANIFESTO#parity-across-projections`). @impl/done
+
 ## 7. Registry, flags & the composition root *(≈ Rust §5)* {#registry}
 
 ##SAME-RULE-AS-RUST-SHARPENED-BY-ERASURE The Rust guide forbids `if flag` in domain logic; the same rule holds in TypeScript, and the erasure boundary (§2) sharpens it. @impl/done

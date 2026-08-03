@@ -38,8 +38,8 @@ already enforces for Rust and TypeScript: @impl/done
   defaults, naked `go` statements, error-string matching, reasonless
   suppressions, `t.Skip` — guide §7's theater list) surfaced as conform
   findings in the Class-F `violates REQ …; fix surface: …` grammar; @impl/done
-- ##RULE-SEAM-ERROR-CONTRACT the seam-error contract (`seam-error-cites-req` — a seam's closed
-  error set carries its REQ URI, guide §5); @impl/done
+- ##RULE-SEAM-ERROR-CONTRACT the seam-error contract (`go-seam-error-cites-req` — a seam's closed
+  error set carries its REQ URI, guide §5): one rule, both halves — the structure half flags a `*Error` type that owns an `Error()` but has no `Spec` field; the message half flags an `Error()` whose rendered text carries no REQ, where a REQ is counted as cited by the literal `spec://` OR the `violates REQ` marker (Go renders the URI out of the `Spec` field, while the format string itself carries the `violates REQ %s` marker); @impl/done
 - ##RULE-DEVIATION-ESCAPE-HATCH the deviation escape hatch (`//spec:deviates … reason="…"`), honoured
   the way `#[spec(deviates)]` is for Rust. @impl/done
 
