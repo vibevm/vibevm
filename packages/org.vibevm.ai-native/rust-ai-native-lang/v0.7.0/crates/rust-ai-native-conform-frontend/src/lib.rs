@@ -54,7 +54,10 @@ impl Frontend for RustFrontend {
         //     unsafe impl methods extracted (they were invisible).
         // v6: EnvRead facts (env::var/var_os/set_var/remove_var) for the
         //     ambient-env rule, with the same test/deviates scoping.
-        "6"
+        // v7: InvariantComment facts — a raw-text scan of the marker
+        //     vocabulary (`SAFETY:` / `INVARIANT:` / …), since syn drops
+        //     plain `//` comments. Feeds invariant-comment-position.
+        "7"
     }
 
     fn extract(&self, _file: &str, _crate_name: &str, module: &str, text: &str) -> Vec<Fact> {
@@ -68,8 +71,15 @@ impl Frontend for RustFrontend {
             }],
             test_depth: 0,
             deviating_depth: 0,
+            test_ranges: Vec::new(),
         };
         v.visit_file(&ast);
+        // Plain `//` line comments are dropped by syn::parse_file (only
+        // `#[doc]` doc comments survive the AST), so the invariant-marker
+        // census walks the raw `text` the AST was parsed from. Runs after
+        // the visit so it can reuse the test-context line ranges the
+        // visit collected.
+        v.scan_invariant_comments(text);
         v.facts.sort_by_key(|f| match f {
             Fact::FileMetrics { .. } => 0,
             Fact::Item { line, .. }
@@ -106,6 +116,11 @@ struct Extractor {
     /// deviation (the solver-choice edges on `Sat` / `NaiveDepSolver`
     /// are the live counter-examples) and grants no amnesty.
     deviating_depth: u32,
+    /// `[start, end]` line ranges of `#[cfg(test)]` modules and `#[test]`
+    /// free fns — the line-grain twin of `test_depth`, collected during
+    /// the visit so the post-visit raw-text comment scan can stamp
+    /// `in_test` on an invariant comment the AST never sees.
+    test_ranges: Vec<(u32, u32)>,
 }
 
 /// `#[cfg(test)]` / `#[cfg(any(test, ...))]` — the same shape the
@@ -191,6 +206,116 @@ fn line_of(spanned: &impl Spanned) -> u32 {
     spanned.span().start().line as u32
 }
 
+/// The fixed invariant-marker vocabulary the frontend emits. The rule
+/// re-checks the active config vocabulary, so the extractor emits
+/// generously; each entry is the canonical spelling the config
+/// dictionary uses — the three colon-bearing markers are self-anchoring,
+/// the three bare markers need a word boundary (`is_word_boundary`).
+const INVARIANT_MARKERS: &[&str] = &[
+    "SAFETY:",
+    "INVARIANT:",
+    "WARNING:",
+    "PANICS",
+    "MUST",
+    "NEVER",
+];
+
+/// The canonical invariant marker a comment line LEADS with, if any.
+/// Detection is anchored at the comment's first content token (after the
+/// `//` / `/*` / `*` introducer and whitespace): a marker not at the very
+/// start of the comment is NOT detected. This matches the all-caps
+/// section-header convention and — deliberately — avoids flagging prose
+/// uses of the bare words `must` / `never` / `panics` mid-sentence (a
+/// comment that BEGINS with the bare word still counts, which is the
+/// invariant-shaped case the rule targets).
+///
+/// **Recorded limit:** a marker embedded mid-comment (`// see SAFETY:`
+/// further down) is not seen; the convention puts the marker at the lead.
+/// The match is case-sensitive to the config's canonical spelling, so
+/// `// safety:` (lowercase) is not detected — only the all-caps form the
+/// guide's vocabulary uses.
+fn invariant_marker(line: &str) -> Option<String> {
+    let lead = line
+        .trim_start_matches(['/', '*', '!', ' ', '\t'])
+        .trim_start();
+    for marker in INVARIANT_MARKERS {
+        if let Some(rest) = lead.strip_prefix(marker) {
+            let needs_boundary = !marker.ends_with(':');
+            let boundary = rest
+                .chars()
+                .next()
+                .is_none_or(|c| !c.is_ascii_alphanumeric() && c != '_');
+            if !needs_boundary || boundary {
+                return Some((*marker).to_string());
+            }
+        }
+    }
+    None
+}
+
+impl Extractor {
+    /// Walk the raw file text for invariant-marker comments and emit one
+    /// [`Fact::InvariantComment`] per marker comment, in source order. See
+    /// [`INVARIANT_MARKERS`] / [`invariant_marker`] for the detection
+    /// rule and its recorded limits. `in_test` is the line-grain twin of
+    /// the visit's `test_depth`: a comment whose line falls inside a
+    /// `#[cfg(test)]` module or `#[test]` fn (collected in
+    /// [`Extractor::test_ranges`]) is test context, exactly as the
+    /// item-level facts already record it.
+    fn scan_invariant_comments(&mut self, text: &str) {
+        let mut in_block = false;
+        for (idx, raw) in text.lines().enumerate() {
+            let line_no = (idx + 1) as u32;
+            if !self.is_comment_line(raw, &mut in_block) {
+                continue;
+            }
+            let Some(marker) = invariant_marker(raw) else {
+                continue;
+            };
+            let in_test = self
+                .test_ranges
+                .iter()
+                .any(|(start, end)| line_no >= *start && line_no <= *end);
+            self.facts.push(Fact::InvariantComment {
+                marker,
+                line: line_no,
+                in_test,
+            });
+        }
+    }
+
+    /// A line is a comment line for the marker census: a `//` line
+    /// comment, a `/*` block line (opening, interior, or closing), or a
+    /// line inside an open block. A line that merely CONTAINS a block
+    /// opener inside code (`x(); /* … */ y()`) reads as a comment line,
+    /// but `invariant_marker` anchors at the lead, so a marker after the
+    /// code is not detected — the over-count costs nothing.
+    ///
+    /// **Recorded limit:** block comments are tracked one transition per
+    /// line (a line that opens AND closes a block is comment-shaped for
+    /// its whole length); a marker that shares a line with code before it
+    /// is not detected.
+    fn is_comment_line(&self, raw: &str, in_block: &mut bool) -> bool {
+        if *in_block {
+            if raw.contains("*/") {
+                *in_block = false;
+            }
+            return true;
+        }
+        let trimmed = raw.trim_start();
+        if trimmed.starts_with("//") {
+            return true;
+        }
+        if let Some(open) = raw.find("/*") {
+            if !raw[open..].contains("*/") {
+                *in_block = true;
+            }
+            return true;
+        }
+        false
+    }
+}
+
 impl<'ast> Visit<'ast> for Extractor {
     fn visit_item_fn(&mut self, node: &'ast syn::ItemFn) {
         self.facts.push(Fact::Item {
@@ -204,6 +329,8 @@ impl<'ast> Visit<'ast> for Extractor {
         let in_test = is_test_fn(&node.attrs) || is_cfg_test(&node.attrs);
         if in_test {
             self.test_depth += 1;
+            self.test_ranges
+                .push((line_of(node), node.span().end().line as u32));
         }
         let deviating = is_spec_deviates(&node.attrs);
         if deviating {
@@ -253,6 +380,8 @@ impl<'ast> Visit<'ast> for Extractor {
         let in_test = is_cfg_test(&node.attrs);
         if in_test {
             self.test_depth += 1;
+            self.test_ranges
+                .push((line_of(node), node.span().end().line as u32));
         }
         syn::visit::visit_item_mod(self, node);
         if in_test {

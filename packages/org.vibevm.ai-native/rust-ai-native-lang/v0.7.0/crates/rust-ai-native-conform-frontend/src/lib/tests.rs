@@ -266,3 +266,57 @@ fn extracts_thiserror_variants_with_enum_attrs() {
     // transparent carries no display template
     assert_eq!(variants[1].1, "");
 }
+
+#[test]
+fn emits_invariant_comments_with_canonical_markers() {
+    // A marker leads the comment → emitted, normalised to the config's
+    // canonical spelling (colon-bearing verbatim, bare words without the
+    // colon). The line is the comment's source line.
+    let facts = extract(
+        "// SAFETY: relies on the lock being held.\n\
+         // PANICS: when n < 0.\n\
+         // You must never call this mid-sentence.\n",
+    );
+    let comments: Vec<(String, u32, bool)> = facts
+        .iter()
+        .filter_map(|f| match f {
+            Fact::InvariantComment {
+                marker,
+                line,
+                in_test,
+            } => Some((marker.clone(), *line, *in_test)),
+            _ => None,
+        })
+        .collect();
+    // Line 2's prose begins with `You`, not a bare marker — the lead
+    // anchor excludes the mid-sentence `must`/`never`. Only the two
+    // leading markers fire.
+    assert_eq!(
+        comments,
+        vec![
+            ("SAFETY:".to_string(), 1, false),
+            ("PANICS".to_string(), 2, false),
+        ],
+        "{comments:?}"
+    );
+}
+
+#[test]
+fn stamps_in_test_on_a_comment_inside_a_cfg_test_mod() {
+    // A SAFETY marker inside a `#[cfg(test)]` module carries `in_test` —
+    // the line-grain twin of the item-level `test_depth` predicate.
+    let facts = extract(
+        "pub fn answer() -> u32 { 42 }\n\
+         #[cfg(test)]\n\
+         mod tests {\n\
+         \x20   // SAFETY: only safe under the test harness.\n\
+         \x20   #[test]\n\
+         \x20   fn checks() {}\n\
+         }\n",
+    );
+    let in_test = facts.iter().find_map(|f| match f {
+        Fact::InvariantComment { in_test, .. } => Some(*in_test),
+        _ => None,
+    });
+    assert_eq!(in_test, Some(true), "{facts:?}");
+}
