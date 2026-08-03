@@ -10,9 +10,11 @@ const URI: &str =
 
 #[test]
 fn uri_parses_with_all_parts() {
+    // B-031: the host is the package coordinate org.vibevm.core/vibevm; the
+    // grammar's first segment is the group half, the name leads the doc path.
     let u = parse_spec_uri(URI).unwrap();
-    assert_eq!(u.package, "vibevm");
-    assert_eq!(u.doc_path, "modules/vibe-resolver/PROP-003");
+    assert_eq!(u.package, "org.vibevm.core");
+    assert_eq!(u.doc_path, "vibevm/modules/vibe-resolver/PROP-003");
     assert_eq!(u.anchor, "req-conditional-fixpoint");
     assert_eq!(u.pinned_r, None);
     assert_eq!(u.without_pin(), URI);
@@ -29,17 +31,17 @@ fn uri_parses_revision_pin() {
 fn uri_rejections() {
     for bad in [
         "http://x/y#a",                           // wrong scheme
-        "spec://org.vibevm.core/vibevm#a",        // no doc-path
-        "spec://org.vibevm.core/vibevm/x",        // no fragment
-        "spec://org.vibevm.core/vibevm/x#",       // empty anchor
-        "spec://org.vibevm.core/vibevm/x#a b",    // whitespace
-        "spec://org.vibevm.core/vibevm/x#a~rx",   // non-integer pin
-        "spec://org.vibevm.core/vibevm/x#a~r0",   // r0
-        "spec://org.vibevm.core/vibevm/x#a#b",    // two fragments
-        "spec://org.vibevm.core/vibevm/x#-a",     // leading dash
-        "spec://org.vibevm.core/vibevm/x#_lead",  // leading underscore: the head must be a letter
+        "spec://somehost#a", // no doc-path (a neutral token: the coordinate form always has one)
+        "spec://org.vibevm.core/vibevm/x", // no fragment
+        "spec://org.vibevm.core/vibevm/x#", // empty anchor
+        "spec://org.vibevm.core/vibevm/x#a b", // whitespace
+        "spec://org.vibevm.core/vibevm/x#a~rx", // non-integer pin
+        "spec://org.vibevm.core/vibevm/x#a~r0", // r0
+        "spec://org.vibevm.core/vibevm/x#a#b", // two fragments
+        "spec://org.vibevm.core/vibevm/x#-a", // leading dash
+        "spec://org.vibevm.core/vibevm/x#_lead", // leading underscore: the head must be a letter
         "spec://org.vibevm.core/vibevm/x#9lives", // digit head, likewise
-        "spec://org.vibevm.core/vibevm/x#a.b",    // `.` is not an id character
+        "spec://org.vibevm.core/vibevm/x#a.b", // `.` is not an id character
     ] {
         assert!(parse_spec_uri(bad).is_err(), "should reject `{bad}`");
     }
