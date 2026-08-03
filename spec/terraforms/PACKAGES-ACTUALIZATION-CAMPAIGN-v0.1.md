@@ -5142,6 +5142,50 @@ aspirational — and every one is still live for the phases that remain.
   Remaining in batch 1: W3 (the carriers' doc sweep) + W4 (the
   TS-shaped flag rule, B-039) — both in flight as this entry lands. @spec/done
 
+- **2026-08-04 · БАТЧ 1 ВОЛНЫ Б ЗАКРЫВАЕТСЯ ЦЕЛИКОМ — B-029 + B-034 +
+  B-039 посажены, B-003 попутно, луп B-035 пройден, панель зелёная,
+  зеркала синхронны.** W3 (the doc sweep, `c67ec458`) landed ruling
+  2.1's second half — every carrier speaks `[<lang>] gated` /
+  `[[<lang>.exempt]] {unit, reason}` in its own noun, the Go guide's
+  «one spelling» apology died, the TS frontend doc gained the honest
+  invariant description. W4 (`0249f9cd`) landed B-039 TS-shaped:
+  ts-extract emits env-read facts, the engine's ts-flag-sites flags
+  reads outside `[typescript] composition_root`, the demo instantiates
+  the tier (src/main.ts + typed as-const registry), the guide's two
+  «Specified, not built» notes now describe the built thing and its
+  honest if(flag) limit; the dirty fixture deliberately stays
+  root-less as the unmounted case. **The panel earned its keep three
+  more times on this landing** — the TCG oracle + MCP relay read the
+  flat roots at four sites the E8-R1 reader table never listed
+  (`29e484ea`); the frontend/TCG/replay TEST tail still built stores
+  by the retired name and wrote flat policies (`2bf7236f`; one fix
+  went through a byte replace that silently missed on CRLF — the
+  recorded trap, paid again); and W4's new Fact variant reached the
+  Rust frontend's deliberately-total sort and the health census
+  (`bd5eb713`) — with a cargo staleness ghost on the way (the host
+  target held a pre-variant fingerprint of the vendored engine;
+  `cargo clean -p` put the build back on real sources). New packet
+  law bought: a code packet that CREATES engine files carries the
+  specmap self-trace in its self-verify (`5323ea82` — eight coverage
+  helpers were orphans; scope! joined them to ENGINE-CONFORM#facts).
+  **The B-035 loop's first post-batch pass**
+  (`harvest/e10-b035-parity-pass.md`, `abfdff30`): rows 2–5
+  infrastructure asymmetries CLOSED (invariant, vacuous, scope,
+  counts — all three drivers from one core); surviving parity debt is
+  content — seam-error REQ-citation (TS none / Go half; B-033's
+  batch) and the Go flag rule; two fresh findings — the
+  floor-disable mechanism exists on Go/TS but NOT the Rust floor
+  (the one asymmetry pointing the wrong way), and B-003 scoped only
+  gofmt while vet/tests/staticcheck still walk ./... unfiltered.
+  Nine re-touched carriers re-sealed (two honest refusals —
+  TOOLING-MAP/BACKLOG are outside the observed corpus); registry
+  unchanged at 88/179/owed 6 (no judging batch this checkpoint —
+  the deferred re-judgements drain with their builds: F-185 whole
+  when B-033 completes the family). Live exhibits, real exits:
+  go-demo 6/0, ts-demo 2/0, both 0 new. Mirrors fanned. **Next:
+  батч 2 (B-033 + B-030) — и развилка №9 карты (дом
+  паритет-принципа) уходит владельцу вместе с кандидатами лупа.** @spec/done
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
