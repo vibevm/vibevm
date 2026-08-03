@@ -189,7 +189,7 @@ full semantic dependency set so a pager can assemble sufficient context mechanic
   nothing else beyond seam-required types. Exported-but-unreferenced identifiers are
   findings. @impl/done
 - ##CONFORMANCE-IS-MADE-LOUD **Conformance is made loud** — every cell carries the compile-time assertion, and
-  conform checks its presence (T-syn): the `go-conformance-assertion` rule polices the **gated** cells — a package in `[go] gated` that declares a seam impl must carry its `var _ seams.<Seam> = (*<Impl>)(nil)`, and a gated cell missing the assertion is a finding; exempt and ungated cells (the genuinely seamless ones included) are out of scope and are never falsely flagged. The assertion itself is real, idiomatic Go and the pattern below is correct. The parity this rests on — no projection enforces the discipline more weakly than another without a recorded reason — is a discipline law in the manifesto (`spec://org.vibevm.ai-native/core-ai-native/00-MANIFESTO#parity-across-projections`). @impl/done
+  conform checks its presence (T-syn): the `go-conformance-assertion` rule polices the **gated** cells — a package in `[go] gated` that declares a seam impl must carry its `var _ seams.<Seam> = (*<Impl>)(nil)`, and a gated cell missing the assertion is a finding; exempt and ungated cells (the genuinely seamless ones included) are out of scope and are never falsely flagged. The assertion itself is real, idiomatic Go and the pattern below is correct. The parity this rests on — no projection enforces the discipline more weakly than another without a recorded reason — is a discipline law in the manifesto (`spec://org.vibevm.ai-native/core-ai-native/00-MANIFESTO#PARITY-ACROSS-PROJECTIONS`). @impl/done
 
 ```go
 // internal/cells/batchplanner/planner.go
