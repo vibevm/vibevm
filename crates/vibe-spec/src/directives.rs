@@ -91,6 +91,8 @@ impl Directives {
     pub fn parse(source: &str) -> Self {
         let lines: Vec<String> = source.lines().map(String::from).collect();
         let fenced = fence_mask(&lines);
+        let commented = comment_mask(&lines);
+        let masked = |i: usize| fenced[i] || commented[i];
         let mut out = Directives::default();
 
         // Pass 1 — fences + directive lines: collect directives AND alias
@@ -99,7 +101,7 @@ impl Directives {
         // `alias_first_line` is parse scratch for the duplicate-alias report.
         let mut alias_first_line: BTreeMap<String, usize> = BTreeMap::new();
         for (i, line) in lines.iter().enumerate() {
-            if fenced[i] {
+            if masked(i) {
                 continue;
             }
             if let Some((kind, rest)) = directive_prefix(line.trim_start()) {
@@ -108,9 +110,9 @@ impl Directives {
         }
 
         // Pass 2 — in-place scans (`@spec://`, `@!`) resolve against the
-        // completed alias table. The fence mask still governs both.
+        // completed alias table. The fence and comment masks govern both.
         for (i, line) in lines.iter().enumerate() {
-            if fenced[i] {
+            if masked(i) {
                 continue;
             }
             out.scan_in_place(line, i);
@@ -356,6 +358,58 @@ fn is_alias_name(s: &str) -> bool {
     chars.all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
 }
 
+/// A precomputed mask marking lines inside HTML comments (`<!-- … -->`),
+/// including the marker lines themselves. A comment is machinery, not
+/// authored directive text: the compiled lane's resolution preamble quotes
+/// `#use … as X` / `@!X` verbatim inside one, provenance and `vibe:begin`
+/// markers carry addresses inside them, and none of that is a declaration
+/// or a use. Line-grained like [`fence_mask`] — the scanners it guards are
+/// line-oriented, and a directive can only ever start a line, so a
+/// mid-line `<!-- -->` on a content line masks nothing it should not.
+fn comment_mask(lines: &[String]) -> Vec<bool> {
+    let mut mask = vec![false; lines.len()];
+    let mut open = false;
+    for (i, line) in lines.iter().enumerate() {
+        let started_open = open;
+        let mut saw_comment = started_open;
+        let mut content_outside = false;
+        let mut rest = line.as_str();
+        loop {
+            if open {
+                match rest.find("-->") {
+                    Some(pos) => {
+                        open = false;
+                        rest = &rest[pos + 3..];
+                    }
+                    None => break,
+                }
+            } else {
+                match rest.find("<!--") {
+                    Some(pos) => {
+                        if !rest[..pos].trim().is_empty() {
+                            content_outside = true;
+                        }
+                        saw_comment = true;
+                        open = true;
+                        rest = &rest[pos + 4..];
+                    }
+                    None => {
+                        if !rest.trim().is_empty() {
+                            content_outside = true;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        // Masked: a line that starts inside an open comment, leaves one
+        // open, or is comment-only. A content line that merely contains a
+        // closed inline comment stays scannable.
+        mask[i] = started_open || open || (saw_comment && !content_outside);
+    }
+    mask
+}
+
 /// The address run of an `@spec` starting at `spec://`: everything up to
 /// whitespace or a closing bracket/quote, with trailing sentence punctuation
 /// trimmed (so `(@spec://a/b#c).` yields `spec://a/b#c`).
@@ -485,6 +539,40 @@ mod tests {
         // A real heading (`# text`, space after `#`) is not a directive.
         let d = Directives::parse("# Use the thing {#use-it}\nbody\n");
         assert!(d.directives.is_empty());
+    }
+
+    #[test]
+    fn html_comments_mask_directives_and_sigils() {
+        // The compiled lane's resolution preamble quotes `#use … as X` and
+        // `@!X` verbatim inside a multi-line HTML comment; provenance markers
+        // carry addresses in single-line comments. None of it is authored
+        // directive text — the scanner must collect nothing and error on
+        // nothing (the exact false positive that broke the first host
+        // regeneration on the nested git-practices lane).
+        let src = "\
+<!-- RESOLUTION RULES — read these five lines before anything else:
+  4. `#use spec://vibevm/a/b#c as X` binds a file-local alias; `@!X` is a
+     mandatory read of X's target (same rules as @spec://vibevm/d/e#f).
+-->
+<!-- vibe:static org.example/pkg — vibedeps/pkg/1.0.0/spec/boot/x.md -->
+real body with @spec://vibevm/real#one
+#use spec://vibevm/real#two
+";
+        let d = Directives::parse(src);
+        assert_eq!(d.errors, vec![], "{:?}", d.errors);
+        assert!(d.aliases.is_empty(), "a quoted `as X` is not a declaration");
+        assert_eq!(d.directives.len(), 1, "only the real #use counts");
+        assert_eq!(d.directives[0].address.doc_path, "real");
+        assert_eq!(d.in_place_uses.len(), 1, "only the real @spec counts");
+        assert_eq!(d.in_place_uses[0].address.anchor, vec!["one"]);
+    }
+
+    #[test]
+    fn a_mid_line_comment_does_not_mask_the_line() {
+        // Line-grained on purpose: a content line that merely CONTAINS a
+        // closed `<!-- -->` is a content line; its in-place uses still count.
+        let d = Directives::parse("see <!-- note --> @spec://vibevm/a#x here\n");
+        assert_eq!(d.in_place_uses.len(), 1);
     }
 
     #[test]
