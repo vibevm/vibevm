@@ -56,11 +56,17 @@ pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
     // The dedicated seam-error rule (B-033) — the two halves that used to
     // ride the `go-unsafe-in-domain` umbrella now have their own id.
     // Always on: a seam error cites its REQ regardless of the cell layout.
-    // (`go-conformance-assertion` waits for the extractor's `var _` emit —
-    // it would flag every cell as un-asserting until the facts flow.)
     out.push(Box::new(rules::GoSeamErrorCitesReq));
     if let Some(cells_dir) = &config.go.cells_dir {
         out.push(Box::new(rules::GoCellIsolation::new(cells_dir)));
+        // B-030: a gated cell carries the loud-conformance assertion
+        // `var _ Seam = (*Impl)(nil)`; the extractor emits it (S2a) and
+        // this fires for a gated cell that declares none. Conditional on
+        // cells_dir, scoped to the gate list (exempt/ungated cells are out).
+        out.push(Box::new(rules::GoConformanceAssertion::new(
+            config.go.cells_dir.as_deref(),
+            &config.go.gated,
+        )));
     }
     out.push(Box::new(rules::FileLength {
         max_lines: config.max_file_lines,

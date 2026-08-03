@@ -57,6 +57,17 @@ fn relay_enrichment_matches_the_gate_on_the_dirty_cell() {
         "{:?}",
         enriched.conform_findings
     );
+    // B-030: the plan cell declares no `var _ Seam = (*Impl)(nil)` — the
+    // relay surfaces the conformance finding the gate does (one truth).
+    assert_eq!(
+        rules
+            .iter()
+            .filter(|r| **r == "go-conformance-assertion")
+            .count(),
+        1,
+        "{:?}",
+        enriched.conform_findings
+    );
     // Advice cites the guide, deduplicated per rule/kind.
     assert!(!enriched.advice.is_empty());
     assert!(

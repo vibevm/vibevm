@@ -25,10 +25,18 @@ func (e *GreetError) Error() string {
 
 func (e *GreetError) Unwrap() error { return e.Err }
 
+// Greeting is the seam this cell satisfies.
+type Greeting interface {
+	Greet(name string) string
+}
+
 // Greeter greets deterministically off its injected clock.
 type Greeter struct {
 	clk clock
 }
+
+// Conformance is made loud: Greeter satisfies the Greeting seam.
+var _ Greeting = (*Greeter)(nil)
 
 // New is the blessed construction path.
 //
