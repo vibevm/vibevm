@@ -1,0 +1,21 @@
+{
+  "name": "@org.vibevm/eslint-plugin-ai-native",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Custom @typescript-eslint rules for the AI-Native TypeScript discipline: the diagnostic-cites-req rule (Scaffold F) whose messages reproduce the engine's Class-F REQ-citation grammar exactly. Run directly with node >= 22.6 (type stripping); resolves @typescript-eslint/utils from the consumer's own typescript-eslint install at runtime, like its ts-extract / ts-oracle siblings.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "node --test \"test/*.test.ts\""
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "^8.46.0",
+    "@typescript-eslint/rule-tester": "^8.46.0",
+    "@typescript-eslint/utils": "^8.46.0",
+    "eslint": "^9.39.0",
+    "typescript": "^6.0.3"
+  }
+}
