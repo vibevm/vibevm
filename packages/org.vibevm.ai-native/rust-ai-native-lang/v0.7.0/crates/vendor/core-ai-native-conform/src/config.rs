@@ -56,6 +56,8 @@ use toml::Value;
 /// )
 /// .unwrap();
 /// assert_eq!(cfg.max_file_lines, 600);
+/// assert_eq!(cfg.invariant_comment_min_file_lines, 120);
+/// assert_eq!(cfg.invariant_comment_markers.len(), 6);
 /// assert_eq!(cfg.rust.gated, vec!["app".to_string()]);
 /// assert_eq!(cfg.rust.registry_gated_crate.as_deref(), Some("app"));
 /// ```
@@ -88,6 +90,17 @@ pub struct Config {
     // --- the live surface ---
     /// The per-file line budget (`file-length`); read by every frontend.
     pub max_file_lines: u32,
+    /// The invariant-marker vocabulary for `invariant-comment-position`
+    /// — the comment tokens (normalized, as written) that mark an
+    /// invariant worth surfacing. A root key (beside `max_file_lines`)
+    /// because the vocabulary is language-neutral, not per-language
+    /// policy (design `new-rule-classes.md` §2). Empty disables the rule.
+    pub invariant_comment_markers: Vec<String>,
+    /// The minimum file length below which the `invariant-comment-position`
+    /// rule is silent — on a short file «thirds» are meaningless, so no
+    /// comment is ever «buried in the middle». A root key, same reason as
+    /// the vocabulary; defaults to 120 lines.
+    pub invariant_comment_min_file_lines: u32,
     /// The Rust half of the policy (`[rust]`).
     pub rust: RustConfig,
     /// The TypeScript half of the policy (`[typescript]`), consumed by
@@ -113,6 +126,15 @@ impl Default for Config {
             registry_gated_crate: None,
             exempt: None,
             max_file_lines: 600,
+            invariant_comment_markers: vec![
+                "SAFETY:".into(),
+                "INVARIANT:".into(),
+                "PANICS".into(),
+                "WARNING:".into(),
+                "MUST".into(),
+                "NEVER".into(),
+            ],
+            invariant_comment_min_file_lines: 120,
             rust: RustConfig::default(),
             typescript: TsConfig::default(),
             go: GoConfig::default(),
