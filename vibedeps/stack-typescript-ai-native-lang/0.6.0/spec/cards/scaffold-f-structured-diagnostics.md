@@ -42,7 +42,7 @@ routine:
   2. Add a one-line fix surface: where to change and what.
   3. Emit in a stable structured form (eslint `messageId` + SARIF; fixed grammar for domain errors).
   4. Keep it compact (one line of why + one of where).
-checker: @typescript-eslint `diagnostic-cites-req` (custom messages must match the grammar `violates REQ <uri>: <why>; fix surface: <where>`)
+checker: `diagnostic-cites-req` in the flat-config plugin `@org.vibevm/eslint-plugin-ai-native` (rule key `ai-native/diagnostic-cites-req`; source `typescript-ai-native-lang/v0.6.0/tools/eslint-plugin-ai-native/`) — custom messages must match the grammar `violates REQ <uri>: <why>; fix surface: <where>`; wired via the project's own eslint config (demo: `research/ts-demo/eslint.config.js` at `error`)
 raid_role: layer=tooling; order=after:none; batch=package
 budget: active_rules=1; first_signal=lint pass (<60s)
 ```

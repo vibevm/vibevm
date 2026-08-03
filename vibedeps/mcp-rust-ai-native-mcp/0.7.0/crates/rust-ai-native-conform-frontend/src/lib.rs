@@ -80,12 +80,14 @@ impl Frontend for RustFrontend {
             | Fact::UnwrapUse { line, .. }
             | Fact::EnvRead { line, .. }
             // Never produced by rust-syn — the ts-tsc and go frontends own
-            // these — but the sort is total over the shared fact model.
+            // these, and the comment-walking invariant pass is not wired
+            // here yet — but the sort is total over the shared fact model.
             | Fact::TsUnsafe { line, .. }
             | Fact::TsEnvRead { line, .. }
             | Fact::TsSeamError { line, .. }
             | Fact::GoUnsafe { line, .. }
-            | Fact::GoConformance { line, .. } => *line,
+            | Fact::GoConformance { line, .. }
+            | Fact::InvariantComment { line, .. } => *line,
         });
         v.facts
     }
