@@ -1,0 +1,61 @@
+{
+  "batch": "E13-S4-reseal",
+  "cluster": "ai-native",
+  "files": {
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md": {
+      "PARITY-ACROSS-PROJECTIONS": {
+        "v": "confirmed",
+        "ev": [
+          "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:97  ##PARITY-ACROSS-PROJECTIONS **The strictness is equal across projections.** No language projection enforces the discipline more weakly than another; a rule the pilot enforces is either enforced in every projection or its absence carries a recorded reason. @impl/done",
+          "PRESCRIBES, judged coherent + referents resolve. The clause is the owner-ruled home of the parity principle (TOOLING-MAP.md fork No.9, taken 2026-08-04: «Ядро дисциплины» — the language-neutral guiding layer of core-ai-native, one home, the stacks cite). Its own referent «the pilot» resolves to ##VIBEVM-IS-FIRST-PILOT (00-MANIFESTO.md:11). It is cited by all three stack guides — GUIDE-AI-NATIVE-RUST.md:72, GUIDE-AI-NATIVE-GO.md:192, GUIDE-AI-NATIVE-TYPESCRIPT.md:161 — and the citation URI form was corrected to the marker's exact spelling this pass (the fragment lookup is case-sensitive: crates/vibe-spec/src/doctree.rs:219 `self.anchors.get(anchor)`, ids inserted verbatim at doctree.rs:378)."
+        ]
+      },
+      "PARITY-IS-THE-PROJECTION-TWIN-OF-THE-HATCH": {
+        "v": "confirmed",
+        "ev": [
+          "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:99  ##PARITY-IS-THE-PROJECTION-TWIN-OF-THE-HATCH This is the projection-level twin of `##BAN-WITHOUT-HATCH-IS-A-BUG` … the recorded reason is the escape hatch. @impl/done",
+          "PRESCRIBES, coherent; the one referent it names resolves in the same section — ##BAN-WITHOUT-HATCH-IS-A-BUG at 00-MANIFESTO.md:95. The «weaker with machinery and a recorded reason» disposition it defines is the one the parity loop actually uses: campaigns/packages-2026-09/harvest/e12-b035-parity-pass.md row 7 records Rust's conformance reason («the compiler at the use site IS the assertion») and TS's routed build as recorded reasons rather than silent gaps."
+        ]
+      },
+      "PARITY-PILOT-IS-A-BAR-NOT-A-PRIVILEGE": {
+        "v": "confirmed",
+        "ev": [
+          "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:101  ##PARITY-PILOT-IS-A-BAR-NOT-A-PRIVILEGE The pilot language is the current reference bar because it is furthest along, not because it is privileged … A new language inherits the law on arrival. @impl/done",
+          "PRESCRIBES, coherent; «the pilot» resolves to ##VIBEVM-IS-FIRST-PILOT (00-MANIFESTO.md:11). The «bar rises to it» half is already exercised in the tree rather than aspirational: B-049 raised the RUST floor to the Go/TS shape (`RustConfig.floor_disable`, core-ai-native-conform/src/config.rs), i.e. the pilot was the weaker cell and the bar moved to the maturer projections — harvest/e12-b035-parity-pass.md row 13."
+        ]
+      },
+      "PARITY-GAP-IS-NEVER-SILENT": {
+        "v": "confirmed",
+        "ev": [
+          "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:103  ##PARITY-GAP-IS-NEVER-SILENT A projection weaker on some rule with no recorded reason is … the discipline silently decaying — the failure mode A5 and A6 exist to make impossible … the checker is built or the reason is recorded, never the rule quietly relaxed. @spec/done",
+          "PRESCRIBES, coherent; every referent resolves — A5 at 00-MANIFESTO.md:55 (##AXIOM-A5-RULE-IS-CODE), A6 at :56 (##AXIOM-A6-REALITY-BEFORE-ASPIRATION), and «(§4)» to the enclosing section heading `## 4. Stricter, not simpler — and where the strictness lives {#stricter-not-simpler}` at :79. Marked @spec/done, which is correct for a clause that states a disposition rather than promising a checker of its own."
+        ]
+      }
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md": {
+      "TS-SEAM-ERROR-CITES-REQ-IS-BUILT": {
+        "v": "confirmed",
+        "ev": [
+          "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:161  ##TS-SEAM-ERROR-CITES-REQ-IS-BUILT *The gate now checks this* — the `ts-seam-error-cites-req` rule flags a discriminated-union error type alias `E` whose variants carry no `spec://` REQ. Honest limits, recorded … @impl/done",
+          "DESCRIBES, checked against the tree and TRUE in every part. The rule exists: packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/typescript_parity.rs:16 (doc) and :56 (`id() = \"ts-seam-error-cites-req\"`). It is MOUNTED in the TS driver: packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform/src/lib.rs:55 `out.push(Box::new(rules::TsSeamErrorCitesReq));`. The three recorded limits match the implementation (Form-1 union members, name-based error position, closed `{kind,tag,_tag}` discriminant) — the clause records what the heuristic cannot see instead of claiming coverage, which is the ##PARITY-GAP-IS-NEVER-SILENT disposition applied to itself."
+        ]
+      }
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md": {
+      "CONFORMANCE-IS-MADE-LOUD": {
+        "v": "confirmed",
+        "ev": [
+          "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:191-192  ##CONFORMANCE-IS-MADE-LOUD **Conformance is made loud** — … the `go-conformance-assertion` rule polices the **gated** cells … exempt and ungated cells (the genuinely seamless ones included) are out of scope and are never falsely flagged. @impl/done",
+          "**Evidence RE-GROUNDED (verdict unchanged: confirmed).** The prior evidence vouched for a DIFFERENT text — the B-027-swept form carrying «Specified, not built (→ B-030)» with an @impl/plan marker. Wave-B batch 2 built the rule and S4 rewrote the clause to describe it, so the old evidence no longer describes the anchor it is filed under. Re-grounded on the built state: `GoConformanceAssertion` lives at core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/go_parity.rs:113-154 (the `gated` set at :146-150 is exactly the «exempt and ungated cells are out of scope» scope the clause claims), and it is mounted conditionally on `cells_dir` in the Go driver at go-ai-native-lang/v0.1.0/crates/go-ai-native-conform/src/lib.rs:66. The doc now DESCRIBES what the tree HAS."
+        ]
+      },
+      "SWEEP-CENSUS-REGRESSIONS": {
+        "v": "confirmed",
+        "ev": [
+          "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:614-620  ##SWEEP-CENSUS-REGRESSIONS **Census regressions** … `go-extract` emits the kinds, the `go-unsafe-in-domain` conform rule reports them — except `seam_error_missing_req`, which since B-033 is owned by the dedicated `go-seam-error-cites-req` rule (its structure half) …",
+          "**Evidence RE-GROUNDED (verdict unchanged: confirmed).** The prior evidence vouched for the pre-B-033 text, which listed all five kinds under the `go-unsafe-in-domain` umbrella; that became false the moment batch 2 moved the seam-error kind out, and S4 corrected the clause. Checked against the tree: the structure half is owned by the dedicated rule — core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/go_parity.rs:87 matches `\"seam_error_missing_req\" if !in_test` inside `GoSeamErrorCitesReq`, and rules/go.rs:34 documents the seam-error kinds as no longer the umbrella's. The other four kinds remain the umbrella's, exactly as the corrected clause states."
+        ]
+      }
+    }
+  }
+}
