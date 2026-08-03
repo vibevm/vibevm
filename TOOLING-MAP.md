@@ -95,7 +95,7 @@
 6. ##FORK-QUERY-LANGUAGE The map query language v0 (exact URI + symbol + type filter + response ceiling is the placeholder) (B-018.2). @doc/done
 7. ##FORK-DISPUTED `disputed`'s fate when the lifecycle vocabularies merge (B-024). @doc/done
 8. ##FORK-B027-RULE The B-027 marker rule («не планируется → `@spec/done`; запланировано записью → `@impl/plan`») — awaiting «да, свипуй». @doc/done
-9. ##FORK-PARITY-HOME The spec home of the «не слабее Rust без записанной причины» principle (B-035). @doc/done
+9. ##FORK-PARITY-HOME The spec home of the «не слабее Rust без записанной причины» principle (B-035) — **taken 2026-08-04:** «Ядро дисциплины» — the language-neutral guiding layer of core-ai-native (manifesto level), one home, the stacks cite; Python inherits on arrival. The lift is a boss-authored contract edit riding batch 2. Same sitting, the loop's inverted-asymmetry candidate ruled: the Rust floor **builds** the `floor_disable` twin (B-049) rather than recording a decline. @doc/done
 10. ##FORK-FIRST-SOURCE The 74.8 % first-source reconciliation inside `core-ai-native`'s appendices (the F-161 tail) — **taken 2026-08-02:** the ATLAS pair 75.3 %/70.2 % is canon; carriers aligned. @doc/done
 11. ##FORK-COMPOSITION-SHAPE The multi-language composition shape — a thin MCP+CLI aggregator, a discovery roster served by `vibe`, or the hybrid (B-046's options 1/2/3; the autonomy law binds all three). @doc/done
 
