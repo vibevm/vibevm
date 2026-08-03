@@ -404,3 +404,32 @@ the packet's perimeter or report the split as a leftover» — the full
 conform engine stays the boss's panel (a cold worktree cannot afford
 the xtask build), but the one budget it keeps tripping on is a
 one-liner any worker can check.
+
+##fact-new-engine-files-scope **New engine files carry `specmark::scope!`
+(2026-08-04, paid at the W1 landing — the third consecutive class the
+packets did not gate):** an accepted engine slice created two new
+submodule files with tests, budgets and clippy all green, and the
+panel's specmap self-trace flagged their eight pub helpers as
+**orphans** (`5323ea82`). A code packet that CREATES `.rs` files in an
+engine crate therefore orders the cheap form in the packet itself:
+«каждый новый файл несёт `specmark::scope!(…)` тем же юнитом, что его
+соседи по крейту» — the real self-trace gate stays the boss's panel.
+
+##fact-engine-enum-ripple **An engine enum change is a cross-package
+ripple (2026-08-04, paid at the W4 landing, twice):** adding a `Fact`
+variant compiled green in the slice's own workspace and then broke the
+RUST frontend's deliberately-total sort and the Rust health census in
+OTHER packages (`1391ad6b`, `bd5eb713`) — and the E8 census's
+reader-table had already missed the TCG oracle the same way
+(`29e484ea`). Two rules bought: *(i)* a census/reader-table is
+evidence, never a completeness proof — the boss's merge plan greps the
+WHOLE tree for consumers of a changed engine surface (`grep -rn` on
+the field/variant/fn, vendor copies excluded), and the panel's
+package-workspace sweep is the real perimeter check; *(ii)* a slice
+that touches a shared engine ENUM budgets exhaustive-match arms in
+every frontend into either the packet's perimeter or the boss tail —
+never assumes its own workspace is the blast radius. Bonus trap paid
+on the same chase: a stale cargo fingerprint in the host target kept
+failing the FIXED code against a pre-change engine rmeta —
+`cargo clean -p <crate>` puts the build back on real sources before
+any deeper diagnosis.
