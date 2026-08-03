@@ -78,18 +78,19 @@ impl CrateHealth {
 
 pub fn run_health(root: &Path, out_rel: &str, extra_sections: &[(String, Value)]) -> Result<()> {
     let (config, _origin) = rust_ai_native_conform::load_config_or_default(root)?;
-    let store = Store::at_repo(root, &config);
+    let store = Store::for_rust(root, &config);
     let mut log = ExtractionLog::default();
     let frontend = RustFrontend;
     let facts = store.extract_workspace(root, &frontend, &mut log)?;
 
-    let gated: BTreeSet<&str> = config.gated_crates.iter().map(|s| s.as_str()).collect();
+    let gated: BTreeSet<&str> = config.rust.gated.iter().map(|s| s.as_str()).collect();
     let pub_doctest_gated: BTreeSet<&str> = config
+        .rust
         .gated_pub_doctest
         .iter()
         .map(|s| s.as_str())
         .collect();
-    let env_roots: BTreeSet<&str> = config.env_roots.iter().map(|s| s.as_str()).collect();
+    let env_roots: BTreeSet<&str> = config.rust.env_roots.iter().map(|s| s.as_str()).collect();
 
     let mut crates: BTreeMap<String, CrateHealth> = BTreeMap::new();
     for sf in &facts {
@@ -147,14 +148,14 @@ pub fn run_health(root: &Path, out_rel: &str, extra_sections: &[(String, Value)]
                 } => {
                     if !in_test
                         && !in_deviation
-                        && !config.audit_crates.contains(&sf.crate_name)
+                        && !config.rust.audit_crates.contains(&sf.crate_name)
                         && !env_roots.contains(sf.file.as_str())
                     {
                         h.env_nonroot += 1;
                     }
                 }
                 Fact::UnsafeUse { in_deviation, .. } => {
-                    if !in_deviation && !config.audit_crates.contains(&sf.crate_name) {
+                    if !in_deviation && !config.rust.audit_crates.contains(&sf.crate_name) {
                         h.unsafe_nonaudit += 1;
                     }
                 }
@@ -244,9 +245,9 @@ pub fn run_health(root: &Path, out_rel: &str, extra_sections: &[(String, Value)]
                  the health delta. No LLM.",
         "budget": { "file_length": BUDGET, "danger_floor": DANGER_FLOOR },
         "summary": {
-            "gated_crates": config.gated_crates.len(),
-            "exempt_crates": config.exempt.len(),
-            "pub_doctest_gated": config.gated_pub_doctest,
+            "gated_crates": config.rust.gated.len(),
+            "exempt_crates": config.rust.exempt.len(),
+            "pub_doctest_gated": config.rust.gated_pub_doctest,
             "conform_baseline_total": baseline_total,
             "conform_baseline_by_rule": baseline_by_rule,
             "files_over_budget": over_all.len(),
@@ -343,9 +344,9 @@ fn print_summary(
     println!("=== Discipline health (rust-ai-native health) ===");
     println!(
         "gated: {} | exempt: {} | pub-doctest-gated: {}",
-        config.gated_crates.len(),
-        config.exempt.len(),
-        config.gated_pub_doctest.len(),
+        config.rust.gated.len(),
+        config.rust.exempt.len(),
+        config.rust.gated_pub_doctest.len(),
     );
     print!("conform baseline: {baseline_total} frozen");
     if !baseline_by_rule.is_empty() {
