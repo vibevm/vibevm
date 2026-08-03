@@ -36,6 +36,8 @@
 
 ##UNIT-SELF-CONTAINED A unit's `STATIC.md` is self-contained and reversible (open/close markers, PROP-035 §11): reading it, an agent gets this package and everything statically linked into it, in dependency order, once each — the PROP-034 dedup + topological-order + cycle-rejection invariants, applied **within the unit**. @impl/done
 
+##UNIT-ARTIFACT-STATIC-CONSUMER-ELIDES The unit artifact serves **dynamic** consumers (an `INDEX.md` reference loads the whole zone through it) and standalone unit reads; a **static** consumer whose lane already compiles the unit's zone member-by-member **elides** the aggregate entry to a provenance stub instead of embedding the artifact — the once-each rule of PROP-009 §2.3 `##STATIC-EMITS-ONCE-EACH` (B-006, owner-approved 2026-08-04), applied at compose time and distinct from §2.4's hoisting, which shares one copy *across* consumers rather than deduplicating within one lane. @spec/work
+
 ### 2.2 The edge is the linker instruction; compilation is recursive and dynamic-bounded {#edge-recursion}
 
 ##EDGE-IS-INSTRUCTION **Decision.** `link` is a property of the **edge** (consumer-side, declared in the parent's manifest), never baked into the pulled package (as PROP-034 §2.1 already states). A unit `P` is compiled by walking its **own** direct edges `P→X`: @impl/done
