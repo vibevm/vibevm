@@ -9,7 +9,6 @@ use std::collections::BTreeSet;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use specmark::spec;
 use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_core::{Group, PackageRef, VersionSpec};
 use vibe_registry::{CachedPackage, ResolvedPackage};
