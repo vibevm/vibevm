@@ -112,6 +112,10 @@ pub fn run_health(root: &Path, out_rel: &str) -> Result<()> {
                     }
                 }
                 go_ai_native_extract_bridge::RawFact::Import { .. } => {}
+                // A conformance assertion is a positive signal; its
+                // presence is policed by the `go-conformance-assertion`
+                // rule, not summed as a census metric here.
+                go_ai_native_extract_bridge::RawFact::GoConformance { .. } => {}
             }
         }
     }

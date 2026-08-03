@@ -60,10 +60,10 @@ pub enum BridgeError {
     Protocol { detail: String },
 }
 
-/// One `go_unsafe` / `import` / `item` / `file_metrics` record, exactly
-/// as the extractor emits it (serde-tagged on `fact`). `Serialize` is
-/// symmetric so the oracle relay (go-ai-native-tcg) can re-emit the
-/// same vocabulary it received (TCG-PROTOCOL-GO §2).
+/// One `go_unsafe` / `go_conformance` / `import` / `item` / `file_metrics`
+/// record, exactly as the extractor emits it (serde-tagged on `fact`).
+/// `Serialize` is symmetric so the oracle relay (go-ai-native-tcg) can
+/// re-emit the same vocabulary it received (TCG-PROTOCOL-GO §2).
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(tag = "fact", rename_all = "snake_case")]
 pub enum RawFact {
@@ -72,6 +72,15 @@ pub enum RawFact {
         line: u32,
         #[serde(default)]
         reason: Option<String>,
+    },
+    GoConformance {
+        seam: String,
+        /// The implementing type — the JSON wire field is `impl`
+        /// (what go-extract emits); `impl` is a Rust keyword, so the
+        /// field is `impl_type` with a serde rename.
+        #[serde(rename = "impl")]
+        impl_type: String,
+        line: u32,
     },
     Import {
         to_path: String,
@@ -263,6 +272,16 @@ pub fn conform_facts(record: &FileRecord) -> Vec<conform_core::Fact> {
                 in_test: record.in_test,
                 reason: reason.clone(),
             },
+            RawFact::GoConformance {
+                seam,
+                impl_type,
+                line,
+            } => Fact::GoConformance {
+                seam: seam.clone(),
+                impl_type: impl_type.clone(),
+                line: *line,
+                in_test: record.in_test,
+            },
             RawFact::Import { to_path, line } => Fact::Import {
                 from_module: record.file.clone(),
                 to_path: to_path.clone(),
@@ -360,5 +379,61 @@ mod tests {
         assert_eq!(first, again);
         let body = std::fs::read_to_string(&first).expect("read back");
         assert_eq!(body, EXTRACTOR_SOURCE);
+    }
+
+    /// A `go_conformance` record (the loud-conformance assertion
+    /// `var _ <seam> = (*<Impl>)(nil)`) lowers into the engine's
+    /// `Fact::GoConformance`, with `in_test` stamped from the record
+    /// and the wire field `impl` mapped to `impl_type`.
+    #[test]
+    fn go_conformance_record_lowers_into_engine_fact() {
+        let raw = concat!(
+            r#"{"protocol":1,"file":"internal/cells/plan/planner.go","#,
+            r#""in_test":false,"degraded":false,"#,
+            r#""facts":[{"fact":"go_conformance","seam":"seams.Planner","#,
+            r#""impl":"Planner","line":14}],"markers":[]}"#,
+            "\n",
+        );
+        let records = parse_ndjson(raw).expect("parse");
+        let facts = conform_facts(&records[0]);
+        assert!(
+            facts.iter().any(|f| matches!(
+                f,
+                conform_core::Fact::GoConformance {
+                    seam,
+                    impl_type,
+                    line,
+                    in_test,
+                } if seam == "seams.Planner"
+                    && impl_type == "Planner"
+                    && *line == 14
+                    && !*in_test
+            )),
+            "go_conformance lowers with seam/impl_type and a stamped in_test: {facts:?}"
+        );
+    }
+
+    /// The message-half kind `seam_error_message_no_req` rides the
+    /// existing `go_unsafe` mapping: it reaches `Fact::GoUnsafe` with
+    /// no bridge edit (the new kind is just a string value).
+    #[test]
+    fn seam_error_message_kind_flows_through_go_unsafe_mapping() {
+        let raw = concat!(
+            r#"{"protocol":1,"file":"internal/cells/plan/plan.go","#,
+            r#""in_test":false,"degraded":false,"#,
+            r#""facts":[{"fact":"go_unsafe","#,
+            r#""kind":"seam_error_message_no_req","line":17}],"markers":[]}"#,
+            "\n",
+        );
+        let records = parse_ndjson(raw).expect("parse");
+        let facts = conform_facts(&records[0]);
+        assert!(
+            facts.iter().any(|f| matches!(
+                f,
+                conform_core::Fact::GoUnsafe { kind, line, in_test, .. }
+                    if kind == "seam_error_message_no_req" && *line == 17 && !*in_test
+            )),
+            "the message-half kind rides the existing go_unsafe mapping: {facts:?}"
+        );
     }
 }
