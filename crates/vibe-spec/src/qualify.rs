@@ -278,7 +278,11 @@ fn rewrite_links(line: &str, slug: &str, defined: &HashSet<String>) -> String {
 /// Read an anchor id `[A-Za-z][A-Za-z0-9_-]*` starting at `start`, returning
 /// the id (a `&str` slice of the line — ASCII, so valid UTF-8) and the byte
 /// position just past it. `None` if the head byte is not an ASCII letter.
-fn read_anchor_id(bytes: &[u8], start: usize) -> Option<(&str, usize)> {
+///
+/// Shared crate-wide: the per-node qualify pass and the pipeline's cross-node
+/// second pass both scan `(#x)` references, and routing both through this one
+/// scanner is what keeps them from disagreeing on what counts as a name.
+pub(crate) fn read_anchor_id(bytes: &[u8], start: usize) -> Option<(&str, usize)> {
     let head = *bytes.get(start)?;
     if !head.is_ascii_alphabetic() {
         return None;

@@ -261,9 +261,19 @@ pub fn render_static(
         // PROP-035 §8: a `normal` package's static contribution is the
         // `#use` / `#source`-resolved, tree-shaken closure reachable from its
         // contract — compiled (with `@!X` already rewritten to its full
-        // address, §7.4), not concatenated. A `simple` package is carried
-        // verbatim (its over-load the author's problem, PROP-035 §3).
-        let body = if entry.format.is_normal() {
+        // address, §7.4) and qualified **per-node** (each node under its own
+        // origin, B-006 rider) — not concatenated. A `simple` package is
+        // carried verbatim (its over-load the author's problem, PROP-035 §3).
+        //
+        // Both branches yield `(body, per-node renames)` — the normal branch's
+        // renames already carry each node's own origin; the simple branch's are
+        // wrapped under the entry's origin. So the body is pushed as-compiled
+        // and the renames flow straight into the tombstone: a `normal` body is
+        // NEVER re-qualified whole under the entry's origin (that would
+        // mis-attribute a spliced-in node's labels and double-prefix every
+        // label).
+        let (body, mut renames): (String, Vec<(String, RenameEntry)>) = if entry.format.is_normal()
+        {
             compile_normal_entry(entry, workspace_root)?
         } else {
             let abs = workspace_root.join(&entry.path);
@@ -283,7 +293,7 @@ pub fn render_static(
             // whole-lane — `#embed` targets `spec://` sources under vibedeps/,
             // never a sibling lane entry, so the result is identical and each
             // entry's final body is self-contained for the qualify pass.
-            if has_embed_directive(&raw) {
+            let expanded = if has_embed_directive(&raw) {
                 let source =
                     FsSectionSource::new(FileResolver::new(workspace_root, HOST_NAMESPACE));
                 expand_embeds(&raw, &source).map_err(|e| WorkspaceError::InlineCompile {
@@ -291,17 +301,20 @@ pub fn render_static(
                 })?
             } else {
                 raw
-            }
+            };
+            // B-011 §3 (PROP-035 §8 phase 5): qualify every label this entry
+            // defines under its origin slug, and rewrite its intra-document
+            // `(#x)` links to match — a pure function of (body, origin), so the
+            // lane is collision-free by construction and append-only.
+            let (qualified, entry_renames) = qualify_contribution(&expanded, &entry.origin);
+            let pairs = entry_renames
+                .into_iter()
+                .map(|r| (entry.origin.clone(), r))
+                .collect();
+            (qualified, pairs)
         };
-        // B-011 §3 (PROP-035 §8 phase 5): qualify every label this entry
-        // defines under its origin slug, and rewrite its intra-document
-        // `(#x)` links to match — a pure function of (body, origin), so the
-        // lane is collision-free by construction and append-only.
-        let (qualified, renames) = qualify_contribution(&body, &entry.origin);
-        for rename in renames {
-            tombstone.push((entry.origin.clone(), rename));
-        }
-        bodies.push_str(qualified.trim_end());
+        tombstone.append(&mut renames);
+        bodies.push_str(body.trim_end());
         bodies.push_str("\n\n");
     }
     let mut out = String::from(STATIC_HEADER);

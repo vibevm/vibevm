@@ -588,3 +588,84 @@ fn fs_section_source_surfaces_qualified_candidates_on_a_short_anchor_miss() {
     assert!(err.contains("qualified candidates for `root`"), "{err}");
     assert!(err.contains("org-x--aaa--root"), "{err}");
 }
+
+// ----- B-006 rider (W-B): per-node qualify for cross-origin closures --------
+
+/// Write a `normal` fixture whose host contract `#use`s a node in a DIFFERENT
+/// package — the case per-node qualification exists for. The host package
+/// `com.example.host/host` references the dep package's `##THE-RULE` via a
+/// short link; without per-node qualify the dep's labels would be
+/// mis-attributed to the host's origin. Each package lives in its own
+/// `vibedeps/<slot>/1.0.0/spec/…` slot, matched by the `-<name>` suffix the
+/// resolver keys on (name `host` → slot `demo-host`; name `dep` → slot
+/// `demo-dep`). Returns the host contract's workspace-relative path.
+#[cfg(test)]
+fn write_cross_pkg_fixture(ws: &Path) -> String {
+    let write = |slot: &str, rel: &str, body: &str| {
+        let p = ws.join(format!("vibedeps/{slot}/1.0.0/spec/{rel}"));
+        fs::create_dir_all(p.parent().unwrap()).unwrap();
+        fs::write(&p, body).unwrap();
+    };
+    write(
+        "demo-host",
+        "contract/host.md",
+        "# Host {#root}\n\
+         #use spec://com.example.dep/dep/contract/dep#root\n\
+         See (#THE-RULE) from the dep.\n\
+         HOST_BODY\n",
+    );
+    write(
+        "demo-dep",
+        "contract/dep.md",
+        "# Dep {#root}\n##THE-RULE the rule\nDEP_BODY\n",
+    );
+    "vibedeps/demo-host/1.0.0/spec/contract/host.md".to_string()
+}
+
+#[test]
+fn render_static_qualifies_a_normal_closure_per_node_across_packages() {
+    // Q7 (E4-W2-NODE-QUALIFY): a normal closure spanning two packages is
+    // qualified PER-NODE — the dep's labels carry the dep's origin, never the
+    // host entry's — and the cross-node short link resolves to the dep's
+    // qualified heir. `qualify_contribution` is NOT run over the compiled body
+    // (no double prefix); the per-node renames land in the tombstone.
+    let ws = TempDir::new().unwrap();
+    let contract = write_cross_pkg_fixture(ws.path());
+    let b = boot(vec![entry_normal(&contract, "com.example.host/host")]);
+    let text = render_static(&b, ws.path()).unwrap().unwrap();
+
+    // (1) The dep's labels are qualified under the DEP's origin — per-node, not
+    // the host entry's. Whole-body qualify under the entry's origin could never
+    // produce this.
+    assert!(text.contains("{#com-example-dep--dep--root}"), "{text}");
+    assert!(text.contains("##com-example-dep--dep--THE-RULE"), "{text}");
+    // The host's own label is under the host's origin.
+    assert!(text.contains("{#com-example-host--host--root}"), "{text}");
+    // (2) The cross-node short link resolved to the dep's qualified heir.
+    assert!(text.contains("(#com-example-dep--dep--THE-RULE)"), "{text}");
+    // (3) No double prefix: the dep's label was neither mis-attributed to the
+    // host origin (whole-body qualify) nor double-prefixed (whole-body over the
+    // per-node compile).
+    assert!(
+        !text.contains("##com-example-host--host--THE-RULE"),
+        "dep's label mis-attributed to host origin: {text}"
+    );
+    assert!(
+        !text.contains("com-example-host--host--com-example-dep"),
+        "double prefix from re-qualifying: {text}"
+    );
+    // (4) The per-node renames land in the tombstone — both origins present.
+    assert!(
+        text.contains("THE-RULE → com-example-dep--dep--THE-RULE (com.example.dep/dep)"),
+        "{text}"
+    );
+    assert!(
+        text.contains("com-example-host--host--root (com.example.host/host)"),
+        "{text}"
+    );
+    // (5) Zero duplicate anchors over the cross-package splice — the gate.
+    assert!(
+        DocTree::parse(&text).duplicate_anchors().is_empty(),
+        "{text}"
+    );
+}

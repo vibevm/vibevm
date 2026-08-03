@@ -3,16 +3,18 @@
 //! package's contribution to its `#use` / `#source`-resolved, tree-shaken
 //! closure, rather than concatenating the file verbatim (the `simple` path).
 //!
-//! The hard algorithmic work is [`vibe_spec::compile_static`]; this cell only
-//! derives the closure's seed from a [`BootEntry`] and adapts the compiler's
-//! error into a REQ-citing [`WorkspaceError`].
+//! The hard algorithmic work is [`vibe_spec::compile_static_qualified`]; this
+//! cell only derives the closure's seed from a [`BootEntry`] and adapts the
+//! compiler's error into a REQ-citing [`WorkspaceError`].
 
 specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-035#pipeline");
 
 use std::path::Path;
 
 use specmark::spec;
-use vibe_spec::{FileResolver, FsSectionSource, SpecAddress, compile_static};
+use vibe_spec::{
+    FileResolver, FsSectionSource, RenameEntry, SpecAddress, compile_static_qualified,
+};
 
 use super::HOST_NAMESPACE;
 use crate::WorkspaceError;
@@ -25,6 +27,12 @@ use crate::boot::BootEntry;
 /// `vibedeps/` tree (the same [`FileResolver`] the `#embed` pass uses), so the
 /// closure may span `source/` and other packages the contract `#use`s.
 ///
+/// Qualification is **per-node** (PROP-035 §8 phase 5, B-006 rider): every node
+/// in the closure is qualified under its own authoring origin — derived from its
+/// topo key — so a node spliced in from another package keeps its true
+/// provenance, never the entry's; the returned rename map is `(origin, rename)`
+/// per node, ready for the lane tombstone.
+///
 /// Errors are surfaced as [`WorkspaceError::InlineCompile`] naming the package
 /// and the governing requirement (PROP-035 §8) — a structured, REQ-citing
 /// diagnostic the installer prints rather than a bare compiler string.
@@ -35,7 +43,7 @@ use crate::boot::BootEntry;
 pub(super) fn compile_normal_entry(
     entry: &BootEntry,
     workspace_root: &Path,
-) -> Result<String, WorkspaceError> {
+) -> Result<(String, Vec<(String, RenameEntry)>), WorkspaceError> {
     let seed =
         normal_seed(&entry.origin, &entry.path).ok_or_else(|| WorkspaceError::InlineCompile {
             reason: format!(
@@ -46,7 +54,7 @@ pub(super) fn compile_normal_entry(
             ),
         })?;
     let source = FsSectionSource::new(FileResolver::new(workspace_root, HOST_NAMESPACE));
-    compile_static(&seed, &source).map_err(|e| WorkspaceError::InlineCompile {
+    compile_static_qualified(&seed, &source).map_err(|e| WorkspaceError::InlineCompile {
         reason: format!(
             "compiling the normal package `{}` closure (PROP-035 §8): {e}",
             entry.origin
@@ -55,8 +63,8 @@ pub(super) fn compile_normal_entry(
 }
 
 /// Derive the `spec://` seed for a `normal` static entry — the whole-document
-/// address of its boot-snippet contract, from which [`compile_static`] walks
-/// the `#use` / `#source` closure (PROP-035 §6/§8).
+/// address of its boot-snippet contract, from which [`compile_static_qualified`]
+/// walks the `#use` / `#source` closure (PROP-035 §6/§8).
 ///
 /// `origin` is the entry's `<group>/<name>` provenance (a hoisted entry may
 /// append a ` [shared by …]` suffix, dropped here); `path` is the

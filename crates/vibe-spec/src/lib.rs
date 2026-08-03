@@ -39,7 +39,7 @@ pub use gate::{DuplicateId, first_duplicate};
 pub use link_table::{LinkTable, LinkTableError, build_link_table};
 pub use markers::{Block, close, decompile, open};
 pub use merge::{MergeMode, MergedSection, SectionOrigin, fold_source, merge_contract_source};
-pub use pipeline::{CompileError, compile_static};
+pub use pipeline::{CompileError, compile_static, compile_static_qualified};
 pub use qualify::{RenameEntry, origin_slug, qualify_contribution};
 pub use resolver::{FileResolver, ResolveError};
 pub use use_graph::{UseGraphError, topo_order_from};
