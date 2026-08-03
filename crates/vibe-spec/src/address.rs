@@ -6,14 +6,15 @@
 //! spec://<group>/<name>[@<version>]/<doc-path>#<anchor>[.<sub>…][~r<N>]
 //! ```
 //!
-//! - **authority** — either a package coordinate `<group>/<name>` or the host
-//!   project's reserved single-token namespace (e.g. `vibevm`). The two are
-//!   told apart syntactically: a first segment containing a `.` is a
+//! - **authority** — a package coordinate `<group>/<name>` (the only form that
+//!   resolves), or a legacy undotted **host** authority (e.g. `vibevm`). The
+//!   two are told apart syntactically: a first segment containing a `.` is a
 //!   reverse-DNS **group** (so `<group>/<name>` follows); a first segment
-//!   without a `.` is the **host** authority (no `name`). Demo/fixture packages
-//!   therefore use dotted groups (`com.example.demo`), matching PROP-029's
-//!   `com.example.shop` illustrations. The group↔name joiner is `/`, never `.`
-//!   (PROP-029).
+//!   without a `.` is the **host** authority (no `name`). Since B-031 the host
+//!   is itself a package coordinate, so an undotted authority parses but never
+//!   resolves. Demo/fixture packages use dotted groups (`com.example.demo`),
+//!   matching PROP-029's `com.example.shop` illustrations. The group↔name
+//!   joiner is `/`, never `.` (PROP-029).
 //! - **`@<version>`** — optional, attached to `<name>`; a raw version spec, not
 //!   parsed to semver here (the router resolves the concrete slot from the
 //!   lockfile later, PROP-035 §6). Absent, the version is the lockfile's.
@@ -49,8 +50,11 @@ pub struct SpecAddress {
 /// The authority half of a `spec://` address.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Authority {
-    /// The root project's reserved namespace (e.g. `vibevm`) — not a package,
-    /// has no group (PROP-029 §scope).
+    /// An undotted authority. Parses (illustrative fixtures like
+    /// `spec://demo/…` are grammar-legal), but **never resolves** — the host is
+    /// a package coordinate (`<group>/<name>`) since B-031, so an undotted
+    /// authority names nothing. The resolver answers any such address with
+    /// [`ResolveError::LegacyHostAuthority`](crate::ResolveError::LegacyHostAuthority).
     Host(String),
     /// A package coordinate. `version` is the raw `@`-spec, unparsed.
     Package {

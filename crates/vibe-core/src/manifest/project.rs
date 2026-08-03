@@ -32,11 +32,21 @@ use crate::error::{Error, Result};
 /// "#).unwrap();
 /// assert_eq!(p.name, "my-app");
 /// assert!(p.authors.is_empty()); // `authors` defaults to empty
+/// assert!(p.group.is_none());    // `group` defaults to absent
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ProjectSection {
     pub name: String,
+    /// The project's reverse-DNS group (e.g. `org.vibevm.core`) — the group
+    /// half of the workspace's **self coordinate**, the `<group>/<name>` a
+    /// `spec://` address names to reach this project's authored `spec/` tree
+    /// (B-031: the host is a package coordinate, not a reserved host token).
+    /// Optional — a project with no `group` declares no self coordinate, so
+    /// its authored tree is unreachable by `spec://` address (every spec://
+    /// there must instead name a real package under `vibedeps/`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub group: Option<crate::Group>,
     pub version: String,
     #[serde(default)]
     pub authors: Vec<String>,

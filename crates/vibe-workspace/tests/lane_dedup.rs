@@ -47,10 +47,16 @@ use std::path::Path;
 use tempfile::TempDir;
 use vibe_core::Group;
 use vibe_core::manifest::{LinkType, PackageFormat};
+use vibe_spec::SelfCoordinate;
 use vibe_workspace::boot::hybrid::{UnitEdge, UnitId, UnitInput};
 use vibe_workspace::boot::{BootBand, BootEntry, EffectiveBoot};
 use vibe_workspace::boot_artifacts::render_static;
 use vibe_workspace::install::desubstitute_covered_units;
+
+/// The host self coordinate the demo workspaces stand in for (B-031).
+fn coord() -> SelfCoordinate {
+    SelfCoordinate::new(Some("org.vibevm.core".into()), "vibevm".into())
+}
 
 // ----- helpers (the topology, built at the unit level) ---------------------
 
@@ -244,7 +250,7 @@ fn t1_contentless_aggregator_elides_members_render_once() {
     assert!(!find(&eff, "m2").elided);
 
     // Render: each member's text exactly once; AGG is a stub with no `#use`.
-    let lane = render_static(&eff, ws.path()).unwrap().unwrap();
+    let lane = render_static(&eff, ws.path(), &coord()).unwrap().unwrap();
     assert_eq!(lane.matches("M1BODY").count(), 1, "M1 text once:\n{lane}");
     assert_eq!(lane.matches("M2BODY").count(), 1, "M2 text once:\n{lane}");
     let stub = marker_line(&lane, &pkgref("agg"));
@@ -366,7 +372,7 @@ fn t3_mixed_consumers_identity_dedup_order_invariant() {
         assert!(find(&eff, "b").elided, "B elides (order {names:?})");
         assert!(find(&eff, "gp").elided, "GP elides (order {names:?})");
         assert!(!find(&eff, "m1").elided && !find(&eff, "m2").elided);
-        let lane = render_static(&eff, ws.path()).unwrap().unwrap();
+        let lane = render_static(&eff, ws.path(), &coord()).unwrap().unwrap();
         assert_eq!(
             lane.matches("M1BODY").count(),
             1,
@@ -413,7 +419,7 @@ fn t4_aggregator_with_snippet_de_substitutes_to_snippet() {
     assert!(!r_entry.unit_substituted, "R de-substituted");
     assert_eq!(r_entry.path, r, "R path rolled back to its own snippet");
 
-    let lane = render_static(&eff, ws.path()).unwrap().unwrap();
+    let lane = render_static(&eff, ws.path(), &coord()).unwrap().unwrap();
     assert_eq!(
         lane.matches("RBODY").count(),
         1,
@@ -460,7 +466,7 @@ fn t5_unrelated_append_leaves_t1_verdicts_unchanged() {
     assert!(!find(&eff, "m1").elided);
     assert!(!find(&eff, "m2").elided);
     assert!(!find(&eff, "x").elided);
-    let lane = render_static(&eff, ws.path()).unwrap().unwrap();
+    let lane = render_static(&eff, ws.path(), &coord()).unwrap().unwrap();
     assert_eq!(lane.matches("M1BODY").count(), 1);
     assert_eq!(lane.matches("XBODY").count(), 1, "X renders once:\n{lane}");
 }
@@ -501,7 +507,7 @@ fn t6_nested_umbrellas_collapse_in_one_pass() {
 
     assert!(find(&eff, "p").elided, "P elides in one pass");
     assert!(find(&eff, "gp").elided, "GP elides in one pass");
-    let lane = render_static(&eff, ws.path()).unwrap().unwrap();
+    let lane = render_static(&eff, ws.path(), &coord()).unwrap().unwrap();
     assert_eq!(lane.matches("M1BODY").count(), 1);
     assert_eq!(lane.matches("M2BODY").count(), 1);
 }

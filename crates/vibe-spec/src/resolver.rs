@@ -11,25 +11,74 @@
 //! Version / slot selection is deliberately thin here: an explicit `@version`
 //! picks the slot version, and absent one a single installed version is taken.
 //! A lockfile-backed selection (kind + version from `vibe.lock`) is the layer
-//! above; this resolver only needs the workspace root and the host namespace.
+//! above; this resolver only needs the workspace root and the project's self
+//! coordinate.
+//!
+//! **B-031 — the host is a package coordinate.** The root project is addressed
+//! as `spec://<group>/<name>/…` (its *self coordinate*), not by a reserved
+//! host token. A `SelfCoordinate` whose `group` is `None` names a project that
+//! declares no self coordinate — its authored `spec/` is then unreachable by
+//! address. An undotted `spec://<host>/…` authority (the legacy form) parses
+//! but never resolves: it errors with [`ResolveError::LegacyHostAuthority`].
 
 use std::fs;
 use std::path::{Path, PathBuf};
 
 use crate::address::{Authority, SpecAddress};
 
+/// The root project's own `<group>/<name>` coordinate — what a
+/// `spec://<group>/<name>/…` address must name to resolve against the
+/// project's authored `spec/` tree (B-031: the host is a package coordinate,
+/// not a reserved host token).
+///
+/// `group` is optional: a project with no `group` declares no self coordinate,
+/// so its authored tree is unreachable by `spec://` address. Both halves are
+/// plain strings — the group is validated at the manifest layer (PROP-008);
+/// the resolver only matches them against the parsed address.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SelfCoordinate {
+    /// The reverse-DNS group half (e.g. `org.vibevm.core`).
+    pub group: Option<String>,
+    /// The name half (e.g. `vibevm`).
+    pub name: String,
+}
+
+impl SelfCoordinate {
+    /// Build a self coordinate from its halves.
+    pub fn new(group: Option<String>, name: String) -> Self {
+        Self { group, name }
+    }
+}
+
 /// Resolves `spec://` addresses to files under a workspace root.
 #[derive(Debug, Clone)]
 pub struct FileResolver {
     ws_root: PathBuf,
-    host_namespace: String,
+    self_coord: SelfCoordinate,
 }
 
 /// Why an address does not resolve to a file.
 #[derive(Debug, thiserror::Error)]
 pub enum ResolveError {
-    #[error("address targets host `{addr_host}`, but this resolver's host is `{our_host}`")]
-    UnknownHost { addr_host: String, our_host: String },
+    /// A legacy undotted `spec://<host>/…` authority (B-031). Such an authority
+    /// is grammar-legal but never resolves — the host is a package coordinate.
+    /// `hint` names the resolver's actual self coordinate (or notes its
+    /// absence) so a caller can rewrite the address; `given` is the token as
+    /// written.
+    #[error("{hint}")]
+    LegacyHostAuthority { given: String, hint: String },
+    /// A self-coordinate address carrying an `@version` — the self coordinate
+    /// is unversioned, so a version pin on it is an error, never silently
+    /// dropped.
+    #[error(
+        "the self coordinate `spec://{self_group}/{self_name}` is unversioned; \
+         drop the `@{version}` from the address"
+    )]
+    SelfCoordinateVersioned {
+        self_group: String,
+        self_name: String,
+        version: String,
+    },
     #[error("no installed vibedeps slot for package `{0}`")]
     PackageSlotNotFound(String),
     #[error("package `{0}` has several installed versions; address must pin `@version`")]
@@ -45,12 +94,13 @@ pub enum ResolveError {
 }
 
 impl FileResolver {
-    /// A resolver rooted at `ws_root`, treating `host_namespace` (e.g.
-    /// `vibevm`) as the authored host project's authority.
-    pub fn new(ws_root: impl Into<PathBuf>, host_namespace: impl Into<String>) -> Self {
+    /// A resolver rooted at `ws_root`, treating `self_coord` as the project's
+    /// own `<group>/<name>` authority — the coordinate a `spec://` address
+    /// must name to reach the authored `spec/` tree (B-031).
+    pub fn new(ws_root: impl Into<PathBuf>, self_coord: SelfCoordinate) -> Self {
         Self {
             ws_root: ws_root.into(),
-            host_namespace: host_namespace.into(),
+            self_coord,
         }
     }
 
@@ -63,16 +113,59 @@ impl FileResolver {
     }
 
     /// The `spec/` root an authority resolves against.
+    ///
+    /// The self-coordinate match is the **first** arm (B-031): a
+    /// `spec://<self_group>/<self_name>/…` address lands in the authored
+    /// `spec/` tree before any `vibedeps/` slot is considered. Any other
+    /// package coordinate falls through to slot lookup; an undotted host
+    /// authority never resolves.
     fn spec_root(&self, authority: &Authority) -> Result<PathBuf, ResolveError> {
         match authority {
-            Authority::Host(h) if *h == self.host_namespace => Ok(self.ws_root.join("spec")),
-            Authority::Host(h) => Err(ResolveError::UnknownHost {
-                addr_host: h.clone(),
-                our_host: self.host_namespace.clone(),
+            Authority::Package {
+                group,
+                name,
+                version: None,
+            } if self.is_self(group, name) => Ok(self.ws_root.join("spec")),
+            Authority::Package {
+                group,
+                name,
+                version: Some(v),
+            } if self.is_self(group, name) => Err(ResolveError::SelfCoordinateVersioned {
+                self_group: group.clone(),
+                self_name: name.clone(),
+                version: v.clone(),
             }),
             Authority::Package { name, version, .. } => {
                 Ok(self.package_slot(name, version.as_deref())?.join("spec"))
             }
+            Authority::Host(h) => Err(ResolveError::LegacyHostAuthority {
+                given: h.clone(),
+                hint: self.legacy_host_hint(h),
+            }),
+        }
+    }
+
+    /// Whether a parsed `<group>/<name>` is this resolver's own coordinate. A
+    /// groupless self coordinate matches nothing — it has no package form.
+    fn is_self(&self, group: &str, name: &str) -> bool {
+        match &self.self_coord.group {
+            Some(g) => g == group && self.self_coord.name == name,
+            None => false,
+        }
+    }
+
+    /// The rewrite hint for a legacy undotted authority: name the resolver's
+    /// actual self coordinate, or — when the project declares none — say so.
+    fn legacy_host_hint(&self, given: &str) -> String {
+        match &self.self_coord.group {
+            Some(group) => format!(
+                "`spec://{given}/…` no longer resolves: the host is a package at \
+                 `spec://{group}/{name}/…` since B-031 — rewrite the address",
+                name = self.self_coord.name
+            ),
+            None => "this workspace declares no self coordinate; \
+                     undotted authorities never resolve"
+                .to_string(),
         }
     }
 
@@ -178,6 +271,114 @@ fn read_dir_or_empty(dir: &Path) -> impl Iterator<Item = fs::DirEntry> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    // ----- B-031: the host is a package coordinate (Т1–Т6) ------------------
+
+    /// The self coordinate the host project carries since B-031.
+    fn host_coord() -> SelfCoordinate {
+        SelfCoordinate::new(Some("org.vibevm.core".into()), "vibevm".into())
+    }
+
+    #[test]
+    fn t1_self_coordinate_resolves_to_the_authored_spec_tree() {
+        // Т1: `spec://<self_group>/<self_name>/…` resolves under ws_root/spec,
+        // ahead of any vibedeps/ slot lookup (B-031 — the self-match is first).
+        let ws = tempfile::TempDir::new().unwrap();
+        let doc = ws.path().join("spec/common/TARGET.md");
+        fs::create_dir_all(doc.parent().unwrap()).unwrap();
+        fs::write(&doc, "# Target\n").unwrap();
+        let r = FileResolver::new(ws.path(), host_coord());
+        let addr = SpecAddress::parse("spec://org.vibevm.core/vibevm/common/TARGET").unwrap();
+        let file = r.resolve_file(&addr).unwrap();
+        assert!(file.ends_with("TARGET.md"), "{file:?}");
+    }
+
+    #[test]
+    fn t2_legacy_host_authority_names_the_self_coordinate_and_b031() {
+        // Т2: the old reserved host token no longer resolves; the error points
+        // at the actual self coordinate and cites B-031.
+        let r = FileResolver::new(Path::new("."), host_coord());
+        let addr = SpecAddress::parse("spec://vibevm/common/PROP-000#commits").unwrap();
+        let err = r.resolve_file(&addr).unwrap_err();
+        let ResolveError::LegacyHostAuthority { given, hint } = &err else {
+            panic!("expected LegacyHostAuthority, got {err:?}");
+        };
+        assert_eq!(given, "vibevm");
+        assert!(hint.contains("org.vibevm.core/vibevm"), "{hint}");
+        assert!(hint.contains("B-031"), "{hint}");
+    }
+
+    #[test]
+    fn t3_any_undotted_authority_never_resolves() {
+        // Т3: a fixture-style undotted authority (`spec://demo/…`) parses but
+        // never resolves — the same legacy-host error as the real token.
+        let r = FileResolver::new(Path::new("."), host_coord());
+        let addr = SpecAddress::parse("spec://demo/x/y#z").unwrap();
+        let err = r.resolve_file(&addr).unwrap_err();
+        assert!(matches!(err, ResolveError::LegacyHostAuthority { .. }));
+        // The hint still points at the self coordinate, not at `demo`.
+        let hint = err.to_string();
+        assert!(hint.contains("org.vibevm.core/vibevm"), "{hint}");
+    }
+
+    #[test]
+    fn t4_a_non_self_package_resolves_to_its_vibedeps_slot() {
+        // Т4: a package coordinate that is NOT the self coordinate falls through
+        // to the vibedeps/ slot lookup, unchanged from before B-031.
+        let ws = tempfile::TempDir::new().unwrap();
+        let doc = ws
+            .path()
+            .join("vibedeps/flow-demo/1.0.0/spec/contract/API.md");
+        fs::create_dir_all(doc.parent().unwrap()).unwrap();
+        fs::write(&doc, "# API\n").unwrap();
+        let r = FileResolver::new(ws.path(), host_coord());
+        let addr = SpecAddress::parse("spec://org.vibevm.demo/demo/contract/API#root").unwrap();
+        let file = r.resolve_file(&addr).unwrap();
+        assert!(file.ends_with("API.md"), "{file:?}");
+    }
+
+    #[test]
+    fn t5_a_groupless_project_has_no_self_coordinate() {
+        // Т5: a project with no `group` declares no self coordinate. Its own
+        // name in package form does NOT resolve to spec/ (it falls through to a
+        // vibedeps slot lookup that finds nothing), and an undotted authority
+        // errors "no self coordinate".
+        let ws = tempfile::TempDir::new().unwrap();
+        let coord = SelfCoordinate::new(None, "solo".into());
+        let r = FileResolver::new(ws.path(), coord);
+
+        // Package form of the project's own name → slot lookup, not spec/.
+        let pkg = SpecAddress::parse("spec://org.foo/solo/x/y").unwrap();
+        assert!(matches!(
+            r.resolve_file(&pkg).unwrap_err(),
+            ResolveError::PackageSlotNotFound(_)
+        ));
+
+        // Undotted authority → "no self coordinate".
+        let undotted = SpecAddress::parse("spec://solo/x/y").unwrap();
+        let err = r.resolve_file(&undotted).unwrap_err();
+        assert!(err.to_string().contains("no self coordinate"), "{}", err);
+    }
+
+    #[test]
+    fn t6_a_versioned_self_coordinate_is_an_error() {
+        // Т6 (У2): a self-coordinate address carrying `@version` is an error —
+        // the self coordinate is unversioned, so the pin is never dropped.
+        let r = FileResolver::new(Path::new("."), host_coord());
+        let addr = SpecAddress::parse("spec://org.vibevm.core/vibevm@0.1/common/TARGET").unwrap();
+        let err = r.resolve_file(&addr).unwrap_err();
+        let ResolveError::SelfCoordinateVersioned {
+            self_group,
+            self_name,
+            version,
+        } = &err
+        else {
+            panic!("expected SelfCoordinateVersioned, got {err:?}");
+        };
+        assert_eq!(self_group, "org.vibevm.core");
+        assert_eq!(self_name, "vibevm");
+        assert_eq!(version, "0.1");
+    }
 
     #[test]
     fn id_stem_recognition() {

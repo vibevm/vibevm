@@ -6,19 +6,24 @@
 
 use std::path::{Path, PathBuf};
 
-use vibe_spec::{DocTree, FileResolver, ResolveError, SpecAddress};
+use vibe_spec::{DocTree, FileResolver, ResolveError, SelfCoordinate, SpecAddress};
 
 fn ws() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/ws")
 }
 
 fn resolver() -> FileResolver {
-    FileResolver::new(ws(), "vibevm")
+    // B-031: the host is the package coordinate `org.vibevm.core/vibevm`.
+    FileResolver::new(
+        ws(),
+        SelfCoordinate::new(Some("org.vibevm.core".into()), "vibevm".into()),
+    )
 }
 
 #[test]
 fn resolves_host_prop_inverting_truncation() {
-    let addr = SpecAddress::parse("spec://vibevm/modules/demo/PROP-042#root").unwrap();
+    let addr =
+        SpecAddress::parse("spec://org.vibevm.core/vibevm/modules/demo/PROP-042#root").unwrap();
     let file = resolver().resolve_file(&addr).unwrap();
     assert!(file.ends_with("PROP-042-example-thing.md"), "{file:?}");
 }
@@ -26,7 +31,7 @@ fn resolves_host_prop_inverting_truncation() {
 #[test]
 fn resolves_host_plain_doc_end_to_end() {
     // The full chain: address -> file -> tree -> node.
-    let addr = SpecAddress::parse("spec://vibevm/common/PROP-000#commits").unwrap();
+    let addr = SpecAddress::parse("spec://org.vibevm.core/vibevm/common/PROP-000#commits").unwrap();
     let file = resolver().resolve_file(&addr).unwrap();
     let src = std::fs::read_to_string(&file).unwrap();
     let tree = DocTree::parse(&src);
@@ -55,12 +60,13 @@ fn resolves_package_source_slot() {
 }
 
 #[test]
-fn unknown_host_is_an_error() {
+fn legacy_host_authority_is_an_error() {
+    // B-031: an undotted authority never resolves — the host is a package
+    // coordinate now. The error points at the resolver's self coordinate.
     let addr = SpecAddress::parse("spec://otherproject/x/y#z").unwrap();
-    assert!(matches!(
-        resolver().resolve_file(&addr),
-        Err(ResolveError::UnknownHost { .. })
-    ));
+    let err = resolver().resolve_file(&addr).unwrap_err();
+    assert!(matches!(err, ResolveError::LegacyHostAuthority { .. }));
+    assert!(err.to_string().contains("org.vibevm.core/vibevm"), "{err}");
 }
 
 #[test]
@@ -74,7 +80,7 @@ fn missing_package_is_an_error() {
 
 #[test]
 fn missing_doc_is_an_error() {
-    let addr = SpecAddress::parse("spec://vibevm/common/PROP-999#root").unwrap();
+    let addr = SpecAddress::parse("spec://org.vibevm.core/vibevm/common/PROP-999#root").unwrap();
     assert!(matches!(
         resolver().resolve_file(&addr),
         Err(ResolveError::DocNotFound { .. })

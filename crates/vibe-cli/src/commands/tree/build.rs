@@ -19,8 +19,8 @@ use vibe_spec::Directives;
 use super::artifacts::{self, IndexParse};
 use super::diagnostics;
 use super::model::{
-    Boot, Carrier, Condition, ConditionKind, DeclaredLink, HOST_NAMESPACE, InPlaceSpec, IndexLane,
-    Load, LoadOrigin, LoadType, Package, PackageTree, Project, SCHEMA_VERSION, Source, SourceKind,
+    Boot, Carrier, Condition, ConditionKind, DeclaredLink, InPlaceSpec, IndexLane, Load,
+    LoadOrigin, LoadType, Package, PackageTree, Project, SCHEMA_VERSION, Source, SourceKind,
     StaticLane,
 };
 
@@ -163,11 +163,25 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
         },
     };
 
+    // The host self coordinate (B-031): `<group>/<name>` from `[project]`, or
+    // the bare name when the project declares no `group`. A display string on
+    // the model; the address a `spec://` link must name to reach the authored
+    // `spec/` tree.
+    let self_coord = manifest
+        .project
+        .as_ref()
+        .map(|p| {
+            p.group
+                .as_ref()
+                .map(|g| format!("{g}/{}", p.name))
+                .unwrap_or_else(|| p.name.clone())
+        })
+        .unwrap_or_default();
     let project = Project {
         root: root.display().to_string(),
         name: manifest.project.as_ref().map(|p| p.name.clone()),
         is_workspace: manifest.is_workspace_root(),
-        host_namespace: HOST_NAMESPACE.to_string(),
+        self_coord,
     };
 
     Ok(PackageTree {

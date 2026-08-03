@@ -9,7 +9,7 @@ use tempfile::TempDir;
 use vibe_core::manifest::LinkType;
 use vibe_spec::{DocTree, FileResolver, FsSectionSource, SectionSource, SpecAddress};
 
-use super::tests::{boot, entry, entry_normal};
+use super::tests::{boot, coord, entry, entry_normal};
 
 // ----- B-011 (W3): qualify-on-splice, preamble, tombstone, @!X, R3, R4 -----
 
@@ -43,7 +43,7 @@ fn golden_splice_qualifies_colliding_labels_and_emits_preamble_and_tombstone() {
         entry(&alpha, LinkType::Static, "org.demo/alpha"),
         entry(&beta, LinkType::Static, "org.demo/beta"),
     ]);
-    let text = render_static(&b, ws.path()).unwrap().unwrap();
+    let text = render_static(&b, ws.path(), &coord()).unwrap().unwrap();
 
     // (1) Zero duplicate anchors over the colliding splice — the gate.
     let dups = DocTree::parse(&text).duplicate_anchors().to_vec();
@@ -90,7 +90,7 @@ fn render_static_omits_the_tombstone_when_no_label_was_renamed() {
     let ws = TempDir::new().unwrap();
     let p = write_simple_boot(ws.path(), "flow-plain", "Plain prose, no labels at all.");
     let b = boot(vec![entry(&p, LinkType::Static, "org.demo/plain")]);
-    let text = render_static(&b, ws.path()).unwrap().unwrap();
+    let text = render_static(&b, ws.path(), &coord()).unwrap().unwrap();
     // The tombstone's specific opener is absent (the preamble documents a
     // "RENAMED ANCHORS table" in rule 2, so a literal `contains` would lie).
     assert!(
@@ -127,7 +127,7 @@ fn render_static_rewrites_at_bang_to_the_full_address_in_a_normal_closure() {
     let ws = TempDir::new().unwrap();
     let contract = write_aliaser_fixture(ws.path());
     let b = boot(vec![entry_normal(&contract, "com.example.hello/aliaser")]);
-    let text = render_static(&b, ws.path()).unwrap().unwrap();
+    let text = render_static(&b, ws.path(), &coord()).unwrap().unwrap();
 
     // `@!pre` became the alias target's full address.
     assert!(
@@ -164,7 +164,7 @@ fn render_static_errors_when_a_simple_contribution_carries_an_as_clause() {
         "# Bad {#root}\n#use spec://org.demo/other/doc#root as dep\nbody\n",
     );
     let b = boot(vec![entry(&p, LinkType::Static, "org.demo/bad")]);
-    let err = render_static(&b, ws.path()).unwrap_err();
+    let err = render_static(&b, ws.path(), &coord()).unwrap_err();
     let WorkspaceError::InlineCompile { reason } = err else {
         panic!("expected InlineCompile, got {err:?}");
     };
@@ -178,7 +178,7 @@ fn render_static_errors_when_a_simple_contribution_carries_at_bang() {
     let ws = TempDir::new().unwrap();
     let p = write_simple_boot(ws.path(), "flow-bad2", "# Bad {#root}\nSees @!dep here.\n");
     let b = boot(vec![entry(&p, LinkType::Static, "org.demo/bad2")]);
-    let err = render_static(&b, ws.path()).unwrap_err();
+    let err = render_static(&b, ws.path(), &coord()).unwrap_err();
     let WorkspaceError::InlineCompile { reason } = err else {
         panic!("expected InlineCompile, got {err:?}");
     };
@@ -199,8 +199,8 @@ fn fs_section_source_surfaces_qualified_candidates_on_a_short_anchor_miss() {
         "# Target {#org-x--aaa--root}\n##org-x--aaa--FACT a fact\n",
     )
     .unwrap();
-    let src = FsSectionSource::new(FileResolver::new(ws.path(), HOST_NAMESPACE));
-    let addr = SpecAddress::parse("spec://vibevm/common/TARGET#root").unwrap();
+    let src = FsSectionSource::new(FileResolver::new(ws.path(), coord()));
+    let addr = SpecAddress::parse("spec://org.vibevm.core/vibevm/common/TARGET#root").unwrap();
     let err = src.section_text(&addr).unwrap_err();
     assert!(err.contains("anchor not found"), "{err}");
     assert!(err.contains("qualified candidates for `root`"), "{err}");
@@ -250,7 +250,7 @@ fn render_static_qualifies_a_normal_closure_per_node_across_packages() {
     let ws = TempDir::new().unwrap();
     let contract = write_cross_pkg_fixture(ws.path());
     let b = boot(vec![entry_normal(&contract, "com.example.host/host")]);
-    let text = render_static(&b, ws.path()).unwrap().unwrap();
+    let text = render_static(&b, ws.path(), &coord()).unwrap().unwrap();
 
     // (1) The dep's labels are qualified under the DEP's origin — per-node, not
     // the host entry's. Whole-body qualify under the entry's origin could never

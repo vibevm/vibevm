@@ -13,10 +13,10 @@ use std::path::Path;
 
 use specmark::spec;
 use vibe_spec::{
-    FileResolver, FsSectionSource, RenameEntry, SpecAddress, compile_static_qualified,
+    FileResolver, FsSectionSource, RenameEntry, SelfCoordinate, SpecAddress,
+    compile_static_qualified,
 };
 
-use super::HOST_NAMESPACE;
 use crate::WorkspaceError;
 use crate::boot::BootEntry;
 
@@ -43,6 +43,7 @@ use crate::boot::BootEntry;
 pub(super) fn compile_normal_entry(
     entry: &BootEntry,
     workspace_root: &Path,
+    self_coord: &SelfCoordinate,
 ) -> Result<(String, Vec<(String, RenameEntry)>), WorkspaceError> {
     let seed =
         normal_seed(&entry.origin, &entry.path).ok_or_else(|| WorkspaceError::InlineCompile {
@@ -53,7 +54,7 @@ pub(super) fn compile_normal_entry(
                 entry.origin, entry.path
             ),
         })?;
-    let source = FsSectionSource::new(FileResolver::new(workspace_root, HOST_NAMESPACE));
+    let source = FsSectionSource::new(FileResolver::new(workspace_root, self_coord.clone()));
     compile_static_qualified(&seed, &source).map_err(|e| WorkspaceError::InlineCompile {
         reason: format!(
             "compiling the normal package `{}` closure (PROP-035 §8): {e}",

@@ -3,6 +3,50 @@
 
 use super::*;
 
+// ----- `[project].group` — the self-coordinate group half (B-031) -----------
+
+#[test]
+fn project_section_parses_with_group() {
+    // A project carrying its self-coordinate group round-trips through serde.
+    let raw = r#"
+name = "vibevm"
+group = "org.vibevm.core"
+version = "0.1.0-dev"
+"#;
+    let p: ProjectSection = toml::from_str(raw).unwrap();
+    assert_eq!(p.name, "vibevm");
+    assert_eq!(p.group.as_ref().unwrap().as_str(), "org.vibevm.core");
+    // The group survives a serialize round-trip (and absent fields stay absent).
+    let back: ProjectSection = toml::from_str(&toml::to_string(&p).unwrap()).unwrap();
+    assert_eq!(p, back);
+}
+
+#[test]
+fn project_section_parses_without_group() {
+    // `group` is optional — a project with no self coordinate is legal.
+    let raw = r#"
+name = "my-app"
+version = "0.1.0"
+"#;
+    let p: ProjectSection = toml::from_str(raw).unwrap();
+    assert_eq!(p.name, "my-app");
+    assert!(p.group.is_none());
+    // A groupless project serializes without a `group` key.
+    let rendered = toml::to_string(&p).unwrap();
+    assert!(!rendered.contains("group"));
+}
+
+#[test]
+fn project_section_rejects_a_malformed_group() {
+    // Group validation runs on parse (PROP-008): an uppercase segment is bad.
+    let raw = r#"
+name = "x"
+group = "Org.Bad"
+version = "0.1.0"
+"#;
+    assert!(toml::from_str::<ProjectSection>(raw).is_err());
+}
+
 #[test]
 fn registry_section_rejects_unknown_field() {
     let raw = r#"

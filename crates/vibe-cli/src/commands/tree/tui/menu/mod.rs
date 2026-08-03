@@ -338,8 +338,8 @@ fn resync_marks(groups: &mut [MenuGroup], snap: &Snapshot) {
 pub(super) mod test_support {
     use super::*;
     use crate::commands::tree::model::{
-        Boot, Condition, HOST_NAMESPACE, IndexLane, Load, LoadOrigin, LoadType, Package,
-        PackageTree, Project, SCHEMA_VERSION,
+        Boot, Condition, IndexLane, Load, LoadOrigin, LoadType, Package, PackageTree, Project,
+        SCHEMA_VERSION,
     };
 
     /// A minimal fixture tree: one `g/a` package, declared as a root. Shared by
@@ -373,7 +373,7 @@ pub(super) mod test_support {
                 root: "/tmp/x".to_string(),
                 name: None,
                 is_workspace: false,
-                host_namespace: HOST_NAMESPACE.to_string(),
+                self_coord: "org.vibevm.core/vibevm".to_string(),
             },
             roots: vec!["g/a".to_string()],
             packages: vec![pkg],

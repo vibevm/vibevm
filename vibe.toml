@@ -1,5 +1,6 @@
 [project]
 name = "vibevm"
+group = "org.vibevm.core"
 version = "0.1.0-dev"
 authors = ["Oleg Chirukhin"]
 

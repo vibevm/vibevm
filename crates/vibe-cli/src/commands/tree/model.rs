@@ -18,10 +18,6 @@ use serde::Serialize;
 /// The one and only schema version this producer emits (PROP-036 §2.7).
 pub const SCHEMA_VERSION: u32 = 1;
 
-/// The host project's `spec://` authority (PROP-035 §6) — the root project is
-/// addressed as `vibevm`.
-pub const HOST_NAMESPACE: &str = "vibevm";
-
 /// The root document — one object, validated against the v1 schema.
 #[derive(Debug, Serialize)]
 pub struct PackageTree {
@@ -44,7 +40,13 @@ pub struct Project {
     pub root: String,
     pub name: Option<String>,
     pub is_workspace: bool,
-    pub host_namespace: String,
+    /// The host project's self coordinate (B-031) — `<group>/<name>` from the
+    /// manifest, or the bare name when the project declares no `group`. A
+    /// display string, like the `host_namespace` it replaced. Serialised under
+    /// the legacy key `host_namespace` to keep the v1 `vibe tree --json` schema
+    /// stable (the field rename is Rust-internal; the wire key is unchanged).
+    #[serde(rename = "host_namespace")]
+    pub self_coord: String,
 }
 
 /// One resolved package (one object per lock entry — the unique set; the

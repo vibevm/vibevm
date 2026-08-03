@@ -196,7 +196,15 @@ fn regenerate_published_boot(node_dir: &Path, manifest: &Manifest) -> Result<()>
         dependencies: &[],
         default_link: manifest.boot.default_link,
     })?;
-    crate::boot_artifacts::write_boot_artifacts(node_dir, node_dir, &effective)?;
+    // The staged copy's self coordinate (B-031): the package's own
+    // `<group>/<name>` from its `[package]` table — a standalone published
+    // copy is its own self. Absent a `[package]`, no self coordinate.
+    let self_coord = manifest
+        .package
+        .as_ref()
+        .map(|p| vibe_spec::SelfCoordinate::new(Some(p.group.as_str().to_owned()), p.name.clone()))
+        .unwrap_or_else(|| vibe_spec::SelfCoordinate::new(None, String::new()));
+    crate::boot_artifacts::write_boot_artifacts(node_dir, node_dir, &self_coord, &effective)?;
     Ok(())
 }
 

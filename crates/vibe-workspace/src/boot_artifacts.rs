@@ -42,7 +42,8 @@ use std::path::{Path, PathBuf};
 use serde::Serialize;
 use specmark::spec;
 use vibe_spec::{
-    Directives, FileResolver, FsSectionSource, RenameEntry, expand_embeds, qualify_contribution,
+    Directives, FileResolver, FsSectionSource, RenameEntry, SelfCoordinate, expand_embeds,
+    qualify_contribution,
 };
 
 use crate::WorkspaceError;
@@ -60,11 +61,6 @@ pub use redirect::{
     BLOCK_CLOSE, BLOCK_OPEN, BlockLocation, REDIRECT_FILES, locate_block, render_redirect,
     write_redirect_blocks,
 };
-
-/// The host project's `spec://` authority (PROP-035 §6) — the root project is
-/// addressed as `vibevm`. Used to resolve `#embed` targets when compiling the
-/// inline lane.
-const HOST_NAMESPACE: &str = "vibevm";
 
 /// `schema` version of the generated `INDEX.md` manifest (PROP-009 §2.3).
 pub const INDEX_SCHEMA: u32 = 1;
@@ -214,6 +210,7 @@ pub fn render_index(
 pub fn render_static(
     boot: &EffectiveBoot,
     workspace_root: &Path,
+    self_coord: &SelfCoordinate,
 ) -> Result<Option<String>, WorkspaceError> {
     let entries: Vec<_> = boot.static_entries().collect();
     if entries.is_empty() {
@@ -274,7 +271,7 @@ pub fn render_static(
         // label).
         let (body, mut renames): (String, Vec<(String, RenameEntry)>) = if entry.format.is_normal()
         {
-            compile_normal_entry(entry, workspace_root)?
+            compile_normal_entry(entry, workspace_root, self_coord)?
         } else {
             let abs = workspace_root.join(&entry.path);
             let raw = fs::read_to_string(&abs).map_err(|e| io_err(&abs, e))?;
@@ -295,7 +292,7 @@ pub fn render_static(
             // entry's final body is self-contained for the qualify pass.
             let expanded = if has_embed_directive(&raw) {
                 let source =
-                    FsSectionSource::new(FileResolver::new(workspace_root, HOST_NAMESPACE));
+                    FsSectionSource::new(FileResolver::new(workspace_root, self_coord.clone()));
                 expand_embeds(&raw, &source).map_err(|e| WorkspaceError::InlineCompile {
                     reason: e.to_string(),
                 })?
@@ -403,9 +400,12 @@ pub struct WrittenArtifacts {
 /// `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` redirects.
 ///
 /// `node_dir` is the node's root; `workspace_root` is the absolute
-/// workspace root, used to resolve the static contributions' content. A
-/// stale `STATIC.md` from an earlier generation is removed when the node
-/// no longer has static contributions, so it is never read by mistake.
+/// workspace root, used to resolve the static contributions' content;
+/// `self_coord` is the workspace root's own `<group>/<name>` coordinate
+/// (B-031 — the host is a package coordinate), the authority a `spec://`
+/// address names to reach the authored `spec/` tree. A stale `STATIC.md`
+/// from an earlier generation is removed when the node no longer has static
+/// contributions, so it is never read by mistake.
 #[spec(
     implements = "spec://vibevm/modules/vibe-workspace/PROP-012#co-tenant",
     r = 1
@@ -413,6 +413,7 @@ pub struct WrittenArtifacts {
 pub fn write_boot_artifacts(
     node_dir: &Path,
     workspace_root: &Path,
+    self_coord: &SelfCoordinate,
     boot: &EffectiveBoot,
 ) -> Result<WrittenArtifacts, WorkspaceError> {
     let boot_dir = node_dir.join("spec").join("boot");
@@ -425,7 +426,7 @@ pub fn write_boot_artifacts(
 
     // STATIC.md — only when there are static contributions.
     let static_path = boot_dir.join(STATIC_FILE);
-    let static_lane = match render_static(boot, workspace_root)? {
+    let static_lane = match render_static(boot, workspace_root, self_coord)? {
         Some(text) => {
             fs::write(&static_path, text).map_err(|e| io_err(&static_path, e))?;
             Some(static_path)

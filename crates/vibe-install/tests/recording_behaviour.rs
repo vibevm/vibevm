@@ -13,6 +13,7 @@ fn empty_manifest() -> Manifest {
     Manifest {
         project: Some(ProjectSection {
             name: "demo".to_string(),
+            group: None,
             version: "0.0.1".to_string(),
             authors: vec![],
         }),

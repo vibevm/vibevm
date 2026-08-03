@@ -74,7 +74,7 @@ pub fn tree_markdown(app: &App) -> (String, usize) {
         .project
         .name
         .as_deref()
-        .unwrap_or(app.tree.project.host_namespace.as_str());
+        .unwrap_or(app.tree.project.self_coord.as_str());
     let doc = format!("# vibe tree — {project} ({count} packages)\n\n```\n{body}```\n");
     (doc, count)
 }
@@ -249,8 +249,8 @@ pub(super) fn render_file_dest(area: Rect, buf: &mut Buffer, app: &App) {
 mod tests {
     use super::*;
     use crate::commands::tree::model::{
-        Boot, Condition, HOST_NAMESPACE, IndexLane, Load, LoadOrigin, LoadType, Package,
-        PackageTree, Project, SCHEMA_VERSION,
+        Boot, Condition, IndexLane, Load, LoadOrigin, LoadType, Package, PackageTree, Project,
+        SCHEMA_VERSION,
     };
     use crate::commands::tree::tui::state::DisplayMode;
 
@@ -311,7 +311,7 @@ mod tests {
                 root: "/tmp/x".to_string(),
                 name: Some("demo".to_string()),
                 is_workspace: false,
-                host_namespace: HOST_NAMESPACE.to_string(),
+                self_coord: "org.vibevm.core/vibevm".to_string(),
             },
             roots: roots.iter().map(|s| s.to_string()).collect(),
             packages,

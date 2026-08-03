@@ -315,6 +315,7 @@ impl Manifest {
         Manifest {
             project: Some(ProjectSection {
                 name: name.into(),
+                group: None,
                 version: version.into(),
                 authors: Vec::new(),
             }),

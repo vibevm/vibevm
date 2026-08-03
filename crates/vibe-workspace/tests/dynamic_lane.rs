@@ -40,9 +40,16 @@ use std::path::Path;
 
 use tempfile::TempDir;
 use vibe_core::manifest::{LinkType, PackageFormat};
-use vibe_spec::{DocTree, FileResolver, FsSectionSource, SectionSource, SpecAddress};
+use vibe_spec::{
+    DocTree, FileResolver, FsSectionSource, SectionSource, SelfCoordinate, SpecAddress,
+};
 use vibe_workspace::boot::{BootBand, BootEntry, EffectiveBoot};
 use vibe_workspace::boot_artifacts::render_static;
+
+/// The host self coordinate the demo workspaces stand in for (B-031).
+fn coord() -> SelfCoordinate {
+    SelfCoordinate::new(Some("org.vibevm.core".into()), "vibevm".into())
+}
 
 // ----- helpers (public-surface mirrors of the in-crate unit-test helpers) --
 
@@ -154,15 +161,20 @@ fn exhibit_a_append_only_composition_is_byte_stable() {
     let origin_b = "org.demo/beta";
 
     // Lane 1: only package A is spliced. Lane 2: the world A+B.
-    let lane_a = render_static(&boot(vec![entry_simple(&alpha, origin_a)]), ws.path())
-        .unwrap()
-        .unwrap();
+    let lane_a = render_static(
+        &boot(vec![entry_simple(&alpha, origin_a)]),
+        ws.path(),
+        &coord(),
+    )
+    .unwrap()
+    .unwrap();
     let lane_ab = render_static(
         &boot(vec![
             entry_simple(&alpha, origin_a),
             entry_simple(&beta, origin_b),
         ]),
         ws.path(),
+        &coord(),
     )
     .unwrap()
     .unwrap();
@@ -260,6 +272,7 @@ fn exhibit_b_alias_survives_a_cleaned_carrier() {
     let lane = render_static(
         &boot(vec![entry_normal(&beta_contract, "org.demo/beta")]),
         ws.path(),
+        &coord(),
     )
     .unwrap()
     .unwrap();
@@ -280,7 +293,7 @@ fn exhibit_b_alias_survives_a_cleaned_carrier() {
     // `vibedeps/flow-alpha/1.0.0/spec/rule.md`. The resolver never consults the
     // lane string: it is constructed from the workspace root and reads only the
     // source files. The alias binds to the address, never to compiled text.
-    let src = FsSectionSource::new(FileResolver::new(ws.path(), "vibevm"));
+    let src = FsSectionSource::new(FileResolver::new(ws.path(), coord()));
     let addr = SpecAddress::parse("spec://org.demo/alpha/rule#root").unwrap();
     let resolved = src
         .section_text(&addr)
@@ -334,6 +347,7 @@ fn exhibit_c_a_missed_short_anchor_answers_with_qualified_heirs() {
             entry_simple(&beta, "org.demo/beta"),
         ]),
         ws.path(),
+        &coord(),
     )
     .unwrap()
     .unwrap();

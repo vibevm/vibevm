@@ -253,8 +253,8 @@ mod tests {
 
     use super::*;
     use crate::commands::tree::model::{
-        Boot, Condition, HOST_NAMESPACE, IndexLane, Load, LoadOrigin, LoadType, Package,
-        PackageTree, Project, SCHEMA_VERSION,
+        Boot, Condition, IndexLane, Load, LoadOrigin, LoadType, Package, PackageTree, Project,
+        SCHEMA_VERSION,
     };
 
     fn pkg(id: &str) -> Package {
@@ -290,7 +290,7 @@ mod tests {
                 root: "/tmp/x".to_string(),
                 name: None,
                 is_workspace: false,
-                host_namespace: HOST_NAMESPACE.to_string(),
+                self_coord: "org.vibevm.core/vibevm".to_string(),
             },
             roots: vec!["g/alpha".to_string(), "g/beta".to_string()],
             packages: vec![pkg("g/alpha"), pkg("g/beta")],

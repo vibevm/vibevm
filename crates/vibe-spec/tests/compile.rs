@@ -3,16 +3,24 @@
 
 use std::path::{Path, PathBuf};
 
-use vibe_spec::{FileResolver, FsSectionSource, SpecAddress, compile_static, decompile};
+use vibe_spec::{
+    FileResolver, FsSectionSource, SelfCoordinate, SpecAddress, compile_static, decompile,
+};
 
 fn ws() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/ws")
 }
 
+/// B-031: the host is the package coordinate `org.vibevm.core/vibevm`.
+fn coord() -> SelfCoordinate {
+    SelfCoordinate::new(Some("org.vibevm.core".into()), "vibevm".into())
+}
+
 #[test]
 fn compiles_a_document_pulling_a_use_and_an_embed() {
-    let source = FsSectionSource::new(FileResolver::new(ws(), "vibevm"));
-    let seed = SpecAddress::parse("spec://vibevm/modules/demo/PROP-050#root").unwrap();
+    let source = FsSectionSource::new(FileResolver::new(ws(), coord()));
+    let seed =
+        SpecAddress::parse("spec://org.vibevm.core/vibevm/modules/demo/PROP-050#root").unwrap();
     let out = compile_static(&seed, &source).unwrap();
 
     // The #use target is pulled in and emitted before the seed.
@@ -35,7 +43,7 @@ fn compiles_a_document_pulling_a_use_and_an_embed() {
 
 #[test]
 fn compiles_a_contract_folding_its_source() {
-    let source = FsSectionSource::new(FileResolver::new(ws(), "vibevm"));
+    let source = FsSectionSource::new(FileResolver::new(ws(), coord()));
     let seed = SpecAddress::parse("spec://org.vibevm.demo/demo-lib/contract/API#root").unwrap();
     let out = compile_static(&seed, &source).unwrap();
 
@@ -48,8 +56,9 @@ fn compiles_a_contract_folding_its_source() {
 
 #[test]
 fn compiled_output_decompiles_to_its_blocks() {
-    let source = FsSectionSource::new(FileResolver::new(ws(), "vibevm"));
-    let seed = SpecAddress::parse("spec://vibevm/modules/demo/PROP-050#root").unwrap();
+    let source = FsSectionSource::new(FileResolver::new(ws(), coord()));
+    let seed =
+        SpecAddress::parse("spec://org.vibevm.core/vibevm/modules/demo/PROP-050#root").unwrap();
     let out = compile_static(&seed, &source).unwrap();
 
     // Reversible (§11): the two emitted blocks — the #use dependency then the

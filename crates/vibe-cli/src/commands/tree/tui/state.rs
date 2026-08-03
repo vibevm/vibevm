@@ -443,7 +443,7 @@ mod tests {
                 root: "/tmp/x".to_string(),
                 name: None,
                 is_workspace: false,
-                host_namespace: HOST_NAMESPACE.to_string(),
+                self_coord: "org.vibevm.core/vibevm".to_string(),
             },
             roots: roots.iter().map(|s| s.to_string()).collect(),
             packages,

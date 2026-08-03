@@ -25,6 +25,21 @@ use super::{ResolvedDep, io_err};
 mod hybrid_emit;
 use hybrid_emit::{append_hoisted, build_unit_table, emit_package_units, verify_fingerprints};
 
+/// The workspace root's self coordinate — `<group>/<name>` from its `[project]`
+/// table (B-031: the host is a package coordinate). A root with no `[project]`
+/// (or no `group`) declares no self coordinate, so its authored `spec/` is
+/// unreachable by `spec://` address — the resolver then errors on any undotted
+/// authority with "no self coordinate".
+fn root_self_coordinate(root_manifest: &Manifest) -> vibe_spec::SelfCoordinate {
+    match &root_manifest.project {
+        Some(p) => vibe_spec::SelfCoordinate::new(
+            p.group.as_ref().map(|g| g.as_str().to_owned()),
+            p.name.clone(),
+        ),
+        None => vibe_spec::SelfCoordinate::new(None, String::new()),
+    }
+}
+
 /// Regenerate every node's boot artifacts from a given `resolution` — the
 /// boot half of [`apply_resolution`], without materialising. Returns the
 /// `rel_path` of every node whose artifacts were written.
@@ -32,6 +47,13 @@ pub fn regenerate_boot_from(
     workspace: &Workspace,
     resolution: &[ResolvedDep],
 ) -> Result<Vec<String>, WorkspaceError> {
+    // The workspace root's self coordinate (B-031): `<group>/<name>` from its
+    // `[project]` table — what a `spec://` address names to reach the authored
+    // `spec/` tree. Always the root's coordinate (self = workspace root),
+    // threaded into every artifact write. A root with no `[project]` (or no
+    // `group`) declares none.
+    let self_coord = root_self_coordinate(&workspace.root_manifest);
+
     // The per-unit compiler (PROP-038 §2.1): emit each materialised package's
     // own STATIC.md / INDEX.md from its own edges, and learn which packages
     // statically link a child (`with_static`) — a node's dynamic edge to such
@@ -59,7 +81,14 @@ pub fn regenerate_boot_from(
         })
         .map(|(pkg, _)| pkg.clone())
         .collect();
-    let with_static = emit_package_units(&workspace.root, resolution, &table, &shared, &fps)?;
+    let with_static = emit_package_units(
+        &workspace.root,
+        &self_coord,
+        resolution,
+        &table,
+        &shared,
+        &fps,
+    )?;
 
     // The absolute root's foundation boot — inherited by every member
     // (PROP-009 §2.2: inherited foundation flows down).
@@ -116,7 +145,7 @@ pub fn regenerate_boot_from(
         // single-copies count as present, and before the artifact write so the
         // rendered lane is the once-each form.
         desubstitute_covered_units(&mut effective, &table);
-        boot_artifacts::write_boot_artifacts(&node_dir, &workspace.root, &effective)?;
+        boot_artifacts::write_boot_artifacts(&node_dir, &workspace.root, &self_coord, &effective)?;
         nodes_regenerated.push(rel.to_string());
     }
     Ok(nodes_regenerated)

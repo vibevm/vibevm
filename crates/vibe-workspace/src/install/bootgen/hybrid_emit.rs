@@ -123,6 +123,7 @@ fn slot_rel_path(dep: &ResolvedDep) -> String {
 )]
 pub(super) fn emit_package_units(
     workspace_root: &Path,
+    self_coord: &vibe_spec::SelfCoordinate,
     resolution: &[ResolvedDep],
     table: &HashMap<UnitId, UnitInput>,
     shared: &HashSet<UnitId>,
@@ -163,7 +164,7 @@ pub(super) fn emit_package_units(
         let effective = zone_to_effective(id, &zones[id], table, &with_static, &slots, shared);
         let boot_dir = workspace_root.join(slot).join("spec").join("boot");
         let fp = fingerprints.get(id).map(String::as_str).unwrap_or("");
-        emit_effective(&boot_dir, workspace_root, &effective, fp)?;
+        emit_effective(&boot_dir, workspace_root, self_coord, &effective, fp)?;
     }
     Ok(with_static)
 }
@@ -268,6 +269,7 @@ fn dynamic_target_path(
 fn emit_effective(
     boot_dir: &Path,
     workspace_root: &Path,
+    self_coord: &vibe_spec::SelfCoordinate,
     effective: &EffectiveBoot,
     fingerprint: &str,
 ) -> Result<(), WorkspaceError> {
@@ -290,7 +292,7 @@ fn emit_effective(
     )
     .map_err(|e| io_err(&index, e))?;
     let static_path = boot_dir.join(boot_artifacts::STATIC_FILE);
-    match boot_artifacts::render_static(effective, workspace_root)? {
+    match boot_artifacts::render_static(effective, workspace_root, self_coord)? {
         Some(text) => fs::write(&static_path, text).map_err(|e| io_err(&static_path, e))?,
         None => {
             if static_path.exists() {

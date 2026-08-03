@@ -3,19 +3,27 @@
 
 use std::path::{Path, PathBuf};
 
-use vibe_spec::{FileResolver, FsSectionSource, expand_embeds};
+use vibe_spec::{FileResolver, FsSectionSource, SelfCoordinate, expand_embeds};
 
 fn ws() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/ws")
 }
 
 fn source() -> FsSectionSource {
-    FsSectionSource::new(FileResolver::new(ws(), "vibevm"))
+    // B-031: the host is the package coordinate `org.vibevm.core/vibevm`.
+    FsSectionSource::new(FileResolver::new(
+        ws(),
+        SelfCoordinate::new(Some("org.vibevm.core".into()), "vibevm".into()),
+    ))
 }
 
 #[test]
 fn expands_a_host_section_from_the_corpus() {
-    let out = expand_embeds("#embed spec://vibevm/common/PROP-000#commits\n", &source()).unwrap();
+    let out = expand_embeds(
+        "#embed spec://org.vibevm.core/vibevm/common/PROP-000#commits\n",
+        &source(),
+    )
+    .unwrap();
     assert!(out.contains("Commit rules live here."), "{out}");
     assert!(!out.contains("#embed"));
 }

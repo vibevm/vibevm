@@ -3,12 +3,20 @@
 //! of the lane tests along the redirect seam; the lane tests keep the
 //! `STATIC.md` / `INDEX.md` coverage.
 
-use super::super::write_boot_artifacts;
+use super::super::{SelfCoordinate, write_boot_artifacts};
 use super::*;
 use crate::boot::{BootBand, BootEntry, EffectiveBoot};
 use specmark::verifies;
 use tempfile::TempDir;
 use vibe_core::manifest::LinkType;
+
+/// The host self coordinate these redirect tests stand in for (B-031). The
+/// redirect-path tests carry no static entries, so the coordinate is never
+/// exercised — it is threaded for signature conformance only.
+#[cfg(test)]
+fn coord() -> SelfCoordinate {
+    SelfCoordinate::new(Some("org.vibevm.core".into()), "vibevm".into())
+}
 
 #[cfg(test)]
 fn entry(path: &str, link: LinkType, origin: &str) -> BootEntry {
@@ -42,7 +50,7 @@ fn render_redirect_points_at_the_boot_files() {
 fn write_boot_artifacts_writes_index_and_redirects() {
     let ws = TempDir::new().unwrap();
     let b = boot(vec![entry("spec/boot/00-core.md", LinkType::Dynamic, ".")]);
-    let written = write_boot_artifacts(ws.path(), ws.path(), &b).unwrap();
+    let written = write_boot_artifacts(ws.path(), ws.path(), &coord(), &b).unwrap();
 
     assert!(written.index.is_file());
     assert!(written.static_lane.is_none());
@@ -65,7 +73,7 @@ fn write_boot_artifacts_writes_inline_when_present() {
         LinkType::Static,
         "flow:crit",
     )]);
-    let written = write_boot_artifacts(ws.path(), ws.path(), &b).unwrap();
+    let written = write_boot_artifacts(ws.path(), ws.path(), &coord(), &b).unwrap();
     assert!(written.static_lane.is_some());
     assert!(ws.path().join("spec/boot/STATIC.md").is_file());
 }
@@ -83,12 +91,12 @@ fn write_boot_artifacts_removes_a_stale_inline() {
         LinkType::Static,
         "flow:crit",
     )]);
-    write_boot_artifacts(ws.path(), ws.path(), &with_inline).unwrap();
+    write_boot_artifacts(ws.path(), ws.path(), &coord(), &with_inline).unwrap();
     assert!(ws.path().join("spec/boot/STATIC.md").exists());
 
     // A later generation has none — the stale STATIC.md must go.
     let without = boot(vec![entry("spec/boot/00-core.md", LinkType::Dynamic, ".")]);
-    let written = write_boot_artifacts(ws.path(), ws.path(), &without).unwrap();
+    let written = write_boot_artifacts(ws.path(), ws.path(), &coord(), &without).unwrap();
     assert!(written.static_lane.is_none());
     assert!(!ws.path().join("spec/boot/STATIC.md").exists());
 }

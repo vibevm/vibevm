@@ -286,6 +286,7 @@ pub(super) fn ensure_project_manifest(
     let manifest = Manifest {
         project: Some(ProjectSection {
             name: name.to_string(),
+            group: None,
             version: "0.0.1".to_string(),
             authors: authors.to_vec(),
         }),

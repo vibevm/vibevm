@@ -12,3 +12,6 @@ description = "spec:// addressing, the document IR, and the deterministic router
 
 [dependencies]
 thiserror.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
