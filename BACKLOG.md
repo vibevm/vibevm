@@ -129,7 +129,7 @@ already written from it is the specification of the work.)*
 | ##B003-ANCHOR **anchor** | none — found in a captured run, not against a marked fact |
 | ##B003-LOCATOR **locator** | `campaigns/packages-2026-09/harvest/go-ai-native-lang-floor.md:11,31-35`; the gate is `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs` |
 | ##B003-SEVERITY **severity** | P2 |
-| ##B003-DISPOSITION **disposition** | `open` |
+| ##B003-DISPOSITION **disposition** | `done` — **landed 2026-08-04 (`082e205b`), волна Б попутной стройкой:** the `[go].exclude_substrings` default (and the init template) gains `"/fixtures/"` (parity with the TS default), and the floor's gofmt step post-filters its listing through the same key with the engine's exact match semantics (`\`→`/` then substring; pure function, floor.rs's first unit tests). Measured on the package root: gofmt red-on-fixtures + 5 conform findings → gofmt green + 0 findings; the four remaining red steps are this row's recorded not-defects. Engine edit fanned ×6 via sync-engines; the TS twin hole is B-048 |
 | ##B003-FILED **filed by** | the packages-actualization campaign, Phase D, 2026-07-29 |
 
 - ##B003-WHAT **What it is.** `tools/go-extract/test/fixtures/dirty/` holds
@@ -768,7 +768,7 @@ already written from it is the specification of the work.)*
 | ##B029-ANCHOR **anchor** | Config нейтрального движка гейта (`core-ai-native-conform/src/config.rs:44`), вендорится в шесть пакетов |
 | ##B029-LOCATOR **locator** | единственный ключ ratchet-списка — `gated_crates`, одно написание на все языки; `deny_unknown_fields` — любое другое слово даёт громкий parse error; Go-доки на 2026-08-02 приведены к шипнутому ключу с оговоркой «слово — общего движка» |
 | ##B029-SEVERITY **severity** | P2 |
-| ##B029-DISPOSITION **disposition** | `planned` — **решение владельца 2026-08-02, пункт 2.1 = (а)+(б): «правда кода сегодня, идиома — записанной стройкой»** |
+| ##B029-DISPOSITION **disposition** | `planned` → **развилка №2 карты взята владельцем 2026-08-04** (единица = родная единица языка: Rust crate / Go package / TS cell; дом — полная симметрия секций одной формы, нейтральный ключ `gated` в идиомном доме, корень — только общий бюджет; плоские корневые ключи умирают громко с подсказкой переезда; бар владельца дословно: «расширяемо на новые языки (скоро добавится Python!)… Хочется сделать хорошо и надолго»). Запись: `spec/design/gate-parity-config.md` §2; прежний пункт 2.1 (2026-08-02: «правда кода сегодня, идиома — записанной стройкой») исполняется этой стройкой |
 | ##B029-FILED **filed by** | решение владельца 2026-08-02 (его же challenge: «crates — это не термин Golang») |
 
 - ##B029-SUT **Суть, по-простому.** Список «какие единицы кода уже под гейтом» во всех языках называется растовым словом `gated_crates` — Go-проект пишет чужой термин в свой конфиг. Стройка: нейтральный ключ (например `gated_units`) или пер-языковый алиас (`gated_packages` для Go, `gated_cells` для TS), старое написание остаётся алиасом совместимости навсегда.
@@ -837,7 +837,7 @@ already written from it is the specification of the work.)*
 | ##B034-ANCHOR **anchor** | `##EVERY-PACKAGE-GATED-OR-EXEMPT` в `conform-frontend-go.md` (F-185); реализация-образец — `Config::validate_against_tree` (`core-ai-native-conform/src/config.rs:259-266`) |
 | ##B034-LOCATOR **locator** | инвариант реален и оттестирован, но crate-овый: читает `gated_crates`/`[[exempt]]`/`roots` корневой таблицы; вызывают его только `rust-ai-native-conform` (`lib.rs:119`, `:188`) и его MCP-близнец; Go- и TS-фронтенды не вызывают никогда |
 | ##B034-SEVERITY **severity** | P2 |
-| ##B034-DISPOSITION **disposition** | `planned` — **решение владельца 2026-08-02: «Похоже на задачу — нужно реализовать эту функциональность в Typescript и Go»**; рамка семьи — как у B-033 |
+| ##B034-DISPOSITION **disposition** | `planned` — **решение владельца 2026-08-02: «Похоже на задачу — нужно реализовать эту функциональность в Typescript и Go»**; рамка семьи — как у B-033; **единица гейта и дом списков решены развилкой №2 2026-08-04** (Go = package, TS = cell, симметричные секции — см. `##B029-DISPOSITION` и `spec/design/gate-parity-config.md` §2) |
 | ##B034-FILED **filed by** | рулинг предъявления F-185, 2026-08-02 |
 
 - ##B034-SUT **Суть, по-простому.** Проверка «каждый модуль либо под контролем гейта, либо явно исключён с причиной — ничего не забыто молча» существует и работает только для Rust-крейтов. Go-документация обещала её «на каждом прогоне» — по факту для Go и TS она не бежит никогда: их код попадает под контроль только через baseline-«трещотку», а классификацию дерева никто не сверяет. Стройка: пер-языковый инвариант — Go-единица (package), TS-единица (cell) — плюс пер-языковые гейт-списки в конфиге.

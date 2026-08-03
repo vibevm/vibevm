@@ -88,7 +88,7 @@
 ##forks-lead Eleven named decisions, each waiting inside its entry; the waves above cannot finish without them: @doc/done
 
 1. ##FORK-COMPUTED-NAMES Rust cell naming — adopt computed `{Variant}{Seam}` (as Go practises) or free naming + vocabulary lint (B-038). @doc/done
-2. ##FORK-GATE-UNIT The gate unit per language (crate / package / cell) and where gating lists live (root table with aliases vs per-language sections) (B-029 / B-034). @doc/done
+2. ##FORK-GATE-UNIT The gate unit per language (crate / package / cell) and where gating lists live (root table with aliases vs per-language sections) (B-029 / B-034) — **taken 2026-08-04:** each language's native unit (Rust crate «давай в Go сделаем пакеты» → Go package; TS cell), and full symmetry under the owner's quality bar («расширяемо на новые языки (скоро добавится Python!)… Хочется сделать хорошо и надолго»): every language a section of one uniform shape, neutral `gated` key in the idiomatic home, root = shared budget only, retired flat keys die loudly with the move hint. Record: `spec/design/gate-parity-config.md` §2. @doc/done
 3. ##FORK-FINGERPRINT Fingerprint substance — raw text vs token stream (noise measurement first) (B-019а). @doc/done
 4. ##FORK-FRAGMENT-IDENTITY What a code-side fragment *is* (no end-of-range, no body today) (B-016.2). @doc/done
 5. ##FORK-CONTRACT-PROFILE The `contract` privacy tier's content — decided with a real closed-tree consumer at the table (B-017). @doc/done

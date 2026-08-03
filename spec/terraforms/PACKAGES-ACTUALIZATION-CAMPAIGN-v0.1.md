@@ -5072,6 +5072,38 @@ aspirational — and every one is still live for the phases that remain.
   message: WAL/CONTINUE rewritten, the map refreshed at the wave
   boundary, the start prompt handed to the owner in chat. @spec/done
 
+- **2026-08-04 · Волна Б открывается: цензус-тройка → развилка №2
+  взята → B-003 посажен тем же часом.** The batch-1 opener ran
+  census-first: three parallel claudez read-only workers (E8-R1
+  config surface, E8-R2 gate units + FlagSites, E8-R3 go-floor
+  mechanics — all ПРИНЯТО first pass, boss spot-checks green)
+  landed `harvest/e8-r{1,2,3}-*.md` (`83c15795`), and the map's
+  fork №2 went to the owner on measured fact. **The ruling,
+  verbatim:** units — «А что является единицей учета в Rust?
+  Крейты? Если да, давай в Go сделаем пакеты» (Rust = crate stands,
+  Go = package; TS = cell by the native-unit norm his bar implies);
+  homes — «Какое решение максимально хорошо с точки зрения
+  построения систем, расширяемо на новые языки (скоро добавится
+  Python!)… Я не хочу делать плохие временные решения… Хочется
+  сделать хорошо и надолго» — read as full symmetry: every language
+  a config section of ONE uniform shape (`roots` /
+  `exclude_substrings` / neutral `gated` / `[[<lang>.exempt]]
+  {unit, reason}` / `floor_disable` + language extras), root =
+  shared budget only, retired flat keys die loudly with the move
+  hint (three in-tree carriers, pre-publication window). Record:
+  `spec/design/gate-parity-config.md` (§2 ruling, §3 shape, §4 the
+  W1 → W2a∥W2b → W3 → W4 cut); the map's §5 №2 marked taken;
+  B-029/B-034 rows carry the ruling. **B-003 landed in parallel
+  while the fork stood** (disjoint perimeter; E9 claudez worker,
+  ПРИНЯТО first pass): the Go conform default + init template gain
+  `/fixtures/`, the floor's gofmt step post-filters through the
+  same key with the engine's match semantics — measured live on the
+  package root: gofmt red + 5 fixture findings → gofmt green +
+  0 findings, the four remaining reds the row's recorded
+  not-defects (`082e205b`; sync-engines ×6 + vibedeps in step).
+  The TS floor's twin hole censused and FILED, not ridden: B-048.
+  Next: W1 (engine Config v2) on the ruled shape. @spec/done
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
