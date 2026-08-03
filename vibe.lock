@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-07-26T12:02:34Z"
+generated_at = "2026-08-03T00:40:18Z"
 schema_version = 5
 root_dependencies = [
     "stack:org.vibevm/rust-ai-native@^0.7.0",
@@ -36,7 +36,7 @@ name = "redbook"
 group = "org.vibevm.world"
 version = "0.2.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/redbook/v0.2.0"
-content_hash = "sha256:94c40fc1af60e114bb1b4e40881fabfd6d189d70aa243b87eef4954011757728"
+content_hash = "sha256:de2ce169dc13e368615763deb3dc086cf685af4d9ea2402c82f3f4efa7308052"
 files_written = []
 dependencies = [
     "flow:org.vibevm.world/addressable-specs@=0.1.0",
@@ -70,7 +70,7 @@ name = "wal-specspaces"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/wal-specspaces/v0.1.0"
-content_hash = "sha256:824e830669f4589d354c76fc8abf0fcb1d62e04d16ee3e8a2e3852fc9f1c6789"
+content_hash = "sha256:bc7da1949f3e3a94527beb92a5c929c80c02fddbd5c1f189044e2d3710798a29"
 files_written = []
 dependencies = ["flow:org.vibevm.world/wal@=0.2.0"]
 source_kind = "local"
@@ -95,7 +95,7 @@ name = "typescript-ai-native"
 group = "org.vibevm.ai-native"
 version = "0.6.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0"
-content_hash = "sha256:28fae23a08d73d6b574ad39f14122d7e2a57aef7b1c0638aa37d3484bf6c7410"
+content_hash = "sha256:eedcd5dadbd0d7bdf07e4efe42ee3394049427389dc5221eac2e0c5ad35b687d"
 files_written = []
 dependencies = [
     "mcp:org.vibevm.ai-native/typescript-ai-native-mcp@=0.6.0",
@@ -109,7 +109,7 @@ name = "core-ai-native"
 group = "org.vibevm.ai-native"
 version = "0.8.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.ai-native/core-ai-native/v0.8.0"
-content_hash = "sha256:da34d60dfd80e26093bd11444bd200431090ddb55bc48f26074f7e271b440ea1"
+content_hash = "sha256:aa5b2cc21c4d85cae197c006123e0ae9e2982d44f581af1d1d3e41f743ad89d1"
 files_written = []
 source_kind = "local"
 
@@ -119,7 +119,7 @@ name = "rust-ai-native-lang"
 group = "org.vibevm.ai-native"
 version = "0.7.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0"
-content_hash = "sha256:0800b991baf071878a56be83cbfe013440b8d36793029b8b8bb56414167fddd6"
+content_hash = "sha256:6c7f59d9de699a81932b891133153cb8367d14baed3641172181dcdc86ec8c5c"
 files_written = []
 dependencies = ["flow:org.vibevm.ai-native/core-ai-native@=0.8.0"]
 source_kind = "local"
@@ -130,7 +130,7 @@ name = "rust-ai-native-mcp"
 group = "org.vibevm.ai-native"
 version = "0.7.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0"
-content_hash = "sha256:1fd651079ee1d0538b7c8b26e5e6747323f33b6ea8653e90f117cf070a27625c"
+content_hash = "sha256:e0408f0fe8ff890c1e0c2e71b45ba9c8dceb787a6a20272444c591b1faeb8f83"
 files_written = []
 dependencies = ["stack:org.vibevm.ai-native/rust-ai-native-lang@=0.7.0"]
 source_kind = "local"
@@ -141,7 +141,7 @@ name = "typescript-ai-native-lang"
 group = "org.vibevm.ai-native"
 version = "0.6.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0"
-content_hash = "sha256:0ba3cfc9f8b9d32cbddc48c8a9bcbc57ee5a397b95d0dc8fc957899f3e7577a0"
+content_hash = "sha256:2567891fcb588286605841dfd366788b17de8a1061a15dad52f845e5e10cfb4f"
 files_written = []
 dependencies = ["flow:org.vibevm.ai-native/core-ai-native@=0.8.0"]
 source_kind = "local"
@@ -152,7 +152,7 @@ name = "typescript-ai-native-mcp"
 group = "org.vibevm.ai-native"
 version = "0.6.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0"
-content_hash = "sha256:9ea3850eea77a89d3030ada0b45e7604fccbe1ac8ddc6f6c70b2396d53c594bb"
+content_hash = "sha256:d7bbe049e224ed869617c870f63458721ded41369027defb7562d04e6764790f"
 files_written = []
 dependencies = ["stack:org.vibevm.ai-native/typescript-ai-native-lang@=0.6.0"]
 source_kind = "local"
@@ -177,7 +177,7 @@ name = "addressable-specs"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/addressable-specs/v0.1.0"
-content_hash = "sha256:7663afa33398592e419a6bf5f19e07c181f6eadcf5bb5780a1a5e62b0ef1496c"
+content_hash = "sha256:867690145c57a0ccd09f849f81479800ace84f9891f48eb15cfa632cc77e6c67"
 files_written = []
 source_kind = "local"
 
@@ -187,7 +187,7 @@ name = "campaign-plans"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/campaign-plans/v0.1.0"
-content_hash = "sha256:fe056c9267824209ebb348f4720a8a2d5ce988c7c9c66d2003ccb06748f963af"
+content_hash = "sha256:ae51bf7106882f0a9e1098f475a8961f1ca3df86469b8248502d8150c155abfe"
 files_written = []
 source_kind = "local"
 
@@ -197,7 +197,7 @@ name = "comparative-research"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/comparative-research/v0.1.0"
-content_hash = "sha256:a7a62a31ed4fb4db9331acbead5a51b8382b890420dcef9f26a231a61adbe6c0"
+content_hash = "sha256:ad6c031fd1deaedba5c12f77d5e60c8422e9703cb765e19bface71d2a1323431"
 files_written = []
 source_kind = "local"
 
@@ -207,7 +207,7 @@ name = "conflict-protocol"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/conflict-protocol/v0.1.0"
-content_hash = "sha256:6bdea900f490eaa333bca0a715b990e1a441cea002b21cfceb7e43f1cf15a99e"
+content_hash = "sha256:61565f96816d7d162bce1e14112a21bb01e453dd0ce2415555b03cd34a8514a3"
 files_written = []
 source_kind = "local"
 
@@ -217,7 +217,7 @@ name = "decision-records"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/decision-records/v0.1.0"
-content_hash = "sha256:804fcbf2358e8f1b1faee8d6ec51ed2e521abe988bcb4d1cb152bef7a4dd65a3"
+content_hash = "sha256:49f398a4e8f2facb70b93260524cd2291f22c6b4a39e8f55d06f420cd0882b17"
 files_written = []
 source_kind = "local"
 
@@ -227,7 +227,7 @@ name = "dev-runtime-docs"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/dev-runtime-docs/v0.1.0"
-content_hash = "sha256:08a8adbcc9c8514c0011f2913c0e0143f02f2e9e05b2cab1abd46a316f651297"
+content_hash = "sha256:d075d18a4de70d9658291bd3440aef7ee3dc7d95ca1922a499ec8ba52211034c"
 files_written = []
 source_kind = "local"
 
@@ -237,7 +237,7 @@ name = "discovery-prompt"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/discovery-prompt/v0.1.0"
-content_hash = "sha256:ee9dbc70eecabd41582c9a23b88eb6a34dd2f9579ff2a8ff01edc7a88bb0f244"
+content_hash = "sha256:ed7e588de05def64c34946a9781c5b7c67e48479cba27f0ff1591b7900e24ec7"
 files_written = []
 source_kind = "local"
 
@@ -247,7 +247,7 @@ name = "git-atomic-commits"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/git-atomic-commits/v0.1.0"
-content_hash = "sha256:6f82661478c4a5a3899cf06a3a0515002cb6ab0d80ff2982e33dc93acbc5b3f7"
+content_hash = "sha256:97e15bc223293b618e9e49e5f31f39fccadd041060a476af34dcdef5e89396ed"
 files_written = []
 source_kind = "local"
 
@@ -257,7 +257,7 @@ name = "git-attribution-policy"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/git-attribution-policy/v0.1.0"
-content_hash = "sha256:1e03be538195503b582fe53485c0cf26b63781a2edb4373d39c68488de68f32b"
+content_hash = "sha256:8ad575e8fc0d20c737deef76713820e754ca633f33d6035147f4e41e4a0bf770"
 files_written = []
 source_kind = "local"
 
@@ -267,7 +267,7 @@ name = "git-autonomy"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/git-autonomy/v0.1.0"
-content_hash = "sha256:1ead4453c12171c7f0ef8ae0058181f5c445309e846106b3689d1c55c13c1905"
+content_hash = "sha256:abcb0e7e0e0a1b09c47d97cad41f80b092739875e4b2b51018895e3429a00ddd"
 files_written = []
 source_kind = "local"
 
@@ -277,7 +277,7 @@ name = "git-conventional-commits"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/git-conventional-commits/v0.1.0"
-content_hash = "sha256:40366c09d560fa67cb903af51378e244fd212ac7abad636ce5b7bd6f233f8eae"
+content_hash = "sha256:cda8fbb9396740eab665fe7fe6ed4e0161a632fa90b143196205cd7b37eeb0cf"
 files_written = []
 source_kind = "local"
 
@@ -287,7 +287,7 @@ name = "git-practices"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/git-practices/v0.1.0"
-content_hash = "sha256:9c674a85e2a46a0c697c2c2dd1566269b0961b42aaedc043fcaefc5a4e193d85"
+content_hash = "sha256:30f0f592944bfcf4c994fa9238e1ecc01c953381677be0978c479316f0b879c5"
 files_written = []
 dependencies = [
     "flow:org.vibevm.world/git-atomic-commits@=0.1.0",
@@ -303,7 +303,7 @@ name = "health-audit"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/health-audit/v0.1.0"
-content_hash = "sha256:74b9c2867df1cc4100565502e643ea103c205dd4d4622bd3e2ff231595a6bef4"
+content_hash = "sha256:3d502cea9aca9ef5f7b2f0c253d53b27ac048e799f1e36492641cce7b6f3ef6d"
 files_written = []
 source_kind = "local"
 
@@ -313,7 +313,7 @@ name = "licensing"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/licensing/v0.1.0"
-content_hash = "sha256:a92c1b0c6eac773c28640882af0700b8f8bc9471fc1e00bb927860e33ed84810"
+content_hash = "sha256:323a5e058023151e4d3c23e4d7228caee25192bbaf3c5c2802b801dee277d1b9"
 files_written = []
 source_kind = "local"
 
@@ -323,7 +323,7 @@ name = "managed-blocks"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/managed-blocks/v0.1.0"
-content_hash = "sha256:9cbb33a20d43c355699334010a80964131a2954d434f7fc8be60e9cc62eaec2c"
+content_hash = "sha256:68ceec1fae36668634c6e0d929fe5b7eb3f80405b3adb24d645db9c81b2e6141"
 files_written = []
 source_kind = "local"
 
@@ -333,7 +333,7 @@ name = "manual-tests"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/manual-tests/v0.1.0"
-content_hash = "sha256:af283e693df0b974e92f3844749a6bafe1812814847ea9ee600a8c40ae7607ae"
+content_hash = "sha256:3c92365ecf3341f00d1c12dc381bbae46c5bf95d5a8715d92395ce408d5176e8"
 files_written = []
 source_kind = "local"
 
@@ -343,7 +343,7 @@ name = "operating-modes"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/operating-modes/v0.1.0"
-content_hash = "sha256:4d7ed98cd697192f080e2c45a0c7b3ad9211047c5fb502650a2d655943f3c558"
+content_hash = "sha256:179d2e4ced7d49eaefc739dd0cdbdb35687a0cafd965548a22fdb7eae886a2e3"
 files_written = []
 source_kind = "local"
 
@@ -353,7 +353,7 @@ name = "qualified-naming"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/qualified-naming/v0.1.0"
-content_hash = "sha256:97167929d8547c5d0c67f491e65a3054c6d7f7e8ae4c7b9fd9a08215b84c075e"
+content_hash = "sha256:b20083253c9c88749c980db8ec57861e1232c10e5c0891e66d530644e2c11343"
 files_written = []
 source_kind = "local"
 
@@ -363,7 +363,7 @@ name = "secrets-hygiene"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/secrets-hygiene/v0.1.0"
-content_hash = "sha256:a3049f7d9cec6efe43ebfdf73aec32a6b9c95f4f4cc5041b5bb6b7ab19541dd7"
+content_hash = "sha256:85fb82fad4b7e45e386522f4d27072b5b327e852f4b79ba061e6ba887e5c15c9"
 files_written = []
 source_kind = "local"
 
@@ -373,7 +373,7 @@ name = "source-mirrors"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/source-mirrors/v0.1.0"
-content_hash = "sha256:6775da628abc2bab81c5f4447492d5b740c7f5c020d12f4b538a8b3de42f7d8d"
+content_hash = "sha256:eef7e6b0a3cea86d3236676ed71603da2dc570c1471025667730ff0db99b280d"
 files_written = []
 source_kind = "local"
 
@@ -383,7 +383,7 @@ name = "spec-genres"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/spec-genres/v0.1.0"
-content_hash = "sha256:82c71ed1d4f2a076bf3cec328d570a2a57b18cc1d6103b1a8e84295b733f522e"
+content_hash = "sha256:f12f36239a1ebfd1b0726100f5926647883bc49a21e9658fda6842f455e6a112"
 files_written = []
 source_kind = "local"
 
@@ -393,7 +393,7 @@ name = "sync-from-code"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/sync-from-code/v0.1.0"
-content_hash = "sha256:0505b2166483ca8228c098c8eb290f43fa12b59af877acd59d5567b2bbe70649"
+content_hash = "sha256:6c2e52bc305a1a9d63e91c8f408c276890489ab07df6b4914541a06b3b2c0203"
 files_written = []
 source_kind = "local"
 
@@ -403,7 +403,7 @@ name = "tool-design-lessons"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/tool-design-lessons/v0.1.0"
-content_hash = "sha256:fc250e20b782a7c912f75cbaf5bae38e8392cea68327ac934e7b426e46887004"
+content_hash = "sha256:8a455eacbbe23829efe16e51480ff1e7e96646f07dd15bcdd29bb0a3a0d6cddb"
 files_written = []
 source_kind = "local"
 
@@ -413,7 +413,7 @@ name = "two-process-model"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/two-process-model/v0.1.0"
-content_hash = "sha256:074b2b8c1158507bc37dcff3177acbf396732a74b87ae3a8308c825c8e907980"
+content_hash = "sha256:3d9cebca2c7650b79c04660ea9c0c244f72f87930439c874f2f9d3677a2c603e"
 files_written = []
 source_kind = "local"
 
@@ -423,6 +423,6 @@ name = "wal"
 group = "org.vibevm.world"
 version = "0.2.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/wal/v0.2.0"
-content_hash = "sha256:26fdc85246954c1117d319bd0ef46c69714f00baecb4ac95989ee5a7f78628b6"
+content_hash = "sha256:4d51bb1dfd16e6ae88544d5862f92b3cb4850a06b8130f6fd3266de6cc7fa80a"
 files_written = []
 source_kind = "local"
