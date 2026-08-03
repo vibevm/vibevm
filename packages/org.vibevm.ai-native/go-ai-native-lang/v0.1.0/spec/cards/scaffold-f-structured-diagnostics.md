@@ -43,7 +43,7 @@ routine:
   3. Wrap causes with %w so the chain stays machine-walkable.
   4. Emit custom-check findings in the fixed grammar (SARIF for conform).
   5. Keep it compact (one line of why + one of where).
-checker: conform `seam-error-cites-req` (seam error types must carry Spec + the grammar) — shipped, go-ai-native-conform
+checker: conform `go-seam-error-cites-req` (the seam error's structure + message halves in `go-ai-native-conform`; shipped, B-033) — the custom-check third channel (`analysis.Analyzer`) is `WISH` (→ `BACKLOG.md {#b-050}`)
 raid_role: layer=tooling; order=after:none; batch=package
 budget: active_rules=1; first_signal=conform check (<60s)
 ```

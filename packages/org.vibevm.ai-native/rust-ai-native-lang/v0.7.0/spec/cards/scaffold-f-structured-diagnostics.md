@@ -42,7 +42,7 @@ routine:
   2. Add a one-line fix surface: where to change and what.
   3. Emit in a stable structured form (SARIF for conform; fixed grammar for thiserror).
   4. Keep it compact (one line of why + one of where).
-checker: conform T-lex `diagnostic-cites-req` (custom messages must match the grammar `violates REQ <uri>: <why>; fix surface: <where>`)
+checker: conform `error-enum-cites-req` + `error-message-cites-req` (the Class-F halves in `core-ai-native-conform`; every finding renders through the engine's one `req_message`, so error-surface messages must match `violates REQ <uri>: <why>; fix surface: <where>`) — the custom-clippy third channel is `WISH` (→ `BACKLOG.md {#b-050}`: `dylint` links `rustc_private` and will not build on the project's pinned `stable`)
 raid_role: layer=tooling; order=after:none; batch=crate
 budget: active_rules=1; first_signal=lint pass (<60s)
 ```

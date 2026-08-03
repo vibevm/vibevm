@@ -282,10 +282,25 @@ Go shape and the rule. @impl/done
   edit; first signal < ~60s (R3-007). *Rule:* whole-repo CI is not an agent loop; the
   per-cell loop is the substrate that makes every other scaffold's signal fast enough. @impl/done
 - ##SCAFFOLD-F-STRUCTURED-DIAGNOSTICS **F — Structured, REQ-citing diagnostics** (`scaffold-f-structured-diagnostics`).
-  Seam error types render `violates REQ <spec-uri>: <why>; fix surface: <where>` (§5);
-  custom checks emit the same grammar; conform emits SARIF. *Rule:* every custom check
-  and every seam error is agent-actionable — REQ URI + fix surface, never bare free
-  text (R3-011). @impl/done
+  Two of the three channels are built: a seam's closed error set carries its `Spec`
+  field and renders `violates REQ <spec-uri>: <why>; fix surface: <where>` in `Error()`
+  (§5; the structure + message halves, enforced by `go-seam-error-cites-req` in
+  `go-ai-native-conform`, B-033), and conform findings ship as SARIF. The grammar is the
+  engine's one renderer/acceptor pair (`req_message` / `matches_req_grammar`), so the
+  custom checks that exist already speak it. *Not built — the third channel:* a custom
+  `analysis.Analyzer` whose message names the rule and the remedy. The promise does not
+  name a vehicle ("custom checks emit the same grammar"); the natural carrier is a
+  standalone `analysis.Analyzer` modeled on the `staticcheck` / `exhaustive` analyzers
+  the floor already invokes (a single `go install` binary, same shape as those). The
+  promise stands, the build is planned, and the route is recorded: `BACKLOG.md {#b-050}`
+  (owner ruling 2026-08-04; the Go half rides the same entry as Rust's). *Rule:* every
+  custom check and every seam error is agent-actionable — REQ URI + fix surface, never
+  bare free text (R3-011). The parity behind it — no projection enforces the discipline
+  more weakly than another without a recorded reason — is a discipline law in the
+  manifesto (`spec://org.vibevm.ai-native/core-ai-native/00-MANIFESTO#PARITY-ACROSS-PROJECTIONS`);
+  the asymmetry that TypeScript has this channel built and Go does not yet is held by its
+  sibling law (`spec://org.vibevm.ai-native/core-ai-native/00-MANIFESTO#PARITY-GAP-IS-NEVER-SILENT`),
+  recorded with a reason and a route, not in silence. @impl/plan
 - ##SCAFFOLD-G-EXECUTABLE-EXAMPLES **G — Executable examples** (`scaffold-g-doctests`). **`Example` functions are real
   doctests, and stronger than Rust's:** `ExampleXxx` with an `// Output:` comment is
   compiled AND executed by `go test`, its stdout diffed against the comment — a
