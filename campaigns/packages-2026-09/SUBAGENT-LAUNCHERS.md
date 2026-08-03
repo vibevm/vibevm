@@ -389,3 +389,18 @@ already published; forward-fixed the same hour). Run the panel in
 background as the bare `bash tools/self-check.sh` so the task's own
 exit code IS the panel's, and **the mirror fan-out waits for the read
 tail, never for the notification.**
+
+##fact-code-slice-file-budget **Code-slice self-verify includes the
+file-length budget (2026-08-04, paid at the B-006 landing — the second
+consecutive slice where the panel caught a class the packets did not
+gate):** two accepted code slices passed check + tests + clippy, and
+the panel's `cargo xtask conform check` still failed on **file-length**
+(`pipeline.rs` 738 and a tests file 671 against the 600-line budget;
+the boss split both along feature seams, `aa740348`). A code packet's
+self-verify block therefore carries the cheap form of that gate:
+«каждый изменённый/созданный `.rs` — `wc -l` ≤ 600; if a change would
+cross the budget, split along the file's responsibility seams INSIDE
+the packet's perimeter or report the split as a leftover» — the full
+conform engine stays the boss's panel (a cold worktree cannot afford
+the xtask build), but the one budget it keeps tripping on is a
+one-liner any worker can check.
