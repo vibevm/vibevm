@@ -61,14 +61,14 @@ impl FromGithubOptions {
 /// the cell only fills and walks it.
 #[cell(seam = "PackageScanner", variant = "from-github")]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#reindex")]
-pub struct FromGithubScanner {
+pub struct FromGithubPackageScanner {
     /// API endpoint, org, auth, and clone destination for the fetch
     /// half; the walk half shares [`FromClonesOptions`] through the
     /// seam signature.
     pub opts: FromGithubOptions,
 }
 
-impl PackageScanner for FromGithubScanner {
+impl PackageScanner for FromGithubPackageScanner {
     fn scan(&self, walk: &FromClonesOptions, prior: Option<&Checkpoint>) -> Result<ScanReport> {
         let org_dir = clone_org(&self.opts)?;
         scan_org_dir_with_filter(&org_dir, walk, prior)

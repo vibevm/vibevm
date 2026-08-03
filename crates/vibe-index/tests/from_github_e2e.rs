@@ -165,7 +165,7 @@ fn local_clone_url(p: &Path) -> String {
 )]
 fn from_github_cell_scans_through_the_seam() {
     use vibe_index::scanner::{
-        FromClonesOptions, FromGithubOptions, FromGithubScanner, PackageScanner,
+        FromClonesOptions, FromGithubOptions, FromGithubPackageScanner, PackageScanner,
     };
     use vibe_index::types::NamingConvention;
 
@@ -186,7 +186,7 @@ fn from_github_cell_scans_through_the_seam() {
     }]]);
 
     let clone_into = work.path().join("clones");
-    let scanner = FromGithubScanner {
+    let scanner = FromGithubPackageScanner {
         opts: FromGithubOptions {
             api_base: mock.base_url.clone(),
             org: "vibespecs".into(),

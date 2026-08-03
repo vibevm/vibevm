@@ -6,7 +6,10 @@
 //! tool cells are referenced here by name.
 
 use serde_json::{Value, json};
-use vibe_mcp::tools::{AgenticExplain, MaterialiseSubskill, McpTool, QueryPackage, ReadSubskill};
+use vibe_mcp::tools::{
+    AgenticExplainMcpTool, MaterialiseSubskillMcpTool, McpTool, QueryPackageMcpTool,
+    ReadSubskillMcpTool,
+};
 use vibe_mcp::{ServerContext, dispatch_one};
 
 const LOCKFILE_FIXTURE: &str = r#"
@@ -70,13 +73,13 @@ fn project_with_locked(text: &str) -> (tempfile::TempDir, ServerContext) {
 
 #[test]
 fn each_cell_descriptor_names_itself() {
-    assert_eq!(QueryPackage.descriptor().name, "query_package");
-    assert_eq!(ReadSubskill.descriptor().name, "read_subskill");
+    assert_eq!(QueryPackageMcpTool.descriptor().name, "query_package");
+    assert_eq!(ReadSubskillMcpTool.descriptor().name, "read_subskill");
     assert_eq!(
-        MaterialiseSubskill.descriptor().name,
+        MaterialiseSubskillMcpTool.descriptor().name,
         "materialise_subskill"
     );
-    assert_eq!(AgenticExplain.descriptor().name, "agentic_explain");
+    assert_eq!(AgenticExplainMcpTool.descriptor().name, "agentic_explain");
 }
 
 // --- agentic_explain (PROP-018 §2.8 dual transport) ----------------------
@@ -84,7 +87,7 @@ fn each_cell_descriptor_names_itself() {
 #[test]
 fn agentic_explain_cell_returns_inline_instruction() {
     let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
-    let out = AgenticExplain.run(&json!({}), &ctx).unwrap();
+    let out = AgenticExplainMcpTool.run(&json!({}), &ctx).unwrap();
     assert_eq!(out["source"], "agentic explain");
     assert_eq!(out["delivery"], "inline");
     let instruction = out["instruction"].as_str().unwrap();
@@ -100,7 +103,7 @@ fn agentic_explain_cell_returns_inline_instruction() {
 #[test]
 fn query_package_cell_returns_full_entry() {
     let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
-    let out = QueryPackage
+    let out = QueryPackageMcpTool
         .run(&json!({ "name": "org.vibevm/wal" }), &ctx)
         .unwrap();
     assert_eq!(out["kind"], "flow");
@@ -122,7 +125,7 @@ fn query_package_cell_returns_full_entry() {
 #[test]
 fn query_package_cell_unknown_is_not_found() {
     let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
-    let err = QueryPackage
+    let err = QueryPackageMcpTool
         .run(&json!({ "name": "org.vibevm/nope" }), &ctx)
         .unwrap_err();
     assert!(err.to_string().contains("not in lockfile"));
@@ -131,7 +134,7 @@ fn query_package_cell_unknown_is_not_found() {
 #[test]
 fn query_package_cell_invalid_pkgref_errors() {
     let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
-    let err = QueryPackage
+    let err = QueryPackageMcpTool
         .run(&json!({ "name": "no-group" }), &ctx)
         .unwrap_err();
     // bare short name → must be group-qualified
@@ -150,7 +153,7 @@ fn read_subskill_cell_returns_paths_and_content() {
     std::fs::create_dir_all(b.parent().unwrap()).unwrap();
     std::fs::write(&b, "boot snippet bytes here.").unwrap();
 
-    let out = ReadSubskill
+    let out = ReadSubskillMcpTool
         .run(
             &json!({ "package": "org.vibevm/wal", "subskill_path": "stack/rust" }),
             &ctx,
@@ -171,7 +174,7 @@ fn read_subskill_cell_returns_paths_and_content() {
 #[test]
 fn read_subskill_cell_unknown_subskill_errors() {
     let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
-    let err = ReadSubskill
+    let err = ReadSubskillMcpTool
         .run(
             &json!({ "package": "org.vibevm/wal", "subskill_path": "made/up" }),
             &ctx,
@@ -195,7 +198,7 @@ fn materialise_subskill_cell_copies_lazy_pull_content() {
     )
     .unwrap();
 
-    let out = MaterialiseSubskill
+    let out = MaterialiseSubskillMcpTool
         .run(
             &json!({ "package": "org.vibevm/wal", "subskill_path": "sqlx/v08" }),
             &ctx,
@@ -221,7 +224,7 @@ fn materialise_subskill_cell_copies_lazy_pull_content() {
 #[test]
 fn materialise_subskill_cell_no_op_for_non_lazy_pull() {
     let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
-    let out = MaterialiseSubskill
+    let out = MaterialiseSubskillMcpTool
         .run(
             &json!({ "package": "org.vibevm/wal", "subskill_path": "stack/rust" }),
             &ctx,
@@ -242,7 +245,7 @@ fn materialise_subskill_cell_refuses_overwrite_without_force() {
     std::fs::create_dir_all(&target_dir).unwrap();
     std::fs::write(target_dir.join("SQLX-NOTES.md"), "user-edit").unwrap();
 
-    let out = MaterialiseSubskill
+    let out = MaterialiseSubskillMcpTool
         .run(
             &json!({ "package": "org.vibevm/wal", "subskill_path": "sqlx/v08" }),
             &ctx,

@@ -8,7 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 
 use super::*;
 
-impl GitPackageRegistry {
+impl GitPerPackageRegistry {
     /// Bootstrap (or refresh) the per-package clone at `clone_dir`
     /// against `url`. Used by [`Self::ensure_clone_against_sources`]
     /// and the mirror-fallback variants of [`Self::fetch`] /

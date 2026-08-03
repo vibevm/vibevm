@@ -326,7 +326,7 @@ fn fetch_dep_manifest_clone_fallback_uses_mirror_dispatch() {
     // mirror takes over.
 
     let backend: Arc<dyn GitBackend> = Arc::new(NoArchiveBackend(inner.clone()));
-    let r = GitPackageRegistry::open_with_mirrors(
+    let r = GitPerPackageRegistry::open_with_mirrors(
         "vibespecs",
         "https://primary.example/vibespecs",
         "main",

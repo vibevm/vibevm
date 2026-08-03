@@ -15,8 +15,8 @@ use crate::error::{Error, Result};
 use crate::index::Index;
 use crate::index::checkpoint::{self, Checkpoint};
 use crate::scanner::{
-    FromClonesOptions, FromClonesScanner, FromGithubOptions, FromGithubScanner, PackageScanner,
-    ScanReport,
+    FromClonesOptions, FromClonesPackageScanner, FromGithubOptions, FromGithubPackageScanner,
+    PackageScanner, ScanReport,
 };
 use crate::types::{NamingConvention, PackageKind, VersionEntry};
 
@@ -96,7 +96,7 @@ pub fn run(args: Args) -> Result<()> {
     // scan.
     let mut _temp_guard: Option<tempfile::TempDir> = None;
     let scanner: Box<dyn PackageScanner> = if let Some(path) = args.from_clones.clone() {
-        Box::new(FromClonesScanner { org_dir: path })
+        Box::new(FromClonesPackageScanner { org_dir: path })
     } else if let Some(org) = args.from_github.clone() {
         let token = match args.token_file.as_deref() {
             Some(path) => Some(read_token(path)?),
@@ -113,7 +113,7 @@ pub fn run(args: Args) -> Result<()> {
             _temp_guard = Some(dir);
             path
         };
-        Box::new(FromGithubScanner {
+        Box::new(FromGithubPackageScanner {
             opts: FromGithubOptions {
                 api_base: args.api_base.clone(),
                 org,

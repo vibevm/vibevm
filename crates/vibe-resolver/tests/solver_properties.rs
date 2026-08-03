@@ -23,7 +23,7 @@ use proptest::prelude::*;
 use specmark::verifies;
 use vibe_core::manifest::Manifest;
 use vibe_core::{Group, PackageRef, VersionSpec};
-use vibe_resolver::sat::Sat;
+use vibe_resolver::sat::SatDepSolver;
 use vibe_resolver::{
     DepProvider, DepProviderError, DepSolver, NaiveDepSolver, ResolvedGraph, ResolvoDepSolver,
     VersionEnumerator,
@@ -376,7 +376,7 @@ proptest! {
     #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
     fn differential_naive_vs_sat_dominance(world in world_strategy(), picks in prop::collection::vec(0usize..6, 1..=3)) {
         let naive = NaiveDepSolver::new(WorldProvider::new(&world));
-        let sat = Sat::new(WorldProvider::new(&world));
+        let sat = SatDepSolver::new(WorldProvider::new(&world));
         let roots = root_refs(&world, &picks);
         match (naive.solve(&roots), sat.solve(&roots)) {
             (Ok(gn), Ok(gs)) => {

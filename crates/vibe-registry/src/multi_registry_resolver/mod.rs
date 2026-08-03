@@ -1,6 +1,6 @@
 //! Multi-registry resolver — PROP-002.
 //!
-//! Sits on top of one or more [`GitPackageRegistry`] instances and dispatches
+//! Sits on top of one or more [`GitPerPackageRegistry`] instances and dispatches
 //! resolution / fetch through the priority + override + (eventually) mirror
 //! decision tree pinned in [PROP-002 §2.2 / §2.3 / §2.4](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md).
 //!
@@ -14,7 +14,7 @@
 //!    surface it.
 //!
 //! 2. **`[[registry]]` array, in priority order.** The first registry
-//!    whose [`GitPackageRegistry::resolve`] succeeds wins. If a registry
+//!    whose [`GitPerPackageRegistry::resolve`] succeeds wins. If a registry
 //!    answers `UnknownPackage` (the package repo simply does not exist
 //!    under that org URL), we fall through to the next. Other errors
 //!    (network, auth, malformed manifest) bubble up immediately — those
@@ -47,7 +47,7 @@ use vibe_core::manifest::{
 use vibe_core::{Group, PackageKind, PackageRef, VersionSpec};
 
 use crate::git_backend::{GitBackend, GitError, ShellGit};
-use crate::git_package_registry::{GitPackageRegistry, copy_dir_excluding_git};
+use crate::git_package_registry::{GitPerPackageRegistry, copy_dir_excluding_git};
 use crate::registry_cache::{DEFAULT_FRESHNESS_SECS, default_cache_root, strip_git_plus_prefix};
 use crate::{
     CachedPackage, InPlaceMaterialised, LocalRegistry, RegistryError, ResolvedPackage,
@@ -109,7 +109,7 @@ pub struct MultiResolution {
     /// meaningful when `via_redirect.is_some()`; for non-redirected
     /// resolutions the registry's own auth applies via `registry_name`
     /// → registry lookup. The fetch path uses this to synthesise a
-    /// target-side `GitPackageRegistry` with the right auth without
+    /// target-side `GitPerPackageRegistry` with the right auth without
     /// re-fetching the redirect marker.
     pub redirect_target_auth: vibe_core::manifest::AuthKind,
     /// Env-var name when `redirect_target_auth = TokenEnv`. `None`
@@ -152,11 +152,11 @@ pub struct ResolvedPathDep {
     pub workspace_rel: String,
 }
 
-/// Resolver coordinating an ordered set of [`GitPackageRegistry`]
+/// Resolver coordinating an ordered set of [`GitPerPackageRegistry`]
 /// instances plus the cross-cutting `[[mirror]]` and `[[override]]`
 /// layers from `vibe.toml`.
 pub struct MultiRegistryResolver {
-    registries: Vec<Arc<GitPackageRegistry>>,
+    registries: Vec<Arc<GitPerPackageRegistry>>,
     /// The ordered walk list — git and local sources interleaved in the
     /// declared `[[registry]]` order. The four core operations
     /// (list / resolve / fetch-dep-manifest / fetch) iterate this; the
@@ -281,7 +281,7 @@ impl MultiRegistryResolver {
     }
 
     /// Build a resolver from `vibe.toml`-shape sections plus a backend
-    /// reused across all `GitPackageRegistry` instances. Production
+    /// reused across all `GitPerPackageRegistry` instances. Production
     /// callers pass `Arc::new(ShellGit::new())` as the backend; tests
     /// pass a fake.
     pub fn from_manifest(
@@ -358,7 +358,7 @@ impl MultiRegistryResolver {
             } else {
                 Arc::clone(&backend)
             };
-            let mut entry = GitPackageRegistry::open_with_auth(
+            let mut entry = GitPerPackageRegistry::open_with_auth(
                 &reg.name,
                 &reg.url,
                 &reg.r#ref,
@@ -409,7 +409,7 @@ impl MultiRegistryResolver {
         )
     }
 
-    pub fn registries(&self) -> &[Arc<GitPackageRegistry>] {
+    pub fn registries(&self) -> &[Arc<GitPerPackageRegistry>] {
         &self.registries
     }
 

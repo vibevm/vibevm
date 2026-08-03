@@ -36,8 +36,8 @@ pub mod search;
 pub mod vendor;
 
 pub use git_backend::{GitBackend, GitError, ShellGit};
-pub use git_package_registry::GitPackageRegistry;
-pub use git_registry::{GitRegistry, RegistryMeta, default_cache_root};
+pub use git_package_registry::GitPerPackageRegistry;
+pub use git_registry::{GitMonorepoRegistry, RegistryMeta, default_cache_root};
 pub use index_client::{
     BindingSite, IndexClient, IndexError, PurlLookupHit, PurlLookupResults, SearchHit,
     SearchResults, index_url_for,
@@ -49,7 +49,7 @@ pub use multi_registry_resolver::{
 };
 
 /// Uniform surface over all registry backends — [`LocalRegistry`] and
-/// [`GitRegistry`] both implement this trait. `vibe-install` and
+/// [`GitMonorepoRegistry`] both implement this trait. `vibe-install` and
 /// `vibe-cli` consume registries exclusively through the trait so the
 /// concrete backend can be chosen at CLI-argument-parse time.
 ///
@@ -208,7 +208,7 @@ pub struct CachedPackage {
     pub source_uri: String,
     /// Name of the `[[registry]]` entry in `vibe.toml` that served this
     /// package. `None` for `LocalRegistry` (`--registry <path>`), the
-    /// legacy monorepo `GitRegistry`, and packages resolved through
+    /// legacy monorepo `GitMonorepoRegistry`, and packages resolved through
     /// `[[override]]`.
     pub registry_name: Option<String>,
     /// Git ref the content was fetched at — typically `v<version>` for
@@ -293,7 +293,7 @@ impl CachedPackage {
     }
 }
 
-/// What [`GitPackageRegistry::materialise_in_place`](crate::GitPackageRegistry)
+/// What [`GitPerPackageRegistry::materialise_in_place`](crate::GitPerPackageRegistry)
 /// produced: the in-place slot is already populated on disk (a fresh clone or
 /// an incremental `git fetch`), so these are the records the install layer
 /// needs to write the lockfile entry and compose boot (PROP-022 §2.4/§2.5).

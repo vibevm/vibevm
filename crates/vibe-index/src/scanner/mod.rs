@@ -19,8 +19,8 @@ pub mod git_cli;
 pub mod manifest;
 pub mod org_walk;
 
-pub use from_clones::FromClonesScanner;
-pub use from_github::{FromGithubOptions, FromGithubScanner, clone_org, list_repos};
+pub use from_clones::FromClonesPackageScanner;
+pub use from_github::{FromGithubOptions, FromGithubPackageScanner, clone_org, list_repos};
 pub use org_walk::{FromClonesOptions, ScanReport, SkipNote, scan_org_dir};
 
 /// The scan seam (PROP-005 §2.8): one cell per source kind, selected
@@ -31,11 +31,11 @@ pub use org_walk::{FromClonesOptions, ScanReport, SkipNote, scan_org_dir};
 /// entries forward unchanged.
 ///
 /// ```
-/// use vibe_index::scanner::{FromClonesOptions, FromClonesScanner, PackageScanner};
+/// use vibe_index::scanner::{FromClonesOptions, FromClonesPackageScanner, PackageScanner};
 /// use vibe_index::types::NamingConvention;
 ///
 /// let org = tempfile::tempdir().unwrap();
-/// let scanner = FromClonesScanner {
+/// let scanner = FromClonesPackageScanner {
 ///     org_dir: org.path().to_path_buf(),
 /// };
 /// let opts = FromClonesOptions {

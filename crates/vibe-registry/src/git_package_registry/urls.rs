@@ -7,7 +7,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#r
 
 use super::*;
 
-impl GitPackageRegistry {
+impl GitPerPackageRegistry {
     /// Compose the per-package repo URL — `<org_url>/<naming(group, name)>.git`
     /// for normal multi-package registries, or the verbatim single-package
     /// URL for git-source registries (PROP-002 §2.4.1). Trailing slashes
@@ -143,7 +143,7 @@ mod tests {
         // declared up front, naming is bypassed.
         let cache = tempdir().unwrap();
         let fake: Arc<dyn GitBackend> = Arc::new(FakeBackend::default());
-        let r = GitPackageRegistry::open_single_package(
+        let r = GitPerPackageRegistry::open_single_package(
             "git-source-flow-internal",
             "https://github.com/me/flow-internal",
             "v0.1.0",
@@ -171,7 +171,7 @@ mod tests {
     fn single_package_skips_mirror_chain() {
         let cache = tempdir().unwrap();
         let fake: Arc<dyn GitBackend> = Arc::new(FakeBackend::default());
-        let r = GitPackageRegistry::open_single_package(
+        let r = GitPerPackageRegistry::open_single_package(
             "git-source",
             "https://github.com/me/flow-internal",
             "v1.0",

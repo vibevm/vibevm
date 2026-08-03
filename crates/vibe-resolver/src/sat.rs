@@ -1,4 +1,4 @@
-//! `Sat` — the `sat` DepSolver cell: chronological backtracking over
+//! `SatDepSolver` — the `sat` DepSolver cell: chronological backtracking over
 //! version choices (PROP-003 §2.1 "solver upgrade"). It closed the
 //! backtracking half of DBT-0011, which the debt ledger now records as
 //! fixed.
@@ -9,7 +9,7 @@
 //! fits or fails — no second chance. This cell adds the second
 //! chance without re-implementing any resolution semantics:
 //!
-//! > **The naive solver is the branch checker.** `Sat` walks a tree
+//! > **The naive solver is the branch checker.** `SatDepSolver` walks a tree
 //! > of version *bounds*; at each node it runs the full naive solve
 //! > under a [`BoundedProvider`] that caps selected packages below
 //! > their conflicting picks. A `VersionConflict` narrows the bound
@@ -98,7 +98,7 @@ impl<'a, P: DepProvider> DepProvider for BoundedProvider<'a, P> {
 ///
 /// ```
 /// use vibe_core::{Group, PackageRef, manifest::Manifest};
-/// use vibe_resolver::{DepProvider, DepProviderError, DepSolver, sat::Sat};
+/// use vibe_resolver::{DepProvider, DepProviderError, DepSolver, sat::SatDepSolver};
 ///
 /// struct OnePackage(Manifest);
 /// impl DepProvider for OnePackage {
@@ -117,7 +117,7 @@ impl<'a, P: DepProvider> DepProvider for BoundedProvider<'a, P> {
 /// let m = Manifest::parse_str(
 ///     "[package]\ngroup = \"org.vibevm\"\nname = \"wal\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
 /// ).unwrap();
-/// let solver = Sat::new(OnePackage(m));
+/// let solver = SatDepSolver::new(OnePackage(m));
 /// let graph = solver
 ///     .solve(&[PackageRef::parse("org.vibevm/wal").unwrap()])
 ///     .unwrap();
@@ -125,13 +125,13 @@ impl<'a, P: DepProvider> DepProvider for BoundedProvider<'a, P> {
 /// ```
 #[cell(seam = "DepSolver", variant = "sat")]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
-pub struct Sat<P: DepProvider> {
+pub struct SatDepSolver<P: DepProvider> {
     provider: P,
 }
 
-impl<P: DepProvider> Sat<P> {
+impl<P: DepProvider> SatDepSolver<P> {
     pub fn new(provider: P) -> Self {
-        Sat { provider }
+        SatDepSolver { provider }
     }
 
     pub fn into_inner(self) -> P {
@@ -180,7 +180,7 @@ fn conflict_key(package: &str) -> Result<(Group, String), SolveError> {
 /// the two cells cannot drift semantically. Non-primary — resolvo is the
 /// shipped default; this is one of the cells `--solver` keeps reachable.
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
-impl<P: DepProvider> DepSolver for Sat<P> {
+impl<P: DepProvider> DepSolver for SatDepSolver<P> {
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
         // The choice stack: each entry excludes `>= bound` for its
         // package. The effective bound per package is the LOWEST entry
@@ -371,7 +371,7 @@ mod tests {
 
     /// The first-pick-wins trap: naive fails, sat backtracks and
     /// solves. `a` accepts c >=1; `b` demands c ^1; c has 1.0 and 2.0.
-    /// Naive picks c=2.0 for `a` (highest), then `b` conflicts. Sat
+    /// Naive picks c=2.0 for `a` (highest), then `b` conflicts. SatDepSolver
     /// caps c below 2.0 and lands c=1.0 — satisfying both.
     #[test]
     fn sat_solves_where_naive_first_pick_fails() {
@@ -390,7 +390,7 @@ mod tests {
             "the trap must actually trap naive: {err:?}"
         );
 
-        let sat = Sat::new(MapProvider::new(&seeds));
+        let sat = SatDepSolver::new(MapProvider::new(&seeds));
         let graph = sat.solve(&roots(&["a", "b"])).unwrap();
         let c = graph
             .find(&Group::parse("org.vibevm").unwrap(), "c")
@@ -411,7 +411,7 @@ mod tests {
             pkg("d", "2.0.0", &[]),
         ];
         let seeds: Vec<&str> = seeds.iter().map(String::as_str).collect();
-        let sat = Sat::new(MapProvider::new(&seeds));
+        let sat = SatDepSolver::new(MapProvider::new(&seeds));
         let graph = sat.solve(&roots(&["a", "b"])).unwrap();
         let org = Group::parse("org.vibevm").unwrap();
         assert_eq!(graph.find(&org, "c").unwrap().version.major, 1);
@@ -429,7 +429,7 @@ mod tests {
             pkg("c", "2.0.0", &[]),
         ];
         let seeds: Vec<&str> = seeds.iter().map(String::as_str).collect();
-        let sat = Sat::new(MapProvider::new(&seeds));
+        let sat = SatDepSolver::new(MapProvider::new(&seeds));
         let err = sat.solve(&roots(&["a", "b"])).unwrap_err();
         match err {
             SolveError::VersionConflict { package, .. } => {
@@ -449,7 +449,7 @@ mod tests {
         let naive_graph = NaiveDepSolver::new(MapProvider::new(&seeds))
             .solve(&roots(&["a"]))
             .unwrap();
-        let sat_graph = Sat::new(MapProvider::new(&seeds))
+        let sat_graph = SatDepSolver::new(MapProvider::new(&seeds))
             .solve(&roots(&["a"]))
             .unwrap();
         let render = |g: &ResolvedGraph| {

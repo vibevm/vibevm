@@ -1,7 +1,7 @@
 //! The registry-source model + the local-`[[registry]]` url parser.
 //!
 //! [`RegistrySource`] is the heterogeneous entry the multi-registry walk
-//! iterates: git registries ([`GitPackageRegistry`]) and local-directory
+//! iterates: git registries ([`GitPerPackageRegistry`]) and local-directory
 //! registries ([`LocalRegistry`]) coexist in declared order, dispatched per
 //! variant on the four core operations. [`local_path_from_url`] turns a local
 //! `[[registry]]` url into the filesystem path `LocalRegistry` opens.
@@ -14,7 +14,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 use super::*;
 
 /// One source in the priority-ordered registry walk. Git registries
-/// ([`GitPackageRegistry`] — per-package repos under an org URL, versions by
+/// ([`GitPerPackageRegistry`] — per-package repos under an org URL, versions by
 /// git tag) and local-directory registries ([`LocalRegistry`] — a monorepo
 /// laid out `<root>/<group>/<name>/v<version>/`) coexist in declared order.
 ///
@@ -29,7 +29,7 @@ use super::*;
 pub enum RegistrySource {
     /// Remote (or local-git) org-root registry: `<org>/<group>.<name>.git`
     /// per-package repos, versions by `git ls-remote` tags.
-    Git(Arc<GitPackageRegistry>),
+    Git(Arc<GitPerPackageRegistry>),
     /// Local-directory registry: a filesystem root laid out
     /// `<root>/<group>/<name>/v<version>/`, read with no git.
     Local(LocalRegistrySource),

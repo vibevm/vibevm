@@ -4,7 +4,7 @@
 //!
 //! - [`DepProvider`] — what the solver needs from the registry layer:
 //!   pick a concrete version for a [`PackageRef`], read the manifest at
-//!   that version. Implemented by [`MultiRegistryProvider`] for the
+//!   that version. Implemented by [`MultiRegistryDepProvider`] for the
 //!   production path; tests provide their own. [`VersionEnumerator`]
 //!   adds `list_versions` for the cells that pick among candidates
 //!   themselves (PROP-017 §2.2).
@@ -13,7 +13,7 @@
 //!   that includes transitive deps.
 //! - [`ResolvoDepSolver`] — resolvo (CDCL SAT) behind that seam, and the
 //!   shipped default (`--solver` defaults to `resolvo`; PROP-017).
-//! - [`Sat`](sat::Sat) — chronological backtracking over version bounds,
+//! - [`SatDepSolver`](sat::SatDepSolver) — chronological backtracking over version bounds,
 //!   with the naive solve as its branch checker.
 //! - [`NaiveDepSolver`] — a depth-first single-pass solver, kept as the
 //!   small-graph fast path and the differential oracle's reference cell
@@ -71,14 +71,14 @@ pub mod resolvo_engine;
 pub mod sat;
 
 pub use activation::{ActivationContext, ActivationOutcome, CapabilityTag, TagError};
-pub use embedded_provider::{EmbeddedPrecedence, EmbeddedProvider};
+pub use embedded_provider::{EmbeddedDepProvider, EmbeddedPrecedence};
 pub use features::{
     FeatureError, FeatureExpansion, FeatureRequest, FeatureValue, expand_features,
     validate_features_table,
 };
-pub use local_composite_provider::LocalCompositeProvider;
-pub use local_registry_provider::LocalRegistryProvider;
-pub use multi_registry_provider::MultiRegistryProvider;
+pub use local_composite_provider::LocalCompositeDepProvider;
+pub use local_registry_provider::LocalRegistryDepProvider;
+pub use multi_registry_provider::MultiRegistryDepProvider;
 pub use naive::NaiveDepSolver;
 pub use resolvo_engine::ResolvoDepSolver;
 

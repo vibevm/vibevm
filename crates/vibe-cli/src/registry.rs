@@ -19,10 +19,10 @@ use std::path::PathBuf;
 
 use vibe_publish::DirectGitCreator;
 use vibe_registry::{LocalRegistry, MultiRegistryResolver, RegistryError};
-use vibe_resolver::sat::Sat;
+use vibe_resolver::sat::SatDepSolver;
 use vibe_resolver::{
-    DepSolver, EmbeddedPrecedence, EmbeddedProvider, LocalCompositeProvider, LocalRegistryProvider,
-    MultiRegistryProvider, NaiveDepSolver, ResolvoDepSolver,
+    DepSolver, EmbeddedDepProvider, EmbeddedPrecedence, LocalCompositeDepProvider,
+    LocalRegistryDepProvider, MultiRegistryDepProvider, NaiveDepSolver, ResolvoDepSolver,
 };
 
 /// Where a selected value came from. The full chain is
@@ -146,7 +146,7 @@ pub enum ProviderResource<'a> {
     Multi(&'a MultiRegistryResolver),
     /// PROP-030: the local-registry family (project-local `packages/` plus
     /// the vibe-embedded `packages/` of a source install), composed into one
-    /// `LocalCompositeProvider` and an optional declared multi-registry
+    /// `LocalCompositeDepProvider` and an optional declared multi-registry
     /// walk, at the origin-selected precedence. The Vec is ordered:
     /// project-local first (when discovered), then vibe-embedded.
     Embedded {
@@ -190,22 +190,22 @@ pub fn dep_solver<'a>(
     // recorded provenance: flags.solver / flags.provider carry it.
     match (flags.solver.value, flags.provider.value, resource) {
         ("resolvo", "local-registry", ProviderResource::Local(r)) => {
-            Box::new(ResolvoDepSolver::new(LocalRegistryProvider::new(r)))
+            Box::new(ResolvoDepSolver::new(LocalRegistryDepProvider::new(r)))
         }
         ("resolvo", "multi-registry", ProviderResource::Multi(m)) => {
-            Box::new(ResolvoDepSolver::new(MultiRegistryProvider::new(m)))
+            Box::new(ResolvoDepSolver::new(MultiRegistryDepProvider::new(m)))
         }
         ("naive", "local-registry", ProviderResource::Local(r)) => {
-            Box::new(NaiveDepSolver::new(LocalRegistryProvider::new(r)))
+            Box::new(NaiveDepSolver::new(LocalRegistryDepProvider::new(r)))
         }
         ("naive", "multi-registry", ProviderResource::Multi(m)) => {
-            Box::new(NaiveDepSolver::new(MultiRegistryProvider::new(m)))
+            Box::new(NaiveDepSolver::new(MultiRegistryDepProvider::new(m)))
         }
         ("sat", "local-registry", ProviderResource::Local(r)) => {
-            Box::new(Sat::new(LocalRegistryProvider::new(r)))
+            Box::new(SatDepSolver::new(LocalRegistryDepProvider::new(r)))
         }
         ("sat", "multi-registry", ProviderResource::Multi(m)) => {
-            Box::new(Sat::new(MultiRegistryProvider::new(m)))
+            Box::new(SatDepSolver::new(MultiRegistryDepProvider::new(m)))
         }
         (
             "resolvo",
@@ -216,11 +216,14 @@ pub fn dep_solver<'a>(
                 precedence,
                 short_circuit,
             },
-        ) => Box::new(ResolvoDepSolver::new(EmbeddedProvider::new(
-            LocalCompositeProvider::new(
-                locals.into_iter().map(LocalRegistryProvider::new).collect(),
+        ) => Box::new(ResolvoDepSolver::new(EmbeddedDepProvider::new(
+            LocalCompositeDepProvider::new(
+                locals
+                    .into_iter()
+                    .map(LocalRegistryDepProvider::new)
+                    .collect(),
             ),
-            declared.map(MultiRegistryProvider::new),
+            declared.map(MultiRegistryDepProvider::new),
             precedence,
             short_circuit,
         ))),
@@ -233,11 +236,14 @@ pub fn dep_solver<'a>(
                 precedence,
                 short_circuit,
             },
-        ) => Box::new(NaiveDepSolver::new(EmbeddedProvider::new(
-            LocalCompositeProvider::new(
-                locals.into_iter().map(LocalRegistryProvider::new).collect(),
+        ) => Box::new(NaiveDepSolver::new(EmbeddedDepProvider::new(
+            LocalCompositeDepProvider::new(
+                locals
+                    .into_iter()
+                    .map(LocalRegistryDepProvider::new)
+                    .collect(),
             ),
-            declared.map(MultiRegistryProvider::new),
+            declared.map(MultiRegistryDepProvider::new),
             precedence,
             short_circuit,
         ))),
@@ -250,11 +256,14 @@ pub fn dep_solver<'a>(
                 precedence,
                 short_circuit,
             },
-        ) => Box::new(Sat::new(EmbeddedProvider::new(
-            LocalCompositeProvider::new(
-                locals.into_iter().map(LocalRegistryProvider::new).collect(),
+        ) => Box::new(SatDepSolver::new(EmbeddedDepProvider::new(
+            LocalCompositeDepProvider::new(
+                locals
+                    .into_iter()
+                    .map(LocalRegistryDepProvider::new)
+                    .collect(),
             ),
-            declared.map(MultiRegistryProvider::new),
+            declared.map(MultiRegistryDepProvider::new),
             precedence,
             short_circuit,
         ))),

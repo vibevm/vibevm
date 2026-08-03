@@ -8,10 +8,10 @@
 //! and the choice of precedence from the install `origin`, live in the CLI
 //! (PROP-030 §7); this cell is only the composition.
 //!
-//! Pre-§3.3 this cell held a single `LocalRegistryProvider` for the embedded
+//! Pre-§3.3 this cell held a single `LocalRegistryDepProvider` for the embedded
 //! registry. Adding project-local packages as a second source at the same
 //! tier forced either N-way logic inside this cell or a composite — the
-//! [`LocalCompositeProvider`] owns the inner ordering of the local family
+//! [`LocalCompositeDepProvider`] owns the inner ordering of the local family
 //! (project-local first, vibe-embedded second) and exposes the same
 //! `VersionEnumerator` surface this cell consumed, so the composition with
 //! the declared walk stays 2-way at the upper layer.
@@ -21,7 +21,8 @@ use vibe_core::manifest::Manifest;
 use vibe_core::{Group, PackageRef};
 
 use crate::{
-    DepProvider, DepProviderError, LocalCompositeProvider, MultiRegistryProvider, VersionEnumerator,
+    DepProvider, DepProviderError, LocalCompositeDepProvider, MultiRegistryDepProvider,
+    VersionEnumerator,
 };
 
 /// Which side wins a coordinate both the embedded registry and the declared
@@ -38,7 +39,7 @@ pub enum EmbeddedPrecedence {
 }
 
 /// A `DepProvider` over the local-registry family (project-local +
-/// vibe-embedded, composed by [`LocalCompositeProvider`]) plus an optional
+/// vibe-embedded, composed by [`LocalCompositeDepProvider`]) plus an optional
 /// declared multi-registry walk, delegating **per coordinate** at the
 /// [`EmbeddedPrecedence`] the caller selected from the install origin.
 ///
@@ -48,9 +49,9 @@ pub enum EmbeddedPrecedence {
 /// the registries'.
 #[cell(seam = "DepProvider", variant = "embedded", flag = "provider")]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#precedence")]
-pub struct EmbeddedProvider<'a> {
-    embedded: LocalCompositeProvider<'a>,
-    declared: Option<MultiRegistryProvider<'a>>,
+pub struct EmbeddedDepProvider<'a> {
+    embedded: LocalCompositeDepProvider<'a>,
+    declared: Option<MultiRegistryDepProvider<'a>>,
     precedence: EmbeddedPrecedence,
     /// PROP-030 §3.1: when set (`--embedded-short-circuit`), version
     /// enumeration stops at the first provider that serves a coordinate
@@ -64,7 +65,7 @@ pub struct EmbeddedProvider<'a> {
     short_circuit: bool,
 }
 
-impl<'a> EmbeddedProvider<'a> {
+impl<'a> EmbeddedDepProvider<'a> {
     /// Compose the local-registry family with an optional declared walk.
     /// With `declared = None` (a project that declares no `[[registry]]`),
     /// the local family answers alone — the case that lifts PROP-002's
@@ -73,12 +74,12 @@ impl<'a> EmbeddedProvider<'a> {
     /// discovered, then vibe-embedded, so the inner ordering of the local
     /// family already reflects the developer-in-project precedence.
     pub fn new(
-        embedded: LocalCompositeProvider<'a>,
-        declared: Option<MultiRegistryProvider<'a>>,
+        embedded: LocalCompositeDepProvider<'a>,
+        declared: Option<MultiRegistryDepProvider<'a>>,
         precedence: EmbeddedPrecedence,
         short_circuit: bool,
     ) -> Self {
-        EmbeddedProvider {
+        EmbeddedDepProvider {
             embedded,
             declared,
             precedence,
@@ -98,7 +99,7 @@ impl<'a> EmbeddedProvider<'a> {
     }
 }
 
-impl<'a> DepProvider for EmbeddedProvider<'a> {
+impl<'a> DepProvider for EmbeddedDepProvider<'a> {
     #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#precedence")]
     fn resolve_version(&self, pkgref: &PackageRef) -> Result<semver::Version, DepProviderError> {
         resolve_first(&self.ordered(), |p| p.resolve_version(pkgref))
@@ -115,7 +116,7 @@ impl<'a> DepProvider for EmbeddedProvider<'a> {
     }
 }
 
-impl<'a> VersionEnumerator for EmbeddedProvider<'a> {
+impl<'a> VersionEnumerator for EmbeddedDepProvider<'a> {
     #[spec(
         implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#provider-enrichment"
     )]

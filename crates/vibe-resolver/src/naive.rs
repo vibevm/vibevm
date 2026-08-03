@@ -3,7 +3,7 @@
 //! Single pass, no backtracking. See [`crate`] module docs for the
 //! pinned limitations, and the note on the struct below for why this cell
 //! stays in tree now that the SAT-style upgrade has happened twice over —
-//! `Sat` and `ResolvoDepSolver` both sit beside it, and resolvo is the
+//! `SatDepSolver` and `ResolvoDepSolver` both sit beside it, and resolvo is the
 //! production default.
 
 use specmark::{cell, spec};
@@ -39,7 +39,7 @@ fn require_group(pkgref: &PackageRef) -> Result<&Group, SolveError> {
 /// dominance oracle (PROP-003 §2.1 "the cheapest oracle we'll ever have";
 /// PROP-017 §6 "naive and sat stay in tree"). Selecting it is choosing
 /// speed over completeness knowingly — its first-pick-wins limit is real,
-/// and `Sat` / `ResolvoDepSolver` are the cells that backtrack.
+/// and `SatDepSolver` / `ResolvoDepSolver` are the cells that backtrack.
 #[cell(seam = "DepSolver", variant = "naive", flag = "solver")]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]

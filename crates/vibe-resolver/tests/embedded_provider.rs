@@ -1,4 +1,4 @@
-//! Behaviour oracle for the `EmbeddedProvider` cell (PROP-030 §3): drive the
+//! Behaviour oracle for the `EmbeddedDepProvider` cell (PROP-030 §3): drive the
 //! composed provider over a real embedded local-directory registry, so the
 //! cell has an integration-level characterization and not merely the unit
 //! tests beside it. The `declared = None` shape is the one PROP-030 leans on
@@ -11,8 +11,8 @@ use specmark::verifies;
 use vibe_core::{Group, PackageRef};
 use vibe_registry::LocalRegistry;
 use vibe_resolver::{
-    DepProvider, EmbeddedPrecedence, EmbeddedProvider, LocalCompositeProvider,
-    LocalRegistryProvider, VersionEnumerator,
+    DepProvider, EmbeddedDepProvider, EmbeddedPrecedence, LocalCompositeDepProvider,
+    LocalRegistryDepProvider, VersionEnumerator,
 };
 
 fn v(s: &str) -> semver::Version {
@@ -46,8 +46,8 @@ fn embedded_registry_answers_alone_when_no_declared_walk() {
     let registry = LocalRegistry::new(&root).unwrap();
     // The local family is now a composite (PROP-030 §3.3): a single-element
     // composite is equivalent to the pre-§3.3 single-provider shape.
-    let provider = EmbeddedProvider::new(
-        LocalCompositeProvider::new(vec![LocalRegistryProvider::new(&registry)]),
+    let provider = EmbeddedDepProvider::new(
+        LocalCompositeDepProvider::new(vec![LocalRegistryDepProvider::new(&registry)]),
         None,
         EmbeddedPrecedence::EmbeddedFirst,
         false,

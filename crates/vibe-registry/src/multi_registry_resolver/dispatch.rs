@@ -11,7 +11,7 @@ impl MultiRegistryResolver {
     /// Materialise a previously-resolved package into the per-project cache.
     /// The returned [`CachedPackage`] carries lockfile-v2 provenance
     /// (`registry_name` / `source_ref` / `overridden`) populated by the
-    /// `GitPackageRegistry` impl or by the override path.
+    /// `GitPerPackageRegistry` impl or by the override path.
     pub fn fetch(
         &self,
         resolution: &MultiResolution,
@@ -84,7 +84,7 @@ impl MultiRegistryResolver {
     /// Place a registry-served `in-place` package directly into its project
     /// `slot` (PROP-022 §2.4) — a fresh clone, or an incremental `git fetch`
     /// on an existing slot — bypassing the cache clone + snapshot copy. Routes
-    /// to the [`GitPackageRegistry`] that resolved the package. The special
+    /// to the [`GitPerPackageRegistry`] that resolved the package. The special
     /// source kinds (override / git-source / path-source / redirect) are not
     /// in-place candidates; they keep the move-based snapshot path.
     pub fn materialise_in_place(

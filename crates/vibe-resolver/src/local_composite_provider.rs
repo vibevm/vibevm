@@ -1,15 +1,15 @@
-//! `LocalCompositeProvider` — a `DepProvider` over an ordered list of
-//! [`LocalRegistryProvider`]s, the structural answer to "project-local
+//! `LocalCompositeDepProvider` — a `DepProvider` over an ordered list of
+//! [`LocalRegistryDepProvider`]s, the structural answer to "project-local
 //! packages + vibe-embedded packages" composing at the same tier of
 //! resolution (PROP-030 §3.3, the project-local sources extension).
 //!
-//! The pre-§3.3 `EmbeddedProvider` carried a single `LocalRegistryProvider`
+//! The pre-§3.3 `EmbeddedDepProvider` carried a single `LocalRegistryDepProvider`
 //! for the embedded registry; adding project-local as a second source forced
-//! either N-way logic inside `EmbeddedProvider` (touching its `ordered()`,
+//! either N-way logic inside `EmbeddedDepProvider` (touching its `ordered()`,
 //! `resolve_first`, `union_versions`, `first_served_versions`, plus four
 //! clash/short-circuit tests) or this composite — a `DepProvider` over many
 //! local-registry providers, exposing the same `VersionEnumerator` surface
-//! `EmbeddedProvider` consumed, so it composes unchanged with the declared
+//! `EmbeddedDepProvider` consumed, so it composes unchanged with the declared
 //! walk. The composite owns the inner ordering of its locals (project-local
 //! first, then vibe-embedded, per the developer-in-project precedence) and is
 //! transparent to the layer above.
@@ -23,28 +23,28 @@ use specmark::{cell, spec};
 use vibe_core::manifest::Manifest;
 use vibe_core::{Group, PackageRef};
 
-use crate::{DepProvider, DepProviderError, LocalRegistryProvider, VersionEnumerator};
+use crate::{DepProvider, DepProviderError, LocalRegistryDepProvider, VersionEnumerator};
 
-/// A `DepProvider` over an ordered list of [`LocalRegistryProvider`]s. The
+/// A `DepProvider` over an ordered list of [`LocalRegistryDepProvider`]s. The
 /// providers are consulted in the order given (first wins; later providers
 /// are absent-fall-through only), and version enumeration unions across all
 /// of them. An empty composite is a programming error — at least one local
 /// source is required (the only caller constructs it from a non-empty list,
 /// see `InstallResolver::Embedded` in `vibe-cli`).
 #[cell(seam = "DepProvider", variant = "local-composite", flag = "provider")]
-pub struct LocalCompositeProvider<'a> {
+pub struct LocalCompositeDepProvider<'a> {
     /// Ordered: first provider wins a clash. The caller (the install
     /// resolver) builds this as `[project_local, vibe_embedded]` so
     /// project-local takes precedence inside the local family.
-    providers: Vec<LocalRegistryProvider<'a>>,
+    providers: Vec<LocalRegistryDepProvider<'a>>,
 }
 
-impl<'a> LocalCompositeProvider<'a> {
+impl<'a> LocalCompositeDepProvider<'a> {
     /// Compose an ordered list of local-registry providers. The list MUST be
     /// non-empty — an empty composite answers nothing for any coordinate and
     /// surfaces the same "consulted no providers" sentinel the embedded
     /// composition does.
-    pub fn new(providers: Vec<LocalRegistryProvider<'a>>) -> Self {
+    pub fn new(providers: Vec<LocalRegistryDepProvider<'a>>) -> Self {
         Self { providers }
     }
 
@@ -59,7 +59,7 @@ impl<'a> LocalCompositeProvider<'a> {
     }
 }
 
-impl<'a> DepProvider for LocalCompositeProvider<'a> {
+impl<'a> DepProvider for LocalCompositeDepProvider<'a> {
     #[spec(
         implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local"
     )]
@@ -80,13 +80,13 @@ impl<'a> DepProvider for LocalCompositeProvider<'a> {
     }
 }
 
-impl<'a> VersionEnumerator for LocalCompositeProvider<'a> {
+impl<'a> VersionEnumerator for LocalCompositeDepProvider<'a> {
     /// Project-local and vibe-embedded both answer locally (no network), so
     /// the union is cheap and is what the candidate-enumerating solver needs
     /// — it sees every locally-available version for a coordinate, then the
     /// fetch picks the precedence-first one (project-local, per the ordering).
     /// The `--embedded-short-circuit` knob, when it applies, is enforced by
-    /// the layer above (`EmbeddedProvider`); this composite always unions.
+    /// the layer above (`EmbeddedDepProvider`); this composite always unions.
     #[spec(
         implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#provider-enrichment"
     )]
@@ -122,7 +122,7 @@ fn is_absent(err: &DepProviderError) -> bool {
 /// Absent providers are skipped; a real failure short-circuits. If every
 /// provider is absent the last absence is returned so the caller sees a
 /// genuine "not found" rather than a fabricated one. `providers` MUST be
-/// non-empty (see [`LocalCompositeProvider::ordered`]).
+/// non-empty (see [`LocalCompositeDepProvider::ordered`]).
 fn resolve_first<T>(
     providers: &[&dyn VersionEnumerator],
     op: impl Fn(&dyn VersionEnumerator) -> Result<T, DepProviderError>,
@@ -174,7 +174,7 @@ fn union_versions(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::LocalRegistryProvider;
+    use crate::LocalRegistryDepProvider;
     use semver::Version;
     use specmark::verifies;
     use std::fs;
@@ -235,9 +235,9 @@ mod tests {
             "vibe-embedded",
         );
 
-        let composite = LocalCompositeProvider::new(vec![
-            LocalRegistryProvider::new(&project),
-            LocalRegistryProvider::new(&embedded),
+        let composite = LocalCompositeDepProvider::new(vec![
+            LocalRegistryDepProvider::new(&project),
+            LocalRegistryDepProvider::new(&embedded),
         ]);
         let pkgref = PackageRef::parse("org.vibevm/wal@0.2.0").unwrap();
         let v = composite.resolve_version(&pkgref).unwrap();
@@ -279,9 +279,9 @@ mod tests {
             "vibe-embedded",
         );
 
-        let composite = LocalCompositeProvider::new(vec![
-            LocalRegistryProvider::new(&project),
-            LocalRegistryProvider::new(&embedded),
+        let composite = LocalCompositeDepProvider::new(vec![
+            LocalRegistryDepProvider::new(&project),
+            LocalRegistryDepProvider::new(&embedded),
         ]);
         let pkgref = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
         let v = composite.resolve_version(&pkgref).unwrap();
@@ -312,9 +312,9 @@ mod tests {
             "embedded",
         );
 
-        let composite = LocalCompositeProvider::new(vec![
-            LocalRegistryProvider::new(&project),
-            LocalRegistryProvider::new(&embedded),
+        let composite = LocalCompositeDepProvider::new(vec![
+            LocalRegistryDepProvider::new(&project),
+            LocalRegistryDepProvider::new(&embedded),
         ]);
         let versions = composite.list_versions(&org(), "wal").unwrap();
         assert_eq!(
@@ -346,9 +346,9 @@ mod tests {
             .join(Manifest::FILENAME);
         fs::write(&path, "not = valid = toml =").unwrap();
 
-        let composite = LocalCompositeProvider::new(vec![
-            LocalRegistryProvider::new(&project),
-            LocalRegistryProvider::new(&embedded),
+        let composite = LocalCompositeDepProvider::new(vec![
+            LocalRegistryDepProvider::new(&project),
+            LocalRegistryDepProvider::new(&embedded),
         ]);
         let v = Version::parse("0.1.0").unwrap();
         let err = composite.fetch_manifest(&org(), "wal", &v).unwrap_err();
@@ -367,9 +367,9 @@ mod tests {
         let embedded_tmp = tempfile::tempdir().unwrap();
         let project = LocalRegistry::new(project_tmp.path()).unwrap();
         let embedded = LocalRegistry::new(embedded_tmp.path()).unwrap();
-        let composite = LocalCompositeProvider::new(vec![
-            LocalRegistryProvider::new(&project),
-            LocalRegistryProvider::new(&embedded),
+        let composite = LocalCompositeDepProvider::new(vec![
+            LocalRegistryDepProvider::new(&project),
+            LocalRegistryDepProvider::new(&embedded),
         ]);
         let pkgref = PackageRef::parse("org.vibevm/nope").unwrap();
         let err = composite.resolve_version(&pkgref).unwrap_err();

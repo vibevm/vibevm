@@ -19,12 +19,12 @@ use crate::scanner::org_walk::{FromClonesOptions, ScanReport, scan_org_dir_with_
 /// the composition root, for `--from-clones`) guarantees it exists.
 #[cell(seam = "PackageScanner", variant = "from-clones")]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#reindex")]
-pub struct FromClonesScanner {
+pub struct FromClonesPackageScanner {
     /// The org directory — one subdirectory per package repo clone.
     pub org_dir: PathBuf,
 }
 
-impl PackageScanner for FromClonesScanner {
+impl PackageScanner for FromClonesPackageScanner {
     fn scan(&self, walk: &FromClonesOptions, prior: Option<&Checkpoint>) -> Result<ScanReport> {
         scan_org_dir_with_filter(&self.org_dir, walk, prior)
     }

@@ -20,7 +20,7 @@ use specmark::verifies;
 use vibe_core::PackageRef;
 use vibe_registry::{LocalRegistry, MultiRegistryResolver, ShellGit};
 use vibe_resolver::{
-    DepSolver, LocalRegistryProvider, MultiRegistryProvider, NaiveDepSolver, ResolvedGraph,
+    DepSolver, LocalRegistryDepProvider, MultiRegistryDepProvider, NaiveDepSolver, ResolvedGraph,
     ResolvoDepSolver,
 };
 
@@ -162,7 +162,7 @@ fn provider_pair_agrees_on_solvable_inputs() {
 
     // Cell 1: local-registry provider.
     let local = LocalRegistry::new(&localroot).unwrap();
-    let local_graph = NaiveDepSolver::new(LocalRegistryProvider::new(&local))
+    let local_graph = NaiveDepSolver::new(LocalRegistryDepProvider::new(&local))
         .solve(&roots)
         .expect("local-registry arm must solve");
 
@@ -181,7 +181,7 @@ fn provider_pair_agrees_on_solvable_inputs() {
         3600,
     )
     .expect("building the multi-registry resolver");
-    let multi_graph = NaiveDepSolver::new(MultiRegistryProvider::new(&multi))
+    let multi_graph = NaiveDepSolver::new(MultiRegistryDepProvider::new(&multi))
         .solve(&roots)
         .expect("multi-registry arm must solve");
 
@@ -201,10 +201,10 @@ fn provider_pair_agrees_on_solvable_inputs() {
     // graph naive reaches on this conflict-free world — proving
     // `MultiRegistryResolver::list_versions` and the provider impls feed
     // candidates correctly off real `file://` git repos and local disk.
-    let local_resolvo = ResolvoDepSolver::new(LocalRegistryProvider::new(&local))
+    let local_resolvo = ResolvoDepSolver::new(LocalRegistryDepProvider::new(&local))
         .solve(&roots)
         .expect("local-registry resolvo arm must solve");
-    let multi_resolvo = ResolvoDepSolver::new(MultiRegistryProvider::new(&multi))
+    let multi_resolvo = ResolvoDepSolver::new(MultiRegistryDepProvider::new(&multi))
         .solve(&roots)
         .expect("multi-registry resolvo arm must solve");
     assert_eq!(

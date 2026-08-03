@@ -1,4 +1,4 @@
-//! Optional HTTP client that lets `GitPackageRegistry` consult an
+//! Optional HTTP client that lets `GitPerPackageRegistry` consult an
 //! upstream index (PROP-005 §2.10) for cheap version enumeration
 //! before falling back to `git ls-remote`. Slice 10.
 //!

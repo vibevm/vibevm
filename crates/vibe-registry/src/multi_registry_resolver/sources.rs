@@ -10,7 +10,7 @@ use super::*;
 impl MultiRegistryResolver {
     /// Resolve a `[requires.packages]` git-source declaration
     /// (PROP-002 §2.4.1). Synthesises a single-package
-    /// `GitPackageRegistry` pointing at `dep.url`, fetches
+    /// `GitPerPackageRegistry` pointing at `dep.url`, fetches
     /// `vibe.toml` at the declared `tag`/`branch`/`rev`,
     /// verifies the `(group, name)` identity matches and the optional
     /// `version` constraint is satisfied, returns a `MultiResolution`
@@ -22,7 +22,7 @@ impl MultiRegistryResolver {
     ) -> Result<MultiResolution, RegistryError> {
         let synthetic_name = format!("git-source-{}-{}", dep.group, dep.name);
         let refname = dep.ref_kind.as_str().to_string();
-        let reg = GitPackageRegistry::open_single_package(
+        let reg = GitPerPackageRegistry::open_single_package(
             &synthetic_name,
             &dep.url,
             &refname,
@@ -199,7 +199,7 @@ impl MultiRegistryResolver {
         // not used here — we clone into our own `__git_sources__`
         // sub-tree so the cache stays organised by resolution mode.
         let synthetic_name = format!("git-source-{group}-{name}");
-        let reg = GitPackageRegistry::open_single_package(
+        let reg = GitPerPackageRegistry::open_single_package(
             &synthetic_name,
             &dep.url,
             &refname,

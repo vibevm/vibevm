@@ -1,7 +1,7 @@
 //! Characterization oracles for the `Registry`-seam cells that no
 //! other integration test in this crate references: [`LocalRegistry`]
-//! (variant `local`) and [`GitRegistry`] (variant `git-monorepo`).
-//! `GitPackageRegistry` (variant `git-per-package`) already has its
+//! (variant `local`) and [`GitMonorepoRegistry`] (variant `git-monorepo`).
+//! `GitPerPackageRegistry` (variant `git-per-package`) already has its
 //! oracle in `index_fast_path.rs`.
 //!
 //! Each test drives the cell through the `Registry` seam against a
@@ -19,7 +19,7 @@ use tempfile::tempdir;
 use vibe_core::{Group, PackageRef};
 use vibe_registry::git_backend::{GitBackend, GitError};
 use vibe_registry::git_registry::DEFAULT_FRESHNESS_SECS;
-use vibe_registry::{GitRegistry, LocalRegistry, Registry, RegistryError};
+use vibe_registry::{GitMonorepoRegistry, LocalRegistry, Registry, RegistryError};
 
 /// Group-native registry layout (`<root>/<group>/<name>/v<ver>/`) with
 /// `org.vibevm/wal` at 0.1.0 and 0.2.0 — the same fixture shape the
@@ -160,7 +160,7 @@ fn git_registry_clones_once_and_serves_git_shaped_source_uris() {
 
     let backend = Arc::new(FakeGit::new(upstream));
     let cache_root = tmp.path().join("cache");
-    let git = GitRegistry::open_with(
+    let git = GitMonorepoRegistry::open_with(
         "git@gitverse.ru:anarchic/vibespecs.git",
         "main",
         &cache_root,
@@ -194,7 +194,7 @@ fn git_registry_clones_once_and_serves_git_shaped_source_uris() {
     assert!(cached.content_hash.starts_with("sha256:"));
 
     // A second open within the freshness TTL reuses the clone.
-    let _again = GitRegistry::open_with(
+    let _again = GitMonorepoRegistry::open_with(
         "git@gitverse.ru:anarchic/vibespecs.git",
         "main",
         &cache_root,

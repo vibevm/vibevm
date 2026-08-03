@@ -14,7 +14,7 @@ use super::*;
 /// success.
 pub(super) fn try_fetch_redirect(
     backend: &Arc<dyn GitBackend>,
-    reg: &GitPackageRegistry,
+    reg: &GitPerPackageRegistry,
     resolved: &ResolvedPackage,
     tag: &str,
 ) -> Result<Option<RedirectFile>, RegistryError> {
@@ -22,7 +22,7 @@ pub(super) fn try_fetch_redirect(
 }
 
 /// Lower-level form of `try_fetch_redirect`: take an already-built
-/// `GitPackageRegistry` plus `(kind, name, ref)` and probe its repo
+/// `GitPerPackageRegistry` plus `(kind, name, ref)` and probe its repo
 /// for a `vibe-redirect.toml`. Used both for the initial probe at
 /// the stub layer and the hop-limit check at the target.
 ///
@@ -42,7 +42,7 @@ pub(super) fn try_fetch_redirect(
 /// part of the package payload.
 fn try_fetch_redirect_for_url(
     backend: &Arc<dyn GitBackend>,
-    reg: &GitPackageRegistry,
+    reg: &GitPerPackageRegistry,
     group: &Group,
     name: &str,
     refname: &str,
@@ -98,7 +98,7 @@ impl MultiRegistryResolver {
         &self,
         pkgref: &PackageRef,
         stub_resolved: &ResolvedPackage,
-        stub_reg: &GitPackageRegistry,
+        stub_reg: &GitPerPackageRegistry,
         redirect: &RedirectFile,
         stub_tag: &str,
     ) -> Result<MultiResolution, RegistryError> {
@@ -123,7 +123,7 @@ impl MultiRegistryResolver {
         // the group the registry resolved by (PROP-008).
         let group = &stub_resolved.group;
         let synthetic_name = format!("redirect-target-{}-{}", group, pkgref.name);
-        let target_reg = GitPackageRegistry::open_single_package(
+        let target_reg = GitPerPackageRegistry::open_single_package(
             &synthetic_name,
             &target_url,
             &target_ref,
@@ -249,7 +249,7 @@ impl MultiRegistryResolver {
         // the redirect's declared auth, so the M1.14 token-injection
         // + scrub-from-`.git/config` discipline applies here too.
         let synthetic_name = format!("redirect-target-{group}-{name}");
-        let target_reg = GitPackageRegistry::open_single_package(
+        let target_reg = GitPerPackageRegistry::open_single_package(
             &synthetic_name,
             &target_url,
             &refname,

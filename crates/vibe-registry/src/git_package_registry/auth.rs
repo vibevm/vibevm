@@ -6,7 +6,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 
 use super::*;
 
-impl GitPackageRegistry {
+impl GitPerPackageRegistry {
     /// The `auth` regime the registry was opened with — read by
     /// `MultiRegistryResolver` to decide between walk-to-next-registry
     /// (on `AuthKind::None` + 401) and halt-with-actionable-error
@@ -60,7 +60,7 @@ impl GitPackageRegistry {
     /// — `MultiRegistryResolver` prefers the explicit `token_env`
     /// from the manifest section when available; this fallback is
     /// only used when surfacing a `MissingToken` error from inside
-    /// `GitPackageRegistry` (which doesn't carry the explicit name).
+    /// `GitPerPackageRegistry` (which doesn't carry the explicit name).
     fn derive_default_token_env_name(&self) -> Option<String> {
         let host = registry_host_from_url(&self.org_url)?;
         let mut sanitised = String::with_capacity(host.len());
@@ -222,7 +222,7 @@ mod tests {
         // Rust 2024+).
         let cache = tempdir().unwrap();
         let fake = Arc::new(FakeBackend::default());
-        let reg = GitPackageRegistry::open_with_explicit_token(
+        let reg = GitPerPackageRegistry::open_with_explicit_token(
             "internal",
             "https://internal.example.com/vibespecs",
             "main",
@@ -315,7 +315,7 @@ mod tests {
             inner: fake.clone(),
             scrubs: Mutex::new(Vec::new()),
         });
-        let reg = GitPackageRegistry::open_with_explicit_token(
+        let reg = GitPerPackageRegistry::open_with_explicit_token(
             "internal",
             "https://scrub.example/vibespecs",
             "main",

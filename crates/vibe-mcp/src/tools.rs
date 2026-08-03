@@ -23,10 +23,10 @@ use crate::{ServerContext, ToolDescriptor, ToolError};
 /// not know a tool's identity beyond it.
 ///
 /// ```
-/// use vibe_mcp::tools::{McpTool, QueryPackage};
+/// use vibe_mcp::tools::{McpTool, QueryPackageMcpTool};
 ///
 /// // A tool's descriptor names it and shapes its arguments.
-/// let tool = QueryPackage;
+/// let tool = QueryPackageMcpTool;
 /// let d = tool.descriptor();
 /// assert_eq!(d.name, "query_package");
 /// assert_eq!(d.input_schema["required"][0], "name");
@@ -43,10 +43,10 @@ pub trait McpTool {
 /// A new tool is a new cell added here, not an edit to the dispatcher.
 pub fn default_tools() -> Vec<Box<dyn McpTool>> {
     vec![
-        Box::new(QueryPackage),
-        Box::new(ReadSubskill),
-        Box::new(MaterialiseSubskill),
-        Box::new(AgenticExplain),
+        Box::new(QueryPackageMcpTool),
+        Box::new(ReadSubskillMcpTool),
+        Box::new(MaterialiseSubskillMcpTool),
+        Box::new(AgenticExplainMcpTool),
     ]
 }
 
@@ -58,14 +58,14 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
 /// entry. Read-only.
 ///
 /// ```
-/// use vibe_mcp::tools::{McpTool, QueryPackage};
-/// assert_eq!(QueryPackage.descriptor().name, "query_package");
+/// use vibe_mcp::tools::{McpTool, QueryPackageMcpTool};
+/// assert_eq!(QueryPackageMcpTool.descriptor().name, "query_package");
 /// ```
 #[cell(seam = "McpTool", variant = "query_package")]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools")]
-pub struct QueryPackage;
+pub struct QueryPackageMcpTool;
 
-impl McpTool for QueryPackage {
+impl McpTool for QueryPackageMcpTool {
     fn descriptor(&self) -> ToolDescriptor {
         ToolDescriptor {
             name: "query_package".to_string(),
@@ -145,14 +145,14 @@ impl McpTool for QueryPackage {
 /// for eager / lazy-push, package cache for lazy-pull. Read-only.
 ///
 /// ```
-/// use vibe_mcp::tools::{McpTool, ReadSubskill};
-/// assert_eq!(ReadSubskill.descriptor().name, "read_subskill");
+/// use vibe_mcp::tools::{McpTool, ReadSubskillMcpTool};
+/// assert_eq!(ReadSubskillMcpTool.descriptor().name, "read_subskill");
 /// ```
 #[cell(seam = "McpTool", variant = "read_subskill")]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools")]
-pub struct ReadSubskill;
+pub struct ReadSubskillMcpTool;
 
-impl McpTool for ReadSubskill {
+impl McpTool for ReadSubskillMcpTool {
     fn descriptor(&self) -> ToolDescriptor {
         ToolDescriptor {
             name: "read_subskill".to_string(),
@@ -276,14 +276,14 @@ impl McpTool for ReadSubskill {
 /// writing tool.
 ///
 /// ```
-/// use vibe_mcp::tools::{McpTool, MaterialiseSubskill};
-/// assert_eq!(MaterialiseSubskill.descriptor().name, "materialise_subskill");
+/// use vibe_mcp::tools::{McpTool, MaterialiseSubskillMcpTool};
+/// assert_eq!(MaterialiseSubskillMcpTool.descriptor().name, "materialise_subskill");
 /// ```
 #[cell(seam = "McpTool", variant = "materialise_subskill")]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools")]
-pub struct MaterialiseSubskill;
+pub struct MaterialiseSubskillMcpTool;
 
-impl McpTool for MaterialiseSubskill {
+impl McpTool for MaterialiseSubskillMcpTool {
     fn descriptor(&self) -> ToolDescriptor {
         ToolDescriptor {
             name: "materialise_subskill".to_string(),
@@ -414,14 +414,14 @@ impl McpTool for MaterialiseSubskill {
 /// path returns it synchronously and writes no mailbox file.
 ///
 /// ```
-/// use vibe_mcp::tools::{McpTool, AgenticExplain};
-/// assert_eq!(AgenticExplain.descriptor().name, "agentic_explain");
+/// use vibe_mcp::tools::{McpTool, AgenticExplainMcpTool};
+/// assert_eq!(AgenticExplainMcpTool.descriptor().name, "agentic_explain");
 /// ```
 #[cell(seam = "McpTool", variant = "agentic_explain")]
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#transports")]
-pub struct AgenticExplain;
+pub struct AgenticExplainMcpTool;
 
-impl McpTool for AgenticExplain {
+impl McpTool for AgenticExplainMcpTool {
     fn descriptor(&self) -> ToolDescriptor {
         ToolDescriptor {
             name: "agentic_explain".to_string(),

@@ -431,7 +431,7 @@ impl MultiRegistryResolver {
             let target_url = resolution.source_url.clone();
             let target_ref = resolution.source_ref.clone().unwrap_or_default();
             let synthetic_name = format!("redirect-target-{group}-{name}");
-            let target_reg = GitPackageRegistry::open_single_package(
+            let target_reg = GitPerPackageRegistry::open_single_package(
                 &synthetic_name,
                 &target_url,
                 &target_ref,
@@ -465,7 +465,7 @@ impl MultiRegistryResolver {
                 .clone()
                 .unwrap_or_else(|| dep.ref_kind.as_str().to_string());
             let synthetic_name = format!("git-source-{group}-{name}");
-            let reg = GitPackageRegistry::open_single_package(
+            let reg = GitPerPackageRegistry::open_single_package(
                 &synthetic_name,
                 &dep.url,
                 &source_ref,

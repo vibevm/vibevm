@@ -15,17 +15,17 @@ use crate::{DepProvider, DepProviderError, VersionEnumerator};
 /// `DepProvider` impl backed by a [`LocalRegistry`].
 #[cell(seam = "DepProvider", variant = "local-registry", flag = "provider")]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
-pub struct LocalRegistryProvider<'a> {
+pub struct LocalRegistryDepProvider<'a> {
     registry: &'a LocalRegistry,
 }
 
-impl<'a> LocalRegistryProvider<'a> {
+impl<'a> LocalRegistryDepProvider<'a> {
     pub fn new(registry: &'a LocalRegistry) -> Self {
-        LocalRegistryProvider { registry }
+        LocalRegistryDepProvider { registry }
     }
 }
 
-impl<'a> DepProvider for LocalRegistryProvider<'a> {
+impl<'a> DepProvider for LocalRegistryDepProvider<'a> {
     fn resolve_version(&self, pkgref: &PackageRef) -> Result<semver::Version, DepProviderError> {
         match self.registry.resolve(pkgref) {
             Ok(r) => Ok(r.version),
@@ -77,7 +77,7 @@ impl<'a> DepProvider for LocalRegistryProvider<'a> {
     }
 }
 
-impl<'a> VersionEnumerator for LocalRegistryProvider<'a> {
+impl<'a> VersionEnumerator for LocalRegistryDepProvider<'a> {
     #[spec(
         implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#provider-enrichment"
     )]
@@ -117,7 +117,7 @@ mod tests {
     fn fetch_manifest_absent_version_dir_is_unknown_package() {
         let tmp = tempfile::tempdir().unwrap();
         let reg = LocalRegistry::new(tmp.path()).unwrap();
-        let provider = LocalRegistryProvider::new(&reg);
+        let provider = LocalRegistryDepProvider::new(&reg);
         let group = Group::parse("org.vibevm").unwrap();
         let ver = semver::Version::parse("0.1.0").unwrap();
         let err = provider.fetch_manifest(&group, "wal", &ver).unwrap_err();
@@ -139,7 +139,7 @@ mod tests {
         )
         .unwrap();
         let reg = LocalRegistry::new(tmp.path()).unwrap();
-        let provider = LocalRegistryProvider::new(&reg);
+        let provider = LocalRegistryDepProvider::new(&reg);
         let group = Group::parse("org.vibevm").unwrap();
         let ver = semver::Version::parse("0.1.0").unwrap();
         let manifest = provider.fetch_manifest(&group, "wal", &ver).unwrap();
@@ -156,7 +156,7 @@ mod tests {
         fs::create_dir_all(&dir).unwrap();
         // no vibe.toml inside
         let reg = LocalRegistry::new(tmp.path()).unwrap();
-        let provider = LocalRegistryProvider::new(&reg);
+        let provider = LocalRegistryDepProvider::new(&reg);
         let group = Group::parse("org.vibevm").unwrap();
         let ver = semver::Version::parse("0.1.0").unwrap();
         let err = provider.fetch_manifest(&group, "wal", &ver).unwrap_err();

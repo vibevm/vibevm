@@ -163,7 +163,7 @@ impl GitBackend for ShellGit {
         // invisible to a previously-bootstrapped clone.
         self.run(&["fetch", "--prune", "--tags", "origin"], Some(dest))?;
         // Try the tag-form first (PROP-002 §2.5: versions are git tags),
-        // then fall back to the branch-form (legacy GitRegistry path,
+        // then fall back to the branch-form (legacy GitMonorepoRegistry path,
         // and registry-level metadata refs). `refs/tags/<name>` and
         // `origin/<name>` are both unambiguous fully-qualified refs;
         // git resolves them without the heuristic-driven ambiguity of a

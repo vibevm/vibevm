@@ -17,17 +17,17 @@ use crate::{DepProvider, DepProviderError, VersionEnumerator};
 /// `DepProvider` impl backed by a [`MultiRegistryResolver`].
 #[cell(seam = "DepProvider", variant = "multi-registry", flag = "provider")]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
-pub struct MultiRegistryProvider<'a> {
+pub struct MultiRegistryDepProvider<'a> {
     resolver: &'a MultiRegistryResolver,
 }
 
-impl<'a> MultiRegistryProvider<'a> {
+impl<'a> MultiRegistryDepProvider<'a> {
     pub fn new(resolver: &'a MultiRegistryResolver) -> Self {
-        MultiRegistryProvider { resolver }
+        MultiRegistryDepProvider { resolver }
     }
 }
 
-impl<'a> DepProvider for MultiRegistryProvider<'a> {
+impl<'a> DepProvider for MultiRegistryDepProvider<'a> {
     #[spec(
         implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
     )]
@@ -97,7 +97,7 @@ impl<'a> DepProvider for MultiRegistryProvider<'a> {
     }
 }
 
-impl<'a> VersionEnumerator for MultiRegistryProvider<'a> {
+impl<'a> VersionEnumerator for MultiRegistryDepProvider<'a> {
     #[spec(
         implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#provider-enrichment"
     )]

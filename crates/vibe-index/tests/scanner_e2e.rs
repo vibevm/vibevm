@@ -71,7 +71,7 @@ fn fs_must_create(p: &Path) {
     r = 1
 )]
 fn from_clones_cell_scans_through_the_seam() {
-    use vibe_index::scanner::{FromClonesOptions, FromClonesScanner, PackageScanner};
+    use vibe_index::scanner::{FromClonesOptions, FromClonesPackageScanner, PackageScanner};
     use vibe_index::types::NamingConvention;
 
     if !git_available() {
@@ -88,7 +88,7 @@ fn from_clones_cell_scans_through_the_seam() {
         "v0.1.0",
     );
 
-    let scanner = FromClonesScanner {
+    let scanner = FromClonesPackageScanner {
         org_dir: org.clone(),
     };
     let opts = FromClonesOptions {

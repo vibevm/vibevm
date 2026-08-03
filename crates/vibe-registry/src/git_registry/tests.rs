@@ -61,7 +61,7 @@ fn open_clones_on_first_use_and_skips_when_fresh() {
     fake.seed_source(upstream.clone());
 
     // First open → clone.
-    let r1 = GitRegistry::open_with(
+    let r1 = GitMonorepoRegistry::open_with(
         "git@host:o/r.git",
         "main",
         &cache_root,
@@ -79,7 +79,7 @@ fn open_clones_on_first_use_and_skips_when_fresh() {
     assert!(r1.cache_dir().join("meta.toml").exists());
 
     // Second open with fresh TTL → no update.
-    let _r2 = GitRegistry::open_with(
+    let _r2 = GitMonorepoRegistry::open_with(
         "git@host:o/r.git",
         "main",
         &cache_root,
@@ -92,7 +92,8 @@ fn open_clones_on_first_use_and_skips_when_fresh() {
 
     // Second open with zero TTL → update fires.
     let _r3 =
-        GitRegistry::open_with("git@host:o/r.git", "main", &cache_root, fake.clone(), 0).unwrap();
+        GitMonorepoRegistry::open_with("git@host:o/r.git", "main", &cache_root, fake.clone(), 0)
+            .unwrap();
     assert_eq!(fake.clone_count(), 1);
     assert_eq!(fake.update_count(), 1);
 }
@@ -108,7 +109,7 @@ fn sync_always_updates() {
     let fake = Arc::new(FakeGit::default());
     fake.seed_source(upstream.clone());
 
-    let r = GitRegistry::open_with(
+    let r = GitMonorepoRegistry::open_with(
         "git@host:o/r.git",
         "main",
         &cache_root,
@@ -134,7 +135,7 @@ fn resolve_and_fetch_produce_git_source_uri() {
     let fake = Arc::new(FakeGit::default());
     fake.seed_source(upstream.clone());
 
-    let r = GitRegistry::open_with(
+    let r = GitMonorepoRegistry::open_with(
         "git@gitverse.ru:anarchic/vibespecs.git",
         "main",
         &cache_root,

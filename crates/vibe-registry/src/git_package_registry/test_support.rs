@@ -175,8 +175,8 @@ mod fixtures {
         org_url: &str,
         naming: NamingConvention,
         backend: Arc<dyn GitBackend>,
-    ) -> GitPackageRegistry {
-        GitPackageRegistry::open_with(
+    ) -> GitPerPackageRegistry {
+        GitPerPackageRegistry::open_with(
             "vibespecs",
             org_url,
             "main",
@@ -194,8 +194,8 @@ mod fixtures {
         naming: NamingConvention,
         mirror_urls: Vec<String>,
         backend: Arc<dyn GitBackend>,
-    ) -> GitPackageRegistry {
-        GitPackageRegistry::open_with_mirrors(
+    ) -> GitPerPackageRegistry {
+        GitPerPackageRegistry::open_with_mirrors(
             "vibespecs",
             org_url,
             "main",

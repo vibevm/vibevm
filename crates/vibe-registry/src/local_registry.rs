@@ -1,7 +1,7 @@
 //! The M0 local-directory registry backend — [`LocalRegistry`].
 //!
 //! Laid out `<root>/<group>/<name>/v<version>/` per `VIBEVM-SPEC.md`
-//! §8.2 — the same on-disk shape a [`GitRegistry`](crate::GitRegistry)
+//! §8.2 — the same on-disk shape a [`GitMonorepoRegistry`](crate::GitMonorepoRegistry)
 //! clone delegates to. Split out of the crate root so the cell behind
 //! the `Registry` seam lives in one file-set with one registration
 //! point.

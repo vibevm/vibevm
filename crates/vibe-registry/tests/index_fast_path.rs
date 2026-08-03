@@ -1,5 +1,5 @@
 //! End-to-end coverage of the index-aware fast path on
-//! `GitPackageRegistry`. A mock axum server stands in for a
+//! `GitPerPackageRegistry`. A mock axum server stands in for a
 //! vibe-index host; the registry is configured against it. When the
 //! mock returns 200 the version list is served from the index; when
 //! it returns 404 (or the index is misconfigured) the registry
@@ -22,7 +22,7 @@ use tokio::net::TcpListener;
 use vibe_core::manifest::NamingConvention;
 use vibe_core::{Group, PackageKind};
 use vibe_registry::git_backend::GitBackend;
-use vibe_registry::{GitError, GitPackageRegistry, IndexClient};
+use vibe_registry::{GitError, GitPerPackageRegistry, IndexClient};
 
 #[derive(Default)]
 struct CannedFiles {
@@ -209,7 +209,7 @@ fn index_fast_path_serves_versions() {
     let mock = spawn_mock(canned);
     let cache = tempdir().unwrap();
     let backend = Arc::new(AlwaysMissing);
-    let registry = GitPackageRegistry::open_with_mirrors(
+    let registry = GitPerPackageRegistry::open_with_mirrors(
         "vibespecs",
         "https://example.invalid/vibespecs",
         "main",
@@ -246,7 +246,7 @@ fn index_404_falls_through_to_git_backend() {
     let mock = spawn_mock(canned);
     let cache = tempdir().unwrap();
     let backend = Arc::new(AlwaysMissing);
-    let registry = GitPackageRegistry::open_with_mirrors(
+    let registry = GitPerPackageRegistry::open_with_mirrors(
         "vibespecs",
         "https://example.invalid/vibespecs",
         "main",
@@ -317,7 +317,7 @@ fn index_5xx_falls_through_to_git_backend() {
     let cache = tempdir().unwrap();
     let backend = Arc::new(AlwaysMissing);
     let org = Group::parse("org.vibevm").unwrap();
-    let registry = GitPackageRegistry::open_with_mirrors(
+    let registry = GitPerPackageRegistry::open_with_mirrors(
         "vibespecs",
         "https://example.invalid/vibespecs",
         "main",

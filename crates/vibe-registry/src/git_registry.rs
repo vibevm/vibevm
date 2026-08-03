@@ -1,6 +1,6 @@
 //! Git-backed registry.
 //!
-//! A [`GitRegistry`] is a thin layer on top of a [`LocalRegistry`]: it
+//! A [`GitMonorepoRegistry`] is a thin layer on top of a [`LocalRegistry`]: it
 //! owns a local clone of a remote git repository at
 //! `~/.vibe/registries/<hash>/clone/` and delegates resolve / fetch to
 //! a [`LocalRegistry`] pointed at that clone. The on-disk layout is
@@ -50,7 +50,7 @@ pub struct RegistryMeta {
 
 /// Git-backed [`Registry`] implementation.
 #[cell(seam = "Registry", variant = "git-monorepo")]
-pub struct GitRegistry {
+pub struct GitMonorepoRegistry {
     backend: Arc<dyn GitBackend>,
     url: String,
     refname: String,
@@ -59,7 +59,7 @@ pub struct GitRegistry {
     local: LocalRegistry,
 }
 
-impl GitRegistry {
+impl GitMonorepoRegistry {
     /// Open (cloning if necessary) a git-backed registry at `url#ref`
     /// using the default [`ShellGit`] backend and the default
     /// cache root under `~/.vibe/registries/`.
@@ -79,7 +79,7 @@ impl GitRegistry {
     }
 
     /// Lower-level constructor exposing backend, cache root and TTL.
-    /// Used by tests; production callers prefer [`GitRegistry::open`].
+    /// Used by tests; production callers prefer [`GitMonorepoRegistry::open`].
     pub fn open_with(
         url: &str,
         refname: &str,
@@ -127,7 +127,7 @@ impl GitRegistry {
         }
 
         let local = LocalRegistry::new(clone_dir.clone())?;
-        Ok(GitRegistry {
+        Ok(GitMonorepoRegistry {
             backend,
             url: url.to_string(),
             refname: refname.to_string(),
@@ -170,7 +170,7 @@ impl GitRegistry {
     }
 }
 
-impl Registry for GitRegistry {
+impl Registry for GitMonorepoRegistry {
     fn list_versions(
         &self,
         group: &Group,

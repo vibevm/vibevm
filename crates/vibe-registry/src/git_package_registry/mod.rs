@@ -1,6 +1,6 @@
 //! Per-package git registry — PROP-002.
 //!
-//! `GitPackageRegistry` resolves a [`PackageRef`] against an organization-root
+//! `GitPerPackageRegistry` resolves a [`PackageRef`] against an organization-root
 //! URL by:
 //!
 //! 1. Composing the per-package repo URL via the registry's [`NamingConvention`]
@@ -64,7 +64,7 @@ pub(crate) use fetch::copy_dir_excluding_git;
 
 /// Per-package git registry — one organization URL, many package repos under it.
 #[cell(seam = "Registry", variant = "git-per-package")]
-pub struct GitPackageRegistry {
+pub struct GitPerPackageRegistry {
     backend: Arc<dyn GitBackend>,
     name: String,
     org_url: String,
@@ -124,7 +124,7 @@ pub struct GitPackageRegistry {
     freshness_secs: u64,
 }
 
-impl GitPackageRegistry {
+impl GitPerPackageRegistry {
     /// Open a registry against the default cache root and a fresh
     /// [`ShellGit`] backend.
     pub fn open(
@@ -232,7 +232,7 @@ impl GitPackageRegistry {
             path: bucket.clone(),
             source,
         })?;
-        Ok(GitPackageRegistry {
+        Ok(GitPerPackageRegistry {
             backend,
             name: name.to_string(),
             org_url: org_url.to_string(),
@@ -310,7 +310,7 @@ impl GitPackageRegistry {
             None
         };
 
-        Ok(GitPackageRegistry {
+        Ok(GitPerPackageRegistry {
             backend,
             name: name.to_string(),
             org_url: org_url.to_string(),
@@ -332,7 +332,7 @@ impl GitPackageRegistry {
     /// Used for git-source declarations from `[requires.packages]`
     /// table-form (PROP-002 §2.4.1) — the consumer's `vibe.toml`
     /// declares `"org.vibevm/internal" = { git = "...", tag = "..." }`
-    /// and the resolver synthesises a `GitPackageRegistry` pointing
+    /// and the resolver synthesises a `GitPerPackageRegistry` pointing
     /// directly at that URL, bypassing the org-level `naming`-driven
     /// URL composition.
     ///
@@ -430,29 +430,29 @@ impl GitPackageRegistry {
     }
 }
 
-impl Registry for GitPackageRegistry {
+impl Registry for GitPerPackageRegistry {
     fn list_versions(
         &self,
         group: &Group,
         name: &str,
     ) -> Result<Vec<semver::Version>, RegistryError> {
-        GitPackageRegistry::list_versions(self, group, name)
+        GitPerPackageRegistry::list_versions(self, group, name)
     }
     fn resolve(&self, pkgref: &PackageRef) -> Result<ResolvedPackage, RegistryError> {
-        GitPackageRegistry::resolve(self, pkgref)
+        GitPerPackageRegistry::resolve(self, pkgref)
     }
     fn fetch(
         &self,
         resolved: &ResolvedPackage,
         cache_root: &Path,
     ) -> Result<CachedPackage, RegistryError> {
-        GitPackageRegistry::fetch(self, resolved, cache_root)
+        GitPerPackageRegistry::fetch(self, resolved, cache_root)
     }
 }
 
 /// Lowercase hex of the first 8 bytes (16 chars) of `sha256(s)`. Matches the
 /// hashing rule pinned in PROP-001 §2.4 / PROP-002 §2.6 — same identity
-/// shape as the monorepo `GitRegistry` uses for its registry-level cache
+/// shape as the monorepo `GitMonorepoRegistry` uses for its registry-level cache
 /// directories.
 fn short_url_hash(s: &str) -> String {
     let mut h = Sha256::new();

@@ -3,7 +3,7 @@
 //! freshness TTL, and the URL canonicalisation that keys the cache.
 //!
 //! Lives outside any `Registry`-seam cell file on purpose: both git
-//! cells (`GitRegistry`, `GitPackageRegistry`) and the multi-registry
+//! cells (`GitMonorepoRegistry`, `GitPerPackageRegistry`) and the multi-registry
 //! resolver consume these helpers, and a cell must not import a
 //! sibling cell's module to reach shared cache mechanics (R-002).
 //! `git_registry` re-exports the public items, so the historical
@@ -39,7 +39,7 @@ pub fn default_cache_root() -> Result<PathBuf, RegistryError> {
 /// `git+` is a pip / Cargo convention that labels a URL as "this is a
 /// git source" in a lockfile or manifest. Native git does not
 /// understand the prefix itself, so we peel it off at the backend
-/// boundary. Used by `GitRegistry`, `GitPackageRegistry`, and the
+/// boundary. Used by `GitMonorepoRegistry`, `GitPerPackageRegistry`, and the
 /// override path in `MultiRegistryResolver`.
 pub(crate) fn strip_git_plus_prefix(url: &str) -> &str {
     url.strip_prefix("git+").unwrap_or(url)

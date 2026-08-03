@@ -8,7 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 
 use super::*;
 
-impl GitPackageRegistry {
+impl GitPerPackageRegistry {
     /// Fetch `vibe.toml` at an arbitrary git ref (tag, branch,
     /// or commit SHA) — used by the git-source resolver path
     /// (PROP-002 §2.4.1) where the operator declared `tag = "..."` /
