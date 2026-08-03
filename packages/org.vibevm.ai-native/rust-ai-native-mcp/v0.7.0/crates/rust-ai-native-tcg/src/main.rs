@@ -176,7 +176,7 @@ fn main() -> Result<()> {
                 .complete(&file, pos, None)
                 .map_err(|e| anyhow::anyhow!("{e}"))?;
             let symbols = finalise_completions(entries, &file, None, 200);
-            let (_crate_name, module) = derive_crate_module(&policy.config.roots, &file);
+            let (_crate_name, module) = derive_crate_module(&policy.config.rust.roots, &file);
             let seam = seam_file_for(&root, &file);
             let mut branded = std::fs::read_to_string(root.join(&file))
                 .map(|t| detect_newtypes(&t, &file))

@@ -184,7 +184,7 @@ fn tcg_scope(session: &mut TcgSession, args: &Value) -> ToolOutput {
     match session.with_oracle(|o| o.complete(&file, pos, content.clone())) {
         Ok(entries) => {
             let symbols = finalise_completions(entries, &file, None, 200);
-            let (_crate_name, module) = derive_crate_module(&policy.config.roots, &file);
+            let (_crate_name, module) = derive_crate_module(&policy.config.rust.roots, &file);
             let root = session.root.clone();
             let text = content
                 .clone()

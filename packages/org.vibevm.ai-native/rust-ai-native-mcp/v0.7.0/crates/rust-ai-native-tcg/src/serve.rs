@@ -130,7 +130,7 @@ fn handle_op(
                 );
                 oracle.complete(f, pos, content.clone()).map(|entries| {
                     let symbols = finalise_completions(entries, f, None, 200);
-                    let (_crate, module) = derive_crate_module(&policy.config.roots, f);
+                    let (_crate, module) = derive_crate_module(&policy.config.rust.roots, f);
                     let text = content
                         .clone()
                         .or_else(|| std::fs::read_to_string(policy.root.join(f)).ok());
