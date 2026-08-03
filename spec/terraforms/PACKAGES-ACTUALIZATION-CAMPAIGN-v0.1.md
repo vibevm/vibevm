@@ -4958,6 +4958,30 @@ aspirational — and every one is still live for the phases that remain.
   (coordinate form / legacy behaviour / migration perimeter);
   implementation holds for the ruling. B-028 stays queued behind.** @spec/done
 
+- **2026-08-04 · B-031 ruled — and the owner adds a fourth point,
+  addressed to the boss by name.** The ruling, verbatim: «1.
+  координаты: группа org.vibevm.core, имя vibevm. 2. жесткая ошибка с
+  подсказкой 3. все живые поверхности» — the coordinate keeps the
+  manifest name untouched (only `group` is added; addresses become
+  `spec://org.vibevm.core/vibevm/…`), the legacy notation dies loudly,
+  the migration covers every living surface. The fourth point:
+  «проверь что наш текущий рефакторинг не сломается от этого
+  переименования (проверь сам, Fable!)» — executed boss-side the same
+  hour, layer by layer, and recorded as design §5.1: the campaign
+  registry keys by file-path + anchor-id (0 URI-keyed keys across
+  cache/corpus/obligations/baseline — walked empirically), specmap.json
+  and the orphan ratchet regenerate consistently (namespace and code
+  attributes move in one pass; edges 1:1), the 126 `~rN` pins are
+  unchecked today and ride inert, the intent ledger's renamed subjects
+  soft-miss by the B-022 design, and `baseline.json`→`rescan` seeing
+  the rename is re-verification, not breakage. Net verdict: nothing
+  becomes invalid-and-load-bearing, and the landing MUST carry the
+  mirror → mechanical-diff spot-check → **mass re-seal** step, now
+  named in the design's W3. The build starts on the ruling: W1
+  (resolver + identity, claudez) → W2 (the migration script, dry-run
+  first) → W3 (boss: PROP edits, re-seal, re-judgements, panel,
+  mirrors). @spec/done
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
