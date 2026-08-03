@@ -5019,6 +5019,35 @@ aspirational — and every one is still live for the phases that remain.
   original spellings. **Wave А's build queue is drained: B-028 — a
   decision entry, not a build — is the next fork, to the owner.** @spec/done
 
+- **2026-08-04 · B-028 ruled and landed — ВОЛНА А ЗАКРЫТА ЦЕЛИКОМ.**
+  On the fork's presentation the owner ruled the version half's
+  semantics, verbatim: «Я хочу чтобы указание версий было опциональной
+  фичей. Если версия не указана - используется самая свежая» — read as
+  the one deterministic offline form, the freshest INSTALLED version
+  (semver-newest slot), and stated as such in every carrier. Executed
+  the same hour: *(code, E7-W1 claudez, ПРИНЯТО first pass)* the
+  resolver's several-installed-versions error dies — the absent-version
+  arm picks semver-newest via a small in-crate comparator
+  (`resolver/version_order.rs`, no `semver` dependency; 0.10 beats 0.9
+  numerically, releases beat their pre-releases, explicit `@version`
+  still pins any exact slot; F1–F6 + a 13-pair table); *(contract)*
+  PROP-035 §6 `##URI-VERSION-OPTIONAL` / `##ROUTER-VERSION` re-ruled
+  from the lockfile wording to the freshest default; *(the flow)* the
+  `{#uri-scheme}` section publishes the WHOLE grammar — coordinate
+  authority, optional version with the freshest default, multi-segment
+  doc-path, revision pin — keeping the four row anchors alive (module
+  and doc scope themselves inside `<doc-path>`, which is why their
+  B-031 re-judgement survives); *(the book)* both redbook chapters
+  stop restating the schema and cite the section — the campaign's own
+  one-norm-one-home law applied to its teaching book; the section's
+  six anchors judged confirmed against shipped behaviour (batch
+  E7-B028-URI), the file re-sealed, the chapters honestly outside the
+  observed corpus. Package edits in-slot until the pre-publication
+  boundary. Panel green, tail read. **Волна А: B-011 → B-006 → B-031 →
+  B-028 — все посажены под мандатом фазы E. Дальше по карте — волны
+  Б/В/Г, добром пока не покрытые, и стоячие пересуды остальных
+  deferred-строк по мере их строек.** @spec/done
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
