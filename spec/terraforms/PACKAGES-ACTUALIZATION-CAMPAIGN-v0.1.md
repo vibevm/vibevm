@@ -5104,6 +5104,44 @@ aspirational — and every one is still live for the phases that remain.
   The TS floor's twin hole censused and FILED, not ridden: B-048.
   Next: W1 (engine Config v2) on the ruled shape. @spec/done
 
+- **2026-08-04 · B-029 + B-034 LAND — the config surface is symmetric
+  and the coverage invariant speaks three languages.** Three claudez
+  slices staged on a branch so main never carried red package
+  workspaces, then landed as one green chain (`97688de0` → `aa4b3a72`
+  → `51e350bf` → `d3a960f3`): **W1** (engine Config v2 — root =
+  shared budget + [rust]/[go]/[typescript] of one uniform shape,
+  neutral `gated` + `{unit, reason}` exempt, nine loud tombstones
+  with per-key move hints, the generic six-refusal validator +
+  per-language enumerators, vacuous/scope guards, Store::for_rust;
+  ПРИНЯТО + one boss tiny-fix — the Rust scope warning had ignored
+  literal roots and would have cried wolf on every single-crate
+  layout), **W2a** (Rust FE/CLI re-point, init template v2 with the
+  everything-starts-exempt posture preserved; the worker's honest
+  finding: the engine rule-struct field names and health's JSON
+  report keys keep the old spelling as internal API/schema — noted
+  as cosmetic follow-ups), **W2b** (Go/TS drivers validate in check
+  AND freeze, scope/vacuous/counts announces in each language's
+  noun, init templates enumerate exempt through the engine's own
+  go_units/ts_units so fresh projects clear validate by
+  construction; demos fully adopt — go-demo 6 packages, ts-demo 2
+  cells; gate-tested fixtures get their lists; the tombstoned flat
+  `roots = []` removed from six carriers, documented not silent).
+  The host policy and rust-demo migrated to [rust]; the fractality
+  package's policy deliberately stays flat — that specspace runs the
+  frozen 0.7.0 engine slot and migrates on its own stack upgrade,
+  guided by the tombstone. **The panel then caught the census gap**
+  (`29e484ea`): the TCG oracle and the MCP relay read the flat
+  `config.roots` at four sites the E8-R1 reader table never listed —
+  the workspace test went red, the boss re-pointed all four, and
+  sync-engines fanned the oracle fix into the twin. Lesson recorded:
+  a census's reader table is evidence, never a completeness proof —
+  the panel's package-workspace sweep is the real perimeter check.
+  Live exhibits, real exits: go-demo «6 package(s) gated, 0 exempt»
+  and ts-demo «2 cell(s) gated, 0 exempt», both 0 new findings.
+  Волна Г rode alongside: the B-040 seams census (`a8037735`).
+  Remaining in batch 1: W3 (the carriers' doc sweep) + W4 (the
+  TS-shaped flag rule, B-039) — both in flight as this entry lands. @spec/done
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
