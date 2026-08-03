@@ -104,6 +104,7 @@ spec://<group>/<name>[@<version>]/<doc-path>#<anchor>[.<sub>…][~r<N>]
 
 ##THE-ROUTER **The router** is the new component: a deterministic function `spec:// → IR node`, evaluated over the resolved, materialized tree. It is the prerequisite everything else stands on. It must handle, without an LLM: @impl/done
 
+- ##ROUTER-SELF-COORDINATE **The self coordinate (B-031, owner-approved 2026-08-04)** — the root project's own `<group>/<name>` (declared in `[project]`, e.g. `org.vibevm.core/vibevm`) resolves to the workspace's **authored `spec/` tree**, matched before any `vibedeps/` slot lookup and never versioned; an undotted authority (the retired host token, illustrative fixtures) parses but never resolves — a hard error carrying the rename hint. @impl/done
 - ##ROUTER-DOC-ID **Doc-id truncation** — `PROP-NNN` / `FEAT-NNN` in a URI resolve to `PROP-NNN-<slug>.md`; other docs use the full stem. (This is `canonical_doc_path` in the specmap engine, reused, not reinvented.) @impl/done
 - ##ROUTER-VIBEDEPS **`packages/` (source) vs `vibedeps/` (materialized slot)** — the compiler resolves against the **materialized `vibedeps/` tree** (the installed reality), consistent with the specmap engine, which never scans `packages/`. @impl/done
 - ##ROUTER-VERSION **Version selection** from the lockfile when `@version` is absent. @impl/done

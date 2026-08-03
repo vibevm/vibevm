@@ -2,7 +2,7 @@
 
 <status stage="spec" state="done" comment="B0 2026-07-24: accepted 2026-07-12, owner-ratified; re-marked at fact grain (re-pilot) same day"/>
 
-##status-line **Status:** accepted 2026-07-12 (owner-ratified). **Builds on:** [`spec://vibevm/modules/vibe-registry/PROP-008#group`](../modules/vibe-registry/PROP-008-qualified-naming.md#group) (the `group` field) and the **addressable-specs** flow, whose `#modules` unit defines the fully-qualified module authority and the joiner-never-`.` rule this PROP applies: `spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#modules`. @spec/done
+##status-line **Status:** accepted 2026-07-12 (owner-ratified). **Builds on:** [`spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#group`](../modules/vibe-registry/PROP-008-qualified-naming.md#group) (the `group` field) and the **addressable-specs** flow, whose `#modules` unit defines the fully-qualified module authority and the joiner-never-`.` rule this PROP applies: `spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#modules`. @spec/done
 
 ## 1. Every address is fully qualified {#decision}
 
@@ -40,7 +40,8 @@
 
 ## 4. Scope and exceptions {#scope}
 
-- ##SCOPE-HOST The **host vibevm project's own** specs keep the project authority `spec://vibevm/…` — the root project is not a package with a group; §1 binds packages. @spec/done
+- ##SCOPE-HOST <status stage="spec" state="void">Retired 2026-08-04 by B-031 (owner-approved): the host exemption is gone — **the root project IS a package coordinate**, `group = "org.vibevm.core"`, `name = "vibevm"` in the root `vibe.toml`, addressed `spec://org.vibevm.core/vibevm/…` like every other package; §1 binds it too. The retired short authority `spec://vibevm/…` parses (undotted-authority grammar survives for fixtures and legibility) and **never resolves** — the resolver answers `LegacyHostAuthority` with a rename hint naming the self coordinate. The self coordinate resolves to the workspace's own authored `spec/` tree, never a `vibedeps/` slot. Migration record: 1 893 living-surface occurrences rewritten in one pass, 2026-08-04; rationale: [`spec/design/host-as-package.md`](../design/host-as-package.md). This tombstone stays so the old sentence's name is never reused and inbound links do not break.</status> @spec/void
+- ##SCOPE-SELF-COORDINATE **The self coordinate.** The root project declares its package identity in `[project]` (`group` + `name`, PROP-008 semantics); its authored `spec/` tree answers to `spec://<group>/<name>/…` — the *self coordinate*, matched by the resolver before any slot lookup and never versioned (`@version` on it is an error). A project that declares no `group` has no self coordinate, and its authored tree is unreachable by address. @spec/work
 - ##SCOPE-FIXTURES **Test fixtures and grammar examples** (`spec://demo/…`, `spec://com.example.shop/…`, and the like) are illustrative, not real packages; they are out of scope and stay as written. @spec/done
 - ##SCOPE-GROUP-CHANGE Changing a package's `group` is a **new package**, not a rename (PROP-008 §2.2). <status stage="spec" state="done">This PROP governs how an address is written and how a migration is performed mechanically — not the identity semantics, which PROP-008 owns.</status> @spec/done
 
@@ -48,3 +49,4 @@
 
 - ##CHANGELOG-CREATED [2026-07-12] Created — ratified alongside the `org.vibevm` → `org.vibevm.ai-native` / `org.vibevm.world` group restructure, the first refactor performed under §3. @spec/done
 - ##CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite it and keep only vibevm's concrete carriers, the mechanical-refactoring foundation, and the scope rules. @spec/done
+- ##CHANGELOG-B031 [2026-08-04] **The host exemption retired (B-031, owner-approved).** The root project became the package coordinate `org.vibevm.core/vibevm`; `##SCOPE-HOST` is a tombstone, `##SCOPE-SELF-COORDINATE` carries the live rule, and the authority rename (`spec://vibevm/…` → `spec://org.vibevm.core/vibevm/…`, 1 893 living-surface occurrences) was performed under §3's mechanical-refactoring foundation in one scripted pass. Design record: [`spec/design/host-as-package.md`](../design/host-as-package.md). @spec/work
