@@ -453,6 +453,31 @@ run_step "cargo clippy --all-targets (go-ai-native-mcp pkg)" \
 # The host's self-check no longer runs them — the vibevm-term repo carries
 # its own floor.
 
+# 11b. B-011's lane-citation lint (PROP-035 §11
+# ##COMPILED-LANE-IS-NOT-A-CITATION-TARGET): authored text never TARGETS a
+# compiled STATIC lane — no `@spec://…/boot/STATIC#…` in-place use and no
+# directive whose address lands there. The directive scanner already rejects
+# these at compile time; this is the tree-level half over the authored trees.
+# Prose that merely mentions such an address (the rule's own statement, the
+# design doc) is legal — only the sigil/directive forms are the violation,
+# which is why the grep matches those forms and not the bare address.
+check_lane_citations() {
+  local hits
+  hits=$(grep -rEn --include='*.md' \
+      -e '@spec://[^[:space:]`]*/boot/STATIC#' \
+      -e '^[[:space:]]*#(use|embed|source)[[:space:]]+[^ ]*spec://[^[:space:]]*/boot/STATIC' \
+      spec/ packages/ crates/ 2>/dev/null \
+    | grep -v 'spec/boot/STATIC\.md' \
+    | grep -v 'legacy-spec/')
+  if [ -n "$hits" ]; then
+    printf '%s\n' "$hits" >&2
+    printf 'authored text targets a compiled STATIC lane (PROP-035 §11)\n' >&2
+    return 1
+  fi
+  return 0
+}
+run_step "lane-citation lint (B-011)" check_lane_citations || OVERALL=$?
+
 # 12. The tripwire again, over the whole run. Steps 7-10 run seven more test
 # suites (the authored engines, the three stacks, the three mcp packages)
 # against the same baseline from step 0, and each of them is a `cargo test`
