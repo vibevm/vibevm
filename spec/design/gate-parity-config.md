@@ -1,0 +1,49 @@
+# The gate grows per-language units — config surface, coverage invariant, flag rule {#root}
+
+<status stage="spec" state="work" comment="the B-029 + B-034 + B-039 design proposal (волна Б, батч 1), standing on the E8 census pair (harvest/e8-r1-config-census.md, harvest/e8-r2-gate-units-census.md); awaiting the owner's ruling on the map's fork №2"/>
+
+##companion-line **Companion to:** [`BACKLOG.md` B-029](../../BACKLOG.md#b-029) (neutral/per-language gate key + the config-surface enrichment, ruling 2.1 recorded in the row), [B-034](../../BACKLOG.md#b-034) (gated-or-exempt for Go/TS), [B-039](../../BACKLOG.md#b-039) (mount R-001 on the TS gate); the fork it carries is [`TOOLING-MAP.md` §5 №2](../../TOOLING-MAP.md#forks). Evidence: [`e8-r1-config-census.md`](../../campaigns/packages-2026-09/harvest/e8-r1-config-census.md) (the config surface), [`e8-r2-gate-units-census.md`](../../campaigns/packages-2026-09/harvest/e8-r2-gate-units-census.md) (units, FlagSites, rosters). Non-normative; the PROPs and the backlog rulings win. @spec/work
+
+## 1. The measured basis, in five lines {#basis}
+
+##basis-summary (1) Only Rust has a gate-unit notion: `validate_against_tree` classifies cargo-crate dirs against `gated_crates`/`[[exempt]]`, called only by the Rust driver (census R1 Q4). (2) Go and TS scan `[go]`/`[typescript]` `roots` into a flat file list — no unit enumerator, no lists, no invariant (R2 Q1–Q2). (3) An empty/mis-scoped per-language `roots` inside a present `conform.toml` is a **silent green** for Go/TS; Rust is guarded by `warn_vacuously_gated` + the count summary (R1 Q8, R2 Q3). (4) The literal FlagSites mount on TS is impossible today: the rule keys on `Fact::Ctor` and `cell(…)`-attributed items, both emitted only by the Rust frontend; TS lacks the facts, the config field, and the cell-type notion (R2 Q4). (5) The migration surface of the root keys is tiny — three live `gated_crates` carriers, all Rust projects; Go/TS carriers: zero (R1 Q5–Q6). @spec/work
+
+## 2. The fork — the owner's decision (map §5 №2) {#fork}
+
+##fork-question **The question:** what is the unit of gate accounting per language, and where do the per-language gate lists live? @spec/work
+
+##fork-go-unit **Go unit.** *(а) — recommended:* the **package** — every directory holding `.go` files under `[go].roots` (after excludes), keyed by root-relative path. It is Go's own coarse unit and the analogue of the crate; cells, registry, seams, `cmd/` are all packages, so nothing stays outside the ledger. *(б):* cells only (subdirs of `cells_dir`) — cheaper, but `registry`/`seams`/`cmd`/`sim` stay unaccounted and the «забыто молча» hole survives for exactly the packages most likely to grow logic. @spec/work
+
+##fork-ts-unit **TS unit.** *(а) — recommended:* the **cell** — every immediate subdirectory of `cells_dir`, keyed by its dir name. It is the discipline's own TS unit and supports one-by-one adoption (the sweep flips cells the way Rust flips crates). Non-cell dirs under the roots (`core`, seams) stay outside unit-accounting by the discipline's own boundary — cells are the domain; that boundary is recorded, not silent. *(б):* full partition — classify every top-level dir under each root too (`core` enters the ledger as exempt-with-reason). Closes the «domain code grows outside `cells_dir`» corner at the price of a mixed-grain list (cells by cell, support dirs by dir) and a lie in any single-noun key name. @spec/work
+
+##fork-list-homes **Where the lists live.** *(а) — recommended:* **per-language sections with idiomatic keys**, greenfield: `[go] gated_packages` + `[[go.exempt]] {package, reason}`; `[typescript] gated_cells` + `[[typescript.exempt]] {cell, reason}`. The root table stays the flat Rust layer (`gated_crates` untouched — it is the Rust list and reads as such; the recorded decision replaces the Go docs' «слово — общего движка» apology). No aliases needed anywhere: the language is named by the section, the three live Rust carriers keep parsing byte-identically, and zero Go/TS carriers exist to migrate. *(б):* full symmetry — a `[rust]` section too, root keys become a deprecated spelling. Uniform, but the move is structural (not expressible as a serde alias), breaks the published Rust init template, and no build in the batch needs it — the unpulled-build rule argues parking it. *(в):* one neutral root key over all languages — rejected by measurement: three different enumerators over three different root sets do not merge into one list without type-tagging every entry. @spec/work
+
+##fork-recommendation **Recommendation: а + а + а.** Go = package, TS = cell, per-language sections with idiomatic keys, root stays the flat Rust layer by recorded decision. @spec/work
+
+## 3. The design past the fork (boss-settled, worker-elaborated) {#design}
+
+##design-invariant **The coverage invariant (B-034).** The engine grows one generic core — enumerate units, require `gated ∪ exempt` coverage, reject duplicates/both-listed/empty reasons/ghost entries — parameterised by the unit noun so each language's six error strings speak its own word (package/cell, not crate). `validate_against_tree` becomes the Rust-shaped wrapper over it, its messages byte-stable. New per-language enumerators: Go — walk `[go].roots` for `.go`-bearing dirs (the excludes and skip-dirs of the scanner apply, so the unit set matches the scanned corpus); TS — list `cells_dir`'s immediate subdirs. The Go and TS drivers call their validator in `run_check` + `run_freeze` exactly where Rust does. @spec/work
+
+##design-vacuous **The vacuous-green guards.** Both drivers gain the two announce mechanisms Rust already has: a per-language `warn_vacuously_gated` (a gated unit the scan attributed zero files to) and the gated/exempt count summary; plus the sharper one the census showed missing everywhere it matters — a present config whose language `roots` enumerate **zero units** warns loudly instead of passing silently. @spec/work
+
+##design-flag-rule **The TS flag rule (B-039), TS-shaped.** The literal R-001 mount being impossible (census R2 Q4), the rule is built in the TS frontend's own shape, enforcing the guide's own promise («flags read once at the composition root; no config reads in domain cells»): `ts-extract` emits a new census kind for environment/config reads (`process.env`, `import.meta.env`); a new engine rule flags such reads in files under `cells_dir` outside the configured composition root; `[typescript]` gains the root-naming field. The `if (flag)` half of the promise needs flag identity that no table provides yet — recorded as the rule's documented limit, not silently claimed. The demo instantiates the tier it currently only describes (a typed registry + composition root in `research/ts-demo`), so the guide's «described, never instantiated» note dies honestly. @spec/work
+
+##design-go-registry **The Go half of B-039 routes to batch 2.** The census found Go promising R-001 at the seam with a dead config key (`registry_pkg`, zero readers) and no rule; a `registry is the sole cell importer` rule is implementable today from existing import facts. It is the natural sibling of B-033 (the dedicated Go seam-error rule) and rides that batch rather than widening this one. @spec/work
+
+##design-docs **The idiom lands in the carriers (ruling 2.1's second half).** The Go/TS frontend docs, guides, skills and init templates speak the new keys from birth; the Go guide's «one spelling across the language stacks today» caveat and the frontend doc's apology die in the same change. Init templates mirror the Rust adoption posture (worker verifies what `rust-ai-native init` actually emits and mirrors it per language). @spec/work
+
+##design-not-built **Not built here:** no `[rust]` section (unpulled); no rename of `gated_crates` (it is the Rust list by recorded decision); no per-language `max_file_lines` override (no measured need); no foreign-linter ingest (B-026); no assertion-presence rules (B-030, batch 2). @spec/work
+
+## 4. The build cut {#cut}
+
+##cut-w1 **W1 — one thread (the shared surface):** engine `Config` (`[go]`/`[typescript]` gate fields), the generic validator + two enumerators + two wrapper validators, driver wiring (go/ts `run_check`/`run_freeze`), vacuous guards, tests — edited in the canonical v0.8.0 engine plus the go-lang/ts-lang vendor copies for self-verify; the boss re-vendors ×6 at merge. Demo/fixture configs that a driver test actually runs through `run_check` gain their lists in the same slice (the worker maps which ones at build). @spec/work
+
+##cut-w2 **W2 — after W1 lands, parallel to W3:** the TS flag rule end-to-end (`ts-extract` census kind → engine rule → config field → TS driver mount → demo registry + composition root → guide re-point). @spec/work
+
+##cut-w3 **W3 — doc packet, disjoint from W2:** the carriers sweep (frontend docs, guides, skills, init template texts) onto the new keys and the recorded root-layer decision. @spec/work
+
+##cut-boss-tail **The boss tail per slice:** review by WORKER-REPORT, `cargo xtask sync-engines` from the host root, fmt per package manifests, panel bare with the tail read, rematerialise after canonical package edits, commits per Rules 1–4. After the batch: the B-035 loop pass re-runs the parity table and the F-185 family re-judgement drains through mirror → merge-verdicts → seal. @spec/work
+
+## 5. Acceptance {#acceptance}
+
+##acceptance-list Measured, not narrated: (1) the Go and TS drivers fail loudly on an unclassified unit and on ghost entries, six messages per language in the language's own noun; (2) an empty-scope run warns instead of passing silently — exhibited on a scratch tree; (3) the TS flag rule flags an env read inside a cell and stays quiet at the composition root — exhibited on the demo; (4) the three live Rust carriers parse byte-identically; (5) the panel green with the tail read; (6) F-185's re-judgement rides the landing. @spec/work
