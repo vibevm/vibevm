@@ -70,7 +70,7 @@ impl Verb {
 /// ```
 /// use core_ai_native_specmark_grammar::parse_spec_uri;
 /// let uri = parse_spec_uri("spec://org.vibevm.core/vibevm/common/PROP-000#commits~r2").unwrap();
-/// assert_eq!(uri.package, "vibevm");
+/// assert_eq!(uri.package, "org.vibevm.core");
 /// assert_eq!(uri.anchor, "commits");
 /// assert_eq!(uri.pinned_r, Some(2));
 /// // `without_pin` drops the `~rN` to recover the unit's canonical address.
@@ -119,7 +119,7 @@ pub fn is_valid_anchor(anchor: &str) -> bool {
 /// ```
 /// use core_ai_native_specmark_grammar::parse_spec_uri;
 /// let uri = parse_spec_uri("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#mirror").unwrap();
-/// assert_eq!(uri.doc_path, "modules/vibe-registry/PROP-002");
+/// assert_eq!(uri.doc_path, "vibevm/modules/vibe-registry/PROP-002");
 /// assert_eq!(uri.anchor, "mirror");
 /// // A missing `#anchor` fragment is rejected.
 /// assert!(parse_spec_uri("spec://org.vibevm.core/vibevm/x").is_err());
