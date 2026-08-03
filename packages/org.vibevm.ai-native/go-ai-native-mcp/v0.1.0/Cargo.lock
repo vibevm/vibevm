@@ -297,6 +297,7 @@ dependencies = [
  "core-ai-native-specmark",
  "go-ai-native-conform-frontend",
  "serde_json",
+ "tempfile",
 ]
 
 [[package]]
