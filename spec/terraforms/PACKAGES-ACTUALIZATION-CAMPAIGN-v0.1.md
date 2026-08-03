@@ -4853,6 +4853,21 @@ aspirational — and every one is still live for the phases that remain.
   one `-c` rework fixed it; two rework rules paid for and recorded in
   the law's `#fact-first-live-fanout`. @spec/done
 
+- **2026-08-04 · release-события — рулинг владельца.** On the boss's
+  «publication of the six consumer packages is a release event held
+  for the owner», the owner drew the line precisely: **publication
+  into separate GitHub repositories waits — «это будет отдельная
+  операция после того как мы доделаем наш рефакторинг»**; a version
+  bump as such he allowed. The boss's recommendation, accepted as the
+  standing default: versions stay untouched until the pre-publication
+  boundary, where the bump and the publication become ONE operation —
+  the slot model makes a real bump a new-slot mint, wave А keeps
+  editing the same packages, and interim slot numbers nobody publishes
+  would only multiply; the registry's release-route rows and the
+  in-slot edits already track exactly what will ship. If the owner
+  wants numbers fixed earlier, the boss mints the seven slots on his
+  word. @spec/done
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
