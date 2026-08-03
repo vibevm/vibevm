@@ -38,7 +38,7 @@ package document._
 | Golden characterization | 5 flows, byte-deterministic | **byte-identical** after every phase (re-captured after Phase 3's registry-factory refactor and Phase 6's sweep) |
 | Wish-ratio of activated rules | n/a | 3 conform rules shipped, 3 enforced (R-001, R-002, unsafe-gate) — wish-ratio 0 |
 | Ledger hit rate | n/a | live smoke 1 hit / 1 miss; counters in `.ledger/telemetry.json`; rot-rate plumbing in place, no data yet |
-| LLM-$ per merged change | n/a | not instrumented — no `vibe-llm` runtime exists; the ledger's cost field is plumbed and zero-valued for the template producer |
+| LLM-$ per merged change | n/a | not instrumented — no `vibe-llm` runtime exists, and the ledger carries no cost field at all (the entry wrapper ships `{producer, epoch, inputs-hash, created_at}` only; cost arrives with the B-020 client) |
 
 ## What the discipline got wrong (feeds v0.2)
 
