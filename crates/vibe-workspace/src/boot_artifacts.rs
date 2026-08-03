@@ -461,3 +461,7 @@ fn io_err(path: &Path, e: std::io::Error) -> WorkspaceError {
 #[cfg(test)]
 #[path = "boot_artifacts/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "boot_artifacts/tests_qualify.rs"]
+mod tests_qualify;
