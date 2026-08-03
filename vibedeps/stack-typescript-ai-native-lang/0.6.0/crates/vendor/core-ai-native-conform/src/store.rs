@@ -36,7 +36,7 @@ pub struct ExtractionLog {
 /// # }
 ///
 /// let repo = std::path::Path::new(".");
-/// let store = Store::at_repo(repo, &Config::default());
+/// let store = Store::for_rust(repo, &Config::default());
 /// let mut log = ExtractionLog::default();
 /// let facts = store.extract_workspace(repo, &NullFrontend, &mut log).unwrap();
 /// println!("{} file(s) extracted, {} cached", log.extracted.len(), log.cached);
@@ -49,11 +49,15 @@ pub struct Store {
 }
 
 impl Store {
-    pub fn at_repo(repo: &Path, config: &Config) -> Store {
+    /// The Rust-scan view of the store: scan roots and exclusions come
+    /// from the `[rust]` policy table (B-029 moved them out of the flat
+    /// root keys); the cache directory is shared (slots are keyed by
+    /// frontend id+version, so the languages never collide).
+    pub fn for_rust(repo: &Path, config: &Config) -> Store {
         Store {
             root: repo.join("target").join("conform").join("facts"),
-            roots: config.roots.clone(),
-            exclude: config.exclude_substrings.clone(),
+            roots: config.rust.roots.clone(),
+            exclude: config.rust.exclude_substrings.clone(),
         }
     }
 
@@ -368,8 +372,9 @@ fn typescript_sources(
 
 /// Directory names the Go walk never descends into — vendored trees,
 /// goldens/fixtures, and build output, mirroring go-extract's own skip
-/// list.
-const GO_SKIP_DIRS: &[&str] = &[
+/// list. `pub(crate)` so the Go unit enumerator (`config::coverage`)
+/// reuses the one list.
+pub(crate) const GO_SKIP_DIRS: &[&str] = &[
     "vendor",
     "testdata",
     "node_modules",
@@ -515,9 +520,9 @@ mod tests {
         let root = tmp.path();
         std::fs::create_dir_all(root.join("src")).unwrap();
         std::fs::write(root.join("src").join("lib.rs"), "pub fn f() {}\n").unwrap();
-        let cfg: Config = toml::from_str("roots = [\".\"]").unwrap();
+        let cfg: Config = toml::from_str("[rust]\nroots = [\".\"]\n").unwrap();
 
-        let store = Store::at_repo(root, &cfg);
+        let store = Store::for_rust(root, &cfg);
         let mut log = ExtractionLog::default();
         let facts = store
             .extract_workspace(root, &NullFrontend, &mut log)

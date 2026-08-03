@@ -29,7 +29,11 @@ pub mod baseline;
 pub mod rules;
 pub mod sarif;
 
-pub use config::{Config, ConfigOrigin, ExemptEntry, FloorDisable, GoConfig, TsConfig};
+pub use config::{
+    Config, ConfigOrigin, ExemptEntry, FloorDisable, GoConfig, RustConfig, TsConfig,
+    go_scope_warnings, go_units, go_vacuously_gated, rust_scope_warnings, rust_units,
+    ts_scope_warnings, ts_units, ts_vacuously_gated,
+};
 pub use facts::{Fact, Frontend, SourceFacts};
 pub use finding::{Finding, Rule, check, count_by_rule};
 pub use store::{ExtractionLog, Store, content_hash, sort_source_facts};

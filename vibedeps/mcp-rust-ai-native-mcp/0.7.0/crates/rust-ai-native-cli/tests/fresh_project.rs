@@ -165,11 +165,11 @@ pub fn hello() -> &'static str {
     );
 
     // 5. The conform gate catches a domain unwrap once the crate is
-    //    flipped into gated_crates (the expand-as-you-conform move).
+    //    flipped into `gated` (the expand-as-you-conform move).
     write(
         root,
         "conform.toml",
-        "roots = [\"crates/*\"]\ngated_crates = [\"app\"]\n",
+        "[rust]\nroots = [\"crates/*\"]\ngated = [\"app\"]\n",
     );
     write(
         root,

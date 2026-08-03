@@ -53,8 +53,8 @@ pub fn load_config_or_default(root: &Path) -> Result<(Config, ConfigOrigin)> {
 pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
     let mut out: Vec<Box<dyn Rule>> = Vec::new();
     if let (Some(reg_file), Some(reg_crate)) = (
-        config.registry_file.as_ref(),
-        config.registry_gated_crate.as_ref(),
+        config.rust.registry_file.as_ref(),
+        config.rust.registry_gated_crate.as_ref(),
     ) {
         out.push(Box::new(rules::FlagSites {
             registry_file: reg_file.clone(),
@@ -63,31 +63,31 @@ pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
     }
     out.push(Box::new(rules::CellIsolation));
     out.push(Box::new(rules::UnsafeGate {
-        audit_crates: config.audit_crates.clone(),
+        audit_crates: config.rust.audit_crates.clone(),
     }));
     out.push(Box::new(rules::SeamHasDoctest {
-        gated_crates: config.gated_crates.clone(),
+        gated_crates: config.rust.gated.clone(),
     }));
     out.push(Box::new(rules::PubDoctest {
-        gated_crates: config.gated_pub_doctest.clone(),
+        gated_crates: config.rust.gated_pub_doctest.clone(),
     }));
     out.push(Box::new(rules::ErrorEnumCitesReq {
-        gated_crates: config.gated_crates.clone(),
+        gated_crates: config.rust.gated.clone(),
     }));
     out.push(Box::new(rules::CellHasOracle));
     out.push(Box::new(rules::ErrorMessageCitesReq {
-        gated_crates: config.gated_crates.clone(),
+        gated_crates: config.rust.gated.clone(),
     }));
     out.push(Box::new(rules::FileLength {
         max_lines: config.max_file_lines,
     }));
     out.push(Box::new(rules::NoUnwrapInDomain {
-        gated_crates: config.gated_crates.clone(),
+        gated_crates: config.rust.gated.clone(),
     }));
     out.push(Box::new(rules::AmbientEnv {
-        gated_crates: config.gated_crates.clone(),
-        audit_crates: config.audit_crates.clone(),
-        roots: config.env_roots.clone(),
+        gated_crates: config.rust.gated.clone(),
+        audit_crates: config.rust.audit_crates.clone(),
+        roots: config.rust.env_roots.clone(),
     }));
     out
 }
@@ -117,7 +117,7 @@ pub fn run_check(root: &Path, baseline_rel: &str, scope: Option<&str>) -> Result
 
     let (config, _origin) = load_config_or_default(root)?;
     config.validate_against_tree(root)?;
-    let store = Store::at_repo(root, &config);
+    let store = Store::for_rust(root, &config);
     let mut log = ExtractionLog::default();
     let frontend = RustFrontend;
     let facts = store.extract_workspace(root, &frontend, &mut log)?;
@@ -129,6 +129,13 @@ pub fn run_check(root: &Path, baseline_rel: &str, scope: Option<&str>) -> Result
         Frontend::version(&frontend),
     );
     warn_vacuously_gated(&config, &facts);
+    // The sharper empty-scope guard: a present `[rust]` policy whose roots
+    // resolved to zero crates warns loudly instead of passing silently (the
+    // false-green vector the E8 census showed). The helper string is
+    // self-sufficient, so it is printed verbatim — no `conform:` wrapper.
+    for w in conform_core::rust_scope_warnings(root, &config.rust) {
+        eprintln!("{w}");
+    }
 
     let owned = build_rules(&config);
     let rule_refs: Vec<&dyn Rule> = owned.iter().map(|r| r.as_ref()).collect();
@@ -167,8 +174,8 @@ pub fn run_check(root: &Path, baseline_rel: &str, scope: Option<&str>) -> Result
     );
     eprintln!(
         "conform: {} crate(s) gated, {} exempt — see conform.toml for the why of each.",
-        config.gated_crates.len(),
-        config.exempt.len(),
+        config.rust.gated.len(),
+        config.rust.exempt.len(),
     );
     if !new.is_empty() {
         bail!("conform: {} new finding(s) against the baseline", new.len());
@@ -186,11 +193,18 @@ pub fn run_freeze(root: &Path, baseline_rel: &str) -> Result<()> {
 
     let (config, _origin) = load_config_or_default(root)?;
     config.validate_against_tree(root)?;
-    let store = Store::at_repo(root, &config);
+    let store = Store::for_rust(root, &config);
     let mut log = ExtractionLog::default();
     let frontend = RustFrontend;
     let facts = store.extract_workspace(root, &frontend, &mut log)?;
     warn_vacuously_gated(&config, &facts);
+    // The sharper empty-scope guard: a present `[rust]` policy whose roots
+    // resolved to zero crates warns loudly instead of passing silently (the
+    // false-green vector the E8 census showed). The helper string is
+    // self-sufficient, so it is printed verbatim — no `conform:` wrapper.
+    for w in conform_core::rust_scope_warnings(root, &config.rust) {
+        eprintln!("{w}");
+    }
     let owned = build_rules(&config);
     let rule_refs: Vec<&dyn Rule> = owned.iter().map(|r| r.as_ref()).collect();
     let findings = check(&rule_refs, &facts, None);

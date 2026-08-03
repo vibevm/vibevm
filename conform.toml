@@ -2,12 +2,20 @@
 #
 # The conform checker (ENGINE-CONFORM v0.1) is config-driven: this file is
 # the policy the gate enforces on THIS project. It is vibevm-specific — the
-# gated-crate list, the env-read roots, and the exempt table are all about
+# gated list, the env-read roots, and the exempt table are all about
 # vibevm's own code, and TERRAFORM-PLAN-v0.3 §30 records conform.toml as
 # staying with the consumer, not moving into the discipline package. A
 # consumer of the rust-ai-native stack writes its own conform.toml for its
 # own layout. See PROP-024 and discipline://rust-ai-native-lang.
+#
+# The surface is per-language (B-029/B-034): the root carries only the
+# shared budget; each language owns a section of one uniform shape. This
+# project is Rust-only, so `[rust]` is the whole policy.
 
+# The per-file line budget (GUIDE-AI-NATIVE-RUST §2).
+max_file_lines = 600
+
+[rust]
 # Source roots to scan. A `<dir>/*` entry scans each subdir of <dir> as one
 # crate; any other entry is a literal crate dir.
 roots = ["crates/*", "xtask"]
@@ -32,13 +40,10 @@ registry_gated_crate = "vibe-cli"
 # call site: a platform constructor runs single-threaded before `main`.
 audit_crates = ["vibe-test-support"]
 
-# The per-file line budget (GUIDE-AI-NATIVE-RUST §2).
-max_file_lines = 600
-
 # Crates under the Class-F/G conform gates (the expand-as-you-conform list —
 # a crate enters when its seams are doctested and its error layer carries REQ
 # edges).
-gated_crates = [
+gated = [
     "progress-core",
     "vibe-core",
     "vibe-actions",
@@ -99,30 +104,30 @@ env_roots = [
     "crates/vibe-registry/src/registry_cache.rs",
 ]
 
-# Crates deliberately OUTSIDE gated_crates, each paired with the reason it has
+# Crates deliberately OUTSIDE `gated`, each paired with the reason it has
 # not (yet) flipped — a silent exemption reads as a bug, a recorded one as a
 # decision. `every_crate_is_gated_or_exempt` keeps this honest against the
 # workspace so a new crate cannot slip in unclassified.
-[[exempt]]
-crate = "vibe-graph"
+[[rust.exempt]]
+unit = "vibe-graph"
 reason = "M0 stub, no code yet — the task-graph runner per VIBEVM-SPEC §5 is unbuilt; nothing to gate until it lands"
 
-[[exempt]]
-crate = "vibe-llm"
+[[rust.exempt]]
+unit = "vibe-llm"
 reason = "M0 stub, no code yet — providers land in the v1.5 LLM milestone per VIBEVM-SPEC §10.4; nothing to gate until then"
 
-[[exempt]]
-crate = "vibe-wire"
+[[rust.exempt]]
+unit = "vibe-wire"
 reason = "generated code (JTD-schema codegen output), excluded by PROP-014 §2.3; the generator input under schemas/ is the taggable unit instead"
 
-[[exempt]]
-crate = "xtask"
+[[rust.exempt]]
+unit = "xtask"
 reason = "internal developer tooling — panics are acceptable at the developer's own console; stays exempt on the record (CONVERT-PLAN Phase 5, 5.3)"
 
-[[exempt]]
-crate = "vibe-test-support"
+[[rust.exempt]]
+unit = "vibe-test-support"
 reason = "test-only support crate — consumed exclusively as a dev-dependency, ships in no binary; the Class-F/G seam and REQ-edge gates describe a product surface it does not have (DRIFT-020)"
 
-[[exempt]]
-crate = "vibe-spec"
-reason = "PROP-035 spec-compiler, provisional — not yet spec-tagged or REQ-edged; enters gated_crates once the format stabilises and its seams are doctested (§15 migration puts vibevm's own adoption last)"
+[[rust.exempt]]
+unit = "vibe-spec"
+reason = "PROP-035 spec-compiler, provisional — not yet spec-tagged or REQ-edged; enters the gated list once the format stabilises and its seams are doctested (§15 migration puts vibevm's own adoption last)"

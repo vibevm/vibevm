@@ -17,3 +17,6 @@ conform-core.workspace = true
 go-ai-native-conform-frontend.workspace = true
 serde_json.workspace = true
 specmark.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

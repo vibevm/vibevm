@@ -79,12 +79,35 @@ fn extract(root: &Path, config: &Config) -> Result<Vec<conform_core::SourceFacts
     Ok(facts)
 }
 
+/// Announce the TypeScript coverage posture after extraction — the
+/// sharper empty-scope guard (a configured `cells_dir` that enumerated
+/// zero cells warns loudly instead of passing silently) and the
+/// vacuous-gate warning (a gated cell the scan attributed no sources
+/// to). Printed in both `run_check` and `run_freeze`, exactly where
+/// Rust's `warn_vacuously_gated` sits; the count summary lives in
+/// `run_check` alone (parity with the Rust driver).
+fn announce_ts_coverage(root: &Path, config: &Config) {
+    let units = conform_core::ts_units(root, &config.typescript);
+    for w in conform_core::ts_scope_warnings(&units, &config.typescript) {
+        eprintln!("{w}");
+    }
+    for cell in conform_core::ts_vacuously_gated(&config.typescript.gated, &units) {
+        eprintln!(
+            "typescript-ai-native-conform: WARNING — gated cell `{cell}` matched no scanned \
+             sources; its gates are green by vacuity. Point `cells_dir` in conform.toml at the \
+             cells tree, or drop it from `[typescript] gated`."
+        );
+    }
+}
+
 /// Run the TS gate at `root` against `baseline_rel`; SARIF lands at
 /// `target/conform/report-typescript.sarif`; any new finding fails.
 pub fn run_check(root: &Path, baseline_rel: &str, scope: Option<&str>) -> Result<()> {
     use conform_core::{baseline, check, count_by_rule, sarif};
     let config = load_config(root)?;
+    config.validate_typescript_against_tree(root)?;
     let facts = extract(root, &config)?;
+    announce_ts_coverage(root, &config);
     let owned = build_rules(&config);
     let rule_refs: Vec<&dyn Rule> = owned.iter().map(|r| r.as_ref()).collect();
 
@@ -125,6 +148,11 @@ pub fn run_check(root: &Path, baseline_rel: &str, scope: Option<&str>) -> Result
             .unwrap_or(&sarif_path)
             .display()
     );
+    eprintln!(
+        "typescript-ai-native-conform: {} cell(s) gated, {} exempt — see conform.toml for the why of each.",
+        config.typescript.gated.len(),
+        config.typescript.exempt.len(),
+    );
     if !new.is_empty() {
         bail!(
             "typescript-ai-native-conform: {} new finding(s) against the baseline",
@@ -140,7 +168,9 @@ pub fn run_check(root: &Path, baseline_rel: &str, scope: Option<&str>) -> Result
 pub fn run_freeze(root: &Path, baseline_rel: &str) -> Result<()> {
     use conform_core::{check, count_by_rule};
     let config = load_config(root)?;
+    config.validate_typescript_against_tree(root)?;
     let facts = extract(root, &config)?;
+    announce_ts_coverage(root, &config);
     let owned = build_rules(&config);
     let rule_refs: Vec<&dyn Rule> = owned.iter().map(|r| r.as_ref()).collect();
     let findings = check(&rule_refs, &facts, None);
@@ -160,4 +190,56 @@ pub fn run_freeze(root: &Path, baseline_rel: &str) -> Result<()> {
         baseline_rel
     );
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The coverage invariant (B-034) refuses an on-disk TS cell that is
+    /// neither gated nor exempt — the silent-green failure mode the gate
+    /// now closes. Pure config + tree: no extraction, so no node
+    /// toolchain floor (the `tests/gate.rs` pair carries the end-to-end
+    /// half over the committed fixtures).
+    #[test]
+    fn validate_refuses_an_unclassified_ts_cell() {
+        let tmp = tempfile::tempdir().expect("tempdir");
+        let root = tmp.path();
+        std::fs::create_dir_all(root.join("src/cells/greeting")).expect("mkdir");
+        std::fs::write(
+            root.join("src/cells/greeting/index.ts"),
+            "export const x = 1;\n",
+        )
+        .expect("ts file");
+        // roots = ["src"], cells_dir set, no gated/exempt → the greeting
+        // cell is on disk but unclassified.
+        std::fs::write(
+            root.join("conform.toml"),
+            "[typescript]\nroots = [\"src\"]\ncells_dir = \"src/cells\"\n",
+        )
+        .expect("conform");
+        let cfg = Config::load(&root.join("conform.toml")).expect("parses");
+        let err = cfg
+            .validate_typescript_against_tree(root)
+            .expect_err("must refuse");
+        let msg = err.to_string();
+        assert!(
+            msg.contains("greeting"),
+            "must name the unclassified cell: {msg}"
+        );
+        assert!(
+            msg.contains("cell") && msg.contains("neither gated nor exempt"),
+            "must speak the TS noun and the refusal class: {msg}"
+        );
+
+        // Classifying the cell (gated OR exempt) clears the refusal.
+        std::fs::write(
+            root.join("conform.toml"),
+            "[typescript]\nroots = [\"src\"]\ncells_dir = \"src/cells\"\ngated = [\"greeting\"]\n",
+        )
+        .expect("conform");
+        let cfg = Config::load(&root.join("conform.toml")).expect("parses");
+        cfg.validate_typescript_against_tree(root)
+            .expect("classified → green");
+    }
 }

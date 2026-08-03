@@ -42,7 +42,7 @@ fn fixture(lib_body: &str) -> TempDir {
     write(
         dir.path(),
         "conform.toml",
-        "roots = [\"crates/*\"]\ngated_crates = [\"myapp\"]\n",
+        "[rust]\nroots = [\"crates/*\"]\ngated = [\"myapp\"]\n",
     );
     write(
         dir.path(),
