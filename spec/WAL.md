@@ -34,9 +34,10 @@ S4 docs, B-035 loop №2, F-185 re-judge.** Live zone
 
 ##WAL-STATE **State at checkpoint** (2026-08-04; the commands supersede):
 registry **88 obligations / 179 drift verdicts — owed 6** (UNCHANGED — no
-judging batch ran yet; F-185's family re-judgement is a pending step, and
-it needs S4 first). Panel GREEN (bare, tail read) after the last landing.
-**Mirrors are BEHIND: the 15 batch-2 commits are local `main` only — the
+judging batch ran yet; F-185's family re-judgement is the pending CLOSE step
+— S4 and the B-035 loop are done). Panel GREEN (bare, tail read) after the
+last landing. **Mirrors are BEHIND: the 20+ batch-2 commits are local `main`
+only — the
 mirror fan-out (`cargo xtask mirror`) has NOT run this run (held for an
 explicit wind-down).** Specmap orphan ratchet at 42 (host side untouched;
 the two new engine files carry `scope!`). Five observed files still stand
@@ -45,30 +46,29 @@ design docs (now four with `seam-error-and-assertion-parity.md`). @impl/done
 
 ## Next — closing batch 2, then the Б/В/Г mandate {#next}
 
-1. ##WAL-NEXT-S4 **S4 — the guides speak the built state (the doc debt).**
-   The guides still carry «Specified, not built» notes for things now BUILT:
-   `GUIDE-AI-NATIVE-GO.md:192` (`##CONFORMANCE-IS-MADE-LOUD`, `@impl/plan` →
-   the go-conformance-assertion rule polices gated cells now) and the Go
-   seam-error contract (`conform-frontend-go.md:41`, both halves built; the
-   message half's marker is `spec://` OR `violates REQ`). The TS guide's
-   seam-error clause gains an honest note (the `ts-seam-error-cites-req` rule
-   + its recorded limits: Form-1 union, name-based error position, closed
-   `{kind,tag,_tag}` discriminant). And the parity principle (manifesto
-   `##PARITY-ACROSS-PROJECTIONS`) is CITED by the three guides (fork №9's
-   «stacks cite»). **The delegated S4 worker returned EMPTY (echoed
-   TASK-DONE, no edits, no report — the §8 report-skip failure) — re-do it
-   (boss-side or re-commission).** Non-gating (panel is green without it),
-   but F-185's re-judge depends on it. @spec/done
-2. ##WAL-NEXT-LOOP **B-035 loop pass №2 — re-cut the parity table** by the
-   fact of the tree after batch 2 (`harvest/e10-b035-parity-pass.md` is
-   pass №1; write pass №2). Rows that now CLOSE: **row 1** (seam-error
-   REQ-citation — all three check it: Rust 2 rules, Go 1 rule both halves,
-   TS 1 rule); **row 7** (conformance-assertion — Go built gated, Rust
-   recorded [compiler], TS routed [type-level tests, parity debt]); **row
-   13** (floor-disable — all three now, B-049 closed the inversion).
-   Remaining open: row 6 (Go flag/registry rule — batch 3), rows 8/12 (Go
-   floor `vet`/`tests`/`staticcheck` residual — B-048), the record-reason
-   rows 9/10/11 (narrate in the guides). @spec/done
+1. ##WAL-NEXT-S4 **S4 — DONE (the guides speak the built state).** The three
+   guides now describe the built rules and cite the parity law: Go
+   `##CONFORMANCE-IS-MADE-LOUD` (@impl/done, the gated conformance rule), the
+   Go seam-error contract (both halves, message marker `spec://` OR `violates
+   REQ`), the TS `##TS-SEAM-ERROR-CITES-REQ-IS-BUILT` note (with the recorded
+   Form-1 / name-based / `{kind,tag,_tag}` limits), and each guide cites
+   manifesto `##PARITY-ACROSS-PROJECTIONS`. A stale `##SWEEP-CENSUS-REGRESSIONS`
+   claim (seam_error under go-unsafe-in-domain) was corrected. **Lesson: the
+   S4 worker hit a worktree-write anomaly and edited the MAIN repo (not its
+   worktree), transparently documenting it — the boss mis-judged it «failed»
+   at the `TASK-DONE` marker while it was still running and mis-recorded one
+   checkpoint. Verify worker completion by the harness background-task
+   notification, NEVER the log's `TASK-DONE`.** Landed `docs(packages)` ×2
+   (guides + rematerialise), panel green. @spec/done
+2. ##WAL-NEXT-LOOP **B-035 loop pass №2 — DONE.**
+   `harvest/e12-b035-parity-pass.md` re-cut the parity table by the fact of
+   the tree after batch 2: **rows 1** (seam-error REQ-citation ×3) and **13**
+   (floor-disable ×3, B-049 closed the inversion) PARITY ACHIEVED; **row 7**
+   (conformance — Go built gated, Rust recorded [compiler], TS routed
+   [type-level tests, parity debt]). Remaining open (recorded, routed to
+   later batches, NOT silent): row 6 (Go flag/registry rule), rows 8/12 (Go
+   floor `vet`/`tests`/`staticcheck` `./...` residual — B-048's Go twin).
+   M-PARITY is recorded-honest but not build-complete (needs row 6 + 8/12). @spec/done
 3. ##WAL-NEXT-F185 **F-185 family re-judgement (B-033 completes the
    family)** — AFTER S4 (the guides must speak the built state first, else
    F-185's anchors stay drift): `vibe progress mirror --campaign <zone>` →
@@ -246,8 +246,9 @@ Every landing panel-green (the panel earned its keep on the go
 characterization coupling — the seam-error move + message half broke the gate
 count and the TCG parity three times; each a same-landing fix). 3 claudez
 workers accepted (2 with boss corrections that were the worker's own correct
-escalations); 1 doc worker (S4) returned empty and is a re-do. Earlier:
-батч 1 whole (2026-08-04), волна А whole, Phase D closed 2026-08-03. @impl/done
+escalations); the S4 doc worker succeeded (it edited the MAIN repo after a
+worktree-write anomaly, documented transparently, boss-reviewed + landed).
+Earlier: батч 1 whole (2026-08-04), волна А whole, Phase D closed 2026-08-03. @impl/done
 
 ## In progress {#in-progress}
 
@@ -260,12 +261,14 @@ the mandate is live. @impl/done
 
 ## Known issues {#known-issues}
 
-- ##WAL-KI-S4-REDO **S4 doc re-narration is owed** (the delegated worker
-  returned empty). Guides still promise built things as «not built»
-  (`GUIDE-AI-NATIVE-GO.md:192` `@impl/plan`; the Go/TS seam-error notes) and
-  the parity principle is not yet cited by the three guides. Non-gating;
-  blocks the F-185 re-judge. @impl/done
-- ##WAL-KI-MIRRORS-BEHIND **Mirrors are 15 commits behind** — `cargo xtask
+- ##WAL-KI-COMPLETION-SIGNAL **Lesson (S4):** verify a background worker's
+  completion by the harness's background-task NOTIFICATION, never the log's
+  `TASK-DONE` marker — a doc worker echoed `TASK-DONE` early, kept running,
+  and (hitting a worktree-write anomaly) edited the MAIN repo; the boss
+  mis-judged it failed and mis-recorded one checkpoint before catching it. A
+  doc-only worker whose worktree is unwritable falls back to the main repo —
+  review its `git diff` on the host as usual. @impl/done
+- ##WAL-KI-MIRRORS-BEHIND **Mirrors are 20+ commits behind** — `cargo xtask
   mirror` has not run this run (held for an explicit wind-down / batch close). @impl/done
 - ##WAL-KI-OPEN **Open on the owner, none blocking:** nine remaining map forks
   (№1 arrives with B-038 in batch 3); F-129; the H-roster; the pre-publication
