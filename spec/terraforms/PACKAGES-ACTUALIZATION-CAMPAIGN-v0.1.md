@@ -4939,6 +4939,25 @@ aspirational — and every one is still live for the phases that remain.
   reports, meta with verdicts). **Wave А continues: B-031 next, then
   B-028.** @spec/done
 
+- **2026-08-04 · B-031 opens — the census lands, the sketch goes to
+  the owner.** On the owner's «продолжай», wave А moved to B-031. The
+  evidence sweep was delegated whole (claudez, read-only packet, no
+  cargo — the E5 census: every count command-cited and re-run;
+  ПРИНЯТО first pass) and reshaped the filing: 2 351 living
+  occurrences (not the crates-only 1 384), the contract carve-out
+  exactly one line (PROP-029 `##SCOPE-HOST`), truncation already
+  authority-agnostic (→ stays with B-028), ≈343 test fixtures, 500
+  historical JSONs untouched by design, 314 canonical-package
+  cross-boundary citations (in-slot edits under the release ruling).
+  The boss design over it —
+  [`spec/design/host-as-package.md`](../design/host-as-package.md):
+  `org.vibevm/core` through the unified grammar, the resolver's
+  self-coordinate mapping, undotted authorities failing loudly with
+  the rename hint, a dry-run-first one-commit migration, F-169/F-147
+  re-judgements riding the landing. **Three forks to the owner
+  (coordinate form / legacy behaviour / migration perimeter);
+  implementation holds for the ruling. B-028 stays queued behind.** @spec/done
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
