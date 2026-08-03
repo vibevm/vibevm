@@ -1,0 +1,22 @@
+{
+ "batch": "E3-F146",
+ "cluster": "ai-native",
+ "files": {
+  "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md": {
+   "ROW-FRONTEND-TS-JS": {
+    "v": "confirmed",
+    "ev": [
+     "the row is re-annotated per the B-023 study and the owner 2026-08-04 ruling: the T-syn cell names tree-sitter/SWC a ruled non-build (grep tree-sitter|swc repository-wide = 0 outside this table and the harvest; the shipped sidecar already parses at that depth), matching the T1 verdict of harvest/e1-b023-syntactic-tiers-feasibility.md",
+     "the T-sem cell states the shipped depth honestly: tools/ts-extract extract.ts drives createSourceFile/forEachChild/createScanner and never createProgram/getTypeChecker (harvest §2 evidence, owner counter-probe) — and carries the deferral verbatim from BACKLOG.md B-023 disposition: checker deepening waits for a second type-requiring rule beyond as_cross"
+    ]
+   },
+   "ROW-FRONTEND-PYTHON": {
+    "v": "confirmed",
+    "ev": [
+     "the row is specified-not-built in full, in the C++ row idiom: rustpython|symtable|cpython return no hit in the engine, its manifests or any frontend crate, and Fact carries no Python variant (core-ai-native-conform/src/facts.rs) — matching the P1/P2 rows of the B-023 synthesis",
+     "the interim names the gate honestly: both columns feasible on the go-extract/ts-extract sidecar precedent, but no python-ai-native-lang consumer exists — waits on a product decision about a Python stack, per B-023 disposition (owner-ruled 2026-08-04)"
+    ]
+   }
+  }
+ }
+}

@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-02T21:14:46Z",
+  "updated_at": "2026-08-03T02:07:59Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -5004,7 +5004,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md": {
-      "content_hash": "443fcb2c5279fb8aab12d4eb4020ad49e516776a18a4aaf43cfeca4004200e45",
+      "content_hash": "23f183305c4bcd249c9e1dea6a214ed176b9ec914dfacc9ae6e2f4938bde97d2",
       "rollup": {
         "explicit": [
           "spec",
@@ -5026,7 +5026,7 @@
       "unit_count": 7,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "443fcb2c5279fb8aab12d4eb4020ad49e516776a18a4aaf43cfeca4004200e45",
+        "processed_hash": "23f183305c4bcd249c9e1dea6a214ed176b9ec914dfacc9ae6e2f4938bde97d2",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -5278,12 +5278,10 @@
             ]
           },
           "ROW-FRONTEND-TS-JS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:3  //! TypeScript Compiler API, via the packaged `tools/ts-extract`",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform-frontend/src/lib.rs:12  //! Process economics: `warm()` (the store's batch hook) runs ONE node",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/facts.rs:185      /// overhead (`ts-tsc` spawns node) extracts the whole pending set",
-              "the T-sem column is right — the TypeScript Compiler API through a node child process — and the T-syn column names tree-sitter / SWC, of which grep finds neither"
+              "the row is re-annotated per the B-023 study and the owner 2026-08-04 ruling: the T-syn cell names tree-sitter/SWC a ruled non-build (grep tree-sitter|swc repository-wide = 0 outside this table and the harvest; the shipped sidecar already parses at that depth), matching the T1 verdict of harvest/e1-b023-syntactic-tiers-feasibility.md",
+              "the T-sem cell states the shipped depth honestly: tools/ts-extract extract.ts drives createSourceFile/forEachChild/createScanner and never createProgram/getTypeChecker (harvest §2 evidence, owner counter-probe) — and carries the deferral verbatim from BACKLOG.md B-023 disposition: checker deepening waits for a second type-requiring rule beyond as_cross"
             ]
           },
           "ROW-FRONTEND-GO": {
@@ -5293,12 +5291,10 @@
             ]
           },
           "ROW-FRONTEND-PYTHON": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-conform-frontend/src/lib.rs:82              // Never produced by rust-syn — the ts-tsc and go frontends own",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:105      pub fn extract_typescript(",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:118      pub fn extract_go(",
-              "there is no Python frontend. grep for rustpython / python / symtable / cpython over the engine, its manifests and both named frontends returns 0"
+              "the row is specified-not-built in full, in the C++ row idiom: rustpython|symtable|cpython return no hit in the engine, its manifests or any frontend crate, and Fact carries no Python variant (core-ai-native-conform/src/facts.rs) — matching the P1/P2 rows of the B-023 synthesis",
+              "the interim names the gate honestly: both columns feasible on the go-extract/ts-extract sidecar precedent, but no python-ai-native-lang consumer exists — waits on a product decision about a Python stack, per B-023 disposition (owner-ruled 2026-08-04)"
             ]
           },
           "FRONTEND-CRASH-DEGRADES-VISIBLY-NEVER-SILENTLY": {
@@ -5364,12 +5360,12 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T19:06:18Z",
-        "verify_batch": "C1 + D5b + D7 + D21 + D22 + D24 + D34"
+        "verified_at": "2026-08-03T02:07:59Z",
+        "verify_batch": "C1 + D5b + D7 + D21 + D22 + D24 + D34 + E3-F146"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md": {
-      "content_hash": "1ad512c96d0c33368c5a09cd7249d2ae16e7bc8c1643b0af2879f8da721be676",
+      "content_hash": "38d379070dcee59ed185a18317ab7b20d7e00bb92c80910f7e185a7dcf7a7753",
       "rollup": {
         "explicit": [
           "spec",
@@ -5391,7 +5387,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "1ad512c96d0c33368c5a09cd7249d2ae16e7bc8c1643b0af2879f8da721be676",
+        "processed_hash": "38d379070dcee59ed185a18317ab7b20d7e00bb92c80910f7e185a7dcf7a7753",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -5566,12 +5562,10 @@
             ]
           },
           "ENTRY-CARRIES-ITS-PROVENANCE-FIELDS": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:113  pub struct ProseRender {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:214          \"\\n— provenance: computed at {}, epoch {}, producer {producer}\\n\",",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:155      std::fs::write(&slot, &text).with_context(|| format!(\"writing {}\", slot.display()))?;",
-              "there is no entry struct: the stored object is a plain text blob (ledger.rs:155). Of the eight fields the fact lists — producer, model, prompt rev, inputs, epoch, cost, timestamp, confidence — grep finds none of confidence, created_at, timestamp, model_id or prompt_rev anywhere in the crate"
+              "Partly-built interim in place per the owner-agreed B-022 verdict table (M-A): layer 1 ships — LedgerEntry{schema,kind,producer,epoch,inputs_hash,created_at_unix,body} at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:166-180 (the 2026-08-04 B-022 slice, commit 3014f94a)",
+              "the absent LLM-side fields (model_id, prompt_rev, cost, confidence, spec-URI ~r inputs) are routed to a recorded build: BACKLOG.md B-020 (planned, owner 2026-08-01) — BUILD-FIRST interim form; owner agreement «с B-022 согласен» 2026-08-04, plan §7 LOG"
             ]
           },
           "RENDERED-EXPLANATION-DISPLAYS-PROVENANCE": {
@@ -5599,11 +5593,10 @@
             ]
           },
           "GC-IS-LRU-WITH-A-PIN-SET": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:119  fn object_path(root: &Path, key_hex: &str) -> PathBuf {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/baseline.rs:51  /// fail the gate; stale entries are prune candidates (the file may",
-              "no garbage collection of any kind exists: grep for gc / lru / least-recently / evict / prune / size_budget / pin_set over the crates and their manifests returns one unrelated hit in conform's baseline module"
+              "Specified-not-built interim in place (M-B): no LRU/pin/budget/delete path exists — ledger.rs writes objects and never removes them (grep evict|lru|pin over core-ai-native-specmap = 0); store write path ledger.rs:119-122",
+              "both keys named per the ruling: eviction pressure -> B-020 (deterministic template recompute is free), pin source -> the §7 release slice behind the owner B-015 notice (BACKLOG.md B-015 parking, B-022 coupling note)"
             ]
           },
           "CONCURRENCY-LAST-WRITE-WINS-IS-BENIGN": {
@@ -5616,12 +5609,10 @@
             ]
           },
           "TELEMETRY-FEEDS-THE-HEADLINE-METRIC": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:83  pub struct Telemetry {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:86      pub rot_checks: u64,",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:80  /// epoch-invalidated entry runs (none do yet — the template producer",
-              "`Telemetry` (ledger.rs:82-88) carries hits, misses, rot_checks and rot_changed. Of the four measures the fact names — hit rate, cost per kind, LLM-$ per change, rot rate — two exist and the two involving cost do not: there is no cost field and no per-kind breakdown"
+              "Partly-built interim matches the tree: Telemetry{hits,misses,rot_checks,rot_changed} at ledger.rs:83-88 — hit rate live, rot plumbing live-no-data; NO cost field anywhere in the struct, so both cost measures are honestly routed to B-020 per the M-C verdict",
+              "per-kind axis exists since the B-022 QueryKind enum (2026-08-04); the fact text now says exactly which halves stand and which wait"
             ]
           },
           "QUERY-FACTS-EXTRACT": {
@@ -5663,11 +5654,10 @@
             ]
           },
           "RELEASE-SLICE-IS-EXPORTED-SIGNED-AND-SHIPPED": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:17  //! Local per checkout; never shipped, never signed, never exposed —",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:1  //! The intent ledger, local slice (LEDGER-INTENT v0.1; PLAYBOOK",
-              "no export, freeze, sign or ship path exists: grep for release-slice / export / sign_ / signature / ed25519 / minisign / gpg over the crates and manifests returns nothing. The ledger is local-only, which the crate's own header says"
+              "Specified-not-built interim in place (M-D): no export/sign/ship path in any engine crate, stack CLI or host driver (grep export|sign over core-ai-native crates = no such mechanism); ledger.rs:17 header itself says never shipped, never signed, never exposed",
+              "waits whole on the owner B-015 notice, named verbatim in the interim; §7 own rule UNSIGNED-SLICES-ARE-NEVER-EXPOSED-REMOTELY forbids an unsigned interim, matching the harvest M-D verdict the owner agreed with 2026-08-04"
             ]
           },
           "UNSIGNED-SLICES-ARE-NEVER-EXPOSED-REMOTELY": {
@@ -5704,11 +5694,10 @@
             ]
           },
           "FAILURE-KEY-UNDER-SPECIFICATION": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:132      const PRODUCER: &str = \"explain.item/prose-template-1\";",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:136      let key = content_hash(&format!(\"{PRODUCER}\\n{}\\n{subject}\", epoch.0));",
-              "query kinds are not a closed enum: the one kind is a `const PRODUCER: &str` string literal (ledger.rs:132), and grep for QueryKind / enum Query returns zero. A string constant is exactly the under-specification this fact claims to have closed off"
+              "the mechanism is BUILT since 2026-08-04 (the B-022 slice, commit 3014f94a): QueryKind is a closed enum with a structured reviewed key v=1/k=/p=/e=/s= — ledger.rs cache_key + QueryKind::name()/producer(); adding a kind is an enum variant PR, exactly as the fact states",
+              "vendored forward x6 the same pass (cargo xtask sync-engines); the fact re-judges on the build, no annotation needed"
             ]
           },
           "FAILURE-LEDGER-WORSHIP": {
@@ -5727,8 +5716,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T15:54:43Z",
-        "verify_batch": "C1 + D5b + D10-groupA"
+        "verified_at": "2026-08-03T02:07:59Z",
+        "verify_batch": "C1 + D5b + D10-groupA + E3-F159"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/MCP-CORE-v0.1.md": {
@@ -92353,7 +92342,7 @@
       }
     },
     "spec/design/README.md": {
-      "content_hash": "cb384e0db167ec8292522e88b23246778577f7a0bed2221e64fa11a891ddc4d6",
+      "content_hash": "26033202cf2db36d129189f55f600c87a3d858bf73ff56b24498d8420cf8895b",
       "rollup": {
         "explicit": [
           "doc",
@@ -92367,11 +92356,11 @@
           "doc",
           "done"
         ],
-        "marker_count": 69,
-        "fact_count": 63,
+        "marker_count": 70,
+        "fact_count": 64,
         "unmarked_facts": 0
       },
-      "marker_count": 69,
+      "marker_count": 70,
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
@@ -93013,6 +93002,29 @@
         "verified_at": "2026-07-25T13:00:46Z",
         "verify_batch": "c2-design + d2b"
       }
+    },
+    "spec/design/deterministic-loading-aliasing.md": {
+      "content_hash": "0868ebebe62dbf44010fc45ec7d69427d0f8664eb7831f6c88660140789156c9",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 53,
+        "fact_count": 52,
+        "unmarked_facts": 0
+      },
+      "marker_count": 53,
+      "unit_count": 13,
+      "issue_count": 0
     },
     "spec/design/loading-and-boot-model.md": {
       "content_hash": "346279d5d1c2f87bc27bbe9e5c8677d55f59b77e361ebe8ddb53b29e74ba39c1",
@@ -110421,7 +110433,7 @@
       }
     },
     "spec/modules/vibe-workspace/PROP-009-loading-model.md": {
-      "content_hash": "07214ceb1a7eaf557b8b8c6a672fe8ba0e0f47a4a7b3f07c3b0c26e595efc6a1",
+      "content_hash": "38cfca4440000e3169119fc60e27a1e1d89e9ff73ac678acf1e0241984214741",
       "rollup": {
         "explicit": [
           "impl",
@@ -110429,17 +110441,17 @@
         ],
         "computed": [
           "spec",
-          "done"
+          "work"
         ],
         "effective": [
           "impl",
           "done"
         ],
-        "marker_count": 105,
-        "fact_count": 104,
+        "marker_count": 108,
+        "fact_count": 107,
         "unmarked_facts": 0
       },
-      "marker_count": 105,
+      "marker_count": 108,
       "unit_count": 20,
       "issue_count": 0,
       "campaign": {
@@ -113741,7 +113753,7 @@
       }
     },
     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md": {
-      "content_hash": "16f282502a1076facfeb02a35cf10791ad611ad62e4512a2c805e0c5c47aa1ff",
+      "content_hash": "31a39d92631b815db4a812c63e158a2fc68620cb8c6dee4ac2cb69bbf77e2991",
       "rollup": {
         "explicit": [
           "impl",
@@ -113755,11 +113767,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 135,
-        "fact_count": 134,
+        "marker_count": 145,
+        "fact_count": 144,
         "unmarked_facts": 0
       },
-      "marker_count": 135,
+      "marker_count": 145,
       "unit_count": 22,
       "issue_count": 0,
       "campaign": {

@@ -1,0 +1,43 @@
+{
+ "batch": "E3-F159",
+ "cluster": "ai-native",
+ "files": {
+  "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/LEDGER-INTENT-v0.1.md": {
+   "ENTRY-CARRIES-ITS-PROVENANCE-FIELDS": {
+    "v": "confirmed",
+    "ev": [
+     "Partly-built interim in place per the owner-agreed B-022 verdict table (M-A): layer 1 ships — LedgerEntry{schema,kind,producer,epoch,inputs_hash,created_at_unix,body} at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ledger.rs:166-180 (the 2026-08-04 B-022 slice, commit 3014f94a)",
+     "the absent LLM-side fields (model_id, prompt_rev, cost, confidence, spec-URI ~r inputs) are routed to a recorded build: BACKLOG.md B-020 (planned, owner 2026-08-01) — BUILD-FIRST interim form; owner agreement «с B-022 согласен» 2026-08-04, plan §7 LOG"
+    ]
+   },
+   "GC-IS-LRU-WITH-A-PIN-SET": {
+    "v": "confirmed",
+    "ev": [
+     "Specified-not-built interim in place (M-B): no LRU/pin/budget/delete path exists — ledger.rs writes objects and never removes them (grep evict|lru|pin over core-ai-native-specmap = 0); store write path ledger.rs:119-122",
+     "both keys named per the ruling: eviction pressure -> B-020 (deterministic template recompute is free), pin source -> the §7 release slice behind the owner B-015 notice (BACKLOG.md B-015 parking, B-022 coupling note)"
+    ]
+   },
+   "TELEMETRY-FEEDS-THE-HEADLINE-METRIC": {
+    "v": "confirmed",
+    "ev": [
+     "Partly-built interim matches the tree: Telemetry{hits,misses,rot_checks,rot_changed} at ledger.rs:83-88 — hit rate live, rot plumbing live-no-data; NO cost field anywhere in the struct, so both cost measures are honestly routed to B-020 per the M-C verdict",
+     "per-kind axis exists since the B-022 QueryKind enum (2026-08-04); the fact text now says exactly which halves stand and which wait"
+    ]
+   },
+   "RELEASE-SLICE-IS-EXPORTED-SIGNED-AND-SHIPPED": {
+    "v": "confirmed",
+    "ev": [
+     "Specified-not-built interim in place (M-D): no export/sign/ship path in any engine crate, stack CLI or host driver (grep export|sign over core-ai-native crates = no such mechanism); ledger.rs:17 header itself says never shipped, never signed, never exposed",
+     "waits whole on the owner B-015 notice, named verbatim in the interim; §7 own rule UNSIGNED-SLICES-ARE-NEVER-EXPOSED-REMOTELY forbids an unsigned interim, matching the harvest M-D verdict the owner agreed with 2026-08-04"
+    ]
+   },
+   "FAILURE-KEY-UNDER-SPECIFICATION": {
+    "v": "confirmed",
+    "ev": [
+     "the mechanism is BUILT since 2026-08-04 (the B-022 slice, commit 3014f94a): QueryKind is a closed enum with a structured reviewed key v=1/k=/p=/e=/s= — ledger.rs cache_key + QueryKind::name()/producer(); adding a kind is an enum variant PR, exactly as the fact states",
+     "vendored forward x6 the same pass (cargo xtask sync-engines); the fact re-judges on the build, no annotation needed"
+    ]
+   }
+  }
+ }
+}

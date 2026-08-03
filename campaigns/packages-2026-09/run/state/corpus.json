@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-02T21:14:47Z",
+  "updated_at": "2026-08-03T02:06:42Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -91586,9 +91586,9 @@
         "stage": "doc",
         "state": "done"
       },
-      "markers": 69,
+      "markers": 70,
       "units": 6,
-      "facts": 63,
+      "facts": 64,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -92230,6 +92230,23 @@
         "verified_at": "2026-07-25T13:00:46Z",
         "verify_batch": "c2-design + d2b"
       }
+    },
+    {
+      "path": "spec/design/deterministic-loading-aliasing.md",
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 53,
+      "units": 13,
+      "facts": 52,
+      "unmarked": 0,
+      "issues": 0,
+      "campaign": {}
     },
     {
       "path": "spec/design/loading-and-boot-model.md",
@@ -109518,9 +109535,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 105,
+      "markers": 108,
       "units": 20,
-      "facts": 104,
+      "facts": 107,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -112810,9 +112827,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 135,
+      "markers": 145,
       "units": 22,
-      "facts": 134,
+      "facts": 144,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
