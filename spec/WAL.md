@@ -1,17 +1,20 @@
 # WAL — Project Continuation State {#root}
 
-_Updated: 2026-08-04, checkpoint (**PHASE E — ВОЛНА Б БАТЧ 2 ПОСТРОЕН
-ЦЕЛИКОМ, зелёный, 15 коммитов; остались доки/луп/пересуд до закрытия
-батча. One long autonomous run built the whole parity batch: the engine
-gains `go-seam-error-cites-req` (both halves), `ts-seam-error-cites-req`,
-`go-conformance-assertion` (gated), two new `Fact` variants + the
-`seam_error_message_no_req` kind + `[rust] floor_disable`; the extractors
-emit them (go `Error()` bodies + `var _` assertions, ts discriminated-union
-errors); all three rules MOUNTED and exhibited on the fixtures; B-049's
-Rust floor honours `floor_disable`; the parity principle is LIFTED into the
-manifesto. Panel green at every landing. NOT yet done: S4 doc re-narration
-(the guides still promise things now built), the B-035 loop pass №2, and
-the F-185 family re-judgement.**)_
+_Updated: 2026-08-04, checkpoint (**PHASE E — ВОЛНА Б БАТЧ 2 ЗАКРЫТ,
+зелёный. One long autonomous run built AND closed the whole parity batch:
+the engine gains `go-seam-error-cites-req` (both halves),
+`ts-seam-error-cites-req`, `go-conformance-assertion` (gated), two new
+`Fact` variants + the `seam_error_message_no_req` kind + `[rust]
+floor_disable`; the extractors emit them (go `Error()` bodies + `var _`
+assertions, ts discriminated-union errors); all three rules MOUNTED and
+exhibited on the fixtures; B-049's Rust floor honours `floor_disable`; the
+parity principle is LIFTED into the manifesto and the three guides describe
+the built rules + cite it (S4); the B-035 loop pass №2 re-cut the parity
+table; F-185's family re-judged `confirmed` (registry 87/176, 98.1 %); the
+BACKLOG rows record it. Panel green at every landing. The only batch-2
+remnant is registry-vouching hygiene (re-seal the S4-edited guides). NEXT:
+batch 3 (B-036 + B-037 + B-038; map fork №1 computed-names arrives WITH
+B-038 — a genuine owner stop).**)_
 
 ##WAL-NUMBERS-COME-FROM-COMMANDS **Every number below is reproduced by two
 commands; run them rather than quoting this file.** @impl/done
@@ -33,10 +36,14 @@ S4 docs, B-035 loop №2, F-185 re-judge.** Live zone
 `campaigns/packages-2026-09/`. @impl/done
 
 ##WAL-STATE **State at checkpoint** (2026-08-04; the commands supersede):
-registry **88 obligations / 179 drift verdicts — owed 6** (UNCHANGED — no
-judging batch ran yet; F-185's family re-judgement is the pending CLOSE step
-— S4 and the B-035 loop are done). Panel GREEN (bare, tail read) after the
-last landing. **Mirrors are BEHIND: the 20+ batch-2 commits are local `main`
+registry **87 obligations / 176 drift verdicts — 98.1 % confirmed** (F-185
+re-judged `confirmed`: the go seam-error rule is built, the go-lang doc's
+promise now matches reality; −3 drifts / −1 obligation). **BATCH 2 CLOSED —
+build + docs (S4) + parity loop №2 + the F-185 re-judge + the backlog rows
+all landed.** The only remaining batch-2 hygiene is registry-vouching: the
+S4-edited guides + manifesto carry semantically-stale seals (a re-judge +
+re-seal pass, joining the observed-files set). Panel GREEN (bare, tail read)
+after the last landing. **Mirrors are BEHIND: the 20+ batch-2 commits are local `main`
 only — the
 mirror fan-out (`cargo xtask mirror`) has NOT run this run (held for an
 explicit wind-down).** Specmap orphan ratchet at 42 (host side untouched;
@@ -69,12 +76,18 @@ design docs (now four with `seam-error-and-assertion-parity.md`). @impl/done
    later batches, NOT silent): row 6 (Go flag/registry rule), rows 8/12 (Go
    floor `vet`/`tests`/`staticcheck` `./...` residual — B-048's Go twin).
    M-PARITY is recorded-honest but not build-complete (needs row 6 + 8/12). @spec/done
-3. ##WAL-NEXT-F185 **F-185 family re-judgement (B-033 completes the
-   family)** — AFTER S4 (the guides must speak the built state first, else
-   F-185's anchors stay drift): `vibe progress mirror --campaign <zone>` →
-   `merge-verdicts.py` → seal, **never chained** (seal takes explicit
-   PATHs). Then registry numbers move (F-185's promises now match reality).
-   @spec/done
+3. ##WAL-NEXT-F185 **F-185 family re-judgement — DONE.** `vibe progress
+   mirror --campaign campaigns/packages-2026-09` → `merge-verdicts.py <batch>
+   --force` → `vibe progress seal <path>` restated F-185's 3 anchors
+   (`conform-frontend-go.md` #RULE-SEAM-ERROR-CONTRACT /
+   #CONFORM-TOML-GAINS-A-GO-SECTION / #EVERY-PACKAGE-GATED-OR-EXEMPT) from
+   `drift` to `confirmed`; registry 88/179 → 87/176. **Recipe gotcha
+   recorded:** `merge-verdicts.py` takes a verdict-BATCH JSON as argv[1]
+   (schema: `tasks/evidence/batch-*.json`, `{batch, cluster, files:{path:
+   {ANCHOR:{v,ev}}}}`), NOT a bare flag; it REFUSES a restate without
+   `--force`; `vibe progress seal` refuses a file with any unjudged marker.
+   The remaining registry hygiene (NOT gating): re-judge + re-seal the
+   S4-edited guides + the manifesto (semantically-stale seals). @spec/done
 4. ##WAL-NEXT-BATCH-34 **Batch 3 → batch 4 → M-PARITY.** Батч 3
    (B-036 invariant-comment position + B-037 custom REQ-citing lints +
    B-038 pending cards; **map fork №1 computed-names arrives WITH B-038** —
