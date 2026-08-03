@@ -278,7 +278,7 @@ already written from it is the specification of the work.)*
 | ##B006-ANCHOR **anchor** | falsifies `spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#THE-POLICY-IS-STATED-IN-EXACTLY-ONE-ALWAYS-LOADED-PLACE` — from the host side, not the package's |
 | ##B006-LOCATOR **locator** | `spec/boot/STATIC.md:421` and `:615` carry the identical `vibe:static org.vibevm.world/git-attribution-policy` provenance marker and source path; the emitter is `crates/vibe-workspace/src/boot_artifacts.rs` / the `bootgen` static lane |
 | ##B006-SEVERITY **severity** | P2 |
-| ##B006-DISPOSITION **disposition** | `open` — **design sketch delivered to the owner 2026-08-04** ([`spec/design/lane-composition-dedup.md`](spec/design/lane-composition-dedup.md): the exact mechanism, the compose-time once-each elision recommendation, three forks, the per-node-qualify rider); implementation holds for the ruling per the Phase E contract gate |
+| ##B006-DISPOSITION **disposition** | `open` — **design APPROVED by the owner 2026-08-04** («согласен с твоими рекомендациями a1 b1 c1»: A1 compose-time once-each elision · B1 provenance stub, no `#use` · C1 contract landing incl. the per-node-qualify rider); [`spec/design/lane-composition-dedup.md`](spec/design/lane-composition-dedup.md) is the record; building per its §8 worker cut |
 | ##B006-FILED **filed by** | the packages-actualization campaign, Phase D, wave 6, 2026-07-29 |
 
 - ##B006-WHAT **What it is, measured.** `spec/boot/STATIC.md` carries **31 static
