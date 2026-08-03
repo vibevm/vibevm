@@ -1,6 +1,6 @@
 # The gate grows per-language units — config surface, coverage invariant, flag rule {#root}
 
-<status stage="spec" state="work" comment="the B-029 + B-034 + B-039 design (волна Б, батч 1), standing on the E8 census pair; the map's fork №2 RULED by the owner 2026-08-04 — §2 records the ruling verbatim, §3 the settled shape, §4 the re-cut build"/>
+<status stage="spec" state="done" comment="the B-029 + B-034 + B-039 design (волна Б, батч 1); fork №2 RULED 2026-08-04 (§2 verbatim) and the whole cut LANDED the same day — W1 97688de0, W2a aa4b3a72, W2b 51e350bf, host d3a960f3, W3 c67ec458, W4 0249f9cd, panel green, live demo exhibits at real exit 0; the B-035 loop pass abfdff30 measures the acceptance"/>
 
 ##companion-line **Companion to:** [`BACKLOG.md` B-029](../../BACKLOG.md#b-029) (neutral/per-language gate key + the config-surface enrichment, ruling 2.1 recorded in the row), [B-034](../../BACKLOG.md#b-034) (gated-or-exempt for Go/TS), [B-039](../../BACKLOG.md#b-039) (mount R-001 on the TS gate); the fork it carries is [`TOOLING-MAP.md` §5 №2](../../TOOLING-MAP.md#forks). Evidence: [`e8-r1-config-census.md`](../../campaigns/packages-2026-09/harvest/e8-r1-config-census.md) (the config surface), [`e8-r2-gate-units-census.md`](../../campaigns/packages-2026-09/harvest/e8-r2-gate-units-census.md) (units, FlagSites, rosters). Non-normative; the PROPs and the backlog rulings win. @spec/work
 
