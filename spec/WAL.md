@@ -1,6 +1,6 @@
 # WAL — Project Continuation State {#root}
 
-_Updated: 2026-08-04, checkpoint (**PHASE E — ВОЛНА Б БАТЧ 2 ЗАКРЫТ,
+_Updated: 2026-08-04, wind-down №7 (**PHASE E — ВОЛНА Б БАТЧ 2 ЗАКРЫТ,
 зелёный. One long autonomous run built AND closed the whole parity batch:
 the engine gains `go-seam-error-cites-req` (both halves),
 `ts-seam-error-cites-req`, `go-conformance-assertion` (gated), two new
@@ -43,10 +43,9 @@ build + docs (S4) + parity loop №2 + the F-185 re-judge + the backlog rows
 all landed.** The only remaining batch-2 hygiene is registry-vouching: the
 S4-edited guides + manifesto carry semantically-stale seals (a re-judge +
 re-seal pass, joining the observed-files set). Panel GREEN (bare, tail read)
-after the last landing. **Mirrors are BEHIND: the 20+ batch-2 commits are local `main`
-only — the
-mirror fan-out (`cargo xtask mirror`) has NOT run this run (held for an
-explicit wind-down).** Specmap orphan ratchet at 42 (host side untouched;
+after the last landing. **Mirrors ROLLED OUT via `cargo xtask mirror` this
+wind-down (№7) — `main` synced to every mirror, fast-forward-only.** Specmap
+orphan ratchet at 42 (host side untouched;
 the two new engine files carry `scope!`). Five observed files still stand
 unsealed pending their anchors' judging pass: PROP-035, PROP-029, the three
 design docs (now four with `seam-error-and-assertion-parity.md`). @impl/done
@@ -281,8 +280,8 @@ the mandate is live. @impl/done
   mis-judged it failed and mis-recorded one checkpoint before catching it. A
   doc-only worker whose worktree is unwritable falls back to the main repo —
   review its `git diff` on the host as usual. @impl/done
-- ##WAL-KI-MIRRORS-BEHIND **Mirrors are 20+ commits behind** — `cargo xtask
-  mirror` has not run this run (held for an explicit wind-down / batch close). @impl/done
+- ##WAL-KI-MIRRORS-SYNCED **Mirrors synced** — `cargo xtask mirror` rolled
+  `main` out to every mirror this wind-down (№7), fast-forward-only. @impl/done
 - ##WAL-KI-OPEN **Open on the owner, none blocking:** nine remaining map forks
   (№1 arrives with B-038 in batch 3); F-129; the H-roster; the pre-publication
   boundary. @impl/done
