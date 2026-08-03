@@ -4868,6 +4868,34 @@ aspirational — and every one is still live for the phases that remain.
   wants numbers fixed earlier, the boss mints the seven slots on his
   word. @spec/done
 
+- **2026-08-04 · Phase E, second slice — the ruled re-judgements drain
+  and B-006 goes to the owner as a sketch.** The routine half executed
+  on the standing rulings, boss-side end to end (annotations are spec
+  authoring, verdicts are verdicts — the never-delegate set; nothing
+  in the slice was delegable code): **F-159** — four owner-ruled
+  interims into LEDGER-INTENT (M-A layer 2 → B-020; M-B → B-020 +
+  M-D-as-pin-source; M-C's two cost measures → B-020; M-D → the B-015
+  notice, verbatim) and the fifth anchor (M-E) re-judged on the built
+  enum — five `confirmed` (batch E3-F159), the obligation **resolved
+  to history**; **F-146** — the §2 frontend table re-annotated (ts-tsc
+  honest parser depth + the B-023 deferral quoted verbatim; Python
+  specified-not-built in the C++-row idiom), two `confirmed` (batch
+  E3-F146), one drift stays owed on B-025; both through mirror →
+  merge → seal, never chained; the host line `terraform/REPORT.md:41`
+  fixed; B-022 closed in the backlog with heirs named (B-020, B-015).
+  Registry after: **89 obligations / 183 drifts / owed 10 /
+  resolved 140** (commands reproduce, never quote). **B-006** — the
+  wave-А next — analysed to its exact mechanism (the closure walk and
+  the `with_static` unit-artifact substitution both firing on one
+  static entry; the conjunction DRIFT-029/030 stopped on) and put to
+  the owner as the design sketch the mandate requires before a
+  contract-touching build:
+  [`spec/design/lane-composition-dedup.md`](../design/lane-composition-dedup.md)
+  — compose-time once-each elision recommended, three forks, W3's
+  per-node-qualify rider, two-packet worker cut. **Implementation
+  holds for the ruling; B-031/B-028 stay queued behind it per the
+  wave order.** @spec/done
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
