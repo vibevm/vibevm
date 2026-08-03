@@ -94,6 +94,14 @@
 
 ##BAN-WITHOUT-HATCH-IS-A-BUG A ban with no escape hatch is a bug in the discipline; a deviation with no reason is a bug in the code. @impl/done
 
+##PARITY-ACROSS-PROJECTIONS **The strictness is equal across projections.** No language projection enforces the discipline more weakly than another; a rule the pilot enforces is either enforced in every projection or its absence carries a recorded reason. @impl/done
+
+##PARITY-IS-THE-PROJECTION-TWIN-OF-THE-HATCH This is the projection-level twin of `##BAN-WITHOUT-HATCH-IS-A-BUG`: an unexplained asymmetry between projections is a bug in the discipline exactly as a reasonless deviation is a bug in the code. A projection is weaker *with machinery and a recorded reason* — a language genuinely lacking an idiom's analogue (the compiler already enforces it; the idiom does not exist in that language) records that, and the recorded reason is the escape hatch. @impl/done
+
+##PARITY-PILOT-IS-A-BAR-NOT-A-PRIVILEGE The pilot language is the current reference bar because it is furthest along, not because it is privileged; as a projection matures past the pilot on some axis, the bar rises to it. A new language inherits the law on arrival — it is a projection of the one discipline, held to the same floor. @impl/done
+
+##PARITY-GAP-IS-NEVER-SILENT A projection weaker on some rule with no recorded reason is not a smaller stack; it is the discipline silently decaying — the failure mode A5 and A6 exist to make impossible. Weakening a rule for a projection because building its checker is harder there is the same category of error as dropping the rule for being unused (§4): the checker is built or the reason is recorded, never the rule quietly relaxed. @spec/done
+
 ## 5. Runnable capital: explanation must be executable {#runnable-capital}
 
 ##second-decisive-result The second decisive result: weak agents given a *written* distillation of a strong agent's strategy barely improved; given an *executable* helper library carrying the same strategy, they leapt (Sonnet 4.6 on Brainfuck: 12→12 with text, 12→64 with runnable helpers). @spec/done
