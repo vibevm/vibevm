@@ -4896,6 +4896,49 @@ aspirational — and every one is still live for the phases that remain.
   holds for the ruling; B-031/B-028 stay queued behind it per the
   wave order.** @spec/done
 
+- **2026-08-04 · B-006 ruled, hardened twice by the owner, and LANDED
+  the same day.** The ruling: «согласен с твоими рекомендациями a1 b1
+  c1» — A1 compose-time once-each elision, B1 provenance stub with no
+  `#use`, C1 contract landing with the per-node rider. Two owner
+  probes arrived mid-build and each sharpened the rule before code:
+  *(i)* mixed consumers (several packages pulling git-practices as
+  `static` and `static-transitive`) — answered by construction
+  (identity-deduped closure walk + single-version invariant + the
+  coverage guard) and encoded as fixture Т3 with both declaration
+  permutations; *(ii)* a package with its own code plus widely-shared
+  static libs — surfaced the де-substitution refinement (a covered
+  snippet-bearing entry reverts to its snippet; elision-to-stub had
+  silently dropped its own text) and drew the honest boundary into
+  the contract: partial coverage conservatively keeps the whole unit
+  artifact (text is never lost, a present member rides twice), and
+  deduplicating inside unit artifacts is the hoisting plane's job
+  (DRIFT-030's undercounting counter is the recorded trigger).
+  **Contract:** PROP-009 §2.3 `##STATIC-EMITS-ONCE-EACH` (+ the stale
+  B-011 interim shed, + history), PROP-038 §2.1
+  `##UNIT-ARTIFACT-STATIC-CONSUMER-ELIDES`, PROP-035 §8 per-node
+  (`2e014bf7`, `6b8e789a`, `624e8e8d`). **Build, two claudez slices,
+  both ПРИНЯТО first pass, zero `-c` reworks:** W-A — the
+  `desubstitute_covered_units` pass + `elided` stub arc + Т1–Т7
+  (the worker caught the packet's Т2 flaw — a `when`-gated member
+  leaves the zone entirely, so the guard case is consumer-link
+  divergence — and named the nested boot-bearing-umbrella fixpoint
+  counterexample, parked in the doc comment); W-B — the W3 rider:
+  `compile_static_qualified` (one shared phase loop, `CompileMode`),
+  per-node origins off topo keys, the cross-node second pass
+  (unique definer → rewrite; ambiguous → `AmbiguousShortLink` with
+  sorted candidates; undefined → loader's lookup), `render_static`
+  never re-qualifies a normal body, Q1–Q7 on a new two-package
+  fixture (`68529118`, `d45a49d8`). **Acceptance on the live lane
+  (`e7bf3349`):** git-family markers 9 → 5, double-qualified labels
+  164 → 0, the lane −404 lines (2589 → 2185), the tombstone sheds
+  its same-origin repeats, `git-attribution-policy`'s «exactly one
+  always-loaded place» true from the host side, W-B byte-stable (zero
+  normal entries today — machinery for the first arrival). Serialized
+  one-lane on purpose: the two perimeters share `render_static`.
+  Worker archives: `cache/agents/sorted/E4-W{1,2}-*/` (logs, stamped
+  reports, meta with verdicts). **Wave А continues: B-031 next, then
+  B-028.** @spec/done
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
