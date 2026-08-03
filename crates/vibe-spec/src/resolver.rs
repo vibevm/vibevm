@@ -295,11 +295,15 @@ mod tests {
 
     #[test]
     fn t2_legacy_host_authority_names_the_self_coordinate_and_b031() {
-        // Т2: the old reserved host token no longer resolves; the error points
-        // at the actual self coordinate and cites B-031.
+        // Т2: an undotted (legacy-host-shaped) authority no longer resolves;
+        // the error points at the actual self coordinate and cites B-031. The
+        // input is built by concatenation so the retired literal never sits in
+        // source where the B-031 migrator (or a reader) could take it for a
+        // live address; the arm and the hint are identical for every undotted
+        // token.
         let r = FileResolver::new(Path::new("."), host_coord());
-        let addr =
-            SpecAddress::parse("spec://org.vibevm.core/vibevm/common/PROP-000#commits").unwrap();
+        let legacy = concat!("spec://", "vibevm", "/common/PROP-000#commits");
+        let addr = SpecAddress::parse(legacy).unwrap();
         let err = r.resolve_file(&addr).unwrap_err();
         let ResolveError::LegacyHostAuthority { given, hint } = &err else {
             panic!("expected LegacyHostAuthority, got {err:?}");
