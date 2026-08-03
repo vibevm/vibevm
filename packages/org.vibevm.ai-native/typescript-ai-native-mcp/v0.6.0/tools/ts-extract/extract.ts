@@ -85,7 +85,13 @@ interface MetricsFact {
   lines: number;
 }
 
-type ExtractFact = UnsafeFact | ImportFact | ItemFact | MetricsFact;
+interface EnvReadFact {
+  fact: "ts_env_read";
+  source: "process.env" | "import.meta.env";
+  line: number;
+}
+
+type ExtractFact = UnsafeFact | ImportFact | ItemFact | MetricsFact | EnvReadFact;
 
 interface Marker {
   tag: string;
@@ -176,6 +182,8 @@ interface TsModule {
     EndOfFileToken: number;
     SingleLineCommentTrivia: number;
     MultiLineCommentTrivia: number;
+    PropertyAccessExpression: number;
+    ElementAccessExpression: number;
   };
   createSourceFile(
     name: string,
@@ -312,6 +320,44 @@ function declarationInfo(ts: TsModule, node: Node): DeclarationInfo | null {
   return null;
 }
 
+/**
+ * The composition-root read bases the `ts-flag-sites` rule polices
+ * (GUIDE-AI-NATIVE-TYPESCRIPT §7, B-039): `process.env` (Node) and
+ * `import.meta.env` (Vite/bundler). Returns the base label when `node`
+ * is a property- or element-access whose OBJECT is one of these bases,
+ * else `null`. The access itself may be `.X` or `["X"]`; a bare
+ * `process.env` with no further access is not, on its own, a read site,
+ * and a chained `process.env.X.Y` emits once — at the `process.env.X`
+ * access (its object is the `process.env` base; the outer `.Y` access's
+ * object is `process.env.X`, which is not a base, so it does not fire).
+ */
+function envReadSource(
+  ts: TsModule,
+  sf: SourceFile,
+  node: Node,
+): "process.env" | "import.meta.env" | null {
+  const isAccess =
+    node.kind === ts.SyntaxKind.PropertyAccessExpression ||
+    node.kind === ts.SyntaxKind.ElementAccessExpression;
+  if (!isAccess) return null;
+  const base = (node as unknown as { expression?: Node }).expression;
+  if (base === undefined || base.kind !== ts.SyntaxKind.PropertyAccessExpression) {
+    return null;
+  }
+  const baseName = (
+    base as unknown as { name: { getText(sf: SourceFile): string } }
+  ).name.getText(sf);
+  if (baseName !== "env") return null;
+  const owner = (base as unknown as { expression: Node }).expression;
+  // `<owner>.env`: the owner is the global exterior handle. `process`
+  // parses as an identifier; `import.meta` parses as a `MetaProperty`,
+  // so match on the owner's text rather than a specific node shape.
+  const ownerText = owner.getText(sf);
+  if (ownerText === "process") return "process.env";
+  if (ownerText === "import.meta") return "import.meta.env";
+  return null;
+}
+
 function extractFile(ts: TsModule, absPath: string, relPath: string): FileRecord {
   const text = readFileSync(absPath, "utf8");
   const record: FileRecord = {
@@ -339,6 +385,14 @@ function extractFile(ts: TsModule, absPath: string, relPath: string): FileRecord
   }
 
   const visit = (node: Node): void => {
+    const envSource = envReadSource(ts, sf, node);
+    if (envSource !== null) {
+      record.facts.push({
+        fact: "ts_env_read",
+        source: envSource,
+        line: lineOf(sf, node.getStart(sf)),
+      });
+    }
     if (node.kind === ts.SyntaxKind.AnyKeyword) {
       record.facts.push({
         fact: "ts_unsafe",

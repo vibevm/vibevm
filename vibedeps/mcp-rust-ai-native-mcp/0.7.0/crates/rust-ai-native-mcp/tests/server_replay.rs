@@ -99,7 +99,7 @@ fn the_server_end_to_end_on_a_bare_project() {
     std::fs::write(
         root.join("conform.toml"),
         format!(
-            "roots = [\".\"]\ngated_crates = [\"{}\"]\n",
+            "[rust]\nroots = [\".\"]\ngated = [\"{}\"]\n",
             root.file_name().expect("dir name").to_string_lossy()
         ),
     )

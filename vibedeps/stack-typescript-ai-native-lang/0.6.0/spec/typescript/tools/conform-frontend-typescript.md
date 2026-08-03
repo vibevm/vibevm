@@ -27,7 +27,7 @@
 
 ##eslint-could-express-some-of-these ESLint *could* express some of these as custom rules. @spec/done
 
-##ONE-ENGINE-ONE-GRAMMAR-ONE-BASELINE Routing them through conform instead keeps **one rule engine, one finding grammar, one ratchet baseline** across both languages, with the rules defined once in `conform-core` and fed by either frontend — so a rule cannot drift between the Rust and TypeScript projections. @impl/done
+##ONE-ENGINE-ONE-GRAMMAR-ONE-BASELINE Routing them through conform instead keeps **one rule engine, one finding grammar, one ratchet baseline** across both languages, with the rules defined once in `conform-core` and fed by either frontend — so a rule cannot drift between the Rust and TypeScript projections. The TypeScript gate carries the same coverage invariant as the sibling stacks: every cell the `[typescript]` roots enumerate is either `[typescript] gated` or carries a `[[typescript.exempt]]` entry with its reason (`{unit, reason}` — the cell is TS's gate unit), enforced by the engine in `check` and `freeze` — an unclassified cell, a duplicate, a both-listed cell, a reasonless or a ghost exemption all fail loudly with cell-naming messages. A present config whose TS roots resolve to zero cells warns instead of passing silently, and a gated cell the scan attributed no file to is flagged vacuous. @impl/done
 
 ## 2. What it is {#what-it-is}
 

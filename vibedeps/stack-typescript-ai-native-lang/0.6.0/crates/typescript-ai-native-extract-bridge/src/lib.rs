@@ -61,10 +61,11 @@ pub enum BridgeError {
     Protocol { detail: String },
 }
 
-/// One `ts_unsafe` / `import` / `item` / `file_metrics` record, exactly
-/// as the extractor emits it (serde-tagged on `fact`). `Serialize` is
-/// symmetric so the oracle relay (typescript-ai-native-tcg-bridge) can re-emit the
-/// same vocabulary it received (TCG-PROTOCOL §2).
+/// One `ts_unsafe` / `ts_env_read` / `import` / `item` / `file_metrics`
+/// record, exactly as the extractor emits it (serde-tagged on `fact`).
+/// `Serialize` is symmetric so the oracle relay
+/// (typescript-ai-native-tcg-bridge) can re-emit the same vocabulary it
+/// received (TCG-PROTOCOL §2).
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(tag = "fact", rename_all = "snake_case")]
 pub enum RawFact {
@@ -86,6 +87,13 @@ pub enum RawFact {
     },
     FileMetrics {
         lines: u32,
+    },
+    /// A `process.env` / `import.meta.env` read site (the `ts-flag-sites`
+    /// signal, B-039). `in_test` is file-grain, stamped in [`conform_facts`]
+    /// from the record — same posture as `TsUnsafe`.
+    TsEnvRead {
+        source: String,
+        line: u32,
     },
 }
 
@@ -220,6 +228,11 @@ pub fn conform_facts(record: &FileRecord) -> Vec<conform_core::Fact> {
                 has_doctest: *has_doc_example,
             },
             RawFact::FileMetrics { lines } => Fact::FileMetrics { lines: *lines },
+            RawFact::TsEnvRead { source, line } => Fact::TsEnvRead {
+                source: source.clone(),
+                line: *line,
+                in_test: record.in_test,
+            },
         })
         .collect()
 }
@@ -263,6 +276,45 @@ mod tests {
         });
         assert!(import.is_some());
         assert_eq!(records[0].markers[0].uri, "spec://demo/PROP-001#req");
+    }
+
+    #[test]
+    fn env_read_lowers_with_file_grain_in_test() {
+        const REPLAY_ENV: &str = concat!(
+            r#"{"protocol":1,"file":"src/cells/parse/logic.ts","in_test":false,"degraded":false,"#,
+            r#""facts":[{"fact":"file_metrics","lines":9},"#,
+            r#"{"fact":"ts_env_read","source":"process.env","line":3}],"#,
+            r#""markers":[]}"#,
+            "\n",
+            r#"{"protocol":1,"file":"src/cells/greet/index.test.ts","in_test":true,"degraded":false,"#,
+            r#""facts":[{"fact":"file_metrics","lines":1},"#,
+            r#"{"fact":"ts_env_read","source":"import.meta.env","line":2}],"#,
+            r#""markers":[]}"#,
+            "\n",
+        );
+        let records = parse_ndjson(REPLAY_ENV).expect("parse");
+        assert_eq!(records.len(), 2);
+
+        // A domain-cell read: source carried verbatim, in_test stamped false.
+        let domain = conform_facts(&records[0]);
+        let read = domain.iter().find_map(|f| match f {
+            conform_core::Fact::TsEnvRead { source, .. } => Some(source.as_str()),
+            _ => None,
+        });
+        assert_eq!(read, Some("process.env"));
+        assert!(domain.iter().any(|f| matches!(
+            f,
+            conform_core::Fact::TsEnvRead { source, line: 3, in_test: false }
+            if source == "process.env"
+        )));
+
+        // A test-file read: in_test stamped true (file-grain, like TsUnsafe).
+        let test = conform_facts(&records[1]);
+        assert!(test.iter().any(|f| matches!(
+            f,
+            conform_core::Fact::TsEnvRead { source, line: 2, in_test: true }
+            if source == "import.meta.env"
+        )));
     }
 
     #[test]

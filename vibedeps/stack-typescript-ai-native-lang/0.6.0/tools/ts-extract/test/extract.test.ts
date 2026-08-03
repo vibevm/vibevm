@@ -30,6 +30,7 @@ interface Record {
     symbol?: string;
     is_exported?: boolean;
     lines?: number;
+    source?: string;
   }>;
   markers: Array<{
     tag: string;
@@ -98,6 +99,18 @@ test("imports carry the specifier, including sibling-internal paths", () => {
     .map((f) => f.to_path)
     .sort();
   assert.deepEqual(imports, ["../greet/internal.js", "node:fs"]);
+});
+
+test("env reads surface as ts_env_read (the B-039 signal)", () => {
+  const logic = byFile.get("src/cells/parse/logic.ts");
+  assert.ok(logic);
+  const envReads = logic.facts.filter((f) => f.fact === "ts_env_read");
+  assert.ok(envReads.length >= 1, JSON.stringify(logic.facts));
+  assert.ok(
+    envReads.every(
+      (f) => f.source === "process.env" || f.source === "import.meta.env",
+    ),
+  );
 });
 
 test("spec markers surface with raw-text URIs (the @implements finding)", () => {

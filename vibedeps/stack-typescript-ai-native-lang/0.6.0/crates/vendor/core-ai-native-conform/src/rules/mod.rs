@@ -22,7 +22,7 @@ pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};
 pub use diagnostics::{ErrorEnumCitesReq, ErrorMessageCitesReq, PubDoctest, SeamHasDoctest};
 pub use go::{GoCellIsolation, GoUnsafeInDomain};
 pub use structure::{CellHasOracle, CellIsolation, FlagSites};
-pub use typescript::{TsCellIsolation, TsUnsafeInDomain};
+pub use typescript::{TsCellIsolation, TsFlagSites, TsUnsafeInDomain};
 
 /// Render a finding message in the Class-F diagnostic grammar
 /// (card scaffold-f-structured-diagnostics, Band 3):

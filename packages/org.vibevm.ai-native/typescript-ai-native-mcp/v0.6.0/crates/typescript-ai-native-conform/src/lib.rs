@@ -54,6 +54,14 @@ pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
             &config.typescript.seam,
         )));
     }
+    // ts-flag-sites (B-039) mounts ONLY when the policy names a
+    // composition root — the TS twin of Rust mounting R-001 only with
+    // `registry_file`. Absent the field, the rule is off (a project
+    // without the flag idiom), so the dirty fixture's gate count and the
+    // `None` default are unchanged.
+    if let Some(root) = &config.typescript.composition_root {
+        out.push(Box::new(rules::TsFlagSites::new(root)));
+    }
     out.push(Box::new(rules::FileLength {
         max_lines: config.max_file_lines,
     }));
@@ -241,5 +249,57 @@ mod tests {
         let cfg = Config::load(&root.join("conform.toml")).expect("parses");
         cfg.validate_typescript_against_tree(root)
             .expect("classified → green");
+    }
+
+    /// The B-039 demo (`research/ts-demo`) instantiates the runtime-flag
+    /// tier the guide used to only describe: `src/main.ts` is the
+    /// composition root, so `[typescript] composition_root` is set, the
+    /// `ts-flag-sites` rule mounts, and the root's own env read is the one
+    /// legal site. Pure config + tree + rule construction — no node
+    /// toolchain floor (the live demo run is the boss's acceptance).
+    #[test]
+    fn demo_config_mounts_flag_sites_and_validates_green() {
+        let demo = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../../../../research/ts-demo");
+        assert!(demo.is_dir(), "demo tree must exist at {}", demo.display());
+        assert!(
+            demo.join("src/main.ts").is_file(),
+            "the composition root src/main.ts must exist"
+        );
+
+        let cfg = Config::load(&demo.join("conform.toml")).expect("demo conform.toml");
+        assert_eq!(
+            cfg.typescript.composition_root.as_deref(),
+            Some("src/main.ts"),
+            "demo must name its composition root",
+        );
+
+        // main.ts lives OUTSIDE cells_dir, so the on-disk cell set
+        // (greeting, farewell) is unchanged and the coverage invariant
+        // still holds — adding a root file never adds a cell.
+        cfg.validate_typescript_against_tree(&demo)
+            .expect("demo tree validates green");
+
+        let rules = build_rules(&cfg);
+        let ids: Vec<&str> = rules.iter().map(|r| r.id()).collect();
+        assert!(
+            ids.contains(&"ts-flag-sites"),
+            "the rule must mount when composition_root is set: {ids:?}"
+        );
+    }
+
+    /// `ts-flag-sites` is OFF when `[typescript] composition_root` is
+    /// absent — the default and the dirty fixture's posture. The dirty
+    /// fixture's gate therefore stays at its 5 findings; a project without
+    /// the flag idiom is never surprised by the rule.
+    #[test]
+    fn flag_sites_is_unmounted_without_a_composition_root() {
+        let (cfg, _) = Config::load_or_default(std::path::Path::new(".")).unwrap();
+        assert!(cfg.typescript.composition_root.is_none());
+        let ids: Vec<&str> = build_rules(&cfg).iter().map(|r| r.id()).collect();
+        assert!(
+            !ids.contains(&"ts-flag-sites"),
+            "the rule must NOT mount without composition_root: {ids:?}"
+        );
     }
 }

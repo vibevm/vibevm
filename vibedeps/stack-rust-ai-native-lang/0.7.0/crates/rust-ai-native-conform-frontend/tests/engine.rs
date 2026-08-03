@@ -55,7 +55,7 @@ fn incremental_one_file_diff_reextracts_one_file() {
     let tmp = tempfile::tempdir().unwrap();
     let repo = tmp.path();
     mini_workspace(repo);
-    let store = Store::at_repo(repo, &Config::default());
+    let store = Store::for_rust(repo, &Config::default());
 
     let mut cold = ExtractionLog::default();
     store
@@ -104,7 +104,7 @@ fn findings_and_sarif_are_deterministic_and_baseline_gates() {
     let tmp = tempfile::tempdir().unwrap();
     let repo = tmp.path();
     mini_workspace(repo);
-    let store = Store::at_repo(repo, &Config::default());
+    let store = Store::for_rust(repo, &Config::default());
 
     let run = || {
         let mut log = ExtractionLog::default();

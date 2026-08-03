@@ -272,6 +272,13 @@ pub struct TsConfig {
     pub cells_dir: Option<String>,
     /// The seam module name a sibling cell may be imported through.
     pub seam: String,
+    /// The one legal site for environment/config reads
+    /// (`process.env` / `import.meta.env`) — the composition root, the
+    /// TS twin of Rust's `registry_file` (GUIDE-AI-NATIVE-TYPESCRIPT §7,
+    /// B-039). A repo-relative file. The `ts-flag-sites` rule is mounted
+    /// ONLY when this is `Some`; `None` leaves the rule off, exactly as
+    /// a Rust project without the cell idiom omits `registry_file`.
+    pub composition_root: Option<String>,
     /// Floor steps this project explicitly disables, each with a
     /// recorded reason. The floor PRINTS every disablement every run —
     /// the "a defaulted nothing-gated run announces itself" posture
@@ -289,6 +296,7 @@ impl Default for TsConfig {
             exempt: Vec::new(),
             cells_dir: None,
             seam: "index".into(),
+            composition_root: None,
             floor_disable: Vec::new(),
         }
     }

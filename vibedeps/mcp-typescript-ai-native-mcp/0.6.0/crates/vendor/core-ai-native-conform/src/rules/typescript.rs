@@ -13,6 +13,8 @@ use crate::rules::req_message;
 
 const TS_GUIDE_BANS: &str = "discipline://typescript-ai-native-lang/guide#the-unsafe-set";
 const TS_GUIDE_CELLS: &str = "discipline://typescript-ai-native-lang/guide#cells";
+const TS_GUIDE_FLAGS: &str =
+    "discipline://typescript-ai-native-lang/guide#no-if-flag-in-domain-cells";
 
 /// `ts-unsafe-in-domain` — the §8 ban set as Class-F findings: `any`
 /// in type position, a cross-type `as`, a non-null `!`, `@ts-ignore`
@@ -236,6 +238,113 @@ impl Rule for TsCellIsolation {
     }
 }
 
+/// `ts-flag-sites` — the TS-native twin of Rust's R-001 (`FlagSites`),
+/// enforcing GUIDE-AI-NATIVE-TYPESCRIPT §7's "flags/config are read
+/// once at the composition root" promise in the TS frontend's own
+/// shape. The Rust rule keys on `<Type>::new(...)` construction sites
+/// (a fact only the Rust frontend emits, so it cannot mount on TS);
+/// this rule keys on the env/config READ sites the `ts-tsc` frontend
+/// actually sees (`Fact::TsEnvRead`): a `process.env` / `import.meta.env`
+/// access in any scanned file OTHER than the configured
+/// `composition_root` is a finding. A read AT the composition root is
+/// the one legal site and stays quiet; test files are out of scope
+/// (file-grain `in_test`), parity with `ts-unsafe-in-domain` and the
+/// Rust `ambient-env` rule.
+///
+/// **Honest limit, recorded not claimed.** This rule catches the
+/// MECHANICAL half of the §7 promise — config/env reads outside the
+/// root. It does NOT catch the `if (flag)` half: detecting a
+/// conditional branch on a flag needs flag identity (which value is a
+/// flag?), and no flag table flows through the facts today, so a bare
+/// `if (someValue)` in a domain cell is undetected. The rule is
+/// mounted by the TS driver ONLY when `[typescript] composition_root`
+/// is set; absent that field the rule is off (a project without the
+/// flag idiom), exactly as Rust's R-001 is off without `registry_file`.
+///
+/// ```
+/// use core_ai_native_conform::rules::TsFlagSites;
+/// use core_ai_native_conform::{Fact, Rule, SourceFacts};
+///
+/// let rule = TsFlagSites::new("src/main.ts");
+/// let facts = vec![
+///     SourceFacts {
+///         file: "src/main.ts".into(),
+///         crate_name: "src".into(),
+///         facts: vec![Fact::TsEnvRead { source: "process.env".into(), line: 5, in_test: false }],
+///     },
+///     SourceFacts {
+///         file: "src/cells/greeting/index.ts".into(),
+///         crate_name: "src".into(),
+///         facts: vec![Fact::TsEnvRead { source: "process.env".into(), line: 3, in_test: false }],
+///     },
+/// ];
+/// let findings = rule.check(&facts);
+/// assert_eq!(findings.len(), 1);
+/// assert!(findings[0].message.contains("process.env"));
+/// ```
+pub struct TsFlagSites {
+    composition_root: String,
+}
+
+impl TsFlagSites {
+    pub fn new(composition_root: &str) -> TsFlagSites {
+        TsFlagSites {
+            composition_root: composition_root.trim_matches('/').to_string(),
+        }
+    }
+}
+
+impl Rule for TsFlagSites {
+    fn id(&self) -> &'static str {
+        "ts-flag-sites"
+    }
+    fn why(&self) -> &'static str {
+        "flags and config are read once at the composition root and dispatched through \
+         a typed registry; a config read in a domain cell hides how the exterior \
+         couples into the system"
+    }
+    fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
+        let mut out = Vec::new();
+        for source in facts {
+            for fact in &source.facts {
+                let Fact::TsEnvRead {
+                    source: handle,
+                    line,
+                    in_test,
+                } = fact
+                else {
+                    continue;
+                };
+                if *in_test {
+                    continue;
+                }
+                if source.file == self.composition_root {
+                    continue;
+                }
+                let why = format!(
+                    "`{handle}` is read outside the composition root (`{}`) — config/env \
+                     is validated and typed exactly once, at the root",
+                    self.composition_root
+                );
+                let fix = format!(
+                    "read the flag once at the composition root (`{}`) and dispatch \
+                     through the typed registry",
+                    self.composition_root
+                );
+                out.push(Finding {
+                    rule: self.id(),
+                    file: source.file.clone(),
+                    line: *line,
+                    message: req_message(TS_GUIDE_FLAGS, &why, &fix),
+                    why: self.why(),
+                    fingerprint: format!("{}|{}|{handle}#{line}", self.id(), source.file),
+                });
+            }
+        }
+        out
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -333,6 +442,56 @@ mod tests {
         assert_eq!(findings.len(), 1, "{findings:?}");
         assert_eq!(findings[0].line, 5);
         assert!(core_ai_native_conform_grammar_ok(&findings[0].message));
+    }
+
+    #[test]
+    fn env_read_at_the_composition_root_is_silent() {
+        let rule = TsFlagSites::new("src/main.ts");
+        let facts = vec![ts_source(
+            "src/main.ts",
+            vec![Fact::TsEnvRead {
+                source: "process.env".into(),
+                line: 5,
+                in_test: false,
+            }],
+        )];
+        assert!(
+            rule.check(&facts).is_empty(),
+            "the root is the one legal site"
+        );
+    }
+
+    #[test]
+    fn env_read_outside_the_composition_root_is_a_finding() {
+        let rule = TsFlagSites::new("src/main.ts");
+        let facts = vec![ts_source(
+            "src/cells/greeting/index.ts",
+            vec![Fact::TsEnvRead {
+                source: "process.env".into(),
+                line: 3,
+                in_test: false,
+            }],
+        )];
+        let findings = rule.check(&facts);
+        assert_eq!(findings.len(), 1, "{findings:?}");
+        assert_eq!(findings[0].line, 3);
+        assert!(findings[0].message.contains("process.env"));
+        assert!(findings[0].message.contains("src/main.ts"));
+        assert!(core_ai_native_conform_grammar_ok(&findings[0].message));
+    }
+
+    #[test]
+    fn env_read_in_a_test_file_is_out_of_scope() {
+        let rule = TsFlagSites::new("src/main.ts");
+        let facts = vec![ts_source(
+            "src/cells/greeting/index.test.ts",
+            vec![Fact::TsEnvRead {
+                source: "import.meta.env".into(),
+                line: 2,
+                in_test: true,
+            }],
+        )];
+        assert!(rule.check(&facts).is_empty(), "test files are out of scope");
     }
 
     fn core_ai_native_conform_grammar_ok(message: &str) -> bool {

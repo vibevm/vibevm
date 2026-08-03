@@ -207,7 +207,7 @@ pub fn enrich_validate(
 ) -> EnrichedValidate {
     use conform_core::Frontend;
 
-    let (crate_name, module) = derive_crate_module(&policy.config.roots, file_rel);
+    let (crate_name, module) = derive_crate_module(&policy.config.rust.roots, file_rel);
     let frontend = RustFrontend;
     let facts = frontend.extract(file_rel, &crate_name, &module, text);
     let sf = SourceFacts {

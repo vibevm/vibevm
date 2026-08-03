@@ -77,6 +77,10 @@ pub fn run_health(root: &Path, out_rel: &str) -> Result<()> {
                     }
                 }
                 typescript_ai_native_extract_bridge::RawFact::Import { .. } => {}
+                // Env reads are the `ts-flag-sites` gate's concern, not the
+                // health snapshot (file-length / unsafe / exports), so they
+                // tally into no bucket here.
+                typescript_ai_native_extract_bridge::RawFact::TsEnvRead { .. } => {}
             }
         }
     }

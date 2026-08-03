@@ -15,3 +15,9 @@ exclude_substrings = ["/fixtures/"]
 gated = ["farewell", "greeting"]
 cells_dir = "src/cells"
 seam = "index"
+# The one legal site for env/config reads (R-001 / GUIDE §7, B-039): the
+# composition root. Setting this mounts the `ts-flag-sites` rule, which
+# flags any `process.env` / `import.meta.env` read in a scanned file
+# outside this one. `src/main.ts` lives outside `cells_dir`, so the
+# on-disk cell set (greeting, farewell) is unchanged.
+composition_root = "src/main.ts"

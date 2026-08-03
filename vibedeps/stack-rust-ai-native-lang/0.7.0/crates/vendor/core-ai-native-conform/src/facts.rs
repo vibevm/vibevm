@@ -132,6 +132,22 @@ pub enum Fact {
         in_test: bool,
         reason: Option<String>,
     },
+    /// A TypeScript environment/config read site — `process.env.X`,
+    /// `process.env["X"]`, or `import.meta.env.X` — produced by the
+    /// `ts-tsc` frontend. This is the TS shape of the "flags/config are
+    /// read once at the composition root" signal
+    /// (GUIDE-AI-NATIVE-TYPESCRIPT §7, B-039). `source` names the read
+    /// base (`"process.env"` / `"import.meta.env"`) so the finding points
+    /// at the actual exterior handle; `in_test` marks test files, where
+    /// the domain rule does not apply — file-grain, same as
+    /// [`Fact::TsUnsafe`]. Consumed by `ts-flag-sites`, the TS-native
+    /// twin of Rust's R-001: an env read is legal only in the single
+    /// file named by `[typescript] composition_root`.
+    TsEnvRead {
+        source: String,
+        line: u32,
+        in_test: bool,
+    },
 }
 
 /// Facts of one source file, with its repo-relative path.

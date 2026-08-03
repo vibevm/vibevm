@@ -84,7 +84,7 @@ the work-list; its git diff is the trend). @impl/done
 - ##WEEKLY-TRIPWIRE `typescript-ai-native tripwire --base origin/main` — debt that this
   week's changes touched; each fired entry is addressed in the PR text:
   pulled-in, re-dispositioned, or consciously deferred. @impl/done
-- ##WEEKLY-REREAD-DISABLE-AND-EXEMPT-LISTS Re-read the `floor_disable` list and the exempt lists: does each reason
+- ##WEEKLY-REREAD-DISABLE-AND-EXEMPT-LISTS Re-read the `floor_disable` list and the `[[typescript.exempt]]` list: does each reason
   still hold? @impl/done
 
 ## Output contract {#output-contract}
