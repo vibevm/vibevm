@@ -86,7 +86,7 @@ work-list; its git diff is the trend). @impl/done
    **not** a per-kind or per-package split, so compare the figure against
    the previous run rather than expecting a breakdown. Drain immediately;
    restructure beats testify. Outside the gate they are the adoption
-   backlog: **flip a package into `gated_crates` only after it drains to
+   backlog: **flip a package into `[go] gated` only after it drains to
    zero.** @impl/done
 
 ## Tier 2 — drift (weekly) {#tier-two}

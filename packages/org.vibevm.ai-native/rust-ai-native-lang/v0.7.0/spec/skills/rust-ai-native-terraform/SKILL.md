@@ -79,8 +79,8 @@ dependency order: @impl/done
    doctest per public seam, cells with oracles where variance exists.
    `rust-ai-native conform check --scope <crate>` is the per-crate lens;
    `rust-ai-native fast-loop --cell <crate>` keeps the loop under budget. @impl/done
-2. ##RAID-FLIP **Flip**: add the crate to conform.toml's `gated_crates` (remove its
-   `[[exempt]]` entry) — legal only at zero findings; a flip must never
+2. ##RAID-FLIP **Flip**: add the crate to conform.toml's `[rust] gated` (remove its
+   `[[rust.exempt]]` entry) — legal only at zero findings; a flip must never
    widen the baseline. @impl/done
 3. ##RAID-BEHAVIOR-CHANGES-CARRY-AN-ORACLE **Behavior changes carry a differential oracle** (card scaffold-d);
    golden transcripts must fail loudly when stale, never auto-update. @impl/done

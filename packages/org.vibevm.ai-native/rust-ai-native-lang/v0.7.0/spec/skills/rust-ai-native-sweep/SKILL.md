@@ -76,7 +76,7 @@ this order: @impl/done
 5. ##RATCHET-CENSUS-REGRESSIONS **Census regressions** (`unwrap_domain` / `env_nonroot` /
    `unsafe_nonaudit` / `error_enums_missing_req` non-zero on a gated
    crate) — drain immediately; restructure beats testify. On an ungated
-   crate they are the adoption backlog: **flip a crate into `gated_crates`
+   crate they are the adoption backlog: **flip a crate into `[rust] gated`
    only after it drains to zero.** @impl/done
 
 ## Tier 2 — drift (weekly) {#tier-two}
