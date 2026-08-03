@@ -1,0 +1,54 @@
+{
+ "batch": "E6-F169-F147",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md": {
+   "ROW-SEGMENT-MODULE": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "the drift died with B-031 (owner-ruled 2026-08-04, landed the same day): the host no longer mints a namespace into the module position — its authority is the full package coordinate org.vibevm.core/vibevm (vibe.toml [project] group+name; resolver self-coordinate arm, crates/vibe-spec/src/resolver.rs spec_root), and the segment after it is literally a directory under spec/modules/ or common, exactly as the row defines",
+     "measured on the migrated tree: host citations now read spec://org.vibevm.core/vibevm/modules/<dir>/<doc>#<anchor> (e.g. spec/modules/vibe-workspace/PROP-035-spec-compiler.md scope! line); --verify residue of the retired form on living surfaces = 0; the package text needed no edit — the host came into line, per the B-031 closure note in BACKLOG B-031"
+    ]
+   },
+   "ROW-SEGMENT-DOC": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "same landing, same direction of repair: the doc position in host addresses is the document file stem under the named directory (PROP-000, PROP-035-spec-compiler, …) — the row description now matches the host literally; truncation stays a resolver affordance (resolve_doc, authority-agnostic) and is B-028 material, not a falsifier of this row",
+     "campaigns/packages-2026-09/harvest/e5-b031-evidence.md §4b: 541 truncated ids resolve through the same prefix-scan the packages use — one rule, no host special case left"
+    ]
+   }
+  },
+  "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md": {
+   "SEGMENT-MODULE-IS-THE-DIRECTORY": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "B-031 landed 2026-08-04: the host address carries the directory name in the module segment position (spec://org.vibevm.core/vibevm/modules/<directory>/…) — the mapping this twin states now holds for the host without exception; the one-segment-right displacement the drift measured is gone with the minted-namespace authority",
+     "resolver evidence: FileResolver.spec_root maps the self coordinate to ws_root/spec and resolve_doc walks <module>/<doc> under it — the twin describes exactly what the code does now (crates/vibe-spec/src/resolver.rs)"
+    ]
+   },
+   "SEGMENT-DOC-IS-THE-FILE-NAME": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "the doc segment is the file name (stem) under the module directory in every host citation after the migration — the twin holds literally; the package text was not edited (the host side repaired), per BACKLOG B-031 closure direction",
+     "spot-checks on the migrated tree: spec://org.vibevm.core/vibevm/common/PROP-000#commits ↔ spec/common/PROP-000.md; spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#… ↔ spec/modules/vibe-progress/PROP-043-progress-markup.md (truncation, same rule as packages)"
+    ]
+   }
+  }
+ }
+}

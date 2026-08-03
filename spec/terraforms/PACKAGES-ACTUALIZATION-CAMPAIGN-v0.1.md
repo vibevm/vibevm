@@ -4982,6 +4982,43 @@ aspirational — and every one is still live for the phases that remain.
   first) → W3 (boss: PROP edits, re-seal, re-judgements, panel,
   mirrors). @spec/done
 
+- **2026-08-04 · B-031 LANDS — the host is `org.vibevm.core/vibevm`,
+  and the exception is dead.** Two claudez slices, both ПРИНЯТО first
+  pass: W1 (resolver + identity — the self coordinate resolves first,
+  an undotted authority answers `LegacyHostAuthority` with the rename
+  hint, both `HOST_NAMESPACE` constants retired, the root `vibe.toml`
+  gains `group`; the worker corrected the packet's own type sketch —
+  vibe-spec depends on no vibe-core, so the coordinate is strings —
+  and kept the v1 wire key behind a serde rename) and W2 (the
+  byte-exact migrator, proven on a disposable worktree). The boss wet
+  pass: **1 893 occurrences over 606 files, `--verify` residue 0**;
+  specmap.toml → the coordinate and specmap.json re-minted
+  consistently; sync-engines ×6; the lane regenerated. **The panel
+  then earned its keep four runs in a row** — package-workspace fmt
+  (the host `cargo fmt --all` cannot reach the eight package
+  workspaces), Т2's input literal un-migrated via `concat!` (the one
+  string that must stay in the retired form — and the boss's own
+  piped-grep test count had read that red as green, the recorded
+  panel-tail lesson applied one command late), three files split at
+  seams for the 600 budget (with the extractor honesty note: a
+  helper without `#[test]` in a split-out tests file needs the
+  deviates hatch), and the specmark grammar's tests + doctests
+  re-pointed at what the coordinate form actually parses to (both
+  slots, vendored ×6). **The §5.1 metadata pass executed:** mirror →
+  mechanical spot-check → mass re-seal — 15 files re-vouched, 4
+  honestly refused pending their new anchors' own judging (PROP-035,
+  PROP-029, the two new design docs). **Re-judgements:** F-169
+  resolved whole, F-147's segment twins confirmed (batch
+  E6-F169-F147) — registry **88 obligations / 179 drifts / owed 6 /
+  resolved 142**; the orphan-ratchet count honestly moves 37 → 42
+  (the five new public surfaces of this session's builds join the
+  standing owner row). One perimeter honesty note: P1 rewrote
+  addresses inside VERBATIM QUOTES on markdown surfaces too (e.g.
+  the 2026-08-02 ruling text now shows the new form) — the ruled
+  perimeter, applied consistently; JSON records alone keep the
+  original spellings. **Wave А's build queue is drained: B-028 — a
+  decision entry, not a build — is the next fork, to the owner.** @spec/done
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:

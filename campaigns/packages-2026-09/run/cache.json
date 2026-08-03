@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-03T02:07:59Z",
+  "updated_at": "2026-08-03T11:11:46Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -4479,7 +4479,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/BROWNFIELD-PROTOCOL-v0.1.md": {
-      "content_hash": "5518bab664216e79ab250d9a7c94eadc459cefd9f336e287a55d602fcb1aaa4d",
+      "content_hash": "24bd000669bcbaecf30165b1a8fc5f39e688d8de984158d1133858f9e9359513",
       "rollup": {
         "explicit": [
           "spec",
@@ -4501,7 +4501,7 @@
       "unit_count": 12,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "5518bab664216e79ab250d9a7c94eadc459cefd9f336e287a55d602fcb1aaa4d",
+        "processed_hash": "24bd000669bcbaecf30165b1a8fc5f39e688d8de984158d1133858f9e9359513",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -4999,7 +4999,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T15:54:43Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "C1 + D4a + D5b + D7 + D10-groupA"
       }
     },
@@ -5721,7 +5721,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/MCP-CORE-v0.1.md": {
-      "content_hash": "74fdf8fef163f367e8a7b491a4285beb9aafdcc1730f76b4e837e88cba50ad13",
+      "content_hash": "3bc6c832d3b0bf800befe3f54b27d5a47004014fb4167bfd3e62d19520bf3fd7",
       "rollup": {
         "explicit": [
           "spec",
@@ -5743,7 +5743,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "74fdf8fef163f367e8a7b491a4285beb9aafdcc1730f76b4e837e88cba50ad13",
+        "processed_hash": "3bc6c832d3b0bf800befe3f54b27d5a47004014fb4167bfd3e62d19520bf3fd7",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -6024,12 +6024,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T06:18:01Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "C1"
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
-      "content_hash": "09986074d347e43e094b7d58fa93cd3716c02f800b5dadcb0f3ccce6f0000643",
+      "content_hash": "0b26f26d4fb7ea6e870803af9ad17e915725db23effa6c37ba8526caf370b279",
       "rollup": {
         "explicit": [
           "spec",
@@ -6051,7 +6051,7 @@
       "unit_count": 27,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "09986074d347e43e094b7d58fa93cd3716c02f800b5dadcb0f3ccce6f0000643",
+        "processed_hash": "0b26f26d4fb7ea6e870803af9ad17e915725db23effa6c37ba8526caf370b279",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -7358,7 +7358,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T19:06:18Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "C1 + D5b + D7 + D10-groupA + D13-1a + D16 + D17 + D18 + D34"
       }
     },
@@ -25543,33 +25543,25 @@
             ]
           },
           "ROW-SEGMENT-MODULE": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:80  | ##ROW-SEGMENT-MODULE `<module>` @impl/done | spec module — a directory under `spec/modules/`, or `common` @impl/done | `com.example.shop` @impl/done |",
-              "crates/vibe-spec/src/address.rs:9  //! - **authority** — either a package coordinate `<group>/<name>` or the host //!   project's reserved single-token namespace (e.g. `vibevm`). The two are //!   told apart syntactically: a first segment containing a `.` is a //!   reverse-DNS **group** (so `<group>/<name>` follows); a first segment",
-              "specmap.toml:13  # `<package>` segment of every `spec://vibevm/…` URI (PROP-014 §2.1). namespace = \"vibevm\"",
-              "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
-              "DRIFT: the host's `<module>` position holds something the row does not describe. The row defines it as «a directory under `spec/modules/`, or `common`»; the host mints a single namespace instead — `specmap.toml:14` sets `namespace = \"vibevm\"` and 1 384 host citations read `spec://vibevm/<doc>#<anchor>`, with the document carrying the module distinction rather than the authority. Packages use the third form the row also omits, `<group>/<name>` (68 citations)."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "the drift died with B-031 (owner-ruled 2026-08-04, landed the same day): the host no longer mints a namespace into the module position — its authority is the full package coordinate org.vibevm.core/vibevm (vibe.toml [project] group+name; resolver self-coordinate arm, crates/vibe-spec/src/resolver.rs spec_root), and the segment after it is literally a directory under spec/modules/ or common, exactly as the row defines",
+              "measured on the migrated tree: host citations now read spec://org.vibevm.core/vibevm/modules/<dir>/<doc>#<anchor> (e.g. spec/modules/vibe-workspace/PROP-035-spec-compiler.md scope! line); --verify residue of the retired form on living surfaces = 0; the package text needed no edit — the host came into line, per the B-031 closure note in BACKLOG B-031"
             ]
           },
           "ROW-SEGMENT-DOC": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:81  | ##ROW-SEGMENT-DOC `<doc>` @impl/done | document name, extension dropped @impl/done | `PROP-001` @impl/done |",
-              "crates/vibe-spec/src/resolver.rs:112  /// Resolve a doc-path (relative to a `spec/` root) to a `.md` file, inverting /// the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan.",
-              "crates/vibe-spec/src/resolver.rs:150  /// Does a file stem equal `id` or start with `id-` (the descriptive-slug form)? fn id_file_matches(path: &Path, id: &str) -> bool {",
-              "crates/vibe-spec/src/resolver.rs:164  /// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail). fn is_id_stem(s: &str) -> bool {",
-              "DRIFT: «document name, extension dropped» is not what the host does, and the host's code says so. Its documents are named `PROP-043-progress-markup.md` and cited as `PROP-043` — the descriptive tail is dropped too — and `crates/vibe-spec/src/resolver.rs:112-113` exists to «invert the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan», a directory read per resolution. The row describes a pure string operation; the consumer implements a lookup."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "same landing, same direction of repair: the doc position in host addresses is the document file stem under the named directory (PROP-000, PROP-035-spec-compiler, …) — the row description now matches the host literally; truncation stays a resolver affordance (resolve_doc, authority-agnostic) and is B-028 material, not a falsifier of this row",
+              "campaigns/packages-2026-09/harvest/e5-b031-evidence.md §4b: 541 truncated ids resolve through the same prefix-scan the packages use — one rule, no host special case left"
             ]
           },
           "ROW-SEGMENT-SECTION": {
@@ -26173,7 +26165,7 @@
           }
         },
         "verified_at": "2026-08-02T14:53:46Z",
-        "verify_batch": "W3 + D8-boss + D25 + D26 + D28"
+        "verify_batch": "W3 + D8-boss + D25 + D26 + D28 + E6-F169-F147"
       }
     },
     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md": {
@@ -27510,32 +27502,25 @@
             ]
           },
           "SEGMENT-MODULE-IS-THE-DIRECTORY": {
-            "v": "drift",
-            "ev": [
-              "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
-              "specmap.toml:13  # `<package>` segment of every `spec://vibevm/…` URI (PROP-014 §2.1). namespace = \"vibevm\"",
-              "crates/vibe-spec/src/address.rs:9  //! - **authority** — either a package coordinate `<group>/<name>` or the host //!   project's reserved single-token namespace (e.g. `vibevm`). The two are //!   told apart syntactically: a first segment containing a `.` is a //!   reverse-DNS **group** (so `<group>/<name>` follows); a first segment",
-              "DRIFT: the directory name is in the host's addresses, one segment further right than this mapping places it. Host citations read `spec://vibevm/modules/<module>/<doc>#<anchor>` — the authority is a minted namespace (`specmap.toml:14`, `namespace = \"vibevm\"`), and the module directory has moved into the path. The mapping as stated does not describe the consumer's addresses."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "B-031 landed 2026-08-04: the host address carries the directory name in the module segment position (spec://org.vibevm.core/vibevm/modules/<directory>/…) — the mapping this twin states now holds for the host without exception; the one-segment-right displacement the drift measured is gone with the minted-namespace authority",
+              "resolver evidence: FileResolver.spec_root maps the self coordinate to ws_root/spec and resolve_doc walks <module>/<doc> under it — the twin describes exactly what the code does now (crates/vibe-spec/src/resolver.rs)"
             ]
           },
           "SEGMENT-DOC-IS-THE-FILE-NAME": {
-            "v": "drift",
-            "ev": [
-              "crates/vibe-spec/src/resolver.rs:112  /// Resolve a doc-path (relative to a `spec/` root) to a `.md` file, inverting /// the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan.",
-              "crates/vibe-spec/src/resolver.rs:150  /// Does a file stem equal `id` or start with `id-` (the descriptive-slug form)? fn id_file_matches(path: &Path, id: &str) -> bool {",
-              "crates/vibe-spec/src/resolver.rs:164  /// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail). fn is_id_stem(s: &str) -> bool {",
-              "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
-              "DRIFT, and the host keeps a resolver that exists because of it. Host files carry a descriptive slug — `PROP-043-progress-markup.md` — and are cited as `PROP-043`, so the doc segment is the file name minus the extension AND minus the tail. `crates/vibe-spec/src/resolver.rs:112-113` inverts that truncation by a prefix-scan."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "the doc segment is the file name (stem) under the module directory in every host citation after the migration — the twin holds literally; the package text was not edited (the host side repaired), per BACKLOG B-031 closure direction",
+              "spot-checks on the migrated tree: spec://org.vibevm.core/vibevm/common/PROP-000#commits ↔ spec/common/PROP-000.md; spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#… ↔ spec/modules/vibe-progress/PROP-043-progress-markup.md (truncation, same rule as packages)"
             ]
           },
           "SEGMENT-FRAGMENT-IS-THE-ANCHOR": {
@@ -27702,7 +27687,7 @@
           }
         },
         "verified_at": "2026-08-02T14:53:46Z",
-        "verify_batch": "W3 + D27 + D28"
+        "verify_batch": "W3 + D27 + D28 + E6-F169-F147"
       }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md": {
@@ -45736,7 +45721,7 @@
       }
     },
     "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/flows/conventional-commits/conventional-commits.md": {
-      "content_hash": "75cfebaf5998c0fbc28288657ef276ef5c6a378ae14101b10e53082331f7d17e",
+      "content_hash": "a652ab464120bb2d81a6cabcf3b4cec8d13e7d7b9e55e8ccd9ce87448fbf01d7",
       "rollup": {
         "explicit": [
           "spec",
@@ -45758,7 +45743,7 @@
       "unit_count": 17,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "75cfebaf5998c0fbc28288657ef276ef5c6a378ae14101b10e53082331f7d17e",
+        "processed_hash": "a652ab464120bb2d81a6cabcf3b4cec8d13e7d7b9e55e8ccd9ce87448fbf01d7",
         "verdicts": {
           "ALL-COMMITS-FOLLOW-THE-CONVENTIONAL-COMMITS-SPECIFICATION": {
             "v": "confirmed",
@@ -46416,7 +46401,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T14:02:07Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "W1e"
       }
     },
@@ -85504,7 +85489,7 @@
       }
     },
     "spec/boot/00-core.md": {
-      "content_hash": "27697df5871b7e4831d1ae9db525ff6a93c0b124fcc90afa3d02047dfee9c511",
+      "content_hash": "3cb482aa6077afe52cae7fbfc4af631938391d5712996e25a75d82c1fb298dec",
       "rollup": {
         "computed": [
           "impl",
@@ -85522,7 +85507,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "27697df5871b7e4831d1ae9db525ff6a93c0b124fcc90afa3d02047dfee9c511",
+        "processed_hash": "3cb482aa6077afe52cae7fbfc4af631938391d5712996e25a75d82c1fb298dec",
         "verdicts": {
           "project-identity": {
             "v": "confirmed",
@@ -85726,7 +85711,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T06:03:18Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c0-boot + d2g"
       }
     },
@@ -85943,7 +85928,7 @@
       }
     },
     "spec/common/PROP-000.md": {
-      "content_hash": "c045a7c8529db4646e4633120d5383766e5b652585d6be812596ebdb9703e2e7",
+      "content_hash": "80bbcb789bb9789c760d9b15723a124f6d09abb73140939a0d0824214cdba2cc",
       "rollup": {
         "explicit": [
           "spec",
@@ -90556,7 +90541,7 @@
       }
     },
     "spec/common/PROP-029-fully-qualified-addresses.md": {
-      "content_hash": "884c6b872ba4833b3608abd9862bf7c88fdc2e6b4de6bb0db52f5c4debb9c405",
+      "content_hash": "fc5d1de3fe9940ded91a844a4eba896bf61f71d581f95db62d4b6f68bec3105c",
       "rollup": {
         "explicit": [
           "spec",
@@ -90564,17 +90549,17 @@
         ],
         "computed": [
           "spec",
-          "done"
+          "work"
         ],
         "effective": [
           "spec",
           "done"
         ],
-        "marker_count": 32,
-        "fact_count": 30,
+        "marker_count": 35,
+        "fact_count": 32,
         "unmarked_facts": 0
       },
-      "marker_count": 32,
+      "marker_count": 35,
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
@@ -90740,7 +90725,7 @@
       }
     },
     "spec/common/PROP-031-algorithmic-refactoring.md": {
-      "content_hash": "a9a4a9ddea1568bebaef341c37fc0b2c142a04be20c989b73eda6a7a18beda2d",
+      "content_hash": "b0c52e3f6c1102341df2702464847ac0efc651b1d9a2a95adf8511d4e061a6dd",
       "rollup": {
         "explicit": [
           "spec",
@@ -90766,7 +90751,7 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 94,
         "marker_count": 96,
-        "processed_hash": "a9a4a9ddea1568bebaef341c37fc0b2c142a04be20c989b73eda6a7a18beda2d",
+        "processed_hash": "b0c52e3f6c1102341df2702464847ac0efc651b1d9a2a95adf8511d4e061a6dd",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -91219,12 +91204,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T13:32:18Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c3d-common-tail"
       }
     },
     "spec/common/PROP-032-project-model-ide-substrate.md": {
-      "content_hash": "b8bd5b21c508b0693e3e58929d008ef365fa09137755c14518ec0d0d7661f771",
+      "content_hash": "3e09df67126e58671d9474160dfc86a89d7e8051fef3801a20287b4497dc3386",
       "rollup": {
         "explicit": [
           "spec",
@@ -91250,7 +91235,7 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 126,
         "marker_count": 128,
-        "processed_hash": "b8bd5b21c508b0693e3e58929d008ef365fa09137755c14518ec0d0d7661f771",
+        "processed_hash": "3e09df67126e58671d9474160dfc86a89d7e8051fef3801a20287b4497dc3386",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -91895,12 +91880,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T13:32:18Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c3d-common-tail"
       }
     },
     "spec/common/PROP-033-refactoring-registry.md": {
-      "content_hash": "781411de33b4434ad1ae7113ccc9272973c9f944faf85a77b6a4be5f836956a9",
+      "content_hash": "3443fe5e75b7494db296126c5b6aec9e8aa3682d90eff7a7e9717e54c236cba1",
       "rollup": {
         "explicit": [
           "spec",
@@ -91926,7 +91911,7 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 81,
         "marker_count": 83,
-        "processed_hash": "781411de33b4434ad1ae7113ccc9272973c9f944faf85a77b6a4be5f836956a9",
+        "processed_hash": "3443fe5e75b7494db296126c5b6aec9e8aa3682d90eff7a7e9717e54c236cba1",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -92337,12 +92322,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T13:32:18Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c3d-common-tail"
       }
     },
     "spec/design/README.md": {
-      "content_hash": "26033202cf2db36d129189f55f600c87a3d858bf73ff56b24498d8420cf8895b",
+      "content_hash": "117370d9801764a13d114dc0604f572fe3e7f062e8e9b894a2fbb84e32c41adf",
       "rollup": {
         "explicit": [
           "doc",
@@ -92356,11 +92341,11 @@
           "doc",
           "done"
         ],
-        "marker_count": 70,
-        "fact_count": 64,
+        "marker_count": 72,
+        "fact_count": 66,
         "unmarked_facts": 0
       },
-      "marker_count": 70,
+      "marker_count": 72,
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
@@ -92616,7 +92601,7 @@
       }
     },
     "spec/design/action-system.md": {
-      "content_hash": "5ed13c61b05d66a48b3cb5579e59dfc3eb0db65c837178d1972c95aa065e18f5",
+      "content_hash": "edd8872c278d744900fc3875b8e91f083dd6b33c778610e00a8375a6736cf76e",
       "rollup": {
         "computed": [
           "doc",
@@ -92638,7 +92623,7 @@
         "coverage_note": "verdicts keyed by fact anchors; table cell-markers inherit their row anchor; <status> elements judged as _elements",
         "fact_count": 78,
         "marker_count": 78,
-        "processed_hash": "5ed13c61b05d66a48b3cb5579e59dfc3eb0db65c837178d1972c95aa065e18f5",
+        "processed_hash": "edd8872c278d744900fc3875b8e91f083dd6b33c778610e00a8375a6736cf76e",
         "verdicts": {
           "genre-line": {
             "v": "confirmed",
@@ -92999,7 +92984,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T13:00:46Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c2-design + d2b"
       }
     },
@@ -93024,6 +93009,52 @@
       },
       "marker_count": 53,
       "unit_count": 13,
+      "issue_count": 0
+    },
+    "spec/design/host-as-package.md": {
+      "content_hash": "bfae75b27b0398d6fdfbea1f2656b8870c6be8185b483335360c98b19bd835e6",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 27,
+        "fact_count": 26,
+        "unmarked_facts": 0
+      },
+      "marker_count": 27,
+      "unit_count": 10,
+      "issue_count": 0
+    },
+    "spec/design/lane-composition-dedup.md": {
+      "content_hash": "20ebccbf26f9e1c76590f04e75cb06b9ec758e1acb2e70df28f729158bbb9bfd",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 23,
+        "fact_count": 22,
+        "unmarked_facts": 0
+      },
+      "marker_count": 23,
+      "unit_count": 9,
       "issue_count": 0
     },
     "spec/design/loading-and-boot-model.md": {
@@ -97326,7 +97357,7 @@
       }
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {
-      "content_hash": "dc156b690a46e7c409a2e729791ef471aa66e43f8cbc80ec49327bd102ac4157",
+      "content_hash": "8093661f1a5277da9010a83b94eb637b0da3537c5552dc6f17f93d853cb7fd64",
       "rollup": {
         "explicit": [
           "impl",
@@ -97352,7 +97383,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 278,
         "marker_count": 279,
-        "processed_hash": "dc156b690a46e7c409a2e729791ef471aa66e43f8cbc80ec49327bd102ac4157",
+        "processed_hash": "8093661f1a5277da9010a83b94eb637b0da3537c5552dc6f17f93d853cb7fd64",
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -99029,7 +99060,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T14:57:59Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c4f3-index"
       }
     },
@@ -100549,7 +100580,7 @@
       }
     },
     "spec/modules/vibe-progress/PROP-043-progress-markup.md": {
-      "content_hash": "3cbe93c09e79d4d550effe2929c2d72aa1fc0a0d6c74f0b8aa8d7841f81e0753",
+      "content_hash": "e44968da2676c7ab3fa984aabaafdc84fca83f13d3df0f9eb9249a776fba6eda",
       "rollup": {
         "explicit": [
           "impl",
@@ -100575,7 +100606,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (14 cells); document <status> judged as _elements",
         "fact_count": 158,
         "marker_count": 159,
-        "processed_hash": "3cbe93c09e79d4d550effe2929c2d72aa1fc0a0d6c74f0b8aa8d7841f81e0753",
+        "processed_hash": "e44968da2676c7ab3fa984aabaafdc84fca83f13d3df0f9eb9249a776fba6eda",
         "verdicts": {
           "self-uri": {
             "v": "confirmed",
@@ -101501,7 +101532,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T14:53:46Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c4a-vibe-progress + d2f + E"
       }
     },
@@ -101600,7 +101631,7 @@
       }
     },
     "spec/modules/vibe-progress/templates/impl-task.md": {
-      "content_hash": "9f85265c1a8e0111664f74f5d7f0addbdddcbc7fc49de38ea100bd617b97805d",
+      "content_hash": "f3faa42a50f14db559f92d0512749a0860790fe9b9680ab5c887fcfd9df0164a",
       "rollup": {
         "explicit": [
           "spec",
@@ -101626,7 +101657,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 22,
         "marker_count": 23,
-        "processed_hash": "9f85265c1a8e0111664f74f5d7f0addbdddcbc7fc49de38ea100bd617b97805d",
+        "processed_hash": "f3faa42a50f14db559f92d0512749a0860790fe9b9680ab5c887fcfd9df0164a",
         "verdicts": {
           "status-legend": {
             "v": "confirmed",
@@ -101767,7 +101798,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T14:01:39Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c4a-vibe-progress"
       }
     },
@@ -101902,7 +101933,7 @@
       }
     },
     "spec/modules/vibe-registry/PROP-001-git-backend.md": {
-      "content_hash": "78efc2f8dca1c4951cf6f2ea098fbef228124a06c1b6a5878b106446b5561e07",
+      "content_hash": "5597ebf68c3fa320e5e015deb81d8eb3f0145b5d822095b02d3cfda82b77c184",
       "rollup": {
         "explicit": [
           "impl",
@@ -101928,7 +101959,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 92,
         "marker_count": 93,
-        "processed_hash": "78efc2f8dca1c4951cf6f2ea098fbef228124a06c1b6a5878b106446b5561e07",
+        "processed_hash": "5597ebf68c3fa320e5e015deb81d8eb3f0145b5d822095b02d3cfda82b77c184",
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -102492,12 +102523,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T14:14:56Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c4b-registry-core + d2d"
       }
     },
     "spec/modules/vibe-registry/PROP-002-decentralized-registry.md": {
-      "content_hash": "a4aa3c9909ffe89ead7c9ed3c71e25799810eb28b870a16a9bacd070d52a7f85",
+      "content_hash": "a8f9be32bb5e89e9a9ec5d8167192277ff3af77c87df5a114bae30a696ca6e0c",
       "rollup": {
         "explicit": [
           "impl",
@@ -102523,7 +102554,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (74 cells); document <status> judged as _elements",
         "fact_count": 359,
         "marker_count": 360,
-        "processed_hash": "a4aa3c9909ffe89ead7c9ed3c71e25799810eb28b870a16a9bacd070d52a7f85",
+        "processed_hash": "a8f9be32bb5e89e9a9ec5d8167192277ff3af77c87df5a114bae30a696ca6e0c",
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -104260,7 +104291,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-26T10:35:08Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c4b-registry-core + d2d"
       }
     },
@@ -106077,7 +106108,7 @@
       }
     },
     "spec/modules/vibe-registry/PROP-030-embedded-registry.md": {
-      "content_hash": "58d2569e3e769e56c001ec98527400a0a3515188dcaa79f505623fce6ca984aa",
+      "content_hash": "938b964bb9b943be2f6b02d1fc65cce480f20b7d4f067f74ab6d4592e439dca3",
       "rollup": {
         "explicit": [
           "impl",
@@ -106103,7 +106134,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 75,
         "marker_count": 76,
-        "processed_hash": "58d2569e3e769e56c001ec98527400a0a3515188dcaa79f505623fce6ca984aa",
+        "processed_hash": "938b964bb9b943be2f6b02d1fc65cce480f20b7d4f067f74ab6d4592e439dca3",
         "verdicts": {
           "self-uri": {
             "v": "confirmed",
@@ -106625,7 +106656,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T14:52:12Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c4f1-registry-rest + d1"
       }
     },
@@ -110433,7 +110464,7 @@
       }
     },
     "spec/modules/vibe-workspace/PROP-009-loading-model.md": {
-      "content_hash": "38cfca4440000e3169119fc60e27a1e1d89e9ff73ac678acf1e0241984214741",
+      "content_hash": "92d588ce7dfd01366b9899b3c4b7c85f37f0baca67e221d40ba6664c559e70cf",
       "rollup": {
         "explicit": [
           "impl",
@@ -110447,11 +110478,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 108,
-        "fact_count": 107,
+        "marker_count": 110,
+        "fact_count": 109,
         "unmarked_facts": 0
       },
-      "marker_count": 108,
+      "marker_count": 110,
       "unit_count": 20,
       "issue_count": 0,
       "campaign": {
@@ -113753,7 +113784,7 @@
       }
     },
     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md": {
-      "content_hash": "31a39d92631b815db4a812c63e158a2fc68620cb8c6dee4ac2cb69bbf77e2991",
+      "content_hash": "56482e35e9e7ceeb7d3c8bf565d6ca568a5f5f44b02fb72a86d6d7d8c2d1f088",
       "rollup": {
         "explicit": [
           "impl",
@@ -113767,11 +113798,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 145,
-        "fact_count": 144,
+        "marker_count": 146,
+        "fact_count": 145,
         "unmarked_facts": 0
       },
-      "marker_count": 145,
+      "marker_count": 146,
       "unit_count": 22,
       "issue_count": 0,
       "campaign": {
@@ -114599,7 +114630,7 @@
       }
     },
     "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md": {
-      "content_hash": "f8c3799d364dc48ba8fe3eeb1e2d5865b9b44b28f2e5dc79fe9929bbb6262386",
+      "content_hash": "560f4006a6cfb34d96cba946c6a6f145b3281db5ca37a34fa782860a87322fcd",
       "rollup": {
         "explicit": [
           "impl",
@@ -114607,17 +114638,17 @@
         ],
         "computed": [
           "spec",
-          "done"
+          "work"
         ],
         "effective": [
           "impl",
           "done"
         ],
-        "marker_count": 86,
-        "fact_count": 85,
+        "marker_count": 87,
+        "fact_count": 86,
         "unmarked_facts": 0
       },
-      "marker_count": 86,
+      "marker_count": 87,
       "unit_count": 16,
       "issue_count": 0,
       "campaign": {
