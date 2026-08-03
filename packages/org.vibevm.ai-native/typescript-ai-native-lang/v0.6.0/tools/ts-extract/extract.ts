@@ -91,7 +91,28 @@ interface EnvReadFact {
   line: number;
 }
 
-type ExtractFact = UnsafeFact | ImportFact | ItemFact | MetricsFact | EnvReadFact;
+/**
+ * The `ts-seam-error-cites-req` signal (B-033 TS twin, §3.2): a
+ * discriminated-union error type alias `E`. `symbol` is the alias name;
+ * `cites_req` is whether the union cites a `spec://` REQ (a JSDoc
+ * `@implements`/`@documents` marker on the alias OR a `spec://` substring
+ * in a variant member). `in_test` is file-grain, stamped by the bridge
+ * from the record — same posture as `EnvReadFact`.
+ */
+interface TsSeamErrorFact {
+  fact: "ts_seam_error";
+  symbol: string;
+  cites_req: boolean;
+  line: number;
+}
+
+type ExtractFact =
+  | UnsafeFact
+  | ImportFact
+  | ItemFact
+  | MetricsFact
+  | EnvReadFact
+  | TsSeamErrorFact;
 
 interface Marker {
   tag: string;
@@ -208,6 +229,8 @@ interface TsModule {
   isCallExpression(node: Node): boolean;
   isIdentifier(node: Node): boolean;
   isTypeReferenceNode(node: Node): boolean;
+  isUnionTypeNode(node: Node): boolean;
+  isTypeLiteralNode(node: Node): boolean;
   isFunctionDeclaration(node: Node): boolean;
   isClassDeclaration(node: Node): boolean;
   isInterfaceDeclaration(node: Node): boolean;
@@ -358,6 +381,113 @@ function envReadSource(
   return null;
 }
 
+/**
+ * The closed discriminant-property vocabulary for the error-union
+ * heuristic (`##ts-seam-heuristic`). A variant member «carries a
+ * discriminant» when it owns a property named one of these — the TS
+ * discriminated-union idiom the guide's `E` uses (`kind` dominates;
+ * `tag`/`_tag` are the common alternates). A discriminant named outside
+ * this set is a documented limit, never a silent claim.
+ */
+const SEAM_DISCRIMINANTS = new Set(["kind", "tag", "_tag"]);
+
+/**
+ * Does the `ts-seam-error-cites-req` signal fire on this type alias
+ * (B-033 TS twin, §3.2)? The conservative default, measured against the
+ * guide's canonical `Result<T, E>` form
+ * (`GUIDE-AI-NATIVE-TYPESCRIPT.md:152,157,159`) and `research/ts-demo`:
+ * a `type` alias whose RHS is a union of object-literal members each
+ * carrying a discriminant property, in error position (named `*Error` or
+ * `E`). Returns the `ts_seam_error` fact for a matching alias, else
+ * `null` — the non-matching remainder is the documented limit.
+ *
+ * **Recorded limits (the `ts-flag-sites` precedent — never silent):**
+ * (1) error position is by NAME only — «the second type argument of a
+ * `Result<T, E>`» is NOT detected, as it needs cross-reference
+ * resolution (finding a `Result<_, ThisAlias>` usage) the single-file
+ * AST walk does not do; (2) the degenerate single-object-literal `E`
+ * whose `kind` is itself a string-literal union (one object type, not a
+ * `UnionTypeNode` RHS) is not seen; (3) a discriminant named outside
+ * `{kind, tag, _tag}` is not seen.
+ */
+function seamErrorFromAlias(
+  ts: TsModule,
+  sf: SourceFile,
+  node: Node,
+): TsSeamErrorFact | null {
+  const alias = node as unknown as { name: { text: string }; type?: Node };
+  const symbol = alias.name.text;
+  if (symbol !== "E" && !symbol.endsWith("Error")) return null;
+  const rhs = alias.type;
+  if (rhs === undefined || !ts.isUnionTypeNode(rhs)) return null;
+  const members = (rhs as unknown as { types?: Node[] }).types ?? [];
+  if (members.length === 0) return null;
+  // Every member is an object literal carrying a discriminant property.
+  for (const member of members) {
+    if (!ts.isTypeLiteralNode(member)) return null;
+    if (!hasDiscriminant(member)) return null;
+  }
+  // cites_req — a `spec://` REQ cited via a JSDoc `@implements`/
+  // `@documents` marker on the alias, OR a `spec://` substring in a
+  // variant-member string literal.
+  const citesReq =
+    aliasCitesReqViaMarker(ts, sf, node, symbol) || containsSpecUri(ts, rhs);
+  return {
+    fact: "ts_seam_error",
+    symbol,
+    cites_req: citesReq,
+    line: lineOf(sf, node.getStart(sf)),
+  };
+}
+
+/** Does this object-literal type own a discriminant property? */
+function hasDiscriminant(typeLiteral: Node): boolean {
+  const members =
+    (typeLiteral as unknown as { members?: Node[] }).members ?? [];
+  return members.some((m) => {
+    const name = (m as unknown as { name?: { text?: string } }).name;
+    return name !== undefined && SEAM_DISCRIMINANTS.has(name.text ?? "");
+  });
+}
+
+/**
+ * Does the alias carry a JSDoc `@implements`/`@documents` marker whose
+ * parsed URI is a `spec://` REQ? Reuses `markerFromTag` so the raw-text
+ * parse (stable across parsed and unparsed tag names — the Phase 0 spike
+ * finding) does the work.
+ */
+function aliasCitesReqViaMarker(
+  ts: TsModule,
+  sf: SourceFile,
+  node: Node,
+  symbol: string,
+): boolean {
+  for (const tag of ts.getJSDocTags(node)) {
+    const marker = markerFromTag(sf, tag, symbol);
+    if (
+      marker !== null &&
+      (marker.tag === "implements" || marker.tag === "documents") &&
+      marker.uri.includes("spec://")
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/** Does any `StringLiteral` inside this subtree carry a `spec://` REQ? */
+function containsSpecUri(ts: TsModule, node: Node): boolean {
+  if (ts.isStringLiteral(node)) {
+    const text = (node as unknown as { text: string }).text;
+    if (text.includes("spec://")) return true;
+  }
+  let found = false;
+  ts.forEachChild(node, (child) => {
+    if (!found && containsSpecUri(ts, child)) found = true;
+  });
+  return found;
+}
+
 function extractFile(ts: TsModule, absPath: string, relPath: string): FileRecord {
   const text = readFileSync(absPath, "utf8");
   const record: FileRecord = {
@@ -454,6 +584,10 @@ function extractFile(ts: TsModule, absPath: string, relPath: string): FileRecord
           line: lineOf(sf, node.getStart(sf)),
         });
       }
+    }
+    if (ts.isTypeAliasDeclaration(node)) {
+      const seam = seamErrorFromAlias(ts, sf, node);
+      if (seam !== null) record.facts.push(seam);
     }
     const decl = declarationInfo(ts, node);
     if (decl !== null && decl.symbol !== null) {

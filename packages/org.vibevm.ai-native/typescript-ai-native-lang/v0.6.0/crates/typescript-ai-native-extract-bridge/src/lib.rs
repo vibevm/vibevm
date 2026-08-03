@@ -61,9 +61,9 @@ pub enum BridgeError {
     Protocol { detail: String },
 }
 
-/// One `ts_unsafe` / `ts_env_read` / `import` / `item` / `file_metrics`
-/// record, exactly as the extractor emits it (serde-tagged on `fact`).
-/// `Serialize` is symmetric so the oracle relay
+/// One `ts_unsafe` / `ts_env_read` / `ts_seam_error` / `import` / `item` /
+/// `file_metrics` record, exactly as the extractor emits it (serde-tagged
+/// on `fact`). `Serialize` is symmetric so the oracle relay
 /// (typescript-ai-native-tcg-bridge) can re-emit the same vocabulary it
 /// received (TCG-PROTOCOL §2).
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -93,6 +93,17 @@ pub enum RawFact {
     /// from the record — same posture as `TsUnsafe`.
     TsEnvRead {
         source: String,
+        line: u32,
+    },
+    /// A discriminated-union error type alias `E` (the
+    /// `ts-seam-error-cites-req` signal, B-033 TS twin). `cites_req` is the
+    /// extractor's computed flag (a JSDoc `@implements`/`@documents`
+    /// marker on the alias OR a `spec://` substring in a variant member).
+    /// `in_test` is file-grain, stamped in [`conform_facts`] from the
+    /// record — same posture as `TsEnvRead`.
+    TsSeamError {
+        symbol: String,
+        cites_req: bool,
         line: u32,
     },
 }
@@ -233,6 +244,16 @@ pub fn conform_facts(record: &FileRecord) -> Vec<conform_core::Fact> {
                 line: *line,
                 in_test: record.in_test,
             },
+            RawFact::TsSeamError {
+                symbol,
+                cites_req,
+                line,
+            } => Fact::TsSeamError {
+                symbol: symbol.clone(),
+                cites_req: *cites_req,
+                line: *line,
+                in_test: record.in_test,
+            },
         })
         .collect()
 }
@@ -314,6 +335,50 @@ mod tests {
             f,
             conform_core::Fact::TsEnvRead { source, line: 2, in_test: true }
             if source == "import.meta.env"
+        )));
+    }
+
+    #[test]
+    fn ts_seam_error_lowers_with_file_grain_in_test() {
+        const REPLAY_SEAM: &str = concat!(
+            r#"{"protocol":1,"file":"src/cells/parse/error.ts","in_test":false,"degraded":false,"#,
+            r#""facts":[{"fact":"file_metrics","lines":4},"#,
+            r#"{"fact":"ts_seam_error","symbol":"ParseError","cites_req":true,"line":2}],"#,
+            r#""markers":[]}"#,
+            "\n",
+            r#"{"protocol":1,"file":"src/cells/parse/error.test.ts","in_test":true,"degraded":false,"#,
+            r#""facts":[{"fact":"file_metrics","lines":1},"#,
+            r#"{"fact":"ts_seam_error","symbol":"ParseError","cites_req":false,"line":2}],"#,
+            r#""markers":[]}"#,
+            "\n",
+        );
+        let records = parse_ndjson(REPLAY_SEAM).expect("parse");
+        assert_eq!(records.len(), 2);
+
+        // A citing error union in a domain file: symbol + cites_req
+        // carried verbatim, in_test stamped false (file-grain).
+        let domain = conform_facts(&records[0]);
+        assert!(domain.iter().any(|f| matches!(
+            f,
+            conform_core::Fact::TsSeamError {
+                symbol,
+                cites_req: true,
+                line: 2,
+                in_test: false
+            } if symbol == "ParseError"
+        )));
+
+        // A non-citing error union in a test file: in_test stamped true
+        // (file-grain, like TsUnsafe/TsEnvRead), so the rule skips it.
+        let test_recs = conform_facts(&records[1]);
+        assert!(test_recs.iter().any(|f| matches!(
+            f,
+            conform_core::Fact::TsSeamError {
+                symbol,
+                cites_req: false,
+                line: 2,
+                in_test: true
+            } if symbol == "ParseError"
         )));
     }
 
