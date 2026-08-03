@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-03T11:51:28Z",
+  "updated_at": "2026-08-03T14:59:58Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -9396,7 +9396,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md": {
-      "content_hash": "bbd9bbfc58eec9f924fb043689377eb2bdae6a0779760578445f4b8bac85bf45",
+      "content_hash": "44f286353e0490bdd2f0f9c5cb036c7da6b7b9a97c80a26bf57d72e58352e795",
       "rollup": {
         "explicit": [
           "spec",
@@ -9418,7 +9418,7 @@
       "unit_count": 17,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "bbd9bbfc58eec9f924fb043689377eb2bdae6a0779760578445f4b8bac85bf45",
+        "processed_hash": "44f286353e0490bdd2f0f9c5cb036c7da6b7b9a97c80a26bf57d72e58352e795",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -10654,7 +10654,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T19:06:18Z",
+        "verified_at": "2026-08-03T14:59:58Z",
         "verify_batch": "C3 + D5a + D6 + D7 + D9-boss-a + D24 + D34"
       }
     },
@@ -11652,7 +11652,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md": {
-      "content_hash": "efd7da05501b8e4ec3d5f60ba84fae3a6329e9f29647da0db98c74ce2c124fcf",
+      "content_hash": "b0d5b3f12ca44a50e17a97ef99f02fe0f3557c8eb106393c5be160a962043b6e",
       "rollup": {
         "explicit": [
           "spec",
@@ -11674,7 +11674,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "efd7da05501b8e4ec3d5f60ba84fae3a6329e9f29647da0db98c74ce2c124fcf",
+        "processed_hash": "b0d5b3f12ca44a50e17a97ef99f02fe0f3557c8eb106393c5be160a962043b6e",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -11928,7 +11928,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T14:10:28Z",
+        "verified_at": "2026-08-03T14:59:58Z",
         "verify_batch": "C4+C5 + C45-go-review"
       }
     },
@@ -12507,7 +12507,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md": {
-      "content_hash": "85a5d8ac2d74bd0bf84064515cdcd8bde3648679d901558de98bc861158cbf56",
+      "content_hash": "bc10514855f3ba50f8da3d5775150c4a183359b78fb44b9c747a829be606b149",
       "rollup": {
         "explicit": [
           "impl",
@@ -12529,7 +12529,7 @@
       "unit_count": 7,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "85a5d8ac2d74bd0bf84064515cdcd8bde3648679d901558de98bc861158cbf56",
+        "processed_hash": "bc10514855f3ba50f8da3d5775150c4a183359b78fb44b9c747a829be606b149",
         "verdicts": {
           "RUNNING-THE-STANDING-SWEEP": {
             "v": "confirmed",
@@ -12817,7 +12817,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T20:39:23Z",
+        "verified_at": "2026-08-03T14:59:58Z",
         "verify_batch": "C6 + D8b + D8a + D9-boss-a + D11-release-a"
       }
     },
@@ -15501,7 +15501,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md": {
-      "content_hash": "a67f7129859287c5e182d9e7c6e2c41402637ed50d25a2b3a56dba64ded697d6",
+      "content_hash": "b70b769344683bb01b0566b981ca40aa2120880b388d46ffc030b8d4485d8fad",
       "rollup": {
         "explicit": [
           "spec",
@@ -15523,7 +15523,7 @@
       "unit_count": 16,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "a67f7129859287c5e182d9e7c6e2c41402637ed50d25a2b3a56dba64ded697d6",
+        "processed_hash": "b70b769344683bb01b0566b981ca40aa2120880b388d46ffc030b8d4485d8fad",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -16296,7 +16296,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T19:06:18Z",
+        "verified_at": "2026-08-03T14:59:58Z",
         "verify_batch": "C3 + D5a + D7 + D34"
       }
     },
@@ -17977,7 +17977,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md": {
-      "content_hash": "6746d59a193a64405d109a6a15e3b306d14e1c6b9f573f939b8076b75d2e15f8",
+      "content_hash": "66f470b84458a2f37e12ce5ad9a3ad239d21be8b918b32d9bf8a07de7df48ec2",
       "rollup": {
         "explicit": [
           "impl",
@@ -17999,7 +17999,7 @@
       "unit_count": 7,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "6746d59a193a64405d109a6a15e3b306d14e1c6b9f573f939b8076b75d2e15f8",
+        "processed_hash": "66f470b84458a2f37e12ce5ad9a3ad239d21be8b918b32d9bf8a07de7df48ec2",
         "verdicts": {
           "RUNNING-THE-STANDING-SWEEP": {
             "v": "confirmed",
@@ -18296,12 +18296,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T15:32:52Z",
+        "verified_at": "2026-08-03T14:59:58Z",
         "verify_batch": "C6 + D8b + D8a + D9-boss-a"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-terraform/SKILL.md": {
-      "content_hash": "8d86b781cbbfb07b6423abe3c1ea458faa8f211938dc441bf64bc6f83f00e6a3",
+      "content_hash": "f8f199051a45648cfe02f9e4cf833403f1fd91c5d519f96388762c2582ab38fa",
       "rollup": {
         "explicit": [
           "impl",
@@ -18323,7 +18323,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "8d86b781cbbfb07b6423abe3c1ea458faa8f211938dc441bf64bc6f83f00e6a3",
+        "processed_hash": "f8f199051a45648cfe02f9e4cf833403f1fd91c5d519f96388762c2582ab38fa",
         "verdicts": {
           "EXECUTING-THE-BROWNFIELD-PROTOCOL": {
             "v": "confirmed",
@@ -18615,7 +18615,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:29:33Z",
+        "verified_at": "2026-08-03T14:59:58Z",
         "verify_batch": "C6"
       }
     },
@@ -20803,7 +20803,7 @@
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/skills/typescript-ai-native-sweep/SKILL.md": {
-      "content_hash": "6cee59e5f9cf0a518c58a3a38ab2ff164c4658a0669fdad4f803b3afa80c6221",
+      "content_hash": "b32d2f256d92a23bf2a1a2e2a1ef2b2bfc1ecacc1fb697f8bc14cbc1e0c05395",
       "rollup": {
         "explicit": [
           "impl",
@@ -20825,7 +20825,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "6cee59e5f9cf0a518c58a3a38ab2ff164c4658a0669fdad4f803b3afa80c6221",
+        "processed_hash": "b32d2f256d92a23bf2a1a2e2a1ef2b2bfc1ecacc1fb697f8bc14cbc1e0c05395",
         "verdicts": {
           "RUNNING-THE-STANDING-SWEEP": {
             "v": "confirmed",
@@ -21058,7 +21058,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T20:39:23Z",
+        "verified_at": "2026-08-03T14:59:58Z",
         "verify_batch": "C6 + D1a + D8b + D11-release-a"
       }
     },
@@ -21350,7 +21350,7 @@
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md": {
-      "content_hash": "abd6dca703f86d3ebeb71ee28df1fd283efd8d017102c78e2aec7bbdb8924101",
+      "content_hash": "1ae7919d82bb3326ef5848244523589ed1a9a5cff42fee11ffcc7fcd59bcca36",
       "rollup": {
         "explicit": [
           "spec",
@@ -21372,7 +21372,7 @@
       "unit_count": 18,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "abd6dca703f86d3ebeb71ee28df1fd283efd8d017102c78e2aec7bbdb8924101",
+        "processed_hash": "1ae7919d82bb3326ef5848244523589ed1a9a5cff42fee11ffcc7fcd59bcca36",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -22610,7 +22610,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T19:06:18Z",
+        "verified_at": "2026-08-03T14:59:58Z",
         "verify_batch": "C3 + C45-cross-language + D5a + D7 + D30 + D33 + D34"
       }
     },
@@ -23330,7 +23330,7 @@
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.md": {
-      "content_hash": "6dcc151777cbd0856fe80d247e123e943265b1eacc162495fc73022549b05d4c",
+      "content_hash": "7d4d65d337b841ec9243695587be6fe8992bce8ecc2d398ed3281188693d413b",
       "rollup": {
         "explicit": [
           "spec",
@@ -23352,7 +23352,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "6dcc151777cbd0856fe80d247e123e943265b1eacc162495fc73022549b05d4c",
+        "processed_hash": "7d4d65d337b841ec9243695587be6fe8992bce8ecc2d398ed3281188693d413b",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -23644,7 +23644,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:58:29Z",
+        "verified_at": "2026-08-03T14:59:58Z",
         "verify_batch": "C4+C5"
       }
     },
@@ -92371,7 +92371,7 @@
       }
     },
     "spec/design/README.md": {
-      "content_hash": "117370d9801764a13d114dc0604f572fe3e7f062e8e9b894a2fbb84e32c41adf",
+      "content_hash": "95d515b2b49cedcde08349f8ffbf99ee064eb0cacf32851e83c47d8783fc69b1",
       "rollup": {
         "explicit": [
           "doc",
@@ -92385,11 +92385,11 @@
           "doc",
           "done"
         ],
-        "marker_count": 72,
-        "fact_count": 66,
+        "marker_count": 73,
+        "fact_count": 67,
         "unmarked_facts": 0
       },
-      "marker_count": 72,
+      "marker_count": 73,
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
@@ -93053,6 +93053,29 @@
       },
       "marker_count": 53,
       "unit_count": 13,
+      "issue_count": 0
+    },
+    "spec/design/gate-parity-config.md": {
+      "content_hash": "ab91610871ceacef4fed09a18a2b3eed49e2d8784da3781db7154f932acc7b7e",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "work"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "work"
+        ],
+        "marker_count": 20,
+        "fact_count": 19,
+        "unmarked_facts": 0
+      },
+      "marker_count": 20,
+      "unit_count": 6,
       "issue_count": 0
     },
     "spec/design/host-as-package.md": {
