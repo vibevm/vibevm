@@ -10,6 +10,8 @@
 //! empty-scope helpers hand the drivers (W2) the announce strings Rust
 //! already prints.
 
+specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#facts");
+
 use std::collections::BTreeSet;
 use std::path::Path;
 

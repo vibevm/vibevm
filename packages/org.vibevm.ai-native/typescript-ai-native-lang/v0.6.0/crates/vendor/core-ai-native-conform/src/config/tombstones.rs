@@ -10,6 +10,8 @@
 //! the loud tombstone is the whole migration aid (no alias grace
 //! period; design `gate-parity-config.md` §`fork-legacy`).
 
+specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#facts");
+
 use anyhow::{Result, bail};
 
 use super::Config;
