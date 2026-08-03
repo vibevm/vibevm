@@ -71,6 +71,10 @@ pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
     out.push(Box::new(rules::FileLength {
         max_lines: config.max_file_lines,
     }));
+    out.push(Box::new(rules::InvariantCommentPosition {
+        markers: config.invariant_comment_markers.clone(),
+        min_lines: config.invariant_comment_min_file_lines,
+    }));
     out
 }
 
@@ -86,7 +90,7 @@ fn extract(root: &Path, config: &Config) -> Result<Vec<conform_core::SourceFacts
     let mut log = ExtractionLog::default();
     let facts = store.extract_go(root, &frontend, &mut log)?;
     eprintln!(
-        "go-ai-native-conform: extracted {} file(s), {} cached (producer go-extract-1).",
+        "go-ai-native-conform: extracted {} file(s), {} cached (producer go-extract-2).",
         log.extracted.len(),
         log.cached,
     );

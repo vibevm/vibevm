@@ -116,6 +116,9 @@ pub fn run_health(root: &Path, out_rel: &str) -> Result<()> {
                 // presence is policed by the `go-conformance-assertion`
                 // rule, not summed as a census metric here.
                 go_ai_native_extract_bridge::RawFact::GoConformance { .. } => {}
+                // An invariant-marker comment feeds
+                // invariant-comment-position, not a health census metric.
+                go_ai_native_extract_bridge::RawFact::InvariantComment { .. } => {}
             }
         }
     }

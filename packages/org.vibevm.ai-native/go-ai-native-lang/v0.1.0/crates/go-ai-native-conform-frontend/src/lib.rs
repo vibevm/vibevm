@@ -91,7 +91,9 @@ impl Frontend for GoExtractFrontend {
     fn version(&self) -> &'static str {
         // Bump with the extractor protocol / fact schema: retires every
         // cached slot wholesale (the brief's cache contract).
-        "1"
+        // v2: invariant_comment facts (the marker census) feed
+        //     invariant-comment-position.
+        "2"
     }
     fn warm(&self, pending_files: &[String]) {
         self.warm_batch(Some(pending_files));

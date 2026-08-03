@@ -5,3 +5,10 @@
 roots = ["."]
 cells_dir = "internal/cells"
 gated = ["internal/cells/plan", "internal/registry"]
+
+# The invariant-comment-position exhibit lives under `src/` (the rule's
+# in_src scope — Go's `internal/` layout is outside it, like FileLength).
+# `src` is not a domain package, so it is exempt, not gated.
+[[go.exempt]]
+unit = "src"
+reason = "invariant-comment-position exhibit fixture, not a domain package"
