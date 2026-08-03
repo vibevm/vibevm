@@ -145,6 +145,17 @@ impl Directives {
             }
         };
 
+        // R5 (B-011): a `spec://` address that names a generated static lane
+        // (`…/boot/STATIC`) is an illegal citation target — the lane is a cache,
+        // source-of-truth is the package source. Rejected at the single address
+        // chokepoint, before any directive-kind or alias handling runs, so it is
+        // caught for every directive AND every `#use … as` binding alike
+        // (PROP-035 §11 `##COMPILED-LANE-IS-NOT-A-CITATION-TARGET`).
+        if let Some(message) = lane_citation_error(&address) {
+            self.errors.push(DirectiveError { line, message });
+            return;
+        }
+
         // The token tail after the address was silently ignored pre-B-011; it
         // is now reported for every directive kind. The only legal tail is
         // `#use`'s `as <Alias>` clause (refinement point R1).
@@ -189,10 +200,22 @@ impl Directives {
         for (pos, _) in line.match_indices("@spec://") {
             let run = address_run(&line[pos + 1..]); // skip the '@'
             match SpecAddress::parse(run) {
-                Ok(address) => self.in_place_uses.push(InPlaceUse {
-                    address,
-                    line: line_no,
-                }),
+                Ok(address) => {
+                    // R5 (B-011): the lane is not a citation target — reject an
+                    // `@spec://…/boot/STATIC` the same way a directive address is
+                    // rejected above, at the one chokepoint both share.
+                    if let Some(message) = lane_citation_error(&address) {
+                        self.errors.push(DirectiveError {
+                            line: line_no,
+                            message,
+                        });
+                    } else {
+                        self.in_place_uses.push(InPlaceUse {
+                            address,
+                            line: line_no,
+                        });
+                    }
+                }
                 Err(e) => self.errors.push(DirectiveError {
                     line: line_no,
                     message: format!("bad @spec in-place use: {e}"),
@@ -252,6 +275,27 @@ fn directive_prefix(line: &str) -> Option<(DirectiveKind, &str)> {
         }
     }
     None
+}
+
+/// R5 (B-011, design §6.1 layer 1): the compiled `spec/boot/STATIC.md` lane is a
+/// generated cache, not a citation target — source-of-truth is the package
+/// source under `vibedeps/`. An address whose document path names it (`boot/STATIC`
+/// or `…/boot/STATIC`) is rejected with a PROP-035 §11
+/// `##COMPILED-LANE-IS-NOT-A-CITATION-TARGET` citation. The path-boundary check
+/// (`== "boot/STATIC"` or `.ends_with("/boot/STATIC")`) avoids matching an
+/// unrelated stem that merely ends in those letters.
+fn lane_citation_error(addr: &SpecAddress) -> Option<String> {
+    let p = &addr.doc_path;
+    if p == "boot/STATIC" || p.ends_with("/boot/STATIC") {
+        Some(format!(
+            "spec:// address targets the compiled static lane `{addr}` — a generated \
+             cache, not a citation target (PROP-035 §11 \
+             ##COMPILED-LANE-IS-NOT-A-CITATION-TARGET); cite the package source \
+             under vibedeps/ instead"
+        ))
+    } else {
+        None
+    }
 }
 
 /// The verdict on the tokens following a directive's address (B-011): returns
@@ -328,7 +372,11 @@ fn address_run(s: &str) -> &str {
 /// Trailing punctuation naturally terminates the run (`@!X.` → `X`, `(@!X)` →
 /// `X`), consistent with [`address_run`]'s trimming philosophy (refinement
 /// point R3).
-fn identifier_run(s: &str) -> &str {
+///
+/// `pub(crate)` so the static compiler's `@!X` → `@spec://` rewrite (PROP-035
+/// §8 phase 5 / B-011) reuses the exact same identifier boundary this scanner
+/// already honours — the two never drift apart on what counts as a name.
+pub(crate) fn identifier_run(s: &str) -> &str {
     let mut end = 0;
     for (i, c) in s.char_indices() {
         let valid = if i == 0 {
@@ -659,5 +707,59 @@ Trailing dot @!root. and parenthesised (@!root) both resolve.
         // `@a` is neither `@spec://` nor `@!` — not collected. Two `@!` uses.
         assert_eq!(d.errors, vec![]);
         assert_eq!(d.in_place_uses.len(), 2);
+    }
+
+    // ---- R5 (B-011): the compiled lane is not a citation target -----------
+
+    #[test]
+    fn use_into_the_compiled_lane_is_rejected() {
+        // A directive whose address names a generated STATIC lane is rejected
+        // (PROP-035 §11 ##COMPILED-LANE-IS-NOT-A-CITATION-TARGET).
+        let d = Directives::parse("#use spec://vibevm/boot/STATIC#root\n");
+        assert!(d.directives.is_empty(), "the directive must not land");
+        assert_eq!(d.errors.len(), 1);
+        let msg = &d.errors[0].message;
+        assert!(msg.contains("not a citation target"), "{msg}");
+        assert!(msg.contains("PROP-035 §11"), "{msg}");
+        assert!(
+            msg.contains("##COMPILED-LANE-IS-NOT-A-CITATION-TARGET"),
+            "{msg}"
+        );
+    }
+
+    #[test]
+    fn every_directive_kind_rejects_a_lane_target() {
+        for kw in ["#use", "#embed", "#source"] {
+            let d = Directives::parse(&format!("{kw} spec://org.example/pkg/boot/STATIC#root\n"));
+            assert!(d.directives.is_empty(), "{kw}: must be rejected");
+            assert_eq!(d.errors.len(), 1, "{kw}: one error");
+            assert!(
+                d.errors[0].message.contains("not a citation target"),
+                "{kw}: {}",
+                d.errors[0].message
+            );
+        }
+    }
+
+    #[test]
+    fn at_spec_into_the_compiled_lane_is_rejected() {
+        // The in-place-use sigil shares the chokepoint with directives.
+        let d = Directives::parse("See @spec://vibevm/boot/STATIC#root here.\n");
+        assert!(d.in_place_uses.is_empty(), "the use must not land");
+        assert_eq!(d.errors.len(), 1);
+        assert!(d.errors[0].message.contains("not a citation target"));
+    }
+
+    #[test]
+    fn an_unrelated_path_ending_in_static_is_not_flagged() {
+        // `STATIC` is a common word; only the `boot/STATIC` lane path is illegal,
+        // and only at a path boundary — `foo/boot/STATIC` matches, `boot/STATIC`
+        // matches, but `notboot/STATIC` does not (no boundary) and a doc named
+        // `STATIC` at a different path does not either.
+        let d = Directives::parse("#use spec://vibevm/STATIC#root\n");
+        assert_eq!(d.errors, vec![], "bare `STATIC` is not the lane path");
+
+        let d = Directives::parse("#use spec://org.example/pkg/notes/STATIC#x\n");
+        assert_eq!(d.errors, vec![], "`notes/STATIC` is not the lane path");
     }
 }

@@ -301,3 +301,36 @@ prose before
     assert!(out.contains("##keep-me"));
     assert!(!out.contains("##drop-me"), "overridden span kept: {out}");
 }
+
+#[test]
+fn qualified_candidates_list_renamed_heirs_of_a_short_name() {
+    // B-011 §6.1 layer 3: a spliced lane qualified `#root` into two heirs (two
+    // origins). A short-anchor miss surfaces both, deterministically ordered.
+    let src = "\
+# A {#org-vibevm-world--wal--root}
+##org-vibevm-world--wal--FACT fact one
+# B {#org-vibevm-world--redbook--root}
+";
+    let t = DocTree::parse(src);
+    let mut roots = t.qualified_candidates("root");
+    assert_eq!(
+        roots.drain(..).collect::<Vec<_>>(),
+        vec![
+            "org-vibevm-world--redbook--root",
+            "org-vibevm-world--wal--root",
+        ],
+        "heirs are sorted, not in document order"
+    );
+    let facts = t.qualified_candidates("FACT");
+    assert_eq!(facts, vec!["org-vibevm-world--wal--FACT"]);
+    // A short name with no qualified heir → empty (definitely absent).
+    assert!(t.qualified_candidates("missing").is_empty());
+}
+
+#[test]
+fn qualified_candidates_ignore_unqualified_plain_anchors() {
+    // A plain `#root` (never qualified) is not a `--root` heir — only qualified
+    // tails match, so an un-spliced document answers emptiness for `root`.
+    let t = DocTree::parse("# Plain {#root}\n");
+    assert!(t.qualified_candidates("root").is_empty());
+}

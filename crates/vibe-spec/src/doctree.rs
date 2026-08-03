@@ -245,6 +245,27 @@ impl DocTree {
         &self.duplicate_anchors
     }
 
+    /// The qualified heirs of a short anchor name (B-011 §6.1 layer 3): every
+    /// anchor in this tree whose qualified form ends `--<short>` — i.e. a label
+    /// the qualify phase renamed from `short` to `<origin-slug>--short`. Sorted
+    /// for determinism (the tree's anchor map is unordered). Empty when no
+    /// qualified tail matches, so a caller can tell "definitely absent" from
+    /// "renamed — here are the candidates".
+    ///
+    /// Used by the resolver to answer a missed short anchor with its qualified
+    /// heirs rather than emptiness (design §5: fail with candidates, never a
+    /// silent pick).
+    pub fn qualified_candidates(&self, short: &str) -> Vec<&str> {
+        let mut out: Vec<&str> = self
+            .anchors
+            .keys()
+            .map(String::as_str)
+            .filter(|a| a.rsplit_once("--").is_some_and(|(_, tail)| tail == short))
+            .collect();
+        out.sort();
+        out
+    }
+
     /// Every anchored node — heading **and** fact leaf — in document order, as
     /// `(id, anchor)`. Skips the root and any heading without an anchor. Fact
     /// ids share the one anchor namespace (PROP-035 §5), so both grains appear;

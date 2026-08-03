@@ -35,12 +35,15 @@
 
 specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-009#artifacts");
 
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 
 use serde::Serialize;
 use specmark::spec;
-use vibe_spec::{FileResolver, FsSectionSource, expand_embeds};
+use vibe_spec::{
+    Directives, FileResolver, FsSectionSource, RenameEntry, expand_embeds, qualify_contribution,
+};
 
 use crate::WorkspaceError;
 use crate::boot::EffectiveBoot;
@@ -105,6 +108,29 @@ const INDEX_HEADER: &str = "\
 # entry: an INCLUDE resolved at boot — when it also carries
 # `when = \"os:<name>\"`, read the file only if the session's operating
 # system is <name> (windows / macos / linux), and skip it otherwise.
+
+";
+
+/// The resolution preamble (B-011 §5.1, owner-priority placement 2026-08-04) —
+/// the first lines of the lane, after the three header comments. Boss-authored
+/// text, emitted verbatim; do not reword. A session re-reads `STATIC.md` at
+/// every start and after compaction, so placing the rules here is what makes
+/// them un-forgettable (design §5.1).
+const RESOLUTION_PREAMBLE: &str = "\
+<!-- RESOLUTION RULES — read these five lines before anything else:
+  1. Labels in this file are qualified: <origin-slug>--<original>. The origin
+     is named by the provenance comment above each block; the original short
+     label is the tail after the last `--`.
+  2. A short label you cannot find here → check the RENAMED ANCHORS table
+     below for its qualified heirs; never guess among look-alikes.
+  3. Full spec:// addresses resolve against package SOURCES under vibedeps/,
+     never against this generated file. This file is a cache, not a target.
+  4. `#use spec://… as X` binds a file-local alias; `@!X` is a mandatory read
+     of X's target (same rules as @spec://…). In this compiled file every @!X
+     is already rewritten to its full address.
+  5. An ambiguous or unresolvable short reference is an ERROR to surface with
+     candidates — never silently pick one.
+-->
 
 ";
 
@@ -225,7 +251,13 @@ pub fn render_static(
     if entries.is_empty() {
         return Ok(None);
     }
-    let mut out = String::from(STATIC_HEADER);
+    // B-011 (PROP-035 §8 phase 5 / §11): the lane is built in two parts — the
+    // concatenated, origin-qualified contribution bodies, and the tombstone of
+    // every rename the qualify phase made. The header (with its resolution
+    // preamble) leads; the tombstone sits directly under it (START-placement,
+    // design §5.1/§6.1) when at least one rename happened; then the bodies.
+    let mut bodies = String::new();
+    let mut tombstone: Vec<(String, RenameEntry)> = Vec::new();
     for entry in entries {
         if entry.use_ref {
             // A soft-hoist reference (PROP-038 §2.5): this package's text lives
@@ -233,43 +265,122 @@ pub fn render_static(
             // graph edge survives locally and the read-set dedups the read —
             // the agent knows the package is part of this zone without a
             // duplicated copy.
-            out.push_str(&format!(
+            bodies.push_str(&format!(
                 "<!-- vibe:hoisted {} — text in the root STATIC.md -->\n#use spec://{}\n\n",
                 entry.origin, entry.origin
             ));
             continue;
         }
         // An HTML-comment provenance marker — invisible in rendered markdown,
-        // so the concatenated content stays verbatim (or marks the compiled
-        // closure's origin, for a `normal` package).
-        out.push_str(&format!(
+        // names the origin the block's labels are qualified under (B-011 §3).
+        bodies.push_str(&format!(
             "<!-- vibe:static {} — {} -->\n\n",
             entry.origin, entry.path
         ));
         // PROP-035 §8: a `normal` package's static contribution is the
         // `#use` / `#source`-resolved, tree-shaken closure reachable from its
-        // contract — compiled, not concatenated. A `simple` package is carried
+        // contract — compiled (with `@!X` already rewritten to its full
+        // address, §7.4), not concatenated. A `simple` package is carried
         // verbatim (its over-load the author's problem, PROP-035 §3).
         let body = if entry.format.is_normal() {
             compile_normal_entry(entry, workspace_root)?
         } else {
             let abs = workspace_root.join(&entry.path);
-            fs::read_to_string(&abs).map_err(|e| io_err(&abs, e))?
+            let raw = fs::read_to_string(&abs).map_err(|e| io_err(&abs, e))?;
+            // R3 (B-011): `#use … as` / `@!` are `normal`-format machinery; a
+            // `simple` contribution is carried whole and cannot bind or resolve
+            // aliases. Detected on the verbatim text (before any embed), so an
+            // embed-spliced `@!` from another document is not mis-attributed.
+            if let Some(reason) = simple_alias_machinery(&raw) {
+                return Err(WorkspaceError::InlineCompile {
+                    reason: format!("the simple package `{}` {reason}", entry.origin),
+                });
+            }
+            // R1 (B-011): expand this entry's `#embed`s to a fixed point BEFORE
+            // qualifying, so a label an embed splices in is qualified under the
+            // entry's origin and tombstoned with the rest. Per-entry, not
+            // whole-lane — `#embed` targets `spec://` sources under vibedeps/,
+            // never a sibling lane entry, so the result is identical and each
+            // entry's final body is self-contained for the qualify pass.
+            if has_embed_directive(&raw) {
+                let source =
+                    FsSectionSource::new(FileResolver::new(workspace_root, HOST_NAMESPACE));
+                expand_embeds(&raw, &source).map_err(|e| WorkspaceError::InlineCompile {
+                    reason: e.to_string(),
+                })?
+            } else {
+                raw
+            }
         };
-        out.push_str(body.trim_end());
-        out.push_str("\n\n");
+        // B-011 §3 (PROP-035 §8 phase 5): qualify every label this entry
+        // defines under its origin slug, and rewrite its intra-document
+        // `(#x)` links to match — a pure function of (body, origin), so the
+        // lane is collision-free by construction and append-only.
+        let (qualified, renames) = qualify_contribution(&body, &entry.origin);
+        for rename in renames {
+            tombstone.push((entry.origin.clone(), rename));
+        }
+        bodies.push_str(qualified.trim_end());
+        bodies.push_str("\n\n");
     }
-    // Spec-compiler (PROP-035 §8): expand any `#embed` the static lane carries
-    // (§7.1). Guarded — a lane with no directives is byte-identical, so
-    // vibevm's own boot stays untouched until it adopts the format (§15).
-    // `#use` / `#source` are mode-dependent and left to the structural loader.
-    if has_embed_directive(&out) {
-        let source = FsSectionSource::new(FileResolver::new(workspace_root, HOST_NAMESPACE));
-        out = expand_embeds(&out, &source).map_err(|e| WorkspaceError::InlineCompile {
-            reason: e.to_string(),
-        })?;
+    let mut out = String::from(STATIC_HEADER);
+    out.push_str(RESOLUTION_PREAMBLE);
+    if !tombstone.is_empty() {
+        out.push_str(&render_tombstone(&tombstone));
     }
+    out.push_str(&bodies);
     Ok(Some(out))
+}
+
+/// R3 (B-011): detect alias machinery a `simple`-format contribution must not
+/// carry — a `#use … as <Alias>` clause (the file's alias table is non-empty)
+/// or an `@!<Alias>` use with no matching declaration (the scanner reports it
+/// as an undeclared alias). Returns the defect description when present.
+fn simple_alias_machinery(raw: &str) -> Option<String> {
+    let d = Directives::parse(raw);
+    let has_as_clause = !d.aliases.is_empty();
+    let has_at_bang = d
+        .errors
+        .iter()
+        .any(|e| e.message.contains("undeclared alias"));
+    if has_as_clause || has_at_bang {
+        Some(
+            "carries alias machinery (`#use … as` / `@!`) that is \
+             `normal`-format only (PROP-035 §7.2); convert the package to \
+             `format = \"normal\"` or drop the alias"
+                .to_string(),
+        )
+    } else {
+        None
+    }
+}
+
+/// The RENAMED ANCHORS tombstone (B-011 §6.1 layer 2 / PROP-035 §11
+/// `##STATIC-TOMBSTONE-TABLE`) — a single HTML comment (invisible in render,
+/// no new anchors minted) with one line per retired short name, each grouped
+/// with its qualified heirs and their origins. Deterministic order: short name
+/// ascending, then origin ascending within a group.
+fn render_tombstone(renames: &[(String, RenameEntry)]) -> String {
+    // Group by the original short name; within a group keep every
+    // (origin, qualified) heir.
+    let mut groups: BTreeMap<String, Vec<(String, String)>> = BTreeMap::new();
+    for (origin, r) in renames {
+        groups
+            .entry(r.original.clone())
+            .or_default()
+            .push((origin.clone(), r.qualified.clone()));
+    }
+    let mut out = String::from("<!-- RENAMED ANCHORS (short → qualified heirs):\n");
+    for (short, mut heirs) in groups {
+        heirs.sort();
+        let listed: Vec<String> = heirs
+            .iter()
+            .map(|(origin, qualified)| format!("{qualified} ({origin})"))
+            .collect();
+        out.push_str(&format!("  {short} → {}\n", listed.join(", ")));
+    }
+    out.push_str("-->\n\n");
+    out
 }
 
 /// Whether the static lane carries an `#embed` directive (a line starting with

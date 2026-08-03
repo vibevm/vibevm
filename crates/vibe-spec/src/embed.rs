@@ -116,9 +116,32 @@ impl SectionSource for FsSectionSource {
             .map_err(|e| e.to_string())?;
         let src = fs::read_to_string(&file).map_err(|e| e.to_string())?;
         let tree = DocTree::parse(&src);
-        let node = tree
-            .resolve_path(&addr.anchor)
-            .ok_or_else(|| format!("anchor not found in {}", file.display()))?;
+        let node = match tree.resolve_path(&addr.anchor) {
+            Some(node) => node,
+            None => {
+                // B-011 §6.1 layer 3: a missed short anchor answers with its
+                // qualified heirs, never emptiness. The flat segment being
+                // resolved is the lookup's short name; the tree's
+                // `<origin-slug>--<short>` tails are the rename's heirs.
+                let candidates = addr
+                    .anchor
+                    .first()
+                    .map(|short| tree.qualified_candidates(short.as_str()))
+                    .filter(|c| !c.is_empty())
+                    .map(|c| {
+                        format!(
+                            " (qualified candidates for `{}`: {})",
+                            addr.anchor.first().unwrap(),
+                            c.join(", ")
+                        )
+                    })
+                    .unwrap_or_default();
+                return Err(format!(
+                    "anchor not found in {}{candidates}",
+                    file.display()
+                ));
+            }
+        };
         Ok(tree.text(node))
     }
 }

@@ -10,6 +10,7 @@ use crate::boot::{BootBand, BootEntry};
 use specmark::verifies;
 use tempfile::TempDir;
 use vibe_core::manifest::{LinkType, PackageFormat, TargetOs, WhenCondition};
+use vibe_spec::{DocTree, FileResolver, FsSectionSource, SectionSource, SpecAddress};
 
 #[cfg(test)]
 fn entry(path: &str, link: LinkType, origin: &str) -> BootEntry {
@@ -302,10 +303,21 @@ fn render_static_compiles_a_normal_package_closure() {
         prelude < contract_body,
         "dependency must precede its user:\n{text}"
     );
-    // No directive survives the compile (§7.1 / §8).
-    assert!(!text.contains("#use "), "{text}");
-    assert!(!text.contains("#source "), "{text}");
-    assert!(!text.contains("#embed "), "{text}");
+    // No directive survives the compile (§7.1 / §8). Asserted line-wise so the
+    // resolution preamble's documentation of `#use … as` (rule 4) is not
+    // mistaken for a surviving directive line.
+    assert!(
+        !text.lines().any(|l| l.trim_start().starts_with("#use ")),
+        "{text}"
+    );
+    assert!(
+        !text.lines().any(|l| l.trim_start().starts_with("#source ")),
+        "{text}"
+    );
+    assert!(
+        !text.lines().any(|l| l.trim_start().starts_with("#embed ")),
+        "{text}"
+    );
 }
 
 #[test]
@@ -337,7 +349,7 @@ fn render_static_normal_differs_from_simple_on_the_same_file() {
     // `simple` carries the file verbatim: the directive is unresolved, the
     // source is not merged, and the dependency is not pulled.
     assert!(
-        simple.contains("#use "),
+        simple.lines().any(|l| l.trim_start().starts_with("#use ")),
         "simple keeps the directive:\n{simple}"
     );
     assert!(
@@ -348,9 +360,11 @@ fn render_static_normal_differs_from_simple_on_the_same_file() {
         !simple.contains("PRELUDE_BODY"),
         "simple must not pull the dep"
     );
-    // `normal` resolves the closure: directive gone, source merged, dep pulled.
+    // `normal` resolves the closure: directive gone (line-wise — the
+    // preamble documents `#use`, so a literal `.contains` would false-pass),
+    // source merged, dep pulled.
     assert!(
-        !normal.contains("#use "),
+        !normal.lines().any(|l| l.trim_start().starts_with("#use ")),
         "normal must resolve the directive:\n{normal}"
     );
     assert!(normal.contains("SOURCE_BODY"));
@@ -371,6 +385,202 @@ fn render_static_errors_on_a_missing_contribution() {
     )]);
     let err = render_static(&b, ws.path()).unwrap_err();
     assert!(matches!(err, WorkspaceError::Io { .. }), "{err}");
+}
+
+// ----- B-011 (W3): qualify-on-splice, preamble, tombstone, @!X, R3, R4 -----
+
+/// Write a `simple` boot file into a fresh `vibedeps/<slot>/<ver>/boot.md`.
+#[cfg(test)]
+fn write_simple_boot(ws: &Path, slot: &str, body: &str) -> String {
+    let p = ws.join(format!("vibedeps/{slot}/1.0.0/boot.md"));
+    fs::create_dir_all(p.parent().unwrap()).unwrap();
+    fs::write(&p, body).unwrap();
+    format!("vibedeps/{slot}/1.0.0/boot.md")
+}
+
+#[test]
+fn golden_splice_qualifies_colliding_labels_and_emits_preamble_and_tombstone() {
+    // The B-011 golden (acceptance 1): two simple contributions whose
+    // `{#root}` and `##FACT` labels collide. After qualify-on-splice every
+    // label is unique by construction, the resolution preamble leads, and the
+    // tombstone names each retired short name with its qualified heirs.
+    let ws = TempDir::new().unwrap();
+    let alpha = write_simple_boot(
+        ws.path(),
+        "flow-alpha",
+        "# Alpha {#root}\n\n##FACT the alpha fact.\n",
+    );
+    let beta = write_simple_boot(
+        ws.path(),
+        "flow-beta",
+        "# Beta {#root}\n\n##FACT the beta fact.\n",
+    );
+    let b = boot(vec![
+        entry(&alpha, LinkType::Static, "org.demo/alpha"),
+        entry(&beta, LinkType::Static, "org.demo/beta"),
+    ]);
+    let text = render_static(&b, ws.path()).unwrap().unwrap();
+
+    // (1) Zero duplicate anchors over the colliding splice — the gate.
+    let dups = DocTree::parse(&text).duplicate_anchors().to_vec();
+    assert!(
+        dups.is_empty(),
+        "colliding labels must be qualified apart:\n{text}"
+    );
+    // The qualified labels are present, one origin each.
+    assert!(text.contains("{#org-demo--alpha--root}"), "{text}");
+    assert!(text.contains("{#org-demo--beta--root}"), "{text}");
+    assert!(text.contains("##org-demo--alpha--FACT"), "{text}");
+
+    // (2) The resolution preamble, verbatim (rule 1 + the header line).
+    assert!(text.contains("RESOLUTION RULES"), "{text}");
+    assert!(
+        text.contains("qualified: <origin-slug>--<original>"),
+        "{text}"
+    );
+
+    // (3) The tombstone, directly under the header: each short name with both
+    // qualified heirs and origins (FACT sorts before root in the BTreeMap).
+    assert!(
+        text.contains("RENAMED ANCHORS (short → qualified heirs):"),
+        "{text}"
+    );
+    assert!(
+        text.contains(
+            "root → org-demo--alpha--root (org.demo/alpha), org-demo--beta--root (org.demo/beta)"
+        ),
+        "{text}"
+    );
+    assert!(
+        text.contains(
+            "FACT → org-demo--alpha--FACT (org.demo/alpha), org-demo--beta--FACT (org.demo/beta)"
+        ),
+        "{text}"
+    );
+}
+
+#[test]
+fn render_static_omits_the_tombstone_when_no_label_was_renamed() {
+    // The tombstone appears only when the qualify phase renamed something. A
+    // label-free lane carries no tombstone (and the preamble still leads).
+    let ws = TempDir::new().unwrap();
+    let p = write_simple_boot(ws.path(), "flow-plain", "Plain prose, no labels at all.");
+    let b = boot(vec![entry(&p, LinkType::Static, "org.demo/plain")]);
+    let text = render_static(&b, ws.path()).unwrap().unwrap();
+    // The tombstone's specific opener is absent (the preamble documents a
+    // "RENAMED ANCHORS table" in rule 2, so a literal `contains` would lie).
+    assert!(
+        !text.contains("RENAMED ANCHORS (short → qualified heirs):"),
+        "{text}"
+    );
+    assert!(text.contains("RESOLUTION RULES"), "{text}");
+}
+
+/// Write a `normal` fixture whose contract `#use … as pre`s a prelude and
+/// references it via `@!pre` — exercising the compiled-lane `@!X` rewrite
+/// (acceptance 1's fourth sub-assertion; necessarily normal-path, since R3
+/// forbids `@!` in a `simple` contribution).
+#[cfg(test)]
+fn write_aliaser_fixture(ws: &Path) -> String {
+    let base = ws.join("vibedeps/demo-aliaser/1.0.0/spec");
+    let write = |rel: &str, body: &str| {
+        let p = base.join(rel);
+        fs::create_dir_all(p.parent().unwrap()).unwrap();
+        fs::write(&p, body).unwrap();
+    };
+    write(
+        "contract/greeting.md",
+        "# Greeting {#greet-root}\n\
+         #use spec://com.example.hello/aliaser/contract/prelude#root as pre\n\
+         Sees @!pre here.\n",
+    );
+    write("contract/prelude.md", "# Prelude {#root}\n\nPRELUDE_BODY\n");
+    "vibedeps/demo-aliaser/1.0.0/spec/contract/greeting.md".to_string()
+}
+
+#[test]
+fn render_static_rewrites_at_bang_to_the_full_address_in_a_normal_closure() {
+    let ws = TempDir::new().unwrap();
+    let contract = write_aliaser_fixture(ws.path());
+    let b = boot(vec![entry_normal(&contract, "com.example.hello/aliaser")]);
+    let text = render_static(&b, ws.path()).unwrap().unwrap();
+
+    // `@!pre` became the alias target's full address.
+    assert!(
+        text.contains("@spec://com.example.hello/aliaser/contract/prelude#root"),
+        "{text}"
+    );
+    assert!(!text.contains("@!pre"), "{text}");
+    // The aliased dependency is emitted (it is a real `#use` edge).
+    assert!(text.contains("PRELUDE_BODY"), "{text}");
+    // The alias declaration left with the stripped `#use` line; the contract's
+    // own distinct label is qualified (no collision with the prelude's `#root`).
+    assert!(
+        text.contains("{#com-example-hello--aliaser--greet-root}"),
+        "{text}"
+    );
+    assert!(
+        text.contains("{#com-example-hello--aliaser--root}"),
+        "{text}"
+    );
+    assert!(
+        DocTree::parse(&text).duplicate_anchors().is_empty(),
+        "{text}"
+    );
+}
+
+#[test]
+fn render_static_errors_when_a_simple_contribution_carries_an_as_clause() {
+    // R3: a `#use … as <Alias>` clause is `normal`-format machinery; a `simple`
+    // contribution is carried whole and cannot bind aliases.
+    let ws = TempDir::new().unwrap();
+    let p = write_simple_boot(
+        ws.path(),
+        "flow-bad",
+        "# Bad {#root}\n#use spec://org.demo/other/doc#root as dep\nbody\n",
+    );
+    let b = boot(vec![entry(&p, LinkType::Static, "org.demo/bad")]);
+    let err = render_static(&b, ws.path()).unwrap_err();
+    let WorkspaceError::InlineCompile { reason } = err else {
+        panic!("expected InlineCompile, got {err:?}");
+    };
+    assert!(reason.contains("alias machinery"), "{reason}");
+    assert!(reason.contains("PROP-035 §7.2"), "{reason}");
+}
+
+#[test]
+fn render_static_errors_when_a_simple_contribution_carries_at_bang() {
+    // R3: an `@!<Alias>` use is likewise `normal`-format machinery.
+    let ws = TempDir::new().unwrap();
+    let p = write_simple_boot(ws.path(), "flow-bad2", "# Bad {#root}\nSees @!dep here.\n");
+    let b = boot(vec![entry(&p, LinkType::Static, "org.demo/bad2")]);
+    let err = render_static(&b, ws.path()).unwrap_err();
+    let WorkspaceError::InlineCompile { reason } = err else {
+        panic!("expected InlineCompile, got {err:?}");
+    };
+    assert!(reason.contains("alias machinery"), "{reason}");
+}
+
+#[test]
+fn fs_section_source_surfaces_qualified_candidates_on_a_short_anchor_miss() {
+    // R4 (B-011 §6.1 layer 3): a missed short anchor answers with its qualified
+    // heirs, never emptiness. A document whose `#root` was qualified to
+    // `org-x--aaa--root` is queried for the short `root` — the resolver's miss
+    // error lists the heir.
+    let ws = TempDir::new().unwrap();
+    let doc = ws.path().join("spec/common/TARGET.md");
+    fs::create_dir_all(doc.parent().unwrap()).unwrap();
+    fs::write(
+        &doc,
+        "# Target {#org-x--aaa--root}\n##org-x--aaa--FACT a fact\n",
+    )
+    .unwrap();
+    let src = FsSectionSource::new(FileResolver::new(ws.path(), HOST_NAMESPACE));
+    let addr = SpecAddress::parse("spec://vibevm/common/TARGET#root").unwrap();
+    let err = src.section_text(&addr).unwrap_err();
+    assert!(err.contains("anchor not found"), "{err}");
+    assert!(err.contains("qualified candidates for `root`"), "{err}");
+    assert!(err.contains("org-x--aaa--root"), "{err}");
 }
 
 #[test]
