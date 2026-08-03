@@ -69,6 +69,23 @@ exists to drive it — a *consumer* is what is missing there.
    licence families are permissive across the board (model-knowledge,
    marked for pin-time verification).
 
+## RULED — the owner's word, 2026-08-04 {#ruled}
+
+**Verbatim:** «давай B-023 отложим до тех пор, пока не появится ещё
+какое-то правило кроме "as_cross с не локальной областью". Не нужно
+забывать об этом, это нормальное продолжение развития, просто это
+кандидат на середину или конец бэклога.»
+
+**What this supersedes:** the §counter-probe's «planned deepening +
+research prelude» proposal. The ruling keeps the deferral but sharpens
+the trigger — `as_cross` alone does NOT fire it; the checker deepening
+waits for a **second** type-requiring rule to appear, and sits at
+mid-to-late backlog priority, outside the current waves. Standing in
+full: the no-build on a tree-sitter/SWC duplicate; Python behind a
+stack decision; the honest-labels re-annotation now names this ruling
+as the deferral it records (executed with the two F-146 anchors'
+re-judgement, verdict-first, when that pass runs).
+
 ## The owner's counter-probe (2026-08-04) — the depth verdict re-judged {#counter-probe}
 
 **The probe, near-verbatim:** «А ты уверен вообще, что это приемлемая

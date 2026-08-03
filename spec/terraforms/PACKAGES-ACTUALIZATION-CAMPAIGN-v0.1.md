@@ -4844,7 +4844,11 @@ aspirational — and every one is still live for the phases that remain.
   «T-sem» TS frontend never calls the type checker — parser-depth in
   substance) — the owner **counter-probed the depth verdict** («а ты
   уверен, что это приемлемая глубина?»), re-opening T2's passive
-  trigger for re-judgement. **Transport first-blood:** one of two
+  trigger for re-judgement, then **ruled 2026-08-04**: the checker
+  deepening is deferred until a SECOND type-requiring rule appears
+  (`as_cross` alone does not fire it), mid-to-late backlog priority,
+  «не нужно забывать об этом» (verbatim in B-023's disposition).
+  **Transport first-blood:** one of two
   workers skipped the mandated WORKER-REPORT while echoing TASK-DONE;
   one `-c` rework fixed it; two rework rules paid for and recorded in
   the law's `#fact-first-live-fanout`. @spec/done
