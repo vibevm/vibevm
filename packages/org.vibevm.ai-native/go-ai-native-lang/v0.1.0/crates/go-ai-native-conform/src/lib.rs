@@ -81,12 +81,35 @@ fn extract(root: &Path, config: &Config) -> Result<Vec<conform_core::SourceFacts
     Ok(facts)
 }
 
+/// Announce the Go coverage posture after extraction — the sharper
+/// empty-scope guard (a configured `[go]` scope that enumerated zero
+/// packages warns loudly instead of passing silently) and the
+/// vacuous-gate warning (a gated package the scan attributed no sources
+/// to). Printed in both `run_check` and `run_freeze`, exactly where
+/// Rust's `warn_vacuously_gated` sits; the count summary lives in
+/// `run_check` alone (parity with the Rust driver).
+fn announce_go_coverage(root: &Path, config: &Config) {
+    let units = conform_core::go_units(root, &config.go);
+    for w in conform_core::go_scope_warnings(&units, &config.go) {
+        eprintln!("{w}");
+    }
+    for pkg in conform_core::go_vacuously_gated(&config.go.gated, &units) {
+        eprintln!(
+            "go-ai-native-conform: WARNING — gated package `{pkg}` matched no scanned sources; \
+             its gates are green by vacuity. Point `roots` in conform.toml at the package dir \
+             (a literal entry) or its parent (`<dir>/*`), or drop it from `[go] gated`."
+        );
+    }
+}
+
 /// Run the Go gate at `root` against `baseline_rel`; SARIF lands at
 /// `target/conform/report-go.sarif`; any new finding fails.
 pub fn run_check(root: &Path, baseline_rel: &str, scope: Option<&str>) -> Result<()> {
     use conform_core::{baseline, check, count_by_rule, sarif};
     let config = load_config(root)?;
+    config.validate_go_against_tree(root)?;
     let facts = extract(root, &config)?;
+    announce_go_coverage(root, &config);
     let owned = build_rules(&config);
     let rule_refs: Vec<&dyn Rule> = owned.iter().map(|r| r.as_ref()).collect();
 
@@ -122,6 +145,11 @@ pub fn run_check(root: &Path, baseline_rel: &str, scope: Option<&str>) -> Result
             .unwrap_or(&sarif_path)
             .display()
     );
+    eprintln!(
+        "go-ai-native-conform: {} package(s) gated, {} exempt — see conform.toml for the why of each.",
+        config.go.gated.len(),
+        config.go.exempt.len(),
+    );
     if !new.is_empty() {
         bail!(
             "go-ai-native-conform: {} new finding(s) against the baseline",
@@ -137,7 +165,9 @@ pub fn run_check(root: &Path, baseline_rel: &str, scope: Option<&str>) -> Result
 pub fn run_freeze(root: &Path, baseline_rel: &str) -> Result<()> {
     use conform_core::{check, count_by_rule};
     let config = load_config(root)?;
+    config.validate_go_against_tree(root)?;
     let facts = extract(root, &config)?;
+    announce_go_coverage(root, &config);
     let owned = build_rules(&config);
     let rule_refs: Vec<&dyn Rule> = owned.iter().map(|r| r.as_ref()).collect();
     let findings = check(&rule_refs, &facts, None);
@@ -157,4 +187,50 @@ pub fn run_freeze(root: &Path, baseline_rel: &str) -> Result<()> {
         baseline_rel
     );
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The coverage invariant (B-034) refuses an on-disk Go package that
+    /// is neither gated nor exempt — the silent-green failure mode the
+    /// gate now closes. Pure config + tree: no extraction, so no go
+    /// toolchain floor (the `tests/gate.rs` pair carries the end-to-end
+    /// half over the committed fixtures).
+    #[test]
+    fn validate_refuses_an_unclassified_go_package() {
+        let tmp = tempfile::tempdir().expect("tempdir");
+        let root = tmp.path();
+        std::fs::create_dir_all(root.join("internal/cells/hello")).expect("mkdir");
+        std::fs::write(
+            root.join("internal/cells/hello/hello.go"),
+            "// Package hello is the demo cell.\npackage hello\n",
+        )
+        .expect("go file");
+        // roots = ["."], no gated/exempt → the hello package is on disk
+        // but unclassified.
+        std::fs::write(root.join("conform.toml"), "[go]\nroots = [\".\"]\n").expect("conform");
+        let cfg = Config::load(&root.join("conform.toml")).expect("parses");
+        let err = cfg.validate_go_against_tree(root).expect_err("must refuse");
+        let msg = err.to_string();
+        assert!(
+            msg.contains("internal/cells/hello"),
+            "must name the unclassified package: {msg}"
+        );
+        assert!(
+            msg.contains("package") && msg.contains("neither gated nor exempt"),
+            "must speak the Go noun and the refusal class: {msg}"
+        );
+
+        // Classifying the package (gated OR exempt) clears the refusal.
+        std::fs::write(
+            root.join("conform.toml"),
+            "[go]\nroots = [\".\"]\ngated = [\"internal/cells/hello\"]\n",
+        )
+        .expect("conform");
+        let cfg = Config::load(&root.join("conform.toml")).expect("parses");
+        cfg.validate_go_against_tree(root)
+            .expect("classified → green");
+    }
 }

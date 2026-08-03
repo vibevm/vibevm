@@ -6,12 +6,22 @@
 # import paths, and the file-length budget. Rust-side keys stay at
 # their defaults until Rust code joins the tree.
 
-roots = []
 max_file_lines = 600
 
 [go]
 roots = ["."]
 exclude_substrings = ["/testdata/", "/vendor/"]
+# The demo is fully adopted: every on-disk package is gated (none exempt).
+# The set is the engine's `go_units` over `roots = ["."]` — the six
+# package directories carrying `.go` sources under the fixture root.
+gated = [
+    "cmd/reconcile",
+    "internal/cells/batchplanner",
+    "internal/cells/naiveplanner",
+    "internal/registry",
+    "internal/seams",
+    "internal/sim",
+]
 cells_dir = "internal/cells"
 seams_pkg = "internal/seams"
 registry_pkg = "internal/registry"

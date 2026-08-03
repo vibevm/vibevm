@@ -6,11 +6,12 @@
 # import specifiers, and the file-length budget. Rust-side keys stay
 # at their defaults until Rust code joins the tree.
 
-roots = []
 max_file_lines = 600
 
 [typescript]
 roots = ["src"]
 exclude_substrings = ["/fixtures/"]
+# The demo is fully adopted: every on-disk cell is gated (none exempt).
+gated = ["farewell", "greeting"]
 cells_dir = "src/cells"
 seam = "index"
