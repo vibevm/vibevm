@@ -9,8 +9,10 @@
 //! `PROP-042-example-thing.md`.
 //!
 //! Version / slot selection is deliberately thin here: an explicit `@version`
-//! picks the slot version, and absent one a single installed version is taken.
-//! A lockfile-backed selection (kind + version from `vibe.lock`) is the layer
+//! picks the slot version, and an absent one resolves to the **freshest**
+//! installed version (semver-newest; the owner's optional-version rule,
+//! B-028 2026-08-04) — no pin is required when several are installed. A
+//! lockfile-backed selection (kind + version from `vibe.lock`) is the layer
 //! above; this resolver only needs the workspace root and the project's self
 //! coordinate.
 //!
@@ -81,8 +83,6 @@ pub enum ResolveError {
     },
     #[error("no installed vibedeps slot for package `{0}`")]
     PackageSlotNotFound(String),
-    #[error("package `{0}` has several installed versions; address must pin `@version`")]
-    AmbiguousVersion(String),
     #[error("document `{doc_path}` not found under `{base}`")]
     DocNotFound { doc_path: String, base: String },
     #[error("document id `{id}` is ambiguous ({count} files match) under `{dir}`")]
@@ -171,7 +171,12 @@ impl FileResolver {
 
     /// Find a package's materialised slot: `vibedeps/<kind>-<name>/<version>`.
     /// The address carries no `kind`, so the slot is matched by the `-<name>`
-    /// suffix (kind + name is unique).
+    /// suffix (kind + name is unique). An explicit `@version` names the slot
+    /// version; an absent one resolves to the **freshest installed** version
+    /// (semver-newest; the owner's optional-version rule, B-028 2026-08-04). A
+    /// directory whose name does not look like a version (it does not start
+    /// with a digit) is ignored as a candidate — if none remain, the slot is
+    /// treated as not installed. Lockfile-backed selection is the layer above.
     fn package_slot(&self, name: &str, version: Option<&str>) -> Result<PathBuf, ResolveError> {
         let vibedeps = self.ws_root.join("vibedeps");
         let suffix = format!("-{name}");
@@ -188,14 +193,26 @@ impl FileResolver {
         match version {
             Some(v) => Ok(slot_dir.join(v)),
             None => {
-                let mut versions: Vec<PathBuf> = read_dir_or_empty(&slot_dir)
-                    .map(|e| e.path())
-                    .filter(|p| p.is_dir())
+                // The freshest installed version: collect names that look like
+                // versions (a version directory starts with its major number —
+                // a stray non-version folder is not a candidate, B-028 У1) and
+                // take the semver-newest. Zero candidates ⇒ not installed.
+                let candidates: Vec<String> = read_dir_or_empty(&slot_dir)
+                    .filter_map(|e| {
+                        let p = e.path();
+                        if !p.is_dir() {
+                            return None;
+                        }
+                        let n = p.file_name()?.to_str()?;
+                        n.chars()
+                            .next()
+                            .is_some_and(|c| c.is_ascii_digit())
+                            .then_some(n.to_string())
+                    })
                     .collect();
-                match versions.len() {
-                    0 => Err(ResolveError::PackageSlotNotFound(name.to_string())),
-                    1 => Ok(versions.pop().unwrap()),
-                    _ => Err(ResolveError::AmbiguousVersion(name.to_string())),
+                match version_order::newest(candidates.iter().map(String::as_str)) {
+                    Some(v) => Ok(slot_dir.join(v)),
+                    None => Err(ResolveError::PackageSlotNotFound(name.to_string())),
                 }
             }
         }
@@ -267,6 +284,10 @@ fn is_id_stem(s: &str) -> bool {
 fn read_dir_or_empty(dir: &Path) -> impl Iterator<Item = fs::DirEntry> {
     fs::read_dir(dir).into_iter().flatten().flatten()
 }
+
+/// Version ordering for the freshest-installed rule (B-028): `newest` selects
+/// the semver-newest installed version for an unpinned address.
+mod version_order;
 
 #[cfg(test)]
 mod tests {
@@ -409,5 +430,94 @@ mod tests {
             Path::new("PROP-042-example.txt"),
             "PROP-042"
         ));
+    }
+
+    // ----- B-028: an absent version resolves to the freshest (F1–F6) --------
+
+    /// Build a vibedeps slot `<kind>-<name>` holding the given installed
+    /// versions, each with `spec/API.md` (the doc every F-test resolves).
+    /// Returns the slot path so a caller may add non-version neighbours.
+    fn make_versions(ws: &Path, kind: &str, name: &str, versions: &[&str]) -> PathBuf {
+        let slot = ws.join("vibedeps").join(format!("{kind}-{name}"));
+        for v in versions {
+            let dir = slot.join(v).join("spec");
+            fs::create_dir_all(&dir).unwrap();
+            fs::write(dir.join("API.md"), "# API\n").unwrap();
+        }
+        slot
+    }
+
+    #[test]
+    fn f1_a_single_installed_version_is_taken() {
+        // F1: one installed version — an absent `@version` takes it (as before).
+        let ws = tempfile::TempDir::new().unwrap();
+        make_versions(ws.path(), "flow", "widget", &["1.0.0"]);
+        let r = FileResolver::new(ws.path(), host_coord());
+        let addr = SpecAddress::parse("spec://org.demo/widget/API").unwrap();
+        let file = r.resolve_file(&addr).unwrap();
+        assert!(file.ends_with("1.0.0/spec/API.md"), "{file:?}");
+    }
+
+    #[test]
+    fn f2_two_versions_compare_numerically_not_lexicographically() {
+        // F2: `0.9.0` and `0.10.0` — the freshest is `0.10.0` (numeric segment
+        // compare, not lexicographic).
+        let ws = tempfile::TempDir::new().unwrap();
+        make_versions(ws.path(), "flow", "widget", &["0.9.0", "0.10.0"]);
+        let r = FileResolver::new(ws.path(), host_coord());
+        let addr = SpecAddress::parse("spec://org.demo/widget/API").unwrap();
+        let file = r.resolve_file(&addr).unwrap();
+        assert!(file.ends_with("0.10.0/spec/API.md"), "{file:?}");
+    }
+
+    #[test]
+    fn f3_a_release_beats_its_pre_release() {
+        // F3: `1.0.0` and `1.0.0-alpha` — the release `1.0.0` is fresher.
+        let ws = tempfile::TempDir::new().unwrap();
+        make_versions(ws.path(), "flow", "widget", &["1.0.0", "1.0.0-alpha"]);
+        let r = FileResolver::new(ws.path(), host_coord());
+        let addr = SpecAddress::parse("spec://org.demo/widget/API").unwrap();
+        let file = r.resolve_file(&addr).unwrap();
+        assert!(file.ends_with("1.0.0/spec/API.md"), "{file:?}");
+    }
+
+    #[test]
+    fn f4_an_explicit_version_pins_even_the_non_newest() {
+        // F4: an explicit `@version` names the exact slot — including one that
+        // is NOT the freshest (pinning `1.0.0` under a newer `2.0.0`).
+        let ws = tempfile::TempDir::new().unwrap();
+        make_versions(ws.path(), "flow", "widget", &["1.0.0", "2.0.0"]);
+        let r = FileResolver::new(ws.path(), host_coord());
+        let addr = SpecAddress::parse("spec://org.demo/widget@1.0.0/API").unwrap();
+        let file = r.resolve_file(&addr).unwrap();
+        assert!(file.ends_with("1.0.0/spec/API.md"), "{file:?}");
+    }
+
+    #[test]
+    fn f5_no_version_directories_is_slot_not_found() {
+        // F5: a slot with no version directories → PackageSlotNotFound. The slot
+        // holds only a non-version folder (`notes`, B-028 У1): such a directory
+        // is not a version candidate, so the candidate set is empty.
+        let ws = tempfile::TempDir::new().unwrap();
+        let slot = make_versions(ws.path(), "flow", "widget", &[]);
+        fs::create_dir_all(slot.join("notes")).unwrap();
+        let r = FileResolver::new(ws.path(), host_coord());
+        let addr = SpecAddress::parse("spec://org.demo/widget/API").unwrap();
+        let err = r.resolve_file(&addr).unwrap_err();
+        assert!(
+            matches!(err, ResolveError::PackageSlotNotFound(_)),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn f6_more_segments_at_equal_prefix_is_newer() {
+        // F6: `1.2` and `1.2.1` — the freshest is `1.2.1` (more segments).
+        let ws = tempfile::TempDir::new().unwrap();
+        make_versions(ws.path(), "flow", "widget", &["1.2", "1.2.1"]);
+        let r = FileResolver::new(ws.path(), host_coord());
+        let addr = SpecAddress::parse("spec://org.demo/widget/API").unwrap();
+        let file = r.resolve_file(&addr).unwrap();
+        assert!(file.ends_with("1.2.1/spec/API.md"), "{file:?}");
     }
 }
