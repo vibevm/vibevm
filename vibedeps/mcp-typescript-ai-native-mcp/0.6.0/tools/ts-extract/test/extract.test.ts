@@ -61,7 +61,7 @@ const seamRecords = runExtract(SEAM);
 const seamByFile = new Map(seamRecords.map((r) => [r.file, r]));
 
 test("one protocol-1 record per source file, sorted", () => {
-  assert.equal(records.length, 4);
+  assert.equal(records.length, 5);
   assert.ok(records.every((r) => r.protocol === 1));
   assert.deepEqual(
     records.map((r) => r.file),
@@ -69,6 +69,7 @@ test("one protocol-1 record per source file, sorted", () => {
       "src/cells/greet/index.ts",
       "src/cells/greet/internal.ts",
       "src/cells/parse/logic.ts",
+      "src/invariant.ts",
       "src/rubble.ts",
     ],
   );
@@ -197,6 +198,15 @@ test("file metrics are always present, even for rubble", () => {
     const metrics = record.facts.filter((f) => f.fact === "file_metrics");
     assert.equal(metrics.length, 1, record.file);
   }
+});
+
+test("an invariant-marker comment surfaces as invariant_comment (R3-003)", () => {
+  const inv = byFile.get("src/invariant.ts");
+  assert.ok(inv, JSON.stringify(records.map((r) => r.file)));
+  const comments = inv.facts.filter((f) => f.fact === "invariant_comment");
+  assert.equal(comments.length, 1, JSON.stringify(inv.facts));
+  assert.equal(comments[0].marker, "SAFETY:");
+  assert.equal(comments[0].line, 75);
 });
 
 test("a syntactically hopeless file degrades to zero facts, not an error (B5)", () => {

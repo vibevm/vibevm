@@ -20,12 +20,14 @@ fn dirty_fixture_yields_the_five_findings_then_freeze_ratchets_them() {
     let root = fixture("dirty");
     let baseline = "target/conform/test-baseline.json";
 
-    // Fresh gate: five findings (1 isolation + 4 unsafe), non-zero.
+    // Fresh gate: six findings (1 isolation + 4 unsafe + 1
+    // invariant-comment-position on src/invariant.ts, a `// SAFETY:`
+    // comment buried in the middle third of the 150-line exhibit file).
     let _ = std::fs::remove_file(root.join(baseline));
     let err = typescript_ai_native_conform::run_check(&root, baseline, None)
         .expect_err("dirty tree must fail the gate");
     assert!(
-        err.to_string().contains("5 new finding(s)"),
+        err.to_string().contains("6 new finding(s)"),
         "unexpected: {err}"
     );
 

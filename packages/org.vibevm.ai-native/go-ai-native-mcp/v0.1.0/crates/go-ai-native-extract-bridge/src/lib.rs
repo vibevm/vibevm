@@ -102,6 +102,15 @@ pub enum RawFact {
     FileMetrics {
         lines: u32,
     },
+    /// A comment carrying an invariant marker (`SAFETY:` / `INVARIANT:` /
+    /// `PANICS` / …), normalised to the config vocabulary's spelling.
+    /// `in_test` is file-grain, stamped in [`conform_facts`] from the
+    /// record — same posture as `GoUnsafe`. Consumed by
+    /// `invariant-comment-position`.
+    InvariantComment {
+        marker: String,
+        line: u32,
+    },
 }
 
 /// One §8 `//spec:` directive marker. Unlike the TS twin this carries
@@ -303,6 +312,11 @@ pub fn conform_facts(record: &FileRecord) -> Vec<conform_core::Fact> {
                 has_doctest: *has_doc_example,
             },
             RawFact::FileMetrics { lines } => Fact::FileMetrics { lines: *lines },
+            RawFact::InvariantComment { marker, line } => Fact::InvariantComment {
+                marker: marker.clone(),
+                line: *line,
+                in_test: record.in_test,
+            },
         })
         .collect()
 }
@@ -434,6 +448,32 @@ mod tests {
                     if kind == "seam_error_message_no_req" && *line == 17 && !*in_test
             )),
             "the message-half kind rides the existing go_unsafe mapping: {facts:?}"
+        );
+    }
+
+    /// An `invariant_comment` record lowers into the engine's
+    /// `Fact::InvariantComment`, with the marker carried verbatim and
+    /// `in_test` stamped from the record (file-grain, like GoUnsafe).
+    #[test]
+    fn invariant_comment_record_lowers_into_engine_fact() {
+        let raw = concat!(
+            r#"{"protocol":1,"file":"src/invariant.go","#,
+            r#""in_test":false,"degraded":false,"#,
+            r#""facts":[{"fact":"invariant_comment","marker":"SAFETY:","line":75}],"markers":[]}"#,
+            "\n",
+        );
+        let records = parse_ndjson(raw).expect("parse");
+        let facts = conform_facts(&records[0]);
+        assert!(
+            facts.iter().any(|f| matches!(
+                f,
+                conform_core::Fact::InvariantComment {
+                    marker,
+                    line,
+                    in_test,
+                } if marker == "SAFETY:" && *line == 75 && !*in_test
+            )),
+            "invariant_comment lowers with the marker and a stamped in_test: {facts:?}"
         );
     }
 }

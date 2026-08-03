@@ -68,6 +68,10 @@ type fact struct {
 	// `var _ <seam> = (*<Impl>)(nil)` loud-conformance assertion.
 	Seam string `json:"seam,omitempty"`
 	Impl string `json:"impl,omitempty"`
+	// invariant_comment: the canonical invariant marker a comment leads
+	// with (`SAFETY:` / `INVARIANT:` / `PANICS` / …), normalised to the
+	// config dictionary's spelling. Feeds invariant-comment-position.
+	Marker string `json:"marker,omitempty"`
 }
 
 // marker is one //spec: directive (GUIDE-AI-NATIVE-GO §8).
@@ -266,6 +270,10 @@ func (ex *extractor) run() {
 
 	// Suppression hygiene: every comment line, whole file.
 	ex.suppressions()
+
+	// Invariant-marker comments: the same Comments walk, emitting a
+	// fact per comment whose lead carries an invariant marker.
+	ex.invariantComments()
 }
 
 // importedPackages maps the local name each import binds to its path.
@@ -801,6 +809,72 @@ func (ex *extractor) suppressions() {
 					ex.unsafeAt("reasonless_suppression", line)
 				}
 			}
+		}
+	}
+}
+
+// invariantMarkers is the fixed vocabulary the extractor emits — the
+// canonical spelling the config dictionary uses. The rule re-checks the
+// active config vocabulary, so the extractor emits generously; the three
+// colon-bearing markers are self-anchoring, the three bare markers need
+// a word boundary.
+var invariantMarkers = []string{
+	"SAFETY:", "INVARIANT:", "WARNING:", "PANICS", "MUST", "NEVER",
+}
+
+// invariantMarkerOf returns the canonical invariant marker a comment
+// leads with, or "" when it leads with none. Detection is anchored at the
+// comment's first content token (after the // / /* / * introducer and
+// whitespace): a marker not at the very start is not detected. This
+// matches the all-caps section-header convention and — deliberately —
+// avoids flagging prose uses of the bare words must / never / panics
+// mid-sentence (a comment that BEGINS with the bare word still counts).
+//
+// Recorded limit: a marker embedded mid-comment is not seen; the match is
+// case-sensitive to the config's canonical spelling, so `// safety:`
+// (lowercase) is not detected.
+func invariantMarkerOf(text string) string {
+	lead := strings.TrimLeft(text, "/*!\t ")
+	for _, m := range invariantMarkers {
+		if !strings.HasPrefix(lead, m) {
+			continue
+		}
+		if strings.HasSuffix(m, ":") {
+			return m // colon-bearing markers are self-anchoring
+		}
+		rest := lead[len(m):]
+		if rest == "" || !isWordByte(rest[0]) {
+			return m
+		}
+	}
+	return ""
+}
+
+func isWordByte(b byte) bool {
+	return b == '_' ||
+		('a' <= b && b <= 'z') ||
+		('A' <= b && b <= 'Z') ||
+		('0' <= b && b <= '9')
+}
+
+// invariantComments emits one invariant_comment fact per comment whose
+// lead carries an invariant marker (GUIDE-AI-NATIVE-GO §2, the
+// invariant-comment-position signal R3-003). The same whole-file Comments
+// walk suppressions() uses; the marker is normalised to the config
+// spelling, and in_test is file-grain (the record's flag), stamped by the
+// bridge the way every census fact is.
+func (ex *extractor) invariantComments() {
+	for _, group := range ex.file.Comments {
+		for _, c := range group.List {
+			marker := invariantMarkerOf(c.Text)
+			if marker == "" {
+				continue
+			}
+			ex.facts = append(ex.facts, fact{
+				Fact:   "invariant_comment",
+				Marker: marker,
+				Line:   ex.line(c.Pos()),
+			})
 		}
 	}
 }

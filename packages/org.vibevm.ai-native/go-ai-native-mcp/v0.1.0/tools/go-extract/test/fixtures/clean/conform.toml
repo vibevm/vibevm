@@ -4,3 +4,9 @@
 roots = ["."]
 cells_dir = "internal/cells"
 gated = ["internal/cells/greet"]
+
+# The invariant-comment-position green exhibit lives under `src/` (the
+# rule's in_src scope); the marker sits at the top, so it is not buried.
+[[go.exempt]]
+unit = "src"
+reason = "invariant-comment-position exhibit fixture, not a domain package"

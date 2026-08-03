@@ -81,3 +81,42 @@ fn passes_a_clean_gated_crate() {
     rust_ai_native_conform::run_check(dir.path(), "conform-baseline.json", None)
         .expect("a clean gated crate must pass the gate");
 }
+
+/// A 150-line `src/lib.rs` whose only non-filler line is an
+/// `// SAFETY:` invariant comment at `marker_line`; every other line is
+/// inert comment filler that leads with no marker. Arithmetic, checked by
+/// hand: at 150 lines the rule is active (≥ min 120); the middle third is
+/// lines 51..=100 (lower = 150/3 = 50, upper = 2·150/3 = 100), so a marker
+/// at line 75 is buried (red) and one at line 5 sits in the top third
+/// (line 5 ≤ 50, green).
+fn long_lib_with_safety_at(marker_line: usize) -> String {
+    assert!((1..=150).contains(&marker_line));
+    (1..=150)
+        .map(|n| {
+            if n == marker_line {
+                "// SAFETY: this invariant is positioned for the exhibit.".to_string()
+            } else {
+                format!("// inert filler line {n}")
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
+#[test]
+fn invariant_comment_buried_in_the_middle_third_fails_the_gate() {
+    let dir = fixture(&long_lib_with_safety_at(75));
+    let err = rust_ai_native_conform::run_check(dir.path(), "conform-baseline.json", None)
+        .expect_err("a mid-third invariant comment in a long src file must fail");
+    assert!(
+        err.to_string().contains("1 new finding(s)"),
+        "expected exactly the one invariant-comment-position finding: {err}"
+    );
+}
+
+#[test]
+fn invariant_comment_at_the_top_of_a_long_file_passes() {
+    let dir = fixture(&long_lib_with_safety_at(5));
+    rust_ai_native_conform::run_check(dir.path(), "conform-baseline.json", None)
+        .expect("a top-of-file invariant comment is not buried — the gate passes");
+}

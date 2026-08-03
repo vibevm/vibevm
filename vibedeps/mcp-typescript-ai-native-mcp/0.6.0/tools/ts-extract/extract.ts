@@ -106,13 +106,28 @@ interface TsSeamErrorFact {
   line: number;
 }
 
+/**
+ * A comment carrying an invariant marker (`SAFETY:` / `INVARIANT:` /
+ * `PANICS` / …), normalised to the config vocabulary's spelling. The
+ * `ts-tsc` comment stream emits one per comment whose lead carries a
+ * marker; `in_test` is file-grain, stamped by the bridge from the
+ * record — same posture as `TsSeamErrorFact`. Consumed by
+ * `invariant-comment-position` (R3-003).
+ */
+interface InvariantCommentFact {
+  fact: "invariant_comment";
+  marker: string;
+  line: number;
+}
+
 type ExtractFact =
   | UnsafeFact
   | ImportFact
   | ItemFact
   | MetricsFact
   | EnvReadFact
-  | TsSeamErrorFact;
+  | TsSeamErrorFact
+  | InvariantCommentFact;
 
 interface Marker {
   tag: string;
@@ -266,6 +281,47 @@ interface JsDocTag extends Node {
 
 function lineOf(sf: SourceFile, pos: number): number {
   return sf.getLineAndCharacterOfPosition(pos).line + 1;
+}
+
+/**
+ * The fixed invariant-marker vocabulary the extractor emits — the
+ * canonical spelling the config dictionary uses. The rule re-checks the
+ * active config vocabulary, so the extractor emits generously; the three
+ * colon-bearing markers are self-anchoring, the three bare markers need a
+ * word boundary.
+ */
+const INVARIANT_MARKERS = [
+  "SAFETY:",
+  "INVARIANT:",
+  "WARNING:",
+  "PANICS",
+  "MUST",
+  "NEVER",
+];
+
+/**
+ * The canonical invariant marker a comment leads with, or `null` when it
+ * leads with none. Detection is anchored at the comment's first content
+ * token (after the `//` / `/*` / `*` introducer and whitespace): a marker
+ * not at the very start is not detected. This matches the all-caps
+ * section-header convention and — deliberately — avoids flagging prose
+ * uses of the bare words must / never / panics mid-sentence (a comment
+ * that BEGINS with the bare word still counts).
+ *
+ * Recorded limit: a marker embedded mid-comment is not seen; the match is
+ * case-sensitive to the config's canonical spelling, so `// safety:`
+ * (lowercase) is not detected.
+ */
+function invariantMarkerOf(commentText: string): string | null {
+  const lead = commentText.replace(/^[/!*!\s]+/u, "").trimStart();
+  for (const marker of INVARIANT_MARKERS) {
+    if (!lead.startsWith(marker)) continue;
+    const bare = !marker.endsWith(":");
+    const rest = lead.slice(marker.length);
+    if (!bare) return marker;
+    if (rest.length === 0 || !/[\w]/.test(rest.charAt(0))) return marker;
+  }
+  return null;
 }
 
 /** `@ts-expect-error -- reason` / `@ts-ignore` in one comment string. */
@@ -662,6 +718,17 @@ function extractFile(ts: TsModule, absPath: string, relPath: string): FileRecord
             uri: scopeMatch[1],
             reason: null,
             symbol: null,
+            line: lineOf(sf, start),
+          });
+        }
+        // An invariant marker leading the comment feeds
+        // invariant-comment-position; the marker is normalised to the
+        // config spelling, and in_test is stamped by the bridge.
+        const invariant = invariantMarkerOf(commentText);
+        if (invariant !== null) {
+          record.facts.push({
+            fact: "invariant_comment",
+            marker: invariant,
             line: lineOf(sf, start),
           });
         }

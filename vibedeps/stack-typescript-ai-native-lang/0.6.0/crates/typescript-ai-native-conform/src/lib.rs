@@ -70,6 +70,10 @@ pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
     out.push(Box::new(rules::FileLength {
         max_lines: config.max_file_lines,
     }));
+    out.push(Box::new(rules::InvariantCommentPosition {
+        markers: config.invariant_comment_markers.clone(),
+        min_lines: config.invariant_comment_min_file_lines,
+    }));
     out
 }
 
@@ -85,7 +89,7 @@ fn extract(root: &Path, config: &Config) -> Result<Vec<conform_core::SourceFacts
     let mut log = ExtractionLog::default();
     let facts = store.extract_typescript(root, &frontend, &mut log)?;
     eprintln!(
-        "typescript-ai-native-conform: extracted {} file(s), {} cached (producer ts-tsc-1).",
+        "typescript-ai-native-conform: extracted {} file(s), {} cached (producer ts-tsc-2).",
         log.extracted.len(),
         log.cached,
     );
