@@ -40,7 +40,7 @@ fn plain() -> RescanOptions {
 }
 
 #[spec(
-    deviates = "discipline://rust-ai-native-lang/guide#bans-and-escape-hatches",
+    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
     reason = "test-support helper in a #[cfg(test)] module file: the panic IS the assertion"
 )]
 fn class_of(rows: &[RescanRow], addr: &str) -> RescanClass {

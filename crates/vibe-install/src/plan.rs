@@ -341,4 +341,4 @@ pub fn plan<S: InstallSource + ?Sized>(
 /// conditional-dependency expansion, split along the seam when the
 /// migration pushed the file past the 600-line budget.
 mod fetch;
-use fetch::{expand_conditional_deps, fetch_node, fetch_or_defer, try_in_place_incremental};
+use fetch::{expand_conditional_deps, fetch_or_defer};
