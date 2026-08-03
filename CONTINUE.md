@@ -1,185 +1,180 @@
-# CONTINUE — cold-resume snapshot (2026-08-04, wind-down №4: первый срез фазы E ПОСАЖЕН)
+# CONTINUE — cold-resume snapshot (2026-08-04, wind-down №5: волна А закрыта, мандат на Б/В/Г)
 
 **Не цитируй числа из этого файла — меряй:**
 `python campaigns/packages-2026-09/tasks/summary.py` ·
 `python campaigns/packages-2026-09/tasks/drift-registry.py`.
 `spec/WAL.md` переписан той же сессией и **суперсидит** этот снапшот.
 
-**TL;DR.** Фаза E исполнила первый срез мандата ЦЕЛИКОМ и посадила его в
-дерево: **B-011 построен и живёт** (дизайн одобрен владельцем → спеки →
-имплементация пятью claudez-срезами → хостовая склейка перегенерена:
-0 дубликатов якорей против прежних 59 предупреждений; M-LOAD взят обеими
-метками), **B-022 enum-срез посажен** (+6 вендоров), **исследования
-B-022/B-023 закрыты синтезами и рулингами владельца**. Панель зелёная
-(хвост прочитан), оба зеркала синхронны. Реестр кампании не менялся —
-пересуды якорей осознанно отложены в свои заходы. Фазы **T/F/G добром НЕ
-покрыты**; release-публикация пакетов — только после конца рефакторинга.
+**TL;DR.** Одна сессия посадила ЧЕТЫРЕ рулёные стройки, и волна А закрыта
+целиком: **B-006** (once-each полоса: покрытые юниты де-субституируются,
+git-семья эмитится однажды, −404 строки, двойные префиксы 164→0),
+**B-031** (хост — пакет **`org.vibevm.core/vibevm`**: миграция 1 893
+вхождений по 606 файлам, residue 0; `spec://vibevm/…` парсится и никогда
+не резолвится — `LegacyHostAuthority` с подсказкой; SCOPE-HOST —
+void-надгробие), **B-028** (флоу публикует ПОЛНУЮ грамматику; версия в
+адресе — опциональная фича, без версии — **свежайшая установленная**,
+рулинг дословно), плюс routine-пересуды (F-159 → B-022 done; F-146 ×2;
+F-169 целиком; близнецы F-147) и хост-фикс терраформа. **Владелец дал
+НОВЫЙ мандат: все оставшиеся волны — Б, В, Г** (§7 LOG, запись
+2026-08-04, дословно). Панель зелёная (хвост), зеркала синхронны.
 
-## ПЕРВОЕ ДЕЛО НОВОЙ СЕССИИ — продолжать мандат фазы E
+## ПЕРВОЕ ДЕЛО НОВОЙ СЕССИИ — волна Б, батч 1
 
-Добро владельца стоит (2026-08-03, §7 LOG; переспрашивать НЕ нужно).
-Внутри волны А следующий — **B-006** (двойная эмиссия git-семьи в
-приоритетной полосе), затем B-031, B-028. Параллельная линия — routine
-по уже данным рулингам:
+Добро стоит (§7 LOG «НОВЫЙ МАНДАТ», 2026-08-04) — НЕ переспрашивать.
+Порядок волн — карта `TOOLING-MAP.md` §4; развилки владельца из её §5 —
+по одной, по мере подхода (мандат на стройку ≠ мандат на его развилки).
 
-1. **B-006.** Дубль теперь ВИДЕН механически: tombstone склейки несёт
-   same-origin повторы (вложенный STATIC пакета git-practices против
-   прямых вкладов его членов). Направление — soft-hoist/`use_ref`
-   механика (PROP-038 §2.5 уже есть в render_static) либо дедуп на
-   уровне состава лейна; если решение меняет контракт PROP-009/PROP-035 —
-   дизайн-скетч владельцу ДО имплементации (формат подачи из WAL).
-   Связанный follow-up W3: per-node qualify кросс-origin normal-closures
-   («deferred to the B-006 follow-up» — отчёт W3 и meta).
-2. **Пересуды F-159 (B-022) — рулинг есть, исполнять.** Interim-аннотации
-   в LEDGER-INTENT-v0.1.md по вердикт-таблице синтеза
-   (`e1-b022-ledger-feasibility.md`): M-A слой 2 → B-020; M-B → B-020+M-D;
-   M-C две метрики → B-020; M-D → B-015-нотис. Затем пересуд пяти якорей:
-   `vibe progress mirror --campaign campaigns/packages-2026-09` →
-   re-judge → `merge-verdicts.py` → seal (НЕ сцеплять шаги).
-3. **Пересуды F-146 (B-023) — рулинг есть, исполнять.** Пере-аннотации
-   таблицы §2 ENGINE-CONFORM: честная глубина ts-tsc (парсерная половина
-   Compiler API) + деферрал дословно («до второго типо-требующего
-   правила», рулинг 2026-08-04 в disposition B-023). Тот же seal-путь для
-   двух якорей.
-4. **Хост-фикс** `terraform/REPORT.md:41` (ложная фраза «cost field is
-   plumbed» — поля нет; одна строка).
+1. **Прочти строки батча:** `BACKLOG.md` **B-029** (нейтральный ключ
+   гейта + обогащение conform.toml под Go/TS; рулинг 2.1 записан в
+   строке: «правда кода сегодня, идиома — записанной стройкой»; моя
+   заготовка — нейтральный ключ + языковые алиасы навсегда), **B-034**
+   (инвариант gated-or-exempt для Go/TS; единица гейта пер-язык решается
+   вместе с B-029), **B-039** (прочти его строку — в этой сессии не
+   читалась). Пересечение периметров реши ДО нарезки: B-029+B-034 почти
+   наверняка один поток (общая поверхность conform.toml/Config), B-039 —
+   по его периметру.
+2. **Конвейер тот же, что посадил волну А:** boss-дизайн там, где
+   контракт меняется (Config-ключи вендорятся ×6 — это правка движка:
+   sync-engines тем же заходом, fmt по пакетным workspace'ам, панель);
+   код — claudez-пакетами по закону транспорта (self-verify: check +
+   targeted tests + clippy -D warnings + `wc -l` ≤ 600); ревью по
+   WORKER-REPORT; вердикты/коммиты — босс.
+3. **После посадки батча** — пересуды его строк (F-185 ждёт parity-семью)
+   тем же mirror → merge-verdicts → seal (не сцеплять), затем следующий
+   батч Б: (B-033 + B-030) → (B-036 + B-037 + B-038) → (B-025 + B-026;
+   на B-025 висит последний якорь F-146, на B-026 — F-206). B-035
+   (лупом после каждого батча), B-003 — попутно.
+4. **Волна В после Б** (или чересполосно при непересекающихся
+   периметрах): B-019а + B-016.1 + B-017 (+решение B-024) →
+   B-018.1/.2 → B-018.4 + B-016.2 → **B-020** (разблокирует четыре
+   interim-аннотации LEDGER-INTENT) + B-021 (+решение B-014).
+   **Волна Г** — параллельно-оппортунистически: B-040, B-005, F-132,
+   B-010-check.
 
-## Рулинги владельца этой сессии (все зафиксированы дословно в durable)
+## Рулинги владельца этой сессии (все дословно в durable)
 
-- **B-011 дизайн ПРИНЯТ** («Принимаю дизайн B-011») со всеми
-  рекомендованными развилками A1/B1/C1/D1/E1 + добавление: правила
-  резолвинга приоритизированы для агента (преамбула первыми строками
-  склейки; §13 first-instructions). Статус в
-  `spec/design/deterministic-loading-aliasing.md`.
-- **B-022 — согласие** («с B-022 согласен»): enum-срез построен;
-  аннотации+пересуды — п.2 выше; хост-фикс — п.4.
-- **B-023 — отложено, дословно:** «давай B-023 отложим до тех пор, пока
-  не появится ещё какое-то правило кроме "as_cross с не локальной
-  областью". Не нужно забывать об этом… кандидат на середину или конец
-  бэклога» (disposition B-023). Ни строчки кода не строилось.
-- **Release-события:** публикация в GitHub-registry — «отдельная операция
-  после того как мы доделаем наш рефакторинг»; версии НЕ бампаем до
-  пред-публикационной границы (бамп=минт нового слота; на публикации
-  бамп+публикация = одна операция). §7 LOG запись 2026-08-04.
+- **B-006 одобрен** («согласен с твоими рекомендациями a1 b1 c1») + две
+  его пробы усилили правило до де-субституции и явной границы частичного
+  покрытия (остаток — забота hoisting-плана, триггер DRIFT-030).
+  Дизайн: `spec/design/lane-composition-dedup.md` (approved).
+- **B-031 одобрен** («1. координаты: группа org.vibevm.core, имя vibevm.
+  2. жесткая ошибка с подсказкой 3. все живые поверхности») + личное
+  задание боссу — проверка метаданных рефакторинга — исполнено и
+  записано дизайном §5.1 (реестр ключуется путями; specmap
+  регенерируется; 126 пинов `~rN` инертны; ledger soft-miss'ит; посадка
+  несёт mirror → спот-чек → mass re-seal). Дизайн:
+  `spec/design/host-as-package.md` (approved).
+- **B-028 рулинг**: «Я хочу чтобы указание версий было опциональной
+  фичей. Если версия не указана - используется самая свежая» — прочитано
+  как «свежайшая УСТАНОВЛЕННАЯ» (semver-newest слот; единственное
+  детерминированное офлайн-чтение) и так записано во всех носителях.
+- **НОВЫЙ МАНДАТ**: «Хочу все остальные волны сделать» — Б/В/Г целиком;
+  T/F/G — вне добра; публикация — после конца рефакторинга; версии не
+  бампать до пред-публикационной границы.
 
-## Что построено (карта посадки B-011/B-022)
+## Что построено (карта посадки за сессию)
 
-- **vibe-spec:** `qualify.rs` (новая ячейка: origin_slug/RenameEntry/
-  qualify_contribution); `directives.rs` (клауза `as`, сигил `@!`,
-  aliases-таблица, tail-ошибки, **comment_mask** — HTML-комменты
-  маскируются как fences, R5-отказ lane-citation) + `directives/tests.rs`;
-  `pipeline.rs` (@!→полный адрес на emit); `doctree.rs`
-  (qualified_candidates); `embed.rs` (кандидаты в miss-ошибке).
-- **vibe-workspace:** `boot_artifacts.rs` (qualify-on-splice, per-entry
-  embed→qualify, RESOLUTION_PREAMBLE — авторский текст, tombstone,
-  anchor-qualified шапка) + `boot_artifacts/redirect.rs` (PROP-012 ячейка,
-  выделена W5) + тесты по швам; `tests/dynamic_lane.rs` (M-LOAD
-  исполняемо: append-only байт-в-байт, алиас при вычищенном носителе,
-  кандидаты на промах).
-- **core-ai-native-specmap `ledger.rs`:** QueryKind enum, ключ
-  `v=1\nk=\np=\ne=\ns=`, LedgerEntry{schema,kind,producer,epoch,
-  inputs_hash,created_at_unix,body}, старый слот = мягкий промах;
-  вендорено ×6 (sync-engines).
-- **Панель:** новый шаг `lane-citation lint (B-011)` в tools/self-check.sh.
-- **Спеки:** PROP-035 §7.2/§7.4/§8(PIPE-QUALIFY)/§11(4 факта)/§13/§17;
-  PROP-009 §2.3(anchor-qualified+preamble+not-a-citation-target)/§8.
-- **Склейка хоста:** перегенерена (`vibe install --assume-yes`);
-  137/137 якорей и 518/518 фактов уникальны; INDEX byte-stable.
+- **vibe-workspace:** `desubstitute_covered_units` (bootgen.rs; чистый
+  проход, страж покрытия, де-субституция/заглушка) + арка `elided` в
+  render_static + `unit_substituted`/`elided` в BootEntry/DependencyBoot;
+  тесты `tests/lane_dedup.rs` Т1–Т7.
+- **vibe-spec:** `compile_static_qualified` (per-node qualify, вторая
+  проходка межузловых ссылок, `AmbiguousShortLink`; pipeline/tests.rs
+  вынесен); `SelfCoordinate` + self-ветка `spec_root` +
+  `LegacyHostAuthority`/`SelfCoordinateVersioned` (UnknownHost мёртв);
+  `resolver/version_order.rs` (freshest, без крейта semver) + F1–F6.
+- **vibe-core:** `ProjectSection.group: Option<Group>`; корневой
+  `vibe.toml` несёт `group = "org.vibevm.core"`.
+- **vibe-cli:** константа HOST_NAMESPACE мертва; поле модели
+  `self_coord` (wire-ключ `host_namespace` сохранён serde-rename).
+- **Миграция:** `campaigns/packages-2026-09/tasks/migrate-b031.py`
+  (байтовый, dry-run/wet/verify, идемпотентный) — уже отработал;
+  `--verify` residue 0 — стоячая проверка.
+- **Контракты:** PROP-009 §2.3 `##STATIC-EMITS-ONCE-EACH`; PROP-038
+  §2.1 elides-фраза; PROP-035 §8 per-node + §6 freshest
+  (`##URI-VERSION-OPTIONAL`/`##ROUTER-VERSION`) + §6
+  `##ROUTER-SELF-COORDINATE`; PROP-029 §4 — SCOPE-HOST void-надгробие +
+  `##SCOPE-SELF-COORDINATE` + changelog B-031.
+- **Пакеты:** флоу addressable-specs `{#uri-scheme}` — полная грамматика
+  (якоря строк живы, +GROUP-NAME/VERSION/REVISION-PIN+lead); redbook
+  гл.1/гл.2 цитируют секцию; core-ai-native LEDGER-INTENT — четыре
+  interim'а (B-020/B-015-ключи); ENGINE-CONFORM §2 — честная глубина
+  ts-tsc + деферрал B-023 дословно.
 
-## Уроки сессии (вписаны в закон транспорта §8 SUBAGENT-LAUNCHERS.md)
+## Уроки сессии (вписаны в durable: WAL #constraints + закон §8)
 
-- `#fact-first-live-fanout`: существование WORKER-REPORT — часть
-  механической сверки (TASK-DONE не сигнал); доработка, которая должна
-  лечь в конкретную секцию отчёта, ДИКТУЕТ текст секции дословно.
-- `#fact-code-slice-self-verify`: код-пакеты включают
-  `cargo clippy -p <crate> --all-targets -- -D warnings` в self-verify
-  (check/test пропустили три клиппи-хвоста до панели).
-- `#fact-panel-background-form`: панель фоном — ТОЛЬКО bare
-  `bash tools/self-check.sh` (echo глотает exit); **фан-аут зеркал ждёт
-  прочитанный ХВОСТ, не нотификацию** (оплачено публикацией красного).
-
-## Нетривиальные находки сессии
-
-- Перегенерация склейки: `cargo run -q -p vibe-cli --bin vibe -- install
-  --assume-yes` (продакшн-вход в write_boot_artifacts — bootgen.rs:110).
-- Вложенные скомпилированные STATIC пакетов (git-practices) проходят как
-  simple-вклады; их преамбулы — HTML-комменты, теперь маскируются
-  сканером (fix e0bfb837). B-006-дубль виден в tombstone как same-origin
-  повтор — НЕ коллизия.
-- Дифф-ошибки директив НЕ фатальны в compile_static (pre-existing;
-  follow-up «directive errors fail the compile» назван в отчёте W3).
-- cwd Bash-вызовов персистентен между командами — `cd` в команде ломает
-  последующие относительные пути (дважды оплачено); абсолютные пути.
-- `git commit -m … <pathspec>` НЕ берёт untracked (b8c23c7e — догонка).
-- Windows держит хэндлы worktree после смерти воркера: remove --force →
-  Permission denied → `git worktree prune` + `rm -rf` (трижды).
-- Пять параллельных воркеров/линию подтверждены законом; в этой сессии
-  максимум шёл 3 одновременно (W1+E2 на claudez, W2 на claudez2).
+- **Real exits:** exit-коды читаются настоящими, не через pipe/grep
+  (оплачено: красный доктест прочитан как зелёный; панель поймала).
+- **Файловый бюджет в пакетах:** `wc -l` ≤ 600 на тронутый .rs — в
+  self-verify каждого код-пакета (§8, четвёртый оплаченный факт).
+- **fmt/vendor-охват:** хостовый fmt не достаёт восемь пакетных
+  workspace'ов; после правок пакетных крейтов — fmt по манифестам +
+  sync-engines + rematerialise.
+- **Watcher-ловушка:** греп лога воркера по маркеру ловит текст ПАКЕТА
+  в первом событии — вахта по `"type":"result"`.
+- **python open('/tmp/…')** на Windows пишет в корень диска — скретчпад.
+- **Legacy-фикстура** держится `concat!`-склейкой — мигратор её не
+  тронет; не «чинить».
+- **Seal-отказы** по файлам с несуженными якорями — честное состояние
+  (четыре файла ждут судейского захода), не ошибка.
 
 ## Очередь владельца
 
-Пусто блокирующего. Стоячее: открытые строки аудита (`AUDIT.md`
-§2026-08-03), DBT-0023, MT-02/MT-03, known-issues WAL. Развилки карты —
-по одной по мере подхода. Release-публикация — после рефакторинга (его
-слово).
+Пусто блокирующего. Стоячее: одиннадцать пер-строчных развилок карты
+(по одной, по мере подхода batch'ей), открытые строки аудита
+(`AUDIT.md` §2026-08-03), DBT-0023, MT-02/MT-03, пред-публикационная
+граница (минт+публикация = одна операция), known-issues WAL (ratchet
+42, стейл-описание в package-tree.schema).
 
 ## Где стоит работа
 
-- `main`, оба зеркала синхронны (последний фан-аут — 5fc99cf7);
-  роллаут — ТОЛЬКО `cargo xtask mirror`. Дерево чистое.
-- Панель зелёная — «self-check: all green» прочитан хвостом; шаг 6b
-  требует локальный jtd-codegen; vibe-команды параллельно панели
-  запрещены.
-- Реестр: 90/190, owed 17 (шесть строк ledger `#close-2026-08-03`),
-  resolved 139 — за сессию НЕ менялся (пересуды впереди, п.2–3 выше).
+- `main`, оба зеркала синхронны (последний фан-аут в этой записи —
+  см. `git log`; роллаут — ТОЛЬКО `cargo xtask mirror`). Дерево чистое.
+- Панель зелёная — «self-check: all green» прочитан хвостом.
+- Реестр: 88/179, owed 6, resolved 142 — меряй командами.
 - Архив воркеров: `C:\Users\olegc\git\v\cache\agents\sorted\
-  {E1-B022-SWEEP,E1-B023-SWEEP,E2-LEDGER-ENUM,E1-W1-QUALIFY,
-  E1-W2-DIRECTIVES,E1-W3-SPLICE,E1-W4-DYNLANE,E1-W5-SPLIT-CELLS}/` —
-  пакет+логи+штампованный отчёт+meta с вердиктом в каждом.
+  {E4-W1-LANE-DEDUP,E4-W2-NODE-QUALIFY,E5-B031-SWEEP,E6-W1-SELF-COORD,
+  E6-W2-MIGRATE-SCRIPT,E7-W1-FRESHEST}\` — пакет+лог+штампованный
+  отчёт+meta с вердиктом в каждом.
 
-## Карта
+## Карта чтения новой сессии
 
-`campaigns/packages-2026-09/`: SUBAGENT-LAUNCHERS.md (+3 новых факта §8)
-+ SUBAGENT-MODE.toml (=claudez); план
-`spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md` §5E/§6.1/§7 LOG
-(записи 2026-08-03/04 с конца); ledger PHASE-D-HOST-OBLIGATIONS.md
-`#close-2026-08-03`. Дизайн:
-`spec/design/deterministic-loading-aliasing.md` (СТАТУС: approved; §6.1
-слои, §5.1 преамбула, §10 срезы). Harvest: `e1-b022-*`, `e1-b023-*`
-(четыре файла). `BACKLOG.md`: B-011 (approved-строка), B-022 (`open`,
-аннотации впереди), B-023 (`done`+рулинг), B-006 — следующий.
-`TOOLING-MAP.md` — refresh на границе волны (supersession-rule).
+`CLAUDE.md` → бут по INDEX → `spec/WAL.md` (констрейнты — ВЕСЬ список;
+там теперь self-координата, freshest, once-each, real-exits,
+package-fmt) → этот файл → `campaigns/packages-2026-09/
+SUBAGENT-LAUNCHERS.md` ЦЕЛИКОМ (§8 — четыре факта) + SUBAGENT-MODE.toml
+перед КАЖДЫМ fan-out → `TOOLING-MAP.md` §4–§5 (порядок волн + одиннадцать
+развилок) → `BACKLOG.md` B-029/B-034/B-039 → план §5E + §7 LOG с конца
+(записи 2026-08-04: мандат — последняя).
 
-## Недавняя цепочка коммитов (сессия, снизу вверх — начало среза)
+## Недавняя цепочка коммитов (сессия, сверху — свежие)
 
 ```
-b6e4eb2d docs(campaign): B-022 evidence lands
-3ed300a3 docs(campaign): B-022 ruled on paper
-056e766f docs(design): B-011 aliasing design
-7bb831e5 docs(design): one slug case
-f543bee7 docs(design): index the B-011 proposal
-33a0308f docs(campaign): B-023 evidence lands
-7c010251 docs(campaign): B-023 ruled on paper
-e9d1d605 docs(campaign): first live fan-out pays two rework rules
-78eba081 docs(design): stale-short-address case answered
-7a902469 docs(campaign): owner counter-probe re-judges B-023 depth
-<фиксация рулингов> docs(campaign): owner rules — B-011 approved, B-022 agreed
-e8117846 docs(spec): B-011 lands as contract (PROP-035)
-53154c43 docs(spec): PROP-009 history records the turn
-3014f94a feat(core-ai-native): ledger query kinds close into an enum
-3b24d75f feat(vibe-spec): B-011 primitives — qualify + alias grammar
-cc188949 feat(vibe-workspace): the static lane compiles anchor-qualified
-e0bfb837 fix(vibe-spec): HTML comments are machinery
-abca000d feat(boot): host lane anchor-qualified — M-LOAD zero
-f77178f2 chore(vibedeps): rematerialise
-e6c1a94f build(self-check): lane-citation lint joins the panel
-cdfb4680 style(vibe-spec): clippy tail the packets did not gate
-d4db3c36 docs(campaign): clippy-in-packets + panel-exit rules
-d988ac65 refactor(vibe-workspace): grown files split along seams
-b8c23c7e chore(vibedeps): untracked schemas dir
-d0bf20d9 style(core-ai-native): ledger clippy tail
-cefc4649 docs(campaign): B-023 ruled — waits for a second rule
-5fc99cf7 docs(campaign): release events ruled
+566ca667 docs(campaign): wave А closes whole
+0a2cf315 docs(campaign): B-028 closes — ruled and executed the same hour
+addbc78c docs(spec): one grammar, one home — versions optional
+eb78b62c feat(vibe-spec): unversioned address → freshest installed
+5e811924 docs(campaign): B-031 closes — landed, measured, re-sealed
+ec41e71b fix(core-ai-native): grammar doctests follow the coordinate form
+38b44dc4 fix(core-ai-native): grammar tests read the coordinate form
+81e6d834 style(vibe-install): spec-attribute import follows its users
+14841cd4 fix(vibe-install): deviates speak spec://, imports trim
+28eb8617 refactor(vibe-install): three files split at seams (600 budget)
+497d547d fix(vibe-spec): legacy-form fixture migration-proof (concat!)
+8a92ed4b style(packages): migration's fmt tail across package workspaces
+e25b2dc5 docs(spec): host exemption dies with a tombstone
+23162e3f refactor(spec): the host authority migrates (1893/606, residue 0)
+0d2c6eef feat(vibe-spec): the host resolves as its own package coordinate
+61641267 feat(campaign): the B-031 migrator
+0780b72a docs(campaign): owner rules B-031
+51eb17ed docs(campaign): B-031 census + sketch recorded
+5b284399 docs(design): B-031 sketch on a measured census
+de070928 docs(campaign): file-length budget joins packet self-verify
+aa740348 refactor(vibe-spec): grown files split along feature seams
+94c9d2db docs(campaign): B-006 closes
+d45a49d8 feat(vibe-spec): normal closures qualify per node
+e7bf3349 feat(boot): the host lane emits the git family once
+68529118 feat(vibe-workspace): the lane composes once-each
 ```
 
 ## Quick-start
@@ -187,7 +182,8 @@ cefc4649 docs(campaign): B-023 ruled — waits for a second rule
 ```sh
 python campaigns/packages-2026-09/tasks/summary.py
 python campaigns/packages-2026-09/tasks/drift-registry.py
-bash tools/self-check.sh   # читать РЕАЛЬНЫЙ exit хвостом; фоном — bare-форма
+bash tools/self-check.sh   # exit — настоящий, хвостом; фоном — bare-форма
+python campaigns/packages-2026-09/tasks/migrate-b031.py --verify  # residue 0
 ```
 
 _WAL — канон живого состояния; при расхождении верить ему, не этому файлу._
