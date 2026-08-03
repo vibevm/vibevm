@@ -296,7 +296,8 @@ mod tests {
         CodeItem, EdgeProvenance, EdgeVerb, SpecUnitKind, SpecUnitStatus,
     };
 
-    const GRAMMAR: &str = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar";
+    const GRAMMAR: &str =
+        "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar";
     const COMPOSITION: &str =
         "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition";
 

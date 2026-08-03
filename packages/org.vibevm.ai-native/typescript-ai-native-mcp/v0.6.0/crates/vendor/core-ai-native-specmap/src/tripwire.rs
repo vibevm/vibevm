@@ -118,7 +118,10 @@ mod tests {
         assert_eq!(fired.len(), 1);
         assert_eq!(fired[0].id, "DBT-0001");
         assert_eq!(fired[0].hits.len(), 1);
-        assert_eq!(fired[0].unevaluated, vec!["rev:spec://org.vibevm.core/vibevm/x#req-a"]);
+        assert_eq!(
+            fired[0].unevaluated,
+            vec!["rev:spec://org.vibevm.core/vibevm/x#req-a"]
+        );
     }
 
     #[test]

@@ -5,7 +5,8 @@
 use super::*;
 use quote::quote;
 
-const URI: &str = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint";
+const URI: &str =
+    "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint";
 
 #[test]
 fn uri_parses_with_all_parts() {
@@ -27,7 +28,7 @@ fn uri_parses_revision_pin() {
 #[test]
 fn uri_rejections() {
     for bad in [
-        "http://x/y#a",         // wrong scheme
+        "http://x/y#a",                         // wrong scheme
         "spec://org.vibevm.core/vibevm#a",      // no doc-path
         "spec://org.vibevm.core/vibevm/x",      // no fragment
         "spec://org.vibevm.core/vibevm/x#A-b",  // uppercase anchor
