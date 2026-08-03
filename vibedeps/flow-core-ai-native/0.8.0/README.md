@@ -16,7 +16,7 @@
 by AI agents — including weak readers** (small models in swarms maintaining
 frontier-authored code). @impl/done
 
-##PROMPT-CONTENT-ONLY This package is prompt content only. @impl/done
+##PROMPT-CONTENT-ONLY This package ships prompt content and the neutral engine crates it authors — five **library** crates (`core-ai-native-conform`, `-mcp`, `-specmap`, `-specmark`, `-specmark-grammar`); it ships no binary. @impl/done
 
 ##RUNNABLE-HALF-IN-STACKS The runnable half — the checkers, the
 per-language cards, the guides — ships in each language stack

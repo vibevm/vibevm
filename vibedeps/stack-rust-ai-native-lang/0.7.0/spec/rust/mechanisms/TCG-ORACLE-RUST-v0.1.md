@@ -115,8 +115,11 @@ per-document version replaces it, `didClose` releases it back to disk. @impl/don
 ##rules-are-lsp-native-law-lead The rules the TS campaign learned the hard way are LSP-native law
 here and the bridge enforces them structurally: @impl/done
 
-- ##OVERLAY-RULE-VERSIONS-NEVER-REPEAT versions never repeat or reset within a session (a monotonic counter
-  per document, never derived from content); @impl/done
+- ##OVERLAY-RULE-VERSIONS-NEVER-REPEAT versions never repeat within an
+  overlay's lifetime (a monotonic counter per open document, never derived
+  from content); clearing an overlay closes the document and a later
+  reopen starts again at 1 —
+  `crates/rust-ai-native-tcg-bridge/src/oracle.rs:184` (`docs.remove`); @impl/done
 - ##OVERLAY-RULE-VALIDATE-WITHOUT-CONTENT-READS-DISK `validate` WITHOUT inline content reads the disk file and opens it
   with that text, so version bookkeeping has exactly one owner (the
   bridge) and a later disk edit is picked up by the next validate's
@@ -136,8 +139,10 @@ rust-analyzer's independent analysis, which is deliberately partial. @spec/done
 ##consequences-all-normative-lead Consequences, all normative: @impl/done
 
 - ##CLEAN-VALIDATE-DOES-NOT-CERTIFY-A-CLEAN-FLOOR A clean `validate` does NOT certify a clean floor. The floor
-  (`rust-ai-native floor` → cargo check) remains the truth;
-  consumer-facing docs repeat it. @impl/done
+  (`rust-ai-native floor` — the seven steps: cargo fmt → cargo test →
+  clippy → conform → specmap → test-gate → fast-loop; the compile rides
+  inside the test step) remains the truth; consumer-facing docs repeat
+  it. @impl/done
 - ##DIFFERENTIAL-CORPUS-CURATES-NATIVE-COMPETENCE The differential corpus curates classes INSIDE r-a's native
   competence; each class is pinned to cargo check through the
   committed mapping table (1.93.1 rows: E0308↔E0308, E0425↔E0425,
@@ -200,7 +205,7 @@ session: @impl/done
 ##GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY Graceful exit is the LSP
 dance — `shutdown` request, `exit` notification — with kill-on-drop as
 the backstop; the no-zombie property is test-asserted (spike-proven:
-clean exit code 0, no surviving pid). *Specified, not built — the
+clean exit code 0, no surviving pid). *Specified, not built (→ B-044) — the
 mechanism, not the proof. The dance ships (`shutdown` at
 `crates/rust-ai-native-tcg-bridge/src/oracle.rs:356`) and so does the
 backstop (`Drop for ChildTransport` → `kill()` then `wait()`,
@@ -208,7 +213,7 @@ backstop (`Drop for ChildTransport` → `kill()` then `wait()`,
 checks only that `shutdown()` returned (`tests/live_oracle.rs:116`), and no
 exit-code check and no surviving-pid or process-table probe exists in this
 stack's test surface. «Test-asserted» and «spike-proven» describe a spike,
-not a test in the tree.* @spec/done
+not a test in the tree.* @impl/plan
 
 ##PATHS-BECOME-URIS-AFTER-PREFIX-STRIPPING Paths become URIs only after
 verbatim-prefix stripping (`\\?\` breaks child argv and URI builders —
@@ -246,7 +251,12 @@ crate, this box: @impl/done
 ##posted-targets-lead Posted targets for demo-class trees: @impl/done
 
 - ##TARGET-WARM-VALIDATE warm `validate` p50 < 500 ms, @impl/done
-- ##TARGET-WARM-COMPLETE `complete` p50 < 300 ms, @impl/done
+- ##TARGET-WARM-COMPLETE `complete` p50 < 300 ms — posted, not yet
+  measured: the bench harness times `validate` only
+  (`crates/rust-ai-native-tcg/src/bench.rs` emits `cold_init_ms`,
+  `validate_p50_ms`, `validate_p95_ms` and no `complete` field); the
+  measurement corpus is deliberately far-future work (`BACKLOG.md`
+  B-042), @spec/done
 - ##TARGET-COLD-INIT-TO-QUIESCENT cold init-to-quiescent < 15 s. @impl/done
 
 ##BENCH-HARNESS-RECORDS-DISTRIBUTIONS The bench
@@ -255,7 +265,12 @@ committed REPORT with a reason — and per the owner's resolution a miss
 CANCELS NOTHING: the campaign proceeds and the miss is reported
 prominently. @impl/done
 
-##LARGE-WORKSPACE-CONSUMERS-ARE-WARNED Large-workspace consumers are warned about the product's
-60 s first-request ceiling; the relay's eager init at `serve` start
-(before the host's first frame) spends the cold cost as early as
-possible. @impl/done
+##LARGE-WORKSPACE-CONSUMERS-ARE-WARNED Large-workspace consumers are warned —
+the tcg brief's `##RISK-COLD-INIT-ON-LARGE-WORKSPACES` carries the
+spec-layer warning (14.7 s cache-cold on a minimal crate; a big consumer
+tree may exceed the first-request budget) — and the relay's eager init at
+`serve` start (before the host's first frame) spends the cold cost as
+early as possible. The shipped ceiling is the **45 s** quiescence budget
+(`QUIESCENCE_BUDGET`, `crates/rust-ai-native-tcg/src/lib.rs:33`, used by
+`spawn_oracle` and `serve`); this document's own
+`##TARGET-COLD-INIT-TO-QUIESCENT` posts < 15 s for demo-class trees. @impl/done

@@ -33,9 +33,9 @@
 
 ##rule-examples-lead Rule examples: @impl/done
 
-- ##EXAMPLE-R-021-FORBIDDEN-IDIOM R-021 forbidden-idiom scan → T-lex/T-syn; *Specified, not built: R-021 is not a rule in this engine. `R-021` returns zero hits across every crate in the repository, and no forbidden-idiom scan of any kind ships. It is cited as a ban in the language guides and authored nowhere.* @spec/done
+- ##EXAMPLE-R-021-FORBIDDEN-IDIOM R-021 forbidden-idiom scan → T-lex/T-syn; *Specified, not built (→ B-038): R-021 is not a rule in this engine. `R-021` returns zero hits across every crate in the repository, and no forbidden-idiom scan of any kind ships. It is cited as a ban in the language guides and authored nowhere.* @impl/plan
 - ##EXAMPLE-R-002-IMPORT-GRAPH-ISOLATION R-002 import-graph isolation → T-syn (Rust) / T-sem (C++ where headers lie); *The rule is real; the mapping is not. `CellIsolation` carries id `"R-002"` (`conform/src/rules/structure.rs:77-91`) and is projected per language as `TsCellIsolation` and `GoCellIsolation`. What does not exist is either side of the arrow — no tier assigns it a depth, and there is no C++ frontend to escalate to.* @spec/done
-- ##EXAMPLE-R-020-NAMING-VS-MANIFEST R-020 naming-vs-manifest → T-syn + specmap index; *Specified, not built: neither the rule nor the join. `R-020` returns zero hits across every crate, and the conform engine does not depend on the specmap crate at all — no manifest lists it — so a rule combining structural facts with the specmap index cannot be written today without a new dependency edge.* @spec/done
+- ##EXAMPLE-R-020-NAMING-VS-MANIFEST R-020 naming-vs-manifest → T-syn + specmap index; *Specified, not built (→ B-038): neither the rule nor the join. `R-020` returns zero hits across every crate, and the conform engine does not depend on the specmap crate at all — no manifest lists it — so a rule combining structural facts with the specmap index cannot be written today without a new dependency edge.* @impl/plan
 - ##EXAMPLE-TYPE-FLOW-RULES type-flow rules (future) → T-sem. @spec/done
 
 ## 2. Frontends — borrowed, behind one trait {#frontends}
@@ -56,9 +56,11 @@ trait Frontend {
 | ##ROW-FRONTEND-GO Go @impl/done | `go/parser`+`go/ast` via a stdlib-only **`go run` sidecar** (go-extract) @impl/done | gopls / `go vet` as evidence providers — *Built, but at another layer, and not as evidence providers. Both tools run: `go vet ./...` is step 2 of the Go floor (`go-ai-native-cli/src/floor.rs:115-120`) and `gopls` is driven as a long-lived LSP oracle by `go-ai-native-tcg`. Neither reaches conform — conform ingests no output from either, so nothing they know becomes a fact. Read this cell as naming where semantic depth lives in the Go stack, not as a conform frontend.* @spec/done | BSD-3 — clean @impl/done |
 | ##ROW-FRONTEND-PYTHON Python @impl/done | RustPython parser (MIT) in-process @impl/done | CPython `ast`/`symtable` via sidecar @impl/done | PSF / MIT — clean @impl/done |
 
+##TIER-VOCABULARY **The tier vocabulary (document taxonomy).** T-lex / T-syn / T-sem name the depth an enforcement mechanism reads at: **T-lex** — lexical (tokens, pragmas, build tags; no parse), **T-syn** — syntactic (parser-grade extraction), **T-sem** — semantic (compiler/type-grade). The taxonomy classifies rules and frontends in prose and tables; it is deliberately not (yet) a code-level type — the rule registry's tier column is a later-phase mechanism. @spec/done
+
 ##SIDECAR-PROTOCOL-IS-NDJSON-OVER-STDIO Sidecar protocol: newline-delimited JSON over stdio, versioned; sidecars emit Facts, nothing else. @impl/done
 
-##FRONTEND-CRASH-DEGRADES-VISIBLY-NEVER-SILENTLY A frontend crash degrades that language's T-sem rules to `skipped (frontend unavailable)` — visible in the report, never silent. @impl/done
+##FRONTEND-CRASH-DEGRADES-VISIBLY-NEVER-SILENTLY A frontend whose toolchain is broken is a **hard error**: each stack's driver probes its frontend before extraction and fails the run (`typescript-ai-native-conform/src/lib.rs:66-70`), so the gate can never report green over zero facts. A per-file extraction failure surfaces on stderr and yields an empty fact set for that file. *Specified, not built: there is no `skipped (frontend unavailable)` report status — `Finding` carries no status field.* @spec/done
 
 ##FOREIGN-LINTERS-ARE-EVIDENCE-PROVIDERS **Foreign linters as evidence providers.** clippy, eslint, ruff, clang-tidy run as-is; their output is ingested as facts via **SARIF** (the OASIS static-analysis interchange format). @impl/done
 
@@ -81,7 +83,7 @@ trait Frontend {
 
 ## 4. Rules as queries {#rules}
 
-##RULES-ARE-RUST-TRAIT-IMPLS-COMPILED-IN v0.1: rules are Rust implementations of one trait — `fn check(&self, facts: &FactStore, specmap: &Index) -> Vec<Finding>` — compiled into the engine. @impl/done
+##RULES-ARE-RUST-TRAIT-IMPLS-COMPILED-IN v0.1: rules are Rust implementations of one trait — `fn check(&self, facts: &[SourceFacts]) -> Vec<Finding>`, alongside `fn id()` and `fn why()` (`core-ai-native-conform/src/finding.rs:51-56`) — compiled into the engine. *The earlier sketch's `specmap: &Index` parameter is dropped: the conform crate carries no dependency on the specmap crate, so the parameter was impossible, not merely absent.* @impl/done
 
 ##QUERY-DSL-IS-DELIBERATELY-DEFERRED A declarative query DSL (datalog-flavored) is deliberately deferred: we will know its right shape after ~30 real rules exist, not before (Open Question 2). @spec/done
 
@@ -106,4 +108,4 @@ trait Frontend {
 
 ---
 
-##UNEXERCISED-FRONTEND-OR-TIER-IS-REMOVED *Any frontend or tier specified here that is not exercised by Playbook Phase 4 is removed from this document rather than carried as aspiration.* @impl/done
+##UNEXERCISED-FRONTEND-OR-TIER-IS-REMOVED *Any frontend or tier specified here that is not exercised by Playbook Phase 4 is either removed from this document or annotated in place as **specified, not built** — never carried as unmarked aspiration.* @impl/done

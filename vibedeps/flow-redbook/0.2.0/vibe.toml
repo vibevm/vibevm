@@ -47,5 +47,8 @@ category = "flow"
 "flow:org.vibevm.world/tool-design-lessons" = "=0.1.0"
 # The cultural-extraction wave (edition bump to a clean 0.3.0 lands when the
 # full new practice set has settled; accumulated here in place meanwhile).
+# Standing rule (owner, 2026-08-02, the F-114 ruling): the NEXT roster change
+# bumps the edition — a member set never changes again under an unmoved
+# version number.
 "flow:org.vibevm.world/dev-runtime-docs" = "=0.1.0"
 "flow:org.vibevm.world/wal-specspaces" = "=0.1.0"

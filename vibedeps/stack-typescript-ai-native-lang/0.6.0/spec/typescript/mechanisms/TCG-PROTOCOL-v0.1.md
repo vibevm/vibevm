@@ -148,7 +148,9 @@ semantic changes to existing fields bump `ORACLE_PROTOCOL`, and the
 bridge treats a mismatch as its own error class — the same
 cache-retirement posture the extract bridge established. @impl/done
 
-##REPLAY-GOLDENS-PIN-BOTH-SIDES Replay
-goldens on both sides (recorded streams checked into the package
-tests) pin the CURRENT shape; the fact-parity test (ORACLE §1) pins
-the vocabulary shared with ts-extract. @impl/done
+##REPLAY-GOLDENS-PIN-BOTH-SIDES Scripted
+doubles pin the INNER side in this package's tests (the no-node double,
+`crates/typescript-ai-native-tcg-bridge/src/transport.rs:312`); the
+fact-parity test (ORACLE §1) pins the vocabulary shared with
+ts-extract. The OUTER shape is not yet pinned — no recorded stream is
+checked into the package and no test constructs an outer frame. @spec/done

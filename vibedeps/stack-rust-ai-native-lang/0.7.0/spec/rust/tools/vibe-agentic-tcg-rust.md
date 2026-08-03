@@ -46,7 +46,9 @@ coverage. @spec/done
 overlay-true, discipline-enriched — and never the final word. @spec/done
 
 ##FLOOR-REMAINS-THE-TRUTH The floor
-(`rust-ai-native floor` → cargo check) remains the truth. @impl/done
+(`rust-ai-native floor` — the seven steps: cargo fmt → cargo test →
+clippy → conform → specmap → test-gate → fast-loop; the compile rides
+inside the test step) remains the truth. @impl/done
 
 ## 2. Design stance (consequences of what we know) {#design-stance}
 

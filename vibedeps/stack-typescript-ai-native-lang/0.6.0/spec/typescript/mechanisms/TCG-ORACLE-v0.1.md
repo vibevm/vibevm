@@ -150,8 +150,14 @@ bridge's `node-missing` error with its recipe, not an oracle concern. @impl/done
 ##TARGETS-ARE-POSTED-AND-MEASURED-NEVER-GATED Targets are POSTED and MEASURED, never CI-gated (timing gates on shared
 boxes generate flakes, not signal): @impl/done
 
-- ##TARGET-WARM-VALIDATE-AND-COMPLETE warm `validate` p50 < 150 ms and
-  `complete` p50 < 200 ms on demo-class trees, @impl/done
+- ##TARGET-WARM-VALIDATE-AND-COMPLETE warm `validate` p50 < 150 ms —
+  measured and met (19.32 ms on the committed battery,
+  `research/tcg-bench/reports/bench-2026-07-07-baseline.json`) — and
+  `complete` p50 < 200 ms on demo-class trees, posted, not yet measured:
+  the bench harness times `validate` only
+  (`crates/typescript-ai-native-tcg/src/bench.rs` emits `cold_init_ms`,
+  `validate_p50_ms`, `validate_p95_ms`); the measurement corpus is
+  deliberately far-future work (`BACKLOG.md` B-042), @impl/done
 - ##TARGET-COLD-INIT cold init < 5 s. @impl/done
 
 ##BENCH-HARNESS-RECORDS-DISTRIBUTIONS The battery's bench harness records the distributions per run; a target

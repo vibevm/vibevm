@@ -8,7 +8,7 @@
 
 ##RENAMED-FROM-VIBE-TCG *Renamed `vibe-tcg.md` → `rust-ai-native-tcg.md` (the D13 language-suffix policy, then its PROP-028 §2.4 family-prefix supersession) — the bare name `vibe-tcg` belongs solely to vibevm's language-generic product crate.* *Specified, not built — the rename happened and the policy resolves; the crate the name is reserved FOR does not exist. This file carries the new name, and the supersession chain it cites is authored (PROP-028 §2.4, `##D13-SUPERSEDED` → `##D13-LANGUAGE-LEADS` → `##D13-NEUTRAL-OUTSIDE`). But `vibe-tcg` was deleted with the whole multiplexed-product topology (PROP-026 in vibe-mcp, `##TCG-CRATE-DELETED`), and vibevm's crate roster carries no `vibe-tcg`: every tcg crate in the tree is per-family (`rust-ai-native-tcg`, `typescript-ai-native-tcg`, `go-ai-native-tcg`). The `vibe-*` stem is still reserved for language-neutral vibevm crates as a POLICY; the specific reservation this sentence asserts is held by nothing.* @spec/done
 
-##DERIVED-FROM-THE-EVIDENCE *Derived from R2C-005 (type-constrained decoding is per-language manual work; no Rust impl exists), DR2-012/DR1-014 (the 74.8% compile-error reduction in TypeScript), and the constrained-decoding ecosystem scan (SynCode, XGrammar-2, IterGen, Mündler PLDI'25).* @spec/done
+##DERIVED-FROM-THE-EVIDENCE *Derived from R2C-005 (type-constrained decoding is per-language manual work; no Rust impl exists), DR2-012/DR1-014 (the 75.3 %/70.2 % compile-error reduction in TypeScript), and the constrained-decoding ecosystem scan (SynCode, XGrammar-2, IterGen, Mündler PLDI'25).* *One of the three cited ids does not resolve: `R2C-005` (ATLAS `##FINDING-R2C-005`) and `DR2-012` (`##FINDING-DR2-012`) are authored; `DR1-014` is not — the roster runs 001–013 and 015–024 with 014 the only gap, and no document in the tree defines it. The reduction result stands on DR2-012 (whose canonical pair 75.3 %/70.2 % this line now cites) and on the cited paper; the second id is a dead reference.* @spec/done
 
 > ##AGENTIC-SIBLING-SHIPPED **The agentic sibling SHIPPED (2026-07-07).** The tcg line's AGENTIC
 > delivery exists for BOTH languages: TypeScript first
@@ -32,7 +32,7 @@
 
 ##NO-TYPE-AWARE-TOOL-EXISTS-FOR-RUST The gap for Rust specifically: no type-aware constrained-generation tool exists (the PLDI'25 authors built it only for a TypeScript subset and state plainly it must be re-implemented per language). @spec/done
 
-##RUST-AI-NATIVE-TCG-IS-THAT-MISSING-TOOL `rust-ai-native-tcg` is that missing tool for Rust, delivered as a vibevm component so the swarm's weak agents generate well-typed Rust by construction rather than by retry. @spec/done
+##RUST-AI-NATIVE-TCG-IS-THAT-MISSING-TOOL `rust-ai-native-tcg` is the name reserved for that missing tool for Rust — to be delivered as a vibevm component so the swarm's weak agents generate well-typed Rust by construction rather than by retry. The binary shipping under that name today is the AGENTIC consultation oracle (`vibe.toml` `[[binary]]`, `crates/rust-ai-native-tcg`); the token-level generation tier this brief specifies is held VERY-FAR-FUTURE per ##status-line and is not built. @spec/done
 
 ##STRATEGIC-PLACEMENT-IN-THE-CATALOG **Strategic placement in the scaffold catalog:** this is the generation-time complement to the post-generation `cargo check` loop (Class E). @spec/done
 

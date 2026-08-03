@@ -114,8 +114,9 @@ UIs are merely nicer inboxes than a mailing list. @spec/done
   no two writes to `main` can race. There is no reconciliation step to
   get wrong because there is no concurrent write to reconcile. @impl/done
 - ##BUYS-ANY-HOST-CAN-VANISH-WITHOUT-DATA-LOSS **Any host can vanish without data loss.** Every host holds the full
-  history; mainline holds it too. A host going dark, getting blocked,
-  or deleting the repo costs a line in the manifest, not a commit. @impl/done
+  history of the refs the manifest declares for it; mainline holds the whole
+  tree. A host going dark, getting blocked, or deleting the repo costs a line
+  in the manifest, not a commit. @impl/done
 - ##BUYS-AUDIENCE-AND-JURISDICTION-PER-HOST **Audience and jurisdiction per host.** Each host serves its own
   region, community, or compliance surface, while all serve identical
   history. Adding a host is one manifest entry. @impl/done

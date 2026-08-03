@@ -123,36 +123,144 @@ fn object_path(root: &Path, key_hex: &str) -> PathBuf {
         .join(key_hex)
 }
 
+/// The closed query-kind register (LEDGER-INTENT §6/§8). Adding a
+/// variant is a reviewed PR, not a string; the kind is part of every
+/// cache key. One kind ships in v0.1 — `explain.item` — behind the
+/// `trace explain --prose` path. The kind that previously lived as an
+/// in-function `const PRODUCER` string (`ledger.rs:132` before B-022)
+/// is now a typed value the key composes from.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum QueryKind {
+    ExplainItem,
+}
+
+impl QueryKind {
+    /// The wire/provenance name, e.g. "explain.item".
+    pub fn name(self) -> &'static str {
+        match self {
+            QueryKind::ExplainItem => "explain.item",
+        }
+    }
+
+    /// The producer id for this kind's shipped producer, e.g.
+    /// "explain.item/prose-template-1".
+    pub fn producer(self) -> &'static str {
+        match self {
+            QueryKind::ExplainItem => "explain.item/prose-template-1",
+        }
+    }
+}
+
+/// The stored ledger entry (LEDGER-INTENT §4, the deterministic
+/// subset). The LLM-only fields — `model_id`, `prompt_rev`, `cost`,
+/// `confidence` — wait for a producer that carries them (B-020); a
+/// deterministic template cannot populate them, so they are absent
+/// rather than zero-valued. The slot's content is the JSON
+/// serialisation of this struct; an old bare-prose object fails to
+/// parse as `LedgerEntry` and is treated as a MISS — graceful, no
+/// migration code. Carrying `producer`/`kind`/`inputs_hash` on the
+/// entry (not only folded into the key) is what makes §8's
+/// cache-poisoning predicate — "select a bad producer's entries" —
+/// possible at all.
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
+pub struct LedgerEntry {
+    /// The entry-shape schema version (bump ⇒ wholesale invalidate).
+    pub schema: u32,
+    /// `QueryKind::name()` — the kind, readable off the entry.
+    pub kind: String,
+    /// The producer id (`QueryKind::producer()`).
+    pub producer: String,
+    /// The epoch the entry was computed under (`Epoch.0`).
+    pub epoch: String,
+    /// `content_hash(subject_json)` — readable, not only key-folded.
+    pub inputs_hash: String,
+    /// UNIX seconds at compute time (R2: `std::time`, no chrono).
+    pub created_at_unix: u64,
+    /// The rendered prose body.
+    pub body: String,
+}
+
+/// Canonical, versioned key material (LEDGER-INTENT §2/§8). The `v=1`
+/// prefix is the key-schema version (bumping it wholesale-invalidates
+/// the cache); the remaining fields are the structured tuple §8 says
+/// must be reviewable per kind, so a bad producer's entries can be
+/// selected by predicate rather than only by deleting `.ledger/`
+/// wholesale. R1: a hand-built stable string is chosen over
+/// `serde_json::to_string` of a struct — its bytes are exactly what a
+/// test can assert on, so stability is trivially verifiable and free
+/// of any struct-field-ordering assumption the serialiser would carry.
+fn cache_key(kind: QueryKind, producer: &str, epoch: &str, subject_hash: &str) -> String {
+    format!(
+        "v=1\nk={}\np={}\ne={}\ns={}",
+        kind.name(),
+        producer,
+        epoch,
+        subject_hash,
+    )
+}
+
+/// Wall-clock seconds since the UNIX epoch (R2). `Cargo.toml` carries
+/// no `chrono`, so this uses the std clock; the `unwrap_or(0)` only
+/// fires if the clock is somehow before the epoch — not a real case.
+fn now_unix_secs() -> u64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|d| d.as_secs())
+        .unwrap_or(0)
+}
+
 /// `explain.item` with a prose render (LEDGER §6 query kind 2): the
 /// structured subgraph is the ground truth; the prose cites URIs; the
 /// stored entry is keyed by `(subgraph, epoch, producer)` so an
 /// epoch change makes yesterday's render unreachable while the
 /// conform facts store stays untouched.
 pub fn prose_explain(root: &Path, map: &Specmap, target: &str) -> Result<ProseRender> {
-    const PRODUCER: &str = "explain.item/prose-template-1";
+    let kind = QueryKind::ExplainItem;
+    let producer = kind.producer();
     let subgraph = crate::explain::explain_json(map, target)?;
     let subject = serde_json::to_string(&subgraph)?;
+    let subject_hash = content_hash(&subject);
     let epoch = epoch(root);
-    let key = content_hash(&format!("{PRODUCER}\n{}\n{subject}", epoch.0));
+    let key = content_hash(&cache_key(kind, producer, &epoch.0, &subject_hash));
     let key_hex = key.strip_prefix("sha256:").unwrap_or(&key).to_string();
     let slot = object_path(root, &key_hex);
 
     let mut telemetry = load_telemetry(root);
-    if let Ok(text) = std::fs::read_to_string(&slot) {
-        telemetry.hits += 1;
-        save_telemetry(root, &telemetry)?;
-        return Ok(ProseRender {
-            text,
-            cached: true,
-            epoch,
-        });
+    // Hit path: a slot exists AND parses as the structured entry
+    // (LEDGER §4). An old bare-prose object (or anything that fails
+    // to parse) is a graceful MISS — counted as a miss, recomputed
+    // into the new shape, no migration code. The key-schema bump
+    // (`v=1` in `cache_key`) already moved the old opaque-hash slots
+    // to unreachable paths, so this branch mostly guards a slot the
+    // new key still resolves to but a pre-B-022 binary wrote.
+    if let Ok(bytes) = std::fs::read_to_string(&slot) {
+        if let Ok(entry) = serde_json::from_str::<LedgerEntry>(&bytes) {
+            telemetry.hits += 1;
+            save_telemetry(root, &telemetry)?;
+            return Ok(ProseRender {
+                text: entry.body,
+                cached: true,
+                epoch,
+            });
+        }
     }
 
-    let text = render_prose(&subgraph, target, &epoch, PRODUCER);
+    // Miss path (slot absent, unreadable, or old-format): recompute.
+    let text = render_prose(&subgraph, target, &epoch, producer);
+    let entry = LedgerEntry {
+        schema: 1,
+        kind: kind.name().to_string(),
+        producer: producer.to_string(),
+        epoch: epoch.0.clone(),
+        inputs_hash: subject_hash,
+        created_at_unix: now_unix_secs(),
+        body: text.clone(),
+    };
     if let Some(parent) = slot.parent() {
         std::fs::create_dir_all(parent)?;
     }
-    std::fs::write(&slot, &text).with_context(|| format!("writing {}", slot.display()))?;
+    std::fs::write(&slot, serde_json::to_string_pretty(&entry)?)
+        .with_context(|| format!("writing {}", slot.display()))?;
     telemetry.misses += 1;
     save_telemetry(root, &telemetry)?;
     Ok(ProseRender {
@@ -299,5 +407,153 @@ mod tests {
         let tmp = tempfile::tempdir().unwrap();
         seed_epoch_inputs(tmp.path());
         assert_eq!(epoch(tmp.path()), epoch(tmp.path()));
+    }
+
+    /// (a) An old bare-prose slot (the pre-B-022 on-disk shape) at the
+    /// path the new key resolves to is a MISS — recomputed into the
+    /// new `LedgerEntry` shape, then a second call hits. Roundtrip.
+    #[test]
+    fn old_bare_prose_slot_is_a_miss_then_recomputes_to_structured() {
+        let tmp = tempfile::tempdir().unwrap();
+        seed_epoch_inputs(tmp.path());
+        let map = mini_map();
+
+        // Resolve the exact slot the new key computes, and pre-seed
+        // it with an old bare-prose object.
+        let kind = QueryKind::ExplainItem;
+        let producer = kind.producer();
+        let subgraph = crate::explain::explain_json(&map, "demo::thing").unwrap();
+        let subject = serde_json::to_string(&subgraph).unwrap();
+        let subject_hash = content_hash(&subject);
+        let ep = epoch(tmp.path());
+        let key = content_hash(&cache_key(kind, producer, &ep.0, &subject_hash));
+        let key_hex = key.strip_prefix("sha256:").unwrap_or(&key);
+        let slot = object_path(tmp.path(), key_hex);
+        std::fs::create_dir_all(slot.parent().unwrap()).unwrap();
+        std::fs::write(&slot, "this is old bare prose, not a JSON entry").unwrap();
+
+        let render = prose_explain(tmp.path(), &map, "demo::thing").unwrap();
+        assert!(
+            !render.cached,
+            "an old bare-prose slot must miss and recompute"
+        );
+
+        // The slot is now a structured entry.
+        let on_disk: LedgerEntry =
+            serde_json::from_str(&std::fs::read_to_string(&slot).unwrap()).unwrap();
+        assert_eq!(on_disk.schema, 1);
+        assert_eq!(on_disk.kind, "explain.item");
+        assert_eq!(on_disk.producer, "explain.item/prose-template-1");
+        assert_eq!(on_disk.epoch, ep.0);
+        assert_eq!(on_disk.inputs_hash, subject_hash);
+        assert_eq!(on_disk.body, render.text);
+        assert!(on_disk.created_at_unix > 0);
+
+        // A second call now hits the recomputed structured slot.
+        let second = prose_explain(tmp.path(), &map, "demo::thing").unwrap();
+        assert!(second.cached);
+        assert_eq!(second.text, render.text);
+
+        let t = load_telemetry(tmp.path());
+        assert_eq!(
+            (t.hits, t.misses),
+            (1, 1),
+            "old-format miss counted once, then a hit"
+        );
+    }
+
+    /// (b) The canonical key material is stable for identical inputs
+    /// and discriminates across producer / epoch / subject. The kind
+    /// name is embedded in the `k=` field, so a future second variant
+    /// would differ by construction (only one kind ships today).
+    #[test]
+    fn cache_key_is_stable_and_discriminating() {
+        let kind = QueryKind::ExplainItem;
+        let producer = kind.producer();
+        let subject_hash = "sha256:aaaa";
+        let epoch_a = "sha256:1111";
+        let epoch_b = "sha256:2222";
+
+        let k1 = cache_key(kind, producer, epoch_a, subject_hash);
+        let k2 = cache_key(kind, producer, epoch_a, subject_hash);
+        assert_eq!(k1, k2, "identical inputs must yield identical material");
+
+        // The kind name is embedded — a second kind would differ here.
+        assert!(k1.contains("k=explain.item\n"), "kind folds into the key");
+
+        assert_ne!(
+            cache_key(kind, producer, epoch_a, "sha256:bbbb"),
+            k1,
+            "different subject must differ"
+        );
+        assert_ne!(
+            cache_key(kind, producer, epoch_b, subject_hash),
+            k1,
+            "different epoch must differ"
+        );
+        assert_ne!(
+            cache_key(kind, "explain.item/other-producer", epoch_a, subject_hash),
+            k1,
+            "different producer must differ"
+        );
+    }
+
+    /// (c) `LedgerEntry` roundtrips through serde losslessly.
+    #[test]
+    fn ledger_entry_roundtrips_through_serde() {
+        let entry = LedgerEntry {
+            schema: 1,
+            kind: "explain.item".into(),
+            producer: "explain.item/prose-template-1".into(),
+            epoch: "sha256:deadbeef".into(),
+            inputs_hash: "sha256:cafe".into(),
+            created_at_unix: 1_700_000_000,
+            body: "# demo::thing\n\n— provenance: ...".into(),
+        };
+        let json = serde_json::to_string(&entry).unwrap();
+        let back: LedgerEntry = serde_json::from_str(&json).unwrap();
+        assert_eq!(back.schema, entry.schema);
+        assert_eq!(back.kind, entry.kind);
+        assert_eq!(back.producer, entry.producer);
+        assert_eq!(back.epoch, entry.epoch);
+        assert_eq!(back.inputs_hash, entry.inputs_hash);
+        assert_eq!(back.created_at_unix, entry.created_at_unix);
+        assert_eq!(back.body, entry.body);
+    }
+
+    /// (d) §8 FAILURE-CACHE-POISONING predicate: a bad producer's
+    /// entries can now be selected by filtering the `producer` field
+    /// the entry carries — impossible when the slot was opaque prose.
+    /// This is the capability the structured entry exists to enable.
+    #[test]
+    fn entries_can_be_selected_by_producer_predicate() {
+        let good = LedgerEntry {
+            schema: 1,
+            kind: "explain.item".into(),
+            producer: "explain.item/prose-template-1".into(),
+            epoch: "sha256:e1".into(),
+            inputs_hash: "sha256:s1".into(),
+            created_at_unix: 1,
+            body: "good".into(),
+        };
+        let bad = LedgerEntry {
+            schema: 1,
+            kind: "explain.item".into(),
+            producer: "explain.item/POISONED-llm-7".into(),
+            epoch: "sha256:e1".into(),
+            inputs_hash: "sha256:s1".into(),
+            created_at_unix: 2,
+            body: "bad".into(),
+        };
+        let entries = vec![good, bad];
+
+        // Wholesale invalidation of the poisoned producer is now a
+        // one-predicate filter over a field the entry carries.
+        let poisoned: Vec<&LedgerEntry> = entries
+            .iter()
+            .filter(|e| e.producer == "explain.item/POISONED-llm-7")
+            .collect();
+        assert_eq!(poisoned.len(), 1);
+        assert_eq!(poisoned[0].body, "bad");
     }
 }

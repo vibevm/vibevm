@@ -25,10 +25,10 @@
 - ##c-3-side-b **Side B:** EsoLang follow-up (benchmark): +Text ~0 effect (Sonnet 12→12); +Lib transformative (12→64). @spec/done
 - ##C-3-RESOLUTION **Resolution:** **executable beats prose for capability transfer.** → **Runnable capital** (Manifesto §5; the entire scaffold catalog). This reversed our own prior-turn position; recorded as a death so it is not re-nucleated. @impl/done
 
-## C-4 — "Type-constrained decoding cuts errors 74.8%" vs "no Rust implementation exists" {#c-4-tcg-without-rust}
+## C-4 — "Type-constrained decoding cuts compile errors 75.3%/70.2%" vs "no Rust implementation exists" {#c-4-tcg-without-rust}
 - ##c-4-side-a **Side A:** type-constrained decoding is highly effective (benchmark, TypeScript). @spec/done
 - ##c-4-side-b **Side B:** the method is per-language manual work; only TypeScript exists; Rust's traits/lifetimes are far harder (the authors' repo, primary source). @spec/done
-- ##C-4-RESOLUTION **Resolution:** route the oracle to where it exists — **post-generation `cargo check` loop** (Class E) for Rust today; constrained decoding is a **future tool** (`vibe-tcg`), staged, standing on rust-analyzer rather than reimplementing the type system. The 74.8% does not transfer for free. → Guide §12, tcg spec. @impl/done
+- ##C-4-RESOLUTION **Resolution:** route the oracle to where it exists — **post-generation `cargo check` loop** (Class E) for Rust today; constrained decoding is a **future tool** (`vibe-tcg`), staged, standing on rust-analyzer rather than reimplementing the type system. The 75.3%/70.2% (synthesis/translation — DR2-012's canonical pair) does not transfer for free. → Guide §12, tcg spec. @impl/done
 
 ## C-5 — Rust benchmark conflict: 58% (SWE-bench Multilingual) vs 10–17% (Multi-SWE-bench) {#c-5-rust-benchmark-conflict}
 - ##c-5-side-a **Side A:** Rust resolves well (highest of 9 languages at 58%). @spec/done

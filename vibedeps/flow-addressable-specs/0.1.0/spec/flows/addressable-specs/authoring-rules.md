@@ -100,7 +100,9 @@ it and stop pretending it binds. @impl/done
 ##RECORD-THE-TEST-NAME-IN-THE-UNIT Record the test name in the unit
 once it exists (`Test: …`); that line is half of the bidirectional
 graph described in the
-[protocol §graph](ADDRESSABLE-SPECS-PROTOCOL.md#graph). @impl/done
+[protocol §graph](ADDRESSABLE-SPECS-PROTOCOL.md#graph) — and where the
+project mechanizes that graph, the same half is authored as a tag on the
+test and rendered back at the unit instead, per that section. @impl/done
 
 ## Deviations are first-class {#deviations}
 
@@ -214,7 +216,9 @@ Do not edit anything yet.
   binds. @impl/done
 - ##SUM-CONTRACT-AND-RATIONALE-ARE-SEPARATE Contract and rationale are separate; the spec never restates
   *how*. A spec that mirrors code is shadow code. @impl/done
-- ##SUM-EVERY-CONTRACT-IMPLIES-A-TEST Every contract implies a test; the unit names it. @impl/done
+- ##SUM-EVERY-CONTRACT-IMPLIES-A-TEST Every contract implies a test; the unit
+  names it, by a `Test:` line or by a rendered edge where the graph is
+  mechanized. @impl/done
 - ##SUM-DEVIATIONS-ARE-RECORDED-WHERE-THEY-HAPPEN Deviations are recorded where they happen, with reasons; the
   undocumented one is the defect. @impl/done
 - ##SUM-THE-SIZE-BUDGETS Budgets: boot ≤ 500 tokens, WAL ≤ 3000, module spec ≤ 5000 —

@@ -244,7 +244,9 @@ be re-checked. @impl/done
 ##NO-TOOLING-IS-REQUIRED-TO-BENEFIT No tooling is required to benefit — a plain
 `grep -rn "PROP-001#verification.timeout"` answers "which code
 implements this unit", the `Test:` line answers "which test verifies
-it", and a failing test carries the address of the violated unit. @impl/done
+it", and a failing test carries the address of the violated unit. Where
+the graph is mechanized, the same two questions are answered by the
+rendered view over the code-side tags instead (§[graph](#graph)). @impl/done
 
 ##the-graph-pays-off-from-the-first-marker Tools can mechanize the check later; the graph is useful the day
 the first marker lands. @impl/done
@@ -283,5 +285,7 @@ project:
 - ##SUM-ONE-FACT-ONE-ANCHOR One fact, one anchor. Copies diverge silently; cite instead. @impl/done
 - ##SUM-INVARIANTS-AT-THE-EDGES Invariants live at the start or end of a file — the middle is
   where models stop reading. @impl/done
-- ##SUM-THE-BIDIRECTIONAL-GRAPH `Implements:` markers plus `Test:` lines form a bidirectional
-  graph that pays off with zero tooling. @impl/done
+- ##SUM-THE-BIDIRECTIONAL-GRAPH `Implements:` markers plus `Test:` lines form a
+  bidirectional graph that pays off with zero tooling — and where the graph is
+  mechanized, the same two edges are authored as code-side tags and the
+  spec-side view is rendered (§[graph](#graph)). @impl/done
