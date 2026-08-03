@@ -72,15 +72,20 @@ missing parameter, a violated invariant — the URI wins every time. @impl/done
 ## The URI scheme {#uri-scheme}
 
 ```
-spec://<module>/<doc>#<section>[.<sub>]
+spec://<group>/<name>[@<version>]/<doc-path>#<section>[.<sub>…][~r<N>]
 ```
+
+##URI-SCHEME-IS-THE-FULL-GRAMMAR This is the **whole** grammar — the section stopped publishing a subset of what implementations resolve (2026-08-04, closing the split the vibevm host measured): the authority is a package coordinate, the version and the revision pin are optional extensions, and a project's root is a package like any other (no host exception exists). @impl/done
 
 | Segment     | Meaning | Example |
 |-------------|---------|---------|
-| ##ROW-SEGMENT-MODULE `<module>` @impl/done | spec module — a directory under `spec/modules/`, or `common` @impl/done | `com.example.shop` @impl/done |
-| ##ROW-SEGMENT-DOC `<doc>` @impl/done | document name, extension dropped @impl/done | `PROP-001` @impl/done |
+| ##ROW-SEGMENT-GROUP-NAME `<group>/<name>` @impl/done | the package coordinate: reverse-DNS group, then package name, joined by `/` (never `.`) — the root project included, addressed by its own declared coordinate @impl/done | `org.vibevm.world/wal` @impl/done |
+| ##ROW-SEGMENT-VERSION `[@<version>]` @impl/done | **optional — a feature, never an obligation** (owner-ruled 2026-08-04): absent, the address resolves against the **freshest installed version** (semver-newest); explicit, it picks its exact slot, including a non-newest one @impl/done | `@0.8.0` @impl/done |
+| ##ROW-SEGMENT-MODULE `<module>` @impl/done | inside `<doc-path>`: the spec module — a directory under `spec/modules/`, or `common` @impl/done | `modules/vibe-registry` @impl/done |
+| ##ROW-SEGMENT-DOC `<doc>` @impl/done | inside `<doc-path>`: the document name, extension dropped @impl/done | `PROP-001` @impl/done |
 | ##ROW-SEGMENT-SECTION `<section>` @impl/done | the `{#anchor}` of a heading in that document @impl/done | `verification` @impl/done |
 | ##ROW-SEGMENT-SUB `.<sub>` @impl/done | dotted hierarchy inside the anchor namespace @impl/done | `verification.timeout` @impl/done |
+| ##ROW-SEGMENT-REVISION-PIN `[~r<N>]` @impl/done | pins a **spec-unit revision** for drift detection — never a package version (the `@` half owns that) @impl/done | `#verification~r2` @impl/done |
 
 ##why-a-uri-and-not-a-bespoke-notation Why a URI and not a bespoke notation? @spec/done
 

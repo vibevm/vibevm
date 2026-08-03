@@ -98,7 +98,7 @@ spec://<group>/<name>[@<version>]/<doc-path>#<anchor>[.<sub>…][~r<N>]
 ```
 
 - ##URI-JOINER `group` ↔ `name` joiner is **`/`, never `.`** (PROP-029). @impl/done
-- ##URI-VERSION-OPTIONAL `@<version>` is **optional**; absent, the version is taken from the lockfile / current install. This closes one of today's ambiguities (the URI carried no version while several versions coexist on disk). @impl/done
+- ##URI-VERSION-OPTIONAL `@<version>` is **optional — a feature, never an obligation (owner-ruled 2026-08-04, B-028: «указание версий — опциональная фича; если версия не указана — используется самая свежая»)**; absent, the address resolves against the **freshest installed version** of the package (semver-newest among the materialised `vibedeps/` slots — the one deterministic offline reading of «самая свежая»). Several coexisting slots are therefore not an ambiguity but an ordered set with a defined maximum; an explicit `@<version>` still picks its exact slot, including a non-newest one. @impl/done
 - ##URI-TREE-PATH `#<anchor>.<sub>…` is a **tree path** into the document IR (§5). @impl/done
 - ##URI-REVISION-PIN `~r<N>` pins a spec-unit revision (PROP-014), not a package version. @spec/done
 
@@ -107,7 +107,7 @@ spec://<group>/<name>[@<version>]/<doc-path>#<anchor>[.<sub>…][~r<N>]
 - ##ROUTER-SELF-COORDINATE **The self coordinate (B-031, owner-approved 2026-08-04)** — the root project's own `<group>/<name>` (declared in `[project]`, e.g. `org.vibevm.core/vibevm`) resolves to the workspace's **authored `spec/` tree**, matched before any `vibedeps/` slot lookup and never versioned; an undotted authority (the retired host token, illustrative fixtures) parses but never resolves — a hard error carrying the rename hint. @impl/done
 - ##ROUTER-DOC-ID **Doc-id truncation** — `PROP-NNN` / `FEAT-NNN` in a URI resolve to `PROP-NNN-<slug>.md`; other docs use the full stem. (This is `canonical_doc_path` in the specmap engine, reused, not reinvented.) @impl/done
 - ##ROUTER-VIBEDEPS **`packages/` (source) vs `vibedeps/` (materialized slot)** — the compiler resolves against the **materialized `vibedeps/` tree** (the installed reality), consistent with the specmap engine, which never scans `packages/`. @impl/done
-- ##ROUTER-VERSION **Version selection** from the lockfile when `@version` is absent. @impl/done
+- ##ROUTER-VERSION **Version selection when `@version` is absent — the freshest installed** (semver-newest slot; owner-ruled 2026-08-04, B-028, superseding the earlier lockfile wording). A lockfile-informed selection layer above the router remains possible machinery, but the router's own default is the newest materialised slot — deterministic over the installed set. @impl/done
 
 - ##ROUTER-DETERMINISM Determinism is a hard requirement: the static compiler must resolve every address to exactly one node or fail loudly. @impl/done
 - ##ROUTER-EXTENDS-SPECMAP The router extends the `specmap.json` index (already a `uri↔file` table) rather than duplicating it. @impl/done

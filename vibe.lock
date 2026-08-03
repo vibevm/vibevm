@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-08-03T11:05:09Z"
+generated_at = "2026-08-03T11:50:52Z"
 schema_version = 5
 root_dependencies = [
     "stack:org.vibevm/rust-ai-native@^0.7.0",
@@ -36,7 +36,7 @@ name = "redbook"
 group = "org.vibevm.world"
 version = "0.2.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/redbook/v0.2.0"
-content_hash = "sha256:de2ce169dc13e368615763deb3dc086cf685af4d9ea2402c82f3f4efa7308052"
+content_hash = "sha256:56dc40aa2927ddf48765b15894045a0e4fce125121954a3c19caf60d6eded9f8"
 files_written = []
 dependencies = [
     "flow:org.vibevm.world/addressable-specs@=0.1.0",
@@ -177,7 +177,7 @@ name = "addressable-specs"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/addressable-specs/v0.1.0"
-content_hash = "sha256:867690145c57a0ccd09f849f81479800ace84f9891f48eb15cfa632cc77e6c67"
+content_hash = "sha256:f4e8d4f2446fda2f7d169b76e9012696157b352a9543f137e0b12c1a5000e258"
 files_written = []
 source_kind = "local"
 
