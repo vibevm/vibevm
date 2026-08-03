@@ -9,7 +9,7 @@
 //! primary UI never uses those ASCII characters as *semantic* glyphs (PROP-037
 //! §2.2.2).
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#glyph-vocabulary");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#glyph-vocabulary");
 
 /// The complete glyph set the TUI renders with. Built once for a given tier by
 /// [`Glyphs::rich`] (Tier ≥ 1) or [`Glyphs::ascii`] (Tier 0); the active

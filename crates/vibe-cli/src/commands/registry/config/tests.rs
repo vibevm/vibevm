@@ -1,6 +1,6 @@
 //! Unit tests for the registry-config helpers.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#registry");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
 use super::{adapter_for_host, parse_naming};
 use vibe_core::manifest::NamingConvention;

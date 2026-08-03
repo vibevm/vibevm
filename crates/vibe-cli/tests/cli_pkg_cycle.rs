@@ -18,7 +18,7 @@ use predicates::prelude::*;
 use specmark::verifies;
 
 #[test]
-#[verifies("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
+#[verifies("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 fn full_install_cycle() {
     // PROP-009 loading model: `vibe install` materialises a resolved
     // package's published tree verbatim into a `vibedeps/<kind>-<name>/
@@ -197,7 +197,7 @@ fn full_install_cycle() {
 /// `vibedeps/` slot already present for the resolved version. The slot
 /// still stands and the lockfile keeps exactly one entry.
 #[test]
-#[verifies("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
+#[verifies("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 fn install_second_install_is_idempotent() {
     let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
@@ -345,7 +345,7 @@ fn install_reports_json() {
 /// lockfile fresh and skips the depsolver entirely. The fast-path report
 /// carries `unchanged: true` and emits no resolution plan ahead of it.
 #[test]
-#[verifies("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
+#[verifies("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 fn install_skips_resolution_when_the_lockfile_is_fresh() {
     let project = tempfile::tempdir().unwrap();
     // The registry lives OUTSIDE the project so the fresh-lockfile fast
@@ -872,7 +872,10 @@ fn install_from_git_registry() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#git-source", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source",
+    r = 1
+)]
 fn install_from_git_source_with_tag_records_source_kind_git() {
     if !git_available() {
         eprintln!("skipping install_from_git_source_with_tag: git not on PATH");
@@ -960,7 +963,10 @@ fn install_from_git_source_with_tag_records_source_kind_git() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#git-source", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source",
+    r = 1
+)]
 fn install_from_git_source_with_branch_pins_lockfile_to_resolved_commit() {
     if !git_available() {
         eprintln!("skipping install_from_git_source_with_branch: git not on PATH");
@@ -1026,7 +1032,10 @@ fn install_from_git_source_with_branch_pins_lockfile_to_resolved_commit() {
 /// `vibedeps/` slot. The manifest keeps exactly one git-source entry
 /// and the lockfile one entry with `source_kind = "git"`.
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#git-source", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source",
+    r = 1
+)]
 fn install_git_source_then_repeat_install_no_args_is_idempotent() {
     if !git_available() {
         eprintln!("skipping install_git_source_then_repeat_install: git not on PATH");

@@ -66,7 +66,10 @@ fn fs_must_create(p: &Path) {
 /// (the binary-level reindex tests below exercise the same walk
 /// end-to-end through the composition root).
 #[test]
-#[verifies("spec://vibevm/modules/vibe-index/PROP-005#reindex", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#reindex",
+    r = 1
+)]
 fn from_clones_cell_scans_through_the_seam() {
     use vibe_index::scanner::{FromClonesOptions, FromClonesScanner, PackageScanner};
     use vibe_index::types::NamingConvention;
@@ -111,7 +114,10 @@ fn from_clones_cell_scans_through_the_seam() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-index/PROP-005#reindex", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#reindex",
+    r = 1
+)]
 fn reindex_from_clones_walks_three_packages() {
     if !git_available() {
         return;
@@ -305,7 +311,10 @@ fn reindex_text_output_lists_skipped_entries() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-index/PROP-005#reindex", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#reindex",
+    r = 1
+)]
 fn incremental_skips_unchanged_repos_and_picks_up_new_tags() {
     if !git_available() {
         return;

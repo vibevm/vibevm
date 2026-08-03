@@ -6,7 +6,7 @@
 //!
 //! [`super::flatten`]: super::flatten
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#tree-shapes");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#tree-shapes");
 
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 
@@ -42,7 +42,7 @@ pub enum TreeShape {
     PrunedTree,
 }
 
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#tree-shapes")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#tree-shapes")]
 impl TreeShape {
     /// Whether this shape runs the orphan pass. Only [`TreeShape::MembersAsRoots`]
     /// does — it is the "show everything" default and keeps the PROP-036 §2.12

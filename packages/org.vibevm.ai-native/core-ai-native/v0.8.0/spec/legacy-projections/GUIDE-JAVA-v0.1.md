@@ -30,7 +30,7 @@ A cell is a **Maven/Gradle module** by default; in small repos a package guarded
 Cell manifest (annotation carrier, §5):
 
 ```java
-@SpecImplements(value = "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade", r = 2)
+@SpecImplements(value = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade", r = 2)
 @Cell(seam = "DepSolver", variant = "sat", replaces = "naive", flag = "solver")
 public final class SatDepSolver implements DepSolver {
     private final DepProvider provider;

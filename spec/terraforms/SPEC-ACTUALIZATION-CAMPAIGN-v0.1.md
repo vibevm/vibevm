@@ -919,7 +919,7 @@ because it is the part wave 2 turned into amendments.*
   archive-provenance form instead (the honest inverse of the plan's
   port-then-repoint expectation, recorded here as the L2→L3 finding).
   **L4 (repoints):** four batch commits `83346e78` `f8f347d8`
-  `9514e8fb` `1ec6a27c` — 26 sites incl. both `spec://vibevm/research`
+  `9514e8fb` `1ec6a27c` — 26 sites incl. both `spec://org.vibevm.core/vibevm/research`
   URI retirements, plus **four word-level sites the path greps could
   not see** (PROP-031 status-line, PROP-037 plan pointer, PROP-040
   delta-mapping, PROP-041 `spec.research` §3.7): the literal-backtick

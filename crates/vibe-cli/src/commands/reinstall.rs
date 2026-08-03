@@ -24,9 +24,9 @@
 //! regenerates the whole workspace — a node and every ancestor
 //! (PROP-009 §2.10): a node's aggregated boot depends on its members'.
 //!
-//! Spec: spec://vibevm/modules/vibe-workspace/PROP-009-loading-model §2.10.
+//! Spec: spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009-loading-model §2.10.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#cli-surface");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface");
 
 use std::fs;
 use std::path::{Path, PathBuf};

@@ -1,7 +1,7 @@
 //! `vibe registry redirect-update` — partial marker rewrite on an
 //! existing stub (PROP-002 §2.4.2 trust model).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#redirect");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect");
 
 use anyhow::{Context, Result, anyhow, bail};
 use vibe_core::manifest::Manifest;

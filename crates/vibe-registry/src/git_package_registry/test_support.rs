@@ -1,7 +1,7 @@
 //! Shared fixtures for the per-package registry's submodule tests —
 //! the canned [`GitBackend`] fake plus registry constructors.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#registry-model");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 pub(crate) use fixtures::*;
 

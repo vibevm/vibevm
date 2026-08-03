@@ -12,7 +12,7 @@
 //!
 //! [prop]: ../../../../../spec/modules/vibe-registry/PROP-001-git-backend.md
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-001#backend");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#backend");
 
 use std::ffi::OsString;
 use std::path::{Path, PathBuf};

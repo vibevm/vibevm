@@ -9,7 +9,7 @@
 //! (matches the discipline `vibe-publish::github` follows for HTTPS
 //! token-auth pushes — token never appears in logs or process output).
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#reindex");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#reindex");
 
 use std::path::PathBuf;
 use std::process::Command;
@@ -60,7 +60,7 @@ impl FromGithubOptions {
 /// lifetime (a scratch temp dir or an operator-supplied warm cache);
 /// the cell only fills and walks it.
 #[cell(seam = "PackageScanner", variant = "from-github")]
-#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#reindex")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#reindex")]
 pub struct FromGithubScanner {
     /// API endpoint, org, auth, and clone destination for the fetch
     /// half; the walk half shares [`FromClonesOptions`] through the

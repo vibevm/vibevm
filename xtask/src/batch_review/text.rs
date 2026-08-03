@@ -15,7 +15,7 @@
 use super::fences::{blank_fences, is_fence_line};
 
 // ---------------------------------------------------------------- vocabulary
-// spec://vibevm/modules/vibe-progress/PROP-043#stages / #states / #actions
+// spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#stages / #states / #actions
 pub(super) const STAGES: &[&str] = &["idea", "spec", "impl", "test", "doc", "freeze", "unknown"];
 pub(super) const STATES: &[&str] = &["plan", "work", "done", "hold", "void"];
 pub(super) const ACTIONS: &[&str] = &["continue", "drift", "rework", "remove"];

@@ -36,7 +36,7 @@
 //! constructs the credentialed URL on demand; the value is consumed
 //! immediately by the publisher and never persisted.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#publish");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish");
 
 use std::time::Duration;
 

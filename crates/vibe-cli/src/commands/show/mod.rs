@@ -18,7 +18,7 @@
 //! Spec: `VIBEVM-SPEC.md` §9.5 (configuration sources / provenance),
 //! §4.6 (effective spec), ROADMAP §M1.4.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#command-summary");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
 mod config;
 mod effective;

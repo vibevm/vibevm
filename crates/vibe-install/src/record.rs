@@ -3,7 +3,7 @@
 //! plan/apply phases drive them, and `vibe update` reuses the pin
 //! helper.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
 use vibe_core::manifest::{GitPackageDep, LockedPackage, Lockfile, Manifest, SourceKind};
 use vibe_core::{ContentHash, PackageName, PackageRef, SourceUrl, VersionSpec};

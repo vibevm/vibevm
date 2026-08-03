@@ -2,7 +2,7 @@
 //! never build artifacts. The exclusion list MUST stay in lockstep
 //! with `vibe-index`'s content_hash port (PROP-005 §3.2).
 
-specmark::scope!("spec://vibevm/common/PROP-024#shippable-tree");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-024#shippable-tree");
 
 use std::fs;
 use std::path::{Path, PathBuf};

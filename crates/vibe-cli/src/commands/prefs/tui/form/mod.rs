@@ -18,7 +18,7 @@
 //!
 //! [`TreeSettings`]: crate::commands::tree::tui::settings::TreeSettings
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#edit-form");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#edit-form");
 
 pub mod control;
 pub mod lifecycle;
@@ -153,7 +153,9 @@ impl Form {
     /// (PROP-041 §4 `#form-per-type`). One field per page key, derived from the
     /// key's `KeyMeta` + resolved value. The write-layer defaults per the session
     /// context (#write-layer-choice). Returns `None` when no page is open.
-    #[spec(implements = "spec://vibevm/modules/vibe-settings/PROP-041#form-per-type")]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#form-per-type"
+    )]
     pub fn build(app: &PrefsApp) -> Option<Self> {
         let page_id = app.open_page.as_deref()?;
         let decl = app.registry.pages().iter().find(|d| d.id == page_id)?;

@@ -150,23 +150,29 @@ mod tests {
     }
 
     fn seed() -> SpecAddress {
-        SpecAddress::parse("spec://vibevm/a#r").unwrap()
+        SpecAddress::parse("spec://org.vibevm.core/vibevm/a#r").unwrap()
     }
 
     #[test]
     fn linear_cascade_orders_dependencies_first() {
         let src = MockSource::new(&[
-            ("spec://vibevm/a#r", "#use spec://vibevm/b#r"),
-            ("spec://vibevm/b#r", "#use spec://vibevm/c#r"),
-            ("spec://vibevm/c#r", "leaf"),
+            (
+                "spec://org.vibevm.core/vibevm/a#r",
+                "#use spec://org.vibevm.core/vibevm/b#r",
+            ),
+            (
+                "spec://org.vibevm.core/vibevm/b#r",
+                "#use spec://org.vibevm.core/vibevm/c#r",
+            ),
+            ("spec://org.vibevm.core/vibevm/c#r", "leaf"),
         ]);
         let order = topo_order_from(&seed(), &src).unwrap();
         assert_eq!(
             order,
             vec![
-                "spec://vibevm/c#r".to_string(),
-                "spec://vibevm/b#r".to_string(),
-                "spec://vibevm/a#r".to_string(),
+                "spec://org.vibevm.core/vibevm/c#r".to_string(),
+                "spec://org.vibevm.core/vibevm/b#r".to_string(),
+                "spec://org.vibevm.core/vibevm/a#r".to_string(),
             ]
         );
     }
@@ -175,31 +181,40 @@ mod tests {
     fn diamond_deduplicates_the_shared_dependency() {
         let src = MockSource::new(&[
             (
-                "spec://vibevm/a#r",
-                "#use spec://vibevm/b#r\n#use spec://vibevm/c#r",
+                "spec://org.vibevm.core/vibevm/a#r",
+                "#use spec://org.vibevm.core/vibevm/b#r\n#use spec://org.vibevm.core/vibevm/c#r",
             ),
-            ("spec://vibevm/b#r", "#use spec://vibevm/d#r"),
-            ("spec://vibevm/c#r", "#use spec://vibevm/d#r"),
-            ("spec://vibevm/d#r", "shared leaf"),
+            (
+                "spec://org.vibevm.core/vibevm/b#r",
+                "#use spec://org.vibevm.core/vibevm/d#r",
+            ),
+            (
+                "spec://org.vibevm.core/vibevm/c#r",
+                "#use spec://org.vibevm.core/vibevm/d#r",
+            ),
+            ("spec://org.vibevm.core/vibevm/d#r", "shared leaf"),
         ]);
         let order = topo_order_from(&seed(), &src).unwrap();
         assert_eq!(order.len(), 4, "d appears once: {order:?}");
-        assert_eq!(order.first().unwrap(), "spec://vibevm/d#r");
-        assert_eq!(order.last().unwrap(), "spec://vibevm/a#r");
+        assert_eq!(order.first().unwrap(), "spec://org.vibevm.core/vibevm/d#r");
+        assert_eq!(order.last().unwrap(), "spec://org.vibevm.core/vibevm/a#r");
     }
 
     #[test]
     fn in_place_use_is_a_dependency_edge() {
         let src = MockSource::new(&[
-            ("spec://vibevm/a#r", "prose @spec://vibevm/b#r here"),
-            ("spec://vibevm/b#r", "leaf"),
+            (
+                "spec://org.vibevm.core/vibevm/a#r",
+                "prose @spec://org.vibevm.core/vibevm/b#r here",
+            ),
+            ("spec://org.vibevm.core/vibevm/b#r", "leaf"),
         ]);
         let order = topo_order_from(&seed(), &src).unwrap();
         assert_eq!(
             order,
             vec![
-                "spec://vibevm/b#r".to_string(),
-                "spec://vibevm/a#r".to_string(),
+                "spec://org.vibevm.core/vibevm/b#r".to_string(),
+                "spec://org.vibevm.core/vibevm/a#r".to_string(),
             ]
         );
     }
@@ -207,15 +222,21 @@ mod tests {
     #[test]
     fn a_cycle_is_reported_with_its_path() {
         let src = MockSource::new(&[
-            ("spec://vibevm/a#r", "#use spec://vibevm/b#r"),
-            ("spec://vibevm/b#r", "#use spec://vibevm/a#r"),
+            (
+                "spec://org.vibevm.core/vibevm/a#r",
+                "#use spec://org.vibevm.core/vibevm/b#r",
+            ),
+            (
+                "spec://org.vibevm.core/vibevm/b#r",
+                "#use spec://org.vibevm.core/vibevm/a#r",
+            ),
         ]);
         let err = topo_order_from(&seed(), &src).unwrap_err();
         match err {
             UseGraphError::Cycle(path) => {
-                assert_eq!(path.first().unwrap(), "spec://vibevm/a#r");
-                assert_eq!(path.last().unwrap(), "spec://vibevm/a#r");
-                assert!(path.contains(&"spec://vibevm/b#r".to_string()));
+                assert_eq!(path.first().unwrap(), "spec://org.vibevm.core/vibevm/a#r");
+                assert_eq!(path.last().unwrap(), "spec://org.vibevm.core/vibevm/a#r");
+                assert!(path.contains(&"spec://org.vibevm.core/vibevm/b#r".to_string()));
             }
             other => panic!("expected a cycle, got {other:?}"),
         }
@@ -223,16 +244,19 @@ mod tests {
 
     #[test]
     fn an_unresolved_use_is_reported() {
-        let src = MockSource::new(&[("spec://vibevm/a#r", "#use spec://vibevm/missing#r")]);
+        let src = MockSource::new(&[(
+            "spec://org.vibevm.core/vibevm/a#r",
+            "#use spec://org.vibevm.core/vibevm/missing#r",
+        )]);
         let err = topo_order_from(&seed(), &src).unwrap_err();
         assert!(matches!(err, UseGraphError::Unresolved { .. }));
     }
 
     #[test]
     fn a_leaf_seed_orders_just_itself() {
-        let src = MockSource::new(&[("spec://vibevm/a#r", "no uses here")]);
+        let src = MockSource::new(&[("spec://org.vibevm.core/vibevm/a#r", "no uses here")]);
         let order = topo_order_from(&seed(), &src).unwrap();
-        assert_eq!(order, vec!["spec://vibevm/a#r".to_string()]);
+        assert_eq!(order, vec!["spec://org.vibevm.core/vibevm/a#r".to_string()]);
     }
 
     #[test]

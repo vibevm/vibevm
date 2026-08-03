@@ -1,7 +1,7 @@
 //! The `when` activation condition a `[boot_snippet]` can carry — the OS
 //! gate of the loading model (PROP-009 §2.4 / §2.6).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#git-source");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source");
 
 use serde::{Deserialize, Serialize};
 

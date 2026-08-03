@@ -2,7 +2,7 @@
 //! (PROP-019 §2.2). Carries the full verb set: `install`, activation
 //! (`use`/`env`), introspection (`ls`/`current`/`which`/`doctor`), `remove`/`gc`.
 
-specmark::scope!("spec://vibevm/common/PROP-019#surface");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#surface");
 
 use clap::Subcommand;
 

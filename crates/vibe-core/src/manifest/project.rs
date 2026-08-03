@@ -11,7 +11,7 @@
 //! that bypass the registry layer for specific pkgrefs. Schema:
 //! `VIBEVM-SPEC.md` §7.5, [PROP-002 §2.2 / §2.3 / §2.4](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#registry-model");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use serde::{Deserialize, Serialize};
 

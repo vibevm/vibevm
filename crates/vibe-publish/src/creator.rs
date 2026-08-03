@@ -5,7 +5,7 @@
 //! host. Layering per
 //! [PROP-002 §2.10](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#publish).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#publish");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish");
 
 use crate::PublishError;
 

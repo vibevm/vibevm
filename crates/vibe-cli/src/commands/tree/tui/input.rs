@@ -18,7 +18,7 @@
 //!    they may also be in the keymap, but the direct handling stays so
 //!    navigation is instant and unaffected by the resolver's enablement gate.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#tui");
 
 use anyhow::Result;
 use rat_salsa::Control;

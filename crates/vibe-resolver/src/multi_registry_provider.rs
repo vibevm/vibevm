@@ -16,7 +16,7 @@ use crate::{DepProvider, DepProviderError, VersionEnumerator};
 
 /// `DepProvider` impl backed by a [`MultiRegistryResolver`].
 #[cell(seam = "DepProvider", variant = "multi-registry", flag = "provider")]
-#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#solver")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
 pub struct MultiRegistryProvider<'a> {
     resolver: &'a MultiRegistryResolver,
 }
@@ -28,7 +28,9 @@ impl<'a> MultiRegistryProvider<'a> {
 }
 
 impl<'a> DepProvider for MultiRegistryProvider<'a> {
-    #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator")]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
+    )]
     fn resolve_version(&self, pkgref: &PackageRef) -> Result<semver::Version, DepProviderError> {
         // `MultiRegistryResolver::resolve` returns a `MultiResolution`
         // already pinning the version (and tracking provenance). We
@@ -65,7 +67,7 @@ impl<'a> DepProvider for MultiRegistryProvider<'a> {
         }
     }
 
-    #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#redirect")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect")]
     fn fetch_manifest(
         &self,
         group: &Group,
@@ -96,7 +98,9 @@ impl<'a> DepProvider for MultiRegistryProvider<'a> {
 }
 
 impl<'a> VersionEnumerator for MultiRegistryProvider<'a> {
-    #[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-017#provider-enrichment")]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#provider-enrichment"
+    )]
     fn list_versions(
         &self,
         group: &Group,

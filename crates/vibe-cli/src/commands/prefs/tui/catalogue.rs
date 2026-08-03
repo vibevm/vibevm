@@ -15,7 +15,9 @@
 //! posture). An action's `invoke` is a no-op marker — the surface applies the
 //! effect by address.
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#commands-are-actions");
+specmark::scope!(
+    "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#commands-are-actions"
+);
 
 use vibe_actions::{
     Action, ActionAddr, Capability, Ctx, Enablement, InvokeOutcome, Key, KeyCode, KeyModifiers,

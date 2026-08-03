@@ -115,7 +115,10 @@ fn spawn_mock(canned: CannedSearch) -> Mock {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-index/PROP-005#integration", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#integration",
+    r = 1
+)]
 fn search_decodes_response_and_propagates_query_params() {
     let canned = CannedSearch {
         response: Some(serde_json::json!({

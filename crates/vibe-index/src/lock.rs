@@ -9,7 +9,7 @@
 //!   to terminate, wait for the lock to disappear.
 //! - manually remove the file if the previous server crashed.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
 use std::fs;
 use std::io::Write;

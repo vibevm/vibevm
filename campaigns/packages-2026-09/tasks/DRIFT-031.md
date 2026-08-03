@@ -20,25 +20,25 @@ whose text quotes a fenced-code backtick can carry a trailing marker.
 ```
 > **Fact anchors — the anchored-when-marked law**. A stable fact address is
 > written `##<ID>` as the **first token** of a paragraph or list item.
-> — spec://vibevm/modules/vibe-progress/PROP-043#FACT-ANCHOR-SYNTAX
+> — spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#FACT-ANCHOR-SYNTAX
 ```
 
 ```
 > every paragraph, list item, and non-empty table body cell carries its own
 > marker — these are the **countable units** the exhaustive counter enforces
-> — spec://vibevm/modules/vibe-progress/PROP-043#COUNTABLE-UNITS
+> — spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#COUNTABLE-UNITS
 ```
 
 ```
 > Inside fenced code blocks, inline code spans, and URLs the element and the
 > shorthand (§3.7) are **not recognized** — the scanner is fence-aware.
-> — spec://vibevm/modules/vibe-progress/PROP-043#FENCE-AWARE
+> — spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#FENCE-AWARE
 ```
 
 ```
 > A shorthand is recognized only as a standalone token at the start or end of
 > a paragraph's text, never mid-sentence, never inside code or links.
-> — spec://vibevm/modules/vibe-progress/PROP-043#SHORTHAND-STANDALONE
+> — spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#SHORTHAND-STANDALONE
 ```
 
 `##COUNTABLE-UNITS` makes **every** list item a countable unit, with no

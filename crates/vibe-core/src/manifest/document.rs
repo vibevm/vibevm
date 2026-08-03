@@ -25,7 +25,7 @@
 //! `[conflicts]`, `[compatibility]`, `[boot_snippet]`, `[features]`,
 //! `[target.*]`) are meaningful only alongside `[package]`.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-007#unified-manifest");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest");
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -59,7 +59,7 @@ use super::{read_toml, write_toml};
 /// assert_eq!(m.require_package().unwrap().name, "wal");
 /// ```
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
     r = 1
 )]
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
@@ -428,7 +428,7 @@ impl Manifest {
                     reason: format!(
                         "[[mcp_server]] is legal only in `mcp`-kind packages (this manifest is {}) \
                          — the kind IS the taxonomy \
-                         (violates spec://vibevm/modules/vibe-mcp/PROP-027#manifest; \
+                         (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest; \
                           fix: set [package] kind = \"mcp\", or drop the [[mcp_server]] table)",
                         kind.map_or("not a package".to_string(), |k| format!("kind = \"{k}\"")),
                     ),
@@ -441,7 +441,7 @@ impl Manifest {
             return Err(Error::InvalidManifest {
                 reason: "an `mcp`-kind package must declare at least one [[mcp_server]] — \
                          the kind promises a server \
-                         (violates spec://vibevm/modules/vibe-mcp/PROP-027#manifest; \
+                         (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest; \
                           fix: declare the server, or pick the kind that matches the content)"
                     .to_string(),
             });
@@ -453,7 +453,7 @@ impl Manifest {
                 return Err(Error::InvalidManifest {
                     reason: format!(
                         "duplicate [[mcp_server]] name `{}` \
-                         (violates spec://vibevm/modules/vibe-mcp/PROP-027#manifest; \
+                         (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest; \
                           fix: server names are the agent-visible identity — make them unique)",
                         s.name
                     ),
@@ -463,7 +463,7 @@ impl Manifest {
                 return Err(Error::InvalidManifest {
                     reason: format!(
                         "[[mcp_server]] `{}` names binary `{}` but no [[binary]] declares it \
-                         (violates spec://vibevm/modules/vibe-mcp/PROP-027#manifest; \
+                         (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest; \
                           fix: the server IS a PROP-025 binary — declare it in [[binary]])",
                         s.name, s.binary
                     ),
@@ -474,7 +474,7 @@ impl Manifest {
                 return Err(Error::InvalidManifest {
                     reason: format!(
                         "[[mcp_server]] `{}` args carry unknown substitution variable(s) {} \
-                         (violates spec://vibevm/modules/vibe-mcp/PROP-027#manifest; \
+                         (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest; \
                           fix: only {} substitute at registration time)",
                         s.name,
                         unknown.join(", "),
@@ -491,7 +491,7 @@ impl Manifest {
                         "`mcp`-kind packages pin every package requirement exactly, and \
                          `{r}` does not — the served engines and the consumer's gates must \
                          resolve to ONE version set \
-                         (violates spec://vibevm/modules/vibe-mcp/PROP-027#exact-pin; \
+                         (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#exact-pin; \
                           fix: require `=X.Y.Z`, and bump it in lockstep with the served package)",
                     ),
                 });

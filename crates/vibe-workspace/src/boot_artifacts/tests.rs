@@ -291,7 +291,7 @@ fn render_static_without_directives_is_left_verbatim() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-035#pipeline")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#pipeline")]
 fn render_static_compiles_a_normal_package_closure() {
     // The heart of `normal + static` (PROP-035 §8): the contribution is
     // compiled to its `#use`/`#source`-resolved, tree-shaken, dependency-
@@ -333,7 +333,7 @@ fn render_static_compiles_a_normal_package_closure() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-035#formats")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#formats")]
 fn render_static_normal_differs_from_simple_on_the_same_file() {
     // The crux of the format distinction (PROP-035 §3/§8): the SAME contract
     // file pulled `static` compiles (normal) versus concatenates verbatim

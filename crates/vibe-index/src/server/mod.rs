@@ -3,7 +3,7 @@
 //! Slice 5 lands the read surface; slice 6 adds the write surface
 //! (POST/DELETE) and bearer-token auth.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#http");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http");
 
 pub mod auth;
 pub mod error;
@@ -38,7 +38,7 @@ use tower_http::trace::TraceLayer;
 /// guard. Rate-limit middleware runs first when the configured
 /// quotas are non-zero (slice 23, PROP-005 §9 Q10).
 #[spec(
-    implements = "spec://vibevm/modules/vibe-index/PROP-005#server-mode",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#server-mode",
     r = 1
 )]
 pub fn build_app(state: AppState) -> Router {

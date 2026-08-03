@@ -16,10 +16,10 @@ JSON it emits when it has nothing new to say.
 ## 2. Contract {#contract}
 
 > All formats are schema-versioned (`"schema": 1`); all writes are atomic.
-> — `spec://vibevm/modules/vibe-progress/PROP-043#data`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#data`
 
 > Everything else can be erased at any moment — no knowledge is lost.
-> — `spec://vibevm/modules/vibe-progress/PROP-043#erasure`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#erasure`
 
 **Owner's ruling, 2026-07-25:** take the lever DRIFT-010 identified and
 declined to pull — «не переписывать state-файлы при отсутствии изменений».

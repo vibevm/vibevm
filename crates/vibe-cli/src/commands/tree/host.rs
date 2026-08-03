@@ -8,7 +8,7 @@
 //! intercepts (`OSC 7773 ; <icon-name> ST`); in any other terminal it is a
 //! harmless no-op (unknown OSC sequences are discarded).
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-042#in-place-upgrade");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#in-place-upgrade");
 
 use std::io::Write;
 

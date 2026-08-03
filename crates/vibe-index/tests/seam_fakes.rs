@@ -120,7 +120,10 @@ fn post(uri: &str, token: Option<&str>, body: serde_json::Value) -> Request<Body
 }
 
 #[tokio::test]
-#[specmark::verifies("spec://vibevm/modules/vibe-index/PROP-005#server-mode", r = 1)]
+#[specmark::verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#server-mode",
+    r = 1
+)]
 async fn write_is_authorised_by_the_injected_token_store() {
     // The always-accept store authorises the write although no
     // admin.tokens file exists anywhere — proof the auth decision flows
@@ -136,7 +139,10 @@ async fn write_is_authorised_by_the_injected_token_store() {
 }
 
 #[tokio::test]
-#[specmark::verifies("spec://vibevm/modules/vibe-index/PROP-005#server-mode", r = 1)]
+#[specmark::verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#server-mode",
+    r = 1
+)]
 async fn write_is_refused_by_the_injected_token_store() {
     // Same request, same valid-looking Bearer token — but the injected
     // store rejects, so the handler 401s. The verdict is the seam's.
@@ -151,7 +157,10 @@ async fn write_is_refused_by_the_injected_token_store() {
 }
 
 #[tokio::test]
-#[specmark::verifies("spec://vibevm/modules/vibe-index/PROP-005#http", r = 1)]
+#[specmark::verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http",
+    r = 1
+)]
 async fn the_injected_rate_limiter_blocks_through_the_middleware() {
     // A read needs no auth, so a 429 here can only be the injected
     // limiter's deny verdict reaching the response through the

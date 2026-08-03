@@ -348,7 +348,7 @@ mod tests {
             edges: vec![Edge {
                 fromSymbol: "demo::thing".into(),
                 verb: EdgeVerb::Implements,
-                uri: "spec://vibevm/common/PROP-000#root".into(),
+                uri: "spec://org.vibevm.core/vibevm/common/PROP-000#root".into(),
                 provenance: EdgeProvenance::Authored,
                 file: "crates/demo/src/lib.rs".into(),
                 line: 3,

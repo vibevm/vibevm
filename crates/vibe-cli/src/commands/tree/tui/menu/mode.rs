@@ -2,7 +2,7 @@
 //! the single-group, non-sticky menu — pick a mode and the menu closes. The
 //! shared model and `confirm` policy live in [`super`].
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#f3-mode-menu");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#f3-mode-menu");
 
 use specmark::spec;
 
@@ -13,7 +13,7 @@ impl MenuState {
     /// The F3 display-mode menu (PROP-037 §7.1) — one group; closes on `Enter`.
     /// A single-group menu has no Tab Order, so `Tab` is inert here
     /// (PROP-037 §5.4).
-    #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#f3-mode-menu")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#f3-mode-menu")]
     pub fn mode(app: &App) -> Self {
         let options: Vec<MenuOption> =
             [DisplayMode::All, DisplayMode::SubTables, DisplayMode::Tabs]

@@ -15,7 +15,7 @@
 //! marker scanning ([`markers`]), and the anchor laws ([`anchors`]). This
 //! module keeps the orchestrator and the shared hash.
 
-specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#parsing");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#parsing");
 
 mod anchors;
 mod blocks;

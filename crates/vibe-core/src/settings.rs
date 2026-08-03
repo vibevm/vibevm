@@ -25,7 +25,9 @@
 //! §9.5 places user-level configuration in the precedence chain; this
 //! module fixes *where* that configuration lives.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order");
+specmark::scope!(
+    "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
+);
 
 use std::path::PathBuf;
 
@@ -134,7 +136,9 @@ mod tests {
     use specmark::verifies;
 
     #[test]
-    #[verifies("spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order")]
+    #[verifies(
+        "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
+    )]
     fn override_wins_verbatim_over_home() {
         // `$VIBE_SETTINGS` is an escape hatch: it must land exactly where
         // pointed, ignoring the home-derived default entirely.

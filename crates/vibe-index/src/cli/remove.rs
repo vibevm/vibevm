@@ -2,7 +2,7 @@
 //! versions of a package from the index, addressed by its `(group,
 //! name)` identity (PROP-008 §2.2).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-008#identity");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity");
 
 use std::path::PathBuf;
 

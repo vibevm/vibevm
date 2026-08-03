@@ -5,7 +5,7 @@
 //! subtext0). Each is a unit struct over a `const TABLE` consulted by its
 //! [`Palette`] impl.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#palette-tokens");
 
 use specmark::spec;
 
@@ -111,7 +111,7 @@ fn lookup(table: &[(Role, Rgb); 16], role: Role) -> Rgb {
     table[0].1
 }
 
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#palette-tokens")]
 impl Palette for Mocha {
     fn role(&self, role: Role) -> Rgb {
         lookup(&MOCHA, role)
@@ -124,7 +124,7 @@ impl Palette for Mocha {
     }
 }
 
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#palette-tokens")]
 impl Palette for Macchiato {
     fn role(&self, role: Role) -> Rgb {
         lookup(&MACCHIATO, role)
@@ -137,7 +137,7 @@ impl Palette for Macchiato {
     }
 }
 
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#palette-tokens")]
 impl Palette for Frappe {
     fn role(&self, role: Role) -> Rgb {
         lookup(&FRAPPE, role)
@@ -150,7 +150,7 @@ impl Palette for Frappe {
     }
 }
 
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#palette-tokens")]
 impl Palette for Latte {
     fn role(&self, role: Role) -> Rgb {
         lookup(&LATTE, role)

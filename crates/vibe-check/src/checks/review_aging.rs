@@ -2,7 +2,7 @@
 //! `spec/**/*.md` whose date is older than `review_max_age_days`
 //! (default 14) is reported as a warning.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#linter");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
 
 use std::fs;
 use std::path::{Path, PathBuf};

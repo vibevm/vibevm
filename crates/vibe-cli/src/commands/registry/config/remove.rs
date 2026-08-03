@@ -1,7 +1,7 @@
 //! `vibe registry remove registry|mirror` — drop a `[[registry]]` or
 //! `[[mirror]]` block, refusing removals that would orphan mirrors.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#registry");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
 use anyhow::{Context, Result, bail};
 use serde::Serialize;

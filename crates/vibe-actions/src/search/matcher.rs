@@ -19,7 +19,7 @@
 //!
 //! Spec: [PROP-039 §10.3](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#se-ranking).
 
-specmark::scope!("spec://vibevm/modules/vibe-actions/PROP-039#search-everywhere");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#search-everywhere");
 
 /// Tier base for an exact (case-insensitive) match.
 pub(crate) const EXACT: i64 = 1000;

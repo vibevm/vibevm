@@ -75,7 +75,10 @@ fn allow_vibevm() -> HookPolicy {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-020#phases", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases",
+    r = 1
+)]
 fn pre_install_hook_runs_for_an_allowed_group() {
     let ws = TempDir::new().unwrap();
     let (dep, _pkg) = dep_with_pre_hook("wal", "0.3.0");
@@ -95,7 +98,10 @@ fn pre_install_hook_runs_for_an_allowed_group() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-020#failure", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#failure",
+    r = 1
+)]
 fn pre_install_failure_rolls_back_the_slot() {
     let ws = TempDir::new().unwrap();
     let (dep, _pkg) = dep_with_pre_hook("wal", "0.3.0");
@@ -117,7 +123,10 @@ fn pre_install_failure_rolls_back_the_slot() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-020#trust-gate", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#trust-gate",
+    r = 1
+)]
 fn untrusted_group_skips_the_hook_without_running_it() {
     let ws = TempDir::new().unwrap();
     let (dep, _pkg) = dep_with_pre_hook("wal", "0.3.0");
@@ -173,7 +182,10 @@ fn dep_with_post_hook(name: &str, version: &str) -> (ResolvedDep, TempDir) {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-020#phases", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases",
+    r = 1
+)]
 fn post_install_runs_for_materialised_slots_and_flags_failure() {
     let ws = TempDir::new().unwrap();
     let (dep, _pkg) = dep_with_post_hook("wal", "0.3.0");
@@ -231,7 +243,10 @@ fn post_install_runs_for_materialised_slots_and_flags_failure() {
 // --- PROP-022 §2.4 — in-place materialization --------------------------
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-022#in-place", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
+    r = 1
+)]
 fn apply_resolution_places_an_in_place_package_in_an_unversioned_slot() {
     let ws_dir = TempDir::new().unwrap();
     write(
@@ -297,7 +312,10 @@ fn apply_resolution_places_an_in_place_package_in_an_unversioned_slot() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-022#in-place", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
+    r = 1
+)]
 fn prune_leaves_an_in_place_slot_untouched() {
     // A standalone project whose resolution carries no packages must not
     // prune a pre-existing in-place slot (it is a git working tree, not a
@@ -361,7 +379,10 @@ fn dep_in_place_with_pre_hook(name: &str, version: &str) -> (ResolvedDep, TempDi
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-020#phases", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases",
+    r = 1
+)]
 fn pre_install_hook_runs_in_an_in_place_slot() {
     let ws = TempDir::new().unwrap();
     let (dep, _pkg) = dep_in_place_with_pre_hook("giant", "1.0.0");
@@ -386,7 +407,10 @@ fn pre_install_hook_runs_in_an_in_place_slot() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-020#failure", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#failure",
+    r = 1
+)]
 fn pre_install_failure_rolls_back_an_in_place_slot() {
     let ws = TempDir::new().unwrap();
     let (dep, _pkg) = dep_in_place_with_pre_hook("giant", "1.0.0");
@@ -455,7 +479,10 @@ fn materialise_subtree_does_not_prune_unrelated_slots() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-022#in-place", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
+    r = 1
+)]
 fn already_placed_in_place_slot_runs_hook_without_moving() {
     // An incremental in-place update (PROP-022 §2.4) has the install layer
     // git-fetch the slot directly, then hand it to the materialise pass with

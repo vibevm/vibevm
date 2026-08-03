@@ -28,7 +28,7 @@ report it in prose.
 
 > `campaign.json` (phase lane, wave, counters, **gates**) … The dashboard
 > reads **only** these; it computes nothing and parses no Markdown ever.
-> — `spec://vibevm/modules/vibe-progress/PROP-043#state`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#state`
 
 Anchor realised: `STATE-FILES`.
 
@@ -99,7 +99,7 @@ bash tools/self-check.sh
 - CLI scenario: `vibe progress gate floor --status red --detail
   "cli_pkg_cycle::install_from_git_registry (F-055, environmental)"` then
   reading `campaigns/progress-2026-08/run/state/campaign.json` shows it.
-- Discipline: `#[spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#state")]`,
+- Discipline: `#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#state")]`,
   `cargo fmt --all`, clippy clean, atomic commits, no AI attribution.
 
 ## 7. Analogies {#analogies}

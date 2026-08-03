@@ -394,7 +394,7 @@ pub fn select_invocation(slot: &Path, base: &Path, platform: Platform, probe: &d
        Platform::Windows => sh_via_bash().or_else(|| (ps1.is_file() && probe.has("powershell")) …
 ```
 
-carrying `#[spec(implements = "spec://vibevm/modules/vibe-workspace/PROP-020#script-selection")]`
+carrying `#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#script-selection")]`
 at `hooks.rs:323-326`. The manifest value is a genuine base path and it resolves
 to a concrete file on disk, which is precisely and only what the sentence
 claims.

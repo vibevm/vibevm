@@ -1,7 +1,7 @@
 //! `weave` — stitch the observed corpus into whole-context LLM input
 //! (PROP-043 §5): full form with token-budget sharding, or the digest map.
 
-specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#CMD-WEAVE");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#CMD-WEAVE");
 
 use crate::doc::ParsedDoc;
 

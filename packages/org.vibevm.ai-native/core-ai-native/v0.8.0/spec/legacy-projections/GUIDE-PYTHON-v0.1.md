@@ -31,7 +31,7 @@ A cell is a package (directory) behind one seam: `__init__.py` is the single pub
 Cell manifest (decorator carrier, §5):
 
 ```python
-@spec(implements="spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade", r=2)
+@spec(implements="spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade", r=2)
 @cell(seam="DepSolver", variant="sat", replaces="naive", flag="solver")
 class SatDepSolver:
     def __init__(self, provider: DepProvider) -> None: ...

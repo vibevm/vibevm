@@ -8,7 +8,7 @@
 //! marker — the TUI Surface applies the effect by address (`super::run_action`,
 //! §11.1).
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#action-catalogue");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#action-catalogue");
 
 use vibe_actions::{
     Action, ActionAddr, Capability, Ctx, Enablement, InvokeOutcome, Key, KeyCode, KeyModifiers,

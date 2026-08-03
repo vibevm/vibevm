@@ -1,7 +1,7 @@
 //! `vibe show config` — dump the effective configuration with
 //! provenance per value (`VIBEVM-SPEC.md` §9.5).
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#command-summary");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
 use std::path::Path;
 

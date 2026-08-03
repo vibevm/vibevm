@@ -9,7 +9,7 @@
 //! (`consent_to_build` — one trust model, two verbs); the CLI composes
 //! all three and owns the file writes.
 
-specmark::scope!("spec://vibevm/modules/vibe-mcp/PROP-027#registration");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#registration");
 
 use std::path::Path;
 

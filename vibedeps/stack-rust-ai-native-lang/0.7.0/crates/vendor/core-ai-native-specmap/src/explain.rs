@@ -296,9 +296,10 @@ mod tests {
         CodeItem, EdgeProvenance, EdgeVerb, SpecUnitKind, SpecUnitStatus,
     };
 
-    const GRAMMAR: &str = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar";
+    const GRAMMAR: &str =
+        "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar";
     const COMPOSITION: &str =
-        "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition";
+        "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition";
 
     fn fixture() -> Specmap {
         Specmap {
@@ -418,7 +419,7 @@ mod tests {
     fn unknown_targets_error_clearly() {
         let map = fixture();
         assert!(explain_text(&map, "no::such::thing").is_err());
-        assert!(explain_text(&map, "spec://vibevm/x#nope").is_err());
+        assert!(explain_text(&map, "spec://org.vibevm.core/vibevm/x#nope").is_err());
     }
 
     #[test]

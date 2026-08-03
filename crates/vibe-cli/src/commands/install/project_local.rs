@@ -15,7 +15,7 @@
 //! checkout of the project carries the same tree, so a lock entry resolved
 //! from here is reproducible across machines (PROP-030 §5).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-030#project-local");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local");
 
 use std::path::{Path, PathBuf};
 

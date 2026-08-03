@@ -20,7 +20,7 @@ fn make_skill_body(root: &Path, body: &str) -> std::path::PathBuf {
 }
 
 #[test]
-#[verifies("spec://vibevm/common/PROP-018#vibe-skill", r = 3)]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill", r = 3)]
 fn projects_dir_skill_and_is_idempotent() {
     let pkg = tempfile::tempdir().unwrap();
     let proj = tempfile::tempdir().unwrap();
@@ -187,7 +187,10 @@ fn uninstall_removes_then_reports_absent() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-mcp/PROP-015#skill-include", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill-include",
+    r = 1
+)]
 fn include_projects_only_matching_files() {
     let pkg = tempfile::tempdir().unwrap();
     let proj = tempfile::tempdir().unwrap();

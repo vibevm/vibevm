@@ -16,7 +16,7 @@
 //! Mirrors `tree::tui::search::mod` (the engine usage, the tab/research/step
 //! machinery, and the `confirm` shape) over [`super::state::PrefsApp`].
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#settings-search");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#settings-search");
 
 mod providers;
 pub mod render;

@@ -118,7 +118,7 @@ fn normalize(graph: &ResolvedGraph) -> Vec<(String, String, String, bool, Vec<St
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#solver")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
 fn provider_pair_agrees_on_solvable_inputs() {
     if !git_available() {
         eprintln!("differential oracle: `git` not on PATH — skipping (hermetic harness needs it)");

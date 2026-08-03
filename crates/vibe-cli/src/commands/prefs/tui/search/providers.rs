@@ -18,7 +18,7 @@
 //! since only the App may mutate the model. This mirrors the tree TUI's
 //! `providers.rs` shape.
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#settings-search");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#settings-search");
 
 use vibe_actions::search::{
     Candidate, ItemRef, Modifiers, ProviderId, Query, SearchProvider, Selected,

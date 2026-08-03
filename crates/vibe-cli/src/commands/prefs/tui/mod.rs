@@ -23,7 +23,7 @@
 //! structure. The state owns the resolved prefs + schema + context, the page
 //! registry, the fold set + selection, and the open page.
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#overview");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#overview");
 
 pub mod catalogue;
 pub mod dispatch;

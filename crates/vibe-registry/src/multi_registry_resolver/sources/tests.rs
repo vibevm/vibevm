@@ -2,7 +2,7 @@
 //! resolution order, identity / version-constraint refusals, and the
 //! clone-free path-source fetch.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#git-source");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source");
 
 use super::*;
 use std::fs;

@@ -5,7 +5,7 @@
 //! staging-vs-selection seam; every public item here is re-exported by
 //! the parent, so the `vibe_workspace::publish::*` paths are unchanged.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish");
 
 use std::path::{Path, PathBuf};
 
@@ -74,7 +74,7 @@ pub struct OriginInfo {
 /// The returned [`StagedNode`] owns the temp dir; keep it alive until the
 /// publish completes.
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-007#published-repos",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#published-repos",
     r = 1
 )]
 pub fn stage_node(

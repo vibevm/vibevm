@@ -4,7 +4,7 @@
 //! adapter side. A project without any provider runs with empty evidence —
 //! the separability law in action.
 
-specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#evidence");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#evidence");
 
 use crate::model::{Marker, Stage, State};
 use serde::{Deserialize, Serialize};

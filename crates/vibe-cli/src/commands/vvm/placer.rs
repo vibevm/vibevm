@@ -2,7 +2,7 @@
 //! (PROP-019 §2.15): hardlink unchanged files from the previous instance,
 //! copy only what changed, never hashing large files.
 
-specmark::scope!("spec://vibevm/common/PROP-019#instances");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#instances");
 
 use std::fs;
 use std::io;
@@ -21,11 +21,11 @@ use super::store::VersionStore;
 /// file, copying it into the new instance, or preparing/publishing the
 /// instance layout.
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/common/PROP-019#instances")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#instances")]
 pub(crate) enum PlaceError {
     #[error(
         "statting distribution file `{path}` failed: {source} \
-         (violates spec://vibevm/common/PROP-019#instances; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
           fix: ensure the freshly-built distribution is readable)"
     )]
     Stat {
@@ -36,7 +36,7 @@ pub(crate) enum PlaceError {
 
     #[error(
         "copying `{from}` → `{to}` failed: {source} \
-         (violates spec://vibevm/common/PROP-019#instances; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
           fix: ensure the instance root is writable and has free space)"
     )]
     Copy {
@@ -48,7 +48,7 @@ pub(crate) enum PlaceError {
 
     #[error(
         "preparing the instance layout at `{path}` failed: {source} \
-         (violates spec://vibevm/common/PROP-019#instances; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
           fix: ensure the instance root is writable)"
     )]
     Layout {
@@ -59,7 +59,7 @@ pub(crate) enum PlaceError {
 
     #[error(
         "serialising the instance manifest failed: {detail} \
-         (violates spec://vibevm/common/PROP-019#instances; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
           fix: report this — the manifest is malformed)"
     )]
     Serialise { detail: String },
@@ -298,7 +298,7 @@ mod tests {
     use specmark::verifies;
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#instances", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#instances", r = 1)]
     fn manifest_round_trips_and_detects_change() {
         let tmp = tempfile::tempdir().unwrap();
         let f = tmp.path().join("vibe");
@@ -316,7 +316,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#instances", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#instances", r = 1)]
     fn place_creates_an_instance_with_a_manifest() {
         let tmp = tempfile::tempdir().unwrap();
         let store = VersionStore::new(tmp.path());
@@ -347,7 +347,7 @@ mod tests {
     /// and the kind-level `PermissionDenied` — the scanner-held-handle races
     /// the publish rename / staging cleanup retry on — and not other errors.
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#instances", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#instances", r = 1)]
     fn is_transient_lock_classifies_access_denied() {
         assert!(is_transient_lock(&io::Error::from_raw_os_error(5)));
         assert!(is_transient_lock(&io::Error::new(
@@ -364,7 +364,7 @@ mod tests {
     /// (the common path, no retry needed) and report the lock-class errors
     /// they would retry on rather than masking them.
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#instances", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#instances", r = 1)]
     fn rename_and_remove_succeed_when_unlocked() {
         let tmp = tempfile::tempdir().unwrap();
         let from = tmp.path().join("staging");

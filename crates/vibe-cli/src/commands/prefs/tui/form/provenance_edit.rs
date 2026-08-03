@@ -13,7 +13,7 @@
 //! **fallback** value (the next layer down that sets the key, or the built-in
 //! default) so the surface immediately reflects the layer that now wins.
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#provenance-edit");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#provenance-edit");
 
 use specmark::spec;
 use vibe_settings::loader::load_layer;
@@ -34,7 +34,9 @@ impl Form {
     /// control + baseline to the fallback value so the surface immediately
     /// reflects the layer that now wins. Refuses a scope-forbidden layer with
     /// the same typed error as `apply`.
-    #[spec(implements = "spec://vibevm/modules/vibe-settings/PROP-041#provenance-edit")]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#provenance-edit"
+    )]
     pub fn clear_focused(
         &mut self,
         schema: &Schema,

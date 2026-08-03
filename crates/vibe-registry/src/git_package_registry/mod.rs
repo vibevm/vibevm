@@ -33,7 +33,7 @@
 //!
 //! Spec: [PROP-002 §2.5 / §2.6 / §2.12](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#registry-model");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use std::fmt::Write as _;
 use std::fs;

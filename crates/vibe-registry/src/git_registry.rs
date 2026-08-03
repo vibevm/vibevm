@@ -13,7 +13,7 @@
 //!
 //! [prop]: ../../../../spec/modules/vibe-registry/PROP-001-git-backend.md
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-001#registry-trait");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#registry-trait");
 
 use std::fs;
 use std::path::{Path, PathBuf};

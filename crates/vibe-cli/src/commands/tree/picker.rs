@@ -6,7 +6,7 @@
 //! A native OS folder chooser (`rfd`); returns the chosen directory, or `None`
 //! when the user cancels (a clean no-op, never an error).
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#command");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#command");
 
 use std::path::PathBuf;
 

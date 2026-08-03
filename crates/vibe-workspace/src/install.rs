@@ -15,7 +15,7 @@
 //! This keeps the orchestration unit-testable without the registry stack,
 //! the same decoupling [`crate::boot`] uses.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-009#install");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install");
 
 use std::collections::HashSet;
 use std::fs;

@@ -8,7 +8,7 @@
 //! the model + the derived, scrollable [`PageRow`] list (built by
 //! [`super::page_tree::flatten`]).
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#tree-widget");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#tree-widget");
 
 use std::collections::BTreeSet;
 

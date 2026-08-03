@@ -14,7 +14,7 @@
 //! this on the metadata itself; until then the table here is the one place the
 //! closed sets live for the surface.
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#form-per-type");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#form-per-type");
 
 use specmark::spec;
 use vibe_settings::schema::{KeyMeta, KeyType};
@@ -227,7 +227,7 @@ fn value_to_edit_string(value: &toml::Value) -> String {
 /// ([`known_options`]) renders as a selection regardless of its declared
 /// `KeyType::String` — the surface's per-key knowledge of the closed set, until
 /// `enum_values` is carried on the metadata (REVIEW phase 2.4).
-#[spec(implements = "spec://vibevm/modules/vibe-settings/PROP-041#form-per-type")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#form-per-type")]
 pub fn build_control(meta: &KeyMeta, resolved: Option<&toml::Value>) -> FieldControl {
     // A closed-set string key → selection (the vibe.tree.* palette/mode/sort/shape
     // keys are declared String but are really closed enums).

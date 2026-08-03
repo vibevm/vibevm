@@ -1,6 +1,6 @@
 //! `vibe show subskills` — active subskill entries per locked package.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#command-summary");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
 use anyhow::Result;
 use serde::Serialize;

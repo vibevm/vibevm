@@ -1,7 +1,7 @@
 //! Check 1 — `vibe.toml` parses and matches schema; `vibe.lock` (if
 //! present) parses and matches schema.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#linter");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
 
 use std::path::{Path, PathBuf};
 

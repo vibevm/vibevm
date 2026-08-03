@@ -9,7 +9,7 @@ exactly that. Consumers: the per-language discipline servers
 (`rust-ai-native-mcp`, `typescript-ai-native-mcp`) vendor this crate
 byte-identically (sync-engines) and mount their tool sets on it.
 **Related:** the consumer-side kind and delivery laws live in the
-consuming repo's PROP-027 (`spec://vibevm/modules/vibe-mcp/PROP-027`);
+consuming repo's PROP-027 (`spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027`);
 the tcg tool grammar in TCG-PROTOCOL-RUST-v0.1 / TCG-PROTOCOL-v0.1 (the
 stacks) is transport-independent and unchanged by this mechanism.
 

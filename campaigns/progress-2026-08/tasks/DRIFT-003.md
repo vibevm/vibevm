@@ -27,11 +27,11 @@ journal, instead of a compiled-in `"A"`.
 > `campaign.json` (wave, stage-of-campaign, gates, counters, `updated_at`) …
 > The dashboard reads **only** these; it computes nothing and parses no
 > Markdown ever.
-> — `spec://vibevm/modules/vibe-progress/PROP-043#state`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#state`
 
 > all writes are atomic (tmp + rename); the journal is append-only JSONL
 > (a torn tail line is discarded on read)
-> — `spec://vibevm/modules/vibe-progress/PROP-043#data`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#data`
 
 ## 3. Current state {#current}
 

@@ -1,6 +1,6 @@
 //! `vibe-index purls <data-dir> <purl>` — describes-index.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
 use std::path::PathBuf;
 

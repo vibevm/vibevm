@@ -39,7 +39,7 @@
 //! Until then this module is informational; the operator must
 //! `export VIBE_REGISTRY_CACHE=…` for the value to actually apply.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-011#materialise-diff");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#materialise-diff");
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -259,11 +259,13 @@ impl UserConfig {
 /// assert!(e.to_string().contains("configuration-sources-in-precedence-order"));
 /// ```
 #[derive(Debug, thiserror::Error)]
-#[spec(implements = "spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order")]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
+)]
 pub enum UserConfigError {
     #[error(
         "could not read `{path}`: {source} \
-         (violates spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order; \
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order; \
           fix: check the file's permissions, or remove it to fall back to defaults)"
     )]
     Io {
@@ -273,7 +275,7 @@ pub enum UserConfigError {
     },
     #[error(
         "`{path}` is malformed: {source} \
-         (violates spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order; \
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order; \
           fix: repair the TOML at the reported location)"
     )]
     Parse {
@@ -283,7 +285,7 @@ pub enum UserConfigError {
     },
     #[error(
         "could not serialise the user config for `{path}`: {source} \
-         (violates spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order)"
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order)"
     )]
     Serialize {
         path: PathBuf,

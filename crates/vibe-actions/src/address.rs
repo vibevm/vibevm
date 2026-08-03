@@ -11,7 +11,7 @@
 //!
 //! Spec: [PROP-039 §2](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#addressing).
 
-specmark::scope!("spec://vibevm/modules/vibe-actions/PROP-039#addressing");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#addressing");
 
 use std::fmt;
 use std::str::FromStr;
@@ -32,12 +32,14 @@ pub type QueryPairs = Vec<(String, String)>;
 /// A malformed action address. Parsing never panics — every rejection is this
 /// typed error (PROP-039 §2.1, `#address-parse`).
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-actions/PROP-039#address-grammar")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#address-grammar"
+)]
 pub enum AddrError {
     /// The input does not match the `action://<group>/<name>` grammar.
     #[error(
         "invalid action address `{input}`: {reason} \
-         (violates spec://vibevm/modules/vibe-actions/PROP-039#address-grammar; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#address-grammar; \
           fix: write it as `action://<group>/<name>` with a dotted group and a \
           dotted/kebab name)"
     )]

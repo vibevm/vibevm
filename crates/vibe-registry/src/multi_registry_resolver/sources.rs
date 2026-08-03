@@ -3,7 +3,7 @@
 //! resolution / fetch (PROP-002 §2.4.1) and path-source resolution /
 //! fetch (PROP-007 §2.5).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#git-source");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source");
 
 use super::*;
 

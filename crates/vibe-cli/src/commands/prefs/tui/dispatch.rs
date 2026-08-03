@@ -12,7 +12,9 @@
 //! [`super::catalogue::PrefsActionCtx`] (the resolver stays pure, PROP-039 §9.2
 //! — the tree catalogue's recorded posture).
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#commands-are-actions");
+specmark::scope!(
+    "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#commands-are-actions"
+);
 
 use rat_salsa::Control;
 use vibe_actions::ActionAddr;
@@ -68,7 +70,7 @@ fn apply_form(app: &mut PrefsApp) {
     if form.has_blocking_error() {
         tracing::warn!(
             "vibe prefs form: apply blocked \u{2014} a field has a validation error \
-             (violates spec://vibevm/modules/vibe-settings/PROP-041#validation)"
+             (violates spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#validation)"
         );
         return;
     }

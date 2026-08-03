@@ -190,7 +190,7 @@ fn picks_highest_matching_for_range() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#capability")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability")]
 fn detects_version_conflict_across_paths() {
     // Two roots: one wants ^0.1, the other wants ^0.2. Naive picks
     // the first root's version (0.1.5) and the second's constraint
@@ -215,7 +215,7 @@ fn detects_version_conflict_across_paths() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#capability")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability")]
 fn detects_conflicts_declaration() {
     // org.vibevm/ui declares conflicts with org.vibevm/legacy-wal; if
     // both are roots, solver refuses.
@@ -250,7 +250,7 @@ packages = ["org.vibevm/legacy-wal"]
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#capability")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability")]
 fn capability_requires_satisfied_by_already_seen_provider() {
     // Order matters: org.vibevm/rust provides ui:landing-page, then
     // org.vibevm/home requires it. Naive provider-then-consumer
@@ -290,7 +290,7 @@ capabilities = ["ui:landing-page@^0.3"]
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#capability")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability")]
 fn capability_requires_self_satisfaction() {
     // A package that both provides and requires the same capability
     // with the same exact version trivially satisfies itself.
@@ -317,7 +317,7 @@ capabilities = ["x:y@^0.1"]
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#capability")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability")]
 fn capability_requires_unmet_errors() {
     let m = r#"
 [package]
@@ -344,7 +344,7 @@ capabilities = ["ui:landing-page@^0.3"]
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator")]
 fn unknown_package_propagates() {
     let p = MapProvider::new();
     let solver = NaiveDepSolver::new(p);
@@ -358,7 +358,7 @@ fn unknown_package_propagates() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#capability")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability")]
 fn obsoletes_drops_obsolete_entry() {
     // root: org.vibevm/welcome-page that obsoletes
     // org.vibevm/welcome-page-legacy. legacy: standalone, also a root.
@@ -392,7 +392,7 @@ packages = ["org.vibevm/welcome-page-legacy"]
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#capability")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability")]
 fn requires_any_picks_first_alternative() {
     // org.vibevm/x requires_any [org.vibevm/a, org.vibevm/b]; only
     // org.vibevm/a available.
@@ -420,7 +420,7 @@ one_of = ["org.vibevm/a@^0.1", "org.vibevm/b@^0.1"]
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#lockfile")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile")]
 fn root_dependencies_marked() {
     let p = MapProvider::new();
     p.seed(
@@ -441,7 +441,7 @@ fn root_dependencies_marked() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#lockfile")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile")]
 fn dependencies_are_exact_pinned_after_solve() {
     let p = MapProvider::new();
     p.seed(

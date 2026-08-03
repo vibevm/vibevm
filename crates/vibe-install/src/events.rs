@@ -3,7 +3,7 @@
 //! voice. Tool output is the agent's percept: typed events beat free
 //! text at the seam (R3-011).
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
 /// One observable step of [`plan`](crate::plan). Fields carry exactly
 /// what a renderer needs; no pre-formatted prose crosses the seam.

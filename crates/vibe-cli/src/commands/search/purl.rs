@@ -1,7 +1,7 @@
 //! `vibe search --purl` — reverse PURL lookup across every configured
 //! registry index (PROP-005 §2.10 `/purls` route).
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
 use std::collections::HashMap;
 use std::path::Path;

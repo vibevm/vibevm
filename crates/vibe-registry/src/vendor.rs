@@ -18,7 +18,7 @@
 //!
 //! Spec: [PROP-002 §2.3 (mirror layer)](../../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#mirror).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#mirror");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#mirror");
 
 use std::path::Path;
 
@@ -31,11 +31,11 @@ use crate::{MultiRegistryResolver, RegistryError};
 /// Failure surface of vendoring — every refusal names the violated spec
 /// unit and the fix surface (the product-error grammar, SHRINK-v0.1 §4).
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#mirror")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#mirror")]
 pub enum VendorError {
     #[error(
         "refreshing the per-package clone for `{group}/{name}` at `{refname}` failed \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#mirror; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#mirror; \
           fix: ensure the registry — or one of its `[[mirror]]` URLs — is reachable at that ref): {source}"
     )]
     Refresh {
@@ -51,7 +51,7 @@ pub enum VendorError {
     #[error(
         "per-package clone for `{group}/{name}` lacks a `.git/` after refresh — the registry \
          returned without populating the cache at `{clone_dir}` \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#mirror; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#mirror; \
           fix: wipe `~/.vibe/registries` and re-run, or confirm the registry serves this ref)"
     )]
     CacheNotPopulated {
@@ -62,7 +62,7 @@ pub enum VendorError {
 
     #[error(
         "deriving the vendor repo name for `{group}/{name}` failed \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#mirror; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#mirror; \
           fix: the registry's `naming` convention needs a `kind` this lockfile entry omits): {source}"
     )]
     RepoName {
@@ -74,7 +74,7 @@ pub enum VendorError {
 
     #[error(
         "I/O error vendoring into `{path}` \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#mirror; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#mirror; \
           fix: check permissions and free space at that path): {source}"
     )]
     Io {

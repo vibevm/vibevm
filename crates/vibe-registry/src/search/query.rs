@@ -4,7 +4,7 @@
 //! applies, kept here so the org-walk fallback need not pull the
 //! server-side index crate.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#registry-model");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 /// Tokenise a free-text query the same way the server does:
 /// lowercase ASCII alphanumeric runs, drop tokens shorter than 2

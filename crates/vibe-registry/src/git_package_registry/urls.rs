@@ -3,7 +3,7 @@
 //! primary-plus-mirrors URL chain, and the credentialed form handed
 //! to git invocations (PROP-008 §2.5).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-008#repo-naming");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#repo-naming");
 
 use super::*;
 

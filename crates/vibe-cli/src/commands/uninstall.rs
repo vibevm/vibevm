@@ -5,9 +5,9 @@
 //! declaration, and regenerates every node's boot artifacts so the
 //! package no longer appears in the computed boot sequence.
 //!
-//! Spec: spec://vibevm/modules/vibe-workspace/PROP-009-loading-model.
+//! Spec: spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009-loading-model.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#command-summary");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
 use std::path::{Path, PathBuf};
 

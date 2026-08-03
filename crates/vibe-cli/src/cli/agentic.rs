@@ -6,7 +6,7 @@
 //! acting. `vibe command` is the single *consumer*: it drains the pending
 //! instruction so the calling agent can carry it out on its own LLM.
 
-specmark::scope!("spec://vibevm/common/PROP-018#relay");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-018#relay");
 
 use std::path::PathBuf;
 

@@ -14,7 +14,7 @@
 //!
 //! Spec: [PROP-040 §4](../../../../../spec/modules/vibe-settings/PROP-040-settings.md#merge).
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-040#merge-algorithm");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#merge-algorithm");
 
 use std::collections::BTreeMap;
 
@@ -38,7 +38,9 @@ use super::Origin;
 /// `path_prefix` is the dotted path to `over`'s root inside the composed tree
 /// (empty at the top level); `dotted = prefix + "." + key` is the path used
 /// for both schema lookup and provenance.
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#merge-algorithm")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#merge-algorithm"
+)]
 pub(super) fn merge_layer(
     merged: &mut toml::Table,
     provenance: &mut BTreeMap<String, Origin>,
@@ -161,7 +163,7 @@ fn merge_by_index(
         diagnostics.push(format!(
             "merge-by-key at `{dotted}` falls back to identity-by-index (base={}, over={}) — \
              REVIEW(phase 2.4): a key-field will make this a real keyed merge \
-             (spec://vibevm/modules/vibe-settings/PROP-040#merge-strategy-opt-in)",
+             (spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#merge-strategy-opt-in)",
             base.len(),
             over.len(),
         ));
@@ -193,7 +195,7 @@ fn push_conflict(
     diagnostics.push(format!(
         "merge conflict at `{dotted}`: {origin} has {over_kind} but a prior layer set {prior_kind}; \
          the {over_kind} is skipped \
-         (REVIEW: spec://vibevm/modules/vibe-settings/PROP-040#merge-algorithm)"
+         (REVIEW: spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#merge-algorithm)"
     ));
 }
 

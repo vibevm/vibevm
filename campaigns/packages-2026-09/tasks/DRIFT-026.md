@@ -188,7 +188,7 @@ operator's discipline, keep a 4-of-148 seal from being made.
 
 ### 9.2 Proposed PROP-043 wording, for the reviewer's sync pass {#proposed}
 
-The code scopes to `spec://vibevm/modules/vibe-progress/PROP-043#seal`, which
+The code scopes to `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#seal`, which
 does not exist yet. Two edits, both under sync-from-code:
 
 **§5 (`#tool`)** — one line in the verb list, after `gate`:

@@ -2,7 +2,7 @@
 //! (PROP-043 §5). All markup knowledge lives in the core; this file only
 //! resolves paths, wires the campaign zone, and renders to the terminal.
 
-specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#tool");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#tool");
 
 use std::path::Path;
 

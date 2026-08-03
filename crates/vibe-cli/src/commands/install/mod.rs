@@ -9,7 +9,7 @@
 //! confirmation between plan and apply, and rendering. The pipeline
 //! itself lives in `vibe-install`.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
 mod project_local;
 mod report;

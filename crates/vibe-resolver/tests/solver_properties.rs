@@ -252,7 +252,7 @@ proptest! {
     /// Determinism (PROP-003 #determinism): the same world and roots
     /// solve to a byte-identical normalized graph, twice.
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#determinism")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#determinism")]
     fn solve_is_deterministic(world in world_strategy(), picks in prop::collection::vec(0usize..6, 1..=3)) {
         let provider = WorldProvider::new(&world);
         let solver = NaiveDepSolver::new(provider);
@@ -320,7 +320,7 @@ proptest! {
     /// Exact pinning: every dependency reference in the output carries
     /// an `=x.y.z` constraint (the lockfile reproducibility contract).
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#lockfile")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile")]
     fn dependencies_are_exact_pinned(world in world_strategy(), picks in prop::collection::vec(0usize..6, 1..=3)) {
         let provider = WorldProvider::new(&world);
         let solver = NaiveDepSolver::new(provider);
@@ -347,7 +347,7 @@ proptest! {
     /// The differential harness proves itself: a solver agrees with a
     /// second instance of itself on every world.
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
     fn differential_harness_smoke(world in world_strategy(), picks in prop::collection::vec(0usize..6, 1..=3)) {
         let a = NaiveDepSolver::new(WorldProvider::new(&world));
         let b = NaiveDepSolver::new(WorldProvider::new(&world));
@@ -373,7 +373,7 @@ proptest! {
     /// the oracle demonstrating the cells' semantic difference before
     /// any human enumerated it.
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
     fn differential_naive_vs_sat_dominance(world in world_strategy(), picks in prop::collection::vec(0usize..6, 1..=3)) {
         let naive = NaiveDepSolver::new(WorldProvider::new(&world));
         let sat = Sat::new(WorldProvider::new(&world));
@@ -417,7 +417,7 @@ proptest! {
     /// derivation rather than re-emitting naive's `SolveError`, so
     /// demanding equal error classes would punish the better diagnostics.
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-017#dominance")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#dominance")]
     fn differential_naive_vs_resolvo_dominance(world in world_strategy(), picks in prop::collection::vec(0usize..6, 1..=3)) {
         let naive = NaiveDepSolver::new(WorldProvider::new(&world));
         let resolvo = ResolvoDepSolver::new(WorldProvider::new(&world));

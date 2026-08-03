@@ -5,7 +5,7 @@
 //! resolution from the materialised `vibedeps/` tree for uninstall /
 //! reinstall.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-009#install");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install");
 
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::fs;
@@ -269,7 +269,7 @@ pub fn regenerate_boot(workspace: &Workspace) -> Result<Vec<String>, WorkspaceEr
 /// dirty-subgraph should have regenerated. An empty result means the boot graph
 /// is consistent.
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-038#tests",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests",
     r = 1
 )]
 pub fn verify_boot_graph(workspace: &Workspace) -> Result<Vec<UnitId>, WorkspaceError> {
@@ -544,7 +544,7 @@ fn static_transitive_closure(
 /// install never half-applies. A missing instruction file is fine; it is
 /// created on write.
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-012#plan-time",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#plan-time",
     r = 1
 )]
 pub(super) fn validate_redirect_blocks(workspace: &Workspace) -> Result<(), WorkspaceError> {

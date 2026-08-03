@@ -128,7 +128,7 @@ fn populated_index() -> Option<(tempfile::TempDir, std::path::PathBuf)> {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-index/PROP-005#cli", r = 1)]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#cli", r = 1)]
 fn get_returns_versions_for_known_package() {
     let Some((_work, data)) = populated_index() else {
         return;

@@ -1,7 +1,7 @@
 //! Tests for the resolver's own surface — the mirror-chain filter and
 //! sort exposed via [`MultiRegistryResolver::mirrors_for`].
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#registry-model");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use super::*;
 use tempfile::tempdir;

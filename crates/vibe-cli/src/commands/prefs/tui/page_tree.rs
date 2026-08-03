@@ -16,7 +16,7 @@
 //! `ResolvedPrefs::inspect`, so the surface owns no preference logic (§1
 //! `#surface-not-engine`).
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#tree-widget");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#tree-widget");
 
 use std::collections::BTreeSet;
 
@@ -59,7 +59,7 @@ impl PageRow {
 /// `prefs` is read-only here — the surface never mutates preferences (§1
 /// `#surface-not-engine`); it only reads provenance through `inspect` to show
 /// where a value is coming from.
-#[spec(implements = "spec://vibevm/modules/vibe-settings/PROP-041#tree-widget")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#tree-widget")]
 pub fn flatten(
     roots: &[PageNode],
     folded: &BTreeSet<String>,

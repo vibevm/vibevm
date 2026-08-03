@@ -4,7 +4,7 @@
 //! dep-manifest read that follows the resolved source kind. The
 //! fetch-side dispatch lives in [`super::dispatch`].
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#registry-model");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use super::attempt::format_walk_attempts;
 use super::redirect_follow::try_fetch_redirect;
@@ -52,7 +52,9 @@ impl MultiRegistryResolver {
     /// via the full `resolve` path — enumerating *every* version behind a
     /// redirect is a follow-up; `resolve` / `fetch_manifest` already
     /// follow redirects, so install never breaks on one.
-    #[specmark::spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#solver")]
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver"
+    )]
     pub fn list_versions(
         &self,
         group: &Group,

@@ -17,7 +17,7 @@
 //!
 //! [`Color`]: ratatui_core::style::Color
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#theme");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#theme");
 
 use ratatui_core::style::{Color, Modifier, Style};
 use specmark::spec;
@@ -84,7 +84,7 @@ impl Theme {
     /// Resolve a [`Role`] to its projected [`Color`] for this theme's tier
     /// (PROP-037 §2.2.3). The only route a component has from a semantic role
     /// to a terminal colour.
-    #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#rendering-tiers")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#rendering-tiers")]
     #[must_use]
     pub fn color(&self, role: Role) -> Color {
         project_color(

@@ -269,12 +269,25 @@ mod tests {
     }
 
     #[test]
-    fn host_address_with_anchor() {
-        let a = SpecAddress::parse("spec://vibevm/common/PROP-000#commits").unwrap();
-        assert_eq!(a.authority, Authority::Host("vibevm".into()));
+    fn undotted_authority_parses_as_host_shape() {
+        // Grammar only (B-031): an undotted authority still PARSES as the
+        // Host shape — resolution rejects it later with the rename hint. The
+        // fixture token is deliberately neutral, not the retired `vibevm`.
+        let a = SpecAddress::parse("spec://somehost/common/PROP-000#commits").unwrap();
+        assert_eq!(a.authority, Authority::Host("somehost".into()));
         assert_eq!(a.doc_path, "common/PROP-000");
         assert_eq!(a.anchor, vec!["commits"]);
         assert_eq!(a.pinned_r, None);
+    }
+
+    #[test]
+    fn the_self_coordinate_form_parses_as_a_package() {
+        // The migrated host form is an ordinary package coordinate (B-031).
+        let a =
+            SpecAddress::parse("spec://org.vibevm.core/vibevm/common/PROP-000#commits").unwrap();
+        assert_eq!(a.authority, pkg("org.vibevm.core", "vibevm", None));
+        assert_eq!(a.doc_path, "common/PROP-000");
+        assert_eq!(a.anchor, vec!["commits"]);
     }
 
     #[test]
@@ -296,7 +309,7 @@ mod tests {
     #[test]
     fn dotted_anchor_is_a_tree_path() {
         let a = SpecAddress::parse(
-            "spec://vibevm/modules/vibe-workspace/PROP-035#pipeline.embed-order",
+            "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#pipeline.embed-order",
         )
         .unwrap();
         assert_eq!(a.anchor, vec!["pipeline", "embed-order"]);
@@ -304,14 +317,14 @@ mod tests {
 
     #[test]
     fn whole_document_has_no_anchor() {
-        let a = SpecAddress::parse("spec://vibevm/common/PROP-000").unwrap();
+        let a = SpecAddress::parse("spec://org.vibevm.core/vibevm/common/PROP-000").unwrap();
         assert!(a.anchor.is_empty());
         assert_eq!(a.doc_path, "common/PROP-000");
     }
 
     #[test]
     fn revision_pin() {
-        let a = SpecAddress::parse("spec://vibevm/x/y#a~r3").unwrap();
+        let a = SpecAddress::parse("spec://org.vibevm.core/vibevm/x/y#a~r3").unwrap();
         assert_eq!(a.anchor, vec!["a"]);
         assert_eq!(a.pinned_r, Some(3));
     }
@@ -324,8 +337,12 @@ mod tests {
             "spec://org.vibevm.world/redbook@0.2/flows/x#a.b"
         );
         // A pinless, versionless host address is its own canonical form.
-        let b = SpecAddress::parse("spec://vibevm/common/PROP-000#commits").unwrap();
-        assert_eq!(b.without_pin(), "spec://vibevm/common/PROP-000#commits");
+        let b =
+            SpecAddress::parse("spec://org.vibevm.core/vibevm/common/PROP-000#commits").unwrap();
+        assert_eq!(
+            b.without_pin(),
+            "spec://org.vibevm.core/vibevm/common/PROP-000#commits"
+        );
     }
 
     #[test]
@@ -339,7 +356,7 @@ mod tests {
     #[test]
     fn rejects_whitespace() {
         assert_eq!(
-            SpecAddress::parse("spec://vibevm/a b/c#d"),
+            SpecAddress::parse("spec://org.vibevm.core/vibevm/a b/c#d"),
             Err(SpecAddressError::ContainsWhitespace)
         );
     }
@@ -347,7 +364,7 @@ mod tests {
     #[test]
     fn rejects_authority_only() {
         assert_eq!(
-            SpecAddress::parse("spec://vibevm"),
+            SpecAddress::parse("spec://org.vibevm.core/vibevm"),
             Err(SpecAddressError::MissingDocPath)
         );
         assert_eq!(
@@ -368,7 +385,7 @@ mod tests {
     #[test]
     fn rejects_empty_path_segment() {
         assert_eq!(
-            SpecAddress::parse("spec://vibevm//PROP-000#x"),
+            SpecAddress::parse("spec://org.vibevm.core/vibevm//PROP-000#x"),
             Err(SpecAddressError::EmptyPathSegment)
         );
     }
@@ -377,21 +394,21 @@ mod tests {
     fn rejects_bad_anchor_segment() {
         // A non-letter head — the id grammar's one shape rule.
         assert_eq!(
-            SpecAddress::parse("spec://vibevm/x/y#9lives"),
+            SpecAddress::parse("spec://org.vibevm.core/vibevm/x/y#9lives"),
             Err(SpecAddressError::InvalidAnchorSegment("9lives".into()))
         );
         assert_eq!(
-            SpecAddress::parse("spec://vibevm/x/y#_lead"),
+            SpecAddress::parse("spec://org.vibevm.core/vibevm/x/y#_lead"),
             Err(SpecAddressError::InvalidAnchorSegment("_lead".into()))
         );
         // A character outside the id charset.
         assert_eq!(
-            SpecAddress::parse("spec://vibevm/x/y#has!bang"),
+            SpecAddress::parse("spec://org.vibevm.core/vibevm/x/y#has!bang"),
             Err(SpecAddressError::InvalidAnchorSegment("has!bang".into()))
         );
         // An empty segment between dots.
         assert_eq!(
-            SpecAddress::parse("spec://vibevm/x/y#a..b"),
+            SpecAddress::parse("spec://org.vibevm.core/vibevm/x/y#a..b"),
             Err(SpecAddressError::InvalidAnchorSegment(String::new()))
         );
     }
@@ -402,7 +419,7 @@ mod tests {
     /// owner ruled the behaviour changes.
     #[test]
     fn anchor_segments_carry_both_id_registers() {
-        let a = SpecAddress::parse("spec://vibevm/x/y#Bad").unwrap();
+        let a = SpecAddress::parse("spec://org.vibevm.core/vibevm/x/y#Bad").unwrap();
         assert_eq!(a.anchor, vec!["Bad"]);
 
         let f = SpecAddress::parse(
@@ -412,10 +429,13 @@ mod tests {
         assert_eq!(f.anchor, vec!["SINGLE-DESIGN-TARGET"]);
 
         // Underscores, digits, a revision pin, and a tree path all compose.
-        let p = SpecAddress::parse("spec://vibevm/x/y#R_040.sub-a~r2").unwrap();
+        let p = SpecAddress::parse("spec://org.vibevm.core/vibevm/x/y#R_040.sub-a~r2").unwrap();
         assert_eq!(p.anchor, vec!["R_040", "sub-a"]);
         assert_eq!(p.pinned_r, Some(2));
-        assert_eq!(p.without_pin(), "spec://vibevm/x/y#R_040.sub-a");
+        assert_eq!(
+            p.without_pin(),
+            "spec://org.vibevm.core/vibevm/x/y#R_040.sub-a"
+        );
     }
 
     /// The seam convention (PROP-035 §4): `vibe-spec` shares no code with
@@ -436,7 +456,7 @@ mod tests {
             "req-conditional-fixpoint",
             "SINGLE-DESIGN-TARGET",
         ] {
-            let raw = format!("spec://vibevm/x/y#{ok}");
+            let raw = format!("spec://org.vibevm.core/vibevm/x/y#{ok}");
             assert!(
                 SpecAddress::parse(&raw).is_ok(),
                 "package grammar accepts `{ok}`; host must too"
@@ -446,7 +466,7 @@ mod tests {
         // purpose: `.` descends the tree path here, and each side splits before
         // it validates.
         for bad in ["", "9lives", "-lead", "_lead", "has space", "a!", "café"] {
-            let raw = format!("spec://vibevm/x/y#{bad}");
+            let raw = format!("spec://org.vibevm.core/vibevm/x/y#{bad}");
             assert!(
                 SpecAddress::parse(&raw).is_err(),
                 "package grammar rejects `{bad}`; host must too"
@@ -457,11 +477,11 @@ mod tests {
     #[test]
     fn rejects_bad_revision() {
         assert_eq!(
-            SpecAddress::parse("spec://vibevm/x/y#a~r0"),
+            SpecAddress::parse("spec://org.vibevm.core/vibevm/x/y#a~r0"),
             Err(SpecAddressError::InvalidRevision("r0".into()))
         );
         assert_eq!(
-            SpecAddress::parse("spec://vibevm/x/y#a~3"),
+            SpecAddress::parse("spec://org.vibevm.core/vibevm/x/y#a~3"),
             Err(SpecAddressError::InvalidRevision("3".into()))
         );
     }
@@ -469,7 +489,7 @@ mod tests {
     #[test]
     fn rejects_empty_anchor() {
         assert_eq!(
-            SpecAddress::parse("spec://vibevm/x/y#"),
+            SpecAddress::parse("spec://org.vibevm.core/vibevm/x/y#"),
             Err(SpecAddressError::EmptyAnchor)
         );
     }

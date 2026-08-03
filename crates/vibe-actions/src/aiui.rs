@@ -17,7 +17,7 @@
 //!
 //! Spec: [PROP-039 §11.3](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#aiui).
 
-specmark::scope!("spec://vibevm/modules/vibe-actions/PROP-039#aiui");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#aiui");
 
 use crate::address::ActionAddr;
 use crate::context::Ctx;

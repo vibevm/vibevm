@@ -77,7 +77,7 @@ all of them this campaign's own bookkeeping. `git diff --name-only
 9f79acf1..HEAD` touches **nothing** under `spec/`, `crates/`, `packages/` or
 `specmap.json`, so every measurement below holds unchanged at the later HEAD. It
 is recorded because §6.1's `##THE-CAMPAIGN-IS-INSIDE-ITS-OWN-CORPUS` says a
-figure must name its HEAD, and because one figure here (the `spec://vibevm/…`
+figure must name its HEAD, and because one figure here (the `spec://org.vibevm.core/vibevm/…`
 citation count, 1 384 → 1 385) moved by exactly one campaign sentence.
 
 ---
@@ -237,7 +237,7 @@ three-part superset. Both halves of the verdict reproduce:
 
 ```console
 $ grep -rohE 'spec://[A-Za-z0-9._-]+/' crates xtask spec specmap.toml *.md | sort | uniq -c | sort -rn | head -6
-   1385 spec://vibevm/
+   1385 spec://org.vibevm.core/vibevm/
      49 spec://org.vibevm.world/
      22 spec://org.vibevm.demo/
      22 spec://org.vibevm.ai-native/
@@ -254,7 +254,7 @@ two days*, which is the wave-6 lesson about a figure taken over a window this
 campaign is itself writing into.
 
 The divergence is real. A host address reads
-`spec://vibevm/modules/vibe-progress/PROP-043#baseline`
+`spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#baseline`
 (`crates/progress-core/src/baseline.rs:14`), so the module **directory** is
 present but one segment right of where the mapping puts it; the **doc** segment is
 a path rather than a name; and the file it names is `PROP-043-progress-markup.md`
@@ -275,7 +275,7 @@ specified in writing on the host side, before the fact:**
   the router and marked `@impl/done`;
 - `spec/common/PROP-029-fully-qualified-addresses.md:44` `##SCOPE-HOST` — *«The
   **host vibevm project's own** specs keep the project authority
-  `spec://vibevm/…` — the root project is not a package with a group; §1 binds
+  `spec://org.vibevm.core/vibevm/…` — the root project is not a package with a group; §1 binds
   packages.»* A scoped exception, dated and owner-ratified;
 - `crates/vibe-spec/src/address.rs:9-17` — the implementation's own module doc:
   *«**authority** — either a package coordinate `<group>/<name>` or the host
@@ -507,7 +507,7 @@ stacks receives the documents its code tags cite, instead of needing
 vibevm's dev tree.
 …
 Historical note: vibevm-hosted URIs of the form
-`spec://vibevm/discipline/<DOC>#<anchor>` map 1:1 to
+`spec://org.vibevm.core/vibevm/discipline/<DOC>#<anchor>` map 1:1 to
 `spec://org.vibevm.ai-native/core-ai-native/mechanisms/<DOC>#<anchor>` (anchors unchanged).
 ```
 
@@ -527,7 +527,7 @@ both ways so the reading is the owner's:
   sentence that four other adopters could keep or break independently.
 
 Either way the practical consequence is nil, and it is measurable: the old
-address does not dangle. `grep -rn 'spec://vibevm/discipline'` returns **zero**
+address does not dangle. `grep -rn 'spec://org.vibevm.core/vibevm/discipline'` returns **zero**
 hits anywhere in `crates/`, `xtask/`, `spec/` or `packages/` — every citer was
 rewritten, which is the continuity the tombstone exists to provide, obtained by
 the more expensive route the verdict itself names.
@@ -631,7 +631,7 @@ or the propagation gap simply moves.
 
 **New obligations noticed.** (1) The **five `dangling-edge` warnings** in
 `specmap.json` are all one defect and it belongs to the flow whose subject is that
-an address must resolve: `spec://vibevm/modules/vibe-progress/PROP-043#report`,
+an address must resolve: `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#report`,
 `#seal` (×3) and `#weave` resolve to nothing, because
 `spec/modules/vibe-progress/PROP-043-progress-markup.md:390`, `:398` and `:419`
 write `{#report}` / `{#weave}` / `{#seal}` on **list-item** lines rather than on
@@ -686,7 +686,7 @@ verdicts on the two rows did not do. `refs/**` reported separately.
 
 | the verdict said | measured at HEAD | command |
 |---|---|---|
-| 1 384 `spec://vibevm/…` host citations | **1 385** | `grep -rohE 'spec://vibevm/[A-Za-z0-9._/-]*' crates xtask spec specmap.toml *.md \| wc -l` |
+| 1 384 `spec://org.vibevm.core/vibevm/…` host citations | **1 385** | `grep -rohE 'spec://org.vibevm.core/vibevm/[A-Za-z0-9._/-]*' crates xtask spec specmap.toml *.md \| wc -l` |
 | 68 `<group>/<name>` citations | **91** | `grep -rohE 'spec://[a-z0-9-]+\.[a-z0-9.-]+/[a-z0-9-]+/' crates xtask spec specmap.toml *.md \| wc -l` |
 | 519 anchors in use, 0 non-kebab | **859**, still **0** non-kebab | `find spec -name '*.md' ! -name 'STATIC.md' -exec grep -hoE '^#{1,6} .*\{#[A-Za-z0-9._-]+\}$' {} + \| grep -oE '\{#[A-Za-z0-9._-]+\}$' \| wc -l` |
 | 677 implements + 223 verifies + 12 deviates over 5 266 units | **exact match, all four** | `python -c "…collections.Counter(e['verb'] for e in json.load(open('specmap.json'))['edges'])"` |
@@ -715,7 +715,7 @@ The summary: *«`spec://<module>/<doc>#<section>[.<sub>]`; anchors are `{#id}`, 
 are hierarchy, **modules reverse-DNS when specs can be shared**.»*
 
 The verdict grants the first three clauses and drifts the fourth: *«the scheme as
-stated has no place for the host's own `spec://vibevm/…` namespace, which carries
+stated has no place for the host's own `spec://org.vibevm.core/vibevm/…` namespace, which carries
 1 384 of its citations.»*
 
 It has exactly that place, and the summary's own wording is the place. The clause
@@ -727,7 +727,7 @@ repository; **short local names are fine when they provably cannot**.»* The hos
 own specs are the root project's, never published as a package, and the host
 recorded exactly that at `spec/common/PROP-029-fully-qualified-addresses.md:44`
 `##SCOPE-HOST`: *«The **host vibevm project's own** specs keep the project
-authority `spec://vibevm/…` — the root project is not a package with a group; §1
+authority `spec://org.vibevm.core/vibevm/…` — the root project is not a package with a group; §1
 binds packages.»* `vibevm` in the `<module>` position **is** the scheme as stated,
 taking the short-local-name branch of the rule this summary compresses into one
 clause.
@@ -777,7 +777,7 @@ The verdict's two claims split cleanly.
 **The first survives.** The host's `<module>` position holds a minted namespace
 (`specmap.toml:14`, `namespace = "vibevm"`), and the module directory sits one
 segment right of where the row places it —
-`spec://vibevm/modules/vibe-progress/PROP-043#baseline`
+`spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#baseline`
 (`crates/progress-core/src/baseline.rs:14`). The row describes a two-segment
 scheme; the host runs PROP-035's three-part one. That is a genuine mismatch, and
 it is the same one F-147's four addressing anchors carry, with the same recorded
@@ -935,7 +935,7 @@ two boilerplate section titles, it is every short section name the flow corpus
 uses in common.
 
 **And the address is real, not hypothetical.** The committed index mints
-**98 spec units** for `spec/boot/STATIC.md`, `spec://vibevm/boot/STATIC#root`
+**98 spec units** for `spec/boot/STATIC.md`, `spec://org.vibevm.core/vibevm/boot/STATIC#root`
 among them, so `#root` is a live minted address naming twenty-six different
 documents' roots. Zero code edges point into any of them today, so the ambiguity
 is **latent, not currently mis-resolving** — worth saying plainly, because it is
@@ -1114,7 +1114,7 @@ PROP-014 relocation kept every anchor — checkable without the archive, since t
 shipped unit still carries them:
 `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md:80`
 carries the law itself on the shipped side (*«Anchors are immutable once published
-and never reused»*), and no `spec://vibevm/discipline/…` address survives anywhere
+and never reused»*), and no `spec://org.vibevm.core/vibevm/discipline/…` address survives anywhere
 in `crates/`, `xtask/`, `spec/` or `packages/` to be silently re-pointed. The host's `spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md:44`
 `##RETIRED-SECTIONS-KEPT` is the practice working: §3–§5 describe a retired
 topology and **stay** rather than having their anchors recycled.
@@ -1202,7 +1202,7 @@ absence stands on the `KindMismatch` search alone, which is enough.
 `##ROW-FORM-KIND-AND-NAME` survives only in its third column. Its **Where legal**
 column — *«CLI input only»* — is correct: `flow:wal` parses
 (`display_round_trips_every_form`, `crates/vibe-core/src/package_ref/tests.rs:256-269`,
-carrying `#[verifies("spec://vibevm/modules/vibe-registry/PROP-008#pkgref", r = 1)]`),
+carrying `#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref", r = 1)]`),
 and `##RULE-MANIFESTS-ACCEPT-QUALIFIED-FORMS-ONLY` holds — every entry in
 `vibe.lock` carries both `name` and `group`. Only *«kind is validated after
 resolution»* is false, and it is false in the same one place as the anchor above.
@@ -1435,7 +1435,7 @@ were reachable from where the verdict already stood.
 2. **Reading the rest of the document — 3 verdicts.** *«The third form the row
    omits»* is defined 68 lines below the row, in a MUST
    (`ADDRESSABLE-SPECS-PROTOCOL.md:148`). *«The scheme has no place for
-   `spec://vibevm/…`»* is refuted by the summary's own conditional and by
+   `spec://org.vibevm.core/vibevm/…`»* is refuted by the summary's own conditional and by
    `spec-tree-layout.md:146`. *«A never-read line in the boot file»* is a
    do-not-**write** line eight lines above the section that tells the session to
    read that very directory.
@@ -1456,7 +1456,7 @@ were reachable from where the verdict already stood.
 |---|---:|---:|---|
 | `duplicate-anchor` warnings, all in `spec/boot/STATIC.md` | 59 | **59** | holds |
 | specmap edges: implements / verifies / deviates / units | 677 / 223 / 12 / 5 266 | **identical** | holds |
-| `spec://vibevm/…` host citations | 1 384 | **1 385** | holds (+1) |
+| `spec://org.vibevm.core/vibevm/…` host citations | 1 384 | **1 385** | holds (+1) |
 | `find spec -name 'FEAT-*'` | 0 | **0** | holds |
 | `grep -rn '^Test:' spec/` | 0 | **0** | holds |
 | `KindMismatch` in `.rs` | 0 | **0** | holds (third re-verification) |

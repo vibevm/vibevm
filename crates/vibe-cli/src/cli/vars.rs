@@ -1,6 +1,6 @@
 //! Args for `vibe vars` (PROP-019 §2.14).
 
-specmark::scope!("spec://vibevm/common/PROP-019#vars");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#vars");
 
 #[derive(Debug, clap::Args)]
 pub struct VarsArgs {

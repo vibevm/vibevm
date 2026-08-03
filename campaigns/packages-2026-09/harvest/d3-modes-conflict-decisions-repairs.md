@@ -411,7 +411,7 @@ is not.
 ## F-298 — the host recorded a different weighting, deliberately and in writing: §3.6 route (c)
 
 **Outcome:** RE-JUDGE: confirmed — route (c), exception recorded host-side at
-`spec://vibevm/common/PROP-000#dep-weight`
+`spec://org.vibevm.core/vibevm/common/PROP-000#dep-weight`
 **Anchors:** 0 of 1 edited — `##ROW-PREFER-NO-NEW-DEPENDENCY`.
 **Files touched:** none
 

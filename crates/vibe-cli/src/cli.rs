@@ -7,7 +7,7 @@
 //! submodules and are re-exported below, so consumers keep addressing
 //! everything as `crate::cli::X`.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#command-summary");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
 use clap::{Parser, Subcommand};
 

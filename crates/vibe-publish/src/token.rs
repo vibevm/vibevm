@@ -37,7 +37,7 @@
 //! [PROP-000 §20](../../../spec/common/PROP-000.md#token-secrecy)
 //! for the full discipline.
 
-specmark::scope!("spec://vibevm/common/PROP-000#token-secrecy");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy");
 
 use std::fmt;
 use std::fs;
@@ -276,7 +276,7 @@ mod tests {
     }
 
     #[test]
-    #[specmark::verifies("spec://vibevm/common/PROP-000#token-secrecy")]
+    #[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy")]
     fn debug_redacts_value() {
         let t = Token::from_explicit("super-secret-12345");
         let s = format!("{t:?}");
@@ -285,7 +285,7 @@ mod tests {
     }
 
     #[test]
-    #[specmark::verifies("spec://vibevm/common/PROP-000#token-secrecy")]
+    #[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy")]
     fn display_redacts_value() {
         let t = Token::from_explicit("super-secret-12345");
         let s = format!("{t}");

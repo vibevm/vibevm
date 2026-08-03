@@ -4,7 +4,7 @@
 //! primitives — the caller picks JSON vs TOML from the agent profile and
 //! threads the section key + server name in.
 
-specmark::scope!("spec://vibevm/modules/vibe-mcp/PROP-015#agent-config");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#agent-config");
 
 use std::fs;
 use std::path::Path;

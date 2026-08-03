@@ -17,7 +17,7 @@
 //!
 //! Spec: [PROP-040 §3, §9](../../../../spec/modules/vibe-settings/PROP-040-settings.md#locations).
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-040#locations");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#locations");
 
 use std::fmt;
 use std::path::{Path, PathBuf};
@@ -148,7 +148,9 @@ impl fmt::Display for Layer {
 ///     Layer::L1,
 /// );
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#path-classifier")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#path-classifier"
+)]
 pub fn classify(path: &Path) -> Layer {
     classify_with_settings_dir(path, resolved_settings_dir().as_deref())
 }
@@ -179,7 +181,9 @@ pub fn classify(path: &Path) -> Layer {
 ///     Layer::L2,
 /// );
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#path-classifier")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#path-classifier"
+)]
 pub fn classify_with_settings_dir(path: &Path, settings_dir: Option<&Path>) -> Layer {
     let basename = path.file_name().and_then(|s| s.to_str());
     match basename {
@@ -203,7 +207,9 @@ pub fn classify_with_settings_dir(path: &Path, settings_dir: Option<&Path>) -> L
 /// Backward-compatible shim: classify against the user's home `.vibe/`.
 /// Equivalent to [`classify_with_settings_dir`] with `<home>/.vibe` as the
 /// L1 directory (the pre-`$VIBE_SETTINGS` fixed location, PROP-040 §3).
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#path-classifier")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#path-classifier"
+)]
 pub fn classify_with_home(path: &Path, home: Option<&Path>) -> Layer {
     let dir = home.map(|h| h.join(DOT_VIBE));
     classify_with_settings_dir(path, dir.as_deref())
@@ -226,7 +232,9 @@ pub fn classify_with_home(path: &Path, home: Option<&Path>) -> Layer {
 /// let table = load_layer(Path::new("/no/such/vibe-settings-doctest.toml")).unwrap();
 /// assert!(table.is_empty());
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#missing-is-default")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#missing-is-default"
+)]
 pub fn load_layer(path: &Path) -> Result<toml::Table, SettingsError> {
     // Tag the layer mechanically up front (§9); the same tag covers both error
     // arms so the diagnostic names which layer failed without caller input.
@@ -296,7 +304,9 @@ impl LayeredRaw {
 /// .unwrap();
 /// assert!(raw.l1.is_empty() && raw.l2.is_empty() && raw.l3.is_empty());
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#locations")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#locations"
+)]
 pub fn load_all(l1: &Path, l2: &Path, l3: &Path) -> Result<LayeredRaw, SettingsError> {
     Ok(LayeredRaw {
         l1: load_layer(l1)?,

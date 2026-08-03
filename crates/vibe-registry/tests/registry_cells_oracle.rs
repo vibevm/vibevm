@@ -40,7 +40,7 @@ fn seed_local_layout(root: &Path) {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#registry-model")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model")]
 fn local_registry_resolves_and_fetches_through_the_seam() {
     let fixture = tempdir().unwrap();
     seed_local_layout(fixture.path());
@@ -82,7 +82,7 @@ fn local_registry_resolves_and_fetches_through_the_seam() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#registry-model")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model")]
 fn local_registry_missing_root_is_rejected_at_open() {
     let fixture = tempdir().unwrap();
     let absent = fixture.path().join("definitely-not-a-registry");
@@ -151,7 +151,7 @@ impl GitBackend for FakeGit {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-001#registry-trait")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#registry-trait")]
 fn git_registry_clones_once_and_serves_git_shaped_source_uris() {
     let tmp = tempdir().unwrap();
     let upstream = tmp.path().join("upstream");

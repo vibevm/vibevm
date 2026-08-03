@@ -3,7 +3,7 @@
 //! §2.5). The store reads no ambient environment — the root is resolved at
 //! the composition root and handed in.
 
-specmark::scope!("spec://vibevm/common/PROP-019#layout");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#layout");
 
 use std::fs;
 use std::io;
@@ -17,11 +17,11 @@ use super::model::{InstallRecord, State, VersionId};
 /// The version-store layer's failure surface (PROP-019 §2.4, §2.5): reading,
 /// parsing, or writing the on-disk inventory and the `current` pointer.
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/common/PROP-019#layout")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#layout")]
 pub enum StoreError {
     #[error(
         "reading the VVM inventory `{path}` failed: {source} \
-         (violates spec://vibevm/common/PROP-019#layout; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#layout; \
           fix: ensure the install root is readable)"
     )]
     ReadState {
@@ -32,14 +32,14 @@ pub enum StoreError {
 
     #[error(
         "the VVM inventory `{path}` is malformed: {detail} \
-         (violates spec://vibevm/common/PROP-019#layout; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#layout; \
           fix: repair or delete the corrupt state.toml)"
     )]
     ParseState { path: PathBuf, detail: String },
 
     #[error(
         "writing the VVM layout at `{path}` failed: {source} \
-         (violates spec://vibevm/common/PROP-019#layout; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#layout; \
           fix: ensure the install root is writable)"
     )]
     WriteLayout {
@@ -50,7 +50,7 @@ pub enum StoreError {
 
     #[error(
         "serialising the VVM inventory failed: {detail} \
-         (violates spec://vibevm/common/PROP-019#layout; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#layout; \
           fix: report this — the in-memory state is malformed)"
     )]
     Serialise { detail: String },
@@ -61,7 +61,7 @@ pub const BINARY_NAME: &str = if cfg!(windows) { "vibe.exe" } else { "vibe" };
 
 /// Owns the on-disk layout under `$VIBEVM_INSTALL_ROOT/opt` (PROP-019 §2.4).
 #[derive(Debug, Clone)]
-#[spec(implements = "spec://vibevm/common/PROP-019#layout")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#layout")]
 pub struct VersionStore {
     root: PathBuf,
 }
@@ -301,7 +301,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#layout", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#layout", r = 1)]
     fn instance_paths_nest_under_kind_id_instance() {
         let store = VersionStore::new("/opt");
         let id = VersionId::new(Kind::Tag, "1.2.3");
@@ -316,7 +316,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#layout", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#layout", r = 1)]
     fn alloc_instance_is_monotonic_from_one() {
         let tmp = tempfile::tempdir().unwrap();
         let store = VersionStore::new(tmp.path());
@@ -326,7 +326,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#activation", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#activation", r = 1)]
     fn active_follows_the_current_pointer() {
         let tmp = tempfile::tempdir().unwrap();
         let store = VersionStore::new(tmp.path());

@@ -11,7 +11,7 @@
 //! [`clear_focused`](super::Form::clear_focused) method, wired to a key in the
 //! provenance view; this module only renders the data + the hint.
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#provenance");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#provenance");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;

@@ -22,7 +22,7 @@ no open obligation in the findings ledger and no `unknown` marker. @spec/done
 
 ```
 > <quoted unit text>
-> — `spec://vibevm/…#anchor`
+> — `spec://org.vibevm.core/vibevm/…#anchor`
 ```
 
 - ##CONTRACT-LIST-ALL List every anchor this task realises. @spec/done

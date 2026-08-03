@@ -10,7 +10,7 @@
 //!
 //! Spec: [PROP-040 §3](../../../../spec/modules/vibe-settings/PROP-040-settings.md#locations).
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-040#missing-is-default");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#missing-is-default");
 
 use std::path::PathBuf;
 
@@ -39,13 +39,15 @@ use crate::loader::Layer;
 /// assert!(e.to_string().contains("missing-is-default"));
 /// ```
 #[derive(Debug, thiserror::Error)]
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#missing-is-default")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#missing-is-default"
+)]
 pub enum SettingsError {
     /// The layer file exists but could not be read (permissions, I/O, ...).
     /// Non-fatal — the caller treats the layer as absent.
     #[error(
         "could not read {layer} file `{path}`: {source} \
-         (violates spec://vibevm/modules/vibe-settings/PROP-040#missing-is-default; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#missing-is-default; \
           fix: check the file's permissions, or remove it to fall back to defaults)"
     )]
     Io {
@@ -61,7 +63,7 @@ pub enum SettingsError {
     /// reports the diagnostic and treats the layer as absent.
     #[error(
         "{layer} file `{path}` is malformed: {source} \
-         (violates spec://vibevm/modules/vibe-settings/PROP-040#missing-is-default; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#missing-is-default; \
           fix: repair the TOML at the reported location)"
     )]
     Parse {

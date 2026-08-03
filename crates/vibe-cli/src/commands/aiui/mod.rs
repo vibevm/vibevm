@@ -5,7 +5,7 @@
 //! control server (§4). The **model plane** (`state`) projects the TUI state to a
 //! serialisable `ModelView` (PROP-039 §11.2/§11.3).
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-042#aiui-cli");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#aiui-cli");
 
 mod cdp;
 mod control;
@@ -35,7 +35,7 @@ pub fn run(_ctx: &output::Context, args: AiuiArgs) -> Result<()> {
 
 /// `vibe aiui render` — the render plane (PROP-042 §1/§4): build the tree model
 /// at `--path`, drive `--send` at `--size`, print the `--format` snapshot.
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-042#aiui-cli")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#aiui-cli")]
 fn render(a: AiuiRenderArgs) -> Result<()> {
     let (cols, rows) = parse_size(&a.size)?;
     let cells = matches!(a.format, SnapFormat::Cells);
@@ -49,7 +49,7 @@ fn render(a: AiuiRenderArgs) -> Result<()> {
 /// `ModelView` — display mode, ordering, the active tab, the selection, the
 /// visible rows, which modals are open. Structured state, never pixels; for
 /// flow/state assertions with no rendering at all.
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-042#aiui-cli")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#aiui-cli")]
 fn state(a: AiuiStateArgs) -> Result<()> {
     let view = super::tree::state(&a.path, &a.send)?;
     let json = serde_json::to_string_pretty(&view)?;

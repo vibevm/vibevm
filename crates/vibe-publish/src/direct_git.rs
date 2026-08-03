@@ -21,7 +21,7 @@
 //! is upheld trivially because no token participates in this path —
 //! the credential surface is local-git's, not vibevm's.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#publish");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish");
 
 use crate::{CreateOpts, PublishError, RepoCreator, RepoInfo, extract_host_segment};
 

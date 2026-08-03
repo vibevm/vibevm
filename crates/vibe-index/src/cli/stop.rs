@@ -7,7 +7,7 @@
 //! can `taskkill /PID <n>` themselves. Slice 11's docs cover both
 //! platforms in the operator handbook.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
 use std::path::PathBuf;
 

@@ -18,7 +18,7 @@
 //!
 //! Spec: [PROP-040 §8](../../../../spec/modules/vibe-settings/PROP-040-settings.md#prefs-command).
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-040#prefs-command");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#prefs-command");
 
 mod check;
 mod get;

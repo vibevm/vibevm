@@ -225,7 +225,7 @@ note:      Phase 2 crate sweep (PLAYBOOK-TERRAFORM-VIBEVM-v0.2 #phase2;
 mined_commits -> 4      proposals -> 54      candidate_orphans -> 0
 proposals[0] = {"id":"PRP-0001","item":"vibe_resolver::ResolvedNode",
   "item_kind":"struct","file":"crates/vibe-resolver/src/lib.rs",
-  "verb":"implements","uri":"spec://vibevm/modules/vibe-registry/PROP-008#identity",
+  "verb":"implements","uri":"spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity",
   "confidence":"high","evidence_code":…,"evidence_spec":…}
 ```
 
@@ -684,7 +684,7 @@ $ grep -n "ErrorMessageCitesReq" -A8 …/conform/src/rules/diagnostics.rs
       the REQ URI, so a failing run is navigable back to the requirement …"
 
 $ grep -rn "spec://" --include=*.rs crates/vibe-core/src | grep -i err
-crates/vibe-core/src/error.rs:34   (violates spec://vibevm/modules/vibe-registry/PROP-008#pkgref; …
+crates/vibe-core/src/error.rs:34   (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref; …
 ```
 
 Force (iii) — *"failures cite the violated REQ"* — is enforced by two shipped

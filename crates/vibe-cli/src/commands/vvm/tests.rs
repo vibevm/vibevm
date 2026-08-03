@@ -2,7 +2,7 @@
 //! of `mod.rs` so the production file stays inside the file-length budget
 //! (DISCIPLINE-SWEEP §1a tests-out); included via `#[path]` from `mod.rs`.
 
-specmark::scope!("spec://vibevm/common/PROP-019#surface");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#surface");
 
 use super::*;
 use crate::commands::vvm::model::{
@@ -25,7 +25,7 @@ fn rec(kind: Kind, id: &str, instance: u64) -> InstallRecord {
 }
 
 #[test]
-#[verifies("spec://vibevm/common/PROP-019#selectors", r = 1)]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#selectors", r = 1)]
 fn resolve_installed_picks_the_newest_instance_per_selector() {
     let state = State {
         next_instance: 9,

@@ -105,7 +105,10 @@ fn req_delete(uri: &str, token: Option<&str>) -> Request<Body> {
 }
 
 #[tokio::test]
-#[verifies("spec://vibevm/modules/vibe-index/PROP-005#server-mode", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#server-mode",
+    r = 1
+)]
 async fn post_packages_inserts_entry() {
     let (_tmp, state) = fresh_state(false, Some("topsecret"));
     let app = build_app(state);

@@ -9,7 +9,7 @@
 //! it with validation / picker). The [`TextField`] primitive gives the
 //! append-only `type_char`/`backspace` edit + the `█` cursor render.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#copy-dest");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#copy-dest");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::{Constraint, Layout, Rect};
@@ -105,7 +105,7 @@ impl FileDest {
     /// `Save` / `Cancel` [`Button`]s side by side, and a key hint on the last
     /// row. The focused control carries its theme highlight (the `█` cursor for
     /// the field, the accent bar for a button).
-    #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#copy-dest")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#copy-dest")]
     pub fn render(&self, area: Rect, buf: &mut Buffer, theme: &Theme) {
         if area.width < 28 || area.height < 9 {
             return;

@@ -8,7 +8,7 @@
 //!
 //! Spec: PROP-002 §2.3 (mirror layer), §6 (Phase B preview).
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#registry");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
 use anyhow::{Context, Result, bail};
 use serde::Serialize;

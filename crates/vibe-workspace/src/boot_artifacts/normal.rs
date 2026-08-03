@@ -7,7 +7,7 @@
 //! cell only derives the closure's seed from a [`BootEntry`] and adapts the
 //! compiler's error into a REQ-citing [`WorkspaceError`].
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-035#pipeline");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#pipeline");
 
 use std::path::Path;
 
@@ -37,7 +37,7 @@ use crate::boot::BootEntry;
 /// and the governing requirement (PROP-035 §8) — a structured, REQ-citing
 /// diagnostic the installer prints rather than a bare compiler string.
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-035#pipeline",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#pipeline",
     r = 1
 )]
 pub(super) fn compile_normal_entry(
@@ -90,7 +90,7 @@ mod tests {
     use super::*;
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-workspace/PROP-035#addressing")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#addressing")]
     fn normal_seed_derives_the_whole_doc_contract_address() {
         // The seed is the contract's whole-document address — no anchor, so the
         // compiler walks from the root (PROP-035 §6): `<group>/<name>` from the

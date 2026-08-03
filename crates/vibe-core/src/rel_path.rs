@@ -2,7 +2,7 @@
 //!
 //! Spec: [PROP-007](../../../spec/modules/vibe-workspace/PROP-007-workspace.md).
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-007#workspace-section");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section");
 
 use std::fmt;
 

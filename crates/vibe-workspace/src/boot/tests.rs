@@ -64,7 +64,7 @@ fn empty_inputs_yield_empty_boot() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-035#formats")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#formats")]
 fn dependency_format_reaches_its_boot_entry() {
     // The static renderer keys on `BootEntry.format` to decide compile vs
     // verbatim (PROP-035 §8); the composition must carry a `normal`

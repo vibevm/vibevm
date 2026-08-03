@@ -2,7 +2,7 @@
 
 <status stage="impl" state="done" action="continue" actionstage="impl" comment="contract ratified 2026-07-24; the §5 tool ships (all seven subcommands); the campaign it governs is in Phase D — the open tail is the §6 evidence join and the parity items of F-046"/>
 
-##self-uri `spec://vibevm/modules/vibe-progress/PROP-043` @spec/done
+##self-uri `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043` @spec/done
 
 ##status-line **Status:** RATIFIED 2026-07-24 (owner, in session — «ратифицирую PROP-043»)
 and **IMPLEMENTED**: the markup language, the tool surface and the data contracts

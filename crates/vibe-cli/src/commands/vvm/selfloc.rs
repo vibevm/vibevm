@@ -3,7 +3,7 @@
 //! `…/<base>/opt/vibevm/versions/<kind>/<id>/<instance>/vibe[.exe]`, so it
 //! knows its root and home from `current_exe()` — no env var required.
 
-specmark::scope!("spec://vibevm/common/PROP-019#activation");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#activation");
 
 use std::path::{Path, PathBuf};
 
@@ -65,7 +65,7 @@ mod tests {
     use specmark::verifies;
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#activation", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#activation", r = 1)]
     fn derive_self_parses_a_managed_layout() {
         let tmp = tempfile::tempdir().unwrap();
         let inst = tmp
@@ -98,7 +98,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#activation", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#activation", r = 1)]
     fn strip_verbatim_drops_the_windows_prefix() {
         assert_eq!(
             strip_verbatim(PathBuf::from(r"\\?\C:\Users\x\opt")),

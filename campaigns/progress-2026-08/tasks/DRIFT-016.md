@@ -17,10 +17,10 @@ outside the repository, keyed by branch, where its size costs nothing.
 ## 2. Contract {#contract}
 
 > Everything else can be erased at any moment — no knowledge is lost.
-> — `spec://vibevm/modules/vibe-progress/PROP-043#erasure`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#erasure`
 
 > Per observed file: path, content-hash, extracted markers with positions …
-> — `spec://vibevm/modules/vibe-progress/PROP-043#cache`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#cache`
 
 > **Cache campaign maps are load-bearing.** `run/cache.json` carries the
 > C-phase verdicts; mutate it by load-and-merge only.
@@ -148,7 +148,7 @@ bash tools/self-check.sh
 - **Live check, reported in §9:** run a scan on this repository, then
   `git status` — `cache.json`'s diff must be the ordinary small one, and
   `du` its size before and after.
-- Discipline: `#[spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#erasure")]`
+- Discipline: `#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#erasure")]`
   on the sidecar seam, `cargo fmt --all`, clippy clean, atomic commits, no
   AI attribution.
 

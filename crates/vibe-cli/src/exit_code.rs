@@ -2,7 +2,7 @@
 //!
 //! Spec: `VIBEVM-SPEC.md` §9.4.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#exit-codes");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#exit-codes");
 
 use std::process::ExitCode;
 
@@ -35,12 +35,12 @@ pub const AMBIGUOUS_PACKAGE: u8 = 7;
 /// A structured `vibe install` / `vibe uninstall` failure the CLI maps to
 /// a specific process exit code (`VIBEVM-SPEC.md` §9.4).
 #[derive(Debug, Error)]
-#[specmark::spec(implements = "spec://vibevm/VIBEVM-SPEC#exit-codes")]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#exit-codes")]
 pub enum InstallError {
     /// The user declined the plan at the interactive confirmation prompt.
     #[error(
         "user declined the plan \
-         (violates spec://vibevm/VIBEVM-SPEC#exit-codes; \
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#exit-codes; \
           fix: re-run and accept at the confirmation prompt, or adjust the requested packages)"
     )]
     UserDeclined,
@@ -52,7 +52,7 @@ pub enum InstallError {
     /// are in hand; the Class-F tail follows it.
     #[error(
         "{0} \
-         (violates spec://vibevm/VIBEVM-SPEC#exit-codes; \
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#exit-codes; \
           fix: re-run with the group-qualified `<group>/<name>` form shown above)"
     )]
     AmbiguousPackage(String),

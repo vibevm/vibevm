@@ -27,14 +27,14 @@ kebab-only, unchanged.
 ```
 > `##UPPER-SLUG` names a **normative fact** (a law, rule, carrier, changelog
 > entry — content with binding weight); `##kebab-case` names a **service unit**
-> — spec://vibevm/modules/vibe-progress/PROP-043#DECISION-TWO-REGISTERS
+> — spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DECISION-TWO-REGISTERS
 ```
 
 ```
 > `<ID>` is `[A-Za-z][A-Za-z0-9_-]*`; the unit is then addressable as
 > `spec://…/<doc>#<ID>`, sharing one address space with the heading
 > `{#anchor}`s — a duplicate across both forms is a `check` error.
-> — spec://vibevm/modules/vibe-progress/PROP-043#FACT-ID-GRAMMAR
+> — spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#FACT-ID-GRAMMAR
 ```
 
 `##FACT-ID-GRAMMAR` already states that a fact is addressable **as a
@@ -75,7 +75,7 @@ Verified 2026-07-26 by reading the grammar crate and measuring the corpus.
    so an unpropagated fix turns the floor red.
 
 **A test pins the old behaviour and must flip.**
-`…/specmark-grammar/src/lib/tests.rs:33` lists `"spec://vibevm/x#A-b"` among
+`…/specmark-grammar/src/lib/tests.rs:33` lists `"spec://org.vibevm.core/vibevm/x#A-b"` among
 the rejected URIs, commented `// uppercase anchor`. **Moving it to the accepted
 set is the point of the task, not a golden being bent to pass** — the owner
 ruled the behaviour changes. Say so in the commit body. The two assertions at
@@ -140,8 +140,8 @@ citing a real UPPER fact anchor minted by B1 (for example
 confirm it **compiles**, then remove it and say in §9 that you did. A task that
 widens a grammar and never cites one real anchor has not been tested.
 
-- `parse_spec_uri("spec://vibevm/x#A-b")` → **Ok**, anchor `A-b`;
-- `parse_spec_uri("spec://vibevm/x#A-b~r2")` → **Ok**, pin 2;
+- `parse_spec_uri("spec://org.vibevm.core/vibevm/x#A-b")` → **Ok**, anchor `A-b`;
+- `parse_spec_uri("spec://org.vibevm.core/vibevm/x#A-b~r2")` → **Ok**, pin 2;
 - `is_valid_anchor("FACT-A")` → **still false**;
 - `cargo xtask sync-engines --check` → clean across all pairs.
 
@@ -213,7 +213,7 @@ pinned by `heading_anchor_law_is_unchanged_by_the_uri_widening`, which asserts
 `is_valid_anchor("9lives")` while `parse_spec_uri("…#9lives")` errors.
 
 **Two tests deliberately flipped, both authorised by the owner's ruling.**
-`tests.rs` moved `"spec://vibevm/x#A-b"` out of `uri_rejections` into the new
+`tests.rs` moved `"spec://org.vibevm.core/vibevm/x#A-b"` out of `uri_rejections` into the new
 `uri_accepts_an_upper_fact_anchor`; `address.rs` moved `#Bad` out of
 `rejects_bad_anchor_segment` into `anchor_segments_carry_both_id_registers`. Two
 further fixtures had to change because they *used* a now-valid string as their

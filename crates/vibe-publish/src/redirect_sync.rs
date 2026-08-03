@@ -15,7 +15,7 @@
 //! carries the pushed / already-present breakdown back for the caller's
 //! report.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#redirect");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect");
 
 use specmark::spec;
 use thiserror::Error;
@@ -28,19 +28,19 @@ use crate::git_publish;
 /// Failure surface of redirect-sync — every refusal names the violated
 /// spec unit and the fix surface (the product-error grammar).
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#redirect")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect")]
 pub enum RedirectSyncError {
     #[error(
         "stub at `{stub_url}` does not carry `vibe-redirect.toml` at HEAD — is this actually a \
          redirect stub? \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#redirect; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect; \
           fix: point redirect-sync at a stub repo created by `vibe registry redirect`)"
     )]
     NotAStub { stub_url: String },
 
     #[error(
         "parsing `vibe-redirect.toml` from stub `{stub_url}` failed: {reason} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#redirect; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect; \
           fix: correct the marker file on the stub, or recreate it with `vibe registry redirect`)"
     )]
     MarkerParse { stub_url: String, reason: String },
@@ -48,7 +48,7 @@ pub enum RedirectSyncError {
     #[error(
         "stub `{stub_url}` uses `ref_policy = \"pinned\"` — every consumer resolves to \
          `pinned_ref = {pinned_ref:?}` regardless of stub tag, so there is nothing to sync \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#redirect; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect; \
           fix: edit the marker to `ref_policy = \"pass-through-tag\"` to enable tag mirroring)"
     )]
     PinnedPolicy {
@@ -58,7 +58,7 @@ pub enum RedirectSyncError {
 
     #[error(
         "redirect target `{target_url}` declares auth = \"token-env\" but {reason} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#redirect; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect; \
           fix: export the named env-var, or change the stub's `[redirect].auth`)"
     )]
     TargetAuth { target_url: String, reason: String },

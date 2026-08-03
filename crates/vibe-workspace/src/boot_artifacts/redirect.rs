@@ -10,7 +10,7 @@
 //! [`render_redirect`]) is the PROP-009 §2.3 redirect, unchanged — PROP-012
 //! changed the envelope, not the payload.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-012#surface");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#surface");
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -63,7 +63,7 @@ Boot is pure file-reading — there is nothing to execute.";
 /// The body of vibevm's managed redirect block — the text between the
 /// `<vibevm>` markers (PROP-012 §2.5).
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-012#content",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#content",
     r = 1
 )]
 pub fn render_redirect() -> &'static str {
@@ -81,7 +81,7 @@ fn render_block() -> String {
 /// (PROP-012 §2.2–§2.3).
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-012#markers",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#markers",
     r = 1
 )]
 pub enum BlockLocation {
@@ -101,7 +101,7 @@ pub enum BlockLocation {
 /// (PROP-012 §2.2). No markdown parse, no model — the detection that
 /// gates a mutating write must be deterministic and trivial.
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-012#markers",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#markers",
     r = 1
 )]
 pub fn locate_block(content: &str) -> BlockLocation {
@@ -178,11 +178,11 @@ fn at_lines(lines: &[usize]) -> String {
 /// without writing — callers validate at plan time (PROP-012 §2.4), so
 /// this is the defensive last line.
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-012#create",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#create",
     r = 1
 )]
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-012#migration",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#migration",
     r = 1
 )]
 fn write_managed_block(path: &Path) -> Result<Option<PathBuf>, WorkspaceError> {

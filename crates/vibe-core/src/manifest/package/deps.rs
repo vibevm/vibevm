@@ -3,7 +3,7 @@
 //! `version.var` placeholder (PROP-007 §2.6) — plus their conversions from
 //! the wire form.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#git-source");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source");
 
 use crate::error::{Error, Result};
 use crate::manifest::project::AuthKind;

@@ -4,7 +4,7 @@
 //! that shares one bare `name` — the `by-name/<name>.json` candidate set
 //! that makes short-name resolution one round-trip per registry.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#entry");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry");
 
 use chrono::{DateTime, Utc};
 use semver::Version;
@@ -19,7 +19,10 @@ use super::VersionEntry;
 /// every `PackageEntry` that shares one bare `name`.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#entry", r = 1)]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry",
+    r = 1
+)]
 pub struct PackageEntry {
     pub group: Group,
     pub name: String,
@@ -59,7 +62,10 @@ impl PackageEntry {
 /// per registry and lets a collision (PROP-008 §2.7) be detected at once.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#entry", r = 1)]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry",
+    r = 1
+)]
 pub struct NameEntry {
     pub name: String,
     pub indexed_at: DateTime<Utc>,

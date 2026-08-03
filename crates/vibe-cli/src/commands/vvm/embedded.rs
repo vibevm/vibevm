@@ -5,7 +5,7 @@
 //! injects it into resolution, and the developer/user precedence, live in
 //! the install command (PROP-030 §3, §7) — this is only the discovery half.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-030#registry");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#registry");
 
 use std::path::{Path, PathBuf};
 

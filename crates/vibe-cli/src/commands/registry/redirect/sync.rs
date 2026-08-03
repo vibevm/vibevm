@@ -5,7 +5,7 @@
 //! §4.2). Hosts the shared CLI leg reused by `redirect --sync` and
 //! `redirect-update --resync`.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#redirect");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect");
 
 use anyhow::{Context, Result, anyhow, bail};
 use vibe_core::manifest::{Manifest, RegistrySection};

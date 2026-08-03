@@ -46,7 +46,7 @@
 //! root [`check_project`] does nothing but iterate that registration.
 
 #![forbid(unsafe_code)]
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-009#root");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#root");
 
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -391,7 +391,7 @@ pub fn all_checks() -> Vec<Box<dyn Check>> {
 ///     report.count(Severity::Warning),
 /// );
 /// ```
-#[spec(implements = "spec://vibevm/VIBEVM-SPEC#linter")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter")]
 pub fn check_project(project_root: &Path, opts: &CheckOptions) -> CheckReport {
     let mut report = CheckReport::default();
     // Resolve "now" once so every time-based cell shares a single

@@ -4,7 +4,7 @@
 //! Split from the `cli` hub along command-family lines; the hub
 //! re-exports everything, so `crate::cli::X` paths are unchanged.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#command-summary");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
 use std::path::PathBuf;
 

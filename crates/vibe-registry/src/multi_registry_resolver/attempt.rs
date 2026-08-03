@@ -5,7 +5,7 @@
 //! envelope; [`format_walk_attempts`] renders the human-readable "Tried:"
 //! block. Split out of `walk` to hold the file-length budget.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#registry-model");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 /// One row in the aggregated "tried these registries" report surfaced via
 /// [`crate::RegistryError::PackageNotFoundEverywhere`]. Captured per-registry

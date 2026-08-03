@@ -5,7 +5,7 @@
 //! read. Recovery rule rendered into RESUME.md verbatim: step closed ⇒
 //! edits stand; step open ⇒ `git restore` its files and redo.
 
-specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#campaign-zone");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#campaign-zone");
 
 use crate::cache::{now_utc, write_atomic};
 use anyhow::{Context, Result};

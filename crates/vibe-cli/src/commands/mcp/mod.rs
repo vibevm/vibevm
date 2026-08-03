@@ -47,7 +47,7 @@
 //! on Linux (used by Claude Desktop). OpenCode deliberately reads the
 //! XDG-style `~/.config/opencode/` on every OS.
 
-specmark::scope!("spec://vibevm/modules/vibe-mcp/PROP-015#lifecycle");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#lifecycle");
 
 use std::fs;
 use std::io::IsTerminal;

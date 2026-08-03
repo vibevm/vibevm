@@ -240,7 +240,7 @@ enum CodemodCmd {
     /// Fixed-parameter example (the weakest-tier invocation shape):
     ///   cargo xtask codemod add-cell --crate-dir crates/vibe-resolver \
     ///     --cell sat --seam DepSolver --variant sat \
-    ///     --spec-uri "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade"
+    ///     --spec-uri "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade"
     AddCell {
         /// Crate directory, repo-relative (e.g. crates/vibe-resolver).
         #[arg(long)]

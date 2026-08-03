@@ -1,7 +1,7 @@
 //! Report rendering: XML (native), Markdown table, and the five
 //! resolution views (PROP-043 §5 `report`).
 
-specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#CMD-REPORT");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#CMD-REPORT");
 
 use crate::doc::ParsedDoc;
 use crate::evidence::{Evidence, EvidenceProvider};

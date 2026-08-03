@@ -2,7 +2,7 @@
 
 <status stage="impl" state="done" comment="C 2026-07-25: the embedded registry ships wholesale; motivation and decision facts stay spec-stage; fact grain 2026-07-24"/>
 
-##self-uri `spec://vibevm/modules/vibe-registry/PROP-030` @spec/done
+##self-uri `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030` @spec/done
 
 ##status-line **Status: IMPLEMENTED** (specified 2026-07-13; verified against the tree
 2026-07-25 by the spec-actualization campaign). The embedded registry is this

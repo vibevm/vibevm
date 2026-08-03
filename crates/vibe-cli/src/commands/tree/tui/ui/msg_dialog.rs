@@ -7,7 +7,7 @@
 //! value struct, no state enum — `Enter`/`Esc` close at the controller layer
 //! when a dialog owns the frame.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#coming-soon");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#coming-soon");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::{Constraint, Layout, Rect};
@@ -63,7 +63,7 @@ impl MsgDialog {
     /// Render the dialog centred over `area`: a titled [`Window`], the body line
     /// under it, and a focused `OK` [`Button`] centred on the last inner row
     /// (PROP-037 §2.10). Draws nothing if `area` is too small to hold the frame.
-    #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#coming-soon")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#coming-soon")]
     pub fn render(&self, area: Rect, buf: &mut Buffer, theme: &Theme) {
         // The frame needs: border(2) + body(1) + gap(1) + button(1) = 5 outer
         // rows; refuse to draw into anything smaller.

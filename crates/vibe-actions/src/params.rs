@@ -9,7 +9,7 @@
 //!
 //! Spec: [PROP-039 §5](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#parameters).
 
-specmark::scope!("spec://vibevm/modules/vibe-actions/PROP-039#parameters");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#parameters");
 
 use std::collections::BTreeMap;
 use std::fmt;
@@ -271,12 +271,14 @@ impl ParamValues {
 
 /// A parameter validation failure (PROP-039 §5.2).
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-actions/PROP-039#param-validation")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#param-validation"
+)]
 pub enum ParamError {
     /// A required parameter was not supplied.
     #[error(
         "missing required parameter `{name}` \
-         (violates spec://vibevm/modules/vibe-actions/PROP-039#param-validation; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#param-validation; \
           fix: supply a value for `{name}`)"
     )]
     MissingRequired {
@@ -287,7 +289,7 @@ pub enum ParamError {
     /// A supplied value's type does not match the schema.
     #[error(
         "parameter `{name}` expects `{expected}` but got `{got}` \
-         (violates spec://vibevm/modules/vibe-actions/PROP-039#param-validation; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#param-validation; \
           fix: pass a `{expected}` value for `{name}`)"
     )]
     TypeMismatch {
@@ -302,7 +304,7 @@ pub enum ParamError {
     /// A supplied parameter is not declared by the schema.
     #[error(
         "unknown parameter `{name}` — not declared by the action's schema \
-         (violates spec://vibevm/modules/vibe-actions/PROP-039#param-validation; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#param-validation; \
           fix: remove `{name}` or add it to the schema)"
     )]
     UnknownParam {

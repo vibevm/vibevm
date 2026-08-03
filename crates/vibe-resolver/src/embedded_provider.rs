@@ -47,7 +47,7 @@ pub enum EmbeddedPrecedence {
 /// exactly like the plain providers do — the only borrow that outlives it is
 /// the registries'.
 #[cell(seam = "DepProvider", variant = "embedded", flag = "provider")]
-#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-030#precedence")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#precedence")]
 pub struct EmbeddedProvider<'a> {
     embedded: LocalCompositeProvider<'a>,
     declared: Option<MultiRegistryProvider<'a>>,
@@ -99,12 +99,12 @@ impl<'a> EmbeddedProvider<'a> {
 }
 
 impl<'a> DepProvider for EmbeddedProvider<'a> {
-    #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-030#precedence")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#precedence")]
     fn resolve_version(&self, pkgref: &PackageRef) -> Result<semver::Version, DepProviderError> {
         resolve_first(&self.ordered(), |p| p.resolve_version(pkgref))
     }
 
-    #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-030#precedence")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#precedence")]
     fn fetch_manifest(
         &self,
         group: &Group,
@@ -116,7 +116,9 @@ impl<'a> DepProvider for EmbeddedProvider<'a> {
 }
 
 impl<'a> VersionEnumerator for EmbeddedProvider<'a> {
-    #[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-017#provider-enrichment")]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#provider-enrichment"
+    )]
     fn list_versions(
         &self,
         group: &Group,
@@ -425,7 +427,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-registry/PROP-030#knob")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#knob")]
     fn short_circuit_stops_at_the_first_serving_provider() {
         // PROP-030 §3.1: with embedded-first ordering, a coordinate the
         // embedded provider serves is enumerated from embedded alone — the
@@ -452,7 +454,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-registry/PROP-030#knob")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#knob")]
     fn short_circuit_falls_through_when_embedded_absent() {
         // The other half of PROP-030 §3.1: a coordinate the embedded
         // provider lacks still reaches the declared provider under

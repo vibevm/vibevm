@@ -14,7 +14,7 @@
 //!
 //! [`Button`]: super::button::Button
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#group");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#group");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;
@@ -92,7 +92,7 @@ impl Group {
     /// (PROP-037 §5.4) the border + name use the accent/title styles; otherwise
     /// the muted `border()` / `dim()` styles — the visual signal of which
     /// focus-group `Tab` is in.
-    #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#group")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#group")]
     pub fn render(&self, area: Rect, buf: &mut Buffer, theme: &Theme) -> Rect {
         let border_style = if self.focused {
             theme.accent()

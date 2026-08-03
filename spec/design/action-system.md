@@ -1,7 +1,7 @@
 # The vibevm Action System — design & architecture {#root}
 
 ##genre-line **Genre:** design (lore) — non-binding rationale and architecture. The normative contract is
-**Spec 1 = PROP-039** (`spec://vibevm/modules/vibe-actions/PROP-039`, written and implemented — the
+**Spec 1 = PROP-039** (`spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039`, written and implemented — the
 `vibe-actions` crate ships); this document
 explains *why* the system is shaped as it is and *how* the pieces fit. It is derived, behind the
 clean-room firewall, from the study

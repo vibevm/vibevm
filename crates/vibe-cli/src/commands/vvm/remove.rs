@@ -3,7 +3,7 @@
 //! managed source clone; gc prunes non-active instances. A committer's
 //! external tree is never touched.
 
-specmark::scope!("spec://vibevm/common/PROP-019#remove");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#remove");
 
 use std::fs;
 
@@ -283,7 +283,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#remove", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#remove", r = 1)]
     fn removal_scope_defaults_to_both() {
         assert_eq!(removal_scope(false, false), RemoveScope::Both);
         assert_eq!(removal_scope(true, false), RemoveScope::Bin);
@@ -291,7 +291,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#remove", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#remove", r = 1)]
     fn remove_id_drops_all_instances_and_forgets() {
         let tmp = tempfile::tempdir().unwrap();
         let store = VersionStore::new(tmp.path());

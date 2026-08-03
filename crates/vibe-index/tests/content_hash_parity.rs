@@ -25,7 +25,10 @@ use vibe_index::content_hash::compute_content_hash;
 const GOLDEN: &str = "sha256:e10a49c0a8e1b35e3f0dc1e74d6ce26605052b2eead2225124051d67a2f76cb6";
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-index/PROP-005#trust", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#trust",
+    r = 1
+)]
 fn flow_wal_v0_1_0_matches_canonical_algorithm() {
     let fixture = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("fixtures")
@@ -40,6 +43,6 @@ fn flow_wal_v0_1_0_matches_canonical_algorithm() {
         hash, GOLDEN,
         "vibe-index content_hash diverged from the canonical algorithm — \
          either the fixture bytes changed or the algorithm did. See \
-         spec://vibevm/modules/vibe-index/PROP-005#types"
+         spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#types"
     );
 }

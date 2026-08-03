@@ -25,7 +25,7 @@
 //! - Phase 2.6 — `cli`: `vibe prefs` plumbing (§8).
 //! - Phase 2.7 — `persist`: diff-from-default + `.gitignore` gen (§6, §9).
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-040#root");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#root");
 
 pub mod cli;
 pub mod error;

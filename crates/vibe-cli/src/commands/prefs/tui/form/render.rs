@@ -14,7 +14,7 @@
 //! a fresh [`TextField`] with the focus flag set when the field is focused
 //! (render is pure — no mutation of the form's state).
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#edit-form");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#edit-form");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;

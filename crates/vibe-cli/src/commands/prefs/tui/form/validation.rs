@@ -13,7 +13,7 @@
 //! edits keys the schema already declares, so unknown-key diagnostics cannot
 //! arise from a form edit.
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#validation");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#validation");
 
 use super::Form;
 

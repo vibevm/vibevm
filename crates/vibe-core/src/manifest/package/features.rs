@@ -1,7 +1,7 @@
 //! `[features]` — the feature-definition table of a package manifest
 //! (PROP-003 §2.4) and its hand-rolled serde forms.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#git-source");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source");
 
 use std::collections::BTreeMap;
 

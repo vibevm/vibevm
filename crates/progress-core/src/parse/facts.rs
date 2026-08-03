@@ -1,6 +1,6 @@
 //! Phase 3 — fact segmentation (paragraphs, lead lines, list items, table cells).
 
-specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#parsing");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#parsing");
 
 use crate::doc::{BlockKind, Fact, FactKind, ParsedDoc};
 use specmark::spec;
@@ -51,8 +51,8 @@ fn list_marker_len(line: &str) -> Option<usize> {
 /// under §3.9 `#granularity`, `##FACT-ANCHOR-SYNTAX` under §3.8
 /// `#placement` — because the specmark address grammar takes kebab-case
 /// heading anchors only, not a fact anchor's `##<ID>`.)
-#[spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#granularity")]
-#[spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#placement")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#granularity")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#placement")]
 fn task_box_len(t: &str) -> usize {
     let b = t.as_bytes();
     if b.len() < 3 || b[0] != b'[' || b[2] != b']' || !matches!(b[1], b' ' | b'x' | b'X') {
@@ -110,7 +110,7 @@ fn row_cells(text: &str, s: usize, e: usize) -> Vec<(usize, usize)> {
 /// The spacing is eaten greedily rather than one space at a time so the
 /// quoted form is no pickier than the plain one: `   ##ID` already mints
 /// an anchor through the caller's leading trim, and `>   ##ID` must too.
-#[spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#granularity")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#granularity")]
 fn blockquote_prefix_len(t: &str) -> usize {
     let b = t.as_bytes();
     let mut i = 0usize;

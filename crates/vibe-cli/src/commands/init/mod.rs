@@ -7,7 +7,7 @@
 //!   vibe init package <group>/<name> [dir]       — package (creates project if absent)
 //!   vibe init group <group> [dir]                — group dir (creates project if absent)
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#project-initialization");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#project-initialization");
 
 mod helpers;
 mod package;

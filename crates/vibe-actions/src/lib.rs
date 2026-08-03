@@ -31,7 +31,7 @@
 //! design: [`spec/design/action-system.md`](../../../spec/design/action-system.md).
 
 #![forbid(unsafe_code)]
-specmark::scope!("spec://vibevm/modules/vibe-actions/PROP-039#root");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#root");
 
 pub mod action;
 pub mod address;

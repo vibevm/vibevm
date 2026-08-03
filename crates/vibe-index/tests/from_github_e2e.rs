@@ -159,7 +159,10 @@ fn local_clone_url(p: &Path) -> String {
 /// replacement diffs against (the binary-level test below exercises
 /// the same path end-to-end through the composition root).
 #[test]
-#[verifies("spec://vibevm/modules/vibe-index/PROP-005#reindex", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#reindex",
+    r = 1
+)]
 fn from_github_cell_scans_through_the_seam() {
     use vibe_index::scanner::{
         FromClonesOptions, FromGithubOptions, FromGithubScanner, PackageScanner,
@@ -211,7 +214,10 @@ fn from_github_cell_scans_through_the_seam() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-index/PROP-005#reindex", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#reindex",
+    r = 1
+)]
 fn from_github_walks_mock_org_into_index() {
     if !git_available() {
         return;

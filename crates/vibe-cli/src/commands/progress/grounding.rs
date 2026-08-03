@@ -8,7 +8,7 @@
 //! functions'. The campaign-path helpers live here for the same reason:
 //! finding a zone and naming it is grounding's business and nothing else's.
 
-specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#tool");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#tool");
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
@@ -60,7 +60,7 @@ pub(super) struct Ground {
 /// Every subcommand grounds through here, so "all subcommands are
 /// incremental over the content-hash cache" is one function's property
 /// rather than eight — realises `TOOL-INCREMENTAL`.
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#tool")]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#tool")]
 pub(super) fn ground(common: &ProgressCommonArgs) -> Result<Ground> {
     let root = common
         .path

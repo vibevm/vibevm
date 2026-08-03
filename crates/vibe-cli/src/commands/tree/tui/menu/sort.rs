@@ -9,7 +9,7 @@
 //! composes the F2 groups from the live [`App`] and gives them their
 //! [`MenuEffect`]s.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#f2-sort-menu");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#f2-sort-menu");
 
 use specmark::spec;
 
@@ -26,7 +26,7 @@ impl MenuState {
     /// sub-tables adds "Block order". Each group's cursor starts on its current
     /// value; the active group starts on the first group holding a checked
     /// option (PROP-037 §5.4 — the focus-group model).
-    #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#f2-sort-menu")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#f2-sort-menu")]
     pub fn sort(app: &App) -> Self {
         let mut groups = vec![sort_group(app), shape_group(app)];
         if app.display_mode == DisplayMode::SubTables {

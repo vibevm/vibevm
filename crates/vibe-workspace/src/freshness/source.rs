@@ -3,7 +3,7 @@
 
 use std::path::Path;
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-011#skip-resolution");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#skip-resolution");
 
 /// `true` iff `source_url` is a local `file://` path located *inside*
 /// `workspace_root` — the in-repo self-hosting registry (`packages/`,

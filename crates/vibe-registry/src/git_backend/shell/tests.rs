@@ -2,7 +2,7 @@
 //! (skipped when no `git` is on `PATH`), the inline tar extractor, and
 //! the locale-stable stderr classifier.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-001#backend");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#backend");
 
 use super::*;
 use std::fs;
@@ -72,7 +72,10 @@ fn clone_then_update_against_bare_origin() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-021#lock", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#lock",
+    r = 1
+)]
 fn head_commit_returns_the_checked_out_sha() {
     skip_without_git!();
     let tmp = tempdir().unwrap();
@@ -102,7 +105,10 @@ fn head_commit_returns_the_checked_out_sha() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-021#fetch", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#fetch",
+    r = 1
+)]
 fn submodule_step_is_a_noop_without_submodules() {
     skip_without_git!();
     let tmp = tempdir().unwrap();

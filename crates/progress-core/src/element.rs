@@ -5,7 +5,7 @@
 //! `<!-- REVIEW -->`) are opaque text by law — the shorthand recognizer
 //! must refuse `@spec://` by lookahead (PROP-043 §3.7).
 
-specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#markup");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#markup");
 
 use crate::model::{Action, Audience, Stage, State};
 
@@ -292,7 +292,10 @@ mod tests {
     #[test]
     fn shorthand_refuses_foreign_spec_directive() {
         // `@spec://…` is the in-place spec-citation grammar — never ours.
-        assert_eq!(lex_shorthand("@spec://vibevm/modules/x#y", 0), None);
+        assert_eq!(
+            lex_shorthand("@spec://org.vibevm.core/vibevm/modules/x#y", 0),
+            None
+        );
         // Plain `@spec` (no `://`) IS ours.
         assert!(lex_shorthand("@spec", 0).is_some());
         // Unknown words are not shorthand at all.

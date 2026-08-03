@@ -9,7 +9,7 @@
 //! refuses, mirroring `vibe tree`'s gate). The TUI owns no preference logic
 //! (PROP-041 §1 `#surface-not-engine`); it reads `ResolvedPrefs` + the schema.
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#overview");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#overview");
 
 use std::path::Path;
 

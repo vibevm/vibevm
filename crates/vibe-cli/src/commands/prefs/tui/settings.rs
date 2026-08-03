@@ -13,7 +13,7 @@
 //! ([`crate::commands::tree::tui::settings`]); the origin hint (§3
 //! `#tree-shows-origin-hint`) reads them through `ResolvedPrefs::inspect`.
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#registry");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#registry");
 
 use super::registry::{PageDecl, PageRegistry};
 

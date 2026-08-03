@@ -22,7 +22,7 @@
 //!
 //! [`super::button`]: super::button
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#radio-group");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#radio-group");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;
@@ -109,7 +109,7 @@ impl RadioGroup {
     /// option — the selected marked `theme.glyphs().flag_on` (●), the rest
     /// `theme.glyphs().flag_off` (○) (PROP-037 §2.7). No-op if `area` cannot
     /// hold the label row.
-    #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#radio-group")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#radio-group")]
     pub fn render(&self, area: Rect, buf: &mut Buffer, theme: &Theme) {
         if area.height < 2 {
             return;

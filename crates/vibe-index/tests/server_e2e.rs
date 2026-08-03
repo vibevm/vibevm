@@ -302,7 +302,10 @@ async fn by_name_route_404s_for_missing() {
 }
 
 #[tokio::test]
-#[verifies("spec://vibevm/modules/vibe-index/PROP-005#server-mode", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#server-mode",
+    r = 1
+)]
 async fn packages_list_returns_sorted_envelope() {
     let (_tmp, state) = populated_state();
     let app = build_app(state);

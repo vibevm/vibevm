@@ -2,7 +2,7 @@
 //! committer checkout (built in place, never touched) and managed mirror
 //! clones, plus selector→commit resolution against a clone.
 
-specmark::scope!("spec://vibevm/common/PROP-019#provenance");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#provenance");
 
 use std::fs;
 use std::io::IsTerminal;
@@ -23,32 +23,32 @@ use crate::output;
 /// that cannot be prepared. Git and store failures pass through transparently
 /// (their own Class-F messages already cite the requirement).
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/common/PROP-019#provenance")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#provenance")]
 pub(crate) enum ResolveError {
     #[error(
         "unknown source mirror `{token}` \
-         (violates spec://vibevm/common/PROP-019#provenance; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#provenance; \
           fix: pass `gitverse` or `github`)"
     )]
     UnknownMirror { token: String },
 
     #[error(
         "{what} not found in the clone \
-         (violates spec://vibevm/common/PROP-019#selectors; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#selectors; \
           fix: pass a selector that exists upstream — check `git ls-remote`)"
     )]
     RefNotFound { what: String },
 
     #[error(
         "no semantic-version tags in the clone \
-         (violates spec://vibevm/common/PROP-019#selectors; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#selectors; \
           fix: install `latest` or an explicit branch/commit instead of `stable`)"
     )]
     NoSemverTags,
 
     #[error(
         "preparing the managed clone at `{path}` failed: {source} \
-         (violates spec://vibevm/common/PROP-019#provenance; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#provenance; \
           fix: ensure the VVM source directory is writable)"
     )]
     Clone {
@@ -336,7 +336,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#build", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#build", r = 1)]
     fn find_source_root_walks_up_to_the_workspace() {
         let tmp = tempfile::tempdir().unwrap();
         let root = tmp.path();
@@ -351,7 +351,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#selectors", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#selectors", r = 1)]
     fn resolve_in_clone_against_a_local_clone() {
         let src = tempfile::tempdir().unwrap();
         make_source_repo(src.path());
@@ -373,7 +373,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#build", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#build", r = 1)]
     fn mirror_parses_names_and_maps_urls() {
         assert_eq!(Mirror::parse("gitverse").unwrap(), Mirror::GitVerse);
         assert_eq!(Mirror::parse("github").unwrap(), Mirror::Github);
@@ -383,7 +383,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#provenance", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#provenance", r = 1)]
     fn prepare_from_mirror_clones_then_fetches() {
         let upstream = tempfile::tempdir().unwrap();
         make_source_repo(upstream.path());

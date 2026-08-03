@@ -1,6 +1,6 @@
 //! `vibe show purls` — PURL bindings recorded in the lockfile.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#command-summary");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
 use anyhow::Result;
 use serde::Serialize;

@@ -6,7 +6,7 @@
 //! [`super::modes`] over the one [`super::flatten`] walk — every mode renders a
 //! tree (PROP-037 §3.1, §4).
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#tui");
 
 use std::collections::BTreeSet;
 

@@ -94,7 +94,7 @@ mod tests {
       "entries": [
         { "id": "DBT-0001", "kind": "coverage-gap", "severity": "P1", "title": "registry path under-tested",
           "disposition": "filed",
-          "tripwires": ["touch:crates/vibe-registry/src/**", "rev:spec://vibevm/x#req-a"] },
+          "tripwires": ["touch:crates/vibe-registry/src/**", "rev:spec://org.vibevm.core/vibevm/x#req-a"] },
         { "id": "DBT-0015", "kind": "disputed-spec", "severity": "P2", "title": "fixed already",
           "disposition": "fixed",
           "tripwires": ["touch:spec/modules/vibe-resolver/**"] },
@@ -118,7 +118,7 @@ mod tests {
         assert_eq!(fired.len(), 1);
         assert_eq!(fired[0].id, "DBT-0001");
         assert_eq!(fired[0].hits.len(), 1);
-        assert_eq!(fired[0].unevaluated, vec!["rev:spec://vibevm/x#req-a"]);
+        assert_eq!(fired[0].unevaluated, vec!["rev:spec://org.vibevm.core/vibevm/x#req-a"]);
     }
 
     #[test]

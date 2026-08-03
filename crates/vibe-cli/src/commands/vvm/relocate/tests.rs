@@ -40,7 +40,7 @@ fn state_of(installs: Vec<InstallRecord>) -> model::State {
 }
 
 #[test]
-#[verifies("spec://vibevm/common/PROP-019#relocate", r = 1)]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#relocate", r = 1)]
 fn infer_old_source_picks_the_most_common_external_path() {
     let state = state_of(vec![
         ext(Kind::Branch, "main", 1, "C:/old/vibevm"),
@@ -63,7 +63,7 @@ fn infer_old_source_picks_the_most_common_external_path() {
 /// repointed (active) or deleted (not), with nothing missed and nothing
 /// double-counted.
 #[test]
-#[verifies("spec://vibevm/common/PROP-019#relocate", r = 1)]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#relocate", r = 1)]
 fn plan_partitions_old_matching_records() {
     let old = "C:/old/vibevm";
     let installs = vec![
@@ -120,7 +120,7 @@ fn plan_partitions_old_matching_records() {
 /// The active instance is protected: even when it is the only old-sourced
 /// instance, it is repointed, not deleted (PROP-019 §2.17).
 #[test]
-#[verifies("spec://vibevm/common/PROP-019#relocate", r = 1)]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#relocate", r = 1)]
 fn plan_keeps_the_active_instance() {
     let old = "C:/old/vibevm";
     let installs = vec![ext(Kind::Branch, "main", 9, old)];
@@ -134,7 +134,7 @@ fn plan_keeps_the_active_instance() {
 /// and repoints the active record's source_path — in one state write
 /// (scaffold H: a temp-dir store, no real-machine mutation).
 #[test]
-#[verifies("spec://vibevm/common/PROP-019#relocate", r = 1)]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#relocate", r = 1)]
 fn apply_removes_dirs_repoints_active_and_forgets_deleted() {
     let tmp = tempfile::tempdir().unwrap();
     let store = VersionStore::new(tmp.path());
@@ -174,7 +174,7 @@ fn apply_removes_dirs_repoints_active_and_forgets_deleted() {
 
 /// An empty plan touches nothing (no record sourced from the old location).
 #[test]
-#[verifies("spec://vibevm/common/PROP-019#relocate", r = 1)]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#relocate", r = 1)]
 fn apply_is_a_noop_on_an_empty_plan() {
     let tmp = tempfile::tempdir().unwrap();
     let store = VersionStore::new(tmp.path());
@@ -202,7 +202,7 @@ fn apply_is_a_noop_on_an_empty_plan() {
 /// finishes the job), repoints the active instance, and leaves the rest
 /// alone (PROP-019 §2.17). Pure: no filesystem involved.
 #[test]
-#[verifies("spec://vibevm/common/PROP-019#relocate", r = 1)]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#relocate", r = 1)]
 fn rewrite_state_keeps_locked_forgets_removed_and_repoints_active() {
     let old = "C:/old/vibevm";
     let active = ext(Kind::Branch, "main", 3, old);
@@ -252,7 +252,7 @@ fn rewrite_state_keeps_locked_forgets_removed_and_repoints_active() {
 
 /// A target that is not a vibevm checkout is refused before anything mutates.
 #[test]
-#[verifies("spec://vibevm/common/PROP-019#relocate", r = 1)]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#relocate", r = 1)]
 fn run_rejects_a_non_source_tree_target() {
     let tmp = tempfile::tempdir().unwrap();
     let env = VvmEnv {
@@ -271,7 +271,7 @@ fn run_rejects_a_non_source_tree_target() {
     let err = run_relocate_cmd(&quiet(), &env, args).unwrap_err();
     let msg = format!("{err:#}");
     assert!(msg.contains("not a vibevm source tree"), "got: {msg}");
-    assert!(msg.contains("spec://vibevm/common/PROP-019#relocate"));
+    assert!(msg.contains("spec://org.vibevm.core/vibevm/common/PROP-019#relocate"));
 }
 
 fn quiet() -> output::Context {

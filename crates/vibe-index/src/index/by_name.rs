@@ -10,7 +10,7 @@
 //! (`by-name/<kind>/<name>.json`). `kind` left package identity, so the
 //! directory level is gone — `<name>` alone is the key.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-008#short-name");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name");
 
 use std::fs;
 use std::path::{Path, PathBuf};

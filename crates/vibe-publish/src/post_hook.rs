@@ -14,7 +14,7 @@
 //! appear in stdout / stderr / log output. The Authorization header
 //! carries the bearer token to the index server only.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#integration");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#integration");
 
 use std::path::Path;
 use std::time::Duration;
@@ -65,11 +65,11 @@ pub fn index_token_for(registry: &str) -> Option<String> {
 /// The hook's failure surface — warnings by contract, never publish
 /// failures (PROP-005 §2.14).
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#integration")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#integration")]
 pub enum HookError {
     #[error(
         "could not read manifest at `{path}`: {source} \
-         (violates spec://vibevm/modules/vibe-index/PROP-005#integration; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#integration; \
          fix: keep a parseable `[package]` vibe.toml in the published source dir)"
     )]
     Manifest {
@@ -79,7 +79,7 @@ pub enum HookError {
     },
     #[error(
         "could not compute content_hash on `{path}`: {source} \
-         (violates spec://vibevm/modules/vibe-index/PROP-005#integration; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#integration; \
          fix: ensure the source dir stays readable — the next `vibe-index reindex` \
          covers the gap)"
     )]
@@ -90,21 +90,21 @@ pub enum HookError {
     },
     #[error(
         "HTTP POST to index failed: {0} \
-         (violates spec://vibevm/modules/vibe-index/PROP-005#integration; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#integration; \
          fix: check the `VIBEVM_INDEX_URL_<REGISTRY>` endpoint is reachable — the next \
          `vibe-index reindex` covers the gap)"
     )]
     Http(#[from] Box<reqwest::Error>),
     #[error(
         "index server returned status {status}: {body} \
-         (violates spec://vibevm/modules/vibe-index/PROP-005#integration; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#integration; \
          fix: inspect the index server response — the next `vibe-index reindex` \
          covers the gap)"
     )]
     UnexpectedStatus { status: u16, body: String },
     #[error(
         "invalid header: {0} \
-         (violates spec://vibevm/modules/vibe-index/PROP-005#integration; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#integration; \
          fix: re-mint the index token without control or non-ASCII characters)"
     )]
     Header(String),

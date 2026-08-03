@@ -2,7 +2,7 @@
 //! freshness, transport detection, and the git-shaped `source_uri`
 //! recorded at fetch time.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-001#registry-trait");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#registry-trait");
 
 use super::*;
 use crate::git_backend::GitError;

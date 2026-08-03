@@ -8,7 +8,7 @@
 //! (`materialise_subskill`). Subsequent slices add `list_capabilities`
 //! and PROP-003 §F virtual-capability emission once `vibe-llm` is real.
 
-specmark::scope!("spec://vibevm/modules/vibe-mcp/PROP-015#tools");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools");
 
 use serde_json::{Value, json};
 use specmark::{cell, spec};
@@ -31,7 +31,7 @@ use crate::{ServerContext, ToolDescriptor, ToolError};
 /// assert_eq!(d.name, "query_package");
 /// assert_eq!(d.input_schema["required"][0], "name");
 /// ```
-#[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-015#tools")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools")]
 pub trait McpTool {
     /// The tool's `tools/list` descriptor.
     fn descriptor(&self) -> ToolDescriptor;
@@ -62,7 +62,7 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
 /// assert_eq!(QueryPackage.descriptor().name, "query_package");
 /// ```
 #[cell(seam = "McpTool", variant = "query_package")]
-#[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-015#tools")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools")]
 pub struct QueryPackage;
 
 impl McpTool for QueryPackage {
@@ -149,7 +149,7 @@ impl McpTool for QueryPackage {
 /// assert_eq!(ReadSubskill.descriptor().name, "read_subskill");
 /// ```
 #[cell(seam = "McpTool", variant = "read_subskill")]
-#[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-015#tools")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools")]
 pub struct ReadSubskill;
 
 impl McpTool for ReadSubskill {
@@ -280,7 +280,7 @@ impl McpTool for ReadSubskill {
 /// assert_eq!(MaterialiseSubskill.descriptor().name, "materialise_subskill");
 /// ```
 #[cell(seam = "McpTool", variant = "materialise_subskill")]
-#[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-015#tools")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools")]
 pub struct MaterialiseSubskill;
 
 impl McpTool for MaterialiseSubskill {
@@ -418,7 +418,7 @@ impl McpTool for MaterialiseSubskill {
 /// assert_eq!(AgenticExplain.descriptor().name, "agentic_explain");
 /// ```
 #[cell(seam = "McpTool", variant = "agentic_explain")]
-#[spec(implements = "spec://vibevm/common/PROP-018#transports")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#transports")]
 pub struct AgenticExplain;
 
 impl McpTool for AgenticExplain {

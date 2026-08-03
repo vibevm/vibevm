@@ -32,7 +32,7 @@
 //! the `[origin]` marker + README banner + PR-template already make a
 //! published copy unmistakably a generated read-only copy.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-007#surface");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#surface");
 
 mod origin;
 mod publish;

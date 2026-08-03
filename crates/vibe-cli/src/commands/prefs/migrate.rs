@@ -1,6 +1,6 @@
 //! `vibe prefs migrate` — rewrite deprecated keys to their replacements.
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-040#prefs-command");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#prefs-command");
 
 use anyhow::Result;
 use serde::Serialize;

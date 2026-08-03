@@ -27,7 +27,7 @@
 //! `VIBE_SETTINGS` relocates this store along with everything else and
 //! there is no second variable to forget (F-055).
 
-specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#erasure");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#erasure");
 
 use crate::cache::write_if_changed;
 use crate::doc::ParsedDoc;
@@ -206,7 +206,9 @@ impl Payloads {
     /// schema this build does not know. None of them is reportable,
     /// because none of them changes what the run answers — only how long
     /// it takes (PROP-043 §7.5, DRIFT-016 §4.3).
-    #[specmark::spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#erasure")]
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#erasure"
+    )]
     pub fn load(dir: Option<PathBuf>) -> Payloads {
         let docs = dir.as_deref().and_then(read_store).unwrap_or_default();
         Payloads { dir, docs }
@@ -241,7 +243,9 @@ impl Payloads {
     /// The store carries no clock, so its identity test is plain byte
     /// equality: a run over an unchanged corpus rewrites nothing here
     /// either (DRIFT-017 §4.1, applied one file past the six it names).
-    #[specmark::spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#erasure")]
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#erasure"
+    )]
     pub fn store<'a>(&self, docs: impl IntoIterator<Item = &'a ParsedDoc>) -> bool {
         let Some(dir) = &self.dir else {
             return false;

@@ -8,7 +8,7 @@
 //! commit SHA. Richer git operations land when the scanner needs
 //! them.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
 use std::path::Path;
 use std::process::Command;

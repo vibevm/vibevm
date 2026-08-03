@@ -2,7 +2,7 @@
 //! `UnknownPackage` fall-through, the per-`auth` walk-vs-halt rules,
 //! override short-circuits, and the fetch-side dispatch they feed.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#registry-model");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use super::*;
 use std::fs;
@@ -12,7 +12,7 @@ use vibe_core::manifest::NamingConvention;
 use crate::multi_registry_resolver::test_support::*;
 
 #[test]
-#[specmark::verifies("spec://vibevm/modules/vibe-registry/PROP-002#enabled")]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#enabled")]
 fn disabled_registry_is_skipped_by_the_resolver() {
     // PROP-002 §2.2.3 #enabled: `enabled = false` drops the registry from the
     // built resolver, so no resolution path consults it — without deleting it.

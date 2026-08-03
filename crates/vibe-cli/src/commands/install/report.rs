@@ -2,7 +2,7 @@
 //! / fresh-path envelopes. Pure rendering over the orchestrator's
 //! types; nothing here mutates state.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
 use anyhow::Result;
 use serde::Serialize;

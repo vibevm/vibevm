@@ -8,7 +8,7 @@
 //! interactivity, so the CLI's uninstall / `reinstall --force` paths can be
 //! unit-tested without a terminal.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-022#destructive-guard");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#destructive-guard");
 
 use specmark::spec;
 use vibe_core::manifest::Materialization;
@@ -79,7 +79,7 @@ pub enum DestructiveGuard {
 /// );
 /// ```
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
     r = 1
 )]
 pub fn guard_destructive(
@@ -103,7 +103,7 @@ mod tests {
 
     #[test]
     #[verifies(
-        "spec://vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
+        "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
         r = 1
     )]
     fn snapshot_and_hardlink_are_never_guarded() {
@@ -124,7 +124,7 @@ mod tests {
 
     #[test]
     #[verifies(
-        "spec://vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
+        "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
         r = 1
     )]
     fn in_place_aborts_only_when_non_interactive_and_not_opted_in() {
@@ -137,7 +137,7 @@ mod tests {
 
     #[test]
     #[verifies(
-        "spec://vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
+        "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
         r = 1
     )]
     fn in_place_opt_in_proceeds_in_any_session() {
@@ -155,7 +155,7 @@ mod tests {
 
     #[test]
     #[verifies(
-        "spec://vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
+        "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
         r = 1
     )]
     fn in_place_interactive_without_opt_in_must_ask() {

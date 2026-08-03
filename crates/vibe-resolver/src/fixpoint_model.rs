@@ -24,7 +24,9 @@ use specmark::spec;
 
 /// One package in the model world.
 #[derive(Debug, Clone)]
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#conditional-deps")]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-deps"
+)]
 pub struct ModelPackage {
     /// Package name; doubles as its graph tag (`flow:<name>` in the
     /// production shape, plain `name` here — the model abstracts the
@@ -41,7 +43,9 @@ pub struct ModelPackage {
 /// `context(<trigger>) → <dep>` — the model's rendering of one
 /// `[target."context(...)".dependencies]` manifest entry.
 #[derive(Debug, Clone)]
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#conditional-deps")]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-deps"
+)]
 pub struct ConditionalEdge {
     pub trigger: String,
     pub dep: String,
@@ -50,7 +54,9 @@ pub struct ConditionalEdge {
 /// One observed iteration of the loop — what a reader inspects
 /// instead of mentally simulating.
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#conditional-deps")]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-deps"
+)]
 pub struct FixpointStep {
     /// 1-based iteration number.
     pub iteration: usize,
@@ -101,7 +107,9 @@ pub struct FixpointStep {
 /// assert!(steps[1].stable);
 /// ```
 #[derive(Debug, Clone)]
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#conditional-deps")]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-deps"
+)]
 pub struct FixpointModel {
     world: BTreeMap<String, ModelPackage>,
     graph: BTreeSet<String>,

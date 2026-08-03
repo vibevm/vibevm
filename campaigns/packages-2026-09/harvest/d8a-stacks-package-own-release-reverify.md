@@ -879,7 +879,7 @@ what is convicted is the sentence that turns achievability into a shipped comman
   change atomically … The shipped codemod surface today is one verb,
   `rust-ai-native codemod add-cell` (`crates/rust-ai-native-cli`); the rename
   operation is specified and not built — see
-  `spec://vibevm/common/PROP-031#beachhead`.» That wording makes the card agree
+  `spec://org.vibevm.core/vibevm/common/PROP-031#beachhead`.» That wording makes the card agree
   with the PROP that already cites it.
 - **typescript `:19`** → the same demotion, naming the TS package's own shipped
   verb (`typescript-ai-native codemod add-cell --cell --spec-uri`) and dropping

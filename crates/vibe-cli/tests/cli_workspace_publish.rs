@@ -102,7 +102,10 @@ version = "0.0.1"
 // would fail with an auth error against api.github.com.
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-007#published-repos", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#published-repos",
+    r = 1
+)]
 fn publish_direct_repo_url_pushes_to_local_bare_repo() {
     if !git_available() {
         eprintln!("skipping: git not on PATH");
@@ -330,7 +333,7 @@ fn workspace_publish_dry_run_reports_plan() {
 
 #[test]
 #[verifies(
-    "spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish",
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish",
     r = 1
 )]
 fn workspace_publish_dry_run_json_envelope() {
@@ -371,7 +374,7 @@ fn workspace_publish_dry_run_json_envelope() {
 
 #[test]
 #[verifies(
-    "spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish",
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish",
     r = 1
 )]
 fn workspace_publish_dry_run_topological_order() {
@@ -404,7 +407,7 @@ fn workspace_publish_dry_run_topological_order() {
 
 #[test]
 #[verifies(
-    "spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish",
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish",
     r = 1
 )]
 fn workspace_publish_member_filter_narrows() {
@@ -520,7 +523,7 @@ fn workspace_publish_errors_without_registry() {
 
 #[test]
 #[verifies(
-    "spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish",
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish",
     r = 1
 )]
 fn workspace_publish_all_internal_is_a_clean_noop() {

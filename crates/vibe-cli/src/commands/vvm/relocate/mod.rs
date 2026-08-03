@@ -9,7 +9,7 @@
 //! `--yes`. The active instance is kept (its source is repointed, never
 //! deleted); removing a version is `self remove`'s job (§2.9).
 
-specmark::scope!("spec://vibevm/common/PROP-019#relocate");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#relocate");
 
 use std::collections::HashMap;
 use std::fs;
@@ -32,18 +32,18 @@ use crate::output;
 /// source tree to relocate from. Store / IO failures pass through transparently
 /// (their own Class-F messages already cite the requirement).
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/common/PROP-019#relocate")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#relocate")]
 pub(crate) enum RelocateError {
     #[error(
         "`{path}` is not a vibevm source tree \
-         (violates spec://vibevm/common/PROP-019#relocate; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#relocate; \
           fix: pass the path of a checkout carrying the workspace Cargo.toml and crates/vibe-cli)"
     )]
     NotASourceTree { path: PathBuf },
 
     #[error(
         "no installed version records a source tree to relocate from \
-         (violates spec://vibevm/common/PROP-019#relocate; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#relocate; \
           fix: install from a checkout first (`vibe self install`), or pass `--from <old-path>`)"
     )]
     NoOldSource,
@@ -58,7 +58,7 @@ type InstanceRef = (model::VersionId, u64);
 /// `--dry-run` print the plan and the oracle test assert it partitions the
 /// inventory without writing anything.
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[spec(implements = "spec://vibevm/common/PROP-019#relocate")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#relocate")]
 pub(crate) struct RelocatePlan {
     /// The old source path (as recorded), repointed away from.
     pub old: PathBuf,

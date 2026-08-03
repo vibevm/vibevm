@@ -18,11 +18,11 @@ telling the user it is a no-op.
 
 > **Fallback:** non-tty and `--plain` render a static ASCII tree; `--json`
 > the JSON — neither enters interactive mode.
-> — `spec://vibevm/modules/vibe-cli/PROP-036#tui`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#tui`
 
 > **Status: IMPLEMENTED** … `vibe tree --json` validates against the shipped
 > `package-tree.schema.v1.json` per its own `--help`, and `-t` is live.
-> — `spec://vibevm/modules/vibe-cli/PROP-036#root`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#root`
 
 Finding realised: **F-036**.
 

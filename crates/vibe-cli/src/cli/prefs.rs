@@ -3,7 +3,7 @@
 //! command-family lines; the hub re-exports everything, so
 //! `crate::cli::X` paths stay stable.
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-040#prefs-command");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#prefs-command");
 
 use std::path::PathBuf;
 

@@ -5,7 +5,7 @@
 //! the MCP-entry writers and the install/upgrade/uninstall walkers
 //! consume the same report types.
 
-specmark::scope!("spec://vibevm/modules/vibe-mcp/PROP-015#lifecycle");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#lifecycle");
 
 use std::fs;
 use std::path::Path;
@@ -34,7 +34,7 @@ pub const SKILL_TEMPLATE: &str = include_str!("skill_template.md");
 /// assert_eq!(r.status, "created");
 /// ```
 #[derive(Debug, Clone, Serialize)]
-#[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-015#lifecycle")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#lifecycle")]
 pub struct AgentInstallReport {
     pub agent: String,
     pub scope: &'static str,
@@ -59,7 +59,7 @@ pub struct AgentInstallReport {
 /// assert_eq!(r.status, "skipped");
 /// ```
 #[derive(Debug, Clone, Serialize)]
-#[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-015#lifecycle")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#lifecycle")]
 pub struct SkillInstallReport {
     pub agent: String,
     pub scope: &'static str,
@@ -73,7 +73,7 @@ pub struct SkillInstallReport {
 /// or no surface for this scope, report `skipped`. Idempotent: an
 /// identical existing file is left `unchanged`; a divergent one is
 /// `updated`.
-#[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-015#skill")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill")]
 pub fn install_skill(
     agent: Agent,
     scope: Scope,

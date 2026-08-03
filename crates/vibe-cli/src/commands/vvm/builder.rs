@@ -2,7 +2,7 @@
 //! binary. A crate-internal seam (vibe-cli is a bin crate) so tests drive
 //! the pipeline without a real cargo build.
 
-specmark::scope!("spec://vibevm/common/PROP-019#build");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#build");
 
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -37,7 +37,7 @@ pub(crate) trait Builder {
 /// The production builder: `cargo build [--release] -p vibe-cli` into a
 /// managed `--target-dir`, honouring the tree's `rust-toolchain.toml`
 /// (PROP-019 §2.7, §2.8).
-#[spec(implements = "spec://vibevm/common/PROP-019#build")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#build")]
 pub(crate) struct CargoBuilder;
 
 impl Builder for CargoBuilder {

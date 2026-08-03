@@ -6,7 +6,7 @@
 //! this table is NOT any-kind: it is legal only in `mcp`-kind
 //! packages — the kind IS the taxonomy.
 
-specmark::scope!("spec://vibevm/modules/vibe-mcp/PROP-027#manifest");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest");
 
 use serde::{Deserialize, Serialize};
 

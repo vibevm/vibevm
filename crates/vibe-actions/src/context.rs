@@ -13,7 +13,7 @@
 //!
 //! Spec: [PROP-039 §6](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#context).
 
-specmark::scope!("spec://vibevm/modules/vibe-actions/PROP-039#context");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#context");
 
 use std::any::{Any, TypeId, type_name};
 use std::collections::HashMap;

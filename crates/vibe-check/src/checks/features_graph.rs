@@ -2,7 +2,7 @@
 //! (no cycles to unknown features, no exclusive-group violations,
 //! every `subskill:<path>` reference resolves on disk).
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#linter");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
 
 use std::path::Path;
 

@@ -13,7 +13,7 @@
 //! pluggable inference backend (PROP-018 §2.2); a built-in `vibe-llm`
 //! backend (§6) serves *standalone* mode, when no agent is present.
 
-specmark::scope!("spec://vibevm/common/PROP-018#relay");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-018#relay");
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -33,14 +33,14 @@ use thiserror::Error;
 ///     path: "/p/.vibe/agentic".into(),
 ///     source: std::io::Error::other("disk full"),
 /// };
-/// assert!(e.to_string().contains("spec://vibevm/common/PROP-018#relay"));
+/// assert!(e.to_string().contains("spec://org.vibevm.core/vibevm/common/PROP-018#relay"));
 /// ```
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/common/PROP-018#relay")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#relay")]
 pub enum RelayError {
     #[error(
         "relay mailbox operation on `{path}` failed: {source} \
-         (violates spec://vibevm/common/PROP-018#relay; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-018#relay; \
           fix: ensure the project's `.vibe/agentic/` directory is writable)"
     )]
     Mailbox {
@@ -58,7 +58,7 @@ pub enum RelayError {
 /// assert_ne!(Affinity::AgenticOnly, Affinity::StandaloneOnly);
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
-#[spec(implements = "spec://vibevm/common/PROP-018#affinity")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#affinity")]
 pub enum Affinity {
     /// Needs the calling agent's LLM via the relay — no built-in engine yet.
     AgenticOnly,
@@ -77,7 +77,7 @@ pub enum Affinity {
 /// assert_ne!(ActiveBackend::Relay, ActiveBackend::None);
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[spec(implements = "spec://vibevm/common/PROP-018#mode-is-backend")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#mode-is-backend")]
 pub enum ActiveBackend {
     /// Reached as a subprocess of an agent (CLI one-shot or MCP call): the
     /// relay is available and reasoning delegates back to that agent.
@@ -94,21 +94,21 @@ pub enum ActiveBackend {
 ///
 /// ```
 /// use vibe_mcp::agentic::AffinityError;
-/// assert!(AffinityError::NeedsAgent.to_string().contains("spec://vibevm/common/PROP-018#affinity"));
+/// assert!(AffinityError::NeedsAgent.to_string().contains("spec://org.vibevm.core/vibevm/common/PROP-018#affinity"));
 /// ```
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/common/PROP-018#affinity")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#affinity")]
 pub enum AffinityError {
     #[error(
         "this operation needs an agent to reason for it, but none is driving vibevm \
-         (violates spec://vibevm/common/PROP-018#affinity; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-018#affinity; \
           fix: run it under a coding agent, or wait for the built-in inference engine)"
     )]
     NeedsAgent,
 
     #[error(
         "this operation runs standalone and does not delegate to an agent \
-         (violates spec://vibevm/common/PROP-018#affinity; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-018#affinity; \
           fix: run it directly, not through the agentic relay)"
     )]
     NeedsStandalone,
@@ -161,7 +161,7 @@ pub fn check_affinity(affinity: Affinity, active: ActiveBackend) -> Result<(), A
 /// assert!(i.to_markdown().contains("vibevm-intent: pending"));
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
-#[spec(implements = "spec://vibevm/common/PROP-018#relay")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#relay")]
 pub struct Intent {
     /// The command that produced it, e.g. `"agentic explain"`.
     pub source: String,
@@ -191,7 +191,7 @@ impl Intent {
 /// a bare literal between the writer ([`Intent::to_markdown`]) and the
 /// drainer ([`drain_intent`]).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[spec(implements = "spec://vibevm/common/PROP-018#relay")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#relay")]
 pub(crate) enum IntentStatus {
     Pending,
     Done,
@@ -276,7 +276,7 @@ pub trait InferenceBackend {
 /// assert!(matches!(backend.submit(&intent).unwrap(), BackendOutcome::Delegated { .. }));
 /// ```
 #[derive(Debug, Clone)]
-#[spec(implements = "spec://vibevm/common/PROP-018#pluggable-backend")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#pluggable-backend")]
 pub struct RelayBackend {
     dir: PathBuf,
 }
@@ -317,7 +317,7 @@ impl InferenceBackend for RelayBackend {
 /// }
 /// ```
 #[derive(Debug, Clone)]
-#[spec(implements = "spec://vibevm/common/PROP-018#transports")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#transports")]
 pub struct InlineBackend;
 
 impl InferenceBackend for InlineBackend {
@@ -341,7 +341,7 @@ const ARCHIVE: &str = "command.done.md";
 /// relay dir and a self-contained `*` gitignore exist — so the transient
 /// state never reaches git even if the project has no `.vibe/.gitignore` —
 /// then writes `command.md`.
-#[spec(implements = "spec://vibevm/common/PROP-018#relay")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#relay")]
 pub fn park_intent(dir: &Path, intent: &Intent) -> Result<PathBuf, RelayError> {
     fs::create_dir_all(dir).map_err(|source| RelayError::Mailbox {
         path: dir.to_path_buf(),
@@ -363,7 +363,7 @@ pub fn park_intent(dir: &Path, intent: &Intent) -> Result<PathBuf, RelayError> {
 /// Drain the pending intent (PROP-018 §2.7): return its markdown and move
 /// it to `command.done.md` (status flipped to `done`), emptying the slot.
 /// `None` when nothing pends — re-running after a drain is a clean no-op.
-#[spec(implements = "spec://vibevm/common/PROP-018#relay")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#relay")]
 pub fn drain_intent(dir: &Path) -> Result<Option<String>, RelayError> {
     let path = dir.join(MAILBOX);
     if !path.exists() {
@@ -398,7 +398,7 @@ pub const EXPLAIN_AFFINITY: Affinity = Affinity::AgenticOnly;
 /// no LLM work and reads no file *content* — it only inspects which of
 /// `README.md` / `vibe.toml` exist to tailor the instruction the agent
 /// will execute.
-#[spec(implements = "spec://vibevm/common/PROP-018#explain")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#explain")]
 pub fn explain_intent(project_root: &Path) -> Intent {
     let readme = ["README.md", "readme.md", "Readme.md"]
         .into_iter()
@@ -461,7 +461,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-018#relay", r = 4)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-018#relay", r = 4)]
     fn park_then_drain_is_a_one_shot_mailbox() {
         let proj = tempfile::tempdir().unwrap();
         let dir = relay_dir(proj.path());
@@ -489,7 +489,10 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-018#pluggable-backend", r = 2)]
+    #[verifies(
+        "spec://org.vibevm.core/vibevm/common/PROP-018#pluggable-backend",
+        r = 2
+    )]
     fn relay_backend_delegates() {
         let proj = tempfile::tempdir().unwrap();
         let backend = RelayBackend::for_project(proj.path());
@@ -503,7 +506,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-018#transports", r = 5)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-018#transports", r = 5)]
     fn inline_backend_returns_the_intent_for_inline_delivery() {
         let intent = Intent {
             source: "agentic explain".to_string(),
@@ -517,7 +520,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-018#affinity", r = 2)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-018#affinity", r = 2)]
     fn affinity_dispatcher_refuses_mismatched_backend() {
         // agentic-only is fine under the relay, refused standalone.
         assert!(check_affinity(Affinity::AgenticOnly, ActiveBackend::Relay).is_ok());
@@ -536,7 +539,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-018#explain", r = 4)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-018#explain", r = 4)]
     fn explain_intent_tailors_to_detected_sources() {
         let proj = tempfile::tempdir().unwrap();
         // Neither file present.

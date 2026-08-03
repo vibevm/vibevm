@@ -39,24 +39,28 @@ use vibe_core::manifest::ActivationRules;
 /// assert!(CapabilityTag::parse("rust").is_err());
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-activation"
+)]
 pub struct CapabilityTag(String);
 
 /// Why a raw string is not a [`CapabilityTag`].
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-activation"
+)]
 pub enum TagError {
     #[error(
         "context tag `{0}` is missing the `<namespace>:` prefix \
          (examples: `stack:rust`, `capability:wal-protocol`) \
-         (violates spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-activation; \
          fix: write the tag in the closed `<namespace>:<name>` form)"
     )]
     MissingNamespace(String),
 
     #[error(
         "context tag `{0}` has an empty namespace or name half \
-         (violates spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-activation; \
          fix: fill both halves of the `<namespace>:<name>` form)"
     )]
     EmptyHalf(String),
@@ -100,7 +104,9 @@ impl Borrow<str> for CapabilityTag {
 /// Built once per `vibe install` invocation; re-used across every
 /// candidate subskill.
 #[derive(Debug, Clone, Default)]
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-activation"
+)]
 pub struct ActivationContext {
     /// Capabilities and pkgrefs present in the resolved graph.
     /// Examples: `flow:wal`, `stack:rust`, `capability:wal-protocol`.
@@ -134,7 +140,9 @@ impl ActivationContext {
 /// Outcome of evaluating one subskill's activation rules. `Active`
 /// carries the channels that fired (for diagnostic output).
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-activation"
+)]
 pub struct ActivationOutcome {
     pub active: bool,
     pub channels_matched: Vec<&'static str>,
@@ -148,9 +156,11 @@ pub struct ActivationOutcome {
 /// here. `subskill_describes_type` is the lowercased PURL type of the
 /// subskill's own `describes` field (if any) — used by
 /// `if_describes_match`.
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
 #[spec(
-    deviates = "spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-activation"
+)]
+#[spec(
+    deviates = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-activation",
     reason = "the §2.5.2 `if_os` channel is not probed here: the spec reserves it as \
               schema-only, \"inert until the activation engine is built\" — the engine \
               now exists and the probe is still unimplemented; recorded per the owner \
@@ -439,7 +449,7 @@ mod tests {
     use super::*;
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
     fn empty_rules_inactive() {
         let rules = ActivationRules::default();
         let ctx = ActivationContext::default();
@@ -449,7 +459,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
     fn if_present_match() {
         let rules = ActivationRules {
             if_present: vec!["stack:rust".into()],
@@ -474,7 +484,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
     fn if_provides_match() {
         let rules = ActivationRules {
             if_provides: vec!["interface:build-system".into()],
@@ -488,7 +498,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
     fn if_files_match_via_glob() {
         let tmp = tempfile::tempdir().unwrap();
         fs::create_dir_all(tmp.path().join("src")).unwrap();
@@ -523,7 +533,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
     fn if_describes_match_uses_subskill_type() {
         let rules = ActivationRules {
             if_describes_match: true,
@@ -548,7 +558,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
     fn if_language_match() {
         let rules = ActivationRules {
             if_language: vec!["ru".into()],
@@ -563,7 +573,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-activation")]
     fn multiple_channels_compose() {
         let rules = ActivationRules {
             if_present: vec!["stack:rust".into()],

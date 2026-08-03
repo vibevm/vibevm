@@ -16,7 +16,7 @@
 //!
 //! Spec: [PROP-039 §10](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#search-everywhere).
 
-specmark::scope!("spec://vibevm/modules/vibe-actions/PROP-039#search-everywhere");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#search-everywhere");
 
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};

@@ -69,12 +69,12 @@ impl Verb {
 ///
 /// ```
 /// use core_ai_native_specmark_grammar::parse_spec_uri;
-/// let uri = parse_spec_uri("spec://vibevm/common/PROP-000#commits~r2").unwrap();
+/// let uri = parse_spec_uri("spec://org.vibevm.core/vibevm/common/PROP-000#commits~r2").unwrap();
 /// assert_eq!(uri.package, "vibevm");
 /// assert_eq!(uri.anchor, "commits");
 /// assert_eq!(uri.pinned_r, Some(2));
 /// // `without_pin` drops the `~rN` to recover the unit's canonical address.
-/// assert_eq!(uri.without_pin(), "spec://vibevm/common/PROP-000#commits");
+/// assert_eq!(uri.without_pin(), "spec://org.vibevm.core/vibevm/common/PROP-000#commits");
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SpecUri {
@@ -118,11 +118,11 @@ pub fn is_valid_anchor(anchor: &str) -> bool {
 ///
 /// ```
 /// use core_ai_native_specmark_grammar::parse_spec_uri;
-/// let uri = parse_spec_uri("spec://vibevm/modules/vibe-registry/PROP-002#mirror").unwrap();
+/// let uri = parse_spec_uri("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#mirror").unwrap();
 /// assert_eq!(uri.doc_path, "modules/vibe-registry/PROP-002");
 /// assert_eq!(uri.anchor, "mirror");
 /// // A missing `#anchor` fragment is rejected.
-/// assert!(parse_spec_uri("spec://vibevm/x").is_err());
+/// assert!(parse_spec_uri("spec://org.vibevm.core/vibevm/x").is_err());
 /// ```
 pub fn parse_spec_uri(raw: &str) -> Result<SpecUri, String> {
     let rest = raw
@@ -182,7 +182,7 @@ pub fn parse_spec_uri(raw: &str) -> Result<SpecUri, String> {
 /// use core_ai_native_specmark_grammar::{EdgeSpec, Verb, parse_spec_uri};
 /// let edge = EdgeSpec {
 ///     verb: Verb::Implements,
-///     uri: parse_spec_uri("spec://vibevm/common/PROP-000#commits").unwrap(),
+///     uri: parse_spec_uri("spec://org.vibevm.core/vibevm/common/PROP-000#commits").unwrap(),
 ///     r: None,
 ///     reason: None,
 /// };
@@ -228,7 +228,7 @@ fn reconcile_pins(uri: &SpecUri, attr_r: Option<u32>, err_span: Span) -> syn::Re
 /// ```
 /// use core_ai_native_specmark_grammar::{SpecArgs, Verb};
 /// let args: SpecArgs =
-///     syn::parse_str(r#"implements = "spec://vibevm/common/PROP-000#commits", r = 2"#).unwrap();
+///     syn::parse_str(r#"implements = "spec://org.vibevm.core/vibevm/common/PROP-000#commits", r = 2"#).unwrap();
 /// assert_eq!(args.edge.verb, Verb::Implements);
 /// assert_eq!(args.edge.r, Some(2));
 /// ```
@@ -331,7 +331,7 @@ impl Parse for SpecArgs {
 ///
 /// ```
 /// use core_ai_native_specmark_grammar::{UriArgs, Verb};
-/// let args: UriArgs = syn::parse_str(r#""spec://vibevm/common/PROP-000#commits""#).unwrap();
+/// let args: UriArgs = syn::parse_str(r#""spec://org.vibevm.core/vibevm/common/PROP-000#commits""#).unwrap();
 /// // A `scope!` marker defaults its module edge to `implements`.
 /// assert_eq!(args.into_scope_edge().verb, Verb::Implements);
 /// ```

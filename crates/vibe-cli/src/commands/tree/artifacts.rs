@@ -11,7 +11,7 @@
 //! - [`read_index`] parses the generated `INDEX.md` TOML manifest into its
 //!   ordered `[[entry]]` list.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#static-decompile");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#static-decompile");
 
 use anyhow::{Context, Result};
 use serde::Deserialize;
@@ -234,14 +234,17 @@ body line
         let text = "\
 <!-- vibe:static org.vibevm.world/x \u{2014} vibedeps/flow-x/0.1.0/b.md -->
 
-<!-- embed: spec://vibevm/a/b#c -->
+<!-- embed: spec://org.vibevm.core/vibevm/a/b#c -->
 inner
-<!-- /embed: spec://vibevm/a/b#c -->
+<!-- /embed: spec://org.vibevm.core/vibevm/a/b#c -->
 ";
         let c = decompile_static(text);
         assert_eq!(c.len(), 1);
         assert_eq!(c[0].embeds.len(), 1);
-        assert_eq!(c[0].embeds[0].address, "spec://vibevm/a/b#c");
+        assert_eq!(
+            c[0].embeds[0].address,
+            "spec://org.vibevm.core/vibevm/a/b#c"
+        );
         assert!(c[0].embeds[0].start_line < c[0].embeds[0].end_line);
     }
 

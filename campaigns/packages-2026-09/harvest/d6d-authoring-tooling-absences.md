@@ -361,7 +361,7 @@ The data is live in the host's committed map:
 
 ```console
 $ python -c "…specmap.json…"   # edges into one unit, and the totals
-spec unit spec://vibevm/modules/vibe-registry/PROP-030#knob
+spec unit spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#knob
   verifies ← vibe_cli::commands::install::flag_tests::offline_without_a_local_registry_bails_before_the_network (crates/vibe-cli/src/commands/install/flag_tests.rs:98)
   verifies ← vibe_cli::commands::install::flag_tests::short_circuit_conflicts_with_embedded_last          (…flag_tests.rs:67)
   verifies ← vibe_resolver::embedded_provider::tests::short_circuit_falls_through_when_embedded_absent    (crates/vibe-resolver/src/embedded_provider.rs:455)

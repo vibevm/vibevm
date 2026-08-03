@@ -6,7 +6,7 @@
 //! through ONE implementation — dispatch-invariant logic must not
 //! exist twice.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-025#dispatch");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#dispatch");
 
 use std::path::{Path, PathBuf};
 
@@ -24,31 +24,31 @@ use crate::Workspace;
 /// assert!(e.to_string().contains("vibe bin list"));
 /// ```
 #[derive(Debug, thiserror::Error)]
-#[spec(implements = "spec://vibevm/modules/vibe-workspace/PROP-025#dispatch")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#dispatch")]
 pub enum BinsError {
     #[error(
-        "violates spec://vibevm/modules/vibe-workspace/PROP-025#dispatch: \
+        "violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#dispatch: \
          loading workspace at `{path}`: {detail}; fix surface: run inside a \
          vibevm project (a `vibe.toml` above the cwd)"
     )]
     Workspace { path: PathBuf, detail: String },
 
     #[error(
-        "violates spec://vibevm/modules/vibe-workspace/PROP-025#dispatch: \
+        "violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#dispatch: \
          reading lockfile `{path}`: {detail}; fix surface: re-run \
          `vibe install` to regenerate it"
     )]
     Lockfile { path: PathBuf, detail: String },
 
     #[error(
-        "violates spec://vibevm/modules/vibe-workspace/PROP-025#dispatch: \
+        "violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#dispatch: \
          no installed package declares a binary `{name}` (declared: \
          {known:?}); fix surface: `vibe bin list` shows the full table"
     )]
     UnknownBinary { name: String, known: Vec<String> },
 
     #[error(
-        "violates spec://vibevm/modules/vibe-workspace/PROP-025#security: \
+        "violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#security: \
          building `{name}` runs `{package}`'s build scripts and proc-macros \
          (arbitrary code) and the group `{group}` is not allow-listed; fix \
          surface: consent explicitly — `vibe bin build {name} --assume-yes` \
@@ -61,14 +61,14 @@ pub enum BinsError {
     },
 
     #[error(
-        "violates spec://vibevm/modules/vibe-workspace/PROP-025#build: \
+        "violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#build: \
          spawning cargo for `{name}`: {detail}; fix surface: install a Rust \
          toolchain — package binaries build with the consumer's cargo"
     )]
     CargoSpawn { name: String, detail: String },
 
     #[error(
-        "violates spec://vibevm/modules/vibe-workspace/PROP-025#build: cargo \
+        "violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#build: cargo \
          failed for `{name}`; fix surface: the slot builds standalone \
          (PROP-024 s2.4) — read cargo's own error, this is a real build \
          error, not a topology one"
@@ -76,7 +76,7 @@ pub enum BinsError {
     BuildFailed { name: String },
 
     #[error(
-        "violates spec://vibevm/modules/vibe-workspace/PROP-025#manifest: \
+        "violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#manifest: \
          cargo succeeded but `{artifact}` is missing; fix surface: the \
          [[binary]] declaration's name must equal the crate's bin target"
     )]

@@ -32,7 +32,7 @@ A cell is a static-library CMake target behind one seam: one public include dire
 Cell manifest (carrier, §5):
 
 ```cpp
-/// @spec implements spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade r2
+/// @spec implements spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade r2
 /// @cell seam=DepSolver variant=sat replaces=naive flag=solver
 class SatDepSolver final : public DepSolver { /* ... */ };
 ```

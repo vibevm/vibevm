@@ -62,7 +62,7 @@ use provider::VibevmResolvoProvider;
 /// assert!(graph.packages[0].is_root);
 /// ```
 #[cell(seam = "DepSolver", variant = "resolvo")]
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-017#architecture")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#architecture")]
 pub struct ResolvoDepSolver<P: VersionEnumerator> {
     provider: P,
 }
@@ -78,8 +78,8 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
 }
 
 impl<P: VersionEnumerator> DepSolver for ResolvoDepSolver<P> {
-    #[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-017#dominance")]
-    #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#lockfile")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#dominance")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile")]
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
         // Hard solve, then a best-effort greedy expansion over
         // `[recommends]` (PROP-003 §2.3.3): each recommended package is

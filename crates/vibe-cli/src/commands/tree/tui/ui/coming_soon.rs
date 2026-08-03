@@ -8,7 +8,7 @@
 //!
 //! [`MsgDialog`]: super::msg_dialog::MsgDialog
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#coming-soon");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#coming-soon");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;
@@ -60,7 +60,7 @@ impl ComingSoon {
 
     /// Render the modal centred over `area` (PROP-037 §2.10). Delegates to the
     /// underlying [`MsgDialog`] render.
-    #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#coming-soon")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#coming-soon")]
     pub fn render(&self, area: Rect, buf: &mut Buffer, theme: &Theme) {
         self.dialog.render(area, buf, theme);
     }

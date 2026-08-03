@@ -18,7 +18,7 @@
 //! fabricated verdict carries forward a judgment nobody made. The
 //! artifact fails toward re-verifying, never toward false confidence.
 
-specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#baseline");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#baseline");
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
@@ -121,7 +121,9 @@ pub struct Projection {
 /// assert_eq!(unit.crates, vec!["vibe-cli"], "derived from the evidence refs");
 /// assert!(p.omitted.is_empty());
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#baseline")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#baseline"
+)]
 pub fn project<'a>(
     docs: impl IntoIterator<Item = &'a ParsedDoc>,
     cache: &Cache,

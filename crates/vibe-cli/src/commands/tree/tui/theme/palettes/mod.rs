@@ -4,7 +4,7 @@
 //! single place a [`PaletteName`] becomes a boxed [`Palette`] — adding a
 //! palette means adding a variant plus a match arm here, nothing else.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#palette-tokens");
 
 use specmark::spec;
 
@@ -55,7 +55,7 @@ impl PaletteName {
 /// future settings-driven palette switch calls nothing else.
 ///
 /// [`Theme`](super::Theme): crate::commands::tree::tui::theme::Theme
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#palette-tokens")]
 #[must_use]
 pub fn resolve(name: PaletteName) -> Box<dyn Palette> {
     match name {

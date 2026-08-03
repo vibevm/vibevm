@@ -1,7 +1,7 @@
 //! Argument struct for `vibe term` — launch the vibeterm terminal (PROP-042 §5
 //! `#vibe-term`). Split from the `cli` hub; the hub re-exports it.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#command-summary");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
 use clap::Args;
 

@@ -2,9 +2,9 @@
 
 Every session in this repository begins by reading this file, then every file in `spec/boot/` in filename order, then `spec/WAL.md`, then any relevant PROP/FEAT documents under `spec/common/` and `spec/modules/` for the task at hand. Only after that, start work.
 
-The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here. Authoritative record: [spec://vibevm/common/PROP-000#commits](spec/common/PROP-000.md#commits).
+The repository's commit-and-push discipline — human-authored **attribution** (never mark any part of this repository as AI-authored), **Conventional Commits**, **atomicity**, and commit **autonomy** (routine proceeds; non-routine stops and asks) — is the `git-practices` family, a dependency of this project loaded first and verbatim from `spec/boot/INLINE.md`. The rules live in that inline lane, not restated here. Authoritative record: [spec://org.vibevm.core/vibevm/common/PROP-000#commits](spec/common/PROP-000.md#commits).
 
-Authoritative record: [spec://vibevm/common/PROP-000#commits](spec/common/PROP-000.md#commits).
+Authoritative record: [spec://org.vibevm.core/vibevm/common/PROP-000#commits](spec/common/PROP-000.md#commits).
 
 ## Delegation-first — spend Claude on judgment, run execution on fractality
 

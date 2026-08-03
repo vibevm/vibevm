@@ -8,7 +8,7 @@
 //! probes for them — `vibe term` / `vibe frame` resolve through `PATH` (with
 //! an in-place fallback for `vibe tree`).
 
-specmark::scope!("spec://vibevm/common/PROP-019#surface");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#surface");
 
 use crate::cli::VvmDoctorArgs;
 use crate::output;

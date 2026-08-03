@@ -3,7 +3,7 @@
 //! fixed point, and shape the resolution the caller confirms before
 //! [`apply`](crate::apply) mutates anything beyond the recorded migration writes.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
 use std::collections::BTreeSet;
 use std::fs;
@@ -406,7 +406,7 @@ fn fetch_or_defer<S: InstallSource + ?Sized>(
 /// [`apply`](crate::apply) with the freshly-fetched values once the
 /// incremental `git fetch` has run.
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-022#in-place",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
     r = 1
 )]
 fn try_in_place_incremental(
@@ -499,7 +499,9 @@ fn try_in_place_incremental(
     reason = "the fixpoint reads the whole planning context; bundling \
               the borrows into a struct would only rename the arity"
 )]
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint")]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint"
+)]
 fn expand_conditional_deps<S: InstallSource + ?Sized>(
     source: &S,
     roots: &[PackageRef],

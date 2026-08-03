@@ -31,7 +31,7 @@ A cell is a **package** under `internal/cells/<name>` — `internal/` makes non-
 Cell manifest (directive carrier, §5) plus the conformance assertion:
 
 ```go
-//spec:implements spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade r=2
+//spec:implements spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade r=2
 //spec:cell seam=DepSolver variant=sat replaces=naive flag=solver
 type SatDepSolver struct{ /* ... */ }
 

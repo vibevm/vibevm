@@ -8,7 +8,7 @@
 //! Mirrors `tree::tui::search::render::draw` (the same `ui::Window` + query +
 //! tabs + results + footer recipe), adjusted for the two `vibe.prefs` providers.
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#settings-search");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#settings-search");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::{Constraint, Layout, Rect};

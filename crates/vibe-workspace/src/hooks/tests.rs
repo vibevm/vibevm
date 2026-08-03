@@ -64,7 +64,10 @@ fn pre_hook() -> HooksDecl {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-020#trust-gate", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#trust-gate",
+    r = 1
+)]
 fn trust_matrix() {
     let allowed = vec!["org.vibevm".to_string()];
     let vibe = org("org.vibevm");
@@ -92,7 +95,10 @@ fn trust_matrix() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-020#trust-gate", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#trust-gate",
+    r = 1
+)]
 fn hook_policy_maps_allowed_to_run_and_the_rest_to_skip() {
     // The pipeline-side policy resolves only run-vs-skip; the CLI already
     // turned a genuine refusal into an abort, so `Refused` never appears here.
@@ -123,7 +129,7 @@ fn hook_policy_maps_allowed_to_run_and_the_rest_to_skip() {
 
 #[test]
 #[verifies(
-    "spec://vibevm/modules/vibe-workspace/PROP-020#script-selection",
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#script-selection",
     r = 1
 )]
 fn unix_selects_sh_via_bash() {
@@ -144,7 +150,7 @@ fn unix_selects_sh_via_bash() {
 
 #[test]
 #[verifies(
-    "spec://vibevm/modules/vibe-workspace/PROP-020#script-selection",
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#script-selection",
     r = 1
 )]
 fn windows_prefers_sh_then_falls_back_to_ps1() {
@@ -195,7 +201,10 @@ fn not_declared_phase_is_a_noop() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-020#phases", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases",
+    r = 1
+)]
 fn allowed_hook_runs_on_zero_exit() {
     let slot = tempdir().unwrap();
     fs::create_dir_all(slot.path().join("hooks")).unwrap();
@@ -222,7 +231,10 @@ fn allowed_hook_runs_on_zero_exit() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-020#failure", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#failure",
+    r = 1
+)]
 fn pre_install_nonzero_aborts() {
     let slot = tempdir().unwrap();
     fs::create_dir_all(slot.path().join("hooks")).unwrap();
@@ -249,7 +261,10 @@ fn pre_install_nonzero_aborts() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-020#failure", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#failure",
+    r = 1
+)]
 fn post_install_nonzero_installs_but_flags() {
     let slot = tempdir().unwrap();
     fs::create_dir_all(slot.path().join("hooks")).unwrap();
@@ -280,7 +295,10 @@ fn post_install_nonzero_installs_but_flags() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-020#trust-gate", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#trust-gate",
+    r = 1
+)]
 fn refused_trust_is_an_error() {
     let slot = tempdir().unwrap();
     let group = org("org.untrusted");
@@ -330,7 +348,7 @@ fn needs_consent_skips_in_library() {
 
 #[test]
 #[verifies(
-    "spec://vibevm/modules/vibe-workspace/PROP-020#script-selection",
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#script-selection",
     r = 1
 )]
 fn declared_but_no_interpreter_errors() {

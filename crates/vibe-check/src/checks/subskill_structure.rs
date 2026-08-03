@@ -3,7 +3,7 @@
 //! §2.5.0, and lazy-push / lazy-pull subskills carry the load-bearing
 //! `description` field.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#linter");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
 
 use std::path::Path;
 

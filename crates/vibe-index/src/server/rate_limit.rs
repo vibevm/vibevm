@@ -22,7 +22,7 @@
 //! the PROP foresaw; v2 (per-route quotas, sliding window, dashmap
 //! sharding) lands when scale demands it.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#open");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#open");
 
 use std::collections::HashMap;
 use std::net::IpAddr;
@@ -192,7 +192,10 @@ pub trait RateLimiter: std::fmt::Debug + Send + Sync {
 }
 
 #[derive(Debug)]
-#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#http", r = 1)]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http",
+    r = 1
+)]
 pub struct TokenBucketRateLimiter {
     config: RateLimitConfig,
     by_token: Mutex<HashMap<String, Bucket>>,

@@ -9,7 +9,7 @@
 //! machinery. The library does the per-(agent, scope) work; this module is
 //! the CLI dispatch, enumeration, plan rendering, and confirm UX.
 
-specmark::scope!("spec://vibevm/common/PROP-018#vibe-skill");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill");
 
 use std::io::IsTerminal;
 use std::path::{Path, PathBuf};

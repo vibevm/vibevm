@@ -6,7 +6,7 @@
 //! `INDEX.md` — what an agent actually reads at boot — never a fresh
 //! recompute (PROP-036 §2.3 decision).
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#effective-load");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#effective-load");
 
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 use std::fs;

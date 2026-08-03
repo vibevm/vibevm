@@ -5,7 +5,7 @@
 //! [PROP-002 §2.1](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#identity)
 //! (content addressing).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-008#identity");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity");
 
 use std::fmt;
 

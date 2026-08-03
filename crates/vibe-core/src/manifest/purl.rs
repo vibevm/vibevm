@@ -17,7 +17,7 @@
 //! are not interpreted. `<version>` may be an exact SemVer string or a
 //! [`semver::VersionReq`] requirement (`^0.8`, `>=1, <2`, `*`).
 
-specmark::scope!("spec://vibevm/modules/vibe-resolver/PROP-003#subskill-describes");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-describes");
 
 use std::fmt;
 
@@ -144,17 +144,19 @@ impl<'de> Deserialize<'de> for Purl {
 /// assert!(err.to_string().contains("missing `pkg:` scheme"));
 /// ```
 #[derive(Debug, Error, PartialEq, Eq)]
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#subskill-describes")]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-describes"
+)]
 pub enum PurlError {
     #[error(
         "invalid PURL `{0}`: missing `pkg:` scheme \
-         (violates spec://vibevm/modules/vibe-resolver/PROP-003#subskill-describes; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-describes; \
           fix: prefix the URL with `pkg:`)"
     )]
     MissingScheme(String),
     #[error(
         "invalid PURL `{0}`: malformed structure \
-         (violates spec://vibevm/modules/vibe-resolver/PROP-003#subskill-describes; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-describes; \
           fix: write it as `pkg:<type>/<name>[@<version>]`)"
     )]
     Malformed(String),

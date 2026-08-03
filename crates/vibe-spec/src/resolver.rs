@@ -298,7 +298,8 @@ mod tests {
         // Т2: the old reserved host token no longer resolves; the error points
         // at the actual self coordinate and cites B-031.
         let r = FileResolver::new(Path::new("."), host_coord());
-        let addr = SpecAddress::parse("spec://vibevm/common/PROP-000#commits").unwrap();
+        let addr =
+            SpecAddress::parse("spec://org.vibevm.core/vibevm/common/PROP-000#commits").unwrap();
         let err = r.resolve_file(&addr).unwrap_err();
         let ResolveError::LegacyHostAuthority { given, hint } = &err else {
             panic!("expected LegacyHostAuthority, got {err:?}");

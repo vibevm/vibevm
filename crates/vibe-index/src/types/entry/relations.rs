@@ -4,7 +4,7 @@
 //! conflicts with. Each mirrors a `vibe.toml` table (PROP-005 §2.6) and
 //! serialises empty-omitted through its `is_empty` skip guard.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#entry");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry");
 
 use serde::{Deserialize, Serialize};
 

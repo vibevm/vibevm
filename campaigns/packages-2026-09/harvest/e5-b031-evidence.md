@@ -22,12 +22,12 @@ it (in backticks, reproducible); every contract/code quote carries an exact
 
 ---
 
-## 1. `spec://vibevm` quotes — full count
+## 1. `spec://org.vibevm.core/vibevm` quotes — full count
 
 ### (a) per-area occurrence counts + total
 
-Command (per area): `grep -ro $E 'spec://vibevm' <area> | wc -l`
-Combined: `grep -ro $E 'spec://vibevm' spec/ crates/ campaigns/ packages/ tools/ xtask/ *.md | wc -l`
+Command (per area): `grep -ro $E 'spec://org.vibevm.core/vibevm' <area> | wc -l`
+Combined: `grep -ro $E 'spec://org.vibevm.core/vibevm' spec/ crates/ campaigns/ packages/ tools/ xtask/ *.md | wc -l`
 
 | area | occurrences |
 |---|---|
@@ -43,16 +43,16 @@ Combined: `grep -ro $E 'spec://vibevm' spec/ crates/ campaigns/ packages/ tools/
 Sum of areas (2351) equals the one-command combined count (2351).
 
 Of those, occurrences carrying a trailing `/`:
-`grep -ro $E 'spec://vibevm/' spec/ crates/ campaigns/ packages/ tools/ xtask/ *.md | wc -l` → **2330**.
-Bare `spec://vibevm` (no `/`) = 2351 − 2330 = **21** (e.g.
-`crates/vibe-spec/src/address.rs:346  SpecAddress::parse("spec://vibevm")`; the
-rest are prose mentions like `…host specs use spec://vibevm authority…` in
+`grep -ro $E 'spec://org.vibevm.core/vibevm/' spec/ crates/ campaigns/ packages/ tools/ xtask/ *.md | wc -l` → **2330**.
+Bare `spec://org.vibevm.core/vibevm` (no `/`) = 2351 − 2330 = **21** (e.g.
+`crates/vibe-spec/src/address.rs:346  SpecAddress::parse("spec://org.vibevm.core/vibevm")`; the
+rest are prose mentions like `…host specs use spec://org.vibevm.core/vibevm authority…` in
 `campaigns/.../baseline.json`).
 
 ### (b) breakdown by 2nd address segment
 
 Exact counts for the task-named segments, via a boundary-anchored regex:
-`grep -roE $E "spec://vibevm/<seg>(/|#|$|[\"' )>|])" spec/ crates/ campaigns/ packages/ tools/ xtask/ *.md | wc -l`
+`grep -roE $E "spec://org.vibevm.core/vibevm/<seg>(/|#|$|[\"' )>|])" spec/ crates/ campaigns/ packages/ tools/ xtask/ *.md | wc -l`
 
 | 2nd segment | occurrences |
 |---|---|
@@ -65,16 +65,16 @@ Exact counts for the task-named segments, via a boundary-anchored regex:
 | **named subtotal** | **1825** |
 
 "Other" = 2330 − 1825 = **505**. First-component tally via
-`grep -rohE $E 'spec://vibevm/[a-zA-Z0-9_-]+' spec/ crates/ campaigns/ packages/ tools/ xtask/ *.md | sed 's#spec://vibevm/##' | sort | uniq -c | sort -rn`:
+`grep -rohE $E 'spec://org.vibevm.core/vibevm/[a-zA-Z0-9_-]+' spec/ crates/ campaigns/ packages/ tools/ xtask/ *.md | sed 's#spec://org.vibevm.core/vibevm/##' | sort | uniq -c | sort -rn`:
 
 - `VIBEVM-SPEC` — **95** — a *real* host doc-id (the root `VIBEVM-SPEC.md`
   registered as `root_spec_docs` in `specmap.toml:30`); form
-  `specmark::scope!("spec://vibevm/VIBEVM-SPEC#linter")` (e.g.
+  `specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter")` (e.g.
   `crates/vibe-check/src/checks/activation_conflict.rs:6`).
 - Single-letter / synthetic segments — Rust **test fixtures**, not real paths:
   `x` 180, `a` 95, `b` 43, `c` 15, `d` 9 (e.g.
-  `crates/vibe-spec/src/address.rs:310  SpecAddress::parse("spec://vibevm/x/y#a~r3")`;
-  `crates/vibe-cli/src/commands/tree/artifacts.rs:237  <!-- embed: spec://vibevm/a/b#c -->`).
+  `crates/vibe-spec/src/address.rs:310  SpecAddress::parse("spec://org.vibevm.core/vibevm/x/y#a~r3")`;
+  `crates/vibe-cli/src/commands/tree/artifacts.rs:237  <!-- embed: spec://org.vibevm.core/vibevm/a/b#c -->`).
 - Misc small: `impl` 4, `real` 3, `missing` 3, `fake` 3, `discipline` 3,
   `research` 1, `module` 1, `STATIC` 1.
 - Template/markdown artifacts (ellipses, `<doc`, trailing backticks) — the
@@ -82,7 +82,7 @@ Exact counts for the task-named segments, via a boundary-anchored regex:
 
 ### (c) Rust sources vs markdown vs other
 
-`grep -ro $E --include='<ext>' 'spec://vibevm' spec/ crates/ campaigns/ packages/ tools/ xtask/`
+`grep -ro $E --include='<ext>' 'spec://org.vibevm.core/vibevm' spec/ crates/ campaigns/ packages/ tools/ xtask/`
 
 | extension | occurrences |
 |---|---|
@@ -93,13 +93,13 @@ Exact counts for the task-named segments, via a boundary-anchored regex:
 (Rust + markdown + json = 2351; no other extensions carry the literal.)
 
 Rust form characterisation:
-`grep -rn $E --include='*.rs' 'spec://vibevm' crates/ | grep -cE 'spec\(|scope!|specmark'` → **652** lines carry
+`grep -rn $E --include='*.rs' 'spec://org.vibevm.core/vibevm' crates/ | grep -cE 'spec\(|scope!|specmark'` → **652** lines carry
 the `#[spec(...)]` / `specmark::scope!` macro form; total `*.rs` lines in
-`crates/` carrying the literal: `grep -rn $E --include='*.rs' 'spec://vibevm' crates/ | wc -l` → **1343** (so ≈1.24
+`crates/` carrying the literal: `grep -rn $E --include='*.rs' 'spec://org.vibevm.core/vibevm' crates/ | wc -l` → **1343** (so ≈1.24
 occurrences/line; 1669 occurrences across 1343 lines).
 
 The 500 `*.json` occurrences are campaign evidence/baseline data, not source:
-top files `grep -ro $E --include='*.json' 'spec://vibevm' … | awk -F: '{n=split($1,a,"/"); print a[n]}' | sort | uniq -c | sort -rn` →
+top files `grep -ro $E --include='*.json' 'spec://org.vibevm.core/vibevm' … | awk -F: '{n=split($1,a,"/"); print a[n]}' | sort | uniq -c | sort -rn` →
 `baseline.json` 223, `ev-W3a.json` 72, `batch-W3a-1.json` 29, … all under
 `campaigns/.../tasks/evidence/` and `campaigns/.../baseline.json`.
 
@@ -111,7 +111,7 @@ top files `grep -ro $E --include='*.json' 'spec://vibevm' … | awk -F: '{n=spli
 
 `##SCOPE-HOST` (the host exception), `spec/common/PROP-029-fully-qualified-addresses.md:43`:
 
-> `- ##SCOPE-HOST The **host vibevm project's own** specs keep the project authority \`spec://vibevm/…\` — the root project is not a package with a group; §1 binds packages. @spec/done`
+> `- ##SCOPE-HOST The **host vibevm project's own** specs keep the project authority \`spec://org.vibevm.core/vibevm/…\` — the root project is not a package with a group; §1 binds packages. @spec/done`
 
 Sibling scope rules in the same §4: `:44 ##SCOPE-FIXTURES` (test fixtures
 `spec://demo/…`, `spec://com.example.shop/…` are out of scope) and `:45 ##SCOPE-GROUP-CHANGE`.
@@ -311,9 +311,9 @@ Actual file stems on disk, `ls -1 spec/common/*.md spec/modules/*/*.md | sed -E 
 `OWNER-GUIDE`). Every PROP doc on disk has the full `PROP-NNN-<slug>` form
 (except `PROP-000` which is bare `PROP-000.md`).
 
-Doc-ids cited under `spec://vibevm/(common|modules)/…` in `spec/` + `campaigns/`
+Doc-ids cited under `spec://org.vibevm.core/vibevm/(common|modules)/…` in `spec/` + `campaigns/`
 (no `run/`). Extraction:
-`grep -rohE $E 'spec://vibevm/(common|modules)/[^"'"'"' )>#|`:]+' spec/ campaigns/ | sed -E 's#.*/##; s#\.md$##; s#[^A-Za-z0-9-]+$##'`
+`grep -rohE $E 'spec://org.vibevm.core/vibevm/(common|modules)/[^"'"'"' )>#|`:]+' spec/ campaigns/ | sed -E 's#.*/##; s#\.md$##; s#[^A-Za-z0-9-]+$##'`
 
 | form | occurrences |
 |---|---|
@@ -372,7 +372,7 @@ The 25 `PROP-001` are demo/illustrative authorities (`com.example.shop`,
 - `:1  # specmap.toml — vibevm's traceability scan + orphan-ratchet policy.` (comment)
 - `:12-14` — the host namespace declaration:
   > `:12 # The spec:// namespace this project's units are minted under — the`
-  > `:13 # \`<package>\` segment of every \`spec://vibevm/…\` URI (PROP-014 §2.1).`
+  > `:13 # \`<package>\` segment of every \`spec://org.vibevm.core/vibevm/…\` URI (PROP-014 §2.1).`
   > `:14 namespace = "vibevm"`
 - `:39-40, :56` — comments referencing `flow:org.vibevm.ai-native/core-ai-native`
   and `spec://org.vibevm.ai-native/core-ai-native/…`.
@@ -411,16 +411,16 @@ dependency key, or prose.
 
 ---
 
-## 6. Tools parsing `spec://vibevm`
+## 6. Tools parsing `spec://org.vibevm.core/vibevm`
 
 Perimeter: `campaigns/packages-2026-09/tasks/*.py`, `tools/`, `xtask/src/`.
 
-Files containing the literal `spec://vibevm`:
-`grep -rn 'spec://vibevm' campaigns/packages-2026-09/tasks/*.py tools/ xtask/src/` → **2** hits, both
+Files containing the literal `spec://org.vibevm.core/vibevm`:
+`grep -rn 'spec://org.vibevm.core/vibevm' campaigns/packages-2026-09/tasks/*.py tools/ xtask/src/` → **2** hits, both
 non-parsing (a comment and a help example):
 
-- `xtask/src/batch_review/text.rs:18` — `// spec://vibevm/modules/vibe-progress/PROP-043#stages / #states / #actions` (comment).
-- `xtask/src/main.rs:243` — `///     --spec-uri "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade"` (doc-example).
+- `xtask/src/batch_review/text.rs:18` — `// spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#stages / #states / #actions` (comment).
+- `xtask/src/main.rs:243` — `///     --spec-uri "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade"` (doc-example).
 
 Files referencing `vibevm` / address structure, with role:
 
@@ -506,14 +506,14 @@ no resolving `[[package]]` block.
 
 ## 8. Cross-boundaries: packages citing the host
 
-### (a) canonical package sources citing `spec://vibevm/` (host namespace)
+### (a) canonical package sources citing `spec://org.vibevm.core/vibevm/` (host namespace)
 
 Perimeter `packages/org.vibevm.*/**`, excluding each package's own `.vibe/` and
-`vibedeps/`. `grep -ro $E 'spec://vibevm/' packages/ | wc -l` → **314**
-occurrences. (Bare `spec://vibevm` in `packages/` = 322 − 314 = 8.)
+`vibedeps/`. `grep -ro $E 'spec://org.vibevm.core/vibevm/' packages/ | wc -l` → **314**
+occurrences. (Bare `spec://org.vibevm.core/vibevm` in `packages/` = 322 − 314 = 8.)
 
 Per-package occurrence counts
-(`grep -ro $E 'spec://vibevm/' packages/ | sed -E 's#:.*##; s#(packages/org\.vibevm\.[^/]+/[^/]+/[^/]+)/.*#\1#' | sort | uniq -c | sort -rn`):
+(`grep -ro $E 'spec://org.vibevm.core/vibevm/' packages/ | sed -E 's#:.*##; s#(packages/org\.vibevm\.[^/]+/[^/]+/[^/]+)/.*#\1#' | sort | uniq -c | sort -rn`):
 
 | package | occurrences |
 |---|---|
@@ -528,17 +528,17 @@ Per-package occurrence counts
 | `org.vibevm.world/git-conventional-commits/v0.1.0` | 1 |
 | **total** | **314** |
 
-Example lines (`grep -rn $E 'spec://vibevm/' packages/ | head -5`):
+Example lines (`grep -rn $E 'spec://org.vibevm.core/vibevm/' packages/ | head -5`):
 
-- `packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/explain.rs:299  const GRAMMAR: &str = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar";`
-- `packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/explain.rs:301  "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition";`
-- `packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/explain.rs:421  assert!(explain_text(&map, "spec://vibevm/x#nope").is_err());`
-- `packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/ledger.rs:243  uri: "spec://vibevm/common/PROP-000#root".into(),`
-- `packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/mdspec.rs:150  /// \`spec://vibevm/common/PROP-000#commits\`): relative to \`spec/\`, the`
+- `packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/explain.rs:299  const GRAMMAR: &str = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar";`
+- `packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/explain.rs:301  "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition";`
+- `packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/explain.rs:421  assert!(explain_text(&map, "spec://org.vibevm.core/vibevm/x#nope").is_err());`
+- `packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/ledger.rs:243  uri: "spec://org.vibevm.core/vibevm/common/PROP-000#root".into(),`
+- `packages/org.vibevm.ai-native/core-ai-native/v0.7.0/crates/core-ai-native-specmap/src/mdspec.rs:150  /// \`spec://org.vibevm.core/vibevm/common/PROP-000#commits\`): relative to \`spec/\`, the`
 
 ### (b) installed view `vibedeps/*/spec/**` citing the host
 
-`grep -ro 'spec://vibevm/' vibedeps/ | wc -l` → **295** occurrences
+`grep -ro 'spec://org.vibevm.core/vibevm/' vibedeps/ | wc -l` → **295** occurrences
 (regenerated materialised copies; the single completeness number requested).
 
 ---

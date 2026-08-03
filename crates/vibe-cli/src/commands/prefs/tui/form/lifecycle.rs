@@ -23,7 +23,9 @@
 //! [`diff_from_default`]: vibe_settings::persist::diff_from_default
 //! [`write_layer`]: vibe_settings::persist::write_layer
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle");
+specmark::scope!(
+    "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle"
+);
 
 use specmark::spec;
 use vibe_settings::loader::load_layer;
@@ -40,7 +42,9 @@ impl Form {
     /// Whether any field's editable value differs from its resolved baseline
     /// (PROP-041 §4 `#configurable-lifecycle`). Cheap: compares each control's
     /// current value to the captured baseline; no resolver call, no I/O.
-    #[spec(implements = "spec://vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle")]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle"
+    )]
     #[must_use]
     pub fn is_modified(&self) -> bool {
         self.fields
@@ -55,7 +59,9 @@ impl Form {
     /// writes through the same load → set-dotted → diff-from-default →
     /// atomic-write path P9a's `TreeSettings` uses. On success, updates each
     /// field's baseline so `is_modified` reads false post-apply.
-    #[spec(implements = "spec://vibevm/modules/vibe-settings/PROP-041#write-layer-choice")]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#write-layer-choice"
+    )]
     pub fn apply(&mut self, schema: &Schema) -> Result<(), ApplyError> {
         // #configurable-lifecycle — apply is gated on is_modified; never write a no-op.
         if !self.is_modified() {
@@ -128,7 +134,9 @@ impl Form {
     /// `#configurable-lifecycle` — model → form). Rebuilds each control from the
     /// key's metadata + the fresh resolved value and resets the focus to the
     /// first field.
-    #[spec(implements = "spec://vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle")]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle"
+    )]
     pub fn reset(&mut self, prefs: &ResolvedPrefs) {
         for field in &mut self.fields {
             let resolved = prefs.get(&field.key);
@@ -219,24 +227,24 @@ impl std::fmt::Display for ApplyError {
             ApplyError::ScopeForbidden { key, scope, layer } => write!(
                 f,
                 "cannot write `{key}` to layer {layer}: scope `{scope}` forbids it \
-                 (violates spec://vibevm/modules/vibe-settings/PROP-040#scope-matrix; \
+                 (violates spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#scope-matrix; \
                  fix: switch the write-layer to one the scope allows, or change the key's scope)"
             ),
             ApplyError::InvalidValue { key, value, kind } => write!(
                 f,
                 "invalid value for `{key}`: `{value}` is not a valid {kind} \
-                 (violates spec://vibevm/modules/vibe-settings/PROP-041#validation; \
+                 (violates spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#validation; \
                  fix: enter a value of the declared type)"
             ),
             ApplyError::Load { layer, message } => write!(
                 f,
                 "could not load the {layer} settings file: {message} \
-                 (violates spec://vibevm/modules/vibe-settings/PROP-040#diff-from-default)"
+                 (violates spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#diff-from-default)"
             ),
             ApplyError::Write { layer, message } => write!(
                 f,
                 "could not write the {layer} settings file: {message} \
-                 (violates spec://vibevm/modules/vibe-settings/PROP-040#diff-from-default)"
+                 (violates spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#diff-from-default)"
             ),
         }
     }

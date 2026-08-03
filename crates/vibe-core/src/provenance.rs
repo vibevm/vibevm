@@ -12,7 +12,7 @@
 //!
 //! Spec: [PROP-002 §2.7](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#lockfile).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#lockfile");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile");
 
 use std::fmt;
 

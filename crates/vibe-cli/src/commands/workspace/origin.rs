@@ -1,7 +1,7 @@
 //! `[origin]` provenance for staged publish nodes — best-effort git
 //! probes of the workspace root (PROP-007 §2.7).
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-007#surface");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#surface");
 
 use std::path::Path;
 use std::process::Command;

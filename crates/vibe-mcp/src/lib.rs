@@ -28,7 +28,7 @@
 //! declared name.
 
 #![forbid(unsafe_code)]
-specmark::scope!("spec://vibevm/modules/vibe-mcp/PROP-015#server");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server");
 
 use std::collections::BTreeMap;
 use std::path::PathBuf;
@@ -133,39 +133,39 @@ pub struct ToolDescriptor {
 /// assert!(e.to_string().contains("not found"));
 /// ```
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-015#errors")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#errors")]
 pub enum ToolError {
     #[error(
         "invalid arguments: {0} \
-         (violates spec://vibevm/modules/vibe-mcp/PROP-015#tools; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools; \
           fix: pass arguments matching the tool's inputSchema)"
     )]
     InvalidArguments(String),
 
     #[error(
         "not found: {0} \
-         (violates spec://vibevm/modules/vibe-mcp/PROP-015#tools; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools; \
           fix: install the package, or query one the lockfile carries)"
     )]
     NotFound(String),
 
     #[error(
         "io error: {0} \
-         (violates spec://vibevm/modules/vibe-mcp/PROP-015#tools; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools; \
           fix: check the project tree and cache are readable)"
     )]
     Io(#[from] std::io::Error),
 
     #[error(
         "vibe-core error: {0} \
-         (violates spec://vibevm/modules/vibe-mcp/PROP-015#tools; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools; \
           fix: act on the wrapped vibe-core error)"
     )]
     Core(#[from] vibe_core::Error),
 
     #[error(
         "internal error: {0} \
-         (violates spec://vibevm/modules/vibe-mcp/PROP-015#tools; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools; \
           fix: this is a server-side invariant break — report it)"
     )]
     Internal(String),
@@ -346,18 +346,18 @@ impl Server<StdioTransport> {
 /// assert!(e.to_string().contains("transport error"));
 /// ```
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-015#errors")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#errors")]
 pub enum ServerError {
     #[error(
         "transport error: {0} \
-         (violates spec://vibevm/modules/vibe-mcp/PROP-015#server; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server; \
           fix: check the stdio transport is connected)"
     )]
     Transport(#[from] std::io::Error),
 
     #[error(
         "json error: {0} \
-         (violates spec://vibevm/modules/vibe-mcp/PROP-015#server; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server; \
           fix: send well-formed JSON-RPC 2.0 messages)"
     )]
     Json(#[from] serde_json::Error),

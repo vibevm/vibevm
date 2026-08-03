@@ -2,7 +2,7 @@
 //! `[[registry]]` and `[[mirror]]` configuration management,
 //! one submodule per subcommand.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#registry");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
 mod add;
 mod list;

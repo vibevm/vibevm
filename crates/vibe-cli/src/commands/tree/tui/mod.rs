@@ -11,7 +11,7 @@
 //! [`state`] (state + flatten), [`render`] (draw), [`input`] (keys), and
 //! [`modal`] (the detail popup).
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#tui");
 
 mod copy;
 mod dispatch;
@@ -108,7 +108,7 @@ pub fn run(tree: PackageTree) -> Result<()> {
 /// through the real [`input::handle`], paints one frame into an off-screen
 /// [`Buffer`] of `cols×rows`, and projects it to the `text` (or `cells`)
 /// snapshot (§2). No terminal, no alt-screen, no rat-salsa loop.
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-042#render-plane")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#render-plane")]
 pub(crate) fn snapshot_headless(
     tree: PackageTree,
     cols: u16,
@@ -142,7 +142,7 @@ pub(crate) fn snapshot_headless(
 /// [`input::handle`], and projects the resulting state. The semantic sibling of
 /// [`snapshot_headless`]: same `(tree, script)`, but the model instead of the
 /// glyph grid — for flow/state assertions with no rendering at all.
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-042#aiui-cli")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#aiui-cli")]
 pub(crate) fn state_headless(tree: PackageTree, send: &str) -> Result<model_view::TreeModelView> {
     let script = keyscript::parse(send)?;
     let mut app = App::new(tree);

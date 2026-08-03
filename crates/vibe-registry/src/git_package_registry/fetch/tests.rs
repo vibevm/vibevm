@@ -2,7 +2,7 @@
 //! population, mirror fall-through on the fetch path, the cross-source
 //! content-hash gate, and clone reuse via `update`.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#registry-model");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use super::*;
 use specmark::verifies;
@@ -482,7 +482,10 @@ fn fetch_reuses_existing_clone_via_update() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-022#in-place", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
+    r = 1
+)]
 fn fetch_in_place_skips_the_cache_copy_and_keeps_git() {
     let cache = tempdir().unwrap();
     let pkg_cache = tempdir().unwrap();
@@ -535,7 +538,10 @@ fn fetch_in_place_skips_the_cache_copy_and_keeps_git() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-022#in-place", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
+    r = 1
+)]
 fn materialise_in_place_clones_then_updates_the_slot() {
     let cache = tempdir().unwrap();
     let slot_parent = tempdir().unwrap();

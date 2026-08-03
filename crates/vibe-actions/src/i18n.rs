@@ -15,7 +15,7 @@
 // for now; the `locales/<lang>.ftl` loader + `ArcSwap<Catalogue>` locale swap
 // land with the surface layer.
 
-specmark::scope!("spec://vibevm/modules/vibe-actions/PROP-039#i18n");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#i18n");
 
 use std::collections::HashMap;
 use std::fmt;

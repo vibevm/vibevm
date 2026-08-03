@@ -8,7 +8,7 @@
 //! command, not a cell — the upstream API exposes no org-scoped repo
 //! enumeration yet.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
 use crate::error::Result;
 use crate::index::checkpoint::Checkpoint;

@@ -23,7 +23,7 @@
 //! Anonymous calls work but the GitHub rate limit drops to 60 req/h.
 //! The token bytes never enter logs, errors, or the JSON envelope.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#registry-model");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use std::time::Duration;
 
@@ -45,36 +45,36 @@ const MAX_REPOS_PER_SCAN: usize = 500;
 
 #[derive(Debug, Error)]
 #[allow(dead_code)] // NotGitHub / NoOrgInUrl reserved for future host detection paths
-#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#registry-model")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model")]
 pub enum FullScanError {
     #[error(
         "registry URL `{url}` does not point at a GitHub organisation \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#registry-model; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model; \
           fix: use a `https://github.com/<org>` registry URL, or run an index server)"
     )]
     NotGitHub { url: String },
     #[error(
         "could not extract org segment from `{url}` \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#registry-model; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model; \
           fix: use a `https://github.com/<org>` registry URL)"
     )]
     NoOrgInUrl { url: String },
     #[error(
         "HTTP request to `{url}` failed: {message} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#registry-model; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model; \
           fix: check network reachability and the GitHub API base URL)"
     )]
     Http { url: String, message: String },
     #[error(
         "GitHub API returned status {status} on `{url}` \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#registry-model; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model; \
           fix: for 403/429 wait for the rate-limit reset or supply a token; \
           otherwise confirm the org exists and is public)"
     )]
     Status { url: String, status: u16 },
     #[error(
         "response body from `{url}` could not be parsed: {message} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#registry-model; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model; \
           fix: the GitHub API response shape changed — update the scanner's deserialisers)"
     )]
     Malformed { url: String, message: String },

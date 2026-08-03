@@ -27,7 +27,7 @@ A cell is a static/OBJECT CMake target behind one seam, public headers via CMake
 - **Promotion** to a separately versioned library on the usual triggers (heavy optional deps / release cadence / ~2 kLoC).
 
 ```cpp
-/// @spec implements spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade r2
+/// @spec implements spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade r2
 /// @cell seam=DepSolver variant=sat replaces=naive flag=solver
 class SatDepSolver final : public DepSolver { /* ... */ };
 ```

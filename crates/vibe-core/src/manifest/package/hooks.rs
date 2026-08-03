@@ -4,7 +4,7 @@
 //! module owns only the manifest shape — interpreter selection, the trust
 //! gate, and execution live in `vibe-workspace` (PROP-020 §2.2/§2.3/§2.5).
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-020#manifest");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#manifest");
 
 use std::path::PathBuf;
 

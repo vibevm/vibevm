@@ -1,7 +1,7 @@
 //! `vibe registry test` — probe each configured registry through the
 //! exact auth path the install machinery would use.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#registry");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
 use anyhow::{Context, Result, bail};
 use serde::Serialize;

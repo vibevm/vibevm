@@ -198,7 +198,7 @@ Budget signal: past ~5 files, stop and return.
   legs, so removing them moves the code *toward* the spec. What remains
   is pre-existing drift in the other direction — the list **under**-describes
   the code, and did so before this task. For the sync-from-code flow,
-  `spec://vibevm/modules/vibe-registry/PROP-002#PUB-TOKEN-LOADING` —
+  `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-TOKEN-LOADING` —
   `spec/modules/vibe-registry/PROP-002-decentralized-registry.md:590-594`,
   verbatim:
 

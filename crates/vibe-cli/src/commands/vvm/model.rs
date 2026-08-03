@@ -2,7 +2,7 @@
 //! build profiles, install origin, and the on-disk inventory (PROP-019
 //! §2.3–2.4, §2.16).
 
-specmark::scope!("spec://vibevm/common/PROP-019#layout");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#layout");
 
 use std::fmt;
 use std::path::PathBuf;
@@ -14,18 +14,18 @@ use thiserror::Error;
 /// The version-model layer's parse failures (PROP-019 §2.3, §2.2): the two
 /// untrusted boundaries where a user-supplied string becomes a typed value.
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/common/PROP-019#selectors")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#selectors")]
 pub enum ModelError {
     #[error(
         "empty version selector \
-         (violates spec://vibevm/common/PROP-019#selectors; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#selectors; \
           fix: pass a selector like `latest`, `stable`, `1.2.3`, or `tag:1.2.3`)"
     )]
     EmptySelector,
 
     #[error(
         "unknown build profile `{0}` \
-         (violates spec://vibevm/common/PROP-019#build; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#build; \
           fix: pass `debug` or `release`)"
     )]
     UnknownProfile(String),
@@ -35,7 +35,7 @@ pub enum ModelError {
 /// on-disk layout so a tag `1.2.3` and a branch `1.2.3` never collide.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
-#[spec(implements = "spec://vibevm/common/PROP-019#layout")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#layout")]
 pub enum Kind {
     Tag,
     Branch,
@@ -66,7 +66,7 @@ impl Kind {
 /// The canonical identity of a version: `<kind>:<id>` (PROP-019 §2.4).
 /// Rendered with `:` for humans, split into `<kind>/<id>` on disk.
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[spec(implements = "spec://vibevm/common/PROP-019#layout")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#layout")]
 pub struct VersionId {
     pub kind: Kind,
     /// The git-side identifier: a tag name, a branch name, or a commit hash.
@@ -96,7 +96,7 @@ impl fmt::Display for VersionId {
 /// The build profile (PROP-019 §2.2).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
-#[spec(implements = "spec://vibevm/common/PROP-019#build")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#build")]
 pub enum Profile {
     Debug,
     Release,
@@ -130,7 +130,7 @@ pub const DEFAULT_PROFILE: Profile = Profile::Debug;
 
 /// A parsed user version request, before git resolution (PROP-019 §2.3).
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[spec(implements = "spec://vibevm/common/PROP-019#selectors")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#selectors")]
 pub enum Selector {
     /// The tip of branch `main`.
     Latest,
@@ -181,7 +181,7 @@ fn looks_like_semver_tag(s: &str) -> bool {
 /// Where an installed instance's distribution came from (PROP-019 §2.16).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
-#[spec(implements = "spec://vibevm/common/PROP-019#provenance")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#provenance")]
 pub enum Origin {
     /// A VVM-owned clone under `src/<kind>/<id>` (VVM updates/drops it).
     Managed,
@@ -203,7 +203,7 @@ impl Origin {
 
 /// One installed instance and its metadata (PROP-019 §2.4, §2.7, §2.16).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[spec(implements = "spec://vibevm/common/PROP-019#layout")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#layout")]
 pub struct InstallRecord {
     pub kind: Kind,
     pub id: String,
@@ -237,7 +237,7 @@ impl InstallRecord {
 /// §2.5), not stored here. This file is the inventory plus the monotonic
 /// instance counter (§9.4).
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
-#[spec(implements = "spec://vibevm/common/PROP-019#layout")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#layout")]
 pub struct State {
     /// The next instance number to allocate (0 means "start at 1").
     #[serde(default)]
@@ -252,7 +252,7 @@ mod tests {
     use specmark::verifies;
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#layout", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#layout", r = 1)]
     fn version_id_renders_and_splits_by_kind() {
         let v = VersionId::new(Kind::Tag, "1.2.3");
         assert_eq!(v.to_string(), "tag:1.2.3");
@@ -264,7 +264,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#layout", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#layout", r = 1)]
     fn state_round_trips_through_toml() {
         let state = State {
             next_instance: 4,
@@ -289,7 +289,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#selectors", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#selectors", r = 1)]
     fn selector_parse_classifies_by_shape() {
         use Selector::*;
         assert_eq!(Selector::parse("latest", None).unwrap(), Latest);
@@ -318,7 +318,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#build", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#build", r = 1)]
     fn profile_parses_and_defaults_to_debug() {
         assert_eq!(Profile::parse("release").unwrap(), Profile::Release);
         assert!(Profile::parse("fast").is_err());

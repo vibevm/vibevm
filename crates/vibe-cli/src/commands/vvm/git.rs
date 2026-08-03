@@ -3,7 +3,7 @@
 //! than linking a git library — matching the project's existing tooling and
 //! honouring the user's own credentials and host-key config (§2.13).
 
-specmark::scope!("spec://vibevm/common/PROP-019#build");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#build");
 
 use std::path::Path;
 use std::process::Command;
@@ -15,11 +15,11 @@ use thiserror::Error;
 /// `git` failed, or git ran and exited non-zero. One enum for the layer so
 /// a build failure is navigable back to the requirement it serves.
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/common/PROP-019#build")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#build")]
 pub(crate) enum GitError {
     #[error(
         "spawning `git {args}` failed: {source} \
-         (violates spec://vibevm/common/PROP-019#build; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#build; \
           fix: install git and put it on PATH — see `vibe self doctor`)"
     )]
     Spawn {
@@ -30,7 +30,7 @@ pub(crate) enum GitError {
 
     #[error(
         "`git {args}` failed: {stderr} \
-         (violates spec://vibevm/common/PROP-019#build; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#build; \
           fix: check the revision/remote exists and the clone is intact)"
     )]
     Failed { args: String, stderr: String },

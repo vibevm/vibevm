@@ -64,7 +64,7 @@ fn empty_manifest() -> Manifest {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-030#knob")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#knob")]
 fn short_circuit_conflicts_with_embedded_last() {
     // PROP-030 §3.1: `--embedded-short-circuit` presupposes
     // embedded-first precedence, so pairing it with
@@ -95,7 +95,7 @@ fn short_circuit_conflicts_with_embedded_last() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-030#knob")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#knob")]
 fn offline_without_a_local_registry_bails_before_the_network() {
     // PROP-030 §3.1 + PROP-002 §2.2.2.1: `--offline` with no embedded
     // registry and no `--registry` (and no local registry in the merged
@@ -125,7 +125,10 @@ fn offline_without_a_local_registry_bails_before_the_network() {
 /// PROP-030 §3.3: `--prefer-local` and `--no-prefer-local` are mutually
 /// exclusive — same guard shape as the embedded pair.
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-030#project-local", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local",
+    r = 1
+)]
 fn prefer_local_conflicts_with_no_prefer_local() {
     let mut args = base_args();
     args.prefer_local = true;
@@ -153,7 +156,10 @@ fn prefer_local_conflicts_with_no_prefer_local() {
 /// non-empty and the resolver is built — without project-local, the same
 /// args would bail with "no registry configured".
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-030#project-local", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local",
+    r = 1
+)]
 fn project_local_packages_activate_resolver_without_vibe_embedded() {
     let project_root = tempfile::tempdir().unwrap();
     // A real packages/ tree the discovery helper recognises. Needs at

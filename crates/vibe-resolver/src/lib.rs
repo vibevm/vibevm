@@ -106,8 +106,8 @@ pub use resolvo_engine::ResolvoDepSolver;
 /// assert!(node.is_root);
 /// ```
 #[derive(Debug, Clone)]
-#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-008#identity")]
-#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#lockfile")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile")]
 pub struct ResolvedNode {
     /// Reverse-FQDN group — half of the `(group, name)` identity tuple
     /// (PROP-008 §2.2). `kind` is pure metadata and is not carried here.
@@ -146,7 +146,7 @@ pub struct ResolvedNode {
 /// assert_eq!(graph.roots().count(), 1);
 /// ```
 #[derive(Debug, Clone, Default)]
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
 pub struct ResolvedGraph {
     pub packages: Vec<ResolvedNode>,
 }
@@ -161,7 +161,7 @@ impl ResolvedGraph {
     }
 
     /// Find a node by `(group, name)` identity.
-    #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-008#identity")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity")]
     pub fn find(&self, group: &Group, name: &str) -> Option<&ResolvedNode> {
         self.packages
             .iter()
@@ -206,7 +206,7 @@ impl ResolvedGraph {
 ///     .unwrap();
 /// assert_eq!(picked, semver::Version::parse("0.1.0").unwrap());
 /// ```
-#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#solver")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
 pub trait DepProvider {
     /// Pick a concrete version satisfying `pkgref.version` from the
     /// available versions of `(pkgref.kind, pkgref.name)`. Implementors
@@ -257,7 +257,9 @@ pub trait DepProvider {
 ///     .unwrap();
 /// assert_eq!(versions, vec![semver::Version::parse("0.1.0").unwrap()]);
 /// ```
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-017#provider-enrichment")]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#provider-enrichment"
+)]
 pub trait VersionEnumerator: DepProvider {
     /// All available versions of `(group, name)`, in any order — the
     /// solver sorts. Backed by `Registry::list_versions` in production.
@@ -301,9 +303,9 @@ pub trait VersionEnumerator: DepProvider {
 /// assert_eq!(graph.packages.len(), 1);
 /// assert!(graph.packages[0].is_root);
 /// ```
-#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#solver")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
 #[spec(
-    deviates = "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade",
+    deviates = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade",
     reason = "PROP-003 §2.1 adds `pin_preferences(&mut self, pins)` to this trait for \
               minimum-churn re-resolution; the method is still absent. PROP-011 Phase 3 \
               holds pins at the install layer instead — `freshness::hold_pins` rewrites \
@@ -336,23 +338,25 @@ pub trait DepSolver {
 /// assert_eq!(
 ///     err.to_string(),
 ///     "package `org.vibevm/nope` is not available in any configured registry \
-///      (violates spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
+///      (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
 ///      fix: check the name, or add the registry that hosts it to [[registry]])",
 /// );
 /// ```
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator")]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
+)]
 pub enum DepProviderError {
     #[error(
         "package `{group}/{name}` is not available in any configured registry \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
          fix: check the name, or add the registry that hosts it to [[registry]])"
     )]
     UnknownPackage { group: Group, name: String },
 
     #[error(
         "no version of `{group}/{name}` matches `{constraint}` \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
          fix: relax the version constraint or publish a matching release)"
     )]
     NoMatchingVersion {
@@ -372,7 +376,7 @@ pub enum DepProviderError {
     /// produces, so prose-only consumers see no regression.
     #[error(
         "{summary} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
          fix: check the name, or add the registry that hosts it to [[registry]])"
     )]
     AggregateNotFound {
@@ -384,7 +388,7 @@ pub enum DepProviderError {
 
     #[error(
         "{0} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
          fix: act on the underlying provider failure named in the message)"
     )]
     Other(String),
@@ -405,8 +409,8 @@ pub enum DepProviderError {
 /// assert!(err.to_string().contains("[[override]]"));
 /// ```
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#capability")]
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-017#unsatisfiable")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#unsatisfiable")]
 pub enum SolveError {
     #[error(transparent)]
     Provider(#[from] DepProviderError),
@@ -415,7 +419,7 @@ pub enum SolveError {
         "version conflict on `{package}`: already chose `{existing}`, but \
          a later constraint requires `{new_constraint}`. Pin a single \
          constraint that satisfies both, or use `[[override]]` to break the tie. \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#capability; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability; \
          fix: pin one [requires] constraint satisfying both, or add an [[override]])"
     )]
     VersionConflict {
@@ -427,7 +431,7 @@ pub enum SolveError {
     #[error(
         "package `{package}` declares `[conflicts]` against `{against}`, which \
          is also being installed in this graph \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#capability; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability; \
          fix: remove one of the two packages, or drop the [conflicts] entry)"
     )]
     ConflictsDeclared { package: String, against: String },
@@ -436,7 +440,7 @@ pub enum SolveError {
         "capability `{capability}` required by `{requirer}` is not provided by \
          any package in the resolved graph. Add a package whose `[provides].capabilities` \
          includes `{capability}`, or pin a concrete `[requires].packages` entry. \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#capability; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability; \
          fix: add a provider of the capability or a concrete [requires].packages entry)"
     )]
     CapabilityUnmet {
@@ -447,7 +451,7 @@ pub enum SolveError {
     #[error(
         "all alternatives in `[[requires_any]]` declared by `{requirer}` failed to \
          resolve: {alternatives:?} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#capability; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability; \
          fix: make at least one `one_of` alternative resolvable)"
     )]
     DisjunctionUnsatisfiable {
@@ -461,7 +465,7 @@ pub enum SolveError {
     /// "why did it fail" payload a raw UNSAT verdict cannot give.
     #[error(
         "dependency resolution is unsatisfiable:\n{explanation}\n\
-         (violates spec://vibevm/modules/vibe-resolver/PROP-017#unsatisfiable; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#unsatisfiable; \
          fix: relax a version constraint, drop a conflicting package, or accept a downgrade)"
     )]
     Unsatisfiable { explanation: String },

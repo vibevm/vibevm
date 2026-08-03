@@ -9,7 +9,7 @@
 //! [`TokenBucketRateLimiter`]); [`AppState::with_seams`] injects either
 //! directly, which is how a test drives a handler through a fake.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicU64, Ordering};

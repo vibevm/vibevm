@@ -29,7 +29,7 @@
 //! zone is the root's `static-transitive` closure — byte-identical to the
 //! pre-hybrid global linker (the migration-safety corollary, PROP-038 §5).
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-038#edge-recursion");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#edge-recursion");
 
 use std::cmp::Reverse;
 use std::collections::{BinaryHeap, HashMap, HashSet};

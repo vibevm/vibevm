@@ -78,7 +78,10 @@ version = "{version}"
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#redirect", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",
+    r = 1
+)]
 fn install_via_redirect_pass_through_tag() {
     if !git_available() {
         eprintln!("skipping install_via_redirect_pass_through_tag: git not on PATH");
@@ -182,7 +185,10 @@ fn install_via_redirect_pass_through_tag() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#redirect", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",
+    r = 1
+)]
 fn install_via_redirect_pinned_policy_uses_pinned_ref() {
     if !git_available() {
         eprintln!("skipping install_via_redirect_pinned_policy: git not on PATH");
@@ -258,7 +264,10 @@ fn install_via_redirect_pinned_policy_uses_pinned_ref() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#redirect", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",
+    r = 1
+)]
 fn install_via_redirect_identity_mismatch_rejected() {
     if !git_available() {
         eprintln!("skipping install_via_redirect_identity_mismatch: git not on PATH");
@@ -326,7 +335,10 @@ fn install_via_redirect_identity_mismatch_rejected() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#redirect", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",
+    r = 1
+)]
 fn install_via_redirect_chain_rejected_at_hop_two() {
     if !git_available() {
         eprintln!("skipping install_via_redirect_chain: git not on PATH");
@@ -441,7 +453,10 @@ fn redirect_update_help_lists_partial_update_flags() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#redirect", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",
+    r = 1
+)]
 fn redirect_update_rejects_description_and_clear_combined() {
     // Mutual-exclusion check fires FIRST in the handler, before any
     // filesystem or network work — so we can test it with an empty
@@ -463,7 +478,10 @@ fn redirect_update_rejects_description_and_clear_combined() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-002#redirect", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",
+    r = 1
+)]
 fn redirect_update_rejects_invalid_pkgref() {
     let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();

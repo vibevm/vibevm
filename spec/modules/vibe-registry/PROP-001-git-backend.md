@@ -8,7 +8,7 @@
 
 ##supersedes-line **Supersedes:** nothing. @spec/done
 
-##related **Related:** [spec://vibevm/common/PROP-000#registry](../../common/PROP-000.md#registry), [`VIBEVM-SPEC.md` §8](../../../VIBEVM-SPEC.md), [PROP-002](PROP-002-decentralized-registry.md). @spec/done
+##related **Related:** [spec://org.vibevm.core/vibevm/common/PROP-000#registry](../../common/PROP-000.md#registry), [`VIBEVM-SPEC.md` §8](../../../VIBEVM-SPEC.md), [PROP-002](PROP-002-decentralized-registry.md). @spec/done
 
 ## Superseded parts (by PROP-002)
 

@@ -15,7 +15,7 @@
 //! close affordance) layers on as fields on [`Window`] in a later phase; the
 //! frame/title/panel composition here is the stable base they compose over.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#window");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#window");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::{Constraint, Flex, Layout, Rect};
@@ -52,7 +52,7 @@ impl Window {
     /// the screen before calling (each popup owns its own content-based sizing).
     /// The centering is the two-axis `Flex::Center` layout every popup shared
     /// before the dedup — pixel-identical rendering, one source.
-    #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#window")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#window")]
     #[must_use]
     pub fn centered(
         area: Rect,

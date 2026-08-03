@@ -13,7 +13,7 @@
 //!
 //! [`Window`]: super::window::Window
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#card");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#card");
 
 use std::fmt::Display;
 
@@ -106,7 +106,7 @@ impl Card {
     /// top-right border, then each row: a bold header line, the wrapped value
     /// lines beneath, and a blank gap before the next field. Long values wrap
     /// at word boundaries to the content width; they are never truncated.
-    #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#detail-card")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#detail-card")]
     pub fn render(&self, area: Rect, buf: &mut Buffer, theme: &Theme) {
         if area.width < 20 || area.height < 5 || self.rows.is_empty() {
             return;

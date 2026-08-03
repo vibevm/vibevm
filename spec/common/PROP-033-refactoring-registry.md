@@ -2,9 +2,9 @@
 
 <status stage="spec" state="done" action="continue" comment="B0 2026-07-24: design proposal v0.1, drafted for review; open to challenge until ratified; fact grain 2026-07-24"/>
 
-##status-line **Status.** Design proposal v0.1 — not implementation-locked. Drafted for review; open to challenge until ratified. It schedules no implementation of its own; it is the *packaging, discovery, and dispatch* layer over the operations of [PROP-031](spec://vibevm/common/PROP-031#root) and the discovery surface of [PROP-032](spec://vibevm/common/PROP-032#agent-first). @spec/done
+##status-line **Status.** Design proposal v0.1 — not implementation-locked. Drafted for review; open to challenge until ratified. It schedules no implementation of its own; it is the *packaging, discovery, and dispatch* layer over the operations of [PROP-031](spec://org.vibevm.core/vibevm/common/PROP-031#root) and the discovery surface of [PROP-032](spec://org.vibevm.core/vibevm/common/PROP-032#agent-first). @spec/done
 
-##companions **Companions.** [PROP-031 — algorithmic refactoring](spec://vibevm/common/PROP-031#algebra) (the operations this registry catalogs) · [PROP-032 — the project model & agent-first substrate](spec://vibevm/common/PROP-032#agent-first) (the registry is its discovery surface; its §2.8 three-tier packaging is where the registry lives) · PROP-009 (the loading model — `spec/boot/INDEX.md` is the generated-manifest precedent) · PROP-025 (binary delivery — `vibe bin exec`, the dispatch mechanism) · PROP-027 (mcp packages — `.mcp.json` is the second generated-manifest precedent) · PROP-029 (fully-qualified addresses — id namespacing) · PROP-018 (skills — the `[[skill]]` declaration idiom). @spec/done
+##companions **Companions.** [PROP-031 — algorithmic refactoring](spec://org.vibevm.core/vibevm/common/PROP-031#algebra) (the operations this registry catalogs) · [PROP-032 — the project model & agent-first substrate](spec://org.vibevm.core/vibevm/common/PROP-032#agent-first) (the registry is its discovery surface; its §2.8 three-tier packaging is where the registry lives) · PROP-009 (the loading model — `spec/boot/INDEX.md` is the generated-manifest precedent) · PROP-025 (binary delivery — `vibe bin exec`, the dispatch mechanism) · PROP-027 (mcp packages — `.mcp.json` is the second generated-manifest precedent) · PROP-029 (fully-qualified addresses — id namespacing) · PROP-018 (skills — the `[[skill]]` declaration idiom). @spec/done
 
 ---
 
@@ -94,7 +94,7 @@ gate   = "cargo test"                  # even an LLM refactor is done only when 
 
 ## 3. Where the registry sits — the three-tier product model {#tiers}
 
-##TIER-PLACEMENT `prop r1` — The registry lives in the **SDD-substrate tier** of the product model ratified in [PROP-032 §2.8](spec://vibevm/common/PROP-032#packaging): @spec/done
+##TIER-PLACEMENT `prop r1` — The registry lives in the **SDD-substrate tier** of the product model ratified in [PROP-032 §2.8](spec://org.vibevm.core/vibevm/common/PROP-032#packaging): @spec/done
 
 1. ##TIER-BASE **Base vibevm** — no refactorings; `vibe refactor list` is empty. @spec/done
 2. ##TIER-SDD **+ the SDD substrate** (specmark + specmap) — contributes the algorithmic core (`rename-address`, `move-unit`, `retarget-edge`) **and the registry itself**. @spec/done

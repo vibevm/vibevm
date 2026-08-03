@@ -2,7 +2,7 @@
 //! every installed package's written files, each with a `spec://`
 //! provenance header (`VIBEVM-SPEC.md` §4.6).
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#command-summary");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
 use std::fs;
 use std::path::{Path, PathBuf};

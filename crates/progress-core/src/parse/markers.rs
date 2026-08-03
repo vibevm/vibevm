@@ -1,6 +1,6 @@
 //! Phase 4 — marker scanning: placement law, granularity, and issues.
 
-specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#parsing");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#parsing");
 
 use super::facts::take_fact_id;
 use crate::doc::{Block, BlockKind, FactKind, Issue, IssueCode, ParsedDoc, Severity};

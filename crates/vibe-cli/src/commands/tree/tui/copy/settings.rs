@@ -9,7 +9,7 @@
 //! reused as-is (PROP-037 §2.7); this struct adds only the focus-between-groups
 //! policy and the value accessors the confirm logic reads.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#copy-flow");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#copy-flow");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;
@@ -118,7 +118,7 @@ impl CopySettings {
     /// Render the modal centred over `area` (PROP-037 §10.2): a titled
     /// [`Window`] with the two radio groups stacked, the focused group marked
     /// with the theme `▸` focus arrow, and a key hint on the last row.
-    #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#copy-flow")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#copy-flow")]
     pub fn render(&self, area: Rect, buf: &mut Buffer, theme: &Theme) {
         if area.width < 24 || area.height < 11 {
             return;

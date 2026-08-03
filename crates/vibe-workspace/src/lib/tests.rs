@@ -118,7 +118,10 @@ fn glob_members_expand_and_skip_non_packages() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-007#nesting", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting",
+    r = 1
+)]
 fn nested_workspace_recurses_with_depth() {
     let tmp = TempDir::new().unwrap();
     // Root lists a sub-workspace as a member.
@@ -143,7 +146,10 @@ fn nested_workspace_recurses_with_depth() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-007#nesting", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting",
+    r = 1
+)]
 fn discover_from_member_finds_absolute_root() {
     let tmp = TempDir::new().unwrap();
     write(tmp.path(), "vibe.toml", &workspace_root("mono", &["sub"]));
@@ -233,7 +239,10 @@ fn iter_nodes_yields_root_then_members() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-007#versions", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#versions",
+    r = 1
+)]
 fn version_var_resolves_from_root_workspace() {
     let tmp = TempDir::new().unwrap();
     write(
@@ -261,7 +270,10 @@ fn version_var_resolves_from_root_workspace() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-007#versions", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#versions",
+    r = 1
+)]
 fn version_var_matryoshka_nearest_wins() {
     let tmp = TempDir::new().unwrap();
     // Root defines core = ^0.1; a nested workspace overrides it to ^0.9.

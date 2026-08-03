@@ -12,7 +12,7 @@
 //! the same repo at the same ref — both present is rejected as
 //! `AmbiguousStub`.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#redirect");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect");
 
 use std::path::Path;
 
@@ -98,7 +98,7 @@ impl RedirectFile {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(into = "RedirectSectionWire", try_from = "RedirectSectionWire")]
 #[spec(
-    implements = "spec://vibevm/modules/vibe-registry/PROP-002#redirect",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",
     r = 1
 )]
 pub struct RedirectSection {
@@ -224,7 +224,7 @@ impl TryFrom<RedirectSectionWire> for RedirectSection {
 /// empty: the same archive call is re-run with `vibe-redirect.toml`
 /// and the result fed here.
 #[spec(
-    implements = "spec://vibevm/modules/vibe-registry/PROP-002#redirect",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",
     r = 1
 )]
 pub fn parse_redirect_bytes(bytes: &[u8]) -> Result<RedirectFile> {
@@ -298,7 +298,10 @@ description = "Delegated to acme-corp"
     }
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#redirect", r = 1)]
+    #[verifies(
+        "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",
+        r = 1
+    )]
     fn pinned_without_ref_rejected() {
         let raw = r#"
 [redirect]
@@ -368,7 +371,10 @@ secret_field = "..."
     }
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#redirect", r = 1)]
+    #[verifies(
+        "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",
+        r = 1
+    )]
     fn round_trip_preserves_minimal_shape() {
         let r = RedirectFile::pass_through_tag("https://github.com/x/y");
         let rendered = toml::to_string_pretty(&r).unwrap();

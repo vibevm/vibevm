@@ -6,7 +6,7 @@
 //! and a consuming project with no `specmap.json` loses nothing but the
 //! column.
 
-specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#evidence");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#evidence");
 
 use std::collections::HashMap;
 use std::path::Path;
@@ -88,7 +88,7 @@ impl EvidenceProvider for SpecmapEvidence {
     /// index's own `spec_units` table, which states the file ↔ URI
     /// correspondence — a join on index data, never a rewrite of the
     /// address (`spec://…#addressing` owns address forms, not this file).
-    #[spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#evidence")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#evidence")]
     fn evidence_for(&self, unit_addr: &str) -> Option<Evidence> {
         let uri = if unit_addr.starts_with("spec://") {
             unit_addr

@@ -2,7 +2,7 @@
 //! (`--json`). `--quiet` collapses human-readable output to a single summary
 //! line. See `VIBEVM-SPEC.md` §9.3.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#output-format");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#output-format");
 
 use console::Style;
 use serde::Serialize;

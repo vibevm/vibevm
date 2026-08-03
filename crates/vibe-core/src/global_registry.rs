@@ -10,7 +10,7 @@
 //! (PROP-002 §2.2.2.1 `#offline-local`): local sources resolve, remotes are
 //! dropped, so no network round-trip or credential prompt is possible.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#global-config");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#global-config");
 
 use std::path::{Path, PathBuf};
 
@@ -166,11 +166,11 @@ pub fn ensure_default_global_registry() -> Result<(), GlobalRegistryError> {
 /// assert!(e.to_string().contains("global-config"));
 /// ```
 #[derive(Debug, thiserror::Error)]
-#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#global-config")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#global-config")]
 pub enum GlobalRegistryError {
     #[error(
         "could not read `{path}`: {source} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#global-config; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#global-config; \
           fix: check the file's permissions, or remove it to fall back to \
           project-only registry config)"
     )]
@@ -181,7 +181,7 @@ pub enum GlobalRegistryError {
     },
     #[error(
         "`{path}` is malformed: {source} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#global-config; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#global-config; \
           fix: repair the TOML at the reported location)"
     )]
     Parse {
@@ -191,7 +191,7 @@ pub enum GlobalRegistryError {
     },
     #[error(
         "could not serialise the registry config for `{path}`: {source} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#global-config; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#global-config; \
           fix: report this — the in-memory config is malformed)"
     )]
     Serialize {
@@ -236,7 +236,9 @@ impl EffectiveRegistryConfig {
     /// overrides; drop `http(s)`/`ssh`/`git` remotes. A machine-local
     /// registry still resolves offline; a github/gitverse one is simply
     /// absent — no network, no credential prompt.
-    #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#offline-local")]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#offline-local"
+    )]
     pub fn local_only(self) -> Self {
         EffectiveRegistryConfig {
             registries: self
@@ -286,7 +288,7 @@ impl EffectiveRegistryConfig {
 /// assert_eq!(eff.registries[0].url, "https://github.com/team");
 /// assert_eq!(eff.registries[1].name, "local");
 /// ```
-#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#global-config")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#global-config")]
 pub fn merge_effective(
     project: &Manifest,
     global: &GlobalRegistryConfig,
@@ -380,7 +382,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#global-config")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#global-config")]
     fn merge_is_project_first_and_dedupes_registries_by_name() {
         let project =
             project_with("[[registry]]\nname=\"team\"\nurl=\"https://github.com/team\"\n");
@@ -399,7 +401,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#global-config")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#global-config")]
     fn merge_dedupes_overrides_by_pkgref_and_concatenates_mirrors() {
         let project = project_with(
             "[[override]]\npkgref=\"feat:wal\"\nsource_url=\"https://github.com/me/wal\"\n\
@@ -424,7 +426,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#offline-local")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#offline-local")]
     fn local_only_keeps_local_drops_remote() {
         let project = project_with(
             "[[registry]]\nname=\"team\"\nurl=\"https://github.com/team\"\n\
@@ -436,7 +438,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#global-config")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#global-config")]
     fn global_config_accepts_any_registry_not_just_local() {
         // `~/.vibe/registry.toml` is not limited to local repos — it takes the
         // same `[[registry]]` shape as a project `vibe.toml`, so any remote
@@ -460,7 +462,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-registry/PROP-002#offline-local")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#offline-local")]
     fn url_is_local_truth_table() {
         for (url, want_local) in [
             ("file:///home/u/repos", true),

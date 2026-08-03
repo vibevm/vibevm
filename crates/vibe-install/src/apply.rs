@@ -2,7 +2,7 @@
 //! merge the requested roots into `vibe.toml`, materialise the
 //! resolution into `vibedeps/`, and rebuild `vibe.lock` wholesale.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
 use std::collections::BTreeSet;
 

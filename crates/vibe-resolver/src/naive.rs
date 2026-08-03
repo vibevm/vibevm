@@ -41,8 +41,8 @@ fn require_group(pkgref: &PackageRef) -> Result<&Group, SolveError> {
 /// speed over completeness knowingly — its first-pick-wins limit is real,
 /// and `Sat` / `ResolvoDepSolver` are the cells that backtrack.
 #[cell(seam = "DepSolver", variant = "naive", flag = "solver")]
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
-#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#solver")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
 pub struct NaiveDepSolver<P: DepProvider> {
     provider: P,
 }
@@ -58,8 +58,8 @@ impl<P: DepProvider> NaiveDepSolver<P> {
 }
 
 impl<P: DepProvider> DepSolver for NaiveDepSolver<P> {
-    #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#lockfile")]
-    #[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#determinism")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#determinism")]
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
         let mut state = SolverState::new();
         let root_keys: Vec<(Group, String)> = roots

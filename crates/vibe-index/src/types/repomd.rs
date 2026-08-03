@@ -1,7 +1,7 @@
 //! `repomd.json` — the per-index manifest. Modelled after RPM's
 //! `repomd.xml`. PROP-005 §2.4 pins the schema.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#layout");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout");
 
 use std::collections::BTreeMap;
 
@@ -13,7 +13,10 @@ use super::kinds::NamingConvention;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#layout", r = 1)]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout",
+    r = 1
+)]
 pub struct Repomd {
     pub schema_version: u32,
     pub registry: String,
@@ -101,7 +104,10 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-index/PROP-005#layout", r = 1)]
+    #[verifies(
+        "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout",
+        r = 1
+    )]
     fn repomd_round_trips() {
         let r = sample_repomd();
         let json = serde_json::to_string(&r).unwrap();

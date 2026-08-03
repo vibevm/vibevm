@@ -1,7 +1,7 @@
 //! `vibe-index get <data-dir> <group> <name>` — read one package entry
 //! from the index by its `(group, name)` identity (PROP-008 §2.2).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-008#identity");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity");
 
 use std::path::PathBuf;
 

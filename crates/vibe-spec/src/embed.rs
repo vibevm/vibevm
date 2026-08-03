@@ -174,8 +174,12 @@ mod tests {
 
     #[test]
     fn expands_a_simple_embed() {
-        let src = MockSource::new(&[("spec://vibevm/a#x", "EMBEDDED BODY")]);
-        let out = expand_embeds("before\n#embed spec://vibevm/a#x\nafter\n", &src).unwrap();
+        let src = MockSource::new(&[("spec://org.vibevm.core/vibevm/a#x", "EMBEDDED BODY")]);
+        let out = expand_embeds(
+            "before\n#embed spec://org.vibevm.core/vibevm/a#x\nafter\n",
+            &src,
+        )
+        .unwrap();
         assert!(out.contains("EMBEDDED BODY"));
         assert!(out.contains("before"));
         assert!(out.contains("after"));
@@ -186,10 +190,13 @@ mod tests {
     #[test]
     fn expands_recursively_to_a_fixed_point() {
         let src = MockSource::new(&[
-            ("spec://vibevm/a#x", "level1\n#embed spec://vibevm/b#y"),
-            ("spec://vibevm/b#y", "level2"),
+            (
+                "spec://org.vibevm.core/vibevm/a#x",
+                "level1\n#embed spec://org.vibevm.core/vibevm/b#y",
+            ),
+            ("spec://org.vibevm.core/vibevm/b#y", "level2"),
         ]);
-        let out = expand_embeds("#embed spec://vibevm/a#x\n", &src).unwrap();
+        let out = expand_embeds("#embed spec://org.vibevm.core/vibevm/a#x\n", &src).unwrap();
         assert!(out.contains("level1"));
         assert!(out.contains("level2"));
         assert!(!out.contains("#embed"));
@@ -198,15 +205,21 @@ mod tests {
     #[test]
     fn detects_a_cycle_with_its_path() {
         let src = MockSource::new(&[
-            ("spec://vibevm/a#x", "#embed spec://vibevm/b#y"),
-            ("spec://vibevm/b#y", "#embed spec://vibevm/a#x"),
+            (
+                "spec://org.vibevm.core/vibevm/a#x",
+                "#embed spec://org.vibevm.core/vibevm/b#y",
+            ),
+            (
+                "spec://org.vibevm.core/vibevm/b#y",
+                "#embed spec://org.vibevm.core/vibevm/a#x",
+            ),
         ]);
-        let err = expand_embeds("#embed spec://vibevm/a#x\n", &src).unwrap_err();
+        let err = expand_embeds("#embed spec://org.vibevm.core/vibevm/a#x\n", &src).unwrap_err();
         match err {
             EmbedError::Cycle(path) => {
-                assert_eq!(path.first().unwrap(), "spec://vibevm/a#x");
-                assert_eq!(path.last().unwrap(), "spec://vibevm/a#x");
-                assert!(path.contains(&"spec://vibevm/b#y".to_string()));
+                assert_eq!(path.first().unwrap(), "spec://org.vibevm.core/vibevm/a#x");
+                assert_eq!(path.last().unwrap(), "spec://org.vibevm.core/vibevm/a#x");
+                assert!(path.contains(&"spec://org.vibevm.core/vibevm/b#y".to_string()));
             }
             other => panic!("expected a cycle, got {other:?}"),
         }
@@ -215,16 +228,17 @@ mod tests {
     #[test]
     fn reports_an_unresolved_embed() {
         let src = MockSource::new(&[]);
-        let err = expand_embeds("#embed spec://vibevm/missing#x\n", &src).unwrap_err();
+        let err =
+            expand_embeds("#embed spec://org.vibevm.core/vibevm/missing#x\n", &src).unwrap_err();
         assert!(matches!(err, EmbedError::Unresolved { .. }));
     }
 
     #[test]
     fn markers_wrap_the_splice() {
-        let src = MockSource::new(&[("spec://vibevm/a#x", "BODY")]);
-        let out = expand_embeds("#embed spec://vibevm/a#x\n", &src).unwrap();
-        assert!(out.contains("<!-- embed: spec://vibevm/a#x -->"));
-        assert!(out.contains("<!-- /embed: spec://vibevm/a#x -->"));
+        let src = MockSource::new(&[("spec://org.vibevm.core/vibevm/a#x", "BODY")]);
+        let out = expand_embeds("#embed spec://org.vibevm.core/vibevm/a#x\n", &src).unwrap();
+        assert!(out.contains("<!-- embed: spec://org.vibevm.core/vibevm/a#x -->"));
+        assert!(out.contains("<!-- /embed: spec://org.vibevm.core/vibevm/a#x -->"));
     }
 
     /// A [`SectionSource`] backed by a real [`DocTree`]: it resolves an address's
@@ -248,7 +262,11 @@ mod tests {
         // sibling, and not the whole section.
         let doc = DocTree::parse("# Doc {#root}\n- ##fact-a the exact unit\n- ##fact-b other\n");
         let src = DocSource(doc);
-        let out = expand_embeds("before\n#embed spec://vibevm/d#fact-a\nafter\n", &src).unwrap();
+        let out = expand_embeds(
+            "before\n#embed spec://org.vibevm.core/vibevm/d#fact-a\nafter\n",
+            &src,
+        )
+        .unwrap();
         assert!(out.contains("##fact-a the exact unit"), "{out}");
         assert!(!out.contains("##fact-b"), "spliced too much:\n{out}");
         assert!(out.contains("before") && out.contains("after"));

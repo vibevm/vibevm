@@ -2,7 +2,7 @@
 //! `vibedeps/` slot on disk, and `vibedeps/` carries no slot absent
 //! from the lockfile (PROP-009 §2.1).
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#linter");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
 
 use std::fs;
 use std::path::{Path, PathBuf};

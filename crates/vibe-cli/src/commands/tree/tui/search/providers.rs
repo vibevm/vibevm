@@ -8,7 +8,7 @@
 //! catalogue itself (and its live `vibe_actions::Registry`) lives in
 //! [`super::catalogue`].
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#f1-search");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#f1-search");
 
 use vibe_actions::search::{
     Candidate, ItemRef, Modifiers, ProviderId, Query, SearchProvider, Selected,

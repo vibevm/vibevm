@@ -2,7 +2,7 @@
 //! which doubles as the runnable form of "how to update the stack" (§7):
 //! change [`REQUIRED_TOOLS`] and both `man doctor` and the docs follow.
 
-specmark::scope!("spec://vibevm/common/PROP-019#tools");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#tools");
 
 use std::process::Command;
 
@@ -145,7 +145,7 @@ mod tests {
     use specmark::verifies;
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#tools", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#tools", r = 1)]
     fn required_tools_table_is_well_formed() {
         assert!(!REQUIRED_TOOLS.is_empty());
         for t in REQUIRED_TOOLS {
@@ -172,7 +172,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#tools", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#tools", r = 1)]
     fn extract_semver_tolerates_vendor_suffixes() {
         assert_eq!(
             extract_semver("git version 2.43.0").as_deref(),
@@ -190,7 +190,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#tools", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#tools", r = 1)]
     fn version_ok_compares_semver() {
         assert!(version_ok("1.93.1", "1.93.0"));
         assert!(version_ok("2.0.0", "1.93.0"));

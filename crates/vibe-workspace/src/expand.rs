@@ -6,7 +6,7 @@
 //! everything here is `pub(crate)` at most, so the public surface is
 //! unchanged.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-007#nesting");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting");
 
 use std::collections::{BTreeMap, HashMap, HashSet};
 use std::path::{Path, PathBuf};
@@ -106,7 +106,7 @@ pub(crate) fn expand(
 /// (when the node is itself a workspace), then its declaring workspace, on up
 /// to the absolute root — first hit wins. PROP-007 §2.6.
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-007#versions",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#versions",
     r = 1
 )]
 pub(crate) fn finalize_versions(

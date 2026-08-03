@@ -3,7 +3,7 @@
 //! feature table, sub-skill delivery, i18n availability, and the boot
 //! snippet. Each mirrors a `vibe.toml` table (PROP-005 §2.6).
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#entry");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry");
 
 use std::collections::BTreeMap;
 

@@ -113,7 +113,10 @@ fn locate_block_absent_when_no_markers() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-012#markers", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#markers",
+    r = 1
+)]
 fn locate_block_well_formed_pair() {
     let content = "before\n<vibevm>\nbody\n</vibevm>\nafter\n";
     match locate_block(content) {
@@ -125,7 +128,10 @@ fn locate_block_well_formed_pair() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-012#markers", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#markers",
+    r = 1
+)]
 fn locate_block_two_openers_is_malformed() {
     let content = "<vibevm>\na\n</vibevm>\n<vibevm>\nb\n</vibevm>\n";
     match locate_block(content) {
@@ -174,7 +180,10 @@ fn write_managed_block_creates_a_missing_file() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-012#create", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#create",
+    r = 1
+)]
 fn write_managed_block_appends_preserving_co_tenant_content() {
     let dir = TempDir::new().unwrap();
     let path = dir.path().join("CLAUDE.md");
@@ -191,7 +200,10 @@ fn write_managed_block_appends_preserving_co_tenant_content() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-012#create", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#create",
+    r = 1
+)]
 fn write_managed_block_splices_in_place_preserving_surroundings() {
     let dir = TempDir::new().unwrap();
     let path = dir.path().join("CLAUDE.md");

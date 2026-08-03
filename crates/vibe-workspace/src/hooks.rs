@@ -10,7 +10,7 @@
 //! [`HookTrust::NeedsConsent`] and the CLI resolves it; the library stays
 //! standalone (PROP-018 §2.3) and non-interactive.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-020#phases");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases");
 
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -118,11 +118,11 @@ pub struct HookReport {
 /// The hook layer's failure surface (PROP-020). Each message cites the
 /// violated unit and a fix surface (Class-F grammar).
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/modules/vibe-workspace/PROP-020#phases")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases")]
 pub enum HookError {
     #[error(
         "package `{group}/{name}` declares a {phase} hook but is not trusted to run it \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-020#trust-gate; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#trust-gate; \
          fix: allow-list `{group}` in [hooks].allowed_groups or pass --allow-hooks)"
     )]
     Untrusted {
@@ -133,7 +133,7 @@ pub enum HookError {
 
     #[error(
         "{phase} hook for `{group}/{name}` declares `{base}` but no usable interpreter/script \
-         was found (violates spec://vibevm/modules/vibe-workspace/PROP-020#script-selection; \
+         was found (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#script-selection; \
          fix: ship `{base}.sh` (bash / Git Bash) or `{base}.ps1` (PowerShell) and install the \
          interpreter)"
     )]
@@ -146,7 +146,7 @@ pub enum HookError {
 
     #[error(
         "pre-install hook for `{group}/{name}` failed with exit {code} \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-020#failure; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#failure; \
          fix: the slot is rolled back — repair the hook script and reinstall)"
     )]
     PreInstallFailed {
@@ -157,7 +157,7 @@ pub enum HookError {
 
     #[error(
         "spawning the {phase} hook for `{group}/{name}` failed: {reason} \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-020#script-selection; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#script-selection; \
          fix: ensure the hook script is executable and the interpreter is on PATH)"
     )]
     Spawn {
@@ -263,7 +263,7 @@ impl HookRunner for SystemHookRunner {
 /// interactive run asks for consent and a non-interactive run refuses,
 /// never executing third-party code unseen.
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-020#trust-gate",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#trust-gate",
     r = 1
 )]
 pub fn decide_trust(
@@ -321,7 +321,7 @@ impl HookPolicy {
 /// interpreter/script pair exists — the caller maps that to
 /// [`HookError::NoInterpreter`].
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-020#script-selection",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#script-selection",
     r = 1
 )]
 pub fn select_invocation(
@@ -383,7 +383,7 @@ fn build_env(ctx: &HookContext, phase: HookPhase) -> Vec<(String, String)> {
 /// - `post-install` non-zero exit → `post-install-failed` (Ok) — the
 ///   package is already durable, so the failure is surfaced, not fatal.
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-020#phases",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases",
     r = 1
 )]
 pub fn run_package_hook(

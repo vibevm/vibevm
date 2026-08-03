@@ -21,11 +21,11 @@ use crate::ActivationContext;
 /// Parsed conditional-dep predicate.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[spec(
-    implements = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
     r = 1
 )]
 #[spec(
-    implements = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
     r = 2
 )]
 pub enum ConditionalPredicate {
@@ -46,11 +46,11 @@ impl ConditionalPredicate {
     /// grammar over context keys; leading / trailing whitespace is
     /// tolerated everywhere.
     #[spec(
-        implements = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
         r = 1
     )]
     #[spec(
-        deviates = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+        deviates = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
         r = 1,
         reason = "the grammar unit names the full §2.5.2 probe set inside context(...); \
                   only present/provides keys (+ composition) are implemented — the \
@@ -87,7 +87,7 @@ impl ConditionalPredicate {
     /// predicate matches. Pure over `(self, ctx)` — host state never
     /// enters, which is what keeps lockfiles host-invariant.
     #[spec(
-        implements = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
         r = 1
     )]
     pub fn evaluate(&self, ctx: &ActivationContext) -> bool {
@@ -205,13 +205,13 @@ impl<'a> Parser<'a> {
 
 #[derive(Debug, Error, PartialEq, Eq)]
 #[spec(
-    implements = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
     r = 1
 )]
 pub enum PredicateError {
     #[error(
         "malformed conditional-dep predicate `{0}` (expected `context(<key>)`) \
-         (violates spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar; \
          fix: compose context keys with `and` / `or` / `not` inside `context(...)`)"
     )]
     Malformed(String),
@@ -219,7 +219,7 @@ pub enum PredicateError {
     #[error(
         "conditional-dep predicate `{0}` uses an unsupported form. Today only \
          `context(<key>)` (capability/pkgref/interface tag) is recognised. \
-         (violates spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar; \
          fix: probe forms like `if_files = …` belong in [activation], not in `context(...)`)"
     )]
     Unsupported(String),
@@ -234,7 +234,7 @@ mod tests {
 
     #[test]
     #[verifies(
-        "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+        "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
         r = 1
     )]
     fn parses_simple_present_predicate() {
@@ -244,7 +244,7 @@ mod tests {
 
     #[test]
     #[verifies(
-        "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+        "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
         r = 1
     )]
     fn parses_with_whitespace() {
@@ -254,7 +254,7 @@ mod tests {
 
     #[test]
     #[verifies(
-        "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+        "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
         r = 1
     )]
     fn rejects_malformed() {
@@ -270,7 +270,7 @@ mod tests {
 
     #[test]
     #[verifies(
-        "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
+        "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-grammar",
         r = 1
     )]
     fn flags_unsupported_probe_forms() {
@@ -282,7 +282,7 @@ mod tests {
 
     #[test]
     #[verifies(
-        "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
+        "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
         r = 2
     )]
     fn parses_composition_with_precedence() {
@@ -312,7 +312,7 @@ mod tests {
 
     #[test]
     #[verifies(
-        "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
+        "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
         r = 2
     )]
     fn evaluates_composition() {
@@ -328,7 +328,7 @@ mod tests {
 
     #[test]
     #[verifies(
-        "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
+        "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-composition",
         r = 2
     )]
     fn rejects_malformed_composition() {
@@ -352,7 +352,7 @@ mod tests {
 
     #[test]
     #[verifies(
-        "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
+        "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
         r = 1
     )]
     fn evaluates_against_present() {
@@ -365,7 +365,7 @@ mod tests {
 
     #[test]
     #[verifies(
-        "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
+        "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-host-invariance",
         r = 1
     )]
     fn evaluates_against_provides() {

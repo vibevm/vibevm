@@ -11,7 +11,7 @@
 //! card carries (the PROP-036 §2.11 package detail), the card decides *how*
 //! they look.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#tui");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;

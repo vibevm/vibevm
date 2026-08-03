@@ -2,7 +2,7 @@
 //! exists for the package's canonical language; missing translations
 //! for languages declared in `[i18n].available` surface as warnings.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#linter");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
 
 use std::path::Path;
 

@@ -4,7 +4,7 @@
 //! values the snapshot test in [`theme`] pins (PROP-037 §2.2.1 R8 fidelity);
 //! they match the legacy `theme.rs` constants byte-for-byte.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#palette-tokens");
 
 use specmark::spec;
 
@@ -40,7 +40,7 @@ const TABLE: [(Role, Rgb); 16] = [
     (Role::ButtonOff, Rgb(38, 35, 58)),    // = Surface1
 ];
 
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#palette-tokens")]
 impl Palette for RosePine {
     fn role(&self, role: Role) -> Rgb {
         for (r, rgb) in TABLE.iter() {

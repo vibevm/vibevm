@@ -2,7 +2,7 @@
 //! PROP-002 §2.4.1 / PROP-007 §2.6 / PROP-009 §2.4, reached only through
 //! `Requires`'s `Serialize` / `Deserialize` (`into` / `try_from`).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#git-source");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source");
 
 use std::collections::BTreeMap;
 

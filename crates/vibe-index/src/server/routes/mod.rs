@@ -1,4 +1,4 @@
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 pub mod admin;
 pub mod capabilities;
 pub mod health;

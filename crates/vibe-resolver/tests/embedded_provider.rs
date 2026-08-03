@@ -36,7 +36,7 @@ fn seed(root: &Path, name: &str, versions: &[&str]) {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-030#precedence")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#precedence")]
 fn embedded_registry_answers_alone_when_no_declared_walk() {
     let tmp = tempfile::tempdir().unwrap();
     let root = tmp.path().join("embedded");

@@ -23,7 +23,7 @@ campaign's counts stop being stored beside the data they are derived from.
 
 ```
 > `processed_hash` records the text a file's verdicts were computed against
-> — campaign amendment A4, spec://vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#amendments
+> — campaign amendment A4, spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#amendments
 ```
 
 Amendment **A4** already requires the hand-seal staleness gap to be closed

@@ -19,11 +19,11 @@ becoming O(nothing).
 > Invalidation: unit hash changed ⇒ suspect; **named crate has commits after
 > the verdict date ⇒ suspect**; **a random control sample of
 > carried-forward units is re-verified** regardless.
-> — `spec://vibevm/modules/vibe-progress/PROP-043#baseline`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#baseline`
 
 > `rescan --baseline <prev>/baseline.json` → new / suspect /
 > carried-forward lists.
-> — `spec://vibevm/modules/vibe-progress/PROP-043#tool`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#tool`
 
 Anchor realised: `BASELINE-INVALIDATION`.
 
@@ -100,7 +100,7 @@ bash tools/self-check.sh
   map leaves everything carried-forward and does not error.
 - CLI scenario: `vibe progress rescan --baseline <fixture>` prints four
   labelled counts.
-- Discipline: `#[spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#baseline")]`,
+- Discipline: `#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#baseline")]`,
   `cargo fmt --all`, clippy clean, atomic commits, no AI attribution.
 
 ## 7. Analogies {#analogies}

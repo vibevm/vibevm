@@ -11,7 +11,7 @@
 //!
 //! [`Intent`]: vibe_mcp::agentic::Intent
 
-specmark::scope!("spec://vibevm/common/PROP-018#relay");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-018#relay");
 
 use anyhow::Result;
 use vibe_mcp::agentic::{

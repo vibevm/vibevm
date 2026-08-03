@@ -34,7 +34,7 @@
 //! (`focus` + per-`RadioGroup` selection) — per-group memory so `Tab` away and
 //! back leaves the cursor exactly where it was.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#f2-sort-menu");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#f2-sort-menu");
 
 use specmark::spec;
 
@@ -102,7 +102,7 @@ pub struct MenuState {
 impl MenuState {
     /// The ComingSoon placeholder menu (PROP-037 §2.10), titled with `feature`.
     /// Drawn through [`ComingSoon`]; `Enter`/`Esc` close it.
-    #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#coming-soon")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#coming-soon")]
     #[allow(dead_code)] // first user: copy::png_coming_soon (§10.4); wired when copy-settings lands.
     pub fn coming_soon(feature: impl Into<String>) -> Self {
         Self {
@@ -146,7 +146,7 @@ impl MenuState {
     /// within-group cursors are untouched — only which group holds the live
     /// `↑`/`↓` + `Enter` changes. A single-group menu (F3) is a no-op (there is
     /// no Tab Order — `Tab` is inert there).
-    #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#focus-groups")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#focus-groups")]
     pub fn focus_next_group(&mut self) {
         if let MenuKind::Groups {
             groups,
@@ -160,7 +160,7 @@ impl MenuState {
     }
 
     /// Cycle the active focus group backward (`Shift+Tab`, PROP-037 §5.4).
-    #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#focus-groups")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#focus-groups")]
     pub fn focus_prev_group(&mut self) {
         if let MenuKind::Groups {
             groups,

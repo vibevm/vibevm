@@ -11,7 +11,7 @@
 //! jump is a no-op that closes the modal (the list itself is the diagnostic
 //! surface; the fix is `vibe prefs migrate` or a manual edit).
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#lint-all");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#lint-all");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;

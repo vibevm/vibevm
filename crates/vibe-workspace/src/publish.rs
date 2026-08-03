@@ -27,7 +27,7 @@
 //! credential ever reaches it. That machinery is `vibe-publish`'s, reused
 //! unchanged by the CLI.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish");
 
 use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
@@ -113,7 +113,7 @@ pub struct Selection {
 /// raised so a typo'd `--member` fails loudly rather than silently
 /// publishing nothing.
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish",
     r = 1
 )]
 pub fn select_publishable_nodes(
@@ -183,7 +183,7 @@ pub fn select_publishable_nodes(
 /// outside the selected set (an external sibling, a non-publishing member)
 /// is simply not an edge — it imposes no ordering constraint here.
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish",
     r = 1
 )]
 pub fn topo_order(workspace: &Workspace, nodes: &[PublishNode]) -> Result<Vec<PublishNode>> {

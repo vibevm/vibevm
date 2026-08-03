@@ -71,12 +71,12 @@ mod tests {
     #[test]
     fn open_and_close_are_paired() {
         assert_eq!(
-            open("spec://vibevm/a#r"),
-            "<!-- vibe:begin spec://vibevm/a#r -->"
+            open("spec://org.vibevm.core/vibevm/a#r"),
+            "<!-- vibe:begin spec://org.vibevm.core/vibevm/a#r -->"
         );
         assert_eq!(
-            close("spec://vibevm/a#r"),
-            "<!-- vibe:end spec://vibevm/a#r -->"
+            close("spec://org.vibevm.core/vibevm/a#r"),
+            "<!-- vibe:end spec://org.vibevm.core/vibevm/a#r -->"
         );
     }
 
@@ -84,12 +84,12 @@ mod tests {
     fn decompile_recovers_blocks() {
         let doc = format!(
             "{}\nbody line one\nbody line two\n{}\n",
-            open("spec://vibevm/a#r"),
-            close("spec://vibevm/a#r"),
+            open("spec://org.vibevm.core/vibevm/a#r"),
+            close("spec://org.vibevm.core/vibevm/a#r"),
         );
         let blocks = decompile(&doc);
         assert_eq!(blocks.len(), 1);
-        assert_eq!(blocks[0].key, "spec://vibevm/a#r");
+        assert_eq!(blocks[0].key, "spec://org.vibevm.core/vibevm/a#r");
         assert_eq!(blocks[0].body, "body line one\nbody line two");
     }
 
@@ -97,21 +97,27 @@ mod tests {
     fn two_blocks_recovered_in_order() {
         let doc = format!(
             "{}\nfirst\n{}\n{}\nsecond\n{}\n",
-            open("spec://vibevm/a#r"),
-            close("spec://vibevm/a#r"),
-            open("spec://vibevm/b#r"),
-            close("spec://vibevm/b#r"),
+            open("spec://org.vibevm.core/vibevm/a#r"),
+            close("spec://org.vibevm.core/vibevm/a#r"),
+            open("spec://org.vibevm.core/vibevm/b#r"),
+            close("spec://org.vibevm.core/vibevm/b#r"),
         );
         let keys: Vec<String> = decompile(&doc).into_iter().map(|b| b.key).collect();
-        assert_eq!(keys, ["spec://vibevm/a#r", "spec://vibevm/b#r"]);
+        assert_eq!(
+            keys,
+            [
+                "spec://org.vibevm.core/vibevm/a#r",
+                "spec://org.vibevm.core/vibevm/b#r"
+            ]
+        );
     }
 
     #[test]
     fn nested_embed_markers_stay_in_the_body() {
         let doc = format!(
-            "{}\n<!-- embed: spec://vibevm/x#r -->\nembedded text\n<!-- /embed: spec://vibevm/x#r -->\n{}\n",
-            open("spec://vibevm/a#r"),
-            close("spec://vibevm/a#r"),
+            "{}\n<!-- embed: spec://org.vibevm.core/vibevm/x#r -->\nembedded text\n<!-- /embed: spec://org.vibevm.core/vibevm/x#r -->\n{}\n",
+            open("spec://org.vibevm.core/vibevm/a#r"),
+            close("spec://org.vibevm.core/vibevm/a#r"),
         );
         let blocks = decompile(&doc);
         assert_eq!(blocks.len(), 1);

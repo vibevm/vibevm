@@ -153,7 +153,10 @@ ui = "^0.3"
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-007#root-package", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#root-package",
+    r = 1
+)]
 fn root_package_composes_workspace_and_package() {
     // cargo-style: the root crate is itself publishable. PROP-007 §2.9.
     let raw = r#"
@@ -181,7 +184,10 @@ fn virtual_workspace_root_parses() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-007#published-repos", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#published-repos",
+    r = 1
+)]
 fn origin_marker_parses() {
     let raw = r#"
 [package]
@@ -207,7 +213,7 @@ generated_at = "2026-05-20T00:00:00Z"
 
 #[test]
 #[verifies(
-    "spec://vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
     r = 1
 )]
 fn rejects_project_and_package_together() {
@@ -228,7 +234,7 @@ version = "0.0.1"
 
 #[test]
 #[verifies(
-    "spec://vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
     r = 1
 )]
 fn rejects_no_role_section() {
@@ -238,7 +244,7 @@ fn rejects_no_role_section() {
 
 #[test]
 #[verifies(
-    "spec://vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest",
     r = 1
 )]
 fn rejects_package_role_section_without_package() {
@@ -256,7 +262,7 @@ source = "boot/x.md"
 }
 
 #[test]
-#[verifies("spec://vibevm/common/PROP-018#skill-decl", r = 3)]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-018#skill-decl", r = 3)]
 fn package_declares_skills_and_roundtrips() {
     let raw = r#"
 [package]
@@ -290,7 +296,7 @@ path = "skills/vim-quickref/SKILL.md"
 }
 
 #[test]
-#[verifies("spec://vibevm/common/PROP-018#skill-decl", r = 3)]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-018#skill-decl", r = 3)]
 fn rejects_skill_section_without_package() {
     // `[[skill]]` is package-role: a package declares skills about its own
     // files, so a plain `[project]` carrying it is a role error.
@@ -479,7 +485,7 @@ binary = "rust-ai-native-mcp"
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#manifest")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest")]
 fn mcp_kind_manifest_parses_under_its_laws() {
     let raw = mcp_manifest(
         "\"stack:org.vibevm/rust-ai-native-lang\" = \"=0.6.0\"",
@@ -495,7 +501,7 @@ fn mcp_kind_manifest_parses_under_its_laws() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#manifest")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest")]
 fn mcp_server_table_is_refused_outside_the_mcp_kind() {
     let raw = r#"
 [package]
@@ -519,7 +525,7 @@ binary = "rust-ai-native-mcp"
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#manifest")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest")]
 fn mcp_kind_without_a_server_is_refused() {
     let raw = r#"
 [package]
@@ -535,7 +541,7 @@ description = "x"
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#manifest")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest")]
 fn mcp_server_binary_must_resolve_and_names_must_be_unique() {
     // Unresolved binary reference.
     let raw = mcp_manifest("\"stack:org.vibevm/rust-ai-native-lang\" = \"=0.6.0\"", "")
@@ -553,7 +559,7 @@ fn mcp_server_binary_must_resolve_and_names_must_be_unique() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#manifest")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest")]
 fn mcp_server_args_substitute_only_the_closed_set() {
     let raw = mcp_manifest(
         "\"stack:org.vibevm/rust-ai-native-lang\" = \"=0.6.0\"",
@@ -565,7 +571,7 @@ fn mcp_server_args_substitute_only_the_closed_set() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#exact-pin")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#exact-pin")]
 fn mcp_kind_requires_exact_pins() {
     for bad in ["\"^0.6\"", "\"0.6.0\"", "\"=0.6\"", "\">=0.6.0, <0.7\""] {
         let raw = mcp_manifest(

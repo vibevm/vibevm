@@ -16,10 +16,10 @@ ruling («сделай wire и реализуй»).
 ## 2. Contract {#contract}
 
 > All subcommands are incremental over the content-hash cache (§7.1).
-> — `spec://vibevm/modules/vibe-progress/PROP-043#tool`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#tool`
 
 > Per observed file: path, content-hash, extracted markers with positions …
-> — `spec://vibevm/modules/vibe-progress/PROP-043#cache`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#cache`
 
 Anchor realised: `TOOL-INCREMENTAL`.
 
@@ -96,7 +96,7 @@ bash tools/self-check.sh
 - New test: `no_cache_flag_forces_full_parse`.
 - Measured: report the warm-run wall time against the cold one on this
   repository in §9. A speed-up that cannot be measured is not a feature.
-- Discipline: `#[spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#tool")]`,
+- Discipline: `#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#tool")]`,
   `cargo fmt --all`, clippy clean, atomic commits, no AI attribution.
 
 ## 7. Analogies {#analogies}

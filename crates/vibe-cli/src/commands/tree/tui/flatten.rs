@@ -10,7 +10,7 @@
 //! every shape feeds via a [`ShapeCtx`]. The default [`TreeShape::MembersAsRoots`]
 //! over the declared-root filter is byte-identical to the pre-shape walk.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#tui");
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -34,7 +34,7 @@ pub(super) use super::shape::TreeShape;
 /// default [`TreeShape::MembersAsRoots`] and `filter` = the declared-root set
 /// the output is byte-identical to the pre-shape walk (the tree-mode default;
 /// see `state::App::rebuild`).
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#tree-filters")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#tree-filters")]
 pub(super) fn flatten(
     tree: &PackageTree,
     folded: &BTreeSet<String>,

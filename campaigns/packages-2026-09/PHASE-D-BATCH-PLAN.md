@@ -7,10 +7,10 @@ view is [`OBLIGATIONS.md`](OBLIGATIONS.md). This document is the reasoning
 around them._
 
 Governing contract:
-[spec://vibevm/terraforms/packages-actualization#phase-d](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md#phase-d),
+[spec://org.vibevm.core/vibevm/terraforms/packages-actualization#phase-d](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md#phase-d),
 which says *«same obligation types, same loop-until-dry waves, same escalation
 rule»* and points at wave 1's mechanics:
-[spec://vibevm/terraforms/spec-actualization#phase-d](../../spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md#phase-d).
+[spec://org.vibevm.core/vibevm/terraforms/spec-actualization#phase-d](../../spec/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md#phase-d).
 The SPEC-task shape is
 [`spec/modules/vibe-progress/templates/spec-task.md`](../../spec/modules/vibe-progress/templates/spec-task.md)
 and is not restated here.

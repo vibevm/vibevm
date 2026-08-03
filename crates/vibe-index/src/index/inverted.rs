@@ -17,7 +17,7 @@
 //!
 //! Each line is one JSON record sorted by `(group, name, version)`.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#layout");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout");
 
 use std::collections::BTreeMap;
 use std::fs;

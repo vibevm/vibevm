@@ -1,6 +1,6 @@
 //! `vibe registry add` — append or prepend a `[[registry]]` block.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#registry");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
 use anyhow::{Context, Result, anyhow, bail};
 use serde::Serialize;

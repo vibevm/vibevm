@@ -15,7 +15,7 @@
 //! `vibe-core` originals do not derive. [`package_kind`] converts between
 //! the two with a total `match`.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
 use std::path::Path;
 
@@ -40,7 +40,10 @@ use crate::types::{
 /// [`Manifest`]. Parse / validation failures surface as
 /// [`Error::Malformed`] so the scan driver records a skip note for the
 /// offending package rather than aborting the whole reindex.
-#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#entry", r = 1)]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry",
+    r = 1
+)]
 pub fn parse_manifest(bytes: &[u8]) -> Result<Manifest> {
     let s = std::str::from_utf8(bytes)
         .map_err(|e| Error::Malformed(format!("vibe.toml is not UTF-8: {e}")))?;

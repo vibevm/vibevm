@@ -28,7 +28,7 @@ compiled into both and read twice.
 > Hoisting dedup at **compile time**: a package statically linked by more than
 > one consumer is **hoisted** to a shared location (§2.4) and linked **once**;
 > each consumer references it.
-> — spec://vibevm/modules/vibe-workspace/PROP-038#MODE-STATIC-SOFT
+> — spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#MODE-STATIC-SOFT
 ```
 
 ```
@@ -36,14 +36,14 @@ compiled into both and read twice.
 > sees the same prompt several times and can be confused about which copy is
 > authoritative — a correctness hazard the owner weighs above the
 > "explicit-over-implicit" cost of a smart default.
-> — spec://vibevm/modules/vibe-workspace/PROP-038#duplication-hazard
+> — spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#duplication-hazard
 ```
 
 ```
 > **Within one static zone** … → hoist into `Z`'s `STATIC.md`. Dedup achieved
 > **and** the package still loads only when `Z` loads … Within-zone hoisting is
 > free and always done.
-> — spec://vibevm/modules/vibe-workspace/PROP-038#HOIST-WITHIN-ZONE
+> — spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#HOIST-WITHIN-ZONE
 ```
 
 The observed duplication is the hazard `##duplication-hazard` names, in the

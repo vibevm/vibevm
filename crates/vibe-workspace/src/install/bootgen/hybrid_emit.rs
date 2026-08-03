@@ -3,7 +3,7 @@
 //! (in `super`) builds the unit table, emits each package's own artifacts, and
 //! appends the hoisted shared packages to the global root.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-038#units");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#units");
 
 use std::collections::{HashMap, HashSet};
 use std::fs;
@@ -27,7 +27,7 @@ use super::super::{ResolvedDep, io_err};
 /// declared `link`, then `Y`'s `[boot_snippet]` suggestion, then `X`'s
 /// `[boot].default_link`, then `dynamic`.
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-038#units",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#units",
     r = 1
 )]
 pub(super) fn build_unit_table(resolution: &[ResolvedDep]) -> HashMap<UnitId, UnitInput> {
@@ -118,7 +118,7 @@ fn slot_rel_path(dep: &ResolvedDep) -> String {
 /// `STATIC.md` rather than the raw snippet (the parent then loads the whole
 /// zone, not just the snippet).
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-038#units",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#units",
     r = 1
 )]
 pub(super) fn emit_package_units(
@@ -310,7 +310,7 @@ fn emit_effective(
 /// no-op when nothing is shared, so the root artifacts stay byte-identical on
 /// a tree with no shared package (PROP-038 §5).
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-038#hoisting",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#hoisting",
     r = 1
 )]
 pub(super) fn append_hoisted(
@@ -361,7 +361,7 @@ fn shared_by(id: &UnitId, pulls: &HashMap<UnitId, HashSet<UnitId>>) -> String {
 /// (missing artifact, or a mismatched fingerprint the regeneration should have
 /// refreshed), sorted for a deterministic report.
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-038#tests",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#tests",
     r = 1
 )]
 pub(super) fn verify_fingerprints(

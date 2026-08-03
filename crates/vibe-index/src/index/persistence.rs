@@ -4,7 +4,7 @@
 //! these out keeps the per-format code (primary.jsonl, by-name JSON,
 //! repomd.json) tightly focused on its own shape.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
 use std::fs;
 use std::io::Write;
@@ -19,7 +19,7 @@ use crate::error::{Error, Result};
 /// Write `bytes` to `path` atomically (tmp + fsync + rename). Creates
 /// the parent directory when missing.
 #[spec(
-    implements = "spec://vibevm/modules/vibe-index/PROP-005#persistence",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#persistence",
     r = 1
 )]
 pub fn atomic_write(path: &Path, bytes: &[u8]) -> Result<()> {
@@ -87,7 +87,10 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-index/PROP-005#persistence", r = 1)]
+    #[verifies(
+        "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#persistence",
+        r = 1
+    )]
     fn atomic_write_replaces_existing() {
         let dir = tempdir().unwrap();
         let path = dir.path().join("file.json");
@@ -97,7 +100,10 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-index/PROP-005#persistence", r = 1)]
+    #[verifies(
+        "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#persistence",
+        r = 1
+    )]
     fn atomic_write_does_not_leave_tmp_behind() {
         let dir = tempdir().unwrap();
         let path = dir.path().join("file.json");

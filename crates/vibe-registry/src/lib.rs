@@ -17,7 +17,7 @@
 //! [prop]: ../../../spec/modules/vibe-registry/PROP-001-git-backend.md
 
 #![forbid(unsafe_code)]
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-001#root");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#root");
 
 use std::path::{Path, PathBuf};
 

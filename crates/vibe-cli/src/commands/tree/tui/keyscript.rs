@@ -3,7 +3,7 @@
 //! `Shift+` prefix is honoured; unknown or side-effecting keys (`F4`/`F6`) are a
 //! hard error naming the offending token — never a silent skip.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-042#key-script");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#key-script");
 
 use anyhow::{Result, bail};
 use ratatui_crossterm::crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers};
@@ -11,7 +11,7 @@ use specmark::spec;
 
 /// Parse a space-separated key script into synthetic key-press events
 /// (PROP-042 §3). An empty script yields no events.
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-042#key-script")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#key-script")]
 pub(crate) fn parse(script: &str) -> Result<Vec<Event>> {
     script.split_whitespace().map(parse_one).collect()
 }

@@ -5,7 +5,7 @@
 use super::*;
 use quote::quote;
 
-const URI: &str = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint";
+const URI: &str = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint";
 
 #[test]
 fn uri_parses_with_all_parts() {
@@ -28,15 +28,15 @@ fn uri_parses_revision_pin() {
 fn uri_rejections() {
     for bad in [
         "http://x/y#a",         // wrong scheme
-        "spec://vibevm#a",      // no doc-path
-        "spec://vibevm/x",      // no fragment
-        "spec://vibevm/x#A-b",  // uppercase anchor
-        "spec://vibevm/x#a b",  // whitespace
-        "spec://vibevm/x#a~rx", // non-integer pin
-        "spec://vibevm/x#a~r0", // r0
-        "spec://vibevm/x#a#b",  // two fragments
-        "spec://vibevm/x#-a",   // leading dash
-        "spec://vibevm/x#a-",   // trailing dash
+        "spec://org.vibevm.core/vibevm#a",      // no doc-path
+        "spec://org.vibevm.core/vibevm/x",      // no fragment
+        "spec://org.vibevm.core/vibevm/x#A-b",  // uppercase anchor
+        "spec://org.vibevm.core/vibevm/x#a b",  // whitespace
+        "spec://org.vibevm.core/vibevm/x#a~rx", // non-integer pin
+        "spec://org.vibevm.core/vibevm/x#a~r0", // r0
+        "spec://org.vibevm.core/vibevm/x#a#b",  // two fragments
+        "spec://org.vibevm.core/vibevm/x#-a",   // leading dash
+        "spec://org.vibevm.core/vibevm/x#a-",   // trailing dash
     ] {
         assert!(parse_spec_uri(bad).is_err(), "should reject `{bad}`");
     }

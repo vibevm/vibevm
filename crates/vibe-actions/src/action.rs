@@ -11,7 +11,7 @@
 //!
 //! Spec: [PROP-039 §3](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#action-value).
 
-specmark::scope!("spec://vibevm/modules/vibe-actions/PROP-039#action-value");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#action-value");
 
 use std::fmt;
 
@@ -275,12 +275,14 @@ pub struct ResolvedAction {
 /// Why [`ActionBuilder::build`] rejected a declaration — the human-legibility
 /// discipline enforced at construction (§3.3).
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-actions/PROP-039#presentation")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#presentation"
+)]
 pub enum ActionBuildError {
     /// No name was supplied.
     #[error(
         "action `{addr}` has no name — name is mandatory \
-         (violates spec://vibevm/modules/vibe-actions/PROP-039#presentation; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#presentation; \
           fix: call `.name_en(..)` when building the action)"
     )]
     MissingName {
@@ -291,7 +293,7 @@ pub enum ActionBuildError {
     /// No description was supplied.
     #[error(
         "action `{addr}` has no description — description is mandatory \
-         (violates spec://vibevm/modules/vibe-actions/PROP-039#presentation; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#presentation; \
           fix: call `.description_en(..)` when building the action)"
     )]
     MissingDescription {
@@ -303,7 +305,7 @@ pub enum ActionBuildError {
     #[error(
         "action `{addr}` has an empty {field} — name and description must be non-empty, \
          meaningful text \
-         (violates spec://vibevm/modules/vibe-actions/PROP-039#presentation; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#presentation; \
           fix: give `{field}` real, human-legible text)"
     )]
     EmptyPresentation {
@@ -316,7 +318,7 @@ pub enum ActionBuildError {
     /// No invoke body was supplied.
     #[error(
         "action `{addr}` has no invoke body \
-         (violates spec://vibevm/modules/vibe-actions/PROP-039#invoke; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#invoke; \
           fix: call `.invoke(..)` when building the action)"
     )]
     MissingInvoke {

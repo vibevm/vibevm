@@ -3,7 +3,7 @@
 //! `[[registry]]` and override clones via the `__overrides__`
 //! subtree, with per-entry skip reporting.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#registry-model");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use super::*;
 

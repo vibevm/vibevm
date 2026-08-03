@@ -24,20 +24,20 @@ what the tree does not do.
 > **`static-soft`** — **the default** … a package statically linked by more than
 > one consumer is **hoisted** to a shared location (§2.4) and linked **once**;
 > each consumer references it.
-> — spec://vibevm/modules/vibe-workspace/PROP-038#MODE-STATIC-SOFT
+> — spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#MODE-STATIC-SOFT
 ```
 
 ```
 > **Within one static zone** … → hoist into `Z`'s `STATIC.md`. Dedup achieved
 > **and** the package still loads only when `Z` loads … Within-zone hoisting is
 > free and always done.
-> — spec://vibevm/modules/vibe-workspace/PROP-038#HOIST-WITHIN-ZONE
+> — spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#HOIST-WITHIN-ZONE
 ```
 
 ```
 > Across dynamic zones … → the only shared always-loaded location is the
 > **global root** `STATIC.md`, and hoisting there makes the package **eager**
-> — spec://vibevm/modules/vibe-workspace/PROP-038#HOIST-CROSS-ZONE
+> — spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#HOIST-CROSS-ZONE
 ```
 
 `##HOIST-CROSS-ZONE` is quoted because it is the case the fix must **not**

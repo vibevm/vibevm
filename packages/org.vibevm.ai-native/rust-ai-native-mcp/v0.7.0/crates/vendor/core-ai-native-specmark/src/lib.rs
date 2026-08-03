@@ -10,7 +10,7 @@
 //! ```rust,ignore
 //! use specmark::spec;
 //!
-//! #[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint", r = 2)]
+//! #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint", r = 2)]
 //! pub enum ConditionalPredicate { /* … */ }
 //! ```
 //!
@@ -69,7 +69,7 @@ fn emit_error(err: syn::Error, item: TokenStream) -> TokenStream {
 /// ```
 /// # use core_ai_native_specmark as specmark; // consumers alias the crate to `specmark`
 /// #[specmark::spec(
-///     implements = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint",
+///     implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint",
 ///     r = 2
 /// )]
 /// pub struct ConditionalPredicate;
@@ -87,7 +87,7 @@ pub fn spec(attr: TokenStream, item: TokenStream) -> TokenStream {
 ///
 /// ```
 /// # use core_ai_native_specmark as specmark;
-/// #[specmark::verifies("spec://vibevm/common/PROP-000#token-secrecy")]
+/// #[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy")]
 /// fn redaction_is_total() {}
 /// ```
 #[proc_macro_attribute]
@@ -106,7 +106,7 @@ pub fn verifies(attr: TokenStream, item: TokenStream) -> TokenStream {
 ///
 /// ```
 /// # use core_ai_native_specmark as specmark;
-/// specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#mirror");
+/// specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#mirror");
 /// ```
 #[proc_macro]
 pub fn scope(input: TokenStream) -> TokenStream {

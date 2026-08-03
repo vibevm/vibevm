@@ -33,7 +33,7 @@
 //! for the window/group pattern (PROP-037 §2.1) — they talk to [`Window`] /
 //! [`Group`] instead.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#components");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#components");
 
 use ratatui_core::layout::Rect;
 

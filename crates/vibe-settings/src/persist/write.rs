@@ -58,7 +58,9 @@ use crate::loader::Layer;
 /// assert!(after.contains("palette = \"rosé-pine\""), "body still present");
 /// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#role-marker")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#role-marker"
+)]
 pub fn write_layer(path: &Path, table: &toml::Table, layer: Layer) -> Result<(), PersistError> {
     // Ensure the parent directory (e.g. `.vibe/`) exists before we stage the
     // temp file beside the target.

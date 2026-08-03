@@ -1,7 +1,7 @@
 //! `vibe registry publish` — publish a package to its registry host, or
 //! push directly to a known git URL via `--repo-url`.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#registry");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
 use anyhow::{Context, Result, anyhow, bail};
 use serde::Serialize;

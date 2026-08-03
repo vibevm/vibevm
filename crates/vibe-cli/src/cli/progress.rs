@@ -2,7 +2,7 @@
 //! over the standalone `progress-core` (PROP-043 §5). Split from the
 //! `cli` hub along command-family lines; the hub re-exports everything.
 
-specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#tool");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#tool");
 
 use std::path::PathBuf;
 

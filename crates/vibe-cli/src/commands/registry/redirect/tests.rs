@@ -1,6 +1,6 @@
 //! Unit tests for the redirect command family (PROP-002 §2.4.2).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#redirect");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect");
 
 use super::update::{
     build_redirect_update_commit_msg, compute_updated_redirect_section, diff_redirect_sections,

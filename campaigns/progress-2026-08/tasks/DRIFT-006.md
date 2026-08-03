@@ -19,11 +19,11 @@ cache.
 
 > The specmap side supplies, per unit, the `implements` / `verifies` edge
 > counts and their provenance refs; the report joins them to the marker.
-> — `spec://vibevm/modules/vibe-progress/PROP-043#evidence`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#evidence`
 
 > `report` — views, audiences, per-file and project rollups, explicit vs
 > computed, xml / md / json forms.
-> — `spec://vibevm/modules/vibe-progress/PROP-043#tool`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#tool`
 
 Anchors realised: `EVIDENCE-SPECMAP`, `CMD-REPORT`.
 
@@ -106,7 +106,7 @@ bash tools/self-check.sh
 - CLI scenario: `vibe progress report --view done` on this repo prints the
   evidence column with non-zero counts for at least the PROP-043 units the
   campaign recorded 19 `implements` edges for.
-- Discipline: `#[spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#evidence")]`
+- Discipline: `#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#evidence")]`
   on the new provider, `cargo fmt --all`, clippy clean, atomic commits, no
   AI attribution anywhere.
 

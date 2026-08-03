@@ -1,7 +1,7 @@
 # vibe-index — operator handbook
 
 Audience: an org owner who wants to host a metadata index for their
-vibevm-shaped registry. Spec: [`spec://vibevm/modules/vibe-index/PROP-005`](../../../spec/modules/vibe-index/PROP-005-package-index.md).
+vibevm-shaped registry. Spec: [`spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005`](../../../spec/modules/vibe-index/PROP-005-package-index.md).
 
 ## Mental model in one paragraph
 

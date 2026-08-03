@@ -12,7 +12,7 @@ package PUBLICATION waits for the refactor's end by the owner's word.**)_
 
 ##WAL-NUMBERS-COME-FROM-COMMANDS **Every number below is reproduced by two
 commands; run them rather than quoting this file** (why:
-`spec://vibevm/terraforms/packages-actualization#quick-start`). @impl/done
+`spec://org.vibevm.core/vibevm/terraforms/packages-actualization#quick-start`). @impl/done
 
 ```bash
 python campaigns/packages-2026-09/tasks/drift-registry.py

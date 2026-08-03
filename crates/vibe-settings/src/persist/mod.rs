@@ -24,7 +24,7 @@
 //!
 //! Spec: [PROP-040 §6, §3](../../../../spec/modules/vibe-settings/PROP-040-settings.md#diff-from-default).
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-040#diff-from-default");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#diff-from-default");
 
 pub mod error;
 pub mod write;
@@ -86,7 +86,9 @@ use crate::schema::Schema;
 /// assert!(diff_from_default(&t2, &schema).is_empty(), "collapses to empty");
 /// # Ok::<(), vibe_settings::schema::SchemaError>(())
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#diff-from-default")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#diff-from-default"
+)]
 pub fn diff_from_default(table: &toml::Table, schema: &Schema) -> toml::Table {
     diff_table(table, schema, String::new())
 }

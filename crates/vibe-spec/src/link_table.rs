@@ -135,63 +135,90 @@ mod tests {
     }
 
     fn seed() -> SpecAddress {
-        SpecAddress::parse("spec://vibevm/a#r").unwrap()
+        SpecAddress::parse("spec://org.vibevm.core/vibevm/a#r").unwrap()
     }
 
     #[test]
     fn records_each_edge_kind() {
         let src = MockSource::new(&[
             (
-                "spec://vibevm/a#r",
-                "#use spec://vibevm/b#r\n#source spec://vibevm/c#r\n#embed spec://vibevm/d#r",
+                "spec://org.vibevm.core/vibevm/a#r",
+                "#use spec://org.vibevm.core/vibevm/b#r\n#source spec://org.vibevm.core/vibevm/c#r\n#embed spec://org.vibevm.core/vibevm/d#r",
             ),
-            ("spec://vibevm/b#r", "leaf"),
-            ("spec://vibevm/c#r", "leaf"),
-            ("spec://vibevm/d#r", "leaf"),
+            ("spec://org.vibevm.core/vibevm/b#r", "leaf"),
+            ("spec://org.vibevm.core/vibevm/c#r", "leaf"),
+            ("spec://org.vibevm.core/vibevm/d#r", "leaf"),
         ]);
         let table = build_link_table(&seed(), &src).unwrap();
-        assert_eq!(table.uses["spec://vibevm/a#r"], ["spec://vibevm/b#r"]);
-        assert_eq!(table.sources["spec://vibevm/a#r"], ["spec://vibevm/c#r"]);
-        assert_eq!(table.embeds["spec://vibevm/a#r"], ["spec://vibevm/d#r"]);
+        assert_eq!(
+            table.uses["spec://org.vibevm.core/vibevm/a#r"],
+            ["spec://org.vibevm.core/vibevm/b#r"]
+        );
+        assert_eq!(
+            table.sources["spec://org.vibevm.core/vibevm/a#r"],
+            ["spec://org.vibevm.core/vibevm/c#r"]
+        );
+        assert_eq!(
+            table.embeds["spec://org.vibevm.core/vibevm/a#r"],
+            ["spec://org.vibevm.core/vibevm/d#r"]
+        );
     }
 
     #[test]
     fn in_place_use_is_recorded_as_a_use_edge() {
         let src = MockSource::new(&[
-            ("spec://vibevm/a#r", "see @spec://vibevm/b#r"),
-            ("spec://vibevm/b#r", "leaf"),
+            (
+                "spec://org.vibevm.core/vibevm/a#r",
+                "see @spec://org.vibevm.core/vibevm/b#r",
+            ),
+            ("spec://org.vibevm.core/vibevm/b#r", "leaf"),
         ]);
         let table = build_link_table(&seed(), &src).unwrap();
-        assert_eq!(table.uses["spec://vibevm/a#r"], ["spec://vibevm/b#r"]);
+        assert_eq!(
+            table.uses["spec://org.vibevm.core/vibevm/a#r"],
+            ["spec://org.vibevm.core/vibevm/b#r"]
+        );
     }
 
     #[test]
     fn traversal_is_cycle_safe() {
         let src = MockSource::new(&[
-            ("spec://vibevm/a#r", "#use spec://vibevm/b#r"),
-            ("spec://vibevm/b#r", "#use spec://vibevm/a#r"),
+            (
+                "spec://org.vibevm.core/vibevm/a#r",
+                "#use spec://org.vibevm.core/vibevm/b#r",
+            ),
+            (
+                "spec://org.vibevm.core/vibevm/b#r",
+                "#use spec://org.vibevm.core/vibevm/a#r",
+            ),
         ]);
         let table = build_link_table(&seed(), &src).unwrap();
-        assert!(table.uses.contains_key("spec://vibevm/a#r"));
-        assert!(table.uses.contains_key("spec://vibevm/b#r"));
+        assert!(table.uses.contains_key("spec://org.vibevm.core/vibevm/a#r"));
+        assert!(table.uses.contains_key("spec://org.vibevm.core/vibevm/b#r"));
     }
 
     #[test]
     fn render_is_stable_and_tab_separated() {
         let src = MockSource::new(&[
-            ("spec://vibevm/a#r", "#use spec://vibevm/b#r"),
-            ("spec://vibevm/b#r", "leaf"),
+            (
+                "spec://org.vibevm.core/vibevm/a#r",
+                "#use spec://org.vibevm.core/vibevm/b#r",
+            ),
+            ("spec://org.vibevm.core/vibevm/b#r", "leaf"),
         ]);
         let table = build_link_table(&seed(), &src).unwrap();
         assert_eq!(
             table.render(),
-            "use\tspec://vibevm/a#r\tspec://vibevm/b#r\n"
+            "use\tspec://org.vibevm.core/vibevm/a#r\tspec://org.vibevm.core/vibevm/b#r\n"
         );
     }
 
     #[test]
     fn an_unresolved_edge_is_reported() {
-        let src = MockSource::new(&[("spec://vibevm/a#r", "#use spec://vibevm/missing#r")]);
+        let src = MockSource::new(&[(
+            "spec://org.vibevm.core/vibevm/a#r",
+            "#use spec://org.vibevm.core/vibevm/missing#r",
+        )]);
         let err = build_link_table(&seed(), &src).unwrap_err();
         assert!(matches!(err, LinkTableError::Unresolved { .. }));
     }

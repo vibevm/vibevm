@@ -3,7 +3,7 @@
 //! registry-served fetch, plus the override clone-and-materialise
 //! path (PROP-002 §2.3 / §2.4).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#registry-model");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use super::*;
 

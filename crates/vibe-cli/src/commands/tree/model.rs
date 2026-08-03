@@ -11,7 +11,7 @@
 //! Display state (TUI mode, ordering, tab, selection) is deliberately absent:
 //! it is TUI-only and never part of the machine surface (PROP-036 §2.7).
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#json");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#json");
 
 use serde::Serialize;
 

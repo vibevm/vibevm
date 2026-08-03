@@ -7,7 +7,7 @@
 //! `STATIC.md` / `INDEX.md` lanes versus a fresh `EffectiveBoot` recompute)
 //! is deferred — it needs the full boot recompute.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#diagnostics");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#diagnostics");
 
 use std::collections::BTreeSet;
 
@@ -18,7 +18,7 @@ use super::model::{Diagnostic, Severity};
 /// The REQ every diagnostic in this module enforces (PROP-036 §2.10). Each
 /// `Diagnostic` cites it via `spec_ref` (scaffold-F) so the surfaced fact
 /// carries a jump to its governing contract.
-const DIAGNOSTICS_REQ: &str = "spec://vibevm/modules/vibe-cli/PROP-036#diagnostics";
+const DIAGNOSTICS_REQ: &str = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#diagnostics";
 
 /// Compute the non-fatal diagnostics for a resolved tree (PROP-036 §2.10).
 ///

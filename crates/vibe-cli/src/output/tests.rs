@@ -4,7 +4,7 @@
 //! crate (AUD-0016 posture): one guard per test serializes all
 //! env-mutating tests process-wide and restores on drop.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#output-format");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#output-format");
 
 use super::*;
 use rust_ai_native_env_audit::EnvGuard;

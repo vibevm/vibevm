@@ -25,7 +25,7 @@ since 2026-06-14.
 > **Status.** … **the port is COMPLETE** — `ResolvoDepSolver` is the shipped
 > production default (`crates/vibe-cli/src/registry.rs:117`, `--solver`
 > defaults to `resolvo`).
-> — `spec://vibevm/modules/vibe-resolver/PROP-017#root`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#root`
 
 A *stale* reason is worse than a missing one: it is a defect wearing the
 discipline's own badge, and every reader who trusts the badge is misled.
@@ -136,7 +136,7 @@ metadata fix, not a resolver change.
 
   ```
   #[spec(
-      deviates = "spec://vibevm/modules/vibe-registry/PROP-002#solver",
+      deviates = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver",
       reason = "PROP-002 §2.8 decides resolvo is the PRIMARY depsolver; no ResolvoSolver \
                 exists in tree and NaiveDepSolver is the only DepSolver impl — the known \
                 SAT/resolvo upgrade debt (DBT-0011), recorded honestly until the second \
@@ -147,7 +147,7 @@ metadata fix, not a resolver change.
   After, verbatim:
 
   ```
-  #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#solver")]
+  #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
   ```
 
   Reasoning. The old reason is false four ways over:
@@ -187,7 +187,7 @@ metadata fix, not a resolver change.
 
   ```
   #[spec(
-      deviates = "spec://vibevm/modules/vibe-registry/PROP-002#solver",
+      deviates = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver",
       reason = "PROP-002 §2.8 names resolvo as the primary industrial solver; this cell \
                 implements chronological backtracking natively over the unmodified \
                 DepProvider trait instead, reusing the naive cell as its branch checker. \
@@ -199,7 +199,7 @@ metadata fix, not a resolver change.
   After, verbatim:
 
   ```
-  #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#solver")]
+  #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
   ```
 
   Reasoning. The clause that made this a deviation was the last one —

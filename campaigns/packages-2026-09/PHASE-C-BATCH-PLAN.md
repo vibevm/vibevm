@@ -6,7 +6,7 @@ assignment is [`tasks/PHASE-C-BATCHES.json`](tasks/PHASE-C-BATCHES.json), genera
 from `run/mirror/`; this document is the reasoning around it._
 
 Governing contract:
-[spec://vibevm/terraforms/packages-actualization#phase-c](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md#phase-c),
+[spec://org.vibevm.core/vibevm/terraforms/packages-actualization#phase-c](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md#phase-c),
 with §3.1 [#world-verdicts](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md#world-verdicts)
 and §3.2 [#ai-native-verdicts](../../spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md#ai-native-verdicts).
 Mechanics are wave 1's and are not re-invented: PROP-043

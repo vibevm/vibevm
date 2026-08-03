@@ -4,7 +4,9 @@
 //! file is a call shape the typed seam must reject at `cargo check`
 //! time — the compile error IS the assertion.
 
-specmark::scope!("spec://vibevm/modules/vibe-resolver/PROP-003#subskill-activation");
+specmark::scope!(
+    "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#subskill-activation"
+);
 
 #[test]
 fn wrong_seam_calls_do_not_compile() {

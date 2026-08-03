@@ -297,7 +297,7 @@ fn segment_block_facts(
 
 /// The canonical citation path used inside `spec://` URIs — the house
 /// style every existing citation in the repo already uses (CLAUDE.md:
-/// `spec://vibevm/common/PROP-000#commits`): relative to `spec/`, the
+/// `spec://org.vibevm.core/vibevm/common/PROP-000#commits`): relative to `spec/`, the
 /// `.md` extension stripped, and a filename carrying a document id
 /// truncated to it (`modules/vibe-resolver/PROP-003-dep-evolution.md`
 /// → `modules/vibe-resolver/PROP-003`). Files without a document id

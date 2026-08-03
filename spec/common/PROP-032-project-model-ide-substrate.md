@@ -2,9 +2,9 @@
 
 <status stage="spec" state="done" action="continue" comment="B0 2026-07-24: design proposal v0.1, drafted for review; open to challenge until ratified; fact grain 2026-07-24"/>
 
-##status-line **Status.** Design proposal v0.1 — not implementation-locked. Drafted for review; every decision below is open to challenge until ratified. This PROP names a *model and a direction*; it schedules no implementation of its own. It is the umbrella under which [PROP-014](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#index) (traceability) and [PROP-031](spec://vibevm/common/PROP-031#root) (refactoring) become **consumers of one model**, and it fixes the one foundational extension both need: **code as a first-class addressable node.** @spec/done
+##status-line **Status.** Design proposal v0.1 — not implementation-locked. Drafted for review; every decision below is open to challenge until ratified. This PROP names a *model and a direction*; it schedules no implementation of its own. It is the umbrella under which [PROP-014](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#index) (traceability) and [PROP-031](spec://org.vibevm.core/vibevm/common/PROP-031#root) (refactoring) become **consumers of one model**, and it fixes the one foundational extension both need: **code as a first-class addressable node.** @spec/done
 
-##companions **Companions.** [PROP-014 — specmap bidirectional traceability](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#index) (the code↔spec *projection* of this model; its `#edges`, `#queries`, `#runtime` are generalised here) · [PROP-031 — algorithmic refactoring](spec://vibevm/common/PROP-031#root) (the *mutations* over this model) · [PROP-003 — dependency evolution](spec://vibevm/modules/vibe-resolver/PROP-003) §2.5.3 and [PROP-014 §2.7](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#llm-boundary) (the LLM boundary this PROP makes the primary interface) · [PROP-000 §3](spec://vibevm/common/PROP-000#license) (permissive-only dependencies) · prior art: LSP, SCIP/LSIF, rustdoc intra-doc links, Sphinx domains (§6). @spec/done
+##companions **Companions.** [PROP-014 — specmap bidirectional traceability](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#index) (the code↔spec *projection* of this model; its `#edges`, `#queries`, `#runtime` are generalised here) · [PROP-031 — algorithmic refactoring](spec://org.vibevm.core/vibevm/common/PROP-031#root) (the *mutations* over this model) · [PROP-003 — dependency evolution](spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003) §2.5.3 and [PROP-014 §2.7](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#llm-boundary) (the LLM boundary this PROP makes the primary interface) · [PROP-000 §3](spec://org.vibevm.core/vibevm/common/PROP-000#license) (permissive-only dependencies) · prior art: LSP, SCIP/LSIF, rustdoc intra-doc links, Sphinx domains (§6). @spec/done
 
 ---
 
@@ -93,7 +93,7 @@
 ### 2.6 Agent-first: the primary client emits typed commands; surfaces are progressive {#agent-first}
 
 - ##AGENT-PRIMARY `req r1` — The **primary consumer of the substrate is an agent**, not a human at a keyboard. @spec/done
-- ##TYPED-COMMANDS An agent drives navigation and refactoring by **emitting typed query/mutation commands** — the LLM boundary of [PROP-031 §2.2](spec://vibevm/common/PROP-031#llm-boundary) and PROP-014 §2.7: *the model proposes a typed command; the deterministic engine executes and gates it.* @spec/done
+- ##TYPED-COMMANDS An agent drives navigation and refactoring by **emitting typed query/mutation commands** — the LLM boundary of [PROP-031 §2.2](spec://org.vibevm.core/vibevm/common/PROP-031#llm-boundary) and PROP-014 §2.7: *the model proposes a typed command; the deterministic engine executes and gates it.* @spec/done
 - ##TRANSPORT-MCP The transport is MCP ([PROP-014 §2.8](spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#runtime), already shipping `specmap_query` / `specmap_explain`). @spec/done
 
 - ##IDE-HEADLESS The consequence reorders the usual notion of "IDE": **the IDE is a headless model-plus-operations server; the GUI is the last, optional client, not the IDE itself.** @spec/done
@@ -120,7 +120,7 @@ library API  →  command line  →  MCP / agent  →  (last, optional) graphica
 
 ### 2.8 The substrate is a discipline-neutral, independently-installable tier {#packaging}
 
-##SUBSTRATE-NEUTRAL `req r1` — The substrate (specmark + specmap-core + the refactoring operations and their registry, [PROP-033](spec://vibevm/common/PROP-033#root)) is packaged **independently of the ai-native discipline** and delivered as its own installable tier, so vibevm serves a spectrum of users through a **three-tier product model**: @spec/done
+##SUBSTRATE-NEUTRAL `req r1` — The substrate (specmark + specmap-core + the refactoring operations and their registry, [PROP-033](spec://org.vibevm.core/vibevm/common/PROP-033#root)) is packaged **independently of the ai-native discipline** and delivered as its own installable tier, so vibevm serves a spectrum of users through a **three-tier product model**: @spec/done
 
 1. ##TIER-BASE **Base vibevm** — the package manager itself (resolve / install / lockfile / boot; working with `vibe.toml` projects; loading spec collections). No traceability, no refactoring, no discipline. The "just load a collection of specs" user lives here. @spec/done
 2. ##TIER-SDD **+ the SDD substrate** (a package under `org.vibevm.world`, not `ai-native`) — installs specmark + specmap + the refactoring registry: the `spec://` / `code://` model, integrity checking, navigation, and the algorithmic refactoring core. Proper spec-driven development, **without** the strict discipline. @spec/done

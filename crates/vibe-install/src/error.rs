@@ -2,7 +2,7 @@
 //! Class-F product grammar; lower layers pass through transparently
 //! (their messages already carry the grammar).
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
 use specmark::spec;
 use thiserror::Error;
@@ -10,12 +10,12 @@ use thiserror::Error;
 pub type Result<T, E = Error> = std::result::Result<T, E>;
 
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub enum Error {
     #[error(
         "no packages to install — neither the command line nor any workspace \
          member's [requires] names one \
-         (violates spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail; \
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail; \
           fix: pass `<group>/<name>[@<version>] …` or add entries to \
           [requires].packages in `{manifest_dir}/vibe.toml`)"
     )]
@@ -24,7 +24,7 @@ pub enum Error {
     #[error(
         "conditional-dep expansion exceeded {iterations} iterations — cascading \
          predicates may form a cycle or runaway chain; pending extras: {pending:?} \
-         (violates spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint; \
           fix: break the predicate chain in the named packages' \
           [target.\"context(…)\".dependencies] tables)"
     )]
@@ -36,14 +36,14 @@ pub enum Error {
     #[error(
         "CLI root `{pkgref}` is missing from the solved graph — the install \
          source returned an incomplete resolution \
-         (violates spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail; \
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail; \
           fix: report this against the InstallSource implementation in use)"
     )]
     RootNotFetched { pkgref: String },
 
     #[error(
         "could not create the package cache at `{path}`: {source} \
-         (violates spec://vibevm/VIBEVM-SPEC#fetching-strategy-and-cache-layout; \
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#fetching-strategy-and-cache-layout; \
           fix: check the workspace root is writable)"
     )]
     CacheDir {
@@ -54,7 +54,7 @@ pub enum Error {
 
     #[error(
         "package tag for `{package}` failed to parse: {source} \
-         (violates spec://vibevm/modules/vibe-resolver/PROP-003#interface-tags; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#interface-tags; \
           fix: the package's kind/name or capability list is malformed — \
           correct its manifest)"
     )]

@@ -4,7 +4,7 @@
 //! process. Production uses [`StdioTransport`]; tests use
 //! [`MemoryTransport`] which buffers input and captures output.
 
-specmark::scope!("spec://vibevm/modules/vibe-mcp/PROP-015#server");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server");
 
 use std::io::{self, BufRead, BufReader, Read, Write};
 use std::sync::Mutex;

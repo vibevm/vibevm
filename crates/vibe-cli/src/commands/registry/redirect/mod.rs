@@ -1,7 +1,7 @@
 //! `vibe registry redirect / redirect-sync / redirect-update` —
 //! redirect-stub creation and maintenance (PROP-002 §2.4.2).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#redirect");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect");
 
 mod create;
 mod sync;

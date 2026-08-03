@@ -22,7 +22,7 @@
 //!
 //! [`super::button`]: super::button
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#text-field");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#text-field");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;
@@ -104,7 +104,7 @@ impl TextField {
     /// character (clamped to `area.width`). The panel fill makes the field read
     /// as a bordered input box; the containing `Window`/`Group` supplies the
     /// outer chrome.
-    #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#text-field")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#text-field")]
     pub fn render(&self, area: Rect, buf: &mut Buffer, theme: &Theme) {
         if area.width == 0 {
             return;

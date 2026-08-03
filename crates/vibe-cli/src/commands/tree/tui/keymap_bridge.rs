@@ -15,7 +15,7 @@
 //! Crossterm sends the spacebar as `Char(' ')`, which is mapped to
 //! `KeyCode::Space` so it matches the keymap's `"Space"` binding.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#action-catalogue");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#action-catalogue");
 
 use ratatui_crossterm::crossterm::event::{
     Event, KeyCode as CtKeyCode, KeyEvent, KeyEventKind, KeyModifiers as CtKeyModifiers,

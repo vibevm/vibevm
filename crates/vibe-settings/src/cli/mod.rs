@@ -19,7 +19,7 @@
 //!
 //! Spec: [PROP-040 §8](../../../../spec/modules/vibe-settings/PROP-040-settings.md#prefs-command).
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-040#prefs-command");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#prefs-command");
 
 use crate::loader::{Layer, LayeredRaw};
 use crate::resolver::{self, InspectValue, Origin, ResolvedPrefs};
@@ -141,13 +141,15 @@ pub struct Migration {
 /// allowed (they surface as warnings at `check`, per §6 `#schema-first`), so the
 /// plumbing stays usable before a schema is populated.
 #[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#scope-matrix")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#scope-matrix"
+)]
 pub enum PrefsError {
     /// The key is declared, but its `scope` forbids writing to `layer` (§7
     /// `#scope-matrix`). The host reports this and does not persist.
     #[error(
         "cannot set `{key}` in {layer}: its scope `{scope}` forbids that layer \
-         (violates spec://vibevm/modules/vibe-settings/PROP-040#scope-matrix; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#scope-matrix; \
           fix: write to one of the allowed layers — {allowed})"
     )]
     WrongLayer {
@@ -193,7 +195,9 @@ pub enum PrefsError {
 /// assert!(matches!(out, PrefsOutcome::Value(None)));
 /// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#prefs-command")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#prefs-command"
+)]
 pub fn run_prefs<'a>(
     op: PrefsOp<'a>,
     schema: &Schema,

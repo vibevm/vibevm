@@ -124,7 +124,7 @@ impl<'a, P: DepProvider> DepProvider for BoundedProvider<'a, P> {
 /// assert_eq!(graph.packages.len(), 1);
 /// ```
 #[cell(seam = "DepSolver", variant = "sat")]
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade")]
 pub struct Sat<P: DepProvider> {
     provider: P,
 }
@@ -179,7 +179,7 @@ fn conflict_key(package: &str) -> Result<(Group, String), SolveError> {
 /// `DepProvider` trait, reusing the naive cell as its branch checker so
 /// the two cells cannot drift semantically. Non-primary — resolvo is the
 /// shipped default; this is one of the cells `--solver` keeps reachable.
-#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#solver")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
 impl<P: DepProvider> DepSolver for Sat<P> {
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
         // The choice stack: each entry excludes `>= bound` for its

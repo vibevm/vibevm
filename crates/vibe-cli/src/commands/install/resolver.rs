@@ -2,7 +2,7 @@
 //! local / multi-registry dispatch and the M1.15 `--git` source-flag
 //! recording.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#install-workflow-in-detail");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
 use std::path::Path;
 

@@ -34,7 +34,7 @@
 //! (PROP-009 §2.6) is a conditional `dynamic` entry: the condition can only
 //! be honoured by the gated INDEX form, never by the verbatim `static` lane.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-009#effective-boot");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#effective-boot");
 
 use vibe_core::manifest::{BootCategory, LinkType, PackageFormat, WhenCondition};
 use vibe_core::{Group, PackageKind};

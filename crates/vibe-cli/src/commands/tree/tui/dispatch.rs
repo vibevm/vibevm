@@ -10,7 +10,7 @@
 //! resolver can gate bindings without reaching into the typed `Ctx` (the
 //! resolver stays pure, PROP-039 §9.2).
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#action-catalogue");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#action-catalogue");
 
 use rat_salsa::Control;
 use vibe_actions::ActionAddr;

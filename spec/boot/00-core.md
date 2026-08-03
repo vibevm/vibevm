@@ -16,7 +16,7 @@
 
 ## The four non-negotiable rules
 
-##four-rules-lead See [`CLAUDE.md`](../../CLAUDE.md) (and its identical copies `AGENTS.md` / `GEMINI.md`) for the full text. Authoritative reference: [spec://vibevm/common/PROP-000#commits](../common/PROP-000.md#commits). Summary only: @impl/done
+##four-rules-lead See [`CLAUDE.md`](../../CLAUDE.md) (and its identical copies `AGENTS.md` / `GEMINI.md`) for the full text. Authoritative reference: [spec://org.vibevm.core/vibevm/common/PROP-000#commits](../common/PROP-000.md#commits). Summary only: @impl/done
 
 1. ##RULE-ATTRIBUTION **Attribution — keep this repository human-authored.** Never mark commits, branches, comments, or any artefact as machine-authored. The rule itself (and its copy in PROP-000 §12.1) is the only place in the project where that topic is discussed. @impl/done
 2. ##RULE-CONVENTIONAL-COMMITS **Conventional Commits** — short subject, long explanatory body answering *why*. @impl/done
@@ -46,7 +46,7 @@
 
 ## Hard conventions
 
-- ##CONV-LANGUAGE **Language:** Rust. See [spec://vibevm/common/PROP-000#language](../common/PROP-000.md#language). @impl/done
+- ##CONV-LANGUAGE **Language:** Rust. See [spec://org.vibevm.core/vibevm/common/PROP-000#language](../common/PROP-000.md#language). @impl/done
 - ##CONV-MANIFESTS **Manifests:** TOML. One `vibe.toml` per node — the role is set by section (`[project]` ⊕ `[package]`, optionally `[workspace]`); lockfile = `vibe.lock`. @impl/done
 - ##CONV-TERMINOLOGY **Terminology:** only five installable kinds — `flow`, `feat`, `stack`, `tool`, `mcp` (the register grows only by owner amendment to `VIBEVM-SPEC.md` §4.1; `app` is anticipated). Never say "lifecycle", "phase", "goal", "plugin" (except that "plugin" == "package" in passing context). See `VIBEVM-SPEC.md` §4. @impl/done
 - ##CONV-REPO-URLS **Repository URLs:** vibevm source = `git@gitverse.ru:vibevm/vibevm.git` / `https://gitverse.ru/vibevm/vibevm`. Package registry = the GitHub organization `https://github.com/vibespecs` (deliberate split-host posture — see `spec/boot/90-user.md` and [PROP-000 §7](../common/PROP-000.md#registry)). The legacy GitVerse monorepo `git@gitverse.ru:anarchic/vibespecs.git` is read-only transition state. @impl/done

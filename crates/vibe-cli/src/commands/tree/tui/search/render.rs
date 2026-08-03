@@ -4,7 +4,7 @@
 //! the All tab, one normalized row per hit), and a key hint. Drawn last so it
 //! sits on top. All colour comes from [`super::super::theme`].
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#f1-search");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#f1-search");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::{Constraint, Layout, Rect};

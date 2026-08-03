@@ -4,7 +4,7 @@
 //! calls; [`draw_groups`] lays out the focus groups (the active one accent-
 //! framed), [`draw_option`] stamps one option row through the theme vocabulary.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#f2-sort-menu");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#f2-sort-menu");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;

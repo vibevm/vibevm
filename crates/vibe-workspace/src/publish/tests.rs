@@ -58,7 +58,7 @@ fn origin_info() -> OriginInfo {
 
 #[test]
 #[verifies(
-    "spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish",
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish",
     r = 1
 )]
 fn selection_includes_default_publish_and_skips_never() {
@@ -206,7 +206,7 @@ fn selection_member_filter_rejects_unknown_node() {
 
 #[test]
 #[verifies(
-    "spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish",
+    "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish",
     r = 1
 )]
 fn topo_order_is_dependency_first() {

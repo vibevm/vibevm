@@ -25,14 +25,14 @@ exactly the configured corpus.
 ## 2. Contract {#contract}
 
 > All subcommands are incremental over the content-hash cache (§7.1).
-> — `spec://vibevm/modules/vibe-progress/PROP-043#tool`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#tool`
 
 > Per observed file: path, content-hash, extracted markers with positions …
-> — `spec://vibevm/modules/vibe-progress/PROP-043#cache`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#cache`
 
 > `corpus.json` (per-file rollups and counts) … The dashboard reads **only**
 > these; it computes nothing and parses no Markdown ever.
-> — `spec://vibevm/modules/vibe-progress/PROP-043#state`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#state`
 
 The cache is *per observed file*; a file outside the observed set has no
 contract right to a record.

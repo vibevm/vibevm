@@ -17,7 +17,7 @@
 //! file is swallowed and warned via `tracing` (PROP-037 §9 "missing/corrupt →
 //! defaults"), never a hard error — the TUI always launches with *some* theme.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#settings");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#settings");
 
 use std::path::PathBuf;
 
@@ -276,7 +276,9 @@ impl TreeSettings {
     /// A missing/unreadable file is swallowed — [`load_all`] treats a missing
     /// file as an empty table; a parse error is logged and treated as empty so
     /// the TUI always launches.
-    #[specmark::spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#settings")]
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#settings"
+    )]
     pub fn load(&self) -> ResolvedPrefs {
         let raw = match load_all(&self.l1, &self.l2, &self.l3) {
             Ok(raw) => raw,

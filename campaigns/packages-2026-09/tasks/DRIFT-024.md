@@ -17,7 +17,7 @@ classes of file that must never carry markup are no longer observed.
 
 > ##ZONE-EXCLUDED Excluded from markup scope, from packaging, and from
 > registries — always.
-> — `spec://vibevm/modules/vibe-progress/PROP-043#campaign-zone`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#campaign-zone`
 
 Findings realised: **F-070** (33 `LICENSE.md`, 264 paragraphs of verbatim
 UPL text) and **F-071** (three `spec/cards/INDEX.md`, each declaring itself a

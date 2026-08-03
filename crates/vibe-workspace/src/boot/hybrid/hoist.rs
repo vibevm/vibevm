@@ -16,7 +16,7 @@
 //! package in its forced (non-`when`-gated) subtree; `static-hard` opts out
 //! (never counted, never hoisted); `dynamic` is not static and never counts.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-038#hoisting");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#hoisting");
 
 use std::collections::{HashMap, HashSet};
 

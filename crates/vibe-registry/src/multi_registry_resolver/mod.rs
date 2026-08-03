@@ -34,7 +34,7 @@
 //! `CachedPackage` continue to use them via the `.resolved` / `.cached`
 //! field on the wrapper.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#registry-model");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};

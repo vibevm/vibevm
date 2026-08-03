@@ -18,12 +18,12 @@ stop saying it.
 > **Status.** … **the port is COMPLETE** — `ResolvoDepSolver` is the shipped
 > production default (`crates/vibe-cli/src/registry.rs:117`, `--solver`
 > defaults to `resolvo`).
-> — `spec://vibevm/modules/vibe-resolver/PROP-017#root`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#root`
 
 > `NaiveDepSolver` stays in tree as the "small graphs / no features / no
 > disjunctions" fast path. **The default clause is superseded** … the
 > production default became **resolvo**, not `sat`.
-> — `spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade`
 
 Finding realised: **F-059**.
 

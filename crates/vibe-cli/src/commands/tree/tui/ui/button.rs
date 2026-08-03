@@ -24,7 +24,7 @@
 //! owns a focus graph, [`Button`] gains a `ButtonState`-backed companion without
 //! its call sites changing, because they already talk to `ui::Button`.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#button");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#button");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Rect;
@@ -100,7 +100,7 @@ impl Button {
     /// The whole area is styled — [`Theme::selection()`] when focused (accent
     /// ground, base text, bold), [`Theme::dim()`] otherwise — and the padded
     /// label is written symmetrically (` {label} `). Truncates to `area.width`.
-    #[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#button")]
+    #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#button")]
     pub fn render(&self, area: Rect, buf: &mut Buffer, theme: &Theme) {
         let style = if self.focused {
             theme.selection()

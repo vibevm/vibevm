@@ -31,7 +31,7 @@ scanner behavior.
 > — `cargo xtask conform check`, 2026-07-24
 
 > The **core** (parser, model, rollup, renderers, cache) is its own crate …
-> — `spec://vibevm/modules/vibe-progress/PROP-043#separability`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#separability`
 
 ## 3. Current state {#current}
 

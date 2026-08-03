@@ -625,7 +625,7 @@ merely negative:
 
 **One thing the d8a draft proposed that this draft deliberately drops, and the
 owner should rule on it rather than inherit it silently.** `d8a` suggested
-appending «see `spec://vibevm/common/PROP-031#beachhead`». Two problems, both
+appending «see `spec://org.vibevm.core/vibevm/common/PROP-031#beachhead`». Two problems, both
 measured:
 
 1. **That anchor does not exist.** `grep -n "{#beachhead}" spec/common/PROP-031-algorithmic-refactoring.md`
@@ -635,14 +635,14 @@ measured:
    pointer family.
 2. **It points a shipped `ai-native` card at a host PROP.** Per
    [§3.8](../PHASE-D-BATCH-PLAN.md#audience) these packages ship to consumers who
-   do not have vibevm's `spec/common/`. Every one of the 27 `spec://vibevm/`
+   do not have vibevm's `spec/common/`. Every one of the 27 `spec://org.vibevm.core/vibevm/`
    strings in `packages/org.vibevm.ai-native/*/v*/spec/` today is an
    **illustrative example inside a code sample** (`GUIDE-*-v0.1.md`'s
-   `@spec implements spec://vibevm/…#req-…`), not a live cross-boundary pointer.
+   `@spec implements spec://org.vibevm.core/vibevm/…#req-…`), not a live cross-boundary pointer.
    This would be the first.
 
    **Design choice owed: YES, small** — cite PROP-031 (and if so, with a
-   *resolvable* anchor: `spec://vibevm/common/PROP-031#problem`, or the
+   *resolvable* anchor: `spec://org.vibevm.core/vibevm/common/PROP-031#problem`, or the
    `##BEACHHEAD-LIMITS` id) and accept the first live host pointer in an
    `ai-native` card; or leave the sentence self-contained as drafted above. The
    host side of the relationship is unaffected either way —
@@ -900,7 +900,7 @@ one that owns it.
 $ grep -rn "spec://" packages/org.vibevm.world/git-conventional-commits/
 …/spec/boot/31-flow-conventional-commits.md:24:##CITE-SPEC-URIS-WHERE-RELEVANT Cite `spec://…` URIs where relevant. @impl/done
 …/spec/flows/conventional-commits/conventional-commits.md:75:  measurement, or conversation that drove it. Use `spec://…` URIs
-…/spec/flows/conventional-commits/conventional-commits.md:142:Cited by spec://vibevm/modules/vibe-registry/PROP-001#freshness.
+…/spec/flows/conventional-commits/conventional-commits.md:142:Cited by spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#freshness.
 ```
 
 with the full rule at `conventional-commits.md:74-77` (`##INCLUDE-WHY-THIS-CHANGE-WAS-MADE`).

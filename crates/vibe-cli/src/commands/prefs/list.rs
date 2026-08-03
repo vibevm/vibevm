@@ -1,6 +1,6 @@
 //! `vibe prefs list` — every resolved key with its value and origin.
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-040#prefs-command");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#prefs-command");
 
 use anyhow::Result;
 use serde::Serialize;

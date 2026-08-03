@@ -2,7 +2,7 @@
 //! resolution at open, bearer-token injection into git-facing URLs,
 //! and the `MissingToken` pre-flight (PROP-002 §2.2.1).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#registry-auth");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-auth");
 
 use super::*;
 

@@ -4,7 +4,7 @@
 
 #![deny(unsafe_code)]
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#cli-surface");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface");
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::PathBuf;

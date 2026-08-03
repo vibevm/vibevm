@@ -12,7 +12,7 @@
 //! registries (`--registry <path>`) and legacy v1 entries are reported
 //! as skipped — there is no per-package clone to refresh for them.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#registry");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
 mod config;
 mod publish;

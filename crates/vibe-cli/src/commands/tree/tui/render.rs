@@ -3,7 +3,7 @@
 //! from [`super::theme`]. The detail card, the Search Everywhere window, and the
 //! F-key menus are drawn last, on top.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#tui");
 
 use rat_widget::tabbed::{TabPlacement, TabType, Tabbed, TabbedState};
 use rat_widget::table::Table;

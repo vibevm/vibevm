@@ -5,7 +5,7 @@
 use super::*;
 use quote::quote;
 
-const URI: &str = "spec://vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint";
+const URI: &str = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#req-conditional-fixpoint";
 
 #[test]
 fn uri_parses_with_all_parts() {
@@ -28,17 +28,17 @@ fn uri_parses_revision_pin() {
 fn uri_rejections() {
     for bad in [
         "http://x/y#a",           // wrong scheme
-        "spec://vibevm#a",        // no doc-path
-        "spec://vibevm/x",        // no fragment
-        "spec://vibevm/x#",       // empty anchor
-        "spec://vibevm/x#a b",    // whitespace
-        "spec://vibevm/x#a~rx",   // non-integer pin
-        "spec://vibevm/x#a~r0",   // r0
-        "spec://vibevm/x#a#b",    // two fragments
-        "spec://vibevm/x#-a",     // leading dash
-        "spec://vibevm/x#_lead",  // leading underscore: the head must be a letter
-        "spec://vibevm/x#9lives", // digit head, likewise
-        "spec://vibevm/x#a.b",    // `.` is not an id character
+        "spec://org.vibevm.core/vibevm#a",        // no doc-path
+        "spec://org.vibevm.core/vibevm/x",        // no fragment
+        "spec://org.vibevm.core/vibevm/x#",       // empty anchor
+        "spec://org.vibevm.core/vibevm/x#a b",    // whitespace
+        "spec://org.vibevm.core/vibevm/x#a~rx",   // non-integer pin
+        "spec://org.vibevm.core/vibevm/x#a~r0",   // r0
+        "spec://org.vibevm.core/vibevm/x#a#b",    // two fragments
+        "spec://org.vibevm.core/vibevm/x#-a",     // leading dash
+        "spec://org.vibevm.core/vibevm/x#_lead",  // leading underscore: the head must be a letter
+        "spec://org.vibevm.core/vibevm/x#9lives", // digit head, likewise
+        "spec://org.vibevm.core/vibevm/x#a.b",    // `.` is not an id character
     ] {
         assert!(parse_spec_uri(bad).is_err(), "should reject `{bad}`");
     }
@@ -49,16 +49,16 @@ fn uri_rejections() {
 /// from the rejection set above: the owner ruled the behaviour changes.
 #[test]
 fn uri_accepts_an_upper_fact_anchor() {
-    let u = parse_spec_uri("spec://vibevm/x#A-b").unwrap();
+    let u = parse_spec_uri("spec://org.vibevm.core/vibevm/x#A-b").unwrap();
     assert_eq!(u.anchor, "A-b");
     assert_eq!(u.pinned_r, None);
-    assert_eq!(u.without_pin(), "spec://vibevm/x#A-b");
+    assert_eq!(u.without_pin(), "spec://org.vibevm.core/vibevm/x#A-b");
 
     // The revision pin composes with it unchanged.
-    let p = parse_spec_uri("spec://vibevm/x#A-b~r2").unwrap();
+    let p = parse_spec_uri("spec://org.vibevm.core/vibevm/x#A-b~r2").unwrap();
     assert_eq!(p.anchor, "A-b");
     assert_eq!(p.pinned_r, Some(2));
-    assert_eq!(p.without_pin(), "spec://vibevm/x#A-b");
+    assert_eq!(p.without_pin(), "spec://org.vibevm.core/vibevm/x#A-b");
 
     // A real minted fact id, underscores and all.
     let f =
@@ -68,8 +68,8 @@ fn uri_accepts_an_upper_fact_anchor() {
     // The id grammar constrains only the head character, so a dash may sit
     // anywhere after it — `#a-` is a URI the kebab law would have refused.
     // Only the head rule still bites.
-    assert!(parse_spec_uri("spec://vibevm/x#a-").is_ok());
-    assert!(parse_spec_uri("spec://vibevm/x#-a").is_err());
+    assert!(parse_spec_uri("spec://org.vibevm.core/vibevm/x#a-").is_ok());
+    assert!(parse_spec_uri("spec://org.vibevm.core/vibevm/x#-a").is_err());
 }
 
 /// Every string a document may mint a name from, with the one verdict both
@@ -122,7 +122,7 @@ fn the_two_validators_agree_on_every_input() {
     // addressable one.
     for &(s, want) in ID_TABLE {
         assert_eq!(
-            parse_spec_uri(&format!("spec://vibevm/x#{s}")).is_ok(),
+            parse_spec_uri(&format!("spec://org.vibevm.core/vibevm/x#{s}")).is_ok(),
             want,
             "URI anchor `{s}`"
         );

@@ -9,7 +9,7 @@
 //! Split out of the resolver root to hold the file-length budget (PROP-002
 //! §2.2.2 — a local url is served from the filesystem, never git-cloned).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#registry-model");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use super::*;
 

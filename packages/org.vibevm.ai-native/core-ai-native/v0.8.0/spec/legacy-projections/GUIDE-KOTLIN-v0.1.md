@@ -31,7 +31,7 @@ A cell is a Gradle module (in KMP, its `commonMain` source set — Part III make
 Cell manifest (annotation carrier, §5):
 
 ```kotlin
-@SpecImplements("spec://vibevm/modules/vibe-resolver/PROP-003#solver-upgrade", r = 2)
+@SpecImplements("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade", r = 2)
 @Cell(seam = "DepSolver", variant = "sat", replaces = "naive", flag = "solver")
 class SatDepSolver(
     private val provider: DepProvider,

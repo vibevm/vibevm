@@ -7,7 +7,7 @@
 //! lets one restyle the whole TUI by swapping the palette (PROP-037 §1.4 — the
 //! theme is the TUI's "CSS").
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#palette-tokens");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#palette-tokens");
 
 /// The sixteen semantic role tokens (PROP-037 §2.2.1). A component names a
 /// role; the active [`Palette`] resolves it to a colour. The first eleven are

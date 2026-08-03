@@ -9,7 +9,7 @@
 //!
 //! Spec: [PROP-039 §7](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#invocation).
 
-specmark::scope!("spec://vibevm/modules/vibe-actions/PROP-039#invocation");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#invocation");
 
 use std::future::Future;
 use std::pin::Pin;
@@ -49,12 +49,12 @@ pub type InvokeResult = Result<InvokeOutcome, InvokeError>;
 /// Why an invocation failed (PROP-039 §7). The action body may also return
 /// [`InvokeError::Failed`] for its own domain failures.
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-actions/PROP-039#invoke")]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#invoke")]
 pub enum InvokeError {
     /// No action is registered at (or aliased to) the address.
     #[error(
         "no action registered at `{addr}` \
-         (violates spec://vibevm/modules/vibe-actions/PROP-039#invoke; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#invoke; \
           fix: register the action or correct the address)"
     )]
     UnknownAction {
@@ -70,7 +70,7 @@ pub enum InvokeError {
     #[error(
         "action `{addr}` requires capability `{required}` but the caller was granted \
          only up to `{granted}` \
-         (violates spec://vibevm/modules/vibe-actions/PROP-039#capabilities; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#capabilities; \
           fix: grant a wider scope or invoke a lower-capability action)"
     )]
     CapabilityRefused {
@@ -85,7 +85,7 @@ pub enum InvokeError {
     /// The invocation was cancelled before the action body completed.
     #[error(
         "invocation of `{addr}` was cancelled \
-         (spec://vibevm/modules/vibe-actions/PROP-039#invoke)"
+         (spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#invoke)"
     )]
     Cancelled {
         /// The cancelled action's address.
@@ -95,7 +95,7 @@ pub enum InvokeError {
     /// The action body reported a domain failure.
     #[error(
         "action `{addr}` failed: {message} \
-         (spec://vibevm/modules/vibe-actions/PROP-039#invoke)"
+         (spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#invoke)"
     )]
     Failed {
         /// The failing action's address.

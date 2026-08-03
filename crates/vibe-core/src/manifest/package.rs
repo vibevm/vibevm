@@ -19,7 +19,7 @@
 //! inline-table value may also carry a `link` field — the dependency's
 //! inclusion type (PROP-009 §2.4).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#git-source");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source");
 
 use std::path::PathBuf;
 
@@ -277,7 +277,7 @@ impl PublishPosture {
 /// assert!(!Materialization::Snapshot.is_in_place());
 /// ```
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-022#modes",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#modes",
     r = 1
 )]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]

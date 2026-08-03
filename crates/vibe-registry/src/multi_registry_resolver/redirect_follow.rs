@@ -2,7 +2,7 @@
 //! for `vibe-redirect.toml`, following the marker to its target with
 //! the hop-limit guard, and fetching redirect-resolved content.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#redirect");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect");
 
 use super::*;
 

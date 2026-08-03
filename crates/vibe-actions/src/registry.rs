@@ -11,7 +11,7 @@
 //!
 //! Spec: [PROP-039 §4](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#registry).
 
-specmark::scope!("spec://vibevm/modules/vibe-actions/PROP-039#registry");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#registry");
 
 use std::collections::BTreeMap;
 
@@ -22,14 +22,16 @@ use crate::address::ActionAddr;
 
 /// A registry operation failure (PROP-039 §4).
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-actions/PROP-039#registry-collision")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#registry-collision"
+)]
 pub enum RegistryError {
     /// A `(group, name)` was registered twice — the incumbent and newcomer are
     /// both named (§4.1).
     #[error(
         "action address collision at `{addr}`: `{incumbent}` is already registered there, \
          cannot also register `{newcomer}` \
-         (violates spec://vibevm/modules/vibe-actions/PROP-039#registry-collision; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#registry-collision; \
           fix: give the newcomer a distinct address, or use `override_of` deliberately)"
     )]
     Collision {
@@ -44,7 +46,7 @@ pub enum RegistryError {
     /// An alias address is already occupied by an action or another alias.
     #[error(
         "cannot register alias `{alias}`: that address is already an action or alias \
-         (violates spec://vibevm/modules/vibe-actions/PROP-039#address-uniqueness; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#address-uniqueness; \
           fix: choose an unused alias address)"
     )]
     AliasCollision {
@@ -55,7 +57,7 @@ pub enum RegistryError {
     /// An alias points at an address that is not a registered action (§4.2).
     #[error(
         "alias `{alias}` targets `{target}`, which is not a registered action \
-         (violates spec://vibevm/modules/vibe-actions/PROP-039#registry-integrity; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#registry-integrity; \
           fix: register the target action before aliasing to it)"
     )]
     AliasTargetMissing {
@@ -68,7 +70,7 @@ pub enum RegistryError {
     /// [`Registry::override_of`] was called with no incumbent to override.
     #[error(
         "cannot override `{addr}`: nothing is registered there \
-         (violates spec://vibevm/modules/vibe-actions/PROP-039#registry-override; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#registry-override; \
           fix: use `register` for a new address, or register the incumbent first)"
     )]
     OverrideMissing {

@@ -8,7 +8,7 @@
 //! and many projections flow from it — never bespoke per-tier rendering in a
 //! component.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#rendering-tiers");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#rendering-tiers");
 
 use ratatui_core::style::Color;
 use specmark::spec;
@@ -88,7 +88,7 @@ impl Tier {
 /// assert_eq!(detect_tier(None, Some("xterm")), Tier::T3);
 /// assert_eq!(detect_tier(None, Some("screen")), Tier::T3);
 /// ```
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#rendering-tiers")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#rendering-tiers")]
 #[must_use]
 pub fn detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier {
     // 1. COLORTERM truecolour wins → Tier 3 (case-insensitive).
@@ -119,7 +119,7 @@ pub fn detect_tier(colorterm: Option<&str>, term: Option<&str>) -> Tier {
 /// T3 keeps the truecolour; T2 quantises to the xterm 6×6×6 cube; T1 maps the
 /// role to one of the 16 ANSI colours; T0 resets to the terminal default (mono).
 /// `is_light` selects the ANSI fg/bg polarity for T1.
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#rendering-tiers")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#rendering-tiers")]
 #[must_use]
 pub fn project_color(rgb: Rgb, role: Role, tier: Tier, is_light: bool) -> Color {
     match tier {

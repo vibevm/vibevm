@@ -3,7 +3,7 @@
 //! it over loopback HTTP+JSON (token-guarded) — open / send / snapshot / wait /
 //! close. Blocking `reqwest`; no daemon, no ambient network.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-042#aiui-cli");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#aiui-cli");
 
 use std::path::PathBuf;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};

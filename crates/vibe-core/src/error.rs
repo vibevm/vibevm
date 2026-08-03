@@ -3,8 +3,8 @@
 //! Parsing, validation, and I/O errors surfaced from this crate. Concrete
 //! operational errors (e.g. network, git) live in the crates that perform them.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#package-identity");
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#manifest-schema");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#package-identity");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema");
 
 use std::path::PathBuf;
 
@@ -24,21 +24,21 @@ pub type Result<T, E = Error> = std::result::Result<T, E>;
 /// let e = Error::BadPackageKind("xml".into());
 /// let msg = e.to_string();
 /// assert!(msg.contains("must be one of: flow, feat, stack, tool, mcp"));
-/// assert!(msg.contains("spec://vibevm/VIBEVM-SPEC#four-installable-kinds"));
+/// assert!(msg.contains("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#four-installable-kinds"));
 /// ```
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/VIBEVM-SPEC#package-identity")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#package-identity")]
 pub enum Error {
     #[error(
         "invalid package reference `{input}`: {reason} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-008#pkgref; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref; \
           fix: write the reference as `[kind:][group/]name[@version]`)"
     )]
     BadPackageRef { input: String, reason: String },
 
     #[error(
         "invalid package kind `{0}` — must be one of: flow, feat, stack, tool, mcp \
-         (violates spec://vibevm/VIBEVM-SPEC#four-installable-kinds; \
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#four-installable-kinds; \
           fix: use one of the installable kinds)"
     )]
     BadPackageKind(String),
@@ -46,35 +46,35 @@ pub enum Error {
     #[error(
         "invalid package name `{0}` — must be kebab-case (lowercase letters, digits, \
          and internal hyphens only) \
-         (violates spec://vibevm/modules/vibe-registry/PROP-008#pkgref; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref; \
           fix: rename to kebab-case)"
     )]
     BadPackageName(String),
 
     #[error(
         "invalid package group `{input}`: {reason} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-008#pkgref; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref; \
           fix: use a reverse-FQDN group like `org.vibevm`)"
     )]
     BadGroup { input: String, reason: String },
 
     #[error(
         "invalid capability reference `{input}`: {reason} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#capability; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability; \
           fix: write the capability as `interface:<name>[@version]`)"
     )]
     BadCapabilityRef { input: String, reason: String },
 
     #[error(
         "invalid content hash `{input}`: {reason} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-008#identity; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity; \
           fix: use a `sha256:<hex>` digest as produced by the indexer)"
     )]
     BadContentHash { input: String, reason: String },
 
     #[error(
         "invalid version spec `{input}` \
-         (violates spec://vibevm/modules/vibe-registry/PROP-008#pkgref; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref; \
           fix: use a Cargo-style requirement such as `^1.2`, `~1.2.3`, or `=1.2.3`)"
     )]
     BadVersionSpec {
@@ -85,35 +85,35 @@ pub enum Error {
 
     #[error(
         "invalid dependency declaration for `{input}`: {reason} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#git-source; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source; \
           fix: correct the [requires] entry in vibe.toml)"
     )]
     BadDependencyDecl { input: String, reason: String },
 
     #[error(
         "invalid `when` condition `{input}`: {reason} \
-         (violates spec://vibevm/VIBEVM-SPEC#manifest-schema; \
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema; \
           fix: correct the `when` predicate on the dependency)"
     )]
     BadWhenCondition { input: String, reason: String },
 
     #[error(
         "invalid manifest: {reason} \
-         (violates spec://vibevm/VIBEVM-SPEC#manifest-schema; \
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema; \
           fix: correct vibe.toml against the schema)"
     )]
     InvalidManifest { reason: String },
 
     #[error(
         "unsupported vibe.lock schema version {found} — expected {expected} \
-         (violates spec://vibevm/VIBEVM-SPEC#lockfile-schema; \
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#lockfile-schema; \
           fix: regenerate with `vibe install`)"
     )]
     UnsupportedLockfile { found: u32, expected: u32 },
 
     #[error(
         "failed to read file at {path} \
-         (violates spec://vibevm/VIBEVM-SPEC#directory-layout; \
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#directory-layout; \
           fix: check the path exists and is readable)"
     )]
     Read {
@@ -124,7 +124,7 @@ pub enum Error {
 
     #[error(
         "failed to write file at {path} \
-         (violates spec://vibevm/VIBEVM-SPEC#directory-layout; \
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#directory-layout; \
           fix: check the parent directory exists and is writable)"
     )]
     Write {
@@ -135,7 +135,7 @@ pub enum Error {
 
     #[error(
         "failed to parse TOML at {path} \
-         (violates spec://vibevm/VIBEVM-SPEC#manifest-schema; \
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema; \
           fix: repair the TOML syntax at the reported location)"
     )]
     ParseToml {
@@ -146,7 +146,7 @@ pub enum Error {
 
     #[error(
         "failed to serialize TOML \
-         (violates spec://vibevm/VIBEVM-SPEC#manifest-schema; \
+         (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema; \
           fix: act on the wrapped serializer error)"
     )]
     SerializeToml(#[from] toml::ser::Error),

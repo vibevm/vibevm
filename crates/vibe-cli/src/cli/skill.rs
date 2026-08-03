@@ -5,7 +5,7 @@
 //! agents' skill directories. Split from the `cli` hub along command-family
 //! lines; the hub re-exports everything.
 
-specmark::scope!("spec://vibevm/common/PROP-018#vibe-skill");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill");
 
 use std::path::PathBuf;
 

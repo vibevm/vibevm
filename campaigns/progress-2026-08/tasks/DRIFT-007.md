@@ -18,11 +18,11 @@ promises, so a marker-density fold can be trusted to lose no information.
 > `check` — vocabulary hints, well-formedness, placement, shorthand
 > disambiguation, foreign-grammar non-collision, `--exhaustive` unmarked
 > detection, **lossless folds**, exit codes.
-> — `spec://vibevm/modules/vibe-progress/PROP-043#tool`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#tool`
 
 > Marker density folds: agreeing sections collapse to unit markers
 > (lossless, `check`-verified).
-> — `spec://vibevm/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1#phase-f`
+> — `spec://org.vibevm.core/vibevm/terraforms/SPEC-ACTUALIZATION-CAMPAIGN-v0.1#phase-f`
 
 Anchor realised: `CMD-CHECK`.
 
@@ -94,7 +94,7 @@ bash tools/self-check.sh
 - **`vibe progress check` on this repository must still report 0** — if the
   new check fires on the live corpus, that is a finding to surface (§8), not
   a reason to weaken the rule.
-- Discipline: `#[spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#tool")]`,
+- Discipline: `#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#tool")]`,
   `cargo fmt --all`, clippy clean, atomic commits, no AI attribution.
 
 ## 7. Analogies {#analogies}
@@ -106,7 +106,7 @@ same structure. Imitate its shape and its test style.
 ## 8. Stop rule {#stop}
 
 If the fold relation as defined in §4 contradicts anything in
-`spec://vibevm/modules/vibe-progress/PROP-043#rollup`: STOP, mark
+`spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#rollup`: STOP, mark
 `<!-- REVIEW: … -->`, record the question here, set status `returned`. The
 definition above is the reviewer's reading, not a licence to invent.
 
@@ -123,7 +123,7 @@ Budget signal: past ~5 files or ~350 lines, stop and return.
   repository: **clean, exit 0** — the new class fires nowhere on the live
   corpus (verified separately that it does fire on a synthetic lossy fold).
 - §8 stop rule — **not triggered**. §4's relation does not contradict
-  `spec://vibevm/modules/vibe-progress/PROP-043#rollup`: it never fires on
+  `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#rollup`: it never fires on
   the mixed/divergent case that `##EXPLICIT-BEATS` calls "information, not
   noise", and its agreement precondition is `##POST-CAMPAIGN-FOLD`'s own
   wording ("a section whose units agree collapses to one unit marker …

@@ -22,7 +22,7 @@
 //!
 //! Spec: [PROP-039 §9](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#keymap).
 
-specmark::scope!("spec://vibevm/modules/vibe-actions/PROP-039#keymap");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#keymap");
 
 use crate::address::ActionAddr;
 use crate::params::ParamValues;

@@ -22,7 +22,7 @@
 //! from PROP-001 §2.5 — the same "metadata older than an hour gets
 //! a refresh" intuition.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
 use std::fs;
 use std::io::Write;

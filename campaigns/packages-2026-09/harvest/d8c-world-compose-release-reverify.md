@@ -144,7 +144,7 @@ depends on what a consumer does, and the sentence is falsifiable entirely inside
 $ grep -rn "spec://" packages/org.vibevm.world/git-conventional-commits/
 …/spec/boot/31-flow-conventional-commits.md:24:##CITE-SPEC-URIS-WHERE-RELEVANT Cite `spec://…` URIs where relevant. @impl/done
 …/spec/flows/conventional-commits/conventional-commits.md:75:  measurement, or conversation that drove it. Use `spec://…` URIs
-…/spec/flows/conventional-commits/conventional-commits.md:142:Cited by spec://vibevm/modules/vibe-registry/PROP-001#freshness.
+…/spec/flows/conventional-commits/conventional-commits.md:142:Cited by spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#freshness.
 ```
 
 The verdict's `31-flow-conventional-commits.md:24` citation is **exact**. The

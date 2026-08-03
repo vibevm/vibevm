@@ -1,7 +1,7 @@
 //! `vibe registry set-mirror` — attach a `[[mirror]]` to one registry
 //! or to every registry (`of = "*"`).
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#registry");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
 use anyhow::{Context, Result, bail};
 use serde::Serialize;

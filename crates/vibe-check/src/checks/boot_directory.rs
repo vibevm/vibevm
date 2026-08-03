@@ -3,7 +3,7 @@
 //! authored boot files and `vibe`-generated `INDEX.md` / `STATIC.md`
 //! artifacts, none numerically prefixed.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#linter");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
 
 use std::fs;
 use std::path::{Path, PathBuf};

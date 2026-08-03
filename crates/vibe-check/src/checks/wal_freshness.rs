@@ -1,7 +1,7 @@
 //! Check 5 — `spec/WAL.md` modification time is less than
 //! `wal_max_age_hours` (default 24); older → warning.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#linter");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
 
 use std::fs;
 use std::path::{Path, PathBuf};

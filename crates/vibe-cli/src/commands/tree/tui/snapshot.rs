@@ -3,7 +3,7 @@
 //! order, per-row right-trim); `cells` is lossless for style (run-length-encoded
 //! runs carrying fg/bg/modifiers). Neither invents or drops content.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-042#snapshot-contract");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#snapshot-contract");
 
 use ratatui_core::buffer::Buffer;
 use ratatui_core::layout::Position;
@@ -14,7 +14,7 @@ use specmark::spec;
 /// The `text` snapshot: one line per row, the row's cell symbols concatenated
 /// with trailing whitespace trimmed (PROP-042 §2). Column alignment within a row
 /// is preserved (trim is right-only).
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-042#snapshot-contract")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#snapshot-contract")]
 pub(crate) fn to_text(buf: &Buffer) -> String {
     let area = buf.area;
     let mut out = String::new();
@@ -40,7 +40,7 @@ struct RunKey {
 
 /// The `cells` snapshot: run-length-encoded rows carrying per-run style
 /// (PROP-042 §2). `grid[y]` is an array of `{n, ch, fg?, bg?, mods?}` runs.
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-042#snapshot-contract")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#snapshot-contract")]
 pub(crate) fn to_cells(buf: &Buffer) -> Value {
     let area = buf.area;
     let mut grid: Vec<Value> = Vec::with_capacity(area.height as usize);

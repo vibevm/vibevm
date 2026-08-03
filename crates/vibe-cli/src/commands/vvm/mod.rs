@@ -5,7 +5,7 @@
 //! Dispatches every `vibe self` verb over the instance layout and the live
 //! `current` pointer (PROP-019 §2.4, §2.5).
 
-specmark::scope!("spec://vibevm/common/PROP-019#surface");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#surface");
 
 mod builder;
 mod doctor;

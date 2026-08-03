@@ -3,9 +3,9 @@ use super::*;
 #[test]
 fn parses_the_three_directives() {
     let src = "\
-#embed spec://vibevm/a/b#x
+#embed spec://org.vibevm.core/vibevm/a/b#x
 #use spec://org.vibevm.demo/lib/contract/API#root
-#source spec://vibevm/c/d#y
+#source spec://org.vibevm.core/vibevm/c/d#y
 ";
     let d = Directives::parse(src);
     assert_eq!(d.directives.len(), 3);
@@ -19,14 +19,14 @@ fn parses_the_three_directives() {
 
 #[test]
 fn parses_options() {
-    let d = Directives::parse("#embed once spec://vibevm/a/b#x\n");
+    let d = Directives::parse("#embed once spec://org.vibevm.core/vibevm/a/b#x\n");
     assert_eq!(d.directives[0].options, "once");
     assert_eq!(d.directives[0].address.doc_path, "a/b");
 }
 
 #[test]
 fn collects_in_place_uses_from_prose() {
-    let src = "See @spec://vibevm/common/PROP-000#commits for the rules.\n";
+    let src = "See @spec://org.vibevm.core/vibevm/common/PROP-000#commits for the rules.\n";
     let d = Directives::parse(src);
     assert_eq!(d.in_place_uses.len(), 1);
     assert_eq!(d.in_place_uses[0].address.doc_path, "common/PROP-000");
@@ -35,11 +35,11 @@ fn collects_in_place_uses_from_prose() {
 
 #[test]
 fn trims_brackets_and_sentence_punctuation() {
-    let d = Directives::parse("(@spec://vibevm/a/b#c).\n");
+    let d = Directives::parse("(@spec://org.vibevm.core/vibevm/a/b#c).\n");
     assert_eq!(d.in_place_uses.len(), 1);
     assert_eq!(
         d.in_place_uses[0].address.without_pin(),
-        "spec://vibevm/a/b#c"
+        "spec://org.vibevm.core/vibevm/a/b#c"
     );
 }
 
@@ -49,7 +49,7 @@ fn trims_brackets_and_sentence_punctuation() {
 /// test pins the discovered behaviour so the mirror stays honest.
 #[test]
 fn probe_spec_in_inline_backticks_is_collected() {
-    let d = Directives::parse("see `@spec://vibevm/a/b#c` here\n");
+    let d = Directives::parse("see `@spec://org.vibevm.core/vibevm/a/b#c` here\n");
     assert_eq!(d.in_place_uses.len(), 1);
     assert_eq!(d.in_place_uses[0].address.doc_path, "a/b");
     assert_eq!(d.in_place_uses[0].address.anchor, vec!["c"]);
@@ -57,14 +57,16 @@ fn probe_spec_in_inline_backticks_is_collected() {
 
 #[test]
 fn multiple_in_place_uses_on_one_line() {
-    let d = Directives::parse("@spec://vibevm/a#x and @spec://vibevm/b#y\n");
+    let d = Directives::parse(
+        "@spec://org.vibevm.core/vibevm/a#x and @spec://org.vibevm.core/vibevm/b#y\n",
+    );
     assert_eq!(d.in_place_uses.len(), 2);
 }
 
 #[test]
 fn bare_spec_is_not_an_in_place_use() {
     // No `@` sigil → discretionary reference, not collected.
-    let d = Directives::parse("see spec://vibevm/a/b#c here\n");
+    let d = Directives::parse("see spec://org.vibevm.core/vibevm/a/b#c here\n");
     assert!(d.in_place_uses.is_empty());
     assert!(d.directives.is_empty());
 }
@@ -72,10 +74,10 @@ fn bare_spec_is_not_an_in_place_use() {
 #[test]
 fn directives_in_fences_are_ignored() {
     let src = "\
-#use spec://vibevm/real#x
+#use spec://org.vibevm.core/vibevm/real#x
 ```
-#use spec://vibevm/fake#y
-@spec://vibevm/fake#z
+#use spec://org.vibevm.core/vibevm/fake#y
+@spec://org.vibevm.core/vibevm/fake#z
 ```
 ";
     let d = Directives::parse(src);
@@ -101,12 +103,12 @@ fn html_comments_mask_directives_and_sigils() {
     // regeneration on the nested git-practices lane).
     let src = "\
 <!-- RESOLUTION RULES — read these five lines before anything else:
-  4. `#use spec://vibevm/a/b#c as X` binds a file-local alias; `@!X` is a
- mandatory read of X's target (same rules as @spec://vibevm/d/e#f).
+  4. `#use spec://org.vibevm.core/vibevm/a/b#c as X` binds a file-local alias; `@!X` is a
+ mandatory read of X's target (same rules as @spec://org.vibevm.core/vibevm/d/e#f).
 -->
 <!-- vibe:static org.example/pkg — vibedeps/pkg/1.0.0/spec/boot/x.md -->
-real body with @spec://vibevm/real#one
-#use spec://vibevm/real#two
+real body with @spec://org.vibevm.core/vibevm/real#one
+#use spec://org.vibevm.core/vibevm/real#two
 ";
     let d = Directives::parse(src);
     assert_eq!(d.errors, vec![], "{:?}", d.errors);
@@ -121,14 +123,14 @@ real body with @spec://vibevm/real#one
 fn a_mid_line_comment_does_not_mask_the_line() {
     // Line-grained on purpose: a content line that merely CONTAINS a
     // closed `<!-- -->` is a content line; its in-place uses still count.
-    let d = Directives::parse("see <!-- note --> @spec://vibevm/a#x here\n");
+    let d = Directives::parse("see <!-- note --> @spec://org.vibevm.core/vibevm/a#x here\n");
     assert_eq!(d.in_place_uses.len(), 1);
 }
 
 #[test]
 fn bad_address_is_reported() {
     // A digit-headed anchor: `#Bad` is a legal fact id and no longer serves.
-    let d = Directives::parse("#use spec://vibevm/a/b#9lives\n");
+    let d = Directives::parse("#use spec://org.vibevm.core/vibevm/a/b#9lives\n");
     assert!(d.directives.is_empty());
     assert_eq!(d.errors.len(), 1);
     assert!(d.errors[0].message.contains("bad address"));
@@ -145,19 +147,19 @@ fn directive_without_address_is_reported() {
 
 #[test]
 fn as_clause_binds_alias() {
-    let d = Directives::parse("#use spec://vibevm/a/b#c as root\n");
+    let d = Directives::parse("#use spec://org.vibevm.core/vibevm/a/b#c as root\n");
     assert_eq!(d.directives.len(), 1);
     assert_eq!(d.directives[0].kind, DirectiveKind::Use);
     assert_eq!(d.directives[0].options, "");
     assert_eq!(d.directives[0].address.doc_path, "a/b");
     assert_eq!(d.errors, vec![]);
     let addr = d.aliases.get("root").expect("alias `root` declared");
-    assert_eq!(addr.without_pin(), "spec://vibevm/a/b#c");
+    assert_eq!(addr.without_pin(), "spec://org.vibevm.core/vibevm/a/b#c");
 }
 
 #[test]
 fn options_before_address_still_parse_with_as() {
-    let d = Directives::parse("#use once spec://vibevm/a/b#c as root\n");
+    let d = Directives::parse("#use once spec://org.vibevm.core/vibevm/a/b#c as root\n");
     assert_eq!(d.directives[0].options, "once");
     assert_eq!(d.directives[0].address.doc_path, "a/b");
     assert_eq!(
@@ -169,8 +171,8 @@ fn options_before_address_still_parse_with_as() {
 #[test]
 fn duplicate_alias_is_reported_and_first_wins() {
     let src = "\
-#use spec://vibevm/a/b#c as root
-#use spec://vibevm/x/y#z as root
+#use spec://org.vibevm.core/vibevm/a/b#c as root
+#use spec://org.vibevm.core/vibevm/x/y#z as root
 ";
     let d = Directives::parse(src);
     // Both directives still land — each is a valid dependency edge.
@@ -193,7 +195,7 @@ fn duplicate_alias_is_reported_and_first_wins() {
 fn trailing_tokens_after_address_error_for_every_kind() {
     // R1: the silently-ignored tail is now an error, for each directive kind.
     for kw in ["#use", "#embed", "#source"] {
-        let src = format!("{kw} spec://vibevm/a/b#c junk after\n");
+        let src = format!("{kw} spec://org.vibevm.core/vibevm/a/b#c junk after\n");
         let d = Directives::parse(&src);
         assert!(
             d.directives.is_empty(),
@@ -214,7 +216,7 @@ fn trailing_tokens_after_address_error_for_every_kind() {
 fn as_clause_on_embed_and_source_errors() {
     // `as` is a `#use` clause; on `#embed`/`#source` it is a defect.
     for kw in ["#embed", "#source"] {
-        let src = format!("{kw} spec://vibevm/a/b#c as root\n");
+        let src = format!("{kw} spec://org.vibevm.core/vibevm/a/b#c as root\n");
         let d = Directives::parse(&src);
         assert!(d.directives.is_empty(), "{kw} … as: must not land");
         assert_eq!(d.errors.len(), 1, "{kw} … as: expected one error");
@@ -229,19 +231,19 @@ fn as_clause_on_embed_and_source_errors() {
 #[test]
 fn as_clause_without_name_or_with_bad_name_errors() {
     // `as` with no name.
-    let d = Directives::parse("#use spec://vibevm/a/b#c as\n");
+    let d = Directives::parse("#use spec://org.vibevm.core/vibevm/a/b#c as\n");
     assert!(d.directives.is_empty());
     assert_eq!(d.errors.len(), 1);
     assert!(d.errors[0].message.contains("needs an alias name"));
 
     // `as` with a digit-headed name (violates the identifier grammar).
-    let d = Directives::parse("#use spec://vibevm/a/b#c as 9bad\n");
+    let d = Directives::parse("#use spec://org.vibevm.core/vibevm/a/b#c as 9bad\n");
     assert!(d.directives.is_empty());
     assert_eq!(d.errors.len(), 1);
     assert!(d.errors[0].message.contains("not a valid identifier"));
 
     // `as` with more than one name.
-    let d = Directives::parse("#use spec://vibevm/a/b#c as a b\n");
+    let d = Directives::parse("#use spec://org.vibevm.core/vibevm/a/b#c as a b\n");
     assert!(d.directives.is_empty());
     assert_eq!(d.errors.len(), 1);
     assert!(d.errors[0].message.contains("exactly one alias name"));
@@ -253,7 +255,7 @@ fn at_bang_resolves_alias_declared_later_in_file() {
     // `as root` declaration — pass 2 resolves against the completed table.
     let src = "\
 Sees @!root here on line 1.
-#use spec://vibevm/a/b#c as root
+#use spec://org.vibevm.core/vibevm/a/b#c as root
 ";
     let d = Directives::parse(src);
     assert_eq!(d.errors, vec![]);
@@ -266,7 +268,7 @@ Sees @!root here on line 1.
 #[test]
 fn at_bang_undeclared_alias_lists_known_aliases() {
     let src = "\
-#use spec://vibevm/a/b#c as root
+#use spec://org.vibevm.core/vibevm/a/b#c as root
 Refers to @!missing and @!root.
 ";
     let d = Directives::parse(src);
@@ -290,10 +292,10 @@ fn at_bang_undeclared_with_no_aliases_says_none_declared() {
 #[test]
 fn at_bang_in_fences_is_ignored() {
     let src = "\
-#use spec://vibevm/a/b#c as root
+#use spec://org.vibevm.core/vibevm/a/b#c as root
 ```
 @!root inside a fence
-@spec://vibevm/fake#z
+@spec://org.vibevm.core/vibevm/fake#z
 ```
 ";
     let d = Directives::parse(src);
@@ -307,8 +309,8 @@ fn at_bang_in_inline_backticks_mirrors_spec() {
     // collection (only fenced blocks do, via the fence mask). The closing
     // backtick terminates the run, so both sigils are collected.
     let src = "\
-#use spec://vibevm/a/b#c as root
-see `@!root` in code, like `@spec://vibevm/a/b#c` is.
+#use spec://org.vibevm.core/vibevm/a/b#c as root
+see `@!root` in code, like `@spec://org.vibevm.core/vibevm/a/b#c` is.
 ";
     let d = Directives::parse(src);
     assert_eq!(d.errors, vec![]);
@@ -322,7 +324,7 @@ fn at_bang_adjacent_punctuation_trims_to_identifier() {
     // R3: the identifier grammar naturally terminates the name; trailing
     // punctuation is prose, consistent with `address_run`'s trimming.
     let src = "\
-#use spec://vibevm/a/b#c as root
+#use spec://org.vibevm.core/vibevm/a/b#c as root
 Trailing dot @!root. and parenthesised (@!root) both resolve.
 ";
     let d = Directives::parse(src);
@@ -337,8 +339,8 @@ Trailing dot @!root. and parenthesised (@!root) both resolve.
 #[test]
 fn multiple_at_bang_uses_on_one_line() {
     let src = "\
-#use spec://vibevm/a#x as a
-#use spec://vibevm/b#y as b
+#use spec://org.vibevm.core/vibevm/a#x as a
+#use spec://org.vibevm.core/vibevm/b#y as b
 @a and @!a and @!b here
 ";
     let d = Directives::parse(src);
@@ -353,7 +355,7 @@ fn multiple_at_bang_uses_on_one_line() {
 fn use_into_the_compiled_lane_is_rejected() {
     // A directive whose address names a generated STATIC lane is rejected
     // (PROP-035 §11 ##COMPILED-LANE-IS-NOT-A-CITATION-TARGET).
-    let d = Directives::parse("#use spec://vibevm/boot/STATIC#root\n");
+    let d = Directives::parse("#use spec://org.vibevm.core/vibevm/boot/STATIC#root\n");
     assert!(d.directives.is_empty(), "the directive must not land");
     assert_eq!(d.errors.len(), 1);
     let msg = &d.errors[0].message;
@@ -382,7 +384,7 @@ fn every_directive_kind_rejects_a_lane_target() {
 #[test]
 fn at_spec_into_the_compiled_lane_is_rejected() {
     // The in-place-use sigil shares the chokepoint with directives.
-    let d = Directives::parse("See @spec://vibevm/boot/STATIC#root here.\n");
+    let d = Directives::parse("See @spec://org.vibevm.core/vibevm/boot/STATIC#root here.\n");
     assert!(d.in_place_uses.is_empty(), "the use must not land");
     assert_eq!(d.errors.len(), 1);
     assert!(d.errors[0].message.contains("not a citation target"));
@@ -394,7 +396,7 @@ fn an_unrelated_path_ending_in_static_is_not_flagged() {
     // and only at a path boundary — `foo/boot/STATIC` matches, `boot/STATIC`
     // matches, but `notboot/STATIC` does not (no boundary) and a doc named
     // `STATIC` at a different path does not either.
-    let d = Directives::parse("#use spec://vibevm/STATIC#root\n");
+    let d = Directives::parse("#use spec://org.vibevm.core/vibevm/STATIC#root\n");
     assert_eq!(d.errors, vec![], "bare `STATIC` is not the lane path");
 
     let d = Directives::parse("#use spec://org.example/pkg/notes/STATIC#x\n");

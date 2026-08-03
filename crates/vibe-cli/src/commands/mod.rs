@@ -1,6 +1,6 @@
 //! Sub-command implementations. Each module keeps `pub fn run(&Context, args) -> anyhow::Result<()>`.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#cli-surface");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface");
 
 use std::path::{Path, PathBuf};
 

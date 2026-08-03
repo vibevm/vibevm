@@ -1146,7 +1146,7 @@ aspirational — and every one is still live for the phases that remain.
   is *not* a new decision: `##FACT-ID-GRAMMAR` already says a fact is
   addressable as `spec://…/<doc>#<ID>`, and the parser simply never implemented
   that sentence. One test flips by design (`tests.rs:33` lists
-  `spec://vibevm/x#A-b` as rejected, commented «uppercase anchor»), and the
+  `spec://org.vibevm.core/vibevm/x#A-b` as rejected, commented «uppercase anchor»), and the
   assertions that `is_valid_anchor("FACT-A")` stays false must survive — a
   useful tripwire that the change is scoped to the URI and not to the heading law.
 

@@ -21,12 +21,14 @@ use std::path::PathBuf;
 /// # let _: Layer = Layer::L2;
 /// ```
 #[derive(Debug, thiserror::Error)]
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#diff-from-default")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#diff-from-default"
+)]
 pub enum PersistError {
     /// A read/write/create_dir operation on a layer file failed.
     #[error(
         "could not read or write settings file `{path}`: {source} \
-         (violates spec://vibevm/modules/vibe-settings/PROP-040#diff-from-default; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#diff-from-default; \
           fix: check the path and permissions, or remove the file to fall back to defaults)"
     )]
     Io {
@@ -40,7 +42,7 @@ pub enum PersistError {
     /// The layer table could not be serialised to TOML.
     #[error(
         "could not serialise the settings table: {source} \
-         (violates spec://vibevm/modules/vibe-settings/PROP-040#diff-from-default)"
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#diff-from-default)"
     )]
     Serialize {
         #[source]
@@ -52,7 +54,7 @@ pub enum PersistError {
     /// produced something `toml_edit` cannot round-trip).
     #[error(
         "could not build an editable document for `{path}`: {source} \
-         (violates spec://vibevm/modules/vibe-settings/PROP-040#diff-from-default)"
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#diff-from-default)"
     )]
     Edit {
         /// The layer file the document was being staged for.

@@ -2,7 +2,7 @@
 //! default excludes — by directory and by file name — and the project's own
 //! enumerated `exclude` globs (PROP-043 §4).
 
-specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#config");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#config");
 
 use anyhow::{Context, Result};
 use serde::Deserialize;

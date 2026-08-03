@@ -11,7 +11,9 @@
 //! `#[cell]`-manifested type (`NaiveDepSolver`, the provider pair,
 //! `LocalRegistry`, …) anywhere else in `vibe-cli` is a finding.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order");
+specmark::scope!(
+    "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
+);
 
 use std::path::PathBuf;
 

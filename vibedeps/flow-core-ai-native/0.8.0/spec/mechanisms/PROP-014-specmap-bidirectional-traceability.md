@@ -48,7 +48,7 @@
 2. ##CONSEQUENCE-AUTHORED-METADATA-ROTS-UNLESS-THREE-FORCES-HOLD Authored metadata rots unless three forces hold simultaneously: @impl/done
    - ##FORCE-EDGES-TRAVEL-WITH-THE-ARTEFACTS **Edges travel with the artefacts.** Code-side links live *in the code* (attributes on items) and survive any refactor that moves the item. Spec-side links live *in the spec* (stable anchors). External sidecar maps are rejected (§5.1). @impl/done
    - ##FORCE-INVARIANTS-ARE-MACHINE-CHECKED **Invariants are machine-checked.** Dangling references, uncovered requirements, orphan code, and — the load-bearing one — **staleness**: a spec unit carries a revision + content hash; when it changes, every edge pinned to the old revision flips to *suspect* until re-affirmed. @impl/done
-   - ##FORCE-MAP-IS-LOAD-BEARING-IN-DAILY-WORK **The map is load-bearing in daily work.** A map that is only audited dies (the classical requirements-traceability graveyard). specmap must feed (i) agent context paging — working on a REQ pulls its code, editing an item pulls its specs; (ii) `vibe explain`; (iii) error provenance — failures cite the violated REQ. *Two of the three feeds ship. (ii) is real, under the name `trace explain` rather than `vibe explain` (`specmap/src/explain.rs:199,209`, driven by `cargo xtask trace explain` and `rust-ai-native trace explain`). (iii) is real and enforced: the conform rules `error-message-cites-req` and `error-enum-cites-req` require the `spec://` REQ URI in the Display text itself — "errors are agent food" — and host errors carry it, e.g. `vibe-core/src/error.rs:34` emits `(violates spec://vibevm/modules/vibe-registry/PROP-008#pkgref; …)`. **(i) agent context paging has no implementation** — nothing pulls code from a REQ or specs from an item.* @impl/done
+   - ##FORCE-MAP-IS-LOAD-BEARING-IN-DAILY-WORK **The map is load-bearing in daily work.** A map that is only audited dies (the classical requirements-traceability graveyard). specmap must feed (i) agent context paging — working on a REQ pulls its code, editing an item pulls its specs; (ii) `vibe explain`; (iii) error provenance — failures cite the violated REQ. *Two of the three feeds ship. (ii) is real, under the name `trace explain` rather than `vibe explain` (`specmap/src/explain.rs:199,209`, driven by `cargo xtask trace explain` and `rust-ai-native trace explain`). (iii) is real and enforced: the conform rules `error-message-cites-req` and `error-enum-cites-req` require the `spec://` REQ URI in the Display text itself — "errors are agent food" — and host errors carry it, e.g. `vibe-core/src/error.rs:34` emits `(violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref; …)`. **(i) agent context paging has no implementation** — nothing pulls code from a REQ or specs from an item.* @impl/done
 3. ##CONSEQUENCE-M1-5-CONVERGENCE **M1.5 convergence.** Once `vibe build` generates code from specs, the generator emits specmap edges as a true compiler byproduct — the analogy becomes literal. Hand-authored tags remain as the human-override lane. This PROP defines the format that the future generator will target. @impl/done
 
 ### 1.2 The runtime vision (AI-native open source) {#runtime-vision}
@@ -152,10 +152,10 @@ pass MUST only add requirements (monotone), guaranteeing convergence.
 use specmark::spec;
 
 /// Parses the `context(<key>)` predicate grammar.
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#conditional-deps", r = 2)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-deps", r = 2)]
 pub enum ConditionalPredicate { /* … */ }
 
-#[spec(deviates = "spec://vibevm/modules/vibe-resolver/PROP-003#conditional-deps", r = 2,
+#[spec(deviates = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-deps", r = 2,
        reason = "boolean composition (`and`/`or`/`not`) intentionally unimplemented; \
                  surfaces as PredicateError::Unsupported pending PROP-014-pilot decision")]
 impl ConditionalPredicate {
@@ -167,7 +167,7 @@ mod tests {
     use specmark::verifies;
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#conditional-deps", r = 2)]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-deps", r = 2)]
     fn fixed_point_is_monotone() { /* … */ }
 }
 ```

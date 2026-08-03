@@ -30,7 +30,9 @@ use super::types::{KeyMeta, SchemaError};
 /// assert_eq!(tree_keys, vec!["tree.mode", "tree.palette"]);
 /// # Ok::<(), vibe_settings::schema::SchemaError>(())
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#schema")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema"
+)]
 #[derive(Debug, Clone, Default)]
 pub struct Schema {
     keys: BTreeMap<String, KeyMeta>,
@@ -44,7 +46,9 @@ impl Schema {
 
     /// Register a key. A duplicate path is a hard [`SchemaError::DuplicateKey`]
     /// — a *collision*, never a silent override (PROP-040 §6 `#schema-first`).
-    #[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#schema-first")]
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema-first"
+    )]
     pub fn register(&mut self, meta: KeyMeta) -> Result<(), SchemaError> {
         if self.keys.contains_key(&meta.path) {
             return Err(SchemaError::DuplicateKey {

@@ -33,7 +33,7 @@
 //! time. A `dynamic` entry without `when` is an unconditional INCLUDE —
 //! still valid.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-009#artifacts");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#artifacts");
 
 use std::collections::BTreeMap;
 use std::fs;
@@ -407,7 +407,7 @@ pub struct WrittenArtifacts {
 /// from an earlier generation is removed when the node no longer has static
 /// contributions, so it is never read by mistake.
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-012#co-tenant",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#co-tenant",
     r = 1
 )]
 pub fn write_boot_artifacts(

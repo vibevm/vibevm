@@ -10,8 +10,8 @@
 # consumer, the engine ships in the package).
 
 # The spec:// namespace this project's units are minted under — the
-# `<package>` segment of every `spec://vibevm/…` URI (PROP-014 §2.1).
-namespace = "vibevm"
+# `<package>` segment of every `spec://org.vibevm.core/vibevm/…` URI (PROP-014 §2.1).
+namespace = "org.vibevm.core/vibevm"
 
 # Code roots scanned for #[spec]/#[verifies]/scope! tags. A `<dir>/*` entry
 # scans each subdir of <dir> as one crate; any other entry is a literal dir.

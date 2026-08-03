@@ -5,7 +5,7 @@
 //! PROP-002 §2.9). `Requires` round-trips through the sibling
 //! `wire::RequiresWire` for its table form.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#git-source");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source");
 
 use std::collections::BTreeMap;
 

@@ -8,7 +8,7 @@
 //! lexicographic order. Good enough for the indexed scale targeted by
 //! slice 4 (≤ 10k packages); a tantivy-backed upgrade is a v1 lever.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -61,7 +61,10 @@ fn push_if_keepable(out: &mut Vec<String>, tok: String) {
     out.push(tok);
 }
 
-#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#cli", r = 1)]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#cli",
+    r = 1
+)]
 pub fn search(index: &Index, query: &str, kind_filter: Option<PackageKind>) -> Vec<SearchHit> {
     let query_tokens: BTreeSet<String> = tokenise(query).into_iter().collect();
     if query_tokens.is_empty() {

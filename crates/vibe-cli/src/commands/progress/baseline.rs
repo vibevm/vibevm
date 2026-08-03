@@ -9,7 +9,7 @@
 //! verdict; the projection is in `progress-core`, and what lives here is
 //! path resolution and the summary a human reads.
 
-specmark::scope!("spec://vibevm/modules/vibe-progress/PROP-043#baseline");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#baseline");
 
 use std::path::PathBuf;
 

@@ -4,7 +4,7 @@
 //! load to its column label. Split out of `state` along the model-vs-state seam
 //! so each file stays within the surface-form budget (module-grain cells).
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#tui");
 
 use super::super::model::LoadType;
 

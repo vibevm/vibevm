@@ -1,7 +1,7 @@
 //! Check 6 — WAL has the canonical sections (Current Phase,
 //! Constraints, Done, Next, Issues).
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#linter");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
 
 use std::fs;
 use std::path::{Path, PathBuf};

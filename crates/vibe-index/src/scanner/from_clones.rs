@@ -3,7 +3,7 @@
 //! source is a no-op and scanning IS the walk. PROP-005 §2.8's
 //! default source for operators who maintain their own clone tree.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#reindex");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#reindex");
 
 use std::path::PathBuf;
 
@@ -18,7 +18,7 @@ use crate::scanner::org_walk::{FromClonesOptions, ScanReport, scan_org_dir_with_
 /// package repo. The directory is taken verbatim — the operator (or
 /// the composition root, for `--from-clones`) guarantees it exists.
 #[cell(seam = "PackageScanner", variant = "from-clones")]
-#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#reindex")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#reindex")]
 pub struct FromClonesScanner {
     /// The org directory — one subdirectory per package repo clone.
     pub org_dir: PathBuf,

@@ -6,7 +6,7 @@
 //! `YYYY-MM-DDTHH:MM:SSZ` — RFC 3339 without sub-seconds or offsets,
 //! which is all the spec-level consumers need.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#lockfile-schema");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#lockfile-schema");
 
 use std::time::{SystemTime, UNIX_EPOCH};
 

@@ -25,7 +25,7 @@
 //! to drive every branch without hitting the network.
 
 #![forbid(unsafe_code)]
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#publish");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish");
 
 use std::path::PathBuf;
 
@@ -111,12 +111,12 @@ pub fn extract_org_segment(org_url: &str) -> Result<String, PublishError> {
 /// assert!(rendered.contains("does not force-push tags"));
 /// ```
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#publish")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish")]
 pub enum PublishError {
     #[error(
         "publish refused: source directory `{path}` does not look like a vibevm package — \
          {reason} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#publish; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish; \
          fix: point the command at a directory whose `vibe.toml` carries a `[package]` section)"
     )]
     SourceInvalid { path: PathBuf, reason: String },
@@ -124,7 +124,7 @@ pub enum PublishError {
     #[error(
         "publish refused: cannot derive an organization segment from `{url}`. \
          Configure `[[registry]].url` to a value `git` accepts (e.g. `git@gitverse.ru:vibespecs`). \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#publish; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish; \
          fix: include the organization segment after the host in `[[registry]].url`)"
     )]
     OrgUrlInvalid { url: String },
@@ -132,7 +132,7 @@ pub enum PublishError {
     #[error(
         "publish refused: token lacks `repo:create` permission in organization `{org}` on `{host}`. \
          Contact an org owner, or use a token whose scope includes repository creation. \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#publish; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish; \
          fix: mint a token with `repo:create` scope for `{org}` or have an org owner elevate it)"
     )]
     AuthForbidden { host: String, org: String },
@@ -140,7 +140,7 @@ pub enum PublishError {
     #[error(
         "publish refused: no token available for host `{host}`. \
          Set `VIBEVM_PUBLISH_TOKEN` or write a token to `~/.vibe/git.publish.token`. \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#publish; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish; \
          fix: export `VIBEVM_PUBLISH_TOKEN` or write `~/.vibe/<host-prefix>.publish.token`)"
     )]
     AuthMissing { host: String },
@@ -149,7 +149,7 @@ pub enum PublishError {
         "publish refused: organization `{org}` does not exist on `{host}` \
          (or the token cannot see it). Check spelling — different from \
          a permissions error. \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#publish; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish; \
          fix: correct the org segment in `[[registry]].url` or use a token that can see `{org}`)"
     )]
     OrgNotFound { host: String, org: String },
@@ -157,7 +157,7 @@ pub enum PublishError {
     #[error(
         "publish refused: tag `{tag}` already exists on `{repo}`. \
          Pick a new version — `vibe registry publish` does not force-push tags. \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#publish; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish; \
          fix: bump `[package].version` in `vibe.toml` and publish again)"
     )]
     TagCollision { repo: String, tag: String },
@@ -165,7 +165,7 @@ pub enum PublishError {
     #[error(
         "publish refused: no push access to `{repo}`. Ask a maintainer of \
          that repo to grant you push, or use a different registry. \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#publish; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish; \
          fix: request push access on `{repo}` or point `[[registry]].url` at a registry \
          you can write to)"
     )]
@@ -174,28 +174,28 @@ pub enum PublishError {
     #[error(
         "publish refused: host `{host}` is unreachable (network or DNS error). \
          Check connectivity and try again. \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#publish; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish; \
          fix: restore network/DNS reachability of `{host}`, then re-run the publish)"
     )]
     HostUnreachable { host: String },
 
     #[error(
         "git operation failed during publish: {0} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#publish; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish; \
          fix: resolve the reported git failure, then re-run `vibe registry publish`)"
     )]
     Git(String),
 
     #[error(
         "HTTP request to `{host}` failed: {message} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#publish; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish; \
          fix: check connectivity to `{host}` and retry)"
     )]
     HttpFailed { host: String, message: String },
 
     #[error(
         "unexpected response from `{host}` (status {status}): {body} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#publish; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish; \
          fix: retry the publish — if the status persists, the host API shape changed and \
          the adapter needs updating)"
     )]
@@ -207,7 +207,7 @@ pub enum PublishError {
 
     #[error(
         "filesystem error during publish at `{path}`: {message} \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#publish; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish; \
          fix: check permissions and free space at `{path}`, then re-run)"
     )]
     Io { path: PathBuf, message: String },
@@ -216,7 +216,7 @@ pub enum PublishError {
         "publish refused: scope violation — adapter for `{host}` is scoped to organization \
          `{expected_org}` but the request targeted `{attempted_org}`. The publish utility never \
          operates outside the organization named in `[[registry]].url`. \
-         See spec://vibevm/common/PROP-000#token-secrecy."
+         See spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy."
     )]
     ScopeViolation {
         host: String,
@@ -228,7 +228,7 @@ pub enum PublishError {
         "publish refused: no `RepoCreator` adapter for host `{host}`. Configured registry URL \
          points at an unsupported host; add an adapter per PROP-002 §2.10 or use a supported one \
          (today: `github.com`, `gitverse.ru`). \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#publish; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish; \
          fix: point `[[registry]].url` at `github.com` or `gitverse.ru`, or add a \
          `RepoCreator` impl for `{host}`)"
     )]

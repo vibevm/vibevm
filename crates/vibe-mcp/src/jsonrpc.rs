@@ -5,7 +5,7 @@
 //! [`parse`] which decides whether the message is a request
 //! (carries `id`) or a notification (no `id`).
 
-specmark::scope!("spec://vibevm/modules/vibe-mcp/PROP-015#server");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server");
 
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value};
@@ -170,32 +170,32 @@ impl JsonRpcResponse {
 /// assert!(matches!(parse("{not json").unwrap_err(), ParseError::Json(_)));
 /// ```
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-015#server")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server")]
 pub enum ParseError {
     #[error(
         "invalid JSON: {0} \
-         (violates spec://vibevm/modules/vibe-mcp/PROP-015#server; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server; \
           fix: send one well-formed JSON-RPC 2.0 object per line)"
     )]
     Json(#[from] serde_json::Error),
 
     #[error(
         "missing `jsonrpc` field \
-         (violates spec://vibevm/modules/vibe-mcp/PROP-015#server; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server; \
           fix: include `\"jsonrpc\": \"2.0\"` in the request)"
     )]
     MissingJsonrpc,
 
     #[error(
         "unsupported jsonrpc version `{0}` (expected `2.0`) \
-         (violates spec://vibevm/modules/vibe-mcp/PROP-015#server; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server; \
           fix: set `\"jsonrpc\": \"2.0\"`)"
     )]
     UnsupportedVersion(String),
 
     #[error(
         "missing `method` field \
-         (violates spec://vibevm/modules/vibe-mcp/PROP-015#server; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#server; \
           fix: include a `method` string in the request)"
     )]
     MissingMethod,

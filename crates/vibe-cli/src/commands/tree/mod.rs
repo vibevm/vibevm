@@ -9,7 +9,7 @@
 //! [`build`], the serde model in [`model`], the artifact decompilers in
 //! [`artifacts`], and the renderer in [`plain`].
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#command");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#command");
 
 mod artifacts;
 mod build;

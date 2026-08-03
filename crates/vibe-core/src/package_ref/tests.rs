@@ -44,7 +44,10 @@ fn name_rejects_invalid() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-008#group", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#group",
+    r = 1
+)]
 fn group_accepts_valid() {
     for g in [
         "org.vibevm",
@@ -60,7 +63,10 @@ fn group_accepts_valid() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-008#group", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#group",
+    r = 1
+)]
 fn group_rejects_invalid() {
     for g in [
         "",
@@ -103,7 +109,10 @@ fn group_serde_via_string() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-008#pkgref", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref",
+    r = 1
+)]
 fn parse_short_bare() {
     let r = PackageRef::parse("wal").unwrap();
     assert_eq!(r.kind, None);
@@ -134,7 +143,10 @@ fn parse_qualified() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-008#pkgref", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref",
+    r = 1
+)]
 fn parse_qualified_with_kind() {
     let r = PackageRef::parse("flow:org.vibevm/wal").unwrap();
     assert_eq!(r.kind, Some(PackageKind::Flow));
@@ -144,7 +156,10 @@ fn parse_qualified_with_kind() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-008#pkgref", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref",
+    r = 1
+)]
 fn parse_bare_semver_is_caret_per_cargo() {
     // Cargo / npm / Poetry semantics: a bare semver like `0.3.0` is
     // shorthand for `^0.3.0` (caret — compatible release). To pin
@@ -252,7 +267,10 @@ fn parse_rejects_bad_name() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-008#pkgref", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref",
+    r = 1
+)]
 fn display_round_trips_every_form() {
     for s in [
         "wal",
@@ -269,7 +287,10 @@ fn display_round_trips_every_form() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-registry/PROP-008#identity", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity",
+    r = 1
+)]
 fn qualified_name_is_the_identity_string() {
     // kind and version drop; `<group>/<name>` is the identity.
     let q = PackageRef::parse("flow:org.vibevm/wal@0.1.0").unwrap();

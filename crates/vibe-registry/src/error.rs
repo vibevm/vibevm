@@ -2,7 +2,9 @@
 //! violated REQ and a fix surface (PROP-002 §2.3's failure
 //! discriminator).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator");
+specmark::scope!(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
+);
 
 use std::path::PathBuf;
 
@@ -27,30 +29,32 @@ use crate::git_backend::GitError;
 /// assert_eq!(
 ///     err.to_string(),
 ///     "package `org.vibevm/nope` is not in the registry \
-///      (violates spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
+///      (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
 ///       fix: check the spelling or add a [[registry]] that carries it)",
 /// );
 /// ```
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator")]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
+)]
 pub enum RegistryError {
     #[error(
         "registry root `{0}` does not exist or is not a directory \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#registry-model; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model; \
           fix: check the [[registry]] url or pass --registry <dir>)"
     )]
     MissingRoot(PathBuf),
 
     #[error(
         "package `{group}/{name}` is not in the registry \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
           fix: check the spelling or add a [[registry]] that carries it)"
     )]
     UnknownPackage { group: Group, name: String },
 
     #[error(
         "no version of `{group}/{name}` matches `{req}` \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
           fix: relax the version requirement or run `vibe registry sync`)"
     )]
     NoMatchingVersion {
@@ -64,14 +68,14 @@ pub enum RegistryError {
     /// name must be qualified at the CLI boundary first.
     #[error(
         "package reference `{0}` is not group-qualified — registry resolution needs \
-         `<group>/<name>` (violates spec://vibevm/modules/vibe-registry/PROP-002#registry-model; \
+         `<group>/<name>` (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model; \
          fix: qualify the reference as `<group>/<name>`)"
     )]
     UnqualifiedPkgref(String),
 
     #[error(
         "registry entry at `{path}` has an invalid directory name `{name}` — expected \
-         `v<semver>` (violates spec://vibevm/modules/vibe-registry/PROP-002#layout; \
+         `v<semver>` (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#layout; \
          fix: rename the version directory to `v<major>.<minor>.<patch>`)"
     )]
     BadVersionDir { path: PathBuf, name: String },
@@ -82,7 +86,7 @@ pub enum RegistryError {
     /// malformed local url is caught at construction, not mid-walk.
     #[error(
         "`{url}` is a local `[[registry]]` url that does not resolve to a filesystem path \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#registry-model; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model; \
           fix: use a `file:///<path>` URL or a bare path pointing at a directory laid out \
           `<group>/<name>/v<version>/`)"
     )]
@@ -93,7 +97,7 @@ pub enum RegistryError {
 
     #[error(
         "git operation failed \
-         (violates spec://vibevm/modules/vibe-registry/PROP-001#backend-trait; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#backend-trait; \
           fix: act on the wrapped git error): {0}"
     )]
     Git(#[from] GitError),
@@ -101,14 +105,14 @@ pub enum RegistryError {
     #[error(
         "could not determine the user home directory; set HOME (or USERPROFILE on Windows), or \
          pass an explicit cache root \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#cache; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#cache; \
           fix: set HOME / USERPROFILE or VIBE_REGISTRY_CACHE)"
     )]
     NoHomeDir,
 
     #[error(
         "registry meta file at `{path}` is malformed \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
           fix: correct or regenerate the file at that path): {reason}"
     )]
     MalformedMeta { path: PathBuf, reason: String },
@@ -120,7 +124,7 @@ pub enum RegistryError {
     #[error(
         "registry `{registry}` declares `auth = \"token-env\"` but env-var `{env_var}` is empty or unset; \
          set it to a personal access token with read access to the registry org \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#registry-auth; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-auth; \
           fix: export {env_var})"
     )]
     MissingToken { registry: String, env_var: String },
@@ -139,7 +143,7 @@ pub enum RegistryError {
     /// with downstream consumers that match on it.
     #[error(
         "package `{group}/{name}` not found in any configured registry \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
           fix: check the package name and `vibe registry list`).\nTried:\n{summary}"
     )]
     PackageNotFoundEverywhere {
@@ -151,7 +155,7 @@ pub enum RegistryError {
 
     #[error(
         "I/O error on `{path}` \
-         (violates spec://vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
           fix: check the path's existence and permissions)"
     )]
     Io {
@@ -168,7 +172,7 @@ pub enum RegistryError {
     #[error(
         "package `{group}/{name}` declares in-place materialization but resolves through a \
          local-directory registry with no git backend \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-022#in-place; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place; \
           fix: serve it from a git `[[registry]]`, or drop `materialization = \"in-place\"`)"
     )]
     InPlaceUnsupported { group: Group, name: String },

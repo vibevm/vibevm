@@ -11,7 +11,7 @@
 //! (a bundled MCP server a package ships for agents) is reserved but not yet
 //! wired (PROP-018 §6).
 
-specmark::scope!("spec://vibevm/common/PROP-018#skill-decl");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-018#skill-decl");
 
 use std::path::PathBuf;
 

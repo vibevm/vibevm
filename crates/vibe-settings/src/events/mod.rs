@@ -30,7 +30,7 @@
 //!
 //! Spec: [PROP-040 §10](../../../../../spec/modules/vibe-settings/PROP-040-settings.md#events).
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-040#events");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#events");
 
 use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
@@ -66,7 +66,9 @@ use crate::schema::{Applies, Schema};
 /// assert!(!ev.is_empty());
 /// ```
 #[derive(Debug, Clone)]
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#change-events")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#change-events"
+)]
 pub struct ChangeEvent {
     /// The dotted paths whose resolved value may have changed (PROP-040 §10
     /// `#change-events`). A key is listed when the layer's value for it
@@ -120,7 +122,9 @@ impl ChangeEvent {
     /// assert!(!ev.affects("edge"));         // nothing under edge.*
     /// assert!(ev.affects(""));              // root namespace → any key
     /// ```
-    #[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#change-events")]
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#change-events"
+    )]
     pub fn affects(&self, prefix: &str) -> bool {
         if self.affected_keys.is_empty() {
             return false;
@@ -159,7 +163,9 @@ impl ChangeEvent {
 /// assert_eq!(applies_of(&schema, "tree.ghost"), Applies::Live);
 /// # Ok::<(), vibe_settings::schema::SchemaError>(())
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#applies")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#applies"
+)]
 pub fn applies_of(schema: &Schema, key: &str) -> Applies {
     schema
         .get(key)
@@ -203,7 +209,9 @@ pub fn applies_of(schema: &Schema, key: &str) -> Applies {
 /// assert_eq!(affected_applies(&ev, &schema), Applies::Restart);
 /// # Ok::<(), vibe_settings::schema::SchemaError>(())
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#applies")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#applies"
+)]
 pub fn affected_applies(event: &ChangeEvent, schema: &Schema) -> Applies {
     let mut worst = Applies::Live;
     for key in &event.affected_keys {
@@ -301,7 +309,9 @@ impl EventEmitter {
     /// well-behaved callbacks; a panicking subscriber would unwind through
     /// `emit`, so the host is responsible for catching its own subscriber
     /// errors.
-    #[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#change-events")]
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#change-events"
+    )]
     pub fn emit(&self, event: &ChangeEvent) {
         for sub in &self.subscribers {
             sub(event);
@@ -332,7 +342,9 @@ impl Default for EventEmitter {
 /// assert!(e.to_string().contains("does not exist"));
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#file-watch")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#file-watch"
+)]
 pub enum WatchError {
     /// The layer file does not exist, so there is nothing to watch. (A missing
     /// layer is *not* an error for the loader — §3 `#missing-is-default` — but
@@ -341,7 +353,7 @@ pub enum WatchError {
     /// starts the watch once the file is created.)
     #[error(
         "cannot watch `{path}`: file does not exist \
-         (spec://vibevm/modules/vibe-settings/PROP-040#file-watch; \
+         (spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#file-watch; \
           fix: create the layer file, or start watching after the first edit)"
     )]
     PathMissing {
@@ -355,7 +367,7 @@ pub enum WatchError {
     /// backend, so it surfaces the host's wording verbatim.
     #[error(
         "cannot watch `{path}`: {message} \
-         (spec://vibevm/modules/vibe-settings/PROP-040#file-watch; \
+         (spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#file-watch; \
           fix: see the host (vibe-cli) watcher-backend diagnostic)"
     )]
     Backend {
@@ -414,13 +426,17 @@ pub enum WatchError {
 ///     .unwrap_err();
 /// assert!(matches!(err, WatchError::PathMissing { .. }));
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#file-watch")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#file-watch"
+)]
 pub trait Watcher {
     /// Begin watching `path`; call `on_change` when the file changes on disk
     /// (PROP-040 §10 `#file-watch`). Returns an error if the watch could not
     /// be installed (see [`WatchError`]). The backend owns debounce and its own
     /// threading; `on_change` fires only for a real, settled change.
-    #[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#file-watch")]
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#file-watch"
+    )]
     fn watch(
         &mut self,
         path: &Path,

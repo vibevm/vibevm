@@ -20,7 +20,7 @@ straight back to `vibe progress rescan` reports every unit as
 > at verdict time, verdict, evidence refs, date, named crates, marker
 > snapshot. **Shipped:** `baseline.rs`'s `BaselineUnit` carries exactly these
 > fields, with `Baseline::load` / `store` and the `rescan` CLI live.
-> — `spec://vibevm/modules/vibe-progress/PROP-043#baseline`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#baseline`
 
 > The one artifact worth keeping anyway is `baseline.json`: not knowledge but
 > **acceleration** — its loss returns the next run's cost from O(delta) to

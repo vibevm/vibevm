@@ -10,7 +10,7 @@
 //! ([`PackageEntry`], [`NameEntry`]) in `aggregate`. All three are
 //! re-exported here, so every `crate::types::*` path is unchanged.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#entry");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry");
 
 use chrono::{DateTime, Utc};
 use semver::Version;
@@ -36,7 +36,10 @@ pub use relations::{
 /// Per-version index record. PROP-005 §2.6.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-#[spec(implements = "spec://vibevm/modules/vibe-index/PROP-005#entry", r = 1)]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry",
+    r = 1
+)]
 pub struct VersionEntry {
     pub schema_version: u32,
 

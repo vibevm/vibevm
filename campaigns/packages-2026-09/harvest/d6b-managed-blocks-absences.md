@@ -542,7 +542,7 @@ argument away.** The composed message is
 ```rust
 #[error(
     "malformed <vibevm> block in `{}`: {reason} \
-     (violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; \
+     (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#markers; \
      fix: repair the file by hand to exactly one <vibevm>/</vibevm> pair)",
     .path.display()
 )]

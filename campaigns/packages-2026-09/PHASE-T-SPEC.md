@@ -228,21 +228,21 @@ test does not mention it.**
 **Real — three kinds, each read straight out of the fact's own words:**
 
 ```rust
-#[specmark::verifies("spec://vibevm/modules/vibe-progress/PROP-043#SHORTHAND-BARE")]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#SHORTHAND-BARE")]
 #[test]
 fn canonical_bare_shorthand_defaults_to_work() {
     // literal written from the fact, before anything was run
     assert_eq!(parse_shorthand("@impl"), Ok(Marker::new(Stage::Impl, State::Work)));
 }
 
-#[specmark::verifies("spec://vibevm/modules/vibe-progress/PROP-043#SHORTHAND-BARE")]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#SHORTHAND-BARE")]
 #[test]
 fn boundary_unknown_is_the_one_exception_and_defaults_to_hold() {
     // the fact says "exactly one exception" — that clause IS the boundary case
     assert_eq!(parse_shorthand("@unknown"), Ok(Marker::new(Stage::Unknown, State::Hold)));
 }
 
-#[specmark::verifies("spec://vibevm/modules/vibe-progress/PROP-043#VOCAB-CLOSED")]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#VOCAB-CLOSED")]
 #[test]
 fn negative_a_typo_dies_with_a_nearest_legal_value_hint() {
     // the fact promises a hint, not merely an error — assert the hint

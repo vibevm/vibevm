@@ -4,7 +4,7 @@
 //! `vibe_publish::Publisher`. The `[origin]` provenance probe lives in
 //! [`super::origin`].
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-007#surface");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#surface");
 
 use anyhow::{Context, Result, anyhow, bail};
 use serde::Serialize;

@@ -7,7 +7,7 @@
 //! layered in `by-cap` / `by-purl` / inverted text search; slice 5 the
 //! HTTP server.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-008#identity");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity");
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};

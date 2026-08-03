@@ -20,7 +20,7 @@
 //!
 //! [`App`]: super::state::App
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#copy");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#copy");
 
 pub mod file_dest;
 pub mod settings;
@@ -43,7 +43,7 @@ use super::state::{App, RowNode};
 /// the per-package `T`/`C`/`S` flags ride along. "What I see is what I copy"
 /// (§10.1): in Tabs mode [`App::rows`] already holds only the active tab's
 /// partition, so this serializes exactly that.
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#copy-markdown")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#copy-markdown")]
 pub fn tree_markdown(app: &App) -> (String, usize) {
     let mut count = 0usize;
     let mut body = String::new();
@@ -85,7 +85,7 @@ pub fn tree_markdown(app: &App) -> (String, usize) {
 /// builds ([`super::modal::detail_card`]) and serializes it, so the copy is
 /// byte-faithful to what is on screen. `None` when no card is open (a
 /// separator/subheader selection, or nothing selected).
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#copy-providers")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#copy-providers")]
 pub fn card_markdown(app: &App) -> Option<String> {
     let card = super::modal::detail_card(app)?;
     let body = card.to_markdown();
@@ -115,7 +115,7 @@ fn screen_doc(app: &App) -> String {
 /// F6 entry point: the card's markdown when its modal is open, the tree's
 /// markdown otherwise. Returns the footer flash line (a `\u{2713}` confirmation
 /// or a `\u{2717}` error if the clipboard is unavailable).
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#copy-flow")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#copy-flow")]
 pub fn copy(app: &App) -> String {
     if app.modal_open
         && let Some(md) = card_markdown(app)
@@ -149,7 +149,7 @@ fn write_clipboard(text: String) -> Result<(), String> {
 /// (§10.4); Markdown + clipboard → copy + flash + close; Markdown + file → push
 /// the [`FileDest`] modal over it (the depth-2 cascade). A no-op when no
 /// copy-settings modal is open.
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#copy-flow")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#copy-flow")]
 pub fn confirm_settings(app: &mut App) {
     let Some(cs) = app.copy_settings.as_ref() else {
         return;
@@ -179,7 +179,7 @@ pub fn confirm_settings(app: &mut App) {
 /// success: flash + close both file-dest and copy-settings (the depth-2 stack
 /// unwinds). On error: flash the error and keep file-dest open so the user can
 /// fix the path. A no-op when no file-dest modal is open.
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-037#copy-dest")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#copy-dest")]
 pub fn confirm_file_dest_save(app: &mut App) {
     let Some(path) = app.file_dest.as_ref().map(|fd| fd.path().to_string()) else {
         return;

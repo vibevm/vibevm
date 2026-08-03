@@ -27,13 +27,13 @@ impl SectionSource for MockSource {
 fn composes_use_ordering_and_embed_expansion() {
     let src = MockSource::new(&[
         (
-            "spec://vibevm/a#r",
-            "# A {#r}\n#use spec://vibevm/b#r\n#embed spec://vibevm/c#r",
+            "spec://org.vibevm.core/vibevm/a#r",
+            "# A {#r}\n#use spec://org.vibevm.core/vibevm/b#r\n#embed spec://org.vibevm.core/vibevm/c#r",
         ),
-        ("spec://vibevm/b#r", "# B {#r}\nbee"),
-        ("spec://vibevm/c#r", "cee"),
+        ("spec://org.vibevm.core/vibevm/b#r", "# B {#r}\nbee"),
+        ("spec://org.vibevm.core/vibevm/c#r", "cee"),
     ]);
-    let seed = SpecAddress::parse("spec://vibevm/a#r").unwrap();
+    let seed = SpecAddress::parse("spec://org.vibevm.core/vibevm/a#r").unwrap();
     let out = compile_static(&seed, &src).unwrap();
 
     // The dependency `b` is emitted before its user `a`.
@@ -46,26 +46,32 @@ fn composes_use_ordering_and_embed_expansion() {
     assert!(!out.contains("#use"), "{out}");
     assert!(!out.contains("#embed"), "{out}");
     // Node markers wrap each emission.
-    assert!(out.contains("<!-- vibe:begin spec://vibevm/a#r -->"));
-    assert!(out.contains("<!-- vibe:end spec://vibevm/b#r -->"));
+    assert!(out.contains("<!-- vibe:begin spec://org.vibevm.core/vibevm/a#r -->"));
+    assert!(out.contains("<!-- vibe:end spec://org.vibevm.core/vibevm/b#r -->"));
 }
 
 #[test]
 fn a_lone_seed_compiles_to_itself() {
-    let src = MockSource::new(&[("spec://vibevm/a#r", "# A {#r}\njust me")]);
-    let seed = SpecAddress::parse("spec://vibevm/a#r").unwrap();
+    let src = MockSource::new(&[("spec://org.vibevm.core/vibevm/a#r", "# A {#r}\njust me")]);
+    let seed = SpecAddress::parse("spec://org.vibevm.core/vibevm/a#r").unwrap();
     let out = compile_static(&seed, &src).unwrap();
     assert!(out.contains("just me"));
-    assert!(out.contains("<!-- vibe:begin spec://vibevm/a#r -->"));
+    assert!(out.contains("<!-- vibe:begin spec://org.vibevm.core/vibevm/a#r -->"));
 }
 
 #[test]
 fn a_cycle_fails_the_compile() {
     let src = MockSource::new(&[
-        ("spec://vibevm/a#r", "#use spec://vibevm/b#r"),
-        ("spec://vibevm/b#r", "#use spec://vibevm/a#r"),
+        (
+            "spec://org.vibevm.core/vibevm/a#r",
+            "#use spec://org.vibevm.core/vibevm/b#r",
+        ),
+        (
+            "spec://org.vibevm.core/vibevm/b#r",
+            "#use spec://org.vibevm.core/vibevm/a#r",
+        ),
     ]);
-    let seed = SpecAddress::parse("spec://vibevm/a#r").unwrap();
+    let seed = SpecAddress::parse("spec://org.vibevm.core/vibevm/a#r").unwrap();
     assert!(matches!(
         compile_static(&seed, &src),
         Err(CompileError::UseGraph(_))
@@ -78,15 +84,15 @@ fn a_clean_fact_override_compiles_to_the_source_version() {
     // `fact-a`, so the gate passes and the source text wins.
     let src = MockSource::new(&[
         (
-            "spec://vibevm/c#root",
-            "# API {#root}\n#source spec://vibevm/impl#root\n- ##fact-a contract version\n",
+            "spec://org.vibevm.core/vibevm/c#root",
+            "# API {#root}\n#source spec://org.vibevm.core/vibevm/impl#root\n- ##fact-a contract version\n",
         ),
         (
-            "spec://vibevm/impl#root",
+            "spec://org.vibevm.core/vibevm/impl#root",
             "# Impl {#root}\n- ##fact-a source version\n",
         ),
     ]);
-    let seed = SpecAddress::parse("spec://vibevm/c#root").unwrap();
+    let seed = SpecAddress::parse("spec://org.vibevm.core/vibevm/c#root").unwrap();
     let out = compile_static(&seed, &src).unwrap();
     assert!(out.contains("source version"), "{out}");
     assert!(!out.contains("contract version"), "{out}");
@@ -100,15 +106,15 @@ fn a_cross_section_fact_collision_fails_the_gate() {
     // it, so the merged document holds `dup` twice across sections.
     let src = MockSource::new(&[
         (
-            "spec://vibevm/c#root",
-            "# A {#a}\n#source spec://vibevm/impl#whole\n- ##dup contract's\n",
+            "spec://org.vibevm.core/vibevm/c#root",
+            "# A {#a}\n#source spec://org.vibevm.core/vibevm/impl#whole\n- ##dup contract's\n",
         ),
         (
-            "spec://vibevm/impl#whole",
+            "spec://org.vibevm.core/vibevm/impl#whole",
             "# A {#a}\nplain source a\n# B {#b}\n- ##dup source's\n",
         ),
     ]);
-    let seed = SpecAddress::parse("spec://vibevm/c#root").unwrap();
+    let seed = SpecAddress::parse("spec://org.vibevm.core/vibevm/c#root").unwrap();
     match compile_static(&seed, &src) {
         Err(CompileError::DuplicateId { dup, .. }) => {
             assert_eq!(dup.id, "dup");
@@ -146,15 +152,15 @@ fn at_bang_alias_is_rewritten_to_the_full_address() {
     // leaves with the stripped `#use` line.
     let src = MockSource::new(&[
         (
-            "spec://vibevm/a#r",
-            "# A {#r}\n#use spec://vibevm/b#r as dep\nSees @!dep here.\n",
+            "spec://org.vibevm.core/vibevm/a#r",
+            "# A {#r}\n#use spec://org.vibevm.core/vibevm/b#r as dep\nSees @!dep here.\n",
         ),
-        ("spec://vibevm/b#r", "# B {#r}\nb body\n"),
+        ("spec://org.vibevm.core/vibevm/b#r", "# B {#r}\nb body\n"),
     ]);
-    let seed = SpecAddress::parse("spec://vibevm/a#r").unwrap();
+    let seed = SpecAddress::parse("spec://org.vibevm.core/vibevm/a#r").unwrap();
     let out = compile_static(&seed, &src).unwrap();
     // The alias target's full address is spliced in for `@!dep`.
-    assert!(out.contains("@spec://vibevm/b#r"), "{out}");
+    assert!(out.contains("@spec://org.vibevm.core/vibevm/b#r"), "{out}");
     assert!(!out.contains("@!dep"), "{out}");
     // The declaration line (and its `as dep` clause) is gone with `#use`.
     assert!(!out.contains("#use "), "{out}");
@@ -169,12 +175,12 @@ fn at_bang_in_a_fence_is_not_rewritten() {
     // inside a fenced block is prose-as-data, not a use, so it stays put.
     let src = MockSource::new(&[
         (
-            "spec://vibevm/a#r",
-            "# A {#r}\n#use spec://vibevm/b#r as dep\n```\n@!dep\n```\n",
+            "spec://org.vibevm.core/vibevm/a#r",
+            "# A {#r}\n#use spec://org.vibevm.core/vibevm/b#r as dep\n```\n@!dep\n```\n",
         ),
-        ("spec://vibevm/b#r", "# B {#r}\nb\n"),
+        ("spec://org.vibevm.core/vibevm/b#r", "# B {#r}\nb\n"),
     ]);
-    let seed = SpecAddress::parse("spec://vibevm/a#r").unwrap();
+    let seed = SpecAddress::parse("spec://org.vibevm.core/vibevm/a#r").unwrap();
     let out = compile_static(&seed, &src).unwrap();
     assert!(out.contains("@!dep"), "fenced @!dep must stay: {out}");
 }

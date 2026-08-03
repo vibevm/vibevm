@@ -3,7 +3,7 @@
 //! context (the values vibevm derives from `current_exe`) even when a shell's
 //! `$VIBEVM_HOME` is stale. The publish token is deliberately never included.
 
-specmark::scope!("spec://vibevm/common/PROP-019#vars");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#vars");
 
 use anyhow::{Result, bail};
 
@@ -93,7 +93,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#vars", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#vars", r = 1)]
     fn plain_prints_actual_values() {
         let out = render(&rows(), false, false);
         assert_eq!(
@@ -103,7 +103,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#vars", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#vars", r = 1)]
     fn diff_brackets_only_differences() {
         let out = render(&rows(), false, true);
         assert!(out.contains("VIBEVM_HOME=/opt/vibevm/versions/branch/main/2 [/old]"));
@@ -113,7 +113,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#vars", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#vars", r = 1)]
     fn full_diff_has_two_tables_and_stars_differences() {
         let out = render(&rows(), true, true);
         assert!(out.contains("# ACTUAL\n"));

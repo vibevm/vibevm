@@ -11,7 +11,7 @@
 //! `$VIBEVM_<APP>` → the active instance's packaged `<app>/` (back-compat)
 //! → `PATH` lookup, with an in-place fallback for `vibe tree`.
 
-specmark::scope!("spec://vibevm/common/PROP-019#build");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#build");
 
 use std::fs;
 use std::path::PathBuf;
@@ -71,7 +71,7 @@ pub(crate) struct InstallRequest<'a> {
 /// §2.7, §2.15). If the build is byte-identical to the latest instance and
 /// `--force` is absent, no new instance is made — `current` just points at
 /// it (the dedup-skip).
-#[spec(implements = "spec://vibevm/common/PROP-019#build")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#build")]
 pub(crate) fn perform_install(
     ctx: &output::Context,
     store: &VersionStore,
@@ -189,7 +189,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#instances", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#instances", r = 1)]
     fn install_makes_instance_skips_unchanged_and_forces_rebuild() {
         let tmp = tempfile::tempdir().unwrap();
         let store = VersionStore::new(tmp.path());

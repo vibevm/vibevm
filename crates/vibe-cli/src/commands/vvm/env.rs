@@ -5,7 +5,7 @@
 //! the POSIX rc-file path in a temp file and never mutate the real machine;
 //! the Windows registry path is only ever taken by a live `man use`.
 
-specmark::scope!("spec://vibevm/common/PROP-019#activation");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#activation");
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -386,7 +386,7 @@ mod tests {
     use specmark::verifies;
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#activation", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#activation", r = 1)]
     fn shell_detect_and_export_line() {
         assert_eq!(Shell::detect(Some("/usr/bin/zsh")), Shell::Zsh);
         assert_eq!(Shell::detect(Some("/bin/bash")), Shell::Bash);
@@ -410,7 +410,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#activation", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#activation", r = 1)]
     fn shims_read_the_current_pointer() {
         let tmp = tempfile::tempdir().unwrap();
         write_shims(tmp.path()).unwrap();
@@ -429,7 +429,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#path", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#path", r = 1)]
     fn rc_persister_is_idempotent_and_repoints() {
         let tmp = tempfile::tempdir().unwrap();
         let rc = tmp.path().join(".bashrc");
@@ -462,7 +462,7 @@ mod tests {
     }
 
     #[test]
-    #[verifies("spec://vibevm/common/PROP-019#path", r = 1)]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#path", r = 1)]
     fn path_with_prefix_moves_shim_dir_to_front() {
         // Present but not first → moved to front (wins over an earlier
         // ~/.cargo/bin/vibe).

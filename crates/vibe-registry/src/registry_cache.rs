@@ -10,7 +10,7 @@
 //! paths (`vibe_registry::git_registry::default_cache_root`, …)
 //! remain valid.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-001#cache-layout");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#cache-layout");
 
 use std::path::PathBuf;
 

@@ -16,7 +16,7 @@
 //! in [`super::page_tree`]; the built-in declarations live in
 //! [`super::settings`].
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#registry");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#registry");
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -221,7 +221,9 @@ impl PageRegistry {
     /// `ctx_has_project` gates [`PageScope::Project`] pages: when `false` (a
     /// no-project / L1-only session) they are omitted and any group left empty
     /// is pruned (§3 `#tree-context`).
-    #[spec(implements = "spec://vibevm/modules/vibe-settings/PROP-041#declarative-pages")]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#declarative-pages"
+    )]
     pub fn tree(&self, ctx_has_project: bool) -> Vec<PageNode> {
         // The set of declared ids — a parent_id that names one of these is a
         // resolved group; any other parent_id is unresolved (→ "Other").

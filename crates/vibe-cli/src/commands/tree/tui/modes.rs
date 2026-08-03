@@ -10,7 +10,7 @@
 //! The graph utility [`reachable_from_roots`] stays here — the tree flatten's
 //! orphan pass (PROP-036 §2.12) consumes it.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#modes");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#modes");
 
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 

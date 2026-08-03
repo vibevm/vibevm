@@ -6,7 +6,7 @@
 //! and shared core (this module + the crate root) only — never a
 //! sibling cell.
 
-specmark::scope!("spec://vibevm/VIBEVM-SPEC#linter");
+specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter");
 
 pub mod activation_conflict;
 pub mod boot_directory;

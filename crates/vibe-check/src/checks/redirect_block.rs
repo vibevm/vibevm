@@ -1,7 +1,7 @@
 //! The redirect-block check — the `<vibevm>` marker pair in each agent
 //! instruction file at the project root is well-formed (PROP-012 §2.2).
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-012#markers");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#markers");
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -24,7 +24,7 @@ impl Check for RedirectBlockCheck {
     /// is an error: a mutating `vibe` command would refuse to proceed
     /// against it.
     #[spec(
-        implements = "spec://vibevm/modules/vibe-workspace/PROP-012#markers",
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#markers",
         r = 1
     )]
     fn run(&self, project_root: &Path, _opts: &CheckOptions, report: &mut CheckReport) {

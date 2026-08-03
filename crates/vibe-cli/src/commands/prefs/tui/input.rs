@@ -27,7 +27,7 @@
 //! repaint is handled first so the display never garbles (the same lesson the
 //! tree TUI records).
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#tree-widget");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#tree-widget");
 
 use anyhow::Result;
 use rat_salsa::Control;
@@ -282,7 +282,7 @@ fn handle_form(event: &Event, app: &mut PrefsApp) -> Control<super::AppEvent> {
             if form.has_blocking_error() {
                 tracing::warn!(
                     "vibe prefs form: apply blocked — a field has a validation error \
-                     (violates spec://vibevm/modules/vibe-settings/PROP-041#validation)"
+                     (violates spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#validation)"
                 );
                 Control::Changed
             } else {

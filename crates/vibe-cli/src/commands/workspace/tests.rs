@@ -1,7 +1,7 @@
 //! Hermetic tests for the publish loop (mock `RepoCreator`, real bare
 //! repos under a tempdir — no network).
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-007#surface");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#surface");
 
 use super::*;
 use crate::commands::workspace::origin::root_identity_name;

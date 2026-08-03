@@ -38,7 +38,7 @@
 //!
 //! Spec: [PROP-040 §4, §5](../../../../../spec/modules/vibe-settings/PROP-040-settings.md#resolver).
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-040#resolver");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#resolver");
 
 use std::collections::BTreeMap;
 use std::fmt;
@@ -215,7 +215,9 @@ impl ResolvedPrefs {
     /// assert!(rp.get("tree.missing").is_none());
     /// # Ok::<(), Box<dyn std::error::Error>>(())
     /// ```
-    #[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#resolved-prefs")]
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#resolved-prefs"
+    )]
     pub fn get(&self, path: &str) -> Option<&toml::Value> {
         lookup_dotted(&self.merged, path)
     }
@@ -239,7 +241,9 @@ impl ResolvedPrefs {
     /// assert!(rp.get_section("tree.palette").is_none());
     /// # Ok::<(), Box<dyn std::error::Error>>(())
     /// ```
-    #[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#get-section")]
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#get-section"
+    )]
     pub fn get_section(&self, namespace: &str) -> Option<&toml::Table> {
         lookup_dotted(&self.merged, namespace).and_then(toml::Value::as_table)
     }
@@ -252,7 +256,9 @@ impl ResolvedPrefs {
     /// `value`/`default`/`l1`/… fields carry each layer's subtree and `origin`
     /// is [`Origin::Default`] (a container has no single provenance; ask
     /// [`origin`](Self::origin) per leaf instead).
-    #[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#inspect")]
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#inspect"
+    )]
     pub fn inspect(&self, path: &str) -> Option<InspectValue> {
         let value = lookup_dotted(&self.merged, path)?.clone();
         let origin = self
@@ -288,7 +294,9 @@ impl ResolvedPrefs {
     /// assert!(rp.origin("missing").is_none());
     /// # Ok::<(), Box<dyn std::error::Error>>(())
     /// ```
-    #[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#inspect")]
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#inspect"
+    )]
     pub fn origin(&self, path: &str) -> Option<Origin> {
         self.provenance.get(path).copied()
     }
@@ -346,7 +354,9 @@ impl ResolvedPrefs {
 /// assert_eq!(rp.origin("tree.palette"), Some(Origin::Cli));
 /// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#resolved-prefs")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#resolved-prefs"
+)]
 pub fn resolve(
     raw: LayeredRaw,
     schema: &Schema,

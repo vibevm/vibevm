@@ -14,10 +14,10 @@
 //! first, then vibe-embedded, per the developer-in-project precedence) and is
 //! transparent to the layer above.
 //!
-//! Conformance twin: spec://vibevm/modules/vibe-registry/PROP-030#project-local
+//! Conformance twin: spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local
 //! (the products-side normative anchor for the project-local extension).
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-030#project-local");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local");
 
 use specmark::{cell, spec};
 use vibe_core::manifest::Manifest;
@@ -60,12 +60,16 @@ impl<'a> LocalCompositeProvider<'a> {
 }
 
 impl<'a> DepProvider for LocalCompositeProvider<'a> {
-    #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-030#project-local")]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local"
+    )]
     fn resolve_version(&self, pkgref: &PackageRef) -> Result<semver::Version, DepProviderError> {
         resolve_first(&self.ordered(), |p| p.resolve_version(pkgref))
     }
 
-    #[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-030#project-local")]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local"
+    )]
     fn fetch_manifest(
         &self,
         group: &Group,
@@ -83,7 +87,9 @@ impl<'a> VersionEnumerator for LocalCompositeProvider<'a> {
     /// fetch picks the precedence-first one (project-local, per the ordering).
     /// The `--embedded-short-circuit` knob, when it applies, is enforced by
     /// the layer above (`EmbeddedProvider`); this composite always unions.
-    #[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-017#provider-enrichment")]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#provider-enrichment"
+    )]
     fn list_versions(
         &self,
         group: &Group,
@@ -207,7 +213,10 @@ mod tests {
     /// project. The composite resolves `wal` and `fetch_manifest` reports the
     /// project-local label, not the embedded one.
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-registry/PROP-030#project-local", r = 1)]
+    #[verifies(
+        "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local",
+        r = 1
+    )]
     fn project_local_wins_over_embedded_on_a_clash() {
         let project_tmp = tempfile::tempdir().unwrap();
         let embedded_tmp = tempfile::tempdir().unwrap();
@@ -247,7 +256,10 @@ mod tests {
     /// load-bearing fall-through behaviour the embedded composition relied on
     /// with a single provider; the composite preserves it across N.
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-registry/PROP-030#project-local", r = 1)]
+    #[verifies(
+        "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local",
+        r = 1
+    )]
     fn absent_in_first_falls_through_to_second() {
         let project_tmp = tempfile::tempdir().unwrap();
         let embedded_tmp = tempfile::tempdir().unwrap();
@@ -286,7 +298,7 @@ mod tests {
     /// only embedded carries, only embedded's versions surface; for `redb`
     /// only project's; for a coordinate neither carries, an absence.
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-017#provider-enrichment")]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#provider-enrichment")]
     fn list_versions_unions_across_both_providers() {
         let project_tmp = tempfile::tempdir().unwrap();
         let embedded_tmp = tempfile::tempdir().unwrap();

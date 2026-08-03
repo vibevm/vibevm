@@ -1,6 +1,6 @@
 //! `vibe prefs show-origins [key]` — the full per-layer breakdown.
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-040#show-origins");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#show-origins");
 
 use anyhow::Result;
 use serde::Serialize;

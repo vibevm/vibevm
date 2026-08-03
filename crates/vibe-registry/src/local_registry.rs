@@ -6,7 +6,7 @@
 //! the `Registry` seam lives in one file-set with one registration
 //! point.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#registry-model");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use std::fs;
 use std::path::{Path, PathBuf};

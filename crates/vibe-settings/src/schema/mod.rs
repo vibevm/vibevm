@@ -27,7 +27,7 @@
 //!
 //! Spec: [PROP-040 §6, §7](../../../../../../spec/modules/vibe-settings/PROP-040-settings.md#schema).
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-040#schema");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema");
 
 mod registry;
 mod types;

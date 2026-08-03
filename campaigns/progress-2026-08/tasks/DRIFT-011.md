@@ -26,10 +26,10 @@ any other fact.
 
 > A `##<ID>` at the start of a countable unit (any nesting depth, outside
 > fenced/inline code) mints a **fact unit**.
-> — `spec://vibevm/modules/vibe-progress/PROP-043#granularity`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#granularity`
 
 > Anchored-when-marked: a marked fact must be anchored.
-> — `spec://vibevm/modules/vibe-progress/PROP-043#granularity`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#granularity`
 
 Finding realised: **F-015** — blockquote paragraphs are countable units (they
 can carry a marker) but cannot carry a `##<ID>`, because the parser never
@@ -104,7 +104,7 @@ bash tools/self-check.sh
   markers / 0 unmarked. If the count changes, an existing `> ##…` in the
   tree was being silently ignored — that is a finding to surface (§8), and a
   welcome one, but it is not something to absorb quietly.
-- Discipline: `#[spec(implements = "spec://vibevm/modules/vibe-progress/PROP-043#granularity")]`,
+- Discipline: `#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#granularity")]`,
   `cargo fmt --all`, clippy clean, atomic commits, no AI attribution.
 
 ## 7. Analogies {#analogies}

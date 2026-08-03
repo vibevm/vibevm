@@ -5,7 +5,7 @@
 //! the far backlog (PROP-017 §8); they will join this module when they
 //! land.
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#capability");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability");
 
 use serde::{Deserialize, Serialize};
 

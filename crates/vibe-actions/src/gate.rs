@@ -16,7 +16,7 @@
 //! Spec: [PROP-039 §8.4](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#legibility-gate),
 //! [§12.2](../../../../spec/modules/vibe-actions/PROP-039-action-system.md#gates).
 
-specmark::scope!("spec://vibevm/modules/vibe-actions/PROP-039#gates");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#gates");
 
 use std::fmt;
 

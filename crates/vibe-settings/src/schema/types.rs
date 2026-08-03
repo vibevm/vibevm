@@ -28,7 +28,9 @@ use crate::loader::Layer;
 /// assert_eq!(KeyType::Bool.to_string(), "bool");
 /// assert_eq!(KeyType::Array.label(), "array");
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#schema-fields")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema-fields"
+)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum KeyType {
     /// A boolean flag (`true` / `false`).
@@ -91,7 +93,9 @@ impl fmt::Display for KeyType {
 /// assert_eq!(Scope::TeamOnly.writable_layers(), &[Layer::L2]);
 /// assert_eq!(Scope::Project.to_string(), "project");
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#scope-meta")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#scope-meta"
+)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Scope {
     /// Settable in L1 (and overridden by L2/L3). Roams (future cloud, §14).
@@ -121,7 +125,9 @@ impl Scope {
     /// (PROP-040 §7 `#scope-matrix`). Returned as a static slice — the matrix
     /// is fixed in the spec and encoded here in one place; the resolver reads
     /// it to refuse writes to forbidden layers.
-    #[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#scope-matrix")]
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#scope-matrix"
+    )]
     pub const fn writable_layers(self) -> &'static [Layer] {
         match self {
             // User: global default at L1, project-shared at L2, per-project at L3.
@@ -156,7 +162,9 @@ impl fmt::Display for Scope {
 /// assert_eq!(Applies::default(), Applies::Live);
 /// assert_eq!(Applies::Restart.label(), "restart");
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#applies")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#applies"
+)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
 pub enum Applies {
     /// Takes effect immediately (default — most preferences).
@@ -202,7 +210,9 @@ impl fmt::Display for Applies {
 /// assert_eq!(MergeStrategy::default(), MergeStrategy::Replace);
 /// assert_eq!(MergeStrategy::Append.label(), "append");
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#merge-strategy-opt-in")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#merge-strategy-opt-in"
+)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
 pub enum MergeStrategy {
     /// Higher layer's array fully replaces the lower (default; non-obvious
@@ -250,7 +260,9 @@ impl fmt::Display for MergeStrategy {
 /// let d = Deprecation::with_replacement("use `tree.sort`", "node.sort");
 /// assert_eq!(d.replaced_by.as_deref(), Some("node.sort"));
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#deprecation")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#deprecation"
+)]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Deprecation {
     /// The dotted path that replaces this key, if any.
@@ -271,7 +283,9 @@ impl Deprecation {
     }
 
     /// A deprecation pointing at a replacement key (PROP-040 §6 `#deprecation`).
-    #[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#deprecation")]
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#deprecation"
+    )]
     #[must_use]
     pub fn with_replacement(message: impl Into<String>, replaced_by: impl Into<String>) -> Self {
         Deprecation {
@@ -306,7 +320,9 @@ impl Deprecation {
 /// assert_eq!(key.applies, Applies::Reload);
 /// assert!(matches!(key.default, Some(toml::Value::String(_))));
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#schema-fields")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema-fields"
+)]
 #[derive(Debug, Clone, PartialEq)]
 pub struct KeyMeta {
     /// The dotted path of the key, e.g. `"tree.palette"` (PROP-040 §5
@@ -348,7 +364,9 @@ impl KeyMeta {
     /// assert!(!key.restricted);
     /// # Ok::<(), SchemaError>(())
     /// ```
-    #[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#schema-fields")]
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema-fields"
+    )]
     pub fn new(
         path: impl Into<String>,
         key_type: KeyType,
@@ -429,12 +447,14 @@ impl KeyMeta {
 /// assert!(err.to_string().contains("schema-fields"));
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#schema-first")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema-first"
+)]
 pub enum SchemaError {
     /// The `path` was empty — a key must have a non-empty dotted path.
     #[error(
         "a setting key's path is required and must be non-empty \
-         (violates spec://vibevm/modules/vibe-settings/PROP-040#schema-fields; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema-fields; \
           fix: pass a dotted path such as `tree.palette`)"
     )]
     EmptyPath,
@@ -443,7 +463,7 @@ pub enum SchemaError {
     /// non-empty description for every key.
     #[error(
         "setting `{path}` is missing a description — PROP-040 §6 mandates a non-empty description \
-         (violates spec://vibevm/modules/vibe-settings/PROP-040#schema-fields; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema-fields; \
           fix: document the key's effect for the settings UI and AIUI)"
     )]
     EmptyDescription {
@@ -456,7 +476,7 @@ pub enum SchemaError {
     /// `#schema-first`).
     #[error(
         "setting `{path}` is already registered — duplicate registration \
-         (violates spec://vibevm/modules/vibe-settings/PROP-040#schema-first; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema-first; \
           fix: pick a distinct path, or drop the duplicate declaration)"
     )]
     DuplicateKey {

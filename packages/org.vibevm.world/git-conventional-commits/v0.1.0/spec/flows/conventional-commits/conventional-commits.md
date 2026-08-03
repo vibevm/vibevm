@@ -139,7 +139,7 @@ the configured TTL (default 1 h); `vibe registry sync` forces a
 pull regardless. Rationale: every `vibe install` hitting the
 network was making offline work painful and slow.
 
-Cited by spec://vibevm/modules/vibe-registry/PROP-001#freshness.
+Cited by spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#freshness.
 ```
 
 ### Refactor {#example-refactor}

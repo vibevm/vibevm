@@ -20,7 +20,9 @@ use super::types::KeyType;
 
 /// The kind of non-fatal diagnostic surfaced by [`validate`] (PROP-040 §6
 /// `#schema-first`, §6 `#deprecation`).
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#schema-first")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema-first"
+)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum DiagnosticKind {
     /// A key present in a file but not declared by the schema (typo, retired
@@ -40,7 +42,9 @@ pub enum DiagnosticKind {
 /// A non-fatal validation diagnostic (PROP-040 §6 `#schema-first`). Validation
 /// never blocks boot — the resolver reports each diagnostic, then treats the
 /// offending value as absent (§3 `#missing-is-default`).
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#schema-first")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema-first"
+)]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Diagnostic {
     /// The dotted path the diagnostic is about.
@@ -77,7 +81,9 @@ pub struct Diagnostic {
 /// assert_eq!(unknown, vec!["ghost.key", "tree.palate"]);
 /// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#schema-first")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema-first"
+)]
 pub fn unknown_keys(schema: &Schema, table: &toml::Table) -> Vec<String> {
     let mut out = Vec::new();
     collect_unknown(schema, table, String::new(), &mut out);
@@ -118,7 +124,9 @@ pub fn unknown_keys(schema: &Schema, table: &toml::Table) -> Vec<String> {
 /// assert!(dep.message.contains("tree.sort"));
 /// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
-#[specmark::spec(implements = "spec://vibevm/modules/vibe-settings/PROP-040#schema-first")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema-first"
+)]
 pub fn validate(schema: &Schema, table: &toml::Table) -> Vec<Diagnostic> {
     let mut out = Vec::new();
     for path in unknown_keys(schema, table) {

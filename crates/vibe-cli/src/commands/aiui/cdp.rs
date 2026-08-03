@@ -9,7 +9,7 @@
 //! chromiumoxide is async over tokio, so each `inspect` spins a current-thread
 //! tokio runtime and `block_on`s the connect + evaluate.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-042#aiui-cli");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#aiui-cli");
 
 use std::time::Duration;
 

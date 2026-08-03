@@ -4,7 +4,7 @@
 //! §2.5). The clone / cache-materialisation half lives in
 //! [`super::fetch`].
 
-specmark::scope!("spec://vibevm/modules/vibe-registry/PROP-002#registry-model");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use super::*;
 

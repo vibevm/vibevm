@@ -1,6 +1,6 @@
 //! `vibe prefs get <key>` — the resolved value of one key + which layer set it.
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-040#prefs-command");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#prefs-command");
 
 use anyhow::Result;
 use serde::Serialize;

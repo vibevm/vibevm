@@ -11,7 +11,7 @@ more package repos in a vibevm-shaped registry. It runs in two modes:
   exposes a REST API. Single-writer; reads open, writes guarded by
   bearer-token auth.
 
-Specification: [`spec://vibevm/modules/vibe-index/PROP-005`](../../spec/modules/vibe-index/PROP-005-package-index.md).
+Specification: [`spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005`](../../spec/modules/vibe-index/PROP-005-package-index.md).
 
 ## A member of the vibevm workspace
 

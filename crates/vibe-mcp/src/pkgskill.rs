@@ -9,7 +9,7 @@
 //! delivery into the project tree. Standalone-only (PROP-018 §2.3): no LLM,
 //! so it works whether or not an agent is driving vibevm.
 
-specmark::scope!("spec://vibevm/common/PROP-018#vibe-skill");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill");
 
 use std::collections::BTreeMap;
 use std::fs;
@@ -28,14 +28,14 @@ use crate::agents::{Agent, Scope};
 /// ```
 /// use vibe_mcp::pkgskill::PackageSkillError;
 /// let e = PackageSkillError::SkillsRoot { detail: "no config dir".into() };
-/// assert!(e.to_string().contains("spec://vibevm/common/PROP-018#vibe-skill"));
+/// assert!(e.to_string().contains("spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill"));
 /// ```
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/common/PROP-018#vibe-skill")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill")]
 pub enum PackageSkillError {
     #[error(
         "reading skill content at `{path}` failed: {source} \
-         (violates spec://vibevm/common/PROP-018#vibe-skill; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill; \
           fix: ensure the package's declared skill source and the agent dirs are readable)"
     )]
     Read {
@@ -46,7 +46,7 @@ pub enum PackageSkillError {
 
     #[error(
         "writing the projected skill at `{path}` failed: {source} \
-         (violates spec://vibevm/common/PROP-018#vibe-skill; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill; \
           fix: ensure the agent's skills directory is writable)"
     )]
     Write {
@@ -57,7 +57,7 @@ pub enum PackageSkillError {
 
     #[error(
         "resolving the agent skills root failed: {detail} \
-         (violates spec://vibevm/common/PROP-018#vibe-skill; \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill; \
           fix: act on the wrapped agent-config error)"
     )]
     SkillsRoot { detail: String },
@@ -79,7 +79,7 @@ pub enum PackageSkillError {
 /// assert_eq!(r.skill, "demo");
 /// ```
 #[derive(Debug, Clone, Serialize)]
-#[spec(implements = "spec://vibevm/common/PROP-018#vibe-skill")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill")]
 pub struct PackageSkillReport {
     pub skill: String,
     pub agent: String,
@@ -100,7 +100,7 @@ pub struct PackageSkillReport {
 /// and reported `updated`, so a file the source dropped leaves no stale
 /// copy. Agents with no filesystem skill loader (Cursor, Claude Desktop)
 /// or no surface for this scope report `skipped`.
-#[spec(implements = "spec://vibevm/common/PROP-018#vibe-skill")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill")]
 pub fn install_package_skill(
     agent: Agent,
     scope: Scope,
@@ -118,7 +118,7 @@ pub fn install_package_skill(
 /// a skill pick specific files out of a noisy subtree (e.g. a bridged
 /// upstream repo full of unrelated content, PROP-023).
 #[spec(
-    implements = "spec://vibevm/modules/vibe-mcp/PROP-015#skill-include",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill-include",
     r = 1
 )]
 pub fn install_package_skill_selecting(
@@ -195,7 +195,7 @@ pub fn install_package_skill_selecting(
 /// uninstall` inverse. `removed` when present, `absent` when nothing was
 /// there, `skipped` for agents with no skill loader. Only the skill's own
 /// `<name>/` dir is touched.
-#[spec(implements = "spec://vibevm/common/PROP-018#vibe-skill")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill")]
 pub fn uninstall_package_skill(
     agent: Agent,
     scope: Scope,

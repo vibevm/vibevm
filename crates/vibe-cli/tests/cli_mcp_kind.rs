@@ -15,8 +15,8 @@ use common::{UserScratch, fixture_registry};
 use specmark::verifies;
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#kind")]
-#[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#exact-pin")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#kind")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#exact-pin")]
 fn mcp_kind_installs_and_its_exact_pin_selects_the_pinned_stack() {
     let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
@@ -77,8 +77,8 @@ fn mcp_kind_installs_and_its_exact_pin_selects_the_pinned_stack() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#registration")]
-#[verifies("spec://vibevm/modules/vibe-mcp/PROP-027#consent")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#registration")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#consent")]
 fn mcp_install_registers_and_uninstall_removes_package_servers() {
     let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();

@@ -5,7 +5,7 @@
 //! shared [`crate::commands::tree::tui::theme::Theme`] — this module owns no
 //! colour or glyph literal, so a restyle touches only the theme.
 
-specmark::scope!("spec://vibevm/modules/vibe-settings/PROP-041#tree-widget");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#tree-widget");
 
 use rat_widget::table::Table;
 use rat_widget::table::textdata::{Cell, Row};

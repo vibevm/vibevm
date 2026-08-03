@@ -91,10 +91,10 @@ pass MUST only add requirements (monotone), guaranteeing convergence.
 use specmark::spec;
 
 /// Parses the `context(<key>)` predicate grammar.
-#[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-003#conditional-deps", r = 2)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-deps", r = 2)]
 pub enum ConditionalPredicate { /* … */ }
 
-#[spec(deviates = "spec://vibevm/modules/vibe-resolver/PROP-003#conditional-deps", r = 2,
+#[spec(deviates = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-deps", r = 2,
        reason = "boolean composition (`and`/`or`/`not`) intentionally unimplemented; \
                  surfaces as PredicateError::Unsupported pending PROP-014-pilot decision")]
 impl ConditionalPredicate {
@@ -106,7 +106,7 @@ mod tests {
     use specmark::verifies;
 
     #[test]
-    #[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#conditional-deps", r = 2)]
+    #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-deps", r = 2)]
     fn fixed_point_is_monotone() { /* … */ }
 }
 ```

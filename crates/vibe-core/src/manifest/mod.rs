@@ -8,7 +8,7 @@
 //! - [`Lockfile`] — `vibe.lock` at a workspace's absolute root. Schema:
 //!   `VIBEVM-SPEC.md` §7.4.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-007#unified-manifest");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest");
 
 mod document;
 pub mod i18n;

@@ -26,7 +26,7 @@
 //! duration of a filesystem walk.
 
 #![forbid(unsafe_code)]
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-007#nesting");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting");
 
 use std::collections::HashSet;
 use std::path::{Path, PathBuf};
@@ -69,17 +69,17 @@ pub use publish::{
 /// assert_eq!(
 ///     err.to_string(),
 ///     "workspace nesting cycle: `packages/a` is reached more than once \
-///      (violates spec://vibevm/modules/vibe-workspace/PROP-007#nesting; \
+///      (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting; \
 ///      fix: remove the members entry that re-lists an ancestor workspace)",
 /// );
 /// ```
 #[derive(Debug, Error)]
-#[spec(implements = "spec://vibevm/modules/vibe-workspace/PROP-007#nesting")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting")]
 pub enum WorkspaceError {
     /// No `vibe.toml` exists at or above the starting directory.
     #[error(
         "no `vibe.toml` found at or above `{}` \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-007#nesting; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting; \
          fix: run inside a vibevm project or create a `vibe.toml` at the \
          project root)",
         .start.display()
@@ -91,7 +91,7 @@ pub enum WorkspaceError {
     /// every `Result` in this crate (`clippy::result_large_err`).
     #[error(
         "manifest at `{}` is invalid \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-007#unified-manifest; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#unified-manifest; \
          fix: repair that vibe.toml — the underlying error names the defect)",
         .path.display()
     )]
@@ -106,7 +106,7 @@ pub enum WorkspaceError {
     #[error(
         "workspace member `{pattern}` declared in `{declared_in}` does not exist \
          or carries no vibe.toml \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-007#workspace-section; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section; \
          fix: create the member directory with a vibe.toml or drop the entry \
          from [workspace].members)"
     )]
@@ -119,7 +119,7 @@ pub enum WorkspaceError {
     /// member must live under the root so its `rel_path` is portable.
     #[error(
         "workspace member `{path}` lies outside the workspace root `{root}` \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-007#nesting; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting; \
          fix: move the member under the workspace root or drop it from \
          [workspace].members)"
     )]
@@ -129,7 +129,7 @@ pub enum WorkspaceError {
     /// a tree.
     #[error(
         "workspace nesting cycle: `{path}` is reached more than once \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-007#nesting; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting; \
          fix: remove the members entry that re-lists an ancestor workspace)"
     )]
     NestingCycle { path: String },
@@ -137,7 +137,7 @@ pub enum WorkspaceError {
     /// A `members` glob pattern is syntactically invalid.
     #[error(
         "invalid member glob pattern `{pattern}`: {reason} \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-007#workspace-section; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section; \
          fix: correct the glob in [workspace].members)"
     )]
     BadGlob { pattern: String, reason: String },
@@ -145,7 +145,7 @@ pub enum WorkspaceError {
     /// A filesystem operation failed.
     #[error(
         "I/O error on `{}`: {reason} \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-007#nesting; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting; \
          fix: check that the path exists and is readable, then retry)",
         .path.display()
     )]
@@ -156,7 +156,7 @@ pub enum WorkspaceError {
     #[error(
         "version placeholder `{var}` referenced in `{declared_in}` is defined in no \
          enclosing [workspace.versions] \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-007#versions; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#versions; \
          fix: define `{var}` in a [workspace.versions] table of an enclosing \
          workspace)"
     )]
@@ -166,7 +166,7 @@ pub enum WorkspaceError {
     #[error(
         "[workspace.versions] placeholder `{var}` has an invalid constraint \
          `{constraint}` \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-007#versions; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#versions; \
          fix: give the placeholder a parseable constraint such as `0.0.1` or `^0.3`)"
     )]
     BadVersionVar { var: String, constraint: String },
@@ -177,7 +177,7 @@ pub enum WorkspaceError {
     #[error(
         "var-dep for placeholder `{var}` in `{declared_in}` is not a valid \
          package reference: {reason} \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-007#versions; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#versions; \
          fix: use a kebab-case group/name in the [requires] var-dep entry)"
     )]
     BadVarDepRef {
@@ -192,7 +192,7 @@ pub enum WorkspaceError {
     /// diagnosis instead of a panic.
     #[error(
         "rendering spec/boot/INDEX.md failed: {reason} \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-009#artifacts; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#artifacts; \
          fix: the IndexManifest shape no longer serialises as TOML — restore \
          a serialisable shape)"
     )]
@@ -203,7 +203,7 @@ pub enum WorkspaceError {
     /// contribution is malformed; `reason` names the offending address.
     #[error(
         "compiling spec/boot/INLINE.md failed: {reason} \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-035#embed)"
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#embed)"
     )]
     InlineCompile { reason: String },
 
@@ -212,7 +212,7 @@ pub enum WorkspaceError {
     /// fell out of sync.
     #[error(
         "publish references `{rel_path}`, which is not a node of this workspace \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-007#selective-publish; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish; \
          fix: pass a rel_path that names the root `.` or a listed member)"
     )]
     UnknownPublishNode { rel_path: String },
@@ -221,7 +221,7 @@ pub enum WorkspaceError {
     /// contains a cycle — a package transitively requires itself.
     #[error(
         "boot dependency cycle among: {packages} \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-009#effective-boot; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#effective-boot; \
          fix: break the [requires] cycle among the listed packages)"
     )]
     BootDependencyCycle { packages: String },
@@ -232,7 +232,7 @@ pub enum WorkspaceError {
     /// is canonical; the operator repairs the file by hand.
     #[error(
         "malformed <vibevm> block in `{}`: {reason} \
-         (violates spec://vibevm/modules/vibe-workspace/PROP-012#markers; \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#markers; \
          fix: keep the block you want, delete the other marker(s), then re-run — \
          zero markers or exactly one <vibevm>/</vibevm> pair)",
         .path.display()
@@ -275,7 +275,7 @@ type Result<T> = std::result::Result<T, WorkspaceError>;
 /// ```
 #[derive(Debug, Clone)]
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-007#workspace-section",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
     r = 1
 )]
 pub struct WorkspaceMember {
@@ -325,7 +325,7 @@ pub struct WorkspaceMember {
 /// ```
 #[derive(Debug, Clone)]
 #[spec(
-    implements = "spec://vibevm/modules/vibe-workspace/PROP-007#workspace-section",
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section",
     r = 1
 )]
 pub struct Workspace {
@@ -346,7 +346,7 @@ impl Workspace {
     /// includes the starting node (PROP-007 §2.3). A node with no enclosing
     /// `[workspace]` is its own root — a standalone workspace.
     #[spec(
-        implements = "spec://vibevm/modules/vibe-workspace/PROP-007#nesting",
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting",
         r = 1
     )]
     pub fn discover(start: impl AsRef<Path>) -> Result<Workspace> {

@@ -5,7 +5,7 @@
 //! only argument parsing, the confirm/render UX, and the lifecycle
 //! drivers.
 
-specmark::scope!("spec://vibevm/modules/vibe-mcp/PROP-015#agent-config");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#agent-config");
 
 use std::path::{Path, PathBuf};
 
@@ -546,7 +546,7 @@ impl Agent {
 /// Detect every supported agent that has any presence-marker in the
 /// project tree or, for user-level agents, an existing config dir on
 /// this host (PROP-015 §2.4).
-#[spec(implements = "spec://vibevm/modules/vibe-mcp/PROP-015#agent-detection")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#agent-detection")]
 pub fn detect_agents(project_root: Option<&Path>) -> Vec<Agent> {
     Agent::ALL
         .iter()

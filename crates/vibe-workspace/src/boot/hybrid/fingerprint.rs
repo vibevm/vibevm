@@ -10,7 +10,7 @@
 //! boundary breaks propagation). A `when`-gated target is treated as dynamic
 //! for propagation, matching [`super::resolve_zone`].
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-038#change-detection");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#change-detection");
 
 use std::collections::{HashMap, HashSet};
 

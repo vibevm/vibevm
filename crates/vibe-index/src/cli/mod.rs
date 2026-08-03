@@ -3,7 +3,7 @@
 //! against the full dispatch shape, so every subcommand renders help
 //! and parses its arguments whatever the caller does next.
 
-specmark::scope!("spec://vibevm/modules/vibe-index/PROP-005#root");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
 use clap::{Parser, Subcommand};
 
@@ -42,7 +42,7 @@ modes:
     index is held in RAM and persisted to disk on every mutation.
     Single-writer; reads open, writes guarded by bearer-token auth.
 
-Specification: spec://vibevm/modules/vibe-index/PROP-005.";
+Specification: spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005.";
 
 #[derive(Debug, Parser)]
 #[command(

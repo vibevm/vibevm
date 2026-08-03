@@ -3,7 +3,7 @@
 //! `PATH` search), resolves its Electron binary via the app's own `path.txt`,
 //! and spawns it detached.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-042#vibe-term");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#vibe-term");
 
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
@@ -16,7 +16,7 @@ use crate::output;
 
 /// Run `vibe term`: resolve vibeterm + its Electron binary, pick the shell (or
 /// the `--exec` override), and launch the terminal detached.
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-042#vibe-term")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#vibe-term")]
 pub fn run(_ctx: &output::Context, args: TermArgs) -> Result<()> {
     // A bare shell path may contain spaces (`C:\Program Files\…\pwsh.exe`);
     // quote it so vibeterm's `splitCommand` keeps it as one token. A user
@@ -30,7 +30,7 @@ pub fn run(_ctx: &output::Context, args: TermArgs) -> Result<()> {
 
 /// Run `vibe frame`: like `vibe term`, but launches vibeframe — the simple
 /// terminal frame VibeTree runs in (a copy of the minimal vibeterm terminal).
-#[spec(implements = "spec://vibevm/modules/vibe-cli/PROP-042#vibe-term")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-042#vibe-term")]
 pub fn run_frame(_ctx: &output::Context, args: TermArgs) -> Result<()> {
     let exec = match args.exec {
         Some(cmd) => cmd,

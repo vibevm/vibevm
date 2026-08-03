@@ -47,7 +47,10 @@ fn sample_entry() -> VersionEntry {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-index/PROP-005#entry", r = 1)]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry",
+    r = 1
+)]
 fn version_entry_round_trips_through_json() {
     let v = sample_entry();
     let json = serde_json::to_string(&v).unwrap();

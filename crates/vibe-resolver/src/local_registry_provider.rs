@@ -14,7 +14,7 @@ use crate::{DepProvider, DepProviderError, VersionEnumerator};
 
 /// `DepProvider` impl backed by a [`LocalRegistry`].
 #[cell(seam = "DepProvider", variant = "local-registry", flag = "provider")]
-#[spec(implements = "spec://vibevm/modules/vibe-registry/PROP-002#solver")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
 pub struct LocalRegistryProvider<'a> {
     registry: &'a LocalRegistry,
 }
@@ -78,7 +78,9 @@ impl<'a> DepProvider for LocalRegistryProvider<'a> {
 }
 
 impl<'a> VersionEnumerator for LocalRegistryProvider<'a> {
-    #[spec(implements = "spec://vibevm/modules/vibe-resolver/PROP-017#provider-enrichment")]
+    #[spec(
+        implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#provider-enrichment"
+    )]
     fn list_versions(
         &self,
         group: &Group,

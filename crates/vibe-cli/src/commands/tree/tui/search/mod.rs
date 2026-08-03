@@ -12,7 +12,7 @@
 //! by address; backing it with a live `vibe_actions::Registry` (Ctx enablement +
 //! address-routed invoke) is the next increment.
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-037#f1-search");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#f1-search");
 
 pub(super) mod catalogue;
 mod providers;

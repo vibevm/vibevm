@@ -99,7 +99,7 @@ fn package_meta_as_package_ref_pins_exact() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-035#formats")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#formats")]
 fn package_format_parses_and_defaults_to_simple() {
     // PROP-035 §3: `format` is optional and defaults to `simple` — the
     // fail-safe posture (a forgotten format over-loads, visibly working,

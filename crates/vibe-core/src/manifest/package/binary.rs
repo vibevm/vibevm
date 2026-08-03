@@ -3,7 +3,7 @@
 //! dispatching live in `vibe-cli`'s `bin` family; `vibe-core` gives the
 //! manifest shape and the structural validation `vibe check` runs.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-025#manifest");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#manifest");
 
 use std::path::PathBuf;
 

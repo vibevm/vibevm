@@ -23,13 +23,13 @@ thematic break and a fence are.
 > every paragraph, list item, and non-empty table body cell carries its
 > own marker — these are the **countable units** the exhaustive counter
 > enforces
-> — `spec://vibevm/modules/vibe-progress/PROP-043#COUNTABLE-UNITS`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#COUNTABLE-UNITS`
 ```
 
 ```
 > every marked paragraph or list item MUST carry a `##<ID>` anchor as its
 > first token
-> — `spec://vibevm/modules/vibe-progress/PROP-043#ANCHORED-WHEN-MARKED`
+> — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#ANCHORED-WHEN-MARKED`
 ```
 
 **The two are unsatisfiable together on a frontmatter block, and that is the

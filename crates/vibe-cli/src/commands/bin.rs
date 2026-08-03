@@ -4,7 +4,7 @@
 //! PROP-026 §4 — one implementation, two consumers); this file is the
 //! CLI's thin verbs over it.
 
-specmark::scope!("spec://vibevm/modules/vibe-workspace/PROP-025#dispatch");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#dispatch");
 
 use std::path::Path;
 

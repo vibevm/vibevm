@@ -62,7 +62,7 @@
 { "id": "DBT-0007", "kind": "failing-test",   // failing-test | unimplemented-req |
                                               // disputed-spec | orphan-code | stale-doc
   "severity": "P2",                           // PROP-013 scale
-  "evidence": ["tests-baseline:…", "spec://vibevm/...#req-...~r1"],
+  "evidence": ["tests-baseline:…", "spec://org.vibevm.core/vibevm/...#req-...~r1"],
   "disposition": "filed",                     // fixed | filed | accepted | open
   "tripwires": ["touch:crates/vibe-registry/src/git_backend/**", "rev:spec://…#req-…"],
   "sunset": "evidence window 60d — re-disposition at next audit" }
@@ -72,7 +72,7 @@
 
 ```json
 { "id": "INT-0031", "source": "spec/WAL.md#next 2026-05-23",
-  "text": "first full PROP-013 audit run", "links": ["spec://vibevm/common/PROP-013"],
+  "text": "first full PROP-013 audit run", "links": ["spec://org.vibevm.core/vibevm/common/PROP-013"],
   "state": "open" }                           // open | done | rescoped | rejected
 ```
 

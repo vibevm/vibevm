@@ -111,7 +111,7 @@ fn assert_conformance(world: &[ProdPackage], roots: &[&str]) {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#conditional-deps")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-deps")]
 fn stack_trigger_world_conforms() {
     // The canonical PROP-003 §2.6.1 shape: a stack's presence pulls a
     // conditional flow in on the second pass.
@@ -136,7 +136,7 @@ fn stack_trigger_world_conforms() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-resolver/PROP-003#conditional-deps")]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-deps")]
 fn chained_triggers_conform() {
     // Two-stage cascade: each join changes the context the next
     // iteration probes — the case mental simulation gets wrong.

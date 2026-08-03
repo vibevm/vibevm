@@ -7,7 +7,7 @@
 //! and not re-expanded — cycle-guarded on the `group/name` key
 //! (PROP-036 §2.12).
 
-specmark::scope!("spec://vibevm/modules/vibe-cli/PROP-036#tui");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#tui");
 
 use std::collections::{BTreeMap, BTreeSet};
 
