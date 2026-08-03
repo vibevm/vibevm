@@ -252,21 +252,22 @@ fn rewrite_links(line: &str, slug: &str, defined: &HashSet<String>) -> String {
             i += 1;
             continue;
         }
-        if !in_code && b == b'(' && bytes.get(i + 1) == Some(&b'#') {
-            if let Some((id, after_id)) = read_anchor_id(bytes, i + 2)
-                && bytes.get(after_id) == Some(&b')')
-                && defined.contains(id)
-            {
-                out.push_str(&line[last..i]);
-                out.push_str("(#");
-                out.push_str(slug);
-                out.push_str("--");
-                out.push_str(id);
-                out.push(')');
-                last = after_id + 1;
-                i = after_id + 1;
-                continue;
-            }
+        if !in_code
+            && b == b'('
+            && bytes.get(i + 1) == Some(&b'#')
+            && let Some((id, after_id)) = read_anchor_id(bytes, i + 2)
+            && bytes.get(after_id) == Some(&b')')
+            && defined.contains(id)
+        {
+            out.push_str(&line[last..i]);
+            out.push_str("(#");
+            out.push_str(slug);
+            out.push_str("--");
+            out.push_str(id);
+            out.push(')');
+            last = after_id + 1;
+            i = after_id + 1;
+            continue;
         }
         i += 1;
     }

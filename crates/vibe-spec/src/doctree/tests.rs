@@ -312,9 +312,9 @@ fn qualified_candidates_list_renamed_heirs_of_a_short_name() {
 # B {#org-vibevm-world--redbook--root}
 ";
     let t = DocTree::parse(src);
-    let mut roots = t.qualified_candidates("root");
+    let roots = t.qualified_candidates("root");
     assert_eq!(
-        roots.drain(..).collect::<Vec<_>>(),
+        roots,
         vec![
             "org-vibevm-world--redbook--root",
             "org-vibevm-world--wal--root",
