@@ -218,6 +218,8 @@ fn zone_to_effective(
             // A `normal` static member is compiled to its closure by
             // `render_static` (PROP-035 §8); `simple` stays verbatim.
             format: unit.format,
+            unit_substituted: false,
+            elided: false,
         });
     }
     for (target, when) in &zone.dynamic_edges {
@@ -234,6 +236,8 @@ fn zone_to_effective(
             // A dynamic edge is read by reference (INDEX.md), never compiled
             // into the static lane, so its format does not matter here.
             format: Default::default(),
+            unit_substituted: false,
+            elided: false,
         });
     }
     EffectiveBoot { entries }
@@ -331,6 +335,8 @@ pub(super) fn append_hoisted(
             // A hoisted `normal` package is still compiled to its closure
             // (PROP-035 §8) at the single hoist point.
             format: unit.format,
+            unit_substituted: false,
+            elided: false,
         });
     }
 }

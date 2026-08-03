@@ -57,6 +57,8 @@ fn entry_simple(path: &str, origin: &str) -> BootEntry {
         origin: origin.to_string(),
         use_ref: false,
         format: PackageFormat::Simple,
+        unit_substituted: false,
+        elided: false,
     }
 }
 
@@ -71,6 +73,8 @@ fn entry_normal(path: &str, origin: &str) -> BootEntry {
         origin: origin.to_string(),
         use_ref: false,
         format: PackageFormat::Normal,
+        unit_substituted: false,
+        elided: false,
     }
 }
 

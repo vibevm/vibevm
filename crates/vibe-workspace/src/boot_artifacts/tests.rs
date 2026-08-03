@@ -22,6 +22,8 @@ fn entry(path: &str, link: LinkType, origin: &str) -> BootEntry {
         origin: origin.to_string(),
         use_ref: false,
         format: Default::default(),
+        unit_substituted: false,
+        elided: false,
     }
 }
 
@@ -37,6 +39,8 @@ fn entry_when(path: &str, link: LinkType, when: Option<WhenCondition>, origin: &
         origin: origin.to_string(),
         use_ref: false,
         format: Default::default(),
+        unit_substituted: false,
+        elided: false,
     }
 }
 
@@ -57,6 +61,8 @@ fn entry_normal(path: &str, origin: &str) -> BootEntry {
         origin: origin.to_string(),
         use_ref: false,
         format: PackageFormat::Normal,
+        unit_substituted: false,
+        elided: false,
     }
 }
 

@@ -15,8 +15,8 @@ use specmark::spec;
 use vibe_core::Group;
 use vibe_core::manifest::{BootCategory, LinkType, Manifest};
 
-use crate::boot::hybrid::{UnitId, fingerprint, hoist};
-use crate::boot::{self, AuthoredBoot, DependencyBoot, NodeBootInputs};
+use crate::boot::hybrid::{UnitId, UnitInput, fingerprint, hoist, resolve_zone};
+use crate::boot::{self, AuthoredBoot, BootEntry, DependencyBoot, EffectiveBoot, NodeBootInputs};
 use crate::{Workspace, WorkspaceError, boot_artifacts, vibedeps};
 
 use super::{ResolvedDep, io_err};
@@ -107,10 +107,116 @@ pub fn regenerate_boot_from(
         if rel == "." {
             append_hoisted(&mut effective, &shared, &table, &pulls);
         }
+        // B-006 (lane dedup): roll a substituted unit-STATIC entry back to the
+        // package's own snippet — or elide a contentless umbrella — once every
+        // boot-bearing member of its zone is present individually in this
+        // lane. A pure pass over the composition and the unit table; coverage
+        // is never lost (a member missing from the lane keeps the
+        // substitution in place). Sits after `append_hoisted` so the hoisted
+        // single-copies count as present, and before the artifact write so the
+        // rendered lane is the once-each form.
+        desubstitute_covered_units(&mut effective, &table);
         boot_artifacts::write_boot_artifacts(&node_dir, &workspace.root, &effective)?;
         nodes_regenerated.push(rel.to_string());
     }
     Ok(nodes_regenerated)
+}
+
+/// B-006 (lane dedup) — de-substitute the covered units in one node's
+/// effective boot. A `static` entry whose path `node_dependency_boot`
+/// rewrote to a compiled per-unit `STATIC.md` (`unit_substituted`) is rolled
+/// back — to the package's own snippet when the package ships one, or elided
+/// to a provenance stub when it is a contentless umbrella — IF every
+/// boot-bearing member of that unit's static zone is already present in this
+/// lane as an individual `static` entry. If even one is missing, the
+/// substitution stays in place: a lane emits each package's text **once**,
+/// but never at the cost of losing coverage (PROP-038 §2.1).
+///
+/// The decision is a pure function of the entry set and the unit table: a
+/// snapshot of the entries is taken once, and every substituted entry is
+/// decided against that snapshot — the order of entries and the count of
+/// consumers (static / static-transitive / static-hard in any mix) do not
+/// affect the verdict. One pass (not a fixpoint) suffices for the
+/// nested-umbrella shapes the contract targets, because a contentless
+/// umbrella is never a boot-bearing member of its parent's zone, so it
+/// cannot gate its parent's elision.
+///
+/// `pub` (re-exported at [`crate::install::desubstitute_covered_units`]) so
+/// the once-each topology can be exercised at the unit level without a full
+/// install.
+pub fn desubstitute_covered_units(
+    effective: &mut EffectiveBoot,
+    table: &HashMap<UnitId, UnitInput>,
+) {
+    // Identity by origin: a substituted entry's origin is exactly its
+    // `<group>/<name>` pkgref (closure-walk entries always carry that form),
+    // and so is the matching `UnitInput.origin`. Hoisted entries never carry
+    // a unit-STATIC — `append_hoisted` only fires for a unit with an
+    // `own_boot_path` — so a substituted origin never collides with a hoist.
+    let by_origin: HashMap<&str, &UnitId> = table
+        .iter()
+        .map(|(id, u)| (u.origin.as_str(), id))
+        .collect();
+    // Decide every entry against the ORIGINAL snapshot. A rolled-back entry
+    // does not retroactively count as "present" for a sibling decided later
+    // in the same pass — the verdict depends only on the pre-pass set.
+    let snapshot: Vec<BootEntry> = effective.entries.clone();
+
+    for entry in &mut effective.entries {
+        if !(entry.unit_substituted && entry.link == LinkType::Static) {
+            continue;
+        }
+        let Some(id) = by_origin.get(entry.origin.as_str()).copied() else {
+            continue;
+        };
+        let zone = resolve_zone(id, table);
+        // The boot-bearing members of this unit's static zone, other than the
+        // unit itself — members that actually carry boot content. A boot-less
+        // umbrella threads the order but contributes no text, so it is never
+        // required; that is why a single pass collapses nested umbrellas. The
+        // unit itself is dropped here (its own snippet is handled by the
+        // de-substitute / elide branches below), so a zone whose only
+        // boot-bearing member is itself is vacuously covered. Collected by
+        // value to keep the `present` lookups free of reference-level dance.
+        let boot_bearing: Vec<UnitId> = zone
+            .static_members
+            .iter()
+            .filter(|m| *m != id && table.get(*m).is_some_and(|u| u.own_boot_path.is_some()))
+            .cloned()
+            .collect();
+        let covered = boot_bearing
+            .iter()
+            .all(|m| present(&snapshot, &table[m].origin));
+        if !covered {
+            continue;
+        }
+        match &table[id].own_boot_path {
+            // The package ships its own snippet: point back at it (its text
+            // then enters the lane once, through this entry).
+            Some(snippet) => {
+                entry.path = snippet.clone();
+                entry.unit_substituted = false;
+            }
+            // A contentless umbrella: emit a stub, no second copy.
+            None => entry.elided = true,
+        }
+    }
+}
+
+/// Whether the boot-bearing member `origin` (`<group>/<name>`) is present in
+/// the pre-pass snapshot as an individual `static` entry — its own text, not
+/// a unit-STATIC substitution and not a hoist `#use` marker. The hoisted
+/// shared-by form `"<g>/<n> [shared by …]"` counts as present: that entry IS
+/// the single copy of the member's text at the hoist point. A different
+/// package `"<g>/<n2>"` does not match `"<g>/<n>"` — the `[` guard makes the
+/// match prefix-exact on the pkgref.
+fn present(snapshot: &[BootEntry], origin: &str) -> bool {
+    snapshot.iter().any(|e| {
+        e.link == LinkType::Static
+            && !e.unit_substituted
+            && !e.use_ref
+            && (e.origin == origin || e.origin.starts_with(&format!("{origin} [")))
+    })
 }
 
 /// Regenerate every node's boot artifacts from the materialised `vibedeps/`
@@ -320,12 +426,23 @@ fn node_dependency_boot(
             // PROP-038 §2.1: a dependency that statically links a child is read
             // through its compiled STATIC.md (carrying the whole zone), not its
             // raw snippet. A leaf keeps pointing at the snippet (byte-compat).
-            let boot_path = if with_static.contains(&(dep.group.clone(), dep.name.clone())) {
-                Some(format!("{slot}/spec/boot/{}", boot_artifacts::STATIC_FILE))
-            } else {
-                snippet
-                    .map(|bs| format!("{slot}/{}", bs.source.to_string_lossy().replace('\\', "/")))
-            };
+            // B-006: remember which entries had their path substituted up to a
+            // unit-STATIC — `desubstitute_covered_units` rolls the substitution
+            // back (or elides it) once the zone is covered member-by-member.
+            let (boot_path, unit_substituted) =
+                if with_static.contains(&(dep.group.clone(), dep.name.clone())) {
+                    (
+                        Some(format!("{slot}/spec/boot/{}", boot_artifacts::STATIC_FILE)),
+                        true,
+                    )
+                } else {
+                    (
+                        snippet.map(|bs| {
+                            format!("{slot}/{}", bs.source.to_string_lossy().replace('\\', "/"))
+                        }),
+                        false,
+                    )
+                };
             DependencyBoot {
                 kind: dep.kind,
                 group: dep.group.clone(),
@@ -356,6 +473,7 @@ fn node_dependency_boot(
                     .as_ref()
                     .map(|p| p.format)
                     .unwrap_or_default(),
+                unit_substituted,
             }
         })
         .collect()

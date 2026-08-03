@@ -227,6 +227,19 @@ pub fn render_static(
     let mut bodies = String::new();
     let mut tombstone: Vec<(String, RenameEntry)> = Vec::new();
     for entry in entries {
+        if entry.elided {
+            // B-006 (lane dedup): this entry's whole static zone is emitted
+            // member-by-member elsewhere in this lane (once-each). Render a
+            // provenance stub — NO `#use`, no body — so the lane carries the
+            // zone's text exactly once while the graph membership stays
+            // visible. Deliberately not a hoist marker (B1): there is no
+            // single root copy to point at; every member is right here.
+            bodies.push_str(&format!(
+                "<!-- vibe:static {} — {}; zone elided: emitted member-by-member in this lane (once-each, B-006) -->\n\n",
+                entry.origin, entry.path
+            ));
+            continue;
+        }
         if entry.use_ref {
             // A soft-hoist reference (PROP-038 §2.5): this package's text lives
             // once in the global root STATIC.md. Leave a `#use` marker so the

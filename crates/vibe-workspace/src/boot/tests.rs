@@ -37,6 +37,7 @@ fn dep(name: &str, has_boot: bool, requires: &[&str]) -> DependencyBoot {
         when: None,
         requires: requires.iter().map(|r| (org(), r.to_string())).collect(),
         format: Default::default(),
+        unit_substituted: false,
     }
 }
 

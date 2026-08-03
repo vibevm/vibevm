@@ -20,6 +20,8 @@ fn entry(path: &str, link: LinkType, origin: &str) -> BootEntry {
         origin: origin.to_string(),
         use_ref: false,
         format: Default::default(),
+        unit_substituted: false,
+        elided: false,
     }
 }
 

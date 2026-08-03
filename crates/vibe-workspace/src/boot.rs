@@ -123,6 +123,14 @@ pub struct DependencyBoot {
     /// `#source`-merged closure by the boot linker (PROP-035 §8); a `simple`
     /// one is concatenated verbatim. Default `simple` (fail-safe).
     pub format: PackageFormat,
+    /// B-006 (lane dedup): `true` when `node_dependency_boot` rewrote
+    /// `boot_path` from the package's raw snippet to its compiled per-unit
+    /// `STATIC.md` — the package statically links a child, so the whole zone
+    /// is read (PROP-038 §2.1). The lane-dedup pass
+    /// (`desubstitute_covered_units`) may roll such an entry back to its
+    /// snippet — or elide it — once every boot-bearing member of its zone is
+    /// present individually in the lane. `false` for every other construction.
+    pub unit_substituted: bool,
 }
 
 /// One entry in a node's computed effective boot sequence.
@@ -153,6 +161,18 @@ pub struct BootEntry {
     /// (PROP-035 §8). `Simple` (the default, and always for a node's own
     /// authored boot) keeps the verbatim path.
     pub format: PackageFormat,
+    /// B-006 (lane dedup): carried from [`DependencyBoot::unit_substituted`]
+    /// — `true` when this entry's `path` points at a compiled per-unit
+    /// `STATIC.md` rather than the package's own snippet. See
+    /// `desubstitute_covered_units`. `false` for authored boot and for any
+    /// dependency the linker did not substitute.
+    pub unit_substituted: bool,
+    /// B-006 (lane dedup): `true` when this entry's whole static zone is
+    /// emitted member-by-member elsewhere in the same lane, so the entry
+    /// renders as a provenance stub (no `#use`, no body) instead of a second
+    /// copy. Set only by `desubstitute_covered_units`, for a contentless
+    /// umbrella whose every boot-bearing member is present individually.
+    pub elided: bool,
 }
 
 /// A node's computed effective boot sequence (PROP-009 §2.2) — every entry
@@ -222,6 +242,8 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
             use_ref: false,
             // A node's own authored boot is always carried verbatim.
             format: PackageFormat::Simple,
+            unit_substituted: false,
+            elided: false,
         });
     }
 
@@ -237,6 +259,8 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
             use_ref: false,
             // A node's own authored boot is always carried verbatim.
             format: PackageFormat::Simple,
+            unit_substituted: false,
+            elided: false,
         });
     }
 
@@ -284,6 +308,10 @@ pub fn compute_effective_boot(inputs: NodeBootInputs<'_>) -> Result<EffectiveBoo
             // whether to compile the closure (`normal`) or concatenate
             // verbatim (`simple`) — PROP-035 §8.
             format: dep.format,
+            // B-006: carry the substitution flag so the lane-dedup pass can
+            // see which entries point at a compiled unit-STATIC.
+            unit_substituted: dep.unit_substituted,
+            elided: false,
         });
     }
 

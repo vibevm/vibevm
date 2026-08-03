@@ -32,6 +32,9 @@ use crate::hooks::{
 use crate::{Workspace, WorkspaceError, vibedeps};
 
 mod bootgen;
+/// B-006 (lane dedup) — de-substitute covered unit-STATIC entries. Public so
+/// the once-each topology is exercisable at the unit level (no full install).
+pub use bootgen::desubstitute_covered_units;
 pub(crate) use bootgen::node_own_boot;
 use bootgen::validate_redirect_blocks;
 /// The boot-graph integrity check (PROP-038 §3) — public API for `vibe check`.
