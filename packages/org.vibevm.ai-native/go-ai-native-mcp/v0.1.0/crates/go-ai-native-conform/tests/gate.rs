@@ -20,19 +20,20 @@ fn dirty_fixture_yields_the_ten_findings_then_freeze_ratchets_them() {
     let root = fixture("dirty");
     let baseline = "target/conform/test-baseline.json";
 
-    // Fresh gate: eleven findings on the dirty tree. On plan.go — 8
+    // Fresh gate: twelve findings on the dirty tree. On plan.go — 8
     // `go-unsafe-in-domain` census sites (blank_import, init_decl,
     // 2×ambient_call, naked_go, 2×error_string_match, reasonless_suppression;
     // the deviation-covered ambient in Sanctioned is honoured) + 2
     // `go-seam-error-cites-req` (B-033: the structure half at the type
     // decl and the message half at the Error() method line — PlanError
-    // has no Spec field AND renders no REQ) — plus t_skip in the sibling
-    // test file. Non-zero.
+    // has no Spec field AND renders no REQ) + 1 `go-conformance-assertion`
+    // (B-030: the plan cell declares no `var _ Seam = (*Impl)(nil)`) —
+    // plus t_skip in the sibling test file. Non-zero.
     let _ = std::fs::remove_file(root.join(baseline));
     let err = go_ai_native_conform::run_check(&root, baseline, None)
         .expect_err("dirty tree must fail the gate");
     assert!(
-        err.to_string().contains("11 new finding(s)"),
+        err.to_string().contains("12 new finding(s)"),
         "unexpected: {err}"
     );
 

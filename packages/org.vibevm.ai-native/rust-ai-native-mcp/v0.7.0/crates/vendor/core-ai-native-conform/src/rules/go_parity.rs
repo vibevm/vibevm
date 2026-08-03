@@ -111,26 +111,29 @@ impl Rule for GoSeamErrorCitesReq {
 }
 
 /// `go-conformance-assertion` — the «conformance is made loud»
-/// presence check (GUIDE-AI-NATIVE-GO §2, B-030): every cell (a package
-/// directory directly under `cells_dir`) carries the compile-time
-/// assertion `var _ <seam> = (*<Impl>)(nil)`. This is the Go analogue
-/// of Rust's `cargo check` at the use site — the one seam-conformance
-/// signal that can drift silently, so a presence check earns its keep.
-/// It is the absence-check twin of `cell-has-oracle`: keyed on the
-/// cell set derived from the fact file-paths and the `Fact::GoConformance`
-/// facts, it fires for a cell that declares no assertion at all.
+/// presence check (GUIDE-AI-NATIVE-GO §2, B-030): a **gated** cell (a
+/// package directory directly under `cells_dir`, named in the gate list)
+/// carries the compile-time assertion `var _ <seam> = (*<Impl>)(nil)`.
+/// This is the Go analogue of Rust's `cargo check` at the use site — the
+/// one seam-conformance signal that can drift silently, so a presence
+/// check earns its keep. It is the absence-check twin of
+/// `cell-has-oracle`: keyed on the cell set derived from the fact
+/// file-paths and the `Fact::GoConformance` facts, it fires for a gated
+/// cell that declares no assertion. Gating scopes the rule to the cells
+/// a project polices, so a seam-less or exempt cell — one with nothing to
+/// assert — is never falsely flagged.
 ///
 /// Mounted conditional on `cells_dir` (the `go-cell-isolation`
 /// template), so a project without cells never runs it; a project
-/// mounts it by setting `[go] cells_dir`. Findings land soft through
-/// the ratchet baseline until the tree is clean.
+/// mounts it by setting `[go] cells_dir` and gating its cells. Findings
+/// land soft through the ratchet baseline until the tree is clean.
 ///
 /// ```
 /// use core_ai_native_conform::rules::GoConformanceAssertion;
 /// use core_ai_native_conform::{Fact, Rule, SourceFacts};
 ///
 /// // A cell with no conformance assertion is flagged.
-/// let rule = GoConformanceAssertion::new(Some("internal/cells"));
+/// let rule = GoConformanceAssertion::new(Some("internal/cells"), &["internal/cells/plan".into()]);
 /// let facts = vec![SourceFacts {
 ///     file: "internal/cells/plan/plan.go".into(),
 ///     crate_name: "demo".into(),
@@ -140,12 +143,21 @@ impl Rule for GoSeamErrorCitesReq {
 /// ```
 pub struct GoConformanceAssertion {
     cells_dir: Option<String>,
+    /// The gated cell packages (repo-relative `cells_dir/<cell>`). Only a
+    /// GATED cell owes the assertion: a project gates the cells it
+    /// polices, so an exempt or ungated cell — including one that
+    /// satisfies no seam and has nothing to assert — is out of scope.
+    gated: std::collections::BTreeSet<String>,
 }
 
 impl GoConformanceAssertion {
-    pub fn new(cells_dir: Option<&str>) -> GoConformanceAssertion {
+    pub fn new(cells_dir: Option<&str>, gated: &[String]) -> GoConformanceAssertion {
         GoConformanceAssertion {
             cells_dir: cells_dir.map(|d| d.trim_matches('/').to_string()),
+            gated: gated
+                .iter()
+                .map(|g| g.trim_matches('/').to_string())
+                .collect(),
         }
     }
 
@@ -178,10 +190,12 @@ impl Rule for GoConformanceAssertion {
             return out;
         }
         // The cell set is whatever the fact stream declares under
-        // cells_dir; a cell is owing if it carries no GoConformance fact.
-        // (Starter predicate, measured against research/go-demo where every
-        // cell under internal/cells carries the assertion: EVERY cell-package
-        // under cells_dir owes one.)
+        // cells_dir; a GATED cell is owing if it carries no GoConformance
+        // fact. Gating scopes the rule to the cells a project polices, so
+        // a seam-less or exempt cell is never falsely flagged (measured:
+        // research/go-demo's gated cells all carry the assertion, the
+        // clean fixture's gated greet cell carries it, the dirty fixture's
+        // gated plan cell does not).
         let mut first_file: std::collections::BTreeMap<String, String> = Default::default();
         let mut asserting: std::collections::BTreeSet<String> = Default::default();
         for sf in facts {
@@ -206,6 +220,14 @@ impl Rule for GoConformanceAssertion {
         }
         for (cell, file) in &first_file {
             if asserting.contains(cell) {
+                continue;
+            }
+            // Only a gated cell owes the assertion.
+            let pkg = match &self.cells_dir {
+                Some(dir) => format!("{dir}/{cell}"),
+                None => cell.clone(),
+            };
+            if !self.gated.contains(&pkg) {
                 continue;
             }
             out.push(Finding {
@@ -334,7 +356,8 @@ mod tests {
 
     #[test]
     fn conformance_assertion_present_cell_is_silent() {
-        let rule = GoConformanceAssertion::new(Some("internal/cells"));
+        let rule =
+            GoConformanceAssertion::new(Some("internal/cells"), &["internal/cells/plan".into()]);
         let facts = vec![go_source(
             "internal/cells/plan/planner.go",
             vec![Fact::GoConformance {
@@ -349,7 +372,8 @@ mod tests {
 
     #[test]
     fn conformance_assertion_absent_cell_is_flagged() {
-        let rule = GoConformanceAssertion::new(Some("internal/cells"));
+        let rule =
+            GoConformanceAssertion::new(Some("internal/cells"), &["internal/cells/plan".into()]);
         let facts = vec![go_source("internal/cells/plan/planner.go", vec![])];
         let findings = rule.check(&facts);
         assert_eq!(findings.len(), 1, "{findings:?}");
@@ -359,9 +383,21 @@ mod tests {
     }
 
     #[test]
+    fn conformance_assertion_ungated_cell_is_silent() {
+        // An ungated cell (not in the gate list — e.g. a seam-less or
+        // exempt cell) owes nothing, even with no assertion.
+        let rule = GoConformanceAssertion::new(Some("internal/cells"), &[]);
+        let facts = vec![go_source("internal/cells/plan/planner.go", vec![])];
+        assert!(
+            rule.check(&facts).is_empty(),
+            "an ungated cell is not policed"
+        );
+    }
+
+    #[test]
     fn conformance_assertion_without_cells_dir_is_a_noop() {
         // The None constructor must not panic and emits nothing.
-        let rule = GoConformanceAssertion::new(None);
+        let rule = GoConformanceAssertion::new(None, &[]);
         let facts = vec![go_source("internal/cells/plan/planner.go", vec![])];
         assert!(rule.check(&facts).is_empty());
     }

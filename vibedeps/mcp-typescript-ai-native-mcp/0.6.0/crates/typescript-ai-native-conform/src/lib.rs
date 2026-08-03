@@ -48,6 +48,11 @@ fn load_config(root: &Path) -> Result<Config> {
 pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
     let mut out: Vec<Box<dyn Rule>> = Vec::new();
     out.push(Box::new(rules::TsUnsafeInDomain));
+    // ts-seam-error-cites-req (B-033) — the TS twin of the Go/Rust
+    // seam-error rules; always on (it fires only where the extractor
+    // finds a discriminated-union error alias, so a project without the
+    // idiom stays quiet).
+    out.push(Box::new(rules::TsSeamErrorCitesReq));
     if let Some(cells_dir) = &config.typescript.cells_dir {
         out.push(Box::new(rules::TsCellIsolation::new(
             cells_dir,
