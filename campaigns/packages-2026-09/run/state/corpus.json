@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-03T11:10:53Z",
+  "updated_at": "2026-08-03T11:50:54Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -4453,7 +4453,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "5518bab664216e79ab250d9a7c94eadc459cefd9f336e287a55d602fcb1aaa4d",
+        "processed_hash": "24bd000669bcbaecf30165b1a8fc5f39e688d8de984158d1133858f9e9359513",
         "summary": {
           "confirmed": 60,
           "unverifiable": 3
@@ -4955,7 +4955,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T15:54:43Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "C1 + D4a + D5b + D7 + D10-groupA"
       }
     },
@@ -5686,7 +5686,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "74fdf8fef163f367e8a7b491a4285beb9aafdcc1730f76b4e837e88cba50ad13",
+        "processed_hash": "3bc6c832d3b0bf800befe3f54b27d5a47004014fb4167bfd3e62d19520bf3fd7",
         "summary": {
           "confirmed": 34
         },
@@ -5970,7 +5970,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T06:18:01Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "C1"
       }
     },
@@ -5990,7 +5990,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "09986074d347e43e094b7d58fa93cd3716c02f800b5dadcb0f3ccce6f0000643",
+        "processed_hash": "0b26f26d4fb7ea6e870803af9ad17e915725db23effa6c37ba8526caf370b279",
         "summary": {
           "confirmed": 166,
           "drift": 1,
@@ -7302,7 +7302,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T19:06:18Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "C1 + D5b + D7 + D10-groupA + D13-1a + D16 + D17 + D18 + D34"
       }
     },
@@ -24986,16 +24986,16 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 79,
+      "markers": 89,
       "units": 11,
-      "facts": 78,
+      "facts": 88,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
         "processed_hash": "dd0c9734eb4c87a01971648fd2925a5249affe4189ad8c9578decab6523946c6",
         "summary": {
-          "confirmed": 60,
-          "drift": 4
+          "confirmed": 62,
+          "drift": 2
         },
         "verdicts": {
           "scope-of-this-document": {
@@ -25223,33 +25223,25 @@
             ]
           },
           "ROW-SEGMENT-MODULE": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:80  | ##ROW-SEGMENT-MODULE `<module>` @impl/done | spec module — a directory under `spec/modules/`, or `common` @impl/done | `com.example.shop` @impl/done |",
-              "crates/vibe-spec/src/address.rs:9  //! - **authority** — either a package coordinate `<group>/<name>` or the host //!   project's reserved single-token namespace (e.g. `vibevm`). The two are //!   told apart syntactically: a first segment containing a `.` is a //!   reverse-DNS **group** (so `<group>/<name>` follows); a first segment",
-              "specmap.toml:13  # `<package>` segment of every `spec://vibevm/…` URI (PROP-014 §2.1). namespace = \"vibevm\"",
-              "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
-              "DRIFT: the host's `<module>` position holds something the row does not describe. The row defines it as «a directory under `spec/modules/`, or `common`»; the host mints a single namespace instead — `specmap.toml:14` sets `namespace = \"vibevm\"` and 1 384 host citations read `spec://vibevm/<doc>#<anchor>`, with the document carrying the module distinction rather than the authority. Packages use the third form the row also omits, `<group>/<name>` (68 citations)."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "the drift died with B-031 (owner-ruled 2026-08-04, landed the same day): the host no longer mints a namespace into the module position — its authority is the full package coordinate org.vibevm.core/vibevm (vibe.toml [project] group+name; resolver self-coordinate arm, crates/vibe-spec/src/resolver.rs spec_root), and the segment after it is literally a directory under spec/modules/ or common, exactly as the row defines",
+              "measured on the migrated tree: host citations now read spec://org.vibevm.core/vibevm/modules/<dir>/<doc>#<anchor> (e.g. spec/modules/vibe-workspace/PROP-035-spec-compiler.md scope! line); --verify residue of the retired form on living surfaces = 0; the package text needed no edit — the host came into line, per the B-031 closure note in BACKLOG B-031"
             ]
           },
           "ROW-SEGMENT-DOC": {
-            "v": "drift",
-            "ev": [
-              "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:81  | ##ROW-SEGMENT-DOC `<doc>` @impl/done | document name, extension dropped @impl/done | `PROP-001` @impl/done |",
-              "crates/vibe-spec/src/resolver.rs:112  /// Resolve a doc-path (relative to a `spec/` root) to a `.md` file, inverting /// the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan.",
-              "crates/vibe-spec/src/resolver.rs:150  /// Does a file stem equal `id` or start with `id-` (the descriptive-slug form)? fn id_file_matches(path: &Path, id: &str) -> bool {",
-              "crates/vibe-spec/src/resolver.rs:164  /// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail). fn is_id_stem(s: &str) -> bool {",
-              "DRIFT: «document name, extension dropped» is not what the host does, and the host's code says so. Its documents are named `PROP-043-progress-markup.md` and cited as `PROP-043` — the descriptive tail is dropped too — and `crates/vibe-spec/src/resolver.rs:112-113` exists to «invert the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan», a directory read per resolution. The row describes a pure string operation; the consumer implements a lookup."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "same landing, same direction of repair: the doc position in host addresses is the document file stem under the named directory (PROP-000, PROP-035-spec-compiler, …) — the row description now matches the host literally; truncation stays a resolver affordance (resolve_doc, authority-agnostic) and is B-028 material, not a falsifier of this row",
+              "campaigns/packages-2026-09/harvest/e5-b031-evidence.md §4b: 541 truncated ids resolve through the same prefix-scan the packages use — one rule, no host special case left"
             ]
           },
           "ROW-SEGMENT-SECTION": {
@@ -25853,7 +25845,7 @@
           }
         },
         "verified_at": "2026-08-02T14:53:46Z",
-        "verify_batch": "W3 + D8-boss + D25 + D26 + D28"
+        "verify_batch": "W3 + D8-boss + D25 + D26 + D28 + E6-F169-F147"
       }
     },
     {
@@ -26723,8 +26715,8 @@
       "campaign": {
         "processed_hash": "d6f25e9b1c935bf8003a1f03fb30f2a4817bfd87af7778402e9f7284ed44c0d7",
         "summary": {
-          "confirmed": 45,
-          "drift": 5
+          "confirmed": 47,
+          "drift": 3
         },
         "verdicts": {
           "scope-of-this-document": {
@@ -27184,32 +27176,25 @@
             ]
           },
           "SEGMENT-MODULE-IS-THE-DIRECTORY": {
-            "v": "drift",
-            "ev": [
-              "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
-              "specmap.toml:13  # `<package>` segment of every `spec://vibevm/…` URI (PROP-014 §2.1). namespace = \"vibevm\"",
-              "crates/vibe-spec/src/address.rs:9  //! - **authority** — either a package coordinate `<group>/<name>` or the host //!   project's reserved single-token namespace (e.g. `vibevm`). The two are //!   told apart syntactically: a first segment containing a `.` is a //!   reverse-DNS **group** (so `<group>/<name>` follows); a first segment",
-              "DRIFT: the directory name is in the host's addresses, one segment further right than this mapping places it. Host citations read `spec://vibevm/modules/<module>/<doc>#<anchor>` — the authority is a minted namespace (`specmap.toml:14`, `namespace = \"vibevm\"`), and the module directory has moved into the path. The mapping as stated does not describe the consumer's addresses."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "B-031 landed 2026-08-04: the host address carries the directory name in the module segment position (spec://org.vibevm.core/vibevm/modules/<directory>/…) — the mapping this twin states now holds for the host without exception; the one-segment-right displacement the drift measured is gone with the minted-namespace authority",
+              "resolver evidence: FileResolver.spec_root maps the self coordinate to ws_root/spec and resolve_doc walks <module>/<doc> under it — the twin describes exactly what the code does now (crates/vibe-spec/src/resolver.rs)"
             ]
           },
           "SEGMENT-DOC-IS-THE-FILE-NAME": {
-            "v": "drift",
-            "ev": [
-              "crates/vibe-spec/src/resolver.rs:112  /// Resolve a doc-path (relative to a `spec/` root) to a `.md` file, inverting /// the `PROP-NNN` / `FEAT-NNN` truncation by a prefix-scan.",
-              "crates/vibe-spec/src/resolver.rs:150  /// Does a file stem equal `id` or start with `id-` (the descriptive-slug form)? fn id_file_matches(path: &Path, id: &str) -> bool {",
-              "crates/vibe-spec/src/resolver.rs:164  /// A `PROP-NNN` / `FEAT-NNN` id stem (the truncated doc-path tail). fn is_id_stem(s: &str) -> bool {",
-              "crates/progress-core/src/baseline.rs:14  specmark::scope!(\"spec://vibevm/modules/vibe-progress/PROP-043#baseline\");",
-              "DRIFT, and the host keeps a resolver that exists because of it. Host files carry a descriptive slug — `PROP-043-progress-markup.md` — and are cited as `PROP-043`, so the doc segment is the file name minus the extension AND minus the tail. `crates/vibe-spec/src/resolver.rs:112-113` inverts that truncation by a prefix-scan."
-            ],
+            "v": "confirmed",
             "src": [
               1,
-              2,
-              3
+              2
+            ],
+            "ev": [
+              "the doc segment is the file name (stem) under the module directory in every host citation after the migration — the twin holds literally; the package text was not edited (the host side repaired), per BACKLOG B-031 closure direction",
+              "spot-checks on the migrated tree: spec://org.vibevm.core/vibevm/common/PROP-000#commits ↔ spec/common/PROP-000.md; spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#… ↔ spec/modules/vibe-progress/PROP-043-progress-markup.md (truncation, same rule as packages)"
             ]
           },
           "SEGMENT-FRAGMENT-IS-THE-ANCHOR": {
@@ -27376,7 +27361,7 @@
           }
         },
         "verified_at": "2026-08-02T14:53:46Z",
-        "verify_batch": "W3 + D27 + D28"
+        "verify_batch": "W3 + D27 + D28 + E6-F169-F147"
       }
     },
     {
@@ -45284,7 +45269,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "75cfebaf5998c0fbc28288657ef276ef5c6a378ae14101b10e53082331f7d17e",
+        "processed_hash": "a652ab464120bb2d81a6cabcf3b4cec8d13e7d7b9e55e8ccd9ce87448fbf01d7",
         "summary": {
           "confirmed": 44,
           "drift": 3
@@ -45946,7 +45931,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T14:02:07Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "W1e"
       }
     },
@@ -84791,7 +84776,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "27697df5871b7e4831d1ae9db525ff6a93c0b124fcc90afa3d02047dfee9c511",
+        "processed_hash": "3cb482aa6077afe52cae7fbfc4af631938391d5712996e25a75d82c1fb298dec",
         "summary": {
           "confirmed": 33
         },
@@ -84998,7 +84983,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T06:03:18Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c0-boot + d2g"
       }
     },
@@ -89994,7 +89979,7 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 94,
         "marker_count": 96,
-        "processed_hash": "a9a4a9ddea1568bebaef341c37fc0b2c142a04be20c989b73eda6a7a18beda2d",
+        "processed_hash": "b0c52e3f6c1102341df2702464847ac0efc651b1d9a2a95adf8511d4e061a6dd",
         "summary": {
           "confirmed": 75
         },
@@ -90450,7 +90435,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T13:32:18Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c3d-common-tail"
       }
     },
@@ -90474,7 +90459,7 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 126,
         "marker_count": 128,
-        "processed_hash": "b8bd5b21c508b0693e3e58929d008ef365fa09137755c14518ec0d0d7661f771",
+        "processed_hash": "3e09df67126e58671d9474160dfc86a89d7e8051fef3801a20287b4497dc3386",
         "summary": {
           "confirmed": 107
         },
@@ -91122,7 +91107,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T13:32:18Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c3d-common-tail"
       }
     },
@@ -91146,7 +91131,7 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 81,
         "marker_count": 83,
-        "processed_hash": "781411de33b4434ad1ae7113ccc9272973c9f944faf85a77b6a4be5f836956a9",
+        "processed_hash": "3443fe5e75b7494db296126c5b6aec9e8aa3682d90eff7a7e9717e54c236cba1",
         "summary": {
           "confirmed": 68
         },
@@ -91560,7 +91545,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T13:32:18Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c3d-common-tail"
       }
     },
@@ -91851,7 +91836,7 @@
         "coverage_note": "verdicts keyed by fact anchors; table cell-markers inherit their row anchor; <status> elements judged as _elements",
         "fact_count": 78,
         "marker_count": 78,
-        "processed_hash": "5ed13c61b05d66a48b3cb5579e59dfc3eb0db65c837178d1972c95aa065e18f5",
+        "processed_hash": "edd8872c278d744900fc3875b8e91f083dd6b33c778610e00a8375a6736cf76e",
         "summary": {
           "confirmed": 59
         },
@@ -92215,7 +92200,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T13:00:46Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c2-design + d2b"
       }
     },
@@ -96544,7 +96529,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 278,
         "marker_count": 279,
-        "processed_hash": "dc156b690a46e7c409a2e729791ef471aa66e43f8cbc80ec49327bd102ac4157",
+        "processed_hash": "8093661f1a5277da9010a83b94eb637b0da3537c5552dc6f17f93d853cb7fd64",
         "summary": {
           "confirmed": 279
         },
@@ -98224,7 +98209,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T14:57:59Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c4f3-index"
       }
     },
@@ -99747,7 +99732,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (14 cells); document <status> judged as _elements",
         "fact_count": 158,
         "marker_count": 159,
-        "processed_hash": "3cbe93c09e79d4d550effe2929c2d72aa1fc0a0d6c74f0b8aa8d7841f81e0753",
+        "processed_hash": "e44968da2676c7ab3fa984aabaafdc84fca83f13d3df0f9eb9249a776fba6eda",
         "summary": {
           "confirmed": 152
         },
@@ -100676,7 +100661,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T14:53:46Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c4a-vibe-progress + d2f + E"
       }
     },
@@ -100790,7 +100775,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 22,
         "marker_count": 23,
-        "processed_hash": "9f85265c1a8e0111664f74f5d7f0addbdddcbc7fc49de38ea100bd617b97805d",
+        "processed_hash": "f3faa42a50f14db559f92d0512749a0860790fe9b9680ab5c887fcfd9df0164a",
         "summary": {
           "confirmed": 23
         },
@@ -100934,7 +100919,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T14:01:39Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c4a-vibe-progress"
       }
     },
@@ -101084,7 +101069,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 92,
         "marker_count": 93,
-        "processed_hash": "78efc2f8dca1c4951cf6f2ea098fbef228124a06c1b6a5878b106446b5561e07",
+        "processed_hash": "5597ebf68c3fa320e5e015deb81d8eb3f0145b5d822095b02d3cfda82b77c184",
         "summary": {
           "confirmed": 93
         },
@@ -101651,7 +101636,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T14:14:56Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c4b-registry-core + d2d"
       }
     },
@@ -101675,7 +101660,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (74 cells); document <status> judged as _elements",
         "fact_count": 359,
         "marker_count": 360,
-        "processed_hash": "a4aa3c9909ffe89ead7c9ed3c71e25799810eb28b870a16a9bacd070d52a7f85",
+        "processed_hash": "a8f9be32bb5e89e9a9ec5d8167192277ff3af77c87df5a114bae30a696ca6e0c",
         "summary": {
           "confirmed": 288
         },
@@ -103415,7 +103400,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-26T10:35:08Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c4b-registry-core + d2d"
       }
     },
@@ -105235,7 +105220,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 75,
         "marker_count": 76,
-        "processed_hash": "58d2569e3e769e56c001ec98527400a0a3515188dcaa79f505623fce6ca984aa",
+        "processed_hash": "938b964bb9b943be2f6b02d1fc65cce480f20b7d4f067f74ab6d4592e439dca3",
         "summary": {
           "confirmed": 76
         },
@@ -105760,7 +105745,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T14:52:12Z",
+        "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c4f1-registry-rest + d1"
       }
     },

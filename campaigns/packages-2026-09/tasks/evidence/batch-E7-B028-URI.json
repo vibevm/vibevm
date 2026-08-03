@@ -1,0 +1,74 @@
+{
+ "batch": "E7-B028-URI",
+ "cluster": "world",
+ "files": {
+  "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md": {
+   "URI-SCHEME-IS-THE-FULL-GRAMMAR": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "owner-ruled 2026-08-04 (B-028 + the optional-version ruling verbatim in BACKLOG B-028): the section now publishes the grammar implementations resolve — checked against PROP-035 §6 ##UNIFIED-GRAMMAR (identical form) and the resolver (self coordinate, slot lookup, freshest default, ~rN parse at address.rs)",
+     "the no-host-exception clause is true since B-031 the same day: PROP-029 ##SCOPE-HOST is a void tombstone, the root resolves by its declared coordinate (resolver.rs spec_root first arm)"
+    ]
+   },
+   "ROW-SEGMENT-GROUP-NAME": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "matches the implemented authority exactly: classify_authority (address.rs) parses dotted-first-segment as Package{group,name}; the joiner-never-dot law is PROP-029/PROP-035 ##URI-JOINER; the root-included clause is B-031 (vibe.toml [project] group+name, self-coordinate arm)",
+     "example org.vibevm.world/wal is a live installed package (vibedeps/flow-wal/0.2.0)"
+    ]
+   },
+   "ROW-SEGMENT-VERSION": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "the owner ruling verbatim («указание версий — опциональная фича; если не указана — самая свежая») implemented the same pass: package_slot absent-version arm picks semver-newest (resolver/version_order.rs; F1–F6 incl. 0.9<0.10 numeric and explicit-pin-non-newest), so the row describes shipped behaviour",
+     "explicit @version pins the exact slot — package_slot Some(v) arm unchanged"
+    ]
+   },
+   "ROW-SEGMENT-MODULE": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "re-affirmed after the section rewrite: the row now scopes itself inside <doc-path> (modules/<dir> or common) — exactly the tree shape resolve_doc walks under a spec/ root, for packages and the host alike since B-031",
+     "live example in the row (modules/vibe-registry) resolves in the host tree (spec/modules/vibe-registry/)"
+    ]
+   },
+   "ROW-SEGMENT-DOC": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "re-affirmed after the rewrite: the doc name with extension dropped is what resolve_doc matches (exact stem, or the PROP-NNN/FEAT-NNN prefix-scan — authority-agnostic, resolver.rs resolve_doc/is_id_stem)",
+     "the truncation affordance is not restated here — it stays implementation-side (B-028 left it a resolver affordance; the row stays honest without it)"
+    ]
+   },
+   "ROW-SEGMENT-REVISION-PIN": {
+    "v": "confirmed",
+    "src": [
+     1,
+     2
+    ],
+    "ev": [
+     "the ~rN pin parses at the address layer (address.rs pinned_r, parse_revision) and is a revision selector, never identity (address.rs:131 doc); the never-a-package-version clause is the PROP-035 §6 ##URI-REVISION-PIN law, and the @-half ownership sentence matches it",
+     "population on living surfaces: 126 pins ride post-migration (E5 census + B-031 landing), all in the ~rN unit-revision meaning"
+    ]
+   }
+  }
+ }
+}
