@@ -1,0 +1,29 @@
+{
+  "batch": "E12-F185-rejudge",
+  "cluster": "ai-native",
+  "files": {
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md": {
+      "RULE-SEAM-ERROR-CONTRACT": {
+        "v": "confirmed",
+        "ev": [
+          "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md:41  - ##RULE-SEAM-ERROR-CONTRACT the seam-error contract (`go-seam-error-cites-req` — a seam's closed error set carries its REQ URI, guide §5): one rule, both halves. @impl/done",
+          "**restated confirmed <- drift.** The drift that opened F-185 was «`seam-error-cites-req` is not a rule» — it shipped only as the census KIND `seam_error_missing_req` inside `go-unsafe-in-domain`. Wave-B batch 2 (B-033) built the dedicated rule: `GoSeamErrorCitesReq` (id `go-seam-error-cites-req`) lives in the engine at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/go_parity.rs, checks BOTH halves (the structure half `seam_error_missing_req` moved out of the umbrella; the message half `seam_error_message_no_req` reads the `Error()` body), and is mounted in the go driver at packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-conform/src/lib.rs. The gate test at crates/go-ai-native-conform/tests/gate.rs asserts the dirty PlanError reds on both halves. The doc now DESCRIBES what the tree HAS."
+        ]
+      },
+      "CONFORM-TOML-GAINS-A-GO-SECTION": {
+        "v": "confirmed",
+        "ev": [
+          "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md:107  - ##CONFORM-TOML-GAINS-A-GO-SECTION `conform.toml` gains a `[go]` section, written by `go-ai-native init` from the module layout: `roots`, `cells_dir`, `seams_pkg`, `registry_pkg`, `[go] gated` / `[[go.exempt]]`. @impl/done",
+          "**restated confirmed <- drift.** Wave-B batch 1 (B-029) built the per-language config surface: `GoConfig` carries `roots`, `exclude_substrings`, `cells_dir`, `seams_pkg`, `registry_pkg`, neutral `gated`, `[[go.exempt]] {unit, reason}`, and `floor_disable` — packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/config.rs. The retired flat root keys are loud tombstones. The `[go]` section the doc describes is exactly what the config parses."
+        ]
+      },
+      "EVERY-PACKAGE-GATED-OR-EXEMPT": {
+        "v": "confirmed",
+        "ev": [
+          "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md:116  - ##EVERY-PACKAGE-GATED-OR-EXEMPT The every-package-gated-or-exempt invariant is enforced by the engine on every check, exactly as for the sibling stacks. @impl/done",
+          "**restated confirmed <- drift.** Wave-B batch 1 (B-034) generalised the coverage invariant to Go: `validate_go_against_tree` (core-ai-native-conform/src/config/coverage.rs) enforces `gated ∪ exempt` coverage over the Go package units with six refusals in the language's own noun, and the Go driver calls it in BOTH `run_check` and `run_freeze` (packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-conform/src/lib.rs). Enforced on every check, exactly as the doc states."
+        ]
+      }
+    }
+  }
+}

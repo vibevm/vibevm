@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-03T14:59:20Z",
+  "updated_at": "2026-08-03T20:45:00Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -258,9 +258,9 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 101,
+      "markers": 105,
       "units": 10,
-      "facts": 100,
+      "facts": 104,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -9311,7 +9311,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "bbd9bbfc58eec9f924fb043689377eb2bdae6a0779760578445f4b8bac85bf45",
+        "processed_hash": "44f286353e0490bdd2f0f9c5cb036c7da6b7b9a97c80a26bf57d72e58352e795",
         "summary": {
           "confirmed": 147,
           "unverifiable": 2
@@ -10551,7 +10551,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T19:06:18Z",
+        "verified_at": "2026-08-03T14:59:58Z",
         "verify_batch": "C3 + D5a + D6 + D7 + D9-boss-a + D24 + D34"
       }
     },
@@ -11558,7 +11558,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "efd7da05501b8e4ec3d5f60ba84fae3a6329e9f29647da0db98c74ce2c124fcf",
+        "processed_hash": "b0d5b3f12ca44a50e17a97ef99f02fe0f3557c8eb106393c5be160a962043b6e",
         "summary": {
           "confirmed": 26,
           "drift": 3
@@ -11816,7 +11816,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T14:10:28Z",
+        "verified_at": "2026-08-03T14:59:58Z",
         "verify_batch": "C4+C5 + C45-go-review"
       }
     },
@@ -12403,7 +12403,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "85a5d8ac2d74bd0bf84064515cdcd8bde3648679d901558de98bc861158cbf56",
+        "processed_hash": "bc10514855f3ba50f8da3d5775150c4a183359b78fb44b9c747a829be606b149",
         "summary": {
           "confirmed": 34
         },
@@ -12694,7 +12694,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T20:39:23Z",
+        "verified_at": "2026-08-03T14:59:58Z",
         "verify_batch": "C6 + D8b + D8a + D9-boss-a + D11-release-a"
       }
     },
@@ -15327,7 +15327,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "a67f7129859287c5e182d9e7c6e2c41402637ed50d25a2b3a56dba64ded697d6",
+        "processed_hash": "b70b769344683bb01b0566b981ca40aa2120880b388d46ffc030b8d4485d8fad",
         "summary": {
           "confirmed": 83,
           "drift": 5
@@ -16104,7 +16104,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T19:06:18Z",
+        "verified_at": "2026-08-03T14:59:58Z",
         "verify_batch": "C3 + D5a + D7 + D34"
       }
     },
@@ -17785,7 +17785,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "6746d59a193a64405d109a6a15e3b306d14e1c6b9f573f939b8076b75d2e15f8",
+        "processed_hash": "66f470b84458a2f37e12ce5ad9a3ad239d21be8b918b32d9bf8a07de7df48ec2",
         "summary": {
           "confirmed": 35
         },
@@ -18085,7 +18085,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T15:32:52Z",
+        "verified_at": "2026-08-03T14:59:58Z",
         "verify_batch": "C6 + D8b + D8a + D9-boss-a"
       }
     },
@@ -18105,7 +18105,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "8d86b781cbbfb07b6423abe3c1ea458faa8f211938dc441bf64bc6f83f00e6a3",
+        "processed_hash": "f8f199051a45648cfe02f9e4cf833403f1fd91c5d519f96388762c2582ab38fa",
         "summary": {
           "confirmed": 34
         },
@@ -18400,7 +18400,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:29:33Z",
+        "verified_at": "2026-08-03T14:59:58Z",
         "verify_batch": "C6"
       }
     },
@@ -20547,7 +20547,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "6cee59e5f9cf0a518c58a3a38ab2ff164c4658a0669fdad4f803b3afa80c6221",
+        "processed_hash": "b32d2f256d92a23bf2a1a2e2a1ef2b2bfc1ecacc1fb697f8bc14cbc1e0c05395",
         "summary": {
           "confirmed": 27
         },
@@ -20783,7 +20783,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-31T20:39:23Z",
+        "verified_at": "2026-08-03T14:59:58Z",
         "verify_batch": "C6 + D1a + D8b + D11-release-a"
       }
     },
@@ -21080,13 +21080,13 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 154,
+      "markers": 155,
       "units": 18,
-      "facts": 153,
+      "facts": 154,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "abd6dca703f86d3ebeb71ee28df1fd283efd8d017102c78e2aec7bbdb8924101",
+        "processed_hash": "1ae7919d82bb3326ef5848244523589ed1a9a5cff42fee11ffcc7fcd59bcca36",
         "summary": {
           "confirmed": 148,
           "drift": 4,
@@ -22329,7 +22329,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T19:06:18Z",
+        "verified_at": "2026-08-03T14:59:58Z",
         "verify_batch": "C3 + C45-cross-language + D5a + D7 + D30 + D33 + D34"
       }
     },
@@ -23057,7 +23057,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "6dcc151777cbd0856fe80d247e123e943265b1eacc162495fc73022549b05d4c",
+        "processed_hash": "7d4d65d337b841ec9243695587be6fe8992bce8ecc2d398ed3281188693d413b",
         "summary": {
           "confirmed": 34
         },
@@ -23352,7 +23352,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:58:29Z",
+        "verified_at": "2026-08-03T14:59:58Z",
         "verify_batch": "C4+C5"
       }
     },
@@ -91603,9 +91603,9 @@
         "stage": "doc",
         "state": "done"
       },
-      "markers": 73,
+      "markers": 74,
       "units": 6,
-      "facts": 67,
+      "facts": 68,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -92269,11 +92269,11 @@
       "path": "spec/design/gate-parity-config.md",
       "effective": {
         "stage": "spec",
-        "state": "work"
+        "state": "done"
       },
       "explicit": {
         "stage": "spec",
-        "state": "work"
+        "state": "done"
       },
       "markers": 20,
       "units": 6,
@@ -92713,6 +92713,23 @@
         "verified_at": "2026-07-25T13:00:46Z",
         "verify_batch": "c2-design + d2b"
       }
+    },
+    {
+      "path": "spec/design/seam-error-and-assertion-parity.md",
+      "effective": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "markers": 28,
+      "units": 11,
+      "facts": 27,
+      "unmarked": 0,
+      "issues": 0,
+      "campaign": {}
     },
     {
       "path": "spec/design/structural-loader.md",
