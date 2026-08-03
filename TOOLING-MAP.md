@@ -1,6 +1,6 @@
 # The tooling development map
 
-<status stage="doc" state="work" comment="B-041: drafted 2026-08-02, approved by the owner the same day («мне нравится этот документ») and integrated beside the backlog by his direction; the waves and forks remain proposals framed by the running campaign"/>
+<status stage="doc" state="work" comment="B-041: drafted 2026-08-02, approved by the owner the same day («мне нравится этот документ») and integrated beside the backlog by his direction; the waves and forks remain proposals framed by the running campaign; wave-boundary refresh 2026-08-04: волна А landed whole, and the owner's same-day mandate opens Б/В/Г («Хочу все остальные волны сделать»)"/>
 
 ##companion-line **Companion to:** [`BACKLOG.md` B-041](BACKLOG.md#b-041) (the commissioning entry) and the backlog's own [`#map` section](BACKLOG.md#map); the atoms this map arranges are the backlog's build entries B-001…B-043 and the campaign's «Specified, not built» annotations. Genre-wise this is a design-rationale document living beside the backlog it arranges — the [`spec/design/` index](spec/design/README.md) carries its row. [`ROADMAP.md`](ROADMAP.md) is a different document: the **product** milestone roadmap (M0/M1.x…); this map covers the **discipline tooling**, and the two do not compete. @doc/done
 
@@ -76,7 +76,7 @@
 
 ##waves-lead A proposal for the owner, not a schedule — each wave is one coherent release batch (the engine vendors into six packages, so gate-plane changes are release events and batch naturally). **Framed by `##frame-line`:** the vehicle for these waves is the campaign's own phase sequence — Phase E's mandate first, later mandates after it; while Phase D's queues drain, nothing below starts. @doc/work
 
-- ##WAVE-A **Волна А — детерминированная загрузка:** B-011 (highest), then B-006, B-031, B-028; B-004 and B-001 ride as design permits. Exit: the M-LOAD milestone below. @doc/work
+- ##WAVE-A **Волна А — детерминированная загрузка: ЗАКРЫТА ЦЕЛИКОМ 2026-08-04.** B-011 (qualified splice + aliases + lookup, M-LOAD taken on both measurements) → B-006 (once-each lane, de-substitution) → B-031 (the host is `org.vibevm.core/vibevm`; 1 893-occurrence migration, residue 0) → B-028 (the flow publishes the whole grammar; versions optional, absent → freshest installed — owner-ruled). B-004 and B-001 did not ride (unpulled by any design need — they stay in the backlog). Chronicle: the campaign §7 LOG, 2026-08-03/04. @doc/done
 - ##WAVE-B **Волна Б — паритет гейтов и новые классы правил:** (B-029 + B-034 + B-039) → (B-033 + B-030) → (B-036 + B-037 + B-038) → (B-025 + B-026); B-003 rides; B-035 loops after each batch. Feeder: B-023 (syntactic tiers, Python frontend). Exit: M-PARITY. @doc/work
 - ##WAVE-V **Волна В — карта и её потребители:** B-013 → the one format change (B-019а + B-016.1 + B-017; B-024 decided alongside) → B-018.1/.2 → B-018.4 + B-016.2 → B-020 + B-021; B-014 decided here. Feeder: B-022 (ledger mechanisms). Exit: M-ASK + M-DRIFT. @doc/work
 - ##WAVE-G **Волна Г — хост догоняет собственную дисциплину** (parallel, opportunistic): B-040 (seam refactor survey), B-005 (ancestry gate), the F-132 schemas debt, B-010's check-verb fix. @doc/work

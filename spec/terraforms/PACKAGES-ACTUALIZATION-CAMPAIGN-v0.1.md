@@ -5048,6 +5048,30 @@ aspirational — and every one is still live for the phases that remain.
   Б/В/Г, добром пока не покрытые, и стоячие пересуды остальных
   deferred-строк по мере их строек.** @spec/done
 
+- **2026-08-04 · НОВЫЙ МАНДАТ — добро на ВСЕ оставшиеся волны.** On
+  the wave-А close report and the Б/В/Г explainer, the owner, verbatim:
+  «сохрани состояние, напиши промт для продоложения. Хочу все
+  остальные волны сделать». **The mandate, recorded:** Phase E
+  continues across **волны Б, В и Г целиком**, in the map's order —
+  Б batch by batch (opener: B-029 + B-034 + B-039; then B-033 + B-030;
+  then B-036 + B-037 + B-038; then B-025 + B-026; B-003 rides, B-035
+  loops after each batch), then В down its chain (B-019а + B-016.1 +
+  B-017 with B-024 decided alongside → B-018.1/.2 → B-018.4 + B-016.2
+  → B-020 + B-021; B-014 decided there), Г parallel-opportunistic
+  (B-040, B-005, F-132 schemas, B-010's check-verb). The standing
+  split holds: boss = Fable (task cutting, design, review, verdicts,
+  commits, owner communication), исполнение — claudez workers under
+  the full transport law; **the map's per-entry owner forks still
+  stop for the owner one at a time** (the eleven named decisions —
+  a mandate to build is not a mandate to pick his forks); deferred
+  re-judgements drain as their builds land (B-025 → F-146's last
+  anchor, B-026 → F-206, the parity family → F-185, B-020 → the
+  LEDGER-INTENT interims' key). **T/F/G остаются вне добра**;
+  publication waits for the refactor's end; versions stay unbumped
+  to the pre-publication boundary. Wind-down executed the same
+  message: WAL/CONTINUE rewritten, the map refreshed at the wave
+  boundary, the start prompt handed to the owner in chat. @spec/done
+
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 
 *Added 2026-07-31 under the owner's bring-into-line ruling:
