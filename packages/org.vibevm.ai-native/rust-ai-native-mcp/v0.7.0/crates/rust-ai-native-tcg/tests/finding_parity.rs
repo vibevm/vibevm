@@ -27,15 +27,15 @@ fn relay_enrichment_matches_the_gate_scan_fingerprint_for_fingerprint() {
     std::fs::write(root.join("crates/app/src/shout.rs"), VIOLATING).expect("source");
     std::fs::write(
         root.join("conform.toml"),
-        "roots = [\"crates/*\"]\nmax_file_lines = 600\n\
-         gated_crates = [\"app\"]\ngated_pub_doctest = []\n\
+        "max_file_lines = 600\n[rust]\nroots = [\"crates/*\"]\n\
+         gated = [\"app\"]\ngated_pub_doctest = []\n\
          audit_crates = []\nenv_roots = []\n",
     )
     .expect("conform.toml");
 
     // The gate's path: Store scan over the tree, exactly as run_check.
     let config = rust_ai_native_conform::load_config(root).expect("config");
-    let store = Store::at_repo(root, &config);
+    let store = Store::for_rust(root, &config);
     let mut log = ExtractionLog::default();
     let facts = store
         .extract_workspace(root, &RustFrontend, &mut log)

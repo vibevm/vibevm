@@ -29,8 +29,8 @@ fn scratch_policy() -> (tempfile::TempDir, Policy) {
     std::fs::write(dir.path().join("crates/app/Cargo.toml"), "[package]\n").expect("manifest");
     std::fs::write(
         dir.path().join("conform.toml"),
-        "roots = [\"crates/*\"]\nmax_file_lines = 600\n\
-         gated_crates = [\"app\"]\ngated_pub_doctest = []\n\
+        "max_file_lines = 600\n[rust]\nroots = [\"crates/*\"]\n\
+         gated = [\"app\"]\ngated_pub_doctest = []\n\
          audit_crates = []\nenv_roots = []\n",
     )
     .expect("conform.toml");
