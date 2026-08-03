@@ -11,7 +11,7 @@
       "crate_name": "src",
       "file": "src/cells/parse/logic.ts",
       "item_kind": "export",
-      "line": 21,
+      "line": 24,
       "symbol": "src/cells/parse/logic.ts::DEVIANT"
     },
     {
@@ -34,7 +34,7 @@
     {
       "file": "src/cells/parse/logic.ts",
       "from_symbol": "src/cells/parse/logic.ts::DEVIANT",
-      "line": 21,
+      "line": 24,
       "provenance": "authored",
       "uri": "spec://fixture/PROP-001#req-parse",
       "verb": "deviates",
