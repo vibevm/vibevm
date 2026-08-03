@@ -137,7 +137,7 @@ pub fn run_init(root: &Path, opts: &InitOptions) -> Result<()> {
          \n\
          [go]\n\
          roots = [\".\"]\n\
-         exclude_substrings = [\"/testdata/\", \"/vendor/\"]\n\
+         exclude_substrings = [\"/testdata/\", \"/vendor/\", \"/fixtures/\"]\n\
          {cells_line}\
          {seams_line}\
          {registry_line}"
@@ -264,6 +264,17 @@ mod tests {
                 .expect("conform parses");
         assert_eq!(conform.go.roots, vec![".".to_string()]);
         assert_eq!(conform.go.cells_dir.as_deref(), Some("internal/cells"));
+        // The init template's `[go].exclude_substrings` must carry
+        // `/fixtures/` (B-003) alongside the testdata/vendor pair, so the
+        // generated policy drops extractor fixtures by default.
+        assert_eq!(
+            conform.go.exclude_substrings,
+            vec![
+                "/testdata/".to_string(),
+                "/vendor/".to_string(),
+                "/fixtures/".to_string(),
+            ]
+        );
 
         // specmap.toml parses and carries the discovered external root.
         let specmap = specmap_core::config::Config::load(root)

@@ -51,6 +51,24 @@ fn run_tool_step(mut cmd: Command, recipe: &str) -> bool {
     }
 }
 
+/// The files `gofmt -l .` reported as unformatted, after dropping the
+/// `[go].exclude_substrings` entries — the conform engine's own skip
+/// (`store.rs::go_sources`): normalise `\` → `/`, then `String::contains`
+/// against each exclude. gofmt on Windows prints back-slashed paths, so
+/// the separator is normalised before the match while the original line
+/// is kept verbatim for the `unformatted:` print. Pure (no I/O), so the
+/// floor's exclusion is unit-tested in isolation below.
+fn filter_gofmt_listed(raw: &str, excludes: &[String]) -> Vec<String> {
+    raw.lines()
+        .filter(|l| !l.trim().is_empty())
+        .filter(|l| {
+            let norm = l.replace('\\', "/");
+            !excludes.iter().any(|s| norm.contains(s.as_str()))
+        })
+        .map(str::to_owned)
+        .collect()
+}
+
 /// The floor. Green ⇒ `Ok(())`; any red step ⇒ an error naming them.
 pub fn run_floor(root: &Path, opts: &FloorOptions) -> Result<()> {
     let (config, _origin) = conform_core::Config::load_or_default(root)?;
@@ -88,7 +106,7 @@ pub fn run_floor(root: &Path, opts: &FloorOptions) -> Result<()> {
         let ok = match cmd.output() {
             Ok(out) if out.status.success() => {
                 let listed = String::from_utf8_lossy(&out.stdout);
-                let dirty: Vec<&str> = listed.lines().filter(|l| !l.trim().is_empty()).collect();
+                let dirty = filter_gofmt_listed(&listed, &config.go.exclude_substrings);
                 for f in &dirty {
                     eprintln!("  gofmt: unformatted: {f}");
                 }
@@ -224,5 +242,68 @@ pub fn run_floor(root: &Path, opts: &FloorOptions) -> Result<()> {
         Ok(())
     } else {
         bail!("floor: {} step(s) failed: {}", red.len(), red.join(", "));
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The Go default `[go].exclude_substrings`, as `run_floor` sees it —
+    /// kept here as a fixture so the filter tests track the real policy.
+    fn go_excludes() -> Vec<String> {
+        vec![
+            "/testdata/".to_string(),
+            "/vendor/".to_string(),
+            "/fixtures/".to_string(),
+        ]
+    }
+
+    /// (а) a file under `/fixtures/` is dropped — on both POSIX and the
+    /// back-slashed Windows form gofmt prints (B-003's exact symptom).
+    #[test]
+    fn fixture_files_are_dropped_posix_and_windows() {
+        let posix = "tools/go-extract/test/fixtures/dirty/internal/cells/plan/plan.go\n";
+        assert!(filter_gofmt_listed(posix, &go_excludes()).is_empty());
+
+        // gofmt on Windows prints back-slashed paths; the match must
+        // normalise `\` → `/` before applying the exclude (store.rs:441).
+        let windows = "tools\\go-extract\\test\\fixtures\\dirty\\plan.go\n";
+        assert!(filter_gofmt_listed(windows, &go_excludes()).is_empty());
+    }
+
+    /// (б) an ordinary source file passes through untouched.
+    #[test]
+    fn ordinary_files_pass_through() {
+        let raw = "internal/cells/plan/plan.go\ninternal/registry/registry.go\n";
+        assert_eq!(
+            filter_gofmt_listed(raw, &go_excludes()),
+            vec![
+                "internal/cells/plan/plan.go".to_string(),
+                "internal/registry/registry.go".to_string(),
+            ]
+        );
+    }
+
+    /// (в) non-empty raw output that is entirely excluded yields an empty
+    /// list — the gofmt step goes green, the fixtures never print as
+    /// unformatted.
+    #[test]
+    fn all_excluded_yields_empty_so_the_step_is_green() {
+        let raw = "tools/go-extract/test/fixtures/dirty/a.go\n\
+                   tools/go-extract/test/fixtures/clean/b.go\n";
+        let got = filter_gofmt_listed(raw, &go_excludes());
+        assert!(got.is_empty(), "expected no unformatted files, got {got:?}");
+    }
+
+    /// Blank/whitespace-only lines in gofmt's output are dropped (the
+    /// floor never printed them before, and must not start now).
+    #[test]
+    fn blank_lines_are_dropped() {
+        let raw = "\ninternal/cells/plan/plan.go\n\n   \n";
+        assert_eq!(
+            filter_gofmt_listed(raw, &go_excludes()),
+            vec!["internal/cells/plan/plan.go".to_string()]
+        );
     }
 }

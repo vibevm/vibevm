@@ -133,7 +133,7 @@ impl Default for GoConfig {
     fn default() -> Self {
         GoConfig {
             roots: vec![".".into()],
-            exclude_substrings: vec!["/testdata/".into(), "/vendor/".into()],
+            exclude_substrings: vec!["/testdata/".into(), "/vendor/".into(), "/fixtures/".into()],
             cells_dir: None,
             seams_pkg: None,
             registry_pkg: None,
@@ -465,5 +465,20 @@ mod tests {
             toml::from_str("roots = [\".\"]\ngated_crates = [\"ghost\"]\n").unwrap();
         let err = ghost.validate_against_tree(root).unwrap_err().to_string();
         assert!(err.contains("`ghost` is listed"), "{err}");
+    }
+
+    /// The Go default `[go].exclude_substrings` must drop fixture trees
+    /// the same way the TypeScript default drops `/fixtures/` — without
+    /// it, the deliberately-broken extractor fixtures under
+    /// `tools/go-extract/test/fixtures/` are scanned as source (B-003).
+    #[test]
+    fn go_default_excludes_fixtures() {
+        let excludes = GoConfig::default().exclude_substrings;
+        assert!(
+            excludes.iter().any(|s| s == "/fixtures/"),
+            "Go default exclude_substrings must contain `/fixtures/`: {excludes:?}"
+        );
+        assert!(excludes.iter().any(|s| s == "/testdata/"));
+        assert!(excludes.iter().any(|s| s == "/vendor/"));
     }
 }
