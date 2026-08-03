@@ -3,7 +3,9 @@
 //! recorded-deviation escape hatch, and cell isolation over import
 //! paths. Defined ONCE here — the neutral engine — so the rule cannot
 //! drift between language projections (the same consolidation argument
-//! that homes the TypeScript family here).
+//! that homes the TypeScript family here). The parity-driven rules
+//! (`go-seam-error-cites-req`, `go-conformance-assertion`) live in
+//! [`go_parity`](super::go_parity).
 
 specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules");
 
@@ -12,7 +14,7 @@ use crate::finding::{Finding, Rule};
 use crate::rules::req_message;
 
 const GO_GUIDE_CELLS: &str = "discipline://go-ai-native-lang/guide#cells";
-const GO_GUIDE_ERRORS: &str = "discipline://go-ai-native-lang/guide#errors";
+pub(super) const GO_GUIDE_ERRORS: &str = "discipline://go-ai-native-lang/guide#errors";
 const GO_GUIDE_BANS: &str = "discipline://go-ai-native-lang/guide#bans";
 const GO_GUIDE_REPLACEMENT: &str = "discipline://go-ai-native-lang/guide#replacement";
 
@@ -22,13 +24,16 @@ const GO_GUIDE_REPLACEMENT: &str = "discipline://go-ai-native-lang/guide#replace
 /// `go` statements are banned INSIDE CELLS (§2, §5 — the composition
 /// root and boundary adapters are their sanctioned homes, so these
 /// kinds fire only under `cells_dir`); error-string matching (§5),
-/// reasonless suppression directives (§1), a seam error type without
-/// its REQ citation (§5), and `t.Skip` on tests (§10 — the registry is
-/// the only xfail home) fire everywhere. A site covered by a reasoned
-/// `//spec:deviates … reason="…"` is recorded testimony and is
-/// honoured, not flagged. Value-level bans skip `_test.go` files
-/// (capability injection is not demanded of fixtures); `t_skip` fires
-/// ONLY there.
+/// reasonless suppression directives (§1), and `t.Skip` on tests (§10
+/// — the registry is the only xfail home) fire everywhere. A site
+/// covered by a reasoned `//spec:deviates … reason="…"` is recorded
+/// testimony and is honoured, not flagged. Value-level bans skip
+/// `_test.go` files (capability injection is not demanded of fixtures);
+/// `t_skip` fires ONLY there.
+///
+/// The seam-error kinds (`seam_error_missing_req`,
+/// `seam_error_message_no_req`) have moved to their own rule
+/// `go-seam-error-cites-req`; this umbrella no longer carries them.
 ///
 /// ```
 /// use core_ai_native_conform::rules::GoUnsafeInDomain;
@@ -141,11 +146,6 @@ impl Rule for GoUnsafeInDomain {
                         GO_GUIDE_BANS,
                         "a suppression without a reason is unrecorded testimony",
                         "append the reason (`//lint:ignore <Check> <reason>`), or fix the finding",
-                    ),
-                    "seam_error_missing_req" if !in_test => (
-                        GO_GUIDE_ERRORS,
-                        "a seam error type without a Spec field cannot cite its REQ",
-                        "carry the violated spec:// URI (Code + Spec + Err) and render it",
                     ),
                     _ => continue,
                 };

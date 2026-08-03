@@ -166,14 +166,17 @@ pub fn run_health(root: &Path, out_rel: &str, extra_sections: &[(String, Value)]
                         h.danger_files.push((sf.file.clone(), *lines));
                     }
                 }
-                // TsUnsafe and GoUnsafe are the ts-tsc and go frontends'
-                // facts; this collector runs over rust-syn facts, so they
-                // never appear here — their censuses belong to the
-                // TypeScript and Go health twins.
+                // TsUnsafe/TsSeamError and GoUnsafe/GoConformance are the
+                // ts-tsc and go frontends' facts; this collector runs over
+                // rust-syn facts, so they never appear here — their censuses
+                // belong to the TypeScript and Go health twins.
                 Fact::Import { .. }
                 | Fact::Ctor { .. }
                 | Fact::TsUnsafe { .. }
-                | Fact::GoUnsafe { .. } => {}
+                | Fact::TsEnvRead { .. }
+                | Fact::TsSeamError { .. }
+                | Fact::GoUnsafe { .. }
+                | Fact::GoConformance { .. } => {}
             }
         }
     }

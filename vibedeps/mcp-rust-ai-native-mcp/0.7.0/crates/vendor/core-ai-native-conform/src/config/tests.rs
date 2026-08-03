@@ -110,6 +110,27 @@ fn defaults_match_census_q1() {
     assert!(t.gated.is_empty() && t.exempt.is_empty());
 }
 
+#[test]
+fn rust_floor_disable_parses_step_and_reason() {
+    // B-049: `[[rust.floor_disable]]` mirrors the Go/TS slot EXACTLY —
+    // a `{step, reason}` table, each disablement carrying its reason so
+    // the Rust floor can print it (enforced in its own lane, next slice).
+    // A flat `["step"]` list is deliberately NOT accepted: parity means
+    // Rust disables a step with a recorded reason, never bare.
+    let cfg: Config = toml::from_str(
+        "[[rust.floor_disable]]\nstep = \"clippy\"\nreason = \"pinned toolchain lints churn\"\n",
+    )
+    .unwrap();
+    assert_eq!(cfg.rust.floor_disable.len(), 1);
+    assert_eq!(cfg.rust.floor_disable[0].step, "clippy");
+    assert_eq!(
+        cfg.rust.floor_disable[0].reason,
+        "pinned toolchain lints churn"
+    );
+    // Default is empty.
+    assert!(RustConfig::default().floor_disable.is_empty());
+}
+
 // === tombstones — each retired key names its own move ===
 
 #[test]

@@ -27,9 +27,12 @@ fn relay_enrichment_matches_the_gate_on_the_dirty_cell() {
         },
     );
 
-    // The gate's own census on this one file: 9 findings (see the
-    // conform gate test — the file's 8 census sites + the suppression;
-    // t_skip lives in the sibling test file, not here).
+    // The gate's own census on this one file: 9 findings total (see the
+    // conform gate test — the file's census sites + the suppression;
+    // t_skip lives in the sibling test file, not here). Since B-033 the
+    // seam error's missing-`Spec` finding reports under the dedicated
+    // `go-seam-error-cites-req` rule, so 8 remain under the umbrella
+    // `go-unsafe-in-domain` and 1 is the seam-error rule.
     let rules: Vec<&str> = enriched
         .conform_findings
         .iter()
@@ -40,7 +43,16 @@ fn relay_enrichment_matches_the_gate_on_the_dirty_cell() {
             .iter()
             .filter(|r| **r == "go-unsafe-in-domain")
             .count(),
-        9,
+        8,
+        "{:?}",
+        enriched.conform_findings
+    );
+    assert_eq!(
+        rules
+            .iter()
+            .filter(|r| **r == "go-seam-error-cites-req")
+            .count(),
+        1,
         "{:?}",
         enriched.conform_findings
     );

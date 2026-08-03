@@ -83,7 +83,9 @@ impl Frontend for RustFrontend {
             // these — but the sort is total over the shared fact model.
             | Fact::TsUnsafe { line, .. }
             | Fact::TsEnvRead { line, .. }
-            | Fact::GoUnsafe { line, .. } => *line,
+            | Fact::TsSeamError { line, .. }
+            | Fact::GoUnsafe { line, .. }
+            | Fact::GoConformance { line, .. } => *line,
         });
         v.facts
     }

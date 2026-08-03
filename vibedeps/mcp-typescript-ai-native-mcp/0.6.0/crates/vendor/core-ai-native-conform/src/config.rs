@@ -163,6 +163,14 @@ pub struct RustConfig {
     pub registry_file: Option<String>,
     /// The crate R-001 gates; meaningful only with `registry_file`.
     pub registry_gated_crate: Option<String>,
+    /// Floor steps this project explicitly disables, each with a
+    /// recorded reason — the Rust twin of the Go/TypeScript
+    /// `floor_disable` slot (B-049), the same `{step, reason}` shape and
+    /// the same posture (printed on every run). The Rust floor reads it
+    /// in its own lane (`rust-ai-native-cli/src/floor.rs`, next slice);
+    /// here the field is added so the engine already parses
+    /// `[[rust.floor_disable]]`.
+    pub floor_disable: Vec<FloorDisable>,
 }
 
 impl Default for RustConfig {
@@ -177,6 +185,7 @@ impl Default for RustConfig {
             env_roots: Vec::new(),
             registry_file: None,
             registry_gated_crate: None,
+            floor_disable: Vec::new(),
         }
     }
 }

@@ -120,17 +120,36 @@ pub enum Fact {
     /// produced by the `go-extract` frontend: `kind` is one of
     /// `init_decl` / `blank_import` / `ambient_call` / `naked_go` /
     /// `error_string_match` / `t_skip` / `reasonless_suppression` /
-    /// `seam_error_missing_req`. `reason` carries the text of a
-    /// reasoned `//spec:deviates … reason="…"` covering the site (the
-    /// Go shape of deviation testimony, honoured by
-    /// `go-unsafe-in-domain` instead of flagged) or a suppression
+    /// `seam_error_missing_req` / `seam_error_message_no_req`. `reason`
+    /// carries the text of a reasoned `//spec:deviates … reason="…"`
+    /// covering the site (the Go shape of deviation testimony, honoured
+    /// by `go-unsafe-in-domain` instead of flagged) or a suppression
     /// directive's own reason. `in_test` marks `_test.go` files —
     /// file-grain, because Go test scoping is a file convention.
+    ///
+    /// The two `seam_error_*` kinds are the structure half
+    /// (`seam_error_missing_req` — the error type carries no `Spec`
+    /// field) and the message half (`seam_error_message_no_req` — its
+    /// `Error()` renders no `spec://`); both are consumed by the
+    /// dedicated `go-seam-error-cites-req` rule, not the umbrella.
     GoUnsafe {
         kind: String,
         line: u32,
         in_test: bool,
         reason: Option<String>,
+    },
+    /// A Go compile-time conformance assertion
+    /// `var _ <seam> = (*<Impl>)(nil)` (GUIDE-AI-NATIVE-GO §2, the
+    /// «conformance is made loud» idiom), produced by the `go-extract`
+    /// frontend. `seam` is the interface the type satisfies, `impl_type`
+    /// the implementing type, `line` the assertion line. `in_test` marks
+    /// `_test.go` files. Consumed by `go-conformance-assertion`, the
+    /// absence-check that fires when a cell declares no such assertion.
+    GoConformance {
+        seam: String,
+        impl_type: String,
+        line: u32,
+        in_test: bool,
     },
     /// A TypeScript environment/config read site — `process.env.X`,
     /// `process.env["X"]`, or `import.meta.env.X` — produced by the
@@ -145,6 +164,22 @@ pub enum Fact {
     /// file named by `[typescript] composition_root`.
     TsEnvRead {
         source: String,
+        line: u32,
+        in_test: bool,
+    },
+    /// A TypeScript discriminated-union error type alias `E`
+    /// (GUIDE-AI-NATIVE-TYPESCRIPT §6, the «failure on a seam is a typed
+    /// value» contract), produced by the `ts-tsc` frontend. `symbol` is
+    /// the alias name; `cites_req` is the extractor's computed flag —
+    /// whether the union cites a `spec://` REQ (a JSDoc
+    /// `@implements`/`@documents` marker on the alias OR a `spec://`
+    /// substring in a variant member); `line` is the alias line.
+    /// `in_test` marks test files (`*.test.ts` / `*.spec.ts` /
+    /// `__tests__/`). Consumed by `ts-seam-error-cites-req`, the TS
+    /// twin of the Rust/Go seam-error rules.
+    TsSeamError {
+        symbol: String,
+        cites_req: bool,
         line: u32,
         in_test: bool,
     },

@@ -1,0 +1,368 @@
+//! The Go parity rule family (B-033 + B-030, the seam-error and
+//! conformance-assertion parity lift): a seam's closed error set
+//! carries its REQ URI (`go-seam-error-cites-req`), and every cell
+//! carries the loud-conformance assertion (`go-conformance-assertion`).
+//! Split out of `go.rs` along the parity seam so neither file crosses
+//! the 600-line budget; the scope unit matches its siblings so
+//! self-trace finds no orphan.
+
+specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules");
+
+use crate::facts::{Fact, SourceFacts};
+use crate::finding::{Finding, Rule};
+use crate::rules::req_message;
+
+use super::go::GO_GUIDE_ERRORS;
+
+const GO_GUIDE_CONFORMANCE: &str = "discipline://go-ai-native-lang/guide#conformance-is-made-loud";
+
+/// `go-seam-error-cites-req` — a seam's closed error set carries its
+/// REQ URI. This is the dedicated home for the two seam-error halves
+/// that previously rode the `go-unsafe-in-domain` umbrella: the
+/// **structure half** (`seam_error_missing_req` — the `*Error` type
+/// owns an `Error()` method but carries no `Spec` field, so it cannot
+/// hold the violated `spec://` URI) and the **message half**
+/// (`seam_error_message_no_req` — its `Error()` renders no `spec://`,
+/// the direct Go analogue of Rust's `message.contains("spec://")` gate
+/// in `error-message-cites-req`). One Go rule checks both halves (Go's
+/// idiom is one struct with two obligations), but each half emits under
+/// its own fingerprint suffix (`…-structure` / `…-message`) so the
+/// ratchet tightens them independently and SARIF separates them.
+///
+/// A site covered by a reasoned `//spec:deviates … reason="…"` is
+/// recorded testimony and is honoured, not flagged (the same gate the
+/// umbrella uses); `_test.go` files are out of scope (carried verbatim
+/// from `go-unsafe-in-domain`).
+///
+/// ```
+/// use core_ai_native_conform::rules::GoSeamErrorCitesReq;
+/// use core_ai_native_conform::{Fact, Rule, SourceFacts};
+///
+/// let facts = vec![SourceFacts {
+///     file: "internal/cells/plan/plan.go".into(),
+///     crate_name: "demo".into(),
+///     facts: vec![Fact::GoUnsafe {
+///         kind: "seam_error_missing_req".into(),
+///         line: 17,
+///         in_test: false,
+///         reason: None,
+///     }],
+/// }];
+/// let findings = GoSeamErrorCitesReq.check(&facts);
+/// assert_eq!(findings.len(), 1);
+/// assert!(findings[0].fingerprint.contains("structure"));
+/// ```
+pub struct GoSeamErrorCitesReq;
+
+impl Rule for GoSeamErrorCitesReq {
+    fn id(&self) -> &'static str {
+        "go-seam-error-cites-req"
+    }
+    fn why(&self) -> &'static str {
+        "a seam's closed error set carries its REQ URI: the type holds the \
+         violated spec:// (Code + Spec + Err) and Error() renders it, so a \
+         failing run is navigable back to the requirement (GUIDE-AI-NATIVE-GO \
+         §5; the structure half and the message half)"
+    }
+    fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
+        let mut out = Vec::new();
+        for source in facts {
+            for fact in &source.facts {
+                let Fact::GoUnsafe {
+                    kind,
+                    line,
+                    in_test,
+                    reason,
+                } = fact
+                else {
+                    continue;
+                };
+                // A reasoned deviation covering the site is testimony,
+                // not a finding (carried verbatim from the umbrella's
+                // gate; neither seam-error kind is a suppression).
+                if reason.is_some() {
+                    continue;
+                }
+                let (half, why, fix) = match kind.as_str() {
+                    "seam_error_missing_req" if !in_test => (
+                        "structure",
+                        "a seam error type carries no `Spec` field — cannot cite its REQ",
+                        "carry the violated spec:// URI as a `Spec` field (Code + Spec + Err)",
+                    ),
+                    "seam_error_message_no_req" if !in_test => (
+                        "message",
+                        "a seam error `Error()` renders no spec:// REQ",
+                        "render the violated spec:// URI in the `Error()` format string",
+                    ),
+                    _ => continue,
+                };
+                out.push(Finding {
+                    rule: self.id(),
+                    file: source.file.clone(),
+                    line: *line,
+                    message: req_message(GO_GUIDE_ERRORS, why, fix),
+                    why: self.why(),
+                    fingerprint: format!("go-seam-error-cites-req-{half}|{}|{line}", source.file),
+                });
+            }
+        }
+        out
+    }
+}
+
+/// `go-conformance-assertion` — the «conformance is made loud»
+/// presence check (GUIDE-AI-NATIVE-GO §2, B-030): every cell (a package
+/// directory directly under `cells_dir`) carries the compile-time
+/// assertion `var _ <seam> = (*<Impl>)(nil)`. This is the Go analogue
+/// of Rust's `cargo check` at the use site — the one seam-conformance
+/// signal that can drift silently, so a presence check earns its keep.
+/// It is the absence-check twin of `cell-has-oracle`: keyed on the
+/// cell set derived from the fact file-paths and the `Fact::GoConformance`
+/// facts, it fires for a cell that declares no assertion at all.
+///
+/// Mounted conditional on `cells_dir` (the `go-cell-isolation`
+/// template), so a project without cells never runs it; a project
+/// mounts it by setting `[go] cells_dir`. Findings land soft through
+/// the ratchet baseline until the tree is clean.
+///
+/// ```
+/// use core_ai_native_conform::rules::GoConformanceAssertion;
+/// use core_ai_native_conform::{Fact, Rule, SourceFacts};
+///
+/// // A cell with no conformance assertion is flagged.
+/// let rule = GoConformanceAssertion::new(Some("internal/cells"));
+/// let facts = vec![SourceFacts {
+///     file: "internal/cells/plan/plan.go".into(),
+///     crate_name: "demo".into(),
+///     facts: vec![],
+/// }];
+/// assert_eq!(rule.check(&facts).len(), 1);
+/// ```
+pub struct GoConformanceAssertion {
+    cells_dir: Option<String>,
+}
+
+impl GoConformanceAssertion {
+    pub fn new(cells_dir: Option<&str>) -> GoConformanceAssertion {
+        GoConformanceAssertion {
+            cells_dir: cells_dir.map(|d| d.trim_matches('/').to_string()),
+        }
+    }
+
+    /// The cell a repo-relative FILE path belongs to, if it is under
+    /// `cells_dir`: `internal/cells/plan/plan.go` → `Some("plan")`.
+    /// Mirrors `GoCellIsolation::cell_of_file` so the two rules agree
+    /// on what a cell is.
+    fn cell_of_file<'a>(&self, rel: &'a str) -> Option<&'a str> {
+        let prefix = self.cells_dir.as_deref()?;
+        let rest = rel.strip_prefix(prefix)?;
+        let rest = rest.strip_prefix('/')?;
+        let cell = rest.split('/').next()?;
+        if cell.is_empty() { None } else { Some(cell) }
+    }
+}
+
+impl Rule for GoConformanceAssertion {
+    fn id(&self) -> &'static str {
+        "go-conformance-assertion"
+    }
+    fn why(&self) -> &'static str {
+        "silent interface conformance can drift: a cell that drops its \
+         `var _ Seam = (*Impl)(nil)` assertion can stop satisfying its seam \
+         with no compile error naming the seam (GUIDE-AI-NATIVE-GO §2; the \
+         loud-conformance idiom)"
+    }
+    fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
+        let mut out = Vec::new();
+        if self.cells_dir.is_none() {
+            return out;
+        }
+        // The cell set is whatever the fact stream declares under
+        // cells_dir; a cell is owing if it carries no GoConformance fact.
+        // (Starter predicate, measured against research/go-demo where every
+        // cell under internal/cells carries the assertion: EVERY cell-package
+        // under cells_dir owes one.)
+        let mut first_file: std::collections::BTreeMap<String, String> = Default::default();
+        let mut asserting: std::collections::BTreeSet<String> = Default::default();
+        for sf in facts {
+            let Some(cell) = self.cell_of_file(&sf.file) else {
+                continue;
+            };
+            first_file
+                .entry(cell.to_string())
+                .and_modify(|f| {
+                    if &sf.file < f {
+                        *f = sf.file.clone();
+                    }
+                })
+                .or_insert_with(|| sf.file.clone());
+            if sf
+                .facts
+                .iter()
+                .any(|f| matches!(f, Fact::GoConformance { .. }))
+            {
+                asserting.insert(cell.to_string());
+            }
+        }
+        for (cell, file) in &first_file {
+            if asserting.contains(cell) {
+                continue;
+            }
+            out.push(Finding {
+                rule: self.id(),
+                file: file.clone(),
+                line: 1,
+                message: req_message(
+                    GO_GUIDE_CONFORMANCE,
+                    &format!(
+                        "cell `{cell}` carries no conformance assertion \
+                         `var _ Seam = (*Impl)(nil)`"
+                    ),
+                    "add `var _ <seam> = (*<Impl>)(nil)` beside the cell's type declaration",
+                ),
+                why: self.why(),
+                fingerprint: format!("{}|{cell}", self.id()),
+            });
+        }
+        out.sort();
+        out
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn go_source(file: &str, facts: Vec<Fact>) -> SourceFacts {
+        SourceFacts {
+            file: file.into(),
+            crate_name: "demo".into(),
+            facts,
+        }
+    }
+
+    #[test]
+    fn seam_error_structure_half_emits_structure_fingerprint() {
+        let facts = vec![go_source(
+            "internal/cells/plan/plan.go",
+            vec![Fact::GoUnsafe {
+                kind: "seam_error_missing_req".into(),
+                line: 17,
+                in_test: false,
+                reason: None,
+            }],
+        )];
+        let findings = GoSeamErrorCitesReq.check(&facts);
+        assert_eq!(findings.len(), 1, "{findings:?}");
+        assert!(findings[0].fingerprint.contains("structure"));
+        assert!(findings[0].message.contains("Spec"));
+        assert!(crate::rules::matches_req_grammar(&findings[0].message));
+    }
+
+    #[test]
+    fn seam_error_message_half_emits_message_fingerprint() {
+        let facts = vec![go_source(
+            "internal/cells/plan/plan.go",
+            vec![Fact::GoUnsafe {
+                kind: "seam_error_message_no_req".into(),
+                line: 22,
+                in_test: false,
+                reason: None,
+            }],
+        )];
+        let findings = GoSeamErrorCitesReq.check(&facts);
+        assert_eq!(findings.len(), 1, "{findings:?}");
+        assert!(findings[0].fingerprint.contains("message"));
+        assert!(findings[0].message.contains("Error()"));
+        assert!(crate::rules::matches_req_grammar(&findings[0].message));
+    }
+
+    #[test]
+    fn seam_error_type_missing_both_halves_emits_two_distinct_findings() {
+        let facts = vec![go_source(
+            "internal/cells/plan/plan.go",
+            vec![
+                Fact::GoUnsafe {
+                    kind: "seam_error_missing_req".into(),
+                    line: 17,
+                    in_test: false,
+                    reason: None,
+                },
+                Fact::GoUnsafe {
+                    kind: "seam_error_message_no_req".into(),
+                    line: 22,
+                    in_test: false,
+                    reason: None,
+                },
+            ],
+        )];
+        let findings = GoSeamErrorCitesReq.check(&facts);
+        assert_eq!(findings.len(), 2, "{findings:?}");
+        let fps: std::collections::HashSet<&str> =
+            findings.iter().map(|f| f.fingerprint.as_str()).collect();
+        assert_eq!(fps.len(), 2, "two distinct fingerprints: {fps:?}");
+        assert!(fps.iter().any(|f| f.contains("structure")));
+        assert!(fps.iter().any(|f| f.contains("message")));
+    }
+
+    #[test]
+    fn seam_error_deviation_reason_and_test_context_are_suppressed() {
+        let facts = vec![go_source(
+            "internal/cells/plan/plan.go",
+            vec![
+                // A reasoned deviation is honoured.
+                Fact::GoUnsafe {
+                    kind: "seam_error_missing_req".into(),
+                    line: 3,
+                    in_test: false,
+                    reason: Some("documented elsewhere".into()),
+                },
+                // A test file is out of scope.
+                Fact::GoUnsafe {
+                    kind: "seam_error_message_no_req".into(),
+                    line: 9,
+                    in_test: true,
+                    reason: None,
+                },
+            ],
+        )];
+        assert!(
+            GoSeamErrorCitesReq.check(&facts).is_empty(),
+            "deviation and test context suppress"
+        );
+    }
+
+    #[test]
+    fn conformance_assertion_present_cell_is_silent() {
+        let rule = GoConformanceAssertion::new(Some("internal/cells"));
+        let facts = vec![go_source(
+            "internal/cells/plan/planner.go",
+            vec![Fact::GoConformance {
+                seam: "seams.Planner".into(),
+                impl_type: "Planner".into(),
+                line: 14,
+                in_test: false,
+            }],
+        )];
+        assert!(rule.check(&facts).is_empty(), "an asserting cell is quiet");
+    }
+
+    #[test]
+    fn conformance_assertion_absent_cell_is_flagged() {
+        let rule = GoConformanceAssertion::new(Some("internal/cells"));
+        let facts = vec![go_source("internal/cells/plan/planner.go", vec![])];
+        let findings = rule.check(&facts);
+        assert_eq!(findings.len(), 1, "{findings:?}");
+        assert!(findings[0].fingerprint.contains("plan"));
+        assert!(findings[0].message.contains("var _ Seam"));
+        assert!(crate::rules::matches_req_grammar(&findings[0].message));
+    }
+
+    #[test]
+    fn conformance_assertion_without_cells_dir_is_a_noop() {
+        // The None constructor must not panic and emits nothing.
+        let rule = GoConformanceAssertion::new(None);
+        let facts = vec![go_source("internal/cells/plan/planner.go", vec![])];
+        assert!(rule.check(&facts).is_empty());
+    }
+}

@@ -53,6 +53,12 @@ pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
     out.push(Box::new(rules::GoUnsafeInDomain::new(
         config.go.cells_dir.as_deref(),
     )));
+    // The dedicated seam-error rule (B-033) — the two halves that used to
+    // ride the `go-unsafe-in-domain` umbrella now have their own id.
+    // Always on: a seam error cites its REQ regardless of the cell layout.
+    // (`go-conformance-assertion` waits for the extractor's `var _` emit —
+    // it would flag every cell as un-asserting until the facts flow.)
+    out.push(Box::new(rules::GoSeamErrorCitesReq));
     if let Some(cells_dir) = &config.go.cells_dir {
         out.push(Box::new(rules::GoCellIsolation::new(cells_dir)));
     }

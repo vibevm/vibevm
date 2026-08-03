@@ -15,14 +15,18 @@ use crate::facts::{Fact, SourceFacts};
 mod budget;
 mod diagnostics;
 mod go;
+mod go_parity;
 mod structure;
 mod typescript;
+mod typescript_parity;
 
 pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};
 pub use diagnostics::{ErrorEnumCitesReq, ErrorMessageCitesReq, PubDoctest, SeamHasDoctest};
 pub use go::{GoCellIsolation, GoUnsafeInDomain};
+pub use go_parity::{GoConformanceAssertion, GoSeamErrorCitesReq};
 pub use structure::{CellHasOracle, CellIsolation, FlagSites};
 pub use typescript::{TsCellIsolation, TsFlagSites, TsUnsafeInDomain};
+pub use typescript_parity::TsSeamErrorCitesReq;
 
 /// Render a finding message in the Class-F diagnostic grammar
 /// (card scaffold-f-structured-diagnostics, Band 3):
