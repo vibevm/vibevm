@@ -233,16 +233,16 @@ pub fn prose_explain(root: &Path, map: &Specmap, target: &str) -> Result<ProseRe
     // (`v=1` in `cache_key`) already moved the old opaque-hash slots
     // to unreachable paths, so this branch mostly guards a slot the
     // new key still resolves to but a pre-B-022 binary wrote.
-    if let Ok(bytes) = std::fs::read_to_string(&slot) {
-        if let Ok(entry) = serde_json::from_str::<LedgerEntry>(&bytes) {
-            telemetry.hits += 1;
-            save_telemetry(root, &telemetry)?;
-            return Ok(ProseRender {
-                text: entry.body,
-                cached: true,
-                epoch,
-            });
-        }
+    if let Ok(bytes) = std::fs::read_to_string(&slot)
+        && let Ok(entry) = serde_json::from_str::<LedgerEntry>(&bytes)
+    {
+        telemetry.hits += 1;
+        save_telemetry(root, &telemetry)?;
+        return Ok(ProseRender {
+            text: entry.body,
+            cached: true,
+            epoch,
+        });
     }
 
     // Miss path (slot absent, unreadable, or old-format): recompute.
@@ -545,7 +545,7 @@ mod tests {
             created_at_unix: 2,
             body: "bad".into(),
         };
-        let entries = vec![good, bad];
+        let entries = [good, bad];
 
         // Wholesale invalidation of the poisoned producer is now a
         // one-predicate filter over a field the entry carries.
