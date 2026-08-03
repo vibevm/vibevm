@@ -369,3 +369,23 @@ part of the mechanical set-compare, never assumed from `TASK-DONE`;
 that section's replacement text verbatim** — a template-following weak
 writer re-fills the template as-is and treats surrounding instructions
 as soft asks. Runs and meta: `cache/agents/sorted/E1-B023-SWEEP/`.
+
+##fact-code-slice-self-verify **Code-slice self-verify includes clippy
+(2026-08-04, paid at the W1–W4 landing):** four accepted code slices
+passed their packet's `cargo check` + `cargo test` self-verify and the
+boss's re-runs — and the panel's `clippy -D warnings` still failed on
+two of them (a collapsible-if, a drain-collect). A code packet's
+self-verify block therefore includes
+`cargo clippy -p <crate> --all-targets -- -D warnings` alongside
+check/test; the boss's merge tail runs the workspace clippy before the
+panel. Doc/evidence packets are unaffected.
+
+##fact-panel-background-form **The panel's background form (2026-08-04,
+paid the expensive way):** `bash tools/self-check.sh; echo EXIT=$?`
+run as a background task always completes «successfully» — the echo
+swallows the real exit, and the boss read the task notification as
+green and fanned out the mirrors before reading the tail (red panel,
+already published; forward-fixed the same hour). Run the panel in
+background as the bare `bash tools/self-check.sh` so the task's own
+exit code IS the panel's, and **the mirror fan-out waits for the read
+tail, never for the notification.**
