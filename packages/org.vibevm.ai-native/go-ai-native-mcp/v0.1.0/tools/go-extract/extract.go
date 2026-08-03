@@ -64,6 +64,10 @@ type fact struct {
 	Lines uint32 `json:"lines,omitempty"`
 	// shared
 	Line uint32 `json:"line,omitempty"`
+	// go_conformance: the seam interface and implementing type of a
+	// `var _ <seam> = (*<Impl>)(nil)` loud-conformance assertion.
+	Seam string `json:"seam,omitempty"`
+	Impl string `json:"impl,omitempty"`
 }
 
 // marker is one //spec: directive (GUIDE-AI-NATIVE-GO §8).
@@ -233,13 +237,13 @@ func (ex *extractor) run() {
 	ex.collectMarkers(docOwners)
 
 	// Declarations: items, init(), blank imports, seam error types.
-	errType := ex.errorMethodOwners()
+	errMethods := ex.errorMethods()
 	for _, decl := range ex.file.Decls {
 		switch d := decl.(type) {
 		case *ast.FuncDecl:
 			ex.funcItem(d)
 		case *ast.GenDecl:
-			ex.genItems(d, errType)
+			ex.genItems(d, errMethods)
 		}
 	}
 
@@ -439,7 +443,7 @@ func (ex *extractor) funcItem(d *ast.FuncDecl) {
 	}
 }
 
-func (ex *extractor) genItems(d *ast.GenDecl, errOwners map[string]bool) {
+func (ex *extractor) genItems(d *ast.GenDecl, errOwners map[string]*ast.FuncDecl) {
 	for _, spec := range d.Specs {
 		switch s := spec.(type) {
 		case *ast.TypeSpec:
@@ -452,7 +456,9 @@ func (ex *extractor) genItems(d *ast.GenDecl, errOwners map[string]bool) {
 				Underlying:    primitiveUnderlying(s),
 			})
 			ex.seamErrorShape(s, errOwners)
+			ex.seamErrorMessage(s, errOwners)
 		case *ast.ValueSpec:
+			ex.conformanceAssertion(s)
 			kind := "var"
 			if d.Tok == token.CONST {
 				kind = "const"
@@ -494,10 +500,93 @@ func primitiveUnderlying(s *ast.TypeSpec) string {
 	return ""
 }
 
-// errorMethodOwners collects type names carrying an `Error() string`
-// method in this file — the seam-error shape's other half.
-func (ex *extractor) errorMethodOwners() map[string]bool {
-	out := map[string]bool{}
+// conformanceAssertion recognises the loud-conformance idiom
+// `var _ <seam> = (*<Impl>)(nil)` (GUIDE-AI-NATIVE-GO §2) in a ValueSpec
+// and emits a go_conformance record carrying the seam interface name and
+// the implementing type. The match requires the exact `= (*Ident)(nil)`
+// RHS, so the codemod near-misses `var _ = New` (no typed seam, RHS an
+// ident) and `var _ *Type` (no values) do not match.
+func (ex *extractor) conformanceAssertion(s *ast.ValueSpec) {
+	if !isBlankVar(s) || len(s.Values) != 1 {
+		return
+	}
+	impl := nilCastImpl(s.Values[0])
+	if impl == "" {
+		return
+	}
+	seam := seamName(s.Type)
+	if seam == "" {
+		return
+	}
+	ex.facts = append(ex.facts, fact{
+		Fact: "go_conformance",
+		Seam: seam,
+		Impl: impl,
+		Line: ex.line(s.Pos()),
+	})
+}
+
+// isBlankVar reports whether a ValueSpec binds at least one blank name
+// (`var _ ...`) — the assertion's left-hand side.
+func isBlankVar(s *ast.ValueSpec) bool {
+	for _, name := range s.Names {
+		if name.Name == "_" {
+			return true
+		}
+	}
+	return false
+}
+
+// nilCastImpl renders the impl type name of a `(*Impl)(nil)` conversion,
+// or "" when the expression is not that exact shape.
+func nilCastImpl(e ast.Expr) string {
+	call, ok := e.(*ast.CallExpr)
+	if !ok || len(call.Args) != 1 {
+		return ""
+	}
+	paren, ok := call.Fun.(*ast.ParenExpr)
+	if !ok {
+		return ""
+	}
+	star, ok := paren.X.(*ast.StarExpr)
+	if !ok {
+		return ""
+	}
+	ident, ok := star.X.(*ast.Ident)
+	if !ok {
+		return ""
+	}
+	// The single argument must be the untyped nil.
+	if id, ok := call.Args[0].(*ast.Ident); !ok || id.Name != "nil" {
+		return ""
+	}
+	return ident.Name
+}
+
+// seamName renders a seam type annotation: a selector `pkg.Iface`
+// renders as "pkg.Iface", a bare `Iface` as "Iface". Anything else (no
+// type, a star type, …) is not a seam annotation and yields "".
+func seamName(t ast.Expr) string {
+	switch tt := t.(type) {
+	case *ast.SelectorExpr:
+		if x, ok := tt.X.(*ast.Ident); ok {
+			return x.Name + "." + tt.Sel.Name
+		}
+		return tt.Sel.Name
+	case *ast.Ident:
+		return tt.Name
+	}
+	return ""
+}
+
+// errorMethods maps each type name that owns an `Error() string` method
+// in this file to that method's declaration — the seam-error shape's
+// other half, structure AND message. The structure half
+// (`seamErrorShape`) only needs to know the type owns the method; the
+// message half (`seamErrorMessage`) walks the method body, so the map
+// carries the `*ast.FuncDecl`, not just a bool.
+func (ex *extractor) errorMethods() map[string]*ast.FuncDecl {
+	out := map[string]*ast.FuncDecl{}
 	for _, decl := range ex.file.Decls {
 		d, ok := decl.(*ast.FuncDecl)
 		if !ok || d.Recv == nil || d.Name.Name != "Error" || len(d.Recv.List) != 1 {
@@ -508,7 +597,7 @@ func (ex *extractor) errorMethodOwners() map[string]bool {
 			t = star.X
 		}
 		if ident, isIdent := t.(*ast.Ident); isIdent {
-			out[ident.Name] = true
+			out[ident.Name] = d
 		}
 	}
 	return out
@@ -516,8 +605,8 @@ func (ex *extractor) errorMethodOwners() map[string]bool {
 
 // seamErrorShape flags an XxxError struct that has an Error() method
 // but no Spec field — a seam error that cannot cite its REQ (§5).
-func (ex *extractor) seamErrorShape(s *ast.TypeSpec, errOwners map[string]bool) {
-	if !strings.HasSuffix(s.Name.Name, "Error") || !errOwners[s.Name.Name] {
+func (ex *extractor) seamErrorShape(s *ast.TypeSpec, errOwners map[string]*ast.FuncDecl) {
+	if !strings.HasSuffix(s.Name.Name, "Error") || errOwners[s.Name.Name] == nil {
 		return
 	}
 	st, ok := s.Type.(*ast.StructType)
@@ -532,6 +621,49 @@ func (ex *extractor) seamErrorShape(s *ast.TypeSpec, errOwners map[string]bool) 
 		}
 	}
 	ex.unsafeAt("seam_error_missing_req", ex.line(s.Pos()))
+}
+
+// seamErrorMessage flags an *Error type whose Error() method renders no
+// REQ — the message half of the seam-error contract (§5). It walks the
+// Error() body's string literals (the fmt.Sprintf/fmt.Errorf template,
+// returned constants, concatenations); if none carries the Class-F `REQ`
+// marker or a literal `spec://`, the type's Error() cannot cite its
+// violated requirement. It fires at the type-decl line — the same anchor
+// the structure half uses — so a type missing both halves reports two
+// findings at one site under distinct fingerprints.
+//
+// The Go idiom is `violates REQ %s` where the URI rides a Spec field
+// (not a literal `spec://`), so the gate honours either token: a bare
+// `spec://`-only check (the literal Rust analogue) would false-red the
+// guide's own clean idiom.
+func (ex *extractor) seamErrorMessage(s *ast.TypeSpec, errOwners map[string]*ast.FuncDecl) {
+	if !strings.HasSuffix(s.Name.Name, "Error") {
+		return
+	}
+	method := errOwners[s.Name.Name]
+	if method == nil || method.Body == nil {
+		return
+	}
+	citesReq := false
+	ast.Inspect(method.Body, func(n ast.Node) bool {
+		lit, ok := n.(*ast.BasicLit)
+		if !ok || lit.Kind != token.STRING {
+			return true
+		}
+		if text, err := strconv.Unquote(lit.Value); err == nil &&
+			(strings.Contains(text, "spec://") || strings.Contains(text, "violates REQ")) {
+			citesReq = true
+			return false
+		}
+		return true
+	})
+	if !citesReq {
+		// Anchor at the Error() method, not the type decl the structure
+		// half uses, so the two halves land on distinct lines: the gate
+		// keys a finding by (file, line), so a shared line would swallow
+		// one half in the count.
+		ex.unsafeAt("seam_error_message_no_req", ex.line(method.Pos()))
+	}
 }
 
 // ambientDefaults: package → the selectors that couple a cell to

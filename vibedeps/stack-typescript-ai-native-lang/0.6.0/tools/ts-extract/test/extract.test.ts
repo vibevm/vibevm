@@ -15,6 +15,7 @@ import { dirname, join } from "node:path";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const EXTRACT = join(HERE, "..", "extract.ts");
 const DIRTY = join(HERE, "fixtures", "dirty");
+const SEAM = join(HERE, "fixtures", "seam");
 
 interface Record {
   protocol: number;
@@ -31,6 +32,7 @@ interface Record {
     is_exported?: boolean;
     lines?: number;
     source?: string;
+    cites_req?: boolean;
   }>;
   markers: Array<{
     tag: string;
@@ -54,6 +56,9 @@ function runExtract(root: string): Record[] {
 
 const records = runExtract(DIRTY);
 const byFile = new Map(records.map((r) => [r.file, r]));
+
+const seamRecords = runExtract(SEAM);
+const seamByFile = new Map(seamRecords.map((r) => [r.file, r]));
 
 test("one protocol-1 record per source file, sorted", () => {
   assert.equal(records.length, 4);
@@ -111,6 +116,50 @@ test("env reads surface as ts_env_read (the B-039 signal)", () => {
       (f) => f.source === "process.env" || f.source === "import.meta.env",
     ),
   );
+});
+
+test("a citing error union surfaces as ts_seam_error with cites_req true (the B-033 TS twin)", () => {
+  const errors = seamByFile.get("src/errors.ts");
+  assert.ok(errors, JSON.stringify(seamRecords.map((r) => r.file)));
+  const seam = errors.facts.filter((f) => f.fact === "ts_seam_error");
+
+  // (a) JSDoc @implements spec:// on the alias -> cites_req true, on the
+  // alias line (line 2). The marker raw-text parse keeps the scheme.
+  const parse = seam.find((f) => f.symbol === "ParseError");
+  assert.ok(parse, JSON.stringify(seam));
+  assert.equal(parse.cites_req, true);
+  assert.equal(parse.line, 2);
+
+  // (a') the second citation form — a `spec://` substring in a variant
+  // member's string literal (no JSDoc on the alias) -> cites_req true.
+  const route = seam.find((f) => f.symbol === "RouteError");
+  assert.ok(route, JSON.stringify(seam));
+  assert.equal(route.cites_req, true);
+  assert.equal(route.line, 6);
+});
+
+test("a non-citing error union surfaces as ts_seam_error with cites_req false", () => {
+  const errors = seamByFile.get("src/errors.ts");
+  assert.ok(errors);
+  const seam = errors.facts.filter((f) => f.fact === "ts_seam_error");
+  // (b) in error position, discriminated, but carries no spec://.
+  const plan = seam.find((f) => f.symbol === "PlanError");
+  assert.ok(plan, JSON.stringify(seam));
+  assert.equal(plan.cites_req, false);
+  assert.equal(plan.line, 16);
+});
+
+test("a non-error union emits no ts_seam_error fact", () => {
+  const errors = seamByFile.get("src/errors.ts");
+  assert.ok(errors);
+  const seam = errors.facts.filter((f) => f.fact === "ts_seam_error");
+  const symbols = seam.map((f) => f.symbol);
+  // (c) a discriminated union NOT in error position (name `Mode`) and an
+  // error-position union with no discriminant (name `BlobError`, property
+  // `code` not in {kind, tag, _tag}) both emit nothing.
+  assert.ok(!symbols.includes("Mode"), JSON.stringify(symbols));
+  assert.ok(!symbols.includes("BlobError"), JSON.stringify(symbols));
+  assert.deepEqual(symbols.sort(), ["ParseError", "PlanError", "RouteError"]);
 });
 
 test("spec markers surface with raw-text URIs (the @implements finding)", () => {

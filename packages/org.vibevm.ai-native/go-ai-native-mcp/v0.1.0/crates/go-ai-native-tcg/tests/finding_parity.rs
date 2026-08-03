@@ -27,12 +27,13 @@ fn relay_enrichment_matches_the_gate_on_the_dirty_cell() {
         },
     );
 
-    // The gate's own census on this one file: 9 findings total (see the
+    // The gate's own census on this one file: 10 findings total (see the
     // conform gate test — the file's census sites + the suppression;
     // t_skip lives in the sibling test file, not here). Since B-033 the
-    // seam error's missing-`Spec` finding reports under the dedicated
-    // `go-seam-error-cites-req` rule, so 8 remain under the umbrella
-    // `go-unsafe-in-domain` and 1 is the seam-error rule.
+    // seam error reports under the dedicated `go-seam-error-cites-req`
+    // rule on BOTH halves (PlanError has no Spec field AND its Error()
+    // renders no REQ), so 8 remain under the umbrella `go-unsafe-in-domain`
+    // and 2 are the seam-error rule's structure + message halves.
     let rules: Vec<&str> = enriched
         .conform_findings
         .iter()
@@ -52,7 +53,7 @@ fn relay_enrichment_matches_the_gate_on_the_dirty_cell() {
             .iter()
             .filter(|r| **r == "go-seam-error-cites-req")
             .count(),
-        1,
+        2,
         "{:?}",
         enriched.conform_findings
     );
