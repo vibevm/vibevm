@@ -12,6 +12,7 @@
     "floor": "typescript-ai-native floor"
   },
   "devDependencies": {
+    "@org.vibevm/eslint-plugin-ai-native": "file:../../packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/tools/eslint-plugin-ai-native",
     "@types/node": "^26.1.0",
     "eslint": "^9.39.0",
     "prettier": "^3.6.0",
