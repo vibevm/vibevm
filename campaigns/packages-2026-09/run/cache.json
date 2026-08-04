@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-04T21:27:15Z",
+  "updated_at": "2026-08-04T22:47:03Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -93956,6 +93956,29 @@
       },
       "marker_count": 46,
       "unit_count": 8,
+      "issue_count": 0
+    },
+    "spec/design/multiple-sources-and-plugins.md": {
+      "content_hash": "cd9f32549426b4f5b11f2efc7486b023040b896c1e27beb879a46cee21507a7b",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "plan"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 24,
+        "fact_count": 23,
+        "unmarked_facts": 0
+      },
+      "marker_count": 24,
+      "unit_count": 7,
       "issue_count": 0
     },
     "spec/design/new-rule-classes.md": {
