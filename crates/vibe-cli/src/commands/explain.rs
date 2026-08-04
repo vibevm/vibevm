@@ -1,8 +1,9 @@
 //! `vibe explain` — the host traceability-explain command
-//! (V3-EXPLAIN-SURFACE). A thin surface over [`vibe_trace::explain`]: the
-//! capability (config-load → build fresh → render) lives in `vibe-trace`,
-//! shared one-to-one with the MCP `explain` tool, so this command only
-//! selects the form and prints — it duplicates no build-or-render logic.
+//! (V3-EXPLAIN-SURFACE). A thin surface over [`vibe_trace::explain`] (and its
+//! fragment sibling [`vibe_trace::fragment`]): the capability (config-load →
+//! build fresh → render) lives in `vibe-trace`, shared one-to-one with the
+//! MCP `explain` tool, so this command only selects the form and prints — it
+//! duplicates no build-or-render logic.
 
 specmark::scope!("spec://core-ai-native/mechanisms/PROP-014#queries");
 
@@ -18,7 +19,22 @@ use crate::output::Context;
 /// `trace explain --json` byte-for-byte — the value IS the structured
 /// answer an agent consumes, so it is printed directly, not wrapped in a
 /// vibe envelope). The default prints the deterministic text view.
+///
+/// `--fragment` switches to the code-text view ([`vibe_trace::fragment`]):
+/// the source of the element behind `target` plus a drift verdict. Drift is
+/// information, not a refusal, so the exit code stays zero — the fragment is
+/// printed either way.
 pub fn run(ctx: &Context, args: ExplainArgs) -> Result<()> {
+    if args.fragment {
+        let out = vibe_trace::fragment(&args.path, &args.target, ctx.is_json())?;
+        match out {
+            vibe_trace::Fragment::Text(text) => print!("{text}"),
+            vibe_trace::Fragment::Json(value) => {
+                println!("{}", serde_json::to_string_pretty(&value)?);
+            }
+        }
+        return Ok(());
+    }
     let out = vibe_trace::explain(&args.path, &args.target, ctx.is_json())?;
     match out {
         vibe_trace::Explain::Text(text) => print!("{text}"),
@@ -67,5 +83,16 @@ mod tests {
         };
         assert_eq!(args.target, "t");
         assert_eq!(args.path.to_string_lossy(), "/tmp/p");
+    }
+
+    /// `--fragment` selects the code-text view over the subgraph (V7).
+    #[test]
+    fn the_fragment_flag_selects_the_fragment_view() {
+        let cli = Cli::try_parse_from(["vibe", "explain", "x::f", "--fragment"])
+            .expect("parse `vibe explain <target> --fragment`");
+        let Command::Explain(args) = cli.command else {
+            panic!("argv did not parse to `explain`");
+        };
+        assert!(args.fragment, "--fragment reaches the explain command");
     }
 }

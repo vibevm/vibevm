@@ -20,4 +20,14 @@ pub struct ExplainArgs {
     /// Project root. Defaults to the current directory.
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
+
+    /// Show the source text of the code element behind `target` instead of the
+    /// subgraph — the "…and here it is" view (V7-FRAGMENT-DRIFT). When the map
+    /// recorded a fingerprint, it is recomputed from the element's current
+    /// source and a drift verdict is printed: the map notices a code edit
+    /// before a person does. Drift is information, not a refusal — the fragment
+    /// is printed either way and the exit code stays zero. Works for an
+    /// installed package too (its carried map is the checkpoint).
+    #[arg(long)]
+    pub fragment: bool,
 }

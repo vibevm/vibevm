@@ -24,6 +24,8 @@ use anyhow::Result;
 use serde_json::Value;
 
 mod foreign;
+mod fragment;
+pub use fragment::{Fragment, fragment};
 
 /// One rendered explanation of a traceability target: the deterministic
 /// text view, or the raw one-hop JSON subgraph. [`explain`] returns one of

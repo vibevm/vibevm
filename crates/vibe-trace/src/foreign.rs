@@ -59,6 +59,53 @@ struct Resolver {
     entries: BTreeMap<String, Carriage>,
 }
 
+/// A foreign target resolved to its carried map and the slot its sources live
+/// in. The slot is the base directory for reading an element's source file
+/// (the carried map's `file` paths are slot-relative); the coordinate is the
+/// provenance marker. Shared by [`try_foreign`] (renders the subgraph) and the
+/// fragment view (reads the source and re-fingerprints it) so the own/foreign
+/// dispatch lives in exactly one place.
+pub(crate) struct ForeignResolved {
+    pub(crate) map: Specmap,
+    pub(crate) slot: PathBuf,
+    pub(crate) coordinate: String,
+}
+
+/// Resolve a foreign `spec://` target to its carried map and source slot.
+///
+/// - `Ok(Some)` — `target` belongs to an installed package that carries a map;
+///   the map and its slot are returned for the caller to render (`explain`) or
+///   read source from (`fragment`).
+/// - `Ok(None)` — `target` is not a foreign address (a code symbol, the
+///   project's own address, or an address no installed package owns); the
+///   caller takes the own-tree path.
+/// - `Err(_)` — `target` belongs to an installed package that carries no map:
+///   the distinct "does not participate" message, not the engine's generic
+///   not-found (so it is not mistaken for a typo in the address).
+pub(crate) fn resolve_foreign(root: &Path, target: &str) -> Result<Option<ForeignResolved>> {
+    let Some(coordinate) = coordinate_of(target) else {
+        return Ok(None);
+    };
+    let resolver = discover(root);
+    match resolver.entries.get(&coordinate) {
+        Some(Carriage::Map { slot }) => {
+            let map = load_map(slot)?;
+            Ok(Some(ForeignResolved {
+                map,
+                slot: slot.clone(),
+                coordinate,
+            }))
+        }
+        Some(Carriage::NoMap) => bail!(
+            "package `{coordinate}` is installed under `{VIBEDEPS_DIR}/` but does not participate \
+             in traceability — its slot carries no `{MAP_FILENAME}` (no `specmap.toml` in its \
+             source tree, so `vibe specmap` writes nothing). Re-publish it with a map to query \
+             its addresses. A typo in the address would surface a different `no spec unit` message."
+        ),
+        None => Ok(None),
+    }
+}
+
 /// Try to answer `target` from an installed package's carried map.
 ///
 /// - `Ok(Some(explain))` — `target` is a foreign `spec://` address answered
@@ -68,25 +115,11 @@ struct Resolver {
 ///   the project's own address, or an address no installed package owns. The
 ///   caller builds the project's own map fresh (which also yields the engine's
 ///   `no spec unit` error for an address that exists nowhere).
-/// - `Err(_)` — `target` belongs to an installed package that carries no map:
-///   a distinct "does not participate" message, not the engine's generic
-///   not-found (so it is not mistaken for a typo in the address).
+/// - `Err(_)` — `target` belongs to an installed package that carries no map
+///   (surfaced by [`resolve_foreign`]).
 pub(crate) fn try_foreign(root: &Path, target: &str, json: bool) -> Result<Option<Explain>> {
-    let Some(coordinate) = coordinate_of(target) else {
-        return Ok(None);
-    };
-    let resolver = discover(root);
-    match resolver.entries.get(&coordinate) {
-        Some(Carriage::Map { slot }) => {
-            let map = load_map(slot)?;
-            Ok(Some(render_foreign(&map, target, json, &coordinate)?))
-        }
-        Some(Carriage::NoMap) => bail!(
-            "package `{coordinate}` is installed under `{VIBEDEPS_DIR}/` but does not participate \
-             in traceability — its slot carries no `{MAP_FILENAME}` (no `specmap.toml` in its \
-             source tree, so `vibe specmap` writes nothing). Re-publish it with a map to query \
-             its addresses. A typo in the address would surface a different `no spec unit` message."
-        ),
+    match resolve_foreign(root, target)? {
+        Some(fr) => Ok(Some(render_foreign(&fr.map, target, json, &fr.coordinate)?)),
         None => Ok(None),
     }
 }
