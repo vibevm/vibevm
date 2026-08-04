@@ -110,8 +110,12 @@ from the module layout: `roots` (source roots to scan), `cells_dir`
 `registry_pkg` (default `internal/registry`), `[go] gated` /
 `[[go.exempt]]` `{unit, reason}` (the package is Go's gate unit — the
 expand-as-you-conform ratchet: a package enters `gated` only at zero
-findings, every other package carrying an exempt reason), and the file
-budget. @impl/done
+findings, every other package carrying an exempt reason). The file budget and the
+`invariant-comment-position` rule are fed by **root** `conform.toml` keys (NOT under `[go]` — they are
+language-neutral, beside each other): `max_file_lines` (default 600), `invariant_comment_markers` (the
+marker vocabulary; default the five labeled markers `INVARIANT:` / `WARNING:` / `PANICS:` / `MUST:` /
+`NEVER:`, empty disables the rule), and `invariant_comment_min_file_lines` (the floor below which a file
+is skipped whole; default 120). @impl/done
 
 ##EVERY-PACKAGE-GATED-OR-EXEMPT The
 every-package-gated-or-exempt invariant is enforced by the engine on

@@ -230,10 +230,17 @@ func New(store seams.Store, clk clock) *BatchPlanner { /* … */ }
   precede or immediately adjoin the declaration. Autoregression makes reading order
   conditioning order; intent goes first. @impl/done
 - ##POSITION-IS-A-RESOURCE **Position is a resource** (R3-003): package-level invariants live in the package doc
-  block (`doc.go`) or at file top; safety-critical facts never sit in a file's diluted
-  middle third. Prefer more, smaller, single-purpose files at equal token mass — Go
-  packages are natively multi-file, so splitting costs nothing (§15). A conform check
-  warns on files over the length budget. @impl/done
+  block (`doc.go`) or at file top; safety-critical facts never sit in a file's diluted middle third.
+  Prefer more, smaller, single-purpose files at equal token mass — Go packages are natively multi-file,
+  so splitting costs nothing (§15). Enforced, not promised: alongside the long-standing `file-length`
+  check on the budget, **`invariant-comment-position`** fires through the normal gate when a comment
+  whose marker is in the configured vocabulary lands in a file's middle third — line `l` with
+  `lines/3 < l <= 2·lines/3` (integer-divided; for a 120-line file, lines 41–80) — with the remedy
+  move-to-edge-or-split; the marker vocabulary (`invariant_comment_markers`, default the five labeled
+  markers `INVARIANT:` / `WARNING:` / `PANICS:` / `MUST:` / `NEVER:` — a marker is a labeled tag, not a
+  bare word, so the colon is the markup signal) and the floor (`invariant_comment_min_file_lines`,
+  default 120 — below it the whole file is skipped) are root `conform.toml` keys shared across
+  languages. Test-context markers are out of scope. @impl/done
 - ##UNIFORMITY-IS-LOAD-BEARING **Uniformity is load-bearing** (R3-006, H6) — and Go's culture already enforces most
   of it. What remains ours: one idiom per operation *within this repository* (one way to
   construct a cell, one error shape per seam, one fake per capability), and legitimate
