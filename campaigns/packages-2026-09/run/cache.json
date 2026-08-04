@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-04T02:52:00Z",
+  "updated_at": "2026-08-04T21:27:15Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -23739,7 +23739,7 @@
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.md": {
-      "content_hash": "f0968854da45737d874020b768f34ccc0fc40d23a3d9ac35dfc1257e5003d11c",
+      "content_hash": "8fe183a8e6bd6a572f1f9e054a342871f83d59d3bb19b0bf584df372e491d215",
       "rollup": {
         "explicit": [
           "spec",
@@ -23753,11 +23753,11 @@
           "spec",
           "done"
         ],
-        "marker_count": 34,
+        "marker_count": 35,
         "fact_count": 34,
-        "unmarked_facts": 1
+        "unmarked_facts": 0
       },
-      "marker_count": 34,
+      "marker_count": 35,
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
@@ -92780,7 +92780,7 @@
       }
     },
     "spec/design/README.md": {
-      "content_hash": "c635562621bee6d66cd73aa5a890bef5fc0567734cf4f6cff028594ca287d31c",
+      "content_hash": "a6597c0ceb49805d8bc01b2ed8c6cb295a2023041cddbc31eebee8502c2a01ed",
       "rollup": {
         "explicit": [
           "doc",
@@ -92794,11 +92794,11 @@
           "doc",
           "done"
         ],
-        "marker_count": 75,
-        "fact_count": 69,
+        "marker_count": 76,
+        "fact_count": 70,
         "unmarked_facts": 0
       },
-      "marker_count": 75,
+      "marker_count": 76,
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
@@ -93935,8 +93935,31 @@
         "verify_batch": "c2-design + d2b"
       }
     },
+    "spec/design/map-format-change.md": {
+      "content_hash": "c3d6b0db4ad2e044842e379d644ca2ab32fa8eab7ebed9875a57fdee003be9fd",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "work"
+        ],
+        "computed": [
+          "spec",
+          "plan"
+        ],
+        "effective": [
+          "spec",
+          "work"
+        ],
+        "marker_count": 46,
+        "fact_count": 45,
+        "unmarked_facts": 0
+      },
+      "marker_count": 46,
+      "unit_count": 8,
+      "issue_count": 0
+    },
     "spec/design/new-rule-classes.md": {
-      "content_hash": "4f8ee50c2924678fa9188c421141230ad7e663bff675f2db3a1dd428d0dc30ab",
+      "content_hash": "f3ad41617b003a195a4f1f0728061288c49f11c47b81c2ec3e47d451a06c5a8b",
       "rollup": {
         "explicit": [
           "spec",
@@ -93950,11 +93973,11 @@
           "spec",
           "work"
         ],
-        "marker_count": 14,
+        "marker_count": 32,
         "fact_count": 31,
-        "unmarked_facts": 18
+        "unmarked_facts": 0
       },
-      "marker_count": 14,
+      "marker_count": 32,
       "unit_count": 6,
       "issue_count": 0
     },
