@@ -58,4 +58,4 @@ dispositioned = []
 # dangling. Units found here never enter the committed specmap.json.
 [[external_specs]]
 namespace = "core-ai-native"
-root = "vibedeps/flow-core-ai-native/0.7.0/spec"
+root = "vibedeps/flow-core-ai-native/0.8.0/spec"
