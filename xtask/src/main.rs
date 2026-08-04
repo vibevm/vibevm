@@ -426,6 +426,7 @@ fn mirror_health_section(root: &std::path::Path) -> Result<serde_json::Value> {
     for s in &statuses {
         let (label, state, remote) = match &s.state {
             SyncState::InSync => ("sync   ", "in_sync", serde_json::Value::Null),
+            SyncState::Behind(sha) => ("BEHIND ", "behind", serde_json::json!(sha)),
             SyncState::Drift(sha) => ("DRIFT  ", "drift", serde_json::json!(sha)),
             SyncState::Missing => ("MISSING", "missing", serde_json::Value::Null),
         };
