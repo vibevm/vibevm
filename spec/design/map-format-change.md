@@ -279,11 +279,22 @@ abroad. *(C) The consumer declares strictness* for the packages it develops —
 explicit, and the shape package managers already use. *(D) Demand-driven* — the
 contract always compiles alone, and absence is fatal only when something
 references an anchor that only the source provides; the exact linker analogue.
-**Recommendation: C together with B**, with D as where it arrives later —
+**Recommendation was C together with B**, with D as where it arrives later —
 knowing that a reference reaches a source-only anchor requires the real
 contract↔source edges, and today those are hand-drawn. That is the link table,
 unbuilt. Building D before the table would be guessing. The honest cost of C:
 a SECOND key, on the consumer's side. @spec/work
+
+##b017-distinction-deferred **The owner deferred the whole distinction
+(2026-08-04): «различать свой и чужой проект пока не надо… разработчик сам
+сможет с помощью каких-то инструментов проверить, есть ли у пакета
+реализации».** So none of the four candidates is built now, and no strictness
+key is introduced. The consequence to state rather than assume: with no
+distinction, one behaviour serves everyone, and «is the implementation present»
+becomes a question a **tool answers on request** rather than one a build fails
+on. That reading points at graceful degradation as the single behaviour, with
+the absence reported rather than fatal — but it is a reading, not a ruling, and
+nothing is built on it until the owner returns to the question. @spec/plan
 
 ##b017-standing-on-a-demonstration **What that candidate is owed before it can
 be leaned on.** Publishing contracts apart from their sources means a `#source`

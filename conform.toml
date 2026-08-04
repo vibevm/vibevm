@@ -57,6 +57,7 @@ gated = [
     "vibe-publish",
     "vibe-cli",
     "vibe-mcp",
+    "vibe-trace",
 ]
 
 # Crates whose whole public TYPE surface is gated for compiled doctests (the
