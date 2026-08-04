@@ -7,7 +7,7 @@
 specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules");
 
 use crate::facts::{Fact, SourceFacts};
-use crate::finding::{Finding, Rule};
+use crate::finding::{Finding, FindingStatus, Rule};
 use crate::rules::req_message;
 
 const TS_GUIDE_SEAM_ERROR: &str =
@@ -89,6 +89,8 @@ impl Rule for TsSeamErrorCitesReq {
                     ),
                     why: self.why(),
                     fingerprint: format!("{}|{}|{symbol}", self.id(), source.file),
+                    status: FindingStatus::Live,
+                    evidence: fact.summary(),
                 });
             }
         }
