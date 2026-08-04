@@ -5,14 +5,18 @@
       "file": "crates/demo-core/src/parse.rs",
       "item_kind": "fn",
       "line": 41,
-      "symbol": "demo_core::parse::Timeout::parse"
+      "symbol": "demo_core::parse::Timeout::parse",
+      "end_line": 60,
+      "fingerprint": "tok1:9b1a3f2c8d4e5b6077f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0"
     },
     {
       "crate_name": "demo-core",
       "file": "crates/demo-core/src/parse.rs",
       "item_kind": "fn",
       "line": 88,
-      "symbol": "demo_core::parse::tests::rejects_negative"
+      "symbol": "demo_core::parse::tests::rejects_negative",
+      "end_line": 96,
+      "fingerprint": "tok1:7e2d4c6b8a0f1e3d5c7b9a1f3e5d7c9b1a3f5e7d9c1b3a5f7e9d1c3b5a7f9e1d3"
     }
   ],
   "edges": [
@@ -35,7 +39,7 @@
       "verb": "verifies"
     }
   ],
-  "schema": 2,
+  "schema": 3,
   "spec_units": [
     {
       "anchor": "root",

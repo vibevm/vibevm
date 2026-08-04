@@ -104,6 +104,20 @@
                 "line": {
                     "type": "uint32"
                 }
+            },
+            "optionalProperties": {
+                "end_line": {
+                    "type": "uint32",
+                    "metadata": {
+                        "description": "1-based last line of the element's span — the far end of `line`, same attribute-inclusive convention. Optional because only the Rust scanner produces a span today; a scanner that cannot leaves it absent rather than inventing one."
+                    }
+                },
+                "fingerprint": {
+                    "type": "string",
+                    "metadata": {
+                        "description": "`<scheme>:<hex>` over the element's token stream — `tok1:<sha256>`; doc comments count as code, ordinary comments and whitespace do not. Optional for the same scanner-capability reason as `end_line`."
+                    }
+                }
             }
         },
         "edge": {

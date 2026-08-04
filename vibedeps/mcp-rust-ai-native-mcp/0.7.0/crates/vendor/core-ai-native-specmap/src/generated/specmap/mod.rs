@@ -51,6 +51,21 @@ pub struct CodeItem {
     /// `vibe_resolver::conditional::ConditionalPredicate::parse`.
     #[serde(rename = "symbol")]
     pub symbol: String,
+
+    /// 1-based last line of the element's span — the far end of `line`, same
+    /// attribute-inclusive convention. Optional because only the Rust scanner
+    /// produces a span today; a scanner that cannot leaves it absent rather
+    /// than inventing one.
+    #[serde(rename = "end_line")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub endLine: Option<Box<u32>>,
+
+    /// `<scheme>:<hex>` over the element's token stream — `tok1:<sha256>`;
+    /// doc comments count as code, ordinary comments and whitespace do not.
+    /// Optional for the same scanner-capability reason as `end_line`.
+    #[serde(rename = "fingerprint")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub fingerprint: Option<Box<String>>,
 }
 
 #[derive(Serialize, Deserialize)]
