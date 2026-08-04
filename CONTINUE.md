@@ -1,4 +1,4 @@
-# CONTINUE — cold-resume snapshot (2026-08-04, wind-down №7: батч 2 волны Б ЗАКРЫТ)
+# CONTINUE — cold-resume snapshot (2026-08-04, wind-down №8: ВОЛНА Б ЗАКРЫТА ЦЕЛИКОМ)
 
 **Не цитируй числа отсюда — меряй:**
 `python campaigns/packages-2026-09/tasks/summary.py` ·
@@ -7,178 +7,174 @@
 
 ## TL;DR
 
-Один длинный автономный прогон **построил И закрыл батч 2 волны Б** (паритет
-гейтов) — 27 коммитов, панель зелёная на каждой посадке, реестр двинулся
-**88/179 → 87/176 (98.1 %)**. Движок получил три новых правила
-(`go-seam-error-cites-req` обе половины, `ts-seam-error-cites-req`,
-`go-conformance-assertion` gated) + `[rust] floor_disable`; экстракторы их
-эмитят; все смонтированы и показаны на фикстурах; принцип паритета поднят в
-манифест и цитируется тремя гайдами; луп B-035 №2 перекроил паритет-таблицу;
-семья F-185 пересужена `confirmed`; backlog-строки помечены. **Остаток батча 2
-— только гигиена реестра** (ре-seal S4-правленных гайдов). **Дальше — батч 3**
-(развилка №1 карты приходит с B-038 — настоящий стоп владельцу). Мандат Б/В/Г
-стоит, паузы нет. Зеркала выкачаны этим wind-down'ом.
+Один длинный автономный прогон **закрыл батчи 3 и 4, то есть ВСЮ волну Б** —
+48 коммитов, панель зелёная на каждой посадке, зеркала синхронны. Построены
+**пять механизмов**: три правила, которых не было ни в одном языке
+(`invariant-comment-position`, `cell-name-is-computed`, `declared-test-matrices`),
+TS-слой кастомных линтов, статус находки «отступление признано» и ингест
+SARIF. Написаны **три карточки из семи pending** — каждая потому, что у
+правила появился чекер. Владелец взял **развилку №1 карты** (вычисляемые
+имена) — исполнено 16 переименований. Заведены **B-050…B-053**. Реестр
+пересужен и запечатан: 41 новый вердикт, 0 отказов.
+
+**Веха M-PARITY: планка записанной причины ДОСТИГНУТА** (ни одна языковая
+ячейка не слабее другой молча); сборочная полнота — нет, между ними ровно
+четыре названные вещи. **Дальше — ВОЛНА В.** Мандат Б/В/Г стоит, паузы нет.
 
 ## Где стоит работа
 
-- Ветка `main`; после `cargo xtask mirror` (этот wind-down) — синхронна с
-  зеркалами. Дерево чистое. `.wt/E12-S4-DOCS` — handle-locked leftover
-  (gitignored, git-prune чист, снести позже).
+- Ветка `main` @ `414b7224`; зеркала (gitverse + github) синхронны — раскатано
+  `cargo xtask mirror` этим wind-down'ом. Дерево чистое.
 - Панель зелёная — «self-check: all green» прочитан хвостом (bare-форма).
-- Реестр: **87 obligations / 176 drift verdicts, 98.1 % confirmed** — меряй
-  командами. F-185 закрыт пересудом.
+  Conform: **27 находок, все `DeviationAcknowledged`, 0 живых, 0 новых** — это
+  не долг, это новая видимость (см. B-025 ниже).
+- Реестр: **87 обязательств / 176 drift-вердиктов, 98.1 %**, подтверждённых
+  утверждений **11 252** — меряй командами.
 - Открытые аудит-строки: `AUDIT.md` §2026-08-03 (cargo-outdated, dead_code
   shadow; DBT-0023).
-- Активного блокера НЕТ. Ближайшее настоящее решение владельца — **развилка №1
-  карты (computed-names)**, приходит в батче 3 с B-038.
+- Активного блокера НЕТ. Ближайшее настоящее решение владельца — развилки
+  волны В (см. ниже: B-024 и B-014 решаются внутри неё).
+- `.wt/` держит семь handle-locked leftover-каталогов (gitignored, git-prune
+  чист) — снести позже командой из `spec/WAL.md#constraints`.
 
-## ПЕРВОЕ ДЕЛО НОВОЙ СЕССИИ — батч 3 (мандат стоит, паузы нет)
+## ПЕРВОЕ ДЕЛО НОВОЙ СЕССИИ — волна В (мандат стоит, паузы нет)
 
-**Внимание:** промт продолжения НЕ обязан быть слово-в-слово; мандат Б/В/Г
-(§7 LOG «Хочу все остальные волны сделать») живой. Порядок:
+Порядок задаёт карта `TOOLING-MAP.md` §4 `##WAVE-V`:
 
-0. **(Гигиена, оппортунистически, не гейтит)** ре-seal S4-правленных гайдов +
-   манифеста: verdict-батч (правленые/новые якоря → `confirmed`; правленые:
-   go-GUIDE `##CONFORMANCE-IS-MADE-LOUD`/`##SWEEP-CENSUS-REGRESSIONS`,
-   rust-GUIDE `##SCAFFOLD-F-STRUCTURED-DIAGNOSTICS`; новые: ts-GUIDE
-   `##TS-SEAM-ERROR-CITES-REQ-IS-BUILT`, манифест 4 `##PARITY-*` клаузы) →
-   `merge-verdicts.py <batch> --force` → `vibe progress seal <пути>`. **Образец
-   батча — `campaigns/packages-2026-09/tasks/evidence/batch-E12-F185-rejudge.json`.**
-   Присоединяется к пяти незапечатанным observed-файлам (PROP-035, PROP-029,
-   три дизайн-дока — теперь четыре с `seam-error-and-assertion-parity.md`).
-1. **Батч 3** (карта §4, `TOOLING-MAP.md#waves`): каденс тот же — **цензус**
-   (read-only claudez-воркеры, образец E8/E11-цензусов в `harvest/`) →
-   **босс-дизайн** (`spec/design/`, образец `gate-parity-config.md` /
-   `seam-error-and-assertion-parity.md`) → **claudez-стройки** (закон
-   транспорта — `SUBAGENT-LAUNCHERS.md` ЦЕЛИКОМ + `SUBAGENT-MODE.toml` перед
-   КАЖДЫМ fan-out). Состав: **B-036** (conform-правило «инварианты не тонут в
-   середине файла» — `BACKLOG.md {#b-036}`), **B-037** (кастомные REQ-линты:
-   dylint-класс + typescript-eslint — `{#b-037}`), **B-038** (pending-карты
-   R-060 + closed-vocabulary-naming — `{#b-038}`). **Развилка №1 карты
-   (computed-names, `TOOLING-MAP.md#forks` №1) приходит С B-038 — НАСТОЯЩИЙ
-   стоп владельцу** (дерево-вопрос, AskUserQuestion с рекомендацией — форма
-   работает отлично).
-2. **Батч 4** (B-025 mark-don't-suppress → последний якорь F-146; B-026
-   SARIF-ингест → F-206) → выход **M-PARITY** (паритет-таблица без языковой
-   ячейки слабее Rust без записанной причины; после батча 2 остаются строки 6
-   и 8/12 — Go flag-rule и Go-floor `./...`-остаток).
-3. **Волна В** (карта): B-013 done → один формат-чейндж (B-019а+B-016.1+B-017,
-   B-024 рядом) → B-018.1/.2 → B-018.4+B-016.2 → B-020+B-021 (B-014 там; B-020
-   разблокирует четыре interim'а LEDGER-INTENT) → выход M-ASK+M-DRIFT. **Волна
-   Г** оппортунистически: B-040 (цензус снят — `harvest/g1-b040-seams-census.md`),
-   B-005, F-132-схемы, B-010-check.
+> B-013 (done) → **один формат-чейндж** (B-019а фингерпринты + B-016 половина 1
+> «карта едет в пакете» + B-017 контрактные поля — вместе, это правило самих
+> записей) → **B-018.1/.2** → **B-018.4 + B-016.2** → **B-020 + B-021**;
+> решения B-024 и B-014 принимаются внутри волны. Выход — **M-ASK + M-DRIFT**.
 
-## Что построено батчем 2 (карта посадки)
+**Три развилки владельца ждут внутри волны В** (`TOOLING-MAP.md` §5): №3
+фингерпринты (сырой текст против токен-потока — сперва замер шума), №4 что
+такое фрагмент кода, №5 содержание privacy-тира `contract`, №6 язык запросов
+к карте v0, №7 судьба `disputed` при слиянии словарей. Выносить **по одной**,
+деревом, `AskUserQuestion` с рекомендацией — форма работает.
 
-- **Движок (canonical `core-ai-native/v0.8.0`, вендорится ×6):**
-  `Fact::GoConformance {seam, impl_type, line, in_test}` +
-  `Fact::TsSeamError {symbol, cites_req, line, in_test}` + новый `GoUnsafe`
-  kind `seam_error_message_no_req`; правила `rules/go_parity.rs`
-  (`GoSeamErrorCitesReq` — обе половины, per-half отпечатки; `GoConformanceAssertion`
-  — **gated**-предикат `new(cells_dir, gated)`) и `rules/typescript_parity.rs`
-  (`TsSeamErrorCitesReq`); `RustConfig.floor_disable: Vec<FloorDisable>`.
-- **Экстракторы/мосты:** go-extract читает тела `Error()` (маркер `spec://`/
-  `violates REQ`; якорь message — строка МЕТОДА, не типа) + `var _ Seam =
-  (*Impl)(nil)`; ts-extract ловит Form-1 union-ошибки; мосты — новые `RawFact`
-  арма. `tools/go-extract/go.mod` создан (для `go test`; materialise независим).
-- **Драйверы:** go монтирует seam-error (всегда) + conformance (условно
-  cells_dir, gated); ts монтирует seam-error; rust-floor чтит `floor_disable`.
-- **Фикстуры:** clean go-greet получил seam `Greeting` + ассерцию (комплаент);
-  dirty plan красный по обеим half + conformance (gate = 12); голден
-  `specmap.json` регенерирован.
-- **Дисциплина:** манифест §4 несёт `##PARITY-ACROSS-PROJECTIONS` (+3 клаузы),
-  три гайда цитируют.
+**Каденс тот же, что дал волну Б:** цензус (read-only claudez-воркеры) →
+босс-дизайн в `spec/design/` → claudez-стройки → панель → луп аудита →
+пересуд якорей → зеркала.
 
-## Не-очевидные находки прогона (durable-уроки, в WAL #constraints)
+## Что построила волна Б (карта посадки)
 
-- **Завершение воркера — по НОТИФИКАЦИИ фоновой задачи, НЕ по маркеру
-  `TASK-DONE`** (echo'нулся рано, продолжил в main-repo — мисджаджил как failed).
-- **Doc-воркер с незаписываемым worktree пишет в main-repo** — ревьюй `git diff`
-  хоста как обычно.
-- **Вынос вида-находки из умбреллы в своё правило** ломает КАЖДЫЙ by-rule count
-  тест (gate-count, TCG-parity) — монтаж + правка счётчиков той же посадкой.
-- **Новое gate-правило, требующее комплаентных образцов**, каскадит в фикстуры
-  + init-шаблоны + голдены + тесты. Специмап-голден: `run_specmap_go(root, false)`
-  пишет (CLI нет — одноразовый bless-тест).
-- **Предикат conformance = gated-ячейки** (не «каждая» — бесшовные/exempt вне).
-- **Message-маркер = `spec://` ИЛИ `violates REQ`** (Go рендерит URI из поля).
-- **Кэш экстракции** протухает по (контент, версия фронтенда); правка ЛОГИКИ
-  внутри версии не инвалидирует → чисти `fixtures/*/target`.
-- **`Fact`-ВАРИАНТ = кросс-пакетная рябь** (Rust FE сорт + 3 health-цензуса +
-  мосты); `Fact`-KIND — нет.
-- **`merge-verdicts.py` берёт verdict-БАТЧ JSON** (`{batch, cluster, files:
-  {path:{ANCHOR:{v,ev}}}}`), НЕ голый флаг; рефьюзит restate без `--force`;
-  `vibe progress seal` рефьюзит файл с несуждёнными маркерами.
-- **Воркеры хорошо эскалируют суждение** — приняты 2 коррекции, бывшие
-  правильными эскалациями воркера (`spec://`-vs-`REQ`, `Vec<String>`).
+**Батч 3** — три класса правил, каждое обещано корпусом и не существовавшее:
+
+- `invariant-comment-position` (B-036): новый `Fact::InvariantComment`, три
+  экстрактора, монтаж в три гейта, шесть фикстур, два корневых ключа конфига,
+  три гайда, карточка `rule-position-is-a-resource`.
+- `cell-name-is-computed` (B-038, развилка №1): одно правило на Rust+Go, Go
+  доносит `//spec:cell` до движка через мост в растовом написании, 16
+  переименований в хосте, карточка `rule-closed-vocabulary-naming`.
+- `declared-test-matrices` (B-038, R-060): битовая маска на любой глубине +
+  вложенность ≥ 3 по ДИАПАЗОННЫМ циклам, карточка
+  `rule-declared-test-matrices`.
+- B-037: TS-плагин `@org.vibevm/eslint-plugin-ai-native` с правилом
+  `diagnostic-cites-req`; Rust/Go — записанная причина + маршрут `{#b-050}`.
+
+**Батч 4** — модель находок:
+
+- B-025: `FindingStatus::{Live, DeviationAcknowledged}` + поле вовлечённых
+  фактов; шесть правил штампуют вместо пропуска; `baseline::diff` не считает
+  признанные новыми; SARIF рендерит `suppressions{kind:"inSource"}`.
+- B-026: `Fact::LintDiagnosis`, корневой ключ `sarif_reports`, форма
+  цитирования `Fact::cites_lint(tool, id, status)`, правило
+  `LintSuppressionNeedsReason` смонтировано во все три драйвера; битый отчёт —
+  отсутствие фактов, не отказ.
+
+## Не-очевидные находки прогона (durable-уроки, полностью — в WAL #constraints)
+
+- **Новый синтаксический признак прогоняется по живому дереву ДО посадки
+  правила.** Панель дважды поправила не воркеров, а БОССОВ дизайн: голое
+  `NEVER` ловило эмфазу в прозе; «вложенность ≥ 3» ловила исчерпание закрытых
+  перечислений — то есть как раз ОБЪЯВЛЕННУЮ матрицу. Предъявление на
+  фикстурах доказывает, что правило срабатывает, и ничего не говорит о том,
+  где оно срабатывает лишнего.
+- **Ложную находку НЕЛЬЗЯ замораживать в baseline** — заморозка превращает её
+  в ложь, которую ратчет потом защищает. Правится правило.
+- **Ручной синк вендор-копий воркером ОБЯЗАТЕЛЕН**: хостовые крейты
+  path-зависят от пакетных, поэтому `cargo xtask sync-engines` сам не
+  соберётся, пока копии не согласованы. Порядок мержа: применить вендор-правки
+  воркера → `sync-engines --check`.
+- **Рябь нового варианта `Fact` — четыре места** (два исчерпывающих матча по
+  `Fact` + два по `RawFact` в Go/TS health-цензусах), а не два.
+- **Грепать лог на `TASK-DONE` бесполезно** — паттерн совпадает с текстом
+  инструкции внутри пакета. Завершение — только по нотификации.
+- **Быстрый греп босса систематически занижает периметр** — трижды за сессию:
+  окно в 8 строк пропустило три ячейки; счёт по файлам вместо правил дал 2
+  вместо 6; цензус мерил без хоста и дал 10 вместо 16. Машина точнее.
+- **`specmark::scope!` нужен каждому новому `.rs`, у чьих соседей он есть** —
+  формулировка «в движковом крейте» пропустила файл фронтенда.
 
 ## Карта репозитория (верхний уровень)
 
 - `spec/` — PROP/FEAT-контракты (`common/`, `modules/`), `boot/` (загрузка
-  PROP-009), `design/` (рационали — non-normative), `terraforms/`
-  (кампанийные планы), `WAL.md`.
+  PROP-009), `design/` (рационали — non-normative), `terraforms/`, `WAL.md`.
 - `campaigns/packages-2026-09/` — активная кампания: `harvest/` (цензусы +
-  паритет-таблицы), `tasks/` (`summary.py`, `drift-registry.py`,
-  `merge-verdicts.py`, `evidence/`), `run/` (реестр-состояние — генерится),
-  `SUBAGENT-LAUNCHERS.md` + `SUBAGENT-MODE.toml` (закон транспорта воркеров),
-  `OBLIGATIONS.md`, `BATCH-PLAN.md`.
+  паритет-таблицы, последняя `e14-b035-parity-pass.md`), `tasks/`
+  (`summary.py`, `drift-registry.py`, `merge-verdicts.py`, `evidence/`),
+  `run/` (генерится), `SUBAGENT-LAUNCHERS.md` + `SUBAGENT-MODE.toml` (закон
+  транспорта), `OBLIGATIONS.md`, `BATCH-PLAN.md`.
 - `packages/org.vibevm.ai-native/` — дисциплина: `core-ai-native/v0.8.0/`
-  (нейтральный движок conform+specmap + манифест; вендорится ×6),
-  `{rust,go,typescript}-ai-native-lang/` (стек-гайды, экстракторы, драйверы,
-  CLI, фикстуры), `*-mcp/` (MCP-твины, синкаются). `fractality/` — специспейс.
+  (движок conform+specmap + манифест; вендорится ×6),
+  `{rust,go,typescript}-ai-native-lang/` (гайды, карточки, экстракторы,
+  драйверы, CLI, фикстуры, TS-плагин линтов), `*-mcp/` (близнецы, синкаются).
+  `fractality/` — специспейс.
 - `packages/org.vibevm.world/` — флоу (git-practices, delegation-*, spec-genres…).
-- `crates/`, `xtask/` — хост-инструментарий (`vibe`, `cargo xtask
-  sync-engines`/`mirror`/`conform`). `vibedeps/` — рематериализованные копии
-  installed-пакетов. `.wt/` — worktree'ы воркеров (gitignored).
-- Корень: `BACKLOG.md` (P1/P2/P3), `TOOLING-MAP.md` (волны+развилки),
-  `AUDIT.md`, `TASKS.md`, `ROADMAP.md`, `CLAUDE.md`/`AGENTS.md`/`GEMINI.md`.
+- `crates/`, `xtask/` — хост (`vibe`, `cargo xtask sync-engines`/`mirror`/
+  `conform`). `vibedeps/` — рематериализованные копии. `.wt/` — worktree'ы.
+- Корень: `BACKLOG.md` (P1/P2/P3, до B-053), `TOOLING-MAP.md` (волны+развилки),
+  `AUDIT.md`, `TASKS.md` (**протух — описывает Phase A registry-рефакторинга**),
+  `ROADMAP.md`, `CLAUDE.md`/`AGENTS.md`/`GEMINI.md`.
 
 ## Действующие архитектурные/полит-решения (в силе)
 
-- **Принцип паритета — закон дисциплины** (манифест `##PARITY-ACROSS-PROJECTIONS`):
-  ни одна проекция не слабее без записанной причины.
-- **Конфиг пер-язык** (v2): корень = `max_file_lines` + `[rust]`/`[go]`/
-  `[typescript]` одной формы, нейтральный `gated`, `[[<lang>.exempt]]` /
-  `[[<lang>.floor_disable]] {step,reason}`; единицы — crate/package/cell;
-  старые плоские ключи — надгробия. fractality-конфиг СОЗНАТЕЛЬНО flat (0.7.0).
-- **Хост — пакет** `org.vibevm.core/vibevm` (B-031); `spec://vibevm/…` парсится
-  и НЕ резолвится; старую форму не возвращать.
-- **BUILD-FIRST** (не ослаблять правило за неиспользованность); **T/F/G вне
-  добра**; публикация — после рефакторинга; версии не бампать до
-  пред-публикации; замеров нет — стоячий ответ.
+- **Принцип паритета — закон дисциплины** (`##PARITY-ACROSS-PROJECTIONS`), и
+  его близнец `##PARITY-GAP-IS-NEVER-SILENT`: пробел несёт причину И маршрут.
+- **Вычисляемые имена ячеек** (развилка №1, владелец 2026-08-04):
+  `Pascal(variant)` + шов как записан; проверяется одним правилом у Rust и Go.
+- **Помечать, а не гасить** (владелец 2026-08-01): признанное отступление
+  рождает находку со статусом, ничего не выпадает из IR.
+- **Конфиг пер-язык** (v2): корень = языко-нейтральное (`max_file_lines`,
+  словарь маркеров, минимальная длина файла, `sarif_reports`) + однородные
+  секции `[rust]`/`[go]`/`[typescript]`; fractality-конфиг сознательно flat.
+- **Хост — пакет** `org.vibevm.core/vibevm`; `spec://vibevm/…` не резолвится.
+- **BUILD-FIRST**; **T/F/G вне добра**; публикация — после рефакторинга;
+  версии не бампать до пред-публикации; **замеров нет** — стоячий ответ.
 - **Делегация:** claudez-воркеры (GLM-5.2), закон транспорта
   `SUBAGENT-LAUNCHERS.md`; ревью/вердикты/коммиты — босс; Rules 1–4 биндят
-  делегированное как прямое (человеческая атрибуция — без AI-трейлеров).
+  делегированное как прямое (человеческая атрибуция, без AI-трейлеров).
 - **Роллаут — ТОЛЬКО `cargo xtask mirror`** (fast-forward, никогда `--force`).
 
-## Недавняя цепочка коммитов (последние 25, сверху — свежие)
+## Недавняя цепочка коммитов (последние 26, сверху — свежие)
 
 ```
-fd562b7c docs(continue): batch 2 closed — next is batch 3 (fork №1 with B-038)
-ad3c1d7e docs(wal): batch 2 CLOSED — F-185 re-judged confirmed, registry 87/176
-d0c0fddd docs(backlog): batch 2's builds land — B-033/B-030/B-049 done, the parity loop's pass №2
-3fae12d7 docs(campaign): F-185's family re-judged confirmed — the go seam-error rule is built (registry 87/176)
-7e946e77 docs(continue): correct — S4 and the loop done, the F-185 close recipe
-aeb6c703 docs(wal): correct the checkpoint — S4 and the B-035 loop landed, F-185 re-judge remains
-a4e40c4a docs(campaign): the §7 LOG takes the batch-2-built entry
-6a7e40f7 docs(campaign): the B-035 parity loop re-cuts after batch 2 — rows 1/7/13 closed
-0bdffc21 chore(packages): rematerialise the guide docs
-ee2df2ce docs(packages): the guides describe the built seam-error and conformance rules and cite the parity law
-94e6db0e chore(packages): vendor and rematerialise the batch-2 rule mounts
-32aba0ab feat(rust-ai-native): the floor honours [rust] floor_disable
-f63c1d32 feat(typescript-ai-native): the ts gate mounts the seam-error rule
-d09e2a19 feat(go-ai-native): the go gate mounts the conformance-assertion rule
-bd4291d5 feat(core-ai-native): the conformance-assertion rule scopes to the gate list
-0393ce91 chore(packages): sync the extractor twins and rematerialise
-a5ba2b0b feat(typescript-ai-native): ts-extract detects the seam-error union and its REQ citation
-8f1fc914 feat(go-ai-native): go-extract emits the seam-error message half and the conformance assertion
-c0f99902 chore(packages): vendor the parity engine into the copies and rematerialise
-549677c8 fix(rust-ai-native): the fact sort and health census cover the new variants
-736cdcf5 feat(core-ai-native): the Rust config gains a floor_disable twin
-c5f14183 feat(go-ai-native): the go gate mounts the dedicated seam-error rule
-ae927800 feat(core-ai-native): the seam-error and conformance-assertion rules join the engine
-8e03348a docs(core-ai-native): the parity principle joins the manifesto
-3c5f51e5 docs(design): the seam-error and assertion parity sketch on the E11 census pair
+414b7224 docs(campaign): волна Б exits — the parity bar it was built for is met, and the four gaps that remain are named
+27df7a8f chore(packages): vendor the SARIF ingest into the twins and rematerialise
+0c6012fd feat(packages): the three drivers load lint reports before the rules run
+decc5d0a feat(core-ai-native): a foreign linter's diagnosis becomes a fact the gate can cite
+54712ca1 chore(packages): vendor the finding status into the twins and rematerialise
+d2111008 feat(packages): six rules stamp the acknowledgement, in every language
+05f8bdff feat(core-ai-native): an acknowledged deviation is MARKED, never suppressed
+c626946b docs(campaign): the B-035 parity loop re-cuts after batch 3 — and names the inversion it created
+52528323 docs(campaign): batch 3's anchors are judged and its eleven files re-sealed
+e758db8c chore(packages): sync the narrowed sweep predicate and rematerialise
+4f53e053 fix(core-ai-native): exhausting a closed set of axes IS the declared form
+f71b5f26 chore(packages): vendor the matrix rule into the twins and rematerialise
+834fd362 feat(packages): three extractors see a swept matrix, and R-060 gets its card
+809b3af0 feat(core-ai-native): a test matrix is declared as data, never swept
+6c51a357 docs(backlog): B-052 — the three halves of R3-004 that stayed unbuilt
+310047f2 chore(packages): rematerialise the naming card and the guide clauses
+c6f6ed4a docs(packages): the naming rule gets its card, and each half of R3-004 carries its true marker
+5b697484 refactor(crates): three more cells take their computed names — the checker found what the survey missed
+302ade09 chore(packages): vendor the naming rule into the six copies and rematerialise
+10b4437b feat(rust-ai-native): the gate mounts the cell-name rule and the test cells take their computed names
+7ea543af feat(go-ai-native): the cell manifest reaches the engine, in Rust's spelling
+d990f779 feat(core-ai-native): a cell's name is checked against the name its manifest computes
+a2a562e8 chore(packages): sync the narrowed vocabulary to the twins and rematerialise
+712fa86d docs(packages): the position rule is described, and its card is authored
+d9922aa5 fix(core-ai-native): an invariant marker is a labelled tag, not a word in prose
+01c55f7d docs(backlog): B-051 — the pilot language has no conform surface spec
 ```
 
 ## Quick-start
@@ -188,7 +184,8 @@ python campaigns/packages-2026-09/tasks/summary.py
 python campaigns/packages-2026-09/tasks/drift-registry.py
 bash tools/self-check.sh   # exit — настоящий, хвостом; фоном — bare-форма
 cargo xtask sync-engines   # вендор ×6 после движковых правок
-cargo run -q -p vibe-cli --bin vibe -- install --assume-yes   # рематериализация vibedeps
+cargo run -q -p vibe-cli --bin vibe -- install --assume-yes   # рематериализация
+cargo xtask mirror         # раскатка, fast-forward-only
 ```
 
 _WAL — канон живого состояния; при расхождении верить ему, не этому файлу._
