@@ -1,76 +1,141 @@
 # TASKS — vibevm, active work
 
-Live checklist for the current work-slice. Each item is a logical commit (Conventional Commits per [PROP-000 §12.2](spec/common/PROP-000.md#conventional-commits); grouped by meaning per §12.3).
+Live checklist for the current work-slice. Each item is a logical commit
+(Conventional Commits per [PROP-000 §12.2](spec/common/PROP-000.md#conventional-commits);
+grouped by meaning per §12.3).
 
 **Status key:** `[ ]` queued · `[~]` in progress · `[x]` done.
 
----
+**Where the numbers live.** This file never carries counts. The campaign's own
+two commands do:
 
-## Current slice: Phase A of the decentralized-registry refactor
-
-Scope: fix the Nix-style registry lock-in from day one — per-package repos, multi-registry / mirror / override schemas, content-addressed identity, resolvo-backed transitive deps, JTD wire-contract foundation, maintainer publish tool. Phase B (polished multi-registry UX, `vibe vendor`, richer publish adapters) lands as a follow-up milestone (M1.6).
-
-Full design locked in [PROP-002](spec/modules/vibe-registry/PROP-002-decentralized-registry.md) once that file lands (queued below).
-
-### Documentation (do first — contract before code)
-
-- [x] `docs(prop-000)`: add §15 (dep weight) / §16 (JTD + codegen) / §17 (prod-arch lens) / §18 (complexity ≥ RPM) / §19 (load-bearing setup docs).
-- [x] `docs(claude)`: "Memory discipline" section in CLAUDE.md / AGENTS.md / GEMINI.md.
-- [x] `docs(guides)`: create `DEV-GUIDE.md` and `RUNTIME-GUIDE.md` scaffolds at repo root.
-- [x] `docs(spec)`: amend `VIBEVM-SPEC.md` §7.3 / §7.4 / §7.5 / §8.1 / §8.2 / §8.3 / §8.4 / §8.6 (new) / §11.2 revision note / §16 M1 acceptance for decentralized per-package registry, `[[registry]]` array, `[[mirror]]`, `[[override]]`, lockfile v2, capability-based deps, depsolver, maintainer publish.
-- [x] `docs(prop-001)`: mark §2.3 / §2.4 / §2.6 as superseded by PROP-002; prune size-based argument in §2.1 per PROP-000 §15.
-- [x] `docs(prop-002)`: write new `spec/modules/vibe-registry/PROP-002-decentralized-registry.md` — full design lock.
-- [x] `docs(roadmap)`: add M1.1-revision (per-package + resolver) and M1.6 (multi-registry polish); update snapshot.
-- [x] `docs(wal)`: checkpoint new phase; retire the v1-era "current phase" text.
-
-### Schemas and codegen foundation
-
-- [x] `build(tools)`: scaffolding for the JTD toolchain — `tools/jtd-codegen/README.md` pins version 0.4.1 with per-platform install commands; `tools/.gitignore` keeps binaries out of git; `xtask` crate carries `cargo xtask codegen` and `cargo xtask check-codegen`; `.cargo/config.toml` aliases `xtask = "run --quiet --package xtask --"`. Binary itself is not committed — first run after install populates generated code under `crates/vibe-wire/src/generated/`.
-- [~] `feat(schemas)`: seven JTD schemas under `schemas/` describe every CLI `--json` wire format — `init_report`, `install_plan`, `install_report`, `list_report`, `registry_sync_report`, `registry_publish_report`, `uninstall_report`. Schemas are documentation-quality today (the consuming structs in `vibe-cli` remain hand-written). Once the `jtd-codegen` binary is installed via `tools/jtd-codegen/README.md`, `cargo xtask codegen` produces typed Rust wrappers under `crates/vibe-wire/src/generated/`, and the CLI commands incrementally swap their hand-rolled `Serialize` structs for the codegen'd types — schema-driven from there on.
-- [x] `feat(vibe-wire)`: new `crates/vibe-wire` crate with `pub mod generated` placeholder, `[default-members]` excludes `xtask` from the published-as-`vibe` dependency tree.
-
-### Core types (Rust)
-
-- [x] `feat(core)`: type-safe package dependencies — parse `[provides]` / `[requires]` / `[[requires_any]]` / `[obsoletes]` / `[conflicts]` into `PackageRef` / `CapabilityRef` values; legacy `[dependencies]` compact form migrates transparently via `PackageManifest::normalize_legacy_deps`.
-- [x] `feat(core)`: `vibe.toml` schema v2 — `[[registry]]` array with `naming` convention, `[[mirror]]` with priority + wildcard `of = "*"`, `[[override]]` for surgical pkgref pins; v1 singleton auto-migrated on read; serializes in modern form on write; `primary_registry()` / `registry_by_name()` / `mirrors_for()` helpers.
-- [x] `feat(core)`: `vibe.lock` schema v2 — `LockedPackage` gains `registry` / `source_url` (renamed from `source` with serde alias) / `source_ref` / `resolved_commit` / `dependencies` / `overridden`; `LockfileMeta` gains `schema_version` / `solver` / `root_dependencies`; v1 lockfiles auto-migrate on next write via serde alias + defaults; `looks_like_v1_on_disk()` heuristic for future UX nudges; `vibe list --json` and `vibe install --json` plan output renamed `source` → `source_url` to match lockfile shape.
-
-### Resolver and registry layer
-
-- [x] `feat(vibe-resolver)`: new crate with `DepProvider` / `DepSolver` traits; `NaiveDepSolver` (DFS, no backtracking) handles concrete deps + capabilities + obsoletes + conflicts + simple disjunctions; `MultiRegistryProvider` adapts `MultiRegistryResolver`, `LocalRegistryProvider` adapts `LocalRegistry`. `ResolvedNode.dependencies` post-processed to exact-pinned `=<version>` for the lockfile. Resolvo / libsolv impls behind the same trait still pending — naive covers today's all-empty-deps fixtures and any first-cut realistic graph.
-- [x] `feat(registry)`: `ShellGit::list_tags` (via `git ls-remote --tags`, dedupes annotated-tag peeled-form) and `ShellGit::fetch_file_at_ref` (via `git archive --remote=<url> --format=tar`, in-process tar extraction, no `tar` crate); `GitBackend` trait widened with both methods plus `FileNotFoundInRef` and `ArchiveUnsupported` error variants.
-- [x] `feat(registry)`: `GitPackageRegistry` — per-package repo addressing through `NamingConvention`, tag-based versions, lazy clones (`bootstrap` / `update` only when committing to a version, not during dep-walk). `fetch_dep_manifest` reads `vibe-package.toml` via `git archive` without cloning. Exists alongside the legacy monorepo `GitRegistry` until `MultiRegistryResolver` switches `vibe install` over.
-- [x] `feat(registry)`: `MultiRegistryResolver` — priority-ordered registry walk with fall-through on `UnknownPackage`, `[[override]]` short-circuit (with manifest-identity verification at the pinned ref so a misnamed override fails loud), `mirrors_for(name)` exposing priority-sorted mirror chain (runtime mirror dispatch + cross-source content_hash verification deferred to M1.6 Phase B). `MultiResolution` / `MultiCached` carry registry-name / source_url / source_ref / overridden provenance for lockfile v2.
-- [x] `feat(install)`: switch `vibe install` to `MultiRegistryResolver`; `CachedPackage` carries `registry_name` / `source_ref` / `resolved_commit` / `overridden`; `register_installed` forwards them to lockfile v2. `git+` prefix stripped at the backend boundary across `GitPackageRegistry` and override paths so `git+file://` / `git+ssh://` URLs in `vibe.toml` Just Work. `cli_e2e::install_from_git_registry` rewritten for the per-package fixture layout.
-- [x] `feat(registry)`: per-package `vibe registry sync` — walks lockfile entries, refreshes each per-package clone via `MultiRegistryResolver::refresh_lockfile_clones`; registry-served and override-served entries refresh through their respective subtrees; legacy / local / unattributed entries reported as skipped.
-- [x] `feat(install)`: transitive install through `NaiveDepSolver` — `vibe install` runs the solver before fetching; transitive packages materialise after roots; lockfile entries' `dependencies` populated with exact-pinned pkgrefs; `[meta].root_dependencies` carries the user-typed roots; CLI step output marks transitives as `(transitive)`.
-
-### Publish tooling
-
-- [x] `feat(vibe-publish)`: new `crates/vibe-publish` crate with `RepoCreator` trait, `GitVerseCreator` (Gitea-compatible HTTP via reqwest blocking + rustls), `Publisher` orchestrator (manifest read → repo create/reuse → init+push+tag), `Token` with debug/display redaction, `vibe registry publish <path> [--registry <name>] [--dry-run]` subcommand. Error surface per PROP-002 §2.10 (auth-forbidden / org-not-found / push-denied / tag-collision / host-unreachable). Live API verification deferred to first real publish run; assumed Gitea-compatible request shapes documented inline.
-
-### Fixture migration and live packages
-
-- [x] `chore(fixtures)`: relocated `packages/` → `fixtures/registry/` via `git mv` (history preserved). Layout intentionally stays M0-monorepo for the LocalRegistry hermetic-fixture path; `cli_e2e::fixture_registry()` updated; `packages/` is now reserved for the future dogfooding tree (vibevm using vibevm).
-- [ ] `test(e2e)`: update `cli_e2e.rs` against the new fixture layout.
-- [x] `feat(packages-live)`: migrate three v0.1.0 flows to per-package repos in the `vibespecs` organization on **GitHub** (org migrated from GitVerse 2026-04-29 due to a missing GitVerse REST API endpoint — see PROP-000 §7 / PROP-002 §2.10). All three published 2026-04-29 via `vibe registry publish`: `https://github.com/vibespecs/flow-wal`, `flow-sync-from-code`, `flow-atomic-commits`, each tagged `v0.1.0`. End-to-end install + sync smoke green.
-- [x] `test(manual)`: `manual-tests/M1.5-gate-v2-per-package-smoke.md` written against the per-package shape; "Last known pass" line filled in after the first successful run against `vibespecs/`. Index in `manual-tests/README.md` updated.
-
-### Close-out
-
-- [x] `docs(wal, roadmap, prop-000)`: Phase A checkpoint, 210+ tests green across the workspace (30 in `vibe-publish` covering host adapter selection / token redaction / scope-violation guards), clippy clean, all new contracts wired, live three-package migration to GitHub applied 2026-04-29.
+```sh
+python campaigns/packages-2026-09/tasks/summary.py
+python campaigns/packages-2026-09/tasks/drift-registry.py
+```
 
 ---
 
-## M1.5-gate docs (parallel; first slice landed)
+## How this file relates to the four that resemble it
 
-- [x] `docs(commands)`: `docs/commands/{init,install,list,uninstall,registry-sync,registry-publish,version}.md` — one reference file per shipped CLI subcommand, with usage, flags, exit codes, schema links.
-- [x] `docs(authoring)`: `docs/authoring-{flow,feat,stack}.md` — per-kind authoring guides; package layout, manifest schema, capability contract design, versioning, publish procedure.
-- [x] `docs(README)`: `docs/README.md` — index across commands and authoring guides.
-- [ ] `docs(commands)`: `vibe build` / `vibe sync` / `vibe show` / `vibe check` reference docs land alongside the M1.2-M1.5 commands when they ship.
+Since 2026-06 vibevm's work-slices are **campaigns**, not loose checklists, and
+four documents divide the job. This file is the *shortest* of them — the slice
+in flight, nothing else:
 
-## Backlog (post-Phase-A; not active)
+| Document | Holds |
+|---|---|
+| `TASKS.md` (this file) | The slice in flight — each line a commit waiting to be made |
+| [`TOOLING-MAP.md`](TOOLING-MAP.md) | The wave order and the owner forks each wave carries |
+| [`BACKLOG.md`](BACKLOG.md) | Findings triaged P1/P2/P3 that nobody is working on yet |
+| [`campaigns/packages-2026-09/BATCH-PLAN.md`](campaigns/packages-2026-09/BATCH-PLAN.md) | The running campaign's phase/batch mechanics |
 
-- M1.6 polish: second live `[[registry]]`, full mirror fallback exercised in e2e, `vibe vendor` generator, `vibe registry add/list/set-mirror` CLI surface, GitHub / Gitea / Forgejo publish adapters on demand.
-- JTD'd `vibe show` / `vibe plan` / `vibe build` event streams.
-- Supply-chain attestation (sigstore or equivalent) — out of M1 scope, noted for architectural allowance now.
+A line here is a *commit*; a line in the map is a *build*; a line in the
+backlog is a *finding*. When they disagree, the backlog entry carries the
+owner's ruling and wins.
+
+---
+
+## Current slice: волна В — the map and its consumers
+
+Ordered by [`TOOLING-MAP.md` `##WAVE-V`](TOOLING-MAP.md). Волны А and Б closed
+whole (2026-08-04); this is the third.
+
+### Measurement first — the forks stand on numbers
+
+- [ ] `docs(campaign)`: fingerprint noise measured on the real history — raw
+      text vs token stream, the number owner fork №3 is decided on
+      (`harvest/e15-b019a-fingerprint-noise.md` + the re-runnable
+      `tasks/fingerprint-noise.py`).
+- [ ] `docs(campaign)`: the two lifecycle vocabularies censused — what carries
+      specmap's `planned`/`disputed` today and what consumes it, under fork №7
+      (`harvest/e16-b024-lifecycle-vocab-census.md`).
+- [ ] `docs(campaign)`: the census the one format change stands on — manifest
+      strictness, what travels in a package, the schema-bump route
+      (`harvest/e17-map-format-census.md`).
+
+### The one format change — three builds, one schema bump
+
+- [ ] `docs(design)`: the boss design for the format change, standing on the
+      three censuses above, with the owner's forks marked where they fall.
+- [ ] `feat(core-ai-native)`: schema 2 → 3 — the code item gains its span and
+      its fingerprint (B-019а), the map ships inside a package (B-016 half 1),
+      the privacy tier reaches the manifest (B-017). **One change, not three.**
+- [ ] `chore(packages)`: vendor the format change into the six engine copies
+      and rematerialise.
+
+### The consumers the map unlocks
+
+- [ ] `feat(vibe)`: «объясни» over vibe's own agent interface (B-018.1).
+- [ ] `feat(vibe)`: map search — the query language v0 is owner fork №6
+      (B-018.2).
+- [ ] `feat(vibe)`: answers about *installed* packages, fed by the
+      package-shipped map (B-018.4) + fragments by fingerprint (B-016.2,
+      owner fork №4).
+- [ ] `feat(vibe)`: the light client to external LLMs (B-020) + the threshold
+      warnings (B-021).
+
+### Decided inside the wave, not deferred out of it
+
+- [ ] `feat(xtask)`: B-014 — the committed host index is regenerated and its
+      freshness is gated (or the «regenerate on demand only» posture is
+      recorded as a decision). The engine's own doc comment already claims the
+      gate; the host panel does not run it.
+- [ ] `docs(backlog)`: B-024's ruling written into the entry — the vocabularies
+      merge, and `disputed`'s fate is settled (fork №7).
+
+### Волна Г — parallel, opportunistic, never blocking
+
+- [ ] `fix(xtask)`: `mirror --check` tests **ancestry**, not equality — a
+      target legitimately behind mainline stops reading as drift (B-005).
+- [ ] `fix(vibe)`: a check verb that writes — `progress check` stops rewriting
+      a frozen zone's state, or says in its first help line that it does
+      (B-010).
+- [ ] `refactor(crates)`: the pointed seam work the B-040 census earned
+      (`harvest/g1-b040-seams-census.md`) — sealed traits and typestate where
+      they pay, a recorded reason where they do not.
+- [ ] `docs(spec)`: the F-132 schema debt.
+
+### M-PARITY bar 2 — the four named builds between recorded-honest and built
+
+- [ ] `feat(go-ai-native)`: the Go flag/registry rule (parity row 6).
+- [ ] `fix(go-ai-native)`: the Go floor's `./...` scoping — `vet`/`tests`/
+      `staticcheck` gain the exclusion `gofmt` already has (rows 8/12,
+      B-048's sibling).
+- [ ] *(P3, owner-ruled «don't build now, don't drop the promise»)* the Rust
+      `dylint` and Go `analysis.Analyzer` custom-lint vehicles — `{#b-050}`.
+- [ ] *(deferred, cost measured)* the Rust deviation-reason text — ~33
+      frontend sites + a frontend version bump — `{#b-053}`.
+
+---
+
+## Tombstone — what stood here until 2026-08-04
+
+Until this rewrite the file carried the checklist of **Phase A of the
+decentralized-registry refactor** (spring 2026): per-package repos,
+multi-registry / mirror / override schemas, lockfile v2, the resolver crate,
+the publish tool, the live three-package migration to GitHub. That slice
+finished; its checklist is in `git log`, its contract in
+[PROP-002](spec/modules/vibe-registry/PROP-002-decentralized-registry.md).
+
+Two lines never got ticked, and both were **resolved by evolution rather than
+by the commit they named** — recorded here so the absence is not read as debt:
+
+- `test(e2e)`: «update `cli_e2e.rs` against the new fixture layout» — that
+  monolith no longer exists. It split into per-surface suites under
+  `crates/vibe-cli/tests/` and the fixture helper moved into their shared
+  `common` module.
+- `docs(commands)`: «`vibe build` / `vibe sync` / `vibe show` / `vibe check`
+  reference docs» — `docs/commands/` now holds twenty-odd files including
+  `show.md` and `check.md`; `build` and `sync` are not commands this CLI grew.
+
+**Two lines of the retired checklist are cited by `file:line` in the
+campaign's frozen evidence** (`tasks/evidence/`, batches W1a and W6d). Those
+citations now point at different content, so the lines they quoted are kept
+here verbatim rather than left dangling — the evidence is historical and stays
+untouched by policy, and this is the route back to what it read:
+
+- was `TASKS.md:19` — `- [x] docs(guides): create DEV-GUIDE.md and
+  RUNTIME-GUIDE.md scaffolds at repo root.`
+- was `TASKS.md:56` — `- [x] feat(packages-live): migrate three v0.1.0 flows
+  to per-package repos in the vibespecs organization on GitHub` (published
+  2026-04-29, all three tagged `v0.1.0`).
