@@ -48,14 +48,17 @@ CACHE = ZONE / "run" / "cache.json"
 # (`merge-verdicts.addressable`); this only compares the text of anchors the
 # cache already names as judged, so a regex cannot widen the perimeter.
 #
-# The optional list bullet is load-bearing, not tidiness: a great many facts
-# in this corpus are written as `- ##ID …` list items, and a pattern anchored
-# on `##` alone silently folds them into the PRECEDING fact's paragraph (or
-# drops them when there is no preceding one). The first cut of this program
-# had that bug, and its effect is the dangerous direction — a list-item fact
-# that moved could compare equal and be sealed as stable. Caught 2026-08-05
-# by a seal refusal that named facts this extractor reported as absent.
-FACT_RE = re.compile(r"^\s*(?:[-*+]\s+)?##([A-Za-z0-9_-]+)\b")
+# The optional list marker is load-bearing, not tidiness: a great many facts
+# in this corpus are written as `- ##ID …` bullets or `5. ##ID …` numbered
+# steps, and a pattern anchored on `##` alone silently folds them into the
+# PRECEDING fact's paragraph (or drops them when there is no preceding one).
+# The first cut of this program matched bare `##` and the second only bullets;
+# both had the same failure in the dangerous direction — a list fact that
+# moved compares equal and gets sealed as stable. Both gaps were caught the
+# same day: the bullet one by a seal refusal naming facts this extractor
+# reported absent, the numbered one by `PROP-035 ##PIPE-QUALIFY`, a `5.` step.
+# Widen this pattern before trusting a clean run over a new corpus.
+FACT_RE = re.compile(r"^\s*(?:[-*+]\s+|\d+\.\s+)?##([A-Za-z0-9_-]+)\b")
 
 
 def sh(*args):

@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-04T23:28:59Z",
+  "updated_at": "2026-08-04T23:36:33Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -86401,7 +86401,7 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 161,
         "marker_count": 162,
-        "processed_hash": "484d066f3cbe607730f5620a557f6e0846926ef1b12867b11bca961e66433c91",
+        "processed_hash": "80bbcb789bb9789c760d9b15723a124f6d09abb73140939a0d0824214cdba2cc",
         "verdicts": {
           "DOC-PINS": {
             "v": "confirmed",
@@ -86697,7 +86697,9 @@
           "REG-BACKEND-PIN": {
             "v": "confirmed",
             "ev": [
-              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+              "Backend choice, trait design, cache layout and Windows UX for M1 are pinned in PROP-001: shell out to the system git behind a `GitBackend` trait.",
+              "spec/modules/vibe-registry/PROP-001-git-backend.md exists; crates/vibe-registry/src/git_backend/ carries the trait and its `ShellGit` implementation",
+              "found: the pin resolves. The text moved only because the citation was rewritten from `spec://vibevm/...` to `spec://org.vibevm.core/vibevm/...` by B-031 - the claim is untouched."
             ]
           },
           "INIT-DEFAULT-REGISTRY": {
@@ -87451,25 +87453,33 @@
           "split-host-decision": {
             "v": "confirmed",
             "ev": [
-              "owner ruling recorded verbatim-in-substance 2026-08-01 (the carve-out of d12-adr §3.13, census 35→36): GitHub leads both surfaces, GitVerse is supplementary — full source mirror plus deliberately-published-to registry storage, never blanket-mirrored; coherent with PROP-016's single-writer law (mainline stays local main, fan-out unchanged — the record says so explicitly) and with the section's own migration history above it"
+              "GitHub carries the leading role for both surfaces (source and the vibespecs registry); GitVerse is supplementary - a full source mirror plus fall-through resolution.",
+              "`git remote` names exactly `github` and `origin` (gitverse); `vibe.toml` declares `vibespecs` on github.com as the publish target and `vibespecs-gitverse` as the fall-through, in that order",
+              "found: the tree implements the posture the ruling states - github primary, gitverse mirror and fall-through. The fact is NEW since this file's verified_at stamp, which is why the text moved."
             ]
           },
           "split-host-why": {
             "v": "confirmed",
             "ev": [
-              "both grounds resolve: the technical one cites ##REG-MIGRATION-WHY in the same section (the documented POST /orgs/{org}/repos 404/WAF-403 gap, PROP-002 §2.10 + crates/vibe-publish/src/gitverse.rs); the observational one is the owner's stated 2026-08-01 ground — audience visibility is external-world knowledge, exactly the B-015-pattern reasoning he established the same day"
+              "Two grounds: the technical one (GitVerse's public REST API exposes no org-scoped repo creation, so the publish loop cannot run end to end there) and the observational one (the owner's, 2026-08-01).",
+              "PROP-002 section 2.10; the same file's `##REG-MIGRATION-WHY` the fact cites",
+              "found: both grounds resolve, and the technical one is still true today - this session's mirror fan-out reached gitverse and failed on github for an unrelated local network reason, which does not touch the API gap."
             ]
           },
           "split-host-rejected": {
             "v": "confirmed",
             "ev": [
-              "three alternatives, each with its recorded reason: equal-canonical (the section's own prior reading — superseded by this ruling, kept as mirror mechanics), GitVerse-led (blocked by the documented endpoint gap while it stands), blanket-mirroring the registry (rejected in the owner's own quoted words — deliberate per-package publication); no invented rejection, every reason sourced from the section or the ruling"
+              "Considered and rejected: the equal-canonical dual-host reading (superseded, kept as mirror mechanics), GitVerse-led (impossible while the endpoint gap stands), and blanket-mirroring the registry.",
+              "PROP-002's section 2.10 documents the `POST /orgs/{org}/repos` probe and its failure codes (2 occurrences)",
+              "found: the ground the rejection rests on is documented where the fact sends the reader; the superseded reading survives as mirror mechanics, which `cargo xtask mirror` is."
             ]
           },
           "split-host-revisit": {
             "v": "confirmed",
             "ev": [
-              "both halves carry real observation points: the publish-loop half is a one-request probe (POST /orgs/{org}/repos → 2xx) whose failure codes are documented at the cited PROP-002 §2.10; the leading-role half deliberately has no code trigger — owner's notice from external observation, the same-day B-015 precedent named in the text; no unobservable trigger, no invented threshold"
+              "Revisit when the halves re-open separately: the publish-loop half when GitVerse's org-scoped repo creation starts returning 2xx, observable with one request.",
+              "PROP-002 section 2.10 carries the probe and its failure codes",
+              "found: the revisit condition is stated as an observation point with a documented probe rather than as a feeling - checkable by anyone, which is what makes it a revisit trigger."
             ]
           },
           "ATTRIBUTION-ENFORCEMENT-EXCEPTION": {
@@ -87479,10 +87489,18 @@
               "Checked by absence: `.github/workflows` does not exist; `.git/hooks` carries only `*.sample`; `tools/self-check.sh` has no trailer or attribution step.",
               "found: nothing enforces it mechanically, exactly as the fact says. The fact was ADDED after this file's `verified_at` stamp, which is why the text moved - it is new, not edited."
             ]
+          },
+          "ATTRIBUTION-BOOT-SURFACE-EXCEPTION": {
+            "v": "confirmed",
+            "ev": [
+              "The installed attribution flow's single-place law is deliberately not kept literally by this host's boot surfaces: 00-core.md, the CLAUDE/AGENTS/GEMINI triple and the agent instruction files each carry a short digest of the four rules by design.",
+              "spec/boot/00-core.md exists; tools/self-check.sh carries `check_instruction_triple`, which byte-compares CLAUDE.md against AGENTS.md and GEMINI.md and fails on any divergence",
+              "found: the exception describes the tree accurately, and the half that must not drift (the triple being identical) is mechanically gated - an exception with a checker on its riskiest edge."
+            ]
           }
         },
-        "verified_at": "2026-08-01T12:54:05Z",
-        "verify_batch": "c3b-prop-000 + d1 + D14 + D20 + H4-stale-host"
+        "verified_at": "2026-08-04T23:36:33Z",
+        "verify_batch": "c3b-prop-000 + d1 + D14 + D20 + H4-stale-host + H6-stale-host-tail"
       }
     },
     "spec/common/PROP-006-operating-modes.md": {
@@ -91016,7 +91034,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor; <status> elements judged as _elements",
         "fact_count": 30,
         "marker_count": 32,
-        "processed_hash": "884c6b872ba4833b3608abd9862bf7c88fdc2e6b4de6bb0db52f5c4debb9c405",
+        "processed_hash": "fc5d1de3fe9940ded91a844a4eba896bf61f71d581f95db62d4b6f68bec3105c",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -91137,7 +91155,9 @@
           "SCOPE-HOST": {
             "v": "confirmed",
             "ev": [
-              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+              "Now a tombstone: retired 2026-08-04 by B-031, the host exemption is gone and the root project IS a package coordinate addressed like every other package.",
+              "the root `vibe.toml` `[project]` block carries `group = \"org.vibevm.core\"` and `name = \"vibevm\"`",
+              "found: the retirement is real and the replacement is declared where the tombstone says. The fact did not vanish - it became a marked tombstone, which is this project's own rule for a retired name."
             ]
           },
           "SCOPE-FIXTURES": {
@@ -91169,10 +91189,26 @@
             "ev": [
               "spec/done tags consistent (accepted 2026-07-12; changelog carries the extraction record)"
             ]
+          },
+          "SCOPE-SELF-COORDINATE": {
+            "v": "confirmed",
+            "ev": [
+              "The self coordinate: the root project's `[project]` group+name make its authored `spec/` tree answer to `spec://<group>/<name>/...`, matched before any slot lookup and never versioned; a project with no group has no self coordinate.",
+              "root vibe.toml declares both fields; PROP-035's `##ROUTER-SELF-COORDINATE` states the same rule from the resolver's side",
+              "found: the rule is stated consistently on both sides of the contract, and this repository is its own first consumer - every `spec://org.vibevm.core/vibevm/...` address in the corpus resolves through it."
+            ]
+          },
+          "CHANGELOG-B031": {
+            "v": "confirmed",
+            "ev": [
+              "Records the 2026-08-04 retirement: the root became `org.vibevm.core/vibevm`, `##SCOPE-HOST` is a tombstone, `##SCOPE-SELF-COORDINATE` carries the live rule, and the authority rename covered 1 893 living-surface occurrences.",
+              "TOOLING-MAP `##WAVE-A` records B-031 with the same figure and residue 0; both anchors exist in this file in the states the changelog describes",
+              "found: every element of the changelog line is observable - the two anchors in their stated states, and the migration figure agreeing with the map."
+            ]
           }
         },
-        "verified_at": "2026-07-25T13:05:25Z",
-        "verify_batch": "c3a-common-small + H4-stale-host"
+        "verified_at": "2026-08-04T23:36:33Z",
+        "verify_batch": "c3a-common-small + H4-stale-host + H6-stale-host-tail"
       }
     },
     "spec/common/PROP-031-algorithmic-refactoring.md": {
@@ -111288,7 +111324,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 103,
         "marker_count": 104,
-        "processed_hash": "abecd46d4e84b936f5f6bd4240f397f89067b905e6b2b7938652087555903444",
+        "processed_hash": "92d588ce7dfd01366b9899b3c4b7c85f37f0baca67e221d40ba6664c559e70cf",
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -111435,7 +111471,9 @@
           "ARTIFACT-STATIC-MD": {
             "v": "confirmed",
             "ev": [
-              "artifacts live and consumed daily: STATIC.md (verbatim priority lane — this session read it first), INDEX.md TOML manifest (schema=1, static pointer, [[entry]] path/kind — the live file matches the §2.3 grammar byte-for-byte); pure file-reading preserved; redirect is the PROP-012 managed <vibevm> block (live in CLAUDE.md)"
+              "`STATIC.md` changed from a verbatim concatenation to an ANCHOR-QUALIFIED one: each contribution carried whole with its label definitions and intra-contribution links rewritten under its origin.",
+              "spec/boot/STATIC.md, read directly this session: it opens with the five-line RESOLUTION RULES preamble, its labels carry the `<origin-slug>--<original>` form, it carries the RENAMED ANCHORS table, and it states in rule 3 that full addresses resolve against package sources under vibedeps/ and that the file is a cache, not a target",
+              "found: the artifact on disk is qualified exactly as the fact now says. The claim strengthened behind a build that shipped, which is the healthy direction for a fact to move."
             ]
           },
           "ARTIFACT-INDEX-MD": {
@@ -111489,7 +111527,9 @@
           "LINK-STATIC": {
             "v": "confirmed",
             "ev": [
-              "inclusion types live: link static|dynamic default dynamic (LinkType in package.rs:364-376 after the 07-16 rename); when=os gate end-to-end (boot_artifacts.rs '## when on dynamic entries' — renderer emits when=\"os:<name>\"; INDEX grammar in CLAUDE.md block documents it); two-type spectrum (old third type gone — LINKING-SPECTRUM matches shipped enum exactly); suggested-default + consumer-wins in schema"
+              "`link = \"static\"` compiles the contribution into `STATIC.md` ahead of time, whole and anchor-qualified; the emergency priority lane, read first.",
+              "spec/boot/STATIC.md, read directly this session: it opens with the five-line RESOLUTION RULES preamble, its labels carry the `<origin-slug>--<original>` form, it carries the RENAMED ANCHORS table, and it states in rule 3 that full addresses resolve against package sources under vibedeps/ and that the file is a cache, not a target; the generated block in CLAUDE.md instructs every session to read STATIC.md first, then INDEX.md",
+              "found: both halves hold - the lane exists and is read first by contract, and its content is qualified. Only the adjective moved (verbatim became ahead-of-time, whole, anchor-qualified)."
             ]
           },
           "LINKING-SPECTRUM": {
@@ -111725,8 +111765,9 @@
           "SURF-SHOW-EFFECTIVE": {
             "v": "confirmed",
             "ev": [
-              "shipped-but-spec/done: `vibe show effective` EXISTS (show --help: 'Print the effective spec — every spec/boot file plus every installed package's files_written, concatenated with spec:// provenance headers') — the simple concatenation form; the §2.8 engine-backed projection stays v1.5, but the command itself is live; same refresh sweep as F-026",
-              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
+              "`vibe show effective` SHIPS in its simple concatenation form - every spec/boot file plus every installed package's files_written, joined with `spec://` provenance headers - while the engine-backed projection stays v1.5 scope.",
+              "`vibe show effective --help` prints: «Print the effective spec - every spec/boot file plus every installed package's `files_written`, concatenated with `spec://` provenance headers in stable order»",
+              "found: the help text matches the fact almost word for word, and the fact is explicit about which half is deferred - a marker moving from @spec/done to @impl/done behind a real surface."
             ]
           },
           "SURF-ENGINE-CRATE": {
@@ -111920,10 +111961,58 @@
             "ev": [
               "honest self-diagnosis: the comment NAMES the gap ('status line says DRAFT; M1.18 phases 1-7 shipped; phase 8 v1.5 scope') — impl/work defensible while phase 8 stays open"
             ]
+          },
+          "ARTIFACTS-CARRY-NO-TOKEN-BUDGET": {
+            "v": "confirmed",
+            "ev": [
+              "A generated boot artifact carries no token budget: the size budgets govern AUTHORED documents, and `STATIC.md` is compiler output - not read by a human, not edited.",
+              "spec/boot/STATIC.md carries the do-not-edit banner in its first line and is regenerated by `vibe install` (this session regenerated the boot artifacts for 1 node during rematerialisation)",
+              "found: the premise the ruling rests on is observable - the file declares itself generated and is in fact regenerated by the installer, so a budget on it would govern nothing a human writes."
+            ]
+          },
+          "COMPILED-LANE-IS-NOT-A-CITATION-TARGET": {
+            "v": "confirmed",
+            "ev": [
+              "Authored text never cites `spec://.../boot/STATIC#...`; the lane is compiler output and source-of-truth is the package source under vibedeps/.",
+              "tools/self-check.sh carries `check_lane_citations` (step 11b), which greps the authored trees for the sigil and directive forms of such an address; STATIC.md's own rule 3 states the same",
+              "found: the rule has a checker in the panel, which is what separates it from a wish - and the artifact states it to its own readers as well."
+            ]
+          },
+          "HISTORY-B006-ONCE-EACH": {
+            "v": "confirmed",
+            "ev": [
+              "2026-08-04: the lane emits once each - a static entry embedding a compiled unit artifact is elided to a provenance stub when its whole static zone is present member by member.",
+              "spec/boot/STATIC.md contains provenance-stub text; PROP-038 `##UNIT-ARTIFACT-STATIC-CONSUMER-ELIDES` states the consumer half of the same rule; PROP-009 carries `##STATIC-EMITS-ONCE-EACH` (2 occurrences)",
+              "found: the history line names a landing whose rule text, consumer-side twin and generated output are all present."
+            ]
+          },
+          "HISTORY-B011-QUALIFIED": {
+            "v": "confirmed",
+            "ev": [
+              "2026-08-04: the static lane becomes anchor-qualified - labels rewritten under the contribution's origin slug, the lane opening with the resolution preamble and tombstone table.",
+              "spec/boot/STATIC.md, read directly this session: it opens with the five-line RESOLUTION RULES preamble, its labels carry the `<origin-slug>--<original>` form, it carries the RENAMED ANCHORS table, and it states in rule 3 that full addresses resolve against package sources under vibedeps/ and that the file is a cache, not a target",
+              "found: all three consequences the history line claims are visible in the generated lane."
+            ]
+          },
+          "STATIC-EMITS-ONCE-EACH": {
+            "v": "confirmed",
+            "ev": [
+              "A static entry that would embed a compiled unit artifact is de-substituted when every boot-bearing member of its static zone is already present as an individual static entry of the same lane.",
+              "spec/boot/STATIC.md carries provenance stubs rather than a second copy of the family text; PROP-038 section 2.1's `##UNIT-ARTIFACT-STATIC-CONSUMER-ELIDES` is the same rule stated from the artifact's side",
+              "found: the rule is stated in both places that must agree about it, and the lane shows the stub rather than the duplicate."
+            ]
+          },
+          "STATIC-OPENS-WITH-RESOLUTION-PREAMBLE": {
+            "v": "confirmed",
+            "ev": [
+              "`STATIC.md` opens with the resolution preamble and the tombstone table - label convention, alias semantics, lookup rule, and every renamed short name with its qualified heirs.",
+              "spec/boot/STATIC.md, read directly this session: it opens with the five-line RESOLUTION RULES preamble, its labels carry the `<origin-slug>--<original>` form, it carries the RENAMED ANCHORS table, and it states in rule 3 that full addresses resolve against package sources under vibedeps/ and that the file is a cache, not a target",
+              "found: the preamble is the first content of the file, numbered 1-5, and the renamed-anchors table follows it - the placement the fact argues for is the placement on disk."
+            ]
           }
         },
-        "verified_at": "2026-07-25T14:28:14Z",
-        "verify_batch": "c4d1-workspace-big3 + d2a + H4-stale-host"
+        "verified_at": "2026-08-04T23:36:33Z",
+        "verify_batch": "c4d1-workspace-big3 + d2a + H4-stale-host + H6-stale-host-tail"
       }
     },
     "spec/modules/vibe-workspace/PROP-011-incremental-install.md": {
@@ -114612,7 +114701,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 134,
         "marker_count": 135,
-        "processed_hash": "16f282502a1076facfeb02a35cf10791ad611ad62e4512a2c805e0c5c47aa1ff",
+        "processed_hash": "1607746c03c154f800a4d4dc33327e5dae2d9c84106d3c2c8620533d6c098163",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -114871,7 +114960,9 @@
           "URI-VERSION-OPTIONAL": {
             "v": "confirmed",
             "ev": [
-              "addressing + router live: unified grammar (group/name joiner '/', optional @version from lockfile, ~rN reserved spec/done); the router = vibe-spec resolve over the materialized vibedeps tree (doc-id truncation via canonical_doc_path reuse; determinism = CompileError on ambiguity)"
+              "`@<version>` is optional - a feature, never an obligation; absent, the address resolves against the freshest installed version.",
+              "TOOLING-MAP `##WAVE-A` (B-028) carries the owner's words verbatim; the fact quotes them in the original Russian",
+              "found: the quoted ruling matches the map's record of it; the two halves of the contract (optional, and freshest when absent) are the two halves the ruling states."
             ]
           },
           "URI-TREE-PATH": {
@@ -114907,7 +114998,9 @@
           "ROUTER-VERSION": {
             "v": "confirmed",
             "ev": [
-              "addressing + router live: unified grammar (group/name joiner '/', optional @version from lockfile, ~rN reserved spec/done); the router = vibe-spec resolve over the materialized vibedeps tree (doc-id truncation via canonical_doc_path reuse; determinism = CompileError on ambiguity)"
+              "Version selection when `@version` is absent is the FRESHEST INSTALLED slot (semver-newest), owner-ruled 2026-08-04 under B-028, superseding the earlier lockfile wording.",
+              "TOOLING-MAP `##WAVE-A` records B-028 with «versions optional, absent -> freshest installed - owner-ruled»",
+              "found: the ruling is recorded in the map under the wave that landed it, and this fact is the contract side of it. The change is a ruling landing, not a drift."
             ]
           },
           "ROUTER-DETERMINISM": {
@@ -115426,10 +115519,98 @@
               "F-028: the marker repeats the status-line's claim (spec/work 'DESIGN provisional; not implementation-locked') without diagnosing it — while §17 records the compiler shipped three times over (vibe-spec, rename, normal+static AOT)",
               "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
             ]
+          },
+          "AT-BANG-IS-AN-ALIASED-IN-PLACE-USE": {
+            "v": "confirmed",
+            "ev": [
+              "`@!<Alias>` is the aliased twin of `@spec://...`: a mandatory in-place use of the address the file's `as`-declared alias binds to; an undeclared alias is a compile error naming the known aliases.",
+              "crates/vibe-spec/src/pipeline.rs parses the alias table from the pre-strip text (`Directives::parse(&folded).aliases`) and calls `rewrite_at_bang(&expanded, &aliases)`",
+              "found: the machinery exists and is wired in the order the contract describes - aliases are read before the directive lines are stripped, which is what lets `@!X` survive into the compiled lane."
+            ]
+          },
+          "COMPILED-LABELS-ARE-QUALIFIED": {
+            "v": "confirmed",
+            "ev": [
+              "A compiled block's heading anchors and fact ids carry the qualify phase's `<origin-slug>--` prefix, so the compiled label namespace is collision-free by construction and reversible per block.",
+              "spec/boot/STATIC.md, read directly this session: it opens with the five-line RESOLUTION RULES preamble, its labels carry the `<origin-slug>--<original>` form, it carries the RENAMED ANCHORS table, and it states in rule 3 that full addresses resolve against package sources under vibedeps/ and that the file is a cache, not a target",
+              "found: the qualified form is in the generated lane and its preamble documents the derivation (origin slug, original tail after the last `--`), which is the reversibility the fact claims."
+            ]
+          },
+          "COMPILED-LANE-IS-NOT-A-CITATION-TARGET": {
+            "v": "confirmed",
+            "ev": [
+              "A `spec://` address naming a generated `STATIC.md` is an illegal target for authored text; the directive compiler rejects it and the gate lints the tree.",
+              "tools/self-check.sh `check_lane_citations` (step 11b) is the tree-level half; STATIC.md rule 3 states the same to readers",
+              "found: both halves the fact promises exist - a compile-time rejection and a tree-level lint - and the lint is a panel step rather than a hope."
+            ]
+          },
+          "HISTORY-B011-ALIASING": {
+            "v": "confirmed",
+            "ev": [
+              "2026-08-04: the qualify phase lands (labels become origin-qualified, a pure function of origin and so splice-order independent), plus the `as` alias declaration.",
+              "crates/vibe-spec carries the qualify phase (doctree.rs, lib.rs and the pipeline tests reference it) and the alias table in pipeline.rs; STATIC.md shows the output",
+              "found: the history line's two named mechanisms are both in the crate, and the property it claims for them (order independence) is what the generated lane's stable labels show."
+            ]
+          },
+          "LOADER-RESOLUTION-RULES": {
+            "v": "confirmed",
+            "ev": [
+              "The first-loaded text includes the resolution rules: the qualified-label convention, alias semantics, two-scope lookup with fail-with-candidates, the tombstone table's role, and where full addresses resolve.",
+              "spec/boot/STATIC.md, read directly this session: it opens with the five-line RESOLUTION RULES preamble, its labels carry the `<origin-slug>--<original>` form, it carries the RENAMED ANCHORS table, and it states in rule 3 that full addresses resolve against package sources under vibedeps/ and that the file is a cache, not a target",
+              "found: all five are in the preamble, in that order, as the first content of the first file a session reads."
+            ]
+          },
+          "PIPE-QUALIFY": {
+            "v": "confirmed",
+            "ev": [
+              "The pipeline's qualify step, per node under its own authoring origin, rewriting label definitions and intra-closure links while never touching full addresses, directive lines or fenced content.",
+              "crates/vibe-spec carries the qualify phase; STATIC.md's preamble documents the same slug derivation, and its rule 3 confirms full addresses are untouched",
+              "found: the step exists and the invariants it promises (per-node origin, addresses untouched) are the ones the generated lane exhibits."
+            ]
+          },
+          "ROUTER-SELF-COORDINATE": {
+            "v": "confirmed",
+            "ev": [
+              "The root project's own group/name resolves to the workspace's authored `spec/` tree, matched before any vibedeps slot lookup and never versioned; an undotted authority parses but never resolves.",
+              "root vibe.toml declares `org.vibevm.core` / `vibevm`; PROP-029's `##SCOPE-SELF-COORDINATE` states the same rule from the addressing side; the WAL records that `spec://vibevm/...` parses and never resolves",
+              "found: contract, addressing rule and observed behaviour agree - and the never-resolving legacy form is recorded as a known state rather than as a bug."
+            ]
+          },
+          "SHORT-LABEL-LOOKUP-IS-TWO-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "An unqualified label reference resolves against exactly two scopes in order - the containing document's anchors, then the file's declared aliases - and found in neither or in both is a compile error listing the candidates.",
+              "crates/vibe-spec/src/doctree.rs carries the lookup and its candidate-listing error path",
+              "found: the rule is implemented where the contract puts it, and the failure mode the fact insists on (list the candidates, never widen the search) is the one in the code."
+            ]
+          },
+          "STATIC-HEADER-RESOLUTION-PREAMBLE": {
+            "v": "confirmed",
+            "ev": [
+              "The compiled lane opens with a short generated preamble carrying the label convention, alias semantics, the two-scope rule, the tombstone pointer and where full addresses resolve.",
+              "spec/boot/STATIC.md, read directly this session: it opens with the five-line RESOLUTION RULES preamble, its labels carry the `<origin-slug>--<original>` form, it carries the RENAMED ANCHORS table, and it states in rule 3 that full addresses resolve against package sources under vibedeps/ and that the file is a cache, not a target",
+              "found: the preamble is generated, short, first, and carries all five items."
+            ]
+          },
+          "STATIC-TOMBSTONE-TABLE": {
+            "v": "confirmed",
+            "ev": [
+              "The tombstone table sits directly under the header: every short name the qualify phase renamed, with its qualified heirs and their origins.",
+              "spec/boot/STATIC.md, read directly this session: it opens with the five-line RESOLUTION RULES preamble, its labels carry the `<origin-slug>--<original>` form, it carries the RENAMED ANCHORS table, and it states in rule 3 that full addresses resolve against package sources under vibedeps/ and that the file is a cache, not a target; the preamble's rule 2 points a reader who cannot find a short label at that table",
+              "found: the table is where the fact says and the preamble routes to it - a retired short name answers with candidates rather than with emptiness."
+            ]
+          },
+          "USE-AS-ALIAS": {
+            "v": "confirmed",
+            "ev": [
+              "`#use spec://... as <Alias>` declares a file-local alias bound to the target address.",
+              "crates/vibe-spec/src/pipeline.rs comment and code: the alias table is parsed from the pre-strip text so the `#use ... as <Alias>` bindings survive the directive strip; crates/vibe-spec/src/directives.rs treats `as` as a `#use` clause and a defect on `#embed`/`#source`",
+              "found: the declaration form is parsed, its binding survives compilation, and the grammar rejects `as` on the two directives it does not belong to - the contract's restriction is enforced, not merely stated."
+            ]
           }
         },
-        "verified_at": "2026-07-25T14:28:14Z",
-        "verify_batch": "c4d1-workspace-big3 + d2a + H4-stale-host"
+        "verified_at": "2026-08-04T23:36:33Z",
+        "verify_batch": "c4d1-workspace-big3 + d2a + H4-stale-host + H6-stale-host-tail"
       }
     },
     "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md": {
@@ -115459,7 +115640,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (8 cells); document <status> judged as _elements",
         "fact_count": 85,
         "marker_count": 86,
-        "processed_hash": "f8c3799d364dc48ba8fe3eeb1e2d5865b9b44b28f2e5dc79fe9929bbb6262386",
+        "processed_hash": "560f4006a6cfb34d96cba946c6a6f145b3281db5ca37a34fa782860a87322fcd",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -115820,8 +116001,9 @@
           "TEST-MUTATION-FUZZ": {
             "v": "confirmed",
             "ev": [
-              "F-024 extended (c4d2): the proptest mutation-fuzz shipped AFTER the §6 deferral — boot/hybrid/fuzz.rs header reads 'Property-based fuzzing of the hybrid boot graph (PROP-038 §3, DEF-5)' with proptest random DAGs; the unit's spec/done aged behind its own DEF-5 landing",
-              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
+              "Property-based mutation fuzzing over random DAGs asserting `incremental == full` after each mutation - now marked SHIPPED under boot/hybrid/.",
+              "crates/vibe-workspace/src/boot/hybrid/fuzz.rs exists, beside testkit.rs and fingerprint.rs in the same module",
+              "found: the shipped claim resolves to a real file in the named location. A test plan item moving to shipped behind the file is the healthy direction."
             ]
           },
           "TEST-GOLDEN-INVARIANTS": {
@@ -115931,10 +116113,18 @@
             "ev": [
               "accurate: IMPLEMENTED 2026-07-15 all five phases — boot/hybrid/ tree live (fingerprint.rs, hoist/, fuzz.rs)"
             ]
+          },
+          "UNIT-ARTIFACT-STATIC-CONSUMER-ELIDES": {
+            "v": "confirmed",
+            "ev": [
+              "The unit artifact serves dynamic consumers and standalone reads; a static consumer whose lane already compiles the zone member by member elides the aggregate to a provenance stub - the once-each rule of PROP-009.",
+              "PROP-009 carries `##STATIC-EMITS-ONCE-EACH` (2 occurrences); spec/boot/STATIC.md carries provenance-stub text rather than a duplicated family",
+              "found: the two contracts that must agree about this rule state it identically, and the generated lane exhibits it."
+            ]
           }
         },
-        "verified_at": "2026-07-25T14:37:13Z",
-        "verify_batch": "c4d2-workspace-rest + d2d + H4-stale-host"
+        "verified_at": "2026-08-04T23:36:33Z",
+        "verify_batch": "c4d2-workspace-rest + d2d + H4-stale-host + H6-stale-host-tail"
       }
     }
   }
