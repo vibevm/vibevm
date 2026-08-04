@@ -221,6 +221,36 @@ being a clash and becomes one concept used twice. **Not decided — this is the
 recommendation carried to the owner's fork №5, and it supersedes the
 field-redaction shape sketched above.** @spec/work
 
+##b017-replace-is-the-gradient **`:replace` is the privacy gradient at section
+grain, not a hazard to publication (owner, 2026-08-04, correcting this
+document's first reading).** A contract section may carry the minimum an
+outsider needs; where the source exists, that minimum is replaced by the full
+text an insider is entitled to. That is the header-and-body relation exactly.
+The boss's first reading — that a replaced contract section hands an outsider
+text its own author calls superseded — does not survive the check: **an outsider
+reads precisely the contract document under either mode**, because they have no
+source at all. The merge mode governs the *insider's* view and says nothing
+about what leaves the package. No publishability rule follows from it. @spec/done
+
+##b017-one-checkable-rule **One publishability rule does survive, and it is
+about references rather than modes.** A section living only in the source is
+invisible to an outsider — legitimate privacy by absence — but a `#use` or an
+`@spec://` reaching from the contract into such an anchor dangles for whoever
+receives the contract alone. That is mechanically checkable. Everything else
+reduces to «the contract must be true standing alone», which is a property of
+authorship that no gate can hold. @spec/work
+
+##b017-floor-not-stump **Consequence for the loader, and it strengthens the
+degradation case.** If a contract's minimum is an honest floor rather than a
+truncation, then «the source is absent» is a package's **legitimate outward
+view**, not a damaged build. Today the compiler fails there — not because the
+data is bad but because it cannot tell «not distributed» from «lost». The
+distinguisher is the manifest declaration, which is the same key §4 introduces.
+So the privacy tier, the `:replace` mode and the loader's degradation are one
+mechanism seen from three sides: the tier says what shipped, `:replace` says
+what is visible per section, and the degradation says how to read it when the
+source is not there. @spec/work
+
 ##b017-standing-on-a-demonstration **What that candidate is owed before it can
 be leaned on.** Publishing contracts apart from their sources means a `#source`
 that crosses a package boundary. Measured: the directive carries a full address
