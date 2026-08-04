@@ -1,0 +1,98 @@
+{
+  "batch": "H7-jtd-codegen-readme",
+  "cluster": "ai-native",
+  "files": {
+    "packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md": {
+      "WHAT-IT-IS": {
+        "v": "confirmed",
+        "ev": [
+          "Claims jtd-codegen generates strictly-typed, language-specific code from JTD (JSON Type Definition, RFC 8927) schemas; a consuming project derives its wire types from committed *.jtd.json schemas through this binary — schema-first codegen.",
+          "packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md:5-9 ; xtask/src/codegen.rs ; schemas/specmap.jtd.json",
+          "README:5-9 states exactly this, citing RFC 8927. The host uses it: xtask codegen.rs drives jtd-codegen and a committed schemas/specmap.jtd.json (9326 bytes) is the source of truth. Matches.",
+          "BOSS CORRECTION: the gathered row cited `schemas/specmap.jtd.json` (with a byte count) as an example of the committed schemas. That file DOES NOT EXIST - `schemas/` holds seven report schemas (init_report, install_plan, install_report, list_report, registry_publish_report, registry_sync_report, uninstall_report) and no specmap one. The FACT still holds: the host does derive its wire types from committed `*.jtd.json` schemas through this binary, driven by `xtask/src/codegen.rs` into `crates/vibe-wire/src/generated/`. Verdict confirmed on the corrected evidence, not on the row as filed."
+        ]
+      },
+      "THIS-PACKAGE-IS-THE-RECIPE-NOT-THE-BINARY": {
+        "v": "confirmed",
+        "ev": [
+          "Claims this package ships the provisioning recipe, never the binary; the binary is fetched from the upstream release page into the consuming project's local tools/jtd-codegen/ (gitignored); only the recipe and the version pin travel with source trees.",
+          "tools/.gitignore ; tools/jtd-codegen/ ; README.md:11-18",
+          "tools/.gitignore: 'The binaries themselves are NOT committed — each subdirectory carries a README.md pinning the upstream version and install procedure. New machines run the install command from the README to populate this directory.' tools/jtd-codegen/ exists as a directory. Confirms recipe-not-binary posture."
+        ]
+      },
+      "UPSTREAM": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the upstream is https://github.com/jsontypedef/json-typedef-codegen.",
+          "README.md:20-21 ; xtask/src/codegen.rs",
+          "README:20-21 names exactly that URL. The xtask fetch/install recipe in the README points at the same github.com/jsontypedef/json-typedef-codegen release paths. Matches."
+        ]
+      },
+      "PINNED-VERSION": {
+        "v": "drift",
+        "ev": [
+          "Claims the pinned version is jtd-codegen 0.4.1 — the most recent stable release at pinning time; this README is the pin's single home; CI asserts schemas do not drift from generated code.",
+          "README.md:25-29 ; xtask/src/codegen.rs:171",
+          "README:25 'jtd-codegen 0.4.1'. xtask/src/codegen.rs:171 comment 'jtd-codegen 0.4.1 writes a single mod.rs per --rust-out'. The pin (0.4.1) is consistent across the recipe and the codegen driver. Matches.",
+          "BOSS: the pin itself is confirmed - README states `jtd-codegen 0.4.1` and `xtask/src/codegen.rs:171` reasons about 0.4.1's single-mod.rs behaviour, so the number is consistent and single-homed. The DRIFT is the last clause: «CI asserts that schemas do not drift from generated code». This project has no CI - no `.github/workflows`, and PROP-000 records the standing no-CI decision as deliberate. The assertion the clause describes does exist, but as a floor step: `cargo xtask check-codegen`, run by `tools/self-check.sh:342`. Fix surface: name the mechanism the consumer actually has (its floor / gate panel) rather than a CI system this consumer declined."
+        ]
+      },
+      "INSTALL-TARGET": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the install target is to drop the platform binary at tools/jtd-codegen/jtd-codegen (or .exe on Windows) inside the consuming project, kept gitignored.",
+          "README.md:33-35 ; tools/.gitignore ; xtask/src/codegen.rs:16-25",
+          "README:33-35 names tools/jtd-codegen/jtd-codegen(.exe). codegen.rs:16-25 'Prefer the project-local copy under tools/jtd-codegen/' and looks for 'jtd-codegen.exe'/'jtd-codegen'. tools/.gitignore keeps it uncommitted. Matches."
+        ]
+      },
+      "INSTALL-WINDOWS": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the Windows install (from project root, PowerShell or Git Bash): curl -LO the v0.4.1 x86_64-pc-windows-gnu.zip, unzip -d tools/jtd-codegen, rm the zip.",
+          "README.md:39-45 ; tools/jtd-codegen/ dir",
+          "README:41-45 gives exactly that curl/unzip recipe against v0.4.1/x86_64-pc-windows-gnu.zip. The target directory tools/jtd-codegen/ exists. The recipe is self-consistent with the pinned version."
+        ]
+      },
+      "WINDOWS-GNU-BUILD": {
+        "v": "confirmed",
+        "ev": [
+          "Claims upstream ships a gnu build, not msvc — the static binary works on the Windows hosts the projects target.",
+          "README.md:47-48 ; README.md:42 (x86_64-pc-windows-gnu.zip)",
+          "README:42 fetches 'x86_64-pc-windows-gnu.zip' (gnu target, not msvc), and :47-48 states the rationale. The chosen artefact target is the gnu one. Matches."
+        ]
+      },
+      "INSTALL-MACOS": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the macOS install: Apple Silicon curls v0.4.1/aarch64-apple-darwin.tar.gz into tools/jtd-codegen (Intel swaps in x86_64-apple-darwin.tar.gz).",
+          "README.md:52-58",
+          "README:55-57 gives the aarch64-apple-darwin curl|tar recipe at v0.4.1, with the Intel x86_64-apple-darwin swap noted (:53). Self-consistent with the pinned version and install target."
+        ]
+      },
+      "INSTALL-LINUX": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the Linux install is one command: curl v0.4.1/x86_64-unknown-linux-gnu.tar.gz | tar -xz -C tools/jtd-codegen.",
+          "README.md:62-67",
+          "README:65-67 gives exactly that one-line curl|tar recipe against v0.4.1/x86_64-unknown-linux-gnu.tar.gz into tools/jtd-codegen. Self-consistent with the pinned version and install target."
+        ]
+      },
+      "VERIFY-VERSION": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the installed binary answers with the pinned version: tools/jtd-codegen/jtd-codegen --version prints 'jtd-codegen 0.4.1'.",
+          "README.md:71-75 ; xtask/src/codegen.rs:171 (0.4.1)",
+          "README:74 'tools/jtd-codegen/jtd-codegen --version    # prints \"jtd-codegen 0.4.1\"'. The expected string matches the pinned version referenced in codegen.rs:171. Matches."
+        ]
+      },
+      "CONSUMER-WIRES-ITS-OWN-TASK": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the consumer wires the binary into its own regeneration task and drift check (generate, then byte-compare in CI); the first consumer (vibevm host) runs it as cargo xtask codegen / cargo xtask check-codegen, preferring the project-local binary and falling back to PATH, preflighting and erroring actionably (pointing at this recipe) when both are missing.",
+          "xtask/src/codegen.rs:16-39,237 ; tools/self-check.sh:342 ; README.md:79-84",
+          "codegen.rs:16-17 'Locate the jtd-codegen binary. Prefer the project-local copy under tools/jtd-codegen/; fall back to PATH'; :34-39 preflight errors 'jtd-codegen not found. Looked at:... Install per tools/jtd-codegen/README.md. PROP-000 §16...'. run_check_codegen (codegen.rs:237) is the byte-compare gate; self-check.sh:342 runs 'cargo xtask check-codegen'. Matches in full."
+        ]
+      }
+    }
+  }
+}

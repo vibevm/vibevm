@@ -1,0 +1,188 @@
+{
+  "batch": "H8-lane-dedup",
+  "cluster": "host",
+  "files": {
+    "spec/design/lane-composition-dedup.md": {
+      "companion-line": {
+        "v": "confirmed",
+        "ev": [
+          "Companion to BACKLOG B-006, PROP-038, PROP-009 §2.3, PROP-035 §8, and deterministic-loading-aliasing.md (B-011).",
+          "BACKLOG.md:347; spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md; spec/modules/vibe-workspace/PROP-009-loading-model.md:243; spec/design/deterministic-loading-aliasing.md",
+          "B-006 row exists at BACKLOG.md:347; PROP-038 present; PROP-009:243 ##HISTORY-B006-ONCE-EACH cites this design; deterministic-loading-aliasing.md present."
+        ]
+      },
+      "authority-line": {
+        "v": "confirmed",
+        "ev": [
+          "Authority: non-normative proposal; lands as PROP edits (§6).",
+          "spec/design/lane-composition-dedup.md:7; PROP-009:243, PROP-038:37",
+          "The §6 PROP edits landed: PROP-009:243 ##STATIC-EMITS-ONCE-EACH, PROP-038:37 ##UNIT-SELF-CONTAINED — the proposal became normative."
+        ]
+      },
+      "problem-shape": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: STATIC.md carries the git commit-rules family twice — once as four direct contributions, once nested inside the git-practices contribution (a 323-line compiled unit artifact); nine vibe:static provenance markers for a five-package family.",
+          "spec/boot/STATIC.md (grep vibe:static git-); BACKLOG.md:357-363 (B-006-WHAT), :354 (B-006-DISPOSITION)",
+          "STATIC.md today has 5 git-family markers (4 members + git-practices) — down from nine (B-006-DISPOSITION: «git-family markers 9 → 5»); B-006-WHAT describes the four duplicate members; PROP-009:243 records «323 nested lines»."
+        ]
+      },
+      "problem-double-qualify": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: B-011 qualification made the duplicate loud; the nested copies arrive already qualified and the host pass re-prefixes them, minting double-qualified labels org-vibevm-world--git-practices--org-vibevm-world--git-atomic-commits--<TAIL> — 164 occurrences.",
+          "spec/boot/STATIC.md (grep --git-practices--org-vibevm-world--); PROP-009-loading-model.md:243",
+          "grep -c -- --git-practices--org-vibevm-world-- spec/boot/STATIC.md → 0; PROP-009:243 records «164 double-qualified labels» removed — the double-qualification is gone post-fix.",
+          "BOSS: re-measured - zero occurrences of the double-qualified form in the generated lane today."
+        ]
+      },
+      "problem-falsified-claim": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: the shape falsifies git-attribution-policy's «in exactly one always-loaded place»; PROP-038 §2.1 ##UNIT-SELF-CONTAINED promises every unit's lane carries its zone «in dependency order, once each».",
+          "BACKLOG.md:351,372-376 (B-006-ANCHOR, B-006-IT-FALSIFIES-A-SHIPPED-CLAIM); spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md:37",
+          "B-006-ANCHOR: falsifies the git-attribution-policy exactly-one claim «from the host side»; PROP-038:37 ##UNIT-SELF-CONTAINED: «in dependency order, once each»."
+        ]
+      },
+      "mechanism-two-sources": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: two independent composition sources each emit a copy and nothing reconciles them.",
+          "crates/vibe-workspace/src/install/bootgen.rs:401 (node_dependency_boot); crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs:250 (dynamic_target_path)",
+          "Both sources exist: node_dependency_boot (closure walk) at bootgen.rs:401 and the unit-artifact substitution path (hybrid_emit.rs:250 dynamic_target_path) — the two emission paths the design names."
+        ]
+      },
+      "MECH-CLOSURE-WALK": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: node_dependency_boot (bootgen.rs:284-301) walks the root requires closure breadth-first; the static-transitive edge forces the whole subtree static, so every boot-bearing member becomes its own static entry.",
+          "crates/vibe-workspace/src/install/bootgen.rs:401 (fn node_dependency_boot)",
+          "node_dependency_boot exists at bootgen.rs:401 (the design cited :284-301; the file grew). with_static (bootgen.rs:84,462) drives the static-link classification — the closure walk the design describes."
+        ]
+      },
+      "MECH-UNIT-SUBSTITUTION": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: the same walk, reaching a dependency that statically links a child (with_static), replaces its contribution path with the dependency's compiled STATIC.md (bootgen.rs:323-328); git-practices is that case.",
+          "crates/vibe-workspace/src/install/bootgen.rs:462; crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs:143,250",
+          "bootgen.rs:462 with_static.contains check; hybrid_emit.rs:143 with_static computed, :250 dynamic_target_path points at the compiled STATIC for with_static deps — the substitution path landed."
+        ]
+      },
+      "mechanism-when-each-is-right": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: the substitution is correct for a dynamic edge (hybrid_emit.rs dynamic_target_path); the closure walk is correct for the static lane; both applied to a static entry is the bug.",
+          "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs:227,250",
+          "hybrid_emit.rs:227/250 dynamic_target_path — the dynamic-edge substitution; the design's point is the conjunction of both paths on a static entry, which desubstitute_covered_units (bootgen.rs:147) now reconciles."
+        ]
+      },
+      "mechanism-prior-stops": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: DRIFT-029 (suppress per-unit artifact writes; contradicted PROP-038 §2.1, marker at hybrid_emit.rs:148) and DRIFT-030 (counting the entry-point node clears the aggregator but the root then holds the member twice; marker at bootgen.rs:89) both stopped for a ruling.",
+          "crates/vibe-workspace/src/install/bootgen.rs:118-135 (DRIFT-030 REVIEW marker); crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs:154",
+          "The DRIFT-030 REVIEW marker is present at bootgen.rs:118-135 («Which mechanism owns the dedup is a design question, so DRIFT-030 stopped on its §8»); hybrid_emit.rs:154 carries a with_static ruling comment. Note: the design's impl-slices said these markers would be retired in the landing; the DRIFT-030 marker is still present (now at :118, cited as :89)."
+        ]
+      },
+      "solution-once-each": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: one rule at compose time — a static entry that would embed a with_static package's unit artifact is elided to a provenance stub if every boot-bearing member of its zone is already present as its own static entry; coverage is never lost.",
+          "crates/vibe-workspace/src/install/bootgen.rs:147,154-169 (desubstitute_covered_units)",
+          "desubstitute_covered_units at bootgen.rs:147 implements exactly this: roll a substituted entry back, or elide a contentless umbrella to a stub, IF every zone member is present individually; :161 «a lane emits each package's text once, but never at the cost of losing coverage (PROP-038 §2.1)».",
+          "BOSS: `desubstitute_covered_units` exists in `crates/vibe-workspace/src/install/bootgen.rs` and is the compose-time pass the fact describes."
+        ]
+      },
+      "solution-why-not-hoist": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: the hoist route (count entry-points as pullers in soft_static_pulls) degrades the aggregator but causes a root double-write (closure walk + append_hoisted) and a world-wide blast radius; the narrow fix is the composition rule.",
+          "crates/vibe-workspace/src/install/bootgen.rs:76 (soft_static_pulls), :137 (append_hoisted), :118-135 (DRIFT-030 root double-write analysis)",
+          "soft_static_pulls at :76, append_hoisted at :137; the DRIFT-030 marker :118-135 records the measured root double-write («the root then holds the member twice, once per path») — the trap the design rejects the hoist route for."
+        ]
+      },
+      "solution-why-not-suppress": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: dropping the substitution unconditionally silently changes the semantics of a static edge to a zone whose members resolve dynamic at node level; PROP-038 §2.2 recursion. The conditional elision preserves §2.2.",
+          "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md (§2.2); bootgen.rs:154-169",
+          "PROP-038 §2.2 is the static-edge recursion contract (the design's reference); desubstitute_covered_units is conditional (bootgen.rs:159 «IF every boot-bearing member … is already present») — coverage-preserving, not an unconditional drop."
+        ]
+      },
+      "solution-owner-probes": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: owner's two hardening probes (2026-08-04) — mixed consumers, and own-code + shared libs; the verdict is order- and mix-independent (pure function of the entry set); de-substitution reverts a snippet-bearing aggregator to its own snippet.",
+          "BACKLOG.md:354 (B-006-DISPOSITION); crates/vibe-workspace/src/install/bootgen.rs:164-169",
+          "B-006-DISPOSITION records «two hardening probes answered in the rule: mixed static/static-transitive consumers, de-substitution for a snippet-bearing aggregator»; bootgen.rs:164-169 doc: «a pure function of the entry set … order of entries and the count of consumers … do not affect the verdict»."
+        ]
+      },
+      "rider-what": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: the qualify phase runs per node, under each node's own origin (PROP-035 §8); for normal closures splicing cross-origin nodes this is the honest form; measured population today: the git umbrella and zero normal static entries.",
+          "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:191 (##PIPE-QUALIFY)",
+          "PROP-035:191 ##PIPE-QUALIFY: «per node, each node under its own authoring origin … a compiled closure that splices cross-origin nodes qualifies every node under the origin that authored it» — the rider landed normatively."
+        ]
+      },
+      "forks-tree": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: three forks (A dedup owner, B stub form, C contract landing), each with the boss's recommendation first.",
+          "spec/design/lane-composition-dedup.md:46; BACKLOG.md:354 (B-006-DISPOSITION)",
+          "B-006-DISPOSITION: owner-approved «a1 b1 c1» — the owner took all three recommended options, matching the three forks in §5."
+        ]
+      },
+      "FORK-DEDUP-OWNER": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: (A1 taken) compose-time elision at the node; minimal perimeter, vibedeps untouched, hoisting untouched, §2.2 preserved.",
+          "BACKLOG.md:354; crates/vibe-workspace/src/install/bootgen.rs:147 (desubstitute_covered_units)",
+          "B-006-DISPOSITION owner took A1; desubstitute_covered_units (bootgen.rs:147) is the compose-time elision — a pure pass over the composition and unit table, vibedeps untouched."
+        ]
+      },
+      "FORK-STUB-FORM": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: (B1 taken) a generated provenance stub (marker comment + one sentence, no #use directive); a #use would point the mandatory-read machinery at the duplicate.",
+          "BACKLOG.md:354; crates/vibe-workspace/src/install/bootgen.rs:154-169",
+          "B-006-DISPOSITION owner took B1; desubstitute_covered_units doc (:157-158) «elided to a provenance stub when it is a contentless umbrella» — the stub form, no #use.",
+          "BOSS: the stub is observable, not merely coded. The umbrella's provenance comment in `spec/boot/STATIC.md` is exactly the B1 shape - a marker comment plus one sentence naming why the zone is absent, and no `#use` directive that would point the mandatory-read machinery at the duplicate."
+        ]
+      },
+      "FORK-CONTRACT-LANDING": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: (C1 taken) PROP-009 §2.3 gains the once-each sentence (##STATIC-EMITS-ONCE-EACH) and sheds the stale B-011 interim tail; PROP-038 §2.1 gains a cross-reference sentence; PROP-035 §8 changes only under the rider.",
+          "spec/modules/vibe-workspace/PROP-009-loading-model.md:243; PROP-038-hybrid-boot-linking.md:37; PROP-035-spec-compiler.md:191",
+          "PROP-009:243 ##HISTORY-B006-ONCE-EACH landed (##STATIC-EMITS-ONCE-EACH, «the linker-side twin sentence: PROP-038 §2.1; the per-node-qualify rider: PROP-035 §8»); PROP-038:37 carries the once-each contract."
+        ]
+      },
+      "normative-list": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: the §5-C1 edit list (PROP-009 §2.3, PROP-038 §2.1, PROP-035 §8 per-node) applied by the boss; no registry anchors ride this build (none of six deferred rows names B-006).",
+          "PROP-009-loading-model.md:243; PROP-038:37; PROP-035:191; BACKLOG.md:354",
+          "All three edits landed (PROP-009:243, PROP-038:37, PROP-035:191); B-006-DISPOSITION: «No registry anchors ride this build» — the re-judge surface is the git-attribution-policy claim already routed to the host."
+        ]
+      },
+      "acceptance-list": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: (i) five git-family markers total (down from nine); (ii) zero double-qualified labels (164 → 0); (iii) tombstone carries no same-origin repeat rows; (iv) lane loses ~320 lines; (v) DocTree::duplicate_anchors()==[]; (vii) panel green, INDEX.md byte-stable.",
+          "spec/boot/STATIC.md (grep); crates/vibe-spec/src/doctree.rs:244; BACKLOG.md:354 (B-006-DISPOSITION)",
+          "STATIC.md: git markers = 5 (was 9), double-qualified labels = 0 (was 164); doctree.rs:244 duplicate_anchors() exists; B-006-DISPOSITION records «git-family markers 9 → 5, double-qualified labels 164 → 0, −404 lines» (the design estimated ~320; landing measured −404).",
+          "BOSS re-measurement, taken independently of the gathered row: `spec/boot/STATIC.md` carries exactly FIVE `vibe:static org.vibevm.world/git-*` provenance markers (the four members plus the umbrella), and zero `--git-practices--org-vibevm-world--` double-qualified labels. The umbrella's marker is itself the acceptance: it reads `vibedeps/flow-git-practices/0.1.0/spec/boot/STATIC.md; zone elided: emitted member-by-member in this lane (once-each, B-006)` - the rule, the stub form and the 9 to 5 count all visible in one line."
+        ]
+      },
+      "impl-slices": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: two claudez packets — W-A the composition elision (bootgen.rs + hybrid_emit.rs + boot.rs seam + fixtures), W-B the per-node qualify rider (pipeline.rs + boot_artifacts.rs splice + cross-origin fixture); the two DRIFT review markers retired in the same landing.",
+          "crates/vibe-workspace/src/install/bootgen.rs:147; crates/vibe-spec/src/pipeline.rs:191; BACKLOG.md:354",
+          "B-006-DISPOSITION: «built the same day by two claudez slices (W-A de-substitution …; W-B per-node qualify …)»; desubstitute_covered_units (bootgen.rs:147) + PIPE-QUALIFY (pipeline.rs:191) are the two slices. Note: the DRIFT-030 review marker at bootgen.rs:118-135 is still present though the design said both markers retire here."
+        ]
+      }
+    }
+  }
+}

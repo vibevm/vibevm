@@ -1,0 +1,220 @@
+{
+  "batch": "H9-host-as-package",
+  "cluster": "host",
+  "files": {
+    "spec/design/host-as-package.md": {
+      "companion-line": {
+        "v": "confirmed",
+        "ev": [
+          "Companion to BACKLOG B-031, PROP-029 §4 (##SCOPE-HOST), PROP-035 §6, BACKLOG B-028, and the census e5-b031-evidence.md.",
+          "BACKLOG.md:864,823; spec/common/PROP-029-fully-qualified-addresses.md:43; spec/modules/vibe-workspace/PROP-035-spec-compiler.md; campaigns/packages-2026-09/harvest/e5-b031-evidence.md",
+          "B-031/B-028 rows exist; PROP-029:43 is the (now-retired) SCOPE-HOST line; e5-b031-evidence.md present."
+        ]
+      },
+      "authority-line": {
+        "v": "confirmed",
+        "ev": [
+          "Authority: non-normative proposal; on approval lands as PROP edits (§7).",
+          "spec/design/host-as-package.md:7; PROP-029:43-44",
+          "The §7 PROP edits landed: PROP-029:43 ##SCOPE-HOST is a void tombstone, :44 ##SCOPE-SELF-COORDINATE added — the proposal became normative."
+        ]
+      },
+      "mandate-verbatim": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: owner direction (2026-08-02) verbatim — give the root package a normal fully-qualified name, the resolver must account for vibe.toml addressing everywhere including the root; «Я бы назвал корневой пакет spec://org.vibevm.core».",
+          "BACKLOG.md:871 (B-031-DISPOSITION)",
+          "B-031-DISPOSITION records the owner quote verbatim, including «Я бы назвал корневой пакет spec://org.vibevm.core» and the universal-addressing requirement."
+        ]
+      },
+      "census-reshapes": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: the living tree carries 2 351 occurrences of spec://org.vibevm.core/vibevm; packages/ 322 (314 canonical); the contract carve-out is exactly one line (PROP-029:43 SCOPE-HOST); the code special-case is spec_root, Authority::Host, two HOST_NAMESPACE constants, specmap.toml:14.",
+          "campaigns/packages-2026-09/harvest/e5-b031-evidence.md:509-529; spec/common/PROP-029-fully-qualified-addresses.md:43; crates/vibe-spec/src/resolver.rs:122,141",
+          "e5-b031:509-529 confirms 314 canonical package-source occurrences (322 total in packages/); PROP-029:43 is the one contract line; resolver.rs:122 spec_root / :141 the Host arm. The 2 351 whole-tree total is the census's own figure (e5-b031); the per-area breakdown's canonical half matches exactly."
+        ]
+      },
+      "truncation-dissolves": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: doc-id truncation was filed as a host exception; the sweep shows resolve_doc is authority-agnostic (resolver.rs:60-63) and package citations already use it; truncation is not host-special.",
+          "crates/vibe-spec/src/resolver.rs:224 (fn resolve_doc)",
+          "resolver.rs:224 fn resolve_doc is a single authority-agnostic prefix-scan (no Host branch inside it) — consistent with the claim; the design cited :60-63, the function is now at :224."
+        ]
+      },
+      "solution-paragraph": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: the root gains identity group org.vibevm.core, name vibevm; address prefix spec://org.vibevm.core/vibevm/…; the resolver's host mapping dies; spec_root maps the self coordinate; manifest name unchanged; an old spec://org.vibevm.core/vibevm address fails loudly with the rename hint.",
+          "vibe.toml:1-3; crates/vibe-spec/src/resolver.rs:71,122,141; specmap.toml:14",
+          "vibe.toml:2 name=vibevm, :3 group=org.vibevm.core (name unchanged, group added); resolver.rs:141 Host arm → LegacyHostAuthority error with hint; specmap.toml:14 namespace=org.vibevm.core/vibevm — all landed."
+        ]
+      },
+      "detail-identity": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: vibe.toml [project] gains group = org.vibevm.core; name = vibevm does not change; identity = (group, name) (PROP-008).",
+          "vibe.toml:1-3",
+          "vibe.toml:1 [project], :2 name = vibevm, :3 group = org.vibevm.core — exactly the ruled form (group added, manifest name intact).",
+          "BOSS: the root `vibe.toml` `[project]` carries `name = \"vibevm\"` and `group = \"org.vibevm.core\"` - the manifest name is unchanged and the group was added, exactly the ruled form."
+        ]
+      },
+      "detail-resolver": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: FileResolver::new(ws_root, self_coordinate); spec_root matches Authority::Package against the self coordinate first (→ ws_root/spec); the Host parse variant survives but no undotted authority resolves (Host arm = one unconditional error with hint); the two HOST_NAMESPACE constants die.",
+          "crates/vibe-spec/src/resolver.rs:71,122,141,304; grep HOST_NAMESPACE crates/**/*.rs",
+          "resolver.rs:71 LegacyHostAuthority, :141 Host arm errors, :304 test t1_self_coordinate_resolves_to_the_authored_spec_tree; grep HOST_NAMESPACE over crates/**/*.rs → no matches (both constants dead).",
+          "BOSS re-measurement: `LegacyHostAuthority` occurs 6 times in `crates/vibe-spec/src/resolver.rs`, the self-coordinate test `t1_self_coordinate_resolves_to_the_authored_spec_tree` is present, and `HOST_NAMESPACE` has ZERO occurrences anywhere under `crates/` - the retired token is gone from the code, not merely deprecated in prose."
+        ]
+      },
+      "detail-namespace": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: specmap.toml:14 namespace = vibevm becomes the self coordinate (org.vibevm.core/vibevm); the engine treats it as an opaque prefix.",
+          "specmap.toml:14",
+          "specmap.toml:14 namespace = org.vibevm.core/vibevm — the value is now the self coordinate; B-031-DISPOSITION records «specmap namespace + specmap.json re-minted consistently».",
+          "BOSS: `specmap.toml:14` reads `namespace = \"org.vibevm.core/vibevm\"` - the self coordinate, verified directly."
+        ]
+      },
+      "detail-migration": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: a scripted migration rewrites spec://org.vibevm.core/vibevm across the living surfaces (*.rs, *.md, *.toml, xtask); historical machine records are not rewritten.",
+          "BACKLOG.md:871 (B-031-DISPOSITION)",
+          "B-031-DISPOSITION: «1 893 occurrences over 606 files, --verify residue 0 … five fixture families honestly re-pointed … Historical campaign JSON untouched (the own-corpus law)»."
+        ]
+      },
+      "detail-rejudge": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: F-169 (2 anchors) and F-147 (3 anchors) re-judge after the migration; host-zone anchors with migrated literals re-seal through mirror → merge-verdicts → seal.",
+          "BACKLOG.md:871,876 (B-031-DISPOSITION, B-031-CLOSES)",
+          "B-031-DISPOSITION: «F-169 resolved whole and F-147's twins confirmed (batch E6-F169-F147)»; «the mass re-seal executed (15 re-vouched; 4 files honestly refused …)» — the re-judge path ran."
+        ]
+      },
+      "unchanged-list": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: doc-id truncation, the flow grammar (B-028), SCOPE-FIXTURES, disk layout, the specmap engine, historical campaign JSON, and publication/version numbers do not change.",
+          "spec/common/PROP-029-fully-qualified-addresses.md:45 (SCOPE-FIXTURES); BACKLOG.md:823 (B-028 done)",
+          "PROP-029:45 ##SCOPE-FIXTURES stays «out of scope … stay as written»; spec/ tree stays in place; B-028 (flow grammar) is its own done row — the unchanged set holds."
+        ]
+      },
+      "risk-two-resolvers": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: FileResolver (vibe-spec) and the specmap engine both resolve host addresses; the build must exercise both. NOTE: the §5 risks block also physically carries ##risk-mass-rewrite (L42) and ##risk-muscle-memory (L43) tokens, but the mirror folds the three consecutive marker lines into one addressable fact (risk-two-resolvers); those two are not addressable anchors and are not submitted.",
+          "crates/vibe-spec/src/resolver.rs; specmap.toml; BACKLOG.md:871 (B-031-DISPOSITION); spec/common/PROP-029-fully-qualified-addresses.md:43",
+          "Both surfaces exist (resolver.rs and specmap.toml:14); B-031-DISPOSITION: «1 893 occurrences over 606 files, --verify residue 0 … both gates green» (the mass-rewrite risk, mitigated); resolver.rs:141 Host arm → LegacyHostAuthority hint + PROP-029:43 tombstone (the muscle-memory risk: old addresses fail loudly with the rename record). The mirror's risks block has exactly one addressable fact (risk-two-resolvers)."
+        ]
+      },
+      "check-mandate": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: owner's fourth point (2026-08-04) verbatim — verify the running refactor's own metadata survives the rename (e.g. progress metadata), assigned to the boss personally.",
+          "BACKLOG.md:871 (B-031-DISPOSITION); spec/design/host-as-package.md:47",
+          "B-031-DISPOSITION: «his fourth point — the refactor-metadata check — was assigned to the boss personally and is executed and recorded in the design §5.1»."
+        ]
+      },
+      "CHECK-REGISTRY-KEYS": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: campaign registry keys are path-based, zero URI keys — walked cache.json, corpus.json, obligations.json, baseline.json; 0 keys carry spec://org.vibevm.core/vibevm; anchors key as <file-path>#<ANCHOR-ID>.",
+          "campaigns/packages-2026-09/run/cache.json, run/state/corpus.json (structure); crates/progress-core/src/seal.rs",
+          "cache.json files-dict keyed by path (verified structure: {schema, updated_at, files}); corpus.json files-list keyed by path; the addressable-anchor keying is path#id (seal.rs:178-184 addressable iterates doc.blocks.facts). The literal-occurrence counts in evidence strings are dated quotes (own-corpus law)."
+        ]
+      },
+      "CHECK-SPECMAP-REGEN": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: specmap.json is engine-generated; the migration moves the namespace value and the #[spec]/scope! literals in the same pass; the orphan set does not move.",
+          "specmap.toml:14; specmap.json; BACKLOG.md:871",
+          "B-031-DISPOSITION: «specmap namespace + specmap.json re-minted consistently»; specmap.toml:14 carries the new namespace — the re-mint path is the engine, not hand-edits."
+        ]
+      },
+      "CHECK-PINS-INERT": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: revision pins ~rN are unchecked today, therefore inert; the resolver treats a pin as a revision selector, not part of the identity; no gate validates pin currency.",
+          "crates/vibe-spec/src/address.rs:134-136 (without_pin); grep revision across crates",
+          "address.rs:134-136 doc: «the pin is a revision selector, not part of the identity» + without_pin() drops it; the design cited address.rs:131, the quote is at :134-136. No pin-currency gate located in vibe-spec.",
+          "BOSS: `without_pin` is present in `crates/vibe-spec/src/address.rs`, so the pin-is-not-identity claim has a function behind it rather than only a doc comment."
+        ]
+      },
+      "CHECK-LEDGER-SOFT-MISS": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: the intent ledger's old slots become graceful misses by design (B-022's structured key + soft-miss branch); renamed subjects recompute.",
+          "BACKLOG.md:745 (B-022); campaigns/packages-2026-09/run/state/obligations.json",
+          "B-022 is the ledger-intent research row (BACKLOG.md:745); obligations.json exists. The soft-miss behaviour is B-022's design; the design's claim is that renamed subjects recompute rather than error."
+        ]
+      },
+      "CHECK-RESCAN-HONEST": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: baseline.json → the next campaign's rescan seeing the rename is correct behaviour (the units did change), not breakage.",
+          "campaigns/packages-2026-09/run/state/corpus.json (baseline projection); spec/design/host-as-package.md:53",
+          "Design-rationale statement about the close-out baseline; corpus.json is the campaign's own state projection. The claim is that a rescan flagging migrated units is honest re-verification — a design assertion, not a code path to grep."
+        ]
+      },
+      "check-verdict": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: verdict — no metadata becomes invalid-and-load-bearing; every surface is path-keyed, regenerated, unchecked, soft-missing, or honestly re-verified; the two handling steps (mass re-seal + specmap/lane regen) fold into §8 W3.",
+          "spec/design/host-as-package.md:55; BACKLOG.md:871",
+          "B-031-DISPOSITION confirms both handling steps ran — «the mass re-seal executed (15 re-vouched)» and the specmap/lane regeneration; the verdict is the design's summary of the §5.1 pass."
+        ]
+      },
+      "forks-tree": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: three forks (K coordinate, L legacy, P perimeter), RULED 2026-08-04 — K → owner's own form (group org.vibevm.core, name vibevm), L → L1, P → P1.",
+          "BACKLOG.md:871 (B-031-DISPOSITION); vibe.toml:3",
+          "B-031-DISPOSITION records the ruling verbatim: «1. координаты: группа org.vibevm.core, имя vibevm. 2. жесткая ошибка с подсказкой 3. все живые поверхности»; vibe.toml:3 group=org.vibevm.core confirms K, resolver LegacyHostAuthority confirms L1."
+        ]
+      },
+      "FORK-COORDINATE": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: (K1 presented) group org.vibevm/name core → spec://org.vibevm/core; owner overruled both K1 and K2 in favour of his own form (group org.vibevm.core, name vibevm).",
+          "BACKLOG.md:871; vibe.toml:3",
+          "B-031-DISPOSITION: the owner's own form — neither K1 nor K2 as presented; vibe.toml:3 group = org.vibevm.core (the group carries his full spelling), name vibevm unchanged."
+        ]
+      },
+      "FORK-LEGACY": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: (L1 taken) hard error with the rename hint, no alias.",
+          "crates/vibe-spec/src/resolver.rs:71,141; BACKLOG.md:871",
+          "resolver.rs:71/141 LegacyHostAuthority (hard error + hint, no resolving alias); B-031-DISPOSITION «жесткая ошибка с подсказкой» — L1 landed."
+        ]
+      },
+      "FORK-PERIMETER": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: (P1 taken) all living surfaces (*.rs, *.md, *.toml, xtask ≈1 851 occurrences), historical evidence JSON untouched.",
+          "BACKLOG.md:871",
+          "B-031-DISPOSITION: «1 893 occurrences over 606 files … Historical campaign JSON untouched» — P1 (living surfaces, historical JSON preserved); the design's ≈1 851 estimate measured 1 893 on landing."
+        ]
+      },
+      "normative-list": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: PROP-029 ##SCOPE-HOST retired-with-tombstone; §1 loses its host exemption; PROP-035 §6 gains the self-coordinate mapping; specmap.toml + root vibe.toml change per §3.",
+          "spec/common/PROP-029-fully-qualified-addresses.md:43-44; vibe.toml:3; specmap.toml:14",
+          "PROP-029:43 ##SCOPE-HOST is a void tombstone («Retired 2026-08-04 by B-031»), :44 ##SCOPE-SELF-COORDINATE added; vibe.toml:3 + specmap.toml:14 carry the identity — all normative edits landed."
+        ]
+      },
+      "impl-slices": {
+        "v": "confirmed",
+        "ev": [
+          "Claim: W1 resolver+identity, W2 the migration script, W3 (boss) the PROP edits + the §5.1 metadata pass + mass re-seal.",
+          "crates/vibe-spec/src/resolver.rs; BACKLOG.md:871",
+          "B-031-DISPOSITION: «W1 resolver+identity … W2 migrator … the host wet pass — 1 893 occurrences … the mass re-seal executed» — the §8 cut landed in sequence."
+        ]
+      }
+    }
+  }
+}
