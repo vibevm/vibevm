@@ -20,11 +20,15 @@ fn dirty_fixture_yields_the_five_findings_then_freeze_ratchets_them() {
     let root = fixture("dirty");
     let baseline = "target/conform/test-baseline.json";
 
-    // Fresh gate: eight findings (1 isolation + 4 unsafe + 1
+    // Fresh gate: eight NEW findings (1 isolation + 4 unsafe + 1
     // invariant-comment-position on src/invariant.ts, a `// INVARIANT:`
     // comment buried in the middle third of the 150-line exhibit file),
     // plus 2 declared-test-matrices (R-060: src/sweep.test.ts sweeps a
-    // `1 << 3` bit-mask AND nests three C-style for-loops).
+    // `1 << 3` bit-mask AND nests three C-style for-loops). B-025 adds a
+    // NINTH finding — the reasoned `@ts-expect-error -- …` in logic.ts —
+    // now MARKED `DeviationAcknowledged` (visible in the SARIF, never
+    // `new`), so the gate still reports exactly 8 NEW and the freeze
+    // ratchets only the eight Live fingerprints.
     let _ = std::fs::remove_file(root.join(baseline));
     let err = typescript_ai_native_conform::run_check(&root, baseline, None)
         .expect_err("dirty tree must fail the gate");

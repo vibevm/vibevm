@@ -194,7 +194,7 @@ pub fn run_check(root: &Path, baseline_rel: &str, scope: Option<&str>) -> Result
 /// and a re-freeze after work that shrank the set. The diff review is the
 /// guard: outside a new-rule landing the file may only shrink.
 pub fn run_freeze(root: &Path, baseline_rel: &str) -> Result<()> {
-    use conform_core::{ExtractionLog, Store, check, count_by_rule};
+    use conform_core::{ExtractionLog, Store, baseline, check, count_by_rule};
     use rust_ai_native_conform_frontend::RustFrontend;
 
     let (config, _origin) = load_config_or_default(root)?;
@@ -215,9 +215,10 @@ pub fn run_freeze(root: &Path, baseline_rel: &str) -> Result<()> {
     let rule_refs: Vec<&dyn Rule> = owned.iter().map(|r| r.as_ref()).collect();
     let findings = check(&rule_refs, &facts, None);
     let counts = count_by_rule(&findings);
-    let mut fps: Vec<&str> = findings.iter().map(|f| f.fingerprint.as_str()).collect();
-    fps.sort_unstable();
-    fps.dedup();
+    // B-025: only LIVE fingerprints are frozen — an acknowledged
+    // deviation is gate-inert (never `new`), so freezing it would grow
+    // the baseline with a fingerprint that protects nothing.
+    let fps = baseline::freezeable(&findings);
     let body = serde_json::json!({ "schema": 1, "findings": fps });
     let mut text = serde_json::to_string_pretty(&body).context("serialising baseline")?;
     text.push('\n');

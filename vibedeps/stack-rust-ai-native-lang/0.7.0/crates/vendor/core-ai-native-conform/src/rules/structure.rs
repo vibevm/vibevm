@@ -5,7 +5,7 @@
 specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules");
 
 use crate::facts::{Fact, SourceFacts};
-use crate::finding::{Finding, Rule};
+use crate::finding::{Finding, FindingStatus, Rule};
 
 use super::{cell_types, req_message};
 
@@ -65,6 +65,8 @@ impl Rule for FlagSites {
                         ),
                         why: self.why(),
                         fingerprint: format!("R-001|{}|{type_name}", sf.file),
+                        status: FindingStatus::Live,
+                        evidence: f.summary(),
                     });
                 }
             }
@@ -134,6 +136,8 @@ impl Rule for CellIsolation {
                             ),
                             why: self.why(),
                             fingerprint: format!("R-002|{}|{other_stem}", sf.file),
+                            status: FindingStatus::Live,
+                            evidence: f.summary(),
                         });
                     }
                 }
@@ -227,6 +231,8 @@ impl Rule for CellHasOracle {
                 ),
                 why: self.why(),
                 fingerprint: format!("cell-has-oracle|{file}|{type_name}"),
+                status: FindingStatus::Live,
+                evidence: format!("Item({type_name}) — no integration test references it"),
             });
         }
         out.sort();

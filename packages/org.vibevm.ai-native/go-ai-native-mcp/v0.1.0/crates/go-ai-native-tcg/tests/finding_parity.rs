@@ -33,7 +33,10 @@ fn relay_enrichment_matches_the_gate_on_the_dirty_cell() {
     // seam error reports under the dedicated `go-seam-error-cites-req`
     // rule on BOTH halves (PlanError has no Spec field AND its Error()
     // renders no REQ), so 8 remain under the umbrella `go-unsafe-in-domain`
-    // and 2 are the seam-error rule's structure + message halves.
+    // and 2 are the seam-error rule's structure + message halves. B-025
+    // adds a NINTH umbrella finding — the `ambient_call` site covered by
+    // a reasoned `//spec:deviates` — now MARKED `DeviationAcknowledged`
+    // (visible, `baselined` for the agent so it is not advised).
     let rules: Vec<&str> = enriched
         .conform_findings
         .iter()
@@ -44,7 +47,7 @@ fn relay_enrichment_matches_the_gate_on_the_dirty_cell() {
             .iter()
             .filter(|r| **r == "go-unsafe-in-domain")
             .count(),
-        8,
+        9,
         "{:?}",
         enriched.conform_findings
     );

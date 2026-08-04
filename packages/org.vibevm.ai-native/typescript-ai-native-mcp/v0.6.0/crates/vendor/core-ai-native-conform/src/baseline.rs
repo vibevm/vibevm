@@ -5,7 +5,7 @@ use std::path::Path;
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 
-use crate::finding::Finding;
+use crate::finding::{Finding, FindingStatus};
 
 /// `conform-baseline.json`: frozen pre-existing findings, by
 /// fingerprint. The file only shrinks.
@@ -51,6 +51,17 @@ pub fn load(path: &Path) -> Result<Baseline> {
 /// fail the gate; stale entries are prune candidates (the file may
 /// only shrink, so pruning is the legal direction).
 ///
+/// B-025 (mark, don't suppress): a `DeviationAcknowledged` finding
+/// NEVER enters `new` — it is visible in the IR/SARIF but cannot fail
+/// the gate, so it is gate-inert. This is the ONE place the gate's
+/// pass/fail sees the status: the three drivers all read `new` from
+/// here, so excluding acknowledged once (here) keeps them all honest
+/// without a per-driver edit. A leftover acknowledged entry already IN
+/// the baseline is NOT reported `stale`: `stale` means "the site is
+/// gone from the tree," and an acknowledged finding is still present
+/// (it changed status, it did not disappear) — so the entry simply
+/// becomes inert rather than crying a false "prune me."
+///
 /// ```
 /// use core_ai_native_conform::baseline::{Baseline, diff};
 ///
@@ -65,6 +76,8 @@ pub fn diff<'a>(
 ) -> (Vec<&'a Finding>, Vec<&'a String>) {
     let new = findings
         .iter()
+        // B-025: an acknowledged deviation is gate-inert — never `new`.
+        .filter(|f| !matches!(f.status, FindingStatus::DeviationAcknowledged { .. }))
         .filter(|f| !baseline.findings.contains(&f.fingerprint))
         .collect();
     let stale = baseline
@@ -73,6 +86,24 @@ pub fn diff<'a>(
         .filter(|fp| !findings.iter().any(|f| &f.fingerprint == *fp))
         .collect();
     (new, stale)
+}
+
+/// The fingerprints a `freeze` should write: every LIVE finding's
+/// identity, sorted and de-duplicated. An acknowledged deviation is
+/// never gateable (it never reaches `new`), so freezing it would grow
+/// the baseline with a fingerprint that protects nothing — the file
+/// must not grow with acknowledged prints (B-025). Used by every
+/// driver's `run_freeze` so the exclusion lives in one place, exactly
+/// as the gate's exclusion lives in [`diff`].
+pub fn freezeable(findings: &[Finding]) -> Vec<&str> {
+    let mut fps: Vec<&str> = findings
+        .iter()
+        .filter(|f| !matches!(f.status, FindingStatus::DeviationAcknowledged { .. }))
+        .map(|f| f.fingerprint.as_str())
+        .collect();
+    fps.sort_unstable();
+    fps.dedup();
+    fps
 }
 
 #[cfg(test)]
@@ -120,5 +151,78 @@ mod tests {
         let (new, stale) = baseline::diff(&frozen, &findings);
         assert!(new.is_empty());
         assert_eq!(stale.len(), 1);
+    }
+
+    /// B-025: an acknowledged deviation is gate-inert. It never enters
+    /// `new` (so it cannot fail the gate), a leftover entry matching it
+    /// is NOT `stale` (the site is still present — it changed status, it
+    /// did not vanish), and `freezeable` never writes its fingerprint.
+    #[test]
+    fn acknowledged_findings_are_gate_inert() {
+        use crate::FindingStatus;
+        let gate = rules::UnsafeGate {
+            audit_crates: vec![],
+        };
+        // Two unsafe uses in one file: one Live, one acknowledged
+        // (in_deviation). The rule stamps both (B-025).
+        let facts = vec![sf(
+            "crates/a/src/lib.rs",
+            "a",
+            vec![
+                Fact::UnsafeUse {
+                    context: "block".into(),
+                    line: 5,
+                    in_test: false,
+                    in_deviation: false,
+                },
+                Fact::UnsafeUse {
+                    context: "block".into(),
+                    line: 9,
+                    in_test: false,
+                    in_deviation: true,
+                },
+            ],
+        )];
+        let findings = check(&[&gate], &facts, None);
+        assert_eq!(findings.len(), 2);
+        let ack = findings
+            .iter()
+            .find(|f| matches!(f.status, FindingStatus::DeviationAcknowledged { .. }))
+            .expect("the in_deviation use is stamped acknowledged");
+        let ack_fp = ack.fingerprint.clone();
+
+        // Empty baseline: the acknowledged finding never enters `new`.
+        let empty = baseline::Baseline {
+            schema: 1,
+            findings: vec![],
+        };
+        let (new, stale) = baseline::diff(&empty, &findings);
+        assert_eq!(new.len(), 1, "only the Live finding is new");
+        assert!(new[0].fingerprint != ack_fp);
+        assert!(stale.is_empty());
+
+        // A leftover acknowledged entry already in the baseline is NOT
+        // stale — the finding is still present (as acknowledged), so the
+        // entry is inert, not a prune candidate. (The Live finding is
+        // still `new` here — it is not baselined — which is correct and
+        // separate from the acknowledged one's inertness.)
+        let leftover = baseline::Baseline {
+            schema: 1,
+            findings: vec![ack_fp.clone()],
+        };
+        let (new, stale) = baseline::diff(&leftover, &findings);
+        assert!(
+            new.iter().all(|f| f.fingerprint != ack_fp),
+            "an acknowledged finding never enters new"
+        );
+        assert!(
+            !stale.contains(&&ack_fp),
+            "a leftover acknowledged entry is inert, not stale"
+        );
+
+        // freezeable excludes the acknowledged fingerprint entirely.
+        let frozen = baseline::freezeable(&findings);
+        assert!(!frozen.contains(&ack_fp.as_str()));
+        assert_eq!(frozen.len(), 1, "only the Live fingerprint is freezeable");
     }
 }

@@ -8,7 +8,7 @@
 specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules");
 
 use crate::facts::{Fact, SourceFacts};
-use crate::finding::{Finding, Rule};
+use crate::finding::{Finding, FindingStatus, Rule};
 use crate::rules::req_message;
 
 const TS_GUIDE_BANS: &str = "discipline://typescript-ai-native-lang/guide#the-unsafe-set";
@@ -20,10 +20,12 @@ const TS_GUIDE_FLAGS: &str =
 /// in type position, a cross-type `as`, a non-null `!`, `@ts-ignore`
 /// always, and `@ts-expect-error` WITHOUT a `-- reason`. A reasoned
 /// `@ts-expect-error -- reason` is recorded testimony (the TS shape of
-/// `#[spec(deviates)]`) and is honoured, not flagged. Test files are
-/// out of scope for the value-level bans (the guide scopes the ban to
-/// domain code), but `@ts-ignore` stays banned everywhere — it rots
-/// silently even in tests.
+/// `#[spec(deviates)]`) — B-025 (mark, don't suppress): it is stamped
+/// `DeviationAcknowledged` (visible in the IR/SARIF, gate-green),
+/// carrying its `reason` text, not skipped. Test files are out of scope
+/// for the value-level bans (the guide scopes the ban to domain code),
+/// but `@ts-ignore` stays banned everywhere — it rots silently even in
+/// tests.
 ///
 /// ```
 /// use core_ai_native_conform::rules::TsUnsafeInDomain;
@@ -66,26 +68,46 @@ impl Rule for TsUnsafeInDomain {
                 else {
                     continue;
                 };
-                let (why, fix) = match kind.as_str() {
+                let (why, fix, status) = match kind.as_str() {
                     "any_type" if !in_test => (
                         "`any` disables checking and propagates transitively",
                         "use `unknown` + a runtime narrowing, or record a deviation",
+                        FindingStatus::Live,
                     ),
                     "as_cross" if !in_test => (
                         "a cross-type `as` makes the compiler believe a lie",
                         "narrow with a runtime check first (`as const` is always fine)",
+                        FindingStatus::Live,
                     ),
                     "non_null" if !in_test => (
                         "`!` claims non-null without proof",
                         "narrow, or use an `asserts x is NonNullable<T>` function",
+                        FindingStatus::Live,
                     ),
                     "ts_ignore" => (
                         "`@ts-ignore` silences the compiler invisibly and cannot rot loudly",
                         "use `@ts-expect-error -- reason`, which fails when the error goes",
+                        FindingStatus::Live,
                     ),
                     "ts_expect_error" if reason.is_none() => (
                         "`@ts-expect-error` without `-- reason` is an unrecorded deviation",
                         "append `-- <why this suppression is sound>`",
+                        FindingStatus::Live,
+                    ),
+                    // B-025: a REASONED `@ts-expect-error -- reason` is a
+                    // recorded deviation (the TS shape of #[spec(deviates)])
+                    // — MARKED acknowledged, not skipped. Unlike the
+                    // value-level bans above, this arm carries no `in_test`
+                    // guard: a reasoned suppression is in scope in tests too
+                    // (a deviation exists wherever the directive sits), so it
+                    // stays visible everywhere. `reason` rides the status
+                    // straight to the SARIF `justification`.
+                    "ts_expect_error" if reason.is_some() => (
+                        "a reasoned `@ts-expect-error` is a recorded, acknowledged deviation",
+                        "keep the `-- reason`, or remove the directive once the error is gone",
+                        FindingStatus::DeviationAcknowledged {
+                            reason: reason.clone(),
+                        },
                     ),
                     _ => continue,
                 };
@@ -96,6 +118,8 @@ impl Rule for TsUnsafeInDomain {
                     message: req_message(TS_GUIDE_BANS, why, fix),
                     why: self.why(),
                     fingerprint: format!("{}|{}|{kind}#{line}", self.id(), source.file),
+                    status,
+                    evidence: fact.summary(),
                 });
             }
         }
@@ -231,6 +255,8 @@ impl Rule for TsCellIsolation {
                     ),
                     why: self.why(),
                     fingerprint: format!("{}|{}|{to_path}#{line}", self.id(), source.file),
+                    status: FindingStatus::Live,
+                    evidence: fact.summary(),
                 });
             }
         }
@@ -338,6 +364,8 @@ impl Rule for TsFlagSites {
                     message: req_message(TS_GUIDE_FLAGS, &why, &fix),
                     why: self.why(),
                     fingerprint: format!("{}|{}|{handle}#{line}", self.id(), source.file),
+                    status: FindingStatus::Live,
+                    evidence: fact.summary(),
                 });
             }
         }
@@ -358,16 +386,19 @@ mod tests {
     }
 
     #[test]
-    fn reasoned_expect_error_is_honoured_and_unreasoned_is_not() {
+    fn reasoned_expect_error_is_marked_and_unreasoned_is_live() {
         let facts = vec![ts_source(
             "src/a.ts",
             vec![
+                // A reasoned directive is MARKED acknowledged (B-025),
+                // not skipped — its reason rides the status.
                 Fact::TsUnsafe {
                     kind: "ts_expect_error".into(),
                     line: 3,
                     in_test: false,
                     reason: Some("narrowed upstream".into()),
                 },
+                // An unreasoned directive is a Live violation.
                 Fact::TsUnsafe {
                     kind: "ts_expect_error".into(),
                     line: 9,
@@ -377,8 +408,15 @@ mod tests {
             ],
         )];
         let findings = TsUnsafeInDomain.check(&facts);
-        assert_eq!(findings.len(), 1);
-        assert_eq!(findings[0].line, 9);
+        assert_eq!(findings.len(), 2, "{findings:?}");
+        let ack = findings.iter().find(|f| f.line == 3).unwrap();
+        assert!(matches!(
+            ack.status,
+            FindingStatus::DeviationAcknowledged { ref reason }
+                if reason.as_deref() == Some("narrowed upstream")
+        ));
+        let live = findings.iter().find(|f| f.line == 9).unwrap();
+        assert!(matches!(live.status, FindingStatus::Live));
     }
 
     #[test]

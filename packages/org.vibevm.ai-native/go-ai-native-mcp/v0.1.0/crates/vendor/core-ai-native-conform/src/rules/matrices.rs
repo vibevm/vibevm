@@ -13,7 +13,7 @@
 specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules");
 
 use crate::facts::{Fact, SourceFacts};
-use crate::finding::{Finding, Rule};
+use crate::finding::{Finding, FindingStatus, Rule};
 
 use super::req_message;
 
@@ -133,6 +133,8 @@ impl Rule for DeclaredTestMatrices {
                     message: req_message(MATRICES_CARD, &why, fix),
                     why: self.why(),
                     fingerprint: format!("declared-test-matrices|{}|{kind}#{ordinal}", sf.file),
+                    status: FindingStatus::Live,
+                    evidence: f.summary(),
                 });
             }
         }

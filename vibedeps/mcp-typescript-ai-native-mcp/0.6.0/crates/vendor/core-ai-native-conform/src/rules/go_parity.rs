@@ -9,7 +9,7 @@
 specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules");
 
 use crate::facts::{Fact, SourceFacts};
-use crate::finding::{Finding, Rule};
+use crate::finding::{Finding, FindingStatus, Rule};
 use crate::rules::req_message;
 
 use super::go::GO_GUIDE_ERRORS;
@@ -30,9 +30,10 @@ const GO_GUIDE_CONFORMANCE: &str = "discipline://go-ai-native-lang/guide#conform
 /// ratchet tightens them independently and SARIF separates them.
 ///
 /// A site covered by a reasoned `//spec:deviates … reason="…"` is
-/// recorded testimony and is honoured, not flagged (the same gate the
-/// umbrella uses); `_test.go` files are out of scope (carried verbatim
-/// from `go-unsafe-in-domain`).
+/// recorded testimony — B-025 (mark, don't suppress): it is stamped
+/// `DeviationAcknowledged` (visible, gate-green, reason carried), not
+/// skipped (the same posture the umbrella now uses); `_test.go` files
+/// are out of scope (carried verbatim from `go-unsafe-in-domain`).
 ///
 /// ```
 /// use core_ai_native_conform::rules::GoSeamErrorCitesReq;
@@ -77,10 +78,42 @@ impl Rule for GoSeamErrorCitesReq {
                 else {
                     continue;
                 };
-                // A reasoned deviation covering the site is testimony,
-                // not a finding (carried verbatim from the umbrella's
-                // gate; neither seam-error kind is a suppression).
-                if reason.is_some() {
+                // B-025 (mark, don't suppress): a reasoned
+                // `//spec:deviates` covering a SEAM-ERROR site is MARKED
+                // acknowledged, not skipped. Only the two seam_error
+                // kinds belong here — a reasoned deviation of another
+                // kind is `GoUnsafeInDomain`'s acknowledged finding, not
+                // a duplicate under this rule. The `half` still keys the
+                // fingerprint so the two obligations stay separable.
+                let half = match kind.as_str() {
+                    "seam_error_missing_req" => "structure",
+                    "seam_error_message_no_req" => "message",
+                    _ => "deviation",
+                };
+                if reason.is_some() && half != "deviation" {
+                    out.push(Finding {
+                        rule: self.id(),
+                        file: source.file.clone(),
+                        line: *line,
+                        message: req_message(
+                            GO_GUIDE_ERRORS,
+                            &format!(
+                                "`{kind}` seam-error obligation is covered by a recorded \
+                                 //spec:deviates deviation"
+                            ),
+                            "keep the deviation recorded, or remediate the seam error and \
+                             remove the directive",
+                        ),
+                        why: self.why(),
+                        fingerprint: format!(
+                            "go-seam-error-cites-req-{half}|{}|{line}",
+                            source.file
+                        ),
+                        status: FindingStatus::DeviationAcknowledged {
+                            reason: reason.clone(),
+                        },
+                        evidence: fact.summary(),
+                    });
                     continue;
                 }
                 let (half, why, fix) = match kind.as_str() {
@@ -103,6 +136,8 @@ impl Rule for GoSeamErrorCitesReq {
                     message: req_message(GO_GUIDE_ERRORS, why, fix),
                     why: self.why(),
                     fingerprint: format!("go-seam-error-cites-req-{half}|{}|{line}", source.file),
+                    status: FindingStatus::Live,
+                    evidence: fact.summary(),
                 });
             }
         }
@@ -244,6 +279,8 @@ impl Rule for GoConformanceAssertion {
                 ),
                 why: self.why(),
                 fingerprint: format!("{}|{cell}", self.id()),
+                status: FindingStatus::Live,
+                evidence: format!("no GoConformance assertion for cell `{cell}`"),
             });
         }
         out.sort();
@@ -328,18 +365,19 @@ mod tests {
     }
 
     #[test]
-    fn seam_error_deviation_reason_and_test_context_are_suppressed() {
+    fn seam_error_deviation_is_marked_and_test_context_is_out_of_scope() {
         let facts = vec![go_source(
             "internal/cells/plan/plan.go",
             vec![
-                // A reasoned deviation is honoured.
+                // A reasoned deviation is MARKED acknowledged (B-025),
+                // carrying its reason — not skipped.
                 Fact::GoUnsafe {
                     kind: "seam_error_missing_req".into(),
                     line: 3,
                     in_test: false,
                     reason: Some("documented elsewhere".into()),
                 },
-                // A test file is out of scope.
+                // A test file stays out of scope.
                 Fact::GoUnsafe {
                     kind: "seam_error_message_no_req".into(),
                     line: 9,
@@ -348,10 +386,14 @@ mod tests {
                 },
             ],
         )];
-        assert!(
-            GoSeamErrorCitesReq.check(&facts).is_empty(),
-            "deviation and test context suppress"
-        );
+        let findings = GoSeamErrorCitesReq.check(&facts);
+        assert_eq!(findings.len(), 1, "{findings:?}");
+        assert!(findings[0].fingerprint.contains("structure"));
+        assert!(matches!(
+            findings[0].status,
+            FindingStatus::DeviationAcknowledged { ref reason }
+                if reason.as_deref() == Some("documented elsewhere")
+        ));
     }
 
     #[test]

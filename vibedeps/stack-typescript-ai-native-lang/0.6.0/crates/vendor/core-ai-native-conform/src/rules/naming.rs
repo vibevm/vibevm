@@ -13,7 +13,7 @@
 specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules");
 
 use crate::facts::{Fact, SourceFacts};
-use crate::finding::{Finding, Rule};
+use crate::finding::{Finding, FindingStatus, Rule};
 
 use super::req_message;
 
@@ -144,6 +144,8 @@ impl Rule for CellNameIsComputed {
                     // rots on any edit above the cell, and a baseline that
                     // rots on unrelated edits is a checker that lies.
                     fingerprint: format!("cell-name-is-computed|{}|{declared}", sf.file),
+                    status: FindingStatus::Live,
+                    evidence: f.summary(),
                 });
             }
         }

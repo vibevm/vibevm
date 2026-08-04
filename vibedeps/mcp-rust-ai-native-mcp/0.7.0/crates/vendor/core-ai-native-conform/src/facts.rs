@@ -220,6 +220,77 @@ pub enum Fact {
     },
 }
 
+impl Fact {
+    /// A compact, visualizer-facing rendering of this fact — the value
+    /// [`Finding::evidence`](crate::Finding::evidence) carries. Names the
+    /// variant and its salient discriminator(s) (the kind/symbol/carrier
+    /// a reader needs, plus the `in_test`/`in_deviation`/`reason` flags a
+    /// deviation view needs), WITHOUT the prose that would bloat the
+    /// finding record. One line, no delimiters a tool must parse: it is a
+    /// label for a human/dashboard, not a structured channel (B-025 —
+    /// every signal stays visible in the IR).
+    pub fn summary(&self) -> String {
+        match self {
+            Fact::Item { kind, symbol, .. } => format!("Item({kind}:{symbol})"),
+            Fact::Import { to_path, .. } => format!("Import({to_path})"),
+            Fact::Ctor { type_name, .. } => format!("Ctor({type_name})"),
+            Fact::UnsafeUse {
+                context,
+                in_test,
+                in_deviation,
+                ..
+            } => {
+                format!("UnsafeUse({context},test={in_test},dev={in_deviation})")
+            }
+            Fact::ErrorVariant {
+                enum_symbol,
+                variant,
+                ..
+            } => {
+                format!("ErrorVariant({enum_symbol}::{variant})")
+            }
+            Fact::FileMetrics { lines } => format!("FileMetrics({lines})"),
+            Fact::UnwrapUse {
+                method,
+                in_test,
+                in_deviation,
+                ..
+            } => {
+                format!("UnwrapUse({method},test={in_test},dev={in_deviation})")
+            }
+            Fact::EnvRead {
+                method,
+                in_test,
+                in_deviation,
+                ..
+            } => {
+                format!("EnvRead({method},test={in_test},dev={in_deviation})")
+            }
+            // TS/Go facts carry `reason` on the variant, but the reason
+            // text is NOT echoed here — it rides on the finding's status
+            // for acknowledged deviations (where it belongs) and would
+            // only bloat the evidence label for a live finding.
+            Fact::TsUnsafe { kind, in_test, .. } => format!("TsUnsafe({kind},test={in_test})"),
+            Fact::GoUnsafe { kind, in_test, .. } => format!("GoUnsafe({kind},test={in_test})"),
+            Fact::GoConformance {
+                impl_type, seam, ..
+            } => {
+                format!("GoConformance({impl_type}:{seam})")
+            }
+            Fact::TsEnvRead {
+                source, in_test, ..
+            } => format!("TsEnvRead({source},test={in_test})"),
+            Fact::TsSeamError {
+                symbol, cites_req, ..
+            } => {
+                format!("TsSeamError({symbol},cites_req={cites_req})")
+            }
+            Fact::InvariantComment { marker, .. } => format!("InvariantComment({marker})"),
+            Fact::TestSweep { kind, detail, .. } => format!("TestSweep({kind}:{detail})"),
+        }
+    }
+}
+
 /// Facts of one source file, with its repo-relative path.
 ///
 /// ```

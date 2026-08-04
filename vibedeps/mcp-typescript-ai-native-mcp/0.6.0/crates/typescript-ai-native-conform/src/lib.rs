@@ -184,7 +184,7 @@ pub fn run_check(root: &Path, baseline_rel: &str, scope: Option<&str>) -> Result
 /// legal moments as the Rust gate: a new rule landing, and a re-freeze
 /// after the set shrank).
 pub fn run_freeze(root: &Path, baseline_rel: &str) -> Result<()> {
-    use conform_core::{check, count_by_rule};
+    use conform_core::{baseline, check, count_by_rule};
     let config = load_config(root)?;
     config.validate_typescript_against_tree(root)?;
     let facts = extract(root, &config)?;
@@ -193,9 +193,10 @@ pub fn run_freeze(root: &Path, baseline_rel: &str) -> Result<()> {
     let rule_refs: Vec<&dyn Rule> = owned.iter().map(|r| r.as_ref()).collect();
     let findings = check(&rule_refs, &facts, None);
     let counts = count_by_rule(&findings);
-    let mut fps: Vec<&str> = findings.iter().map(|f| f.fingerprint.as_str()).collect();
-    fps.sort_unstable();
-    fps.dedup();
+    // B-025: only LIVE fingerprints are frozen — an acknowledged
+    // deviation is gate-inert (never `new`), so freezing it would grow
+    // the baseline with a fingerprint that protects nothing.
+    let fps = baseline::freezeable(&findings);
     let body = serde_json::json!({ "schema": 1, "findings": fps });
     let mut text = serde_json::to_string_pretty(&body).context("serialising baseline")?;
     text.push('\n');

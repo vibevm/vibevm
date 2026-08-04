@@ -7,7 +7,7 @@ use crate::facts::SourceFacts;
 /// One finding with its A1 chain.
 ///
 /// ```
-/// use core_ai_native_conform::Finding;
+/// use core_ai_native_conform::{Finding, FindingStatus};
 ///
 /// let f = Finding {
 ///     rule: "unsafe-gate",
@@ -20,8 +20,11 @@ use crate::facts::SourceFacts;
 ///     ),
 ///     why: "unsafe is an audit boundary",
 ///     fingerprint: "unsafe-gate|crates/x/src/lib.rs|block#0".into(),
+///     status: FindingStatus::Live,
+///     evidence: "UnsafeUse(block,test=false,dev=false)".into(),
 /// };
 /// assert!(core_ai_native_conform::rules::matches_req_grammar(&f.message));
+/// assert!(matches!(f.status, FindingStatus::Live));
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Finding {
@@ -33,6 +36,78 @@ pub struct Finding {
     pub why: &'static str,
     /// Stable identity for the baseline: `rule|file|carrier`.
     pub fingerprint: String,
+    // --- B-025 (mark, don't suppress): a deviation no longer vanishes ---
+    // The two fields below are declared LAST on purpose. `Finding`
+    // derives `Ord`, and the declaration order fixes the lexicographic
+    // compare: `(rule, file, line, message, why, fingerprint, status,
+    // evidence)`. Fingerprints are unique within a run (`rule|file|
+    // carrier#ordinal`), so the first six fields already pin a total
+    // order and `status`/`evidence` are tie-breakers that are never
+    // reached — the sort stays byte-identical to the pre-B-025 order, so
+    // no counter, golden, or baseline shifts from ordering.
+    /// Whether this is a live violation or a deviation the codebase has
+    /// recorded and accepted. See [`FindingStatus`].
+    pub status: FindingStatus,
+    /// A compact rendering of the fact(s) that birthed this finding —
+    /// the [`Fact::summary`](crate::Fact::summary) of the originating
+    /// fact, or a short description for absence-based findings. Carried
+    /// so a future visualizer can show WHAT fired, not just WHERE: the
+    /// IR keeps every signal visible (B-025 — «нужно всё видеть»).
+    pub evidence: String,
+}
+
+/// Whether a finding is a live violation or a deviation the codebase has
+/// RECORDED and ACCEPTED — B-025, «помечать вместо гасить».
+///
+/// A recorded deviation (`#[spec(deviates = …, reason = …)]` on a Rust
+/// fn, `@ts-expect-error -- reason` in TypeScript, `//spec:deviates …
+/// reason="…"` in Go) used to make a finding DISAPPEAR: the rule skipped
+/// it, so it was absent from the IR, the SARIF, every downstream view.
+/// The owner ruled (2026-08-01) that this is wrong — every signal must
+/// stay visible, because recording a deviation exists to SEE it, and a
+/// future visualizer over the IR needs the full picture, not the gated
+/// one. So the rule now STAMPS the finding `DeviationAcknowledged`
+/// instead of skipping: the finding stays in the IR and the SARIF
+/// (marked, via SARIF `suppressions`), it just never fails the gate —
+/// [`baseline::diff`](crate::baseline::diff) keeps it out of `new`.
+///
+/// `reason` carries the deviation's recorded justification text WHEN THE
+/// FRONTEND CAPTURED IT: TypeScript and Go carry it on the fact (the
+/// `reason` field of [`Fact::TsUnsafe`](crate::Fact::TsUnsafe) /
+/// [`Fact::GoUnsafe`](crate::Fact::GoUnsafe)), so an acknowledged TS/Go
+/// finding reproduces the human's reason in SARIF. The Rust facts carry
+/// only the boolean (`in_deviation`), so a Rust acknowledged finding has
+/// `reason: None` — its SARIF `justification` falls back to a fixed
+/// marker. Plumbing the reason text from `#[spec(deviates = …, reason =
+/// "…")]` through the rust-syn frontend into the three Rust fact
+/// variants is a measured, recorded leftover (see WORKER-REPORT).
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub enum FindingStatus {
+    /// A live violation — fails the gate unless its fingerprint is frozen
+    /// in the baseline.
+    Live,
+    /// A violation next to a RECORDED deviation. It stays in the IR and
+    /// SARIF (the deviation is acknowledged, not hidden) but never fails
+    /// the gate. `reason` is the deviation's justification when the
+    /// frontend captured it (`None` for the Rust facts — see the enum
+    /// doc).
+    DeviationAcknowledged { reason: Option<String> },
+}
+
+impl Default for FindingStatus {
+    /// A finding is a live violation until the rule that birthed it says
+    /// otherwise — the overwhelming majority are `Live`. `Default` exists
+    /// for that ergonomics (a rule that never deals with deviations, and
+    /// any future code/test), NOT as a claim that "no status" is a third
+    /// state: every `Finding` is constructed with an explicit `status`.
+    /// Chosen `Live` over `DeviationAcknowledged` because a deviation is
+    /// the marked EXCEPTION — defaulting to the un-acknowledged form is
+    /// the safe failure mode (a finding that should have been marked but
+    /// wasn't still fails the gate, the loud error; the reverse would
+    /// silently pass a real violation).
+    fn default() -> Self {
+        FindingStatus::Live
+    }
 }
 
 /// A rule is a compiled query over facts (ENGINE-CONFORM §4).

@@ -6,7 +6,7 @@
 specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules");
 
 use crate::facts::{Fact, SourceFacts};
-use crate::finding::{Finding, Rule};
+use crate::finding::{Finding, FindingStatus, Rule};
 
 use super::req_message;
 
@@ -94,6 +94,8 @@ impl Rule for SeamHasDoctest {
                     ),
                     why: self.why(),
                     fingerprint: format!("seam-has-doctest|{}|{symbol}", sf.file),
+                    status: FindingStatus::Live,
+                    evidence: f.summary(),
                 });
             }
         }
@@ -191,6 +193,8 @@ impl Rule for PubDoctest {
                     ),
                     why: self.why(),
                     fingerprint: format!("pub-doctest|{}|{symbol}", sf.file),
+                    status: FindingStatus::Live,
+                    evidence: f.summary(),
                 });
             }
         }
@@ -273,6 +277,8 @@ impl Rule for ErrorMessageCitesReq {
                     ),
                     why: self.why(),
                     fingerprint: format!("error-message-cites-req|{}|{name}::{variant}", sf.file),
+                    status: FindingStatus::Live,
+                    evidence: f.summary(),
                 });
             }
         }
@@ -357,6 +363,8 @@ impl Rule for ErrorEnumCitesReq {
                     ),
                     why: self.why(),
                     fingerprint: format!("error-enum-cites-req|{}|{enum_symbol}", sf.file),
+                    status: FindingStatus::Live,
+                    evidence: f.summary(),
                 });
             }
         }

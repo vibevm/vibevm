@@ -35,5 +35,5 @@ pub use config::{
     ts_scope_warnings, ts_units, ts_vacuously_gated,
 };
 pub use facts::{Fact, Frontend, SourceFacts};
-pub use finding::{Finding, Rule, check, count_by_rule};
+pub use finding::{Finding, FindingStatus, Rule, check, count_by_rule};
 pub use store::{ExtractionLog, Store, content_hash, sort_source_facts};
