@@ -116,10 +116,11 @@ fn unsafe_gate_respects_audit_crates() {
 }
 
 #[test]
-fn unsafe_gate_honors_testimony_but_not_test_context() {
+fn unsafe_gate_marks_testimony_but_keeps_test_context_live() {
     // Three uses in one file: a bare one, a testified one, a
-    // test-context one. The testimony is honored; the test context
-    // is not (unsoundness in tests is still unsoundness).
+    // test-context one. B-025: the testimony is MARKED acknowledged
+    // (not skipped); the test context stays a Live finding
+    // (unsoundness in tests is still unsoundness).
     let facts = vec![sf(
         "crates/a/src/lib.rs",
         "a",
@@ -148,18 +149,30 @@ fn unsafe_gate_honors_testimony_but_not_test_context() {
         audit_crates: vec![],
     };
     let found = rule.check(&facts);
-    assert_eq!(found.len(), 2, "{found:?}");
+    assert_eq!(found.len(), 3, "{found:?}");
     // The testified block still advances the ordinal: the bare block
-    // keys #0, the test-context block keys #2 — gaining or losing a
-    // neighbour's testimony never re-keys an existing fingerprint.
+    // keys #0, the testified block #1, the test-context block #2 —
+    // gaining or losing a neighbour's deviation never re-keys an
+    // existing fingerprint.
     assert_eq!(
         found[0].fingerprint,
         "unsafe-gate|crates/a/src/lib.rs|block#0"
     );
     assert_eq!(
         found[1].fingerprint,
+        "unsafe-gate|crates/a/src/lib.rs|block#1"
+    );
+    assert_eq!(
+        found[2].fingerprint,
         "unsafe-gate|crates/a/src/lib.rs|block#2"
     );
+    // The middle (testified) one is acknowledged; the other two live.
+    assert!(matches!(
+        found[1].status,
+        crate::FindingStatus::DeviationAcknowledged { .. }
+    ));
+    assert!(found[0].status == crate::FindingStatus::Live);
+    assert!(found[2].status == crate::FindingStatus::Live);
 }
 
 #[test]

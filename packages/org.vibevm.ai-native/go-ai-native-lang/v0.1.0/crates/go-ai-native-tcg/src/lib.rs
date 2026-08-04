@@ -192,11 +192,21 @@ pub fn enrich_validate(
     let conform_findings: Vec<WireFinding> = findings
         .iter()
         .map(|f| {
+            // B-025: an acknowledged deviation is sanctioned (recorded
+            // testimony), so it is `baselined` for the agent's purposes —
+            // the relay still surfaces it (parity with the gate's SARIF,
+            // everything visible) but does NOT advise fixing an accepted
+            // deviation. (The wire carries only a bool; a future status
+            // field would split ratchet-frozen from deviation-acknowledged.)
             let baselined = policy
                 .baseline
                 .findings
                 .iter()
-                .any(|fp| fp == &f.fingerprint);
+                .any(|fp| fp == &f.fingerprint)
+                || matches!(
+                    f.status,
+                    conform_core::FindingStatus::DeviationAcknowledged { .. }
+                );
             if !baselined
                 && let Some(a) = advice_for(f.rule, kind_of_fingerprint(&f.fingerprint))
                 && !advice.contains(&a)

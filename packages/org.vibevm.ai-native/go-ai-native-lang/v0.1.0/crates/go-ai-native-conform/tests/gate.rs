@@ -20,11 +20,10 @@ fn dirty_fixture_yields_the_ten_findings_then_freeze_ratchets_them() {
     let root = fixture("dirty");
     let baseline = "target/conform/test-baseline.json";
 
-    // Fresh gate: sixteen findings on the dirty tree. On plan.go — 8
+    // Fresh gate: sixteen NEW findings on the dirty tree. On plan.go — 8
     // `go-unsafe-in-domain` census sites (blank_import, init_decl,
-    // 2×ambient_call, naked_go, 2×error_string_match, reasonless_suppression;
-    // the deviation-covered ambient in Sanctioned is honoured) + 2
-    // `go-seam-error-cites-req` (B-033: the structure half at the type
+    // 2×ambient_call, naked_go, 2×error_string_match, reasonless_suppression)
+    // + 2 `go-seam-error-cites-req` (B-033: the structure half at the type
     // decl and the message half at the Error() method line — PlanError
     // has no Spec field AND renders no REQ) + 1 `go-conformance-assertion`
     // (B-030: the plan cell declares no `var _ Seam = (*Impl)(nil)`) + 1
@@ -34,8 +33,10 @@ fn dirty_fixture_yields_the_ten_findings_then_freeze_ratchets_them() {
     // comment buried in the middle third of the 150-line exhibit file),
     // plus 2 `declared-test-matrices` (R-060: TestSweptMatrix sweeps a
     // `1 << 3` bit-mask and TestNestedSweep nests three C-style for-loops,
-    // both in plan_test.go).
-    // Non-zero.
+    // both in plan_test.go). B-025 adds a SEVENTEENTH finding — the
+    // deviation-covered `ambient_call` in Sanctioned, now MARKED
+    // `DeviationAcknowledged` (visible, never `new`), so the gate still
+    // reports exactly 16 NEW and the freeze ratchets only those sixteen.
     let _ = std::fs::remove_file(root.join(baseline));
     let err = go_ai_native_conform::run_check(&root, baseline, None)
         .expect_err("dirty tree must fail the gate");

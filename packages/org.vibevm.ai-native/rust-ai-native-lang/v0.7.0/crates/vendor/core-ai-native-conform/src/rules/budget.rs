@@ -6,7 +6,7 @@
 specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules");
 
 use crate::facts::{Fact, SourceFacts};
-use crate::finding::{Finding, Rule};
+use crate::finding::{Finding, FindingStatus, Rule};
 
 use super::req_message;
 
@@ -16,14 +16,17 @@ use super::req_message;
 /// unsafety behind a safe API and is exempt wholesale; everywhere
 /// else a justified boundary testifies via
 /// `#[spec(deviates = …, reason = …)]` on the carrying fn
-/// (`in_deviation`, frontend v5) and the rule honors it
-/// (ENGINE-CONFORM §4). Test-context unsafe (`in_test`) is
+/// (`in_deviation`, frontend v5). B-025 (mark, don't suppress): a
+/// testified boundary is no longer skipped — the rule stamps it a
+/// `DeviationAcknowledged` finding that stays in the IR/SARIF but
+/// never fails the gate. Test-context unsafe (`in_test`) is
 /// deliberately NOT exempt — unsoundness in tests is still
-/// unsoundness; tests use the audit crate's safe API instead.
+/// unsoundness, so it stays a Live finding; tests use the audit
+/// crate's safe API instead.
 ///
 /// ```
 /// use core_ai_native_conform::rules::UnsafeGate;
-/// use core_ai_native_conform::{Fact, Rule, SourceFacts};
+/// use core_ai_native_conform::{Fact, FindingStatus, Rule, SourceFacts};
 ///
 /// let rule = UnsafeGate { audit_crates: vec!["audited".into()] };
 /// let outside = SourceFacts {
@@ -34,12 +37,12 @@ use super::req_message;
 ///             context: "block".into(), line: 5,
 ///             in_test: false, in_deviation: false,
 ///         },
-///         // Testified boundary — honored, not flagged.
+///         // Testified boundary — MARKED acknowledged, not skipped.
 ///         Fact::UnsafeUse {
 ///             context: "block".into(), line: 9,
 ///             in_test: false, in_deviation: true,
 ///         },
-///         // Test context — still gated.
+///         // Test context — still a Live finding.
 ///         Fact::UnsafeUse {
 ///             context: "block".into(), line: 40,
 ///             in_test: true, in_deviation: false,
@@ -47,7 +50,10 @@ use super::req_message;
 ///     ],
 /// };
 /// let findings = rule.check(&[outside]);
-/// assert_eq!(findings.len(), 2);
+/// assert_eq!(findings.len(), 3);
+/// let ack = findings.iter().find(|f| f.line == 9).unwrap();
+/// assert!(matches!(ack.status, FindingStatus::DeviationAcknowledged { .. }));
+/// assert!(findings.iter().filter(|f| matches!(f.status, FindingStatus::Live)).count() == 2);
 /// assert!(core_ai_native_conform::rules::matches_req_grammar(&findings[0].message));
 /// ```
 pub struct UnsafeGate {
@@ -84,15 +90,27 @@ impl Rule for UnsafeGate {
                 } = f
                 {
                     // The ordinal advances over every unsafe use —
-                    // testified or not — so an existing fingerprint
+                    // acknowledged or not — so an existing fingerprint
                     // never silently re-keys when a NEIGHBOUR gains
-                    // or loses its testimony.
+                    // or loses its deviation testimony.
                     let counter = seen.entry(context.clone()).or_insert(0);
                     let ordinal = *counter;
                     *counter += 1;
-                    if *in_deviation {
-                        continue;
-                    }
+                    // B-025 (mark, don't suppress): a recorded deviation
+                    // is MARKED acknowledged, not skipped — the finding
+                    // stays in the IR/SARIF, it just never fails the gate.
+                    // `in_test` is a DIFFERENT axis and does NOT become a
+                    // status: test-context unsafe is still gated (a Live
+                    // finding), because unsoundness in tests is still
+                    // unsoundness. Only `in_deviation` — a `#[spec(deviates)]`
+                    // testimony on the carrying fn — is an acknowledged
+                    // deviation. (The Rust facts carry no reason TEXT, so
+                    // the status's `reason` is None here; TS/Go do carry it.)
+                    let status = if *in_deviation {
+                        FindingStatus::DeviationAcknowledged { reason: None }
+                    } else {
+                        FindingStatus::Live
+                    };
                     out.push(Finding {
                         rule: self.id(),
                         file: sf.file.clone(),
@@ -106,6 +124,8 @@ impl Rule for UnsafeGate {
                         ),
                         why: self.why(),
                         fingerprint: format!("unsafe-gate|{}|{context}#{ordinal}", sf.file),
+                        status,
+                        evidence: f.summary(),
                     });
                 }
             }
@@ -175,6 +195,8 @@ impl Rule for FileLength {
                     ),
                     why: self.why(),
                     fingerprint: format!("file-length|{}", sf.file),
+                    status: FindingStatus::Live,
+                    evidence: f.summary(),
                 });
             }
         }
@@ -188,12 +210,14 @@ impl Rule for FileLength {
 /// sites inside `#[cfg(test)]` modules and `#[test]` functions are
 /// exempt (the facts carry `in_test`); a justified boundary records
 /// `#[spec(deviates = …, reason = …)]` on the carrying fn, and the
-/// facts see the testimony (`in_deviation`, frontend v4) — the rule
-/// honors it instead of freezing the site in the baseline.
+/// facts see the testimony (`in_deviation`, frontend v4) — B-025
+/// (mark, don't suppress): the rule stamps it a
+/// `DeviationAcknowledged` finding (visible, gate-green) instead of
+/// freezing the site in the baseline or hiding it.
 ///
 /// ```
 /// use core_ai_native_conform::rules::NoUnwrapInDomain;
-/// use core_ai_native_conform::{Fact, Rule, SourceFacts};
+/// use core_ai_native_conform::{Fact, FindingStatus, Rule, SourceFacts};
 ///
 /// let rule = NoUnwrapInDomain { gated_crates: vec!["x".into()] };
 /// let domain = SourceFacts {
@@ -211,7 +235,11 @@ impl Rule for FileLength {
 ///         },
 ///     ],
 /// };
-/// assert_eq!(rule.check(&[domain]).len(), 1);
+/// let findings = rule.check(&[domain]);
+/// // in_test stays skipped; the deviation is marked, not skipped.
+/// assert_eq!(findings.len(), 2);
+/// let ack = findings.iter().find(|f| f.line == 120).unwrap();
+/// assert!(matches!(ack.status, FindingStatus::DeviationAcknowledged { .. }));
 /// ```
 pub struct NoUnwrapInDomain {
     pub gated_crates: Vec<String>,
@@ -249,12 +277,24 @@ impl Rule for NoUnwrapInDomain {
                 else {
                     continue;
                 };
-                if *in_test || *in_deviation {
+                // `in_test` is a different SCOPE, not a deviation: a
+                // test-context unwrap is out of the rule's domain
+                // entirely (the ban does not apply to tests), so it is
+                // skipped — NOT marked. Only `in_deviation` (a recorded
+                // `#[spec(deviates)]`) is an acknowledged deviation that
+                // B-025 stamps instead of skips. Keeping these two apart
+                // is the whole point: scope ≠ status (see UnsafeGate).
+                if *in_test {
                     continue;
                 }
                 let counter = seen.entry(method.as_str()).or_insert(0);
                 let ordinal = *counter;
                 *counter += 1;
+                let status = if *in_deviation {
+                    FindingStatus::DeviationAcknowledged { reason: None }
+                } else {
+                    FindingStatus::Live
+                };
                 out.push(Finding {
                     rule: self.id(),
                     file: sf.file.clone(),
@@ -268,6 +308,8 @@ impl Rule for NoUnwrapInDomain {
                     ),
                     why: self.why(),
                     fingerprint: format!("no-unwrap-in-domain|{}|{method}#{ordinal}", sf.file),
+                    status,
+                    evidence: f.summary(),
                 });
             }
         }
@@ -289,7 +331,7 @@ impl Rule for NoUnwrapInDomain {
 ///
 /// ```
 /// use core_ai_native_conform::rules::AmbientEnv;
-/// use core_ai_native_conform::{Fact, Rule, SourceFacts};
+/// use core_ai_native_conform::{Fact, FindingStatus, Rule, SourceFacts};
 ///
 /// let rule = AmbientEnv {
 ///     gated_crates: vec!["x".into()],
@@ -301,11 +343,14 @@ impl Rule for NoUnwrapInDomain {
 ///     crate_name: "x".into(),
 ///     facts: vec![
 ///         Fact::EnvRead { method: "var".into(), line: 9, in_test: false, in_deviation: false },
-///         // A testified read is honored, not flagged.
+///         // A testified read is MARKED acknowledged, not skipped.
 ///         Fact::EnvRead { method: "var".into(), line: 20, in_test: false, in_deviation: true },
 ///     ],
 /// };
-/// assert_eq!(rule.check(&[domain]).len(), 1);
+/// let findings = rule.check(&[domain]);
+/// assert_eq!(findings.len(), 2);
+/// let ack = findings.iter().find(|f| f.line == 20).unwrap();
+/// assert!(matches!(ack.status, FindingStatus::DeviationAcknowledged { .. }));
 /// // A read in a recorded composition root is exempt.
 /// let root = SourceFacts {
 ///     file: "crates/x/src/main.rs".into(),
@@ -365,12 +410,21 @@ impl Rule for AmbientEnv {
                 else {
                     continue;
                 };
-                if *in_test || *in_deviation {
+                // `in_test` is scope (the rule does not apply to test
+                // reads) — skipped. `in_deviation` is an acknowledged
+                // deviation — B-025 stamps it, not skips it. Scope ≠
+                // status (see UnsafeGate / NoUnwrapInDomain).
+                if *in_test {
                     continue;
                 }
                 let counter = seen.entry(method.as_str()).or_insert(0);
                 let ordinal = *counter;
                 *counter += 1;
+                let status = if *in_deviation {
+                    FindingStatus::DeviationAcknowledged { reason: None }
+                } else {
+                    FindingStatus::Live
+                };
                 out.push(Finding {
                     rule: self.id(),
                     file: sf.file.clone(),
@@ -384,6 +438,8 @@ impl Rule for AmbientEnv {
                     ),
                     why: self.why(),
                     fingerprint: format!("ambient-env|{}|{method}#{ordinal}", sf.file),
+                    status,
+                    evidence: f.summary(),
                 });
             }
         }

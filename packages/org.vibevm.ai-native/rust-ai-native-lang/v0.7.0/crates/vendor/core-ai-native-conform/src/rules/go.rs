@@ -10,7 +10,7 @@
 specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules");
 
 use crate::facts::{Fact, SourceFacts};
-use crate::finding::{Finding, Rule};
+use crate::finding::{Finding, FindingStatus, Rule};
 use crate::rules::req_message;
 
 const GO_GUIDE_CELLS: &str = "discipline://go-ai-native-lang/guide#cells";
@@ -27,7 +27,9 @@ const GO_GUIDE_REPLACEMENT: &str = "discipline://go-ai-native-lang/guide#replace
 /// reasonless suppression directives (§1), and `t.Skip` on tests (§10
 /// — the registry is the only xfail home) fire everywhere. A site
 /// covered by a reasoned `//spec:deviates … reason="…"` is recorded
-/// testimony and is honoured, not flagged. Value-level bans skip
+/// testimony — B-025 (mark, don't suppress): it is stamped
+/// `DeviationAcknowledged` (visible in the IR/SARIF, gate-green),
+/// carrying its `reason` text, not skipped. Value-level bans skip
 /// `_test.go` files (capability injection is not demanded of fixtures);
 /// `t_skip` fires ONLY there.
 ///
@@ -95,10 +97,44 @@ impl Rule for GoUnsafeInDomain {
                 else {
                     continue;
                 };
-                // A reasoned deviation covering the site is testimony,
-                // not a finding — except suppressions, whose reason is
-                // exactly what the census checks.
-                if reason.is_some() && kind != "reasonless_suppression" {
+                // B-025 (mark, don't suppress): a reasoned
+                // `//spec:deviates … reason="…"` covering an OWNED kind
+                // is a recorded deviation — MARKED acknowledged (visible,
+                // gate-green, reason carried), not skipped. OWNED = the
+                // kinds this umbrella's Live match below fires on. The
+                // two `seam_error_*` kinds are NOT owned here (they live
+                // in `GoSeamErrorCitesReq`, which carries its own
+                // acknowledged stamp), and `reasonless_suppression`'s
+                // `reason` is exactly what that census arm checks (a
+                // suppression owes a reason), so it stays Live — none of
+                // those three becomes an acknowledged finding here.
+                let owned = matches!(
+                    kind.as_str(),
+                    "init_decl"
+                        | "blank_import"
+                        | "ambient_call"
+                        | "naked_go"
+                        | "error_string_match"
+                        | "t_skip"
+                );
+                if reason.is_some() && owned {
+                    out.push(Finding {
+                        rule: self.id(),
+                        file: source.file.clone(),
+                        line: *line,
+                        message: req_message(
+                            GO_GUIDE_BANS,
+                            &format!("`{kind}` is covered by a recorded //spec:deviates deviation"),
+                            "keep the deviation recorded, or remove the site and the \
+                             directive once it is remediated",
+                        ),
+                        why: self.why(),
+                        fingerprint: format!("{}|{}|{kind}#{line}", self.id(), source.file),
+                        status: FindingStatus::DeviationAcknowledged {
+                            reason: reason.clone(),
+                        },
+                        evidence: fact.summary(),
+                    });
                     continue;
                 }
                 // Cell-scoped kinds fire only under cells_dir; the
@@ -156,6 +192,8 @@ impl Rule for GoUnsafeInDomain {
                     message: req_message(uri, why, fix),
                     why: self.why(),
                     fingerprint: format!("{}|{}|{kind}#{line}", self.id(), source.file),
+                    status: FindingStatus::Live,
+                    evidence: fact.summary(),
                 });
             }
         }
@@ -266,6 +304,8 @@ impl Rule for GoCellIsolation {
                     ),
                     why: self.why(),
                     fingerprint: format!("{}|{}|{to_path}#{line}", self.id(), source.file),
+                    status: FindingStatus::Live,
+                    evidence: fact.summary(),
                 });
             }
         }
@@ -286,16 +326,19 @@ mod tests {
     }
 
     #[test]
-    fn deviation_reason_is_honoured_and_reasonless_suppression_is_not() {
+    fn deviation_reason_is_marked_and_reasonless_suppression_is_live() {
         let facts = vec![go_source(
             "internal/cells/plan/plan.go",
             vec![
+                // A reasoned deviation is MARKED acknowledged (B-025),
+                // carrying its reason — not skipped.
                 Fact::GoUnsafe {
                     kind: "ambient_call".into(),
                     line: 3,
                     in_test: false,
                     reason: Some("wall clock is the domain here".into()),
                 },
+                // A reasonless suppression stays a Live violation.
                 Fact::GoUnsafe {
                     kind: "reasonless_suppression".into(),
                     line: 9,
@@ -305,8 +348,15 @@ mod tests {
             ],
         )];
         let findings = GoUnsafeInDomain::new(Some("internal/cells")).check(&facts);
-        assert_eq!(findings.len(), 1);
-        assert_eq!(findings[0].line, 9);
+        assert_eq!(findings.len(), 2, "{findings:?}");
+        let ack = findings.iter().find(|f| f.line == 3).unwrap();
+        assert!(matches!(
+            ack.status,
+            FindingStatus::DeviationAcknowledged { ref reason }
+                if reason.as_deref() == Some("wall clock is the domain here")
+        ));
+        let live = findings.iter().find(|f| f.line == 9).unwrap();
+        assert!(matches!(live.status, FindingStatus::Live));
     }
 
     #[test]

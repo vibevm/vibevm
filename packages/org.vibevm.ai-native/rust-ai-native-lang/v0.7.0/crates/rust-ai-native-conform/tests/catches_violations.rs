@@ -263,3 +263,49 @@ fn a_declared_axis_nest_passes_the_gate() {
     rust_ai_native_conform::run_check(dir.path(), "conform-baseline.json", None)
         .expect("a 3-deep collection-loop nest is a declared matrix — green");
 }
+
+/// A seam whose one domain `.unwrap()` sits inside a fn carrying
+/// `#[spec(deviates = …, reason = …)]` — B-025's live exhibit: the
+/// finding is BORN (visible in the SARIF, marked with an `inSource`
+/// suppression) yet the gate stays GREEN, because an acknowledged
+/// deviation never reaches `new`. This is the whole point of
+/// «помечать вместо гасить»: the deviation is seen, not hidden, and
+/// not punished.
+const DEVIATED: &str = r#"/// A seam with a testified domain unwrap.
+///
+/// ```
+/// let _ = myapp::parse("3");
+/// ```
+#[spec(deviates = "spec://demo/PROP-001#req-parse", reason = "FFI boundary, audited")]
+pub fn parse(s: &str) -> i32 {
+    s.parse::<i32>().unwrap()
+}
+"#;
+
+#[test]
+fn an_acknowledged_deviation_is_visible_but_the_gate_stays_green() {
+    let dir = fixture(DEVIATED);
+    // GREEN: the acknowledged unwrap never reaches `new`.
+    rust_ai_native_conform::run_check(dir.path(), "conform-baseline.json", None)
+        .expect("an acknowledged deviation must not fail the gate");
+    // But the finding IS born and marked — read the SARIF the gate wrote.
+    let sarif = std::fs::read_to_string(
+        dir.path()
+            .join("target")
+            .join("conform")
+            .join("report.sarif"),
+    )
+    .expect("the gate writes a SARIF report");
+    assert!(
+        sarif.contains("\"ruleId\": \"no-unwrap-in-domain\""),
+        "the deviation's finding is present in the report"
+    );
+    assert!(
+        sarif.contains("\"vibevmConform/status\": \"deviation-acknowledged\""),
+        "the finding is tagged acknowledged"
+    );
+    assert!(
+        sarif.contains("\"kind\": \"inSource\""),
+        "the finding carries an inSource suppression"
+    );
+}
