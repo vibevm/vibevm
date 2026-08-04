@@ -447,6 +447,80 @@ run_step "cargo test --workspace (go-ai-native-mcp pkg)" \
 run_step "cargo clippy --all-targets (go-ai-native-mcp pkg)" \
   cargo clippy --manifest-path "$MCPG_MANIFEST" --workspace --all-targets --quiet -- -D warnings || OVERALL=$?
 
+# 10b. The discipline engine, pointed at its own sources (B-057). Steps 7-10
+# run fmt/test/clippy and the specmap self-traces over every live package
+# workspace — but `cargo xtask conform check` (step 5) is HOST-only, so the
+# Class-F/G rules, the file-length budget and the unsafe gate never ran over
+# the code that IMPLEMENTS them. The panel said nothing false about it (no
+# step claimed the coverage), which is why this was uncovered ground rather
+# than a lying gate — but a projection where the discipline does not apply is
+# still a projection.
+#
+# One binary, built once from the rust stack, run per slot: the policy stays
+# with the consumer (PROP-024), so each slot carries its own `conform.toml`
+# and its own ratchet baseline. The loop is driven by GATED_SLOTS, so step
+# 0b's live-set denominator already covers this step too — a new package
+# cannot appear without its conform run appearing with it.
+#
+# What the first run measured, so a later reader knows what these numbers
+# mean: 134 findings over the four authored slots, 102 of them one rule
+# (seam-has-doctest). None of that was frozen. The policies gate the crates
+# that are already clean and name every other crate `exempt` WITH its finding
+# count — the same expand-as-you-conform posture the host's own conform.toml
+# takes. The debt stays visible in the config instead of buried in a ratchet.
+for slot in $GATED_SLOTS; do
+  run_step "rust-ai-native-conform check ($slot)" \
+    cargo run --quiet --manifest-path "$PKG_MANIFEST" \
+      -p rust-ai-native-conform --bin rust-ai-native-conform \
+      -- --path "$slot" check || OVERALL=$?
+done
+
+# 10c. The mcp packages' authored-crate denominator. Their conform policy
+# names the scan perimeter LITERALLY (`roots = ["crates/<authored>"]`) rather
+# than by glob, because the glob would scan the vendored copies too and the
+# engine's `exclude_substrings` cannot exclude a crate directory — it matches
+# the CRATE-relative path (`src/lib.rs`), never the repo-relative one the
+# findings print (B-059). A literal perimeter is correct but loses what a glob
+# gave for free: the gated-or-exempt invariant that forces a NEW crate to be
+# classified. This restores it, derived rather than spelled — the authored set
+# is whatever `crates/` holds minus `vendor/` minus what sync-engines.toml
+# declares vendored INTO that slot. A version bump or a new copy changes the
+# manifest and this guard follows; a new AUTHORED crate makes it red.
+mcp_vendored_into() {
+  awk -v want="\"$1\"" 'BEGIN { RS = "" }
+    index($0, want) == 0 { next }
+    {
+      s = index($0, "crates = [")
+      if (s == 0) next
+      rest = substr($0, s + 10)
+      e = index(rest, "]")
+      if (e == 0) next
+      n = split(substr(rest, 1, e - 1), parts, "\"")
+      for (i = 2; i <= n; i += 2) if (parts[i] != "") print parts[i]
+    }
+  ' sync-engines.toml
+}
+check_mcp_authored_denominator() {
+  local slot rc=0 authored declared
+  for slot in "$MCPR_DIR" "$MCPT_DIR" "$MCPG_DIR"; do
+    authored="$(comm -23 \
+      <(ls -1 "$slot/crates" | grep -v '^vendor$' | sort) \
+      <(mcp_vendored_into "$slot/crates" | sort -u) | tr '\n' ' ')"
+    declared="$(sed -n 's/^roots = \["crates\/\([^"]*\)"\]$/\1 /p' "$slot/conform.toml")"
+    if [ "$authored" != "$declared" ]; then
+      echo "self-check: \`$slot\` authored crates are {${authored% }}," >&2
+      echo "self-check: but conform.toml scans {${declared% }}." >&2
+      echo "self-check: classify the newcomer — an AUTHORED crate belongs in" >&2
+      echo "self-check: this slot's conform.toml (roots + gated); a VENDORED" >&2
+      echo "self-check: copy belongs in sync-engines.toml. Neither is optional." >&2
+      rc=1
+    fi
+  done
+  return "$rc"
+}
+run_step "mcp packages' authored crates are the conform perimeter" \
+  check_mcp_authored_denominator || OVERALL=$?
+
 # 11. The vibeterm / vibeframe terminal products moved to a separate repo
 # (`vibevm-term`); their pure-logic tests (`node --test` for the shared
 # arg/keymap helpers, `vitest` for the vibeterm engine cells) live there now.
