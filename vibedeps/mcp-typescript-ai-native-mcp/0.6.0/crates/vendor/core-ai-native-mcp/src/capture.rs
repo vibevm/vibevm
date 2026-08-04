@@ -123,6 +123,8 @@ mod platform {
     use std::io;
     use std::os::fd::AsRawFd;
 
+    use specmark::spec;
+
     unsafe extern "C" {
         fn dup(fd: i32) -> i32;
         fn dup2(oldfd: i32, newfd: i32) -> i32;
@@ -134,6 +136,12 @@ mod platform {
         saved_fd: i32,
     }
 
+    #[spec(
+        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+        reason = "dup/dup2/close over this process's own fd 2; the saved descriptor is owned by \
+                  Restore and put back on restore — this cell is the audited home of raw-fd work, \
+                  the only place in the crate that touches fds"
+    )]
     pub fn redirect_stderr_to(sink: &File) -> io::Result<Restore> {
         // SAFETY: plain POSIX fd shuffling on this process's own
         // descriptors; the saved fd is owned by Restore and closed on
@@ -153,6 +161,12 @@ mod platform {
         }
     }
 
+    #[spec(
+        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+        reason = "dup2/close to put the saved fd back where redirect_stderr_to took it — the \
+                  symmetric restore half of the same audited redirect, on a descriptor this \
+                  module owns"
+    )]
     pub fn restore_stderr(r: Restore) -> io::Result<()> {
         // SAFETY: as above — restoring the descriptor this module saved.
         unsafe {
@@ -173,6 +187,8 @@ mod platform {
     use std::io;
     use std::os::windows::io::AsRawHandle;
 
+    use specmark::spec;
+
     type Handle = *mut c_void;
     const STD_ERROR_HANDLE: u32 = -12i32 as u32;
 
@@ -191,6 +207,12 @@ mod platform {
     // hands it back to SetStdHandle on the same process.
     unsafe impl Send for Restore {}
 
+    #[spec(
+        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+        reason = "SetStdHandle swap of this process's own STD_ERROR_HANDLE; the prior handle is \
+                  saved for restore, and both Rust's stderr writes and spawned children resolve \
+                  the live handle — pinned by the capture test"
+    )]
     pub fn redirect_stderr_to(sink: &File) -> io::Result<Restore> {
         // SAFETY: swapping this process's own std-error handle; the
         // previous handle is saved and restored by `restore_stderr`.
@@ -206,6 +228,12 @@ mod platform {
         }
     }
 
+    #[spec(
+        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+        reason = "SetStdHandle putting the saved STD_ERROR_HANDLE back where redirect_stderr_to \
+                  took it — the symmetric restore half of the same audited swap, on a handle this \
+                  module owns"
+    )]
     pub fn restore_stderr(r: Restore) -> io::Result<()> {
         // SAFETY: as above — restoring the handle this module saved.
         unsafe {
