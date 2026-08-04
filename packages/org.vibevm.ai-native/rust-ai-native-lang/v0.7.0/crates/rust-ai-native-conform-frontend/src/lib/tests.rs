@@ -14,11 +14,14 @@ fn extract(src: &str) -> Vec<Fact> {
 
 #[test]
 fn extracts_items_with_cell_and_spec_attrs() {
+    // The cell name is computed: seam `S`, variant `v` → `VS`
+    // (Pascal("v") + seam), so the type is `VS`, the convention
+    // cell-name-is-computed (B-038) checks.
     let facts = extract(
         r#"
         #[cell(seam = "S", variant = "v")]
         #[spec(implements = "spec://p/d#a")]
-        pub struct Thing;
+        pub struct VS;
         "#,
     );
     let Some(Fact::Item { symbol, attrs, .. }) =
@@ -26,7 +29,7 @@ fn extracts_items_with_cell_and_spec_attrs() {
     else {
         panic!("expected an item fact, got {facts:?}");
     };
-    assert_eq!(symbol, "x::m::Thing");
+    assert_eq!(symbol, "x::m::VS");
     assert!(attrs.iter().any(|a| a.starts_with("cell(")));
     assert!(attrs.iter().any(|a| a.starts_with("spec(")));
 }
