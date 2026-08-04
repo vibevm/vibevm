@@ -35,72 +35,65 @@ owner's ruling and wins.
 
 ---
 
-## Current slice: волна В — the map and its consumers
+## Current slice: волна Г — the host catches up with its own discipline
 
-Ordered by [`TOOLING-MAP.md` `##WAVE-V`](TOOLING-MAP.md). Волны А and Б closed
-whole (2026-08-04); this is the third.
+Ordered by the owner's ruling of 2026-08-05: **the gate holes first, then
+registry hygiene, then B-056, then волна Г whole.** Волны А, Б and В closed
+whole (2026-08-04/05).
 
-### Measurement first — the forks stand on numbers
+### The two gate holes — closed first, because everything built after them is built under them
 
-- [ ] `docs(campaign)`: fingerprint noise measured on the real history — raw
-      text vs token stream, the number owner fork №3 is decided on
-      (`harvest/e15-b019a-fingerprint-noise.md` + the re-runnable
-      `tasks/fingerprint-noise.py`).
-- [ ] `docs(campaign)`: the two lifecycle vocabularies censused — what carries
-      specmap's `planned`/`disputed` today and what consumes it, under fork №7
-      (`harvest/e16-b024-lifecycle-vocab-census.md`).
-- [ ] `docs(campaign)`: the census the one format change stands on — manifest
-      strictness, what travels in a package, the schema-bump route
-      (`harvest/e17-map-format-census.md`).
+- [x] `feat(conform)`: the discipline engine runs over its own package
+      sources (B-057) — a policy and a ratchet baseline per live slot, seven
+      panel runs off one binary, and the mcp slots' authored-crate
+      denominator derived from `sync-engines.toml` rather than spelled.
+- [x] `fix(specmap)`: a declared `[[external_specs]]` root that is not on
+      disk announces itself instead of resolving twelve citations into
+      nothing (B-058 half 2). One edit in the neutral engine; a warning, not
+      a refusal — the resolution layer's «not yet installed» tolerance is
+      deliberate and stays.
+- [x] `feat(check)`: the installed copies get a freshness signal (B-058
+      half 1) — a `local-source-freshness` cell over the lockfile's own
+      source hashes. No new panel step: the panel already runs `vibe check`.
+- [x] `docs(backlog)`: B-059 filed (conform's exclusions match a different
+      path than the one conform prints); B-057 and B-058 closed with what
+      the build actually measured.
+- [x] `chore(vibedeps)`: rematerialise after the package edits — the very
+      reinstall the new signal asked for.
 
-### The one format change — three builds, one schema bump
+### Registry hygiene — measured, and larger than the record said
 
-- [ ] `docs(design)`: the boss design for the format change, standing on the
-      three censuses above, with the owner's forks marked where they fall.
-- [ ] `feat(core-ai-native)`: schema 2 → 3 — the code item gains its span and
-      its fingerprint (B-019а), the map ships inside a package (B-016 half 1),
-      the privacy tier reaches the manifest (B-017). **One change, not three.**
-- [ ] `chore(packages)`: vendor the format change into the six engine copies
-      and rematerialise.
+The WAL carried «five observed files await their anchors' judging pass».
+Measured from the campaign cache: **28** — 20 whose verdicts are stale
+(`processed_hash` ≠ `content_hash`, among them PROP-000 at 177 verdicts,
+PROP-035 at 135, PROP-009 at 104) and 8 with no verdicts at all (seven
+`spec/design/*` docs + one package README).
 
-### The consumers the map unlocks
+- [ ] `docs(campaign)`: the evidence sweep over the 28 — delegated by the
+      `WORLD-WORKER-BRIEF` split (workers gather evidence rows, the boss
+      writes every verdict).
+- [ ] `chore(campaign)`: merge the verdicts, then seal — never chained.
 
-- [ ] `feat(vibe)`: «объясни» over vibe's own agent interface (B-018.1).
-- [ ] `feat(vibe)`: map search — the query language v0 is owner fork №6
-      (B-018.2).
-- [ ] `feat(vibe)`: answers about *installed* packages, fed by the
-      package-shipped map (B-018.4) + fragments by fingerprint (B-016.2,
-      owner fork №4).
-- [ ] `feat(vibe)`: the light client to external LLMs (B-020) + the threshold
-      warnings (B-021).
+### B-056 — multiple inheritance of contract documents, and the plugin form
 
-### Decided inside the wave, not deferred out of it
+Four owner rulings closed the SHAPE on 2026-08-04; what is left is the build.
 
-- [ ] `feat(xtask)`: B-014 — the committed host index is regenerated and its
-      freshness is gated (or the «regenerate on demand only» posture is
-      recorded as a decision). The engine's own doc comment already claims the
-      gate; the host panel does not run it.
-- [ ] `docs(backlog)`: B-024's ruling written into the entry — the vocabularies
-      merge, and `disputed`'s fate is settled (fork №7).
+- [ ] `feat(vibe-spec)`: `#source` folding gains N inputs instead of two, its
+      own cycle guard and dedup by the `use_graph` pattern, and `:replace` as
+      a flag that drops the contract text while sources still sum in order.
+- [ ] `feat(vibe-spec)`: the glob form — the resolver enumerates installed
+      slots, sorted; one tree plus one lockfile give one result.
 
-### Волна Г — parallel, opportunistic, never blocking
+### Волна Г proper
 
-- [ ] `fix(xtask)`: `mirror --check` tests **ancestry**, not equality — a
-      target legitimately behind mainline stops reading as drift (B-005).
-- [ ] `fix(vibe)`: a check verb that writes — `progress check` stops rewriting
-      a frozen zone's state, or says in its first help line that it does
-      (B-010).
 - [ ] `refactor(crates)`: the pointed seam work the B-040 census earned
       (`harvest/g1-b040-seams-census.md`) — sealed traits and typestate where
       they pay, a recorded reason where they do not.
-- [ ] `docs(spec)`: the F-132 schema debt.
+- [ ] `docs(spec)`: the F-132 schema debt — spec tags in
+      `schemas/specmap.jtd.json`.
 
-### M-PARITY bar 2 — the four named builds between recorded-honest and built
+### M-PARITY bar 2 — two named builds left, both owner-deferred
 
-- [ ] `feat(go-ai-native)`: the Go flag/registry rule (parity row 6).
-- [ ] `fix(go-ai-native)`: the Go floor's `./...` scoping — `vet`/`tests`/
-      `staticcheck` gain the exclusion `gofmt` already has (rows 8/12,
-      B-048's sibling).
 - [ ] *(P3, owner-ruled «don't build now, don't drop the promise»)* the Rust
       `dylint` and Go `analysis.Analyzer` custom-lint vehicles — `{#b-050}`.
 - [ ] *(deferred, cost measured)* the Rust deviation-reason text — ~33
