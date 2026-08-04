@@ -102,8 +102,8 @@ pub enum RawFact {
     FileMetrics {
         lines: u32,
     },
-    /// A comment carrying an invariant marker (`SAFETY:` / `INVARIANT:` /
-    /// `PANICS` / …), normalised to the config vocabulary's spelling.
+    /// A comment carrying an invariant marker (`INVARIANT:` / `WARNING:`
+    /// / `PANICS:` / …), normalised to the config vocabulary's spelling.
     /// `in_test` is file-grain, stamped in [`conform_facts`] from the
     /// record — same posture as `GoUnsafe`. Consumed by
     /// `invariant-comment-position`.
@@ -459,7 +459,7 @@ mod tests {
         let raw = concat!(
             r#"{"protocol":1,"file":"src/invariant.go","#,
             r#""in_test":false,"degraded":false,"#,
-            r#""facts":[{"fact":"invariant_comment","marker":"SAFETY:","line":75}],"markers":[]}"#,
+            r#""facts":[{"fact":"invariant_comment","marker":"INVARIANT:","line":75}],"markers":[]}"#,
             "\n",
         );
         let records = parse_ndjson(raw).expect("parse");
@@ -471,7 +471,7 @@ mod tests {
                     marker,
                     line,
                     in_test,
-                } if marker == "SAFETY:" && *line == 75 && !*in_test
+                } if marker == "INVARIANT:" && *line == 75 && !*in_test
             )),
             "invariant_comment lowers with the marker and a stamped in_test: {facts:?}"
         );

@@ -57,7 +57,7 @@ use toml::Value;
 /// .unwrap();
 /// assert_eq!(cfg.max_file_lines, 600);
 /// assert_eq!(cfg.invariant_comment_min_file_lines, 120);
-/// assert_eq!(cfg.invariant_comment_markers.len(), 6);
+/// assert_eq!(cfg.invariant_comment_markers.len(), 5);
 /// assert_eq!(cfg.rust.gated, vec!["app".to_string()]);
 /// assert_eq!(cfg.rust.registry_gated_crate.as_deref(), Some("app"));
 /// ```
@@ -91,10 +91,30 @@ pub struct Config {
     /// The per-file line budget (`file-length`); read by every frontend.
     pub max_file_lines: u32,
     /// The invariant-marker vocabulary for `invariant-comment-position`
-    /// — the comment tokens (normalized, as written) that mark an
+    /// — the labeled comment tags (normalized, as written) that mark an
     /// invariant worth surfacing. A root key (beside `max_file_lines`)
     /// because the vocabulary is language-neutral, not per-language
     /// policy (design `new-rule-classes.md` §2). Empty disables the rule.
+    ///
+    /// **A marker is a labeled tag, not a word from prose** (B-036). Every
+    /// entry carries a trailing `:` — the colon is the mark of labeling,
+    /// what tells a reader "this line declares an invariant" rather than
+    /// "this sentence uses a forceful word". A bare `NEVER` mid-sentence
+    /// («a body is NEVER re-qualified whole») is emphasis, not an
+    /// invariant, and the bare-word vocabulary caught it as a false
+    /// positive — the same class of error as the `violates REQ` vs bare
+    /// `REQ` lesson. So the dictionary is the five colon-bearing tags
+    /// only; the rule still re-checks membership, so a stale cached bare
+    /// marker can never red a frozen baseline.
+    ///
+    /// `SAFETY:` is excluded for a different reason: it IS a labeled tag,
+    /// but by Rust convention (and clippy's `undocumented_unsafe_blocks`)
+    /// a `SAFETY:` comment is the *block-local justification of an
+    /// `unsafe` block* and must sit directly beside it — moving it to a
+    /// file's edge to satisfy a position rule would destroy its meaning.
+    /// It is not a file-level invariant, so it has no place in a rule
+    /// about file-level position. (A real `// SAFETY:` at its `unsafe`
+    /// block is therefore correctly left alone by this rule.)
     pub invariant_comment_markers: Vec<String>,
     /// The minimum file length below which the `invariant-comment-position`
     /// rule is silent — on a short file «thirds» are meaningless, so no
@@ -127,12 +147,11 @@ impl Default for Config {
             exempt: None,
             max_file_lines: 600,
             invariant_comment_markers: vec![
-                "SAFETY:".into(),
                 "INVARIANT:".into(),
-                "PANICS".into(),
                 "WARNING:".into(),
-                "MUST".into(),
-                "NEVER".into(),
+                "PANICS:".into(),
+                "MUST:".into(),
+                "NEVER:".into(),
             ],
             invariant_comment_min_file_lines: 120,
             rust: RustConfig::default(),

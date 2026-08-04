@@ -96,7 +96,12 @@ impl Frontend for TsTscFrontend {
         // cached slot wholesale (the Ф6 brief's cache contract).
         // v2: invariant_comment facts (the marker census) feed
         //     invariant-comment-position.
-        "2"
+        // v3: the vocabulary narrows to the five labeled (colon-bearing)
+        //     tags — a marker is a labeled tag, not a prose word. `SAFETY:`
+        //     is dropped (a block-local `unsafe` justification, not a file
+        //     invariant), and the bare words gain a colon (`MUST:` ≠ bare
+        //     `MUST`), so the cache must retire.
+        "3"
     }
     fn warm(&self, pending_files: &[String]) {
         self.warm_batch(Some(pending_files));
