@@ -121,6 +121,23 @@ pub struct Config {
     /// comment is ever «buried in the middle». A root key, same reason as
     /// the vocabulary; defaults to 120 lines.
     pub invariant_comment_min_file_lines: u32,
+    /// Where a flora step deposits foreign-linter SARIF reports for the
+    /// gate to read back in (B-026). Repo-relative paths: each is a report
+    /// file read directly, or a directory walked for `*.sarif` / `*.json`.
+    ///
+    /// A root key — beside `max_file_lines` and the invariant vocabulary —
+    /// because SARIF ingest is a CROSS-LANGUAGE engine mechanism, not a
+    /// per-language policy: one flora deposit point holds every linter's
+    /// report (clippy, eslint, golangci-lint together), and each report's
+    /// `runs[].tool.driver.name` says which tool it is, so the engine never
+    /// needs to know which language a report is about. That is the v2
+    /// logic — the root carries the language-neutral, the per-language
+    /// sections own the homogeneous `roots`/`gated`/`exempt`/… shape — and
+    /// a report directory is language-neutral plumbing, not a per-language
+    /// slot (which would triplicate the key and break the one-place deposit
+    /// model). Empty (the default) means no reports are read — the norm
+    /// today, since no project deposits them yet; absence is never an error.
+    pub sarif_reports: Vec<String>,
     /// The Rust half of the policy (`[rust]`).
     pub rust: RustConfig,
     /// The TypeScript half of the policy (`[typescript]`), consumed by
@@ -154,6 +171,7 @@ impl Default for Config {
                 "NEVER:".into(),
             ],
             invariant_comment_min_file_lines: 120,
+            sarif_reports: Vec::new(),
             rust: RustConfig::default(),
             typescript: TsConfig::default(),
             go: GoConfig::default(),
