@@ -240,7 +240,7 @@ already written from it is the specification of the work.)*
 | ##B005-ANCHOR **anchor** | `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/fanout-mechanics#INVARIANT-THE-ANCESTRY-GATE` — the rule; the defect is in the host's port of it |
 | ##B005-LOCATOR **locator** | `xtask/src/mirror.rs:327-342` (`probe`), against the flow's own reference script at `fanout-mechanics.md:190-195` |
 | ##B005-SEVERITY **severity** | P2 |
-| ##B005-DISPOSITION **disposition** | `open` |
+| ##B005-DISPOSITION **disposition** | `done` — построено 2026-08-04 (волна Г, коммит `39ad7b1d`). `probe` различает три состояния вместо двух: равенство ⇒ синхрон, предок ⇒ `Behind` (здоровое отставание, `--check` от него не падает), всё остальное ⇒ дрейф. Ловушка, из-за которой это не однострочник: sha цели приходит из `ls-remote` и может отсутствовать в локальном хранилище объектов — git тогда завершается кодом 128, а не 1; неизвестный объект трактуется как «не предок» ⇒ дрейф и никогда не роняет проверку. Решение вынесено в чистую функцию `classify(head, remote, ancestry)` и покрыто офлайн-таблицей из пяти случаев. JSON отчёта здоровья получил четвёртое имя состояния `behind`; набор имён нигде в дереве не закреплён. Путь push'а не тронут. Хвост F-204: строка реестра, названная `deferred` по этой записи, пере-судится ближайшим проходом якорей |
 | ##B005-FILED **filed by** | the packages-actualization campaign, Phase D, wave 6, 2026-07-29 — found in passing while re-verifying F-204, outside its anchor list |
 
 - ##B005-WHAT **What it is.** The flow specifies an **ancestry** gate: the target's main
