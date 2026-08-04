@@ -72,7 +72,7 @@ flat config with **no CLI change to the floor**. @spec/done
 ##b036-rule **The rule.** `invariant-comment-position`: a comment carrying an
 invariant marker, in a file long enough for «thirds» to mean anything, whose
 line falls in the middle third, is a finding. The remedy in the message is the
-guide's own: move it to the file's top or bottom, or split the file.
+guide's own: move it to the file's top or bottom, or split the file. @spec/done
 
 ##b036-inputs **Inputs, decided.** Denominator `Fact::FileMetrics { lines }`
 (ships). Numerator: a NEW engine fact carrying the marker and its line. This is
@@ -80,7 +80,7 @@ a `Fact` **VARIANT**, the expensive kind — the WAL's
 `##WAL-C-KIND-VS-VARIANT-RIPPLE` checklist binds the landing (every exhaustive
 `Fact` match in the whole tree, the Rust frontend's total sort, the three health
 censuses, the bridges' `RawFact` arms, `cargo clean -p`), and it bumps the
-frontend versions, which re-extracts. Budgeted, not discovered.
+frontend versions, which re-extracts. Budgeted, not discovered. @spec/done
 
 ##b036-config **Where the knobs live.** Two ROOT keys, beside `max_file_lines`
 and for the same reason — they are language-neutral budgets, not per-language
@@ -91,19 +91,19 @@ uniform and untouched. **Refinement point for the worker: name both keys in the
 shape the existing root table uses, and state the defaults you chose in the
 report.** The boss's defaults: markers = the measured vocabulary plus the ones
 the guides name (`SAFETY:`, `INVARIANT:`, `PANICS`, `WARNING:`, `MUST`,
-`NEVER`), minimum length = 120 lines.
+`NEVER`), minimum length = 120 lines. @spec/done
 
 ##b036-fingerprint **Fingerprint: never line-keyed.** The stop.rs lesson
 (`budget.rs:71-75`) applies exactly — key by file + marker + per-file ordinal,
-so an edit above the comment does not re-key a frozen baseline entry.
+so an edit above the comment does not re-key a frozen baseline entry. @spec/done
 
-##b036-scope Scope like `FileLength`: `in_src` only, test context out.
+##b036-scope Scope like `FileLength`: `in_src` only, test context out. @spec/done
 
 ##b036-exhibit **Exhibit, because the live tree will not.** The dirty fixture of
 each stack gains an invariant comment in its middle third; the clean fixture
 gains one at the top. The characterization coupling of
 `##WAL-C-CHARACTERIZATION-COUPLING` applies — every by-rule count moves in the
-same landing.
+same landing. @spec/done
 
 ## 3. B-037 — the custom REQ-citing lint layer {#b037}
 
@@ -112,13 +112,13 @@ clippy lints name the rule and the remedy». TS: «Custom `@typescript-eslint`
 rules whose messages cite the violated `spec://` REQ and the fix surface». Go:
 **no vehicle at all** — only «custom checks emit the same grammar». All three
 carry the R3-011 grammar, and the three stack cards name a checker
-(`diagnostic-cites-req`) that does not exist.
+(`diagnostic-cites-req`) that does not exist. @spec/done
 
 ##b037-grammar-is-the-contract **The grammar is the contract, and it already
 has one authoritative renderer** — `req_message` + the `matches_req_grammar`
 acceptor in the engine, with 19 production call sites. Anything built here
 reproduces that string exactly; a second spelling of the grammar would be the
-bug this channel exists to prevent.
+bug this channel exists to prevent. @spec/done
 
 ##b037-ts-build **TypeScript — BUILD, fully.** A plugin package beside
 `ts-extract` / `ts-oracle`, authoring the rule the TS card itself names,
@@ -130,7 +130,7 @@ detection predicate for «a diagnostic» in TS — state what you chose and what
 cannot see, in the honest-limits style the `ts-seam-error-cites-req` note set;
 (ii) the package name and its `package.json` shape, matching the two sibling
 tool packages; (iii) whether the demo's config wires the plugin as `error` or
-`warn`, and why.**
+`warn`, and why.** @spec/done
 
 ##b037-rust-position **Rust — the vehicle is blocked by a toolchain policy, and
 that is stated, not smuggled.** The only supported route to a custom clippy lint
@@ -145,27 +145,27 @@ floor tool (the same shape Go already has with `staticcheck` and TS with
 failure when absent). **That adoption is a toolchain-policy decision, so it is
 the owner's** — routed as a named build, never as silence. The parity law's bar
 is met the way the law itself words it: the gap carries a recorded reason and a
-named route, and no rule is quietly relaxed.
+named route, and no rule is quietly relaxed. @spec/done
 
 ##b037-go-position **Go — no vehicle is promised, and the honest move is to
 name one rather than invent one silently.** The floor already distributes and
 invokes single-binary analyzers (`staticcheck`, `exhaustive` via `go install` +
 `path_tool`), so the shape a Go custom lint would take is already exercised;
 what is missing is the *decision* that Go's custom-lint carrier is an
-`analysis.Analyzer`. Recorded here, routed with the Rust half.
+`analysis.Analyzer`. Recorded here, routed with the Rust half. @spec/done
 
 ##b037-doc-correction **The guides' clause is corrected in the same landing.**
 All three mark `##SCAFFOLD-F-STRUCTURED-DIAGNOSTICS` `@impl/done` while the
 third channel is unbuilt — which is precisely the class of claim this campaign
 exists to kill. TS's clause becomes a description of the built plugin; Rust's
-and Go's state what enforces the grammar today and name the routed build.
+and Go's state what enforces the grammar today and name the routed build. @spec/done
 
 ## 4. B-038 — the pending cards get cards and checkers {#b038}
 
 ##b038-fork **The owner's fork №1, taken 2026-08-04: computed cell names.** The
 canonical cell name is `Pascal(variant)` followed by **the seam spelled as
 written** — `SatDepSolver`, not `SatDepsolver`; the naive
-«pascal both halves» composer mangles multi-word seams and is not the rule.
+«pascal both halves» composer mangles multi-word seams and is not the rule. @spec/done
 
 ##b038-fork-cost **The cost, boss-measured over the WHOLE tree** (the census's
 own count was ~10 because its perimeter was the discipline packages and
@@ -178,21 +178,21 @@ of `vibe-check` — `variant = "wal-freshness"` + `seam = "Check"` →
 `WalFreshnessCheck` — so the convention is already the house style in the
 largest cell family, which is the strongest argument the measurement produced.
 No cell name is wire-visible (MCP tool names are separate string literals), so
-every rename is compiler-checked and internal.
+every rename is compiler-checked and internal. @spec/done
 
 ##b038-one-rule-two-languages **One engine rule serves Rust and Go.** Go
 practises `{Variant}{Seam}` today with **no machine check anywhere**, so the
 build closes a Go gap in the same move rather than creating an asymmetry: the
 rule reads the manifest (Rust `#[cell(seam, variant)]`, Go `//spec:cell seam=
 variant=`) and compares the declared type name against the composed one. TS
-carries a recorded reason — it has no cell manifest to compute from.
+carries a recorded reason — it has no cell manifest to compute from. @spec/done
 
 ##b038-lands-frozen **The rule lands with a frozen baseline; the renames ride a
 separate, deliberate commit.** So the day the rule mounts, nothing reds, and the
 13 renames are reviewed as what they are — a readability improvement the
 compiler verifies (`Sat` → `SatDepSolver` and `EmbeddedProvider` →
 `EmbeddedDepProvider` are the two that best explain why the rule is worth
-having).
+having). @spec/done
 
 ##b038-r060 **R-060 — the card is new, and its checker lands vacuous.** «Test
 matrices are declared as data, never a `2^n` sweep» is cited by two guides and
@@ -201,14 +201,14 @@ the host registry with no card and no checker behind it. The census found
 nothing here — which is BUILD-FIRST's explicit case («a rule is never weakened
 for being unused»), and the fixture is what exercises it. **Refinement point for
 the worker: state the syntactic signature you keyed on and, for each language,
-which declared-matrix idioms you deliberately treat as compliant.**
+which declared-matrix idioms you deliberately treat as compliant.** @spec/done
 
 ##b038-id-space **The id space, measured: the R3-series registry IS `ATLAS.md`**
 (R3-001…R3-015, R3-004 at `:55`); the **R-0NN series has no registry at all** —
 zero `FINDING-R-0` records — and R-060 is the highest cited id. So the naming
 card needs no id reservation, and R-060's card is authored against an id the
 corpus already uses. The absent R-series registry is a finding in its own right
-and is filed to the backlog rather than fixed in passing.
+and is filed to the backlog rather than fixed in passing. @spec/done
 
 ## 5. What this batch deliberately does not do {#non-goals}
 
