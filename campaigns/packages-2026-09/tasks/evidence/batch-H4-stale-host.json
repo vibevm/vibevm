@@ -1,0 +1,72 @@
+{
+  "batch": "H4-stale-host",
+  "cluster": "host",
+  "files": {
+    "spec/common/PROP-000.md": {
+      "ATTRIBUTION-ENFORCEMENT-EXCEPTION": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the attribution posture is enforced procedurally, not mechanically - no commit hook, trailer scanner or CI check exists or is planned, consistent with the standing no-CI decision.",
+          "Checked by absence: `.github/workflows` does not exist; `.git/hooks` carries only `*.sample`; `tools/self-check.sh` has no trailer or attribution step.",
+          "found: nothing enforces it mechanically, exactly as the fact says. The fact was ADDED after this file's `verified_at` stamp, which is why the text moved - it is new, not edited."
+        ]
+      }
+    },
+    "spec/common/PROP-029-fully-qualified-addresses.md": {
+      "status-line": {
+        "v": "confirmed",
+        "ev": [
+          "Accepted 2026-07-12, owner-ratified; builds on PROP-008's `group` field and the addressable-specs `#modules` unit.",
+          "spec/modules/vibe-registry/PROP-008-qualified-naming.md carries `{#group}` (1 occurrence)",
+          "found: the referent resolves. The text moved only because the citation was rewritten from the retired `spec://vibevm/...` form to `spec://org.vibevm.core/vibevm/...` by the B-031 migration - the claim is unchanged and its target is where it says."
+        ]
+      }
+    },
+    "spec/modules/vibe-workspace/PROP-009-loading-model.md": {
+      "WHEN-FORCES-DYNAMIC": {
+        "v": "confirmed",
+        "ev": [
+          "A `[boot_snippet]` with a `when` condition stays a conditional dynamic entry irrespective of `link`, because a condition cannot be honoured by the static lane.",
+          "The only edit is the adjective describing that lane: 'verbatim' became 'ahead-of-time'.",
+          "found: the constraint, its reason and its consequence are word-for-word unchanged; the substituted adjective is more accurate about WHY a condition cannot ride the lane - it is composed before the session, not merely copied."
+        ]
+      },
+      "milestone-line": {
+        "v": "confirmed",
+        "ev": [
+          "Now claims M1.18 is SHIPPED and implementation-locked, where it previously claimed a design proposal targeting a new M1.18.",
+          "ROADMAP.md carries M1.18 (7 occurrences); the file's own status-line records phases 1-7 shipped 2026-05-22; every session of this repository boots on `spec/boot/STATIC.md` + `INDEX.md`, which is that machinery running.",
+          "found: the milestone exists in the roadmap and the mechanism it names is what this repository boots on today - the marker moving from @spec/work to @impl/done follows the build, not the other way round."
+        ]
+      },
+      "status-line": {
+        "v": "confirmed",
+        "ev": [
+          "DRAFT became IMPLEMENTED: phases 1-7 shipped, the OS-scoped `when` gate shipped, phase 8's engine-backed effective-spec projection stays v1.5 scope.",
+          "spec/boot/STATIC.md and spec/boot/INDEX.md exist and are what CLAUDE.md's generated block instructs every session to read, in that order, with the `[[entry]]` grammar the line describes.",
+          "found: the shipped half is observable in this tree's own boot; the deferred half is named as deferred rather than claimed."
+        ]
+      }
+    },
+    "spec/modules/vibe-workspace/PROP-035-spec-compiler.md": {
+      "status-line": {
+        "v": "confirmed",
+        "ev": [
+          "DESIGN/provisional became IMPLEMENTED, citing the history section's record of the compiler shipping as the `vibe-spec` crate wired into bootgen.",
+          "crates/vibe-spec exists and this session read its `merge.rs` (fold_source), `use_graph.rs` (three-colour cycle DFS) and `pipeline.rs` directly; the file carries its history anchors.",
+          "found: the crate the status line names is real and carries the machinery the compiler sections specify - the status change is backed by the code."
+        ]
+      }
+    },
+    "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md": {
+      "fp-storage-note": {
+        "v": "confirmed",
+        "ev": [
+          "Was 'fingerprint storage location and granularity are open'; now says they were resolved on 2026-07-15 - header storage (`RES-FP-STORAGE`) and per-package granularity (`RES-GRANULARITY`).",
+          "grep in the same file for RES-FP-STORAGE / RES-GRANULARITY",
+          "found: 3 occurrences - both resolution ids exist where the note sends the reader. An open question closing is the healthiest reason for a fact to move."
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "batch": "H3-design-readme-index",
+  "cluster": "host",
+  "files": {
+    "spec/design/README.md": {
+      "idx-tooling-map": {
+        "v": "drift",
+        "ev": [
+          "Claims TOOLING-MAP.md carries «the ten owner forks».",
+          "TOOLING-MAP.md ##forks-lead + the numbered entries under §5 {#forks}",
+          "found: «Eleven named decisions, each waiting inside its entry» and ELEVEN numbered `##FORK-` entries (1..11). The count was ten when this line was written; fork 11 (##FORK-COMPOSITION-SHAPE) was added after. Everything else in the entry — the four planes, waves А–Г, the five milestones, the owner's commissioning quote, the root-relocation — resolves."
+        ]
+      },
+      "idx-deterministic-loading": {
+        "v": "confirmed",
+        "ev": [
+          "Points at deterministic-loading-aliasing.md as the B-011 design, approved 2026-08-04, the compiled lane going 59 duplicate-anchor collisions → 0.",
+          "spec/design/deterministic-loading-aliasing.md (124 lines, exists); the 59 figure occurs 3× in it; TOOLING-MAP ##WAVE-A records B-011 with M-LOAD taken on both measurements",
+          "found: file, approval and the 59 → 0 acceptance all resolve where the entry says."
+        ]
+      },
+      "idx-lane-dedup": {
+        "v": "confirmed",
+        "ev": [
+          "Points at lane-composition-dedup.md as the B-006 design, approved «согласен с твоими рекомендациями a1 b1 c1», acceptance measured on the live lane (markers 9 → 5, double-qualified labels 164 → 0, −404 lines).",
+          "spec/design/lane-composition-dedup.md (62 lines) carries «164 → 0»; the 9 → 5 and −404 figures are recorded in spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
+          "found: every figure resolves — the entry attributes them to the measured landing, not to the design's own text, and the campaign record carries the two the design does not."
+        ]
+      },
+      "idx-host-as-package": {
+        "v": "confirmed",
+        "ev": [
+          "Points at host-as-package.md as the B-031 design: ≈1 851 living-surface occurrences proposed, landed as a 1 893-occurrence migration at residue 0.",
+          "spec/design/host-as-package.md (71 lines) carries «1 851»; TOOLING-MAP ##WAVE-A carries «1 893-occurrence migration, residue 0»; harvest/e5-b031-evidence.md exists",
+          "found: the proposal figure is in the design, the landing figure in the map, the cited census on disk — the entry's split between proposed and landed is faithful."
+        ]
+      },
+      "idx-gate-parity": {
+        "v": "drift",
+        "ev": [
+          "Says the design proposes «per-language sections with idiomatic keys (`gated_packages` / `gated_cells` + their own exempt)».",
+          "grep for gated_packages / gated_cells across spec/design/gate-parity-config.md and every *.toml in the tree",
+          "found: ZERO occurrences anywhere — not in the design, not in any live config. The design states the opposite in ##fork-shape: «The gate key is the neutral spelling `gated` in an idiomatic home», which is what the owner's ruling produced and what the seven package policies landed 2026-08-05 actually carry. The rest of the entry (units ruled crate/package/cell, the quality-bar quote, landed whole) resolves; this one referent does not."
+        ]
+      },
+      "idx-seam-error-parity": {
+        "v": "confirmed",
+        "ev": [
+          "Points at seam-error-and-assertion-parity.md as the B-033 + B-030 + B-049 design carrying the parity-principle lift, map fork №9, taken 2026-08-04 «Ядро дисциплины».",
+          "spec/design/seam-error-and-assertion-parity.md (286 lines, exists); harvest/e11-r1-seam-errors-census.md and e11-r2-assertions-census.md both on disk; TOOLING-MAP ##FORK-PARITY-HOME",
+          "found: the design, both cited censuses, and the fork's ruling text «Ядро дисциплины» — the language-neutral guiding layer of core-ai-native — all resolve."
+        ]
+      },
+      "idx-map-format-change": {
+        "v": "confirmed",
+        "ev": [
+          "Points at map-format-change.md as the B-019а + B-016.1 + B-017 design carrying forks №3, №4 and №5, with the self-describing fingerprint as its load-bearing decision.",
+          "spec/design/map-format-change.md (376 lines); grep for fork numbers yields exactly №3 №4 №5; harvest/e17-map-format-census.md and e16-b024-lifecycle-vocab-census.md both present",
+          "found: the three fork numbers the entry names are the three the design carries, and both cited censuses exist."
+        ]
+      },
+      "idx-new-rule-classes": {
+        "v": "confirmed",
+        "ev": [
+          "Points at new-rule-classes.md as the B-036 + B-037 + B-038 design carrying fork №1, taken 2026-08-04 as computed cell names, cost 40 manifest-bearing cells / 14 compliant / 13 production renames.",
+          "spec/design/new-rule-classes.md (227 lines); grep yields fork №1 only; the three e13 censuses on disk; TOOLING-MAP ##FORK-COMPUTED-NAMES",
+          "found: the map's fork entry carries the same three figures verbatim — «40 manifest-bearing cells, 14 already compliant … 13 production renames in the host `crates/`»."
+        ]
+      }
+    }
+  }
+}

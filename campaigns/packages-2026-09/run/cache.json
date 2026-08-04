@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-04T22:59:30Z",
+  "updated_at": "2026-08-04T23:28:59Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -23761,7 +23761,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "f0968854da45737d874020b768f34ccc0fc40d23a3d9ac35dfc1257e5003d11c",
+        "processed_hash": "8fe183a8e6bd6a572f1f9e054a342871f83d59d3bb19b0bf584df372e491d215",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -23833,10 +23833,10 @@
           "RULE-FILE-LENGTH-BUDGET": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.md:23  - ##RULE-FILE-LENGTH-BUDGET the file-length budget (position is a resource); @impl/done",
-              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform/src/lib.rs:57      out.push(Box::new(rules::FileLength {",
-              "research/ts-demo/conform.toml:10  max_file_lines = 600",
-              "located in the perimeter on the refs above, machine-verified against the files they cite"
+              "The file-length budget rides the ROOT `conform.toml` key `max_file_lines` (default 600), with two sibling ROOT keys for the invariant-comment-position rule - `invariant_comment_markers` (default the five labeled markers INVARIANT: / WARNING: / PANICS: / MUST: / NEVER:, empty disables) and `invariant_comment_min_file_lines` (default 120); all three language-neutral, NOT under [typescript].",
+              "core-ai-native-conform/src/config.rs (root-level `pub invariant_comment_markers` and `pub invariant_comment_min_file_lines`, `max_file_lines`); rust-ai-native-conform/src/lib.rs `build_rules` consumes them as `config.max_file_lines` / `config.invariant_comment_markers` / `config.invariant_comment_min_file_lines` - the ROOT view, never `config.rust.*`",
+              "found: all three keys are declared at the root of `Config` and read from the root by the rule builder; the five default markers are exactly INVARIANT: / MUST: / NEVER: / PANICS: / WARNING:. The seven package policies landed 2026-08-05 each carry `max_file_lines = 600` above their `[rust]` section, which is the same root/per-language split observed live.",
+              "RESTATEMENT, and why: this file was sealed earlier in the session on a text-stability check whose fact extractor did not recognise list-item facts (`- ##ID ...`), so this fact's move went unseen and the seal vouched for it unchecked. The move was the marker `@impl/done` being appended - the claim text itself is byte-identical - and the claim now verifies against the engine directly. The verdict is unchanged; what changed is that it has been checked."
             ]
           },
           "RULE-CELL-ISOLATION": {
@@ -24053,8 +24053,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-04T02:52:00Z",
-        "verify_batch": "C4+C5"
+        "verified_at": "2026-08-04T23:23:50Z",
+        "verify_batch": "C4+C5 + H5-restate-file-length-budget"
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/typescript-ai-native-tcg.md": {
@@ -31734,7 +31734,7 @@
       "unit_count": 13,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "b1310825173a10ac2751eb4931db1c53582d620c79f15e73067c697f926b6dc3",
+        "processed_hash": "77ca78c5dc0eb3042ec54b2b47a1208f172184326e7573bf9380453d7465116e",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -32531,7 +32531,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T21:45:52Z",
+        "verified_at": "2026-08-04T23:23:50Z",
         "verify_batch": "W4"
       }
     },
@@ -34368,7 +34368,7 @@
       "unit_count": 11,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "951dd530a7ed50d38c49ca51662ed3d06215fdc4e86d677ef4b646c831d3ee81",
+        "processed_hash": "320453b6a58cc91261beb67b1867fbb709c3f49267ca3b5e73426e7094f82f48",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -35210,7 +35210,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T20:07:01Z",
+        "verified_at": "2026-08-04T23:23:50Z",
         "verify_batch": "W3 + D3b"
       }
     },
@@ -40169,7 +40169,7 @@
       "unit_count": 10,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "2dfd25b0b7e920a7e89afd5f70b4734e04571fa9ec24192a523a3febf1e496b6",
+        "processed_hash": "5ec7e8a30ec61eaec608757a874cf175b904ee8aaa5871c53830e48e4c40a7ac",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -40656,24 +40656,25 @@
           "EVERY-CONTROL-IS-A-LITERAL-HASHTAG": {
             "v": "confirmed",
             "src": [
-              1
+              1,
+              3
             ],
             "ev": [
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:119  ##EVERY-CONTROL-IS-A-LITERAL-HASHTAG Every criticality control - #hot, #cold, #reboil and their modifiers - is a literal hashtag",
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:69  TRIGGERING (read first): every control below is a hashtag - literal \"#\" + exact token,",
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:38  Don't activate SUPERTHINK by default; use it only on prompts where the \"SUPERTHINK\" or \"#SUPERTHINK\" word exists (in lowercase, uppercase, or any mix of cases).",
-              "CLOSED F-229 (Phase D, wave 1, route a). The sentence asserted of EVERY control what the artefact scopes to the controls inside <EXTENSION_CRITICALITY> (:62-150), and its own knob list carries #superthink, which ships as a separate extension block at :35-51 and fires on the BARE word by the artefact's own line 38. The sentence now names the criticality controls and states #superthink as the documented exception, matching the artefact rather than widening it."
+              "Every criticality control is a literal hashtag; superthink is the documented exception, shipping as its own extension block above the criticality one and firing on the bare word too.",
+              "DISCOVERY-PROMPT.md carries 'superthink' twice; usage.md carries it four times",
+              "found: the exception is documented in the artifact itself, so the fact's new clause is not an assertion about behaviour but a pointer to a block that exists."
             ]
           },
           "BARE-WORDS-NEVER-FIRE-THE-MACHINERY": {
             "v": "confirmed",
             "src": [
-              1
+              1,
+              3
             ],
             "ev": [
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:124  ##BARE-WORDS-NEVER-FIRE-THE-MACHINERY Bare `hot` and `cold` in ordinary prose never fire the criticality machinery",
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md:71  case-insensitive (like #superthink). Bare words \"hot\"/\"cold\" in ordinary prose NEVER fire this",
-              "CLOSED F-301 (Phase D, wave 1, route a). The sentence asserted a universal negative that the artefact's own SUPERTHINK block refutes; it now carries the artefact's own scope - the generic words hot and cold - word for word."
+              "Bare 'hot' / 'cold' in ordinary prose never fire the criticality machinery; only the hash-prefixed token triggers.",
+              "DISCOVERY-PROMPT.md in the installed slot - the criticality extension block and its trigger tokens",
+              "found: the controls are defined as hash-prefixed tokens; the edit narrowed a general sentence ('bare words') to the two words it is actually about, which is what the neighbouring facts already implied."
             ]
           },
           "DEFAULT-WITH-NO-HASHTAG": {
@@ -40788,12 +40789,13 @@
           "ARTIFACT-IS-READ-ONLY-BUT-BUILT-TO-BE-ADAPTED": {
             "v": "confirmed",
             "src": [
-              1
+              1,
+              3
             ],
             "ev": [
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:171  ##ARTIFACT-IS-READ-ONLY-BUT-BUILT-TO-BE-ADAPTED The artifact is read-only, but it is built to be adapted",
-              "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md:185  4. Leave <MAIN>, <EXTENSION_CRITICALITY>, and the response grammar",
-              "CLOSED F-229 (second anchor, Phase D, wave 1, route a). The summary put every EXTENSION block on the configuration side while the file's own re-derive prompt, fifteen lines below, puts <EXTENSION_CRITICALITY> on the mechanism side - and the artefact's text makes the re-derive prompt right, since that block is the pump. The summary now draws the same line and says which neighbour it agrees with."
+              "The artifact is read-only but built to be adapted: the variables block and the EXTENSION blocks describing you are configuration; MAIN and EXTENSION_CRITICALITY are mechanism.",
+              "The package's own shipped artifact, vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md (source 1 as shipped text, source 3 as the installed copy)",
+              "found: MAIN and EXTENSION_CRITICALITY are present in the artifact as named. The edit made the line NAME the blocks it previously described in general terms - a sharpening, and the sharper claim also holds."
             ]
           },
           "re-derive-prompt-lead": {
@@ -40896,8 +40898,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T08:26:30Z",
-        "verify_batch": "W4 + D1b"
+        "verified_at": "2026-08-04T23:28:59Z",
+        "verify_batch": "W4 + D1b + H4-stale-world"
       }
     },
     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/README.md": {
@@ -53245,7 +53247,7 @@
       "unit_count": 13,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "a0d5f7e270d26a52a6e66362698b9a38e993028e4191521e178eb5d026309440",
+        "processed_hash": "b7a51d395463b6017cf013a982457879934c0b1426b20d9e94713cf5f7bcdda3",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -54681,7 +54683,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T23:01:22Z",
+        "verified_at": "2026-08-04T23:23:50Z",
         "verify_batch": "W7 + D6 + D7"
       }
     },
@@ -56777,7 +56779,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "14baaf6cbd3f48ba5423cfd7733187bcb5817a7e76caabf136e598c8c7c497a3",
+        "processed_hash": "1b857ec3d182430be86b93977ca30954efd623a2f1b28effaebf01c7e7abeabb",
         "verdicts": {
           "THE-PROJECT-KEEPS-A-SECOND-TEST-TIER": {
             "v": "confirmed",
@@ -56881,16 +56883,14 @@
           },
           "sibling-document-pointers": {
             "v": "confirmed",
-            "ev": [
-              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md:29  [`../flows/manual-tests/`](../flows/manual-tests/MANUAL-TESTS-PROTOCOL.md). @impl/done",
-              "spec/boot/STATIC.md:916  [`../flows/manual-tests/`](../flows/manual-tests/MANUAL-TESTS-PROTOCOL.md).",
-              "vibedeps/flow-manual-tests/0.1.0/spec/boot/44-flow-manual-tests.md:23  [`../flows/manual-tests/`](../flows/manual-tests/MANUAL-TESTS-PROTOCOL.md).",
-              "confirmed: This is the one `../flows/…` pointer in this snippet (`grep -noE '\\.\\./flows/[^)]*'` returns exactly one hit, at line 29 in the package and line 23 in the installed copy — matching the harvest's per-file count of 1 for manual-tests). Inside the package the pointer resolves: spec/boot/../flows/manual-tests/MANUAL-TESTS-PROTOCOL.md exists. In the consuming host it does not: `ls -d spec/flows` returns nothing and `ls spec/` returns WAL.md, boot, common, design, manual-tests, modules, terraforms — so from spec/boot/STATIC.md:916 the link resolves to a spec/flows/ that does not exist. This is the pointer form the brief distinguished: it is a `../flows/manual-tests/…` pointer, NOT a claim about spec/manual-tests/, so the host's existing spec/manual-tests/ does not rescue it. Source-3 note measured while resolving these refs: the installed payload under vibedeps/flow-manual-tests/0.1.0/ is ANCHOR-STRIPPED — `grep -c '##[A-Za-z]'` returns 0 for all five installed files (README.md, the boot snippet and the three flow documents) against 123 anchors in the package source, and the @impl/done markers are gone too. What a consumer receives is the prose without the fact anchors, so a source-3 citation can only ever land on the rendered sentence, never on the anchor id."
-            ],
             "src": [
               1,
-              2,
               3
+            ],
+            "ev": [
+              "The format, authoring rules and skeleton live at the qualified address org.vibevm.world/manual-tests/flows/manual-tests/MANUAL-TESTS-PROTOCOL#root.",
+              "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md - present, carries `{#root}`; the installed copy under vibedeps/flow-manual-tests/ is present too",
+              "found: the target resolves. The text moved because a relative markdown link was replaced by a fully-qualified address - the pointer got MORE resolvable, not less."
             ]
           },
           "the-whole-point-is-human-eyes-on-real-output": {
@@ -57012,8 +57012,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T22:01:09Z",
-        "verify_batch": "W5"
+        "verified_at": "2026-08-04T23:28:59Z",
+        "verify_batch": "W5 + H4-stale-world"
       }
     },
     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md": {
@@ -57039,7 +57039,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "5414aab581d54282c5e4cab2a20f9fe8fcf08c19663443053539e54fab34ca98",
+        "processed_hash": "fcb68dae1acd8b70920506ca031c4f847213281e3dd5bff15cd79ddeef53bec3",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -57558,7 +57558,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T22:03:08Z",
+        "verified_at": "2026-08-04T23:23:50Z",
         "verify_batch": "W5"
       }
     },
@@ -59073,7 +59073,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "34f934d610a6a07999a483986a98d6025dacdaab50151d463c987be76ec06434",
+        "processed_hash": "04146b7a40d23a741a66038a30972345b76f1b9bdb077760aa229324d2a9476c",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -59801,7 +59801,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T22:15:21Z",
+        "verified_at": "2026-08-04T23:23:50Z",
         "verify_batch": "W5"
       }
     },
@@ -61498,7 +61498,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "1b506ae082ac082cbdf1a188de26e5cba74df3c4ba975928ba7c8449e0f32a11",
+        "processed_hash": "1348b64bf37a504c5094875f8526321e64f316dcab5a15e17befacad51f88045",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -62159,7 +62159,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T23:21:05Z",
+        "verified_at": "2026-08-04T23:23:50Z",
         "verify_batch": "W7"
       }
     },
@@ -65197,7 +65197,7 @@
       "unit_count": 5,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "42c8ed93b007a456495927062df966e04ddcfbde906a89b97de876a0a4797adc",
+        "processed_hash": "d7398e88dd92eb37dc35fe066e28f9371acead41ae4c80222ab9a2510f9cc5b0",
         "verdicts": {
           "the-repository-is-worked-by-a-recordable-agent-session": {
             "v": "confirmed",
@@ -65456,22 +65456,19 @@
           },
           "sibling-document-pointers": {
             "v": "confirmed",
-            "ev": [
-              "spec/boot/STATIC.md:1110  [`SECRETS-HYGIENE-PROTOCOL.md`](../flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md).",
-              "spec/boot/STATIC.md:1111  Scope rules: [`scope-discipline.md`](../flows/secrets-hygiene/scope-discipline.md).",
-              "spec/boot/STATIC.md:1112  Install-time code: [`third-party-code-consent.md`](../flows/secrets-hygiene/third-party-code-consent.md).",
-              "vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md:1  # Secrets Hygiene Protocol {#root}",
-              "confirmed: All three targets resolve inside the package and inside `vibedeps/flow-secrets-hygiene/0.1.0/spec/flows/secrets-hygiene/`. They do NOT resolve in the consuming project: the three pointers are carried verbatim into the compiled host lane at `spec/boot/STATIC.md:1110-1112`, and `ls spec/` returns WAL.md, boot, common, design, manual-tests, modules, terraforms — there is no `spec/flows/` directory in this repository. So all three of this snippet's `../flows/…` pointers dangle in the host. This is W1's 69-dangling family and it is a fact about the pointer, not about the three documents, which exist and are installed. The batch's other three flows contribute six more of the same, for nine total."
-            ],
             "src": [
               1,
-              2,
               3
+            ],
+            "ev": [
+              "Three pointers: the protocol, the scope rules, and the install-time third-party-code consent, all as qualified addresses under org.vibevm.world/secrets-hygiene.",
+              "All three targets present with `{#root}`: SECRETS-HYGIENE-PROTOCOL.md, scope-discipline.md, third-party-code-consent.md; installed copy present under vibedeps/flow-secrets-hygiene/",
+              "found: all three resolve; the same relative-link to qualified-address rewrite as its siblings."
             ]
           }
         },
-        "verified_at": "2026-07-28T22:18:59Z",
-        "verify_batch": "W5"
+        "verified_at": "2026-08-04T23:28:59Z",
+        "verify_batch": "W5 + H4-stale-world"
       }
     },
     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL.md": {
@@ -65497,7 +65494,7 @@
       "unit_count": 13,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "042263ea44a5c7e7fb5b451a7316f5738dd28b9b13ddfaafe6f396764fa8f3ba",
+        "processed_hash": "b6c7180c227259c212fe864377b547737a0c04400c1bea3312bd88fa58ad40b2",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -66278,7 +66275,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T22:20:06Z",
+        "verified_at": "2026-08-04T23:23:50Z",
         "verify_batch": "W5"
       }
     },
@@ -79380,7 +79377,7 @@
       "unit_count": 11,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "1b8bfd391e63718d519439db77367b2d186d49685d921ad2ded68a2ffbadf2c3",
+        "processed_hash": "3c1cae2ba0fc4ee8afc01034f793a2b332d73f3240efc3942cc334dbca49be6e",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -79990,7 +79987,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T19:14:14Z",
+        "verified_at": "2026-08-04T23:23:50Z",
         "verify_batch": "W2c"
       }
     },
@@ -81364,7 +81361,7 @@
       "unit_count": 5,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "db1e68a85ef8769b3ca9845ef95717172a89ac9ccbb9f0db715b31d5a0d4d734",
+        "processed_hash": "c310e9d21fb1d8765709e1355e1fcca15c61b46df001cdca99fac39e37574815",
         "verdicts": {
           "THE-PROJECT-MAY-HOST-SPECSPACES": {
             "v": "confirmed",
@@ -81676,22 +81673,19 @@
           },
           "sibling-document-pointers": {
             "v": "confirmed",
-            "ev": [
-              "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md:1  # The Specspaces Protocol {#root}",
-              "spec/boot/STATIC.md:1498  Full protocol:",
-              "spec/boot/STATIC.md:1499  [`spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md`](../flows/wal-specspaces/SPECSPACES-PROTOCOL.md).",
-              "campaigns/packages-2026-09/harvest/world-w2-wal-family.md:19    relative .md citations resolved: 23",
-              "confirmed: The target exists and the relative citation resolves — covered by the batch harvest's source-1 join over these 23 files («relative .md citations resolved: 23, broken: 0»), cited from the harvest per the task note. Unlike the sync-from-code pointers, this one also resolves from the installed slot, because the slot keeps the `spec/boot/` → `spec/flows/` relationship the link assumes (vibedeps/flow-wal-specspaces/0.1.0/spec/boot/11-flow-wal-specspaces.md and .../spec/flows/wal-specspaces/). The host contract points at the same document by name at CLAUDE.md:141."
-            ],
             "src": [
               1,
-              2,
               3
+            ],
+            "ev": [
+              "Full protocol at the qualified address org.vibevm.world/wal-specspaces/flows/wal-specspaces/SPECSPACES-PROTOCOL#root.",
+              "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md - present, carries `{#root}`; installed copy present under vibedeps/flow-wal-specspaces/",
+              "found: the target resolves; the same rewrite."
             ]
           }
         },
-        "verified_at": "2026-07-29T17:23:24Z",
-        "verify_batch": "W2d + D3a"
+        "verified_at": "2026-08-04T23:28:59Z",
+        "verify_batch": "W2d + D3a + H4-stale-world"
       }
     },
     "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md": {
@@ -83017,7 +83011,7 @@
       "unit_count": 15,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "0224a8990b6e4f52f3d21ab20a1f539ab568e9edcac3f31b90dc0e1beb66eaa6",
+        "processed_hash": "f0f2a1d8a214d5db1dc2e2ecbba15afda48701fb54b01fdea1670b531f94a24e",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -83811,7 +83805,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-29T16:50:24Z",
+        "verified_at": "2026-08-04T23:23:50Z",
         "verify_batch": "W2a + D2a"
       }
     },
@@ -87481,12 +87475,14 @@
           "ATTRIBUTION-ENFORCEMENT-EXCEPTION": {
             "v": "confirmed",
             "ev": [
-              "the §3.6(c)-form marked exception, owner ruling 2026-08-01 (F-230 answer (в)): tree-verified that the state it records is real — no tracked hooks (.git/hooks has samples only), no .github/, no CI config, no trailer scanner; the boot contract does carry the rules every session reads; the no-CI decision it cites is the standing owner decision already on record in terraform/REPORT.md's findings; placed inside PROP-000 §12, the host's commit-discipline section, where the enforcement question lives"
+              "Claims the attribution posture is enforced procedurally, not mechanically - no commit hook, trailer scanner or CI check exists or is planned, consistent with the standing no-CI decision.",
+              "Checked by absence: `.github/workflows` does not exist; `.git/hooks` carries only `*.sample`; `tools/self-check.sh` has no trailer or attribution step.",
+              "found: nothing enforces it mechanically, exactly as the fact says. The fact was ADDED after this file's `verified_at` stamp, which is why the text moved - it is new, not edited."
             ]
           }
         },
         "verified_at": "2026-08-01T12:54:05Z",
-        "verify_batch": "c3b-prop-000 + d1 + D14 + D20"
+        "verify_batch": "c3b-prop-000 + d1 + D14 + D20 + H4-stale-host"
       }
     },
     "spec/common/PROP-006-operating-modes.md": {
@@ -91025,7 +91021,9 @@
           "status-line": {
             "v": "confirmed",
             "ev": [
-              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+              "Accepted 2026-07-12, owner-ratified; builds on PROP-008's `group` field and the addressable-specs `#modules` unit.",
+              "spec/modules/vibe-registry/PROP-008-qualified-naming.md carries `{#group}` (1 occurrence)",
+              "found: the referent resolves. The text moved only because the citation was rewritten from the retired `spec://vibevm/...` form to `spec://org.vibevm.core/vibevm/...` by the B-031 migration - the claim is unchanged and its target is where it says."
             ]
           },
           "ADDR-LAW": {
@@ -91174,7 +91172,7 @@
           }
         },
         "verified_at": "2026-07-25T13:05:25Z",
-        "verify_batch": "c3a-common-small"
+        "verify_batch": "c3a-common-small + H4-stale-host"
       }
     },
     "spec/common/PROP-031-algorithmic-refactoring.md": {
@@ -92806,7 +92804,7 @@
         "coverage_note": "verdicts keyed by fact anchors; table cell-markers inherit their row anchor; <status> elements judged as _elements",
         "fact_count": 29,
         "marker_count": 34,
-        "processed_hash": "9d1a5790394672fa323f7a230f7781697ad7d982ad78975fcbebd9b79a69953d",
+        "processed_hash": "a6597c0ceb49805d8bc01b2ed8c6cb295a2023041cddbc31eebee8502c2a01ed",
         "verdicts": {
           "genre-definition": {
             "v": "confirmed",
@@ -93047,10 +93045,74 @@
             "ev": [
               "referents resolve 2026-08-01: #WRITE-IN-THE-SESSION-THAT-DECIDES and #backfilled-reasoning-is-fiction resolve in DECISION-RECORDS-PROTOCOL.md («fiction with confidence» verbatim there), #ROW-ANTI-BACKFILLED-MEMORY in record-template.md, #RHYTHM-OPPORTUNISTIC in revisit-triggers.md, #ASK-RATHER-THAN-INVENT-DATA in the boot snippet; the scheduled-exception claim is tree-true — common/'s reopenable sections were classified and backfilled in one pass (twelve records: PROP-000 ×5, PROP-018 ×3, PROP-024 ×4, commit eccb1499, census 35 labels → 12 reopenable in harvest/d12-adr-execution-material.md); the pending §3.13 ##SPLIT-HOST-POSTURE carve-out (35→36) is an owner question about one unit's boundary and does not contradict the executed pass; the genre-map quote «amended by decision record» is the installed spec-genres row verbatim"
             ]
+          },
+          "idx-tooling-map": {
+            "v": "drift",
+            "ev": [
+              "Claims TOOLING-MAP.md carries «the ten owner forks».",
+              "TOOLING-MAP.md ##forks-lead + the numbered entries under §5 {#forks}",
+              "found: «Eleven named decisions, each waiting inside its entry» and ELEVEN numbered `##FORK-` entries (1..11). The count was ten when this line was written; fork 11 (##FORK-COMPOSITION-SHAPE) was added after. Everything else in the entry — the four planes, waves А–Г, the five milestones, the owner's commissioning quote, the root-relocation — resolves."
+            ]
+          },
+          "idx-deterministic-loading": {
+            "v": "confirmed",
+            "ev": [
+              "Points at deterministic-loading-aliasing.md as the B-011 design, approved 2026-08-04, the compiled lane going 59 duplicate-anchor collisions → 0.",
+              "spec/design/deterministic-loading-aliasing.md (124 lines, exists); the 59 figure occurs 3× in it; TOOLING-MAP ##WAVE-A records B-011 with M-LOAD taken on both measurements",
+              "found: file, approval and the 59 → 0 acceptance all resolve where the entry says."
+            ]
+          },
+          "idx-lane-dedup": {
+            "v": "confirmed",
+            "ev": [
+              "Points at lane-composition-dedup.md as the B-006 design, approved «согласен с твоими рекомендациями a1 b1 c1», acceptance measured on the live lane (markers 9 → 5, double-qualified labels 164 → 0, −404 lines).",
+              "spec/design/lane-composition-dedup.md (62 lines) carries «164 → 0»; the 9 → 5 and −404 figures are recorded in spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
+              "found: every figure resolves — the entry attributes them to the measured landing, not to the design's own text, and the campaign record carries the two the design does not."
+            ]
+          },
+          "idx-host-as-package": {
+            "v": "confirmed",
+            "ev": [
+              "Points at host-as-package.md as the B-031 design: ≈1 851 living-surface occurrences proposed, landed as a 1 893-occurrence migration at residue 0.",
+              "spec/design/host-as-package.md (71 lines) carries «1 851»; TOOLING-MAP ##WAVE-A carries «1 893-occurrence migration, residue 0»; harvest/e5-b031-evidence.md exists",
+              "found: the proposal figure is in the design, the landing figure in the map, the cited census on disk — the entry's split between proposed and landed is faithful."
+            ]
+          },
+          "idx-gate-parity": {
+            "v": "drift",
+            "ev": [
+              "Says the design proposes «per-language sections with idiomatic keys (`gated_packages` / `gated_cells` + their own exempt)».",
+              "grep for gated_packages / gated_cells across spec/design/gate-parity-config.md and every *.toml in the tree",
+              "found: ZERO occurrences anywhere — not in the design, not in any live config. The design states the opposite in ##fork-shape: «The gate key is the neutral spelling `gated` in an idiomatic home», which is what the owner's ruling produced and what the seven package policies landed 2026-08-05 actually carry. The rest of the entry (units ruled crate/package/cell, the quality-bar quote, landed whole) resolves; this one referent does not."
+            ]
+          },
+          "idx-seam-error-parity": {
+            "v": "confirmed",
+            "ev": [
+              "Points at seam-error-and-assertion-parity.md as the B-033 + B-030 + B-049 design carrying the parity-principle lift, map fork №9, taken 2026-08-04 «Ядро дисциплины».",
+              "spec/design/seam-error-and-assertion-parity.md (286 lines, exists); harvest/e11-r1-seam-errors-census.md and e11-r2-assertions-census.md both on disk; TOOLING-MAP ##FORK-PARITY-HOME",
+              "found: the design, both cited censuses, and the fork's ruling text «Ядро дисциплины» — the language-neutral guiding layer of core-ai-native — all resolve."
+            ]
+          },
+          "idx-map-format-change": {
+            "v": "confirmed",
+            "ev": [
+              "Points at map-format-change.md as the B-019а + B-016.1 + B-017 design carrying forks №3, №4 and №5, with the self-describing fingerprint as its load-bearing decision.",
+              "spec/design/map-format-change.md (376 lines); grep for fork numbers yields exactly №3 №4 №5; harvest/e17-map-format-census.md and e16-b024-lifecycle-vocab-census.md both present",
+              "found: the three fork numbers the entry names are the three the design carries, and both cited censuses exist."
+            ]
+          },
+          "idx-new-rule-classes": {
+            "v": "confirmed",
+            "ev": [
+              "Points at new-rule-classes.md as the B-036 + B-037 + B-038 design carrying fork №1, taken 2026-08-04 as computed cell names, cost 40 manifest-bearing cells / 14 compliant / 13 production renames.",
+              "spec/design/new-rule-classes.md (227 lines); grep yields fork №1 only; the three e13 censuses on disk; TOOLING-MAP ##FORK-COMPUTED-NAMES",
+              "found: the map's fork entry carries the same three figures verbatim — «40 manifest-bearing cells, 14 already compliant … 13 production renames in the host `crates/`»."
+            ]
           }
         },
-        "verified_at": "2026-08-01T07:27:17Z",
-        "verify_batch": "c2-design + D14"
+        "verified_at": "2026-08-04T23:26:24Z",
+        "verify_batch": "c2-design + D14 + H3-design-readme-index"
       }
     },
     "spec/design/action-system.md": {
@@ -111231,15 +111293,17 @@
           "milestone-line": {
             "v": "confirmed",
             "ev": [
-              "F-026 (ledgered in B): 'design proposal ... Not implementation-locked' while §7 records Phases 1-7 shipped 2026-05-22",
-              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
+              "Now claims M1.18 is SHIPPED and implementation-locked, where it previously claimed a design proposal targeting a new M1.18.",
+              "ROADMAP.md carries M1.18 (7 occurrences); the file's own status-line records phases 1-7 shipped 2026-05-22; every session of this repository boots on `spec/boot/STATIC.md` + `INDEX.md`, which is that machinery running.",
+              "found: the milestone exists in the roadmap and the mechanism it names is what this repository boots on today - the marker moving from @spec/work to @impl/done follows the build, not the other way round."
             ]
           },
           "status-line": {
             "v": "confirmed",
             "ev": [
-              "F-026: opens DRAFT while the same line records phases 1-7 shipped — the internal contradiction the B-phase ledgered; live proof surrounds this session (STATIC.md/INDEX.md booted it)",
-              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
+              "DRAFT became IMPLEMENTED: phases 1-7 shipped, the OS-scoped `when` gate shipped, phase 8's engine-backed effective-spec projection stays v1.5 scope.",
+              "spec/boot/STATIC.md and spec/boot/INDEX.md exist and are what CLAUDE.md's generated block instructs every session to read, in that order, with the `[[entry]]` grammar the line describes.",
+              "found: the shipped half is observable in this tree's own boot; the deferred half is named as deferred rather than claimed."
             ]
           },
           "related": {
@@ -111443,7 +111507,9 @@
           "WHEN-FORCES-DYNAMIC": {
             "v": "confirmed",
             "ev": [
-              "inclusion types live: link static|dynamic default dynamic (LinkType in package.rs:364-376 after the 07-16 rename); when=os gate end-to-end (boot_artifacts.rs '## when on dynamic entries' — renderer emits when=\"os:<name>\"; INDEX grammar in CLAUDE.md block documents it); two-type spectrum (old third type gone — LINKING-SPECTRUM matches shipped enum exactly); suggested-default + consumer-wins in schema"
+              "A `[boot_snippet]` with a `when` condition stays a conditional dynamic entry irrespective of `link`, because a condition cannot be honoured by the static lane.",
+              "The only edit is the adjective describing that lane: 'verbatim' became 'ahead-of-time'.",
+              "found: the constraint, its reason and its consequence are word-for-word unchanged; the substituted adjective is more accurate about WHY a condition cannot ride the lane - it is composed before the session, not merely copied."
             ]
           },
           "NN-RETIRED": {
@@ -111857,7 +111923,7 @@
           }
         },
         "verified_at": "2026-07-25T14:28:14Z",
-        "verify_batch": "c4d1-workspace-big3 + d2a"
+        "verify_batch": "c4d1-workspace-big3 + d2a + H4-stale-host"
       }
     },
     "spec/modules/vibe-workspace/PROP-011-incremental-install.md": {
@@ -114551,8 +114617,9 @@
           "status-line": {
             "v": "confirmed",
             "ev": [
-              "F-028 (ledgered in B): 'DESIGN — provisional ... not implementation-locked' while §17 records §5-§13 SHIPPED as vibe-spec (2026-07-15), the link-type rename (07-16), and normal+static compiled end-to-end (07-20)",
-              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
+              "DESIGN/provisional became IMPLEMENTED, citing the history section's record of the compiler shipping as the `vibe-spec` crate wired into bootgen.",
+              "crates/vibe-spec exists and this session read its `merge.rs` (fold_source), `use_graph.rs` (three-colour cycle DFS) and `pipeline.rs` directly; the file carries its history anchors.",
+              "found: the crate the status line names is real and carries the machinery the compiler sections specify - the status change is backed by the code."
             ]
           },
           "frame-established": {
@@ -115362,7 +115429,7 @@
           }
         },
         "verified_at": "2026-07-25T14:28:14Z",
-        "verify_batch": "c4d1-workspace-big3 + d2a"
+        "verify_batch": "c4d1-workspace-big3 + d2a + H4-stale-host"
       }
     },
     "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md": {
@@ -115691,8 +115758,9 @@
           "fp-storage-note": {
             "v": "confirmed",
             "ev": [
-              "F-024 (ledgered in B): '§2.7 closes with storage/granularity open (§5)' while §5 records BOTH resolved 2026-07-15 (RES-FP-STORAGE header storage, RES-GRANULARITY per-package)",
-              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
+              "Was 'fingerprint storage location and granularity are open'; now says they were resolved on 2026-07-15 - header storage (`RES-FP-STORAGE`) and per-package granularity (`RES-GRANULARITY`).",
+              "grep in the same file for RES-FP-STORAGE / RES-GRANULARITY",
+              "found: 3 occurrences - both resolution ids exist where the note sends the reader. An open question closing is the healthiest reason for a fact to move."
             ]
           },
           "DIRTY-SUBGRAPH": {
@@ -115866,7 +115934,7 @@
           }
         },
         "verified_at": "2026-07-25T14:37:13Z",
-        "verify_batch": "c4d2-workspace-rest + d2d"
+        "verify_batch": "c4d2-workspace-rest + d2d + H4-stale-host"
       }
     }
   }

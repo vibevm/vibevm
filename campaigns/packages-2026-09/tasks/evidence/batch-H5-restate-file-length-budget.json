@@ -1,0 +1,17 @@
+{
+  "batch": "H5-restate-file-length-budget",
+  "cluster": "ai-native",
+  "files": {
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.md": {
+      "RULE-FILE-LENGTH-BUDGET": {
+        "v": "confirmed",
+        "ev": [
+          "The file-length budget rides the ROOT `conform.toml` key `max_file_lines` (default 600), with two sibling ROOT keys for the invariant-comment-position rule - `invariant_comment_markers` (default the five labeled markers INVARIANT: / WARNING: / PANICS: / MUST: / NEVER:, empty disables) and `invariant_comment_min_file_lines` (default 120); all three language-neutral, NOT under [typescript].",
+          "core-ai-native-conform/src/config.rs (root-level `pub invariant_comment_markers` and `pub invariant_comment_min_file_lines`, `max_file_lines`); rust-ai-native-conform/src/lib.rs `build_rules` consumes them as `config.max_file_lines` / `config.invariant_comment_markers` / `config.invariant_comment_min_file_lines` - the ROOT view, never `config.rust.*`",
+          "found: all three keys are declared at the root of `Config` and read from the root by the rule builder; the five default markers are exactly INVARIANT: / MUST: / NEVER: / PANICS: / WARNING:. The seven package policies landed 2026-08-05 each carry `max_file_lines = 600` above their `[rust]` section, which is the same root/per-language split observed live.",
+          "RESTATEMENT, and why: this file was sealed earlier in the session on a text-stability check whose fact extractor did not recognise list-item facts (`- ##ID ...`), so this fact's move went unseen and the seal vouched for it unchecked. The move was the marker `@impl/done` being appended - the claim text itself is byte-identical - and the claim now verifies against the engine directly. The verdict is unchanged; what changed is that it has been checked."
+        ]
+      }
+    }
+  }
+}

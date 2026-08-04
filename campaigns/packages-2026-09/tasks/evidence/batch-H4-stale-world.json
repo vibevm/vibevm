@@ -1,0 +1,86 @@
+{
+  "batch": "H4-stale-world",
+  "cluster": "world",
+  "files": {
+    "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/flows/discovery-prompt/usage.md": {
+      "ARTIFACT-IS-READ-ONLY-BUT-BUILT-TO-BE-ADAPTED": {
+        "v": "confirmed",
+        "src": [
+          1,
+          3
+        ],
+        "ev": [
+          "The artifact is read-only but built to be adapted: the variables block and the EXTENSION blocks describing you are configuration; MAIN and EXTENSION_CRITICALITY are mechanism.",
+          "The package's own shipped artifact, vibedeps/flow-discovery-prompt/0.1.0/spec/flows/discovery-prompt/DISCOVERY-PROMPT.md (source 1 as shipped text, source 3 as the installed copy)",
+          "found: MAIN and EXTENSION_CRITICALITY are present in the artifact as named. The edit made the line NAME the blocks it previously described in general terms - a sharpening, and the sharper claim also holds."
+        ]
+      },
+      "BARE-WORDS-NEVER-FIRE-THE-MACHINERY": {
+        "v": "confirmed",
+        "src": [
+          1,
+          3
+        ],
+        "ev": [
+          "Bare 'hot' / 'cold' in ordinary prose never fire the criticality machinery; only the hash-prefixed token triggers.",
+          "DISCOVERY-PROMPT.md in the installed slot - the criticality extension block and its trigger tokens",
+          "found: the controls are defined as hash-prefixed tokens; the edit narrowed a general sentence ('bare words') to the two words it is actually about, which is what the neighbouring facts already implied."
+        ]
+      },
+      "EVERY-CONTROL-IS-A-LITERAL-HASHTAG": {
+        "v": "confirmed",
+        "src": [
+          1,
+          3
+        ],
+        "ev": [
+          "Every criticality control is a literal hashtag; superthink is the documented exception, shipping as its own extension block above the criticality one and firing on the bare word too.",
+          "DISCOVERY-PROMPT.md carries 'superthink' twice; usage.md carries it four times",
+          "found: the exception is documented in the artifact itself, so the fact's new clause is not an assertion about behaviour but a pointer to a block that exists."
+        ]
+      }
+    },
+    "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md": {
+      "sibling-document-pointers": {
+        "v": "confirmed",
+        "src": [
+          1,
+          3
+        ],
+        "ev": [
+          "The format, authoring rules and skeleton live at the qualified address org.vibevm.world/manual-tests/flows/manual-tests/MANUAL-TESTS-PROTOCOL#root.",
+          "packages/org.vibevm.world/manual-tests/v0.1.0/spec/flows/manual-tests/MANUAL-TESTS-PROTOCOL.md - present, carries `{#root}`; the installed copy under vibedeps/flow-manual-tests/ is present too",
+          "found: the target resolves. The text moved because a relative markdown link was replaced by a fully-qualified address - the pointer got MORE resolvable, not less."
+        ]
+      }
+    },
+    "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/boot/57-flow-secrets-hygiene.md": {
+      "sibling-document-pointers": {
+        "v": "confirmed",
+        "src": [
+          1,
+          3
+        ],
+        "ev": [
+          "Three pointers: the protocol, the scope rules, and the install-time third-party-code consent, all as qualified addresses under org.vibevm.world/secrets-hygiene.",
+          "All three targets present with `{#root}`: SECRETS-HYGIENE-PROTOCOL.md, scope-discipline.md, third-party-code-consent.md; installed copy present under vibedeps/flow-secrets-hygiene/",
+          "found: all three resolve; the same relative-link to qualified-address rewrite as its siblings."
+        ]
+      }
+    },
+    "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.md": {
+      "sibling-document-pointers": {
+        "v": "confirmed",
+        "src": [
+          1,
+          3
+        ],
+        "ev": [
+          "Full protocol at the qualified address org.vibevm.world/wal-specspaces/flows/wal-specspaces/SPECSPACES-PROTOCOL#root.",
+          "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md - present, carries `{#root}`; installed copy present under vibedeps/flow-wal-specspaces/",
+          "found: the target resolves; the same rewrite."
+        ]
+      }
+    }
+  }
+}
