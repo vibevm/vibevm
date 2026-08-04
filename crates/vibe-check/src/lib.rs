@@ -57,8 +57,8 @@ pub mod checks;
 
 pub use checks::{
     ActivationConflictCheck, BootDirectoryCheck, FeaturesGraphCheck, I18nCoverageCheck,
-    LockfileFilesCheck, ManifestValidityCheck, RedirectBlockCheck, ReviewAgingCheck,
-    SubskillStructureCheck, WalFreshnessCheck, WalWellformedCheck,
+    LocalSourceFreshnessCheck, LockfileFilesCheck, ManifestValidityCheck, RedirectBlockCheck,
+    ReviewAgingCheck, SubskillStructureCheck, WalFreshnessCheck, WalWellformedCheck,
 };
 
 /// Stable identifier for a single check. Used in [`Finding::check`]
@@ -103,6 +103,11 @@ pub enum CheckId {
     /// root is well-formed: zero markers, or exactly one ordered
     /// `<vibevm>` … `</vibevm>` pair.
     RedirectBlock,
+    /// A locked package whose `source_kind = "local"` no longer matches its
+    /// on-disk source tree — the source changed (or vanished) since install,
+    /// so the materialised `vibedeps/` copy is stale. Warning; remedy
+    /// `vibe install --assume-yes`.
+    LocalSourceFreshness,
     /// PROP-038 §3 — every per-unit boot artifact's recorded fingerprint
     /// matches a fresh recomputation (the hybrid linker's dirty-subgraph is
     /// consistent); a stale artifact warns to `vibe reinstall`.
@@ -123,6 +128,7 @@ impl CheckId {
             CheckId::I18nCoverage => "i18n_coverage",
             CheckId::ActivationConflict => "activation_conflict",
             CheckId::RedirectBlock => "redirect_block",
+            CheckId::LocalSourceFreshness => "local_source_freshness",
             CheckId::BootGraphIntegrity => "boot_graph_integrity",
         }
     }
@@ -144,6 +150,7 @@ impl CheckId {
             CheckId::I18nCoverage,
             CheckId::ActivationConflict,
             CheckId::RedirectBlock,
+            CheckId::LocalSourceFreshness,
         ]
     }
 }
@@ -352,7 +359,7 @@ pub trait Check {
 /// use vibe_check::{CheckId, all_checks};
 ///
 /// let checks = all_checks();
-/// assert_eq!(checks.len(), 11);
+/// assert_eq!(checks.len(), 12);
 /// assert_eq!(checks[0].id(), CheckId::ManifestValidity);
 /// ```
 pub fn all_checks() -> Vec<Box<dyn Check>> {
@@ -368,6 +375,7 @@ pub fn all_checks() -> Vec<Box<dyn Check>> {
         Box::new(SubskillStructureCheck),
         Box::new(I18nCoverageCheck),
         Box::new(ActivationConflictCheck),
+        Box::new(LocalSourceFreshnessCheck),
     ]
 }
 
@@ -525,6 +533,7 @@ mod tests {
                 CheckId::SubskillStructure,
                 CheckId::I18nCoverage,
                 CheckId::ActivationConflict,
+                CheckId::LocalSourceFreshness,
             ]
         );
     }
