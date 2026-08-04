@@ -161,6 +161,25 @@ pub struct ExternalSpec {
     pub root: String,
 }
 
+/// One `[[external_specs]]` entry whose declared [`ExternalSpec::root`] is not
+/// a directory on disk — the "not yet installed" state, surfaced (not
+/// silenced) by [`Config::missing_external_spec_roots`]. Carries everything a
+/// caller needs to print a useful warning: the namespace quotes will fail to
+/// resolve into, the path exactly as declared in `specmap.toml`, and that path
+/// resolved against the project root.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MissingExternalSpecRoot {
+    /// The spec namespace quotes cannot resolve into while the root is absent
+    /// (`spec://<namespace>/…`).
+    pub namespace: String,
+    /// The project-root-relative path exactly as declared under
+    /// `[[external_specs]]` `root`.
+    pub declared: String,
+    /// That path resolved against the project root — the directory that was
+    /// not found.
+    pub resolved: PathBuf,
+}
+
 /// One orphan held outside the gate, with the debt id that records why it is
 /// allowed to stand.
 ///
@@ -188,6 +207,18 @@ impl Config {
     /// file must set `namespace`: minted URIs are identity, so a policy
     /// that scans without saying whose `spec://` segment to mint is a
     /// config error, not a defaultable gap.
+    ///
+    /// A `[[external_specs]]` root whose directory is absent is a *legitimate*
+    /// state — "that package is not installed yet" — but one the project MUST
+    /// hear about out loud: every quote into that namespace resolves to
+    /// nothing while it stands, and the only failure that ever bit us was the
+    /// silence around it, never the absence itself. So
+    /// [`missing_external_spec_roots`](Self::missing_external_spec_roots) is
+    /// consulted here and, when non-empty, a warning is printed to stderr
+    /// (each namespace, its declared path, the resolved path, the consequence,
+    /// and the fix); the config is then returned all the same, never refused.
+    /// The built-in degradation — the resolution layer skips a missing root —
+    /// stays in force; this only ends the silence around it.
     pub fn load(root: &Path) -> Result<Option<Config>> {
         let path = root.join(Self::REL_PATH);
         if !path.exists() {
@@ -204,6 +235,29 @@ impl Config {
                  `namespace = \"myproject\"`)",
                 path.display()
             );
+        }
+        // An absent `[[external_specs]]` root is the legitimate "not yet
+        // installed" state, not a refusal — but it must be said out loud,
+        // once and for every broken namespace, so version drift cannot pass
+        // silently. Print the warning here (the engine's own idiom for a
+        // missing external root, and for a vacuously-green gate, is to warn on
+        // stderr rather than fail); then hand the config back regardless.
+        let missing = cfg.missing_external_spec_roots(root);
+        if !missing.is_empty() {
+            eprintln!(
+                "specmap: WARNING — {} `external_specs` root(s) not found on disk; quotes \
+                 into their namespaces will not resolve. Reinstall dependencies or fix \
+                 specmap.toml:",
+                missing.len()
+            );
+            for m in &missing {
+                eprintln!(
+                    "  external spec root `{}` (namespace `{}`) -> {} (not found)",
+                    m.declared,
+                    m.namespace,
+                    m.resolved.display(),
+                );
+            }
         }
         Ok(Some(cfg))
     }
@@ -230,6 +284,34 @@ impl Config {
         }
         dirs.sort();
         dirs
+    }
+
+    /// The `[[external_specs]]` entries whose declared
+    /// [`ExternalSpec::root`] is not a directory under `root` — the "not yet
+    /// installed" set, in declaration order. Each carries its namespace, the
+    /// path as declared in `specmap.toml`, and that path resolved against the
+    /// project root (the directory that was not found). A missing root is a
+    /// *legitimate* state (the package may simply not be installed yet), so
+    /// this returns the set for a caller to warn about; it is not itself a
+    /// failure. Mirrors the conform engine's `rust_scope_warnings` /
+    /// `vacuously_gated` helpers, which hand a caller a list to print rather
+    /// than printing it themselves.
+    pub fn missing_external_spec_roots(&self, root: &Path) -> Vec<MissingExternalSpecRoot> {
+        self.external_specs
+            .iter()
+            .filter_map(|ext| {
+                let resolved = root.join(&ext.root);
+                if resolved.is_dir() {
+                    None
+                } else {
+                    Some(MissingExternalSpecRoot {
+                        namespace: ext.namespace.clone(),
+                        declared: ext.root.clone(),
+                        resolved,
+                    })
+                }
+            })
+            .collect()
     }
 }
 
@@ -306,6 +388,58 @@ mod tests {
         .unwrap();
         assert_eq!(cfg.external_specs.len(), 1);
         assert_eq!(cfg.external_specs[0].namespace, "core-ai-native");
+    }
+
+    #[test]
+    fn external_specs_root_present_loads() {
+        // A materialised external spec tree: the entry's directory exists, so
+        // the load succeeds and names no missing root.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        std::fs::create_dir_all(root.join("vibedeps/flow-core-ai-native/0.3.0/spec")).unwrap();
+        std::fs::write(
+            root.join("specmap.toml"),
+            "namespace = \"demo\"\n\
+             [[external_specs]]\n\
+             namespace = \"core-ai-native\"\n\
+             root = \"vibedeps/flow-core-ai-native/0.3.0/spec\"\n",
+        )
+        .unwrap();
+        let cfg = Config::load(root).unwrap().unwrap();
+        assert_eq!(cfg.external_specs.len(), 1);
+        assert_eq!(cfg.external_specs[0].namespace, "core-ai-native");
+        // A present root is no one's warning.
+        assert!(cfg.missing_external_spec_roots(root).is_empty());
+    }
+
+    #[test]
+    fn external_specs_root_missing_warns_not_fails() {
+        // The version-drift / not-yet-installed state: the declared root is
+        // absent. `load` still returns the config (legitimate degradation),
+        // but the missing root is surfaced — exactly one, with its namespace
+        // and declared path visible — so the silence cannot stand.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        std::fs::write(
+            root.join("specmap.toml"),
+            "namespace = \"demo\"\n\
+             [[external_specs]]\n\
+             namespace = \"core-ai-native\"\n\
+             root = \"vibedeps/flow-core-ai-native/0.9.0/spec\"\n",
+        )
+        .unwrap();
+        let cfg = Config::load(root).unwrap().unwrap();
+        let missing = cfg.missing_external_spec_roots(root);
+        assert_eq!(missing.len(), 1, "exactly the one absent root");
+        assert_eq!(missing[0].namespace, "core-ai-native");
+        assert_eq!(
+            missing[0].declared,
+            "vibedeps/flow-core-ai-native/0.9.0/spec"
+        );
+        assert_eq!(
+            missing[0].resolved,
+            root.join("vibedeps/flow-core-ai-native/0.9.0/spec")
+        );
     }
 
     #[test]
