@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-04T23:40:04Z",
+  "updated_at": "2026-08-04T23:45:05Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -93657,7 +93657,436 @@
       },
       "marker_count": 53,
       "unit_count": 13,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "0868ebebe62dbf44010fc45ec7d69427d0f8664eb7831f6c88660140789156c9",
+        "verdicts": {
+          "companion-line": {
+            "v": "confirmed",
+            "ev": [
+              "Companion to BACKLOG B-011, PROP-035, PROP-009 §2.3, loading-and-boot-model.md.",
+              "BACKLOG.md:507; spec/modules/vibe-workspace/PROP-035-spec-compiler.md; spec/modules/vibe-workspace/PROP-009-loading-model.md; spec/design/loading-and-boot-model.md",
+              "B-011 row exists at BACKLOG.md:507; PROP-035/PROP-009 exist at the cited paths; loading-and-boot-model.md present in spec/design/."
+            ]
+          },
+          "authority-line": {
+            "v": "confirmed",
+            "ev": [
+              "Authority: non-normative proposal; PROPs stay the contract; lands as PROP edits (§7).",
+              "spec/design/deterministic-loading-aliasing.md:7; cross-check PROP-009 §2.3 + PROP-035 §7/§8",
+              "The §7 PROP edits are landed: PROP-009-loading-model.md:242 ##HISTORY-B011-QUALIFIED, PROP-035:143 ##USE-AS-ALIAS / :191 ##PIPE-QUALIFY — the proposal did become normative."
+            ]
+          },
+          "problem-splice": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: STATIC.md concatenates 31 contributions from 27 packages; {#root} defined 26×, {#never} 17×, {#when} 9× — 59 duplicate-anchor warnings over 11 names; 61 fact ids appear more than once.",
+              "BACKLOG.md:534-536 (B-011-COLLISION-REQUIREMENT); spec/boot/STATIC.md (grep duplicate-anchor)",
+              "BACKLOG.md:534-536 records verbatim: «59 предупреждений duplicate-anchor по 11 именам — {#root} определён 26 раз, {#never} 17, {#when} 9»; STATIC.md today has 0 duplicate-anchor (post-fix), confirming the measured pre-state was real."
+            ]
+          },
+          "problem-stripping": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: the compiled lane carries 838 house-grammar tokens; naive stripping changes what is addressable; the owner framed stripping as needing a resolution design first (2026-07-31).",
+              "BACKLOG.md:512 (B-011-LOCATOR), :517-522 (B-011-WHY-NAIVE-STRIPPING-IS-WRONG)",
+              "B-011-LOCATOR: «838 ##ANCHOR / @stage/state tokens over 1 446 source lines»; B-011-WHY-NAIVE-STRIPPING-IS-WRONG restates the dangling-reference framing verbatim."
+            ]
+          },
+          "problem-determinism": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: the owner ruled this highest priority (2026-08-02) verbatim «От этой вещи зависит как вообще работает загрузка, насколько детерминированно и хорошо».",
+              "BACKLOG.md:514 (B-011-DISPOSITION)",
+              "B-011-DISPOSITION quotes it verbatim: «самый высокий приоритет — решение владельца 2026-08-02: …От этой вещи зависит как вообще работает загрузка, насколько детерминированно и хорошо»."
+            ]
+          },
+          "solution-three-layers": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: three layers — qualified rename-on-splice, aliases (#use…as X / @!X), a fixed two-scope lookup rule.",
+              "crates/vibe-spec/src/qualify.rs:77; crates/vibe-spec/src/directives.rs:79-189; spec/modules/vibe-workspace/PROP-035-spec-compiler.md:173",
+              "All three landed: qualify_contribution at qualify.rs:77; alias table + @!X at directives.rs:79-189; two-scope lookup at PROP-035:173 ##SHORT-LABEL-LOOKUP-IS-TWO-SCOPE."
+            ]
+          },
+          "rename-owner-direction": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: owner required the splicer rename labels inside STATIC.md keeping all references valid, plus the qualified-rewrite idea (2026-08-02).",
+              "BACKLOG.md:538-548 (B-011-COLLISION-REQUIREMENT + B-011-QUALIFIED-REWRITE)",
+              "Both owner quotes recorded verbatim: «склейщик переименовывает метки внутри STATIC.md так, чтобы все ссылки … сохраняли валидность» (:538) and «Возможно, при материализации нам нужно сразу переписывать все ссылки на qualified варианты?» (:546)."
+            ]
+          },
+          "rename-form": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: a contribution origin <group>/<name> becomes a slug; {#root} → {#org-vibevm-world--wal--root}; dots→-, joiner --; both label kinds share one namespace.",
+              "crates/vibe-spec/src/qualify.rs:41-60; spec/modules/vibe-workspace/PROP-035-spec-compiler.md:162,191",
+              "qualify.rs:41-52 origin_slug: «org.vibevm.world/wal → org-vibevm-world--wal»; PROP-035:162 ##FACT-MERGED-UNIQUENESS «fact and heading ids, one namespace»; :191 restates the slug rules verbatim.",
+              "BOSS: the qualified form is live at scale, not exhibited on an example - `spec/boot/STATIC.md` carries 1061 labels of the `org-vibevm-world--` shape, and `origin_slug` in `crates/vibe-spec/src/qualify.rs` is the function that mints them."
+            ]
+          },
+          "rename-what-is-rewritten": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: heading anchors {#x}, fact ids ##X, and intra-doc (#x) links are rewritten; full spec:// addresses, directive lines, fenced content are left alone.",
+              "crates/vibe-spec/src/qualify.rs:71-227; PROP-035:191",
+              "qualify.rs:200-227 rewrites ##X definitions and (#x) links; :223-227 exempts directive lines (directive_prefix) — matches; PROP-035:191 lists the never-touched set (full spec://, @spec, directive lines, fenced content)."
+            ]
+          },
+          "rename-determinism": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: a qualified prefix (not disambiguation suffixes) because the qualified name is a pure function of (origin, label) — stable across recomposition, append-safe.",
+              "crates/vibe-spec/src/qualify.rs:71-77",
+              "qualify.rs:75-77 doc: «pure function of (text, origin) — independent of splice order and of any sibling contribution — which is the append-only property (design §6)».",
+              "BOSS: `qualify.rs` documents the property as a pure function of (text, origin), independent of splice order - which is what makes late dynamic-lane additions append-only rather than a re-qualification of everything already emitted."
+            ]
+          },
+          "rename-contract-change": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: PROP-009 §2.3 ##ARTIFACT-STATIC-MD «verbatim concatenation» becomes «anchor-qualified concatenation».",
+              "spec/modules/vibe-workspace/PROP-009-loading-model.md:242; :103",
+              "PROP-009:242 ##HISTORY-B011-QUALIFIED: «§2.3's ##ARTIFACT-STATIC-MD changes from «verbatim concatenation» to «anchor-qualified concatenation»»; :103 LINK-STATIC already says «anchor-qualified — §2.3»."
+            ]
+          },
+          "rename-index-effect": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: host specmap.json duplicate-anchor warnings drop from 59 to zero (first half of M-LOAD).",
+              "spec/boot/STATIC.md (grep duplicate-anchor); PROP-009-loading-model.md:242",
+              "grep -c duplicate-anchor spec/boot/STATIC.md → 0; PROP-009:242 records «the host lane regenerated 59 → 0».",
+              "BOSS re-measurement: `grep -c duplicate-anchor spec/boot/STATIC.md` returns 0 - the 59 collisions the design was commissioned to kill are gone from the generated lane."
+            ]
+          },
+          "alias-grammar": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: grammar #use [options] spec://… as <Alias>; reference form @!<Alias>; only @!X is grammar.",
+              "crates/vibe-spec/src/directives.rs:161-189; PROP-035:143,172",
+              "directives.rs:161-189 parses the as <Alias> clause; :119 scan_alias_use handles @!X; PROP-035:172 ##AT-BANG-IS-AN-ALIASED-IN-PLACE-USE confirms @!<Alias> is the grammar."
+            ]
+          },
+          "alias-scope": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: an alias is file-scoped (whole-file, not exported/inherited); two declarations in one file = compile error.",
+              "crates/vibe-spec/src/directives.rs:174-189; PROP-035:143",
+              "directives.rs:178-189 emits «duplicate alias …» on a repeated name; PROP-035:143 ##USE-AS-ALIAS: «file-scoped (visible throughout the declaring file … never exported, never inherited)».",
+              "BOSS: the duplicate-alias error text is present in `crates/vibe-spec/src/directives.rs` - a repeated alias name in one file fails rather than silently taking the last binding."
+            ]
+          },
+          "alias-binding": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: the alias binds to the address, never the text — survives splicing and stripping (owner 2026-08-02).",
+              "BACKLOG.md:551-553 (B-011-QUALIFIED-REWRITE); PROP-035:143",
+              "B-011-QUALIFIED-REWRITE: «Алиасы привязываются к source-of-truth адресу, поэтому переживают и склейку, и стриппинг»; PROP-035:143 ##USE-AS-ALIAS: «binds to the address, never to any compiled text»."
+            ]
+          },
+          "alias-compiled-form": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: in compiled STATIC.md, @!X is rewritten to the full @spec:// address; declaration lines consumed like every #use.",
+              "crates/vibe-spec/src/directives.rs:112-119; PROP-035:172,191",
+              "PROP-035:172 ##AT-BANG: «In the compiled static lane every @!X is rewritten to the full @spec://… address»; :191 ##PIPE-QUALIFY: «@!X rewrites to its full address here (§7.4)»."
+            ]
+          },
+          "lookup-rule": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: an unqualified label reference resolves against exactly two scopes (defining document, then file aliases); ambiguous → compile error with candidates.",
+              "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:173",
+              "PROP-035:173 ##SHORT-LABEL-LOOKUP-IS-TWO-SCOPE: «resolves against exactly two scopes … Found in neither, or in both: a compile error listing the candidates — the resolver never widens the search and never picks silently»."
+            ]
+          },
+          "lookup-adl": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: the C++ ADL analogy the owner named; context = defining document + file imports; ambiguity is an error not a ranking.",
+              "BACKLOG.md:549 (B-011-QUALIFIED-REWRITE); PROP-035:173",
+              "B-011-QUALIFIED-REWRITE: «Ориентир дизайна — ADL в C++ (Argument Dependent Lookup)»; PROP-035:173 encodes the two-scope fail-with-candidates form (no overload-resolution widening)."
+            ]
+          },
+          "lookup-agent-surface": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: the compiled STATIC.md header states the qualified-label convention; provenance comment names the origin; no new tooling needed to read the lane.",
+              "spec/boot/STATIC.md (header); PROP-009-loading-model.md:242",
+              "PROP-009:242: «the lane opens with the resolution preamble + tombstone table»; STATIC.md header carries the generated preamble (verified the file exists, 2185 lines)."
+            ]
+          },
+          "placement-owner-word": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: owner addition on approving the design (2026-08-04): the resolution rules must be priority-placed for the executing agent — possibly earlier in the load list.",
+              "BACKLOG.md:558-561 (B-011-DESIGN-APPROVED)",
+              "B-011-DESIGN-APPROVED: «добавлением владельца …: правила резолвинга приоритизируются для агента-исполнителя — преамбула первыми строками склейки + first-instructions контракт §13 (дизайн §5.1)»."
+            ]
+          },
+          "placement-mechanism": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: the best position is the first lines of STATIC.md; boot files are re-read every session start and after compaction; the addressable-specs placement law says START or END.",
+              "PROP-009-loading-model.md:103,242; spec/design/deterministic-loading-aliasing.md:59",
+              "PROP-009:103 LINK-STATIC «Read first, one read, maximum attention weight»; :242 the lane opens with the resolution preamble — START-placement, matching the design's mechanism claim."
+            ]
+          },
+          "PLACEMENT-PREAMBLE": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: a resolution preamble (~8 generated lines) sits at the lane header before any content.",
+              "spec/boot/STATIC.md (head); PROP-009-loading-model.md:242",
+              "PROP-009:242: «the lane opens with the resolution preamble + tombstone table»; STATIC.md exists and is generated (the preamble is generated text, verified by file presence)."
+            ]
+          },
+          "PLACEMENT-TOMBSTONE-UNDER-HEADER": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: the tombstone table sits directly under the header (START-placement, never the tail).",
+              "spec/boot/STATIC.md; PROP-035-spec-compiler.md:192",
+              "PROP-035:192 ##PIPE-EMIT: «prefixed by the resolution preamble and the tombstone table (§11)» — emitted at the head; STATIC.md carries it."
+            ]
+          },
+          "PLACEMENT-LOADER-FIRST": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: PROP-035 §13 binds the directive first-instructions contract; B-011 wires it in for the first time with the resolution rules as named content.",
+              "spec/modules/vibe-workspace/PROP-035-spec-compiler.md (§13); spec/design/structural-loader.md",
+              "PROP-035 §13 is the first-instructions contract surface (document present); structural-loader.md exists in spec/design/. Whether the §13 wiring is itself built is a separate §13 question; the design's claim is that B-011 supplies the named content."
+            ]
+          },
+          "dynamic-owner-case": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: owner's named hard case (2026-08-02) — separately consider dynamic late-loading of libraries carrying their own STATIC.md.",
+              "BACKLOG.md:540-541 (B-011-COLLISION-REQUIREMENT)",
+              "B-011-COLLISION-REQUIREMENT records the owner direction: «отдельно рассмотреть сложные случаи динамической дозагрузки новых библиотек, в которых есть собственные STATIC.md»."
+            ]
+          },
+          "dynamic-composition": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: a late library L adds its lane as an INDEX entry; nothing in the host's compiled STATIC.md is renamed; qualified names depend only on origin, so assembly order cannot change meaning.",
+              "crates/vibe-spec/src/qualify.rs:75-77; PROP-009-loading-model.md (dynamic INDEX entries)",
+              "qualify.rs:75-77: the qualified name is independent of splice order/composition (append-only) — the property the determinism claim rests on; INDEX dynamic-entry mechanism is PROP-009's."
+            ]
+          },
+          "dynamic-not-a-new-mechanism": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: no new loader mechanism proposed; INDEX dynamic entries, when-gating, structural loader stay as PROP-009/PROP-035 define them.",
+              "spec/design/deterministic-loading-aliasing.md:71; PROP-009/PROP-035",
+              "Design-rationale statement; the verifiable half is that no new loader crate/type was introduced for B-011 — the B-011 code lives in vibe-spec (qualify/directives) + vibe-workspace splice, reusing existing surfaces."
+            ]
+          },
+          "stale-short-question": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: owner probe (2026-08-03) — a dynamically-loaded library references #root which the splice renamed; can it happen and what do we do.",
+              "spec/design/deterministic-loading-aliasing.md:75; BACKLOG.md B-011",
+              "Design-rationale record of the owner's review probe; the B-011 filing and approval (BACKLOG.md:554) frame the same dynamic-stale concern; no separate verbatim quote outside the design."
+            ]
+          },
+          "stale-short-taxonomy": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: exactly one reference class breaks — an address targeting the compiled splice itself; full spec:// addresses and a doc's own (#x) links stay unbroken.",
+              "spec/design/deterministic-loading-aliasing.md:77; crates/vibe-spec/src/qualify.rs (full spec:// never touched)",
+              "qualify.rs:223-227 exempts full spec:// addresses and directive lines from rewrite — confirming they stay unbroken; the one breaking class (compiled-splice short anchor) is the design's analysis."
+            ]
+          },
+          "stale-short-was-a-lottery": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: #root was already defined 26× in the compiled lane (a lottery); the rename converts silent ambiguity into a loud not-found; measured population of this class today: zero.",
+              "BACKLOG.md:536-537 (B-011-COLLISION-REQUIREMENT); spec/boot/STATIC.md (duplicate-anchor=0)",
+              "B-011: «{#root} определён 26 раз … ссылок из кода пока ноль — неоднозначность латентна»; STATIC.md post-fix has 0 duplicate-anchor, so the loud-not-found posture is the current behaviour."
+            ]
+          },
+          "stale-short-defence": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: four defence layers, cheap-to-rich.",
+              "spec/design/deterministic-loading-aliasing.md:81-86; STATIC.md (tombstone); resolver (LegacyHostAuthority)",
+              "Design proposal; the landed halves: STATIC.md carries the tombstone table (PROP-035:192) and the resolver answers misses with candidates/hint (resolver.rs LegacyHostAuthority). The four-layer set is the design's own structuring."
+            ]
+          },
+          "DEFENCE-LINT": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: forbid-and-lint — an address targeting spec/boot/STATIC.md becomes an illegal target; cheapest now while population is zero.",
+              "spec/design/deterministic-loading-aliasing.md:83; PROP-009-loading-model.md:242",
+              "PROP-009:242 ##HISTORY-B011-QUALIFIED: «a generated lane stops being a legal citation target» — the lint/forbid posture landed normatively."
+            ]
+          },
+          "DEFENCE-TOMBSTONE": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: a tombstone table in the lane header lists each collided short name with its qualified heirs; the splicer already holds the rename map and prints it.",
+              "crates/vibe-spec/src/qualify.rs:60-71 (RenameEntry); PROP-035-spec-compiler.md:192; STATIC.md",
+              "qualify.rs:60-71 RenameEntry {original, qualified} is the rename map the splicer returns; PROP-035:192 the tombstone table is emitted at the head — the print path exists.",
+              "BOSS: `RenameEntry` is a real struct in `qualify.rs`, so the rename map the tombstone table is rendered from is data the splicer returns rather than a document convention."
+            ]
+          },
+          "DEFENCE-RESOLVER": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: the resolver answers a missed STATIC#<short> with candidates, never emptiness.",
+              "crates/vibe-spec/src/resolver.rs:71 (LegacyHostAuthority)",
+              "resolver.rs:71 LegacyHostAuthority { given, hint } — the resolver returns a named error with a hint rather than emptiness; the §5 fail-with-candidates posture for the post-rename read."
+            ]
+          },
+          "DEFENCE-INSTALL-CHECK": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: install-time outbound-link validation; larger; may ride separately (fork E).",
+              "spec/design/deterministic-loading-aliasing.md:86,106 (FORK-INSTALL-VALIDATION E1)",
+              "Design-proposed follow-up (fork E1, a separate entry); not part of the B-011 slice — its absence from the landed B-011 code (qualify/directives) is consistent with it being deferred."
+            ]
+          },
+          "stale-short-in-slice": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: defence layers 1–3 belong to this slice; layer 4 is fork E.",
+              "spec/design/deterministic-loading-aliasing.md:88; BACKLOG.md:554-562",
+              "B-011-DESIGN-APPROVED: «install-валидация ссылок отдельной стройкой» — layer 4 explicitly approved as a separate build; layers 1–3 are the landed B-011 work."
+            ]
+          },
+          "normative-prop035": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: PROP-035 §7.2 gains the as <Alias> clause; §7.4 gains @!X; §8 gains a qualify step; §11 notes origin-qualified labels (reversible).",
+              "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:143,172,191",
+              "All landed: :143 ##USE-AS-ALIAS (§7.2 as-clause); :172 ##AT-BANG-IS-AN-ALIASED-IN-PLACE-USE (§7.4 @!X); :191 ##PIPE-QUALIFY (§8 qualify, with decompile reversibility noted)."
+            ]
+          },
+          "normative-prop009": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: PROP-009 §2.3 ##ARTIFACT-STATIC-MD «verbatim concatenation» → «anchor-qualified concatenation»; SESSION-START-ORDER unchanged.",
+              "spec/modules/vibe-workspace/PROP-009-loading-model.md:242",
+              "PROP-009:242 ##HISTORY-B011-QUALIFIED records exactly this edit; the anchor-qualified form is also referenced at :103."
+            ]
+          },
+          "normative-backlog": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: BACKLOG B-011 acceptance restated as M-LOAD's two measurements (zero duplicate-anchor over the lane; an alias resolving with its carrier cleaned) plus the append-safety property test.",
+              "BACKLOG.md:554-562 (B-011-DESIGN-APPROVED); STATIC.md",
+              "B-011-DESIGN-APPROVED restates the approved design with the measurements; STATIC.md duplicate-anchor=0 satisfies the first M-LOAD measurement; the append-safety property is qualify.rs:384 test (stripping_the_prefix_restores_the_original)."
+            ]
+          },
+          "forks-tree": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: four forks, each with the boss's recommendation first.",
+              "spec/design/deterministic-loading-aliasing.md:100; BACKLOG.md:554-562",
+              "B-011-DESIGN-APPROVED: «со всеми рекомендованными развилками» — the owner took every recommended option, matching the four forks (A1/B1/C1/D1/E1) in §8."
+            ]
+          },
+          "FORK-SLUG-SHAPE": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: (A1 recommended) full origin slug org-vibevm-world--wal; globally unique, self-describing. Owner took A1.",
+              "BACKLOG.md:556-558 (B-011-DESIGN-APPROVED); crates/vibe-spec/src/qualify.rs:52",
+              "B-011-DESIGN-APPROVED: «полный слаг»; qualify.rs:52 origin_slug produces exactly org-vibevm-world--wal — A1 landed."
+            ]
+          },
+          "FORK-FACT-IDS": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: (B1 recommended) both heading and fact ids qualified, one namespace; owner took B1.",
+              "BACKLOG.md:556-558; crates/vibe-spec/src/qualify.rs:200-227",
+              "B-011-DESIGN-APPROVED: «обе разновидности меток»; qualify.rs rewrites both ##X fact ids and {#x} headings — B1 landed."
+            ]
+          },
+          "FORK-COMPILED-REFERENCE": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: (C1 recommended) @!X compiles to the full spec:// address; owner took C1.",
+              "BACKLOG.md:556-558; PROP-035-spec-compiler.md:172,191",
+              "B-011-DESIGN-APPROVED: «@!X компилируется в полный адрес»; PROP-035:172/191 confirm @!X rewrites to the full address — C1 landed."
+            ]
+          },
+          "FORK-STRICTNESS": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: (D1 recommended) hard error with candidates; migration flag --lenient; owner took D1.",
+              "BACKLOG.md:556-562; PROP-035-spec-compiler.md:173",
+              "B-011-DESIGN-APPROVED: «жёсткая ошибка с кандидатами + флаг мягкости»; PROP-035:173 encodes compile-error-with-candidates — D1 landed."
+            ]
+          },
+          "FORK-INSTALL-VALIDATION": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: (E1 recommended) install-time outbound-link validation as a separate follow-up entry; owner took E1.",
+              "BACKLOG.md:556-562 (B-011-DESIGN-APPROVED)",
+              "B-011-DESIGN-APPROVED: «install-валидация ссылок отдельной стройкой» — E1 taken; consistent with its absence from the landed B-011 slice."
+            ]
+          },
+          "oos-strip": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: the marker strip itself is out of this slice (B-011 is aliasing design first). NOTE: the §9 block also physically carries ##oos-b006 / ##oos-b031 / ##oos-hot-attach tokens on lines 111-113, but the campaign mirror folds the four consecutive marker lines into one addressable fact (oos-strip); those three are not addressable anchors and are intentionally not submitted.",
+              "BACKLOG.md:507,529-531 (B-011-INTERIM); spec/design/deterministic-loading-aliasing.md:110-113; campaigns/packages-2026-09/run/mirror/spec__design__deterministic-loading-aliasing.md.json",
+              "B-011-INTERIM: «the strip waits for the aliasing design rather than shipping half-safe» — the strip is explicitly deferred; STATIC.md still carries the authoring tokens (838 per B-011-LOCATOR). The mirror's out-of-scope block has exactly one addressable fact (oos-strip, line 110, marked) — oos-b006/oos-b031/oos-hot-attach are marker tokens in that block's text, not separate facts."
+            ]
+          },
+          "impl-slices": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: four work slices W1–W4, each a claudez packet with a disjoint perimeter, self-verifying with cargo check -p vibe-spec / -p vibe-workspace.",
+              "crates/vibe-spec/src/qualify.rs, directives.rs; crates/vibe-workspace/src/boot_artifacts.rs; PROP-009-loading-model.md:242",
+              "PROP-009:242: «Landed the same day (five worker slices; the host lane regenerated 59 → 0)» — the worker cut landed; qualify.rs/directives.rs are the W1/W2 cells."
+            ]
+          },
+          "IMPL-W1": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: W1 — vibe-spec qualify module, new cell crates/vibe-spec/src/qualify.rs: qualify_contribution(text, origin), property-tested.",
+              "crates/vibe-spec/src/qualify.rs:77,384",
+              "qualify.rs exists; qualify_contribution at :77 (signature matches: text, origin); :384 test stripping_the_prefix_restores_the_original — the reversibility property test.",
+              "BOSS: `qualify_contribution` is present in `crates/vibe-spec/src/qualify.rs` with the signature the slice describes."
+            ]
+          },
+          "IMPL-W2": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: W2 — directives grammar: as <Alias> on #use; @!X scanner; per-file alias table with two error classes.",
+              "crates/vibe-spec/src/directives.rs:79-189",
+              "directives.rs:79-85 aliases map; :112-119 @!X scan; :178-189 duplicate-alias error; :135 no-address error — the two error classes landed."
+            ]
+          },
+          "IMPL-W3": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: W3 — splice integration (boot_artifacts render_static + pipeline emit): qualify each entry, rewrite @!X, emit preamble + tombstone, resolver answers with candidates, lint compiled-lane target; gate DocTree::duplicate_anchors()==[].",
+              "crates/vibe-workspace/src/boot_artifacts.rs; crates/vibe-spec/src/pipeline.rs:191; crates/vibe-spec/src/doctree.rs:244",
+              "pipeline.rs:191 ##PIPE-QUALIFY wires the qualify step; doctree.rs:244 duplicate_anchors() is the gate; STATIC.md duplicate-anchor=0 shows the gate holds; render_static lives in boot_artifacts.rs (B-011-ANCHOR cites it)."
+            ]
+          },
+          "IMPL-W4": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: W4 — the dynamic-load exhibit (fixture test): two packages into two lanes, one loaded later as an INDEX entry; assert zero collisions and an alias resolving against vibedeps/ source with the carrier text removed.",
+              "crates/vibe-spec/tests or crates/vibe-workspace/tests; PROP-009-loading-model.md:242",
+              "PROP-009:242 records five worker slices landed including the dynamic exhibit; the M-LOAD acceptance (alias resolves with carrier cleaned) is the property W4 tests — the landed qualify logic (binds to address not text) is its basis."
+            ]
+          },
+          "impl-spec-edits": {
+            "v": "confirmed",
+            "ev": [
+              "Claim: the §7 PROP edits are boss work (spec authoring never delegated), applied only on approval.",
+              "PROP-009-loading-model.md:242; PROP-035-spec-compiler.md:143,172,191",
+              "The PROP edits landed (PROP-009:242, PROP-035:143/172/191) — applied on the 2026-08-04 approval (B-011-DESIGN-APPROVED), confirming the boss-authored normative edits shipped."
+            ]
+          }
+        },
+        "verified_at": "2026-08-04T23:43:45Z",
+        "verify_batch": "H13-deterministic-loading"
+      }
     },
     "spec/design/gate-parity-config.md": {
       "content_hash": "55a57fb1be28c40ee106e52ad95443175bdbaee01d681bdedbe4bc612ba22ee0",
@@ -94725,7 +95154,379 @@
       },
       "marker_count": 46,
       "unit_count": 8,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "c3d6b0db4ad2e044842e379d644ca2ab32fa8eab7ebed9875a57fdee003be9fd",
+        "verdicts": {
+          "authority-line": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the doc is non-normative (spec/design genre); the contract lives in PROP-014 and package specs; backlog entries B-016/017/019 carry the owner rulings.",
+              "BACKLOG.md:654 / :669 / :702 ; doc map-format-change.md:5-10",
+              "B-016 (:661), B-017 (:676), B-019 (:709) are all disposition 'planned' with owner ruling 'это надо строить' (2026-08-01) — the backlog rulings the doc says win on divergence exist at the cited lines."
+            ]
+          },
+          "standing-on": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the design stands on two read-only censuses (e17 map-format + e16 lifecycle vocab) taken before a line was written.",
+              "campaigns/packages-2026-09/harvest/e17-map-format-census.md ; e16-b024-lifecycle-vocab-census.md",
+              "Both files exist. e17 opens 'census of the specmap map, the package manifest, and the schema-bump route... not a spec: nothing here is proposed, only measured' (e17:3-9); e16 present (15987 bytes)."
+            ]
+          },
+          "one-change-law": {
+            "v": "confirmed",
+            "ev": [
+              "Claims one map-format change (not three): a format change forces full regeneration of every committed index + re-pin of lockfiles; the three entries ride together.",
+              "BACKLOG.md B-016-DEPS :667 ; B-019-A :713 ; B-017-BUILD :680",
+              "B-016-DEPS: 'Любое изменение формата карты идёт одной сменой формата вместе с B-019 (не тремя)'; B-019-A: 'ехать одной сменой вместе с B-016/B-017... до неё починить сломанный инструмент перегенерации (B-013)'. Matches."
+            ]
+          },
+          "finding-manifest-is-strict": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the Manifest parser refuses unknown keys (deny_unknown_fields), pinned by a test; a new manifest key is a schema bump, never additive.",
+              "crates/vibe-core/src/manifest/document.rs:66-67 ; e17 §3.2.2",
+              "document.rs:66 '#[serde(deny_unknown_fields)]' on 'pub struct Manifest' (:67). e17 §3.2.2 cites the pinning test rejects_unknown_top_level_section (document/tests.rs:343) asserting is_err() on a [mystery] section."
+            ]
+          },
+          "finding-min-version-exists": {
+            "v": "confirmed",
+            "ev": [
+              "Claims Compatibility.min_vibe_version exists and is propagated into the registry index entry and the publish post-hook (so B-017's precondition is met).",
+              "crates/vibe-index/src/scanner/manifest.rs:78 ; crates/vibe-index/src/types/entry/relations.rs:17 ; crates/vibe-publish/src/post_hook.rs:253",
+              "All three present: manifest.rs:78 'min_vibe_version: c.min_vibe_version.clone()'; relations.rs:17 'pub min_vibe_version: Option<String>'; post_hook.rs:253 '\"min_vibe_version\": manifest.compatibility.min_vibe_version'. Caveat (e17 §Caveats): install-time enforcement was NOT measured, only existence+propagation."
+            ]
+          },
+          "finding-map-feeds-identity": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the content hash covers the entire shippable tree minus five build-output names; the manifest declares no file list, so a specmap.json is not excludable.",
+              "crates/vibe-index/src/content_hash.rs:28 ; e17 §3.3.1",
+              "content_hash.rs:28 'const SHIPPABLE_EXCLUDES: &[&str] = &[\".git\", \".vibe\", \"target\", \"node_modules\", \".vibeignore\"]' — exactly five names. e17 §3.3.1 confirms the manifest declares no file list (none among the 26 Manifest fields)."
+            ]
+          },
+          "finding-precedent-exists": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the precedent is real, not hypothetical: the fractality package ships a specmap.json inside its own directory today.",
+              "packages/org.vibevm.fractality/fractality/v0.1.0/specmap.json ; e17 §3.3.3",
+              "File exists (100751 bytes). e17 §3.3.3 lists it as precedent #1: 'a generated specmap (schema 2, real code_items)... committed inside a published package's tree... feeds compute_content_hash'."
+            ]
+          },
+          "finding-namespace-is-consumer-assigned": {
+            "v": "confirmed",
+            "ev": [
+              "Claims a package's spec namespace is assigned by the consumer (via [[external_specs]]), never declared by the package; identity is (group,name,version) with no spec namespace.",
+              "e17 §3.5.2 (config.rs:99-105 ExternalSpec.namespace) ; doc map-format-change.md:59-66",
+              "e17 §3.5.2: 'It is not derived from the package's (group, name) identity; it is a short string hand-assigned by the consumer in its specmap.toml [[external_specs]]'. Confirms consumer-assigned."
+            ]
+          },
+          "finding-item-has-neither": {
+            "v": "drift",
+            "ev": [
+              "Claims the code item has neither a fingerprint nor an end-of-range; both are net-new fields (so B-019а is a real schema bump).",
+              "e17 §3.7.2 ; current packages/.../core-ai-native-specmap/src/generated/specmap/mod.rs:36",
+              "At the e17 census HEAD (7708bdee) CodeItem had only `line` (e17 §3.7.2 'NO' end-of-range). IN THE CURRENT TREE CodeItem now CARRIES endLine + fingerprint (mod.rs, both Option) and SCHEMA=3 (index.rs:31) — the net-new fields the design proposes have since landed; the 'has neither' claim was true at measurement time, diverges from current code.",
+              "BOSS: DRIFT, and the healthiest kind - the build this design proposed is what falsified it. The sentence is present tense («The code item has neither a fingerprint nor an end of range») and today the code item carries both: `endLine` and `fingerprint`, each `Option`, and the index schema constant reads `pub const SCHEMA: u32 = 3` with the doc naming exactly those two optional fields. True when the census measured it, false now. Fix surface: put it in the past tense of its own measurement, or move it under a «what the census found» heading so a reader cannot take it for the current state."
+            ]
+          },
+          "finding-host-index-ungated": {
+            "v": "confirmed",
+            "ev": [
+              "Claims docs describe the committed index as gated by `cargo xtask specmap --check`, the --check path exists in code, but no panel step runs it; boss-measured --check exits 1 with drift 139 added/19 removed/26 edges added/24 removed.",
+              "tools/self-check.sh ; e17 §3.1.2 + Discrepancy D1",
+              "self-check.sh runs 'cargo xtask sync-engines --check' (:332) and 'cargo xtask check-codegen' (:342) but NO `cargo xtask specmap --check`; e17 D1 confirms the --check code path exists (index.rs:324) but is not wired into the panel. The 139/19/26/24 drift numbers are boss-measured at runtime — not independently re-runnable (cargo out of perimeter); the panel absence is verified."
+            ]
+          },
+          "b019a-shape": {
+            "v": "confirmed",
+            "ev": [
+              "Claims code_item gains end_line + fingerprint, produced by the scanner (not the index builder); the index composes scanners through a trait and the neutral core never learns a language.",
+              "generated/specmap/mod.rs:36 ; e17 §3.7.4 (CodeScanner trait scanner.rs:23-27, build_with_scanner index.rs:64)",
+              "CodeItem now has endLine + fingerprint. e17 §3.7.4 documents 'pub trait CodeScanner' (scanner.rs:23-27) and the D3 compose seam 'index::build_with_scanner' (index.rs:64) that TS/Go inject through.",
+              "BOSS: the shape landed as designed - `CodeItem` now carries `endLine` and `fingerprint`, both optional, under index schema 3."
+            ]
+          },
+          "b019a-optional": {
+            "v": "confirmed",
+            "ev": [
+              "Claims both new fields are OPTIONAL (a parity decision, not convenience): only one scanner can fill them today; absent means 'this scanner does not produce it'.",
+              "generated/specmap/mod.rs (endLine/fingerprint) ; doc map-format-change.md:90-97",
+              "Both fields are 'pub endLine: Option<Box<u32>>' and 'pub fingerprint: Option<Box<String>>' each with '#[serde(skip_serializing_if = \"Option::is_none\")]' — optional exactly as designed, so a scanner that cannot produce them leaves them absent."
+            ]
+          },
+          "b019a-ripple": {
+            "v": "confirmed",
+            "ev": [
+              "Claims adding a field breaks every literal construction (found under --all-targets); three scanners construct CodeItem literally; two live in other packages compiling against vendored copies, so the landing is two slices with the sync between.",
+              "e17 §3.7.4 (CodeScanner impls) ; vendor copy count",
+              "e17 §3.7.4 lists four impls (RustScanner, CompositeScanner, TS RecordsScanner, Go RecordsScanner); six vendored core-ai-native-specmap copies exist (go/rust/ts × lang/mcp). The two-slice landing order itself is a plan; commit/slice timing is git-unverifiable."
+            ]
+          },
+          "b019a-self-describing": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the fingerprint string is self-describing `<scheme>:<hex>` (scheme inside the value, like content_hash's sha256:<hex>), so changing the hashed substance later is a regeneration, not another schema bump.",
+              "generated/specmap/mod.rs fingerprint field doc ; TOOLING-MAP.md:92 (FORK-FINGERPRINT)",
+              "CodeItem.fingerprint doc: '`<scheme>:<hex>` over the element's token stream — `tok1:<sha256>`'. FORK-FINGERPRINT (TOOLING-MAP:92): 'self-describing (`<scheme>:<hex>`), so their later upgrade is a regeneration and not another format change'. Matches."
+            ]
+          },
+          "b019a-substance": {
+            "v": "confirmed",
+            "ev": [
+              "Claims owner fork №3 (2026-08-04): the token stream, with doc comments counted as code; e15 measured a doc-dropping scheme calls 7.5% cosmetic vs 2.2% keeping them, gap = 105 doc-comment edits.",
+              "TOOLING-MAP.md:92 FORK-FINGERPRINT ; harvest/e15-b019a-fingerprint-noise.md:15,89,214",
+              "FORK-FINGERPRINT: 'taken 2026-08-04: the token stream, with doc comments counted as code'. e15 confirms 'B1 = 7.5 %, B2 = 2.2 %' (e15:15), table spurious_rate 7.5%/2.2% (:89), and 'на 105 раз больше... Эти 105 лишних срабатываний — doc-comment-правки' (:214-215)."
+            ]
+          },
+          "b019a-scheme-per-scanner": {
+            "v": "confirmed",
+            "ev": [
+              "Claims Rust ships the token scheme (it already holds syn/proc-macro2 with span locations, a token-render helper, span().end()); Go and TS ship raw text with a recorded route.",
+              "core-ai-native-specmap/src/rscan.rs:14,33,151 ; TOOLING-MAP.md:92",
+              "rscan.rs:14 'use quote::ToTokens'; :33 'fn compact_tokens(t: impl ToTokens)'; :151 'let end_line = item.span().end().line as u32'. FORK-FINGERPRINT: 'only Rust gets the token stream free (syn/proc-macro2 already in the scanner, compact_tokens already written, span().end() available); Go's and TypeScript's... ship the raw-text scheme first'. Matches."
+            ]
+          },
+          "b019a-parity": {
+            "v": "confirmed",
+            "ev": [
+              "Claims parity is a per-scanner obligation; a scanner that cannot produce the chosen substance falls back to the other and records the reason+route (parity law); the Rust scanner parses with syn over proc-macro2.",
+              "rscan.rs ; e17 §3.7.4 ; manifesto 00-MANIFESTO.md:103 (##PARITY-GAP-IS-NEVER-SILENT)",
+              "rscan.rs uses syn::spanned::Spanned + quote::ToTokens (Rust scanner is type/span-aware). The parity law it invokes is real and landed: 00-MANIFESTO.md:103 '##PARITY-GAP-IS-NEVER-SILENT... the checker is built or the reason is recorded, never the rule quietly relaxed'."
+            ]
+          },
+          "b019a-what-it-buys": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the milestone served is M-DRIFT: the map notices a code edit before a human (the fingerprint is the mirror of the suspects mechanism on the code side).",
+              "TOOLING-MAP.md:109 (##M-DRIFT)",
+              "TOOLING-MAP:109 '##M-DRIFT: the map notices a code edit (fingerprint mismatch surfaces as a suspect edge without a human noticing first)'. Matches the doc's framing verbatim."
+            ]
+          },
+          "b016-truck-already-drives": {
+            "v": "confirmed",
+            "ev": [
+              "Claims a package travels as a whole directory with no file list, so the map file itself costs nothing to transport; everything expensive is policy/reading, not shipping.",
+              "BACKLOG.md B-016-LOCATOR :659 ; e17 §3.3.1",
+              "B-016-LOCATOR: 'манифест не имеет списка файлов вообще (пакет едет целой директорией — файл карты поедет бесплатно)'. e17 §3.3.1 confirms the manifest declares no file list. Matches."
+            ]
+          },
+          "b016-namespace-key": {
+            "v": "drift",
+            "ev": [
+              "Claims the new rule the census demands: a manifest key naming the namespace under which the package's own spec units are addressed; consumer [[external_specs]] stays as override.",
+              "doc map-format-change.md:158-164 ; e17 §3.5.3 ; TOOLING-MAP.md:108 (##M-ASK)",
+              "e17 §3.5.3 confirms a self-shipped map's namespace is not unambiguous today and 'the rule must be added'. DIVERGENCE TO SURFACE: this design's proposed manifest namespace key was later OVERTURNED by the owner — TOOLING-MAP M-ASK (:108) records 'B-016 half 1 — the owner refuted the manifest key this was first designed around, and nothing was added to the manifest' (the coordinate is used instead). The key as designed did not ship.",
+              "BOSS: DRIFT, and the gathered row surfaced it correctly. The design proposes a manifest key naming the namespace a package's own spec units are addressed under. That key was OVERTURNED by the owner and never added - TOOLING-MAP `##M-ASK` records «the owner refuted the manifest key this was first designed around, and nothing was added to the manifest», and the shipped build mints addresses under the package COORDINATE the manifest already carries. Fix surface: restate the rule as coordinate-derived, or mark this paragraph superseded and point at M-ASK."
+            ]
+          },
+          "b016-identity-policy": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the identity question is answered explicitly as (i): the map is part of the package's identity (a pin that moves when meaning moves); the noise is real and is the price.",
+              "doc map-format-change.md:166-175 ; e17 §3.3.2 ; BACKLOG B-016-HALF1 :665",
+              "This is a recorded design decision (state=work). e17 §3.3.2 confirms the underlying tension ('a map-in-package makes the package identity pin track a derived artefact') that the design resolves by choice (i). B-016-HALF1 names the policy question ('входит ли карта в контент-хэш пакета'). No contradicting owner ruling found in BACKLOG."
+            ]
+          },
+          "b016-reader-is-the-work": {
+            "v": "confirmed",
+            "ev": [
+              "Claims no code in the tree reads a prebuilt map for a foreign package; the reader this half adds is a second, non-committed resolver map assembled at query time, leaving the committed index byte-reproducible.",
+              "e17 §3.4 ; BACKLOG B-018-PARTS.4 :698 ; TOOLING-MAP.md:108 (##M-ASK)",
+              "e17 §3.4: 'no consumer today that reads a prebuilt map for a foreign installed package'. B-018-PARTS.4: 'строить вторую, некоммитимую карту-резолвер'. M-ASK (:108) confirms it landed: 'the reader assembles a second, never-persisted resolver in memory from the maps installed packages carry, leaving the committed map byte-identical'."
+            ]
+          },
+          "b017-shape": {
+            "v": "confirmed",
+            "ev": [
+              "Claims one manifest key with three values — open / contract / none — applied producer-side, so a closed project's bytes never leave its machine.",
+              "BACKLOG.md B-017-SUT :679 ; B-017-BUILD :680",
+              "B-017-SUT: 'Три уровня: open / contract / none'. B-017-BUILD: '(2) Редакцию применять на стороне производителя (байты закрытого проекта не покидают его машину), не фильтром на сервере'. Matches."
+            ]
+          },
+          "b017-contract-content": {
+            "v": "confirmed",
+            "ev": [
+              "Claims owner fork №5: what `contract` contains; the design deferred it 'until a real closed consumer is at the table'; the census confirms no such consumer; recommendation = the tier the present data model can express.",
+              "TOOLING-MAP.md:94 (FORK-CONTRACT-PROFILE) ; BACKLOG B-017-BUILD.4 :680",
+              "FORK-CONTRACT-PROFILE is NOT marked taken — 'The contract privacy tier's content — decided with a real closed-tree consumer at the table (B-017)'. B-017-BUILD '(4) Содержание contract-уровня... вопрос, который дизайн сам отложил до реального закрытого потребителя'. Fork №5 is genuinely open — consistent with the design."
+            ]
+          },
+          "b017-name-clash": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the word `contract` is already taken by the spec compiler's normal-package format (a contract/source split), which is the hazard; raised by the owner 2026-08-04.",
+              "crates/vibe-spec/src/directives.rs:7,42 ; spec/design/structural-loader.md:35-37",
+              "The spec compiler does have a contract/source notion: directives.rs:7 '#source [options] <spec://…> — a contract→impl edge (§7.3)'; structural-loader.md:37 'A short contract section names its heavy implementation via #source spec://X'. So 'contract' is an established spec-compiler term — the lexical clash the design raises is real."
+            ]
+          },
+          "b017-tier-from-the-split": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the recommendation: define the privacy tier BY the contract/source split (ship contract docs, withhold source docs); explicitly 'Not decided — recommendation carried to the owner's fork №5'.",
+              "doc map-format-change.md:213-222 ; TOOLING-MAP.md:94 (FORK-CONTRACT-PROFILE)",
+              "The doc states at :220 'Not decided — this is the recommendation carried to the owner's fork №5, and it supersedes the field-redaction shape sketched above'. FORK-CONTRACT-PROFILE is un-taken. Recommendation status confirmed."
+            ]
+          },
+          "b017-replace-is-the-gradient": {
+            "v": "confirmed",
+            "ev": [
+              "Claims `:replace` is the privacy gradient at section grain, not a publication hazard (owner, 2026-08-04, correcting the document's first reading).",
+              "doc map-format-change.md:224-233 ; spec compiler merge modes (vibe-spec directives)",
+              "An owner correction recorded in the design itself (marker state=done). The owner-quoted correction is dated 2026-08-04 in the doc; I did not find it restated verbatim in BACKLOG/TOOLING-MAP/spec/WAL — it lives in this design's session record. The :replace merge mode is part of the spec-compiler directive set."
+            ]
+          },
+          "b017-one-checkable-rule": {
+            "v": "confirmed",
+            "ev": [
+              "Claims one publishability rule survives and it is about references: a #use or @spec:// reaching from the contract into a source-only anchor dangles for a contract-only receiver; mechanically checkable.",
+              "doc map-format-change.md:235-241 ; crates/vibe-spec/src/directives.rs (#use/#embed/#source parsed)",
+              "Design-stated rule (state=work). The directive set it would check is real and mechanically parsed — directives.rs recognises '#use' / '#embed' / '#source' (DirectiveKind variants, directives.rs:42) — so such a reference-reach check is implementable. The rule itself is not yet built."
+            ]
+          },
+          "b017-floor-not-stump": {
+            "v": "confirmed",
+            "ev": [
+              "Claims that if a contract's minimum is an honest floor rather than a truncation, 'source absent' is a package's legitimate outward view (not a damaged build); today the compiler fails there because it cannot tell 'not distributed' from 'lost'.",
+              "doc map-format-change.md:243-252",
+              "Design-level reasoning (state=work) tying the privacy tier, :replace and loader degradation into one mechanism. No code today distinguishes 'not distributed' from 'lost' — consistent with the design's premise; the loader change is proposed, not built."
+            ]
+          },
+          "b017-link-is-never-stripped": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the #source line ships with the contract (owner, 2026-08-04): producer-side redaction does not remove the directive; stripping it would lose the link permanently.",
+              "doc map-format-change.md:254-260 ; crates/vibe-spec/src/directives.rs:42 (DirectiveKind::Source)",
+              "Owner ruling recorded in the design (marker state=done); the #source directive it concerns is a real parsed directive (directives.rs:42 'DirectiveKind::Source => \"#source\"'). The owner quote is in the design's session record, not found verbatim elsewhere."
+            ]
+          },
+          "b017-one-source-per-document": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the compiler reads the FIRST #source directive in a document and never looks for a second (a second is swallowed silently); measured while answering the owner.",
+              "crates/vibe-spec/src/directives.rs ; doc map-format-change.md:262-269",
+              "The #source directive is parsed by vibe-spec (directives.rs:7,42). The 'first only, second silently swallowed' behaviour is the design's measured claim about the parser; I did not independently trace the take-first logic in directives.rs to confirm the silent-swallow, and the doc itself says 'The silent swallow is filed separately' — reported as the design's measured finding, not independently re-verified."
+            ]
+          },
+          "b017-own-project-vs-foreign": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the owner's harder question: absence of source is normal in a foreign product and an error at home; four candidates A/B/C/D told apart by who declares; recommendation C together with B, D later.",
+              "doc map-format-change.md:271-286",
+              "Design-internal analysis (state=work). Consistent with the absence of any own-vs-foreign mechanism in the tree today; the design notes D 'requires the real contract↔source edges... today those are hand-drawn... the link table, unbuilt'."
+            ]
+          },
+          "b017-distinction-deferred": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the owner deferred the whole distinction (2026-08-04), verbatim: «различать свой и чужой проект пока не надо… разработчик сам сможет с помощью каких-то инструментов проверить, есть ли у пакета реализации».",
+              "doc map-format-change.md:288-297 ; BACKLOG.md ; TOOLING-MAP.md",
+              "The verbatim owner quote is recorded in the design (state=plan). I searched BACKLOG.md and TOOLING-MAP.md for this ruling and did not find it restated there — it is this design's own session record of the 2026-08-04 owner deferral. No contradicting ruling found."
+            ]
+          },
+          "b017-standing-on-a-demonstration": {
+            "v": "confirmed",
+            "ev": [
+              "Claims a #source crossing a package boundary is allowed (the directive carries a full address, resolves through the ordinary resolver); live uses of #source in this tree number zero — the mechanism is built and never exercised.",
+              "crates/vibe-spec/src/directives.rs:7,42 ; grep '#source' across spec/packages/crates",
+              "The #source directive exists (directives.rs:7,42). A perimeter grep for '#source' found it ONLY in tests (directives/tests.rs), one fixture's prose (foreign-grammars.md), and design-doc descriptions (structural-loader.md) — ZERO live authored #source edges in real spec markdown. 'Built and never exercised' confirmed.",
+              "BOSS: confirmed, and worth being precise about. The claim is that live authored `#source` edges number zero - the mechanism is built and never exercised. The row's perimeter grep found it only in tests, one fixture's prose and design descriptions, which is exactly what the claim says. Cross-package `#source` has since been exercised by TESTS (both the working case and the missing-source failure), which does not contradict a claim about AUTHORED edges."
+            ]
+          },
+          "b017-one-bump": {
+            "v": "drift",
+            "ev": [
+              "Claims both keys (namespace §3 + profile §4) ride one manifest bump, gated behind min_vibe_version; introducing them in separate releases would break consumers.",
+              "BACKLOG.md B-017-BUILD :680 ; B-016-DEPS :667",
+              "B-017-BUILD '(1)... вводить вместе с механикой минимальной версии, не «на вырост»'. Design decision. DIVERGENCE: per TOOLING-MAP M-ASK the owner later refuted the namespace manifest key, so the 'two manifest keys one bump' premise is partly overturned — the privacy profile key is the surviving piece.",
+              "BOSS: DRIFT by consequence. The claim is that TWO manifest keys - the namespace one and the privacy profile - ride one bump behind `min_vibe_version`. One of the two no longer exists (see `b016-namespace-key`), so the premise is half gone. The surviving piece is the privacy-profile key, and the one-bump discipline still applies to it; the sentence needs to stop counting two."
+            ]
+          },
+          "bump-route-alive": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the JTD schema is the source of truth, jtd-codegen produces the generated wire module, cargo xtask check-codegen byte-compares; B-013 closed the broken relocation so this bump would not discover it.",
+              "BACKLOG.md B-013-DISPOSITION :588 ; xtask/src/codegen.rs ; tools/self-check.sh:342",
+              "B-013 disposition 'done' (L588): 'все четыре координаты fix shape... cargo xtask check-codegen чист; генератор упакован как tool:org.vibevm.ai-native/jtd-codegen'. schemas/specmap.jtd.json exists; check-codegen runs in the panel (self-check.sh:342)."
+            ]
+          },
+          "bump-surfaces": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the surfaces a 2→3 bump touches: the JTD schema; the generated wire module; the canonical example; the scanner filling the new fields; every exhaustive consumer; the six vendored engine copies; the committed indexes.",
+              "e17 §3.6.2 ; vendor-copy count ; specmap.json count",
+              "e17 §3.6.2 lists the 7 touch-surfaces. Verified: six vendored core-ai-native-specmap copies (go/rust/ts × lang/mcp) and thirteen committed specmap.json files in the perimeter. Matches."
+            ]
+          },
+          "bump-vendor-order": {
+            "v": "confirmed",
+            "ev": [
+              "Claims host crates path-depend on the package crates, so the vendored copies are hand-synced first and sync-engines --check verifies afterwards.",
+              "xtask/src/sync_engines.rs ; tools/self-check.sh:332",
+              "sync_engines.rs exists (SyncManifest with deny_unknown_fields, :37). self-check.sh:332 'run_step \"cargo xtask sync-engines --check\" cargo xtask sync-engines --check'. The vendor-verify gate is live in the panel."
+            ]
+          },
+          "b014-two-halves": {
+            "v": "confirmed",
+            "ev": [
+              "Claims B-014 is two independent halves; half one (regenerate the committed index and commit it) landed during this design's measurement pass and took the dangling-edge count from seventeen to zero.",
+              "BACKLOG.md B-014 :605 (disposition) ; host specmap.json suspects",
+              "B-014 disposition is 'open' (:612) — the whole entry is not closed. The committed host specmap.json currently has suspects=0 (dangling edges zero), consistent with the 'to zero' half of the claim; the prior 'seventeen' count is not independently reconstructable without the historical artefact. B-014 stays open because half two (the gate decision) is unmade."
+            ]
+          },
+          "b014-gate-decision": {
+            "v": "confirmed",
+            "ev": [
+              "Claims half two — whether the host index gains a freshness gate — is answered 'not as a byte-compare'; the heading line is volatile decoration, so a byte-compare would fire on nearly every doc commit.",
+              "BACKLOG.md B-014-FIX-SHAPE :626 ; e17 §3.7",
+              "B-014-FIX-SHAPE '(ii) Decide whether the host wants a freshness gate at all — a --check-style byte-compare... or a deliberate «regenerated on demand only» posture'. The design's 'not a byte-compare' answer is a decision recorded here (state=work); B-014's open status is consistent with the gate decision still being open."
+            ]
+          },
+          "b014-what-instead": {
+            "v": "confirmed",
+            "ev": [
+              "Claims what is gated instead: a freshness check comparing the index's content (units, content hashes, code items, edges) while ignoring derived line numbers; cheap once the format change is in.",
+              "doc map-format-change.md:348-354 ; e17 §3.7.3",
+              "Design proposal (state=work). e17 §3.7.3 confirms the index carries units/contentHash/code_items/edges as separable from the volatile line numbers, so a content-only compare is technically possible. The check is not yet built."
+            ]
+          },
+          "non-goal-fragments": {
+            "v": "confirmed",
+            "ev": [
+              "Claims this change does not build fragments-by-hash; B-016 half 2 needs an address type, a store, a fetch verb, and its unresolved question (what a code-side fragment is) is owner fork №4.",
+              "TOOLING-MAP.md:93 (FORK-FRAGMENT-IDENTITY) ; BACKLOG B-016-HALF2 :666",
+              "FORK-FRAGMENT-IDENTITY is NOT marked taken — 'What a code-side fragment is (no end-of-range, no body today) (B-016.2)'. B-016-HALF2: 'нерешённый дизайн-вопрос до кода: что такое фрагмент со стороны кода'. Fork №4 is open — consistent with the non-goal."
+            ]
+          },
+          "non-goal-command-nodes": {
+            "v": "confirmed",
+            "ev": [
+              "Claims this change does not add the command or error-variant nodes; B-019 (б) and (в) are separate node types with their own extraction.",
+              "BACKLOG.md B-019-B :714 ; B-019-V :715",
+              "B-019-B 'В дереве нет ни определения «команды», ни экстрактора, ни потребителя'; B-019-V discusses the error-variant boundary question across the conform/specmap engines. Confirms (б) and (в) are distinct parts, not riding this format change."
+            ]
+          },
+          "non-goal-signatures": {
+            "v": "confirmed",
+            "ev": [
+              "Claims this change does not add signatures to the map; §4's recommendation defines the contract tier over data the map already carries precisely so it does not grow a signature-extraction limb.",
+              "doc map-format-change.md §4 (b017-tier-from-the-split) ; BACKLOG B-017-LOCATOR :674",
+              "B-017-LOCATOR 'у «contract»-уровня нет данных (карта не хранит сигнатур)'. The design's §4 recommends the tier over the contract/source split rather than signatures — internally consistent with the non-goal."
+            ]
+          },
+          "non-goal-vocabulary": {
+            "v": "confirmed",
+            "ev": [
+              "Claims this change does not merge the lifecycle vocabularies; B-024's census measured the specmap lifecycle status has zero carriers and one display-only consumer, so the merge is a separate cheap change needing no format bump.",
+              "BACKLOG.md B-024-LOCATOR :776 ; harvest/e16-b024-lifecycle-vocab-census.md",
+              "B-024-LOCATOR 'носителей 0 из 5 266' for specmap lifecycle statuses; B-024 disposition 'planned' (merge direction chosen: сводим к словарю progress). e16 exists (15987 bytes). Consistent with the non-goal."
+            ]
+          }
+        },
+        "verified_at": "2026-08-04T23:43:05Z",
+        "verify_batch": "H12-map-format"
+      }
     },
     "spec/design/multiple-sources-and-plugins.md": {
       "content_hash": "cd9f32549426b4f5b11f2efc7486b023040b896c1e27beb879a46cee21507a7b",
@@ -94748,7 +95549,221 @@
       },
       "marker_count": 24,
       "unit_count": 7,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "cd9f32549426b4f5b11f2efc7486b023040b896c1e27beb879a46cee21507a7b",
+        "verdicts": {
+          "companion-line": {
+            "v": "confirmed",
+            "ev": [
+              "Companion to BACKLOG B-056 (four owner rulings, honest cost) and B-055 (today's silence on a second directive); contract is PROP-035's #source mechanics and its no-deadlock invariant.",
+              "BACKLOG.md carries `{#b-056}` and `{#b-055}`; spec/modules/vibe-workspace/PROP-035-spec-compiler.md carries the `#source` section and section 9's `##NO-DEADLOCK-INVARIANT`",
+              "found: every companion resolves; the doc declares itself lore and defers to the PROPs, which is the genre this directory holds.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "basis-one-source": {
+            "v": "confirmed",
+            "ev": [
+              "The pipeline takes the FIRST `#source` and drops the rest silently.",
+              "crates/vibe-spec/src/pipeline.rs:221 - `.find(|d| d.kind == DirectiveKind::Source).map(|d| d.address)`, read line by line",
+              "found: `find` returns the first match and the function returns one address; there is no diagnostic on a second directive. This is B-055's silence, stated as the basis rather than as a complaint.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "basis-two-inputs": {
+            "v": "confirmed",
+            "ev": [
+              "The folder's signature is binary: `fold_source(contract, source) -> String`, walking top-level contract sections and looking each anchor up in THE source.",
+              "crates/vibe-spec/src/merge.rs - `pub fn fold_source(contract: &DocTree, source: &DocTree) -> String` and its `:add` / `:replace` arms plus the source-only append loop",
+              "found: exactly two `&DocTree` parameters; the generalisation to N is the centre of the build, as the fact says.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "basis-no-recursion": {
+            "v": "confirmed",
+            "ev": [
+              "The fold does not follow a source's own `#source`, because `use_graph` does not count `#embed`/`#source` as dependency edges.",
+              "crates/vibe-spec/src/use_graph.rs - the module states that `#embed` and `#source` are not dependency edges and are ignored by its traversal",
+              "found: the exclusion is explicit in the module that owns cycle detection, so the absence of recursion is a design position rather than an oversight.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "basis-resolver-is-pointwise": {
+            "v": "confirmed",
+            "ev": [
+              "The resolver maps one package coordinate to one installed slot; there is no enumeration by pattern.",
+              "crates/vibe-spec/src/resolver.rs - the resolve path is a coordinate-to-slot lookup with the self-coordinate matched first; no glob or pattern branch exists",
+              "found: pointwise resolution confirmed, which is precisely the capability the plugin form needs to add.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "rulings-recap": {
+            "v": "confirmed",
+            "ev": [
+              "Restates the owner's four rulings of 2026-08-04: :replace drops only the contract text, a glob must be sorted, both spellings live, and recursion follows the C++/Java pattern.",
+              "BACKLOG.md `##B056-RULED` carries all four verbatim",
+              "found: the recap matches the recorded rulings one for one, with nothing added and nothing dropped.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "rulings-replace-is-a-flag": {
+            "v": "confirmed",
+            "ev": [
+              "The owner's formulation removes the two-replace conflict instead of deciding it, and is backward compatible: with ONE source the result is today's behaviour.",
+              "BACKLOG.md `##B056-REPLACE-BECOMES-A-FLAG`; merge.rs's `MergeMode::Replace` arm, which emits the source text alone",
+              "found: with a single source the flag reduces to today's Replace arm exactly - the degenerate case checks out against the code, not only against the argument.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "rulings-left": {
+            "v": "confirmed",
+            "ev": [
+              "What the rulings leave to the build: the N-input fold, the flag's threading, a cycle guard and dedup for the fold, and resolver enumeration.",
+              "BACKLOG.md `##B056-ORDER-AND-RECURSION` names the same four",
+              "found: the remainder list agrees with the backlog's own.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "fold-signature": {
+            "v": "confirmed",
+            "ev": [
+              "One new entry point `fold_sources(contract, sources)` with `fold_source` kept as its degenerate case, so every existing fold test passes through the new path unchanged.",
+              "merge.rs's test module exercises `fold_source` directly across the contract-only, replace, add and source-only cases",
+              "found: the existing tests are a real regression harness for the generalisation, which is what makes keeping the binary name a check rather than a courtesy.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "fold-per-section": {
+            "v": "confirmed",
+            "ev": [
+              "The per-section rule over a SEQUENCE of sources: empty, any-replace, otherwise contract-minus-overridden then the members in order.",
+              "merge.rs's current single-source rule, which this generalises by replacing 'the source' with 'the sequence'",
+              "found: each of the three branches maps onto an arm that exists today; none is invented.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "fold-per-section-delta": {
+            "v": "confirmed",
+            "ev": [
+              "The delta from today's law is two words - 'any' and 'every'.",
+              "merge.rs `overridden_facts`, a lookup in one source document",
+              "found: the only structural change is set-union over N documents where there is a lookup in one.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "fold-override-is-a-union": {
+            "v": "confirmed",
+            "ev": [
+              "Fact override widens to the union over all sources; a fact redeclared twice is caught by the post-merge anchor-uniqueness recheck rather than by the fold.",
+              "merge.rs `overridden_facts`; crates/vibe-spec/src/gate.rs and doctree.rs `duplicate_anchors()`, the uniqueness check that runs over the merged view",
+              "found: the recheck the fact leans on exists as a real function, so the fold can stay simple by design rather than by hope.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "fold-source-only-collision": {
+            "v": "confirmed",
+            "ev": [
+              "A source-only anchor declared twice IS an error, and the asymmetry with an addition to a contract section is deliberate - declaration is idempotent, definition is not.",
+              "BACKLOG.md `##B056-ODR-PARALLEL` records the same one-definition-rule parallel; doctree.rs `duplicate_anchors()` is the mechanism that fails",
+              "found: the rule is already the project's, and the fold inherits it instead of restating it.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "fold-order-is-declaration-order": {
+            "v": "confirmed",
+            "ev": [
+              "Order is declaration order and a glob is sorted before it joins, so the composed document is a pure function of (tree, lockfile).",
+              "BACKLOG.md `##B056-RULED` ruling (2) mandates sorting; vibe.lock pins the installed set",
+              "found: both halves of the determinism argument rest on things that exist - the ruling and the lockfile.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "recursion-already-canon": {
+            "v": "confirmed",
+            "ev": [
+              "Ruling (4) is already this project's law under another name, implemented for `#use` but never reaching the fold.",
+              "PROP-035 section 9 `##NO-DEADLOCK-INVARIANT`; crates/vibe-spec/src/use_graph.rs - three-colour DFS, dedup by construction, `is_contract` predicate, a loop legal only when every node is a contract, a loop touching a source rejected",
+              "found: every element the fact names is in the module - this is the strongest claim in the document and it is the one that makes the build small.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "recursion-what-to-extend": {
+            "v": "confirmed",
+            "ev": [
+              "The fold needs the same traversal over `#source` edges, reusing the existing walker rather than writing a second one.",
+              "use_graph.rs (the walker) and merge.rs (the fold), today unconnected",
+              "found: the two modules are real and the gap between them is the work; the one-implementation argument mirrors the project's own one-calculator law for hashes.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "recursion-dedup-asymmetry": {
+            "v": "confirmed",
+            "ev": [
+              "The static traversal dedups by construction; the structural (dynamic) mode is prompt-executed, so its dedup is unmeasured and must not be claimed.",
+              "use_graph.rs (dedup by construction); spec/design/structural-loader.md, which holds the structural mode's instructions",
+              "found: the static half is machine-guaranteed and the dynamic half is instructions - the asymmetry is real, and the fact refuses to assert symmetry rather than assuming it.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "plugins-only-enumeration-is-new": {
+            "v": "confirmed",
+            "ev": [
+              "The glob adds exactly one capability - the resolver enumerating installed packages by pattern; everything downstream is the sequence fold.",
+              "resolver.rs (pointwise today); merge.rs (the fold that would consume the sequence)",
+              "found: the split between what is new and what is reuse holds against both modules.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "plugins-reproducible-by-lockfile": {
+            "v": "confirmed",
+            "ev": [
+              "Reproducibility is not at risk: what is installed is the lockfile's pinned set, so sorted expansion gives one result.",
+              "vibe.lock pins 36 packages with their versions and content hashes",
+              "found: the lockfile is the pinned set the argument needs, and it exists with the packages enumerated.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "plugins-empty-is-legal": {
+            "v": "confirmed",
+            "ev": [
+              "A glob matching nothing is a legal empty set, so the plugin form has no declared-but-not-shipped problem.",
+              "BACKLOG.md `##B056-GLOBS-DEGRADE-NATURALLY`",
+              "found: recorded in the backlog as the same side benefit; the fact restates rather than invents it.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "cost-halves": {
+            "v": "confirmed",
+            "ev": [
+              "Only the `:add` half is cheap; the resolver, the flag semantics, ordering and recursion are a separate build.",
+              "BACKLOG.md `##B056-COST` states the same split",
+              "found: the honest-cost line agrees with the backlog's.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "cost-reading-consequence": {
+            "v": "confirmed",
+            "ev": [
+              "A section assembled from five plugins is long and B-021's long-section threshold will fire on it.",
+              "BACKLOG.md `##B056-COST` names the same consequence; B-021's thresholds landed this campaign and fire 0 and 4 times on this tree",
+              "found: the warning exists and would apply - the consequence is predicted from a shipped rule, not from an imagined one.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          },
+          "cost-order": {
+            "v": "confirmed",
+            "ev": [
+              "Four landings, each standing alone, with step 2 closing B-055 on its way past.",
+              "pipeline.rs:221 (the `.find` that step 2 replaces); BACKLOG.md `{#b-055}`",
+              "found: step 2's target is one call site and B-055 is exactly the defect it removes, so the claim that one build closes another checks out.",
+              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+            ]
+          }
+        },
+        "verified_at": "2026-08-04T23:45:05Z",
+        "verify_batch": "H14-multiple-sources-design"
+      }
     },
     "spec/design/new-rule-classes.md": {
       "content_hash": "f3ad41617b003a195a4f1f0728061288c49f11c47b81c2ec3e47d451a06c5a8b",
@@ -94771,7 +95786,267 @@
       },
       "marker_count": 32,
       "unit_count": 6,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "f3ad41617b003a195a4f1f0728061288c49f11c47b81c2ec3e47d451a06c5a8b",
+        "verdicts": {
+          "authority-line": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the doc is non-normative; the contract stays in the PROPs and package specs; backlog entries B-036/037/038 carry the owner rulings and win on divergence.",
+              "BACKLOG.md:935 / :948 / :961 ; doc new-rule-classes.md:5-10",
+              "B-036 (:935), B-037 (:948), B-038 (:961) all present. B-036 disposition 'planned', B-037 'planned', B-038 carries fork №1 (computed names) — the backlog rulings the doc cites exist at those lines."
+            ]
+          },
+          "standing-on": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the design stands on three read-only censuses (e13-r1 comment-position, e13-r2 custom-lints, e13-r3 pending-cards) taken in parallel before a line was written.",
+              "campaigns/packages-2026-09/harvest/e13-r1-comment-position-census.md ; e13-r2-custom-lints-census.md ; e13-r3-pending-cards-census.md",
+              "All three harvest files exist (seen in campaigns/.../harvest/ listing). The doc states 'Every number below is theirs unless it says «boss-measured»' (:17), matching the campaign's measurement-first posture."
+            ]
+          },
+          "batch-shape": {
+            "v": "confirmed",
+            "ev": [
+              "Claims batch 3 is one conveyor (card + checker + exhibit, three times): B-036 = rule-position-is-a-resource, B-038 = rule-closed-vocabulary-naming + R-060, B-037 = Scaffold F's third diagnostics channel.",
+              "doc new-rule-classes.md:19-25 ; BACKLOG B-036/037/038",
+              "The three backlog entries exist (:935/:948/:961) and map to the three rule classes the doc names. The 'three of the seven pending cards' framing is the design's own."
+            ]
+          },
+          "finding-no-severity": {
+            "v": "confirmed",
+            "ev": [
+              "Claims there is no severity class in the engine: Finding carries no severity, Rule has no severity method, all drivers fail iff !new.is_empty() against the ratchet baseline.",
+              "core-ai-native-conform/src/finding.rs:30 ; rules/* ; baseline.rs",
+              "Finding is defined at finding.rs:30 (struct present). grep shows the ratchet idiom '!new.is_empty()' / 'new.is_empty()' throughout baseline.rs (:70,:152,:202). No severity field/method surfaced in the Finding/Rule shape — consistent with 'no severity class'."
+            ]
+          },
+          "finding-denominator-exists": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the position denominator already ships: Fact::FileMetrics { lines } is emitted once per file by every frontend.",
+              "core-ai-native-conform/src/facts.rs:76",
+              "facts.rs:76 'FileMetrics { lines: u32 },'. The variant exists; rules/budget.rs:177 and rules/position.rs:45-58 destructure 'let Fact::FileMetrics { lines } = f' — confirming it is the file-line denominator."
+            ]
+          },
+          "finding-comment-walks-exist": {
+            "v": "confirmed",
+            "ev": [
+              "Claims two of three extractors already walk every comment (go-extract's suppression pass, ts-extract's scanner read text+line); only the Rust frontend loses plain // comments because syn::parse_file drops them.",
+              "core-ai-native-specmap/src/rscan.rs (syn::parse_file) ; e13-r1 census",
+              "The Rust path uses syn (e17 §3.7.4: 'syn::parse_file at rscan.rs:243'), which drops plain // comments — consistent. The go-extract/ts-extract comment-walk capability is the e13-r1 census's measurement; the extractors exist under go-ai-native-lang/typescript-ai-native-lang tools/."
+            ]
+          },
+          "finding-vocabulary-is-absent": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the marker vocabulary the guides evoke is near-absent from our own tree (SAFETY: 6, INVARIANT: 0, PANICS 0, rustdoc # Safety 0, TS @invariant 0).",
+              "doc new-rule-classes.md:50-56 ; e13-r1 census",
+              "These are e13-r1 census counts. The doc's consequence ('the rule must be exhibited on fixtures, because the live tree will not exhibit it') is the design's BUILD-FIRST reading; the near-zero counts are the census's, restated here."
+            ]
+          },
+          "finding-toolchain-pins-stable": {
+            "v": "confirmed",
+            "ev": [
+              "Claims rust-toolchain.toml pins stable and is the only toolchain file in the tree; a dylint library needs nightly (rustc_private) and cannot compile on stable. Boss-measured: no nightly installed, cargo dylint not present.",
+              "rust-toolchain.toml ; doc new-rule-classes.md:58-62",
+              "rust-toolchain.toml: '[toolchain] channel = \"stable\"' (components rustfmt, clippy). Confirms the stable pin. The dylint/nightly requirement is the toolchain fact that reshapes B-037; the 'no nightly / no cargo dylint' boss-measurement is a runtime fact (not re-runnable here).",
+              "BOSS: `rust-toolchain.toml` reads `channel = \"stable\"`, so the dylint-needs-nightly blocker the design records is real today."
+            ]
+          },
+          "finding-ts-vehicle-is-present": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the TS vehicle is already in the tree: typescript-eslint ^8.46.0 is a devDependency of the consumer demo (resolving @typescript-eslint/utils → RuleCreator), and the TS floor runs a bare eslint .",
+              "research/ts-demo/package.json:20 ; e13-r2 census",
+              "research/ts-demo/package.json:20 '\"typescript-eslint\": \"^8.46.0\"'. Confirms the version. The flat-config pickup and bare 'eslint .' floor are the e13-r2 census's measurement of the TS floor.",
+              "BOSS: `research/ts-demo/package.json` carries `\"typescript-eslint\": \"^8.46.0\"` - the vehicle is a live devDependency, which is what makes the TS half buildable while the Rust half waits on a toolchain decision."
+            ]
+          },
+          "b036-rule": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the rule invariant-comment-position: a comment carrying an invariant marker, in a file long enough for thirds, whose line falls in the middle third, is a finding.",
+              "doc new-rule-classes.md:72-75 ; BACKLOG B-036 :935 ; core-ai-native-conform/src/rules/position.rs",
+              "Design rule (state=done). BACKLOG B-036 present (:935). A rules/position.rs already exists in the conform engine (referenced at position.rs:45-58), consistent with the position rule's home.",
+              "BOSS: the rule is mounted, not proposed - `InvariantCommentPosition` is in the engine's standing rule set (this session read `build_rules` and saw it constructed with `markers` and `min_lines` from the ROOT config)."
+            ]
+          },
+          "b036-inputs": {
+            "v": "confirmed",
+            "ev": [
+              "Claims inputs decided: denominator Fact::FileMetrics { lines } (ships); numerator = a NEW engine Fact variant carrying the marker+line — the expensive WAL-C-KIND-VS-VARIANT-RIPPLE kind; bumps frontend versions.",
+              "core-ai-native-conform/src/facts.rs:76 ; doc new-rule-classes.md:77-83",
+              "FileMetrics ships (facts.rs:76). The new Fact VARIANT (the ripple) is a design plan; whether the variant has landed was not individually traced — reported as the design's plan with the denominator verified present.",
+              "BOSS - closing the row's own open question. It said the new Fact variant was a design plan and that whether it had landed was not investigated. It landed: `facts.rs` carries a `Comment { ... }` variant beside `FileMetrics`, `rules/position.rs` exists, and `InvariantCommentPosition` is exported from `rules/mod.rs`. B-036 is built, not merely specified."
+            ]
+          },
+          "b036-config": {
+            "v": "confirmed",
+            "ev": [
+              "Claims two ROOT keys (marker vocabulary list + minimum file length), beside max_file_lines; language-neutral budgets in the root table; boss defaults markers = measured vocabulary + guide-named (SAFETY:, INVARIANT:, PANICS, WARNING:, MUST, NEVER), minimum length = 120 lines.",
+              "doc new-rule-classes.md:85-94 ; conform config (root table)",
+              "Design config shape (state=done). The 120-line default is also the B-021 long-section threshold (BACKLOG B-021-BUILD :743 '120 строк'), i.e. a consistent house default. The root-table shape is the gate-parity config convention."
+            ]
+          },
+          "b036-fingerprint": {
+            "v": "confirmed",
+            "ev": [
+              "Claims fingerprint is never line-keyed: key by file + marker + per-file ordinal, so an edit above the comment does not re-key a frozen baseline entry (the stop.rs / budget.rs:71-75 lesson).",
+              "core-ai-native-conform/src/rules/budget.rs:71-78",
+              "budget.rs:73-78 comment: 'Fingerprint by context + per-file ordinal, NOT by line: a line-keyed fingerprint goes stale on any...'. The exact lesson the doc cites is recorded in the tree at the cited site."
+            ]
+          },
+          "b036-scope": {
+            "v": "confirmed",
+            "ev": [
+              "Claims scope is like FileLength: in_src only, test context out.",
+              "doc new-rule-classes.md:100 ; conform FileLength rule",
+              "Design decision (state=done). The in_src/test-out scoping mirrors the existing FileLength/budget rules (same engine) — a consistent scope convention."
+            ]
+          },
+          "b036-exhibit": {
+            "v": "confirmed",
+            "ev": [
+              "Claims an exhibit is needed because the live tree will not exhibit the rule: each stack's dirty fixture gains an invariant comment in its middle third; clean fixture gains one at the top.",
+              "doc new-rule-classes.md:102-106 ; fixtures under tools/go-extract|ts-extract/test/fixtures",
+              "Design exhibit plan. The clean/dirty fixture pairs exist (the eight specmap.json fixture files include {clean,dirty} pairs under go-extract/ts-extract test/fixtures), so the exhibit target surfaces exist."
+            ]
+          },
+          "b037-promise": {
+            "v": "confirmed",
+            "ev": [
+              "Claims what is promised per language: Rust 'custom clippy lints name the rule and remedy'; TS 'custom @typescript-eslint rules whose messages cite the violated spec:// REQ'; Go 'no vehicle — only custom checks emit the same grammar'; all three carry the R3-011 grammar and name a checker (diagnostic-cites-req) that does not exist.",
+              "doc new-rule-classes.md:110-115 ; the language guides",
+              "Design's summary of guide promises. The checker name 'diagnostic-cites-req' not existing today is consistent with B-037 being 'planned'; the R3-011 grammar is the req_message grammar (next anchor)."
+            ]
+          },
+          "b037-grammar-is-the-contract": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the grammar is the contract and already has one authoritative renderer — req_message + matches_req_grammar acceptor in the engine, with 19 production call sites; anything built here reproduces that string exactly.",
+              "core-ai-native-conform/src (req_message / matches_req_grammar) ; doc new-rule-classes.md:117-121",
+              "grep for req_message|matches_req_grammar in the conform engine returns 65 hits (incl. tests/docs). The single-renderer principle is confirmed — the symbols exist and are widely used; the design's '19 production call sites' is its own measured subset of these."
+            ]
+          },
+          "b037-ts-build": {
+            "v": "confirmed",
+            "ev": [
+              "Claims TS — BUILD fully: a plugin package beside ts-extract/ts-oracle authoring diagnostic-cites-req via ESLintUtils.RuleCreator, messages rendered by one helper reproducing the engine grammar, tested with @typescript-eslint/rule-tester, wired into the demo's flat config; nothing in the floor changes.",
+              "doc new-rule-classes.md:123-133 ; typescript-eslint ^8.46.0 (research/ts-demo/package.json:20)",
+              "Design build plan (state=done). The vehicle (typescript-eslint ^8.46.0, supplying RuleCreator) is present in the demo (:20); the plugin package itself is the work to build."
+            ]
+          },
+          "b037-rust-position": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the Rust custom-lint vehicle is blocked by toolchain policy: dylint needs a pinned nightly, this project pins stable and ships one toolchain file; the custom-CHECK layer (the conform engine, 19 call sites of the one renderer) exists and speaks the grammar; what is missing is a type-aware vehicle, and adopting one is an owner toolchain-policy decision.",
+              "rust-toolchain.toml (stable) ; BACKLOG B-037 :948 ; TOOLING-MAP.md:107 (b-050 ref)",
+              "rust-toolchain.toml pins stable. The conform engine IS the grammar-speaking check layer (req_message renderer, 65 grep hits). The dylint/nightly adoption is owner-ruled deferred — TOOLING-MAP M-PARITY (:107) names 'BACKLOG.md {#b-050} (the Rust dylint... vehicles, owner-ruled don't build now, don't drop the promise)'. Matches."
+            ]
+          },
+          "b037-go-position": {
+            "v": "confirmed",
+            "ev": [
+              "Claims Go — no vehicle is promised; the honest move is to name one (an analysis.Analyzer) rather than invent one silently; the floor already distributes single-binary analyzers (staticcheck, exhaustive).",
+              "doc new-rule-classes.md:150-155 ; TOOLING-MAP.md:107 (b-050)",
+              "The Go analyzer shape (staticcheck/exhaustive via go install + path_tool) is the existing floor pattern. TOOLING-MAP M-PARITY (:107) records the Go analysis.Analyzer vehicle as owner-ruled deferred ('don't build now, don't drop the promise') — consistent with 'recorded, routed, not built'."
+            ]
+          },
+          "b037-doc-correction": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the guides' clause is corrected in the same landing: all three mark ##SCAFFOLD-F-STRUCTURED-DIAGNOSTICS @impl/done while the third channel is unbuilt — the class of claim this campaign exists to kill.",
+              "doc new-rule-classes.md:157-161 ; SCAFFOLD-F in the guides",
+              "The doc identifies a 'Specified, not built' gap (the third diagnostics channel). This is exactly the drift class the campaign judges; the correction lands when the channel builds. The ##SCAFFOLD-F-STRUCTURED-DIAGNOSTICS anchor lives in the language guides (referenced here in backticks as a cross-doc marker)."
+            ]
+          },
+          "b038-fork": {
+            "v": "confirmed",
+            "ev": [
+              "Claims owner fork №1 (2026-08-04): computed cell names — Pascal(variant) followed by the seam spelled as written (SatDepSolver, not SatDepsolver); the naive 'pascal both halves' composer mangles multi-word seams and is not the rule.",
+              "TOOLING-MAP.md:90 (FORK-COMPUTED-NAMES) ; doc new-rule-classes.md:165-168",
+              "FORK-COMPUTED-NAMES: 'taken 2026-08-04: computed names. The canonical cell name is composed as Pascal(variant) + the seam spelled as written'. Matches the design verbatim, including the SatDepSolver example and the record pointer to new-rule-classes.md §4."
+            ]
+          },
+          "b038-fork-cost": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the cost, boss-measured over the WHOLE tree: 40 manifest-bearing cells; 14 already compliant; 13 production renames in host crates/ (vibe-resolver ×5, vibe-mcp ×4, vibe-registry ×2, vibe-index ×2); no cell name is wire-visible.",
+              "TOOLING-MAP.md:90 ; grep '#[cell(' across crates/ ; doc new-rule-classes.md:170-181",
+              "FORK-COMPUTED-NAMES (TOOLING-MAP:90) restates '40 manifest-bearing cells, 14 already compliant... 13 production renames in the host crates/'. grep for '#[cell(' / '//spec:cell' in host crates/ returns 30 cell declarations — same order of magnitude (the 40 is whole-tree incl. packages+fixtures+.vibe/cache). The vibe-check family uses seam='Check' (e.g. activation_conflict.rs:23), consistent with the compliant-family claim.",
+              "BOSS: TOOLING-MAP `##FORK-COMPUTED-NAMES` carries the same three figures this fact does - 40 manifest-bearing cells, 14 already compliant, 13 production renames in the host - so the design and the map agree on the measured cost rather than each carrying its own number."
+            ]
+          },
+          "b038-one-rule-two-languages": {
+            "v": "confirmed",
+            "ev": [
+              "Claims one engine rule serves Rust and Go: Go practises {Variant}{Seam} today with no machine check, so the build closes a Go gap; the rule reads the manifest (Rust #[cell(seam,variant)], Go //spec:cell seam= variant=) and compares the declared name against the composed one; TS records a reason (no cell manifest).",
+              "doc new-rule-classes.md:183-188 ; cell manifests in crates/",
+              "Design rule (state=done). Both manifest forms exist: Rust '#[cell(seam = \"Check\", variant = \"...\")]' (crates/vibe-check) and the Go '//spec:cell' convention. TS having no cell manifest is the recorded reason — consistent with the closed-vocabulary design."
+            ]
+          },
+          "b038-lands-frozen": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the rule lands with a frozen ratchet baseline; the 13 renames ride a separate, deliberate commit, so the day the rule mounts nothing reds.",
+              "doc new-rule-classes.md:190-195 ; TOOLING-MAP.md:90",
+              "Design landing plan. FORK-COMPUTED-NAMES (TOOLING-MAP:90): 'The rule lands with a frozen ratchet baseline; the renames ride a separate deliberate commit'. The frozen-baseline-on-mount convention is the WAL-C characterization-coupling discipline."
+            ]
+          },
+          "b038-r060": {
+            "v": "confirmed",
+            "ev": [
+              "Claims R-060 — the card is new and its checker lands vacuous: 'test matrices declared as data, never a 2^n sweep' is cited by two guides and the host registry with no card/checker; the census found zero combinatorial constructs in the tree.",
+              "doc new-rule-classes.md:197-204 ; e13-r3 census ; R-060 mentions",
+              "R-060 has 11 mentions across the ai-native specs/crates (so it is cited). The card/checker being absent and zero combinatorial constructs are e13-r3 census measurements; BUILD-FIRST ('a rule is never weakened for being unused') is the principle. Matches."
+            ]
+          },
+          "b038-id-space": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the id space measured: the R3-series registry IS ATLAS.md (R3-001…R3-015, R3-004 at :55); the R-0NN series has no registry at all (zero FINDING-R-0 records) and R-060 is the highest cited id.",
+              "core-ai-native/v0.8.0/spec/appendix/ATLAS.md:55 ; grep 'FINDING-R-0'",
+              "ATLAS.md exists at v0.8.0/spec/appendix/ATLAS.md with '##FINDING-R3-004' at line :55 (and R3-015 at :75) — R3-004 at :55 matches exactly. grep for 'FINDING-R-0' in the spec returns no records — the R-0NN registry is absent; R-060 is referenced (11 mentions). Matches precisely."
+            ]
+          },
+          "non-goal-severity": {
+            "v": "confirmed",
+            "ev": [
+              "Claims no severity/warning model in the engine (§1 — the ratchet already carries the semantic).",
+              "doc new-rule-classes.md:215-216 ; finding.rs:30",
+              "Non-goal, internally consistent with finding-no-severity (Finding has no severity). The ratchet baseline freeze is the semantic that replaces severity."
+            ]
+          },
+          "non-goal-seven-cards": {
+            "v": "confirmed",
+            "ev": [
+              "Claims not all seven pending cards — three of them plus R-060's new one; the remaining four ride the same conveyor later, as 01-PATTERN-CARD-FORMAT.md describes its own scope.",
+              "doc new-rule-classes.md:218-220",
+              "Design scope statement. The four-not-done remainder is the deferred tail of the pending-cards list; the scoped-conveyor framing matches the pattern-card-format package's own scope discipline."
+            ]
+          },
+          "non-goal-vocabulary": {
+            "v": "confirmed",
+            "ev": [
+              "Claims no closed-token vocabulary and no synonym/shadow detector — fork's variant B needed all three and the owner did not take it; the naming rule checks composition, which needs none of them.",
+              "doc new-rule-classes.md:222-224 ; TOOLING-MAP.md:90 (FORK-COMPUTED-NAMES = variant A)",
+              "FORK-COMPUTED-NAMES took computed names (variant A), not the free-naming + vocabulary-lint variant B — consistent with 'the owner did not take it'. The composition-only check needs no closed vocabulary."
+            ]
+          },
+          "non-goal-nightly": {
+            "v": "confirmed",
+            "ev": [
+              "Claims no nightly toolchain and no dylint library until the owner rules on the toolchain question (§3).",
+              "rust-toolchain.toml (stable) ; TOOLING-MAP.md:107 (b-050)",
+              "rust-toolchain.toml pins stable (no nightly). TOOLING-MAP M-PARITY (:107) records the dylint vehicle as owner-deferred ('don't build now, don't drop the promise'). Matches."
+            ]
+          }
+        },
+        "verified_at": "2026-08-04T23:41:48Z",
+        "verify_batch": "H11-new-rule-classes"
+      }
     },
     "spec/design/seam-error-and-assertion-parity.md": {
       "content_hash": "e8a0e6d5e0ad13fcc3901d81b5cb279e56ff1d31e09f7904df743082399dca59",
@@ -94794,7 +96069,234 @@
       },
       "marker_count": 28,
       "unit_count": 11,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "e8a0e6d5e0ad13fcc3901d81b5cb279e56ff1d31e09f7904df743082399dca59",
+        "verdicts": {
+          "companion-line": {
+            "v": "confirmed",
+            "ev": [
+              "Claims companions: BACKLOG B-033 (Go seam-error rule + message half + TS twin), B-030 (conformance-assertion presence), B-049 ([rust] floor_disable); discharges TOOLING-MAP §5 fork №9 (parity home, taken); evidence = e11-r1 seam-errors + e11-r2 assertions censuses.",
+              "BACKLOG.md:892 / :851 / :1084 ; TOOLING-MAP.md:98 (FORK-PARITY-HOME) ; harvest/e11-r1, e11-r2",
+              "B-033 (:892), B-030 (:851), B-049 (:1084) all present. FORK-PARITY-HOME (:98) is 'taken 2026-08-04'. The e11-r1/e11-r2 harvest files exist (seen in harvest listing). Matches."
+            ]
+          },
+          "basis-seam": {
+            "v": "confirmed",
+            "ev": [
+              "Claims seam errors are one paradigm three states: Rust Fact::ErrorVariant (facts.rs:66-73) carrying message+enum_attrs with two rules ErrorMessageCitesReq / ErrorEnumCitesReq; Go has only the structure half (seam_error_missing_req inside go-unsafe-in-domain); TS has neither half.",
+              "core-ai-native-conform/src/facts.rs:66-73 ; rules/diagnostics.rs (ErrorMessageCitesReq) ; rules/go.rs:60,80 (GoUnsafeInDomain)",
+              "facts.rs:66 'ErrorVariant {', :72 'enum_attrs: Vec<String>'. ErrorMessageCitesReq is in rules/diagnostics.rs (:216-228 doc). GoUnsafeInDomain is at rules/go.rs:60 with id 'go-unsafe-in-domain' (:80) and the seam_error_missing_req kinds in its docstring (:37). Matches the cited sites."
+            ]
+          },
+          "basis-assertion": {
+            "v": "confirmed",
+            "ev": [
+              "Claims conformance assertions: Go idiom var _ seams.X = (*Impl)(nil) is live; the guide PROMISES 'conform checks its presence' while self-annotating not-yet-built (→B-030); go-extract actively discards it (ValueSpec skips _-named var).",
+              "core-ai-native-conform/src/rules/go.rs ; go-extract extract.go ; GUIDE-AI-NATIVE-GO.md ; e11-r2 census",
+              "The Go var _ assertion idiom and go-extract's _-skip are the e11-r2 census measurements (extract.go:461-463 per the doc). The conform engine's Go rules live in rules/go.rs. Consistent with the cited measurement."
+            ]
+          },
+          "basis-floor": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the floor asymmetry (B-049): Go and TS consumers disable a floor step with a recorded reason (GoConfig/TsConfig floor_disable, loud print + hard-fail on unknown); the Rust floor runs every step unconditionally and RustConfig has no such field.",
+              "core-ai-native-conform/src/config.rs (floor_disable) ; BACKLOG B-049 :1084",
+              "config.rs carries floor_disable for Go/TS (e.g. :300) AND a Rust floor_disable slot is now present at config.rs:232 with comment 'floor_disable slot (B-049)' — so the asymmetry the design identifies has since been addressed in v0.8.0. B-049 present (:1084). The 'asymmetry pointing the wrong way' was true at design time; the twin has landed."
+            ]
+          },
+          "basis-wire": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the wire every new signal rides is the ts_env_read four-hop template (extractor emit → bridge RawFact → engine Fact → rule → driver); adding a Fact variant bumps frontend version + retires cache slots (facts.rs:5-8); adding a Kind value to GoUnsafe is neither.",
+              "core-ai-native-conform/src/facts.rs ; doc seam-error-and-assertion-parity.md:45-50",
+              "The Fact variant/Kind distinction is real in facts.rs (enum Fact with variants like ErrorVariant:66, FileMetrics:76; the GoUnsafe Kind-value pattern). The variant-ripples-frontend-version rule is the engine's documented ripple (B-039 ts_env_read precedent). Consistent."
+            ]
+          },
+          "dec-no-fork": {
+            "v": "confirmed",
+            "ev": [
+              "Claims no map fork opens here: the two nearest owner forks (№2 gate units, №9 parity home) are taken; every choice is a boss design decision on measured fact.",
+              "TOOLING-MAP.md:91 (FORK-GATE-UNIT taken) :98 (FORK-PARITY-HOME taken) ; doc :54-58",
+              "FORK-GATE-UNIT (:91) and FORK-PARITY-HOME (:98) are both 'taken 2026-08-04'. So the two nearest forks are indeed taken, consistent with 'no owner fork opens inside this batch'."
+            ]
+          },
+          "dec-one-go-rule": {
+            "v": "confirmed",
+            "ev": [
+              "Claims one Go rule (go-seam-error-cites-req) checking both halves, per-half fingerprints, not two — matching the Go doc's single promised rule (conform-frontend-go.md:41).",
+              "conform-frontend-go.md:41 ; core-ai-native-conform/src/rules/go.rs ; doc :60-70",
+              "conform-frontend-go.md:41 '##RULE-SEAM-ERROR-CONTRACT... (`go-seam-error-cites-req` — a seam's closed error set carries its REQ URI)'. The single-rule-with-two-fingerprints projection is the design's decision; rules/go.rs is the home. Matches the cited guide line.",
+              "BOSS: `##RULE-SEAM-ERROR-CONTRACT` is present in the Go frontend guide, and `GoUnsafeInDomain` is a real rule struct in the engine - the surface this decision reasons about exists."
+            ]
+          },
+          "dec-ts-twin-now": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the TS twin (ts-seam-error-cites-req) builds now, conservatively, with its limit recorded — the parity principle forbids leaving TS weaker without a recorded reason.",
+              "manifesto 00-MANIFESTO.md:103 (##PARITY-GAP-IS-NEVER-SILENT) ; doc :72-78",
+              "The parity principle forcing the build is real and landed: 00-MANIFESTO.md:103 '##PARITY-GAP-IS-NEVER-SILENT... the checker is built or the reason is recorded, never the rule quietly relaxed'. The TS twin's conservative form follows the ts-flag-sites precedent."
+            ]
+          },
+          "dec-b030-verdicts": {
+            "v": "confirmed",
+            "ev": [
+              "Claims B-030 survey verdicts: Go = build the presence rule (owner ruling 2.2a); Rust = record the reason, do not build (compiler is the assertion); TS = record and route (type-level-test build carried by the B-035 loop, not this batch).",
+              "BACKLOG B-030 :851 ; GUIDE-AI-NATIVE-RUST.md ; TOOLING-MAP.md:107 (M-PARITY b-050/b-053)",
+              "B-030 present (:851, 'проверка ассерция соответствия присутствует: построить для Go, обследовать Rust/TS'). The per-language verdicts are the design's reading of the survey; the Rust 'compiler is the assertion' and TS routed-build are consistent with the parity-loop deferral pattern in M-PARITY (:107)."
+            ]
+          },
+          "dec-facts": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the fact plan (ripple-minimising): Go message half = new GoUnsafe KIND (no new variant); Go assertion = new Fact::GoConformance; TS seam-error = new Fact::TsSeamError; two new variants → two ripples.",
+              "core-ai-native-conform/src/facts.rs ; doc :94-102",
+              "The Fact enum (facts.rs) is the ripple surface; adding a Kind value to GoUnsafe vs a new variant is the documented cost difference (basis-wire). The two new variants (GoConformance, TsSeamError) are the design's plan — whether they have landed was not individually traced in facts.rs; reported as the plan with the ripple surface verified."
+            ]
+          },
+          "go-seam-structure": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the structure half promotes the existing seam_error_missing_req go_unsafe fact into a dedicated GoSeamErrorCitesReq rule and removes the kind from GoUnsafeInDomain so it is owned by exactly one rule.",
+              "core-ai-native-conform/src/rules/go.rs:60,80,37 ; doc :108-117",
+              "rules/go.rs:60 'pub struct GoUnsafeInDomain', :80 id 'go-unsafe-in-domain', :37 docstring naming the 'seam_error_missing_req' kinds. The promote-and-remove re-ownership is the design's plan against this verified site."
+            ]
+          },
+          "go-seam-message": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the message half is a new go-extract input: read an Error() method body, emit GoUnsafe{kind:'seam_error_message_no_req'} when it carries no spec://; today errorMethodOwners reads only the receiver, never the body.",
+              "go-extract extract.go (errorMethodOwners) ; rules/diagnostics.rs:260 (Rust message.contains gate) ; doc :119-135",
+              "The Rust analogue (message half gating on 'spec://' substring) is in rules/diagnostics.rs. The Go errorMethodOwners body-walk gap is the e11-r1 census measurement (extract.go:499-515 per doc). Consistent; the new extractor input is the build."
+            ]
+          },
+          "ts-seam-fact": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the new TS signal: ts-extract emits ts_seam_error for a discriminated-union error type alias; bridge lowers to Fact::TsSeamError{symbol,cites_req,line,in_test}; rule TsSeamErrorCitesReq fires when !cites_req.",
+              "doc :139-145 ; ts-extract / ts-bridge",
+              "Design fact plan. The ts-extract/bridge pathway (the ts_env_read four-hop wire) is the proven template (basis-wire); Fact::TsSeamError is the new variant (dec-facts). The build target is consistent with the existing TS extractor architecture."
+            ]
+          },
+          "ts-seam-heuristic": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the detection heuristic is a measured refinement point: what makes a type alias 'an error union E' in the ts-extract AST; conservative default against research/ts-demo and the guide's canonical form; whatever it cannot see is recorded as a limit, never silently claimed.",
+              "research/ts-demo ; GUIDE-AI-NATIVE-TYPESCRIPT.md:152,157,159 ; doc :147-159",
+              "research/ts-demo exists (a specmap.json demo artefact is present). The ts-flag-sites 'if(flag)' precedent (record-the-undetectable) is the established TS pattern the heuristic follows. The guide line citations are the canonical error-union form."
+            ]
+          },
+          "go-assert-extract": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the Go extractor stops discarding: recognises var _ <seam> = (*<Impl>)(nil) in the ValueSpec branch BEFORE the _-skip and emits a conformance-assertion record; near-misses var _ = New and var _ *Type must NOT match.",
+              "go-extract extract.go:461-463 (ValueSpec _-skip) ; codemod.rs:61,63 (near-misses) ; doc :163-169",
+              "The ValueSpec _-skip the extractor must pre-empt is the e11-r2 measured site (extract.go:461-463). The near-miss shapes (var _ = New) are the codemod.rs references. Consistent; the extractor change is the build."
+            ]
+          },
+          "go-assert-rule": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the rule fires on absence (the cell-has-oracle shape): GoConformanceAssertion keys on the cell set + new Fact::GoConformance facts, fires for a cell declaring an impl of a seam with no matching assertion; same shape as CellHasOracle.",
+              "core-ai-native-conform/src/rules/structure.rs (CellHasOracle) ; rules/go.rs ; doc :171-181",
+              "CellHasOracle is real: rules/mod.rs:37 'pub use structure::{CellHasOracle, CellIsolation, FlagSites}' and rules/structure.rs:3 'cell-has-oracle replacement net'. The absence-check shape the new rule reuses is verified present.",
+              "BOSS: `CellHasOracle` is exported from the engine's `rules/mod.rs`, so the presence-rule template this fact builds on is real."
+            ]
+          },
+          "go-assert-survey": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the survey verdicts land as recorded reasons: the Rust reason (compiler-is-the-assertion) and the TS routed-build are written into the parity table's assertion row (B-035 loop) and the guides' honest self-annotations.",
+              "TOOLING-MAP.md:107 (M-PARITY) ; doc :183-186",
+              "M-PARITY (:107) records 'Bar 1 — the recorded-reason bar... REACHED. No language cell is weaker than another in silence'. The assertion-row recorded reasons are part of that parity table — consistent with the survey verdicts landing as recorded reasons."
+            ]
+          },
+          "floor-twin": {
+            "v": "confirmed",
+            "ev": [
+              "Claims B-049 mirrors the Go/TS mechanic exactly: RustConfig gains floor_disable (the uniform section reserves the slot); rust floor reads it and disables named steps with the twins' enforcement (loud print + hard-fail on unknown step).",
+              "core-ai-native-conform/src/config.rs:227-232 ; rust-ai-native-cli/src/floor.rs ; BACKLOG B-049 :1084",
+              "config.rs:227-232 already carries the Rust floor_disable slot (comment 'floor_disable slot (B-049), the same {step, reason} shape' / '[[rust.floor_disable]]'). floor.rs exists at rust-ai-native-cli/src/floor.rs. So the twin the design proposes has landed in config; B-049 present (:1084).",
+              "BOSS: `floor_disable` occurs 9 times in the engine's `config.rs`, so the Rust twin slot B-049 asks for is present alongside the Go/TS ones rather than only designed."
+            ]
+          },
+          "lift-home": {
+            "v": "confirmed",
+            "ev": [
+              "Claims map fork №9 (2026-08-04): the parity principle's home is «Ядро дисциплины» — core-ai-native's manifesto level, one home, the stacks cite; carrier is 00-MANIFESTO.md §4.",
+              "TOOLING-MAP.md:98 (FORK-PARITY-HOME) ; core-ai-native/v0.8.0/spec/00-MANIFESTO.md:79 (§4)",
+              "FORK-PARITY-HOME (:98) 'taken 2026-08-04: Ядро дисциплины — the language-neutral guiding layer of core-ai-native (manifesto level)'. 00-MANIFESTO.md §4 'Stricter, not simpler — and where the strictness lives' exists at :79. Matches."
+            ]
+          },
+          "lift-principle": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the principle (owner verbatim, 2026-08-02, B-035 anchor): «Мы по условию идеи не должны делать поддержку других языков хуже, чем это сделано для Rust...»; lifted to a discipline law; projection-level twin of BAN-WITHOUT-HATCH-IS-A-BUG.",
+              "manifesto 00-MANIFESTO.md:97-103 ; doc :207-216",
+              "The principle has LANDED in the manifesto: :97 '##PARITY-ACROSS-PROJECTIONS The strictness is equal across projections. No language projection enforces the discipline more weakly than another'; :99 '##PARITY-IS-THE-PROJECTION-TWIN-OF-THE-HATCH... twin of ##BAN-WITHOUT-HATCH-IS-A-BUG'. The owner verbatim source quote is in the design; the codified law is verified in the manifesto.",
+              "BOSS re-measurement: both manifesto anchors the lift targets are present in `core-ai-native/v0.8.0/spec/00-MANIFESTO.md` - `##PARITY-ACROSS-PROJECTIONS` and `##PARITY-GAP-IS-NEVER-SILENT`. The lift is landed, not proposed."
+            ]
+          },
+          "lift-citation": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the stacks cite, they do not restate: each language guide adds one citation to the new manifesto anchor beside its conformance section (Go ##CONFORMANCE-IS-MADE-LOUD, TS ##RULE-FAILURE-ON-A-SEAM-IS-A-TYPED-VALUE, Rust its scaffold-F row) — one home, N pointers.",
+              "manifesto 00-MANIFESTO.md:97 ; the language guides ; doc :218-222",
+              "The manifesto anchor exists (:97 PARITY-ACROSS-PROJECTIONS). The Go/TS guide markers (##CONFORMANCE-IS-MADE-LOUD, ##RULE-FAILURE-ON-A-SEAM-IS-A-TYPED-VALUE) are the cited guide anchors (referenced in this doc's cut-s4 too). The home-and-pointers pattern is the gate-parity-config convention."
+            ]
+          },
+          "cut-s1": {
+            "v": "confirmed",
+            "ev": [
+              "Claims S1 — engine spine (one thread, cargo-heavy): facts.rs (GoConformance, TsSeamError, new kind docstring); rules/go.rs; rules/typescript.rs; rules/mod.rs re-exports; the ripple (grep whole tree for exhaustive Fact matches).",
+              "core-ai-native-conform/src/{facts.rs,rules/go.rs,rules/typescript.rs,rules/mod.rs} ; doc :226-237",
+              "The cited engine files all exist (facts.rs, rules/go.rs, rules/mod.rs verified; rules/structure.rs, diagnostics.rs, budget.rs, position.rs present). The slice is the build plan targeting these verified surfaces."
+            ]
+          },
+          "cut-s2": {
+            "v": "confirmed",
+            "ev": [
+              "Claims S2a ∥ S2b — extractors + bridges (two disjoint lanes after S1 + sync-engines): Go extract.go reads Error() bodies + recognises var _ assertions; TS extract.ts detects the error union; bridges gain the RawFact arms.",
+              "go-extract extract.go ; ts-extract extract.ts ; go-bridge / ts-bridge ; doc :239-247",
+              "The extractor/bridge surfaces exist (go-extract, ts-extract under the lang packages' tools/; bridges per the ts_env_read wire). The two-lane disjoint split (go-* vs ts-*) is the build plan."
+            ]
+          },
+          "cut-s3": {
+            "v": "confirmed",
+            "ev": [
+              "Claims S3 — driver mounts + B-049 (parallel, disjoint): Go driver mounts GoSeamErrorCitesReq + GoConformanceAssertion (conditional on cells_dir); TS driver mounts TsSeamErrorCitesReq; B-049 RustConfig.floor_disable + rust floor enforcement.",
+              "core-ai-native-conform driver crates ; config.rs:232 (rust floor_disable) ; doc :249-254",
+              "Driver mount sites exist in the lang cli crates. The Rust floor_disable twin surface is verified present (config.rs:232). The conditional-on-cells_dir mount mirrors GoCellIsolation. Consistent build plan."
+            ]
+          },
+          "cut-s4": {
+            "v": "confirmed",
+            "ev": [
+              "Claims S4 — docs + demo + fixtures + citations (doc lane after rules are real): the guides' self-annotations die (##RULE-SEAM-ERROR-CONTRACT, ##CONFORMANCE-IS-MADE-LOUD, the TS 'Specified, not built' note); the parity citation lands in all three guides; demos/fixtures gain red+green exhibits.",
+              "conform-frontend-go.md:41 (##RULE-SEAM-ERROR-CONTRACT) ; research/{go,ts}-demo ; fixtures ; doc :256-262",
+              "The guide self-annotations to retire are real (conform-frontend-go.md:41 ##RULE-SEAM-ERROR-CONTRACT). The demo/fixture exhibit surfaces exist (research/go-demo, research/ts-demo, the clean/dirty fixture pairs). The doc-lane plan targets verified surfaces."
+            ]
+          },
+          "cut-boss-tail": {
+            "v": "confirmed",
+            "ev": [
+              "Claims the boss tail per slice: review by WORKER-REPORT, cargo xtask sync-engines from host root on package-crate change, cargo fmt --all, vibe install rematerialise, cargo clean -p before diagnosing stale fingerprints, panel bare, commits per Rules 1–4; after batch the B-035 loop pass №2 re-cuts the parity table.",
+              "tools/self-check.sh:332 (sync-engines) ; TOOLING-MAP.md:107 (M-PARITY) ; doc :264-272",
+              "The tail verbs are the campaign's established boss-tail (sync-engines --check is panel step :332; fmt/vibe install/cargo clean -p are the standard loop). M-PARITY (:107) is the B-035 loop record referenced. Consistent with the standing workflow."
+            ]
+          },
+          "acceptance-list": {
+            "v": "confirmed",
+            "ev": [
+              "Claims measured acceptance (not narrated): (1) go-seam-error-cites-req distinct rule, two fingerprints; (2) ts-seam-error-cites-req reds a non-citing union; (3) go-conformance-assertion reds a missing var _ and ignores the near-miss; (4) Rust floor disables a named step + hard-fails unknown; (5) parity principle reads once in manifesto, cited by three guides; (6) panel green; (7) B-035 table shows no cell weaker than Rust without a recorded reason.",
+              "manifesto 00-MANIFESTO.md:97 ; TOOLING-MAP.md:107 (M-PARITY Bar 1 REACHED) ; config.rs:232 (rust floor_disable)",
+              "The acceptance surfaces are real: the parity principle is in the manifesto (:97), M-PARITY Bar 1 (recorded-reason) is REACHED (:107), the Rust floor_disable twin is present (config.rs:232). The per-rule red/green exhibit acceptance is runtime-verified at build time (not re-runnable here); the named surfaces all exist."
+            ]
+          }
+        },
+        "verified_at": "2026-08-04T23:41:03Z",
+        "verify_batch": "H10-seam-parity"
+      }
     },
     "spec/design/structural-loader.md": {
       "content_hash": "8cba6169f825b9a5a6ceaf228caac49c2201c82052dda30df941759da9d86723",

@@ -1,0 +1,215 @@
+{
+  "batch": "H14-multiple-sources-design",
+  "cluster": "host",
+  "files": {
+    "spec/design/multiple-sources-and-plugins.md": {
+      "companion-line": {
+        "v": "confirmed",
+        "ev": [
+          "Companion to BACKLOG B-056 (four owner rulings, honest cost) and B-055 (today's silence on a second directive); contract is PROP-035's #source mechanics and its no-deadlock invariant.",
+          "BACKLOG.md carries `{#b-056}` and `{#b-055}`; spec/modules/vibe-workspace/PROP-035-spec-compiler.md carries the `#source` section and section 9's `##NO-DEADLOCK-INVARIANT`",
+          "found: every companion resolves; the doc declares itself lore and defers to the PROPs, which is the genre this directory holds.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "basis-one-source": {
+        "v": "confirmed",
+        "ev": [
+          "The pipeline takes the FIRST `#source` and drops the rest silently.",
+          "crates/vibe-spec/src/pipeline.rs:221 - `.find(|d| d.kind == DirectiveKind::Source).map(|d| d.address)`, read line by line",
+          "found: `find` returns the first match and the function returns one address; there is no diagnostic on a second directive. This is B-055's silence, stated as the basis rather than as a complaint.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "basis-two-inputs": {
+        "v": "confirmed",
+        "ev": [
+          "The folder's signature is binary: `fold_source(contract, source) -> String`, walking top-level contract sections and looking each anchor up in THE source.",
+          "crates/vibe-spec/src/merge.rs - `pub fn fold_source(contract: &DocTree, source: &DocTree) -> String` and its `:add` / `:replace` arms plus the source-only append loop",
+          "found: exactly two `&DocTree` parameters; the generalisation to N is the centre of the build, as the fact says.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "basis-no-recursion": {
+        "v": "confirmed",
+        "ev": [
+          "The fold does not follow a source's own `#source`, because `use_graph` does not count `#embed`/`#source` as dependency edges.",
+          "crates/vibe-spec/src/use_graph.rs - the module states that `#embed` and `#source` are not dependency edges and are ignored by its traversal",
+          "found: the exclusion is explicit in the module that owns cycle detection, so the absence of recursion is a design position rather than an oversight.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "basis-resolver-is-pointwise": {
+        "v": "confirmed",
+        "ev": [
+          "The resolver maps one package coordinate to one installed slot; there is no enumeration by pattern.",
+          "crates/vibe-spec/src/resolver.rs - the resolve path is a coordinate-to-slot lookup with the self-coordinate matched first; no glob or pattern branch exists",
+          "found: pointwise resolution confirmed, which is precisely the capability the plugin form needs to add.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "rulings-recap": {
+        "v": "confirmed",
+        "ev": [
+          "Restates the owner's four rulings of 2026-08-04: :replace drops only the contract text, a glob must be sorted, both spellings live, and recursion follows the C++/Java pattern.",
+          "BACKLOG.md `##B056-RULED` carries all four verbatim",
+          "found: the recap matches the recorded rulings one for one, with nothing added and nothing dropped.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "rulings-replace-is-a-flag": {
+        "v": "confirmed",
+        "ev": [
+          "The owner's formulation removes the two-replace conflict instead of deciding it, and is backward compatible: with ONE source the result is today's behaviour.",
+          "BACKLOG.md `##B056-REPLACE-BECOMES-A-FLAG`; merge.rs's `MergeMode::Replace` arm, which emits the source text alone",
+          "found: with a single source the flag reduces to today's Replace arm exactly - the degenerate case checks out against the code, not only against the argument.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "rulings-left": {
+        "v": "confirmed",
+        "ev": [
+          "What the rulings leave to the build: the N-input fold, the flag's threading, a cycle guard and dedup for the fold, and resolver enumeration.",
+          "BACKLOG.md `##B056-ORDER-AND-RECURSION` names the same four",
+          "found: the remainder list agrees with the backlog's own.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "fold-signature": {
+        "v": "confirmed",
+        "ev": [
+          "One new entry point `fold_sources(contract, sources)` with `fold_source` kept as its degenerate case, so every existing fold test passes through the new path unchanged.",
+          "merge.rs's test module exercises `fold_source` directly across the contract-only, replace, add and source-only cases",
+          "found: the existing tests are a real regression harness for the generalisation, which is what makes keeping the binary name a check rather than a courtesy.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "fold-per-section": {
+        "v": "confirmed",
+        "ev": [
+          "The per-section rule over a SEQUENCE of sources: empty, any-replace, otherwise contract-minus-overridden then the members in order.",
+          "merge.rs's current single-source rule, which this generalises by replacing 'the source' with 'the sequence'",
+          "found: each of the three branches maps onto an arm that exists today; none is invented.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "fold-per-section-delta": {
+        "v": "confirmed",
+        "ev": [
+          "The delta from today's law is two words - 'any' and 'every'.",
+          "merge.rs `overridden_facts`, a lookup in one source document",
+          "found: the only structural change is set-union over N documents where there is a lookup in one.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "fold-override-is-a-union": {
+        "v": "confirmed",
+        "ev": [
+          "Fact override widens to the union over all sources; a fact redeclared twice is caught by the post-merge anchor-uniqueness recheck rather than by the fold.",
+          "merge.rs `overridden_facts`; crates/vibe-spec/src/gate.rs and doctree.rs `duplicate_anchors()`, the uniqueness check that runs over the merged view",
+          "found: the recheck the fact leans on exists as a real function, so the fold can stay simple by design rather than by hope.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "fold-source-only-collision": {
+        "v": "confirmed",
+        "ev": [
+          "A source-only anchor declared twice IS an error, and the asymmetry with an addition to a contract section is deliberate - declaration is idempotent, definition is not.",
+          "BACKLOG.md `##B056-ODR-PARALLEL` records the same one-definition-rule parallel; doctree.rs `duplicate_anchors()` is the mechanism that fails",
+          "found: the rule is already the project's, and the fold inherits it instead of restating it.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "fold-order-is-declaration-order": {
+        "v": "confirmed",
+        "ev": [
+          "Order is declaration order and a glob is sorted before it joins, so the composed document is a pure function of (tree, lockfile).",
+          "BACKLOG.md `##B056-RULED` ruling (2) mandates sorting; vibe.lock pins the installed set",
+          "found: both halves of the determinism argument rest on things that exist - the ruling and the lockfile.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "recursion-already-canon": {
+        "v": "confirmed",
+        "ev": [
+          "Ruling (4) is already this project's law under another name, implemented for `#use` but never reaching the fold.",
+          "PROP-035 section 9 `##NO-DEADLOCK-INVARIANT`; crates/vibe-spec/src/use_graph.rs - three-colour DFS, dedup by construction, `is_contract` predicate, a loop legal only when every node is a contract, a loop touching a source rejected",
+          "found: every element the fact names is in the module - this is the strongest claim in the document and it is the one that makes the build small.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "recursion-what-to-extend": {
+        "v": "confirmed",
+        "ev": [
+          "The fold needs the same traversal over `#source` edges, reusing the existing walker rather than writing a second one.",
+          "use_graph.rs (the walker) and merge.rs (the fold), today unconnected",
+          "found: the two modules are real and the gap between them is the work; the one-implementation argument mirrors the project's own one-calculator law for hashes.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "recursion-dedup-asymmetry": {
+        "v": "confirmed",
+        "ev": [
+          "The static traversal dedups by construction; the structural (dynamic) mode is prompt-executed, so its dedup is unmeasured and must not be claimed.",
+          "use_graph.rs (dedup by construction); spec/design/structural-loader.md, which holds the structural mode's instructions",
+          "found: the static half is machine-guaranteed and the dynamic half is instructions - the asymmetry is real, and the fact refuses to assert symmetry rather than assuming it.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "plugins-only-enumeration-is-new": {
+        "v": "confirmed",
+        "ev": [
+          "The glob adds exactly one capability - the resolver enumerating installed packages by pattern; everything downstream is the sequence fold.",
+          "resolver.rs (pointwise today); merge.rs (the fold that would consume the sequence)",
+          "found: the split between what is new and what is reuse holds against both modules.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "plugins-reproducible-by-lockfile": {
+        "v": "confirmed",
+        "ev": [
+          "Reproducibility is not at risk: what is installed is the lockfile's pinned set, so sorted expansion gives one result.",
+          "vibe.lock pins 36 packages with their versions and content hashes",
+          "found: the lockfile is the pinned set the argument needs, and it exists with the packages enumerated.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "plugins-empty-is-legal": {
+        "v": "confirmed",
+        "ev": [
+          "A glob matching nothing is a legal empty set, so the plugin form has no declared-but-not-shipped problem.",
+          "BACKLOG.md `##B056-GLOBS-DEGRADE-NATURALLY`",
+          "found: recorded in the backlog as the same side benefit; the fact restates rather than invents it.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "cost-halves": {
+        "v": "confirmed",
+        "ev": [
+          "Only the `:add` half is cheap; the resolver, the flag semantics, ordering and recursion are a separate build.",
+          "BACKLOG.md `##B056-COST` states the same split",
+          "found: the honest-cost line agrees with the backlog's.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "cost-reading-consequence": {
+        "v": "confirmed",
+        "ev": [
+          "A section assembled from five plugins is long and B-021's long-section threshold will fire on it.",
+          "BACKLOG.md `##B056-COST` names the same consequence; B-021's thresholds landed this campaign and fire 0 and 4 times on this tree",
+          "found: the warning exists and would apply - the consequence is predicted from a shipped rule, not from an imagined one.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      },
+      "cost-order": {
+        "v": "confirmed",
+        "ev": [
+          "Four landings, each standing alone, with step 2 closing B-055 on its way past.",
+          "pipeline.rs:221 (the `.find` that step 2 replaces); BACKLOG.md `{#b-055}`",
+          "found: step 2's target is one call site and B-055 is exactly the defect it removes, so the claim that one build closes another checks out.",
+          "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,261 @@
+{
+  "batch": "H11-new-rule-classes",
+  "cluster": "host",
+  "files": {
+    "spec/design/new-rule-classes.md": {
+      "authority-line": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the doc is non-normative; the contract stays in the PROPs and package specs; backlog entries B-036/037/038 carry the owner rulings and win on divergence.",
+          "BACKLOG.md:935 / :948 / :961 ; doc new-rule-classes.md:5-10",
+          "B-036 (:935), B-037 (:948), B-038 (:961) all present. B-036 disposition 'planned', B-037 'planned', B-038 carries fork №1 (computed names) — the backlog rulings the doc cites exist at those lines."
+        ]
+      },
+      "standing-on": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the design stands on three read-only censuses (e13-r1 comment-position, e13-r2 custom-lints, e13-r3 pending-cards) taken in parallel before a line was written.",
+          "campaigns/packages-2026-09/harvest/e13-r1-comment-position-census.md ; e13-r2-custom-lints-census.md ; e13-r3-pending-cards-census.md",
+          "All three harvest files exist (seen in campaigns/.../harvest/ listing). The doc states 'Every number below is theirs unless it says «boss-measured»' (:17), matching the campaign's measurement-first posture."
+        ]
+      },
+      "batch-shape": {
+        "v": "confirmed",
+        "ev": [
+          "Claims batch 3 is one conveyor (card + checker + exhibit, three times): B-036 = rule-position-is-a-resource, B-038 = rule-closed-vocabulary-naming + R-060, B-037 = Scaffold F's third diagnostics channel.",
+          "doc new-rule-classes.md:19-25 ; BACKLOG B-036/037/038",
+          "The three backlog entries exist (:935/:948/:961) and map to the three rule classes the doc names. The 'three of the seven pending cards' framing is the design's own."
+        ]
+      },
+      "finding-no-severity": {
+        "v": "confirmed",
+        "ev": [
+          "Claims there is no severity class in the engine: Finding carries no severity, Rule has no severity method, all drivers fail iff !new.is_empty() against the ratchet baseline.",
+          "core-ai-native-conform/src/finding.rs:30 ; rules/* ; baseline.rs",
+          "Finding is defined at finding.rs:30 (struct present). grep shows the ratchet idiom '!new.is_empty()' / 'new.is_empty()' throughout baseline.rs (:70,:152,:202). No severity field/method surfaced in the Finding/Rule shape — consistent with 'no severity class'."
+        ]
+      },
+      "finding-denominator-exists": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the position denominator already ships: Fact::FileMetrics { lines } is emitted once per file by every frontend.",
+          "core-ai-native-conform/src/facts.rs:76",
+          "facts.rs:76 'FileMetrics { lines: u32 },'. The variant exists; rules/budget.rs:177 and rules/position.rs:45-58 destructure 'let Fact::FileMetrics { lines } = f' — confirming it is the file-line denominator."
+        ]
+      },
+      "finding-comment-walks-exist": {
+        "v": "confirmed",
+        "ev": [
+          "Claims two of three extractors already walk every comment (go-extract's suppression pass, ts-extract's scanner read text+line); only the Rust frontend loses plain // comments because syn::parse_file drops them.",
+          "core-ai-native-specmap/src/rscan.rs (syn::parse_file) ; e13-r1 census",
+          "The Rust path uses syn (e17 §3.7.4: 'syn::parse_file at rscan.rs:243'), which drops plain // comments — consistent. The go-extract/ts-extract comment-walk capability is the e13-r1 census's measurement; the extractors exist under go-ai-native-lang/typescript-ai-native-lang tools/."
+        ]
+      },
+      "finding-vocabulary-is-absent": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the marker vocabulary the guides evoke is near-absent from our own tree (SAFETY: 6, INVARIANT: 0, PANICS 0, rustdoc # Safety 0, TS @invariant 0).",
+          "doc new-rule-classes.md:50-56 ; e13-r1 census",
+          "These are e13-r1 census counts. The doc's consequence ('the rule must be exhibited on fixtures, because the live tree will not exhibit it') is the design's BUILD-FIRST reading; the near-zero counts are the census's, restated here."
+        ]
+      },
+      "finding-toolchain-pins-stable": {
+        "v": "confirmed",
+        "ev": [
+          "Claims rust-toolchain.toml pins stable and is the only toolchain file in the tree; a dylint library needs nightly (rustc_private) and cannot compile on stable. Boss-measured: no nightly installed, cargo dylint not present.",
+          "rust-toolchain.toml ; doc new-rule-classes.md:58-62",
+          "rust-toolchain.toml: '[toolchain] channel = \"stable\"' (components rustfmt, clippy). Confirms the stable pin. The dylint/nightly requirement is the toolchain fact that reshapes B-037; the 'no nightly / no cargo dylint' boss-measurement is a runtime fact (not re-runnable here).",
+          "BOSS: `rust-toolchain.toml` reads `channel = \"stable\"`, so the dylint-needs-nightly blocker the design records is real today."
+        ]
+      },
+      "finding-ts-vehicle-is-present": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the TS vehicle is already in the tree: typescript-eslint ^8.46.0 is a devDependency of the consumer demo (resolving @typescript-eslint/utils → RuleCreator), and the TS floor runs a bare eslint .",
+          "research/ts-demo/package.json:20 ; e13-r2 census",
+          "research/ts-demo/package.json:20 '\"typescript-eslint\": \"^8.46.0\"'. Confirms the version. The flat-config pickup and bare 'eslint .' floor are the e13-r2 census's measurement of the TS floor.",
+          "BOSS: `research/ts-demo/package.json` carries `\"typescript-eslint\": \"^8.46.0\"` - the vehicle is a live devDependency, which is what makes the TS half buildable while the Rust half waits on a toolchain decision."
+        ]
+      },
+      "b036-rule": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the rule invariant-comment-position: a comment carrying an invariant marker, in a file long enough for thirds, whose line falls in the middle third, is a finding.",
+          "doc new-rule-classes.md:72-75 ; BACKLOG B-036 :935 ; core-ai-native-conform/src/rules/position.rs",
+          "Design rule (state=done). BACKLOG B-036 present (:935). A rules/position.rs already exists in the conform engine (referenced at position.rs:45-58), consistent with the position rule's home.",
+          "BOSS: the rule is mounted, not proposed - `InvariantCommentPosition` is in the engine's standing rule set (this session read `build_rules` and saw it constructed with `markers` and `min_lines` from the ROOT config)."
+        ]
+      },
+      "b036-inputs": {
+        "v": "confirmed",
+        "ev": [
+          "Claims inputs decided: denominator Fact::FileMetrics { lines } (ships); numerator = a NEW engine Fact variant carrying the marker+line — the expensive WAL-C-KIND-VS-VARIANT-RIPPLE kind; bumps frontend versions.",
+          "core-ai-native-conform/src/facts.rs:76 ; doc new-rule-classes.md:77-83",
+          "FileMetrics ships (facts.rs:76). The new Fact VARIANT (the ripple) is a design plan; whether the variant has landed was not individually traced — reported as the design's plan with the denominator verified present.",
+          "BOSS - closing the row's own open question. It said the new Fact variant was a design plan and that whether it had landed was not investigated. It landed: `facts.rs` carries a `Comment { ... }` variant beside `FileMetrics`, `rules/position.rs` exists, and `InvariantCommentPosition` is exported from `rules/mod.rs`. B-036 is built, not merely specified."
+        ]
+      },
+      "b036-config": {
+        "v": "confirmed",
+        "ev": [
+          "Claims two ROOT keys (marker vocabulary list + minimum file length), beside max_file_lines; language-neutral budgets in the root table; boss defaults markers = measured vocabulary + guide-named (SAFETY:, INVARIANT:, PANICS, WARNING:, MUST, NEVER), minimum length = 120 lines.",
+          "doc new-rule-classes.md:85-94 ; conform config (root table)",
+          "Design config shape (state=done). The 120-line default is also the B-021 long-section threshold (BACKLOG B-021-BUILD :743 '120 строк'), i.e. a consistent house default. The root-table shape is the gate-parity config convention."
+        ]
+      },
+      "b036-fingerprint": {
+        "v": "confirmed",
+        "ev": [
+          "Claims fingerprint is never line-keyed: key by file + marker + per-file ordinal, so an edit above the comment does not re-key a frozen baseline entry (the stop.rs / budget.rs:71-75 lesson).",
+          "core-ai-native-conform/src/rules/budget.rs:71-78",
+          "budget.rs:73-78 comment: 'Fingerprint by context + per-file ordinal, NOT by line: a line-keyed fingerprint goes stale on any...'. The exact lesson the doc cites is recorded in the tree at the cited site."
+        ]
+      },
+      "b036-scope": {
+        "v": "confirmed",
+        "ev": [
+          "Claims scope is like FileLength: in_src only, test context out.",
+          "doc new-rule-classes.md:100 ; conform FileLength rule",
+          "Design decision (state=done). The in_src/test-out scoping mirrors the existing FileLength/budget rules (same engine) — a consistent scope convention."
+        ]
+      },
+      "b036-exhibit": {
+        "v": "confirmed",
+        "ev": [
+          "Claims an exhibit is needed because the live tree will not exhibit the rule: each stack's dirty fixture gains an invariant comment in its middle third; clean fixture gains one at the top.",
+          "doc new-rule-classes.md:102-106 ; fixtures under tools/go-extract|ts-extract/test/fixtures",
+          "Design exhibit plan. The clean/dirty fixture pairs exist (the eight specmap.json fixture files include {clean,dirty} pairs under go-extract/ts-extract test/fixtures), so the exhibit target surfaces exist."
+        ]
+      },
+      "b037-promise": {
+        "v": "confirmed",
+        "ev": [
+          "Claims what is promised per language: Rust 'custom clippy lints name the rule and remedy'; TS 'custom @typescript-eslint rules whose messages cite the violated spec:// REQ'; Go 'no vehicle — only custom checks emit the same grammar'; all three carry the R3-011 grammar and name a checker (diagnostic-cites-req) that does not exist.",
+          "doc new-rule-classes.md:110-115 ; the language guides",
+          "Design's summary of guide promises. The checker name 'diagnostic-cites-req' not existing today is consistent with B-037 being 'planned'; the R3-011 grammar is the req_message grammar (next anchor)."
+        ]
+      },
+      "b037-grammar-is-the-contract": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the grammar is the contract and already has one authoritative renderer — req_message + matches_req_grammar acceptor in the engine, with 19 production call sites; anything built here reproduces that string exactly.",
+          "core-ai-native-conform/src (req_message / matches_req_grammar) ; doc new-rule-classes.md:117-121",
+          "grep for req_message|matches_req_grammar in the conform engine returns 65 hits (incl. tests/docs). The single-renderer principle is confirmed — the symbols exist and are widely used; the design's '19 production call sites' is its own measured subset of these."
+        ]
+      },
+      "b037-ts-build": {
+        "v": "confirmed",
+        "ev": [
+          "Claims TS — BUILD fully: a plugin package beside ts-extract/ts-oracle authoring diagnostic-cites-req via ESLintUtils.RuleCreator, messages rendered by one helper reproducing the engine grammar, tested with @typescript-eslint/rule-tester, wired into the demo's flat config; nothing in the floor changes.",
+          "doc new-rule-classes.md:123-133 ; typescript-eslint ^8.46.0 (research/ts-demo/package.json:20)",
+          "Design build plan (state=done). The vehicle (typescript-eslint ^8.46.0, supplying RuleCreator) is present in the demo (:20); the plugin package itself is the work to build."
+        ]
+      },
+      "b037-rust-position": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the Rust custom-lint vehicle is blocked by toolchain policy: dylint needs a pinned nightly, this project pins stable and ships one toolchain file; the custom-CHECK layer (the conform engine, 19 call sites of the one renderer) exists and speaks the grammar; what is missing is a type-aware vehicle, and adopting one is an owner toolchain-policy decision.",
+          "rust-toolchain.toml (stable) ; BACKLOG B-037 :948 ; TOOLING-MAP.md:107 (b-050 ref)",
+          "rust-toolchain.toml pins stable. The conform engine IS the grammar-speaking check layer (req_message renderer, 65 grep hits). The dylint/nightly adoption is owner-ruled deferred — TOOLING-MAP M-PARITY (:107) names 'BACKLOG.md {#b-050} (the Rust dylint... vehicles, owner-ruled don't build now, don't drop the promise)'. Matches."
+        ]
+      },
+      "b037-go-position": {
+        "v": "confirmed",
+        "ev": [
+          "Claims Go — no vehicle is promised; the honest move is to name one (an analysis.Analyzer) rather than invent one silently; the floor already distributes single-binary analyzers (staticcheck, exhaustive).",
+          "doc new-rule-classes.md:150-155 ; TOOLING-MAP.md:107 (b-050)",
+          "The Go analyzer shape (staticcheck/exhaustive via go install + path_tool) is the existing floor pattern. TOOLING-MAP M-PARITY (:107) records the Go analysis.Analyzer vehicle as owner-ruled deferred ('don't build now, don't drop the promise') — consistent with 'recorded, routed, not built'."
+        ]
+      },
+      "b037-doc-correction": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the guides' clause is corrected in the same landing: all three mark ##SCAFFOLD-F-STRUCTURED-DIAGNOSTICS @impl/done while the third channel is unbuilt — the class of claim this campaign exists to kill.",
+          "doc new-rule-classes.md:157-161 ; SCAFFOLD-F in the guides",
+          "The doc identifies a 'Specified, not built' gap (the third diagnostics channel). This is exactly the drift class the campaign judges; the correction lands when the channel builds. The ##SCAFFOLD-F-STRUCTURED-DIAGNOSTICS anchor lives in the language guides (referenced here in backticks as a cross-doc marker)."
+        ]
+      },
+      "b038-fork": {
+        "v": "confirmed",
+        "ev": [
+          "Claims owner fork №1 (2026-08-04): computed cell names — Pascal(variant) followed by the seam spelled as written (SatDepSolver, not SatDepsolver); the naive 'pascal both halves' composer mangles multi-word seams and is not the rule.",
+          "TOOLING-MAP.md:90 (FORK-COMPUTED-NAMES) ; doc new-rule-classes.md:165-168",
+          "FORK-COMPUTED-NAMES: 'taken 2026-08-04: computed names. The canonical cell name is composed as Pascal(variant) + the seam spelled as written'. Matches the design verbatim, including the SatDepSolver example and the record pointer to new-rule-classes.md §4."
+        ]
+      },
+      "b038-fork-cost": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the cost, boss-measured over the WHOLE tree: 40 manifest-bearing cells; 14 already compliant; 13 production renames in host crates/ (vibe-resolver ×5, vibe-mcp ×4, vibe-registry ×2, vibe-index ×2); no cell name is wire-visible.",
+          "TOOLING-MAP.md:90 ; grep '#[cell(' across crates/ ; doc new-rule-classes.md:170-181",
+          "FORK-COMPUTED-NAMES (TOOLING-MAP:90) restates '40 manifest-bearing cells, 14 already compliant... 13 production renames in the host crates/'. grep for '#[cell(' / '//spec:cell' in host crates/ returns 30 cell declarations — same order of magnitude (the 40 is whole-tree incl. packages+fixtures+.vibe/cache). The vibe-check family uses seam='Check' (e.g. activation_conflict.rs:23), consistent with the compliant-family claim.",
+          "BOSS: TOOLING-MAP `##FORK-COMPUTED-NAMES` carries the same three figures this fact does - 40 manifest-bearing cells, 14 already compliant, 13 production renames in the host - so the design and the map agree on the measured cost rather than each carrying its own number."
+        ]
+      },
+      "b038-one-rule-two-languages": {
+        "v": "confirmed",
+        "ev": [
+          "Claims one engine rule serves Rust and Go: Go practises {Variant}{Seam} today with no machine check, so the build closes a Go gap; the rule reads the manifest (Rust #[cell(seam,variant)], Go //spec:cell seam= variant=) and compares the declared name against the composed one; TS records a reason (no cell manifest).",
+          "doc new-rule-classes.md:183-188 ; cell manifests in crates/",
+          "Design rule (state=done). Both manifest forms exist: Rust '#[cell(seam = \"Check\", variant = \"...\")]' (crates/vibe-check) and the Go '//spec:cell' convention. TS having no cell manifest is the recorded reason — consistent with the closed-vocabulary design."
+        ]
+      },
+      "b038-lands-frozen": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the rule lands with a frozen ratchet baseline; the 13 renames ride a separate, deliberate commit, so the day the rule mounts nothing reds.",
+          "doc new-rule-classes.md:190-195 ; TOOLING-MAP.md:90",
+          "Design landing plan. FORK-COMPUTED-NAMES (TOOLING-MAP:90): 'The rule lands with a frozen ratchet baseline; the renames ride a separate deliberate commit'. The frozen-baseline-on-mount convention is the WAL-C characterization-coupling discipline."
+        ]
+      },
+      "b038-r060": {
+        "v": "confirmed",
+        "ev": [
+          "Claims R-060 — the card is new and its checker lands vacuous: 'test matrices declared as data, never a 2^n sweep' is cited by two guides and the host registry with no card/checker; the census found zero combinatorial constructs in the tree.",
+          "doc new-rule-classes.md:197-204 ; e13-r3 census ; R-060 mentions",
+          "R-060 has 11 mentions across the ai-native specs/crates (so it is cited). The card/checker being absent and zero combinatorial constructs are e13-r3 census measurements; BUILD-FIRST ('a rule is never weakened for being unused') is the principle. Matches."
+        ]
+      },
+      "b038-id-space": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the id space measured: the R3-series registry IS ATLAS.md (R3-001…R3-015, R3-004 at :55); the R-0NN series has no registry at all (zero FINDING-R-0 records) and R-060 is the highest cited id.",
+          "core-ai-native/v0.8.0/spec/appendix/ATLAS.md:55 ; grep 'FINDING-R-0'",
+          "ATLAS.md exists at v0.8.0/spec/appendix/ATLAS.md with '##FINDING-R3-004' at line :55 (and R3-015 at :75) — R3-004 at :55 matches exactly. grep for 'FINDING-R-0' in the spec returns no records — the R-0NN registry is absent; R-060 is referenced (11 mentions). Matches precisely."
+        ]
+      },
+      "non-goal-severity": {
+        "v": "confirmed",
+        "ev": [
+          "Claims no severity/warning model in the engine (§1 — the ratchet already carries the semantic).",
+          "doc new-rule-classes.md:215-216 ; finding.rs:30",
+          "Non-goal, internally consistent with finding-no-severity (Finding has no severity). The ratchet baseline freeze is the semantic that replaces severity."
+        ]
+      },
+      "non-goal-seven-cards": {
+        "v": "confirmed",
+        "ev": [
+          "Claims not all seven pending cards — three of them plus R-060's new one; the remaining four ride the same conveyor later, as 01-PATTERN-CARD-FORMAT.md describes its own scope.",
+          "doc new-rule-classes.md:218-220",
+          "Design scope statement. The four-not-done remainder is the deferred tail of the pending-cards list; the scoped-conveyor framing matches the pattern-card-format package's own scope discipline."
+        ]
+      },
+      "non-goal-vocabulary": {
+        "v": "confirmed",
+        "ev": [
+          "Claims no closed-token vocabulary and no synonym/shadow detector — fork's variant B needed all three and the owner did not take it; the naming rule checks composition, which needs none of them.",
+          "doc new-rule-classes.md:222-224 ; TOOLING-MAP.md:90 (FORK-COMPUTED-NAMES = variant A)",
+          "FORK-COMPUTED-NAMES took computed names (variant A), not the free-naming + vocabulary-lint variant B — consistent with 'the owner did not take it'. The composition-only check needs no closed vocabulary."
+        ]
+      },
+      "non-goal-nightly": {
+        "v": "confirmed",
+        "ev": [
+          "Claims no nightly toolchain and no dylint library until the owner rules on the toolchain question (§3).",
+          "rust-toolchain.toml (stable) ; TOOLING-MAP.md:107 (b-050)",
+          "rust-toolchain.toml pins stable (no nightly). TOOLING-MAP M-PARITY (:107) records the dylint vehicle as owner-deferred ('don't build now, don't drop the promise'). Matches."
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,373 @@
+{
+  "batch": "H12-map-format",
+  "cluster": "host",
+  "files": {
+    "spec/design/map-format-change.md": {
+      "authority-line": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the doc is non-normative (spec/design genre); the contract lives in PROP-014 and package specs; backlog entries B-016/017/019 carry the owner rulings.",
+          "BACKLOG.md:654 / :669 / :702 ; doc map-format-change.md:5-10",
+          "B-016 (:661), B-017 (:676), B-019 (:709) are all disposition 'planned' with owner ruling 'это надо строить' (2026-08-01) — the backlog rulings the doc says win on divergence exist at the cited lines."
+        ]
+      },
+      "standing-on": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the design stands on two read-only censuses (e17 map-format + e16 lifecycle vocab) taken before a line was written.",
+          "campaigns/packages-2026-09/harvest/e17-map-format-census.md ; e16-b024-lifecycle-vocab-census.md",
+          "Both files exist. e17 opens 'census of the specmap map, the package manifest, and the schema-bump route... not a spec: nothing here is proposed, only measured' (e17:3-9); e16 present (15987 bytes)."
+        ]
+      },
+      "one-change-law": {
+        "v": "confirmed",
+        "ev": [
+          "Claims one map-format change (not three): a format change forces full regeneration of every committed index + re-pin of lockfiles; the three entries ride together.",
+          "BACKLOG.md B-016-DEPS :667 ; B-019-A :713 ; B-017-BUILD :680",
+          "B-016-DEPS: 'Любое изменение формата карты идёт одной сменой формата вместе с B-019 (не тремя)'; B-019-A: 'ехать одной сменой вместе с B-016/B-017... до неё починить сломанный инструмент перегенерации (B-013)'. Matches."
+        ]
+      },
+      "finding-manifest-is-strict": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the Manifest parser refuses unknown keys (deny_unknown_fields), pinned by a test; a new manifest key is a schema bump, never additive.",
+          "crates/vibe-core/src/manifest/document.rs:66-67 ; e17 §3.2.2",
+          "document.rs:66 '#[serde(deny_unknown_fields)]' on 'pub struct Manifest' (:67). e17 §3.2.2 cites the pinning test rejects_unknown_top_level_section (document/tests.rs:343) asserting is_err() on a [mystery] section."
+        ]
+      },
+      "finding-min-version-exists": {
+        "v": "confirmed",
+        "ev": [
+          "Claims Compatibility.min_vibe_version exists and is propagated into the registry index entry and the publish post-hook (so B-017's precondition is met).",
+          "crates/vibe-index/src/scanner/manifest.rs:78 ; crates/vibe-index/src/types/entry/relations.rs:17 ; crates/vibe-publish/src/post_hook.rs:253",
+          "All three present: manifest.rs:78 'min_vibe_version: c.min_vibe_version.clone()'; relations.rs:17 'pub min_vibe_version: Option<String>'; post_hook.rs:253 '\"min_vibe_version\": manifest.compatibility.min_vibe_version'. Caveat (e17 §Caveats): install-time enforcement was NOT measured, only existence+propagation."
+        ]
+      },
+      "finding-map-feeds-identity": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the content hash covers the entire shippable tree minus five build-output names; the manifest declares no file list, so a specmap.json is not excludable.",
+          "crates/vibe-index/src/content_hash.rs:28 ; e17 §3.3.1",
+          "content_hash.rs:28 'const SHIPPABLE_EXCLUDES: &[&str] = &[\".git\", \".vibe\", \"target\", \"node_modules\", \".vibeignore\"]' — exactly five names. e17 §3.3.1 confirms the manifest declares no file list (none among the 26 Manifest fields)."
+        ]
+      },
+      "finding-precedent-exists": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the precedent is real, not hypothetical: the fractality package ships a specmap.json inside its own directory today.",
+          "packages/org.vibevm.fractality/fractality/v0.1.0/specmap.json ; e17 §3.3.3",
+          "File exists (100751 bytes). e17 §3.3.3 lists it as precedent #1: 'a generated specmap (schema 2, real code_items)... committed inside a published package's tree... feeds compute_content_hash'."
+        ]
+      },
+      "finding-namespace-is-consumer-assigned": {
+        "v": "confirmed",
+        "ev": [
+          "Claims a package's spec namespace is assigned by the consumer (via [[external_specs]]), never declared by the package; identity is (group,name,version) with no spec namespace.",
+          "e17 §3.5.2 (config.rs:99-105 ExternalSpec.namespace) ; doc map-format-change.md:59-66",
+          "e17 §3.5.2: 'It is not derived from the package's (group, name) identity; it is a short string hand-assigned by the consumer in its specmap.toml [[external_specs]]'. Confirms consumer-assigned."
+        ]
+      },
+      "finding-item-has-neither": {
+        "v": "drift",
+        "ev": [
+          "Claims the code item has neither a fingerprint nor an end-of-range; both are net-new fields (so B-019а is a real schema bump).",
+          "e17 §3.7.2 ; current packages/.../core-ai-native-specmap/src/generated/specmap/mod.rs:36",
+          "At the e17 census HEAD (7708bdee) CodeItem had only `line` (e17 §3.7.2 'NO' end-of-range). IN THE CURRENT TREE CodeItem now CARRIES endLine + fingerprint (mod.rs, both Option) and SCHEMA=3 (index.rs:31) — the net-new fields the design proposes have since landed; the 'has neither' claim was true at measurement time, diverges from current code.",
+          "BOSS: DRIFT, and the healthiest kind - the build this design proposed is what falsified it. The sentence is present tense («The code item has neither a fingerprint nor an end of range») and today the code item carries both: `endLine` and `fingerprint`, each `Option`, and the index schema constant reads `pub const SCHEMA: u32 = 3` with the doc naming exactly those two optional fields. True when the census measured it, false now. Fix surface: put it in the past tense of its own measurement, or move it under a «what the census found» heading so a reader cannot take it for the current state."
+        ]
+      },
+      "finding-host-index-ungated": {
+        "v": "confirmed",
+        "ev": [
+          "Claims docs describe the committed index as gated by `cargo xtask specmap --check`, the --check path exists in code, but no panel step runs it; boss-measured --check exits 1 with drift 139 added/19 removed/26 edges added/24 removed.",
+          "tools/self-check.sh ; e17 §3.1.2 + Discrepancy D1",
+          "self-check.sh runs 'cargo xtask sync-engines --check' (:332) and 'cargo xtask check-codegen' (:342) but NO `cargo xtask specmap --check`; e17 D1 confirms the --check code path exists (index.rs:324) but is not wired into the panel. The 139/19/26/24 drift numbers are boss-measured at runtime — not independently re-runnable (cargo out of perimeter); the panel absence is verified."
+        ]
+      },
+      "b019a-shape": {
+        "v": "confirmed",
+        "ev": [
+          "Claims code_item gains end_line + fingerprint, produced by the scanner (not the index builder); the index composes scanners through a trait and the neutral core never learns a language.",
+          "generated/specmap/mod.rs:36 ; e17 §3.7.4 (CodeScanner trait scanner.rs:23-27, build_with_scanner index.rs:64)",
+          "CodeItem now has endLine + fingerprint. e17 §3.7.4 documents 'pub trait CodeScanner' (scanner.rs:23-27) and the D3 compose seam 'index::build_with_scanner' (index.rs:64) that TS/Go inject through.",
+          "BOSS: the shape landed as designed - `CodeItem` now carries `endLine` and `fingerprint`, both optional, under index schema 3."
+        ]
+      },
+      "b019a-optional": {
+        "v": "confirmed",
+        "ev": [
+          "Claims both new fields are OPTIONAL (a parity decision, not convenience): only one scanner can fill them today; absent means 'this scanner does not produce it'.",
+          "generated/specmap/mod.rs (endLine/fingerprint) ; doc map-format-change.md:90-97",
+          "Both fields are 'pub endLine: Option<Box<u32>>' and 'pub fingerprint: Option<Box<String>>' each with '#[serde(skip_serializing_if = \"Option::is_none\")]' — optional exactly as designed, so a scanner that cannot produce them leaves them absent."
+        ]
+      },
+      "b019a-ripple": {
+        "v": "confirmed",
+        "ev": [
+          "Claims adding a field breaks every literal construction (found under --all-targets); three scanners construct CodeItem literally; two live in other packages compiling against vendored copies, so the landing is two slices with the sync between.",
+          "e17 §3.7.4 (CodeScanner impls) ; vendor copy count",
+          "e17 §3.7.4 lists four impls (RustScanner, CompositeScanner, TS RecordsScanner, Go RecordsScanner); six vendored core-ai-native-specmap copies exist (go/rust/ts × lang/mcp). The two-slice landing order itself is a plan; commit/slice timing is git-unverifiable."
+        ]
+      },
+      "b019a-self-describing": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the fingerprint string is self-describing `<scheme>:<hex>` (scheme inside the value, like content_hash's sha256:<hex>), so changing the hashed substance later is a regeneration, not another schema bump.",
+          "generated/specmap/mod.rs fingerprint field doc ; TOOLING-MAP.md:92 (FORK-FINGERPRINT)",
+          "CodeItem.fingerprint doc: '`<scheme>:<hex>` over the element's token stream — `tok1:<sha256>`'. FORK-FINGERPRINT (TOOLING-MAP:92): 'self-describing (`<scheme>:<hex>`), so their later upgrade is a regeneration and not another format change'. Matches."
+        ]
+      },
+      "b019a-substance": {
+        "v": "confirmed",
+        "ev": [
+          "Claims owner fork №3 (2026-08-04): the token stream, with doc comments counted as code; e15 measured a doc-dropping scheme calls 7.5% cosmetic vs 2.2% keeping them, gap = 105 doc-comment edits.",
+          "TOOLING-MAP.md:92 FORK-FINGERPRINT ; harvest/e15-b019a-fingerprint-noise.md:15,89,214",
+          "FORK-FINGERPRINT: 'taken 2026-08-04: the token stream, with doc comments counted as code'. e15 confirms 'B1 = 7.5 %, B2 = 2.2 %' (e15:15), table spurious_rate 7.5%/2.2% (:89), and 'на 105 раз больше... Эти 105 лишних срабатываний — doc-comment-правки' (:214-215)."
+        ]
+      },
+      "b019a-scheme-per-scanner": {
+        "v": "confirmed",
+        "ev": [
+          "Claims Rust ships the token scheme (it already holds syn/proc-macro2 with span locations, a token-render helper, span().end()); Go and TS ship raw text with a recorded route.",
+          "core-ai-native-specmap/src/rscan.rs:14,33,151 ; TOOLING-MAP.md:92",
+          "rscan.rs:14 'use quote::ToTokens'; :33 'fn compact_tokens(t: impl ToTokens)'; :151 'let end_line = item.span().end().line as u32'. FORK-FINGERPRINT: 'only Rust gets the token stream free (syn/proc-macro2 already in the scanner, compact_tokens already written, span().end() available); Go's and TypeScript's... ship the raw-text scheme first'. Matches."
+        ]
+      },
+      "b019a-parity": {
+        "v": "confirmed",
+        "ev": [
+          "Claims parity is a per-scanner obligation; a scanner that cannot produce the chosen substance falls back to the other and records the reason+route (parity law); the Rust scanner parses with syn over proc-macro2.",
+          "rscan.rs ; e17 §3.7.4 ; manifesto 00-MANIFESTO.md:103 (##PARITY-GAP-IS-NEVER-SILENT)",
+          "rscan.rs uses syn::spanned::Spanned + quote::ToTokens (Rust scanner is type/span-aware). The parity law it invokes is real and landed: 00-MANIFESTO.md:103 '##PARITY-GAP-IS-NEVER-SILENT... the checker is built or the reason is recorded, never the rule quietly relaxed'."
+        ]
+      },
+      "b019a-what-it-buys": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the milestone served is M-DRIFT: the map notices a code edit before a human (the fingerprint is the mirror of the suspects mechanism on the code side).",
+          "TOOLING-MAP.md:109 (##M-DRIFT)",
+          "TOOLING-MAP:109 '##M-DRIFT: the map notices a code edit (fingerprint mismatch surfaces as a suspect edge without a human noticing first)'. Matches the doc's framing verbatim."
+        ]
+      },
+      "b016-truck-already-drives": {
+        "v": "confirmed",
+        "ev": [
+          "Claims a package travels as a whole directory with no file list, so the map file itself costs nothing to transport; everything expensive is policy/reading, not shipping.",
+          "BACKLOG.md B-016-LOCATOR :659 ; e17 §3.3.1",
+          "B-016-LOCATOR: 'манифест не имеет списка файлов вообще (пакет едет целой директорией — файл карты поедет бесплатно)'. e17 §3.3.1 confirms the manifest declares no file list. Matches."
+        ]
+      },
+      "b016-namespace-key": {
+        "v": "drift",
+        "ev": [
+          "Claims the new rule the census demands: a manifest key naming the namespace under which the package's own spec units are addressed; consumer [[external_specs]] stays as override.",
+          "doc map-format-change.md:158-164 ; e17 §3.5.3 ; TOOLING-MAP.md:108 (##M-ASK)",
+          "e17 §3.5.3 confirms a self-shipped map's namespace is not unambiguous today and 'the rule must be added'. DIVERGENCE TO SURFACE: this design's proposed manifest namespace key was later OVERTURNED by the owner — TOOLING-MAP M-ASK (:108) records 'B-016 half 1 — the owner refuted the manifest key this was first designed around, and nothing was added to the manifest' (the coordinate is used instead). The key as designed did not ship.",
+          "BOSS: DRIFT, and the gathered row surfaced it correctly. The design proposes a manifest key naming the namespace a package's own spec units are addressed under. That key was OVERTURNED by the owner and never added - TOOLING-MAP `##M-ASK` records «the owner refuted the manifest key this was first designed around, and nothing was added to the manifest», and the shipped build mints addresses under the package COORDINATE the manifest already carries. Fix surface: restate the rule as coordinate-derived, or mark this paragraph superseded and point at M-ASK."
+        ]
+      },
+      "b016-identity-policy": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the identity question is answered explicitly as (i): the map is part of the package's identity (a pin that moves when meaning moves); the noise is real and is the price.",
+          "doc map-format-change.md:166-175 ; e17 §3.3.2 ; BACKLOG B-016-HALF1 :665",
+          "This is a recorded design decision (state=work). e17 §3.3.2 confirms the underlying tension ('a map-in-package makes the package identity pin track a derived artefact') that the design resolves by choice (i). B-016-HALF1 names the policy question ('входит ли карта в контент-хэш пакета'). No contradicting owner ruling found in BACKLOG."
+        ]
+      },
+      "b016-reader-is-the-work": {
+        "v": "confirmed",
+        "ev": [
+          "Claims no code in the tree reads a prebuilt map for a foreign package; the reader this half adds is a second, non-committed resolver map assembled at query time, leaving the committed index byte-reproducible.",
+          "e17 §3.4 ; BACKLOG B-018-PARTS.4 :698 ; TOOLING-MAP.md:108 (##M-ASK)",
+          "e17 §3.4: 'no consumer today that reads a prebuilt map for a foreign installed package'. B-018-PARTS.4: 'строить вторую, некоммитимую карту-резолвер'. M-ASK (:108) confirms it landed: 'the reader assembles a second, never-persisted resolver in memory from the maps installed packages carry, leaving the committed map byte-identical'."
+        ]
+      },
+      "b017-shape": {
+        "v": "confirmed",
+        "ev": [
+          "Claims one manifest key with three values — open / contract / none — applied producer-side, so a closed project's bytes never leave its machine.",
+          "BACKLOG.md B-017-SUT :679 ; B-017-BUILD :680",
+          "B-017-SUT: 'Три уровня: open / contract / none'. B-017-BUILD: '(2) Редакцию применять на стороне производителя (байты закрытого проекта не покидают его машину), не фильтром на сервере'. Matches."
+        ]
+      },
+      "b017-contract-content": {
+        "v": "confirmed",
+        "ev": [
+          "Claims owner fork №5: what `contract` contains; the design deferred it 'until a real closed consumer is at the table'; the census confirms no such consumer; recommendation = the tier the present data model can express.",
+          "TOOLING-MAP.md:94 (FORK-CONTRACT-PROFILE) ; BACKLOG B-017-BUILD.4 :680",
+          "FORK-CONTRACT-PROFILE is NOT marked taken — 'The contract privacy tier's content — decided with a real closed-tree consumer at the table (B-017)'. B-017-BUILD '(4) Содержание contract-уровня... вопрос, который дизайн сам отложил до реального закрытого потребителя'. Fork №5 is genuinely open — consistent with the design."
+        ]
+      },
+      "b017-name-clash": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the word `contract` is already taken by the spec compiler's normal-package format (a contract/source split), which is the hazard; raised by the owner 2026-08-04.",
+          "crates/vibe-spec/src/directives.rs:7,42 ; spec/design/structural-loader.md:35-37",
+          "The spec compiler does have a contract/source notion: directives.rs:7 '#source [options] <spec://…> — a contract→impl edge (§7.3)'; structural-loader.md:37 'A short contract section names its heavy implementation via #source spec://X'. So 'contract' is an established spec-compiler term — the lexical clash the design raises is real."
+        ]
+      },
+      "b017-tier-from-the-split": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the recommendation: define the privacy tier BY the contract/source split (ship contract docs, withhold source docs); explicitly 'Not decided — recommendation carried to the owner's fork №5'.",
+          "doc map-format-change.md:213-222 ; TOOLING-MAP.md:94 (FORK-CONTRACT-PROFILE)",
+          "The doc states at :220 'Not decided — this is the recommendation carried to the owner's fork №5, and it supersedes the field-redaction shape sketched above'. FORK-CONTRACT-PROFILE is un-taken. Recommendation status confirmed."
+        ]
+      },
+      "b017-replace-is-the-gradient": {
+        "v": "confirmed",
+        "ev": [
+          "Claims `:replace` is the privacy gradient at section grain, not a publication hazard (owner, 2026-08-04, correcting the document's first reading).",
+          "doc map-format-change.md:224-233 ; spec compiler merge modes (vibe-spec directives)",
+          "An owner correction recorded in the design itself (marker state=done). The owner-quoted correction is dated 2026-08-04 in the doc; I did not find it restated verbatim in BACKLOG/TOOLING-MAP/spec/WAL — it lives in this design's session record. The :replace merge mode is part of the spec-compiler directive set."
+        ]
+      },
+      "b017-one-checkable-rule": {
+        "v": "confirmed",
+        "ev": [
+          "Claims one publishability rule survives and it is about references: a #use or @spec:// reaching from the contract into a source-only anchor dangles for a contract-only receiver; mechanically checkable.",
+          "doc map-format-change.md:235-241 ; crates/vibe-spec/src/directives.rs (#use/#embed/#source parsed)",
+          "Design-stated rule (state=work). The directive set it would check is real and mechanically parsed — directives.rs recognises '#use' / '#embed' / '#source' (DirectiveKind variants, directives.rs:42) — so such a reference-reach check is implementable. The rule itself is not yet built."
+        ]
+      },
+      "b017-floor-not-stump": {
+        "v": "confirmed",
+        "ev": [
+          "Claims that if a contract's minimum is an honest floor rather than a truncation, 'source absent' is a package's legitimate outward view (not a damaged build); today the compiler fails there because it cannot tell 'not distributed' from 'lost'.",
+          "doc map-format-change.md:243-252",
+          "Design-level reasoning (state=work) tying the privacy tier, :replace and loader degradation into one mechanism. No code today distinguishes 'not distributed' from 'lost' — consistent with the design's premise; the loader change is proposed, not built."
+        ]
+      },
+      "b017-link-is-never-stripped": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the #source line ships with the contract (owner, 2026-08-04): producer-side redaction does not remove the directive; stripping it would lose the link permanently.",
+          "doc map-format-change.md:254-260 ; crates/vibe-spec/src/directives.rs:42 (DirectiveKind::Source)",
+          "Owner ruling recorded in the design (marker state=done); the #source directive it concerns is a real parsed directive (directives.rs:42 'DirectiveKind::Source => \"#source\"'). The owner quote is in the design's session record, not found verbatim elsewhere."
+        ]
+      },
+      "b017-one-source-per-document": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the compiler reads the FIRST #source directive in a document and never looks for a second (a second is swallowed silently); measured while answering the owner.",
+          "crates/vibe-spec/src/directives.rs ; doc map-format-change.md:262-269",
+          "The #source directive is parsed by vibe-spec (directives.rs:7,42). The 'first only, second silently swallowed' behaviour is the design's measured claim about the parser; I did not independently trace the take-first logic in directives.rs to confirm the silent-swallow, and the doc itself says 'The silent swallow is filed separately' — reported as the design's measured finding, not independently re-verified."
+        ]
+      },
+      "b017-own-project-vs-foreign": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the owner's harder question: absence of source is normal in a foreign product and an error at home; four candidates A/B/C/D told apart by who declares; recommendation C together with B, D later.",
+          "doc map-format-change.md:271-286",
+          "Design-internal analysis (state=work). Consistent with the absence of any own-vs-foreign mechanism in the tree today; the design notes D 'requires the real contract↔source edges... today those are hand-drawn... the link table, unbuilt'."
+        ]
+      },
+      "b017-distinction-deferred": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the owner deferred the whole distinction (2026-08-04), verbatim: «различать свой и чужой проект пока не надо… разработчик сам сможет с помощью каких-то инструментов проверить, есть ли у пакета реализации».",
+          "doc map-format-change.md:288-297 ; BACKLOG.md ; TOOLING-MAP.md",
+          "The verbatim owner quote is recorded in the design (state=plan). I searched BACKLOG.md and TOOLING-MAP.md for this ruling and did not find it restated there — it is this design's own session record of the 2026-08-04 owner deferral. No contradicting ruling found."
+        ]
+      },
+      "b017-standing-on-a-demonstration": {
+        "v": "confirmed",
+        "ev": [
+          "Claims a #source crossing a package boundary is allowed (the directive carries a full address, resolves through the ordinary resolver); live uses of #source in this tree number zero — the mechanism is built and never exercised.",
+          "crates/vibe-spec/src/directives.rs:7,42 ; grep '#source' across spec/packages/crates",
+          "The #source directive exists (directives.rs:7,42). A perimeter grep for '#source' found it ONLY in tests (directives/tests.rs), one fixture's prose (foreign-grammars.md), and design-doc descriptions (structural-loader.md) — ZERO live authored #source edges in real spec markdown. 'Built and never exercised' confirmed.",
+          "BOSS: confirmed, and worth being precise about. The claim is that live authored `#source` edges number zero - the mechanism is built and never exercised. The row's perimeter grep found it only in tests, one fixture's prose and design descriptions, which is exactly what the claim says. Cross-package `#source` has since been exercised by TESTS (both the working case and the missing-source failure), which does not contradict a claim about AUTHORED edges."
+        ]
+      },
+      "b017-one-bump": {
+        "v": "drift",
+        "ev": [
+          "Claims both keys (namespace §3 + profile §4) ride one manifest bump, gated behind min_vibe_version; introducing them in separate releases would break consumers.",
+          "BACKLOG.md B-017-BUILD :680 ; B-016-DEPS :667",
+          "B-017-BUILD '(1)... вводить вместе с механикой минимальной версии, не «на вырост»'. Design decision. DIVERGENCE: per TOOLING-MAP M-ASK the owner later refuted the namespace manifest key, so the 'two manifest keys one bump' premise is partly overturned — the privacy profile key is the surviving piece.",
+          "BOSS: DRIFT by consequence. The claim is that TWO manifest keys - the namespace one and the privacy profile - ride one bump behind `min_vibe_version`. One of the two no longer exists (see `b016-namespace-key`), so the premise is half gone. The surviving piece is the privacy-profile key, and the one-bump discipline still applies to it; the sentence needs to stop counting two."
+        ]
+      },
+      "bump-route-alive": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the JTD schema is the source of truth, jtd-codegen produces the generated wire module, cargo xtask check-codegen byte-compares; B-013 closed the broken relocation so this bump would not discover it.",
+          "BACKLOG.md B-013-DISPOSITION :588 ; xtask/src/codegen.rs ; tools/self-check.sh:342",
+          "B-013 disposition 'done' (L588): 'все четыре координаты fix shape... cargo xtask check-codegen чист; генератор упакован как tool:org.vibevm.ai-native/jtd-codegen'. schemas/specmap.jtd.json exists; check-codegen runs in the panel (self-check.sh:342)."
+        ]
+      },
+      "bump-surfaces": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the surfaces a 2→3 bump touches: the JTD schema; the generated wire module; the canonical example; the scanner filling the new fields; every exhaustive consumer; the six vendored engine copies; the committed indexes.",
+          "e17 §3.6.2 ; vendor-copy count ; specmap.json count",
+          "e17 §3.6.2 lists the 7 touch-surfaces. Verified: six vendored core-ai-native-specmap copies (go/rust/ts × lang/mcp) and thirteen committed specmap.json files in the perimeter. Matches."
+        ]
+      },
+      "bump-vendor-order": {
+        "v": "confirmed",
+        "ev": [
+          "Claims host crates path-depend on the package crates, so the vendored copies are hand-synced first and sync-engines --check verifies afterwards.",
+          "xtask/src/sync_engines.rs ; tools/self-check.sh:332",
+          "sync_engines.rs exists (SyncManifest with deny_unknown_fields, :37). self-check.sh:332 'run_step \"cargo xtask sync-engines --check\" cargo xtask sync-engines --check'. The vendor-verify gate is live in the panel."
+        ]
+      },
+      "b014-two-halves": {
+        "v": "confirmed",
+        "ev": [
+          "Claims B-014 is two independent halves; half one (regenerate the committed index and commit it) landed during this design's measurement pass and took the dangling-edge count from seventeen to zero.",
+          "BACKLOG.md B-014 :605 (disposition) ; host specmap.json suspects",
+          "B-014 disposition is 'open' (:612) — the whole entry is not closed. The committed host specmap.json currently has suspects=0 (dangling edges zero), consistent with the 'to zero' half of the claim; the prior 'seventeen' count is not independently reconstructable without the historical artefact. B-014 stays open because half two (the gate decision) is unmade."
+        ]
+      },
+      "b014-gate-decision": {
+        "v": "confirmed",
+        "ev": [
+          "Claims half two — whether the host index gains a freshness gate — is answered 'not as a byte-compare'; the heading line is volatile decoration, so a byte-compare would fire on nearly every doc commit.",
+          "BACKLOG.md B-014-FIX-SHAPE :626 ; e17 §3.7",
+          "B-014-FIX-SHAPE '(ii) Decide whether the host wants a freshness gate at all — a --check-style byte-compare... or a deliberate «regenerated on demand only» posture'. The design's 'not a byte-compare' answer is a decision recorded here (state=work); B-014's open status is consistent with the gate decision still being open."
+        ]
+      },
+      "b014-what-instead": {
+        "v": "confirmed",
+        "ev": [
+          "Claims what is gated instead: a freshness check comparing the index's content (units, content hashes, code items, edges) while ignoring derived line numbers; cheap once the format change is in.",
+          "doc map-format-change.md:348-354 ; e17 §3.7.3",
+          "Design proposal (state=work). e17 §3.7.3 confirms the index carries units/contentHash/code_items/edges as separable from the volatile line numbers, so a content-only compare is technically possible. The check is not yet built."
+        ]
+      },
+      "non-goal-fragments": {
+        "v": "confirmed",
+        "ev": [
+          "Claims this change does not build fragments-by-hash; B-016 half 2 needs an address type, a store, a fetch verb, and its unresolved question (what a code-side fragment is) is owner fork №4.",
+          "TOOLING-MAP.md:93 (FORK-FRAGMENT-IDENTITY) ; BACKLOG B-016-HALF2 :666",
+          "FORK-FRAGMENT-IDENTITY is NOT marked taken — 'What a code-side fragment is (no end-of-range, no body today) (B-016.2)'. B-016-HALF2: 'нерешённый дизайн-вопрос до кода: что такое фрагмент со стороны кода'. Fork №4 is open — consistent with the non-goal."
+        ]
+      },
+      "non-goal-command-nodes": {
+        "v": "confirmed",
+        "ev": [
+          "Claims this change does not add the command or error-variant nodes; B-019 (б) and (в) are separate node types with their own extraction.",
+          "BACKLOG.md B-019-B :714 ; B-019-V :715",
+          "B-019-B 'В дереве нет ни определения «команды», ни экстрактора, ни потребителя'; B-019-V discusses the error-variant boundary question across the conform/specmap engines. Confirms (б) and (в) are distinct parts, not riding this format change."
+        ]
+      },
+      "non-goal-signatures": {
+        "v": "confirmed",
+        "ev": [
+          "Claims this change does not add signatures to the map; §4's recommendation defines the contract tier over data the map already carries precisely so it does not grow a signature-extraction limb.",
+          "doc map-format-change.md §4 (b017-tier-from-the-split) ; BACKLOG B-017-LOCATOR :674",
+          "B-017-LOCATOR 'у «contract»-уровня нет данных (карта не хранит сигнатур)'. The design's §4 recommends the tier over the contract/source split rather than signatures — internally consistent with the non-goal."
+        ]
+      },
+      "non-goal-vocabulary": {
+        "v": "confirmed",
+        "ev": [
+          "Claims this change does not merge the lifecycle vocabularies; B-024's census measured the specmap lifecycle status has zero carriers and one display-only consumer, so the merge is a separate cheap change needing no format bump.",
+          "BACKLOG.md B-024-LOCATOR :776 ; harvest/e16-b024-lifecycle-vocab-census.md",
+          "B-024-LOCATOR 'носителей 0 из 5 266' for specmap lifecycle statuses; B-024 disposition 'planned' (merge direction chosen: сводим к словарю progress). e16 exists (15987 bytes). Consistent with the non-goal."
+        ]
+      }
+    }
+  }
+}

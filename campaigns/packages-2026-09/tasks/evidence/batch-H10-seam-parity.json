@@ -1,0 +1,228 @@
+{
+  "batch": "H10-seam-parity",
+  "cluster": "host",
+  "files": {
+    "spec/design/seam-error-and-assertion-parity.md": {
+      "companion-line": {
+        "v": "confirmed",
+        "ev": [
+          "Claims companions: BACKLOG B-033 (Go seam-error rule + message half + TS twin), B-030 (conformance-assertion presence), B-049 ([rust] floor_disable); discharges TOOLING-MAP §5 fork №9 (parity home, taken); evidence = e11-r1 seam-errors + e11-r2 assertions censuses.",
+          "BACKLOG.md:892 / :851 / :1084 ; TOOLING-MAP.md:98 (FORK-PARITY-HOME) ; harvest/e11-r1, e11-r2",
+          "B-033 (:892), B-030 (:851), B-049 (:1084) all present. FORK-PARITY-HOME (:98) is 'taken 2026-08-04'. The e11-r1/e11-r2 harvest files exist (seen in harvest listing). Matches."
+        ]
+      },
+      "basis-seam": {
+        "v": "confirmed",
+        "ev": [
+          "Claims seam errors are one paradigm three states: Rust Fact::ErrorVariant (facts.rs:66-73) carrying message+enum_attrs with two rules ErrorMessageCitesReq / ErrorEnumCitesReq; Go has only the structure half (seam_error_missing_req inside go-unsafe-in-domain); TS has neither half.",
+          "core-ai-native-conform/src/facts.rs:66-73 ; rules/diagnostics.rs (ErrorMessageCitesReq) ; rules/go.rs:60,80 (GoUnsafeInDomain)",
+          "facts.rs:66 'ErrorVariant {', :72 'enum_attrs: Vec<String>'. ErrorMessageCitesReq is in rules/diagnostics.rs (:216-228 doc). GoUnsafeInDomain is at rules/go.rs:60 with id 'go-unsafe-in-domain' (:80) and the seam_error_missing_req kinds in its docstring (:37). Matches the cited sites."
+        ]
+      },
+      "basis-assertion": {
+        "v": "confirmed",
+        "ev": [
+          "Claims conformance assertions: Go idiom var _ seams.X = (*Impl)(nil) is live; the guide PROMISES 'conform checks its presence' while self-annotating not-yet-built (→B-030); go-extract actively discards it (ValueSpec skips _-named var).",
+          "core-ai-native-conform/src/rules/go.rs ; go-extract extract.go ; GUIDE-AI-NATIVE-GO.md ; e11-r2 census",
+          "The Go var _ assertion idiom and go-extract's _-skip are the e11-r2 census measurements (extract.go:461-463 per the doc). The conform engine's Go rules live in rules/go.rs. Consistent with the cited measurement."
+        ]
+      },
+      "basis-floor": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the floor asymmetry (B-049): Go and TS consumers disable a floor step with a recorded reason (GoConfig/TsConfig floor_disable, loud print + hard-fail on unknown); the Rust floor runs every step unconditionally and RustConfig has no such field.",
+          "core-ai-native-conform/src/config.rs (floor_disable) ; BACKLOG B-049 :1084",
+          "config.rs carries floor_disable for Go/TS (e.g. :300) AND a Rust floor_disable slot is now present at config.rs:232 with comment 'floor_disable slot (B-049)' — so the asymmetry the design identifies has since been addressed in v0.8.0. B-049 present (:1084). The 'asymmetry pointing the wrong way' was true at design time; the twin has landed."
+        ]
+      },
+      "basis-wire": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the wire every new signal rides is the ts_env_read four-hop template (extractor emit → bridge RawFact → engine Fact → rule → driver); adding a Fact variant bumps frontend version + retires cache slots (facts.rs:5-8); adding a Kind value to GoUnsafe is neither.",
+          "core-ai-native-conform/src/facts.rs ; doc seam-error-and-assertion-parity.md:45-50",
+          "The Fact variant/Kind distinction is real in facts.rs (enum Fact with variants like ErrorVariant:66, FileMetrics:76; the GoUnsafe Kind-value pattern). The variant-ripples-frontend-version rule is the engine's documented ripple (B-039 ts_env_read precedent). Consistent."
+        ]
+      },
+      "dec-no-fork": {
+        "v": "confirmed",
+        "ev": [
+          "Claims no map fork opens here: the two nearest owner forks (№2 gate units, №9 parity home) are taken; every choice is a boss design decision on measured fact.",
+          "TOOLING-MAP.md:91 (FORK-GATE-UNIT taken) :98 (FORK-PARITY-HOME taken) ; doc :54-58",
+          "FORK-GATE-UNIT (:91) and FORK-PARITY-HOME (:98) are both 'taken 2026-08-04'. So the two nearest forks are indeed taken, consistent with 'no owner fork opens inside this batch'."
+        ]
+      },
+      "dec-one-go-rule": {
+        "v": "confirmed",
+        "ev": [
+          "Claims one Go rule (go-seam-error-cites-req) checking both halves, per-half fingerprints, not two — matching the Go doc's single promised rule (conform-frontend-go.md:41).",
+          "conform-frontend-go.md:41 ; core-ai-native-conform/src/rules/go.rs ; doc :60-70",
+          "conform-frontend-go.md:41 '##RULE-SEAM-ERROR-CONTRACT... (`go-seam-error-cites-req` — a seam's closed error set carries its REQ URI)'. The single-rule-with-two-fingerprints projection is the design's decision; rules/go.rs is the home. Matches the cited guide line.",
+          "BOSS: `##RULE-SEAM-ERROR-CONTRACT` is present in the Go frontend guide, and `GoUnsafeInDomain` is a real rule struct in the engine - the surface this decision reasons about exists."
+        ]
+      },
+      "dec-ts-twin-now": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the TS twin (ts-seam-error-cites-req) builds now, conservatively, with its limit recorded — the parity principle forbids leaving TS weaker without a recorded reason.",
+          "manifesto 00-MANIFESTO.md:103 (##PARITY-GAP-IS-NEVER-SILENT) ; doc :72-78",
+          "The parity principle forcing the build is real and landed: 00-MANIFESTO.md:103 '##PARITY-GAP-IS-NEVER-SILENT... the checker is built or the reason is recorded, never the rule quietly relaxed'. The TS twin's conservative form follows the ts-flag-sites precedent."
+        ]
+      },
+      "dec-b030-verdicts": {
+        "v": "confirmed",
+        "ev": [
+          "Claims B-030 survey verdicts: Go = build the presence rule (owner ruling 2.2a); Rust = record the reason, do not build (compiler is the assertion); TS = record and route (type-level-test build carried by the B-035 loop, not this batch).",
+          "BACKLOG B-030 :851 ; GUIDE-AI-NATIVE-RUST.md ; TOOLING-MAP.md:107 (M-PARITY b-050/b-053)",
+          "B-030 present (:851, 'проверка ассерция соответствия присутствует: построить для Go, обследовать Rust/TS'). The per-language verdicts are the design's reading of the survey; the Rust 'compiler is the assertion' and TS routed-build are consistent with the parity-loop deferral pattern in M-PARITY (:107)."
+        ]
+      },
+      "dec-facts": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the fact plan (ripple-minimising): Go message half = new GoUnsafe KIND (no new variant); Go assertion = new Fact::GoConformance; TS seam-error = new Fact::TsSeamError; two new variants → two ripples.",
+          "core-ai-native-conform/src/facts.rs ; doc :94-102",
+          "The Fact enum (facts.rs) is the ripple surface; adding a Kind value to GoUnsafe vs a new variant is the documented cost difference (basis-wire). The two new variants (GoConformance, TsSeamError) are the design's plan — whether they have landed was not individually traced in facts.rs; reported as the plan with the ripple surface verified."
+        ]
+      },
+      "go-seam-structure": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the structure half promotes the existing seam_error_missing_req go_unsafe fact into a dedicated GoSeamErrorCitesReq rule and removes the kind from GoUnsafeInDomain so it is owned by exactly one rule.",
+          "core-ai-native-conform/src/rules/go.rs:60,80,37 ; doc :108-117",
+          "rules/go.rs:60 'pub struct GoUnsafeInDomain', :80 id 'go-unsafe-in-domain', :37 docstring naming the 'seam_error_missing_req' kinds. The promote-and-remove re-ownership is the design's plan against this verified site."
+        ]
+      },
+      "go-seam-message": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the message half is a new go-extract input: read an Error() method body, emit GoUnsafe{kind:'seam_error_message_no_req'} when it carries no spec://; today errorMethodOwners reads only the receiver, never the body.",
+          "go-extract extract.go (errorMethodOwners) ; rules/diagnostics.rs:260 (Rust message.contains gate) ; doc :119-135",
+          "The Rust analogue (message half gating on 'spec://' substring) is in rules/diagnostics.rs. The Go errorMethodOwners body-walk gap is the e11-r1 census measurement (extract.go:499-515 per doc). Consistent; the new extractor input is the build."
+        ]
+      },
+      "ts-seam-fact": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the new TS signal: ts-extract emits ts_seam_error for a discriminated-union error type alias; bridge lowers to Fact::TsSeamError{symbol,cites_req,line,in_test}; rule TsSeamErrorCitesReq fires when !cites_req.",
+          "doc :139-145 ; ts-extract / ts-bridge",
+          "Design fact plan. The ts-extract/bridge pathway (the ts_env_read four-hop wire) is the proven template (basis-wire); Fact::TsSeamError is the new variant (dec-facts). The build target is consistent with the existing TS extractor architecture."
+        ]
+      },
+      "ts-seam-heuristic": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the detection heuristic is a measured refinement point: what makes a type alias 'an error union E' in the ts-extract AST; conservative default against research/ts-demo and the guide's canonical form; whatever it cannot see is recorded as a limit, never silently claimed.",
+          "research/ts-demo ; GUIDE-AI-NATIVE-TYPESCRIPT.md:152,157,159 ; doc :147-159",
+          "research/ts-demo exists (a specmap.json demo artefact is present). The ts-flag-sites 'if(flag)' precedent (record-the-undetectable) is the established TS pattern the heuristic follows. The guide line citations are the canonical error-union form."
+        ]
+      },
+      "go-assert-extract": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the Go extractor stops discarding: recognises var _ <seam> = (*<Impl>)(nil) in the ValueSpec branch BEFORE the _-skip and emits a conformance-assertion record; near-misses var _ = New and var _ *Type must NOT match.",
+          "go-extract extract.go:461-463 (ValueSpec _-skip) ; codemod.rs:61,63 (near-misses) ; doc :163-169",
+          "The ValueSpec _-skip the extractor must pre-empt is the e11-r2 measured site (extract.go:461-463). The near-miss shapes (var _ = New) are the codemod.rs references. Consistent; the extractor change is the build."
+        ]
+      },
+      "go-assert-rule": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the rule fires on absence (the cell-has-oracle shape): GoConformanceAssertion keys on the cell set + new Fact::GoConformance facts, fires for a cell declaring an impl of a seam with no matching assertion; same shape as CellHasOracle.",
+          "core-ai-native-conform/src/rules/structure.rs (CellHasOracle) ; rules/go.rs ; doc :171-181",
+          "CellHasOracle is real: rules/mod.rs:37 'pub use structure::{CellHasOracle, CellIsolation, FlagSites}' and rules/structure.rs:3 'cell-has-oracle replacement net'. The absence-check shape the new rule reuses is verified present.",
+          "BOSS: `CellHasOracle` is exported from the engine's `rules/mod.rs`, so the presence-rule template this fact builds on is real."
+        ]
+      },
+      "go-assert-survey": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the survey verdicts land as recorded reasons: the Rust reason (compiler-is-the-assertion) and the TS routed-build are written into the parity table's assertion row (B-035 loop) and the guides' honest self-annotations.",
+          "TOOLING-MAP.md:107 (M-PARITY) ; doc :183-186",
+          "M-PARITY (:107) records 'Bar 1 — the recorded-reason bar... REACHED. No language cell is weaker than another in silence'. The assertion-row recorded reasons are part of that parity table — consistent with the survey verdicts landing as recorded reasons."
+        ]
+      },
+      "floor-twin": {
+        "v": "confirmed",
+        "ev": [
+          "Claims B-049 mirrors the Go/TS mechanic exactly: RustConfig gains floor_disable (the uniform section reserves the slot); rust floor reads it and disables named steps with the twins' enforcement (loud print + hard-fail on unknown step).",
+          "core-ai-native-conform/src/config.rs:227-232 ; rust-ai-native-cli/src/floor.rs ; BACKLOG B-049 :1084",
+          "config.rs:227-232 already carries the Rust floor_disable slot (comment 'floor_disable slot (B-049), the same {step, reason} shape' / '[[rust.floor_disable]]'). floor.rs exists at rust-ai-native-cli/src/floor.rs. So the twin the design proposes has landed in config; B-049 present (:1084).",
+          "BOSS: `floor_disable` occurs 9 times in the engine's `config.rs`, so the Rust twin slot B-049 asks for is present alongside the Go/TS ones rather than only designed."
+        ]
+      },
+      "lift-home": {
+        "v": "confirmed",
+        "ev": [
+          "Claims map fork №9 (2026-08-04): the parity principle's home is «Ядро дисциплины» — core-ai-native's manifesto level, one home, the stacks cite; carrier is 00-MANIFESTO.md §4.",
+          "TOOLING-MAP.md:98 (FORK-PARITY-HOME) ; core-ai-native/v0.8.0/spec/00-MANIFESTO.md:79 (§4)",
+          "FORK-PARITY-HOME (:98) 'taken 2026-08-04: Ядро дисциплины — the language-neutral guiding layer of core-ai-native (manifesto level)'. 00-MANIFESTO.md §4 'Stricter, not simpler — and where the strictness lives' exists at :79. Matches."
+        ]
+      },
+      "lift-principle": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the principle (owner verbatim, 2026-08-02, B-035 anchor): «Мы по условию идеи не должны делать поддержку других языков хуже, чем это сделано для Rust...»; lifted to a discipline law; projection-level twin of BAN-WITHOUT-HATCH-IS-A-BUG.",
+          "manifesto 00-MANIFESTO.md:97-103 ; doc :207-216",
+          "The principle has LANDED in the manifesto: :97 '##PARITY-ACROSS-PROJECTIONS The strictness is equal across projections. No language projection enforces the discipline more weakly than another'; :99 '##PARITY-IS-THE-PROJECTION-TWIN-OF-THE-HATCH... twin of ##BAN-WITHOUT-HATCH-IS-A-BUG'. The owner verbatim source quote is in the design; the codified law is verified in the manifesto.",
+          "BOSS re-measurement: both manifesto anchors the lift targets are present in `core-ai-native/v0.8.0/spec/00-MANIFESTO.md` - `##PARITY-ACROSS-PROJECTIONS` and `##PARITY-GAP-IS-NEVER-SILENT`. The lift is landed, not proposed."
+        ]
+      },
+      "lift-citation": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the stacks cite, they do not restate: each language guide adds one citation to the new manifesto anchor beside its conformance section (Go ##CONFORMANCE-IS-MADE-LOUD, TS ##RULE-FAILURE-ON-A-SEAM-IS-A-TYPED-VALUE, Rust its scaffold-F row) — one home, N pointers.",
+          "manifesto 00-MANIFESTO.md:97 ; the language guides ; doc :218-222",
+          "The manifesto anchor exists (:97 PARITY-ACROSS-PROJECTIONS). The Go/TS guide markers (##CONFORMANCE-IS-MADE-LOUD, ##RULE-FAILURE-ON-A-SEAM-IS-A-TYPED-VALUE) are the cited guide anchors (referenced in this doc's cut-s4 too). The home-and-pointers pattern is the gate-parity-config convention."
+        ]
+      },
+      "cut-s1": {
+        "v": "confirmed",
+        "ev": [
+          "Claims S1 — engine spine (one thread, cargo-heavy): facts.rs (GoConformance, TsSeamError, new kind docstring); rules/go.rs; rules/typescript.rs; rules/mod.rs re-exports; the ripple (grep whole tree for exhaustive Fact matches).",
+          "core-ai-native-conform/src/{facts.rs,rules/go.rs,rules/typescript.rs,rules/mod.rs} ; doc :226-237",
+          "The cited engine files all exist (facts.rs, rules/go.rs, rules/mod.rs verified; rules/structure.rs, diagnostics.rs, budget.rs, position.rs present). The slice is the build plan targeting these verified surfaces."
+        ]
+      },
+      "cut-s2": {
+        "v": "confirmed",
+        "ev": [
+          "Claims S2a ∥ S2b — extractors + bridges (two disjoint lanes after S1 + sync-engines): Go extract.go reads Error() bodies + recognises var _ assertions; TS extract.ts detects the error union; bridges gain the RawFact arms.",
+          "go-extract extract.go ; ts-extract extract.ts ; go-bridge / ts-bridge ; doc :239-247",
+          "The extractor/bridge surfaces exist (go-extract, ts-extract under the lang packages' tools/; bridges per the ts_env_read wire). The two-lane disjoint split (go-* vs ts-*) is the build plan."
+        ]
+      },
+      "cut-s3": {
+        "v": "confirmed",
+        "ev": [
+          "Claims S3 — driver mounts + B-049 (parallel, disjoint): Go driver mounts GoSeamErrorCitesReq + GoConformanceAssertion (conditional on cells_dir); TS driver mounts TsSeamErrorCitesReq; B-049 RustConfig.floor_disable + rust floor enforcement.",
+          "core-ai-native-conform driver crates ; config.rs:232 (rust floor_disable) ; doc :249-254",
+          "Driver mount sites exist in the lang cli crates. The Rust floor_disable twin surface is verified present (config.rs:232). The conditional-on-cells_dir mount mirrors GoCellIsolation. Consistent build plan."
+        ]
+      },
+      "cut-s4": {
+        "v": "confirmed",
+        "ev": [
+          "Claims S4 — docs + demo + fixtures + citations (doc lane after rules are real): the guides' self-annotations die (##RULE-SEAM-ERROR-CONTRACT, ##CONFORMANCE-IS-MADE-LOUD, the TS 'Specified, not built' note); the parity citation lands in all three guides; demos/fixtures gain red+green exhibits.",
+          "conform-frontend-go.md:41 (##RULE-SEAM-ERROR-CONTRACT) ; research/{go,ts}-demo ; fixtures ; doc :256-262",
+          "The guide self-annotations to retire are real (conform-frontend-go.md:41 ##RULE-SEAM-ERROR-CONTRACT). The demo/fixture exhibit surfaces exist (research/go-demo, research/ts-demo, the clean/dirty fixture pairs). The doc-lane plan targets verified surfaces."
+        ]
+      },
+      "cut-boss-tail": {
+        "v": "confirmed",
+        "ev": [
+          "Claims the boss tail per slice: review by WORKER-REPORT, cargo xtask sync-engines from host root on package-crate change, cargo fmt --all, vibe install rematerialise, cargo clean -p before diagnosing stale fingerprints, panel bare, commits per Rules 1–4; after batch the B-035 loop pass №2 re-cuts the parity table.",
+          "tools/self-check.sh:332 (sync-engines) ; TOOLING-MAP.md:107 (M-PARITY) ; doc :264-272",
+          "The tail verbs are the campaign's established boss-tail (sync-engines --check is panel step :332; fmt/vibe install/cargo clean -p are the standard loop). M-PARITY (:107) is the B-035 loop record referenced. Consistent with the standing workflow."
+        ]
+      },
+      "acceptance-list": {
+        "v": "confirmed",
+        "ev": [
+          "Claims measured acceptance (not narrated): (1) go-seam-error-cites-req distinct rule, two fingerprints; (2) ts-seam-error-cites-req reds a non-citing union; (3) go-conformance-assertion reds a missing var _ and ignores the near-miss; (4) Rust floor disables a named step + hard-fails unknown; (5) parity principle reads once in manifesto, cited by three guides; (6) panel green; (7) B-035 table shows no cell weaker than Rust without a recorded reason.",
+          "manifesto 00-MANIFESTO.md:97 ; TOOLING-MAP.md:107 (M-PARITY Bar 1 REACHED) ; config.rs:232 (rust floor_disable)",
+          "The acceptance surfaces are real: the parity principle is in the manifesto (:97), M-PARITY Bar 1 (recorded-reason) is REACHED (:107), the Rust floor_disable twin is present (config.rs:232). The per-rule red/green exhibit acceptance is runtime-verified at build time (not re-runnable here); the named surfaces all exist."
+        ]
+      }
+    }
+  }
+}
