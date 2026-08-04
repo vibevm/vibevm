@@ -415,6 +415,30 @@ engine crate therefore orders the cheap form in the packet itself:
 «каждый новый файл несёт `specmark::scope!(…)` тем же юнитом, что его
 соседи по крейту» — the real self-trace gate stays the boss's panel.
 
+##fact-gitignored-state-misses-the-worktree **A packet may only cite what
+git carries (2026-08-05, paid on the first hygiene fan-out):** the campaign
+mirror lives at `campaigns/*/run/mirror/` and that path is **gitignored**, so
+a fresh worktree has `run/` without it. Both workers were pointed at mirror
+files that did not exist on their side; one spent its whole run trying to
+regenerate the mirror without the tools to do it and then echoed `TASK-DONE`
+with no deliverable at all. Two rules bought: *(i)* before citing any
+generated artifact, the boss checks `git check-ignore` on it and **copies it
+into the worktree at provisioning time** — a worktree is a git checkout, not
+a copy of the working directory; *(ii)* the sibling `run/cache.json` IS
+tracked, so a packet needing anchors can cite the cache when the mirror is
+not provisioned — but the mirror stays the definition, and deriving anchors
+any other way is a divergence to be reported rather than a shortcut to be
+taken. @impl/done
+
+##fact-one-thread-one-writer **A `-c` correction sent while the first run is
+still alive makes two writers on one worktree (2026-08-05, caught before it
+cost anything):** conversations are keyed by (state dir, cwd), so a mid-flight
+`-c` does not queue behind the running turn — it starts a second process
+against the same files. The boss killed the two correction runs and waited for
+the originals. **Send a `-c` only after the run it corrects has ended**; a
+worker that must learn something mid-flight learns it from the filesystem
+instead — put the file where the packet said it would be. @impl/done
+
 ##fact-engine-enum-ripple **An engine enum change is a cross-package
 ripple (2026-08-04, paid at the W4 landing, twice):** adding a `Fact`
 variant compiled green in the slice's own workspace and then broke the
