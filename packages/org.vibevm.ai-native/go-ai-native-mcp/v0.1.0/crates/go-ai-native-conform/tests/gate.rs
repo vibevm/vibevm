@@ -20,7 +20,7 @@ fn dirty_fixture_yields_the_ten_findings_then_freeze_ratchets_them() {
     let root = fixture("dirty");
     let baseline = "target/conform/test-baseline.json";
 
-    // Fresh gate: sixteen NEW findings on the dirty tree. On plan.go — 8
+    // Fresh gate: seventeen NEW findings on the dirty tree. On plan.go — 8
     // `go-unsafe-in-domain` census sites (blank_import, init_decl,
     // 2×ambient_call, naked_go, 2×error_string_match, reasonless_suppression)
     // + 2 `go-seam-error-cites-req` (B-033: the structure half at the type
@@ -33,15 +33,17 @@ fn dirty_fixture_yields_the_ten_findings_then_freeze_ratchets_them() {
     // comment buried in the middle third of the 150-line exhibit file),
     // plus 2 `declared-test-matrices` (R-060: TestSweptMatrix sweeps a
     // `1 << 3` bit-mask and TestNestedSweep nests three C-style for-loops,
-    // both in plan_test.go). B-025 adds a SEVENTEENTH finding — the
-    // deviation-covered `ambient_call` in Sanctioned, now MARKED
-    // `DeviationAcknowledged` (visible, never `new`), so the gate still
-    // reports exactly 16 NEW and the freeze ratchets only those sixteen.
+    // both in plan_test.go), plus 1 `go-flag-sites` on
+    // internal/wiring/wiring.go (the plan cell imported outside the
+    // registry). B-025 adds an EIGHTEENTH finding — the deviation-covered
+    // `ambient_call` in Sanctioned, now MARKED `DeviationAcknowledged`
+    // (visible, never `new`), so the gate still reports exactly 17 NEW
+    // and the freeze ratchets only those seventeen.
     let _ = std::fs::remove_file(root.join(baseline));
     let err = go_ai_native_conform::run_check(&root, baseline, None)
         .expect_err("dirty tree must fail the gate");
     assert!(
-        err.to_string().contains("16 new finding(s)"),
+        err.to_string().contains("17 new finding(s)"),
         "unexpected: {err}"
     );
 

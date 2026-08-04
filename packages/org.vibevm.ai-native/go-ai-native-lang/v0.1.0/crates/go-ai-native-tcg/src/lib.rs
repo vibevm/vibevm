@@ -132,6 +132,11 @@ fn advice_for(rule: &str, kind_hint: &str) -> Option<String> {
             "a sibling-cell import — depend on the seams package instead; only \
              the registry imports cells (GUIDE-AI-NATIVE-GO §2)"
         }
+        "go-flag-sites" => {
+            "a cell imported outside the registry — move the import into the \
+             registry package and reach the cell through its seam; a cell is \
+             constructed in one place (GUIDE-AI-NATIVE-GO §6)"
+        }
         "file-length" => {
             "the file exceeds the position budget — move a cohesive slice into a \
              sibling file of the same package (GUIDE-AI-NATIVE-GO §15)"

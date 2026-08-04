@@ -67,6 +67,15 @@ pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
             config.go.cells_dir.as_deref(),
             &config.go.gated,
         )));
+        // `go-flag-sites` — the Go twin of Rust's R-001 and TypeScript's
+        // `ts-flag-sites`: a cell package is imported only from the
+        // registry. Keyed on the import edge (the one cell-bearing fact
+        // the Go frontend produces) and the `registry_pkg` perimeter.
+        // Mounted only when the registry is named too — no perimeter, no
+        // rule (the same opt-in shape as Rust's `registry_file`).
+        if let Some(registry_pkg) = &config.go.registry_pkg {
+            out.push(Box::new(rules::GoFlagSites::new(cells_dir, registry_pkg)));
+        }
     }
     // B-038: a cell's name is computed from its manifest — Pascal(variant)
     // + the seam as written. One engine rule reads Rust #[cell] and Go

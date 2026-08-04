@@ -4,6 +4,7 @@
 [go]
 roots = ["."]
 cells_dir = "internal/cells"
+registry_pkg = "internal/registry"
 gated = ["internal/cells/plan", "internal/registry"]
 
 # The invariant-comment-position exhibit lives under `src/` (the rule's
@@ -12,3 +13,9 @@ gated = ["internal/cells/plan", "internal/registry"]
 [[go.exempt]]
 unit = "src"
 reason = "invariant-comment-position exhibit fixture, not a domain package"
+
+# The go-flag-sites red exhibit: a package outside cells_dir, other than
+# the registry, that imports a cell directly (internal/wiring/wiring.go).
+[[go.exempt]]
+unit = "internal/wiring"
+reason = "go-flag-sites red exhibit — a cell imported outside the registry"

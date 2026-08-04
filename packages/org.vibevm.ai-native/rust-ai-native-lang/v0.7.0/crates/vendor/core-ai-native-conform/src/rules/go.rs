@@ -17,6 +17,7 @@ const GO_GUIDE_CELLS: &str = "discipline://go-ai-native-lang/guide#cells";
 pub(super) const GO_GUIDE_ERRORS: &str = "discipline://go-ai-native-lang/guide#errors";
 const GO_GUIDE_BANS: &str = "discipline://go-ai-native-lang/guide#bans";
 const GO_GUIDE_REPLACEMENT: &str = "discipline://go-ai-native-lang/guide#replacement";
+const GO_GUIDE_REGISTRY: &str = "discipline://go-ai-native-lang/guide#registry";
 
 /// `go-unsafe-in-domain` — the Go ban census as Class-F findings:
 /// `init()` declarations, blank imports, ambient defaults
@@ -239,30 +240,29 @@ impl GoCellIsolation {
             cells_dir: cells_dir.trim_matches('/').to_string(),
         }
     }
+}
 
-    /// The cell a repo-relative FILE path belongs to, if it is under
-    /// `cells_dir`: `internal/cells/plan/plan.go` → `Some("plan")`.
-    fn cell_of_file<'a>(&self, rel: &'a str) -> Option<&'a str> {
-        let rest = rel.strip_prefix(self.cells_dir.as_str())?;
-        let rest = rest.strip_prefix('/')?;
-        let cell = rest.split('/').next()?;
-        if cell.is_empty() { None } else { Some(cell) }
-    }
+/// The cell a repo-relative FILE belongs to, if directly under `cells_dir`
+/// (`internal/cells/plan/plan.go` → `Some("plan")`). Shared cell-of-file parser.
+pub(super) fn cell_of_file<'a>(cells_dir: &str, rel: &'a str) -> Option<&'a str> {
+    let rest = rel.strip_prefix(cells_dir)?;
+    let rest = rest.strip_prefix('/')?;
+    let cell = rest.split('/').next()?;
+    if cell.is_empty() { None } else { Some(cell) }
+}
 
-    /// The cell an IMPORT path names, if any: Go import paths are
-    /// module-qualified (`example.com/demo/internal/cells/plan`), so
-    /// the cell is whatever follows the `cells_dir` segment.
-    fn cell_of_import<'a>(&self, import: &'a str) -> Option<&'a str> {
-        let needle = format!("{}/", self.cells_dir);
-        let idx = import.find(&needle)?;
-        // Guard against substring accidents: the match must sit at a
-        // path-segment boundary.
-        if idx > 0 && !import[..idx].ends_with('/') {
-            return None;
-        }
-        let cell = import[idx + needle.len()..].split('/').next()?;
-        if cell.is_empty() { None } else { Some(cell) }
+/// The cell an IMPORT names, via a segment-boundary match on `cells_dir`
+/// (so `…/myinternal/cells/x` does not count). Shared cell-of-import parser.
+pub(super) fn cell_of_import<'a>(cells_dir: &str, import: &'a str) -> Option<&'a str> {
+    let needle = format!("{}/", cells_dir);
+    let idx = import.find(&needle)?;
+    // Guard against substring accidents: the match must sit at a
+    // path-segment boundary.
+    if idx > 0 && !import[..idx].ends_with('/') {
+        return None;
     }
+    let cell = import[idx + needle.len()..].split('/').next()?;
+    if cell.is_empty() { None } else { Some(cell) }
 }
 
 impl Rule for GoCellIsolation {
@@ -276,14 +276,14 @@ impl Rule for GoCellIsolation {
     fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
         let mut out = Vec::new();
         for source in facts {
-            let Some(from_cell) = self.cell_of_file(&source.file) else {
+            let Some(from_cell) = cell_of_file(&self.cells_dir, &source.file) else {
                 continue;
             };
             for fact in &source.facts {
                 let Fact::Import { to_path, line, .. } = fact else {
                     continue;
                 };
-                let Some(target_cell) = self.cell_of_import(to_path) else {
+                let Some(target_cell) = cell_of_import(&self.cells_dir, to_path) else {
                     continue;
                 };
                 if target_cell == from_cell {
@@ -301,6 +301,112 @@ impl Rule for GoCellIsolation {
                         ),
                         "depend on the seams package instead, or move the shared piece \
                          into core; only the registry imports cells",
+                    ),
+                    why: self.why(),
+                    fingerprint: format!("{}|{}|{to_path}#{line}", self.id(), source.file),
+                    status: FindingStatus::Live,
+                    evidence: fact.summary(),
+                });
+            }
+        }
+        out
+    }
+}
+
+/// `go-flag-sites` — the Go twin of Rust's `R-001` (`FlagSites`) and
+/// TypeScript's `ts-flag-sites`: a cell package is imported ONLY from
+/// `registry_pkg`. The Rust rule keys on `<Type>::new(...)` (a
+/// Rust-frontend-only fact); the Go form keys on the `import` edge — the
+/// one cell-bearing fact the Go frontend produces — and the config's
+/// invariant (GUIDE-AI-NATIVE-GO §6: only `registry_pkg` may import cell
+/// packages). A file outside `cells_dir` importing a cell, other than one
+/// in `registry_pkg`, is a flag that leaked past the composition root.
+///
+/// Demarcation with `go-cell-isolation` is by file location (it owns
+/// inside `cells_dir`, this rule the outside), so they never
+/// double-report. Mounted only when both `cells_dir` and `registry_pkg`
+/// are set; fires on `_test.go` and stamps `Live`, since the `import`
+/// fact carries no test context or `//spec:deviates` testimony to exempt.
+///
+/// ```
+/// use core_ai_native_conform::rules::GoFlagSites;
+/// use core_ai_native_conform::{Fact, Rule, SourceFacts};
+///
+/// let rule = GoFlagSites::new("internal/cells", "internal/registry");
+/// let facts = vec![SourceFacts {
+///     file: "internal/wiring/wiring.go".into(),
+///     crate_name: "demo".into(),
+///     facts: vec![Fact::Import {
+///         from_module: "internal/wiring/wiring.go".into(),
+///         to_path: "example.com/demo/internal/cells/plan".into(),
+///         line: 5,
+///     }],
+/// }];
+/// let findings = rule.check(&facts);
+/// assert_eq!(findings.len(), 1);
+/// assert!(findings[0].message.contains("plan"));
+/// ```
+pub struct GoFlagSites {
+    cells_dir: String,
+    registry_pkg: String,
+}
+
+impl GoFlagSites {
+    pub fn new(cells_dir: &str, registry_pkg: &str) -> GoFlagSites {
+        GoFlagSites {
+            cells_dir: cells_dir.trim_matches('/').to_string(),
+            registry_pkg: registry_pkg.trim_matches('/').to_string(),
+        }
+    }
+
+    /// True when `file` lives in the registry package (the one legal importer).
+    fn is_registry_file(&self, file: &str) -> bool {
+        file.starts_with(&format!("{}/", self.registry_pkg))
+    }
+}
+
+impl Rule for GoFlagSites {
+    fn id(&self) -> &'static str {
+        "go-flag-sites"
+    }
+    fn why(&self) -> &'static str {
+        "flag at the seam, never in the veins: a cell is constructed in one place — \
+         the registry — so a cell package imported anywhere else is a selection flag \
+         that leaked past the composition root (GUIDE-AI-NATIVE-GO §6)"
+    }
+    fn check(&self, facts: &[SourceFacts]) -> Vec<Finding> {
+        let mut out = Vec::new();
+        for source in facts {
+            // `go-cell-isolation` owns files INSIDE cells_dir (a cell
+            // importing a sibling); this rule owns the outside, so a file
+            // with a cell-of-file is left to its sibling rule.
+            if cell_of_file(&self.cells_dir, &source.file).is_some() {
+                continue;
+            }
+            if self.is_registry_file(&source.file) {
+                continue;
+            }
+            for fact in &source.facts {
+                let Fact::Import { to_path, line, .. } = fact else {
+                    continue;
+                };
+                let Some(target_cell) = cell_of_import(&self.cells_dir, to_path) else {
+                    continue;
+                };
+                out.push(Finding {
+                    rule: self.id(),
+                    file: source.file.clone(),
+                    line: *line,
+                    message: req_message(
+                        GO_GUIDE_REGISTRY,
+                        &format!(
+                            "cell `{target_cell}` is imported outside the registry (`{to_path}`)"
+                        ),
+                        &format!(
+                            "import cells only in the registry (`{}`); reach `{target_cell}` \
+                             through the seam it exposes",
+                            self.registry_pkg
+                        ),
                     ),
                     why: self.why(),
                     fingerprint: format!("{}|{}|{to_path}#{line}", self.id(), source.file),
@@ -453,5 +559,54 @@ mod tests {
             }],
         )];
         assert!(rule.check(&facts).is_empty());
+    }
+
+    #[test]
+    fn flag_sites_flag_the_leak_and_spare_the_legal_paths() {
+        let rule = GoFlagSites::new("internal/cells", "internal/registry");
+        let facts = vec![
+            // A non-registry file outside cells_dir importing a cell → finding.
+            go_source(
+                "internal/wiring/wiring.go",
+                vec![Fact::Import {
+                    from_module: "internal/wiring/wiring.go".into(),
+                    to_path: "example.com/demo/internal/cells/plan".into(),
+                    line: 5,
+                }],
+            ),
+            // The registry importing a cell → legal, silent.
+            go_source(
+                "internal/registry/registry.go",
+                vec![Fact::Import {
+                    from_module: "internal/registry/registry.go".into(),
+                    to_path: "example.com/demo/internal/cells/plan".into(),
+                    line: 7,
+                }],
+            ),
+            // Inside cells_dir → go-cell-isolation's beat, not double-reported.
+            go_source(
+                "internal/cells/naiveplanner/planner.go",
+                vec![Fact::Import {
+                    from_module: "internal/cells/naiveplanner/planner.go".into(),
+                    to_path: "example.com/demo/internal/cells/batchplanner".into(),
+                    line: 4,
+                }],
+            ),
+            // A non-cell import (seams / stdlib) → free.
+            go_source(
+                "internal/wiring/other.go",
+                vec![Fact::Import {
+                    from_module: "internal/wiring/other.go".into(),
+                    to_path: "example.com/demo/internal/seams".into(),
+                    line: 1,
+                }],
+            ),
+        ];
+        let findings = rule.check(&facts);
+        assert_eq!(findings.len(), 1, "{findings:?}");
+        assert_eq!(findings[0].line, 5);
+        assert!(findings[0].message.contains("plan"));
+        assert!(findings[0].message.contains("registry"));
+        assert!(crate::rules::matches_req_grammar(&findings[0].message));
     }
 }

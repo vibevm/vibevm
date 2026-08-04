@@ -198,14 +198,12 @@ impl GoConformanceAssertion {
 
     /// The cell a repo-relative FILE path belongs to, if it is under
     /// `cells_dir`: `internal/cells/plan/plan.go` → `Some("plan")`.
-    /// Mirrors `GoCellIsolation::cell_of_file` so the two rules agree
-    /// on what a cell is.
+    /// Delegates to the one shared cell-of-file parser
+    /// (`super::go::cell_of_file`) so this rule, `GoCellIsolation`, and
+    /// `GoFlagSites` agree on what a cell is.
     fn cell_of_file<'a>(&self, rel: &'a str) -> Option<&'a str> {
-        let prefix = self.cells_dir.as_deref()?;
-        let rest = rel.strip_prefix(prefix)?;
-        let rest = rest.strip_prefix('/')?;
-        let cell = rest.split('/').next()?;
-        if cell.is_empty() { None } else { Some(cell) }
+        let dir = self.cells_dir.as_deref()?;
+        super::go::cell_of_file(dir, rel)
     }
 }
 

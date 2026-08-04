@@ -13,6 +13,13 @@
       "item_kind": "decl",
       "line": 50,
       "symbol": "internal/cells/greet/greet.go::New"
+    },
+    {
+      "crate_name": "go",
+      "file": "internal/registry/registry.go",
+      "item_kind": "package",
+      "line": 6,
+      "symbol": "internal/registry/registry.go"
     }
   ],
   "edges": [
@@ -31,6 +38,15 @@
       "line": 50,
       "provenance": "authored",
       "uri": "spec://demo/PROP-001#req-greet",
+      "verb": "implements",
+      "pinned_r": 1
+    },
+    {
+      "file": "internal/registry/registry.go",
+      "from_symbol": "internal/registry/registry.go",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://demo/PROP-001#cells",
       "verb": "implements",
       "pinned_r": 1
     }

@@ -286,8 +286,13 @@ pub struct GoConfig {
     /// `scope` answers and the init generator; carries no rule.
     pub seams_pkg: Option<String>,
     /// The registry package path (repo-relative) — the one legal cell
-    /// importer and flag reader, for init/codemod; carries no rule
-    /// (files outside `cells_dir` are already free to import cells).
+    /// importer and flag reader, for init/codemod, AND the perimeter the
+    /// `go-flag-sites` rule carves out: a cell package imported by any
+    /// file outside `cells_dir` other than this package is a selection
+    /// flag that leaked past the composition root (GUIDE-AI-NATIVE-GO
+    /// §6). The rule mounts only when both `cells_dir` and `registry_pkg`
+    /// are set; `None` leaves it off, exactly as Rust's R-001 is off
+    /// without `registry_file`.
     pub registry_pkg: Option<String>,
     /// Floor steps this project explicitly disables, each with a
     /// recorded reason — printed on every run, same posture as the
