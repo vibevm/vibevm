@@ -81,7 +81,12 @@ pub fn run_health(root: &Path, out_rel: &str, extra_sections: &[(String, Value)]
     let store = Store::for_rust(root, &config);
     let mut log = ExtractionLog::default();
     let frontend = RustFrontend;
-    let facts = store.extract_workspace(root, &frontend, &mut log)?;
+    let mut facts = store.extract_workspace(root, &frontend, &mut log)?;
+    // V8-OUTOFLINE-TESTS: stamp out-of-line `#[cfg(test)] mod` bodies the same
+    // way the gate does, so this collector's `unwrap_domain` / `env_nonroot`
+    // counts can never drift from what `conform check` enforces (its standing
+    // contract — the numbers mirror the gate, not a parallel reading).
+    rust_ai_native_conform_frontend::apply_out_of_line_test_context(root, &mut facts);
 
     let gated: BTreeSet<&str> = config.rust.gated.iter().map(|s| s.as_str()).collect();
     let pub_doctest_gated: BTreeSet<&str> = config

@@ -34,6 +34,10 @@ use serde::Deserialize;
 /// // Unset fields fall back to the defaults.
 /// assert_eq!(cfg.spec_roots, vec!["spec".to_string()]);
 /// assert!(cfg.root_spec_docs.is_empty());
+/// // Quality thresholds default to the start placeholders; both gate off at 0.
+/// assert_eq!(cfg.max_connections_per_item, 3);
+/// assert_eq!(cfg.max_section_lines, 120);
+/// assert_eq!(cfg.section_grain, core_ai_native_specmap::config::SectionGrain::Leaf);
 /// ```
 #[derive(Debug, Clone, Deserialize)]
 #[serde(default, deny_unknown_fields)]
@@ -68,6 +72,56 @@ pub struct Config {
     /// Orphans allowed to stand, each carrying its debt id (the "dispositioned
     /// into debt.json" arm of the Phase 2 acceptance).
     pub dispositioned: Vec<Disposition>,
+    /// Max distinct spec points one code element may realise before the
+    /// `overloaded-item` warning fires — **inclusive** (an element reaching
+    /// the threshold is flagged). Language-neutral — the map is one for all
+    /// languages, and this config models none — so it sits at the root, not
+    /// under any language section. `0` disables the check. Start value `3`:
+    /// a placeholder until the live corpus calibrates it, which the warning
+    /// itself gathers.
+    #[serde(default = "default_max_connections_per_item")]
+    pub max_connections_per_item: usize,
+    /// Max lines a **leaf** spec section (one with no nested subsection) may
+    /// span before the `long-section` warning fires — **inclusive**. Leaves
+    /// only by default ([`section_grain`](Config::section_grain)): a container
+    /// section is long because the document is, which measures genre, not
+    /// discipline. `0` disables. Start value `120`, a placeholder for
+    /// calibration.
+    #[serde(default = "default_max_section_lines")]
+    pub max_section_lines: usize,
+    /// Grain at which [`max_section_lines`](Config::max_section_lines) is
+    /// measured: `leaf` (default) — only sections with no nested subsection;
+    /// `all` — every section, containers included (measures document size,
+    /// not discipline; opt in deliberately).
+    #[serde(default)]
+    pub section_grain: SectionGrain,
+}
+
+/// The grain at which the `long-section` threshold is measured
+/// ([`Config::max_section_lines`]). `Leaf` — only sections with no nested
+/// subsection (the default; measures section discipline, not document
+/// size). `All` — every section, containers included.
+///
+/// ```
+/// use core_ai_native_specmap::config::SectionGrain;
+/// assert_eq!(SectionGrain::default(), SectionGrain::Leaf);
+/// ```
+#[derive(Debug, Clone, Copy, Default, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "lowercase")]
+pub enum SectionGrain {
+    #[default]
+    Leaf,
+    All,
+}
+
+/// Default for [`Config::max_connections_per_item`] — the start placeholder.
+fn default_max_connections_per_item() -> usize {
+    3
+}
+
+/// Default for [`Config::max_section_lines`] — the start placeholder.
+fn default_max_section_lines() -> usize {
+    120
 }
 
 impl Default for Config {
@@ -80,6 +134,9 @@ impl Default for Config {
             external_specs: Vec::new(),
             exempt: Vec::new(),
             dispositioned: Vec::new(),
+            max_connections_per_item: default_max_connections_per_item(),
+            max_section_lines: default_max_section_lines(),
+            section_grain: SectionGrain::default(),
         }
     }
 }
@@ -194,6 +251,30 @@ mod tests {
         assert_eq!(cfg.spec_roots, ["spec"]);
         assert!(cfg.root_spec_docs.is_empty());
         assert!(cfg.external_specs.is_empty());
+        // Quality thresholds: the start placeholders, leaf grain.
+        assert_eq!(cfg.max_connections_per_item, 3);
+        assert_eq!(cfg.max_section_lines, 120);
+        assert_eq!(cfg.section_grain, SectionGrain::Leaf);
+    }
+
+    #[test]
+    fn quality_thresholds_parse_and_disable() {
+        // Overridable, the disable sentinel `0` carries through, and the
+        // grain enum reads its lowercase form.
+        let cfg: Config = toml::from_str(
+            "namespace = \"demo\"\n\
+             max_connections_per_item = 5\n\
+             max_section_lines = 0\n\
+             section_grain = \"all\"\n",
+        )
+        .unwrap();
+        assert_eq!(cfg.max_connections_per_item, 5);
+        assert_eq!(cfg.max_section_lines, 0);
+        assert_eq!(cfg.section_grain, SectionGrain::All);
+        // A bogus grain value is rejected (deny by the enum, not unknown_fields).
+        assert!(
+            toml::from_str::<Config>("namespace = \"x\"\nsection_grain = \"weird\"\n").is_err()
+        );
     }
 
     #[test]

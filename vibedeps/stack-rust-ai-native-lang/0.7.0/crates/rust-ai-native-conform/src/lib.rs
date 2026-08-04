@@ -147,6 +147,11 @@ pub fn run_check(root: &Path, baseline_rel: &str, scope: Option<&str>) -> Result
     let (lint_facts, sreports, sdiagnoses) = sarif::load_reports(root, &config.sarif_reports);
     let mut facts = facts;
     facts.extend(lint_facts);
+    // V8-OUTOFLINE-TESTS: a body-less `#[cfg(test)] mod tests;` puts the
+    // module body in a sibling file the per-file scan reads as domain. Stamp
+    // those body files' facts `in_test` cross-file, once, over the full set —
+    // the body's test status is a property of the declaration, not the body.
+    rust_ai_native_conform_frontend::apply_out_of_line_test_context(root, &mut facts);
     if !config.sarif_reports.is_empty() {
         eprintln!("conform: ingested {sreports} SARIF report(s), {sdiagnoses} diagnosis fact(s).");
     }
@@ -224,6 +229,9 @@ pub fn run_freeze(root: &Path, baseline_rel: &str) -> Result<()> {
     let (lint_facts, _sreports, _sdiagnoses) = sarif::load_reports(root, &config.sarif_reports);
     let mut facts = facts;
     facts.extend(lint_facts);
+    // V8-OUTOFLINE-TESTS: keep freeze in lockstep with check — the same
+    // out-of-line test-body stamp, so a baseline and a gate never disagree.
+    rust_ai_native_conform_frontend::apply_out_of_line_test_context(root, &mut facts);
     warn_vacuously_gated(&config, &facts);
     // The sharper empty-scope guard: a present `[rust]` policy whose roots
     // resolved to zero crates warns loudly instead of passing silently (the

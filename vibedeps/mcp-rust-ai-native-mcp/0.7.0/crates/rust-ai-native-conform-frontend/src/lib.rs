@@ -13,7 +13,11 @@ use quote::ToTokens;
 use syn::spanned::Spanned;
 use syn::visit::Visit;
 
+mod out_of_line;
 mod sweep;
+pub use out_of_line::{
+    apply_out_of_line_test_context, out_of_line_test_bodies, stamp_test_context,
+};
 
 /// The Rust T-syn [`Frontend`](conform_core::Frontend): parse a source
 /// string into conform facts in-process.
@@ -156,9 +160,9 @@ struct Extractor {
     range_loop_depth: u32,
 }
 
-/// `#[cfg(test)]` / `#[cfg(any(test, ...))]` — the same shape the
-/// specmap ratchet skips.
-fn is_cfg_test(attrs: &[syn::Attribute]) -> bool {
+/// `#[cfg(test)]` / `#[cfg(any(test, ...))]` — the same shape the specmap
+/// ratchet skips. `pub(crate)` so out-of-line detection reuses it verbatim.
+pub(crate) fn is_cfg_test(attrs: &[syn::Attribute]) -> bool {
     attrs.iter().any(|a| {
         if !a.path().is_ident("cfg") {
             return false;
