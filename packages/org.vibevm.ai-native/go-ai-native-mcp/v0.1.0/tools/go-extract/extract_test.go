@@ -189,10 +189,11 @@ func TestSpecCellDirective_WithoutOwnerIsDropped(t *testing.T) {
 
 // --- D. swept test matrices: test_sweep (R-060) ----------------------
 
-// The dirty fixture's plan_test.go sweeps a `1 << 3` bit-mask — the
-// declared-test-matrices violation — emitted only because the file is a
+// The dirty fixture's plan_test.go carries BOTH swept-matrix halves: a
+// `1 << 3` bit-mask loop AND a three-deep C-style for nest — the two
+// declared-test-matrices violations — emitted only because the file is a
 // _test.go (in_test).
-func TestSweptMatrix_DirtyTestFileEmitsBitmask(t *testing.T) {
+func TestSweptMatrix_DirtyTestFileEmitsBitmaskAndNestedLoops(t *testing.T) {
 	fs := extractFixture(t, "dirty/internal/cells/plan/plan_test.go")
 	var sweeps []fact
 	for _, f := range fs {
@@ -200,14 +201,26 @@ func TestSweptMatrix_DirtyTestFileEmitsBitmask(t *testing.T) {
 			sweeps = append(sweeps, f)
 		}
 	}
-	if len(sweeps) != 1 {
-		t.Fatalf("plan_test.go emits one test_sweep (bitmask), got %+v", sweeps)
+	if len(sweeps) != 2 {
+		t.Fatalf("plan_test.go emits two test_sweep facts (bitmask + nested-loops), got %+v", sweeps)
 	}
-	if sweeps[0].Kind != "bitmask" {
-		t.Errorf("kind = %q, want bitmask", sweeps[0].Kind)
+	byKind := map[string]fact{}
+	for _, s := range sweeps {
+		byKind[s.Kind] = s
 	}
-	if sweeps[0].Detail == "" || !strings.Contains(sweeps[0].Detail, "<<") {
-		t.Errorf("detail = %q, want the rendered bit-mask bound", sweeps[0].Detail)
+	bm, ok := byKind["bitmask"]
+	if !ok {
+		t.Fatalf("bitmask sweep must fire, got %+v", sweeps)
+	}
+	if bm.Detail == "" || !strings.Contains(bm.Detail, "<<") {
+		t.Errorf("bitmask detail = %q, want the rendered bit-mask bound", bm.Detail)
+	}
+	nl, ok := byKind["nested-loops"]
+	if !ok {
+		t.Fatalf("nested-loops sweep must fire, got %+v", sweeps)
+	}
+	if nl.Detail != "3" {
+		t.Errorf("nested-loops detail = %q, want depth 3", nl.Detail)
 	}
 }
 
@@ -232,5 +245,75 @@ func TestSweptMatrix_DeclaredAndNonTestAreSilent(t *testing.T) {
 		if f.Fact == "test_sweep" {
 			t.Fatalf("a bit-mask outside a _test.go file never fires, got %+v", f)
 		}
+	}
+}
+
+// Three nested C-style for-loops (generated axes) emit the nested-loops
+// signal — the Cartesian half of R-060 — once, at the third loop's depth.
+func TestSweptMatrix_NestedForStmtsEmitNestedLoops(t *testing.T) {
+	src := []byte("package plan\n\n" +
+		"func TestNestedSweep(t *testing.T) {\n" +
+		"	for i := 0; i < 2; i++ {\n" +
+		"		for j := 0; j < 2; j++ {\n" +
+		"			for k := 0; k < 2; k++ { _ = i }\n" +
+		"		}\n" +
+		"	}\n" +
+		"}\n")
+	var nested []fact
+	for _, f := range extractSource("plan_test.go", src).Facts {
+		if f.Fact == "test_sweep" && f.Kind == "nested-loops" {
+			nested = append(nested, f)
+		}
+	}
+	if len(nested) != 1 {
+		t.Fatalf("three nested ForStmts emit one nested-loops, got %+v", nested)
+	}
+	if nested[0].Detail != "3" {
+		t.Errorf("detail = %q, want depth 3", nested[0].Detail)
+	}
+}
+
+// Three nested for-range loops over DECLARED collections (literal slices)
+// emit nothing — the narrowing (R-060): a declared axis does not count, so
+// exhausting a closed set by nesting for-range is compliant. This is the
+// exact shape the host's progress-core / vibe-workspace tests use.
+func TestSweptMatrix_NestedRangeOverDeclaredAxesIsSilent(t *testing.T) {
+	src := []byte("package plan\n\n" +
+		"func TestDeclaredAxes(t *testing.T) {\n" +
+		"	for _, a := range []int{0, 1} {\n" +
+		"		for _, b := range []int{0, 1} {\n" +
+		"			for _, c := range []int{0, 1} { _ = a }\n" +
+		"		}\n" +
+		"	}\n" +
+		"}\n")
+	for _, f := range extractSource("plan_test.go", src).Facts {
+		if f.Fact == "test_sweep" {
+			t.Fatalf("a declared-axis for-range nest never fires, got %+v", f)
+		}
+	}
+}
+
+// The mixed case (R-060 refinement): a generated ForStmt nested inside a
+// declared for-range still counts — depth tracks generated axes only, so
+// three ForStmts at any level (here under one for-range wrapper) fire.
+func TestSweptMatrix_MixedNestCountsOnlyGeneratedAxes(t *testing.T) {
+	src := []byte("package plan\n\n" +
+		"func TestMixed(t *testing.T) {\n" +
+		"	for _, tc := range []int{0, 1} {\n" +
+		"		for i := 0; i < 2; i++ {\n" +
+		"			for j := 0; j < 2; j++ {\n" +
+		"				for k := 0; k < 2; k++ { _ = tc }\n" +
+		"			}\n" +
+		"		}\n" +
+		"	}\n" +
+		"}\n")
+	var nested []fact
+	for _, f := range extractSource("plan_test.go", src).Facts {
+		if f.Fact == "test_sweep" && f.Kind == "nested-loops" {
+			nested = append(nested, f)
+		}
+	}
+	if len(nested) != 1 || nested[0].Detail != "3" {
+		t.Fatalf("three ForStmts under a for-range wrapper fire one nested-loops at depth 3, got %+v", nested)
 	}
 }

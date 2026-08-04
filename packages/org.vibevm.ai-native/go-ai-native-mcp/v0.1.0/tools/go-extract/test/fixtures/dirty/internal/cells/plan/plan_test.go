@@ -14,3 +14,17 @@ func TestSweptMatrix(t *testing.T) {
 		_ = mask
 	}
 }
+
+// TestNestedSweep is the nested-loops half of declared-test-matrices
+// (R-060): three C-style for-loops nested — a Cartesian product of
+// GENERATED axes (each bound is a computed `0..n` range, not a declared
+// collection), so the case count is a product no reader multiplies out.
+func TestNestedSweep(t *testing.T) {
+	for i := 0; i < 2; i++ {
+		for j := 0; j < 2; j++ {
+			for k := 0; k < 2; k++ {
+				_ = i*4 + j*2 + k
+			}
+		}
+	}
+}

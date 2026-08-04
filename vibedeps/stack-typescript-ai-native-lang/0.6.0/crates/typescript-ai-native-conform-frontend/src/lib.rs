@@ -104,7 +104,13 @@ impl Frontend for TsTscFrontend {
         // v4: test_sweep facts — a swept test matrix (a `1 << n` / `2 ** n`
         //     / `Math.pow(2, n)` bit-mask loop bound, or a ≥3-deep Cartesian
         //     nest) in test files only, feeding declared-test-matrices.
-        "4"
+        // v5: the nested-loops signal narrows — only a C-style `for`
+        //     (ForStatement, a generated numeric axis) counts toward the
+        //     sweep depth; for-of/for-in over a declared collection (and
+        //     while/do) no longer count. Exhausting a closed set by nesting
+        //     for-of is now compliant, so the emitted fact set shrinks and
+        //     the cache must retire.
+        "5"
     }
     fn warm(&self, pending_files: &[String]) {
         self.warm_batch(Some(pending_files));

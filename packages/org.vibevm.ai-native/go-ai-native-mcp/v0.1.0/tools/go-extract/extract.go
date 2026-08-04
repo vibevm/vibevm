@@ -81,8 +81,9 @@ type fact struct {
 	Marker string `json:"marker,omitempty"`
 	// test_sweep: the `declared-test-matrices` signal (R-060). Kind is
 	// "bitmask" (a `1 << n` / `math.Pow(2, n)` loop bound) or
-	// "nested-loops" (a ≥3-deep Cartesian nest); Detail carries the bound
-	// text or the depth. Emitted only in `_test.go` files.
+	// "nested-loops" (a ≥3-deep nest of GENERATED-axis loops — C-style
+	// `for`, NOT a for-range over a declared collection); Detail carries
+	// the bound text or the depth. Emitted only in `_test.go` files.
 	Detail string `json:"detail,omitempty"`
 }
 
@@ -933,10 +934,12 @@ func (ex *extractor) invariantComments() {
 
 // testSweeps emits one test_sweep fact per swept test matrix (R-060) in a
 // `_test.go` file: a `1 << n` / `math.Pow(2, n)` bit-mask loop bound, or a
-// Cartesian product of three-or-more nested loops. Declared matrices — a
-// table of cases iterated once — are compliant and emit nothing. The walk
-// tracks loop-nesting depth with a visitor whose `Visit(nil)` leave-call
-// balances each enter, so sibling loops do not accumulate depth.
+// Cartesian product of three-or-more nested GENERATED-axis loops. Declared
+// matrices — a table of cases iterated once, OR any nest of for-range loops
+// over declared collections — are compliant and emit nothing. The walk
+// tracks the depth of GENERATED-axis loops only (see isCountedLoop) with a
+// visitor whose `Visit(nil)` leave-call balances each enter, so sibling loops
+// do not accumulate depth.
 func (ex *extractor) testSweeps() {
 	if !ex.inTest {
 		return
@@ -946,9 +949,11 @@ func (ex *extractor) testSweeps() {
 	}
 }
 
-// loopCounter is the depth-tracking visitor for testSweeps. `stack` records,
-// per entered node, whether that node was a loop, so the `Visit(nil)` leave
-// decrements `depth` only for the loop levels it incremented.
+// loopCounter is the generated-axis depth tracker for testSweeps. `stack`
+// records, per entered node, whether that node was a counted (generated-axis)
+// loop, so the `Visit(nil)` leave decrements `depth` only for the levels it
+// incremented. Every node is still walked: a for-range over a declared
+// collection does not count, but a generated-axis for nested inside it does.
 type loopCounter struct {
 	ex    *extractor
 	depth int
@@ -965,28 +970,41 @@ func (lc *loopCounter) Visit(node ast.Node) ast.Visitor {
 		}
 		return nil
 	}
-	isLoop := isLoopNode(node)
-	lc.stack = append(lc.stack, isLoop)
-	if isLoop {
+	counted := isCountedLoop(node)
+	lc.stack = append(lc.stack, counted)
+	if counted {
 		lc.depth++
 		lc.ex.emitSweep(node, lc.depth)
 	}
 	return lc
 }
 
-// isLoopNode reports whether `node` is a Go loop — `for` (ForStmt) or
-// `for ... range` (RangeStmt). Go has no separate while/do; both are `for`.
-func isLoopNode(node ast.Node) bool {
-	switch node.(type) {
-	case *ast.ForStmt, *ast.RangeStmt:
-		return true
-	}
-	return false
+// isCountedLoop reports whether `node` is a GENERATED-axis loop — the only
+// kind that counts toward the swept-matrix depth (R-060). In Go that is the
+// C-style `for init; cond; post {}` (ForStmt): its bound is a computed
+// numeric range the reader cannot count by eye, so three nested such loops
+// generate a Cartesian product of cases nobody wrote down. A `for ... range`
+// (RangeStmt) iterates a DECLARED collection — a slice, array, map, or
+// channel whose cases are data someone wrote — so it is a declared axis and
+// does NOT count, no matter how deeply nested (the cases are recorded; the
+// product is merely expressed by the nesting). Go has no separate while/do;
+// both shapes are `for`.
+//
+// Recorded limit: `for i := range n` (Go 1.22+ integer-range) is a RangeStmt
+// over an integer — a generated axis in disguise — but it is syntactically
+// indistinguishable from `for _, tc := range slice` when the operand is a
+// non-literal expression, so the heuristic treats ALL RangeStmts as declared
+// and under-counts the integer-range form. That errs toward silence (no false
+// positive), the safe direction for a narrowing.
+func isCountedLoop(node ast.Node) bool {
+	_, isFor := node.(*ast.ForStmt)
+	return isFor
 }
 
-// emitSweep records the swept-matrix signals one loop carries: a bit-mask
-// bound (ForStmt only — a RangeStmt iterates a collection, no numeric bound),
-// and a Cartesian nest at depth ≥ 3. A loop exhibiting both emits both.
+// emitSweep records the swept-matrix signals one generated-axis loop carries:
+// a bit-mask bound (a `1 << n` / `math.Pow(2, n)` in the ForStmt's
+// condition/init/post), and a Cartesian nest at generated-axis depth ≥ 3. A
+// loop exhibiting both emits both.
 func (ex *extractor) emitSweep(node ast.Node, depth int) {
 	line := ex.line(node.Pos())
 	if fs, ok := node.(*ast.ForStmt); ok {

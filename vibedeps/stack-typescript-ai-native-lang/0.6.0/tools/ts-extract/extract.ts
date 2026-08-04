@@ -122,9 +122,10 @@ interface InvariantCommentFact {
 
 /**
  * A swept test matrix (R-060): `kind` is `"bitmask"` (a `1 << n` / `2 ** n` /
- * `Math.pow(2, n)` loop bound) or `"nested-loops"` (a ≥3-deep Cartesian
- * nest); `detail` carries the bound text or the depth. Emitted only in test
- * files (`*.test.ts` / `*.spec.ts` / `__tests__`). Consumed by
+ * `Math.pow(2, n)` loop bound) or `"nested-loops"` (a ≥3-deep nest of
+ * GENERATED-axis C-style `for` loops — NOT for-of over a declared collection);
+ * `detail` carries the bound text or the depth. Emitted only in test files
+ * (`*.test.ts` / `*.spec.ts` / `__tests__`). Consumed by
  * `declared-test-matrices`.
  */
 interface TestSweepFact {
@@ -566,10 +567,14 @@ function containsSpecUri(ts: TsModule, node: Node): boolean {
 
 /**
  * Classifies a loop node for the swept-matrix census (R-060), or returns
- * `null` for a non-loop. `"for"` is the C-style `for` — the only kind that
- * carries a numeric bound (the bit-mask signal); `for...of`/`for...in` are
- * `"range"` (they iterate a collection, no numeric bound), and `while`/`do`
- * are `"loop"`. All three count toward the Cartesian-nest depth.
+ * `null` for a non-loop. `"for"` is the C-style `for` — the ONLY generated
+ * axis: it carries a numeric bound (the bit-mask signal) AND is the only kind
+ * that counts toward the Cartesian-nest depth. `for...of`/`for...in` are
+ * `"range"` (they iterate a DECLARED collection — a declared axis, never
+ * counted), and `while`/`do` are `"loop"` (a computed condition). `while`/`do`
+ * are a recorded limit: a numeric `while (i < n)` IS a generated axis, but the
+ * heuristic cannot tell it from a data-driven `while` over an iterator, so it
+ * does not count (errs toward silence — the safe direction for a narrowing).
  */
 function loopKind(ts: TsModule, node: Node): "for" | "range" | "loop" | null {
   if (node.kind === ts.SyntaxKind.ForStatement) return "for";
@@ -737,12 +742,13 @@ function extractFile(ts: TsModule, absPath: string, relPath: string): FileRecord
       }
     }
     // Swept test matrices (R-060): a loop node in a test file. A C-style
-    // `for` with a `2^n` bound is a bit-mask sweep; any loop kind counts
-    // toward the Cartesian-nest depth. Declared matrices (a table iterated
-    // once) emit nothing.
+    // `for` with a `2^n` bound is a bit-mask sweep; ONLY a C-style `for`
+    // (a generated numeric axis) counts toward the Cartesian-nest depth —
+    // for-of/for-in iterate a DECLARED collection and while/do run a computed
+    // condition, so neither is a generated axis. Declared matrices (a table
+    // iterated once, or a nest of for-of over declared axes) emit nothing.
     const loop = loopKind(ts, node);
     if (loop !== null && record.in_test) {
-      const childDepth = loopDepth + 1;
       const line = lineOf(sf, node.getStart(sf));
       if (loop === "for") {
         const bound = bitmaskBoundOfFor(sf, node);
@@ -755,7 +761,11 @@ function extractFile(ts: TsModule, absPath: string, relPath: string): FileRecord
           });
         }
       }
-      if (childDepth >= 3) {
+      // Only a generated-axis `for` advances the depth; a declared-axis
+      // loop (for-of/for-in/while/do) passes the enclosing depth through
+      // unchanged, so a generated `for` nested inside it still counts.
+      const childDepth = loop === "for" ? loopDepth + 1 : loopDepth;
+      if (loop === "for" && childDepth >= 3) {
         record.facts.push({
           fact: "test_sweep",
           kind: "nested-loops",

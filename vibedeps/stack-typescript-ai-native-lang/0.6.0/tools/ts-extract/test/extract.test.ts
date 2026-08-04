@@ -15,6 +15,7 @@ import { dirname, join } from "node:path";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const EXTRACT = join(HERE, "..", "extract.ts");
 const DIRTY = join(HERE, "fixtures", "dirty");
+const CLEAN = join(HERE, "fixtures", "clean");
 const SEAM = join(HERE, "fixtures", "seam");
 
 interface Record {
@@ -56,6 +57,9 @@ function runExtract(root: string): Record[] {
 
 const records = runExtract(DIRTY);
 const byFile = new Map(records.map((r) => [r.file, r]));
+
+const cleanRecords = runExtract(CLEAN);
+const cleanByFile = new Map(cleanRecords.map((r) => [r.file, r]));
 
 const seamRecords = runExtract(SEAM);
 const seamByFile = new Map(seamRecords.map((r) => [r.file, r]));
@@ -210,14 +214,26 @@ test("an invariant-marker comment surfaces as invariant_comment (R3-003)", () =>
   assert.equal(comments[0].line, 75);
 });
 
-test("a 2^n bit-mask loop surfaces as test_sweep in a test file (R-060)", () => {
+test("a 2^n bit-mask and a nested C-style for each surface as test_sweep (R-060)", () => {
   const sweep = byFile.get("src/sweep.test.ts");
   assert.ok(sweep, JSON.stringify(records.map((r) => r.file)));
   assert.equal(sweep.in_test, true);
   const sweeps = sweep.facts.filter((f) => f.fact === "test_sweep");
-  assert.equal(sweeps.length, 1, JSON.stringify(sweep.facts));
-  assert.equal(sweeps[0].kind, "bitmask");
-  assert.ok((sweeps[0] as { detail?: string }).detail?.includes("<<"));
+  assert.equal(sweeps.length, 2, JSON.stringify(sweep.facts));
+  const byKind = new Map(sweeps.map((f) => [f.kind, f]));
+  const bitmask = byKind.get("bitmask");
+  assert.ok(bitmask, "bit-mask sweep must fire");
+  assert.ok((bitmask as { detail?: string }).detail?.includes("<<"));
+  const nested = byKind.get("nested-loops");
+  assert.ok(nested, "three nested C-style for-loops must fire nested-loops");
+  assert.equal((nested as { detail?: string }).detail, "3");
+});
+
+test("a nest of for-of over declared axes is silent (R-060 narrowing)", () => {
+  const matrix = cleanByFile.get("src/matrix.test.ts");
+  assert.ok(matrix, JSON.stringify(cleanRecords.map((r) => r.file)));
+  const sweeps = matrix.facts.filter((f) => f.fact === "test_sweep");
+  assert.equal(sweeps.length, 0, JSON.stringify(matrix.facts));
 });
 
 test("a syntactically hopeless file degrades to zero facts, not an error (B5)", () => {

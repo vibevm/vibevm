@@ -187,3 +187,79 @@ fn a_declared_test_matrix_passes_the_gate() {
     rust_ai_native_conform::run_check(dir.path(), "conform-baseline.json", None)
         .expect("a declared table iterated once is the compliant matrix — green");
 }
+
+/// The nested-loops half of the rule (R-060): three nested RANGE for-loops
+/// — generated axes — in a test. A Cartesian product of generated axes is a
+/// swept matrix; the depth-3 loop is the one finding.
+const NESTED_RANGE_MATRIX: &str = r#"/// A seam with a nested-range sweep.
+///
+/// ```
+/// let _ = myapp::answer();
+/// ```
+pub fn answer() -> u32 {
+    0
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn swept() {
+        for a in 0..2 {
+            for b in 0..2 {
+                for c in 0..2 {
+                    let _ = (a, b, c);
+                }
+            }
+        }
+    }
+}
+"#;
+
+/// The narrowing's green half (R-060): three nested `for x in [literal]`
+/// loops — DECLARED axes. Exhausting a closed set by nesting collection
+/// loops is compliant (the cases are data), so this stays green where a
+/// bare-depth heuristic would have red'd it. This is the host
+/// `vibe-workspace` / `progress-core` shape.
+const DECLARED_AXIS_NEST: &str = r#"/// A seam that exhausts a closed set by nesting.
+///
+/// ```
+/// let _ = myapp::answer();
+/// ```
+pub fn answer() -> u32 {
+    0
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn exhausted() {
+        for a in [false, true] {
+            for b in [false, true] {
+                for c in [false, true] {
+                    let _ = (a, b, c);
+                }
+            }
+        }
+    }
+}
+"#;
+
+#[test]
+fn a_nested_range_loop_matrix_fails_the_gate() {
+    let dir = fixture(NESTED_RANGE_MATRIX);
+    let err = rust_ai_native_conform::run_check(dir.path(), "conform-baseline.json", None)
+        .expect_err("a 3-deep range-loop nest must fail the gate");
+    // Only the nested-loops finding fires — the seam is doctested, no
+    // unwrap/unsafe/env — so exactly one new finding.
+    assert!(
+        err.to_string().contains("1 new finding(s)"),
+        "expected exactly the declared-test-matrices nested-loops finding: {err}"
+    );
+}
+
+#[test]
+fn a_declared_axis_nest_passes_the_gate() {
+    let dir = fixture(DECLARED_AXIS_NEST);
+    rust_ai_native_conform::run_check(dir.path(), "conform-baseline.json", None)
+        .expect("a 3-deep collection-loop nest is a declared matrix — green");
+}

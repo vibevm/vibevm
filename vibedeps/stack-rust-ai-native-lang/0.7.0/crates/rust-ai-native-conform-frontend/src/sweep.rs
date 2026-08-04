@@ -14,20 +14,45 @@ use quote::ToTokens;
 use crate::Extractor;
 
 impl Extractor {
-    /// Bookkeeping shared by every loop kind on entry: bump the nesting
-    /// depth and, at the ≥ 3 Cartesian threshold inside a test, emit the
-    /// `nested-loops` swept-matrix fact. Emitted at the threshold crossing
-    /// (depth 3), so a single deep nest reports once per 3rd-level loop,
-    /// never per inner iteration.
+    /// Bookkeeping on entry to a GENERATED-axis loop (a `for` over a range):
+    /// bump the range-loop depth and, at the ≥ 3 threshold inside a test,
+    /// emit the `nested-loops` swept-matrix fact. Emitted at the threshold
+    /// crossing (depth 3), so a single deep nest reports once per 3rd-level
+    /// loop, never per inner iteration. A DECLARED-axis loop (a `for` over a
+    /// collection/array/path) never calls this — see [`is_range_iterable`].
     pub(crate) fn enter_loop(&mut self, line: u32) {
-        self.loop_depth += 1;
-        if self.loop_depth >= 3 && self.test_depth > 0 {
+        self.range_loop_depth += 1;
+        if self.range_loop_depth >= 3 && self.test_depth > 0 {
             self.facts.push(Fact::TestSweep {
                 kind: "nested-loops".into(),
                 line,
-                detail: self.loop_depth.to_string(),
+                detail: self.range_loop_depth.to_string(),
             });
         }
+    }
+}
+
+/// Is this `for`-loop iterable a generated numeric RANGE — the only form
+/// that counts toward the swept-matrix depth (R-060)? A `for x in 0..n` /
+/// `0..=n` / `a..b` iterable is a generated axis (its bound is computed, not
+/// written as data); a collection iterable (`[a, b]`, `Stage::ALL`,
+/// `vec.iter()`) is a DECLARED axis and returns false. Parens/groups unwrap
+/// to the range beneath, so `(0..n)` counts.
+///
+/// **Recorded limit:** a range wrapped in an adapter (`(0..n).step_by(2)`) is
+/// syntactically a method-call iterable, not an `ExprRange`, so it reads as
+/// declared and does not count — it under-counts a genuinely generated axis.
+/// `while`/`loop` carry no iterable at all: a numeric `while i < n` IS a
+/// generated axis, but the heuristic cannot tell it from a data-driven
+/// `while let Some(x) = iter.next()`, so neither counts (the Visit overrides
+/// for them are gone). Both err toward silence — no false positive — the safe
+/// direction for a narrowing.
+pub(crate) fn is_range_iterable(expr: &syn::Expr) -> bool {
+    match expr {
+        syn::Expr::Range(_) => true,
+        syn::Expr::Group(g) => is_range_iterable(&g.expr),
+        syn::Expr::Paren(p) => is_range_iterable(&p.expr),
+        _ => false,
     }
 }
 
