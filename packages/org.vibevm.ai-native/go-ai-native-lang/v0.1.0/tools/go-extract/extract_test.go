@@ -139,3 +139,49 @@ func TestGoConformance_NearMissesDoNotMatch(t *testing.T) {
 		})
 	}
 }
+
+// --- C. cell manifest: //spec:cell → item attrs ----------------------
+
+// A //spec:cell directive in a type's doc comment rides the owning
+// item's Attrs as the raw `key=value …` text — the Go cell manifest the
+// bridge renders into the engine's cell(seam=,variant=) attr, so one
+// cell-name rule reads Rust #[cell] and Go //spec:cell identically.
+func TestSpecCellDirective_AttachesToOwningItem(t *testing.T) {
+	src := []byte("package plan\n\n" +
+		"// BatchPlanner is the batch Planner cell.\n" +
+		"//\n" +
+		"//spec:cell seam=Planner variant=batch replaces=naive flag=planner\n" +
+		"type BatchPlanner struct{}\n")
+	fs := extractSource("internal/cells/plan/planner.go", src).Facts
+	var cell *fact
+	for i := range fs {
+		if fs[i].Fact == "item" && fs[i].Symbol == "BatchPlanner" {
+			cell = &fs[i]
+			break
+		}
+	}
+	if cell == nil {
+		t.Fatal("BatchPlanner item fact not emitted")
+	}
+	if len(cell.Attrs) != 1 {
+		t.Fatalf("cell item carries one attr, got %+v", cell.Attrs)
+	}
+	want := "seam=Planner variant=batch replaces=naive flag=planner"
+	if cell.Attrs[0] != want {
+		t.Errorf("attr = %q, want the raw directive args verbatim", cell.Attrs[0])
+	}
+}
+
+// A free-floating //spec:cell (blank line before the declaration) has no
+// owning item, so it attaches to nothing — the directive is dropped, not
+// invented onto a neighbour.
+func TestSpecCellDirective_WithoutOwnerIsDropped(t *testing.T) {
+	src := []byte("package plan\n\n" +
+		"//spec:cell seam=Planner variant=batch\n\n" +
+		"type Other struct{}\n")
+	for _, f := range extractSource("planner.go", src).Facts {
+		if f.Fact == "item" && len(f.Attrs) > 0 {
+			t.Fatalf("orphan directive must not attach: %+v", f)
+		}
+	}
+}

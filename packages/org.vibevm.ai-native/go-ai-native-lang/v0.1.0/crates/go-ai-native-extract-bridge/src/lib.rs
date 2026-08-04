@@ -98,6 +98,16 @@ pub enum RawFact {
         /// non-type items, aliases, and non-primitive underlyings.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         underlying: Option<String>,
+        /// The raw `seam=… variant=…` args of a `//spec:cell` directive
+        /// the item's doc comment carries — the Go cell manifest, rendered
+        /// into the engine's `cell(seam = "…", variant = "…")` attr in
+        /// [`conform_facts`]. That render is the single place the rust
+        /// notation is born for Go, so one cell-name rule reads Rust's
+        /// verbatim `#[cell]` attr and Go's directive identically and a
+        /// second grammar form never appears. Absent on items with no
+        /// `//spec:cell`.
+        #[serde(default, skip_serializing_if = "Vec::is_empty")]
+        attrs: Vec<String>,
     },
     FileMetrics {
         lines: u32,
@@ -302,12 +312,13 @@ pub fn conform_facts(record: &FileRecord) -> Vec<conform_core::Fact> {
                 line,
                 is_exported,
                 has_doc_example,
+                attrs,
                 ..
             } => Fact::Item {
                 kind: kind.clone(),
                 symbol: symbol.clone(),
                 line: *line,
-                attrs: Vec::new(),
+                attrs: cell_attrs(attrs),
                 is_pub: *is_exported,
                 has_doctest: *has_doc_example,
             },
@@ -319,6 +330,42 @@ pub fn conform_facts(record: &FileRecord) -> Vec<conform_core::Fact> {
             },
         })
         .collect()
+}
+
+/// Render a Go item's raw `//spec:cell` attrs into the engine's rust
+/// notation — the single place the `cell(seam = "…", variant = "…")`
+/// form is born for Go, so one cell-name rule reads it identically to
+/// the Rust frontend's verbatim `#[cell]` attr and a second grammar
+/// form never appears. The Go directive writes unquoted whitespace-
+/// separated `key=value` tokens (`seam=Planner variant=batch`); here
+/// they are re-keyed to the rust manifest shape — quoted values, spaces
+/// around `=`, and `seam` + `variant` only (the rust `#[cell]` manifest
+/// carries just those, so extra keys like `replaces` / `flag` are
+/// dropped). A directive missing either key composes no name and yields
+/// nothing (the rule's "nothing to compute" vacuity guard).
+fn cell_attrs(raw: &[String]) -> Vec<String> {
+    raw.iter()
+        .filter_map(|args| {
+            let seam = unquoted_value(args, "seam")?;
+            let variant = unquoted_value(args, "variant")?;
+            Some(format!("cell(seam = \"{seam}\", variant = \"{variant}\")"))
+        })
+        .collect()
+}
+
+/// Read an unquoted `key=value` token's value from a whitespace-
+/// separated Go directive args string. The Go `//spec:cell` grammar has
+/// no quoted values and no spaces inside a value, so a `split_whitespace`
+/// + `split_once('=')` is exact. Returns `None` when the key is absent.
+fn unquoted_value(args: &str, key: &str) -> Option<String> {
+    for tok in args.split_whitespace() {
+        if let Some((k, v)) = tok.split_once('=')
+            && k == key
+        {
+            return Some(v.to_string());
+        }
+    }
+    None
 }
 
 #[cfg(test)]
@@ -474,6 +521,62 @@ mod tests {
                 } if marker == "INVARIANT:" && *line == 75 && !*in_test
             )),
             "invariant_comment lowers with the marker and a stamped in_test: {facts:?}"
+        );
+    }
+
+    /// A `//spec:cell seam=… variant=…` directive rides an item's raw
+    /// `attrs`; `conform_facts` renders it into the engine's
+    /// `cell(seam = "…", variant = "…")` attr — the rust notation ONE
+    /// cell-name rule reads on both languages. The Go unquoted
+    /// `key=value` tokens are re-keyed to the rust manifest shape
+    /// (quoted, ` = `), and the extra keys (`replaces`, `flag`) the
+    /// Go directive carries are dropped, since the rust `#[cell]`
+    /// manifest holds only `seam` + `variant`. This is the single place
+    /// that rust notation is born for Go — a second grammar form never
+    /// appears.
+    #[test]
+    fn spec_cell_directive_renders_into_engine_attr() {
+        let raw = concat!(
+            r#"{"protocol":1,"file":"internal/cells/plan/planner.go","#,
+            r#""in_test":false,"degraded":false,"#,
+            r#""facts":[{"fact":"item","kind":"type","symbol":"BatchPlanner","#,
+            r#""is_exported":true,"has_doc_example":false,"#,
+            r#""attrs":["seam=Planner variant=batch replaces=naive flag=planner"],"line":18}],"markers":[]}"#,
+            "\n",
+        );
+        let records = parse_ndjson(raw).expect("parse");
+        let facts = conform_facts(&records[0]);
+        let attrs = facts
+            .iter()
+            .find_map(|f| match f {
+                conform_core::Fact::Item { attrs, .. }
+                    if attrs.iter().any(|a| a.starts_with("cell(")) =>
+                {
+                    Some(attrs.clone())
+                }
+                _ => None,
+            })
+            .expect("the cell item carries a rendered attr");
+        assert_eq!(
+            attrs,
+            vec!["cell(seam = \"Planner\", variant = \"batch\")".to_string()],
+            "raw unquoted Go directive → rust cell attr, extras dropped: {attrs:?}"
+        );
+        // A directive missing a key composes no name and yields no attr.
+        let partial = concat!(
+            r#"{"protocol":1,"file":"internal/cells/plan/planner.go","#,
+            r#""in_test":false,"degraded":false,"#,
+            r#""facts":[{"fact":"item","kind":"type","symbol":"P","#,
+            r#""is_exported":true,"has_doc_example":false,"#,
+            r#""attrs":["seam=Planner"],"line":18}],"markers":[]}"#,
+            "\n",
+        );
+        let partial_facts = conform_facts(&parse_ndjson(partial).expect("parse")[0]);
+        assert!(
+            partial_facts
+                .iter()
+                .all(|f| !matches!(f, conform_core::Fact::Item { attrs, .. } if attrs.iter().any(|a| a.starts_with("cell(")))),
+            "a directive missing variant composes no name: {partial_facts:?}"
         );
     }
 }

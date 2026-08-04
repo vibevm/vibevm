@@ -38,6 +38,13 @@ type Greeter struct {
 // Conformance is made loud: Greeter satisfies the Greeting seam.
 var _ Greeting = (*Greeter)(nil)
 
+// FormalGreeting is the `formal` Greeting cell — its name is the
+// computed one (Pascal("formal") + seam "Greeting" = "FormalGreeting"),
+// the clean exhibit for cell-name-is-computed (B-038).
+//
+//spec:cell seam=Greeting variant=formal
+type FormalGreeting struct{}
+
 // New is the blessed construction path.
 //
 //spec:implements spec://demo/PROP-001#req-greet r=1
