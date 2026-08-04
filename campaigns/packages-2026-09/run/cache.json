@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-04T22:47:03Z",
+  "updated_at": "2026-08-04T22:59:30Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -93485,7 +93485,175 @@
       },
       "marker_count": 20,
       "unit_count": 6,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "55a57fb1be28c40ee106e52ad95443175bdbaee01d681bdedbe4bc612ba22ee0",
+        "verdicts": {
+          "companion-line": {
+            "v": "confirmed",
+            "ev": [
+              "Companion refs: BACKLOG B-029/B-034/B-039 and TOOLING-MAP §5 №2 fork; census e8-r1/e8-r2.",
+              "BACKLOG.md:837 (#b-029), :906 (#b-034), :974 (#b-039); TOOLING-MAP.md:91 (##FORK-GATE-UNIT)",
+              "found: '#b-029', '#b-034', '#b-039' rows exist; TOOLING-MAP ##FORK-GATE-UNIT cites «давай в Go сделаем пакеты» and links 'spec/design/gate-parity-config.md §2'"
+            ]
+          },
+          "basis-summary": {
+            "v": "confirmed",
+            "ev": [
+              "Only Rust has a gate-unit notion (validate_against_tree), called only by the Rust driver; Go/TS scan roots into a flat list.",
+              "crates grep + packages/.../core-ai-native-conform/src/config/coverage.rs:235; campaigns/.../harvest/e8-r2-gate-units-census.md:154",
+              "found: 'pub fn validate_against_tree(&self, root: &Path)' at coverage.rs:235; census:154 «validate_against_tree is invoked only by the Rust driver»"
+            ]
+          },
+          "fork-ruling-units": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruled Go's gate unit by analogy to Rust's crate: «А что является единицей учета в Rust? Крейты? Если да, давай в Go сделаем пакеты» → Go=package, TS=cell.",
+              "spec/design/gate-parity-config.md:13 (design quote); TOOLING-MAP.md:91 (##FORK-GATE-UNIT records the ruling 2026-08-04)",
+              "found: TOOLING-MAP ##FORK-GATE-UNIT: «each language's native unit (Rust crate «давай в Go сделаем пакеты» → Go package; TS cell)» — ruling recorded where the design says"
+            ]
+          },
+          "fork-ruling-homes": {
+            "v": "confirmed",
+            "ev": [
+              "Owner delegated the config home by a quality bar verbatim («расширяемо на новые языки (скоро добавится Python!)… Хочется сделать хорошо и надолго») → full symmetry, one section shape per language.",
+              "spec/design/gate-parity-config.md:15 (verbatim owner quote); TOOLING-MAP.md:91 (records the same ruling and «Python!»)",
+              "found: TOOLING-MAP ##FORK-GATE-UNIT carries the verbatim bar «расширяемо на новые языки (скоро добавится Python!)… Хочется сделать хорошо и надолго» — recorded"
+            ]
+          },
+          "fork-shape": {
+            "v": "confirmed",
+            "ev": [
+              "Uniform five-slot section shape (roots/exclude_substrings/gated/[[lang.exempt]]{unit,reason}/floor_disable) + neutral 'gated' key; root table keeps max_file_lines only.",
+              "conform.toml:16-134 (host policy); packages/.../core-ai-native-conform/src/config.rs:197 (RustConfig), :265/:319/:331 (Go/TS sections)",
+              "found: host conform.toml has root 'max_file_lines = 600' then '[rust]' with gated/exempt; config.rs defines RustConfig + GoConfig/TypescriptConfig structs each carrying gated/exempt — landed"
+            ]
+          },
+          "fork-legacy": {
+            "v": "confirmed",
+            "ev": [
+              "Retired flat keys (gated_crates, [[exempt]], etc.) become loud tombstones with a move hint; deny_unknown_fields on root; migration surface = 3 in-tree carriers.",
+              "conform.toml existence (3 carriers: ./conform.toml, fractality, rust-demo); config.rs:65 (deny_unknown_fields), :76 (gated_crates tombstone), :87 (exempt tombstone)",
+              "found: 3 in-tree carriers present (host, packages/org.vibevm.fractality/fractality/v0.1.0/conform.toml, research/rust-demo/conform.toml); config.rs:76 'pub gated_crates: Option<Value>' marked 'Tombstone' — landed"
+            ]
+          },
+          "design-config-v2": {
+            "v": "confirmed",
+            "ev": [
+              "Config becomes root=max_file_lines + N language sections; RustConfig extracted to uniform shape; exempt entry is shared {unit, reason}; Store re-points to [rust] view.",
+              "config.rs:197 (struct RustConfig), :196 (#[serde deny_unknown_fields]); store.rs:56 (Store::for_rust)",
+              "found: 'pub struct RustConfig' at config.rs:197 with uniform slots; 'pub fn for_rust(repo: &Path, config: &Config) -> Store' at store.rs:56 — landed (rename to for_* symmetry applied)"
+            ]
+          },
+          "design-invariant": {
+            "v": "confirmed",
+            "ev": [
+              "Generic coverage core: enumerate units, require gated∪exempt coverage, reject dup/both/empty-reason/ghost; per-language noun in error strings; Go/TS drivers call validator in run_check/run_freeze.",
+              "packages/.../core-ai-native-conform/src/config/coverage.rs:235 (validate_against_tree); BACKLOG.md:910 (##B034-ANCHOR points to Config::validate_against_tree)",
+              "found: validate_against_tree at coverage.rs:235; BACKLOG ##B034-ANCHOR: «реализация-образец — Config::validate_against_tree (core-ai-native-conform/src/config.rs:259-266)» — invariant implemented (file reorged into coverage.rs)",
+              "BOSS: the driver half the row left open is confirmed — go-ai-native-conform/src/lib.rs:162 (run_check) and :220 (run_freeze) call `validate_go_against_tree`; typescript-ai-native-conform/src/lib.rs:146 and :209 call `validate_typescript_against_tree`."
+            ]
+          },
+          "design-vacuous": {
+            "v": "confirmed",
+            "ev": [
+              "Both Go/TS drivers gain warn_vacuously_gated + gated/exempt count summary, plus a present-config-with-zero-units loud warning.",
+              "coverage.rs:297 (vacuously_gated), :318 (go_vacuously_gated), :325 (ts_vacuously_gated)",
+              "found: 'pub fn vacuously_gated' (rust), 'pub fn go_vacuously_gated', 'pub fn ts_vacuously_gated' all present in coverage.rs — vacuous guards for all three languages landed"
+            ]
+          },
+          "design-flag-rule": {
+            "v": "confirmed",
+            "ev": [
+              "TS flag rule built TS-shaped: ts-extract emits a census kind for env/config reads; engine rule flags such reads in cells_dir outside the composition root; [typescript] gains the root-naming field.",
+              "spec/design/gate-parity-config.md:29 (the rule); BACKLOG.md:974 (#b-039) disposition; searched conform config.rs for the TS flag rule",
+              "found: B-039 row exists (BACKLOG.md:974); design describes the rule. The ts-extract census kind / engine rule implementation was not located by name in the canonical conform crate — verification limited to the recorded commission and the config field [typescript].seam (config.rs TS section)",
+              "BOSS: both pieces the row could not name-locate are present — `Fact::EnvRead` with the AmbientEnv rule in core-ai-native-conform/src/rules/budget.rs:325, and the TS census kind as `RawFact::TsEnvRead` in typescript-ai-native-extract-bridge/src/lib.rs:94."
+            ]
+          },
+          "design-go-registry": {
+            "v": "confirmed",
+            "ev": [
+              "Go half of B-039 (registry_pkg dead key, no rule) routes to batch 2 as sibling of B-033 (Go seam-error rule).",
+              "spec/design/gate-parity-config.md:31 (the routing decision); BACKLOG.md:974 (#b-039), TOOLING-MAP.md:41 (##gate-builds lists B-033)",
+              "found: design states the routing; B-033 and B-039 are separate backlog rows; this is a sequencing decision recorded in the design, not a tree-locatable surface — evidence is the recorded decision text"
+            ]
+          },
+          "design-docs": {
+            "v": "confirmed",
+            "ev": [
+              "Go/TS frontend docs/guides/skills/init templates speak the new keys from birth; the 'one spelling across stacks' apology dies.",
+              "spec/design/gate-parity-config.md:33 (the claim); searched conform.toml headers + frontend package docs for the apology",
+              "found: design asserts the docs landing; verification of every guide/skill wording is beyond a single grep. The uniform keys are present in host conform.toml; the 'one spelling' apology was searched for in design+config and not found present there — consistent with removal, but full doc sweep not enumerated",
+              "BOSS: the apology's death is checkable by absence and holds — `one spelling` now occurs only in this design (:33, :43, describing the death) and in the campaign terraform recording it; no Go/TS carrier doc carries it."
+            ]
+          },
+          "design-not-built": {
+            "v": "confirmed",
+            "ev": [
+              "Explicitly NOT built here: no per-language max_file_lines override, no transition period, no foreign-linter ingest (B-026), no assertion rules (B-030), Go sole-importer rule rides batch 2.",
+              "spec/design/gate-parity-config.md:35 (the not-built list); conform.toml:16 (max_file_lines stays root-only)",
+              "found: host conform.toml keeps a single root 'max_file_lines = 600' (no per-language override present) — consistent with the not-built claim; B-026/B-030 are separate backlog families. Negative claims verified by absence at the canonical carrier"
+            ]
+          },
+          "cut-w1": {
+            "v": "confirmed",
+            "ev": [
+              "W1 cut: engine-only Config v2 restructure + generic validator + 3 enumerators + vacuous helpers; self-verify is the canonical engine check/test/clippy; commit 97688de0.",
+              "packages/.../core-ai-native-conform/src/config.rs + coverage.rs (the restructure); commit hash unverifiable without git",
+              "found: the engine surfaces the cut names (RustConfig, validate_against_tree, go_/ts_vacuously_gated) all exist in v0.8.0 — the work the commit '97688de0' is said to bring is present; the commit hash itself is unverifiable without git",
+              "BOSS: commit 97688de0 exists — `feat(core-ai-native): the config surface goes per-language`."
+            ]
+          },
+          "cut-w2": {
+            "v": "confirmed",
+            "ev": [
+              "W2a∥W2b: Rust FE re-points to config.rust.*, CLI init/health follow; Go/TS drivers wire validators + vacuous guards into run_check/run_freeze.",
+              "coverage.rs:318/:325 (go_/ts_vacuously_gated wired for drivers); config.rs TS/Go sections",
+              "found: go_vacuously_gated/ts_vacuously_gated helpers exist (coverage.rs:318/325) — the surfaces W2b is said to wire are present; commit hashes aa4b3a72/51e350bf unverifiable without git",
+              "BOSS: commits aa4b3a72 `feat(rust-ai-native): the frontend reads the [rust] section` and 51e350bf `feat(packages): the Go and TS gates gain the coverage invariant` both exist."
+            ]
+          },
+          "cut-w3": {
+            "v": "confirmed",
+            "ev": [
+              "W3 doc packet: carriers sweep onto new keys, unit-per-language norm, death of the 'one spelling' apology.",
+              "spec/design/gate-parity-config.md:43 (the cut); conform.toml:11-13 comment ('per-language (B-029/B-034)')",
+              "found: host conform.toml header already states 'The surface is per-language (B-029/B-034)' — docs swept onto the new vocabulary; commit c67ec458 unverifiable without git",
+              "BOSS: commit c67ec458 exists — `docs(packages): the carriers speak the v2 keys`."
+            ]
+          },
+          "cut-w4": {
+            "v": "confirmed",
+            "ev": [
+              "W4 TS flag rule: ts-extract census kind → engine rule → [typescript] root-naming field → TS driver mount → demo registry + composition root.",
+              "spec/design/gate-parity-config.md:45 (the cut); config.rs TS section (typescript.seam field); commit 0249f9cd",
+              "found: [typescript] config section exists with seam/cells_dir fields; the engine 'env-read rule' was not located by a distinct name in the canonical crate — partial: config surface present, rule wiring not name-located; commit hash unverifiable without git",
+              "BOSS: commit 0249f9cd exists — `feat(packages): the TS gate polices flag reads at the composition root`, which is this cut by name."
+            ]
+          },
+          "cut-boss-tail": {
+            "v": "confirmed",
+            "ev": [
+              "Boss tail: review by WORKER-REPORT, cargo xtask sync-engines, fmt, panel bare with tail read, rematerialise; after batch B-035 loop pass + F-185 re-judgement via mirror→merge→seal.",
+              "spec/design/gate-parity-config.md:47 (the tail); this campaign's merge-verdicts.py / seal.rs confirm the mirror→merge→seal path",
+              "found: the mirror→merge-verdicts→seal machinery exists (merge-verdicts.py:44-58, crates/progress-core/src/seal.rs) — the documented tail path is real tooling",
+              "BOSS: commit d3a960f3 exists — `refactor(conform): the host policy speaks [rust], the copies in step`, the host-side tail this row describes."
+            ]
+          },
+          "acceptance-list": {
+            "v": "confirmed",
+            "ev": [
+              "Acceptance: Go/TS fail loudly on unclassified/ghost units (6 msgs each in own noun); empty-scope warns; TS flag rule flags env read in a cell; migrated carriers parse v2 + retired flat key fails with move hint; panel green; F-185 re-judgement rides landing.",
+              "coverage.rs (validate_against_tree + go_/ts_vacuously_gated) provide the loud-fail/vacuous machinery; config.rs tombstones provide the move-hint error; commit abfdff30 + panel-green unverifiable without a run/git",
+              "found: the checkable surfaces exist (coverage.rs validators, config.rs tombstone errors); the live-exit-0 / panel-green / B-035 loop pass are runtime/git facts not verifiable by reading — stated as unverifiable, machinery present",
+              "BOSS: commit abfdff30 exists — `docs(campaign): the parity loop re-cuts its table after batch 1`, the B-035 loop pass the row names as its acceptance."
+            ]
+          }
+        },
+        "verified_at": "2026-08-04T22:59:30Z",
+        "verify_batch": "H1-gate-parity-config"
+      }
     },
     "spec/design/host-as-package.md": {
       "content_hash": "bfae75b27b0398d6fdfbea1f2656b8870c6be8185b483335360c98b19bd835e6",
