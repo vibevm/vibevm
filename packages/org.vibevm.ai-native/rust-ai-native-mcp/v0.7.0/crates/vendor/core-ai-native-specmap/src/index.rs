@@ -24,9 +24,11 @@ use crate::mdspec;
 /// Repo-relative location of the committed index.
 pub const INDEX_REL_PATH: &str = "specmap.json";
 
-/// Current index schema number. 2: canonical (house-style) URI
-/// doc-paths, `spec_unit.file`, the `suspects` table.
-pub const SCHEMA: u32 = 2;
+/// Current index schema number. 3: optional `code_item.end_line` and
+/// `code_item.fingerprint` (the Rust scanner's span and token-stream
+/// hash; absent from scanners that do not produce them). 2: canonical
+/// (house-style) URI doc-paths, `spec_unit.file`, the `suspects` table.
+pub const SCHEMA: u32 = 3;
 
 fn verb_str(e: &crate::generated::specmap::Edge) -> &'static str {
     use crate::generated::specmap::EdgeVerb::*;

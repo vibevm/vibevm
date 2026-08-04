@@ -110,6 +110,13 @@ fn lower_record(
                 itemKind: item_kind,
                 line: *line,
                 symbol: item_symbol,
+                // Absent, not invented: go-extract carries only a start `line`
+                // per marker/item — no end line, no element body — so there is
+                // no span to record and no text to fingerprint. Filling these
+                // needs that toolchain to emit the element's span (the
+                // fingerprint would then hash the raw range text as `raw1:`).
+                endLine: None,
+                fingerprint: None,
             });
         }
         edges.push(Edge {

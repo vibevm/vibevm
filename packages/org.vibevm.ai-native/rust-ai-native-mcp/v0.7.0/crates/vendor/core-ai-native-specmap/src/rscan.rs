@@ -9,6 +9,7 @@ use std::path::Path;
 
 specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code");
 
+use crate::fingerprint::fingerprint_of;
 use crate::generated::specmap::{CodeItem, Edge, EdgeProvenance, EdgeVerb, Warning};
 use quote::ToTokens;
 use specmark_grammar::{EdgeSpec, SpecArgs, UriArgs};
@@ -42,13 +43,22 @@ struct FileScan<'a> {
 }
 
 impl FileScan<'_> {
-    fn record_item(&mut self, symbol: &str, item_kind: &str, line: u32) {
+    fn record_item(
+        &mut self,
+        symbol: &str,
+        item_kind: &str,
+        line: u32,
+        end_line: u32,
+        fingerprint: String,
+    ) {
         self.items.push(CodeItem {
             symbol: symbol.to_string(),
             itemKind: item_kind.to_string(),
             crateName: self.crate_name.to_string(),
             file: self.file.to_string(),
             line,
+            endLine: Some(Box::new(end_line)),
+            fingerprint: Some(Box::new(fingerprint)),
         });
     }
 
@@ -123,12 +133,24 @@ impl FileScan<'_> {
         out
     }
 
-    fn tag_item(&mut self, attrs: &[syn::Attribute], symbol: &str, item_kind: &str, line: u32) {
+    fn tag_item<T: ToTokens + Spanned>(
+        &mut self,
+        attrs: &[syn::Attribute],
+        item: &T,
+        symbol: &str,
+        item_kind: &str,
+        line: u32,
+    ) {
         let edges = self.edges_from_attrs(attrs);
         if edges.is_empty() {
             return;
         }
-        self.record_item(symbol, item_kind, line);
+        // `line` is the attribute-inclusive start of the span; `end_line` is
+        // the matching far end of the same span — the item's closing brace
+        // or semicolon. Same convention, opposite end.
+        let end_line = item.span().end().line as u32;
+        let fingerprint = fingerprint_of(item);
+        self.record_item(symbol, item_kind, line, end_line, fingerprint);
         for (edge, edge_line) in edges {
             self.record_edge(symbol, edge, edge_line);
         }
@@ -140,42 +162,42 @@ impl FileScan<'_> {
             match item {
                 syn::Item::Fn(f) => {
                     let symbol = format!("{module}::{}", f.sig.ident);
-                    self.tag_item(&f.attrs, &symbol, "fn", line);
+                    self.tag_item(&f.attrs, f, &symbol, "fn", line);
                 }
                 syn::Item::Struct(s) => {
                     let symbol = format!("{module}::{}", s.ident);
-                    self.tag_item(&s.attrs, &symbol, "struct", line);
+                    self.tag_item(&s.attrs, s, &symbol, "struct", line);
                 }
                 syn::Item::Enum(e) => {
                     let symbol = format!("{module}::{}", e.ident);
-                    self.tag_item(&e.attrs, &symbol, "enum", line);
+                    self.tag_item(&e.attrs, e, &symbol, "enum", line);
                 }
                 syn::Item::Union(u) => {
                     let symbol = format!("{module}::{}", u.ident);
-                    self.tag_item(&u.attrs, &symbol, "union", line);
+                    self.tag_item(&u.attrs, u, &symbol, "union", line);
                 }
                 syn::Item::Trait(t) => {
                     let symbol = format!("{module}::{}", t.ident);
-                    self.tag_item(&t.attrs, &symbol, "trait", line);
+                    self.tag_item(&t.attrs, t, &symbol, "trait", line);
                     for ti in &t.items {
                         if let syn::TraitItem::Fn(tf) = ti {
                             let msym = format!("{module}::{}::{}", t.ident, tf.sig.ident);
                             let mline = tf.span().start().line as u32;
-                            self.tag_item(&tf.attrs, &msym, "fn", mline);
+                            self.tag_item(&tf.attrs, tf, &msym, "fn", mline);
                         }
                     }
                 }
                 syn::Item::Const(c) => {
                     let symbol = format!("{module}::{}", c.ident);
-                    self.tag_item(&c.attrs, &symbol, "const", line);
+                    self.tag_item(&c.attrs, c, &symbol, "const", line);
                 }
                 syn::Item::Static(s) => {
                     let symbol = format!("{module}::{}", s.ident);
-                    self.tag_item(&s.attrs, &symbol, "static", line);
+                    self.tag_item(&s.attrs, s, &symbol, "static", line);
                 }
                 syn::Item::Type(t) => {
                     let symbol = format!("{module}::{}", t.ident);
-                    self.tag_item(&t.attrs, &symbol, "type", line);
+                    self.tag_item(&t.attrs, t, &symbol, "type", line);
                 }
                 syn::Item::Impl(im) => {
                     let ty = compact_tokens(&im.self_ty);
@@ -185,19 +207,19 @@ impl FileScan<'_> {
                         }
                         None => format!("{module}::<impl {ty}>"),
                     };
-                    self.tag_item(&im.attrs, &symbol, "impl", line);
+                    self.tag_item(&im.attrs, im, &symbol, "impl", line);
                     for ii in &im.items {
                         if let syn::ImplItem::Fn(mf) = ii {
                             let msym = format!("{module}::{ty}::{}", mf.sig.ident);
                             let mline = mf.span().start().line as u32;
-                            self.tag_item(&mf.attrs, &msym, "fn", mline);
+                            self.tag_item(&mf.attrs, mf, &msym, "fn", mline);
                         }
                     }
                 }
                 syn::Item::Mod(m) => {
                     let sub = format!("{module}::{}", m.ident);
                     let mline = m.span().start().line as u32;
-                    self.tag_item(&m.attrs, &sub, "mod", mline);
+                    self.tag_item(&m.attrs, m, &sub, "mod", mline);
                     if let Some((_, items)) = &m.content {
                         self.walk_items(items, &sub);
                     }
@@ -216,7 +238,9 @@ impl FileScan<'_> {
                         .map(|s| s.ident == "scope")
                         .unwrap_or(false);
                     if is_scope && let Ok(args) = syn::parse2::<UriArgs>(mc.mac.tokens.clone()) {
-                        self.record_item(module, "mod", line);
+                        let end_line = mc.span().end().line as u32;
+                        let fingerprint = fingerprint_of(mc);
+                        self.record_item(module, "mod", line, end_line, fingerprint);
                         self.record_edge(module, args.into_scope_edge(), line);
                     }
                 }
@@ -459,5 +483,29 @@ mod tests {{
             "x::tests::cli_e2e"
         );
         assert!(module_path("x", Path::new("benches/b.rs")).is_none());
+    }
+
+    /// §2.3 proof: on a multi-line tagged item the recorded `end_line`
+    /// strictly exceeds `line`, which can only happen if `proc-macro2`'s
+    /// `span-locations` feature yields real line numbers (the zero-span
+    /// trap). Values printed for the verbatim record.
+    #[test]
+    fn end_line_exceeds_line_for_multiline_item() {
+        let src = format!(
+            "#[spec(implements = \"{URI}\", r = 1)]\n\
+             pub fn fold(\n    a: u32,\n    b: u32,\n    c: u32,\n) -> u32 {{\n    a + b + c\n}}\n"
+        );
+        let (items, _, warnings) = scan_source("crates/x/src/m.rs", "x", "x::m", &src);
+        assert!(warnings.is_empty(), "{}", fmt_warnings(&warnings));
+        assert_eq!(items.len(), 1, "exactly one tagged item");
+        let it = &items[0];
+        let end = it.endLine.as_deref().copied().expect("end_line present");
+        let fp = it.fingerprint.as_deref().expect("fingerprint present");
+        println!("line={} end_line={} fingerprint={}", it.line, end, fp);
+        assert!(
+            end > it.line,
+            "end_line {end} must exceed line {} — spans read as zero (span-locations off?)",
+            it.line
+        );
     }
 }

@@ -303,7 +303,7 @@ mod tests {
 
     fn fixture() -> Specmap {
         Specmap {
-            schema: 2,
+            schema: crate::index::SCHEMA,
             specUnits: vec![
                 SpecUnit {
                     uri: GRAMMAR.to_string(),
@@ -338,6 +338,8 @@ mod tests {
                 crateName: "vibe-resolver".to_string(),
                 file: "crates/vibe-resolver/src/conditional.rs".to_string(),
                 line: 32,
+                endLine: None,
+                fingerprint: None,
             }],
             edges: vec![
                 Edge {
