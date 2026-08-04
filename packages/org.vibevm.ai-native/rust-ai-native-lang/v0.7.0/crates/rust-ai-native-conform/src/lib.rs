@@ -94,6 +94,7 @@ pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
         audit_crates: config.rust.audit_crates.clone(),
         roots: config.rust.env_roots.clone(),
     }));
+    out.push(Box::new(rules::DeclaredTestMatrices));
     out
 }
 

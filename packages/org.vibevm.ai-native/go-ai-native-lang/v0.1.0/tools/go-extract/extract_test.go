@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -182,6 +183,54 @@ func TestSpecCellDirective_WithoutOwnerIsDropped(t *testing.T) {
 	for _, f := range extractSource("planner.go", src).Facts {
 		if f.Fact == "item" && len(f.Attrs) > 0 {
 			t.Fatalf("orphan directive must not attach: %+v", f)
+		}
+	}
+}
+
+// --- D. swept test matrices: test_sweep (R-060) ----------------------
+
+// The dirty fixture's plan_test.go sweeps a `1 << 3` bit-mask — the
+// declared-test-matrices violation — emitted only because the file is a
+// _test.go (in_test).
+func TestSweptMatrix_DirtyTestFileEmitsBitmask(t *testing.T) {
+	fs := extractFixture(t, "dirty/internal/cells/plan/plan_test.go")
+	var sweeps []fact
+	for _, f := range fs {
+		if f.Fact == "test_sweep" {
+			sweeps = append(sweeps, f)
+		}
+	}
+	if len(sweeps) != 1 {
+		t.Fatalf("plan_test.go emits one test_sweep (bitmask), got %+v", sweeps)
+	}
+	if sweeps[0].Kind != "bitmask" {
+		t.Errorf("kind = %q, want bitmask", sweeps[0].Kind)
+	}
+	if sweeps[0].Detail == "" || !strings.Contains(sweeps[0].Detail, "<<") {
+		t.Errorf("detail = %q, want the rendered bit-mask bound", sweeps[0].Detail)
+	}
+}
+
+// A declared matrix (a table + one range loop) emits nothing, and a
+// bit-mask loop OUTSIDE a _test.go file never fires (test context only).
+func TestSweptMatrix_DeclaredAndNonTestAreSilent(t *testing.T) {
+	declared := []byte("package plan\n\n" +
+		"func table() {\n" +
+		"	cases := []struct{ in string }{{\"a\"}, {\"b\"}}\n" +
+		"	for _, tc := range cases { _ = tc }\n" +
+		"}\n")
+	for _, f := range extractSource("plan.go", declared).Facts {
+		if f.Fact == "test_sweep" {
+			t.Fatalf("a declared matrix never fires, got %+v", f)
+		}
+	}
+	nonTest := []byte("package plan\n\n" +
+		"func gen() {\n" +
+		"	for mask := 0; mask < 1<<3; mask++ { _ = mask }\n" +
+		"}\n")
+	for _, f := range extractSource("plan.go", nonTest).Facts {
+		if f.Fact == "test_sweep" {
+			t.Fatalf("a bit-mask outside a _test.go file never fires, got %+v", f)
 		}
 	}
 }

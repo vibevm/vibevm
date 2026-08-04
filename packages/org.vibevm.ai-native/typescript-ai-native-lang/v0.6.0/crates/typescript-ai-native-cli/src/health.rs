@@ -87,6 +87,9 @@ pub fn run_health(root: &Path, out_rel: &str) -> Result<()> {
                 // An invariant-marker comment feeds
                 // invariant-comment-position, not a health census metric.
                 typescript_ai_native_extract_bridge::RawFact::InvariantComment { .. } => {}
+                // A swept test matrix (R-060) lives in test context and
+                // feeds declared-test-matrices, not a domain census metric.
+                typescript_ai_native_extract_bridge::RawFact::TestSweep { .. } => {}
             }
         }
     }

@@ -20,7 +20,7 @@ fn dirty_fixture_yields_the_ten_findings_then_freeze_ratchets_them() {
     let root = fixture("dirty");
     let baseline = "target/conform/test-baseline.json";
 
-    // Fresh gate: fourteen findings on the dirty tree. On plan.go — 8
+    // Fresh gate: fifteen findings on the dirty tree. On plan.go — 8
     // `go-unsafe-in-domain` census sites (blank_import, init_decl,
     // 2×ambient_call, naked_go, 2×error_string_match, reasonless_suppression;
     // the deviation-covered ambient in Sanctioned is honoured) + 2
@@ -31,13 +31,15 @@ fn dirty_fixture_yields_the_ten_findings_then_freeze_ratchets_them() {
     // `cell-name-is-computed` (B-038: `Wrongplanner` is not its computed
     // name `BatchPlanner`) — plus t_skip in the sibling test file, plus 1
     // `invariant-comment-position` on src/invariant.go (a `// INVARIANT:`
-    // comment buried in the middle third of the 150-line exhibit file).
+    // comment buried in the middle third of the 150-line exhibit file),
+    // plus 1 `declared-test-matrices` (R-060: TestSweptMatrix sweeps a
+    // `1 << 3` bit-mask in plan_test.go).
     // Non-zero.
     let _ = std::fs::remove_file(root.join(baseline));
     let err = go_ai_native_conform::run_check(&root, baseline, None)
         .expect_err("dirty tree must fail the gate");
     assert!(
-        err.to_string().contains("14 new finding(s)"),
+        err.to_string().contains("15 new finding(s)"),
         "unexpected: {err}"
     );
 

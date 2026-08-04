@@ -120,6 +120,20 @@ interface InvariantCommentFact {
   line: number;
 }
 
+/**
+ * A swept test matrix (R-060): `kind` is `"bitmask"` (a `1 << n` / `2 ** n` /
+ * `Math.pow(2, n)` loop bound) or `"nested-loops"` (a ≥3-deep Cartesian
+ * nest); `detail` carries the bound text or the depth. Emitted only in test
+ * files (`*.test.ts` / `*.spec.ts` / `__tests__`). Consumed by
+ * `declared-test-matrices`.
+ */
+interface TestSweepFact {
+  fact: "test_sweep";
+  kind: "bitmask" | "nested-loops";
+  detail: string;
+  line: number;
+}
+
 type ExtractFact =
   | UnsafeFact
   | ImportFact
@@ -127,7 +141,8 @@ type ExtractFact =
   | MetricsFact
   | EnvReadFact
   | TsSeamErrorFact
-  | InvariantCommentFact;
+  | InvariantCommentFact
+  | TestSweepFact;
 
 interface Marker {
   tag: string;
@@ -220,6 +235,11 @@ interface TsModule {
     MultiLineCommentTrivia: number;
     PropertyAccessExpression: number;
     ElementAccessExpression: number;
+    ForStatement: number;
+    ForOfStatement: number;
+    ForInStatement: number;
+    WhileStatement: number;
+    DoStatement: number;
   };
   createSourceFile(
     name: string,
@@ -544,6 +564,55 @@ function containsSpecUri(ts: TsModule, node: Node): boolean {
   return found;
 }
 
+/**
+ * Classifies a loop node for the swept-matrix census (R-060), or returns
+ * `null` for a non-loop. `"for"` is the C-style `for` — the only kind that
+ * carries a numeric bound (the bit-mask signal); `for...of`/`for...in` are
+ * `"range"` (they iterate a collection, no numeric bound), and `while`/`do`
+ * are `"loop"`. All three count toward the Cartesian-nest depth.
+ */
+function loopKind(ts: TsModule, node: Node): "for" | "range" | "loop" | null {
+  if (node.kind === ts.SyntaxKind.ForStatement) return "for";
+  if (
+    node.kind === ts.SyntaxKind.ForOfStatement ||
+    node.kind === ts.SyntaxKind.ForInStatement
+  ) {
+    return "range";
+  }
+  if (
+    node.kind === ts.SyntaxKind.WhileStatement ||
+    node.kind === ts.SyntaxKind.DoStatement
+  ) {
+    return "loop";
+  }
+  return null;
+}
+
+/**
+ * The `2^n` bit-mask signal (R-060) for a C-style `for`: does its
+ * initializer / condition / incrementor carry a `1 << n` shift, a `2 ** n`
+ * exponentiation, or a `Math.pow(2, …)` call? Returns the bound's text when
+ * it does, else `null`. Each pattern anchors on a digit NOT preceded by a
+ * word char or dot, so `buf1 << n` or `a2 ** n` (identifiers ending in a
+ * digit) never false-fire.
+ */
+function bitmaskBoundOfFor(sf: SourceFile, node: Node): string | null {
+  const forStmt = node as unknown as {
+    initializer?: Node;
+    condition?: Node;
+    incrementor?: Node;
+  };
+  const parts = [forStmt.initializer, forStmt.condition, forStmt.incrementor];
+  for (const part of parts) {
+    if (part === undefined) continue;
+    const text = part.getText(sf);
+    if (/(^|[^\w.])1\s*<</u.test(text)) return text.trim();
+    if (/(^|[^\w.])2\s*\*\*/u.test(text)) return text.trim();
+    if (/Math\.pow\s*\(\s*2\b/u.test(text)) return text.trim();
+  }
+  return null;
+}
+
 function extractFile(ts: TsModule, absPath: string, relPath: string): FileRecord {
   const text = readFileSync(absPath, "utf8");
   const record: FileRecord = {
@@ -570,7 +639,7 @@ function extractFile(ts: TsModule, absPath: string, relPath: string): FileRecord
     return record;
   }
 
-  const visit = (node: Node): void => {
+  const visit = (node: Node, loopDepth: number): void => {
     const envSource = envReadSource(ts, sf, node);
     if (envSource !== null) {
       record.facts.push({
@@ -667,10 +736,40 @@ function extractFile(ts: TsModule, absPath: string, relPath: string): FileRecord
         if (marker !== null) record.markers.push(marker);
       }
     }
-    ts.forEachChild(node, visit);
+    // Swept test matrices (R-060): a loop node in a test file. A C-style
+    // `for` with a `2^n` bound is a bit-mask sweep; any loop kind counts
+    // toward the Cartesian-nest depth. Declared matrices (a table iterated
+    // once) emit nothing.
+    const loop = loopKind(ts, node);
+    if (loop !== null && record.in_test) {
+      const childDepth = loopDepth + 1;
+      const line = lineOf(sf, node.getStart(sf));
+      if (loop === "for") {
+        const bound = bitmaskBoundOfFor(sf, node);
+        if (bound !== null) {
+          record.facts.push({
+            fact: "test_sweep",
+            kind: "bitmask",
+            line,
+            detail: bound,
+          });
+        }
+      }
+      if (childDepth >= 3) {
+        record.facts.push({
+          fact: "test_sweep",
+          kind: "nested-loops",
+          line,
+          detail: String(childDepth),
+        });
+      }
+      ts.forEachChild(node, (child) => visit(child, childDepth));
+      return;
+    }
+    ts.forEachChild(node, (child) => visit(child, loopDepth));
   };
   try {
-    visit(sf);
+    visit(sf, 0);
   } catch {
     record.degraded = true;
     record.facts = record.facts.filter((f) => f.fact === "file_metrics");
