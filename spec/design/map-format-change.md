@@ -87,6 +87,24 @@ and `fingerprint`, a string. Both are produced by the **scanner**, not by the
 index builder — the index composes scanners through a trait and the neutral core
 never learns a language. @spec/done
 
+##b019a-optional **Both fields are OPTIONAL, and that is a parity decision
+rather than a convenience.** Three scanners fill this struct and only one of
+them can fill these fields today; a required field would force the other two to
+invent a value, and an invented `end_line` is a lie the map would then serve to
+whoever asks for a fragment. Absent means *this scanner does not produce it* —
+visible in the data, with its reason recorded beside the scanner. It also keeps
+a schema-2 index parseable, so the thirteen indexes in the tree regenerate on
+their own producers' schedule instead of all at once. @spec/done
+
+##b019a-ripple **The ripple this carries, named because Rust makes it
+mandatory.** Adding a field to a struct breaks every literal construction of it,
+optional or not — the compiler finds them only under `--all-targets`. The three
+scanners construct `CodeItem` literally, and two of them live in other packages
+compiling against **vendored** copies of the engine, so they do not break until
+the vendor sync runs. The landing is therefore two slices with the sync between
+them, not one: engine and the Rust scanner first, the Go and TypeScript scan
+crates second. @impl/plan
+
 ##b019a-self-describing **The fingerprint string is self-describing, and this
 is the load-bearing decision of the whole section.** It is written
 `<scheme>:<hex>` — the scheme name travels *inside the value*, exactly as the
