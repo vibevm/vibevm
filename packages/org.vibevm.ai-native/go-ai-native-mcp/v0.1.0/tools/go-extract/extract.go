@@ -52,6 +52,13 @@ type fact struct {
 	Symbol        string `json:"symbol,omitempty"`
 	IsExported    *bool  `json:"is_exported,omitempty"`
 	HasDocExample *bool  `json:"has_doc_example,omitempty"`
+	// item: the verbatim `seam=… variant=…` args of a `//spec:cell`
+	// directive in the item's doc comment — the Go cell manifest, carried
+	// raw so the bridge renders it once into the engine's
+	// `cell(seam = "…", variant = "…")` attr and one cell-name rule reads
+	// Rust `#[cell]` and Go `//spec:cell` identically. Absent on items
+	// whose doc comment carries no `//spec:cell`.
+	Attrs []string `json:"attrs,omitempty"`
 	// item kind=type only: the underlying type's rendering when it is
 	// a defined type over a primitive (`type AccountID string` →
 	// "string") — the Go brand signal the oracle's scope answers use.
@@ -219,6 +226,11 @@ type extractor struct {
 	inTest  bool
 	facts   []fact
 	markers []marker
+	// cellAttrs maps an owning item name to the raw `//spec:cell …` args
+	// its doc comment carries, so the item fact speaks the manifest the
+	// cell-name rule reads. Populated by collectMarkers (via docOwners);
+	// read by funcItem / genItems.
+	cellAttrs map[string]string
 	// deviations: line ranges covered by a reasoned //spec:deviates,
 	// so census sites inside them carry the testimony.
 	deviations []devRange
@@ -231,6 +243,16 @@ type devRange struct {
 
 func (ex *extractor) line(pos token.Pos) uint32 {
 	return uint32(ex.fset.Position(pos).Line) // #nosec: fits u32
+}
+
+// attrsFor returns the cell-manifest attrs for an item name — its
+// `//spec:cell …` directive's raw args as a one-element slice, or nil
+// when the item carries no such directive (so the JSON field omits).
+func (ex *extractor) attrsFor(name string) []string {
+	if args, ok := ex.cellAttrs[name]; ok {
+		return []string{args}
+	}
+	return nil
 }
 
 func (ex *extractor) run() {
@@ -364,8 +386,23 @@ func (ex *extractor) collectMarkers(docOwners map[*ast.CommentGroup]string) {
 				continue
 			}
 			tag, args, _ := strings.Cut(rest, " ")
+			// //spec:cell is the cell manifest (GUIDE-AI-NATIVE-GO §3):
+			// it rides its owning item's attrs, not the marker stream, so
+			// the one cell-name rule reads Rust #[cell] and Go //spec:cell
+			// through the same engine attr. Only an owned directive
+			// attaches; the raw `key=value …` text is carried verbatim and
+			// the bridge renders it into rust notation.
+			if tag == "cell" {
+				if hasOwner {
+					if ex.cellAttrs == nil {
+						ex.cellAttrs = map[string]string{}
+					}
+					ex.cellAttrs[owner] = args
+				}
+				continue
+			}
 			if !markerTags[tag] {
-				continue // //spec:cell and future tags: not markers yet
+				continue // future tags: not markers yet
 			}
 			m := marker{Tag: tag, Line: ex.line(c.Pos())}
 			if hasOwner {
@@ -445,6 +482,7 @@ func (ex *extractor) funcItem(d *ast.FuncDecl) {
 		// Example coverage is package-level (Example funcs live in
 		// sibling _test.go files); the collector joins them by name.
 		HasDocExample: &noExample,
+		Attrs:         ex.attrsFor(d.Name.Name),
 	})
 	if d.Name.Name == "init" && d.Recv == nil {
 		ex.unsafeAt("init_decl", ex.line(d.Pos()))
@@ -462,6 +500,7 @@ func (ex *extractor) genItems(d *ast.GenDecl, errOwners map[string]*ast.FuncDecl
 				Line: ex.line(s.Pos()), IsExported: &exported,
 				HasDocExample: &noExample,
 				Underlying:    primitiveUnderlying(s),
+				Attrs:         ex.attrsFor(s.Name.Name),
 			})
 			ex.seamErrorShape(s, errOwners)
 			ex.seamErrorMessage(s, errOwners)
@@ -481,6 +520,7 @@ func (ex *extractor) genItems(d *ast.GenDecl, errOwners map[string]*ast.FuncDecl
 					Fact: "item", Kind: kind, Symbol: name.Name,
 					Line: ex.line(name.Pos()), IsExported: &exported,
 					HasDocExample: &noExample,
+					Attrs:         ex.attrsFor(name.Name),
 				})
 			}
 		}

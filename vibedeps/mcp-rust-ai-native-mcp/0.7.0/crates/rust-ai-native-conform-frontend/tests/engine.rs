@@ -23,12 +23,15 @@ fn mini_workspace(repo: &Path) {
     seed(
         repo,
         "crates/alpha/src/cell_x.rs",
-        "use crate::cell_y::Y;\n\n#[cell(seam = \"S\", variant = \"x\")]\npub struct X;\n",
+        // Cell names are computed: seam `S`, variant `x` → `XS`; the
+        // sibling import names the `YS` cell in cell_y. cell-name-is-
+        // computed (B-038).
+        "use crate::cell_y::YS;\n\n#[cell(seam = \"S\", variant = \"x\")]\npub struct XS;\n",
     );
     seed(
         repo,
         "crates/alpha/src/cell_y.rs",
-        "#[cell(seam = \"S\", variant = \"y\")]\npub struct Y;\n",
+        "#[cell(seam = \"S\", variant = \"y\")]\npub struct YS;\n",
     );
     seed(
         repo,
@@ -74,7 +77,7 @@ fn incremental_one_file_diff_reextracts_one_file() {
     seed(
         repo,
         "crates/alpha/src/cell_y.rs",
-        "#[cell(seam = \"S\", variant = \"y\")]\npub struct Y;\npub struct Extra;\n",
+        "#[cell(seam = \"S\", variant = \"y\")]\npub struct YS;\npub struct Extra;\n",
     );
     let mut touched = ExtractionLog::default();
     store

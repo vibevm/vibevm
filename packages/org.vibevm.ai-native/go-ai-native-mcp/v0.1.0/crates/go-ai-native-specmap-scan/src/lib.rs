@@ -270,6 +270,7 @@ mod tests {
                 is_exported: true,
                 has_doc_example: false,
                 underlying: None,
+                attrs: Vec::new(),
             })
             .collect();
         FileRecord {

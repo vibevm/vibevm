@@ -87,6 +87,7 @@ fn brands_are_exported_defined_types_over_primitives() {
                 is_exported: true,
                 has_doc_example: false,
                 underlying: Some("string".into()),
+                attrs: Vec::new(),
             },
             RawFact::Item {
                 kind: "type".into(),
@@ -95,6 +96,7 @@ fn brands_are_exported_defined_types_over_primitives() {
                 is_exported: false,
                 has_doc_example: false,
                 underlying: Some("int".into()),
+                attrs: Vec::new(),
             },
             RawFact::Item {
                 kind: "type".into(),
@@ -103,6 +105,7 @@ fn brands_are_exported_defined_types_over_primitives() {
                 is_exported: true,
                 has_doc_example: false,
                 underlying: None,
+                attrs: Vec::new(),
             },
         ],
         markers: vec![],

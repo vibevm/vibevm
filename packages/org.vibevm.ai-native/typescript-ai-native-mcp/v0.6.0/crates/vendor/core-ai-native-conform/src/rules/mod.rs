@@ -1,8 +1,10 @@
 //! The standing conform rules, one file per family: structure rules
 //! (R-001 flag-sites, R-002 cell isolation, the Class-D
 //! cell-has-oracle net), diagnostics rules (the Class-G seam-doctest
-//! gate and the two Class-F REQ-citation halves), and budget-and-bans
-//! rules (unsafe-gate, file-length, no-unwrap-in-domain). The Class-F
+//! gate and the two Class-F REQ-citation halves), naming rules
+//! (cell-name-is-computed, the B-038 computed-name convention), and
+//! budget-and-bans rules (unsafe-gate, file-length, no-unwrap-in-domain).
+//! The Class-F
 //! message grammar (`req_message` / `matches_req_grammar`) and the
 //! shared `#[cell]` discovery helper live here; every rule type keeps
 //! its public path `core_ai_native_conform::rules::<RuleType>` via the
@@ -16,6 +18,7 @@ mod budget;
 mod diagnostics;
 mod go;
 mod go_parity;
+mod naming;
 mod position;
 mod structure;
 mod typescript;
@@ -25,6 +28,7 @@ pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};
 pub use diagnostics::{ErrorEnumCitesReq, ErrorMessageCitesReq, PubDoctest, SeamHasDoctest};
 pub use go::{GoCellIsolation, GoUnsafeInDomain};
 pub use go_parity::{GoConformanceAssertion, GoSeamErrorCitesReq};
+pub use naming::CellNameIsComputed;
 pub use position::InvariantCommentPosition;
 pub use structure::{CellHasOracle, CellIsolation, FlagSites};
 pub use typescript::{TsCellIsolation, TsFlagSites, TsUnsafeInDomain};

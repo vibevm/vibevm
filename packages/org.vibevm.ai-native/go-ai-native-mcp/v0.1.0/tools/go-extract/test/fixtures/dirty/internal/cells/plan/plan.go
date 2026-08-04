@@ -21,6 +21,13 @@ type PlanError struct {
 
 func (e *PlanError) Error() string { return fmt.Sprintf("plan: %d", e.Code) }
 
+// Wrongplanner is the deliberately mis-named cell — its manifest computes
+// `BatchPlanner` (Pascal("batch") + seam "Planner"), so this name is the
+// red exhibit for cell-name-is-computed (B-038).
+//
+//spec:cell seam=Planner variant=batch
+type Wrongplanner struct{}
+
 func init() { // init_decl
 	fmt.Println("registering")
 }

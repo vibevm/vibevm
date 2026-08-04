@@ -11,7 +11,7 @@
       "crate_name": "go",
       "file": "internal/cells/greet/greet.go",
       "item_kind": "decl",
-      "line": 43,
+      "line": 50,
       "symbol": "internal/cells/greet/greet.go::New"
     }
   ],
@@ -28,7 +28,7 @@
     {
       "file": "internal/cells/greet/greet.go",
       "from_symbol": "internal/cells/greet/greet.go::New",
-      "line": 43,
+      "line": 50,
       "provenance": "authored",
       "uri": "spec://demo/PROP-001#req-greet",
       "verb": "implements",

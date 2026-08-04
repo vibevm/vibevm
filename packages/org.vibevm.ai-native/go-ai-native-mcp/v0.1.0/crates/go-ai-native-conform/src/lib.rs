@@ -68,6 +68,12 @@ pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
             &config.go.gated,
         )));
     }
+    // B-038: a cell's name is computed from its manifest — Pascal(variant)
+    // + the seam as written. One engine rule reads Rust #[cell] and Go
+    // //spec:cell (the bridge renders the directive into the same attr);
+    // unconditional, like GoSeamErrorCitesReq, since a cell manifest cites
+    // its REQ regardless of the cell layout.
+    out.push(Box::new(rules::CellNameIsComputed));
     out.push(Box::new(rules::FileLength {
         max_lines: config.max_file_lines,
     }));

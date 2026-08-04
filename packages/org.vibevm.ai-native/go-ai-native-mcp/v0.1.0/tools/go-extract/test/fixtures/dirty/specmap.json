@@ -11,14 +11,14 @@
       "crate_name": "go",
       "file": "internal/cells/plan/plan.go",
       "item_kind": "decl",
-      "line": 49,
+      "line": 56,
       "symbol": "internal/cells/plan/plan.go::Sanctioned"
     },
     {
       "crate_name": "go",
       "file": "internal/cells/plan/plan.go",
       "item_kind": "decl",
-      "line": 30,
+      "line": 37,
       "symbol": "internal/cells/plan/plan.go::Solve"
     }
   ],
@@ -35,7 +35,7 @@
     {
       "file": "internal/cells/plan/plan.go",
       "from_symbol": "internal/cells/plan/plan.go::Sanctioned",
-      "line": 49,
+      "line": 56,
       "provenance": "authored",
       "uri": "spec://demo/PROP-001#cells",
       "verb": "deviates",
@@ -45,7 +45,7 @@
     {
       "file": "internal/cells/plan/plan.go",
       "from_symbol": "internal/cells/plan/plan.go::Solve",
-      "line": 30,
+      "line": 37,
       "provenance": "authored",
       "uri": "spec://demo/PROP-001#req-solve",
       "verb": "implements",

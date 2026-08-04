@@ -75,6 +75,7 @@ pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
         gated_crates: config.rust.gated.clone(),
     }));
     out.push(Box::new(rules::CellHasOracle));
+    out.push(Box::new(rules::CellNameIsComputed));
     out.push(Box::new(rules::ErrorMessageCitesReq {
         gated_crates: config.rust.gated.clone(),
     }));
