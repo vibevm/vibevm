@@ -6,7 +6,7 @@
 //! replacement of any cell that diverges on these merges red here.
 
 use vibe_publish::{
-    DirectGitCreator, GitHubCreator, GitVerseCreator, PublishError, RepoCreator, Token,
+    DirectRepoCreator, GithubRepoCreator, GitverseRepoCreator, PublishError, RepoCreator, Token,
 };
 
 fn token() -> Token {
@@ -19,8 +19,9 @@ fn token() -> Token {
 /// `ScopeViolation` — the PROP-000 §20 scope-discipline guard.
 #[test]
 fn api_adapters_share_the_scope_guard_contract() {
-    let github = GitHubCreator::new(token(), "vibespecs").expect("github adapter constructs");
-    let gitverse = GitVerseCreator::new(token(), "vibespecs").expect("gitverse adapter constructs");
+    let github = GithubRepoCreator::new(token(), "vibespecs").expect("github adapter constructs");
+    let gitverse =
+        GitverseRepoCreator::new(token(), "vibespecs").expect("gitverse adapter constructs");
 
     let cases: [(&dyn RepoCreator, &str); 2] =
         [(&github, "github.com"), (&gitverse, "gitverse.ru")];
@@ -50,7 +51,7 @@ fn api_adapters_share_the_scope_guard_contract() {
 /// short-circuits the whole create-repo dance on.
 #[test]
 fn direct_adapter_short_circuits_the_api_flow() {
-    let direct = DirectGitCreator::new("file:///tmp/local-bare.git");
+    let direct = DirectRepoCreator::new("file:///tmp/local-bare.git");
     let creator: &dyn RepoCreator = &direct;
 
     assert_eq!(

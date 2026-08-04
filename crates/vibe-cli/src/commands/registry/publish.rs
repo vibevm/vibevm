@@ -272,7 +272,7 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
 }
 
 /// Execute the no-API publish path. Builds the
-/// [`DirectGitCreator`](vibe_publish::DirectGitCreator) cell (in the
+/// [`DirectRepoCreator`](vibe_publish::DirectRepoCreator) cell (in the
 /// registry module, per R-001) for the supplied URL, threads it through
 /// the regular [`Publisher`] flow
 /// — which short-circuits at `direct_repo_url` — and renders the

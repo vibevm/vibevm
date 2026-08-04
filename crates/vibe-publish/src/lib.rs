@@ -4,8 +4,8 @@
 //!
 //! - [`RepoCreator`] — host-specific trait for "create a repo in this
 //!   org, check whether one exists, produce the URL to push to". Two
-//!   impls today: [`GitHubCreator`] (primary, drives the `vibespecs`
-//!   org migration); [`GitVerseCreator`] (retained for any future
+//!   impls today: [`GithubRepoCreator`] (primary, drives the `vibespecs`
+//!   org migration); [`GitverseRepoCreator`] (retained for any future
 //!   Gitea-shape host that fully supports the org-scoped POST). New
 //!   adapters land as one new `impl RepoCreator` per host.
 //! - [`Publisher`] — host-agnostic orchestrator. Reads manifest,
@@ -43,9 +43,9 @@ pub mod redirect_sync;
 pub mod token;
 
 pub use creator::{CreateOpts, RepoCreator, RepoInfo};
-pub use direct_git::DirectGitCreator;
-pub use github::GitHubCreator;
-pub use gitverse::GitVerseCreator;
+pub use direct_git::DirectRepoCreator;
+pub use github::GithubRepoCreator;
+pub use gitverse::GitverseRepoCreator;
 pub use orchestrator::{PublishConfig, PublishOutcome, Publisher};
 pub use post_hook::{HookConfig, HookError, HookReport, fire as fire_index_hook};
 pub use token::{Token, TokenSource, host_env_var, load_token, load_token_for_host};
@@ -313,11 +313,11 @@ pub fn creator_for_url(
     let expected_org = expected_org.into();
     let host_lower = host.to_ascii_lowercase();
     if host_lower == "github.com" || host_lower.ends_with(".github.com") {
-        let creator = GitHubCreator::new(token, expected_org)?;
+        let creator = GithubRepoCreator::new(token, expected_org)?;
         return Ok(Box::new(creator));
     }
     if host_lower == "gitverse.ru" || host_lower.ends_with(".gitverse.ru") {
-        let creator = GitVerseCreator::new(token, expected_org)?;
+        let creator = GitverseRepoCreator::new(token, expected_org)?;
         return Ok(Box::new(creator));
     }
     Err(PublishError::UnsupportedHost { host })
@@ -462,7 +462,7 @@ mod tests {
     #[test]
     fn validate_scope_refuses_other_org() {
         let token = Token::from_explicit("test-token-please-redact");
-        let creator = GitHubCreator::new(token, "vibespecs").unwrap();
+        let creator = GithubRepoCreator::new(token, "vibespecs").unwrap();
         let err = creator
             .validate_scope("not-vibespecs")
             .expect_err("scope guard should fire");

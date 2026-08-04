@@ -49,7 +49,7 @@ pub const DEFAULT_GITVERSE_HOST_NAME: &str = "gitverse.ru";
 const GITVERSE_ACCEPT: &str = "application/vnd.gitverse.object+json;version=1";
 
 #[specmark::cell(seam = "RepoCreator", variant = "gitverse")]
-pub struct GitVerseCreator {
+pub struct GitverseRepoCreator {
     api_base: String,
     host_name: String,
     /// Org this adapter is scoped to. Drives [`RepoCreator::expected_org`]
@@ -61,7 +61,7 @@ pub struct GitVerseCreator {
     client: reqwest::blocking::Client,
 }
 
-impl GitVerseCreator {
+impl GitverseRepoCreator {
     pub fn new(token: Token, expected_org: impl Into<String>) -> Result<Self, PublishError> {
         Self::with_endpoint(
             token,
@@ -84,7 +84,7 @@ impl GitVerseCreator {
                 host: host_name.to_string(),
                 message: format!("constructing HTTP client: {e}"),
             })?;
-        Ok(GitVerseCreator {
+        Ok(GitverseRepoCreator {
             api_base: api_base.trim_end_matches('/').to_string(),
             host_name: host_name.to_string(),
             expected_org: expected_org.into(),
@@ -123,7 +123,7 @@ struct RepoResponse {
     html_url: Option<String>,
 }
 
-impl RepoCreator for GitVerseCreator {
+impl RepoCreator for GitverseRepoCreator {
     fn host_name(&self) -> &str {
         &self.host_name
     }

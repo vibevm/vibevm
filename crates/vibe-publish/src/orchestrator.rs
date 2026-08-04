@@ -109,10 +109,10 @@ pub struct PublishOutcome {
 ///
 /// ```no_run
 /// use std::path::PathBuf;
-/// use vibe_publish::{DirectGitCreator, PublishConfig, Publisher};
+/// use vibe_publish::{DirectRepoCreator, PublishConfig, Publisher};
 ///
 /// // Operator-provisioned repo: push with local git credentials.
-/// let creator = DirectGitCreator::new("file:///tmp/registry/org.vibevm_wal.git");
+/// let creator = DirectRepoCreator::new("file:///tmp/registry/org.vibevm_wal.git");
 /// let publisher = Publisher::new(&creator);
 ///
 /// let mut config = PublishConfig::with_defaults(

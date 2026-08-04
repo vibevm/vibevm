@@ -55,8 +55,8 @@ pub struct CreateOpts {
 }
 
 /// Host-specific operations for the publish flow. One impl per
-/// supported git host. Today: [`GitHubCreator`] (primary) and
-/// [`GitVerseCreator`] (legacy / retained). Adapter pattern matches
+/// supported git host. Today: [`GithubRepoCreator`] (primary) and
+/// [`GitverseRepoCreator`] (legacy / retained). Adapter pattern matches
 /// [PROP-002 §2.10](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#publish)
 /// — adding Gitea / Forgejo / GitLab is one new `impl RepoCreator`,
 /// no consumer-side changes.
@@ -171,7 +171,7 @@ pub trait RepoCreator {
     /// credentials". [`Publisher::publish`] short-circuits the whole
     /// org-extraction + repo_exists + create_repo dance when this
     /// returns `Some`. Default `None` means the regular host-adapter
-    /// flow (token, API, scope-guard) applies. See [`crate::DirectGitCreator`].
+    /// flow (token, API, scope-guard) applies. See [`crate::DirectRepoCreator`].
     fn direct_repo_url(&self) -> Option<&str> {
         None
     }

@@ -17,7 +17,7 @@ specmark::scope!(
 
 use std::path::PathBuf;
 
-use vibe_publish::DirectGitCreator;
+use vibe_publish::DirectRepoCreator;
 use vibe_registry::{LocalRegistry, MultiRegistryResolver, RegistryError};
 use vibe_resolver::sat::SatDepSolver;
 use vibe_resolver::{
@@ -177,8 +177,8 @@ pub fn local_registry(root: PathBuf) -> Result<LocalRegistry, RegistryError> {
 /// by `creator_for_url`; the direct adapter is the one the CLI builds
 /// from an explicit flag, so its construction lives here with the other
 /// cell-selection sites and the publish command threads the instance in.
-pub fn direct_git_creator(repo_url: String) -> DirectGitCreator {
-    DirectGitCreator::new(repo_url)
+pub fn direct_git_creator(repo_url: String) -> DirectRepoCreator {
+    DirectRepoCreator::new(repo_url)
 }
 
 /// Construct the selected `DepSolver` cell over the selected

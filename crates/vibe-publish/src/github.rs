@@ -65,7 +65,7 @@ fn user_agent() -> String {
 }
 
 #[specmark::cell(seam = "RepoCreator", variant = "github")]
-pub struct GitHubCreator {
+pub struct GithubRepoCreator {
     api_base: String,
     host_name: String,
     /// Org this adapter is scoped to. See [`RepoCreator::expected_org`].
@@ -76,7 +76,7 @@ pub struct GitHubCreator {
     client: reqwest::blocking::Client,
 }
 
-impl GitHubCreator {
+impl GithubRepoCreator {
     pub fn new(token: Token, expected_org: impl Into<String>) -> Result<Self, PublishError> {
         Self::with_endpoint(
             token,
@@ -99,7 +99,7 @@ impl GitHubCreator {
                 host: host_name.to_string(),
                 message: format!("constructing HTTP client: {e}"),
             })?;
-        Ok(GitHubCreator {
+        Ok(GithubRepoCreator {
             api_base: api_base.trim_end_matches('/').to_string(),
             host_name: host_name.to_string(),
             expected_org: expected_org.into(),
@@ -144,7 +144,7 @@ struct RepoResponse {
     html_url: Option<String>,
 }
 
-impl RepoCreator for GitHubCreator {
+impl RepoCreator for GithubRepoCreator {
     fn host_name(&self) -> &str {
         &self.host_name
     }
@@ -312,7 +312,7 @@ mod tests {
     #[test]
     fn push_url_embeds_token_for_https() {
         let token = Token::from_explicit("test-token-please-redact");
-        let creator = GitHubCreator::new(token, "vibespecs").unwrap();
+        let creator = GithubRepoCreator::new(token, "vibespecs").unwrap();
         let url = creator.push_url("vibespecs", "flow-wal");
         assert_eq!(
             url,
@@ -324,7 +324,7 @@ mod tests {
     fn push_url_does_not_appear_in_creator_debug() {
         // Constructing a creator and calling Debug on it must never
         // print the token, even though `push_url` reads it. (We don't
-        // derive Debug on GitHubCreator; this test verifies that
+        // derive Debug on GithubRepoCreator; this test verifies that
         // Token redaction holds via the wrapped Token.)
         let token = Token::from_explicit("super-secret-do-not-leak");
         let dbg = format!("{token:?}");
@@ -335,14 +335,14 @@ mod tests {
     #[test]
     fn expected_org_is_set_at_construction() {
         let token = Token::from_explicit("ignored");
-        let creator = GitHubCreator::new(token, "my-org").unwrap();
+        let creator = GithubRepoCreator::new(token, "my-org").unwrap();
         assert_eq!(creator.expected_org(), Some("my-org"));
     }
 
     #[test]
     fn validate_scope_passes_for_matching_org() {
         let token = Token::from_explicit("ignored");
-        let creator = GitHubCreator::new(token, "vibespecs").unwrap();
+        let creator = GithubRepoCreator::new(token, "vibespecs").unwrap();
         assert!(creator.validate_scope("vibespecs").is_ok());
     }
 
@@ -351,7 +351,7 @@ mod tests {
         // A token with broad scopes could in principle target a user
         // namespace; the adapter's scope guard refuses.
         let token = Token::from_explicit("ignored");
-        let creator = GitHubCreator::new(token, "vibespecs").unwrap();
+        let creator = GithubRepoCreator::new(token, "vibespecs").unwrap();
         let err = creator
             .validate_scope("some-other-user")
             .expect_err("scope guard must fire");
@@ -361,7 +361,7 @@ mod tests {
     #[test]
     fn host_name_is_github_com_by_default() {
         let token = Token::from_explicit("ignored");
-        let creator = GitHubCreator::new(token, "vibespecs").unwrap();
+        let creator = GithubRepoCreator::new(token, "vibespecs").unwrap();
         assert_eq!(creator.host_name(), "github.com");
     }
 }

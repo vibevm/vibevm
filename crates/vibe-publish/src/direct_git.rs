@@ -7,7 +7,7 @@
 //! tag-and-push dance against it.
 //!
 //! Wiring: the consumer (CLI) checks for a non-empty `--repo-url`,
-//! constructs a [`DirectGitCreator`] with that URL, and feeds it into
+//! constructs a [`DirectRepoCreator`] with that URL, and feeds it into
 //! [`crate::Publisher`] in place of the regular host adapter. When
 //! [`Publisher::publish`](crate::Publisher::publish) sees
 //! [`RepoCreator::direct_repo_url`] return `Some`, it short-circuits
@@ -29,7 +29,7 @@ use crate::{CreateOpts, PublishError, RepoCreator, RepoInfo, extract_host_segmen
 /// no token, no API client, no org scoping. Every [`RepoCreator`]
 /// method except [`RepoCreator::push_url`] is a no-op or refusal.
 #[specmark::cell(seam = "RepoCreator", variant = "direct")]
-pub struct DirectGitCreator {
+pub struct DirectRepoCreator {
     /// Repo URL the operator supplied. Used verbatim as the push URL
     /// — vibevm never rewrites or augments it.
     repo_url: String,
@@ -40,14 +40,14 @@ pub struct DirectGitCreator {
     host_name: String,
 }
 
-impl DirectGitCreator {
+impl DirectRepoCreator {
     /// Build a creator for the given URL. The URL is used as-is at
     /// push time; vibevm does not inspect, normalise, or canonicalise
     /// it. A trailing `/` does no harm — git handles both forms.
     pub fn new(repo_url: impl Into<String>) -> Self {
         let repo_url = repo_url.into();
         let host_name = extract_host_segment(&repo_url).unwrap_or_else(|_| "git".to_string());
-        DirectGitCreator {
+        DirectRepoCreator {
             repo_url,
             host_name,
         }
@@ -60,7 +60,7 @@ impl DirectGitCreator {
     }
 }
 
-impl RepoCreator for DirectGitCreator {
+impl RepoCreator for DirectRepoCreator {
     fn host_name(&self) -> &str {
         &self.host_name
     }
@@ -98,7 +98,7 @@ impl RepoCreator for DirectGitCreator {
         // Publisher that ignored `direct_repo_url`); raise a clear
         // error so the bug is loud.
         Err(PublishError::Git(format!(
-            "internal error: DirectGitCreator::create_repo invoked for `{}` — \
+            "internal error: DirectRepoCreator::create_repo invoked for `{}` — \
              direct-push adapter does not provision repositories. The publish \
              pipeline should have short-circuited at `direct_repo_url`.",
             self.repo_url
@@ -123,13 +123,13 @@ mod tests {
 
     #[test]
     fn host_name_for_https_url() {
-        let c = DirectGitCreator::new("https://example.org/foo/bar.git");
+        let c = DirectRepoCreator::new("https://example.org/foo/bar.git");
         assert_eq!(c.host_name(), "example.org");
     }
 
     #[test]
     fn host_name_for_ssh_shorthand() {
-        let c = DirectGitCreator::new("git@example.org:foo/bar.git");
+        let c = DirectRepoCreator::new("git@example.org:foo/bar.git");
         assert_eq!(c.host_name(), "example.org");
     }
 
@@ -138,33 +138,33 @@ mod tests {
         // `file:///` URLs do not carry a meaningful host; fallback
         // is the literal `"git"`. Useful in tests that point at a
         // local bare repo for hermetic e2e coverage.
-        let c = DirectGitCreator::new("file:///tmp/origin.git");
+        let c = DirectRepoCreator::new("file:///tmp/origin.git");
         assert_eq!(c.host_name(), "git");
     }
 
     #[test]
     fn direct_repo_url_round_trips() {
-        let c = DirectGitCreator::new("ssh://git@example.org/foo.git");
+        let c = DirectRepoCreator::new("ssh://git@example.org/foo.git");
         assert_eq!(c.direct_repo_url(), Some("ssh://git@example.org/foo.git"));
         assert_eq!(c.repo_url(), "ssh://git@example.org/foo.git");
     }
 
     #[test]
     fn validate_scope_is_a_no_op() {
-        let c = DirectGitCreator::new("https://example.org/foo.git");
+        let c = DirectRepoCreator::new("https://example.org/foo.git");
         assert!(c.validate_scope("anything").is_ok());
         assert!(c.expected_org().is_none());
     }
 
     #[test]
     fn repo_exists_returns_true_unconditionally() {
-        let c = DirectGitCreator::new("https://example.org/foo.git");
+        let c = DirectRepoCreator::new("https://example.org/foo.git");
         assert!(c.repo_exists("ignored-org", "ignored-name").unwrap());
     }
 
     #[test]
     fn push_url_returns_configured_url_verbatim() {
-        let c = DirectGitCreator::new("https://example.org/foo/bar.git");
+        let c = DirectRepoCreator::new("https://example.org/foo/bar.git");
         // org and name args are ignored on this path.
         assert_eq!(
             c.push_url("ignored", "also-ignored"),
@@ -174,13 +174,13 @@ mod tests {
 
     #[test]
     fn create_repo_raises_clear_error() {
-        let c = DirectGitCreator::new("https://example.org/foo.git");
+        let c = DirectRepoCreator::new("https://example.org/foo.git");
         let err = c
             .create_repo("ignored", "name", &CreateOpts::default())
             .expect_err("create_repo must refuse on direct-push adapter");
         match err {
             PublishError::Git(msg) => {
-                assert!(msg.contains("DirectGitCreator"));
+                assert!(msg.contains("DirectRepoCreator"));
                 assert!(msg.contains("https://example.org/foo.git"));
             }
             other => panic!("expected PublishError::Git, got: {other:?}"),
