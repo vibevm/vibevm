@@ -19,12 +19,13 @@
 
 ## Rule cards
 
-*Authored as their checkers ship. The first two:*
+*Authored as their checkers ship. The first three:*
 
 | Card | Layer | Mechanism | Trigger mode | Transfer | Checker status |
 |---|---|---|---|---|---|
 | `rule-position-is-a-resource` | D+H | rule | gate | [E-mid] | shipped (`invariant-comment-position`, core-ai-native-conform) |
 | `rule-closed-vocabulary-naming` | B+H | rule | gate | [E-mid] | shipped (`cell-name-is-computed`, core-ai-native-conform; serves Go too; composition only — the closed-vocabulary / one-referent / no-synonym halves of R3-004 are unbuilt) |
+| `rule-declared-test-matrices` | E+H | rule | gate | [E-mid] | shipped (`declared-test-matrices`, core-ai-native-conform; serves Go and TypeScript too; vacuum on host — shown on fixtures) |
 
 ## Trigger-mode delivery summary
 - **inline** (per-edit, lint-detectable): C, F. Most frequent; cheapest.
@@ -49,7 +50,7 @@
 - `antipattern-god-file` (R3-013) — fan-in per file bounds swarm throughput.
 - `antipattern-lying-prose` (R2C-004/H4) — unverified prose claims near code.
 
-These are deferred not because they are unimportant but to honor minimal sufficiency: the nine scaffold cards are the runnable-capital core; rule/anti-pattern cards are added as their checkers ship — `rule-position-is-a-resource` and `rule-closed-vocabulary-naming` (above) are the first two, their `invariant-comment-position` and `cell-name-is-computed` checkers now live.
+These are deferred not because they are unimportant but to honor minimal sufficiency: the nine scaffold cards are the runnable-capital core; rule/anti-pattern cards are added as their checkers ship — `rule-position-is-a-resource`, `rule-closed-vocabulary-naming`, and `rule-declared-test-matrices` (above) are the first three, their `invariant-comment-position`, `cell-name-is-computed`, and `declared-test-matrices` checkers now live.
 
 ## Notes on status
 - **shipped** = the checker ships in this stack (rust-ai-native-conform / rust-ai-native) and runs on any consumer tree.

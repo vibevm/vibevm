@@ -171,10 +171,10 @@ pub fn run_health(root: &Path, out_rel: &str, extra_sections: &[(String, Value)]
                 // rust-syn facts, so they never appear here — their censuses
                 // belong to the TypeScript and Go health twins.
                 // InvariantComment is the `invariant-comment-position` input;
-                // the comment walk is not wired into rust-syn yet, and the
-                // rule is not mounted, so a middle-third census counter is
-                // deferred to the slice that lands both (it would add a JSON
-                // health field — a characterization coupling, not a ripple).
+                // TestSweep is the `declared-test-matrices` input (R-060). Both
+                // live in test context, not domain code, so neither carries a
+                // health counter here — a characterization coupling, not a
+                // ripple.
                 Fact::Import { .. }
                 | Fact::Ctor { .. }
                 | Fact::TsUnsafe { .. }
@@ -182,7 +182,8 @@ pub fn run_health(root: &Path, out_rel: &str, extra_sections: &[(String, Value)]
                 | Fact::TsSeamError { .. }
                 | Fact::GoUnsafe { .. }
                 | Fact::GoConformance { .. }
-                | Fact::InvariantComment { .. } => {}
+                | Fact::InvariantComment { .. }
+                | Fact::TestSweep { .. } => {}
             }
         }
     }

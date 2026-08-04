@@ -79,6 +79,11 @@ type fact struct {
 	// with (`INVARIANT:` / `WARNING:` / `PANICS:` / …), normalised to the
 	// config dictionary's spelling. Feeds invariant-comment-position.
 	Marker string `json:"marker,omitempty"`
+	// test_sweep: the `declared-test-matrices` signal (R-060). Kind is
+	// "bitmask" (a `1 << n` / `math.Pow(2, n)` loop bound) or
+	// "nested-loops" (a ≥3-deep Cartesian nest); Detail carries the bound
+	// text or the depth. Emitted only in `_test.go` files.
+	Detail string `json:"detail,omitempty"`
 }
 
 // marker is one //spec: directive (GUIDE-AI-NATIVE-GO §8).
@@ -201,7 +206,7 @@ func extractSource(rel string, src []byte) record {
 		rec.Degraded = true
 	}
 
-	ex := extractor{fset: fset, file: parsed, inTest: rec.InTest}
+	ex := extractor{fset: fset, file: parsed, inTest: rec.InTest, src: src}
 	ex.run()
 	rec.Facts = append(rec.Facts, ex.facts...)
 	rec.Markers = append(rec.Markers, ex.markers...)
@@ -224,6 +229,7 @@ type extractor struct {
 	fset    *token.FileSet
 	file    *ast.File
 	inTest  bool
+	src     []byte
 	facts   []fact
 	markers []marker
 	// cellAttrs maps an owning item name to the raw `//spec:cell …` args
@@ -296,6 +302,10 @@ func (ex *extractor) run() {
 	// Invariant-marker comments: the same Comments walk, emitting a
 	// fact per comment whose lead carries an invariant marker.
 	ex.invariantComments()
+
+	// Swept test matrices (R-060): a `1 << n`/`Pow(2, n)` bit-mask loop or
+	// a ≥3-deep Cartesian nest of loops, in `_test.go` files only.
+	ex.testSweeps()
 }
 
 // importedPackages maps the local name each import binds to its path.
@@ -919,4 +929,140 @@ func (ex *extractor) invariantComments() {
 			})
 		}
 	}
+}
+
+// testSweeps emits one test_sweep fact per swept test matrix (R-060) in a
+// `_test.go` file: a `1 << n` / `math.Pow(2, n)` bit-mask loop bound, or a
+// Cartesian product of three-or-more nested loops. Declared matrices — a
+// table of cases iterated once — are compliant and emit nothing. The walk
+// tracks loop-nesting depth with a visitor whose `Visit(nil)` leave-call
+// balances each enter, so sibling loops do not accumulate depth.
+func (ex *extractor) testSweeps() {
+	if !ex.inTest {
+		return
+	}
+	for _, decl := range ex.file.Decls {
+		ast.Walk(&loopCounter{ex: ex}, decl)
+	}
+}
+
+// loopCounter is the depth-tracking visitor for testSweeps. `stack` records,
+// per entered node, whether that node was a loop, so the `Visit(nil)` leave
+// decrements `depth` only for the loop levels it incremented.
+type loopCounter struct {
+	ex    *extractor
+	depth int
+	stack []bool
+}
+
+func (lc *loopCounter) Visit(node ast.Node) ast.Visitor {
+	if node == nil {
+		if n := len(lc.stack); n > 0 {
+			if lc.stack[n-1] {
+				lc.depth--
+			}
+			lc.stack = lc.stack[:n-1]
+		}
+		return nil
+	}
+	isLoop := isLoopNode(node)
+	lc.stack = append(lc.stack, isLoop)
+	if isLoop {
+		lc.depth++
+		lc.ex.emitSweep(node, lc.depth)
+	}
+	return lc
+}
+
+// isLoopNode reports whether `node` is a Go loop — `for` (ForStmt) or
+// `for ... range` (RangeStmt). Go has no separate while/do; both are `for`.
+func isLoopNode(node ast.Node) bool {
+	switch node.(type) {
+	case *ast.ForStmt, *ast.RangeStmt:
+		return true
+	}
+	return false
+}
+
+// emitSweep records the swept-matrix signals one loop carries: a bit-mask
+// bound (ForStmt only — a RangeStmt iterates a collection, no numeric bound),
+// and a Cartesian nest at depth ≥ 3. A loop exhibiting both emits both.
+func (ex *extractor) emitSweep(node ast.Node, depth int) {
+	line := ex.line(node.Pos())
+	if fs, ok := node.(*ast.ForStmt); ok {
+		if bound := bitmaskBound(ex.src, ex.fset, fs); bound != "" {
+			ex.facts = append(ex.facts, fact{
+				Fact:   "test_sweep",
+				Kind:   "bitmask",
+				Line:   line,
+				Detail: bound,
+			})
+		}
+	}
+	if depth >= 3 {
+		ex.facts = append(ex.facts, fact{
+			Fact:   "test_sweep",
+			Kind:   "nested-loops",
+			Line:   line,
+			Detail: strconv.Itoa(depth),
+		})
+	}
+}
+
+// bitmaskBound returns the rendered bound when a ForStmt's condition or
+// post-statement carries a `1 << n` shift (literal `1` left operand) or a
+// `math.Pow(2, …)` call — the two Go shapes of a `2^n` sweep. Structural,
+// not textual, so `buf1 << n` (an identifier ending in a digit) never
+// false-fires. Returns "" when the bound is not a power-of-two sweep.
+func bitmaskBound(src []byte, fset *token.FileSet, fs *ast.ForStmt) string {
+	var found string
+	seek := func(n ast.Node) bool {
+		if found != "" {
+			return false
+		}
+		if be, ok := n.(*ast.BinaryExpr); ok && be.Op == token.SHL {
+			if lit, ok := be.X.(*ast.BasicLit); ok && lit.Kind == token.INT && lit.Value == "1" {
+				found = sliceText(src, fset, be)
+				return false
+			}
+		}
+		if ce, ok := n.(*ast.CallExpr); ok {
+			if sel, ok := ce.Fun.(*ast.SelectorExpr); ok {
+				if x, ok := sel.X.(*ast.Ident); ok && x.Name == "math" && sel.Sel.Name == "Pow" {
+					if len(ce.Args) > 0 {
+						if lit, ok := ce.Args[0].(*ast.BasicLit); ok && lit.Kind == token.INT && lit.Value == "2" {
+							found = sliceText(src, fset, ce)
+							return false
+						}
+					}
+				}
+			}
+		}
+		return true
+	}
+	if fs.Cond != nil {
+		ast.Inspect(fs.Cond, seek)
+	}
+	if found == "" && fs.Init != nil {
+		ast.Inspect(fs.Init, seek)
+	}
+	if found == "" && fs.Post != nil {
+		ast.Inspect(fs.Post, seek)
+	}
+	return found
+}
+
+// sliceText returns the source-text slice a node spans, via the FileSet's
+// byte offsets. Used to carry the exact swept bound (`"1 << n"`) as the
+// fact's machine detail.
+func sliceText(src []byte, fset *token.FileSet, node ast.Node) string {
+	if node == nil {
+		return ""
+	}
+	lo := fset.Position(node.Pos()).Offset
+	hi := fset.Position(node.End()).Offset
+	if lo < 0 || hi < lo || hi > len(src) {
+		return ""
+	}
+	return string(src[lo:hi])
 }

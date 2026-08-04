@@ -61,7 +61,7 @@ const seamRecords = runExtract(SEAM);
 const seamByFile = new Map(seamRecords.map((r) => [r.file, r]));
 
 test("one protocol-1 record per source file, sorted", () => {
-  assert.equal(records.length, 5);
+  assert.equal(records.length, 6);
   assert.ok(records.every((r) => r.protocol === 1));
   assert.deepEqual(
     records.map((r) => r.file),
@@ -71,6 +71,7 @@ test("one protocol-1 record per source file, sorted", () => {
       "src/cells/parse/logic.ts",
       "src/invariant.ts",
       "src/rubble.ts",
+      "src/sweep.test.ts",
     ],
   );
 });
@@ -207,6 +208,16 @@ test("an invariant-marker comment surfaces as invariant_comment (R3-003)", () =>
   assert.equal(comments.length, 1, JSON.stringify(inv.facts));
   assert.equal(comments[0].marker, "INVARIANT:");
   assert.equal(comments[0].line, 75);
+});
+
+test("a 2^n bit-mask loop surfaces as test_sweep in a test file (R-060)", () => {
+  const sweep = byFile.get("src/sweep.test.ts");
+  assert.ok(sweep, JSON.stringify(records.map((r) => r.file)));
+  assert.equal(sweep.in_test, true);
+  const sweeps = sweep.facts.filter((f) => f.fact === "test_sweep");
+  assert.equal(sweeps.length, 1, JSON.stringify(sweep.facts));
+  assert.equal(sweeps[0].kind, "bitmask");
+  assert.ok((sweeps[0] as { detail?: string }).detail?.includes("<<"));
 });
 
 test("a syntactically hopeless file degrades to zero facts, not an error (B5)", () => {

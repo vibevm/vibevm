@@ -121,6 +121,15 @@ pub enum RawFact {
         marker: String,
         line: u32,
     },
+    /// A swept test matrix (R-060): `kind` is `"bitmask"` (a `1 << n` /
+    /// `math.Pow(2, n)` loop bound) or `"nested-loops"` (a ≥3-deep Cartesian
+    /// nest); `detail` carries the bound text or the depth. Emitted only in
+    /// `_test.go` files. Consumed by `declared-test-matrices`.
+    TestSweep {
+        kind: String,
+        line: u32,
+        detail: String,
+    },
 }
 
 /// One §8 `//spec:` directive marker. Unlike the TS twin this carries
@@ -327,6 +336,11 @@ pub fn conform_facts(record: &FileRecord) -> Vec<conform_core::Fact> {
                 marker: marker.clone(),
                 line: *line,
                 in_test: record.in_test,
+            },
+            RawFact::TestSweep { kind, line, detail } => Fact::TestSweep {
+                kind: kind.clone(),
+                line: *line,
+                detail: detail.clone(),
             },
         })
         .collect()

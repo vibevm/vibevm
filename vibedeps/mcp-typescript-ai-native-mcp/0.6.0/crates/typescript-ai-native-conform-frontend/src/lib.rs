@@ -101,7 +101,10 @@ impl Frontend for TsTscFrontend {
         //     is dropped (a block-local `unsafe` justification, not a file
         //     invariant), and the bare words gain a colon (`MUST:` ≠ bare
         //     `MUST`), so the cache must retire.
-        "3"
+        // v4: test_sweep facts — a swept test matrix (a `1 << n` / `2 ** n`
+        //     / `Math.pow(2, n)` bit-mask loop bound, or a ≥3-deep Cartesian
+        //     nest) in test files only, feeding declared-test-matrices.
+        "4"
     }
     fn warm(&self, pending_files: &[String]) {
         self.warm_batch(Some(pending_files));

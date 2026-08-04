@@ -81,6 +81,7 @@ pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
         markers: config.invariant_comment_markers.clone(),
         min_lines: config.invariant_comment_min_file_lines,
     }));
+    out.push(Box::new(rules::DeclaredTestMatrices));
     out
 }
 

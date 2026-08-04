@@ -13,6 +13,8 @@ use quote::ToTokens;
 use syn::spanned::Spanned;
 use syn::visit::Visit;
 
+mod sweep;
+
 /// The Rust T-syn [`Frontend`](conform_core::Frontend): parse a source
 /// string into conform facts in-process.
 ///
@@ -62,7 +64,10 @@ impl Frontend for RustFrontend {
         //     is dropped (a block-local `unsafe` justification, not a file
         //     invariant), and the bare words gain a colon (`MUST:` ≠ bare
         //     `MUST`), so the cache must retire.
-        "8"
+        // v9: TestSweep facts — a swept test matrix (a `1 << n` bit-mask
+        //     loop bound, or a ≥3-deep Cartesian nest of loops) in test
+        //     context only, feeding declared-test-matrices (R-060).
+        "9"
     }
 
     fn extract(&self, _file: &str, _crate_name: &str, module: &str, text: &str) -> Vec<Fact> {
@@ -77,6 +82,7 @@ impl Frontend for RustFrontend {
             test_depth: 0,
             deviating_depth: 0,
             test_ranges: Vec::new(),
+            loop_depth: 0,
         };
         v.visit_file(&ast);
         // Plain `//` line comments are dropped by syn::parse_file (only
@@ -102,7 +108,8 @@ impl Frontend for RustFrontend {
             | Fact::TsSeamError { line, .. }
             | Fact::GoUnsafe { line, .. }
             | Fact::GoConformance { line, .. }
-            | Fact::InvariantComment { line, .. } => *line,
+            | Fact::InvariantComment { line, .. }
+            | Fact::TestSweep { line, .. } => *line,
         });
         v.facts
     }
@@ -126,6 +133,11 @@ struct Extractor {
     /// the visit so the post-visit raw-text comment scan can stamp
     /// `in_test` on an invariant comment the AST never sees.
     test_ranges: Vec<(u32, u32)>,
+    /// Nesting depth of loops (`for`/`while`/`loop`) currently being
+    /// visited — nonzero while inside a loop. The declared-test-matrices
+    /// signal (R-060): a Cartesian product of ≥ 3 nested loops in test
+    /// context is a swept matrix.
+    loop_depth: u32,
 }
 
 /// `#[cfg(test)]` / `#[cfg(any(test, ...))]` — the same shape the
@@ -531,6 +543,37 @@ impl<'ast> Visit<'ast> for Extractor {
             in_deviation: self.deviating_depth > 0,
         });
         syn::visit::visit_expr_unsafe(self, node);
+    }
+
+    fn visit_expr_for_loop(&mut self, node: &'ast syn::ExprForLoop) {
+        self.enter_loop(line_of(node));
+        // A bit-mask bound is a `for`-loop signal only — `while`/`loop`
+        // have no iterable. The iterable `0..(1 << n)` carries the `2^n`
+        // sweep; a range with no power-of-two bound (a plain `0..len`) is
+        // not a swept matrix.
+        if self.test_depth > 0
+            && let Some(bound) = sweep::power_of_two_bound(&node.expr)
+        {
+            self.facts.push(Fact::TestSweep {
+                kind: "bitmask".into(),
+                line: line_of(node),
+                detail: bound,
+            });
+        }
+        syn::visit::visit_expr_for_loop(self, node);
+        self.loop_depth -= 1;
+    }
+
+    fn visit_expr_while(&mut self, node: &'ast syn::ExprWhile) {
+        self.enter_loop(line_of(node));
+        syn::visit::visit_expr_while(self, node);
+        self.loop_depth -= 1;
+    }
+
+    fn visit_expr_loop(&mut self, node: &'ast syn::ExprLoop) {
+        self.enter_loop(line_of(node));
+        syn::visit::visit_expr_loop(self, node);
+        self.loop_depth -= 1;
     }
 }
 
