@@ -200,6 +200,36 @@ fingerprint dropped, which leaks the shape of the contract and nothing about the
 code's layout. The second is implementable today and needs no signature
 extraction; it is the recommendation carried to the owner. @spec/work
 
+##b017-name-clash **The word `contract` is already taken, and by a neighbour —
+which is the hazard, not the coincidence.** The spec compiler's normal-package
+format splits a spec into a `contract` (the small exposed surface, the header)
+and a `source` (the heavy implementation, the translation unit), linked by
+`#source` and merged section by section. The privacy tier's middle value wears
+the same word for a *code-side* notion — «signatures without bodies» — inherited
+from the specmap design. Two different objects, one word, and similar enough
+that the substitution is not noticed on reading. Raised by the owner
+2026-08-04. @spec/done
+
+##b017-tier-from-the-split **The candidate the clash suggests: define the tier
+BY that split rather than beside it.** `contract` would mean *ship the contract
+documents, withhold the source documents* — and the map that travels with them
+carries the contract anchors and the edges among them and simply lacks the
+source-side ones. Nothing about signatures needs inventing, nothing new needs
+extracting, and the privacy boundary coincides with the boundary a package
+author already draws by hand instead of asking for a second one. The word stops
+being a clash and becomes one concept used twice. **Not decided — this is the
+recommendation carried to the owner's fork №5, and it supersedes the
+field-redaction shape sketched above.** @spec/work
+
+##b017-standing-on-a-demonstration **What that candidate is owed before it can
+be leaned on.** Publishing contracts apart from their sources means a `#source`
+that crosses a package boundary. Measured: the directive carries a full address
+and resolves through the ordinary resolver, whose error set includes «no
+installed slot for package» — so nothing forbids it. Also measured: **live uses
+of `#source` in this tree number zero**, so the mechanism is built and never
+exercised. The demonstration is a separate, read-only task; the tier's shape
+does not ship on an untested assumption. @impl/plan
+
 ##b017-one-bump **Both keys ride one manifest bump.** The namespace key of §3
 and the profile key here are two keys in one schema change, gated behind
 `min_vibe_version` — the same lever, paid once. Introducing them in separate
