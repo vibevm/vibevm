@@ -251,6 +251,40 @@ mechanism seen from three sides: the tier says what shipped, `:replace` says
 what is visible per section, and the degradation says how to read it when the
 source is not there. @spec/work
 
+##b017-link-is-never-stripped **The `#source` line ships with the contract
+(owner, 2026-08-04).** Producer-side redaction does not remove the directive.
+Stripping it would cost one loader branch less and lose the link permanently: a
+consumer who later obtains the implementation legitimately — bought it, signed
+for it, moved inside the company — would never get the merge, because the
+reference was cut at publication time. The link is cheap to carry and impossible
+to restore. @spec/done
+
+##b017-one-source-per-document **Measured while answering the owner: one
+contract document takes exactly ONE source.** The compiler reads the **first**
+`#source` directive in a document's text and never looks for a second — a
+second one is swallowed in silence, with no warning. A contract *package* may
+still have several sources, because each of its documents may point at a
+different one, possibly in a different package; the pairing is
+document-to-document, not package-to-package. The silent swallow is filed
+separately. @impl/done
+
+##b017-own-project-vs-foreign **The owner's harder question: absence of the
+source is normal in a foreign product and an ERROR at home — so what carries
+the distinction?** Four candidates, told apart by who declares. *(A) The
+consumer's coordinate* — «is this package mine» — breaks precisely on this
+repository, which both authors its packages and consumes them through
+`vibedeps/`, so one package looks both own and foreign. *(B) The producer's
+tier* says the same thing to everyone, so it cannot be an error at home and fine
+abroad. *(C) The consumer declares strictness* for the packages it develops —
+explicit, and the shape package managers already use. *(D) Demand-driven* — the
+contract always compiles alone, and absence is fatal only when something
+references an anchor that only the source provides; the exact linker analogue.
+**Recommendation: C together with B**, with D as where it arrives later —
+knowing that a reference reaches a source-only anchor requires the real
+contract↔source edges, and today those are hand-drawn. That is the link table,
+unbuilt. Building D before the table would be guessing. The honest cost of C:
+a SECOND key, on the consumer's side. @spec/work
+
 ##b017-standing-on-a-demonstration **What that candidate is owed before it can
 be leaned on.** Publishing contracts apart from their sources means a `#source`
 that crosses a package boundary. Measured: the directive carries a full address
