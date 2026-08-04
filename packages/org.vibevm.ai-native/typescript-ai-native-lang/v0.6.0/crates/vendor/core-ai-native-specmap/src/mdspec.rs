@@ -13,42 +13,18 @@ specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014
 use std::path::Path;
 
 use crate::generated::specmap::{SpecUnit, SpecUnitKind, SpecUnitStatus, Warning};
-use specmark_grammar::{is_valid_anchor, is_valid_fact_id};
+use specmark_grammar::is_valid_anchor;
 use walkdir::WalkDir;
 
-use crate::config::Config;
+use crate::config::{Config, SectionGrain};
 use crate::{content_hash, fwd};
 
-/// A heading line: 1–6 `#`, a space, text, trailing `{#anchor}`.
-fn parse_heading(line: &str) -> Option<(usize, String, String)> {
-    let trimmed = line.trim_end();
-    let hashes = trimmed.chars().take_while(|&c| c == '#').count();
-    if hashes == 0 || hashes > 6 {
-        return None;
-    }
-    let rest = &trimmed[hashes..];
-    if !rest.starts_with(' ') {
-        return None;
-    }
-    let rest = rest.trim_start();
-    let open = rest.rfind("{#")?;
-    if !rest.ends_with('}') {
-        return None;
-    }
-    let anchor = &rest[open + 2..rest.len() - 1];
-    let heading = rest[..open].trim_end().to_string();
-    Some((hashes, heading, anchor.to_string()))
-}
-
-/// Any heading line (anchored or not) — unit spans end at these.
-fn heading_level(line: &str) -> Option<usize> {
-    let trimmed = line.trim_end();
-    let hashes = trimmed.chars().take_while(|&c| c == '#').count();
-    if hashes == 0 || hashes > 6 {
-        return None;
-    }
-    trimmed[hashes..].starts_with(' ').then_some(hashes)
-}
+/// Pure line-classification primitives (heading / fence / list-item /
+/// `##<ID>` fact-anchor detection) — the syntactic helper layer this pass
+/// composes. Lives in the `lines` child module so the main file stays within
+/// the file-length budget (same split as `mdspec/tests.rs`).
+mod lines;
+use lines::{fact_anchor_at, fence_mask, heading_level, list_item_content, parse_heading};
 
 /// Parsed kind line: `` `<kind> r<N>[ <status>]` `` + optional same-line prose.
 struct KindLine {
@@ -122,83 +98,6 @@ fn parse_kind_line(line: &str) -> Result<Option<KindLine>, String> {
         status,
         disputes,
     }))
-}
-
-/// Per-line "inside a fenced code block" mask. A line whose trimmed
-/// start is ``` or ~~~ toggles the fence; heading detection is
-/// suppressed inside fences so worked examples in guides do not leak
-/// into the unit inventory.
-fn fence_mask(lines: &[&str]) -> Vec<bool> {
-    let mut mask = Vec::with_capacity(lines.len());
-    let mut in_fence = false;
-    for line in lines {
-        let t = line.trim_start();
-        let is_boundary = t.starts_with("```") || t.starts_with("~~~");
-        if is_boundary {
-            // The boundary line itself counts as fenced content.
-            mask.push(true);
-            in_fence = !in_fence;
-        } else {
-            mask.push(in_fence);
-        }
-    }
-    mask
-}
-
-/// Byte offset of a list item's content when the line opens one
-/// (`- ` / `* ` / `+ ` / `N. ` / `N) ` at any indent), else `None`.
-///
-/// A list item is where the finest fact grain lives: a `##<ID>` written as
-/// the item's first token mints its own unit (PROP-014 §2.1). This mirrors
-/// — without sharing code (PROP-014 §2.9 separability; the convention is
-/// held by tests on both sides) — the host Progress-Control scanner's list
-/// recognition.
-fn list_item_content(line: &str) -> Option<usize> {
-    let indent = line.len() - line.trim_start().len();
-    let rest = &line[indent..];
-    for pre in ["- ", "* ", "+ "] {
-        if rest.starts_with(pre) {
-            return Some(indent + pre.len());
-        }
-    }
-    let digits = rest.chars().take_while(|c| c.is_ascii_digit()).count();
-    if (1..=9).contains(&digits) {
-        let after = &rest[digits..];
-        if after.starts_with(". ") || after.starts_with(") ") {
-            return Some(indent + digits + 2);
-        }
-    }
-    None
-}
-
-/// A `##<ID>` fact anchor at `line[start..]` (leading whitespace skipped):
-/// `##`, a valid fact id, then whitespace or end-of-line. Returns the id
-/// and the trimmed remainder of the line — the fact's lead text, kept as
-/// the unit heading.
-///
-/// `##` followed by an invalid id — a non-letter head (`##9bad`) or an id
-/// run glued to a non-space glyph (`##bad!`) — is ordinary prose: `None`,
-/// and (unlike a malformed heading anchor) no warning (PROP-014 §2.1). The
-/// id charset is [`is_valid_fact_id`], which a heading anchor now takes too —
-/// one grammar, two grains; only the reaction to a bad name differs, prose
-/// here and a warning there.
-fn fact_anchor_at(line: &str, start: usize) -> Option<(String, String)> {
-    let seg = &line[start..];
-    let lead_ws = seg.len() - seg.trim_start().len();
-    let rest = seg[lead_ws..].strip_prefix("##")?;
-    let id_len = rest
-        .chars()
-        .take_while(|&c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
-        .count();
-    if id_len == 0 {
-        return None;
-    }
-    let id = &rest[..id_len];
-    let after = &rest[id_len..];
-    if !is_valid_fact_id(id) || after.chars().next().is_some_and(|c| !c.is_whitespace()) {
-        return None;
-    }
-    Some((id.to_string(), after.trim().to_string()))
 }
 
 /// The `duplicate-anchor` warning, shared by heading anchors and `##<ID>`
@@ -333,7 +232,25 @@ pub fn canonical_doc_path(file: &str) -> String {
 /// ([`Config::namespace`] for the project's own tree, an
 /// [`ExternalSpec`](crate::config::ExternalSpec)'s namespace for an
 /// installed package's tree).
+/// The bare three-arg seam the unit tests call: the `long-section` quality
+/// check is **disabled** here (threshold `0`), so existing assertions on "no
+/// warnings" stay green. The scan entry points route through
+/// [`parse_units_with`] carrying the live config.
 pub fn parse_units(file: &str, text: &str, namespace: &str) -> (Vec<SpecUnit>, Vec<Warning>) {
+    parse_units_with(file, text, namespace, 0, SectionGrain::Leaf)
+}
+
+/// [`parse_units`] carrying the `long-section` quality policy.
+/// `max_section_lines` is inclusive (a section reaching it fires) and `0`
+/// disables it; `grain` selects whether only leaf sections or every section
+/// is measured.
+fn parse_units_with(
+    file: &str,
+    text: &str,
+    namespace: &str,
+    max_section_lines: usize,
+    grain: SectionGrain,
+) -> (Vec<SpecUnit>, Vec<Warning>) {
     let doc_path = canonical_doc_path(file);
     let lines: Vec<&str> = text.lines().collect();
     let fenced = fence_mask(&lines);
@@ -441,6 +358,33 @@ pub fn parse_units(file: &str, text: &str, namespace: &str) -> (Vec<SpecUnit>, V
             }
         }
 
+        // Long-section quality warning (§3.3): a leaf section — one with no
+        // nested subsection — past the threshold reads poorly and churns
+        // often. A container section is long only because the document is,
+        // which says nothing about discipline, so at `leaf` grain (the
+        // default) it is not measured. Because the span already ends at the
+        // next same-or-higher heading, any heading left inside the body is
+        // strictly deeper — so "no heading in the body" *is* the leaf test.
+        // Fenced headings are code samples, not structure, and are ignored.
+        if max_section_lines != 0 {
+            let is_leaf = (i + 1..end).all(|k| fenced[k] || heading_level(lines[k]).is_none());
+            if grain == SectionGrain::All || is_leaf {
+                let section_lines = end - i;
+                if section_lines >= max_section_lines {
+                    warnings.push(Warning {
+                        code: "long-section".to_string(),
+                        message: format!(
+                            "section `{heading}` spans {section_lines} lines \
+                             (threshold {max_section_lines}) — long sections read \
+                             poorly and churn often; split into smaller leaves"
+                        ),
+                        file: file.to_string(),
+                        line: heading_line_no,
+                    });
+                }
+            }
+        }
+
         units.push(SpecUnit {
             uri: format!("spec://{namespace}/{doc_path}#{anchor}"),
             docPath: doc_path.clone(),
@@ -482,7 +426,13 @@ pub fn scan_spec_tree(root: &Path, cfg: &Config) -> (Vec<SpecUnit>, Vec<Warning>
             let file_rel = fwd(rel);
             match std::fs::read_to_string(path) {
                 Ok(text) => {
-                    let (mut u, mut w) = parse_units(&file_rel, &text, &cfg.namespace);
+                    let (mut u, mut w) = parse_units_with(
+                        &file_rel,
+                        &text,
+                        &cfg.namespace,
+                        cfg.max_section_lines,
+                        cfg.section_grain,
+                    );
                     units.append(&mut u);
                     warnings.append(&mut w);
                 }

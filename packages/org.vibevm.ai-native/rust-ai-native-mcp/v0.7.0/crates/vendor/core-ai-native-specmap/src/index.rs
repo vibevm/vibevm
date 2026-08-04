@@ -12,7 +12,7 @@
 
 specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#index");
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 
 use crate::generated::specmap::{Specmap, Suspect, Warning};
@@ -142,6 +142,47 @@ pub fn build_with_scanner(
                         });
                     }
                 }
+            }
+        }
+    }
+
+    // Overloaded-item quality warning (§3.4): a code element realising
+    // many distinct spec points usually does too much — or the spec is
+    // sliced too finely. Count distinct target uris per element: two edges
+    // of different verbs into the same point is one connection, not two.
+    // BTreeMap/BTreeSet make the iteration order — and therefore the
+    // warning list — deterministic regardless of scan order; the global
+    // (file, line, code, message) warning sort below folds each into the
+    // stable row. `0` disables the check.
+    if cfg.max_connections_per_item != 0 {
+        let threshold = cfg.max_connections_per_item;
+        // symbol → (distinct target uris, anchor file, anchor line)
+        let mut per_symbol: BTreeMap<&str, (BTreeSet<&str>, &str, u32)> = BTreeMap::new();
+        for e in &edges {
+            let entry = per_symbol
+                .entry(&e.fromSymbol)
+                .or_insert_with(|| (BTreeSet::new(), e.file.as_str(), e.line));
+            entry.0.insert(e.uri.as_str());
+            // Anchor the warning at the element's topmost edge (smallest
+            // file, then line) — deterministic irrespective of scan order.
+            if (e.file.as_str(), e.line) < (entry.1, entry.2) {
+                entry.1 = e.file.as_str();
+                entry.2 = e.line;
+            }
+        }
+        for (symbol, (uris, file, line)) in per_symbol {
+            let n = uris.len();
+            if n >= threshold {
+                warnings.push(Warning {
+                    code: "overloaded-item".to_string(),
+                    message: format!(
+                        "`{symbol}` realises {n} distinct spec points (threshold \
+                         {threshold}); it likely does too much, or the spec is \
+                         sliced too fine"
+                    ),
+                    file: file.to_string(),
+                    line,
+                });
             }
         }
     }
@@ -421,221 +462,4 @@ pub fn vacuity_warning(summary: &Summary) -> Option<String> {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    /// A small synthetic tree — several anchored units across two docs plus
-    /// one tagged code item. Enough to exercise the inventory, the ordering
-    /// invariant, and the edge-from-code path without assuming any particular
-    /// host repository: specmap-core ships in the rust-ai-native package now,
-    /// so `CARGO_MANIFEST_DIR` is no longer a substantial spec tree.
-    fn synthetic_tree() -> tempfile::TempDir {
-        let tmp = tempfile::tempdir().unwrap();
-        let root = tmp.path();
-        std::fs::create_dir_all(root.join("spec/modules")).unwrap();
-        std::fs::write(
-            root.join("spec/A.md"),
-            "## Alpha {#alpha}\n`prop r1`\n\nbody\n\n## Beta {#beta}\n\nbody\n",
-        )
-        .unwrap();
-        std::fs::write(
-            root.join("spec/modules/B.md"),
-            "## Gamma {#gamma}\n`req r1`\n\nbody\n",
-        )
-        .unwrap();
-        let src = root.join("crates/x/src");
-        std::fs::create_dir_all(&src).unwrap();
-        std::fs::write(
-            src.join("lib.rs"),
-            "#[spec(implements = \"spec://project/A#alpha\", r = 1)]\npub fn f() {}\n",
-        )
-        .unwrap();
-        tmp
-    }
-
-    /// PROP-014 §2.5: determinism is a tested property — index twice, assert
-    /// byte-identical.
-    #[test]
-    fn index_is_deterministic() {
-        let tmp = synthetic_tree();
-        let a = to_canonical_bytes(&build(tmp.path(), &Config::default())).unwrap();
-        let b = to_canonical_bytes(&build(tmp.path(), &Config::default())).unwrap();
-        assert_eq!(a, b);
-        assert!(a.ends_with('\n'));
-    }
-
-    #[test]
-    fn node_inventory_is_ordered_and_house_style() {
-        let tmp = synthetic_tree();
-        let map = build(tmp.path(), &Config::default());
-        assert!(map.specUnits.len() >= 3, "got {}", map.specUnits.len());
-        // Ordering invariant: (doc_path, line) non-decreasing.
-        assert!(
-            map.specUnits
-                .windows(2)
-                .all(|w| (&w[0].docPath, w[0].line) <= (&w[1].docPath, w[1].line))
-        );
-        // House-style URIs: no `spec/` prefix, no `.md`.
-        assert!(
-            map.specUnits
-                .iter()
-                .all(|u| !u.uri.starts_with("spec://project/spec/") && !u.uri.contains(".md#"))
-        );
-        // The tagged code item produced its edge into the spec unit.
-        assert!(
-            map.edges.iter().any(|e| e.uri == "spec://project/A#alpha"),
-            "expected an edge into spec://project/A#alpha"
-        );
-    }
-
-    /// End-to-end over a synthetic tree: suspects, dangling edges and
-    /// pin-ahead warnings all surface.
-    #[test]
-    fn suspects_dangling_and_pin_ahead_are_detected() {
-        let tmp = tempfile::tempdir().unwrap();
-        let root = tmp.path();
-        std::fs::create_dir_all(root.join("spec")).unwrap();
-        std::fs::write(
-            root.join("spec/T.md"),
-            "## The contract {#req-t}\n`req r2`\n\nIt MUST hold.\n",
-        )
-        .unwrap();
-        let src_dir = root.join("crates/x/src");
-        std::fs::create_dir_all(&src_dir).unwrap();
-        std::fs::write(
-            src_dir.join("lib.rs"),
-            r#"
-#[spec(implements = "spec://project/T#req-t", r = 1)]
-pub fn stale() {}
-
-#[spec(implements = "spec://project/T#req-t", r = 2)]
-pub fn current() {}
-
-#[spec(implements = "spec://project/T#req-t", r = 3)]
-pub fn ahead() {}
-
-#[spec(implements = "spec://project/T#req-missing", r = 1)]
-pub fn dangling() {}
-"#,
-        )
-        .unwrap();
-
-        let map = build(root, &Config::default());
-        assert_eq!(map.specUnits.len(), 1);
-        assert_eq!(map.specUnits[0].uri, "spec://project/T#req-t");
-        assert_eq!(map.edges.len(), 4);
-        assert_eq!(map.suspects.len(), 1, "exactly the r1 pin is suspect");
-        assert_eq!(map.suspects[0].fromSymbol, "x::stale");
-        assert_eq!(map.suspects[0].pinnedR, 1);
-        assert_eq!(map.suspects[0].currentR, 2);
-        let codes: Vec<&str> = map.warnings.iter().map(|w| w.code.as_str()).collect();
-        assert!(codes.contains(&"dangling-edge"), "{codes:?}");
-        assert!(codes.contains(&"pin-ahead-of-unit"), "{codes:?}");
-    }
-
-    /// PROP-014 §7.1: an edge into an installed package's unit resolves
-    /// through `[[external_specs]]` — no dangling warning, suspects work —
-    /// while the external unit itself stays OUT of the serialised index.
-    #[test]
-    fn external_specs_resolve_edges_without_entering_the_index() {
-        let tmp = tempfile::tempdir().unwrap();
-        let root = tmp.path();
-        std::fs::create_dir_all(root.join("spec")).unwrap();
-        let ext = root.join("vibedeps/some-flow/0.3.0/spec/mechanisms");
-        std::fs::create_dir_all(&ext).unwrap();
-        std::fs::write(
-            ext.join("ENGINE-X-v0.1.md"),
-            "## Rules {#rules}\n`req r2`\n\nbody\n",
-        )
-        .unwrap();
-        let src_dir = root.join("crates/x/src");
-        std::fs::create_dir_all(&src_dir).unwrap();
-        std::fs::write(
-            src_dir.join("lib.rs"),
-            r#"
-#[spec(implements = "spec://some-flow/mechanisms/ENGINE-X-v0.1#rules", r = 1)]
-pub fn stale_pin_into_external() {}
-
-#[spec(implements = "spec://some-flow/mechanisms/MISSING#rules", r = 1)]
-pub fn dangling_even_with_externals() {}
-"#,
-        )
-        .unwrap();
-        let cfg = Config {
-            external_specs: vec![crate::config::ExternalSpec {
-                namespace: "some-flow".into(),
-                root: "vibedeps/some-flow/0.3.0/spec".into(),
-            }],
-            ..Config::default()
-        };
-        let map = build(root, &cfg);
-        // The external unit is resolution-only: not inventoried.
-        assert!(
-            map.specUnits.is_empty(),
-            "external units leaked into the index: {}",
-            map.specUnits.len()
-        );
-        // The resolved edge dangles no more — and its stale pin is a suspect.
-        let codes: Vec<&str> = map.warnings.iter().map(|w| w.code.as_str()).collect();
-        assert_eq!(
-            codes.iter().filter(|c| **c == "dangling-edge").count(),
-            1,
-            "only the truly-missing target dangles: {codes:?}"
-        );
-        assert_eq!(map.suspects.len(), 1);
-        assert_eq!(map.suspects[0].pinnedR, 1);
-        assert_eq!(map.suspects[0].currentR, 2);
-    }
-
-    #[test]
-    fn drift_classification_reports_bumps_and_unbumped_hashes() {
-        let tmp = tempfile::tempdir().unwrap();
-        let root = tmp.path();
-        std::fs::create_dir_all(root.join("spec")).unwrap();
-        let src_dir = root.join("crates/x/src");
-        std::fs::create_dir_all(&src_dir).unwrap();
-        std::fs::write(
-            src_dir.join("lib.rs"),
-            "#[spec(implements = \"spec://project/T#req-t\", r = 1)]\npub fn f() {}\n",
-        )
-        .unwrap();
-
-        std::fs::write(
-            root.join("spec/T.md"),
-            "## C {#req-t}\n`req r1`\n\nIt MUST hold.\n",
-        )
-        .unwrap();
-        let old = build(root, &Config::default());
-
-        // (b) editorial change, no bump → unbumped-hash.
-        std::fs::write(
-            root.join("spec/T.md"),
-            "## C {#req-t}\n`req r1`\n\nIt MUST always hold.\n",
-        )
-        .unwrap();
-        let edited = build(root, &Config::default());
-        let report = classify_drift(&old, &edited);
-        assert!(
-            report.iter().any(|l| l.starts_with("unbumped-hash:")),
-            "{report:?}"
-        );
-
-        // (a) semantic change + bump → revision bump + suspect listing.
-        std::fs::write(
-            root.join("spec/T.md"),
-            "## C {#req-t}\n`req r2`\n\nIt MUST hold, monotonically.\n",
-        )
-        .unwrap();
-        let bumped = build(root, &Config::default());
-        let report = classify_drift(&old, &bumped);
-        assert!(
-            report.iter().any(|l| l.starts_with("revision bump:")),
-            "{report:?}"
-        );
-        assert!(
-            report.iter().any(|l| l.contains("now SUSPECT")),
-            "{report:?}"
-        );
-        assert_eq!(bumped.suspects.len(), 1);
-    }
-}
+mod tests;

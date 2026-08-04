@@ -376,3 +376,125 @@ fn a_lead_paragraph_fact_and_its_list_item_facts_coexist() {
     let anchors: Vec<&str> = units.iter().map(|u| u.anchor.as_str()).collect();
     assert_eq!(anchors, ["root", "lead", "a", "c"]);
 }
+
+// ----- long-section quality warning (§3.3) -----
+
+/// A leaf section (no nested headings) spanning exactly `total` lines: the
+/// heading line + a kind line + enough `body` lines to reach `total`. No
+/// blank lines, so `lines().count()` is exactly `total`.
+fn leaf_section(total: usize) -> String {
+    assert!(total >= 2);
+    let mut s = String::from("## Edge {#edge}\n`req r1`\n");
+    for _ in 0..(total - 2) {
+        s.push_str("body\n");
+    }
+    s
+}
+
+/// A doc whose `## Parent` (level 2) holds `parent_body_lines` of prose
+/// then a nested `### Child` (level 3) — so Parent is a container whose
+/// full span is large, Child a short leaf.
+fn container_doc(parent_body_lines: usize) -> String {
+    let mut s = String::from("## Parent {#parent}\n`req r1`\n");
+    for _ in 0..parent_body_lines {
+        s.push_str("parent body\n");
+    }
+    s.push_str("### Child {#child}\n`req r1`\nshort\n");
+    s
+}
+
+#[test]
+fn long_section_below_threshold_is_silent() {
+    let text = leaf_section(119);
+    let (_, warnings) = parse_units_with(DOC, &text, NS, 120, SectionGrain::Leaf);
+    assert!(
+        warnings.iter().all(|w| w.code != "long-section"),
+        "{}",
+        fmt_warnings(&warnings)
+    );
+}
+
+#[test]
+fn long_section_at_threshold_fires_inclusive() {
+    // Exactly the threshold: inclusive boundary ⇒ fires.
+    let text = leaf_section(120);
+    let (_, warnings) = parse_units_with(DOC, &text, NS, 120, SectionGrain::Leaf);
+    let ls: Vec<&Warning> = warnings
+        .iter()
+        .filter(|w| w.code == "long-section")
+        .collect();
+    assert_eq!(ls.len(), 1, "{}", fmt_warnings(&warnings));
+    assert!(ls[0].message.contains("120 lines"), "{}", ls[0].message);
+    assert_eq!(ls[0].line, 1);
+}
+
+#[test]
+fn long_section_above_threshold_fires() {
+    let text = leaf_section(121);
+    let (_, warnings) = parse_units_with(DOC, &text, NS, 120, SectionGrain::Leaf);
+    assert_eq!(
+        warnings.iter().filter(|w| w.code == "long-section").count(),
+        1
+    );
+}
+
+#[test]
+fn long_section_disabled_at_zero_is_silent() {
+    let text = leaf_section(500);
+    let (_, warnings) = parse_units_with(DOC, &text, NS, 0, SectionGrain::Leaf);
+    assert!(
+        warnings.iter().all(|w| w.code != "long-section"),
+        "threshold 0 must disable the check: {}",
+        fmt_warnings(&warnings)
+    );
+}
+
+#[test]
+fn container_section_is_skipped_at_leaf_grain() {
+    // Parent's full span is 205 lines, but it is a container — at `leaf`
+    // grain it is not measured, and the short Child leaf does not fire.
+    let text = container_doc(200);
+    let (_, warnings) = parse_units_with(DOC, &text, NS, 120, SectionGrain::Leaf);
+    assert_eq!(
+        warnings.iter().filter(|w| w.code == "long-section").count(),
+        0,
+        "container must not be measured at leaf grain: {}",
+        fmt_warnings(&warnings)
+    );
+}
+
+#[test]
+fn container_section_is_measured_at_all_grain() {
+    let text = container_doc(200);
+    let (_, warnings) = parse_units_with(DOC, &text, NS, 120, SectionGrain::All);
+    // Parent (205 lines) fires; Child (3 lines) does not.
+    assert_eq!(
+        warnings.iter().filter(|w| w.code == "long-section").count(),
+        1,
+        "{}",
+        fmt_warnings(&warnings)
+    );
+}
+
+#[test]
+fn long_section_warnings_are_deterministic_in_document_order() {
+    // Two long leaf sections: warnings land in document order, and two
+    // parses of the same text agree line for line.
+    let mut text = leaf_section(130);
+    text.push_str("## Next {#next}\n`req r1`\n");
+    for _ in 0..130 {
+        text.push_str("more\n");
+    }
+    let (_, w1) = parse_units_with(DOC, &text, NS, 120, SectionGrain::Leaf);
+    let (_, w2) = parse_units_with(DOC, &text, NS, 120, SectionGrain::Leaf);
+    let key = |w: &Warning| format!("{}:{}|{}|{}", w.file, w.line, w.code, w.message);
+    let k1: Vec<String> = w1.iter().map(key).collect();
+    let k2: Vec<String> = w2.iter().map(key).collect();
+    assert_eq!(k1, k2, "same input must yield the same warning order");
+    let ls: Vec<u32> = w1
+        .iter()
+        .filter(|w| w.code == "long-section")
+        .map(|w| w.line)
+        .collect();
+    assert_eq!(ls, [1, 131], "document order, heading lines: {ls:?}");
+}
