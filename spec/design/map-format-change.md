@@ -97,13 +97,24 @@ a mixed-scheme index is legible and a scheme migration is one regeneration wide.
 The owner's fork below therefore chooses the *first* scheme, not the only one
 this format can ever carry. @spec/done
 
-##b019a-substance **The substance — owner fork №3, measured before it was
-asked.** Raw text against token stream, with the noise measured on this
-repository's own history before the question reached the owner. The measurement
-and its outcome are recorded in
-[`harvest/e15-b019a-fingerprint-noise.md`](../../campaigns/packages-2026-09/harvest/e15-b019a-fingerprint-noise.md);
-the ruling is recorded in [`TOOLING-MAP.md` §5](../../TOOLING-MAP.md#forks) as
-that fork's outcome. @spec/work
+##b019a-substance **The substance — owner fork №3, taken 2026-08-04: the token
+stream, with doc comments counted as code.** The measurement came first
+([`harvest/e15-b019a-fingerprint-noise.md`](../../campaigns/packages-2026-09/harvest/e15-b019a-fingerprint-noise.md)):
+a token scheme that drops doc comments would call 7.5 % of this history's raw
+changes cosmetic, one that keeps them calls 2.2 %, and the gap is 105
+doc-comment edits — which in this codebase are frequently where the spec
+relationship is actually written. So a formatter run and an ordinary `//` note
+leave the fingerprint alone; a rewritten `///` does not. @spec/done
+
+##b019a-scheme-per-scanner **Rust ships the token scheme; Go and TypeScript ship
+raw text, and that is a recorded gap with a route.** The Rust scanner already
+holds everything it needs — `syn` and `proc-macro2` with span locations, a
+token-rendering helper, and `span().end()` for the range — so its cost is zero.
+Go's and TypeScript's item records come from their own extractors, in their own
+toolchains; teaching those to emit a token stream is two foreign-toolchain
+builds and does not gate this format change. Because the fingerprint value names
+its own scheme, their upgrade later is a regeneration rather than another bump —
+which is precisely what `##b019a-self-describing` was chosen for. @spec/work
 
 ##b019a-parity **Parity is a per-scanner obligation, and a scanner that cannot
 meet it records why.** The Rust scanner already parses with `syn` over
