@@ -2,7 +2,7 @@
 // inert filler line 2.
 // inert filler line 3.
 // inert filler line 4.
-// SAFETY: positioned at the top for the green exhibit.
+// INVARIANT: positioned at the top for the green exhibit.
 // inert filler line 6.
 // inert filler line 7.
 // inert filler line 8.

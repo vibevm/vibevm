@@ -184,14 +184,14 @@ pub enum Fact {
         in_test: bool,
     },
     /// A comment carrying an invariant marker
-    /// (`SAFETY:` / `INVARIANT:` / `PANICS` / `WARNING:` / `MUST` /
-    /// `NEVER`, …), produced by a comment-walking frontend. `marker` is
-    /// the normalized marker exactly as recorded in the config
-    /// vocabulary; `line` is the comment's line; `in_test` marks a
-    /// comment in test context, where the position rule does not apply.
-    /// Consumed by `invariant-comment-position` (R3-003 "position is a
-    /// resource"): an invariant marker that lands in the middle third of
-    /// a long file is buried where a reader pages past it.
+    /// (`INVARIANT:` / `WARNING:` / `PANICS:` / `MUST:` / `NEVER:`, …),
+    /// produced by a comment-walking frontend. `marker` is the normalized
+    /// marker exactly as recorded in the config vocabulary; `line` is the
+    /// comment's line; `in_test` marks a comment in test context, where
+    /// the position rule does not apply. Consumed by
+    /// `invariant-comment-position` (R3-003 "position is a resource"): an
+    /// invariant marker that lands in the middle third of a long file is
+    /// buried where a reader pages past it.
     InvariantComment {
         marker: String,
         line: u32,

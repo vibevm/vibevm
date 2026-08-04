@@ -106,8 +106,8 @@ pub enum RawFact {
         cites_req: bool,
         line: u32,
     },
-    /// A comment carrying an invariant marker (`SAFETY:` / `INVARIANT:` /
-    /// `PANICS` / …), normalised to the config vocabulary's spelling.
+    /// A comment carrying an invariant marker (`INVARIANT:` / `WARNING:`
+    /// / `PANICS:` / …), normalised to the config vocabulary's spelling.
     /// `in_test` is file-grain, stamped in [`conform_facts`] from the
     /// record — same posture as `TsUnsafe`. Consumed by
     /// `invariant-comment-position`.
@@ -418,7 +418,7 @@ mod tests {
         const REPLAY_INV: &str = concat!(
             r#"{"protocol":1,"file":"src/invariant.ts","in_test":false,"degraded":false,"#,
             r#""facts":[{"fact":"file_metrics","lines":150},"#,
-            r#"{"fact":"invariant_comment","marker":"SAFETY:","line":75}],"markers":[]}"#,
+            r#"{"fact":"invariant_comment","marker":"INVARIANT:","line":75}],"markers":[]}"#,
             "\n",
         );
         let records = parse_ndjson(REPLAY_INV).expect("parse");
@@ -430,7 +430,7 @@ mod tests {
                     marker,
                     line,
                     in_test,
-                } if marker == "SAFETY:" && *line == 75 && !*in_test
+                } if marker == "INVARIANT:" && *line == 75 && !*in_test
             )),
             "invariant_comment lowers with the marker and a stamped in_test: {facts:?}"
         );

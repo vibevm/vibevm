@@ -29,7 +29,7 @@ fn dirty_fixture_yields_the_ten_findings_then_freeze_ratchets_them() {
     // has no Spec field AND renders no REQ) + 1 `go-conformance-assertion`
     // (B-030: the plan cell declares no `var _ Seam = (*Impl)(nil)`) —
     // plus t_skip in the sibling test file, plus 1
-    // `invariant-comment-position` on src/invariant.go (a `// SAFETY:`
+    // `invariant-comment-position` on src/invariant.go (a `// INVARIANT:`
     // comment buried in the middle third of the 150-line exhibit file).
     // Non-zero.
     let _ = std::fs::remove_file(root.join(baseline));

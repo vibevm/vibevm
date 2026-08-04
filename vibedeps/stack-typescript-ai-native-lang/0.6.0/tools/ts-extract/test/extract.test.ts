@@ -205,7 +205,7 @@ test("an invariant-marker comment surfaces as invariant_comment (R3-003)", () =>
   assert.ok(inv, JSON.stringify(records.map((r) => r.file)));
   const comments = inv.facts.filter((f) => f.fact === "invariant_comment");
   assert.equal(comments.length, 1, JSON.stringify(inv.facts));
-  assert.equal(comments[0].marker, "SAFETY:");
+  assert.equal(comments[0].marker, "INVARIANT:");
   assert.equal(comments[0].line, 75);
 });
 

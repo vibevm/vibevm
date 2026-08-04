@@ -17,6 +17,14 @@
 | `scaffold-h-simulators` | E+H | scaffold H | gate | [E-strong] | specified |
 | `scaffold-i-codemods` | H+A | scaffold I | raid | **[E-hyp]** | pilot prototype shipped (`rust-ai-native codemod add-cell`); free parameterization stays the open R4 question |
 
+## Rule cards
+
+*Authored as their checkers ship. The first:*
+
+| Card | Layer | Mechanism | Trigger mode | Transfer | Checker status |
+|---|---|---|---|---|---|
+| `rule-position-is-a-resource` | D+H | rule | gate | [E-mid] | shipped (`invariant-comment-position`, core-ai-native-conform) |
+
 ## Trigger-mode delivery summary
 - **inline** (per-edit, lint-detectable): C, F. Most frequent; cheapest.
 - **gate** (per-merge): B, D, E, G, H.
@@ -37,12 +45,11 @@
 - `rule-closed-vocabulary-naming` (R3-004) — names from a closed vocabulary; no shadowing.
 - `rule-cell-closure` (R3-001) — editable units declare their full semantic dependency set.
 - `rule-contract-first-ordering` (R3-002) — intent before body.
-- `rule-position-is-a-resource` (R3-003) — critical invariants at file edges; file-length bound.
 - `rule-uniformity` (R3-006/H6) — one idiom per operation; mark exceptions.
 - `antipattern-god-file` (R3-013) — fan-in per file bounds swarm throughput.
 - `antipattern-lying-prose` (R2C-004/H4) — unverified prose claims near code.
 
-These are deferred not because they are unimportant but to honor minimal sufficiency: the nine scaffold cards are the runnable-capital core; rule/anti-pattern cards are added as the pilot shows which triggers actually fire.
+These are deferred not because they are unimportant but to honor minimal sufficiency: the nine scaffold cards are the runnable-capital core; rule/anti-pattern cards are added as their checkers ship — `rule-position-is-a-resource` (above) is the first, its `invariant-comment-position` checker now live.
 
 ## Notes on status
 - **shipped** = the checker ships in this stack (rust-ai-native-conform / rust-ai-native) and runs on any consumer tree.

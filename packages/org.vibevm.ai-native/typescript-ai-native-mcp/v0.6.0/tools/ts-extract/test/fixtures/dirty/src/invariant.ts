@@ -72,7 +72,7 @@
 // inert filler line 72.
 // inert filler line 73.
 // inert filler line 74.
-// SAFETY: buried in the middle third for the exhibit.
+// INVARIANT: buried in the middle third for the exhibit.
 // inert filler line 76.
 // inert filler line 77.
 // inert filler line 78.

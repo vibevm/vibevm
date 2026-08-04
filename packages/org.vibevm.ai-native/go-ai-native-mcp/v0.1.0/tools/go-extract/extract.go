@@ -69,7 +69,7 @@ type fact struct {
 	Seam string `json:"seam,omitempty"`
 	Impl string `json:"impl,omitempty"`
 	// invariant_comment: the canonical invariant marker a comment leads
-	// with (`SAFETY:` / `INVARIANT:` / `PANICS` / …), normalised to the
+	// with (`INVARIANT:` / `WARNING:` / `PANICS:` / …), normalised to the
 	// config dictionary's spelling. Feeds invariant-comment-position.
 	Marker string `json:"marker,omitempty"`
 }
@@ -815,11 +815,11 @@ func (ex *extractor) suppressions() {
 
 // invariantMarkers is the fixed vocabulary the extractor emits — the
 // canonical spelling the config dictionary uses. The rule re-checks the
-// active config vocabulary, so the extractor emits generously; the three
-// colon-bearing markers are self-anchoring, the three bare markers need
-// a word boundary.
+// active config vocabulary, so the extractor emits generously; all five
+// are colon-bearing labeled tags (a marker is a labeled tag, not a prose
+// word), so each is self-anchoring.
 var invariantMarkers = []string{
-	"SAFETY:", "INVARIANT:", "WARNING:", "PANICS", "MUST", "NEVER",
+	"INVARIANT:", "WARNING:", "PANICS:", "MUST:", "NEVER:",
 }
 
 // invariantMarkerOf returns the canonical invariant marker a comment
@@ -827,11 +827,13 @@ var invariantMarkers = []string{
 // comment's first content token (after the // / /* / * introducer and
 // whitespace): a marker not at the very start is not detected. This
 // matches the all-caps section-header convention and — deliberately —
-// avoids flagging prose uses of the bare words must / never / panics
-// mid-sentence (a comment that BEGINS with the bare word still counts).
+// does not flag prose: every marker is a colon-bearing labeled tag, so a
+// bare must / never / panics mid-sentence (or even leading one) is not an
+// invariant declaration and does not fire. The word-boundary guard
+// remains as a forward-compatible check for any future bare marker.
 //
 // Recorded limit: a marker embedded mid-comment is not seen; the match is
-// case-sensitive to the config's canonical spelling, so `// safety:`
+// case-sensitive to the config's canonical spelling, so `// invariant:`
 // (lowercase) is not detected.
 func invariantMarkerOf(text string) string {
 	lead := strings.TrimLeft(text, "/*!\t ")

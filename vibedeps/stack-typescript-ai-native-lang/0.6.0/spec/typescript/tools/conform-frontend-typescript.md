@@ -20,7 +20,7 @@
 
 ##frontend-answers-the-structural-half-lead `typescript-ai-native-conform-frontend` answers the **other** half — the *structural / architectural* rules no type checker expresses, the ones `conform check` already enforces for Rust: @impl/done
 
-- ##RULE-FILE-LENGTH-BUDGET the file-length budget (position is a resource); @impl/done
+- ##RULE-FILE-LENGTH-BUDGET the file-length budget (position is a resource), carried as the root `conform.toml` key `max_file_lines` (default 600), with two sibling **root** keys for the `invariant-comment-position` rule (R3-003) — `invariant_comment_markers` (the marker vocabulary; default the five labeled markers `INVARIANT:` / `WARNING:` / `PANICS:` / `MUST:` / `NEVER:`, and empty disables the rule) and `invariant_comment_min_file_lines` (the floor below which a file is skipped whole, a «third» meaning nothing; default 120); all three are root keys, language-neutral, NOT under `[typescript]`;
 - ##RULE-CELL-ISOLATION cell isolation (a cell imports seams + core only, never sibling cells); @impl/done
 - ##RULE-BANS-AS-FACTS the bans-as-facts (`any` / unchecked `as` / `!` / `@ts-ignore` in domain code — the §8 set) surfaced as conform findings in the Class-F `violates REQ …; fix surface: …` grammar, navigable back to the governing card; @impl/done
 - ##RULE-DEVIATION-ESCAPE-HATCH the deviation escape hatch (`@ts-expect-error -- reason`, a recorded `deviates`), honoured the way `#[spec(deviates)]` is for Rust. @impl/done

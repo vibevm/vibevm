@@ -11,15 +11,22 @@ use crate::finding::{Finding, Rule};
 use super::req_message;
 
 /// Guide §2 — `invariant-comment-position`: a comment carrying an
-/// invariant marker (`SAFETY:` / `INVARIANT:` / `PANICS` / `WARNING:` /
-/// `MUST` / `NEVER`, …) that lands in the MIDDLE THIRD of a file long
-/// enough for thirds to mean anything is buried where a reader skimming
-/// the edges pages past it. Critical invariants belong at a file's
-/// edges — its top or bottom — where they survive a skim; the remedy is
-/// the guide's own: move the comment to the top or bottom, or split the
-/// file (R3-003 "position is a resource"). Test-context comments
-/// (`in_test`) are out of scope, and files below [`Self::min_lines`] are
-/// skipped — a third is meaningless on a short file.
+/// invariant marker (`INVARIANT:` / `WARNING:` / `PANICS:` / `MUST:` /
+/// `NEVER:`, …) that lands in the MIDDLE THIRD of a file long enough for
+/// thirds to mean anything is buried where a reader skimming the edges
+/// pages past it. Critical invariants belong at a file's edges — its top
+/// or bottom — where they survive a skim; the remedy is the guide's own:
+/// move the comment to the top or bottom, or split the file (R3-003
+/// "position is a resource"). Test-context comments (`in_test`) are out
+/// of scope, and files below [`Self::min_lines`] are skipped — a third is
+/// meaningless on a short file.
+///
+/// The vocabulary is the labeled tags only — a marker is a labeled tag
+/// (every entry ends in `:`), never a bare word lifted from prose.
+/// Block-local justifications (`SAFETY:` at an `unsafe` block) are
+/// deliberately outside the rule: their place is beside the code they
+/// justify, not at a file's edge, so a position rule over them would
+/// destroy meaning rather than surface it.
 ///
 /// ```
 /// use core_ai_native_conform::rules::InvariantCommentPosition;

@@ -21,7 +21,7 @@ fn dirty_fixture_yields_the_five_findings_then_freeze_ratchets_them() {
     let baseline = "target/conform/test-baseline.json";
 
     // Fresh gate: six findings (1 isolation + 4 unsafe + 1
-    // invariant-comment-position on src/invariant.ts, a `// SAFETY:`
+    // invariant-comment-position on src/invariant.ts, a `// INVARIANT:`
     // comment buried in the middle third of the 150-line exhibit file).
     let _ = std::fs::remove_file(root.join(baseline));
     let err = typescript_ai_native_conform::run_check(&root, baseline, None)

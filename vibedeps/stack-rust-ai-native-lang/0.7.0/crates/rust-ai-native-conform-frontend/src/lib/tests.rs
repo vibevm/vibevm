@@ -270,10 +270,10 @@ fn extracts_thiserror_variants_with_enum_attrs() {
 #[test]
 fn emits_invariant_comments_with_canonical_markers() {
     // A marker leads the comment → emitted, normalised to the config's
-    // canonical spelling (colon-bearing verbatim, bare words without the
-    // colon). The line is the comment's source line.
+    // canonical spelling (the colon-bearing labeled tag verbatim). The
+    // line is the comment's source line.
     let facts = extract(
-        "// SAFETY: relies on the lock being held.\n\
+        "// INVARIANT: relies on the lock being held.\n\
          // PANICS: when n < 0.\n\
          // You must never call this mid-sentence.\n",
     );
@@ -288,14 +288,14 @@ fn emits_invariant_comments_with_canonical_markers() {
             _ => None,
         })
         .collect();
-    // Line 2's prose begins with `You`, not a bare marker — the lead
-    // anchor excludes the mid-sentence `must`/`never`. Only the two
-    // leading markers fire.
+    // Line 3 is prose — it leads with `You`, not a labeled tag, and the
+    // bare mid-sentence `must`/`never` carry no colon, so neither fires.
+    // Only the two leading labeled markers fire.
     assert_eq!(
         comments,
         vec![
-            ("SAFETY:".to_string(), 1, false),
-            ("PANICS".to_string(), 2, false),
+            ("INVARIANT:".to_string(), 1, false),
+            ("PANICS:".to_string(), 2, false),
         ],
         "{comments:?}"
     );
@@ -303,13 +303,14 @@ fn emits_invariant_comments_with_canonical_markers() {
 
 #[test]
 fn stamps_in_test_on_a_comment_inside_a_cfg_test_mod() {
-    // A SAFETY marker inside a `#[cfg(test)]` module carries `in_test` —
-    // the line-grain twin of the item-level `test_depth` predicate.
+    // An invariant marker inside a `#[cfg(test)]` module carries
+    // `in_test` — the line-grain twin of the item-level `test_depth`
+    // predicate.
     let facts = extract(
         "pub fn answer() -> u32 { 42 }\n\
          #[cfg(test)]\n\
          mod tests {\n\
-         \x20   // SAFETY: only safe under the test harness.\n\
+         \x20   // INVARIANT: only safe under the test harness.\n\
          \x20   #[test]\n\
          \x20   fn checks() {}\n\
          }\n",

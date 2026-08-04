@@ -57,7 +57,12 @@ impl Frontend for RustFrontend {
         // v7: InvariantComment facts — a raw-text scan of the marker
         //     vocabulary (`SAFETY:` / `INVARIANT:` / …), since syn drops
         //     plain `//` comments. Feeds invariant-comment-position.
-        "7"
+        // v8: the vocabulary narrows to the five labeled (colon-bearing)
+        //     tags — a marker is a labeled tag, not a prose word. `SAFETY:`
+        //     is dropped (a block-local `unsafe` justification, not a file
+        //     invariant), and the bare words gain a colon (`MUST:` ≠ bare
+        //     `MUST`), so the cache must retire.
+        "8"
     }
 
     fn extract(&self, _file: &str, _crate_name: &str, module: &str, text: &str) -> Vec<Fact> {
@@ -209,31 +214,26 @@ fn line_of(spanned: &impl Spanned) -> u32 {
 /// The fixed invariant-marker vocabulary the frontend emits. The rule
 /// re-checks the active config vocabulary, so the extractor emits
 /// generously; each entry is the canonical spelling the config
-/// dictionary uses — the three colon-bearing markers are self-anchoring,
-/// the three bare markers need a word boundary (`is_word_boundary`).
-const INVARIANT_MARKERS: &[&str] = &[
-    "SAFETY:",
-    "INVARIANT:",
-    "WARNING:",
-    "PANICS",
-    "MUST",
-    "NEVER",
-];
+/// dictionary uses. All five are colon-bearing labeled tags — a marker
+/// is a labeled tag, not a prose word — so each is self-anchoring. The
+/// word-boundary guard in [`invariant_marker`] stays as a
+/// forward-compatible check for any future bare marker.
+const INVARIANT_MARKERS: &[&str] = &["INVARIANT:", "WARNING:", "PANICS:", "MUST:", "NEVER:"];
 
 /// The canonical invariant marker a comment line LEADS with, if any.
 /// Detection is anchored at the comment's first content token (after the
 /// `//` / `/*` / `*` introducer and whitespace): a marker not at the very
 /// start of the comment is NOT detected. This matches the all-caps
-/// section-header convention and — deliberately — avoids flagging prose
-/// uses of the bare words `must` / `never` / `panics` mid-sentence (a
-/// comment that BEGINS with the bare word still counts, which is the
-/// invariant-shaped case the rule targets).
+/// section-header convention and — deliberately — does not flag prose:
+/// every marker is a colon-bearing labeled tag, so a bare `must` /
+/// `never` / `panics` mid-sentence (or even leading one) is not an
+/// invariant declaration and does not fire.
 ///
-/// **Recorded limit:** a marker embedded mid-comment (`// see SAFETY:`
+/// **Recorded limit:** a marker embedded mid-comment (`// see INVARIANT:`
 /// further down) is not seen; the convention puts the marker at the lead.
 /// The match is case-sensitive to the config's canonical spelling, so
-/// `// safety:` (lowercase) is not detected — only the all-caps form the
-/// guide's vocabulary uses.
+/// `// invariant:` (lowercase) is not detected — only the all-caps form
+/// the guide's vocabulary uses.
 fn invariant_marker(line: &str) -> Option<String> {
     let lead = line
         .trim_start_matches(['/', '*', '!', ' ', '\t'])

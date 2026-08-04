@@ -107,8 +107,8 @@ interface TsSeamErrorFact {
 }
 
 /**
- * A comment carrying an invariant marker (`SAFETY:` / `INVARIANT:` /
- * `PANICS` / …), normalised to the config vocabulary's spelling. The
+ * A comment carrying an invariant marker (`INVARIANT:` / `WARNING:` /
+ * `PANICS:` / …), normalised to the config vocabulary's spelling. The
  * `ts-tsc` comment stream emits one per comment whose lead carries a
  * marker; `in_test` is file-grain, stamped by the bridge from the
  * record — same posture as `TsSeamErrorFact`. Consumed by
@@ -286,17 +286,16 @@ function lineOf(sf: SourceFile, pos: number): number {
 /**
  * The fixed invariant-marker vocabulary the extractor emits — the
  * canonical spelling the config dictionary uses. The rule re-checks the
- * active config vocabulary, so the extractor emits generously; the three
- * colon-bearing markers are self-anchoring, the three bare markers need a
- * word boundary.
+ * active config vocabulary, so the extractor emits generously; all five
+ * are colon-bearing labeled tags (a marker is a labeled tag, not a prose
+ * word), so each is self-anchoring.
  */
 const INVARIANT_MARKERS = [
-  "SAFETY:",
   "INVARIANT:",
   "WARNING:",
-  "PANICS",
-  "MUST",
-  "NEVER",
+  "PANICS:",
+  "MUST:",
+  "NEVER:",
 ];
 
 /**
@@ -304,12 +303,13 @@ const INVARIANT_MARKERS = [
  * leads with none. Detection is anchored at the comment's first content
  * token (after the `//` / `/*` / `*` introducer and whitespace): a marker
  * not at the very start is not detected. This matches the all-caps
- * section-header convention and — deliberately — avoids flagging prose
- * uses of the bare words must / never / panics mid-sentence (a comment
- * that BEGINS with the bare word still counts).
+ * section-header convention and — deliberately — does not flag prose:
+ * every marker is a colon-bearing labeled tag, so a bare must / never /
+ * panics mid-sentence (or even leading one) is not an invariant
+ * declaration and does not fire.
  *
  * Recorded limit: a marker embedded mid-comment is not seen; the match is
- * case-sensitive to the config's canonical spelling, so `// safety:`
+ * case-sensitive to the config's canonical spelling, so `// invariant:`
  * (lowercase) is not detected.
  */
 function invariantMarkerOf(commentText: string): string | null {
