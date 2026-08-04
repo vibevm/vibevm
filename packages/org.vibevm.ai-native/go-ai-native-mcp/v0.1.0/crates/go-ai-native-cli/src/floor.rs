@@ -12,6 +12,8 @@ use std::process::Command;
 
 use anyhow::{Result, bail};
 
+mod perimeter;
+
 pub struct FloorOptions {
     /// Run every step even after a failure (report all, then exit
     /// non-zero).
@@ -87,6 +89,15 @@ pub fn run_floor(root: &Path, opts: &FloorOptions) -> Result<()> {
     }
     let is_disabled = |step: &str| disabled.iter().any(|d| d.step == step);
 
+    // The floor's shared package perimeter: `go list ./...` once, then the
+    // same `[go].exclude_substrings` filter gofmt applies to files — so
+    // vet/test/staticcheck/exhaustive judge the identical boundary. Lazy:
+    // nothing spawns `go list` when every consuming step is disabled.
+    let needs_perimeter =
+        !is_disabled("vet") || !is_disabled("tests") || !is_disabled("staticcheck");
+    let perimeter =
+        perimeter::resolve_perimeter(root, &config.go.exclude_substrings, needs_perimeter);
+
     let mut outcomes: Vec<StepOutcome> = Vec::new();
     let record = |outcomes: &mut Vec<StepOutcome>, label: &'static str, ok: bool| {
         if !ok {
@@ -129,52 +140,89 @@ pub fn run_floor(root: &Path, opts: &FloorOptions) -> Result<()> {
         }
     }
 
-    // 2. Vet — the toolchain's own correctness census.
+    // 2. Vet — the toolchain's own correctness census, over the SAME
+    // perimeter gofmt judged: the fixtures kept deliberately wrong stay out
+    // of `go vet` exactly as they stay out of `gofmt -l`.
     if !is_disabled("vet") {
-        header(opts, "go vet ./...");
-        let mut cmd = crate::tools::go_command(root);
-        cmd.args(["vet", "./..."]);
-        let ok = run_tool_step(cmd, "install go >= 1.24 and put it on PATH");
-        if !record(&mut outcomes, "vet", ok) && !opts.keep_going {
+        header(
+            opts,
+            &format!(
+                "go vet (floor perimeter: {})",
+                perimeter::perimeter_scope(perimeter.as_ref())
+            ),
+        );
+        if let Some(ok) = perimeter::run_perimeter_step(perimeter.as_ref(), "vet", "vet", |pkgs| {
+            let mut cmd = crate::tools::go_command(root);
+            cmd.arg("vet");
+            perimeter::add_packages_or_wildcard(&mut cmd, pkgs);
+            run_tool_step(cmd, "install go >= 1.24 and put it on PATH")
+        }) && !record(&mut outcomes, "vet", ok)
+            && !opts.keep_going
+        {
             bail!("floor: `vet` failed");
         }
     }
 
     // 3. Tests — per-module `go test` (build + run in one verb; the
-    // compile IS the first half of the signal).
+    // compile IS the first half of the signal), over the same perimeter.
     if !is_disabled("tests") {
-        header(opts, "go test ./...");
-        let mut cmd = crate::tools::go_command(root);
-        cmd.args(["test", "./..."]);
-        let ok = run_tool_step(cmd, "install go >= 1.24 and put it on PATH");
-        if !record(&mut outcomes, "tests", ok) && !opts.keep_going {
+        header(
+            opts,
+            &format!(
+                "go test (floor perimeter: {})",
+                perimeter::perimeter_scope(perimeter.as_ref())
+            ),
+        );
+        if let Some(ok) =
+            perimeter::run_perimeter_step(perimeter.as_ref(), "tests", "test", |pkgs| {
+                let mut cmd = crate::tools::go_command(root);
+                cmd.arg("test");
+                perimeter::add_packages_or_wildcard(&mut cmd, pkgs);
+                run_tool_step(cmd, "install go >= 1.24 and put it on PATH")
+            })
+            && !record(&mut outcomes, "tests", ok)
+            && !opts.keep_going
+        {
             bail!("floor: `tests` failed");
         }
     }
 
-    // 4. The evidence providers: staticcheck + the exhaustive linter
-    // (the one Discipline rule a linter carries entirely — GUIDE §5).
+    // 4. The evidence providers: staticcheck + the exhaustive linter (the
+    // one Discipline rule a linter carries entirely — GUIDE §5), both over
+    // the same perimeter.
     if !is_disabled("staticcheck") {
-        header(opts, "staticcheck ./... && exhaustive ./...");
-        let sc = run_tool_step(
-            {
-                let mut cmd = crate::tools::path_tool(root, "staticcheck");
-                cmd.arg("./...");
-                cmd
-            },
-            "go install honnef.co/go/tools/cmd/staticcheck@latest (or disable the \
-             step with a reason in conform.toml [go].floor_disable)",
+        header(
+            opts,
+            &format!(
+                "staticcheck + exhaustive (floor perimeter: {})",
+                perimeter::perimeter_scope(perimeter.as_ref())
+            ),
         );
-        let ex = run_tool_step(
-            {
-                let mut cmd = crate::tools::path_tool(root, "exhaustive");
-                cmd.arg("./...");
-                cmd
-            },
-            "go install github.com/nishanths/exhaustive/cmd/exhaustive@latest (or \
-             disable the step with a reason in conform.toml [go].floor_disable)",
-        );
-        if !record(&mut outcomes, "staticcheck", sc && ex) && !opts.keep_going {
+        if let Some(ok) =
+            perimeter::run_perimeter_step(perimeter.as_ref(), "staticcheck", "lint", |pkgs| {
+                let sc = run_tool_step(
+                    {
+                        let mut cmd = crate::tools::path_tool(root, "staticcheck");
+                        perimeter::add_packages_or_wildcard(&mut cmd, pkgs);
+                        cmd
+                    },
+                    "go install honnef.co/go/tools/cmd/staticcheck@latest (or disable the \
+                 step with a reason in conform.toml [go].floor_disable)",
+                );
+                let ex = run_tool_step(
+                    {
+                        let mut cmd = crate::tools::path_tool(root, "exhaustive");
+                        perimeter::add_packages_or_wildcard(&mut cmd, pkgs);
+                        cmd
+                    },
+                    "go install github.com/nishanths/exhaustive/cmd/exhaustive@latest (or \
+                 disable the step with a reason in conform.toml [go].floor_disable)",
+                );
+                sc && ex
+            })
+            && !record(&mut outcomes, "staticcheck", ok)
+            && !opts.keep_going
+        {
             bail!("floor: `staticcheck` failed");
         }
     }
