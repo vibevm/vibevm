@@ -29,7 +29,7 @@ mod typescript_parity;
 pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};
 pub use citations::LintSuppressionNeedsReason;
 pub use diagnostics::{ErrorEnumCitesReq, ErrorMessageCitesReq, PubDoctest, SeamHasDoctest};
-pub use go::{GoCellIsolation, GoUnsafeInDomain};
+pub use go::{GoCellIsolation, GoFlagSites, GoUnsafeInDomain};
 pub use go_parity::{GoConformanceAssertion, GoSeamErrorCitesReq};
 pub use matrices::DeclaredTestMatrices;
 pub use naming::CellNameIsComputed;
