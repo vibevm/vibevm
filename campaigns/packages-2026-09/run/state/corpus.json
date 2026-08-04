@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-03T21:51:02Z",
+  "updated_at": "2026-08-04T02:50:36Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -264,9 +264,9 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "8782a55ff9f4f0744bff60f48c912c515b299a2051b406902a3e270555429274",
+        "processed_hash": "8bc517c099ad90c312b9ca5a006a4b7b9ce5a18ee897cfbc104b824953cbc3cc",
         "summary": {
-          "confirmed": 99,
+          "confirmed": 103,
           "unverifiable": 1
         },
         "verdicts": {
@@ -1111,10 +1111,38 @@
               "terraform/BASELINE.md:1  the adoption plan really does live outside this package, at the host's terraform/",
               "CLOSED F-209 partially (Phase D wave 4, route a). The placement was right and the NAME was wrong: the fact pointed at a directory called `vibevm-terraform`, which exists nowhere in the tree, while the plan it means is the host's `terraform/` - BASELINE.md, LOG.md, REPORT.md and adopt-v0.3/PREDICTIONS.md."
             ]
+          },
+          "PARITY-ACROSS-PROJECTIONS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:97  ##PARITY-ACROSS-PROJECTIONS **The strictness is equal across projections.** No language projection enforces the discipline more weakly than another; a rule the pilot enforces is either enforced in every projection or its absence carries a recorded reason. @impl/done",
+              "PRESCRIBES, judged coherent + referents resolve. The clause is the owner-ruled home of the parity principle (TOOLING-MAP.md fork No.9, taken 2026-08-04: «Ядро дисциплины» — the language-neutral guiding layer of core-ai-native, one home, the stacks cite). Its own referent «the pilot» resolves to ##VIBEVM-IS-FIRST-PILOT (00-MANIFESTO.md:11). It is cited by all three stack guides — GUIDE-AI-NATIVE-RUST.md:72, GUIDE-AI-NATIVE-GO.md:192, GUIDE-AI-NATIVE-TYPESCRIPT.md:161 — and the citation URI form was corrected to the marker's exact spelling this pass (the fragment lookup is case-sensitive: crates/vibe-spec/src/doctree.rs:219 `self.anchors.get(anchor)`, ids inserted verbatim at doctree.rs:378)."
+            ]
+          },
+          "PARITY-IS-THE-PROJECTION-TWIN-OF-THE-HATCH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:99  ##PARITY-IS-THE-PROJECTION-TWIN-OF-THE-HATCH This is the projection-level twin of `##BAN-WITHOUT-HATCH-IS-A-BUG` … the recorded reason is the escape hatch. @impl/done",
+              "PRESCRIBES, coherent; the one referent it names resolves in the same section — ##BAN-WITHOUT-HATCH-IS-A-BUG at 00-MANIFESTO.md:95. The «weaker with machinery and a recorded reason» disposition it defines is the one the parity loop actually uses: campaigns/packages-2026-09/harvest/e12-b035-parity-pass.md row 7 records Rust's conformance reason («the compiler at the use site IS the assertion») and TS's routed build as recorded reasons rather than silent gaps."
+            ]
+          },
+          "PARITY-PILOT-IS-A-BAR-NOT-A-PRIVILEGE": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:101  ##PARITY-PILOT-IS-A-BAR-NOT-A-PRIVILEGE The pilot language is the current reference bar because it is furthest along, not because it is privileged … A new language inherits the law on arrival. @impl/done",
+              "PRESCRIBES, coherent; «the pilot» resolves to ##VIBEVM-IS-FIRST-PILOT (00-MANIFESTO.md:11). The «bar rises to it» half is already exercised in the tree rather than aspirational: B-049 raised the RUST floor to the Go/TS shape (`RustConfig.floor_disable`, core-ai-native-conform/src/config.rs), i.e. the pilot was the weaker cell and the bar moved to the maturer projections — harvest/e12-b035-parity-pass.md row 13."
+            ]
+          },
+          "PARITY-GAP-IS-NEVER-SILENT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md:103  ##PARITY-GAP-IS-NEVER-SILENT A projection weaker on some rule with no recorded reason is … the discipline silently decaying — the failure mode A5 and A6 exist to make impossible … the checker is built or the reason is recorded, never the rule quietly relaxed. @spec/done",
+              "PRESCRIBES, coherent; every referent resolves — A5 at 00-MANIFESTO.md:55 (##AXIOM-A5-RULE-IS-CODE), A6 at :56 (##AXIOM-A6-REALITY-BEFORE-ASPIRATION), and «(§4)» to the enclosing section heading `## 4. Stricter, not simpler — and where the strictness lives {#stricter-not-simpler}` at :79. Marked @spec/done, which is correct for a clause that states a disposition rather than promising a checker of its own."
+            ]
           }
         },
-        "verified_at": "2026-07-29T18:55:16Z",
-        "verify_batch": "C2 + D4a + D5b + D7"
+        "verified_at": "2026-08-03T21:56:32Z",
+        "verify_batch": "C2 + D4a + D5b + D7 + E13-S4-reseal"
       }
     },
     {
@@ -9305,13 +9333,13 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 150,
+      "markers": 151,
       "units": 17,
-      "facts": 149,
+      "facts": 150,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "44f286353e0490bdd2f0f9c5cb036c7da6b7b9a97c80a26bf57d72e58352e795",
+        "processed_hash": "fc5a0ff28461e7bc27ea64793c9f676489a2724f813b41867ae01f4cc00620e0",
         "summary": {
           "confirmed": 147,
           "unverifiable": 2
@@ -9818,7 +9846,8 @@
           "CONFORMANCE-IS-MADE-LOUD": {
             "v": "confirmed",
             "ev": [
-              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-030 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:191-192  ##CONFORMANCE-IS-MADE-LOUD **Conformance is made loud** — … the `go-conformance-assertion` rule polices the **gated** cells … exempt and ungated cells (the genuinely seamless ones included) are out of scope and are never falsely flagged. @impl/done",
+              "**Evidence RE-GROUNDED (verdict unchanged: confirmed).** The prior evidence vouched for a DIFFERENT text — the B-027-swept form carrying «Specified, not built (→ B-030)» with an @impl/plan marker. Wave-B batch 2 built the rule and S4 rewrote the clause to describe it, so the old evidence no longer describes the anchor it is filed under. Re-grounded on the built state: `GoConformanceAssertion` lives at core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/go_parity.rs:113-154 (the `gated` set at :146-150 is exactly the «exempt and ungated cells are out of scope» scope the clause claims), and it is mounted conditionally on `cells_dir` in the Go driver at go-ai-native-lang/v0.1.0/crates/go-ai-native-conform/src/lib.rs:66. The doc now DESCRIBES what the tree HAS."
             ]
           },
           "PROMOTION-TO-A-SEPARATE-MODULE": {
@@ -10540,8 +10569,8 @@
           "SWEEP-CENSUS-REGRESSIONS": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/  the census has a live three-stage producer; two of the five names are shipped kinds verbatim",
-              "CLOSED F-184 partially (Phase D wave 5) - CORRECTED, not demoted. The census producer ships and two of the five kind names are the shipped strings; only the other three were wrong, and only those changed."
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:614-620  ##SWEEP-CENSUS-REGRESSIONS **Census regressions** … `go-extract` emits the kinds, the `go-unsafe-in-domain` conform rule reports them — except `seam_error_missing_req`, which since B-033 is owned by the dedicated `go-seam-error-cites-req` rule (its structure half) …",
+              "**Evidence RE-GROUNDED (verdict unchanged: confirmed).** The prior evidence vouched for the pre-B-033 text, which listed all five kinds under the `go-unsafe-in-domain` umbrella; that became false the moment batch 2 moved the seam-error kind out, and S4 corrected the clause. Checked against the tree: the structure half is owned by the dedicated rule — core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/go_parity.rs:87 matches `\"seam_error_missing_req\" if !in_test` inside `GoSeamErrorCitesReq`, and rules/go.rs:34 documents the seam-error kinds as no longer the umbrella's. The other four kinds remain the umbrella's, exactly as the corrected clause states."
             ]
           },
           "SWEEP-FLIP-ONLY-AFTER-DRAIN": {
@@ -10551,8 +10580,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-03T14:59:58Z",
-        "verify_batch": "C3 + D5a + D6 + D7 + D9-boss-a + D24 + D34"
+        "verified_at": "2026-08-03T21:56:32Z",
+        "verify_batch": "C3 + D5a + D6 + D7 + D9-boss-a + D24 + D34 + E13-S4-reseal"
       }
     },
     {
@@ -13781,6 +13810,57 @@
       }
     },
     {
+      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md",
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 14,
+      "units": 4,
+      "facts": 13,
+      "unmarked": 0,
+      "issues": 0,
+      "campaign": {}
+    },
+    {
+      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-declared-test-matrices.md",
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 14,
+      "units": 4,
+      "facts": 13,
+      "unmarked": 0,
+      "issues": 0,
+      "campaign": {}
+    },
+    {
+      "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-position-is-a-resource.md",
+      "effective": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "done"
+      },
+      "markers": 14,
+      "units": 4,
+      "facts": 13,
+      "unmarked": 0,
+      "issues": 0,
+      "campaign": {}
+    },
+    {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md",
       "effective": {
         "stage": "spec",
@@ -15316,13 +15396,13 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 89,
+      "markers": 90,
       "units": 16,
-      "facts": 88,
+      "facts": 89,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "b70b769344683bb01b0566b981ca40aa2120880b388d46ffc030b8d4485d8fad",
+        "processed_hash": "314b5bbb00c17513fa22feb0372c89effacc2ceeeb436ff765f6cec163b9f95a",
         "summary": {
           "confirmed": 83,
           "drift": 5
@@ -16099,7 +16179,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-03T14:59:58Z",
+        "verified_at": "2026-08-03T21:56:32Z",
         "verify_batch": "C3 + D5a + D7 + D34"
       }
     },
@@ -21081,9 +21161,9 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "1ae7919d82bb3326ef5848244523589ed1a9a5cff42fee11ffcc7fcd59bcca36",
+        "processed_hash": "4ebad8cf864a376dc650c645a7f0424b13bca2e92f3895c58a7a4822cab671ab",
         "summary": {
-          "confirmed": 148,
+          "confirmed": 149,
           "drift": 4,
           "unverifiable": 1
         },
@@ -22322,10 +22402,17 @@
               "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/vendor/core-ai-native-conform/src/config.rs:173      pub floor_disable: Vec<FloorDisable>,",
               "located in the perimeter on the refs above, machine-verified against the files they cite"
             ]
+          },
+          "TS-SEAM-ERROR-CITES-REQ-IS-BUILT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md:161  ##TS-SEAM-ERROR-CITES-REQ-IS-BUILT *The gate now checks this* — the `ts-seam-error-cites-req` rule flags a discriminated-union error type alias `E` whose variants carry no `spec://` REQ. Honest limits, recorded … @impl/done",
+              "DESCRIBES, checked against the tree and TRUE in every part. The rule exists: packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/typescript_parity.rs:16 (doc) and :56 (`id() = \"ts-seam-error-cites-req\"`). It is MOUNTED in the TS driver: packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/crates/typescript-ai-native-conform/src/lib.rs:55 `out.push(Box::new(rules::TsSeamErrorCitesReq));`. The three recorded limits match the implementation (Form-1 union members, name-based error position, closed `{kind,tag,_tag}` discriminant) — the clause records what the heuristic cannot see instead of claiming coverage, which is the ##PARITY-GAP-IS-NEVER-SILENT disposition applied to itself."
+            ]
           }
         },
-        "verified_at": "2026-08-03T14:59:58Z",
-        "verify_batch": "C3 + C45-cross-language + D5a + D7 + D30 + D33 + D34"
+        "verified_at": "2026-08-03T21:56:32Z",
+        "verify_batch": "C3 + C45-cross-language + D5a + D7 + D30 + D33 + D34 + E13-S4-reseal"
       }
     },
     {
@@ -23046,10 +23133,10 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 35,
+      "markers": 34,
       "units": 6,
       "facts": 34,
-      "unmarked": 0,
+      "unmarked": 1,
       "issues": 0,
       "campaign": {
         "processed_hash": "7d4d65d337b841ec9243695587be6fe8992bce8ecc2d398ed3281188693d413b",
@@ -91598,9 +91685,9 @@
         "stage": "doc",
         "state": "done"
       },
-      "markers": 74,
+      "markers": 75,
       "units": 6,
-      "facts": 68,
+      "facts": 69,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -92708,6 +92795,23 @@
         "verified_at": "2026-07-25T13:00:46Z",
         "verify_batch": "c2-design + d2b"
       }
+    },
+    {
+      "path": "spec/design/new-rule-classes.md",
+      "effective": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "markers": 14,
+      "units": 6,
+      "facts": 31,
+      "unmarked": 18,
+      "issues": 0,
+      "campaign": {}
     },
     {
       "path": "spec/design/seam-error-and-assertion-parity.md",

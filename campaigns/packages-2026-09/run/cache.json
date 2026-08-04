@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-03T21:56:32Z",
+  "updated_at": "2026-08-04T02:52:00Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -8869,7 +8869,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/cards/scaffold-f-structured-diagnostics.md": {
-      "content_hash": "ccafcff42a4d55bb286ff0b87bb86b5ca54373cf1671cc7ae65b6438e550dd2e",
+      "content_hash": "0a0c619dd6b361ecd46a2203c00a9a72e3dddbdbeff4097df5f1df46c131312c",
       "rollup": {
         "explicit": [
           "spec",
@@ -8891,7 +8891,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "ccafcff42a4d55bb286ff0b87bb86b5ca54373cf1671cc7ae65b6438e550dd2e",
+        "processed_hash": "0a0c619dd6b361ecd46a2203c00a9a72e3dddbdbeff4097df5f1df46c131312c",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -9007,7 +9007,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:59:36Z",
+        "verified_at": "2026-08-04T02:52:00Z",
         "verify_batch": "C4+C5"
       }
     },
@@ -9424,7 +9424,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md": {
-      "content_hash": "fc5a0ff28461e7bc27ea64793c9f676489a2724f813b41867ae01f4cc00620e0",
+      "content_hash": "0ca2eb6199edeb4452d42513fafb05f07336c6d15929c0da01713b0b3dc6a43d",
       "rollup": {
         "explicit": [
           "spec",
@@ -9438,15 +9438,15 @@
           "spec",
           "done"
         ],
-        "marker_count": 150,
-        "fact_count": 149,
+        "marker_count": 151,
+        "fact_count": 150,
         "unmarked_facts": 0
       },
-      "marker_count": 150,
+      "marker_count": 151,
       "unit_count": 17,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "fc5a0ff28461e7bc27ea64793c9f676489a2724f813b41867ae01f4cc00620e0",
+        "processed_hash": "0ca2eb6199edeb4452d42513fafb05f07336c6d15929c0da01713b0b3dc6a43d",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -10681,10 +10681,17 @@
             "ev": [
               "repaired under F-166, owner ruling 2026-08-02 answer (а): the key now names the one the shipped engine reads — gated_crates (config.rs:44, the only spelling, deny_unknown_fields makes any other word a loud parse error) — with the honest parenthetical that the spelling is the shared neutral engine's; the Rust-flavoured word is recorded as a planned engine-side rename (neutral/per-language key, BACKLOG B-029), and the doc will follow the engine when it lands; the flip-only-after-drain practice claim itself was never in dispute"
             ]
+          },
+          "NAMES-REST-OF-R3-004-IS-UNBUILT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/GUIDE-AI-NATIVE-GO.md:222  - ##NAMES-REST-OF-R3-004-IS-UNBUILT The other halves of R3-004 — one name = one referent across contract surfaces, no synonym pairs or shadowing, and a closed vocabulary of structural tokens — are **not built**: no such checker or",
+              "DESCRIBES an ABSENCE, and the absence is measured, not assumed: the census harvest/e13-r3-pending-cards-census.md Q4 found no closed token vocabulary anywhere in the tree (0, neither as data nor as a constant), no contract-surface name registry, and no synonym/shadowing detector. Only the composition half of R3-004 has a checker (`cell-name-is-computed`). The clause carries `@spec/done` rather than `@impl/plan` because B-027 ties `@impl/plan` to a NAMED backlog entry and none existed when it was written; BACKLOG.md {#b-052} now names them, and raising the marker is a deliberate later decision rather than an automatic consequence."
+            ]
           }
         },
-        "verified_at": "2026-08-03T21:56:32Z",
-        "verify_batch": "C3 + D5a + D6 + D7 + D9-boss-a + D24 + D34 + E13-S4-reseal"
+        "verified_at": "2026-08-04T02:52:00Z",
+        "verify_batch": "C3 + D5a + D6 + D7 + D9-boss-a + D24 + D34 + E13-S4-reseal + E13-BATCH3-CARDS"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md": {
@@ -11681,7 +11688,7 @@
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md": {
-      "content_hash": "b68e511ecf78c6a34f4c52379d2702d09648e19fa80d2c4f6b2e45d8f6795226",
+      "content_hash": "ebe3a0f65ed2e8a1c07ffcae1ca35bc73bdb88eaa035b317561baa18ab84cb2c",
       "rollup": {
         "explicit": [
           "spec",
@@ -11703,7 +11710,7 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "b68e511ecf78c6a34f4c52379d2702d09648e19fa80d2c4f6b2e45d8f6795226",
+        "processed_hash": "ebe3a0f65ed2e8a1c07ffcae1ca35bc73bdb88eaa035b317561baa18ab84cb2c",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -11953,7 +11960,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-03T20:46:24Z",
+        "verified_at": "2026-08-04T02:52:00Z",
         "verify_batch": "C4+C5 + C45-go-review + E12-F185-rejudge"
       }
     },
@@ -13963,6 +13970,369 @@
         "verify_batch": "C6 + D8b + D11-release-a"
       }
     },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md": {
+      "content_hash": "0448af48053873006ab5482dd0438b42a941007fcf6469a40a3ebe7d1929bed4",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
+      },
+      "marker_count": 14,
+      "unit_count": 4,
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "0448af48053873006ab5482dd0438b42a941007fcf6469a40a3ebe7d1929bed4",
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md:5  ##status-line **Discipline v0.2 · BETA · T2 · Rust (lineage home of the shared rule; the checker serves Go too)** @impl/done",
+              "Card section judged against the BUILT rule it documents. The checker `cell-name-is-computed` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/naming.rs; mounted in the Rust and Go drivers (TS carries a recorded reason: no cell manifest exists to compute from); the tree was brought to compliance by 16 renames; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "CLASSIFICATION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md:9  ##CLASSIFICATION Classification: layer=B (names & tokens) + H (weak-reader); mechanism=rule. *The slug names the broader R3-004 aspiration (\"closed-vocabulary naming\"). The SHIPPED checker enforces one half of it — the name is COM",
+              "Card section judged against the BUILT rule it documents. The checker `cell-name-is-computed` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/naming.rs; mounted in the Rust and Go drivers (TS carries a recorded reason: no cell manifest exists to compute from); the tree was brought to compliance by 16 renames; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "INTENT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md:11  ##INTENT Intent: a cell's canonical type name is not chosen freely but COMPUTED from its manifest — `Pascal(variant)` followed by the seam SPELLED AS WRITTEN — so the type announces which variant of which seam it is, and a rename ",
+              "Card section judged against the BUILT rule it documents. The checker `cell-name-is-computed` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/naming.rs; mounted in the Rust and Go drivers (TS carries a recorded reason: no cell manifest exists to compute from); the tree was brought to compliance by 16 renames; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "ALSO-KNOWN-AS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md:13  ##ALSO-KNOWN-AS Also Known As: computed-cell-name; `cell-name-is-computed`; the `WalFreshnessCheck` house style; R3-004 (composition half); B-038 fork №1. @spec/done",
+              "Card section judged against the BUILT rule it documents. The checker `cell-name-is-computed` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/naming.rs; mounted in the Rust and Go drivers (TS carries a recorded reason: no cell manifest exists to compute from); the tree was brought to compliance by 16 renames; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "APPLICABILITY-RECOGNITION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md:15  ##APPLICABILITY-RECOGNITION Applicability / Recognition: an item carries a `cell(seam = \"…\", variant = \"…\")` manifest attr — the Rust frontend lowers `#[cell(seam = \"…\", variant = \"…\")]` into it VERBATIM, and the Go extract bridge",
+              "Card section judged against the BUILT rule it documents. The checker `cell-name-is-computed` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/naming.rs; mounted in the Rust and Go drivers (TS carries a recorded reason: no cell manifest exists to compute from); the tree was brought to compliance by 16 renames; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "MOTIVATION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md:19  ##MOTIVATION Motivation: a struct named `Sat` behind a `#[cell(seam = \"DepSolver\", variant = \"sat\")]` manifest hides which seam-variant it is — a reader must open the manifest to learn it, and the next author renames the type with",
+              "Card section judged against the BUILT rule it documents. The checker `cell-name-is-computed` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/naming.rs; mounted in the Rust and Go drivers (TS carries a recorded reason: no cell manifest exists to compute from); the tree was brought to compliance by 16 renames; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "STRUCTURE-AND-PARTICIPANTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md:21  ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: the conform fact `Fact::Item { symbol, attrs, … }` — the Rust frontend lowers the `#[cell]` manifest into `attrs` verbatim; the Go bridge renders the `//spec:cell` directive i",
+              "Card section judged against the BUILT rule it documents. The checker `cell-name-is-computed` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/naming.rs; mounted in the Rust and Go drivers (TS carries a recorded reason: no cell manifest exists to compute from); the tree was brought to compliance by 16 renames; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "COLLABORATIONS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md:23  ##COLLABORATIONS Collaborations: rides the same conform gate, SARIF output, and ratchet baseline as the other structural rules; **one engine rule serves Rust AND Go** — both drivers mount `CellNameIsComputed`, so the Go convention",
+              "Card section judged against the BUILT rule it documents. The checker `cell-name-is-computed` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/naming.rs; mounted in the Rust and Go drivers (TS carries a recorded reason: no cell manifest exists to compute from); the tree was brought to compliance by 16 renames; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "GOALS-AND-NON-GOALS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md:25  ##GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* enforce that a cell's type name IS its manifest composed — `Pascal(variant)` + the seam as written. *Non-Goals (the honest boundary):* **the rule checks COMPOSITION ONLY.** It does",
+              "Card section judged against the BUILT rule it documents. The checker `cell-name-is-computed` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/naming.rs; mounted in the Rust and Go drivers (TS carries a recorded reason: no cell manifest exists to compute from); the tree was brought to compliance by 16 renames; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "CONSEQUENCES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md:27  ##CONSEQUENCES Consequences: (+) a cell's name announces its seam-variant at every call site; (+) renames are compiler-checked, riding a manifest edit; (+) one rule reads two languages through one attr string, so a second grammar ",
+              "Card section judged against the BUILT rule it documents. The checker `cell-name-is-computed` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/naming.rs; mounted in the Rust and Go drivers (TS carries a recorded reason: no cell manifest exists to compute from); the tree was brought to compliance by 16 renames; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "ALTERNATIVES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md:29  ##ALTERNATIVES Alternatives: free naming plus a separate vocabulary/uniqueness lint — the closed-vocabulary variant the owner did not take; it needs a token vocabulary that does not exist in the tree. Pascal-both-halves compositio",
+              "Card section judged against the BUILT rule it documents. The checker `cell-name-is-computed` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/naming.rs; mounted in the Rust and Go drivers (TS carries a recorded reason: no cell manifest exists to compute from); the tree was brought to compliance by 16 renames; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "RISKS-AND-ASSUMPTIONS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md:31  ##RISKS-AND-ASSUMPTIONS Risks & Assumptions: assumes the manifest's `seam` is already in the spelling the name should carry, since the rule substitutes it verbatim and never re-cases it; assumes `variant` words compose cleanly und",
+              "Card section judged against the BUILT rule it documents. The checker `cell-name-is-computed` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/naming.rs; mounted in the Rust and Go drivers (TS carries a recorded reason: no cell manifest exists to compute from); the tree was brought to compliance by 16 renames; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "EVIDENCE-AND-TRANSFER-STRENGTH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md:33  ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: checker shipped (`cell-name-is-computed`, doctested in `core-ai-native-conform/src/rules/naming.rs`, mounted in `rust-ai-native-conform` and `go-ai-native-conform`); R",
+              "Card section judged against the BUILT rule it documents. The checker `cell-name-is-computed` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/naming.rs; mounted in the Rust and Go drivers (TS carries a recorded reason: no cell manifest exists to compute from); the tree was brought to compliance by 16 renames; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          }
+        },
+        "verified_at": "2026-08-04T02:52:00Z",
+        "verify_batch": "E13-BATCH3-CARDS"
+      }
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-declared-test-matrices.md": {
+      "content_hash": "4683dfcc7ddcce5caadfcc6eb2a6f78eee9d835294605a3ea14abc871df626cc",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
+      },
+      "marker_count": 14,
+      "unit_count": 4,
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "4683dfcc7ddcce5caadfcc6eb2a6f78eee9d835294605a3ea14abc871df626cc",
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-declared-test-matrices.md:5  ##status-line **Discipline v0.2 · BETA · T2 · Rust (lineage home of the shared rule; the checker serves Go and TypeScript too)** @impl/done",
+              "Card section judged against the BUILT rule it documents. The checker `declared-test-matrices` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/matrices.rs; mounted in all three drivers; the nested-loop half narrowed to GENERATED range axes after the panel caught two false positives on closed-enum exhaustion; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "CLASSIFICATION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-declared-test-matrices.md:9  ##CLASSIFICATION Classification: layer=E (verification) + H (weak-reader); mechanism=rule. @impl/done",
+              "Card section judged against the BUILT rule it documents. The checker `declared-test-matrices` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/matrices.rs; mounted in all three drivers; the nested-loop half narrowed to GENERATED range axes after the panel caught two false positives on closed-enum exhaustion; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "INTENT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-declared-test-matrices.md:11  ##INTENT Intent: a test matrix is DECLARED as data — a table of cases iterated once — never GENERATED by a full `2^n` enumeration, because a swept matrix hides a case count that grows exponentially with the axes, so a regression s",
+              "Card section judged against the BUILT rule it documents. The checker `declared-test-matrices` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/matrices.rs; mounted in all three drivers; the nested-loop half narrowed to GENERATED range axes after the panel caught two false positives on closed-enum exhaustion; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "ALSO-KNOWN-AS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-declared-test-matrices.md:13  ##ALSO-KNOWN-AS Also Known As: declared-test-matrices; `declared-test-matrices`; no-combinatorial-sweep; table-driven-not-bitmask; R-060. @spec/done",
+              "Card section judged against the BUILT rule it documents. The checker `declared-test-matrices` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/matrices.rs; mounted in all three drivers; the nested-loop half narrowed to GENERATED range axes after the panel caught two false positives on closed-enum exhaustion; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "APPLICABILITY-RECOGNITION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-declared-test-matrices.md:15  ##APPLICABILITY-RECOGNITION Applicability / Recognition: a test file (a `#[cfg(test)]`/`#[test]` site for rust-syn, a `_test.go` file for go-extract, a `*.test.ts`/`*.spec.ts`/`__tests__` file for ts-tsc) carries EITHER (a) a loop",
+              "Card section judged against the BUILT rule it documents. The checker `declared-test-matrices` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/matrices.rs; mounted in all three drivers; the nested-loop half narrowed to GENERATED range axes after the panel caught two false positives on closed-enum exhaustion; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "MOTIVATION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-declared-test-matrices.md:19  ##MOTIVATION Motivation: a test written `for mask in 0..(1 << n) { check(mask) }` enumerates `2^n` cases the reader must derive mentally to know what is covered; add a fifth axis and the suite quietly runs 32× more (or, if the bou",
+              "Card section judged against the BUILT rule it documents. The checker `declared-test-matrices` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/matrices.rs; mounted in all three drivers; the nested-loop half narrowed to GENERATED range axes after the panel caught two false positives on closed-enum exhaustion; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "STRUCTURE-AND-PARTICIPANTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-declared-test-matrices.md:21  ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: the conform fact `Fact::TestSweep { kind, line, detail }` (emitted by all three frontends, only in test context) → the `declared-test-matrices` rule turns each into one findin",
+              "Card section judged against the BUILT rule it documents. The checker `declared-test-matrices` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/matrices.rs; mounted in all three drivers; the nested-loop half narrowed to GENERATED range axes after the panel caught two false positives on closed-enum exhaustion; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "COLLABORATIONS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-declared-test-matrices.md:23  ##COLLABORATIONS Collaborations: rides the same conform gate, SARIF output, and ratchet baseline as the other rules; **one engine rule serves Rust, Go, AND TypeScript** — all three drivers mount `DeclaredTestMatrices`, since every",
+              "Card section judged against the BUILT rule it documents. The checker `declared-test-matrices` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/matrices.rs; mounted in all three drivers; the nested-loop half narrowed to GENERATED range axes after the panel caught two false positives on closed-enum exhaustion; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "GOALS-AND-NON-GOALS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-declared-test-matrices.md:25  ##GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* red a swept test matrix — a `2^n` bit-mask loop or a ≥3-deep generated-axis (range / C-style-for) nest — in test context, so a reader can count the cases by eye. *Non-Goals:* NOT a",
+              "Card section judged against the BUILT rule it documents. The checker `declared-test-matrices` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/matrices.rs; mounted in all three drivers; the nested-loop half narrowed to GENERATED range axes after the panel caught two false positives on closed-enum exhaustion; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "CONSEQUENCES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-declared-test-matrices.md:27  ##CONSEQUENCES Consequences: (+) a swept matrix becomes a named, reviewable finding rather than an invisible exponent; (+) the table-driven remedy is the same idiom every guide already recommends, so the fix is mechanical; (+) one",
+              "Card section judged against the BUILT rule it documents. The checker `declared-test-matrices` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/matrices.rs; mounted in all three drivers; the nested-loop half narrowed to GENERATED range axes after the panel caught two false positives on closed-enum exhaustion; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "ALTERNATIVES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-declared-test-matrices.md:29  ##ALTERNATIVES Alternatives: no check at all — the pre-rule state: a swept matrix is invisible until a regression escapes it; ban ALL nested loops in tests (too blunt — a 2-deep nest is readable and common); a coverage-gate that d",
+              "Card section judged against the BUILT rule it documents. The checker `declared-test-matrices` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/matrices.rs; mounted in all three drivers; the nested-loop half narrowed to GENERATED range axes after the panel caught two false positives on closed-enum exhaustion; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "RISKS-AND-ASSUMPTIONS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-declared-test-matrices.md:31  ##RISKS-AND-ASSUMPTIONS Risks & Assumptions: assumes a bit-mask loop bound (`1 << n`) is generating test cases, not computing a real bitmask for the system under test (in test context this is near-always true — a test computing a ",
+              "Card section judged against the BUILT rule it documents. The checker `declared-test-matrices` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/matrices.rs; mounted in all three drivers; the nested-loop half narrowed to GENERATED range axes after the panel caught two false positives on closed-enum exhaustion; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "EVIDENCE-AND-TRANSFER-STRENGTH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-declared-test-matrices.md:33  ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: checker shipped (`declared-test-matrices`, doctested in `core-ai-native-conform/src/rules/matrices.rs`, mounted in `rust-ai-native-conform`, `go-ai-native-conform`, an",
+              "Card section judged against the BUILT rule it documents. The checker `declared-test-matrices` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/matrices.rs; mounted in all three drivers; the nested-loop half narrowed to GENERATED range axes after the panel caught two false positives on closed-enum exhaustion; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          }
+        },
+        "verified_at": "2026-08-04T02:52:00Z",
+        "verify_batch": "E13-BATCH3-CARDS"
+      }
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-position-is-a-resource.md": {
+      "content_hash": "910167e28c5959ca57c77995bb6ddb56469db7674e435456bb70f07409039f3b",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 14,
+        "fact_count": 13,
+        "unmarked_facts": 0
+      },
+      "marker_count": 14,
+      "unit_count": 4,
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "910167e28c5959ca57c77995bb6ddb56469db7674e435456bb70f07409039f3b",
+        "verdicts": {
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-position-is-a-resource.md:5  ##status-line **Discipline v0.2 · BETA · T2 · Rust** @impl/done",
+              "Card section judged against the BUILT rule it documents. The checker `invariant-comment-position` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/position.rs; mounted in all three drivers' build_rules; exhibited red+green on six fixtures; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "CLASSIFICATION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-position-is-a-resource.md:9  ##CLASSIFICATION Classification: layer=D (context & repo) + H (weak-reader); mechanism=rule. @impl/done",
+              "Card section judged against the BUILT rule it documents. The checker `invariant-comment-position` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/position.rs; mounted in all three drivers' build_rules; exhibited red+green on six fixtures; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "INTENT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-position-is-a-resource.md:11  ##INTENT Intent: critical invariants stated in comments belong at a file's edges — its top or bottom — where they survive a skim; a marker buried in the middle third is paged past by a reader (human or weak agent) who never reache",
+              "Card section judged against the BUILT rule it documents. The checker `invariant-comment-position` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/position.rs; mounted in all three drivers' build_rules; exhibited red+green on six fixtures; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "ALSO-KNOWN-AS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-position-is-a-resource.md:13  ##ALSO-KNOWN-AS Also Known As: invariant-position; bury-the-invariant; \"the comment nobody reads\"; R3-003. @spec/done",
+              "Card section judged against the BUILT rule it documents. The checker `invariant-comment-position` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/position.rs; mounted in all three drivers' build_rules; exhibited red+green on six fixtures; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "APPLICABILITY-RECOGNITION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-position-is-a-resource.md:15  ##APPLICABILITY-RECOGNITION Applicability / Recognition: a source file of at least `invariant_comment_min_file_lines` (default 120) carries a comment whose normalized marker is in the configured `invariant_comment_markers` vocabul",
+              "Card section judged against the BUILT rule it documents. The checker `invariant-comment-position` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/position.rs; mounted in all three drivers' build_rules; exhibited red+green on six fixtures; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "MOTIVATION": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-position-is-a-resource.md:19  ##MOTIVATION Motivation: a reader skims a file's top and bottom; the middle is where attention thins. An `INVARIANT:` stating \"this counter must never wrap\" sitting at line 600 of 900 is read by no one who later edits line 600, so",
+              "Card section judged against the BUILT rule it documents. The checker `invariant-comment-position` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/position.rs; mounted in all three drivers' build_rules; exhibited red+green on six fixtures; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "STRUCTURE-AND-PARTICIPANTS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-position-is-a-resource.md:21  ##STRUCTURE-AND-PARTICIPANTS Structure & Participants: the conform fact `Fact::InvariantComment { marker, line, in_test }` (emitted by every frontend's comment walk — the Rust frontend's raw-text scan, the TS/Go sidecars) plus `Fa",
+              "Card section judged against the BUILT rule it documents. The checker `invariant-comment-position` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/position.rs; mounted in all three drivers' build_rules; exhibited red+green on six fixtures; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "COLLABORATIONS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-position-is-a-resource.md:23  ##COLLABORATIONS Collaborations: rides the same conform gate, SARIF output, and ratchet baseline as `file-length`; the marker vocabulary is a root `conform.toml` key shared across Rust/TS/Go (one vocabulary, not three); the rule r",
+              "Card section judged against the BUILT rule it documents. The checker `invariant-comment-position` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/position.rs; mounted in all three drivers' build_rules; exhibited red+green on six fixtures; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "GOALS-AND-NON-GOALS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-position-is-a-resource.md:25  ##GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* surface invariants a skim misses; keep both the vocabulary and the floor configurable per project. *Non-Goals:* NOT a prose-truth judge — it keys on the marker, not whether the com",
+              "Card section judged against the BUILT rule it documents. The checker `invariant-comment-position` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/position.rs; mounted in all three drivers' build_rules; exhibited red+green on six fixtures; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "CONSEQUENCES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-position-is-a-resource.md:27  ##CONSEQUENCES Consequences: (+) invariants that matter sit where they are seen; (+) the floor and the third are explicit and tunable. (−) a marker the author meant block-local but tagged with a file-level token will fire — the vo",
+              "Card section judged against the BUILT rule it documents. The checker `invariant-comment-position` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/position.rs; mounted in all three drivers' build_rules; exhibited red+green on six fixtures; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "ALTERNATIVES": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-position-is-a-resource.md:29  ##ALTERNATIVES Alternatives: a flat \"no comments past line N\" rule (too blunt — loses the invariant/not-prose distinction this card exists to make); relying on rustdoc / `@invariant` placement alone (un-enforced, so it drifts). @s",
+              "Card section judged against the BUILT rule it documents. The checker `invariant-comment-position` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/position.rs; mounted in all three drivers' build_rules; exhibited red+green on six fixtures; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "RISKS-AND-ASSUMPTIONS": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-position-is-a-resource.md:31  ##RISKS-AND-ASSUMPTIONS Risks & Assumptions: assumes the marker vocabulary marks genuine **file-level** invariants, not block-local notes — which is why `SAFETY:` is excluded: in Rust a `SAFETY:` must hug its `unsafe` block (langu",
+              "Card section judged against the BUILT rule it documents. The checker `invariant-comment-position` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/position.rs; mounted in all three drivers' build_rules; exhibited red+green on six fixtures; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          },
+          "EVIDENCE-AND-TRANSFER-STRENGTH": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-position-is-a-resource.md:33  ##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: checker shipped (`invariant-comment-position`, doctested in `core-ai-native-conform/src/rules/position.rs`); R3-003. Class: built + unit-tested, not yet exercised on b",
+              "Card section judged against the BUILT rule it documents. The checker `invariant-comment-position` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/position.rs; mounted in all three drivers' build_rules; exhibited red+green on six fixtures; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+            ]
+          }
+        },
+        "verified_at": "2026-08-04T02:52:00Z",
+        "verify_batch": "E13-BATCH3-CARDS"
+      }
+    },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-a-generators.md": {
       "content_hash": "fc678589ba5c62ffe693bc7f6ba6bd7a03e78c82ee7064d0ad5e40c65bbfabfc",
       "rollup": {
@@ -14965,7 +15335,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-f-structured-diagnostics.md": {
-      "content_hash": "1bff0d5268448ebc4e8129faa32f6da7ef92d873a34eba5ab0c20e99057685cc",
+      "content_hash": "8710d1dbf3d843abe5f62fd6f13f5063481b8304cb4ea2607662b6a86ae86f68",
       "rollup": {
         "explicit": [
           "spec",
@@ -14987,7 +15357,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "1bff0d5268448ebc4e8129faa32f6da7ef92d873a34eba5ab0c20e99057685cc",
+        "processed_hash": "8710d1dbf3d843abe5f62fd6f13f5063481b8304cb4ea2607662b6a86ae86f68",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -15103,7 +15473,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T12:01:00Z",
+        "verified_at": "2026-08-04T02:52:00Z",
         "verify_batch": "C4+C5 + C45-rust-review"
       }
     },
@@ -15526,7 +15896,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md": {
-      "content_hash": "314b5bbb00c17513fa22feb0372c89effacc2ceeeb436ff765f6cec163b9f95a",
+      "content_hash": "814152b31aa4471700db967bba2f15e270dc0946318febbba64401f213d7b87b",
       "rollup": {
         "explicit": [
           "spec",
@@ -15540,15 +15910,15 @@
           "spec",
           "done"
         ],
-        "marker_count": 89,
-        "fact_count": 88,
+        "marker_count": 90,
+        "fact_count": 89,
         "unmarked_facts": 0
       },
-      "marker_count": 89,
+      "marker_count": 90,
       "unit_count": 16,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "314b5bbb00c17513fa22feb0372c89effacc2ceeeb436ff765f6cec163b9f95a",
+        "processed_hash": "814152b31aa4471700db967bba2f15e270dc0946318febbba64401f213d7b87b",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -16319,10 +16689,17 @@
               "campaigns/packages-2026-09/harvest/rust-ai-native-lang-health.md:12  pub-doctest promotion candidates: none (no gated crate is at full type coverage)",
               "located in the perimeter on the refs above, machine-verified against the files they cite; the host dogfoods this stack — 120 files carry #[spec(implements=…)] and 402 carry specmark::scope!"
             ]
+          },
+          "NAMES-REST-OF-R3-004-IS-UNBUILT": {
+            "v": "confirmed",
+            "ev": [
+              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/GUIDE-AI-NATIVE-RUST.md:58  - ##NAMES-REST-OF-R3-004-IS-UNBUILT The other halves of R3-004 — structural tokens drawn from a closed vocabulary, one name = one referent repo-wide, and no synonym pairs or shadowing on contract surfaces — are **not built**: no s",
+              "DESCRIBES an ABSENCE, and the absence is measured, not assumed: the census harvest/e13-r3-pending-cards-census.md Q4 found no closed token vocabulary anywhere in the tree (0, neither as data nor as a constant), no contract-surface name registry, and no synonym/shadowing detector. Only the composition half of R3-004 has a checker (`cell-name-is-computed`). The clause carries `@spec/done` rather than `@impl/plan` because B-027 ties `@impl/plan` to a NAMED backlog entry and none existed when it was written; BACKLOG.md {#b-052} now names them, and raising the marker is a deliberate later decision rather than an automatic consequence."
+            ]
           }
         },
-        "verified_at": "2026-08-03T21:56:32Z",
-        "verify_batch": "C3 + D5a + D7 + D34"
+        "verified_at": "2026-08-04T02:52:00Z",
+        "verify_batch": "C3 + D5a + D7 + D34 + E13-BATCH3-CARDS"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md": {
@@ -20341,7 +20718,7 @@
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-f-structured-diagnostics.md": {
-      "content_hash": "17ce96669f86eabf3aebc8568ee1e50a2bc93e56b853847b553c305214e2d5d2",
+      "content_hash": "a818bfe63043576578d6e2f41c92bb0b5416481d950fda5afc71698ef7f52a9e",
       "rollup": {
         "explicit": [
           "spec",
@@ -20363,7 +20740,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "17ce96669f86eabf3aebc8568ee1e50a2bc93e56b853847b553c305214e2d5d2",
+        "processed_hash": "a818bfe63043576578d6e2f41c92bb0b5416481d950fda5afc71698ef7f52a9e",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -20461,7 +20838,7 @@
             ]
           }
         },
-        "verified_at": "2026-07-28T11:58:29Z",
+        "verified_at": "2026-08-04T02:52:00Z",
         "verify_batch": "C4+C5"
       }
     },
@@ -21375,7 +21752,7 @@
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md": {
-      "content_hash": "4ebad8cf864a376dc650c645a7f0424b13bca2e92f3895c58a7a4822cab671ab",
+      "content_hash": "2157f697b12d5644b447c094c95f081f42e06d67e8409ed73980a3431b9d129e",
       "rollup": {
         "explicit": [
           "spec",
@@ -21397,7 +21774,7 @@
       "unit_count": 18,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "4ebad8cf864a376dc650c645a7f0424b13bca2e92f3895c58a7a4822cab671ab",
+        "processed_hash": "2157f697b12d5644b447c094c95f081f42e06d67e8409ed73980a3431b9d129e",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -22642,7 +23019,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-03T21:56:32Z",
+        "verified_at": "2026-08-04T02:52:00Z",
         "verify_batch": "C3 + C45-cross-language + D5a + D7 + D30 + D33 + D34 + E13-S4-reseal"
       }
     },
@@ -23362,7 +23739,7 @@
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.md": {
-      "content_hash": "7d4d65d337b841ec9243695587be6fe8992bce8ecc2d398ed3281188693d413b",
+      "content_hash": "f0968854da45737d874020b768f34ccc0fc40d23a3d9ac35dfc1257e5003d11c",
       "rollup": {
         "explicit": [
           "spec",
@@ -23376,15 +23753,15 @@
           "spec",
           "done"
         ],
-        "marker_count": 35,
+        "marker_count": 34,
         "fact_count": 34,
-        "unmarked_facts": 0
+        "unmarked_facts": 1
       },
-      "marker_count": 35,
+      "marker_count": 34,
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "7d4d65d337b841ec9243695587be6fe8992bce8ecc2d398ed3281188693d413b",
+        "processed_hash": "f0968854da45737d874020b768f34ccc0fc40d23a3d9ac35dfc1257e5003d11c",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -23676,7 +24053,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-03T14:59:58Z",
+        "verified_at": "2026-08-04T02:52:00Z",
         "verify_batch": "C4+C5"
       }
     },
@@ -92403,7 +92780,7 @@
       }
     },
     "spec/design/README.md": {
-      "content_hash": "566ee27c332711b12eddc8d60db08d401694f43e809564af26fa44d043015842",
+      "content_hash": "c635562621bee6d66cd73aa5a890bef5fc0567734cf4f6cff028594ca287d31c",
       "rollup": {
         "explicit": [
           "doc",
@@ -92417,11 +92794,11 @@
           "doc",
           "done"
         ],
-        "marker_count": 74,
-        "fact_count": 68,
+        "marker_count": 75,
+        "fact_count": 69,
         "unmarked_facts": 0
       },
-      "marker_count": 74,
+      "marker_count": 75,
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
@@ -93557,6 +93934,29 @@
         "verified_at": "2026-07-25T13:00:46Z",
         "verify_batch": "c2-design + d2b"
       }
+    },
+    "spec/design/new-rule-classes.md": {
+      "content_hash": "4f8ee50c2924678fa9188c421141230ad7e663bff675f2db3a1dd428d0dc30ab",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "work"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "work"
+        ],
+        "marker_count": 14,
+        "fact_count": 31,
+        "unmarked_facts": 18
+      },
+      "marker_count": 14,
+      "unit_count": 6,
+      "issue_count": 0
     },
     "spec/design/seam-error-and-assertion-parity.md": {
       "content_hash": "e8a0e6d5e0ad13fcc3901d81b5cb279e56ff1d31e09f7904df743082399dca59",
