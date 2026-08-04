@@ -1,0 +1,813 @@
+{
+  "batch": "H1",
+  "cluster": "host",
+  "files": {
+    "spec/design/deterministic-loading-aliasing.md": {
+      "companion-line": {
+        "v": "PENDING",
+        "ev": [
+          "Companion to BACKLOG B-011, PROP-035, PROP-009 §2.3, loading-and-boot-model.md.",
+          "BACKLOG.md:507; spec/modules/vibe-workspace/PROP-035-spec-compiler.md; spec/modules/vibe-workspace/PROP-009-loading-model.md; spec/design/loading-and-boot-model.md",
+          "B-011 row exists at BACKLOG.md:507; PROP-035/PROP-009 exist at the cited paths; loading-and-boot-model.md present in spec/design/."
+        ]
+      },
+      "authority-line": {
+        "v": "PENDING",
+        "ev": [
+          "Authority: non-normative proposal; PROPs stay the contract; lands as PROP edits (§7).",
+          "spec/design/deterministic-loading-aliasing.md:7; cross-check PROP-009 §2.3 + PROP-035 §7/§8",
+          "The §7 PROP edits are landed: PROP-009-loading-model.md:242 ##HISTORY-B011-QUALIFIED, PROP-035:143 ##USE-AS-ALIAS / :191 ##PIPE-QUALIFY — the proposal did become normative."
+        ]
+      },
+      "problem-splice": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: STATIC.md concatenates 31 contributions from 27 packages; {#root} defined 26×, {#never} 17×, {#when} 9× — 59 duplicate-anchor warnings over 11 names; 61 fact ids appear more than once.",
+          "BACKLOG.md:534-536 (B-011-COLLISION-REQUIREMENT); spec/boot/STATIC.md (grep duplicate-anchor)",
+          "BACKLOG.md:534-536 records verbatim: «59 предупреждений duplicate-anchor по 11 именам — {#root} определён 26 раз, {#never} 17, {#when} 9»; STATIC.md today has 0 duplicate-anchor (post-fix), confirming the measured pre-state was real."
+        ]
+      },
+      "problem-stripping": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the compiled lane carries 838 house-grammar tokens; naive stripping changes what is addressable; the owner framed stripping as needing a resolution design first (2026-07-31).",
+          "BACKLOG.md:512 (B-011-LOCATOR), :517-522 (B-011-WHY-NAIVE-STRIPPING-IS-WRONG)",
+          "B-011-LOCATOR: «838 ##ANCHOR / @stage/state tokens over 1 446 source lines»; B-011-WHY-NAIVE-STRIPPING-IS-WRONG restates the dangling-reference framing verbatim."
+        ]
+      },
+      "problem-determinism": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the owner ruled this highest priority (2026-08-02) verbatim «От этой вещи зависит как вообще работает загрузка, насколько детерминированно и хорошо».",
+          "BACKLOG.md:514 (B-011-DISPOSITION)",
+          "B-011-DISPOSITION quotes it verbatim: «самый высокий приоритет — решение владельца 2026-08-02: …От этой вещи зависит как вообще работает загрузка, насколько детерминированно и хорошо»."
+        ]
+      },
+      "solution-three-layers": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: three layers — qualified rename-on-splice, aliases (#use…as X / @!X), a fixed two-scope lookup rule.",
+          "crates/vibe-spec/src/qualify.rs:77; crates/vibe-spec/src/directives.rs:79-189; spec/modules/vibe-workspace/PROP-035-spec-compiler.md:173",
+          "All three landed: qualify_contribution at qualify.rs:77; alias table + @!X at directives.rs:79-189; two-scope lookup at PROP-035:173 ##SHORT-LABEL-LOOKUP-IS-TWO-SCOPE."
+        ]
+      },
+      "rename-owner-direction": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: owner required the splicer rename labels inside STATIC.md keeping all references valid, plus the qualified-rewrite idea (2026-08-02).",
+          "BACKLOG.md:538-548 (B-011-COLLISION-REQUIREMENT + B-011-QUALIFIED-REWRITE)",
+          "Both owner quotes recorded verbatim: «склейщик переименовывает метки внутри STATIC.md так, чтобы все ссылки … сохраняли валидность» (:538) and «Возможно, при материализации нам нужно сразу переписывать все ссылки на qualified варианты?» (:546)."
+        ]
+      },
+      "rename-form": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: a contribution origin <group>/<name> becomes a slug; {#root} → {#org-vibevm-world--wal--root}; dots→-, joiner --; both label kinds share one namespace.",
+          "crates/vibe-spec/src/qualify.rs:41-60; spec/modules/vibe-workspace/PROP-035-spec-compiler.md:162,191",
+          "qualify.rs:41-52 origin_slug: «org.vibevm.world/wal → org-vibevm-world--wal»; PROP-035:162 ##FACT-MERGED-UNIQUENESS «fact and heading ids, one namespace»; :191 restates the slug rules verbatim."
+        ]
+      },
+      "rename-what-is-rewritten": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: heading anchors {#x}, fact ids ##X, and intra-doc (#x) links are rewritten; full spec:// addresses, directive lines, fenced content are left alone.",
+          "crates/vibe-spec/src/qualify.rs:71-227; PROP-035:191",
+          "qualify.rs:200-227 rewrites ##X definitions and (#x) links; :223-227 exempts directive lines (directive_prefix) — matches; PROP-035:191 lists the never-touched set (full spec://, @spec, directive lines, fenced content)."
+        ]
+      },
+      "rename-determinism": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: a qualified prefix (not disambiguation suffixes) because the qualified name is a pure function of (origin, label) — stable across recomposition, append-safe.",
+          "crates/vibe-spec/src/qualify.rs:71-77",
+          "qualify.rs:75-77 doc: «pure function of (text, origin) — independent of splice order and of any sibling contribution — which is the append-only property (design §6)»."
+        ]
+      },
+      "rename-contract-change": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: PROP-009 §2.3 ##ARTIFACT-STATIC-MD «verbatim concatenation» becomes «anchor-qualified concatenation».",
+          "spec/modules/vibe-workspace/PROP-009-loading-model.md:242; :103",
+          "PROP-009:242 ##HISTORY-B011-QUALIFIED: «§2.3's ##ARTIFACT-STATIC-MD changes from «verbatim concatenation» to «anchor-qualified concatenation»»; :103 LINK-STATIC already says «anchor-qualified — §2.3»."
+        ]
+      },
+      "rename-index-effect": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: host specmap.json duplicate-anchor warnings drop from 59 to zero (first half of M-LOAD).",
+          "spec/boot/STATIC.md (grep duplicate-anchor); PROP-009-loading-model.md:242",
+          "grep -c duplicate-anchor spec/boot/STATIC.md → 0; PROP-009:242 records «the host lane regenerated 59 → 0»."
+        ]
+      },
+      "alias-grammar": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: grammar #use [options] spec://… as <Alias>; reference form @!<Alias>; only @!X is grammar.",
+          "crates/vibe-spec/src/directives.rs:161-189; PROP-035:143,172",
+          "directives.rs:161-189 parses the as <Alias> clause; :119 scan_alias_use handles @!X; PROP-035:172 ##AT-BANG-IS-AN-ALIASED-IN-PLACE-USE confirms @!<Alias> is the grammar."
+        ]
+      },
+      "alias-scope": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: an alias is file-scoped (whole-file, not exported/inherited); two declarations in one file = compile error.",
+          "crates/vibe-spec/src/directives.rs:174-189; PROP-035:143",
+          "directives.rs:178-189 emits «duplicate alias …» on a repeated name; PROP-035:143 ##USE-AS-ALIAS: «file-scoped (visible throughout the declaring file … never exported, never inherited)»."
+        ]
+      },
+      "alias-binding": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the alias binds to the address, never the text — survives splicing and stripping (owner 2026-08-02).",
+          "BACKLOG.md:551-553 (B-011-QUALIFIED-REWRITE); PROP-035:143",
+          "B-011-QUALIFIED-REWRITE: «Алиасы привязываются к source-of-truth адресу, поэтому переживают и склейку, и стриппинг»; PROP-035:143 ##USE-AS-ALIAS: «binds to the address, never to any compiled text»."
+        ]
+      },
+      "alias-compiled-form": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: in compiled STATIC.md, @!X is rewritten to the full @spec:// address; declaration lines consumed like every #use.",
+          "crates/vibe-spec/src/directives.rs:112-119; PROP-035:172,191",
+          "PROP-035:172 ##AT-BANG: «In the compiled static lane every @!X is rewritten to the full @spec://… address»; :191 ##PIPE-QUALIFY: «@!X rewrites to its full address here (§7.4)»."
+        ]
+      },
+      "lookup-rule": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: an unqualified label reference resolves against exactly two scopes (defining document, then file aliases); ambiguous → compile error with candidates.",
+          "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:173",
+          "PROP-035:173 ##SHORT-LABEL-LOOKUP-IS-TWO-SCOPE: «resolves against exactly two scopes … Found in neither, or in both: a compile error listing the candidates — the resolver never widens the search and never picks silently»."
+        ]
+      },
+      "lookup-adl": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the C++ ADL analogy the owner named; context = defining document + file imports; ambiguity is an error not a ranking.",
+          "BACKLOG.md:549 (B-011-QUALIFIED-REWRITE); PROP-035:173",
+          "B-011-QUALIFIED-REWRITE: «Ориентир дизайна — ADL в C++ (Argument Dependent Lookup)»; PROP-035:173 encodes the two-scope fail-with-candidates form (no overload-resolution widening)."
+        ]
+      },
+      "lookup-agent-surface": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the compiled STATIC.md header states the qualified-label convention; provenance comment names the origin; no new tooling needed to read the lane.",
+          "spec/boot/STATIC.md (header); PROP-009-loading-model.md:242",
+          "PROP-009:242: «the lane opens with the resolution preamble + tombstone table»; STATIC.md header carries the generated preamble (verified the file exists, 2185 lines)."
+        ]
+      },
+      "placement-owner-word": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: owner addition on approving the design (2026-08-04): the resolution rules must be priority-placed for the executing agent — possibly earlier in the load list.",
+          "BACKLOG.md:558-561 (B-011-DESIGN-APPROVED)",
+          "B-011-DESIGN-APPROVED: «добавлением владельца …: правила резолвинга приоритизируются для агента-исполнителя — преамбула первыми строками склейки + first-instructions контракт §13 (дизайн §5.1)»."
+        ]
+      },
+      "placement-mechanism": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the best position is the first lines of STATIC.md; boot files are re-read every session start and after compaction; the addressable-specs placement law says START or END.",
+          "PROP-009-loading-model.md:103,242; spec/design/deterministic-loading-aliasing.md:59",
+          "PROP-009:103 LINK-STATIC «Read first, one read, maximum attention weight»; :242 the lane opens with the resolution preamble — START-placement, matching the design's mechanism claim."
+        ]
+      },
+      "PLACEMENT-PREAMBLE": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: a resolution preamble (~8 generated lines) sits at the lane header before any content.",
+          "spec/boot/STATIC.md (head); PROP-009-loading-model.md:242",
+          "PROP-009:242: «the lane opens with the resolution preamble + tombstone table»; STATIC.md exists and is generated (the preamble is generated text, verified by file presence)."
+        ]
+      },
+      "PLACEMENT-TOMBSTONE-UNDER-HEADER": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the tombstone table sits directly under the header (START-placement, never the tail).",
+          "spec/boot/STATIC.md; PROP-035-spec-compiler.md:192",
+          "PROP-035:192 ##PIPE-EMIT: «prefixed by the resolution preamble and the tombstone table (§11)» — emitted at the head; STATIC.md carries it."
+        ]
+      },
+      "PLACEMENT-LOADER-FIRST": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: PROP-035 §13 binds the directive first-instructions contract; B-011 wires it in for the first time with the resolution rules as named content.",
+          "spec/modules/vibe-workspace/PROP-035-spec-compiler.md (§13); spec/design/structural-loader.md",
+          "PROP-035 §13 is the first-instructions contract surface (document present); structural-loader.md exists in spec/design/. Whether the §13 wiring is itself built is a separate §13 question; the design's claim is that B-011 supplies the named content."
+        ]
+      },
+      "dynamic-owner-case": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: owner's named hard case (2026-08-02) — separately consider dynamic late-loading of libraries carrying their own STATIC.md.",
+          "BACKLOG.md:540-541 (B-011-COLLISION-REQUIREMENT)",
+          "B-011-COLLISION-REQUIREMENT records the owner direction: «отдельно рассмотреть сложные случаи динамической дозагрузки новых библиотек, в которых есть собственные STATIC.md»."
+        ]
+      },
+      "dynamic-composition": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: a late library L adds its lane as an INDEX entry; nothing in the host's compiled STATIC.md is renamed; qualified names depend only on origin, so assembly order cannot change meaning.",
+          "crates/vibe-spec/src/qualify.rs:75-77; PROP-009-loading-model.md (dynamic INDEX entries)",
+          "qualify.rs:75-77: the qualified name is independent of splice order/composition (append-only) — the property the determinism claim rests on; INDEX dynamic-entry mechanism is PROP-009's."
+        ]
+      },
+      "dynamic-not-a-new-mechanism": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: no new loader mechanism proposed; INDEX dynamic entries, when-gating, structural loader stay as PROP-009/PROP-035 define them.",
+          "spec/design/deterministic-loading-aliasing.md:71; PROP-009/PROP-035",
+          "Design-rationale statement; the verifiable half is that no new loader crate/type was introduced for B-011 — the B-011 code lives in vibe-spec (qualify/directives) + vibe-workspace splice, reusing existing surfaces."
+        ]
+      },
+      "stale-short-question": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: owner probe (2026-08-03) — a dynamically-loaded library references #root which the splice renamed; can it happen and what do we do.",
+          "spec/design/deterministic-loading-aliasing.md:75; BACKLOG.md B-011",
+          "Design-rationale record of the owner's review probe; the B-011 filing and approval (BACKLOG.md:554) frame the same dynamic-stale concern; no separate verbatim quote outside the design."
+        ]
+      },
+      "stale-short-taxonomy": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: exactly one reference class breaks — an address targeting the compiled splice itself; full spec:// addresses and a doc's own (#x) links stay unbroken.",
+          "spec/design/deterministic-loading-aliasing.md:77; crates/vibe-spec/src/qualify.rs (full spec:// never touched)",
+          "qualify.rs:223-227 exempts full spec:// addresses and directive lines from rewrite — confirming they stay unbroken; the one breaking class (compiled-splice short anchor) is the design's analysis."
+        ]
+      },
+      "stale-short-was-a-lottery": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: #root was already defined 26× in the compiled lane (a lottery); the rename converts silent ambiguity into a loud not-found; measured population of this class today: zero.",
+          "BACKLOG.md:536-537 (B-011-COLLISION-REQUIREMENT); spec/boot/STATIC.md (duplicate-anchor=0)",
+          "B-011: «{#root} определён 26 раз … ссылок из кода пока ноль — неоднозначность латентна»; STATIC.md post-fix has 0 duplicate-anchor, so the loud-not-found posture is the current behaviour."
+        ]
+      },
+      "stale-short-defence": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: four defence layers, cheap-to-rich.",
+          "spec/design/deterministic-loading-aliasing.md:81-86; STATIC.md (tombstone); resolver (LegacyHostAuthority)",
+          "Design proposal; the landed halves: STATIC.md carries the tombstone table (PROP-035:192) and the resolver answers misses with candidates/hint (resolver.rs LegacyHostAuthority). The four-layer set is the design's own structuring."
+        ]
+      },
+      "DEFENCE-LINT": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: forbid-and-lint — an address targeting spec/boot/STATIC.md becomes an illegal target; cheapest now while population is zero.",
+          "spec/design/deterministic-loading-aliasing.md:83; PROP-009-loading-model.md:242",
+          "PROP-009:242 ##HISTORY-B011-QUALIFIED: «a generated lane stops being a legal citation target» — the lint/forbid posture landed normatively."
+        ]
+      },
+      "DEFENCE-TOMBSTONE": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: a tombstone table in the lane header lists each collided short name with its qualified heirs; the splicer already holds the rename map and prints it.",
+          "crates/vibe-spec/src/qualify.rs:60-71 (RenameEntry); PROP-035-spec-compiler.md:192; STATIC.md",
+          "qualify.rs:60-71 RenameEntry {original, qualified} is the rename map the splicer returns; PROP-035:192 the tombstone table is emitted at the head — the print path exists."
+        ]
+      },
+      "DEFENCE-RESOLVER": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the resolver answers a missed STATIC#<short> with candidates, never emptiness.",
+          "crates/vibe-spec/src/resolver.rs:71 (LegacyHostAuthority)",
+          "resolver.rs:71 LegacyHostAuthority { given, hint } — the resolver returns a named error with a hint rather than emptiness; the §5 fail-with-candidates posture for the post-rename read."
+        ]
+      },
+      "DEFENCE-INSTALL-CHECK": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: install-time outbound-link validation; larger; may ride separately (fork E).",
+          "spec/design/deterministic-loading-aliasing.md:86,106 (FORK-INSTALL-VALIDATION E1)",
+          "Design-proposed follow-up (fork E1, a separate entry); not part of the B-011 slice — its absence from the landed B-011 code (qualify/directives) is consistent with it being deferred."
+        ]
+      },
+      "stale-short-in-slice": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: defence layers 1–3 belong to this slice; layer 4 is fork E.",
+          "spec/design/deterministic-loading-aliasing.md:88; BACKLOG.md:554-562",
+          "B-011-DESIGN-APPROVED: «install-валидация ссылок отдельной стройкой» — layer 4 explicitly approved as a separate build; layers 1–3 are the landed B-011 work."
+        ]
+      },
+      "normative-prop035": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: PROP-035 §7.2 gains the as <Alias> clause; §7.4 gains @!X; §8 gains a qualify step; §11 notes origin-qualified labels (reversible).",
+          "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:143,172,191",
+          "All landed: :143 ##USE-AS-ALIAS (§7.2 as-clause); :172 ##AT-BANG-IS-AN-ALIASED-IN-PLACE-USE (§7.4 @!X); :191 ##PIPE-QUALIFY (§8 qualify, with decompile reversibility noted)."
+        ]
+      },
+      "normative-prop009": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: PROP-009 §2.3 ##ARTIFACT-STATIC-MD «verbatim concatenation» → «anchor-qualified concatenation»; SESSION-START-ORDER unchanged.",
+          "spec/modules/vibe-workspace/PROP-009-loading-model.md:242",
+          "PROP-009:242 ##HISTORY-B011-QUALIFIED records exactly this edit; the anchor-qualified form is also referenced at :103."
+        ]
+      },
+      "normative-backlog": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: BACKLOG B-011 acceptance restated as M-LOAD's two measurements (zero duplicate-anchor over the lane; an alias resolving with its carrier cleaned) plus the append-safety property test.",
+          "BACKLOG.md:554-562 (B-011-DESIGN-APPROVED); STATIC.md",
+          "B-011-DESIGN-APPROVED restates the approved design with the measurements; STATIC.md duplicate-anchor=0 satisfies the first M-LOAD measurement; the append-safety property is qualify.rs:384 test (stripping_the_prefix_restores_the_original)."
+        ]
+      },
+      "forks-tree": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: four forks, each with the boss's recommendation first.",
+          "spec/design/deterministic-loading-aliasing.md:100; BACKLOG.md:554-562",
+          "B-011-DESIGN-APPROVED: «со всеми рекомендованными развилками» — the owner took every recommended option, matching the four forks (A1/B1/C1/D1/E1) in §8."
+        ]
+      },
+      "FORK-SLUG-SHAPE": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: (A1 recommended) full origin slug org-vibevm-world--wal; globally unique, self-describing. Owner took A1.",
+          "BACKLOG.md:556-558 (B-011-DESIGN-APPROVED); crates/vibe-spec/src/qualify.rs:52",
+          "B-011-DESIGN-APPROVED: «полный слаг»; qualify.rs:52 origin_slug produces exactly org-vibevm-world--wal — A1 landed."
+        ]
+      },
+      "FORK-FACT-IDS": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: (B1 recommended) both heading and fact ids qualified, one namespace; owner took B1.",
+          "BACKLOG.md:556-558; crates/vibe-spec/src/qualify.rs:200-227",
+          "B-011-DESIGN-APPROVED: «обе разновидности меток»; qualify.rs rewrites both ##X fact ids and {#x} headings — B1 landed."
+        ]
+      },
+      "FORK-COMPILED-REFERENCE": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: (C1 recommended) @!X compiles to the full spec:// address; owner took C1.",
+          "BACKLOG.md:556-558; PROP-035-spec-compiler.md:172,191",
+          "B-011-DESIGN-APPROVED: «@!X компилируется в полный адрес»; PROP-035:172/191 confirm @!X rewrites to the full address — C1 landed."
+        ]
+      },
+      "FORK-STRICTNESS": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: (D1 recommended) hard error with candidates; migration flag --lenient; owner took D1.",
+          "BACKLOG.md:556-562; PROP-035-spec-compiler.md:173",
+          "B-011-DESIGN-APPROVED: «жёсткая ошибка с кандидатами + флаг мягкости»; PROP-035:173 encodes compile-error-with-candidates — D1 landed."
+        ]
+      },
+      "FORK-INSTALL-VALIDATION": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: (E1 recommended) install-time outbound-link validation as a separate follow-up entry; owner took E1.",
+          "BACKLOG.md:556-562 (B-011-DESIGN-APPROVED)",
+          "B-011-DESIGN-APPROVED: «install-валидация ссылок отдельной стройкой» — E1 taken; consistent with its absence from the landed B-011 slice."
+        ]
+      },
+      "oos-strip": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the marker strip itself is out of this slice (B-011 is aliasing design first). NOTE: the §9 block also physically carries ##oos-b006 / ##oos-b031 / ##oos-hot-attach tokens on lines 111-113, but the campaign mirror folds the four consecutive marker lines into one addressable fact (oos-strip); those three are not addressable anchors and are intentionally not submitted.",
+          "BACKLOG.md:507,529-531 (B-011-INTERIM); spec/design/deterministic-loading-aliasing.md:110-113; campaigns/packages-2026-09/run/mirror/spec__design__deterministic-loading-aliasing.md.json",
+          "B-011-INTERIM: «the strip waits for the aliasing design rather than shipping half-safe» — the strip is explicitly deferred; STATIC.md still carries the authoring tokens (838 per B-011-LOCATOR). The mirror's out-of-scope block has exactly one addressable fact (oos-strip, line 110, marked) — oos-b006/oos-b031/oos-hot-attach are marker tokens in that block's text, not separate facts."
+        ]
+      },
+      "impl-slices": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: four work slices W1–W4, each a claudez packet with a disjoint perimeter, self-verifying with cargo check -p vibe-spec / -p vibe-workspace.",
+          "crates/vibe-spec/src/qualify.rs, directives.rs; crates/vibe-workspace/src/boot_artifacts.rs; PROP-009-loading-model.md:242",
+          "PROP-009:242: «Landed the same day (five worker slices; the host lane regenerated 59 → 0)» — the worker cut landed; qualify.rs/directives.rs are the W1/W2 cells."
+        ]
+      },
+      "IMPL-W1": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: W1 — vibe-spec qualify module, new cell crates/vibe-spec/src/qualify.rs: qualify_contribution(text, origin), property-tested.",
+          "crates/vibe-spec/src/qualify.rs:77,384",
+          "qualify.rs exists; qualify_contribution at :77 (signature matches: text, origin); :384 test stripping_the_prefix_restores_the_original — the reversibility property test."
+        ]
+      },
+      "IMPL-W2": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: W2 — directives grammar: as <Alias> on #use; @!X scanner; per-file alias table with two error classes.",
+          "crates/vibe-spec/src/directives.rs:79-189",
+          "directives.rs:79-85 aliases map; :112-119 @!X scan; :178-189 duplicate-alias error; :135 no-address error — the two error classes landed."
+        ]
+      },
+      "IMPL-W3": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: W3 — splice integration (boot_artifacts render_static + pipeline emit): qualify each entry, rewrite @!X, emit preamble + tombstone, resolver answers with candidates, lint compiled-lane target; gate DocTree::duplicate_anchors()==[].",
+          "crates/vibe-workspace/src/boot_artifacts.rs; crates/vibe-spec/src/pipeline.rs:191; crates/vibe-spec/src/doctree.rs:244",
+          "pipeline.rs:191 ##PIPE-QUALIFY wires the qualify step; doctree.rs:244 duplicate_anchors() is the gate; STATIC.md duplicate-anchor=0 shows the gate holds; render_static lives in boot_artifacts.rs (B-011-ANCHOR cites it)."
+        ]
+      },
+      "IMPL-W4": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: W4 — the dynamic-load exhibit (fixture test): two packages into two lanes, one loaded later as an INDEX entry; assert zero collisions and an alias resolving against vibedeps/ source with the carrier text removed.",
+          "crates/vibe-spec/tests or crates/vibe-workspace/tests; PROP-009-loading-model.md:242",
+          "PROP-009:242 records five worker slices landed including the dynamic exhibit; the M-LOAD acceptance (alias resolves with carrier cleaned) is the property W4 tests — the landed qualify logic (binds to address not text) is its basis."
+        ]
+      },
+      "impl-spec-edits": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the §7 PROP edits are boss work (spec authoring never delegated), applied only on approval.",
+          "PROP-009-loading-model.md:242; PROP-035-spec-compiler.md:143,172,191",
+          "The PROP edits landed (PROP-009:242, PROP-035:143/172/191) — applied on the 2026-08-04 approval (B-011-DESIGN-APPROVED), confirming the boss-authored normative edits shipped."
+        ]
+      }
+    },
+    "spec/design/host-as-package.md": {
+      "companion-line": {
+        "v": "PENDING",
+        "ev": [
+          "Companion to BACKLOG B-031, PROP-029 §4 (##SCOPE-HOST), PROP-035 §6, BACKLOG B-028, and the census e5-b031-evidence.md.",
+          "BACKLOG.md:864,823; spec/common/PROP-029-fully-qualified-addresses.md:43; spec/modules/vibe-workspace/PROP-035-spec-compiler.md; campaigns/packages-2026-09/harvest/e5-b031-evidence.md",
+          "B-031/B-028 rows exist; PROP-029:43 is the (now-retired) SCOPE-HOST line; e5-b031-evidence.md present."
+        ]
+      },
+      "authority-line": {
+        "v": "PENDING",
+        "ev": [
+          "Authority: non-normative proposal; on approval lands as PROP edits (§7).",
+          "spec/design/host-as-package.md:7; PROP-029:43-44",
+          "The §7 PROP edits landed: PROP-029:43 ##SCOPE-HOST is a void tombstone, :44 ##SCOPE-SELF-COORDINATE added — the proposal became normative."
+        ]
+      },
+      "mandate-verbatim": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: owner direction (2026-08-02) verbatim — give the root package a normal fully-qualified name, the resolver must account for vibe.toml addressing everywhere including the root; «Я бы назвал корневой пакет spec://org.vibevm.core».",
+          "BACKLOG.md:871 (B-031-DISPOSITION)",
+          "B-031-DISPOSITION records the owner quote verbatim, including «Я бы назвал корневой пакет spec://org.vibevm.core» and the universal-addressing requirement."
+        ]
+      },
+      "census-reshapes": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the living tree carries 2 351 occurrences of spec://org.vibevm.core/vibevm; packages/ 322 (314 canonical); the contract carve-out is exactly one line (PROP-029:43 SCOPE-HOST); the code special-case is spec_root, Authority::Host, two HOST_NAMESPACE constants, specmap.toml:14.",
+          "campaigns/packages-2026-09/harvest/e5-b031-evidence.md:509-529; spec/common/PROP-029-fully-qualified-addresses.md:43; crates/vibe-spec/src/resolver.rs:122,141",
+          "e5-b031:509-529 confirms 314 canonical package-source occurrences (322 total in packages/); PROP-029:43 is the one contract line; resolver.rs:122 spec_root / :141 the Host arm. The 2 351 whole-tree total is the census's own figure (e5-b031); the per-area breakdown's canonical half matches exactly."
+        ]
+      },
+      "truncation-dissolves": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: doc-id truncation was filed as a host exception; the sweep shows resolve_doc is authority-agnostic (resolver.rs:60-63) and package citations already use it; truncation is not host-special.",
+          "crates/vibe-spec/src/resolver.rs:224 (fn resolve_doc)",
+          "resolver.rs:224 fn resolve_doc is a single authority-agnostic prefix-scan (no Host branch inside it) — consistent with the claim; the design cited :60-63, the function is now at :224."
+        ]
+      },
+      "solution-paragraph": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the root gains identity group org.vibevm.core, name vibevm; address prefix spec://org.vibevm.core/vibevm/…; the resolver's host mapping dies; spec_root maps the self coordinate; manifest name unchanged; an old spec://org.vibevm.core/vibevm address fails loudly with the rename hint.",
+          "vibe.toml:1-3; crates/vibe-spec/src/resolver.rs:71,122,141; specmap.toml:14",
+          "vibe.toml:2 name=vibevm, :3 group=org.vibevm.core (name unchanged, group added); resolver.rs:141 Host arm → LegacyHostAuthority error with hint; specmap.toml:14 namespace=org.vibevm.core/vibevm — all landed."
+        ]
+      },
+      "detail-identity": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: vibe.toml [project] gains group = org.vibevm.core; name = vibevm does not change; identity = (group, name) (PROP-008).",
+          "vibe.toml:1-3",
+          "vibe.toml:1 [project], :2 name = vibevm, :3 group = org.vibevm.core — exactly the ruled form (group added, manifest name intact)."
+        ]
+      },
+      "detail-resolver": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: FileResolver::new(ws_root, self_coordinate); spec_root matches Authority::Package against the self coordinate first (→ ws_root/spec); the Host parse variant survives but no undotted authority resolves (Host arm = one unconditional error with hint); the two HOST_NAMESPACE constants die.",
+          "crates/vibe-spec/src/resolver.rs:71,122,141,304; grep HOST_NAMESPACE crates/**/*.rs",
+          "resolver.rs:71 LegacyHostAuthority, :141 Host arm errors, :304 test t1_self_coordinate_resolves_to_the_authored_spec_tree; grep HOST_NAMESPACE over crates/**/*.rs → no matches (both constants dead)."
+        ]
+      },
+      "detail-namespace": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: specmap.toml:14 namespace = vibevm becomes the self coordinate (org.vibevm.core/vibevm); the engine treats it as an opaque prefix.",
+          "specmap.toml:14",
+          "specmap.toml:14 namespace = org.vibevm.core/vibevm — the value is now the self coordinate; B-031-DISPOSITION records «specmap namespace + specmap.json re-minted consistently»."
+        ]
+      },
+      "detail-migration": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: a scripted migration rewrites spec://org.vibevm.core/vibevm across the living surfaces (*.rs, *.md, *.toml, xtask); historical machine records are not rewritten.",
+          "BACKLOG.md:871 (B-031-DISPOSITION)",
+          "B-031-DISPOSITION: «1 893 occurrences over 606 files, --verify residue 0 … five fixture families honestly re-pointed … Historical campaign JSON untouched (the own-corpus law)»."
+        ]
+      },
+      "detail-rejudge": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: F-169 (2 anchors) and F-147 (3 anchors) re-judge after the migration; host-zone anchors with migrated literals re-seal through mirror → merge-verdicts → seal.",
+          "BACKLOG.md:871,876 (B-031-DISPOSITION, B-031-CLOSES)",
+          "B-031-DISPOSITION: «F-169 resolved whole and F-147's twins confirmed (batch E6-F169-F147)»; «the mass re-seal executed (15 re-vouched; 4 files honestly refused …)» — the re-judge path ran."
+        ]
+      },
+      "unchanged-list": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: doc-id truncation, the flow grammar (B-028), SCOPE-FIXTURES, disk layout, the specmap engine, historical campaign JSON, and publication/version numbers do not change.",
+          "spec/common/PROP-029-fully-qualified-addresses.md:45 (SCOPE-FIXTURES); BACKLOG.md:823 (B-028 done)",
+          "PROP-029:45 ##SCOPE-FIXTURES stays «out of scope … stay as written»; spec/ tree stays in place; B-028 (flow grammar) is its own done row — the unchanged set holds."
+        ]
+      },
+      "risk-two-resolvers": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: FileResolver (vibe-spec) and the specmap engine both resolve host addresses; the build must exercise both. NOTE: the §5 risks block also physically carries ##risk-mass-rewrite (L42) and ##risk-muscle-memory (L43) tokens, but the mirror folds the three consecutive marker lines into one addressable fact (risk-two-resolvers); those two are not addressable anchors and are not submitted.",
+          "crates/vibe-spec/src/resolver.rs; specmap.toml; BACKLOG.md:871 (B-031-DISPOSITION); spec/common/PROP-029-fully-qualified-addresses.md:43",
+          "Both surfaces exist (resolver.rs and specmap.toml:14); B-031-DISPOSITION: «1 893 occurrences over 606 files, --verify residue 0 … both gates green» (the mass-rewrite risk, mitigated); resolver.rs:141 Host arm → LegacyHostAuthority hint + PROP-029:43 tombstone (the muscle-memory risk: old addresses fail loudly with the rename record). The mirror's risks block has exactly one addressable fact (risk-two-resolvers)."
+        ]
+      },
+      "check-mandate": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: owner's fourth point (2026-08-04) verbatim — verify the running refactor's own metadata survives the rename (e.g. progress metadata), assigned to the boss personally.",
+          "BACKLOG.md:871 (B-031-DISPOSITION); spec/design/host-as-package.md:47",
+          "B-031-DISPOSITION: «his fourth point — the refactor-metadata check — was assigned to the boss personally and is executed and recorded in the design §5.1»."
+        ]
+      },
+      "CHECK-REGISTRY-KEYS": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: campaign registry keys are path-based, zero URI keys — walked cache.json, corpus.json, obligations.json, baseline.json; 0 keys carry spec://org.vibevm.core/vibevm; anchors key as <file-path>#<ANCHOR-ID>.",
+          "campaigns/packages-2026-09/run/cache.json, run/state/corpus.json (structure); crates/progress-core/src/seal.rs",
+          "cache.json files-dict keyed by path (verified structure: {schema, updated_at, files}); corpus.json files-list keyed by path; the addressable-anchor keying is path#id (seal.rs:178-184 addressable iterates doc.blocks.facts). The literal-occurrence counts in evidence strings are dated quotes (own-corpus law)."
+        ]
+      },
+      "CHECK-SPECMAP-REGEN": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: specmap.json is engine-generated; the migration moves the namespace value and the #[spec]/scope! literals in the same pass; the orphan set does not move.",
+          "specmap.toml:14; specmap.json; BACKLOG.md:871",
+          "B-031-DISPOSITION: «specmap namespace + specmap.json re-minted consistently»; specmap.toml:14 carries the new namespace — the re-mint path is the engine, not hand-edits."
+        ]
+      },
+      "CHECK-PINS-INERT": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: revision pins ~rN are unchecked today, therefore inert; the resolver treats a pin as a revision selector, not part of the identity; no gate validates pin currency.",
+          "crates/vibe-spec/src/address.rs:134-136 (without_pin); grep revision across crates",
+          "address.rs:134-136 doc: «the pin is a revision selector, not part of the identity» + without_pin() drops it; the design cited address.rs:131, the quote is at :134-136. No pin-currency gate located in vibe-spec."
+        ]
+      },
+      "CHECK-LEDGER-SOFT-MISS": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the intent ledger's old slots become graceful misses by design (B-022's structured key + soft-miss branch); renamed subjects recompute.",
+          "BACKLOG.md:745 (B-022); campaigns/packages-2026-09/run/state/obligations.json",
+          "B-022 is the ledger-intent research row (BACKLOG.md:745); obligations.json exists. The soft-miss behaviour is B-022's design; the design's claim is that renamed subjects recompute rather than error."
+        ]
+      },
+      "CHECK-RESCAN-HONEST": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: baseline.json → the next campaign's rescan seeing the rename is correct behaviour (the units did change), not breakage.",
+          "campaigns/packages-2026-09/run/state/corpus.json (baseline projection); spec/design/host-as-package.md:53",
+          "Design-rationale statement about the close-out baseline; corpus.json is the campaign's own state projection. The claim is that a rescan flagging migrated units is honest re-verification — a design assertion, not a code path to grep."
+        ]
+      },
+      "check-verdict": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: verdict — no metadata becomes invalid-and-load-bearing; every surface is path-keyed, regenerated, unchecked, soft-missing, or honestly re-verified; the two handling steps (mass re-seal + specmap/lane regen) fold into §8 W3.",
+          "spec/design/host-as-package.md:55; BACKLOG.md:871",
+          "B-031-DISPOSITION confirms both handling steps ran — «the mass re-seal executed (15 re-vouched)» and the specmap/lane regeneration; the verdict is the design's summary of the §5.1 pass."
+        ]
+      },
+      "forks-tree": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: three forks (K coordinate, L legacy, P perimeter), RULED 2026-08-04 — K → owner's own form (group org.vibevm.core, name vibevm), L → L1, P → P1.",
+          "BACKLOG.md:871 (B-031-DISPOSITION); vibe.toml:3",
+          "B-031-DISPOSITION records the ruling verbatim: «1. координаты: группа org.vibevm.core, имя vibevm. 2. жесткая ошибка с подсказкой 3. все живые поверхности»; vibe.toml:3 group=org.vibevm.core confirms K, resolver LegacyHostAuthority confirms L1."
+        ]
+      },
+      "FORK-COORDINATE": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: (K1 presented) group org.vibevm/name core → spec://org.vibevm/core; owner overruled both K1 and K2 in favour of his own form (group org.vibevm.core, name vibevm).",
+          "BACKLOG.md:871; vibe.toml:3",
+          "B-031-DISPOSITION: the owner's own form — neither K1 nor K2 as presented; vibe.toml:3 group = org.vibevm.core (the group carries his full spelling), name vibevm unchanged."
+        ]
+      },
+      "FORK-LEGACY": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: (L1 taken) hard error with the rename hint, no alias.",
+          "crates/vibe-spec/src/resolver.rs:71,141; BACKLOG.md:871",
+          "resolver.rs:71/141 LegacyHostAuthority (hard error + hint, no resolving alias); B-031-DISPOSITION «жесткая ошибка с подсказкой» — L1 landed."
+        ]
+      },
+      "FORK-PERIMETER": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: (P1 taken) all living surfaces (*.rs, *.md, *.toml, xtask ≈1 851 occurrences), historical evidence JSON untouched.",
+          "BACKLOG.md:871",
+          "B-031-DISPOSITION: «1 893 occurrences over 606 files … Historical campaign JSON untouched» — P1 (living surfaces, historical JSON preserved); the design's ≈1 851 estimate measured 1 893 on landing."
+        ]
+      },
+      "normative-list": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: PROP-029 ##SCOPE-HOST retired-with-tombstone; §1 loses its host exemption; PROP-035 §6 gains the self-coordinate mapping; specmap.toml + root vibe.toml change per §3.",
+          "spec/common/PROP-029-fully-qualified-addresses.md:43-44; vibe.toml:3; specmap.toml:14",
+          "PROP-029:43 ##SCOPE-HOST is a void tombstone («Retired 2026-08-04 by B-031»), :44 ##SCOPE-SELF-COORDINATE added; vibe.toml:3 + specmap.toml:14 carry the identity — all normative edits landed."
+        ]
+      },
+      "impl-slices": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: W1 resolver+identity, W2 the migration script, W3 (boss) the PROP edits + the §5.1 metadata pass + mass re-seal.",
+          "crates/vibe-spec/src/resolver.rs; BACKLOG.md:871",
+          "B-031-DISPOSITION: «W1 resolver+identity … W2 migrator … the host wet pass — 1 893 occurrences … the mass re-seal executed» — the §8 cut landed in sequence."
+        ]
+      }
+    },
+    "spec/design/lane-composition-dedup.md": {
+      "companion-line": {
+        "v": "PENDING",
+        "ev": [
+          "Companion to BACKLOG B-006, PROP-038, PROP-009 §2.3, PROP-035 §8, and deterministic-loading-aliasing.md (B-011).",
+          "BACKLOG.md:347; spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md; spec/modules/vibe-workspace/PROP-009-loading-model.md:243; spec/design/deterministic-loading-aliasing.md",
+          "B-006 row exists at BACKLOG.md:347; PROP-038 present; PROP-009:243 ##HISTORY-B006-ONCE-EACH cites this design; deterministic-loading-aliasing.md present."
+        ]
+      },
+      "authority-line": {
+        "v": "PENDING",
+        "ev": [
+          "Authority: non-normative proposal; lands as PROP edits (§6).",
+          "spec/design/lane-composition-dedup.md:7; PROP-009:243, PROP-038:37",
+          "The §6 PROP edits landed: PROP-009:243 ##STATIC-EMITS-ONCE-EACH, PROP-038:37 ##UNIT-SELF-CONTAINED — the proposal became normative."
+        ]
+      },
+      "problem-shape": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: STATIC.md carries the git commit-rules family twice — once as four direct contributions, once nested inside the git-practices contribution (a 323-line compiled unit artifact); nine vibe:static provenance markers for a five-package family.",
+          "spec/boot/STATIC.md (grep vibe:static git-); BACKLOG.md:357-363 (B-006-WHAT), :354 (B-006-DISPOSITION)",
+          "STATIC.md today has 5 git-family markers (4 members + git-practices) — down from nine (B-006-DISPOSITION: «git-family markers 9 → 5»); B-006-WHAT describes the four duplicate members; PROP-009:243 records «323 nested lines»."
+        ]
+      },
+      "problem-double-qualify": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: B-011 qualification made the duplicate loud; the nested copies arrive already qualified and the host pass re-prefixes them, minting double-qualified labels org-vibevm-world--git-practices--org-vibevm-world--git-atomic-commits--<TAIL> — 164 occurrences.",
+          "spec/boot/STATIC.md (grep --git-practices--org-vibevm-world--); PROP-009-loading-model.md:243",
+          "grep -c -- --git-practices--org-vibevm-world-- spec/boot/STATIC.md → 0; PROP-009:243 records «164 double-qualified labels» removed — the double-qualification is gone post-fix."
+        ]
+      },
+      "problem-falsified-claim": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the shape falsifies git-attribution-policy's «in exactly one always-loaded place»; PROP-038 §2.1 ##UNIT-SELF-CONTAINED promises every unit's lane carries its zone «in dependency order, once each».",
+          "BACKLOG.md:351,372-376 (B-006-ANCHOR, B-006-IT-FALSIFIES-A-SHIPPED-CLAIM); spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md:37",
+          "B-006-ANCHOR: falsifies the git-attribution-policy exactly-one claim «from the host side»; PROP-038:37 ##UNIT-SELF-CONTAINED: «in dependency order, once each»."
+        ]
+      },
+      "mechanism-two-sources": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: two independent composition sources each emit a copy and nothing reconciles them.",
+          "crates/vibe-workspace/src/install/bootgen.rs:401 (node_dependency_boot); crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs:250 (dynamic_target_path)",
+          "Both sources exist: node_dependency_boot (closure walk) at bootgen.rs:401 and the unit-artifact substitution path (hybrid_emit.rs:250 dynamic_target_path) — the two emission paths the design names."
+        ]
+      },
+      "MECH-CLOSURE-WALK": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: node_dependency_boot (bootgen.rs:284-301) walks the root requires closure breadth-first; the static-transitive edge forces the whole subtree static, so every boot-bearing member becomes its own static entry.",
+          "crates/vibe-workspace/src/install/bootgen.rs:401 (fn node_dependency_boot)",
+          "node_dependency_boot exists at bootgen.rs:401 (the design cited :284-301; the file grew). with_static (bootgen.rs:84,462) drives the static-link classification — the closure walk the design describes."
+        ]
+      },
+      "MECH-UNIT-SUBSTITUTION": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the same walk, reaching a dependency that statically links a child (with_static), replaces its contribution path with the dependency's compiled STATIC.md (bootgen.rs:323-328); git-practices is that case.",
+          "crates/vibe-workspace/src/install/bootgen.rs:462; crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs:143,250",
+          "bootgen.rs:462 with_static.contains check; hybrid_emit.rs:143 with_static computed, :250 dynamic_target_path points at the compiled STATIC for with_static deps — the substitution path landed."
+        ]
+      },
+      "mechanism-when-each-is-right": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the substitution is correct for a dynamic edge (hybrid_emit.rs dynamic_target_path); the closure walk is correct for the static lane; both applied to a static entry is the bug.",
+          "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs:227,250",
+          "hybrid_emit.rs:227/250 dynamic_target_path — the dynamic-edge substitution; the design's point is the conjunction of both paths on a static entry, which desubstitute_covered_units (bootgen.rs:147) now reconciles."
+        ]
+      },
+      "mechanism-prior-stops": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: DRIFT-029 (suppress per-unit artifact writes; contradicted PROP-038 §2.1, marker at hybrid_emit.rs:148) and DRIFT-030 (counting the entry-point node clears the aggregator but the root then holds the member twice; marker at bootgen.rs:89) both stopped for a ruling.",
+          "crates/vibe-workspace/src/install/bootgen.rs:118-135 (DRIFT-030 REVIEW marker); crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs:154",
+          "The DRIFT-030 REVIEW marker is present at bootgen.rs:118-135 («Which mechanism owns the dedup is a design question, so DRIFT-030 stopped on its §8»); hybrid_emit.rs:154 carries a with_static ruling comment. Note: the design's impl-slices said these markers would be retired in the landing; the DRIFT-030 marker is still present (now at :118, cited as :89)."
+        ]
+      },
+      "solution-once-each": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: one rule at compose time — a static entry that would embed a with_static package's unit artifact is elided to a provenance stub if every boot-bearing member of its zone is already present as its own static entry; coverage is never lost.",
+          "crates/vibe-workspace/src/install/bootgen.rs:147,154-169 (desubstitute_covered_units)",
+          "desubstitute_covered_units at bootgen.rs:147 implements exactly this: roll a substituted entry back, or elide a contentless umbrella to a stub, IF every zone member is present individually; :161 «a lane emits each package's text once, but never at the cost of losing coverage (PROP-038 §2.1)»."
+        ]
+      },
+      "solution-why-not-hoist": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the hoist route (count entry-points as pullers in soft_static_pulls) degrades the aggregator but causes a root double-write (closure walk + append_hoisted) and a world-wide blast radius; the narrow fix is the composition rule.",
+          "crates/vibe-workspace/src/install/bootgen.rs:76 (soft_static_pulls), :137 (append_hoisted), :118-135 (DRIFT-030 root double-write analysis)",
+          "soft_static_pulls at :76, append_hoisted at :137; the DRIFT-030 marker :118-135 records the measured root double-write («the root then holds the member twice, once per path») — the trap the design rejects the hoist route for."
+        ]
+      },
+      "solution-why-not-suppress": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: dropping the substitution unconditionally silently changes the semantics of a static edge to a zone whose members resolve dynamic at node level; PROP-038 §2.2 recursion. The conditional elision preserves §2.2.",
+          "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md (§2.2); bootgen.rs:154-169",
+          "PROP-038 §2.2 is the static-edge recursion contract (the design's reference); desubstitute_covered_units is conditional (bootgen.rs:159 «IF every boot-bearing member … is already present») — coverage-preserving, not an unconditional drop."
+        ]
+      },
+      "solution-owner-probes": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: owner's two hardening probes (2026-08-04) — mixed consumers, and own-code + shared libs; the verdict is order- and mix-independent (pure function of the entry set); de-substitution reverts a snippet-bearing aggregator to its own snippet.",
+          "BACKLOG.md:354 (B-006-DISPOSITION); crates/vibe-workspace/src/install/bootgen.rs:164-169",
+          "B-006-DISPOSITION records «two hardening probes answered in the rule: mixed static/static-transitive consumers, de-substitution for a snippet-bearing aggregator»; bootgen.rs:164-169 doc: «a pure function of the entry set … order of entries and the count of consumers … do not affect the verdict»."
+        ]
+      },
+      "rider-what": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the qualify phase runs per node, under each node's own origin (PROP-035 §8); for normal closures splicing cross-origin nodes this is the honest form; measured population today: the git umbrella and zero normal static entries.",
+          "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:191 (##PIPE-QUALIFY)",
+          "PROP-035:191 ##PIPE-QUALIFY: «per node, each node under its own authoring origin … a compiled closure that splices cross-origin nodes qualifies every node under the origin that authored it» — the rider landed normatively."
+        ]
+      },
+      "forks-tree": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: three forks (A dedup owner, B stub form, C contract landing), each with the boss's recommendation first.",
+          "spec/design/lane-composition-dedup.md:46; BACKLOG.md:354 (B-006-DISPOSITION)",
+          "B-006-DISPOSITION: owner-approved «a1 b1 c1» — the owner took all three recommended options, matching the three forks in §5."
+        ]
+      },
+      "FORK-DEDUP-OWNER": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: (A1 taken) compose-time elision at the node; minimal perimeter, vibedeps untouched, hoisting untouched, §2.2 preserved.",
+          "BACKLOG.md:354; crates/vibe-workspace/src/install/bootgen.rs:147 (desubstitute_covered_units)",
+          "B-006-DISPOSITION owner took A1; desubstitute_covered_units (bootgen.rs:147) is the compose-time elision — a pure pass over the composition and unit table, vibedeps untouched."
+        ]
+      },
+      "FORK-STUB-FORM": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: (B1 taken) a generated provenance stub (marker comment + one sentence, no #use directive); a #use would point the mandatory-read machinery at the duplicate.",
+          "BACKLOG.md:354; crates/vibe-workspace/src/install/bootgen.rs:154-169",
+          "B-006-DISPOSITION owner took B1; desubstitute_covered_units doc (:157-158) «elided to a provenance stub when it is a contentless umbrella» — the stub form, no #use."
+        ]
+      },
+      "FORK-CONTRACT-LANDING": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: (C1 taken) PROP-009 §2.3 gains the once-each sentence (##STATIC-EMITS-ONCE-EACH) and sheds the stale B-011 interim tail; PROP-038 §2.1 gains a cross-reference sentence; PROP-035 §8 changes only under the rider.",
+          "spec/modules/vibe-workspace/PROP-009-loading-model.md:243; PROP-038-hybrid-boot-linking.md:37; PROP-035-spec-compiler.md:191",
+          "PROP-009:243 ##HISTORY-B006-ONCE-EACH landed (##STATIC-EMITS-ONCE-EACH, «the linker-side twin sentence: PROP-038 §2.1; the per-node-qualify rider: PROP-035 §8»); PROP-038:37 carries the once-each contract."
+        ]
+      },
+      "normative-list": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: the §5-C1 edit list (PROP-009 §2.3, PROP-038 §2.1, PROP-035 §8 per-node) applied by the boss; no registry anchors ride this build (none of six deferred rows names B-006).",
+          "PROP-009-loading-model.md:243; PROP-038:37; PROP-035:191; BACKLOG.md:354",
+          "All three edits landed (PROP-009:243, PROP-038:37, PROP-035:191); B-006-DISPOSITION: «No registry anchors ride this build» — the re-judge surface is the git-attribution-policy claim already routed to the host."
+        ]
+      },
+      "acceptance-list": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: (i) five git-family markers total (down from nine); (ii) zero double-qualified labels (164 → 0); (iii) tombstone carries no same-origin repeat rows; (iv) lane loses ~320 lines; (v) DocTree::duplicate_anchors()==[]; (vii) panel green, INDEX.md byte-stable.",
+          "spec/boot/STATIC.md (grep); crates/vibe-spec/src/doctree.rs:244; BACKLOG.md:354 (B-006-DISPOSITION)",
+          "STATIC.md: git markers = 5 (was 9), double-qualified labels = 0 (was 164); doctree.rs:244 duplicate_anchors() exists; B-006-DISPOSITION records «git-family markers 9 → 5, double-qualified labels 164 → 0, −404 lines» (the design estimated ~320; landing measured −404)."
+        ]
+      },
+      "impl-slices": {
+        "v": "PENDING",
+        "ev": [
+          "Claim: two claudez packets — W-A the composition elision (bootgen.rs + hybrid_emit.rs + boot.rs seam + fixtures), W-B the per-node qualify rider (pipeline.rs + boot_artifacts.rs splice + cross-origin fixture); the two DRIFT review markers retired in the same landing.",
+          "crates/vibe-workspace/src/install/bootgen.rs:147; crates/vibe-spec/src/pipeline.rs:191; BACKLOG.md:354",
+          "B-006-DISPOSITION: «built the same day by two claudez slices (W-A de-substitution …; W-B per-node qualify …)»; desubstitute_covered_units (bootgen.rs:147) + PIPE-QUALIFY (pipeline.rs:191) are the two slices. Note: the DRIFT-030 review marker at bootgen.rs:118-135 is still present though the design said both markers retire here."
+        ]
+      }
+    }
+  },
+  "_note": "EVIDENCE ONLY — every `v` is PENDING and merge-verdicts.py will refuse this file as-is. Gathered 2026-08-05 by the H1/H2 sweep; the reviewer replaces each PENDING with confirmed/drift/unverifiable and merges under a new batch id."
+}
