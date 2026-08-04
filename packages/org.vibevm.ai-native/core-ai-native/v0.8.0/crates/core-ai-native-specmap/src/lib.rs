@@ -32,6 +32,7 @@ pub mod generated;
 
 pub mod config;
 pub mod explain;
+pub mod fingerprint;
 pub mod index;
 pub mod ledger;
 pub mod mdspec;

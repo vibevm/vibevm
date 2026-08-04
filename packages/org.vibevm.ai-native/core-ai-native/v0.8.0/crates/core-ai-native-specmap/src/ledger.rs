@@ -337,13 +337,15 @@ mod tests {
 
     fn mini_map() -> Specmap {
         Specmap {
-            schema: 2,
+            schema: crate::index::SCHEMA,
             codeItems: vec![CodeItem {
                 symbol: "demo::thing".into(),
                 itemKind: "fn".into(),
                 crateName: "demo".into(),
                 file: "crates/demo/src/lib.rs".into(),
                 line: 3,
+                endLine: None,
+                fingerprint: None,
             }],
             edges: vec![Edge {
                 fromSymbol: "demo::thing".into(),
