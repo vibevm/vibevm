@@ -175,6 +175,10 @@ pub fn run_health(root: &Path, out_rel: &str, extra_sections: &[(String, Value)]
                 // live in test context, not domain code, so neither carries a
                 // health counter here — a characterization coupling, not a
                 // ripple.
+                // LintDiagnosis (B-026) is a foreign-linter diagnosis read
+                // from a SARIF report; this collector extracts rust-syn
+                // facts directly and never loads reports, so it never sees
+                // one — a no-op arm for exhaustiveness, not a counter.
                 Fact::Import { .. }
                 | Fact::Ctor { .. }
                 | Fact::TsUnsafe { .. }
@@ -183,7 +187,8 @@ pub fn run_health(root: &Path, out_rel: &str, extra_sections: &[(String, Value)]
                 | Fact::GoUnsafe { .. }
                 | Fact::GoConformance { .. }
                 | Fact::InvariantComment { .. }
-                | Fact::TestSweep { .. } => {}
+                | Fact::TestSweep { .. }
+                | Fact::LintDiagnosis { .. } => {}
             }
         }
     }

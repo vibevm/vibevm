@@ -218,6 +218,40 @@ pub enum Fact {
         line: u32,
         detail: String,
     },
+    /// A diagnosis from a FOREIGN linter — another tool's verdict on the
+    /// codebase, read back IN as a fact (B-026 SARIF ingest). The Discipline
+    /// quotes a foreign linter rather than reinventing it: clippy, eslint,
+    /// golangci-lint already find what they find, and a Discipline rule may
+    /// CITE one of their diagnoses as the evidence for its own claim
+    /// (`check: { tool, rule_id, status }` — see [`Fact::cites_lint`]).
+    ///
+    /// Produced NOT by a per-language frontend but by [`sarif::ingest`]
+    /// (`crate::sarif`) reading a SARIF 2.1.0 report a flora step deposited
+    /// — so this is the one fact whose origin is a file a tool wrote, not
+    /// source the engine parsed. `tool` is the SARIF
+    /// `runs[].tool.driver.name`; `rule_id` is the result's `ruleId`;
+    /// `file`/`line` come from the first result location's
+    /// `physicalLocation` (`artifactLocation.uri` / `region.startLine`);
+    /// `message` is the result's `message.text`.
+    ///
+    /// `suppressed` carries the result's `suppressions`: a suppressed
+    /// diagnosis is the foreign-linter shape of "known and accepted in
+    /// source" — exactly what [`FindingStatus::DeviationAcknowledged`]
+    /// (B-025) was built for. A rule that surfaces a suppressed diagnosis
+    /// stamps the finding `DeviationAcknowledged`, so it stays visible in
+    /// the IR/SARIF but never fails the gate (the existing gate-inert
+    /// path in `baseline::diff` / `baseline::freezeable`, reused for
+    /// free — no new status). `reason` is the suppression's
+    /// `justification` text when the report carried one.
+    LintDiagnosis {
+        tool: String,
+        rule_id: String,
+        file: String,
+        line: u32,
+        message: String,
+        suppressed: bool,
+        reason: Option<String>,
+    },
 }
 
 impl Fact {
@@ -287,6 +321,61 @@ impl Fact {
             }
             Fact::InvariantComment { marker, .. } => format!("InvariantComment({marker})"),
             Fact::TestSweep { kind, detail, .. } => format!("TestSweep({kind}:{detail})"),
+            // A foreign diagnosis: name its tool + rule + suppression
+            // status (the reason text rides on the finding's status for
+            // acknowledged ones, same posture as TsUnsafe/GoUnsafe).
+            Fact::LintDiagnosis {
+                tool,
+                rule_id,
+                suppressed,
+                ..
+            } => format!("LintDiagnosis({tool}:{rule_id},suppressed={suppressed})"),
+        }
+    }
+
+    /// B-026 — the citation dictionary: is this fact a diagnosis a
+    /// FOREIGN linter (`tool`) produced under rule `rule_id`? A Discipline
+    /// rule calls this to say «this diagnosis confirms my claim» — quoting
+    /// the foreign linter instead of reinventing its check. The form is
+    /// `check: { tool, id, status }`: `tool` + `rule_id` name the foreign
+    /// verdict, and `suppressed` filters by the diagnosis's status —
+    /// `None` accepts either, `Some(true)` only an acknowledged
+    /// (suppressed) one, `Some(false)` only a live one.
+    ///
+    /// ```
+    /// use core_ai_native_conform::Fact;
+    ///
+    /// let live = Fact::LintDiagnosis {
+    ///     tool: "clippy".into(), rule_id: "clippy::unwrap_used".into(),
+    ///     file: "src/a.rs".into(), line: 4, message: "used unwrap".into(),
+    ///     suppressed: false, reason: None,
+    /// };
+    /// let ack = Fact::LintDiagnosis {
+    ///     tool: "clippy".into(), rule_id: "clippy::unwrap_used".into(),
+    ///     file: "src/a.rs".into(), line: 9, message: "used unwrap".into(),
+    ///     suppressed: true, reason: Some("FFI boundary".into()),
+    /// };
+    /// // {tool, id} match; status narrows it.
+    /// assert!(live.cites_lint("clippy", "clippy::unwrap_used", None));
+    /// assert!(live.cites_lint("clippy", "clippy::unwrap_used", Some(false)));
+    /// assert!(!live.cites_lint("clippy", "clippy::unwrap_used", Some(true)));
+    /// assert!(ack.cites_lint("clippy", "clippy::unwrap_used", Some(true)));
+    /// // Wrong tool or id: no match, regardless of status.
+    /// assert!(!live.cites_lint("eslint", "clippy::unwrap_used", None));
+    /// assert!(!live.cites_lint("clippy", "clippy::something_else", None));
+    /// // A source fact is never a foreign diagnosis.
+    /// assert!(!Fact::Ctor { type_name: "X".into(), line: 1 }
+    ///     .cites_lint("clippy", "clippy::unwrap_used", None));
+    /// ```
+    pub fn cites_lint(&self, tool: &str, rule_id: &str, suppressed: Option<bool>) -> bool {
+        match self {
+            Fact::LintDiagnosis {
+                tool: t,
+                rule_id: r,
+                suppressed: s,
+                ..
+            } => t == tool && r == rule_id && suppressed.is_none_or(|want| want == *s),
+            _ => false,
         }
     }
 }

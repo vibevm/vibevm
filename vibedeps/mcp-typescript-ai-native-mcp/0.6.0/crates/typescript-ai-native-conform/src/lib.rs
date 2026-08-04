@@ -75,6 +75,11 @@ pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
         min_lines: config.invariant_comment_min_file_lines,
     }));
     out.push(Box::new(rules::DeclaredTestMatrices));
+    // B-026: a foreign-linter diagnosis the codebase suppressed must carry
+    // a reason — quotes the foreign linter (clippy/eslint/golangci via a
+    // SARIF report) instead of reinventing it. Fires only when such a
+    // diagnosis is present (no report deposited ⇒ no facts ⇒ silent).
+    out.push(Box::new(rules::LintSuppressionNeedsReason));
     out
 }
 
@@ -94,6 +99,21 @@ fn extract(root: &Path, config: &Config) -> Result<Vec<conform_core::SourceFacts
         log.extracted.len(),
         log.cached,
     );
+    // B-026: read foreign-linter SARIF reports a flora step deposited (the
+    // root-level `sarif_reports` paths) and merge their diagnoses into the
+    // fact stream, so a rule may cite a foreign verdict. Shared by
+    // `run_check` and `run_freeze` so freeze sees the same facts the gate
+    // does. Absent reports is the norm (a no-op); a broken report is
+    // announced and skipped — never fatal.
+    let (lint_facts, sreports, sdiagnoses) =
+        conform_core::sarif::load_reports(root, &config.sarif_reports);
+    let mut facts = facts;
+    facts.extend(lint_facts);
+    if !config.sarif_reports.is_empty() {
+        eprintln!(
+            "typescript-ai-native-conform: ingested {sreports} SARIF report(s), {sdiagnoses} diagnosis fact(s)."
+        );
+    }
     Ok(facts)
 }
 

@@ -116,7 +116,13 @@ impl Frontend for RustFrontend {
             | Fact::GoUnsafe { line, .. }
             | Fact::GoConformance { line, .. }
             | Fact::InvariantComment { line, .. }
-            | Fact::TestSweep { line, .. } => *line,
+            | Fact::TestSweep { line, .. }
+            // B-026: a foreign-linter diagnosis (SARIF ingest), sorted by
+            // its line like every located fact. Never produced by rust-syn
+            // — it arrives via sarif::load_reports, merged into the fact
+            // stream by the driver after extraction — but the sort is total
+            // over the shared fact model.
+            | Fact::LintDiagnosis { line, .. } => *line,
         });
         v.facts
     }

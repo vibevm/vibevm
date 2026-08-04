@@ -95,6 +95,11 @@ pub fn build_rules(config: &Config) -> Vec<Box<dyn Rule>> {
         roots: config.rust.env_roots.clone(),
     }));
     out.push(Box::new(rules::DeclaredTestMatrices));
+    // B-026: a foreign-linter diagnosis the codebase suppressed must carry
+    // a reason — quotes the foreign linter (clippy/eslint/golangci via a
+    // SARIF report) instead of reinventing it. Fires only when such a
+    // diagnosis is present (no report deposited ⇒ no facts ⇒ silent).
+    out.push(Box::new(rules::LintSuppressionNeedsReason));
     out
 }
 
@@ -134,6 +139,17 @@ pub fn run_check(root: &Path, baseline_rel: &str, scope: Option<&str>) -> Result
         Frontend::id(&frontend),
         Frontend::version(&frontend),
     );
+    // B-026: read foreign-linter SARIF reports a flora step deposited (the
+    // root-level `sarif_reports` paths) and merge their diagnoses into the
+    // fact stream, so a rule may cite a foreign verdict. Absent reports is
+    // the norm (a no-op); a broken report is announced on stderr and
+    // skipped — never fatal (the unread report is the absence of facts).
+    let (lint_facts, sreports, sdiagnoses) = sarif::load_reports(root, &config.sarif_reports);
+    let mut facts = facts;
+    facts.extend(lint_facts);
+    if !config.sarif_reports.is_empty() {
+        eprintln!("conform: ingested {sreports} SARIF report(s), {sdiagnoses} diagnosis fact(s).");
+    }
     warn_vacuously_gated(&config, &facts);
     // The sharper empty-scope guard: a present `[rust]` policy whose roots
     // resolved to zero crates warns loudly instead of passing silently (the
@@ -194,7 +210,7 @@ pub fn run_check(root: &Path, baseline_rel: &str, scope: Option<&str>) -> Result
 /// and a re-freeze after work that shrank the set. The diff review is the
 /// guard: outside a new-rule landing the file may only shrink.
 pub fn run_freeze(root: &Path, baseline_rel: &str) -> Result<()> {
-    use conform_core::{ExtractionLog, Store, baseline, check, count_by_rule};
+    use conform_core::{ExtractionLog, Store, baseline, check, count_by_rule, sarif};
     use rust_ai_native_conform_frontend::RustFrontend;
 
     let (config, _origin) = load_config_or_default(root)?;
@@ -203,6 +219,11 @@ pub fn run_freeze(root: &Path, baseline_rel: &str) -> Result<()> {
     let mut log = ExtractionLog::default();
     let frontend = RustFrontend;
     let facts = store.extract_workspace(root, &frontend, &mut log)?;
+    // B-026: merge the same foreign-linter SARIF diagnoses `run_check`
+    // sees, so freeze and the gate agree on the finding set.
+    let (lint_facts, _sreports, _sdiagnoses) = sarif::load_reports(root, &config.sarif_reports);
+    let mut facts = facts;
+    facts.extend(lint_facts);
     warn_vacuously_gated(&config, &facts);
     // The sharper empty-scope guard: a present `[rust]` policy whose roots
     // resolved to zero crates warns loudly instead of passing silently (the

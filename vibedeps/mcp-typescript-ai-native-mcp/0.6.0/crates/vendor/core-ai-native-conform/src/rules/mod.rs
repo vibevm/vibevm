@@ -15,6 +15,7 @@ specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/ENGINE-C
 use crate::facts::{Fact, SourceFacts};
 
 mod budget;
+mod citations;
 mod diagnostics;
 mod go;
 mod go_parity;
@@ -26,6 +27,7 @@ mod typescript;
 mod typescript_parity;
 
 pub use budget::{AmbientEnv, FileLength, NoUnwrapInDomain, UnsafeGate};
+pub use citations::LintSuppressionNeedsReason;
 pub use diagnostics::{ErrorEnumCitesReq, ErrorMessageCitesReq, PubDoctest, SeamHasDoctest};
 pub use go::{GoCellIsolation, GoUnsafeInDomain};
 pub use go_parity::{GoConformanceAssertion, GoSeamErrorCitesReq};
