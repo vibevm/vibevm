@@ -89,8 +89,20 @@ Four owner rulings closed the SHAPE on 2026-08-04; what is left is the build.
 - [ ] `refactor(crates)`: the pointed seam work the B-040 census earned
       (`harvest/g1-b040-seams-census.md`) — sealed traits and typestate where
       they pay, a recorded reason where they do not.
-- [ ] `docs(spec)`: the F-132 schema debt — spec tags in
-      `schemas/specmap.jtd.json`.
+- [ ] `docs(spec)`: the F-132 schema debt. **Measured 2026-08-05, and the
+      debt is not where the line said.** `schemas/specmap.jtd.json` does not
+      exist; what exists is seven `*.jtd.json` report schemas, and **none of
+      them carries a spec tag of any kind**. That matters because
+      `conform.toml` exempts `vibe-wire` on the stated ground that «the
+      generator input under `schemas/` is the taggable unit instead» — so
+      the exemption's own justification is the thing that is missing.
+      **The cheap fix is a wish, not a fix:** each schema has a top-level
+      `metadata` block, so a `spec://` key drops in trivially — and nothing
+      reads it, because the specmap scanner takes `.rs` and markdown, not
+      JSON. Closing this honestly means either teaching the scanner the
+      schema metadata, or correcting the claim to «excluded, input NOT
+      tagged» with a reason and a route. The owner's standing word on it is
+      «сделать как будет возможность».
 
 ### M-PARITY bar 2 — two named builds left, both owner-deferred
 
