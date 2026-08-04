@@ -44,6 +44,7 @@ pub mod search;
 pub mod short_name;
 pub mod show;
 pub mod skill;
+pub mod specmap;
 pub mod term;
 pub mod trace;
 pub mod tree;

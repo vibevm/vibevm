@@ -21,6 +21,7 @@ mod prefs;
 mod progress;
 mod registry;
 mod skill;
+mod specmap;
 mod term;
 mod vars;
 mod vvm;
@@ -36,6 +37,7 @@ pub use prefs::*;
 pub use progress::*;
 pub use registry::*;
 pub use skill::*;
+pub use specmap::*;
 pub use term::*;
 pub use vars::*;
 pub use vvm::*;
@@ -223,6 +225,16 @@ pub enum Command {
     /// subgraph; the default is the deterministic text view. Contrast
     /// `vibe trace`, a delegating alias to the installed stack's `trace`.
     Explain(ExplainArgs),
+
+    /// Generate the package's carried traceability map (V5-PACKAGE-MAP §2.2).
+    /// Reads the package's `vibe.toml` (for its `(group, name)` coordinate) and
+    /// `specmap.toml` (its scan policy; presence is the opt-in), and writes the
+    /// map — built fresh with the same engine `vibe explain` uses — minted under
+    /// the coordinate `spec://<group>/<name>/…` (globally unique, where the
+    /// local `specmap.toml` nickname is not), so a consumer can query an
+    /// installed package without rebuilding. A package without a `specmap.toml`
+    /// is left untouched. Read-only to the tree outside the one map file.
+    Specmap(SpecmapArgs),
 
     /// Traceability queries over the project's specmap (PROP-014 §2.6) —
     /// a delegating alias: arguments pass through verbatim to the
