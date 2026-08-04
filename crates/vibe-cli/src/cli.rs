@@ -13,6 +13,7 @@ use clap::{Parser, Subcommand};
 
 mod agentic;
 mod aiui;
+mod explain;
 mod inspect;
 mod mcp;
 mod pkg;
@@ -27,6 +28,7 @@ mod workspace;
 
 pub use agentic::*;
 pub use aiui::*;
+pub use explain::*;
 pub use inspect::*;
 pub use mcp::*;
 pub use pkg::*;
@@ -212,6 +214,15 @@ pub enum Command {
         #[command(subcommand)]
         cmd: BinCmd,
     },
+
+    /// Traceability explain over THIS tree (PROP-014 §2.6): build the
+    /// specmap fresh in memory and render what implements, verifies,
+    /// documents, or deviates from a spec unit or code symbol — the host's
+    /// built-in answer to the canonical "which test verifies this rule?"
+    /// (`vibe explain "spec://…#anchor"`). `--json` emits the raw one-hop
+    /// subgraph; the default is the deterministic text view. Contrast
+    /// `vibe trace`, a delegating alias to the installed stack's `trace`.
+    Explain(ExplainArgs),
 
     /// Traceability queries over the project's specmap (PROP-014 §2.6) —
     /// a delegating alias: arguments pass through verbatim to the

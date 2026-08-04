@@ -128,6 +128,7 @@ fn main() -> ExitCode {
         Command::Update(args) => commands::update::run(&ctx, args, discover_embedded_root()),
         Command::Reinstall(args) => commands::reinstall::run(&ctx, args, discover_embedded_root()),
         Command::Check(args) => commands::check::run(&ctx, args),
+        Command::Explain(args) => commands::explain::run(&ctx, args),
         Command::Show(args) => commands::show::run(&ctx, args),
         Command::Prefs(args) => commands::prefs::run(&ctx, args),
         Command::Tree(args) => commands::tree::run(&ctx, args),

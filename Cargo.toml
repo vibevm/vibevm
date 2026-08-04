@@ -22,6 +22,7 @@ members = [
     "crates/vibe-publish",
     "crates/vibe-spec",
     "crates/vibe-test-support",
+    "crates/vibe-trace",
     "crates/vibe-wire",
     "crates/vibe-workspace",
     "xtask",
@@ -43,6 +44,7 @@ default-members = [
     "crates/vibe-publish",
     "crates/vibe-spec",
     "crates/vibe-test-support",
+    "crates/vibe-trace",
     "crates/vibe-wire",
     "crates/vibe-workspace",
 ]
@@ -78,6 +80,10 @@ vibe-spec = { path = "crates/vibe-spec", version = "0.1.0-dev" }
 # Test-only: linking it isolates the test process's per-user settings home
 # before the first `#[test]` runs (DRIFT-020). Consume as a dev-dependency.
 vibe-test-support = { path = "crates/vibe-test-support", version = "0.1.0-dev" }
+# The host's traceability-explain capability (PROP-014 §2.6): build the
+# specmap fresh and render a target's subgraph. Shared one-to-one by the
+# `vibe explain` CLI surface and the `explain` MCP tool.
+vibe-trace = { path = "crates/vibe-trace", version = "0.1.0-dev" }
 vibe-wire = { path = "crates/vibe-wire", version = "0.1.0-dev" }
 vibe-workspace = { path = "crates/vibe-workspace", version = "0.1.0-dev" }
 

@@ -29,6 +29,7 @@ pub mod agentic;
 pub mod aiui;
 pub mod bin;
 pub mod check;
+pub mod explain;
 pub mod init;
 pub mod install;
 pub mod list;

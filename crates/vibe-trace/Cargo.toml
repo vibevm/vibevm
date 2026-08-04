@@ -1,0 +1,20 @@
+[package]
+name = "vibe-trace"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Host traceability-explain capability — build the specmap fresh in memory and render a target's subgraph"
+
+[dependencies]
+specmark.workspace = true
+specmap-core.workspace = true
+anyhow.workspace = true
+serde_json.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

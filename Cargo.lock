@@ -3959,6 +3959,7 @@ dependencies = [
  "vibe-settings",
  "vibe-spec",
  "vibe-test-support",
+ "vibe-trace",
  "vibe-wire",
  "vibe-workspace",
  "walkdir",
@@ -4059,6 +4060,7 @@ dependencies = [
  "toml 0.9.12+spec-1.1.0",
  "tracing",
  "vibe-core",
+ "vibe-trace",
 ]
 
 [[package]]
@@ -4149,6 +4151,17 @@ dependencies = [
  "assert_cmd",
  "tempfile",
  "vibe-core",
+]
+
+[[package]]
+name = "vibe-trace"
+version = "0.1.0-dev"
+dependencies = [
+ "anyhow",
+ "core-ai-native-specmap",
+ "core-ai-native-specmark",
+ "serde_json",
+ "tempfile",
 ]
 
 [[package]]

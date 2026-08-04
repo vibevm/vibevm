@@ -9,10 +9,11 @@
 //!   for stdio servers).
 //! - MCP message shapes — `initialize` handshake, `tools/list`,
 //!   `tools/call` — modelled as plain Rust types serialised via serde.
-//! - Four tools (see [`tools::default_tools`]): `query_package` (lockfile
+//! - Five tools (see [`tools::default_tools`]): `query_package` (lockfile
 //!   metadata), `read_subskill` and `materialise_subskill` (subskill
-//!   content for an activated package), and `agentic_explain` (the
-//!   PROP-018 in-project inference transport).
+//!   content for an activated package), `agentic_explain` (the
+//!   PROP-018 in-project inference transport), and `explain` (the
+//!   PROP-014 traceability lookup over this project's tree).
 //!
 //! ## Architecture
 //!
@@ -466,6 +467,49 @@ version = "0.0.1"
         let response_line = dispatch_one(ctx, &req).unwrap();
         let v: Value = serde_json::from_str(&response_line).unwrap();
         assert_eq!(v["error"]["code"], -32601);
+    }
+
+    #[test]
+    fn tools_list_includes_explain() {
+        let (_dir, ctx) = empty_project();
+        let req = json!({
+            "jsonrpc": "2.0",
+            "id": 5,
+            "method": "tools/list",
+            "params": {}
+        })
+        .to_string();
+        let response_line = dispatch_one(ctx, &req).unwrap();
+        let v: Value = serde_json::from_str(&response_line).unwrap();
+        let tools = v["result"]["tools"].as_array().expect("tools array");
+        let names: Vec<&str> = tools.iter().map(|t| t["name"].as_str().unwrap()).collect();
+        assert!(names.contains(&"explain"), "got {:?}", names);
+    }
+
+    /// The explain tool dispatches (it is not "unknown") and surfaces a
+    /// target that the empty test project cannot resolve as an in-band
+    /// `isError` — the §4 behavior, reached through the shared
+    /// `vibe_trace::explain` core.
+    #[test]
+    fn explain_tool_runs_and_reports_an_unresolvable_target_in_band() {
+        let (_dir, ctx) = empty_project();
+        let req = json!({
+            "jsonrpc": "2.0",
+            "id": 6,
+            "method": "tools/call",
+            "params": { "name": "explain", "arguments": { "target": "spec://x/Y#z" } }
+        })
+        .to_string();
+        let response_line = dispatch_one(ctx, &req).unwrap();
+        let v: Value = serde_json::from_str(&response_line).unwrap();
+        assert!(
+            v["error"].is_null(),
+            "the tool dispatched, not unknown: {v}"
+        );
+        assert!(
+            v["result"]["isError"].as_bool() == Some(true),
+            "expected in-band error; got {v}"
+        );
     }
 
     #[test]
