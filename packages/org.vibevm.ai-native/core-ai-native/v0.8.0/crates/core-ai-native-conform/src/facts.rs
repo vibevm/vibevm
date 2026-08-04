@@ -204,12 +204,15 @@ pub enum Fact {
     /// `*.spec.ts` file for ts-tsc): outside tests the rule is not about
     /// this. `kind` is the syntactic signal that fired — `"bitmask"` (a
     /// loop bound sweeps `2^n`: `1 << n` / `2 ** n` / `math.Pow(2, n)`) or
-    /// `"nested-loops"` (a Cartesian product of ≥ 3 nested loops). `line`
-    /// is the loop's line; `detail` is the short machine detail — the bound
-    /// text for a bitmask (`"1 << n"`) or the nesting depth for nested
-    /// loops (`"3"`). Consumed by `declared-test-matrices`, the rule that a
-    /// table of cases iterated once is compliant and a generated exponent
-    /// is not.
+    /// `"nested-loops"` (a Cartesian product of ≥ 3 nested GENERATED-axis
+    /// loops — a Rust range `for i in 0..n`, a Go/TS C-style `for`; a loop
+    /// over a DECLARED collection/array/constant does NOT count, so a nest
+    /// of those is compliant). `line` is the loop's line; `detail` is the
+    /// short machine detail — the bound text for a bitmask (`"1 << n"`) or
+    /// the nesting depth for nested loops (`"3"`). Consumed by
+    /// `declared-test-matrices`, the rule that a table of cases iterated
+    /// once (or a closed set exhausted by nesting collection loops) is
+    /// compliant and a generated exponent is not.
     TestSweep {
         kind: String,
         line: u32,

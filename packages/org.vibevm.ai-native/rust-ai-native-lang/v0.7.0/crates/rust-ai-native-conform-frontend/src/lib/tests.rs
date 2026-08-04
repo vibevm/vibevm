@@ -324,3 +324,156 @@ fn stamps_in_test_on_a_comment_inside_a_cfg_test_mod() {
     });
     assert_eq!(in_test, Some(true), "{facts:?}");
 }
+
+// --- R-060 narrowed predicate: range-axis nesting ---------------------
+
+/// The depth of nested loops carrying the `nested-loops` swept-matrix
+/// signal, or `None` when no such fact fired. [`extract`] is the test
+/// harness; the helper keeps the assertions below one-liners.
+#[cfg(test)]
+fn nested_loop_depth(facts: &[Fact]) -> Option<&str> {
+    facts.iter().find_map(|f| match f {
+        Fact::TestSweep { kind, detail, .. } if kind == "nested-loops" => Some(detail.as_str()),
+        _ => None,
+    })
+}
+
+#[cfg(test)]
+fn has_bitmask(facts: &[Fact]) -> bool {
+    facts
+        .iter()
+        .any(|f| matches!(f, Fact::TestSweep { kind, .. } if kind == "bitmask"))
+}
+
+/// Three nested RANGE for-loops (generated axes) in a test fire the
+/// `nested-loops` signal once, at depth 3 — the Cartesian half of R-060.
+#[test]
+fn a_three_deep_range_nest_in_a_test_emits_nested_loops() {
+    let facts = extract(
+        r#"#[test]
+fn swept() {
+    for a in 0..2 {
+        for b in 0..2 {
+            for c in 0..2 {
+                let _ = c;
+            }
+        }
+    }
+}
+"#,
+    );
+    assert_eq!(nested_loop_depth(&facts), Some("3"), "{facts:?}");
+}
+
+/// The host `vibe-workspace` shape — three nested `for x in [literal]`
+/// loops (declared axes). The narrowing keeps it GREEN: a collection
+/// iterable is data someone wrote, so exhausting a closed set by nesting
+/// is compliant and no sweep fires.
+#[test]
+fn a_three_deep_collection_nest_in_a_test_is_silent() {
+    let facts = extract(
+        r#"#[test]
+fn exhausted() {
+    for a in [false, true] {
+        for b in [false, true] {
+            for c in [false, true] {
+                let _ = (a, b, c);
+            }
+        }
+    }
+}
+"#,
+    );
+    assert!(
+        facts.iter().all(|f| !matches!(f, Fact::TestSweep { .. })),
+        "a declared-axis collection nest never fires: {facts:?}"
+    );
+}
+
+/// The host `progress-core` shape — three nested `for x in CONST_PATH`
+/// loops (declared axes). A path iterable is data too, so this stays GREEN.
+#[test]
+fn a_three_deep_path_iterable_nest_in_a_test_is_silent() {
+    let facts = extract(
+        r#"const STAGES: [u8; 2] = [0, 1];
+#[test]
+fn exhausted() {
+    for a in STAGES {
+        for b in STAGES {
+            for c in STAGES {
+                let _ = (a, b, c);
+            }
+        }
+    }
+}
+"#,
+    );
+    assert!(
+        facts.iter().all(|f| !matches!(f, Fact::TestSweep { .. })),
+        "a path-iterable collection nest never fires: {facts:?}"
+    );
+}
+
+/// The refinement's mixed case: count only range axes. A collection-loop
+/// wrapper does not count, but three range loops nested under it still
+/// reach depth 3 and fire.
+#[test]
+fn a_range_nest_under_a_collection_loop_still_fires() {
+    let facts = extract(
+        r#"#[test]
+fn mixed() {
+    for _t in [0, 1] {
+        for a in 0..2 {
+            for b in 0..2 {
+                for c in 0..2 {
+                    let _ = c;
+                }
+            }
+        }
+    }
+}
+"#,
+    );
+    assert_eq!(nested_loop_depth(&facts), Some("3"), "{facts:?}");
+}
+
+/// The `2^n` bit-mask bound is unchanged by the narrowing: a `for mask in
+/// 0..(1 << n)` in a test fires the `bitmask` signal (its iterable IS a
+/// range, but the signal is the bound, checked for every for-loop).
+#[test]
+fn a_bitmask_for_loop_in_a_test_emits_bitmask() {
+    let facts = extract(
+        r#"#[test]
+fn swept() {
+    for mask in 0..(1 << 3) {
+        let _ = mask;
+    }
+}
+"#,
+    );
+    assert!(has_bitmask(&facts), "{facts:?}");
+    // A single 1-deep loop is below the ≥ 3 nesting threshold.
+    assert_eq!(nested_loop_depth(&facts), None, "{facts:?}");
+}
+
+/// Outside test context no sweep fires, even for a 3-deep range nest —
+/// the rule is about tests, not production loops.
+#[test]
+fn a_range_nest_outside_a_test_is_silent() {
+    let facts = extract(
+        r#"pub fn swept() {
+    for a in 0..2 {
+        for b in 0..2 {
+            for c in 0..2 {
+                let _ = c;
+            }
+        }
+    }
+}
+"#,
+    );
+    assert!(
+        facts.iter().all(|f| !matches!(f, Fact::TestSweep { .. })),
+        "outside test context no sweep fires: {facts:?}"
+    );
+}

@@ -67,7 +67,14 @@ impl Frontend for RustFrontend {
         // v9: TestSweep facts — a swept test matrix (a `1 << n` bit-mask
         //     loop bound, or a ≥3-deep Cartesian nest of loops) in test
         //     context only, feeding declared-test-matrices (R-060).
-        "9"
+        // v10: the nested-loops signal narrows — only a `for` loop with a
+        //     RANGE iterable (`0..n`) counts toward the sweep depth; a
+        //     collection/array/path iterable is a declared axis and no
+        //     longer counts, and `while`/`loop` do not count either.
+        //     Exhausting a closed set by nesting collection loops is now
+        //     compliant, so the emitted fact set shrinks and the cache
+        //     must retire.
+        "10"
     }
 
     fn extract(&self, _file: &str, _crate_name: &str, module: &str, text: &str) -> Vec<Fact> {
@@ -82,7 +89,7 @@ impl Frontend for RustFrontend {
             test_depth: 0,
             deviating_depth: 0,
             test_ranges: Vec::new(),
-            loop_depth: 0,
+            range_loop_depth: 0,
         };
         v.visit_file(&ast);
         // Plain `//` line comments are dropped by syn::parse_file (only
@@ -133,11 +140,14 @@ struct Extractor {
     /// the visit so the post-visit raw-text comment scan can stamp
     /// `in_test` on an invariant comment the AST never sees.
     test_ranges: Vec<(u32, u32)>,
-    /// Nesting depth of loops (`for`/`while`/`loop`) currently being
-    /// visited — nonzero while inside a loop. The declared-test-matrices
-    /// signal (R-060): a Cartesian product of ≥ 3 nested loops in test
-    /// context is a swept matrix.
-    loop_depth: u32,
+    /// Nesting depth of RANGE loops (`for x in 0..n`) currently being
+    /// visited — nonzero while inside a generated-axis for-loop. The
+    /// declared-test-matrices signal (R-060): only a range iterable is a
+    /// generated axis, so a Cartesian product of ≥ 3 nested RANGE loops in
+    /// test context is a swept matrix; a `for x in [a, b]` / `for x in
+    /// Stage::ALL` collection loop is a declared axis and never increments
+    /// this.
+    range_loop_depth: u32,
 }
 
 /// `#[cfg(test)]` / `#[cfg(any(test, ...))]` — the same shape the
@@ -546,11 +556,10 @@ impl<'ast> Visit<'ast> for Extractor {
     }
 
     fn visit_expr_for_loop(&mut self, node: &'ast syn::ExprForLoop) {
-        self.enter_loop(line_of(node));
         // A bit-mask bound is a `for`-loop signal only — `while`/`loop`
-        // have no iterable. The iterable `0..(1 << n)` carries the `2^n`
-        // sweep; a range with no power-of-two bound (a plain `0..len`) is
-        // not a swept matrix.
+        // have no iterable. Checked for every for-loop, regardless of
+        // iterable kind: a `2^n` bound only makes sense on a counted loop,
+        // and `0..(1 << n)` is itself a range iterable.
         if self.test_depth > 0
             && let Some(bound) = sweep::power_of_two_bound(&node.expr)
         {
@@ -560,20 +569,20 @@ impl<'ast> Visit<'ast> for Extractor {
                 detail: bound,
             });
         }
-        syn::visit::visit_expr_for_loop(self, node);
-        self.loop_depth -= 1;
-    }
-
-    fn visit_expr_while(&mut self, node: &'ast syn::ExprWhile) {
-        self.enter_loop(line_of(node));
-        syn::visit::visit_expr_while(self, node);
-        self.loop_depth -= 1;
-    }
-
-    fn visit_expr_loop(&mut self, node: &'ast syn::ExprLoop) {
-        self.enter_loop(line_of(node));
-        syn::visit::visit_expr_loop(self, node);
-        self.loop_depth -= 1;
+        // Only a RANGE iterable (`0..n`) is a generated axis that counts
+        // toward the swept-matrix depth; a collection/array/path iterable
+        // (`[a, b]`, `Stage::ALL`, `vec.iter()`) is a DECLARED axis — its
+        // cases are written as data — and does not count, no matter how
+        // deeply nested. `while`/`loop` carry no iterable at all and are
+        // left to the default Visit (they do not count either: see
+        // [`sweep::is_range_iterable`]'s recorded limit).
+        if sweep::is_range_iterable(&node.expr) {
+            self.enter_loop(line_of(node));
+            syn::visit::visit_expr_for_loop(self, node);
+            self.range_loop_depth -= 1;
+        } else {
+            syn::visit::visit_expr_for_loop(self, node);
+        }
     }
 }
 
