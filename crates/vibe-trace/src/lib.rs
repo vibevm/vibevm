@@ -23,6 +23,8 @@ use std::path::Path;
 use anyhow::Result;
 use serde_json::Value;
 
+mod foreign;
+
 /// One rendered explanation of a traceability target: the deterministic
 /// text view, or the raw one-hop JSON subgraph. [`explain`] returns one of
 /// these; a caller matches the form to decide how to render or pass it on.
@@ -50,19 +52,36 @@ pub enum Explain {
     Json(Value),
 }
 
-/// Build the traceability index FRESH in memory for `root` and render the
-/// subgraph around `target` — a `spec://…#anchor` URI or a code symbol.
+/// Answer a traceability question for `root` and render the subgraph around
+/// `target` — a `spec://…#anchor` URI or a code symbol.
+///
+/// Two backends, picked by the address:
+///
+/// - **The project's own address** (or a code symbol, or anything no installed
+///   package owns) builds the traceability index **FRESH** in memory and
+///   renders it — the same posture as before, never from a stale committed
+///   artefact (PROP-014 §2.6).
+/// - **An installed package's address** — a `spec://` URI whose coordinate
+///   `<group>/<name>` names a package materialised under `root/vibedeps/` that
+///   carries a `package.specmap.json` — is answered from that carried map
+///   (V6-FOREIGN-EXPLAIN). The committed project map is byte-stable and
+///   deliberately excludes foreign sections, so the foreign answer comes from
+///   a second, non-committed map built in memory at query time. The body is
+///   the engine's own rendering; one provenance line marks that the data came
+///   from a carried map, not a fresh build.
 ///
 /// `json` selects the form: `true` → the raw subgraph ([`Explain::Json`]),
 /// `false` → the deterministic text view ([`Explain::Text`]). Both surfaces
-/// (CLI, MCP) call this one function, so the build-and-render pipeline
-/// lives in exactly one place.
+/// (CLI, MCP) call this one function, so the pipeline lives in one place.
 ///
 /// Errors mirror the engine verbatim: a `target` that does not resolve — no
 /// such spec unit, no matching code item, or an ambiguous suffix — is an
-/// `Err` carrying the engine's own message. The caller decides how to
-/// surface it (the CLI prints and exits non-zero; the MCP maps it to its
-/// not-found class). No new error classes are invented here.
+/// `Err` carrying the engine's own message. One new, distinct message is added
+/// for the foreign half: an address owned by an installed package that carries
+/// no map reports that the package "does not participate", so it is not
+/// mistaken for a typo in the address (which surfaces the engine's generic
+/// not-found). The caller decides how to surface an `Err` (the CLI prints and
+/// exits non-zero; the MCP maps it to its not-found class).
 ///
 /// The canonical use: point it at a tree root and a spec address, get the
 /// code-side edges back. The example builds a one-unit tree so it does not
@@ -100,9 +119,22 @@ pub enum Explain {
 /// }
 /// ```
 pub fn explain(root: &Path, target: &str, json: bool) -> Result<Explain> {
-    // Build fresh in memory: explain answers for the tree as it is, never
-    // for a stale committed artefact (PROP-014 §2.6 — the stacks' `trace
-    // explain` takes the same posture).
+    // A foreign `spec://` address — one owned by an installed package — is
+    // answered from the carried map that package ships (V6-FOREIGN-EXPLAIN).
+    // `try_foreign` returns `Ok(None)` for everything else: a code symbol, the
+    // project's own address, or an address nothing owns. Those build the
+    // project's map fresh below.
+    if let Some(foreign) = foreign::try_foreign(root, target, json)? {
+        return Ok(foreign);
+    }
+    explain_fresh(root, target, json)
+}
+
+/// The project's own backend: build the index FRESH in memory for `root` and
+/// render the subgraph around `target` — never from a stale committed
+/// artefact (PROP-014 §2.6 — the stacks' `trace explain` takes the same
+/// posture).
+fn explain_fresh(root: &Path, target: &str, json: bool) -> Result<Explain> {
     let cfg = specmap_core::config::Config::load(root)?.unwrap_or_default();
     let map = specmap_core::index::build(root, &cfg);
     let rendered = if json {

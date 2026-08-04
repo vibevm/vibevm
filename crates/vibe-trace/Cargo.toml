@@ -15,6 +15,14 @@ specmark.workspace = true
 specmap-core.workspace = true
 anyhow.workspace = true
 serde_json.workspace = true
+# `vibe-core` for the package manifest (`vibe.toml` → `[package]` group/name) so
+# the foreign resolver can map an installed `vibedeps/` slot to its globally-
+# unique coordinate `<group>/<name>` — the same identity the `vibe specmap`
+# generator mints the carried map under. `semver` picks the highest-version slot
+# when more than one is materialised, so resolution is deterministic regardless
+# of directory iteration order.
+vibe-core.workspace = true
+semver.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true
