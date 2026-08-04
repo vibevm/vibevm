@@ -22,8 +22,13 @@ pub enum ProgressSubcommand {
     /// dashboard state projections (when a campaign zone is present).
     Scan(ProgressCommonArgs),
 
-    /// Validate the markup: closed vocabularies (with nearest-value
-    /// hints), placement law, well-formedness. Non-zero exit on errors.
+    /// Validate the markup (read-only: writes nothing by default) and
+    /// exit non-zero on errors — closed vocabularies (with nearest-value
+    /// hints), placement law, well-formedness. Unlike `scan`, `check`
+    /// leaves the campaign zone untouched — neither the cache nor the
+    /// `state/` projections — so a validation run cannot rewrite a frozen
+    /// zone the way its name says it would not. Pass `--write-state` to
+    /// also warm the cache and projections, exactly as `scan` would.
     Check(ProgressCheckArgs),
 
     /// Render the tree status: XML natively, `--md` table, `--json`.
@@ -68,8 +73,14 @@ pub struct ProgressCommonArgs {
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
 
-    /// Campaign zone directory (default: the single `campaigns/<id>/`
-    /// under the root, when exactly one exists).
+    /// The campaign zone — the `campaigns/<id>/` whose `run/` holds the
+    /// cache, the `state/` projections, the baseline and the journal.
+    /// This selects a **state zone**, never a perimeter to read: the tree
+    /// a verb parses is always `--path` (default: `.`), and `--campaign`
+    /// only says which campaign's records and projections a run writes
+    /// into — or, for the read verbs, reads from. Default: the single
+    /// `campaigns/<id>/` under the root, when exactly one exists; ad-hoc
+    /// mode (no zone, no state) when zero or several do.
     #[arg(long)]
     pub campaign: Option<PathBuf>,
 
@@ -78,7 +89,8 @@ pub struct ProgressCommonArgs {
     /// not inherit a cached parse says so on the command line rather than
     /// hoping (PROP-043 §7.5 — the cache is erasable acceleration). The
     /// cache is still *written*, so the run leaves the campaign's records
-    /// and state projections exactly as a warm run would.
+    /// and state projections exactly as a warm run would — for the verbs
+    /// that write; `check` writes only under `--write-state`.
     ///
     /// `gate` parses nothing, so the flag does nothing there.
     #[arg(long)]
@@ -94,6 +106,15 @@ pub struct ProgressCheckArgs {
     /// paragraphs, list items, table body cells — in scope (PROP-043 §3.9).
     #[arg(long)]
     pub exhaustive: bool,
+
+    /// Persist the run: write the campaign cache and the `state/`
+    /// projections exactly as `scan` would. Off by default — `check` is
+    /// read-only, so a validation run leaves the zone's records and state
+    /// projections untouched. Reach for it when a check is also the run
+    /// that should warm the cache; otherwise prefer `scan`, the verb named
+    /// for writing.
+    #[arg(long)]
+    pub write_state: bool,
 }
 
 #[derive(Debug, Args)]

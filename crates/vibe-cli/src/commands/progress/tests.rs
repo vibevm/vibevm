@@ -556,3 +556,32 @@ fn verdicts_never_leave_cache_json() {
     assert!(!store.contains("campaign"), "no campaign key reaches it");
     assert!(!store.contains("confirmed"), "and no verdict rides along");
 }
+
+// ---- G-B010: `check` is read-only unless `--write-state` opts the write in ----
+
+/// The `--write-state` flag exists on `check` and is off by default. The
+/// default *is* the fix, so the default is the thing to pin (G-B010).
+/// Parsed through the real `Cli` so the test exercises the exact surface a
+/// user hits, global flags and all.
+#[test]
+fn check_write_state_defaults_off_and_parses() {
+    use crate::cli::{Cli, Command, ProgressArgs, ProgressSubcommand};
+    use clap::Parser;
+
+    fn check(argv: &[&str]) -> ProgressCheckArgs {
+        let cli = Cli::try_parse_from(argv).expect("parse `vibe progress check`");
+        let Command::Progress(ProgressArgs {
+            command: ProgressSubcommand::Check(a),
+        }) = cli.command
+        else {
+            panic!("argv did not parse to `progress check`: {argv:?}");
+        };
+        a
+    }
+
+    let off = check(&["vibe", "progress", "check"]);
+    assert!(!off.write_state, "off by default — check is read-only");
+
+    let on = check(&["vibe", "progress", "check", "--write-state"]);
+    assert!(on.write_state, "the flag turns the write back on");
+}

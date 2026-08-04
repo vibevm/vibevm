@@ -151,7 +151,14 @@ fn check(ctx: &Context, a: &ProgressCheckArgs) -> Result<()> {
             }
         }
     }
-    refresh_state(&mut g)?;
+    // `check` is read-only by default: the write tail `scan` runs is an
+    // opt-in here, behind `--write-state`, so a validation run that names
+    // a campaign zone cannot rewrite its records or state projections
+    // (G-B010). The single shared `refresh_state` is the one writer — no
+    // second copy — gated rather than forked.
+    if a.write_state {
+        refresh_state(&mut g)?;
+    }
     if errors > 0 {
         bail!("progress check: {errors} error(s), {warnings} warning(s)");
     }

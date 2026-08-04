@@ -299,3 +299,77 @@ fn absent_file_is_always_written() {
         );
     }
 }
+
+// ---- G-B010: `check` is read-only unless `--write-state` opts the write in ----
+
+/// `check` over a campaign zone, default flags, writes nothing — not the
+/// cache, not a `state/` projection. The defect was that `check` ran
+/// `scan`'s write tail unconditionally, so `--campaign` (which reads as a
+/// read-perimeter selector) silently rewrote a frozen zone. The fix is the
+/// absence of the write, asserted on mtimes the way every other claim in
+/// this cell is (G-B010).
+#[test]
+fn check_writes_nothing_without_write_state() {
+    let tmp = tempfile::tempdir().expect("tempdir");
+    let root = tmp.path();
+    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    incremental_fixture(root).expect("fixture tree");
+
+    // Seed the zone with a warm scan so there is something to *not* move.
+    scan(&ctx, &args(root, false)).expect("seed scan");
+    let before = mtimes(root);
+    assert!(
+        before.contains_key(&root.join("campaigns/progress-test/run/cache.json")),
+        "the seed scan wrote the cache"
+    );
+
+    // A check over the same zone, default flags, leaves every artifact
+    // alone. Its validation outcome is orthogonal to the write under test,
+    // so the Result is ignored — what matters is the disk.
+    let _ = check(
+        &ctx,
+        &ProgressCheckArgs {
+            common: args(root, false),
+            exhaustive: false,
+            write_state: false,
+        },
+    );
+    assert_eq!(mtimes(root), before, "check touched nothing on disk");
+}
+
+/// The opt-in half: `check --write-state` writes exactly the artifacts
+/// `scan` would, so a run that validates *and* warms the cache still can.
+#[test]
+fn check_with_write_state_writes_like_scan() {
+    let tmp = tempfile::tempdir().expect("tempdir");
+    let root = tmp.path();
+    let ctx = crate::output::Context::from_flags(true, false, None, true);
+    incremental_fixture(root).expect("fixture tree");
+
+    // An empty zone: the first writing run creates every artifact. The
+    // validation outcome is ignored for the same reason as above — the
+    // write happens before any validation bail, exactly as `scan`'s would.
+    let _ = check(
+        &ctx,
+        &ProgressCheckArgs {
+            common: args(root, false),
+            exhaustive: false,
+            write_state: true,
+        },
+    );
+    for name in [
+        "cache.json",
+        "corpus.json",
+        "campaign.json",
+        "payloads.json",
+    ] {
+        let path = artifacts(root)
+            .into_iter()
+            .find(|p| p.file_name().is_some_and(|n| n == name))
+            .unwrap_or_else(|| panic!("no artifact named {name}"));
+        assert!(
+            path.is_file(),
+            "`{name}` was written by check --write-state"
+        );
+    }
+}
