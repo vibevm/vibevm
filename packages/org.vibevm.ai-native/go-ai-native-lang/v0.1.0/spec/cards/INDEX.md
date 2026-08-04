@@ -28,6 +28,15 @@ language-neutral and carried verbatim from the core catalog so the three project
 stay comparable. What differs per row is the **checker** (a Go tool, not a Rust or TS
 one) and the per-language Band-3 routine.
 
+## Rule cards
+
+*Authored as their checkers ship. The naming card is authored once, in the Rust projection (the shared rule's lineage home); its checker ships on Go too — one engine rule reads Rust `#[cell]` and Go `//spec:cell` (rendered by the extract bridge into the same attr) through one parser.*
+
+| Card | Layer | Mechanism | Trigger mode | Transfer | Checker status |
+|---|---|---|---|---|---|
+| `rule-closed-vocabulary-naming` | B+H | rule | gate | [E-mid] | shipped — `cell-name-is-computed` (shared core engine, mounted in `go-ai-native-conform`; composition only). Card authored in the Rust projection: `rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md`. The closed-vocabulary / one-referent / no-synonym halves of R3-004 are unbuilt. |
+| `rule-position-is-a-resource` | D+H | rule | gate | [E-mid] | shipped — `invariant-comment-position` (shared core engine, mounted in `go-ai-native-conform`). Card authored in the Rust projection: `rust-ai-native-lang/v0.7.0/spec/cards/rule-position-is-a-resource.md`. |
+
 ## Trigger-mode delivery summary
 - **inline** (per-edit, lint-detectable): C, F — go vet / staticcheck / conform findings
   in the editor loop.
@@ -60,8 +69,9 @@ its evidence IDs are non-empty AND pilot evidence has not falsified it.
 
 ## Axis coverage (research frame A–H)
 - A language-shape: A (generators), I (codemods)
-- B names & tokens: covered by guide §3 (naming + the free nominal types) — candidate
-  future card `rule-closed-vocabulary-naming`
+- B names & tokens: covered by guide §3 (naming + the free nominal types) —
+  `rule-closed-vocabulary-naming` (shipped `cell-name-is-computed`, composition only;
+  the closed-vocabulary half of R3-004 stays unbuilt)
 - C meta-layer: A, F, G
 - D context & repo: covered by guide §2 (cells, closure) — candidate `rule-cell-closure`
 - E verification: B, C, D, E, F, H
@@ -77,14 +87,11 @@ its evidence IDs are non-empty AND pilot evidence has not falsified it.
   B's checker as a presence check; candidate `rule-loud-conformance`.
 
 ## Pending cards (named, not yet authored — pilot will prioritize)
-- `rule-closed-vocabulary-naming` (R3-004) — names from a closed vocabulary; no
-  shadowing on contract surfaces.
 - `rule-cell-closure` (R3-001) — cells declare their full semantic dependency set;
   no ambient state.
 - `rule-owned-concurrency` (guide §5) — every goroutine has an owner; channels are
   implementation.
 - `rule-contract-first-ordering` (R3-002) — intent before body.
-- `rule-position-is-a-resource` (R3-003) — invariants at file edges; file-length bound.
 - `rule-uniformity` (R3-006/H6) — one idiom per operation; mark exceptions.
 - `antipattern-init-registration` (guide §2/§7) — the stdlib-blessed import side effect,
   banned in cells.

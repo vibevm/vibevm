@@ -19,11 +19,12 @@
 
 ## Rule cards
 
-*Authored as their checkers ship. The first:*
+*Authored as their checkers ship. The first two:*
 
 | Card | Layer | Mechanism | Trigger mode | Transfer | Checker status |
 |---|---|---|---|---|---|
 | `rule-position-is-a-resource` | D+H | rule | gate | [E-mid] | shipped (`invariant-comment-position`, core-ai-native-conform) |
+| `rule-closed-vocabulary-naming` | B+H | rule | gate | [E-mid] | shipped (`cell-name-is-computed`, core-ai-native-conform; serves Go too; composition only — the closed-vocabulary / one-referent / no-synonym halves of R3-004 are unbuilt) |
 
 ## Trigger-mode delivery summary
 - **inline** (per-edit, lint-detectable): C, F. Most frequent; cheapest.
@@ -33,7 +34,7 @@
 
 ## Axis coverage (research frame A–H)
 - A language-shape: A (generators), I (codemods)
-- B names & tokens: covered by guide §2 (naming rules) — candidate future card `rule-closed-vocabulary-naming`
+- B names & tokens: covered by guide §2 (naming rules) — `rule-closed-vocabulary-naming` (shipped `cell-name-is-computed`, composition only; the closed-vocabulary half of R3-004 stays unbuilt)
 - C meta-layer: A, F, G
 - D context & repo: covered by guide §1 (cells, closure) — candidate `rule-cell-closure`
 - E verification: B, C, D, E, F, H
@@ -42,14 +43,13 @@
 - H weak-reader: E, H, I
 
 ## Pending cards (named, not yet authored — pilot will prioritize)
-- `rule-closed-vocabulary-naming` (R3-004) — names from a closed vocabulary; no shadowing.
 - `rule-cell-closure` (R3-001) — editable units declare their full semantic dependency set.
 - `rule-contract-first-ordering` (R3-002) — intent before body.
 - `rule-uniformity` (R3-006/H6) — one idiom per operation; mark exceptions.
 - `antipattern-god-file` (R3-013) — fan-in per file bounds swarm throughput.
 - `antipattern-lying-prose` (R2C-004/H4) — unverified prose claims near code.
 
-These are deferred not because they are unimportant but to honor minimal sufficiency: the nine scaffold cards are the runnable-capital core; rule/anti-pattern cards are added as their checkers ship — `rule-position-is-a-resource` (above) is the first, its `invariant-comment-position` checker now live.
+These are deferred not because they are unimportant but to honor minimal sufficiency: the nine scaffold cards are the runnable-capital core; rule/anti-pattern cards are added as their checkers ship — `rule-position-is-a-resource` and `rule-closed-vocabulary-naming` (above) are the first two, their `invariant-comment-position` and `cell-name-is-computed` checkers now live.
 
 ## Notes on status
 - **shipped** = the checker ships in this stack (rust-ai-native-conform / rust-ai-native) and runs on any consumer tree.

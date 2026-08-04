@@ -212,10 +212,14 @@ func New(store seams.Store, clk clock) *BatchPlanner { /* … */ }
 
 - ##NAMES-ARE-TOKEN-PROGRAMS **Names are token programs** (R3-004, R-020). Canonical cell type name is computed
   from the manifest: `{Variant}{Seam}` → `BatchPlanner`; the package is the lower-case
-  variant (`batchplanner`). One name = one referent across contract surfaces; no
-  shadowing, no synonym pairs; structural tokens from a closed vocabulary. Length is
-  free; ambiguity is not. (Short closure-local bindings — `i`, `ok`, `ctx` — are
-  idiomatic Go and exempt; the rule scopes to contract surfaces.) @impl/done
+  variant (`batchplanner`). Go practised this by hand; it is now machine-checked by the
+  SAME rule as Rust — `cell-name-is-computed`, mounted in `go-ai-native-conform`, reads
+  the `//spec:cell seam=… variant=…` directive (the extract bridge renders it into the
+  engine's one attr shape) and reds a name that is not the composed one. **It checks
+  composition only.** Length is free; ambiguity is not. (Short closure-local bindings —
+  `i`, `ok`, `ctx` — are idiomatic Go and exempt; the rule scopes to contract surfaces.)
+  @impl/done
+- ##NAMES-REST-OF-R3-004-IS-UNBUILT The other halves of R3-004 — one name = one referent across contract surfaces, no synonym pairs or shadowing, and a closed vocabulary of structural tokens — are **not built**: no such checker or vocabulary exists in the tree (the owner's fork №1 took computed names; the closed-vocabulary variant was not taken), and **no backlog entry exists for them yet**. @spec/done
 - ##FAMILY-PREFIX-RULE **The family-prefix rule (owner policy; PROP-028 §2.4).** Every named surface of the
   Go discipline is language-FIRST, carrying the `go-ai-native` stem as a prefix: the
   umbrella binary `go-ai-native` (crate `go-ai-native-cli`), the standalone tools
