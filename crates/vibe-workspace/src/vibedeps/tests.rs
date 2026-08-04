@@ -216,7 +216,7 @@ fn remove_slot_deletes_and_reports() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-022#hardlink", r = 1)]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#hardlink", r = 1)]
 fn materialise_hardlink_mode_places_the_full_tree() {
     let ws = TempDir::new().unwrap();
     let src = TempDir::new().unwrap();
@@ -243,7 +243,7 @@ fn materialise_hardlink_mode_places_the_full_tree() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-022#in-place", r = 1)]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place", r = 1)]
 fn in_place_slot_path_is_unversioned() {
     let rel = in_place_slot_rel_path(PackageKind::Feat, "chromium");
     assert_eq!(rel, "vibedeps/feat-chromium");
@@ -252,7 +252,7 @@ fn in_place_slot_path_is_unversioned() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-022#in-place", r = 1)]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place", r = 1)]
 fn materialise_in_place_moves_the_clone_keeping_git() {
     let ws = TempDir::new().unwrap();
     // A fetched clone: content plus a `.git` (the live working tree).
@@ -274,7 +274,7 @@ fn materialise_in_place_moves_the_clone_keeping_git() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-022#in-place", r = 1)]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place", r = 1)]
 fn is_in_place_slot_false_for_a_versioned_snapshot() {
     let ws = TempDir::new().unwrap();
     // A versioned snapshot slot has no `.git` at the <kind>-<name> level,
@@ -306,7 +306,7 @@ fn remove_in_place_slot_deletes_and_reports() {
 }
 
 #[test]
-#[verifies("spec://vibevm/modules/vibe-workspace/PROP-022#vendoring", r = 1)]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#vendoring", r = 1)]
 fn ensure_gitignored_appends_once() {
     let ws = TempDir::new().unwrap();
     ensure_gitignored(ws.path(), "vibedeps/feat-giant").unwrap();
