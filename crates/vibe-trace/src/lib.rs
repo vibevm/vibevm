@@ -23,7 +23,25 @@ use std::path::Path;
 use anyhow::Result;
 use serde_json::Value;
 
-/// One rendered explanation of a traceability target.
+/// One rendered explanation of a traceability target: the deterministic
+/// text view, or the raw one-hop JSON subgraph. [`explain`] returns one of
+/// these; a caller matches the form to decide how to render or pass it on.
+///
+/// ```
+/// use vibe_trace::Explain;
+///
+/// // The two renderings `explain` can return — match the form to act on it.
+/// let text = Explain::Text("spec unit …\n".to_string());
+/// let json = Explain::Json(serde_json::json!({"target": "spec://x/Y#z"}));
+/// match &text {
+///     Explain::Text(s) => assert!(s.starts_with("spec unit")),
+///     Explain::Json(_) => unreachable!("text form"),
+/// }
+/// match &json {
+///     Explain::Json(v) => assert_eq!(v["target"], "spec://x/Y#z"),
+///     Explain::Text(_) => unreachable!("json form"),
+/// }
+/// ```
 #[derive(Debug)]
 pub enum Explain {
     /// The deterministic text view — `specmap_core::explain::explain_text`.
@@ -45,6 +63,42 @@ pub enum Explain {
 /// `Err` carrying the engine's own message. The caller decides how to
 /// surface it (the CLI prints and exits non-zero; the MCP maps it to its
 /// not-found class). No new error classes are invented here.
+///
+/// The canonical use: point it at a tree root and a spec address, get the
+/// code-side edges back. The example builds a one-unit tree so it does not
+/// depend on any particular repository's content.
+///
+/// ```
+/// use std::fs;
+///
+/// let root = tempfile::tempdir().unwrap();
+/// let r = root.path();
+/// fs::write(
+///     r.join("specmap.toml"),
+///     "namespace = \"demo\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"spec\"]\n",
+/// )
+/// .unwrap();
+/// fs::create_dir_all(r.join("spec")).unwrap();
+/// fs::write(
+///     r.join("spec/D.md"),
+///     "## The rule {#req-r}\n`req r1`\n\nIt MUST hold.\n",
+/// )
+/// .unwrap();
+/// let src = r.join("crates/x/src");
+/// fs::create_dir_all(&src).unwrap();
+/// fs::write(
+///     src.join("lib.rs"),
+///     "#[verifies(\"spec://demo/D#req-r\")]\nfn t() {}\n",
+/// )
+/// .unwrap();
+///
+/// match vibe_trace::explain(r, "spec://demo/D#req-r", false).unwrap() {
+///     vibe_trace::Explain::Text(text) => {
+///         assert!(text.contains("verifies ← `x::t`"), "{text}")
+///     }
+///     vibe_trace::Explain::Json(_) => panic!("default is the text view"),
+/// }
+/// ```
 pub fn explain(root: &Path, target: &str, json: bool) -> Result<Explain> {
     // Build fresh in memory: explain answers for the tree as it is, never
     // for a stale committed artefact (PROP-014 §2.6 — the stacks' `trace
