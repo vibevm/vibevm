@@ -153,3 +153,57 @@ fn findings_and_sarif_are_deterministic_and_baseline_gates() {
     assert!(new.is_empty());
     assert!(stale.is_empty());
 }
+
+/// V8-OUTOFLINE-TESTS: a body-less `#[cfg(test)] mod tests;` declaration
+/// puts the module body in a sibling file the per-file scan reads as domain.
+/// The cross-file stamp corrects the body's facts to `in_test` over the real
+/// store path (extract_workspace → apply_out_of_line_test_context), so the
+/// body's `unwrap` stops reading as a domain violation.
+#[test]
+fn out_of_line_test_body_is_stamped_test_context() {
+    use conform_core::Fact;
+    let tmp = tempfile::tempdir().unwrap();
+    let repo = tmp.path();
+    seed(
+        repo,
+        "crates/gamma/src/lib.rs",
+        "#[cfg(test)]\nmod tests;\n",
+    );
+    seed(
+        repo,
+        "crates/gamma/src/tests.rs",
+        "fn helper() { Some(1).unwrap(); }\n",
+    );
+    let store = Store::for_rust(repo, &Config::default());
+    let mut log = ExtractionLog::default();
+    let mut facts = store
+        .extract_workspace(repo, &RustFrontend, &mut log)
+        .unwrap();
+
+    // Before the stamp the body file is scanned standalone — its `unwrap`
+    // lands `in_test: false`, exactly the defect.
+    let unwrap_in_test = |facts: &[conform_core::SourceFacts]| {
+        facts
+            .iter()
+            .find(|sf| sf.file.ends_with("src/tests.rs"))
+            .and_then(|sf| {
+                sf.facts.iter().find_map(|f| match f {
+                    Fact::UnwrapUse { in_test, .. } => Some(*in_test),
+                    _ => None,
+                })
+            })
+    };
+    assert_eq!(
+        unwrap_in_test(&facts),
+        Some(false),
+        "the out-of-line body reads as domain before the stamp"
+    );
+
+    rust_ai_native_conform_frontend::apply_out_of_line_test_context(repo, &mut facts);
+
+    assert_eq!(
+        unwrap_in_test(&facts),
+        Some(true),
+        "the out-of-line body is test context after the stamp"
+    );
+}

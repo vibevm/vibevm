@@ -477,3 +477,123 @@ fn a_range_nest_outside_a_test_is_silent() {
         "outside test context no sweep fires: {facts:?}"
     );
 }
+
+// --- V8-OUTOFLINE-TESTS: out-of-line #[cfg(test)] mod bodies ------------
+
+use super::out_of_line::{mod_dir_of, out_line_test_body_paths};
+
+/// `mod_dir_of` is Rust 2018 module resolution: a crate root (`lib.rs`/
+/// `main.rs`) or `mod.rs` resolves in its OWN directory; any other
+/// `<stem>.rs` resolves in a sibling directory named after the stem.
+#[test]
+fn mod_dir_of_follows_rusts_module_rules() {
+    assert_eq!(mod_dir_of("crates/x/src/lib.rs"), "crates/x/src");
+    assert_eq!(
+        mod_dir_of("crates/x/src/fragment/mod.rs"),
+        "crates/x/src/fragment"
+    );
+    assert_eq!(
+        mod_dir_of("crates/x/src/fragment.rs"),
+        "crates/x/src/fragment"
+    );
+}
+
+/// A body-less `#[cfg(test)] mod` resolves its body by Rust's rules — both
+/// forms at a crate root (the sibling file AND the dir's mod.rs), the
+/// submodule's OWN dir when declared there (acceptance #4), a `#[path]`
+/// pinning one file outright, and an INLINE mod emitting nothing (the
+/// per-file depth logic already scopes it — acceptance #2's regression).
+#[test]
+fn out_of_line_test_mod_body_paths() {
+    let both = out_line_test_body_paths("crates/x/src/lib.rs", "#[cfg(test)]\nmod tests;\n");
+    assert_eq!(both.len(), 2);
+    assert!(
+        both.iter()
+            .all(|p| p == "crates/x/src/tests.rs" || p == "crates/x/src/tests/mod.rs")
+    );
+    let sub = out_line_test_body_paths("crates/x/src/fragment.rs", "#[cfg(test)]\nmod t;\n");
+    assert!(sub.contains(&"crates/x/src/fragment/t.rs".to_string()));
+    let pinned = out_line_test_body_paths(
+        "crates/x/src/lib.rs",
+        "#[cfg(test)]\n#[path = \"lib/tests.rs\"]\nmod tests;\n",
+    );
+    assert_eq!(pinned, vec!["crates/x/src/lib/tests.rs".to_string()]);
+    let inline = out_line_test_body_paths("crates/x/src/lib.rs", "#[cfg(test)]\nmod t {\n}\n");
+    assert!(inline.is_empty());
+}
+
+/// The fix, in memory (acceptance #1 + #3): a `cfg(test)` body's `unwrap`
+/// is stamped `in_test` (it reads as domain before — the defect), but a
+/// plain `mod foo;` body's stays a finding. The real store path is pinned
+/// in `tests/engine.rs`.
+#[test]
+fn out_of_line_body_stamped_test_production_stays_finding() {
+    use conform_core::SourceFacts;
+    let body = "fn h() { Some(1).unwrap(); }\n";
+    let prod = "pub fn f() { Some(2).unwrap(); }\n";
+    let files = vec![
+        (
+            "crates/x/src/lib.rs".into(),
+            "#[cfg(test)]\nmod tests;\n".into(),
+        ),
+        ("crates/x/src/tests.rs".into(), body.to_string()),
+        ("crates/x/src/foo.rs".into(), "mod foo;\n".into()),
+        ("crates/x/src/foo/tests.rs".into(), prod.to_string()),
+    ];
+    let bodies = out_of_line_test_bodies(&files);
+    assert!(bodies.contains("crates/x/src/tests.rs"));
+    assert!(!bodies.contains("crates/x/src/foo/tests.rs"));
+    let mut sfs = vec![
+        SourceFacts {
+            file: "crates/x/src/tests.rs".into(),
+            crate_name: "x".into(),
+            facts: RustFrontend.extract("crates/x/src/tests.rs", "x", "x::tests", body),
+        },
+        SourceFacts {
+            file: "crates/x/src/foo/tests.rs".into(),
+            crate_name: "x".into(),
+            facts: RustFrontend.extract("crates/x/src/foo/tests.rs", "x", "x::foo::tests", prod),
+        },
+    ];
+    assert!(
+        sfs[0]
+            .facts
+            .iter()
+            .all(|f| !matches!(f, Fact::UnwrapUse { in_test: true, .. }))
+    );
+    stamp_test_context(&mut sfs, &bodies);
+    let stamped = |i: usize| {
+        sfs[i]
+            .facts
+            .iter()
+            .any(|f| matches!(f, Fact::UnwrapUse { in_test: true, .. }))
+    };
+    assert!(
+        stamped(0),
+        "cfg(test) body stamped test: {:?}",
+        sfs[0].facts
+    );
+    assert!(
+        !stamped(1),
+        "production body not silenced: {:?}",
+        sfs[1].facts
+    );
+}
+
+/// Cross-file transitivity: a test body that declares another `#[cfg(test)]`
+/// out-of-line mod is scanned too, so the nested body is detected (one
+/// declaration per file, no fixpoint). NOT covered (recorded limit): a plain
+/// `mod sub;` inside an already-test body carries no `cfg(test)` attr.
+#[test]
+fn a_test_body_declaring_another_cfg_test_mod_is_detected() {
+    let files = vec![
+        (
+            "crates/x/src/lib.rs".into(),
+            "#[cfg(test)]\nmod a;\n".into(),
+        ),
+        ("crates/x/src/a.rs".into(), "#[cfg(test)]\nmod b;\n".into()),
+    ];
+    let bodies = out_of_line_test_bodies(&files);
+    assert!(bodies.contains("crates/x/src/a.rs"));
+    assert!(bodies.contains("crates/x/src/a/b.rs"), "{bodies:?}");
+}
