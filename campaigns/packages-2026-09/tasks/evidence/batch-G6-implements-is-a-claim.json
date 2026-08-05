@@ -1,0 +1,32 @@
+{
+  "batch": "G6-implements-is-a-claim",
+  "cluster": "ai-native",
+  "files": {
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
+      "RULE-IMPLEMENTS-IS-A-CLAIM-ABOUT-CODE-THAT-RUNS": {
+        "v": "confirmed",
+        "ev": [
+          "PRESCRIBES, and the same commit made the tree obey it: the two `implements` edges from `vibe_settings::events::Watcher` and its `watch` method were removed, because the only `impl Watcher for` sites in the whole tree are a doc example and a `Noop` in that module's tests. Index edges 932 -> 930.",
+          "Coherent with its neighbours and every referent resolves: `implements` is one of the five verbs the rule above it declares, and the trait/abstract-signature classes it names are code items the model already carries (`item_kind` values include `trait`).",
+          "Bounded by measurement rather than asserted broadly: five traits in the committed map carry edges, and four of them have real implementations (McpTool 5, DepProvider 7, DepSolver 3, VersionEnumerator 3). The rule therefore describes a discipline, not a widespread defect."
+        ]
+      },
+      "RULE-WHY-A-DECLARED-SHAPE-MUST-NOT-CLAIM-COVERAGE": {
+        "v": "confirmed",
+        "ev": [
+          "PRESCRIBES the rationale, and its central claim is checkable: an edge from a declaration is indistinguishable in the index from an edge from working code. Checked — `Edge` carries verb, from_symbol, uri, file, line and provenance; nothing on it records whether the tail is implemented, so no consumer can tell the two apart.",
+          "The reader-facing damage is measured rather than hypothesised: before this commit `vibe explain \"spec://…/PROP-040#file-watch\"` listed the trait and its method as implementors; after it, the requirement shows its one honest edge from `WatchError`.",
+          "The gradient it names — the more carefully a project declares shapes ahead of time, the more false coverage it accumulates — follows from the indistinguishability above and needs no separate evidence; it is the reason the rule exists rather than a claim about this tree."
+        ]
+      },
+      "RULE-DROPPING-THE-EDGE-SILENCES-NOTHING": {
+        "v": "confirmed",
+        "ev": [
+          "PRESCRIBES, and it answers the one objection the change invites. Checked against the regenerated index: after both edges were removed the ratchet reports **0 gated orphan(s)**, because `crates/vibe-settings/src/events/mod.rs` carries `specmark::scope!(\"…PROP-040#events\")` and `##RULE-SCOPE-INHERITANCE` gives every item in the module a default edge.",
+          "The second half is checked too: the requirement retains its edge from `vibe_settings::events::WatchError`, real code with a real implementation, so removing the declaration's claim did not leave the unit uncovered.",
+          "This is the clause that corrects the backlog row which raised the finding: it judged «move the tag to the implementation» as losing the link to where the shape is promised. The link survives in the module scope and in the docblock, so the option was cheaper than the row believed."
+        ]
+      }
+    }
+  }
+}

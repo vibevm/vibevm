@@ -1,0 +1,17 @@
+{
+  "batch": "G6-index-contents",
+  "cluster": "ai-native",
+  "files": {
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
+      "INDEX-CONTENTS": {
+        "v": "confirmed",
+        "ev": [
+          "RESTATED 2026-08-05 because the fact's own text moved, and one third of it had gone false. It said `code_item` carries no content hash at all, only file/line/symbol. It carries `fingerprint` — `tok1:<sha256>` over the element's TOKEN STREAM — on 915 of 915 items in the committed index, landed by wave В.",
+          "The two absences it records are re-checked and STILL true: no per-REQ coverage math exists anywhere in the engine (a grep for coverage over the specmap crate returns only a debt fixture and `explain`'s zero-edge line), and the orphans table is still computed at gate time by the ratchet and never serialised.",
+          "Its counts were a different tree's and are replaced by today's, with the old reading kept beside them rather than deleted: 5 652 spec units / 915 code items / 930 edges / 205 warnings against the recorded 5 266 / 898 / 912 / 265.",
+          "Marker follows the correction: the clause described unbuilt halves and carried `@spec/done`; two thirds of it now describes shipped behaviour, so it reads `@impl/done`."
+        ]
+      }
+    }
+  }
+}
