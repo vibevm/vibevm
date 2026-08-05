@@ -1,39 +1,42 @@
 {
-    "metadata": {
-        "description": "Wire format for `vibe uninstall --json`. Source of truth for `crates/vibe-wire/src/generated/uninstall_report.rs`.",
-        "rustOptions": {
-            "package": "vibe_wire::uninstall_report"
-        }
+  "metadata": {
+    "description": "Wire format for `vibe uninstall --json`. Source of truth for `crates/vibe-wire/src/generated/uninstall_report.rs`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT"
     },
-    "properties": {
-        "ok": {
-            "type": "boolean"
-        },
-        "command": {
-            "type": "string",
-            "metadata": {
-                "description": "Always `\"uninstall\"` for this report."
-            }
-        },
-        "package": {
-            "type": "string",
-            "metadata": {
-                "description": "`<kind>:<name>` of the package that was removed."
-            }
-        },
-        "version": {
-            "type": "string"
-        },
-        "removed_count": {
-            "type": "uint32"
-        },
-        "paths": {
-            "elements": {
-                "type": "string"
-            },
-            "metadata": {
-                "description": "Forward-slash-normalised paths of every file removed. User-owned paths (e.g. `spec/boot/00-core.md`, `spec/boot/90-user.md`, `spec/WAL.md`) are filtered out at plan-time and never appear here."
-            }
-        }
+    "rustOptions": {
+      "package": "vibe_wire::uninstall_report"
     }
+  },
+  "properties": {
+    "ok": {
+      "type": "boolean"
+    },
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"uninstall\"` for this report."
+      }
+    },
+    "package": {
+      "type": "string",
+      "metadata": {
+        "description": "`<kind>:<name>` of the package that was removed."
+      }
+    },
+    "version": {
+      "type": "string"
+    },
+    "removed_count": {
+      "type": "uint32"
+    },
+    "paths": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "description": "Forward-slash-normalised paths of every file removed. User-owned paths (e.g. `spec/boot/00-core.md`, `spec/boot/90-user.md`, `spec/WAL.md`) are filtered out at plan-time and never appear here."
+      }
+    }
+  }
 }

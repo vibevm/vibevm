@@ -1,92 +1,100 @@
 {
-    "metadata": {
-        "description": "Wire format for `vibe list --json`. Source of truth for `crates/vibe-wire/src/generated/list_report.rs`.",
-        "rustOptions": {
-            "package": "vibe_wire::list_report"
-        }
+  "metadata": {
+    "description": "Wire format for `vibe list --json`. Source of truth for `crates/vibe-wire/src/generated/list_report.rs`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT"
     },
-    "properties": {
-        "ok": {
-            "type": "boolean"
-        },
-        "command": {
-            "type": "string",
-            "metadata": {
-                "description": "Always `\"list\"` for this report."
-            }
-        },
-        "project": {
-            "type": "string"
-        },
-        "count": {
-            "type": "uint32"
-        },
-        "packages": {
-            "elements": {
-                "ref": "list_entry"
-            }
-        }
-    },
-    "definitions": {
-        "package_kind": {
-            "enum": ["flow", "feat", "stack", "tool"]
-        },
-        "list_entry": {
-            "properties": {
-                "kind": {
-                    "ref": "package_kind"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "version": {
-                    "type": "string"
-                },
-                "source_url": {
-                    "type": "string"
-                },
-                "content_hash": {
-                    "type": "string"
-                },
-                "boot_snippet": {
-                    "type": "string",
-                    "nullable": true,
-                    "metadata": {
-                        "description": "Filename of the package's boot snippet under `spec/boot/`, or null if absent."
-                    }
-                },
-                "files_written": {
-                    "elements": {
-                        "type": "string"
-                    }
-                }
-            },
-            "optionalProperties": {
-                "registry": {
-                    "type": "string",
-                    "metadata": {
-                        "description": "`[[registry]].name` from `vibe.toml` that served this package. Absent for `--registry <path>` and legacy installs."
-                    }
-                },
-                "source_ref": {
-                    "type": "string",
-                    "metadata": {
-                        "description": "Git ref the content was fetched at — typically `v<version>`. Absent for non-git sources."
-                    }
-                },
-                "resolved_commit": {
-                    "type": "string",
-                    "metadata": {
-                        "description": "Commit hash the ref resolved to. Reserved for resolver-aware installs."
-                    }
-                },
-                "overridden": {
-                    "type": "boolean",
-                    "metadata": {
-                        "description": "True iff this package was resolved through a `[[override]]` entry in `vibe.toml`."
-                    }
-                }
-            }
-        }
+    "rustOptions": {
+      "package": "vibe_wire::list_report"
     }
+  },
+  "properties": {
+    "ok": {
+      "type": "boolean"
+    },
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"list\"` for this report."
+      }
+    },
+    "project": {
+      "type": "string"
+    },
+    "count": {
+      "type": "uint32"
+    },
+    "packages": {
+      "elements": {
+        "ref": "list_entry"
+      }
+    }
+  },
+  "definitions": {
+    "package_kind": {
+      "enum": [
+        "flow",
+        "feat",
+        "stack",
+        "tool"
+      ]
+    },
+    "list_entry": {
+      "properties": {
+        "kind": {
+          "ref": "package_kind"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "source_url": {
+          "type": "string"
+        },
+        "content_hash": {
+          "type": "string"
+        },
+        "boot_snippet": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "Filename of the package's boot snippet under `spec/boot/`, or null if absent."
+          }
+        },
+        "files_written": {
+          "elements": {
+            "type": "string"
+          }
+        }
+      },
+      "optionalProperties": {
+        "registry": {
+          "type": "string",
+          "metadata": {
+            "description": "`[[registry]].name` from `vibe.toml` that served this package. Absent for `--registry <path>` and legacy installs."
+          }
+        },
+        "source_ref": {
+          "type": "string",
+          "metadata": {
+            "description": "Git ref the content was fetched at — typically `v<version>`. Absent for non-git sources."
+          }
+        },
+        "resolved_commit": {
+          "type": "string",
+          "metadata": {
+            "description": "Commit hash the ref resolved to. Reserved for resolver-aware installs."
+          }
+        },
+        "overridden": {
+          "type": "boolean",
+          "metadata": {
+            "description": "True iff this package was resolved through a `[[override]]` entry in `vibe.toml`."
+          }
+        }
+      }
+    }
+  }
 }

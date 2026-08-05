@@ -1,6 +1,86 @@
 {
   "code_items": [
     {
+      "crate_name": "<schema>",
+      "file": "schemas/init_report.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "init_report",
+      "end_line": 75
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/init_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 55,
+      "symbol": "init_report::outcome",
+      "end_line": 73
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/init_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 49,
+      "symbol": "init_report::outcome_action",
+      "end_line": 54
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/install_plan.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "install_plan",
+      "end_line": 70
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/install_plan.jtd.json",
+      "item_kind": "schema-def",
+      "line": 25,
+      "symbol": "install_plan::plan_entry",
+      "end_line": 68
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/install_report.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "install_report",
+      "end_line": 53
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/install_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 31,
+      "symbol": "install_report::applied_report",
+      "end_line": 51
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/list_report.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "list_report",
+      "end_line": 100
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/list_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 42,
+      "symbol": "list_report::list_entry",
+      "end_line": 98
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/list_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 34,
+      "symbol": "list_report::package_kind",
+      "end_line": 41
+    },
+    {
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/lib.rs",
       "item_kind": "mod",
@@ -368,6 +448,54 @@
       "symbol": "progress_core::weave",
       "end_line": 4,
       "fingerprint": "tok1:2fba04a2cdf3d973a178c96bdc3a2c0376d402d5d95f7cfca72a1e277085f6f7"
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/registry_publish_report.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "registry_publish_report",
+      "end_line": 64
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/registry_sync_report.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "registry_sync_report",
+      "end_line": 77
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/registry_sync_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 33,
+      "symbol": "registry_sync_report::package_kind",
+      "end_line": 40
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/registry_sync_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 41,
+      "symbol": "registry_sync_report::refreshed_entry",
+      "end_line": 62
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/registry_sync_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 63,
+      "symbol": "registry_sync_report::skipped_entry",
+      "end_line": 75
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/uninstall_report.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "uninstall_report",
+      "end_line": 42
     },
     {
       "crate_name": "vibe-actions",
@@ -3516,8 +3644,8 @@
       "item_kind": "enum",
       "line": 16,
       "symbol": "vibe_core::error::Error",
-      "end_line": 153,
-      "fingerprint": "tok1:9e002ec4789419b96369b7c02f025fc6c3ac43270b4cc4dd8ff59a620e186eeb"
+      "end_line": 168,
+      "fingerprint": "tok1:005629b7576b407360c3d429af2f79148f01ecae655a65e95b6ef6919652d16b"
     },
     {
       "crate_name": "vibe-core",
@@ -8220,6 +8348,38 @@
   ],
   "edges": [
     {
+      "file": "schemas/init_report.jtd.json",
+      "from_symbol": "init_report",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/install_plan.jtd.json",
+      "from_symbol": "install_plan",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/install_report.jtd.json",
+      "from_symbol": "install_report",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/list_report.jtd.json",
+      "from_symbol": "list_report",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT",
+      "verb": "implements"
+    },
+    {
       "file": "crates/progress-core/src/lib.rs",
       "from_symbol": "progress_core",
       "line": 23,
@@ -8570,6 +8730,30 @@
       "line": 4,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#CMD-WEAVE",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/registry_publish_report.jtd.json",
+      "from_symbol": "registry_publish_report",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/registry_sync_report.jtd.json",
+      "from_symbol": "registry_sync_report",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT",
+      "verb": "implements"
+    },
+    {
+      "file": "schemas/uninstall_report.jtd.json",
+      "from_symbol": "uninstall_report",
+      "line": 1,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT",
       "verb": "implements"
     },
     {

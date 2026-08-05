@@ -20,6 +20,18 @@ scan_roots = ["crates/*", "xtask"]
 # Markdown trees walked for anchored spec units (<root>/**/*.md).
 spec_roots = ["spec"]
 
+# Directories walked for JTD schemas (`<root>/**/*.jtd.json`), whose
+# `metadata.spec` block carries the same verb → URI tags a `#[spec]` attribute
+# carries in Rust. Empty (the default) leaves the scanner a no-op.
+#
+# This exists because of the `vibe-wire` exemption below. PROP-014 designates
+# the GENERATOR INPUT — the schema — as the taggable unit in place of the
+# generated code, and until 2026-08-05 that designation had no reader: no
+# scanner opened a `.json` at all, so the exemption's justification named a
+# mechanism that did not exist (B-060). The mechanism exists now, and this line
+# is what points it at anything.
+schema_roots = ["schemas"]
+
 # Enumerated exclusions, applied after both include halves above. The include
 # side is enumerated so nothing is indexed by accident, and an enumerated
 # exclude serves that purpose exactly as well — not a wildcard escape hatch.
@@ -62,11 +74,16 @@ root_spec_docs = ["VIBEVM-SPEC.md"]
 # scope!-inherited module edge. Each exemption and why:
 #   vibe-graph, vibe-llm  — M0 stub crates, no code yet
 #   vibe-wire             — generated code. PROP-014 §2.3 designates the JTD
-#                           schema the taggable unit instead; measured
-#                           2026-08-05, no schema carries a tag and no scanner
-#                           reads .json, so that half is a decision, not a
-#                           description (B-060). The exemption rests on the
-#                           generated-code half alone.
+#                           schema the taggable unit instead, and as of
+#                           2026-08-05 that half is REAL: `schema_roots` above
+#                           points the new JTD scanner at `schemas/`, and all
+#                           seven wire contracts carry
+#                           `metadata.spec.implements = …PROP-000#JTD-SSOT`.
+#                           So the exemption now rests on both of its halves.
+#                           (Historical note, kept because it is the reason the
+#                           mechanism exists: until that date no scanner opened
+#                           a `.json` at all, so the designation was a decision
+#                           nobody could act on — B-060.)
 #   xtask                 — internal tooling binary (panics ok at the dev console)
 #   vibe-spec             — the PROP-035 spec compiler, provisional: not yet
 #                           spec-tagged or REQ-edged, and §15's migration puts

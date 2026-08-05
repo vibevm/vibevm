@@ -1,67 +1,70 @@
 {
-    "metadata": {
-        "description": "Wire format for `vibe install --json` plan-rendering output. Emitted before user confirmation when `--json` is set; consumers can dry-run by parsing this and aborting before apply. Source of truth for `crates/vibe-wire/src/generated/install_plan.rs`.",
-        "rustOptions": {
-            "package": "vibe_wire::install_plan"
-        }
+  "metadata": {
+    "description": "Wire format for `vibe install --json` plan-rendering output. Emitted before user confirmation when `--json` is set; consumers can dry-run by parsing this and aborting before apply. Source of truth for `crates/vibe-wire/src/generated/install_plan.rs`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT"
     },
-    "properties": {
-        "command": {
-            "type": "string",
-            "metadata": {
-                "description": "Always `\"install:plan\"` for this report."
-            }
-        },
-        "plans": {
-            "elements": {
-                "ref": "plan_entry"
-            }
-        }
-    },
-    "definitions": {
-        "plan_entry": {
-            "properties": {
-                "package": {
-                    "type": "string",
-                    "metadata": {
-                        "description": "`<kind>:<name>` (no version)."
-                    }
-                },
-                "version": {
-                    "type": "string",
-                    "metadata": {
-                        "description": "Resolved exact version, e.g. `\"0.1.0\"`."
-                    }
-                },
-                "source_url": {
-                    "type": "string",
-                    "metadata": {
-                        "description": "URL the content was fetched from. Per PROP-002 §2.1 this is informational — identity is the content_hash."
-                    }
-                },
-                "content_hash": {
-                    "type": "string",
-                    "metadata": {
-                        "description": "`sha256:<hex>` over the package tree. The identity of the install."
-                    }
-                },
-                "writes": {
-                    "elements": {
-                        "type": "string"
-                    },
-                    "metadata": {
-                        "description": "Forward-slash-normalised relative paths the install would create."
-                    }
-                }
-            },
-            "optionalProperties": {
-                "boot_snippet": {
-                    "type": "string",
-                    "metadata": {
-                        "description": "Filename of the boot snippet this package contributes, when one is present."
-                    }
-                }
-            }
-        }
+    "rustOptions": {
+      "package": "vibe_wire::install_plan"
     }
+  },
+  "properties": {
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"install:plan\"` for this report."
+      }
+    },
+    "plans": {
+      "elements": {
+        "ref": "plan_entry"
+      }
+    }
+  },
+  "definitions": {
+    "plan_entry": {
+      "properties": {
+        "package": {
+          "type": "string",
+          "metadata": {
+            "description": "`<kind>:<name>` (no version)."
+          }
+        },
+        "version": {
+          "type": "string",
+          "metadata": {
+            "description": "Resolved exact version, e.g. `\"0.1.0\"`."
+          }
+        },
+        "source_url": {
+          "type": "string",
+          "metadata": {
+            "description": "URL the content was fetched from. Per PROP-002 §2.1 this is informational — identity is the content_hash."
+          }
+        },
+        "content_hash": {
+          "type": "string",
+          "metadata": {
+            "description": "`sha256:<hex>` over the package tree. The identity of the install."
+          }
+        },
+        "writes": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "description": "Forward-slash-normalised relative paths the install would create."
+          }
+        }
+      },
+      "optionalProperties": {
+        "boot_snippet": {
+          "type": "string",
+          "metadata": {
+            "description": "Filename of the boot snippet this package contributes, when one is present."
+          }
+        }
+      }
+    }
+  }
 }

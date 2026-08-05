@@ -1,69 +1,75 @@
 {
-    "metadata": {
-        "description": "Wire format for `vibe init --json`. Source of truth for `crates/vibe-wire/src/generated/init_report.rs`.",
-        "rustOptions": {
-            "package": "vibe_wire::init_report"
-        }
+  "metadata": {
+    "description": "Wire format for `vibe init --json`. Source of truth for `crates/vibe-wire/src/generated/init_report.rs`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT"
     },
-    "properties": {
-        "ok": {
-            "type": "boolean"
-        },
-        "command": {
-            "type": "string",
-            "metadata": {
-                "description": "Always `\"init\"` for this report."
-            }
-        },
-        "project": {
-            "type": "string"
-        },
-        "path": {
-            "type": "string",
-            "metadata": {
-                "description": "Forward-slash-normalised display path of the initialised directory."
-            }
-        },
-        "created": {
-            "type": "uint32",
-            "metadata": {
-                "description": "Number of files freshly created."
-            }
-        },
-        "kept": {
-            "type": "uint32",
-            "metadata": {
-                "description": "Number of files left untouched because they already existed (idempotency)."
-            }
-        },
-        "outcomes": {
-            "elements": {
-                "ref": "outcome"
-            }
-        }
-    },
-    "definitions": {
-        "outcome_action": {
-            "enum": ["created", "kept"]
-        },
-        "outcome": {
-            "properties": {
-                "path": {
-                    "type": "string",
-                    "metadata": {
-                        "description": "Forward-slash-normalised path relative to the project root."
-                    }
-                },
-                "action": {
-                    "ref": "outcome_action"
-                },
-                "reason": {
-                    "type": "string",
-                    "metadata": {
-                        "description": "Human-readable label like \"agent redirect\" or \"boot: project foundation\"."
-                    }
-                }
-            }
-        }
+    "rustOptions": {
+      "package": "vibe_wire::init_report"
     }
+  },
+  "properties": {
+    "ok": {
+      "type": "boolean"
+    },
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"init\"` for this report."
+      }
+    },
+    "project": {
+      "type": "string"
+    },
+    "path": {
+      "type": "string",
+      "metadata": {
+        "description": "Forward-slash-normalised display path of the initialised directory."
+      }
+    },
+    "created": {
+      "type": "uint32",
+      "metadata": {
+        "description": "Number of files freshly created."
+      }
+    },
+    "kept": {
+      "type": "uint32",
+      "metadata": {
+        "description": "Number of files left untouched because they already existed (idempotency)."
+      }
+    },
+    "outcomes": {
+      "elements": {
+        "ref": "outcome"
+      }
+    }
+  },
+  "definitions": {
+    "outcome_action": {
+      "enum": [
+        "created",
+        "kept"
+      ]
+    },
+    "outcome": {
+      "properties": {
+        "path": {
+          "type": "string",
+          "metadata": {
+            "description": "Forward-slash-normalised path relative to the project root."
+          }
+        },
+        "action": {
+          "ref": "outcome_action"
+        },
+        "reason": {
+          "type": "string",
+          "metadata": {
+            "description": "Human-readable label like \"agent redirect\" or \"boot: project foundation\"."
+          }
+        }
+      }
+    }
+  }
 }

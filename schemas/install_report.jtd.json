@@ -1,50 +1,53 @@
 {
-    "metadata": {
-        "description": "Wire format for `vibe install --json` (the final apply report). Source of truth for `crates/vibe-wire/src/generated/install_report.rs`.",
-        "rustOptions": {
-            "package": "vibe_wire::install_report"
-        }
+  "metadata": {
+    "description": "Wire format for `vibe install --json` (the final apply report). Source of truth for `crates/vibe-wire/src/generated/install_report.rs`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT"
     },
-    "properties": {
-        "ok": {
-            "type": "boolean"
-        },
-        "command": {
-            "type": "string",
-            "metadata": {
-                "description": "Always `\"install\"` for this report."
-            }
-        },
-        "project": {
-            "type": "string"
-        },
-        "installed": {
-            "elements": {
-                "ref": "applied_report"
-            }
-        }
-    },
-    "definitions": {
-        "applied_report": {
-            "properties": {
-                "package": {
-                    "type": "string",
-                    "metadata": {
-                        "description": "Package label in `<kind>:<name>@<version>` form."
-                    }
-                },
-                "files_written": {
-                    "type": "uint32"
-                },
-                "paths": {
-                    "elements": {
-                        "type": "string"
-                    },
-                    "metadata": {
-                        "description": "Forward-slash-normalised paths of every file the install wrote."
-                    }
-                }
-            }
-        }
+    "rustOptions": {
+      "package": "vibe_wire::install_report"
     }
+  },
+  "properties": {
+    "ok": {
+      "type": "boolean"
+    },
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"install\"` for this report."
+      }
+    },
+    "project": {
+      "type": "string"
+    },
+    "installed": {
+      "elements": {
+        "ref": "applied_report"
+      }
+    }
+  },
+  "definitions": {
+    "applied_report": {
+      "properties": {
+        "package": {
+          "type": "string",
+          "metadata": {
+            "description": "Package label in `<kind>:<name>@<version>` form."
+          }
+        },
+        "files_written": {
+          "type": "uint32"
+        },
+        "paths": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "description": "Forward-slash-normalised paths of every file the install wrote."
+          }
+        }
+      }
+    }
+  }
 }
