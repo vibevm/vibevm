@@ -85,6 +85,25 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
   with its own writer, which is the defect class this programme keeps paying for.
 - ##ENTRY-NO-SILENT-DELETION An entry leaves only by changing disposition, never by deletion. A
   backlog that forgets is indistinguishable from one that was never right.
+  **SUPERSEDED 2026-08-05** by the owner's ruling recorded at
+  [`##B062-WHAT-REPLACES-THE-MARKER`](#b-062): a row now dies with the commit
+  that makes it untrue, and the commit is what remembers.
+- ##ENTRY-THE-FILE-IS-MID-MIGRATION **How to read this file today, and it is
+  not yet the way the ruling intends.** The ruling removed statuses from
+  planning documents and made deletion the closure — but the rows closed
+  BEFORE it were closed the old way, by flipping a field that has since been
+  stripped. So the file currently holds live rows and finished history side by
+  side **with nothing distinguishing them**, which is a weaker state than
+  either the old convention or the new one. Measured 2026-08-05: of 50 rows,
+  **13 carry no sign of closure anywhere in their body** and the rest read as
+  done — but that count comes from matching closure words in prose, and prose
+  is not a status: a row narrowed today reads «построена» about the third of
+  it that shipped and is still live. **Treat the count as a lower bound on the
+  live set, never as the set itself**, and measure a row against the tree
+  before acting on it — which is the standing law anyway
+  ([`##WAL-C-MEASURE-WHAT-IS-BUILT-FIRST`](spec/WAL.md)). Completing the
+  migration means deleting the pre-ruling closed rows; that is a decision
+  about this file's history and it belongs to the owner, not to a regex.
 
 ## P1 — handled; kept as record {#p1}
 
