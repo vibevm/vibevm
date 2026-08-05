@@ -212,6 +212,32 @@ specifically: re-judge now, or when the tool can distinguish the grains?
 this. Found 2026-08-06 while landing `BACKLOG.md` B-045, whose build made the
 false clause retroactively true — which is how it surfaced at all.
 
+**The unit cost of question (ii), measured rather than estimated
+(2026-08-06, later the same day).** Three facts of this very document came due
+for re-judgement when the corpus was rescanned — `##SHORT-AT-BOUNDARY` (its
+wording moved with the B-045 build), `##INSTALLED-STATE-RESOLVES-LOCALLY` (new)
+and `##milestone-line` (whose recorded verdict is stamped 14:52 on 2026-07-25
+while the text it describes was written at 20:16 the same day, so it predated
+its own subject). All three were judged to the standard question (ii) proposes:
+evidence of their own, one ref per independent clause. The result is **15
+evidence items for 3 facts — 11 of them `file:line` — produced by eight
+measurement commands over six source files and one test.** Five refs per fact
+against the one shared blob they used to carry.
+
+Two things that cost tells, and one it does not. It tells that the standard is
+**payable**: nothing in the three needed a judgement call the evidence could not
+settle, and one clause turned out provable structurally rather than
+behaviourally (`qualify_locked` takes no resolver in its signature, so «no
+index, no network» is a fact about the type). It tells that clause-by-clause is
+where the work is: `##SHORT-AT-BOUNDARY` is one sentence with two independent
+claims and needed refs for both — the standing rule
+`##WAL-C-A-COMPOUND-FACT-IS-JUDGED-CLAUSE-BY-CLAUSE` applied at the smallest
+possible scale. What it does **not** tell is the total: the eight commands
+covered a whole section, so a document's facts amortise their reading, and
+multiplying five-per-fact by 4 151 would be exactly the kind of unearned number
+this finding is about. The three are recorded in `run/cache.json` under batch
+`RJ1`; the document seals clean at 93 verdicts.
+
 ### 2026-08-06-02 · A2/B2 · P2 · fixed 2026-08-06 (same day it was met)
 
 **The freshness instrument every session is told to run reports a clean zero
