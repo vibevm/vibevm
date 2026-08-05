@@ -61,28 +61,45 @@ whole (2026-08-04/05).
 - [x] `chore(vibedeps)`: rematerialise after the package edits — the very
       reinstall the new signal asked for.
 
-### Registry hygiene — measured, and larger than the record said
+### Registry hygiene — CLOSED WHOLE 2026-08-05
 
-The WAL carried «five observed files await their anchors' judging pass».
-Measured from the campaign cache: **28** — 20 whose verdicts are stale
-(`processed_hash` ≠ `content_hash`, among them PROP-000 at 177 verdicts,
-PROP-035 at 135, PROP-009 at 104) and 8 with no verdicts at all (seven
-`spec/design/*` docs + one package README).
+The record said five files. Measured: **28** — 20 stale (1214 verdicts between
+them) and 8 never judged. The instrument built for it reduced 1214 flagged
+verdicts to **19 that had actually moved**.
 
-- [ ] `docs(campaign)`: the evidence sweep over the 28 — delegated by the
-      `WORLD-WORKER-BRIEF` split (workers gather evidence rows, the boss
-      writes every verdict).
-- [ ] `chore(campaign)`: merge the verdicts, then seal — never chained.
+- [x] `feat(campaign)`: `tasks/text-stability.py` — which judged facts moved,
+      instead of re-reading everything. Two blind spots found and fixed the
+      same day (list facts, then numbered ones), and every seal re-verified
+      after each fix.
+- [x] `docs(campaign)`: the evidence sweep, delegated by the
+      `WORLD-WORKER-BRIEF` split — workers gather rows stamped `PENDING`,
+      which the merger refuses; the boss writes every verdict.
+- [x] `chore(campaign)`: merged and sealed, never chained. **272 files, 0
+      stale, 0 unjudged**; six drifts found, all documents that outlived their
+      subject.
 
 ### B-056 — multiple inheritance of contract documents, and the plugin form
 
-Four owner rulings closed the SHAPE on 2026-08-04; what is left is the build.
+Four owner rulings closed the SHAPE on 2026-08-04. The build design is
+authored and judged: [`spec/design/multiple-sources-and-plugins.md`](spec/design/multiple-sources-and-plugins.md).
+**This is the next build.** Four landings, each standing alone:
 
-- [ ] `feat(vibe-spec)`: `#source` folding gains N inputs instead of two, its
-      own cycle guard and dedup by the `use_graph` pattern, and `:replace` as
-      a flag that drops the contract text while sources still sum in order.
-- [ ] `feat(vibe-spec)`: the glob form — the resolver enumerates installed
-      slots, sorted; one tree plus one lockfile give one result.
+- [x] `docs(design)`: the build design over the four rulings — measured basis,
+      the section rule for a sequence, the recursion law that already exists,
+      and the cut below.
+- [ ] `feat(vibe-spec)`: `fold_sources(contract, &[sources])` in
+      `crates/vibe-spec/src/merge.rs`, with `fold_source` kept as its
+      degenerate case — **every existing fold test must pass through the new
+      path unchanged**, which is the regression harness, not politeness.
+- [ ] `fix(vibe-spec)`: the pipeline stops taking the first directive —
+      `crates/vibe-spec/src/pipeline.rs:221` is
+      `.find(|d| d.kind == DirectiveKind::Source)`. Pass every `#source` in
+      declaration order. **This landing closes [B-055](BACKLOG.md#b-055).**
+- [ ] `feat(vibe-spec)`: the fold's cycle guard and dedup, by EXTENDING
+      `crates/vibe-spec/src/use_graph.rs`'s three-colour walker to `#source`
+      edges. **Never a second walker** — one law, one implementation.
+- [ ] `feat(vibe-spec)`: resolver enumeration for the glob form, sorted; one
+      tree plus one lockfile give one result.
 
 ### Волна Г proper
 
