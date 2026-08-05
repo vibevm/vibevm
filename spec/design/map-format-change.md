@@ -5,9 +5,12 @@
 ##authority-line **Non-normative** (`spec/design/` genre). The contract stays in
 PROP-014 and in the discipline packages' own specs; this document records why
 волна В's format change is shaped the way it is, and what the workers were told
-to elaborate. The backlog entries [`{#b-016}`](../../BACKLOG.md#b-016),
-[`{#b-017}`](../../BACKLOG.md#b-017), [`{#b-019}`](../../BACKLOG.md#b-019) carry
-the owner's rulings and win on divergence. @doc/done
+to elaborate. The owner's rulings behind it were filed as backlog entries
+`B-016`, [`{#b-017}`](../../BACKLOG.md#b-017) and `B-019`, and they win on
+divergence — but two of the three have since been drained and their rows are
+gone (B-016 built whole; B-019 built in its fingerprint third), so only B-017
+is still a live link. A row that is closed leaves its ruling in the commit that
+closed it, not in an address. @doc/done
 
 ##standing-on The measurement this design stands on — two read-only censuses
 taken before a line was written, plus a noise measurement cut for the owner's

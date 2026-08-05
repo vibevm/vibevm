@@ -30115,7 +30115,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:74ba98b93ee5a84d17b8064cc2a8985f6d9ecba6ee6751f27df759e4a130aef5",
+      "content_hash": "sha256:b8018fc69fabd1bdd0b24939be903c39feb871738a817dbb1cc69a0294069bf8",
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "The one map-format change — span and fingerprint, the map in the package, the privacy tier",
@@ -30124,7 +30124,7 @@
     },
     {
       "anchor": "authority-line",
-      "content_hash": "sha256:bb3c04bb19d95455494b1cab0819f84dacf085c8926c5f00ccc4415e60813cc1",
+      "content_hash": "sha256:381d5bac53b75aa6f2d7d6ca001424d07ba100b6dd50c06c33bd37be663f86d3",
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**Non-normative** (`spec/design/` genre). The contract stays in",
@@ -30137,7 +30137,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "The measurement this design stands on — two read-only censuses",
-      "line": 12,
+      "line": 15,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#standing-on"
     },
     {
@@ -30146,7 +30146,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**Why one change and not three.** Each of the three entries",
-      "line": 21,
+      "line": 24,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#one-change-law"
     },
     {
@@ -30155,7 +30155,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "1. What the censuses changed about the plan",
-      "line": 28,
+      "line": 31,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#census-changed"
     },
     {
@@ -30164,7 +30164,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The manifest parser refuses unknown keys, and a",
-      "line": 30,
+      "line": 33,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#finding-manifest-is-strict"
     },
     {
@@ -30173,7 +30173,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**That precondition is already met.**",
-      "line": 37,
+      "line": 40,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#finding-min-version-exists"
     },
     {
@@ -30182,7 +30182,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**A map dropped into a package feeds that",
-      "line": 45,
+      "line": 48,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#finding-map-feeds-identity"
     },
     {
@@ -30191,7 +30191,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The precedent is already in the tree, not",
-      "line": 54,
+      "line": 57,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#finding-precedent-exists"
     },
     {
@@ -30200,7 +30200,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**A package's spec namespace is",
-      "line": 59,
+      "line": 62,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#finding-namespace-is-consumer-assigned"
     },
     {
@@ -30209,7 +30209,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The code item has neither a fingerprint nor an end",
-      "line": 68,
+      "line": 71,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#finding-item-has-neither"
     },
     {
@@ -30218,7 +30218,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The host index is described as gated and is",
-      "line": 74,
+      "line": 77,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#finding-host-index-ungated"
     },
     {
@@ -30227,7 +30227,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "2. B-019(а) — the code item gains a span and a fingerprint",
-      "line": 82,
+      "line": 85,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b019a"
     },
     {
@@ -30236,7 +30236,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The shape.** `code_item` gains two fields: `end_line`, the",
-      "line": 84,
+      "line": 87,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b019a-shape"
     },
     {
@@ -30245,7 +30245,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**Both fields are OPTIONAL, and that is a parity decision",
-      "line": 90,
+      "line": 93,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b019a-optional"
     },
     {
@@ -30254,7 +30254,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The ripple this carries, named because Rust makes it",
-      "line": 99,
+      "line": 102,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b019a-ripple"
     },
     {
@@ -30263,7 +30263,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The fingerprint string is self-describing, and this",
-      "line": 108,
+      "line": 111,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b019a-self-describing"
     },
     {
@@ -30272,7 +30272,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The substance — owner fork №3, taken 2026-08-04: the token",
-      "line": 118,
+      "line": 121,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b019a-substance"
     },
     {
@@ -30281,7 +30281,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**Rust ships the token scheme; Go and TypeScript ship",
-      "line": 127,
+      "line": 130,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b019a-scheme-per-scanner"
     },
     {
@@ -30290,7 +30290,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**Parity is a per-scanner obligation, and a scanner that cannot",
-      "line": 137,
+      "line": 140,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b019a-parity"
     },
     {
@@ -30299,7 +30299,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**What it buys, stated as the milestone it serves.**",
-      "line": 145,
+      "line": 148,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b019a-what-it-buys"
     },
     {
@@ -30308,7 +30308,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "3. B-016 half 1 — the map rides inside the package",
-      "line": 151,
+      "line": 154,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b016-half1"
     },
     {
@@ -30317,7 +30317,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The truck already drives.** A package travels as a",
-      "line": 153,
+      "line": 156,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b016-truck-already-drives"
     },
     {
@@ -30326,7 +30326,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The package declares its own spec namespace.** This is",
-      "line": 158,
+      "line": 161,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b016-namespace-key"
     },
     {
@@ -30335,7 +30335,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The identity question is answered explicitly, not by",
-      "line": 166,
+      "line": 169,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b016-identity-policy"
     },
     {
@@ -30344,7 +30344,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The consumer-side reader is the actual build.** No",
-      "line": 177,
+      "line": 180,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b016-reader-is-the-work"
     },
     {
@@ -30353,7 +30353,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "4. B-017 — the privacy tier",
-      "line": 185,
+      "line": 188,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b017"
     },
     {
@@ -30362,7 +30362,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The shape.** One manifest key with three values — `open`,",
-      "line": 187,
+      "line": 190,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b017-shape"
     },
     {
@@ -30371,7 +30371,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**What `contract` contains — owner fork №5.** The",
-      "line": 192,
+      "line": 195,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b017-contract-content"
     },
     {
@@ -30380,7 +30380,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The word `contract` is already taken, and by a neighbour —",
-      "line": 203,
+      "line": 206,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b017-name-clash"
     },
     {
@@ -30389,7 +30389,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The candidate the clash suggests: define the tier",
-      "line": 213,
+      "line": 216,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b017-tier-from-the-split"
     },
     {
@@ -30398,7 +30398,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**`:replace` is the privacy gradient at section",
-      "line": 224,
+      "line": 227,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b017-replace-is-the-gradient"
     },
     {
@@ -30407,7 +30407,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**One publishability rule does survive, and it is",
-      "line": 235,
+      "line": 238,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b017-one-checkable-rule"
     },
     {
@@ -30416,7 +30416,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**Consequence for the loader, and it strengthens the",
-      "line": 243,
+      "line": 246,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b017-floor-not-stump"
     },
     {
@@ -30425,7 +30425,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The `#source` line ships with the contract",
-      "line": 254,
+      "line": 257,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b017-link-is-never-stripped"
     },
     {
@@ -30434,7 +30434,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**Measured while answering the owner: one",
-      "line": 262,
+      "line": 265,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b017-one-source-per-document"
     },
     {
@@ -30443,7 +30443,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The owner's harder question: absence of the",
-      "line": 271,
+      "line": 274,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b017-own-project-vs-foreign"
     },
     {
@@ -30452,7 +30452,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The owner deferred the whole distinction",
-      "line": 288,
+      "line": 291,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b017-distinction-deferred"
     },
     {
@@ -30461,7 +30461,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**What that candidate is owed before it can",
-      "line": 299,
+      "line": 302,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b017-standing-on-a-demonstration"
     },
     {
@@ -30470,7 +30470,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**Both keys ride one manifest bump.** The namespace key of §3",
-      "line": 308,
+      "line": 311,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b017-one-bump"
     },
     {
@@ -30479,7 +30479,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "5. The bump itself — what a 2 → 3 touches",
-      "line": 314,
+      "line": 317,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#bump"
     },
     {
@@ -30488,7 +30488,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The route is alive and was repaired for exactly this",
-      "line": 316,
+      "line": 319,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#bump-route-alive"
     },
     {
@@ -30497,7 +30497,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The surfaces, named once so none is missed:** the JTD schema;",
-      "line": 322,
+      "line": 325,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#bump-surfaces"
     },
     {
@@ -30506,7 +30506,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**The vendor order is not optional.** Host crates path-depend",
-      "line": 328,
+      "line": 331,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#bump-vendor-order"
     },
     {
@@ -30515,7 +30515,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "6. B-014 — decided here, and not the way it first looked",
-      "line": 333,
+      "line": 336,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b014"
     },
     {
@@ -30524,7 +30524,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**B-014 is two independent halves and only one of them is",
-      "line": 335,
+      "line": 338,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b014-two-halves"
     },
     {
@@ -30533,7 +30533,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**Half two — whether the host index gains a freshness gate",
-      "line": 340,
+      "line": 343,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b014-gate-decision"
     },
     {
@@ -30542,7 +30542,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**What is gated instead: the parts that are not",
-      "line": 348,
+      "line": 351,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#b014-what-instead"
     },
     {
@@ -30551,7 +30551,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "7. What this change deliberately does not do",
-      "line": 356,
+      "line": 359,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#non-goals"
     },
     {
@@ -30560,7 +30560,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**It does not build fragments-by-hash.** B-016 half 2 needs",
-      "line": 358,
+      "line": 361,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#non-goal-fragments"
     },
     {
@@ -30569,7 +30569,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**It does not add the command or error-variant nodes.**",
-      "line": 363,
+      "line": 366,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#non-goal-command-nodes"
     },
     {
@@ -30578,7 +30578,7 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**It does not add signatures to the map.** A `contract`",
-      "line": 368,
+      "line": 371,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#non-goal-signatures"
     },
     {
@@ -30587,12 +30587,12 @@
       "doc_path": "design/map-format-change",
       "file": "spec/design/map-format-change.md",
       "heading": "**It does not merge the lifecycle vocabularies.** B-024's",
-      "line": 373,
+      "line": 376,
       "uri": "spec://org.vibevm.core/vibevm/design/map-format-change#non-goal-vocabulary"
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:ca6e21cdbc7e205a1a59d62660dffdebc463f0dc14ad8f7a50868b877986d1cb",
+      "content_hash": "sha256:a52658e9b40717c3e9fa1cfc3cf544c80c9cf846b9aaf8fe95ba696eceba9445",
       "doc_path": "design/multiple-sources-and-plugins",
       "file": "spec/design/multiple-sources-and-plugins.md",
       "heading": "Multiple sources for one contract, and the plugin form",
@@ -30844,7 +30844,7 @@
     },
     {
       "anchor": "cost",
-      "content_hash": "sha256:c7eb75ee4273b9cc7dc6b3a0f6d18f7e8e3fcfb4f4c0ff957fe51f70ae2fc5bf",
+      "content_hash": "sha256:f753638af4295666ff2a1855df0a0fb68e1a222c8d201afdd9e3c129a72f70be",
       "doc_path": "design/multiple-sources-and-plugins",
       "file": "spec/design/multiple-sources-and-plugins.md",
       "heading": "6. The honest cost, and the order to build in",
@@ -30862,10 +30862,10 @@
     },
     {
       "anchor": "cost-reading-consequence",
-      "content_hash": "sha256:9c6d5880dcc290688af0f935c8ad255bea4ac11601961a623cff946becd984f2",
+      "content_hash": "sha256:786c682f35545b9f86ac0c37280b5195ff1f51efaeec726d49498a5896468e24",
       "doc_path": "design/multiple-sources-and-plugins",
       "file": "spec/design/multiple-sources-and-plugins.md",
-      "heading": "**A section assembled from five plugins is long, and the long-section threshold warning ([B-021](../../BACKLOG.md#b-021)) will fire on it.** That is right rather than annoying — a reader deserves to know a section is composed — but it should be expected rather than discovered. @spec/done",
+      "heading": "**A section assembled from five plugins is long, and the long-section threshold warning will fire on it** — `long-section`, armed by the root `max_section_lines` key (start value 120, leaf sections only) and raised by the map engine at `mdspec.rs`; it ships, and this repository's own committed map already carries three of them. That is right rather than annoying — a reader deserves to know a section is composed — but it should be expected rather than discovered. @spec/done",
       "line": 63,
       "uri": "spec://org.vibevm.core/vibevm/design/multiple-sources-and-plugins#cost-reading-consequence"
     },
@@ -30880,7 +30880,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:d61f79416bdf220fe21e5ba64d5a265d3c0220aea5c8a3c078b8b8cca9ece36b",
+      "content_hash": "sha256:dda81d633c4897684d4b815f13af5d3aa036c0bf4d620ba0ac56c0ee9a32dd90",
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "The three new rule classes — comment position, custom lints, pending cards",
@@ -30889,7 +30889,7 @@
     },
     {
       "anchor": "authority-line",
-      "content_hash": "sha256:351f01254d29eac0064199158641eeb7197db9e285ab35569aefd17ca1abb07d",
+      "content_hash": "sha256:bd54707ceb46896e83ef2097735082b16d8b07a670cca6bd7cc8b05fe24ede04",
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**Non-normative** (`spec/design/` genre). The contract stays in",
@@ -30902,7 +30902,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "The measurement this design stands on — three read-only censuses",
-      "line": 12,
+      "line": 15,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#standing-on"
     },
     {
@@ -30911,7 +30911,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**The batch's shape in one paragraph.** Three builds that look",
-      "line": 19,
+      "line": 22,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#batch-shape"
     },
     {
@@ -30920,7 +30920,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "1. What the censuses changed about the plan",
-      "line": 27,
+      "line": 30,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#census-changed"
     },
     {
@@ -30929,7 +30929,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**There is no severity class in the engine, and B-036",
-      "line": 29,
+      "line": 32,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#finding-no-severity"
     },
     {
@@ -30938,7 +30938,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**The position denominator already ships.**",
-      "line": 39,
+      "line": 42,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#finding-denominator-exists"
     },
     {
@@ -30947,7 +30947,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**Two of three extractors already walk every",
-      "line": 44,
+      "line": 47,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#finding-comment-walks-exist"
     },
     {
@@ -30956,7 +30956,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**The marker vocabulary the guides evoke is",
-      "line": 50,
+      "line": 53,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#finding-vocabulary-is-absent"
     },
     {
@@ -30965,7 +30965,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**`rust-toolchain.toml` pins `stable`, and it",
-      "line": 58,
+      "line": 61,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#finding-toolchain-pins-stable"
     },
     {
@@ -30974,7 +30974,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**The TS vehicle is already in the tree.**",
-      "line": 64,
+      "line": 67,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#finding-ts-vehicle-is-present"
     },
     {
@@ -30983,7 +30983,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "2. B-036 — the invariant-comment position rule",
-      "line": 70,
+      "line": 73,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b036"
     },
     {
@@ -30992,7 +30992,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**The rule.** `invariant-comment-position`: a comment carrying an",
-      "line": 72,
+      "line": 75,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b036-rule"
     },
     {
@@ -31001,7 +31001,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**Inputs, decided.** Denominator `Fact::FileMetrics { lines }`",
-      "line": 77,
+      "line": 80,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b036-inputs"
     },
     {
@@ -31010,7 +31010,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**Where the knobs live.** Two ROOT keys, beside `max_file_lines`",
-      "line": 85,
+      "line": 88,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b036-config"
     },
     {
@@ -31019,7 +31019,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**Fingerprint: never line-keyed.** The stop.rs lesson",
-      "line": 96,
+      "line": 99,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b036-fingerprint"
     },
     {
@@ -31028,7 +31028,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "Scope like `FileLength`: `in_src` only, test context out. @spec/done",
-      "line": 100,
+      "line": 103,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b036-scope"
     },
     {
@@ -31037,7 +31037,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**Exhibit, because the live tree will not.** The dirty fixture of",
-      "line": 102,
+      "line": 105,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b036-exhibit"
     },
     {
@@ -31046,7 +31046,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "3. B-037 — the custom REQ-citing lint layer",
-      "line": 108,
+      "line": 111,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b037"
     },
     {
@@ -31055,7 +31055,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**What is promised, per language, verbatim.** Rust: «custom",
-      "line": 110,
+      "line": 113,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b037-promise"
     },
     {
@@ -31064,7 +31064,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**The grammar is the contract, and it already",
-      "line": 117,
+      "line": 120,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b037-grammar-is-the-contract"
     },
     {
@@ -31073,7 +31073,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**TypeScript — BUILD, fully.** A plugin package beside",
-      "line": 123,
+      "line": 126,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b037-ts-build"
     },
     {
@@ -31082,7 +31082,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**Rust — the vehicle is blocked by a toolchain policy, and",
-      "line": 135,
+      "line": 138,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b037-rust-position"
     },
     {
@@ -31091,7 +31091,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**Go — no vehicle is promised, and the honest move is to",
-      "line": 150,
+      "line": 153,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b037-go-position"
     },
     {
@@ -31100,7 +31100,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**The guides' clause is corrected in the same landing.**",
-      "line": 157,
+      "line": 160,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b037-doc-correction"
     },
     {
@@ -31109,7 +31109,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "4. B-038 — the pending cards get cards and checkers",
-      "line": 163,
+      "line": 166,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b038"
     },
     {
@@ -31118,7 +31118,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**The owner's fork №1, taken 2026-08-04: computed cell names.** The",
-      "line": 165,
+      "line": 168,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b038-fork"
     },
     {
@@ -31127,7 +31127,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**The cost, boss-measured over the WHOLE tree** (the census's",
-      "line": 170,
+      "line": 173,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b038-fork-cost"
     },
     {
@@ -31136,7 +31136,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**One engine rule serves Rust and Go.** Go",
-      "line": 183,
+      "line": 186,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b038-one-rule-two-languages"
     },
     {
@@ -31145,7 +31145,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**The rule lands with a frozen baseline; the renames ride a",
-      "line": 190,
+      "line": 193,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b038-lands-frozen"
     },
     {
@@ -31154,7 +31154,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**R-060 — the card is new, and its checker lands vacuous.** «Test",
-      "line": 197,
+      "line": 200,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b038-r060"
     },
     {
@@ -31163,7 +31163,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**The id space, measured: the R3-series registry IS `ATLAS.md`**",
-      "line": 206,
+      "line": 209,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#b038-id-space"
     },
     {
@@ -31172,7 +31172,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "5. What this batch deliberately does not do",
-      "line": 213,
+      "line": 216,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#non-goals"
     },
     {
@@ -31181,7 +31181,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "No severity/warning model in the engine (§1 — the ratchet",
-      "line": 215,
+      "line": 218,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#non-goal-severity"
     },
     {
@@ -31190,7 +31190,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "Not all seven pending cards — three of them plus R-060's",
-      "line": 218,
+      "line": 221,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#non-goal-seven-cards"
     },
     {
@@ -31199,7 +31199,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "No closed-token vocabulary and no synonym/shadow",
-      "line": 222,
+      "line": 225,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#non-goal-vocabulary"
     },
     {
@@ -31208,7 +31208,7 @@
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "No nightly toolchain and no `dylint` library until the owner",
-      "line": 226,
+      "line": 229,
       "uri": "spec://org.vibevm.core/vibevm/design/new-rule-classes#non-goal-nightly"
     },
     {
@@ -38107,7 +38107,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:053d64db2ac3a3334aa1729fe196b142729afbc87ac5efe005e6c8a9aa43b4de",
+      "content_hash": "sha256:4db143724b88bb92178e99e2c78e1afc5307569a911fa496cc99525011df99c8",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "PROP-005: Optional package index — per-org metadata + standalone index server",
@@ -38269,7 +38269,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:cc7252ff6e08440e835cd198d827ba65e9eec3eb984457850f861227d792d89c",
+      "content_hash": "sha256:8fb7310c0ea35fed6cfca39ed9f168e96071e4064a349843d2e2787807eb03d3",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2. Decisions",
@@ -38836,7 +38836,7 @@
     },
     {
       "anchor": "entry",
-      "content_hash": "sha256:b9991be42e00038d1240389f0792c497c4de06bde4957a5d515562dc8cad6410",
+      "content_hash": "sha256:3b7d17cebf397d97fdc41d22efb478980d032332c430525e9e54f45f251be57c",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.6 Index entry shape (the canonical record)",
@@ -38854,10 +38854,10 @@
     },
     {
       "anchor": "ENTRY-SCHEMA",
-      "content_hash": "sha256:057a8d5c6fc8edca5ec3bdb77a95dc140c14279b70437e7fc972fb8268d5d2b5",
+      "content_hash": "sha256:0f824486895e2476d24029480054848802196e33de250483905925bed95fcc8d",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
-      "heading": "**Decision.** Every `(group, name, version)` entry carries the following fields. This is the schema lines of `primary.jsonl` follow, and the elements each `by-name/<name>.json` candidate's `versions[]` carry. JTD schema lives in `crates/vibe-index/schemas/index-entry.jtd.json` (PROP-000 §16). @impl/done",
+      "heading": "**Decision.** Every `(group, name, version)` entry carries the following fields. This is the schema lines of `primary.jsonl` follow, and the elements each `by-name/<name>.json` candidate's `versions[]` carry. **This section IS the schema** — measured 2026-08-05: there is no JTD file for the index entry anywhere in the tree, and `crates/vibe-index/schemas/` does not exist. The types are hand-written against this text (`crates/vibe-index/src/types/entry/`, whose own docblock says «Schema pinned in PROP-005 §2.6»), which is a different arrangement from the seven wire reports under the root `schemas/`, where the JTD file is the authority and the Rust is generated and gated by `cargo xtask check-codegen`. @impl/done",
       "line": 234,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#ENTRY-SCHEMA"
     },
@@ -39376,7 +39376,7 @@
     },
     {
       "anchor": "types",
-      "content_hash": "sha256:52aea098f2a9640be75c5022c439f8d569a07ffa5d3d9ccb59c78b06bf47eceb",
+      "content_hash": "sha256:0f209955b145083df13ee4dd6f9eda86e13ba48111bd4659bd94800fa4cfaf53",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.12 Data structures",
@@ -39394,10 +39394,10 @@
     },
     {
       "anchor": "RUST-TYPES",
-      "content_hash": "sha256:37f15b0641f450a42fca3dc43736449ae0e16b493563ed3cf0e2144cf80a7a98",
+      "content_hash": "sha256:c80dedc5e2d7395618a503e586cbd0167a988d2f856d1da0be90973d95bd3c04",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
-      "heading": "**Decision.** Rust types live in `crates/vibe-index/src/types/`, derived from the JTD schemas under `crates/vibe-index/schemas/`: @impl/done",
+      "heading": "**Decision.** Rust types live in `crates/vibe-index/src/types/`, **hand-written against §2.6 rather than generated** — there is no JTD schema for them (measured 2026-08-05), so the text is the contract and the compiler checks nothing between them: @impl/done",
       "line": 457,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#RUST-TYPES"
     },
@@ -39691,7 +39691,7 @@
     },
     {
       "anchor": "architecture",
-      "content_hash": "sha256:065442fc87e99c9cd5564ab1b0528c1e0200af8aeb6d4924cff86ef9e1ea28af",
+      "content_hash": "sha256:90b360656f3a2459920d4f4f6f793530674e4606ad416d7ee142653589ca32e4",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "3. Architecture",
@@ -39700,7 +39700,7 @@
     },
     {
       "anchor": "crate-layout",
-      "content_hash": "sha256:c7687032ab88f2537f85f7fd887320c3429e575fe1ae45933ed4cb7a10b48588",
+      "content_hash": "sha256:b444bbdada00e19cf576ca21662505a28ce4ce2d42dd665e11698425a6d21d37",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "3.1 Crate layout",
@@ -39722,7 +39722,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "3.2 Dependencies",
-      "line": 651,
+      "line": 647,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#deps"
     },
     {
@@ -39731,7 +39731,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`design r1` @impl/done",
-      "line": 653,
+      "line": 649,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#design-deps"
     },
     {
@@ -39740,7 +39740,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Minimal Rust crates to keep redistribution clean: @impl/done",
-      "line": 655,
+      "line": 651,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#deps-lead"
     },
     {
@@ -39749,7 +39749,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`clap` (derive) — CLI dispatch. @impl/done",
-      "line": 657,
+      "line": 653,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#dep-clap"
     },
     {
@@ -39758,7 +39758,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`tokio` (full) — async runtime for the server. @impl/done",
-      "line": 658,
+      "line": 654,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#dep-tokio"
     },
     {
@@ -39767,7 +39767,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`axum` — HTTP framework. Mature, minimal, integrates with `tower` middleware. @impl/done",
-      "line": 659,
+      "line": 655,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#dep-axum"
     },
     {
@@ -39776,7 +39776,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`tower` / `tower-http` — auth, CORS, tracing layers. @impl/done",
-      "line": 660,
+      "line": 656,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#dep-tower"
     },
     {
@@ -39785,7 +39785,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`serde` / `serde_json` — JSON. @impl/done",
-      "line": 661,
+      "line": 657,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#dep-serde"
     },
     {
@@ -39794,7 +39794,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`toml` — read package manifests. @impl/done",
-      "line": 662,
+      "line": 658,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#dep-toml"
     },
     {
@@ -39803,7 +39803,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`semver` — version handling. Same dep `vibe-core` uses; pin same version. @impl/done",
-      "line": 663,
+      "line": 659,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#dep-semver"
     },
     {
@@ -39812,7 +39812,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`sha2` — content_hash. Same as `vibe-registry`. @impl/done",
-      "line": 664,
+      "line": 660,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#dep-sha2"
     },
     {
@@ -39821,7 +39821,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`flate2` — gzip primary.jsonl.gz. @impl/done",
-      "line": 665,
+      "line": 661,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#dep-flate2"
     },
     {
@@ -39830,7 +39830,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`walkdir` — directory traversal (matches `vibe-registry`). @impl/done",
-      "line": 666,
+      "line": 662,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#dep-walkdir"
     },
     {
@@ -39839,7 +39839,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`tracing` / `tracing-subscriber` — logging. @impl/done",
-      "line": 667,
+      "line": 663,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#dep-tracing"
     },
     {
@@ -39848,7 +39848,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`chrono` — timestamps. @impl/done",
-      "line": 668,
+      "line": 664,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#dep-chrono"
     },
     {
@@ -39857,7 +39857,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`thiserror` — error enums. @impl/done",
-      "line": 669,
+      "line": 665,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#dep-thiserror"
     },
     {
@@ -39866,7 +39866,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`gix` (or shell-out via `std::process::Command`) — read git tags / show files at refs. Decision §3.3. @impl/done",
-      "line": 670,
+      "line": 666,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#dep-git"
     },
     {
@@ -39875,7 +39875,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`reqwest` — `--from-github` HTTP client. @impl/done",
-      "line": 671,
+      "line": 667,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#dep-reqwest"
     },
     {
@@ -39884,7 +39884,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`tempfile` — atomic write helpers. @impl/done",
-      "line": 672,
+      "line": 668,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#dep-tempfile"
     },
     {
@@ -39893,7 +39893,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`prometheus` — `/metrics` endpoint. @impl/done",
-      "line": 673,
+      "line": 669,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#dep-prometheus"
     },
     {
@@ -39902,7 +39902,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**`vibe-core` dependency.** `vibe-index` parses `vibe.toml` and `vibe-subskill.toml` through `vibe-core`'s own `Manifest` / `SubskillManifest` types, so the index can never drift from the manifest schema. This reverses the proposal's original standalone-no-`vibe-core` stance — [§6](#distribution) records the reversal, [§9](#open) item 11 the de-rot finding that forced it. What stays duplicated is small and stable: the four-variant `PackageKind` / `NamingConvention` (`src/types/kinds.rs`, frozen by `VIBEVM-SPEC.md` §4, needing the `Ord` + `clap::ValueEnum` the `vibe-core` originals lack) and the `compute_content_hash` algorithm (`src/content_hash.rs`, gated by `tests/content_hash_parity.rs` against a byte-for-byte copy of `fixtures/registry/flow/wal/v0.1.0/`). `compute_content_hash` folds into `vibe-core` once it is lowered out of `vibe-registry`. @impl/done",
-      "line": 675,
+      "line": 671,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#VIBE-CORE-DEP"
     },
     {
@@ -39911,7 +39911,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Deliberately NOT pulling:** @spec/done",
-      "line": 677,
+      "line": 673,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#not-pulling-lead"
     },
     {
@@ -39920,7 +39920,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "A database (SQLite / PostgreSQL). All state in RAM + flat files. @spec/done",
-      "line": 679,
+      "line": 675,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#not-pulling-db"
     },
     {
@@ -39929,7 +39929,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "3.3 Git access in the scanner",
-      "line": 681,
+      "line": 677,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#git-access"
     },
     {
@@ -39938,7 +39938,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`design r1` @impl/done",
-      "line": 683,
+      "line": 679,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#design-git-access"
     },
     {
@@ -39947,7 +39947,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Decision.** Use shell-out to `git` via `std::process::Command` for the scanner's read paths (`git tag`, `git show <ref>:<path>`, `git rev-parse <tag>`). Same path `vibe-registry::shell.rs` already follows. Rationale matches PROP-001 §2.1: shell-out works on every platform git works on, no per-host bindings to maintain. @impl/done",
-      "line": 685,
+      "line": 681,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SCANNER-SHELL-OUT"
     },
     {
@@ -39956,7 +39956,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Not** `gix` for v0: smaller dep tree wins. v1 may switch if perf demands and gix's read API matures further. @spec/done",
-      "line": 687,
+      "line": 683,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#not-gix"
     },
     {
@@ -39965,7 +39965,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "3.4 Threading model",
-      "line": 689,
+      "line": 685,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#threading"
     },
     {
@@ -39974,7 +39974,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`design r1` @impl/done",
-      "line": 691,
+      "line": 687,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#design-threading"
     },
     {
@@ -39983,7 +39983,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "CLI mode: synchronous. tokio runtime is created only in `serve` subcommand. @impl/done",
-      "line": 693,
+      "line": 689,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#THREAD-CLI-SYNC"
     },
     {
@@ -39992,7 +39992,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Server mode: tokio multi-thread runtime. Routes are async; `Arc<RwLock<Index>>` is `tokio::sync::RwLock` (async lock). @impl/done",
-      "line": 694,
+      "line": 690,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#THREAD-SERVER-ASYNC"
     },
     {
@@ -40001,7 +40001,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Disk writes serialised through a single dedicated tokio task: `index_writer`. The server posts mutations to it via an mpsc channel; the writer applies them in order. This avoids fsync stalls blocking the request handlers. @impl/done",
-      "line": 695,
+      "line": 691,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#THREAD-WRITER-TASK"
     },
     {
@@ -40010,7 +40010,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "3.5 Configuration precedence",
-      "line": 697,
+      "line": 693,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#config"
     },
     {
@@ -40019,7 +40019,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`design r1` @impl/done",
-      "line": 699,
+      "line": 695,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#design-config"
     },
     {
@@ -40028,7 +40028,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "For every flag with a default, precedence is: explicit CLI flag > env var (`VIBE_INDEX_*`) > on-disk config (`<data-dir>/state/config.toml`, optional) > built-in default. Same shape `vibe show config` already uses on the consumer side. @impl/done",
-      "line": 701,
+      "line": 697,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#CONFIG-PRECEDENCE"
     },
     {
@@ -40037,7 +40037,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4. Phase plan (slices)",
-      "line": 705,
+      "line": 701,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#phases"
     },
     {
@@ -40046,7 +40046,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Each slice = one or more conventional commits. The utility becomes useful at slice 5 (read endpoints + reindex from clones); the rest are progressive enhancements. @impl/done",
-      "line": 707,
+      "line": 703,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slices-lead"
     },
     {
@@ -40055,7 +40055,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.1 Slice 1 — skeleton",
-      "line": 709,
+      "line": 705,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-1"
     },
     {
@@ -40064,7 +40064,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`crates/vibe-index/` standalone crate with `Cargo.toml` + `src/main.rs` + `src/lib.rs`. clap dispatch with stub subcommands that all print \"not yet implemented\". `vibe-index --version` works. `tests/help_smoke.rs` passes. @impl/done",
-      "line": 711,
+      "line": 707,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SLICE-1"
     },
     {
@@ -40073,7 +40073,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Commit: `feat(services/vibe-index): skeleton crate + clap subcommand dispatch`. @impl/done",
-      "line": 713,
+      "line": 709,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-1-commit"
     },
     {
@@ -40082,7 +40082,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.2 Slice 2 — types + persistence",
-      "line": 715,
+      "line": 711,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-2"
     },
     {
@@ -40091,7 +40091,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`src/types/` (entry / repomd), `src/index/` (memory, persistence, primary, by_name, repomd). JTD schemas in `schemas/`. Atomic write protocol. `vibe-index init` works (writes empty `repomd.json` + empty `primary.jsonl`). `vibe-index dump` works. `vibe-index verify` works (checks file hashes). Round-trip tests. @impl/done",
-      "line": 717,
+      "line": 713,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SLICE-2"
     },
     {
@@ -40100,7 +40100,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Commits: @impl/done",
-      "line": 719,
+      "line": 715,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-2-commits"
     },
     {
@@ -40109,7 +40109,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`feat(services/vibe-index): index entry + repomd schemas + JTD` @impl/done",
-      "line": 721,
+      "line": 717,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-2-c1"
     },
     {
@@ -40118,7 +40118,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`feat(services/vibe-index): in-memory index + atomic persistence` @impl/done",
-      "line": 722,
+      "line": 718,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-2-c2"
     },
     {
@@ -40127,7 +40127,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`feat(services/vibe-index): vibe-index init/dump/verify` @impl/done",
-      "line": 723,
+      "line": 719,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-2-c3"
     },
     {
@@ -40136,7 +40136,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.3 Slice 3 — scanner + reindex from clones",
-      "line": 725,
+      "line": 721,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-3"
     },
     {
@@ -40145,7 +40145,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`src/scanner/from_clones.rs` walks `<org-dir>/<repo>/.git` directories; `src/content_hash.rs` mirrors `vibe-registry::compute_content_hash`; `vibe-index reindex --from-clones` works against `fixtures/sample-org/`. Parity test against `vibe-registry`. Incremental mode = full for now (deferred to slice 7). @impl/done",
-      "line": 727,
+      "line": 723,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SLICE-3"
     },
     {
@@ -40154,7 +40154,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Commits: @impl/done",
-      "line": 729,
+      "line": 725,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-3-commits"
     },
     {
@@ -40163,7 +40163,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`feat(services/vibe-index): content_hash parity with vibe-registry` @impl/done",
-      "line": 731,
+      "line": 727,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-3-c1"
     },
     {
@@ -40172,7 +40172,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`feat(services/vibe-index): scanner — walk org-dir clones` @impl/done",
-      "line": 732,
+      "line": 728,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-3-c2"
     },
     {
@@ -40181,7 +40181,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`feat(services/vibe-index): vibe-index reindex --from-clones` @impl/done",
-      "line": 733,
+      "line": 729,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-3-c3"
     },
     {
@@ -40190,7 +40190,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.4 Slice 4 — read CLI subcommands",
-      "line": 735,
+      "line": 731,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-4"
     },
     {
@@ -40199,7 +40199,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`get`, `list`, `search`, `capabilities`, `purls`, `outdated`. Inverted text index for search. JSON output for every subcommand. `cli_e2e.rs` covers each. @impl/done",
-      "line": 737,
+      "line": 733,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SLICE-4"
     },
     {
@@ -40208,7 +40208,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Commits: @impl/done",
-      "line": 739,
+      "line": 735,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-4-commits"
     },
     {
@@ -40217,7 +40217,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`feat(services/vibe-index): inverted text index for search` @impl/done",
-      "line": 741,
+      "line": 737,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-4-c1"
     },
     {
@@ -40226,7 +40226,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`feat(services/vibe-index): vibe-index get/list/search/capabilities/purls` @impl/done",
-      "line": 742,
+      "line": 738,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-4-c2"
     },
     {
@@ -40235,7 +40235,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`feat(services/vibe-index): vibe-index outdated against a vibe.lock` @impl/done",
-      "line": 743,
+      "line": 739,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-4-c3"
     },
     {
@@ -40244,7 +40244,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.5 Slice 5 — HTTP server (read-only)",
-      "line": 745,
+      "line": 741,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-5"
     },
     {
@@ -40253,7 +40253,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`vibe-index serve --read-only`. axum app exposes `/healthz`, `/readyz`, `/v1/index/*`, `/v1/packages*`, `/v1/capabilities/*`, `/v1/purls/*`, `/metrics`. PID lock file. CORS open. `server_e2e.rs` covers each route. @impl/done",
-      "line": 747,
+      "line": 743,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SLICE-5"
     },
     {
@@ -40262,7 +40262,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Commits: @impl/done",
-      "line": 749,
+      "line": 745,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-5-commits"
     },
     {
@@ -40271,7 +40271,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`feat(services/vibe-index): axum server skeleton + healthz/readyz` @impl/done",
-      "line": 751,
+      "line": 747,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-5-c1"
     },
     {
@@ -40280,7 +40280,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`feat(services/vibe-index): GET /v1/index/* file routes` @impl/done",
-      "line": 752,
+      "line": 748,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-5-c2"
     },
     {
@@ -40289,7 +40289,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`feat(services/vibe-index): GET /v1/packages query routes` @impl/done",
-      "line": 753,
+      "line": 749,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-5-c3"
     },
     {
@@ -40298,7 +40298,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`feat(services/vibe-index): /metrics prometheus endpoint` @impl/done",
-      "line": 754,
+      "line": 750,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-5-c4"
     },
     {
@@ -40307,7 +40307,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "After slice 5: vibe-index is **independently usable** as a read-only server fed by `reindex --from-clones`. This is the \"MVP\" mark. @impl/done",
-      "line": 756,
+      "line": 752,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#MVP-MARK"
     },
     {
@@ -40316,7 +40316,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.6 Slice 6 — write CLI + write HTTP + auth",
-      "line": 758,
+      "line": 754,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-6"
     },
     {
@@ -40325,7 +40325,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`vibe-index add` / `vibe-index remove`. HTTP `POST /v1/packages`, `DELETE /v1/packages/...`. Bearer-token auth via `<data-dir>/state/admin.tokens`. Write-side server-vs-CLI lock arbitration. @impl/done",
-      "line": 760,
+      "line": 756,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SLICE-6"
     },
     {
@@ -40334,7 +40334,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Commits: @impl/done",
-      "line": 762,
+      "line": 758,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-6-commits"
     },
     {
@@ -40343,7 +40343,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`feat(services/vibe-index): vibe-index add/remove (CLI)` @impl/done",
-      "line": 764,
+      "line": 760,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-6-c1"
     },
     {
@@ -40352,7 +40352,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`feat(services/vibe-index): bearer-token auth + admin.tokens loader` @impl/done",
-      "line": 765,
+      "line": 761,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-6-c2"
     },
     {
@@ -40361,7 +40361,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`feat(services/vibe-index): POST/DELETE /v1/packages routes` @impl/done",
-      "line": 766,
+      "line": 762,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-6-c3"
     },
     {
@@ -40370,7 +40370,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.7 Slice 7 — incremental reindex",
-      "line": 768,
+      "line": 764,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-7"
     },
     {
@@ -40379,7 +40379,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`<data-dir>/state/checkpoint.json`. `vibe-index reindex --incremental --from-clones` walks the diff between checkpoint and current state. Test: full vs incremental produce identical output. @impl/done",
-      "line": 770,
+      "line": 766,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SLICE-7"
     },
     {
@@ -40388,7 +40388,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Commit: `feat(services/vibe-index): incremental reindex via checkpoint`. @impl/done",
-      "line": 772,
+      "line": 768,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-7-commit"
     },
     {
@@ -40397,7 +40397,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.8 Slice 8 — `--from-github` mode",
-      "line": 774,
+      "line": 770,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-8"
     },
     {
@@ -40406,7 +40406,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`reqwest`-based GitHub API walk. `--token-file FILE`. Rate-limit-aware backoff. Same shape as `--from-clones` from caller's POV. @impl/done",
-      "line": 776,
+      "line": 772,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SLICE-8"
     },
     {
@@ -40415,7 +40415,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Commit: `feat(services/vibe-index): reindex --from-github (REST API walk)`. @impl/done",
-      "line": 778,
+      "line": 774,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-8-commit"
     },
     {
@@ -40424,7 +40424,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.9 Slice 9 — vibe-publish post-publish hook",
-      "line": 780,
+      "line": 776,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-9"
     },
     {
@@ -40433,7 +40433,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`crates/vibe-publish/src/lib.rs::Publisher::publish` gains optional index POST after successful push. New env var `VIBEVM_INDEX_TOKEN_<HOST>`. New `[[registry]].index_url` / `[[registry]].index_token` fields in the project manifest. @impl/done",
-      "line": 782,
+      "line": 778,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SLICE-9"
     },
     {
@@ -40442,7 +40442,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Commit: `feat(vibe-publish): POST to registry index after publish (opt-in)`. @impl/done",
-      "line": 784,
+      "line": 780,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-9-commit"
     },
     {
@@ -40451,7 +40451,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.10 Slice 10 — consumer-side integration",
-      "line": 786,
+      "line": 782,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-10"
     },
     {
@@ -40460,7 +40460,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`crates/vibe-registry/src/multi_registry_resolver.rs` gains the index-aware fast path. Falls back transparently on 404 / connect-failure. Live e2e test against an index-equipped registry. @impl/done",
-      "line": 788,
+      "line": 784,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SLICE-10"
     },
     {
@@ -40469,7 +40469,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Commit: `feat(vibe-registry): consume registry index for resolve fast path (opt-in)`. @impl/done",
-      "line": 790,
+      "line": 786,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-10-commit"
     },
     {
@@ -40478,7 +40478,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "4.11 Slice 11 — docs + manual-test smoke",
-      "line": 792,
+      "line": 788,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-11"
     },
     {
@@ -40487,7 +40487,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`crates/vibe-index/docs/` filled in (operator-handbook, consumer-protocol, format). `manual-tests/M2.10-index-smoke.md` walks the live e2e: bootstrap an index from a fresh org dir, serve it, install a package through it, search it. @impl/done",
-      "line": 794,
+      "line": 790,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SLICE-11"
     },
     {
@@ -40496,7 +40496,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Commits: @impl/done",
-      "line": 796,
+      "line": 792,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-11-commits"
     },
     {
@@ -40505,7 +40505,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`docs(vibe-index): operator handbook + consumer protocol + format reference` @impl/done",
-      "line": 798,
+      "line": 794,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-11-c1"
     },
     {
@@ -40514,7 +40514,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`test: manual-test smoke for index bootstrap + consume` @impl/done",
-      "line": 799,
+      "line": 795,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#slice-11-c2"
     },
     {
@@ -40523,7 +40523,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "5. Test plan",
-      "line": 803,
+      "line": 799,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#tests"
     },
     {
@@ -40532,7 +40532,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Per slice (specifics in §4); cumulative state at GA: @impl/done",
-      "line": 805,
+      "line": 801,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#tests-lead"
     },
     {
@@ -40541,7 +40541,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Unit:** every type round-trips through serde JSON / TOML; every CLI subcommand has at least one happy-path test; every server route has at least one happy-path + one auth-fail test. @impl/done",
-      "line": 807,
+      "line": 803,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#TEST-UNIT"
     },
     {
@@ -40550,7 +40550,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Integration:** full-reindex against `fixtures/sample-org/` produces a byte-identical `primary.jsonl` to `fixtures/golden-index/primary.jsonl`. Incremental reindex applied to the same starting state is byte-identical to a full reindex. @impl/done",
-      "line": 808,
+      "line": 804,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#TEST-INTEGRATION"
     },
     {
@@ -40559,7 +40559,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Parity:** `tests/content_hash_parity.rs` runs the same fixture package through `vibe-registry::compute_content_hash` AND `crates/vibe-index/src/content_hash.rs`, asserts equality. CI gates the merge if they diverge. @impl/done",
-      "line": 809,
+      "line": 805,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#TEST-PARITY"
     },
     {
@@ -40568,7 +40568,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**End-to-end:** `tests/server_e2e.rs` spawns the server in-process (axum's `oneshot` style), drives every documented route over HTTP, asserts response shapes. @impl/done",
-      "line": 810,
+      "line": 806,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#TEST-E2E"
     },
     {
@@ -40577,7 +40577,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Crash recovery:** `tests/persistence_atomic.rs` simulates mid-write crash by failing the rename step; asserts the previous version remains readable. @impl/done",
-      "line": 811,
+      "line": 807,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#TEST-CRASH"
     },
     {
@@ -40586,7 +40586,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Hermetic vs live:** all tests above run hermetically (no network). A separate `cli_live_e2e.rs` (`#[ignore]`-d, opt-in via `cargo test -- --ignored`) walks `--from-github vibespecs` against the real registry to confirm the API walk works against actual infrastructure. @impl/done",
-      "line": 812,
+      "line": 808,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#TEST-HERMETIC"
     },
     {
@@ -40595,7 +40595,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "6. Distribution — a workspace crate",
-      "line": 816,
+      "line": 812,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#distribution"
     },
     {
@@ -40604,7 +40604,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`design r1` @impl/done",
-      "line": 818,
+      "line": 814,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#design-distribution"
     },
     {
@@ -40613,7 +40613,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Decision (revised 2026-05-22).** `vibe-index` lives at `crates/vibe-index/` as a member of the top-level vibevm workspace. It is built, tested, clippy-gated, and fmt-checked by the same `cargo … --workspace` invocations as every other crate, and it depends on `vibe-core` directly. @impl/done",
-      "line": 820,
+      "line": 816,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#WORKSPACE-MEMBER"
     },
     {
@@ -40622,7 +40622,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Why this reverses the original standalone-workspace decision.** The proposal first placed `vibe-index` in its own Cargo workspace under `services/`, outside `crates/`, so an org owner could vendor just that subdirectory. The cost was a hand-duplicated `vibe.toml` parser with nothing tying it to `vibe-core` — and, sitting outside `cargo test --workspace`, nothing routinely exercising it. It rotted silently against the M1.17 / M1.18 manifest-schema churn ([§9](#open) item 11). Folding the crate back in kills both failure modes at once: the scanner now parses through `vibe-core::Manifest` (one source of truth — the schema cannot drift), and the routine workspace gate covers it (drift is caught the moment it appears). @spec/done",
-      "line": 822,
+      "line": 818,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#fold-in-why"
     },
     {
@@ -40631,7 +40631,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Redistribution.** An org owner who wants to host their own index server clones the vibevm repository and runs `cargo install --path crates/vibe-index`. The \"vendor only the subdirectory\" affordance is gone; in exchange the binary can never ship a stale view of the manifest schema. The HTTP-server deps (`axum` / `tower` / `tower-http`) enter the workspace `Cargo.lock` — `reqwest` was already there for the `vibe-registry` index client, so the marginal cost is `tower` / `tower-http` / `flate2`. @impl/done",
-      "line": 824,
+      "line": 820,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#REDISTRIBUTION"
     },
     {
@@ -40640,7 +40640,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Gate.** `tools/self-check.sh` no longer special-cases a second workspace — steps 1–2 (`cargo test --workspace`, `cargo clippy --workspace`) cover `vibe-index` like any member. @impl/done",
-      "line": 826,
+      "line": 822,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#GATE-COVERS"
     },
     {
@@ -40649,7 +40649,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "7. Auth, secrets, scope",
-      "line": 830,
+      "line": 826,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#secrets"
     },
     {
@@ -40658,7 +40658,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`req r1` @impl/done",
-      "line": 832,
+      "line": 828,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#req-secrets"
     },
     {
@@ -40667,7 +40667,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "[PROP-000 §20](../../common/PROP-000.md#token-secrecy) covers the token-secrecy invariant; PROP-005 inherits it verbatim. Specifically: @impl/done",
-      "line": 834,
+      "line": 830,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SECRECY-INHERITED"
     },
     {
@@ -40676,7 +40676,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Server admin tokens** (`<data-dir>/state/admin.tokens`) — file mode 0600, never echoed in logs / responses / error messages, gitignored. @impl/done",
-      "line": 836,
+      "line": 832,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SECRET-ADMIN-TOKENS"
     },
     {
@@ -40685,7 +40685,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**GitHub API tokens** (`--from-github --token-file FILE`) — same discipline. Read once into memory, scrubbed from the env, never persisted outside the source file. @impl/done",
-      "line": 837,
+      "line": 833,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SECRET-GITHUB-TOKENS"
     },
     {
@@ -40694,7 +40694,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Index POST tokens** (`VIBEVM_INDEX_TOKEN_<HOST>` for the publish-side hook) — per-host shape mirrors `VIBEVM_PUBLISH_TOKEN_<HOST>`. @impl/done",
-      "line": 838,
+      "line": 834,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SECRET-INDEX-TOKENS"
     },
     {
@@ -40703,7 +40703,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Scope discipline.** The server's mutation endpoints accept entries only for the registry the server was started with (`<data-dir>/repomd.json::registry`). A POST attempting to land an entry whose `registry` field disagrees with the server's configured registry → 400 with a clear message. Same shape `vibe-publish::validate_scope` enforces on the publish side. @impl/done",
-      "line": 840,
+      "line": 836,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#SCOPE-DISCIPLINE"
     },
     {
@@ -40712,7 +40712,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "8. Operations",
-      "line": 844,
+      "line": 840,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#ops"
     },
     {
@@ -40721,7 +40721,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "A typical setup for an org owner who wants to host an index: @impl/done",
-      "line": 846,
+      "line": 842,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#ops-lead"
     },
     {
@@ -40730,7 +40730,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Most consumers see only the static raw-HTTP files; the server is for orgs that need real-time publish updates. @impl/done",
-      "line": 867,
+      "line": 863,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#ops-consumers-note"
     },
     {
@@ -40739,7 +40739,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "9. Open questions",
-      "line": 871,
+      "line": 867,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#open"
     },
     {
@@ -40748,7 +40748,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Index file location: `<org>/index` repo vs `<org>/<package-repo>/index/...` per-package?** PROP-005 picks `<org>/index`. The alternative — per-package files inside each package repo — was rejected because it leaves catalog discovery a chicken-and-egg problem (you need to enumerate the org first). If new evidence emerges that orgs object to a top-level `index` repo (naming conflicts, permission boundaries), we revisit. @spec/work",
-      "line": 873,
+      "line": 869,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#OPEN-LOCATION"
     },
     {
@@ -40757,7 +40757,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**`primary.jsonl.gz` compression: gzip vs zstd?** v0 picks gzip — universally supported by every HTTP client; deterministic with `mtime=0`. v1 may add a `primary.jsonl.zst` alongside. @spec/work",
-      "line": 874,
+      "line": 870,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#OPEN-COMPRESSION"
     },
     {
@@ -40766,7 +40766,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**GPG signing of `repomd.json`?** Tracked here, not shipped in v0. Shape: `repomd.json.asc` next to `repomd.json`; consumers verify against a per-registry public key recorded in `[[registry]].pgp_key`. v1. @spec/work",
-      "line": 875,
+      "line": 871,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#OPEN-GPG"
     },
     {
@@ -40775,7 +40775,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Merkle log (Go sumdb-style transparent log)?** Tracked here. v2+. Useful for adversarial environments; v0/v1 trust the host. @spec/work",
-      "line": 876,
+      "line": 872,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#OPEN-MERKLE"
     },
     {
@@ -40784,7 +40784,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Auto-commit-and-push from server** — slice 9 question. Risk: server gets push credentials, which is a step up in trust. Mitigation: keep CLI-driven commit/push the default; `--auto-commit-push` opt-in. @spec/work",
-      "line": 877,
+      "line": 873,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#OPEN-AUTO-PUSH"
     },
     {
@@ -40793,7 +40793,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Multi-registry server** — should one server instance host multiple data dirs (one per registry)? v0 says no (one process per registry). Trivial scale-out via process supervision; we revisit if multi-tenancy demand emerges. @spec/work",
-      "line": 878,
+      "line": 874,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#OPEN-MULTI-REGISTRY"
     },
     {
@@ -40802,7 +40802,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**WebSockets / Server-Sent Events for live publish notifications** — out of scope. Polling `/v1/admin/status::last_reindex` is sufficient at our scale. @spec/work",
-      "line": 879,
+      "line": 875,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#OPEN-SSE"
     },
     {
@@ -40811,7 +40811,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**OCI registry shape** — could we host the index inside an OCI registry instead of git? Out of scope; revisit if the OCI tooling becomes universal among vibevm operators. @spec/work",
-      "line": 880,
+      "line": 876,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#OPEN-OCI"
     },
     {
@@ -40820,7 +40820,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Capability- vs PURL-driven search** — v0 ships `by-cap` and `by-purl` as separate files. If usage shows one dominates, the loser may be folded into the inverted text index. Empirical question. @spec/work",
-      "line": 881,
+      "line": 877,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#OPEN-CAP-VS-PURL"
     },
     {
@@ -40829,7 +40829,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Rate-limiting on the server** — shipped after the v0 plan: `server/rate_limit.rs` is a per-token and per-IP token-bucket limiter, disabled by default and opt-in by flag. Production deployments may still front it with a reverse proxy's limiter; the two compose. @impl/done",
-      "line": 882,
+      "line": 878,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#OPEN-RATE-LIMIT"
     },
     {
@@ -40838,7 +40838,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**Standalone-workspace duplication — RESOLVED 2026-05-22 by folding the crate in.** The 2026-05-22 de-rot found `crates/vibe-index/` had silently rotted: its duplicated `vibe.toml` parser still expected the pre-M1.17 shape (`[writes]`, `[dependencies]`, `[boot_snippet].filename`) and could not parse a current manifest, and its `content_hash` parity test had drifted off a fixture renamed by the M1.17 manifest unification. §3.2 had weighed the duplication cost for `compute_content_hash` alone (\"the algorithm doesn't change\"); the *manifest schema*, by contrast, churned hard through M1.17 / M1.18, and the duplicate parser had no cross-check to catch the drift — the standalone workspace also sat outside the routine `cargo test --workspace` gate. **Resolution:** fold `vibe-index` into the `crates/` workspace and parse through `vibe-core::Manifest` (see [§6](#distribution)). The duplicated parser is deleted; only the tiny, schema-frozen `PackageKind` / `NamingConvention` and the `compute_content_hash` algorithm remain duplicated, both justified in §3.2. @impl/done",
-      "line": 884,
+      "line": 880,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#OPEN-STANDALONE-RESOLVED"
     },
     {
@@ -40847,7 +40847,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "10. Acceptance criteria",
-      "line": 888,
+      "line": 884,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#acceptance"
     },
     {
@@ -40856,7 +40856,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "A given slice is considered accepted when: @impl/done",
-      "line": 890,
+      "line": 886,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#acceptance-lead"
     },
     {
@@ -40865,7 +40865,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "All tests in its slice pass. @impl/done",
-      "line": 892,
+      "line": 888,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#ACC-TESTS"
     },
     {
@@ -40874,7 +40874,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`cargo clippy --workspace --all-targets -- -D warnings` is clean. @impl/done",
-      "line": 893,
+      "line": 889,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#ACC-CLIPPY"
     },
     {
@@ -40883,7 +40883,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`cargo fmt --check` is clean. @impl/done",
-      "line": 894,
+      "line": 890,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#ACC-FMT"
     },
     {
@@ -40892,7 +40892,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "`tools/self-check.sh` is green. @impl/done",
-      "line": 895,
+      "line": 891,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#ACC-SELF-CHECK"
     },
     {
@@ -40901,7 +40901,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Help-text smoke covers any new subcommand. @impl/done",
-      "line": 896,
+      "line": 892,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#ACC-HELP-SMOKE"
     },
     {
@@ -40910,7 +40910,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "A manual walk through `crates/vibe-index/docs/operator-handbook.md` succeeds against `fixtures/sample-org/`. @impl/done",
-      "line": 897,
+      "line": 893,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#ACC-MANUAL-WALK"
     },
     {
@@ -40919,7 +40919,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "PROP-005 is considered closed once slices 1–8 land. Slices 9–11 are integration with the rest of vibevm and ship under their respective milestone PRs. @impl/done",
-      "line": 899,
+      "line": 895,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#CLOSURE-CRITERION"
     },
     {
@@ -40928,7 +40928,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "11. Wire-up scripts (informational, not shipped)",
-      "line": 903,
+      "line": 899,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#wire-up"
     },
     {
@@ -40937,7 +40937,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "For operators wiring the index into their hosting: @spec/done",
-      "line": 905,
+      "line": 901,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#wire-up-lead"
     },
     {
@@ -40946,7 +40946,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**git `post-receive` hook on the org's hosted git** (Forgejo/Gitea/GitVerse-style) — push to a package repo triggers an HTTP POST to the index server: @spec/done",
-      "line": 907,
+      "line": 903,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#WIRE-POST-RECEIVE"
     },
     {
@@ -40955,7 +40955,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**cron line:** @spec/done",
-      "line": 925,
+      "line": 921,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#WIRE-CRON"
     },
     {
@@ -40964,7 +40964,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "These live in `crates/vibe-index/docs/operator-handbook.md` rather than as shipped binaries — operators integrate at their own host, and the hook shape varies enough across hosting platforms that one-size-fits-all isn't worth shipping. @spec/done",
-      "line": 931,
+      "line": 927,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#wire-up-not-shipped"
     },
     {
@@ -40973,7 +40973,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "12. Version history",
-      "line": 935,
+      "line": 931,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#history"
     },
     {
@@ -40982,7 +40982,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**2026-05-06 — draft 1.** Initial proposal. Open for review. @spec/done",
-      "line": 937,
+      "line": 933,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#HISTORY-DRAFT-1"
     },
     {
@@ -40991,7 +40991,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**2026-05-22 — reconciled with the implementation, then folded into the workspace.** A state review found PROP-005 already implemented (slices 1–10 + M2.10 `vibe search`) but rotted; the de-rot realigned the scanner with the current `vibe.toml` schema and corrected this document (§2.6 `boot_snippet`, the `vibe.toml` filename, §2.10 rate-limiter status). The fold then moved `vibe-index` from its own `services/` workspace into `crates/vibe-index/` and switched it to parse through `vibe-core::Manifest` — §3.2, §6, and §9 item 11 are revised for the reversed standalone-workspace decision. @spec/done",
-      "line": 938,
+      "line": 934,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#HISTORY-RECONCILED"
     },
     {
@@ -41000,7 +41000,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**2026-05-22 — group-native (PROP-008 Phase 7).** The index entry gained the mandatory `group` field and the optional `workspace_origin` (§2.6); the `by-name/` layer was re-keyed from `by-name/<kind>/<name>.json` to the candidate-set file `by-name/<name>.json` (§2.4) — one GET per registry now yields every group sharing a bare name; `primary.jsonl` / `by-cap` / `by-purl` sort on the `(group, name, version)` identity; the HTTP `/v1/packages/{group}/{name}` routes, the `vibe-index get/remove` CLI, and the `naming = \"fqdn\"` default followed. The `vibe-registry` index client and the `vibe-publish` post-publish hook were realigned to the new shape. PROP-008 §2.8's index extension is shipped. @spec/done",
-      "line": 939,
+      "line": 935,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#HISTORY-GROUP-NATIVE"
     },
     {
@@ -63748,7 +63748,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:2960cd1f503273000bdc38703d9f1977e20ea2235147f998aafd2966ab8b4ae5",
+      "content_hash": "sha256:1295885a50aec79638804413c423ef0182ab792b3be4fb68caa8e2ba8f6bf854",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
       "heading": "PROP-035: The spec compiler — directive preprocessor, package formats, and the two-mode boot linker",
@@ -65188,7 +65188,7 @@
     },
     {
       "anchor": "open",
-      "content_hash": "sha256:f46c8de56f254de8ba7b4eb1bfc71b9a619531fc9742c68aeaca35fc5488bbc5",
+      "content_hash": "sha256:844f2ea1ea44129c7dbfb0c310c935d0125c7059d1c11213bb379ab4c53bcbdc",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
       "heading": "16. Open questions",
@@ -65241,12 +65241,30 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#OPEN-LINK-TABLES"
     },
     {
+      "anchor": "LINK-TABLES-ARE-DEFERRED-WITH-A-NAMED-TRIGGER",
+      "content_hash": "sha256:d23ebdb590ba9c2f278cf53f91c8a9bbee61c9764f73594bc88f37b02e61962f",
+      "doc_path": "modules/vibe-workspace/PROP-035",
+      "file": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
+      "heading": "**Deferred deliberately, by owner ruling 2026-07-29, and this records the reason so nobody re-derives it.** Built today: the graph and a deterministic dump (`crates/vibe-spec/src/link_table.rs`). Not built: the persisted on-disk format and the structural consumer. The tables are **the vtable of the §13 structural executor** — a prebuilt index so a late-bound reader dispatches instead of searching — and this project does not run that mode, so they are an optimisation of navigation cost, never a precondition of correctness. Meanwhile `#embed spec://…` resolves and splices at compile time (`render_static` → `expand_embeds`), and an `@spec://` pointer that costs a lookup is strictly better than the confidently wrong relative path it replaced. Building the layer mid-refactor would create code the refactor then has to refactor. @spec/done",
+      "line": 288,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#LINK-TABLES-ARE-DEFERRED-WITH-A-NAMED-TRIGGER"
+    },
+    {
+      "anchor": "LINK-TABLES-PROMOTION-TRIGGER",
+      "content_hash": "sha256:55e5b46111ca4554af50cd588bd693958ab9edcec98b28988935706a74de92db",
+      "doc_path": "modules/vibe-workspace/PROP-035",
+      "file": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
+      "heading": "**What promotes it, so the deferral cannot quietly become permanent:** either `@spec://` pointers in the boot lane are MEASURED to cost a reader more than the lane saves, or the §13 structural loader is opened — whichever comes first. Either makes the searching real rather than hypothetical; until one fires, the cost being optimised away is a cost nobody has paid. @spec/done",
+      "line": 289,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#LINK-TABLES-PROMOTION-TRIGGER"
+    },
+    {
       "anchor": "OPEN-NO-ACCESS-CONTROL",
       "content_hash": "sha256:08aaa9185eebb3bb734c5f7eff18e6dc967bf9ea37ce879c3d5f20ad6992815e",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
       "heading": "**No access control (§7.3).** We deliberately omit `private`/`public`. Confirm this holds once real packages exercise cross-contract calls. @spec/work",
-      "line": 288,
+      "line": 290,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#OPEN-NO-ACCESS-CONTROL"
     },
     {
@@ -65255,7 +65273,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
       "heading": "**`dynamic-transitive` (§12).** Inherited from PROP-034 §5; still reserved. @spec/work",
-      "line": 289,
+      "line": 291,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#OPEN-DYNAMIC-TRANSITIVE"
     },
     {
@@ -65264,7 +65282,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
       "heading": "17. Version history",
-      "line": 293,
+      "line": 295,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#history"
     },
     {
@@ -65273,7 +65291,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
       "heading": "**2026-07-14 — drafted (owner-requested), provisional.** Captures the \"static-compiler vision\" design dialogue: two build modes as AOT/JIT with the equivalence invariant (§2); `simple`/`normal` package formats (§3); the `contract`/`source` split (§4); the hierarchical document IR with MD and future-XML frontends (§5); the unified `spec://` grammar and the deterministic router (§6); the three directives `#embed` / `#use` / `#source` plus the `@spec` in-place-use sigil and the read-set (§7); the five-phase compilation pipeline and the embed-ordering standard (§8); the C++-derived cycle rules and the contract-layer no-deadlock invariant (§9); link tables as the vtable analogue (§10, provisional); reversible open/close markers (§11); `transitive-inline` folding in PROP-034 as the emission layer (§12); the first-loaded structural loader (§13); the future algorithmic executor (§14); and the demo-corpus-first, vibevm-last migration (§15). Implementation begins with the router (§6) under this contract. @spec/done",
-      "line": 295,
+      "line": 297,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#HISTORY-DRAFTED"
     },
     {
@@ -65282,7 +65300,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
       "heading": "**2026-07-15 — implemented, and the default flipped to `simple`.** §5–§13 shipped as the `vibe-spec` crate and wired into `bootgen` (the payoff: `render_inline` runs `expand_embeds`, guarded); `transitive-inline` (§12) landed on `LinkType`. **§3's default changed from `normal` to `simple`** (owner decision): a forgotten `format` must fail *safe* (over-load, visibly working) rather than *silent* (a `normal` no-op), which also removes the §15 migration blast radius. Still open and under review: the `link` × `format` interaction (does a `normal` + `static` edge read eagerly or lazily?). @spec/done",
-      "line": 296,
+      "line": 298,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#HISTORY-IMPLEMENTED"
     },
     {
@@ -65291,7 +65309,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
       "heading": "**2026-07-16 — link-type rename (owner decision), the `link` set shrinks to two.** `LinkType::Inline → Static` (the verbatim `STATIC.md` lane — \"the static compiler\"), `Static → Dynamic` (the default, a by-reference `INDEX.md` read with an optional `when`), and the old `Dynamic` removed — a conditional load is now just a `dynamic` entry carrying a `when`. `inline-transitive → static-transitive`; `INLINE.md → STATIC.md`; `render_inline → render_static`; `compile_inline → compile_static`. Pure terminology, aligning vibevm with the CS static/dynamic-linking standard so \"the static compiler\" reads naturally; shipped across `vibe-core`, `vibe-workspace`, `vibe-spec`, the package manifests, and these specs. @spec/done",
-      "line": 297,
+      "line": 299,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#HISTORY-RENAME"
     },
     {
@@ -65300,7 +65318,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
       "heading": "**2026-08-04 — deterministic loading: qualified splice, aliases, the lookup rule (B-011, owner-approved).** The owner's highest-priority build lands its contract: the §8 pipeline gains the **qualify** phase (labels become `<origin-slug>--<original>`, a pure function of origin — splice-order-independent, append-only under late dynamic lane additions); §7.2 gains the `as <Alias>` clause and §7.4 the `@!Alias` mandatory in-place use plus the two-scope short-reference lookup (fail with candidates, never a silent pick); §11 gains the qualified-label, resolution-preamble, tombstone-table, and lane-is-not-a-citation-target facts; §13's first instructions gain the resolution rules as named content (the owner's priority-placement addition). Design rationale and the fork record: `spec/design/deterministic-loading-aliasing.md`; the commissioning entry: `BACKLOG.md` B-011. PROP-009 §2.3's «verbatim concatenation» becomes «anchor-qualified concatenation» in the same landing. @spec/work",
-      "line": 298,
+      "line": 300,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#HISTORY-B011-ALIASING"
     },
     {
@@ -65309,7 +65327,7 @@
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
       "heading": "**2026-07-20 — `normal + static` compiled end to end; the `link × format` question resolved.** The `[package].format` field now **parses** (`PackageFormat` in `vibe-core`, default `simple`, `deny_unknown_fields`-clean), **threads** through the boot model (`DependencyBoot` / `UnitInput` → `BootEntry`, both emission paths), and **drives** the static renderer: a `normal`-format contribution pulled `static` is **compiled** to its `#use` / `#source`-resolved, tree-shaken, dependency-ordered closure (`vibe-workspace::boot_artifacts::normal::compile_normal_entry`, seeded at the contract's whole-document address and delegating to the shipped `vibe_spec::compile_static`), where a `simple` one stays a verbatim concatenation. This **resolves the open `link × format` question** raised in the 2026-07-15 entry (\"does a `normal + static` edge read eagerly or lazily?\"): it is **eager** — the tree-shaken, `#source`-merged closure is AOT-compiled into `STATIC.md`, which is the equivalence-invariant reading (§2), never the whole file. The default stays `simple`, so an un-migrated tree's static lane is byte-identical (§3/§15). `normal + dynamic` — the structural / JIT loader (§13) — is still pending; only the static (AOT) executor honours the format so far. @spec/done",
-      "line": 299,
+      "line": 301,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#HISTORY-NORMAL-STATIC"
     },
     {
@@ -67979,7 +67997,7 @@
     {
       "code": "long-section",
       "file": "spec/design/map-format-change.md",
-      "line": 185,
+      "line": 188,
       "message": "section `4. B-017 — the privacy tier` spans 129 lines (threshold 120) — long sections read poorly and churn often; split into smaller leaves"
     },
     {
