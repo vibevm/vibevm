@@ -143,6 +143,75 @@ De-rotted instead — three exact substitutions per fixture: `group =
 **Filed from the fix as `-15`:** the diagnostic that made this expensive
 to read.
 
+### 2026-08-06-01 · A1/E4 · **P1** · open — owner's court
+
+**A third of the campaign's verdicts carry no evidence of their own, and one
+of them was measurably false while the campaign's own better-evidenced pass
+said so.** Escalated to P1 under `##SEV-GATE-BLINDNESS-IS-P1`: the credibility
+apparatus reports a per-fact number it did not earn per fact.
+
+**The instance, and it is exact.** `PROP-008` `##KIND-VALIDATION` states that
+the resolver asserts a pkgref's `kind` prefix against the resolved manifest and
+raises a `KindMismatch`. Until this session no such type existed anywhere in
+the tree and the reserved exit code `TYPE_MISMATCH = 4` was dead. The campaign
+judged that fact **`confirmed`**. Its recorded evidence is a single prose
+paragraph containing the clause *«pkgref grammar with optional kind validated
+(KindMismatch)»* — an assertion that the mechanism shipped.
+
+**In the same campaign run, the same claim was judged `drift` — four times.**
+The package-side twins in `qualified-naming`'s `ref-grammar.md`
+(`##THE-RESOLVER-CHECKS-THE-TYPE-AND-ERRORS-ON-A-MISMATCH`,
+`##THE-KIND-TAG-VALIDATES-IT-NEVER-DISAMBIGUATES`, `##ROW-FORM-KIND-AND-NAME`,
+`##SUM-THE-KIND-TAG-VALIDATES-THE-RESOLVED-TYPE`) each carry `drift`, and one
+of them names the method: *«`grep -rn 'KindMismatch'` returns 3 hits and NONE
+is code … the reserved exit code is dead»*. Both verdicts are in
+`run/cache.json` today. The corpus contradicted itself about one mechanism, and
+the side that was wrong is the host's.
+
+**Why the two differ is structural, not accidental.** Compared field by field:
+
+| | host `##KIND-VALIDATION` | package twin |
+|---|---|---|
+| keys on the verdict | `v`, `ev` | `v`, `ev`, `src` |
+| evidence items | **1** | 4 |
+| `file:line` refs | **0** | 3 |
+| is the evidence its own? | no — shared verbatim with **89** other anchors of the same document | yes |
+
+**The scale, measured over `run/cache.json`.** 11 862 recorded verdicts; 7 734
+distinct evidence blobs; **259 blobs are stamped on more than one anchor**, and
+**4 151 verdicts — 35.0 % of the corpus — have as their *entire* evidence one
+blob shared with other verdicts.** The largest single blob covers 276 anchors.
+For `PROP-008` the figure is 90 anchors on one paragraph, and all 90 carry
+exactly one evidence item. Those 90 include ordinary normative facts —
+`##GROUP-MANDATORY`, `##IDENTITY-TUPLE`, `##PKGREF-GRAMMAR`,
+`##KIND-VALIDATION` — not merely the document-metadata units.
+
+**Why this is P1 and not a P2 gap.** A document-level judgement can be an
+honest, weaker claim — «this document as a whole is implemented». The defect is
+that it is then **counted as N per-fact confirmations**: `summary.py` prints
+`confi 4867` for the host and `98.1 %` overall, and the exit-gate reasoning,
+the drift registry's obligation counts and the owner's picture of remaining
+work all read those as facts checked against the tree. A verdict that no single
+fact can falsify cannot be a fact's verdict. This is the shape the whole
+programme exists to remove — one statement of truth with many homes — and it is
+in the instrument doing the removing.
+
+**What is NOT claimed.** Not that the 4 151 are wrong; most are probably right,
+and the blobs read as careful work. Not that document-grain judging was
+forbidden — no rule in the plan forbids it, which is part of the finding. The
+claim is only that the corpus cannot tell the two grains apart, and that the
+one case examined end-to-end came out false.
+
+**Open — the owner's court, three questions.** *(i)* Do shared-blob verdicts
+count toward the confirmed total, or do they need their own line in the
+summary? *(ii)* Should the verdict standard require at least one `file:line`
+ref per `confirmed` fact — which would move ~4 151 verdicts to «unverified»
+overnight and is a large, visible number? *(iii)* The 90 `PROP-008` anchors
+specifically: re-judge now, or when the tool can distinguish the grains?
+**Recorded, not acted on:** an agent may escalate severity and may not choose
+this. Found 2026-08-06 while landing `BACKLOG.md` B-045, whose build made the
+false clause retroactively true — which is how it surfaced at all.
+
 ### 2026-08-05-16 · C · P2 · fixed 2026-08-05 (same day it was met)
 
 **The mirror fan-out reported an unreachable host as a diverged one.** Every
