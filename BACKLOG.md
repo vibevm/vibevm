@@ -150,7 +150,7 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
 | ##B059-ANCHOR **anchor** | нет — измерено при закрытии [B-057](#b-057); ближайший закон — `##SEV-GATE-BLINDNESS-IS-P1` в мягкой форме: ключ конфига, молча не делающий ничего, это не лгущий гейт, но соседняя болезнь |
 | ##B059-LOCATOR **locator** | `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:271-275` — исключение сопоставляется с `rel_in_crate`, путём **внутри крейта** (`src/lib.rs`); строками ниже (`:277-281`) в находку кладётся `file` — путь **от корня репозитория** (`crates/foo/src/lib.rs`). Одно поле конфига, два разных строковых пространства |
 | ##B059-SEVERITY **severity** | P2 |
-| ##B059-DISPOSITION **disposition** | `open` |
+| ##B059-DISPOSITION **disposition** | **`closed` 2026-08-05** — построены ОБЕ половины формы `##B059-FIX-SHAPE` (вариант 2 + вариант 3, коммит `48018a64`): подстрока сравнивается с внутрикрейтным И репо-относительным путём, а исключение, не отсеявшее ни одного файла за проход, объявляет себя. Совместимость **измерена до правки**: все `[rust] exclude_substrings` в дереве — это `/generated/`, оно совпадает в обоих прочтениях (репо-относительный путь строго шире внутрикрейтного, поэтому «только внутрикрейтное» совпадение невозможно), так что первая половина не меняет поведение ни одного файла |
 | ##B059-FILED **filed by** | замер долга дисциплины по пакетам, волна Г, 2026-08-05 — воркер опроверг боссов дизайн политики измеренным числом |
 
 - ##B059-SUT **Суть, по-простому.** Человек читает находку и видит адрес `crates/foo/src/lib.rs`. Он хочет убрать этот крейт из скана и пишет `exclude_substrings = ["crates/foo/"]`. Не происходит ничего: сравнение идёт со строкой `src/lib.rs`, в которой имени крейта нет вовсе, поэтому совпадение невозможно в принципе. Ключ не отказывает и не предупреждает — он молча остаётся нулём.
@@ -663,7 +663,7 @@ already written from it is the specification of the work.)*
 | ##B014-ANCHOR **anchor** | none — measured by the B-012 evidence pass; the class is the health-audit's out-of-gate drift, `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#root`'s own subject |
 | ##B014-LOCATOR **locator** | root `specmap.json`: **599 of 5266** spec units' recorded `line` no longer lands on that unit's anchor at HEAD (concentrated: PROP-000 ×137, PROP-043 ×112, PROP-018 ×92, PROP-009 ×91); the code side holds (898/912 edges land on a marker line). No gate covers it: `tools/self-check.sh:366-375`'s specmap steps are the packages' own `--gate` self-traces, and no host-index regeneration or byte-compare runs anywhere in the panel |
 | ##B014-SEVERITY **severity** | P2 |
-| ##B014-DISPOSITION **disposition** | `open` |
+| ##B014-DISPOSITION **disposition** | **`closed` 2026-08-05** (коммит `c909dd78`) — обе половины: индекс перегенерирован (599 из 5266 единиц указывали мимо якоря), и `cargo xtask specmap --check` заведён шагом панели. Гейт при заведении нашёл 45 сирот: 44 у `vibe-spec`, изъятого в `conform.toml` с записанной причиной, которую список `specmap.toml` не отзеркалил, хотя тот же файл говорит, что списки держатся в шаге; 45-я настоящая — `vibe-resolver::embedded_provider` без `scope!` при цитате PROP-030 в собственном докблоке. Было: `open` |
 | ##B014-FILED **filed by** | the B-012 feasibility study (`campaigns/packages-2026-09/harvest/d14-b012-part-B.md` §B4 freshness caveat), 2026-08-01 |
 
 - ##B014-WHY-NOT-P1 **Why P2 and not P1.** `##SEV-GATE-BLINDNESS-IS-P1` covers a gate that
@@ -1130,7 +1130,7 @@ already written from it is the specification of the work.)*
 | ##B048-ANCHOR **anchor** | none — найдено цензусом E8-R3 (`campaigns/packages-2026-09/harvest/e8-r3-go-floor-census.md`, Q5), не против размеченного факта |
 | ##B048-LOCATOR **locator** | `typescript-ai-native-cli/src/floor.rs:78-97` — `prettier --check .`; `:141-160` — `eslint .`; оба обходят `.` без скоупа на policy-roots; в TS-пакете живут настоящие деревья фикстур (`tools/ts-extract/test/fixtures/{clean,dirty}`, `tools/ts-oracle/test/fixtures/proj`), `.prettierignore` в пакете отсутствует |
 | ##B048-SEVERITY **severity** | P2 |
-| ##B048-DISPOSITION **disposition** | `open` |
+| ##B048-DISPOSITION **disposition** | **`closed` 2026-08-05** (коммит `6e047882`) — prettier и eslint заскоуплены на `config.typescript.roots` по образцу соседнего шага тестов, заголовки называют периметр. Было: `open` |
 | ##B048-FILED **filed by** | цензус E8-R3 волны Б, 2026-08-04 |
 
 - ##B048-SUT **Суть, по-простому.** Тот же класс дыры, что B-003 у Go, на двух шагах TS-floor'а: prettier и eslint ходят по всему дереву пакета и в чужом checkout'е упрутся в нарочно сломанные фикстуры экстрактора/оракула. Conform-половины дыры у TS НЕТ (default `exclude_substrings = ["/fixtures/"]` уже стоит); tests-шаг уже заскоуплен на roots (`floor.rs:121-138` — урок demo-walk). Стройка: заскоупить/отфильтровать prettier- и eslint-шаги тем же приёмом, что B-003 у gofmt (пост-фильтр вывода конфигом либо скоуп на roots — решить при постройке единообразно с посаженным B-003).
