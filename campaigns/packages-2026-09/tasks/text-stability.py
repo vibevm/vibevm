@@ -33,6 +33,7 @@ seal. Seal what this reports clean; do not read it as freshness.
 Exit code is 0 always — this is a measuring instrument, not a gate.
 """
 
+import hashlib
 import json
 import pathlib
 import re
@@ -95,9 +96,57 @@ def stale_files(cache):
             yield path, verdicts, camp.get("verified_at")
 
 
+def cache_behind_the_tree(cache):
+    """Judged files whose cached `content_hash` no longer matches their bytes.
+
+    Both fields `stale_files` compares live INSIDE the cache, so a document
+    edited since the last `vibe progress scan` is invisible to this program: the
+    cache still holds the pre-edit digest in both, they agree, and the file is
+    never yielded. Measured 2026-08-06 in exactly that state — one spec document
+    carrying **92 verdicts** was edited, and the report read «0 stale, 0 facts
+    needing re-judgement» with no sign anything had been missed.
+
+    That is the silence this exists to cure, not a defect in the comparison:
+    the program's contract is «run after a scan», and until now nothing said so
+    at the moment it mattered. A clean zero over a cache that is behind the tree
+    licenses nothing.
+    """
+    behind = []
+    for path, rec in cache["files"].items():
+        camp = rec.get("campaign") or {}
+        verdicts = camp.get("verdicts") or {}
+        cached = rec.get("content_hash")
+        if not verdicts or not cached:
+            continue
+        target = ROOT / path
+        if not target.is_file():
+            behind.append((path, len(verdicts), "absent from the tree"))
+            continue
+        digest = hashlib.sha256(target.read_bytes()).hexdigest()
+        if cached not in (digest, "sha256:" + digest):
+            behind.append((path, len(verdicts), "edited since the last scan"))
+    return behind
+
+
 def main():
     only_sealable = "--sealable" in sys.argv
     cache = json.loads(CACHE.read_text(encoding="utf-8"))
+
+    behind = cache_behind_the_tree(cache)
+    if behind and not only_sealable:
+        judged = sum(n for _, n, _ in behind)
+        print(
+            f"WARNING — the cache is behind the tree for {len(behind)} judged "
+            f"file(s) carrying {judged} verdict(s). Everything below compares two "
+            f"fields INSIDE the cache, so those files cannot appear in it no "
+            f"matter what moved in them. Run `vibe progress scan` (or `mirror`) "
+            f"first, or read the result as being about the cache rather than "
+            f"about the tree:"
+        )
+        for path, n, why in sorted(behind, key=lambda r: -r[1]):
+            print(f"  {n:4d} verdicts  {path}  — {why}")
+        print()
+
     clean, dirty, judged_total, moved_total = [], [], 0, 0
 
     for path, verdicts, at in stale_files(cache):

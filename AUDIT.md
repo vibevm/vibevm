@@ -212,7 +212,43 @@ specifically: re-judge now, or when the tool can distinguish the grains?
 this. Found 2026-08-06 while landing `BACKLOG.md` B-045, whose build made the
 false clause retroactively true — which is how it surfaced at all.
 
-### 2026-08-05-16 · C · P2 · fixed 2026-08-05 (same day it was met)
+### 2026-08-06-02 · A2/B2 · P2 · fixed 2026-08-06 (same day it was met)
+
+**The freshness instrument every session is told to run reports a clean zero
+over a cache that is behind the tree.** `spec/WAL.md` opens with «every number
+below is reproduced by commands; run them rather than quoting this file» and
+names three, one of which is `tasks/text-stability.py`. Its report is what a
+session reads to learn whether any judged fact needs re-judging.
+
+**Met live, and the experiment is a clean single-variable one.** This session
+amended one spec document — `PROP-008` §2.6, which carries **92 recorded
+verdicts** — and then ran the program. It printed *«stale files: 0   judged
+verdicts: 0 … facts needing re-judgement: 0»*. Measured against the tree at the
+same moment: of the 274 cached files, **273 still matched their bytes on disk
+and exactly one did not** — the one just edited.
+
+**Why it cannot see it, which is the interesting half.** `stale_files()` calls a
+file stale when `processed_hash != content_hash`, and **both fields live inside
+the cache**. A document edited since the last `vibe progress scan` still carries
+the pre-edit digest in both, they agree, and the file is never yielded. The
+comparison is between two equally stale values, so no edit — of any size, to any
+number of judged facts — can make it fire until a scan refreshes the cache.
+
+**Not a lying gate, which is why it is P2 and not P1.** No panel step runs this
+program, and its own docstring is honest that it measures re-derivation rather
+than freshness. The defect is that its zero is *vacuous* in precisely the state
+a session is in after editing a spec, and that the WAL sends every session to it
+without saying so. Same family as `##WAL-KI-VACUITY-AND-SCHEMA-ROOTS`: a check
+that passes on an empty set and looks like a pass on a full one.
+
+**Fixed the same day, by curing the silence rather than changing the
+comparison.** The program now hashes every judged file before reporting and
+prints a warning naming each file whose cached digest no longer matches its
+bytes, with the verdict count it is hiding, and says in one sentence that
+everything below compares two fields inside the cache. Exit code stays 0 — it is
+a measuring instrument, not a gate, and turning it into one would be the wrong
+cure. **Verified on the live state at landing:** the warning names
+`PROP-008-qualified-naming.md`, 92 verdicts, «edited since the last scan».
 
 **The mirror fan-out reported an unreachable host as a diverged one.** Every
 failed push, whatever its cause, produced one summary: «a non-fast-forward
