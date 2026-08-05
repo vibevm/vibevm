@@ -87,7 +87,11 @@ fn broken_json_is_a_warning_not_a_crash() {
     assert_eq!(warnings.len(), 1, "{}", warn_lines(&warnings));
     assert_eq!(warnings[0].code, "invalid-schema-json");
     assert_eq!(warnings[0].file, "schemas/demo.jtd.json");
-    assert!(warnings[0].message.contains("JSON"), "names the failure: {}", warnings[0].message);
+    assert!(
+        warnings[0].message.contains("JSON"),
+        "names the failure: {}",
+        warnings[0].message
+    );
 }
 
 /// Packet test 5: an unknown `metadata.spec` verb is a finding naming the
