@@ -122,8 +122,19 @@ fn parse_target_auth(s: Option<&str>) -> Result<vibe_core::manifest::AuthKind> {
 }
 
 /// Extract the `(group, …)` half of a pkgref's identity, rejecting an
-/// unqualified registry-subcommand argument (PROP-008 §2.4). Registry
-/// resolution and repo naming are group-keyed; a bare name has no group.
+/// unqualified registry-redirect argument. This is **not** the same case
+/// as `vibe uninstall` / `vibe update`, which accept a bare short name
+/// because they act on an already-installed package and resolve it against
+/// `vibe.lock`. A redirect creates and maintains the registry-side stub for
+/// a package that may not be installed at all — so there is no lockfile to
+/// answer from, and short-name resolution would need the index
+/// (PROP-008 §2.6 INDEX-DEPENDENCY: "Without an index, a registry's short
+/// names are unavailable and the qualified form is required"). The redirect
+/// verbs deliberately do not assume an index is configured, so they require
+/// the group up front. Do not relax this back to a short name: the
+/// lockfile-first path the install commands use does not exist here.
+/// Registry resolution and repo naming are group-keyed; a bare name has no
+/// group.
 fn require_group(pkgref: &vibe_core::PackageRef) -> Result<&Group> {
     pkgref.group.as_ref().ok_or_else(|| {
         anyhow::anyhow!(

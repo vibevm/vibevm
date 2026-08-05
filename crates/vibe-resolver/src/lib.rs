@@ -70,6 +70,9 @@ pub mod naive;
 pub mod resolvo_engine;
 pub mod sat;
 
+mod error;
+mod kind_check;
+
 pub use activation::{ActivationContext, ActivationOutcome, CapabilityTag, TagError};
 pub use embedded_provider::{EmbeddedDepProvider, EmbeddedPrecedence};
 pub use features::{
@@ -81,6 +84,9 @@ pub use local_registry_provider::LocalRegistryDepProvider;
 pub use multi_registry_provider::MultiRegistryDepProvider;
 pub use naive::NaiveDepSolver;
 pub use resolvo_engine::ResolvoDepSolver;
+
+pub use error::SolveError;
+pub(crate) use kind_check::assert_kind_matches;
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -394,82 +400,9 @@ pub enum DepProviderError {
     Other(String),
 }
 
-/// Solver-side failures. Messages name the conflict and the fix
-/// surface — they are agent food, not just human prose:
-///
-/// ```
-/// use vibe_resolver::SolveError;
-///
-/// let err = SolveError::VersionConflict {
-///     package: "org.vibevm/wal".to_string(),
-///     existing: "0.1.0".to_string(),
-///     new_constraint: "^0.2".to_string(),
-/// };
-/// assert!(err.to_string().contains("version conflict on `org.vibevm/wal`"));
-/// assert!(err.to_string().contains("[[override]]"));
-/// ```
-#[derive(Debug, Error)]
-#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability")]
-#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#unsatisfiable")]
-pub enum SolveError {
-    #[error(transparent)]
-    Provider(#[from] DepProviderError),
-
-    #[error(
-        "version conflict on `{package}`: already chose `{existing}`, but \
-         a later constraint requires `{new_constraint}`. Pin a single \
-         constraint that satisfies both, or use `[[override]]` to break the tie. \
-         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability; \
-         fix: pin one [requires] constraint satisfying both, or add an [[override]])"
-    )]
-    VersionConflict {
-        package: String,
-        existing: String,
-        new_constraint: String,
-    },
-
-    #[error(
-        "package `{package}` declares `[conflicts]` against `{against}`, which \
-         is also being installed in this graph \
-         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability; \
-         fix: remove one of the two packages, or drop the [conflicts] entry)"
-    )]
-    ConflictsDeclared { package: String, against: String },
-
-    #[error(
-        "capability `{capability}` required by `{requirer}` is not provided by \
-         any package in the resolved graph. Add a package whose `[provides].capabilities` \
-         includes `{capability}`, or pin a concrete `[requires].packages` entry. \
-         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability; \
-         fix: add a provider of the capability or a concrete [requires].packages entry)"
-    )]
-    CapabilityUnmet {
-        capability: String,
-        requirer: String,
-    },
-
-    #[error(
-        "all alternatives in `[[requires_any]]` declared by `{requirer}` failed to \
-         resolve: {alternatives:?} \
-         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability; \
-         fix: make at least one `one_of` alternative resolvable)"
-    )]
-    DisjunctionUnsatisfiable {
-        requirer: String,
-        alternatives: Vec<String>,
-    },
-
-    /// The engine proved the graph unsatisfiable and produced a
-    /// human-readable derivation. Carried verbatim from resolvo's
-    /// `Conflict::display_user_friendly` (PROP-017 §2.4) — the
-    /// "why did it fail" payload a raw UNSAT verdict cannot give.
-    #[error(
-        "dependency resolution is unsatisfiable:\n{explanation}\n\
-         (violates spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#unsatisfiable; \
-         fix: relax a version constraint, drop a conflicting package, or accept a downgrade)"
-    )]
-    Unsatisfiable { explanation: String },
-}
+// Solver-side failures live in `error::SolveError` (re-exported above as
+// `pub use error::SolveError`), so the public error surface is addressable
+// independently of the solver machinery in this file.
 
 // ---------------------------------------------------------------------------
 // Helpers used by both the naive impl and (eventually) the resolvo impl.

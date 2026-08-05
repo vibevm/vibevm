@@ -381,3 +381,27 @@ fn resolvo_reports_unmet_capability() {
         other => panic!("expected CapabilityUnmet, got {other:?}"),
     }
 }
+
+/// A root's `kind` prefix that disagrees with the resolved manifest's
+/// declared `kind` is a `KindMismatch` under resolvo too (PROP-008 §2.4
+/// KIND-VALIDATION) — the production cell and the naive cell agree.
+#[test]
+fn resolvo_kind_prefix_mismatch_is_a_kind_mismatch() {
+    let seeds = [pkg("wal", "1.0.0", &[])];
+    let seeds: Vec<&str> = seeds.iter().map(String::as_str).collect();
+    let resolvo = ResolvoDepSolver::new(MapProvider::new(&seeds));
+    let err = resolvo
+        .solve(&[PackageRef::parse("feat:org.vibevm/wal").unwrap()])
+        .unwrap_err();
+    assert!(
+        matches!(err, SolveError::KindMismatch { .. }),
+        "expected KindMismatch, got {err:?}"
+    );
+    let msg = err.to_string();
+    assert!(msg.contains("feat"), "must name the requested kind: {msg}");
+    assert!(msg.contains("flow"), "must name the actual kind: {msg}");
+    assert!(
+        msg.contains("org.vibevm/wal"),
+        "must name the package: {msg}"
+    );
+}

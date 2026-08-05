@@ -3381,9 +3381,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/exit_code.rs",
       "item_kind": "enum",
-      "line": 35,
+      "line": 34,
       "symbol": "vibe_cli::exit_code::InstallError",
-      "end_line": 59,
+      "end_line": 58,
       "fingerprint": "tok1:11709838744c2de421db36ffa5f4b43409a745d36f4916d7202745ea398dabc1"
     },
     {
@@ -6261,72 +6261,63 @@
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "trait",
-      "line": 176,
+      "line": 182,
       "symbol": "vibe_resolver::DepProvider",
-      "end_line": 224,
+      "end_line": 230,
       "fingerprint": "tok1:8a2c3106ae693e2db2efcd732266358f0cf1bdfb6a415a05562646ca1577aaf8"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "enum",
-      "line": 327,
+      "line": 333,
       "symbol": "vibe_resolver::DepProviderError",
-      "end_line": 395,
+      "end_line": 401,
       "fingerprint": "tok1:8c2eb96f739afa5b8bfde1f43de2c89ce7b1502df2ea80e732e76f53d030e264"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "trait",
-      "line": 273,
+      "line": 279,
       "symbol": "vibe_resolver::DepSolver",
-      "end_line": 321,
+      "end_line": 327,
       "fingerprint": "tok1:d8693b302ec313ac211c737b9ffbcf7f8aaad4a0c4cb74b66f73cf02d5bd9593"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "struct",
-      "line": 126,
+      "line": 132,
       "symbol": "vibe_resolver::ResolvedGraph",
-      "end_line": 152,
+      "end_line": 158,
       "fingerprint": "tok1:65dd0ed52a707f90aa9d97af29dbd9be3fc9e13b17dac5002b2f9fa1dfbea6ea"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "fn",
-      "line": 163,
+      "line": 169,
       "symbol": "vibe_resolver::ResolvedGraph::find",
-      "end_line": 169,
+      "end_line": 175,
       "fingerprint": "tok1:bc51f782ae7d8da9fed11911b433016a26106bb176426db8b655ab8821ce619e"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "struct",
-      "line": 89,
+      "line": 95,
       "symbol": "vibe_resolver::ResolvedNode",
-      "end_line": 124,
+      "end_line": 130,
       "fingerprint": "tok1:2838f1bfc536aff211ae84b24d2b7e77aec50278340c08e34a8819aa887d49db"
     },
     {
       "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/lib.rs",
-      "item_kind": "enum",
-      "line": 397,
-      "symbol": "vibe_resolver::SolveError",
-      "end_line": 472,
-      "fingerprint": "tok1:11dc026e5c663ed7a5be72c4eab361b2f84d69ff78743eb7bdb2896ba2251a9b"
-    },
-    {
-      "crate_name": "vibe-resolver",
-      "file": "crates/vibe-resolver/src/lib.rs",
       "item_kind": "trait",
-      "line": 226,
+      "line": 232,
       "symbol": "vibe_resolver::VersionEnumerator",
-      "end_line": 271,
+      "end_line": 277,
       "fingerprint": "tok1:1bfbdfbff48a362fd0fee23a52d4f82c3cf8b2636217d3524a3595259f88cdf0"
     },
     {
@@ -6628,6 +6619,24 @@
     },
     {
       "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/error.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_resolver::error",
+      "end_line": 7,
+      "fingerprint": "tok1:f979f186533ddda0cd5b5820f2606a7e5053f19bfe3d8414b06f1ae32fde05e3"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/error.rs",
+      "item_kind": "enum",
+      "line": 15,
+      "symbol": "vibe_resolver::error::SolveError",
+      "end_line": 109,
+      "fingerprint": "tok1:301415a2db82e2ec2f5d8eec6e978c607677c27622f5176d9ff67e978f71f14f"
+    },
+    {
+      "crate_name": "vibe-resolver",
       "file": "crates/vibe-resolver/src/features.rs",
       "item_kind": "enum",
       "line": 288,
@@ -6796,6 +6805,15 @@
       "symbol": "vibe_resolver::fixpoint_model::ModelPackage",
       "end_line": 41,
       "fingerprint": "tok1:7e1eca56ba9ce363f57d08aca0accc6a90ae242984521be0624a901c2ce65a68"
+    },
+    {
+      "crate_name": "vibe-resolver",
+      "file": "crates/vibe-resolver/src/kind_check.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "vibe_resolver::kind_check",
+      "end_line": 10,
+      "fingerprint": "tok1:767fd0784b3c06698f373423dd783d8ff121c302f4b9f23f0f55af81bbef03cd"
     },
     {
       "crate_name": "vibe-resolver",
@@ -11372,7 +11390,7 @@
     {
       "file": "crates/vibe-cli/src/exit_code.rs",
       "from_symbol": "vibe_cli::exit_code::InstallError",
-      "line": 38,
+      "line": 37,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#exit-codes",
       "verb": "implements"
@@ -14051,7 +14069,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::DepProvider",
-      "line": 209,
+      "line": 215,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver",
       "verb": "implements"
@@ -14059,7 +14077,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::DepProviderError",
-      "line": 346,
+      "line": 352,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator",
       "verb": "implements"
@@ -14067,7 +14085,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::DepSolver",
-      "line": 306,
+      "line": 312,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver",
       "verb": "implements"
@@ -14075,7 +14093,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::DepSolver",
-      "line": 307,
+      "line": 313,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade",
       "verb": "deviates",
@@ -14084,7 +14102,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::ResolvedGraph",
-      "line": 149,
+      "line": 155,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#solver-upgrade",
       "verb": "implements"
@@ -14092,7 +14110,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::ResolvedGraph::find",
-      "line": 164,
+      "line": 170,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity",
       "verb": "implements"
@@ -14100,7 +14118,7 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::ResolvedNode",
-      "line": 110,
+      "line": 116,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#lockfile",
       "verb": "implements"
@@ -14108,31 +14126,15 @@
     {
       "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::ResolvedNode",
-      "line": 109,
+      "line": 115,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity",
       "verb": "implements"
     },
     {
       "file": "crates/vibe-resolver/src/lib.rs",
-      "from_symbol": "vibe_resolver::SolveError",
-      "line": 412,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-resolver/src/lib.rs",
-      "from_symbol": "vibe_resolver::SolveError",
-      "line": 413,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#unsatisfiable",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-resolver/src/lib.rs",
       "from_symbol": "vibe_resolver::VersionEnumerator",
-      "line": 260,
+      "line": 266,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#provider-enrichment",
       "verb": "implements"
@@ -14444,6 +14446,30 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-resolver/src/error.rs",
+      "from_symbol": "vibe_resolver::error",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-resolver/src/error.rs",
+      "from_symbol": "vibe_resolver::error::SolveError",
+      "line": 30,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-resolver/src/error.rs",
+      "from_symbol": "vibe_resolver::error::SolveError",
+      "line": 31,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#unsatisfiable",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-resolver/src/features.rs",
       "from_symbol": "vibe_resolver::features::FeatureError",
       "line": 289,
@@ -14593,6 +14619,14 @@
       "line": 27,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-003#conditional-deps",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-resolver/src/kind_check.rs",
+      "from_symbol": "vibe_resolver::kind_check",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#pkgref",
       "verb": "implements"
     },
     {
@@ -48930,7 +48964,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:31e9498f4d94b4873ea09465ede0e5c6fba9b5fdc66443397be627d7905734aa",
+      "content_hash": "sha256:3709952f61ef8cd06601a801c5cbbb8ef468590dc9ed93227ef80b843b19e37f",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "PROP-008: Qualified package naming — groups, short aliases, collision detection",
@@ -49074,7 +49108,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:c83882c1e20840aedea49cf17bc6091f667aaef3a066c6b2fefefa306dff6d91",
+      "content_hash": "sha256:5cefd17b95f15f63587e5bff499047ff794050af0ac9c5a5438112c0ecf3920e",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2. Decisions",
@@ -49371,7 +49405,7 @@
     },
     {
       "anchor": "short-name",
-      "content_hash": "sha256:db6142676d200fe8d48a15c5add5275059bae2a43470f4aa947dbaa8e871f69a",
+      "content_hash": "sha256:0656d03acc12bfb66a43246e846d3dc3eb3caa0643b80a22e306b926f2572e63",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2.6 Short-name resolution",
@@ -49389,10 +49423,10 @@
     },
     {
       "anchor": "SHORT-AT-BOUNDARY",
-      "content_hash": "sha256:66255b4e897319b6ec371d019d659a4a375a7589b4975a41da6a3fc419859450",
+      "content_hash": "sha256:77d5d1de75bab433754c42bb7794f525003bfe43ae5f0318288717ef458d99d4",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
-      "heading": "**Decision.** A short name (`wal`, `flow:wal`) is resolved **only at the CLI input boundary**, via the index. Manifests always store the qualified form. @impl/done",
+      "heading": "**Decision.** A short name (`wal`, `flow:wal`) is resolved **only at the CLI input boundary** — through the index, or from `vibe.lock` alone where the verb acts on installed state (`##INSTALLED-STATE-RESOLVES-LOCALLY`). Manifests always store the qualified form. @impl/done",
       "line": 121,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#SHORT-AT-BOUNDARY"
     },
@@ -49433,12 +49467,21 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#LOCKFILE-AUTHORITATIVE"
     },
     {
+      "anchor": "INSTALLED-STATE-RESOLVES-LOCALLY",
+      "content_hash": "sha256:a8bc58ef8f45782cd9aa950de06abf0f0e77184dc319d9b3407b0c5a9b60dd3d",
+      "doc_path": "modules/vibe-registry/PROP-008",
+      "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
+      "heading": "**A verb that acts on an already-installed package resolves a short name from `vibe.lock` alone — no index, no network.** `vibe uninstall wal` and `vibe update wal` operate over installed state, and the lockfile *is* that state's record, so the answer sits in the file beside them and `##INDEX-DEPENDENCY` does not bind: a name the lockfile does not carry is **not installed** — a local failure with a local remedy, never a lookup that could not be performed. Requiring the qualified form there would be a restriction with no cause behind it. The counter-case is the registry-side redirect verbs (`vibe registry redirect`, `redirect-sync`, `redirect-update`), which create and maintain a stub for a package that need **not** be installed at all: there is no lockfile to answer from, so `##INDEX-DEPENDENCY` binds as written and the qualified form stays required — an honest requirement rather than an unfinished one. @impl/done",
+      "line": 127,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#INSTALLED-STATE-RESOLVES-LOCALLY"
+    },
+    {
       "anchor": "collision",
       "content_hash": "sha256:7a453671c0680e5eb2bfee942cb797d3751d36a58380dbe175d03852ccb19e67",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2.7 Collision vs conflict",
-      "line": 128,
+      "line": 129,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#collision"
     },
     {
@@ -49447,7 +49490,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "`req r1` @impl/done",
-      "line": 130,
+      "line": 131,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#req-collision"
     },
     {
@@ -49456,7 +49499,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "**Decision.** Two distinct failure classes, with distinct handling. This terminology is fixed by this PROP. @impl/done",
-      "line": 132,
+      "line": 133,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#TWO-FAILURE-CLASSES"
     },
     {
@@ -49465,7 +49508,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "**Collision (a naming ambiguity).** Two *different* packages match one short name (`wal`) with different `group`. Detected during short-name resolution (§2.6). @impl/done",
-      "line": 134,
+      "line": 135,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#COLLISION-DEF"
     },
     {
@@ -49474,7 +49517,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "**Conflict (a dependency conflict).** The depsolver cannot satisfy version constraints — incompatible constraints, declared `[conflicts]`, an unsatisfiable diamond. Already handled (PROP-002 §2.9 — resolvo/libsolv conflict-explanation chain). @impl/done",
-      "line": 135,
+      "line": 136,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#CONFLICT-DEF"
     },
     {
@@ -49483,7 +49526,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "Collision handling (new): @impl/done",
-      "line": 137,
+      "line": 138,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#collision-handling-lead"
     },
     {
@@ -49492,7 +49535,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "The resolver collects *all* candidates of a short name — it does **not** stop at the first registry. (PROP-002 §2.2's first-match-wins remains correct for the *same* package mirrored across registries — identical identity. It is wrong for *different* packages sharing a short name; the two are distinguishable only once `group` exists.) @impl/done",
-      "line": 139,
+      "line": 140,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#COLLECT-ALL-CANDIDATES"
     },
     {
@@ -49501,7 +49544,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "One candidate → resolve. Multiple candidates with different identity → **collision**: @impl/done",
-      "line": 140,
+      "line": 141,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#COLLISION-BEHAVIOR"
     },
     {
@@ -49510,7 +49553,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "interactive TTY — print the alternatives and fail with a hint pointing at the qualified form (no interactive pick: the choice must be recorded deliberately, not clicked); @impl/done",
-      "line": 141,
+      "line": 142,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#collision-interactive"
     },
     {
@@ -49519,7 +49562,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "`--unattended` / full-auto — fail-fast; the resolver never guesses. @impl/done",
-      "line": 142,
+      "line": 143,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#collision-unattended"
     },
     {
@@ -49528,7 +49571,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "A new exit code **`7`** (\"ambiguous package\") is assigned, distinct from `3` (\"package conflict\", `VIBEVM-SPEC.md` §9.4). @impl/done",
-      "line": 143,
+      "line": 144,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#EXIT-CODE-7"
     },
     {
@@ -49537,7 +49580,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "Conflict handling is unchanged: the install pipeline is already atomic (resolve → plan → confirm → apply); a failed resolve never reaches apply — \"fail without applying the plan\", as the owner specified. @impl/done",
-      "line": 152,
+      "line": 153,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#CONFLICT-UNCHANGED"
     },
     {
@@ -49546,7 +49589,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2.8 Index extension",
-      "line": 154,
+      "line": 155,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#index-ext"
     },
     {
@@ -49555,7 +49598,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "`req r1` @impl/done",
-      "line": 156,
+      "line": 157,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#req-index-ext"
     },
     {
@@ -49564,7 +49607,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "**Decision.** [PROP-005](../vibe-index/PROP-005-package-index.md)'s entry schema (§2.6) gains two fields: `group` (mandatory, §2.1) and `workspace_origin` (optional — set when the package was published from a workspace, [PROP-007 §2.8](../vibe-workspace/PROP-007-workspace.md) `[origin]`). @impl/done",
-      "line": 158,
+      "line": 159,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#INDEX-FIELDS"
     },
     {
@@ -49573,7 +49616,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "The `by-name/` layer indexes by `name` and returns the candidate set with each candidate's `group`, so §2.6 short-name resolution is one GET per registry. @impl/done",
-      "line": 160,
+      "line": 161,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#BY-NAME-CANDIDATES"
     },
     {
@@ -49582,7 +49625,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "PROP-005 is currently a draft; these are edits to a draft, not a shipped contract. @spec/done",
-      "line": 161,
+      "line": 162,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#draft-edit-note"
     },
     {
@@ -49591,7 +49634,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2.9 Registry explorer",
-      "line": 163,
+      "line": 164,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#explorer"
     },
     {
@@ -49600,7 +49643,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "`design r1` @spec/done",
-      "line": 165,
+      "line": 166,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#design-explorer"
     },
     {
@@ -49609,7 +49652,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "**Decision (forward-looking, out of implementation scope).** The index makes a Maven-Central-style browsable visualisation possible — and richer. A **vibevm registry explorer** is recorded here as a long-term direction (a `ROADMAP.md` M3+ entry): @spec/done",
-      "line": 167,
+      "line": 168,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#EXPLORER-DIRECTION"
     },
     {
@@ -49618,7 +49661,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "a reverse-FQDN group tree with drill-down (`org` → `org.vibevm` → packages → versions), as Maven Central does; @spec/done",
-      "line": 169,
+      "line": 170,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#explorer-group-tree"
     },
     {
@@ -49627,7 +49670,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "beyond Maven Central: filter by `kind`; a capability graph (`[provides]`/`[requires]`); `describes`/PURL links to upstream libraries; redirect-stub delegation; the full dependency DAG; and **workspace provenance** (\"Y is a sub-package of X\", from `workspace_origin`). @spec/done",
-      "line": 170,
+      "line": 171,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#explorer-beyond-maven"
     },
     {
@@ -49636,7 +49679,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "The explorer is a separate, optional layer over the index — not part of PROP-008's implementation. PROP-005 §2.10 already reserves the hook (`vibe-index serve`, CORS-open read endpoints). @spec/done",
-      "line": 172,
+      "line": 173,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#EXPLORER-SEPARATE-LAYER"
     },
     {
@@ -49645,7 +49688,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "The only obligation on this refactor is that the index carry `group` and `workspace_origin` (§2.8) so the explorer is not a retrofit later. @spec/done",
-      "line": 173,
+      "line": 174,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#EXPLORER-INDEX-OBLIGATION"
     },
     {
@@ -49654,7 +49697,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "3. Migration",
-      "line": 177,
+      "line": 178,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#migration"
     },
     {
@@ -49663,7 +49706,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "`design r1` @impl/done",
-      "line": 179,
+      "line": 180,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#design-migration"
     },
     {
@@ -49672,7 +49715,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "The breaking-change window is open: vibevm has no public release, no external users ([PROP-003](../vibe-resolver/PROP-003-dep-evolution.md) — \"schema churn before v0.1.0 is free\"). @impl/done",
-      "line": 181,
+      "line": 182,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#breaking-window"
     },
     {
@@ -49681,7 +49724,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "**Canonical packages.** `flow-wal`, `flow-sync-from-code`, `flow-atomic-commits` migrate to `group = \"org.vibevm\"`. Repositories rename to the `naming = \"fqdn\"` shape (`org.vibevm_wal`, …). The owner authorised migrating the test fixtures and these three without further questions. **Superseded in part by [PROP-029](../../common/PROP-029-fully-qualified-addresses.md):** the redbook trio's *local* group later moved to `org.vibevm.world`, so their real repos render `org.vibevm.world_wal`; the still-published `org.vibevm` repos and the group-`org.vibevm` test fixtures trail that move and rename on their next publish. @impl/done",
-      "line": 183,
+      "line": 184,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#MIG-CANONICAL"
     },
     {
@@ -49690,7 +49733,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "**Test orgs.** `vibespecstest1/2/3` fixtures re-laid-out to the new naming. @impl/done",
-      "line": 184,
+      "line": 185,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#MIG-TEST-ORGS"
     },
     {
@@ -49699,7 +49742,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "**Manifests.** `vibe-package.toml` → `vibe.toml` ([PROP-007 §2.2](../vibe-workspace/PROP-007-workspace.md)); add the `group` field. @impl/done",
-      "line": 185,
+      "line": 186,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#MIG-MANIFESTS"
     },
     {
@@ -49708,7 +49751,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "**Lockfile.** Schema bumps to **v5** — PROP-007 had already taken v4 for `source_kind = \"path\"`; adds the `group` field per `[[package]]`. @impl/done",
-      "line": 186,
+      "line": 187,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#MIG-LOCKFILE-V5"
     },
     {
@@ -49717,7 +49760,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "**`VIBEVM-SPEC.md` §7.1** is edited (under the owner sanction) — the `name`-uniqueness rule changes from \"within a kind\" to \"within a group\", and the identity tuple and pkgref grammar are updated. @impl/done",
-      "line": 187,
+      "line": 188,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#MIG-SPEC-EDIT"
     },
     {
@@ -49726,7 +49769,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "4. Rejected alternatives",
-      "line": 191,
+      "line": 192,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#rejected"
     },
     {
@@ -49735,7 +49778,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "**Per-registry identity.** Already rejected in [PROP-002 §3.4](PROP-002-decentralized-registry.md). `group` is a package attribute, not a registry — §1 explains why it does not reopen that decision. @spec/done",
-      "line": 193,
+      "line": 194,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#REJ-PER-REGISTRY"
     },
     {
@@ -49744,7 +49787,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "**`kind` in the repository name.** Rejected (this PROP, §2.5). With `(group, name)` unique, `kind` in the repo name is redundant noise; `naming = \"fqdn\"` drops it. @spec/done",
-      "line": 194,
+      "line": 195,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#REJ-KIND-IN-REPO"
     },
     {
@@ -49753,7 +49796,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "**Short names inside manifests.** Rejected (§2.6). Manifests store the qualified form; short names are CLI-only sugar. This eliminates transitive collisions by construction. @spec/done",
-      "line": 195,
+      "line": 196,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#REJ-SHORT-IN-MANIFESTS"
     },
     {
@@ -49762,7 +49805,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "**kind prefix as a disambiguator.** Rejected (§2.4). With `name` unique within `group`, the kind prefix can only validate, never disambiguate; a real ambiguity is a group collision. @spec/done",
-      "line": 196,
+      "line": 197,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#REJ-KIND-DISAMBIGUATOR"
     },
     {
@@ -49771,7 +49814,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "5. Open questions",
-      "line": 200,
+      "line": 201,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#open"
     },
     {
@@ -49780,7 +49823,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "Exit code `7` — finalise the assignment against `VIBEVM-SPEC.md` §9.4 and confirm no clash with a future code. @spec/work",
-      "line": 202,
+      "line": 203,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#OPEN-EXIT-CODE-7"
     },
     {
@@ -49789,7 +49832,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "Registry explorer scope (§2.9) — when (if) it becomes a funded milestone, it gets its own PROP. @spec/work",
-      "line": 203,
+      "line": 204,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#OPEN-EXPLORER-SCOPE"
     },
     {
@@ -49798,7 +49841,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "Whether `naming = \"fqdn\"` should also offer a `kind`-bearing variant for registries that want it, or stay strictly `<group>.<name>`. @spec/work",
-      "line": 204,
+      "line": 205,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#OPEN-FQDN-KIND-VARIANT"
     },
     {
@@ -49807,7 +49850,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "6. Phase plan",
-      "line": 208,
+      "line": 209,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#phases"
     },
     {
@@ -49816,7 +49859,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "PROP-008 depends on [PROP-005](../vibe-index/PROP-005-package-index.md) being implemented (short-name resolution, §2.6) and is best sequenced after [PROP-007](../vibe-workspace/PROP-007-workspace.md). Suggested order: PROP-007 (workspace) → PROP-005 implementation (index) → PROP-008 (qualified naming) → collision-detection slice (§2.7). The `group` field, identity-tuple change, pkgref grammar, and `naming = \"fqdn\"` can land before short-name resolution; short-name resolution and collision detection land once the index is real. @impl/done",
-      "line": 210,
+      "line": 211,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#phase-plan"
     },
     {
@@ -49825,7 +49868,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "7. Version history",
-      "line": 214,
+      "line": 215,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#history"
     },
     {
@@ -49834,7 +49877,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "**2026-05-20 — draft 1.** Initial proposal. Requirements locked in an owner design session (decisions on `group`, identity tuple, `kind`-as-metadata, pkgref grammar, `fqdn` repo naming, index-backed short-name resolution, collision detection, exit code 7, registry explorer as a long-term direction). Open for review. @spec/done",
-      "line": 216,
+      "line": 217,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#HISTORY-DRAFT-1"
     },
     {
@@ -49843,7 +49886,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "**2026-05-22 — Phases 1–4 + 7 implemented (under MFBT).** The identity core landed on `main`: the `Group` newtype and the mandatory `[package].group` (Phase 1); the `(group, name, version, content_hash)` identity refactor with `kind` demoted to metadata (Phase 2); the lockfile `group` field at schema v5 (Phase 3); the group-native registry with `NamingConvention::Fqdn` as the default (Phase 4). Phase 7 (§2.8) then made the package index group-native — the [PROP-005](../vibe-index/PROP-005-package-index.md) entry schema gained `group` + `workspace_origin`, the `by-name/` layer became the candidate-set file `by-name/<name>.json`, and the `vibe-registry` index client + `vibe-publish` post-publish hook were realigned. **Remaining:** Phase 5 (index-backed short-name resolution at the CLI boundary, §2.6), Phase 6 (collision detection + exit code `7`, §2.7), Phase 8 (canonical-package migration + the `VIBEVM-SPEC.md §7.1` edit + docs, §3). @spec/done",
-      "line": 217,
+      "line": 218,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#HISTORY-PHASES-1-4-7"
     },
     {
@@ -49852,7 +49895,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "**2026-05-23 — Phases 5 + 6 + 8 shipped with M1.19.** Short-name resolution at the CLI input boundary (`vibe-cli::commands::short_name` — index-backed candidate sets, lockfile-prefers-locked); collision detection with the dedicated exit code `7` (`InstallError::AmbiguousPackage`); the live-registry migration to `fqdn` naming and the `vibe init` default fix (`cc32d7e` — the M1.19 defect AUDIT 2026-05-23-02 records). This entry back-fills the record: the work shipped with M1.19 but the history was not updated at the time. @spec/done",
-      "line": 218,
+      "line": 219,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#HISTORY-PHASES-5-6-8"
     },
     {
@@ -49861,7 +49904,7 @@
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "**2026-06-12 — unit typing (the depth program).** §2.1–2.8 typed `req r1`; §2.9 and §3 typed `design r1`; the Status line updated from the stale DRAFT to the shipped reality. @spec/done",
-      "line": 219,
+      "line": 220,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#HISTORY-UNIT-TYPING"
     },
     {

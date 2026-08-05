@@ -24,7 +24,7 @@ use vibe_core::{Group, PackageRef};
 
 use crate::{
     Chosen, DepProviderError, DepSolver, ResolvedGraph, SolveError, VersionEnumerator,
-    build_resolved_graph,
+    assert_kind_matches, build_resolved_graph,
 };
 use provider::VibevmResolvoProvider;
 
@@ -190,6 +190,23 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
                     let manifest = rp
                         .manifest_of(id, &group, &name, &version)
                         .map_err(SolveError::Provider)?;
+                    // PROP-008 §2.4 KIND-VALIDATION — a root's kind prefix
+                    // (if any) must match the resolved manifest's declared
+                    // kind. A resolvo solvable is interned by
+                    // `(group, name, version)`, so a transitive dep's prefix
+                    // is dropped at intern time and only a root's prefix
+                    // survives to be checked here; the naive cell (shared
+                    // with `sat`) additionally checks transitive prefixes
+                    // via the pkgref it carries through `process_one`.
+                    if is_root && let Some(actual) = manifest.package.as_ref().map(|p| p.kind) {
+                        let requested = roots
+                            .iter()
+                            .find(|r| {
+                                r.group.as_ref().is_some_and(|g| g == &group) && r.name == name
+                            })
+                            .and_then(|r| r.kind);
+                        assert_kind_matches(requested, actual, &format!("{group}/{name}"))?;
+                    }
                     let direct_deps = manifest.requires.packages.clone();
                     // `[obsoletes]` → drop the superseded node from the
                     // output, mirroring the naive cell (PROP-017 §3).

@@ -12,7 +12,7 @@ use vibe_core::{CapabilityRef, Group, PackageRef, VersionSpec};
 
 use crate::{
     ChosenEntry, DepProvider, DepProviderError, DepSolver, EnqueuedPkg, ResolvedGraph, SolveError,
-    SolverState, version_satisfies,
+    SolverState, assert_kind_matches, version_satisfies,
 };
 
 /// Extract the `(group, name)` identity from a pkgref. Solver-internal
@@ -171,6 +171,16 @@ impl<P: DepProvider> NaiveDepSolver<P> {
         let manifest = self
             .provider
             .fetch_manifest(&group, pkgref.name.as_str(), &version)?;
+
+        // PROP-008 §2.4 KIND-VALIDATION — if this pkgref carries a `kind`
+        // prefix, assert it matches the resolved package's declared `kind`.
+        // The pkgref retains its prefix here for both roots and transitive
+        // `[requires.packages]` deps, so the law covers every ref this cell
+        // resolves. `sat` reuses this path verbatim (it delegates to a naive
+        // solve), so the two cells cannot drift on this check.
+        if let Some(actual) = manifest.package.as_ref().map(|p| p.kind) {
+            assert_kind_matches(pkgref.kind, actual, &pkgref.qualified_name())?;
+        }
 
         // Refuse if this package's declared `[conflicts]` collide with
         // anything already in the graph.

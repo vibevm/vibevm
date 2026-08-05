@@ -156,6 +156,43 @@ pub fn qualify(
     }
 }
 
+/// Qualify a CLI-supplied pkgref using **only the lockfile** — no
+/// registry index, no network. This is the resolution path for commands
+/// that act on an already-installed package (`vibe uninstall`, `vibe
+/// update`): `vibe.lock` is the authority for what is installed
+/// (PROP-008 §2.6 LOCKFILE-AUTHORITATIVE), so a bare short name resolves
+/// against it alone and the answer never leaves the file.
+///
+/// - A group-qualified ref passes through untouched.
+/// - Exactly one locked entry of that name → its `group` is spliced in.
+/// - No locked entry → "not installed", a clear local failure that does
+///   not reach the network (the common `uninstall`/`update` case where the
+///   package simply is not there).
+/// - Two locked groups under one name → the same PROP-008 §2.7 collision
+///   [`qualify`] reports.
+pub fn qualify_locked(pkgref: &PackageRef, lockfile: &Lockfile) -> Result<PackageRef> {
+    if pkgref.is_qualified() {
+        return Ok(pkgref.clone());
+    }
+    match locked_groups(lockfile, &pkgref.name).as_slice() {
+        [only] => Ok(PackageRef {
+            kind: pkgref.kind,
+            group: Some(only.clone()),
+            name: pkgref.name.clone(),
+            version: pkgref.version.clone(),
+        }),
+        [] => bail!(
+            "the short name `{name}` is not installed — no package of that name is in \
+             `vibe.lock`. This command acts only on installed packages; if it is installed \
+             under a group you did not name, give the qualified form `<group>/{name}`.",
+            name = pkgref.name,
+        ),
+        // PROP-008 §2.7 — a short name matching two locked groups is a
+        // collision the lockfile cannot break (same verdict as `qualify`).
+        many => Err(InstallError::AmbiguousPackage(render_collision(&pkgref.name, many)).into()),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -199,6 +236,74 @@ mod tests {
         assert!(
             msg.contains("`vibe install com.acme/wal`"),
             "missing the re-run hint:\n{msg}"
+        );
+    }
+
+    /// A minimal locked entry — `locked_groups` reads only `name` and
+    /// `group`, so the rest is fixture mass.
+    fn locked_pkg(group: &str, name: &str) -> vibe_core::manifest::LockedPackage {
+        toml::from_str(&format!(
+            "kind = \"flow\"\n\
+             name = \"{name}\"\n\
+             group = \"{group}\"\n\
+             version = \"0.3.0\"\n\
+             source_url = \"git@example.invalid/x.git\"\n\
+             content_hash = \"sha256:abc\"\n"
+        ))
+        .unwrap()
+    }
+
+    #[test]
+    fn qualify_locked_passes_a_qualified_ref_through() {
+        let lf = Lockfile::empty("test", "2026-01-01");
+        let r = PackageRef::parse("org.vibevm/wal").unwrap();
+        let q = qualify_locked(&r, &lf).unwrap();
+        assert_eq!(q.qualified_name(), "org.vibevm/wal");
+    }
+
+    #[test]
+    fn qualify_locked_resolves_one_locked_entry() {
+        let mut lf = Lockfile::empty("test", "2026-01-01");
+        lf.packages.push(locked_pkg("org.vibevm", "wal"));
+        let r = PackageRef::parse("wal").unwrap();
+        let q = qualify_locked(&r, &lf).unwrap();
+        assert_eq!(q.group.as_ref().unwrap().as_str(), "org.vibevm");
+        assert_eq!(q.name.as_str(), "wal");
+    }
+
+    #[test]
+    fn qualify_locked_unknown_is_not_installed_and_offline() {
+        // The common `uninstall`/`update` case: the package is simply not
+        // there. The failure must name `vibe.lock` and stay local — never
+        // reach for a registry or its index.
+        let lf = Lockfile::empty("test", "2026-01-01");
+        let r = PackageRef::parse("wal").unwrap();
+        let err = qualify_locked(&r, &lf).unwrap_err().to_string();
+        assert!(
+            err.contains("not installed"),
+            "must say not installed: {err}"
+        );
+        assert!(err.contains("vibe.lock"), "must name the lockfile: {err}");
+        assert!(
+            !err.to_lowercase().contains("registry") && !err.to_lowercase().contains("index"),
+            "must not reach for a registry/index: {err}"
+        );
+    }
+
+    #[test]
+    fn qualify_locked_collision_is_ambiguous() {
+        let mut lf = Lockfile::empty("test", "2026-01-01");
+        lf.packages.push(locked_pkg("com.acme", "wal"));
+        lf.packages.push(locked_pkg("org.vibevm", "wal"));
+        let r = PackageRef::parse("wal").unwrap();
+        let err = qualify_locked(&r, &lf).unwrap_err();
+        assert!(
+            err.downcast_ref::<InstallError>().is_some(),
+            "a collision must surface as InstallError (exit 7): {err}"
+        );
+        assert!(
+            err.to_string().contains("ambiguous"),
+            "must say ambiguous: {err}"
         );
     }
 }

@@ -474,3 +474,62 @@ fn dependencies_are_exact_pinned_after_solve() {
     let other = semver::Version::parse("0.1.0").unwrap();
     assert!(!dep.version.matches(&other), "pin should not match older");
 }
+
+/// A `kind` prefix that agrees with the manifest's declared kind solves —
+/// the validation is a no-op on agreement (PROP-008 §2.4 KIND-VALIDATION).
+#[test]
+fn kind_prefix_matching_passes() {
+    let p = MapProvider::new();
+    p.seed("wal", &manifest_minimal("flow", "wal", "0.1.0"));
+    let solver = NaiveDepSolver::new(p);
+    let graph = solver
+        .solve(&[PackageRef::parse("flow:org.vibevm/wal").unwrap()])
+        .unwrap();
+    assert_eq!(graph.packages.len(), 1);
+}
+
+/// A `kind` prefix that disagrees with the manifest's declared kind is a
+/// `KindMismatch` — never a silent pass — and the message names both kinds,
+/// the package, and cites the REQ.
+#[test]
+fn kind_prefix_mismatch_is_a_kind_mismatch() {
+    let p = MapProvider::new();
+    p.seed("wal", &manifest_minimal("flow", "wal", "0.1.0"));
+    let solver = NaiveDepSolver::new(p);
+    let err = solver
+        .solve(&[PackageRef::parse("feat:org.vibevm/wal").unwrap()])
+        .unwrap_err();
+    let msg = err.to_string();
+    match err {
+        crate::SolveError::KindMismatch {
+            package,
+            requested,
+            actual,
+        } => {
+            assert_eq!(package, "org.vibevm/wal");
+            assert_eq!(requested, vibe_core::PackageKind::Feat);
+            assert_eq!(actual, vibe_core::PackageKind::Flow);
+        }
+        other => panic!("expected KindMismatch, got {other:?}"),
+    }
+    assert!(msg.contains("feat"), "must name the requested kind: {msg}");
+    assert!(msg.contains("flow"), "must name the actual kind: {msg}");
+    assert!(
+        msg.contains("org.vibevm/wal"),
+        "must name the package: {msg}"
+    );
+    assert!(msg.contains("PROP-008#pkgref"), "must cite the REQ: {msg}");
+}
+
+/// A pkgref with no `kind` prefix is never kind-checked (the prefix is the
+/// validation signal; its absence is "check nothing").
+#[test]
+fn no_kind_prefix_is_unchecked() {
+    let p = MapProvider::new();
+    p.seed("wal", &manifest_minimal("feat", "wal", "0.1.0"));
+    let solver = NaiveDepSolver::new(p);
+    let graph = solver
+        .solve(&[PackageRef::parse("org.vibevm/wal").unwrap()])
+        .unwrap();
+    assert_eq!(graph.packages.len(), 1);
+}

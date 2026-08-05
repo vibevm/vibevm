@@ -22,6 +22,7 @@ use vibe_workspace::materialization::{DestructiveGuard, guard_destructive};
 use vibe_workspace::vibedeps;
 
 use crate::cli::UninstallArgs;
+use crate::commands::short_name;
 use crate::output;
 
 pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
@@ -33,9 +34,14 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
 
     let pkgref =
         PackageRef::parse(&args.package).with_context(|| format!("parsing `{}`", args.package))?;
-    // Identity is `(group, name)` — `vibe uninstall` needs the qualified
-    // form (PROP-008 §2.4).
-    let group = require_group(&pkgref)?;
+    // `vibe uninstall` acts on an already-installed package, so a bare
+    // short name resolves against `vibe.lock` alone — no index, no network
+    // (the lockfile is the authority for what is installed). A name that is
+    // not locked fails here with a clear "not installed", not a lookup.
+    let pkgref = short_name::qualify_locked(&pkgref, &lockfile)?;
+    let Some(group) = pkgref.group.as_ref() else {
+        bail!("`{pkgref}` resolved without a group — internal: `qualify_locked` should qualify");
+    };
 
     // The materialised slot is keyed by `(kind, name, version)`; the
     // resolved version and the package `kind` (metadata) are both read
@@ -146,14 +152,6 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
     lockfile.write(workspace.lockfile_path())?;
 
     emit_report(ctx, group, &pkgref.name, &version.to_string(), &slot)
-}
-
-/// Extract the `(group, …)` half of a pkgref's identity, rejecting an
-/// unqualified `vibe uninstall` argument (PROP-008 §2.4).
-fn require_group(pkgref: &PackageRef) -> Result<&Group> {
-    pkgref.group.as_ref().ok_or_else(|| {
-        anyhow!("package reference `{pkgref}` is not group-qualified — write `<group>/<name>`")
-    })
 }
 
 /// Remove the matching pkgref from the project manifest's

@@ -434,9 +434,10 @@ impl fmt::Display for VersionSpec {
 #[serde(try_from = "String", into = "String")]
 pub struct PackageRef {
     /// Optional `kind` prefix. Present only when the pkgref was written with
-    /// one; it is validated against the resolved manifest (a `KindMismatch`)
-    /// but never disambiguates — `(group, name)` is already unique
-    /// (PROP-008 §2.3 / §2.4).
+    /// one; the resolver validates it against the resolved manifest's
+    /// declared `kind` after resolution (PROP-008 §2.4 KIND-VALIDATION — a
+    /// mismatch is a `KindMismatch`), but it never disambiguates —
+    /// `(group, name)` is already unique (PROP-008 §2.3).
     pub kind: Option<PackageKind>,
     /// Reverse-FQDN group. `None` only for an unresolved short CLI ref; a
     /// manifest pkgref is always qualified (PROP-008 §2.6).

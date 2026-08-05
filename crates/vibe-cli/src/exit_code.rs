@@ -20,7 +20,6 @@ pub const GENERAL: u8 = 1;
 #[allow(dead_code)]
 pub const USAGE: u8 = 2;
 pub const PACKAGE_CONFLICT: u8 = 3;
-#[allow(dead_code)]
 pub const TYPE_MISMATCH: u8 = 4;
 #[allow(dead_code)]
 pub const USER_DECLINED: u8 = 5;
@@ -90,6 +89,25 @@ pub fn as_exit_code(err: &anyhow::Error) -> ExitCode {
         {
             return ExitCode::from(PACKAGE_CONFLICT);
         }
+        // PROP-008 §2.4 KIND-VALIDATION — a pkgref's `kind` prefix that
+        // disagrees with the resolved manifest's declared `kind` is a type
+        // mismatch (exit `4`). Two wrappers carry it: the bare form (the
+        // `vibe update` scoped path, wrapped in an anyhow `.context`) and
+        // vibe-install's transparent `Error::Solve` envelope (the
+        // `vibe install` path). The transparent envelope forwards `source`
+        // *past* the `SolveError`, so it is matched on its wrapper form
+        // here, not as a bare chain cause.
+        if let Some(vibe_resolver::SolveError::KindMismatch { .. }) =
+            cause.downcast_ref::<vibe_resolver::SolveError>()
+        {
+            return ExitCode::from(TYPE_MISMATCH);
+        }
+        if let Some(vibe_install::Error::Solve(vibe_resolver::SolveError::KindMismatch {
+            ..
+        })) = cause.downcast_ref::<vibe_install::Error>()
+        {
+            return ExitCode::from(TYPE_MISMATCH);
+        }
     }
     if err.downcast_ref::<vibe_core::Error>().is_some() {
         return ExitCode::from(GENERAL);
@@ -147,5 +165,31 @@ mod tests {
             },
         ));
         assert_eq!(as_exit_code(&err), ExitCode::from(PACKAGE_CONFLICT));
+    }
+
+    #[test]
+    fn kind_mismatch_maps_to_four() {
+        // The `vibe update` scoped path wraps a SolveError directly in an
+        // anyhow context; the bare form reaches `as_exit_code` here.
+        let err = anyhow::Error::from(vibe_resolver::SolveError::KindMismatch {
+            package: "org.vibevm/wal".to_string(),
+            requested: vibe_core::PackageKind::Feat,
+            actual: vibe_core::PackageKind::Flow,
+        });
+        assert_eq!(as_exit_code(&err), ExitCode::from(TYPE_MISMATCH));
+    }
+
+    #[test]
+    fn kind_mismatch_maps_to_four_through_the_install_envelope() {
+        // The `vibe install` path wraps a SolveError inside vibe-install's
+        // transparent `Error::Solve`; the exit code must survive the wrapper.
+        let err = anyhow::Error::from(vibe_install::Error::Solve(
+            vibe_resolver::SolveError::KindMismatch {
+                package: "org.vibevm/wal".to_string(),
+                requested: vibe_core::PackageKind::Feat,
+                actual: vibe_core::PackageKind::Flow,
+            },
+        ));
+        assert_eq!(as_exit_code(&err), ExitCode::from(TYPE_MISMATCH));
     }
 }

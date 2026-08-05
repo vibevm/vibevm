@@ -18,7 +18,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use anyhow::{Context, Result, anyhow, bail};
+use anyhow::{Context, Result, bail};
 use dialoguer::Confirm;
 use vibe_core::manifest::{LockedPackage, Lockfile, Manifest, SourceKind};
 use vibe_core::user_config::SlotIntegrity;
@@ -33,6 +33,7 @@ use vibe_workspace::vibedeps;
 
 use crate::cli::{InstallArgs, UpdateArgs};
 use crate::commands::install::{build_install_resolver, exact_pinned_pkgref};
+use crate::commands::short_name;
 use crate::exit_code::InstallError;
 use crate::output;
 
@@ -73,13 +74,20 @@ pub fn run(ctx: &output::Context, args: UpdateArgs, embedded_root: Option<PathBu
     }
 
     // Each named package must already be installed; re-resolve it against
-    // its original root constraint so a caret bumps within range. Identity
-    // is `(group, name)` — `vibe update` needs the qualified form
-    // (PROP-008 §2.4).
+    // its original root constraint so a caret bumps within range. `vibe
+    // update` refreshes an installed package, so a bare short name resolves
+    // against `vibe.lock` alone — no index, no network — and a name not
+    // locked fails here with a clear "not installed".
     let mut roots: Vec<PackageRef> = Vec::with_capacity(args.packages.len());
     for raw in &args.packages {
         let pkgref = PackageRef::parse(raw).with_context(|| format!("parsing `{raw}`"))?;
-        let group = require_group(&pkgref)?.clone();
+        let pkgref = short_name::qualify_locked(&pkgref, &lockfile)?;
+        let group = match pkgref.group.as_ref() {
+            Some(g) => g.clone(),
+            None => bail!(
+                "`{pkgref}` resolved without a group — internal: `qualify_locked` should qualify"
+            ),
+        };
         if lockfile.find(&group, &pkgref.name).is_none() {
             bail!(
                 "package `{group}/{}` is not installed — `vibe update` only refreshes installed \
@@ -438,14 +446,6 @@ fn emit_report(ctx: &output::Context, count: usize, bumps: &[String]) {
         bumps.len(),
         if bumps.len() == 1 { "" } else { "s" },
     ));
-}
-
-/// Extract the `(group, …)` half of a pkgref's identity, rejecting an
-/// unqualified `vibe update` argument (PROP-008 §2.4).
-fn require_group(pkgref: &PackageRef) -> Result<&Group> {
-    pkgref.group.as_ref().ok_or_else(|| {
-        anyhow!("package reference `{pkgref}` is not group-qualified — write `<group>/<name>`")
-    })
 }
 
 fn resolve_project_root(path: &Path) -> Result<PathBuf> {
