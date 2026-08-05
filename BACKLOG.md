@@ -223,32 +223,6 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
 whose surface does not exist is a P2 by construction, and the ignored test
 already written from it is the specification of the work.)*
 
-### B-001 — the §10 link tables, PROP-035's unbuilt half {#b-001}
-
-| | |
-|---|---|
-| ##B001-ANCHOR **anchor** | [`spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#OPEN-LINK-TABLES`](spec/modules/vibe-workspace/PROP-035-spec-compiler.md) — see also `##link-tables-give-back`, both `@spec/work` |
-| ##B001-LOCATOR **locator** | `crates/vibe-spec/src/link_table.rs` — the graph and a deterministic dump exist; the persisted on-disk format and the structural consumer do not |
-| ##B001-SEVERITY **severity** | P2 |
-| ##B001-DISPOSITION **disposition** | `open` |
-| ##B001-FILED **filed by** | the packages-actualization campaign, Phase D, 2026-07-29, on an owner ruling |
-
-- ##B001-WHY-NOT-NOW **Why it is filed and not built.** Phase D's boot-link repair reaches it
-  and does not need it. `#embed spec://…` resolves and splices at compile time
-  today — `render_static` calls `expand_embeds` (`crates/vibe-workspace/src/boot_artifacts.rs:268`),
-  under two tests — and an `@spec://` pointer that costs a lookup is strictly
-  better than the confidently wrong relative path it replaces. Building a new
-  layer mid-refactor would create code the refactor then has to refactor, which
-  is the owner's stated reason for deferring it.
-- ##B001-WHAT-IT-IS **What it actually is.** The vtable of the structural / JIT executor of
-  PROP-035 §13 — a prebuilt index so a late-bound reader dispatches instead of
-  searching. We do not run that mode. It is an optimisation of navigation cost,
-  not a precondition of correctness.
-- ##B001-WHEN-IT-BECOMES-URGENT **The trigger that promotes it.** When `@spec://` pointers in the boot
-  lane are measured to cost a reader more than the lane saves — or when the §13
-  structural loader is opened, whichever comes first. Either makes the searching
-  real rather than hypothetical.
-
 ### B-003 — the Go floor gates a directory named `dirty` {#b-003}
 
 | | |
