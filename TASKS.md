@@ -82,17 +82,55 @@ already built.
       as their entire evidence a blob shared with other verdicts, and one of
       them was measurably false while the campaign's own per-fact pass on the
       same claim said so. Three questions are put and none is answered here.
+      **Its second question now has a measured unit cost** — three facts judged
+      to that standard took fifteen evidence items, eleven of them `file:line`.
+
+### Continued the same slice, 2026-08-06 (second sitting)
+
+- [x] `chore(campaign)`: **the corpus rescanned first, before any number.** The
+      cache could not have known about a 92-verdict document edited the previous
+      sitting, so all three measurement commands were answering about the cache.
+      Three facts came due and were re-judged with evidence of their own, clause
+      by clause — which is also the P1's cost sample. One of them turned out to
+      carry a verdict stamped five hours *before* the text it describes was
+      written.
+- [x] `docs(design)` + `chore(specmap)`: **[B-019](б) has a design** —
+      [`command-nodes.md`](spec/design/command-nodes.md). Two measurements cut
+      the price: the map's item kind is an open string with nothing matching on
+      it, and `explain` has no closed set of target kinds at all, so a node
+      whose symbol is the invocation path answers through existing machinery.
+      Recognition is by clap's derive rather than an author's marker, because a
+      marker a new subcommand can be added without is a norm with no checker.
+- [x] `feat(flows)`: **[B-032] closed.** Choosing the planning carrier is a rule
+      now, seated where placement is decided, with the composition half in the
+      plan's own format and one pointer between them. The threshold stays
+      qualitative on purpose. Citations moved with the row.
+- [x] `docs(backlog)` ×3: **three live rows amended with measurement.** B-047's
+      proposed home for the surface norm does not exist — the four-layer model
+      is absent from the discipline package and lives only in files designed to
+      be rewritten or thrown away. B-046 gains the question that comes before
+      its three options: nothing in a manifest says a package is an AI-Native
+      language. B-019's part-(а) count moved from 915/915 to 916/932, and that
+      is growth, not regression.
+- [x] `docs(audit)` ×3: **`-04`, `-14` and `-10` re-measured, and every number
+      moved.** 55 dead-code sites not 57, and "52 carry a comment" reproduces
+      under no reading — but the actionable set is now exact at fifteen silent
+      ones. The index-schema question turns out not to be about the gate at all,
+      which costs zero config lines; it is about two hand-written types leaving
+      their crate. And the doc sweep's count is wrong for the third time (234
+      over 38 files) against a directory unchanged since July.
 
 ### What the next session picks up, in order
 
-1. The remaining live backlog rows that are **not** owner-parked: **B-019**
-   (b: a command node in the map; c: the error-variant node, whose systems
-   boundary the owner asked to be decided before implementation), **B-032**
-   (the planning-granularity protocol), **B-046** (multi-language composition —
-   three options, the owner's pick), and **B-047**'s remaining two items now
-   that the census exists.
-2. `AUDIT` `-04` (one ruling about an unfinished TUI subsystem, not 57
-   judgements) and `-14` (the index's wire contract, owner-court).
+1. **B-019(б) slice 2 and 3** — nesting (68 subcommands) and the `explain`
+   acceptance, per [`command-nodes.md`](spec/design/command-nodes.md) `#cut`.
+2. **The owner's court, now with material under each:** B-019(в)'s systems
+   boundary · B-046's three options *plus* the typed-marker question under them
+   · B-047's split item (give the four-layer model a home, then refine it) ·
+   `AUDIT` `-04` (one TUI ruling + fifteen named sites) · `-14` (whether the
+   index's wire types leave `vibe-index`) · `-10` (the editorial ruling, with
+   its per-file context classification now built).
+3. The remaining owner-parked rows are unchanged.
 
 ---
 
