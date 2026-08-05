@@ -1,0 +1,25 @@
+{
+  "batch": "G6-prop005-schema",
+  "cluster": "host",
+  "files": {
+    "spec/modules/vibe-index/PROP-005-package-index.md": {
+      "ENTRY-SCHEMA": {
+        "v": "confirmed",
+        "ev": [
+          "RESTATED 2026-08-05 because the fact's own text moved, and the move deleted a false clause rather than rewording one. It had asserted «JTD schema lives in `crates/vibe-index/schemas/index-entry.jtd.json`». Measured: that directory does not exist, no file of that name exists anywhere in the tree (`find . -name 'index-entry*'` outside target/ and .git/ returns nothing), and `find crates/vibe-index -name '*.jtd.json'` returns nothing.",
+          "What replaced it is checkable and checked: the section is the schema, and the code already treated it that way — crates/vibe-index/src/types/entry/mod.rs opens with «Schema pinned in PROP-005 §2.6» and carries a `specmark::scope!` edge to this very anchor.",
+          "The contrast the new text draws also resolves: the root `schemas/` holds seven `*.jtd.json` wire-report contracts, and `cargo xtask check-codegen` is a panel step that byte-compares their generated Rust — so the arrangement the clause says this entry does NOT have is one the tree demonstrably does have elsewhere.",
+          "The field list the anchor governs is unchanged; only the provenance sentence moved."
+        ]
+      },
+      "RUST-TYPES": {
+        "v": "confirmed",
+        "ev": [
+          "RESTATED for the same cause: it said the types are «derived from the JTD schemas under `crates/vibe-index/schemas/`», and nothing is derived from anything — there are no schemas to derive from.",
+          "Checked positively: crates/vibe-index/src/types/ exists and holds entry/ (mod, aggregate, content, relations, tests), kinds.rs, repomd.rs — hand-written Rust, none of it under any generated/ tree and none of it produced by `cargo xtask codegen`, whose two output trees are crates/vibe-wire/src/generated/ and the specmap crate's.",
+          "The new sentence adds the consequence rather than only the correction: with no schema, the text is the contract and the compiler checks nothing between them. That is the state, and the question of whether it SHOULD be the state is recorded as an open audit finding rather than settled here."
+        ]
+      }
+    }
+  }
+}
