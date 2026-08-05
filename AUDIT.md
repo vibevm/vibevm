@@ -655,10 +655,23 @@ green after); campaign corpus 11 188 / 190 / 44 — 98.0 %, exhaustive
   which is what `cargo outdated` was there for. Re-test the tool at the
   next audit; if it learns to resolve excluded-workspace path-deps, the
   row reopens as fixed rather than accepted.
-- **-04 open:** needs a triage pass — which `dead_code` allows guard
-  work-in-progress TUI surfaces (keep, with a reason) and which cover
-  genuinely dead code (delete the code). Escalate or accept next run;
-  do not let it ride.
+- **-04 open, and re-measured 2026-08-05 into a much cheaper shape.** The
+  row read as 57 scattered judgements; it is not. Of the src-side
+  `#[allow(dead_code)]` sites (57 today, down from the recorded 62),
+  **41 sit in `crates/vibe-cli/src/commands/`, and they cluster in the
+  TUI**: `tree/tui/theme/mod.rs` 8, `prefs/tui/registry.rs` 5,
+  `tree/tui/ui/card.rs` 3, `tree/tui/settings.rs` 3, then twos across
+  `ui/text_field`, `ui/radio_group`, `ui/msg_dialog`, `ui/group`. So the
+  triage is **one ruling about a work-in-progress subsystem** plus a sweep
+  of roughly sixteen scattered others — not a 57-item walk. 52 of the
+  vibe-cli sites already carry a comment line directly above them.
+  **The SARIF route was considered and does not apply:** the engine ships
+  `lint-suppression-needs-reason`, but it consumes `LintDiagnosis` facts
+  with `suppressed: true`, and an `#[allow]`ed rustc lint is never emitted
+  at all — a suppressed lint is invisible to the compiler's output by
+  construction, which is exactly why this row needs eyes rather than a
+  gate. Recorded so the next reader does not re-derive the dead end.
+  Escalate or accept next run; do not let it ride.
 - **C-group — no new findings.** C1/C2: today's F-279/B-013 closure
   removed the known stale coordinates (dead v0.5.0 codegen route, README
   ships-line, schema metadata); PROP-014's two schema anchors re-checked
