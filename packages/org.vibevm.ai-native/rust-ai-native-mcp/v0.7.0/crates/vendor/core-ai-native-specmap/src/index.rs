@@ -52,10 +52,11 @@ fn verb_key(e: &crate::generated::specmap::Edge) -> u8 {
     }
 }
 
-/// Build the index for the tree under `root` with the built-in Rust
-/// scanner. Pure function of the tree: same tree → same value.
+/// Build the index for the tree under `root` with the project's default
+/// scanner set ([`crate::scanner::DefaultScanner`] — Rust plus JTD schemas).
+/// Pure function of the tree: same tree → same value.
 pub fn build(root: &Path, cfg: &Config) -> Specmap {
-    build_with_scanner(root, cfg, &crate::scanner::RustScanner)
+    build_with_scanner(root, cfg, &crate::scanner::DefaultScanner::new())
 }
 
 /// Build the index with an explicit code scanner (the D3 seam): the
@@ -338,7 +339,7 @@ fn load_committed(root: &Path) -> Option<Specmap> {
 /// Emits the drift report against the previously-committed index to
 /// stderr before overwriting.
 pub fn write(root: &Path, cfg: &Config) -> Result<(PathBuf, Summary)> {
-    write_with_scanner(root, cfg, &crate::scanner::RustScanner)
+    write_with_scanner(root, cfg, &crate::scanner::DefaultScanner::new())
 }
 
 /// [`write`] with an explicit code scanner (the D3 seam).
@@ -365,7 +366,7 @@ pub fn write_with_scanner(
 /// signals (revision bumps → suspects; unbumped hashes) are visible at
 /// the gate itself.
 pub fn check(root: &Path, cfg: &Config) -> Result<std::result::Result<Summary, String>> {
-    check_with_scanner(root, cfg, &crate::scanner::RustScanner)
+    check_with_scanner(root, cfg, &crate::scanner::DefaultScanner::new())
 }
 
 /// [`check`] with an explicit code scanner (the D3 seam).

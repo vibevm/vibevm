@@ -69,3 +69,50 @@ impl CodeScanner for CompositeScanner<'_> {
         (items, edges, warnings)
     }
 }
+
+/// The project's default scanner set — every built-in language the engine
+/// knows, composed through [`CompositeScanner`]. The single construction
+/// site [`crate::index::build`] / [`write`](crate::index::write) /
+/// [`check`](crate::index::check) share, so the three entry points cannot
+/// diverge on which scanners feed the index (a divergence of two
+/// implementations of one law is silent by nature, and this project has
+/// already paid for one). Today: Rust (`#[spec]` tags via [`RustScanner`])
+/// and JTD schemas (`metadata.spec` via [`crate::jtd::JtdScanner`]). The
+/// JTD scanner is a no-op when
+/// [`schema_roots`](crate::config::Config::schema_roots) is empty, so a
+/// project with no schema roots is byte-stable against the Rust-only scan.
+pub struct DefaultScanner {
+    rust: RustScanner,
+    jtd: crate::jtd::JtdScanner,
+}
+
+impl DefaultScanner {
+    /// The shared construction site. Stateless scanners — the policy is read
+    /// at `scan` time — so construction takes no [`Config`].
+    pub fn new() -> Self {
+        Self {
+            rust: RustScanner,
+            jtd: crate::jtd::JtdScanner,
+        }
+    }
+}
+
+impl Default for DefaultScanner {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl CodeScanner for DefaultScanner {
+    fn id(&self) -> &'static str {
+        "default"
+    }
+    fn scan(&self, root: &Path, cfg: &Config) -> (Vec<CodeItem>, Vec<Edge>, Vec<Warning>) {
+        // Compose through `CompositeScanner` at call time — the borrows are
+        // valid for the call, so no self-referential reference is stored on
+        // the struct. The index sorts and dedups downstream, so the
+        // contribution order never leaks into the committed bytes.
+        let scanners: Vec<&dyn CodeScanner> = vec![&self.rust, &self.jtd];
+        CompositeScanner::new(scanners).scan(root, cfg)
+    }
+}

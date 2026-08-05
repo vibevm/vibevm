@@ -35,6 +35,7 @@ use serde::Deserialize;
 /// assert_eq!(cfg.spec_roots, vec!["spec".to_string()]);
 /// assert!(cfg.root_spec_docs.is_empty());
 /// assert!(cfg.spec_exclude.is_empty());
+/// assert!(cfg.schema_roots.is_empty());
 /// // Quality thresholds default to the start placeholders; both gate off at 0.
 /// assert_eq!(cfg.max_connections_per_item, 3);
 /// assert_eq!(cfg.max_section_lines, 120);
@@ -87,6 +88,17 @@ pub struct Config {
     ///
     /// Absent ⇒ empty ⇒ the behaviour of a config that never had the key.
     pub spec_exclude: Vec<String>,
+    /// JTD schema trees walked for generator-input units
+    /// (`<root>/**/*.jtd.json`) — the taggable surface
+    /// `##RULE-GENERATED-CODE-IS-EXCLUDED` (PROP-014) points at: a `.jtd.json`
+    /// is what a code generator *reads*, so the traceability tag belongs on
+    /// the schema, not on the `/generated/` code it produces. Each schema
+    /// file's root object is one `schema` unit and every `definitions` entry
+    /// its own `schema-def` unit; the `metadata.spec` map ("verb → URI")
+    /// mirrors `#[spec(verb = "…")]` and mints the unit's edges. Empty (the
+    /// default) ⇒ the schema scanner contributes nothing ⇒ the index of a
+    /// project with no schema roots is byte-stable against the Rust-only scan.
+    pub schema_roots: Vec<String>,
     /// Installed packages' spec trees that participate in **resolution
     /// only** (PROP-014 §7.1): their units suppress dangling-edge warnings
     /// and feed queries, but are never serialised into this project's
@@ -160,6 +172,7 @@ impl Default for Config {
             spec_roots: vec!["spec".into()],
             root_spec_docs: Vec::new(),
             spec_exclude: Vec::new(),
+            schema_roots: Vec::new(),
             external_specs: Vec::new(),
             exempt: Vec::new(),
             dispositioned: Vec::new(),
@@ -400,6 +413,21 @@ mod tests {
         )
         .unwrap();
         assert_eq!(cfg.spec_exclude, vec!["spec/WAL.md", "**/INDEX.md"]);
+    }
+
+    #[test]
+    fn schema_roots_defaults_empty_and_reads_from_toml() {
+        // Absent key ⇒ empty list ⇒ the schema scanner is a no-op (the
+        // pre-field behaviour, byte-stable).
+        assert!(Config::default().schema_roots.is_empty());
+        // The key reads. Under `deny_unknown_fields` this same toml was a
+        // hard error before the field existed, so a successful parse is
+        // itself the proof the field is wired into the schema.
+        let cfg: Config = toml::from_str(
+            "namespace = \"demo\"\nschema_roots = [\"schemas\", \"packages/*/schemas\"]\n",
+        )
+        .unwrap();
+        assert_eq!(cfg.schema_roots, vec!["schemas", "packages/*/schemas"]);
     }
 
     #[test]
