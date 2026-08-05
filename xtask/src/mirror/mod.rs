@@ -33,6 +33,7 @@
 //! Auth is the maintainer's per-host SSH keys in the agent; `mirrors.toml`
 //! carries only URLs, no secrets.
 
+mod failure;
 mod probe;
 
 use std::path::Path;
@@ -41,6 +42,8 @@ use std::process::Command;
 use anyhow::{Context, Result, bail};
 
 use crate::repo_root;
+
+use failure::{FailureKind, PushFailure, failure_summary};
 
 // Re-export the probe module's surface (read by `xtask health --mirrors` and
 // `verify`) so callers keep the stable `mirror::SyncState` / `mirror::sync_report`
@@ -290,12 +293,12 @@ fn fan_out(root: &Path, targets: &[Target]) -> Result<()> {
                             refresh_tracking(root, &remotes, &t.url, r);
                         }
                     } else {
-                        eprintln!(
-                            "  FAIL   {} {r} -- {}",
-                            t.name,
-                            String::from_utf8_lossy(&out.stderr).trim()
-                        );
-                        failures.push(format!("{}:{r}", t.name));
+                        let stderr = String::from_utf8_lossy(&out.stderr);
+                        eprintln!("  FAIL   {} {r} -- {}", t.name, stderr.trim());
+                        failures.push(PushFailure {
+                            target: format!("{}:{r}", t.name),
+                            kind: FailureKind::classify(&stderr),
+                        });
                     }
                 }
             }
@@ -307,12 +310,7 @@ fn fan_out(root: &Path, targets: &[Target]) -> Result<()> {
         }
     }
     if !failures.is_empty() {
-        bail!(
-            "mirror: {} push(es) failed -- a non-fast-forward means a target diverged \
-             (someone wrote it directly); reconcile by hand, never --force: {}",
-            failures.len(),
-            failures.join(", ")
-        );
+        bail!("{}", failure_summary(&failures));
     }
     println!("mirror: all push targets synced.");
     Ok(())

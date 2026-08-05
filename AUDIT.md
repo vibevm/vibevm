@@ -116,6 +116,35 @@ De-rotted instead — three exact substitutions per fixture: `group =
 **Filed from the fix as `-15`:** the diagnostic that made this expensive
 to read.
 
+### 2026-08-05-16 · C · P2 · fixed 2026-08-05 (same day it was met)
+
+**The mirror fan-out reported an unreachable host as a diverged one.** Every
+failed push, whatever its cause, produced one summary: «a non-fast-forward
+means a target diverged (someone wrote it directly); reconcile by hand, never
+--force». Met live while rolling this session out — ssh to `github` is
+intercepted at `127.92.0.49`, the connection is closed before any ref is
+compared, and the tool announced a divergence and sent the operator to
+reconcile a rewrite that had not happened.
+
+The same defect class as `-15`, one command over: **a message may be
+technically about the right event and still name the wrong cause, and the cost
+is the reader's next hour.** Here it is worse than merely unhelpful — the
+prescribed remedy for a divergence is a hand reconciliation of two histories,
+which is a dangerous thing to go looking for when nothing diverged.
+
+**Fixed:** the failure kind is classified from git's own stderr and kept
+per-target, and the summary names each cause only for the targets it applies
+to. Divergence keeps its wording and its `never --force`; an unreachable host
+reads «the host never answered; nothing local diverged and there is nothing to
+reconcile — fix the connection, then re-run». A mixed run — one of each — is
+the case the single sentence could not express at all, and it now reads
+correctly; there is a test for exactly that.
+
+The classifier defaults to UNREACHABLE and treats only git's stable rejection
+wording as divergence, because the two errors are not symmetric: calling a real
+divergence «unreachable» costs a re-run, while calling an unreachable host
+«diverged» sends someone to rewrite history.
+
 ### 2026-08-05-15 · C/A3 · P2 · fixed 2026-08-05 (same day it was filed)
 
 **A missing required manifest field is reported as a TOML syntax
