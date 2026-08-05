@@ -132,9 +132,24 @@ tax multiplied by the number of sessions the project will ever run. @spec/done
 
 | File | Budget | When over |
 |------|--------|-----------|
-| ##ROW-BUDGET-BOOT-FILE Boot file (always loaded) @impl/done | ≤ 500 tokens @impl/done | cut; move detail into flow docs and cite @impl/done |
+| ##ROW-BUDGET-BOOT-FILE Boot file, authored (always loaded) @impl/done | ≤ 500 tokens @impl/done | cut; move detail into flow docs and cite @impl/done |
 | ##ROW-BUDGET-WAL WAL / continuation state @impl/done | ≤ 3000 tokens @impl/done | collapse completed items to one line each @impl/done |
 | ##ROW-BUDGET-MODULE-SPEC One module spec document @impl/done | ≤ 5000 tokens @impl/done | split into submodules @impl/done |
+
+##BUDGETS-GOVERN-AUTHORED-DOCUMENTS-ONLY Every budget above governs an
+**authored** document. A **generated** artifact carries none — and the proof
+is in the last column: "cut", "collapse" and "split" are instructions to a
+writer, and a compiler's output has no writer to receive them. Its size is
+whatever the resolution graph says the session must have, so trimming it means
+changing what the project declared it needs, which is a different decision in a
+different file. @impl/done
+
+##COMPILING-INTO-THE-LANE-IS-NOT-A-BUDGET-BREACH It follows that a project
+which *compiles* its boot lane out of installed sources is not in breach when
+that lane grows, and "the artifact is over budget" is not a finding against it.
+The cost that stays real is the **session's** context — a live measurement
+about one run, not a static rule about one file, and this table is not where it
+is settled. @impl/done
 
 ##rule-of-thumb-500-tokens-is-a-page Rule of thumb: 500 tokens is roughly 375 English words — one page. @impl/done
 

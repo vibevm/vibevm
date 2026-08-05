@@ -3549,8 +3549,12 @@ aspirational — and every one is still live for the phases that remain.
   *(ii)* **A generated boot artifact carries no token budget** — recorded at
   [PROP-009 `##ARTIFACTS-CARRY-NO-TOKEN-BUDGET`](../modules/vibe-workspace/PROP-009-loading-model.md#artifacts)
   — which removes the only objection to `#embed`, and leaves the package's own
-  budget row owed the same scope clarification at its next release
-  (`BACKLOG.md` B-002). *(iii)* PROP-035 §10's link tables are **not** a
+  budget row owed the same scope clarification at its next release (filed then
+  as `BACKLOG.md` B-002). **The «next release» half of that sentence was wrong
+  and was paid for on 2026-08-05:** the owner's 2026-07-26 policy already had
+  package prose edited IN PLACE with no version bump, so the clarification
+  waited nine days on a release that was never coming. It landed as an ordinary
+  in-place edit. *(iii)* PROP-035 §10's link tables are **not** a
   precondition and are filed as `BACKLOG.md` B-001: they are the vtable of the
   §13 structural executor, a mode this project does not run, and an `@spec://`
   address that costs a lookup is strictly better than the confidently wrong

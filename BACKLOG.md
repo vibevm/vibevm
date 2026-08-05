@@ -283,22 +283,6 @@ already written from it is the specification of the work.)*
   rather than skipping is the discipline behaving correctly: it refuses to go
   green by omission.
 
-### B-002 — the budget row still binds generated artifacts {#b-002}
-
-| | |
-|---|---|
-| ##B002-ANCHOR **anchor** | `spec://org.vibevm.world/addressable-specs/authoring-rules#ROW-BUDGET-BOOT-FILE` |
-| ##B002-LOCATOR **locator** | the row states one budget for «the boot file» and does not distinguish an authored document from a generated one |
-| ##B002-SEVERITY **severity** | P2 |
-| ##B002-DISPOSITION **disposition** | `open` |
-| ##B002-FILED **filed by** | the packages-actualization campaign, Phase D, 2026-07-29 |
-
-- ##B002-WHY-HERE **Why here rather than fixed.** The host side of this was ruled by the
-  owner and is recorded in PROP-009 §2.3: a generated boot artifact carries no
-  token budget. The package's own row is owed the same scope clarification, and
-  changing it is a release event — a published version and a re-vendor — so it
-  waits for the release batch rather than riding a document repair.
-
 ### B-004 — a fact inside a fenced block carries no anchor, so whether it is judged is luck {#b-004}
 
 | | |
