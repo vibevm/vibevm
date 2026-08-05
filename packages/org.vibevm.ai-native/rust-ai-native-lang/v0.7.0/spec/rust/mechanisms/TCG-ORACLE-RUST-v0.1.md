@@ -205,15 +205,18 @@ session: @impl/done
 ##GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY Graceful exit is the LSP
 dance — `shutdown` request, `exit` notification — with kill-on-drop as
 the backstop; the no-zombie property is test-asserted (spike-proven:
-clean exit code 0, no surviving pid). *Specified, not built (→ B-044) — the
-mechanism, not the proof. The dance ships (`shutdown` at
-`crates/rust-ai-native-tcg-bridge/src/oracle.rs:356`) and so does the
-backstop (`Drop for ChildTransport` → `kill()` then `wait()`,
-`client.rs:346-350`). What does not exist is the assertion: the live test
-checks only that `shutdown()` returned (`tests/live_oracle.rs:116`), and no
-exit-code check and no surviving-pid or process-table probe exists in this
-stack's test surface. «Test-asserted» and «spike-proven» describe a spike,
-not a test in the tree.* @impl/plan
+clean exit code 0, no surviving pid). *Built 2026-08-05 — the proof caught up
+to the mechanism, which had shipped long before it. The dance ships
+(`shutdown` at `crates/rust-ai-native-tcg-bridge/src/oracle.rs:356`) and so
+does the backstop (`Drop for ChildTransport` → `kill()` then `wait()`,
+`client.rs:346-350`). The assertion now ships too:
+`dropping_the_oracle_kills_the_child_process_no_zombie`
+(`tests/live_oracle.rs`) reads the child PID through
+`ChildTransport::child_pid()`, proves that process is alive, drops the wrapper
+— deliberately NOT the graceful path, so the kill-on-drop backstop is what is
+exercised — and polls the OS process table until the PID is gone, treating a
+recycled PID as dead by comparing `start_time`. Between 2026-08-04 and this
+build the sentence was a promise; it is now a description.* @impl/done
 
 ##PATHS-BECOME-URIS-AFTER-PREFIX-STRIPPING Paths become URIs only after
 verbatim-prefix stripping (`\\?\` breaks child argv and URI builders —
