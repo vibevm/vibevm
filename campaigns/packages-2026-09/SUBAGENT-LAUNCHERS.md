@@ -131,8 +131,12 @@ mkdir -p "$(dirname "$LOG")"
     --output-format stream-json --verbose \
     --allowedTools "Read" "Glob" "Grep" "Edit" "Write" \
       "Bash(echo:*)" "Bash(cargo check:*)" "Bash(cargo test:*)" "Bash(cargo fmt:*)" \
-  ) > "$LOG" 2>&1 &
+  ) > "$LOG" 2>&1
 ```
+
+**No trailing `&`** — the harness backgrounds the call, and its completion
+notification is then the worker's, not a detached wrapper's
+(`#fact-the-spawn-form-costs-the-notification`).
 
 The second lane is identical with `claudez2` and its own worktree. Headless
 `-p` auto-denies anything not in `--allowedTools` — no git verbs in the
@@ -490,3 +494,42 @@ one `{"subtype":"thinking_tokens"}` line **per token** — a two-minute-old
 log is already megabytes and grows while the worker only thinks. Judge by
 the last non-telemetry event, not by bytes:
 `grep -v '"subtype":"thinking_tokens"' "$LOG" | tail -c 300`. @impl/done
+
+##fact-the-result-event-is-the-terminal-signal **The stream-json `result`
+event is the completion signal that cannot be forged, and it outranks both
+alternatives (2026-08-05):** `grep -c '"type":"result"' "$LOG"` goes from 0 to
+1 exactly when the run ends, and the line carries `duration_ms`. It beats the
+marker grep, which matches the packet's own text from the first line
+(`#fact-the-status-grep-matches-the-packet`), and it beats waiting for
+`TASK-DONE`, which a worker may simply never emit: measured this session, a
+worker that produced a correct 178-line deliverable and a complete report
+echoed **one** `PROGRESS` for a 498-second run and **no** `TASK-DONE` at all.
+Heartbeats are best-effort by nature — the packet can mandate them and the
+weak writer still drops them — so the poll reads, in order: the `result`
+event for «is it over», the last non-telemetry event for «what is it doing»,
+and the report file on disk for «did it deliver». @impl/done
+
+##fact-the-spawn-form-costs-the-notification **The spawn form printed in
+`#e-spawn` defeats the completion notification it is supposed to produce
+(2026-08-05):** the trailing `&` inside `( … ) > "$LOG" 2>&1 &` detaches the
+worker from the harness task, so the task exits within a second and the boss
+gets a «completed» notification for the *wrapper*, never for the run.
+Measured back to back in one session: the `&` form gave a notification 1 s
+after spawn while the worker ran 8 more minutes; the same command **without**
+the trailing `&`, backgrounded by the harness instead of by the shell, gave a
+notification at the worker's real end. **Drop the `&` and let the harness own
+the backgrounding** — then `##WAL-C-COMPLETION-SIGNAL`'s «notification plus
+report file» is a signal the boss actually receives, instead of one it has to
+poll for. @impl/done
+
+##fact-finalisation-is-coupled-to-worktree-removal **Report archiving silently
+depends on the worktree being removable (2026-08-05):** `#obs-meta` puts the
+move of `WORKER-REPORT-<id>.md` into the archive at finalisation, and in
+practice finalisation happens when the boss tears the worktree down — so a
+worktree that cannot be removed (handle-locked on Windows, the ordinary case)
+takes its report with it. Measured: `.wt/` held **ten** leftover directories
+against **two** worktrees git still tracked, and nine reports; seven had been
+archived anyway and **two never were** (`P-GOFLAG-RULE`,
+`V2-VENDOR-SCANNERS`), so the archive was missing a report for a task that
+looked complete. Archive the report the moment the run ends, as its own step,
+before any cleanup — the two operations have no reason to be one. @impl/done
