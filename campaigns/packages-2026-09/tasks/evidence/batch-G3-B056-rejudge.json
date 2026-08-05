@@ -1,0 +1,88 @@
+{
+  "batch": "G3-B056-rejudge",
+  "cluster": "host",
+  "files": {
+    "spec/design/multiple-sources-and-plugins.md": {
+      "rulings-left": {
+        "v": "confirmed",
+        "ev": [
+          "Left to the build: the N-input fold, the flag's threading, a cycle guard and a dedup for the fold, and enumeration in the resolver.",
+          "All four landed: merge.rs:169 fold_sources; merge.rs:197-203 the any_replace flag; use_graph.rs:84 source_fold_order plus pipeline/fold.rs:97 the include guard; resolver/glob.rs:60 expand_pattern.",
+          "RE-DERIVED after the build, not inherited: the prior verdict judged a plan and carried its own SELF-JUDGED caveat asking a later reviewer to re-derive. The status flip @spec/plan -> @impl/done is earned by four addresses that now exist and are named above."
+        ]
+      },
+      "fold-signature": {
+        "v": "confirmed",
+        "ev": [
+          "One new entry point fold_sources(contract, &[sources]), with fold_source(c, s) kept as the degenerate fold_sources(c, &[s]) so every existing fold test is the regression harness.",
+          "merge.rs:169 fold_sources; merge.rs:242-244 fold_source delegating to fold_sources(contract, &[source]); test fold_source_equals_fold_sources_singleton at merge.rs:484 byte-compares the two entry points across the matched, add, contract-only and source-only branches.",
+          "The kept name did the job it was kept for: the prior verdict called the existing tests a real regression harness for a generalisation not yet written, and the singleton-equality test is that harness made explicit."
+        ]
+      },
+      "fold-per-section": {
+        "v": "confirmed",
+        "ev": [
+          "The per-section rule over a sequence: S(a) empty -> contract section whole; any member carrying :replace -> drop the contract text and emit the members in order; otherwise contract text minus every fact any member redeclares, then the members.",
+          "merge.rs:194 the empty branch; merge.rs:197-199 any_replace; merge.rs:200-203 the replace branch; merge.rs:204-212 the add branch via overridden_facts and text_without; merge.rs:224-234 the source-only append. Tests merge.rs:408 (add order), :421 (replace on the second source), :438 (union of overridden facts), :502 (empty slice).",
+          "Each of the three branches the design named maps onto an arm that now exists, and each arm carries its own test rather than sharing one."
+        ]
+      },
+      "fold-per-section-delta": {
+        "v": "confirmed",
+        "ev": [
+          "The delta from the single-source law is two words, 'any' and 'every': one source becomes a sequence, and fact-override becomes a union over that sequence.",
+          "'any': merge.rs:197 members.iter().any(...) so one :replace suffices, pinned by fold_sources_replace_on_second_keeps_both_sources at merge.rs:421. 'every': the union at merge.rs:147-151 inside overridden_facts, applied at merge.rs:207, pinned by fold_sources_add_union_of_overridden_facts at merge.rs:438.",
+          "The claim that nothing else about the section rule moves survives the build: the branch structure of the pre-B-056 fold is unchanged, and the two words are the only widenings."
+        ]
+      },
+      "fold-override-is-a-union": {
+        "v": "confirmed",
+        "ev": [
+          "The dropped fact set is the union over all sources; a fact redeclared by two sources at once is not a fold problem, because both redeclarations survive into the merged text and the anchor-uniqueness recheck fails on the duplicate.",
+          "merge.rs:142-158 overridden_facts, union by flat_map into a HashSet at :147-151, applied at :207; the surviving-duplicate half at gate.rs:54 first_duplicate, pinned end to end by a_fact_duplicate_between_two_sources_fails_the_build at pipeline/fold_tests.rs:182.",
+          "This fact's reliance on the post-merge gate SURVIVES where its neighbour's did not, and the difference is exactly the gate's rule: first_duplicate fires when a FACT sits on either side of the repeat (gate.rs:64), so a doubly-redeclared fact trips it. What does not trip it is a heading-only repeat, which is fold-source-only-collision's business and not this fact's."
+        ]
+      },
+      "fold-source-only-collision": {
+        "v": "confirmed",
+        "ev": [
+          "A source-only anchor declared by two sources IS an error, and the asymmetry against a source section matching a contract anchor is deliberate: declaration is idempotent, definition is not.",
+          "The catcher is pipeline/fold.rs:173 first_source_section_collision -> CompileError::DuplicateSourceSection (pipeline.rs:60-66), detector at pipeline/fold.rs:211 flagging two or more distinct members per source-only anchor; test two_sources_defining_one_source_only_section_fails_even_without_a_fact at pipeline/collision_tests.rs:24, with the legal mirror at :61 and the inner-level naming at :113.",
+          "EVIDENCE REPLACED, and the replacement is the point of this re-judgement. The claim is unchanged and still holds, but the prior verdict named doctree.rs duplicate_anchors() as the mechanism that fails, and that mechanism does NOT fire here: gate.rs:64 tolerates a pure heading-vs-heading repeat by design, pinned by a_repeated_section_heading_is_not_flagged at gate.rs:131. A verdict whose claim survives on different evidence is not a re-affirmation, and this row is the reason the ten were re-read rather than re-stamped."
+        ]
+      },
+      "fold-order-is-declaration-order": {
+        "v": "confirmed",
+        "ev": [
+          "Order is declaration order, a glob is sorted before it joins, and the composed document is therefore a pure function of (tree, lockfile) rather than of filesystem enumeration order.",
+          "use_graph.rs:200-217 source_addresses walks Directives::parse top to bottom and flattens each expansion in place; resolver/glob.rs:109 sorts by (name, slot) before addresses are built, with dedup at :113. Tests: sources_fold_in_declaration_order_not_alphabetical at pipeline/fold_tests.rs:120, source_fold_preserves_declaration_order at use_graph.rs:457, and g2_sort_independent_of_creation_order at resolver/glob.rs:282.",
+          "The determinism argument the prior verdict accepted on the strength of a ruling plus a lockfile is now carried by code: the sort exists, and a test creates the slots in the wrong order on purpose to prove the result does not follow creation order."
+        ]
+      },
+      "recursion-what-to-extend": {
+        "v": "confirmed",
+        "ev": [
+          "The fold needs its own traversal over #source edges with the same three colours and the same is_contract predicate, reusing the existing walker rather than writing a second one.",
+          "use_graph.rs:84 source_fold_order calls the SAME visit body at use_graph.rs:102 that topo_order_from (:57) uses, parameterised by EdgeKind (:46-51); is_contract is the one predicate at :223. Pinned by source_edges_and_use_edges_do_not_mix at use_graph.rs:526, with the cycle rulings at :482 (contract cycle admitted) and :501 (impl-touching cycle rejected).",
+          "The one-implementation requirement was the fact's whole point and it is met literally: there is one visit, not two walkers agreeing by convention. The gap the prior verdict measured between use_graph.rs and merge.rs is closed by parameterisation rather than by a copy."
+        ]
+      },
+      "plugins-only-enumeration-is-new": {
+        "v": "confirmed",
+        "ev": [
+          "The glob adds exactly one capability: the resolver enumerating installed packages by pattern instead of resolving one coordinate, with everything downstream being the sequence fold.",
+          "resolver/glob.rs:60 expand_pattern (slot scan at :84, name match at :141, membership = name matched AND the document present at :121-128, sort at :109); downstream the members are flattened by source_addresses (use_graph.rs:196) and folded by the ordinary fold_source_closure. Tests g1_two_matches_in_name_order at resolver/glob.rs:264 and a_glob_source_folds_all_its_members_in_sorted_order at pipeline/tests.rs:344.",
+          "The claim's sharp edge - that nothing downstream is new - held: the glob path reaches the fold through the same edge reader as a pointed address, and no fold branch was added for it."
+        ]
+      },
+      "cost-order": {
+        "v": "confirmed",
+        "ev": [
+          "Build order, each step landable alone: fold_sources over an explicit list; the pipeline passing every #source in declaration order instead of .find(); the cycle guard and dedup over the extended walker; resolver enumeration, sorted.",
+          "Landed in that order over eight commits of 2026-08-05 (87bb2bc8, 68f03853, 16dd103a, bb1fd8eb, 1124cd4e, 38eba517, 5254f0cf). Step 2 is objectively complete: a grep for `.find(|d| d.kind == DirectiveKind::Source)` over crates/vibe-spec/src returns zero hits, and the pipeline now folds the whole closure at pipeline.rs:155.",
+          "The prior verdict confirmed a plan and noted that step 2 alone would close B-055; B-055 was in fact closed by that step (commit 77224fcf), so the ordering claim was load-bearing and correct rather than decorative."
+        ]
+      }
+    }
+  }
+}
