@@ -386,9 +386,21 @@ pub enum WatchError {
 ///
 /// `vibe-settings` is **frontend-agnostic** (PROP-040 §1 `#frontend-agnostic`)
 /// and depends on no fs-event library; the concrete impl (the `notify` crate +
-/// debounce) lives in the host (`vibe-cli`). Tests use a no-op/mock impl. This
-/// keeps the data layer testable in isolation and leaves the host free to pick
-/// its fs-event engine.
+/// debounce) belongs in the host (`vibe-cli`). This keeps the data layer
+/// testable in isolation and leaves the host free to pick its fs-event engine.
+///
+/// **Specified, not built (→ B-061), measured 2026-08-05.** That host impl does
+/// not exist: `impl Watcher for` matches exactly two sites in the whole tree,
+/// both test doubles — the doc example below and `events/tests.rs`'s `Noop` —
+/// and no code outside this module so much as names the trait. Two things
+/// follow, and the second is the one that bites. The sentence above described
+/// an arrangement rather than the tree, so read it as the intent it is. And the
+/// `implements` edge this trait carries makes the map report `#file-watch` as
+/// implemented, because an edge from a declaration is indistinguishable in the
+/// index from an edge from working code — the coverage is claimed by the shape,
+/// not delivered by it. Whether a declared-but-unimplemented seam should carry
+/// a weaker verb is a question about the edge vocabulary, and it belongs to
+/// PROP-014 §2.4 rather than to this comment.
 ///
 /// `on_change` is `Fn() + Send + Sync` so the host can route the callback
 /// across threads (watcher thread → UI thread). The trait method is
