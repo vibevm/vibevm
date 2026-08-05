@@ -410,6 +410,30 @@ background as the bare `bash tools/self-check.sh` so the task's own
 exit code IS the panel's, and **the mirror fan-out waits for the read
 tail, never for the notification.**
 
+##fact-a-truncated-pipe-reads-green **A pipe can hide a red run without
+swallowing its exit code — `head` is enough (2026-08-05):** after merging two
+code slices the boss ran `cargo test --workspace 2>&1 | grep -E "^test result…"
+| head -40`, saw forty `ok` lines and called it green. `test result: FAILED.
+169 passed; 12 failed` was line forty-something, and `head` cut it off; the
+grep itself would have shown it. The panel, run bare minutes later, was red.
+Two rules sharpen from this: *(i)* `##WAL-C-REAL-EXITS` is not only about the
+exit code — a **truncated view of the output** is the same defect, and `head`
+on a test log is exactly that; *(ii)* a merge's verification is the PANEL, and
+a pre-panel spot check that disagrees with it is worth nothing, so do not form
+a verdict from one. Related in shape to `#fact-panel-background-form`, where an
+`echo` swallowed the exit — same disease, different disguise, and this one was
+self-inflicted at the boss's own keyboard. @impl/done
+
+##fact-the-tail-is-the-crates-the-packet-did-not-name **The boss tail lands
+exactly in the crates the packet's self-verify did not name (2026-08-05):** the
+wire-validation slice was verified over `vibe-core`, `vibe-registry` and
+`vibe-resolver` — all green, correctly — and broke twelve tests in
+`vibe-workspace`, whose lockfile fixtures carry `content_hash = "sha256:x"`
+through the very `Deserialize` the slice tightened. The worker could not have
+seen it and was not asked to. **A packet that tightens a shared type names the
+consumer crates it CAN check and the boss budgets a workspace run for the rest**
+— the split is the method working, not the worker missing something. @impl/done
+
 ##fact-code-slice-file-budget **Code-slice self-verify includes the
 file-length budget (2026-08-04, paid at the B-006 landing — the second
 consecutive slice where the panel caught a class the packets did not
