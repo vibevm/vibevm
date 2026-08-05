@@ -1,4 +1,4 @@
-# CONTINUE — cold-resume snapshot (2026-08-05, wind-down №12: волна Г закрыта, план осушается)
+# CONTINUE — cold-resume snapshot (2026-08-05, wind-down №13: бэклог осушается, группа №1 закрыта целиком)
 
 **Не цитируй числа отсюда — меряй:**
 `python campaigns/packages-2026-09/tasks/summary.py` ·
@@ -8,209 +8,193 @@
 
 ## TL;DR
 
-**Все четыре волны карты закрыты.** Волна Г — последняя — закрылась 2026-08-05:
-B-005 и B-010 были построены раньше, F-132 закрыт правкой ложного утверждения,
-B-040 построен четырьмя посадками при одной отклонённой измерением.
+Сессия шла по новому курсу владельца — **сперва осушить бэклог, к тестам не
+подходить**. Закрыто **тринадцать строк**, из них **шесть — измерением**, а не
+стройкой: они просили построить построенное. Строк 62 → 50.
 
-Дальше владелец повернул сессию к **бэклогу**: сперва измерить, что в нём уже
-построено, потом реализовывать. Замер дал **10 строк из 39, просивших построить
-построенное**. Три строки построены в этот же заход. **Живых осталось 25 из 62.**
+**Панель была красной на старте, и структурно.** Гейт свежести карты (B-014,
+заведён накануне) падал: `spec/WAL.md` лежит внутри `spec_roots`, wind-down
+переписывает его целиком — **последний коммит каждой сессии делал карту
+протухшей, и следующая открывалась на красном гейте.** Соседний гейт этот файл
+давно изъял по вашему рулингу 2026-07-24; у карты не было ключа изъятия вообще.
+Построен, изъяты чекпойнт и компиляторный вывод (643 единицы, **ноль рёбер** —
+их никто не цитировал).
 
-Рулинг владельца 2026-08-05, дословно: «бэклог — это ПЛАН. План не должен быть
-источником истины для разработки… Когда всё в плане реализовано, план больше не
-нужен». Отсюда: **118 статус-маркеров сняты** с плановых документов, и строка
-теперь умирает вместе с коммитом, который делает её неправдой.
+**Группа №1 «дисциплина не наведена на себя» закрыта целиком**, включая обе
+строки, записанные как «Specified, not built».
 
 ## Где стоит работа
 
-- Ветка `main` @ `010d7104`, 38 коммитов за сессию. Дерево чистое кроме `.wt/`
-  (два handle-locked остатка прошлых сессий).
-- Панель зелёная — «self-check: all green», bare-форма, хвост прочитан.
-  **В панели новый шаг** — `cargo xtask specmap --check` (B-014).
-- `gitverse` синхронен; **`github` ОТСТАЁТ** — ssh заворачивается на
-  `127.92.0.49`. Это **не расхождение**, форсить нельзя.
-- Реестр: 11 575 подтверждённых, 182 drift, 0 stale, 0 к перепросуждению.
-  Корпус 273 файла, `progress check` clean.
+- Ветка `main` @ `ff2079e1`, **49 коммитов за сессию**.
+- Дерево чистое. `.wt/` пуст — все worktree сняты, все отчёты в архиве.
+- **Панель зелёная** — `self-check: all green`, 48 шагов, bare-форма, хвост
+  прочитан.
+- **`gitverse` синхронен** до `586e7c7`; после него два коммита не разосланы —
+  прогнать `cargo xtask mirror`.
+- **`github` НЕДОСТИЖИМ** — ssh на `git@github.com` заворачивается на
+  `127.92.0.49` (петлевой адрес ⇒ перехват порта 22 на машине). **Это не
+  расхождение**, форсить нельзя, и теперь фан-аут говорит это прямо.
+- Реестр: 11 641 подтверждённых, **дрейф 177** (был 182), 0 к перепросуждению,
+  корпус 274 файла, `progress check` clean.
 - Активного блокера НЕТ.
 
-## ПЕРВОЕ ДЕЛО НОВОЙ СЕССИИ — бэклог, и он в ТРЁХ домах
+## ПЕРВОЕ ДЕЛО НОВОЙ СЕССИИ
 
-Владелец спросил «их два — общий и про инструменты?». Двух мало:
+**Пакет для B-045 уже написан и готов к запуску** — он лежит в scratchpad и
+воспроизводится по разделу «Как продолжить» ниже. Три доводки грамматики имён,
+все измерены, все решения приняты. Если он потерялся — там же сказано, что
+измерить и какие решения босс принял.
 
-| дом | что это | сколько несделанного |
-|---|---|---|
-| `BACKLOG.md` | реестр находок, 62 строки | **25 живых** |
-| `TOOLING-MAP.md` | порядок волн + 11 развилок владельца | все 4 волны закрыты; остаток — `##WAVE-PARKED` |
-| `AUDIT.md` | находки аудита здоровья, 25 штук | **10 открытых**, последний прогон 2026-08-03 |
-| `campaigns/packages-2026-09/deferrals.md` | хвосты кампании | 5 |
+Дальше по остатку: `AUDIT -01` (дыра покрытия default-path e2e), затем живые
+строки бэклога по мере измерения.
 
-Итого **40 пунктов**. `AUDIT.md` — durable home находок аудита, его открытые
-десять в бэклоге не дублируются.
+## Что закрыто этой сессией
 
-### Группы живых строк бэклога (25)
+**Тринадцать строк:** B-001, B-002, B-004, B-016, B-021, B-037, B-044, B-051,
+B-052, B-053, B-060, B-061 + сужены B-018, B-019.
 
-1. **Дисциплина не наведена на себя** — B-002, B-004, B-060, B-061. Из них
-   B-060 и B-061 уже честно записаны как «Specified, not built» с маршрутом;
-   B-002 и B-004 не начаты. **Самая дешёвая группа и самая ядовитая:** каждая
-   строка — причина, по которой гейт молчит там, где должен кричать.
-2. **Паритет языков** — B-037 (Rust-половина dylint), B-044, B-050, B-051,
-   B-052, B-053. Формулировка владельца: «мы не можем писать на Typescript и Go
-   пока не поправим вот это».
-3. **Карта и её потребители** — B-001, B-016, B-017, B-018, B-019, B-021,
-   B-024.
-4. **Направление, а не дыры** — B-007 (рулинг о жанре ADR), B-032, B-045,
-   B-046, B-047.
-5. **Ждёт владельца или внешнего** — B-008, B-015, B-020.
+**Построено:**
 
-### Ось владельца: инференс против всего остального
-
-Разрез 2026-08-05: **инференс требуется ровно двум строкам** — B-020 (объяснения
-через внешние LLM, стоит на кредах) и B-042 (корпус, генерируемый LLM;
-запаркована). Остальные 23 живут на статической стороне. Причина: **дерево
-сегодня не запускает инференс вообще** — `InferenceBackend` имеет две
-реализации, и обе перекладывают рассуждение на вызывающего агента
-(`RelayBackend` паркует в `.vibe/agentic/`, `InlineBackend` возвращает
-результатом MCP-вызова), а `vibe-llm` — девятистрочная заглушка до вехи v1.5.
-**Безопасность (B-015) — в последнюю очередь**, решение владельца; она и не
-может идти раньше канала, который охраняет.
-
-## Что построено этой сессией
-
-**Реестровый долг B-056** — 19 вердиктов, два файла запечатаны. Запись долга
-была неверна дважды: считала 13 новых фактов, тогда как войти в реестр могли 8
-(`campaigns/` — структурное исключение движка, `BACKLOG.md` не совпадает ни с
-одним include-глобом); и говорила, что все десять сдвинулись флипом статуса —
-девять да, а у десятого удалена фраза, и его прежним доказательством стоял
-механизм, который работы не делает.
-
-**F-132** — закрыт правкой ложной клаузулы PROP-014 §2.3, не постройкой.
-Назначенная единица разметки не размечена и прочитана быть не может: 0 из 7
-схем несут адрес, все сканеры сравнивают расширение буквально с `rs`/`md`, а
-модель рёбер вешает адрес на СИМВОЛ кода, которого у JSON нет. Маршрут —
-[B-060](BACKLOG.md#b-060).
-
-**B-040** — дизайн [`spec/design/typed-seams.md`](spec/design/typed-seams.md) и
-четыре посадки: `ValidatedOrg` (забытый вызов проверки области видимости больше
-не компилируется), проверка идентификаторов на границе провода (пять значений в
-дереве оказались не хешами), три обязательства строителя в сигнатуре
-(`action.rs` 600 → 565 строк), шов `Watcher` назвал себя непостроенным.
-**Пятая отклонена измерением**, и чтение ради отказа нашло пятистрочный дефект.
-**Sealed traits — сознательный отказ** с архитектурной причиной.
-
-**Три строки бэклога** — B-048 (TS-пол перестал линтовать чужие фикстуры),
-B-059 (ключ исключения конформа работает так, как читается, и мёртвое
-исключение объявляет себя), B-014 (у хостового `specmap.json` появился гейт).
+| что | суть |
+|---|---|
+| ключ изъятия карты | перечислимый `spec_exclude` с предупреждениями о мёртвом и невалидном паттерне; движок + 51 вендор-пара |
+| `conform-frontend-rust.md` | у пилотного языка появилась спека поверхности, которая была у обеих его проекций |
+| дом корневых ключей | описаны один раз в `ENGINE-CONFORM §6`; три спеки цитируют, а не пересказывают |
+| no-zombie | проба процесс-таблицы в трёх стеках; растовая **прогнана**, Go/TS собраны и так и названы |
+| текст причины отступления | движок + фронтенд; `DeviationStack` вместо счётчика; версия кэша 10 → 11 |
+| сканер JTD | схемы читаются; 16 единиц, 7 рёбер; `vibe explain` впервые отвечает про wire-контракты |
+| диагноз манифеста | перестал выбрасывать собственную каретку и позицию |
+| диагноз зеркал | недостижимый хост больше не объявляется разошедшимся |
 
 ## Не-очевидные находки
 
-- **Опровергнутая фраза живёт во всех домах, где её пересказали.** У B-056 их
-  было четыре; посадка починила два, эта сессия — ещё два. Внутри корпуса
-  только два из четырёх.
-- **Составной факт судится по одной из двух своих клауз.** PROP-014's правило
-  было `confirmed` по двум ссылкам, и обе про первую половину предложения.
-- **Два гейта, два списка изъятий, один никогда не гонялся.** `vibe-spec`
-  изъят в `conform.toml` с причиной; `specmap.toml` её не отзеркалил, хотя сам
-  говорит, что списки держатся в шаге. Нашлось при заведении гейта B-014.
-- **Из трёх сканеров конформа разошёлся один.** TS и Go сравнивают с тем же
-  путём, который хранят; Rust — нет. Это и был B-059.
-- **Крейты стеков вендорятся** — mcp-пакеты зеркалят раскладку своего стека.
-  Панель поймала это на `sync-engines --check` после того, как я утверждал
-  обратное.
-- **Усечённый пайп читается зелёным.** `cargo test --workspace | grep | head -40`
-  спрятал строку `FAILED` за границей `head`; панель через десять минут была
-  красной на 12 тестах.
+- **Строка уносит с собой свои цитаты.** Рулинг «строка умирает» не имел
+  спутника: удаление B-016/B-021/B-037 оставило висячие адреса в трёх живых
+  дизайн-документах. Правило записано: **рулинг закрытой строки живёт в
+  коммите, который её закрыл, а не по адресу** — коммит неудаляем, якорь нет.
+- **`sync-engines` копирует крейты, но НЕ корневые манифесты.** Вендорённый
+  крейт переносит `workspace = true` через копирование и не находит ничего на
+  той стороне: три mcp-пакета перестали загружать собственные манифесты.
+- **Растяжка `~/.vibe` срабатывает на командах босса.** Панель снимает слепок
+  дома в начале и сверяет после тестов; `vibe progress mirror`, запущенный
+  рядом, пишет туда кэш — гейт обвинил несуществующий тест. Правило шире, чем
+  «не гонять cargo»: под панелью нельзя ни один `vibe`-глагол, пишущий дом.
+- **`implements` от голого объявления — ложное покрытие**, и градиент ядовит:
+  чем аккуратнее проект объявляет формы заранее, тем больше его накапливает.
+  Математики покрытия в индексе нет вовсе — вред доставлялся читателю
+  `vibe explain`.
+- **Сообщение может быть о правильном событии и называть неправильную
+  причину.** Дважды за сессию: манифест (отсутствующее поле как синтаксис) и
+  зеркала (недостижимость как расхождение). Второе дороже — оно посылало
+  переписывать историю.
+- **Бэклог в середине миграции.** Рулинг снял статусы, но строки, закрытые ДО
+  него, остались. Живое и историю сейчас не различить; регекс для этого
+  ненадёжен (строка, суженная сегодня, читается как закрытая).
 
-## Закон транспорта поймал сам себя четырежды
+## Гейты ловили БОССА, не воркера — пять раз
 
-Всё в `campaigns/packages-2026-09/SUBAGENT-LAUNCHERS.md`: греп маркера
-совпадает с текстом самого пакета; форма запуска с `&` отбирает нотификацию,
-ради которой написана; правило «mtime старше 5 минут = зависание» не может
-сработать, потому что телеметрия размышления держит mtime свежим; терминальный
-сигнал — событие `result`, а не `TASK-DONE`, которого воркер может не сказать
-вовсе. Плюс: **хвост посадки приземляется в тех крейтах, которые пакет не
-называл** — их проверяет босс рабочим-пространственным прогоном.
+Параллельный `vibe` под панелью · правка спеки без регенерации карты ·
+вендоринг движкового поля без спутника в манифестах · `cargo fmt` после работы
+воркера · собственный тест с грубой подстрокой. Все пять — пропущенный шаг,
+который сам же и записан.
+
+## Воркеры опровергли босса пять раз
+
+«T-sem-ярус Rust пуст» (там clippy, чьи диагнозы движок читает фактами) ·
+«одна разборка, два потребителя» (Rust парсит **дважды**) · триггер отказа,
+промахнувшийся по файлу · защита от переиспользования PID через `start_time`
+(сильнее заданного) · `crate_name` для схемы, выбранный измерением
+потребителей. Плюс один раз босс поймал себя сам: неверный греп
+(`impl<P: …>` не совпал) дал бы ложный вывод о целом классе.
 
 ## Карта репозитория (верхний уровень)
 
 - `spec/` — PROP/FEAT-контракты (`common/`, `modules/`), `boot/` (PROP-009),
-  `design/` (рационали; `typed-seams.md` — дизайн B-040 с четырьмя
-  записанными опровержениями), `terraforms/`, `WAL.md`.
-- `campaigns/packages-2026-09/` — активная кампания: `harvest/` (в т.ч.
-  `g5-backlog-truth.md` — замер 39 строк по дереву), `tasks/`
-  (`summary.py`, `drift-registry.py`, `text-stability.py`,
-  `merge-verdicts.py`, `evidence/`), `run/` (генерится; `run/mirror/`
-  **gitignored**), `SUBAGENT-LAUNCHERS.md` + `SUBAGENT-MODE.toml`.
+  `design/`, `terraforms/`, `WAL.md`.
+- `campaigns/packages-2026-09/` — активная кампания: `harvest/`, `tasks/`
+  (`summary.py`, `drift-registry.py`, `text-stability.py`, `merge-verdicts.py`,
+  `evidence/`), `run/` (генерится; `run/mirror/` **gitignored**),
+  `SUBAGENT-LAUNCHERS.md` + `SUBAGENT-MODE.toml`.
 - `packages/org.vibevm.ai-native/` — дисциплина: `core-ai-native/v0.8.0/`
   (движок, вендорится ×6 = 51 пара), `{rust,go,typescript}-ai-native-lang/`,
   `*-mcp/`. **Крейты стеков тоже вендорятся** — в mcp-пакеты.
-- `crates/` — хост, 18 крейтов.
-- Корень: `BACKLOG.md`, `TOOLING-MAP.md`, `AUDIT.md`, `TASKS.md`,
-  `ROADMAP.md`, `specmap.json` (**теперь под гейтом**), `specmap.toml`,
-  `conform.toml`, `CLAUDE.md`/`AGENTS.md`/`GEMINI.md` (байт-идентичны).
+- `crates/` — хост, 18 крейтов. `xtask/` — инструментарий.
+- Корень: `BACKLOG.md`, `TOOLING-MAP.md`, `AUDIT.md`, `TASKS.md`, `ROADMAP.md`,
+  `specmap.json` (под гейтом), `specmap.toml`, `conform.toml`, `schemas/`
+  (теперь в карте), `CLAUDE.md`/`AGENTS.md`/`GEMINI.md` (байт-идентичны).
 
 ## Действующие решения (в силе)
 
-- **План — не источник истины.** Статусы с плановых документов сняты; строка
-  умирает вместе с коммитом, делающим её неправдой (рулинг владельца).
-- **Инференс — за одной вехой.** Дерево не запускает моделей; две строки из
-  25 по ту сторону; безопасность канала — последней.
-- **Один закон — одна реализация**, и расхождение двух молчит по природе.
-- **Ловить надо там, где жив провенанс.**
+- **План — не источник истины.** Строка умирает вместе с коммитом, делающим её
+  неправдой; закрытие есть переезд содержимого в спеку. **И её цитаты уезжают
+  с ней.**
+- **Перед реализацией плана измеряют, что уже реализовано.** За сессию это
+  сэкономило шесть строек; всего за два дня — семнадцать.
+- **`implements` — утверждение о коде, который работает** (PROP-014).
+- **Один закон — одна реализация**, расхождение двух молчит по природе.
 - **Помечать, а не гасить**; **сигнал, а не стена**; **лечи молчание**.
-- **Бюджет 600 строк — нейтральный ключ**, меряет босс после `cargo fmt`.
+- **Бюджет 600 строк** меряет босс после `cargo fmt`.
 - **BUILD-FIRST**; **T/F/G вне добра**; версии не бампать до публикации.
 - **Делегация:** claudez-воркеры; вердикты, ревью и коммиты — босс.
 - **Роллаут — ТОЛЬКО `cargo xtask mirror`**, fast-forward, никогда `--force`.
 - **Движковую правку всегда сопровождает `cargo xtask sync-engines`** —
-  отдельным шагом, не дожидаясь панели.
+  отдельным шагом.
 
 ## Цепочка последних коммитов
 
 ```
-010d7104 docs(backlog): three rows closed by the builds, with what each build found
-60625d47 chore(packages): vendor the conform scanner fix across the six copies
-48018a64 fix(conform): the exclusion key matches the path the finding prints, and dead ones speak
-973fb56c chore(packages): vendor the floor perimeter fix into the mcp copy
-c909dd78 fix(specmap): the host's own traceability index gets a gate, and it found two things
-6e047882 fix(typescript-ai-native): the floor's two unscoped steps stop walking installed fixtures
-c9cdf39d docs(backlog): the plan stops claiming what is, by the owner's ruling (B-062)
-6d899e5d docs(backlog): a quarter of the plan was asking for work already built
-cb8c34f2 chore(campaign): the B-040 design judged whole against what it built
-89bd479c docs(design): ten of this design's own facts still said planned about built work
-f9469422 docs(backlog): two dispositions offered the owner work that was already done
-b790cc91 docs(map): волна Г closes whole, and it closed two of its four by correcting a claim
-fe1fd532 docs(design): the digest newtype is declined, and the reading that declined it paid
-a8fd3d86 fix(progress-core): a record with no processed_hash was projected as fresh
-abc6d4c1 docs(tasks): волна Г closed whole, and with it all four waves of the map
-df171094 docs(tasks): the Phase E exit gate measured, and the one ruling it needs
-24784ca3 refactor(vibe-actions): the builder's three obligations move into the signature
-0ed7fdaf refactor(vibe-core): four identity newtypes start checking at the wire boundary
-805eec95 refactor(vibe-publish): the scope rule stops being a request to implementors
-6b1d686b docs(campaign): head can hide a red run without touching the exit code
-d9251b6d docs(campaign): the stall rule cannot fire, because mtime never goes stale
-5e5ffc92 chore(campaign): a compound fact was confirmed on evidence for one of its clauses
-cd562d55 docs(specmap): the designated taggable unit is designated and untagged (F-132)
-940ca262 chore(campaign): the B-056 registry debt closed, and one re-judgement was not a re-stamp
-c5db2eb8 docs(design): the B-040 seam refactor, shaped by what can be called wrongly
+ff2079e1 docs(backlog): say how to read a file that is mid-migration
+586e7c7a fix(xtask): the mirror fan-out stops calling an unreachable host a divergence
+30128855 style(specmap): rustfmt the JTD scanner's tests, authored and vendored
+bf81a16e chore(campaign): the generated-code rule is re-judged against the build that finished it
+0f12992e docs(specmap): the generated-code rule stops describing an unbuilt half (B-060)
+0e990eee fix(specmap): the seven wire contracts enter the map, and the exemption becomes true
+e9e60b94 chore(packages): vendor the JTD scanner across the six copies
+e0fa42f2 feat(specmap): the designated taggable unit becomes readable — a JTD scanner (B-060)
+d605214c docs(audit): the doc requalification sweep is smaller and not independent (-10)
+e3a009fc docs(audit): the dead-code row is one subsystem ruling, not 57 judgements (-04)
+27c26979 fix(vibe-core): the manifest parse error stops discarding its own diagnosis (AUDIT -15)
+f55c906f chore(campaign): the implements rule earns three verdicts and the index note is corrected
+572f3c1a fix(specmap): an implements edge is a claim about code that runs (B-061)
+c9877c14 chore(packages): the three mcp lockfiles record the sysinfo pin
+24edd190 fix(packages): a vendored crate's workspace dependency must exist in every workspace carrying it
+fbc4a9ed chore(campaign): the three moved citation lines earn their restatements
+1b285725 docs: a closed row takes its citations with it, and today it did not
+27e9fb41 docs(campaign): the panel's home tripwire fires on the boss's own commands
+659d7b3a chore(campaign): five oaths stop drifting because the build made them true
+1b06ec66 docs(backlog): the two parity rows die with the builds that made them untrue (B-044, B-053)
+60ea56a2 chore(packages): vendor the no-zombie probe and the reason frontend into the mcp copies
+5ddf38ce feat(rust-ai-native): the frontend fills the reason the engine learned to carry (B-053)
+f3b5574d test(ai-native): the no-zombie oath stops holding on words and asks the OS (B-044)
+7d1e95e9 docs(audit): the two PROP-011 refinements are no longer in the same position (-11)
+6c97e15b docs(backlog): the map's consumers shipped in wave В, and two rows were asking for them (B-016, B-018)
 ```
 
 ## Ждёт владельца
 
-1. **Гейт выхода фазы E** — измерен: 273 файла, 267 `done`, 6 `work`. Шесть это
-   три дизайна закрытых волн, два ручных теста и черновик PROP-010. Рулинг
-   нужен потому, что **волны Б и В несут на карте `@doc/work`, а WAL называет
-   их закрытыми**, и «волна закрыта» — не очевидно то же, что «её дизайн done».
-2. **B-007** — жанр ADR: это ваш рулинг, а не стройка.
-3. **B-024** — судьба `disputed`. **B-017** — содержание тира приватности.
-   **B-020** — креды. **B-015** — безопасность канала (последней).
+1. **`github` недостижим — единственное, что требует ВАС.** ssh на
+   `git@github.com` уходит на `127.92.0.49`. Диагностика:
+   `ssh -vT git@github.com 2>&1 | head -5` и
+   `git config --get-regexp 'url\..*\.insteadof'`.
+2. **B-050** — dylint для Rust: вопрос nightly-пина. Вы парковали 2026-08-04,
+   мандат 2026-08-05 назвал паритет блокирующим для TS и Go. Рулинг, не стройка.
+3. **AUDIT `-14`** (P2, новая) — контракт индекса единственный без схемы и без
+   гейта кодогенерации: чеканить `index-entry.jtd.json` или записать, почему он
+   намеренно prose-first.
+4. **AUDIT `-04`** — одно решение про незаконченную TUI-подсистему (41 из 57
+   подавлений там), а не 57 суждений.
+5. **Миграция бэклога** — удалять ли строки, закрытые ДО рулинга. Это решение
+   об истории файла.
+6. Прежние: гейт выхода фазы E; **B-007**, **B-015**, **B-017**, **B-020**,
+   **B-024**; AUDIT `-06`/`-07`, `-13`, райдер `2026-06-12-01`.
 
 ## Quick-start
 
 ```sh
 python campaigns/packages-2026-09/tasks/summary.py
 python campaigns/packages-2026-09/tasks/text-stability.py
-bash tools/self-check.sh              # exit настоящий, хвостом; фоном — bare-форма
-cargo xtask specmap --check           # НОВЫЙ шаг панели (B-014)
+bash tools/self-check.sh              # exit настоящий, хвостом; фоном — bare-форма, БЕЗ параллельных vibe-команд
+cargo xtask specmap --check
 cargo xtask sync-engines              # после ЛЮБОЙ правки движка или крейта стека
 cargo xtask conform check
 cargo xtask mirror                    # раскатка, fast-forward-only
