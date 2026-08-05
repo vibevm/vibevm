@@ -228,6 +228,25 @@ incremental re-resolution that skips the registry walk for an
 unchanged subtree (needs PROP-003's SAT `pin_preferences`). **Open** —
 both gate on other work; recorded so they are not forgotten.
 
+**Re-measured 2026-08-05 — the two halves are no longer in the same
+position, and the row should stop implying they are.** *(a)* Its stated
+blocker no longer holds as written: a second `compute_content_hash`
+over a package directory lives at `vibe-index/src/content_hash.rs:40`
+beside the registry's, deliberately ported rather than imported
+(PROP-005 §3.2) and — checked — held in lockstep by a dedicated
+`vibe-index/tests/content_hash_parity.rs`. So the function is reachable
+outside `vibe-registry` today; what remains is a build decision about
+which crate the install path calls, not an absence. Also measured:
+`SlotIntegrity::Verify` currently means «re-materialise every slot», a
+full recursive re-copy, so the spot-check would REPLACE work rather than
+add it. *(b)* still gates as recorded — `pin_preferences` exists in the
+tree only as prose: a `#[spec(deviates …, reason)]` testimony in
+`vibe-resolver/src/lib.rs:309` and a comment in
+`vibe-workspace/src/freshness.rs:218`, no implementation.
+
+Kept P3 and kept open; the point of the re-measurement is that half (a)
+is now cheap and unblocked, which is a different thing from deferred.
+
 ### 2026-05-23-12 · D1 · P3 · **two thirds already built** — re-judged and narrowed 2026-08-05
 
 **Parked backlog.** `version = { workspace = true }` member-version
