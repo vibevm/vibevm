@@ -250,11 +250,17 @@ fn read_verdicts(
         return nothing();
     }
     // The campaign's own note of what it judged, against what is here now.
+    // An ABSENT note is not a match. A record carrying verdicts and no
+    // `processed_hash` has judgements standing against text nobody wrote
+    // down, which is the same debt as a stale one and is reported the same
+    // way. This read used to be `is_some_and`, which made the absence mean
+    // fresh — the dangerous direction, and the one the sibling `verified_at`
+    // guard directly above is written to avoid.
     if record
         .campaign
         .get("processed_hash")
         .and_then(serde_json::Value::as_str)
-        .is_some_and(|h| h != doc.content_hash)
+        != Some(doc.content_hash.as_str())
     {
         out.stale.push(doc.path.clone());
     }

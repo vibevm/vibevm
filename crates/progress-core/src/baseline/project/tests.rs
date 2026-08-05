@@ -325,6 +325,33 @@ fn a_file_that_moved_after_its_verdict_is_reported() {
     assert!(project([&doc], &c, "t").stale.is_empty());
 }
 
+/// A record that carries verdicts and NO `processed_hash` is reported too.
+/// The note of what was judged is missing, so the verdicts stand against
+/// text nobody wrote down — the same debt as a stale file, and the read
+/// must not mistake the absence for a match. It did: `is_some_and` returned
+/// false on a missing key and the file passed as fresh, which is the one
+/// direction this projection must never fail in.
+#[test]
+fn a_record_with_no_processed_hash_is_reported_rather_than_assumed_fresh() {
+    let doc = parse_document("a.md", "# One {#one}\n\n##a1 Claim. @impl/done\n");
+    let c = cached(
+        &doc,
+        "2026-07-25T00:00:00Z",
+        serde_json::json!({"a1": {"v": "confirmed", "ev": []}}),
+    );
+    assert!(
+        !c.files["a.md"].campaign.contains_key("processed_hash"),
+        "the fixture must not carry the key this test is about"
+    );
+
+    let p = project([&doc], &c, "t");
+    assert_eq!(p.stale, vec!["a.md".to_string()]);
+    assert!(
+        p.undated.is_empty(),
+        "it is dated — the missing field is the hash, and the two are reported apart"
+    );
+}
+
 /// An empty campaign map is an empty baseline, not a failure — and
 /// not a baseline of invented verdicts either.
 #[test]
