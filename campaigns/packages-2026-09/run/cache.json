@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-05T18:54:16Z",
+  "updated_at": "2026-08-05T18:55:51Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -117428,7 +117428,7 @@
       }
     },
     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md": {
-      "content_hash": "bbe936107762c299e35768f6731c6ea116b5b361e529421703f3a977f6995a2b",
+      "content_hash": "5b8485761cd9caa19ac2a3fe02b922ccb74ae6979628eb3abe6517339a34dacb",
       "rollup": {
         "explicit": [
           "impl",
@@ -117442,11 +117442,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 153,
-        "fact_count": 152,
+        "marker_count": 155,
+        "fact_count": 154,
         "unmarked_facts": 0
       },
-      "marker_count": 153,
+      "marker_count": 155,
       "unit_count": 22,
       "issue_count": 0,
       "campaign": {
@@ -117454,7 +117454,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 134,
         "marker_count": 135,
-        "processed_hash": "bbe936107762c299e35768f6731c6ea116b5b361e529421703f3a977f6995a2b",
+        "processed_hash": "5b8485761cd9caa19ac2a3fe02b922ccb74ae6979628eb3abe6517339a34dacb",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -118416,10 +118416,25 @@
               "resolver/glob.rs:47 is_pattern (name half only), :60 expand_pattern with the slot scan (:84), name match (:141), membership requiring both name and document (:121-128), sort (:109) and dedup (:113); a non-pattern returns itself (:68-70) and an empty match returns Ok(vec![]). Loud pointed failure: resolver.rs:126-130 PatternNotExpanded, plus Unresolved from visit at use_graph.rs:133-138. The one edge reader: use_graph.rs:196 source_addresses, called by the guard at :168 and by the fold at pipeline/fold.rs:130. Tests: resolver/glob.rs:264, :330, :396, :458, and the_fold_reaches_a_source_through_a_glob_expanded_edge at pipeline/tests.rs:444.",
               "The last clause is the one worth having judged, because its failure would be silent: a glob expanded one way for the guard and another for the fold would build a guard over a graph the fold never walks. Both call the same function, and pipeline/tests.rs:444 exercises the agreement end to end rather than asserting it structurally."
             ]
+          },
+          "LINK-TABLES-ARE-DEFERRED-WITH-A-NAMED-TRIGGER": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES the built/unbuilt split, checked against the tree: crates/vibe-spec/src/link_table.rs carries the graph and a deterministic dump; no persisted on-disk format and no structural consumer exist anywhere in crates/ — the second half of the sentence is an absence, and the absence measures.",
+              "DESCRIBES the standing alternative, also checked: `expand_embeds` is called by `render_static` in crates/vibe-workspace/src/boot_artifacts.rs, so `#embed spec://…` does resolve and splice at compile time today, which is the reason the tables are not on the critical path.",
+              "The ruling it records is the owner's, 2026-07-29, and it was carried by BACKLOG.md B-001 until this commit moved it here. The move is the point: a reader of the open question could not previously learn why the item was not being worked on."
+            ]
+          },
+          "LINK-TABLES-PROMOTION-TRIGGER": {
+            "v": "confirmed",
+            "ev": [
+              "PRESCRIBES a promotion condition; coherent, and both of its referents resolve — `@spec://` pointers in the boot lane exist and are measurable, and §13's structural loader is a named section of this same document.",
+              "The clause is deliberately falsifiable in the direction that matters: it names what would make the deferral wrong, so the decision cannot quietly become permanent by nobody revisiting it. Nothing in the tree fires either condition today — the structural mode is unimplemented and no reader-cost measurement exists (the standing «замеров нет» answer)."
+            ]
           }
         },
-        "verified_at": "2026-08-05T09:35:43Z",
-        "verify_batch": "c4d1-workspace-big3 + d2a + H4-stale-host + H6-stale-host-tail + G3-B056-new"
+        "verified_at": "2026-08-05T18:55:51Z",
+        "verify_batch": "c4d1-workspace-big3 + d2a + H4-stale-host + H6-stale-host-tail + G3-B056-new + G6-link-tables"
       }
     },
     "spec/modules/vibe-workspace/PROP-038-hybrid-boot-linking.md": {

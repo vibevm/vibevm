@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-05T18:53:48Z",
+  "updated_at": "2026-08-05T18:55:19Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -26740,9 +26740,9 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "e4980a742470556922aef207f811b2567ecf88ceba687c3896890b59ad683ff5",
+        "processed_hash": "4b60e42f4afcaf9482a2517b86cd9aa4f00fb85c878e73a5f69771c5346abf4f",
         "summary": {
-          "confirmed": 60,
+          "confirmed": 63,
           "drift": 5
         },
         "verdicts": {
@@ -27590,10 +27590,44 @@
               "Source 2: PROP-009 ##ARTIFACTS-CARRY-NO-TOKEN-BUDGET states the same corollary in the consumer and names the decision it unblocked — «Compiling a document into the lane is therefore a legitimate answer to a dangling pointer, and «the lane grew» is not an objection to it» — and it names the same residual cost this clause names, the session's context.",
               "Measured instance 2026-08-05: `spec/boot/STATIC.md` stands at 12 088 words (~16 100 tokens) and is under no finding by this table, while the two authored snippets beside it are — which is the clause doing exactly the sorting it claims to do."
             ]
+          },
+          "A-FENCE-CARRIES-NO-ANCHOR-AND-THAT-IS-DELIBERATE": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "PRESCRIBES, and the consumer's compiler already implements exactly this: `fence_mask` in crates/vibe-spec/src/doctree.rs masks fenced spans before directives are read (applied by directives.rs), so a `##ANCHOR` written inside a fence is not registered as a label. Source 2 — the host reached the behaviour independently and the package is catching up to it, which is what makes this confirmation more than the package agreeing with itself.",
+              "Its reason is verifiable in the corpus rather than asserted: seventeen `org.vibevm.world` flow packages ship a fenced re-derive prompt whose whole purpose is to be copied into another session verbatim. An anchor inside such a block would be copied with it.",
+              "Coherent with the sibling rule it sits beside — a spec unit is a heading span — and with the host's own label-qualification pass, which states that fenced content is never rewritten."
+            ]
+          },
+          "AN-INSTRUCTION-INSIDE-A-FENCE-IS-UNVERIFIED-BY-CONSTRUCTION": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "PRESCRIBES the consequence, and the campaign paid for it twice before the sentence existed. First instance: the seventeen re-derive prompts opened with `Read spec/flows/<name>/ …`, a path no consuming host has — a wrong instruction that no gate could report, in a block whose purpose is to be executed. Second: three `##three-processes-lead` ASCII diagrams in the -lang tools docs drew a retired topology inside fences no anchor covers.",
+              "The claim that WHICH nearby anchor gets tested is luck is measured, not rhetorical: the same re-derive lead anchor was judged by three different workers against three different claims — the path, the prompt's shape, and its outcome — each defensible, because the fenced body is not addressable and the lead sentence says only «paste this».",
+              "Source 2: the host's own gate reported 6 847 / 6 847 anchors with zero owed while all seventeen fences were wrong, which is exactly the honest gate measuring what it says it measures — evidence for this sentence rather than against it."
+            ]
+          },
+          "A-CHECKABLE-CLAIM-BELONGS-OUTSIDE-THE-FENCE": {
+            "v": "confirmed",
+            "src": [
+              1
+            ],
+            "ev": [
+              "PRESCRIBES the placement remedy, and every referent resolves: it names the fence, the anchored prose beside it, and the class of claim (a path, a version, a command name) each of which the corpus contains inside fences today.",
+              "Self-referential by nature and marked as such — this is a rule addressed to authors about where to put a sentence, so the package's own artefacts are the right and only bench. It is deliberately NOT a checker: the thing it asks an author not to do is precisely the thing no instrument can see, which is the reason the sentence must exist as guidance."
+            ]
           }
         },
-        "verified_at": "2026-08-05T18:29:32Z",
-        "verify_batch": "W3 + D8-boss + D27 + D28 + D29 + G6-b002-budget-scope"
+        "verified_at": "2026-08-05T18:54:16Z",
+        "verify_batch": "W3 + D8-boss + D27 + D28 + D29 + G6-b002-budget-scope + G6-fence-law"
       }
     },
     {
@@ -116414,9 +116448,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 153,
+      "markers": 155,
       "units": 22,
-      "facts": 152,
+      "facts": 154,
       "unmarked": 0,
       "issues": 0,
       "campaign": {

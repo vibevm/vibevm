@@ -1,0 +1,23 @@
+{
+  "batch": "G6-link-tables",
+  "cluster": "host",
+  "files": {
+    "spec/modules/vibe-workspace/PROP-035-spec-compiler.md": {
+      "LINK-TABLES-ARE-DEFERRED-WITH-A-NAMED-TRIGGER": {
+        "v": "confirmed",
+        "ev": [
+          "DESCRIBES the built/unbuilt split, checked against the tree: crates/vibe-spec/src/link_table.rs carries the graph and a deterministic dump; no persisted on-disk format and no structural consumer exist anywhere in crates/ — the second half of the sentence is an absence, and the absence measures.",
+          "DESCRIBES the standing alternative, also checked: `expand_embeds` is called by `render_static` in crates/vibe-workspace/src/boot_artifacts.rs, so `#embed spec://…` does resolve and splice at compile time today, which is the reason the tables are not on the critical path.",
+          "The ruling it records is the owner's, 2026-07-29, and it was carried by BACKLOG.md B-001 until this commit moved it here. The move is the point: a reader of the open question could not previously learn why the item was not being worked on."
+        ]
+      },
+      "LINK-TABLES-PROMOTION-TRIGGER": {
+        "v": "confirmed",
+        "ev": [
+          "PRESCRIBES a promotion condition; coherent, and both of its referents resolve — `@spec://` pointers in the boot lane exist and are measurable, and §13's structural loader is a named section of this same document.",
+          "The clause is deliberately falsifiable in the direction that matters: it names what would make the deferral wrong, so the decision cannot quietly become permanent by nobody revisiting it. Nothing in the tree fires either condition today — the structural mode is unimplemented and no reader-cost measurement exists (the standing «замеров нет» answer)."
+        ]
+      }
+    }
+  }
+}
