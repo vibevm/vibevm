@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-05T20:12:36Z",
+  "updated_at": "2026-08-05T20:42:07Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -6054,9 +6054,9 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "fbadef7acd080e4902d84326f95edf6d399ccb6cc31ef3b4e8898a5747140e97",
+        "processed_hash": "a9320461377e2cccb47f340e967a54bfda604c3bfdf36cb4dfa32f78db61077f",
         "summary": {
-          "confirmed": 166,
+          "confirmed": 169,
           "drift": 1,
           "unverifiable": 6
         },
@@ -6624,7 +6624,10 @@
           "INDEX-CONTENTS": {
             "v": "confirmed",
             "ev": [
-              "MIXED (Phase D wave 5). Eight demoted, one corrected, and `##LLM-AS-PROPOSER` RE-JUDGED confirmed: the loop ran end to end and `terraform/specmap-proposals.json` carries 54 owner-approved proposals. Error provenance ships too, so two of the three forces hold rather than one."
+              "RESTATED 2026-08-05 because the fact's own text moved, and one third of it had gone false. It said `code_item` carries no content hash at all, only file/line/symbol. It carries `fingerprint` — `tok1:<sha256>` over the element's TOKEN STREAM — on 915 of 915 items in the committed index, landed by wave В.",
+              "The two absences it records are re-checked and STILL true: no per-REQ coverage math exists anywhere in the engine (a grep for coverage over the specmap crate returns only a debt fixture and `explain`'s zero-edge line), and the orphans table is still computed at gate time by the ratchet and never serialised.",
+              "Its counts were a different tree's and are replaced by today's, with the old reading kept beside them rather than deleted: 5 652 spec units / 915 code items / 930 edges / 205 warnings against the recorded 5 266 / 898 / 912 / 265.",
+              "Marker follows the correction: the clause described unbuilt halves and carried `@spec/done`; two thirds of it now describes shipped behaviour, so it reads `@impl/done`."
             ]
           },
           "INDEX-DETERMINISM-IS-A-TESTED-PROPERTY": {
@@ -7364,10 +7367,34 @@
             "ev": [
               "closed by the owner-ruled group-A answer (2), 2026-07-31, in d7a's exact drafted wording: the five 'Specified, not built' passages this document carries are now the rule's sanctioned second arm rather than nine standing falsifications; d7a #f-121 option (ii)"
             ]
+          },
+          "RULE-IMPLEMENTS-IS-A-CLAIM-ABOUT-CODE-THAT-RUNS": {
+            "v": "confirmed",
+            "ev": [
+              "PRESCRIBES, and the same commit made the tree obey it: the two `implements` edges from `vibe_settings::events::Watcher` and its `watch` method were removed, because the only `impl Watcher for` sites in the whole tree are a doc example and a `Noop` in that module's tests. Index edges 932 -> 930.",
+              "Coherent with its neighbours and every referent resolves: `implements` is one of the five verbs the rule above it declares, and the trait/abstract-signature classes it names are code items the model already carries (`item_kind` values include `trait`).",
+              "Bounded by measurement rather than asserted broadly: five traits in the committed map carry edges, and four of them have real implementations (McpTool 5, DepProvider 7, DepSolver 3, VersionEnumerator 3). The rule therefore describes a discipline, not a widespread defect."
+            ]
+          },
+          "RULE-WHY-A-DECLARED-SHAPE-MUST-NOT-CLAIM-COVERAGE": {
+            "v": "confirmed",
+            "ev": [
+              "PRESCRIBES the rationale, and its central claim is checkable: an edge from a declaration is indistinguishable in the index from an edge from working code. Checked — `Edge` carries verb, from_symbol, uri, file, line and provenance; nothing on it records whether the tail is implemented, so no consumer can tell the two apart.",
+              "The reader-facing damage is measured rather than hypothesised: before this commit `vibe explain \"spec://…/PROP-040#file-watch\"` listed the trait and its method as implementors; after it, the requirement shows its one honest edge from `WatchError`.",
+              "The gradient it names — the more carefully a project declares shapes ahead of time, the more false coverage it accumulates — follows from the indistinguishability above and needs no separate evidence; it is the reason the rule exists rather than a claim about this tree."
+            ]
+          },
+          "RULE-DROPPING-THE-EDGE-SILENCES-NOTHING": {
+            "v": "confirmed",
+            "ev": [
+              "PRESCRIBES, and it answers the one objection the change invites. Checked against the regenerated index: after both edges were removed the ratchet reports **0 gated orphan(s)**, because `crates/vibe-settings/src/events/mod.rs` carries `specmark::scope!(\"…PROP-040#events\")` and `##RULE-SCOPE-INHERITANCE` gives every item in the module a default edge.",
+              "The second half is checked too: the requirement retains its edge from `vibe_settings::events::WatchError`, real code with a real implementation, so removing the declaration's claim did not leave the unit uncovered.",
+              "This is the clause that corrects the backlog row which raised the finding: it judged «move the tag to the implementation» as losing the link to where the shape is promised. The link survives in the module scope and in the docblock, so the option was cheaper than the row believed."
+            ]
           }
         },
-        "verified_at": "2026-08-05T09:40:39Z",
-        "verify_batch": "C1 + D5b + D7 + D10-groupA + D13-1a + D16 + D17 + D18 + D34 + G4-F132"
+        "verified_at": "2026-08-05T20:13:23Z",
+        "verify_batch": "C1 + D5b + D7 + D10-groupA + D13-1a + D16 + D17 + D18 + D34 + G4-F132 + G6-implements-is-a-claim + G6-index-contents"
       }
     },
     {
