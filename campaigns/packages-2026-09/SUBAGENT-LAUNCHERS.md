@@ -244,7 +244,7 @@ grep -v '"subtype":"thinking_tokens"' "$L" | tail -1
 The one-liner above stays useful for the `PROGRESS` trail; for «is it stuck»
 read that line, and count the worker's tool calls
 (`grep -o '"name":"Edit"' "$L" | wc -l`) — a task that should be editing and
-has zero Edits after its reading phase is the real stall signal. @impl/done
+has zero Edits after its reading phase is the real stall signal.
 
 ##obs-archive **The archive — where every log lives and stays.** Root:
 `C:\Users\olegc\git\v\cache\agents\` (machine-local, OUTSIDE the repo,
@@ -422,7 +422,7 @@ on a test log is exactly that; *(ii)* a merge's verification is the PANEL, and
 a pre-panel spot check that disagrees with it is worth nothing, so do not form
 a verdict from one. Related in shape to `#fact-panel-background-form`, where an
 `echo` swallowed the exit — same disease, different disguise, and this one was
-self-inflicted at the boss's own keyboard. @impl/done
+self-inflicted at the boss's own keyboard.
 
 ##fact-the-tail-is-the-crates-the-packet-did-not-name **The boss tail lands
 exactly in the crates the packet's self-verify did not name (2026-08-05):** the
@@ -432,7 +432,7 @@ wire-validation slice was verified over `vibe-core`, `vibe-registry` and
 through the very `Deserialize` the slice tightened. The worker could not have
 seen it and was not asked to. **A packet that tightens a shared type names the
 consumer crates it CAN check and the boss budgets a workspace run for the rest**
-— the split is the method working, not the worker missing something. @impl/done
+— the split is the method working, not the worker missing something.
 
 ##fact-code-slice-file-budget **Code-slice self-verify includes the
 file-length budget (2026-08-04, paid at the B-006 landing — the second
@@ -472,7 +472,7 @@ a copy of the working directory; *(ii)* the sibling `run/cache.json` IS
 tracked, so a packet needing anchors can cite the cache when the mirror is
 not provisioned — but the mirror stays the definition, and deriving anchors
 any other way is a divergence to be reported rather than a shortcut to be
-taken. @impl/done
+taken.
 
 ##fact-one-thread-one-writer **A `-c` correction sent while the first run is
 still alive makes two writers on one worktree (2026-08-05, caught before it
@@ -481,7 +481,7 @@ cost anything):** conversations are keyed by (state dir, cwd), so a mid-flight
 against the same files. The boss killed the two correction runs and waited for
 the originals. **Send a `-c` only after the run it corrects has ended**; a
 worker that must learn something mid-flight learns it from the filesystem
-instead — put the file where the packet said it would be. @impl/done
+instead — put the file where the packet said it would be.
 
 ##fact-engine-enum-ripple **An engine enum change is a cross-package
 ripple (2026-08-04, paid at the W4 landing, twice):** adding a `Fact`
@@ -514,7 +514,7 @@ failure `#fact-one-thread-one-writer` forbids. **Completion is the harness
 notification plus the report file on disk; a grep hit is not evidence.** The
 liveness read that does work: `grep -o '"command":"echo \\"PROGRESS[^"]*'`
 (the worker's own tool CALLS, which the packet text cannot forge) and
-`ls WORKER-REPORT-<task-id>.md`. @impl/done
+`ls WORKER-REPORT-<task-id>.md`.
 
 ##fact-the-follow-up-packet-drops-the-clause **A follow-up packet written
 against a finding drops the boilerplate the first packet carried — and
@@ -526,14 +526,14 @@ was lost, but for ten minutes the run was indistinguishable from a stall by
 the poll the law prescribes. The clause is not the worker's discipline, it
 is the packet's — and a packet assembled from a review note is exactly the
 one that skips it. Same for the report template and the self-verify block:
-copy the closing three sections before writing the body. @impl/done
+copy the closing three sections before writing the body.
 
 ##fact-log-volume-is-thinking-telemetry **Log size is not activity
 (2026-08-05):** with `MAX_THINKING_TOKENS` set, the stream-json log carries
 one `{"subtype":"thinking_tokens"}` line **per token** — a two-minute-old
 log is already megabytes and grows while the worker only thinks. Judge by
 the last non-telemetry event, not by bytes:
-`grep -v '"subtype":"thinking_tokens"' "$LOG" | tail -c 300`. @impl/done
+`grep -v '"subtype":"thinking_tokens"' "$LOG" | tail -c 300`.
 
 ##fact-the-result-event-is-the-terminal-signal **The stream-json `result`
 event is the completion signal that cannot be forged, and it outranks both
@@ -547,7 +547,7 @@ echoed **one** `PROGRESS` for a 498-second run and **no** `TASK-DONE` at all.
 Heartbeats are best-effort by nature — the packet can mandate them and the
 weak writer still drops them — so the poll reads, in order: the `result`
 event for «is it over», the last non-telemetry event for «what is it doing»,
-and the report file on disk for «did it deliver». @impl/done
+and the report file on disk for «did it deliver».
 
 ##fact-the-spawn-form-costs-the-notification **The spawn form printed in
 `#e-spawn` defeats the completion notification it is supposed to produce
@@ -560,7 +560,7 @@ the trailing `&`, backgrounded by the harness instead of by the shell, gave a
 notification at the worker's real end. **Drop the `&` and let the harness own
 the backgrounding** — then `##WAL-C-COMPLETION-SIGNAL`'s «notification plus
 report file» is a signal the boss actually receives, instead of one it has to
-poll for. @impl/done
+poll for.
 
 ##fact-finalisation-is-coupled-to-worktree-removal **Report archiving silently
 depends on the worktree being removable (2026-08-05):** `#obs-meta` puts the
@@ -572,4 +572,4 @@ against **two** worktrees git still tracked, and nine reports; seven had been
 archived anyway and **two never were** (`P-GOFLAG-RULE`,
 `V2-VENDOR-SCANNERS`), so the archive was missing a report for a task that
 looked complete. Archive the report the moment the run ends, as its own step,
-before any cleanup — the two operations have no reason to be one. @impl/done
+before any cleanup — the two operations have no reason to be one.
