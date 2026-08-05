@@ -1,0 +1,39 @@
+{
+  "batch": "G6-restatements",
+  "cluster": "ai-native",
+  "files": {
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md": {
+      "CONFORM-TOML-GAINS-A-GO-SECTION": {
+        "v": "confirmed",
+        "ev": [
+          "RESTATED 2026-08-05 because the fact's own text moved (B-051 closure): its root-key tail stopped restating the defaults and now names which root keys the Go rules read, citing ENGINE-CONFORM §6 for their meanings.",
+          "The `[go]` half of the paragraph is UNCHANGED and its prior evidence stands: `GoConfig` in core-ai-native-conform/src/config.rs carries roots, exclude_substrings, cells_dir, seams_pkg, registry_pkg, gated, `[[go.exempt]] {unit, reason}` and floor_disable, and the package is Go's gate unit.",
+          "The changed half re-checked against the same schema: max_file_lines, invariant_comment_markers and invariant_comment_min_file_lines are declared at the ROOT of `Config` (config.rs:90-150), not under any language table — which is what the paragraph now claims and all it claims about them.",
+          "What the restatement is NOT: a re-stamp. The paragraph lost three defaults it had been asserting (600, the five-marker list, 120) — each now stated in exactly one place — so the fact it carries is strictly narrower than the one previously confirmed."
+        ]
+      }
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.md": {
+      "RULE-FILE-LENGTH-BUDGET": {
+        "v": "confirmed",
+        "ev": [
+          "RESTATED 2026-08-05, same cause as its Go sibling: the bullet stopped restating the root-key defaults and now names the keys the TS rules read, citing ENGINE-CONFORM §6 for their values.",
+          "Re-checked against core-ai-native-conform/src/config.rs:90-150: max_file_lines, invariant_comment_markers and invariant_comment_min_file_lines are root-level fields of `Config`, and the bullet's surviving structural claim — root keys, language-neutral, NOT under `[typescript]` — holds against that declaration.",
+          "The bullet also gained a fourth key, sarif_reports, and the reason it belongs: boss-verified that typescript-ai-native-conform/src/lib.rs:109 reads `config.sarif_reports` and :82 mounts `LintSuppressionNeedsReason`, so the surface had been silent about a root key its own gate reads.",
+          "This anchor's prior verdict already carried one correction — a seal that vouched for it unchecked because the stability extractor did not see list-item facts. That extractor now sees them, and this restatement is the first one it caught on purpose."
+        ]
+      }
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md": {
+      "GOALS-AND-NON-GOALS": {
+        "v": "confirmed",
+        "ev": [
+          "RESTATED 2026-08-05 because the section's text moved: it had claimed «no backlog entry exists for them» about R3-004's three unbuilt halves, and one did — B-052, filed 2026-08-04, hours after the card was written.",
+          "The correction removed the claim rather than updating it, because the row it referred to was deleted in the same commit: the card IS the record of those halves, and a card pointing at a plan row for its own boundary is the second-writer defect this discipline exists to remove.",
+          "The Goals half is unchanged and its prior evidence stands: `cell-name-is-computed` ships at core-ai-native-conform/src/rules/naming.rs and is mounted in the Rust and Go drivers.",
+          "The Non-Goals half re-checked and still true: the tree carries no closed vocabulary of structural tokens as data or constant, no contract-surface name registry, and no synonym/shadow detector — the same measurement that opened and now closes the question, with the reason recorded (fork №1 took computed names)."
+        ]
+      }
+    }
+  }
+}
