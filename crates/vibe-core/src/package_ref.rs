@@ -182,7 +182,8 @@ impl From<Group> for String {
 /// The grammar is the shared kebab-case rule ([`validate_package_name`]):
 /// one or more lowercase ASCII alphanumeric segments joined by single
 /// hyphens, first and last characters alphanumeric, no doubled hyphens.
-/// `serde(transparent)`, so the wire form is the bare string a manifest
+/// `serde(try_from = "String", into = "String")`, so the wire form is the
+/// bare string a manifest
 /// or lockfile already carries; the validation lives in the constructor
 /// and at the [`PackageRef`] parse seam.
 ///
@@ -197,7 +198,7 @@ impl From<Group> for String {
 /// assert!(PackageRef::parse("org.vibevm/Not-Kebab").is_err());
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
-#[serde(transparent)]
+#[serde(try_from = "String", into = "String")]
 pub struct PackageName(String);
 
 impl PackageName {
@@ -247,6 +248,14 @@ impl FromStr for PackageName {
 
     fn from_str(s: &str) -> Result<Self> {
         PackageName::parse(s)
+    }
+}
+
+impl TryFrom<String> for PackageName {
+    type Error = Error;
+
+    fn try_from(s: String) -> std::result::Result<Self, Self::Error> {
+        PackageName::parse(&s)
     }
 }
 

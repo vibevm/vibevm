@@ -320,7 +320,7 @@ mod tests {
         format!(
             "[[package]]\nkind = \"{kind}\"\ngroup = \"org.vibevm\"\nname = \"{name}\"\n\
              version = \"{version}\"\nsource_url = \"https://example/{name}\"\n\
-             content_hash = \"sha256:x\"\nsource_kind = \"registry\"\n"
+             content_hash = \"sha256:abc\"\nsource_kind = \"registry\"\n"
         )
     }
 
@@ -342,7 +342,7 @@ mod tests {
         format!(
             "[[package]]\nkind = \"{kind}\"\ngroup = \"org.vibevm\"\nname = \"{name}\"\n\
              version = \"{version}\"\nsource_url = \"{source_url}\"\n\
-             content_hash = \"sha256:x\"\nsource_kind = \"registry\"\n"
+             content_hash = \"sha256:abc\"\nsource_kind = \"registry\"\n"
         )
     }
 
@@ -352,7 +352,7 @@ mod tests {
         format!(
             "[[package]]\nkind = \"{kind}\"\ngroup = \"org.vibevm\"\nname = \"{name}\"\n\
              version = \"{version}\"\nsource_url = \"{source_url}\"\n\
-             content_hash = \"sha256:x\"\nsource_kind = \"registry\"\n\
+             content_hash = \"sha256:abc\"\nsource_kind = \"registry\"\n\
              materialization = \"in-place\"\n"
         )
     }
@@ -563,7 +563,7 @@ mod tests {
             &["org.vibevm/internal"],
             "[[package]]\nkind = \"flow\"\ngroup = \"org.vibevm\"\nname = \"internal\"\n\
              version = \"0.1.0\"\nsource_url = \"https://example/i\"\n\
-             content_hash = \"sha256:x\"\nsource_kind = \"git\"\n",
+             content_hash = \"sha256:abc\"\nsource_kind = \"git\"\n",
         );
         let declared = vec![PackageRef::parse("org.vibevm/internal").unwrap()];
         let pinned = hold_pins(&declared, &lf);

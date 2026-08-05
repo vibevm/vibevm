@@ -210,7 +210,7 @@ group = "org.vibevm"
 version ="0.3.0"
 source_url = "git@mycompany:forks/wal"
 source_ref = "my-fix"
-content_hash = "sha256:xyz"
+content_hash = "sha256:abc"
 source_kind = "override"
 overridden = true
 "#;

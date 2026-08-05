@@ -36,7 +36,9 @@ use crate::package_ref::{VersionSpec, validate_package_name};
 /// The **namespace** half of a capability identifier — kebab-case
 /// (PROP-002 §2.9). A distinct type from [`CapabilityName`] so the two
 /// halves of a `<namespace>:<name>` tuple cannot be transposed by
-/// accident. `serde(transparent)`; the grammar is the shared kebab rule.
+/// accident. `serde(try_from = "String", into = "String")`, so the wire form
+/// is the bare string and the kebab grammar is checked on the way in; the
+/// grammar is the shared kebab rule.
 ///
 /// ```
 /// use vibe_core::CapabilityNamespace;
@@ -46,12 +48,13 @@ use crate::package_ref::{VersionSpec, validate_package_name};
 /// assert!(CapabilityNamespace::parse("UI").is_err()); // not kebab-case
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
-#[serde(transparent)]
+#[serde(try_from = "String", into = "String")]
 pub struct CapabilityNamespace(String);
 
 /// The **name** half of a capability identifier — kebab-case
 /// (PROP-002 §2.9). Distinct from [`CapabilityNamespace`] for the same
-/// transposition-safety reason. `serde(transparent)`.
+/// transposition-safety reason. `serde(try_from = "String", into = "String")`
+/// — the bare-string wire form, checked at the boundary.
 ///
 /// ```
 /// use vibe_core::CapabilityName;
@@ -61,7 +64,7 @@ pub struct CapabilityNamespace(String);
 /// assert!(CapabilityName::parse("-bad").is_err()); // leading hyphen rejected
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
-#[serde(transparent)]
+#[serde(try_from = "String", into = "String")]
 pub struct CapabilityName(String);
 
 macro_rules! kebab_newtype {
@@ -102,6 +105,13 @@ macro_rules! kebab_newtype {
             type Err = Error;
             fn from_str(s: &str) -> Result<Self> {
                 $ty::parse(s)
+            }
+        }
+
+        impl TryFrom<String> for $ty {
+            type Error = Error;
+            fn try_from(s: String) -> std::result::Result<Self, Self::Error> {
+                $ty::parse(&s)
             }
         }
 

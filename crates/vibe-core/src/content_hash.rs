@@ -17,12 +17,18 @@ use serde::{Deserialize, Serialize};
 /// mirror-switch or host-migration that changes `source_url` but not the
 /// bytes leaves identity intact.
 ///
-/// `serde(transparent)`: the wire form is the bare `sha256:…` string the
-/// lockfile already carries. The newtype's value is keeping the identity
-/// hash from being confused with the many other strings around it
-/// (`source_url`, `source_ref`, `resolved_commit`); [`parse`] checks the
-/// algorithm prefix, while [`from_validated`] wraps a hash a trusted
-/// producer (`vibe-index`'s `compute_content_hash`) already emitted.
+/// The wire form is the bare `sha256:…` string the lockfile already carries,
+/// and `serde(try_from = "String", into = "String")` keeps it exactly that
+/// while running [`parse`] at the boundary — the spelling `Group` has used all
+/// along. It was `serde(transparent)` until 2026-08-05, on a reason that only
+/// ever justified the wire SHAPE: `transparent` and `try_from`/`into` emit the
+/// same bare string, and only one of them notices a malformed value arriving.
+/// The newtype's other job is keeping the identity hash from being confused
+/// with the many other strings around it (`source_url`, `source_ref`,
+/// `resolved_commit`); [`from_validated`] still wraps a hash a trusted producer
+/// (`vibe-index`'s `compute_content_hash`) already emitted, and there is
+/// deliberately no `From<String>` — an unchecked constructor next to a checked
+/// one is the back door the boundary check exists to close.
 ///
 /// ```
 /// use vibe_core::ContentHash;
@@ -32,7 +38,7 @@ use serde::{Deserialize, Serialize};
 /// assert!(ContentHash::parse("md5:whatever").is_err()); // wrong algorithm
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
-#[serde(transparent)]
+#[serde(try_from = "String", into = "String")]
 pub struct ContentHash(String);
 
 impl ContentHash {
@@ -86,15 +92,17 @@ impl std::ops::Deref for ContentHash {
     }
 }
 
-impl From<String> for ContentHash {
-    fn from(s: String) -> Self {
-        ContentHash(s)
-    }
-}
-
 impl From<ContentHash> for String {
     fn from(h: ContentHash) -> String {
         h.0
+    }
+}
+
+impl TryFrom<String> for ContentHash {
+    type Error = crate::Error;
+
+    fn try_from(s: String) -> std::result::Result<Self, Self::Error> {
+        ContentHash::parse(&s)
     }
 }
 
