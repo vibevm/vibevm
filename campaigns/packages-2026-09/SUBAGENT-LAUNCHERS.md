@@ -615,3 +615,25 @@ archived anyway and **two never were** (`P-GOFLAG-RULE`,
 `V2-VENDOR-SCANNERS`), so the archive was missing a report for a task that
 looked complete. Archive the report the moment the run ends, as its own step,
 before any cleanup — the two operations have no reason to be one.
+
+##fact-a-cd-in-the-boss-command-silently-retargets-the-correction **A `cd` at
+the top of the boss's own command sends the `-c` correction to a different
+worker — and the default wrong destination is the host repository itself
+(2026-08-06, caught with nothing damaged):** conversations are keyed by (state
+dir, cwd), which `#launchers-conversation-key` already says. What it does not
+say is that the boss's *own* shell is the thing that decides that cwd, and the
+Bash tool's working directory persists between calls. The correction was written
+as `cd /…/vibevm` followed by `( claudez -c -p "…" )`, so the subshell inherited
+the repo root instead of `.wt/<task-id>` and `-c` resumed **whatever claudez
+thread last ran at the root** — not the worker being corrected. That thread then
+holds `Edit`/`Write` over the real tree, and the packet it was just handed names
+files that exist there, so the failure mode is not "the correction is lost" but
+"an unrelated conversation is told to edit the host". Killed at the session-start
+hook, before any tool call: `git status` was unchanged and the run's tool tally
+was empty. **The `-c` form is the same subshell the spawn uses —
+`( cd .wt/<task-id> && claudez -c -p … )` — and the `cd` belongs INSIDE the
+parentheses, never before them.** Verified on the resend: `pwd` inside the
+subshell printed the worktree, and the correction reached the right thread.
+Related in shape to `#fact-one-thread-one-writer` (the other way a `-c` finds
+the wrong writer) and to `##WAL-C-SHELL-TRAPS`, whose "cwd is persistent" line
+was written about paths in commands and turns out to govern worker routing too.
