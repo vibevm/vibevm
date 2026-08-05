@@ -27966,6 +27966,15 @@
       "uri": "spec://org.vibevm.core/vibevm/design/README#idx-new-rule-classes"
     },
     {
+      "anchor": "idx-command-nodes",
+      "content_hash": "sha256:4801206777eb9beabf3efee8cb583057cd7db078a6f209b0078148f5b69820cf",
+      "doc_path": "design/README",
+      "file": "spec/design/README.md",
+      "heading": "[Command nodes in the map](command-nodes.md) — the B-019(б) design, standing on the M-B019B measurement (archived under `cache/agents/sorted/M-B019B/`). Two measurements decide most of it and both cut the price down: `item_kind` is an **open string** in the wire schema while its four neighbours carry `enum`s, and no production code matches or filters on it — so a new kind is a new value, not the schema bump B-019(а) was; and `explain`'s target grammar is one prefix test with no closed set of kinds behind it, so a node whose `symbol` is the invocation path (`vibe install`) is answerable through the existing symbol path with no change to `explain` at all. Recognition is by clap's `Subcommand` derive rather than by an author's marker, because a marker that a new subcommand can be added without is a norm with no checker, and both derive spellings in this tree must be read. Corrects the measurement's one wrong conclusion — the enum a command lives in **is** a `syn::Item` the walker already visits, so no pass parallel to `jtd.rs` is needed; the real obstacle is that `tag_item` records nothing untagged, and command nodes take the unconditional `record_item` path instead. Names the crate-wide join (root binary name ↔ group enums, across files) as the design's only structural cost, and cuts the build into three slices with the surfaces census's own numbers as acceptance (29 top-level, 68 nested). Captured 2026-08-06; part (в) explicitly not in it — its systems boundary is the owner's, before implementation. @spec/work",
+      "line": 160,
+      "uri": "spec://org.vibevm.core/vibevm/design/README#idx-command-nodes"
+    },
+    {
       "anchor": "root",
       "content_hash": "sha256:0a50e1e589e9acc0f5a35326fea716711523cc6575e8f6b7f7945e5c0acb8983",
       "doc_path": "design/action-system",
@@ -28504,6 +28513,339 @@
       "heading": "PROP-039 carries one granular addressable REQ per Δ (Δ1–Δ16), organised by the §2 modules, each",
       "line": 277,
       "uri": "spec://org.vibevm.core/vibevm/design/action-system#CONTRACT-POINTER"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:10b0acd5c9b0df08faa5f464806bb1d906ad85a6dcd2143abf703d9d675d5390",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "Command nodes in the map — B-019(б)",
+      "line": 1,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#root"
+    },
+    {
+      "anchor": "design-scope",
+      "content_hash": "sha256:5bf33cd1625db0b36ef20870b44975db53c41b8dc0c4a211a0273683388d2f12",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**Scope.** [`BACKLOG.md`](../../BACKLOG.md) `##B019-B` asks that a",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#design-scope"
+    },
+    {
+      "anchor": "design-not-blocked",
+      "content_hash": "sha256:539e06e66a50df45591213204d0f34be2b721dedcaab1e1999a6f8e7b2c7405f",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**It does not ride the format change.**",
+      "line": 14,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#design-not-blocked"
+    },
+    {
+      "anchor": "measured",
+      "content_hash": "sha256:3f9ba33dbd3ae6fb5e5e5365579b8858459b3b18d68b200ccabd4a87fdd14394",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "1. What is measured today",
+      "line": 20,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#measured"
+    },
+    {
+      "anchor": "m-eight-kinds",
+      "content_hash": "sha256:ba384f6785b46e356c20d4471bf4d61d4d6fed47d1261c970bd49b917d2602b5",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**The committed map carries 932 code items in eight kinds** —",
+      "line": 22,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#m-eight-kinds"
+    },
+    {
+      "anchor": "m-kind-is-an-open-string",
+      "content_hash": "sha256:aa3c111202029f382c1a8da97485eb628bbe08ca03eca2334b5b6cbbb154256d",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**`item_kind` is an open string, and this is the",
+      "line": 27,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#m-kind-is-an-open-string"
+    },
+    {
+      "anchor": "m-nothing-matches-on-kind",
+      "content_hash": "sha256:5259438efa9b15c8703cf512e9097d0b8a6c97245ccfc598989280681fa4d7e4",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**No production code matches or filters on",
+      "line": 36,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#m-nothing-matches-on-kind"
+    },
+    {
+      "anchor": "m-scanner-is-blind-to-derive",
+      "content_hash": "sha256:1a732bc7cc87297484e9fd75861ae7d773b70976f712860c050ebabdccf9f5bc",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**The Rust scanner cannot see `#[derive(...)]`",
+      "line": 43,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#m-scanner-is-blind-to-derive"
+    },
+    {
+      "anchor": "m-explain-target-is-open",
+      "content_hash": "sha256:f130ca9efa4e1416452dde9aa333d8c5c98ff86a8e3210b07420fae86d444e35",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**`explain`'s target grammar is open, and this is the",
+      "line": 49,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#m-explain-target-is-open"
+    },
+    {
+      "anchor": "m-all-three-stacks-are-clap",
+      "content_hash": "sha256:8450150d249477ae1173e510e314ad289e695cef97bc38d405d27cb1f3379621",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**All three language stacks declare their commands",
+      "line": 56,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#m-all-three-stacks-are-clap"
+    },
+    {
+      "anchor": "m-twentyone-copies",
+      "content_hash": "sha256:ec3ae42e50cf689b86807dcec0d9b9b2f03db8c35386a8ee355f06346cf14f5c",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**The engine crate exists in 22 directories: one authored",
+      "line": 63,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#m-twentyone-copies"
+    },
+    {
+      "anchor": "recognition",
+      "content_hash": "sha256:d655dc4d25dbf1e43e65ce1989012a5420debeaf73de6c5308ad17758177512e",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "2. How a command is recognised",
+      "line": 69,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#recognition"
+    },
+    {
+      "anchor": "r-three-answers",
+      "content_hash": "sha256:3b45e86b30633859ea04a1d1f003a47f1fcf8b6f2e05fc16ce30a487993b9c6e",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "Three answers exist. **(A)** Recognise the framework: an enum",
+      "line": 71,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#r-three-answers"
+    },
+    {
+      "anchor": "r-a-wins",
+      "content_hash": "sha256:4d9579439e06968011ebc40c569da3a1fe49885961a809325ddb84808b90340e",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**(A), and the reason is a law rather than a preference.** (B) and (C)",
+      "line": 76,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#r-a-wins"
+    },
+    {
+      "anchor": "r-not-a-framework-in-the-core",
+      "content_hash": "sha256:dba185c5db4163f44bfdfe0e9b0d3a68b2ec52abfb368494bf659ac74166d4ef",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**The objection that (A) puts a framework into a",
+      "line": 84,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#r-not-a-framework-in-the-core"
+    },
+    {
+      "anchor": "r-both-spellings",
+      "content_hash": "sha256:a20a9b6111411799ca00a34ec33213d5d5eeea2004c9319f884d1487b46e472e",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**Both derive spellings must be recognised.** This tree",
+      "line": 95,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#r-both-spellings"
+    },
+    {
+      "anchor": "r-this-is-not-an-owner-fork",
+      "content_hash": "sha256:43d156760ba4bdf9b84cbf9913eaf0c6d783e8eeedfb900771d8383f0c3aae30",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**This is engineering judgement, not the owner's",
+      "line": 103,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#r-this-is-not-an-owner-fork"
+    },
+    {
+      "anchor": "node",
+      "content_hash": "sha256:7fceb2b37a78557a6ac3758da8eb0bb1587a091446c3565e03df3c4f7a2d2b40",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "3. What a command node carries",
+      "line": 107,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#node"
+    },
+    {
+      "anchor": "n-no-new-fields",
+      "content_hash": "sha256:f4da9dc7c19a8f290f1831a8f4eb0481887d8194152627e248e7720d3fad62ab",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "A `code_item` with `item_kind = \"command\"` and the fields that",
+      "line": 109,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#n-no-new-fields"
+    },
+    {
+      "anchor": "n-symbol-is-what-a-human-types",
+      "content_hash": "sha256:9ee91f05b7c7d516ad1658fb055b5624665638135f78041237c339d69aef3bb3",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**The symbol is the invocation path and not the",
+      "line": 120,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#n-symbol-is-what-a-human-types"
+    },
+    {
+      "anchor": "n-binary-name-is-declared",
+      "content_hash": "sha256:fd12671ce06e5c4749bb3d8f07b1dee325ed2936410d313873cd6dafc9774020",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "The binary half of the path is read from the",
+      "line": 127,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#n-binary-name-is-declared"
+    },
+    {
+      "anchor": "n-variant-name-rule",
+      "content_hash": "sha256:70c54348978256e71fa20e45022a43c4f9d8c0d45196d56f2337278bdf091e1b",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "The variant half is clap's own rename rule",
+      "line": 133,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#n-variant-name-rule"
+    },
+    {
+      "anchor": "extraction",
+      "content_hash": "sha256:30f83284ce888a2f4fb1c450306161a9c01686d27574d0b18e05a23e0c4974aa",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "4. Where the extraction lives",
+      "line": 139,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#extraction"
+    },
+    {
+      "anchor": "x-the-enum-is-an-ast-item",
+      "content_hash": "sha256:dbbb9c40588c3a8560699b15e9d69b4fe9ff7d3ffa451120d71c903bf0e23a05",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**A command variant is reachable from the walk that",
+      "line": 141,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#x-the-enum-is-an-ast-item"
+    },
+    {
+      "anchor": "x-not-through-tag-item",
+      "content_hash": "sha256:2c589adf1214787a057cb6c9c42239311cbc2d803f2502ff723641f761182421",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**It cannot ride `tag_item`, and that is the one real",
+      "line": 151,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#x-not-through-tag-item"
+    },
+    {
+      "anchor": "x-the-join-is-crate-wide",
+      "content_hash": "sha256:aa6f5d56832d588b077d4de4be25609141df9e5c603ef57fd26c920355b9fa6f",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**The binary name and the nesting are a crate-wide",
+      "line": 158,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#x-the-join-is-crate-wide"
+    },
+    {
+      "anchor": "x-budget-does-not-choose-the-shape",
+      "content_hash": "sha256:34f20e30fe402d67d5dad2202c398bde54bcb38dd8f0f44ecb0430b0fa936efe",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**`rscan.rs` is 511 lines against the",
+      "line": 169,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#x-budget-does-not-choose-the-shape"
+    },
+    {
+      "anchor": "cut",
+      "content_hash": "sha256:439e01211479a4491969db03378cd48b4bd5937aba4dab8471b042cd838e2755",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "5. The landing cut",
+      "line": 177,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#cut"
+    },
+    {
+      "anchor": "cut-1",
+      "content_hash": "sha256:8c3ca5a11c7a3ac5dd0cc011a547e5b1431467582143eecf7b1e989a7f7a3ebf",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**Slice 1 — top-level commands of one binary.** The derive reader, the",
+      "line": 179,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#cut-1"
+    },
+    {
+      "anchor": "cut-2",
+      "content_hash": "sha256:216ad439cf088faeb98e8f2e1a8ccc65e5b5654c44a8ce379b8c00134a323228",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**Slice 2 — nesting.** A variant whose payload type carries its own",
+      "line": 186,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#cut-2"
+    },
+    {
+      "anchor": "cut-3",
+      "content_hash": "sha256:de2e78a8b1158bf9d4695ac9f57e3d4eeb6c8d87ee55bc5c21ad7c9a542418f2",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**Slice 3 — the acceptance, which is expected to need no code.**",
+      "line": 193,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#cut-3"
+    },
+    {
+      "anchor": "cut-vendor",
+      "content_hash": "sha256:ff4c8c24380a39110d3f4f959d0b1a93e5865601bd4bee91917f1e86f0130821",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**Every slice that edits the engine ends with",
+      "line": 200,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#cut-vendor"
+    },
+    {
+      "anchor": "non-goals",
+      "content_hash": "sha256:86192215515db4557d64017e740efa918859556a644c52b519f1b85d82937b43",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "6. Non-goals",
+      "line": 205,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#non-goals"
+    },
+    {
+      "anchor": "ng-not-v",
+      "content_hash": "sha256:11046fd5be6293ddcdff90a75a810716bd23c310cb229ca2ed97720ccdc12b02",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**Not part (в).** The error-variant node's systems boundary — whether",
+      "line": 207,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#ng-not-v"
+    },
+    {
+      "anchor": "ng-not-a-schema-bump",
+      "content_hash": "sha256:80f7cae09101718f0d9b485ad0a9a4e2915608baa482a414f190eb217c3e5ea0",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**Not a schema bump.** If a build measures that",
+      "line": 212,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#ng-not-a-schema-bump"
+    },
+    {
+      "anchor": "ng-not-the-spec-side-revisions",
+      "content_hash": "sha256:6673f5c8f223687ce8b2e8c8548327612ff67b8876b0d8f8754b3657f983f482",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**Not the spec-side half of (а).** Revision",
+      "line": 216,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#ng-not-the-spec-side-revisions"
+    },
+    {
+      "anchor": "ng-not-other-languages",
+      "content_hash": "sha256:4a5930f559fd05a60b1c37a657392b8a361631c60e61f9527796f5a79cd81482",
+      "doc_path": "design/command-nodes",
+      "file": "spec/design/command-nodes.md",
+      "heading": "**Not command extraction for consumer projects in Go or",
+      "line": 220,
+      "uri": "spec://org.vibevm.core/vibevm/design/command-nodes#ng-not-other-languages"
     },
     {
       "anchor": "companion-line",
