@@ -34,6 +34,7 @@ use serde::Deserialize;
 /// // Unset fields fall back to the defaults.
 /// assert_eq!(cfg.spec_roots, vec!["spec".to_string()]);
 /// assert!(cfg.root_spec_docs.is_empty());
+/// assert!(cfg.spec_exclude.is_empty());
 /// // Quality thresholds default to the start placeholders; both gate off at 0.
 /// assert_eq!(cfg.max_connections_per_item, 3);
 /// assert_eq!(cfg.max_section_lines, 120);
@@ -59,6 +60,33 @@ pub struct Config {
     /// [`spec_roots`](Config::spec_roots) — for a project whose frozen
     /// top-level spec lives at the repo root, outside any `spec/` tree.
     pub root_spec_docs: Vec<String>,
+    /// Spec-markdown files to exclude from the inventory — globs matched
+    /// against the `/`-separated repo-relative path (the exact string each
+    /// [`SpecUnit`](crate::generated::specmap::SpecUnit) carries as `file`),
+    /// applied to what [`spec_roots`](Config::spec_roots) and
+    /// [`root_spec_docs`](Config::root_spec_docs) would otherwise surface.
+    /// The match leaves the inventory before it is parsed into units — the
+    /// exclude is layered **after** the include half, by the same law as the
+    /// progress gate's `exclude`: the include names the forest, the exclude
+    /// names the trees to cut.
+    ///
+    /// This config has two root families — [`scan_roots`](Config::scan_roots)
+    /// (code) and [`spec_roots`](Config::spec_roots) (markdown) — so a bare
+    /// `exclude` would not say which half it prunes. `spec_exclude` names the
+    /// spec-markdown half (the only half with the finding today) and leaves
+    /// the name `code_exclude` free should the code half ever need one.
+    ///
+    /// PROP-014's include half is enumerated by design so nothing is observed
+    /// by accident, and an *enumerated* exclude list serves that purpose
+    /// exactly as well as an enumerated include — both are explicit and both
+    /// are reviewable. What it must not become is a wildcard escape hatch:
+    /// a pattern that matches no file is reported (the `stale-exclude`
+    /// warning), never tolerated, and a pattern that is not a valid glob is
+    /// reported (the `bad-exclude-glob` warning), never silently skipped —
+    /// a skip would leave the corpus wider than the config says.
+    ///
+    /// Absent ⇒ empty ⇒ the behaviour of a config that never had the key.
+    pub spec_exclude: Vec<String>,
     /// Installed packages' spec trees that participate in **resolution
     /// only** (PROP-014 §7.1): their units suppress dangling-edge warnings
     /// and feed queries, but are never serialised into this project's
@@ -131,6 +159,7 @@ impl Default for Config {
             scan_roots: vec!["crates/*".into()],
             spec_roots: vec!["spec".into()],
             root_spec_docs: Vec::new(),
+            spec_exclude: Vec::new(),
             external_specs: Vec::new(),
             exempt: Vec::new(),
             dispositioned: Vec::new(),
@@ -357,6 +386,20 @@ mod tests {
         assert!(
             toml::from_str::<Config>("namespace = \"x\"\nsection_grain = \"weird\"\n").is_err()
         );
+    }
+
+    #[test]
+    fn spec_exclude_defaults_empty_and_reads_from_toml() {
+        // Absent key ⇒ empty list ⇒ no exclusion (the pre-field behaviour).
+        assert!(Config::default().spec_exclude.is_empty());
+        // The key reads. Under `deny_unknown_fields` this same toml was a
+        // hard error before the field existed, so a successful parse is
+        // itself the proof the field is wired into the schema.
+        let cfg: Config = toml::from_str(
+            "namespace = \"demo\"\nspec_exclude = [\"spec/WAL.md\", \"**/INDEX.md\"]\n",
+        )
+        .unwrap();
+        assert_eq!(cfg.spec_exclude, vec!["spec/WAL.md", "**/INDEX.md"]);
     }
 
     #[test]
