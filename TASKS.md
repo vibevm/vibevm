@@ -111,42 +111,75 @@ authored and judged: [`spec/design/multiple-sources-and-plugins.md`](spec/design
       tests moved to their own files: the 600-line budget is a neutral key
       and counts every file, tests included.
 
-### Registry debt this slice created — measured, not guessed
+### Registry debt this slice created — CLOSED 2026-08-05
 
-The B-056 documentation moved judged text and added facts, so the corpus is
-rescanned and mirrored (`progress check: clean`, 272 files, 13 249 markers)
-but the verdict registry is behind by an exact amount:
-
-- [ ] `chore(campaign)`: **10 facts to re-judge** in
-      [`spec/design/multiple-sources-and-plugins.md`](spec/design/multiple-sources-and-plugins.md)
-      — every one moved because its status flipped `@spec/plan` → `@impl/done`
-      when the build landed, so the claim is unchanged and the flip is its own
-      evidence; and **the facts added this slice to judge fresh** — six in
-      PROP-035 §7.3, two corrections in the design, three in the transport law,
-      two in B-056's backlog row. `PROP-035` itself is **sealable as it
-      stands**: 146 verdicts byte-identical, because the edit only appended.
-      Run `python campaigns/packages-2026-09/tasks/text-stability.py` for the
-      current list; never chain merge and seal.
+- [x] `chore(campaign)`: **19 verdicts over two files** — 10 re-judged in
+      [the B-056 design](spec/design/multiple-sources-and-plugins.md) and 9
+      judged fresh (2 design corrections, 7 in PROP-035 §7.3). Both sealed;
+      `text-stability.py` reports 0 stale, 0 owed.
+      **The debt statement was wrong twice, and both corrections are the
+      lesson.** *(i)* It counted 13 new facts; only 8 could ever enter the
+      registry — the transport law lives under `campaigns/`, a structural
+      exclusion in the scanner, and `BACKLOG.md` matches no include glob, so
+      five of the named facts are in files the campaign cannot observe.
+      *(ii)* It said all ten moved for one reason, the `@spec/plan` →
+      `@impl/done` flip. Nine did; the tenth
+      (`##fold-source-only-collision`) lost a whole sentence — the one the
+      build refuted — and its prior verdict's evidence named a mechanism that
+      does not do the job. A re-judgement that had trusted the summary would
+      have re-stamped it.
+- [x] `docs(vibe-spec)` + `docs(backlog)`: the refuted sentence's **other two
+      homes** — `merge.rs`'s module header and append loop, and B-056's
+      `##B056-ODR-PARALLEL`. Four homes, of which the landing had corrected
+      two, and only two of the four are inside the corpus at all.
 
 ### Волна Г proper
 
-- [ ] `refactor(crates)`: the pointed seam work the B-040 census earned
-      (`harvest/g1-b040-seams-census.md`) — sealed traits and typestate where
-      they pay, a recorded reason where they do not.
-- [ ] `docs(spec)`: the F-132 schema debt. **Measured 2026-08-05, and the
-      debt is not where the line said.** `schemas/specmap.jtd.json` does not
-      exist; what exists is seven `*.jtd.json` report schemas, and **none of
-      them carries a spec tag of any kind**. That matters because
-      `conform.toml` exempts `vibe-wire` on the stated ground that «the
-      generator input under `schemas/` is the taggable unit instead» — so
-      the exemption's own justification is the thing that is missing.
-      **The cheap fix is a wish, not a fix:** each schema has a top-level
-      `metadata` block, so a `spec://` key drops in trivially — and nothing
-      reads it, because the specmap scanner takes `.rs` and markdown, not
-      JSON. Closing this honestly means either teaching the scanner the
-      schema metadata, or correcting the claim to «excluded, input NOT
-      tagged» with a reason and a route. The owner's standing word on it is
-      «сделать как будет возможность».
+- [x] `docs(specmap)`: **the F-132 schema debt, closed honestly.** The debt
+      named a file that does not exist; the real defect was one clause of a
+      normative rule. PROP-014 §2.3's exclusion half is real, and its «the
+      generator input is the taggable unit instead» half is a decision nobody
+      executed and nothing can execute: zero of seven schemas carry an
+      address, every scanner compares the extension literally against `rs` or
+      `md`, and the edge model hangs an address off a code SYMBOL, which a
+      JSON document has none of. The cheap fix stayed a wish; the claim, both
+      config twins and the verdict were corrected instead, and
+      [B-060](BACKLOG.md#b-060) carries the route with the honest reason its
+      line estimate does not converge.
+- [x] `chore(campaign)`: that fact had been judged `confirmed` on evidence for
+      **one of its two clauses** — both refs addressed the exclusion, the
+      designation clause had none. A sentence carrying two independent claims
+      needs a ref per claim.
+- [x] `docs(design)`: **the B-040 build design**
+      ([`spec/design/typed-seams.md`](spec/design/typed-seams.md)), shaped by
+      a question that crosses the census's five categories — where does the
+      tree state an obligation on a caller or an implementor, in prose, with
+      nothing checking it. Two of its own claims were refuted while writing
+      it and both are recorded: `progress-core` cannot adopt `vibe-core`'s
+      `ContentHash` (the separability law forbids it), and `serde(transparent)`
+      is not forced by the reason its docblock gives.
+- [x] `docs(vibe-settings)`: **L5 — the file-watch seam is a shape.**
+      `Watcher` has no production implementation, its docblock said the host
+      carries one, and its `implements` edge makes the map report the REQ as
+      built — coverage claimed by the shape rather than delivered by it
+      ([B-061](BACKLOG.md#b-061)).
+- [ ] `refactor(vibe-publish)`: **L1 — `ValidatedOrg`.** The scope rule is a
+      doc-comment obligation on implementors with nothing enforcing it; a
+      newtype only `validate_scope` can mint makes the forgotten call a
+      compile error. Latent, not live — all three implementations honour it
+      today, which is what makes the refactor zero-behaviour-change.
+- [ ] `refactor(vibe-core)`: **L2 — validation at the wire boundary.** Four
+      identity newtypes that validate in `parse()` are `serde(transparent)`
+      and accept any string off the wire; `Group` proves in-tree that
+      `try_from`/`into` keeps the same wire form.
+- [ ] `refactor(progress-core)`: **L3 — a crate-local digest newtype.**
+- [ ] `refactor(vibe-actions)`: **L4 — `ActionBuilder` typestate** for the
+      three presence obligations; emptiness stays a runtime check.
+- [ ] `chore(campaign)`: **31 facts in `typed-seams.md` await first judging.**
+      Deliberately not self-judged in the authoring session — B-056's design
+      was, and this slice had to correct one of those verdicts. Judging them
+      against the built landings is the stronger reading, so they wait for the
+      builds.
 
 ### M-PARITY bar 2 — two named builds left, both owner-deferred
 
