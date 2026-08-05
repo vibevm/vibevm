@@ -1,0 +1,36 @@
+{
+  "batch": "G6-citations-move",
+  "cluster": "host",
+  "files": {
+    "spec/design/map-format-change.md": {
+      "authority-line": {
+        "v": "confirmed",
+        "ev": [
+          "RESTATED 2026-08-05: the line cited three backlog rows as the authority that wins on divergence, and two of the three anchors no longer exist — B-016 and B-019's rows were drained the same day (B-016 built whole; B-019 built in its fingerprint third). A citation to a deleted anchor is not a weaker authority, it is no authority.",
+          "The claim itself is unchanged and still true: the owner's rulings win over this design where they diverge. What moved is where a reader is sent — B-017 is still a live row and stays a link; the two closed ones are named in plain text, with the rule stated: a closed row's ruling lives in the commit that closed it.",
+          "Checked after the fix: a grep for the two dead anchors over spec/ returns nothing, and B-017's row is present in BACKLOG.md."
+        ]
+      }
+    },
+    "spec/design/new-rule-classes.md": {
+      "authority-line": {
+        "v": "confirmed",
+        "ev": [
+          "RESTATED for the same cause as its twin in map-format-change.md: B-037's row was drained 2026-08-05 (its TypeScript half measured as built, its Rust half carried by B-050), so one of the three cited anchors had stopped resolving.",
+          "B-036 and B-038 are still live rows and stay links; B-037 is named in text with its remainder's row cited instead, so a reader following the sentence lands on the row that still owns the work.",
+          "The authority claim is unchanged: the owner's rulings win on divergence."
+        ]
+      }
+    },
+    "spec/design/multiple-sources-and-plugins.md": {
+      "cost-reading-consequence": {
+        "v": "confirmed",
+        "ev": [
+          "RESTATED because the sentence pointed at B-021 for a warning that has since been BUILT — and the row was deleted for exactly that reason, so the citation dangled at the moment the fact became most certain.",
+          "The claim is now stated against the mechanism rather than a plan row: `long-section`, raised by the map engine (core-ai-native-specmap/src/mdspec.rs) and armed by the root `max_section_lines` key, leaf sections only, start value 120.",
+          "Stronger than before on measurement: the design predicted the warning would fire on composed sections; this repository's own committed specmap.json already carries three long-section warnings, so the prediction has instances rather than only a mechanism."
+        ]
+      }
+    }
+  }
+}

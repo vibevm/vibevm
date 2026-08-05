@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-05T19:26:33Z",
+  "updated_at": "2026-08-05T19:33:11Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -95542,7 +95542,7 @@
       }
     },
     "spec/design/map-format-change.md": {
-      "content_hash": "c3d6b0db4ad2e044842e379d644ca2ab32fa8eab7ebed9875a57fdee003be9fd",
+      "content_hash": "5e4c01171e5e096464ceb27416776cc8b7c754522f62c99b51d32675f55002ba",
       "rollup": {
         "explicit": [
           "spec",
@@ -95564,14 +95564,14 @@
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "c3d6b0db4ad2e044842e379d644ca2ab32fa8eab7ebed9875a57fdee003be9fd",
+        "processed_hash": "5e4c01171e5e096464ceb27416776cc8b7c754522f62c99b51d32675f55002ba",
         "verdicts": {
           "authority-line": {
             "v": "confirmed",
             "ev": [
-              "Claims the doc is non-normative (spec/design genre); the contract lives in PROP-014 and package specs; backlog entries B-016/017/019 carry the owner rulings.",
-              "BACKLOG.md:654 / :669 / :702 ; doc map-format-change.md:5-10",
-              "B-016 (:661), B-017 (:676), B-019 (:709) are all disposition 'planned' with owner ruling 'это надо строить' (2026-08-01) — the backlog rulings the doc says win on divergence exist at the cited lines."
+              "RESTATED 2026-08-05: the line cited three backlog rows as the authority that wins on divergence, and two of the three anchors no longer exist — B-016 and B-019's rows were drained the same day (B-016 built whole; B-019 built in its fingerprint third). A citation to a deleted anchor is not a weaker authority, it is no authority.",
+              "The claim itself is unchanged and still true: the owner's rulings win over this design where they diverge. What moved is where a reader is sent — B-017 is still a live row and stays a link; the two closed ones are named in plain text, with the rule stated: a closed row's ruling lives in the commit that closed it.",
+              "Checked after the fix: a grep for the two dead anchors over spec/ returns nothing, and B-017's row is present in BACKLOG.md."
             ]
           },
           "standing-on": {
@@ -95932,12 +95932,12 @@
             ]
           }
         },
-        "verified_at": "2026-08-04T23:43:05Z",
-        "verify_batch": "H12-map-format"
+        "verified_at": "2026-08-05T19:33:11Z",
+        "verify_batch": "H12-map-format + G6-citations-move"
       }
     },
     "spec/design/multiple-sources-and-plugins.md": {
-      "content_hash": "6973274a08d8be8fac237304089124269635d9b796b14bd017007f0d649c8094",
+      "content_hash": "abac840b7322ac52f07e772a13767d38aa7de5f1d56a8084f134c680af1649ca",
       "rollup": {
         "explicit": [
           "spec",
@@ -95959,7 +95959,7 @@
       "unit_count": 7,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "6973274a08d8be8fac237304089124269635d9b796b14bd017007f0d649c8094",
+        "processed_hash": "abac840b7322ac52f07e772a13767d38aa7de5f1d56a8084f134c680af1649ca",
         "verdicts": {
           "companion-line": {
             "v": "confirmed",
@@ -96144,10 +96144,9 @@
           "cost-reading-consequence": {
             "v": "confirmed",
             "ev": [
-              "A section assembled from five plugins is long and B-021's long-section threshold will fire on it.",
-              "BACKLOG.md `##B056-COST` names the same consequence; B-021's thresholds landed this campaign and fire 0 and 4 times on this tree",
-              "found: the warning exists and would apply - the consequence is predicted from a shipped rule, not from an imagined one.",
-              "SELF-JUDGED: this design was authored the same session it is judged in. The measurements in it were taken directly from the code before it was written, and each row below names the file that was read. A later reviewer should re-derive rather than inherit these."
+              "RESTATED because the sentence pointed at B-021 for a warning that has since been BUILT — and the row was deleted for exactly that reason, so the citation dangled at the moment the fact became most certain.",
+              "The claim is now stated against the mechanism rather than a plan row: `long-section`, raised by the map engine (core-ai-native-specmap/src/mdspec.rs) and armed by the root `max_section_lines` key, leaf sections only, start value 120.",
+              "Stronger than before on measurement: the design predicted the warning would fire on composed sections; this repository's own committed specmap.json already carries three long-section warnings, so the prediction has instances rather than only a mechanism."
             ]
           },
           "cost-order": {
@@ -96175,12 +96174,12 @@
             ]
           }
         },
-        "verified_at": "2026-08-05T09:35:43Z",
-        "verify_batch": "H14-multiple-sources-design + G3-B056-new + G3-B056-rejudge"
+        "verified_at": "2026-08-05T19:33:11Z",
+        "verify_batch": "H14-multiple-sources-design + G3-B056-new + G3-B056-rejudge + G6-citations-move"
       }
     },
     "spec/design/new-rule-classes.md": {
-      "content_hash": "f3ad41617b003a195a4f1f0728061288c49f11c47b81c2ec3e47d451a06c5a8b",
+      "content_hash": "41ce00739b4313e70132f6769ad16bdf4060b981d0e4e193d86df64a9bcd31af",
       "rollup": {
         "explicit": [
           "spec",
@@ -96202,14 +96201,14 @@
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "f3ad41617b003a195a4f1f0728061288c49f11c47b81c2ec3e47d451a06c5a8b",
+        "processed_hash": "41ce00739b4313e70132f6769ad16bdf4060b981d0e4e193d86df64a9bcd31af",
         "verdicts": {
           "authority-line": {
             "v": "confirmed",
             "ev": [
-              "Claims the doc is non-normative; the contract stays in the PROPs and package specs; backlog entries B-036/037/038 carry the owner rulings and win on divergence.",
-              "BACKLOG.md:935 / :948 / :961 ; doc new-rule-classes.md:5-10",
-              "B-036 (:935), B-037 (:948), B-038 (:961) all present. B-036 disposition 'planned', B-037 'planned', B-038 carries fork №1 (computed names) — the backlog rulings the doc cites exist at those lines."
+              "RESTATED for the same cause as its twin in map-format-change.md: B-037's row was drained 2026-08-05 (its TypeScript half measured as built, its Rust half carried by B-050), so one of the three cited anchors had stopped resolving.",
+              "B-036 and B-038 are still live rows and stay links; B-037 is named in text with its remainder's row cited instead, so a reader following the sentence lands on the row that still owns the work.",
+              "The authority claim is unchanged: the owner's rulings win on divergence."
             ]
           },
           "standing-on": {
@@ -96458,8 +96457,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-04T23:41:48Z",
-        "verify_batch": "H11-new-rule-classes"
+        "verified_at": "2026-08-05T19:33:11Z",
+        "verify_batch": "H11-new-rule-classes + G6-citations-move"
       }
     },
     "spec/design/seam-error-and-assertion-parity.md": {
