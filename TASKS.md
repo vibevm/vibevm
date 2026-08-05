@@ -35,7 +35,68 @@ owner's ruling and wins.
 
 ---
 
-## Current slice: волна Г — CLOSED WHOLE 2026-08-05
+## Current slice: draining the backlog (2026-08-06)
+
+The owner's course of 2026-08-05 stands: **drain `BACKLOG.md` first, stay away
+from the tests.** Every row is measured against the authored tree before any
+work starts on it — over three days that has stopped nineteen builds of things
+already built.
+
+- [x] `fix(vibe-index)` + `build(self-check)`: **[B-008] closed.** One of twenty
+      workspace members declared no licence at all, against a norm PROP-000 §3
+      has carried since the relicensing and an owner-maintained ledger states as
+      fact. Nothing checked it — not the panel, not conform, not `vibe check` —
+      which is why it drifted for months. The crate joined its siblings and the
+      norm got its checker, reading the member list out of the workspace
+      manifest so a crate added tomorrow is covered. Proven not blind: it fails
+      on a copy of the tree as it stood an hour earlier.
+- [x] `test(vibe-cli)`: **AUDIT `-01` closed — the oldest open finding.** The
+      default path (`vibe init` with no registry flag → `vibe install`) had no
+      e2e at all, and that is the hole finding `-02` shipped through for eight
+      phases. The harness had existed since Phase 3; what was missing was a test
+      that declares its registry where a real user's lives — the machine-global
+      home — and asserts the project manifest stays empty, which is what stops
+      it becoming a copy of the test that already exists.
+- [x] `feat(vibe-resolver)`: **[B-045] closed.** The kind prefix is validated
+      after resolution, `uninstall` and `update` take a bare short name from the
+      lockfile alone, the redirect verbs keep the requirement with its reason
+      recorded beside the code, and the citations moved. `SolveError` left
+      `lib.rs` for its own module on the way — the file had been ten lines under
+      budget before any of this, the hazard `##B054-THE-CLASS` names.
+- [x] `docs(campaign)`: **[B-047]'s first item measured** — nineteen of
+      twenty-nine capabilities keep their substance outside `vibe-cli` and ten
+      do not, the largest being the whole version manager; two of five MCP tools
+      hold the norm, one duplicates a renderer, two have no CLI sibling.
+      Evidence, no verdicts: the design call is a separate step.
+- [x] `fix(campaign)`: **the stability report stops printing a vacuous zero.**
+      It compares two fields inside the cache, so a spec edited since the last
+      scan is invisible to it — met live on a document carrying 92 verdicts.
+      It now names every judged file whose cached digest no longer matches its
+      bytes. Filed and fixed as AUDIT `2026-08-06-02`.
+- [x] `docs(audit)` ×3 + `docs(backlog)`: three measurements corrected against
+      the tree — `-10`'s sweep is 27 files and 169 occurrences rather than 12
+      and ~40; B-007's ADR adoption tripled in five days while the row waited;
+      `-10`'s coupling to B-045 is discharged and its question reframed.
+- [ ] *(owner ruling — filed as **AUDIT `2026-08-06-01`, P1**)* A third of the
+      campaign's verdicts carry no evidence of their own: 4 151 of 11 862 have
+      as their entire evidence a blob shared with other verdicts, and one of
+      them was measurably false while the campaign's own per-fact pass on the
+      same claim said so. Three questions are put and none is answered here.
+
+### What the next session picks up, in order
+
+1. The remaining live backlog rows that are **not** owner-parked: **B-019**
+   (b: a command node in the map; c: the error-variant node, whose systems
+   boundary the owner asked to be decided before implementation), **B-032**
+   (the planning-granularity protocol), **B-046** (multi-language composition —
+   three options, the owner's pick), and **B-047**'s remaining two items now
+   that the census exists.
+2. `AUDIT` `-04` (one ruling about an unfinished TUI subsystem, not 57
+   judgements) and `-14` (the index's wire contract, owner-court).
+
+---
+
+## Previous slice: волна Г — CLOSED WHOLE 2026-08-05
 
 Ordered by the owner's ruling of 2026-08-05: **the gate holes first, then
 registry hygiene, then B-056, then волна Г whole.** Every item is done. Волны
