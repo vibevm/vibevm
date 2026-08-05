@@ -43,5 +43,5 @@ pub use merge::{
 };
 pub use pipeline::{CompileError, compile_static, compile_static_qualified};
 pub use qualify::{RenameEntry, origin_slug, qualify_contribution};
-pub use resolver::{FileResolver, ResolveError, SelfCoordinate};
+pub use resolver::{FileResolver, ResolveError, SelfCoordinate, is_pattern};
 pub use use_graph::{UseGraphError, source_fold_order, topo_order_from};

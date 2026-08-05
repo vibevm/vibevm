@@ -91,6 +91,17 @@ pub enum ResolveError {
         count: usize,
         dir: String,
     },
+    /// A `spec://` address whose package name carries a glob `*` — a pattern,
+    /// not a coordinate (B-056). Point resolution cannot name a single file
+    /// from a pattern: it would fall through to the name-suffix lookup and
+    /// report [`PackageSlotNotFound`](Self::PackageSlotNotFound), mis-stating
+    /// "not installed" where the truth is "this address names a set; expand it
+    /// first with [`FileResolver::expand_pattern`]." `given` is the address as
+    /// written.
+    #[error(
+        "address `{given}` is a pattern (its package name has `*`); expand it with `expand_pattern` first"
+    )]
+    PatternNotExpanded { given: String },
 }
 
 impl FileResolver {
@@ -108,6 +119,15 @@ impl FileResolver {
     /// anchor / revision — those address a node *within* the returned file
     /// (see [`DocTree`](crate::DocTree)).
     pub fn resolve_file(&self, addr: &SpecAddress) -> Result<PathBuf, ResolveError> {
+        // A pattern (a `*` in the package name) names a set, not a file. Refuse
+        // it loudly rather than falling through to the suffix lookup, which would
+        // report PackageSlotNotFound — "not installed" where the truth is "this
+        // address must be expanded first" (B-056, law 7).
+        if glob::is_pattern(addr) {
+            return Err(ResolveError::PatternNotExpanded {
+                given: addr.raw.clone(),
+            });
+        }
         let base_spec = self.spec_root(&addr.authority)?;
         resolve_doc(&base_spec, &addr.doc_path)
     }
@@ -288,6 +308,12 @@ fn read_dir_or_empty(dir: &Path) -> impl Iterator<Item = fs::DirEntry> {
 /// Version ordering for the freshest-installed rule (B-028): `newest` selects
 /// the semver-newest installed version for an unpinned address.
 mod version_order;
+
+/// Pattern expansion (B-056): a `*` in a package name enumerates the installed
+/// set. The `is_pattern` predicate is re-exported at the crate root for the
+/// pipeline (its next consumer).
+mod glob;
+pub use glob::is_pattern;
 
 #[cfg(test)]
 mod tests {
