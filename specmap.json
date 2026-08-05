@@ -28534,7 +28534,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:10b0acd5c9b0df08faa5f464806bb1d906ad85a6dcd2143abf703d9d675d5390",
+      "content_hash": "sha256:8fd2365ae7189d7018340ec31ee47ddd9d76b2fc66aa50ee0aeed1686419c1c4",
       "doc_path": "design/command-nodes",
       "file": "spec/design/command-nodes.md",
       "heading": "Command nodes in the map — B-019(б)",
@@ -28687,7 +28687,7 @@
     },
     {
       "anchor": "node",
-      "content_hash": "sha256:7fceb2b37a78557a6ac3758da8eb0bb1587a091446c3565e03df3c4f7a2d2b40",
+      "content_hash": "sha256:1ec30797a1d38d1eab1a7f96266bb2ef00885877f197701245808f8a7c48ecac",
       "doc_path": "design/command-nodes",
       "file": "spec/design/command-nodes.md",
       "heading": "3. What a command node carries",
@@ -43285,7 +43285,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:4271f6668fceddf2eebb93ead6ad893b7db41460af2ab7fe854f257b37e0e09e",
+      "content_hash": "sha256:e5000be909b376875ef1476ad02f208cea32c51b74e407b70d63c6d81de28f73",
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "Progress Control — руководство владельца",
