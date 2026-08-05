@@ -4,6 +4,7 @@ version = "0.1.0-dev"
 edition = "2024"
 rust-version = "1.93"
 authors = ["Oleg Chirukhin"]
+license-file.workspace = true
 publish = false
 description = "Package index utility for vibevm-shaped registries"
 homepage = "https://gitverse.ru/vibevm/vibevm"

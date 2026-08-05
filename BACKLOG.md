@@ -365,35 +365,6 @@ already written from it is the specification of the work.)*
   surfaced ([`PHASE-D-HOST-OBLIGATIONS.md`](campaigns/packages-2026-09/PHASE-D-HOST-OBLIGATIONS.md)).
   It cannot be sized, let alone scheduled, until this is answered.
 
-### B-008 — one workspace crate declares no licence, and the live ledger says otherwise {#b-008}
-
-| | |
-|---|---|
-| ##B008-ANCHOR **anchor** | `CLAUDE.md`'s operating-facts ledger, «License state»: *«our shipped surface is fully UPL-1.0 … host crates inherit via `license-file.workspace`»* |
-| ##B008-LOCATOR **locator** | `crates/vibe-index/Cargo.toml` — no `license` or `license-file` key of any kind. Every other workspace member carries `license-file.workspace = true` on line 7; the workspace declares `license-file = "LICENSE.md"` at `Cargo.toml:55` |
-| ##B008-SEVERITY **severity** | P2 |
-| ##B008-DISPOSITION **disposition** | `open` |
-| ##B008-FILED **filed by** | the packages-actualization campaign, Phase D, wave 7, 2026-07-31 — surfaced while re-verifying F-236, outside its anchor list |
-
-- ##B008-WHAT **What it is.** `vibe-index` carries full package metadata —
-  `authors`, `description`, `homepage`, `repository`, `keywords`, `categories` —
-  and omits the licence line alone. It is the **only** crate in the workspace
-  that does, checked by iterating every `crates/*/Cargo.toml`. So the ledger
-  sentence «host crates inherit via `license-file.workspace`» is true of every
-  crate but one, and the relicensing run that made the surface UPL-1.0 did not
-  reach it.
-- ##B008-WHY-P2-AND-NOT-HIGHER **Why P2.** `publish = false`, so nothing reaches a registry
-  undeclared and no third party receives an unlicensed artifact. The defect is
-  that a **live, owner-maintained ledger asserts something that is false for one
-  member** — which is precisely the class this campaign exists to remove, and
-  the campaign found it in its own host rather than in a package.
-- ##B008-WHY-FILED-NOT-FIXED **Why filed and not fixed.** It is a one-line change and it is a
-  change to the legal surface. `RULE-NO-SILENT-REPAIRS` binds the phase, and
-  `CLAUDE.md`'s licence ledger is owner-maintained — an agent editing a licence
-  declaration on its own initiative is the wrong default even when the edit is
-  obviously right. **The fix is `license-file.workspace = true` on line 7, to
-  match its twenty-odd siblings.**
-
 ### B-009 — the wind-down's push step contradicts the rollout two host documents standardise {#b-009}
 
 | | |
