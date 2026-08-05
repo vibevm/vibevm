@@ -419,6 +419,39 @@ and put them under `check-codegen` with the rest (the mechanism exists
 and costs a config line), or record in PROP-005 why this contract is
 deliberately prose-first. Filed by the -09 fix, 2026-08-05.
 
+**Re-measured 2026-08-06 — the question is sharper than the row put it, and
+the cost sits somewhere else entirely.** The seven schemas are seven, and the
+gate does cover them: `cargo xtask check-codegen` regenerates and then
+`git diff --exit-code`s the two generated trees (`xtask/src/codegen.rs:243-252`).
+
+**The row's "costs a config line" over-states it: it costs zero.** The schema
+list is not a list — `run_codegen` scans the directories (`codegen.rs:105-111`
+calling `schemas_under`, `:83-96`, which takes every `*.jtd.json` under
+`schemas/` and the specmap engine's schema dir) and routing is by file stem
+(`generated_dir_for`, `:63-70`). Dropping an eighth schema file in is picked up
+on the next run with nothing to configure, and the check then flags the newly
+generated file as drift. Price by example, all seven measured: a 42–100-line
+JTD schema produces a 31–88-line generated `mod.rs`.
+
+**The second candidate does not exist as the row names it.** There is no
+`schemas/repomd.jtd.json` anywhere (`ls` exit 2) — but `Repomd` does exist,
+hand-written, at `crates/vibe-index/src/types/repomd.rs:20`, with a docblock
+citing PROP-005 §2.4 and a `#[spec(implements = …)]` edge. It is the same shape
+as `VersionEntry` (`crates/vibe-index/src/types/entry/mod.rs:43`: hand-written,
+30 fields of which 7 are `Option`, module doc pinning PROP-005 §2.6, its own
+`#[spec]` edge). So the asymmetry the row objects to covers **two** types, not
+one.
+
+**And that is where the real decision is.** Making these "like the seven
+others" is mechanically free at the gate and expensive at the seam: generated
+types land in `crates/vibe-wire/src/generated/`, while both hand-written types
+live in `crates/vibe-index` with per-field documentation, an `impl` block
+(`minimal()`, `sort_key()`), `#[serde(deny_unknown_fields)]` and hand-authored
+spec edges — none of which JTD codegen produces. So the owner's question is not
+"mint a schema or write a paragraph"; it is **whether the index's wire types
+move crate and lose their hand-written surface, or whether PROP-005 records why
+this contract stays prose-first.** The gate was never the obstacle.
+
 ### 2026-05-23-10 · C1 · P3 · open
 
 **Residual doc requalification deferred from PROP-008 Phase 8.** Phase
