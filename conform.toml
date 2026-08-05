@@ -119,7 +119,7 @@ reason = "M0 stub, no code yet — providers land in the v1.5 LLM milestone per 
 
 [[rust.exempt]]
 unit = "vibe-wire"
-reason = "generated code (JTD-schema codegen output), excluded by PROP-014 §2.3; the generator input under schemas/ is the taggable unit instead"
+reason = "generated code (JTD-schema codegen output), excluded by PROP-014 §2.3. That rule also designates the generator input under schemas/ as the taggable unit instead — designated, and untagged: measured 2026-08-05, none of the seven schemas carries a spec address and no scanner reads .json at all (B-060). The exemption stands on the generated-code half alone; do not read the second clause as a description of the tree"
 
 [[rust.exempt]]
 unit = "xtask"

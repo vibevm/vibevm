@@ -29,7 +29,12 @@ root_spec_docs = ["VIBEVM-SPEC.md"]
 # A crate NOT listed is gated: its pub items must carry an own edge or a
 # scope!-inherited module edge. Each exemption and why:
 #   vibe-graph, vibe-llm  — M0 stub crates, no code yet
-#   vibe-wire             — generated code; the JTD schema is the taggable unit
+#   vibe-wire             — generated code. PROP-014 §2.3 designates the JTD
+#                           schema the taggable unit instead; measured
+#                           2026-08-05, no schema carries a tag and no scanner
+#                           reads .json, so that half is a decision, not a
+#                           description (B-060). The exemption rests on the
+#                           generated-code half alone.
 #   xtask                 — internal tooling binary (panics ok at the dev console)
 #   vibe-test-support     — test-only, consumed solely as a dev-dependency and
 #                           shipped in no binary (DRIFT-020); it has no product
