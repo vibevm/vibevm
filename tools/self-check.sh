@@ -341,6 +341,16 @@ run_step "cargo xtask sync-engines --check" cargo xtask sync-engines --check || 
 # it, so schema-vs-generated drift had nothing to catch it.
 run_step "cargo xtask check-codegen" cargo xtask check-codegen || OVERALL=$?
 
+# 6c. Host traceability-index gate (B-014). `specmap.json` is a committed
+# derived artifact and nothing compared it against the tree: measured
+# 2026-08-05, 599 of 5266 units' recorded line no longer landed on their
+# anchor, and the drift had accumulated unseen because the panel's specmap
+# steps below are the PACKAGES' own self-traces, never the host's. The same
+# run also carries the ratchet: a public item in a gated crate with no spec
+# tag is an orphan and fails here rather than in a reader's confusion.
+# Regeneration is `cargo xtask specmap`.
+run_step "cargo xtask specmap --check" cargo xtask specmap --check || OVERALL=$?
+
 # 7. The AUTHORED neutral engines — conform-core, specmap-core, specmark,
 # specmark-grammar — ship in flow:org.vibevm.ai-native/core-ai-native as its OWN Cargo
 # workspace (PROP-024), excluded from the vibevm root. Steps 1-5 build the

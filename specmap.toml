@@ -36,6 +36,14 @@ root_spec_docs = ["VIBEVM-SPEC.md"]
 #                           description (B-060). The exemption rests on the
 #                           generated-code half alone.
 #   xtask                 — internal tooling binary (panics ok at the dev console)
+#   vibe-spec             — the PROP-035 spec compiler, provisional: not yet
+#                           spec-tagged or REQ-edged, and §15's migration puts
+#                           vibevm's own adoption last. Exempt in conform.toml for
+#                           that exact reason and mirrored here 2026-08-05 (B-014):
+#                           the two lists are meant to move together, and this one
+#                           had not, which nothing noticed because the host's own
+#                           ratchet had never been run. It leaves both lists
+#                           together, when the format stabilises.
 #   vibe-test-support     — test-only, consumed solely as a dev-dependency and
 #                           shipped in no binary (DRIFT-020); it has no product
 #                           surface for a spec URI to point at. Same reason it
@@ -47,6 +55,7 @@ root_spec_docs = ["VIBEVM-SPEC.md"]
 exempt = [
     "vibe-graph",
     "vibe-llm",
+    "vibe-spec",
     "vibe-test-support",
     "vibe-wire",
     "xtask",

@@ -16,6 +16,8 @@
 //! `VersionEnumerator` surface this cell consumed, so the composition with
 //! the declared walk stays 2-way at the upper layer.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#precedence");
+
 use specmark::{cell, spec};
 use vibe_core::manifest::Manifest;
 use vibe_core::{Group, PackageRef};
