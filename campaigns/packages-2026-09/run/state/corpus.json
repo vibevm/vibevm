@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-05T22:43:36Z",
+  "updated_at": "2026-08-05T23:38:15Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -27675,9 +27675,9 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 67,
+      "markers": 73,
       "units": 8,
-      "facts": 66,
+      "facts": 72,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -29080,9 +29080,9 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 75,
+      "markers": 78,
       "units": 22,
-      "facts": 74,
+      "facts": 77,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -92561,9 +92561,9 @@
         "stage": "doc",
         "state": "done"
       },
-      "markers": 76,
+      "markers": 77,
       "units": 6,
-      "facts": 70,
+      "facts": 71,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -93270,6 +93270,23 @@
         "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c2-design + d2b"
       }
+    },
+    {
+      "path": "spec/design/command-nodes.md",
+      "effective": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "markers": 41,
+      "units": 7,
+      "facts": 40,
+      "unmarked": 0,
+      "issues": 0,
+      "campaign": {}
     },
     {
       "path": "spec/design/deterministic-loading-aliasing.md",
@@ -107020,16 +107037,18 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (8 cells); document <status> judged as _elements",
         "fact_count": 99,
         "marker_count": 100,
-        "processed_hash": "281c74bb6c891b02729d113da9ded346b14c18ca9277c98ac9897962602763b2",
+        "processed_hash": "43bf8dd17e23f3cdc195928861469a5a28039293a7885138d0b070d6808b8389",
         "summary": {
-          "confirmed": 92
+          "confirmed": 93
         },
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
             "ev": [
-              "F-054: 'design proposal ... Not implementation-locked' one line above a status that says IMPLEMENTED M1.18+M1.19 — the header pair never reconciled (same shape as F-026/F-029)",
-              "D d2a 2026-07-25: the stale-header family closed - status/milestone lines rewritten to the shipped truth with the surface cited, document elements re-staged, affected facts re-marked impl/done"
+              "clause 1 — M1.18 shipped: ROADMAP.md:553 `### M1.18 — Loading model (PROP-009) — SHIPPED (2026-05-22)`",
+              "clause 2 — M1.19 shipped: ROADMAP.md:582 `### M1.19 — Qualified package naming (PROP-008) — SHIPPED (2026-05-22)`",
+              "clause 3 — the reconciliation the parenthetical records: the header pair now agrees, spec/modules/vibe-registry/PROP-008-qualified-naming.md:3 `<status stage=\"impl\" state=\"done\" .../>` and :7 `##status-line **Status:** IMPLEMENTED`; the rewrite is commit ce7e3823 of 2026-07-25, which is the date the parenthetical names",
+              "re-judged 2026-08-06: the prior verdict was dated 2026-07-25T14:52:12Z and ce7e3823 landed at 20:16 the same day, so the recorded verdict predated the text it describes even though its evidence narrated the change"
             ]
           },
           "status-line": {
@@ -107305,7 +107324,11 @@
           "SHORT-AT-BOUNDARY": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "clause 1 — resolution happens only at the CLI input boundary, index route: crates/vibe-cli/src/commands/install/mod.rs:137-140 maps the CLI roots through `short_name::qualify(&resolver, r, &lockfile_snapshot)` before the InstallRequest is built; nothing downstream re-resolves a short name",
+              "clause 1 — the second route the reworded decision now names, lockfile-only: crates/vibe-cli/src/commands/uninstall.rs:41 and crates/vibe-cli/src/commands/update.rs:84 both call `short_name::qualify_locked(&pkgref, &lockfile)`, whose signature (crates/vibe-cli/src/commands/short_name.rs:173) takes no resolver at all",
+              "clause 2 — manifests always store the qualified form: crates/vibe-cli/tests/cli_pkg_cycle.rs:474-511 `install_resolves_bare_short_name_to_qualified` installs the bare `wal` end-to-end and asserts the written vibe.toml carries `\"org.vibevm.world/wal\"` with `recorded.group.is_some()`",
+              "referent resolves: `##INSTALLED-STATE-RESOLVES-LOCALLY` is an addressable fact of the same section, spec/modules/vibe-registry/PROP-008-qualified-naming.md:127",
+              "re-judged 2026-08-06 after the text moved in 64d66c64 (the decision line said 'via the index, full stop'; it now names the local route beside the index one) — the prior verdict was formed against the pre-B-045 wording"
             ]
           },
           "RESOLVE-ONCE-WRITE-QUALIFIED": {
@@ -107577,10 +107600,21 @@
             "ev": [
               "accurate: IMPLEMENTED M1.18+M1.19 — live evidence everywhere (group fields in this repo's lock, fqdn repos on vibespecs, short_name.rs, AmbiguousPackage exit 7 c2-verified)"
             ]
+          },
+          "INSTALLED-STATE-RESOLVES-LOCALLY": {
+            "v": "confirmed",
+            "ev": [
+              "clause 1 — `vibe uninstall wal` / `vibe update wal` resolve from vibe.lock alone: crates/vibe-cli/src/commands/uninstall.rs:41 and crates/vibe-cli/src/commands/update.rs:84 call `qualify_locked`; crates/vibe-cli/src/commands/short_name.rs:173 `pub fn qualify_locked(pkgref: &PackageRef, lockfile: &Lockfile)` — the parameter list carries no resolver and no registry, so 'no index, no network' is structural, not a promise",
+              "clause 2 — an unknown name fails 'not installed' rather than 'could not look up': crates/vibe-cli/src/commands/short_name.rs:184-189 bails with `the short name ... is not installed — no package of that name is in vibe.lock`, pinned offline by the unit test at :275-285 `qualify_locked_unknown_is_not_installed_and_offline`",
+              "clause 3 — the redirect counter-case, qualified form still required for all three verbs: crates/vibe-cli/src/commands/registry/redirect/mod.rs:138 `require_group`, called from create.rs:41, sync.rs:65 and update.rs:50, i.e. `redirect` / `redirect-sync` / `redirect-update` (dispatch at crates/vibe-cli/src/commands/registry/mod.rs:41-43)",
+              "clause 3 — and the reason is recorded beside the code rather than only in the spec: crates/vibe-cli/src/commands/registry/redirect/mod.rs:124-137 docblock states there is no lockfile to answer from and instructs against relaxing it",
+              "collision behaviour preserved on the local route: short_name.rs:190-192 sends two locked groups to `InstallError::AmbiguousPackage`, the same verdict as the index route (PROP-008 §2.7)",
+              "new fact, first judgement — introduced by 64d66c64 (B-045) on 2026-08-06"
+            ]
           }
         },
-        "verified_at": "2026-07-25T14:52:12Z",
-        "verify_batch": "c4f1-registry-rest + d2a"
+        "verified_at": "2026-08-05T22:47:43Z",
+        "verify_batch": "c4f1-registry-rest + d2a + RJ1"
       }
     },
     {

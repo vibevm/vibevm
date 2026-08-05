@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-05T22:47:43Z",
+  "updated_at": "2026-08-05T23:38:15Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -28008,7 +28008,7 @@
       }
     },
     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md": {
-      "content_hash": "d6f25e9b1c935bf8003a1f03fb30f2a4817bfd87af7778402e9f7284ed44c0d7",
+      "content_hash": "86d05053b7a7470eaad9ba582f6320814bc9d539371a9bc9ccd3363b015ef567",
       "rollup": {
         "explicit": [
           "spec",
@@ -28022,11 +28022,11 @@
           "spec",
           "done"
         ],
-        "marker_count": 67,
-        "fact_count": 66,
+        "marker_count": 73,
+        "fact_count": 72,
         "unmarked_facts": 0
       },
-      "marker_count": 67,
+      "marker_count": 73,
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
@@ -29424,7 +29424,7 @@
       }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md": {
-      "content_hash": "c71f34595f5b66b3a06b11ca117ff87af8af56b616d5145b213f931ec20d0106",
+      "content_hash": "ceca41b25372d22100ef374bffd540081ad038119b358bbbaf136784ce256e61",
       "rollup": {
         "explicit": [
           "spec",
@@ -29438,11 +29438,11 @@
           "spec",
           "done"
         ],
-        "marker_count": 75,
-        "fact_count": 74,
+        "marker_count": 78,
+        "fact_count": 77,
         "unmarked_facts": 0
       },
-      "marker_count": 75,
+      "marker_count": 78,
       "unit_count": 22,
       "issue_count": 0,
       "campaign": {
@@ -93348,7 +93348,7 @@
       }
     },
     "spec/design/README.md": {
-      "content_hash": "a6597c0ceb49805d8bc01b2ed8c6cb295a2023041cddbc31eebee8502c2a01ed",
+      "content_hash": "0cc63bcb1ba1947e561c77d167d4eecb7e4070a2af8ba736ae3deebfc3c9067b",
       "rollup": {
         "explicit": [
           "doc",
@@ -93362,11 +93362,11 @@
           "doc",
           "done"
         ],
-        "marker_count": 76,
-        "fact_count": 70,
+        "marker_count": 77,
+        "fact_count": 71,
         "unmarked_facts": 0
       },
-      "marker_count": 76,
+      "marker_count": 77,
       "unit_count": 6,
       "issue_count": 0,
       "campaign": {
@@ -94072,6 +94072,29 @@
         "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c2-design + d2b"
       }
+    },
+    "spec/design/command-nodes.md": {
+      "content_hash": "b343cca5d2499f7b5499f9e09a6b5160733ac6d936c335be7e03449e6f25aa72",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "work"
+        ],
+        "computed": [
+          "spec",
+          "plan"
+        ],
+        "effective": [
+          "spec",
+          "work"
+        ],
+        "marker_count": 41,
+        "fact_count": 40,
+        "unmarked_facts": 0
+      },
+      "marker_count": 41,
+      "unit_count": 7,
+      "issue_count": 0
     },
     "spec/design/deterministic-loading-aliasing.md": {
       "content_hash": "0868ebebe62dbf44010fc45ec7d69427d0f8664eb7831f6c88660140789156c9",

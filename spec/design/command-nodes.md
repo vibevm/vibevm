@@ -111,11 +111,11 @@ already exist. Nothing is added to the wire format. @spec/done
 
 | field | value |
 |---|---|
-| ##n-symbol `symbol` | the invocation path — `vibe install`, `vibe registry redirect` @spec/done |
-| ##n-kind `item_kind` | `"command"` — a new value of an open field (`##m-kind-is-an-open-string`) @spec/done |
-| ##n-crate `crate_name` | the crate declaring the enum @spec/done |
-| ##n-span `file` / `line` / `end_line` | the variant's span, same attribute-inclusive convention as every other item @spec/done |
-| ##n-fingerprint `fingerprint` | the variant's token stream, `tok1:<sha256>` — so «the command's declaration changed, re-check what it links to» works, which is (а)'s purpose applied to a new node @spec/done |
+| ##n-symbol `symbol` @spec/done | the invocation path — `vibe install`, `vibe registry redirect` @spec/done |
+| ##n-kind `item_kind` @spec/done | `"command"` — a new value of an open field (`##m-kind-is-an-open-string`) @spec/done |
+| ##n-crate `crate_name` @spec/done | the crate declaring the enum @spec/done |
+| ##n-span `file` / `line` / `end_line` @spec/done | the variant's span, same attribute-inclusive convention as every other item @spec/done |
+| ##n-fingerprint `fingerprint` @spec/done | the variant's token stream, `tok1:<sha256>` — so «the command's declaration changed, re-check what it links to» works, which is (а)'s purpose applied to a new node @spec/done |
 
 ##n-symbol-is-what-a-human-types **The symbol is the invocation path and not the
 Rust path, and that choice is what makes the row's question answerable.** With
