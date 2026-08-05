@@ -913,6 +913,43 @@ green after); campaign corpus 11 188 / 190 / 44 — 98.0 %, exhaustive
   construction, which is exactly why this row needs eyes rather than a
   gate. Recorded so the next reader does not re-derive the dead end.
   Escalate or accept next run; do not let it ride.
+- **-04 re-measured again 2026-08-06, and three of its four numbers do not
+  reproduce.** The trajectory continues downward on its own: **55** real
+  `#[allow(dead_code)]` sites in src-side authored code, not 57. A naive count
+  gives 56, and the extra one is a `//` comment at
+  `crates/vibe-cli/src/commands/tree/tui/theme/mod.rs:40` that *mentions*
+  `#[allow(dead_code)]` in prose — the same false-hit class the `-10` row was
+  wrong about twice. Reproduce by filtering comment-only lines out of the match
+  set; the boss re-ran it independently and got 55.
+  **The whole suppression surface, which the row never had:** 86 `#[allow]`
+  attributes — `dead_code` 55, `clippy::too_many_arguments` 11,
+  `unused_imports` 9, `clippy::unwrap_used` 8, and one each of `unsafe_code`,
+  `non_snake_case`, `clippy::enum_variant_names`. Beside them sits exactly one
+  `#[expect(…, reason = "…")]` (`crates/vibe-install/src/plan/fetch.rs:166`) —
+  which is arguably the shape this row wants, already present once.
+  **The clustering claim holds and its number was naive:** 40 real sites under
+  `crates/vibe-cli/src/commands/`, of which **39** are under a `tui/` path. The
+  recorded 41 reproduces only if the comment-mention is counted.
+  **The "52 already carry a comment" figure does not reproduce under any
+  reading.** With a `//` line directly above: 32 across all crates, 28 in
+  vibe-cli. Counting a same-line trailing reason too: 40 and 35. So the
+  substantive claim survives — most sites do carry a recorded reason — but the
+  actionable set is smaller and now exact: **15 `dead_code` sites carry no
+  comment at all**, and they are enumerable (`registry.rs:41,74`,
+  `exit_code.rs:17,20,24,26`, `theme/mod.rs:43,45,47`, and single sites in
+  `text_field`, `radio_group`, `msg_dialog`, `group` ×2, `button`).
+  **The SARIF dead end is confirmed against the code, not taken on trust:**
+  `lint-suppression-needs-reason` destructures `Fact::LintDiagnosis` and
+  `continue`s past anything not `suppressed`
+  (`core-ai-native-conform/src/rules/citations.rs:93-107`); `suppressed` is set
+  only from a SARIF result's `suppressions` array (`sarif.rs:201-202`); and
+  `sarif::ingest` is the sole producer of that fact, which the Rust frontend's
+  own spec states outright. An `#[allow]`ed rustc lint produces no diagnostic,
+  so there is nothing for the rule to consume. The row needs eyes.
+  **What the decision now is, stated precisely:** one ruling about the
+  unfinished TUI subsystem covering 39 sites, plus 15 named silent sites that
+  want a reason line each. Severity untouched — an agent escalates and does not
+  downgrade.
 - **C-group — no new findings.** C1/C2: today's F-279/B-013 closure
   removed the known stale coordinates (dead v0.5.0 codegen route, README
   ships-line, schema metadata); PROP-014's two schema anchors re-checked
