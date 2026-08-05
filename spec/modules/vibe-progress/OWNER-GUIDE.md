@@ -71,7 +71,7 @@
 ## 2. Ежедневные команды
 
 ```bash
-vibe progress check            # валидация разметки (это же — в гейт-панели)
+vibe progress check --exhaustive   # валидация разметки; НЕ в гейт-панели — гоняйте сами
 vibe progress report --md      # статус дерева таблицей
 vibe progress report --md --view todo        # что доделать
 vibe progress report --md --view qa          # что тестировать
