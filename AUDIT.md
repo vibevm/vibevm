@@ -88,7 +88,7 @@ quarantined-and-red test is neither a safety net nor a signal.
 per-milestone), or consciously retire whatever is obsolete. Coupled to
 `-07`.
 
-### 2026-05-23-05 · B1 · P3 · open
+### 2026-05-23-05 · B1 · P3 → **P2 while it stood** · fixed 2026-08-05
 
 **`fixtures/manual-test-packages/` carries retired schema.**
 `flow-vibevm-github-smoke` — and likely `flow-vibevm-direct-push-smoke`
@@ -97,6 +97,46 @@ per-milestone), or consciously retire whatever is obsolete. Coupled to
 parses these fixtures, so the gate stays green while they rot.
 **Open:** a small de-rot pass, or delete them if the manual-test
 recipes no longer reference them.
+
+**Fixed 2026-08-05, and «rot» understated it.** Measured by running the
+tool on them: **neither fixture parses at all** — `vibe check` reports
+`manifest_validity` E on both. So M2.10-index-smoke, whose step 3 is
+`vibe registry publish ./fixtures/manual-test-packages/flow-vibevm-github-smoke`,
+could not have reached step 4 for as long as this row has been open. A
+manual test blocked at its first real command is not a manual test that
+is rotting; it is one that cannot run.
+
+The delete-or-de-rot question also settles itself against deletion: the
+recipes DO still reference them (M2.10 line 127, and `cli_live_e2e.rs`).
+De-rotted instead — three exact substitutions per fixture: `group =
+"org.vibevm"` added (the group other fixtures in this tree already use),
+`[writes]` removed, `[boot_snippet].filename` → `category`. Both now pass
+`vibe check`'s manifest gate.
+
+**Filed from the fix as `-15`:** the diagnostic that made this expensive
+to read.
+
+### 2026-08-05-15 · C/A3 · P2 · open
+
+**A missing required manifest field is reported as a TOML syntax
+error.** `vibe check` on a manifest lacking `[package].group` prints
+«`vibe.toml` failed to parse: failed to parse TOML at <path> … fix:
+repair the TOML syntax at the reported location». The TOML is
+syntactically perfect; the field is absent. The remedy names the wrong
+action, the «reported location» is not reported, and the reader is sent
+to look for a typo that is not there. Measured 2026-08-05 while fixing
+`-05`, where it cost several minutes and an incremental bisect of the
+manifest to learn that one key was missing.
+
+The gate is honest in the sense the discipline gates for — the finding
+cites its REQ (`spec://…/VIBEVM-SPEC#manifest-schema`) — so this is not
+a `error-message-cites-req` failure. It is the next layer: **a message
+may cite the right requirement and still name a remedy that does not
+apply.** Serde distinguishes a syntax error from a missing field, and
+the check collapses both into the syntax branch.
+
+**Open:** split the two cases, and let the missing-field branch name the
+field. Filed by the `-05` fix, 2026-08-05.
 
 ### 2026-05-23-06 · C4 · P2 · open
 
