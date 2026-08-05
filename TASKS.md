@@ -35,11 +35,18 @@ owner's ruling and wins.
 
 ---
 
-## Current slice: волна Г — the host catches up with its own discipline
+## Current slice: волна Г — CLOSED WHOLE 2026-08-05
 
 Ordered by the owner's ruling of 2026-08-05: **the gate holes first, then
-registry hygiene, then B-056, then волна Г whole.** Волны А, Б and В closed
-whole (2026-08-04/05).
+registry hygiene, then B-056, then волна Г whole.** Every item is done. Волны
+А, Б and В closed whole (2026-08-04/05); Г closed 2026-08-05, so **all four
+waves of `TOOLING-MAP.md` §4 are closed** and what remains there is
+`##WAVE-PARKED`, which is outside the waves by construction.
+
+Two of Г's four closed by correcting a claim rather than by building what the
+line asked for, and that is worth carrying forward: F-132 asked for tags in a
+file that does not exist, and B-040's last landing was declined on a
+measurement that the reading itself produced.
 
 ### The two gate holes — closed first, because everything built after them is built under them
 
@@ -186,10 +193,25 @@ authored and judged: [`spec/design/multiple-sources-and-plugins.md`](spec/design
       budget back instead of spending it. The packet's own count was wrong and
       the worker corrected it before editing: 15 chains inside `vibe-actions`,
       **2 in `vibe-cli`**, reported with addresses rather than reached for.
-- [ ] `refactor(progress-core)`: **L4 — a crate-local digest newtype**,
-      demoted below the builder once measured: it forbids a hash confused with
-      a different KIND of string, and not the likelier mistake of two hashes
-      used in the wrong roles.
+- [x] `fix(progress-core)`: **L4 — declined, and the reading that declined it
+      paid.** The comparison the digest newtype was justified by takes
+      `processed_hash` out of the campaign record as untyped JSON, so a newtype
+      on the other side cannot type-check it *at all* — zero yield at the one
+      site carrying the argument, against ~60 sites in `progress-core` and 29
+      in `vibe-cli`. Recorded as a decision. The same reading found what the
+      site *did* owe: an absent `processed_hash` read as a match, so a record
+      with verdicts and no note of what they were judged against projected as
+      **fresh**. Five lines, plus a test that keeps a missing hash and a
+      missing date separately reportable.
+- [x] `docs(map)` + `docs(backlog)`: **волна Г closed whole.** B-005 and B-010
+      were already built — and B-010's row still read `open` a day after the
+      commit that closes it verbatim, B-011's `planned` while wave А is closed
+      whole. Both corrected against the tree. Five stale statements in
+      `BACKLOG.md` in one day is the measurement [B-062](BACKLOG.md#b-062)
+      needed and lacked when it was filed.
+- [ ] `chore(campaign)`: judge `typed-seams.md`'s **35 facts** — now against
+      built landings, which is what the deferral was for. Evidence gathering
+      delegated; verdicts are the boss's.
 - [ ] `chore(campaign)`: **31 facts in `typed-seams.md` await first judging.**
       Deliberately not self-judged in the authoring session — B-056's design
       was, and this slice had to correct one of those verdicts. Judging them
