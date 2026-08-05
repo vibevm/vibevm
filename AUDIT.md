@@ -304,6 +304,29 @@ example, about forty occurrences, concentrated in
 between them) rather than spread thin. So the sweep is two documents and
 a family, not fifteen scattered pages.
 
+**That re-measurement is withdrawn — it was low by roughly four times
+(2026-08-06).** The true figure is **27 files and 169 occurrences**, and the
+work is spread thin after all: the largest single file is
+`version-syntax.md` (35), which the 2026-08-05 pass did not name at all, and
+sixteen files carry between one and six each. `commands/install.md` holds 18,
+not 14. Reproduce with
+`campaigns/packages-2026-09/tasks/…`-shaped scripting, or directly: the
+pattern is `<kind>:<name>` **not** followed by `.`, `:` or `/` — the
+qualification test, since `flow:org.vibevm.world/wal` starts identically and
+must not count. Four further hits are false positives and excluded from the
+169: `mcp:install` / `mcp:status` / `mcp:uninstall` / `mcp:upgrade` are
+`"command"` labels inside JSON output samples, not pkgrefs.
+
+**Why the first number was wrong is worth more than the number.** A regex
+without the qualification lookahead counts every qualified form as
+unqualified, and one with too greedy a boundary counts none at all — both were
+run here on the way to the figure above, and the second failed silently
+because this box's `grep -P` refuses the current locale and printed an error
+into a discarded stream while the pipeline reported a clean zero. **A count
+in a health record is a claim like any other, and a grep is a measurement that
+lies in both directions.** The coupling to `BACKLOG.md` B-045 stands
+unchanged; only the size does.
+
 **The part that changes its disposition:** this is not cosmetic while the
 grammar of short names is itself open. `BACKLOG.md` B-045 carries exactly
 that question — kind validation and the short-name forms of four verbs —
