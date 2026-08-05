@@ -192,6 +192,17 @@ impl SystemOracle {
         })
     }
 
+    /// The spawned node child's OS PID — an OBSERVABILITY SEAM, not a
+    /// capability leak. The no-zombie property (TCG-ORACLE §6) promises
+    /// that killing the wrapper kills the child; this PID lets a
+    /// supervisor or integration test ASK THE OPERATING SYSTEM whether
+    /// that promise holds (is the process really gone?) instead of
+    /// trusting the shutdown dance. It deliberately exposes no `Child`
+    /// handle — kill and wait stay owned by this transport's `Drop`.
+    pub fn child_pid(&self) -> u32 {
+        self.child.id()
+    }
+
     /// Graceful shutdown: the `shutdown` op, then wait (bounded), then
     /// kill if the child lingers.
     pub fn shutdown(mut self) -> Result<(), TcgBridgeError> {
