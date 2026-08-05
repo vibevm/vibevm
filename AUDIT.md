@@ -515,6 +515,57 @@ qualified form, and where is the short one the honest example?»** — which is 
 editorial decision with 27 files behind it, and it is the one thing this row
 has never had ruled.
 
+**Re-measured 2026-08-06: 38 files and 234 occurrences — and this row's count
+has now been wrong three times, each by a different method.** ~40 (2026-08-05,
+a regex with no qualification test), 169 over 27 files (2026-08-06, corrected),
+and now 234 over 38. The gap is **not** tree growth: `docs/` has not changed
+since 2026-07-26 (`4dbe1987`), so all three numbers described the same bytes.
+`version-syntax.md` is 38 rather than 35, `commands/install.md` 19 rather than 18.
+
+**A second silent-zero trap, beside the known one.** `grep -P` still refuses
+this locale (`grep: -P supports only unibyte and UTF-8 locales`, **exit 2**,
+re-confirmed today) — and `rg` *without* `-P` refuses lookarounds by returning a
+clean zero rather than an error. Two tools, two different ways of saying
+«nothing here» that are not «nothing is here». The measurement that stands uses
+neither: it captures the optional trailing boundary character and drops matches
+ending in `.`/`:`/`/`, implementing the qualification test with no lookahead at
+all. Cross-checked against `rg -P` (which does work here), returning 256 — the
+extra 22 being lookahead backtracking artefacts (`flow:org.vibevm…` emitting
+`flow:or` once `flow:org.` fails), explained rather than averaged away.
+
+**About 45 of the 234 are false positives, in four classes**, leaving ~189
+genuine short-form occurrences. *(i)* **18** `"command": "x:y"` labels inside
+JSON output samples — the row already excluded four `mcp:*` and **missed
+fourteen** of exactly the same shape (`install:plan`, `update:plan`,
+`show:effective`, `registry:add`/`remove`/`list`/`test`/`vendor`/`set-mirror`,
+`registry:redirect-update`/`redirect-sync`, `workspace:publish`, `search:purl`).
+*(ii)* ~11 git permission scopes (`repo:create`, `repo:write`, `read:packages`).
+*(iii)* ~12 SCP-URL fragments (`git@gitverse.ru:vibespecs`) plus one `file:line`
+reference. *(iv)* ~4 literal `<kind>:<name>` grammar tokens — the form being
+discussed rather than used. **Ten `commands/*` files carry nothing but false
+positives** and have no editorial surface at all.
+
+**The editorial question now has the classification it was missing.** Each
+occurrence sits in one of three contexts: **command** (the user types it),
+**manifest** (a stored value in `vibe.toml` / `vibe.lock` / JSON output), or
+**prose** (a mention). The command-heavy files — `version-syntax.md`,
+`commands/install.md`, `commands/uninstall.md`, `commands/init.md`, the
+`registry-redirect*` family, `registry-auth.md`, `git-source-dependencies.md`,
+`commands/update.md` — are where the short form is the **honest** example,
+because it is what a user types; the qualified form belongs there only where a
+command genuinely requires it. The manifest-context concentrations —
+`version-syntax.md`'s tables, `loading-model.md`, `faq/version-conflicts.md`,
+the capability arrays in `authoring-stack.md` and `authoring-feat.md` — are
+where the qualified form should be **shown**, because that is the value actually
+stored. Prose is editorial discretion, concentrated in `glossary.md`, the
+`authoring-*` pages and `troubleshooting.md`. Full per-file table in the
+archived measurement (`cache/agents/sorted/M-AUDIT/`).
+
+**Capability names are not part of this sweep.** `ui:landing-page`,
+`cli:entrypoint`, `feat:welcome-page` and their kin share the grammar but are a
+different namespace, defined as `<namespace>:<name>` at `docs/glossary.md:39`.
+They belong to the editorial question, never to the false-positive list.
+
 ### 2026-05-23-11 · D1 · P3 · open
 
 **Deferred PROP-011 refinements.** PROP-011 §5 / §8 record two: a
