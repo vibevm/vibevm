@@ -1,0 +1,79 @@
+# Typed seams — where obligation moves into the type, and where it deliberately does not {#root}
+
+<status stage="spec" state="done" comment="the B-040 build design over harvest/g1-b040-seams-census.md, authored 2026-08-05, волна Г. The owner's ruling of 2026-08-02 opened it: «Если у нас на нашем же коде не выполняется пять каких-то важных дисциплин — это похоже на причину по которой нужно всё отрефакторить и начать их применять». Non-normative: the PROPs and the backlog rulings win."/>
+
+##companion-line **Companion to:** [`BACKLOG.md` B-040](../../BACKLOG.md#b-040) (the owner's ruling and the census pointer), the census itself ([`harvest/g1-b040-seams-census.md`](../../campaigns/packages-2026-09/harvest/g1-b040-seams-census.md)), and the guide anchor the finding hangs on — `GUIDE-AI-NATIVE-RUST.md` `##SCAFFOLD-B-TYPED-BUILDERS`. This document is lore: it records why the refactor is shaped this way, and every contract it touches wins wherever they disagree. @spec/done
+
+## 1. The measured basis, and the one thing it does not say {#basis}
+
+##basis-census **The census measured five idioms and found two of them absent outright.** 24 `pub trait` declarations, **none sealed**; one runtime-validating builder (`ActionBuilder`), **zero typestate**, `PhantomData` **absent from the whole perimeter**; 146 `#[must_use]`, 82 % of them on `vibe-cli`'s TUI setter chains; mature validating newtypes on the `vibe-core` identity seam; ~140 serde types of which **7** validate at load. @impl/done
+
+##basis-absence-is-not-a-defect **An idiom's absence is a question, not a verdict.** The census is a count of constructs, and a count cannot say whether a construct was needed. `PhantomData: 0` is a defect exactly where a wrong call is representable today and the type could have forbidden it — and is a non-event everywhere else. So this design does not schedule the five idioms; it looks for **calls that can be made wrongly today** and asks, one at a time, whether a type can refuse them. @spec/done
+
+##basis-the-question-that-found-the-work **The question that produced this build's list: where does the tree state an obligation on a caller or an implementor, in prose, with nothing checking it?** That question crosses the census's five categories rather than following them, and it found four sites — one of them security-relevant and, until this design, invisible in every count the census took. @spec/done
+
+## 2. The scope rule is a request, and that is the strongest finding {#scope}
+
+##scope-the-obligation **`RepoCreator` states an implementor obligation in a doc comment and enforces it nowhere.** `crates/vibe-publish/src/creator.rs:153`–`155`: «Default impl uses `expected_org`. **Concrete impls call this from `repo_exists` / `create_repo` before any side-effecting work.**» `validate_scope` is a default method with a correct body — and nothing makes any implementation call it. @impl/done
+
+##scope-why-it-matters **The rule it protects is not stylistic.** `spec/boot/90-user.md` `##SCOPE-DISCIPLINE` and [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.md#publish) («Never escalate scope») bind the publisher to the org its project declares: create only inside `vibespecs`, never in another org, never in a user namespace. An implementation that forgets the call compiles, passes review as «looks like the others», and escalates scope on its first real run. @spec/done
+
+##scope-the-typed-fix **Put the check in the type: a `ValidatedOrg` only `validate_scope` can mint.** `repo_exists` and `create_repo` stop taking `org: &str` and take `&ValidatedOrg`; the newtype's field is private and its only constructor is the scope check. Forgetting to validate then does not compile, because there is no other way to obtain the argument. This is scaffold-B's own sentence — make the wrong call unrepresentable — applied to the one place in the tree where the wrong call is both possible and dangerous. @spec/plan
+
+##scope-the-cost **The cost is bounded and known.** Three production implementations (`github.rs:147`, `gitverse.rs:126`, `direct_git.rs:63`), one cross-crate test mock (`vibe-cli/src/commands/workspace/tests.rs:84`), and the orchestrator's call sites. The signature change is what forces each one through the mint — that is the point, not a side effect. @spec/plan
+
+##scope-coverage-gap **The same seam also carries an uneven test.** Scope assertions per implementation file: `github.rs` 8 mentions, `gitverse.rs` 3, `direct_git.rs` 3 — and `direct_git`'s is `assert!(c.validate_scope("anything").is_ok())`, which is the *absence* of a scope (a direct-git target has no org to escalate into), not its enforcement. After the newtype lands the table-driven conformance test is one test over three implementations, and it asserts the thing the prose asks for rather than the thing each file happened to check. @spec/plan
+
+## 3. One digest, two spellings — and the law that forbids the obvious fix {#digest}
+
+##digest-asymmetry **The same `sha256:` value is a validated newtype in one crate and a bare `String` in another.** `vibe-core` ships `ContentHash(String)` with `parse()` checking the algorithm prefix and hex shape (`content_hash.rs:36`–`62`). `progress-core` carries the same digest as `pub content_hash: String` on the cache record (`cache.rs:39`) and on `ParsedDoc`/unit (`doc.rs:82`, `:140`), returns it bare from `pub fn content_hash(s: &str) -> String` (`parse/mod.rs:60`), and holds it twice more as `now: String` / `was: Option<String>` on `SealClaim` (`seal.rs:38`, `:40`). @impl/done
+
+##digest-the-obvious-fix-is-forbidden **The first design of this landing was «`progress-core` imports `vibe_core::ContentHash`», and a comment in a manifest refuted it before a line was written.** `crates/progress-core/Cargo.toml` carries the rule inline — «Separability law (PROP-043 §2): NO vibe-* crates here, ever» — and it is not a preference: [`##SEP-CORE`](../modules/vibe-progress/PROP-043-progress-markup.md#separability) makes Progress Control a standalone product hosted inside vibevm, extractable at any moment, whose core depends on no vibevm subsystem. Two spellings of one digest is therefore the **price of a deliberate architecture**, not an oversight to consolidate. @impl/done
+
+##digest-what-is-still-wrong **What survives the refutation is smaller and still real: inside `progress-core` the digest is interchangeable with any other string.** The crate compares `processed_hash` against `content_hash` to decide staleness — the comparison the whole campaign's re-judgement queue is derived from — and at the type level that is `String == String`, which would be just as happy comparing a path, a batch id, or the other file's hash. A crate-local newtype (`progress_core::Digest`, minted by the crate's own hasher, parsed at the cache boundary) restores the distinction without importing anything. @spec/plan
+
+##digest-parallel-not-duplicate **Two newtypes over one concept in two separable crates is parity, not duplication** — the same invariant, never the same code, which is this project's standing reading of parity. The duplication that would matter is two *hash calculators*; there is one, and each crate wraps its own boundary. @spec/plan
+
+## 4. Validation at the wire boundary — a docblock that reads like a constraint {#wire}
+
+##wire-the-count **Of the identity newtypes that validate, exactly one validates on the wire.** `Group` is `serde(try_from = "String", into = "String")` (`package_ref.rs:106`) and rejects a malformed value at deserialize. `ContentHash`, `PackageName`, `CapabilityNamespace`, `CapabilityName` are `serde(transparent)` and accept any string a lockfile or manifest offers; their `parse()` runs only when a caller thinks to call it. @impl/done
+
+##wire-the-docblock-does-not-force-it **The recorded reason for `transparent` justifies the wire SHAPE and reads as if it justified the missing check.** `content_hash.rs:20`–`22`: «`serde(transparent)`: the wire form is the bare `sha256:…` string the lockfile already carries.» True — and `try_from = "String", into = "String"` emits **the same bare string**, which `Group` demonstrates in this very tree. The stated constraint survives the change untouched; what changes is only whether a malformed value is noticed at the boundary or carried inward. @impl/done
+
+##wire-the-landing **Four attributes, and the breakage is the finding.** The four newtypes adopt `Group`'s spelling. If existing fixtures or lockfiles then fail to load, that is a malformed value the tree was already carrying silently — the outcome to want, recorded rather than smoothed. `from_validated` stays: it is the in-process trusted path from `vibe-index`'s hasher, not a wire path. @spec/plan
+
+## 5. `ActionBuilder` — the one builder, and its three runtime obligations {#builder}
+
+##builder-today **The tree's only real builder enforces its required fields at runtime.** `ActionBuilder` (`vibe-actions/src/action.rs:333`) keeps `name`, `description` and `invoke` as `Option<…>` (`:335`, `:336`, `:341`) and turns their absence into `ActionBuildError::MissingName` / `EmptyPresentation` in `build()` (`:449`–`:460`). The obligation is a `Result`, and every caller writes `.unwrap()` or propagates. @impl/done
+
+##builder-the-landing **Typestate moves the three obligations into the type and leaves the validation that cannot move.** A state parameter marks which of the three have been supplied; `build()` exists only on the fully-supplied state and stops returning `Result` for absence. What stays a runtime error is *emptiness* — a supplied-but-blank string is a value check, not a presence check, and no state parameter can see it. Saying which half moves is the design decision here; claiming the whole error goes away would be false. @spec/plan
+
+##builder-the-blast-radius **Measured, and smaller than the idiom's reputation suggests.** `ActionBuilder` appears 10 times and `ActionBuildError` 12 times across `crates/`, and the `.build()` call sites are all inside `vibe-actions` — its own tests, `aiui.rs`, `gate.rs`, `invoke.rs`, `registry.rs`. The private constructor (`action.rs:347`) already fixes the address before chaining, so the state parameter starts from one entry point rather than from every caller. @impl/done
+
+##builder-must-use-stays-as-is **`#[must_use]`'s distribution is already correct and gets no landing.** It pays on `-> Self` setter chains, where dropping the return is the bug; that is exactly where the 146 sit (the 11 `ActionBuilder` setters, the `KeyMeta` setters, the TUI widgets). The seams that lack it — traits, wire types, newtypes — return `Result` or a value whose drop is legitimate. A count of 146 concentrated in one crate looks like an imbalance and is a correct distribution. @spec/done
+
+## 6. `Watcher` — a specified seam with no production implementation {#watcher}
+
+##watcher-the-measurement **One pub trait in the perimeter has zero production implementations anywhere.** `Watcher` (`vibe-settings/src/events/mod.rs:432`) carries `specmark::spec(implements = "…/PROP-040#file-watch")` on the trait and on its method, and the only implementations in the tree are a test `Noop` (`events/tests.rs:250`) and a doc-comment example. @impl/done
+
+##watcher-the-landing **This is «Specified, not built», and the tree should say so where a reader meets it.** The trait is not dead — it is the declared shape of a promised capability — so the landing is an explicit annotation at the seam plus a backlog row carrying the build, not a deletion and not a silent leave-as-is. A specified seam that reads like a live one is the same silence this project treats as the disease. @spec/plan
+
+## 7. Sealed traits — deliberately not adopted, and the reason is architectural {#sealing}
+
+##sealing-the-count **None of the 24 pub traits is sealed, and the census found no sealed-pattern construct anywhere** — no private supertrait, no module-private gate; the word «seal» in this tree is the domain concept of verdict sealing. @impl/done
+
+##sealing-would-break-the-architecture **The seams are extension points by construction, and the extensions live in another crate.** `vibe-cli` implements `SearchProvider` five times, plus `PlanObserver`, `VendorObserver`, `RedirectSyncObserver`, `InstallSource` and `EvidenceProvider`; `vibe-publish`'s test `RepoCreator` mock lives there too. Sealing that family does not harden a contract — it deletes the wiring that makes the CLI a consumer of its own crates. @impl/done
+
+##sealing-buys-nothing-in-a-workspace **The usual payoff does not exist here.** A sealed trait buys non-breaking evolution against **external** implementors; these crates are workspace-internal and published nowhere, so adding a method is a compile error the same commit fixes. Adopting the idiom would trade a real capability for a benefit measured at zero. @spec/done
+
+##sealing-the-one-tempting-case-answered-better **The single seam with a written implementor obligation is `RepoCreator`, and §2 serves it better than sealing would.** Sealing would forbid a foreign implementation; it would not make an in-crate implementation call `validate_scope`. The newtype forbids the actual mistake, and it keeps the test mock legal. Where the obligation is «call this», the fix is an argument only that call can produce — not a lock on who may implement. @spec/plan
+
+##sealing-recorded-not-postponed **Recorded as a decision, not deferred as work.** This is the «задокументировать где сознательно нет» half of the owner's ruling, and re-judging `##SCAFFOLD-B-TYPED-BUILDERS` against practice is part of the closing step: the guide's claim is right about builders and typestate and does not fit a workspace-internal trait surface. @spec/plan
+
+## 8. Build order — five landings, each standing alone {#order}
+
+##order-list **Ordered by payoff over cost, each landable and green alone.** *(1)* `ValidatedOrg` in `vibe-publish` plus the three-implementation conformance test — the security-relevant one, and the only landing that closes an unchecked obligation. *(2)* The four `serde(transparent)` identity newtypes adopt `try_from`/`into` — four attributes, and whatever breaks is a find. *(3)* `progress_core::Digest`, crate-local by the separability law. *(4)* `ActionBuilder` typestate for the three presence obligations. *(5)* `Watcher` annotated «Specified, not built» with a backlog row. @spec/plan
+
+##order-gates **Every landing carries the same gate set.** `cargo check` + `cargo test` + `cargo clippy --all-targets -D warnings` for its crate; every touched or created `.rs` under the 600-line budget measured after `cargo fmt`; the boss's panel is the real gate, and `cargo xtask sync-engines` does not apply — none of these crates is a vendored engine, verified against `sync-engines.toml`, whose sources are the `core-ai-native-*` crates only. @spec/plan
+
+##order-what-this-does-not-do **What this build deliberately leaves alone.** The `RelPath`/`PathBuf`/`String` path-and-URL asymmetry (a newtype there touches every seam constructor and buys distinction, not safety); the ~133 serde types that derive `Deserialize` plainly (their fields are structural, and post-load `validate()` methods already exist where semantics matter); and the `#[must_use]` distribution. Naming them here is what keeps the next census from reading their absence as an oversight. @spec/plan
