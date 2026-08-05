@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-05T18:48:45Z",
+  "updated_at": "2026-08-05T18:53:48Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -5003,9 +5003,9 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "23f183305c4bcd249c9e1dea6a214ed176b9ec914dfacc9ae6e2f4938bde97d2",
+        "processed_hash": "16ecac19c1c48b2be1aaff42c5f3595024c9d395a666bde4217fcc2ff8ed8142",
         "summary": {
-          "confirmed": 42,
+          "confirmed": 48,
           "drift": 2
         },
         "verdicts": {
@@ -5339,10 +5339,46 @@
             "ev": [
               "the legend anchor the owner confirmed verbatim 2026-08-02 (his challenge: the vocabulary references sensible things, badly introduced): defines T-lex/T-syn/T-sem as analysis-depth tiers at the frontend table where the columns already use two of the three; tree-true — the taxonomy is used across the live slot (legacy-projections guides: «conform's T-lex sweep», «tier (T-lex/T-syn/T-sem)» as the future rule-registry column; the Go GUIDE's parentheticals) and the deliberately-not-a-type clause matches the engine (no Tier type anywhere — the earlier F-206 measurement, re-confirmed); closes the H-roster-shaped used-everywhere-defined-nowhere gap for this vocabulary"
             ]
+          },
+          "kind-line-policy": {
+            "v": "confirmed",
+            "ev": [
+              "The section's kind line, in the form the document's other sections use."
+            ]
+          },
+          "THE-ENGINE-OWNS-THE-SCHEMA-THE-CONSUMER-OWNS-THE-VALUES": {
+            "v": "confirmed",
+            "ev": [
+              "PRESCRIBES, and the split it states is PROP-024's, which resolves. Checked against the tree: the schema is `Config` in core-ai-native-conform/src/config.rs (this package), while conform.toml sits at each consumer's root — this repository's own carries `[rust] gated` values no package knows about."
+            ]
+          },
+          "A-KEY-IS-ROOT-WHEN-IT-MODELS-NO-LANGUAGE": {
+            "v": "confirmed",
+            "ev": [
+              "PRESCRIBES the placement rule. Coherent and matched by the live schema: the four root keys model no language, and the three language tables are homogeneous — each owns its own roots/gated/exempt shape (RustConfig, TsConfig, GoConfig in the same file)."
+            ]
+          },
+          "THE-ROOT-KEYS-ARE-DESCRIBED-HERE-AND-NOWHERE-ELSE": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES the four root keys and their defaults. Boss-verified against core-ai-native-conform/src/config.rs:90-150: max_file_lines (600), invariant_comment_markers (the five labeled colon-bearing tags), invariant_comment_min_file_lines (120), sarif_reports (empty), beside the [rust]/[typescript]/[go] tables."
+            ]
+          },
+          "A-SURFACE-DOCUMENT-CITES-THE-ROOT-KEYS-RATHER-THAN-RESTATING-THEM": {
+            "v": "confirmed",
+            "ev": [
+              "PRESCRIBES, and the same commit made it true of all three surface documents, which now name which root keys their own rules read and cite this section for the values. The rule it applies is the flow-level `##ENTRY-CITES-NEVER-RESTATES`, which resolves."
+            ]
+          },
+          "A-RETIRED-KEY-BECOMES-A-LOUD-TOMBSTONE-NOT-A-REMOVAL": {
+            "v": "confirmed",
+            "ev": [
+              "PRESCRIBES, and it describes what the code already does: nine `Option<Value>` tombstone fields at core-ai-native-conform/src/config.rs:71-88, each documented with the section it moved to, so a surviving flat key is rejected by name rather than by serde's generic unknown-field error."
+            ]
           }
         },
-        "verified_at": "2026-08-03T02:07:59Z",
-        "verify_batch": "C1 + D5b + D7 + D21 + D22 + D24 + D34 + E3-F146"
+        "verified_at": "2026-08-05T18:51:36Z",
+        "verify_batch": "C1 + D5b + D7 + D21 + D22 + D24 + D34 + E3-F146 + G6-conform-surfaces"
       }
     },
     {
@@ -11594,9 +11630,9 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "ebe3a0f65ed2e8a1c07ffcae1ca35bc73bdb88eaa035b317561baa18ab84cb2c",
+        "processed_hash": "87b5be72962d7676e01d5be1f10511e7c99e70f880698eb244511944ca334df3",
         "summary": {
-          "confirmed": 29
+          "confirmed": 30
         },
         "verdicts": {
           "status-line": {
@@ -11809,8 +11845,10 @@
           "CONFORM-TOML-GAINS-A-GO-SECTION": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md:107  - ##CONFORM-TOML-GAINS-A-GO-SECTION `conform.toml` gains a `[go]` section, written by `go-ai-native init` from the module layout: `roots`, `cells_dir`, `seams_pkg`, `registry_pkg`, `[go] gated` / `[[go.exempt]]`. @impl/done",
-              "**restated confirmed <- drift.** Wave-B batch 1 (B-029) built the per-language config surface: `GoConfig` carries `roots`, `exclude_substrings`, `cells_dir`, `seams_pkg`, `registry_pkg`, neutral `gated`, `[[go.exempt]] {unit, reason}`, and `floor_disable` — packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/config.rs. The retired flat root keys are loud tombstones. The `[go]` section the doc describes is exactly what the config parses."
+              "RESTATED 2026-08-05 because the fact's own text moved (B-051 closure): its root-key tail stopped restating the defaults and now names which root keys the Go rules read, citing ENGINE-CONFORM §6 for their meanings.",
+              "The `[go]` half of the paragraph is UNCHANGED and its prior evidence stands: `GoConfig` in core-ai-native-conform/src/config.rs carries roots, exclude_substrings, cells_dir, seams_pkg, registry_pkg, gated, `[[go.exempt]] {unit, reason}` and floor_disable, and the package is Go's gate unit.",
+              "The changed half re-checked against the same schema: max_file_lines, invariant_comment_markers and invariant_comment_min_file_lines are declared at the ROOT of `Config` (config.rs:90-150), not under any language table — which is what the paragraph now claims and all it claims about them.",
+              "What the restatement is NOT: a re-stamp. The paragraph lost three defaults it had been asserting (600, the five-marker list, 120) — each now stated in exactly one place — so the fact it carries is strictly narrower than the one previously confirmed."
             ]
           },
           "EVERY-PACKAGE-GATED-OR-EXEMPT": {
@@ -11845,10 +11883,16 @@
               "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md:32  | ##ROW-TIER-T-SEM **T-sem** @impl/done | types, name resolution, macro/template expansion, real import graphs @impl/...",
               "located in the perimeter on the refs above, machine-verified against the files they cite"
             ]
+          },
+          "THE-SARIF-CITATION-PATH-IS-FED-BY-FOREIGN-LINTERS-NOT-BY-GO-EXTRACT": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES a rule this gate mounts and this document had never named. Boss-verified independently of the worker's report: go-ai-native-conform/src/lib.rs:98 pushes `rules::LintSuppressionNeedsReason` and :125 calls `conform_core::sarif::load_reports(root, &config.sarif_reports)` — so the gate both reads the root key and mounts the rule, while the surface named neither."
+            ]
           }
         },
-        "verified_at": "2026-08-04T02:52:00Z",
-        "verify_batch": "C4+C5 + C45-go-review + E12-F185-rejudge"
+        "verified_at": "2026-08-05T18:51:36Z",
+        "verify_batch": "C4+C5 + C45-go-review + E12-F185-rejudge + G6-conform-surfaces + G6-restatements"
       }
     },
     {
@@ -13932,7 +13976,7 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "0448af48053873006ab5482dd0438b42a941007fcf6469a40a3ebe7d1929bed4",
+        "processed_hash": "14b2e3f3a397855dbb36b63b8fe2dd32b204c8fb503200c9dce6f69c0900c0ea",
         "summary": {
           "confirmed": 13
         },
@@ -13996,8 +14040,10 @@
           "GOALS-AND-NON-GOALS": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/rule-closed-vocabulary-naming.md:25  ##GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* enforce that a cell's type name IS its manifest composed — `Pascal(variant)` + the seam as written. *Non-Goals (the honest boundary):* **the rule checks COMPOSITION ONLY.** It does",
-              "Card section judged against the BUILT rule it documents. The checker `cell-name-is-computed` ships at packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/rules/naming.rs; mounted in the Rust and Go drivers (TS carries a recorded reason: no cell manifest exists to compute from); the tree was brought to compliance by 16 renames; panel green with conform reporting 0 findings / 0 frozen. The card was authored in this batch BECAUSE the checker exists — the discipline's own order (a card with no checker is explicitly a WISH), so every section describes a rule whose behaviour the gate demonstrates rather than a rule someone intends."
+              "RESTATED 2026-08-05 because the section's text moved: it had claimed «no backlog entry exists for them» about R3-004's three unbuilt halves, and one did — B-052, filed 2026-08-04, hours after the card was written.",
+              "The correction removed the claim rather than updating it, because the row it referred to was deleted in the same commit: the card IS the record of those halves, and a card pointing at a plan row for its own boundary is the second-writer defect this discipline exists to remove.",
+              "The Goals half is unchanged and its prior evidence stands: `cell-name-is-computed` ships at core-ai-native-conform/src/rules/naming.rs and is mounted in the Rust and Go drivers.",
+              "The Non-Goals half re-checked and still true: the tree carries no closed vocabulary of structural tokens as data or constant, no contract-surface name registry, and no synonym/shadow detector — the same measurement that opened and now closes the question, with the reason recorded (fork №1 took computed names)."
             ]
           },
           "CONSEQUENCES": {
@@ -14029,8 +14075,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-04T02:52:00Z",
-        "verify_batch": "E13-BATCH3-CARDS"
+        "verified_at": "2026-08-05T18:51:36Z",
+        "verify_batch": "E13-BATCH3-CARDS + G6-restatements"
       }
     },
     {
@@ -17598,7 +17644,274 @@
       "facts": 43,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "processed_hash": "b2d5fba934c2f61575bcdf415c32597d5d925646d574ff9d4d273b7b583575b6",
+        "summary": {
+          "confirmed": 43
+        },
+        "verdicts": {
+          "RULE-R-001-FLAG-SITES": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES a rule the Rust gate mounts. Checked against the tree: the rule's id string is returned by its own `impl Rule::id` in core-ai-native-conform/src/rules/, and the gate's roster is `build_rules` in rust-ai-native-conform/src/lib.rs. Boss-verified independently of the worker's report, 2026-08-05: `grep 'fn id(&self)' -A2` over core-ai-native-conform/src/rules/*.rs returns 24 rule ids; the 14 named in this document are exactly the non-`go-`/`ts-` subset, and `lint-suppression-needs-reason` is the 15th wired rule, fed by SARIF rather than by rust-syn — which is why the document carries it outside the list."
+            ]
+          },
+          "RULE-R-002-CELL-ISOLATION": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES a rule the Rust gate mounts. Checked against the tree: the rule's id string is returned by its own `impl Rule::id` in core-ai-native-conform/src/rules/, and the gate's roster is `build_rules` in rust-ai-native-conform/src/lib.rs. Boss-verified independently of the worker's report, 2026-08-05: `grep 'fn id(&self)' -A2` over core-ai-native-conform/src/rules/*.rs returns 24 rule ids; the 14 named in this document are exactly the non-`go-`/`ts-` subset, and `lint-suppression-needs-reason` is the 15th wired rule, fed by SARIF rather than by rust-syn — which is why the document carries it outside the list."
+            ]
+          },
+          "RULE-UNSAFE-GATE": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES a rule the Rust gate mounts. Checked against the tree: the rule's id string is returned by its own `impl Rule::id` in core-ai-native-conform/src/rules/, and the gate's roster is `build_rules` in rust-ai-native-conform/src/lib.rs. Boss-verified independently of the worker's report, 2026-08-05: `grep 'fn id(&self)' -A2` over core-ai-native-conform/src/rules/*.rs returns 24 rule ids; the 14 named in this document are exactly the non-`go-`/`ts-` subset, and `lint-suppression-needs-reason` is the 15th wired rule, fed by SARIF rather than by rust-syn — which is why the document carries it outside the list."
+            ]
+          },
+          "RULE-SEAM-HAS-DOCTEST": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES a rule the Rust gate mounts. Checked against the tree: the rule's id string is returned by its own `impl Rule::id` in core-ai-native-conform/src/rules/, and the gate's roster is `build_rules` in rust-ai-native-conform/src/lib.rs. Boss-verified independently of the worker's report, 2026-08-05: `grep 'fn id(&self)' -A2` over core-ai-native-conform/src/rules/*.rs returns 24 rule ids; the 14 named in this document are exactly the non-`go-`/`ts-` subset, and `lint-suppression-needs-reason` is the 15th wired rule, fed by SARIF rather than by rust-syn — which is why the document carries it outside the list."
+            ]
+          },
+          "RULE-PUB-DOCTEST": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES a rule the Rust gate mounts. Checked against the tree: the rule's id string is returned by its own `impl Rule::id` in core-ai-native-conform/src/rules/, and the gate's roster is `build_rules` in rust-ai-native-conform/src/lib.rs. Boss-verified independently of the worker's report, 2026-08-05: `grep 'fn id(&self)' -A2` over core-ai-native-conform/src/rules/*.rs returns 24 rule ids; the 14 named in this document are exactly the non-`go-`/`ts-` subset, and `lint-suppression-needs-reason` is the 15th wired rule, fed by SARIF rather than by rust-syn — which is why the document carries it outside the list."
+            ]
+          },
+          "RULE-ERROR-ENUM-CITES-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES a rule the Rust gate mounts. Checked against the tree: the rule's id string is returned by its own `impl Rule::id` in core-ai-native-conform/src/rules/, and the gate's roster is `build_rules` in rust-ai-native-conform/src/lib.rs. Boss-verified independently of the worker's report, 2026-08-05: `grep 'fn id(&self)' -A2` over core-ai-native-conform/src/rules/*.rs returns 24 rule ids; the 14 named in this document are exactly the non-`go-`/`ts-` subset, and `lint-suppression-needs-reason` is the 15th wired rule, fed by SARIF rather than by rust-syn — which is why the document carries it outside the list."
+            ]
+          },
+          "RULE-ERROR-MESSAGE-CITES-REQ": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES a rule the Rust gate mounts. Checked against the tree: the rule's id string is returned by its own `impl Rule::id` in core-ai-native-conform/src/rules/, and the gate's roster is `build_rules` in rust-ai-native-conform/src/lib.rs. Boss-verified independently of the worker's report, 2026-08-05: `grep 'fn id(&self)' -A2` over core-ai-native-conform/src/rules/*.rs returns 24 rule ids; the 14 named in this document are exactly the non-`go-`/`ts-` subset, and `lint-suppression-needs-reason` is the 15th wired rule, fed by SARIF rather than by rust-syn — which is why the document carries it outside the list."
+            ]
+          },
+          "RULE-CELL-HAS-ORACLE": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES a rule the Rust gate mounts. Checked against the tree: the rule's id string is returned by its own `impl Rule::id` in core-ai-native-conform/src/rules/, and the gate's roster is `build_rules` in rust-ai-native-conform/src/lib.rs. Boss-verified independently of the worker's report, 2026-08-05: `grep 'fn id(&self)' -A2` over core-ai-native-conform/src/rules/*.rs returns 24 rule ids; the 14 named in this document are exactly the non-`go-`/`ts-` subset, and `lint-suppression-needs-reason` is the 15th wired rule, fed by SARIF rather than by rust-syn — which is why the document carries it outside the list."
+            ]
+          },
+          "RULE-CELL-NAME-IS-COMPUTED": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES a rule the Rust gate mounts. Checked against the tree: the rule's id string is returned by its own `impl Rule::id` in core-ai-native-conform/src/rules/, and the gate's roster is `build_rules` in rust-ai-native-conform/src/lib.rs. Boss-verified independently of the worker's report, 2026-08-05: `grep 'fn id(&self)' -A2` over core-ai-native-conform/src/rules/*.rs returns 24 rule ids; the 14 named in this document are exactly the non-`go-`/`ts-` subset, and `lint-suppression-needs-reason` is the 15th wired rule, fed by SARIF rather than by rust-syn — which is why the document carries it outside the list."
+            ]
+          },
+          "RULE-FILE-LENGTH": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES a rule the Rust gate mounts. Checked against the tree: the rule's id string is returned by its own `impl Rule::id` in core-ai-native-conform/src/rules/, and the gate's roster is `build_rules` in rust-ai-native-conform/src/lib.rs. Boss-verified independently of the worker's report, 2026-08-05: `grep 'fn id(&self)' -A2` over core-ai-native-conform/src/rules/*.rs returns 24 rule ids; the 14 named in this document are exactly the non-`go-`/`ts-` subset, and `lint-suppression-needs-reason` is the 15th wired rule, fed by SARIF rather than by rust-syn — which is why the document carries it outside the list."
+            ]
+          },
+          "RULE-INVARIANT-COMMENT-POSITION": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES a rule the Rust gate mounts. Checked against the tree: the rule's id string is returned by its own `impl Rule::id` in core-ai-native-conform/src/rules/, and the gate's roster is `build_rules` in rust-ai-native-conform/src/lib.rs. Boss-verified independently of the worker's report, 2026-08-05: `grep 'fn id(&self)' -A2` over core-ai-native-conform/src/rules/*.rs returns 24 rule ids; the 14 named in this document are exactly the non-`go-`/`ts-` subset, and `lint-suppression-needs-reason` is the 15th wired rule, fed by SARIF rather than by rust-syn — which is why the document carries it outside the list."
+            ]
+          },
+          "RULE-NO-UNWRAP-IN-DOMAIN": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES a rule the Rust gate mounts. Checked against the tree: the rule's id string is returned by its own `impl Rule::id` in core-ai-native-conform/src/rules/, and the gate's roster is `build_rules` in rust-ai-native-conform/src/lib.rs. Boss-verified independently of the worker's report, 2026-08-05: `grep 'fn id(&self)' -A2` over core-ai-native-conform/src/rules/*.rs returns 24 rule ids; the 14 named in this document are exactly the non-`go-`/`ts-` subset, and `lint-suppression-needs-reason` is the 15th wired rule, fed by SARIF rather than by rust-syn — which is why the document carries it outside the list."
+            ]
+          },
+          "RULE-AMBIENT-ENV": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES a rule the Rust gate mounts. Checked against the tree: the rule's id string is returned by its own `impl Rule::id` in core-ai-native-conform/src/rules/, and the gate's roster is `build_rules` in rust-ai-native-conform/src/lib.rs. Boss-verified independently of the worker's report, 2026-08-05: `grep 'fn id(&self)' -A2` over core-ai-native-conform/src/rules/*.rs returns 24 rule ids; the 14 named in this document are exactly the non-`go-`/`ts-` subset, and `lint-suppression-needs-reason` is the 15th wired rule, fed by SARIF rather than by rust-syn — which is why the document carries it outside the list."
+            ]
+          },
+          "RULE-DECLARED-TEST-MATRICES": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES a rule the Rust gate mounts. Checked against the tree: the rule's id string is returned by its own `impl Rule::id` in core-ai-native-conform/src/rules/, and the gate's roster is `build_rules` in rust-ai-native-conform/src/lib.rs. Boss-verified independently of the worker's report, 2026-08-05: `grep 'fn id(&self)' -A2` over core-ai-native-conform/src/rules/*.rs returns 24 rule ids; the 14 named in this document are exactly the non-`go-`/`ts-` subset, and `lint-suppression-needs-reason` is the 15th wired rule, fed by SARIF rather than by rust-syn — which is why the document carries it outside the list."
+            ]
+          },
+          "status-line": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES the shipped artefacts. Checked: crates/rust-ai-native-conform-frontend/ and crates/rust-ai-native-conform/ both exist in this package; the binary name `rust-ai-native-conform` is the crate's `[[bin]] name`; `id()` returns \"rust-syn\" at rust-ai-native-conform-frontend/src/lib.rs:50."
+            ]
+          },
+          "RUST-IS-THE-PILOT-THE-OTHERS-ARE-PROJECTIONS": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES the family's history and the state of its documents. Checked: the Go and TypeScript surface documents exist under their stacks' spec/*/tools/, and until this file landed the Rust directory held only two TCG documents — the measurement that opened B-051."
+            ]
+          },
+          "NO-SIDECAR-IS-THE-STRUCTURAL-DIFFERENCE": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES, and it is the document's first strong claim, verified rather than assumed: rust-ai-native-conform-frontend/Cargo.toml declares only library dependencies (conform-core, specmark, proc-macro2, quote, syn) — no process spawn, no bridge crate — while the Go and TS twins each spawn an extractor over NDJSON. Boss-checked: `syn::parse_file` is called in-process at rust-ai-native-conform-frontend/src/lib.rs:85."
+            ]
+          },
+          "kind-line-division": {
+            "v": "confirmed",
+            "ev": [
+              "The section's kind line, in the form both sibling surface documents use (`req r1`)."
+            ]
+          },
+          "RUSTC-CARRIES-THE-TYPE-CORRECTNESS-HALF": {
+            "v": "confirmed",
+            "ev": [
+              "PRESCRIBES the division of labour, coherent and with every referent resolving: cargo build, cargo clippy, cargo fmt --check and the test suite are all panel steps in tools/self-check.sh."
+            ]
+          },
+          "THAT-HALF-IS-WELL-TYPED-AND-LOCALLY-SANE": {
+            "v": "confirmed",
+            "ev": [
+              "PRESCRIBES; the rationale sentence of the division above, and the twin documents carry the identical clause for their own toolchains."
+            ]
+          },
+          "frontend-answers-the-structural-half-lead": {
+            "v": "confirmed",
+            "ev": [
+              "The lead-in to the rule roster; its list is judged bullet by bullet below."
+            ]
+          },
+          "RUST-RULES-DIFFER-FROM-THE-GO-PROJECTION-IN-SHAPE": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES a measured asymmetry between two rule rosters. Checked: Go carries one `RULE-BAN-CENSUS-AS-FACTS` umbrella and one `go-seam-error-cites-req`, where the Rust roster splits both — the ids on each side are those returned by the rules' own `impl Rule::id`. Boss-verified independently of the worker's report, 2026-08-05: `grep 'fn id(&self)' -A2` over core-ai-native-conform/src/rules/*.rs returns 24 rule ids; the 14 named in this document are exactly the non-`go-`/`ts-` subset, and `lint-suppression-needs-reason` is the 15th wired rule, fed by SARIF rather than by rust-syn — which is why the document carries it outside the list."
+            ]
+          },
+          "ONE-ENGINE-ONE-GRAMMAR-ONE-BASELINE": {
+            "v": "confirmed",
+            "ev": [
+              "PRESCRIBES the reason the frontends route through one engine; the identical clause stands in the Go surface document, and the shared `conform_core::Fact` it names is the type every frontend emits."
+            ]
+          },
+          "kind-line-extractor": {
+            "v": "confirmed",
+            "ev": [
+              "The section's kind line, in the sibling documents' form."
+            ]
+          },
+          "RUST-FRONTEND-IS-A-FACT-PRODUCER": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES the frontend's contract: `extract(file, package, module, text) -> Vec<Fact>`, the `Frontend` trait method implemented at rust-ai-native-conform-frontend/src/lib.rs:48-87."
+            ]
+          },
+          "RUST-FRONTEND-IS-IN-PROCESS-SYN": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES; the same measurement that carries `##NO-SIDECAR-IS-THE-STRUCTURAL-DIFFERENCE` — a library call, no subprocess, no materialised extractor."
+            ]
+          },
+          "UNPARSEABLE-INPUT-IS-TOLERATED": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES, and it is asserted by a compiled doctest rather than by prose: rust-ai-native-conform-frontend/src/lib.rs:43-44 asserts `RustFrontend.extract(\"x.rs\",\"demo\",\"demo\",\"fn (\").is_empty()`, and the implementation returns an empty Vec on a `syn::parse_file` error at :85-87."
+            ]
+          },
+          "FACT-KINDS": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES the emitted vocabulary. Checked against the `extract` implementation and its visitor: ten variants are constructed there (FileMetrics, Item, Import, Ctor, UnsafeUse, ErrorVariant, UnwrapUse, EnvRead, InvariantComment, TestSweep); the Ts*/Go* variants of the shared enum and `LintDiagnosis` are not, and the document says so."
+            ]
+          },
+          "RUST-PARSES-TWICE-AND-THE-DUPLICATION-IS-THE-COST": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES, and it refutes the Go twin's claim rather than inheriting it. Boss-verified: `syn::parse_file` appears at core-ai-native-specmap/src/rscan.rs:267 AND at rust-ai-native-conform-frontend/src/lib.rs:85 — two crates, two parses over the same text, one emitting CodeItem/Edge for the index and the other Fact for the rules. The anchor was renamed from the twin's `ONE-EXTRACTION-TWO-CONSUMERS` because the inherited name asserted the opposite of the measurement."
+            ]
+          },
+          "kind-line-frontend": {
+            "v": "confirmed",
+            "ev": [
+              "The section's kind line, in the sibling documents' form."
+            ]
+          },
+          "FRONTEND-IMPLEMENTS-THE-ENGINE-TRAIT": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES the trait implementation: `impl Frontend for RustFrontend` with `id()`, `version()` and `extract()` at rust-ai-native-conform-frontend/src/lib.rs:48-87."
+            ]
+          },
+          "VERSION-IS-A-CACHE-KEY-NOT-A-RELEASE": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES. Boss-verified: `fn version()` returns \"10\" at rust-ai-native-conform-frontend/src/lib.rs:81, and the comment block above it records v2-v10, every entry a change to what the extraction emits or a narrowing of an existing fact's scope — which is the sentence's claim about WHY it bumps."
+            ]
+          },
+          "FACTS-ARE-CONTENT-ADDRESSED": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES the store's key, `(file content-hash, frontend id+version)`; the same clause stands in the Go surface document, and the `version()` docblock states the retirement consequence in as many words."
+            ]
+          },
+          "kind-line-topology": {
+            "v": "confirmed",
+            "ev": [
+              "The section's kind line, in the sibling documents' form."
+            ]
+          },
+          "CONFORM-TOML-GAINS-A-RUST-SECTION": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES the `[rust]` schema. Boss-verified: `RustConfig` at core-ai-native-conform/src/config.rs:197-233 declares exactly the ten fields named here, in this order — roots, exclude_substrings, gated, exempt, gated_pub_doctest, audit_crates, env_roots, registry_file, registry_gated_crate, floor_disable — read from the struct rather than from this repository's own conform.toml, which exercises only some of them."
+            ]
+          },
+          "ROOT-KEYS-ARE-LANGUAGE-NEUTRAL-AND-LIVE-AT-THE-ROOT": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES which root keys the Rust rules read, and cites ENGINE-CONFORM §6 for their meanings rather than restating them. Checked: the live `Config` surface at core-ai-native-conform/src/config.rs:90-150 carries max_file_lines, invariant_comment_markers, invariant_comment_min_file_lines and sarif_reports beside the three language tables, and the nine retired flat keys above them are declared as tombstones rejected with a targeted hint."
+            ]
+          },
+          "EVERY-CRATE-GATED-OR-EXEMPT": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES the invariant and Rust's gate unit. Checked: `Config::validate_against_tree` calls `validate_units(..., \"crate\", \"rust\")` in core-ai-native-conform/src/config/coverage.rs, so the unit is the crate — against Go's package and TypeScript's cell."
+            ]
+          },
+          "SYN-IS-A-PARSER-NOT-A-TYPE-CHECKER": {
+            "v": "confirmed",
+            "ev": [
+              "PRESCRIBES the tool's honest boundary; coherent, and the Go twin carries the identical clause for its own parser."
+            ]
+          },
+          "TYPE-DEPENDENT-RULES-ARE-OUT-OF-SCOPE": {
+            "v": "confirmed",
+            "ev": [
+              "PRESCRIBES the consequence of the boundary above; every referent resolves."
+            ]
+          },
+          "THE-DIVISION-IS-THE-THREE-TIER-SPLIT": {
+            "v": "confirmed",
+            "ev": [
+              "PRESCRIBES, citing ENGINE-CONFORM §1, whose tier section defines T-lex / T-syn / T-sem and resolves."
+            ]
+          },
+          "RUSTS-T-SEM-TIER-IS-CLIPPY-AND-THE-GAP-IS-A-TYPE-AWARE-LINT-LIBRARY": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES, and it is a correction of the draft's strongest claim rather than its confirmation. Boss-verified: `Fact::LintDiagnosis` exists at core-ai-native-conform/src/facts.rs:246, the root `sarif_reports` key at config.rs:140, and `sarif::load_reports` is called by the Rust gate at rust-ai-native-conform/src/lib.rs:147 — so clippy diagnoses are read back in as facts and the tier is not empty. The residual gap the sentence names is the absence of a Discipline-authored type-aware lint library, which no crate in the tree provides. The anchor was renamed from `…HAS-NO-VEHICLE…` because the draft's name asserted what the measurement refuted."
+            ]
+          },
+          "THE-RULES-THEMSELVES-LIVE-IN-THE-ENGINE-SPEC": {
+            "v": "confirmed",
+            "ev": [
+              "PRESCRIBES the document's boundary; ENGINE-CONFORM resolves and does define the rules' semantics for all three languages."
+            ]
+          },
+          "THE-GUIDE-IS-THE-AUDIENCE-DOCUMENT": {
+            "v": "confirmed",
+            "ev": [
+              "PRESCRIBES the split between guide and surface; GUIDE-AI-NATIVE-RUST.md resolves and is the author-facing document."
+            ]
+          }
+        },
+        "verified_at": "2026-08-05T18:51:36Z",
+        "verify_batch": "G6-conform-surfaces"
+      }
     },
     {
       "path": "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/rust-ai-native-tcg.md",
@@ -23570,9 +23883,9 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "8fe183a8e6bd6a572f1f9e054a342871f83d59d3bb19b0bf584df372e491d215",
+        "processed_hash": "0640090ca0868f45b0da86b3474e8d4d0daf5d552fd1dfdf29d3f016c33f3e0b",
         "summary": {
-          "confirmed": 34
+          "confirmed": 35
         },
         "verdicts": {
           "status-line": {
@@ -23645,10 +23958,10 @@
           "RULE-FILE-LENGTH-BUDGET": {
             "v": "confirmed",
             "ev": [
-              "The file-length budget rides the ROOT `conform.toml` key `max_file_lines` (default 600), with two sibling ROOT keys for the invariant-comment-position rule - `invariant_comment_markers` (default the five labeled markers INVARIANT: / WARNING: / PANICS: / MUST: / NEVER:, empty disables) and `invariant_comment_min_file_lines` (default 120); all three language-neutral, NOT under [typescript].",
-              "core-ai-native-conform/src/config.rs (root-level `pub invariant_comment_markers` and `pub invariant_comment_min_file_lines`, `max_file_lines`); rust-ai-native-conform/src/lib.rs `build_rules` consumes them as `config.max_file_lines` / `config.invariant_comment_markers` / `config.invariant_comment_min_file_lines` - the ROOT view, never `config.rust.*`",
-              "found: all three keys are declared at the root of `Config` and read from the root by the rule builder; the five default markers are exactly INVARIANT: / MUST: / NEVER: / PANICS: / WARNING:. The seven package policies landed 2026-08-05 each carry `max_file_lines = 600` above their `[rust]` section, which is the same root/per-language split observed live.",
-              "RESTATEMENT, and why: this file was sealed earlier in the session on a text-stability check whose fact extractor did not recognise list-item facts (`- ##ID ...`), so this fact's move went unseen and the seal vouched for it unchecked. The move was the marker `@impl/done` being appended - the claim text itself is byte-identical - and the claim now verifies against the engine directly. The verdict is unchanged; what changed is that it has been checked."
+              "RESTATED 2026-08-05, same cause as its Go sibling: the bullet stopped restating the root-key defaults and now names the keys the TS rules read, citing ENGINE-CONFORM §6 for their values.",
+              "Re-checked against core-ai-native-conform/src/config.rs:90-150: max_file_lines, invariant_comment_markers and invariant_comment_min_file_lines are root-level fields of `Config`, and the bullet's surviving structural claim — root keys, language-neutral, NOT under `[typescript]` — holds against that declaration.",
+              "The bullet also gained a fourth key, sarif_reports, and the reason it belongs: boss-verified that typescript-ai-native-conform/src/lib.rs:109 reads `config.sarif_reports` and :82 mounts `LintSuppressionNeedsReason`, so the surface had been silent about a root key its own gate reads.",
+              "This anchor's prior verdict already carried one correction — a seal that vouched for it unchecked because the stability extractor did not see list-item facts. That extractor now sees them, and this restatement is the first one it caught on purpose."
             ]
           },
           "RULE-CELL-ISOLATION": {
@@ -23863,10 +24176,16 @@
               "research/ts-demo/package.json:11      \"test\": \"node --test\",",
               "located in the perimeter on the refs above, machine-verified against the files they cite"
             ]
+          },
+          "THE-SARIF-CITATION-PATH-IS-FED-BY-FOREIGN-LINTERS-NOT-BY-TS-EXTRACT": {
+            "v": "confirmed",
+            "ev": [
+              "DESCRIBES the same omission on the TypeScript side. Boss-verified: typescript-ai-native-conform/src/lib.rs:82 pushes `rules::LintSuppressionNeedsReason` and :109 calls `conform_core::sarif::load_reports(root, &config.sarif_reports)`."
+            ]
           }
         },
-        "verified_at": "2026-08-04T23:23:50Z",
-        "verify_batch": "C4+C5 + H5-restate-file-length-budget"
+        "verified_at": "2026-08-05T18:51:36Z",
+        "verify_batch": "C4+C5 + H5-restate-file-length-budget + G6-conform-surfaces + G6-restatements"
       }
     },
     {
@@ -26415,9 +26734,9 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 80,
+      "markers": 83,
       "units": 12,
-      "facts": 79,
+      "facts": 82,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
