@@ -472,6 +472,18 @@ liveness read that does work: `grep -o '"command":"echo \\"PROGRESS[^"]*'`
 (the worker's own tool CALLS, which the packet text cannot forge) and
 `ls WORKER-REPORT-<task-id>.md`. @impl/done
 
+##fact-the-follow-up-packet-drops-the-clause **A follow-up packet written
+against a finding drops the boilerplate the first packet carried — and
+observability is the first casualty (2026-08-05):** the B-056 collision
+packet was authored mid-session from a worker's escalation and **omitted the
+heartbeat clause** (`#obs-heartbeats`). The worker emitted no `PROGRESS` for
+its entire first run; layer 1 still showed 15 Reads and a Grep, so nothing
+was lost, but for ten minutes the run was indistinguishable from a stall by
+the poll the law prescribes. The clause is not the worker's discipline, it
+is the packet's — and a packet assembled from a review note is exactly the
+one that skips it. Same for the report template and the self-verify block:
+copy the closing three sections before writing the body. @impl/done
+
 ##fact-log-volume-is-thinking-telemetry **Log size is not activity
 (2026-08-05):** with `MAX_THINKING_TOKENS` set, the stream-json log carries
 one `{"subtype":"thinking_tokens"}` line **per token** — a two-minute-old
