@@ -20,6 +20,7 @@
 //! semantics the structural loader is later checked against.
 
 use std::collections::BTreeMap;
+use std::collections::HashMap;
 use std::collections::HashSet;
 use std::fmt::Write as _;
 
@@ -30,7 +31,7 @@ use crate::embed::{EmbedError, SectionSource, expand_embeds};
 use crate::gate::{DuplicateId, first_duplicate};
 use crate::merge::fold_sources;
 use crate::qualify::{RenameEntry, qualify_contribution, read_anchor_id};
-use crate::use_graph::{UseGraphError, topo_order_from};
+use crate::use_graph::{UseGraphError, source_fold_order, topo_order_from};
 
 /// Why static compilation failed.
 #[derive(Debug, thiserror::Error)]
@@ -131,42 +132,12 @@ fn compile_static_inner(
                 reason,
             })?;
 
-        // phase 3 — fold EVERY declared `#source` into a contract that declares
-        // them, in declaration order, then re-gate id uniqueness over the merged
-        // view (§7.3, clause 3): a duplicate the per-fact override did not cancel
-        // fails the build.
-        let source_addrs = source_directives(&text);
-        let folded = if source_addrs.is_empty() {
-            text
-        } else {
-            let contract_tree = DocTree::parse(&text);
-            // Each source is parsed once and held alive for the fold; the trees
-            // are borrowed into the slice `fold_sources` takes, for the call
-            // only (no text is cloned beyond the `section_text` fetch the
-            // single-source path already paid). An unreachable source fails with
-            // ITS address in the error — not the seed's, and not the first
-            // source's (the loop resolves in declaration order and stops at the
-            // first miss).
-            let mut source_trees: Vec<DocTree> = Vec::with_capacity(source_addrs.len());
-            for source_addr in &source_addrs {
-                let src_text = source.section_text(source_addr).map_err(|reason| {
-                    CompileError::Unresolved {
-                        addr: source_addr.to_string(),
-                        reason,
-                    }
-                })?;
-                source_trees.push(DocTree::parse(&src_text));
-            }
-            let source_refs: Vec<&DocTree> = source_trees.iter().collect();
-            let merged = fold_sources(&contract_tree, &source_refs);
-            if let Some(dup) = first_duplicate(&DocTree::parse(&merged)) {
-                return Err(CompileError::DuplicateId {
-                    addr: key.clone(),
-                    dup,
-                });
-            }
-            merged
-        };
+        // phase 3 — fold the node's whole `#source` closure RECURSIVELY (§7.3,
+        // §8 phase 3): a source that itself declares `#source` folds before it
+        // merges into its parent, every node folds once, and a cycle is judged
+        // by `source_fold_order`. See [`fold_source_closure`] for the recursion,
+        // the legal-cycle forward-declaration rule, and the per-level gate.
+        let folded = fold_source_closure(&text, &addr, source)?;
         // phase 4 — embed over the use/source-resolved body.
         let body = strip_directive_lines(&folded, &[DirectiveKind::Use, DirectiveKind::Source]);
         let expanded = expand_embeds(&body, source)?;
@@ -237,6 +208,147 @@ fn source_directives(text: &str) -> Vec<SpecAddress> {
         .filter(|d| d.kind == DirectiveKind::Source)
         .map(|d| d.address)
         .collect()
+}
+
+/// Phase 3 — fold a node's whole `#source` closure into one body (PROP-035
+/// §7.3, §8 phase 3), **recursively**: a source that itself declares `#source`
+/// folds BEFORE it merges into its parent, every node folds once, and a
+/// `#source` cycle is judged by the guard [`source_fold_order`] (§9). This is
+/// where the recursion law lands: the old fold inlined a declaring source's RAW
+/// text, skipping its own fold, so a chain `a #source b #source c` never reached
+/// `c`.
+///
+/// The guard returns the fold order — deepest sources first, `seed` last — so a
+/// single pass accumulating each node's folded text lets a parent fold its
+/// children's *folded* text. РТ-2: lifted out of [`compile_static_inner`] because
+/// the phase body grows past readable with the recursion + the per-level gate,
+/// and `compile_static_inner` is already long.
+///
+/// **Fast path.** When the seed declares no `#source`, the order is `[seed]`
+/// alone and its text is returned byte-for-byte as authored — no parse, no
+/// re-emit — so a no-`#source` lane is unchanged (B-056-L3B acceptance 5).
+///
+/// **Legal contract cycle (РТ-1).** The guard admits a `#source` cycle whose
+/// every node is a contract (the forward-declaration case, §9). In fold order
+/// that means a node's member can be its own ANCESTOR — not yet folded when the
+/// node is reached. Such a member contributes *nothing*: it is exactly a C++
+/// forward declaration, where the cycle closes on a declaration without a body.
+/// Substituting the ancestor's raw text instead would double-count (the ancestor
+/// later folds this same child in), trip the duplicate-anchor gate, and turn a
+/// legal cycle into a build error — so an unfolded member is skipped, not
+/// inlined. РТ-3: each member's folded text is parsed into a `DocTree` held in a
+/// local `Vec` for the `fold_sources` call only (the slice borrows it); no source
+/// text is cloned beyond the one `section_text` fetch per node.
+///
+/// **Inclusion guard (text dedup).** The owner ruling is that contracts fold in
+/// recursively without the *graph* growing — dedup is part of the law, not just
+/// an optimisation. The guard walks the `#source` edges once, and the fold
+/// honours that at the TEXT level: a node's body enters the compiled document
+/// exactly once. A member already inlined somewhere in this closure contributes
+/// nothing on a second path, so a diamond `a #source b,c; b,c #source d` yields
+/// `d` once — taken by whichever of `b`/`c` the deterministic fold order reaches
+/// first (here `b`), then `c` skips it. Without this, a shared source carrying a
+/// fact would inline twice and the post-merge gate would sink an ordinary plugin
+/// composition (two plugins on a common base) on a surviving duplicate anchor.
+/// A member can thus be skipped for one of TWO distinct reasons — see the inline
+/// note where the members are gathered; they must not be conflated.
+fn fold_source_closure(
+    seed_text: &str,
+    addr: &SpecAddress,
+    source: &impl SectionSource,
+) -> Result<String, CompileError> {
+    // РТ-4: the guard walks the `#source` edges BEFORE any fold text is loaded,
+    // so an unreachable source surfaces here as `UseGraphError::Unresolved`
+    // (naming that source) — measured: this path fires first, not the per-node
+    // `section_text` load below. Normalise it to the pipeline's
+    // `CompileError::Unresolved` so the public "cannot load" contract stays
+    // stable (a `#source` that won't load is a load failure, not a graph-
+    // ordering one) and the seed-level addr attribution is preserved; a true
+    // cycle stays a graph error and propagates as `CompileError::UseGraph`.
+    let order = source_fold_order(addr, source).map_err(|e| match e {
+        UseGraphError::Unresolved { addr, reason } => CompileError::Unresolved { addr, reason },
+        other => CompileError::UseGraph(other),
+    })?;
+
+    let seed_key = addr.without_pin();
+
+    // Fast path: no `#source` edge reaches back, so the seed is the only node in
+    // the fold order — return its text untouched (byte-identical, no parse).
+    if order.len() == 1 {
+        return Ok(seed_text.to_string());
+    }
+
+    // Recursive fold: deepest sources first, seed last. `folded` maps a node key
+    // to its folded body, so a parent collects its children's folded text;
+    // `included` records whose body is already inlined somewhere in this closure
+    // — the inclusion guard that holds every node's text to exactly one copy in
+    // the document (a diamond yields the shared source once, not once per path).
+    let mut folded: HashMap<String, String> = HashMap::new();
+    let mut included: HashSet<String> = HashSet::new();
+    for key in &order {
+        let node_addr = SpecAddress::parse(key)?;
+        let text = if key == &seed_key {
+            // Reuse the seed fetch the caller already paid; every other node is
+            // loaded once here. (The guard loaded each to walk it, but did not
+            // retain the texts.)
+            seed_text.to_string()
+        } else {
+            source
+                .section_text(&node_addr)
+                .map_err(|reason| CompileError::Unresolved {
+                    addr: key.clone(),
+                    reason,
+                })?
+        };
+
+        // This node's own `#source` members, in declaration order — the merge
+        // order `fold_sources` honours. A member can be SKIPPED for one of two
+        // DISTINCT reasons (do not conflate them):
+        //   (1) it is absent from `folded` — an ancestor still on the DFS stack,
+        //       i.e. a legal contract cycle's forward declaration (РТ-1): it folds
+        //       later and lives at its own level, so it brings no body here;
+        //   (2) it is already `included` — its body was inlined on an earlier path
+        //       of the deterministic fold order (the inclusion guard). Re-inlining
+        //       would duplicate a node whose facts would then collide and sink
+        //       the build, so the second path brings nothing. The content is NOT
+        //       lost: it lives where the member was first inlined (the first
+        //       parent the fold order reached through it), and that parent's body
+        //       reaches the seed by the same recursive inclusion.
+        let member_trees: Vec<DocTree> = source_directives(&text)
+            .iter()
+            .filter_map(|m| {
+                let mk = m.without_pin();
+                if included.contains(&mk) {
+                    return None; // (2) inclusion guard: body already inlined
+                }
+                folded.get(&mk).map(|t| {
+                    included.insert(mk); // first inline of this member's body
+                    DocTree::parse(t)
+                }) // a `None` here is (1): the forward-declaration ancestor
+            })
+            .collect();
+        let contract_tree = DocTree::parse(&text);
+        let member_refs: Vec<&DocTree> = member_trees.iter().collect();
+        let merged = fold_sources(&contract_tree, &member_refs);
+
+        // Re-gate id uniqueness at EVERY level (not just the seed) over the
+        // folded view, naming THIS node as the collision site (B-056-L3B
+        // acceptance 6): the duplicate arose here, not at whichever node later
+        // folds this one in.
+        if let Some(dup) = first_duplicate(&DocTree::parse(&merged)) {
+            return Err(CompileError::DuplicateId {
+                addr: key.clone(),
+                dup,
+            });
+        }
+        folded.insert(key.clone(), merged);
+    }
+
+    // The seed is last in fold order; its folded body is the node's resolved
+    // text, and the pipeline continues as before (strip / embed / emit).
+    Ok(folded
+        .remove(&seed_key)
+        .expect("seed is last in fold order, so it is in the accumulator"))
 }
 
 /// Remove directive lines of the given kinds. `#use` is resolved by the
@@ -417,5 +529,7 @@ fn rewrite_cross_node_links(
     Ok(out)
 }
 
+#[cfg(test)]
+mod fold_tests;
 #[cfg(test)]
 mod tests;
