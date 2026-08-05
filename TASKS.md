@@ -103,9 +103,13 @@ authored and judged: [`spec/design/multiple-sources-and-plugins.md`](spec/design
       (name, slot) so the result never depends on directory read order; then
       the glob wired through to the fold, with **one** function computing a
       document's `#source` edges for both the guard and the fold.
-- [ ] `fix(vibe-spec)`: two sources declaring the same source-only section
-      pass silently today — the uniqueness gate tolerates a repeated heading
-      by design and holds no provenance. Judge it in the fold, which does.
+- [x] `fix(vibe-spec)`: two sources DEFINING the same section the contract
+      never declared no longer pass silently. The gate could not be the
+      catcher — it tolerates a repeated heading by design and holds no
+      provenance by then — so the check sits in the fold, per level, as a
+      fallback after the fact gate. The fold machinery and the collision
+      tests moved to their own files: the 600-line budget is a neutral key
+      and counts every file, tests included.
 
 ### Волна Г proper
 
