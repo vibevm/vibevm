@@ -176,12 +176,25 @@ its helpers as orphans. @spec/done
 
 ## 5. The landing cut {#cut}
 
-##cut-1 **Slice 1 — top-level commands of one binary.** The derive reader, the
-`record_item` path, the root-to-enum join, `symbol` as `<binary> <command>`.
-Acceptance is a number: the host's map gains **29** command nodes — the count the
+##cut-1 **Slice 1 — top-level commands, every binary the tree declares.** The
+derive reader, the unconditional record path, the root-to-enum join, `symbol` as
+`<binary> <command>`. Acceptance is a number: the host's map gains **43**
+command nodes. @spec/plan
+
+##cut-1-the-number-was-wrong-first **The acceptance number was 29 until the build
+measured it, and the correction is the boss's error, not the worker's.** The
 surfaces census
 ([`g6-b047-surfaces-census.md`](../../campaigns/packages-2026-09/harvest/g6-b047-surfaces-census.md))
-established as the top-level surface, one per variant of `pub enum Command`. @spec/plan
+counts **29** top-level commands, and that count is right — it is about
+`vibe`'s command surface, which is what it set out to measure. This design took
+that number as the number of map nodes, which the census never claimed. `crates/`
+declares **two** clap binaries with a `Parser` root and a `#[command(subcommand)]`
+field: `vibe-cli/src/cli.rs:46` (`name = "vibe"`, 29 variants) and
+`vibe-index/src/cli/mod.rs:47` (`name = "vibe-index"`, 14 variants). A rule that
+recognises a binary by its declaration finds both, and should. **43 = 29 + 14.**
+No other `Parser` root in `crates/` carries a subcommand field — `vibe-index`'s
+fourteen per-command args structs and `vibe-cli`'s group-args structs are inert
+to the reader for exactly the right reason. @spec/done
 
 ##cut-2 **Slice 2 — nesting.** A variant whose payload type carries its own
 `#[command(subcommand)]` yields commands one level deeper, with the parent's path
