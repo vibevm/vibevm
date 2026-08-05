@@ -20,6 +20,38 @@ scan_roots = ["crates/*", "xtask"]
 # Markdown trees walked for anchored spec units (<root>/**/*.md).
 spec_roots = ["spec"]
 
+# Enumerated exclusions, applied after both include halves above. The include
+# side is enumerated so nothing is indexed by accident, and an enumerated
+# exclude serves that purpose exactly as well — not a wildcard escape hatch.
+# A pattern that stops matching anything says so by name on every run
+# (`stale-exclude`); delete it then rather than leaving a dead one behind.
+#
+# The sibling gate had already excluded both of these, by owner ruling
+# 2026-07-24 recorded at the top of `progress.toml`, and this list had not
+# mirrored it — the third instance of two gates holding two exclusion lists.
+# It was found by the gate `specmap --check` itself, which went red on the
+# first panel run after it was installed.
+#
+#   spec/WAL.md       — the session checkpoint, REWRITTEN WHOLE at every
+#                       wind-down. Measured 2026-08-05: it minted 71 units
+#                       carrying ZERO edges, and each wind-down moved ~46 of
+#                       them, so the last commit of every session invalidated
+#                       the committed index and the next session opened on a
+#                       red panel. An address that dies within a day is not a
+#                       traceability address; the project's own law already
+#                       says a brief may not cite this file.
+#   spec/boot/STATIC.md — compiler output (`vibe install` rewrites it whole;
+#                       its own first line says so). Measured the same day:
+#                       572 units, ZERO edges, and every one of them a
+#                       compiled copy of a package snippet that already
+#                       resolves through `[[external_specs]]` under its own
+#                       address. Indexing it makes this project's index claim
+#                       572 units it neither authored nor can edit.
+#
+# `spec/boot/INDEX.md` is deliberately NOT here: it is a TOML manifest and
+# mints no units, so an exclusion for it would be born stale.
+spec_exclude = ["spec/WAL.md", "spec/boot/STATIC.md"]
+
 # Individual root-level spec documents scanned in addition to spec_roots — the
 # owner-frozen implementation spec lives at the repo root, outside any spec/
 # tree (DBT-0019, closed 2026-06-12 when mdspec began scanning it).
