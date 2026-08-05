@@ -87,19 +87,25 @@ authored and judged: [`spec/design/multiple-sources-and-plugins.md`](spec/design
 - [x] `docs(design)`: the build design over the four rulings — measured basis,
       the section rule for a sequence, the recursion law that already exists,
       and the cut below.
-- [ ] `feat(vibe-spec)`: `fold_sources(contract, &[sources])` in
-      `crates/vibe-spec/src/merge.rs`, with `fold_source` kept as its
-      degenerate case — **every existing fold test must pass through the new
-      path unchanged**, which is the regression harness, not politeness.
-- [ ] `fix(vibe-spec)`: the pipeline stops taking the first directive —
-      `crates/vibe-spec/src/pipeline.rs:221` is
-      `.find(|d| d.kind == DirectiveKind::Source)`. Pass every `#source` in
-      declaration order. **This landing closes [B-055](BACKLOG.md#b-055).**
-- [ ] `feat(vibe-spec)`: the fold's cycle guard and dedup, by EXTENDING
-      `crates/vibe-spec/src/use_graph.rs`'s three-colour walker to `#source`
-      edges. **Never a second walker** — one law, one implementation.
-- [ ] `feat(vibe-spec)`: resolver enumeration for the glob form, sorted; one
-      tree plus one lockfile give one result.
+- [x] `feat(vibe-spec)`: `fold_sources(contract, &[sources])` — the fold takes
+      a sequence; `fold_source` stayed as its degenerate case, and every
+      existing fold test passed through the new path unchanged, which is what
+      the kept name was for.
+- [x] `fix(vibe-spec)`: the pipeline passes every `#source` in declaration
+      order and names the source that fails to resolve rather than the seed.
+      **Closed [B-055](BACKLOG.md#b-055).**
+- [x] `feat(vibe-spec)`: the cycle law reached `#source` through the SAME
+      three-colour walker (one `visit`, one colour map, one `is_contract`),
+      and the fold became recursive under it — **with an include guard the
+      design had not foreseen**: node dedup is not text dedup, and a diamond
+      duplicated the shared source until the guard landed.
+- [x] `feat(vibe-spec)`: resolver enumeration for the glob, sorted by
+      (name, slot) so the result never depends on directory read order; then
+      the glob wired through to the fold, with **one** function computing a
+      document's `#source` edges for both the guard and the fold.
+- [ ] `fix(vibe-spec)`: two sources declaring the same source-only section
+      pass silently today — the uniqueness gate tolerates a repeated heading
+      by design and holds no provenance. Judge it in the fold, which does.
 
 ### Волна Г proper
 
