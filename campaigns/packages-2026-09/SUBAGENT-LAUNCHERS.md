@@ -581,6 +581,29 @@ the panel alone, and read the tail rather than the summary. Same disease as
 `#fact-a-truncated-pipe-reads-green` from the other direction — there a green
 reading hid a red run; here a red reading accused an innocent.
 
+##fact-a-prefix-grep-on-the-command-string-reads-a-worker-that-did-nothing
+**The mirror image of `#fact-the-status-grep-matches-the-packet`, and it costs
+a correct worker its acceptance (2026-08-06, caught one step before the
+rejection was sent):** the boss polled a live run with
+`grep -c '"command":"cargo'` and read **zero cargo invocations** — a worker
+that had written a test file and skipped its entire self-verify. The worker had
+run all four commands. Every one of them was
+`cd "<worktree>" && echo "PROGRESS…" && cargo …`, because a headless worker
+cannot rely on its cwd, so the command string never *starts* with `cargo` and a
+prefix pattern cannot match it. The report's claimed exit codes were then
+verified against the log's own tool results and matched verbatim.
+
+Two rules, and they generalise past this one pattern. *(i)* **Poll on the
+structured field, never on a prefix of a free-form string:** count
+`'"name":"Bash"'` and dump the actual `input.command` values (a six-line
+JSONL walk), which is proof against every shell-composition the worker may
+choose. *(ii)* **A missing signal is a claim about the worker and must be
+measured to the same standard as the worker's own claims** — the boss was
+about to reject on strictly weaker evidence than it demands in a report. Same
+disease as `#fact-the-status-grep-matches-the-packet` from the other side:
+there a grep hit invented a finished worker, here a grep miss invented an idle
+one. The grep is not the measurement; the field is.
+
 ##fact-finalisation-is-coupled-to-worktree-removal **Report archiving silently
 depends on the worktree being removable (2026-08-05):** `#obs-meta` puts the
 move of `WORKER-REPORT-<id>.md` into the archive at finalisation, and in
