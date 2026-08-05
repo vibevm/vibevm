@@ -277,3 +277,208 @@ fn q6_plain_compile_static_emits_labels_unqualified() {
     assert!(!out.contains("--root"), "{out}");
     assert!(!out.contains("--FACT"), "{out}");
 }
+
+// ---- B-056-L4B: a `#source` glob reaches the fold (one edge law, one place) -
+//
+// A `#source` may name a SET — a `*` in the package name — not a file. Both the
+// fold guard (`source_fold_order`) and the fold itself (`fold_source_closure`)
+// now reach a document's `#source` edges through ONE function —
+// `use_graph::source_addresses` — which expands each directive (a glob → its
+// sorted members, a point address → itself) in declaration order. These pin that
+// contract: the glob folds its members, expands in place, degrades on an empty
+// match, and recurses through an expanded edge — the proof the guard and the
+// fold walked the same graph.
+
+/// An in-memory `SectionSource` that ALSO expands a pattern address to a known,
+/// sorted member set — the contract a real `FsSectionSource` delegates to
+/// `FileResolver::expand_pattern`. A pattern absent from the map falls back to
+/// the trait default (the address denotes itself), so a point `#source` behaves
+/// exactly as in the plain `MockSource`: it resolves through `section_text`.
+struct GlobMockSource {
+    text: HashMap<String, String>,
+    members: HashMap<String, Vec<String>>,
+}
+
+impl GlobMockSource {
+    fn text(pairs: &[(&str, &str)]) -> Self {
+        GlobMockSource {
+            text: pairs
+                .iter()
+                .map(|(k, v)| ((*k).to_string(), (*v).to_string()))
+                .collect(),
+            members: HashMap::new(),
+        }
+    }
+
+    /// Map a pattern address (its without-pin key) to the sorted member raws the
+    /// resolver's `expand_pattern` would return. Builder-style so each test names
+    /// only the globs it exercises.
+    fn with_glob(mut self, pattern: &str, members: &[&str]) -> Self {
+        self.members.insert(
+            pattern.to_string(),
+            members.iter().map(|s| (*s).to_string()).collect(),
+        );
+        self
+    }
+}
+
+impl SectionSource for GlobMockSource {
+    fn section_text(&self, addr: &SpecAddress) -> Result<String, String> {
+        self.text
+            .get(&addr.without_pin())
+            .cloned()
+            .ok_or_else(|| "not in mock".to_string())
+    }
+
+    fn expand_pattern(&self, addr: &SpecAddress) -> Result<Vec<SpecAddress>, String> {
+        match self.members.get(&addr.without_pin()) {
+            Some(raws) => Ok(raws
+                .iter()
+                .filter_map(|r| SpecAddress::parse(r).ok())
+                .collect()),
+            None => Ok(vec![addr.clone()]), // not a known pattern → point oracle
+        }
+    }
+}
+
+#[test]
+fn a_glob_source_folds_all_its_members_in_sorted_order() {
+    // One `#source` names a glob; it expands to two members (alpha, beta — the
+    // sorted order the resolver returns). Both members' bodies reach the output,
+    // in expansion order (alpha before beta), and the glob itself never reaches
+    // `section_text` — it names a set, not a file.
+    let src = GlobMockSource::text(&[
+        (
+            "spec://org.vibevm.demo/lib/contract/api#root",
+            "# API {#root}\n#source spec://org.vibevm.plugins/plugin-*/impl#root\ncontract-body",
+        ),
+        (
+            "spec://org.vibevm.plugins/plugin-alpha/impl#root",
+            "# Alpha {#root}\nalpha-body",
+        ),
+        (
+            "spec://org.vibevm.plugins/plugin-beta/impl#root",
+            "# Beta {#root}\nbeta-body",
+        ),
+    ])
+    .with_glob(
+        "spec://org.vibevm.plugins/plugin-*/impl#root",
+        &[
+            "spec://org.vibevm.plugins/plugin-alpha/impl#root",
+            "spec://org.vibevm.plugins/plugin-beta/impl#root",
+        ],
+    );
+    let seed = SpecAddress::parse("spec://org.vibevm.demo/lib/contract/api#root").unwrap();
+    let out = compile_static(&seed, &src).unwrap();
+    let alpha = out.find("alpha-body").expect("alpha-body");
+    let beta = out.find("beta-body").expect("beta-body");
+    assert!(
+        alpha < beta,
+        "glob members in sorted expansion order:\n{out}"
+    );
+    assert!(out.contains("contract-body"), "{out}");
+    assert!(!out.contains("#source"), "{out}");
+    assert!(
+        !out.contains("plugin-*"),
+        "the glob itself must not reach the compiled text:\n{out}"
+    );
+}
+
+#[test]
+fn a_glob_and_a_point_source_keep_their_declaration_order() {
+    // `#source <glob>` then `#source <point>`: declaration order is preserved,
+    // and the glob expands IN PLACE — its members sit where the directive sits,
+    // not shuffled to the end after the point source. So the output order is
+    // contract, [glob's members], point.
+    let src = GlobMockSource::text(&[
+        (
+            "spec://org.vibevm.demo/lib/contract/api#root",
+            "# API {#root}\n\
+             #source spec://org.vibevm.plugins/plugin-*/impl#root\n\
+             #source spec://org.vibevm.demo/lib/source/point#root\n\
+             contract-body",
+        ),
+        (
+            "spec://org.vibevm.plugins/plugin-alpha/impl#root",
+            "# Alpha {#root}\nalpha-body",
+        ),
+        (
+            "spec://org.vibevm.demo/lib/source/point#root",
+            "# Point {#root}\npoint-body",
+        ),
+    ])
+    .with_glob(
+        "spec://org.vibevm.plugins/plugin-*/impl#root",
+        &["spec://org.vibevm.plugins/plugin-alpha/impl#root"],
+    );
+    let seed = SpecAddress::parse("spec://org.vibevm.demo/lib/contract/api#root").unwrap();
+    let out = compile_static(&seed, &src).unwrap();
+    let alpha = out.find("alpha-body").expect("alpha-body");
+    let point = out.find("point-body").expect("point-body");
+    assert!(
+        alpha < point,
+        "glob expands in place: its member before the later point source:\n{out}"
+    );
+}
+
+#[test]
+fn an_empty_glob_source_yields_no_sources() {
+    // РТ-4: a glob matching nothing expands to the empty set, so the seed has no
+    // `#source` edge — the fold takes the fast path and the document compiles as
+    // if it declared no sources (no error, no phantom member, the glob stripped).
+    let src = GlobMockSource::text(&[(
+        "spec://org.vibevm.demo/lib/contract/api#root",
+        "# API {#root}\n#source spec://org.vibevm.plugins/plugin-*/impl#root\ncontract-body",
+    )])
+    .with_glob("spec://org.vibevm.plugins/plugin-*/impl#root", &[]);
+    let seed = SpecAddress::parse("spec://org.vibevm.demo/lib/contract/api#root").unwrap();
+    let out = compile_static(&seed, &src).unwrap();
+    assert!(out.contains("contract-body"), "{out}");
+    assert!(!out.contains("#source"), "{out}");
+    assert!(
+        !out.contains("plugin-*"),
+        "the empty glob must not leak into the compiled text:\n{out}"
+    );
+}
+
+#[test]
+fn the_fold_reaches_a_source_through_a_glob_expanded_edge() {
+    // The proof the guard and the fold ask ONE place: the seed's `#source` is a
+    // glob that expands to a member `b`, and `b` ITSELF declares `#source c`. The
+    // fold reaches `c` only if the guard expanded the glob to `b` AND then
+    // followed `b`'s own `#source c` — the same expansion both walks use. Had the
+    // guard expanded the glob while the fold did not, the fold would try to load
+    // the glob address literally and fail; `c`-body in the output is the witness
+    // they agree.
+    let src = GlobMockSource::text(&[
+        (
+            "spec://org.vibevm.demo/lib/contract/a#root",
+            "# A {#a}\na-body\n#source spec://org.vibevm.plugins/plugin-*/impl#root\n",
+        ),
+        (
+            "spec://org.vibevm.plugins/plugin-alpha/impl#root",
+            "# B {#b}\nb-body\n#source spec://org.vibevm.demo/lib/source/c#root\n",
+        ),
+        (
+            "spec://org.vibevm.demo/lib/source/c#root",
+            "# C {#c}\nc-body",
+        ),
+    ])
+    .with_glob(
+        "spec://org.vibevm.plugins/plugin-*/impl#root",
+        &["spec://org.vibevm.plugins/plugin-alpha/impl#root"],
+    );
+    let seed = SpecAddress::parse("spec://org.vibevm.demo/lib/contract/a#root").unwrap();
+    let out = compile_static(&seed, &src).unwrap();
+    // c-body is present ONLY because the glob expanded to b, and b's own
+    // `#source c` was then followed — the recursion runs through the expanded
+    // edge, so the guard and the fold walked the same graph. (Distinct section
+    // anchors `{#a}/{#b}/{#c}` isolate the glob-edge proof from the merge's
+    // same-id section semantics, which a separate test covers.)
+    assert!(
+        out.contains("c-body"),
+        "recursion through a glob edge:\n{out}"
+    );
+    assert!(out.contains("b-body"), "{out}");
+    assert!(!out.contains("#source"), "{out}");
+}

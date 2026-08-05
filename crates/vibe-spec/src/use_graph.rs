@@ -136,35 +136,39 @@ fn visit(
             addr: addr.to_string(),
             reason,
         })?;
-    let directives = Directives::parse(&text);
 
-    // Edges, selected by `kind`. `Use` follows `#use` plus `@spec` in-place
-    // uses (§7.2/§7.4); `Source` follows only `#source` (§7.3) — `@spec` is a
-    // use, not a source. Collected by line so declaration order is preserved
-    // among siblings.
-    let mut edges: Vec<(usize, &SpecAddress)> = match kind {
-        EdgeKind::Use => directives
-            .directives
-            .iter()
-            .filter(|d| d.kind == DirectiveKind::Use)
-            .map(|d| (d.line, &d.address))
-            .chain(
-                directives
-                    .in_place_uses
-                    .iter()
-                    .map(|u| (u.line, &u.address)),
-            )
-            .collect(),
-        EdgeKind::Source => directives
-            .directives
-            .iter()
-            .filter(|d| d.kind == DirectiveKind::Source)
-            .map(|d| (d.line, &d.address))
-            .collect(),
+    // Edges to follow, selected by `kind`. `Use` follows `#use` plus `@spec`
+    // in-place uses (§7.2/§7.4), line-sorted so a `@spec` interleaves with the
+    // `#use`s by where it sits in the prose. `Source` follows only `#source`
+    // (§7.3) — and every such edge passes through [`source_addresses`], the ONE
+    // place that knows a `#source` may carry a pattern (a glob expands to its
+    // sorted members, a point address to itself), flattened in declaration order.
+    // Owning the addresses (rather than borrowing the parsed directives) is what
+    // lets an expanded glob contribute addresses no directive ever held; the
+    // `Use` branch clones for the same uniform shape, which leaves its behaviour
+    // — order, dedup by reach, cycle detection — byte-for-byte as before.
+    let edges: Vec<SpecAddress> = match kind {
+        EdgeKind::Use => {
+            let directives = Directives::parse(&text);
+            let mut e: Vec<(usize, SpecAddress)> = directives
+                .directives
+                .iter()
+                .filter(|d| d.kind == DirectiveKind::Use)
+                .map(|d| (d.line, d.address.clone()))
+                .chain(
+                    directives
+                        .in_place_uses
+                        .iter()
+                        .map(|u| (u.line, u.address.clone())),
+                )
+                .collect();
+            e.sort_by_key(|(line, _)| *line);
+            e.into_iter().map(|(_, a)| a).collect()
+        }
+        EdgeKind::Source => source_addresses(&text, source)?,
     };
-    edges.sort_by_key(|(line, _)| *line);
 
-    for (_, target) in edges {
+    for target in &edges {
         visit(target, source, state, order, path, kind)?;
     }
 
@@ -172,6 +176,46 @@ fn visit(
     path.pop();
     order.push(key);
     Ok(())
+}
+
+/// The concrete `#source` addresses a document declares, in declaration order —
+/// each EXPANDED to the addresses it denotes (a glob to its sorted members, a
+/// point address to itself) and flattened into one list.
+///
+/// This is the ONE place that knows a `#source` edge may carry a pattern. The
+/// fold guard ([`source_fold_order`], via [`visit`]) and the pipeline's source
+/// fold ([`fold_source_closure`](crate::pipeline::fold_source_closure)) both
+/// reach a document's `#source` edges through here, so the graph they walk is
+/// identical — a glob that expanded one way for the guard and another for the
+/// fold would build a guard over the wrong graph, and such divergence is silent.
+///
+/// `Directives::parse` collects directives top-to-bottom by source line, so the
+/// iteration order is the author's declaration order; a glob expands *in place*
+/// — its members sit where the directive sits, not shuffled to the end — and a
+/// pattern matching nothing yields no addresses (the empty set is legal).
+pub(crate) fn source_addresses(
+    text: &str,
+    source: &impl SectionSource,
+) -> Result<Vec<SpecAddress>, UseGraphError> {
+    let mut out = Vec::new();
+    for d in Directives::parse(text).directives {
+        if d.kind != DirectiveKind::Source {
+            continue;
+        }
+        // A refusal to expand reads as "this edge's target set cannot be
+        // resolved" — the same `Unresolved` a `#source` whose text won't load
+        // raises below in `visit`. The pipeline normalises both to its
+        // `CompileError::Unresolved` "cannot load" contract.
+        let expanded =
+            source
+                .expand_pattern(&d.address)
+                .map_err(|reason| UseGraphError::Unresolved {
+                    addr: d.address.to_string(),
+                    reason,
+                })?;
+        out.extend(expanded);
+    }
+    Ok(out)
 }
 
 /// A node is a contract if its doc-path has a `contract` segment (PROP-035 §4) —

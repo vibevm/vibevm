@@ -26,10 +26,25 @@ use crate::resolver::FileResolver;
 
 /// Supplies the text a `spec://` address resolves to. Abstract so `#embed`
 /// expansion can be driven from a filesystem, an in-memory map, or a test mock.
+///
+/// The fold and the use-graph traverser both reach a document's `#source` edges
+/// through this trait, so the one fact they share — a `#source` address may name
+/// a *set* (a glob), not a file — lives here as [`SectionSource::expand_pattern`].
 pub trait SectionSource {
     /// The text of the section (or whole document) `addr` names, or a reason it
     /// could not be produced.
     fn section_text(&self, addr: &SpecAddress) -> Result<String, String>;
+
+    /// Expand `addr` into the concrete addresses it denotes — a pattern (a `*`
+    /// in the package name) into its sorted member set, a point address into
+    /// exactly itself. The default returns the address unchanged, so a source
+    /// with no notion of an installed set (every test mock, every in-memory map)
+    /// degrades to point behaviour rather than breaking, and no existing
+    /// [`SectionSource`] needs touching when this lands. [`FsSectionSource`]
+    /// overrides it to delegate to the resolver's total oracle.
+    fn expand_pattern(&self, addr: &SpecAddress) -> Result<Vec<SpecAddress>, String> {
+        Ok(vec![addr.clone()])
+    }
 }
 
 /// Why `#embed` expansion failed.
@@ -109,6 +124,17 @@ impl FsSectionSource {
 }
 
 impl SectionSource for FsSectionSource {
+    fn expand_pattern(&self, addr: &SpecAddress) -> Result<Vec<SpecAddress>, String> {
+        // Delegate to the resolver's total oracle: a non-pattern address
+        // denotes exactly itself (it returns before any scan), a pattern
+        // denotes its sorted members, and a pattern matching nothing is the
+        // empty set — so the trait's "what does this address denote" question
+        // has one answer, whatever calls it.
+        self.resolver
+            .expand_pattern(addr)
+            .map_err(|e| e.to_string())
+    }
+
     fn section_text(&self, addr: &SpecAddress) -> Result<String, String> {
         let file = self
             .resolver

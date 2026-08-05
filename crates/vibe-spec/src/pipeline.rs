@@ -31,7 +31,7 @@ use crate::embed::{EmbedError, SectionSource, expand_embeds};
 use crate::gate::{DuplicateId, first_duplicate};
 use crate::merge::fold_sources;
 use crate::qualify::{RenameEntry, qualify_contribution, read_anchor_id};
-use crate::use_graph::{UseGraphError, source_fold_order, topo_order_from};
+use crate::use_graph::{UseGraphError, source_addresses, source_fold_order, topo_order_from};
 
 /// Why static compilation failed.
 #[derive(Debug, thiserror::Error)]
@@ -197,19 +197,6 @@ fn node_origin(addr: &SpecAddress) -> String {
     }
 }
 
-/// Every `#source` address a document declares, in declaration order (§7.3).
-/// `Directives::parse` collects directives top-to-bottom by source line, so the
-/// order here is the order the author wrote them — the merge order the fold
-/// honours.
-fn source_directives(text: &str) -> Vec<SpecAddress> {
-    Directives::parse(text)
-        .directives
-        .into_iter()
-        .filter(|d| d.kind == DirectiveKind::Source)
-        .map(|d| d.address)
-        .collect()
-}
-
 /// Phase 3 — fold a node's whole `#source` closure into one body (PROP-035
 /// §7.3, §8 phase 3), **recursively**: a source that itself declares `#source`
 /// folds BEFORE it merges into its parent, every node folds once, and a
@@ -301,9 +288,12 @@ fn fold_source_closure(
                 })?
         };
 
-        // This node's own `#source` members, in declaration order — the merge
-        // order `fold_sources` honours. A member can be SKIPPED for one of two
-        // DISTINCT reasons (do not conflate them):
+        // This node's own `#source` members, gathered through `source_addresses`
+        // — declaration order, each directive EXPANDED (a glob → its sorted
+        // members, a point address → itself) — the merge order `fold_sources`
+        // honours, and the SAME graph the guard walked (one edge law, one
+        // place). A member can be SKIPPED for one of two DISTINCT reasons (do
+        // not conflate them):
         //   (1) it is absent from `folded` — an ancestor still on the DFS stack,
         //       i.e. a legal contract cycle's forward declaration (РТ-1): it folds
         //       later and lives at its own level, so it brings no body here;
@@ -314,7 +304,13 @@ fn fold_source_closure(
         //       lost: it lives where the member was first inlined (the first
         //       parent the fold order reached through it), and that parent's body
         //       reaches the seed by the same recursive inclusion.
-        let member_trees: Vec<DocTree> = source_directives(&text)
+        let member_trees: Vec<DocTree> = source_addresses(&text, source)
+            .map_err(|e| match e {
+                UseGraphError::Unresolved { addr, reason } => {
+                    CompileError::Unresolved { addr, reason }
+                }
+                other => CompileError::UseGraph(other),
+            })?
             .iter()
             .filter_map(|m| {
                 let mk = m.without_pin();
