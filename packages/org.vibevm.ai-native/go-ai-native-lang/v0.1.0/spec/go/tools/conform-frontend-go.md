@@ -110,12 +110,22 @@ from the module layout: `roots` (source roots to scan), `cells_dir`
 `registry_pkg` (default `internal/registry`), `[go] gated` /
 `[[go.exempt]]` `{unit, reason}` (the package is Go's gate unit — the
 expand-as-you-conform ratchet: a package enters `gated` only at zero
-findings, every other package carrying an exempt reason). The file budget and the
-`invariant-comment-position` rule are fed by **root** `conform.toml` keys (NOT under `[go]` — they are
-language-neutral, beside each other): `max_file_lines` (default 600), `invariant_comment_markers` (the
-marker vocabulary; default the five labeled markers `INVARIANT:` / `WARNING:` / `PANICS:` / `MUST:` /
-`NEVER:`, empty disables the rule), and `invariant_comment_min_file_lines` (the floor below which a file
-is skipped whole; default 120). @impl/done
+findings, every other package carrying an exempt reason). The file-length and `invariant-comment-position` rules are fed by **root**
+`conform.toml` keys (NOT under `[go]` — they are language-neutral, beside each
+other): `max_file_lines` feeds `file-length`; `invariant_comment_markers` /
+`invariant_comment_min_file_lines` feed `invariant-comment-position`; and
+`sarif_reports` feeds the SARIF ingest whose `LintDiagnosis` facts the
+`lint-suppression-needs-reason` rule cites. What those root keys mean, and what
+they default to, is described once, in `ENGINE-CONFORM §6` (the policy file) —
+this surface names which ones the Go rules read, not their values. @impl/done
+
+##THE-SARIF-CITATION-PATH-IS-FED-BY-FOREIGN-LINTERS-NOT-BY-GO-EXTRACT The
+`lint-suppression-needs-reason` rule is mounted in this gate too, and it is
+deliberately absent from the rule list above: its facts come from SARIF
+ingest — `go vet`, `staticcheck`, `golangci-lint` — not from go-extract. It is
+the T-sem citation path (§5), where a Discipline rule cites a foreign linter's
+diagnosis as its own evidence, and it is the one rule here the extractor does
+not feed. @impl/done
 
 ##EVERY-PACKAGE-GATED-OR-EXEMPT The
 every-package-gated-or-exempt invariant is enforced by the engine on
