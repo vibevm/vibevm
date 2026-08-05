@@ -134,14 +134,29 @@ pub enum Error {
     },
 
     #[error(
-        "failed to parse TOML at {path} \
+        "failed to parse `{path}`: {detail} \
          (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema; \
-          fix: repair the TOML syntax at the reported location)"
+          fix: {fix})"
     )]
     ParseToml {
         path: PathBuf,
+        /// The deserialiser's own diagnosis, rendered verbatim — the field
+        /// name for a missing key (`missing field \`group\``), or the parser's
+        /// `TOML parse error at line N, column M` plus caret for broken
+        /// syntax. Surfacing this is the whole point: the `#[source]` it sits
+        /// next to is never printed by `Display`, so before this field existed
+        /// the operator saw neither the field name nor the position.
+        detail: String,
+        /// A remedy matched to the failure kind — not the generic "repair the
+        /// syntax" that used to fire even when only a key was missing. See
+        /// [`Error::parse_toml`] for how the kind is told apart.
+        fix: String,
+        // Boxed to keep the variant (and so every `Result<_, Error>`) under
+        // clippy's `result_large_err` threshold: `toml::de::Error` is ~96 B on
+        // its own, and `detail`/`fix` already push this variant past 128 B. The
+        // chain is preserved — `Box<toml::de::Error>` still implements `Error`.
         #[source]
-        source: toml::de::Error,
+        source: Box<toml::de::Error>,
     },
 
     #[error(
@@ -150,4 +165,131 @@ pub enum Error {
           fix: act on the wrapped serializer error)"
     )]
     SerializeToml(#[from] toml::ser::Error),
+}
+
+impl Error {
+    /// Wrap a `toml::de::Error` so its own diagnosis reaches the reader and
+    /// the remedy matches the failure kind.
+    ///
+    /// `toml::de::Error` exposes no kind discriminator — no enum variant, no
+    /// `is_*` predicate; its public surface is `message()` and `span()`. That
+    /// is not enough to tell the two failures an operator actually hits — a
+    /// missing required key versus genuinely broken TOML syntax — apart
+    /// structurally. `span()` is `None` for a missing field, but also `None`
+    /// for other deserialisation errors (integer overflow, for one), so it
+    /// would mislabel those as "missing field"; and it is `Some` for both
+    /// syntax errors and type/value rejections, so it cannot name the kind
+    /// either. The one reliable signal is the message text: `missing field
+    /// \`X\`` is serde's own `missing_field` contract, which toml does not
+    /// override, so it is stable across toml versions. Everything else is a
+    /// rejection the parser already describes — and, for real syntax errors,
+    /// points at with a line/column — in its own `Display`, which we render
+    /// verbatim into `detail`.
+    pub(crate) fn parse_toml(path: PathBuf, source: toml::de::Error) -> Self {
+        let detail = source.to_string();
+        let detail = detail.trim_end();
+        let missing_field = source.message().contains("missing field");
+        let fix = if missing_field {
+            "add the missing field to vibe.toml"
+        } else {
+            "repair the TOML at the location reported above"
+        };
+        Error::ParseToml {
+            path,
+            detail: detail.to_string(),
+            fix: fix.to_string(),
+            source: Box::new(source),
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Error;
+    use crate::manifest::Manifest;
+
+    #[test]
+    fn missing_required_field_names_it_and_avoids_syntax_advice() {
+        // `[package]` without the required `group`: syntactically valid TOML,
+        // missing a key. The diagnosis must name the field and must NOT tell
+        // the operator to repair TOML syntax — the exact bug this fixes.
+        let err = Manifest::parse_str(
+            "[package]\nname = \"wal\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
+        )
+        .unwrap_err();
+        let msg = err.to_string();
+        assert!(msg.contains("missing field"), "must name the field: {msg}");
+        assert!(msg.contains("group"), "must name `group`: {msg}");
+        assert!(
+            !msg.to_lowercase().contains("repair the toml syntax"),
+            "a missing field is not a syntax error; got: {msg}"
+        );
+        assert!(
+            msg.contains("add the missing field"),
+            "remedy must be to add the field: {msg}"
+        );
+        assert!(
+            msg.contains("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema"),
+            "REQ citation must survive: {msg}"
+        );
+    }
+
+    #[test]
+    fn broken_syntax_carries_the_parser_position() {
+        // `this is = not = toml` is malformed TOML. The parser's own framing
+        // — `TOML parse error at line N, column M` — must now reach the
+        // reader; the bare `#[source]` used to swallow it whole.
+        let err = Manifest::parse_str("this is = not = toml\n").unwrap_err();
+        let msg = err.to_string();
+        assert!(
+            msg.contains("TOML parse error"),
+            "a syntax error must surface the parser's framing: {msg}"
+        );
+        assert!(
+            msg.contains("line") && msg.contains("column"),
+            "a syntax error must carry a position: {msg}"
+        );
+        assert!(
+            msg.contains("repair the TOML"),
+            "remedy must speak to repairing the TOML: {msg}"
+        );
+        assert!(
+            msg.contains("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema"),
+            "REQ citation must survive: {msg}"
+        );
+    }
+
+    #[test]
+    fn valid_manifest_still_parses_cleanly() {
+        // The classification only fires on failure; the happy path is
+        // unchanged. (Broad unchanged-ness for valid manifests is also covered
+        // by the manifest document suite.)
+        let m = Manifest::parse_str("[project]\nname = \"demo\"\nversion = \"0.0.1\"\n").unwrap();
+        assert_eq!(m.require_project().unwrap().name, "demo");
+    }
+
+    #[test]
+    fn req_citation_present_in_every_parse_variant_via_constructor() {
+        // Regression guard for the `error-message-cites-req` gate: whichever
+        // bucket the constructor picks, the REQ citation is in the message.
+        let missing = Error::parse_toml(
+            "vibe.toml".into(),
+            toml::from_str::<Manifest>(
+                "[package]\nname = \"x\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
+            )
+            .unwrap_err(),
+        )
+        .to_string();
+        let broken = Error::parse_toml(
+            "vibe.toml".into(),
+            toml::from_str::<Manifest>("this is = not = toml\n").unwrap_err(),
+        )
+        .to_string();
+        let req = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema";
+        assert!(
+            missing.contains(req),
+            "missing-field msg lost REQ: {missing}"
+        );
+        assert!(broken.contains(req), "syntax-error msg lost REQ: {broken}");
+    }
 }

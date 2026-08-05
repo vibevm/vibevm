@@ -34,11 +34,15 @@ impl Check for ManifestValidityCheck {
             return;
         }
         if let Err(e) = Manifest::read(&manifest_path) {
+            // `e`'s `Display` is already a complete, self-contained sentence —
+            // "failed to parse `vibe.toml`: <diagnosis> (violates …; fix: …)" —
+            // so it is surfaced verbatim rather than re-wrapped (which used to
+            // double the "failed to parse" framing and the filename).
             report.err(
                 CheckId::ManifestValidity,
                 Some(PathBuf::from(Manifest::FILENAME)),
                 None,
-                format!("`{}` failed to parse: {e}", Manifest::FILENAME),
+                format!("{e}"),
             );
         }
 
@@ -52,7 +56,7 @@ impl Check for ManifestValidityCheck {
                 CheckId::ManifestValidity,
                 Some(PathBuf::from(Lockfile::FILENAME)),
                 None,
-                format!("`{}` failed to parse: {e}", Lockfile::FILENAME),
+                format!("{e}"),
             );
         }
     }
@@ -65,7 +69,7 @@ mod tests {
     use tempfile::tempdir;
 
     use crate::test_support::{opts, write_minimal_project};
-    use crate::{CheckId, Severity, check_project};
+    use crate::{CheckId, CheckReport, Severity, check_project};
 
     #[test]
     fn missing_vibe_toml_is_an_error() {
@@ -90,12 +94,65 @@ mod tests {
         fs::write(project.path().join("vibe.toml"), "this is = not = toml").unwrap();
         let report = check_project(project.path(), &opts());
         assert!(report.has_errors());
+        let msg = manifest_msg(&report);
+        // The "failed to parse" marker is preserved (the existing degenerate
+        // contract for this cell).
+        assert!(msg.contains("failed to parse"), "{msg}");
+        // NEW: the parser's own framing now reaches the reader — it used to be
+        // swallowed by the bare `#[source]`.
         assert!(
-            report
-                .findings
-                .iter()
-                .any(|f| f.check == CheckId::ManifestValidity
-                    && f.message.contains("failed to parse")),
+            msg.contains("TOML parse error"),
+            "syntax framing missing: {msg}"
         );
+        assert!(
+            msg.contains("line") && msg.contains("column"),
+            "a syntax error must carry a position: {msg}"
+        );
+        assert!(
+            msg.contains("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema"),
+            "REQ citation missing: {msg}"
+        );
+    }
+
+    #[test]
+    fn missing_required_field_is_diagnosed_not_mislabelled_syntax() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        // Syntactically valid TOML; `[package]` is missing the required
+        // `group`. The diagnosis must name the field and must NOT advise
+        // repairing TOML syntax — the bug this cell now closes.
+        fs::write(
+            project.path().join("vibe.toml"),
+            "[package]\nname = \"wal\"\nkind = \"flow\"\nversion = \"0.1.0\"\n",
+        )
+        .unwrap();
+        let report = check_project(project.path(), &opts());
+        assert!(report.has_errors());
+        let msg = manifest_msg(&report);
+        assert!(msg.contains("missing field"), "must name the field: {msg}");
+        assert!(msg.contains("group"), "must name `group`: {msg}");
+        assert!(
+            !msg.to_lowercase().contains("repair the toml syntax"),
+            "a missing field is not a syntax error: {msg}"
+        );
+        assert!(
+            msg.contains("add the missing field"),
+            "remedy must be to add the field: {msg}"
+        );
+        assert!(
+            msg.contains("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema"),
+            "REQ citation missing: {msg}"
+        );
+    }
+
+    /// The single `ManifestValidity` finding's message, panicking with the full
+    /// report if the cell produced no such finding.
+    fn manifest_msg(report: &CheckReport) -> &str {
+        report
+            .findings
+            .iter()
+            .find(|f| f.check == CheckId::ManifestValidity)
+            .map(|f| f.message.as_str())
+            .unwrap_or_else(|| panic!("no ManifestValidity finding: {:?}", report.findings))
     }
 }

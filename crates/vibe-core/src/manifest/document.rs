@@ -296,10 +296,8 @@ impl Manifest {
     /// callers that obtain manifest bytes without a filesystem path — e.g.
     /// the registry reading a manifest out of a fetched package tree.
     pub fn parse_str(text: &str) -> Result<Self> {
-        let m: Manifest = toml::from_str(text).map_err(|source| Error::ParseToml {
-            path: PathBuf::from(Self::FILENAME),
-            source,
-        })?;
+        let m: Manifest = toml::from_str(text)
+            .map_err(|source| Error::parse_toml(PathBuf::from(Self::FILENAME), source))?;
         m.validate()?;
         Ok(m)
     }

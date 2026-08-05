@@ -116,7 +116,7 @@ De-rotted instead — three exact substitutions per fixture: `group =
 **Filed from the fix as `-15`:** the diagnostic that made this expensive
 to read.
 
-### 2026-08-05-15 · C/A3 · P2 · open
+### 2026-08-05-15 · C/A3 · P2 · fixed 2026-08-05 (same day it was filed)
 
 **A missing required manifest field is reported as a TOML syntax
 error.** `vibe check` on a manifest lacking `[package].group` prints
@@ -137,6 +137,28 @@ the check collapses both into the syntax branch.
 
 **Open:** split the two cases, and let the missing-field branch name the
 field. Filed by the `-05` fix, 2026-08-05.
+
+**Fixed the same day, and the defect was one layer deeper than filed.** The
+variant carried the parser's own error as `#[source]` — and `thiserror` does
+not print `#[source]` in `Display`, while the consumer formatted only the
+outer text. So the diagnosis that DID know the field name and the position
+(`missing field \`group\``, plus `toml`'s line/column and caret) was
+constructed, attached, and then thrown away unread. The message promised «the
+reported location» and discarded the only thing that had one.
+
+Now the parser's own rendering is surfaced verbatim and the remedy branches.
+A missing key reads `missing field \`group\` … fix: add the missing field`;
+broken syntax reads `key with no value, expected \`=\` … fix: repair the TOML
+at the location reported above`. Both keep the REQ citation the gate requires.
+
+**How the two are told apart, measured rather than guessed:** `toml::de::Error`
+0.9 exposes no kind discriminator — only `message()` and `span()`, read from
+the crate source. `span()` cannot do it: `None` for a missing field but also
+`None` for other deserialisation errors (integer overflow), and `Some` for both
+syntax errors and type rejections. The one stable signal is serde's own
+`missing_field` contract, which toml does not override. Text matching in
+exactly one place, on a documented contract, because no structural signal
+exists — recorded so the next reader does not re-derive it.
 
 ### 2026-05-23-06 · C4 · P2 · open
 
