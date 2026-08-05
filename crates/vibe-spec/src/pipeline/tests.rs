@@ -337,3 +337,201 @@ fn q6_plain_compile_static_emits_labels_unqualified() {
     assert!(!out.contains("--root"), "{out}");
     assert!(!out.contains("--FACT"), "{out}");
 }
+
+// ---- B-056-L2: the pipeline folds ALL declared `#source` directives --------
+//
+// A contract declaring more than one `#source` used to fold only the FIRST —
+// every later directive was silently dropped (defect B-055). These pin the
+// fix: every declared source reaches the fold, in declaration order, with the
+// degenerate single-source and no-source paths left byte-unchanged (covered by
+// the existing `folds_source_into_a_contract_that_declares_it` and the no-
+// `#source` seeds above).
+
+#[test]
+fn two_sources_both_folded_in_declaration_order() {
+    // B-055: a contract declaring TWO `#source` directives folds BOTH, in the
+    // order they were declared — the second directive is no longer dropped.
+    let src = MockSource::new(&[
+        (
+            "spec://org.vibevm.demo/lib/contract/api#root",
+            "# API {#root}\n\
+             #source spec://org.vibevm.demo/lib/source/s1#root\n\
+             #source spec://org.vibevm.demo/lib/source/s2#root\n\
+             contract-body",
+        ),
+        (
+            "spec://org.vibevm.demo/lib/source/s1#root",
+            "# S1 {#root}\ns1-body",
+        ),
+        (
+            "spec://org.vibevm.demo/lib/source/s2#root",
+            "# S2 {#root}\ns2-body",
+        ),
+    ]);
+    let seed = SpecAddress::parse("spec://org.vibevm.demo/lib/contract/api#root").unwrap();
+    let out = compile_static(&seed, &src).unwrap();
+    // All three bodies survive — contract, s1, s2 — checked by INDEX order, not
+    // just presence.
+    let c = out.find("contract-body").expect("contract-body");
+    let s1 = out.find("s1-body").expect("s1-body");
+    let s2 = out.find("s2-body").expect("s2-body");
+    assert!(c < s1, "contract before s1:\n{out}");
+    assert!(s1 < s2, "s1 (declared first) before s2:\n{out}");
+}
+
+#[test]
+fn sources_fold_in_declaration_order_not_alphabetical() {
+    // The merge order is the order the author DECLARED the directives, not the
+    // alphabetical order of the addresses: declared s2-before-s1 ⇒ s2 first in
+    // the output, even though s1 < s2 alphabetically.
+    let src = MockSource::new(&[
+        (
+            "spec://org.vibevm.demo/lib/contract/api#root",
+            "# API {#root}\n\
+             #source spec://org.vibevm.demo/lib/source/s2#root\n\
+             #source spec://org.vibevm.demo/lib/source/s1#root\n\
+             contract-body",
+        ),
+        (
+            "spec://org.vibevm.demo/lib/source/s1#root",
+            "# S1 {#root}\ns1-body",
+        ),
+        (
+            "spec://org.vibevm.demo/lib/source/s2#root",
+            "# S2 {#root}\ns2-body",
+        ),
+    ]);
+    let seed = SpecAddress::parse("spec://org.vibevm.demo/lib/contract/api#root").unwrap();
+    let out = compile_static(&seed, &src).unwrap();
+    let s2 = out.find("s2-body").unwrap();
+    let s1 = out.find("s1-body").unwrap();
+    assert!(s2 < s1, "declaration order, not alphabetical:\n{out}");
+}
+
+#[test]
+fn replace_in_second_source_drops_contract_keeps_both_sources() {
+    // `:replace` on the SECOND declared source drops the CONTRACT text only;
+    // both sources survive, in declaration order — the sources still add
+    // together (§7.3, the multi-source replace law).
+    let src = MockSource::new(&[
+        (
+            "spec://org.vibevm.demo/lib/contract/api#root",
+            "# API {#root}\n\
+             #source spec://org.vibevm.demo/lib/source/s1#root\n\
+             #source spec://org.vibevm.demo/lib/source/s2#root\n\
+             contract-body",
+        ),
+        (
+            "spec://org.vibevm.demo/lib/source/s1#root",
+            "# S1 {#root}\ns1-body",
+        ),
+        (
+            "spec://org.vibevm.demo/lib/source/s2#root",
+            "# S2 {#root} :replace\ns2-body",
+        ),
+    ]);
+    let seed = SpecAddress::parse("spec://org.vibevm.demo/lib/contract/api#root").unwrap();
+    let out = compile_static(&seed, &src).unwrap();
+    assert!(
+        !out.contains("contract-body"),
+        "contract text survived:\n{out}"
+    );
+    let s1 = out.find("s1-body").unwrap();
+    let s2 = out.find("s2-body").unwrap();
+    assert!(s1 < s2, "sources in declaration order:\n{out}");
+}
+
+#[test]
+fn a_fact_duplicate_between_two_sources_fails_the_build() {
+    // Two sources each declare the SAME source-only section `#extra`, each
+    // carrying the fact `##dup`. The fold appends both sections (no dedup
+    // between sources), and the post-merge uniqueness gate trips on the
+    // surviving fact-vs-fact collision — a definition is not idempotent even
+    // when the declaration is (PROP-035 §7.3 clause 3).
+    //
+    // NB: the gate does NOT flag a pure heading-vs-heading repeat (the `:add`
+    // concatenation artifact), so a fact must be on at least one side for the
+    // build to fail — see `a_repeated_section_heading_is_not_flagged` in gate.
+    let src = MockSource::new(&[
+        (
+            "spec://org.vibevm.demo/lib/contract/api#root",
+            "# API {#root}\n\
+             #source spec://org.vibevm.demo/lib/source/s1#root\n\
+             #source spec://org.vibevm.demo/lib/source/s2#root\n",
+        ),
+        (
+            "spec://org.vibevm.demo/lib/source/s1#root",
+            "# Extra {#extra}\n- ##dup from s1\n",
+        ),
+        (
+            "spec://org.vibevm.demo/lib/source/s2#root",
+            "# Extra {#extra}\n- ##dup from s2\n",
+        ),
+    ]);
+    let seed = SpecAddress::parse("spec://org.vibevm.demo/lib/contract/api#root").unwrap();
+    match compile_static(&seed, &src) {
+        Err(CompileError::DuplicateId { dup, .. }) => assert_eq!(dup.id, "dup"),
+        other => panic!("expected DuplicateId from the s1/s2 fact collision, got {other:?}"),
+    }
+}
+
+#[test]
+fn unreachable_second_source_names_that_source_not_the_first() {
+    // РТ-3: when the SECOND declared source is unreachable, the Unresolved
+    // error names THAT source's address — not the first source's, and not the
+    // seed's.
+    let src = MockSource::new(&[
+        (
+            "spec://org.vibevm.demo/lib/contract/api#root",
+            "# API {#root}\n\
+             #source spec://org.vibevm.demo/lib/source/s1#root\n\
+             #source spec://org.vibevm.demo/lib/source/s2#root\n\
+             contract-body",
+        ),
+        (
+            "spec://org.vibevm.demo/lib/source/s1#root",
+            "# S1 {#root}\ns1-body",
+        ),
+        // s2 is deliberately absent from the mock — it does not resolve.
+    ]);
+    let seed = SpecAddress::parse("spec://org.vibevm.demo/lib/contract/api#root").unwrap();
+    match compile_static(&seed, &src) {
+        Err(CompileError::Unresolved { addr, .. }) => {
+            assert!(
+                addr.contains("/source/s2"),
+                "error must name the unreachable s2, got: {addr}"
+            );
+            assert!(
+                !addr.contains("/source/s1"),
+                "error must not name the reachable s1, got: {addr}"
+            );
+        }
+        other => panic!("expected Unresolved for s2, got {other:?}"),
+    }
+}
+
+#[test]
+fn no_source_directive_lines_remain_with_two_sources() {
+    // strip_directive_lines cuts by directive KIND, so EVERY `#source` line —
+    // not just the first — is gone from the compiled output.
+    let src = MockSource::new(&[
+        (
+            "spec://org.vibevm.demo/lib/contract/api#root",
+            "# API {#root}\n\
+             #source spec://org.vibevm.demo/lib/source/s1#root\n\
+             #source spec://org.vibevm.demo/lib/source/s2#root\n\
+             contract-body",
+        ),
+        (
+            "spec://org.vibevm.demo/lib/source/s1#root",
+            "# S1 {#root}\ns1-body",
+        ),
+        (
+            "spec://org.vibevm.demo/lib/source/s2#root",
+            "# S2 {#root}\ns2-body",
+        ),
+    ]);
+    let seed = SpecAddress::parse("spec://org.vibevm.demo/lib/contract/api#root").unwrap();
+    let out = compile_static(&seed, &src).unwrap();
+    assert!(!out.contains("#source"), "a #source line survived:\n{out}");
+}

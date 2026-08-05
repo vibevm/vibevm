@@ -4,8 +4,8 @@
 //!
 //! 1. **parse / topo** — build the `#use` graph from the seed and order it so
 //!    every dependency precedes its dependents (§7.2, §8 phase 2);
-//! 2. **source-merge** — fold `source` into `contract` (§7.3) — *deferred*: the
-//!    `#source` contract→impl resolution lands in a follow-up, noted below;
+//! 2. **source-merge** — fold every declared `#source` into `contract`, in
+//!    declaration order (§7.3);
 //! 3. **embed-expand** — splice every `#embed` to a fixed point (§7.1);
 //! 4. **emit** — concatenate the nodes in topological order, each wrapped in
 //!    open/close markers (§11), so the output is reversible.
@@ -28,7 +28,7 @@ use crate::directives::{DirectiveKind, Directives};
 use crate::doctree::DocTree;
 use crate::embed::{EmbedError, SectionSource, expand_embeds};
 use crate::gate::{DuplicateId, first_duplicate};
-use crate::merge::fold_source;
+use crate::merge::fold_sources;
 use crate::qualify::{RenameEntry, qualify_contribution, read_anchor_id};
 use crate::use_graph::{UseGraphError, topo_order_from};
 
@@ -131,28 +131,41 @@ fn compile_static_inner(
                 reason,
             })?;
 
-        // phase 3 — fold source into a contract that declares #source, then
-        // re-gate id uniqueness over the merged view (§7.3, clause 3): a
-        // duplicate the per-fact override did not cancel fails the build.
-        let folded = match first_source_directive(&text) {
-            Some(source_addr) => {
-                let contract_tree = DocTree::parse(&text);
-                let src_text = source.section_text(&source_addr).map_err(|reason| {
+        // phase 3 — fold EVERY declared `#source` into a contract that declares
+        // them, in declaration order, then re-gate id uniqueness over the merged
+        // view (§7.3, clause 3): a duplicate the per-fact override did not cancel
+        // fails the build.
+        let source_addrs = source_directives(&text);
+        let folded = if source_addrs.is_empty() {
+            text
+        } else {
+            let contract_tree = DocTree::parse(&text);
+            // Each source is parsed once and held alive for the fold; the trees
+            // are borrowed into the slice `fold_sources` takes, for the call
+            // only (no text is cloned beyond the `section_text` fetch the
+            // single-source path already paid). An unreachable source fails with
+            // ITS address in the error — not the seed's, and not the first
+            // source's (the loop resolves in declaration order and stops at the
+            // first miss).
+            let mut source_trees: Vec<DocTree> = Vec::with_capacity(source_addrs.len());
+            for source_addr in &source_addrs {
+                let src_text = source.section_text(source_addr).map_err(|reason| {
                     CompileError::Unresolved {
                         addr: source_addr.to_string(),
                         reason,
                     }
                 })?;
-                let merged = fold_source(&contract_tree, &DocTree::parse(&src_text));
-                if let Some(dup) = first_duplicate(&DocTree::parse(&merged)) {
-                    return Err(CompileError::DuplicateId {
-                        addr: key.clone(),
-                        dup,
-                    });
-                }
-                merged
+                source_trees.push(DocTree::parse(&src_text));
             }
-            None => text,
+            let source_refs: Vec<&DocTree> = source_trees.iter().collect();
+            let merged = fold_sources(&contract_tree, &source_refs);
+            if let Some(dup) = first_duplicate(&DocTree::parse(&merged)) {
+                return Err(CompileError::DuplicateId {
+                    addr: key.clone(),
+                    dup,
+                });
+            }
+            merged
         };
         // phase 4 — embed over the use/source-resolved body.
         let body = strip_directive_lines(&folded, &[DirectiveKind::Use, DirectiveKind::Source]);
@@ -213,13 +226,17 @@ fn node_origin(addr: &SpecAddress) -> String {
     }
 }
 
-/// The first `#source` address in a document, if it declares one (§7.3).
-fn first_source_directive(text: &str) -> Option<SpecAddress> {
+/// Every `#source` address a document declares, in declaration order (§7.3).
+/// `Directives::parse` collects directives top-to-bottom by source line, so the
+/// order here is the order the author wrote them — the merge order the fold
+/// honours.
+fn source_directives(text: &str) -> Vec<SpecAddress> {
     Directives::parse(text)
         .directives
         .into_iter()
-        .find(|d| d.kind == DirectiveKind::Source)
+        .filter(|d| d.kind == DirectiveKind::Source)
         .map(|d| d.address)
+        .collect()
 }
 
 /// Remove directive lines of the given kinds. `#use` is resolved by the
