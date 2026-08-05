@@ -405,6 +405,21 @@ B-045; do it in that wave, not before it.** Kept P3 and open, with the
 coupling recorded so the next reader does not spend the afternoon
 rewriting examples into a form that has not been ruled.
 
+**The blocker is discharged 2026-08-06** — B-045 landed (`64d66c64`) and the
+grammar is settled: a `kind` prefix is validated after resolution, and the two
+verbs acting on installed state accept a bare short name while the three
+registry-redirect verbs keep requiring the qualified one, each with its reason
+recorded. So the sweep can now be done against a fixed target. **What the
+landing also showed is that the sweep is smaller than the row's framing:** the
+`uninstall` and `update` docs already documented `<kind>:<name>` — the short
+form — while the code rejected it, so those pages were not wrong about the form
+and needed no edit; the build made them true. The 169 occurrences are examples
+of a form that is legal input, not of a form that is wrong. That reframes the
+open question from «requalify these» to **«where should a doc teach the
+qualified form, and where is the short one the honest example?»** — which is an
+editorial decision with 27 files behind it, and it is the one thing this row
+has never had ruled.
+
 ### 2026-05-23-11 · D1 · P3 · open
 
 **Deferred PROP-011 refinements.** PROP-011 §5 / §8 record two: a
