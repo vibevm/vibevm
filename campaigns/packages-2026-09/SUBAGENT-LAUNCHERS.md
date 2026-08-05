@@ -230,6 +230,22 @@ on stall: read the tail, then kill / correct via the `-c` loop /
 re-commission. Never a blind multi-hour wait — the cadence is the
 owner's ~30 s.
 
+##obs-mtime-is-not-liveness-either **Correction (2026-08-05): with a thinking
+budget set, mtime NEVER goes stale, so the rule above cannot fire.** The log
+gains a line per thinking token, so a worker on a long silent turn keeps its
+mtime one second old while doing nothing observable — measured here at five
+minutes between real events with the file growing the whole time. Liveness is
+the timestamp of the last NON-telemetry event, not the file's:
+
+```sh
+grep -v '"subtype":"thinking_tokens"' "$L" | tail -1
+```
+
+The one-liner above stays useful for the `PROGRESS` trail; for «is it stuck»
+read that line, and count the worker's tool calls
+(`grep -o '"name":"Edit"' "$L" | wc -l`) — a task that should be editing and
+has zero Edits after its reading phase is the real stall signal. @impl/done
+
 ##obs-archive **The archive — where every log lives and stays.** Root:
 `C:\Users\olegc\git\v\cache\agents\` (machine-local, OUTSIDE the repo,
 sibling of the checkout):
