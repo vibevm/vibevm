@@ -438,17 +438,25 @@ pub enum WatchError {
 ///     .unwrap_err();
 /// assert!(matches!(err, WatchError::PathMissing { .. }));
 /// ```
-#[specmark::spec(
-    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#file-watch"
-)]
+// NO `implements` EDGE, DELIBERATELY (B-061, 2026-08-05). `implements` is a
+// claim about code that runs, and nothing implements this trait: the only two
+// `impl Watcher for` sites in the tree are the doc example above and a `Noop`
+// in this module's tests. An edge here made `vibe explain
+// "…PROP-040#file-watch"` show two implementors of a shape nobody had built —
+// coverage asserted by form rather than delivered by code, and the more
+// carefully a project declares shapes ahead of time, the more of that it
+// accumulates. What is NOT lost by dropping the edge: the module's
+// `specmark::scope!("…#events")` still covers this item for the orphan gate,
+// so nothing is silenced; the REQ keeps its one honest edge from
+// `WatchError`; and the docblock above says where the shape is promised.
+// The edge returns with the implementation, which is what it is for.
 pub trait Watcher {
     /// Begin watching `path`; call `on_change` when the file changes on disk
     /// (PROP-040 §10 `#file-watch`). Returns an error if the watch could not
     /// be installed (see [`WatchError`]). The backend owns debounce and its own
     /// threading; `on_change` fires only for a real, settled change.
-    #[specmark::spec(
-        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#file-watch"
-    )]
+    ///
+    /// Carries no `implements` edge for the reason recorded above the trait.
     fn watch(
         &mut self,
         path: &Path,

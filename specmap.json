@@ -7068,24 +7068,6 @@
     {
       "crate_name": "vibe-settings",
       "file": "crates/vibe-settings/src/events/mod.rs",
-      "item_kind": "trait",
-      "line": 381,
-      "symbol": "vibe_settings::events::Watcher",
-      "end_line": 457,
-      "fingerprint": "tok1:d22d5a811743316dbdf85ec7f57cbc2119ad136ca9c5d150c96eb8c2453b99e9"
-    },
-    {
-      "crate_name": "vibe-settings",
-      "file": "crates/vibe-settings/src/events/mod.rs",
-      "item_kind": "fn",
-      "line": 445,
-      "symbol": "vibe_settings::events::Watcher::watch",
-      "end_line": 456,
-      "fingerprint": "tok1:a71ffa91eb851ab6f37c2dd7b0d53e9aac8bf5100a2690df9d6552d8632db1de"
-    },
-    {
-      "crate_name": "vibe-settings",
-      "file": "crates/vibe-settings/src/events/mod.rs",
       "item_kind": "fn",
       "line": 176,
       "symbol": "vibe_settings::events::affected_applies",
@@ -14794,22 +14776,6 @@
       "file": "crates/vibe-settings/src/events/mod.rs",
       "from_symbol": "vibe_settings::events::WatchError",
       "line": 345,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#file-watch",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-settings/src/events/mod.rs",
-      "from_symbol": "vibe_settings::events::Watcher",
-      "line": 441,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#file-watch",
-      "verb": "implements"
-    },
-    {
-      "file": "crates/vibe-settings/src/events/mod.rs",
-      "from_symbol": "vibe_settings::events::Watcher::watch",
-      "line": 449,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#file-watch",
       "verb": "implements"
