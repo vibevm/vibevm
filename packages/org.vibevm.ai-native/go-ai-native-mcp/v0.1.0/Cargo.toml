@@ -67,3 +67,9 @@ proc-macro2 = { version = "1", features = ["span-locations"] }
 
 # Dev / test
 tempfile = "3"
+
+# Process-table probe for the no-zombie live test, inherited by the vendored
+# tcg crate. Pinned: 0.38+ needs rustc > 1.93. A `workspace = true`
+# dependency added to a vendored crate must be declared in EVERY workspace
+# that carries that crate - `sync-engines` copies crates, not root manifests.
+sysinfo = "=0.37.2"
