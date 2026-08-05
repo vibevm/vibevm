@@ -340,6 +340,24 @@ already written from it is the specification of the work.)*
   **157 → 7**; the `fractality` specspace **34 → 14**; this campaign's own
   records **15 → 8**. The practice is adopted at roughly **41 %** in the sibling
   project and **4.6 %** in the host's PROP/FEAT tree. Counted 2026-07-31.
+- ##B007-RE-MEASURED **Re-counted 2026-08-06, and the host figure has
+  tripled.** `spec/common` + `spec/modules` **146 → 12**; all of `spec/`
+  **151 → 15**. So the completeness rate in the PROP/FEAT tree moved from
+  **4.6 %** to **8.2 %** in five days, and the complete records are no longer
+  one file: `PROP-000`, `PROP-018` and `PROP-024` each now carry at least one,
+  where only `PROP-000` did. Nobody was asked to do this — the form is being
+  adopted where sections are being written, which is evidence for the
+  recommendation this row already carries (four-field **inside** the owning
+  section, forward-only) and against minting a separate `spec/decisions/`
+  genre. The owner's question is unchanged; its starting facts are not.
+- ##B007-THE-LABEL-HAS-A-PERIOD **Reproducing that count needs one thing
+  written down, because getting it wrong costs the whole answer.** The bolded
+  label in this tree is overwhelmingly **`**Decision.**` — with a period**:
+  122 occurrences against 25 of `**Decision:**`. A pattern written for the
+  colon form finds **24** sections where there are 146, i.e. it reports the
+  practice as six times rarer than it is, and it reports it *confidently*.
+  That mistake was made on the way to the figures above. Same for the other
+  three labels; match `[.:]?` on all four.
 - ##B007-CENSUS-CORRECTION **The sibling-adoption premise is withdrawn — corrected the same day
   by the D10 proposal pass.** The fractality «14 complete records» are, by file,
   **8 files carrying all four fields, all 8 vendored copies of the
