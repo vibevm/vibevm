@@ -562,6 +562,25 @@ the backgrounding** — then `##WAL-C-COMPLETION-SIGNAL`'s «notification plus
 report file» is a signal the boss actually receives, instead of one it has to
 poll for.
 
+##fact-the-panel-owns-the-user-home-for-its-whole-run **The panel's
+user-home tripwire is a GLOBAL window, and any `vibe` command the boss runs
+beside it fires the gate (2026-08-05, paid on a false red):** `self-check`
+snapshots the operator's real `~/.vibe` at start and compares it after
+`cargo test --workspace`. The boss ran `vibe progress mirror` and
+`merge-verdicts` in that window; the mirror writes
+`~/.vibe/progress-cache/<project>/<zone>/payloads.json`, and the tripwire
+FIRED — «the real per-user settings home changed during this run» — with a
+diagnosis pointing squarely at a leaking TEST. There is no leaking test. The
+gate is correct and its message is correct; what it cannot know is that the
+writer was the boss's own foreground command. **So the standing rule «do not
+touch the tree under a running panel, do not run cargo in parallel» is not
+only about build contention — it extends to every `vibe` verb that writes the
+settings home**, and a tripwire firing on a `progress-cache` path is the boss's
+own concurrency until proven otherwise. The cure is the same either way: run
+the panel alone, and read the tail rather than the summary. Same disease as
+`#fact-a-truncated-pipe-reads-green` from the other direction — there a green
+reading hid a red run; here a red reading accused an innocent.
+
 ##fact-finalisation-is-coupled-to-worktree-removal **Report archiving silently
 depends on the worktree being removable (2026-08-05):** `#obs-meta` puts the
 move of `WORKER-REPORT-<id>.md` into the archive at finalisation, and in
