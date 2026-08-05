@@ -228,12 +228,30 @@ incremental re-resolution that skips the registry walk for an
 unchanged subtree (needs PROP-003's SAT `pin_preferences`). **Open** —
 both gate on other work; recorded so they are not forgotten.
 
-### 2026-05-23-12 · D1 · P3 · open
+### 2026-05-23-12 · D1 · P3 · **two thirds already built** — re-judged and narrowed 2026-08-05
 
 **Parked backlog.** `version = { workspace = true }` member-version
 inheritance (PROP-007 §6) and the publish-signalling polish
 (`--archive`, `has_issues`) were parked behind larger milestones.
 **Open:** re-judge whether either is still wanted.
+
+**Re-measured 2026-08-05, and the row was asking for work the tree had
+done.** Member-version inheritance is IN USE — `crates/vibe-cli/Cargo.toml:3`
+reads `version.workspace = true`, and so do its siblings. `has_issues`
+ships in the GitHub publish path (`crates/vibe-publish/src/github.rs:129`
+declares it, `:218` sets it). Two of the row's three items were built
+while the row sat open asking for them.
+
+**What is left is one flag:** `--archive` on `vibe registry publish` is
+absent from the CLI surface (`--help` carries no such option) and from
+`vibe-publish`. That is the whole residue, it is P3, and it stays open
+under this id rather than being re-filed — a narrowed row is honest;
+a new id for a leftover is inflation.
+
+**The pattern this makes, and it is the twelfth today:** a plan row
+believed rather than measured asks for built work. Eleven were in
+`BACKLOG.md`; this one is in the health audit, which means the disease
+is not the backlog's genre — it is any list read instead of run.
 
 ### 2026-05-23-13 · D1 · P3 · open
 
