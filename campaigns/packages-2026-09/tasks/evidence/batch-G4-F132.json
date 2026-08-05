@@ -1,0 +1,16 @@
+{
+  "batch": "G4-F132",
+  "cluster": "ai-native",
+  "files": {
+    "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
+      "RULE-GENERATED-CODE-IS-EXCLUDED": {
+        "v": "confirmed",
+        "ev": [
+          "Generated code is excluded from orphan checks by a directory marker, and the generator input is DESIGNATED the taggable unit instead — with the second clause now carrying the file's own 'Specified, not built' idiom because it is a decision and not a description.",
+          "Exclusion half, unchanged and real: crates/core-ai-native-specmap/src/rscan.rs:314 and ratchet.rs:82 both skip a path containing '/generated/'. Unbuilt half, measured 2026-08-05: `grep -rn \"spec://\" schemas/` exits 1 over all seven JTD schemas; every scanner compares the extension literally — rscan.rs:333 against \"rs\", mdspec.rs:422 and :498 against \"md\", ratchet.rs:78 against \"rs\" — so no .json is opened by any traversal; and CodeItem (generated/specmap/mod.rs:36) carries no address field, belonging being an Edge from a code symbol to a URI, which a JSON document has no symbol to anchor.",
+          "RE-JUDGED because the prior verdict confirmed a COMPOUND fact on evidence for one of its two clauses: both of its refs (rscan.rs:314, ratchet.rs:82) address the exclusion, and the designation clause had no ref at all. A sentence carrying two independent claims needs a ref per claim; two verified addresses make the whole sentence look verified. The claim is now true as written, because the text was corrected rather than the tree (commit cd562d55), and the route is B-060."
+        ]
+      }
+    }
+  }
+}

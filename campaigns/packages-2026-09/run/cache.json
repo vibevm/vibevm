@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-05T09:35:43Z",
+  "updated_at": "2026-08-05T09:40:39Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -6057,7 +6057,7 @@
       }
     },
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md": {
-      "content_hash": "0b26f26d4fb7ea6e870803af9ad17e915725db23effa6c37ba8526caf370b279",
+      "content_hash": "fbadef7acd080e4902d84326f95edf6d399ccb6cc31ef3b4e8898a5747140e97",
       "rollup": {
         "explicit": [
           "spec",
@@ -6079,7 +6079,7 @@
       "unit_count": 27,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "0b26f26d4fb7ea6e870803af9ad17e915725db23effa6c37ba8526caf370b279",
+        "processed_hash": "fbadef7acd080e4902d84326f95edf6d399ccb6cc31ef3b4e8898a5747140e97",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -6551,9 +6551,9 @@
           "RULE-GENERATED-CODE-IS-EXCLUDED": {
             "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/rscan.rs:314  if fwd(rel_in_crate).contains(\"/generated/\") {",
-              "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/ratchet.rs:82  if fwd(rel_in_crate).contains(\"/generated/\") {",
-              "located in the surface, on the refs above, which were machine-verified against the files they cite"
+              "Generated code is excluded from orphan checks by a directory marker, and the generator input is DESIGNATED the taggable unit instead — with the second clause now carrying the file's own 'Specified, not built' idiom because it is a decision and not a description.",
+              "Exclusion half, unchanged and real: crates/core-ai-native-specmap/src/rscan.rs:314 and ratchet.rs:82 both skip a path containing '/generated/'. Unbuilt half, measured 2026-08-05: `grep -rn \"spec://\" schemas/` exits 1 over all seven JTD schemas; every scanner compares the extension literally — rscan.rs:333 against \"rs\", mdspec.rs:422 and :498 against \"md\", ratchet.rs:78 against \"rs\" — so no .json is opened by any traversal; and CodeItem (generated/specmap/mod.rs:36) carries no address field, belonging being an Edge from a code symbol to a URI, which a JSON document has no symbol to anchor.",
+              "RE-JUDGED because the prior verdict confirmed a COMPOUND fact on evidence for one of its two clauses: both of its refs (rscan.rs:314, ratchet.rs:82) address the exclusion, and the designation clause had no ref at all. A sentence carrying two independent claims needs a ref per claim; two verified addresses make the whole sentence look verified. The claim is now true as written, because the text was corrected rather than the tree (commit cd562d55), and the route is B-060."
             ]
           },
           "RULE-ERROR-ENUMS-ARE-CONTRACT": {
@@ -7386,8 +7386,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-03T11:11:46Z",
-        "verify_batch": "C1 + D5b + D7 + D10-groupA + D13-1a + D16 + D17 + D18 + D34"
+        "verified_at": "2026-08-05T09:40:39Z",
+        "verify_batch": "C1 + D5b + D7 + D10-groupA + D13-1a + D16 + D17 + D18 + D34 + G4-F132"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/README.md": {
@@ -96927,7 +96927,7 @@
       }
     },
     "spec/design/typed-seams.md": {
-      "content_hash": "9054f1758746cf618c5f09c73870001da9dd3d6fa5532d1c3e92e911bd875b2e",
+      "content_hash": "898c2b37020c6f27e6855c2a5057d6bd274b73f2b20bb733e64a0bb37753906c",
       "rollup": {
         "explicit": [
           "spec",
@@ -96941,11 +96941,11 @@
           "spec",
           "done"
         ],
-        "marker_count": 31,
-        "fact_count": 30,
+        "marker_count": 32,
+        "fact_count": 31,
         "unmarked_facts": 0
       },
-      "marker_count": 31,
+      "marker_count": 32,
       "unit_count": 9,
       "issue_count": 0
     },
