@@ -241,6 +241,22 @@ left a cosmetic sweep — requalifying `(kind, name)` / `<kind>:<name>`
 example forms across the ~15 remaining peripheral command docs.
 **Open:** low-priority doc tidy.
 
+**Re-measured 2026-08-05 — smaller than recorded, and NOT independent.**
+Twelve files under `docs/` still carry an unqualified `<kind>:<name>`
+example, about forty occurrences, concentrated in
+`commands/install.md` (14) and the four `registry-redirect*` docs (17
+between them) rather than spread thin. So the sweep is two documents and
+a family, not fifteen scattered pages.
+
+**The part that changes its disposition:** this is not cosmetic while the
+grammar of short names is itself open. `BACKLOG.md` B-045 carries exactly
+that question — kind validation and the short-name forms of four verbs —
+so requalifying the examples now would either encode a form B-045 may
+change, or leave the docs contradicting whatever it settles. **Coupled to
+B-045; do it in that wave, not before it.** Kept P3 and open, with the
+coupling recorded so the next reader does not spend the afternoon
+rewriting examples into a form that has not been ruled.
+
 ### 2026-05-23-11 · D1 · P3 · open
 
 **Deferred PROP-011 refinements.** PROP-011 §5 / §8 record two: a
