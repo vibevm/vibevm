@@ -209,9 +209,16 @@ authored and judged: [`spec/design/multiple-sources-and-plugins.md`](spec/design
       whole. Both corrected against the tree. Five stale statements in
       `BACKLOG.md` in one day is the measurement [B-062](BACKLOG.md#b-062)
       needed and lacked when it was filed.
-- [ ] `chore(campaign)`: judge `typed-seams.md`'s **35 facts** — now against
-      built landings, which is what the deferral was for. Evidence gathering
-      delegated; verdicts are the boss's.
+- [x] `chore(campaign)`: `typed-seams.md`'s **35 facts judged and sealed** —
+      against built landings, which is what the deferral was for, and it paid.
+      Gathered evidence came back 21 SUPPORTS / 11 PARTIAL / 3 NO-CODE, and
+      the eleven were three different things: five describe the pre-landing
+      basis (tense, not error), three carry numbers this session's own builds
+      moved, two prescribe the landing that was later declined, and one clause
+      was simply wrong. Ten facts still said `@spec/plan` about work landed
+      hours earlier — **the same defect this slice had just criticised in
+      B-010's disposition, in a document written the same day by the same
+      hand.** Corrected first, then judged: registry 0 stale, 0 owed.
 
 ### The Phase E exit gate — measured 2026-08-05, and it needs one ruling
 
