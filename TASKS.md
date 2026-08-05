@@ -212,6 +212,32 @@ authored and judged: [`spec/design/multiple-sources-and-plugins.md`](spec/design
 - [ ] `chore(campaign)`: judge `typed-seams.md`'s **35 facts** — now against
       built landings, which is what the deferral was for. Evidence gathering
       delegated; verdicts are the boss's.
+
+### The Phase E exit gate — measured 2026-08-05, and it needs one ruling
+
+The plan's gate is «task queue drained or explicitly deferred; floor green;
+`report --view todo` matches the deferrals file exactly». Two of three are met:
+the four waves are closed and the floor is green (bare panel, tail read).
+
+The third now has a number instead of a guess: **273 files, 267 `done`, 6
+`work`.** The six, classified rather than lumped:
+
+- **Three designs of closed waves** — `map-format-change.md` (волна В),
+  `new-rule-classes.md` (волна Б батч 3), `seam-error-and-assertion-parity.md`
+  (волна Б батч 2). Their builds landed; the document state did not move with
+  them. Same class as B-010's `open`, one level up.
+- **Two manual tests** — `MT-02-vibe-tree-tui.md`, `MT-03-vibe-prefs-tui.md`,
+  `impl/work` because a manual test is unrun until someone runs it.
+- **One draft spec** — `PROP-010-local-package-cache.md`, whose own status says
+  «the S5 open questions need an owner design session».
+
+- [ ] *(owner ruling)* Whether the three closed-wave designs move to
+      `state="done"`, and whether the two manual tests and PROP-010's draft are
+      **deferred by decision** — which is what the gate's own wording asks for
+      and what would let Phase E close. Not decided here: «closed whole» for a
+      wave and «done» for its design are not obviously the same claim, and
+      волны Б and В still carry the map's `@doc/work` while the WAL calls them
+      closed. That disagreement is itself the thing to rule on.
 - [ ] `chore(campaign)`: **31 facts in `typed-seams.md` await first judging.**
       Deliberately not self-judged in the authoring session — B-056's design
       was, and this slice had to correct one of those verdicts. Judging them
