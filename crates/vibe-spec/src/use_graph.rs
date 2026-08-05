@@ -13,7 +13,10 @@
 //! legal (the forward-declaration case) — but resolving it means emitting the
 //! contracts before any source body, which is the emission layer's job (§8 /
 //! §12). This layer reports every cycle; that layer will admit the contract-only
-//! ones. `#embed` and `#source` are not dependency edges and are ignored here.
+//! ones. `#embed` is not an edge and is ignored. `#source` is a *fold* edge,
+//! not a use edge: [`topo_order_from`] still ignores it, and the same
+//! three-colour walk over `#source` alone is exposed as [`source_fold_order`]
+//! for the contract→impl fold — one traverser, two edge sets.
 
 use std::collections::HashMap;
 
@@ -36,6 +39,17 @@ enum Color {
     Black,
 }
 
+/// Which edges a walk follows. The cycle law — three-colour DFS, contract-only
+/// loop admission, dedup by reach — is shared verbatim; only the edge set
+/// differs. One `visit` body serves both, parameterised by this.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum EdgeKind {
+    /// `#use` directives + `@spec` in-place uses (§7.2 / §7.4) — the link edge.
+    Use,
+    /// `#source` directives (§7.3) — the contract→impl fold edge.
+    Source,
+}
+
 /// Walk the use-graph reachable from `seed` and return its node keys
 /// (`SpecAddress::without_pin`) in topological order — every dependency before
 /// its dependents, `seed` last. Deduplicated: a node reached by several paths
@@ -47,7 +61,41 @@ pub fn topo_order_from(
     let mut state: HashMap<String, Color> = HashMap::new();
     let mut order = Vec::new();
     let mut path = Vec::new();
-    visit(seed, source, &mut state, &mut order, &mut path)?;
+    visit(
+        seed,
+        source,
+        &mut state,
+        &mut order,
+        &mut path,
+        EdgeKind::Use,
+    )?;
+    Ok(order)
+}
+
+/// Walk the `#source` edges reachable from `seed` (PROP-035 §7.3) and return
+/// their node keys (`SpecAddress::without_pin`) in fold order: deepest sources
+/// first, `seed` last — so a source that itself declares `#source` is folded
+/// before it merges into its parent. Deduplicated: a contract reached by
+/// several paths folds once. A `#source` cycle *between contracts* is legal
+/// (the forward-declaration case); one touching any non-contract node is a hard
+/// error, reported with its path. This is the same three-colour DFS as
+/// [`topo_order_from`] — one traverser, two edge sets — following only
+/// `#source` (never `#use` or `@spec`).
+pub fn source_fold_order(
+    seed: &SpecAddress,
+    source: &impl SectionSource,
+) -> Result<Vec<String>, UseGraphError> {
+    let mut state: HashMap<String, Color> = HashMap::new();
+    let mut order = Vec::new();
+    let mut path = Vec::new();
+    visit(
+        seed,
+        source,
+        &mut state,
+        &mut order,
+        &mut path,
+        EdgeKind::Source,
+    )?;
     Ok(order)
 }
 
@@ -57,6 +105,7 @@ fn visit(
     state: &mut HashMap<String, Color>,
     order: &mut Vec<String>,
     path: &mut Vec<String>,
+    kind: EdgeKind,
 ) -> Result<(), UseGraphError> {
     let key = addr.without_pin();
     match state.get(&key) {
@@ -89,23 +138,34 @@ fn visit(
         })?;
     let directives = Directives::parse(&text);
 
-    // Dependency edges = #use directives + @spec in-place uses, in line order.
-    let mut edges: Vec<(usize, &SpecAddress)> = directives
-        .directives
-        .iter()
-        .filter(|d| d.kind == DirectiveKind::Use)
-        .map(|d| (d.line, &d.address))
-        .chain(
-            directives
-                .in_place_uses
-                .iter()
-                .map(|u| (u.line, &u.address)),
-        )
-        .collect();
+    // Edges, selected by `kind`. `Use` follows `#use` plus `@spec` in-place
+    // uses (§7.2/§7.4); `Source` follows only `#source` (§7.3) — `@spec` is a
+    // use, not a source. Collected by line so declaration order is preserved
+    // among siblings.
+    let mut edges: Vec<(usize, &SpecAddress)> = match kind {
+        EdgeKind::Use => directives
+            .directives
+            .iter()
+            .filter(|d| d.kind == DirectiveKind::Use)
+            .map(|d| (d.line, &d.address))
+            .chain(
+                directives
+                    .in_place_uses
+                    .iter()
+                    .map(|u| (u.line, &u.address)),
+            )
+            .collect(),
+        EdgeKind::Source => directives
+            .directives
+            .iter()
+            .filter(|d| d.kind == DirectiveKind::Source)
+            .map(|d| (d.line, &d.address))
+            .collect(),
+    };
     edges.sort_by_key(|(line, _)| *line);
 
     for (_, target) in edges {
-        visit(target, source, state, order, path)?;
+        visit(target, source, state, order, path, kind)?;
     }
 
     state.insert(key.clone(), Color::Black);
@@ -293,5 +353,194 @@ mod tests {
             topo_order_from(&seed, &src),
             Err(UseGraphError::Cycle(_))
         ));
+    }
+
+    // --- `#source` fold (B056-L3A): the same traverser, the fold edge set. ---
+
+    /// Recursion along `#source`: a source that itself declares `#source` must
+    /// fold before its parent, so the deepest source comes first and the seed
+    /// last — `[c, b, a]`.
+    #[test]
+    fn source_fold_recurses_to_the_deepest_source_first() {
+        let src = MockSource::new(&[
+            (
+                "spec://org.vibevm.core/vibevm/a#r",
+                "#source spec://org.vibevm.core/vibevm/b#r",
+            ),
+            (
+                "spec://org.vibevm.core/vibevm/b#r",
+                "#source spec://org.vibevm.core/vibevm/c#r",
+            ),
+            ("spec://org.vibevm.core/vibevm/c#r", "deepest source"),
+        ]);
+        let order = source_fold_order(&seed(), &src).unwrap();
+        assert_eq!(
+            order,
+            vec![
+                "spec://org.vibevm.core/vibevm/c#r".to_string(),
+                "spec://org.vibevm.core/vibevm/b#r".to_string(),
+                "spec://org.vibevm.core/vibevm/a#r".to_string(),
+            ]
+        );
+    }
+
+    /// A diamond over `#source` folds the shared source exactly once.
+    #[test]
+    fn source_fold_deduplicates_a_diamond() {
+        let src = MockSource::new(&[
+            (
+                "spec://org.vibevm.core/vibevm/a#r",
+                "#source spec://org.vibevm.core/vibevm/b#r\n#source spec://org.vibevm.core/vibevm/c#r",
+            ),
+            (
+                "spec://org.vibevm.core/vibevm/b#r",
+                "#source spec://org.vibevm.core/vibevm/d#r",
+            ),
+            (
+                "spec://org.vibevm.core/vibevm/c#r",
+                "#source spec://org.vibevm.core/vibevm/d#r",
+            ),
+            ("spec://org.vibevm.core/vibevm/d#r", "shared source"),
+        ]);
+        let order = source_fold_order(&seed(), &src).unwrap();
+        assert_eq!(order.len(), 4, "d appears once: {order:?}");
+        assert_eq!(order.first().unwrap(), "spec://org.vibevm.core/vibevm/d#r");
+        assert_eq!(order.last().unwrap(), "spec://org.vibevm.core/vibevm/a#r");
+    }
+
+    /// Two sibling `#source` directives keep their declaration order in the
+    /// fold — the line-sort, not an arbitrary one.
+    #[test]
+    fn source_fold_preserves_declaration_order() {
+        let src = MockSource::new(&[
+            (
+                "spec://org.vibevm.core/vibevm/a#r",
+                "#source spec://org.vibevm.core/vibevm/b#r\n#source spec://org.vibevm.core/vibevm/c#r",
+            ),
+            ("spec://org.vibevm.core/vibevm/b#r", "first sibling"),
+            ("spec://org.vibevm.core/vibevm/c#r", "second sibling"),
+        ]);
+        let order = source_fold_order(&seed(), &src).unwrap();
+        let b = order
+            .iter()
+            .position(|k| *k == "spec://org.vibevm.core/vibevm/b#r")
+            .unwrap();
+        let c = order
+            .iter()
+            .position(|k| *k == "spec://org.vibevm.core/vibevm/c#r")
+            .unwrap();
+        assert!(b < c, "declaration order lost: {order:?}");
+        assert_eq!(order.last().unwrap(), "spec://org.vibevm.core/vibevm/a#r");
+    }
+
+    /// A `#source` cycle between contracts is a legal forward declaration — no
+    /// error, both folded.
+    #[test]
+    fn a_source_cycle_between_contracts_is_admitted() {
+        let src = MockSource::new(&[
+            (
+                "spec://org.vibevm.demo/lib/contract/a#r",
+                "#source spec://org.vibevm.demo/lib/contract/b#r",
+            ),
+            (
+                "spec://org.vibevm.demo/lib/contract/b#r",
+                "#source spec://org.vibevm.demo/lib/contract/a#r",
+            ),
+        ]);
+        let seed = SpecAddress::parse("spec://org.vibevm.demo/lib/contract/a#r").unwrap();
+        let order = source_fold_order(&seed, &src).unwrap();
+        assert_eq!(order.len(), 2, "both contracts present: {order:?}");
+    }
+
+    /// A `#source` cycle that runs through an implementation (non-contract)
+    /// node is a hard error, reported with the offending path.
+    #[test]
+    fn a_source_cycle_touching_an_impl_is_rejected() {
+        let src = MockSource::new(&[
+            (
+                "spec://org.vibevm.demo/lib/contract/a#r",
+                "#source spec://org.vibevm.demo/lib/source/b#r",
+            ),
+            (
+                "spec://org.vibevm.demo/lib/source/b#r",
+                "#source spec://org.vibevm.demo/lib/contract/a#r",
+            ),
+        ]);
+        let seed = SpecAddress::parse("spec://org.vibevm.demo/lib/contract/a#r").unwrap();
+        match source_fold_order(&seed, &src) {
+            Err(UseGraphError::Cycle(path)) => {
+                assert!(path.contains(&"spec://org.vibevm.demo/lib/contract/a#r".to_string()));
+                assert!(path.contains(&"spec://org.vibevm.demo/lib/source/b#r".to_string()));
+            }
+            other => panic!("expected a cycle, got {other:?}"),
+        }
+    }
+
+    /// A document carrying BOTH `#use x` and `#source y`: the source fold
+    /// reaches `y` only, the use order reaches `x` only — one traverser, two
+    /// disjoint edge sets.
+    #[test]
+    fn source_edges_and_use_edges_do_not_mix() {
+        let src = MockSource::new(&[
+            (
+                "spec://org.vibevm.core/vibevm/a#r",
+                "#use spec://org.vibevm.core/vibevm/x#r\n#source spec://org.vibevm.core/vibevm/y#r",
+            ),
+            ("spec://org.vibevm.core/vibevm/x#r", "use target"),
+            ("spec://org.vibevm.core/vibevm/y#r", "source target"),
+        ]);
+        let fold = source_fold_order(&seed(), &src).unwrap();
+        let uses = topo_order_from(&seed(), &src).unwrap();
+        assert_eq!(
+            fold,
+            vec![
+                "spec://org.vibevm.core/vibevm/y#r".to_string(),
+                "spec://org.vibevm.core/vibevm/a#r".to_string(),
+            ]
+        );
+        assert_eq!(
+            uses,
+            vec![
+                "spec://org.vibevm.core/vibevm/x#r".to_string(),
+                "spec://org.vibevm.core/vibevm/a#r".to_string(),
+            ]
+        );
+    }
+
+    /// A `#source` that names an unknown address is unresolved.
+    #[test]
+    fn an_unresolved_source_is_reported() {
+        let src = MockSource::new(&[(
+            "spec://org.vibevm.core/vibevm/a#r",
+            "#source spec://org.vibevm.core/vibevm/missing#r",
+        )]);
+        let err = source_fold_order(&seed(), &src).unwrap_err();
+        assert!(matches!(err, UseGraphError::Unresolved { .. }));
+    }
+
+    /// `@spec` is a *use*, not a source (РТ-4): the fold follows the `#source`
+    /// edge to `y` and never follows the `@spec` to `b`, even when both sit in
+    /// the same document.
+    #[test]
+    fn an_at_spec_in_place_use_is_not_a_source_edge() {
+        let src = MockSource::new(&[
+            (
+                "spec://org.vibevm.core/vibevm/a#r",
+                "prose @spec://org.vibevm.core/vibevm/b#r here\n#source spec://org.vibevm.core/vibevm/y#r",
+            ),
+            (
+                "spec://org.vibevm.core/vibevm/b#r",
+                "use target, not a source",
+            ),
+            ("spec://org.vibevm.core/vibevm/y#r", "source target"),
+        ]);
+        let order = source_fold_order(&seed(), &src).unwrap();
+        assert_eq!(
+            order,
+            vec![
+                "spec://org.vibevm.core/vibevm/y#r".to_string(),
+                "spec://org.vibevm.core/vibevm/a#r".to_string(),
+            ]
+        );
     }
 }
