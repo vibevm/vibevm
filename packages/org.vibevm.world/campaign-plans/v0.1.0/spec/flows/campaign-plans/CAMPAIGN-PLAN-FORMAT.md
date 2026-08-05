@@ -30,6 +30,10 @@ this tomorrow?" but "could a stranger execute this today?". @impl/done
 format's cost is real: pay it only when the work spans sessions or
 more than a handful of commits. @impl/done
 
+##THE-CARRIER-CHOICE-LIVES-IN-FLOW-ADDRESSABLE-SPECS What decides whether to pay this format's cost at all — or take
+another carrier for the work — is a choice with its own rule, and
+that rule lives in `flow:addressable-specs`'s `#what-goes-where`. @impl/done
+
 ## The five artifact roles {#artifacts}
 
 ##paper-trail-carries-five-roles-lead A campaign's paper trail carries five roles: @impl/done
@@ -176,6 +180,20 @@ prediction, and its planned commit set with subjects spelled in
 advance. @impl/done
 
 ##phase-anatomy-pointer Full anatomy and gate rules: [`phase-gates.md`](phase-gates.md). @impl/done
+
+##A-PLAN-REFERENCES-FEATURE-DOCUMENTS-IT-DOES-NOT-RESTATE-THEM **A plan references feature documents; it does not restate them.**
+Where a campaign executes work that has its own feature documents,
+the plan's phases and batches name those documents and stop there.
+The plan stays what it is — a statement of order, intent and
+acceptance — while each feature's own contract stays in one place
+with one author. @impl/done
+
+##the-plan-is-the-copy-that-goes-stale This is the general addressing law
+(`flow:addressable-specs`'s `##A-NORMATIVE-VALUE-LIVES-AT-EXACTLY-ONE-ANCHOR`)
+applied to this genre, and the echo names its anchor as that law requires.
+Restating a feature's substance inside the plan produces two statements of one
+truth with nothing forcing them to agree, and the plan is the copy that will go
+stale, because it is the one built to be thrown away. @spec/done
 
 ### 9 — Risks and fallbacks {#s9-risks}
 

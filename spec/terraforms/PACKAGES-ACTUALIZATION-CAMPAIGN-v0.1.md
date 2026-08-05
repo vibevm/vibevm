@@ -4341,7 +4341,10 @@ aspirational — and every one is still live for the phases that remain.
   answer (а), F-147 fully ruled → `deferred` (its three segment anchors ride
   B-031), and the granularity-protocol extension he dictated (ask the user;
   FEAT files as addressable units composed into plans; big features only)
-  is **B-032** (planned — not elementary: a new norm across two packages).
+  was **B-032** (not elementary: a new norm across two packages) — **built
+  2026-08-06** and the row closed with it: the carrier criterion lives in
+  `flow:addressable-specs`'s `#what-goes-where` beside the row that already
+  named both homes, the composition half in `flow:campaign-plans` §8.
   His agent-navigation question landed in **B-018 as the canonical
   acceptance query** («which test verifies this rule» — CLI and stack-MCP
   answer it today per checkout; vibe's own MCP cannot, which is exactly

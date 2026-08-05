@@ -88,6 +88,41 @@ the number is part of the URI, and URIs are forever
 | ##ROW-HOME-IMPLEMENTATION-DETAIL Implementation detail (*how*) @impl/done | code and doc comments — never the spec @impl/done |
 | ##ROW-HOME-HUMAN-ONLY-NOTES Copy-paste snippets, human-only reminders @impl/done | `.human/` @impl/done |
 
+##CHOOSING-BETWEEN-THE-TWO-HOMES **Choosing between the two homes.** The row above names two
+carriers for a feature's plan; which one carries it is a choice with
+consequences, because it decides whether the plan stays addressable
+after the work ships and whether it outlives the effort that produced
+it. Make the choice explicitly and say it to whoever asked for the
+work. @impl/done
+
+##A-FEATURE-DOCUMENT-CARRIES-A-FEATURE A **feature document** carries work that is a feature: it has a
+name its user would recognise, it will be referred to again after it
+ships, and it will not finish in one sitting. It is one file in the
+feature's home, and it is addressable like any other specification
+document — every anchored heading it carries becomes an address for
+free, with nothing to register. @impl/done
+
+##A-CAMPAIGN-PLAN-CARRIES-A-PROGRAMME A **campaign plan** carries a programme rather than a feature:
+many documents or many packages, a unit of work that is a batch
+rather than a change, and a lifetime that ends when the campaign
+closes. Its zone is disposable by design, so nothing that must
+outlive the campaign belongs inside it. @impl/done
+
+##NEITHER-CARRIES-SMALL-WORK **Neither carries small work.** A three-line change planned into a
+feature document is a document with more ceremony than content; the
+current slice's checklist carries it, and that is the whole plan it
+needs. @impl/done
+
+##THE-THRESHOLD-STAYS-QUALITATIVE The threshold between them stays qualitative on purpose. A line
+count would be a number nobody measured, and a rule that files work
+by size rather than by kind puts a rename and a subsystem in one
+bucket whenever the count happens to agree. @impl/done
+
+##THE-CHOICE-BELONGS-TO-WHOEVER-ASKED-FOR-THE-WORK **The choice belongs to whoever asked for the work, not to the
+agent doing it.** An agent that picks the carrier silently has
+decided how long the work stays findable, which is not a decision it
+was given: it proposes a carrier with its reason, and asks. @impl/done
+
 ##DEFAULT-A-HOMELESS-FACT-INTO-THE-SPEC-TREE When a fact has no obvious home, default it into the spec tree
 rather than a wiki, a gist, or a head: a teammate — human or agent —
 who clones the repository must receive everything the project knows. @impl/done
