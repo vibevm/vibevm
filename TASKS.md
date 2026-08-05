@@ -163,18 +163,29 @@ authored and judged: [`spec/design/multiple-sources-and-plugins.md`](spec/design
       carries one, and its `implements` edge makes the map report the REQ as
       built — coverage claimed by the shape rather than delivered by it
       ([B-061](BACKLOG.md#b-061)).
-- [ ] `refactor(vibe-publish)`: **L1 — `ValidatedOrg`.** The scope rule is a
-      doc-comment obligation on implementors with nothing enforcing it; a
-      newtype only `validate_scope` can mint makes the forgotten call a
-      compile error. Latent, not live — all three implementations honour it
-      today, which is what makes the refactor zero-behaviour-change.
-- [ ] `refactor(vibe-core)`: **L2 — validation at the wire boundary.** Four
-      identity newtypes that validate in `parse()` are `serde(transparent)`
-      and accept any string off the wire; `Group` proves in-tree that
-      `try_from`/`into` keeps the same wire form.
-- [ ] `refactor(progress-core)`: **L3 — a crate-local digest newtype.**
-- [ ] `refactor(vibe-actions)`: **L4 — `ActionBuilder` typestate** for the
-      three presence obligations; emptiness stays a runtime check.
+- [x] `refactor(vibe-publish)`: **L1 — `ValidatedOrg`.** The forgotten
+      `validate_scope` is now a compile error, because the side-effecting
+      methods take an argument only that check can mint. Two things the design
+      did not ask for came out of the build: the mint is now **once** per path
+      where the orchestrator and redirect-create each ran the check twice, and
+      the new table test asserts what the type cannot — that an adapter
+      *claiming* a scope really enforces it, since a future override could
+      satisfy every signature while the guard disappears.
+- [x] `refactor(vibe-core)`: **L2 — validation at the wire boundary.** Four
+      newtypes adopt `Group`'s spelling. **Five values in the tree were not
+      hashes** — one lockfile fixture and four `sha256:x` in
+      `vibe-workspace`'s freshness tests — all fixed as values, no grammar
+      widened. `From<String> for ContentHash` had to go (the blanket `TryFrom`
+      makes an unchecked `From` conflict with a checked `TryFrom`), which
+      removes an unchecked constructor from the public API for free.
+- [ ] `refactor(vibe-actions)`: **L3 — the builder's three obligations move
+      into the signature** — name and description to the entry point, `invoke`
+      to `build`. **Not typestate:** typestate answers ordering, this is
+      presence, and presence has a cheaper encoding.
+- [ ] `refactor(progress-core)`: **L4 — a crate-local digest newtype**,
+      demoted below the builder once measured: it forbids a hash confused with
+      a different KIND of string, and not the likelier mistake of two hashes
+      used in the wrong roles.
 - [ ] `chore(campaign)`: **31 facts in `typed-seams.md` await first judging.**
       Deliberately not self-judged in the authoring session — B-056's design
       was, and this slice had to correct one of those verdicts. Judging them
