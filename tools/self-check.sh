@@ -562,6 +562,44 @@ check_lane_citations() {
 }
 run_step "lane-citation lint (B-011)" check_lane_citations || OVERALL=$?
 
+# 11c. PROP-000 §3 ##NO-CRATES-IO states that crates in this workspace set
+# `license-file = "LICENSE.md"` and `publish = false` — so that none can be
+# pushed to crates.io by accident, and so the shipped surface carries one
+# licence. Nothing checked it, and one member drifted out of it silently for
+# months: `vibe-index` carried full package metadata and no licence key of any
+# kind, while the owner-maintained ledger asserted every host crate inherits
+# one. An audit walk found it; no gate could have. The member list is read from
+# the workspace manifest rather than restated here, so a crate added tomorrow is
+# covered without anyone remembering this step exists.
+check_member_licence_keys() {
+  local members missing=""
+  members=$(sed -n '/^members = \[/,/^]/p' Cargo.toml \
+    | grep -oE '"[^"]+"' | tr -d '"')
+  if [ -z "$members" ]; then
+    printf 'could not read `members` from the workspace Cargo.toml\n' >&2
+    return 1
+  fi
+  for m in $members; do
+    local manifest="$m/Cargo.toml"
+    if [ ! -f "$manifest" ]; then
+      missing="$missing\n  $manifest — listed as a member, absent from the tree"
+      continue
+    fi
+    grep -qE '^license(-file)?(\.workspace)? *=' "$manifest" \
+      || missing="$missing\n  $manifest — no license/license-file key"
+    grep -qE '^publish(\.workspace)? *=' "$manifest" \
+      || missing="$missing\n  $manifest — no publish key"
+  done
+  if [ -n "$missing" ]; then
+    printf 'workspace members that do not declare PROP-000 §3 #license:%b\n' "$missing" >&2
+    printf 'fix: add `license-file.workspace = true` / `publish.workspace = true`\n' >&2
+    return 1
+  fi
+  return 0
+}
+run_step "every workspace member declares its licence (PROP-000 §3)" \
+  check_member_licence_keys || OVERALL=$?
+
 # 12. The tripwire again, over the whole run. Steps 7-10 run seven more test
 # suites (the authored engines, the three stacks, the three mcp packages)
 # against the same baseline from step 0, and each of them is a `cargo test`
