@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-04T23:45:05Z",
+  "updated_at": "2026-08-05T02:33:35Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -95529,7 +95529,7 @@
       }
     },
     "spec/design/multiple-sources-and-plugins.md": {
-      "content_hash": "cd9f32549426b4f5b11f2efc7486b023040b896c1e27beb879a46cee21507a7b",
+      "content_hash": "6973274a08d8be8fac237304089124269635d9b796b14bd017007f0d649c8094",
       "rollup": {
         "explicit": [
           "spec",
@@ -95537,17 +95537,17 @@
         ],
         "computed": [
           "spec",
-          "plan"
+          "done"
         ],
         "effective": [
           "spec",
           "done"
         ],
-        "marker_count": 24,
-        "fact_count": 23,
+        "marker_count": 26,
+        "fact_count": 25,
         "unmarked_facts": 0
       },
-      "marker_count": 24,
+      "marker_count": 26,
       "unit_count": 7,
       "issue_count": 0,
       "campaign": {
@@ -116680,7 +116680,7 @@
       }
     },
     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md": {
-      "content_hash": "1607746c03c154f800a4d4dc33327e5dae2d9c84106d3c2c8620533d6c098163",
+      "content_hash": "bbe936107762c299e35768f6731c6ea116b5b361e529421703f3a977f6995a2b",
       "rollup": {
         "explicit": [
           "impl",
@@ -116694,11 +116694,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 146,
-        "fact_count": 145,
+        "marker_count": 153,
+        "fact_count": 152,
         "unmarked_facts": 0
       },
-      "marker_count": 146,
+      "marker_count": 153,
       "unit_count": 22,
       "issue_count": 0,
       "campaign": {

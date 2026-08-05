@@ -111,6 +111,23 @@ authored and judged: [`spec/design/multiple-sources-and-plugins.md`](spec/design
       tests moved to their own files: the 600-line budget is a neutral key
       and counts every file, tests included.
 
+### Registry debt this slice created — measured, not guessed
+
+The B-056 documentation moved judged text and added facts, so the corpus is
+rescanned and mirrored (`progress check: clean`, 272 files, 13 249 markers)
+but the verdict registry is behind by an exact amount:
+
+- [ ] `chore(campaign)`: **10 facts to re-judge** in
+      [`spec/design/multiple-sources-and-plugins.md`](spec/design/multiple-sources-and-plugins.md)
+      — every one moved because its status flipped `@spec/plan` → `@impl/done`
+      when the build landed, so the claim is unchanged and the flip is its own
+      evidence; and **the facts added this slice to judge fresh** — six in
+      PROP-035 §7.3, two corrections in the design, three in the transport law,
+      two in B-056's backlog row. `PROP-035` itself is **sealable as it
+      stands**: 146 verdicts byte-identical, because the edit only appended.
+      Run `python campaigns/packages-2026-09/tasks/text-stability.py` for the
+      current list; never chain merge and seal.
+
 ### Волна Г proper
 
 - [ ] `refactor(crates)`: the pointed seam work the B-040 census earned
