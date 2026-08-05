@@ -457,3 +457,24 @@ on the same chase: a stale cargo fingerprint in the host target kept
 failing the FIXED code against a pre-change engine rmeta —
 `cargo clean -p <crate>` puts the build back on real sources before
 any deeper diagnosis.
+
+##fact-the-status-grep-matches-the-packet **The status one-liner reports
+`TASK-DONE` before the worker ever says it (2026-08-05, caught before it
+cost anything):** `--output-format stream-json` logs the **prompt** too, and
+every packet quotes its own closing clause verbatim — so
+`grep -o '…\|TASK-DONE'` hits the PACKET's text on the very first line of
+the log and keeps hitting it forever. A boss reading that grep sees a
+finished worker while the worker is still on step 4, and the natural next
+move is a `-c` correction — which is exactly the two-writers-on-one-worktree
+failure `#fact-one-thread-one-writer` forbids. **Completion is the harness
+notification plus the report file on disk; a grep hit is not evidence.** The
+liveness read that does work: `grep -o '"command":"echo \\"PROGRESS[^"]*'`
+(the worker's own tool CALLS, which the packet text cannot forge) and
+`ls WORKER-REPORT-<task-id>.md`. @impl/done
+
+##fact-log-volume-is-thinking-telemetry **Log size is not activity
+(2026-08-05):** with `MAX_THINKING_TOKENS` set, the stream-json log carries
+one `{"subtype":"thinking_tokens"}` line **per token** — a two-minute-old
+log is already megabytes and grows while the worker only thinks. Judge by
+the last non-telemetry event, not by bytes:
+`grep -v '"subtype":"thinking_tokens"' "$LOG" | tail -c 300`. @impl/done
