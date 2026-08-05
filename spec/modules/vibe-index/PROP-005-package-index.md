@@ -231,7 +231,7 @@ before PROP-008; `kind` left package identity, so `<name>` alone is the key. @im
 
 ##req-entry `req r1` @impl/done
 
-##ENTRY-SCHEMA **Decision.** Every `(group, name, version)` entry carries the following fields. This is the schema lines of `primary.jsonl` follow, and the elements each `by-name/<name>.json` candidate's `versions[]` carry. JTD schema lives in `crates/vibe-index/schemas/index-entry.jtd.json` (PROP-000 §16). @impl/done
+##ENTRY-SCHEMA **Decision.** Every `(group, name, version)` entry carries the following fields. This is the schema lines of `primary.jsonl` follow, and the elements each `by-name/<name>.json` candidate's `versions[]` carry. **This section IS the schema** — measured 2026-08-05: there is no JTD file for the index entry anywhere in the tree, and `crates/vibe-index/schemas/` does not exist. The types are hand-written against this text (`crates/vibe-index/src/types/entry/`, whose own docblock says «Schema pinned in PROP-005 §2.6»), which is a different arrangement from the seven wire reports under the root `schemas/`, where the JTD file is the authority and the Rust is generated and gated by `cargo xtask check-codegen`. @impl/done
 
 ```json
 {
@@ -454,7 +454,7 @@ vibe-index stop <data-dir>                                       # graceful shut
 
 ##req-types `req r1` @impl/done
 
-##RUST-TYPES **Decision.** Rust types live in `crates/vibe-index/src/types/`, derived from the JTD schemas under `crates/vibe-index/schemas/`: @impl/done
+##RUST-TYPES **Decision.** Rust types live in `crates/vibe-index/src/types/`, **hand-written against §2.6 rather than generated** — there is no JTD schema for them (measured 2026-08-05), so the text is the contract and the compiler checks nothing between them: @impl/done
 
 ```rust
 pub struct Index {
@@ -571,10 +571,6 @@ crates/vibe-index/                          # a member of the vibevm workspace
 ├── Cargo.toml                              # depends on vibe-core; no [workspace] table
 ├── README.md                               # operator-facing — how to run, common recipes
 ├── LICENSE                                 # EULA (vibevm's proprietary license)
-├── schemas/                                # JTD wire contracts
-│   ├── repomd.jtd.json
-│   ├── index-entry.jtd.json
-│   └── …
 ├── src/
 │   ├── main.rs                             # bin entrypoint — clap dispatch
 │   ├── lib.rs                              # exports, top-level Error/Result

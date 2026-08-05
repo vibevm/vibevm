@@ -122,7 +122,7 @@ migration archived `flow-wal` / `flow-sync-from-code` /
 them. **Accepted:** archive is the reversible tidy; the owner can
 delete them outright if a fully-clean org is wanted. Re-judge next run.
 
-### 2026-05-23-09 · C2 · P3 · open
+### 2026-05-23-09 · C2 · P3 · half fixed 2026-08-05 (`af160cc4`-series), residue re-filed as `-14`
 
 **PROP-005 references a non-existent `schemas/` directory.** PROP-005
 §2.6 / §3.1 cite `crates/vibe-index/schemas/index-entry.jtd.json`, but
@@ -130,6 +130,45 @@ no `schemas/` directory exists under `crates/vibe-index/` — the index
 wire types are hand-rolled serde structs. Spec-versus-reality drift.
 **Open:** reconcile PROP-005 to the implementation, or add the JTD
 schemas it describes.
+
+**Fixed 2026-08-05, and the measurement was sharper than the row.** The
+file is absent not only from the cited path but from the whole tree —
+there is no JTD schema for the index entry anywhere, and the root
+`schemas/` holds only the seven wire-report contracts. The three lying
+statements were corrected to what is: §2.6 now says outright that the
+SECTION is the schema (which is what the code already believed — the
+`VersionEntry` docblock reads «Schema pinned in PROP-005 §2.6»), §3.1
+says the types are hand-written rather than derived, and the layout
+diagram lost a `schemas/` subtree it had been drawing for months.
+
+**That diagram is worth naming:** it sat inside a fenced block, and a
+fenced block carries no anchor, so nothing could ever have judged it —
+a live instance of the law written into `addressable-specs` the same
+day (`##AN-INSTRUCTION-INSIDE-A-FENCE-IS-UNVERIFIED-BY-CONSTRUCTION`),
+found within the hour and inside this project's own spec.
+
+**What did NOT get fixed, and is now `-14` below:** the decision of
+whether the index entry SHOULD have a JTD schema and a codegen gate
+like its seven siblings. Correcting the spec to match the code closes
+the lie, not the asymmetry.
+
+### 2026-08-05-14 · C2/B2 · P2 · open
+
+**The index's wire contract is the only one with no schema and no
+codegen gate.** Seven wire reports under the root `schemas/` are JTD
+files from which Rust is generated, and `cargo xtask check-codegen`
+fails the panel on any drift between them. `VersionEntry` — the record
+every line of `primary.jsonl` carries, every `by-name/<name>.json`
+candidate's `versions[]` element, and every `POST /v1/packages` body —
+has neither: it is hand-written Rust checked against English prose by
+a reader. The two arrangements are both defensible; having them
+undocumented and unchosen is not, and until 2026-08-05 the spec
+asserted the wrong one of the two.
+
+**Open, owner-court:** either mint `index-entry.jtd.json` + `repomd.jtd.json`
+and put them under `check-codegen` with the rest (the mechanism exists
+and costs a config line), or record in PROP-005 why this contract is
+deliberately prose-first. Filed by the -09 fix, 2026-08-05.
 
 ### 2026-05-23-10 · C1 · P3 · open
 
