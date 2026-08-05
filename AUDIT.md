@@ -44,7 +44,7 @@ WAL's standing Known-issues list.
 **13 findings** — 2 P1, 4 P2, 7 P3. Disposition: 2 fixed, 1 filed,
 1 accepted, 9 open. **10 carry forward** to the next run.
 
-### 2026-05-23-01 · A1 · P1 · filed
+### 2026-05-23-01 · A1 · P1 → P3 (re-judged 2026-06-12) · fixed 2026-08-06
 
 **Production git-registry + naming path is under-tested.** The install
 e2e suite drives `LocalRegistry` (the `--registry <dir>` path) almost
@@ -57,6 +57,33 @@ harness driving `GitPackageRegistry` against real `file://` git
 repositories named per the `fqdn` convention, plus a default-path
 `vibe init` → `vibe install` e2e. Large enough for its own milestone
 task or a PROP.
+
+**Fixed 2026-08-06 — the second half landed, and the first had landed
+long before.** The hermetic `file://` harness has existed since Phase 3
+(`common/mod.rs:105` builds a real per-package bare git registry named per
+`fqdn`); what never existed was a test walking the path a fresh user
+actually walks. `crates/vibe-cli/tests/cli_default_path.rs` now does:
+the registry is declared **only** in the isolated machine-global settings
+home, `vibe init` runs with no registry flag of any kind, the project
+manifest is asserted to carry no `[[registry]]` — which is what stops this
+test from silently becoming a copy of the project-registry one — and the
+install is judged by artifacts, not by exit code.
+
+**What the fix measured on the way, and it is the reason this row was not
+a product defect:** the install path does read the global layer —
+`GlobalRegistryConfig::load()` at `install/mod.rs:109` feeds
+`merge_effective` at `install/resolver.rs:338`, and the merge function
+itself was already unit-tested. Only the *wiring* was untested, which is
+precisely the shape a unit test cannot see and an e2e can.
+
+**What is deliberately not covered, with the measured reason:** the short
+name (`vibe install wal`) on this same path. `resolve_name_candidates`
+skips any registry with no index client
+(`multi_registry_resolver/mod.rs:439-441`), and a hermetic `git+file://`
+bare repo has no PROP-005 index — so short-name enumeration against it is
+structurally impossible, not merely absent. Covering it needs an index
+server standing beside the hermetic registry, which is a harness of its
+own. Recorded here rather than left as a silent hole.
 
 ### 2026-05-23-02 · A1 · P1 · fixed (`cc32d7e`)
 

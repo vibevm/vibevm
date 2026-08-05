@@ -3424,6 +3424,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_default_path.rs",
+      "item_kind": "fn",
+      "line": 25,
+      "symbol": "vibe_cli::tests::cli_default_path::default_path_installs_via_global_registry",
+      "end_line": 165,
+      "fingerprint": "tok1:56bd083321ea7d7fd375cca396716ab8e421de9575a9461a0a9b49a952682aeb"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_mcp_kind.rs",
       "item_kind": "fn",
       "line": 79,
@@ -11400,6 +11409,14 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_default_path.rs",
+      "from_symbol": "vibe_cli::tests::cli_default_path::default_path_installs_via_global_registry",
+      "line": 39,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#global-config",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-cli/tests/cli_mcp_kind.rs",
