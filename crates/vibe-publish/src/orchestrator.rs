@@ -228,8 +228,15 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
         // Step 2: derive org segment from the configured org URL.
         let org_segment = extract_org_segment(&config.org_url)?;
 
+        // Run the adapter's scope check once and carry its typed token
+        // (`ValidatedOrg`) forward — every host method below takes
+        // `&ValidatedOrg`, so a foreign org is refused here, before any
+        // side-effecting work. PROP-002 §2.10 "never escalate scope",
+        // now a type rather than a request.
+        let validated_org = self.creator.validate_scope(&org_segment)?;
+
         // Step 3: figure out repo presence.
-        let exists = self.creator.repo_exists(&org_segment, &repo_name)?;
+        let exists = self.creator.repo_exists(&validated_org, &repo_name)?;
         let mut created_repo = false;
 
         let repo_info = if exists {
@@ -256,7 +263,9 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
                 default_branch: Some("main".to_string()),
                 homepage: meta.homepage.clone(),
             };
-            let info = self.creator.create_repo(&org_segment, &repo_name, &opts)?;
+            let info = self
+                .creator
+                .create_repo(&validated_org, &repo_name, &opts)?;
             created_repo = true;
             info
         };
@@ -270,7 +279,7 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
         // vibevm-produced output (the user-facing PublishOutcome.repo_url
         // carries the public clone URL for display).
         if !config.dry_run {
-            let push_url = self.creator.push_url(&org_segment, &repo_name);
+            let push_url = self.creator.push_url(&validated_org, &repo_name);
             git_publish::push_release(&config.source_dir, &push_url, &tag, &name, &version)?;
         }
 

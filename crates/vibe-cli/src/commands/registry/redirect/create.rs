@@ -203,11 +203,16 @@ pub(in crate::commands::registry) fn run_redirect(
     ));
     let creator = creator_for_url(&registry_section.url, org_segment.clone(), token)
         .map_err(|e| anyhow!("{e}"))?;
+    // Run the scope check once; the typed token gates every host call
+    // below (PROP-002 §2.10 "never escalate scope", now a type).
+    let validated_org = creator
+        .validate_scope(&org_segment)
+        .map_err(|e| anyhow!("{e}"))?;
 
     // Refuse to clobber an existing stub — operators who want to update
     // a stub's marker file should hand-edit it (the M1.16 v0 surface).
     let exists = creator
-        .repo_exists(&org_segment, &stub_repo_name)
+        .repo_exists(&validated_org, &stub_repo_name)
         .map_err(|e| anyhow!("{e}"))?;
     if exists {
         bail!(
@@ -228,7 +233,7 @@ pub(in crate::commands::registry) fn run_redirect(
         homepage: None,
     };
     let _info = creator
-        .create_repo(&org_segment, &stub_repo_name, &opts)
+        .create_repo(&validated_org, &stub_repo_name, &opts)
         .map_err(|e| anyhow!("{e}"))?;
     ctx.step(&format!(
         "Created repository `{stub_repo_name}` on `{host}`"
@@ -236,7 +241,7 @@ pub(in crate::commands::registry) fn run_redirect(
 
     // Push the stub contents to `main`. Token embedded only at the
     // moment of git invocation; never in stdout / stderr / logs.
-    let push_url = creator.push_url(&org_segment, &stub_repo_name);
+    let push_url = creator.push_url(&validated_org, &stub_repo_name);
     let commit_msg = format!("stub: delegate {} to {}", pkgref.qualified_name(), args.to);
     vibe_publish::git_publish::push_initial(staging.path(), &push_url, &commit_msg)
         .map_err(|e| anyhow!("{e}"))?;

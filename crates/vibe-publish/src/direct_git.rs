@@ -23,7 +23,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish");
 
-use crate::{CreateOpts, PublishError, RepoCreator, RepoInfo, extract_host_segment};
+use crate::{CreateOpts, PublishError, RepoCreator, RepoInfo, ValidatedOrg, extract_host_segment};
 
 /// Direct-push adapter. Constructed from a single repo URL; carries
 /// no token, no API client, no org scoping. Every [`RepoCreator`]
@@ -70,14 +70,23 @@ impl RepoCreator for DirectRepoCreator {
         None
     }
 
-    fn validate_scope(&self, _org: &str) -> Result<(), PublishError> {
-        // No scoping to enforce. The publish flow that calls this
-        // never derives an org from a URL on the direct path —
-        // see [`Publisher::publish`] short-circuit on `direct_repo_url`.
-        Ok(())
+    fn validate_scope(&self, org: &str) -> Result<ValidatedOrg, PublishError> {
+        // Direct-push has no org to scope against: the operator handed
+        // vibevm a full repo URL, and the publisher short-circuits the
+        // org-extraction + host-API dance on
+        // [`direct_repo_url`](RepoCreator::direct_repo_url) (see
+        // [`Publisher::publish`]). There is no boundary to refuse, so the
+        // mint is unconditional — but it still returns a [`ValidatedOrg`]
+        // so the "check-before-any-host-method" gate has a token to hand
+        // on. `expected_org()` returning `None` is what makes this the
+        // *declared* opt-out rather than a guard that silently lets
+        // everything through: the scope-guard table test iterates only
+        // adapters that declare a scope, so this one is correctly absent
+        // from the "must refuse a foreign org" table.
+        Ok(ValidatedOrg::new(org))
     }
 
-    fn repo_exists(&self, _org: &str, _name: &str) -> Result<bool, PublishError> {
+    fn repo_exists(&self, _org: &ValidatedOrg, _name: &str) -> Result<bool, PublishError> {
         // The operator told vibevm "this repo exists, push to it"
         // by supplying the URL. Treat as existing; if the push fails
         // because the URL is wrong, `git_publish::push_with_classification`
@@ -88,7 +97,7 @@ impl RepoCreator for DirectRepoCreator {
 
     fn create_repo(
         &self,
-        _org: &str,
+        _org: &ValidatedOrg,
         _name: &str,
         _opts: &CreateOpts,
     ) -> Result<RepoInfo, PublishError> {
@@ -105,7 +114,7 @@ impl RepoCreator for DirectRepoCreator {
         )))
     }
 
-    fn push_url(&self, _org: &str, _name: &str) -> String {
+    fn push_url(&self, _org: &ValidatedOrg, _name: &str) -> String {
         // The configured URL is the push URL, verbatim. Local git
         // resolves credentials via SSH agent / credential.helper /
         // whatever else it is wired to use.
@@ -159,15 +168,18 @@ mod tests {
     #[test]
     fn repo_exists_returns_true_unconditionally() {
         let c = DirectRepoCreator::new("https://example.org/foo.git");
-        assert!(c.repo_exists("ignored-org", "ignored-name").unwrap());
+        let org = c.validate_scope("ignored-org").unwrap();
+        assert!(c.repo_exists(&org, "ignored-name").unwrap());
     }
 
     #[test]
     fn push_url_returns_configured_url_verbatim() {
         let c = DirectRepoCreator::new("https://example.org/foo/bar.git");
-        // org and name args are ignored on this path.
+        // org and name args are ignored on this path; the scope gate is
+        // the only way to mint the `&ValidatedOrg` the signature demands.
+        let org = c.validate_scope("ignored").unwrap();
         assert_eq!(
-            c.push_url("ignored", "also-ignored"),
+            c.push_url(&org, "also-ignored"),
             "https://example.org/foo/bar.git"
         );
     }
@@ -175,8 +187,9 @@ mod tests {
     #[test]
     fn create_repo_raises_clear_error() {
         let c = DirectRepoCreator::new("https://example.org/foo.git");
+        let org = c.validate_scope("ignored").unwrap();
         let err = c
-            .create_repo("ignored", "name", &CreateOpts::default())
+            .create_repo(&org, "name", &CreateOpts::default())
             .expect_err("create_repo must refuse on direct-push adapter");
         match err {
             PublishError::Git(msg) => {

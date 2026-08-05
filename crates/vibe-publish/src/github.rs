@@ -43,7 +43,7 @@ use std::time::Duration;
 use serde::{Deserialize, Serialize};
 
 use crate::token::Token;
-use crate::{CreateOpts, PublishError, RepoCreator, RepoInfo};
+use crate::{CreateOpts, PublishError, RepoCreator, RepoInfo, ValidatedOrg};
 
 /// Default base URL for the GitHub REST API.
 pub const DEFAULT_GITHUB_API_BASE: &str = "https://api.github.com";
@@ -153,7 +153,7 @@ impl RepoCreator for GithubRepoCreator {
         Some(&self.expected_org)
     }
 
-    fn push_url(&self, org: &str, name: &str) -> String {
+    fn push_url(&self, org: &ValidatedOrg, name: &str) -> String {
         // Embed the token only at the moment of push. The receiving
         // process is `git`, which uses the URL for the credentials
         // exchange and then redacts the password in any diagnostic
@@ -165,14 +165,13 @@ impl RepoCreator for GithubRepoCreator {
             "https://x-access-token:{}@{}/{}/{}.git",
             self.token.value(),
             self.host_name,
-            org,
+            org.as_str(),
             name
         )
     }
 
-    fn repo_exists(&self, org: &str, name: &str) -> Result<bool, PublishError> {
-        self.validate_scope(org)?;
-        let url = format!("{}/repos/{}/{}", self.api_base, org, name);
+    fn repo_exists(&self, org: &ValidatedOrg, name: &str) -> Result<bool, PublishError> {
+        let url = format!("{}/repos/{}/{}", self.api_base, org.as_str(), name);
         let res = self
             .client
             .get(&url)
@@ -190,7 +189,7 @@ impl RepoCreator for GithubRepoCreator {
             404 => Ok(false),
             401 | 403 => Err(PublishError::AuthForbidden {
                 host: self.host_name.clone(),
-                org: org.to_string(),
+                org: org.as_str().to_string(),
             }),
             other => {
                 let body = res.text().unwrap_or_default();
@@ -205,12 +204,11 @@ impl RepoCreator for GithubRepoCreator {
 
     fn create_repo(
         &self,
-        org: &str,
+        org: &ValidatedOrg,
         name: &str,
         opts: &CreateOpts,
     ) -> Result<RepoInfo, PublishError> {
-        self.validate_scope(org)?;
-        let url = format!("{}/orgs/{}/repos", self.api_base, org);
+        let url = format!("{}/orgs/{}/repos", self.api_base, org.as_str());
         let body = CreateRepoBody {
             name,
             private: false,
@@ -259,11 +257,11 @@ impl RepoCreator for GithubRepoCreator {
         match status.as_u16() {
             401 | 403 => Err(PublishError::AuthForbidden {
                 host: self.host_name.clone(),
-                org: org.to_string(),
+                org: org.as_str().to_string(),
             }),
             404 => Err(PublishError::OrgNotFound {
                 host: self.host_name.clone(),
-                org: org.to_string(),
+                org: org.as_str().to_string(),
             }),
             422 => {
                 // Validation errors include "repo already exists" (when
@@ -275,9 +273,10 @@ impl RepoCreator for GithubRepoCreator {
                     host: self.host_name.clone(),
                     status: 422,
                     body: format!(
-                        "validation error from GitHub when creating `{org}/{name}` (often: repo \
+                        "validation error from GitHub when creating `{}/{name}` (often: repo \
                          already exists). Re-run `vibe registry publish` — the existing repo \
-                         will be reused."
+                         will be reused.",
+                        org.as_str()
                     ),
                 })
             }
@@ -313,7 +312,10 @@ mod tests {
     fn push_url_embeds_token_for_https() {
         let token = Token::from_explicit("test-token-please-redact");
         let creator = GithubRepoCreator::new(token, "vibespecs").unwrap();
-        let url = creator.push_url("vibespecs", "flow-wal");
+        // `push_url` now takes a `&ValidatedOrg`; mint one via the
+        // scope gate (the only public way in).
+        let org = creator.validate_scope("vibespecs").unwrap();
+        let url = creator.push_url(&org, "flow-wal");
         assert_eq!(
             url,
             "https://x-access-token:test-token-please-redact@github.com/vibespecs/flow-wal.git"

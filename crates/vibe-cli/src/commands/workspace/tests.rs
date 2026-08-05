@@ -10,7 +10,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use vibe_core::manifest::NamingConvention;
-use vibe_publish::{CreateOpts, PublishError, RepoCreator, RepoInfo};
+use vibe_publish::{CreateOpts, PublishError, RepoCreator, RepoInfo, ValidatedOrg};
 
 fn git_available() -> bool {
     Command::new("git")
@@ -86,14 +86,14 @@ impl RepoCreator for MockCreator {
         "mock-host"
     }
 
-    fn repo_exists(&self, _org: &str, _name: &str) -> Result<bool, PublishError> {
+    fn repo_exists(&self, _org: &ValidatedOrg, _name: &str) -> Result<bool, PublishError> {
         // Fresh workspace publish — nothing exists yet.
         Ok(false)
     }
 
     fn create_repo(
         &self,
-        _org: &str,
+        _org: &ValidatedOrg,
         name: &str,
         _opts: &CreateOpts,
     ) -> Result<RepoInfo, PublishError> {
@@ -132,7 +132,7 @@ impl RepoCreator for MockCreator {
         })
     }
 
-    fn push_url(&self, _org: &str, name: &str) -> String {
+    fn push_url(&self, _org: &ValidatedOrg, name: &str) -> String {
         format!(
             "file://{}",
             self.bare_path(name).to_string_lossy().replace('\\', "/")

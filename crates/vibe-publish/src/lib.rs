@@ -42,7 +42,7 @@ pub mod post_hook;
 pub mod redirect_sync;
 pub mod token;
 
-pub use creator::{CreateOpts, RepoCreator, RepoInfo};
+pub use creator::{CreateOpts, RepoCreator, RepoInfo, ValidatedOrg};
 pub use direct_git::DirectRepoCreator;
 pub use github::GithubRepoCreator;
 pub use gitverse::GitverseRepoCreator;

@@ -65,3 +65,59 @@ fn direct_adapter_short_circuits_the_api_flow() {
         .validate_scope("anything")
         .expect("a scope-free adapter trusts its caller");
 }
+
+/// Every adapter that *declares* a scope (`expected_org() == Some`) must
+/// *enforce* it: a foreign org is refused with a `ScopeViolation` whose
+/// fields name the host, the declared org, and the attempted org. This is
+/// the runtime property the `ValidatedOrg` type **cannot** by itself
+/// guarantee — the type only forces a `validate_scope` call before the
+/// host methods run; it does not stop a future adapter from overriding
+/// `validate_scope` to mint unconditionally (silently dropping the guard
+/// while still type-checking, the exact latent hole this landing closes).
+/// The table below is the authoritative list of scoped adapters: adding a
+/// scoped adapter means adding a row, so a new host that declares a scope
+/// but forgets to enforce it merges red here. Parameterised over
+/// `&dyn RepoCreator` so a cell that diverges on the guard fails by name.
+/// Sharper than [`api_adapters_share_the_scope_guard_contract`]: that test
+/// pins the *kind* of the error, this one pins its *fields*.
+#[test]
+fn scoped_adapters_refuse_a_foreign_org() {
+    let github = GithubRepoCreator::new(token(), "vibespecs").expect("github adapter constructs");
+    let gitverse =
+        GitverseRepoCreator::new(token(), "vibespecs").expect("gitverse adapter constructs");
+
+    // Every adapter whose `expected_org()` is `Some` belongs here. The
+    // direct adapter (`expected_org() == None`) is intentionally absent:
+    // it declares no scope, so there is nothing to enforce.
+    let cases: [(&dyn RepoCreator, &str); 2] =
+        [(&github, "github.com"), (&gitverse, "gitverse.ru")];
+
+    for (creator, host) in cases {
+        assert_eq!(
+            creator.expected_org(),
+            Some("vibespecs"),
+            "{host}: this table is for adapters that declare a scope"
+        );
+        let err = creator
+            .validate_scope("someone-else")
+            .expect_err("a scoped adapter must refuse a foreign org");
+        match err {
+            PublishError::ScopeViolation {
+                host: h,
+                expected_org,
+                attempted_org,
+            } => {
+                assert_eq!(h, host, "{host}: the violation must name the host");
+                assert_eq!(
+                    expected_org, "vibespecs",
+                    "{host}: the org the adapter was scoped to at construction"
+                );
+                assert_eq!(
+                    attempted_org, "someone-else",
+                    "{host}: the org that attempted the escalation"
+                );
+            }
+            other => panic!("{host}: expected ScopeViolation, got {other:?}"),
+        }
+    }
+}

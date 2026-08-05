@@ -93,10 +93,15 @@ pub(in crate::commands::registry) fn run_redirect_update(
     ));
     let creator = creator_for_url(&registry_section.url, org_segment.clone(), token)
         .map_err(|e| anyhow!("{e}"))?;
-    let push_url = creator.push_url(&org_segment, &stub_repo_name);
+    // Run the scope check once; the typed token gates every host call
+    // below (PROP-002 §2.10 "never escalate scope", now a type).
+    let validated_org = creator
+        .validate_scope(&org_segment)
+        .map_err(|e| anyhow!("{e}"))?;
+    let push_url = creator.push_url(&validated_org, &stub_repo_name);
 
     let exists = creator
-        .repo_exists(&org_segment, &stub_repo_name)
+        .repo_exists(&validated_org, &stub_repo_name)
         .map_err(|e| anyhow!("{e}"))?;
     if !exists {
         bail!(

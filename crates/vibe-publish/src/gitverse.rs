@@ -36,7 +36,7 @@ use std::time::Duration;
 use serde::{Deserialize, Serialize};
 
 use crate::token::Token;
-use crate::{CreateOpts, PublishError, RepoCreator, RepoInfo};
+use crate::{CreateOpts, PublishError, RepoCreator, RepoInfo, ValidatedOrg};
 
 /// Default base URL for the GitVerse REST API.
 pub const DEFAULT_GITVERSE_API_BASE: &str = "https://api.gitverse.ru";
@@ -132,15 +132,14 @@ impl RepoCreator for GitverseRepoCreator {
         Some(&self.expected_org)
     }
 
-    fn push_url(&self, org: &str, name: &str) -> String {
+    fn push_url(&self, org: &ValidatedOrg, name: &str) -> String {
         // GitVerse uses SSH for pushes — the user's SSH agent / key handles
         // authentication. The token is API-only, never embedded in URL.
-        format!("git@{}:{}/{}.git", self.host_name, org, name)
+        format!("git@{}:{}/{}.git", self.host_name, org.as_str(), name)
     }
 
-    fn repo_exists(&self, org: &str, name: &str) -> Result<bool, PublishError> {
-        self.validate_scope(org)?;
-        let url = format!("{}/repos/{}/{}", self.api_base, org, name);
+    fn repo_exists(&self, org: &ValidatedOrg, name: &str) -> Result<bool, PublishError> {
+        let url = format!("{}/repos/{}/{}", self.api_base, org.as_str(), name);
         let res = self
             .client
             .get(&url)
@@ -156,7 +155,7 @@ impl RepoCreator for GitverseRepoCreator {
             404 => Ok(false),
             401 | 403 => Err(PublishError::AuthForbidden {
                 host: self.host_name.clone(),
-                org: org.to_string(),
+                org: org.as_str().to_string(),
             }),
             other => {
                 let body = res.text().unwrap_or_default();
@@ -171,12 +170,11 @@ impl RepoCreator for GitverseRepoCreator {
 
     fn create_repo(
         &self,
-        org: &str,
+        org: &ValidatedOrg,
         name: &str,
         opts: &CreateOpts,
     ) -> Result<RepoInfo, PublishError> {
-        self.validate_scope(org)?;
-        let url = format!("{}/orgs/{}/repos", self.api_base, org);
+        let url = format!("{}/orgs/{}/repos", self.api_base, org.as_str());
         let body = CreateRepoBody {
             name,
             private: false,
@@ -222,11 +220,11 @@ impl RepoCreator for GitverseRepoCreator {
         match status.as_u16() {
             401 | 403 => Err(PublishError::AuthForbidden {
                 host: self.host_name.clone(),
-                org: org.to_string(),
+                org: org.as_str().to_string(),
             }),
             404 => Err(PublishError::OrgNotFound {
                 host: self.host_name.clone(),
-                org: org.to_string(),
+                org: org.as_str().to_string(),
             }),
             409 => {
                 // Race condition: someone created the repo between our
@@ -239,8 +237,9 @@ impl RepoCreator for GitverseRepoCreator {
                     host: self.host_name.clone(),
                     status: 409,
                     body: format!(
-                        "repo `{org}/{name}` already exists (created concurrently?). \
-                         Re-run `vibe registry publish` — the existing repo will be reused."
+                        "repo `{}/{name}` already exists (created concurrently?). \
+                         Re-run `vibe registry publish` — the existing repo will be reused.",
+                        org.as_str()
                     ),
                 })
             }
