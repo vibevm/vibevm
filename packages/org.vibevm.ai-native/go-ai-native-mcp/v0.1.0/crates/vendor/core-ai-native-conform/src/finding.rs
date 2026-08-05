@@ -75,12 +75,15 @@ pub struct Finding {
 /// FRONTEND CAPTURED IT: TypeScript and Go carry it on the fact (the
 /// `reason` field of [`Fact::TsUnsafe`](crate::Fact::TsUnsafe) /
 /// [`Fact::GoUnsafe`](crate::Fact::GoUnsafe)), so an acknowledged TS/Go
-/// finding reproduces the human's reason in SARIF. The Rust facts carry
-/// only the boolean (`in_deviation`), so a Rust acknowledged finding has
-/// `reason: None` — its SARIF `justification` falls back to a fixed
-/// marker. Plumbing the reason text from `#[spec(deviates = …, reason =
-/// "…")]` through the rust-syn frontend into the three Rust fact
-/// variants is a measured, recorded leftover (see WORKER-REPORT).
+/// finding reproduces the human's reason in SARIF. The three Rust facts
+/// ([`Fact::UnsafeUse`](crate::Fact::UnsafeUse) /
+/// [`Fact::UnwrapUse`](crate::Fact::UnwrapUse) /
+/// [`Fact::EnvRead`](crate::Fact::EnvRead)) carry `reason` too and the
+/// rules thread it onto this status (B-053, the engine half done); but
+/// the rust-syn frontend does NOT yet populate it from
+/// `#[spec(deviates = …, reason = "…")]`, so a Rust acknowledged finding
+/// is still `reason: None` IN PRACTICE and its SARIF `justification`
+/// falls back to the fixed marker until that frontend second pass lands.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum FindingStatus {
     /// A live violation — fails the gate unless its fingerprint is frozen
@@ -89,8 +92,8 @@ pub enum FindingStatus {
     /// A violation next to a RECORDED deviation. It stays in the IR and
     /// SARIF (the deviation is acknowledged, not hidden) but never fails
     /// the gate. `reason` is the deviation's justification when the
-    /// frontend captured it (`None` for the Rust facts — see the enum
-    /// doc).
+    /// frontend captured it (`None` for the Rust facts until the rust-syn
+    /// frontend populates it — see the enum doc).
     DeviationAcknowledged { reason: Option<String> },
 }
 
@@ -145,7 +148,7 @@ pub trait Rule {
 ///     crate_name: "a".into(),
 ///     facts: vec![Fact::UnsafeUse {
 ///         context: "block".into(), line: 5,
-///         in_test: false, in_deviation: false,
+///         in_test: false, in_deviation: false, reason: None,
 ///     }],
 /// }];
 /// assert_eq!(check(&[&gate], &facts, None).len(), 1);
@@ -172,7 +175,7 @@ pub fn check(rules: &[&dyn Rule], facts: &[SourceFacts], scope: Option<&str>) ->
 ///     crate_name: "a".into(),
 ///     facts: vec![Fact::UnsafeUse {
 ///         context: "block".into(), line: 5,
-///         in_test: false, in_deviation: false,
+///         in_test: false, in_deviation: false, reason: None,
 ///     }],
 /// }];
 /// let counts = count_by_rule(&gate.check(&facts));
@@ -210,6 +213,7 @@ mod tests {
                     line: 5,
                     in_test: false,
                     in_deviation: false,
+                    reason: None,
                 }],
             ),
             sf(
@@ -220,6 +224,7 @@ mod tests {
                     line: 5,
                     in_test: false,
                     in_deviation: false,
+                    reason: None,
                 }],
             ),
         ];

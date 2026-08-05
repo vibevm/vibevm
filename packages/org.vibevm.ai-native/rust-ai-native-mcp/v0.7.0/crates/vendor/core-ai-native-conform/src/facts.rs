@@ -54,12 +54,20 @@ pub enum Fact {
     /// inside a fn carrying `#[spec(deviates = …, reason = …)]` — the
     /// recorded testimony the rule honors (ENGINE-CONFORM §4:
     /// a matching deviates record downgrades the finding). Fn-grain
-    /// only, same as `UnwrapUse`.
+    /// only, same as `UnwrapUse`. `reason` carries the attribute's
+    /// `reason = "…"` text when the rust-syn frontend captured it —
+    /// the testimony an acknowledged finding reproduces in the SARIF
+    /// `justification` (the Rust twin of [`Fact::TsUnsafe`] /
+    /// [`Fact::GoUnsafe`]'s `reason`); `None` when the attribute gave
+    /// none or until the frontend extraction lands (the engine half
+    /// is done here; populating the field is the frontend's recorded
+    /// second pass).
     UnsafeUse {
         context: String,
         line: u32,
         in_test: bool,
         in_deviation: bool,
+        reason: Option<String>,
     },
     /// A `#[error("...")]`-carrying enum variant (thiserror) with the
     /// enum's own attribute text — the Class-F diagnostics signal.
@@ -82,23 +90,39 @@ pub enum Fact {
     /// rule honors instead of flagging. Deliberately fn-grain: a
     /// deviates edge on a wider item (impl, struct, mod) records a
     /// different deviation, not unwrap amnesty for everything inside.
+    /// `reason` carries the attribute's `reason = "…"` text when the
+    /// rust-syn frontend captured it — the Rust twin of
+    /// [`Fact::TsUnsafe`]/[`Fact::GoUnsafe`]'s `reason`, threaded to
+    /// the SARIF `justification` for an acknowledged finding; `None`
+    /// when the attribute gave none or until the frontend extraction
+    /// lands (the engine half is done here; the frontend is the
+    /// recorded second pass).
     UnwrapUse {
         method: String,
         line: u32,
         in_test: bool,
         in_deviation: bool,
+        reason: Option<String>,
     },
     /// A `std::env::{var,var_os,set_var,remove_var}` access site — the
     /// R-001 ambient-coupling signal (PROP-014's `ambient-env` rule).
     /// `in_test` marks sites inside `#[cfg(test)]` / `#[test]`; the rule
     /// scopes those out. `in_deviation` marks sites inside a fn carrying
     /// `#[spec(deviates = …, reason = …)]` — the recorded testimony the
-    /// rule honors. Fn-grain, same as [`Fact::UnwrapUse`].
+    /// rule honors. Fn-grain, same as [`Fact::UnwrapUse`]. `reason`
+    /// carries the attribute's `reason = "…"` text when the rust-syn
+    /// frontend captured it — the Rust twin of
+    /// [`Fact::TsUnsafe`]/[`Fact::GoUnsafe`]'s `reason`, threaded to
+    /// the SARIF `justification` for an acknowledged finding; `None`
+    /// when the attribute gave none or until the frontend extraction
+    /// lands (the engine half is done here; the frontend is the
+    /// recorded second pass).
     EnvRead {
         method: String,
         line: u32,
         in_test: bool,
         in_deviation: bool,
+        reason: Option<String>,
     },
     /// A TypeScript `unsafe`-set occurrence
     /// (GUIDE-AI-NATIVE-TYPESCRIPT §8), produced by the `ts-tsc`
@@ -300,10 +324,15 @@ impl Fact {
             } => {
                 format!("EnvRead({method},test={in_test},dev={in_deviation})")
             }
-            // TS/Go facts carry `reason` on the variant, but the reason
-            // text is NOT echoed here — it rides on the finding's status
-            // for acknowledged deviations (where it belongs) and would
-            // only bloat the evidence label for a live finding.
+            // The deviation facts (Rust UnsafeUse/UnwrapUse/EnvRead and
+            // TS/Go TsUnsafe/GoUnsafe) all carry `reason` on the variant,
+            // but the reason text is NOT echoed here — it rides on the
+            // finding's status for acknowledged deviations (where it
+            // belongs) and would only bloat the evidence label for a live
+            // finding. The three Rust arms below keep their `dev=…` flag
+            // only because it predates `reason`; the flag is the state
+            // ("acknowledged"), the absent reason text is its (possibly
+            // missing) prose — see the variants' doc.
             Fact::TsUnsafe { kind, in_test, .. } => format!("TsUnsafe({kind},test={in_test})"),
             Fact::GoUnsafe { kind, in_test, .. } => format!("GoUnsafe({kind},test={in_test})"),
             Fact::GoConformance {

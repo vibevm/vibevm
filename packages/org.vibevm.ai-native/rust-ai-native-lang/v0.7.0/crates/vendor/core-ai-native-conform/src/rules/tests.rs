@@ -94,6 +94,7 @@ fn unsafe_gate_respects_audit_crates() {
                 line: 5,
                 in_test: false,
                 in_deviation: false,
+                reason: None,
             }],
         ),
         sf(
@@ -104,6 +105,7 @@ fn unsafe_gate_respects_audit_crates() {
                 line: 6,
                 in_test: false,
                 in_deviation: false,
+                reason: None,
             }],
         ),
     ];
@@ -130,18 +132,21 @@ fn unsafe_gate_marks_testimony_but_keeps_test_context_live() {
                 line: 5,
                 in_test: false,
                 in_deviation: false,
+                reason: None,
             },
             Fact::UnsafeUse {
                 context: "block".into(),
                 line: 9,
                 in_test: false,
                 in_deviation: true,
+                reason: None,
             },
             Fact::UnsafeUse {
                 context: "block".into(),
                 line: 40,
                 in_test: true,
                 in_deviation: false,
+                reason: None,
             },
         ],
     )];
@@ -223,6 +228,7 @@ fn every_rule_message_speaks_the_req_grammar() {
                     line: 12,
                     in_test: false,
                     in_deviation: false,
+                    reason: None,
                 },
             ],
         ),
@@ -411,6 +417,7 @@ fn unsafe_gate_fingerprint_survives_line_shifts() {
             line: 33,
             in_test: false,
             in_deviation: false,
+            reason: None,
         }],
     )];
     let after = vec![sf(
@@ -421,6 +428,7 @@ fn unsafe_gate_fingerprint_survives_line_shifts() {
             line: 35,
             in_test: false,
             in_deviation: false,
+            reason: None,
         }],
     )];
     let rule = rules::UnsafeGate {
@@ -469,6 +477,7 @@ fn bare_single_crate_paths_are_in_scope() {
             line: 3,
             in_test: false,
             in_deviation: false,
+            reason: None,
         }],
     )];
     assert_eq!(

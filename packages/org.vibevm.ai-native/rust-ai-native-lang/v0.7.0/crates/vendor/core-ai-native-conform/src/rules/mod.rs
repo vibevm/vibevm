@@ -123,4 +123,6 @@ fn cell_types(facts: &[SourceFacts]) -> Vec<(String, String, String)> {
 }
 
 #[cfg(test)]
+mod deviation_reason_tests;
+#[cfg(test)]
 mod tests;

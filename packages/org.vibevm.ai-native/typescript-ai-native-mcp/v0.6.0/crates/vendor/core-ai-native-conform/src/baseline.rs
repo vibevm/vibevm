@@ -133,6 +133,7 @@ mod tests {
                 line: 5,
                 in_test: false,
                 in_deviation: false,
+                reason: None,
             }],
         )];
         let findings = check(&[&gate], &facts, None);
@@ -174,12 +175,14 @@ mod tests {
                     line: 5,
                     in_test: false,
                     in_deviation: false,
+                    reason: None,
                 },
                 Fact::UnsafeUse {
                     context: "block".into(),
                     line: 9,
                     in_test: false,
                     in_deviation: true,
+                    reason: None,
                 },
             ],
         )];
