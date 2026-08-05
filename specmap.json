@@ -3507,18 +3507,18 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "item_kind": "fn",
-      "line": 337,
+      "line": 399,
       "symbol": "vibe_cli::tests::cli_redirect::install_via_redirect_chain_rejected_at_hop_two",
-      "end_line": 409,
+      "end_line": 471,
       "fingerprint": "tok1:d8e67cbabbc933e685f537a49915ecc18dc0c75947e3248696499b78b20a36b6"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "item_kind": "fn",
-      "line": 266,
+      "line": 328,
       "symbol": "vibe_cli::tests::cli_redirect::install_via_redirect_identity_mismatch_rejected",
-      "end_line": 335,
+      "end_line": 397,
       "fingerprint": "tok1:b4d84c6b204b6bf9cc48379c670a66e45c705c770104187a1bc4904ba123fae5"
     },
     {
@@ -3534,27 +3534,36 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "item_kind": "fn",
-      "line": 187,
+      "line": 249,
       "symbol": "vibe_cli::tests::cli_redirect::install_via_redirect_pinned_policy_uses_pinned_ref",
-      "end_line": 264,
+      "end_line": 326,
       "fingerprint": "tok1:f8134675833c45dfd4dbc5e816add71a855c10d66968b613a28c0ddfd12d1faa"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "item_kind": "fn",
-      "line": 455,
+      "line": 187,
+      "symbol": "vibe_cli::tests::cli_redirect::list_json_surfaces_via_redirect_for_redirect_resolved_package",
+      "end_line": 247,
+      "fingerprint": "tok1:50c0975b5e14d68ab4b18cb8cb43127591feeae316040a24290c7b4e0eaa0c6a"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_redirect.rs",
+      "item_kind": "fn",
+      "line": 517,
       "symbol": "vibe_cli::tests::cli_redirect::redirect_update_rejects_description_and_clear_combined",
-      "end_line": 478,
+      "end_line": 540,
       "fingerprint": "tok1:b7270055aae62b82c853a24cdc877debacfcbf44634136b72363be995c0d8f7b"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "item_kind": "fn",
-      "line": 480,
+      "line": 542,
       "symbol": "vibe_cli::tests::cli_redirect::redirect_update_rejects_invalid_pkgref",
-      "end_line": 502,
+      "end_line": 564,
       "fingerprint": "tok1:08229c1b727b845021343b8ad82cfe356dc75795f4954e6b4bfd54992cc11852"
     },
     {
@@ -11522,7 +11531,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "from_symbol": "vibe_cli::tests::cli_redirect::install_via_redirect_chain_rejected_at_hop_two",
-      "line": 338,
+      "line": 400,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",
       "verb": "verifies",
@@ -11531,7 +11540,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "from_symbol": "vibe_cli::tests::cli_redirect::install_via_redirect_identity_mismatch_rejected",
-      "line": 267,
+      "line": 329,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",
       "verb": "verifies",
@@ -11549,7 +11558,16 @@
     {
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "from_symbol": "vibe_cli::tests::cli_redirect::install_via_redirect_pinned_policy_uses_pinned_ref",
-      "line": 188,
+      "line": 250,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_redirect.rs",
+      "from_symbol": "vibe_cli::tests::cli_redirect::list_json_surfaces_via_redirect_for_redirect_resolved_package",
+      "line": 194,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",
       "verb": "verifies",
@@ -11558,7 +11576,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "from_symbol": "vibe_cli::tests::cli_redirect::redirect_update_rejects_description_and_clear_combined",
-      "line": 456,
+      "line": 518,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",
       "verb": "verifies",
@@ -11567,7 +11585,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
       "from_symbol": "vibe_cli::tests::cli_redirect::redirect_update_rejects_invalid_pkgref",
-      "line": 481,
+      "line": 543,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",
       "verb": "verifies",
@@ -66694,7 +66712,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:a2ef867f5bd552d293d3f73928b6b91a7b8c7a7a36b411d407c7d0203550dc5b",
+      "content_hash": "sha256:a073979fb5e57427a4f1589b374fafd43a835edf3dcaa4e16c5259b4d7324d0d",
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "Packages-Actualization Campaign v0.1 — wave 2: the authored packages measure themselves",
@@ -66910,7 +66928,7 @@
     },
     {
       "anchor": "log",
-      "content_hash": "sha256:745eaa592287f9278573c18cb36960a724a0df67dfb72abfd5ff9dd503d4e95f",
+      "content_hash": "sha256:3b3aaefcecc9e3c4c25a2418bc7c558d10350903817f14a850e286f3a0eab034",
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "7. LOG",
@@ -66923,7 +66941,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "7.1 Commit map — hashes bound to phases",
-      "line": 5240,
+      "line": 5243,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#commit-map"
     },
     {
@@ -66932,7 +66950,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "Phase A and Phase B — EXECUTED 2026-07-26/27; 124 commits",
-      "line": 5266,
+      "line": 5269,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#cm-ab"
     },
     {
@@ -66941,7 +66959,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "Phase C — EXECUTED 2026-07-28/29; 146 commits",
-      "line": 5287,
+      "line": 5290,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#cm-c"
     },
     {
@@ -66950,7 +66968,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "Phase D — EXECUTED 2026-07-29 → 2026-08-03; 93 zone commits",
-      "line": 5308,
+      "line": 5311,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#cm-d"
     },
     {
@@ -66959,7 +66977,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "Phases D-close, E, T, F, G — PLANNED; subjects spelled in advance",
-      "line": 5342,
+      "line": 5345,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#cm-planned"
     },
     {
@@ -66968,7 +66986,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "8. Deferrals",
-      "line": 5378,
+      "line": 5381,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#deferrals"
     },
     {
@@ -66977,7 +66995,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "9. REPORT",
-      "line": 5387,
+      "line": 5390,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#report"
     },
     {
@@ -66986,7 +67004,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "10. Quick-start for the executing session",
-      "line": 5391,
+      "line": 5394,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#quick-start"
     },
     {
@@ -66995,7 +67013,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "11. Whole-campaign acceptance",
-      "line": 5411,
+      "line": 5414,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#acceptance"
     },
     {
@@ -67607,31 +67625,37 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
-      "line": 188,
+      "line": 194,
+      "message": "edge `vibe_cli::tests::cli_redirect::list_json_surfaces_via_redirect_for_redirect_resolved_package` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect` carries no kind/revision line yet"
+    },
+    {
+      "code": "pin-into-unmarked-unit",
+      "file": "crates/vibe-cli/tests/cli_redirect.rs",
+      "line": 250,
       "message": "edge `vibe_cli::tests::cli_redirect::install_via_redirect_pinned_policy_uses_pinned_ref` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
-      "line": 267,
+      "line": 329,
       "message": "edge `vibe_cli::tests::cli_redirect::install_via_redirect_identity_mismatch_rejected` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
-      "line": 338,
+      "line": 400,
       "message": "edge `vibe_cli::tests::cli_redirect::install_via_redirect_chain_rejected_at_hop_two` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
-      "line": 456,
+      "line": 518,
       "message": "edge `vibe_cli::tests::cli_redirect::redirect_update_rejects_description_and_clear_combined` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/tests/cli_redirect.rs",
-      "line": 481,
+      "line": 543,
       "message": "edge `vibe_cli::tests::cli_redirect::redirect_update_rejects_invalid_pkgref` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect` carries no kind/revision line yet"
     },
     {

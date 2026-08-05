@@ -184,6 +184,68 @@ fn install_via_redirect_pass_through_tag() {
     );
 }
 
+/// `vibe list --json` surfaces a package's `via_redirect` — the **stub**
+/// URL it came through (`source_url` carries the **target**). Before the
+/// field was threaded into `JsonEntry`, the JSON output dropped it. Uses a
+/// hand-written `vibe.lock` (the minimal valid shape — same as the
+/// `LockedPackage` doctest) so it needs no git/registry and targets the
+/// lockfile→JSON surfacing edit 1 changed, not redirect resolution.
+#[test]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",
+    r = 1
+)]
+fn list_json_surfaces_via_redirect_for_redirect_resolved_package() {
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().unwrap();
+    user.init_project(project.path());
+    // Minimal valid lockfile (mirrors the `LockedPackage` doctest): one
+    // redirect-resolved package — source_url = target, via_redirect = stub.
+    fs::write(
+        project.path().join("vibe.lock"),
+        r#"[meta]
+generated_by = "test"
+generated_at = "2026-01-01T00:00:00Z"
+schema_version = 5
+
+[[package]]
+kind = "flow"
+name = "internal"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "git@example.invalid:external-flow-internal.git"
+content_hash = "sha256:abc"
+via_redirect = "https://stub.invalid/org.vibevm_internal"
+"#,
+    )
+    .unwrap();
+    let stdout = String::from_utf8(
+        user.vibe()
+            .arg("--json")
+            .arg("list")
+            .arg("--path")
+            .arg(project.path())
+            .output()
+            .expect("spawn vibe list --json")
+            .stdout,
+    )
+    .unwrap();
+    let list_doc: serde_json::Value =
+        serde_json::from_str(&stdout).expect("list --json stdout is one JSON document");
+    let via = list_doc["packages"]
+        .as_array()
+        .expect("packages array")
+        .iter()
+        .find(|p| p.get("name").and_then(|n| n.as_str()) == Some("internal"))
+        .expect("`internal` package entry present")["via_redirect"]
+        .as_str()
+        .expect("via_redirect surfaced in `vibe list --json`");
+    assert!(
+        via.contains("org.vibevm_internal"),
+        "expected the stub URL in via_redirect JSON, got: {via}"
+    );
+}
+
 #[test]
 #[verifies(
     "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#redirect",

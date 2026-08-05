@@ -50,6 +50,12 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
             source_ref: Option<&'a str>,
             #[serde(skip_serializing_if = "Option::is_none")]
             resolved_commit: Option<&'a str>,
+            // The stub URL a redirect-resolved package came through
+            // (PROP-002 §2.4.2); `source_url` above carries the target.
+            // Diagnostic / auditing only — omitted for the common
+            // non-redirected case.
+            #[serde(skip_serializing_if = "Option::is_none")]
+            via_redirect: Option<&'a str>,
             content_hash: &'a str,
             boot_snippet: Option<&'a str>,
             files_written: Vec<String>,
@@ -78,6 +84,7 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
                 source_url: &p.source_url,
                 source_ref: p.source_ref.as_deref(),
                 resolved_commit: p.resolved_commit.as_deref(),
+                via_redirect: p.via_redirect.as_deref(),
                 content_hash: &p.content_hash,
                 boot_snippet: p.boot_snippet.as_deref(),
                 files_written: p

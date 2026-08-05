@@ -321,8 +321,8 @@ pub struct LockedPackage {
     /// to an external URL (PROP-002 §2.4.2), records the **stub** URL
     /// here while `source_url` carries the **target** URL. `None` for
     /// non-redirected entries — the common case. Diagnostic / auditing
-    /// only; `vibe show <pkgref>` and `vibe list --json` surface this
-    /// to operators.
+    /// only; surfaced to operators via `vibe list --json` (and recorded
+    /// in `vibe.lock`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub via_redirect: Option<String>,
 
