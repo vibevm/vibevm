@@ -283,67 +283,6 @@ already written from it is the specification of the work.)*
   rather than skipping is the discipline behaving correctly: it refuses to go
   green by omission.
 
-### B-004 — a fact inside a fenced block carries no anchor, so whether it is judged is luck {#b-004}
-
-| | |
-|---|---|
-| ##B004-ANCHOR **anchor** | none — the finding is that the surface *has* no anchor. The nearest marked facts are the `##re-derive-prompt-lead` leads in 17 packages |
-| ##B004-LOCATOR **locator** | `crates/vibe-spec/src/doctree.rs` `fence_mask`, applied by `directives.rs:13-14`; the corpus is the `Read spec/flows/<name>/ …` line opening the re-derive prompt in 17 `spec/flows/*/[A-Z]*-PROTOCOL.md` |
-| ##B004-SEVERITY **severity** | P2 |
-| ##B004-DISPOSITION **disposition** | `open` |
-| ##B004-FILED **filed by** | the packages-actualization campaign, Phase D, wave 6, 2026-07-29 |
-
-- ##B004-WHAT **What it is, measured.** Seventeen packages ship a re-derive prompt whose
-  **first instruction** is `Read spec/flows/<name>/ …`. A consuming host has no
-  `spec/flows/` — the flow arrives at `vibedeps/flow-<name>/…` — so the
-  instruction cannot be followed where it is meant to be run. **Phase C recorded
-  the defect in two of the seventeen** (`licensing`, `spec-genres`; obligation
-  F-240). The other fifteen carry the identical line and their re-derive anchors
-  are all judged `confirmed`.
-- ##B004-WHY-THE-VERDICTS-ARE-NOT-WRONG **The eleven `confirmed` verdicts are not errors, and that is the
-  point.** The same anchor supports several claims, and different workers took up
-  different ones. `spec-genres` judged the *path* («its FIRST instruction cannot
-  be followed where it is meant to be run»). `addressable-specs` judged the
-  prompt's *shape* («a propose-then-approve shape — the host uses the same
-  shape»). `source-mirrors` judged its *outcome* («the host's manifest is a
-  derivation rather than a copy»). Each is defensible against a lead-in that says
-  only «Paste this to your agent in a fresh session». Nothing was mis-judged;
-  the fenced body simply is not addressable, so which of its claims gets tested
-  depends on which one a worker happens to read.
-- ##B004-WHY-P2-AND-NOT-P1 **Why P2 and not P1.** ##SEV-GATE-BLINDNESS-IS-P1 covers a gate that
-  reports green because it is not looking. Phase C's gate reported **6 847 /
-  6 847 anchors, zero owed**, and that claim is exactly true — it is scoped to
-  *addressable anchors*, and excluding fenced content is deliberate (PROP-035 §7:
-  directives inside fences «are ignored, exactly as headings are»). The gate
-  measures what it says it measures. What is missing is reach of the **fact
-  model**, not honesty in the gate.
-- ##B004-WHY-IT-MATTERS-NOW **Why it is decision-relevant before the release batch.** F-240 asks
-  the owner to publish a fix scoped to two packages. Fifteen more ship the same
-  line. Publishing the narrow fix is precisely what §4.5 calls **not a closure** —
-  «a fix landed in one consumer and not the others … is a new `duplication`
-  obligation». The scope of that ask should be seventeen or the remainder should
-  be recorded, and this file is the record until it is.
-- ##B004-THE-GENERAL-SHAPE **The general shape, which outlives this corpus.** Copy-paste prompts,
-  worked examples and quick-start blocks are exactly the content most likely to
-  be *run* by a reader, and exactly the content the anchor model cannot see.
-  Anywhere a fenced block carries an instruction rather than an illustration, it
-  is unverified by construction.
-- ##B004-WAVE8-CORRECTION **Corrected by wave 8's re-measurement (2026-07-31), three ways.**
-  *(i)* The counts above were wrong in both directions: measured at HEAD, the
-  fenced `Read spec/flows/<name>/ …` first line ships in **17 packages
-  exactly**, and after wave 8 re-judged F-240's two leads `confirmed` (each was
-  convicted of the fence's defect while its own do-not-copy-verbatim carve-out
-  sits two lines above — 16 of 17 carry one), the lead anchors read
-  **14 confirmed / 0 drift / 3 unjudged** — not «eleven confirmed», not
-  «fifteen unrecorded». *(ii)* The scope question this entry poses to the owner
-  is cleaner than either option it listed: **repairing all seventeen fences
-  changes no verdict on any scope**, because a fence carries no anchor and no
-  instrument can register the fix — the verdict question is closed and the
-  repair question is a pure product decision. *(iii)* Wave 8 found the shape's
-  second instance in the wild: the three `##three-processes-lead` ASCII
-  diagrams in the `-lang` tools docs draw the retired `vibe-tcg` topology
-  inside fences no anchor covers (`harvest/d8b-stacks-audience-release-reverify.md`).
-
 ### B-005 — `mirror --check` tests equality where the flow specifies ancestry {#b-005}
 
 | | |

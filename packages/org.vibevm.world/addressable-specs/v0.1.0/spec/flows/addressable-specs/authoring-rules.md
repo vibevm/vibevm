@@ -35,6 +35,26 @@ fragment, not a thought. @impl/done
 ##longer-units-page-badly Longer units
 page badly and churn on every edit. @spec/done
 
+##A-FENCE-CARRIES-NO-ANCHOR-AND-THAT-IS-DELIBERATE **Content inside a fenced
+block carries no anchor, and cannot be given one.** A fence is a payload — the
+reader copies it out, pastes it somewhere, runs it — so an anchor written
+inside would travel with the copy and corrupt what it is a copy of. Directives
+inside a fence are ignored for exactly the reason headings inside one are. @impl/done
+
+##AN-INSTRUCTION-INSIDE-A-FENCE-IS-UNVERIFIED-BY-CONSTRUCTION The consequence
+is the part authors underestimate: **a fence carrying an INSTRUCTION rather
+than an illustration is unverified by construction.** No instrument can test
+its claim, none can register that a fix landed, and whether any of it is ever
+checked depends on which nearby anchor a reader happens to pick up. And these
+are exactly the lines most likely to be *run*: quick-start blocks, copy-paste
+prompts, worked commands. @spec/done
+
+##A-CHECKABLE-CLAIM-BELONGS-OUTSIDE-THE-FENCE So put every checkable claim
+**outside** the fence, in an anchored sentence next to it, and keep inside only
+what must be copied verbatim. A path, a version, a command name asserted inside
+a fence is a fact with no address and no reader — assert it in the prose that
+introduces the block, where it can be judged, and let the block demonstrate it. @spec/done
+
 ## Normativity is marked, not implied {#normativity}
 
 ##A-READER-MUST-NEVER-GUESS-WHETHER-A-SENTENCE-BINDS A reader — human or model — must never guess whether a sentence
