@@ -178,10 +178,14 @@ authored and judged: [`spec/design/multiple-sources-and-plugins.md`](spec/design
       widened. `From<String> for ContentHash` had to go (the blanket `TryFrom`
       makes an unchecked `From` conflict with a checked `TryFrom`), which
       removes an unchecked constructor from the public API for free.
-- [ ] `refactor(vibe-actions)`: **L3 — the builder's three obligations move
-      into the signature** — name and description to the entry point, `invoke`
-      to `build`. **Not typestate:** typestate answers ordering, this is
-      presence, and presence has a cheaper encoding.
+- [x] `refactor(vibe-actions)`: **L3 — the builder's three obligations moved
+      into the signature** — name and description to `Action::builder`,
+      `invoke` to `build`. Three `ActionBuildError` variants became compile
+      errors; `EmptyPresentation` stayed, because an empty `&'static str` is a
+      valid one. **`action.rs` went 600 → 565 lines** — the refactor bought
+      budget back instead of spending it. The packet's own count was wrong and
+      the worker corrected it before editing: 15 chains inside `vibe-actions`,
+      **2 in `vibe-cli`**, reported with addresses rather than reached for.
 - [ ] `refactor(progress-core)`: **L4 — a crate-local digest newtype**,
       demoted below the builder once measured: it forbids a hash confused with
       a different KIND of string, and not the likelier mistake of two hashes
