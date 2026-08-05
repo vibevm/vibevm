@@ -13,6 +13,9 @@ use quote::ToTokens;
 use syn::spanned::Spanned;
 use syn::visit::Visit;
 
+use deviation::DeviationStack;
+
+mod deviation;
 mod out_of_line;
 mod sweep;
 pub use out_of_line::{
@@ -78,7 +81,12 @@ impl Frontend for RustFrontend {
         //     Exhausting a closed set by nesting collection loops is now
         //     compliant, so the emitted fact set shrinks and the cache
         //     must retire.
-        "10"
+        // v11: the `#[spec(deviates = …, reason = "…")]` second key is now
+        //     extracted — `UnsafeUse`/`UnwrapUse`/`EnvRead` carry the reason
+        //     text in their `reason` field (the engine threads it to the SARIF
+        //     `justification`), so the fact shape changes and the cache
+        //     must retire.
+        "11"
     }
 
     fn extract(&self, _file: &str, _crate_name: &str, module: &str, text: &str) -> Vec<Fact> {
@@ -91,7 +99,7 @@ impl Frontend for RustFrontend {
                 lines: text.lines().count() as u32,
             }],
             test_depth: 0,
-            deviating_depth: 0,
+            deviating: DeviationStack::default(),
             test_ranges: Vec::new(),
             range_loop_depth: 0,
         };
@@ -138,13 +146,14 @@ struct Extractor {
     /// Nonzero while visiting a `#[cfg(test)]` module or `#[test]`
     /// fn — `UnwrapUse` facts inside carry `in_test: true`.
     test_depth: u32,
-    /// Nonzero while visiting a fn (free or impl method) whose attrs
-    /// carry `#[spec(deviates = …)]` — `UnwrapUse` and `UnsafeUse`
-    /// facts inside carry `in_deviation: true`. Fn-grain only: a
+    /// The fn-grain deviation scope: a stack of each enclosing
+    /// `#[spec(deviates = …)]` fn's reason, so the three deviation facts
+    /// (`UnwrapUse` / `UnsafeUse` / `EnvRead`) inside carry `in_deviation`
+    /// and the nearest reason. See [`deviation`] — fn-grain only: a
     /// deviates edge on an impl, struct, or mod records a different
     /// deviation (the solver-choice edges on `Sat` / `NaiveDepSolver`
     /// are the live counter-examples) and grants no amnesty.
-    deviating_depth: u32,
+    deviating: DeviationStack,
     /// `[start, end]` line ranges of `#[cfg(test)]` modules and `#[test]`
     /// free fns — the line-grain twin of `test_depth`, collected during
     /// the visit so the post-visit raw-text comment scan can stamp
@@ -180,24 +189,6 @@ fn is_test_fn(attrs: &[syn::Attribute]) -> bool {
     attrs
         .iter()
         .any(|a| a.path().segments.last().is_some_and(|s| s.ident == "test"))
-}
-
-/// `#[spec(deviates = "…", reason = "…")]` — the verb is the first
-/// token inside `spec(...)` (specmark-grammar parses verb-first), so
-/// only the `deviates` verb matches; `spec(implements = …)` does not.
-fn is_spec_deviates(attrs: &[syn::Attribute]) -> bool {
-    attrs.iter().any(|a| {
-        if a.path().segments.last().is_none_or(|s| s.ident != "spec") {
-            return false;
-        }
-        match &a.meta {
-            syn::Meta::List(list) => matches!(
-                list.tokens.clone().into_iter().next(),
-                Some(proc_macro2::TokenTree::Ident(i)) if i == "deviates"
-            ),
-            _ => false,
-        }
-    })
 }
 
 fn attr_text(attrs: &[syn::Attribute]) -> Vec<String> {
@@ -364,10 +355,7 @@ impl<'ast> Visit<'ast> for Extractor {
             self.test_ranges
                 .push((line_of(node), node.span().end().line as u32));
         }
-        let deviating = is_spec_deviates(&node.attrs);
-        if deviating {
-            self.deviating_depth += 1;
-        }
+        let deviating = self.deviating.enter_if_deviates(&node.attrs);
         // The decl fact for an `unsafe fn` sees the fn's own test and
         // deviates attrs — push after the depths account for them.
         if node.sig.unsafety.is_some() {
@@ -375,12 +363,13 @@ impl<'ast> Visit<'ast> for Extractor {
                 context: format!("fn {}", node.sig.ident),
                 line: line_of(&node.sig.ident),
                 in_test: self.test_depth > 0,
-                in_deviation: self.deviating_depth > 0,
+                in_deviation: self.deviating.in_deviation(),
+                reason: self.deviating.reason(),
             });
         }
         syn::visit::visit_item_fn(self, node);
         if deviating {
-            self.deviating_depth -= 1;
+            self.deviating.leave();
         }
         if in_test {
             self.test_depth -= 1;
@@ -388,10 +377,7 @@ impl<'ast> Visit<'ast> for Extractor {
     }
 
     fn visit_impl_item_fn(&mut self, node: &'ast syn::ImplItemFn) {
-        let deviating = is_spec_deviates(&node.attrs);
-        if deviating {
-            self.deviating_depth += 1;
-        }
+        let deviating = self.deviating.enter_if_deviates(&node.attrs);
         // v5: an `unsafe fn` in an impl block is an unsafe use too —
         // until v4 these were invisible to the gate.
         if node.sig.unsafety.is_some() {
@@ -399,12 +385,13 @@ impl<'ast> Visit<'ast> for Extractor {
                 context: format!("fn {}", node.sig.ident),
                 line: line_of(&node.sig.ident),
                 in_test: self.test_depth > 0,
-                in_deviation: self.deviating_depth > 0,
+                in_deviation: self.deviating.in_deviation(),
+                reason: self.deviating.reason(),
             });
         }
         syn::visit::visit_impl_item_fn(self, node);
         if deviating {
-            self.deviating_depth -= 1;
+            self.deviating.leave();
         }
     }
 
@@ -428,7 +415,8 @@ impl<'ast> Visit<'ast> for Extractor {
                 method: m,
                 line: line_of(&node.method),
                 in_test: self.test_depth > 0,
-                in_deviation: self.deviating_depth > 0,
+                in_deviation: self.deviating.in_deviation(),
+                reason: self.deviating.reason(),
             });
         }
         syn::visit::visit_expr_method_call(self, node);
@@ -548,7 +536,8 @@ impl<'ast> Visit<'ast> for Extractor {
                     method: segs[segs.len() - 1].clone(),
                     line: line_of(node),
                     in_test: self.test_depth > 0,
-                    in_deviation: self.deviating_depth > 0,
+                    in_deviation: self.deviating.in_deviation(),
+                    reason: self.deviating.reason(),
                 });
             }
         }
@@ -560,7 +549,8 @@ impl<'ast> Visit<'ast> for Extractor {
             context: "block".into(),
             line: line_of(node),
             in_test: self.test_depth > 0,
-            in_deviation: self.deviating_depth > 0,
+            in_deviation: self.deviating.in_deviation(),
+            reason: self.deviating.reason(),
         });
         syn::visit::visit_expr_unsafe(self, node);
     }
@@ -599,3 +589,7 @@ impl<'ast> Visit<'ast> for Extractor {
 #[cfg(test)]
 #[path = "lib/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "lib/deviation_tests.rs"]
+mod deviation_tests;
