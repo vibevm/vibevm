@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-05T10:49:33Z",
+  "updated_at": "2026-08-05T14:26:34Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -96927,7 +96927,7 @@
       }
     },
     "spec/design/typed-seams.md": {
-      "content_hash": "2aaa503674713c389b7106e705d6d90d38a05a5091125a2a6de5ff74d35b0db5",
+      "content_hash": "14c3930d264d5412f8402ba9b7bc095af90e5491bf0891fe7803652153d6fa48",
       "rollup": {
         "explicit": [
           "spec",
@@ -96941,11 +96941,11 @@
           "spec",
           "done"
         ],
-        "marker_count": 34,
-        "fact_count": 33,
+        "marker_count": 36,
+        "fact_count": 35,
         "unmarked_facts": 0
       },
-      "marker_count": 34,
+      "marker_count": 36,
       "unit_count": 9,
       "issue_count": 0
     },
