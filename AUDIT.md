@@ -527,7 +527,7 @@ green after); campaign corpus 11 188 / 190 / 44 — 98.0 %, exhaustive
 |---|---|---|---|---|
 | 2026-08-03-01 | B2 | `cargo xtask check-codegen` (byte-compare of generated JTD wire types) ran in no panel step — schema-vs-generated drift had nothing to catch it; bit the same day (the F-279 regen drift was caught by a hand-run, not the gate) | P2 | fixed `1218c429` (panel step 6b) |
 | 2026-08-03-02 | D4 | `quinn-proto` 0.11.14 — RUSTSEC-2026-0185, remote memory exhaustion, high 7.5 — pinned in BOTH the host `Cargo.lock` and the fractality specspace's lock | P2 | fixed `1db359d0` (host → 0.11.16) · filed DBT-0023 (fractality lock, specspace-owned) |
-| 2026-08-03-03 | D4 | `cargo outdated` 0.19.0 cannot run over this workspace at all — its temp-copy resolution breaks on the path-dep into the excluded package workspace (`progress-core` → vendored `core-ai-native-specmark`); the staleness half of the D4 aid is unavailable | P3 | open |
+| 2026-08-03-03 | D4 | `cargo outdated` 0.19.0 cannot run over this workspace at all — its temp-copy resolution breaks on the path-dep into the excluded package workspace (`progress-core` → vendored `core-ai-native-specmark`); the staleness half of the D4 aid is unavailable | P3 | accepted 2026-08-05 — aid named + measured |
 | 2026-08-03-04 | D3 | src-side `#[allow]` grew 28 → 79 since 2026-06-12; by kind: `dead_code` 62 + `unused_imports` 9; by crate: vibe-cli 69 (TUI theme / prefs / tree modules) — a dead-code shadow this size hides rot from the compiler | P2 | open |
 | 2026-08-03-05 | D2/A2 | census refresh, clean: `#[ignore]` steady at 5 (the cli_live_e2e quartet + 1 specmap-core); TODO-family 11 src hits = 10 detector-pattern strings/fixtures + 1 deliberate PROP-citing forward pointer (`vibe-actions/src/i18n.rs`, Fluent, PROP-039 §8.1) | P3 | accepted |
 
@@ -544,10 +544,18 @@ green after); campaign corpus 11 188 / 190 / 44 — 98.0 %, exhaustive
   (RUSTSEC-2026-0221). Recorded; re-checked next run. On the host,
   `quinn-proto` is absent from the default-target compile graph
   (`cargo tree -i` finds nothing) — the exposure was the lock entry.
-- **-03 open:** staleness signal until then: `cargo update --dry-run`
-  reading, or per-crate checks; the layout (path-deps into excluded
-  package workspaces) is deliberate, so this may end as `accepted` with
-  a named alternative aid.
+- **-03 → `accepted` 2026-08-05, with the aid named and MEASURED** (the
+  disposition this row itself pre-authorised). Re-measured: `cargo
+  outdated` 0.19.0 still fails identically — it copies the workspace to
+  a temp dir and cannot resolve `core-ai-native-specmark` as a path-dep
+  of `progress-core`, because that path leads into an excluded package
+  workspace. The layout causing it is deliberate and worth more than
+  the tool. **The aid, verified the same day: `cargo update --dry-run`
+  — exit 0, and it prints every crate that would move, with the
+  from → to versions.** That is the staleness half of the D4 check,
+  which is what `cargo outdated` was there for. Re-test the tool at the
+  next audit; if it learns to resolve excluded-workspace path-deps, the
+  row reopens as fixed rather than accepted.
 - **-04 open:** needs a triage pass — which `dead_code` allows guard
   work-in-progress TUI surfaces (keep, with a reason) and which cover
   genuinely dead code (delete the code). Escalate or accept next run;
