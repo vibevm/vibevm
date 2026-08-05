@@ -1,0 +1,33 @@
+{
+  "batch": "G6-tcg-rust-restate",
+  "cluster": "ai-native",
+  "files": {
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md": {
+      "GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY": {
+        "v": "confirmed",
+        "ev": [
+          "RESTATED 2026-08-05 because the fact's own text moved, and the move is the whole point: the clause said «the no-zombie property is test-asserted» and then carried a parenthetical admitting it was not — «What does not exist is the assertion … «test-asserted» and «spike-proven» describe a spike, not a test in the tree» — marked `@impl/plan` against B-044.",
+          "The assertion now exists and RUNS: `dropping_the_oracle_kills_the_child_process_no_zombie` in `rust-ai-native-tcg-bridge/tests/live_oracle.rs`, re-run in this tree at merge time — `test result: ok. 2 passed; 0 failed`. It reads the child PID through `ChildTransport::child_pid()`, proves the process alive, drops the wrapper so the kill-on-drop backstop is what is exercised, and polls the OS process table to a deadline, treating a recycled PID as dead by `start_time` comparison.",
+          "The two halves the clause always had right are unchanged and re-checked: the dance at `oracle.rs:356` and the backstop at `client.rs:346-350`. Marker follows the build, `@impl/plan` → `@impl/done`.",
+          "What makes this a correction rather than a stamp: the parenthetical is now a description of what the test does, where it was a confession of what did not exist."
+        ]
+      },
+      "OVERLAY-RULE-VERSIONS-NEVER-REPEAT": {
+        "v": "confirmed",
+        "ev": [
+          "RESTATED 2026-08-05, and NOT because this session touched it — the edit above changed the file, and re-examining it surfaced two facts whose verdicts stood against text that had moved earlier. Re-read against the code rather than re-stamped.",
+          "Checked: `oracle.rs:192` is the `self.docs.remove(rel)` branch that clearing an overlay takes, and `:182` is the `Ok(1)` a later reopen returns — so «clearing closes the document and a later reopen starts again at 1» holds, and the counter is per open document rather than derived from content.",
+          "Verdict stands as it was; the restatement records that the text it now vouches for is the text on disk."
+        ]
+      },
+      "CLEAN-VALIDATE-DOES-NOT-CERTIFY-A-CLEAN-FLOOR": {
+        "v": "confirmed",
+        "ev": [
+          "RESTATED for the same reason as its neighbour above, and re-checked rather than re-stamped.",
+          "The gloss names seven floor steps with the compile riding inside the test step. Checked against `rust-ai-native-cli/src/floor.rs`'s `STEPS` constant: fmt, test, clippy, conform, specmap, test-gate, fast-loop — seven, in that order, and the constant's own doc calls itself the dictionary a `[rust].floor_disable` entry is validated against, with an unknown name a hard failure rather than a silent ignore.",
+          "So the fact's substantive claim — a clean `validate` does not certify a clean floor, because the floor is those seven steps — resolves against a list the code owns."
+        ]
+      }
+    }
+  }
+}

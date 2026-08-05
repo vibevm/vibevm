@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-05T18:58:14Z",
+  "updated_at": "2026-08-05T19:24:29Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -100086,7 +100086,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 278,
         "marker_count": 279,
-        "processed_hash": "8093661f1a5277da9010a83b94eb637b0da3537c5552dc6f17f93d853cb7fd64",
+        "processed_hash": "a636566752ec5626c036a1de50ac4326859a61c4286f8e7440ee395952e67b8e",
         "summary": {
           "confirmed": 279
         },
@@ -100538,7 +100538,10 @@
           "ENTRY-SCHEMA": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "RESTATED 2026-08-05 because the fact's own text moved, and the move deleted a false clause rather than rewording one. It had asserted «JTD schema lives in `crates/vibe-index/schemas/index-entry.jtd.json`». Measured: that directory does not exist, no file of that name exists anywhere in the tree (`find . -name 'index-entry*'` outside target/ and .git/ returns nothing), and `find crates/vibe-index -name '*.jtd.json'` returns nothing.",
+              "What replaced it is checkable and checked: the section is the schema, and the code already treated it that way — crates/vibe-index/src/types/entry/mod.rs opens with «Schema pinned in PROP-005 §2.6» and carries a `specmark::scope!` edge to this very anchor.",
+              "The contrast the new text draws also resolves: the root `schemas/` holds seven `*.jtd.json` wire-report contracts, and `cargo xtask check-codegen` is a panel step that byte-compares their generated Rust — so the arrangement the clause says this entry does NOT have is one the tree demonstrably does have elsewhere.",
+              "The field list the anchor governs is unchanged; only the provenance sentence moved."
             ]
           },
           "field-provenance-lead": {
@@ -100862,7 +100865,9 @@
           "RUST-TYPES": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "RESTATED for the same cause: it said the types are «derived from the JTD schemas under `crates/vibe-index/schemas/`», and nothing is derived from anything — there are no schemas to derive from.",
+              "Checked positively: crates/vibe-index/src/types/ exists and holds entry/ (mod, aggregate, content, relations, tests), kinds.rs, repomd.rs — hand-written Rust, none of it under any generated/ tree and none of it produced by `cargo xtask codegen`, whose two output trees are crates/vibe-wire/src/generated/ and the specmap crate's.",
+              "The new sentence adds the consequence rather than only the correction: with no schema, the text is the contract and the compiler checks nothing between them. That is the state, and the question of whether it SHOULD be the state is recorded as an open audit finding rather than settled here."
             ]
           },
           "PKGKEY-SHAPE": {
@@ -101766,8 +101771,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-03T11:11:46Z",
-        "verify_batch": "c4f3-index"
+        "verified_at": "2026-08-05T18:58:42Z",
+        "verify_batch": "c4f3-index + G6-prop005-schema"
       }
     },
     {

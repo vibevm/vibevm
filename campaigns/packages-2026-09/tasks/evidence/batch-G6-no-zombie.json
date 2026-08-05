@@ -1,0 +1,56 @@
+{
+  "batch": "G6-no-zombie",
+  "cluster": "ai-native",
+  "files": {
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md": {
+      "GRACEFUL-EXIT-IS-THE-LSP-DANCE": {
+        "v": "confirmed",
+        "ev": [
+          "The no-zombie half of this fact is now TEST-ASSERTED, which is precisely what every one of these five drift verdicts was falsifying. Built 2026-08-05, one probe per stack, each in the stack's own existing live test so it inherits that test's capability gate: the child PID is read through a named observability seam on the transport, the process is PROVED alive first (else the probe would be checking emptiness), the wrapper is DROPPED rather than shut down gracefully — so the kill-on-drop backstop is what gets exercised, against a live and uncooperative child — and the OS process table is polled to a deadline until the PID is gone, with a recycled PID read as dead by comparing `start_time`.",
+          "Go: `dropping_the_oracle_kills_the_gopls_child_no_zombie` in `go-ai-native-tcg-bridge/tests/live_oracle.rs`. It COMPILES here and is not claimed to have run — the Go oracle needs gopls, and this stack's posture is to fail with a recipe on a box that lacks it rather than skip. The assertion exists; running it is the toolchain's business, which is what «test-asserted» means for a capability-gated live test.",
+          "Measured before building, and it held: no such assertion existed in any of the three stacks — the tree's only process-table probe belonged to fractality and was about a different child."
+        ]
+      }
+    },
+    "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/tools/vibe-agentic-tcg-go.md": {
+      "RISK-WINDOWS-CHILD-LIFECYCLE": {
+        "v": "confirmed",
+        "ev": [
+          "The no-zombie half of this fact is now TEST-ASSERTED, which is precisely what every one of these five drift verdicts was falsifying. Built 2026-08-05, one probe per stack, each in the stack's own existing live test so it inherits that test's capability gate: the child PID is read through a named observability seam on the transport, the process is PROVED alive first (else the probe would be checking emptiness), the wrapper is DROPPED rather than shut down gracefully — so the kill-on-drop backstop is what gets exercised, against a live and uncooperative child — and the OS process table is polled to a deadline until the PID is gone, with a recycled PID read as dead by comparing `start_time`.",
+          "Go: `dropping_the_oracle_kills_the_gopls_child_no_zombie` in `go-ai-native-tcg-bridge/tests/live_oracle.rs`. It COMPILES here and is not claimed to have run — the Go oracle needs gopls, and this stack's posture is to fail with a recipe on a box that lacks it rather than skip. The assertion exists; running it is the toolchain's business, which is what «test-asserted» means for a capability-gated live test.",
+          "Measured before building, and it held: no such assertion existed in any of the three stacks — the tree's only process-table probe belonged to fractality and was about a different child."
+        ]
+      }
+    },
+    "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/tools/vibe-agentic-tcg-rust.md": {
+      "RISK-WINDOWS-CHILD-LIFECYCLE": {
+        "v": "confirmed",
+        "ev": [
+          "The no-zombie half of this fact is now TEST-ASSERTED, which is precisely what every one of these five drift verdicts was falsifying. Built 2026-08-05, one probe per stack, each in the stack's own existing live test so it inherits that test's capability gate: the child PID is read through a named observability seam on the transport, the process is PROVED alive first (else the probe would be checking emptiness), the wrapper is DROPPED rather than shut down gracefully — so the kill-on-drop backstop is what gets exercised, against a live and uncooperative child — and the OS process table is polled to a deadline until the PID is gone, with a recycled PID read as dead by comparing `start_time`.",
+          "Rust: `dropping_the_oracle_kills_the_child_process_no_zombie` in `rust-ai-native-tcg-bridge/tests/live_oracle.rs`, RUN and green in this tree — `test result: ok. 2 passed; 0 failed`.",
+          "Measured before building, and it held: no such assertion existed in any of the three stacks — the tree's only process-table probe belonged to fractality and was about a different child."
+        ]
+      }
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md": {
+      "RUST-SIDE-OWNS-TERMINATION": {
+        "v": "confirmed",
+        "ev": [
+          "The no-zombie half of this fact is now TEST-ASSERTED, which is precisely what every one of these five drift verdicts was falsifying. Built 2026-08-05, one probe per stack, each in the stack's own existing live test so it inherits that test's capability gate: the child PID is read through a named observability seam on the transport, the process is PROVED alive first (else the probe would be checking emptiness), the wrapper is DROPPED rather than shut down gracefully — so the kill-on-drop backstop is what gets exercised, against a live and uncooperative child — and the OS process table is polled to a deadline until the PID is gone, with a recycled PID read as dead by comparing `start_time`.",
+          "TypeScript: `dropping_the_oracle_kills_the_node_child_no_zombie` in `typescript-ai-native-tcg/tests/oracle_e2e.rs` — that crate, not the bridge, because the bridge ships no integration-test directory and its own docs name the CLI crate's node-gated end-to-end test as where the spawn path is exercised. Compiles here; node-gated, same standing as Go.",
+          "Measured before building, and it held: no such assertion existed in any of the three stacks — the tree's only process-table probe belonged to fractality and was about a different child."
+        ]
+      }
+    },
+    "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/tools/vibe-agentic-tcg-ts.md": {
+      "RISK-WINDOWS-CHILD-LIFECYCLE": {
+        "v": "confirmed",
+        "ev": [
+          "The no-zombie half of this fact is now TEST-ASSERTED, which is precisely what every one of these five drift verdicts was falsifying. Built 2026-08-05, one probe per stack, each in the stack's own existing live test so it inherits that test's capability gate: the child PID is read through a named observability seam on the transport, the process is PROVED alive first (else the probe would be checking emptiness), the wrapper is DROPPED rather than shut down gracefully — so the kill-on-drop backstop is what gets exercised, against a live and uncooperative child — and the OS process table is polled to a deadline until the PID is gone, with a recycled PID read as dead by comparing `start_time`.",
+          "TypeScript: `dropping_the_oracle_kills_the_node_child_no_zombie` in `typescript-ai-native-tcg/tests/oracle_e2e.rs` — that crate, not the bridge, because the bridge ships no integration-test directory and its own docs name the CLI crate's node-gated end-to-end test as where the spawn path is exercised. Compiles here; node-gated, same standing as Go.",
+          "Measured before building, and it held: no such assertion existed in any of the three stacks — the tree's only process-table probe belonged to fractality and was about a different child."
+        ]
+      }
+    }
+  }
+}

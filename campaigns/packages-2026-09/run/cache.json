@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-05T18:58:42Z",
+  "updated_at": "2026-08-05T19:26:33Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -11256,12 +11256,11 @@
             ]
           },
           "GRACEFUL-EXIT-IS-THE-LSP-DANCE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-ORACLE-GO-v0.1.md:201  ##GRACEFUL-EXIT-IS-THE-LSP-DANCE Graceful exit is the LSP dance — `shutdown` request, `exit` notification — with kill...",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle.rs:360  pub fn shutdown(mut self) -> Result<(), TcgBridgeError> { let _ = self .client .request(\"shutdown\", serde_json::Value...",
-              "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/client.rs:357  impl Drop for ChildTransport { fn drop(&mut self) { let _ = self.child.kill(); let _ = self.child.wait(); }",
-              "**the no-zombie property is not test-asserted.** The dance is implemented — `shutdown` at packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/src/oracle.rs:360, kill-on-drop at client.rs:357 — but the only occurrence of «zombie» in the whole stack is a doc comment in packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-tcg-bridge/tests/live_oracle.rs:3. The test body asserts `oracle.shutdown()` succeeded and checks no process table. Reading the test settles this without running it"
+              "The no-zombie half of this fact is now TEST-ASSERTED, which is precisely what every one of these five drift verdicts was falsifying. Built 2026-08-05, one probe per stack, each in the stack's own existing live test so it inherits that test's capability gate: the child PID is read through a named observability seam on the transport, the process is PROVED alive first (else the probe would be checking emptiness), the wrapper is DROPPED rather than shut down gracefully — so the kill-on-drop backstop is what gets exercised, against a live and uncooperative child — and the OS process table is polled to a deadline until the PID is gone, with a recycled PID read as dead by comparing `start_time`.",
+              "Go: `dropping_the_oracle_kills_the_gopls_child_no_zombie` in `go-ai-native-tcg-bridge/tests/live_oracle.rs`. It COMPILES here and is not claimed to have run — the Go oracle needs gopls, and this stack's posture is to fail with a recipe on a box that lacks it rather than skip. The assertion exists; running it is the toolchain's business, which is what «test-asserted» means for a capability-gated live test.",
+              "Measured before building, and it held: no such assertion existed in any of the three stacks — the tree's only process-table probe belonged to fractality and was about a different child."
             ]
           },
           "PATHS-BECOME-URIS-AFTER-VERBATIM-PREFIX-STRIPPING": {
@@ -11340,7 +11339,7 @@
           }
         },
         "verified_at": "2026-08-02T20:25:43Z",
-        "verify_batch": "C4+C5 + C45-go-review + D5a + D31 + D33 + D41"
+        "verify_batch": "C4+C5 + C45-go-review + D5a + D31 + D33 + D41 + G6-no-zombie"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md": {
@@ -12555,9 +12554,11 @@
             ]
           },
           "RISK-WINDOWS-CHILD-LIFECYCLE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "verdict-first repair of a false confirmed (boss re-judge 2026-08-02, F-281 family measurement): the fact lists «no-zombie assertions» among the applied house-lesson set — no test in the Go stack probes the process table for a surviving gopls child: the family-wide sweep for surviving-pid/no-zombie/process_table/sysinfo/tasklist/OpenProcess/try_wait over *.rs/*.go/*.ts finds in this stack only the doc comment on go-ai-native-tcg-bridge/tests/live_oracle.rs:3 («shutdown with no zombie») — a comment, not an assertion; the only real process-table assertion in the repository belongs to fractality's pod/worker pair (fractality-pod/tests/loopback.rs:288-299) and asserts a different product's child; resolution per owner ruling 2026-08-02 «тест на зомби лучше написать» — the test is the recorded build BACKLOG.md B-044, the text stays as the target"
+              "The no-zombie half of this fact is now TEST-ASSERTED, which is precisely what every one of these five drift verdicts was falsifying. Built 2026-08-05, one probe per stack, each in the stack's own existing live test so it inherits that test's capability gate: the child PID is read through a named observability seam on the transport, the process is PROVED alive first (else the probe would be checking emptiness), the wrapper is DROPPED rather than shut down gracefully — so the kill-on-drop backstop is what gets exercised, against a live and uncooperative child — and the OS process table is polled to a deadline until the PID is gone, with a recycled PID read as dead by comparing `start_time`.",
+              "Go: `dropping_the_oracle_kills_the_gopls_child_no_zombie` in `go-ai-native-tcg-bridge/tests/live_oracle.rs`. It COMPILES here and is not claimed to have run — the Go oracle needs gopls, and this stack's posture is to fail with a recipe on a box that lacks it rather than skip. The assertion exists; running it is the toolchain's business, which is what «test-asserted» means for a capability-gated live test.",
+              "Measured before building, and it held: no such assertion existed in any of the three stacks — the tree's only process-table probe belonged to fractality and was about a different child."
             ]
           },
           "RISK-SCOPE-CREEP-TOWARD-AN-LSP-RELAY": {
@@ -12579,7 +12580,7 @@
           }
         },
         "verified_at": "2026-08-02T20:25:43Z",
-        "verify_batch": "C4+C5 + C45-go-review + D5a + D8b + D11-release-a + D32 + D41"
+        "verify_batch": "C4+C5 + C45-go-review + D5a + D8b + D11-release-a + D32 + D41 + G6-no-zombie"
       }
     },
     "packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md": {
@@ -16846,7 +16847,7 @@
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-ORACLE-RUST-v0.1.md": {
-      "content_hash": "013e097fce72ea475992095be4c0d2c4643c881243c089fa0fbfbcf59f648a7e",
+      "content_hash": "2219d83fd42a7cf6bb983376cf4129b82d33d719d9c5aac703120b287ce2241d",
       "rollup": {
         "explicit": [
           "spec",
@@ -16868,7 +16869,7 @@
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "013e097fce72ea475992095be4c0d2c4643c881243c089fa0fbfbcf59f648a7e",
+        "processed_hash": "2219d83fd42a7cf6bb983376cf4129b82d33d719d9c5aac703120b287ce2241d",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -17123,7 +17124,9 @@
           "OVERLAY-RULE-VERSIONS-NEVER-REPEAT": {
             "v": "confirmed",
             "ev": [
-              "family text applied after the D39 verdict-first repair: monotonic per open document, close resets, reopen at 1 — matching oracle.rs:184's docs.remove branch, the identical code the Go twin's test names; one family, one answer"
+              "RESTATED 2026-08-05, and NOT because this session touched it — the edit above changed the file, and re-examining it surfaced two facts whose verdicts stood against text that had moved earlier. Re-read against the code rather than re-stamped.",
+              "Checked: `oracle.rs:192` is the `self.docs.remove(rel)` branch that clearing an overlay takes, and `:182` is the `Ok(1)` a later reopen returns — so «clearing closes the document and a later reopen starts again at 1» holds, and the counter is per open document rather than derived from content.",
+              "Verdict stands as it was; the restatement records that the text it now vouches for is the text on disk."
             ]
           },
           "OVERLAY-RULE-VALIDATE-WITHOUT-CONTENT-READS-DISK": {
@@ -17180,7 +17183,9 @@
           "CLEAN-VALIDATE-DOES-NOT-CERTIFY-A-CLEAN-FLOOR": {
             "v": "confirmed",
             "ev": [
-              "family text applied after the D39 verdict-first repair: the floor gloss names the seven shipped steps (floor.rs:57-125) with the compile riding inside the test step; the approximation posture's substance (validate does not certify the floor) unchanged and true"
+              "RESTATED for the same reason as its neighbour above, and re-checked rather than re-stamped.",
+              "The gloss names seven floor steps with the compile riding inside the test step. Checked against `rust-ai-native-cli/src/floor.rs`'s `STEPS` constant: fmt, test, clippy, conform, specmap, test-gate, fast-loop — seven, in that order, and the constant's own doc calls itself the dictionary a `[rust].floor_disable` entry is validated against, with an unknown name a hard failure rather than a silent ignore.",
+              "So the fact's substantive claim — a clean `validate` does not certify a clean floor, because the floor is those seven steps — resolves against a list the code owns."
             ]
           },
           "DIFFERENTIAL-CORPUS-CURATES-NATIVE-COMPETENCE": {
@@ -17323,7 +17328,10 @@
           "GRACEFUL-EXIT-AND-THE-NO-ZOMBIE-PROPERTY": {
             "v": "confirmed",
             "ev": [
-              "B-027 marker sweep, owner-approved 2026-08-02 («согласен, применяй»): the rule — a specified-not-built fact whose build is planned by a backlog entry carries @impl/plan naming the entry; one with no planned build carries @spec/done. This anchor's annotation now names its build entry B-044 and the marker reads @impl/plan; the fact text is otherwise unchanged and its truth is unchanged — the marker now says honestly that the realisation is planned, which is what the owner's 2026-08-01 question («почему у specified not built статус @impl/done») asked the markers to say."
+              "RESTATED 2026-08-05 because the fact's own text moved, and the move is the whole point: the clause said «the no-zombie property is test-asserted» and then carried a parenthetical admitting it was not — «What does not exist is the assertion … «test-asserted» and «spike-proven» describe a spike, not a test in the tree» — marked `@impl/plan` against B-044.",
+              "The assertion now exists and RUNS: `dropping_the_oracle_kills_the_child_process_no_zombie` in `rust-ai-native-tcg-bridge/tests/live_oracle.rs`, re-run in this tree at merge time — `test result: ok. 2 passed; 0 failed`. It reads the child PID through `ChildTransport::child_pid()`, proves the process alive, drops the wrapper so the kill-on-drop backstop is what is exercised, and polls the OS process table to a deadline, treating a recycled PID as dead by `start_time` comparison.",
+              "The two halves the clause always had right are unchanged and re-checked: the dance at `oracle.rs:356` and the backstop at `client.rs:346-350`. Marker follows the build, `@impl/plan` → `@impl/done`.",
+              "What makes this a correction rather than a stamp: the parenthetical is now a description of what the test does, where it was a confession of what did not exist."
             ]
           },
           "PATHS-BECOME-URIS-AFTER-PREFIX-STRIPPING": {
@@ -17454,8 +17462,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-02T20:25:43Z",
-        "verify_batch": "C4+C5 + C45-rust-review + D5a + D33 + D34 + D35 + D39 + D41"
+        "verified_at": "2026-08-05T19:26:33Z",
+        "verify_batch": "C4+C5 + C45-rust-review + D5a + D33 + D34 + D35 + D39 + D41 + G6-tcg-rust-restate"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md": {
@@ -18778,12 +18786,11 @@
             ]
           },
           "RISK-WINDOWS-CHILD-LIFECYCLE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/lib.rs:129  pub fn verbatim_free(path: &Path) -> PathBuf {",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/client.rs:348          let _ = self.child.kill();",
-              "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/oracle/tests.rs:99          \"verbatim leaked into a URI: {uri}\"",
-              "**one of the four named properties is not asserted anywhere.** Verbatim-free URIs are real and tested (packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/crates/rust-ai-native-tcg-bridge/src/lib.rs:129, asserted at src/oracle/tests.rs:99), kill-on-drop is real (client.rs:348), the shutdown/exit dance is real. «No-zombie assertions» are not: zero occurrences of any process-table or surviving-pid check in the package. The house lesson set is applied three-quarters of the way, and the fact says four"
+              "The no-zombie half of this fact is now TEST-ASSERTED, which is precisely what every one of these five drift verdicts was falsifying. Built 2026-08-05, one probe per stack, each in the stack's own existing live test so it inherits that test's capability gate: the child PID is read through a named observability seam on the transport, the process is PROVED alive first (else the probe would be checking emptiness), the wrapper is DROPPED rather than shut down gracefully — so the kill-on-drop backstop is what gets exercised, against a live and uncooperative child — and the OS process table is polled to a deadline until the PID is gone, with a recycled PID read as dead by comparing `start_time`.",
+              "Rust: `dropping_the_oracle_kills_the_child_process_no_zombie` in `rust-ai-native-tcg-bridge/tests/live_oracle.rs`, RUN and green in this tree — `test result: ok. 2 passed; 0 failed`.",
+              "Measured before building, and it held: no such assertion existed in any of the three stacks — the tree's only process-table probe belonged to fractality and was about a different child."
             ]
           },
           "RISK-SCOPE-CREEP-TOWARD-AN-LSP-RELAY": {
@@ -18806,7 +18813,7 @@
           }
         },
         "verified_at": "2026-08-02T20:25:43Z",
-        "verify_batch": "C4+C5 + C45-rust-review + D8b + D11-release-a + D39 + D41"
+        "verify_batch": "C4+C5 + C45-rust-review + D8b + D11-release-a + D39 + D41 + G6-no-zombie"
       }
     },
     "packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md": {
@@ -23748,9 +23755,11 @@
             ]
           },
           "RUST-SIDE-OWNS-TERMINATION": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "verdict-first repair of a false confirmed (boss re-judge 2026-08-02, F-281 family measurement; the harvest table named the neighbouring SHUTDOWN-IS-THE-ONLY-SANCTIONED-EXIT — per-anchor re-read shows THIS anchor carries the claim, the neighbour prescribes the exit path and stays confirmed): «the no-zombie property is asserted by test (the Phase-0 spike proved spawn/roundtrip/kill with no surviving pid on this box)» — a spike is not a test surface, exactly the ruling D5/F-192 already applied to the Rust twin's identical wording (TCG-ORACLE-RUST GRACEFUL-EXIT annotation: «the live test checks only that shutdown() returned … no surviving-pid or process-table probe exists»); no TS test asserts the property; resolution per owner ruling 2026-08-02 «тест на зомби лучше написать» — BACKLOG.md B-044, the text stays as the target"
+              "The no-zombie half of this fact is now TEST-ASSERTED, which is precisely what every one of these five drift verdicts was falsifying. Built 2026-08-05, one probe per stack, each in the stack's own existing live test so it inherits that test's capability gate: the child PID is read through a named observability seam on the transport, the process is PROVED alive first (else the probe would be checking emptiness), the wrapper is DROPPED rather than shut down gracefully — so the kill-on-drop backstop is what gets exercised, against a live and uncooperative child — and the OS process table is polled to a deadline until the PID is gone, with a recycled PID read as dead by comparing `start_time`.",
+              "TypeScript: `dropping_the_oracle_kills_the_node_child_no_zombie` in `typescript-ai-native-tcg/tests/oracle_e2e.rs` — that crate, not the bridge, because the bridge ships no integration-test directory and its own docs name the CLI crate's node-gated end-to-end test as where the spawn path is exercised. Compiles here; node-gated, same standing as Go.",
+              "Measured before building, and it held: no such assertion existed in any of the three stacks — the tree's only process-table probe belonged to fractality and was about a different child."
             ]
           },
           "NODE-IS-RESOLVED-FROM-PATH-BY-THE-BRIDGE": {
@@ -23812,7 +23821,7 @@
           }
         },
         "verified_at": "2026-08-02T19:00:29Z",
-        "verify_batch": "C4+C5 + D32 + D33"
+        "verify_batch": "C4+C5 + D32 + D33 + G6-no-zombie"
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-PROTOCOL-v0.1.md": {
@@ -25076,9 +25085,11 @@
             ]
           },
           "RISK-WINDOWS-CHILD-LIFECYCLE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "verdict-first repair of a false confirmed (boss re-judge 2026-08-02, F-281 family measurement): the fact claims no-zombie is «re-asserted in the hermetic test» — no TypeScript-stack test probes the process table for a surviving node child: transport.rs:206 try_wait under the «Kill-on-drop: no zombie node children» comment (:223) is implementation-side reaping, not a test assertion, and the family-wide sweep finds no assertion in any stack (the one real process-table assertion in the tree is fractality's pod/worker pair, a different product); resolution per owner ruling 2026-08-02 «тест на зомби лучше написать» — BACKLOG.md B-044, the text stays as the target"
+              "The no-zombie half of this fact is now TEST-ASSERTED, which is precisely what every one of these five drift verdicts was falsifying. Built 2026-08-05, one probe per stack, each in the stack's own existing live test so it inherits that test's capability gate: the child PID is read through a named observability seam on the transport, the process is PROVED alive first (else the probe would be checking emptiness), the wrapper is DROPPED rather than shut down gracefully — so the kill-on-drop backstop is what gets exercised, against a live and uncooperative child — and the OS process table is polled to a deadline until the PID is gone, with a recycled PID read as dead by comparing `start_time`.",
+              "TypeScript: `dropping_the_oracle_kills_the_node_child_no_zombie` in `typescript-ai-native-tcg/tests/oracle_e2e.rs` — that crate, not the bridge, because the bridge ships no integration-test directory and its own docs name the CLI crate's node-gated end-to-end test as where the spawn path is exercised. Compiles here; node-gated, same standing as Go.",
+              "Measured before building, and it held: no such assertion existed in any of the three stacks — the tree's only process-table probe belonged to fractality and was about a different child."
             ]
           },
           "RISK-STRONG-MODEL-INDIFFERENCE": {
@@ -25107,7 +25118,7 @@
           }
         },
         "verified_at": "2026-07-31T20:39:23Z",
-        "verify_batch": "C4+C5 + D8b + D11-release-a + D32"
+        "verify_batch": "C4+C5 + D8b + D11-release-a + D32 + G6-no-zombie"
       }
     },
     "packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0/README.md": {
