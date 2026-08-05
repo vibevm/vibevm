@@ -202,9 +202,7 @@ pub fn build_registry() -> Registry {
         };
         let enablement = spec.enablement;
         let synonyms: Vec<String> = spec.synonyms.iter().map(|s| s.to_string()).collect();
-        let built = Action::builder(addr)
-            .name_en(spec.name)
-            .description_en(spec.desc)
+        let built = Action::builder(addr, spec.name, spec.desc)
             .capability(spec.capability)
             .search_meta(SearchMeta::new(synonyms, Vec::new()))
             .enablement(move |ctx: &Ctx| {
@@ -212,8 +210,7 @@ pub fn build_registry() -> Registry {
                     .map(enablement)
                     .unwrap_or_else(Enablement::enabled)
             })
-            .invoke(|_ctx, _values| Box::pin(async { Ok(InvokeOutcome::Done) }))
-            .build();
+            .build(|_ctx, _values| Box::pin(async { Ok(InvokeOutcome::Done) }));
         if let Ok(action) = built {
             let _ = reg.register(action);
         }

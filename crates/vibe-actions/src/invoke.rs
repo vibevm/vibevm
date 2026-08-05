@@ -237,28 +237,30 @@ mod tests {
     fn registry() -> Registry {
         let mut reg = Registry::new();
 
-        let echo = Action::builder(addr("action://vibe.tree/echo"))
-            .name_en("Echo")
-            .description_en("Echo the text parameter back")
-            .params(ParamSchema::empty().with(ParamSpec::required("text", ParamType::String)))
-            .invoke(|_ctx, values| {
-                let out = match values.get("text") {
-                    Some(crate::params::ParamValue::String(s)) => s.clone(),
-                    _ => String::new(),
-                };
-                Box::pin(async move { Ok(InvokeOutcome::Value(out)) })
-            })
-            .build()
-            .unwrap();
+        let echo = Action::builder(
+            addr("action://vibe.tree/echo"),
+            "Echo",
+            "Echo the text parameter back",
+        )
+        .params(ParamSchema::empty().with(ParamSpec::required("text", ParamType::String)))
+        .build(|_ctx, values| {
+            let out = match values.get("text") {
+                Some(crate::params::ParamValue::String(s)) => s.clone(),
+                _ => String::new(),
+            };
+            Box::pin(async move { Ok(InvokeOutcome::Value(out)) })
+        })
+        .unwrap();
         reg.register(echo).unwrap();
 
-        let wipe = Action::builder(addr("action://vibe.tree/wipe"))
-            .name_en("Wipe")
-            .description_en("A dangerous, mutating action")
-            .capability(Capability::Dangerous)
-            .invoke(|_ctx, _values| Box::pin(async { Ok(InvokeOutcome::Done) }))
-            .build()
-            .unwrap();
+        let wipe = Action::builder(
+            addr("action://vibe.tree/wipe"),
+            "Wipe",
+            "A dangerous, mutating action",
+        )
+        .capability(Capability::Dangerous)
+        .build(|_ctx, _values| Box::pin(async { Ok(InvokeOutcome::Done) }))
+        .unwrap();
         reg.register(wipe).unwrap();
 
         reg
@@ -369,16 +371,17 @@ mod tests {
     fn enablement_predicate_over_ctx_is_pure() {
         // A sanity check that an action's enablement reads the typed context.
         struct HasSelection(bool);
-        let action = Action::builder(addr("action://vibe.tree/copy"))
-            .name_en("Copy")
-            .description_en("Copy the selection")
-            .enablement(|ctx: &Ctx| match ctx.get::<HasSelection>() {
-                Some(HasSelection(true)) => Enablement::enabled(),
-                _ => Enablement::disabled("no selection"),
-            })
-            .invoke(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
-            .build()
-            .unwrap();
+        let action = Action::builder(
+            addr("action://vibe.tree/copy"),
+            "Copy",
+            "Copy the selection",
+        )
+        .enablement(|ctx: &Ctx| match ctx.get::<HasSelection>() {
+            Some(HasSelection(true)) => Enablement::enabled(),
+            _ => Enablement::disabled("no selection"),
+        })
+        .build(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
+        .unwrap();
 
         let empty = Ctx::new();
         assert!(!action.evaluate(&empty).enabled);

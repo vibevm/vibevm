@@ -167,11 +167,8 @@ mod tests {
     }
 
     fn action(addr_str: &str, name: &'static str, description: &'static str) -> Action {
-        Action::builder(addr(addr_str))
-            .name_en(name)
-            .description_en(description)
-            .invoke(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
-            .build()
+        Action::builder(addr(addr_str), name, description)
+            .build(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
             .unwrap()
     }
 

@@ -3,7 +3,8 @@
 //! [`Capability`], and [`SearchMeta`] — and nothing else.
 //!
 //! An [`Action`] is declared through [`Action::builder`], which **requires** a
-//! name, a description, and an invoke (§3.3 — the founding human-legibility
+//! name and a description up front, and [`ActionBuilder::build`], which
+//! **requires** the invoke body (§3.3 — the founding human-legibility
 //! discipline: name and description are mandatory, non-empty, localizable
 //! messages). Presentation strings are [`Msg`]s whose catalogue key is derived
 //! from the address (§8.1). A [`ResolvedAction`] is the immutable snapshot a
@@ -190,10 +191,16 @@ pub struct Action {
 }
 
 impl Action {
-    /// Start declaring an action at `addr`. Name, description, and invoke are
-    /// required at [`ActionBuilder::build`] (§3.3).
-    pub fn builder(addr: ActionAddr) -> ActionBuilder {
-        ActionBuilder::new(addr)
+    /// Start declaring an action at `addr` with its mandatory presentation —
+    /// the inline English `name_en` and `description_en`, whose catalogue keys
+    /// are derived from the address (§3.3, §8.1). The invoke body is supplied
+    /// to [`ActionBuilder::build`].
+    pub fn builder(
+        addr: ActionAddr,
+        name_en: &'static str,
+        description_en: &'static str,
+    ) -> ActionBuilder {
+        ActionBuilder::new(addr, name_en, description_en)
     }
 
     /// The action's address.
@@ -272,35 +279,15 @@ pub struct ResolvedAction {
     pub enablement: Enablement,
 }
 
-/// Why [`ActionBuilder::build`] rejected a declaration — the human-legibility
-/// discipline enforced at construction (§3.3).
+/// Why [`ActionBuilder::build`] rejected a declaration. Presence — name,
+/// description, and the invoke body — is enforced by the construction
+/// signature (§3.3), so the only runtime check left is the value check: a
+/// supplied name or description was empty or whitespace-only.
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
 #[specmark::spec(
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#presentation"
 )]
 pub enum ActionBuildError {
-    /// No name was supplied.
-    #[error(
-        "action `{addr}` has no name — name is mandatory \
-         (violates spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#presentation; \
-          fix: call `.name_en(..)` when building the action)"
-    )]
-    MissingName {
-        /// The action being built.
-        addr: String,
-    },
-
-    /// No description was supplied.
-    #[error(
-        "action `{addr}` has no description — description is mandatory \
-         (violates spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#presentation; \
-          fix: call `.description_en(..)` when building the action)"
-    )]
-    MissingDescription {
-        /// The action being built.
-        addr: String,
-    },
-
     /// A supplied name or description was empty or whitespace-only.
     #[error(
         "action `{addr}` has an empty {field} — name and description must be non-empty, \
@@ -314,78 +301,81 @@ pub enum ActionBuildError {
         /// Which field was empty (`name` or `description`).
         field: &'static str,
     },
-
-    /// No invoke body was supplied.
-    #[error(
-        "action `{addr}` has no invoke body \
-         (violates spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#invoke; \
-          fix: call `.invoke(..)` when building the action)"
-    )]
-    MissingInvoke {
-        /// The action being built.
-        addr: String,
-    },
 }
 
-/// The ergonomic declaration path for an [`Action`] (§3). Name, description,
-/// and invoke are required; everything else defaults (empty params, an
-/// always-enabled predicate, [`Capability::Safe`], empty search metadata).
+/// The ergonomic declaration path for an [`Action`] (§3). Name and description
+/// are required at construction ([`Action::builder`]); the invoke body is
+/// required at [`ActionBuilder::build`]. Everything else defaults (empty
+/// params, an always-enabled predicate, [`Capability::Safe`], empty search
+/// metadata). The `name`/`description` setters stay as optional overrides for a
+/// caller that wants an explicit [`Msg`].
 pub struct ActionBuilder {
     addr: ActionAddr,
-    name: Option<Msg>,
-    description: Option<Msg>,
+    name: Msg,
+    description: Msg,
     icon: Option<Icon>,
     category: Option<Msg>,
     params: ParamSchema,
     enablement: Option<EnablementFn>,
-    invoke: Option<InvokeFn>,
     capability: Capability,
     search_meta: SearchMeta,
 }
 
 impl ActionBuilder {
-    fn new(addr: ActionAddr) -> Self {
+    fn new(addr: ActionAddr, name_en: &'static str, description_en: &'static str) -> Self {
+        let name = Msg::for_action(&addr, "name", name_en);
+        let description = Msg::for_action(&addr, "description", description_en);
         ActionBuilder {
             addr,
-            name: None,
-            description: None,
+            name,
+            description,
             icon: None,
             category: None,
             params: ParamSchema::empty(),
             enablement: None,
-            invoke: None,
             capability: Capability::Safe,
             search_meta: SearchMeta::default(),
         }
     }
 
-    /// Set the name from inline English; the catalogue key is derived from the
-    /// address (§8.1).
+    /// Override the name from inline English; the catalogue key is derived from
+    /// the address (§8.1). Optional — the name supplied to [`Action::builder`]
+    /// is already set.
+    ///
+    /// **These four overrides have no callers as of 2026-08-05**, and that is
+    /// the expected state rather than an oversight: moving name and description
+    /// into `builder`'s signature took every chain that used to set them there.
+    /// They are kept for the caller that supplies a pre-built [`Msg`] from a
+    /// catalogue instead of deriving one from the address — the i18n path the
+    /// `Msg` pair was written for and which nothing exercises yet. Said out
+    /// loud because unexercised surface reads as working surface, which is the
+    /// class this refactor came from.
     #[must_use]
     pub fn name_en(mut self, default_en: &'static str) -> Self {
-        self.name = Some(Msg::for_action(&self.addr, "name", default_en));
+        self.name = Msg::for_action(&self.addr, "name", default_en);
         self
     }
 
-    /// Set the name from an explicit [`Msg`].
+    /// Override the name from an explicit [`Msg`].
     #[must_use]
     pub fn name(mut self, name: Msg) -> Self {
-        self.name = Some(name);
+        self.name = name;
         self
     }
 
-    /// Set the description from inline English; the key is derived from the
-    /// address (§8.1).
+    /// Override the description from inline English; the key is derived from
+    /// the address (§8.1). Optional — the description supplied to
+    /// [`Action::builder`] is already set.
     #[must_use]
     pub fn description_en(mut self, default_en: &'static str) -> Self {
-        self.description = Some(Msg::for_action(&self.addr, "description", default_en));
+        self.description = Msg::for_action(&self.addr, "description", default_en);
         self
     }
 
-    /// Set the description from an explicit [`Msg`].
+    /// Override the description from an explicit [`Msg`].
     #[must_use]
     pub fn description(mut self, description: Msg) -> Self {
-        self.description = Some(description);
+        self.description = description;
         self
     }
 
@@ -420,16 +410,6 @@ impl ActionBuilder {
         self
     }
 
-    /// Set the async invoke body (§7.1). Required.
-    #[must_use]
-    pub fn invoke<F>(mut self, body: F) -> Self
-    where
-        F: Fn(&Ctx, ParamValues) -> BoxFuture<'static, InvokeResult> + Send + Sync + 'static,
-    {
-        self.invoke = Some(Box::new(body));
-        self
-    }
-
     /// Set the capability class. Defaults to [`Capability::Safe`].
     #[must_use]
     pub fn capability(mut self, capability: Capability) -> Self {
@@ -444,36 +424,28 @@ impl ActionBuilder {
         self
     }
 
-    /// Finish, enforcing the §3.3 legibility discipline: name and description
-    /// are mandatory and non-empty, and an invoke body is required.
-    pub fn build(self) -> Result<Action, ActionBuildError> {
+    /// Finish, taking the mandatory async invoke body (§7.1) and enforcing the
+    /// §3.3 legibility discipline: name and description must be non-empty.
+    /// Presence — name, description, and the invoke body — is already fixed by
+    /// the construction signature, so only the value check remains here.
+    pub fn build<F>(self, body: F) -> Result<Action, ActionBuildError>
+    where
+        F: Fn(&Ctx, ParamValues) -> BoxFuture<'static, InvokeResult> + Send + Sync + 'static,
+    {
         let addr_str = self.addr.to_string();
 
-        let name = self.name.ok_or_else(|| ActionBuildError::MissingName {
-            addr: addr_str.clone(),
-        })?;
-        if name.default_en().trim().is_empty() {
+        if self.name.default_en().trim().is_empty() {
             return Err(ActionBuildError::EmptyPresentation {
                 addr: addr_str,
                 field: "name",
             });
         }
-
-        let description = self
-            .description
-            .ok_or_else(|| ActionBuildError::MissingDescription {
-                addr: addr_str.clone(),
-            })?;
-        if description.default_en().trim().is_empty() {
+        if self.description.default_en().trim().is_empty() {
             return Err(ActionBuildError::EmptyPresentation {
                 addr: addr_str,
                 field: "description",
             });
         }
-
-        let invoke = self.invoke.ok_or_else(|| ActionBuildError::MissingInvoke {
-            addr: addr_str.clone(),
-        })?;
 
         let enablement = self
             .enablement
@@ -482,14 +454,14 @@ impl ActionBuilder {
         Ok(Action {
             addr: self.addr,
             presentation: Presentation {
-                name,
-                description,
+                name: self.name,
+                description: self.description,
                 icon: self.icon,
                 category: self.category,
             },
             params: self.params,
             enablement,
-            invoke,
+            invoke: Box::new(body),
             capability: self.capability,
             search_meta: self.search_meta,
         })
@@ -506,15 +478,18 @@ mod tests {
     }
 
     fn minimal() -> ActionBuilder {
-        Action::builder(addr())
-            .name_en("Copy as Markdown")
-            .description_en("Copy the selected node as a Markdown link")
-            .invoke(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
+        Action::builder(
+            addr(),
+            "Copy as Markdown",
+            "Copy the selected node as a Markdown link",
+        )
     }
 
     #[test]
     fn builder_produces_a_well_formed_action() {
-        let action = minimal().build().unwrap();
+        let action = minimal()
+            .build(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
+            .unwrap();
         assert_eq!(action.addr(), &addr());
         assert_eq!(
             action.presentation().name().default_en(),
@@ -526,7 +501,9 @@ mod tests {
 
     #[test]
     fn name_key_is_derived_from_the_address() {
-        let action = minimal().build().unwrap();
+        let action = minimal()
+            .build(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
+            .unwrap();
         assert_eq!(
             action.presentation().name().key().as_str(),
             "action.vibe.tree/copy.markdown.name"
@@ -537,33 +514,15 @@ mod tests {
         );
     }
 
-    #[test]
-    fn build_requires_a_name() {
-        let err = Action::builder(addr())
-            .description_en("desc")
-            .invoke(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
-            .build()
-            .unwrap_err();
-        assert!(matches!(err, ActionBuildError::MissingName { .. }));
-    }
-
-    #[test]
-    fn build_requires_a_description() {
-        let err = Action::builder(addr())
-            .name_en("Copy")
-            .invoke(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
-            .build()
-            .unwrap_err();
-        assert!(matches!(err, ActionBuildError::MissingDescription { .. }));
-    }
+    // Presence of name/description/invoke is now enforced by the construction
+    // signature, so the absence tests (MissingName / MissingDescription /
+    // MissingInvoke) are gone — only the value check (EmptyPresentation) is
+    // exercised below.
 
     #[test]
     fn build_rejects_an_empty_name() {
-        let err = Action::builder(addr())
-            .name_en("   ")
-            .description_en("desc")
-            .invoke(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
-            .build()
+        let err = Action::builder(addr(), "   ", "desc")
+            .build(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
             .unwrap_err();
         assert!(matches!(
             err,
@@ -572,18 +531,24 @@ mod tests {
     }
 
     #[test]
-    fn build_requires_an_invoke_body() {
-        let err = Action::builder(addr())
-            .name_en("Copy")
-            .description_en("desc")
-            .build()
+    fn build_rejects_an_empty_description() {
+        let err = Action::builder(addr(), "Copy", "   ")
+            .build(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
             .unwrap_err();
-        assert!(matches!(err, ActionBuildError::MissingInvoke { .. }));
+        assert!(matches!(
+            err,
+            ActionBuildError::EmptyPresentation {
+                field: "description",
+                ..
+            }
+        ));
     }
 
     #[test]
     fn resolve_produces_an_immutable_snapshot() {
-        let action = minimal().build().unwrap();
+        let action = minimal()
+            .build(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
+            .unwrap();
         let cat = Catalogue::new("en");
         let snap = action.resolve(&Ctx::new(), &cat);
         assert_eq!(snap.addr, addr());

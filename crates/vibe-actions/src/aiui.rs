@@ -122,31 +122,33 @@ mod tests {
     fn registry() -> Registry {
         let mut reg = Registry::new();
 
-        let echo = Action::builder(addr("action://vibe.tree/echo"))
-            .name_en("Echo")
-            .description_en("Echo the text parameter back")
-            .params(ParamSchema::empty().with(ParamSpec::required("text", ParamType::String)))
-            .invoke(|_ctx, values| {
-                let out = match values.get("text") {
-                    Some(ParamValue::String(s)) => s.clone(),
-                    _ => String::new(),
-                };
-                Box::pin(async move { Ok(InvokeOutcome::Value(out)) })
-            })
-            .build()
-            .unwrap();
+        let echo = Action::builder(
+            addr("action://vibe.tree/echo"),
+            "Echo",
+            "Echo the text parameter back",
+        )
+        .params(ParamSchema::empty().with(ParamSpec::required("text", ParamType::String)))
+        .build(|_ctx, values| {
+            let out = match values.get("text") {
+                Some(ParamValue::String(s)) => s.clone(),
+                _ => String::new(),
+            };
+            Box::pin(async move { Ok(InvokeOutcome::Value(out)) })
+        })
+        .unwrap();
         reg.register(echo).unwrap();
 
-        let paste = Action::builder(addr("action://vibe.tree/paste"))
-            .name_en("Paste")
-            .description_en("Paste over the current selection")
-            .enablement(|ctx: &Ctx| match ctx.get::<Selection>() {
-                Some(Selection(true)) => Enablement::enabled(),
-                _ => Enablement::disabled("no selection"),
-            })
-            .invoke(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
-            .build()
-            .unwrap();
+        let paste = Action::builder(
+            addr("action://vibe.tree/paste"),
+            "Paste",
+            "Paste over the current selection",
+        )
+        .enablement(|ctx: &Ctx| match ctx.get::<Selection>() {
+            Some(Selection(true)) => Enablement::enabled(),
+            _ => Enablement::disabled("no selection"),
+        })
+        .build(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
+        .unwrap();
         reg.register(paste).unwrap();
 
         reg
@@ -190,13 +192,14 @@ mod tests {
     #[test]
     fn list_actions_skips_invisible_actions() {
         let mut reg = Registry::new();
-        let hidden = Action::builder(addr("action://vibe.tree/secret"))
-            .name_en("Secret")
-            .description_en("Hidden unless a flag is set")
-            .enablement(|_c| Enablement::hidden())
-            .invoke(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
-            .build()
-            .unwrap();
+        let hidden = Action::builder(
+            addr("action://vibe.tree/secret"),
+            "Secret",
+            "Hidden unless a flag is set",
+        )
+        .enablement(|_c| Enablement::hidden())
+        .build(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
+        .unwrap();
         reg.register(hidden).unwrap();
         assert!(list_actions(&reg, &Ctx::new()).is_empty());
     }
@@ -264,13 +267,14 @@ mod tests {
         // A dangerous action is refused under a safe-only scope — the AIUI
         // inherits the core's capability check verbatim (§7.2).
         let mut reg = Registry::new();
-        let wipe = Action::builder(addr("action://vibe.tree/wipe"))
-            .name_en("Wipe")
-            .description_en("A dangerous, irreversible action")
-            .capability(Capability::Dangerous)
-            .invoke(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
-            .build()
-            .unwrap();
+        let wipe = Action::builder(
+            addr("action://vibe.tree/wipe"),
+            "Wipe",
+            "A dangerous, irreversible action",
+        )
+        .capability(Capability::Dangerous)
+        .build(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
+        .unwrap();
         reg.register(wipe).unwrap();
 
         let out = invoke(

@@ -207,11 +207,8 @@ mod tests {
     }
 
     fn action(addr_str: &str, name: &'static str) -> Action {
-        Action::builder(addr(addr_str))
-            .name_en(name)
-            .description_en("a test action")
-            .invoke(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
-            .build()
+        Action::builder(addr(addr_str), name, "a test action")
+            .build(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
             .unwrap()
     }
 
@@ -388,12 +385,9 @@ mod tests {
     #[test]
     fn capability_is_carried_through_registration() {
         let mut reg = Registry::new();
-        let danger = Action::builder(addr("action://vibe.tree/wipe"))
-            .name_en("Wipe")
-            .description_en("dangerous")
+        let danger = Action::builder(addr("action://vibe.tree/wipe"), "Wipe", "dangerous")
             .capability(Capability::Dangerous)
-            .invoke(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
-            .build()
+            .build(|_c, _v| Box::pin(async { Ok(InvokeOutcome::Done) }))
             .unwrap();
         reg.register(danger).unwrap();
         assert_eq!(
