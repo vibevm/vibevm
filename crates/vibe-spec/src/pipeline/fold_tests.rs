@@ -495,3 +495,7 @@ fn a_duplicate_at_an_inner_level_names_the_inner_node() {
         other => panic!("expected DuplicateId at the inner node, got {other:?}"),
     }
 }
+
+// (The four B-056 source-section collision tests moved to `collision_tests`
+// when `fold_tests` neared the 600-line budget — same seam that split
+// `fold_tests` out of `tests`: one responsibility per file.)
