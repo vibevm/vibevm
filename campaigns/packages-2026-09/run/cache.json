@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T14:57:02Z",
+  "updated_at": "2026-08-06T14:58:55Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -29574,7 +29574,7 @@
       "unit_count": 23,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "c71f34595f5b66b3a06b11ca117ff87af8af56b616d5145b213f931ec20d0106",
+        "processed_hash": "ba0b392ec602f202c56e77eb10a4ae855f7cc2ebf815c323df11fc540203a760",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -30446,10 +30446,110 @@
               1,
               2
             ]
+          },
+          "THE-CARRIER-CHOICE-LIVES-IN-FLOW-ADDRESSABLE-SPECS": {
+            "v": "confirmed",
+            "src": [
+              1
+            ],
+            "ev": [
+              "the address it delegates to resolves: packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/spec-tree-layout.md:78 carries `## What goes where {#what-goes-where}`",
+              "and the rule really is there rather than merely the heading: that section holds the two-carrier choice and its six facts, all judged 2026-08-06 in this same session",
+              "the delegation is the correct direction — this document defines a format, that one decides whether to pay for it, and neither restates the other"
+            ]
+          },
+          "A-PLAN-REFERENCES-FEATURE-DOCUMENTS-IT-DOES-NOT-RESTATE-THEM": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the host's live plan follows it and shows the shape: the owner's programme of 2026-08-06 names spec/design/command-nodes.md, the surfaces census and the harvest measurements by path and stops there, rather than restating their contents",
+              "and where it did carry substance, that substance moved out on closure rather than being duplicated — the plan-closure ruling's own row is now one tombstone line pointing at two spec elements",
+              "the failure the rule prevents is measured in this repository elsewhere: a load-bearing architectural model retold twelve times across a WAL, two campaign documents and about ten harvest files, with no verifiable home — which is the same defect this fact forbids at the plan's own boundary"
+            ]
+          },
+          "the-plan-is-the-copy-that-goes-stale": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "source 1: the law it applies exists at the anchor it names — packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:194, `A normative value lives at exactly one anchor` — so the echo names its anchor as that law itself requires, which is the fact obeying the rule it cites",
+              "source 2: the asymmetry it asserts — the plan is the copy that goes stale, because it is the one built to be thrown away — is observed in this repository rather than assumed. This session found the owner's plan describing a number, the specification carrying it, and the plan's copy right; and found the reverse case too, where a campaign document held a correct finding that was never acted on because its zone is disposable",
+              "so «two statements of one truth with nothing forcing them to agree» is not a worry about the future here; it is the class this campaign has spent the week finding"
+            ]
+          },
+          "A-PLAN-MUST-BE-DELETABLE-WHEN-EXECUTED": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the host executed exactly this on 2026-08-06 and the plan survived the test in the only way that counts — by having its content leave: the plan-closure ruling moved into two spec documents, and its row in the programme became a one-line tombstone that nothing cites",
+              "the same shape repeated twice more the same day: the auto-publication contract moved into PROP-005 and the index-authentication contract into PROP-002, each in the commit that built the thing, leaving the programme rows with nothing load-bearing in them",
+              "the rule's own diagnosis — if deleting a finished plan breaks something, that something was depending on scaffolding — is what the citation measurement checks: three plan-row citations across 718 authored files, one of them inside the plan itself"
+            ]
+          },
+          "THE-TEST-IS-DELETION-NOT-TIDINESS": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the host adopted the same test for a different subsystem on the same day, which is evidence the form travels: the TUI's completion boundary is «delete it on paper and see whether anything but presentation is lost», ruled by the owner and recorded in PROP-037 §0",
+              "and the argument the fact gives for preferring a test to a preference — a project cannot tell by looking whether its plans are load-bearing — is borne out by the citation sweep: nothing in this tree announced that eight citations were dangling; a deliberate question had to be asked",
+              "one question, answered the same way for every plan, is what makes it a test rather than a judgement call"
+            ]
+          },
+          "SIGNIFICANT-CONTENT-MOVES-INTO-THE-SPECS-ON-CLOSURE": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "three instances in one day on the host, each in the commit that closed the item: the plan-closure ruling into the addressing and lifecycle flows; the auto-publication contract into PROP-005 §2.17; the index-authentication contract into PROP-002 §2.2.1.1",
+              "the three categories the fact names are all represented — a rule the work established, decisions with their reasons (including the rejected alternatives), and measurements that will be re-read (the perimeter of the TUI count, recorded so the next reader does not re-derive it wrongly)",
+              "and the residue clause holds: what stayed in the plan is the record of doing, which git keeps — the programme's closed rows carry a line each and no content"
+            ]
+          },
+          "TOMBSTONES-ARE-PROCESS-SUPPORT-NOT-STRUCTURE": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the host's tombstones are exactly the described shape: thirty-five closed backlog rows each reduced to one line naming the commit that carries the ruling, and the programme's closed rows the same",
+              "the «nothing may cite it» clause is measured rather than asserted: 718 authored markdown files carry three citations into backlog rows, and every one of the three points at a row that is still OPEN — not a single citation into a tombstone",
+              "and the «goes when the plan goes» clause is structural here: the tombstones live inside the plan file itself, so deleting the plan deletes them, which is what makes the claim true by construction rather than by discipline"
+            ]
+          },
+          "WHY-DISPOSABLE-ZONES-KEEP-DURABLE-FINDINGS": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the failure it describes is not a shape recognised in the abstract — this repository produced the specimen: five orphaned verdicts were measured, named and written into campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md on 2026-07-28, together with the mechanism that produced them",
+              "they were still there, untouched, on 2026-08-06. Nothing was wrong with the analysis; it was filed in a zone this project's own rules call disposable by design, and it behaved exactly as that promises",
+              "which is the fact's own sentence — the zone was not wrong, filing something durable there was — instantiated at full cost, nine days of it"
+            ]
+          },
+          "THE-ADDRESSING-HALF-LIVES-IN-ADDRESSABLE-SPECS": {
+            "v": "confirmed",
+            "src": [
+              1
+            ],
+            "ev": [
+              "the address resolves: ADDRESSABLE-SPECS-PROTOCOL.md:204 carries `## Never cite something built to disappear {#disposable-targets}`",
+              "and the pairing is symmetric rather than one-way: that section's own `THE-LIFECYCLE-HALF-LIVES-IN-CAMPAIGN-PLANS` points back here at `#temporary`, so each half names the other and neither restates it",
+              "both halves were judged in this same session, and the split holds under reading: this document says nothing about what a citation may address, and that one says nothing about tombstones or deletability"
+            ]
           }
         },
-        "verified_at": "2026-07-28T21:30:50Z",
-        "verify_batch": "W4 + D2a + D6 + D10-plans"
+        "verified_at": "2026-08-06T14:58:55Z",
+        "verify_batch": "W4 + D2a + D6 + D10-plans + DEBT-2026-08-06-G"
       }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/execution-ledger.md": {
