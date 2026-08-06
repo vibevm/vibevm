@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T12:57:59Z",
+  "updated_at": "2026-08-06T13:54:05Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -93514,7 +93514,7 @@
         "coverage_note": "verdicts keyed by fact anchors; table cell-markers inherit their row anchor; <status> elements judged as _elements",
         "fact_count": 29,
         "marker_count": 34,
-        "processed_hash": "a6597c0ceb49805d8bc01b2ed8c6cb295a2023041cddbc31eebee8502c2a01ed",
+        "processed_hash": "0cc63bcb1ba1947e561c77d167d4eecb7e4070a2af8ba736ae3deebfc3c9067b",
         "verdicts": {
           "genre-definition": {
             "v": "confirmed",
@@ -93819,10 +93819,20 @@
               "spec/design/new-rule-classes.md (227 lines); grep yields fork №1 only; the three e13 censuses on disk; TOOLING-MAP ##FORK-COMPUTED-NAMES",
               "found: the map's fork entry carries the same three figures verbatim — «40 manifest-bearing cells, 14 already compliant … 13 production renames in the host `crates/`»."
             ]
+          },
+          "idx-command-nodes": {
+            "v": "confirmed",
+            "ev": [
+              "the row's target exists and is what the row says it is: spec/design/command-nodes.md, 16514 bytes, authored 2026-08-06, titled `Command nodes in the map` and opening on the B-019(b) design",
+              "the measurement the row stands on exists: the archive directory cache/agents/sorted/M-B019B/ is present on this machine",
+              "the row's load-bearing claim `item_kind is an open string in the wire schema` holds: packages/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/specmap.jtd.json:92-94 declares `\"item_kind\": {\"type\": \"string\"}` with no enum, while its neighbours in the same properties block are constrained",
+              "the row's claim that part (v) is deliberately outside the design is corroborated by BACKLOG.md `@fact:B019-V`, which records (v)'s systems-boundary question as unanswered and owner-bound",
+              "perimeter of this verdict: it judges the INDEX ROW — that the pointer resolves and the summary is faithful to its target. The 37 facts inside command-nodes.md are unjudged and are a separate debt, not covered here"
+            ]
           }
         },
-        "verified_at": "2026-08-04T23:26:24Z",
-        "verify_batch": "c2-design + D14 + H3-design-readme-index"
+        "verified_at": "2026-08-06T13:54:05Z",
+        "verify_batch": "c2-design + D14 + H3-design-readme-index + DEBT-2026-08-06-A"
       }
     },
     "spec/design/action-system.md": {
@@ -103982,7 +103992,7 @@
       }
     },
     "spec/modules/vibe-progress/OWNER-GUIDE.md": {
-      "content_hash": "092733216e41332f3e1330c29f6aa9ab27aae37f538d647d7ff90dd778afce5d",
+      "content_hash": "38dde5f7d82ccdd0263317935840e5aa4d056e0b438e3db82b6b9e52900fadbf",
       "rollup": {
         "explicit": [
           "doc",
@@ -104008,7 +104018,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (11 cells); document <status> judged as _elements",
         "fact_count": 69,
         "marker_count": 70,
-        "processed_hash": "351b6bb9d888a9c29a4d2e279528572c19664d61665f503c4880b6d4c8c485e3",
+        "processed_hash": "38dde5f7d82ccdd0263317935840e5aa4d056e0b438e3db82b6b9e52900fadbf",
         "verdicts": {
           "guide-purpose": {
             "v": "confirmed",
@@ -104145,22 +104155,25 @@
           "placement-lead": {
             "v": "confirmed",
             "ev": [
-              "F-020: guide §1 predates the fact amendment - lists 4 placements where the contract has 6 (PROP-043 §3.8: + list items item 4, table cells item 5) and says nothing of ##<ID> fact anchors / anchored-when-marked",
-              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
+              "re-judgement: the earlier verdict was formed before the markup migration moved this fact's text; it was correct when formed and is restated here against the current wording",
+              "the guide says six granularities and points at the placement law; PROP-043 spec/modules/vibe-progress/PROP-043-progress-markup.md:218 states `Six granularities, one rule each - and no ambiguous positions`",
+              "all six are present in that law and each is checked in its own verdict below: document :220, section :225, paragraph :229, list item :233, table cell :310, fragment :316"
             ]
           },
           "PLACE-DOCUMENT": {
             "v": "confirmed",
             "ev": [
-              "F-020: 'до первого заголовка' misses the pilot amendment - in a preamble-less file (this repo's standard shape) the DOCUMENT marker sits right after the first heading (PROP-043 §3.8 item 1; markers.rs implements exactly that)",
-              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
+              "re-judgement after the migration moved the text; substance unchanged",
+              "PROP-043-progress-markup.md:220-224 - marker in the preamble before the first heading, and the 2026-07-24 pilot amendment that a preamble-less document (the standard shape of this repo) takes the standalone marker after its first heading as the DOCUMENT marker",
+              "the guide states both halves, including the preamble-less case, which is the half a reader of this repository actually needs"
             ]
           },
           "PLACE-SECTION": {
             "v": "confirmed",
             "ev": [
-              "F-020: 'сразу после заголовка = секция' is wrong for a preamble-less file's FIRST heading - that position is the document marker (PROP-043 §3.8 items 1-2; markers.rs 'items 1-2 combined')",
-              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
+              "re-judgement after the migration moved the text; substance unchanged",
+              "PROP-043-progress-markup.md:225-228 - marker on its own line immediately after the heading line, for any heading other than a preamble-less file's first one, and this is the only legal standalone position inside a body",
+              "the guide carries the exception verbatim in substance"
             ]
           },
           "PLACE-PARAGRAPH": {
@@ -104310,8 +104323,10 @@
           "FOUR-SURVIVORS": {
             "v": "confirmed",
             "ev": [
-              "contradicts §7.4: the four surviving zone parts are baseline.json+deferrals.md+harvest/+tasks/ (ZONE-LAYOUT/ZONE-LIFETIMES); the guide omits tasks/ and adds 'сами маркеры' (markers do survive but are corpus, not zone); same guide-refresh sweep as F-020",
-              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
+              "re-judgement after the migration moved the text; substance unchanged",
+              "PROP-043-progress-markup.md:548-552 (`ZONE-LAYOUT`) lists the zone as `baseline.json`, `deferrals.md`, `harvest/`, `tasks/` plus the ephemeral `run/`",
+              "PROP-043-progress-markup.md:555-556 (`ZONE-LIFETIMES`) states `run/` is disposable after close-out and the other four survive between campaigns - exactly the four the guide names",
+              "the guide's rider that markers also outlive a campaign because they live in the specs rather than in the zone agrees with `ZONE-EXCLUDED` at :553-554, which excludes the zone from markup scope"
             ]
           },
           "ERASURE-SAFE": {
@@ -104353,24 +104368,44 @@
           "PLACE-LIST-ITEM": {
             "v": "confirmed",
             "ev": [
-              "D d2d 2026-07-25: minted by this wave - the three placement rows the guide was missing (list item, table cell, fact anchor + anchored-when-marked), bringing §1 up to PROP-043 §3.8's six granularities"
+              "re-judgement after the migration moved the text",
+              "PROP-043-progress-markup.md:233-238 - every item of a bulleted or numbered list is a unit of its own at every nesting level, and its marker sits inside the item's own text, FIRST or LAST token",
+              "recorded narrowing, so the next reader does not mistake it for a contradiction: the guide names the LAST-token position only. That is one of the two legal positions, not a false statement about the tool - and it is the position an anchored fact must use anyway, since the anchor occupies the first token"
             ]
           },
           "PLACE-TABLE-CELL": {
             "v": "confirmed",
             "ev": [
-              "D d2d 2026-07-25: minted by this wave - the three placement rows the guide was missing (list item, table cell, fact anchor + anchored-when-marked), bringing §1 up to PROP-043 §3.8's six granularities"
+              "re-judgement after the migration moved the text; substance unchanged",
+              "PROP-043-progress-markup.md:310-315 - every non-empty body cell of a table is a unit of its own and its marker sits inside the cell's text; header and delimiter rows are structure, not units"
             ]
           },
           "PLACE-FACT-ANCHOR": {
             "v": "confirmed",
             "ev": [
-              "D d2d 2026-07-25: minted by this wave - the three placement rows the guide was missing (list item, table cell, fact anchor + anchored-when-marked), bringing §1 up to PROP-043 §3.8's six granularities"
+              "RE-JUDGEMENT THAT REPLACES A VERDICT WHICH HAD GONE FALSE, and the record of what it replaces: the prior verdict was formed against a text that taught the anchor form as `##<ID>`. That was true when judged and became false on 2026-08-06, when the canonical spelling became `@fact:<ID>` and `##<ID>` was demoted to a legacy form that is still READ but no longer WRITTEN. The owner's own guide was therefore teaching the retired spelling",
+              "the law it must agree with: PROP-043-progress-markup.md:239-241 - `A stable fact address is written @fact:<ID> as the first token of a paragraph or list item. The legacy spelling ##<ID> means the same and is still read`",
+              "the text was corrected in the same landing as this verdict, per the rule that content moved or repaired is judged in the same pass; the guide now names `@fact:<ID>` as what is written and `##<ID>` as what is still read",
+              "the second half of the fact - the anchored-when-marked law, a marked fact must be anchored - holds unchanged: PROP-043-progress-markup.md:585 makes a marked unit with no anchor a `check` error",
+              "the stale section pointer that stood beside it was dropped rather than renumbered: the law sits in the placement section, not the granularity one, and the project's own addressing rule prefers naming the element over citing a section number"
+            ]
+          },
+          "DAILY-COMMANDS": {
+            "v": "confirmed",
+            "ev": [
+              "this is an `@fact/code:` fact, so the fenced block IS its body and every command line in it is a claim verified below, one by one",
+              "`vibe progress check --exhaustive` — the subcommand at crates/vibe-cli/src/cli/progress.rs:32 (`Check(ProgressCheckArgs)`), the flag at progress.rs:108 (`pub exhaustive: bool`)",
+              "the same line's claim `since 2026-08-06 it also stands in the gate panel` — tools/self-check.sh:623-624 runs `cargo run --quiet -p vibe-cli -- progress check --exhaustive` as a named panel step. This is the clause that once asserted the opposite of the truth",
+              "`vibe progress report --md` — progress.rs:35 (`Report(ProgressReportArgs)`), `--md` at progress.rs:126-127",
+              "`--view todo|qa|remove|doc` — progress.rs:130-131 declares `pub view: Option<String>` documented as `done | todo | qa | remove | doc`, which covers all four spellings the fence uses",
+              "`--audience user` — progress.rs:134-135 declares `pub audience: Option<String>` documented as `user | author | dev`",
+              "`vibe progress weave --digest` — progress.rs:43 (`Weave(ProgressWeaveArgs)`), `--digest` at progress.rs:145-146",
+              "verified against the clap definitions rather than against `--help` output, so the evidence is file:line a reader can re-check without running anything"
             ]
           }
         },
-        "verified_at": "2026-07-25T14:01:39Z",
-        "verify_batch": "c4a-vibe-progress + d2d"
+        "verified_at": "2026-08-06T13:54:05Z",
+        "verify_batch": "c4a-vibe-progress + d2d + DEBT-2026-08-06-A + DEBT-2026-08-06-B"
       }
     },
     "spec/modules/vibe-progress/PROP-043-progress-markup.md": {

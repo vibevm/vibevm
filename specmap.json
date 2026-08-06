@@ -43992,7 +43992,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:c0d01aad6fec95356088f5234bc69cd6ca54ee174500ff613a1398619ad8883c",
+      "content_hash": "sha256:a4f2851da1f53094243b428d5110c0cb775fdd240e18dabdd65320ef7c6101a9",
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "Progress Control — руководство владельца",
@@ -44163,10 +44163,10 @@
     },
     {
       "anchor": "PLACE-FACT-ANCHOR",
-      "content_hash": "sha256:e7e5282a0309e8735c9c2e0dba5c90e9bf5e5bfd3cf28043ed27243ea7cdb6f1",
+      "content_hash": "sha256:823f9902c1f4f06ef1408475cc9735cd30290f67705e3a80f73e2ef29638b584",
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
-      "heading": "Любая из этих единиц может нести якорь факта `##<ID>` в начале —",
+      "heading": "Любая из этих единиц может нести якорь факта `@fact:<ID>` в начале —",
       "line": 65,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#PLACE-FACT-ANCHOR"
     },
@@ -44176,7 +44176,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "Одинокий маркер между",
-      "line": 68,
+      "line": 69,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#STANDALONE-ERROR"
     },
     {
@@ -44185,7 +44185,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "Правило гигиены между кампаниями (одно): **правите юнит спеки — обновите его",
-      "line": 89,
+      "line": 90,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#HYGIENE-RULE"
     },
     {
@@ -44194,7 +44194,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "Всё остальное караулит инструмент. @status:doc/done",
-      "line": 91,
+      "line": 92,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#tool-guards"
     },
     {
@@ -44203,7 +44203,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "Кампания живёт в `campaigns/<id>/` (например `campaigns/progress-2026-08/`). @status:doc/done",
-      "line": 95,
+      "line": 96,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#campaign-home"
     },
     {
@@ -44212,7 +44212,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "Все стадии, гейты и правила — в плане кампании; здесь — ваша сторона. @status:doc/done",
-      "line": 96,
+      "line": 97,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#guide-side-pointer"
     },
     {
@@ -44221,7 +44221,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "Первый экран — Resume: что не завершено (красным), что дальше, свежесть",
-      "line": 104,
+      "line": 105,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#DASH-RESUME"
     },
     {
@@ -44230,7 +44230,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "Дальше: Корпус (дерево файлов цветом по статусу), @status:doc/done",
-      "line": 107,
+      "line": 108,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#DASH-CORPUS"
     },
     {
@@ -44239,7 +44239,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "Сшивка (график",
-      "line": 108,
+      "line": 109,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#DASH-STITCHING"
     },
     {
@@ -44248,7 +44248,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "Задачи (чем занят",
-      "line": 110,
+      "line": 111,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#DASH-TASKS"
     },
     {
@@ -44257,7 +44257,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "Дашборд read-only: он ничего не считает и",
-      "line": 112,
+      "line": 113,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#DASH-READ-ONLY"
     },
     {
@@ -44266,7 +44266,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "(Терминология: эта страница — «дашборд», не",
-      "line": 114,
+      "line": 115,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#dash-terminology"
     },
     {
@@ -44275,7 +44275,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "**A (scaffold):** ратифицировать PROP-043; подтвердить имя зоны",
-      "line": 119,
+      "line": 120,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#OWNER-A"
     },
     {
@@ -44284,7 +44284,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "**B (разметка):** выборочно читать диффы батчей — маркеры и сплиты, смысл",
-      "line": 121,
+      "line": 122,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#OWNER-B"
     },
     {
@@ -44293,7 +44293,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "**C (верификация):** ничего решать не нужно; полезно поглядывать на",
-      "line": 123,
+      "line": 124,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#OWNER-C"
     },
     {
@@ -44302,7 +44302,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "**D (сшивка):** к вам приходят только **эскалации** — пары документов, чей",
-      "line": 126,
+      "line": 127,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#OWNER-D"
     },
     {
@@ -44311,7 +44311,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "**E (кодирование):** приёмка спорных PR после ревью Fable; вердикты по",
-      "line": 131,
+      "line": 132,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#OWNER-E"
     },
     {
@@ -44320,7 +44320,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "**F (планы):** три плана (release / улучшения / идеи) приходят к вам на",
-      "line": 133,
+      "line": 134,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#OWNER-F"
     },
     {
@@ -44329,7 +44329,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "**G (документация):** вычитка глав двух гайдов — регистр и правда. Все",
-      "line": 135,
+      "line": 136,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#OWNER-G"
     },
     {
@@ -44338,7 +44338,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "Ничего не чините руками. Новая сессия (любая — Fable или Opus) начинает с: @status:doc/done",
-      "line": 141,
+      "line": 142,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#crash-recovery"
     },
     {
@@ -44347,7 +44347,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "RESUME.md сгенерирован журналом и говорит буквально: какой шаг не закрыт,",
-      "line": 147,
+      "line": 148,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#RESUME-CONTRACT"
     },
     {
@@ -44356,7 +44356,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "Максимальная",
-      "line": 149,
+      "line": 150,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#MAX-LOSS-ONE-STEP"
     },
     {
@@ -44365,7 +44365,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "Инструмент сам разложит корпус на «новое / изменившееся (перепроверить) /",
-      "line": 159,
+      "line": 160,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#RESCAN-TRIAGE"
     },
     {
@@ -44374,7 +44374,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "Между кампаниями из зоны кампании хранятся только четыре вещи",
-      "line": 162,
+      "line": 163,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#FOUR-SURVIVORS"
     },
     {
@@ -44383,7 +44383,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "Всё остальное можно",
-      "line": 166,
+      "line": 167,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#ERASURE-SAFE"
     },
     {
@@ -44392,7 +44392,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "**Маркер спорный / кажется неправдой** — правьте смело или ставьте",
-      "line": 171,
+      "line": 172,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#EMERG-DISPUTED-MARKER"
     },
     {
@@ -44401,7 +44401,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "**Инструмент ругается на легальный, по-вашему, случай** — это баг",
-      "line": 174,
+      "line": 175,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#EMERG-TOOL-FALSE-POSITIVE"
     },
     {
@@ -44410,7 +44410,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "**Дашборд показывает странное** — он лишь проекция; истина в",
-      "line": 177,
+      "line": 178,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#EMERG-DASHBOARD-WEIRD"
     },
     {
@@ -44419,7 +44419,7 @@
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "**Хочется бросить кампанию посреди** — безопасно в любой момент: границы",
-      "line": 180,
+      "line": 181,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/OWNER-GUIDE#EMERG-ABANDON-SAFE"
     },
     {

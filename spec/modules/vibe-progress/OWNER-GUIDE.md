@@ -62,8 +62,9 @@
 - @fact:PLACE-LIST-ITEM последним токеном внутри элемента списка (элемент списка); @status:doc/done
 - @fact:PLACE-TABLE-CELL внутри ячейки таблицы (ячейка); @status:doc/done
 - @fact:PLACE-FRAGMENT парным тегом вокруг текста (фрагмент). @status:doc/done
-- @fact:PLACE-FACT-ANCHOR Любая из этих единиц может нести якорь факта `##<ID>` в начале —
-  тогда она адресуема по `spec://…#<ID>`. Закон anchored-when-marked (PROP-043 §3.9):
+- @fact:PLACE-FACT-ANCHOR Любая из этих единиц может нести якорь факта `@fact:<ID>` в начале —
+  тогда она адресуема по `spec://…#<ID>`. Прежнее написание `##<ID>` значит ровно то
+  же и по-прежнему читается, но пишется теперь первое. Закон anchored-when-marked:
   размеченный факт обязан быть заякорен; @status:doc/done
 - @fact:STANDALONE-ERROR Одинокий маркер между
   абзацами — ошибка, инструмент его отвергнет. @status:doc/done
