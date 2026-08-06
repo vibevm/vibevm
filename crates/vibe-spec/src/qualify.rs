@@ -186,9 +186,17 @@ fn content_offset(line: &str) -> usize {
     lead
 }
 
-/// A `##<ID>` fact-id definition at the line's content offset, if the line
-/// opens one: `##`, then a valid id `[A-Za-z][A-Za-z0-9_-]*`, then whitespace or
+/// A fact-id definition at the line's content offset, if the line opens one:
+/// the opener, then a valid id `[A-Za-z][A-Za-z0-9_-]*`, then whitespace or
 /// EOL. Returns the id's byte range and the id.
+///
+/// Both openers are recognised — the qualified `@fact:<ID>` and the legacy
+/// `##<ID>` — because this is the pass that RENAMES labels when snippets from
+/// different packages are spliced into one lane. A reader that misses an
+/// opener does not fail loudly here: it simply leaves that label unqualified,
+/// and two packages that happen to use the same fact id then collide silently
+/// in the compiled boot lane. Measured once, at exactly that cost: 466 markers
+/// spliced with zero of them qualified.
 ///
 /// Recognized **only at the lead position** — a `##X` mid-line is prose, not a
 /// definition (R3). A `###`/`####` run is a heading (space-required) and routed
@@ -197,7 +205,10 @@ fn content_offset(line: &str) -> usize {
 fn fact_id(line: &str) -> Option<(std::ops::Range<usize>, &str)> {
     let start = content_offset(line);
     let rest = line.get(start..)?;
-    let after = rest.strip_prefix("##")?;
+    let (after, opener_len) = match rest.strip_prefix("@fact:") {
+        Some(a) => (a, "@fact:".len()),
+        None => (rest.strip_prefix("##")?, 2),
+    };
     let id_len = after
         .bytes()
         .take_while(|&b| b.is_ascii_alphanumeric() || b == b'-' || b == b'_')
@@ -211,7 +222,7 @@ fn fact_id(line: &str) -> Option<(std::ops::Range<usize>, &str)> {
         .get(id_len)
         .is_none_or(|b| b.is_ascii_whitespace());
     if head_letter && terminated {
-        let id_start = start + 2;
+        let id_start = start + opener_len;
         Some((id_start..id_start + id_len, &after[..id_len]))
     } else {
         None
@@ -375,6 +386,59 @@ Inline code: `##root` and `(#root)`.
                 "org-vibevm-world--wal--FACT-ONE",
                 "org-vibevm-world--wal--FACT-TWO",
             ]
+        );
+    }
+
+    #[test]
+    fn the_qualified_opener_is_qualified_too() {
+        // The failure this guards against is silent by construction: an
+        // unrecognised opener is not an error here, it is simply a label left
+        // unqualified — and two packages sharing a fact id then collide in the
+        // compiled lane with nothing said. Measured once at 466 markers
+        // spliced, none of them qualified.
+        let slug = "org-vibevm-world--wal";
+        let input = "\
+# Heading One {#root}
+
+@fact:FACT-ONE The first fact. @status:impl/done
+
+- @fact:FACT-TWO A list fact. @status:spec/work
+
+See [the fact](#FACT-ONE).
+";
+        let expected = format!(
+            "\
+# Heading One {{#{slug}--root}}
+
+@fact:{slug}--FACT-ONE The first fact. @status:impl/done
+
+- @fact:{slug}--FACT-TWO A list fact. @status:spec/work
+
+See [the fact](#{slug}--FACT-ONE).
+"
+        );
+
+        let (out, renames) = qualify_contribution(input, "org.vibevm.world/wal");
+        assert_eq!(out, expected);
+        assert_eq!(
+            renames
+                .iter()
+                .map(|r| r.original.as_str())
+                .collect::<Vec<_>>(),
+            vec!["root", "FACT-ONE", "FACT-TWO"]
+        );
+    }
+
+    #[test]
+    fn both_openers_qualify_to_the_same_label() {
+        // A half-migrated snippet must not produce two different labels for
+        // what is one id.
+        let legacy = qualify_contribution("##A One. @impl/done\n", "org.vibevm.world/wal");
+        let qualified =
+            qualify_contribution("@fact:A One. @status:impl/done\n", "org.vibevm.world/wal");
+        assert_eq!(
+            legacy.1.first().map(|r| r.qualified.as_str()),
+            qualified.1.first().map(|r| r.qualified.as_str()),
         );
     }
 
