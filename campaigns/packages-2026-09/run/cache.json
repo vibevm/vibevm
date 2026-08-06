@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T05:33:56Z",
+  "updated_at": "2026-08-06T07:20:12Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -25906,7 +25906,7 @@
       }
     },
     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/boot/15-flow-addressable-specs.md": {
-      "content_hash": "85e9a192168af21a46fcaeabc49148b3a312440be19816f90f6d95b686080466",
+      "content_hash": "7261bd1fcf815105663973e74316aa6857d2f2d42f476cebf76f9e34b5e60887",
       "rollup": {
         "explicit": [
           "impl",
@@ -29022,7 +29022,7 @@
       }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/spec/boot/40-flow-campaign-plans.md": {
-      "content_hash": "06037791eb4377b612595e33fc9ee54790a672597e582fbc0d43090da6177186",
+      "content_hash": "1994024b2ee9e7a0aad769549786796b3a21b368b01199e06ebe0a4407e94df6",
       "rollup": {
         "explicit": [
           "impl",
@@ -32039,7 +32039,7 @@
       }
     },
     "packages/org.vibevm.world/comparative-research/v0.1.0/spec/boot/52-flow-comparative-research.md": {
-      "content_hash": "e2fbfe8a945780e268e32414672819306653cbd11483290cfb1512a162f1e423",
+      "content_hash": "518d7f23f3f4d8873323de9ad8b6ed3cd43a9431c9c974d308de8fa9860e54a9",
       "rollup": {
         "explicit": [
           "impl",
@@ -34555,7 +34555,7 @@
       }
     },
     "packages/org.vibevm.world/conflict-protocol/v0.1.0/spec/boot/35-flow-conflict-protocol.md": {
-      "content_hash": "6631e8677e8fb13727cab5b18400df14bb3c2c6902e3347a7801f7f43ba76e88",
+      "content_hash": "16ddcbbf50be74669eae81d37426d99ff36705be2ff2142b4f10d629888baaca",
       "rollup": {
         "explicit": [
           "impl",
@@ -37393,7 +37393,7 @@
       }
     },
     "packages/org.vibevm.world/decision-records/v0.1.0/spec/boot/25-flow-decision-records.md": {
-      "content_hash": "d54fa8d3d30fd32e80778a0642597025fc48a321e4872ef66e1a6f4514327264",
+      "content_hash": "60f79d22e286c62fbddb0f024d916aebfa1286cee56bf6b08953b05805e89ad1",
       "rollup": {
         "explicit": [
           "impl",
@@ -39855,7 +39855,7 @@
       }
     },
     "packages/org.vibevm.world/dev-runtime-docs/v0.1.0/spec/boot/58-flow-dev-runtime-docs.md": {
-      "content_hash": "43e2aa1b991ffdd9029cc13bd95f230c9f33f253f08d316c5e6867cee33189fe",
+      "content_hash": "cdd4e8c055869b17c933f2ea8bfc82bb6cf2fc3a3952e8e28ea8d6d5ce413d28",
       "rollup": {
         "explicit": [
           "impl",
@@ -40510,7 +40510,7 @@
       }
     },
     "packages/org.vibevm.world/discovery-prompt/v0.1.0/spec/boot/50-flow-discovery-prompt.md": {
-      "content_hash": "9507100a873ff6439305a6c9f84856803b516d58f3dac8c3f9b6f9ad1b536b2d",
+      "content_hash": "021462c04bfa8d20c531f3a766581ca61c378b8557b8c8c930563a4ef9a820c9",
       "rollup": {
         "explicit": [
           "impl",
@@ -41694,7 +41694,7 @@
       }
     },
     "packages/org.vibevm.world/git-atomic-commits/v0.1.0/spec/boot/30-flow-atomic-commits.md": {
-      "content_hash": "f963e8874b3d0ff02be7b85b21c501bdff3c7d4c6f50a006712026dc9d4e0c88",
+      "content_hash": "14ff6b83eeb1fa86923740c295238f8b6d4862de7b12da1b96a861313046424d",
       "rollup": {
         "explicit": [
           "impl",
@@ -43949,7 +43949,7 @@
       }
     },
     "packages/org.vibevm.world/git-attribution-policy/v0.1.0/spec/boot/55-flow-attribution-policy.md": {
-      "content_hash": "d624cef159ced10523737520a1362dafe6b53b54c10980d3c6f54e2039d73867",
+      "content_hash": "378f838055e01c74d1ff0458772b1df524e0c531035db5d0b5410608bd065ce2",
       "rollup": {
         "explicit": [
           "impl",
@@ -45730,7 +45730,7 @@
       }
     },
     "packages/org.vibevm.world/git-autonomy/v0.1.0/spec/boot/32-flow-autonomy.md": {
-      "content_hash": "e35afbd96259bf07fa9c1a4f0b564e08dfce34b4f318c6f2177a45de055cbc14",
+      "content_hash": "a5b4afc77e0ebb7eda67ecfd77c58be47c52e180dbbf8deafcd362ab7bc1bcd6",
       "rollup": {
         "explicit": [
           "impl",
@@ -46500,7 +46500,7 @@
       }
     },
     "packages/org.vibevm.world/git-conventional-commits/v0.1.0/spec/boot/31-flow-conventional-commits.md": {
-      "content_hash": "0b69bed96447eae39aa25b94ee8b7da21c9a8a6ae4a4fa2028f934f2eac71277",
+      "content_hash": "f0325e75f5d529e440006de6109d715d3a4d5eb4155a6b0f4247bd2097de50c1",
       "rollup": {
         "explicit": [
           "impl",
@@ -47890,7 +47890,7 @@
       }
     },
     "packages/org.vibevm.world/health-audit/v0.1.0/spec/boot/42-flow-health-audit.md": {
-      "content_hash": "ad7973e40c36533330f7aa8f3eb8eeb09dfd23d7c0d4bfa664e42524e17b0073",
+      "content_hash": "fba52085d27c2559d5f6833858927ddc8fd11d91586e0bd5b3f64c20470ea488",
       "rollup": {
         "explicit": [
           "impl",
@@ -51096,7 +51096,7 @@
       }
     },
     "packages/org.vibevm.world/licensing/v0.1.0/spec/boot/60-flow-licensing.md": {
-      "content_hash": "2d07070caac7c3162aabb2cfa6d8f050ae71c25e2879e42fa618d1cdeb6ca096",
+      "content_hash": "5e71620d0c70f2f5beeb2ecd2e283fa6c0dcbc8148cf47ff7fc3096b9c2e4c28",
       "rollup": {
         "explicit": [
           "impl",
@@ -53565,7 +53565,7 @@
       }
     },
     "packages/org.vibevm.world/managed-blocks/v0.1.0/spec/boot/65-flow-managed-blocks.md": {
-      "content_hash": "8a25137a47bcf8a4b21bee4631be55076fca41ad36742896f9a27f71a1ef57f9",
+      "content_hash": "35008c84f55457fa01964203afa83f3e60dc3c82bf820217109619fbc6dd259c",
       "rollup": {
         "explicit": [
           "impl",
@@ -57291,7 +57291,7 @@
       }
     },
     "packages/org.vibevm.world/manual-tests/v0.1.0/spec/boot/44-flow-manual-tests.md": {
-      "content_hash": "1b857ec3d182430be86b93977ca30954efd623a2f1b28effaebf01c7e7abeabb",
+      "content_hash": "e803433624c3843b93a359c2b014cc539d2f450ef4e699a93aa363826ffb4129",
       "rollup": {
         "explicit": [
           "impl",
@@ -59214,7 +59214,7 @@
       }
     },
     "packages/org.vibevm.world/operating-modes/v0.1.0/spec/boot/45-flow-operating-modes.md": {
-      "content_hash": "bb273abf6c1200f91d615ce7d5f0d011758904c73b061c6c6fdfb0763b113d9f",
+      "content_hash": "51e693f40566090608d9b03fbe94397955c27a28830dc25c2d6a1e1da4627039",
       "rollup": {
         "explicit": [
           "impl",
@@ -61797,7 +61797,7 @@
       }
     },
     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/boot/67-flow-qualified-naming.md": {
-      "content_hash": "21fdbd7b4cfcae0aba505b89cd79708077c5a954fabff7866d52e9d36b5c4a19",
+      "content_hash": "1abe2e9bcb279d1455514903d6bb89f9b43e6e70f1bf8c55b77642a352608e56",
       "rollup": {
         "explicit": [
           "impl",
@@ -65709,7 +65709,7 @@
       }
     },
     "packages/org.vibevm.world/secrets-hygiene/v0.1.0/spec/boot/57-flow-secrets-hygiene.md": {
-      "content_hash": "d7398e88dd92eb37dc35fe066e28f9371acead41ae4c80222ab9a2510f9cc5b0",
+      "content_hash": "6c89d96f812dcf2b4e34e315aa925f95f762319576d155e4a48ff2b1b4572331",
       "rollup": {
         "explicit": [
           "impl",
@@ -68349,7 +68349,7 @@
       }
     },
     "packages/org.vibevm.world/source-mirrors/v0.1.0/spec/boot/62-flow-source-mirrors.md": {
-      "content_hash": "5024a7bb30bb9911ce8edab50e7aee1666b47717c9f0c932365c230ae6aa74c9",
+      "content_hash": "4fd6526638759ce5ff8296eb0e305c014b04b4abcafe770ed62ed200bae44966",
       "rollup": {
         "explicit": [
           "impl",
@@ -71258,7 +71258,7 @@
       }
     },
     "packages/org.vibevm.world/spec-genres/v0.1.0/spec/boot/17-flow-spec-genres.md": {
-      "content_hash": "8169a00ed4013f6224cd95ad221ebafe0467df751365cc975661a0c6aee84a1f",
+      "content_hash": "7e375538d4abb8778d2a6b574e879aa8962bdfc0b083e966b7ef9ba3f820d114",
       "rollup": {
         "explicit": [
           "impl",
@@ -73816,7 +73816,7 @@
       }
     },
     "packages/org.vibevm.world/sync-from-code/v0.1.0/spec/boot/20-flow-sync-from-code.md": {
-      "content_hash": "0ffd9dc06a41138bbff35ddc8710ebf9477ca8ff49ee87bc760b4d53556bbb70",
+      "content_hash": "2fb76f5a8b871bab6da3331159e144527d3db900cf057f1a59ebd1ddea3582c7",
       "rollup": {
         "explicit": [
           "impl",
@@ -76323,7 +76323,7 @@
       }
     },
     "packages/org.vibevm.world/tool-design-lessons/v0.1.0/spec/boot/70-flow-tool-design-lessons.md": {
-      "content_hash": "81e36861497cd1d4e4f5339e94c007ab1e6cdf83f4b966681863958711adcbda",
+      "content_hash": "c5c8746ce1e3f4973d0df7a0ad61f5dd9b78d6af4727f8b6cb4bddc9eb7e8f24",
       "rollup": {
         "explicit": [
           "impl",
@@ -79631,7 +79631,7 @@
       }
     },
     "packages/org.vibevm.world/two-process-model/v0.1.0/spec/boot/05-flow-two-process-model.md": {
-      "content_hash": "992ba6cee071c5a8d12976a73393e26e2da3a0647d3fca8beecfe3d2b07347ed",
+      "content_hash": "7c55838edd57443d292a1388b2b14b17b017243ca411489769d5472e8cf4b338",
       "rollup": {
         "explicit": [
           "impl",
@@ -81873,7 +81873,7 @@
       }
     },
     "packages/org.vibevm.world/wal-specspaces/v0.1.0/spec/boot/11-flow-wal-specspaces.md": {
-      "content_hash": "c310e9d21fb1d8765709e1355e1fcca15c61b46df001cdca99fac39e37574815",
+      "content_hash": "73fc4f7ce3fe1b55003140e8ee0d4019a6efe8ca8f5f4bb726098c6d3ba5a1e2",
       "rollup": {
         "explicit": [
           "impl",
@@ -83279,7 +83279,7 @@
       }
     },
     "packages/org.vibevm.world/wal/v0.2.0/spec/boot/10-flow-wal.md": {
-      "content_hash": "fbc2a08aef71b84d719a9f92b0ad53e7681a9ea874f51513d1ab55c9fc84be14",
+      "content_hash": "82d483b006d9a1edc3ef4a411676cad39dfeef0cd1ec99c4c819b8521b1d769b",
       "rollup": {
         "explicit": [
           "impl",
