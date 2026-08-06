@@ -67576,7 +67576,7 @@
     },
     {
       "anchor": "a-items",
-      "content_hash": "sha256:9e32684a0dc5a09a692427240f3aa0b2c1f73847c43b99957f68346b1b3c0d6a",
+      "content_hash": "sha256:bd33922f122c7052bd320723eb56623ce54b1fc8937f148be8fafa41e9aaeae9",
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "4. Group А — the index",
@@ -67612,7 +67612,7 @@
     },
     {
       "anchor": "a3",
-      "content_hash": "sha256:bb42f249c12e7b834d05227c6b01b55d3911bde0358f9a86570713d5c736ea22",
+      "content_hash": "sha256:762bb2975151525b8d4456d9aad3fea5f2925294b16306d0e22f871fd95e35d8",
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "А3. The organisation cache, `rescan-org`, and the flag's real axis",
@@ -67625,7 +67625,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "А4. Webhooks, GitHub Actions, and a guide that lives in the specs",
-      "line": 644,
+      "line": 647,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a4"
     },
     {
@@ -67634,7 +67634,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "А5. Search over the map — both levels",
-      "line": 661,
+      "line": 664,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a5"
     },
     {
@@ -67643,7 +67643,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "А6. Generate the index's wire types",
-      "line": 690,
+      "line": 693,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a6"
     },
     {
@@ -67652,16 +67652,16 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "4b. Judging debt — asked, answered and landed on 2026-08-06",
-      "line": 727,
+      "line": 730,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#debt"
     },
     {
       "anchor": "undecided",
-      "content_hash": "sha256:a6d79f249526bc3e8c768da7058fe3afd3a5e1f7f06d3579e6f2318ae6f45075",
+      "content_hash": "sha256:be0173f3ee9042cce6b9bd5efbab6840c516b162fe5a5b9d0fdd2723c5754846",
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "5. What was NOT decided and must not be invented",
-      "line": 785,
+      "line": 788,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#undecided"
     },
     {
@@ -67670,7 +67670,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "6. Standing items untouched by this conversation",
-      "line": 796,
+      "line": 802,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#standing"
     },
     {
@@ -67679,7 +67679,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "7. Requires the owner's hands, not a decision",
-      "line": 807,
+      "line": 813,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#hands"
     },
     {

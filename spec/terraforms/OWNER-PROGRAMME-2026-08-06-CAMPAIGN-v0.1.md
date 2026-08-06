@@ -631,10 +631,13 @@ A world where the index is the only door     The world we live in today
 **Therefore, agreed shape:**
 
 1. **Keep the cache.** Stop enumerating on every operation.
-2. **The flag names the assumption, not the topology** — «I am the only writer to
-   this organisation» versus «the organisation may change without me». Default is
-   the second, because it is true today. Do **not** call it `--cluster`: that name
-   promises protection from the wrong risk.
+2. **The flag is `--cache-org`, on by default** — the owner's ruling of
+   2026-08-06, which closes the name left open in §5. It is not `--cluster`:
+   that name would promise protection from the wrong risk. The axis argued
+   here — «I am the only writer to this organisation» versus «the organisation
+   may change without me» — still stands, but the name landed on the mechanism
+   rather than on the assumption, so what keeps the default honest is step (3),
+   not the flag. Ruling and consequence: `BACKLOG.md` B-065.
 3. **Instead of a full enumeration, a cheap freshness check** — git hosts answer
    «has anything changed» with a conditional request that costs almost nothing and
    needs no walk. Cache speed with honest checking.
@@ -791,7 +794,10 @@ the wrong conclusion «four thousand, hopeless»:
   is the boss's debt, not the owner's.
 - **Whether the index client can authenticate** (see А2) — unmeasured.
 - **What to do about claims inside fenced blocks** (see Б3) — named, not answered.
-- **The `--cluster` flag's final name** — the axis is agreed; the word is not.
+- ~~**The `--cluster` flag's final name**~~ — **decided by the owner on
+  2026-08-06: `--cache-org`, on by default.** The ruling and its one
+  consequence live in `BACKLOG.md` B-065; this line is a tombstone and goes
+  with the plan.
 
 ## 6. Standing items untouched by this conversation {#standing}
 
