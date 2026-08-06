@@ -21,6 +21,7 @@ mod prefs;
 mod progress;
 mod query;
 mod registry;
+mod select;
 mod skill;
 mod specmap;
 mod term;
@@ -38,6 +39,7 @@ pub use prefs::*;
 pub use progress::*;
 pub use query::*;
 pub use registry::*;
+pub use select::*;
 pub use skill::*;
 pub use specmap::*;
 pub use term::*;
@@ -248,6 +250,19 @@ pub enum Command {
     /// ONE target's subgraph; `query` FINDS the many nodes that fit.
     /// `--json` emits the machine-readable form. Read-only.
     Query(QueryArgs),
+
+    /// Search the code↔spec map by a conjunctive predicate query and walk the
+    /// bipartite graph (E-A5B-QUERYLANG) — the traversal layer over `vibe
+    /// query`. `--where` carries the query: `uri:`/`symbol:`/`kind:` (the
+    /// same filters as `query`), `scope:` (a `spec://` prefix), `has:`/`lacks:`
+    /// (a verb an edge does/does not touch), and `depth:<0..3>` (an undirected
+    /// walk; seeds stay at `d0`). Predicates are whitespace-AND-joined. Reach
+    /// for `select` over `query` when the answer is relational — "every spec
+    /// rule with NO verifier" (`lacks:verifies`), "the implementers of this
+    /// rule and one hop around them" (`uri:… depth:1`); reach for `query` for
+    /// a flat filter, and `explain` for one target's subgraph. `--json` emits
+    /// the machine-readable form. Read-only.
+    Select(SelectArgs),
 
     /// Generate the package's carried traceability map (V5-PACKAGE-MAP §2.2).
     /// Reads the package's `vibe.toml` (for its `(group, name)` coordinate) and

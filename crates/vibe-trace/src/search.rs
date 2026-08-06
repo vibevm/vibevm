@@ -231,7 +231,12 @@ pub fn render(out: &SearchOut, filters: &Filters, json: bool) -> SearchView {
 /// Project a spec unit into a [`Hit`]. The unit's own `kind` (if any) is the
 /// node's kind — spec units answer `--kind` on their own kind (Р2, УТОЧНИ-4);
 /// a legacy-unmarked unit matches none.
-fn hit_from_spec(u: &SpecUnit) -> Hit {
+///
+/// `pub(crate)` so the query-language layer ([`crate::select`]) reuses the
+/// SAME node projection for its seed selection and output, rather than
+/// rebuilding a parallel one (УТОЧНИ-1). Visibility only — no behaviour
+/// change, and not part of the public API.
+pub(crate) fn hit_from_spec(u: &SpecUnit) -> Hit {
     Hit {
         source: HitSource::Spec,
         name: u.heading.clone(),
@@ -244,7 +249,8 @@ fn hit_from_spec(u: &SpecUnit) -> Hit {
 }
 
 /// Project a code item into a [`Hit`]; the item's `item_kind` is its kind.
-fn hit_from_code(c: &CodeItem) -> Hit {
+/// `pub(crate)` for the same reuse reason as [`hit_from_spec`] (УТОЧНИ-1).
+pub(crate) fn hit_from_code(c: &CodeItem) -> Hit {
     Hit {
         source: HitSource::Code,
         name: c.symbol.clone(),
@@ -271,7 +277,12 @@ fn spec_kind_str(k: &SpecUnitKind) -> &'static str {
 /// A `None` predicate is not applied; the set ones must all pass. `uri` matches
 /// spec units only and `symbol` code items only, so combining them narrows to
 /// nothing rather than widening.
-fn matches_filters(hit: &Hit, filters: &Filters) -> bool {
+///
+/// `pub(crate)` so [`crate::select`] reuses the EXACT `uri`/`symbol`/`kind`
+/// predicate for its seed selection — the query language does not redefine
+/// the floor's three filters (УТОЧНИ-1). Visibility only; the public API and
+/// behaviour are unchanged.
+pub(crate) fn matches_filters(hit: &Hit, filters: &Filters) -> bool {
     if let Some(uri) = &filters.uri
         && (hit.source != HitSource::Spec || hit.uri.as_deref() != Some(uri.as_str()))
     {

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-06T17:05:42Z",
+  "updated_at": "2026-08-06T17:17:47Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -94559,9 +94559,9 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "0868ebebe62dbf44010fc45ec7d69427d0f8664eb7831f6c88660140789156c9",
+        "processed_hash": "0ca040f1b9e2d98aecd3246d5fd6135e2da59b52cdf9eb249644c2eede110348",
         "summary": {
-          "confirmed": 52
+          "confirmed": 55
         },
         "verdicts": {
           "companion-line": {
@@ -94985,10 +94985,33 @@
               "PROP-009-loading-model.md:242; PROP-035-spec-compiler.md:143,172,191",
               "The PROP edits landed (PROP-009:242, PROP-035:143/172/191) — applied on the 2026-08-04 approval (B-011-DESIGN-APPROVED), confirming the boss-authored normative edits shipped."
             ]
+          },
+          "oos-b006": {
+            "v": "confirmed",
+            "ev": [
+              "TOOLING-MAP.md  ##WAVE-A: «B-011 (qualified splice + aliases + lookup …) → B-006 (once-each lane, de-substitution) → B-031 … → B-028» — B-006 is a separate entry with its own build, exactly as this fact says",
+              "BACKLOG.md {#b-006}  «Closed. The ruling and its reasoning live in `9f79acf1`» — B-006 was built by its own commit, not by the slice this design describes",
+              "the scope claim holds: qualification made the duplicate visible and removing it was B-006's own build. First judgement — this anchor was swallowed into `oos-strip`'s paragraph and had no address until the blank line landed today."
+            ]
+          },
+          "oos-b031": {
+            "v": "confirmed",
+            "ev": [
+              "TOOLING-MAP.md  ##WAVE-A records the order literally: B-011 → B-006 → B-031 → B-028, all inside wave А, which is precisely «adjacent loading-plane builds, sequenced after B-011 in wave А»",
+              "BACKLOG.md {#b-031} closed by `1ef63a37` and {#b-028} closed by `93d92ec9` — both built, both after B-011",
+              "both clauses of the fact are checkable and both hold. First judgement — no address until today."
+            ]
+          },
+          "oos-hot-attach": {
+            "v": "confirmed",
+            "ev": [
+              "TOOLING-MAP.md  ##WAVE-A names what B-011 actually shipped — «qualified splice + aliases + lookup» — and no hot-attach workflow is among them",
+              "a scope declaration about the slice's own boundary, and the shipped scope is the evidence for it: the naming guarantees landed, the workflow that writes the INDEX entry did not. First judgement — swallowed until today."
+            ]
           }
         },
-        "verified_at": "2026-08-04T23:43:45Z",
-        "verify_batch": "H13-deterministic-loading"
+        "verified_at": "2026-08-06T17:09:48Z",
+        "verify_batch": "H13-deterministic-loading + S18-SWALLOWED-RESTORED"
       }
     },
     {
@@ -95194,9 +95217,9 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "bfae75b27b0398d6fdfbea1f2656b8870c6be8185b483335360c98b19bd835e6",
+        "processed_hash": "e2035501f12d4f769f32731d9a2e166fc2ee60478747100e910fa555ae79a0c4",
         "summary": {
-          "confirmed": 26
+          "confirmed": 28
         },
         "verdicts": {
           "companion-line": {
@@ -95410,10 +95433,26 @@
               "crates/vibe-spec/src/resolver.rs; BACKLOG.md:871",
               "B-031-DISPOSITION: «W1 resolver+identity … W2 migrator … the host wet pass — 1 893 occurrences … the mass re-seal executed» — the §8 cut landed in sequence."
             ]
+          },
+          "risk-mass-rewrite": {
+            "v": "confirmed",
+            "ev": [
+              "TOOLING-MAP.md  ##WAVE-A: «B-031 (the host is `org.vibevm.core/vibevm`; 1 893-occurrence migration, residue 0)» — the mass edit happened at the scale this risk named and finished with zero residue",
+              "campaigns/packages-2026-09/tasks/migrate-b031.py  the scripted migration this fact's first mitigation prescribes exists in the tree",
+              "the risk was real, the mitigations named were the ones used, and the outcome the mitigations were for — residue 0 — is recorded. Judged as a risk statement whose mitigation set was applied, not as a prediction. First judgement — this anchor was swallowed into `risk-two-resolvers`'s paragraph until today."
+            ]
+          },
+          "risk-muscle-memory": {
+            "v": "confirmed",
+            "ev": [
+              "TOOLING-MAP.md  ##WAVE-A records B-031 landed whole, which is what makes the short host address fail from that point on",
+              "spec/common/PROP-029-fully-qualified-addresses.md  the authority whose changelog this fact says carries the rename record exists at the cited path",
+              "the fact's substance is that loud failure on a stale hand-typed address is DESIGNED behaviour rather than a regression — a statement about intent, judged as such, with the rename it depends on recorded as landed. First judgement — no address until today."
+            ]
           }
         },
-        "verified_at": "2026-08-04T23:40:04Z",
-        "verify_batch": "H9-host-as-package"
+        "verified_at": "2026-08-06T17:09:48Z",
+        "verify_batch": "H9-host-as-package + S18-SWALLOWED-RESTORED"
       }
     },
     {
@@ -96427,7 +96466,269 @@
       "facts": 33,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "processed_hash": "bb643c371b96ea05efb981fec7f3a9322e4c470fa1d4a54ae6303e657b9316ca",
+        "summary": {
+          "confirmed": 33
+        },
+        "verdicts": {
+          "design-scope": {
+            "v": "confirmed",
+            "ev": [
+              "BACKLOG.md ##B018-PARTS point 2 and ##B018-PARTS's 2-bis clause: «простой уровень построен, открыт только язык запросов … Осталось (ii) — обход графа (глубина, «нет ребра такого-то вида»)»",
+              "commit 471e3b1b  feat(trace): the map can be searched, not only asked about (А5a) — the filter level shipped 2026-08-06, which is what makes this document the level ABOVE it",
+              "a scope declaration judged against the two records that set the scope: the owner's two-level ruling and the commit that landed the first level."
+            ]
+          },
+          "design-stands-on-not-instead-of": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-mcp/PROP-015-mcp-integration.md ##MAP-QUERY-THE-SIMPLE-LEVEL-IS-PERMANENT  «the filters must work on their own and must never become a degenerate case of a grammar — in the library they are their own entry point, so a broken parser could not take them down with it»",
+              "crates/vibe-trace/src/search.rs:171  pub fn search(map: &Specmap, filters: &Filters) -> SearchOut — the separate library entry point the ruling requires, present today",
+              "the design's constraint is quoted from the contract that imposes it, and the entry point it must stand on exists at the ref above."
+            ]
+          },
+          "design-the-price-was-named-in-advance": {
+            "v": "confirmed",
+            "ev": [
+              "BACKLOG.md ##B018-PARTS  «то же плюс обход графа (глубина N и «нет ребра такого-то типа»), что сразу отвечает на «какие правила никто не проверяет», но заводит грамматику, которую придётся версионировать»",
+              "the claim is that the versioning cost was stated before the work was authorised rather than discovered during it; the deferral note that named it predates this document and is quoted above."
+            ]
+          },
+          "m-readings-are-dated": {
+            "v": "confirmed",
+            "ev": [
+              "specmap.json  the committed artefact every reading in the section was taken over, schema 3",
+              "tools/self-check.sh  runs `cargo xtask specmap --check`, so the artefact the readings were taken from is gated fresh against the tree rather than being an arbitrary snapshot",
+              "a statement about the readings' provenance, judged against the artefact named and the gate that keeps it current."
+            ]
+          },
+          "m-the-graph-is-small-and-bipartite": {
+            "v": "confirmed",
+            "ev": [
+              "specmap.json  spec_units 5825, code_items 1006, edges 955, suspects 0, warnings 208 — counted over the committed artefact",
+              "vibedeps/flow-core-ai-native/0.8.0/schemas/specmap.jtd.json  the `edge` definition: «One typed, directed edge `(code item) --verb--> (spec unit)`», with properties from_symbol and uri — which is what makes the graph bipartite by construction rather than by observation",
+              "clause by clause: the counts are the artefact's own array lengths; bipartiteness is the schema's own statement; 955 of 955 from_symbol values resolve to a code item and 934 of 955 uri values to a spec unit."
+            ]
+          },
+          "m-three-verbs-of-five-exist": {
+            "v": "confirmed",
+            "ev": [
+              "specmap.json  verb distribution over the 955 edges: implements 716, verifies 225, deviates 14; documents 0, informs 0",
+              "vibedeps/flow-core-ai-native/0.8.0/schemas/specmap.jtd.json  the verb enum: [\"implements\", \"verifies\", \"documents\", \"deviates\", \"informs\"] — five legal values, of which three occur",
+              "both clauses check: the vocabulary is the schema's five, and the occupancy is the artefact's three."
+            ]
+          },
+          "m-the-canonical-answer-is-enormous": {
+            "v": "confirmed",
+            "ev": [
+              "specmap.json  5742 of 5825 spec units carry no incoming `verifies` edge (98.6 %); 5561 carry no edge of any verb (95.5 %)",
+              "crates/vibe-trace/src/search.rs:35  pub const MAX_LIMIT: usize = 200 — the ceiling the raw answer is measured against",
+              "the two numbers in the fact are the counted ones, and the ceiling they are compared with is the shipped constant."
+            ]
+          },
+          "m-kind-cannot-narrow-a-spec-unit": {
+            "v": "confirmed",
+            "ev": [
+              "specmap.json  spec units carrying a `kind`: 0 of 5825; carrying a `status`: 0; carrying a `revision`: 0",
+              "spec/modules/vibe-mcp/PROP-015-mcp-integration.md ##MAP-QUERY-THE-KIND-VOCABULARY-IS-MEASURED-NOT-INVENTED  already records «every spec unit in this tree is legacy-unmarked, so a spec kind matches nothing here today» — this measurement re-derives that independently rather than quoting it",
+              "crates/vibe-trace/src/search.rs:84  the `uri` filter is documented as «Exact match against a spec unit's `spec://…#anchor` URI», which is what makes it name exactly one unit",
+              "three clauses, three refs: kind is empty, the contract already said so, and uri is exact."
+            ]
+          },
+          "m-scope-is-what-makes-it-answerable": {
+            "v": "confirmed",
+            "ev": [
+              "specmap.json  72 distinct documents; units per document max 358, median 57, min 10; 5 documents exceed the 200 ceiling",
+              "specmap.json  the five that still truncate, with their lacking-verifies counts: PROP-005 349 of 358, PROP-003 308, PROP-002 279, PROP-019 234, PROP-000 204",
+              "the load-bearing clause — «67 of the 72 come inside the ceiling» — is 72 minus the 5 named above, and the five are named rather than hidden, which is what the fact claims."
+            ]
+          },
+          "m-depth-has-a-subject-and-a-sample-said-otherwise": {
+            "v": "confirmed",
+            "ev": [
+              "specmap.json  over all 1205 edge-bearing nodes: 864 (71.7 %) reach strictly more at depth 2 than at depth 1; 71 reach more at depth 3; component diameters run to 8 hops",
+              "the correction the fact records is the reason it exists: the first reading sampled the three highest-degree nodes, all star centres whose leaves carry one edge each, and reported depth 2 == depth 1. The exhaustive count above contradicts it. Judged as a dated record of a measurement that was wrong once and re-taken — the wrong reading is kept in the fact deliberately."
+            ]
+          },
+          "m-the-blast-radius-is-bounded": {
+            "v": "confirmed",
+            "ev": [
+              "specmap.json  255 connected components over the edge-bearing subgraph; sizes 44, 25, 23, 22, 21 at the top",
+              "crates/vibe-trace/src/search.rs:35  MAX_LIMIT 200 — the 44-node worst case sits comfortably under it, which is the fact's «precision control, not a safety one»",
+              "both clauses hold on the counted component sizes, and the fact's own qualification — the ceiling protects against a future map rather than this one — is a statement of intent judged as such."
+            ]
+          },
+          "m-twenty-one-edges-dangle": {
+            "v": "confirmed",
+            "ev": [
+              "specmap.json  21 of 955 edges have a `uri` naming no unit in the map, over 5 distinct targets",
+              "specmap.json  the four legitimate ones and their edge counts: core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules (11), PROP-014#queries (6), PROP-014#index (1), org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code (1)",
+              "spec/modules/vibe-mcp/PROP-015-mcp-integration.md ##MAP-QUERY-BUILT-FRESH-LIKE-EXPLAIN and the campaign's standing rule that installed packages stay outside the project map so its byte-reproducibility holds — which is why four of the five are correct rather than defects",
+              "counts and targets are the artefact's; the reason four are legitimate is the recorded reproducibility rule."
+            ]
+          },
+          "m-one-dangling-edge-is-a-host-defect": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-cli/src/commands/tools.rs:13  specmark::scope!(\"spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#binaries\");",
+              "crates/vibe-workspace/src/tools.rs:16  the same address, second occurrence",
+              "spec/modules/vibe-workspace/PROP-025-binary-dispatch.md  the anchors it actually carries: build, cross-package, dispatch, gc, history, manifest, problem, root, security, staleness, v1-cut — there is no #binaries",
+              "BACKLOG.md {#b-076}  the finding filed separately, as this fact says it was",
+              "four clauses, four refs: both citing sites, the absence of the anchor, and the separate filing."
+            ]
+          },
+          "g-one-conjunction-no-operators": {
+            "v": "confirmed",
+            "ev": [
+              "spec/design/map-query-language.md ##m-scope-is-what-makes-it-answerable and ##m-the-canonical-answer-is-enormous  the two measured questions the fact says the corpus actually asks — «inside this document, units lacking this edge» and «what does this reach»",
+              "a design decision at spec stage, and its marker says so (`spec/plan`). Judged as a decision: the syntax it rejects is named, the reason is the versioning liability, and the measured questions that need none of it are cited above. Nothing is claimed to be built."
+            ]
+          },
+          "g-the-predicate-set": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-trace/src/search.rs:81-94  the Filters struct — uri, symbol, kind, limit: the first three predicates of this set are the filter level's own, reached from above rather than redefined",
+              "vibedeps/flow-core-ai-native/0.8.0/schemas/specmap.jtd.json  the verb enum the has:/lacks: values are drawn from",
+              "a spec-stage decision judged as one: every predicate's value space is either the shipped filter level's or the schema's, so the grammar mints no vocabulary of its own."
+            ]
+          },
+          "g-scope-earns-its-place-by-measurement": {
+            "v": "confirmed",
+            "ev": [
+              "spec/design/map-query-language.md ##m-scope-is-what-makes-it-answerable  the measurement this fact says it rests on: 72 documents, median 57 units, 67 of 72 inside the ceiling",
+              "crates/vibe-trace/src/search.rs:84  the existing uri filter is exact-match, which is what leaves scope with no substitute",
+              "the fact's whole claim is that this predicate is in the set because a measurement put it there rather than taste; the measurement is the sibling fact and the gap it fills is the exact-match filter above."
+            ]
+          },
+          "g-has-and-lacks-are-seed-predicates": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-core-ai-native/0.8.0/schemas/specmap.jtd.json  the edge definition is directed code→spec (from_symbol, uri), which is why «touches» must read as incoming for a spec unit and outgoing for a code item if one predicate is to serve both families",
+              "a spec-stage decision. The reasoning is checkable against the schema above: on a directed bipartite graph there is no third reading, and the alternative the fact rejects — applying the predicate after expansion — would make depth:0 differ from no depth at all, which the sibling fact fixes as the identity."
+            ]
+          },
+          "g-depth-expands-the-seed-set": {
+            "v": "confirmed",
+            "ev": [
+              "spec/design/map-query-language.md ##m-the-blast-radius-is-bounded  the measurement the upper bound of 3 is chosen against: components cap at 44 nodes and only 5.9 % of nodes gain anything past depth 2",
+              "a spec-stage decision whose numeric choice is traced to a measurement rather than asserted. The identity clause — depth:0 is the default, so a query without depth: is exactly the seed selection — is what makes this level a strict superset of the one below."
+            ]
+          },
+          "g-hops-are-reported": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-trace/src/search.rs:54-75  the Hit type the level below returns, which carries no distance field — so the hop count is genuinely new information rather than a rename of something present",
+              "a spec-stage decision, judged as one: without it a caller cannot separate what it asked for from what the walk dragged in."
+            ]
+          },
+          "g-unknown-is-an-error-never-ignored": {
+            "v": "confirmed",
+            "ev": [
+              "crates/progress-core/src/doc.rs  IssueCode::FenceBinding's doc-comment: «This is an error rather than a silent skip on purpose. A grammar that ignores a type it does not implement promises what it cannot do»",
+              "crates/progress-core/src/parse/facts.rs:237-250  the shipped refusal for an unknown object type, which is the same law already implemented once in this repository",
+              "the fact claims it is applying an existing law rather than inventing one; the law's own statement and its implementation are the two refs above."
+            ]
+          },
+          "g-the-version-is-in-the-answer-not-the-query": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-trace/src/search.rs:358-373  render_json, which already echoes the filters back in the envelope — the place a grammar version joins, at no cost to the caller",
+              "a spec-stage decision. Its reasoning is checkable: the envelope that would carry the version exists, so putting it there costs nothing, while a mandatory query prefix would tax every caller for a benefit that does not exist until the first breaking change."
+            ]
+          },
+          "g-the-empty-query-is-refused": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-trace/src/search.rs:96-107  Filters::default — the level below already answers «a bounded slice of the whole map» for a bare call",
+              "crates/vibe-trace/src/search.rs:112  has_any_predicate, which is how that level renders the no-filter case honestly",
+              "the decision rests on the existing answer being one function call away, which the two refs show it is."
+            ]
+          },
+          "ng-no-or-no-not": {
+            "v": "confirmed",
+            "ev": [
+              "spec/design/map-query-language.md ##g-one-conjunction-no-operators  the sibling decision this non-goal enforces: no operator layer, so nothing to version",
+              "a spec-stage non-goal judged as a decision. The escape it leaves — two queries for a union — is stated, so the exclusion is bounded rather than absolute."
+            ]
+          },
+          "ng-results-stay-nodes": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-mcp/PROP-015-mcp-integration.md ##MAP-QUERY-RESULTS-ARE-NODES  «Results are nodes, never edges … so edges are a filter dimension for the query level above, and the result set stays spec units and code items»",
+              "the contract already rules this and names this level as the one it anticipated; the non-goal is deference to it, not a new decision."
+            ]
+          },
+          "ng-no-second-producer-here": {
+            "v": "confirmed",
+            "ev": [
+              "BACKLOG.md ##B019-V-RECOMMENDATION  the owner-facing recommendation that the join happens over file and line, with the freshness caveat — recorded and not built",
+              "crates/vibe-trace/src/search.rs:41-48  the HitSource enum, the documented extension point that keeps the door open without building anything through it",
+              "both clauses hold: the ruling is unbuilt, and the shape that must not close is present already."
+            ]
+          },
+          "ng-no-persistence": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-trace/src/search.rs:211-215  pub fn query — «Build the traceability index fresh for root … and run search over it»",
+              "spec/modules/vibe-mcp/PROP-015-mcp-integration.md ##MAP-QUERY-BUILT-FRESH-LIKE-EXPLAIN  the contract clause this non-goal inherits",
+              "the freshness posture is both shipped at the ref above and contracted at the anchor above; traversal changes the cost of a call and not this."
+            ]
+          },
+          "cut-slice-1": {
+            "v": "confirmed",
+            "ev": [
+              "spec/design/map-query-language.md ##g-the-predicate-set  the seven predicates slice 1 covers",
+              "a plan-stage statement, and its marker says so. Judged as a cut: the reason it is one slice — a parser without predicates answers nothing, predicates without a parser are the level below — is checkable against the two neighbouring levels."
+            ]
+          },
+          "cut-slice-2": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-mcp/PROP-015-mcp-integration.md #map-query  the section the contract half lands beside",
+              "campaigns/packages-2026-09/  the standing law that content moved into a specification is judged in the same pass that moves it, which this slice restates as its own condition",
+              "a plan-stage cut naming its destination and the law it will obey."
+            ]
+          },
+          "cut-what-is-deliberately-not-cut": {
+            "v": "confirmed",
+            "ev": [
+              "BACKLOG.md {#b-076}  the dangling-edge finding, filed as its own row rather than folded into this work",
+              "the exclusion is real and checkable: the finding that this design's measurement produced went to a separate row, which is what the fact says happened."
+            ]
+          },
+          "rej-flags-instead-of-a-grammar": {
+            "v": "confirmed",
+            "ev": [
+              "BACKLOG.md ##B018-PARTS  the deferral note recommending the flag-shaped option (i) for the level below, and naming the grammar cost of option (ii) in advance",
+              "a rejection recorded with its loser's merits stated. Judged as a decision record: the alternative is named, the reason it lost is the owner's ruling for a query LANGUAGE plus the pre-accepted versioning cost."
+            ]
+          },
+          "rej-replacing-the-filter-level": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-mcp/PROP-015-mcp-integration.md ##MAP-QUERY-THE-SIMPLE-LEVEL-IS-PERMANENT  the ruling that forbids exactly this, in the words the fact paraphrases",
+              "the rejection is not a preference — the contract rules it out, and the fact cites that as its reason."
+            ]
+          },
+          "rej-unbounded-depth": {
+            "v": "confirmed",
+            "ev": [
+              "spec/design/map-query-language.md ##m-the-blast-radius-is-bounded  the 44-node measured ceiling that makes unbounded traversal LOOK safe, which is the fact's own argument against it",
+              "a rejection whose reasoning is that a bound safe only because today's data is small is not a bound; the measurement it distrusts is its own sibling, cited above."
+            ]
+          },
+          "rej-edges-in-the-answer": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-trace/src/search.rs:121-137  SearchOut and its renderers, which would have to fork if the result type depended on the query",
+              "the cost the rejection names is checkable at the ref above: one result type, two renderers, and every consumer carrying one reader."
+            ]
+          }
+        },
+        "verified_at": "2026-08-06T17:09:48Z",
+        "verify_batch": "A5B-DESIGN"
+      }
     },
     {
       "path": "spec/design/multiple-sources-and-plugins.md",
@@ -100316,9 +100617,9 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (27 cells); document <status> judged as _elements",
         "fact_count": 136,
         "marker_count": 137,
-        "processed_hash": "8ba9828249c828aceddd46ff0d94f58eab1aa675fa6f645876c95e9b04b47363",
+        "processed_hash": "b2c4ea2cb98f5d42c2e2e1bace623df52fc6d8efca26c7ab635ac0d5ea31ce50",
         "summary": {
-          "confirmed": 117
+          "confirmed": 125
         },
         "verdicts": {
           "status-line": {
@@ -101039,10 +101340,76 @@
               "the identity holds under inspection rather than by assertion: `vibevm logic never leaks into the app` forbids a specific direction of leakage from inside, and the deletion test detects the residue of that same leakage from outside. One rule, two vantage points",
               "this matters practically, not stylistically: it means the thinness audit does not introduce a second standard the subsystem must satisfy — it is a way of checking the one it already declares"
             ]
+          },
+          "SORT-SHAPE-HERE": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-cli/src/commands/tree/tui/state.rs:347  /// Set the tree shape to a specific value (the F2 sort menu, PROP-037 §3.3",
+              "crates/vibe-cli/src/commands/tree/tui/settings.rs:188  /// The tree shape (F2 shape group).",
+              "the fact says the tree shape is chosen in the F2 dialog as a further group; the shipped mutator names the F2 sort menu as its caller and the persisted setting names the F2 shape group. First judgement — this anchor was swallowed into `sort-subtables`'s paragraph and had no address until the blank line landed today."
+            ]
+          },
+          "CARD-CONTENT": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-cli/src/commands/tree/tui/modal.rs:40  /// Build the detail [`Card`] for the selected row, if any (PROP-036 §2.11).",
+              "crates/vibe-cli/src/commands/tree/tui/modal.rs:10  the module doc records that this seam decides *what* fields the card carries, which is the clause this fact states",
+              "the claim is that the card's content is the package detail from PROP-036 §2.11; the builder cites that very section as its contract. First judgement — no address until today."
+            ]
+          },
+          "THE-AUDIT-RAN-AND-THE-TWO-CLAUSES-DISAGREE": {
+            "v": "confirmed",
+            "ev": [
+              "cache/agents/sorted/M-TUI-THINNESS/  the census that produced this result, with the perimeter reproduced: 63 files / 18 426 lines / 258 tests, and the two neighbouring perimeters re-measured as controls (52/13 117 and 72/20 372)",
+              "the census's section 3 reports no domain capability living only inside the perimeter, and names version comparison, dependency resolution, manifest validation and package-state computation as absent from it entirely",
+              "judged as the record of an audit that ran today, against the artifact it produced."
+            ]
+          },
+          "WHAT-FAILS-IS-ONLY-RENDERS-NOT-THE-DELETION-TEST": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs:78-89  the scope gate re-implemented inside the perimeter",
+              "crates/vibe-cli/src/commands/prefs/tui/form/provenance_edit.rs:52  the same gate a second time",
+              "crates/vibe-cli/src/commands/tree/tui/settings.rs:547  pub(crate) fn set_dotted — the dotted-path mutation re-implemented",
+              "crates/vibe-settings/src/cli/mod.rs:231-244  fn set_key — the library original of the scope gate, with its own set_dotted at :247, already used by the CLI",
+              "three clauses, three refs: the duplication is at the lines named, the library home exists at the line named, and nothing is lost on deletion because the library keeps the capability — which is why the deletion test stays silent about it."
+            ]
+          },
+          "THE-CONTRAST-IS-INSIDE-THE-SAME-PERIMETER": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-settings/src/schema/validate.rs:130  the library validate the lint modal calls instead of copying",
+              "crates/vibe-settings/src/persist/mod.rs:92  diff_from_default, likewise called from three places in the perimeter rather than re-written",
+              "the claim is that the surface already knows how to be thin in two places and is thick in a third; both thin places are at the refs above and the thick one is the persist path of the sibling fact."
+            ]
+          },
+          "THE-REMAINING-WORK-IS-BOUNDED-AND-NAMED": {
+            "v": "confirmed",
+            "ev": [
+              "BACKLOG.md {#b-077}  the row this fact points at exists and carries the locator, the shape of the fix and what the audit cleared",
+              "a plan-stage statement judged as a decision: the work is named, bounded to one defect, and filed. Its `spec/plan` marker says it is not built, and it is not."
+            ]
+          },
+          "TWO-CANDIDATES-WERE-WEIGHED-AND-CLEARED": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-cli/PROP-037-tree-tui.md  §1.3 assigns the app's own Model layer «all UI state» and «pure data + logic-on-data», which is where filtering, ordering and flattening sit",
+              "crates/vibe-cli/src/commands/tree/tui/  flatten.rs, shape.rs and sort.rs produce rendered rows over a PackageTree the library owns — the graph itself never moves into the perimeter",
+              "both cleared candidates are named with the reason each was cleared, which is what stops them being re-filed as new findings later."
+            ]
+          },
+          "ONE-MEASUREMENT-OF-THIS-SECTION-IS-SOFTER-THAN-IT-READS": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-cli/src/commands/tree/tui/theme/mod.rs:41-47  an #[allow] counted among the 27 whose reason sits on line 40, one line above",
+              "crates/vibe-cli/src/commands/tree/tui/ui/mod.rs:80-91  the same shape, reason on line 79",
+              "crates/vibe-cli/src/commands/tree/tui/ui/button.rs:50  and :57, the same shape again",
+              "the correction is exact: 53 total and 27 uncommented both reproduce under the strict same-line reading, and the three refs above are cases the strict reading counts as reasonless while a reader would not. Judged against the measurement that produced it rather than against a re-derivation."
+            ]
           }
         },
-        "verified_at": "2026-07-25T14:44:25Z",
-        "verify_batch": "c4e-cli-actions + d2a + DEBT-2026-08-06-D"
+        "verified_at": "2026-08-06T17:09:48Z",
+        "verify_batch": "c4e-cli-actions + d2a + DEBT-2026-08-06-D + S18-SWALLOWED-RESTORED"
       }
     },
     {
@@ -101467,9 +101834,11 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 278,
         "marker_count": 279,
-        "processed_hash": "a636566752ec5626c036a1de50ac4326859a61c4286f8e7440ee395952e67b8e",
+        "processed_hash": "22dfd9c67bc9c377bc87d4c9868dadc41341c22fbd3504f0390c54707d792c75",
         "summary": {
-          "confirmed": 311
+          "confirmed": 308,
+          "drift": 2,
+          "unverifiable": 1
         },
         "verdicts": {
           "milestone-line": {
@@ -101763,115 +102132,198 @@
           "req-layout": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "spec/modules/vibe-index/PROP-005-package-index.md:111  @fact:req-layout `req r1` @status:impl/done",
+              "crates/vibe-index/src/index/memory.rs:161      pub fn write_to(&self, data_dir: &Path) -> Result<()> {",
+              "crates/vibe-index/src/index/memory.rs:180          let (primary_meta, primary_gz_meta) = primary::write(data_dir, &mut entries)?;",
+              "Requirement-traceability stub (shared `req r1` token). Confirmed by pointing at the implemented on-disk layout: Index::write_to (memory.rs:161) writes primary.jsonl+gz (memory.rs:180), by-name, by-cap, by-purl and repomd — i.e. the §2.4 layout is built, so requirement r1 for this section is met. Replaces the section-level paragraph that stamped #layout `confirmed` alongside the false jtd.json claim; prior outcome correct, evidence now first-hand and distinct from INDEX-FILE-LAYOUT's per-file citations."
             ]
           },
           "INDEX-FILE-LAYOUT": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/index/repomd.rs:14  pub const FILENAME: &str = \"repomd.json\";",
+              "crates/vibe-index/src/index/primary.rs:20  pub const FILENAME: &str = \"primary.jsonl\";",
+              "crates/vibe-index/src/index/primary.rs:21  pub const FILENAME_GZ: &str = \"primary.jsonl.gz\";",
+              "crates/vibe-index/src/index/by_name.rs:24  pub const DIRNAME: &str = \"by-name\";",
+              "crates/vibe-index/src/index/inverted.rs:35  pub const BY_CAP_DIRNAME: &str = \"by-cap\";",
+              "crates/vibe-index/src/index/inverted.rs:36  pub const BY_PURL_DIRNAME: &str = \"by-purl\";",
+              "crates/vibe-index/src/cli/init.rs:79      let path = data_dir.join(\"README.md\");",
+              "Composite fact judged by clauses — every entry the spec's working-tree lists is produced by the tree. Clause repomd.json (repomd.rs:14), clause primary.jsonl (primary.rs:20), clause primary.jsonl.gz (primary.rs:21), clause by-name/ (by_name.rs:24), clause by-cap/ (inverted.rs:35), clause by-purl/ (inverted.rs:36), clause README.md (init.rs:79, written by init at init.rs:50). The data files are flushed together by write_to (memory.rs:161-255); README.md is created once at init. Replaces the section-level paragraph; outcome correct, now per-file cited."
             ]
           },
           "REPOMD": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/types/repomd.rs:20  pub struct Repomd {",
+              "crates/vibe-index/src/types/repomd.rs:21      pub schema_version: u32,",
+              "crates/vibe-index/src/types/repomd.rs:34      pub files: BTreeMap<String, RepomdFileEntry>,",
+              "crates/vibe-index/src/types/repomd.rs:43  pub enum RepomdFileEntry {",
+              "crates/vibe-index/src/types/repomd.rs:51      File {",
+              "crates/vibe-index/src/types/repomd.rs:53          sha256: String,",
+              "crates/vibe-index/src/types/repomd.rs:44      Directory {",
+              "Composite fact judged by clauses against the §2.4 repomd.json example. schema_version/registry/registry_url/naming/generated_at/generator/package_count/version_count all present (repomd.rs:21-28); the files map (repomd.rs:34) carries File{size,sha256} (repomd.rs:51-54) and Directory{kind:\"directory\",entries} (repomd.rs:44-50) — exactly the example's two shapes. Replaces the shared paragraph; outcome correct."
             ]
           },
           "REPOMD-TRUST-POINT": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/cli/verify.rs:78      for (rel_path, entry) in &manifest.files {",
+              "crates/vibe-index/src/cli/verify.rs:89                  let actual_sha = persistence::sha256_of_bytes(&bytes);",
+              "crates/vibe-index/src/cli/verify.rs:91                  if actual_size != *size || &actual_sha != sha256 {",
+              "crates/vibe-index/src/index/memory.rs:255          repomd::write(data_dir, &manifest)",
+              "crates/vibe-index/src/index/repomd.rs:1  //! `repomd.json` — the per-index manifest, written last on every",
+              "Composite fact judged by clauses. Clause 1 (single point of trust: fetch repomd, then fetch sub-files, verify each against the recorded sha256) — verify.rs::check walks manifest.files (verify.rs:78), reads each sub-file, recomputes its sha256 (verify.rs:89) and compares size+sha against the recorded values (verify.rs:91), flagging any mismatch. Clause 2 (consistent view) — repomd is written LAST on every batch flush (memory.rs:255; docblock repomd.rs:1-3), so a hash-chasing reader never sees a half-updated set. Replaces the shared paragraph; outcome correct, now self-evidenced (this is the consumer-side trust path the shared block only gestured at)."
             ]
           },
           "repomd-pattern-heritage": {
-            "v": "confirmed",
+            "v": "unverifiable",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "spec/modules/vibe-index/PROP-005-package-index.md:167  - @fact:repomd-pattern-heritage This pattern (manifest-with-checksums) is what RPM, Deb, and OCI all share, and is what gives us a path to GPG signing without re-architecting. @status:spec/done",
+              "crates/vibe-index/src/types/repomd.rs:1  //! `repomd.json` — the per-index manifest. Modelled after RPM's",
+              "crates/vibe-index/src/index/repomd.rs:1  //! `repomd.json` — the per-index manifest, written last on every",
+              "UNVERIFIABLE — this is a spec-stage (@status:spec/done) design RATIONALE, not an implementation claim, and its substance is not checkable against THIS tree. It makes two assertions: (a) 'manifest-with-checksums is what RPM, Deb, and OCI all share' — a claim about external packaging ecosystems, not machine-verifiable in this repo (I can only note the code's own docblock says repomd.json is 'Modelled after RPM's repomd.xml', repomd.rs:2, which supports the RPM half but says nothing about Deb/OCI); (b) 'gives us a path to GPG signing without re-architecting' — future capability, and §2.7 trust-oos explicitly defers GPG-signed repomd to v0-out-of-scope, so no GPG path exists to inspect. Searched crates/vibe-index for 'gpg'/'sign'/'asc': nothing. The manifest-with-checksums core is real (REPOMD), but the fact as written appeals to external systems + future work the tree neither proves nor disproves. Replaces the shared paragraph that stamped #layout `confirmed`; for this rationale fact a per-fact verdict of unverifiable (with the reason) is more honest than inheriting a code-evidence paragraph it cannot share."
             ]
           },
           "PRIMARY-JSONL": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/index/primary.rs:1  //! `primary.jsonl` — JSON Lines, one [`VersionEntry`] per line, sorted",
+              "crates/vibe-index/src/index/primary.rs:20  pub const FILENAME: &str = \"primary.jsonl\";",
+              "crates/vibe-index/src/index/primary.rs:28      entries.sort_by(|a, b| a.sort_key().cmp(&b.sort_key()));",
+              "crates/vibe-index/src/index/primary.rs:37          out.extend_from_slice(line.as_bytes());",
+              "crates/vibe-index/src/index/primary.rs:38          out.push(b'\\n');",
+              "crates/vibe-index/src/types/entry/mod.rs:174      pub fn sort_key(&self) -> (&Group, &str, &Version) {",
+              "Composite fact judged by clauses. Clause 1 (newline-delimited JSON, one record per (group,name,version)) — serialise writes one serde_json line + '\\n' per VersionEntry (primary.rs:37-38), filename primary.jsonl (primary.rs:20). Clause 2 (sorted by (group,name,version)) — entries.sort_by sort_key (primary.rs:28); sort_key returns (&group, name, &version) (mod.rs:174-176). Clause 3 (each line is one §2.6 entry) — parse reads one VersionEntry per line (primary.rs:92). (The trailing 'JSONL chosen over JSON-array because …' is rationale, covered by the jsonl-* facts.) Replaces the shared paragraph; outcome correct."
             ]
           },
           "jsonl-append": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "spec/modules/vibe-index/PROP-005-package-index.md:171  - @fact:jsonl-append Append-friendly (a publish hook can append and re-sort + rewrite, or for incremental update merge a sorted insert). @status:spec/done",
+              "crates/vibe-index/src/index/primary.rs:20  pub const FILENAME: &str = \"primary.jsonl\";",
+              "crates/vibe-index/src/index/primary.rs:37          out.extend_from_slice(line.as_bytes());",
+              "crates/vibe-index/src/index/primary.rs:38          out.push(b'\\n');",
+              "Spec-stage (@status:spec/done) rationale: I judged the DECISION in force, not a built mechanism. The format IS newline-delimited one-record-per-line (primary.rs:20,37-38), which is inherently append-friendly (a new version is one trailing line). The fact's parenthetical about a publish hook that appends-and-resorts describes the capability the format enables; the shipped write path is the full deterministic rewrite (memory.rs:161 write_to, which re-sorts via primary.rs:28), and incremental reindex is tracked elsewhere — so I confirm the design rationale as in-force, not a dedicated append-then-resort code path. Replaces the shared paragraph; the prior `confirmed` outcome holds for this rationale, now with the format evidence cited."
             ]
           },
           "jsonl-streamable": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "spec/modules/vibe-index/PROP-005-package-index.md:172  - @fact:jsonl-streamable Streamable by consumers (line-at-a-time parse; no need to buffer the whole file). @status:spec/done",
+              "crates/vibe-index/src/index/primary.rs:88      for (lineno, line) in text.lines().enumerate() {",
+              "crates/vibe-index/src/index/primary.rs:92          let entry: VersionEntry = serde_json::from_str(line).map_err(|e| {",
+              "Spec-stage rationale, and here it is also REALISED in code (stronger than decision-only): the consumer parser walks the file line-at-a-time (primary.rs:88) and deserialises each line independently (primary.rs:92) without buffering the whole file — exactly 'streamable by consumers'. Replaces the shared paragraph; prior outcome correct, now first-hand."
             ]
           },
           "jsonl-grepable": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "spec/modules/vibe-index/PROP-005-package-index.md:173  - @fact:jsonl-grepable `grep`-able (operators can inspect the index manually). @status:spec/done",
+              "crates/vibe-index/src/index/primary.rs:20  pub const FILENAME: &str = \"primary.jsonl\";",
+              "crates/vibe-index/src/index/primary.rs:37          out.extend_from_slice(line.as_bytes());",
+              "crates/vibe-index/src/index/primary.rs:38          out.push(b'\\n');",
+              "Spec-stage rationale. grepability is an inherent property of the JSONL format the tree ships (one self-contained JSON record per '\\n'-terminated line, primary.rs:20,37-38) — an operator can grep primary.jsonl for a name/version and get whole records. Confirmed as a true property of the realised format. Replaces the shared paragraph; prior outcome correct."
             ]
           },
           "jsonl-diffable": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "spec/modules/vibe-index/PROP-005-package-index.md:174  - @fact:jsonl-diffable Diffable in git (per-line diffs survive re-sorts cleanly). @status:spec/done",
+              "crates/vibe-index/src/index/primary.rs:28      entries.sort_by(|a, b| a.sort_key().cmp(&b.sort_key()));",
+              "crates/vibe-index/src/index/primary.rs:181          assert_eq!(serialise(&mut a).unwrap(), serialise(&mut b).unwrap());",
+              "Spec-stage rationale, judged as a composite: clause 1 (per-line diffs) — JSONL, one record per line (primary.rs:37-38). Clause 2 (diffs survive re-sorts) — the sort is deterministic and order-independent, proven by the byte-identity test that feeds two different input orders and asserts identical output (primary.rs:171-182, the assert at :181), so a re-sort over unchanged data produces no churn. Confirms 'per-line diffs survive re-sorts cleanly'. Replaces the shared paragraph; prior outcome correct."
             ]
           },
           "PRIMARY-GZ": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/index/primary.rs:21  pub const FILENAME_GZ: &str = \"primary.jsonl.gz\";",
+              "crates/vibe-index/src/index/primary.rs:51      let gz_bytes = gzip_deterministic(&bytes)?;",
+              "crates/vibe-index/src/index/primary.rs:66      let mut encoder = GzEncoder::new(Vec::new(), Compression::new(6));",
+              "crates/vibe-index/src/index/primary.rs:43  pub fn write(dir: &Path, entries: &mut [VersionEntry]) -> Result<(WrittenFile, WrittenFile)> {",
+              "Composite fact judged by clauses. Clause 1 (.gz sibling ships alongside .jsonl) — write returns BOTH plain and gz (primary.rs:43,51; both written at :46,:53). Clause 2 (deterministic: level 6, mtime disabled, stable sha) — gzip_deterministic uses Compression::new(6) with a Vec dest (no filename, mtime=0 default) (primary.rs:66), and the byte-identity test asserts identical gzip output for identical input (primary.rs:200-208). Replaces the shared paragraph; outcome correct."
             ]
           },
           "BY-NAME": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/index/by_name.rs:1  //! `by-name/<name>.json` — the candidate-set file for one bare package",
+              "crates/vibe-index/src/index/by_name.rs:24  pub const DIRNAME: &str = \"by-name\";",
+              "crates/vibe-index/src/index/by_name.rs:31      dir(data_dir).join(format!(\"{name}.json\"))",
+              "crates/vibe-index/src/types/entry/aggregate.rs:69  pub struct NameEntry {",
+              "crates/vibe-index/src/index/by_name.rs:217          assert_eq!(back.packages[0].group.as_str(), \"com.acme\");",
+              "Composite fact judged by clauses. Clause 1 (one file per bare name, by-name/<name>.json) — DIRNAME 'by-name' (by_name.rs:24), file_path → by-name/<name>.json (by_name.rs:30-32). Clause 2 (candidate set: every (group,name) sharing the name, each with all versions) — NameEntry holds multiple PackageEntry per name (aggregate.rs:69-76); the test builds two groups under one name and round-trips them (by_name.rs:200-219, asserting com.acme before org.vibevm). Clause 3 (keyed on <name> alone, kind-level gone post-PROP-008) — file_path keys on name only (by_name.rs:31). Replaces the shared paragraph; outcome correct."
             ]
           },
           "BY-CAP": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/index/inverted.rs:35  pub const BY_CAP_DIRNAME: &str = \"by-cap\";",
+              "crates/vibe-index/src/index/inverted.rs:54              ':' | '/' | '@' => out.push_str(\"--\"),",
+              "crates/vibe-index/src/index/inverted.rs:186      by_cap_dir(data_dir).join(format!(\"{slug}.jsonl\"))",
+              "crates/vibe-index/src/index/inverted.rs:67      pub kind: PackageKind,",
+              "crates/vibe-index/src/index/inverted.rs:71      pub capability: String,",
+              "Composite fact judged by clauses. Clause 1 (file is by-cap/<capability-slug>.jsonl, one line per pkgref advertising the capability) — BY_CAP_DIRNAME 'by-cap' (inverted.rs:35), capability_file → by-cap/<slug>.jsonl (inverted.rs:185-187), rows bucketed from entry.provides.capabilities (inverted.rs:109-118). Clause 2 (slug = capability with ':' '/' '@' replaced by '--') — fs_safe_slug maps exactly those three to '--' (inverted.rs:54), asserted by test (inverted.rs:346-356). The wire row carries {kind, group, name, version, capability} (inverted.rs:66-72) — a SUPERSET of the spec's illustrative {kind,name,version,capability} (group added, consistent with identity); not a contradiction. Replaces the shared paragraph; outcome correct."
             ]
           },
           "BY-PURL": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "spec/modules/vibe-index/PROP-005-package-index.md:207  @fact:BY-PURL **`by-purl/<purl-slug>.jsonl`** — for \"what vibevm packages document this upstream library?\" queries (PROP-003 §2.5.6 `describes`). Same shape as `by-cap`; `<purl-slug>` is the PURL with `/` replaced by `--`. @status:impl/done",
+              "crates/vibe-index/src/index/inverted.rs:36  pub const BY_PURL_DIRNAME: &str = \"by-purl\";",
+              "crates/vibe-index/src/index/inverted.rs:54              ':' | '/' | '@' => out.push_str(\"--\"),",
+              "crates/vibe-index/src/index/inverted.rs:46  pub fn purl_slug(purl: &str) -> String {",
+              "crates/vibe-index/src/index/inverted.rs:9  //! §2.4 originally documented `:` as preserved in PURL slugs; we",
+              "crates/vibe-index/src/index/inverted.rs:362          assert_eq!(purl_slug(\"pkg:cargo/sqlx@0.8.0\"), \"pkg--cargo--sqlx--0.8.0\");",
+              "DRIFT — composite fact; the file's existence/purpose is confirmed but the slug-encoding CLAUSE is wrong. Clause 1 (by-purl/<purl-slug>.jsonl, same shape as by-cap, describes-index) — TRUE: BY_PURL_DIRNAME 'by-purl' (inverted.rs:36), purl_file → by-purl/<slug>.jsonl (inverted.rs:189-191), PurlRow shape (inverted.rs:74-85). Clause 2 ('<purl-slug> is the PURL with `/` replaced by `--`') — FALSE: purl_slug routes through fs_safe_slug (inverted.rs:46→50) which replaces ':', '/', AND '@' with '--' (inverted.rs:54), not '/' alone. The test proves the real encoding: 'pkg:cargo/sqlx@0.8.0' → 'pkg--cargo--sqlx--0.8.0' (inverted.rs:362) — every ':' and '@' is also escaped. A consumer that followed the spec literally (replace only '/') would compute 'pkg:cargo--sqlx@0.8.0' and miss the file. The tree's own docblock admits the divergence: 'PROP-005 §2.4 originally documented `:` as preserved in PURL slugs; we escape it for Windows-compat' (inverted.rs:8-12, the admission at :9). This is the §2.4-layout lie; the spec text still describes the old encoding while the code (and its tests) moved on. Replaces the section-level paragraph that stamped #layout `confirmed` — for this fact the prior `confirmed` was WRONG."
             ]
           },
           "SORT-INVARIANTS": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/index/primary.rs:28      entries.sort_by(|a, b| a.sort_key().cmp(&b.sort_key()));",
+              "crates/vibe-index/src/types/entry/aggregate.rs:48          self.versions.sort_by(|a, b| a.version.cmp(&b.version));",
+              "crates/vibe-index/src/types/entry/aggregate.rs:91          self.packages.sort_by(|a, b| a.group.cmp(&b.group));",
+              "crates/vibe-index/src/index/inverted.rs:147              rows.sort_by(|a, b| {",
+              "Composite lead-in fact: every multi-entry file is sorted deterministically — confirmed by the three concrete sort sites it summarises: primary.jsonl by (group,name,version) (primary.rs:28), by-name packages by group + versions ascending (aggregate.rs:91 / :48), and by-cap/by-purl rows by (group,name,version) (inverted.rs:147). The individual invariants are judged under sort-primary/sort-by-name/sort-by-cap-purl. Replaces the shared paragraph; outcome correct."
             ]
           },
           "sort-primary": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/index/primary.rs:28      entries.sort_by(|a, b| a.sort_key().cmp(&b.sort_key()));",
+              "crates/vibe-index/src/types/entry/mod.rs:174      pub fn sort_key(&self) -> (&Group, &str, &Version) {",
+              "crates/vibe-index/src/index/primary.rs:166          assert_eq!(parsed[1].version.to_string(), \"0.1.0\");",
+              "crates/vibe-index/src/index/primary.rs:168          assert_eq!(parsed[2].version.to_string(), \"0.2.0\");",
+              "primary.jsonl is sorted by sort_key = (&group, name, &version) (primary.rs:28; key at mod.rs:174-176); version is semver::Version so ordering is ascending semver. The round-trip test asserts wal 0.1.0 precedes wal 0.2.0 (primary.rs:163-168). Replaces the shared paragraph; outcome correct, first-hand."
             ]
           },
           "sort-by-name": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/types/entry/aggregate.rs:91          self.packages.sort_by(|a, b| a.group.cmp(&b.group));",
+              "crates/vibe-index/src/types/entry/aggregate.rs:48          self.versions.sort_by(|a, b| a.version.cmp(&b.version));",
+              "crates/vibe-index/src/index/memory.rs:205              name_entry.finalise();",
+              "Composite fact judged by clauses. Clause 1 (packages sorted by group) — NameEntry::finalise sorts packages by group (aggregate.rs:91), invoked before write (by_name.rs:205). Clause 2 (each package's versions array sorted ascending) — PackageEntry::finalise sorts versions by version (aggregate.rs:48). The candidate-set test asserts com.acme before org.vibevm (by_name.rs:217-218). Replaces the shared paragraph; outcome correct."
             ]
           },
           "sort-by-cap-purl": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/index/inverted.rs:144          // Deterministic line order per file: sort by the PROP-008 §2.2",
+              "crates/vibe-index/src/index/inverted.rs:147              rows.sort_by(|a, b| {",
+              "crates/vibe-index/src/index/inverted.rs:148                  (&a.group, a.name.as_str(), &a.version, a.capability.as_str()).cmp(&(",
+              "crates/vibe-index/src/index/inverted.rs:157              rows.sort_by(|a, b| {",
+              "by-cap rows are sorted by (group, name, version, capability) (inverted.rs:147-155) and by-purl rows by (group, name, version, binding_site) (inverted.rs:156-165) — leading key is (group, name, version) in both, matching the fact; the comment states the intent (inverted.rs:144-146). Replaces the shared paragraph; outcome correct."
             ]
           },
           "DETERMINISM-WHY": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "spec/modules/vibe-index/PROP-005-package-index.md:215  @fact:DETERMINISM-WHY Determinism matters because the index repo lives in git: a non-deterministic order would produce churn diffs on every regenerate, defeating the value of git as the transport. @status:spec/done",
+              "crates/vibe-index/src/index/primary.rs:28      entries.sort_by(|a, b| a.sort_key().cmp(&b.sort_key()));",
+              "crates/vibe-index/src/index/primary.rs:181          assert_eq!(serialise(&mut a).unwrap(), serialise(&mut b).unwrap());",
+              "Spec-stage (@status:spec/done) rationale; I judged the DECISION in force, and it is heavily realised. The determinism it argues for is implemented: primary.jsonl is sorted by a stable key (primary.rs:28) and the byte-identity test feeds two different input orders and asserts identical output (primary.rs:171-182, assert at :181) — i.e. regenerate-over-unchanged-data produces no churn, which is exactly the git-transport property the rationale demands. So 'determinism matters because git churn' is a true, in-force design intent, not just aspiration. Replaces the shared paragraph; prior outcome correct."
             ]
           },
           "req-modes": {
@@ -101913,94 +102365,149 @@
           "req-entry": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "spec/modules/vibe-index/PROP-005-package-index.md:232  @fact:req-entry `req r1` @status:impl/done",
+              "crates/vibe-index/src/types/entry/mod.rs:36  /// Per-version index record. PROP-005 §2.6.",
+              "crates/vibe-index/src/types/entry/mod.rs:43  pub struct VersionEntry {",
+              "Requirement-traceability stub: the shared token `req r1` (same token across 10 req-* facts, no separate definition in the doc) traces requirement r1 to the §2.6 entry schema. Confirmed by pointing at the implemented VersionEntry type that carries the schema. Replaces the section-level paragraph that stamped #entry `confirmed` alongside the false schemas/index-entry.jtd.json claim — the prior verdict's OUTCOME was correct (the entry is implemented) but its evidence was the shared block; this gives the requirement its own first-hand citation."
             ]
           },
           "ENTRY-SCHEMA": {
             "v": "confirmed",
             "ev": [
-              "RESTATED 2026-08-05 because the fact's own text moved, and the move deleted a false clause rather than rewording one. It had asserted «JTD schema lives in `crates/vibe-index/schemas/index-entry.jtd.json`». Measured: that directory does not exist, no file of that name exists anywhere in the tree (`find . -name 'index-entry*'` outside target/ and .git/ returns nothing), and `find crates/vibe-index -name '*.jtd.json'` returns nothing.",
-              "What replaced it is checkable and checked: the section is the schema, and the code already treated it that way — crates/vibe-index/src/types/entry/mod.rs opens with «Schema pinned in PROP-005 §2.6» and carries a `specmark::scope!` edge to this very anchor.",
-              "The contrast the new text draws also resolves: the root `schemas/` holds seven `*.jtd.json` wire-report contracts, and `cargo xtask check-codegen` is a panel step that byte-compares their generated Rust — so the arrangement the clause says this entry does NOT have is one the tree demonstrably does have elsewhere.",
-              "The field list the anchor governs is unchanged; only the provenance sentence moved."
+              "spec/modules/vibe-index/PROP-005-package-index.md:234  @fact:ENTRY-SCHEMA **Decision.** Every `(group, name, version)` entry carries the following fields. This is the schema lines of `primary.jsonl` follow, and the elements each `by-name/<name>.json` candidate's `versions[]` carry. **This section IS the schema** — measured 2026-08-05: there is no JTD file for the index entry anywhere in the tree, and `crates/vibe-index/schemas/` does not exist. The types are hand-written against this text (`crates/vibe-index/src/types/entry/`, whose own docblock says «Schema pinned in PROP-005 §2.6»), which is a different arrangement from the seven wire reports under the root `schemas/`, where the JTD file is the authority and the Rust is generated and gated by `cargo xtask check-codegen`. @status:impl/done",
+              "crates/vibe-index/src/types/entry/mod.rs:1  //! `VersionEntry` — the canonical per-version index record. Schema",
+              "crates/vibe-index/src/types/entry/mod.rs:2  //! pinned in PROP-005 §2.6. Every line of `primary.jsonl` is one of",
+              "crates/vibe-index/src/types/entry/mod.rs:43  pub struct VersionEntry {",
+              "crates/vibe-index/src/types/entry/mod.rs:124      pub const SCHEMA_VERSION: u32 = 1;",
+              "Composite fact judged by clauses. Clause 1 (the §2.6 JSON lists 31 fields) — all 31 are fields of VersionEntry (mod.rs:43-121: schema_version/kind/group/name/version/content_hash/source_url/source_ref/resolved_commit/registry/workspace_origin/license/authors/description/homepage/keywords/describes/compatibility/provides/requires/requires_any/obsoletes/conflicts/features/subskills/i18n/boot_snippet/files_count/indexed_at/indexed_by). Clause 2 (no JTD, schema IS this text) — confirmed empirically: `find` for *.jtd.json and for a schemas/ dir under crates/vibe-index returns nothing; the spec text itself (line 234) and the type's own docblock (mod.rs:1-2) state the schema is pinned in PROP-005 §2.6, hand-written not generated. Caveat (not escalating to drift): the example JSON shows null for workspace_origin/homepage/describes, but those use `skip_serializing_if = Option::is_none` (mod.rs:67,74,84) so a real entry OMITS the key rather than emitting null — an illustrative-example nuance, the field set and semantics are correct. Replaces the section-level paragraph; that paragraph's specific claim that `workspace_origin` is proven by 'the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json' is FALSE (file never existed), but the ENTRY-SCHEMA fact itself — that the entry carries these fields — is true and now has its own citation."
             ]
           },
           "field-provenance-lead": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "spec/modules/vibe-index/PROP-005-package-index.md:288  @fact:field-provenance-lead **Field provenance.** @status:impl/done",
+              "crates/vibe-index/src/scanner/manifest.rs:47  pub fn parse_manifest(bytes: &[u8]) -> Result<Manifest> {",
+              "crates/vibe-index/src/scanner/org_walk.rs:202      let entry = VersionEntry {",
+              "Header/lead-in anchor whose entire substance is the PROV-* sub-facts that follow. Confirmed by pointing at the one production path that establishes field provenance: org_walk.rs build_entry assembles a VersionEntry field-by-field from a manifest parsed out of the materialised tag snapshot (manifest.rs parse_manifest → vibe-core Manifest). Replaces the shared section paragraph; outcome correct (provenance is real and centralised in build_entry), evidence now first-hand."
             ]
           },
           "PROV-MANIFEST-FIELDS": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/scanner/manifest.rs:47  pub fn parse_manifest(bytes: &[u8]) -> Result<Manifest> {",
+              "crates/vibe-index/src/scanner/org_walk.rs:214          license: pkg.license.clone(),",
+              "crates/vibe-index/src/scanner/org_walk.rs:219          describes: pkg.describes.as_ref().map(|p| p.to_string()),",
+              "crates/vibe-index/src/scanner/manifest.rs:149  pub fn boot_snippet_from(b: &Option<BootSnippet>) -> Option<BootSnippetEntry> {",
+              "crates/vibe-index/src/scanner/manifest.rs:151          source: bs.source.to_string_lossy().replace('\\\\', \"/\"),",
+              "Composite fact judged by clauses. Clause 1 (these ~20 fields are read directly from vibe.toml at the tagged ref) — build_entry reads vibe.toml from the materialised-at-tag snapshot (org_walk.rs:186,190) and copies license/authors/description/homepage/keywords/describes straight off the parsed PackageMeta (org_walk.rs:214-219); the structured tables go through manifest.rs:77-147 (compatibility_from/provides_from/requires_from/requires_any_from/obsoletes_from/conflicts_from/features_from/i18n_from). Clause 2 (boot_snippet is source+category, not the retired filename) — boot_snippet_from projects {source, category} (manifest.rs:149-153); the type confirms it (content.rs BootSnippetEntry). Replaces the shared paragraph; outcome correct, now clause-cited."
             ]
           },
           "PROV-GROUP": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/scanner/org_walk.rs:205          group: pkg.group.clone(),",
+              "crates/vibe-index/src/scanner/manifest.rs:56  pub fn require_package(manifest: &Manifest) -> Result<&PackageMeta> {",
+              "crates/vibe-index/src/types/entry/mod.rs:51      pub group: Group,",
+              "`group` is read off the `[package]` table (require_package → PackageMeta) and cloned verbatim into the entry (org_walk.rs:205); the field is typed Group (mod.rs:51). Confirms the mandatory reverse-FQDN qualifier from [package].group. Replaces the shared paragraph; outcome correct, first-hand citation now per-fact."
             ]
           },
           "PROV-WORKSPACE-ORIGIN": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/scanner/org_walk.rs:213          workspace_origin: mfst::workspace_origin_from(&manifest.origin),",
+              "crates/vibe-index/src/scanner/manifest.rs:159  pub fn workspace_origin_from(origin: &Option<OriginSection>) -> Option<WorkspaceOriginEntry> {",
+              "crates/vibe-index/src/types/entry/mod.rs:67      #[serde(default, skip_serializing_if = \"Option::is_none\")]",
+              "crates/vibe-index/src/types/entry/mod.rs:68      pub workspace_origin: Option<WorkspaceOriginEntry>,",
+              "`workspace_origin` is projected from the manifest's `[origin]` table (manifest.rs:159-167), set only when that section is present — i.e. on a `vibe workspace publish` copy; for a standalone publish manifest.origin is None so the field is None. Because it is `Option` + skip_serializing_if (mod.rs:67-68), a standalone entry OMITS the key (absent), which matches the fact's word 'absent' (the example JSON's literal `null` is the illustrative form; see ENTRY-SCHEMA caveat). Replaces the shared paragraph — whose specific claim that workspace_origin is evidenced by a shipped JTD file is the false one; the PROV-WORKSPACE-ORIGIN fact itself is true and now self-evidenced."
             ]
           },
           "PROV-SUBSKILLS": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/scanner/manifest.rs:199  pub fn collect_subskills(pkg_root: &Path) -> Result<Vec<SubskillEntry>> {",
+              "crates/vibe-index/src/scanner/manifest.rs:200      let subdir = pkg_root.join(\"subskills\");",
+              "crates/vibe-index/src/scanner/manifest.rs:206          if !entry.file_type().is_file() || entry.file_name() != SubskillManifest::FILENAME {",
+              "crates/vibe-index/src/scanner/manifest.rs:217          out.push(SubskillEntry {",
+              "crates/vibe-index/src/types/entry/content.rs:62      pub path: String,",
+              "Composite fact judged by clauses. Clause 1 (walk <pkg-root>/subskills/<path>/vibe-subskill.toml) — collect_subskills joins `subskills` (manifest.rs:200) and selects files named SubskillManifest::FILENAME (manifest.rs:206). Clause 2 (each entry is {path, delivery, describes, description, channels}) — the pushed SubskillEntry has exactly those fields (manifest.rs:217-223; content.rs:61-70). Did not separately diff against the lockfile field set (cross-reference, not the fact's core); the walk + entry shape are confirmed. Replaces the shared paragraph; outcome correct."
             ]
           },
           "PROV-CONTENT-HASH": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/scanner/org_walk.rs:193      let content_hash = compute_content_hash(&snapshot)?;",
+              "crates/vibe-index/src/content_hash.rs:1  //! `compute_content_hash` — byte-for-byte port of `vibe-registry`'s",
+              "crates/vibe-index/src/content_hash.rs:40  pub fn compute_content_hash(pkg_dir: &Path) -> Result<String> {",
+              "crates/vibe-registry/src/shippable.rs:72  /// use vibe_registry::compute_content_hash;",
+              "crates/vibe-registry/src/shippable.rs:77  pub fn compute_content_hash(pkg_dir: &Path) -> Result<String, RegistryError> {",
+              "crates/vibe-index/tests/content_hash_parity.rs:25  const GOLDEN: &str = \"sha256:e10a49c0a8e1b35e3f0dc1e74d6ce26605052b2eead2225124051d67a2f76cb6\";",
+              "Composite fact judged by clauses. Clause 1 (index uses the same algorithm as vibe_registry::compute_content_hash) — verified the canonical fn exists and is exported as `vibe_registry::compute_content_hash` (shippable.rs:72 doctest import, :77 def) with the identical algorithm (walk → filter shippable → sort → hash rel||0x00||bytes||0x00 → `sha256:<hex>`; same SHIPPABLE_EXCLUDES list, shippable.rs:18) and vibe-index's port (content_hash.rs:1 docblock 'byte-for-byte port', :40) calls it at index time (org_walk.rs:193). Clause 2 (cross-checks are byte-equal) — the parity test (content_hash_parity.rs:25,41-47) locks a golden hash so divergence is gated. Replaces the shared paragraph; outcome correct."
             ]
           },
           "PROV-SOURCE-URL": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/scanner/org_walk.rs:209          source_url: source_url_for(&opts.registry_url, opts.naming, kind, &pkg.group, &pkg.name),",
+              "crates/vibe-index/src/scanner/org_walk.rs:250      let trimmed = registry_url.trim_end_matches('/');",
+              "crates/vibe-index/src/scanner/org_walk.rs:251      format!(\"{trimmed}/{repo}.git\")",
+              "source_url is composed as the org registry URL + the derived repo name + `.git` (source_url_for, org_walk.rs:242-252; assembled at :209). The composer takes only registry_url — no mirror list is consulted, so mirror URLs cannot appear, matching the invariant. Replaces the shared paragraph; outcome correct, first-hand."
             ]
           },
           "PROV-SOURCE-REF": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/scanner/org_walk.rs:210          source_ref: tag.to_string(),",
+              "crates/vibe-index/src/scanner/org_walk.rs:237  pub fn parse_v_tag(tag: &str) -> Option<Version> {",
+              "crates/vibe-index/src/scanner/org_walk.rs:238      let stripped = tag.strip_prefix('v')?;",
+              "source_ref is the tag verbatim (org_walk.rs:210); the scanned tags are `v<version>` (parse_v_tag strips a leading `v`, org_walk.rs:237-239), so source_ref is `v<version>` by default. (The `vibe-index add` path lets an operator pass an explicit ref — consistent with 'by default'.) Replaces the shared paragraph; outcome correct."
             ]
           },
           "PROV-RESOLVED-COMMIT": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/scanner/org_walk.rs:194      let resolved_commit = git_cli::resolve_commit(repo, tag).ok();",
+              "crates/vibe-index/src/scanner/org_walk.rs:211          resolved_commit,",
+              "crates/vibe-index/src/types/entry/mod.rs:60      pub resolved_commit: Option<String>,",
+              "resolved_commit is the commit SHA the tag resolves to at index time (git_cli::resolve_commit(repo, tag), org_walk.rs:194), stored as Option<String> (mod.rs:59-60) — absent only if resolution failed. Matches 'the commit SHA the tag pointed to at index time'. Replaces the shared paragraph; outcome correct."
             ]
           },
           "PROV-REGISTRY": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/scanner/org_walk.rs:212          registry: opts.registry.clone(),",
+              "crates/vibe-index/src/cli/add.rs:94          registry: index.registry.clone(),",
+              "crates/vibe-index/src/cli/init.rs:20      /// Registry name (the `[[registry]].name` value this index serves).",
+              "registry carries the configured registry name — the local alias this index serves (init.rs:20 ties the --registry arg to the `[[registry]].name` value; both build paths clone that name, org_walk.rs:212 and add.rs:94). Matches 'local alias from [[registry]].name'. Replaces the shared paragraph; outcome correct."
             ]
           },
           "PROV-FILES-COUNT": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/scanner/org_walk.rs:195      let files_count = count_files(&snapshot)? as u32;",
+              "crates/vibe-index/src/scanner/org_walk.rs:230          files_count,",
+              "crates/vibe-index/src/types/entry/mod.rs:117      pub files_count: u32,",
+              "files_count is a plain u32 count of files in the snapshot (count_files, org_walk.rs:195), stored but not folded into content_hash or any integrity gate — informational, matching the fact. Replaces the shared paragraph; outcome correct."
             ]
           },
           "PROV-INDEXED-AT": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/scanner/org_walk.rs:231          indexed_at: opts.indexed_at,",
+              "crates/vibe-index/src/scanner/org_walk.rs:232          indexed_by: opts.generator.clone(),",
+              "crates/vibe-index/src/types/entry/mod.rs:119      pub indexed_at: DateTime<Utc>,",
+              "crates/vibe-index/src/types/entry/mod.rs:120      pub indexed_by: String,",
+              "indexed_at / indexed_by record when the entry was built and by which tool version (org_walk.rs:231-232; typed at mod.rs:119-120) — provenance for the entry itself. Replaces the shared paragraph; outcome correct."
             ]
           },
           "FORWARD-COMPAT": {
-            "v": "confirmed",
+            "v": "drift",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "spec/modules/vibe-index/PROP-005-package-index.md:302  @fact:FORWARD-COMPAT **Forward compatibility.** `schema_version: 1` is recorded at file scope (in `repomd.json`) and at entry scope. v2 entries with new fields can coexist in v1 files via `serde(default)` on consumers; readers of v2 written by an old vibevm gracefully ignore unknown fields. @status:impl/done",
+              "crates/vibe-index/src/types/entry/mod.rs:38  #[serde(deny_unknown_fields)]",
+              "crates/vibe-index/src/types/entry/mod.rs:37  #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]",
+              "crates/vibe-index/src/index/primary.rs:92          let entry: VersionEntry = serde_json::from_str(line).map_err(|e| {",
+              "crates/vibe-index/src/types/entry/relations.rs:14  #[serde(deny_unknown_fields)]",
+              "DRIFT — composite fact judged by clauses, and the impl/done claim does NOT hold. Clause 1 (schema_version recorded at file scope AND entry scope) is TRUE: Repomd.schema_version (types/repomd.rs:21) and VersionEntry.schema_version (mod.rs:44). But clauses 2 & 3 — 'v2 entries with new fields can coexist in v1 files via serde(default) on consumers; readers gracefully ignore unknown fields' — are CONTRADICTED by the tree: VersionEntry carries `#[serde(deny_unknown_fields)]` (mod.rs:38), and so does every sub-struct (content.rs:18,37,60,73,92; aggregate.rs:21,64; relations.rs:14,29,42,57,63,76). With deny_unknown_fields, deserialising a record that carries an extra/unknown field ERRORS — it does not 'gracefully ignore'. The primary.jsonl reader is exactly that deserialiser (primary.rs:92 `let entry: VersionEntry = serde_json::from_str(line)`). The reasoning is also mechanically wrong: `serde(default)` on individual fields supplies defaults for MISSING fields; it does not permit EXTRA fields, and deny_unknown_fields overrides any such leniency regardless. Searched the whole crate for a tolerant reader: no `allow_unknown`, no schema_version>1 gating (schema_version is only ever set/echoed, e.g. memory.rs:245,273 — never compared to branch behaviour). So a v2 entry with a new field in a v1 primary.jsonl would be rejected by `vibe-index`, not tolerated. This is the consequential lie in §2.6 the task warned about. Replaces the section-level paragraph that stamped #entry `confirmed` — for THIS fact the prior `confirmed` was WRONG; the forward-compatibility behaviour it promises is not implemented."
             ]
           },
           "req-trust": {
@@ -103413,8 +103920,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-05T18:58:42Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A"
+        "verified_at": "2026-08-06T17:13:49Z",
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A"
       }
     },
     {
@@ -103427,9 +103934,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 74,
-      "units": 14,
-      "facts": 73,
+      "markers": 84,
+      "units": 15,
+      "facts": 83,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -106266,9 +106773,10 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 22,
         "marker_count": 23,
-        "processed_hash": "f3faa42a50f14db559f92d0512749a0860790fe9b9680ab5c887fcfd9df0164a",
+        "processed_hash": "c0e2041d94e71b34a5438c02d283ab5af310459fea03ff279ecad9d7c4e223fe",
         "summary": {
-          "confirmed": 23
+          "confirmed": 24,
+          "drift": 2
         },
         "verdicts": {
           "status-legend": {
@@ -106408,10 +106916,34 @@
             "ev": [
               "'in force since Phase A' verified: tasks/DRIFT-001..005 all written from it; DRIFT-005 checked field-for-field (Status/Executor/Reviewer/Cluster/Unit-stability present)"
             ]
+          },
+          "EXECUTOR-SPLIT": {
+            "v": "drift",
+            "ev": [
+              "spec/modules/vibe-progress/templates/impl-task.md:11  @fact:EXECUTOR-SPLIT **Executor:** Opus. **Reviewer:** Fable, against §6 verbatim.",
+              "campaigns/packages-2026-09/SUBAGENT-MODE.toml:15  mode = \"claudez\"",
+              "campaigns/packages-2026-09/SUBAGENT-LAUNCHERS.md  ##switch-native: `native` means the harness's built-in subagents «as Phase D ran»; `claudez` means workers are Claude Code processes on GLM-5.2 — and the switch file above says the live value is `claudez`",
+              "the template hard-codes one executor as its default; the campaign's own switch says the executor is the other one and is owner-owned, re-read before every fan-out. The reviewer half still holds — review is the boss's in either mode. Drift on the executor clause, which is why this is drift rather than unverifiable. First judgement — this anchor was swallowed into `status-legend`'s paragraph and had no address until the blank line landed today."
+            ]
+          },
+          "cluster-field": {
+            "v": "confirmed",
+            "ev": [
+              "Cargo.toml  the workspace members include crates/vibe-registry, crates/vibe-workspace, crates/vibe-resolver and crates/vibe-cli — four of the five values this field legend offers, the fifth (`common`) being the cross-cutting bucket rather than a crate",
+              "a field legend judged as one: the closed value set it offers names things that exist. First judgement — no address until today."
+            ]
+          },
+          "UNIT-STABILITY": {
+            "v": "drift",
+            "ev": [
+              "spec/modules/vibe-progress/templates/impl-task.md:15  «every anchor cited in §2 has no open obligation in the findings ledger and no `unknown` marker»",
+              "crates/progress-core/src/model.rs:36  pub enum State { Hold, Plan, Work, Done, Void } — the marker state vocabulary in full",
+              "there is no `unknown` marker and there never was: the state vocabulary is hold | plan | work | done | void. The precondition therefore names a value the grammar cannot produce, so half of it is vacuous rather than false — it can never fail, which is the same defect as a gate that is not looking. The findings-ledger clause is unaffected and stands. Drift on the marker clause. First judgement — swallowed until today."
+            ]
           }
         },
-        "verified_at": "2026-08-03T11:11:46Z",
-        "verify_batch": "c4a-vibe-progress"
+        "verified_at": "2026-08-06T17:09:48Z",
+        "verify_batch": "c4a-vibe-progress + S18-SWALLOWED-RESTORED"
       }
     },
     {
@@ -106434,9 +106966,10 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 15,
         "marker_count": 16,
-        "processed_hash": "91768f4f76c270cdd4c6ec34b021647af6f771500b04fc22e537b36835e9259b",
+        "processed_hash": "3b61fad4c2ae7d46c38aa145dab1ecff1d70cd2a0f336a929c6f76c73666a600",
         "summary": {
-          "confirmed": 16
+          "confirmed": 17,
+          "drift": 1
         },
         "verdicts": {
           "status-legend": {
@@ -106534,10 +107067,25 @@
             "ev": [
               "template ready; zero SPEC-NNN instances is correct - Phase D not opened; fenced example is the prescribed task-file marker"
             ]
+          },
+          "EXECUTOR-SPLIT": {
+            "v": "drift",
+            "ev": [
+              "spec/modules/vibe-progress/templates/spec-task.md:11  @fact:EXECUTOR-SPLIT **Executor:** Fable when budget allows, otherwise Opus. **Reviewer:** Fable always (normative text is judgment territory).",
+              "campaigns/packages-2026-09/SUBAGENT-MODE.toml:15  mode = \"claudez\"",
+              "same defect as its twin in impl-task.md and the same reasoning: the executor clause names a roster the campaign's own owner-owned switch has moved off. The reviewer clause — normative text is judgement territory and stays with the boss — is confirmed by the never-delegate law and is why this is drift on one clause rather than on the fact. First judgement — no address until today."
+            ]
+          },
+          "wave-field": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-progress/templates/spec-task.md:14  @fact:wave-field **Wave:** <stitching wave number>",
+              "campaigns/packages-2026-09/  the campaign this template serves is organised in numbered waves, and BACKLOG.md ##MAP-WAVES-DIGEST names them — a field legend whose slot corresponds to a real organising unit. First judgement — swallowed until today."
+            ]
           }
         },
-        "verified_at": "2026-07-25T14:01:39Z",
-        "verify_batch": "c4a-vibe-progress"
+        "verified_at": "2026-08-06T17:09:48Z",
+        "verify_batch": "c4a-vibe-progress + S18-SWALLOWED-RESTORED"
       }
     },
     {
@@ -107151,9 +107699,10 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (74 cells); document <status> judged as _elements",
         "fact_count": 359,
         "marker_count": 360,
-        "processed_hash": "a8f9be32bb5e89e9a9ec5d8167192277ff3af77c87df5a114bae30a696ca6e0c",
+        "processed_hash": "9e16727195e3c6207d7e27e02cc8bc74f25ad65635c78affca8c0ee9e300259d",
         "summary": {
-          "confirmed": 295
+          "confirmed": 297,
+          "drift": 1
         },
         "verdicts": {
           "milestone-line": {
@@ -108946,10 +109495,34 @@
               "the redaction survives the whole chain, which is the part worth testing rather than reading: `bearer_token_debug_redacts_secret`, `index_auth_debug_redacts_bearer`, and `index_client_debug_redacts_bearer_token` — the last asserting the derived `Debug` of the client itself neither prints the secret nor omits the redaction marker",
               "and no error variant formats it: `IndexError::AuthIncapable` carries the regime name and the status, never the token"
             ]
+          },
+          "status-line": {
+            "v": "drift",
+            "ev": [
+              "spec/modules/vibe-registry/PROP-002-decentralized-registry.md:3  <status stage=\"impl\" state=\"done\" comment=\"B2 2026-07-25: shipped registry contract (M1.1-revision + M1.6 + the M1.13/M1.14 auth/git-source/redirect slices); status line still says accepted-only and the Phase A acceptance boxes stay unchecked - F-032\"/>",
+              "the document convicts this line itself: its own status element records the contract as SHIPPED and names the stale status line as finding F-032. The fact says `accepted 2026-04-24` and stops there, so a reader learns the proposal was accepted and not that it shipped. Judged for the first time — this anchor was swallowed into `milestone-line`'s paragraph and had no address until the blank line landed today."
+            ]
+          },
+          "supersedes-line": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-registry/PROP-001-git-backend.md  carries the anchors this fact supersedes or preserves: {#backend-trait}, {#cache-layout}, {#source-uri}, {#freshness}, {#windows-ux} — all five resolve",
+              "an existence-and-reachability claim about a sibling contract, and every section it names is present in PROP-001. First judgement: the anchor was swallowed until today, so this is the first verdict it has ever carried, not a re-judgement."
+            ]
+          },
+          "related": {
+            "v": "confirmed",
+            "ev": [
+              "spec/common/PROP-000.md:  ## 15. Dependency weight is not a decision factor {#dep-weight}",
+              "spec/common/PROP-000.md:  ## 16. JTD + codegen for wire contracts {#jtd}",
+              "spec/common/PROP-000.md:  ## 17. Production architecture in the prototype phase {#prod-arch}",
+              "spec/common/PROP-000.md:  ## 18. Complexity expectation: higher than RPM {#complexity}",
+              "all four PROP-000 sections this fact points a reader at exist with the numbering it quotes, and VIBEVM-SPEC.md is present at the repository root. First judgement — the anchor had no address until today."
+            ]
           }
         },
-        "verified_at": "2026-08-03T11:11:46Z",
-        "verify_batch": "c4b-registry-core + d2d + A2-INDEXAUTH"
+        "verified_at": "2026-08-06T17:09:48Z",
+        "verify_batch": "c4b-registry-core + d2d + A2-INDEXAUTH + S18-SWALLOWED-RESTORED"
       }
     },
     {
@@ -118472,9 +119045,10 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 134,
         "marker_count": 135,
-        "processed_hash": "5b8485761cd9caa19ac2a3fe02b922ccb74ae6979628eb3abe6517339a34dacb",
+        "processed_hash": "402f966ccb2e33d528887baefc74ec816f84afd00ea378f700d109b00d009cfd",
         "summary": {
-          "confirmed": 155
+          "confirmed": 157,
+          "drift": 1
         },
         "verdicts": {
           "status-line": {
@@ -119452,10 +120026,32 @@
               "PRESCRIBES a promotion condition; coherent, and both of its referents resolve — `@spec://` pointers in the boot lane exist and are measurable, and §13's structural loader is a named section of this same document.",
               "The clause is deliberately falsifiable in the direction that matters: it names what would make the deferral wrong, so the decision cannot quietly become permanent by nobody revisiting it. Nothing in the tree fires either condition today — the structural mode is unimplemented and no reader-cost measurement exists (the standing «замеров нет» answer)."
             ]
+          },
+          "extends": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-009-loading-model.md  the extended contract exists at the path this fact cites",
+              "the claim is that this PROP turns PROP-009's ordered list of contributions into a preprocessor plus linker; PROP-009 is present and is the loading model. First judgement — swallowed into `status-line`'s paragraph until today."
+            ]
+          },
+          "supersedes-line": {
+            "v": "confirmed",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-034-transitive-links-boot-graph.md  the superseded-and-retained contract exists at the cited path",
+              "the fact claims PROP-034 is folded in and RETAINED as the narrower contract for the emission layer; the file being present is exactly what `retained` predicts, so its existence confirms rather than contradicts. First judgement — no address until today."
+            ]
+          },
+          "related": {
+            "v": "drift",
+            "ev": [
+              "spec/modules/vibe-workspace/PROP-035-spec-compiler.md:11  cites packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md",
+              "packages/org.vibevm.ai-native/core-ai-native/  holds both v0.7.0 and v0.8.0; the LIVE slot is v0.8.0 — tools/self-check.sh gates `CORE_SLOT=packages/org.vibevm.ai-native/core-ai-native/v0.8.0` and asserts it is the slot sync-engines vendors FROM",
+              "clause by clause: PROP-028, PROP-029 and PROP-008 all resolve and those clauses hold. The PROP-014 clause is why this is drift rather than confirmed — the path resolves, so nothing is broken, but it lands a reader on the FROZEN slot while the living contract is v0.8.0. A citation that reads correct and delivers superseded text is the failure this campaign exists to remove. First judgement — the anchor had no address until today."
+            ]
           }
         },
-        "verified_at": "2026-08-05T18:55:51Z",
-        "verify_batch": "c4d1-workspace-big3 + d2a + H4-stale-host + H6-stale-host-tail + G3-B056-new + G6-link-tables"
+        "verified_at": "2026-08-06T17:09:48Z",
+        "verify_batch": "c4d1-workspace-big3 + d2a + H4-stale-host + H6-stale-host-tail + G3-B056-new + G6-link-tables + S18-SWALLOWED-RESTORED"
       }
     },
     {

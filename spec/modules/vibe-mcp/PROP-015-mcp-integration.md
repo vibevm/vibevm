@@ -157,7 +157,81 @@ for the same reason: a query answers for the tree as it is. @status:impl/done
 and not built.** Its shape is the filters plus graph traversal — depth, and
 «has no edge of kind X», which is what answers *«which rules does nothing
 verify»* — and it introduces a grammar that will need versioning. It stands on
-this level rather than replacing it. @status:spec/plan
+this level rather than replacing it. **SUPERSEDED 2026-08-06 — it is built; the
+contract is §2.2.2 below.** @status:impl/done
+
+#### 2.2.2 The query language — traversal on top of the filters {#map-select}
+
+@fact:SELECT-IS-A-THIRD-VERB-NOT-A-MODE **`select` is a third verb, for the same
+reason `query` and `explain` are two.** `explain` looks at one target, `query`
+filters a set, and `select` walks the graph from a set. Three questions, three
+caps, three failure modes — a mode flag on one verb would make the result type
+depend on the argument, and every consumer would carry three readers. @status:impl/done
+
+@fact:SELECT-STANDS-ON-THE-FILTER-LEVEL-AND-CANNOT-TAKE-IT-DOWN **It stands on
+the filter level and cannot take it down with it.** The three filter predicates
+are the ones §2.2.1 ships, reached rather than redefined; the parser lives in its
+own module behind its own entry point, so a broken grammar leaves `query`
+answering. That separation is the owner's ruling in
+`##MAP-QUERY-THE-SIMPLE-LEVEL-IS-PERMANENT` made structural instead of promised. @status:impl/done
+
+@fact:SELECT-SEVEN-PREDICATES-JOINED-BY-AND **Seven predicates, whitespace
+separated, joined by AND, and no operators at all:** `uri:`, `symbol:`, `kind:`
+(the filter level's own), `scope:` (prefix of a spec address), `has:` / `lacks:`
+(an edge verb), `depth:` (0..3). No disjunction, no parentheses, no precedence —
+each of those is a permanent versioning liability, and a predicate can be added
+without renumbering a language that has no operator layer to renumber. @status:impl/done
+
+@fact:SELECT-SCOPE-EXISTS-BECAUSE-A-MEASUREMENT-PUT-IT-THERE **`scope:` is in the
+set because the level's own canonical question is unanswerable without it.**
+Measured before the build: 5 742 of 5 825 spec units carry no `verifies` edge,
+and nothing that shipped could narrow that — `kind` is carried by **0** units in
+this tree and `uri` is exact, so composing the negative predicate with the filter
+level yields 5 742 or 1. A document prefix brings 67 of the corpus's 72 documents
+inside the ceiling; the five that do not are named in the design record rather
+than left to be rediscovered. @status:impl/done
+
+@fact:SELECT-HAS-AND-LACKS-READ-THE-EDGE-FROM-THE-NODES-SIDE **`has:` and
+`lacks:` select seeds, and «touches» reads from each family's own side** —
+incoming for a spec unit, outgoing for a code item. On a directed bipartite
+graph that is the only reading under which one predicate serves both families,
+and applying them after the walk instead would answer a question nobody asked. @status:impl/done
+
+@fact:SELECT-DEPTH-EXPANDS-AND-ZERO-IS-THE-IDENTITY **`depth:N` expands the seed
+set along edges, undirected, and the seeds stay in the answer.** `depth:0` is the
+default and the identity, so a query without it is exactly the seed selection —
+which is what keeps this level a strict superset of the one below rather than a
+different thing wearing its name. Every hit carries the hop count it was reached
+at, so a caller can tell what it asked for from what the walk brought with it. @status:impl/done
+
+@fact:SELECT-THE-BOUND-IS-CHOSEN-AGAINST-A-MEASUREMENT-NOT-A-FEELING **The depth
+bound is 3, and the number came from the graph.** Exhaustively over all 1 205
+edge-bearing nodes, 71.7 % reach more at depth 2 than at depth 1 and only 5.9 %
+reach more at depth 3; the largest connected component is 44 nodes. So depth is a
+precision control on this map rather than a safety one — and the result ceiling
+stays hard regardless, because it protects against a future map, not this one. @status:impl/done
+
+@fact:SELECT-AN-UNKNOWN-PREDICATE-IS-AN-ERROR **An unknown predicate, an unknown
+verb, a repeated predicate, an out-of-range depth or an empty query is an ERROR
+that names the offending token and lists what was expected** — never a silently
+ignored clause. Same law as the markup's typed fences, for the same reason: a
+grammar that ignores what it does not understand promises everything and checks
+nothing, and whoever trusted the promise is the one who finds out. An empty query
+is refused rather than read as «everything», because that answer already exists
+one verb away. @status:impl/done
+
+@fact:SELECT-THE-GRAMMAR-VERSION-TRAVELS-IN-THE-ANSWER **The grammar carries a
+version and reports it in every answer rather than demanding it in every query.**
+A query string stays free of ceremony; the structured answer states the version
+it was parsed under, so a consumer that cares can branch and one that does not is
+unaffected. Requiring a prefix would tax every caller forever to buy nothing
+until the first breaking change. @status:impl/done
+
+@fact:SELECT-THE-REASONING-LIVES-BESIDE-THE-CONTRACT The rejected shapes, the
+measurements above with their commands, and the correction of a sampled reading
+that was wrong about depth are in
+[`spec/design/map-query-language.md`](../../design/map-query-language.md) — the
+lore this contract is the short form of. @status:impl/done
 
 ### 2.3 Tool and server errors cite their REQ {#errors}
 

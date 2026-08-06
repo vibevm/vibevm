@@ -97,6 +97,23 @@ Tools:
   promotes a `lazy-pull` subskill into the project tree on demand.
   Refuses to overwrite existing files unless `force=true`.
 
+Traceability over the code↔spec map (the map is built fresh on every
+call; the three are read-only):
+
+- **`query`** — FIND nodes by flat, AND-joined filters (`uri`,
+  `symbol`, `kind`). The grep-like floor: "every `fn`", "the spec
+  unit at this address".
+- **`explain(target)`** — look at ONE target's one-hop subgraph. The
+  canonical "which test verifies this rule?" lookup.
+- **`select(where)`** — RELATIONAL queries over the graph. `where` is
+  predicates joined by spaces: `uri:` / `symbol:` / `kind:` (the same
+  filters as `query`), `scope:` (a `spec://` prefix), `has:<verb>` /
+  `lacks:<verb>` (an edge does/does not touch the seed), and
+  `depth:<0..3>` (an undirected walk; seeds stay at `d0`). Reach for
+  `select` over `query` when the answer needs the edges: e.g.
+  `lacks:verifies` (spec rules with no verifier), `uri:… depth:1` (a
+  rule's implementers and one hop around them).
+
 If the user asks about installed packages — what's installed, what
 version, what features are active, what files a package contributed
 — call `query_package` first. Don't infer.

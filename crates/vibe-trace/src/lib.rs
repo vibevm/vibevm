@@ -32,6 +32,14 @@ pub use fragment::{Fragment, fragment};
 /// code↔spec map, not a degenerate case of a future query language.
 pub mod search;
 
+/// The query-language layer (E-A5B-QUERYLANG): a conjunctive predicate grammar
+/// with undirected graph traversal, sitting ON TOP of [`search`] — it reuses
+/// the floor's `uri`/`symbol`/`kind` predicate for seed selection and adds
+/// `scope`, `has`/`lacks` (verb touch), and `depth` (BFS over the bipartite
+/// code↔spec graph). The floor stays permanent and untouched; a broken parser
+/// cannot reach it.
+pub mod select;
+
 /// One rendered explanation of a traceability target: the deterministic
 /// text view, or the raw one-hop JSON subgraph. [`explain`] returns one of
 /// these; a caller matches the form to decide how to render or pass it on.

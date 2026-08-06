@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T17:13:49Z",
+  "updated_at": "2026-08-06T17:19:11Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -104829,7 +104829,7 @@
       }
     },
     "spec/modules/vibe-mcp/PROP-015-mcp-integration.md": {
-      "content_hash": "617d9398c2d61e33593616762c21648b21ffa1d61415b57cfa4eed2ca86e0489",
+      "content_hash": "6f8501ad8f4973336b4d3105ee60ebd766ce60d6c1cc1b885417cbb059b66f0a",
       "rollup": {
         "explicit": [
           "impl",
@@ -104843,19 +104843,19 @@
           "impl",
           "done"
         ],
-        "marker_count": 74,
-        "fact_count": 73,
+        "marker_count": 84,
+        "fact_count": 83,
         "unmarked_facts": 0
       },
-      "marker_count": 74,
-      "unit_count": 14,
+      "marker_count": 84,
+      "unit_count": 15,
       "issue_count": 0,
       "campaign": {
         "anchors_judged": 64,
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 64,
         "marker_count": 65,
-        "processed_hash": "e147967cbaa3494c8c6a16a198a048113cf659d4cef1f8567260937c2a2d9636",
+        "processed_hash": "6f8501ad8f4973336b4d3105ee60ebd766ce60d6c1cc1b885417cbb059b66f0a",
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -105312,14 +105312,90 @@
           "MAP-QUERY-THE-LANGUAGE-LEVEL-IS-NOT-BUILT": {
             "v": "confirmed",
             "ev": [
-              "unbuilt and marked `spec/plan`: there is no parser and no grammar in the tree",
-              "its shape is recorded from the owner's ruling and the backlog row it closes — filters plus graph traversal, depth and «has no edge of kind X», which is what answers «which rules does nothing verify»",
-              "and the standing-on-rather-than-replacing relation is what the sibling fact about permanence makes structural"
+              "crates/vibe-trace/src/select.rs  the level this fact said was designed and not built, now shipped",
+              "RE-JUDGED 2026-08-06. The verdict it replaces was CORRECT when formed — the level genuinely was designed and unbuilt — and the fact now carries its own supersession clause pointing at §2.2.2. Judged on the supersession rather than on the original claim, which is what the marker `impl/done` now asserts."
+            ]
+          },
+          "SELECT-IS-A-THIRD-VERB-NOT-A-MODE": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-cli/src/cli/select.rs  SelectArgs — the third verb's own argument surface, beside QueryArgs",
+              "crates/vibe-mcp/src/tools/select.rs  SelectMcpTool, registered as its own cell rather than a mode of `query`",
+              "crates/vibe-trace/src/select.rs  SelectOut / SelectView — its own result and view types, which is the claim: a mode flag would have made one verb's result type depend on its argument."
+            ]
+          },
+          "SELECT-STANDS-ON-THE-FILTER-LEVEL-AND-CANNOT-TAKE-IT-DOWN": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-trace/src/select/parse.rs  the grammar lives in its own module behind its own entry point",
+              "crates/vibe-trace/src/search.rs  unchanged in behaviour — only three functions moved to pub(crate) so the level above can reach the predicate instead of copying it",
+              "clause by clause: the parser is separable at the ref above, and the filter level's own entry point `search` is intact, so a parse failure cannot reach it."
+            ]
+          },
+          "SELECT-SEVEN-PREDICATES-JOINED-BY-AND": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-trace/src/select/parse.rs  the parser accepting exactly uri, symbol, kind, scope, has, lacks, depth",
+              "verified by running it: `vibe select --where \"lacks:verifies frobnicate:x\"` prints «expected one of `uri:`, `symbol:`, `kind:`, `scope:`, `has:`, `lacks:`, `depth:`» and exits 1 — the seven are the set, from the shipped binary rather than from the source."
+            ]
+          },
+          "SELECT-SCOPE-EXISTS-BECAUSE-A-MEASUREMENT-PUT-IT-THERE": {
+            "v": "confirmed",
+            "ev": [
+              "specmap.json  5742 of 5825 spec units carry no incoming `verifies` edge; 0 of 5825 carry a `kind`",
+              "spec/design/map-query-language.md ##m-scope-is-what-makes-it-answerable  the 72-document / median-57 / 67-of-72 measurement this fact summarises",
+              "verified end to end by running it: `vibe select --where \"lacks:verifies scope:…/PROP-037\"` answers «showing 6 of 177 matching» — the unscoped form of that question is 5742, so the predicate does the narrowing this fact claims for it."
+            ]
+          },
+          "SELECT-HAS-AND-LACKS-READ-THE-EDGE-FROM-THE-NODES-SIDE": {
+            "v": "confirmed",
+            "ev": [
+              "vibedeps/flow-core-ai-native/0.8.0/schemas/specmap.jtd.json  the edge definition, directed code→spec, which is what makes incoming-for-a-unit and outgoing-for-an-item the only single reading",
+              "crates/vibe-trace/src/select/tests.rs  the packet's ПРОВЕРЬ-5 test, which fails if the direction is read the other way round — the claim is asserted by a test rather than by prose."
+            ]
+          },
+          "SELECT-DEPTH-EXPANDS-AND-ZERO-IS-THE-IDENTITY": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-trace/src/select.rs  the undirected walk and the hop count carried on each hit",
+              "verified by running it: `vibe select --where \"uri:…/PROP-005#root depth:2\"` returns the seed at `d0` and code items at `d1`, so seeds stay in the answer and the hop count is reported",
+              "crates/vibe-trace/src/select/tests.rs  the ПРОВЕРЬ-6 test asserting the walk reaches code from spec and spec from code — the undirectedness clause."
+            ]
+          },
+          "SELECT-THE-BOUND-IS-CHOSEN-AGAINST-A-MEASUREMENT-NOT-A-FEELING": {
+            "v": "confirmed",
+            "ev": [
+              "spec/design/map-query-language.md ##m-depth-has-a-subject-and-a-sample-said-otherwise  71.7 % of 1205 nodes gain at depth 2, 5.9 % at depth 3",
+              "spec/design/map-query-language.md ##m-the-blast-radius-is-bounded  255 components, largest 44 nodes",
+              "crates/vibe-trace/src/search.rs:35  MAX_LIMIT 200 — the ceiling this fact says stays hard regardless of the depth bound",
+              "three clauses, three refs: the depth numbers, the component ceiling, and the independent result ceiling."
+            ]
+          },
+          "SELECT-AN-UNKNOWN-PREDICATE-IS-AN-ERROR": {
+            "v": "confirmed",
+            "ev": [
+              "verified by running the binary: an unknown predicate exits 1 naming the token and listing the expected set; an empty query exits 1 and points the caller at `vibe query` instead of answering «everything»",
+              "crates/vibe-trace/src/select/parse.rs  the refusal constructors, one per case: unknown predicate, unknown verb, repeated predicate, out-of-range depth, empty query",
+              "crates/progress-core/src/parse/facts.rs:237-250  the same law already implemented once in this repository for typed fences, which is what this fact says it is applying rather than inventing."
+            ]
+          },
+          "SELECT-THE-GRAMMAR-VERSION-TRAVELS-IN-THE-ANSWER": {
+            "v": "confirmed",
+            "ev": [
+              "verified by running it: the text header prints «map select · grammar v1 · …», so the version reaches a human reader too",
+              "crates/vibe-trace/src/select.rs  GRAMMAR_VERSION and its place in the JSON envelope — reported, never demanded of the caller, which is the fact's whole claim."
+            ]
+          },
+          "SELECT-THE-REASONING-LIVES-BESIDE-THE-CONTRACT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/design/map-query-language.md  the design record this contract points at, carrying the rejected shapes, the dated measurements and the corrected depth reading",
+              "an existence-and-reachability claim: the document is at the cited path and carries the three things this fact says it carries."
             ]
           }
         },
-        "verified_at": "2026-07-25T14:55:40Z",
-        "verify_batch": "c4f2-mcp-settings + A3-A5A"
+        "verified_at": "2026-08-06T17:19:11Z",
+        "verify_batch": "c4f2-mcp-settings + A3-A5A + A5B-CONTRACT"
       }
     },
     "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md": {

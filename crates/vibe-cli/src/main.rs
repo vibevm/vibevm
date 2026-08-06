@@ -130,6 +130,7 @@ fn main() -> ExitCode {
         Command::Check(args) => commands::check::run(&ctx, args),
         Command::Explain(args) => commands::explain::run(&ctx, args),
         Command::Query(args) => commands::query::run(&ctx, args),
+        Command::Select(args) => commands::select::run(&ctx, args),
         Command::Specmap(args) => commands::specmap::run(&ctx, args),
         Command::Show(args) => commands::show::run(&ctx, args),
         Command::Prefs(args) => commands::prefs::run(&ctx, args),

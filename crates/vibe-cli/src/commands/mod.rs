@@ -42,6 +42,7 @@ pub mod query;
 pub mod registry;
 pub mod reinstall;
 pub mod search;
+pub mod select;
 pub mod short_name;
 pub mod show;
 pub mod skill;
