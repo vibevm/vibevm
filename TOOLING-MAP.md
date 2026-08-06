@@ -10,6 +10,8 @@
 
 @fact:authority-line **Authority:** non-normative. The backlog entries carry the owner's rulings and win over this map wherever they diverge; the PROPs stay the contract. The wave ordering and the fork list below are **proposals** — nothing starts from this document.
 
+@fact:map-is-behind-the-tree-2026-08-06 **Read this map as of 2026-08-04, and the tree as of 2026-08-06.** The owner's programme of 2026-08-06 ran outside this map's wave ordering — deliberately, since it was a separate mandate — and landed six things this document does not yet arrange: the index publishes itself, reads a private index, caches the organisation behind an honest freshness check and specifies its webhook contract; the map gained a **search** surface (the plane below still calls that gap open); and the markup grew qualified markers plus a fence that can become a fact's body. **Refreshing this map against that is the next drainage step, and it is the first thing to do before trusting any «measured gap» below** — several of them were measured before those landings. What has NOT moved is the ordering logic or the fork list; what has moved is which atoms are still atoms. @status:doc/work
+
 ---
 
 ## 1. What this document is {#what}
