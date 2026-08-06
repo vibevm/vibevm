@@ -47,15 +47,35 @@ applied to the surface that most invites logic to accumulate in it. @status:spec
 alternatives were measured and offered on the same day. A *screen list* has a
 visible end but requires deciding which screens should exist — it answers
 "how much" rather than "what for". A *suppression count* (27 carry no reason
-today) is hygiene: all 27 could close without the subsystem moving a step.
-*Manual tests* (there are none, and the TUI is the one surface automated
-tests cannot really exercise) are worth having, but their number grows with
-the screens, so they define no end. Thinness is the only one of the four
-that a new screen does not move. @status:spec/done
+today, of 53 at the perimeter below) is hygiene: all 27 could close without
+the subsystem moving a step. *Manual tests* — and the TUI is the one surface
+automated tests cannot really exercise — are worth having and their number
+grows with the screens, so they define no end. Thinness is the only one of
+the four that a new screen does not move. @status:spec/done
+
+@fact:MANUAL-TESTS-ALREADY-EXIST-FOR-THIS-SURFACE **Correction, 2026-08-06.** The
+line above said there were none. There are three, and two are this subsystem's:
+`spec/manual-tests/MT-02-vibe-tree-tui.md` (the tree TUI's visual sign-off) and
+`MT-03-vibe-prefs-tui.md`, beside `MT-01-vibe-tree.md` for the plain renderer.
+The rejection of manual-tests-as-boundary never depended on the count and still
+holds; the parenthetical was simply false about a file three directories away —
+the exact shape this campaign exists to find. @status:impl/done
 
 @fact:WHAT-THE-MEASUREMENT-FOUND The measurement that framed the question: **63 files, 18 426 lines, 258
 tests inside the subsystem.** It is not a sketch, and its problem was never
 incompleteness — it was an undefined edge. @status:spec/done
+
+@fact:THE-PERIMETER-OF-THAT-MEASUREMENT **The perimeter, so the number is
+reproducible instead of merely quoted** *(added 2026-08-06)*: the two `tui/`
+trees — `crates/vibe-cli/src/commands/tree/tui/**` and
+`crates/vibe-cli/src/commands/prefs/tui/**`. It deliberately excludes
+`commands/tree/`'s own model and build code, which is the library half the
+deletion test is about, and that exclusion is why the figure is the right one
+to audit against. Both numbers this section quotes reproduce at exactly this
+perimeter and at no neighbouring one: `commands/tree/` alone gives 52 files and
+13 117 lines, and adding all of `prefs/tui` to it gives 72 and 20 372. A number
+whose perimeter is unstated is a number the next reader re-derives wrongly —
+this one was recovered by measuring five candidate perimeters. @status:impl/done
 
 @fact:THE-LAYERING-LAW-IS-THE-SAME-LAW This is the §1 layering law seen from outside: *vibevm logic never leaks
 into the app* is thinness stated inward, and the deletion test is how it is
