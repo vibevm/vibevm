@@ -29,6 +29,12 @@ pub enum PackageKind {
     #[serde(rename = "flow")]
     Flow,
 
+    #[serde(rename = "lang")]
+    Lang,
+
+    #[serde(rename = "mcp")]
+    Mcp,
+
     #[serde(rename = "stack")]
     Stack,
 

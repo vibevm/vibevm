@@ -36,7 +36,9 @@
         "flow",
         "feat",
         "stack",
-        "tool"
+        "tool",
+        "mcp",
+        "lang"
       ]
     },
     "list_entry": {
