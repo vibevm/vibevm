@@ -30,7 +30,7 @@ use vibe_core::manifest::Manifest;
 use vibe_registry::search::cache::{self as search_cache, CacheKey};
 use vibe_registry::search::full_scan::{self as search_full_scan, FullScanHit};
 use vibe_registry::search::query;
-use vibe_registry::{IndexClient, SearchHit, index_url_for};
+use vibe_registry::{IndexAuth, IndexClient, ProbeOutcome, SearchHit, index_url_for};
 
 use crate::cli::SearchArgs;
 use crate::output;
@@ -195,14 +195,29 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
                     }
                     continue;
                 }
-                let Some(client) = IndexClient::probe(&base) else {
-                    unreachable.push(UnreachableRegistry {
-                        name: reg.name.clone(),
-                        reason: format!(
-                            "probe of `{base}/repomd.json` failed (server down or wrong URL)"
-                        ),
-                    });
-                    continue;
+                // A2-INDEXAUTH — authenticate with the registry's own
+                // credentials, and tell a refused (401/403) probe apart
+                // from a missing index so the operator sees the real
+                // reason in `UnreachableRegistry.reason`.
+                let auth = IndexAuth::for_registry(reg, &base);
+                let client = match IndexClient::probe(&base, auth) {
+                    ProbeOutcome::Found(c) => c,
+                    ProbeOutcome::Refused { reason } => {
+                        unreachable.push(UnreachableRegistry {
+                            name: reg.name.clone(),
+                            reason,
+                        });
+                        continue;
+                    }
+                    ProbeOutcome::Absent => {
+                        unreachable.push(UnreachableRegistry {
+                            name: reg.name.clone(),
+                            reason: format!(
+                                "probe of `{base}/repomd.json` failed (server down or wrong URL)"
+                            ),
+                        });
+                        continue;
+                    }
                 };
                 match client.search(&query, kind_filter, Some(args.limit)) {
                     Ok(results) => {

@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T14:17:16Z",
+  "updated_at": "2026-08-06T14:28:18Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -106639,7 +106639,7 @@
       }
     },
     "spec/modules/vibe-registry/PROP-002-decentralized-registry.md": {
-      "content_hash": "a8f9be32bb5e89e9a9ec5d8167192277ff3af77c87df5a114bae30a696ca6e0c",
+      "content_hash": "79793544d36af8381b2ba06bf475a79f5758e4fa5957c7c6d11654b6db8ec17f",
       "rollup": {
         "explicit": [
           "impl",
@@ -106653,12 +106653,12 @@
           "impl",
           "done"
         ],
-        "marker_count": 362,
-        "fact_count": 361,
+        "marker_count": 369,
+        "fact_count": 368,
         "unmarked_facts": 0
       },
-      "marker_count": 362,
-      "unit_count": 35,
+      "marker_count": 369,
+      "unit_count": 36,
       "issue_count": 0,
       "campaign": {
         "anchors_judged": 285,
@@ -108400,10 +108400,67 @@
             "ev": [
               "F-063 sync-from-code 2026-07-26: re-verified against crates/vibe-publish/src/token.rs DIRECTLY, not against another document. load_token_for_host (:146-164) walks read_host_env_token (:173) -> read_legacy_env_token (:186) -> token_file_candidates (:228 = per_host_token_path :239, legacy_token_path :246), and both file legs root in vibe_core::settings::settings_dir(), which $VIBE_SETTINGS relocates. host_env_var (:111-127) uppercases the host's first label and folds non-alphanumerics to '_'; tests :305 host_env_var_renders_per_host and :321 host_env_var_uppercases_and_sanitises_prefix pin the rendering. LEDGER CORRECTION: the prior verdict's evidence read 'token loader 3-source order matches 90-user boot facts' - it cross-checked one spec document against another that carried the identical error, which is exactly why this drift survived Phase C with a confirmed verdict."
             ]
+          },
+          "INDEX-AUTH-IS-NOT-A-SECOND-REGIME": {
+            "v": "confirmed",
+            "ev": [
+              "the plan is resolved from the registry section itself: crates/vibe-registry/src/index_client/auth.rs `IndexAuth::for_registry(reg, base_url)` reads `reg.auth` and, under `TokenEnv`, the token from `reg.resolve_token_env_name()` — the same accessor crates/vibe-registry/src/multi_registry_resolver/mod.rs already uses for the git side",
+              "no new configuration key exists: `RegistrySection` in crates/vibe-core/src/manifest/project.rs is unchanged, still seven fields, and no second token file is read anywhere",
+              "all three construction sites pass it: multi_registry_resolver/mod.rs, crates/vibe-cli/src/commands/search.rs and crates/vibe-cli/src/commands/search/purl.rs each build the plan from the section they already hold"
+            ]
+          },
+          "INDEX-AUTH-WHY-IT-MATTERED": {
+            "v": "confirmed",
+            "ev": [
+              "measured before the build, on the pre-change file: `IndexClient` held exactly `file_base` and `server_base`, both URLs, and `build_client` set only a user-agent and a timeout — no header, no credential, at any of the five request sites",
+              "and the read path is load-bearing rather than incidental: PROP-005's own query path makes `<base>/by-name/<name>.json` the FIRST network call of a short-name install, so an index that refuses anonymous reads breaks the resolution it exists to accelerate"
+            ]
+          },
+          "INDEX-AUTH-HEADER-NOT-URL": {
+            "v": "confirmed",
+            "ev": [
+              "the header is attached through the client's `default_headers` at the single chokepoint crates/vibe-registry/src/index_client/mod.rs `build_client`, so every request carries it without any URL being rewritten",
+              "the contrast is real and in the tree: crates/vibe-registry/src/git_package_registry/auth.rs `inject_token` builds `https://x-access-token:<TOKEN>@…` because git consumes a credential that way — and that same function's doc records the discipline this fact generalises, that the credentialed string must not be logged"
+            ]
+          },
+          "INDEX-AUTH-NEVER-OVER-PLAINTEXT": {
+            "v": "confirmed",
+            "ev": [
+              "gate one: crates/vibe-registry/src/index_client/auth.rs `IndexAuth::plan` returns `None` for `(TokenEnv, Some(token), false)` — a resolved token over a non-https base produces no bearer. Covered by `plan_token_env_http_with_token_is_none`",
+              "gate two: crates/vibe-registry/src/index_client/mod.rs `attaches_authorization(base_url, auth)` requires `https://` at the moment of attachment, and `build_client` consults it. Covered by `authorization_attaches_only_for_a_bearer_plan_over_https`, whose four rows are the whole truth table",
+              "the sidestep the second gate closes is concrete rather than theoretical: `IndexAuth::Bearer`, `BearerToken::new` and `IndexClient::at_with_auth` are all public, so `at_with_auth(\"http://…\", Bearer(...))` reached the wire before it. Covered from the outside too, by `bearer_plan_over_http_base_sends_no_authorization_header` and its probe twin",
+              "recorded because it cost a review round: the first implementation carried only gate one and justified it by analogy to `inject_token` — an analogy that argues the other way, since that function checks the scheme inside itself where no caller can sidestep it"
+            ]
+          },
+          "INDEX-AUTH-GIT-REGIMES-CANNOT-SERVE-HTTP": {
+            "v": "confirmed",
+            "ev": [
+              "the plan for both regimes is `IndexAuth::HttpIncapable`, carrying the regime's own name — crates/vibe-registry/src/index_client/auth.rs, covered by `plan_ssh_is_http_incapable` and `plan_credential_helper_is_http_incapable`",
+              "no header is sent under them: `header_map` returns `None` for every non-bearer plan, covered by `header_map_is_none_for_non_bearer_plans`",
+              "and the 401/403 becomes an actionable error rather than a bare status: `IndexError::AuthIncapable` names the regime and the repair (declare `auth = \"token-env\"`), raised by `classify_failure`. Covered end to end by `ssh_plan_401_surfaces_auth_incapable_error` and `ssh_plan_403_also_surfaces_auth_incapable`",
+              "the claim that these regimes cannot answer an HTTP GET is not an assumption about the code but about the mechanisms: this document's own matrix routes `ssh` to ssh-agent and `credential-helper` to git's helper subsystem, neither of which is reachable from a bare `reqwest` request"
+            ]
+          },
+          "INDEX-AUTH-A-REFUSED-PROBE-IS-NOT-A-MISSING-INDEX": {
+            "v": "confirmed",
+            "ev": [
+              "the outcome type is now three-valued: `ProbeOutcome::{Found, Absent, Refused}` in crates/vibe-registry/src/index_client/mod.rs, where the pre-change signature was `Option<IndexClient>`",
+              "the distinction is asserted rather than described: `probe_refused_401_is_distinguishable_from_absent` and `probe_absent_on_404_is_not_refused`",
+              "it reaches the operator through a channel that already existed: crates/vibe-cli/src/commands/search.rs and search/purl.rs put the reason into `UnreachableRegistry.reason`, replacing the previous generic `probe of …/repomd.json failed (server down or wrong URL)`; the resolver logs it at warn",
+              "and the silent fall-through is deliberately preserved for everything else — 404, connect failure, 5xx still yield `Absent`, so a registry with no index behaves exactly as it did"
+            ]
+          },
+          "INDEX-AUTH-THE-TOKEN-IS-STRUCTURALLY-UNPRINTABLE": {
+            "v": "confirmed",
+            "ev": [
+              "`BearerToken` in crates/vibe-registry/src/index_client/auth.rs implements `Debug` by hand as `BearerToken(<redacted>)`, has no `Display`, and its only reader `secret()` is private to that module and consumed solely by `header_map`",
+              "the redaction survives the whole chain, which is the part worth testing rather than reading: `bearer_token_debug_redacts_secret`, `index_auth_debug_redacts_bearer`, and `index_client_debug_redacts_bearer_token` — the last asserting the derived `Debug` of the client itself neither prints the secret nor omits the redaction marker",
+              "and no error variant formats it: `IndexError::AuthIncapable` carries the regime name and the status, never the token"
+            ]
           }
         },
         "verified_at": "2026-08-03T11:11:46Z",
-        "verify_batch": "c4b-registry-core + d2d"
+        "verify_batch": "c4b-registry-core + d2d + A2-INDEXAUTH"
       }
     },
     "spec/modules/vibe-registry/PROP-008-qualified-naming.md": {

@@ -375,10 +375,30 @@ impl MultiRegistryResolver {
             // probed client. Probe is best-effort; absent or
             // unreachable index leaves the registry on the existing
             // git ls-remote path with no warning.
-            if let Some(url) = crate::index_client::index_url_for(&reg.name)
-                && let Some(client) = crate::index_client::IndexClient::probe(&url)
-            {
-                entry = entry.with_index_client(client);
+            if let Some(url) = crate::index_client::index_url_for(&reg.name) {
+                // A2-INDEXAUTH — authenticate to this registry's index
+                // with the registry's own credentials (bearer from
+                // `auth`/`token_env`, the same source the git side
+                // reads). `for_registry` is the scheme gate: a token is
+                // attached only over `https://`.
+                let auth = crate::index_client::IndexAuth::for_registry(reg, &url);
+                match crate::index_client::IndexClient::probe(&url, auth) {
+                    crate::index_client::ProbeOutcome::Found(client) => {
+                        entry = entry.with_index_client(client);
+                    }
+                    // The index is there but refused us (401/403) —
+                    // surface it, unlike the silent Absent fall-through,
+                    // so a private index is not mistaken for a missing
+                    // one.
+                    crate::index_client::ProbeOutcome::Refused { reason } => {
+                        tracing::warn!(
+                            target: "vibe_registry::index_client",
+                            "index for registry `{}` at `{url}` not used: {reason}",
+                            reg.name
+                        );
+                    }
+                    crate::index_client::ProbeOutcome::Absent => {}
+                }
             }
             sources.push(RegistrySource::Git(Arc::new(entry)));
         }

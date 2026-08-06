@@ -10,7 +10,9 @@ use anyhow::Result;
 use semver::Version;
 use serde::Serialize;
 use vibe_core::PackageKind;
-use vibe_registry::{BindingSite, IndexClient, PurlLookupHit, index_url_for};
+use vibe_registry::{
+    BindingSite, IndexAuth, IndexClient, ProbeOutcome, PurlLookupHit, index_url_for,
+};
 
 use crate::output;
 
@@ -59,12 +61,29 @@ pub(super) fn run_purl_lookup(
             unconfigured.push(reg.name.clone());
             continue;
         };
-        let Some(client) = IndexClient::probe(&base) else {
-            unreachable.push(UnreachableRegistry {
-                name: reg.name.clone(),
-                reason: format!("probe of `{base}/repomd.json` failed (server down or wrong URL)"),
-            });
-            continue;
+        // A2-INDEXAUTH — authenticate with the registry's own
+        // credentials, and tell a refused (401/403) probe apart from a
+        // missing index so the operator sees the real reason in
+        // `UnreachableRegistry.reason`.
+        let auth = IndexAuth::for_registry(reg, &base);
+        let client = match IndexClient::probe(&base, auth) {
+            ProbeOutcome::Found(c) => c,
+            ProbeOutcome::Refused { reason } => {
+                unreachable.push(UnreachableRegistry {
+                    name: reg.name.clone(),
+                    reason,
+                });
+                continue;
+            }
+            ProbeOutcome::Absent => {
+                unreachable.push(UnreachableRegistry {
+                    name: reg.name.clone(),
+                    reason: format!(
+                        "probe of `{base}/repomd.json` failed (server down or wrong URL)"
+                    ),
+                });
+                continue;
+            }
         };
         match client.lookup_purl(purl) {
             Ok(results) => {

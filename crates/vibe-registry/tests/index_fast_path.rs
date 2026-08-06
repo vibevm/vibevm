@@ -22,7 +22,7 @@ use tokio::net::TcpListener;
 use vibe_core::manifest::NamingConvention;
 use vibe_core::{Group, PackageKind};
 use vibe_registry::git_backend::GitBackend;
-use vibe_registry::{GitError, GitPerPackageRegistry, IndexClient};
+use vibe_registry::{GitError, GitPerPackageRegistry, IndexAuth, IndexClient, ProbeOutcome};
 
 #[derive(Default)]
 struct CannedFiles {
@@ -272,29 +272,29 @@ fn index_404_falls_through_to_git_backend() {
 }
 
 #[test]
-fn probe_returns_some_when_repomd_responds() {
+fn probe_returns_found_when_repomd_responds() {
     let canned = CannedFiles {
         repomd_status: 200,
         by_name: HashMap::new(),
     };
     let mock = spawn_mock(canned);
-    let client = IndexClient::probe(&mock.base_url);
-    assert!(client.is_some());
-    assert_eq!(
-        client.unwrap().file_base(),
-        mock.base_url.trim_end_matches('/')
-    );
+    let outcome = IndexClient::probe(&mock.base_url, IndexAuth::None);
+    let client = match outcome {
+        ProbeOutcome::Found(c) => c,
+        other => panic!("expected Found, got {other:?}"),
+    };
+    assert_eq!(client.file_base(), mock.base_url.trim_end_matches('/'));
 }
 
 #[test]
-fn probe_returns_none_when_no_repomd() {
+fn probe_returns_absent_when_no_repomd() {
     let canned = CannedFiles {
         repomd_status: 404,
         by_name: HashMap::new(),
     };
     let mock = spawn_mock(canned);
-    let client = IndexClient::probe(&mock.base_url);
-    assert!(client.is_none());
+    let outcome = IndexClient::probe(&mock.base_url, IndexAuth::None);
+    assert!(matches!(outcome, ProbeOutcome::Absent));
 }
 
 #[test]

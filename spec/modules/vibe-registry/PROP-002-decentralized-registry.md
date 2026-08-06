@@ -130,6 +130,57 @@ auth = "ssh"                                     # ssh-agent / keys; URL must be
 
 @fact:AUTH-MIGRATION **Migration.** Pre-this-decision `vibe.toml` files with no `auth` field on `[[registry]]` parse as `auth = "none"` (default), preserving every current behaviour for public registries. Operators who want token-based access add the field explicitly; nothing breaks for anyone else. @status:impl/done
 
+#### 2.2.1.1 The same regime authenticates this registry's index {#index-auth}
+
+@fact:INDEX-AUTH-IS-NOT-A-SECOND-REGIME **One credential, not a second one**
+*(built 2026-08-06)*. A registry's index is that registry's index, so it is read
+with that registry's credentials — the very `auth` / `token_env` declared above,
+resolved by the same algorithm the git side uses. No new configuration key, no
+second token file, nothing for an operator to keep in sync. @status:impl/done
+
+@fact:INDEX-AUTH-WHY-IT-MATTERED **What was broken, measured before the build.**
+The index client carried two fields and both were URLs; it sent no credential on
+any request, ever. So an index living in a private repository was not merely
+unpublishable — it was **unreadable**, and the read path is the one every
+`vibe install` of a short name walks. @status:impl/done
+
+@fact:INDEX-AUTH-HEADER-NOT-URL **The token travels in a header, not in the
+URL.** The git side injects it into the URL because that is how git consumes a
+credential; HTTP has a proper place for one, and a token in a URL leaks into
+logs, proxies and referrers. @status:impl/done
+
+@fact:INDEX-AUTH-NEVER-OVER-PLAINTEXT **Never over `http://`** — the same rule,
+for the same reason, that already keeps the git side from injecting a token into
+a non-https URL. It is enforced **twice**: the access plan never forms a bearer
+for a plaintext base, and the attachment step re-checks the client's own base.
+The second gate is not redundancy for its own sake — the first can be sidestepped
+by a caller that builds a client directly, and a rule a caller can sidestep is a
+rule with no checker. @status:impl/done
+
+@fact:INDEX-AUTH-GIT-REGIMES-CANNOT-SERVE-HTTP **`ssh` and `credential-helper`
+carry no HTTP credential, and say so instead of failing silently.** Both
+authorise git transport: one delegates to ssh-agent, the other to a git
+subsystem, and neither can answer a plain `GET`. Under them the client sends
+nothing, and a 401 or 403 from the index surfaces an error naming the regime and
+the repair rather than a bare status. @status:impl/done
+
+@fact:INDEX-AUTH-A-REFUSED-PROBE-IS-NOT-A-MISSING-INDEX **The probe now tells
+«refused» from «absent», and this is the half a mechanical reading of «add
+authentication» would have missed.** Before, any non-200 meant `None`, and the
+resolver fell silently through to enumerating git — so a private index looked
+exactly like no index at all, and an operator who had configured everything
+correctly saw nothing wrong. A 401 or 403 on the probe is now a distinct outcome
+carrying regime-specific guidance, surfaced through the same unreachable-registry
+channel the search already reports. Everything else — 404, connect failure, 5xx —
+stays the silent fall-through it was. @status:impl/done
+
+@fact:INDEX-AUTH-THE-TOKEN-IS-STRUCTURALLY-UNPRINTABLE **The token cannot be
+printed by accident.** It is held in a type whose own debug rendering is the word
+redacted, with no display form and no public reader; the single private accessor
+sinks it straight into an HTTP header value. So every error, log line and derived
+debug rendering along the whole chain is safe by construction rather than by
+everyone remembering. @status:impl/done
+
 ### 2.2.2 Machine-global registry config: `~/.vibe/registry.toml` {#global-config}
 
 @fact:global-config-req `req r1` @status:impl/done
