@@ -96,6 +96,69 @@ structured JSON + a text rendering out): @status:impl/done
 @fact:TOOL-FAILURE-RENDERING A tool failure renders as `isError: true` in the result payload (a
 tool-level failure), distinct from a transport-level JSON-RPC error. @status:impl/done
 
+#### 2.2.1 Searching the map — the set-returning twin of `explain` {#map-query}
+
+@fact:MAP-QUERY-ANSWERS-A-DIFFERENT-QUESTION **`query` finds nodes; `explain`
+looks at one.** Until 2026-08-06 the map could only be asked about a target
+already known by name, so *«which of these exist?»* was unanswerable — not in
+the host, not in any language stack, not in the engine. `query` is that
+question, and the two are deliberately separate verbs rather than one verb with
+a mode: a point lookup and a set filter render differently, cap differently, and
+fail differently. @status:impl/done
+
+@fact:MAP-QUERY-THE-SIMPLE-LEVEL-IS-PERMANENT **The filter level is a permanent
+level, not a first version to be replaced** *(owner ruling, 2026-08-06)*. An
+agent accustomed to grep reaches for filters; a query language demands a form it
+will not build without need. So the filters must work on their own and must
+never become a degenerate case of a grammar — in the library they are their own
+entry point, so a broken parser could not take them down with it. @status:impl/done
+
+@fact:MAP-QUERY-THREE-FILTERS-AND-A-CEILING **Three filters, combined with AND,
+under a hard ceiling:** exact spec address, substring of a code symbol, element
+kind. None is required; those given narrow. The ceiling is not a convenience and
+cannot be removed — the answer is read by an agent with a bounded context, and
+an unbounded one is useless rather than generous. When it truncates it says so,
+with the total, in both renderings. @status:impl/done
+
+@fact:MAP-QUERY-RESULTS-ARE-NODES **Results are nodes, never edges.** «Find me an
+edge» is not a question anyone asks; «find me what has, or lacks, an edge of this
+kind» is — so edges are a filter dimension for the query level above, and the
+result set stays spec units and code items. @status:impl/done
+
+@fact:MAP-QUERY-A-HIT-CARRIES-ITS-SOURCE **Every hit records where it came
+from**, because a second producer is already designed: the code-quality engine's
+findings join these results **at query time**, by the owner's ruling that two
+engines must not merge their data. Nothing of that engine is built here; the
+result shape simply does not close the door — a discriminated field rather than a
+closed variant set, so a third source adds a value instead of breaking every
+reader. @status:spec/plan
+
+@fact:MAP-QUERY-IS-ONE-CAPABILITY-WITH-TWO-SURFACES **One library, two thin
+surfaces**, per the omnichannel floor: the filtering lives in the host's trace
+crate, `vibe query` renders it for a person and the `query` tool renders it for
+an agent, and both call the same function. The MCP tool's description says when
+to reach for it instead of `explain` — that description is the surface's own,
+which is exactly what the agent-facing class owns and all it owns. @status:impl/done
+
+@fact:MAP-QUERY-THE-KIND-VOCABULARY-IS-MEASURED-NOT-INVENTED **`kind` filters over
+a measured vocabulary.** The committed map carries nine code kinds, and a spec
+unit answers on its own kind rather than borrowing the code one; the two
+vocabularies are disjoint, so one filter serves both without ambiguity. **Caveat
+worth carrying:** every spec unit in this tree is legacy-unmarked, so a spec kind
+matches nothing here today. The path is open and exercised only by fixtures —
+stated because a filter that silently returns nothing is indistinguishable from
+one that is broken. @status:impl/done
+
+@fact:MAP-QUERY-BUILT-FRESH-LIKE-EXPLAIN The map is built fresh in memory per
+call, never read from the committed artefact — the same posture `explain` takes,
+for the same reason: a query answers for the tree as it is. @status:impl/done
+
+@fact:MAP-QUERY-THE-LANGUAGE-LEVEL-IS-NOT-BUILT **The query language is designed
+and not built.** Its shape is the filters plus graph traversal — depth, and
+«has no edge of kind X», which is what answers *«which rules does nothing
+verify»* — and it introduces a grammar that will need versioning. It stands on
+this level rather than replacing it. @status:spec/plan
+
 ### 2.3 Tool and server errors cite their REQ {#errors}
 
 @fact:req-errors `req r1` @status:impl/done

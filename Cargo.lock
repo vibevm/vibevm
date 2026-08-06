@@ -4163,6 +4163,7 @@ dependencies = [
  "core-ai-native-specmap",
  "core-ai-native-specmark",
  "semver",
+ "serde",
  "serde_json",
  "tempfile",
  "vibe-core",

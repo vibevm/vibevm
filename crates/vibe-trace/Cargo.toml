@@ -14,6 +14,7 @@ description = "Host traceability-explain capability — build the specmap fresh 
 specmark.workspace = true
 specmap-core.workspace = true
 anyhow.workspace = true
+serde.workspace = true
 serde_json.workspace = true
 # `vibe-core` for the package manifest (`vibe.toml` → `[package]` group/name) so
 # the foreign resolver can map an installed `vibedeps/` slot to its globally-

@@ -7,8 +7,8 @@
 
 use serde_json::{Value, json};
 use vibe_mcp::tools::{
-    AgenticExplainMcpTool, ListToolsMcpTool, MaterialiseSubskillMcpTool, McpTool,
-    QueryPackageMcpTool, ReadSubskillMcpTool,
+    AgenticExplainMcpTool, ListToolsMcpTool, MaterialiseSubskillMcpTool, McpTool, QueryMcpTool,
+    QueryPackageMcpTool, ReadSubskillMcpTool, default_tools,
 };
 use vibe_mcp::{ServerContext, dispatch_one};
 
@@ -81,6 +81,101 @@ fn each_cell_descriptor_names_itself() {
     );
     assert_eq!(AgenticExplainMcpTool.descriptor().name, "agentic_explain");
     assert_eq!(ListToolsMcpTool.descriptor().name, "list_tools");
+    assert_eq!(QueryMcpTool.descriptor().name, "query");
+}
+
+// --- query (A5A-MAPSEARCH: the map-search surface over the shared library) -
+
+/// ПРОВЕРЬ-7: the `query` cell is registered at the one registration point
+/// (`default_tools`), so it is reachable by the name its descriptor carries —
+/// not merely constructible. A new tool is a new cell added there, not an
+/// edit to the dispatcher.
+#[test]
+fn query_cell_is_registered_in_default_tools() {
+    let names: Vec<String> = default_tools()
+        .iter()
+        .map(|t| t.descriptor().name)
+        .collect();
+    assert!(
+        names.contains(&"query".to_string()),
+        "query must be registered: {names:?}"
+    );
+    // The descriptor's description tells an agent when to reach for `query`
+    // vs `explain` (the point lookup) — the routing guidance ПРОВЕРЬ-7 asks for.
+    let desc = QueryMcpTool.descriptor().description;
+    assert!(
+        desc.contains("explain"),
+        "must contrast with `explain`: {desc}"
+    );
+}
+
+/// A small spec↔code tree the engine can build a real map from — the same
+/// synthetic shape `vibe-trace`'s own tests plant, so the MCP test exercises
+/// the *real* build path, not a stub.
+fn project_with_specmap() -> (tempfile::TempDir, ServerContext) {
+    let dir = tempfile::tempdir().unwrap();
+    let root = dir.path();
+    std::fs::write(
+        root.join("specmap.toml"),
+        "namespace = \"demo\"\nscan_roots = [\"crates/*\"]\nspec_roots = [\"spec\"]\n",
+    )
+    .unwrap();
+    std::fs::create_dir_all(root.join("spec")).unwrap();
+    std::fs::write(
+        root.join("spec/D.md"),
+        "## The rule {#req-r}\n`req r1`\n\nIt MUST hold.\n",
+    )
+    .unwrap();
+    let src = root.join("crates/x/src");
+    std::fs::create_dir_all(&src).unwrap();
+    std::fs::write(
+        src.join("lib.rs"),
+        concat!(
+            "#[spec(implements = \"spec://demo/D#req-r\", r = 1)]\n",
+            "pub fn f() {}\n\n",
+            "#[verifies(\"spec://demo/D#req-r\")]\n",
+            "fn t() {}\n",
+        ),
+    )
+    .unwrap();
+    let ctx = ServerContext::new(root.to_path_buf());
+    (dir, ctx)
+}
+
+/// Acceptance 7: the MCP tool answers the same query the CLI does, through the
+/// SAME library function (`vibe_trace::search::query`), not a copy of the
+/// logic. `kind = "fn"` returns the code items of that kind, built fresh from
+/// the project tree.
+#[test]
+fn query_cell_answers_through_the_shared_library() {
+    let (_dir, ctx) = project_with_specmap();
+    let out = QueryMcpTool.run(&json!({"kind": "fn"}), &ctx).unwrap();
+    let results = out["results"].as_array().expect("results array");
+    assert!(!results.is_empty(), "the fixture plants `fn`s");
+    assert!(
+        results
+            .iter()
+            .all(|r| r["source"] == "code" && r["kind"] == "fn"),
+        "every result is a code `fn`: {results:?}"
+    );
+    // The envelope carries the truncation facts a script branches on.
+    assert_eq!(out["count"], results.len());
+    assert!(out["total_matching"].is_u64());
+    assert_eq!(out["truncated"], false);
+    assert_eq!(out["filters"]["kind"], "fn");
+}
+
+/// `uri` returns exactly the one spec unit, end-to-end through the tool.
+#[test]
+fn query_cell_uri_filter_returns_exactly_one_spec_unit() {
+    let (_dir, ctx) = project_with_specmap();
+    let out = QueryMcpTool
+        .run(&json!({"uri": "spec://demo/D#req-r"}), &ctx)
+        .unwrap();
+    let results = out["results"].as_array().expect("results array");
+    assert_eq!(results.len(), 1);
+    assert_eq!(results[0]["source"], "spec");
+    assert_eq!(results[0]["uri"], "spec://demo/D#req-r");
 }
 
 // --- list_tools (В3: the registry surface over the shared library) -------

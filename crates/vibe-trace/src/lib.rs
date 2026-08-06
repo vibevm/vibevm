@@ -27,6 +27,11 @@ mod foreign;
 mod fragment;
 pub use fragment::{Fragment, fragment};
 
+/// The simple-level map search — independent filters, AND-joined, over a hard
+/// result ceiling (A5A-MAPSEARCH). A permanent grep-like floor over the
+/// code↔spec map, not a degenerate case of a future query language.
+pub mod search;
+
 /// One rendered explanation of a traceability target: the deterministic
 /// text view, or the raw one-hop JSON subgraph. [`explain`] returns one of
 /// these; a caller matches the form to decide how to render or pass it on.

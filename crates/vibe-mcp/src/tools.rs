@@ -48,6 +48,7 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
         Box::new(MaterialiseSubskillMcpTool),
         Box::new(AgenticExplainMcpTool),
         Box::new(ExplainMcpTool),
+        Box::new(QueryMcpTool),
         Box::new(ListToolsMcpTool),
     ]
 }
@@ -576,6 +577,8 @@ impl McpTool for ExplainMcpTool {
     }
 }
 
+pub mod query;
+pub use query::QueryMcpTool;
 // ---------------------------------------------------------------------------
 // shared helpers
 // ---------------------------------------------------------------------------

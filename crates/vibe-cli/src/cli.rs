@@ -19,6 +19,7 @@ mod mcp;
 mod pkg;
 mod prefs;
 mod progress;
+mod query;
 mod registry;
 mod skill;
 mod specmap;
@@ -35,6 +36,7 @@ pub use mcp::*;
 pub use pkg::*;
 pub use prefs::*;
 pub use progress::*;
+pub use query::*;
 pub use registry::*;
 pub use skill::*;
 pub use specmap::*;
@@ -235,6 +237,17 @@ pub enum Command {
     /// subgraph; the default is the deterministic text view. Contrast
     /// `vibe trace`, a delegating alias to the installed stack's `trace`.
     Explain(ExplainArgs),
+
+    /// Search the code↔spec map by independent filters (A5A-MAPSEARCH):
+    /// `--uri` (exact spec address), `--symbol` (substring of a code
+    /// symbol), and `--kind` (a code `item_kind` or a spec unit kind),
+    /// AND-joined, over a hard result ceiling (`--limit`, default 50, max
+    /// 200; no unbounded mode). None is required — bare `vibe query` shows a
+    /// bounded slice of the whole map, with truncation named. The grep-like
+    /// counterpart to `vibe explain` (a point lookup): `explain` looks at
+    /// ONE target's subgraph; `query` FINDS the many nodes that fit.
+    /// `--json` emits the machine-readable form. Read-only.
+    Query(QueryArgs),
 
     /// Generate the package's carried traceability map (V5-PACKAGE-MAP §2.2).
     /// Reads the package's `vibe.toml` (for its `(group, name)` coordinate) and

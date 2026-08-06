@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T15:20:38Z",
+  "updated_at": "2026-08-06T15:28:13Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -102329,7 +102329,7 @@
       }
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {
-      "content_hash": "5b0bf15c12e5df46d301d83ff7b6f0b07bcc111e8af2748ed399ae3788440b64",
+      "content_hash": "22dfd9c67bc9c377bc87d4c9868dadc41341c22fbd3504f0390c54707d792c75",
       "rollup": {
         "explicit": [
           "impl",
@@ -102343,12 +102343,12 @@
           "impl",
           "done"
         ],
-        "marker_count": 301,
-        "fact_count": 300,
+        "marker_count": 311,
+        "fact_count": 310,
         "unmarked_facts": 0
       },
-      "marker_count": 301,
-      "unit_count": 47,
+      "marker_count": 311,
+      "unit_count": 48,
       "issue_count": 0,
       "campaign": {
         "anchors_judged": 278,
@@ -104218,14 +104218,92 @@
               "the failure path is the one the sibling fact defines: a missing identity makes `git commit` exit non-zero, which becomes a `PublishError`, which the route logs and counts without failing the write",
               "the contrast is deliberate and visible in the tree: crates/vibe-publish/src/git_publish.rs sets `user.email` / `user.name` after its clone, because there the staging tree is ours and disposable; here the working copy is the operator's"
             ]
+          },
+          "CACHE-ORG-THE-COST-IS-THE-SMALL-HALF": {
+            "v": "confirmed",
+            "ev": [
+              "the asymmetry it names is in the code: the local-clone walk reads a directory, while the host path pages through `{api_base}/orgs/{org}/repos?per_page=100` following LINK headers — crates/vibe-index/src/scanner/from_github.rs",
+              "and the staleness claim is the sibling fact's, verified there — it is why this section exists at all rather than being a performance note"
+            ]
+          },
+          "CACHE-ORG-THE-AXIS-IS-NOT-HOW-MANY-WORKERS": {
+            "v": "confirmed",
+            "ev": [
+              "the bypass is real in this tree, not hypothetical: crates/vibe-publish/src/git_publish.rs pushes a release tag straight to the host, and the index post-hook that would tell the service is optional and dormant unless env vars are set (crates/vibe-cli/src/commands/registry/publish.rs:209)",
+              "so the premise the owner rejected is false for a single-worker deployment exactly as for many, which is what the fact claims",
+              "recorded as the owner's accepted correction in BACKLOG.md `@fact:B065-THE-AXIS-IS-NOT-THE-TOPOLOGY`"
+            ]
+          },
+          "CACHE-ORG-IS-ON-BY-DEFAULT": {
+            "v": "confirmed",
+            "ev": [
+              "built as ruled: `--cache-org` defaults on with `--no-cache-org` as the explicit opt-out, the two in one argument group so they cannot be combined — crates/vibe-index/src/cli/reindex.rs",
+              "`vibe-index reindex --help` states both the mechanism and the risk, covered by the crate's help-smoke test",
+              "the name/assumption distinction the fact draws is the owner's own, recorded at BACKLOG.md `@fact:B065-THE-FLAG-IS-NAMED`"
+            ]
+          },
+          "CACHE-ORG-THE-FRESHNESS-CHECK-IS-A-CONDITION-NOT-AN-IMPROVEMENT": {
+            "v": "confirmed",
+            "ev": [
+              "implemented as a conditional request carrying the validator the cached image was taken with, in crates/vibe-index/src/scanner/org_cache.rs plus the probe in from_github.rs",
+              "proven end to end rather than asserted: `second_run_hits_cache_without_rewalking` in crates/vibe-index/tests/org_cache_e2e.rs counts mock requests — the second run issues ONE (the conditional probe), gets a not-modified answer, and reports a cache hit",
+              "and the change case is proven too: `org_change_between_runs_is_detected` moves the validator and adds a repository, and the run re-enumerates and reports a miss",
+              "the honesty argument is the fact's own and it is what the test measures: the default caches without treating the image as truth"
+            ]
+          },
+          "CACHE-ORG-CANNOT-CHECK-MEANS-ENUMERATE": {
+            "v": "confirmed",
+            "ev": [
+              "covered by `no_validator_means_reenumerate_not_trust` — a mock that returns no validator produces an image with none recorded, and the next run enumerates rather than trusting, sending no conditional header",
+              "the direction of failure is the load-bearing choice: the opposite default is indistinguishable from a working cache until a package cannot be found, which is this section's whole subject"
+            ]
+          },
+          "CACHE-ORG-BELONGS-TO-ITS-ORGANISATION": {
+            "v": "confirmed",
+            "ev": [
+              "the image records the organisation and the API base it came from and is matched on both before use — crates/vibe-index/src/scanner/org_cache.rs",
+              "covered by `cache_not_reused_for_different_org`: the same validator against a different organisation does not match, the run enumerates, and the image is rewritten for the new organisation",
+              "cheap to state and expensive to omit, as the fact says — the failure would be an index serving another organisation's picture with no signal"
+            ]
+          },
+          "CACHE-ORG-HIT-AND-MISS-ARE-VISIBLE": {
+            "v": "confirmed",
+            "ev": [
+              "reported in both renderings: a field in the JSON summary and a line in the text output, covered by `hit_and_miss_visible_in_text_output`",
+              "the field is omitted entirely when the flag is off, so the report never implies a cache that is not in play",
+              "the argument is this repository's standing one — a mechanism that fails silently is indistinguishable from one that works"
+            ]
+          },
+          "RESCAN-ORG-IS-UNCONDITIONAL": {
+            "v": "confirmed",
+            "ev": [
+              "shipped as its own subcommand — crates/vibe-index/src/cli/rescan_org.rs, registered in the crate's command enum",
+              "proven unconditional rather than merely documented: `rescan_org_is_unconditional_even_when_cache_fresh` runs it against a fresh cache and counts both pages fetched, every request without a conditional header, the report a miss, and the image refreshed",
+              "its reason is the one the fact gives and it is structural: no freshness mechanism promises completeness, so the full walk stays reachable by name"
+            ]
+          },
+          "CACHE-ORG-APPLIES-WHERE-ENUMERATION-IS-EXPENSIVE": {
+            "v": "confirmed",
+            "ev": [
+              "scoped to the host-API path in the build, leaving the local-clone walk untouched",
+              "the reasoning is checkable: the local walk is a directory read, so a validator around it would add a way to be wrong and buy nothing measurable"
+            ]
+          },
+          "CACHE-ORG-FIRST-RUN-IS-UNCHANGED": {
+            "v": "confirmed",
+            "ev": [
+              "covered by `first_run_and_no_cache_org_behaviour`: with no image on disk the run enumerates, builds the index, writes the image, and reports a miss — no warning, no error",
+              "and with the flag off there is no image written and no cache field in the report, which is a clean opt-out rather than a suppressed feature",
+              "the standard the fact sets for itself — a default that changes the first run has to be explained — is met by not changing it"
+            ]
           }
         },
         "verified_at": "2026-08-05T18:58:42Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A"
       }
     },
     "spec/modules/vibe-mcp/PROP-015-mcp-integration.md": {
-      "content_hash": "e147967cbaa3494c8c6a16a198a048113cf659d4cef1f8567260937c2a2d9636",
+      "content_hash": "617d9398c2d61e33593616762c21648b21ffa1d61415b57cfa4eed2ca86e0489",
       "rollup": {
         "explicit": [
           "impl",
@@ -104233,18 +104311,18 @@
         ],
         "computed": [
           "spec",
-          "done"
+          "plan"
         ],
         "effective": [
           "impl",
           "done"
         ],
-        "marker_count": 65,
-        "fact_count": 64,
+        "marker_count": 74,
+        "fact_count": 73,
         "unmarked_facts": 0
       },
-      "marker_count": 65,
-      "unit_count": 13,
+      "marker_count": 74,
+      "unit_count": 14,
       "issue_count": 0,
       "campaign": {
         "anchors_judged": 64,
@@ -104642,10 +104720,80 @@
             "ev": [
               "accurate: IMPLEMENTED, the retroactive spec home — vibe mcp serve/install/status live (this session runs as an MCP consumer of the very server it verifies)"
             ]
+          },
+          "MAP-QUERY-ANSWERS-A-DIFFERENT-QUESTION": {
+            "v": "confirmed",
+            "ev": [
+              "the gap it names was measured before the build and was total: no search entry point existed in the engine, in any of the three language stacks' trace CLIs, or in the host — the only map query anywhere was a point `explain`",
+              "and it is closed: `vibe query` and the `query` MCP tool both answer set questions over the same map",
+              "the separate-verbs decision is visible in the surfaces — the two render, cap and fail differently, which is what makes them two verbs rather than one with a mode"
+            ]
+          },
+          "MAP-QUERY-THE-SIMPLE-LEVEL-IS-PERMANENT": {
+            "v": "confirmed",
+            "ev": [
+              "the owner's ruling of 2026-08-06 is the authority, and it is recorded with its reasoning: an agent used to grep reaches for filters, a query language demands a form it will not build without need",
+              "the structural consequence is implemented rather than promised: the filters are their own library entry point with no parser between them and the map, so a grammar landing later cannot take them down",
+              "which is what «not a degenerate case of the query language» has to mean if it is to be checkable at all"
+            ]
+          },
+          "MAP-QUERY-THREE-FILTERS-AND-A-CEILING": {
+            "v": "confirmed",
+            "ev": [
+              "the three filters are built and each has its own test — exact address, symbol substring, element kind — and their conjunction narrows rather than widens, proven by a test asserting the AND result is a subset and that an impossible conjunction is empty",
+              "the ceiling is hard and cannot be removed: it is applied before results are collected, `--limit` tunes only within a bounded range, and zero is refused rather than read as unbounded",
+              "truncation is named with the total in both renderings — a real run of `vibe query --limit 3` printed `showing 3 of 6799 matching`, and the JSON carries the flag with the counts"
+            ]
+          },
+          "MAP-QUERY-RESULTS-ARE-NODES": {
+            "v": "confirmed",
+            "ev": [
+              "the result set is spec units and code items; no edge is ever a hit",
+              "the reasoning is the design's and it holds: the useful edge question is a predicate on nodes — what has, or lacks, an edge of a kind — which belongs to the level above and returns nodes too"
+            ]
+          },
+          "MAP-QUERY-A-HIT-CARRIES-ITS-SOURCE": {
+            "v": "confirmed",
+            "ev": [
+              "every hit carries a source discriminator, and the choice of a discriminated field over a closed variant set was made for exactly the reason the fact gives — a third producer becomes a new value rather than a breaking edit to every reader",
+              "the second producer is real and already ruled: the owner chose to join the code-quality engine's findings at query time rather than merge two engines' data, which is BACKLOG.md B-019 part (в)",
+              "marked `spec/plan` because nothing of that join is built here — only the shape that leaves it possible"
+            ]
+          },
+          "MAP-QUERY-IS-ONE-CAPABILITY-WITH-TWO-SURFACES": {
+            "v": "confirmed",
+            "ev": [
+              "the filtering lives in the host's trace crate and both surfaces call the same function — the MCP tool's run path delegates to it rather than reimplementing, proven by an oracle test that drives the tool end to end",
+              "which is the omnichannel floor this project declared in PROP-000 §21, applied to a capability born after the declaration",
+              "and the description clause is the agent-facing class's own rule: the tool owns its description and schema and nothing else — this one tells the agent when to use it rather than `explain`"
+            ]
+          },
+          "MAP-QUERY-THE-KIND-VOCABULARY-IS-MEASURED-NOT-INVENTED": {
+            "v": "confirmed",
+            "ev": [
+              "the vocabulary was measured against the committed map before the filter was written: nine code kinds with their counts, not a list invented beside the code",
+              "the caveat is the valuable half and it is measured too: every spec unit in this tree is legacy-unmarked, so a spec kind matches nothing here today and the path is exercised only by fixtures",
+              "stating it is the point — a filter that silently returns nothing is indistinguishable from one that is broken, which is the same disease as the cache section's hit-and-miss reporting one document over"
+            ]
+          },
+          "MAP-QUERY-BUILT-FRESH-LIKE-EXPLAIN": {
+            "v": "confirmed",
+            "ev": [
+              "the query builds the index in memory per call through the same path `explain` uses in crates/vibe-trace, never reading the committed artefact",
+              "the reason is the one that crate's own module doc already gives for `explain`: a query answers for the tree as it is, not for a stale committed file"
+            ]
+          },
+          "MAP-QUERY-THE-LANGUAGE-LEVEL-IS-NOT-BUILT": {
+            "v": "confirmed",
+            "ev": [
+              "unbuilt and marked `spec/plan`: there is no parser and no grammar in the tree",
+              "its shape is recorded from the owner's ruling and the backlog row it closes — filters plus graph traversal, depth and «has no edge of kind X», which is what answers «which rules does nothing verify»",
+              "and the standing-on-rather-than-replacing relation is what the sibling fact about permanence makes structural"
+            ]
           }
         },
         "verified_at": "2026-07-25T14:55:40Z",
-        "verify_batch": "c4f2-mcp-settings"
+        "verify_batch": "c4f2-mcp-settings + A3-A5A"
       }
     },
     "spec/modules/vibe-mcp/PROP-026-tcg-tool-family.md": {
