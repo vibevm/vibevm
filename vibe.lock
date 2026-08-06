@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-08-06T08:12:25Z"
+generated_at = "2026-08-06T09:12:10Z"
 schema_version = 5
 root_dependencies = [
     "stack:org.vibevm/rust-ai-native@^0.7.0",
@@ -353,7 +353,7 @@ name = "qualified-naming"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/qualified-naming/v0.1.0"
-content_hash = "sha256:f79c90c7c76e3d93ee3817fbf57bddd5c6bcffec43300ad77e7359f6ed286659"
+content_hash = "sha256:775db67cbde26b0e68b7acc684bd0187ee8385d6dcfb0e95bf968fc9966924e6"
 files_written = []
 source_kind = "local"
 

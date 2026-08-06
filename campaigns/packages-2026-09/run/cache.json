@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T08:27:43Z",
+  "updated_at": "2026-08-06T09:12:11Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -63396,7 +63396,7 @@
       }
     },
     "packages/org.vibevm.world/qualified-naming/v0.1.0/spec/flows/qualified-naming/ref-grammar.md": {
-      "content_hash": "b8e5eaaf77723ddbd250a67e4ec851cead902e35d136e5d9095d881398ae2c3a",
+      "content_hash": "1083b69144de3e5fa4ae19358e3c147aad391b8a02e49c894e198fccc7bf8dc0",
       "rollup": {
         "explicit": [
           "spec",
@@ -63410,12 +63410,12 @@
           "spec",
           "done"
         ],
-        "marker_count": 58,
-        "fact_count": 57,
+        "marker_count": 73,
+        "fact_count": 72,
         "unmarked_facts": 0
       },
-      "marker_count": 58,
-      "unit_count": 7,
+      "marker_count": 73,
+      "unit_count": 8,
       "issue_count": 0,
       "campaign": {
         "processed_hash": "b8e5eaaf77723ddbd250a67e4ec851cead902e35d136e5d9095d881398ae2c3a",

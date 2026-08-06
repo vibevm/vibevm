@@ -62,6 +62,33 @@ not collide with your version syntax and never overload one. @status:impl/done
 - @fact:RULE-THE-CLI-ACCEPTS-ALL-FORMS **The CLI accepts all forms.** It is the one place a human is present,
   so it is the one place a short name may be resolved. @status:impl/done
 
+## Which form documentation should show {#documentation-policy}
+
+@fact:DOCUMENTED-EXAMPLES-ARE-COPIED-AND-RUN Documentation examples are not
+illustrations — readers copy them and run them. So the form an example shows
+is a claim that the command works when pasted, and that claim differs by
+verb. @status:impl/done
+
+| context | form | why |
+|---|---|---|
+| @fact:ROW-DOC-INSTALL an **install** command @status:impl/done | **qualified** @status:impl/done | works unconditionally; a short name needs a configured registry index, which the reader may not have @status:impl/done |
+| @fact:ROW-DOC-UNINSTALL-UPDATE an **uninstall / update** command @status:impl/done | **short** @status:impl/done | resolves from the lockfile alone — no network, no index — and it is what a person actually types @status:impl/done |
+| @fact:ROW-DOC-FILE-CONTENTS **file contents** (manifest, lockfile, JSON samples) @status:impl/done | **qualified** @status:impl/done | the only form ever stored there, per [§storage](#storage) @status:impl/done |
+| @fact:ROW-DOC-PROSE **prose** @status:impl/done | author's discretion @status:impl/done | nothing is executed @status:impl/done |
+
+@fact:THE-ASYMMETRY-IS-THE-POINT **The asymmetry is the point, and it is not
+tidiness.** A short name in an install example fails for a reader whose
+registry index is unconfigured, while a qualified name in an uninstall
+example is merely longer than what anyone would type. The rule follows the
+failure, not the symmetry. @status:impl/done
+
+@fact:SHORT-FORMS-IN-DOCS-ARE-NOT-ERRORS **A short form in documentation is
+not an error to be swept.** It is legal input and it is implemented; this
+policy governs what NEW examples should show, and existing ones are
+corrected where a reader would actually be misled — not counted and
+mass-replaced. A worked example naming a package that does not exist has no
+qualified form to be rewritten into. @status:impl/done
+
 @fact:THE-KIND-TAG-VALIDATES-IT-NEVER-DISAMBIGUATES **The kind tag validates, it never disambiguates.** @status:impl/done
 
 @fact:THE-RESOLVER-CHECKS-THE-TYPE-AND-ERRORS-ON-A-MISMATCH If a reference

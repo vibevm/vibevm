@@ -482,7 +482,36 @@ spec edges — none of which JTD codegen produces. So the owner's question is no
 move crate and lose their hand-written surface, or whether PROP-005 records why
 this contract stays prose-first.** The gate was never the obstacle.
 
-### 2026-05-23-10 · C1 · P3 · open
+### 2026-05-23-10 · C1 · P3 · closed 2026-08-06 — the rule is written; the sweep is refused
+
+**Closed by writing the policy, not by replacing the examples.** The owner's
+ruling of 2026-08-06 now lives in `qualified-naming`'s `ref-grammar.md`
+§documentation-policy: **install** examples show the qualified form (a short
+name needs a configured registry index the reader may not have), **uninstall
+/ update** examples show the short form (it resolves from the lockfile alone
+and is what a person actually types), **file contents** show the qualified
+form, prose is discretion. It governs new examples; it does not commission a
+sweep of old ones.
+
+**The mass replacement is refused, and a measurement is why.** The README
+quickstart reads `vibe install flow:wal --registry fixtures/registry` — the
+index is supplied on the very line, so the short form works and the example
+is correct. A blanket rewrite would have "fixed" it into something no
+clearer. Of the 28 concrete short install examples, several name packages
+that do not exist (`flow:internal-helper`, `flow:secret`, `flow:fork` in the
+git-source and private-registry guides) and therefore have no qualified form
+to be rewritten into. These are 28 individual judgements, not a substitution.
+
+**The count was wrong four times, and the fourth is mine.** Recorded ~40,
+then 169 across 27 files, then 234 across 38 — and this session measured 174
+across 32 for `docs/` + README, and 1124 across the whole tree. None of the
+five is a bad pattern; each answers a differently-drawn perimeter. **The
+perimeter is the claim, and this row never stated one.** The policy above
+states its own: it speaks about commands and file contents, which is what a
+reader executes, and says nothing about prose, which is what inflated every
+count.
+
+**Superseded detail below** (kept as the record of how the number moved):
 
 **Residual doc requalification deferred from PROP-008 Phase 8.** Phase
 8 reconciled the identity-defining docs (glossary, lockfile-format, the
