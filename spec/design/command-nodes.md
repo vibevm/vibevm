@@ -17,7 +17,33 @@ ruled that (б) is a separate node type with its own extraction, not blocked by
 that change and not carried by it. This document is the sibling that ruling
 points at. @status:spec/done
 
-## 1. What is measured today {#measured}
+## 1. What was measured at design time {#measured}
+
+@fact:m-readings-are-dated **Every reading in this section is dated 2026-08-06,
+taken BEFORE slice 1 landed.** They are kept as they were because they are the
+basis the design's choices were made on, and rewriting them would erase the
+reasoning while keeping the conclusion. Four have since moved, all by the build
+this document commissioned rather than by regression — see
+`##m-re-measured-after-slice-1`. Read this section as evidence for a decision,
+not as a description of the tree. @status:impl/done
+
+@fact:m-re-measured-after-slice-1 **Re-measured 2026-08-06 after slice 1, and the
+four movements.** *(i)* The map carries **997** code items in **nine** kinds, not
+932 in eight — `command` is now one of them with **57** nodes, which is the whole
+point of the build. *(ii)* The scanner **can** read `#[derive(…)]`; that was
+slice 1's one added capability. *(iii)* `rscan.rs` is **571** lines, not 511 —
+still inside the budget, and the submodule the budget argued for exists as
+`cscan.rs`, so the prediction held and the number simply grew. *(iv)* The command
+count is **57**, not the 56 slice 1 measured: `vibe` carries **30**, because
+`vibe tools` shipped later the same day. Growth, not regression — the same
+correction shape `##B019-A-COUNT-MOVED` records for part (а). @status:impl/done
+
+@fact:m-the-rename-rule-is-observable-in-the-map **One node proves
+`##n-variant-name-rule` rather than asserting it.** The map carries `vibe command`,
+and no `Command` variant exists: it is `Drain`, carrying
+`#[command(name = "command")]` at `crates/vibe-cli/src/cli.rs:161`. The extractor
+recorded the string the user types over the Rust identifier, which is exactly what
+that rule demands and the only place in the map where the two differ. @status:impl/done
 
 @fact:m-eight-kinds **The committed map carries 932 code items in eight kinds** —
 `mod` 415, `fn` 376, `enum` 62, `struct` 52, `schema-def` 9, `schema` 7, `impl` 7,
