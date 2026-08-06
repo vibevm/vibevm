@@ -724,6 +724,64 @@ format that arrives from outside, permissiveness is forward compatibility.
 
 ---
 
+## 4b. Judging debt — asked, answered and landed on 2026-08-06 {#debt}
+
+**The owner's question:** as we rewrite specs and build plans during the
+refactor, does that show up in the progress state — all the facts accumulated
+across many phases — or are we simply breaking everything?
+
+**Answer, measured:** not breaking it. The machinery distinguishes three cases,
+and it was built for the first. **But it announces only that one**, and the
+other two accumulate silently.
+
+**What landed the same day** (commit `95e25cbc`, PROP-043 §10.1 and §10.2):
+
+- The **life of a fact under an active campaign** written into the mechanism's
+  own contract: edited ⇒ comes due and is named; **added ⇒ unjudged and nothing
+  says so**; **removed ⇒ its verdict stays and keeps counting**.
+- **«Stale file» ≠ «a judged fact moved».** A file goes stale when facts are
+  merely *added*, leaving every judged fact untouched — so a corpus can carry
+  five stale files and owe zero re-judgements. Read the per-fact answer.
+- **Sealing refuses a file with any unjudged marker**, and that refusal is
+  today the only mechanism that makes an added fact visible at all.
+- **The clearance procedure**: the debt is a list with names, not a ratio; the
+  unit is one file (sealing is a whole-file assertion); the cheapest file is the
+  one you were going to open anyway, because the reading is shared; judge, merge,
+  seal, report; and never judge blind to move a number.
+- **Content moved into a spec is judged in the same pass that moves it** —
+  otherwise the owner's own closure ruling (§2 Б1) manufactures debt at every
+  closure.
+- **A session reports the debt when it restores context** — landed in the resume
+  contract in all three instruction files (commit `b3a27b77`). Reporting is not
+  paying; priority stays the owner's.
+- **`campaigns/packages-2026-09/tasks/judging-debt.py`** — the measurement, one
+  command, three counts with the files and anchors behind them. Its own docstring
+  says it is a **stopgap**: the durable home is the shipped verb, recorded as
+  `##DEBT-MUST-BE-ASKABLE`.
+
+**The finding that made this a contract rather than a note.** The same five
+orphan verdicts were measured, named and written down on **2026-07-28** in
+`campaigns/packages-2026-09/PHASE-C-BATCH-PLAN.md` — `authority-line` and
+`status-line` in two design documents, `related` in a third — together with the
+mechanism that produces them («added by wave 1's own close-out after the file had
+been judged»). They were still there, untouched, on **2026-08-06**. Nothing was
+wrong with the analysis; it was filed **in a campaign zone, which this project's
+own rules call disposable by design**, and it behaved exactly as that promises.
+That is the owner's closure ruling seen from the other side.
+
+**The debt as of 2026-08-06, and it is all this week's:** 47 unjudged facts
+across 4 files (37 of them in `spec/design/command-nodes.md`, which is judged
+nowhere yet), 5 orphaned verdicts across 3 files, 4 stale files. **0.4 % of
+11 852 facts.** Reproduce with the script above.
+
+**Not to be confused with the P1.** Two different debts, and merging them yields
+the wrong conclusion «four thousand, hopeless»:
+
+| | where it came from | how it is paid |
+|---|---|---|
+| **unjudged** (47) | we wrote new text | per file, at closing, cheap |
+| **weakly judged** (4 151) | how judging was done earlier | §2 Б4's two columns; converts by itself as texts move |
+
 ## 5. What was NOT decided and must not be invented {#undecided}
 
 - **What counts as «finished» for the text interface.** The owner ruled «finish
