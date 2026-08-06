@@ -6,8 +6,8 @@
 the PROPs and in the discipline packages' own specs; this document records why
 batch 3 is shaped the way it is, and what the workers were told to elaborate.
 The owner's rulings behind it were filed as backlog entries
-[`{#b-036}`](../../BACKLOG.md#b-036), `B-037` and
-[`{#b-038}`](../../BACKLOG.md#b-038), and they win on divergence — B-037's row
+{#b-036} (closed by `1f048058`), `B-037` and
+{#b-038} (closed by `1f048058`), and they win on divergence — B-037's row
 has since been drained (its TypeScript half built, its Rust half carried by
 [`{#b-050}`](../../BACKLOG.md#b-050)), so its ruling lives in the commit that
 closed it rather than at an address. @status:doc/done

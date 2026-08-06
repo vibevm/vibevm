@@ -2,7 +2,7 @@
 
 <status stage="spec" state="done" comment="B-011 design APPROVED by the owner 2026-08-04 («Принимаю дизайн B-011») with every fork's recommended option — A1 full slug, B1 both label kinds, C1 full address, D1 hard error + lenient flag, E1 layer-4 as a follow-up entry — plus one owner addition the same message: the resolution rules must be priority-placed for the executing agent (§5.1). Normative landing: the §7 PROP edits; implementation: the §10 worker cut"/>
 
-@fact:companion-line **Companion to:** [`BACKLOG.md` B-011](../../BACKLOG.md#b-011) (the commissioning entry — the owner's directions verbatim), [PROP-035](../modules/vibe-workspace/PROP-035-spec-compiler.md) (the spec compiler — the contract this design extends), [PROP-009 §2.3](../modules/vibe-workspace/PROP-009-loading-model.md#artifacts) (the boot artifacts whose `STATIC.md` contract changes), and [`loading-and-boot-model.md`](loading-and-boot-model.md) (the loading model's original design record). @status:spec/work
+@fact:companion-line **Companion to:** BACKLOG.md B-011 (closed by `c9cdf39d`) (the commissioning entry — the owner's directions verbatim), [PROP-035](../modules/vibe-workspace/PROP-035-spec-compiler.md) (the spec compiler — the contract this design extends), [PROP-009 §2.3](../modules/vibe-workspace/PROP-009-loading-model.md#artifacts) (the boot artifacts whose `STATIC.md` contract changes), and [`loading-and-boot-model.md`](loading-and-boot-model.md) (the loading model's original design record). @status:spec/work
 
 @fact:authority-line **Authority:** non-normative proposal. The PROPs stay the contract; on approval this design lands as PROP edits (§7 below) and this document remains the lore behind them. @status:spec/work
 

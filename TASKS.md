@@ -232,7 +232,7 @@ authored and judged: [`spec/design/multiple-sources-and-plugins.md`](spec/design
       the kept name was for.
 - [x] `fix(vibe-spec)`: the pipeline passes every `#source` in declaration
       order and names the source that fails to resolve rather than the seed.
-      **Closed [B-055](BACKLOG.md#b-055).**
+      **Closed B-055 (closed by `bc88e530`).**
 - [x] `feat(vibe-spec)`: the cycle law reached `#source` through the SAME
       three-colour walker (one `visit`, one colour map, one `is_contract`),
       and the fold became recursive under it — **with an include guard the
@@ -339,7 +339,7 @@ authored and judged: [`spec/design/multiple-sources-and-plugins.md`](spec/design
       were already built — and B-010's row still read `open` a day after the
       commit that closes it verbatim, B-011's `planned` while wave А is closed
       whole. Both corrected against the tree. Five stale statements in
-      `BACKLOG.md` in one day is the measurement [B-062](BACKLOG.md#b-062)
+      `BACKLOG.md` in one day is the measurement B-062 (closed by `ff2079e1`)
       needed and lacked when it was filed.
 - [x] `chore(campaign)`: `typed-seams.md`'s **35 facts judged and sealed** —
       against built landings, which is what the deferral was for, and it paid.

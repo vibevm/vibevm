@@ -2,7 +2,7 @@
 
 <status stage="spec" state="done" comment="the B-040 build design over harvest/g1-b040-seams-census.md, authored 2026-08-05, волна Г. The owner's ruling of 2026-08-02 opened it: «Если у нас на нашем же коде не выполняется пять каких-то важных дисциплин — это похоже на причину по которой нужно всё отрефакторить и начать их применять». Non-normative: the PROPs and the backlog rulings win."/>
 
-@fact:companion-line **Companion to:** [`BACKLOG.md` B-040](../../BACKLOG.md#b-040) (the owner's ruling and the census pointer), the census itself ([`harvest/g1-b040-seams-census.md`](../../campaigns/packages-2026-09/harvest/g1-b040-seams-census.md)), and the guide anchor the finding hangs on — `GUIDE-AI-NATIVE-RUST.md` `##SCAFFOLD-B-TYPED-BUILDERS`. This document is lore: it records why the refactor is shaped this way, and every contract it touches wins wherever they disagree. @status:spec/done
+@fact:companion-line **Companion to:** BACKLOG.md B-040 (closed by `1f048058`) (the owner's ruling and the census pointer), the census itself ([`harvest/g1-b040-seams-census.md`](../../campaigns/packages-2026-09/harvest/g1-b040-seams-census.md)), and the guide anchor the finding hangs on — `GUIDE-AI-NATIVE-RUST.md` `##SCAFFOLD-B-TYPED-BUILDERS`. This document is lore: it records why the refactor is shaped this way, and every contract it touches wins wherever they disagree. @status:spec/done
 
 ## 1. The measured basis, and the one thing it does not say {#basis}
 

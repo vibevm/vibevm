@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T08:10:30Z",
+  "updated_at": "2026-08-06T08:17:32Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -94097,7 +94097,7 @@
       "issue_count": 0
     },
     "spec/design/deterministic-loading-aliasing.md": {
-      "content_hash": "0868ebebe62dbf44010fc45ec7d69427d0f8664eb7831f6c88660140789156c9",
+      "content_hash": "aa29bfe41ba61343a8e040d125c23dd0e125c7d40bc6a16c689f945a8d488627",
       "rollup": {
         "explicit": [
           "spec",
@@ -94549,7 +94549,7 @@
       }
     },
     "spec/design/gate-parity-config.md": {
-      "content_hash": "55a57fb1be28c40ee106e52ad95443175bdbaee01d681bdedbe4bc612ba22ee0",
+      "content_hash": "c344cb117ce0bd43df95aa42e57a975d20c7c58fdee6033e9c8b0a2e66916198",
       "rollup": {
         "explicit": [
           "spec",
@@ -94740,7 +94740,7 @@
       }
     },
     "spec/design/host-as-package.md": {
-      "content_hash": "bfae75b27b0398d6fdfbea1f2656b8870c6be8185b483335360c98b19bd835e6",
+      "content_hash": "a68f798ca95651422fd308dfa34ea89905676031d85ee7b87eb0e4def96c5f2c",
       "rollup": {
         "explicit": [
           "spec",
@@ -94982,7 +94982,7 @@
       }
     },
     "spec/design/lane-composition-dedup.md": {
-      "content_hash": "20ebccbf26f9e1c76590f04e75cb06b9ec758e1acb2e70df28f729158bbb9bfd",
+      "content_hash": "70bdd7ffa67ef37780184d75a114aaa4dde1dd8eac2ea40654d04d893c63a95c",
       "rollup": {
         "explicit": [
           "spec",
@@ -95989,7 +95989,7 @@
       }
     },
     "spec/design/multiple-sources-and-plugins.md": {
-      "content_hash": "abac840b7322ac52f07e772a13767d38aa7de5f1d56a8084f134c680af1649ca",
+      "content_hash": "7d52d47355fe58ce41c900861a4ddbfb0437306d44a9510acbd67a5059ff2935",
       "rollup": {
         "explicit": [
           "spec",
@@ -96231,7 +96231,7 @@
       }
     },
     "spec/design/new-rule-classes.md": {
-      "content_hash": "41ce00739b4313e70132f6769ad16bdf4060b981d0e4e193d86df64a9bcd31af",
+      "content_hash": "eabcd731af098efa67f2b6e26515ed238dab8c4ea9e4acfec11948bdf27bfdc3",
       "rollup": {
         "explicit": [
           "spec",
@@ -96514,7 +96514,7 @@
       }
     },
     "spec/design/seam-error-and-assertion-parity.md": {
-      "content_hash": "e8a0e6d5e0ad13fcc3901d81b5cb279e56ff1d31e09f7904df743082399dca59",
+      "content_hash": "b79094875aeed9a85be176cb68e8a9e87bad9ea31e0d77f69f19dcd4ed64afe2",
       "rollup": {
         "explicit": [
           "spec",
@@ -97386,7 +97386,7 @@
       }
     },
     "spec/design/typed-seams.md": {
-      "content_hash": "e56a46075fea5b54811c7d85b3510894c071d804e135347599ba485c2fad7337",
+      "content_hash": "f4dd102ce64e34ffffc834e27c709edcf5ef4a65521d7f9a466f140d33292513",
       "rollup": {
         "explicit": [
           "spec",
@@ -117512,7 +117512,7 @@
       }
     },
     "spec/modules/vibe-workspace/PROP-035-spec-compiler.md": {
-      "content_hash": "5b8485761cd9caa19ac2a3fe02b922ccb74ae6979628eb3abe6517339a34dacb",
+      "content_hash": "a12d30f40cdf58fc56566fb80c2ee800a040737784b3c9b982e724ffeea73040",
       "rollup": {
         "explicit": [
           "impl",

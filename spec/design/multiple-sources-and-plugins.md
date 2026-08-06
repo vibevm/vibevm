@@ -2,11 +2,11 @@
 
 <status stage="spec" state="done" comment="the B-056 design; the owner closed the SHAPE with four rulings on 2026-08-04 (##B056-RULED) and this is the build design over them. Non-normative: PROP-035 and the backlog rulings win. Authored 2026-08-05, волна Г."/>
 
-@fact:companion-line **Companion to:** [`BACKLOG.md` B-056](../../BACKLOG.md#b-056) (the four rulings and the honest cost), [B-055](../../BACKLOG.md#b-055) (today's silence on a second directive). Contract: [PROP-035 `#source`](../modules/vibe-workspace/PROP-035-spec-compiler.md#source) and its `##NO-DEADLOCK-INVARIANT` (§9). This document is lore — it records why the build is shaped this way, and the PROPs win wherever they disagree. @status:spec/done
+@fact:companion-line **Companion to:** BACKLOG.md B-056 (closed by `77224fcf`) (the four rulings and the honest cost), B-055 (closed by `bc88e530`) (today's silence on a second directive). Contract: [PROP-035 `#source`](../modules/vibe-workspace/PROP-035-spec-compiler.md#source) and its `##NO-DEADLOCK-INVARIANT` (§9). This document is lore — it records why the build is shaped this way, and the PROPs win wherever they disagree. @status:spec/done
 
 ## 1. The measured basis {#basis}
 
-@fact:basis-one-source **Folding takes exactly one source, and it is the first one.** `crates/vibe-spec/src/pipeline.rs:221` is `.find(|d| d.kind == DirectiveKind::Source).map(|d| d.address)` — the first `#source` directive wins and every later one is dropped without a word. That silence is [B-055](../../BACKLOG.md#b-055); this design is what replaces it. @status:impl/done
+@fact:basis-one-source **Folding takes exactly one source, and it is the first one.** `crates/vibe-spec/src/pipeline.rs:221` is `.find(|d| d.kind == DirectiveKind::Source).map(|d| d.address)` — the first `#source` directive wins and every later one is dropped without a word. That silence is B-055 (closed by `bc88e530`); this design is what replaces it. @status:impl/done
 
 @fact:basis-two-inputs **The folder's signature is binary.** `merge::fold_source(contract: &DocTree, source: &DocTree) -> String` walks the contract's top-level heading sections, looks each anchor up in THE source, and emits `:add` (contract text minus redeclared facts, then source text) or `:replace` (source text only); source-only sections are appended after. Generalising it is the centre of this build. @status:impl/done
 
@@ -62,4 +62,4 @@
 
 @fact:cost-reading-consequence **A section assembled from five plugins is long, and the long-section threshold warning will fire on it** — `long-section`, armed by the root `max_section_lines` key (start value 120, leaf sections only) and raised by the map engine at `mdspec.rs`; it ships, and this repository's own committed map already carries three of them. That is right rather than annoying — a reader deserves to know a section is composed — but it should be expected rather than discovered. @status:spec/done
 
-@fact:cost-order **Build order, each step landable alone.** *(1)* `fold_sources` over an explicit list, with `fold_source` as its degenerate case and every existing test passing unchanged. *(2)* The pipeline stops taking `.find(…)` and passes every `#source` in declaration order — this alone closes [B-055](../../BACKLOG.md#b-055). *(3)* The fold's cycle guard and dedup over the extended `use_graph` walker. *(4)* Resolver enumeration for the glob, sorted. Steps 1–2 are the sum; 3–4 are the rest. @status:impl/done
+@fact:cost-order **Build order, each step landable alone.** *(1)* `fold_sources` over an explicit list, with `fold_source` as its degenerate case and every existing test passing unchanged. *(2)* The pipeline stops taking `.find(…)` and passes every `#source` in declaration order — this alone closes B-055 (closed by `bc88e530`). *(3)* The fold's cycle guard and dedup over the extended `use_graph` walker. *(4)* Resolver enumeration for the glob, sorted. Steps 1–2 are the sum; 3–4 are the rest. @status:impl/done

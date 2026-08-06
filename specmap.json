@@ -29389,10 +29389,10 @@
     },
     {
       "anchor": "companion-line",
-      "content_hash": "sha256:b18b2fea7ea7c49a400ce7f9fd0d78068ddc19897dd0913dead595cd0e8d6cef",
+      "content_hash": "sha256:245e11a9632b51ab8956969b64d88a30719f5d2c25283d6b0e39be69ae5640cc",
       "doc_path": "design/deterministic-loading-aliasing",
       "file": "spec/design/deterministic-loading-aliasing.md",
-      "heading": "**Companion to:** [`BACKLOG.md` B-011](../../BACKLOG.md#b-011) (the commissioning entry — the owner's directions verbatim), [PROP-035](../modules/vibe-workspace/PROP-035-spec-compiler.md) (the spec compiler — the contract this design extends), [PROP-009 §2.3](../modules/vibe-workspace/PROP-009-loading-model.md#artifacts) (the boot artifacts whose `STATIC.md` contract changes), and [`loading-and-boot-model.md`](loading-and-boot-model.md) (the loading model's original design record). @status:spec/work",
+      "heading": "**Companion to:** BACKLOG.md B-011 (closed by `c9cdf39d`) (the commissioning entry — the owner's directions verbatim), [PROP-035](../modules/vibe-workspace/PROP-035-spec-compiler.md) (the spec compiler — the contract this design extends), [PROP-009 §2.3](../modules/vibe-workspace/PROP-009-loading-model.md#artifacts) (the boot artifacts whose `STATIC.md` contract changes), and [`loading-and-boot-model.md`](loading-and-boot-model.md) (the loading model's original design record). @status:spec/work",
       "line": 5,
       "uri": "spec://org.vibevm.core/vibevm/design/deterministic-loading-aliasing#companion-line"
     },
@@ -29965,7 +29965,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:16e293637c714835b0a861039144a21b602e70e7eff714090c47fa93cded75a4",
+      "content_hash": "sha256:648b0e4dc06ca0a14623aa19d5c0e52604c6ac8bc13793939474552b1b0a9a3f",
       "doc_path": "design/gate-parity-config",
       "file": "spec/design/gate-parity-config.md",
       "heading": "The gate grows per-language units — config surface, coverage invariant, flag rule",
@@ -29974,10 +29974,10 @@
     },
     {
       "anchor": "companion-line",
-      "content_hash": "sha256:4101dce828b996441381c9a1c40aaaa26c3ebc0bc47b02bfd18c006d4eb55f94",
+      "content_hash": "sha256:519c8c9d0360dc48a9eda411946bcfec75490596a1b8158f96ca88efa1f1279e",
       "doc_path": "design/gate-parity-config",
       "file": "spec/design/gate-parity-config.md",
-      "heading": "**Companion to:** [`BACKLOG.md` B-029](../../BACKLOG.md#b-029) (neutral/per-language gate key + the config-surface enrichment, ruling 2.1 recorded in the row), [B-034](../../BACKLOG.md#b-034) (gated-or-exempt for Go/TS), [B-039](../../BACKLOG.md#b-039) (mount R-001 on the TS gate); the fork it carries is [`TOOLING-MAP.md` §5 №2](../../TOOLING-MAP.md#forks). Evidence: [`e8-r1-config-census.md`](../../campaigns/packages-2026-09/harvest/e8-r1-config-census.md) (the config surface), [`e8-r2-gate-units-census.md`](../../campaigns/packages-2026-09/harvest/e8-r2-gate-units-census.md) (units, FlagSites, rosters). Non-normative; the PROPs and the backlog rulings win. @status:spec/work",
+      "heading": "**Companion to:** BACKLOG.md B-029 (closed by `1ef63a37`) (neutral/per-language gate key + the config-surface enrichment, ruling 2.1 recorded in the row), B-034 (closed by `f882cd46`) (gated-or-exempt for Go/TS), B-039 (closed by `1f048058`) (mount R-001 on the TS gate); the fork it carries is [`TOOLING-MAP.md` §5 №2](../../TOOLING-MAP.md#forks). Evidence: [`e8-r1-config-census.md`](../../campaigns/packages-2026-09/harvest/e8-r1-config-census.md) (the config surface), [`e8-r2-gate-units-census.md`](../../campaigns/packages-2026-09/harvest/e8-r2-gate-units-census.md) (units, FlagSites, rosters). Non-normative; the PROPs and the backlog rulings win. @status:spec/work",
       "line": 5,
       "uri": "spec://org.vibevm.core/vibevm/design/gate-parity-config#companion-line"
     },
@@ -30190,7 +30190,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:dcd05db97ba4b78de219a6bf4a43550bef796216ed6e30ca0b0feb3a86eb37eb",
+      "content_hash": "sha256:33c79ae940ee52b4fbdd4a677e10861119b9c82dcf7e5be3ca4feaf7996f227b",
       "doc_path": "design/host-as-package",
       "file": "spec/design/host-as-package.md",
       "heading": "Design rationale: the host becomes a package — `org.vibevm.core/vibevm` (B-031)",
@@ -30199,10 +30199,10 @@
     },
     {
       "anchor": "companion-line",
-      "content_hash": "sha256:c8c4427622e445e1a4f1f0695107dc448ea30673ce766214218975b5898bb741",
+      "content_hash": "sha256:4d59e62abf89f699e3e09b722618db0a47e185ca5facb5acd380b8fc58d8c8d9",
       "doc_path": "design/host-as-package",
       "file": "spec/design/host-as-package.md",
-      "heading": "**Companion to:** [`BACKLOG.md` B-031](../../BACKLOG.md#b-031) (the commissioning entry — the owner's 2026-08-02 direction verbatim), [PROP-029 §4](../common/PROP-029-fully-qualified-addresses.md) (`##SCOPE-HOST` — the one contract line this design retires), [PROP-035 §6](../modules/vibe-workspace/PROP-035-spec-compiler.md) (the unified grammar and router the host joins), [`BACKLOG.md` B-028](../../BACKLOG.md#b-028) (the adjacent flow-grammar ruling, deliberately not folded in), and the census this design stands on: [`campaigns/packages-2026-09/harvest/e5-b031-evidence.md`](../../campaigns/packages-2026-09/harvest/e5-b031-evidence.md). @status:spec/work",
+      "heading": "**Companion to:** BACKLOG.md B-031 (closed by `1ef63a37`) (the commissioning entry — the owner's 2026-08-02 direction verbatim), [PROP-029 §4](../common/PROP-029-fully-qualified-addresses.md) (`##SCOPE-HOST` — the one contract line this design retires), [PROP-035 §6](../modules/vibe-workspace/PROP-035-spec-compiler.md) (the unified grammar and router the host joins), BACKLOG.md B-028 (closed by `93d92ec9`) (the adjacent flow-grammar ruling, deliberately not folded in), and the census this design stands on: [`campaigns/packages-2026-09/harvest/e5-b031-evidence.md`](../../campaigns/packages-2026-09/harvest/e5-b031-evidence.md). @status:spec/work",
       "line": 5,
       "uri": "spec://org.vibevm.core/vibevm/design/host-as-package#companion-line"
     },
@@ -30514,7 +30514,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:6400ed693a0a0af0c1908359d02ca178fa745044f708940d1bcca0e88733fd03",
+      "content_hash": "sha256:4f325533ba3d9a88746e3d972395106586f5d917e38f24397e1a13407eaf5e1f",
       "doc_path": "design/lane-composition-dedup",
       "file": "spec/design/lane-composition-dedup.md",
       "heading": "Design rationale: once-each lane composition — the aggregator double-emission (B-006)",
@@ -30523,10 +30523,10 @@
     },
     {
       "anchor": "companion-line",
-      "content_hash": "sha256:5de676bc12a17c2aa014f669589f785a489fac7b89bbd739eb63241ad240a726",
+      "content_hash": "sha256:322ec316c6df07aaacaf531e291c903ba90b23474bf2decad0fb223ab797fdae",
       "doc_path": "design/lane-composition-dedup",
       "file": "spec/design/lane-composition-dedup.md",
-      "heading": "**Companion to:** [`BACKLOG.md` B-006](../../BACKLOG.md#b-006) (the commissioning entry), [PROP-038](../modules/vibe-workspace/PROP-038-hybrid-boot-linking.md) (the hybrid linker whose two write paths collide here), [PROP-009 §2.3](../modules/vibe-workspace/PROP-009-loading-model.md#artifacts) (the lane contract the fix touches), [PROP-035 §8](../modules/vibe-workspace/PROP-035-spec-compiler.md#pipeline) (the qualify phase the rider refines), and [`deterministic-loading-aliasing.md`](deterministic-loading-aliasing.md) (B-011 — whose qualification made this duplicate mechanically visible instead of silent). @status:spec/work",
+      "heading": "**Companion to:** BACKLOG.md B-006 (closed by `9f79acf1`) (the commissioning entry), [PROP-038](../modules/vibe-workspace/PROP-038-hybrid-boot-linking.md) (the hybrid linker whose two write paths collide here), [PROP-009 §2.3](../modules/vibe-workspace/PROP-009-loading-model.md#artifacts) (the lane contract the fix touches), [PROP-035 §8](../modules/vibe-workspace/PROP-035-spec-compiler.md#pipeline) (the qualify phase the rider refines), and [`deterministic-loading-aliasing.md`](deterministic-loading-aliasing.md) (B-011 — whose qualification made this duplicate mechanically visible instead of silent). @status:spec/work",
       "line": 5,
       "uri": "spec://org.vibevm.core/vibevm/design/lane-composition-dedup#companion-line"
     },
@@ -31675,7 +31675,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:c95b1f74a9fe56184cf5259043d07be115f4f9d6b9c86a93c42d54d49c729ee7",
+      "content_hash": "sha256:a98566b361b2f6a4726d5a44172db62f9191fc7774ac91996ebe581947f06cb6",
       "doc_path": "design/multiple-sources-and-plugins",
       "file": "spec/design/multiple-sources-and-plugins.md",
       "heading": "Multiple sources for one contract, and the plugin form",
@@ -31684,16 +31684,16 @@
     },
     {
       "anchor": "companion-line",
-      "content_hash": "sha256:34c49c306405a0fc4686aabc687e2c84e957d02051a41ea8f2ef7887787403de",
+      "content_hash": "sha256:2aa349df40d23384e8b72917b4009f6f04edb32bae994b0d785cba9305fc193c",
       "doc_path": "design/multiple-sources-and-plugins",
       "file": "spec/design/multiple-sources-and-plugins.md",
-      "heading": "**Companion to:** [`BACKLOG.md` B-056](../../BACKLOG.md#b-056) (the four rulings and the honest cost), [B-055](../../BACKLOG.md#b-055) (today's silence on a second directive). Contract: [PROP-035 `#source`](../modules/vibe-workspace/PROP-035-spec-compiler.md#source) and its `##NO-DEADLOCK-INVARIANT` (§9). This document is lore — it records why the build is shaped this way, and the PROPs win wherever they disagree. @status:spec/done",
+      "heading": "**Companion to:** BACKLOG.md B-056 (closed by `77224fcf`) (the four rulings and the honest cost), B-055 (closed by `bc88e530`) (today's silence on a second directive). Contract: [PROP-035 `#source`](../modules/vibe-workspace/PROP-035-spec-compiler.md#source) and its `##NO-DEADLOCK-INVARIANT` (§9). This document is lore — it records why the build is shaped this way, and the PROPs win wherever they disagree. @status:spec/done",
       "line": 5,
       "uri": "spec://org.vibevm.core/vibevm/design/multiple-sources-and-plugins#companion-line"
     },
     {
       "anchor": "basis",
-      "content_hash": "sha256:bcede1580b9dd59a6d253cfbcc0a322b8691d28b94ed8dcb314423bcfd0f7442",
+      "content_hash": "sha256:75d8234f30ed0ab092e9ac25eb14e2eb61d525b9509214fda76510bb3617b3e2",
       "doc_path": "design/multiple-sources-and-plugins",
       "file": "spec/design/multiple-sources-and-plugins.md",
       "heading": "1. The measured basis",
@@ -31702,10 +31702,10 @@
     },
     {
       "anchor": "basis-one-source",
-      "content_hash": "sha256:e95e9417e2754d2aa110a6085f8e9f3b4489da570637c9d8e94122f0680a0cab",
+      "content_hash": "sha256:7fd73db11e91eca6eee4b3ab64e528ec5bf4509a20a248c06fa22141f8d759ad",
       "doc_path": "design/multiple-sources-and-plugins",
       "file": "spec/design/multiple-sources-and-plugins.md",
-      "heading": "**Folding takes exactly one source, and it is the first one.** `crates/vibe-spec/src/pipeline.rs:221` is `.find(|d| d.kind == DirectiveKind::Source).map(|d| d.address)` — the first `#source` directive wins and every later one is dropped without a word. That silence is [B-055](../../BACKLOG.md#b-055); this design is what replaces it. @status:impl/done",
+      "heading": "**Folding takes exactly one source, and it is the first one.** `crates/vibe-spec/src/pipeline.rs:221` is `.find(|d| d.kind == DirectiveKind::Source).map(|d| d.address)` — the first `#source` directive wins and every later one is dropped without a word. That silence is B-055 (closed by `bc88e530`); this design is what replaces it. @status:impl/done",
       "line": 9,
       "uri": "spec://org.vibevm.core/vibevm/design/multiple-sources-and-plugins#basis-one-source"
     },
@@ -31927,7 +31927,7 @@
     },
     {
       "anchor": "cost",
-      "content_hash": "sha256:3a6c52f4a9523e47cfea480292424e1445bb27e7284af79fe319fa0fb58c5e51",
+      "content_hash": "sha256:f0fade23a06a6a74d95439fbd77d8bf80fd851875866768e68a6363937e3be40",
       "doc_path": "design/multiple-sources-and-plugins",
       "file": "spec/design/multiple-sources-and-plugins.md",
       "heading": "6. The honest cost, and the order to build in",
@@ -31954,16 +31954,16 @@
     },
     {
       "anchor": "cost-order",
-      "content_hash": "sha256:77f8bb7eb15298ea7d1ca781bf79ee6ad55b54841a883ba343456fa948f86602",
+      "content_hash": "sha256:62b3bcd706e19060876d8965650a5f32b9a948d6a0ed94e405f164f268c84651",
       "doc_path": "design/multiple-sources-and-plugins",
       "file": "spec/design/multiple-sources-and-plugins.md",
-      "heading": "**Build order, each step landable alone.** *(1)* `fold_sources` over an explicit list, with `fold_source` as its degenerate case and every existing test passing unchanged. *(2)* The pipeline stops taking `.find(…)` and passes every `#source` in declaration order — this alone closes [B-055](../../BACKLOG.md#b-055). *(3)* The fold's cycle guard and dedup over the extended `use_graph` walker. *(4)* Resolver enumeration for the glob, sorted. Steps 1–2 are the sum; 3–4 are the rest. @status:impl/done",
+      "heading": "**Build order, each step landable alone.** *(1)* `fold_sources` over an explicit list, with `fold_source` as its degenerate case and every existing test passing unchanged. *(2)* The pipeline stops taking `.find(…)` and passes every `#source` in declaration order — this alone closes B-055 (closed by `bc88e530`). *(3)* The fold's cycle guard and dedup over the extended `use_graph` walker. *(4)* Resolver enumeration for the glob, sorted. Steps 1–2 are the sum; 3–4 are the rest. @status:impl/done",
       "line": 65,
       "uri": "spec://org.vibevm.core/vibevm/design/multiple-sources-and-plugins#cost-order"
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:ad938c63577faf7f13dbb321dd022549388e0c1b6a1b12aa368f914c3b944074",
+      "content_hash": "sha256:91ef1a661b971504ebe730cd47c6630095c11d1b185c93440a11da106e195061",
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "The three new rule classes — comment position, custom lints, pending cards",
@@ -31972,7 +31972,7 @@
     },
     {
       "anchor": "authority-line",
-      "content_hash": "sha256:f98ff172139f6fea9c510a7d5422c62abba880a9a65a2434bd43908575814b25",
+      "content_hash": "sha256:54bf63e275d5e1943bc97224acc2176b1f8742d15705996b084dabde517ebc89",
       "doc_path": "design/new-rule-classes",
       "file": "spec/design/new-rule-classes.md",
       "heading": "**Non-normative** (`spec/design/` genre). The contract stays in",
@@ -32296,7 +32296,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:65bceabf4b26d63b178025fb082700453fb9becd3621eacfe0e2f92b828a9786",
+      "content_hash": "sha256:1def34dcfcd1f169c1a0fb2c4fe29eda533b82429fbb1be2e70693376d20631f",
       "doc_path": "design/seam-error-and-assertion-parity",
       "file": "spec/design/seam-error-and-assertion-parity.md",
       "heading": "The gate gains seam-error and conformance-assertion parity across languages",
@@ -32305,10 +32305,10 @@
     },
     {
       "anchor": "companion-line",
-      "content_hash": "sha256:b14e30d5fce5b9e0fe330915e311372b4edb43e85cdb174bae52188cc9cd294c",
+      "content_hash": "sha256:2f8e4cb1b7201eba84fdba8b42e2e0920c9bd517d85e85660cba7177983746e9",
       "doc_path": "design/seam-error-and-assertion-parity",
       "file": "spec/design/seam-error-and-assertion-parity.md",
-      "heading": "**Companion to:** [`BACKLOG.md` B-033](../../BACKLOG.md#b-033) (the dedicated Go seam-error rule + its message half + the TS twin), [B-030](../../BACKLOG.md#b-030) (conformance-assertion presence — build Go, survey Rust/TS), [B-049](../../BACKLOG.md#b-049) (`[rust] floor_disable`); the fork it discharges is [`TOOLING-MAP.md` §5 №9](../../TOOLING-MAP.md#forks) (the parity-principle home, taken). Evidence, measured before any build: [`e11-r1-seam-errors-census.md`](../../campaigns/packages-2026-09/harvest/e11-r1-seam-errors-census.md) (the seam-error paradigm, two halves) and [`e11-r2-assertions-census.md`](../../campaigns/packages-2026-09/harvest/e11-r2-assertions-census.md) (the assertion idiom, Rust/TS survey). The prior batch's design is [`gate-parity-config.md`](gate-parity-config.md) — this one builds on its symmetric per-language surface. Non-normative; the PROPs and the backlog rulings win. @status:spec/work",
+      "heading": "**Companion to:** BACKLOG.md B-033 (closed by `f882cd46`) (the dedicated Go seam-error rule + its message half + the TS twin), B-030 (closed by `1ef63a37`) (conformance-assertion presence — build Go, survey Rust/TS), B-049 (closed by `e4314e83`) (`[rust] floor_disable`); the fork it discharges is [`TOOLING-MAP.md` §5 №9](../../TOOLING-MAP.md#forks) (the parity-principle home, taken). Evidence, measured before any build: [`e11-r1-seam-errors-census.md`](../../campaigns/packages-2026-09/harvest/e11-r1-seam-errors-census.md) (the seam-error paradigm, two halves) and [`e11-r2-assertions-census.md`](../../campaigns/packages-2026-09/harvest/e11-r2-assertions-census.md) (the assertion idiom, Rust/TS survey). The prior batch's design is [`gate-parity-config.md`](gate-parity-config.md) — this one builds on its symmetric per-language surface. Non-normative; the PROPs and the backlog rulings win. @status:spec/work",
       "line": 5,
       "uri": "spec://org.vibevm.core/vibevm/design/seam-error-and-assertion-parity#companion-line"
     },
@@ -33385,7 +33385,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:acb11f19fdb2b33637425709f600dfdef06448c606ebea7284acd240f3c9ca41",
+      "content_hash": "sha256:026327268ffd2edb92e3680a13ada737cc79b3810f5c7c3b9e6328717612122b",
       "doc_path": "design/typed-seams",
       "file": "spec/design/typed-seams.md",
       "heading": "Typed seams — where obligation moves into the type, and where it deliberately does not",
@@ -33394,10 +33394,10 @@
     },
     {
       "anchor": "companion-line",
-      "content_hash": "sha256:04aae16cab8447b71aa432c991d3f82788270dd85b6ad33f962910b93a4f56a7",
+      "content_hash": "sha256:72b61c7e1e9c802e79325ca80fd6010b58cb162d12b021003cc8f42dc2fab051",
       "doc_path": "design/typed-seams",
       "file": "spec/design/typed-seams.md",
-      "heading": "**Companion to:** [`BACKLOG.md` B-040](../../BACKLOG.md#b-040) (the owner's ruling and the census pointer), the census itself ([`harvest/g1-b040-seams-census.md`](../../campaigns/packages-2026-09/harvest/g1-b040-seams-census.md)), and the guide anchor the finding hangs on — `GUIDE-AI-NATIVE-RUST.md` `##SCAFFOLD-B-TYPED-BUILDERS`. This document is lore: it records why the refactor is shaped this way, and every contract it touches wins wherever they disagree. @status:spec/done",
+      "heading": "**Companion to:** BACKLOG.md B-040 (closed by `1f048058`) (the owner's ruling and the census pointer), the census itself ([`harvest/g1-b040-seams-census.md`](../../campaigns/packages-2026-09/harvest/g1-b040-seams-census.md)), and the guide anchor the finding hangs on — `GUIDE-AI-NATIVE-RUST.md` `##SCAFFOLD-B-TYPED-BUILDERS`. This document is lore: it records why the refactor is shaped this way, and every contract it touches wins wherever they disagree. @status:spec/done",
       "line": 5,
       "uri": "spec://org.vibevm.core/vibevm/design/typed-seams#companion-line"
     },
@@ -65083,7 +65083,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:c2820a9a697c24e0f98df134d049bbebe353c059c13c8ad99e253dc7e98ac5bb",
+      "content_hash": "sha256:316205d2ce49bbc3a61b4f39b0735983a922f1630ece36f3bb85c586bef12ace",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
       "heading": "PROP-035: The spec compiler — directive preprocessor, package formats, and the two-mode boot linker",
@@ -65614,7 +65614,7 @@
     },
     {
       "anchor": "directives",
-      "content_hash": "sha256:bc43dfbc712761caa8809bf1e71ef31909ac5e366086ba4f563c1f1074857566",
+      "content_hash": "sha256:4ced6ad74345944111b1ae5a5283ef0062d55bc3708f055111921b1ac4a0c884",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
       "heading": "7. The three directives",
@@ -65794,7 +65794,7 @@
     },
     {
       "anchor": "source",
-      "content_hash": "sha256:bffaa21936b78c58b6a6d14a7e8a1ff988531d9bd7cb64b75188835d1f96410c",
+      "content_hash": "sha256:77d6b755df12885ea18c25bacc967245b163d3cfb7f928a07fa04e4f9a1c23cc",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
       "heading": "7.3 `#source` — contract↔implementation virtual linking",
@@ -65920,10 +65920,10 @@
     },
     {
       "anchor": "SOURCE-SEQUENCE",
-      "content_hash": "sha256:0117afe3983403de9b681537b7f0c84eda38adbc10fbe077e62bffc39f75af7c",
+      "content_hash": "sha256:c7187998d8e72d93343fd31daa74fec806a033864e85ff95a795ee5ddb53a15c",
       "doc_path": "modules/vibe-workspace/PROP-035",
       "file": "spec/modules/vibe-workspace/PROP-035-spec-compiler.md",
-      "heading": "**A contract may declare more than one `#source`, and every one is honoured, in declaration order.** The algorithm above reads \"the source\" as that sequence: for an anchor `a`, let `S(a)` be the sub-sequence of sources carrying a section at `a`, in the order the directives were written (a glob contributing its members sorted). Before this the compiler took the FIRST `#source` and dropped the rest without a word — the silence [B-055](../../../BACKLOG.md#b-055) recorded. @status:impl/done",
+      "heading": "**A contract may declare more than one `#source`, and every one is honoured, in declaration order.** The algorithm above reads \"the source\" as that sequence: for an anchor `a`, let `S(a)` be the sub-sequence of sources carrying a section at `a`, in the order the directives were written (a glob contributing its members sorted). Before this the compiler took the FIRST `#source` and dropped the rest without a word — the silence B-055 (closed by `bc88e530`) recorded. @status:impl/done",
       "line": 166,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#SOURCE-SEQUENCE"
     },
