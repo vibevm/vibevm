@@ -111,6 +111,21 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
 
 ## P2 — the next wave drains from here {#p2}
 
+### B-070 — закрытый словарь видов пакетов живёт в четырнадцати местах, и связывает их только память {#b-070}
+
+| | |
+|---|---|
+| @fact:B070-ANCHOR **anchor** | `##WAL-C-A-NORM-WITHOUT-A-CHECKER-DRIFTS` и `##WAL-C-ONE-LAW-ONE-IMPLEMENTATION`; всплыло при добавлении шестого вида `lang` 2026-08-06 |
+| @fact:B070-LOCATOR **locator** | `crates/vibe-core/src/package_ref/kind.rs` — enum-первоисточник; `crates/vibe-index/src/types/kinds.rs` — вторая копия enum; `schemas/list_report.jtd.json`, `schemas/registry_sync_report.jtd.json`, `crates/vibe-cli/resources/package-tree.schema.v1.json` — три схемы; плюс ~9 рукописных списков в help-текстах, сообщениях об ошибках, `xtask/src/batch_review/refs.rs`, `spec/common/PROP-000.md`, `spec/boot/00-core.md` |
+| @fact:B070-SEVERITY **severity** | P2 |
+| @fact:B070-DISPOSITION **disposition** | `open` — заведено 2026-08-06 |
+| @fact:B070-FILED **filed by** | сессия 2026-08-06, постройка В2 |
+
+- @fact:B070-SUT **Суть, по-простому.** Список видов пакетов закрыт по замыслу, но записан четырнадцать раз. Компилятор держит честными **две** копии (enum-первоисточник и зеркало в индексе — их связывает паритетный тест). Остальные двенадцать при добавлении значения **не ломаются**: они просто продолжают перечислять старый набор. @status:spec/done
+- @fact:B070-IT-ALREADY-DRIFTED-BEFORE-ANYONE-NOTICED **Это не гипотеза — дрейф уже случился и прожил незамеченным.** Две из трёх JTD-схем знали **четыре** вида и так и не узнали про `mcp`, который приехал с PROP-027 задолго до этой сессии. Никто не заметил, потому что заметить было нечем. @status:spec/done
+- @fact:B070-THE-MEASUREMENT-MISSED-THEM-TOO **Замер тоже их не увидел, и это про периметр.** Перед постройкой я посчитал рукописные списки поиском текста `flow, feat, stack, tool, mcp` — в JSON-схеме тот же список записан массивом `enum`, по имени на строку, и образец до него не дотянулся. Нашла панель: схема дерева упала ровно в тот момент, когда в дереве появился `lang`-пакет. @status:spec/done
+- @fact:B070-SHAPE-OF-THE-FIX **Форма починки, не построена.** Один источник и проверка, что остальные с ним согласны: тест, читающий `PackageKind::ALL` и сверяющий его с каждой схемой и каждым прозаическим списком, — либо генерация схем из enum. Дешевле первое: список коротких, а мест много. @status:spec/plan
+
 ### B-069 — документация индекса описывает раскладку и маршруты, которых в коде нет {#b-069}
 
 | | |
