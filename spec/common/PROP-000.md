@@ -329,6 +329,20 @@
 
 ---
 
+## 21. Surface floor — which channels a capability owes {#surfaces}
+
+@fact:SURFACE-DISCIPLINE-IS-THE-OMNICHANNEL-FLOW **Decision:** a capability lives in a **library**; the CLI, the TUI and the MCP server are thin surfaces over it. The rule and its vocabulary are the installed `omnichannel` flow: `spec://org.vibevm.world/omnichannel/flows/omnichannel/OMNICHANNEL-PROTOCOL#root`. This section declares only vibevm's own floor, which is what that flow asks each project to state for itself. @status:spec/done
+
+@fact:VIBEVM-DECLARES-LIBRARY-CLI-MCP **vibevm's declared floor: library + CLI + MCP**, plus **TUI** where one exists (`vibe tree` has one today). A new capability ships with those, or with a recorded reason why one sufficed. @status:spec/plan
+
+@fact:LSP-AND-IDE-ARE-NOT-DECLARED **LSP and IDE extensions are deliberately NOT declared** (owner, 2026-08-06: he will open that work himself). By the flow's own rule an undeclared surface is not a debt, so their absence is a choice and not a gap to be closed. @status:spec/done
+
+@fact:THE-FLOOR-IS-A-TARGET-NOT-A-DESCRIPTION **This is a target, not a description of today.** The census that motivated the decision (`campaigns/packages-2026-09/harvest/g6-b047-surfaces-census.md`) measured the opposite in places: of 29 top-level commands, 19 keep their substance in a separate crate and **10 keep it inside `vibe-cli`** — the largest being the whole `vibe self` version manager. Of 5 MCP tools, 2 share a library function with their CLI twin, 2 have no CLI twin, and 1 reads the same data as `vibe list` while building its output by hand. @status:spec/done
+
+@fact:THE-DIVERGENCE-HAS-ALREADY-BEEN-PAID-FOR **The gap is not theoretical.** `vibe list --json` and the MCP `query_package` printed different values for one field on Windows until 2026-08-06, because each rendered the path itself — two surfaces of one capability answering one question differently, which is exactly the failure this floor exists to prevent. @status:spec/done
+
+---
+
 ## Invariants {#invariants}
 
 @fact:INVARIANTS-STOP-RULE (These restate the most load-bearing rules from the spec and the book. If anything below seems violated in practice, stop and reconcile before proceeding.) @status:spec/done

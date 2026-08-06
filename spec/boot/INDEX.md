@@ -27,6 +27,10 @@ path = "vibedeps/stack-typescript-ai-native-lang/0.6.0/spec/boot/20-stack-typesc
 kind = "static"
 
 [[entry]]
+path = "vibedeps/flow-omnichannel/0.1.0/spec/boot/68-flow-omnichannel.md"
+kind = "static"
+
+[[entry]]
 path = "vibedeps/flow-delegation-rules/0.1.0/spec/boot/77-flow-delegation-rules.md"
 kind = "static"
 

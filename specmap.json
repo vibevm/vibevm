@@ -18022,7 +18022,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:5dc1f005dda41bb2f0293af31f3fc0cec33194f628532b4be3e83125574fbd60",
+      "content_hash": "sha256:d2ca0f4eaa262df1082e8270ff7bd2fc9231fe3cc95bb7ca129f46343e84701c",
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "PROP-000: Foundational technical decisions",
@@ -19731,12 +19731,66 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TOKEN-PINNED-WHERE"
     },
     {
+      "anchor": "surfaces",
+      "content_hash": "sha256:9049f76c2e04918c13c048d3e9cd0d4a6c93951fc1d889dd867e7b361f180c81",
+      "doc_path": "common/PROP-000",
+      "file": "spec/common/PROP-000.md",
+      "heading": "21. Surface floor — which channels a capability owes",
+      "line": 332,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#surfaces"
+    },
+    {
+      "anchor": "SURFACE-DISCIPLINE-IS-THE-OMNICHANNEL-FLOW",
+      "content_hash": "sha256:7c6dbeb611d5ea4bdce1d9c5cd2a96efe75953ff65d129af96089fac58984a22",
+      "doc_path": "common/PROP-000",
+      "file": "spec/common/PROP-000.md",
+      "heading": "**Decision:** a capability lives in a **library**; the CLI, the TUI and the MCP server are thin surfaces over it. The rule and its vocabulary are the installed `omnichannel` flow: `spec://org.vibevm.world/omnichannel/flows/omnichannel/OMNICHANNEL-PROTOCOL#root`. This section declares only vibevm's own floor, which is what that flow asks each project to state for itself. @status:spec/done",
+      "line": 334,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#SURFACE-DISCIPLINE-IS-THE-OMNICHANNEL-FLOW"
+    },
+    {
+      "anchor": "VIBEVM-DECLARES-LIBRARY-CLI-MCP",
+      "content_hash": "sha256:9c7fe45d889f27937c6954cfd3cc38c0fb03d359960a63dabc8e45dddf928ed9",
+      "doc_path": "common/PROP-000",
+      "file": "spec/common/PROP-000.md",
+      "heading": "**vibevm's declared floor: library + CLI + MCP**, plus **TUI** where one exists (`vibe tree` has one today). A new capability ships with those, or with a recorded reason why one sufficed. @status:spec/plan",
+      "line": 336,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#VIBEVM-DECLARES-LIBRARY-CLI-MCP"
+    },
+    {
+      "anchor": "LSP-AND-IDE-ARE-NOT-DECLARED",
+      "content_hash": "sha256:4e54caa7927acb4d0536470adc616ce7195141cee432f5ca49ae3289734bcacc",
+      "doc_path": "common/PROP-000",
+      "file": "spec/common/PROP-000.md",
+      "heading": "**LSP and IDE extensions are deliberately NOT declared** (owner, 2026-08-06: he will open that work himself). By the flow's own rule an undeclared surface is not a debt, so their absence is a choice and not a gap to be closed. @status:spec/done",
+      "line": 338,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#LSP-AND-IDE-ARE-NOT-DECLARED"
+    },
+    {
+      "anchor": "THE-FLOOR-IS-A-TARGET-NOT-A-DESCRIPTION",
+      "content_hash": "sha256:60624d9f71a418b3bcaff0e91c0aeeb7ea528930cedf9013bf62809b0d4a9667",
+      "doc_path": "common/PROP-000",
+      "file": "spec/common/PROP-000.md",
+      "heading": "**This is a target, not a description of today.** The census that motivated the decision (`campaigns/packages-2026-09/harvest/g6-b047-surfaces-census.md`) measured the opposite in places: of 29 top-level commands, 19 keep their substance in a separate crate and **10 keep it inside `vibe-cli`** — the largest being the whole `vibe self` version manager. Of 5 MCP tools, 2 share a library function with their CLI twin, 2 have no CLI twin, and 1 reads the same data as `vibe list` while building its output by hand. @status:spec/done",
+      "line": 340,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#THE-FLOOR-IS-A-TARGET-NOT-A-DESCRIPTION"
+    },
+    {
+      "anchor": "THE-DIVERGENCE-HAS-ALREADY-BEEN-PAID-FOR",
+      "content_hash": "sha256:49446f5e466994c7599c4e80e82f6bc2684f24ddd97d9bdd3c6ed1087dd7e5b8",
+      "doc_path": "common/PROP-000",
+      "file": "spec/common/PROP-000.md",
+      "heading": "**The gap is not theoretical.** `vibe list --json` and the MCP `query_package` printed different values for one field on Windows until 2026-08-06, because each rendered the path itself — two surfaces of one capability answering one question differently, which is exactly the failure this floor exists to prevent. @status:spec/done",
+      "line": 342,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#THE-DIVERGENCE-HAS-ALREADY-BEEN-PAID-FOR"
+    },
+    {
       "anchor": "invariants",
       "content_hash": "sha256:a1c15c99de677d966aa7c60511214c826d5d87e0d7fb4600ece0f38224abaf24",
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "Invariants",
-      "line": 332,
+      "line": 346,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#invariants"
     },
     {
@@ -19745,7 +19799,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "(These restate the most load-bearing rules from the spec and the book. If anything below seems violated in practice, stop and reconcile before proceeding.) @status:spec/done",
-      "line": 334,
+      "line": 348,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INVARIANTS-STOP-RULE"
     },
     {
@@ -19754,7 +19808,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Vocabulary lock.** Never use Maven's \"lifecycle/phase/goal\" or Bazel's internal terminology in user-facing or internal code. The installable kinds are `flow`, `feat`, `stack`, `tool`, `mcp` — the register grows only by owner amendment to `VIBEVM-SPEC.md` §4.1 (`app` is anticipated). The canonical process discipline vocabulary is the one in `VIBEVM-SPEC.md` §4 and the book. @status:spec/done",
-      "line": 336,
+      "line": 350,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-VOCABULARY"
     },
     {
@@ -19763,7 +19817,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**`spec/` is fixed.** The directory name and role cannot be configured away in v1. @status:spec/done",
-      "line": 337,
+      "line": 351,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-SPEC-DIR"
     },
     {
@@ -19772,7 +19826,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**User-owned files are never written by `vibe`.** `spec/boot/00-core.md` and `spec/boot/90-user.md` are off-limits to install/uninstall/update. @status:spec/done",
-      "line": 338,
+      "line": 352,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-USER-FILES"
     },
     {
@@ -19781,7 +19835,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**One commit = one logical unit.** Commit messages follow the git-practices family (§12) and reference `spec://…` URIs where relevant. @status:spec/done",
-      "line": 339,
+      "line": 353,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-ATOMIC-COMMITS"
     },
     {
@@ -19790,7 +19844,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Dogfood.** vibevm is being built using the same discipline it enforces. The `spec/` tree in this repo IS `vibe init`'s reference output. @status:spec/done",
-      "line": 340,
+      "line": 354,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-DOGFOOD"
     },
     {
@@ -19799,7 +19853,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Human authorship is the only attribution.** The posture is the `attribution-policy` flow (a git-practices member, §12); everywhere else assume human authorship only. @status:spec/done",
-      "line": 341,
+      "line": 355,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-HUMAN-AUTHORSHIP"
     },
     {
@@ -19808,7 +19862,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Tokens never appear in vibevm output.** See §20. Audited in unit tests; any new code path touching a `Token` or `RepoCreator` is reviewed for redaction and scope-escalation safety. @status:spec/done",
-      "line": 342,
+      "line": 356,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-TOKEN-SECRECY"
     },
     {

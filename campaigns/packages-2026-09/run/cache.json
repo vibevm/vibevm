@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T09:21:35Z",
+  "updated_at": "2026-08-06T09:34:07Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -58886,6 +58886,75 @@
         "verify_batch": "W5"
       }
     },
+    "packages/org.vibevm.world/omnichannel/v0.1.0/README.md": {
+      "content_hash": "3d1374bd192b5322463d1e3ad5b696ffe9c1852b69a798df0f68d1fe0cbebbb2",
+      "rollup": {
+        "explicit": [
+          "doc",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "doc",
+          "done"
+        ],
+        "marker_count": 10,
+        "fact_count": 9,
+        "unmarked_facts": 0
+      },
+      "marker_count": 10,
+      "unit_count": 3,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/omnichannel/v0.1.0/spec/boot/68-flow-omnichannel.md": {
+      "content_hash": "0faeba40094240aa5187cc4f7b1315eaebba1999b24db0f3d5a471cb8d2fcea3",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "plan"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 12,
+        "fact_count": 11,
+        "unmarked_facts": 0
+      },
+      "marker_count": 12,
+      "unit_count": 4,
+      "issue_count": 0
+    },
+    "packages/org.vibevm.world/omnichannel/v0.1.0/spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.md": {
+      "content_hash": "4d19850da609feb2108114f78901450dc051210fe9558596c25e85b47c64df92",
+      "rollup": {
+        "explicit": [
+          "impl",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "plan"
+        ],
+        "effective": [
+          "impl",
+          "done"
+        ],
+        "marker_count": 37,
+        "fact_count": 36,
+        "unmarked_facts": 0
+      },
+      "marker_count": 37,
+      "unit_count": 8,
+      "issue_count": 0
+    },
     "packages/org.vibevm.world/operating-modes/v0.1.0/README.md": {
       "content_hash": "d237a53f2209ee78087618a80e40acc4dc6d31e8a2ee387d83a402249dff6c59",
       "rollup": {
@@ -86980,7 +87049,7 @@
       }
     },
     "spec/common/PROP-000.md": {
-      "content_hash": "80bbcb789bb9789c760d9b15723a124f6d09abb73140939a0d0824214cdba2cc",
+      "content_hash": "f8dd9e19a2b1872769e426536e1798771989423cbfad895038296cb60cbe5a96",
       "rollup": {
         "explicit": [
           "spec",
@@ -86988,18 +87057,18 @@
         ],
         "computed": [
           "spec",
-          "done"
+          "plan"
         ],
         "effective": [
           "spec",
           "done"
         ],
-        "marker_count": 178,
-        "fact_count": 177,
+        "marker_count": 183,
+        "fact_count": 182,
         "unmarked_facts": 0
       },
-      "marker_count": 178,
-      "unit_count": 22,
+      "marker_count": 183,
+      "unit_count": 23,
       "issue_count": 0,
       "campaign": {
         "anchors_judged": 161,
