@@ -8,6 +8,7 @@ traceable to) lives in [PROP-037 §2.2](../modules/vibe-cli/PROP-037-tree-tui.md
 expands it. When the two disagree, PROP-037 wins._ @status:doc/done
 
 @fact:genre-line **Genre:** design doc (lore). **Contract:** [PROP-037 §2.2](../modules/vibe-cli/PROP-037-tree-tui.md#theme). @status:doc/done
+
 @fact:related **Related:** [the action-system design](action-system.md); the settings meta-plan
 (archived: `legacy-spec/terraforms/SETTINGS-SYSTEM-META-PLAN-v0.1.md`) — the active palette + tier are a user setting. @status:doc/done
 

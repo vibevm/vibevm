@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T15:12:18Z",
+  "updated_at": "2026-08-06T15:20:38Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -96457,7 +96457,7 @@
       }
     },
     "spec/design/loading-and-boot-model.md": {
-      "content_hash": "346279d5d1c2f87bc27bbe9e5c8677d55f59b77e361ebe8ddb53b29e74ba39c1",
+      "content_hash": "e1b6eb40b34a0d3f9d2d216d0799d30aefc263ab74679b8bfa102bbae265d0d7",
       "rollup": {
         "explicit": [
           "doc",
@@ -96471,11 +96471,11 @@
           "doc",
           "done"
         ],
-        "marker_count": 76,
-        "fact_count": 75,
+        "marker_count": 78,
+        "fact_count": 77,
         "unmarked_facts": 0
       },
-      "marker_count": 76,
+      "marker_count": 78,
       "unit_count": 15,
       "issue_count": 0,
       "campaign": {
@@ -98189,7 +98189,7 @@
       }
     },
     "spec/design/tui-visual-language.md": {
-      "content_hash": "a27b95ee35e289f3ac149be96121a413b3a8d5f2d330306d288e4b5e836d5c5f",
+      "content_hash": "65cf4a840093ba44b64ee558be1dea4ec39f94c4e1b6971c1a7160d2bf2a9378",
       "rollup": {
         "explicit": [
           "doc",
@@ -98203,11 +98203,11 @@
           "doc",
           "done"
         ],
-        "marker_count": 176,
-        "fact_count": 175,
+        "marker_count": 177,
+        "fact_count": 176,
         "unmarked_facts": 0
       },
-      "marker_count": 176,
+      "marker_count": 177,
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
@@ -98996,7 +98996,7 @@
       }
     },
     "spec/design/workspace-and-qualified-naming.md": {
-      "content_hash": "0dbdd3b2653908418911c036da3f4bc18c239fb95bb0745f8203589332a13bcd",
+      "content_hash": "4886b45c6d8db16277870503d5ccc3d039507b12a0235266220071965325fa1b",
       "rollup": {
         "explicit": [
           "doc",
@@ -99010,11 +99010,11 @@
           "doc",
           "done"
         ],
-        "marker_count": 100,
-        "fact_count": 99,
+        "marker_count": 102,
+        "fact_count": 101,
         "unmarked_facts": 0
       },
-      "marker_count": 100,
+      "marker_count": 102,
       "unit_count": 16,
       "issue_count": 0,
       "campaign": {

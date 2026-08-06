@@ -31011,7 +31011,7 @@
     },
     {
       "anchor": "rename-note",
-      "content_hash": "sha256:5edc1aeb8c665e26bb43d2fd8f4614d38ba5c02d5b2a4e71536e0365ab85ea53",
+      "content_hash": "sha256:30b681aeaa81901fa335fcc967392a42f948c287b03d482aa5ade281fa5d171f",
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**Terminology (2026-07-16 rename — read this before the body).** This record captures the 2026-05-21 session and keeps that session's three names; the shipped grammar has two. Read `inline` as **`link = \"static\"`** (the verbatim `STATIC.md` lane), the design's `static` as **`link = \"dynamic\"`** (the default, a by-reference `INDEX.md` read), and the design's `dynamic` as a **`dynamic` entry carrying a `when`**. The default moved with the names: design-`static` was the default and its shipped counterpart `dynamic` is. See [PROP-009 §2.4](../modules/vibe-workspace/PROP-009-loading-model.md#inclusion-types), which is normative. @status:doc/done",
@@ -31019,12 +31019,30 @@
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#rename-note"
     },
     {
+      "anchor": "status-line",
+      "content_hash": "sha256:d28cb9161d882fcfddce5c35aec93dfa406772f5442ed358540834a006374255",
+      "doc_path": "design/loading-and-boot-model",
+      "file": "spec/design/loading-and-boot-model.md",
+      "heading": "**Status:** non-normative design record. Captured 2026-05-21 in an owner design session. @status:doc/done",
+      "line": 9,
+      "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#status-line"
+    },
+    {
+      "anchor": "authority-line",
+      "content_hash": "sha256:4a9b898db950f50b1d39a145f54040f97bc5f385d8dfc79658df7681037cf06e",
+      "doc_path": "design/loading-and-boot-model",
+      "file": "spec/design/loading-and-boot-model.md",
+      "heading": "**Authority:** the PROP is the contract. If this document and PROP-009 disagree, the PROP wins. @status:doc/done",
+      "line": 11,
+      "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#authority-line"
+    },
+    {
       "anchor": "origin-question",
       "content_hash": "sha256:646369fffc6adb4538ad5fa72d8b75244ce790253c955a4d02402c74dae9c7ee",
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "PROP-007 shipped the workspace data model (M1.17) but deliberately left one question",
-      "line": 15,
+      "line": 17,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#origin-question"
     },
     {
@@ -31033,7 +31051,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "This session answered it. The answer turned out to be far larger than picking a",
-      "line": 20,
+      "line": 22,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#scope-of-answer"
     },
     {
@@ -31042,7 +31060,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "It belongs to the workspace arc and continues",
-      "line": 26,
+      "line": 28,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#workspace-arc-continuity"
     },
     {
@@ -31051,7 +31069,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "PROP-007 §6 q3 reads as a narrow placement question. It is not. @status:doc/done",
-      "line": 33,
+      "line": 35,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#narrow-question-illusion"
     },
     {
@@ -31060,7 +31078,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "vibevm's boot model ([`VIBEVM-SPEC.md` §6](../../VIBEVM-SPEC.md)) is a **flat, single,",
-      "line": 35,
+      "line": 37,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#flat-model-shape"
     },
     {
@@ -31069,7 +31087,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "A workspace breaks every one of those assumptions at once: @status:doc/done",
-      "line": 40,
+      "line": 42,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#workspace-breaks-lead"
     },
     {
@@ -31078,7 +31096,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**N nodes** — the root plus every member. @status:doc/done",
-      "line": 42,
+      "line": 44,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#break-n-nodes"
     },
     {
@@ -31087,7 +31105,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**N entry points** — a developer `cd`s into any member and opens an agent there.",
-      "line": 43,
+      "line": 45,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#break-n-entry-points"
     },
     {
@@ -31096,7 +31114,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**N boot sequences** — each entry point needs a sequence coherent *for that node*. @status:doc/done",
-      "line": 46,
+      "line": 48,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#break-n-boot-sequences"
     },
     {
@@ -31105,7 +31123,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**One shared dependency set** — unified resolution (PROP-007 §2.4) means one version",
-      "line": 47,
+      "line": 49,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#break-shared-deps"
     },
     {
@@ -31114,7 +31132,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "The flat model cannot be stretched over this. It must be replaced. @status:doc/done",
-      "line": 50,
+      "line": 52,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#flat-model-verdict"
     },
     {
@@ -31123,7 +31141,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "The owner's hard constraint, stated at the outset: **installing a dependency must",
-      "line": 52,
+      "line": 54,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#OWNER-CONSTRAINT-NO-REWRITE"
     },
     {
@@ -31132,7 +31150,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "The owner framed the loading mechanism directly as **static vs dynamic linking**, and",
-      "line": 62,
+      "line": 64,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#linking-frame"
     },
     {
@@ -31141,7 +31159,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "The load-bearing consequence: **at session start, the AI agent is the loader.** Every",
-      "line": 77,
+      "line": 79,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#AGENT-IS-THE-LOADER"
     },
     {
@@ -31150,7 +31168,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**P1 — Two trees.** A node's authored `spec/` (only the node's author writes it) and",
-      "line": 88,
+      "line": 90,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#P1-TWO-TREES"
     },
     {
@@ -31159,7 +31177,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**P2 — The boot sequence is computed, not assembled by hand.** Each node has an",
-      "line": 94,
+      "line": 96,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#P2-COMPUTED-SEQUENCE"
     },
     {
@@ -31168,7 +31186,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**P3 — One generated index per entry point; the agent never walks the graph.**",
-      "line": 104,
+      "line": 106,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#P3-INDEX-PER-ENTRY-POINT"
     },
     {
@@ -31177,7 +31195,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**P4 — Three inclusion types: `inline`, `static`, `dynamic`.** Declared per dependency",
-      "line": 112,
+      "line": 114,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#P4-THREE-INCLUSION-TYPES"
     },
     {
@@ -31186,7 +31204,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "Four forks were put to the owner. The options, the resolution, the reasoning. @status:doc/done",
-      "line": 122,
+      "line": 124,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#forks-lead"
     },
     {
@@ -31195,7 +31213,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "Options offered: a single inlined aggregate (cheapest at boot, but duplication and",
-      "line": 126,
+      "line": 128,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#fork1-options"
     },
     {
@@ -31204,7 +31222,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**Resolution — a refined hybrid.** Not one of the three: a model where `inline`,",
-      "line": 130,
+      "line": 132,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#FORK1-REFINED-HYBRID"
     },
     {
@@ -31213,7 +31231,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**Resolution — a committed dependency tree.** A fresh clone is bootable with no",
-      "line": 142,
+      "line": 144,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#FORK2-COMMITTED-TREE"
     },
     {
@@ -31222,7 +31240,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**Resolution — uniform.** A single-package project is a degenerate (zero-member)",
-      "line": 150,
+      "line": 152,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#FORK3-UNIFORM"
     },
     {
@@ -31231,7 +31249,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**Resolution — boot + effective spec, unified.** The boot index and the `vibe build`",
-      "line": 158,
+      "line": 160,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#FORK4-UNIFIED-VIEWS"
     },
     {
@@ -31240,7 +31258,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "Each dependency in a consumer's `vibe.toml` carries an inclusion type (working syntax",
-      "line": 168,
+      "line": 170,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#inclusion-types-lead"
     },
     {
@@ -31249,7 +31267,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**`STATIC.md`** — the verbatim concatenation of every `static`-typed contribution in",
-      "line": 172,
+      "line": 174,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#GEN-STATIC-MD"
     },
     {
@@ -31258,7 +31276,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**`INDEX.md`** — the ordered, resolved manifest of the rest of the boot sequence.",
-      "line": 177,
+      "line": 179,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#GEN-INDEX-MD"
     },
     {
@@ -31267,7 +31285,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "Session-start order: `CLAUDE.md` → `STATIC.md` → `INDEX.md` and the files it names. @status:doc/done",
-      "line": 181,
+      "line": 183,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#SESSION-START-ORDER"
     },
     {
@@ -31276,7 +31294,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "Cost profile: @status:doc/done",
-      "line": 183,
+      "line": 185,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#cost-profile-lead"
     },
     {
@@ -31285,7 +31303,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "`dynamic` is, mechanically, the subskill `lazy-pull` delivery mode (PROP-003 §2.5) —",
-      "line": 191,
+      "line": 193,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#dynamic-is-lazy-pull"
     },
     {
@@ -31294,7 +31312,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**Numbering.** The `NN-` prefix namespace (10–89, author-chosen) cannot survive a",
-      "line": 198,
+      "line": 200,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#FINDING-NUMBERING"
     },
     {
@@ -31303,7 +31321,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**Mirror-layout breakage.** VIBEVM-SPEC §13.1's mirror layout — source path = target",
-      "line": 204,
+      "line": 206,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#FINDING-MIRROR-BREAKAGE"
     },
     {
@@ -31312,7 +31330,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**Published-copy regeneration.** A package published by `vibe workspace publish` is",
-      "line": 209,
+      "line": 211,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#FINDING-PUBLISH-REGEN"
     },
     {
@@ -31321,7 +31339,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**vibevm dogfoods itself.** The vibevm repository is itself a vibevm project;",
-      "line": 214,
+      "line": 216,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#FINDING-DOGFOOD"
     },
     {
@@ -31330,7 +31348,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**Workspace-aware `vibe install` / `vibe build`** (PROP-007 §9.3, §6 q3) is no longer",
-      "line": 223,
+      "line": 225,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#SUBSUMES-INSTALL-BUILD"
     },
     {
@@ -31339,7 +31357,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**`version = { workspace = true }`** (PROP-007 §6 q4) and the **publish-signalling",
-      "line": 226,
+      "line": 228,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#parks-version-workspace"
     },
     {
@@ -31348,7 +31366,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**PROP-008** (qualified naming) is unaffected; it still follows PROP-005 (index). @status:doc/done",
-      "line": 229,
+      "line": 231,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#prop-008-unaffected"
     },
     {
@@ -31357,7 +31375,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "**2026-05-21.** Session restored from `CONTINUE.md` + `spec/WAL.md`. The owner",
-      "line": 235,
+      "line": 237,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#session-log-2026-05-21"
     },
     {
@@ -31366,7 +31384,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "[PROP-009](../modules/vibe-workspace/PROP-009-loading-model.md) — the contract; shipped M1.18. @status:doc/done",
-      "line": 249,
+      "line": 251,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#ptr-prop-009"
     },
     {
@@ -31375,7 +31393,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "[PROP-007](../modules/vibe-workspace/PROP-007-workspace.md) — the workspace data model; §6 q3 is the question this answers. @status:doc/done",
-      "line": 250,
+      "line": 252,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#ptr-prop-007"
     },
     {
@@ -31384,7 +31402,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "[`workspace-and-qualified-naming.md`](workspace-and-qualified-naming.md) — the preceding design session. @status:doc/done",
-      "line": 251,
+      "line": 253,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#ptr-workspace-naming"
     },
     {
@@ -31393,7 +31411,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "[`VIBEVM-SPEC.md`](../../VIBEVM-SPEC.md) — §6 (boot directory model), §4.2 (layout), §4.6 (effective spec), §13.1 (mirror layout). @status:doc/done",
-      "line": 252,
+      "line": 254,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#ptr-vibevm-spec"
     },
     {
@@ -31402,7 +31420,7 @@
       "doc_path": "design/loading-and-boot-model",
       "file": "spec/design/loading-and-boot-model.md",
       "heading": "[PROP-003 §2.5](../modules/vibe-resolver/PROP-003-dep-evolution.md) — subskills and delivery modes. @status:doc/done",
-      "line": 253,
+      "line": 255,
       "uri": "spec://org.vibevm.core/vibevm/design/loading-and-boot-model#ptr-prop-003"
     },
     {
@@ -33099,7 +33117,7 @@
     },
     {
       "anchor": "genre-line",
-      "content_hash": "sha256:256bca2ab1b5d510f4ab6b210f197170cd05181adca1f480ed773dbe5e6de5c6",
+      "content_hash": "sha256:59520c9ae2df88668b4ba5dd56b49869a4e6e083e7be4a0fcdec895fe9a26b00",
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**Genre:** design doc (lore). **Contract:** [PROP-037 §2.2](../modules/vibe-cli/PROP-037-tree-tui.md#theme). @status:doc/done",
@@ -33107,12 +33125,21 @@
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#genre-line"
     },
     {
+      "anchor": "related",
+      "content_hash": "sha256:e12b3b1febf76179cdd15b45158f6cadfd8ac483c22d5bbfd6ba1b492352abef",
+      "doc_path": "design/tui-visual-language",
+      "file": "spec/design/tui-visual-language.md",
+      "heading": "**Related:** [the action-system design](action-system.md); the settings meta-plan",
+      "line": 12,
+      "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#related"
+    },
+    {
       "anchor": "OWNER-VISION",
       "content_hash": "sha256:86785019f9caab8396540afa24c8b4204f922a757d9a56a994aa48c1d7664153",
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**Owner vision (2026-07-16):** the TUI must look **deliberately beautiful**, not like ASCII",
-      "line": 14,
+      "line": 15,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#OWNER-VISION"
     },
     {
@@ -33121,7 +33148,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**Symbolic precision.** Every glyph is chosen, not defaulted. Box-drawing, braille, and block",
-      "line": 26,
+      "line": 27,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#PRIN-SYMBOLIC-PRECISION"
     },
     {
@@ -33130,7 +33157,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**Truecolor first.** 24-bit RGB is the primary tier; colour is expressed through **semantic role",
-      "line": 29,
+      "line": 30,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#PRIN-TRUECOLOR-FIRST"
     },
     {
@@ -33139,7 +33166,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**Portability.** The primary UI is glyphs + colour roles. It works through SSH, `tmux`, a Linux",
-      "line": 31,
+      "line": 32,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#PRIN-PORTABILITY"
     },
     {
@@ -33148,7 +33175,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**Graceful degradation.** A worse terminal gets a recognisably simpler look, not a broken one. One",
-      "line": 33,
+      "line": 34,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#PRIN-GRACEFUL-DEGRADATION"
     },
     {
@@ -33157,7 +33184,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**Windows are windows.** A modal reads as a solid panel floating over the terminal (filled",
-      "line": 35,
+      "line": 36,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#PRIN-WINDOWS-ARE-WINDOWS"
     },
     {
@@ -33166,7 +33193,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**One CSS.** A restyle touches only the theme; no component logic, no control flow. The `Theme`",
-      "line": 38,
+      "line": 39,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#PRIN-ONE-CSS"
     },
     {
@@ -33175,7 +33202,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "2. Glyph vocabulary",
-      "line": 43,
+      "line": 44,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#glyph-vocabulary"
     },
     {
@@ -33184,7 +33211,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "Every glyph is a constant on the `Theme`, never a hardcoded string at a call site. The table below",
-      "line": 45,
+      "line": 46,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#glyph-lead"
     },
     {
@@ -33193,7 +33220,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**Rule (normative in PROP-037 §2.2 `#glyph-vocabulary`):** in the primary UI (Tier ≥ 1) there are no",
-      "line": 63,
+      "line": 64,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#NO-ASCII-PRIMARY"
     },
     {
@@ -33202,7 +33229,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "3. Palette system",
-      "line": 69,
+      "line": 70,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#palette-tokens"
     },
     {
@@ -33211,7 +33238,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "A `Palette` is a data-driven mapping from **semantic role tokens** → `Color`. The roles (the full",
-      "line": 71,
+      "line": 72,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#palette-definition"
     },
     {
@@ -33220,7 +33247,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "`base` · `surface0` · `surface1` · `muted` · `subtext` · `text` · `accent` · `love` · `gold` ·",
-      "line": 74,
+      "line": 75,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#palette-roles-list"
     },
     {
@@ -33229,7 +33256,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "The role semantics: @status:doc/done",
-      "line": 77,
+      "line": 78,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#role-semantics-lead"
     },
     {
@@ -33238,7 +33265,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "`base` — the terminal/window ground. The main tree keeps the user's terminal background (so a",
-      "line": 78,
+      "line": 79,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#ROLE-BASE"
     },
     {
@@ -33247,7 +33274,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "`surface0` / `surface1` — raised surfaces (status bar chrome / a subtle fill, an off-flag). @status:doc/done",
-      "line": 80,
+      "line": 81,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#ROLE-SURFACES"
     },
     {
@@ -33256,7 +33283,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "`muted` — borders, disabled text, \"why disabled\" reasons. @status:doc/done",
-      "line": 81,
+      "line": 82,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#ROLE-MUTED"
     },
     {
@@ -33265,7 +33292,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "`subtext` — secondary foreground (footer descriptions, header values). @status:doc/done",
-      "line": 82,
+      "line": 83,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#ROLE-SUBTEXT"
     },
     {
@@ -33274,7 +33301,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "`text` — primary foreground. @status:doc/done",
-      "line": 83,
+      "line": 84,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#ROLE-TEXT"
     },
     {
@@ -33283,7 +33310,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "`accent` — the brand: selection highlight, titles, the active key label, the cosmic violet. @status:doc/done",
-      "line": 84,
+      "line": 85,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#ROLE-ACCENT"
     },
     {
@@ -33292,7 +33319,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "`love` / `gold` / `foam` / `rose` — the four tonal accents (warnings / badges & highlights /",
-      "line": 85,
+      "line": 86,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#ROLE-TONAL-ACCENTS"
     },
     {
@@ -33301,7 +33328,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "`selection` — the highlighted row (composed: `accent` ground + `base` text). @status:doc/done",
-      "line": 87,
+      "line": 88,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#ROLE-SELECTION"
     },
     {
@@ -33310,7 +33337,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "`border` — the window/frame stroke (usually `muted`). @status:doc/done",
-      "line": 88,
+      "line": 89,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#ROLE-BORDER"
     },
     {
@@ -33319,7 +33346,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "`paper` — the detail-card panel, distinct from the tree beneath (a \"paper card\": light panel, dark",
-      "line": 89,
+      "line": 90,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#ROLE-PAPER"
     },
     {
@@ -33328,7 +33355,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "`button_on` / `button_off` — a focused vs unfocused button. @status:doc/done",
-      "line": 91,
+      "line": 92,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#ROLE-BUTTONS"
     },
     {
@@ -33337,7 +33364,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**Five built-in palettes** (the full set — a worked example of mass theming): @status:doc/done",
-      "line": 93,
+      "line": 94,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#five-palettes-lead"
     },
     {
@@ -33346,7 +33373,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**Rosé Pine is canonical-locked**: the eleven `Color::Rgb` values already in",
-      "line": 103,
+      "line": 104,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#ROSE-PINE-LOCKED"
     },
     {
@@ -33355,7 +33382,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**Catppuccin** values are the canonical Catppuccin palette (the four flavours; Latte is the light",
-      "line": 106,
+      "line": 107,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#CATPPUCCIN-MAPPING"
     },
     {
@@ -33364,7 +33391,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**Light/dark-awareness:** Latte is the light reference. A `Palette` carries an `is_light: bool`",
-      "line": 109,
+      "line": 110,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#LIGHT-DARK-AWARENESS"
     },
     {
@@ -33373,7 +33400,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "`selection` = `accent` ground + `base` text (bold) — high-contrast on every palette. @status:doc/done",
-      "line": 112,
+      "line": 113,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#DERIVED-SELECTION"
     },
     {
@@ -33382,7 +33409,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "`border` = `muted`. @status:doc/done",
-      "line": 113,
+      "line": 114,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#DERIVED-BORDER"
     },
     {
@@ -33391,7 +33418,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "`paper` = `surface0` (raised, distinct from the tree ground); the detail-card text stays `text`. @status:doc/done",
-      "line": 114,
+      "line": 115,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#DERIVED-PAPER"
     },
     {
@@ -33400,7 +33427,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "`button_on` = `accent` (focused), `button_off` = `surface1`. @status:doc/done",
-      "line": 115,
+      "line": 116,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#DERIVED-BUTTONS"
     },
     {
@@ -33409,7 +33436,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "The active palette is a `Model` field; through the settings system (Шаг 2) it persists across",
-      "line": 117,
+      "line": 118,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#palette-is-setting"
     },
     {
@@ -33418,7 +33445,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "4. Rendering tiers + degradation",
-      "line": 122,
+      "line": 123,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#rendering-tiers"
     },
     {
@@ -33427,7 +33454,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**Detection (normative in PROP-037 §2.2 `#rendering-tiers`):** a **pure function** over the",
-      "line": 131,
+      "line": 132,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#TIER-DETECTION"
     },
     {
@@ -33436,7 +33463,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**Degradation = projection.** A `Theme` is built for Tier 3 (the full palette + rounded + braille),",
-      "line": 140,
+      "line": 141,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#DEGRADATION-PROJECTION"
     },
     {
@@ -33445,7 +33472,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "5. Window / modal aesthetics",
-      "line": 147,
+      "line": 148,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#window-aesthetics"
     },
     {
@@ -33454,7 +33481,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "A window is not a fallback. The composition (the `ui::Window` component, PROP-037 §2.3): @status:doc/done",
-      "line": 149,
+      "line": 150,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#window-composition-lead"
     },
     {
@@ -33463,7 +33490,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "a **solid panel** background (filled `base`), floating over the terminal; @status:doc/done",
-      "line": 151,
+      "line": 152,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#WIN-SOLID-PANEL"
     },
     {
@@ -33472,7 +33499,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "a **rounded frame** (`╭╮╰╯` at Tier ≥ 2; the frame stroke is `border` = `muted`); @status:doc/done",
-      "line": 152,
+      "line": 153,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#WIN-ROUNDED-FRAME"
     },
     {
@@ -33481,7 +33508,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "a **title chip** — the window title rendered as a badge in the `accent` colour, not bare text; @status:doc/done",
-      "line": 153,
+      "line": 154,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#WIN-TITLE-CHIP"
     },
     {
@@ -33490,7 +33517,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**padding** inside the frame; an optional **shadow** (a low-alpha `▓`/`▒` band, or a 1-char offset)",
-      "line": 154,
+      "line": 155,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#WIN-PADDING-SHADOW"
     },
     {
@@ -33499,7 +33526,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "a `[✕]` **close affordance** in the top-right. @status:doc/done",
-      "line": 156,
+      "line": 157,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#WIN-CLOSE-AFFORDANCE"
     },
     {
@@ -33508,7 +33535,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "Even at Tier 1 the window reads as a window — the rounded/square frame + filled panel + title chip",
-      "line": 158,
+      "line": 159,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#WINDOW-AT-TIER-1"
     },
     {
@@ -33517,7 +33544,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "6. Spacing & rhythm",
-      "line": 165,
+      "line": 166,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#spacing-rhythm"
     },
     {
@@ -33526,7 +33553,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "A beautiful window is mostly **empty space used well**. The complaint that turns a \"window\" back",
-      "line": 167,
+      "line": 168,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#spacing-vocabulary-lead"
     },
     {
@@ -33535,7 +33562,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**Interior padding (`PAD_X` = 2, `PAD_Y` = 1).** Every window frame holds its content off the",
-      "line": 173,
+      "line": 174,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#SPACE-INTERIOR-PADDING"
     },
     {
@@ -33544,7 +33571,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**Group gutter (`GUTTER` = 1).** A radio option inside a `Group` frame is inset one cell off the",
-      "line": 179,
+      "line": 180,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#SPACE-GROUP-GUTTER"
     },
     {
@@ -33553,7 +33580,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "**Rhythm & centring.** Structure is read from separation: framed groups get a blank row between",
-      "line": 183,
+      "line": 184,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#SPACE-RHYTHM-CENTRING"
     },
     {
@@ -33562,7 +33589,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "The rule in one line: **content floats inside the frame with air on every side, and multi-element",
-      "line": 189,
+      "line": 190,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#AIR-RULE"
     },
     {
@@ -33571,7 +33598,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "7. ratatui-image readiness",
-      "line": 194,
+      "line": 195,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#image-ready"
     },
     {
@@ -33580,7 +33607,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "The primary UI is glyphs (portable). But the structure is **ready** for `ratatui-image` (future",
-      "line": 196,
+      "line": 197,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#IMAGE-READINESS"
     },
     {
@@ -33589,7 +33616,7 @@
       "doc_path": "design/tui-visual-language",
       "file": "spec/design/tui-visual-language.md",
       "heading": "§2.2 carries the anchors — all five exist: `#palette-tokens` (the role set + the five canonical palettes),",
-      "line": 205,
+      "line": 206,
       "uri": "spec://org.vibevm.core/vibevm/design/tui-visual-language#normative-pointer"
     },
     {
@@ -33990,7 +34017,7 @@
     },
     {
       "anchor": "companion-line",
-      "content_hash": "sha256:2939c9f6734d8497db58b032665b81b185a98744b315e26bfd49580567a11492",
+      "content_hash": "sha256:fcee2c60f7b12a8eb64a3182d42cb088230559412c6a043a548e40bd842aa40c",
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**Companion to:** [PROP-007](../modules/vibe-workspace/PROP-007-workspace.md) (workspace), [PROP-008](../modules/vibe-registry/PROP-008-qualified-naming.md) (qualified naming). @status:doc/done",
@@ -33998,12 +34025,30 @@
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#companion-line"
     },
     {
+      "anchor": "status-line",
+      "content_hash": "sha256:c13e2984376cfd5b5712c499a97f07448f95a4ddee51733fcadfa8bf4b90af9d",
+      "doc_path": "design/workspace-and-qualified-naming",
+      "file": "spec/design/workspace-and-qualified-naming.md",
+      "heading": "**Status:** non-normative design record. Captured 2026-05-20 in an owner design session. @status:doc/done",
+      "line": 7,
+      "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#status-line"
+    },
+    {
+      "anchor": "authority-line",
+      "content_hash": "sha256:d1d39e79771a6892c5bb5660891eb56d0e38b94d44649863b0abe294fa515f00",
+      "doc_path": "design/workspace-and-qualified-naming",
+      "file": "spec/design/workspace-and-qualified-naming.md",
+      "heading": "**Authority:** the PROPs are the contract. If this document and a PROP disagree, the PROP wins. @status:doc/done",
+      "line": 9,
+      "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#authority-line"
+    },
+    {
       "anchor": "what-this-is",
       "content_hash": "sha256:b4ca387c4f18a31003a17090dd4acd88cdb47bee0c0bc4c82334b09f646478b0",
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "PROP-007 and PROP-008 say *what* the workspace + qualified-naming refactor does. This document says *why* — and keeps the lore: the owner's mental model, the four-axis decomposition, every fork weighed during the session, the Cargo-vs-Maven precedents studied, the publication model that needed careful explaining, and the ideas that surfaced but were parked. @status:doc/done",
-      "line": 13,
+      "line": 15,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#what-this-is"
     },
     {
@@ -34012,7 +34057,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "It exists because the design session that produced PROP-007/008 spent a large amount of reasoning that does not belong inside a contract-shaped PROP, yet would be expensive to lose at the next session boundary. See [`spec/design/README.md`](README.md) for the genre. @status:doc/done",
-      "line": 15,
+      "line": 17,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#why-exists"
     },
     {
@@ -34021,7 +34066,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "The owner asked for a structure \"most like Maven submodules and cargo\": a project that decomposes *naturally* into modules; modules that publish to a repository **individually** — or are deliberately **not** shared; and the whole structure declared right in the project description. @status:doc/done",
-      "line": 21,
+      "line": 23,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#owner-request"
     },
     {
@@ -34030,7 +34075,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "Two extremes were named as must-work cases, and they anchor the whole design: @status:doc/done",
-      "line": 23,
+      "line": 25,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#extremes-lead"
     },
     {
@@ -34039,7 +34084,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**Entirely invisible** — a fully structured project that lives nowhere in any external repository. @status:doc/done",
-      "line": 25,
+      "line": 27,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#extreme-invisible"
     },
     {
@@ -34048,7 +34093,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**Entirely published** — the whole project, every sub-package individually, published. @status:doc/done",
-      "line": 26,
+      "line": 28,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#extreme-published"
     },
     {
@@ -34057,7 +34102,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "The \"everything in between\" (some modules public, some private, some workspace-internal) must also be first-class. @status:doc/done",
-      "line": 28,
+      "line": 30,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#in-between-first-class"
     },
     {
@@ -34066,7 +34111,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "A load-bearing phrase from the session, recorded verbatim because it shaped several decisions: *\"the user works in a sub-project and doesn't even notice that it is actually a small piece of something bigger.\"* This is why commands bubble up to the workspace root (PROP-007 §2.4) and why there is one unified manifest rather than many files (§2.2) — \"reading a million different files is hard for a human, and for a small dumb LLM agent too.\" @status:doc/done",
-      "line": 30,
+      "line": 32,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#INVISIBLE-SUBPROJECT-PHRASE"
     },
     {
@@ -34075,7 +34120,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "The spirit throughout: **flexibility and convention-over-configuration**. The owner repeatedly chose \"support both, default sensibly\" over \"pick one.\" That preference resolved R3 (version inheritance: both modes) and W8 (member versioning: both). @status:doc/done",
-      "line": 32,
+      "line": 34,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#flexibility-spirit"
     },
     {
@@ -34084,7 +34129,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "The request decomposes into four orthogonal axes. Keeping them separate was the single most clarifying move of the session — they have different cost, different dependencies, and ship as different milestones. @status:doc/done",
-      "line": 38,
+      "line": 40,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#four-axes-lead"
     },
     {
@@ -34093,7 +34138,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "Axis A alone closes roughly 80% of the request — multi-package projects, local cross-deps, selective publish, both extremes — and it depends on nothing. That was the good news delivered early: the heavy part (naming, discovery) is separable and can come later. @status:doc/done",
-      "line": 47,
+      "line": 49,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#axis-a-eighty-percent"
     },
     {
@@ -34102,7 +34147,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "The chain `D → C → PROP-005 index` is the key finding. Reasoning: @status:doc/done",
-      "line": 60,
+      "line": 62,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#chain-key-finding"
     },
     {
@@ -34111,7 +34156,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**C needs the index.** A short name `wal` must be resolved to a qualified `org.vibevm.world/wal`. That requires enumerating candidates `(*, wal)` across registries. The host cannot list an org cheaply (PROP-005 §1: GitVerse exposes no org listing; GitHub is rate-limited). Therefore short-name resolution requires PROP-005 implemented. @status:doc/done",
-      "line": 62,
+      "line": 64,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#c-needs-index"
     },
     {
@@ -34120,7 +34165,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**D needs C.** A *collision* is two different packages sharing a short name. You can only tell a collision apart from a harmless mirror (the same package served by two registries) once `group` exists to distinguish them. Without `group`, first-match-wins is the only sane policy. @status:doc/done",
-      "line": 63,
+      "line": 65,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#d-needs-c"
     },
     {
@@ -34129,7 +34174,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**The conflict half of D already exists.** The depsolver (resolvo/libsolv per PROP-003), `[conflicts]`, and the conflict-explanation chain are in place; the install pipeline is already atomic (resolve → plan → confirm → apply), so a failed resolve never reaches apply. \"Fail without applying the plan\" is already true. Only *collision* detection is new. @status:doc/done",
-      "line": 64,
+      "line": 66,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#conflict-half-exists"
     },
     {
@@ -34138,7 +34183,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "This is why the recommended sequencing is **A → PROP-005 implementation → C → D**. @status:doc/done",
-      "line": 66,
+      "line": 68,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#recommended-sequencing"
     },
     {
@@ -34147,7 +34192,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "Every fork weighed in the session, the options, the choice, and the reasoning. This is the most valuable part to preserve — settled questions that would otherwise be re-litigated. @status:doc/done",
-      "line": 72,
+      "line": 74,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#forks-lead"
     },
     {
@@ -34156,7 +34201,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**Separator `group`↔`name`.** Chosen: `/` → `flow:org.vibevm.world/wal`. `:` is taken by `kind`, `@` by version; npm-scope (`@org/`) was rejected because `@` doubling with version would confuse. @status:doc/done",
-      "line": 76,
+      "line": 78,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-separator"
     },
     {
@@ -34165,7 +34210,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**Is `group` mandatory?** Chosen: **mandatory**. Maven makes groupId mandatory; an optional `group` creates a grey zone (\"no group\" vs \"has group\"). The three legacy packages migrate silently — the owner waved that through (\"they are test packages anyway\"). @status:doc/done",
-      "line": 77,
+      "line": 79,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-group-mandatory"
     },
     {
@@ -34174,7 +34219,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**Enforce reverse-FQDN?** Chosen: **core does not enforce**. Whether `group` looks like a reversed domain is style — for humans and linters, not the resolver. Maven likewise does not enforce groupId shape. @status:doc/done",
-      "line": 78,
+      "line": 80,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-no-fqdn-enforcement"
     },
     {
@@ -34183,7 +34228,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**Canonical group for vibevm.** `org.vibevm` (domain `vibevm.org`). Recorded in PROP-008 §2.1. @status:doc/done",
-      "line": 79,
+      "line": 81,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-canonical-group"
     },
     {
@@ -34192,7 +34237,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**`kind` in the repository name?** The owner asked: can `kind` leave the repo name entirely? Yes — because identity is already URL-orthogonal (PROP-002 §2.1), the repo name identifies nothing. The one thing `kind` gave the name was disambiguation (`flow-wal` vs `feat-wal`); making `name` unique *within a group* (rather than within a kind) removes that need. Result: repo = `<group>.<name>` = `org.vibevm_wal`, `naming = \"fqdn\"`. `kind` becomes pure metadata and leaves the identity tuple. @status:doc/done",
-      "line": 80,
+      "line": 82,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-kind-out-of-repo-name"
     },
     {
@@ -34201,7 +34246,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**`kind` prefix in pkgref — keep or drop?** Chosen: **optional but allowed, validated when present**. The owner's exact framing: if `flow:` is purely a UX feature, make it optional but possible; and if an install used the prefix explicitly, validate it matches the manifest. So `org.vibevm.world/wal` and `flow:org.vibevm.world/wal` are both legal; a present prefix is checked (`KindMismatch` on mismatch). It is validation + a UX signal — it never disambiguates, because `name` is unique within `group`. @status:doc/done",
-      "line": 81,
+      "line": 83,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-kind-prefix-optional"
     },
     {
@@ -34210,7 +34255,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**Short name in manifests?** Chosen: **no — manifests store the qualified form**. The short name is CLI-only sugar; `vibe install wal` resolves once and writes `org.vibevm.world/wal`. This is the cargo/npm pattern (`cargo add serde` → `serde = \"1\"`). The decisive consequence: the dependency graph is built entirely from qualified names, so **transitive collisions vanish by construction** — short-name resolution only ever happens at the human-typed CLI boundary, not recursively through the graph. @status:doc/done",
-      "line": 82,
+      "line": 84,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-qualified-in-manifests"
     },
     {
@@ -34219,7 +34264,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**Exit code for ambiguity.** Chosen: **new code `7`**, distinct from `3` (package conflict). @status:doc/done",
-      "line": 83,
+      "line": 85,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-exit-code-7"
     },
     {
@@ -34228,7 +34273,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**7a — member is a \"package\" or a \"project\"?** Chosen: **universal node** — it can be both; one structure serves all roles. @status:doc/done",
-      "line": 87,
+      "line": 89,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-7a-universal-node"
     },
     {
@@ -34237,7 +34282,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**7b — can a member be a consumer itself?** Chosen: **yes** — \"and usually it should be: the user works in a sub-project without noticing it is a piece of something bigger.\" This drove command-bubbling. @status:doc/done",
-      "line": 88,
+      "line": 90,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-7b-member-consumer"
     },
     {
@@ -34246,7 +34291,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**7c — one lockfile per workspace or per member?** The owner asked back: how do Cargo and Maven do it? Answer studied (see §6). Chosen: **one `vibe.lock` at the absolute root** (cargo model). Commands inside a member bubble up to it — which *is* the mechanism for 7b's \"doesn't notice.\" @status:doc/done",
-      "line": 89,
+      "line": 91,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-7c-one-lockfile"
     },
     {
@@ -34255,7 +34300,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**7d — `[[registry]]` / `[active]` / `[llm]` shared or per-member?** Chosen: **cascade with override** — the root sets defaults, a member may override. This is safe for `[[registry]]` only because identity is URL-orthogonal: a member overrides *where to fetch from*, not *what* identity it gets; if two registries served a genuinely different `content_hash` under one name, that is a collision and axis D catches it. @status:doc/done",
-      "line": 90,
+      "line": 92,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-7d-cascade-override"
     },
     {
@@ -34264,7 +34309,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**7e — one manifest file or two?** Chosen: **one `vibe.toml` for everything**; `vibe-package.toml` is retired. Reason: a member is simultaneously a developed consumer and a publishable artifact — two files would duplicate `[requires]` and drift. Plus the owner's \"read one file, not a million\" point. The escape hatch noted: \"if it becomes impossible without splitting — we'll split later.\" @status:doc/done",
-      "line": 91,
+      "line": 93,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-7e-one-manifest"
     },
     {
@@ -34273,7 +34318,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**R1 — `[project]` vs `[package]`.** Chosen: 7-α — keep both sections distinct (a node is a non-publishable project *or* a publishable package), rather than folding `[project]` into a `[package]` with optional `kind`. Explicitness; `kind` stays strictly mandatory wherever `[package]` appears. @status:doc/done",
-      "line": 95,
+      "line": 97,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-r1-project-package"
     },
     {
@@ -34282,7 +34327,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**R2 — manifests store the qualified form** (see naming forks above) — confirmed. @status:doc/done",
-      "line": 96,
+      "line": 98,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-r2-qualified-confirmed"
     },
     {
@@ -34291,7 +34336,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**R3 — version placeholders.** Chosen: named `[workspace.versions]` (Maven `<properties>` shape). And: **depth 2 is not enough — recursion to arbitrary nesting depth**. This *reversed* a default the assistant had set (W3: \"nested workspaces forbidden\"). The reversal is load-bearing — it is what makes the matryoshka resolution arbitrary-depth — and it raised the cost of PROP-007 (recursion in root discovery, member aggregation, placeholder resolution). @status:doc/done",
-      "line": 97,
+      "line": 99,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-r3-versions-recursion"
     },
     {
@@ -34300,7 +34345,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**R4 — `org.vibevm`** (recorded above). @status:doc/done",
-      "line": 98,
+      "line": 100,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-r4-org-vibevm"
     },
     {
@@ -34309,7 +34354,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**R5 — kind out of repo name + optional kind prefix** (recorded in naming forks). @status:doc/done",
-      "line": 99,
+      "line": 101,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-r5-kind-out"
     },
     {
@@ -34318,7 +34363,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**R6 — owner sanction** to edit any specification, including the owner-frozen `VIBEVM-SPEC.md`. Granted 2026-05-20 after requirements were judged sufficiently complete. @status:doc/done",
-      "line": 100,
+      "line": 102,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-r6-owner-sanction"
     },
     {
@@ -34327,7 +34372,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**dual-form path-dep** — `{ path, version }` both present: `path` for local development, `version` for when the consuming node is itself published. Required because the owner explicitly wants the mixed mode (some modules local, some published). @status:doc/done",
-      "line": 101,
+      "line": 103,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#fork-dual-form-path-dep"
     },
     {
@@ -34336,7 +34381,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "W1 root discovery by walking up to `[workspace]`; W2 glob in `members`; **W3 nested workspaces — reversed by R3 into recursion**; W4 dependency cycles between members are an error; W5 path outside the workspace allowed but path-only consumers are non-publishable; W6 `vibe install` addressing (root vs `-p` vs cwd); W7 `vibe workspace publish` is non-atomic, stop-on-first-failure; W8 member versioning supports both independent and inherited; collision in an interactive run shows alternatives and fails (no interactive pick — the choice must be recorded deliberately); the lockfile is authoritative when resolving a short name; `group` grammar follows Maven groupId; lockfile schema bumps to v4. @status:doc/done",
-      "line": 105,
+      "line": 107,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#w-defaults"
     },
     {
@@ -34345,7 +34390,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "Both were studied point by point. The findings, kept here so a future session need not re-derive them. @status:doc/done",
-      "line": 111,
+      "line": 113,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#precedent-lead"
     },
     {
@@ -34354,7 +34399,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "The decisions vibevm drew from this: @status:doc/done",
-      "line": 124,
+      "line": 126,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#drawn-lead"
     },
     {
@@ -34363,7 +34408,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**Lockfile: Cargo model.** vibevm already mandates a lockfile (content-hash integrity, PROP-002 §2.1). Maven's lockless model would mean discarding working machinery. One `vibe.lock` at the absolute root. @status:doc/done",
-      "line": 126,
+      "line": 128,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#DRAWN-LOCKFILE-CARGO"
     },
     {
@@ -34372,7 +34417,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**Nested workspaces: vibevm permits them, unlike Cargo.** Cargo forbids them to dodge ambiguity. vibevm can afford them because it fixes \"lock always at the absolute root\" — that rule resolves the ambiguity deterministically. Maven shows arbitrary nesting works when version coordination aggregates upward. @status:doc/done",
-      "line": 127,
+      "line": 129,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#DRAWN-NESTED-PERMITTED"
     },
     {
@@ -34381,7 +34426,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**Version placeholders: Maven `<properties>` shape**, because that is literally what the owner described (\"write `0.0.1` once, reference it by name\"). `[workspace.dependencies]` (Cargo's centralised per-pkgref defaults) is noted as a possible companion mechanism, not the primary one. @status:doc/done",
-      "line": 128,
+      "line": 130,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#DRAWN-MAVEN-PROPERTIES"
     },
     {
@@ -34390,7 +34435,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**groupId: adopted as `group`** — but as a package attribute, not a registry attribute, which is why it does not reopen PROP-002 §3.4's rejection of per-registry identity. @status:doc/done",
-      "line": 129,
+      "line": 131,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#DRAWN-GROUPID"
     },
     {
@@ -34399,7 +34444,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "This needed careful explanation — the owner flagged it as confusing and asked directly. @status:doc/done",
-      "line": 135,
+      "line": 137,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#publication-model-lead"
     },
     {
@@ -34408,7 +34453,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "The model: **the development tree is one source tree** (one git repo, or not in git at all if private). Workspace members are subdirectories; the split into packages is logical, at the resolver level. **Publishing is a separate operation that copies a package directory's content into a new, separate repository** in the registry org and tags it — exactly what `vibe registry publish` does today for one package, repeated per member by `vibe workspace publish`. @status:doc/done",
-      "line": 137,
+      "line": 139,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#PUBLICATION-MODEL"
     },
     {
@@ -34417,7 +34462,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "A nested package does **not** \"surface\" by moving files. Only a *copy of its content* is published, into its own repository, at publish time. The source tree stays unified — a monorepo for development; the registry holds split copies. @status:doc/done",
-      "line": 139,
+      "line": 141,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#NO-FILE-MOVING"
     },
     {
@@ -34426,7 +34471,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "Recommendation: keep members as flat siblings, not physically nested. Logical hierarchy (\"X is built from Y\") is a path-dependency, not a nested directory. Physical nesting is supported (with subtree excision when publishing the outer package, cargo-style) but discouraged for the \"holes in the tree\" complexity. @status:doc/done",
-      "line": 153,
+      "line": 155,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#flat-siblings-recommendation"
     },
     {
@@ -34435,7 +34480,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "The owner asked: when a sub-package's published copy is cloned, how do we make it super-obvious that pull requests there are pointless and contribution belongs to the main project? @status:doc/done",
-      "line": 159,
+      "line": 161,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#signalling-question"
     },
     {
@@ -34444,7 +34489,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "Prior art studied: AOSP / Chromium / Bazel keep read-only mirrors on GitHub with explicit \"this is a mirror, do not send PRs, contribute upstream\" banners. GitHub offers no \"disable PRs only\" switch — only full archival blocks PRs. @status:doc/done",
-      "line": 161,
+      "line": 163,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#prior-art-mirrors"
     },
     {
@@ -34453,7 +34498,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "The layered answer (detail in PROP-007 §2.8): README banner as the first block; repo `description`; Issues disabled; a `PULL_REQUEST_TEMPLATE.md` STOP notice; and `archived = true` as the nuclear `--archive` option (full read-only — vibevm drives the unarchive→push→archive cycle on re-publish). Plus a machine-readable `[origin]` marker in the published copy, and a `published_repos = \"read-only\" | \"open\"` setting for operators who want the inverse model. @status:doc/done",
-      "line": 163,
+      "line": 165,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#layered-answer"
     },
     {
@@ -34462,7 +34507,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "Terminology fixed: the published copy is a **published package repository**; the source of truth is the **workspace**. It is *not* a `[[mirror]]` (that term is taken — an availability copy of a registry). @status:doc/done",
-      "line": 165,
+      "line": 167,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#terminology-published-repo"
     },
     {
@@ -34471,7 +34516,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**vibevm registry explorer.** The owner asked whether a Maven-Central-style browsable visualisation is possible — and wanted it richer. Yes: the per-org index (PROP-005) carries the data. Beyond Maven Central: a reverse-FQDN group tree with drill-down, plus `kind` filtering, a capability graph, `describes`/PURL links to upstream libraries, redirect-stub delegation, the full dependency DAG, and workspace provenance (\"sub-package of X\" from the `[origin]` marker). Recorded as a `ROADMAP.md` M3+ entry and in PROP-008 §2.9. The only obligation on the refactor: the index must carry `group` and `workspace_origin` so the explorer is not a retrofit. @status:doc/done",
-      "line": 171,
+      "line": 173,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#parked-registry-explorer"
     },
     {
@@ -34480,7 +34525,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**`[workspace.dependencies]`** — Cargo-style centralised per-pkgref version defaults, alongside the named placeholders. Deferred until a concrete need surfaces. @status:doc/done",
-      "line": 172,
+      "line": 174,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#parked-workspace-dependencies"
     },
     {
@@ -34489,7 +34534,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**Inverse contribution model** — `published_repos = \"open\"` for projects where the split repo, not the monorepo, is the canonical contribution target. @status:doc/done",
-      "line": 173,
+      "line": 175,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#parked-inverse-model"
     },
     {
@@ -34498,7 +34543,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**2026-05-20.** Session restored from `CONTINUE.md` + `spec/WAL.md`. First closed the `vibe registry redirect-update` tech-debt item (M1.16 deferred-list — 4 commits, `f8af587..b44729d`). Then the owner opened the question of structuring a project with packages without necessarily publishing to a repository. The discussion grew into the workspace + qualified-naming refactor: the four-axis decomposition, the fork-by-fork resolution recorded in §5, two DRAFT PROPs (PROP-007 + PROP-008, commit `ff23a0f`), and finally the decision to create the `spec/design/` genre so this lore is not lost when the implementation moves to a fresh session. Implementation deferred to a new session; this document plus PROP-007/008 are the handoff. @status:doc/done",
-      "line": 179,
+      "line": 181,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#session-log-2026-05-20"
     },
     {
@@ -34507,7 +34552,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "**2026-05-21.** PROP-007 implemented — M1.17 Phases 1–5 (the workspace data model, discovery, path-source + `vibe.lock` v4, `[workspace.versions]`, `vibe workspace publish`) shipped on branch `m1.17-workspace`; Phase 6 documented it. The detailed implementation record is [PROP-007 §9](../modules/vibe-workspace/PROP-007-workspace.md#impl). Workspace-aware `vibe install` remains, gated on the materialisation-target decision (PROP-007 §6 q3). PROP-008 (qualified naming) is still unimplemented — its turn comes after PROP-005 (index). @status:doc/done",
-      "line": 180,
+      "line": 182,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#session-log-2026-05-21"
     },
     {
@@ -34516,7 +34561,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "[PROP-007](../modules/vibe-workspace/PROP-007-workspace.md) — workspace (the contract). @status:doc/done",
-      "line": 186,
+      "line": 188,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#ptr-prop-007"
     },
     {
@@ -34525,7 +34570,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "[PROP-008](../modules/vibe-registry/PROP-008-qualified-naming.md) — qualified naming (the contract). @status:doc/done",
-      "line": 187,
+      "line": 189,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#ptr-prop-008"
     },
     {
@@ -34534,7 +34579,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "[PROP-002](../modules/vibe-registry/PROP-002-decentralized-registry.md) — identity, registry, the per-registry-identity rejection (§3.4). @status:doc/done",
-      "line": 188,
+      "line": 190,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#ptr-prop-002"
     },
     {
@@ -34543,7 +34588,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "[PROP-005](../modules/vibe-index/PROP-005-package-index.md) — the index; a prerequisite for short-name resolution. @status:doc/done",
-      "line": 189,
+      "line": 191,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#ptr-prop-005"
     },
     {
@@ -34552,7 +34597,7 @@
       "doc_path": "design/workspace-and-qualified-naming",
       "file": "spec/design/workspace-and-qualified-naming.md",
       "heading": "[`ROADMAP.md`](../../ROADMAP.md) — milestones M1.17 (workspace), M1.19 (qualified naming — the number shifted after this session was captured; M1.18 went to the loading model), and the M3+ registry-explorer entry. @status:doc/done",
-      "line": 190,
+      "line": 192,
       "uri": "spec://org.vibevm.core/vibevm/design/workspace-and-qualified-naming#ptr-roadmap"
     },
     {

@@ -5,7 +5,9 @@
 @fact:companion-line **Companion to:** [PROP-009](../modules/vibe-workspace/PROP-009-loading-model.md) (the loading model — **shipped**, M1.18 phases 1–7, 2026-05-22). @status:doc/done
 
 @fact:rename-note **Terminology (2026-07-16 rename — read this before the body).** This record captures the 2026-05-21 session and keeps that session's three names; the shipped grammar has two. Read `inline` as **`link = "static"`** (the verbatim `STATIC.md` lane), the design's `static` as **`link = "dynamic"`** (the default, a by-reference `INDEX.md` read), and the design's `dynamic` as a **`dynamic` entry carrying a `when`**. The default moved with the names: design-`static` was the default and its shipped counterpart `dynamic` is. See [PROP-009 §2.4](../modules/vibe-workspace/PROP-009-loading-model.md#inclusion-types), which is normative. @status:doc/done
+
 @fact:status-line **Status:** non-normative design record. Captured 2026-05-21 in an owner design session. @status:doc/done
+
 @fact:authority-line **Authority:** the PROP is the contract. If this document and PROP-009 disagree, the PROP wins. @status:doc/done
 
 ---

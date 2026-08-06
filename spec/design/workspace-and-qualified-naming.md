@@ -3,7 +3,9 @@
 <status stage="doc" state="done" comment="B0 2026-07-24: non-normative design record, captured 2026-05-20 in an owner session"/>
 
 @fact:companion-line **Companion to:** [PROP-007](../modules/vibe-workspace/PROP-007-workspace.md) (workspace), [PROP-008](../modules/vibe-registry/PROP-008-qualified-naming.md) (qualified naming). @status:doc/done
+
 @fact:status-line **Status:** non-normative design record. Captured 2026-05-20 in an owner design session. @status:doc/done
+
 @fact:authority-line **Authority:** the PROPs are the contract. If this document and a PROP disagree, the PROP wins. @status:doc/done
 
 ---

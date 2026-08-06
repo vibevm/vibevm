@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-06T15:10:13Z",
+  "updated_at": "2026-08-06T15:20:39Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -94240,7 +94240,308 @@
       "facts": 45,
       "unmarked": 0,
       "issues": 0,
-      "campaign": {}
+      "campaign": {
+        "processed_hash": "0754f18d2e139d0c8cad4a9c570ca2378f182dfdd7fdc9d0a633d478dce59852",
+        "summary": {
+          "confirmed": 40
+        },
+        "verdicts": {
+          "design-scope": {
+            "v": "confirmed",
+            "ev": [
+              "the three-way split it declares is real in the backlog row it cites: B-019 carries (а) fingerprints, (б) command nodes and (в) the error-variant node, and the owner's 2026-08-01 ruling covers all three algorithmically without an LLM",
+              "part (а) is built as the scope line says — 916 fingerprints in the map at the time, and the current map still carries them on every Rust item",
+              "and (в) is genuinely absent from this document, verified by reading: its only mention is the non-goal that declines it"
+            ]
+          },
+          "design-not-blocked": {
+            "v": "confirmed",
+            "ev": [
+              "the sibling ruling exists at the address named: spec/design/map-format-change.md carries `##non-goal-command-nodes`, ruling (б) a separate node type with its own extraction",
+              "and the claim that it is not blocked by the format change is what the build then proved: slice 1 landed with no schema bump, because `item_kind` is an open field"
+            ]
+          },
+          "m-readings-are-dated": {
+            "v": "confirmed",
+            "ev": [
+              "the document's own status line dates the design to 2026-08-06 on the M-B019B measurement, so the framing matches what the document already declares about itself",
+              "and the four movements it points at are each verified in the re-measurement fact below, all of them caused by the build this design commissioned"
+            ]
+          },
+          "m-re-measured-after-slice-1": {
+            "v": "confirmed",
+            "ev": [
+              "measured 2026-08-06 against the committed specmap.json: 997 code items across nine kinds — mod 421, fn 377, enum 62, command 57, struct 53, schema-def 9, schema 7, impl 7, trait 4",
+              "the scanner's derive capability: `grep -ci derive` over the authored rscan.rs returns 2 where the design measured 0, and the command extractor lives in the new sibling `cscan.rs`",
+              "rscan.rs is 571 lines, measured by `wc -l` on the authored engine crate",
+              "the command tally by crate: vibe-cli 30, vibe-index 14, xtask 13 — and the thirtieth `vibe` command is `vibe tools`, absent from slice 1's reading because it shipped later the same day"
+            ]
+          },
+          "m-the-rename-rule-is-observable-in-the-map": {
+            "v": "confirmed",
+            "ev": [
+              "the map carries a command node with symbol `vibe command` at crates/vibe-cli/src/cli.rs:156, and no `Command` variant exists in that enum",
+              "the source is the `Drain` variant carrying `#[command(name = \"command\")]` at crates/vibe-cli/src/cli.rs:161 — so the extractor took clap's explicit rename over the Rust identifier",
+              "and it is the only node where the two differ, which makes it the single available proof that `##n-variant-name-rule` is implemented rather than merely specified"
+            ]
+          },
+          "m-eight-kinds": {
+            "v": "confirmed",
+            "ev": [
+              "confirmed AS A DATED READING, which is what `##m-readings-are-dated` now frames it as: 932 items in eight kinds with no kind containing `command` was true before slice 1 and is the baseline the design argued from",
+              "superseded by measurement rather than by regression — the map now carries 997 items in nine kinds including 57 commands, recorded at `##m-re-measured-after-slice-1`",
+              "the reproduction recipe it gives still works: tallying `code_items[].item_kind` in specmap.json is exactly how the re-measurement was taken"
+            ]
+          },
+          "m-kind-is-an-open-string": {
+            "v": "confirmed",
+            "ev": [
+              "still true and still load-bearing: packages/org.vibevm.ai-native/core-ai-native/v0.8.0/schemas/specmap.jtd.json:92-94 declares `\"item_kind\": { \"type\": \"string\" }` with no enum",
+              "and the consequence it draws is what the build demonstrated: slice 1 added a new value and required no schema bump, where part (а) had required a real one because it added net-new fields"
+            ]
+          },
+          "m-nothing-matches-on-kind": {
+            "v": "confirmed",
+            "ev": [
+              "re-checked after slice 1: `item_kind` is written, stored and passed through — explain.rs prints it into JSON, ratchet.rs carries it in an orphan record, rscan.rs sets it — and no production site branches on its value or asserts a closed set",
+              "so the claim that a new value breaks nothing downstream held, and slice 1 landing 57 nodes of a brand-new kind without a single downstream edit is the demonstration"
+            ]
+          },
+          "m-scanner-is-blind-to-derive": {
+            "v": "confirmed",
+            "ev": [
+              "confirmed AS A DATED READING: before slice 1 the Rust scanner's only attribute reader had two non-wildcard arms and swallowed everything else, and no occurrence of `derive` existed in the file",
+              "it is precisely the gap the design identified as the ONE capability to add, and slice 1 added it and nothing else — which is why this reading is now false and correctly so",
+              "current state at `##m-re-measured-after-slice-1`: the file now mentions derive, and the command extractor sits in `cscan.rs`"
+            ]
+          },
+          "m-explain-target-is-open": {
+            "v": "confirmed",
+            "ev": [
+              "still true after the build: explain.rs:200 branches on the single prefix `spec://` and everything else goes to the symbol path, which matches `codeItems[].symbol` without consulting `item_kind`",
+              "and the prediction it supports is the one that saved the most work — slice 1 shipped 57 command nodes answerable by `explain` with no change to `explain` at all"
+            ]
+          },
+          "m-all-three-stacks-are-clap": {
+            "v": "confirmed",
+            "ev": [
+              "the three stack CLIs are Rust crates on clap at the three main.rs paths the fact names, so a single Rust-side reader covers the host and all three",
+              "the distinction it draws is the useful one and it holds: what differs per language is the code extractor each CLI drives, not how the CLI declares its own commands"
+            ]
+          },
+          "m-twentyone-copies": {
+            "v": "confirmed",
+            "ev": [
+              "the authored engine is at the path named, and the vendored and vibedeps snapshots are regenerated copies of it — which is why the sync step is mandatory rather than tidy",
+              "and the consequence is enforced in this session's own practice: every engine edit is followed by `cargo xtask sync-engines` as its own step, per the standing constraint"
+            ]
+          },
+          "r-three-answers": {
+            "v": "confirmed",
+            "ev": [
+              "the three recognition strategies are genuinely distinct and exhaustive for this problem — read the framework, make the author mark it, or name it in config — and the two rejected ones are rejected by argument in the fact below rather than by omission"
+            ]
+          },
+          "r-a-wins": {
+            "v": "confirmed",
+            "ev": [
+              "the argument is the project's own law rather than a preference: a norm without a checker drifts, and both (B) and (C) fail it identically — a subcommand added without its marker or its config line is simply absent and nothing says so",
+              "the precedent it cites is real in this repository: the licence norm, where one crate of twenty fell out of a rule for months",
+              "and (A)'s claimed immunity is structural and held under the build: the same declaration that makes the command exist for the user is the one the scanner reads, so a new subcommand appears in the map without anyone remembering anything"
+            ]
+          },
+          "r-not-a-framework-in-the-core": {
+            "v": "confirmed",
+            "ev": [
+              "the placement it defends is where the build actually landed: the command extractor is `cscan.rs` inside the Rust-specific scanner's crate, beside `rscan.rs` which already knows `syn`",
+              "the neutral-core claim holds — the generated model still types `item_kind` as an open String and knows nothing of clap",
+              "and the parity principle it invokes is the project's: parity is that a command is a node of the map, never that the code is the same, so a Go or TypeScript consumer would extract in its own sidecar"
+            ]
+          },
+          "r-both-spellings": {
+            "v": "confirmed",
+            "ev": [
+              "both spellings are in this tree at the lines cited — `#[derive(Debug, Subcommand)]` and `#[derive(clap::Subcommand, Debug)]` in crates/vibe-cli/src/cli.rs",
+              "the failure mode it names is this repository's standing one: a reader matching a single form finds part of the surface and reports a clean number, which is a grep lying in the quiet direction",
+              "and the remedy — match the derive path's LAST segment — is the same rule the existing attribute reader already follows, so it is consistency rather than a new convention"
+            ]
+          },
+          "r-this-is-not-an-owner-fork": {
+            "v": "confirmed",
+            "ev": [
+              "checkable against the backlog row: B-019's owner-bound question is (в)'s systems boundary, recorded as such and explicitly reserved for the owner before implementation",
+              "the recognition strategy is a different question and was decided here on engineering grounds, which is the distinction the fact draws"
+            ]
+          },
+          "n-no-new-fields": {
+            "v": "confirmed",
+            "ev": [
+              "borne out by the build: 57 command nodes exist in the committed map and the wire schema is unchanged — the node reuses `symbol`, `item_kind`, `crate_name`, the span fields and `fingerprint`"
+            ]
+          },
+          "n-symbol": {
+            "v": "confirmed",
+            "ev": [
+              "the map's command nodes carry invocation paths as symbols — `vibe install`, `vibe registry`, `vibe-index reindex` — verified by listing every command node's symbol"
+            ]
+          },
+          "n-kind": {
+            "v": "confirmed",
+            "ev": [
+              "`item_kind = \"command\"` is the value 57 nodes carry, and it is a new value of the open field rather than a schema change, as its sibling measurement established"
+            ]
+          },
+          "n-crate": {
+            "v": "confirmed",
+            "ev": [
+              "every command node carries the declaring crate — the tally splits cleanly as vibe-cli 30, vibe-index 14, xtask 13, which is only possible because the field is populated per node"
+            ]
+          },
+          "n-span": {
+            "v": "confirmed",
+            "ev": [
+              "command nodes carry file and line — `vibe command` resolves to crates/vibe-cli/src/cli.rs:156, the variant's own position, in the same convention as every other item"
+            ]
+          },
+          "n-fingerprint": {
+            "v": "confirmed",
+            "ev": [
+              "the fingerprint form is part (а)'s, `tok1:<sha256>` over the token stream, applied to a new node kind — which is the stated purpose: the command's declaration changing is a reason to re-check what it links to",
+              "and it is format-independent by construction, so running `cargo fmt` over the CLI does not move a command's fingerprint while editing its doc comment does"
+            ]
+          },
+          "n-symbol-is-what-a-human-types": {
+            "v": "confirmed",
+            "ev": [
+              "the choice is what made slice 3 cost nothing: with the invocation path as the symbol, `explain` resolves a command through its existing symbol path, and the measurement that this path is open is `##m-explain-target-is-open`",
+              "the alternative the fact rejects is checkable too — a Rust-path symbol would need a translation step between what a user types and what the map holds, and nobody asked for one"
+            ]
+          },
+          "n-binary-name-is-declared": {
+            "v": "confirmed",
+            "ev": [
+              "the binary name is read from the root's own declaration at crates/vibe-cli/src/cli.rs:47, and the map's symbols begin with `vibe`, `vibe-index` and `xtask` accordingly — three binaries, three declared names",
+              "the fallback clause is the honest half: where a root declares no name the extractor uses the same source clap does rather than inventing one, which is what keeps the map's string equal to the typed string",
+              "marked spec/work rather than impl/done, and that remains accurate — the fallback path is specified and the three roots in this tree all declare a name, so it is unexercised here"
+            ]
+          },
+          "n-variant-name-rule": {
+            "v": "confirmed",
+            "ev": [
+              "implemented and observable, which the design could not yet claim when it was written: the map carries `vibe command` from a `Drain` variant carrying an explicit `#[command(name = \"command\")]` — the explicit form winning over the derived one, exactly as the rule requires",
+              "and the derived form is the rest of the tally — `Install` → `install` and so on across 57 nodes",
+              "the rule's own justification is what the `vibe command` node demonstrates: the map's string must be the string the user types, or the node answers a question nobody asked"
+            ]
+          },
+          "x-the-enum-is-an-ast-item": {
+            "v": "confirmed",
+            "ev": [
+              "the correction it makes to the M-B019B measurement is the substantive part and it was right: a command variant is not a top-level `syn::Item`, but the enum declaring it is, and the walker already visits it",
+              "the build bears it out — no traversal parallel to the JTD scanner was needed; the command extractor rides the walk that already runs",
+              "the fact is careful about what it corrects: the measurement's premise was true and its conclusion did not follow, which is a more useful record than «the measurement was wrong»"
+            ]
+          },
+          "x-not-through-tag-item": {
+            "v": "confirmed",
+            "ev": [
+              "the obstacle is real: the tagged-item path returns early for an item carrying no spec or verifies edge, so an untagged item is not recorded through it",
+              "and the resolution is the one the fact names — command nodes go through the unconditional recording path, which already existed. 57 nodes exist in the map and none of them is tagged, which is the demonstration"
+            ]
+          },
+          "x-the-join-is-crate-wide": {
+            "v": "confirmed",
+            "ev": [
+              "the structural cost is real and was paid: the parser root, the group enums and the args structs live in different files, and per-file scanning cannot see across them",
+              "the three relations the fact enumerates are exactly what the build had to collect and join after the walk, and the workspace accumulator it counts on already held the state",
+              "and the cost's sharpest edge is recorded by its sibling: getting this join wrong produced 29 false command nodes"
+            ]
+          },
+          "x-budget-does-not-choose-the-shape": {
+            "v": "confirmed",
+            "ev": [
+              "the prediction held: the extraction landed as `cscan.rs`, a sibling module the scanner calls, rather than as growth inside rscan.rs",
+              "the line figure is a dated reading — 511 then, 571 now, still inside the 600 budget — and its movement is recorded at `##m-re-measured-after-slice-1` rather than left to be discovered",
+              "the rule it invokes is the standing one and is unaffected by the number: a length budget decides where code sits and never what it is",
+              "the scope-marker clause is also borne out, and by this session's own cost: a new engine-adjacent file without `specmark::scope!` reports its helpers as orphans, which the panel caught on a different crate hours ago"
+            ]
+          },
+          "cut-1": {
+            "v": "confirmed",
+            "ev": [
+              "slice 1 is built: the map carries command nodes with invocation-path symbols, from all three binaries the tree declares, through the unconditional record path and the crate-local join",
+              "the acceptance number is a dated reading — 56 at the landing, 57 today — and the single addition is `vibe tools`, which shipped later the same day. Growth, not regression; recorded at `##m-re-measured-after-slice-1`",
+              "the per-binary split the fact gives is otherwise exact today: vibe-index 14 and xtask 13 are unchanged"
+            ]
+          },
+          "cut-1-the-number-was-wrong-three-times": {
+            "v": "confirmed",
+            "ev": [
+              "each of the four readings is reconstructible and each correction really did widen the perimeter rather than fix a pattern: a census of one binary's surface, then one directory, then the workspace, then the workspace including a binary outside `crates/`",
+              "the defect the number caught is the important part and it is verifiable in the fix: the join is crate-local, keyed by the pair of crate and type name, because two crates both declare `pub enum Command`",
+              "and the test the fact claims exists is the right shape — two roots in different crates whose enums share a name, proved failing before the fix",
+              "this is the clearest instance in the corpus of an acceptance number doing work no review did"
+            ]
+          },
+          "cut-1-the-zero-that-was-a-stale-build": {
+            "v": "confirmed",
+            "ev": [
+              "the signature it describes is specific and correct: no command nodes AND no command warnings is an extractor that never ran, not one that ran and found nothing",
+              "the cure it names is the standing one for this workspace — clearing the engine crate's build artefacts puts the build back on real sources — and it is recorded in the transport law as the engine-enum-ripple trap",
+              "the general rule it draws is the durable half: a zero from the map after an engine edit is a build question before it is a code question"
+            ]
+          },
+          "cut-2": {
+            "v": "confirmed",
+            "ev": [
+              "unbuilt and honestly marked `spec/plan`: the map's command nodes are top-level only — no symbol carries three segments",
+              "and the fact's refusal to take an acceptance number from the census is the disciplined half, argued from slice 1's own history: a host-only figure is not a map figure, and the other two binaries' nested commands have never been counted"
+            ]
+          },
+          "cut-3": {
+            "v": "confirmed",
+            "ev": [
+              "unbuilt and marked `spec/plan`; the claim it rests on is measured and still true, so the expectation that it needs no code remains sound",
+              "the clause that makes it a real acceptance rather than a formality is the escape hatch: if `explain` turns out to need a change, that contradicts a stated measurement and is to be reported as such rather than absorbed"
+            ]
+          },
+          "cut-vendor": {
+            "v": "confirmed",
+            "ev": [
+              "both obligations are standing constraints of this repository rather than this document's inventions — the sync step after any engine edit, and the map regeneration when a new scope unit lands",
+              "and both were paid in this session on unrelated work, which is how they are known to bite: a missing scope marker produced five orphans at the ratchet gate"
+            ]
+          },
+          "ng-not-v": {
+            "v": "confirmed",
+            "ev": [
+              "verified by reading: nothing in this document presumes an answer to (в)'s systems boundary, and the three options remain open in the backlog row",
+              "the owner's requirement that the boundary be answered before implementation is recorded in that row, so the non-goal is a deferral to a named authority rather than an omission"
+            ]
+          },
+          "ng-not-a-schema-bump": {
+            "v": "confirmed",
+            "ev": [
+              "the premise held through the build — no schema change was needed for 57 nodes of a new kind",
+              "and the refusal clause is the valuable half: if a build measures that `item_kind` is closed somewhere this design did not find, that is to be reported with the line rather than improvised around. It is the same right-to-refuse this session hands its own workers"
+            ]
+          },
+          "ng-not-the-spec-side-revisions": {
+            "v": "confirmed",
+            "ev": [
+              "the spec-side revision marks are a separate lifetime and remain untouched — the backlog row for part (а) records them as the surviving half, and nothing in this document or slice 1 touched a spec section's marks"
+            ]
+          },
+          "ng-not-other-languages": {
+            "v": "confirmed",
+            "ev": [
+              "consistent with the placement argument: the extractor is Rust-and-clap-specific by design, and a consumer project in another language would declare commands in its own idiom",
+              "and the scope this covers is not narrow in practice — per the stacks measurement it is the host plus all three stack CLIs, because all four are Rust crates on clap"
+            ]
+          }
+        },
+        "verified_at": "2026-08-06T15:12:18Z",
+        "verify_batch": "DEBT-2026-08-06-L"
+      }
     },
     {
       "path": "spec/design/deterministic-loading-aliasing.md",
@@ -95331,9 +95632,9 @@
         "stage": "doc",
         "state": "done"
       },
-      "markers": 76,
+      "markers": 78,
       "units": 15,
-      "facts": 75,
+      "facts": 77,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -97040,9 +97341,9 @@
         "stage": "doc",
         "state": "done"
       },
-      "markers": 176,
+      "markers": 177,
       "units": 9,
-      "facts": 175,
+      "facts": 176,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -97839,9 +98140,9 @@
         "stage": "doc",
         "state": "done"
       },
-      "markers": 100,
+      "markers": 102,
       "units": 16,
-      "facts": 99,
+      "facts": 101,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
