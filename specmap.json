@@ -43807,7 +43807,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:b482ccd7d78715968278b3e5f9612d210adbef2f54d2dcd70c1ee0a33afa203d",
+      "content_hash": "sha256:c0d01aad6fec95356088f5234bc69cd6ca54ee174500ff613a1398619ad8883c",
       "doc_path": "modules/vibe-progress/OWNER-GUIDE",
       "file": "spec/modules/vibe-progress/OWNER-GUIDE.md",
       "heading": "Progress Control — руководство владельца",

@@ -600,6 +600,29 @@ check_member_licence_keys() {
 run_step "every workspace member declares its licence (PROP-000 §3)" \
   check_member_licence_keys || OVERALL=$?
 
+# 11b. Markup validation. The corpus markup is what the whole campaign rests
+# on — a fact with no marker is judged by nobody — and until now NO gate ran
+# a progress verb at all, so between phase boundaries a markup error lived
+# for exactly as long as it took someone to think of checking by hand. It is
+# not theoretical: a design document was committed carrying five unmarked
+# facts and nothing said anything — not this panel, not `vibe check`, not
+# conform, not the map.
+#
+# `--exhaustive` is the point of the step. The default form walks the same
+# tree and prints `clean` without looking at unmarked facts at all: measured
+# here on a probe file, the plain form reported `clean (276 files)` while the
+# exhaustive form reported the error and exited 1.
+#
+# No `--campaign`: the zone comes from the host's own `progress.toml`, which
+# is the right answer when the panel runs outside a campaign, and stays right
+# inside one.
+#
+# Safe beside the tripwire, and that was measured rather than assumed before
+# this step was added: the settings home was snapshotted by content across
+# 169 files, both forms of the verb were run, and nothing moved.
+run_step "markup validation (vibe progress check --exhaustive)" \
+  cargo run --quiet -p vibe-cli -- progress check --exhaustive || OVERALL=$?
+
 # 12. The tripwire again, over the whole run. Steps 7-10 run seven more test
 # suites (the authored engines, the three stacks, the three mcp packages)
 # against the same baseline from step 0, and each of them is a `cargo test`

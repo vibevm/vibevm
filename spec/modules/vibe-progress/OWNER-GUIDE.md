@@ -77,7 +77,7 @@
 потому, что забор нельзя было осудить. @status:doc/done
 
 ```bash
-vibe progress check --exhaustive   # валидация разметки; НЕ в гейт-панели — гоняйте сами
+vibe progress check --exhaustive   # валидация разметки; С 2026-08-06 стоит и в гейт-панели
 vibe progress report --md      # статус дерева таблицей
 vibe progress report --md --view todo        # что доделать
 vibe progress report --md --view qa          # что тестировать

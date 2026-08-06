@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T08:17:32Z",
+  "updated_at": "2026-08-06T08:27:43Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -103842,7 +103842,7 @@
       }
     },
     "spec/modules/vibe-progress/OWNER-GUIDE.md": {
-      "content_hash": "c66ba599d18e7b984da22f93f95fefbd846bc3fb54d2bf736e7b488af873047a",
+      "content_hash": "092733216e41332f3e1330c29f6aa9ab27aae37f538d647d7ff90dd778afce5d",
       "rollup": {
         "explicit": [
           "doc",
