@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T14:58:55Z",
+  "updated_at": "2026-08-06T15:03:18Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -59158,7 +59158,137 @@
       },
       "marker_count": 12,
       "unit_count": 4,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "0faeba40094240aa5187cc4f7b1315eaebba1999b24db0f3d5a471cb8d2fcea3",
+        "verdicts": {
+          "A-CAPABILITY-LIVES-IN-A-LIBRARY-NOT-IN-A-SURFACE": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "source 1: the snippet's claim is carried by the protocol it points at — packages/org.vibevm.world/omnichannel/v0.1.0/spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.md:1 opens `# The Omnichannel Protocol {#root}`, the address the snippet's closing pointer names",
+              "source 2: the host imported it and declared its own floor in PROP-000 §21 rather than restating the rule, which is the division of labour this snippet asks for",
+              "and the host has a working instance rather than only a declaration: `vibe explain` and the MCP `explain` tool are two thin surfaces over one function in vibe-trace, whose module doc says so in as many words"
+            ]
+          },
+          "NAILING-LOGIC-TO-ONE-SURFACE-IS-THE-DEFECT": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the defect it names was paid for in this repository and is on the record: `vibe list --json` and the MCP `query_package` each rendered a package's file paths themselves, and on Windows the two surfaces of one capability printed different values",
+              "the fact's mechanism is exactly what happened — the second surface reimplemented the logic and the two answered the same question differently",
+              "and the repair is the fact's own prescription: one renderer in crates/vibe-core/src/manifest/lockfile.rs, called by both, landed 2026-08-06"
+            ]
+          },
+          "SURFACES-ARE-NAMED-FROM-ONE-LIST": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "source 1: the list is in this snippet and in the protocol, in the same three classes with the same members",
+              "source 2: the host uses the vocabulary rather than inventing its own — PROP-000 §21 declares its floor as library + CLI + MCP plus TUI where one exists, and names LSP and IDE as deliberately undeclared, all in these words",
+              "the fenced list itself is an example rather than an assertion under this corpus's own rule, and correctly carries no typed marker"
+            ]
+          },
+          "THE-CLASS-DECIDES-WHAT-REPEATS": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the grouping's payoff is observable in the host rather than argued: the agent-facing class shares tool description and schema, and adding an MCP tool here really is a matter of a descriptor plus one registration line, because that is what the class has in common",
+              "the local class's shared problem — one dataset rendered into different views — is the exact shape of the `list` / `query_package` divergence, which is a local-class failure and not a networked-class one",
+              "so «one law for all three, a different thinness test per class» is a distinction with consequences in this tree, which is what makes the grouping earn its place rather than decorate the list"
+            ]
+          },
+          "A-PROJECT-DECLARES-ITS-OWN-SET": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "source 1: the protocol carries the rule this snippet compresses — `@fact:AN-UNDECLARED-SURFACE-IS-NOT-A-DEBT` at OMNICHANNEL-PROTOCOL.md:75",
+              "source 2: the host exercised exactly this clause on 2026-08-06 — LSP and IDE extensions are named as deliberately NOT declared, on the owner's ruling, and PROP-000 §21 records that by this rule their absence is a choice rather than a gap",
+              "which is the strongest form of evidence available for a permission-shaped rule: it was used to decline work, not to justify it"
+            ]
+          },
+          "A-NEW-CAPABILITY-IS-BORN-WITH-EVERY-DECLARED-SURFACE": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the host's first capability built after adopting the flow followed it: `vibe tools` shipped as roster logic in a shared crate with a CLI surface and an MCP surface, built explicitly as this flow's dogfood",
+              "and the escape clause is used as written rather than as a loophole — «a recorded reason why one sufficed», not «we will add it later»: the auto-publication work of 2026-08-06 is a server behaviour with no second surface, and the reason is recorded in its contract rather than deferred",
+              "the distinction the fact insists on — the reason is the artifact — is what makes the clause checkable at all"
+            ]
+          },
+          "THE-SURFACE-TABLE-IS-DERIVED-NEVER-HAND-MAINTAINED": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "marked `spec/plan` and honestly so: no derived table exists today. What exists is the census that motivated the rule, and it was produced by hand",
+              "the rails the fact counts on are real, which is why the plan is credible rather than aspirational: the map now carries 56 command nodes by invocation path, the MCP tools are registered in one place, and the TUI screens are enumerable",
+              "and the failure it predicts for the alternative is measured in this repository rather than assumed — a hand-kept restatement rots, which this campaign has found seven times"
+            ]
+          },
+          "NEVER-PUT-THE-LOGIC-IN-THE-SURFACE": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "source 2, and the honest reading is that the host is a partial instance: the surfaces census measured 29 top-level commands, of which 19 keep their substance in a separate crate and 10 keep it inside the CLI — the largest being the whole version manager",
+              "so this is a target the host declares and does not yet meet, which PROP-000 §21 states outright rather than leaving to be discovered — `THE-FLOOR-IS-A-TARGET-NOT-A-DESCRIPTION`",
+              "the rule itself is confirmed as the project's rule; the verdict is not a claim that every surface already obeys it, and the sibling fact in the host's own floor says which do not"
+            ]
+          },
+          "NEVER-LET-ONE-SURFACE-BECOME-THE-REFERENCE-IMPLEMENTATION": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the shape it forbids — porting the second surface FROM the first — is exactly how the `list` / `query_package` divergence was produced: the MCP tool built its own output by hand from the same data, and the two drifted on one field",
+              "and the fact's sharpest clause is the one that makes it worth writing separately from its neighbour: this is the same defect wearing a plan, so it survives a review that asks «is the logic shared?» and gets «it will be»",
+              "the host's repair went the other way — one renderer, both callers — rather than making either surface the reference"
+            ]
+          },
+          "NEVER-HAND-MAINTAIN-THE-COVERAGE-TABLE": {
+            "v": "confirmed",
+            "src": [
+              1
+            ],
+            "ev": [
+              "it is the imperative form of `THE-SURFACE-TABLE-IS-DERIVED-NEVER-HAND-MAINTAINED` in the same document, and the pair is deliberate: the obligations section states the rule, the never-section states the prohibition, which is this flow-snippet genre's own shape",
+              "no hand-maintained coverage table exists in this tree to contradict it — the only census is dated, labelled a measurement, and cited as one rather than kept current"
+            ]
+          },
+          "full-protocol-pointer": {
+            "v": "confirmed",
+            "src": [
+              1
+            ],
+            "ev": [
+              "the address resolves: packages/org.vibevm.world/omnichannel/v0.1.0/spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.md carries `{#root}` on its title line",
+              "and the two things the pointer promises are both in that document rather than only named: the declaration form, and the thinness test per class at `{#thinness}` — the anchor the host's TUI boundary cites and which this session opened to check"
+            ]
+          }
+        },
+        "verified_at": "2026-08-06T15:03:18Z",
+        "verify_batch": "DEBT-2026-08-06-I"
+      }
     },
     "packages/org.vibevm.world/omnichannel/v0.1.0/spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.md": {
       "content_hash": "4d19850da609feb2108114f78901450dc051210fe9558596c25e85b47c64df92",
