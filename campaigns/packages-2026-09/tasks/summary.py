@@ -44,7 +44,21 @@ def arg(name):
     return sys.argv[sys.argv.index(name) + 1] if name in sys.argv else None
 
 
-def line(label, tally, selfref=None, width=22):
+def evidence_key(v):
+    """The identity of a verdict's evidence, for the shared-blob split.
+
+    Two verdicts stamped with the same evidence paragraph are, between them,
+    one act of reading — so the pair is evidence about the DOCUMENT, not about
+    either statement. The key is the evidence itself; nothing needs to be
+    re-judged to compute the split, which is why the ruling could start today.
+    """
+    ev = v.get("ev")
+    if not ev:
+        return None
+    return json.dumps(ev, sort_keys=True, ensure_ascii=False)
+
+
+def line(label, tally, selfref=None, width=22, grains=None):
     total = sum(tally.get(k, 0) for k in ORDER)
     if not total:
         return
@@ -54,6 +68,15 @@ def line(label, tally, selfref=None, width=22):
     if selfref is not None:
         tail = f"   src=[1] {selfref:>4} ({100.0 * selfref / total:.1f} % self-referential)"
     print(f"  {label:<{width}} {cells}   total {total:>5}   {pct:5.1f} %{tail}")
+    if grains:
+        per_fact, doc_level = grains
+        both = per_fact + doc_level
+        if both:
+            share = 100.0 * per_fact / both
+            print(
+                f"  {'':<{width}} of which confirmed: per-fact {per_fact:>5}"
+                f" · document-level {doc_level:>5}   ({share:5.1f} % per-fact)"
+            )
 
 
 def main():
@@ -70,7 +93,21 @@ def main():
             raise SystemExit(f"no batch {arg('--batch')!r} in {BATCHES.name}")
         want = set(rows[0]["files"])
 
+    # First pass: how many verdicts each evidence blob carries. A blob used
+    # once is that fact's own evidence; a blob used twice or more is one
+    # reading stamped on several statements.
+    blob_uses = collections.Counter()
+    for path, rec in cache["files"].items():
+        if want is not None and path not in want:
+            continue
+        for v in rec.get("campaign", {}).get("verdicts", {}).values():
+            if isinstance(v, dict):
+                k = evidence_key(v)
+                if k is not None:
+                    blob_uses[k] += 1
+
     per_ns = collections.defaultdict(collections.Counter)
+    grain = collections.defaultdict(collections.Counter)
     selfref = collections.Counter()
     nosrc = collections.Counter()
     per_file = collections.defaultdict(collections.Counter)
@@ -88,6 +125,10 @@ def main():
                 continue
             per_ns[ns][v["v"]] += 1
             per_file[path][v["v"]] += 1
+            if v["v"] == "confirmed":
+                k = evidence_key(v)
+                shared = k is None or blob_uses[k] > 1
+                grain[ns]["document" if shared else "fact"] += 1
             files_seen[ns].add(path)
             if ns == "world":
                 src = v.get("src")
@@ -99,16 +140,30 @@ def main():
     scope = f"batch {arg('--batch')}" if want is not None else "the whole campaign"
     print(f"verdict summary — {scope}\n")
     grand = collections.Counter()
+    grand_grain = collections.Counter()
     for ns in ("host", "ai-native", "world"):
         if not per_ns[ns]:
             continue
         line(f"{ns} ({len(files_seen[ns])} files)", per_ns[ns],
-             selfref[ns] if ns == "world" else None)
+             selfref[ns] if ns == "world" else None,
+             grains=(grain[ns]["fact"], grain[ns]["document"]))
         grand.update(per_ns[ns])
+        grand_grain.update(grain[ns])
         if nosrc[ns]:
             print(f"  {'':<22} !! {nosrc[ns]} world verdict(s) carry no src — A2 requires one")
     print()
-    line("ALL", grand)
+    line("ALL", grand, grains=(grand_grain["fact"], grand_grain["document"]))
+    print()
+    print("  per-fact         — this statement has its own evidence record naming a")
+    print("                     concrete place in code or another document. If the")
+    print("                     statement is false the evidence collapses with it.")
+    print("  document-level   — one evidence paragraph is stamped on several")
+    print("                     statements at once: somebody read the document whole")
+    print("                     and concluded it is implemented. If one of them is")
+    print("                     false, the paragraph about the rest still looks right")
+    print("                     and the lie does not surface.")
+    print("  A verdict stays document-level until its fact's text moves or somebody")
+    print("  re-judges it deliberately.")
 
     if "--by-file" in sys.argv:
         print()
