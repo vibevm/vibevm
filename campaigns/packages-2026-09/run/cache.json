@@ -27092,10 +27092,69 @@
               "the ~rN pin parses at the address layer (address.rs pinned_r, parse_revision) and is a revision selector, never identity (address.rs:131 doc); the never-a-package-version clause is the PROP-035 §6 ##URI-REVISION-PIN law, and the @-half ownership sentence matches it",
               "population on living surfaces: 126 pins ride post-migration (E5 census + B-031 landing), all in the ~rN unit-revision meaning"
             ]
+          },
+          "A-PLAN-ROW-IS-NOT-AN-ADDRESS": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "source 2, measured 2026-08-06 over the whole authored tree rather than a sample: 718 tracked markdown files outside the disposable zones (campaigns/, vibedeps/, refs/, .vibe/) carry exactly THREE citations of the form `BACKLOG.md#b-…`",
+              "one of the three is inside the owner's programme — a plan citing a plan row, which dies with the plan and is precisely the case the rule does not govern",
+              "the other two are spec/design/map-format-change.md (at B-017) and spec/design/new-rule-classes.md (at B-050), and both rows are still OPEN. For work that has not shipped there is no spec element to cite instead, so these are not yet the failure the sibling fact describes — they become it on the day those rows close, which is what `REBUILDING-THE-CITATIONS-IS-PART-OF-CLOSING` exists to catch",
+              "zero of the three dangle",
+              "source 1: the rule is stated in this protocol as a rule about addressing, and its lifecycle half is delegated by name rather than restated — checked in the verdict for `THE-LIFECYCLE-HALF-LIVES-IN-CAMPAIGN-PLANS`"
+            ]
+          },
+          "WHY-A-DISPOSABLE-TARGET-IS-WORSE-THAN-A-MISSING-ONE": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the failure mode it describes was observed in this repository, not imagined: the 2026-08-06 measurement that preceded the citation migration found EIGHT citations already dangling — pointing at rows closed in earlier sessions, two of them closed the day before",
+              "and it found them the way the fact predicts they must be found: by a deliberate sweep undertaken for another reason. Nothing had broken, nothing had complained, and the law «a row takes its citations with it» had been written and not executed on the previous closures",
+              "the asymmetry the fact rests on is therefore load-bearing rather than rhetorical — a broken anchor announces itself, a stale-but-resolving one does not, and this corpus produced eight of the second kind and no report of the first",
+              "commit history is the evidence, per source 2: `e540c5f1` repairs the five dangling ones, `5c121c5a` migrates the twenty-two that would have joined them"
+            ]
+          },
+          "ON-CLOSURE-CONTENT-MOVES-INTO-THE-SPECS": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the host executed this three times on 2026-08-06 alone, which is the honest test of a behavioural contract: the plan-closure ruling itself moved into the specs and left a one-line tombstone in the programme row; the auto-publication work moved its contract into PROP-005 §2.17 rather than leaving it in the programme; the index-authentication work moved its contract into PROP-002 §2.2.1.1",
+              "the second clause — where the item established no contract the citation becomes plain text and the number survives as history — is also observed: the thirty-five closed backlog rows carry one-line tombstones naming the commit, with no live link into them",
+              "and the rule's own subject was its first instance, which is the cheapest available proof that it is executable rather than aspirational"
+            ]
+          },
+          "REBUILDING-THE-CITATIONS-IS-PART-OF-CLOSING": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the same-pass clause is enforced by a tool rather than by intention, and the enforcement fired: `vibe progress seal` refuses a file carrying any unjudged marker, and on 2026-08-06 it refused a file whose seven new facts had been written an hour earlier",
+              "the host followed it through every landing of 2026-08-06: each spec section added in this session was judged per fact in the commit that added it, and two files were sealed once their last unjudged fact was cleared",
+              "the failure it names — deferring the step accumulates addresses that outlive their targets — is the same eight-citation finding the sibling fact records, seen from the causal end rather than the symptomatic one"
+            ]
+          },
+          "THE-LIFECYCLE-HALF-LIVES-IN-CAMPAIGN-PLANS": {
+            "v": "confirmed",
+            "src": [
+              1
+            ],
+            "ev": [
+              "the address it delegates to resolves: packages/org.vibevm.world/campaign-plans/v0.1.0/spec/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT.md:272 carries `## A plan is a temporary artifact {#temporary}`",
+              "the split is real rather than nominal: this document says nothing about tombstones or a plan's deletability, and that document says nothing about what a citation may address — one law, two homes, one pointer, with no restatement to drift apart",
+              "which is itself an instance of the rule the pair enforces: the pointer names the element, not the plan row that commissioned the split"
+            ]
           }
         },
         "verified_at": "2026-08-03T11:51:28Z",
-        "verify_batch": "W3 + D8-boss + D25 + D26 + D28 + E6-F169-F147 + E7-B028-URI"
+        "verify_batch": "W3 + D8-boss + D25 + D26 + D28 + E6-F169-F147 + E7-B028-URI + DEBT-2026-08-06-E"
       }
     },
     "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/authoring-rules.md": {
