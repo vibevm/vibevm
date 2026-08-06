@@ -204,7 +204,7 @@ When the user issues a resume trigger phrase, the job is to **restore context an
 **Required behaviour** when a resume phrase fires:
 
 1. Run the full boot sequence (this file → `spec/boot/INDEX.md` and its files → `spec/WAL.md`), read `CONTINUE.md`, and verify repository state empirically (branch, sync with origin, working tree, recent commits).
-2. **Emit a status report in the chat**: where work stands, gate-panel state as last recorded, active blockers, and the candidate next steps (typically the plan pointer from the WAL / `CONTINUE.md`).
+2. **Emit a status report in the chat**: where work stands, gate-panel state as last recorded, active blockers, the **judging debt** while a campaign is live (`python campaigns/<zone>/tasks/judging-debt.py` — unjudged facts, orphaned verdicts, stale files; reporting it is not paying it, and its priority is the owner's), and the candidate next steps (typically the plan pointer from the WAL / `CONTINUE.md`).
 3. **Stop and wait for direction.** No code edits, no plan-phase execution, no commits, no pushes. The owner reads the report and decides what the session does. Any "resume work at …" pointer in `CONTINUE.md` or the WAL names the *candidate* next step for the report — it is not authorisation to start it.
 
 Rationale: the resume boundary exists so the owner can inspect the restored state and steer — possibly somewhere other than the recorded next step. A session that boots straight into execution takes that decision away (rule recorded 2026-06-12 after exactly that misfire).
