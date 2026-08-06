@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-08-06T07:38:39Z"
+generated_at = "2026-08-06T08:12:25Z"
 schema_version = 5
 root_dependencies = [
     "stack:org.vibevm/rust-ai-native@^0.7.0",
@@ -177,7 +177,7 @@ name = "addressable-specs"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/addressable-specs/v0.1.0"
-content_hash = "sha256:4234c0958f0445a4c87589e6016571ac7a1cc791587650d7a024eaa63164f697"
+content_hash = "sha256:5691a5afdb880d82acfdc56e81066a5045c89d49c2a7d0d4bbf67acb46b2e40d"
 files_written = []
 source_kind = "local"
 
@@ -187,7 +187,7 @@ name = "campaign-plans"
 group = "org.vibevm.world"
 version = "0.1.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.world/campaign-plans/v0.1.0"
-content_hash = "sha256:beec3f086313ace47d68bf62a01407067f45d38b03fb48523fc6fa7a368d24be"
+content_hash = "sha256:34d3e8cb10a01d03cb7ae4cc13b499587452038be3b92fff7bf4c30b331756f0"
 files_written = []
 source_kind = "local"
 

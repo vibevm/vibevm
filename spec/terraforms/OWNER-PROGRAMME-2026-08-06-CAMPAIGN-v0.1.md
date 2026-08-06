@@ -61,36 +61,22 @@ groups Б and В compound.
 
 ## 2. Group Б — hygiene {#b-items}
 
-### Б1. The plan-closure rule — write it down first {#b1}
+### Б1. The plan-closure rule — ~~write it down first~~ CLOSED 2026-08-06 {#b1}
 
-**The owner's ruling, near-verbatim (2026-08-06):**
+**The ruling now lives in the specifications, in two homes with one pointer
+between them.** Read it there, not here:
 
-> A plan is a temporary thing. When it is executed it must be possible to delete
-> it and nothing breaks.
->
-> All significant content moves **into the specifications** on closure. Marked
-> statements point at **concrete elements of specifications**, never at rows of a
-> plan — a link to a plan row is a link to something designed to disappear.
->
-> Closed an item — then rebuild the statements and the specs so that no tails
-> remain. That is part of closing, not tidying afterwards.
->
-> Tombstones inside a plan are temporary process support: they exist for the
-> human and the agent walking the plan, and they are not part of the project's
-> structure. When the plan ends they go with it.
+- addressing — *a statement cites the spec element, never the plan row; and
+  re-pointing the citations is part of closing*:
+  `spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#disposable-targets`
+- lifecycle — *a plan is deletable once executed; tombstones are process
+  support*:
+  `spec://org.vibevm.world/campaign-plans/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT#temporary`
 
-**Where it lives.** The rule splits in two, exactly as the planning-medium norm
-did earlier the same day (see the closed row B-032, whose reasoning lives in
-commit `0f80a804`):
-
-- *«content and citations move into the specs on closure»* — this is about
-  addressing. Home: the `addressable-specs` flow.
-- *«a plan is temporary; tombstones are process support»* — this is about a
-  plan's lifecycle. Home: the `campaign-plans` flow.
-- One pointer between them. **No restatement** — one law, one home.
-
-**Why Б1 is first in its own group:** everything else in group Б is an
-application of it.
+This tombstone is itself an instance of what the rule asks for, which is the
+cheapest available proof that the rule is executable: the ruling's text moved
+into the specs, this row keeps one line for whoever is walking the plan, and
+the row can be deleted with the plan without breaking an address.
 
 ### Б2. Migrate the citations, then tombstone the closed rows {#b2}
 

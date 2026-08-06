@@ -67504,7 +67504,7 @@
     },
     {
       "anchor": "b-items",
-      "content_hash": "sha256:a0df62b21071d9545f0cf02d0596d8676e3701e47a12aedc96307f0e598bf5ba",
+      "content_hash": "sha256:708b651b3e12dc602c41ae778e67f9662976a75f6ef37d0c03e1a3537272a3d0",
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "2. Group Б — hygiene",
@@ -67513,10 +67513,10 @@
     },
     {
       "anchor": "b1",
-      "content_hash": "sha256:50c01e48eb1547c06f42d7ac4b56dfb2dd5736d1e05dfbdbce32b19fa973830e",
+      "content_hash": "sha256:0c221ebdd8629f82134b30442b7aff2a0dd6313e3395ce1141b18aec55ccc0db",
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
-      "heading": "Б1. The plan-closure rule — write it down first",
+      "heading": "Б1. The plan-closure rule — ~~write it down first~~ CLOSED 2026-08-06",
       "line": 64,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#b1"
     },
@@ -67526,7 +67526,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "Б2. Migrate the citations, then tombstone the closed rows",
-      "line": 95,
+      "line": 81,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#b2"
     },
     {
@@ -67535,7 +67535,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "Б3. The panel gains the markup-validation step",
-      "line": 129,
+      "line": 115,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#b3"
     },
     {
@@ -67544,7 +67544,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "Б4. The verdict report grows a second column",
-      "line": 167,
+      "line": 153,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#b4"
     },
     {
@@ -67553,7 +67553,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "Б5. Documentation examples — the editorial policy",
-      "line": 221,
+      "line": 207,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#b5"
     },
     {
@@ -67562,7 +67562,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "Б6. Normalise `files_written` to forward slashes",
-      "line": 266,
+      "line": 252,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#b6"
     },
     {
@@ -67571,7 +67571,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "Б7. Record the facts that need no decision",
-      "line": 278,
+      "line": 264,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#b7"
     },
     {
@@ -67580,7 +67580,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "3. Group В — taxonomy",
-      "line": 300,
+      "line": 286,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#v-items"
     },
     {
@@ -67589,7 +67589,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "В1. The omnichannel package",
-      "line": 302,
+      "line": 288,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#v1"
     },
     {
@@ -67598,7 +67598,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "В2. The `lang` package kind",
-      "line": 378,
+      "line": 364,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#v2"
     },
     {
@@ -67607,7 +67607,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "В3. `vibe tools` — the tool registry",
-      "line": 427,
+      "line": 413,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#v3"
     },
     {
@@ -67616,7 +67616,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "В4. The error-variant node — join at query time",
-      "line": 460,
+      "line": 446,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#v4"
     },
     {
@@ -67625,7 +67625,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "В5. A standing fact recorded during this conversation",
-      "line": 483,
+      "line": 469,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#v5"
     },
     {
@@ -67634,7 +67634,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "4. Group А — the index",
-      "line": 494,
+      "line": 480,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a-items"
     },
     {
@@ -67643,7 +67643,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "А0. What the index actually is — read this before touching anything",
-      "line": 496,
+      "line": 482,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a0"
     },
     {
@@ -67652,7 +67652,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "А1. Auto-publication — the blocker",
-      "line": 567,
+      "line": 553,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a1"
     },
     {
@@ -67661,7 +67661,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "А2. Private index — push AND authenticated reading",
-      "line": 587,
+      "line": 573,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a2"
     },
     {
@@ -67670,7 +67670,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "А3. The organisation cache, `rescan-org`, and the flag's real axis",
-      "line": 600,
+      "line": 586,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a3"
     },
     {
@@ -67679,7 +67679,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "А4. Webhooks, GitHub Actions, and a guide that lives in the specs",
-      "line": 647,
+      "line": 633,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a4"
     },
     {
@@ -67688,7 +67688,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "А5. Search over the map — both levels",
-      "line": 664,
+      "line": 650,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a5"
     },
     {
@@ -67697,7 +67697,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "А6. Generate the index's wire types",
-      "line": 693,
+      "line": 679,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a6"
     },
     {
@@ -67706,7 +67706,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "4b. Judging debt — asked, answered and landed on 2026-08-06",
-      "line": 730,
+      "line": 716,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#debt"
     },
     {
@@ -67715,7 +67715,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "5. What was NOT decided and must not be invented",
-      "line": 788,
+      "line": 774,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#undecided"
     },
     {
@@ -67724,7 +67724,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "6. Standing items untouched by this conversation",
-      "line": 802,
+      "line": 788,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#standing"
     },
     {
@@ -67733,7 +67733,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "7. Requires the owner's hands, not a decision",
-      "line": 813,
+      "line": 799,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#hands"
     },
     {

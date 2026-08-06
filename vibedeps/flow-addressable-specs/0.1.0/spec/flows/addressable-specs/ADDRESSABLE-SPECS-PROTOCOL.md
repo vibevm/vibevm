@@ -201,6 +201,40 @@ resolve it. @status:impl/done
 restatement names its anchor in the same sentence, marking which
 copy is the echo. @status:impl/done
 
+## Never cite something built to disappear {#disposable-targets}
+
+@fact:A-PLAN-ROW-IS-NOT-AN-ADDRESS A plan, a backlog row, a campaign document — anything a project
+creates in order to finish and delete — is **not an address**. Cite the
+specification element the work established, never the row that
+commissioned it. @status:impl/done
+
+@fact:WHY-A-DISPOSABLE-TARGET-IS-WORSE-THAN-A-MISSING-ONE This is stricter than it sounds, and the reason is that the
+failure is silent. A citation to a deleted anchor at least breaks
+loudly. A citation to a plan row that still exists keeps resolving —
+to a row describing work as it was *imagined*, long after the work
+shipped and changed shape. The reader finds a plausible, dated, wrong
+answer and has no signal that it is wrong. @status:spec/done
+
+@fact:ON-CLOSURE-CONTENT-MOVES-INTO-THE-SPECS **On closure, significant content moves into the
+specifications**, and every statement pointing at the closed item is
+re-pointed at the spec element that now carries the fact. Where the
+item established no contract — it was a finding, not a rule — the
+citation becomes plain text and the row number survives only as
+history. @status:impl/done
+
+@fact:REBUILDING-THE-CITATIONS-IS-PART-OF-CLOSING **Rebuilding the citations is part of closing, not tidying
+afterwards.** An item is closed when no tail remains: content moved,
+statements re-pointed, and the moved content judged in the same pass
+that moved it. Deferring that step is how a project accumulates
+addresses that outlive their targets. @status:impl/done
+
+@fact:THE-LIFECYCLE-HALF-LIVES-IN-CAMPAIGN-PLANS The other half of this rule — that a plan is a temporary
+artifact and what its tombstones are for — belongs to the campaign-plans
+flow, at
+`spec://org.vibevm.world/campaign-plans/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT#temporary`.
+One law, two homes, one pointer: this half is about addressing, that
+half is about a plan's life. @status:impl/done
+
 ## Placement: Lost in the Middle {#placement}
 
 @fact:MODELS-ATTEND-TO-THE-BEGINNING-AND-THE-END An empirical result, not a style preference: language models attend

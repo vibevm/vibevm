@@ -269,6 +269,41 @@ the new plan's opening table maps each deferral to a closing phase. @status:impl
 @fact:CAMPAIGNS-FORM-A-CHAIN Campaigns form a chain — no work item is lost between links, and no
 campaign starts blank ([`execution-ledger.md` §lineage](execution-ledger.md#lineage)). @status:impl/done
 
+## A plan is a temporary artifact {#temporary}
+
+@fact:A-PLAN-MUST-BE-DELETABLE-WHEN-EXECUTED A campaign plan is **temporary by design**. When it has been
+executed it must be possible to delete it and have nothing break. If
+deleting a finished plan breaks something, that something was
+depending on scaffolding. @status:impl/done
+
+@fact:THE-TEST-IS-DELETION-NOT-TIDINESS The test is deletion, and it is worth stating as a test rather
+than as a preference: a project cannot tell, by looking, whether its
+plans are load-bearing. Asking "could this file be removed today?"
+answers it in one question, and answers it the same way for every
+plan. @status:impl/done
+
+@fact:SIGNIFICANT-CONTENT-MOVES-INTO-THE-SPECS-ON-CLOSURE Significant content — a rule the campaign established, a
+decision with its reasons, a measurement that will be re-read — moves
+**into the specifications** as the item closes. What stays in the plan
+is the record of doing, which git already keeps. @status:impl/done
+
+@fact:TOMBSTONES-ARE-PROCESS-SUPPORT-NOT-STRUCTURE A **tombstone** — the one-line trace a closed row leaves in
+the plan — is process support for whoever is walking the plan, and
+nothing more. It is not part of the project's structure, nothing may
+cite it, and it goes when the plan goes. @status:impl/done
+
+@fact:WHY-DISPOSABLE-ZONES-KEEP-DURABLE-FINDINGS The failure this prevents has a shape worth recognising: a
+correct, carefully-argued finding written into a campaign document,
+which behaves exactly as the zone promises — it is disposable, so it
+is disposed of, and the finding is rediscovered months later at full
+cost. The zone was not wrong; filing something durable there was. @status:spec/done
+
+@fact:THE-ADDRESSING-HALF-LIVES-IN-ADDRESSABLE-SPECS The other half of this rule — that a statement cites the spec
+element and never the plan row, and that re-pointing citations is part
+of closing — belongs to the addressable-specs flow, at
+`spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#disposable-targets`.
+One law, two homes, one pointer. @status:impl/done
+
 ## Re-derive for your project {#re-derive}
 
 @fact:re-derive-lead Run this prompt once to adapt the format to a concrete project: @status:impl/done
