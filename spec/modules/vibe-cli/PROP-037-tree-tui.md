@@ -81,6 +81,60 @@ this one was recovered by measuring five candidate perimeters. @status:impl/done
 into the app* is thinness stated inward, and the deletion test is how it is
 checked from without. They are one rule with two readings, not two rules. @status:spec/done
 
+@fact:THE-AUDIT-RAN-AND-THE-TWO-CLAUSES-DISAGREE **The audit ran on
+2026-08-06, over the perimeter this section fixes, and its result is a split
+verdict — because this section's definition has two clauses and the subsystem
+satisfies one of them.** The deletion test passes: no domain capability lives
+only inside the perimeter, so deleting the TUI on paper loses presentation,
+input handling, the surface's own persisted UI state (`vibe.tree.*`) and
+TUI-specific features, and nothing else. Version comparison, dependency
+resolution, manifest validation and package-state computation are absent from
+the perimeter entirely — the app consumes them through `PackageTree`, which is
+§1.2's one seam working as written. @status:impl/done
+
+@fact:WHAT-FAILS-IS-ONLY-RENDERS-NOT-THE-DELETION-TEST **What fails is the
+other clause: «the TUI only renders».** The settings persist path is written
+**three times** inside the perimeter — `prefs/tui/form/lifecycle.rs:78-89` and
+`prefs/tui/form/provenance_edit.rs:52` re-implement the scope gate, and
+`tree/tui/settings.rs:547` re-implements the dotted-path mutation — while
+`vibe-settings` already ships both and the CLI already uses them
+(`crates/vibe-settings/src/cli/mod.rs:231-244` and its `set_dotted` at `:247`).
+Nothing is lost if the TUI is deleted, so the deletion test is silent about it;
+the work is nonetheless done twice, which is what «only renders» forbids. @status:impl/done
+
+@fact:THE-CONTRAST-IS-INSIDE-THE-SAME-PERIMETER **The contrast that makes this
+a defect rather than a matter of taste sits in the same subsystem.** The lint
+modal calls the library's `validate` (`crates/vibe-settings/src/schema/validate.rs:130`)
+instead of copying it, and `diff_from_default` is likewise called rather than
+re-written. The surface therefore already knows how to be thin in two places
+and is thick in a third — so the fix is a known shape, not a new design. @status:impl/done
+
+@fact:THE-REMAINING-WORK-IS-BOUNDED-AND-NAMED **The subsystem is therefore NOT
+finished, and exactly one bounded piece of work stands between it and
+finished:** collapse the three persist copies onto the library seam — the TUI
+calls `run_prefs(PrefsOp::Set { … })`, or `vibe-settings` exposes a public
+set-with-persist that swallows the host steps. Filed as
+[`BACKLOG.md` B-077](../../../BACKLOG.md#b-077). No other candidate in the
+perimeter survived the audit as a violation. @status:spec/plan
+
+@fact:TWO-CANDIDATES-WERE-WEIGHED-AND-CLEARED **Two candidates were weighed and
+deliberately cleared, recorded so they are not re-opened as new findings.** The
+filter/shape/order pipeline (`flatten.rs`, `shape.rs`, `sort.rs`) is
+display-shaping over a graph that stays in the library, and §1.3 assigns
+filtering, ordering and flattening to the app's own Model layer — legitimate
+today, though a second tree-shaped consumer would turn it into a lift candidate.
+The `vibe.tree.*` parse functions are the wire format of the surface's **own**
+keys, so they are own-state rather than leaked domain. @status:impl/done
+
+@fact:ONE-MEASUREMENT-OF-THIS-SECTION-IS-SOFTER-THAN-IT-READS **A correction to
+this section's own numbers, produced by the audit that reproduced them.** All
+four reproduce exactly — 63 files, 18 426 lines, 258 tests, 53 suppressions of
+which 27 carry no reason — but «carries no reason» means «no `//` comment on the
+same line`». Several of the 27 carry their reason on the line above
+(`theme/mod.rs:41-47`, `ui/mod.rs:80-91`, `ui/button.rs:50,57`), so under a
+softer reading the figure is smaller. The strict reading is the one that
+reproduces, and it is the one this section means. @status:impl/done
+
 ## 1. Architecture — layers {#architecture}
 
 - @fact:layers-intro The application separates, as fixed layers, (a) the vibevm data it renders, (b)
@@ -481,6 +535,7 @@ the mode. This replaces any bare mode-cycle key. @status:spec/done
 - @fact:sort-subtables **sub-tables mode** — two `Group`s (§2.6): a "sort" group (`alphabetical` /
   `topological`) and a "block order" group (a `RadioGroup` over the static /
   dynamic / no-boot block orderings). Group names sit at each frame's top-right. @status:spec/done
+
 @fact:SORT-SHAPE-HERE The tree **shape** (§3.3) is also chosen here (a further group), per context.
 Choices persist (§9). @status:spec/done
 
@@ -526,6 +581,7 @@ glued text blob: @status:spec/done
 - @fact:CARD-WRAP-COPY long values **wrap** (never truncate) and each wrapped value line can be
   **copied to the clipboard** (a per-line copy affordance); @status:spec/done
 - @fact:card-esc `Esc` / the `[x]` closes it. @status:spec/done
+
 @fact:CARD-CONTENT The card's content is the package detail from PROP-036 §2.11 (name, group,
 version, kind, load, transitive + why, condition, STATIC.md, source, hash,
 dependencies, boot path). @status:spec/done
