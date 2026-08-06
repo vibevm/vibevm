@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-05T23:38:15Z",
+  "updated_at": "2026-08-06T00:18:54Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -94074,7 +94074,7 @@
       }
     },
     "spec/design/command-nodes.md": {
-      "content_hash": "b343cca5d2499f7b5499f9e09a6b5160733ac6d936c335be7e03449e6f25aa72",
+      "content_hash": "1759e94be83a494db28168889e25112a36e14e11b4c641caf90a00b935b1d8e1",
       "rollup": {
         "explicit": [
           "spec",
@@ -94088,11 +94088,11 @@
           "spec",
           "work"
         ],
-        "marker_count": 41,
-        "fact_count": 40,
+        "marker_count": 43,
+        "fact_count": 42,
         "unmarked_facts": 0
       },
-      "marker_count": 41,
+      "marker_count": 43,
       "unit_count": 7,
       "issue_count": 0
     },
@@ -103842,7 +103842,7 @@
       }
     },
     "spec/modules/vibe-progress/OWNER-GUIDE.md": {
-      "content_hash": "351b6bb9d888a9c29a4d2e279528572c19664d61665f503c4880b6d4c8c485e3",
+      "content_hash": "bcbc6d8efeb11a13046942119b174fae6d23b0291bfa1b6240a1e2a4e6c5e63b",
       "rollup": {
         "explicit": [
           "doc",

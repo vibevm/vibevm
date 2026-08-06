@@ -177,31 +177,51 @@ its helpers as orphans. @spec/done
 ## 5. The landing cut {#cut}
 
 ##cut-1 **Slice 1 — top-level commands, every binary the tree declares.** The
-derive reader, the unconditional record path, the root-to-enum join, `symbol` as
-`<binary> <command>`. Acceptance is a number: the host's map gains **43**
-command nodes. @spec/plan
+derive reader, the unconditional record path, the crate-local root-to-enum join,
+`symbol` as `<binary> <command>`. Acceptance is a number, and it is measured:
+the host's map carries **56** command nodes — `vibe` 29, `vibe-index` 14,
+`xtask` 13. @impl/done
 
-##cut-1-the-number-was-wrong-first **The acceptance number was 29 until the build
-measured it, and the correction is the boss's error, not the worker's.** The
-surfaces census
-([`g6-b047-surfaces-census.md`](../../campaigns/packages-2026-09/harvest/g6-b047-surfaces-census.md))
-counts **29** top-level commands, and that count is right — it is about
-`vibe`'s command surface, which is what it set out to measure. This design took
-that number as the number of map nodes, which the census never claimed. `crates/`
-declares **two** clap binaries with a `Parser` root and a `#[command(subcommand)]`
-field: `vibe-cli/src/cli.rs:46` (`name = "vibe"`, 29 variants) and
-`vibe-index/src/cli/mod.rs:47` (`name = "vibe-index"`, 14 variants). A rule that
-recognises a binary by its declaration finds both, and should. **43 = 29 + 14.**
-No other `Parser` root in `crates/` carries a subcommand field — `vibe-index`'s
-fourteen per-command args structs and `vibe-cli`'s group-args structs are inert
-to the reader for exactly the right reason. @spec/done
+##cut-1-the-number-was-wrong-three-times **That number was wrong three times
+before it was right, and each correction widened the perimeter of the
+measurement rather than fixing a regex.** It is worth the paragraph, because the
+acceptance number is the only thing that caught the one real defect.
+*(i)* **29** — this design's first figure, taken from the surfaces census
+([`g6-b047-surfaces-census.md`](../../campaigns/packages-2026-09/harvest/g6-b047-surfaces-census.md)).
+The census is right and says something else: it counts `vibe`'s top-level
+command surface. Taking it as a node count was the boss's error.
+*(ii)* **43** — the build's own figure, measured over `crates/`, adding
+`vibe-index`'s 14 (`vibe-index/src/cli/mod.rs:47`, `name = "vibe-index"`).
+Right about the second binary, still scoped to one directory.
+*(iii)* **71**, of which **29 were false** — what the regenerated map actually
+carried. Both `vibe-cli` and `vibe-index` declare `pub enum Command`, and the
+join matched a root to an enum by type name alone across the whole workspace, so
+`find` handed both roots the same enum: the map claimed `vibe-index agentic` and
+`vibe-index term`, which do not exist. **The join is therefore crate-local — the
+pair `(crate_name, type_name)`** — and a test pins two roots in different crates
+whose enums share a name (proved to fail without the fix: exit 101, the
+assertion showing one binary carrying the other's commands).
+*(iv)* **56** — the truth, and it includes a third binary neither earlier
+perimeter contained: `xtask`, which is not under `crates/` at all. @impl/done
+
+##cut-1-the-zero-that-was-a-stale-build **One reading in between was 0, and it
+was not the code.** After the crate-local fix landed, the regenerated map carried
+no command nodes and no `command-*` warnings — the signature of an extractor that
+never ran. Both the authored crate and the vendored copy the host links were
+verified correct by reading. `cargo clean -p core-ai-native-specmap` and one
+re-run produced 56. This is the standing trap recorded at
+`#fact-engine-enum-ripple`: a stale fingerprint in the host target builds fixed
+sources against a pre-change rmeta. **A zero from the map after an engine edit is
+a build question before it is a code question.** @impl/done
 
 ##cut-2 **Slice 2 — nesting.** A variant whose payload type carries its own
 `#[command(subcommand)]` yields commands one level deeper, with the parent's path
-as their prefix. Acceptance is the census's other number: **68** subcommands
-across the ten group variants. If the crate-wide join proves to cost more than
-this slice can carry, slice 1 stands alone and says what it covers — a partial
-landing that names its perimeter beats a whole one that waits. @spec/plan
+as their prefix. **Its acceptance number is NOT yet known and must not be taken
+from the census.** The census's **68** is `vibe`'s subcommand total; slice 1's
+history (`#cut-1-the-number-was-wrong-three-times`) is exactly the demonstration
+that a host-only figure is not a map figure — `vibe-index` and `xtask` have
+nested commands of their own, and nobody has counted them. The slice measures
+first and states the number afterwards. @spec/plan
 
 ##cut-3 **Slice 3 — the acceptance, which is expected to need no code.**
 `vibe explain "vibe install"` must answer, and per `##m-explain-target-is-open`
