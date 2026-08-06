@@ -268,6 +268,41 @@ multiplying five-per-fact by 4 151 would be exactly the kind of unearned number
 this finding is about. The three are recorded in `run/cache.json` under batch
 `RJ1`; the document seals clean at 93 verdicts.
 
+**A second instance, found 2026-08-06 while measuring something else — and this
+one is in the LARGEST blob.** `PROP-005`, the index specification, carries **279
+verdicts across four distinct evidence paragraphs, and one of those paragraphs
+covers 276 of them.** It is the largest single blob in the corpus, and it
+contains this clause:
+
+> *«workspace_origin in the §2.6 entry schema AND the shipped JTD at
+> `crates/vibe-index/schemas/index-entry.jtd.json`»*
+
+**That file does not exist and never has.** The tree carries nine
+`*.jtd.json` files — seven host wire contracts under `schemas/`, the specmap
+engine's own, and its vendored copy — and none is it. There is no
+`crates/vibe-index/schemas/` directory. `git log` over that path across all
+refs returns nothing: the file was never added and never deleted.
+
+**Why this instance is worth recording beside the first.** The `PROP-008` case
+showed the corpus contradicting *itself* — one side per-fact and right, the
+other blob-stamped and wrong — which is the loudest possible form of the defect
+and the reason it was findable at all. This one has no contradicting twin. The
+false clause simply sits inside a paragraph stamped on 276 anchors, most of
+which it says nothing about, and nothing anywhere disagrees with it. It was
+found only because a session went looking for a schema in order to write one.
+
+That is the failure mode the ruling's own definition predicts in as many words:
+*if one of them is false, the paragraph about the rest still looks right, and
+the lie does not surface.* Here is the specimen.
+
+**What it changes about the open work.** Nothing about the mechanism and one
+thing about the priority: the outstanding re-judgement was scoped to the 90
+`PROP-008` anchors. `PROP-005`'s 276 are a second, larger batch on the same
+grounds, and they are the host's — consistent with the concentration this entry
+already measured. Twelve of them were re-judged per fact on 2026-08-06 when the
+auto-publication and webhook work moved the document's text; the remainder
+convert as the ruling intends, when their own text moves.
+
 ### 2026-08-06-02 · A2/B2 · P2 · fixed 2026-08-06 (same day it was met)
 
 **The freshness instrument every session is told to run reports a clean zero
