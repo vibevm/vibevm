@@ -133,19 +133,37 @@ already built.
       the transport law gains the `-c` routing hazard: a `cd` before the
       subshell sends a correction to the repository root instead of the worker.
 
+### The owner conversation of 2026-08-06 — the slice ends here and a programme starts
+
+The session turned into a long owner conversation that **replaced the course**.
+Everything decided in it — eighteen work items, their order, their reasoning and
+the three places the boss was wrong — lives in
+[`spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md`](spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md).
+**Read that file, not this section, to know what to do next.** Order fixed by the
+owner: **Б (hygiene) → В (taxonomy) → А (index)**.
+
+- [x] `chore(vibedeps)`: the installed copies caught up with a day of package
+      edits — six freshness warnings to clean. The boot lane every session reads
+      is assembled from those copies, so a stale one means sessions read
+      yesterday's rules.
+- [x] `feat(progress)` + `docs(session)`: **the life of a fact under an active
+      campaign** is now contract, and the judging debt is measurable by one
+      command and reported at every session start. Written because the same five
+      orphan verdicts were measured in July, filed in a disposable campaign zone,
+      and were still sitting there in August.
+- [x] `docs(plan)` ×3: the programme, its ordering reasoning, and the debt
+      question with its answer.
+
 ### What the next session picks up, in order
 
-1. **B-019(б) slice 2 and 3** — nesting and the `explain` acceptance, per
-   [`command-nodes.md`](spec/design/command-nodes.md) `#cut`. **Slice 2's number
-   is deliberately unmeasured** — do not take the census's 68, which is the host
-   CLI's subcommand total and not a map figure; slice 1's history is exactly why.
-2. **The owner's court, now with material under each:** B-019(в)'s systems
-   boundary · B-046's three options *plus* the typed-marker question under them
-   · B-047's split item (give the four-layer model a home, then refine it) ·
-   `AUDIT` `-04` (one TUI ruling + fifteen named sites) · `-14` (whether the
-   index's wire types leave `vibe-index`) · `-10` (the editorial ruling, with
-   its per-file context classification now built).
-3. The remaining owner-parked rows are unchanged.
+**The programme file is the answer.** Group **Б** first, and inside it Б1 (write
+the plan-closure rule) before everything else, because the rest of Б applies it.
+
+Not in the programme and still standing: B-019(б) slices 2 and 3 — nesting and
+the `explain` acceptance, per [`command-nodes.md`](spec/design/command-nodes.md)
+`#cut`. **Slice 2's number is deliberately unmeasured**; do not take the census's
+68, which is the host CLI's subcommand total and not a map figure — slice 1's
+history is exactly why.
 
 ---
 
