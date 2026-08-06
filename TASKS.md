@@ -283,7 +283,7 @@ authored and judged: [`spec/design/multiple-sources-and-plugins.md`](spec/design
       `md`, and the edge model hangs an address off a code SYMBOL, which a
       JSON document has none of. The cheap fix stayed a wish; the claim, both
       config twins and the verdict were corrected instead, and
-      [B-060](BACKLOG.md#b-060) carries the route with the honest reason its
+      B-060 — closed by `0f12992e`, which carries the route and the honest reason its
       line estimate does not converge.
 - [x] `chore(campaign)`: that fact had been judged `confirmed` on evidence for
       **one of its two clauses** — both refs addressed the exclusion, the
@@ -301,7 +301,7 @@ authored and judged: [`spec/design/multiple-sources-and-plugins.md`](spec/design
       `Watcher` has no production implementation, its docblock said the host
       carries one, and its `implements` edge makes the map report the REQ as
       built — coverage claimed by the shape rather than delivered by it
-      ([B-061](BACKLOG.md#b-061)).
+      (B-061 — closed by `572f3c1a`).
 - [x] `refactor(vibe-publish)`: **L1 — `ValidatedOrg`.** The forgotten
       `validate_scope` is now a compile error, because the side-effecting
       methods take an argument only that check can mint. Two things the design

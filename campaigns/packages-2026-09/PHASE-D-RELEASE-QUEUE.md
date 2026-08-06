@@ -145,7 +145,7 @@ repair in the packages and not in the compiler — and it is also why the repair
   spec-genres, two-process-model, wal. The fifteen unrecorded ones are not
   mis-judged verdicts — the instruction lives **inside a fenced block**, which
   carries no anchor, so which of the prompt's claims got tested varied by
-  worker. Filed as [`BACKLOG.md` B-004](../../BACKLOG.md#b-004). **Publishing
+  worker. Filed as `BACKLOG.md` B-004 — closed by `d64c84cc`. **Publishing
   the two-package fix alone is what §4.5 calls not a closure**; the ask should
   be scoped at seventeen or the remainder recorded as a deferral.
 
