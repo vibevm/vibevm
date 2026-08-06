@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T09:12:11Z",
+  "updated_at": "2026-08-06T09:21:35Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -63418,7 +63418,7 @@
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "b8e5eaaf77723ddbd250a67e4ec851cead902e35d136e5d9095d881398ae2c3a",
+        "processed_hash": "1083b69144de3e5fa4ae19358e3c147aad391b8a02e49c894e198fccc7bf8dc0",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -63575,17 +63575,15 @@
             ]
           },
           "ROW-FORM-KIND-AND-NAME": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "crates/vibe-core/src/package_ref/tests.rs:118  fn parse_short_with_kind() {",
-              "crates/vibe-cli/src/commands/short_name.rs:135              kind: pkgref.kind,",
-              "spec/modules/vibe-registry/PROP-008-qualified-naming.md:95  | ##ROW-SHORT-KIND `flow:wal` @impl/done | short + kind @impl/done | resolved via the index; kind validated",
-              "DRIFT on the row's validation column. The form parses and is carried through resolution — `parse_short_with_kind` pins `kind Some(Flow)` for `flow:wal`, and `qualify()` COPIES the kind onto the qualified ref rather than dropping it, so the tag survives all the way to a resolved reference. What never happens is the check the row promises: nothing compares that kind against the resolved manifest's kind, and `KindMismatch` appears in no `.rs` file. The tag is carried faithfully to a destination that ignores it."
+              "the form parses: crates/vibe-core/src/package_ref/tests.rs:118 `parse_short_with_kind()` accepts `flow:wal`",
+              "'CLI input only' holds — the kind is validated after resolution and never stored: crates/vibe-resolver/src/kind_check.rs:20-32 is the only consumer of the prefix past parsing",
+              "'kind is validated after resolution' is now true of running code, which is what the row's Where-legal column claims: crates/vibe-resolver/src/naive.rs:182 and crates/vibe-resolver/src/resolvo_engine/mod.rs:208",
+              "re-judged 2026-08-06 from `drift`: the row's claim was ahead of the code and is no longer."
             ],
             "src": [
-              1,
-              2,
-              3
+              2
             ]
           },
           "ROW-FORM-GROUP-QUALIFIED": {
@@ -63673,29 +63671,28 @@
             ]
           },
           "THE-KIND-TAG-VALIDATES-IT-NEVER-DISAMBIGUATES": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/modules/vibe-registry/PROP-008-qualified-naming.md:97  - ##KIND-VALIDATION **kind validation.** If the `kind` prefix is present, after resolution the resolver asserts",
-              "spec/modules/vibe-registry/PROP-008-qualified-naming.md:196  - ##REJ-KIND-DISAMBIGUATOR **kind prefix as a disambiguator.** Rejected (§2.4). With `name` unique within",
-              "crates/vibe-core/src/package_ref.rs:499      /// `kind` prefix is never part of it — `kind` is metadata, not identity.",
-              "crates/vibe-cli/src/commands/short_name.rs:37      Ambiguous(Vec<Group>),",
-              "DRIFT on the first half, with the second half settled unusually well. NEVER DISAMBIGUATES is enforced by the types themselves: `qualified_name()` excludes kind from the identity string, and `ShortNameOutcome::Ambiguous` carries `Vec<Group>` — the candidate set is groups only, so kind cannot enter disambiguation even in principle — and `PROP-008` `##REJ-KIND-DISAMBIGUATOR` rejects the alternative explicitly. VALIDATES has no implementation at all: `KindMismatch` exists in no `.rs` file. A sentence whose two halves are «does X, never Y» is drift when X is absent, even where Y is airtight. Root at `##THE-RESOLVER-CHECKS-THE-TYPE-AND-ERRORS-ON-A-MISMATCH`."
+              "validates: crates/vibe-resolver/src/kind_check.rs:26 raises `KindMismatch` on disagreement — the prefix is checked AFTER resolution, against the resolved manifest's declared kind",
+              "never disambiguates: the check takes `actual` from the already-resolved package, so it cannot participate in choosing between candidates — crates/vibe-resolver/src/naive.rs:182 calls it with the manifest already in hand",
+              "the module doc states the same law and cites it: crates/vibe-resolver/src/kind_check.rs:1-8 `//! The kind-prefix validation law (PROP-008 §2.4 KIND-VALIDATION), in one place.`",
+              "re-judged 2026-08-06 from `drift`; the earlier verdict was correct for the tree it was formed against."
             ],
             "src": [
-              1,
               2
             ]
           },
           "THE-RESOLVER-CHECKS-THE-TYPE-AND-ERRORS-ON-A-MISMATCH": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/modules/vibe-registry/PROP-008-qualified-naming.md:97  - ##KIND-VALIDATION **kind validation.** If the `kind` prefix is present, after resolution the resolver asserts",
-              "crates/vibe-core/src/package_ref.rs:428      /// one; it is validated against the resolved manifest (a `KindMismatch`)",
-              "spec/design/workspace-and-qualified-naming.md:81  - ##fork-kind-prefix-optional **`kind` prefix in pkgref — keep or drop?** Chosen: **optional but allowed,",
-              "DRIFT: stated three times in this repository and implemented zero times, with the search widened twice and the widening stated. `grep -rn 'KindMismatch' --include='*.rs' --include='*.md' .` (excluding `target/` and `.vibe/cache/`) returns 3 hits and NONE is code — a doc comment in `crates/vibe-core/src/package_ref.rs`, `PROP-008` `##KIND-VALIDATION`, and a design record. No code anywhere compares a pkgref's kind prefix against the resolved manifest's kind. And the reserved exit code is dead: `TYPE_MISMATCH: u8 = 4` carries `#[allow(dead_code)]` and is referenced exactly once, at its own declaration. So the kind tag is parsed, carried through resolution and never checked against anything. This is the root of three drifts in this file; the neighbouring «never disambiguates» half is settled in the types and confirmed separately."
+              "the mechanism, in one place: crates/vibe-resolver/src/kind_check.rs:20-32 `assert_kind_matches(requested, actual, package)` returns `Err(SolveError::KindMismatch { package, requested, actual })` when a pkgref's kind prefix disagrees with the resolved manifest's declared kind",
+              "the error variant it returns: crates/vibe-resolver/src/error.rs:104 `KindMismatch { .. }`",
+              "call site 1 of 2 — the naive solver: crates/vibe-resolver/src/naive.rs:182 `assert_kind_matches(pkgref.kind, actual, &pkgref.qualified_name())?` inside `process_one` (which also covers `sat` by delegation)",
+              "call site 2 of 2 — the resolvo engine: crates/vibe-resolver/src/resolvo_engine/mod.rs:208 `assert_kind_matches(requested, actual, &format!(\"{group}/{name}\"))?` for root solvables",
+              "the behaviour is asserted, not merely written: crates/vibe-resolver/src/naive/tests.rs:494 `kind_prefix_mismatch_is_a_kind_mismatch` seeds `flow:wal` and solves `feat:org.vibevm/wal`, expecting the error rather than a silent pass",
+              "re-judged 2026-08-06: this anchor previously carried `drift`, and that verdict was CORRECT when formed — no such type existed in the tree. The mechanism was built afterwards; this verdict re-states the claim against the code that now exists, with its own per-fact evidence rather than a shared paragraph."
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -64035,15 +64032,13 @@
             ]
           },
           "SUM-THE-KIND-TAG-VALIDATES-THE-RESOLVED-TYPE": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/modules/vibe-registry/PROP-008-qualified-naming.md:97  - ##KIND-VALIDATION **kind validation.** If the `kind` prefix is present, after resolution the resolver asserts",
-              "spec/modules/vibe-registry/PROP-008-qualified-naming.md:196  - ##REJ-KIND-DISAMBIGUATOR **kind prefix as a disambiguator.** Rejected (§2.4). With `name` unique within",
-              "crates/vibe-cli/src/commands/short_name.rs:37      Ambiguous(Vec<Group>),",
-              "DRIFT, inheriting the body row's split per W1's summary-restatement precedent. «Never disambiguates» is settled in the host's types — the candidate set is `Vec<Group>`, `qualified_name()` excludes kind, and `PROP-008` §4 rejects the alternative explicitly. «Validates the resolved type» has no implementation: `grep -rn 'KindMismatch'` returns three hits and none is code."
+              "the summary restates the law the mechanism implements: crates/vibe-resolver/src/kind_check.rs:20-32, called from crates/vibe-resolver/src/naive.rs:182 and crates/vibe-resolver/src/resolvo_engine/mod.rs:208",
+              "'the RESOLVED type' is literal in the signature: `assert_kind_matches(requested: Option<PackageKind>, actual: PackageKind, package: &str)` compares against `actual`, which the caller reads off the resolved manifest",
+              "re-judged 2026-08-06 from `drift`."
             ],
             "src": [
-              1,
               2
             ]
           },
@@ -64075,10 +64070,86 @@
               2,
               3
             ]
+          },
+          "DOCUMENTED-EXAMPLES-ARE-COPIED-AND-RUN": {
+            "v": "confirmed",
+            "ev": [
+              "the premise is evidenced by this repository's own documentation shape: docs/ carries runnable fenced command blocks throughout — README.md:24-38 is a copy-and-run quickstart (`cargo build`, `vibe init`, `vibe install …`, `vibe list`), and the manual-tests tier exists precisely because commands in prose get executed by humans",
+              "the campaign has paid for the same premise once already: an owner-guide command comment asserting a gate step that did not exist survived because it sat in a fence nobody could judge (AUDIT 2026-08-06, B-063, closed the same day)"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-DOC-INSTALL": {
+            "v": "confirmed",
+            "ev": [
+              "a short name on install resolves through registry indexes, so an unconfigured index makes the example fail: crates/vibe-cli/src/commands/short_name.rs:14-16 `//! locked\", PROP-008 §2.6) — then enumerates registry candidates: a local-directory registry is scanned, a multi-registry resolver walks each registry's index`",
+              "install qualifies short names at the CLI input boundary: crates/vibe-cli/src/commands/install/mod.rs:118 `// Parse the CLI pkgrefs and qualify short names at the input`",
+              "the qualified form needs none of that path — it already carries `(group, name)`, which is the identity the resolver keys on (this file's §storage)"
+            ],
+            "src": [
+              2
+            ]
+          },
+          "ROW-DOC-UNINSTALL-UPDATE": {
+            "v": "confirmed",
+            "ev": [
+              "uninstall resolves from the lockfile alone: crates/vibe-cli/src/commands/uninstall.rs:37-41 `// \\`vibe uninstall\\` acts on an already-installed package, so a bare short name resolves against \\`vibe.lock\\` alone — no index, no network` and the call `short_name::qualify_locked(&pkgref, &lockfile)?`",
+              "update reads the lockfile as its authority the same way: crates/vibe-cli/src/commands/update.rs:66 `let mut lockfile = load_lockfile(&workspace.root)?;`",
+              "so the short form in an uninstall/update example carries no precondition a reader could fail to meet — which is exactly what the row claims"
+            ],
+            "src": [
+              2
+            ]
+          },
+          "ROW-DOC-FILE-CONTENTS": {
+            "v": "confirmed",
+            "ev": [
+              "the storage law this row defers to is stated and judged in the same document: §storage and `##RULE-MANIFESTS-ACCEPT-QUALIFIED-FORMS-ONLY` — a bare or kind-only name is never written to persisted state",
+              "enforced at the boundary rather than trusted: crates/vibe-cli/src/commands/install/mod.rs:118 qualifies short names AT input, so only the qualified form travels onward into manifest and lockfile"
+            ],
+            "src": [
+              1,
+              2
+            ]
+          },
+          "ROW-DOC-PROSE": {
+            "v": "confirmed",
+            "ev": [
+              "the row asserts only that prose executes nothing and therefore constrains nothing — it is the complement of the three rows above, each of which names an executed or stored context",
+              "no mechanism is claimed, so there is none to be absent: this is the deliberate absence of a rule, recorded so its absence is not read as an oversight"
+            ],
+            "src": [
+              1
+            ]
+          },
+          "THE-ASYMMETRY-IS-THE-POINT": {
+            "v": "confirmed",
+            "ev": [
+              "the asymmetry is the two rows' evidence taken together: install depends on a configured index (short_name.rs:14-16) while uninstall/update depend on the lockfile alone (uninstall.rs:37-41) — so the same short form fails in one context and cannot fail in the other",
+              "the rule therefore follows the failure mode rather than a preference for one spelling, which is what this fact states"
+            ],
+            "src": [
+              2
+            ]
+          },
+          "SHORT-FORMS-IN-DOCS-ARE-NOT-ERRORS": {
+            "v": "confirmed",
+            "ev": [
+              "the short form is legal input, not a defect: this file's own §forms table marks bare name and kind+name as legal CLI input, and crates/vibe-core/src/package_ref/tests.rs:118 `parse_short_with_kind()` asserts the parse",
+              "the claim that a mass rewrite would be wrong is measured, not asserted: README.md:31 reads `vibe install flow:wal --registry fixtures/registry`, which supplies the index on the same line, so the short form works there",
+              "and several short install examples name packages that do not exist — `flow:internal-helper`, `flow:secret`, `flow:fork` in docs/git-source-dependencies.md and docs/registry-auth.md — so they have no qualified form to be rewritten into"
+            ],
+            "src": [
+              1,
+              2
+            ]
           }
         },
-        "verified_at": "2026-08-02T19:37:24Z",
-        "verify_batch": "W7 + D36"
+        "verified_at": "2026-08-06T09:21:35Z",
+        "verify_batch": "W7 + D36 + B4-KIND-VALIDATION + B5-DOC-POLICY"
       }
     },
     "packages/org.vibevm.world/redbook/v0.2.0/README.md": {
