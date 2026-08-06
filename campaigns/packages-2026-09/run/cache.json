@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T15:03:18Z",
+  "updated_at": "2026-08-06T15:05:11Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -59135,7 +59135,115 @@
       },
       "marker_count": 10,
       "unit_count": 3,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "3d1374bd192b5322463d1e3ad5b696ffe9c1852b69a798df0f68d1fe0cbebbb2",
+        "verdicts": {
+          "PACKAGE-INSTALLS-THE-SURFACE-DISCIPLINE": {
+            "v": "confirmed",
+            "src": [
+              1,
+              3
+            ],
+            "ev": [
+              "source 1: the package is a `flow` and carries exactly what this line claims — the manifest at packages/org.vibevm.world/omnichannel/v0.1.0/vibe.toml, the protocol document, and the boot snippet",
+              "source 3: it is installed rather than merely present — vibe.lock:16 carries the requirement `flow:org.vibevm.world/omnichannel@^0.1.0`, the resolved entry sits at :36-39, and the consumer copy is materialised at vibedeps/flow-omnichannel",
+              "so «installs one architectural rule and the vocabulary it needs» is checkable at the lockfile, which is this cluster's third source"
+            ]
+          },
+          "the-cost-appears-at-the-second-surface": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the timing claim is borne out by the host's own history rather than by argument: `vibe list` was written first and correct; the divergence appeared when the MCP `query_package` arrived and rendered the same field itself",
+              "and the census measures the same asymmetry across the whole surface: of five MCP tools, two share a library function with their CLI twin, two have no CLI twin at all, and one reads the same data while building its output by hand — the cost is concentrated exactly where a second surface met an existing first",
+              "marked `spec/done` rather than `impl/done`, which is right: it is an observation about when a cost lands, not a mechanism anything implements"
+            ]
+          },
+          "TWO-SURFACES-THAT-DISAGREE-CANNOT-BE-ADJUDICATED": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the specimen is exact: `vibe list --json` and the MCP `query_package` printed different file paths on Windows, and nothing in the tree said which was right — one used the platform separator, the other normalised, and both were defensible",
+              "the fact's remedy is what the repair actually did: a third place, `files_written_posix()` in crates/vibe-core/src/manifest/lockfile.rs, now answers for both callers",
+              "so the claim that the library IS the adjudicator is not a metaphor here — before it existed there was no adjudication, and after it there is no disagreement to adjudicate"
+            ]
+          },
+          "package-contents-lead": {
+            "v": "confirmed",
+            "src": [
+              1
+            ],
+            "ev": [
+              "a lead-in for the two content facts below it, both of which resolve to files that exist — checked in their own verdicts"
+            ]
+          },
+          "CONTENT-THE-PROTOCOL": {
+            "v": "confirmed",
+            "src": [
+              1
+            ],
+            "ev": [
+              "the file exists at the path named: packages/org.vibevm.world/omnichannel/v0.1.0/spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.md",
+              "and it carries each of the five things this line promises rather than only the first: the rule, the vocabulary with its three classes, what thin means per class at `{#thinness}` (:52), the declaration form, and the derived-table requirement",
+              "the thinness anchor is the one the host's TUI boundary cites, so the promise is load-bearing outside this package"
+            ]
+          },
+          "CONTENT-THE-BOOT-SNIPPET": {
+            "v": "confirmed",
+            "src": [
+              1,
+              3
+            ],
+            "ev": [
+              "the file exists at packages/org.vibevm.world/omnichannel/v0.1.0/spec/boot/68-flow-omnichannel.md and carries the four things named — rule, vocabulary, obligations, never-list — verified fact by fact when that snippet was judged in this same session",
+              "source 3: «read at session start» is a claim about delivery, and it holds — the snippet is compiled into the host's boot lane, which is what a `flow`'s boot snippet is for and what the lockfile's materialised copy carries"
+            ]
+          },
+          "NOT-A-CODE-STYLE-RULE": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "source 1: the package's dependencies carry no language discipline — it is a `world` flow, the group for cross-cutting practices a project installs if it wants, alongside git practices and addressable specs",
+              "source 2: the host proves the independence in the useful direction — it installed this flow and declared its floor in PROP-000, a document about the project rather than about writing code, and the rule binds subsystems written before any AI-native discipline existed",
+              "the negative claim is the substantive one and it is checkable: a search of this package finds no language, no linter and no code-shape rule"
+            ]
+          },
+          "NOT-A-CHECKLIST-OF-SURFACES-EVERY-PROJECT-OWES": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "source 1: the protocol's `@fact:AN-UNDECLARED-SURFACE-IS-NOT-A-DEBT` (:75) is the rule this line compresses, so the README is not softening the protocol",
+              "source 2: the host used it exactly this way — LSP and IDE are named as deliberately undeclared on the owner's ruling, and PROP-000 §21 records the consequence that their absence is a choice",
+              "which is what separates a vocabulary from a checklist: the list names surfaces so two projects mean the same thing, and the floor is each project's own"
+            ]
+          },
+          "DELETE-THE-SURFACE-ON-PAPER": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "source 1: the test is the protocol's own, at `{#thinness}`, and this line is its one-sentence form rather than a second definition",
+              "source 2: the host adopted it verbatim for a concrete subsystem on 2026-08-06 — PROP-037 §0 defines the TUI as finished when deleting it on paper loses nothing but presentation, and names the three boundaries it rejected and why",
+              "so the test travels, which is the claim a README of a shipped flow is really making: it settled an argument in a consumer project, not only in the package that states it"
+            ]
+          }
+        },
+        "verified_at": "2026-08-06T15:05:11Z",
+        "verify_batch": "DEBT-2026-08-06-J"
+      }
     },
     "packages/org.vibevm.world/omnichannel/v0.1.0/spec/boot/68-flow-omnichannel.md": {
       "content_hash": "0faeba40094240aa5187cc4f7b1315eaebba1999b24db0f3d5a471cb8d2fcea3",
