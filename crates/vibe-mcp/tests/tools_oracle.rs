@@ -7,8 +7,8 @@
 
 use serde_json::{Value, json};
 use vibe_mcp::tools::{
-    AgenticExplainMcpTool, MaterialiseSubskillMcpTool, McpTool, QueryPackageMcpTool,
-    ReadSubskillMcpTool,
+    AgenticExplainMcpTool, ListToolsMcpTool, MaterialiseSubskillMcpTool, McpTool,
+    QueryPackageMcpTool, ReadSubskillMcpTool,
 };
 use vibe_mcp::{ServerContext, dispatch_one};
 
@@ -80,6 +80,52 @@ fn each_cell_descriptor_names_itself() {
         "materialise_subskill"
     );
     assert_eq!(AgenticExplainMcpTool.descriptor().name, "agentic_explain");
+    assert_eq!(ListToolsMcpTool.descriptor().name, "list_tools");
+}
+
+// --- list_tools (В3: the registry surface over the shared library) -------
+
+/// The cell returns a JSON array, and an empty project is an empty array
+/// rather than an error — "nothing is installed" is an answer, and a
+/// surface that failed here would be useless in a fresh tree.
+#[test]
+fn list_tools_cell_returns_an_array_and_tolerates_an_empty_project() {
+    let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
+    let out = ListToolsMcpTool.run(&json!({}), &ctx).unwrap();
+    let arr = out.as_array().expect("an array");
+    // The fixture's package declares no `[[binary]]`, so the registry is
+    // legitimately empty — and empty is a value, not a failure.
+    assert!(arr.is_empty(), "fixture declares no tools: {out}");
+}
+
+/// End-to-end through the registered server, so the tool is reachable by
+/// the name the skill template teaches — not merely constructible.
+#[test]
+fn list_tools_is_reachable_through_the_dispatcher() {
+    let (_dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
+    let reply = dispatch_one(
+        ctx,
+        &json!({
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "tools/call",
+            "params": {"name": "list_tools", "arguments": {}}
+        })
+        .to_string(),
+    )
+    .expect("a reply");
+    let v: Value = serde_json::from_str(&reply).expect("json");
+    assert!(v["error"].is_null(), "dispatch errored: {v}");
+}
+
+/// The descriptor takes no arguments and says so — an agent reading the
+/// schema must not have to guess whether something is required.
+#[test]
+fn list_tools_declares_no_arguments() {
+    let d = ListToolsMcpTool.descriptor();
+    assert_eq!(d.input_schema["type"], "object");
+    assert!(d.input_schema.get("required").is_none());
+    assert_eq!(d.input_schema["additionalProperties"], false);
 }
 
 // --- agentic_explain (PROP-018 §2.8 dual transport) ----------------------
