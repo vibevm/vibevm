@@ -558,6 +558,148 @@ pub struct VersionEntry { /* §2.6 schema, one-to-one */ }
 - @fact:NEVER-ASSUME-MIRROR **Never assume mirror infrastructure.** The index is opt-in everywhere; no consumer or publisher fails because the index disappeared. @status:impl/done
 - @fact:NEVER-SILENT-SCHEMA **Never make breaking schema changes silently.** `schema_version` bumps. Old consumers parsing a higher schema must surface a "your vibevm is older than this index; please upgrade" message — not silently parse the subset they understand. @status:impl/done
 
+### 2.16 Webhooks — feeding the index instead of polling it {#webhooks}
+
+@fact:WEBHOOK-THE-PROBLEM **The problem, and it is not performance.** To learn
+what changed, the index enumerates the organisation. That is a cost, but the
+cost is the small half. The large half is that **the picture goes stale without
+anyone doing anything wrong**: a developer publishing a package creates a
+repository and pushes a tag straight to the git host, never passing through the
+index service. So the index's image is behind from the moment it is taken, and a
+stale index is worse than a slow one — the package exists and cannot be found.
+@status:spec/done
+
+@fact:WEBHOOK-IS-THE-ANSWER-TO-THE-CACHE **This is what makes the organisation
+cache honest.** [§2.8](#reindex)'s cache and its cheap freshness check reduce how
+often the index asks; they do not change who knows first. A webhook does: the
+image becomes authoritative **because it is fed**, rather than because we assumed
+nobody else writes. Both mechanisms ship — the freshness check is what keeps the
+cache truthful when no webhook is configured, and every deployment starts that
+way. @status:spec/done
+
+@fact:WEBHOOK-ENDPOINT **The endpoint is per host flavour, deliberately.**
+`POST /v1/hooks/{source}` where `{source}` names the git host's flavour
+(`github` today; other flavours are added when one is measured, not reserved in
+advance). One route per flavour rather than one generic route, because the
+payload shape and the signature scheme are host-specific and a single endpoint
+would have to sniff which it received — which is guessing, dressed as
+convenience. @status:spec/done
+
+@fact:WEBHOOK-SECRET-IS-NOT-THE-ADMIN-TOKEN **A webhook authenticates with its
+own shared secret, never with an admin token.** The sender signs the request body
+under a per-hook secret and the index verifies that signature; an unverifiable
+request is refused and not processed. Two reasons, and the second is the
+important one. *(i)* The secret is held by a third party — the git host — and
+must be rotatable without touching the tokens that authorise real writes.
+*(ii)* **Least authority:** an admin token authorises arbitrary writes, while a
+webhook may only cause the index to re-read one repository. Handing a notification
+channel the authority to write anything is how a notification becomes an attack
+surface. Secret storage follows [§7](#secrets) — file, never a flag, never a log.
+@status:spec/done
+
+@fact:WEBHOOK-PAYLOAD-IS-A-NOTIFICATION-NOT-DATA **The load-bearing rule: a
+payload says *that* something changed, never *what* it now is.** The index reads
+the manifest from the git host itself and applies the per-package `add` / `remove`
+of [§2.8](#reindex) for the named repository only. Nothing from the request body
+is ever written into an index record. This follows from [§2.3](#truth) — package
+repos remain authoritative — and it is the rule that keeps an attacker-influenced
+input from becoming index content. **A webhook may never trigger a full
+reindex**, both because that is the expensive thing it exists to avoid and
+because a cheap request that causes an expensive walk is a denial-of-service
+lever. @status:spec/done
+
+@fact:WEBHOOK-DELIVERY-IS-UNRELIABLE **Deliveries arrive twice, out of order, or
+not at all, and the design assumes all three.** The handler is idempotent by
+construction — re-reading a repository and upserting its versions is the same
+operation performed twice — and it never infers from one event that it saw the
+previous one. Consequence, stated so it is not quietly dropped later:
+**webhooks reduce staleness, they do not abolish the full walk.** The explicit
+`rescan-org` verb of [§2.8](#reindex) stays unconditional exactly because a
+missed delivery is invisible from inside. @status:spec/done
+
+@fact:WEBHOOK-FAILURE-POSTURE **What each failure answers.** An unverifiable
+signature is `401` and is not processed. A payload naming a repository outside
+this server's configured organisation is `400` and is not processed — the scope
+check is not optional, since the repository name is the one field of the payload
+we act on. A verified, in-scope delivery whose re-read fails is `202`: the
+request was accepted and the work is ours to retry. Answering `5xx` to a sender
+that retries on a schedule we do not control would turn our own outage into a
+retry storm — the failure is on our side, and the status code should say so
+rather than invite the sender to hammer. @status:spec/done
+
+@fact:WEBHOOK-VS-ACTIONS **The GitHub-Actions alternative, and why it is the
+fallback rather than the default.** The same effect is reachable without any
+endpoint: an Action in the package repository `POST`s to the write API of
+[§2.10](#http) with an admin token. It is genuinely simpler — no new route, no
+signature verification, nothing to specify. What it costs is exactly what
+`#WEBHOOK-SECRET-IS-NOT-THE-ADMIN-TOKEN` protects: **every participating
+repository then holds a credential that can write anything**, and the number of
+places a broad secret lives grows with the organisation. The webhook keeps one
+narrow secret in one place. So: webhook by default; the Action is the honest
+answer for an organisation that already runs its publishing through Actions and
+prefers one mechanism to two, and it has one capability the webhook does not —
+it can also push the built index files, being a runner with a checkout.
+@status:spec/done
+
+@fact:WEBHOOK-NOT-DECIDED **Named, not invented — two things this section does
+NOT settle.** *(i)* Whether the server should require the pushed ref to look
+like a release tag before acting, or re-read on any push to the default branch
+as well: the second catches a manifest edited without a tag, which
+[§2.8](#reindex)'s incremental walk already treats as a real case, and the first
+is cheaper. Decide it against a measured event volume, not here. *(ii)* The
+GitVerse flavour is **unmeasured**: their public API could not enumerate an
+organisation, and nothing here establishes what their webhooks can do. Writing a
+`gitverse` route from that ignorance would be inventing a contract for a system
+nobody in this repository has watched. @status:spec/plan
+
+#### 2.16.1 Setting one up — the operator's walkthrough {#webhooks-guide}
+
+@fact:WEBHOOK-GUIDE-LIVES-HERE **Why this walkthrough sits inside the
+specification and not in `docs/`** *(owner ruling, 2026-08-06)*. It describes how
+to configure a mechanism **whose properties this document defines**. Kept beside
+the contract it changes when the contract changes, because the two are the same
+file and the same commit; kept in `docs/` it drifts. That is not a hypothetical:
+this repository measured two independent instances of exactly that drift in a
+single week — the index's own format documentation against its code, and an
+owner guide promising a gate step that did not exist. @status:spec/done
+
+@fact:WEBHOOK-GUIDE-IS-NOT-YET-A-CLAIM **Read the steps below as a
+specification, not as instructions that work today.** The endpoint is designed
+here and not built; the block is therefore an example and carries no
+`@fact/code:` marker, which is precisely the distinction that keeps a fenced
+block from asserting something nobody can falsify. When the route ships, this
+block becomes the fact's body and comes due with it. @status:spec/plan
+
+```
+# 1. On the index host: put the shared secret where the server reads it.
+#    One secret per configured hook; file, not a flag (§7).
+$ printf '%s' "$SECRET" > ./vibespecs-index/state/webhook.secret
+
+# 2. Start the server with the hook route enabled.
+$ vibe-index serve ./vibespecs-index --bind 0.0.0.0:8412 \
+    --auth-tokens-file ./vibespecs-index/state/admin.tokens \
+    --webhook-secret-file ./vibespecs-index/state/webhook.secret
+
+# 3. On the git host, at the ORGANISATION level (not per repository —
+#    a per-repo hook is one more thing to remember on every new package):
+#      payload URL   https://<index-host>/v1/hooks/github
+#      content type  application/json
+#      secret        the same $SECRET
+#      events        pushes and tag/release creation only — not "everything"
+#
+# 4. Verify the wiring before trusting it: push a tag to any package repo,
+#    then ask the index what it now knows about that package.
+$ vibe-index get ./vibespecs-index <group> <name>
+```
+
+@fact:WEBHOOK-GUIDE-VERIFY-STEP **Step 4 is not politeness.** A hook that is
+configured and silently not arriving looks exactly like a hook that is arriving
+and finding nothing to do, and the difference is invisible from the index side —
+which is the same shape as `#WEBHOOK-DELIVERY-IS-UNRELIABLE`, seen at setup time
+instead of at run time. Verify once against a known change; after that, trust
+the mechanism and keep `rescan-org` for the deliveries you will never know you
+missed. @status:spec/done
+
 ---
 
 ## 3. Architecture {#architecture}

@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T13:54:05Z",
+  "updated_at": "2026-08-06T14:00:48Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -101156,7 +101156,7 @@
       }
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {
-      "content_hash": "a636566752ec5626c036a1de50ac4326859a61c4286f8e7440ee395952e67b8e",
+      "content_hash": "c59a62461dead9f2932ab4b6520a8338f1c5be6975f17358bafc19e8c160f94d",
       "rollup": {
         "explicit": [
           "impl",
@@ -101164,18 +101164,18 @@
         ],
         "computed": [
           "spec",
-          "work"
+          "plan"
         ],
         "effective": [
           "impl",
           "done"
         ],
-        "marker_count": 279,
-        "fact_count": 278,
+        "marker_count": 291,
+        "fact_count": 290,
         "unmarked_facts": 0
       },
-      "marker_count": 279,
-      "unit_count": 44,
+      "marker_count": 291,
+      "unit_count": 46,
       "issue_count": 0,
       "campaign": {
         "anchors_judged": 278,
@@ -102862,10 +102862,105 @@
             "ev": [
               "accurate: implemented; folded into the workspace 2026-05-22 — the §9 item-11 de-rot arc matches the shipped in-workspace crate"
             ]
+          },
+          "WEBHOOK-THE-PROBLEM": {
+            "v": "confirmed",
+            "ev": [
+              "the bypass this fact rests on is real in the tree, not hypothetical: the publish flow pushes a tag straight to the git host (crates/vibe-publish/src/git_publish.rs:30 `push_release`, :174 `push_tag_only`), and the index is told about it only by an OPTIONAL post-hook that stays dormant unless the operator sets the env vars — crates/vibe-cli/src/commands/registry/publish.rs:209 states exactly that in its own comment",
+              "so a publication that never touches the index is the ordinary path, not an edge case, and the index's picture is behind from the moment it is taken",
+              "the `stale is worse than slow` half restates the ruling already recorded in BACKLOG.md `@fact:B065-THE-AXIS-IS-NOT-THE-TOPOLOGY`, which the owner accepted on 2026-08-06"
+            ]
+          },
+          "WEBHOOK-IS-THE-ANSWER-TO-THE-CACHE": {
+            "v": "confirmed",
+            "ev": [
+              "this is a design decision at spec stage, not an implementation claim, and its marker says so (`spec/done`): neither the organisation cache nor the webhook route exists in the tree today",
+              "the relation it asserts is checkable and holds: the checkpoint that makes `--incremental` cheap is crates/vibe-index/src/index/checkpoint.rs and it records per-repository head/tags, i.e. it makes asking cheaper without changing who learns first",
+              "the freshness-check-plus-webhook pairing is the shape the owner agreed in BACKLOG.md `@fact:B065-AGREED-SHAPE`, points (3) and (5)"
+            ]
+          },
+          "WEBHOOK-ENDPOINT": {
+            "v": "confirmed",
+            "ev": [
+              "measured: crates/vibe-index/src/server/routes/ holds admin.rs, capabilities.rs, health.rs, index_files.rs, metrics.rs, packages.rs, purls.rs and mod.rs — eight files, NONE of them a hooks route, so this specifies something absent rather than describing something present",
+              "the `/v1/...` prefix the fact adopts is the existing family's, not a new one: the structured routes are already `/v1/packages`, `/v1/capabilities/{cap}`, `/v1/purls/{purl}` per the client that consumes them (crates/vibe-registry/src/index_client.rs:233)",
+              "the per-flavour argument is falsifiable and stands: signature verification differs per host, and a single route would have to infer the sender from the body"
+            ]
+          },
+          "WEBHOOK-SECRET-IS-NOT-THE-ADMIN-TOKEN": {
+            "v": "confirmed",
+            "ev": [
+              "the authority the fact refuses to reuse is real and measurable: every mutating route calls `require_writeable` (crates/vibe-index/src/server/routes/packages.rs:348), which gates on the bearer tokens read from `<data-dir>/state/admin.tokens`, and those tokens authorise upsert, delete-version and delete-package alike (packages.rs:229, :289, :320)",
+              "so handing a notification channel that token would grant it arbitrary index writes — the least-authority argument is arithmetic over the existing route table, not a preference",
+              "the storage rule it defers to is this document's own secrets section, which already requires file storage and mode 0600 for `admin.tokens` (`@fact:SECRET-ADMIN-TOKENS`)"
+            ]
+          },
+          "WEBHOOK-PAYLOAD-IS-A-NOTIFICATION-NOT-DATA": {
+            "v": "confirmed",
+            "ev": [
+              "it follows from a rule this document already carries rather than inventing one: `@fact:NEVER-REPLACE-TRUTH` in section 2.15 forbids the index displacing `vibe.toml` as the source of truth, and section 2.3 makes package repos authoritative",
+              "the per-package apply path it names exists and is tested: CLI `Add`/`Remove` (crates/vibe-index/src/cli/mod.rs:86,89) and the HTTP twins `upsert` / `delete_version` / `delete_package` (crates/vibe-index/src/server/routes/packages.rs:229, :289, :320)",
+              "the never-a-full-reindex half is a load-shape claim about a real cost: `reindex --from-github` enumerates the organisation page by page over the REST API (crates/vibe-index/src/scanner/from_github.rs:90-98), so a cheap unauthenticated-ish request able to trigger it would be a denial-of-service lever"
+            ]
+          },
+          "WEBHOOK-DELIVERY-IS-UNRELIABLE": {
+            "v": "confirmed",
+            "ev": [
+              "the idempotence it relies on is already a property of the code it would call, not something to be added: crates/vibe-index/src/server/routes/packages.rs:249-259 computes `existed` and then upserts, so running it twice leaves the same index state and differs only in the reported `created` flag",
+              "the consequence it draws — that `rescan-org` stays unconditional — is the same conclusion the owner reached independently in BACKLOG.md `@fact:B065-AGREED-SHAPE` point (4)"
+            ]
+          },
+          "WEBHOOK-FAILURE-POSTURE": {
+            "v": "confirmed",
+            "ev": [
+              "the status vocabulary it uses is the one this server already speaks: `ApiError::bad_request` and `ApiError::internal` are in use at crates/vibe-index/src/server/routes/packages.rs:236 and :257, and the 401 path is `require_writeable` at :348",
+              "the 202-not-500 rule is argued from our own retry relationship rather than from an unmeasured vendor policy: the failing side is the index, and the sender's retry schedule is not ours to set. No claim is made here about what any particular git host does to a persistently failing hook — that is unmeasured and deliberately not asserted",
+              "the scope check is not decorative: the repository name is the one payload field the design acts on, which `WEBHOOK-PAYLOAD-IS-A-NOTIFICATION-NOT-DATA` establishes"
+            ]
+          },
+          "WEBHOOK-VS-ACTIONS": {
+            "v": "confirmed",
+            "ev": [
+              "the alternative is real today and needs no new code, which is what makes it a fair comparison rather than a strawman: the write API exists (`POST /v1/packages` → `upsert`, crates/vibe-index/src/server/routes/packages.rs:229) and accepts a bearer token via `require_writeable` at :348",
+              "its cost is the one the sibling fact measures: that token authorises every mutating route, so an Action per package repository multiplies the places a broad credential lives",
+              "the one capability it names for the Action — pushing the built index files — is genuine: that is a checkout-and-push operation, which is exactly what the auto-publication path does from the server side"
+            ]
+          },
+          "WEBHOOK-NOT-DECIDED": {
+            "v": "confirmed",
+            "ev": [
+              "the first open point is grounded, not vague: this document's own `@fact:INC-CLONES` already treats a new HEAD on main WITHOUT a new tag as a real case worth re-walking, which is precisely why `tags only` is not obviously right",
+              "the second is measured ignorance rather than an omission: `--from-gitverse` is a stub and says why in the flag's own help — crates/vibe-index/src/cli/reindex.rs:41-44, `their public API does not yet expose org-scoped repo enumeration`. Nothing in this repository establishes what that host's webhooks can do",
+              "marked `spec/plan` rather than `spec/done` because it records questions rather than settling them"
+            ]
+          },
+          "WEBHOOK-GUIDE-LIVES-HERE": {
+            "v": "confirmed",
+            "ev": [
+              "the owner's ruling of 2026-08-06, recorded in BACKLOG.md `@fact:B065-WEBHOOKS-AND-THE-GUIDE`: keep the setup guide in the specifications, changing it together with the webhook properties",
+              "the drift it cites is measured, not rhetorical — instance one: BACKLOG.md B-069 records the index's format documentation describing `by-name/<kind>/<name>.json` while the code fetches `by-name/<name>.json` (crates/vibe-registry/src/index_client.rs:187)",
+              "instance two: the owner guide's panel claim, closed as BACKLOG.md B-063 on 2026-08-06 — the guide asserted a gate step that `tools/self-check.sh` did not run",
+              "the mechanism the ruling relies on is structural rather than diligent: guide and contract are the same file, so one commit moves both or neither"
+            ]
+          },
+          "WEBHOOK-GUIDE-IS-NOT-YET-A-CLAIM": {
+            "v": "confirmed",
+            "ev": [
+              "the rule it invokes is the corpus law: PROP-043 `@fact:FENCE-IS-AN-EXAMPLE-UNTIL-MARKED` — a fenced block is an example until marked `@fact/code:`, and only then does it become a fact's body with an address and a verdict",
+              "the block below this fact carries no `@fact/code:` marker, so nothing in it is asserted; verified by the corpus scan, which reports 0 unmarked facts and no typed-anchor error over 278 files after this section landed",
+              "and the honesty is load-bearing here specifically: the walkthrough names a `--webhook-secret-file` flag that does not exist, which under any other marking would be a false claim of exactly the kind this section's own `WEBHOOK-GUIDE-LIVES-HERE` cites twice"
+            ]
+          },
+          "WEBHOOK-GUIDE-VERIFY-STEP": {
+            "v": "confirmed",
+            "ev": [
+              "the verification command it prescribes exists and takes the shape written: crates/vibe-index/src/cli/mod.rs:68 declares `Get(get::Args)` and crates/vibe-index/src/cli/get.rs:18-24 takes `data_dir`, `group`, `name` positionally — the example was corrected from a non-existent `show` verb to this one before the fact was judged",
+              "the indistinguishability it names is the same shape as the sibling fact `WEBHOOK-DELIVERY-IS-UNRELIABLE`, seen at setup time: a hook that never arrives and a hook that arrives with nothing to do produce identical silence at the index"
+            ]
           }
         },
         "verified_at": "2026-08-05T18:58:42Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS"
       }
     },
     "spec/modules/vibe-mcp/PROP-015-mcp-integration.md": {
