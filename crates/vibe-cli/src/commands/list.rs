@@ -87,11 +87,7 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
                 via_redirect: p.via_redirect.as_deref(),
                 content_hash: &p.content_hash,
                 boot_snippet: p.boot_snippet.as_deref(),
-                files_written: p
-                    .files_written
-                    .iter()
-                    .map(|f| f.to_string_lossy().to_string())
-                    .collect(),
+                files_written: p.files_written_posix(),
                 overridden: p.overridden,
                 features: p.features.iter().map(|s| s.as_str()).collect(),
                 subskills_active: p

@@ -114,9 +114,9 @@ impl McpTool for QueryPackageMcpTool {
             })
             .collect();
         let files: Vec<Value> = entry
-            .files_written
-            .iter()
-            .map(|p| Value::String(p.to_string_lossy().replace('\\', "/")))
+            .files_written_posix()
+            .into_iter()
+            .map(Value::String)
             .collect();
 
         Ok(json!({

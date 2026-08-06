@@ -479,6 +479,31 @@ impl Lockfile {
 }
 
 impl LockedPackage {
+    /// The package's `files_written`, rendered for machine-readable output:
+    /// project-relative, always `/`-separated, on every operating system.
+    ///
+    /// One function rather than one per surface. The CLI's `--json` and the
+    /// MCP tool print the same field and disagreed about it on Windows — the
+    /// CLI emitting native separators, the MCP normalising — so two surfaces
+    /// of one capability answered the same question differently depending on
+    /// which door the caller used. Forward slashes for both: this is
+    /// machine-readable output, and a backslash inside a JSON string is an
+    /// escaping hazard before it is anything else.
+    ///
+    /// ```
+    /// # use vibe_core::manifest::LockedPackage;
+    /// # fn demo(p: &LockedPackage) {
+    /// // Whatever the platform stored, the wire form is POSIX-shaped.
+    /// assert!(p.files_written_posix().iter().all(|s| !s.contains('\\')));
+    /// # }
+    /// ```
+    pub fn files_written_posix(&self) -> Vec<String> {
+        self.files_written
+            .iter()
+            .map(|p| p.to_string_lossy().replace('\\', "/"))
+            .collect()
+    }
+
     /// Produce a `PackageRef` pinned to this exact installed version —
     /// fully qualified, carrying the package's `group` and `kind`.
     pub fn as_package_ref(&self) -> Result<PackageRef> {
