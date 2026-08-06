@@ -4062,6 +4062,7 @@ dependencies = [
  "tracing",
  "vibe-core",
  "vibe-trace",
+ "vibe-workspace",
 ]
 
 [[package]]
