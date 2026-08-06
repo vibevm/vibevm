@@ -88171,10 +88171,51 @@
               "spec/boot/00-core.md exists; tools/self-check.sh carries `check_instruction_triple`, which byte-compares CLAUDE.md against AGENTS.md and GEMINI.md and fails on any divergence",
               "found: the exception describes the tree accurately, and the half that must not drift (the triple being identical) is mechanically gated - an exception with a checker on its riskiest edge."
             ]
+          },
+          "SURFACE-DISCIPLINE-IS-THE-OMNICHANNEL-FLOW": {
+            "v": "confirmed",
+            "ev": [
+              "the flow it defers to exists at the address it names: packages/org.vibevm.world/omnichannel/v0.1.0/spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.md:1 opens `# The Omnichannel Protocol {#root}`, so the `#root` anchor the citation uses resolves",
+              "and it is INSTALLED, not merely present: vibe.lock:16 carries the requirement `flow:org.vibevm.world/omnichannel@^0.1.0`, :36-39 the resolved entry, and the materialised copy is at vibedeps/flow-omnichannel",
+              "the division of labour the fact claims — the flow carries the rule, this section carries only vibevm's own floor — is borne out by the section's remaining four facts, which state a floor and never restate the rule"
+            ]
+          },
+          "VIBEVM-DECLARES-LIBRARY-CLI-MCP": {
+            "v": "confirmed",
+            "ev": [
+              "the one factual claim inside a target statement is checkable and true: `vibe tree` has a TUI. crates/vibe-cli/src/commands/tree/ carries a whole `tui/` subtree (input.rs, keymap_bridge.rs, copy/) against real terminal libraries, beside a separate `plain.rs` for the non-interactive rendering",
+              "the rest of the fact is a declaration of intent and its marker says so: `spec/plan`, not `impl/done`. Judging it `confirmed` asserts that this is what the project declares, which the sibling fact `THE-FLOOR-IS-A-TARGET-NOT-A-DESCRIPTION` makes explicit rather than leaving to be discovered"
+            ]
+          },
+          "LSP-AND-IDE-ARE-NOT-DECLARED": {
+            "v": "confirmed",
+            "ev": [
+              "the rule it leans on is really in the flow it cites, not assumed: packages/org.vibevm.world/omnichannel/v0.1.0/spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.md:75 — `@fact:AN-UNDECLARED-SURFACE-IS-NOT-A-DEBT`, `A project with no LSP has …`",
+              "so the inference holds mechanically: the floor above declares library + CLI + MCP + TUI-where-one-exists and does not name LSP or IDE, and by that rule their absence is a choice rather than an open debt",
+              "the owner's ruling of 2026-08-06 is the authority for the choice itself, recorded in the programme of that day under group В"
+            ]
+          },
+          "THE-FLOOR-IS-A-TARGET-NOT-A-DESCRIPTION": {
+            "v": "confirmed",
+            "ev": [
+              "the census it cites exists and is 235 lines: campaigns/packages-2026-09/harvest/g6-b047-surfaces-census.md",
+              "its headline number is derived there rather than asserted: :22-24 counts 29 top-level commands as every variant of `pub enum Command` cross-checked against the dispatch arms at crates/vibe-cli/src/main.rs:105-229, and :43 states `exactly 29 rows = 29 top-level surfaces`",
+              "the fact's purpose — warning a reader that the floor describes the target and not the tree — is corroborated by this session independently: the largest single counterexample it names, `vibe self`, is still a version manager living inside vibe-cli",
+              "perimeter: this verdict checks that the census exists and that its load-bearing count is derived as the fact reports. The 10-inside-vibe-cli and 5-MCP-tool splits are the census's own measurement and are not re-derived here"
+            ]
+          },
+          "THE-DIVERGENCE-HAS-ALREADY-BEEN-PAID-FOR": {
+            "v": "confirmed",
+            "ev": [
+              "the divergence was real and the repair is in the tree: crates/vibe-core/src/manifest/lockfile.rs:500 declares `pub fn files_written_posix(&self)` — one renderer",
+              "both surfaces now call it: crates/vibe-cli/src/commands/list.rs:90 `files_written: p.files_written_posix()` and crates/vibe-mcp/src/tools.rs:165 `.files_written_posix()`. Neither renders the path itself any more",
+              "the repair landed as commit 00401915, `fix(vibe-core): one renderer for the paths both surfaces print (Б6)`, on the date the fact names",
+              "so the fact's claim is not `two surfaces might diverge` but `they did, on Windows, on this field, until this commit` — and every clause of that is checkable"
+            ]
           }
         },
         "verified_at": "2026-08-04T23:36:33Z",
-        "verify_batch": "c3b-prop-000 + d1 + D14 + D20 + H4-stale-host + H6-stale-host-tail"
+        "verify_batch": "c3b-prop-000 + d1 + D14 + D20 + H4-stale-host + H6-stale-host-tail + DEBT-2026-08-06-C"
       }
     },
     "spec/common/PROP-006-operating-modes.md": {
