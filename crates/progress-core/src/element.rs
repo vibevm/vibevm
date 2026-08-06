@@ -205,16 +205,29 @@ pub fn decode_attrs(raw: &[(String, String)]) -> DecodedAttrs {
 
 /// Try to lex a shorthand starting exactly at `at` (which must point at `@`).
 ///
+/// Two forms are accepted. The **qualified** form `@status:<stage>[/<state>]`
+/// names its key, so it is self-identifying: nothing else in the `@` space can
+/// be mistaken for it, and no lookahead is needed to tell it from a foreign
+/// grammar. The **bare** form `@<stage>[/<state>]` is the original spelling,
+/// still read so that documents written before the qualified form keep
+/// parsing.
+///
 /// Refusals (return `None`): `@spec://…` (the foreign directive — `://`
-/// lookahead), any `@word` whose word is not a legal stage, a stage
-/// followed by `/notastate` (that is a candidate typo — the caller decides
-/// whether position makes it marker-shaped enough to flag).
+/// lookahead, which only the bare form needs), any `@word` whose word is not a
+/// legal stage, a stage followed by `/notastate` (that is a candidate typo —
+/// the caller decides whether position makes it marker-shaped enough to flag).
 pub fn lex_shorthand(s: &str, at: usize) -> Option<RawShorthand> {
     let rest = &s[at..];
     if !rest.starts_with('@') {
         return None;
     }
-    let body = &rest[1..];
+    // The qualified prefix is consumed first; everything after it is the same
+    // `<stage>[/<state>]` grammar the bare form uses, so the two share one
+    // reader rather than diverging into two.
+    let (body, prefix_len) = match rest[1..].strip_prefix("status:") {
+        Some(after) => (after, "status:".len()),
+        None => (&rest[1..], 0),
+    };
     let word_end = body
         .char_indices()
         .find(|(_, c)| !c.is_ascii_alphanumeric())
@@ -223,8 +236,10 @@ pub fn lex_shorthand(s: &str, at: usize) -> Option<RawShorthand> {
     let word = &body[..word_end];
     let stage = Stage::parse(word)?;
     let after = &body[word_end..];
-    // Foreign-grammar guard: `@spec://…` is not ours (PROP-043 §3.7).
-    if after.starts_with("://") {
+    // Foreign-grammar guard: `@spec://…` is not ours (PROP-043 §3.7). It can
+    // only bite the bare form — `@status:spec` has already named its key, so a
+    // `://` behind it would be a malformed token of ours, not someone else's.
+    if prefix_len == 0 && after.starts_with("://") {
         return None;
     }
     if let Some(after_slash) = after.strip_prefix('/') {
@@ -238,7 +253,7 @@ pub fn lex_shorthand(s: &str, at: usize) -> Option<RawShorthand> {
         return Some(RawShorthand {
             stage,
             state,
-            len: 1 + word_end + 1 + st_end,
+            len: 1 + prefix_len + word_end + 1 + st_end,
         });
     }
     // Bare shorthand: default state=work; the one exception is
@@ -251,7 +266,7 @@ pub fn lex_shorthand(s: &str, at: usize) -> Option<RawShorthand> {
     Some(RawShorthand {
         stage,
         state,
-        len: 1 + word_end,
+        len: 1 + prefix_len + word_end,
     })
 }
 
@@ -300,5 +315,45 @@ mod tests {
         assert!(lex_shorthand("@spec", 0).is_some());
         // Unknown words are not shorthand at all.
         assert_eq!(lex_shorthand("@vasya", 0), None);
+    }
+
+    #[test]
+    fn qualified_shorthand_reads_the_same_grammar() {
+        let sh = lex_shorthand("@status:impl/done", 0).expect("qualified");
+        assert_eq!((sh.stage, sh.state), (Stage::Impl, State::Done));
+        // The length must cover the prefix, or the caller keeps the tail of
+        // the token as prose and the fact's text silently grows.
+        assert_eq!(sh.len, "@status:impl/done".len());
+
+        let bare = lex_shorthand("@status:impl", 0).expect("qualified bare");
+        assert_eq!((bare.stage, bare.state), (Stage::Impl, State::Work));
+        assert_eq!(bare.len, "@status:impl".len());
+
+        let unknown = lex_shorthand("@status:unknown", 0).expect("qualified unknown");
+        assert_eq!(
+            (unknown.stage, unknown.state),
+            (Stage::Unknown, State::Hold)
+        );
+    }
+
+    #[test]
+    fn qualified_shorthand_needs_no_foreign_guard() {
+        // The bare form must refuse `@spec://…`; the qualified form cannot be
+        // confused with it in the first place, because the key is named.
+        assert_eq!(lex_shorthand("@spec://x#y", 0), None);
+        let sh = lex_shorthand("@status:spec/done", 0).expect("qualified spec");
+        assert_eq!((sh.stage, sh.state), (Stage::Spec, State::Done));
+
+        // A named key with a word that is not a stage is still not shorthand.
+        assert_eq!(lex_shorthand("@status:vasya", 0), None);
+    }
+
+    #[test]
+    fn qualified_shorthand_stops_at_the_token() {
+        // Trailing prose must not be eaten: the token ends where the grammar
+        // ends, and the rest is the sentence around it.
+        let s = "@status:impl/done and then some prose";
+        let sh = lex_shorthand(s, 0).expect("qualified");
+        assert_eq!(&s[sh.len..], " and then some prose");
     }
 }

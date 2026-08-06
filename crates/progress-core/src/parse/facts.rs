@@ -123,9 +123,15 @@ fn blockquote_prefix_len(t: &str) -> usize {
     i
 }
 
-/// The `##<ID>` fact anchor at the start of a span: `(id, content_start)`
-/// where `content_start` is the byte just past the id (for the marker
-/// position law). No id ⇒ content_start == span start.
+/// The fact anchor at the start of a span: `(id, content_start)` where
+/// `content_start` is the byte just past the id (for the marker position law).
+/// No id ⇒ content_start == span start.
+///
+/// Two spellings are accepted. The **qualified** form `@fact:<ID>` names its
+/// key, so it cannot be confused with a heading, with a foreign `@`
+/// annotation, or with an address. The **legacy** form `##<ID>` is the
+/// original spelling and is still read, so a document written before the
+/// qualified form keeps parsing.
 ///
 /// A blockquote paragraph is a countable unit like any other, so its `>`
 /// prefix is consumed before the anchor is looked for — a quoted normative
@@ -135,7 +141,13 @@ pub(super) fn take_fact_id(text: &str, s: usize, e: usize) -> (Option<String>, u
     let lead_ws = seg.len() - seg.trim_start().len();
     let lead = lead_ws + blockquote_prefix_len(&seg[lead_ws..]);
     let t = &seg[lead..];
-    if let Some(rest) = t.strip_prefix("##") {
+    // Longest opener first: `@fact:` and `##` cannot both match, but keeping
+    // the order explicit means adding a third spelling later cannot silently
+    // shadow one of these.
+    for opener in ["@fact:", "##"] {
+        let Some(rest) = t.strip_prefix(opener) else {
+            continue;
+        };
         let id_len = rest
             .chars()
             .take_while(|c| c.is_ascii_alphanumeric() || *c == '-' || *c == '_')
@@ -148,7 +160,7 @@ pub(super) fn take_fact_id(text: &str, s: usize, e: usize) -> (Option<String>, u
                 .is_none_or(|c| c.is_whitespace())
         {
             let id = rest[..id_len].to_string();
-            return (Some(id), s + lead + 2 + id_len);
+            return (Some(id), s + lead + opener.len() + id_len);
         }
     }
     (None, s)
