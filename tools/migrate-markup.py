@@ -187,7 +187,19 @@ def self_test() -> int:
     if twice != fwd:
         print(f"  FAIL idempotence:\n  {fwd!r}\n  {twice!r}")
         bad += 1
-    print(f"self-test: {len(cases) + 3} checks, {bad} failure(s)")
+    # CRLF survives the rewrite. Not reachable through `process` alone in a
+    # repo pinned to LF, so it is asserted on the transform directly: the
+    # count of endings must not change and the markers must still move.
+    crlf = "##A one @impl/done\r\n\r\n##B two @spec/work\r\n"
+    got = process(crlf, False, collections.Counter(), collections.Counter())
+    want = "@fact:A one @status:impl/done\r\n\r\n@fact:B two @status:spec/work\r\n"
+    if got.count("\r\n") != crlf.count("\r\n"):
+        print(f"  FAIL CRLF count: {got!r}")
+        bad += 1
+    if got != want:
+        print(f"  FAIL CRLF content: {got!r}")
+        bad += 1
+    print(f"self-test: {len(cases) + 5} checks, {bad} failure(s)")
     return 1 if bad else 0
 
 
@@ -210,7 +222,15 @@ def main() -> int:
     for p in targets(root):
         scanned += 1
         try:
-            text = p.read_text(encoding="utf-8")
+            # `newline=""` on BOTH ends. This repository pins `eol=lf` for
+            # every text file, so today the translation would be a no-op —
+            # but Python's default is to translate on read AND on write, and
+            # a checkout that ever hands out CRLF would have every line
+            # ending silently rewritten. Git hides that in `diff` because it
+            # normalises endings when comparing, so the damage would surface
+            # only as a content hash that moved for no visible reason.
+            with p.open("r", encoding="utf-8", newline="") as fh:
+                text = fh.read()
         except UnicodeDecodeError:
             stats["unreadable"] += 1
             continue
@@ -218,7 +238,8 @@ def main() -> int:
         if new != text:
             changed.append(p)
             if a.apply:
-                p.write_text(new, encoding="utf-8", newline="")
+                with p.open("w", encoding="utf-8", newline="") as fh:
+                    fh.write(new)
 
     verb = "reverse" if a.reverse else "forward"
     mode = "APPLIED" if a.apply else "dry run"
