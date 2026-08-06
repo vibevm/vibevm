@@ -1,200 +1,183 @@
-# CONTINUE — cold-resume snapshot (2026-08-06, wind-down №14: бэклог осушается дальше, заведён P1)
+# CONTINUE — cold-resume snapshot (2026-08-06, wind-down №15: the course changed)
 
-**Не цитируй числа отсюда — меряй:**
+**Do not quote numbers from here — measure:**
 `python campaigns/packages-2026-09/tasks/summary.py` ·
-`python campaigns/packages-2026-09/tasks/drift-registry.py` ·
-`python campaigns/packages-2026-09/tasks/text-stability.py`.
-`spec/WAL.md` переписан этой же сессией и **суперсидит** этот снапшот.
+`python campaigns/packages-2026-09/tasks/judging-debt.py` ·
+`python campaigns/packages-2026-09/tasks/text-stability.py` ·
+`python campaigns/packages-2026-09/tasks/drift-registry.py`.
+`spec/WAL.md` is rewritten by this same wind-down and **supersedes** this file.
 
 ## TL;DR
 
-Курс владельца прежний — **сперва осушить бэклог**. Закрыто **две строки**
-(B-008, B-045) и **старейшая находка аудита** (`-01`, открыта с 2026-05-23).
-Строк 50 → 48.
+**The course changed, and that is the single most important thing to know.**
+The standing course was «drain the backlog first». A long owner conversation on
+2026-08-06 **authorised eighteen work items** while the session closed **one**
+backlog row. It is a new programme, not a drain.
 
-**Заведён P1 и он ждёт вас** — треть вердиктов кампании не имеет собственных
-доказательств. Подробности ниже, раздел «Ждёт владельца», пункт 1.
+**Everything from that conversation — the items, the order, the reasoning, the
+rejected alternatives and the three places the boss was wrong — is in one file:**
 
-**Четыре измерения соврали за сессию, и все четыре — греповые.** Одно чуть не
-забраковало верную работу воркера. Все записаны там, где их прочтёт следующий.
+> ### 📄 [`spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md`](spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md)
+>
+> **Read it first and in full. It is the plan.** Order fixed by the owner:
+> **Б (hygiene) → В (taxonomy) → А (index)**.
 
-## Где стоит работа
+Nothing blocks. The panel was green at the last read. The tree is clean.
 
-- Ветка `main` @ `c38725d8` (+ чекпойнт-коммиты этого wind-down), **11
-  коммитов работы за сессию**.
-- Дерево чистое, `.wt/` пуст, все отчёты воркеров в архиве, `meta.md` написаны.
-- **Панель:** прогон запущен последним действием сессии; **хвост обязан быть
-  прочитан до раскатки** — если он не зелёный, чините вперёд, не откатывайте.
-- `gitverse` синхронен до `586e7c7` (два коммита прошлой сессии + одиннадцать
-  этой не разосланы) — прогнать `cargo xtask mirror`.
-- **`github` НЕДОСТИЖИМ** — ssh на `git@github.com` заворачивается на
-  `127.92.0.49`. Не расхождение, форсить нельзя. Единственное, что требует
-  ваших рук.
-- Активного блокера НЕТ.
+## What this session built
 
-## ПЕРВОЕ ДЕЛО НОВОЙ СЕССИИ
-
-**Пересканировать корпус кампании.** Эта сессия правила
-`spec/modules/vibe-registry/PROP-008-qualified-naming.md` — документ с **92
-вердиктами**, — и кэш кампании об этом не знает. Все три measurement-команды
-до пересканирования отвечают про кэш, а не про дерево. `text-stability.py`
-теперь **сам об этом предупреждает** (это одна из находок сессии), но сделать
-скан всё равно надо: `vibe progress scan` / `mirror`, затем пере-суд §2.6 —
-там одна изменённая формулировка (`##SHORT-AT-BOUNDARY`) и один новый факт
-(`##INSTALLED-STATE-RESOLVES-LOCALLY`).
-
-## Что закрыто этой сессией
-
-**Две строки бэклога и одна находка аудита:**
-
-| что | суть |
+| | |
 |---|---|
-| **B-008** | `vibe-index` — единственный из двадцати участников воркспейса без объявления лицензии, при норме в `PROP-000 §3` и «фактe» в леджере владельца. Плюс **чекер**, которого у нормы не было ни в панели, ни в конформе, ни в `vibe check` |
-| **B-045** | префикс вида наконец сверяется (`KindMismatch` + мёртвый код возврата 4 ожил); `uninstall`/`update` берут короткое имя из lockfile без сети; redirect-глаголы требование сохранили **с записанной причиной**; цитаты переехали |
-| **AUDIT `-01`** | e2e пути по умолчанию: реестр только в машинном доме, `vibe init` без флагов, и проверка «проектный манифест пуст» — она и не даёт тесту стать копией существующего |
+| **B-032 closed** | choosing the planning carrier is a rule now — the criterion where placement is decided, the composition half in the plan's own format, one pointer between them, citations moved, row deleted |
+| **B-019(б) slice 1** | **56 command nodes** in the map (`vibe` 29, `vibe-index` 14, `xtask` 13), recognised by clap's own derive so a new subcommand cannot be added without appearing |
+| **`via_redirect`** | a docblock promised two surfaces and had neither; one half made true, the other corrected |
+| **fact lifecycle + debt clearance** | PROP-043 §10.1/§10.2 — what happens to a fact when it is edited, added or removed, and how the debt is cleared incrementally |
+| **judging debt is measurable** | `tasks/judging-debt.py`, and every session reports it on resume |
+| **B-063, B-064, B-065, B-066 filed** | markup validation in no gate · the `vibedeps` leak in the engine · the org cache · index auto-publication (the owner's blocker) |
+| **`AUDIT` -04, -14, -10 re-measured** | every number moved |
 
-**Построено попутно:** цензус поверхностей хоста (B-047, первый пункт);
-предупреждение в `text-stability.py`; шаг панели про лицензии.
+## The one thing to internalise before touching anything
 
-## Не-очевидные находки
+**Nine numbers failed to reproduce this session, and not one because of a bad
+pattern.** Every time, the perimeter of the measurement was narrower than the
+perimeter of the claim:
 
-- **Код обещал больше, чем делал, в ЧЕТЫРЁХ местах сразу.** Спека PROP-008,
-  докблок `PackageRef`, `docs/commands/uninstall.md` и `update.md` — все
-  описывали сверку вида и короткую форму аргумента; типа `KindMismatch` не
-  было ни в одном исходнике, а код отбивал ту самую форму, которую доки
-  обещали. Стройка сделала все четыре правдой разом.
-- **Греп соврал четыре раза, и каждый раз по-своему.** *(i)* `"command":"cargo`
-  не совпал, потому что воркер пишет `cd … && cargo …` — чуть не отправил
-  отказ верной работе; *(ii)* шаблон без проверки квалификации посчитал
-  `flow:org.vibevm.world/wal` неквалифицированным; *(iii)* `grep -P` в этой
-  локали ОТКАЗЫВАЕТСЯ работать, пишет об этом в поток, который конвейер
-  выбрасывает, и возвращает чистый ноль; *(iv)* шаблон `**Decision:**` нашёл
-  24 секции там, где их 146, потому что в этом дереве метка пишется
-  `**Decision.**` — с точкой. Первый записан в закон транспорта, остальные — в
-  соответствующие строки аудита и бэклога.
-- **Бюджет длины файла попытался выбрать форму публичного типа.** Воркер
-  схлопнул структурный вариант ошибки в строку, чтобы уложить `lib.rs` в 600.
-  Замер был верен, вывод — нет. Настоящий шов оказался в самом типе ошибки:
-  `SolveError` уехал в свой модуль, `lib.rs` 599 → 523 при базовых **590** —
-  то есть файл стоял в десяти строках от бюджета ещё до правки.
-- **Инструмент свежести сравнивал два поля внутри кэша.** Правка спеки с 92
-  вердиктами дала «0 stale, 0 к пересуду». Замер по дереву: 273 файла из 274
-  совпадают с диском, ровно один — нет, и это он.
+- a census of one binary's command surface taken as a count of map nodes (29);
+- then a measurement scoped to `crates/` (43) — which missed a third binary
+  living outside it;
+- then the map itself (71) — of which **29 were false**, because two crates
+  declare `pub enum Command` and the join matched on type name alone;
+- **56** once the join went crate-local. One reading in between was **0**, and
+  that was a stale build fingerprint, not a bug — `cargo clean -p <crate>`.
 
-## Гейты и воркеры
+Same shape elsewhere: 57 suppressions were 55 (a comment mentioning the
+attribute counted as one); «52 carry a reason» reproduces under no reading;
+a doc sweep's count is wrong **for the third time** against a directory
+unchanged since July; the four-layer architectural model has **zero**
+occurrences in the package the backlog said it lived in.
 
-**Воркер опроверг босса один раз:** шестая «мис-цитата» оказалась законной —
-`##SHORT-CLI-ONLY` действительно живёт в §2.4 и действительно говорит то, что
-цитата утверждает. Пакет считал шесть, их пять.
+**And the boss was wrong three times in front of the owner** — the primary
+registry is GitHub, not GitVerse; the roster argument for a new package kind
+was false because the boot lane already answers it; the four-layer model does
+not belong in the code discipline. All three are recorded as corrections in the
+programme file, because a plan that hides its wrong turns invites them again.
 
-**Босс не принял работу один раз** — и это первый отказ за кампанию, где
-довод воркера был ВЕРЕН, а вывод из него нет. Формулировка отказа назвала
-принятое первым, потом ровно один неверный вывод, потом дословный текст для
-двух разделов отчёта; доработка вернула всё дословно, включая признание.
+## Where work stands
 
-## Карта репозитория (верхний уровень)
+- Branch `main`, tree clean, `.wt/` removed, every worker report archived with
+  its `meta.md` under `C:\Users\olegc\git\v\cache\agents\sorted\`.
+- **Panel green** at the last read (`self-check: all green`, exit 0).
+- `vibe check` **clean** — the six freshness warnings are gone after the
+  reinstall.
+- **Corpus:** 275 files, 0 unmarked facts. **Judging debt: 47 unjudged facts in
+  4 files, 5 orphan verdicts, 4 stale files** — all written this week; measure
+  it, do not quote it.
+- **`gitverse` is behind**; **`github` is UNREACHABLE** — ssh to
+  `git@github.com` is redirected to `127.92.0.49`. Not a divergence, must not be
+  forced. **The only thing needing the owner's hands.**
 
-- `spec/` — PROP/FEAT-контракты (`common/`, `modules/`), `boot/` (PROP-009),
-  `design/`, `terraforms/`, `WAL.md`.
-- `campaigns/packages-2026-09/` — активная кампания: `harvest/`, `tasks/`
-  (`summary.py`, `drift-registry.py`, `text-stability.py`, `merge-verdicts.py`),
-  `run/` (генерится; `run/mirror/` **gitignored**), `SUBAGENT-LAUNCHERS.md` +
-  `SUBAGENT-MODE.toml`.
-- `packages/org.vibevm.ai-native/` — дисциплина: `core-ai-native/v0.8.0/`
-  (движок, вендорится ×6 = 51 пара), `{rust,go,typescript}-ai-native-lang/`,
-  `*-mcp/`.
-- `crates/` — хост, **19 крейтов + xtask = 20 участников воркспейса** (все
-  двадцать теперь объявляют лицензию, и это проверяется).
-- Корень: `BACKLOG.md` (48 строк), `TOOLING-MAP.md`, `AUDIT.md`, `TASKS.md`,
-  `ROADMAP.md`, `specmap.json` (под гейтом), `specmap.toml`, `conform.toml`,
-  `schemas/`, `CLAUDE.md`/`AGENTS.md`/`GEMINI.md` (байт-идентичны).
+## Non-obvious findings worth carrying
 
-## Действующие решения (в силе)
+- **A claim inside a fenced code block cannot be judged.** The owner guide's
+  parenthetical «this is in the gate panel» was false and survived because it
+  sat inside a ```bash block, where no anchor reaches. **Second instance of this
+  law in one week.** What to do about it is named, not answered.
+- **A `cd` before `( claudez -c … )` sends the correction to the repository root
+  instead of the worker** — conversations are keyed by (state dir, cwd), and the
+  resumed stray thread holds write access to the real tree. Caught at the
+  session-start hook, zero tool calls, nothing touched. The `cd` goes **inside**
+  the parentheses.
+- **The seal gate refuses a file carrying any unjudged marker** — correct, and
+  today the only mechanism that makes an added fact visible at all.
+- **«Stale file» is not «a judged fact moved»** — a file goes stale when facts
+  are merely added. A corpus can carry stale files and owe zero re-judgements.
+- **Editing a spec document moves the committed map.** The recorded law spoke of
+  a new file and a new edge; a five-row table edit does it too, and cost a red
+  panel to learn.
+- **The same five orphan verdicts were measured in July**, written into a phase
+  batch plan, and were still untouched in August — filed in the one place the
+  project's own rules call disposable.
 
-- **План — не источник истины.** Строка умирает вместе с коммитом, делающим её
-  неправдой; закрытие есть переезд содержимого **и цитат** в спеку.
-- **Перед реализацией плана измеряют, что уже реализовано.** За три дня это
-  остановило девятнадцать строек построенного.
-- **Греп — измерение, которое врёт в обе стороны.** Не нашёл — тоже не факт.
-- **Бюджет 600 строк — нейтральный ключ.** Он не выбирает форму типа; мерит
-  босс и только после `cargo fmt`.
-- **`implements` — утверждение о коде, который работает.**
-- **Один закон — одна реализация**; расхождение двух молчит по природе.
-- **Помечать, а не гасить**; **сигнал, а не стена**; **лечи молчание**.
-- **BUILD-FIRST**; **T/F/G вне добра**; версии не бампать до публикации.
-- **Делегация:** claudez-воркеры; вердикты, ревью и коммиты — босс.
-- **Роллаут — ТОЛЬКО `cargo xtask mirror`**, fast-forward, никогда `--force`.
-- **После правки движка или крейта стека — `cargo xtask sync-engines`**
-  отдельным шагом. *(Эта сессия движков не трогала — только хостовые крейты.)*
+## Repository map
 
-## Цепочка последних коммитов
+- `spec/` — PROP/FEAT contracts (`common/`, `modules/`), `boot/`, `design/`,
+  `terraforms/` (**the programme lives here**), `WAL.md`.
+- `campaigns/packages-2026-09/` — the live campaign: `harvest/`, `tasks/`
+  (`summary.py`, `judging-debt.py`, `text-stability.py`, `drift-registry.py`,
+  `merge-verdicts.py`), `run/`, `SUBAGENT-LAUNCHERS.md` + `SUBAGENT-MODE.toml`.
+- `packages/org.vibevm.ai-native/` — the discipline: `core-ai-native/v0.8.0/`
+  (engines, vendored ×6 = 51 pairs), `{rust,go,typescript}-ai-native-lang/`,
+  `*-mcp/`. `packages/org.vibevm.world/` — the cross-cutting flows.
+- `crates/` — the host, 19 crates + xtask.
+- Root: `BACKLOG.md` (51 rows), `TASKS.md`, `AUDIT.md`, `TOOLING-MAP.md`,
+  `ROADMAP.md`, `specmap.json` (gated), `CLAUDE.md`/`AGENTS.md`/`GEMINI.md`
+  (byte-identical).
+
+## Decisions in force
+
+- **A plan is temporary.** When executed it must be deletable with nothing
+  breaking. Content moves **into the specifications** on closure; statements
+  point at spec elements, never at plan rows; tombstones inside a plan are
+  temporary process support. *(Owner, 2026-08-06 — the ruling that reshaped the
+  cleanup and produced the programme file.)*
+- **Content moved into a spec is judged in the same pass that moves it.**
+- **Measure before building** — nineteen builds of already-built things stopped
+  in three days.
+- **A grep lies in both directions**, and «found nothing» is not a fact either.
+- **A file-length budget never chooses the shape of a public type.**
+- **`implements` is a claim about running code.**
+- **Mark, don't suppress · signal, not a wall · cure the silence.**
+- **Rollout is `cargo xtask mirror` only**, fast-forward, never `--force`.
+- **After any engine or stack-crate edit — `cargo xtask sync-engines`** as its
+  own step; a new `scope!` file or `#[verifies]` edge — `cargo xtask specmap` in
+  the same landing.
+- **Delegation:** claudez workers execute; verdicts, review and commits are the
+  boss's.
+
+## Recent commits
 
 ```
-c38725d8 fix(campaign): the stability report says when its zero is about the cache, not the tree
-4b52b5f0 docs(audit): the doc sweep's blocker is discharged, and its shape changed (-10)
-64d66c64 feat(vibe-resolver): the kind prefix is finally checked, and two verbs stop demanding a group (B-045)
-1892b8af docs(campaign): the host's surfaces are measured — ten capabilities have no home outside the CLI (B-047)
-9218605a docs(audit): a third of the campaign's verdicts carry no evidence of their own (P1)
-d3c77ff4 docs(backlog): the ADR practice tripled in five days while the row waited (B-007)
-0092e7b2 docs(audit): the doc-requalification sweep is four times what the row claimed (-10)
-bd90da81 docs(campaign): a grep that finds nothing is not a measurement either
-e1373944 test(vibe-cli): the default install path gets the e2e it never had (AUDIT -01)
-3e04256e build(self-check): the licence norm gets the checker it never had
-4db4fcc6 fix(vibe-index): the one crate that declared no licence joins its eighteen siblings
-a66b87a5 docs(wal): session-end checkpoint — wind-down №13
-a9a3fa74 docs(continue): cold-resume checkpoint — the backlog drains, group one closes
-ff2079e1 docs(backlog): say how to read a file that is mid-migration
-586e7c7a fix(xtask): the mirror fan-out stops calling an unreachable host a divergence
-30128855 style(specmap): rustfmt the JTD scanner's tests, authored and vendored
-bf81a16e chore(campaign): the generated-code rule is re-judged against the build that finished it
-0f12992e docs(specmap): the generated-code rule stops describing an unbuilt half (B-060)
-0e990eee fix(specmap): the seven wire contracts enter the map, and the exemption becomes true
-e9e60b94 chore(packages): vendor the JTD scanner across the six copies
-e0fa42f2 feat(specmap): the designated taggable unit becomes readable — a JTD scanner (B-060)
-d605214c docs(audit): the doc requalification sweep is smaller and not independent (-10)
-e3a009fc docs(audit): the dead-code row is one subsystem ruling, not 57 judgements (-04)
-27c26979 fix(vibe-core): the manifest parse error stops discarding its own diagnosis (AUDIT -15)
-f55c906f chore(campaign): the implements rule earns three verdicts and the index note is corrected
+658ab296 docs(plan): the judging-debt question and its answer join the programme
+b3a27b77 docs(session): a resume reports the judging debt, and three index rows are filed
+95e25cbc feat(progress): the life of a fact under an active campaign, and how its debt is cleared
+4ec11b45 docs(plan): the owner's programme of 2026-08-06, ordered and with its reasoning
+90a12d77 chore(vibedeps): the installed copies catch up with a day of package edits
+e24a2e24 docs(backlog): slice 1 of the command node is built, and what it cost (B-019)
+95750706 feat(specmap): a command becomes an entity of the map (B-019б, slice 1)
+86f110e1 docs(design): the command-node acceptance is 43, and the 29 was mine (B-019б)
+65d28e10 docs(campaign): a cd before the correction sends it to the host, not the worker
+be470065 chore(specmap): the map catches up with two spec edits, and the panel is why
+8e101ac7 docs(backlog): the false claim survived because a fence cannot be judged (B-063)
+03152b8f docs(backlog): markup validation is in no gate, and the guide said it was (B-063)
+579e8a48 fix(design): five table rows in the command-node design carried no marker
+9efc9293 fix(vibe-cli): a docblock promised two surfaces for the redirect stub and had neither
+7573c407 docs(tasks): the second sitting of the backlog drain, and what it left the owner
+d85a4a39 docs(audit): the doc sweep's count is wrong for the third time (-10)
+92bd616f docs(audit): the index-schema question is not about the gate (-14)
+b6dfbfa3 docs(audit): three of the dead-code row's four numbers do not reproduce (-04)
+0f80a804 feat(flows): choosing the planning carrier becomes a rule, and B-032 closes
+c75d153e docs(campaign): what B-032 asks for, measured before anyone builds it
+21cc80ce docs(backlog): part (b) gets its design, and part (a)'s number turns out to have moved
+a9098b53 docs(backlog): nothing in a manifest says a package is an AI-Native language (B-046)
+8560adfc docs(backlog): the surface norm's proposed home does not exist (B-047)
+27df675b chore(specmap): the command-node design enters the map
+83adc55a docs(design): what it costs to make a command an entity of the map (B-019б)
+78aa1ed7 docs(audit): the P1's second question gets a measured unit cost (2026-08-06-01)
+34dfb52f chore(campaign): the three facts that moved with the kind-check build are re-judged
 ```
-
-## Ждёт владельца
-
-1. **AUDIT `2026-08-06-01`, P1 — НОВОЕ, и это главное.** Треть вердиктов
-   кампании (**4 151 из 11 862**) имеет единственным доказательством абзац,
-   разделяемый с другими вердиктами. У `PROP-008` — **90 якорей на один
-   абзац**, и в нём была ложная фраза: «kind validated (KindMismatch)» при
-   отсутствующем типе. Тот же смысл кампания судила `drift` четыре раза на
-   пакетной стороне, с указанием файла и строки. Три вопроса в `AUDIT.md`:
-   считать ли такие вердикты в итог `confirmed`; требовать ли хотя бы одну
-   ссылку на каждый `confirmed` факт (это переведёт ~4 151 в «непроверено»
-   разом); пересуживать ли 90 якорей `PROP-008` сейчас.
-2. **`github` недостижим** — единственное, что требует ваших рук.
-   `ssh -vT git@github.com 2>&1 | head -5` и
-   `git config --get-regexp 'url\..*\.insteadof'`.
-3. **B-050** — dylint для Rust, вопрос nightly-пина. Рулинг, не стройка.
-4. **AUDIT `-14`** — контракт индекса единственный без схемы и без гейта
-   кодогенерации: чеканить `index-entry.jtd.json` или записать, почему
-   prose-first.
-5. **AUDIT `-04`** — одно решение про незаконченную TUI-подсистему (41 из 57
-   подавлений там), а не 57 суждений.
-6. **AUDIT `-10`, переформулирована** — свип оказался не «исправить 169
-   ошибок»: доки описывали ЗАКОННУЮ форму. Вопрос теперь редакторский: где
-   документация учит полной форме, а где короткая — честный пример. 27 файлов.
-7. **Миграция бэклога** — удалять ли строки, закрытые ДО рулинга.
-8. Прежние: гейт выхода фазы E; **B-007** (жанр ADR — премиса пересчитана,
-   доля утроилась), **B-015**, **B-017**, **B-020**, **B-024**;
-   AUDIT `-06`/`-07`, `-11`, `-13`, райдер `2026-06-12-01`.
 
 ## Quick-start
 
 ```sh
 python campaigns/packages-2026-09/tasks/summary.py
-python campaigns/packages-2026-09/tasks/text-stability.py   # теперь предупреждает, когда его ноль про кэш
-bash tools/self-check.sh              # exit настоящий, хвостом; фоном — bare-форма, БЕЗ параллельных vibe-команд
+python campaigns/packages-2026-09/tasks/judging-debt.py    # what the corpus owes
+python campaigns/packages-2026-09/tasks/text-stability.py
+bash tools/self-check.sh              # real exit, read the tail; bare form in background
 cargo xtask specmap --check
-cargo xtask sync-engines              # после ЛЮБОЙ правки движка или крейта стека
-cargo xtask conform check
-cargo xtask mirror                    # раскатка, fast-forward-only
+cargo xtask sync-engines              # after ANY engine or stack-crate edit
+cargo xtask mirror                    # rollout, fast-forward only
 ```
 
-_WAL — канон живого состояния; при расхождении верить ему, не этому файлу._
+_The WAL is the canonical living state; believe it over this file where they
+diverge. The programme file is the plan; believe the owner's rulings in it over
+anything derived._
