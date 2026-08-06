@@ -244,6 +244,28 @@ or end of a paragraph's text, never mid-sentence, never inside code or links. @s
      closed up — but it reads like one to a markdown linter, to a parser
      outside CommonMark, and to the eye. `@fact:` states what the token is
      instead of relying on a reader knowing what it is not. @status:impl/done
+   - @fact:FENCE-IS-AN-EXAMPLE-UNTIL-MARKED **A fenced block is an example, not an assertion** *(owner,
+     2026-08-06)*. By default nobody is asked to believe what a fence says
+     and no agent is asked to run it. Marking the fact `@fact/code:<ID>`
+     makes the fence **part of that fact's body**: the fact then has an
+     address, a verdict, and it comes due for re-judgement when the block's
+     text moves. @status:impl/done
+   - @fact:WHY-A-FENCE-NEEDED-THIS **Why the type exists.** A fence carries no anchor of its own and
+     cannot be given one — it is a payload, copied out and pasted elsewhere,
+     and an anchor written inside would travel with the copy. Measured over
+     this corpus: **372 fenced blocks carry zero facts** while all 7255 text
+     blocks carry theirs, so a claim inside a fence belonged to nobody, could
+     not be judged, and could not be made stale. Two false statements
+     survived exactly that way in one week. @status:impl/done
+   - @fact:ONE-OBJECT-TYPE-IS-IMPLEMENTED **The known type set is `code`, and that is a measurement.**
+     Fences are the only block kind falling outside fact bodies: the corpus
+     holds no images at all, and 891 of 908 table rows and 84 of 96 block
+     quotes already sit inside a fact. A type naming a block kind that is
+     already covered would address nothing. @status:impl/done
+   - @fact:UNKNOWN-OBJECT-TYPE-IS-AN-ERROR **An unknown type is a `check` error**, as are a typed anchor
+     that is not its block's last fact and one with no matching block below
+     it. Ignoring an unimplemented type would let the grammar promise what it
+     cannot do, and the author would learn years later that nothing read it. @status:impl/done
    - @fact:FACT-ID-GRAMMAR `<ID>` is
      `[A-Za-z][A-Za-z0-9_-]*`; the unit is then addressable as
      `spec://…/<doc>#<ID>`, sharing one address space with the heading

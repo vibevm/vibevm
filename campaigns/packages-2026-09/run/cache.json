@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T07:41:20Z",
+  "updated_at": "2026-08-06T08:04:00Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -103842,7 +103842,7 @@
       }
     },
     "spec/modules/vibe-progress/OWNER-GUIDE.md": {
-      "content_hash": "bcbc6d8efeb11a13046942119b174fae6d23b0291bfa1b6240a1e2a4e6c5e63b",
+      "content_hash": "c66ba599d18e7b984da22f93f95fefbd846bc3fb54d2bf736e7b488af873047a",
       "rollup": {
         "explicit": [
           "doc",
@@ -103856,11 +103856,11 @@
           "doc",
           "done"
         ],
-        "marker_count": 70,
-        "fact_count": 69,
+        "marker_count": 71,
+        "fact_count": 70,
         "unmarked_facts": 0
       },
-      "marker_count": 70,
+      "marker_count": 71,
       "unit_count": 9,
       "issue_count": 0,
       "campaign": {
@@ -104234,7 +104234,7 @@
       }
     },
     "spec/modules/vibe-progress/PROP-043-progress-markup.md": {
-      "content_hash": "ffa12a7384290bfb4516b653dcb009848c5c59c9951d9e6a0c2bac30faa0fe43",
+      "content_hash": "fd2bb091208c2daf291c9d1566df1a71518b9da7ce9945e11736cd51f9f4c079",
       "rollup": {
         "explicit": [
           "impl",
@@ -104248,11 +104248,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 187,
-        "fact_count": 186,
+        "marker_count": 191,
+        "fact_count": 190,
         "unmarked_facts": 0
       },
-      "marker_count": 187,
+      "marker_count": 191,
       "unit_count": 29,
       "issue_count": 0,
       "campaign": {
