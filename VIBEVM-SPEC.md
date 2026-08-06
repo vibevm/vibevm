@@ -175,7 +175,9 @@ Use these terms and only these terms in code, in documentation, in error message
 
 ### 4.1 The installable kinds {#four-installable-kinds}
 
-vibevm packages come in five kinds. A user installs them with `vibe install <kind>:<name>`. The kind set is a closed register that grows only by an owner-sanctioned amendment to this section — it is terminology discipline, not an architectural ceiling (the `PackageKind` enum's own documentation records that extending it is a spec change, not a design change). `app` — installable, runnable graphical applications — is anticipated as a future kind and deliberately not yet specified.
+vibevm packages come in six kinds. A user installs them with `vibe install <kind>:<name>`. The kind set is a closed register that grows only by an owner-sanctioned amendment to this section — it is terminology discipline, not an architectural ceiling (the `PackageKind` enum's own documentation records that extending it is a spec change, not a design change). `app` — installable, runnable graphical applications — is anticipated as a future kind and deliberately not yet specified.
+
+*Amendment, owner ruling of 2026-08-06 (recorded on his instruction): `lang` is added as the sixth kind. The register was five until that date.*
 
 **`flow`** — A process discipline. Modifies how the human-AI development process works in this project. Examples: WAL discipline, sync-from-code reconciliation, conventional-commits enforcement, REVIEW marker conventions. A flow contributes content to `spec/flows/<name>/` and may register one or more snippets in `spec/boot/`.
 
@@ -184,6 +186,14 @@ vibevm packages come in five kinds. A user installs them with `vibe install <kin
 **`stack`** — A technology context. Provides the concrete mappings from abstract feat capabilities to a specific tech stack. Examples: rust-cli, electron-local, nextjs-postgres, tauri-rust. A stack contributes content to `spec/stacks/<name>/`. A project may have multiple stacks installed but typically one is active per build.
 
 **`tool`** — A reusable script, prompt, or utility that nodes in the build graph may invoke. Examples: a code formatter wrapper, a test runner adapter, a structured-output renderer. Tools are not workflows; they are *capabilities used by workflows*. (Tools are reserved as a kind for future use; v1 does not require them. Document the slot, do not implement.)
+
+**`lang`** — Guidance for writing in something. A `lang` package explains *how to write* in a language, a notation, or a format — the idioms, the constraints, the shape a project's authors should follow. Examples: the AI-Native language guides (Rust, TypeScript, Go); `github-flavored-markdown` would be one, explaining how to write markdown; a stack demanding a particular way of writing C++ would require a `lang` package describing that way. The genre is wider than any one discipline, which is why it is a kind rather than a convention inside one.
+
+*Why it is separate from `stack` (owner ruling 2026-08-06).* Before this amendment `kind = "stack"` carried two genres at once: language guidance, and family aggregators containing nothing but pinned versions of three other packages. Two genres under one word means the word says nothing. After the split, `lang` means language guidance and `stack` means a family bundle, and each word means one thing.
+
+*How a package is recognised as an AI-Native language* (owner sub-ruling, same day): **by its dependency on the discipline core**, never by its group. A third party can then publish its own AI-Native language in its own group and be recognised — recognition by group would have made the discipline a closed club.
+
+*What this does NOT answer.* The kind does not tell an agent what it can invoke. The boot lane already names which language disciplines are installed — each language package contributes a snippet — so the roster question is answered before it is asked. What binaries and servers those languages brought is a different question, and `vibe tools` is its answer.
 
 **`mcp`** — An agent-server package. Its primary deliverable is one or more Model Context Protocol servers, declared in `[[mcp_server]]` tables (legal only in this kind) and delivered as [PROP-025](spec/modules/vibe-workspace/PROP-025-binary-delivery.md) binaries built in the package's own slot. An `mcp` package that serves another package's toolchain (a language stack's discipline tools, say) MUST require that package with an exact `=X.Y.Z` pin, so the served engines and the consumer's gates resolve to one version set — "one engine, one truth" enforced by the resolver, not by protocol. Examples: rust-ai-native-mcp (the AI-Native Rust discipline gates + type oracle over MCP), typescript-ai-native-mcp. Normative spec: PROP-027.
 

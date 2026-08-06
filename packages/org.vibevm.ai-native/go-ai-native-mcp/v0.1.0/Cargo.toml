@@ -1,7 +1,7 @@
 # org.vibevm.ai-native/go-ai-native-mcp — the Go discipline served over
 # MCP (PROP-027). This package vendors the stack's toolchain crates
 # byte-identically (the exact-pin law: `=0.1.0` on
-# stack:org.vibevm.ai-native/go-ai-native-lang holds the vendored engines
+# lang:org.vibevm.ai-native/go-ai-native-lang holds the vendored engines
 # and the consumer's installed gates to ONE resolved version set) plus
 # the neutral mcp-core transport. Never edit vendored copies — the fix
 # surface is the authored crate in the stack / core package.

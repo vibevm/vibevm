@@ -171,7 +171,7 @@ pub fn slot_package(path: &str) -> Option<(&'static str, String)> {
         .strip_prefix("vibedeps/")
         .or_else(|| path.strip_prefix("vibedeps\\"))?;
     let slot = rest.split(['/', '\\']).next()?;
-    for kind in ["flow", "feat", "stack", "tool", "mcp"] {
+    for kind in ["flow", "feat", "stack", "tool", "mcp", "lang"] {
         if let Some(name) = slot.strip_prefix(&format!("{kind}-")) {
             return Some((kind, name.to_string()));
         }

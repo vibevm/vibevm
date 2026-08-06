@@ -85,7 +85,7 @@
 ## 6. Package identity {#identity}
 
 - @fact:IDENTITY-FORM **Decision:** `[<kind>:]<group>/<name>@<version>` — identity is **qualified** since M1.19 ([PROP-008 §2.2](../modules/vibe-registry/PROP-008-qualified-naming.md#identity)); the unqualified `<kind>:<name>@<version>` of `VIBEVM-SPEC.md` §7.1 is CLI sugar that resolves once, at the human boundary. @status:impl/done
-- @fact:KIND-SET `kind ∈ {flow, feat, stack, tool, mcp}` — five kinds; `mcp` shipped with [PROP-027](../modules/vibe-mcp/PROP-027-mcp-packages.md). (§Invariants `INV-VOCABULARY` in this file carries the same list.) @status:impl/done
+- @fact:KIND-SET `kind ∈ {flow, feat, stack, tool, mcp, lang}` — six kinds; `mcp` shipped with [PROP-027](../modules/vibe-mcp/PROP-027-mcp-packages.md). (§Invariants `INV-VOCABULARY` in this file carries the same list.) @status:impl/done
 - @fact:NAME-VERSION-RULES `name` is kebab-case and `(group, name)` is globally unique ([PROP-008](../modules/vibe-registry/PROP-008-qualified-naming.md#identity) — uniqueness moved from *within kind* to *within group*). `version` is semver. @status:impl/done
 
 @fact:constraint-forms-lead Constraint forms in CLI: @status:spec/done
@@ -347,7 +347,7 @@
 
 @fact:INVARIANTS-STOP-RULE (These restate the most load-bearing rules from the spec and the book. If anything below seems violated in practice, stop and reconcile before proceeding.) @status:spec/done
 
-1. @fact:INV-VOCABULARY **Vocabulary lock.** Never use Maven's "lifecycle/phase/goal" or Bazel's internal terminology in user-facing or internal code. The installable kinds are `flow`, `feat`, `stack`, `tool`, `mcp` — the register grows only by owner amendment to `VIBEVM-SPEC.md` §4.1 (`app` is anticipated). The canonical process discipline vocabulary is the one in `VIBEVM-SPEC.md` §4 and the book. @status:spec/done
+1. @fact:INV-VOCABULARY **Vocabulary lock.** Never use Maven's "lifecycle/phase/goal" or Bazel's internal terminology in user-facing or internal code. The installable kinds are `flow`, `feat`, `stack`, `tool`, `mcp`, `lang` — the register grows only by owner amendment to `VIBEVM-SPEC.md` §4.1 (`app` is anticipated). The canonical process discipline vocabulary is the one in `VIBEVM-SPEC.md` §4 and the book. @status:spec/done
 2. @fact:INV-SPEC-DIR **`spec/` is fixed.** The directory name and role cannot be configured away in v1. @status:spec/done
 3. @fact:INV-USER-FILES **User-owned files are never written by `vibe`.** `spec/boot/00-core.md` and `spec/boot/90-user.md` are off-limits to install/uninstall/update. @status:spec/done
 4. @fact:INV-ATOMIC-COMMITS **One commit = one logical unit.** Commit messages follow the git-practices family (§12) and reference `spec://…` URIs where relevant. @status:spec/done

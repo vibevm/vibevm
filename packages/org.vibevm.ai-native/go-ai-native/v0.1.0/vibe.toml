@@ -18,4 +18,4 @@ requires_kinds = []
 # and version-mirrors the stack. core-ai-native arrives transitively through
 # the -lang stack's own `[requires]`.
 [requires]
-packages = { "stack:org.vibevm.ai-native/go-ai-native-lang" = "=0.1.0", "mcp:org.vibevm.ai-native/go-ai-native-mcp" = "=0.1.0" }
+packages = { "lang:org.vibevm.ai-native/go-ai-native-lang" = "=0.1.0", "mcp:org.vibevm.ai-native/go-ai-native-mcp" = "=0.1.0" }

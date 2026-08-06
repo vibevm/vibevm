@@ -4050,7 +4050,7 @@
       "line": 16,
       "symbol": "vibe_core::error::Error",
       "end_line": 168,
-      "fingerprint": "tok1:005629b7576b407360c3d429af2f79148f01ecae655a65e95b6ef6919652d16b"
+      "fingerprint": "tok1:9ea249b857f4280961cbaa1e4bb9cacd684cd70a35ec7b1a2525084be49b64a0"
     },
     {
       "crate_name": "vibe-core",
@@ -16636,7 +16636,7 @@
   "spec_units": [
     {
       "anchor": "root",
-      "content_hash": "sha256:0eab8de03c78cc8c9cd0c729361631fcdf98411a35a61aa84c1c70a4b8887bf5",
+      "content_hash": "sha256:1965a1f99d6192255785b109162743fd643724e36cde6c086e5ce3d90378be35",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "vibevm: A Software Project Manager for Spec-Driven Development with AI Agents",
@@ -16798,7 +16798,7 @@
     },
     {
       "anchor": "core-terminology",
-      "content_hash": "sha256:138a1b2d6c8bf0352705baedc75d44460c57f3c5cf8a129efaae47986a8a125c",
+      "content_hash": "sha256:cf47a903cdc5d9e2624f9b8e4efc6081b636a0d95ae1fe38704b2d6456669cef",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 4. Core terminology",
@@ -16807,7 +16807,7 @@
     },
     {
       "anchor": "four-installable-kinds",
-      "content_hash": "sha256:ed1bf7bfca7dbdac7eba968b50d4a1dc5e29722ed25f42009344f3250920878b",
+      "content_hash": "sha256:1b8f9eff22e5f28096c0325ad84b0622042d5b31618f960ecce4d6f9da0c3182",
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "4.1 The installable kinds",
@@ -16820,7 +16820,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "4.2 The directory layout",
-      "line": 190,
+      "line": 200,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#directory-layout"
     },
     {
@@ -16829,7 +16829,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "4.3 Workflows",
-      "line": 231,
+      "line": 241,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#workflows"
     },
     {
@@ -16838,7 +16838,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "4.4 The task graph",
-      "line": 247,
+      "line": 257,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#task-graph"
     },
     {
@@ -16847,7 +16847,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "4.5 The four memory levels (recap from book)",
-      "line": 277,
+      "line": 287,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#four-memory-levels"
     },
     {
@@ -16856,7 +16856,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "4.6 Other key terms",
-      "line": 285,
+      "line": 295,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#other-key-terms"
     },
     {
@@ -16865,7 +16865,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 5. The task graph in detail",
-      "line": 296,
+      "line": 306,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#task-graph-in-detail"
     },
     {
@@ -16874,7 +16874,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "5.1 The graph builder",
-      "line": 300,
+      "line": 310,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#graph-builder"
     },
     {
@@ -16883,7 +16883,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "5.2 The graph runner",
-      "line": 316,
+      "line": 326,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#graph-runner"
     },
     {
@@ -16892,7 +16892,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "5.3 The typed value system",
-      "line": 332,
+      "line": 342,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#typed-value-system"
     },
     {
@@ -16901,7 +16901,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "5.4 Plugin contribution model",
-      "line": 356,
+      "line": 366,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#plugin-contribution-model"
     },
     {
@@ -16910,7 +16910,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "5.5 Workflows as graph queries",
-      "line": 364,
+      "line": 374,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#workflows-as-graph-queries"
     },
     {
@@ -16919,7 +16919,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "5.6 The `install` workflow in detail",
-      "line": 382,
+      "line": 392,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail"
     },
     {
@@ -16928,7 +16928,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "5.7 The `build` workflow in detail (v1.5 scope; document for forward compatibility)",
-      "line": 429,
+      "line": 439,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#build-workflow-in-detail"
     },
     {
@@ -16937,7 +16937,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 6. The boot directory model",
-      "line": 474,
+      "line": 484,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#boot-directory-model"
     },
     {
@@ -16946,7 +16946,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "6.1 The computed boot sequence",
-      "line": 478,
+      "line": 488,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#computed-boot-sequence"
     },
     {
@@ -16955,7 +16955,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "6.2 The generated artifacts — `INLINE.md` and `INDEX.md`",
-      "line": 486,
+      "line": 496,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#generated-artifacts-inline-md-and-index-md"
     },
     {
@@ -16964,7 +16964,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "6.3 Inclusion types and ordering",
-      "line": 495,
+      "line": 505,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#inclusion-types-and-ordering"
     },
     {
@@ -16973,7 +16973,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "6.4 The managed `<vibevm>` block",
-      "line": 505,
+      "line": 515,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#managed-vibevm-block"
     },
     {
@@ -16982,7 +16982,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "6.5 The attention-weight caveat",
-      "line": 519,
+      "line": 529,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#attention-weight-caveat"
     },
     {
@@ -16991,7 +16991,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 7. The package model",
-      "line": 525,
+      "line": 535,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#package-model"
     },
     {
@@ -17000,7 +17000,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "7.1 Package identity",
-      "line": 527,
+      "line": 537,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#package-identity"
     },
     {
@@ -17009,7 +17009,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "7.2 Package contents",
-      "line": 564,
+      "line": 574,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#package-contents"
     },
     {
@@ -17018,7 +17018,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "7.3 The manifest schema",
-      "line": 583,
+      "line": 593,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema"
     },
     {
@@ -17027,7 +17027,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "7.4 Lockfile schema",
-      "line": 660,
+      "line": 670,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#lockfile-schema"
     },
     {
@@ -17036,7 +17036,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "7.5 The manifest schema — consumer-project role",
-      "line": 702,
+      "line": 712,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema-consumer-project-role"
     },
     {
@@ -17045,7 +17045,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "7.6 Workspaces — multi-package projects",
-      "line": 831,
+      "line": 841,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#workspaces-multi-package-projects"
     },
     {
@@ -17054,7 +17054,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 8. The registry",
-      "line": 905,
+      "line": 915,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry"
     },
     {
@@ -17063,7 +17063,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "8.1 Registry model: decentralized, per-package repos",
-      "line": 907,
+      "line": 917,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry-model-decentralized-per-package-repos"
     },
     {
@@ -17072,7 +17072,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "8.2 Registry layout",
-      "line": 919,
+      "line": 929,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry-layout"
     },
     {
@@ -17081,7 +17081,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "8.3 Fetching strategy and cache layout",
-      "line": 946,
+      "line": 956,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#fetching-strategy-and-cache-layout"
     },
     {
@@ -17090,7 +17090,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "8.4 Publishing",
-      "line": 971,
+      "line": 981,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#publishing"
     },
     {
@@ -17099,7 +17099,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "8.5 Future: LLM-based censoring",
-      "line": 983,
+      "line": 993,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#future-llm-based-censoring"
     },
     {
@@ -17108,7 +17108,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "8.6 Dependency resolver",
-      "line": 989,
+      "line": 999,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#dependency-resolver"
     },
     {
@@ -17117,7 +17117,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 9. The CLI surface",
-      "line": 1007,
+      "line": 1017,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface"
     },
     {
@@ -17126,7 +17126,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "9.1 Command summary (v1)",
-      "line": 1009,
+      "line": 1019,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary"
     },
     {
@@ -17135,7 +17135,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "9.2 Commands deferred to v1.5",
-      "line": 1040,
+      "line": 1050,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#commands-deferred-to-v1-5"
     },
     {
@@ -17144,7 +17144,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "9.3 Output format",
-      "line": 1048,
+      "line": 1058,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#output-format"
     },
     {
@@ -17153,7 +17153,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "9.4 Exit codes",
-      "line": 1060,
+      "line": 1070,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#exit-codes"
     },
     {
@@ -17162,7 +17162,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "9.5 Configuration sources, in precedence order",
-      "line": 1072,
+      "line": 1082,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order"
     },
     {
@@ -17171,7 +17171,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 10. Implementation language and dependencies",
-      "line": 1084,
+      "line": 1094,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#implementation-language-and-dependencies"
     },
     {
@@ -17180,7 +17180,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "10.1 Language: Rust",
-      "line": 1086,
+      "line": 1096,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#language-rust"
     },
     {
@@ -17189,7 +17189,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "10.2 Crate structure",
-      "line": 1097,
+      "line": 1107,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#crate-structure"
     },
     {
@@ -17198,7 +17198,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "10.3 Required external dependencies (all permissive licenses)",
-      "line": 1122,
+      "line": 1132,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#required-external-dependencies"
     },
     {
@@ -17207,7 +17207,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "10.4 LLM provider integration (for v1.5)",
-      "line": 1137,
+      "line": 1147,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#llm-provider-integration"
     },
     {
@@ -17216,7 +17216,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "10.5 Spec-driven development of vibevm itself",
-      "line": 1178,
+      "line": 1188,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#spec-driven-development-of-vibevm-itself"
     },
     {
@@ -17225,7 +17225,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 11. Staging plan",
-      "line": 1184,
+      "line": 1194,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#staging-plan"
     },
     {
@@ -17234,7 +17234,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "11.1 Milestone M0: Walking skeleton",
-      "line": 1188,
+      "line": 1198,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#milestone-m0-walking-skeleton"
     },
     {
@@ -17243,7 +17243,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "11.2 Milestone M1: The package manager",
-      "line": 1204,
+      "line": 1214,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#milestone-m1-the-package-manager"
     },
     {
@@ -17252,7 +17252,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "11.3 Milestone M1.5: Generation",
-      "line": 1226,
+      "line": 1236,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#milestone-m1-5-generation"
     },
     {
@@ -17261,7 +17261,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "11.4 Milestone M2: Production-readiness",
-      "line": 1241,
+      "line": 1251,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#milestone-m2-production-readiness"
     },
     {
@@ -17270,7 +17270,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "11.5 Milestone M3+: Speculative directions",
-      "line": 1255,
+      "line": 1265,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#milestone-m3-speculative-directions"
     },
     {
@@ -17279,7 +17279,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 12. The linter (vibe check)",
-      "line": 1267,
+      "line": 1277,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter"
     },
     {
@@ -17288,7 +17288,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 13. The hand-written flow:wal package",
-      "line": 1292,
+      "line": 1302,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#hand-written-flow-wal-package"
     },
     {
@@ -17297,7 +17297,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "13.1 Package contents",
-      "line": 1298,
+      "line": 1308,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#wal-package-contents"
     },
     {
@@ -17306,7 +17306,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "13.2 Manifest",
-      "line": 1323,
+      "line": 1333,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest"
     },
     {
@@ -17315,7 +17315,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "13.3 Boot snippet content",
-      "line": 1344,
+      "line": 1354,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#boot-snippet-content"
     },
     {
@@ -17324,7 +17324,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "13.4 The protocol document",
-      "line": 1367,
+      "line": 1377,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#protocol-document"
     },
     {
@@ -17333,7 +17333,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 14. Development methodology",
-      "line": 1380,
+      "line": 1390,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#development-methodology"
     },
     {
@@ -17342,7 +17342,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "14.1 Project initialization",
-      "line": 1384,
+      "line": 1394,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#project-initialization"
     },
     {
@@ -17351,7 +17351,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "14.2 The discipline",
-      "line": 1395,
+      "line": 1405,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#discipline"
     },
     {
@@ -17360,7 +17360,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "14.3 What to do when stuck",
-      "line": 1404,
+      "line": 1414,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#what-to-do-when-stuck"
     },
     {
@@ -17369,7 +17369,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "14.4 Iteration order",
-      "line": 1414,
+      "line": 1424,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#iteration-order"
     },
     {
@@ -17378,7 +17378,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "14.5 Testing strategy",
-      "line": 1448,
+      "line": 1458,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#testing-strategy"
     },
     {
@@ -17387,7 +17387,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "14.6 Documentation discipline",
-      "line": 1457,
+      "line": 1467,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#documentation-discipline"
     },
     {
@@ -17396,7 +17396,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 15. Glossary",
-      "line": 1469,
+      "line": 1479,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#glossary"
     },
     {
@@ -17405,7 +17405,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 16. Acceptance checklist for v1",
-      "line": 1513,
+      "line": 1523,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#acceptance-checklist-for-v1"
     },
     {
@@ -17414,7 +17414,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "M0 acceptance",
-      "line": 1517,
+      "line": 1527,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#m0-acceptance"
     },
     {
@@ -17423,7 +17423,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "M1 acceptance (additive over M0)",
-      "line": 1535,
+      "line": 1545,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#m1-acceptance"
     },
     {
@@ -17432,7 +17432,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "M1.5 acceptance (additive over M1)",
-      "line": 1556,
+      "line": 1566,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#m1-5-acceptance"
     },
     {
@@ -17441,7 +17441,7 @@
       "doc_path": "VIBEVM-SPEC",
       "file": "VIBEVM-SPEC.md",
       "heading": "Section 17. Closing notes for the Reader",
-      "line": 1569,
+      "line": 1579,
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#closing-notes-for-the-reader"
     },
     {
@@ -17662,10 +17662,10 @@
     },
     {
       "anchor": "CONV-TERMINOLOGY",
-      "content_hash": "sha256:11e508e36309411c573bcc6604ebee9ba6e190774ff27e995ba8d195aa12c08f",
+      "content_hash": "sha256:48a2d2ac2bfa03c0467f2e54033f913b8ebe37b352a9606d4b4b918dd7b7b283",
       "doc_path": "boot/00-core",
       "file": "spec/boot/00-core.md",
-      "heading": "**Terminology:** only five installable kinds — `flow`, `feat`, `stack`, `tool`, `mcp` (the register grows only by owner amendment to `VIBEVM-SPEC.md` §4.1; `app` is anticipated). Never say \"lifecycle\", \"phase\", \"goal\", \"plugin\" (except that \"plugin\" == \"package\" in passing context). See `VIBEVM-SPEC.md` §4. @status:impl/done",
+      "heading": "**Terminology:** only six installable kinds — `flow`, `feat`, `stack`, `tool`, `mcp`, `lang` (the register grows only by owner amendment to `VIBEVM-SPEC.md` §4.1; `app` is anticipated). Never say \"lifecycle\", \"phase\", \"goal\", \"plugin\" (except that \"plugin\" == \"package\" in passing context). See `VIBEVM-SPEC.md` §4. @status:impl/done",
       "line": 51,
       "uri": "spec://org.vibevm.core/vibevm/boot/00-core#CONV-TERMINOLOGY"
     },
@@ -18022,7 +18022,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:d2ca0f4eaa262df1082e8270ff7bd2fc9231fe3cc95bb7ca129f46343e84701c",
+      "content_hash": "sha256:f6ca0c9d5aba5bb7987a6a567a0d38d50c186cec0b4adaf944a55b2b2b96f58a",
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "PROP-000: Foundational technical decisions",
@@ -18427,7 +18427,7 @@
     },
     {
       "anchor": "identity",
-      "content_hash": "sha256:3aa8a2b9df053b6e821097fd33154e0fe58fc01505edb548e113b2dd863a50fb",
+      "content_hash": "sha256:20a9ec68717e126d4b8696778bc6b950597ed27f86ca9bee723b15e5def4295b",
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "6. Package identity",
@@ -18445,10 +18445,10 @@
     },
     {
       "anchor": "KIND-SET",
-      "content_hash": "sha256:8ad55dd5b911bb501749556967e80419ea03c4efe51fefc7fad5d91b8f220a2d",
+      "content_hash": "sha256:ad7834a889ef5a5bc14965cf189961d072a6452510b7eae2862a0064a634739d",
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
-      "heading": "`kind ∈ {flow, feat, stack, tool, mcp}` — five kinds; `mcp` shipped with [PROP-027](../modules/vibe-mcp/PROP-027-mcp-packages.md). (§Invariants `INV-VOCABULARY` in this file carries the same list.) @status:impl/done",
+      "heading": "`kind ∈ {flow, feat, stack, tool, mcp, lang}` — six kinds; `mcp` shipped with [PROP-027](../modules/vibe-mcp/PROP-027-mcp-packages.md). (§Invariants `INV-VOCABULARY` in this file carries the same list.) @status:impl/done",
       "line": 88,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#KIND-SET"
     },
@@ -19786,7 +19786,7 @@
     },
     {
       "anchor": "invariants",
-      "content_hash": "sha256:a1c15c99de677d966aa7c60511214c826d5d87e0d7fb4600ece0f38224abaf24",
+      "content_hash": "sha256:225f398a48edac3afd16960109a99cedd341d7f3cafc1bacad31207f96c11051",
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "Invariants",
@@ -19804,10 +19804,10 @@
     },
     {
       "anchor": "INV-VOCABULARY",
-      "content_hash": "sha256:430a31192d16359283b3ad9e946993275e3d3108685c2e50a52fe213464e3fe9",
+      "content_hash": "sha256:24d807775fda80e782e2836e22471666da669983443b58d836fa7cb10b94194d",
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
-      "heading": "**Vocabulary lock.** Never use Maven's \"lifecycle/phase/goal\" or Bazel's internal terminology in user-facing or internal code. The installable kinds are `flow`, `feat`, `stack`, `tool`, `mcp` — the register grows only by owner amendment to `VIBEVM-SPEC.md` §4.1 (`app` is anticipated). The canonical process discipline vocabulary is the one in `VIBEVM-SPEC.md` §4 and the book. @status:spec/done",
+      "heading": "**Vocabulary lock.** Never use Maven's \"lifecycle/phase/goal\" or Bazel's internal terminology in user-facing or internal code. The installable kinds are `flow`, `feat`, `stack`, `tool`, `mcp`, `lang` — the register grows only by owner amendment to `VIBEVM-SPEC.md` §4.1 (`app` is anticipated). The canonical process discipline vocabulary is the one in `VIBEVM-SPEC.md` §4 and the book. @status:spec/done",
       "line": 350,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-VOCABULARY"
     },

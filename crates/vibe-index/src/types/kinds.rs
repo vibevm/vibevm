@@ -27,6 +27,10 @@ pub enum PackageKind {
     /// from `vibe-core` like the other four; the parity test below
     /// keeps the copies honest.
     Mcp,
+    /// Guidance for writing in a language, notation or format
+    /// (VIBEVM-SPEC §4.1, owner amendment 2026-08-06) — mirrored from
+    /// `vibe-core` like the rest.
+    Lang,
 }
 
 impl PackageKind {
@@ -37,6 +41,7 @@ impl PackageKind {
             PackageKind::Stack => "stack",
             PackageKind::Tool => "tool",
             PackageKind::Mcp => "mcp",
+            PackageKind::Lang => "lang",
         }
     }
 
@@ -47,6 +52,7 @@ impl PackageKind {
             PackageKind::Stack,
             PackageKind::Tool,
             PackageKind::Mcp,
+            PackageKind::Lang,
         ]
     }
 }
@@ -66,8 +72,9 @@ impl FromStr for PackageKind {
             "stack" => Ok(PackageKind::Stack),
             "tool" => Ok(PackageKind::Tool),
             "mcp" => Ok(PackageKind::Mcp),
+            "lang" => Ok(PackageKind::Lang),
             other => Err(format!(
-                "unknown package kind `{other}` — expected one of: flow, feat, stack, tool, mcp"
+                "unknown package kind `{other}` — expected one of: flow, feat, stack, tool, mcp, lang"
             )),
         }
     }

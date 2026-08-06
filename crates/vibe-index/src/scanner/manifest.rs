@@ -70,6 +70,7 @@ pub fn package_kind(kind: CorePackageKind) -> PackageKind {
         CorePackageKind::Stack => PackageKind::Stack,
         CorePackageKind::Tool => PackageKind::Tool,
         CorePackageKind::Mcp => PackageKind::Mcp,
+        CorePackageKind::Lang => PackageKind::Lang,
     }
 }
 

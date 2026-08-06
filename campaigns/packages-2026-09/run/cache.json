@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T09:34:07Z",
+  "updated_at": "2026-08-06T10:00:19Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -86610,7 +86610,7 @@
       }
     },
     "spec/boot/00-core.md": {
-      "content_hash": "3cb482aa6077afe52cae7fbfc4af631938391d5712996e25a75d82c1fb298dec",
+      "content_hash": "6f024e020699d086bc487f8ed09c60f89462ff45e2ebe6656fc7e685ff5c5b8b",
       "rollup": {
         "computed": [
           "impl",
@@ -87049,7 +87049,7 @@
       }
     },
     "spec/common/PROP-000.md": {
-      "content_hash": "f8dd9e19a2b1872769e426536e1798771989423cbfad895038296cb60cbe5a96",
+      "content_hash": "62ad5e7623c289ff1c7d6dca1b742e8785440a903f7f0f7ebbb14299df171a1b",
       "rollup": {
         "explicit": [
           "spec",

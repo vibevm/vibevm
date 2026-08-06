@@ -23,7 +23,7 @@ pub type Result<T, E = Error> = std::result::Result<T, E>;
 ///
 /// let e = Error::BadPackageKind("xml".into());
 /// let msg = e.to_string();
-/// assert!(msg.contains("must be one of: flow, feat, stack, tool, mcp"));
+/// assert!(msg.contains("must be one of: flow, feat, stack, tool, mcp, lang"));
 /// assert!(msg.contains("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#four-installable-kinds"));
 /// ```
 #[derive(Debug, Error)]
@@ -37,7 +37,7 @@ pub enum Error {
     BadPackageRef { input: String, reason: String },
 
     #[error(
-        "invalid package kind `{0}` — must be one of: flow, feat, stack, tool, mcp \
+        "invalid package kind `{0}` — must be one of: flow, feat, stack, tool, mcp, lang \
          (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#four-installable-kinds; \
           fix: use one of the installable kinds)"
     )]

@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 0.1.0-dev"
-generated_at = "2026-08-06T09:33:12Z"
+generated_at = "2026-08-06T09:59:53Z"
 schema_version = 5
 root_dependencies = [
     "stack:org.vibevm/rust-ai-native@^0.7.0",
@@ -92,11 +92,11 @@ name = "rust-ai-native"
 group = "org.vibevm.ai-native"
 version = "0.7.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.ai-native/rust-ai-native/v0.7.0"
-content_hash = "sha256:cf35dd0a93dd7c447b1b23bfbf2cf426981ce18e87341c5cced85f7942752212"
+content_hash = "sha256:cd045026582a6ef13c95792080056b04795def461348ecb65296c16c00ea61c7"
 files_written = []
 dependencies = [
+    "lang:org.vibevm.ai-native/rust-ai-native-lang@=0.7.0",
     "mcp:org.vibevm.ai-native/rust-ai-native-mcp@=0.7.0",
-    "stack:org.vibevm.ai-native/rust-ai-native-lang@=0.7.0",
 ]
 source_kind = "local"
 
@@ -106,11 +106,11 @@ name = "typescript-ai-native"
 group = "org.vibevm.ai-native"
 version = "0.6.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.ai-native/typescript-ai-native/v0.6.0"
-content_hash = "sha256:c6937c4369ef2e7d5e36715ff7d3abb1f8c0913670c98113e0156f518fee113f"
+content_hash = "sha256:d42b33ecce31d2fca5cc5e2de18f1293a81aa261aca30eacab6d519202a85789"
 files_written = []
 dependencies = [
+    "lang:org.vibevm.ai-native/typescript-ai-native-lang@=0.6.0",
     "mcp:org.vibevm.ai-native/typescript-ai-native-mcp@=0.6.0",
-    "stack:org.vibevm.ai-native/typescript-ai-native-lang@=0.6.0",
 ]
 source_kind = "local"
 
@@ -120,17 +120,17 @@ name = "core-ai-native"
 group = "org.vibevm.ai-native"
 version = "0.8.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.ai-native/core-ai-native/v0.8.0"
-content_hash = "sha256:9fc1604c7e69565ded50ebd47b108efe84ee48de9d8871f012c3fdcef0239a82"
+content_hash = "sha256:e8ce71b16c50f43c981974717594607df1d1a04137b97e1de3f7d1d6170b66d5"
 files_written = []
 source_kind = "local"
 
 [[package]]
-kind = "stack"
+kind = "lang"
 name = "rust-ai-native-lang"
 group = "org.vibevm.ai-native"
 version = "0.7.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0"
-content_hash = "sha256:b54c8bf3fe0b911eb25bc9afa069a9ad1fb841e8c4af759e4e5a364a40351f65"
+content_hash = "sha256:2b42ff99f595ee91749b99ee2816b9b6917c96815a29c420f2fefb41e5fadaf0"
 files_written = []
 dependencies = ["flow:org.vibevm.ai-native/core-ai-native@=0.8.0"]
 source_kind = "local"
@@ -141,18 +141,18 @@ name = "rust-ai-native-mcp"
 group = "org.vibevm.ai-native"
 version = "0.7.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.ai-native/rust-ai-native-mcp/v0.7.0"
-content_hash = "sha256:19a4071730678739290510a364ccf042283516ddfc77591a6f63f317ab2da5d4"
+content_hash = "sha256:392b53aa904a104c77e950fcc78ea35d568e6907d467a9b8c43dd88724b0b5f0"
 files_written = []
-dependencies = ["stack:org.vibevm.ai-native/rust-ai-native-lang@=0.7.0"]
+dependencies = ["lang:org.vibevm.ai-native/rust-ai-native-lang@=0.7.0"]
 source_kind = "local"
 
 [[package]]
-kind = "stack"
+kind = "lang"
 name = "typescript-ai-native-lang"
 group = "org.vibevm.ai-native"
 version = "0.6.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.ai-native/typescript-ai-native-lang/v0.6.0"
-content_hash = "sha256:8986b9af721358d4155755523824fa0b13d39619e965ccae691c0619f782f6d1"
+content_hash = "sha256:5970d044dd238a5c0f59d9b2dccbf1e66c94570c6e9ebeb26d5f8360172f5364"
 files_written = []
 dependencies = ["flow:org.vibevm.ai-native/core-ai-native@=0.8.0"]
 source_kind = "local"
@@ -163,9 +163,9 @@ name = "typescript-ai-native-mcp"
 group = "org.vibevm.ai-native"
 version = "0.6.0"
 source_url = "file:///C:/Users/olegc/git/v/vibevm/packages/org.vibevm.ai-native/typescript-ai-native-mcp/v0.6.0"
-content_hash = "sha256:0cfc2abbf38e48388de1ab6dffc9406b9a1e9d68d91ad96c1897350705c154b6"
+content_hash = "sha256:184559b6133480b70489b64b3e3831f642d7f7148a2a1a4391c45dfebe4ee663"
 files_written = []
-dependencies = ["stack:org.vibevm.ai-native/typescript-ai-native-lang@=0.6.0"]
+dependencies = ["lang:org.vibevm.ai-native/typescript-ai-native-lang@=0.6.0"]
 source_kind = "local"
 
 [[package]]

@@ -37,6 +37,19 @@ pub enum PackageKind {
     /// delivered as PROP-025 binaries and exact-pinned to the package
     /// whose toolchain they serve (VIBEVM-SPEC §4.1, PROP-027).
     Mcp,
+    /// Guidance for *writing in* something — a language, a notation, a
+    /// format: the idioms, the constraints, the shape authors follow.
+    /// The AI-Native language guides are `lang`; so would be a package
+    /// explaining how to write GitHub-flavoured markdown.
+    ///
+    /// Split out of `stack` by owner amendment 2026-08-06 (VIBEVM-SPEC
+    /// §4.1): `stack` had been carrying two genres at once — language
+    /// guidance and family aggregators that pin other packages — and a
+    /// word naming two genres names neither. A package is recognised as
+    /// an AI-Native language by its dependency on the discipline core,
+    /// never by its group, so a third party can publish one in its own
+    /// namespace and be recognised.
+    Lang,
 }
 
 impl PackageKind {
@@ -47,15 +60,17 @@ impl PackageKind {
             PackageKind::Stack => "stack",
             PackageKind::Tool => "tool",
             PackageKind::Mcp => "mcp",
+            PackageKind::Lang => "lang",
         }
     }
 
-    pub const ALL: [PackageKind; 5] = [
+    pub const ALL: [PackageKind; 6] = [
         PackageKind::Flow,
         PackageKind::Feat,
         PackageKind::Stack,
         PackageKind::Tool,
         PackageKind::Mcp,
+        PackageKind::Lang,
     ];
 }
 
@@ -75,6 +90,7 @@ impl FromStr for PackageKind {
             "stack" => Ok(PackageKind::Stack),
             "tool" => Ok(PackageKind::Tool),
             "mcp" => Ok(PackageKind::Mcp),
+            "lang" => Ok(PackageKind::Lang),
             other => Err(Error::BadPackageKind(other.to_owned())),
         }
     }
