@@ -30,6 +30,37 @@ large feature set stays a map rather than a tangle. A REQ is the unit of work. @
 
 ---
 
+## 0. What "finished" means for this subsystem {#done-definition}
+
+@fact:DONE-IS-THINNESS-NOT-FEATURE-COUNT **Owner ruling, 2026-08-06: this subsystem is finished when it is a
+THIN SURFACE** — when every capability it presents lives in a library and
+the TUI only renders. Not when a list of screens is complete, not when a
+suppression count reaches zero. @status:spec/done
+
+@fact:THE-TEST-IS-DELETION-ON-PAPER **The test:** delete the TUI on paper. If anything but presentation and
+input handling is lost, the split is wrong and the work is not done. This is
+`flow:omnichannel`'s own test
+(`spec://org.vibevm.world/omnichannel/flows/omnichannel/OMNICHANNEL-PROTOCOL#thinness`),
+applied to the surface that most invites logic to accumulate in it. @status:spec/done
+
+@fact:WHY-THIS-BOUNDARY-AND-NOT-THE-OTHERS **Why this boundary and not the obvious ones**, recorded because three
+alternatives were measured and offered on the same day. A *screen list* has a
+visible end but requires deciding which screens should exist — it answers
+"how much" rather than "what for". A *suppression count* (27 carry no reason
+today) is hygiene: all 27 could close without the subsystem moving a step.
+*Manual tests* (there are none, and the TUI is the one surface automated
+tests cannot really exercise) are worth having, but their number grows with
+the screens, so they define no end. Thinness is the only one of the four
+that a new screen does not move. @status:spec/done
+
+@fact:WHAT-THE-MEASUREMENT-FOUND The measurement that framed the question: **63 files, 18 426 lines, 258
+tests inside the subsystem.** It is not a sketch, and its problem was never
+incompleteness — it was an undefined edge. @status:spec/done
+
+@fact:THE-LAYERING-LAW-IS-THE-SAME-LAW This is the §1 layering law seen from outside: *vibevm logic never leaks
+into the app* is thinness stated inward, and the deletion test is how it is
+checked from without. They are one rule with two readings, not two rules. @status:spec/done
+
 ## 1. Architecture — layers {#architecture}
 
 - @fact:layers-intro The application separates, as fixed layers, (a) the vibevm data it renders, (b)

@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T10:00:19Z",
+  "updated_at": "2026-08-06T12:57:59Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -100045,7 +100045,7 @@
       }
     },
     "spec/modules/vibe-cli/PROP-037-tree-tui.md": {
-      "content_hash": "8ba9828249c828aceddd46ff0d94f58eab1aa675fa6f645876c95e9b04b47363",
+      "content_hash": "2615971ba32fb4b842ef2ee0198f712744787a0ce72934d2611f04040433d601",
       "rollup": {
         "explicit": [
           "impl",
@@ -100059,12 +100059,12 @@
           "impl",
           "done"
         ],
-        "marker_count": 137,
-        "fact_count": 136,
+        "marker_count": 142,
+        "fact_count": 141,
         "unmarked_facts": 0
       },
-      "marker_count": 137,
-      "unit_count": 61,
+      "marker_count": 142,
+      "unit_count": 62,
       "issue_count": 0,
       "campaign": {
         "anchors_judged": 109,
