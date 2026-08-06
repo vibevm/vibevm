@@ -143,12 +143,42 @@ De-rotted instead — three exact substitutions per fixture: `group =
 **Filed from the fix as `-15`:** the diagnostic that made this expensive
 to read.
 
-### 2026-08-06-01 · A1/E4 · **P1** · open — owner's court
+### 2026-08-06-01 · A1/E4 · **P1** · partly closed 2026-08-06 — measurement built, re-judgement outstanding
 
 **A third of the campaign's verdicts carry no evidence of their own, and one
 of them was measurably false while the campaign's own better-evidenced pass
 said so.** Escalated to P1 under `##SEV-GATE-BLINDNESS-IS-P1`: the credibility
 apparatus reports a per-fact number it did not earn per fact.
+
+**Update 2026-08-06 — the ruling's first half is built, and it moved the
+finding's shape.** `tasks/summary.py` now prints both grains, computed
+mechanically from the evidence itself (a blob used once is that fact's own; a
+blob used twice or more is one reading stamped on many). Both terms are
+defined in the tool's own output. Commit: the `feat(campaign)` landing of
+2026-08-06.
+
+The number the programme predicted is confirmed: the headline falls from
+**98.1 %** to **62.3 % per-fact**. What the estimate could not foresee is that
+the weakness is **not spread across the corpus — it is concentrated in the
+host**:
+
+| namespace | per-fact | document-level | per-fact share |
+|---|---|---|---|
+| host | 718 | **4150** | **14.7 %** |
+| ai-native | 2634 | 160 | 94.3 % |
+| world | 3904 | 76 | 98.1 % |
+| ALL | 7256 | 4386 | 62.3 % |
+
+That is a materially different problem from the one filed. `world` and
+`ai-native` were judged per fact almost throughout; the host's early passes
+were not, and 95 % of the weak verdicts are there. The work is bounded and
+localised rather than corpus-wide.
+
+**What remains open:** the deliberate re-judgement of the 90 `PROP-008`
+anchors that share the blob known to have carried a false clause. The
+conversion of everything else happens by itself, as the ruling intends —
+when a document's text moves, its facts come due and gain their own
+evidence at that moment.
 
 **The instance, and it is exact.** `PROP-008` `##KIND-VALIDATION` states that
 the resolver asserts a pkgref's `kind` prefix against the resolved manifest and
