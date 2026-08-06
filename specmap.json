@@ -44239,7 +44239,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:f2102fb40adc5d50b73b9d996e2ecfcef2a7e5cfe74420ecbb6c9c3d51779a59",
+      "content_hash": "sha256:023e19b0f8b407a066814751c169704ea6f86535c7d5f3c159e086d5fd40d398",
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "PROP-043 — Progress Control: inline status markup and the `vibe progress` tool",
@@ -45661,7 +45661,7 @@
     },
     {
       "anchor": "maintenance",
-      "content_hash": "sha256:2eddcb80ed55236b636ae96c6918e7156bf79713d8fdc43fdd20d7199169b7eb",
+      "content_hash": "sha256:887e0944716401eb155284257f9bbf6b952b313fe027f320a0991d7595206c9b",
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "10. Maintenance discipline",
@@ -45723,12 +45723,201 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#PERIODIC-REVERIFICATION"
     },
     {
+      "anchor": "fact-lifecycle",
+      "content_hash": "sha256:95cb277d31e20090baf0f391e01144ef522fed171bfb3038d28fd1d83509b8b8",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "10.1 The life of a fact under an active campaign",
+      "line": 577,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#fact-lifecycle"
+    },
+    {
+      "anchor": "LIFECYCLE-WHY",
+      "content_hash": "sha256:5c458e58effa1216399141b0629abfd335baf5516a78b1ba2f35d2c0da923473",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**Editing the corpus while a campaign judges it is the normal",
+      "line": 579,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#LIFECYCLE-WHY"
+    },
+    {
+      "anchor": "LIFECYCLE-EDITED",
+      "content_hash": "sha256:656fa56308da8e143e2e53deb1ef259857da9062876b3ce3dcb7cb4ae42c396c",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**A judged fact whose text moves comes due for",
+      "line": 584,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#LIFECYCLE-EDITED"
+    },
+    {
+      "anchor": "LIFECYCLE-ADDED",
+      "content_hash": "sha256:ba7e6a5d35192976f30e4b8f15401e557a8c31cdd39993e0dd8a8b850ffbc157",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**A fact added to an already-judged file is unjudged, and",
+      "line": 588,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#LIFECYCLE-ADDED"
+    },
+    {
+      "anchor": "LIFECYCLE-DELETED",
+      "content_hash": "sha256:b0bd425e7388dde30f3679d6af0e249220ec9d55f35951c8876641f114796dfa",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**A fact removed from a document leaves its verdict",
+      "line": 593,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#LIFECYCLE-DELETED"
+    },
+    {
+      "anchor": "STALE-IS-NOT-REJUDGE",
+      "content_hash": "sha256:5df538e55f589413f938292443aa1bbbb29335a4016b834f24c05a8ae9edf494",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**«The file moved» and «a judged fact moved» are",
+      "line": 596,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#STALE-IS-NOT-REJUDGE"
+    },
+    {
+      "anchor": "SEAL-IS-A-WHOLE-FILE-ASSERTION",
+      "content_hash": "sha256:1823b748cd0c5adcac1d040cbc46b5299b21654fef74e580cd229bcde7ebbbbf",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**Sealing refuses a file carrying any",
+      "line": 602,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#SEAL-IS-A-WHOLE-FILE-ASSERTION"
+    },
+    {
+      "anchor": "debt-clearance",
+      "content_hash": "sha256:130d88bde5ba9b092ba3c42e7da77ca19c02efe37d2b18f4ade685c061c7dcde",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "10.2 Incremental debt clearance",
+      "line": 608,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#debt-clearance"
+    },
+    {
+      "anchor": "DEBT-IS-A-LIST-NOT-A-RATIO",
+      "content_hash": "sha256:d5deb4bcb23fbaaf175191682c5815fe50a66bb5fa565e94b3eb9875aacb98a1",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**The debt is enumerable, so it is paid item by",
+      "line": 610,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-IS-A-LIST-NOT-A-RATIO"
+    },
+    {
+      "anchor": "DEBT-UNIT-IS-THE-FILE",
+      "content_hash": "sha256:91a837690c57f29b2536f416159de1c5e90d8547c0b645bf2faedf89878bc5b7",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**The unit of clearance is one file**, because sealing",
+      "line": 616,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-UNIT-IS-THE-FILE"
+    },
+    {
+      "anchor": "DEBT-CHEAPEST-IS-THE-FILE-YOU-OPENED",
+      "content_hash": "sha256:02d0482c364262908d99ef54015e0d2db042c2684c8f761d2af8530532a96e22",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**The cheapest debt is in the file you",
+      "line": 620,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-CHEAPEST-IS-THE-FILE-YOU-OPENED"
+    },
+    {
+      "anchor": "DEBT-PROCEDURE",
+      "content_hash": "sha256:22003f0c1a027e663880bd6cea0b5f60248ef84cf33739fb89ce50ce1e80dc01",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**The procedure, run on demand and never automatically:** @impl/done",
+      "line": 626,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-PROCEDURE"
+    },
+    {
+      "anchor": "DEBT-STEP-MEASURE",
+      "content_hash": "sha256:43c50c5302d62ccf1a49ee14ec48ac573773a412665f0b769e08bc3e5cfa618f",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**Measure.** Print the three kinds with the files behind",
+      "line": 628,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-STEP-MEASURE"
+    },
+    {
+      "anchor": "DEBT-STEP-PICK",
+      "content_hash": "sha256:0ab341b2f2accd7e562f95559350024cc9c89972bf5099c8f9ea61c7380fe810",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**Pick one file** — either the heaviest, or the one this",
+      "line": 630,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-STEP-PICK"
+    },
+    {
+      "anchor": "DEBT-STEP-JUDGE",
+      "content_hash": "sha256:9cbeb84aa7bc4c850c417006a0f2b267e3b271a798b39a3b6ee642a9a27cd4f6",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**Judge only its unjudged facts**, to the ordinary standard",
+      "line": 632,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-STEP-JUDGE"
+    },
+    {
+      "anchor": "DEBT-STEP-SEAL",
+      "content_hash": "sha256:5985cf981e5a426dbea1d1cf1d89772e6dce357f4020342bf270f4d1691031eb",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**Merge and seal.** A refusal to seal means something in the",
+      "line": 636,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-STEP-SEAL"
+    },
+    {
+      "anchor": "DEBT-STEP-REPORT",
+      "content_hash": "sha256:e0d42b395471752d29cbd098c57b71cad1ce5cd40753fa6ed350d7ccf5c67c5a",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**Report how much was cleared**, so the number moves",
+      "line": 638,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-STEP-REPORT"
+    },
+    {
+      "anchor": "DEBT-CLOSING-INCLUDES-JUDGING",
+      "content_hash": "sha256:1efbab9cb34707df6d72505baa5d8973110df5641dbdcbf68c397692a0771f94",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**Content moved into a specification is judged",
+      "line": 641,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-CLOSING-INCLUDES-JUDGING"
+    },
+    {
+      "anchor": "DEBT-ASK-AT-SESSION-START",
+      "content_hash": "sha256:d57ec691afd1628debc36b97d13f51acdc767db3670b8649cc01d05c054c3175",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**A session reports the debt when it restores",
+      "line": 647,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-ASK-AT-SESSION-START"
+    },
+    {
+      "anchor": "DEBT-MUST-BE-ASKABLE",
+      "content_hash": "sha256:334015cdedaf8da31e404844294a4babe24e4b6dcd3a815b93b4ba4276ef4cd8",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**The debt is a question the tool answers, not a query",
+      "line": 653,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-MUST-BE-ASKABLE"
+    },
+    {
+      "anchor": "DEBT-DO-NOT-JUDGE-BLIND",
+      "content_hash": "sha256:035fd24545843ec5cf9f41504a8f69d9b31ae224073f8c6424aaba10b686e8ae",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**What must not happen: clearing the count by",
+      "line": 662,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-DO-NOT-JUDGE-BLIND"
+    },
+    {
       "anchor": "future",
       "content_hash": "sha256:b53dd3703e6fe21dfd096e31f7611e164e280a4bed28a6807eda9b6853681407",
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "11. Out of scope / future",
-      "line": 577,
+      "line": 667,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#future"
     },
     {
@@ -45737,7 +45926,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "XML document storage (arrives with the PROP-035 XML frontend — this markup is",
-      "line": 579,
+      "line": 669,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#FUT-XML-STORAGE"
     },
     {
@@ -45746,7 +45935,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "second-wave corpora (`packages/org.vibevm.world`,",
-      "line": 581,
+      "line": 671,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#FUT-SECOND-WAVE"
     },
     {
@@ -45755,7 +45944,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "extraction into a",
-      "line": 584,
+      "line": 674,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#FUT-EXTRACTION"
     },
     {
@@ -45764,7 +45953,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "dashboard evolution beyond the minimal read-only page. @spec/done",
-      "line": 586,
+      "line": 676,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#FUT-DASHBOARD"
     },
     {
@@ -45773,7 +45962,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "(Terminology note:",
-      "line": 587,
+      "line": 677,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DASHBOARD-TERM"
     },
     {
@@ -67231,6 +67420,258 @@
       "heading": "**2026-07-15 — IMPLEMENTED.** All five phases of the [HYBRID-LINKING campaign](../../../legacy-spec/terraforms/HYBRID-LINKING-PLAN-v0.1.md) landed on `main` (`d487d4e`…`381095e`), floor green throughout. In `vibe-workspace`: the per-unit recursive compiler (`boot::hybrid` — `resolve_zone` / `topo_zone`), soft hoisting (`hybrid::hoist`) with `#use` markers and shared-by hints, the `static-hard` opt-out on `LinkType`, Merkle fingerprints (`hybrid::fingerprint`) driving the emit-side dirty-subgraph skip (§2.8), and the `verify_boot_graph` integrity check (§3). Emission lives in `install/bootgen` + `bootgen/hybrid_emit`. 178 tests, specmap 0 orphans. Deferred (plan §15): broad conversion of real packages (DEF-3), a `proptest` fuzz sweep (DEF-5), and the `vibe check` CLI wiring (DEF-6). Today's tree is byte-stable — `static` reaches the lane only through the root's `static-transitive` edge, so nothing is per-unit-emitted yet. @spec/done",
       "line": 182,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#HISTORY-IMPLEMENTED"
+    },
+    {
+      "anchor": "group-b",
+      "content_hash": "sha256:1e382ed7d8c6632ae33a83dd9290a514cc1f83ed4a461315adec6a0e6a534f66",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "Group Б — hygiene: the work that makes everything after it cheaper",
+      "line": 39,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#group-b"
+    },
+    {
+      "anchor": "group-v",
+      "content_hash": "sha256:56e0fc2aad13fc2de4ba3210b810da8218fc15fa4184f28f32b0546bc3286041",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "Group В — taxonomy: the foundation the later features stand on",
+      "line": 47,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#group-v"
+    },
+    {
+      "anchor": "group-a",
+      "content_hash": "sha256:273cb8b9785f040f57681607d5582dc885e46c8b5b9e8ed464d7b76ef86640e5",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "Group А — the index, including the blocker",
+      "line": 53,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#group-a"
+    },
+    {
+      "anchor": "b-items",
+      "content_hash": "sha256:a0df62b21071d9545f0cf02d0596d8676e3701e47a12aedc96307f0e598bf5ba",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "2. Group Б — hygiene",
+      "line": 62,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#b-items"
+    },
+    {
+      "anchor": "b1",
+      "content_hash": "sha256:50c01e48eb1547c06f42d7ac4b56dfb2dd5736d1e05dfbdbce32b19fa973830e",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "Б1. The plan-closure rule — write it down first",
+      "line": 64,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#b1"
+    },
+    {
+      "anchor": "b2",
+      "content_hash": "sha256:c88a4ed9563c5171f8927c23a5f2560b7c53855ec43e22a28c85543eca627e35",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "Б2. Migrate the citations, then tombstone the closed rows",
+      "line": 95,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#b2"
+    },
+    {
+      "anchor": "b3",
+      "content_hash": "sha256:a63d534a6eb977d5042af1044d8e644897472d4ff5cd9f01198bbe9198d9b1d6",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "Б3. The panel gains the markup-validation step",
+      "line": 129,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#b3"
+    },
+    {
+      "anchor": "b4",
+      "content_hash": "sha256:6efd685383c35023c4a4fb09e0a5800b623c50938f293f6d69639ec4b8e65d6d",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "Б4. The verdict report grows a second column",
+      "line": 167,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#b4"
+    },
+    {
+      "anchor": "b5",
+      "content_hash": "sha256:5a712bcdaf7314831a1407395667f636d715f2e9c86ff0597a3cd7b3cd14e59b",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "Б5. Documentation examples — the editorial policy",
+      "line": 221,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#b5"
+    },
+    {
+      "anchor": "b6",
+      "content_hash": "sha256:69e93ac82b5a62428d11569e9a401567d5372bf8ed5300c5d2fb4baf05ff2801",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "Б6. Normalise `files_written` to forward slashes",
+      "line": 266,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#b6"
+    },
+    {
+      "anchor": "b7",
+      "content_hash": "sha256:2458054218828c92f48557b8a5a1d83ce1380635106b9906e674ca09ef1d3d83",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "Б7. Record the facts that need no decision",
+      "line": 278,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#b7"
+    },
+    {
+      "anchor": "v-items",
+      "content_hash": "sha256:01be3e6c23c6907f98467302542ed92513760e6831179da35363603ec3c9280d",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "3. Group В — taxonomy",
+      "line": 300,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#v-items"
+    },
+    {
+      "anchor": "v1",
+      "content_hash": "sha256:bd9f4fb33dde70c1f80ff203bf3b68c3e69733d4a1da90d1e2c599193d676c19",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "В1. The omnichannel package",
+      "line": 302,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#v1"
+    },
+    {
+      "anchor": "v2",
+      "content_hash": "sha256:75107577b7940138a0162ed3f187d2013cf3737eb39ee12c9888b158e2269239",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "В2. The `lang` package kind",
+      "line": 378,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#v2"
+    },
+    {
+      "anchor": "v3",
+      "content_hash": "sha256:bbd3b2d52c4c75f40b419fae36d1e1553bdb96fc2c5503b4b7a8408fbb7b336c",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "В3. `vibe tools` — the tool registry",
+      "line": 427,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#v3"
+    },
+    {
+      "anchor": "v4",
+      "content_hash": "sha256:1a4abddbcf89df43edfd43dd28671811a0a5180bb72a5b7b3bd1edd82a2e368d",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "В4. The error-variant node — join at query time",
+      "line": 460,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#v4"
+    },
+    {
+      "anchor": "v5",
+      "content_hash": "sha256:9067a8940f1dfcce5557238d78bedfcf11062b4d5f6e3ee3310bb733982b351e",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "В5. A standing fact recorded during this conversation",
+      "line": 483,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#v5"
+    },
+    {
+      "anchor": "a-items",
+      "content_hash": "sha256:9e32684a0dc5a09a692427240f3aa0b2c1f73847c43b99957f68346b1b3c0d6a",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "4. Group А — the index",
+      "line": 494,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a-items"
+    },
+    {
+      "anchor": "a0",
+      "content_hash": "sha256:0c5a37a9c73e94a679c7e281e526bf3edd1c3d23210cc81b2466bd02af1c9947",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "А0. What the index actually is — read this before touching anything",
+      "line": 496,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a0"
+    },
+    {
+      "anchor": "a1",
+      "content_hash": "sha256:ce61b6fa9e433bf5742fd88d67e0be434e18ffea075e9c3b5538cf8c73ad035c",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "А1. Auto-publication — the blocker",
+      "line": 567,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a1"
+    },
+    {
+      "anchor": "a2",
+      "content_hash": "sha256:3be5aa344d2ded14466ad58c97e4fb5690513803324df7212f89300149d64348",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "А2. Private index — push AND authenticated reading",
+      "line": 587,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a2"
+    },
+    {
+      "anchor": "a3",
+      "content_hash": "sha256:bb42f249c12e7b834d05227c6b01b55d3911bde0358f9a86570713d5c736ea22",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "А3. The organisation cache, `rescan-org`, and the flag's real axis",
+      "line": 600,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a3"
+    },
+    {
+      "anchor": "a4",
+      "content_hash": "sha256:a9f5d6b5f76b8c08da9f21e5b1a37185c4c2e00618af67997ebfc54639cdcad0",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "А4. Webhooks, GitHub Actions, and a guide that lives in the specs",
+      "line": 644,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a4"
+    },
+    {
+      "anchor": "a5",
+      "content_hash": "sha256:116a466a964fb26797af18639c54cdfb297a5ec6449838e04493968208887e53",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "А5. Search over the map — both levels",
+      "line": 661,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a5"
+    },
+    {
+      "anchor": "a6",
+      "content_hash": "sha256:5d4bf9bce9d1a13d3b95b84e70bf64bd6202bb2bfdce393a7002e9c16efa50a3",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "А6. Generate the index's wire types",
+      "line": 690,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a6"
+    },
+    {
+      "anchor": "undecided",
+      "content_hash": "sha256:a6d79f249526bc3e8c768da7058fe3afd3a5e1f7f06d3579e6f2318ae6f45075",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "5. What was NOT decided and must not be invented",
+      "line": 727,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#undecided"
+    },
+    {
+      "anchor": "standing",
+      "content_hash": "sha256:d3fc99e05038493f013d7b81521db29b9d241505ad4b1bacd28f8f58eded68a6",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "6. Standing items untouched by this conversation",
+      "line": 738,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#standing"
+    },
+    {
+      "anchor": "hands",
+      "content_hash": "sha256:37ad005185237236f249b8b79d257eaa6ec8e36402463bf67f4e0b739587b0b6",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "7. Requires the owner's hands, not a decision",
+      "line": 749,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#hands"
     },
     {
       "anchor": "root",

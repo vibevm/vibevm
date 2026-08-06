@@ -574,6 +574,96 @@ drift row already closed. The map is the source; the count is a view of it. @imp
 - ##PERIODIC-REVERIFICATION Periodic re-verification runs as a recurring campaign
   (O(delta) via §7.3) and as a health-audit category between runs. @spec/done
 
+### 10.1 The life of a fact under an active campaign {#fact-lifecycle}
+
+##LIFECYCLE-WHY **Editing the corpus while a campaign judges it is the normal
+case, not an exception** — the campaign exists precisely because the corpus is
+being reworked. Three things can happen to a fact, they are not the same thing,
+and only one of them announces itself. @impl/done
+
+- ##LIFECYCLE-EDITED **A judged fact whose text moves comes due for
+  re-judgement, and the tooling names it.** The freshness reader compares the
+  text a fact was judged against with the text on disk and lists every fact that
+  moved, by anchor. This is the case the machinery was built for. @impl/done
+- ##LIFECYCLE-ADDED **A fact added to an already-judged file is unjudged, and
+  NOTHING says so.** It does not enter the verdict total, it does not appear in
+  any percentage, and no gate fires. It is discovered only by comparing the
+  file's addressable anchors against its verdict map — which no shipped command
+  prints today. @impl/done
+- ##LIFECYCLE-DELETED **A fact removed from a document leaves its verdict
+  behind, and the verdict keeps counting.** The cache is keyed by anchor and
+  nothing prunes a key whose anchor is gone. @impl/done
+- ##STALE-IS-NOT-REJUDGE **«The file moved» and «a judged fact moved» are
+  different questions, and conflating them wastes the whole point.** A file goes
+  stale the moment its bytes change — including when the change only ADDS facts,
+  leaving every judged fact untouched. A corpus can carry five stale files and
+  zero facts owed re-judgement. Read the per-fact answer, never the per-file
+  one. @impl/done
+- ##SEAL-IS-A-WHOLE-FILE-ASSERTION **Sealing refuses a file carrying any
+  unjudged marker, and this is correct rather than inconvenient.** Sealing
+  asserts that *every* verdict in the file is valid for its current text, so a
+  partially-judged file may be left flagged but not vouched for. That refusal is
+  the only mechanism today that makes an added fact visible at all. @impl/done
+
+### 10.2 Incremental debt clearance {#debt-clearance}
+
+##DEBT-IS-A-LIST-NOT-A-RATIO **The debt is enumerable, so it is paid item by
+item and never by re-judging the corpus.** Three enumerable kinds: facts with no
+verdict, facts whose text moved, verdicts whose anchor is gone. Each has names
+and addresses; none is a percentage to be attacked wholesale. Re-judging
+everything would redo work that nothing invalidated. @impl/done
+
+##DEBT-UNIT-IS-THE-FILE **The unit of clearance is one file**, because sealing
+is a whole-file assertion (`##SEAL-IS-A-WHOLE-FILE-ASSERTION`) — a file is
+either clear or flagged, and there is no half-sealed state to leave behind. @impl/done
+
+##DEBT-CHEAPEST-IS-THE-FILE-YOU-OPENED **The cheapest debt is in the file you
+were going to read anyway.** Judging N facts in one document costs far less than
+N facts in N documents, because the reading is shared; a session already editing
+a document pays almost nothing to clear that document's backlog in the same
+pass. @impl/done
+
+##DEBT-PROCEDURE **The procedure, run on demand and never automatically:** @impl/done
+
+1. ##DEBT-STEP-MEASURE **Measure.** Print the three kinds with the files behind
+   them, worst first. @spec/plan
+2. ##DEBT-STEP-PICK **Pick one file** — either the heaviest, or the one this
+   session is about to touch anyway. @impl/done
+3. ##DEBT-STEP-JUDGE **Judge only its unjudged facts**, to the ordinary standard
+   and clause by clause. A prescriptive fact is judged on coherence and on every
+   referent resolving; a descriptive one is checked against the tree. Freshly
+   authored text is not exempt from either. @impl/done
+4. ##DEBT-STEP-SEAL **Merge and seal.** A refusal to seal means something in the
+   file was missed — that refusal is the check, not an obstacle. @impl/done
+5. ##DEBT-STEP-REPORT **Report how much was cleared**, so the number moves
+   visibly rather than silently. @impl/done
+
+##DEBT-CLOSING-INCLUDES-JUDGING **Content moved into a specification is judged
+in the same pass that moves it.** An unjudged statement in a spec is the same
+kind of tail as a dangling citation: the move is not finished until the corpus
+knows about what arrived. Without this the standing ruling «significant content
+moves into the specifications on closure» manufactures debt at every closure. @spec/plan
+
+##DEBT-ASK-AT-SESSION-START **A session reports the debt when it restores
+context** (owner ruling 2026-08-06) — one line in the resume report, beside the
+gate state and the blockers. Reporting is not paying: the session says what the
+debt is and waits, because clearing it is work like any other and its priority
+is the owner's. @spec/plan
+
+##DEBT-MUST-BE-ASKABLE **The debt is a question the tool answers, not a query
+somebody reconstructs** (owner ruling 2026-08-06). «How much debt is there for
+the periodic clearance» must be answerable by asking `vibe progress`, in the
+same breath as the confirmed/drift figures — three counts and the files behind
+them. A number that exists only in a hand-written query is a number nobody
+looks at, and this whole subsection describes work that is invisible until it is
+printed. **The campaign-side script is a stopgap; the durable home is the
+shipped verb.** @spec/plan
+
+##DEBT-DO-NOT-JUDGE-BLIND **What must not happen: clearing the count by
+judging without evidence.** A verdict written to move a number is the defect
+this whole apparatus exists to remove, and it is cheapest to commit exactly when
+someone is paying down a backlog. @impl/done
+
 ## 11. Out of scope / future {#future}
 
 - ##FUT-XML-STORAGE XML document storage (arrives with the PROP-035 XML frontend — this markup is
