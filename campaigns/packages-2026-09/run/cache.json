@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T14:00:48Z",
+  "updated_at": "2026-08-06T14:17:16Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -100096,7 +100096,7 @@
       }
     },
     "spec/modules/vibe-cli/PROP-037-tree-tui.md": {
-      "content_hash": "2615971ba32fb4b842ef2ee0198f712744787a0ce72934d2611f04040433d601",
+      "content_hash": "0fa948e4cd50820fe524ae0d1a72e9bc6b33e3e679a7ae5a8b37ef476e0ac86f",
       "rollup": {
         "explicit": [
           "impl",
@@ -100110,11 +100110,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 142,
-        "fact_count": 141,
+        "marker_count": 144,
+        "fact_count": 143,
         "unmarked_facts": 0
       },
-      "marker_count": 142,
+      "marker_count": 144,
       "unit_count": 62,
       "issue_count": 0,
       "campaign": {
@@ -100784,10 +100784,68 @@
             "ev": [
               "honest self-diagnosis: names both the DRAFT lag and the executed TREE-TUI-PLAN v0.2"
             ]
+          },
+          "DONE-IS-THINNESS-NOT-FEATURE-COUNT": {
+            "v": "confirmed",
+            "ev": [
+              "the owner's ruling of 2026-08-06 is the authority for the definition, and it is recorded outside this document too — spec/WAL.md `@fact:WAL-C-TUI-IS-DONE-WHEN-THIN`, in the same words: delete it on paper, and if anything but presentation is lost it is not done",
+              "the ruling closed a question this repository had left open: the programme of 2026-08-06 listed `what counts as finished for the text interface` among the things NOT decided, as a debt the boss owed the owner",
+              "the two rejected measures it names are both real and both measurable in this tree, which is what makes the rejection meaningful rather than rhetorical — see the sibling fact's verdict"
+            ]
+          },
+          "THE-TEST-IS-DELETION-ON-PAPER": {
+            "v": "confirmed",
+            "ev": [
+              "the test it borrows really is the flow's own, at the anchor cited: packages/org.vibevm.world/omnichannel/v0.1.0/spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.md:52 — `## What \"thin\" means, per class {#thinness}`",
+              "so the citation resolves and the borrowing is exact rather than a paraphrase: this section applies the flow's general test to one surface instead of inventing a second definition of thinness",
+              "and the choice of surface is argued rather than assumed — a TUI is where logic accumulates because rendering and deciding sit in the same event loop"
+            ]
+          },
+          "WHY-THIS-BOUNDARY-AND-NOT-THE-OTHERS": {
+            "v": "confirmed",
+            "ev": [
+              "FIRST verdict on this fact — it was written on 2026-08-06 and never judged, which is why the false clause survived a day: the text asserted, of manual tests, `there are none`. That was false when written — spec/manual-tests/ carries MT-01-vibe-tree.md, MT-02-vibe-tree-tui.md and MT-03-vibe-prefs-tui.md, and MT-02 is a substantial visual sign-off for this very subsystem carrying its own marked facts at impl/done. Judging it at the time it was written would have caught it then; that is the argument for the same-pass rule, made by a case rather than by assertion",
+              "the clause was corrected in this same landing and the correction is recorded as its own fact rather than silently edited in, so the false reading remains findable",
+              "the surviving argument is unaffected and was never the false part: manual tests define no end because their number grows with the screens",
+              "the suppression clause, by contrast, reproduces EXACTLY: at the perimeter now stated in this section there are 53 `#[allow(...)]` attribute lines, of which 27 are bare and 26 carry an explanatory trailing comment. Measured 2026-08-06 by `grep -hE '^\\s*#\\[allow\\([^)]*\\)\\]\\s*$'` over the two tui/ trees",
+              "and the claim that all 27 could close without the subsystem moving is the point of the rejection: an escape hatch is hygiene, and hygiene is orthogonal to whether logic sits in the right layer"
+            ]
+          },
+          "MANUAL-TESTS-ALREADY-EXIST-FOR-THIS-SURFACE": {
+            "v": "confirmed",
+            "ev": [
+              "the three files exist: spec/manual-tests/MT-01-vibe-tree.md, MT-02-vibe-tree-tui.md, MT-03-vibe-prefs-tui.md — the whole content of that directory as of 2026-08-06",
+              "MT-02 is this subsystem's and is not a stub: its opening fact `@fact:purpose` states that the automated suite proves the model and the rendering functions but cannot drive a real terminal, which is precisely the gap a manual test fills, and its facts are marked impl/done",
+              "MT-03 covers the second half of the same perimeter, the prefs TUI — which is exactly the tree this section's own measurement counts"
+            ]
+          },
+          "WHAT-THE-MEASUREMENT-FOUND": {
+            "v": "confirmed",
+            "ev": [
+              "all three numbers reproduce exactly, measured 2026-08-06: 63 files, 18 426 lines, 258 `#[test]` attributes over crates/vibe-cli/src/commands/tree/tui/** plus crates/vibe-cli/src/commands/prefs/tui/**",
+              "the perimeter was not stated by the fact and had to be recovered: five candidates were measured and only this one matches. `commands/tree/` alone gives 52 / 13 117 / 169; `tree/tui` alone 43 / 11 171 / 152; `commands/tree/` plus `prefs/tui` 72 / 20 372 / 275; `commands/tree/` minus its build code 50 / 12 485 / 163",
+              "that the number is right at exactly one of five candidate perimeters is itself the evidence that the perimeter is the intended one, and it is now written into the section as its own fact so the next reader does not repeat the search"
+            ]
+          },
+          "THE-PERIMETER-OF-THAT-MEASUREMENT": {
+            "v": "confirmed",
+            "ev": [
+              "the perimeter it names produces both of this section's quoted numbers and no neighbouring perimeter produces either: 63 / 18 426 / 258 for size, and 53 attribute lines of which 27 bare for suppressions",
+              "the exclusion it justifies is real: crates/vibe-cli/src/commands/tree/ carries model.rs, build.rs, build/, host.rs, artifacts.rs, diagnostics.rs and plain.rs beside the tui/ subtree — that is the library half, and counting it into a thinness audit would measure the thing the audit is supposed to find OUTSIDE the surface",
+              "the two contrast figures quoted in the fact are the measurements above, taken the same day and reproducible with `find`"
+            ]
+          },
+          "THE-LAYERING-LAW-IS-THE-SAME-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "the law it claims identity with is in this same document, one section down: `@fact:LAYERING-LAW` — `styling never leaks into control or app logic, and vibevm logic never leaks into the app`",
+              "the identity holds under inspection rather than by assertion: `vibevm logic never leaks into the app` forbids a specific direction of leakage from inside, and the deletion test detects the residue of that same leakage from outside. One rule, two vantage points",
+              "this matters practically, not stylistically: it means the thinness audit does not introduce a second standard the subsystem must satisfy — it is a way of checking the one it already declares"
+            ]
           }
         },
         "verified_at": "2026-07-25T14:44:25Z",
-        "verify_batch": "c4e-cli-actions + d2a"
+        "verify_batch": "c4e-cli-actions + d2a + DEBT-2026-08-06-D"
       }
     },
     "spec/modules/vibe-cli/PROP-042-aiui-observation.md": {
@@ -101197,7 +101255,7 @@
       }
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {
-      "content_hash": "c59a62461dead9f2932ab4b6520a8338f1c5be6975f17358bafc19e8c160f94d",
+      "content_hash": "5b0bf15c12e5df46d301d83ff7b6f0b07bcc111e8af2748ed399ae3788440b64",
       "rollup": {
         "explicit": [
           "impl",
@@ -101211,12 +101269,12 @@
           "impl",
           "done"
         ],
-        "marker_count": 291,
-        "fact_count": 290,
+        "marker_count": 301,
+        "fact_count": 300,
         "unmarked_facts": 0
       },
-      "marker_count": 291,
-      "unit_count": 46,
+      "marker_count": 301,
+      "unit_count": 47,
       "issue_count": 0,
       "campaign": {
         "anchors_judged": 278,
@@ -102031,7 +102089,9 @@
           "DATA-DIR-IS-WORKTREE": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "RE-JUDGEMENT after the text moved: the line previously said operators commit and push manually `(v0)` or via `--auto-commit-push` `(v1)`, framing the second as unbuilt. It is built as of 2026-08-06 and the sentence now points at its contract instead of at a slice number",
+              "the two halves the fact asserts both hold: crates/vibe-index/src/cli/init.rs writes a `.gitignore` whose body ends `/state/`, and the data directory is a git working tree by construction — which is exactly what section 2.17's preflight verifies before enabling publication",
+              "verified by test rather than by reading: `preflight_rejects_unignored_state_dir` fails a directory whose `state/` is not ignored, and the positive control passes one written by `init`"
             ]
           },
           "ATOMIC-WRITE-PROTOCOL": {
@@ -102769,7 +102829,10 @@
           "OPEN-AUTO-PUSH": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "RE-JUDGEMENT recording what it replaces: the earlier verdict stood on a shared document-level paragraph asserting the crate `IMPLEMENTED and honestly marked`, which was true of the crate and NOT true of this question — `--auto-commit-push` was declared, parsed and discarded by one line at the time that paragraph was written. The question is now genuinely answered, and this verdict is per-fact so the difference is visible",
+              "answered by the build of 2026-08-06: the contract is section 2.17 of this document and the code is crates/vibe-index/src/publish.rs plus the three route call sites",
+              "the mitigation this question proposed is intact rather than dropped: the flag is opt-in and manual commit/push remains the default, which `@fact:DATA-DIR-IS-WORKTREE` still states",
+              "and the addition the fact now records is the substantive part: the question weighed only the push credential, while the data directory also holds the server's own bearer tokens one `git add -A` away — the reason section 2.17 refuses at startup instead of warning"
             ]
           },
           "OPEN-MULTI-REGISTRY": {
@@ -102998,10 +103061,93 @@
               "the verification command it prescribes exists and takes the shape written: crates/vibe-index/src/cli/mod.rs:68 declares `Get(get::Args)` and crates/vibe-index/src/cli/get.rs:18-24 takes `data_dir`, `group`, `name` positionally — the example was corrected from a non-existent `show` verb to this one before the fact was judged",
               "the indistinguishability it names is the same shape as the sibling fact `WEBHOOK-DELIVERY-IS-UNRELIABLE`, seen at setup time: a hook that never arrives and a hook that arrives with nothing to do produce identical silence at the index"
             ]
+          },
+          "AUTO-PUBLISH-CLOSES-THE-ONE-MANUAL-HOLE": {
+            "v": "confirmed",
+            "ev": [
+              "the hole was real and is closed: crates/vibe-index/src/cli/serve.rs no longer carries `let _ = args.auto_commit_push;` — the flag now gates a startup preflight and reaches AppState through `with_auto_commit_push`",
+              "the capability is crates/vibe-index/src/publish.rs (285 lines after `cargo fmt`), carrying `preflight` and `commit_and_push`, with `specmark::scope!` on PROP-005#root like its neighbours",
+              "the three mutating routes call it: crates/vibe-index/src/server/routes/packages.rs — upsert, delete_version and delete_package each invoke the publish helper after their persist",
+              "green at the crate gate on the host tree after applying and formatting: `cargo test -p vibe-index` — 15 binaries, 0 failed, including 4 new integration tests in tests/auto_publish.rs and 4 unit tests in publish.rs; `cargo clippy -p vibe-index --all-targets -- -D warnings` exit 0"
+            ]
+          },
+          "AUTO-PUBLISH-TARGET-IS-THE-WORKING-COPYS-OWN-UPSTREAM": {
+            "v": "confirmed",
+            "ev": [
+              "the push carries no remote and no refspec — crates/vibe-index/src/publish.rs runs `git push --quiet` from inside the data directory, so the destination is whatever the tree's branch is already pointed at",
+              "no new configuration surface was added: `vibe-index serve --help` gains no target flag, and the on-disk config gains no target block. The only new flag behaviour is that the existing `--auto-commit-push` now does something",
+              "the claim that a private repository is a legitimate target by construction follows: the tool never inspects or constrains the remote, so whatever the operator cloned is what receives the push"
+            ]
+          },
+          "AUTO-PUBLISH-REFUSES-TO-SHIP-SECRETS": {
+            "v": "confirmed",
+            "ev": [
+              "the refusal exists and is a hard stop, not a warning: crates/vibe-index/src/publish.rs `preflight` returns `Error::InvalidInput` when `git check-ignore` says `state/admin.tokens` is not ignored, and crates/vibe-index/src/cli/serve.rs calls it before the index is even loaded",
+              "the message names the leak in those words — `git add -A` would stage the bearer tokens at `state/admin.tokens` and push them to the remote — a credential leak — and names the repair",
+              "covered by a test rather than by reading: `preflight_rejects_unignored_state_dir` in publish.rs's own test module, green in the host run",
+              "the hazard is real rather than theoretical: this document's own `@fact:SECRET-ADMIN-TOKENS` puts bearer tokens at that exact path, and `@fact:DATA-DIR-IS-WORKTREE` makes the directory a git working tree — the two together are what `git add -A` would combine",
+              "and the guard the fact relies on holds today: crates/vibe-index/src/cli/init.rs writes a `.gitignore` whose body ends in `/state/`, so a directory created by `init` passes"
+            ]
+          },
+          "AUTO-PUBLISH-REFUSES-WITHOUT-A-WORKING-COPY": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/publish.rs `preflight` checks `is_git_dir` first and returns `Error::InvalidInput` naming the repair (`git init` the data directory and configure a remote) when there is no `.git`",
+              "covered by `preflight_rejects_non_git_data_dir`, green in the host run",
+              "the reasoning is checkable: without a working copy `git add -A` and `git commit` would have nothing to act on, so the server would report every mutation as published forever — the silent-success shape this repository treats as worse than a failure"
+            ]
+          },
+          "AUTO-PUBLISH-A-FAILED-PUSH-IS-NOT-A-FAILED-WRITE": {
+            "v": "confirmed",
+            "ev": [
+              "the handler logs and counts rather than raising: the publish helper in crates/vibe-index/src/server/routes/packages.rs emits `tracing::warn!` and calls the new `note_publish_failure()` on error, and returns nothing the route can fail on",
+              "the counter is real and rendered: `Stats::publish_failures_total` in crates/vibe-index/src/server/state.rs beside `note_mutation`, surfaced as `vibe_index_publish_failures_total` by crates/vibe-index/src/server/metrics.rs in the same `vibe_index_*_total` style as its neighbours",
+              "proven end to end rather than by inspection: `push_failure_keeps_request_alive_and_counts` posts a mutation with no remote configured and asserts 201 rather than 500, the local commit present, and the metric at 1",
+              "and the warning is now actually observable, which it would not have been: this crate installs no tracing subscriber anywhere else, so before this change every `tracing::warn!` in it went nowhere"
+            ]
+          },
+          "AUTO-PUBLISH-AN-EMPTY-DIFF-IS-SUCCESS": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/publish.rs stages, then returns `PublishOutcome::NothingToCommit` when nothing is staged — before any commit or push, and as an `Ok`",
+              "covered by `empty_diff_is_reported_as_success`, green in the host run",
+              "the deliberate divergence the fact names is real: crates/vibe-publish/src/git_publish.rs:204-208 does the opposite for the same operation, returning `PublishError::Git(\"working tree clean; nothing to commit\")` — which is right there, where an empty diff means the caller mis-computed, and wrong here, where it means a sibling publication won the race"
+            ]
+          },
+          "AUTO-PUBLISH-IS-SERIALISED-AND-AWAITED": {
+            "v": "confirmed",
+            "ev": [
+              "the dedicated lock exists and is not the index lock: `publish_lock: tokio::sync::Mutex<()>` on AppState in crates/vibe-index/src/server/state.rs, taken only by the publish helper",
+              "the separation is necessary rather than stylistic: the index write lock is released at the end of each handler's persist block, several lines before publication runs, so reusing it would either hold it across a network push or fail to serialise the pushes at all",
+              "the work runs on `tokio::task::spawn_blocking` and the handler awaits it, so the response is emitted after publication rather than before — which is what makes a 200 mean both things"
+            ]
+          },
+          "AUTO-PUBLISH-EVERY-COMMIT-NAMES-ITS-CHANGE": {
+            "v": "confirmed",
+            "ev": [
+              "the three routes pass distinct messages naming the coordinate: `index: upsert <group>/<name>@<version>` from upsert, `index: remove <group>/<name>@<version>` from delete_version, `index: remove <group>/<name>` from delete_package, in crates/vibe-index/src/server/routes/packages.rs",
+              "asserted rather than assumed: `upsert_publishes_with_named_commit_and_pushes_to_remote` and `delete_routes_publish_remove_messages` read `git log` in both the working copy and a bare remote"
+            ]
+          },
+          "AUTO-PUBLISH-EVERY-MUTATION-COMMITS-EVEN-A-NO-OP": {
+            "v": "confirmed",
+            "ev": [
+              "the cause is in the index's own write path: crates/vibe-index/src/index/memory.rs stamps `generated_at: Utc::now()` on every `write_to`, so two identical writes produce different bytes",
+              "therefore a redundant upsert still yields a diff and a commit, and the empty-diff path can only fire on the overlap case the sibling fact describes — which is why that path is covered by a unit test on the function rather than by a repeated-upsert integration test that would have passed for the wrong reason",
+              "this was found by building the feature, not by reviewing it, and it is recorded rather than fixed: whether the index's write should be byte-deterministic is a question about the format and its consumers, not about this flag"
+            ]
+          },
+          "AUTO-PUBLISH-COMMITTER-IDENTITY-IS-THE-OPERATORS": {
+            "v": "confirmed",
+            "ev": [
+              "no identity is set anywhere in crates/vibe-index/src/publish.rs — the commit runs with the host's configured git identity and nothing else",
+              "the failure path is the one the sibling fact defines: a missing identity makes `git commit` exit non-zero, which becomes a `PublishError`, which the route logs and counts without failing the write",
+              "the contrast is deliberate and visible in the tree: crates/vibe-publish/src/git_publish.rs sets `user.email` / `user.name` after its clone, because there the staging tree is ours and disposable; here the working copy is the operator's"
+            ]
           }
         },
         "verified_at": "2026-08-05T18:58:42Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH"
       }
     },
     "spec/modules/vibe-mcp/PROP-015-mcp-integration.md": {

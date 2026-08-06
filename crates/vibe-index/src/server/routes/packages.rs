@@ -259,6 +259,7 @@ pub async fn upsert(
     };
 
     state.stats.note_mutation();
+    publish_mutation(&state, format!("index: upsert {group}/{name}@{version}")).await;
     let status = if created {
         StatusCode::CREATED
     } else {
@@ -307,6 +308,7 @@ pub async fn delete_version(
     };
     if removed {
         state.stats.note_mutation();
+        publish_mutation(&state, format!("index: remove {group}/{name}@{v}")).await;
     }
     Ok(Json(DeleteResponse {
         command: "delete",
@@ -335,6 +337,7 @@ pub async fn delete_package(
     };
     if removed {
         state.stats.note_mutation();
+        publish_mutation(&state, format!("index: remove {group}/{name}")).await;
     }
     Ok(Json(DeleteResponse {
         command: "delete",
@@ -371,4 +374,41 @@ fn require_writeable(state: &AppState, headers: &HeaderMap) -> Result<(), ApiErr
         return Err(ApiError::unauthorized());
     }
     Ok(())
+}
+
+/// After a successful mutation, commit + push the data directory when
+/// `--auto-commit-push` is on. Runs on a blocking thread under the
+/// publish lock (serialised across mutations); a publish failure is
+/// logged at `warn` and counted, but never fails the request (Р4) — the
+/// mutation already succeeded. A no-op when the flag is off, so the
+/// flag-off server never runs git (Р7).
+async fn publish_mutation(state: &AppState, message: String) {
+    if !state.auto_commit_push {
+        return;
+    }
+    // Hold the publish lock across the blocking git work so two
+    // concurrent commits never interleave in the one working copy.
+    let joined = {
+        let _guard = state.publish_lock.lock().await;
+        let dir = state.data_dir.clone();
+        tokio::task::spawn_blocking(move || crate::publish::commit_and_push(&dir, &message)).await
+    };
+    match joined {
+        Ok(Ok(crate::publish::PublishOutcome::Published)) => {}
+        Ok(Ok(crate::publish::PublishOutcome::NothingToCommit)) => {
+            // Р6: a concurrent publish already shipped this change.
+        }
+        Ok(Err(e)) => {
+            tracing::warn!(
+                error = %e,
+                "auto-commit-push failed after a successful mutation; \
+                 the write stands and the index retries on the next mutation"
+            );
+            state.stats.note_publish_failure();
+        }
+        Err(e) => {
+            tracing::warn!(error = %e, "auto-commit-push task join failed");
+            state.stats.note_publish_failure();
+        }
+    }
 }

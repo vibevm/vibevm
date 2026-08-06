@@ -513,7 +513,7 @@ pub struct VersionEntry { /* §2.6 schema, one-to-one */ }
     └── stats.json                    # counters for /metrics endpoint
 ```
 
-@fact:DATA-DIR-IS-WORKTREE The data-dir doubles as a git working tree of the org's `index` repo. `state/` is `.gitignore`d (the `init` subcommand writes a default `.gitignore`). Operators commit + push the rest manually (v0) or via `--auto-commit-push` (v1). @status:impl/done
+@fact:DATA-DIR-IS-WORKTREE The data-dir doubles as a git working tree of the org's `index` repo. `state/` is `.gitignore`d (the `init` subcommand writes a default `.gitignore`). Operators commit + push the rest manually, or via `--auto-commit-push` — built 2026-08-06, contract in [§2.17](#auto-publish). @status:impl/done
 
 @fact:ATOMIC-WRITE-PROTOCOL **Atomic write protocol.** For each file F to be replaced: @status:impl/done
 
@@ -699,6 +699,87 @@ which is the same shape as `#WEBHOOK-DELIVERY-IS-UNRELIABLE`, seen at setup time
 instead of at run time. Verify once against a known change; after that, trust
 the mechanism and keep `rescan-org` for the deliveries you will never know you
 missed. @status:spec/done
+
+### 2.17 Auto-publication — the server carries its own result to the host {#auto-publish}
+
+@fact:AUTO-PUBLISH-CLOSES-THE-ONE-MANUAL-HOLE **What it fixes.** The server
+already accepts an authenticated write, writes the files atomically, recomputes
+the manifest and verifies integrity. The one thing it could not do was **carry
+the result to where it is served from**. `--auto-commit-push` closes that: after
+each successful mutation the server commits the data directory and pushes it.
+Built 2026-08-06 on the owner's ruling; the flag had been declared and discarded
+by one line since the server shipped. @status:impl/done
+
+@fact:AUTO-PUBLISH-TARGET-IS-THE-WORKING-COPYS-OWN-UPSTREAM **Where it publishes
+is the operator's setting, and vibe-index does not mint a second place to say
+so.** The data directory is already a git working tree ([§2.4](#layout)), and a
+working tree's remote and branch are configured with plain git. So the push
+carries no refspec and names no remote — it goes where the tree is already
+pointed. A private repository is a legitimate target by construction: it is
+simply what the operator cloned. Rejected: a `--push-remote` / `--push-url`
+pair, and a target block in the on-disk config — both would be a second home for
+a value git already owns, which is the defect class this repository keeps
+paying for. @status:impl/done
+
+@fact:AUTO-PUBLISH-REFUSES-TO-SHIP-SECRETS **Startup refuses rather than warns,
+and this is the flag's most important behaviour.** `state/` holds the bearer
+tokens ([§7](#secrets)). If the data directory's `.gitignore` does not cover
+them — a directory created before `init` wrote one, or one edited since —
+`git add -A` would stage those tokens and push them to a host that may be
+public. So with the flag set, the server **does not start** unless it confirms
+`state/admin.tokens` is ignored, and the refusal says so in those words. The
+check runs once at startup rather than per mutation, because the operator must
+learn the configuration is unsafe **before** the first token leaves the machine,
+not after. @status:impl/done
+
+@fact:AUTO-PUBLISH-REFUSES-WITHOUT-A-WORKING-COPY **The second refusal:** the
+flag set over a data directory that is not a git working copy also stops the
+server, naming what to do. Publishing by committing a directory that is not
+tracked is not a degraded mode, it is a no-op that would look like success
+forever. @status:impl/done
+
+@fact:AUTO-PUBLISH-A-FAILED-PUSH-IS-NOT-A-FAILED-WRITE **A push failure never
+turns a successful write into an error.** By the time publication runs the
+mutation is on disk and in memory; the HTTP write has happened. So a failure is
+logged at `warn` with git's own message and counted as
+`vibe_index_publish_failures_total`, and the request still answers as it would
+have. It is not rolled back either: a network outage must not be able to corrupt
+index state. Transient failures self-heal — git accumulates, and the next
+successful push carries the queued commits. @status:impl/done
+
+@fact:AUTO-PUBLISH-AN-EMPTY-DIFF-IS-SUCCESS **Nothing to commit is success, not
+an error** — the opposite of the publish flow's rule for the same operation, and
+deliberately so. The index lock is released before the push, so a second
+mutation can land while the first is publishing and the first commit carries
+both. The second then finds nothing staged, and that is the normal course of
+events rather than a caller's mistake. @status:impl/done
+
+@fact:AUTO-PUBLISH-IS-SERIALISED-AND-AWAITED **One publication at a time, and the
+response waits for it.** Two concurrent mutations must not interleave two
+commits in one working copy, so publication takes its own lock — not the index
+lock, which is released earlier and correctly so. The handler awaits the result
+on a blocking thread, which means a `200` says «persisted **and** published».
+For an index that is what the operator asked for, and mutations are publish
+events rather than a hot path. @status:impl/done
+
+@fact:AUTO-PUBLISH-EVERY-COMMIT-NAMES-ITS-CHANGE **The commit message names what
+moved** — the upsert or the removal, with the package coordinate. Each of the
+three mutating routes knows its own change, so the index's history reads as a
+log of publications rather than a wall of identical messages. @status:impl/done
+
+@fact:AUTO-PUBLISH-EVERY-MUTATION-COMMITS-EVEN-A-NO-OP **A consequence worth
+knowing before it surprises somebody**, measured while building this: writing
+the index stamps a fresh generation time into `repomd.json` on every write. So a
+repeated identical upsert still produces a diff, and therefore a commit. The
+empty-diff path above is real and tested, but in practice it fires only on the
+overlap case, not on redundant writes. Whether the index's own write should be
+deterministic is a question about the format, not about this flag. @status:impl/done
+
+@fact:AUTO-PUBLISH-COMMITTER-IDENTITY-IS-THE-OPERATORS **No identity is invented.**
+The commit uses whatever git identity the host is configured with; if there is
+none, `git commit` fails and that failure takes the path above — logged and
+counted, never fatal to the write. Inventing a fallback author would put a name
+in an organisation's published history that nobody chose. @status:impl/done
 
 ---
 
@@ -1012,7 +1093,7 @@ $ */5 * * * *  vibe-index reindex /home/owner/vibespecs-index --incremental --fr
 2. @fact:OPEN-COMPRESSION **`primary.jsonl.gz` compression: gzip vs zstd?** v0 picks gzip — universally supported by every HTTP client; deterministic with `mtime=0`. v1 may add a `primary.jsonl.zst` alongside. @status:spec/work
 3. @fact:OPEN-GPG **GPG signing of `repomd.json`?** Tracked here, not shipped in v0. Shape: `repomd.json.asc` next to `repomd.json`; consumers verify against a per-registry public key recorded in `[[registry]].pgp_key`. v1. @status:spec/work
 4. @fact:OPEN-MERKLE **Merkle log (Go sumdb-style transparent log)?** Tracked here. v2+. Useful for adversarial environments; v0/v1 trust the host. @status:spec/work
-5. @fact:OPEN-AUTO-PUSH **Auto-commit-and-push from server** — slice 9 question. Risk: server gets push credentials, which is a step up in trust. Mitigation: keep CLI-driven commit/push the default; `--auto-commit-push` opt-in. @status:spec/work
+5. @fact:OPEN-AUTO-PUSH **Auto-commit-and-push from server — ANSWERED and built 2026-08-06; the contract is [§2.17](#auto-publish).** The risk this question named — the server holding push credentials is a step up in trust — is unchanged and is why the flag stays opt-in with manual commit/push as the default. What the build added to the answer is a second risk the question had not seen: the credentials are not the only secret in reach, because the data directory also holds the server's own bearer tokens, and the publishing step is a `git add -A` away from them. Hence the startup refusal in §2.17 rather than a warning. @status:impl/done
 6. @fact:OPEN-MULTI-REGISTRY **Multi-registry server** — should one server instance host multiple data dirs (one per registry)? v0 says no (one process per registry). Trivial scale-out via process supervision; we revisit if multi-tenancy demand emerges. @status:spec/work
 7. @fact:OPEN-SSE **WebSockets / Server-Sent Events for live publish notifications** — out of scope. Polling `/v1/admin/status::last_reindex` is sufficient at our scale. @status:spec/work
 8. @fact:OPEN-OCI **OCI registry shape** — could we host the index inside an OCI registry instead of git? Out of scope; revisit if the OCI tooling becomes universal among vibevm operators. @status:spec/work

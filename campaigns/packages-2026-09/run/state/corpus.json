@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-06T13:58:51Z",
+  "updated_at": "2026-08-06T14:17:17Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -86303,7 +86303,7 @@
         "marker_count": 162,
         "processed_hash": "80bbcb789bb9789c760d9b15723a124f6d09abb73140939a0d0824214cdba2cc",
         "summary": {
-          "confirmed": 177,
+          "confirmed": 182,
           "unverifiable": 1
         },
         "verdicts": {
@@ -87401,10 +87401,51 @@
               "spec/boot/00-core.md exists; tools/self-check.sh carries `check_instruction_triple`, which byte-compares CLAUDE.md against AGENTS.md and GEMINI.md and fails on any divergence",
               "found: the exception describes the tree accurately, and the half that must not drift (the triple being identical) is mechanically gated - an exception with a checker on its riskiest edge."
             ]
+          },
+          "SURFACE-DISCIPLINE-IS-THE-OMNICHANNEL-FLOW": {
+            "v": "confirmed",
+            "ev": [
+              "the flow it defers to exists at the address it names: packages/org.vibevm.world/omnichannel/v0.1.0/spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.md:1 opens `# The Omnichannel Protocol {#root}`, so the `#root` anchor the citation uses resolves",
+              "and it is INSTALLED, not merely present: vibe.lock:16 carries the requirement `flow:org.vibevm.world/omnichannel@^0.1.0`, :36-39 the resolved entry, and the materialised copy is at vibedeps/flow-omnichannel",
+              "the division of labour the fact claims — the flow carries the rule, this section carries only vibevm's own floor — is borne out by the section's remaining four facts, which state a floor and never restate the rule"
+            ]
+          },
+          "VIBEVM-DECLARES-LIBRARY-CLI-MCP": {
+            "v": "confirmed",
+            "ev": [
+              "the one factual claim inside a target statement is checkable and true: `vibe tree` has a TUI. crates/vibe-cli/src/commands/tree/ carries a whole `tui/` subtree (input.rs, keymap_bridge.rs, copy/) against real terminal libraries, beside a separate `plain.rs` for the non-interactive rendering",
+              "the rest of the fact is a declaration of intent and its marker says so: `spec/plan`, not `impl/done`. Judging it `confirmed` asserts that this is what the project declares, which the sibling fact `THE-FLOOR-IS-A-TARGET-NOT-A-DESCRIPTION` makes explicit rather than leaving to be discovered"
+            ]
+          },
+          "LSP-AND-IDE-ARE-NOT-DECLARED": {
+            "v": "confirmed",
+            "ev": [
+              "the rule it leans on is really in the flow it cites, not assumed: packages/org.vibevm.world/omnichannel/v0.1.0/spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.md:75 — `@fact:AN-UNDECLARED-SURFACE-IS-NOT-A-DEBT`, `A project with no LSP has …`",
+              "so the inference holds mechanically: the floor above declares library + CLI + MCP + TUI-where-one-exists and does not name LSP or IDE, and by that rule their absence is a choice rather than an open debt",
+              "the owner's ruling of 2026-08-06 is the authority for the choice itself, recorded in the programme of that day under group В"
+            ]
+          },
+          "THE-FLOOR-IS-A-TARGET-NOT-A-DESCRIPTION": {
+            "v": "confirmed",
+            "ev": [
+              "the census it cites exists and is 235 lines: campaigns/packages-2026-09/harvest/g6-b047-surfaces-census.md",
+              "its headline number is derived there rather than asserted: :22-24 counts 29 top-level commands as every variant of `pub enum Command` cross-checked against the dispatch arms at crates/vibe-cli/src/main.rs:105-229, and :43 states `exactly 29 rows = 29 top-level surfaces`",
+              "the fact's purpose — warning a reader that the floor describes the target and not the tree — is corroborated by this session independently: the largest single counterexample it names, `vibe self`, is still a version manager living inside vibe-cli",
+              "perimeter: this verdict checks that the census exists and that its load-bearing count is derived as the fact reports. The 10-inside-vibe-cli and 5-MCP-tool splits are the census's own measurement and are not re-derived here"
+            ]
+          },
+          "THE-DIVERGENCE-HAS-ALREADY-BEEN-PAID-FOR": {
+            "v": "confirmed",
+            "ev": [
+              "the divergence was real and the repair is in the tree: crates/vibe-core/src/manifest/lockfile.rs:500 declares `pub fn files_written_posix(&self)` — one renderer",
+              "both surfaces now call it: crates/vibe-cli/src/commands/list.rs:90 `files_written: p.files_written_posix()` and crates/vibe-mcp/src/tools.rs:165 `.files_written_posix()`. Neither renders the path itself any more",
+              "the repair landed as commit 00401915, `fix(vibe-core): one renderer for the paths both surfaces print (Б6)`, on the date the fact names",
+              "so the fact's claim is not `two surfaces might diverge` but `they did, on Windows, on this field, until this commit` — and every clause of that is checkable"
+            ]
           }
         },
         "verified_at": "2026-08-04T23:36:33Z",
-        "verify_batch": "c3b-prop-000 + d1 + D14 + D20 + H4-stale-host + H6-stale-host-tail"
+        "verify_batch": "c3b-prop-000 + d1 + D14 + D20 + H4-stale-host + H6-stale-host-tail + DEBT-2026-08-06-C"
       }
     },
     {
@@ -99166,9 +99207,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 142,
+      "markers": 144,
       "units": 62,
-      "facts": 141,
+      "facts": 143,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -99178,7 +99219,7 @@
         "marker_count": 137,
         "processed_hash": "8ba9828249c828aceddd46ff0d94f58eab1aa675fa6f645876c95e9b04b47363",
         "summary": {
-          "confirmed": 110
+          "confirmed": 117
         },
         "verdicts": {
           "status-line": {
@@ -99841,10 +99882,68 @@
             "ev": [
               "honest self-diagnosis: names both the DRAFT lag and the executed TREE-TUI-PLAN v0.2"
             ]
+          },
+          "DONE-IS-THINNESS-NOT-FEATURE-COUNT": {
+            "v": "confirmed",
+            "ev": [
+              "the owner's ruling of 2026-08-06 is the authority for the definition, and it is recorded outside this document too — spec/WAL.md `@fact:WAL-C-TUI-IS-DONE-WHEN-THIN`, in the same words: delete it on paper, and if anything but presentation is lost it is not done",
+              "the ruling closed a question this repository had left open: the programme of 2026-08-06 listed `what counts as finished for the text interface` among the things NOT decided, as a debt the boss owed the owner",
+              "the two rejected measures it names are both real and both measurable in this tree, which is what makes the rejection meaningful rather than rhetorical — see the sibling fact's verdict"
+            ]
+          },
+          "THE-TEST-IS-DELETION-ON-PAPER": {
+            "v": "confirmed",
+            "ev": [
+              "the test it borrows really is the flow's own, at the anchor cited: packages/org.vibevm.world/omnichannel/v0.1.0/spec/flows/omnichannel/OMNICHANNEL-PROTOCOL.md:52 — `## What \"thin\" means, per class {#thinness}`",
+              "so the citation resolves and the borrowing is exact rather than a paraphrase: this section applies the flow's general test to one surface instead of inventing a second definition of thinness",
+              "and the choice of surface is argued rather than assumed — a TUI is where logic accumulates because rendering and deciding sit in the same event loop"
+            ]
+          },
+          "WHY-THIS-BOUNDARY-AND-NOT-THE-OTHERS": {
+            "v": "confirmed",
+            "ev": [
+              "FIRST verdict on this fact — it was written on 2026-08-06 and never judged, which is why the false clause survived a day: the text asserted, of manual tests, `there are none`. That was false when written — spec/manual-tests/ carries MT-01-vibe-tree.md, MT-02-vibe-tree-tui.md and MT-03-vibe-prefs-tui.md, and MT-02 is a substantial visual sign-off for this very subsystem carrying its own marked facts at impl/done. Judging it at the time it was written would have caught it then; that is the argument for the same-pass rule, made by a case rather than by assertion",
+              "the clause was corrected in this same landing and the correction is recorded as its own fact rather than silently edited in, so the false reading remains findable",
+              "the surviving argument is unaffected and was never the false part: manual tests define no end because their number grows with the screens",
+              "the suppression clause, by contrast, reproduces EXACTLY: at the perimeter now stated in this section there are 53 `#[allow(...)]` attribute lines, of which 27 are bare and 26 carry an explanatory trailing comment. Measured 2026-08-06 by `grep -hE '^\\s*#\\[allow\\([^)]*\\)\\]\\s*$'` over the two tui/ trees",
+              "and the claim that all 27 could close without the subsystem moving is the point of the rejection: an escape hatch is hygiene, and hygiene is orthogonal to whether logic sits in the right layer"
+            ]
+          },
+          "MANUAL-TESTS-ALREADY-EXIST-FOR-THIS-SURFACE": {
+            "v": "confirmed",
+            "ev": [
+              "the three files exist: spec/manual-tests/MT-01-vibe-tree.md, MT-02-vibe-tree-tui.md, MT-03-vibe-prefs-tui.md — the whole content of that directory as of 2026-08-06",
+              "MT-02 is this subsystem's and is not a stub: its opening fact `@fact:purpose` states that the automated suite proves the model and the rendering functions but cannot drive a real terminal, which is precisely the gap a manual test fills, and its facts are marked impl/done",
+              "MT-03 covers the second half of the same perimeter, the prefs TUI — which is exactly the tree this section's own measurement counts"
+            ]
+          },
+          "WHAT-THE-MEASUREMENT-FOUND": {
+            "v": "confirmed",
+            "ev": [
+              "all three numbers reproduce exactly, measured 2026-08-06: 63 files, 18 426 lines, 258 `#[test]` attributes over crates/vibe-cli/src/commands/tree/tui/** plus crates/vibe-cli/src/commands/prefs/tui/**",
+              "the perimeter was not stated by the fact and had to be recovered: five candidates were measured and only this one matches. `commands/tree/` alone gives 52 / 13 117 / 169; `tree/tui` alone 43 / 11 171 / 152; `commands/tree/` plus `prefs/tui` 72 / 20 372 / 275; `commands/tree/` minus its build code 50 / 12 485 / 163",
+              "that the number is right at exactly one of five candidate perimeters is itself the evidence that the perimeter is the intended one, and it is now written into the section as its own fact so the next reader does not repeat the search"
+            ]
+          },
+          "THE-PERIMETER-OF-THAT-MEASUREMENT": {
+            "v": "confirmed",
+            "ev": [
+              "the perimeter it names produces both of this section's quoted numbers and no neighbouring perimeter produces either: 63 / 18 426 / 258 for size, and 53 attribute lines of which 27 bare for suppressions",
+              "the exclusion it justifies is real: crates/vibe-cli/src/commands/tree/ carries model.rs, build.rs, build/, host.rs, artifacts.rs, diagnostics.rs and plain.rs beside the tui/ subtree — that is the library half, and counting it into a thinness audit would measure the thing the audit is supposed to find OUTSIDE the surface",
+              "the two contrast figures quoted in the fact are the measurements above, taken the same day and reproducible with `find`"
+            ]
+          },
+          "THE-LAYERING-LAW-IS-THE-SAME-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "the law it claims identity with is in this same document, one section down: `@fact:LAYERING-LAW` — `styling never leaks into control or app logic, and vibevm logic never leaks into the app`",
+              "the identity holds under inspection rather than by assertion: `vibevm logic never leaks into the app` forbids a specific direction of leakage from inside, and the deletion test detects the residue of that same leakage from outside. One rule, two vantage points",
+              "this matters practically, not stylistically: it means the thinness audit does not introduce a second standard the subsystem must satisfy — it is a way of checking the one it already declares"
+            ]
           }
         },
         "verified_at": "2026-07-25T14:44:25Z",
-        "verify_batch": "c4e-cli-actions + d2a"
+        "verify_batch": "c4e-cli-actions + d2a + DEBT-2026-08-06-D"
       }
     },
     {
@@ -100259,9 +100358,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 291,
-      "units": 46,
-      "facts": 290,
+      "markers": 301,
+      "units": 47,
+      "facts": 300,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -100271,7 +100370,7 @@
         "marker_count": 279,
         "processed_hash": "a636566752ec5626c036a1de50ac4326859a61c4286f8e7440ee395952e67b8e",
         "summary": {
-          "confirmed": 279
+          "confirmed": 291
         },
         "verdicts": {
           "milestone-line": {
@@ -101952,10 +102051,105 @@
             "ev": [
               "accurate: implemented; folded into the workspace 2026-05-22 — the §9 item-11 de-rot arc matches the shipped in-workspace crate"
             ]
+          },
+          "WEBHOOK-THE-PROBLEM": {
+            "v": "confirmed",
+            "ev": [
+              "the bypass this fact rests on is real in the tree, not hypothetical: the publish flow pushes a tag straight to the git host (crates/vibe-publish/src/git_publish.rs:30 `push_release`, :174 `push_tag_only`), and the index is told about it only by an OPTIONAL post-hook that stays dormant unless the operator sets the env vars — crates/vibe-cli/src/commands/registry/publish.rs:209 states exactly that in its own comment",
+              "so a publication that never touches the index is the ordinary path, not an edge case, and the index's picture is behind from the moment it is taken",
+              "the `stale is worse than slow` half restates the ruling already recorded in BACKLOG.md `@fact:B065-THE-AXIS-IS-NOT-THE-TOPOLOGY`, which the owner accepted on 2026-08-06"
+            ]
+          },
+          "WEBHOOK-IS-THE-ANSWER-TO-THE-CACHE": {
+            "v": "confirmed",
+            "ev": [
+              "this is a design decision at spec stage, not an implementation claim, and its marker says so (`spec/done`): neither the organisation cache nor the webhook route exists in the tree today",
+              "the relation it asserts is checkable and holds: the checkpoint that makes `--incremental` cheap is crates/vibe-index/src/index/checkpoint.rs and it records per-repository head/tags, i.e. it makes asking cheaper without changing who learns first",
+              "the freshness-check-plus-webhook pairing is the shape the owner agreed in BACKLOG.md `@fact:B065-AGREED-SHAPE`, points (3) and (5)"
+            ]
+          },
+          "WEBHOOK-ENDPOINT": {
+            "v": "confirmed",
+            "ev": [
+              "measured: crates/vibe-index/src/server/routes/ holds admin.rs, capabilities.rs, health.rs, index_files.rs, metrics.rs, packages.rs, purls.rs and mod.rs — eight files, NONE of them a hooks route, so this specifies something absent rather than describing something present",
+              "the `/v1/...` prefix the fact adopts is the existing family's, not a new one: the structured routes are already `/v1/packages`, `/v1/capabilities/{cap}`, `/v1/purls/{purl}` per the client that consumes them (crates/vibe-registry/src/index_client.rs:233)",
+              "the per-flavour argument is falsifiable and stands: signature verification differs per host, and a single route would have to infer the sender from the body"
+            ]
+          },
+          "WEBHOOK-SECRET-IS-NOT-THE-ADMIN-TOKEN": {
+            "v": "confirmed",
+            "ev": [
+              "the authority the fact refuses to reuse is real and measurable: every mutating route calls `require_writeable` (crates/vibe-index/src/server/routes/packages.rs:348), which gates on the bearer tokens read from `<data-dir>/state/admin.tokens`, and those tokens authorise upsert, delete-version and delete-package alike (packages.rs:229, :289, :320)",
+              "so handing a notification channel that token would grant it arbitrary index writes — the least-authority argument is arithmetic over the existing route table, not a preference",
+              "the storage rule it defers to is this document's own secrets section, which already requires file storage and mode 0600 for `admin.tokens` (`@fact:SECRET-ADMIN-TOKENS`)"
+            ]
+          },
+          "WEBHOOK-PAYLOAD-IS-A-NOTIFICATION-NOT-DATA": {
+            "v": "confirmed",
+            "ev": [
+              "it follows from a rule this document already carries rather than inventing one: `@fact:NEVER-REPLACE-TRUTH` in section 2.15 forbids the index displacing `vibe.toml` as the source of truth, and section 2.3 makes package repos authoritative",
+              "the per-package apply path it names exists and is tested: CLI `Add`/`Remove` (crates/vibe-index/src/cli/mod.rs:86,89) and the HTTP twins `upsert` / `delete_version` / `delete_package` (crates/vibe-index/src/server/routes/packages.rs:229, :289, :320)",
+              "the never-a-full-reindex half is a load-shape claim about a real cost: `reindex --from-github` enumerates the organisation page by page over the REST API (crates/vibe-index/src/scanner/from_github.rs:90-98), so a cheap unauthenticated-ish request able to trigger it would be a denial-of-service lever"
+            ]
+          },
+          "WEBHOOK-DELIVERY-IS-UNRELIABLE": {
+            "v": "confirmed",
+            "ev": [
+              "the idempotence it relies on is already a property of the code it would call, not something to be added: crates/vibe-index/src/server/routes/packages.rs:249-259 computes `existed` and then upserts, so running it twice leaves the same index state and differs only in the reported `created` flag",
+              "the consequence it draws — that `rescan-org` stays unconditional — is the same conclusion the owner reached independently in BACKLOG.md `@fact:B065-AGREED-SHAPE` point (4)"
+            ]
+          },
+          "WEBHOOK-FAILURE-POSTURE": {
+            "v": "confirmed",
+            "ev": [
+              "the status vocabulary it uses is the one this server already speaks: `ApiError::bad_request` and `ApiError::internal` are in use at crates/vibe-index/src/server/routes/packages.rs:236 and :257, and the 401 path is `require_writeable` at :348",
+              "the 202-not-500 rule is argued from our own retry relationship rather than from an unmeasured vendor policy: the failing side is the index, and the sender's retry schedule is not ours to set. No claim is made here about what any particular git host does to a persistently failing hook — that is unmeasured and deliberately not asserted",
+              "the scope check is not decorative: the repository name is the one payload field the design acts on, which `WEBHOOK-PAYLOAD-IS-A-NOTIFICATION-NOT-DATA` establishes"
+            ]
+          },
+          "WEBHOOK-VS-ACTIONS": {
+            "v": "confirmed",
+            "ev": [
+              "the alternative is real today and needs no new code, which is what makes it a fair comparison rather than a strawman: the write API exists (`POST /v1/packages` → `upsert`, crates/vibe-index/src/server/routes/packages.rs:229) and accepts a bearer token via `require_writeable` at :348",
+              "its cost is the one the sibling fact measures: that token authorises every mutating route, so an Action per package repository multiplies the places a broad credential lives",
+              "the one capability it names for the Action — pushing the built index files — is genuine: that is a checkout-and-push operation, which is exactly what the auto-publication path does from the server side"
+            ]
+          },
+          "WEBHOOK-NOT-DECIDED": {
+            "v": "confirmed",
+            "ev": [
+              "the first open point is grounded, not vague: this document's own `@fact:INC-CLONES` already treats a new HEAD on main WITHOUT a new tag as a real case worth re-walking, which is precisely why `tags only` is not obviously right",
+              "the second is measured ignorance rather than an omission: `--from-gitverse` is a stub and says why in the flag's own help — crates/vibe-index/src/cli/reindex.rs:41-44, `their public API does not yet expose org-scoped repo enumeration`. Nothing in this repository establishes what that host's webhooks can do",
+              "marked `spec/plan` rather than `spec/done` because it records questions rather than settling them"
+            ]
+          },
+          "WEBHOOK-GUIDE-LIVES-HERE": {
+            "v": "confirmed",
+            "ev": [
+              "the owner's ruling of 2026-08-06, recorded in BACKLOG.md `@fact:B065-WEBHOOKS-AND-THE-GUIDE`: keep the setup guide in the specifications, changing it together with the webhook properties",
+              "the drift it cites is measured, not rhetorical — instance one: BACKLOG.md B-069 records the index's format documentation describing `by-name/<kind>/<name>.json` while the code fetches `by-name/<name>.json` (crates/vibe-registry/src/index_client.rs:187)",
+              "instance two: the owner guide's panel claim, closed as BACKLOG.md B-063 on 2026-08-06 — the guide asserted a gate step that `tools/self-check.sh` did not run",
+              "the mechanism the ruling relies on is structural rather than diligent: guide and contract are the same file, so one commit moves both or neither"
+            ]
+          },
+          "WEBHOOK-GUIDE-IS-NOT-YET-A-CLAIM": {
+            "v": "confirmed",
+            "ev": [
+              "the rule it invokes is the corpus law: PROP-043 `@fact:FENCE-IS-AN-EXAMPLE-UNTIL-MARKED` — a fenced block is an example until marked `@fact/code:`, and only then does it become a fact's body with an address and a verdict",
+              "the block below this fact carries no `@fact/code:` marker, so nothing in it is asserted; verified by the corpus scan, which reports 0 unmarked facts and no typed-anchor error over 278 files after this section landed",
+              "and the honesty is load-bearing here specifically: the walkthrough names a `--webhook-secret-file` flag that does not exist, which under any other marking would be a false claim of exactly the kind this section's own `WEBHOOK-GUIDE-LIVES-HERE` cites twice"
+            ]
+          },
+          "WEBHOOK-GUIDE-VERIFY-STEP": {
+            "v": "confirmed",
+            "ev": [
+              "the verification command it prescribes exists and takes the shape written: crates/vibe-index/src/cli/mod.rs:68 declares `Get(get::Args)` and crates/vibe-index/src/cli/get.rs:18-24 takes `data_dir`, `group`, `name` positionally — the example was corrected from a non-existent `show` verb to this one before the fact was judged",
+              "the indistinguishability it names is the same shape as the sibling fact `WEBHOOK-DELIVERY-IS-UNRELIABLE`, seen at setup time: a hook that never arrives and a hook that arrives with nothing to do produce identical silence at the index"
+            ]
           }
         },
         "verified_at": "2026-08-05T18:58:42Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS"
       }
     },
     {

@@ -23,6 +23,7 @@ pub mod error;
 pub mod index;
 pub mod lock;
 pub mod lockfile;
+pub mod publish;
 pub mod scanner;
 pub mod server;
 pub mod types;

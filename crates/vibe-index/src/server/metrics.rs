@@ -13,6 +13,7 @@ pub fn render(state: &AppState, package_count: u64, version_count: u64) -> Strin
     let uptime = state.started_at.elapsed();
     let requests = state.stats.requests_total.load(Ordering::Relaxed);
     let mutations = state.stats.mutations_total.load(Ordering::Relaxed);
+    let publish_failures = state.stats.publish_failures_total.load(Ordering::Relaxed);
     let read_only = state.read_only as u64;
 
     let mut s = String::with_capacity(512);
@@ -50,6 +51,13 @@ pub fn render(state: &AppState, package_count: u64, version_count: u64) -> Strin
         "Total mutating HTTP requests served since process start.",
         "counter",
         mutations,
+    );
+    metric(
+        &mut s,
+        "vibe_index_publish_failures_total",
+        "Mutations whose --auto-commit-push failed to publish. The mutation itself succeeded and stays on disk.",
+        "counter",
+        publish_failures,
     );
     metric(
         &mut s,

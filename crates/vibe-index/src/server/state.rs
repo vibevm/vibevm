@@ -15,7 +15,7 @@ use std::path::PathBuf;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::Instant;
 
-use tokio::sync::RwLock;
+use tokio::sync::{Mutex, RwLock};
 
 use crate::index::Index;
 use crate::server::auth::{FileTokenStore, TokenStore};
@@ -31,12 +31,23 @@ pub struct AppState {
     pub stats: Stats,
     pub tokens: Box<dyn TokenStore>,
     pub rate_limiter: Box<dyn RateLimiter>,
+    /// `--auto-commit-push`: after a successful mutation, commit the
+    /// data directory and push it. Off ⇒ the server never runs git.
+    pub auto_commit_push: bool,
+    /// Serialises the commit-and-push across concurrent mutations so two
+    /// `git commit` never interleave in the one working copy (Р5). Held
+    /// only during publish, never reusing the index lock — that is
+    /// released first, correctly.
+    pub publish_lock: Mutex<()>,
 }
 
 #[derive(Debug, Default)]
 pub struct Stats {
     pub requests_total: AtomicU64,
     pub mutations_total: AtomicU64,
+    /// Mutations whose `--auto-commit-push` failed to publish. The
+    /// mutation itself succeeded and stays on disk (Р4).
+    pub publish_failures_total: AtomicU64,
 }
 
 impl Stats {
@@ -45,6 +56,9 @@ impl Stats {
     }
     pub fn note_mutation(&self) {
         self.mutations_total.fetch_add(1, Ordering::Relaxed);
+    }
+    pub fn note_publish_failure(&self) {
+        self.publish_failures_total.fetch_add(1, Ordering::Relaxed);
     }
 }
 
@@ -104,6 +118,17 @@ impl AppState {
             stats: Stats::default(),
             tokens,
             rate_limiter,
+            auto_commit_push: false,
+            publish_lock: Mutex::new(()),
         }
+    }
+
+    /// Builder step: turn `--auto-commit-push` on. A separate step
+    /// (rather than widening `with_tokens_and_rate_limit`) so the many
+    /// existing constructor call sites — including every test — stay
+    /// unchanged: the flag defaults to off, and only `serve` opts in.
+    pub fn with_auto_commit_push(mut self, on: bool) -> Self {
+        self.auto_commit_push = on;
+        self
     }
 }

@@ -34,7 +34,11 @@ pub struct Args {
     pub read_only: bool,
 
     /// After every successful mutation, `git add -A && git commit &&
-    /// git push` in the data directory. Slice 5 stub.
+    /// git push` the data directory (which must itself be a git working
+    /// copy whose `state/` is gitignored — bearer tokens live there).
+    /// The commit message names the change; a push failure is logged at
+    /// WARN and counted in `/metrics`, never raised. Startup refuses if
+    /// the data dir is not a git repo or `state/` is not ignored.
     #[arg(long)]
     pub auto_commit_push: bool,
 
@@ -55,7 +59,20 @@ pub struct Args {
 }
 
 pub fn run(args: Args) -> Result<()> {
-    let _ = args.auto_commit_push; // parked until slice 9.
+    // `--auto-commit-push` boots the self-publishing path. Its preflight
+    // (a git working copy, `state/` gitignored) must pass before we
+    // serve a single mutation, and its WARN logs must be observable —
+    // so both the subscriber and the gate are gated on the flag, and
+    // the flag-off path is byte-for-byte the old server.
+    if args.auto_commit_push {
+        let filter = tracing_subscriber::EnvFilter::try_from_default_env()
+            .unwrap_or_else(|_| tracing_subscriber::EnvFilter::new("warn"));
+        let _ = tracing_subscriber::fmt()
+            .with_env_filter(filter)
+            .with_writer(std::io::stderr)
+            .try_init();
+        crate::publish::preflight(&args.data_dir)?;
+    }
 
     let index = Index::load_from(&args.data_dir).map_err(|e| match e {
         Error::Io { .. } | Error::Malformed(_) => Error::InvalidInput(format!(
@@ -85,7 +102,8 @@ pub fn run(args: Args) -> Result<()> {
         index,
         tokens,
         rate_limit,
-    );
+    )
+    .with_auto_commit_push(args.auto_commit_push);
 
     let runtime = tokio::runtime::Builder::new_multi_thread()
         .enable_all()
