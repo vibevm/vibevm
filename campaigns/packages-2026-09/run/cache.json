@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T14:28:18Z",
+  "updated_at": "2026-08-06T14:57:02Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -28089,7 +28089,7 @@
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "d6f25e9b1c935bf8003a1f03fb30f2a4817bfd87af7778402e9f7284ed44c0d7",
+        "processed_hash": "86d05053b7a7470eaad9ba582f6320814bc9d539371a9bc9ccd3363b015ef567",
         "verdicts": {
           "scope-of-this-document": {
             "v": "confirmed",
@@ -28730,10 +28730,79 @@
               2,
               3
             ]
+          },
+          "CHOOSING-BETWEEN-THE-TWO-HOMES": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "source 1: the row it refers to is in this same document and does name two carriers, so the fact adds a decision procedure rather than restating a list",
+              "source 2, and it is the consequence half that is checkable: the host runs both carriers side by side today — 16 feature documents under spec/design/ and two campaign zones under campaigns/ — and the difference the fact names is real and configured, not asserted. The campaign zones are excluded from the corpus by the host's own progress.toml, on the recorded ground that a copy or a disposable zone is not the thing itself",
+              "so «whether the plan stays addressable after the work ships» is decided by the choice exactly as the fact claims: a design document is scanned, judged and addressable; a campaign document is structurally outside all three"
+            ]
+          },
+          "A-FEATURE-DOCUMENT-CARRIES-A-FEATURE": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "source 2: the host's spec/design/ holds 16 such documents and they behave as the fact describes — this session addressed two of them by anchor (spec/design/README.md and spec/design/command-nodes.md) with nothing registered anywhere to make that possible",
+              "the «addressable for free» clause is mechanical rather than aspirational, and it is the same mechanism the corpus scan uses: an anchored heading becomes an address because the scanner reads headings, not a registry",
+              "the three qualifying tests it gives — a name the user would recognise, referred to again after shipping, will not finish in one sitting — are qualitative by design, which the sibling fact `THE-THRESHOLD-STAYS-QUALITATIVE` defends explicitly rather than leaving as vagueness"
+            ]
+          },
+          "A-CAMPAIGN-PLAN-CARRIES-A-PROGRAMME": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "source 2: campaigns/packages-2026-09/ is exactly the shape described — many documents across many packages, a batch rather than a change, and a lifetime bounded by the campaign",
+              "the disposability is enforced rather than intended: the host's progress.toml excludes the campaign zones from the corpus, and PROP-043's own zone rules make `run/` throwaway after close-out while four named artefacts survive",
+              "and the warning clause has been paid for in this repository, which is the strongest evidence available for a rule of this kind: an analysis of five orphaned verdicts was written into a campaign zone on 2026-07-28, was correct, and was still sitting there untouched on 2026-08-06 — it behaved exactly as «nothing that must outlive the campaign belongs inside it» predicts"
+            ]
+          },
+          "NEITHER-CARRIES-SMALL-WORK": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the carrier the fact names for small work exists and is in use: TASKS.md at the host root declares itself a live checklist for the current work-slice where each item is one logical commit",
+              "the boundary it draws is the same one the host's own instruction file draws between TASKS.md and BACKLOG.md — a checklist of commits waiting to be made versus findings nobody is working on — so the three-genre split is consistent across both homes rather than invented here",
+              "the failure it names is a shape this repository has measured elsewhere: a document with more ceremony than content is the same defect as a plan row that outlives its work, seen at the small end"
+            ]
+          },
+          "THE-THRESHOLD-STAYS-QUALITATIVE": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the argument against a line count is one this repository can check against its own experience rather than accept: the file-length budget it does run is deliberately about where code SITS and never about what a type is, and the standing rule recorded for it says so in as many words",
+              "the failure the fact predicts — a rename and a subsystem landing in one bucket whenever the count agrees — is the same class the campaign keeps finding when a measurement's perimeter is left unstated, and the cure is the same: file by kind, and state the kind",
+              "it is a decision about a rule's form rather than a claim about the tree, and its marker says impl/done because the rule is written and in force, not because a checker enforces it — none could, which is the point"
+            ]
+          },
+          "THE-CHOICE-BELONGS-TO-WHOEVER-ASKED-FOR-THE-WORK": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the host's own contract says the same thing in a different vocabulary and enforces it at a harder boundary: its session-resume rule stops the agent after reporting and requires the owner to choose the next step, on the recorded ground that a session booting straight into execution takes that decision away",
+              "and the rule is observed in practice on this axis specifically: the owner's programme of 2026-08-06 records the boss proposing an order with its reasoning and the owner fixing it, and records four rulings where the owner's answer replaced the boss's recommendation",
+              "the fact's remedy is proposal-plus-reason-then-ask rather than silence, which is what makes it checkable at all: a silent choice leaves no artefact, a proposed one leaves the reasoning that can be judged"
+            ]
           }
         },
-        "verified_at": "2026-08-02T14:53:46Z",
-        "verify_batch": "W3 + D27 + D28 + E6-F169-F147"
+        "verified_at": "2026-08-06T14:56:20Z",
+        "verify_batch": "W3 + D27 + D28 + E6-F169-F147 + DEBT-2026-08-06-F"
       }
     },
     "packages/org.vibevm.world/campaign-plans/v0.1.0/README.md": {
@@ -57372,7 +57441,7 @@
       "unit_count": 4,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "1b857ec3d182430be86b93977ca30954efd623a2f1b28effaebf01c7e7abeabb",
+        "processed_hash": "e803433624c3843b93a359c2b014cc539d2f450ef4e699a93aa363826ffb4129",
         "verdicts": {
           "THE-PROJECT-KEEPS-A-SECOND-TEST-TIER": {
             "v": "confirmed",
@@ -57605,7 +57674,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-04T23:28:59Z",
+        "verified_at": "2026-08-06T14:57:02Z",
         "verify_batch": "W5 + H4-stale-world"
       }
     },
@@ -65930,7 +65999,7 @@
       "unit_count": 5,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "d7398e88dd92eb37dc35fe066e28f9371acead41ae4c80222ab9a2510f9cc5b0",
+        "processed_hash": "6c89d96f812dcf2b4e34e315aa925f95f762319576d155e4a48ff2b1b4572331",
         "verdicts": {
           "the-repository-is-worked-by-a-recordable-agent-session": {
             "v": "confirmed",
@@ -66200,7 +66269,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-04T23:28:59Z",
+        "verified_at": "2026-08-06T14:57:02Z",
         "verify_batch": "W5 + H4-stale-world"
       }
     },
@@ -82094,7 +82163,7 @@
       "unit_count": 5,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "c310e9d21fb1d8765709e1355e1fcca15c61b46df001cdca99fac39e37574815",
+        "processed_hash": "73fc4f7ce3fe1b55003140e8ee0d4019a6efe8ca8f5f4bb726098c6d3ba5a1e2",
         "verdicts": {
           "THE-PROJECT-MAY-HOST-SPECSPACES": {
             "v": "confirmed",
@@ -82417,7 +82486,7 @@
             ]
           }
         },
-        "verified_at": "2026-08-04T23:28:59Z",
+        "verified_at": "2026-08-06T14:57:02Z",
         "verify_batch": "W2d + D3a + H4-stale-world"
       }
     },
