@@ -206,209 +206,51 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
 
 ### B-062 — четыреста размеченных фактов вне корпуса: маркер стоит, вердикта нет {#b-062}
 
-| | |
-|---|---|
-| @fact:B062-ANCHOR **anchor** | `PROP-043 §4` (периметр наблюдаемого дерева) против `addressable-specs` `##EVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE` и правила «правило без чекера — это пожелание» |
-| @fact:B062-LOCATOR **locator** | замер 2026-08-05: `BACKLOG.md` — 206 якорей / 69 маркеров / 1239 строк; `TOOLING-MAP.md` — 55 якорей / 57 маркеров / 114 строк; `campaigns/packages-2026-09/SUBAGENT-LAUNCHERS.md` — 51 / 8; `PHASE-T-SPEC.md` — 85 / 1. Ни один из четырёх не наблюдается кампанией: `campaigns` — структурное исключение движка (`crates/progress-core/src/scope.rs:18`, действует даже под явным include), а корневые документы просто не совпадают ни с одним include-глобом host-политики (`progress.toml`: `spec/**` + два пространства пакетов) |
-| @fact:B062-SEVERITY **severity** | P2 |
-| @fact:B062-DISPOSITION **disposition** | **`closed` 2026-08-05 рулингом владельца.** Дословно: «бэклог — это ПЛАН. План не должен быть источником истины для разработки, как и все остальные планы. Произведённые в ходе этого плана спецификации — уже являются источниками истины. Когда всё в плане реализовано, план больше не нужен». Отсюда вариант *(2)*: статусы сняты, потому что план не утверждает, что́ есть — 118 маркеров убраны из `BACKLOG.md` (52), `TOOLING-MAP.md` (55) и `SUBAGENT-LAUNCHERS.md` (11). Якоря оставлены: на них ссылаются ~160 раз из `spec/**`, `crates/**` и конфигов |
-| @fact:B062-FILED **filed by** | волна Г, 2026-08-05 — всплыло при закрытии реестрового долга B-056 |
-
-- @fact:B062-SUT **Суть, по-простому.** Эти документы размечены так же, как спеки: у каждого факта якорь и статус вроде `@impl/done`, то есть «построено». Но кампания их не видит вовсе, поэтому статус никем не проверяется и вердикта не получает. Разметка выглядит как контракт и работает как украшение.
-- @fact:B062-IT-IS-NOT-THEORY **Это не теория — счёт открыт в тот же день, и он дошёл до пяти.** В одной строке бэклога (`##B056-ODR-PARALLEL`) жила фраза, которую постройка опровергла; в другой (`##B056-ORDER-AND-RECURSION`) стоял `@spec/plan` на работе, сделанной сутки назад; в третьей (`##B056-LANDED`) число тестов отстало на четыре. Все три нашлись руками. Вечером того же дня нашлись ещё две, и они хуже, потому что стоят не в прозе, а в поле `disposition`, по которому владелец решает, что делать: **[B-010](#b-010) держал `open` через сутки после коммита, который закрывает его дословно, а [B-011](#b-011) держал `planned` при закрытой целиком волне А.** Строка бэклога — это поверхность решения; протухшая `disposition` предлагает владельцу заново решить сделанное. В спеках ровно этот класс ловит `text-stability.py` за секунды.
-- @fact:B062-THE-COUNTER-ARGUMENT **Контраргумент, и он не слабый.** По закону жанров контракт и не-контракт судятся по-разному: бэклог — реестр находок, карта — план, закон транспорта — механика кампании. Ни один из них не контракт, а `confirmed` над строкой плана значит немного. Кампания уже отказалась по этому же основанию от книги, от discovery-промпта и от замороженных слотов — и отказалась осознанно.
-- @fact:B062-WHAT-WOULD-DECIDE-IT **Что решает спор — не жанр, а маркер.** Книгу исключили потому, что она ничего не утверждает о дереве. Эти четыре — утверждают: `@impl/done` на строке бэклога есть заявление, что нечто построено, и оно бывает ложным. Значит вопрос не «контракт ли это», а «носит ли документ статусы, которые можно опровергнуть деревом». Возможных ответов три: *(1)* расширить корпус на документы со статусами (цена — около 400 якорей к суду, дальше обычный ход кампании); *(2)* оставить как есть и снять статусы с не-контрактов, чтобы разметка перестала обещать проверку, которой нет; *(3)* завести для них третий режим — «размечено, но не верифицируется», которого сегодня не выражает `--exhaustive` (та же стена, что у F-080 и у книги).
-- @fact:B062-CLOSED-BY-RULING **Чем рулинг лучше расширения корпуса.** Расширение лечило симптом: судить 400 утверждений, которые план и не обязан был делать. Рулинг снимает причину — план перестаёт притворяться источником истины. Проверяемость от этого не теряется ни на грамм: всё, что действительно утверждает что-то о дереве, живёт в `spec/**` и в пакетах, и там кампания судит 11 575 фактов и печатает «0 stale» за секунды.
-- @fact:B062-WHAT-THE-COUNT-BOUGHT **Счёт протухших дошёл до четырнадцати, и он и есть доказательство.** Сперва три фразы в строке B-056, потом две `disposition` ([B-010](#b-010) `open` и [B-011](#b-011) `planned` на построенном), потом сплошной замер по дереву: **десять из 39 живых строк просили построить построенное** — B-025, B-026, B-029, B-034, B-035, B-036, B-038, B-039, B-041, B-043. Самая дорогая — B-041: её `planned` заставила босса в тот же день рекомендовать строить карту развития, которая лежала в корне третьи сутки. План, которому верят как источнику истины, стоит именно этого.
-- @fact:B062-WHAT-REPLACES-THE-MARKER **Что теперь вместо статуса.** Строка живёт, пока её работа не сделана, и умирает вместе с переездом содержимого в спеку — закрытие и есть переезд, одним коммитом, а не флип поля. Тогда «закрыто» и «нет в файле» — одно событие, и остатка не образуется в принципе.
-- @fact:B062-A-ROW-TAKES-ITS-CITATIONS-WITH-IT **Спутник рулинга, оплаченный на десятой удалённой строке (2026-08-05).** У строки есть якорь, и на него ссылаются ДРУГИЕ документы: живые дизайны под `spec/design/`, соседние строки этого файла, кампанийные разборы. Удаление строки рвёт каждую такую ссылку — за один заход это случилось с B-016, B-021 и B-037 в трёх дизайн-документах и внутри самого файла. **Поэтому закрытие есть переезд не только содержимого, но и ссылок:** каждая цитата либо указывает туда же, куда уехало содержимое (на построенный механизм, на спеку, на пережившую строку), либо переписывается в текст без адреса. Правило, по которому это решается: **рулинг закрытой строки живёт в коммите, который её закрыл, а не по адресу** — коммит неудаляем, якорь нет. Проверка дешёвая и делается тем же заходом: грепом `](#b-0NN)` по файлу и `BACKLOG.md#b-0NN` по дереву.
-- @fact:B062-RELATED **Смежность.** B-060 и B-061 были тем же жанром находки — заявленное покрытие без доставленного, — с той разницей, что там врал один факт, а здесь не проверяется целый класс. **Обе построены и удалены 2026-08-05:** схемы читаются сканером и размечены, а `implements` от голого объявления снят вместе с правилом, запрещающим его впредь. Их рулинги живут в закрывших коммитах.
+**Closed.** The ruling and its reasoning live in `ff2079e1`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-059 — исключения конформа сопоставляются не с тем путём, который конформ печатает {#b-059}
 
-| | |
-|---|---|
-| @fact:B059-ANCHOR **anchor** | нет — измерено при закрытии [B-057](#b-057); ближайший закон — `##SEV-GATE-BLINDNESS-IS-P1` в мягкой форме: ключ конфига, молча не делающий ничего, это не лгущий гейт, но соседняя болезнь |
-| @fact:B059-LOCATOR **locator** | `packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-conform/src/store.rs:271-275` — исключение сопоставляется с `rel_in_crate`, путём **внутри крейта** (`src/lib.rs`); строками ниже (`:277-281`) в находку кладётся `file` — путь **от корня репозитория** (`crates/foo/src/lib.rs`). Одно поле конфига, два разных строковых пространства |
-| @fact:B059-SEVERITY **severity** | P2 |
-| @fact:B059-DISPOSITION **disposition** | **`closed` 2026-08-05** — построены ОБЕ половины формы `##B059-FIX-SHAPE` (вариант 2 + вариант 3, коммит `48018a64`): подстрока сравнивается с внутрикрейтным И репо-относительным путём, а исключение, не отсеявшее ни одного файла за проход, объявляет себя. Совместимость **измерена до правки**: все `[rust] exclude_substrings` в дереве — это `/generated/`, оно совпадает в обоих прочтениях (репо-относительный путь строго шире внутрикрейтного, поэтому «только внутрикрейтное» совпадение невозможно), так что первая половина не меняет поведение ни одного файла |
-| @fact:B059-FILED **filed by** | замер долга дисциплины по пакетам, волна Г, 2026-08-05 — воркер опроверг боссов дизайн политики измеренным числом |
-
-- @fact:B059-SUT **Суть, по-простому.** Человек читает находку и видит адрес `crates/foo/src/lib.rs`. Он хочет убрать этот крейт из скана и пишет `exclude_substrings = ["crates/foo/"]`. Не происходит ничего: сравнение идёт со строкой `src/lib.rs`, в которой имени крейта нет вовсе, поэтому совпадение невозможно в принципе. Ключ не отказывает и не предупреждает — он молча остаётся нулём.
-- @fact:B059-HOW-IT-SURFACED **Как всплыло — и почему это не теория.** Политика mcp-пакетов проектировалась так, чтобы вендор-копии не ловили находок: авторский дом у них в другом пакете, и править копию запрещено. Исключения были выписаны по именам копий. Замер показал `extracted` = «всё, кроме `crates/vendor/`» — то есть копии сканировались, — и правило длины файла выдало находку прямо на вендор-копии `rust-ai-native-conform-frontend/src/lib.rs` (601 строка при бюджете 600), по адресу, где чинить запрещено. Периметр был обойдён литеральным корнем (`##B057-LANDED`), сам дефект — здесь.
-- @fact:B059-WHY-NOT-P1 **Почему не P1.** Гейт не лжёт: он честно печатает, что просканировал, и находка настоящая. Ложным было ожидание автора конфига, а не вердикт машины. Но цена высока именно из-за бесшумности: конфиг выглядит рабочим, и обнаруживается это только сравнением `extracted` с ручным подсчётом файлов.
-- @fact:B059-FIX-SHAPE **Форма починки — три варианта, выбор за постройкой.** *(1)* Сопоставлять исключение с тем же репо-относительным путём, который печатается в находке — ключ начнёт работать так, как его читают, но у существующих конфигов меняется смысл (наш образец `"/generated/"` совпадёт в обоих прочтениях, у чужих потребителей может быть иначе — мерить до правки). *(2)* Сопоставлять с обоими путями — совместимо, но два пространства у одного ключа остаются. *(3)* Оставить как есть и добавить предупреждение: строка исключения, содержащая `/` и не отсеявшая ни одного файла, объявляет себя вслух. Дешевле всех и лечит именно бесшумность.
-- @fact:B059-RELATED **Смежность.** [B-057](#b-057) — дыра, при закрытии которой это нашлось. Правило «пробел несёт причину И маршрут» здесь работает против нас: у молчаливого исключения нет ни причины, ни маршрута.
+**Closed.** The ruling and its reasoning live in `0f12992e`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-058 — производные сущности без гейта свежести: `vibedeps/` и `specmap.toml` {#b-058}
 
-| | |
-|---|---|
-| @fact:B058-ANCHOR **anchor** | класс — «out-of-gate drift», предмет периодического аудита здоровья; родня — [B-014](#b-014), та же болезнь у коммитнутого индекса карты |
-| @fact:B058-LOCATOR **locator** | *(i)* `vibedeps/` материализуются `vibe install` и **ничем не сверяются** с `packages/`: `tools/self-check.sh` install не запускает и свежесть копий не проверяет (единственное упоминание — комментарий на строке 201 о том, что инструкционные файлы пишет install). *(ii)* `specmap.toml` пишется генератором `init` **через `write_once`** (`…/go-ai-native-cli/src/init.rs:218`) — то есть один раз за жизнь проекта; обнаружение внешних корней (`[[external_specs]]`) при этом в генераторе есть и работает, но повторно не запускается никогда |
-| @fact:B058-SEVERITY **severity** | P2 |
-| @fact:B058-DISPOSITION **disposition** | `closed` — оба экземпляра получили свой сигнал 2026-08-05; см. `##B058-LANDED`. Третий экземпляр класса, [B-014](#b-014), закрыт волной В отдельно |
-| @fact:B058-FILED **filed by** | вопрос владельца о цене переустановки при большом рефакторинге, 2026-08-04 (волна В) |
-
-- @fact:B058-WHAT-IT-IS-NOT **Чем проблема НЕ является — и это надо сказать первым.** Не «переустановок слишком много». Измерено: правка КОДА пакета не требует переустановки вообще — хостовые крейты path-зависят от `packages/…` (8 из 8 зависимостей корневого `Cargo.toml`), а на `vibedeps/` не смотрят **ни разу**, и панель install не гоняет. Сто агентов, пишущих сто тестов в пакет, стоят ноль переустановок. Переустановка нужна только когда пакет меняет то, что публикует в поверхность потребителя (boot-снипет, тексты спек, скиллы), потому что скомпилированная boot-полоса собирается из установленных копий.
-- @fact:B058-WHAT-IT-IS **Чем является: нет сигнала о том, что переустановка нужна.** Никто не сверяет `vibedeps/` с `packages/`, поэтому протухание копий обнаруживается случайно, а не механизмом. Следствие поведенческое: агент, не имеющий сигнала, начинает переустанавливать **защитно** — и вот это уже дорого при большом рефакторинге. Защитный прогон есть симптом отсутствия сигнала, а не необходимость.
-- @fact:B058-BOTH-INSTANCES-PAID **Оба экземпляра класса заплачены в один день.** 2026-08-04: внешний spec-корень в хостовом `specmap.toml` указывал на `flow-core-ai-native/0.7.0` при установленном `0.8.0` — двенадцать цитат резолвились в никуда (починено коммитом `25628598`); и `vibedeps/` пришлось рематериализовать вручную после смены формата карты (`550f26d3`). Оба раза починка случилась не потому, что механизм сказал, а потому что босс случайно посмотрел.
-- @fact:B058-FIX-SHAPE **Форма починки — дешёвая проверка, а не новая машинерия.** *(i)* Шаг «согласованы ли `vibedeps/` с `packages/`» — по образцу того, как `cargo xtask sync-engines --check` уже сверяет вендор-копии с их источниками (механизм существует и работает, нужен его аналог этажом выше). *(ii)* Для `specmap.toml` — режим перегенерации/сверки обнаруживаемой части (`[[external_specs]]`), поскольку код обнаружения уже написан и просто не вызывается повторно; ручная правка агентом остаётся законной только там, где алгоритм не справился (формулировка владельца).
-- @fact:B058-LANDED **Закрыто 2026-08-05, и обе половины вышли дешевле, чем ожидала запись — по одной причине в каждой.** *(i)* Свежесть `vibedeps/` **не потребовала ни нового шага панели, ни новой машинерии**: панель уже гоняет `vibe check`, а замо́к уже хранит на каждый пакет и адрес источника, и его хэш на момент установки. Проверка встала клеткой `local-source-freshness` в тот же ряд: пересчитать хэш источника у каждой записи `source_kind = "local"` и сравнить. Уровень — **предупреждение, а не ошибка**, и это решение, а не слабость: правка кода пакета переустановки не требует, так что ошибка красила бы панель на ровном месте и приучала бы её игнорировать — нужен сигнал, а не стена. Живой замер на посадке: **0 предупреждений** (36 записей, все локальные), и ноль подтверждён пересчётом хэша одного настоящего пакета вручную — то есть это не молчаливый пропуск. *(ii)* Для `specmap.toml` пере-запуск обнаружения оказался НЕВЕРНЫМ инструментом: генератор пишет полное имя (`org.vibevm.ai-native/core-ai-native`), а коммитнутый файл несёт короткое (`core-ai-native`), и сверка «пере-обнаружил и сравнил» краснела бы на расхождении имён вместо протухшей версии. Вместо неё — проверка в самом движке карты: объявленный корень `[[external_specs]]`, которого нет на диске, объявляет себя **громким предупреждением** при загрузке политики. Строгость снята с ошибки до предупреждения по предъявленному факту: слой разрешения НАМЕРЕННО терпит отсутствующий корень как состояние «ещё не установлено», и четыре такие записи живут в дереве (демо под `research/`). Болезнью было молчание, а не отсутствие. Одна правка в нейтральном движке достаётся всем трём языкам вендорингом.
-- @fact:B058-WHY-ONE-ENTRY **Почему одной записью, а не двумя.** Это один класс: производная сущность, у которой есть производитель и нет гейта свежести. B-014 — третий его экземпляр (коммитнутый индекс карты), и его решение внутри волны В пришло к тому же выводу — проверять содержание, а не байты. Чинить их порознь значит трижды изобретать один и тот же шаг панели.
-
+**Closed.** The ruling and its reasoning live in `836cf5a2`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-057 — движок дисциплины не наведён сам на себя: конформ не гоняется по исходникам пакетов {#b-057}
 
-| | |
-|---|---|
-| @fact:B057-ANCHOR **anchor** | нет — измерено попутно при постройке B-021; ближайший закон — принцип паритета (`##PARITY-ACROSS-PROJECTIONS`) в его самом неудобном прочтении: проекция, в которой дисциплина не применяется, — это тоже проекция |
-| @fact:B057-LOCATOR **locator** | `tools/self-check.sh:325` — единственный прогон `cargo xtask conform check`, и он хостовый (13→14 гейтируемых крейтов, 6 исключённых — все из `crates/`). По воркспейсам пакетов панель гоняет `fmt`/`test`/`clippy` и специмаповые self-trace'ы (сиротство), но **конформ — нет**. Следствие: правила Class-F/G, бюджет длины файла и прочие правила движка не применяются к исходникам самого движка и стеков |
-| @fact:B057-SEVERITY **severity** | P2 |
-| @fact:B057-DISPOSITION **disposition** | `closed` — конформ гоняется по всем семи живым пакетным воркспейсам с 2026-08-05; см. `##B057-LANDED` |
-| @fact:B057-FILED **filed by** | постройка B-021, волна В, 2026-08-04 — воркер сам назвал переполнение бюджета в файле, который никакой гейт не проверял |
-
-- @fact:B057-WHY-NOT-P1 **Почему не P1.** `##SEV-GATE-BLINDNESS-IS-P1` — про гейт, который зелен **потому что не смотрит, утверждая, что смотрит**. Панель про пакетные исходники ничего не утверждает: её шаги названы честно (`cargo fmt --all --check (core-ai-native pkg)` и т.п.), конформа среди них нет и он не обещан. Это непокрытая площадь, а не лгущая панель.
-- @fact:B057-THE-DEBT-IS-MEASURED **Долг за дырой измерен, и он почти нулевой.** По всем авторским исходникам пакетов (без `vendor/`, `generated/`, `target/`) бюджет 600 строк превышают **три файла**: `core-ai-native/v0.8.0/…/index.rs` (847) и `…/mdspec.rs` (615) — оба приведены в бюджет той же посадкой, что нашла проблему; и `core-ai-native/v0.7.0/…/index.rs` (639) — **замороженный слот предыдущей версии**, который по политике вне периметра наблюдения. Прочих превышений нет.
-- @fact:B057-WHY-NOW **Почему закрывать сейчас.** Цена закрытия известна и мала именно потому, что долга нет: включение конформа по воркспейсам пакетов сегодня стоит одного шага панели и нуля правок кода. Через год, когда файлов станет больше, та же дыра будет стоить раскопок. Дыры закрывают, когда за ними пусто.
-- @fact:B057-FIX-SHAPE **Форма починки.** Шаг панели, гоняющий конформ по каждому живому воркспейсу пакета — по образцу того, как панель уже гоняет по ним `fmt`/`test`/`clippy`. Открытый вопрос к постройке: какой конфиг конформа брать для пакета (свой `conform.toml` у каждого или хостовый), и что делать с замороженными слотами предыдущих версий — их политика «размечено, но не верифицируется» уже существует и, вероятно, распространяется сюда без изменений.
-- @fact:B057-LANDED **Закрыто 2026-08-05 — и главное здесь то, что запись выше ошибалась в цене.** «Долг почти нулевой, три файла» было верно ровно для ОДНОГО правила (длина файла): остальные правила движка по исходникам пакетов не гонялись никогда, и первый же прогон всеми правилами дал **134 находки** — 9 у ядра, 31 у Rust-стека, 53 у TypeScript, 41 у Go, из них **102 одним правилом** (`seam-has-doctest`). Открытый вопрос про конфиг решён так: у каждого живого слота **свой** `conform.toml` (политика остаётся у потребителя, как и у `conform.toml` хоста), замороженные слоты прошлых версий в периметр не входят — панель выводит живой набор сама. Ничего из 134 **не заморожено**: политика гейтит крейты, у которых долга нет, и называет остальные `exempt` С ЧИСЛОМ находок — та же поза «расширяем по мере готовности», что у хоста. Итог калибровки: **8 крейтов под гейтом, 20 освобождённых с причиной, 134 → 6 находок**, из которых четыре `unsafe` в `core-ai-native-mcp/src/capture.rs` оформлены признанным отступлением (закон «помечать, а не гасить»), а две про длину файла лежат в реечных baseline как настоящий и дренируемый долг. Побочная находка стройки — [B-059](#b-059).
-
+**Closed.** The ruling and its reasoning live in `f7ffb5e5`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-056 — множественное наследование контрактных документов и плагинная форма `#source` {#b-056}
 
-| | |
-|---|---|
-| @fact:B056-ANCHOR **anchor** | `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#source` (механика связывания) + `#contract-source` (раскол); родня — [B-055](#b-055), который про сегодняшнее молчание на второй директиве |
-| @fact:B056-LOCATOR **locator** | сегодня свёртка одноисточниковая и одноуровневая: `crates/vibe-spec/src/pipeline.rs` берёт первую `#source` и сворачивает её текст, **не читая собственную `#source` источника** (рекурсии нет); резолвер отображает координату пакета в один установленный слот — перечисления по образцу не умеет |
-| @fact:B056-SEVERITY **severity** | P2 |
-| @fact:B056-DISPOSITION **disposition** | **`closed` 2026-08-05** (построено; см. `##B056-LANDED` и `##B056-WHAT-THE-BUILD-REFUTED`) — было: `planned`, **высокий приоритет** — **предложение владельца 2026-08-04:** «можем ли мы сделать полноценное множественное наследование для контрактных документов… и даже систему плагинов: `#source spec://org.vibevm.plugins/plugin-*`, дальше подхватываются все подходящие спеки и тела соответствующих секций склеиваются»; приоритет — его же словом («вероятно это нужно добавить всё куда-то в BACKLOG с высоким приоритетом»). **Три вопроса из четырёх им же и закрыты в тот же день — см. `##B056-RULED`.** |
-| @fact:B056-FILED **filed by** | разговор о публикации контрактов, 2026-08-04 (волна В) |
-
-- @fact:B056-WHY-IT-COMPOSES **Почему `:add`-половина достаётся почти даром.** Режим по умолчанию — сумма, а сумма ассоциативна: контракт + s1 + s2 + … складывается без единой новой сущности, секция-только-в-источнике просто добавляется. И коллизия **фактов** между источниками уже ловилась громко: после слияния компилятор пере-проверяет уникальность якорей по объединённому виду и падает на выжившем дубле, то есть два плагина с одним `##ID` дают ошибку сборки, а не тихое «победил последний». *(Уточнено 2026-08-05 постройкой: «уже ловятся» верно ровно для фактов и неверно для заголовков — гейт намеренно терпит повтор заголовка, и столкновение двух source-only секций пришлось ловить в свёртке; см. `##B056-WHAT-THE-BUILD-REFUTED`.)*
-- @fact:B056-RULED **Четыре рулинга владельца, 2026-08-04 — форма механизма закрыта.** *(1)* **`:replace` от любого источника выбрасывает только КОНТРАКТНЫЙ текст; источники между собой всё равно складываются по порядку.** *(2)* **Глоб — обязательна сортировка.** *(3)* **Обе формы:** несколько директив `#source` подряд И звёздочка для поиска. *(4)* **Рекурсия — по образцу C++/Java:** контракты включаются рекурсивно сколько угодно (граф от этого не растёт — дедупликация есть), реализации рекурсивно включать не следует; реализация может включать реализацию, но только до возникновения циклов.
-- @fact:B056-REPLACE-BECOMES-A-FLAG **Почему рулинг (1) лучше исходного предложения — и почему он ничего не ломает.** Босс предлагал считать два `:replace` на один якорь ошибкой сборки; при формулировке владельца **конфликта нет вовсе**: `:replace` перестаёт быть режимом «чей текст канонический» и становится флагом «контрактную сторону выбросить», после чего источники складываются по порядку независимо от того, сколько из них несли флаг. Проверено на вырожденном случае: при ОДНОМ источнике результат совпадает с сегодняшним поведением, то есть обобщение обратно совместимо.
-- @fact:B056-RECURSION-LAW-ALREADY-EXISTS **Рулинг (4) — не новое правило, а действующий закон этого проекта, не дотянутый до свёртки.** PROP-035 §9 несёт его под именем `##NO-DEADLOCK-INVARIANT`: «слой контрактов — там, где циклы законны; слой источников — там, где топологический порядок обязателен», и там же разобрана C++-механика на два разных приёма (стражи включения делают повторное включение no-op; предварительное объявление закрывает цикл без тела). **Реализовано:** `crates/vibe-spec/src/use_graph.rs` — трёхцветный DFS с дедупликацией («a node reached by several paths appears once»), предикат `is_contract` по сегменту пути, петля допускается только если ВСЕ её узлы контрактные, петля с источником — жёсткая ошибка; `#embed`-цикл запрещён отдельно. **Но всё это про `#use`:** тот же модуль явно говорит, что `#embed` и `#source` рёбрами зависимости не считаются и в обходе игнорируются. Значит работа — распространить существующий закон на свёртку `#source`, а не изобретать его.
-- @fact:B056-ODR-PARALLEL **Почему реализация не включает реализацию — то же правило одного определения.** В C++ `.cpp`, включивший `.cpp`, даёт дубль символа на линковке. У нас это воспроизведено **двумя разными механизмами, и разделение между ними — находка постройки:** дубль ФАКТА ловит пост-слияночная пере-проверка уникальности якорей, а дубль source-only СЕКЦИИ она пропускает намеренно (повтор заголовка в слитом виде неотличим от законного `:add`-склеивания), поэтому его судит свёртка, пока провенанс ещё жив. Java приходит к тому же с другой стороны: включения текста нет, интерфейсы наследуются множественно свободно, а неоднозначность default-метода — ошибка компиляции, снимаемая автором явно. Под всем этим одна фраза: **объявление идемпотентно, определение — нет.**
-- @fact:B056-DEDUP-ASYMMETRY **Дедупликация: статическая сторона подтверждена кодом, динамическая — нет.** Обход `#use` дедуплицирует по построению (см. выше). Структурный (динамический) режим исполняется LLM по первым инструкциям, и сами инструкции стоят на удержании до посадки B-011 — то есть там дедупликация есть свойство промпта, а не машины. Симметрию не утверждать, пока не измерено.
-- @fact:B056-DESIGN **Боссов дизайн стройки написан 2026-08-05:** [`spec/design/multiple-sources-and-plugins.md`](spec/design/multiple-sources-and-plugins.md). Он измеряет сегодняшнее состояние (свёртка берёт ПЕРВУЮ `#source` и имеет ровно два входа; рекурсии нет, потому что `use_graph` не считает `#source` ребром), выводит правило секции для последовательности источников, показывает, что рулинг (4) — уже действующий закон `##NO-DEADLOCK-INVARIANT`, которому не хватает досягаемости, и режет стройку на четыре посадки, каждая самостоятельная. Шаг 2 из четырёх закрывает заодно [B-055](#b-055).
-- @fact:B056-ORDER-AND-RECURSION **Что оставалось на стройку после рулингов — и что из этого вышло.** Порядок явного списка — порядок объявления (глоб — сортировка, рулинг (2)). Свёртке нужен был собственный страж циклов по образцу `use_graph` и собственная дедупликация. Резолверу — перечисление по образцу. И `:replace`-флаг надо было провести через `fold_source`, у которого было ровно два входа вместо N. **Построено 2026-08-05, и одно из четырёх вышло иначе:** второго стража не появилось — закон циклов дотянут до рёбер `#source` ТЕМ ЖЕ обходчиком, а «собственная дедупликация» оказалась двумя разными вещами, из которых даром досталась только одна (`##B056-WHAT-THE-BUILD-REFUTED`).
-- @fact:B056-PLUGIN-FORM **Плагинная форма: новое — только перечисление, а воспроизводимость спасает lockfile.** Резолвер был точечным; глобу нужно было перебрать установленное. «Что установлено» при этом не произвол среды, а зафиксированный lockfile'ом набор, поэтому при сортированном раскрытии одно дерево плюс один lockfile дают один результат. **Построено 2026-08-05:** звёздочка допускается в ИМЕННОЙ половине адреса, членство = имя совпало И документ на месте, раскрытие сортировкой по паре (имя, каталог слота), пустое совпадение законно.
-- @fact:B056-GLOBS-DEGRADE-NATURALLY **Побочная выгода, закрывающая соседний спор.** Глоб, не совпавший ни с чем, — законный пустой набор, а не отсутствующий источник. Плагинная форма поэтому **не имеет** проблемы «объявлено-не-поставляется против потеряно», вокруг которой ходит тир приватности: глобы деградируют естественно, точечные адреса — нет.
-- @fact:B056-LANDED **Построено 2026-08-05 — четырьмя посадками, плюс пятая, которой в дизайне не было.** Свёртка приняла последовательность (`fold_sources`, старое имя — вырожденный случай, все прежние тесты прошли без правок); конвейер стал передавать ВСЕ директивы в порядке объявления (этим закрыт [B-055](#b-055)); закон циклов дотянут до рёбер `#source` тем же обходчиком — второго не появилось; резолвер научился перечислять по образцу с обязательной сортировкой; и наконец рёбра `#source` свелись в ОДНУ функцию, через которую ходят и страж, и свёртка. Итог по крейту: **206 юнит-тестов** (замер `cargo test -p vibe-spec` 2026-08-05; строка «202» держалась до пятой посадки и её тестов), конформ 0 новых находок, длины файлов в бюджете (`use_graph.rs` 590 из 600 — следующая правка там начинается с разреза).
-- @fact:B056-WHAT-THE-BUILD-REFUTED **Стройка опровергла два собственных допущения дизайна, и оба нашлись измерением, а не ревью.** Первое: «дубль секции-только-в-источнике поймает пост-слияночная проверка уникальности» — не поймает, потому что гейт намеренно терпит повтор ЗАГОЛОВКА (в слитом виде он неотличим от законного `:add`-склеивания), и провенанс к тому моменту потерян; ловить обязана свёртка, которая ещё знает, кто что принёс. Второе: «дедупликация есть по построению обхода» — обход дедуплицирует УЗЛЫ, а свёртка есть текстовое включение, и одно не влечёт другого: в ромбе общий источник входил в документ дважды, что безобидно для прозы и смертельно для фактов — обычная композиция двух плагинов над общей базой падала бы на дубле якоря. Отсюда страж включения: текст узла входит ровно один раз, первым путём детерминированного порядка.
-- @fact:B056-COST **Честная цена.** Дёшева только `:add`-половина. Резолвер с перечислением, семантика `:replace`, порядок и рекурсия — отдельная стройка со своим дизайном. Плюс следствие для чтения: секция, собранная из пяти плагинов, длинная, и пороговое предупреждение про длинные секции (`long-section`, построено) на ней сработает — скорее правильная обратная связь, чем помеха, но знать стоит заранее.
-
-
-*(Phase T's **T-unbuilt** bucket is still expected to be the bulk filler: a fact
-whose surface does not exist is a P2 by construction, and the ignored test
-already written from it is the specification of the work.)*
+**Closed.** The ruling and its reasoning live in `77224fcf`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-003 — the Go floor gates a directory named `dirty` {#b-003}
 
-| | |
-|---|---|
-| @fact:B003-ANCHOR **anchor** | none — found in a captured run, not against a marked fact |
-| @fact:B003-LOCATOR **locator** | `campaigns/packages-2026-09/harvest/go-ai-native-lang-floor.md:11,31-35`; the gate is `packages/org.vibevm.ai-native/go-ai-native-lang/v0.1.0/crates/go-ai-native-cli/src/floor.rs` |
-| @fact:B003-SEVERITY **severity** | P2 |
-| @fact:B003-DISPOSITION **disposition** | `done` — **landed 2026-08-04 (`082e205b`), волна Б попутной стройкой:** the `[go].exclude_substrings` default (and the init template) gains `"/fixtures/"` (parity with the TS default), and the floor's gofmt step post-filters its listing through the same key with the engine's exact match semantics (`\`→`/` then substring; pure function, floor.rs's first unit tests). Measured on the package root: gofmt red-on-fixtures + 5 conform findings → gofmt green + 0 findings; the four remaining red steps are this row's recorded not-defects. Engine edit fanned ×6 via sync-engines; the TS twin hole is B-048 |
-| @fact:B003-FILED **filed by** | the packages-actualization campaign, Phase D, 2026-07-29 |
-
-- @fact:B003-WHAT **What it is.** `tools/go-extract/test/fixtures/dirty/` holds
-  deliberately malformed Go — it is the extractor's negative-test input, and its
-  directory is named `dirty`. The floor treats it as source: `gofmt` fails on
-  `…/dirty/internal/cells/plan/plan.go`, and **all five** of the run's `conform`
-  findings are inside that same tree. Two of the six failing steps are this one
-  cause.
-- @fact:B003-WHY-IT-IS-A-DEFECT **Why it is a defect and not taste.** The host already decided this
-  question the other way for its own tooling: `DEFAULT_EXCLUDES` in
-  `crates/progress-core/src/scope.rs` drops `fixtures` as *not a contract*,
-  always on and not overridable by an explicit include. One project, two answers
-  to «is a fixture source», and the Go floor has neither an exclude list nor the
-  word `fixtures` anywhere in it.
-- @fact:B003-NOT-P1 **Why P2 and not P1.** @fact:SEV-GATE-BLINDNESS-IS-P1 covers a gate that
-  reports green because it is not looking. This one is the opposite: it looks at
-  more than it should and reports red. That is noise, and noise in a gate is how
-  a floor stops being read — but it is not a gate that lies.
-- @fact:B003-DO-NOT-CONFUSE **What it is not.** The other four failures in that run — no Go module at
-  the package root, no `conform.toml`, no `specmap.json`, two absent optional
-  linters — are **not** defects. They are what a project-level floor prints when
-  it is aimed at a package that is not a project, and Phase C's §2.2 decision
-  captures that unmodified output on purpose. The missing-linter step failing
-  rather than skipping is the discipline behaving correctly: it refuses to go
-  green by omission.
+**Closed.** The ruling and its reasoning live in `0998f319`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-005 — `mirror --check` tests equality where the flow specifies ancestry {#b-005}
 
-| | |
-|---|---|
-| @fact:B005-ANCHOR **anchor** | `spec://org.vibevm.world/source-mirrors/flows/source-mirrors/fanout-mechanics#INVARIANT-THE-ANCESTRY-GATE` — the rule; the defect is in the host's port of it |
-| @fact:B005-LOCATOR **locator** | `xtask/src/mirror.rs:327-342` (`probe`), against the flow's own reference script at `fanout-mechanics.md:190-195` |
-| @fact:B005-SEVERITY **severity** | P2 |
-| @fact:B005-DISPOSITION **disposition** | `done` — построено 2026-08-04 (волна Г, коммит `39ad7b1d`). `probe` различает три состояния вместо двух: равенство ⇒ синхрон, предок ⇒ `Behind` (здоровое отставание, `--check` от него не падает), всё остальное ⇒ дрейф. Ловушка, из-за которой это не однострочник: sha цели приходит из `ls-remote` и может отсутствовать в локальном хранилище объектов — git тогда завершается кодом 128, а не 1; неизвестный объект трактуется как «не предок» ⇒ дрейф и никогда не роняет проверку. Решение вынесено в чистую функцию `classify(head, remote, ancestry)` и покрыто офлайн-таблицей из пяти случаев. JSON отчёта здоровья получил четвёртое имя состояния `behind`; набор имён нигде в дереве не закреплён. Путь push'а не тронут. Хвост F-204: строка реестра, названная `deferred` по этой записи, пере-судится ближайшим проходом якорей |
-| @fact:B005-FILED **filed by** | the packages-actualization campaign, Phase D, wave 6, 2026-07-29 — found in passing while re-verifying F-204, outside its anchor list |
-
-- @fact:B005-WHAT **What it is.** The flow specifies an **ancestry** gate: the target's main
-  must be an ancestor of local mainline. Its own fifteen-line reference script
-  implements exactly that — `git ls-remote` for the target's tip, then
-  `git merge-base --is-ancestor`. The host's port does not: `probe` matches
-  `Some(sha) if sha == head => SyncState::InSync` and sends everything else to
-  `SyncState::Drift`. That is **equality**, and a target legitimately *behind*
-  mainline — the ordinary state of every target between two fan-outs — is
-  reported as drifted.
-- @fact:B005-WHY-P2 **Why P2 and not P1.** It cannot produce a false green. `sha == head`
-  implies in-sync under either test, so the error is strictly in the
-  conservative direction: it reports red where the truth is «behind, which is
-  fine». That is noise, and noise in a check is how a check stops being read —
-  but it is not a gate that lies. Same reasoning as [B-003](#b-003), same
-  direction.
-- @fact:B005-NOT-THE-PUSH-PATH **What it is not.** The *push* path is sound and stays sound: it is
-  fast-forward-only by construction, and `push_args_never_force`
-  (`mirror.rs:426-440`) pins the never-`--force` invariant across four ref
-  shapes. This is the read-only `--check` probe only.
-- @fact:B005-THE-GENERAL-SHAPE **The shape worth remembering.** The package shipped a correct
-  reference implementation *in shell*, and the consumer's re-implementation in
-  Rust lost a property of it. Wave 6 nearly demoted the rule for the consumer's
-  omission — the perimeter check caught that the package itself implements it.
-  Where a flow ships a reference script, that script is a witness, and the port
-  is the thing to audit against it.
-- @fact:B005-NAMED-AS-F204-DEBT **Named as F-204's host debt** (owner ruling
-  2026-08-01, the build-or-demote tail): the registry row is `deferred` naming
-  this entry; the fix drains both together.
+**Closed.** The ruling and its reasoning live in `0998f319`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-006 — the highest-priority boot lane carries four normative snippets twice {#b-006}
 
-| | |
-|---|---|
-| @fact:B006-ANCHOR **anchor** | falsifies `spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#THE-POLICY-IS-STATED-IN-EXACTLY-ONE-ALWAYS-LOADED-PLACE` — from the host side, not the package's |
-| @fact:B006-LOCATOR **locator** | `spec/boot/STATIC.md:421` and `:615` carry the identical `vibe:static org.vibevm.world/git-attribution-policy` provenance marker and source path; the emitter is `crates/vibe-workspace/src/boot_artifacts.rs` / the `bootgen` static lane |
-| @fact:B006-SEVERITY **severity** | P2 |
-| @fact:B006-DISPOSITION **disposition** | `done` — designed → **owner-approved 2026-08-04** («согласен с твоими рекомендациями a1 b1 c1», plus two hardening probes answered in the rule: mixed static/static-transitive consumers, de-substitution for a snippet-bearing aggregator) → contract landed (PROP-009 §2.3 `##STATIC-EMITS-ONCE-EACH`, PROP-038 §2.1, PROP-035 §8 per-node) → **built the same day by two claudez slices** (W-A de-substitution + Т1–Т7; W-B per-node qualify + Q1–Q7) → **acceptance measured on the live lane: git-family markers 9 → 5, double-qualified labels 164 → 0, −404 lines, the anchor claim true from the host side**. Record: [`spec/design/lane-composition-dedup.md`](spec/design/lane-composition-dedup.md). Named residual, accepted and routed: partial-coverage duplication belongs to hoisting (DRIFT-030's counter is the recorded trigger); the nested boot-bearing-umbrella fixpoint case is parked in the pass's doc comment |
-| @fact:B006-FILED **filed by** | the packages-actualization campaign, Phase D, wave 6, 2026-07-29 |
-
-- @fact:B006-WHAT **What it is, measured.** `spec/boot/STATIC.md` carries **31 static
-  contributions resolving to 27 distinct sources**. The four duplicates are the
-  whole `git-*` family — `git-atomic-commits`, `git-attribution-policy`,
-  `git-autonomy`, `git-conventional-commits` — each emitted twice from the same
-  `vibedeps/` path. They are reached both directly and through the
-  `git-practices` umbrella the boot contract loads first, and the compiler
-  concatenates both arrivals instead of emitting the contribution once.
-- @fact:B006-WHY-IT-MATTERS **Why it is worth fixing rather than tolerating.** This is the lane
-  `CLAUDE.md` tells every session to read «first and in full», so the cost is
-  paid on every session by the most expensive reader in the project. And the
-  content duplicated is **normative** — the commit rules — which is the
-  `duplication` defect class this whole campaign exists to remove: one norm
-  authored in two places with nothing forcing them to agree. Here they agree
-  because they are byte-identical copies of one source, so nothing is *wrong*
-  today; what is wrong is the shape.
-- @fact:B006-IT-FALSIFIES-A-SHIPPED-CLAIM **It falsifies a shipped package's claim, and the package is not at
-  fault.** `git-attribution-policy` states the policy «in exactly one
-  always-loaded place (the boot snippet this package installs)». It installs
-  exactly one. The consumer's compiler emits two. Wave 6 routed that obligation
-  to the host on this evidence rather than softening the package's sentence.
-- @fact:B006-WHY-P2 **Why P2 and not P1.** Nothing lies and nothing is lost: both copies are
-  byte-identical and the rule they carry is the one in force. It is waste and a
-  broken invariant, not a gate reporting green while not looking.
+**Closed.** The ruling and its reasoning live in `9f79acf1`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-007 — do the specs owe ADRs, and in what form? {#b-007}
 
@@ -478,179 +320,39 @@ already written from it is the specification of the work.)*
 
 ### B-009 — the wind-down's push step contradicts the rollout two host documents standardise {#b-009}
 
-| | |
-|---|---|
-| @fact:B009-ANCHOR **anchor** | falsifies nothing in a package — the contradiction is host-internal. The rule side is `spec/boot/90-user.md` `##CMD-MIRROR` and `spec/common/PROP-016-source-mirrors.md` `##CMD-MIRROR`; the breach side is `CLAUDE.md`'s END SESSION step 4 |
-| @fact:B009-LOCATOR **locator** | `CLAUDE.md:191` — «Push to `origin/main` — routine per Rule 4» as the wind-down's step 4, where `90-user.md:35` says `cargo xtask mirror` «is the standard rollout, preferred over a bare `git push origin`» and `PROP-016:59` says «This — not `git push origin` — is the standard rollout» |
-| @fact:B009-SEVERITY **severity** | P2 |
-| @fact:B009-DISPOSITION **disposition** | `done` — owner ruling 2026-07-31 («сделай»): step 4 of the wind-down in all three instruction files now names `cargo xtask mirror` as the standard rollout, with the bare push demoted to fallback and the escape hatch preserved |
-| @fact:B009-FILED **filed by** | the packages-actualization campaign, Phase D, wave 8, 2026-07-31 — surfaced re-verifying F-220's source-mirrors half, where the recorded verdict used `CLAUDE.md:191` to demote a package sentence that the other two host documents support |
-
-- @fact:B009-WHAT **What it is.** Three host documents state the wind-down rollout and one
-  disagrees with the other two. The wind-down contract in `CLAUDE.md` prescribes
-  the bare named-remote push; the user-owned boot snippet and PROP-016 both name
-  the mirror fan-out the standard rollout and explicitly deprecate the bare push
-  for it. A session following `CLAUDE.md` to the letter rolls out to one host
-  and leaves every other mirror behind — the exact state `PROP-016`'s fan-out
-  exists to prevent.
-- @fact:B009-WHY-FILED-NOT-FIXED **Why filed and not fixed.** `CLAUDE.md` is the owner-maintained
-  boot contract; its END SESSION section is an owner-authored command
-  specification, and `RULE-NO-SILENT-REPAIRS` binds the phase. The fix is one
-  line — step 4 saying `cargo xtask mirror` (or «push, then fan out») — but
-  which wording the owner wants is the owner's call.
-- @fact:B009-COST-TODAY **What it costs today.** Every session that ends by the book pushes
-  `origin` only; the mirrors drift until someone runs the fan-out by hand, and
-  `mirror --check`'s equality probe (B-005) then reports the *targets* as
-  drifted — two filed defects compounding into one confusing red panel.
+**Closed.** The ruling and its reasoning live in `ae26bcca`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-010 — a check verb that writes, and a `--campaign` flag that selects state rather than scope {#b-010}
 
-| | |
-|---|---|
-| @fact:B010-ANCHOR **anchor** | none — found by a delegated run, not against a marked fact; the nearest law is `tool-design-lessons`' read-verbs-do-not-mutate genre |
-| @fact:B010-LOCATOR **locator** | `vibe progress check --exhaustive --campaign <zone>` — rewrites the named zone's `run/cache.json` / `state/campaign.json` / `state/corpus.json` (observed: +4 962 lines in the closed wave-1 zone's cache, plus a re-scope of the live zone's corpus), because `--campaign` selects the **state zone to write**, not the perimeter to read |
-| @fact:B010-SEVERITY **severity** | P2 |
-| @fact:B010-DISPOSITION **disposition** | **`closed` 2026-08-04** — построено коммитом `4685c8cc` («a verb named check no longer writes, and the flag named campaign says what it selects»): `check` теперь read-only по умолчанию и пишет состояние только под явным `--write-state` (`crates/vibe-cli/src/cli/progress.rs:117`; текст справки говорит это первым делом). **Строка держала `open` до 2026-08-05 — сутки после постройки**, и это тот самый класс, о котором [B-062](#b-062) |
-| @fact:B010-FILED **filed by** | the packages-actualization campaign, D10 pass, 2026-07-31 — a drafting worker pointed the check at the closed `progress-2026-08` zone expecting a read; the boss restored all six files from HEAD, loss-free |
-
-- @fact:B010-WHY-IT-BITES **Why it bites.** A verb named `check` reads as read-only, and the flag
-  named `--campaign` reads as «over this campaign's perimeter»; together they
-  silently rewrite a **closed** campaign's frozen state. `ZONE-LIFETIMES` calls
-  a closed zone's `run/` throwaway, so nothing broke here — but the same
-  combination pointed at a **live** zone during another session's merge window
-  would race its cache.
-- @fact:B010-THE-FIX-SHAPE **The fix shape, for Phase E.** Either `check` becomes read-only
-  (scan state moves behind an explicit `--write-state`), or its help says in the
-  first line that it warms the zone's cache; and `--campaign`'s help says it
-  selects the state zone. One of the two — a check that quietly writes is how a
-  frozen zone stops being frozen.
+**Closed.** The ruling and its reasoning live in `c9cdf39d`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-011 — marker stripping in the boot compiler needs an aliasing design first {#b-011}
 
-| | |
-|---|---|
-| @fact:B011-ANCHOR **anchor** | the compile path: `crates/vibe-workspace/src/boot_artifacts.rs` (static lane), `boot_artifacts/normal.rs` (PROP-035 §8 compile); no marker handling exists anywhere in it today |
-| @fact:B011-LOCATOR **locator** | measured 2026-07-31: the 22 canonically-mapped static contributions carry 838 `##ANCHOR` / `@stage/state` tokens over 1 446 source lines, all of which compile verbatim into `spec/boot/STATIC.md` after a `--force` re-vendor |
-| @fact:B011-SEVERITY **severity** | P2 |
-| @fact:B011-DISPOSITION **disposition** | **`closed` 2026-08-04 — построено, волна А закрыта целиком** (`##WAVE-A` карты); квалифицированный сплайс живёт в `crates/vibe-workspace/src/boot_artifacts.rs` + `boot_artifacts/tests_qualify.rs`, коммит `d45a49d8` («normal closures qualify per node — provenance survives splicing»), а результат виден в самом `spec/boot/STATIC.md`: правила разрешения, таблица RENAMED ANCHORS и форма `<origin-slug>--<original>`. **Строка держала `planned` до 2026-08-05** — см. [B-062](#b-062). Прежний приоритет — **решение владельца 2026-08-02**: «Я бы поставил это в бэклог план с Самым Высоким Приоритетом. От этой вещи зависит как вообще работает загрузка, насколько детерминированно и хорошо» (прежняя запись 2026-07-31 — «это не сейчас, это в бэклог» — поглощена этим решением) |
-| @fact:B011-FILED **filed by** | the packages-actualization campaign, the publication runbook's marker fork, 2026-07-31; расширена рулингом семьи дупликаций F-217/F-218, 2026-08-02 |
-
-- @fact:B011-WHY-NAIVE-STRIPPING-IS-WRONG **Why naive stripping is wrong, in the owner's own framing.** Strip
-  the markup from the compiled lane and a **dynamic module can reference an
-  anchor that existed in the source markup and vanished after cleaning** — the
-  reference resolves at authoring time and dangles at read time. Stripping is
-  not a filter; it changes what is addressable from where, so it needs a
-  resolution design, not a regex.
-- @fact:B011-THE-DESIGN-DIRECTION **The design direction (owner, 2026-07-31).** Short names of the shape
-  `#use spec://… as SOMETHING`: a lane consumer imports an anchor under an
-  alias, and **when SOMETHING's carrier was cleaned, the compiler loads the
-  source markup and learns where the anchor lives** — resolution survives
-  stripping because the alias binds to the source-of-truth address, not to the
-  compiled text. Stripping then becomes safe to build on top.
-- @fact:B011-INTERIM **The interim, ruled the same day:** publish as is — the lane carries
-  the authoring tokens (the house grammar every agent here reads), and the
-  strip waits for the aliasing design rather than shipping half-safe.
-- @fact:B011-COLLISION-REQUIREMENT **Расширение 2026-08-02 — коллизии меток при склейке (из F-217/F-218).**
-  Склейка `spec/boot/STATIC.md` из boot-сниппетов (31 вклад от 27 пакетов)
-  сталкивает заголовочные метки: измерено 59 предупреждений `duplicate-anchor`
-  по 11 именам — `{#root}` определён 26 раз, `{#never}` 17, `{#when}` 9; индекс
-  уже чеканит живой адрес `spec://org.vibevm.core/vibevm/boot/STATIC#root` на 26 «корней» сразу
-  (ссылок из кода пока ноль — неоднозначность латентна). Требование владельца
-  (2026-08-02, дословно по смыслу): **склейщик переименовывает метки внутри
-  STATIC.md так, чтобы все ссылки на эти метки сохраняли валидность по всему
-  документу**; отдельно рассмотреть сложные случаи **динамической дозагрузки
-  новых библиотек, в которых есть собственные STATIC.md**. Реестровые строки
-  F-218 (обе — «один факт — один якорь» и его summary) отложены с именем этой
-  записи; половина F-217 — тоже (вторая половина — тройка CLAUDE/AGENTS/GEMINI —
-  ждёт отдельного решения владельца).
-- @fact:B011-QUALIFIED-REWRITE **Идея владельца (2026-08-02): qualified-переписывание при материализации.**
-  «Возможно, при материализации нам нужно сразу переписывать все ссылки на
-  qualified варианты? То есть, если кто-то обращается к #root внутри документа,
-  мы понимаем, что это какой-то из "spec://.....#root"». Ориентир дизайна —
-  **ADL в C++ (Argument Dependent Lookup)**: как контекстно-зависимо сокращать
-  разные ссылки. Синтаксис из прежнего направления дополняется короткой формой
-  обращения: `#use spec://… as X`, затем в тексте спецификации — `@!X`. Алиасы
-  привязываются к source-of-truth адресу, поэтому переживают и склейку, и
-  стриппинг (исходная мотивация записи).
-- @fact:B011-DESIGN-APPROVED **Дизайн одобрен владельцем 2026-08-04** («Принимаю
-  дизайн B-011») — [`spec/design/deterministic-loading-aliasing.md`](spec/design/deterministic-loading-aliasing.md),
-  со всеми рекомендованными развилками (полный слаг · обе разновидности меток ·
-  `@!X` компилируется в полный адрес · жёсткая ошибка с кандидатами + флаг
-  мягкости · install-валидация ссылок отдельной стройкой) и добавлением
-  владельца тем же сообщением: правила резолвинга приоритизируются для
-  агента-исполнителя — преамбула первыми строками склейки + first-instructions
-  контракт §13 (дизайн §5.1). Нормативная посадка — правки PROP-035/PROP-009
-  (§7 дизайна); имплементация — фаза E, срезы W1–W4 (§10).
+**Closed.** The ruling and its reasoning live in `c9cdf39d`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-012 — PROP-014's specified-not-built mechanism set: research feasibility {#b-012}
 
-| | |
-|---|---|
-| @fact:B012-ANCHOR **anchor** | the ten annotated facts of `spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014-specmap-bidirectional-traceability` — each now carries its «Specified, not built» clause naming exactly what is absent |
-| @fact:B012-LOCATOR **locator** | the mechanisms, in one list: package-shipped `specmap.json` index + fetch-by-content-hash; the per-item edge-multiplicity lint in `vibe check`; `CodeItem.content_hash` + derived `Command`/`ErrorVariant` node views; error-rendering **index lookup** with revision + `run: vibe explain` hint (the compile-time-constant doorway ships); the LLM prose producer behind `vibe explain --prose` (deterministic template ships); `[metamodel] profile` runtime profiles; the spec-unit length warning (≤ 120); rustdoc composition in `explain`; `specmap_query` / `specmap_source` MCP tools |
-| @fact:B012-SEVERITY **severity** | P2 |
-| @fact:B012-DISPOSITION **disposition** | `done` — исследование выполнено 2026-08-01 (`campaigns/packages-2026-09/harvest/d14-b012-prop014-feasibility.md` + части A/B), решения владельца того же дня разлиты в записи от [B-015](#b-015) до B-021: всё из десятки строится (диспозиция `planned`), безопасность — протоколируется и паркуется до уведомления владельца. **Из десятки к 2026-08-05 построены и удалены B-016, B-018 (три части из четырёх), B-019 (треть) и B-021** — их рулинги живут в закрывших коммитах |
-| @fact:B012-FILED **filed by** | the packages-actualization campaign, партия 1a, 2026-08-01 |
-
-- @fact:B012-WHY-RESEARCH-FIRST **Why research-first.** Wave 8/D9 established the corpus-side truth
-  (the annotations); the product-side question — which of the ten are worth
-  building, in what order, and which are better retired from the spec — is a
-  design pass over PROP-014's §13-era ambitions against today's shipped
-  surface. B-001 (the link tables) is the same family and the same trigger
-  logic; the two studies should run together.
+**Closed.** The ruling and its reasoning live in `eccb1499`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-013 — the specmap schema-bump path is broken before anyone needs it {#b-013}
 
-| | |
-|---|---|
-| @fact:B013-ANCHOR **anchor** | none — found by the B-012 evidence pass, not against a marked fact; the nearest law is `dev-runtime-docs`' never-describe-an-abandoned-toolchain |
-| @fact:B013-LOCATOR **locator** | `xtask/src/codegen.rs:50-52` routes the `specmap` schema's codegen to `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.5.0/crates/specmap-core/src/generated` — a slot that does not exist (only `v0.7.0` does); repeated for the drift check at `codegen.rs:215`. Two more coordinates of the same stale relocation: `schemas/specmap.jtd.json` metadata still names `crates/specmap-core/...` / `specmap_core::specmap`, and `core-ai-native-specmap/src/lib.rs:24-27` names a package-local `schemas/specmap.jtd.json` that is absent from the repository |
-| @fact:B013-SEVERITY **severity** | P2 |
-| @fact:B013-DISPOSITION **disposition** | `done` — закрыт исполнением рулинга F-279 (вариант (а), дан 2026-08-02, исполнен 2026-08-03, коммиты `a6bb261e`/`b4c48aa0`): все четыре координаты fix shape — `generated_dir_for` и drift-check целят в живой движок `core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated`, метаданные схемы называют `core-ai-native-specmap`, и сама схема переехала в пакет (`core-ai-native/v0.8.0/schemas/specmap.jtd.json`, рядом канонический `specmap.example.json`), так что заголовок движка стал правдой; `cargo xtask check-codegen` чист; генератор упакован как `tool:org.vibevm.ai-native/jtd-codegen` (рецепт, не бинарь) |
-| @fact:B013-FILED **filed by** | the B-012 feasibility study (`campaigns/packages-2026-09/harvest/d14-b012-part-B.md` §B2, part A cross-cutting note), 2026-08-01 |
-
-- @fact:B013-WHY-IT-BITES **Why it bites.** Every serialised-index evolution in the B-012 set —
-  `CodeItem.content_hash` (M7a), a serialised `doc` field (M10), signatures for
-  the `contract` profile (M3) — is a `SCHEMA` 2→3 bump that must go through
-  jtd-codegen, and the route 404s on first use. The engine relocated into
-  `core-ai-native/v0.8.0` and the codegen plumbing did not move with it.
-- @fact:B013-WHY-P2 **Why P2.** Nothing lies: the checked-in generated module is current and
-  the gate byte-compares real artefacts. The defect is a dev-op that fails on
-  first invocation — noise at the exact moment someone attempts a planned
-  evolution, plus two documentation surfaces describing a pre-relocation world.
-- @fact:B013-FIX-SHAPE **The fix shape.** Point `generated_dir_for` at the authored engine
-  (`packages/org.vibevm.ai-native/core-ai-native/v0.8.0/crates/core-ai-native-specmap/src/generated`),
-  fix the drift-check twin, refresh the schema file's metadata, and either add
-  the package-local schema copy the engine header promises or reword the header.
+**Closed.** The ruling and its reasoning live in `dd02f1e2`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-014 — the committed host specmap.json drifts with no freshness gate {#b-014}
 
-| | |
-|---|---|
-| @fact:B014-ANCHOR **anchor** | none — measured by the B-012 evidence pass; the class is the health-audit's out-of-gate drift, `spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#root`'s own subject |
-| @fact:B014-LOCATOR **locator** | root `specmap.json`: **599 of 5266** spec units' recorded `line` no longer lands on that unit's anchor at HEAD (concentrated: PROP-000 ×137, PROP-043 ×112, PROP-018 ×92, PROP-009 ×91); the code side holds (898/912 edges land on a marker line). No gate covers it: `tools/self-check.sh:366-375`'s specmap steps are the packages' own `--gate` self-traces, and no host-index regeneration or byte-compare runs anywhere in the panel |
-| @fact:B014-SEVERITY **severity** | P2 |
-| @fact:B014-DISPOSITION **disposition** | **`closed` 2026-08-05** (коммит `c909dd78`) — обе половины: индекс перегенерирован (599 из 5266 единиц указывали мимо якоря), и `cargo xtask specmap --check` заведён шагом панели. Гейт при заведении нашёл 45 сирот: 44 у `vibe-spec`, изъятого в `conform.toml` с записанной причиной, которую список `specmap.toml` не отзеркалил, хотя тот же файл говорит, что списки держатся в шаге; 45-я настоящая — `vibe-resolver::embedded_provider` без `scope!` при цитате PROP-030 в собственном докблоке. Было: `open` |
-| @fact:B014-FILED **filed by** | the B-012 feasibility study (`campaigns/packages-2026-09/harvest/d14-b012-part-B.md` §B4 freshness caveat), 2026-08-01 |
-
-- @fact:B014-WHY-NOT-P1 **Why P2 and not P1.** `##SEV-GATE-BLINDNESS-IS-P1` covers a gate that
-  reports green *because it is not looking while claiming to look*. No gate
-  claims to check the host index — self-check's specmap steps name the package
-  slots they trace, truthfully. This is a committed derived artefact whose
-  producer is never re-run: out-of-gate drift, the exact class the periodic
-  audit exists for, not a lying panel.
-- @fact:B014-COST **What it costs today.** Any consumer of the committed index inherits
-  stale spec-side coordinates — including the M2 доorway slice the B-012 study
-  shortlists (its 81/81 URI-resolution measurement holds, but a printed
-  `file:line` would be wrong for ~11 % of units) — and every index-derived
-  distribution must carry a freshness caveat, as the study's own tables do.
-- @fact:B014-FIX-SHAPE **The fix shape, two independent halves.** (i) Regenerate the index and
-  commit it (one command, one churny diff). (ii) Decide whether the host wants
-  a freshness gate at all — a `--check`-style byte-compare in self-check, a
-  WalFreshness-style staleness warning in `vibe check`, or a deliberate
-  «regenerated on demand only» posture recorded as a decision. The A–D
-  health-audit inventory scheduled at the Phase D exit gate should meet this
-  entry there.
+**Closed.** The ruling and its reasoning live in `f7ffb5e5`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-015 — программа безопасности runtime-канала: запротоколирована и запаркована до уведомления владельца {#b-015}
 
@@ -740,29 +442,15 @@ already written from it is the specification of the work.)*
 
 ### B-022 — исследование: механизмы кэша объяснений (LEDGER-INTENT), можно ли реализовать {#b-022}
 
-| | |
-|---|---|
-| @fact:B022-ANCHOR **anchor** | пять фактов LEDGER-INTENT-v0.1 (партия 1c очереди группы B); измерения и готовые аннотации — `campaigns/packages-2026-09/harvest/d7a-core-sync-reverify.md`, раздел F-159 |
-| @fact:B022-LOCATOR **locator** | движок кэша: `core-ai-native-specmap/src/ledger.rs`; на диске хранится текст без полей, чистки нет, метрик две из четырёх, срез не экспортируется и не подписывается, вид запроса — строка в теле функции |
-| @fact:B022-SEVERITY **severity** | P2 |
-| @fact:B022-DISPOSITION **disposition** | `done` — исследование выполнено 2026-08-03 (`harvest/e1-b022-evidence.md` + синтез `e1-b022-ledger-feasibility.md`), **владелец согласился 2026-08-04 («с B-022 согласен»)**; исполнено целиком: M-E+M-A-слой-1 построены 2026-08-04 (QueryKind-enum, структурный ключ, entry-wrapper; вендорено ×6), четыре interim-аннотации M-A/M-B/M-C/M-D вписаны в LEDGER-INTENT (ключи: B-020, B-015), пять якорей F-159 пере-суждены `confirmed` (batch E3-F159), обязательство ушло в историю реестра; хост-строка `terraform/REPORT.md:41` исправлена. Наследники: B-020 (LLM-поля, давление GC, cost-метрики), B-015-нотис (release slice) |
-| @fact:B022-FILED **filed by** | решение владельца 2026-08-01 по предъявленной партии 1c |
-
-- @fact:B022-SUT **Суть, по-простому.** Документ про кэш сгенерированных объяснений обещает пять механизмов, которых нет: записи с полями происхождения (кто произвёл, какая модель, когда, почём), чистку кэша по давности с защитой от выселения нужного, полный набор метрик, подписанный «релизный срез» кэша при выпуске, и закрытый перечень видов запросов. Исследовать по образцу B-012: что из пяти реально строить, что чего требует, что честнее вычеркнуть.
-- @fact:B022-COUPLING **Связки.** «Подписанный срез» — подмножество запаркованной программы безопасности [B-015](#b-015) (подписи нет нигде в дереве — не строить до уведомления владельца); поля происхождения пересекаются с B-020 (клиент внешних LLM захочет писать model_id в запись); вид-запроса-как-enum — дешёвый и независимый. Готовые тексты честных аннотаций (если исследование скажет «не строить») лежат в harvest и не применяются без владельца.
+**Closed.** The ruling and its reasoning live in `0c9c97dc`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-023 — исследование: синтаксический уровень для JS/TS и Python-фронтенд {#b-023}
 
-| | |
-|---|---|
-| @fact:B023-ANCHOR **anchor** | строки таблицы фронтендов ENGINE-CONFORM (партия 1b, пункты 1–2); измерения — `harvest/d7a-core-sync-reverify.md`, раздел F-146 |
-| @fact:B023-LOCATOR **locator** | таблица обещает tree-sitter/SWC для TS/JS и RustPython/CPython-sidecar для Python; в дереве нет ни одного — семантический фронтенд TS (Compiler API через node-sidecar) есть и точен, Python-стека нет вовсе |
-| @fact:B023-SEVERITY **severity** | P2 |
-| @fact:B023-DISPOSITION **disposition** | `done` (исследование) — выполнено 2026-08-03/04 (`campaigns/packages-2026-09/harvest/e1-b023-evidence.md` + синтез `e1-b023-syntactic-tiers-feasibility.md`, включая контр-пробу владельца по глубине); **рулинг владельца 2026-08-04, дословно: «давай B-023 отложим до тех пор, пока не появится ещё какое-то правило кроме "as_cross с не локальной областью". Не нужно забывать об этом, это нормальное продолжение развития, просто это кандидат на середину или конец бэклога»** — checker-глубина ждёт ВТОРОГО типо-требующего правила (один `as_cross` триггером не является), приоритет средний/низкий, вне текущих волн; tree-sitter/SWC-дубль не строится ни в каком исходе; Python-фронтенд ждёт продуктового решения о Python-стеке; два якоря F-146 пере-судятся с пере-аннотацией таблицы §2, когда деферрал будет вписан в спеку |
-| @fact:B023-FILED **filed by** | решение владельца 2026-08-01 по предъявленной партии 1b (пункты 1–2) |
-
-- @fact:B023-SUT **Суть, по-простому.** Гейт качества читает код через «фронтенды» двух глубин: быстрый синтаксический разбор и глубокий семантический. Для TS/JS сегодня есть только глубокий (через компилятор TypeScript в node-процессе); быстрого нет. Для Python нет ничего. Исследовать: что даёт синтаксический уровень для TS/JS (tree-sitter или SWC — какие факты извлекаемы без компилятора, почём, какие лицензии/зависимости), и реализуем ли Python-фронтенд (RustPython-парсер in-process против CPython-sidecar по образцу ts-extract/go-extract), — с рекомендацией строить/не строить по каждому.
-- @fact:B023-CONTEXT **Контекст.** Пакеты языков пишутся для внешних потребителей (наша база — не скамья для Go/TS, §3.8 кампании); прецедент sidecar-архитектуры двойной (ts-extract, go-extract) — Python-sidecar ляжет в готовую форму. До итогов исследования строки таблицы стоят как есть (drift-вердикты кампании остаются честными).
+**Closed.** The ruling and its reasoning live in `0c9c97dc`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-024 — исследование: не вытесняют ли маркеры @stage/state lifecycle-статусы specmap {#b-024}
 
@@ -779,209 +467,93 @@ already written from it is the specification of the work.)*
 
 ### B-025 — находки гейта: помечать признанные отступления, а не гасить {#b-025}
 
-| | |
-|---|---|
-| @fact:B025-ANCHOR **anchor** | факт «цепочка из пяти звеньев» ENGINE-CONFORM (партия 1b, пункт 5); измерения — `harvest/d7a-core-sync-reverify.md`, раздел F-146 |
-| @fact:B025-LOCATOR **locator** | сегодня записанное отступление ГАСИТ находку на этапе правила (`in_deviation`, `conform/src/facts.rs:62`) — метка «deviation-acknowledged» не рождается никогда; поля вовлечённых фактов у находки нет (`Finding` = rule/file/line/message/why/fingerprint) |
-| @fact:B025-SEVERITY **severity** | P2 |
-| @fact:B025-DISPOSITION **disposition** | **`closed` 2026-08-05 — построено; измерено по дереву, не по записи.** `baseline.rs:54` дословно «B-025 (mark, don't suppress)»; вариант `FindingStatus::DeviationAcknowledged` и фильтр, держащий его вне `new` в ОДНОМ месте (`:80`, `:101`). **Строка держала `planned` до этого замера** — см. [B-062](#b-062). Было: `planned` — **решение владельца 2026-08-01, пункт 5 = (б): «помечать вместо гасить. Я в будущем хочу сделать инструменты визуализации, и просто убирать неприменимые факты из IR это плохо, нужно всё видеть»** |
-| @fact:B025-FILED **filed by** | решение владельца 2026-08-01 по партии 1b |
-
-- @fact:B025-SUT **Суть, по-простому.** Когда правило гейта находит нарушение, а рядом есть записанное отступление («мы так делаем сознательно, вот причина»), гейт сейчас просто не рождает находку — она исчезает из всех данных. Строим наоборот: находка рождается всегда, но помечается «отступление признано» и не валит гейт. Тогда инструменты визуализации видят полную картину — сколько нарушений, сколько из них признанных, где; ничего не выпадает из IR.
-- @fact:B025-BUILD **Что строить.** Статус-поле (или отдельный класс) у находки; правило перестаёт фильтровать по `in_deviation` и вместо этого штампует статус; baseline/ratchet учитывает «признанные» отдельно (не считает их новыми нарушениями); SARIF-рендер несёт статус. Заодно — поле вовлечённых фактов (второе недостающее звено той же цепочки). Обязательство F-146 частично ждёт этой стройки (якорь цепочки остаётся drift до неё).
+**Closed.** The ruling and its reasoning live in `245aedd6`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-026 — ингест SARIF: диагнозы чужих линтеров становятся фактами гейта {#b-026}
 
-| | |
-|---|---|
-| @fact:B026-ANCHOR **anchor** | факт «foreign linters as evidence providers» ENGINE-CONFORM (партия 1b, пункт 6); измерения — `harvest/d7a-core-sync-reverify.md`, раздел F-206 |
-| @fact:B026-LOCATOR **locator** | SARIF сегодня только пишется (`sarif::render` — единственная публичная функция модуля), парсера нет ни в одном слое; clippy/eslint бегут floor-шагами, их вывод никуда не попадает |
-| @fact:B026-SEVERITY **severity** | P2 |
-| @fact:B026-DISPOSITION **disposition** | **`closed` 2026-08-05 — построено; измерено по дереву, не по записи.** `core-ai-native-conform/src/sarif.rs:166` `pub fn ingest(text: &str) -> Vec<Fact>` плюс собственный тест-файл `tests/sarif_ingest.rs`; `facts.rs:228` описывает происхождение факта «NOT by a per-language frontend but by sarif::ingest». **Строка держала `planned` до этого замера** — см. [B-062](#b-062). Было: `planned`, **высокий приоритет — решение владельца 2026-08-01, пункт 6: «Построить ингест SARIF в будущем, с высоким приоритетом поместить это в бэклог»** |
-| @fact:B026-FILED **filed by** | решение владельца 2026-08-01 по партии 1b |
-
-- @fact:B026-SUT **Суть, по-простому.** Чужие линтеры (clippy, eslint, в перспективе ruff/clang-tidy) уже бегут рядом с гейтом, но гейт их результатов не видит. Строим чтение SARIF (стандартный формат отчётов статанализа): диагнозы чужих линтеров превращаются в факты гейта, и правила Дисциплины могут на них ссылаться («цитируем clippy, не переизобретаем его» — ровно та постура, которую документ всегда декларировал).
-- @fact:B026-BUILD **Что строить.** SARIF-парсер (или зависимость serde-схемы), маппинг диагноза → `Fact` (какой линтер, какой rule id, файл/строка/сообщение), точка входа (floor-шаг складывает отчёты линтеров, conform их читает), и словарь цитирования в правилах (`check: { tool, id, status }` — форма уже описана в документе и нигде не построена). После стройки якорь foreign-linters пере-суживается по построенному; обязательство F-206 в реестре — `deferred` до тех пор.
+**Closed.** The ruling and its reasoning live in `245aedd6`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-027 — аудит маркеров у «Specified, not built»: смысл против буквы {#b-027}
 
-| | |
-|---|---|
-| @fact:B027-ANCHOR **anchor** | вопрос владельца 2026-08-01 (партия 1b, пункт 7): «Я не понимаю, почему у specified not built статус @status:impl/done, если спецификация не реализована — то это же @status:spec/done или @status:impl/planned?» |
-| @fact:B027-LOCATOR **locator** | аннотированные факты несут маркеры вразнобой: часть @status:spec/done (партия 1a, D14-семья), часть @status:impl/done (например, DISTRIBUTION-RIDES в PROP-014, RULE-MULTIPLICITY-LINT, QUERY-ERROR-PROVENANCE, LLM-AS-RENDERER, RUNTIME-TRANSPORT); четыре закрывающих правила-собрата запечатаны с @status:impl/done |
-| @fact:B027-SEVERITY **severity** | P2 |
-| @fact:B027-DISPOSITION **disposition** | `done` — **правило утверждено владельцем 2026-08-02 («согласен, применяй»), свип исполнен тем же ситтингом**: инвентаризация 48 аннотированных фактов в 16 файлах пакетов; 19 флипов на `@impl/plan` с именем записи стройки прямо в аннотации («Specified, not built (→ B-nnn): …»), у остальных 29 стройка не запланирована и `@spec/done` стоит верно (включая ROW-KIND-PROP, чей ячеечный маркер при перечтении оказался честным как есть); каждый флип пере-сужен батчем D34 (19 confirmed, 0 отказов), 6 файлов запечатаны; хост-сторона фразы не несёт (проверено грепом) |
-| @fact:B027-FILED **filed by** | вопрос владельца 2026-08-01, зафайлен как аудит-задача; правило утверждено и исполнено 2026-08-02 |
-
-- @fact:B027-SUT **Суть, по-простому.** Владелец прав: `@impl/done` на факте, чей механизм не построен, — семантически ложь (маркер утверждает «стадия реализации завершена»). Разнобой — историческая случайность, не дизайн: партия 1a ставила одним фактам @status:spec/done, другим оставила @status:impl/done; закрывающие правила держат @status:impl/done на том основании, что само ПРАВИЛО (как амендировано) в силе. Грамматика маркеров уже несёт нужные слова: стадии `idea<spec<impl<test<doc<freeze`, состояния `hold<plan<work<done<void` — то есть догадка владельца «@status:impl/planned» существует в форме **`@impl/plan`**.
-- @fact:B027-RULE-PROPOSAL **Предлагаемое правило для аудита (утвердить перед свипом):** «specified, not built, стройка НЕ планируется» → `@spec/done`; «specified, not built, стройка запланирована (есть запись в бэклоге)» → `@impl/plan` — тогда маркер сам показывает, что реализация в плане (B-016…B-021, B-025, B-026 — их якоря получат @status:impl/plan с именем записи). Закрывающие правила пяти документов решаются одним решением на семью. Свип механический после утверждения правила; каждое изменение маркера — пере-суд якоря (D14-порядок: mirror → merge → seal).
+**Closed.** The ruling and its reasoning live in `245aedd6`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-028 — грамматика spec://-адресов: пакет публикует подмножество того, что реализует хост {#b-028}
 
-| | |
-|---|---|
-| @fact:B028-ANCHOR **anchor** | секция URI-схемы в `addressable-specs` (ADDRESSABLE-SPECS-PROTOCOL) против хостовой грамматики PROP-035 `##UNIFIED-GRAMMAR`; замечено re-verify-проходом волны 7 (`harvest/d7b-addressing-naming-sync-reverify.md`, раздел F-169, «New obligation noticed») |
-| @fact:B028-LOCATOR **locator** | пакет публикует `spec://<module>/<doc>#<section>`; хост реализует строгий суперсет `spec://<group>/<name>[@<version>]/<doc-path>#<anchor>[.<sub>…][~r<N>]` — опциональная версия, многосегментный путь, revision-pin; пакетная секция не упоминает ни одного из трёх расширений |
-| @fact:B028-SEVERITY **severity** | P2 |
-| @fact:B028-DISPOSITION **disposition** | `done` — **owner-ruled 2026-08-04, дословно: «Я хочу чтобы указание версий было опциональной фичей. Если версия не указана - используется самая свежая»** — и исполнено тем же заходом: флоу несёт ПОЛНУЮ грамматику (секция `{#uri-scheme}` переписана: authority = координата пакета, `[@<version>]` — опциональная фича с дефолтом «свежайшая установленная» (semver-newest — единственное детерминированное офлайн-чтение), `<doc-path>` многосегментный, `[~r<N>]` — пин ревизии юнита; якоря старых строк сохранены, смысл эволюционировал в структуру `<doc-path>`); обе redbook-главы (гл.1:195, гл.2:63) перестали пересказывать схему и цитируют секцию (закон «одна норма — один дом»); PROP-035 §6 `##URI-VERSION-OPTIONAL`/`##ROUTER-VERSION` перерулены с lockfile-формулировки на freshest; резолвер: multi-slot без версии выбирает новейшую вместо ошибки «address must pin @version» (срез E7-W1). Правки пакетов — in-slot до пред-публикационной границы. Filed: **решение владельца 2026-08-02: «положи в бэклог с высоким приоритетом»** |
-| @fact:B028-FILED **filed by** | решение владельца 2026-08-02 по предъявлению группы C/D |
-
-- @fact:B028-SUT **Суть, по-простому.** Флоу адресуемых спек учит консьюмеров грамматике ссылок — но учит **урезанной версии**: наш собственный резолвер понимает ещё версию пакета (`@0.8.0`), путь из нескольких сегментов и пин ревизии (`~r2`). Пакетная версия не ложна (подмножество), но продаётся как целое. Вопрос: нести ли флоу полную грамматику?
-- @fact:B028-STAKES **Что решение тянет.** Если «да» — это release event: секция URI-схемы переписывается, и **redbook пересказывает схему в двух главах** (те тоже двигаются — как раз класс «одна норма в трёх местах», который кампания выжигает). Если «нет» — записать явно, что пакет публикует базовую грамматику, а расширения — хостовое superset-расширение (одна оговорка в пакетной секции + ссылка). Обе развязки закрывают вопрос честно; открытым он оставляет грамматику раздвоенной.
-- @fact:B028-RELATED **Смежное.** Вопрос сегментов `<module>`/`<doc>` (единый namespace хоста, усечённые имена документов — F-169/F-147) — соседний, но отдельный: там спор о **значениях** сегментов, здесь — о **составе** грамматики. Решения независимы.
+**Closed.** The ruling and its reasoning live in `93d92ec9`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-029 — ключ гейта: нейтральное/пер-языковое имя вместо растового на всех {#b-029}
 
-| | |
-|---|---|
-| @fact:B029-ANCHOR **anchor** | Config нейтрального движка гейта (`core-ai-native-conform/src/config.rs:44`), вендорится в шесть пакетов |
-| @fact:B029-LOCATOR **locator** | единственный ключ ratchet-списка — `gated_crates`, одно написание на все языки; `deny_unknown_fields` — любое другое слово даёт громкий parse error; Go-доки на 2026-08-02 приведены к шипнутому ключу с оговоркой «слово — общего движка» |
-| @fact:B029-SEVERITY **severity** | P2 |
-| @fact:B029-DISPOSITION **disposition** | **`closed` 2026-08-05 — построено; измерено по дереву, не по записи.** `config.rs:9-17` — v2-поверхность с пер-языковыми секциями `[rust].gated` / `[go].gated` / `[typescript].gated`; плоские ключи стали громкими tombstone (`config.rs:72-88`), `Config::load` отвергает их с подсказкой (`:430-437`). **Строка держала `planned` до этого замера** — см. [B-062](#b-062). Было: `planned` → **развилка №2 карты взята владельцем 2026-08-04** (единица = родная единица языка: Rust crate / Go package / TS cell; дом — полная симметрия секций одной формы, нейтральный ключ `gated` в идиомном доме, корень — только общий бюджет; плоские корневые ключи умирают громко с подсказкой переезда; бар владельца дословно: «расширяемо на новые языки (скоро добавится Python!)… Хочется сделать хорошо и надолго»). Запись: `spec/design/gate-parity-config.md` §2; прежний пункт 2.1 (2026-08-02: «правда кода сегодня, идиома — записанной стройкой») исполняется этой стройкой |
-| @fact:B029-FILED **filed by** | решение владельца 2026-08-02 (его же challenge: «crates — это не термин Golang») |
-
-- @fact:B029-SUT **Суть, по-простому.** Список «какие единицы кода уже под гейтом» во всех языках называется растовым словом `gated_crates` — Go-проект пишет чужой термин в свой конфиг. Стройка: нейтральный ключ (например `gated_units`) или пер-языковый алиас (`gated_packages` для Go, `gated_cells` для TS), старое написание остаётся алиасом совместимости навсегда.
-- @fact:B029-SCOPE **Масштаб.** Release event: движок вендорится в шесть пакетов; доки трёх стеков и легенды `conform.toml` поворачиваются на идиому после посадки; фикстуры/тесты, читающие ключ, идут той же правкой. Решить при постройке: один нейтральный ключ или языковые алиасы (моя заготовка — нейтральный + алиасы, чтобы старые конфиги не ломались).
-- @fact:B029-CONFIG-SURFACE **Обогащение 2026-08-02 (владелец, по предъявлению F-185): расширить саму поверхность конфига под Go и TypeScript.** «Кажется, мы где-то уже пообещали в бэклоге решить это. Вероятно нам нужно обогатить это обещание. Может быть, под Go и Typescript, нам надо как-то расширить или улучшить то, что мы сохраняем в conform.toml». То есть запись перестаёт быть только переименованием ключа: при постройке спроектировать, что вообще хранит `conform.toml` пер-язык — сегодня гейт-список `gated_crates` / `[[exempt]]` и бюджет `max_file_lines` живут ТОЛЬКО в корневой таблице и работают только на Rust; `[go]` несёт шесть своих ключей (`roots`, `exclude_substrings`, `cells_dir`, `seams_pkg`, `registry_pkg`, `floor_disable`), `[typescript]` — пять (`roots`, `exclude_substrings`, `cells_dir`, `seam`, `floor_disable`), и ни один не гейтовый. Пер-языковые гейт-списки — совместная развязка с [B-034](#b-034) (инвариант gated-or-exempt для Go/TS); единицу гейта пер-язык (crate / package / cell) решить там же.
+**Closed.** The ruling and its reasoning live in `1ef63a37`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-030 — проверка «ассерция соответствия присутствует»: построить для Go, обследовать Rust/TS {#b-030}
 
-| | |
-|---|---|
-| @fact:B030-ANCHOR **anchor** | факт «Conformance is made loud» Go-гайда (аннотирован 2026-08-02); ростер Go-гейта `build_rules` (`go-ai-native-conform/src/lib.rs:51-60`) |
-| @fact:B030-LOCATOR **locator** | ни один гейт семьи не проверяет присутствие compile-time-ассерции: Go — три правила, ни одно не парсит `var _ seams.X = (*Impl)(nil)`; у растового гейта аналогичного правила тоже нет (grep «assertion» по правилам пуст) |
-| @fact:B030-SEVERITY **severity** | P2 |
-| @fact:B030-DISPOSITION **disposition** | `done` — **построено волной Б батч 2, 2026-08-04**: Go — правило `go-conformance-assertion` полицирует **gated**-ячейки на `var _ Seam = (*Impl)(nil)` (бесшовные/exempt вне; экстрактор эмитит `go_conformance`); Rust — вердикт «причина записана» (компилятор на use-site = ассерция, гейт не обещает проверку письменной ассерции); TS — вердикт «маршрут» (type-level-tests, паритет-долг лупа B-035). Записано в `harvest/e12-b035-parity-pass.md` строка 7. Исходно: решение владельца 2026-08-02, пункт 2.2 = (а) сейчас + (б) обследование Rust/TS |
-| @fact:B030-FILED **filed by** | решение владельца 2026-08-02 |
-
-- @fact:B030-SUT **Суть, по-простому.** Гайды учат: каждая ячейка кода несёт компайл-тайм-ассерцию («эта реализация действительно удовлетворяет шву») — а гейт, мол, проверяет её присутствие. Ассерции — настоящая идиома, гейт их присутствие не проверяет нигде. Стройка: (1) Go — синтаксический скан файлов ячеек за паттерном ассерции (go-extract уже парсит исходники, правило ложится в готовый ростер); (2) **обследование Rust и TypeScript**: что их гайды обещают про ассерции/регистрацию (у Rust — `var _`-аналоги и single-registration-point, у TS — branded-швы), проверяют ли их гейты это фактически, и построить недостающие правила там, где обещание есть, а проверки нет.
-- @fact:B030-FORM **Форма.** Каждое новое правило — по образцу существующих (`Rule` с id/why/check, findings через ratchet-baseline, предупреждение до стабилизации); обещания гайдов пере-суживаются по построенному.
+**Closed.** The ruling and its reasoning live in `1ef63a37`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-031 — корень vibevm становится полноценным пакетом: fully-qualified адресация без исключений {#b-031}
 
-| | |
-|---|---|
-| @fact:B031-ANCHOR **anchor** | сегментные правила `addressable-specs` (ROW-SEGMENT-MODULE/DOC + близнецы F-147) против хостовых исключений PROP-029 (`##SCOPE-HOST`, namespace `vibevm`) и PROP-035 (`##ROUTER-DOC-ID`, усечение имён) |
-| @fact:B031-LOCATOR **locator** | 1 384 цитаты вида `spec://org.vibevm.core/vibevm/...`; `specmap.toml` `namespace = "vibevm"`; резолвер `crates/vibe-spec/src/resolver.rs` знает хост как спец-случай |
-| @fact:B031-SEVERITY **severity** | P2 |
-| @fact:B031-DISPOSITION **disposition** | `done` — designed on the E5 census → **owner-approved 2026-08-04** (группа `org.vibevm.core`, имя `vibevm` · жёсткая ошибка с подсказкой · все живые поверхности; his fourth point — the refactor-metadata check — executed by the boss and recorded in the design §5.1) → **landed the same day**: W1 resolver+identity (self coordinate first, `LegacyHostAuthority` hint, both `HOST_NAMESPACE` constants dead), W2 migrator (byte-exact, idempotent), the host wet pass — **1 893 occurrences over 606 files, `--verify` residue 0**, specmap namespace + specmap.json re-minted consistently, sync-engines ×6, five fixture families honestly re-pointed (resolver corpus, address grammar, specmark grammar tests + doctests, Т2 via `concat!`), three budget splits, panel green; **the mass re-seal executed (15 re-vouched; 4 files honestly refused pending their new anchors' own judging)**; F-169 resolved whole and F-147's twins confirmed (batch E6-F169-F147) — registry 179 drifts / 88 obligations / owed 6. Record and ruling verbatim: («1. координаты: группа org.vibevm.core, имя vibevm. 2. жесткая ошибка с подсказкой 3. все живые поверхности»); his fourth point — the refactor-metadata check — was assigned to the boss personally and is executed and recorded in the design §5.1 (registry path-keyed, specmap regenerates, pins inert, ledger soft-misses; the landing carries the mass re-seal). Record: [`spec/design/host-as-package.md`](spec/design/host-as-package.md) on the E5 census [`harvest/e5-b031-evidence.md`](campaigns/packages-2026-09/harvest/e5-b031-evidence.md); **building per its §8 cut (W1 → W2 → W3)**. **Решение владельца 2026-08-02, дословно:** «не логичней ли самому корневому пакету vibevm в vibe.toml дать нормальное fully-qualified имя как у всех остальных пакетов, и дальше чтобы все ссылки работали по обычным правилам, без исключений? Резолвер при этом должен начать учитывать не только структуру внутри spec/packages/vibedeps, но и учитывать адресацию внутри vibe.toml ВЕЗДЕ, включая корневой пакет. Таким образом мы теряем короткую нотацию spec://org.vibevm.core/vibevm/..., но получаем универсальность. Я бы назвал корневой пакет spec://org.vibevm.core» |
-| @fact:B031-FILED **filed by** | решение владельца 2026-08-02 по предъявлению сегментного вопроса (3.2) |
-
-- @fact:B031-SUT **Суть, по-простому.** Сегодня хост — единственный «не-пакет» в собственной адресации: у всех пакетов адреса строятся из их полного имени, а у хоста — короткий спец-namespace `vibevm` со своими записанными исключениями. Стройка: корневой проект получает fully-qualified имя (**org.vibevm.core** — слово владельца), резолвер читает адресацию из vibe.toml везде, включая корень; исключения умирают, короткая нотация умирает вместе с ними, адресация становится универсальной.
-- @fact:B031-DESIGN **Решить при проектировании (первый шаг стройки).** (1) Точная форма координаты: `<group>/<name>` по грамматике (`org.vibevm/core`?) или namespace-строка `org.vibevm.core` — согласовать с хостовой unified-grammar (PROP-035) и B-028. (2) **Вторая половина исключений — усечение имён документов** (`PROP-043` vs `PROP-043-progress-markup`): либо узаконить префикс-скан как универсальный сахар для ВСЕХ пакетов (тогда правило поднимается во флоу и исключение тоже умирает), либо писать полные имена. (3) Механика миграции 1 384 цитат (скриптуемо; операция одного коммита с пере-судом затронутых якорей). (4) Правки PROP-029/PROP-035 (owner-approved диффы) + пересказы в redbook. (5) Кампанийные инструменты, парсящие `spec://org.vibevm.core/vibevm/` (verify-evidence и родня) — та же правка.
-- @fact:B031-CLOSES **Что закрывает.** Сегментные факты F-169 (ROW-SEGMENT-MODULE/DOC) и близнецы F-147 (SEGMENT-MODULE-IS-THE-DIRECTORY / SEGMENT-DOC-IS-THE-FILE-NAME) — после миграции хост соответствует пакетному правилу буквально, пере-суд confirmed без правки пакета; реестровые строки — `deferred` с именем этой записи до посадки.
+**Closed.** The ruling and its reasoning live in `1ef63a37`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-033 — Go: выделенное правило «ошибка шва цитирует REQ» по образцу растовых {#b-033}
 
-| | |
-|---|---|
-| @fact:B033-ANCHOR **anchor** | `##RULE-SEAM-ERROR-CONTRACT` в `conform-frontend-go.md` (F-185); растовые образцы — правила `error-enum-cites-req` / `error-message-cites-req` (`rules/diagnostics.rs:314`, `:235`) |
-| @fact:B033-LOCATOR **locator** | детекция уже есть: вид находки `seam_error_missing_req` внутри правила `go-unsafe-in-domain` (`rules/go.rs:146-149`), эмитится экстрактором (`go-extract/extract.go:534`); выделенного правила с собственным id — нет; проверки, что `Error()` реально рендерит REQ (message-половина), — нет ни в каком виде |
-| @fact:B033-SEVERITY **severity** | P2 |
-| @fact:B033-DISPOSITION **disposition** | `done` — **построено волной Б батч 2, 2026-08-04**: `go-seam-error-cites-req` (одно Go-правило, обе половины, per-half отпечатки; message-половина читает тела `Error()`, маркер `spec://`/`violates REQ`, якорь на строке метода) + TS-близнец `ts-seam-error-cites-req` (Form-1 union, пределы записаны честно) — оба смонтированы и показаны на фикстурах; F-185 пересужен `confirmed`. Исходно: решение владельца 2026-08-02 по предъявлению F-185; рамка семьи B-033/B-034/B-035: «По сути мы не можем писать на Typescript и Go пока не поправим вот это» |
-| @fact:B033-FILED **filed by** | рулинг предъявления F-185, 2026-08-02 |
-
-- @fact:B033-SUT **Суть, по-простому.** Документация Go-гейта обещает именованное правило «тип ошибки на границе модуля цитирует требование спецификации» — правила с таким именем нет; сама проверка живёт видом находки внутри другого правила и ловит только половину контракта (наличие поля `Spec` в типе ошибки), а вторую половину — что метод `Error()` реально печатает `violates REQ …` — не проверяет никто. Стройка: продвинуть вид находки в отдельное правило со своим id + достроить message-половину.
-- @fact:B033-ANSWER **Ответ на вопрос владельца («имеет ли смысл, или особенность языка?»).** Имеет смысл; особенность языка — только в детекторе, не в архитектуре. Rust проверяет замкнутые enum'ы ошибок (два правила), Go-идиома — struct с полями `Code`/`Spec`/`Err` на шов (обе фикстуры пакета это уже доказывают: dirty-фикстура нарочно без `Spec`, clean-фикстура рендерит `violates REQ %s`). Ростер правил Go-фронтенда — те же нейтральные `Rule` с id/why/check, что у Rust; правило ложится в готовую форму. Что даёт отдельный id: собственная строка в SARIF, отдельная гранулярность baseline-«трещотки», per-rule включение/выключение, и — главное — документация перестаёт врать.
-- @fact:B033-TS-TWIN **TS-близнец — решить при постройке.** У TypeScript проверки нет вовсе (ни правилом, ни видом находки — см. B-035, первый проход), при том что TS-гайд предписывает «the E union cites spec:// REQs». Строить близнеца сразу или после B-035 — первый шаг реализации.
+**Closed.** The ruling and its reasoning live in `f882cd46`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-034 — инвариант «каждая единица кода под гейтом или исключена» для Go и TypeScript {#b-034}
 
-| | |
-|---|---|
-| @fact:B034-ANCHOR **anchor** | `##EVERY-PACKAGE-GATED-OR-EXEMPT` в `conform-frontend-go.md` (F-185); реализация-образец — `Config::validate_against_tree` (`core-ai-native-conform/src/config.rs:259-266`) |
-| @fact:B034-LOCATOR **locator** | инвариант реален и оттестирован, но crate-овый: читает `gated_crates`/`[[exempt]]`/`roots` корневой таблицы; вызывают его только `rust-ai-native-conform` (`lib.rs:119`, `:188`) и его MCP-близнец; Go- и TS-фронтенды не вызывают никогда |
-| @fact:B034-SEVERITY **severity** | P2 |
-| @fact:B034-DISPOSITION **disposition** | **`closed` 2026-08-05 — построено; измерено по дереву, не по записи.** инвариант смонтирован во всех трёх ростерах; см. `##B035-*` и поверхность `config.rs` v2 — единица гейта родная каждому языку, `gated`-или-`exempt` проверяется одинаково. **Строка держала `planned` до этого замера** — см. [B-062](#b-062). Было: `planned` — **решение владельца 2026-08-02: «Похоже на задачу — нужно реализовать эту функциональность в Typescript и Go»**; рамка семьи — как у B-033; **единица гейта и дом списков решены развилкой №2 2026-08-04** (Go = package, TS = cell, симметричные секции — см. `##B029-DISPOSITION` и `spec/design/gate-parity-config.md` §2) |
-| @fact:B034-FILED **filed by** | рулинг предъявления F-185, 2026-08-02 |
-
-- @fact:B034-SUT **Суть, по-простому.** Проверка «каждый модуль либо под контролем гейта, либо явно исключён с причиной — ничего не забыто молча» существует и работает только для Rust-крейтов. Go-документация обещала её «на каждом прогоне» — по факту для Go и TS она не бежит никогда: их код попадает под контроль только через baseline-«трещотку», а классификацию дерева никто не сверяет. Стройка: пер-языковый инвариант — Go-единица (package), TS-единица (cell) — плюс пер-языковые гейт-списки в конфиге.
-- @fact:B034-DESIGN **Решить в первый шаг стройки (вместе с B-029).** Единица гейта пер-язык (crate / package / cell); где живут списки — корневая таблица с пер-языковыми алиасами или секции `[go]`/`[typescript]`; и как инвариант включается у языка, где сегодня `roots = []` по умолчанию (пустое дерево — нечего классифицировать: инвариант должен не давать ложную зелень на пустом скоупе). Развязка конфиг-поверхности — `##B029-CONFIG-SURFACE`.
+**Closed.** The ruling and its reasoning live in `f882cd46`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-035 — паритет-аудит языковых стеков: TS и Go не слабее Rust, или причина записана {#b-035}
 
-| | |
-|---|---|
-| @fact:B035-ANCHOR **anchor** | принцип владельца, 2026-08-02 (дословно): «Мы по условию идеи не должны делать поддержку других языков (в особенности Typescript) хуже, чем это сделано для Rust. А по факту мы почему-то начинаем ослаблять правила без видимой причины» |
-| @fact:B035-LOCATOR **locator** | ростеры трёх фронтендов (`build_rules` в `rust-`/`typescript-`/`go-ai-native-conform`), их census-виды, инварианты конфига, флор-шаги, и обещания гайдов против фактических проверок гейтов |
-| @fact:B035-SEVERITY **severity** | P2 |
-| @fact:B035-DISPOSITION **disposition** | **`closed` 2026-08-05 — построено; измерено по дереву, не по записи.** принцип поднят в манифест движка: `00-MANIFESTO.md:97` `##PARITY-ACROSS-PROJECTIONS` и `:103` `##PARITY-GAP-IS-NEVER-SILENT`; три гайда цитируют; слабины закрыты — seam-error ×3, `floor_disable` ×3, conformance ×3, flag-sites ×3. **Строка держала `planned` до этого замера** — см. [B-062](#b-062). Было: `planned` — **решение владельца 2026-08-02: «надо проверить, нет ли подобных же проблем в реализации Typescript»**; рамка семьи — как у B-033 |
-| @fact:B035-FILED **filed by** | рулинг предъявления F-185, 2026-08-02 |
-
-- @fact:B035-SUT **Суть, по-простому.** Систематически сравнить, что проверяет гейт у каждого языка, против того, что проверяет Rust и что обещают гайды, — и каждую найденную слабину либо достроить, либо записать причиной («язык не имеет аналога идиомы»), но не оставлять молчаливой. Метод — по образцу исследования B-012: таблица «механизм → Rust / TS / Go → есть/нет/частично → вердикт строить/записать».
-- @fact:B035-FIRST-PASS **Первый проход (2026-08-02, эта сессия), чтобы аудит не начинался с нуля.** (1) **REQ-цитирование ошибок:** Rust — два правила; Go — structure-половина видом находки (B-033); **TS — ничего**: пять census-видов `TsUnsafeInDomain` (`any_type`, `as_cross`, `non_null`, `ts_ignore`, `ts_expect_error`) — все про unsafe-набор, про ошибки швов ни одного, при обещании гайда «the E union cites spec:// REQs». (2) **Инвариант gated-or-exempt:** только Rust (B-034). (3) **Документация:** Go-доки обещали несуществующее (F-185); TS-доки честны — `conform-frontend-typescript.md` не обещает ни гейт-списков, ни seam-error-правила (проверено грепом), то есть слабина TS — в движке, не в доке. Ростеры симметричны по форме (по 3 правила: unsafe-in-domain, cell-isolation, file-length) — расхождение в начинке видов.
-- @fact:B035-NORM **Шаг стройки: поднять принцип в спеку.** «Не слабее Rust без записанной причины» сегодня живёт только этой записью; при первой стройке семьи поднять его в дисциплину owner-approved диффом, чтобы правило пережило бэклог. **Дом решён владельцем 2026-08-04 (развилка №9 карты): «Ядро дисциплины» — языко-нейтральный guiding-слой core-ai-native (манифест-уровень), один дом, стеки цитируют.** Подъём — босс-авторский контрактный дифф, едет батчем 2. Смежность: B-030 — тот же вопрос для одной конкретной идиомы (ассерции соответствия); этот аудит — его обобщение; B-023 — синтаксический tier, отдельная ось.
-- @fact:B035-LOOP-1 **Луп-проход №1 (после батча 1 волны Б, 2026-08-04):** [`harvest/e10-b035-parity-pass.md`](campaigns/packages-2026-09/harvest/e10-b035-parity-pass.md) — 13 строк; инфраструктурные асимметрии закрыты (инвариант/vacuous/scope/счётчики — у всех трёх); контентный долг — REQ-цитирование швов (B-033) и Go-правило флагов; две свежие находки — Rust-floor без floor_disable (рулинг: строить, B-049) и нефильтрованный остаток Go-floor'а (vet/tests/staticcheck — проверка рутиной батча 2).
-- @fact:B035-LOOP-2 **Луп-проход №2 (после батча 2 волны Б, 2026-08-04):** [`harvest/e12-b035-parity-pass.md`](campaigns/packages-2026-09/harvest/e12-b035-parity-pass.md) — строки 1 (REQ-цитирование швов, обе половины ×3) и 13 (floor-disable ×3, B-049 закрыл инверсию) **паритет достигнут**; строка 7 (conformance — Go построен gated, Rust причина-компилятор, TS маршрут type-level-tests). Принцип паритета поднят в манифест (`##PARITY-ACROSS-PROJECTIONS`), три гайда цитируют. Остаётся открытым (записано, маршрутизировано, не молча): строка 6 (Go flag/registry-правило) и строки 8/12 (Go-floor `./...`-остаток, B-048-близнец) — оба прямые стройки поздних батчей. **M-PARITY: recorded-honest, но не build-complete** (нужны строка 6 + 8/12).
+**Closed.** The ruling and its reasoning live in `f882cd46`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-036 — conform-правило «инварианты не тонут в середине файла» {#b-036}
 
-| | |
-|---|---|
-| @fact:B036-ANCHOR **anchor** | `GUIDE-AI-NATIVE-RUST.md` `##POSITION-IS-A-RESOURCE` (:59) и его TS-близнец (:128) — оба обещают проверку, оба теперь честно drift (F-154 + верди́кт-сначала D30) |
-| @fact:B036-LOCATOR **locator** | нигде не построено: единственные «middle third» в движке — док-комментарий и текст сообщения правила длины (`core-ai-native-conform/src/rules/budget.rs:119`, `:147`); позицию комментариев не смотрит ни один фронтенд |
-| @fact:B036-SEVERITY **severity** | P2 |
-| @fact:B036-DISPOSITION **disposition** | **`closed` 2026-08-05 — построено; измерено по дереву, не по записи.** `rules/position.rs:74` `struct InvariantCommentPosition`, id `invariant-comment-position` (`:88`), логика средней трети (`:119-149`); смонтировано в трёх ростерах; ключи `invariant_comment_markers` / `invariant_comment_min_file_lines` (`config.rs:118`, `:123`). **Строка держала `planned` до этого замера** — см. [B-062](#b-062). Было: `planned` — **решение владельца 2026-08-02: механизмы дисциплины строятся, не аннотируются в отказ** («Если для их работы нужно что-то построить — нужно это спроектировать и потом построить, а не отказываться просто потому что так проще») |
-| @fact:B036-FILED **filed by** | рулинг предъявлений F-154/F-161, 2026-08-02 |
-
-- @fact:B036-SUT **Суть, по-простому.** Гайды учат: критичные инварианты — в начале или конце файла, не в «разбавленной середине» (модели внимания хуже читают середину контекста), и обещают проверку: предупреждать, когда комментарий-инвариант оказался в средней трети файла. Проверка длины файла есть во всех языках; проверки позиции нет ни в одном. Стройка: правило движка (алгоритмическое: извлечь комментарии с маркерами инвариантности, вычислить положение в файле, сравнить с границами третей), конфигурируемые пороги, предупреждение — не блокирующий гейт на старте (урок B-021).
-- @fact:B036-DESIGN **Решить перед кодом.** Что считается «комментарием-инвариантом» (эвристика по маркерам: `SAFETY:`, `INVARIANT:`, `##ANCHOR`-строки, doc-комменты с MUST/NEVER?) — словарь в конфиг; и общий движок против пер-языковых экстракторов (комментарии уже извлекаются фронтендами — проверить, доносят ли позиции).
+**Closed.** The ruling and its reasoning live in `1f048058`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-038 — pending-карточки правил обретают карточки и чекеры: R-060 и closed-vocabulary-naming {#b-038}
 
-| | |
-|---|---|
-| @fact:B038-ANCHOR **anchor** | `##DECLARED-TEST-MATRICES-NEVER-EXPONENTIAL` (:127, «R-060, retained» — id без карточки и чекера) и `##NAMES-ARE-TOKEN-PROGRAMS` (:57, `{Variant}{Seam}` — computed-имя без линта; карточка `rule-closed-vocabulary-naming`/R3-004 «candidate future card» во всех стеках) — F-154 |
-| @fact:B038-LOCATOR **locator** | R-060: две цитаты в гайдах + «Phase 4+ runtime consumer» в `crates/vibe-cli/src/registry.rs:63`; карточек нет, ATLAS-записей нет, чекеров нет; семь pending-карточек перечислены в `core-ai-native/…/01-PATTERN-CARD-FORMAT.md:7` |
-| @fact:B038-SEVERITY **severity** | P2 |
-| @fact:B038-DISPOSITION **disposition** | **`closed` 2026-08-05 — построено; измерено по дереву, не по записи.** карточки и чекеры на месте вместе с семейством B-036/B-039 — правила смонтированы в ростерах всех трёх языков. **Строка держала `planned` до этого замера** — см. [B-062](#b-062). Было: `planned` — решение владельца 2026-08-02 (формула B-036) |
-| @fact:B038-FILED **filed by** | рулинг предъявлений F-154, 2026-08-02 |
-
-- @fact:B038-SUT **Суть, по-простому.** Гайды цитируют правила по id, за которыми не существует ни карточки (описания правила в реестре карточек), ни проверки. Стройка, двумя первыми: **R-060** — «тест-матрицы объявляются данными, никогда полный перебор 2^n»: карточка + чекер (алгоритмический: найти комбинаторные тест-циклы/макросы, сверить с объявленной матрицей); **rule-closed-vocabulary-naming (R3-004)** — карточка + линт именования из закрытого словаря токенов. Остальные пять pending-карточек — тем же конвейером после первых двух.
-- @fact:B038-DESIGN **Дизайн-вопрос внутри — РЕШЁН ВЛАДЕЛЬЦЕМ 2026-08-04 (развилка №1 карты): computed-имена.** Вопрос стоял так: принимает ли Rust вычисляемые имена ячеек `{Variant}{Seam}` (как Go, где это живая практика), или растовые ячейки именуются свободно и линт проверяет только словарь и уникальность. Решение — **вычисляемые**: имя = `Pascal(variant)` + шов как написан, одно правило движка обслуживает Rust И Go (Go практикует конвенцию без единой машинной проверки — стройка закрывает и его пробел), TS записывает причину (манифеста ячейки нет, вычислять не из чего). Текст гайда `:57` остаётся и перестаёт быть целью. **Замер цены по ВСЕМУ дереву (цензус `harvest/e13-r3-pending-cards-census.md` мерил только пакеты дисциплины и `rust-demo` — хост был вне его периметра, и цифра «~10» оказалась занижена):** 40 ячеек с манифестом, **14 уже соответствуют** (всё семейство `vibe-check`), **13 переименований в продакшн-коде хоста** (`vibe-resolver` ×5, `vibe-mcp` ×4, `vibe-registry` ×2, `vibe-index` ×2), остальное — тестовые фикстуры и регенерируемые `.vibe/cache/**`. Имена нигде не уходят в протокол (MCP-имена — отдельные строковые литералы), так что каждое переименование проверяется компилятором. Правило приземляется с замороженным ratchet-baseline; переименования — отдельным коммитом.
+**Closed.** The ruling and its reasoning live in `1f048058`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-039 — смонтировать R-001 (FlagSites) на TypeScript-гейт; обследовать Go {#b-039}
 
-| | |
-|---|---|
-| @fact:B039-ANCHOR **anchor** | `GUIDE-AI-NATIVE-TYPESCRIPT.md` `##NO-IF-FLAG-IN-DOMAIN-CELLS` (:167) + `##RULE-FLAGS-READ-AT-THE-ROOT-AND-DISPATCHED` (:177) — F-161 |
-| @fact:B039-LOCATOR **locator** | правило `FlagSites` (id `R-001`) живёт в общем движке (`rules/structure.rs:33-35`), Rust монтирует его через ветку конфига (`rust-ai-native-conform/src/lib.rs:55-63`, `registry_file` + `registry_gated_crate`); TS-`build_rules` ветки не имеет вовсе — правило непримонтируемо |
-| @fact:B039-SEVERITY **severity** | P2 |
-| @fact:B039-DISPOSITION **disposition** | **`closed` 2026-08-05 — построено; измерено по дереву, не по записи.** flag-sites смонтированы ×3; TS получил конфиг-ветку, Go обследован — остаток записан причиной и маршрутом, а не молчанием. **Строка держала `planned` до этого замера** — см. [B-062](#b-062). Было: `planned` — **решение владельца 2026-08-02: «Я против чтобы ты выключал правила только потому, что они нигде пока не используются»** — правило не ослабляется, гейт дорастает |
-| @fact:B039-FILED **filed by** | рулинг предъявлений F-161, 2026-08-02 |
-
-- @fact:B039-SUT **Суть, по-простому.** Учебник TS называет силой гейта правило «никаких `if (flag)` в доменных ячейках» — а TS-гейт его не запускает и не может запустить: нет ветки конфигурации, которая есть у Rust. Стройка: добавить TS-гейту конфиг-ветку (аналог `registry_file`/`registry_gated_crate` — где у TS живёт реестр флагов, решить при проектировании), смонтировать `FlagSites`, и обследовать Go на ту же дыру. Клауза «deviates + reason» из :177 оживает вместе с правилом.
-- @fact:B039-RELATED **Смежность.** Прямой близнец семьи паритета: B-034 (инвариант gated-or-exempt), B-029 (поверхность конфига), B-035 (аудит). Вести совместно.
+**Closed.** The ruling and its reasoning live in `1f048058`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-040 — рефакторинг-обзор собственных швов: полный scaffold-B на нашем коде {#b-040}
 
-| | |
-|---|---|
-| @fact:B040-ANCHOR **anchor** | `GUIDE-AI-NATIVE-RUST.md` `##SCAFFOLD-B-TYPED-BUILDERS` (:68) — F-154 |
-| @fact:B040-LOCATOR **locator** | практикуются newtypes, typestate-швы и `#[must_use]` (11 употреблений в одном `vibe-actions/src/action.rs`); sealed traits и `PhantomData`-строители — ноль употреблений во всех Rust-проектах дерева на HEAD |
-| @fact:B040-SEVERITY **severity** | P2 |
-| @fact:B040-DISPOSITION **disposition** | **`closed` 2026-08-05** — босс-дизайн [`spec/design/typed-seams.md`](spec/design/typed-seams.md), **четыре посадки построены и одна отклонена измерением** (см. `##B040-LANDED`). Было: `planned` — **решение владельца 2026-08-02: «Если у нас на нашем же коде не выполняется пять каких-то важных дисциплин — это похоже на причину по которой нужно всё отрефакторить и начать их применять»** |
-| @fact:B040-FILED **filed by** | рулинг предъявлений F-154, 2026-08-02 |
-
-- @fact:B040-SUT **Суть, по-простому.** Учебник учит делать неправильный вызов непредставимым: typestate, newtypes, строители с обязательными полями в типах, запечатанные трейты (sealed traits — чтобы чужой код не мог подложить свою реализацию контрактного трейта), `PhantomData`-параметры состояния. Половина идиом у нас в ходу, вторая — нет вообще. Работа: обзор швов vibevm (публичные трейты крейтов, строители, протокольные поверхности) на «где sealed trait / typestate-строитель окупается», применить где окупается, задокументировать где сознательно нет. Не механическая рассыпка идиом по коду — точечный рефакторинг по месту.
-- @fact:B040-VERIFY **Верификация.** Дифференциальный оракул на затронутые ячейки (правило замены нетривиальной ячейки — гайд §D); панель зелёная после каждого шва; итог — пере-суд `:68` по факту практики.
-- @fact:B040-LANDED **Построено 2026-08-05 — четырьмя посадками, пятая отклонена, шестая записана как сознательный отказ.** *(1)* `ValidatedOrg` в `vibe-publish`: правило области видимости было обязанностью реализатора, записанной прозой, и не проверялось ничем; теперь минтить значение умеет только сама проверка, и забытый вызов не компилируется. Попутно минт стал ОДИН раз на путь вместо двух. *(2)* Четыре идентичностных newtype'а перешли на `try_from`/`into` — проверка переехала на границу провода, и **пять значений в дереве оказались не хешами**. *(3)* Три обязательства `ActionBuilder` переехали в сигнатуру (имя и описание — во вход, `invoke` — в `build`); три варианта ошибки стали ошибками компиляции, `action.rs` похудел с 600 до 565 строк. *(4)* Шов `Watcher` назвал себя «Specified, not built» — у него нет ни одной реализации, а `implements`-ребро заставляло карту считать REQ покрытым ([B-061](#b-061)). *(5)* **Отклонено:** крейт-локальный `Digest` в `progress-core` — сравнение, ради которого он предлагался, читает одну сторону из нетипизированного JSON, поэтому тип не проверит его вовсе; зато чтение ради отказа нашло пятистрочный дефект (отсутствующий `processed_hash` читался как свежесть) и он починен. *(6)* **Sealed traits — сознательно не приняты**, с архитектурной причиной: швы этого дерева суть точки расширения, реализуемые из `vibe-cli` кросс-крейтно, а в мастерской без внешних реализаторов обычная выгода запечатывания равна нулю.
-- @fact:B040-WHAT-THE-DESIGN-GOT-WRONG **Дизайн опроверг сам себя четырежды, и все четыре записаны в нём.** `progress-core` не может взять `ContentHash` у `vibe-core` — запрещает закон сепарабельности; `serde(transparent)` не вынуждался причиной, которую называл его докблок; newtype над хешем не ловит перепутанные роли; typestate — ответ на порядок, а не на наличие. Ни одно из четырёх не нашлось ревью — все измерением, и три из них до того, как был написан код.
-- @fact:B040-CENSUS **Обзор-цензус снят (2026-08-04, волна Г попутно):** [`harvest/g1-b040-seams-census.md`](campaigns/packages-2026-09/harvest/g1-b040-seams-census.md) — 24 pub-трейта (ни один не sealed; `Watcher` вовсе без прод-реализации), один рантайм-валидирующий строитель (`ActionBuilder`), typestate/PhantomData — 0 (локатор подтверждён точно), `#[must_use]` 146 (82 % — TUI-виджеты vibe-cli), зрелые newtypes на identity-шве vibe-core с измеренной асимметрией (только `Group` валидирует на load; `content_hash` в progress-core — голый String при валидированном близнеце в vibe-core; URL — везде голый String). Точечный рефакторинг — босс-дизайном по этому цензусу, отдельным заходом.
+**Closed.** The ruling and its reasoning live in `1f048058`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-041 — карта развития инструментария: от реестра дыр к системе {#b-041}
 
-| | |
-|---|---|
-| @fact:B041-ANCHOR **anchor** | директива владельца 2026-08-02 (дословно): «Мне нужно понимание, как развивать вообще наш инструментарий, чтобы оно стало хорошей системой. Система не заморожена, она должна развиваться» + «Построение ai-native дисциплин сложная штука, ее нужно делать, а не отказываться. Там могут быть правки компилятора, изобретение новых инструментов, да что угодно» |
-| @fact:B041-LOCATOR **locator** | сырьё уже собрано кампанией: аннотации «Specified, not built» по корпусу, исследование B-012 (+ его #rulings), стройки B-016…B-021, B-025/B-026, B-033…B-040, паритет-аудит B-035, реестр обязательств |
-| @fact:B041-SEVERITY **severity** | P2 |
-| @fact:B041-DISPOSITION **disposition** | **`closed` 2026-08-05 — построено; измерено по дереву, не по записи.** `TOOLING-MAP.md` в корне; тело самой записи (`##B041-DRAFT`) говорит «Черновик написан, одобрен и интегрирован (2026-08-02)» со словами владельца «мне нравится этот документ». **Строка держала `planned` до этого замера** — см. [B-062](#b-062). Было: `planned`, высокий приоритет — прямой запрос владельца |
-| @fact:B041-FILED **filed by** | рулинг предъявлений F-154/F-161, 2026-08-02 |
-
-- @fact:B041-SUT **Суть, по-простому.** Собрать из накопленного не список дыр, а карту развития: какие механизмы дисциплины существуют / обещаны / строятся, в каком порядке их строить (зависимости: конфиг → правила → линты → карта → агентские инструменты → подпись), что из этого меняет движок, что — стеки, что — хост, и где вехи «система стала хорошей». Жанр — design-документ (lore, не контракт), дом — `spec/design/`; нормативные следствия — отдельными owner-диффами.
-- @fact:B041-METHOD **Метод.** По образцу B-012: свод таблицей «механизм → слой (SPEC/ENGINE/DRIVER/DEPLOYMENT) → состояние → запись стройки → зависимости», сверху — порядок волн и развилки, требующие слова владельца. Черновик — боссом (архитектурная работа, не делегируется).
-- @fact:B041-DRAFT **Черновик написан, одобрен и интегрирован** (2026-08-02, один ситтинг): карта живёт в корне рядом с бэклогом — [`TOOLING-MAP.md`](TOOLING-MAP.md) (переезд из `spec/design/` по слову владельца «интегрировать в бэклог — или положить рядом…»; корневой `ROADMAP.md` — продуктовые вехи, другой документ, не пересекаются) + раздел-указатель [`#map`](#map) в шапке этого файла. Владелец: «мне нравится этот документ», с рамкой — **действовать внутри идущего рефакторинга, недостающее откладывать**; волны исполняются фазами кампании (E и далее), не параллельным процессом. Развилки §5 карты ждут его слова по мере подхода волн.
+**Closed.** The ruling and its reasoning live in `1f048058`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-046 — мультиязычная композиция: агент собирает несколько AI-Native языков в одном проекте {#b-046}
 
@@ -1022,29 +594,15 @@ already written from it is the specification of the work.)*
 
 ### B-048 — TS-floor: prettier/eslint-шаги обходят fixtures пакета (двойник B-003) {#b-048}
 
-| | |
-|---|---|
-| @fact:B048-ANCHOR **anchor** | none — найдено цензусом E8-R3 (`campaigns/packages-2026-09/harvest/e8-r3-go-floor-census.md`, Q5), не против размеченного факта |
-| @fact:B048-LOCATOR **locator** | `typescript-ai-native-cli/src/floor.rs:78-97` — `prettier --check .`; `:141-160` — `eslint .`; оба обходят `.` без скоупа на policy-roots; в TS-пакете живут настоящие деревья фикстур (`tools/ts-extract/test/fixtures/{clean,dirty}`, `tools/ts-oracle/test/fixtures/proj`), `.prettierignore` в пакете отсутствует |
-| @fact:B048-SEVERITY **severity** | P2 |
-| @fact:B048-DISPOSITION **disposition** | **`closed` 2026-08-05** (коммит `6e047882`) — prettier и eslint заскоуплены на `config.typescript.roots` по образцу соседнего шага тестов, заголовки называют периметр. Было: `open` |
-| @fact:B048-FILED **filed by** | цензус E8-R3 волны Б, 2026-08-04 |
-
-- @fact:B048-SUT **Суть, по-простому.** Тот же класс дыры, что B-003 у Go, на двух шагах TS-floor'а: prettier и eslint ходят по всему дереву пакета и в чужом checkout'е упрутся в нарочно сломанные фикстуры экстрактора/оракула. Conform-половины дыры у TS НЕТ (default `exclude_substrings = ["/fixtures/"]` уже стоит); tests-шаг уже заскоуплен на roots (`floor.rs:121-138` — урок demo-walk). Стройка: заскоупить/отфильтровать prettier- и eslint-шаги тем же приёмом, что B-003 у gofmt (пост-фильтр вывода конфигом либо скоуп на roots — решить при постройке единообразно с посаженным B-003).
-- @fact:B048-RELATED **Смежность.** B-003 (прямой образец фикса, Go); B-035 (паритет-строка: floor-шаги «не слабее Rust» — у Rust дыры нет, fmt cargo-скоуплен); попадает в первый же луп B-035 после батча 1.
-- @fact:B048-GO-RESIDUAL **Go-остаток той же семьи (проверен боссом 2026-08-04, луп-строка 12):** после B-003 нефильтрованными у Go-floor'а остались `vet`/`tests`/`staticcheck` (`./...`) — остаток **латентный**: на пакетном корне без `go.mod` эти шаги падают на резолюции модуля раньше, чем дойдут до фикстур (записанные «не-дефекты» строки B-003); укусить может только module-rooted потребитель с фикстурными деревьями. Единообразное лечение — тем же приёмом, каким ляжет фикс этой строки; вести вместе.
+**Closed.** The ruling and its reasoning live in `68106a1c`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-049 — Rust-floor обретает floor_disable (близнец Go/TS-механизма) {#b-049}
 
-| | |
-|---|---|
-| @fact:B049-ANCHOR **anchor** | паритет-таблица лупа B-035, строка 13 (`harvest/e10-b035-parity-pass.md`) — единственная асимметрия «не в ту сторону» |
-| @fact:B049-LOCATOR **locator** | `rust-ai-native-cli/src/floor.rs:46-141` бежит все шаги безусловно; у `RustConfig` нет поля `floor_disable`; у Go/TS механизм есть и работает (`GoConfig`/`TsConfig.floor_disable` + enforcement в их floor'ах: печать каждого отключения, hard-fail неизвестного шага) |
-| @fact:B049-SEVERITY **severity** | P2 |
-| @fact:B049-DISPOSITION **disposition** | `done` — **построено волной Б батч 2, 2026-08-04**: `RustConfig.floor_disable: Vec<FloorDisable>` + enforcement в `rust-ai-native-cli/src/floor.rs` (`STEPS`-словарь реальных шагов, печать каждого отключения с причиной, hard-fail неизвестного шага) — текстовое зеркало Go/TS-близнецов; паритет-инверсия лупа закрыта (строка 13). Исходно: решение владельца 2026-08-04 «Строить близнеца» |
-| @fact:B049-FILED **filed by** | луп-проход №1 B-035, 2026-08-04 |
-
-- @fact:B049-SUT **Суть, по-простому.** Потребитель Go/TS-стека может отключить шаг floor'а с записанной причиной (и floor громко печатает каждое отключение); потребитель Rust-стека — не может никак. Принцип паритета симметричен: и Rust не слабее прочих. Стройка: `[rust] floor_disable` в конфиге движка (форма секций уже единая) + enforcement в Rust-floor'е той же механикой, что у близнецов.
+**Closed.** The ruling and its reasoning live in `e4314e83`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-050 — типо-аварный вехикл кастомных линтов для Rust: dylint-библиотека и её toolchain {#b-050}
 
@@ -1061,33 +619,15 @@ already written from it is the specification of the work.)*
 
 ### B-043 — генератор реестра может выдать один id двум кластерам {#b-043}
 
-| | |
-|---|---|
-| @fact:B043-ANCHOR **anchor** | закон единого пространства находок — план кампании `#ids` («Ids continue the campaign's one finding space») |
-| @fact:B043-LOCATOR **locator** | `campaigns/packages-2026-09/tasks/drift-registry.py` — сопоставление новых кластеров с прежним реестром не несёт ограничения уникальности: два кластера могут унаследовать один прежний id |
-| @fact:B043-SEVERITY **severity** | P2 |
-| @fact:B043-DISPOSITION **disposition** | **`closed` 2026-08-05 — построено; измерено по дереву, не по записи.** `campaigns/packages-2026-09/tasks/drift-registry.py:557-562` `carry_ids` — жадное ОДНОЗНАЧНОЕ сопоставление с пометкой занятости (`taken_p` / `taken_c`), так что два кластера не могут унаследовать один прежний id; минтинг идёт над `spent`. **Строка держала `open` до этого замера** — см. [B-062](#b-062). Было: `open` |
-| @fact:B043-FILED **filed by** | ситтинг 2026-08-02, четвёртый обмен — воспроизведено вживую |
-| @fact:B043-REPRO **воспроизведение** | пере-кластеризация после D30 (двойка TS-близнецов вошла в кэш) разнесла прежний F-154 на два кластера — и оба унаследовали id `F-154`; счётчик «newly assigned» при этом показал 1, дубль тихий. Разведено вручную тем же днём (кросс-файловый кластер → `F-355`), следующая регенерация несёт оба id стабильно; дефект в инструменте остался |
-| @fact:B043-FIX **fix shape** | уникальное сопоставление (жадное по пересечению якорей с пометкой занятости прежнего id, либо честное паросочетание) и громкий отказ при коллизии вместо тихого дубля — рефьюз лучше двойника, как у merge-verdicts |
-
-## P3 — accepted, no action planned {#p3}
+**Closed.** The ruling and its reasoning live in `e4314e83`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-055 — вторая директива `#source` в документе проглатывается молча {#b-055}
 
-| | |
-|---|---|
-| @fact:B055-ANCHOR **anchor** | `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#source` — механика связывания контракта с реализацией |
-| @fact:B055-LOCATOR **locator** | `crates/vibe-spec/src/pipeline.rs` — `first_source_directive` берёт **первую** директиву `#source` в тексте документа (`.find(…)`) и возвращает её; вызывающий код сворачивает ровно один сорс. Вторая и последующие директивы не читаются, предупреждения нет |
-| @fact:B055-SEVERITY **severity** | P2 |
-| @fact:B055-DISPOSITION **disposition** | **`closed` 2026-08-05** — снят посадкой 2 стройки [B-056](#b-056); см. `##B055-LANDED` |
-| @fact:B055-FILED **filed by** | вопрос владельца о числе сорсов у контракта, 2026-08-04 (волна В) |
-
-- @fact:B055-SUT **Суть.** Автор, написавший в одном контрактном документе две директивы `#source`, получит слияние только с первой. Вторая не сработает и об этом никто не скажет — ни ошибки, ни предупреждения. Молчание здесь хуже отказа: автор уверен, что связал два источника, а связан один.
-- @fact:B055-WHAT-IS-NOT-THE-DEFECT **Чего дефект НЕ означает.** Ограничение «один сорс на документ» само по себе может быть правильным (контракт — единица, у неё одна реализация). Пара — отношение документ↔документ, а не пакет↔пакет: контрактный **пакет** волен иметь много сорсов, каждый документ свой, хоть в разных пакетах. Дефект — не в числе, а в тишине.
-- @fact:B055-FIX-SHAPE **Форма починки.** Либо отказ на второй директиве (одна на документ — контракт, нарушение громкое), либо честная поддержка нескольких с определённым порядком слияния. Первое дешевле и, вероятно, честнее; выбор — при постройке.
-- @fact:B055-LANDED **Закрыто 2026-08-05 второй развилкой, а не первой.** Постройка B-056 сделала выбор в пользу честной поддержки нескольких источников: конвейер собирает ВСЕ директивы `#source` в порядке объявления и передаёт их свёртке, которая теперь принимает последовательность. Отказ на второй директиве не понадобился — он был бы дешевле ровно до того момента, как владелец заказал плагинную форму, где несколько источников и есть смысл механизма. Вырожденные пути остались байтовыми: документ без `#source` и документ с одной `#source` дают ровно прежний результат, и все прежние тесты конвейера прошли без правок. Попутно вылечена и диагностика: при пяти источниках недостижимый называет СЕБЯ, а не seed и не первого.
-
+**Closed.** The ruling and its reasoning live in `bc88e530`. This line is a
+tombstone — process support for whoever walks this file, not project
+structure, and it goes when the file does.
 
 ### B-054 — файл тестов прогресс-команды стоит в тринадцати строках от бюджета {#b-054}
 
