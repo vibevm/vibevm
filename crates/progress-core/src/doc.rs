@@ -38,6 +38,16 @@ pub struct Fact {
     /// Set by the marker scan: the unit carries its own marker.
     #[serde(default)]
     pub marked: bool,
+    /// The 1-based inclusive line range of an adjacent block this fact's body
+    /// extends into, when its anchor names an object type (`@fact/code:<ID>`).
+    ///
+    /// Without this a claim inside a fenced block belongs to no fact at all:
+    /// measured over this corpus, 372 fenced blocks carried zero facts while
+    /// every one of 7255 text blocks carried its own. Such a claim can be
+    /// neither judged nor made stale, which is how a false line survives in a
+    /// document everyone believes is verified.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub covers: Option<(usize, usize)>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -122,6 +132,14 @@ pub enum IssueCode {
     MissingAnchor,
     /// A `##<ID>` / `{#anchor}` id minted twice in one document.
     DuplicateId,
+    /// An anchor naming an object type that does not bind: an unknown type,
+    /// or a type with no matching block adjacent to it.
+    ///
+    /// This is an error rather than a silent skip on purpose. A grammar that
+    /// ignores a type it does not implement promises what it cannot do — the
+    /// author writes `@fact/image:` today and learns in a year that nothing
+    /// ever read it.
+    FenceBinding,
 }
 
 /// One fully parsed document.

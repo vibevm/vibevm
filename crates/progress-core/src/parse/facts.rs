@@ -2,7 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#parsing");
 
-use crate::doc::{BlockKind, Fact, FactKind, ParsedDoc};
+use crate::doc::{BlockKind, Fact, FactKind, Issue, IssueCode, ParsedDoc, Severity};
 use specmark::spec;
 
 /// Byte offset of a list item's content when the line opens one
@@ -137,33 +137,151 @@ fn blockquote_prefix_len(t: &str) -> usize {
 /// prefix is consumed before the anchor is looked for — a quoted normative
 /// statement is addressable, and anchored-when-marked reaches it.
 pub(super) fn take_fact_id(text: &str, s: usize, e: usize) -> (Option<String>, usize) {
+    match parse_anchor(text, s, e) {
+        Some(a) => (Some(a.id.to_string()), a.content_start),
+        None => (None, s),
+    }
+}
+
+/// The object type an anchor names, if it names one: `@fact/code:<ID>` ⇒
+/// `Some("code")`. A plain `@fact:<ID>` or `##<ID>` covers only its own
+/// paragraph and yields `None`.
+pub(super) fn take_fact_type(text: &str, s: usize, e: usize) -> Option<String> {
+    parse_anchor(text, s, e).and_then(|a| a.ty.map(str::to_string))
+}
+
+/// The one reader of the anchor grammar. Both public entry points go through
+/// it, so a type and an id can never be parsed by two slightly different
+/// rules — the failure mode this whole markup has now paid for three times.
+struct Anchor<'a> {
+    ty: Option<&'a str>,
+    id: &'a str,
+    /// Byte offset into the ORIGINAL text, just past the anchor.
+    content_start: usize,
+}
+
+fn parse_anchor(text: &str, s: usize, e: usize) -> Option<Anchor<'_>> {
     let seg = &text[s..e];
     let lead_ws = seg.len() - seg.trim_start().len();
     let lead = lead_ws + blockquote_prefix_len(&seg[lead_ws..]);
     let t = &seg[lead..];
-    // Longest opener first: `@fact:` and `##` cannot both match, but keeping
-    // the order explicit means adding a third spelling later cannot silently
-    // shadow one of these.
-    for opener in ["@fact:", "##"] {
-        let Some(rest) = t.strip_prefix(opener) else {
-            continue;
-        };
-        let id_len = rest
+
+    // Qualified openers first — `@fact/<type>:` is longer than `@fact:` and
+    // must be tried before it, or the type would be read as part of no id and
+    // the anchor silently downgraded to an untyped one.
+    let (ty, rest, opener_len) = if let Some(after) = t.strip_prefix("@fact/") {
+        let ty_len = after
             .chars()
-            .take_while(|c| c.is_ascii_alphanumeric() || *c == '-' || *c == '_')
+            .take_while(|c| c.is_ascii_lowercase() || *c == '-')
             .count();
-        if id_len > 0
-            && rest.chars().next().is_some_and(|c| c.is_ascii_alphabetic())
-            && rest[id_len..]
-                .chars()
-                .next()
-                .is_none_or(|c| c.is_whitespace())
-        {
-            let id = rest[..id_len].to_string();
-            return (Some(id), s + lead + opener.len() + id_len);
+        let after_ty = after.get(ty_len..)?;
+        let body = after_ty.strip_prefix(':')?;
+        if ty_len == 0 {
+            return None;
+        }
+        (Some(&after[..ty_len]), body, "@fact/".len() + ty_len + 1)
+    } else if let Some(after) = t.strip_prefix("@fact:") {
+        (None, after, "@fact:".len())
+    } else if let Some(after) = t.strip_prefix("##") {
+        (None, after, 2)
+    } else {
+        return None;
+    };
+
+    let id_len = rest
+        .chars()
+        .take_while(|c| c.is_ascii_alphanumeric() || *c == '-' || *c == '_')
+        .count();
+    if id_len == 0
+        || !rest.chars().next().is_some_and(|c| c.is_ascii_alphabetic())
+        || !rest[id_len..]
+            .chars()
+            .next()
+            .is_none_or(|c| c.is_whitespace())
+    {
+        return None;
+    }
+    Some(Anchor {
+        ty,
+        id: &rest[..id_len],
+        content_start: s + lead + opener_len + id_len,
+    })
+}
+
+/// The object types an anchor may name. One entry, and that is not an
+/// oversight: measured over this corpus, fenced blocks are the ONLY block
+/// kind that falls outside every fact body — there are no images at all, 891
+/// of 908 table rows and 84 of 96 block quotes already sit inside one.
+/// A 1-based inclusive line range.
+type LineRange = (usize, usize);
+
+const KNOWN_TYPES: [(&str, BlockKind); 1] = [("code", BlockKind::Code)];
+
+/// Bind each typed anchor to the block it covers, or record why it cannot.
+///
+/// Three refusals, all errors rather than silent skips:
+/// an unknown type; a typed anchor that is not its block's last fact (the
+/// block it would claim is not adjacent to it); and a typed anchor with no
+/// matching block after it.
+pub(super) fn bind_covered_blocks(doc: &mut ParsedDoc) {
+    // (block index, fact index, the covered block's line range)
+    let mut binds: Vec<(usize, usize, LineRange)> = Vec::new();
+    let mut issues: Vec<Issue> = Vec::new();
+
+    for (bi, b) in doc.blocks.iter().enumerate() {
+        for (fi, f) in b.facts.iter().enumerate() {
+            let Some(ty) = take_fact_type(&b.scan_text, f.span.0, f.span.1) else {
+                continue;
+            };
+            let Some((_, want)) = KNOWN_TYPES.iter().find(|(n, _)| *n == ty) else {
+                issues.push(Issue {
+                    severity: Severity::Error,
+                    line: f.line,
+                    code: IssueCode::FenceBinding,
+                    message: format!(
+                        "`@fact/{ty}:` names an object type this markup does not implement \
+                         (known: {})",
+                        KNOWN_TYPES
+                            .iter()
+                            .map(|(n, _)| *n)
+                            .collect::<Vec<_>>()
+                            .join(", ")
+                    ),
+                });
+                continue;
+            };
+            if fi + 1 != b.facts.len() {
+                issues.push(Issue {
+                    severity: Severity::Error,
+                    line: f.line,
+                    code: IssueCode::FenceBinding,
+                    message: "a typed anchor must be the last fact of its block — \
+                              another fact stands between it and the block it would cover"
+                        .into(),
+                });
+                continue;
+            }
+            match doc.blocks.get(bi + 1) {
+                Some(next) if next.kind == *want => {
+                    binds.push((bi, fi, (next.line_start, next.line_end)));
+                }
+                _ => issues.push(Issue {
+                    severity: Severity::Error,
+                    line: f.line,
+                    code: IssueCode::FenceBinding,
+                    message: format!(
+                        "`@fact/{ty}:` is not followed by a {ty} block — the anchor names \
+                         a body it does not have"
+                    ),
+                }),
+            }
         }
     }
-    (None, s)
+
+    for (bi, fi, covers) in binds {
+        doc.blocks[bi].facts[fi].covers = Some(covers);
+    }
+    doc.issues.extend(issues);
 }
 
 /// Segment every Text block into countable facts (PROP-043 §8):
@@ -312,6 +430,7 @@ fn mk_fact(kind: FactKind, text: &str, s: usize, e: usize, line: usize) -> Fact 
         line,
         span: (s, e),
         marked: false,
+        covers: None,
     }
 }
 

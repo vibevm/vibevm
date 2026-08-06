@@ -27,7 +27,7 @@ mod units;
 use crate::doc::ParsedDoc;
 use anchors::check_anchor_laws;
 use blocks::collect_blocks;
-use facts::segment_facts;
+use facts::{bind_covered_blocks, segment_facts};
 use markers::scan_markers;
 use sha2::{Digest, Sha256};
 use units::collect_units;
@@ -43,6 +43,7 @@ pub fn parse_document(path: &str, text: &str) -> ParsedDoc {
     collect_blocks(&lines, &mut doc);
     collect_units(&lines, &mut doc);
     segment_facts(&mut doc);
+    bind_covered_blocks(&mut doc);
     scan_markers(&mut doc);
     check_anchor_laws(&mut doc);
     doc.fact_count = doc.blocks.iter().map(|b| b.facts.len()).sum();
@@ -191,6 +192,83 @@ mod qualified_form_tests {
             content_hash(base),
             content_hash("@fact:a1 First claim. @status:spec/done\n")
         );
+    }
+
+    // ---- `@fact/code:` — a fence becomes a fact's body ---------------------
+
+    fn binding_issues(d: &ParsedDoc) -> Vec<&crate::doc::Issue> {
+        d.issues
+            .iter()
+            .filter(|i| i.code == crate::doc::IssueCode::FenceBinding)
+            .collect()
+    }
+
+    /// The point of the whole feature: a claim inside a fence stops belonging
+    /// to nobody.
+    #[test]
+    fn a_typed_anchor_binds_the_fence_below_it() {
+        let d = parse_document(
+            "a.md",
+            "# T {#t}\n\n\
+             @fact/code:PANEL the panel runs this @status:impl/done\n\
+             ```bash\n\
+             bash tools/self-check.sh\n\
+             ```\n",
+        );
+        assert!(binding_issues(&d).is_empty(), "{:?}", d.issues);
+        let f = d
+            .blocks
+            .iter()
+            .flat_map(|b| &b.facts)
+            .find(|f| f.id.as_deref() == Some("PANEL"))
+            .expect("fact");
+        assert_eq!(f.covers, Some((4, 6)), "the fence's line range");
+    }
+
+    /// An untyped anchor covers only its own paragraph — the default the
+    /// owner asked for: a fence is an example until someone says otherwise.
+    #[test]
+    fn an_untyped_anchor_covers_nothing() {
+        let d = parse_document(
+            "a.md",
+            "# T {#t}\n\n\
+             @fact:PLAIN just prose @status:impl/done\n\
+             ```bash\n\
+             echo hi\n\
+             ```\n",
+        );
+        assert!(binding_issues(&d).is_empty());
+        let f = d
+            .blocks
+            .iter()
+            .flat_map(|b| &b.facts)
+            .find(|f| f.id.as_deref() == Some("PLAIN"))
+            .expect("fact");
+        assert_eq!(f.covers, None);
+    }
+
+    /// An unimplemented type is an ERROR, not a silent skip. A grammar that
+    /// ignores what it cannot do promises what it cannot do.
+    #[test]
+    fn an_unknown_type_is_an_error() {
+        let d = parse_document(
+            "a.md",
+            "# T {#t}\n\n@fact/image:PIC a picture @status:impl/done\n",
+        );
+        let issues = binding_issues(&d);
+        assert_eq!(issues.len(), 1, "{:?}", d.issues);
+        assert!(issues[0].message.contains("image"), "{}", issues[0].message);
+        assert!(issues[0].message.contains("code"), "names what IS known");
+    }
+
+    /// A typed anchor with no fence after it names a body it does not have.
+    #[test]
+    fn a_typed_anchor_without_its_block_is_an_error() {
+        let d = parse_document(
+            "a.md",
+            "# T {#t}\n\n@fact/code:NOPE no fence follows @status:impl/done\n\nplain text\n",
+        );
+        assert_eq!(binding_issues(&d).len(), 1, "{:?}", d.issues);
     }
 
     /// Mixed spellings inside one document must both be read: during the
