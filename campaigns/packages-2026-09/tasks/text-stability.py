@@ -19,7 +19,9 @@ is theatre — this program finds the 13.
 
 What it does, per stale file: take the commit that was HEAD at `verified_at`,
 extract every judged fact's own paragraph from that revision and from the
-working tree, and compare them byte for byte.
+working tree, and compare them byte for byte — in CANONICAL markup form, which
+is the form the engine hashes, so a fact whose spelling was rewritten and whose
+content was not compares equal (`canonical_markup`).
 
 **What a clean result licenses, and what it does not.** Byte-identical text
 means each verdict was formed against exactly the text on disk today, so the
@@ -44,10 +46,34 @@ ZONE = pathlib.Path(__file__).resolve().parent.parent
 ROOT = ZONE.parent.parent
 CACHE = ZONE / "run" / "cache.json"
 
+def canonical_markup(s):
+    """Mirror of `progress_core::parse::canonical_markup` — reduce both marker
+    spellings to the legacy one.
+
+    The engine hashes and compares text in this form, not in its raw one, so a
+    document that changed only its markup SPELLING is the same content. This
+    program must ask the same question the engine answers; a comparison of raw
+    spellings would report the 2026-08-06 migration as though every fact in the
+    corpus had been rewritten. It did report exactly that, over 274 files and
+    11 870 verdicts, until this function existed.
+
+    It is a second implementation of one law and that is a cost, not a design:
+    `#recipe-drift` below is what makes the divergence loud instead of silent.
+    Only `@fact:` and `@status:` are folded — `@fact/<type>:` is a form with no
+    legacy equivalent and hashes as itself, which is the engine's behaviour too.
+    """
+    return s.replace("@fact:", "##").replace("@status:", "@")
+
+
 # A fact's own paragraph: the `##<id>` line and every line up to the next
 # blank one. Deliberately NOT the anchor set — that is the mirror's job
 # (`merge-verdicts.addressable`); this only compares the text of anchors the
 # cache already names as judged, so a regex cannot widen the perimeter.
+#
+# The pattern reads the LEGACY spelling only, and correctly so: every blob it
+# is handed has been through `canonical_markup` first. Feeding it raw text
+# matches nothing at all on a migrated corpus — measured 2026-08-06 over three
+# spec documents carrying 377 facts between them: 0 matches.
 #
 # The optional list marker is load-bearing, not tidiness: a great many facts
 # in this corpus are written as `- ##ID …` bullets or `5. ##ID …` numbered
@@ -110,29 +136,58 @@ def cache_behind_the_tree(cache):
     the program's contract is «run after a scan», and until now nothing said so
     at the moment it mattered. A clean zero over a cache that is behind the tree
     licenses nothing.
+
+    The digest is taken over `canonical_markup`, because that is what the engine
+    hashes. Taking it over raw bytes accused a freshly-scanned cache of being
+    stale for every migrated file — the accusation `#recipe-drift` now catches.
     """
-    behind = []
+    behind, judged_files = [], 0
     for path, rec in cache["files"].items():
         camp = rec.get("campaign") or {}
         verdicts = camp.get("verdicts") or {}
         cached = rec.get("content_hash")
         if not verdicts or not cached:
             continue
+        judged_files += 1
         target = ROOT / path
         if not target.is_file():
             behind.append((path, len(verdicts), "absent from the tree"))
             continue
-        digest = hashlib.sha256(target.read_bytes()).hexdigest()
+        text = canonical_markup(target.read_bytes().decode("utf-8"))
+        digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
         if cached not in (digest, "sha256:" + digest):
             behind.append((path, len(verdicts), "edited since the last scan"))
-    return behind
+    return behind, judged_files
+
+
+def recipe_has_drifted(behind, judged_files):
+    """Is «every judged file is stale» a claim about the tree, or about us?
+
+    A corpus where nearly every judged file was edited since the last scan is
+    possible; a corpus where nearly every judged file was edited and none was
+    not is a hash recipe that no longer matches the engine's. The second is
+    what happened on 2026-08-06, and the program announced the first — loudly,
+    with a file list, and wrongly. Distinguishing them costs one ratio, and
+    guessing wrong costs a session's worth of re-judgement that is not owed.
+    """
+    return judged_files > 10 and len(behind) >= judged_files * 9 // 10
 
 
 def main():
     only_sealable = "--sealable" in sys.argv
     cache = json.loads(CACHE.read_text(encoding="utf-8"))
 
-    behind = cache_behind_the_tree(cache)
+    behind, judged_files = cache_behind_the_tree(cache)
+    if recipe_has_drifted(behind, judged_files) and not only_sealable:
+        print(
+            f"REFUSING TO REPORT — {len(behind)} of {judged_files} judged files "
+            f"disagree with their cached hash. That is not a corpus that was "
+            f"edited; that is this program computing the hash differently from "
+            f"the engine. Teach `canonical_markup` here whatever "
+            f"`progress_core::parse::canonical_markup` now does, then re-run. "
+            f"Everything below would be about the recipe, not about the tree."
+        )
+        return
     if behind and not only_sealable:
         judged = sum(n for _, n, _ in behind)
         print(
@@ -154,8 +209,8 @@ def main():
             dirty.append((path, len(verdicts), ["<undated: cannot locate the judging revision>"]))
             continue
         base = sh("git", "rev-list", "-1", f"--before={at}", "HEAD").strip()
-        old = fact_paragraphs(sh("git", "show", f"{base}:{path}"))
-        new = fact_paragraphs((ROOT / path).read_text(encoding="utf-8"))
+        old = fact_paragraphs(canonical_markup(sh("git", "show", f"{base}:{path}")))
+        new = fact_paragraphs(canonical_markup((ROOT / path).read_text(encoding="utf-8")))
         moved = sorted(a for a in verdicts if old.get(a) != new.get(a))
         judged_total += len(verdicts)
         moved_total += len(moved)
