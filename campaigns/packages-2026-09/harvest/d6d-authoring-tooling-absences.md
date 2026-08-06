@@ -695,7 +695,7 @@ this sentence is false about. Its own worked example agrees with it
 resolution"*), and its own summary agrees with it. What is false is the **host's
 implementation of the grammar**, which parses the prefix and skips the check —
 and which asserts the same unbuilt behaviour in its own `PROP-008
-##KIND-VALIDATION` at `@impl/done`. The obligation is the host's, on both
+@fact:KIND-VALIDATION` at `@status:impl/done`. The obligation is the host's, on both
 documents.
 
 **The second reason not to edit, and it is independent of the first: the batch
@@ -719,9 +719,9 @@ F-244 is the headline (line 65) and the summary (line 183) of a claim whose body
 (line 67) belongs to an owner-approval obligation.
 
 Demoting F-244 alone would leave the document reading *«The kind tag validates,
-it never disambiguates. **Specified, not built.** @spec/done»* at line 65 and,
+it never disambiguates. **Specified, not built.** @status:spec/done»* at line 65 and,
 two lines below at line 67, *«the resolver checks that the resolved package's
-type matches, and errors on a mismatch. @impl/done»* — a self-contradiction
+type matches, and errors on a mismatch. @status:impl/done»* — a self-contradiction
 authored by the batch boundary rather than by anything true. §6.1's
 `##ROUTE-BEFORE-FALSIFIER` was bought for the batch cut ignoring `closure_route`;
 this is the same lesson arriving from the other side, where honouring the route

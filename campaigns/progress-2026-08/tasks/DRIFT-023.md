@@ -16,7 +16,7 @@ straight back to `vibe progress rescan` reports every unit as
 
 ## 2. Contract {#contract}
 
-> ##BASELINE-RECORD `baseline.json` — per unit: URI#anchor, unit content-hash
+> @fact:BASELINE-RECORD `baseline.json` — per unit: URI#anchor, unit content-hash
 > at verdict time, verdict, evidence refs, date, named crates, marker
 > snapshot. **Shipped:** `baseline.rs`'s `BaselineUnit` carries exactly these
 > fields, with `Baseline::load` / `store` and the `rescan` CLI live.
@@ -234,10 +234,10 @@ Budget signal: past ~6 files, stop and return.
   **The spec text this makes true** — `PROP-043` §7.3, for the reviewer's
   sync pass, quoted verbatim as it stands today:
 
-  > - ##BASELINE-RECORD `baseline.json` — per unit: URI#anchor, unit content-hash at verdict time,
+  > - @fact:BASELINE-RECORD `baseline.json` — per unit: URI#anchor, unit content-hash at verdict time,
   >   verdict, evidence refs, date, named crates, marker snapshot. **Shipped:**
   >   `baseline.rs`'s `BaselineUnit` carries exactly these fields, with
-  >   `Baseline::load` / `store` and the `rescan` CLI live. @impl/done
+  >   `Baseline::load` / `store` and the `rescan` CLI live. @status:impl/done
 
   The `store` half of that sentence is now true of `Baseline` rather than of
   `Cache`. The line still says nothing about the `baseline` subcommand or

@@ -15,7 +15,7 @@ classes of file that must never carry markup are no longer observed.
 
 ## 2. Contract {#contract}
 
-> ##ZONE-EXCLUDED Excluded from markup scope, from packaging, and from
+> @fact:ZONE-EXCLUDED Excluded from markup scope, from packaging, and from
 > registries — always.
 > — `spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#campaign-zone`
 
@@ -200,7 +200,7 @@ Budget signal: past ~4 files, stop and return.
 - **Proposed PROP-043 §4 wording, for the reviewer's sync-from-code pass.**
   One anchor added, after `##excludes-rationale`:
 
-  > - ##CONFIG-EXCLUDE An optional `exclude` list of globs, matched against
+  > - @fact:CONFIG-EXCLUDE An optional `exclude` list of globs, matched against
   >   the `/`-separated repo-relative path and applied **after** the includes
   >   and after both default rules. Enumerated, never a wildcard escape
   >   hatch: it serves `##INCLUDE-STYLE`'s purpose — nothing observed by
@@ -208,16 +208,16 @@ Budget signal: past ~4 files, stop and return.
   >   as reviewable as an enumerated include. A pattern matching nothing is
   >   a warning naming the pattern; the count of files removed is reported
   >   by `scan`; a pattern that is not a valid glob is an error naming it.
-  >   Absent ⇒ empty ⇒ unchanged behaviour. @impl/done
+  >   Absent ⇒ empty ⇒ unchanged behaviour. @status:impl/done
 
   And one **body** amendment, which moves no anchor — `##DEFAULT-EXCLUDES`
   today says the always-on set is eight directories, while the code now also
   holds a file name, and an unamended §4 is the drift the next audit files:
 
-  > - ##DEFAULT-EXCLUDES **Default excludes** (applied always, even under
+  > - @fact:DEFAULT-EXCLUDES **Default excludes** (applied always, even under
   >   explicit includes): by path component — `vibedeps/`, `.vibe/`, `refs/`,
   >   `fixtures/`, `campaigns/`, `target/`, `node_modules/`, `**/vendor/`;
-  >   and by file name — `LICENSE.md`. @impl/done
+  >   and by file name — `LICENSE.md`. @status:impl/done
 
   If the reviewer prefers to keep `##DEFAULT-EXCLUDES` verbatim, the file-name
   rule wants its own anchor (`##DEFAULT-EXCLUDE-FILES`) rather than going

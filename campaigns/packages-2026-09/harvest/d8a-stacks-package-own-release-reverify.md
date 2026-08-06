@@ -110,13 +110,13 @@ $ grep -n "GUIDE-AI-NATIVE\|cards/INDEX.md" \
 ```
 
 - go `20-stack-go-ai-native-lang.md:5-6` —
-  «##GO-CODE-FOLLOWS-THE-GO-GUIDE Go code in this project follows the AI-Native Go guide
-  (`go/GUIDE-AI-NATIVE-GO.md` **in this package**). @impl/done»
-- go `:12-13` — «##CARD-REGISTRY-FOR-GO Card registry for Go: `cards/INDEX.md` **in this package** (trigger → card; …). @impl/done»
-- rust `20-stack-rust-ai-native-lang.md:5-6` — «##RUST-CODE-FOLLOWS-THE-RUST-GUIDE … (`rust/GUIDE-AI-NATIVE-RUST.md` **in this package**). @impl/done»
-- rust `:12-13` — «##CARD-REGISTRY-FOR-RUST Card registry for Rust: `cards/INDEX.md` **in this package** …»
-- typescript `20-stack-typescript-ai-native-lang.md:5-7` — «##TYPESCRIPT-CODE-FOLLOWS-THE-TYPESCRIPT-GUIDE … (`typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` **in this package**). @impl/done»
-- typescript `:13-14` — «##CARD-REGISTRY-FOR-TYPESCRIPT Card registry for TypeScript: `cards/INDEX.md` **in this package** …»
+  «@fact:GO-CODE-FOLLOWS-THE-GO-GUIDE Go code in this project follows the AI-Native Go guide
+  (`go/GUIDE-AI-NATIVE-GO.md` **in this package**). @status:impl/done»
+- go `:12-13` — «@fact:CARD-REGISTRY-FOR-GO Card registry for Go: `cards/INDEX.md` **in this package** (trigger → card; …). @status:impl/done»
+- rust `20-stack-rust-ai-native-lang.md:5-6` — «@fact:RUST-CODE-FOLLOWS-THE-RUST-GUIDE … (`rust/GUIDE-AI-NATIVE-RUST.md` **in this package**). @status:impl/done»
+- rust `:12-13` — «@fact:CARD-REGISTRY-FOR-RUST Card registry for Rust: `cards/INDEX.md` **in this package** …»
+- typescript `20-stack-typescript-ai-native-lang.md:5-7` — «@fact:TYPESCRIPT-CODE-FOLLOWS-THE-TYPESCRIPT-GUIDE … (`typescript/GUIDE-AI-NATIVE-TYPESCRIPT.md` **in this package**). @status:impl/done»
+- typescript `:13-14` — «@fact:CARD-REGISTRY-FOR-TYPESCRIPT Card registry for TypeScript: `cards/INDEX.md` **in this package** …»
 
 All six are unchanged from the text the verdict quotes. **The original reason is
 accurate as written** and needs no restatement.
@@ -699,7 +699,7 @@ card's declared reader is the weakest agent tier — types it.
 
 Current text, `go-ai-native-lang/v0.1.0/spec/cards/scaffold-i-codemods.md:19`:
 
-> ##MOTIVATION Motivation: A weak agent asked to "add a planner variant" must create the cell package, the conformance assertion, the directive tags, the registry arm, and the Example stub — **five files in lockstep**. `go-ai-native codemod add-cell <pkg> <cell> <seam> <variant> <spec-uri>` performs the change atomically and verifiably; the agent fills **five parameters** instead of coordinating five files. @spec/done
+> @fact:MOTIVATION Motivation: A weak agent asked to "add a planner variant" must create the cell package, the conformance assertion, the directive tags, the registry arm, and the Example stub — **five files in lockstep**. `go-ai-native codemod add-cell <pkg> <cell> <seam> <variant> <spec-uri>` performs the change atomically and verifiably; the agent fills **five parameters** instead of coordinating five files. @status:spec/done
 
 **The verdict's own citations, re-opened at HEAD.** `main.rs:147-165`:
 
@@ -780,7 +780,7 @@ verb**, not the family's.
 
 Current text, `rust-ai-native-lang/v0.7.0/spec/cards/scaffold-i-codemods.md:19`:
 
-> ##MOTIVATION Motivation: A weak agent asked to "rename this seam across its 7 call-sites + the registry + the error enum" desynchronizes them. `vibe codemod rename-seam --from X --to Y` **performs** the change atomically and verifiably; the agent fills two parameters instead of coordinating seven edits. @spec/done
+> @fact:MOTIVATION Motivation: A weak agent asked to "rename this seam across its 7 call-sites + the registry + the error enum" desynchronizes them. `vibe codemod rename-seam --from X --to Y` **performs** the change atomically and verifiably; the agent fills two parameters instead of coordinating seven edits. @status:spec/done
 
 **The obligation's printed reason is the Go one and does not describe this
 anchor.** The per-anchor reason on record does: «the command does not exist … no
@@ -832,7 +832,7 @@ it one line later.
 
 Current text, `typescript-ai-native-lang/v0.6.0/spec/cards/scaffold-i-codemods.md:19`:
 
-> ##MOTIVATION Motivation: … `vibe codemod rename-seam --from X --to Y`, **built on `ts-morph`**, performs the change atomically and verifiably; the agent fills two parameters instead of coordinating seven edits. @spec/done
+> @fact:MOTIVATION Motivation: … `vibe codemod rename-seam --from X --to Y`, **built on `ts-morph`**, performs the change atomically and verifiably; the agent fills two parameters instead of coordinating seven edits. @status:spec/done
 
 **Judged on the TS package's own tree only**, per §3.8 — nothing below is a host
 observable, so the ruling that voids `F-187` and `F-189` does not reach it:
@@ -927,10 +927,10 @@ types and its own tests. No host observable anywhere in this entry.
 
 Current text, `go-ai-native-lang/v0.1.0/spec/go/mechanisms/TCG-PROTOCOL-GO-v0.1.md:57-62`:
 
-> - ##OP-INIT **`init`** `{root}` → `{gopls_version, gopls_path, go_version,
+> - @fact:OP-INIT **`init`** `{root}` → `{gopls_version, gopls_path, go_version,
 >   root_files, ready}` — resolves and spawns gopls (ORACLE-GO §1), negotiates
 >   capabilities (§2), applies §3 config, waits for readiness bounded by a
->   deadline. … @impl/done
+>   deadline. … @status:impl/done
 
 ```
 $ sed -n '74,84p' …/crates/go-ai-native-tcg/src/serve.rs
@@ -960,8 +960,8 @@ verdict is accurate in every particular for Go.**
 
 Current text, `rust-ai-native-lang/v0.7.0/spec/rust/mechanisms/TCG-PROTOCOL-RUST-v0.1.md:69-75`:
 
-> - ##OP-INIT **`init`** `{root}` → `{ra_version, ra_path, toolchain, root_files,
->   quiescent}` — resolves and spawns the analyzer (ORACLE-RUST §1) … @impl/done
+> - @fact:OP-INIT **`init`** `{root}` → `{ra_version, ra_path, toolchain, root_files,
+>   quiescent}` — resolves and spawns the analyzer (ORACLE-RUST §1) … @status:impl/done
 
 ```
 $ sed -n '76,86p' …/crates/rust-ai-native-tcg/src/serve.rs
@@ -1101,10 +1101,10 @@ host observable; nothing here is void under §3.8.
 
 Current text, `rust-ai-native-lang/v0.7.0/spec/skills/rust-ai-native-sweep/SKILL.md:75-79`:
 
-> 5. ##RATCHET-CENSUS-REGRESSIONS **Census regressions** (`unwrap_domain` /
+> 5. @fact:RATCHET-CENSUS-REGRESSIONS **Census regressions** (`unwrap_domain` /
 >    `env_nonroot` / `unsafe_nonaudit` / `error_enums_missing_req` non-zero on a
 >    gated crate) — drain immediately … **flip a crate into `gated_crates` only
->    after it drains to zero.** @impl/done
+>    after it drains to zero.** @status:impl/done
 
 **It already says `gated_crates`.** The verdict's headline correction —
 «`gated_packages` → `gated_crates`» — has nothing to correct here. And all four
@@ -1152,10 +1152,10 @@ uses. **Nothing in the reason is about this document.**
 
 Current text, `go-ai-native-lang/v0.1.0/spec/skills/go-ai-native-sweep/SKILL.md:79-83`:
 
-> 5. ##RATCHET-CENSUS-REGRESSIONS **census regressions** (`init_in_cell` /
+> 5. @fact:RATCHET-CENSUS-REGRESSIONS **census regressions** (`init_in_cell` /
 >    `ambient_call_in_cell` / `naked_go_in_cell` / `error_string_match` /
 >    `seam_error_missing_req` non-zero on a gated package) — drain immediately …
->    **flip a package into `gated_packages` only after it drains to zero.** @impl/done
+>    **flip a package into `gated_packages` only after it drains to zero.** @status:impl/done
 
 Five kind strings measured against the Go stack's own crates and tools:
 

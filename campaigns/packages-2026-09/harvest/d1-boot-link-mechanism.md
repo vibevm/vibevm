@@ -579,7 +579,7 @@ The governing decision retires it explicitly.
 > source and target path) worked only because a dependency landed at one fixed
 > path in every project.
 >
-> `- ##WRITES-RETIRED-WHY A materialised package is now its own verbatim subtree
+> `- @fact:WRITES-RETIRED-WHY A materialised package is now its own verbatim subtree
 > under `vibedeps/<slot>/`; **a package's internal cross-references must become
 > package-relative or `spec://` URIs.**`
 
@@ -599,10 +599,10 @@ alternative outright: *"`vibe install` **never writes into any node's authored
 
 `spec/common/PROP-000.md:173`, §13 "Package layout convention":
 
-> ##mirror-example Concretely, the canonical `flow:wal@0.1.0` payload … contains
+> @fact:mirror-example Concretely, the canonical `flow:wal@0.1.0` payload … contains
 > `spec/flows/wal/WAL-PROTOCOL.md` at exactly that relative path; after `vibe
 > install flow:wal`, the file lives at `spec/flows/wal/WAL-PROTOCOL.md` inside
-> the user's project. **No mapping, no rewriting.** @spec/done
+> the user's project. **No mapping, no rewriting.** @status:spec/done
 
 It is marked `@spec/done` and carries no supersession note pointing at
 PROP-009 §2.1. Read on its own it says both that `spec/flows/` *is* the
@@ -624,7 +624,7 @@ PROP disagree about whether it has happened.
 `spec/modules/vibe-workspace/PROP-009-loading-model.md:61`:
 
 > `- ##ARTIFACT-STATIC-MD **`STATIC.md`** — the **verbatim** concatenation, in
-> priority order, of every `static`-typed (§2.4) contribution …` @impl/done
+> priority order, of every `static`-typed (§2.4) contribution …` @status:impl/done
 
 Repeated at `:99` for the link type itself:
 

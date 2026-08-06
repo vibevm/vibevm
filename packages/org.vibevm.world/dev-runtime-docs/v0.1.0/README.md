@@ -2,22 +2,22 @@
 
 <status stage="doc" state="done" audience="user"/>
 
-##PACKAGE-INSTALLS-THE-SAME-COMMIT-DOC-DISCIPLINE A vibevm `flow` package that installs a small, load-bearing discipline: a project's
+@fact:PACKAGE-INSTALLS-THE-SAME-COMMIT-DOC-DISCIPLINE A vibevm `flow` package that installs a small, load-bearing discipline: a project's
 **setup and runtime documentation is updated in the same commit** as any change to the
-toolchain, prerequisites, environment, paths, or bootstrap steps. @impl/done
+toolchain, prerequisites, environment, paths, or bootstrap steps. @status:impl/done
 
-##setup-docs-are-the-file-someone-opens-when-things-break Setup docs are the file someone opens when the build breaks or the environment is wrong. @spec/done
+@fact:setup-docs-are-the-file-someone-opens-when-things-break Setup docs are the file someone opens when the build breaks or the environment is wrong. @status:spec/done
 
-##THE-UPDATE-IS-NEVER-SEPARABLE-FROM-THE-CHANGE A deferred doc update is exactly the drift these files exist to prevent — so the update is
-never separable from the change that necessitates it. @impl/done
+@fact:THE-UPDATE-IS-NEVER-SEPARABLE-FROM-THE-CHANGE A deferred doc update is exactly the drift these files exist to prevent — so the update is
+never separable from the change that necessitates it. @status:impl/done
 
-##package-contents-lead This package ships: @impl/done
+@fact:package-contents-lead This package ships: @status:impl/done
 
-- ##CONTENT-THE-FULL-PROTOCOL `spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md` — the obligation, why it is
+- @fact:CONTENT-THE-FULL-PROTOCOL `spec/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL.md` — the obligation, why it is
   pinned in the project's foundational conventions, the contributor-vs-runtime audience
-  split, and how to keep the docs honest. @impl/done
-- ##CONTENT-THE-BOOT-SNIPPET `spec/boot/58-flow-dev-runtime-docs.md` — the boot snippet loaded at session start: the
-  rule and the never-do list. @impl/done
+  split, and how to keep the docs honest. @status:impl/done
+- @fact:CONTENT-THE-BOOT-SNIPPET `spec/boot/58-flow-dev-runtime-docs.md` — the boot snippet loaded at session start: the
+  rule and the never-do list. @status:impl/done
 
 ## Install {#install}
 
@@ -31,14 +31,14 @@ vibe install flow:dev-runtime-docs
 vibe uninstall flow:dev-runtime-docs
 ```
 
-##UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE Uninstalling removes every file the package wrote, including the boot snippet. @impl/done
+@fact:UNINSTALL-REMOVES-EVERY-FILE-THE-PACKAGE-WROTE Uninstalling removes every file the package wrote, including the boot snippet. @status:impl/done
 
 ## Philosophical background {#background}
 
-##extracted-from-vibevms-own-foundational-conventions Extracted from vibevm's own foundational conventions (PROP-000 §19): the obligation that a
+@fact:extracted-from-vibevms-own-foundational-conventions Extracted from vibevm's own foundational conventions (PROP-000 §19): the obligation that a
 change touching prerequisites/toolchain/env/paths ships with the matching guide update in the
-same commit, pinned centrally so it is met during the boot-sequence read-order. @spec/done
+same commit, pinned centrally so it is met during the boot-sequence read-order. @status:spec/done
 
 ## License {#license}
 
-##license-line UPL-1.0 — The Universal Permissive License, Version 1.0. See `LICENSE`. @impl/done
+@fact:license-line UPL-1.0 — The Universal Permissive License, Version 1.0. See `LICENSE`. @status:impl/done

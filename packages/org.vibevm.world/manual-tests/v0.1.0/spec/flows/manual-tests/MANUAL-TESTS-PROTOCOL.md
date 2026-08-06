@@ -2,123 +2,123 @@
 
 <status stage="spec" state="done"/>
 
-##scope-of-this-document **Scope of this document.** This file defines *why* a project keeps a
+@fact:scope-of-this-document **Scope of this document.** This file defines *why* a project keeps a
 second, human-run test tier alongside its automated suite, *what* a
 manual test is and is not, *when* to run one, *who* runs it, and the
-directory convention that keeps the tier discoverable. @impl/done
+directory convention that keeps the tier discoverable. @status:impl/done
 
-##sibling-document-pointers The four rules
+@fact:sibling-document-pointers The four rules
 each test must satisfy live in [`authoring-rules.md`](authoring-rules.md);
-the copy-ready skeleton lives in [`test-template.md`](test-template.md). @impl/done
+the copy-ready skeleton lives in [`test-template.md`](test-template.md). @status:impl/done
 
 ## Why a second tier exists {#why-second-tier}
 
-##the-automated-suite-is-hermetic-because-it-lies-about-the-world The automated suite is fast and hermetic *because it lies about the
-world*. @spec/done
+@fact:the-automated-suite-is-hermetic-because-it-lies-about-the-world The automated suite is fast and hermetic *because it lies about the
+world*. @status:spec/done
 
-##to-give-the-same-answer-on-every-machine-it-substitutes To run in a second and give the same answer on every machine,
+@fact:to-give-the-same-answer-on-every-machine-it-substitutes To run in a second and give the same answer on every machine,
 it substitutes fakes for real dependencies, temporary directories for
-the real per-user layout, and local fixtures for real remotes. @spec/done
+the real per-user layout, and local fixtures for real remotes. @status:spec/done
 
-##that-substitution-is-the-refactor-loop-and-the-blind-spot That
+@fact:that-substitution-is-the-refactor-loop-and-the-blind-spot That
 substitution is exactly what makes it a good refactor loop — and
 exactly why it cannot prove the surfaces that only exist in the real
-world. @spec/done
+world. @status:spec/done
 
-##those-surfaces-are-enumerable-lead Those surfaces are enumerable: @impl/done
+@fact:those-surfaces-are-enumerable-lead Those surfaces are enumerable: @status:impl/done
 
 | Surface | What the automated tier uses | What only the real world has |
 |---------|------------------------------|------------------------------|
-| ##ROW-SURFACE-AUTHENTICATION Authentication @spec/done | An in-process fake or a skipped check @spec/done | Real SSH keys, OAuth flows, API tokens against a real endpoint @spec/done |
-| ##ROW-SURFACE-PER-USER-STATE Per-user state @spec/done | A throwaway temp directory @spec/done | The actual on-disk layout the tool creates under the user's home @spec/done |
-| ##ROW-SURFACE-ARTIFACTS-CONSUMERS-READ Artifacts consumers read @spec/done | An in-memory value @spec/done | A lockfile (or export, or manifest) byte-for-byte as a downstream consumer receives it @spec/done |
-| ##ROW-SURFACE-HUMAN-INTENT Human intent @spec/done | An `assert_eq!` on a string @spec/done | A person reading the output and confirming it says what they meant @spec/done |
+| @fact:ROW-SURFACE-AUTHENTICATION Authentication @status:spec/done | An in-process fake or a skipped check @status:spec/done | Real SSH keys, OAuth flows, API tokens against a real endpoint @status:spec/done |
+| @fact:ROW-SURFACE-PER-USER-STATE Per-user state @status:spec/done | A throwaway temp directory @status:spec/done | The actual on-disk layout the tool creates under the user's home @status:spec/done |
+| @fact:ROW-SURFACE-ARTIFACTS-CONSUMERS-READ Artifacts consumers read @status:spec/done | An in-memory value @status:spec/done | A lockfile (or export, or manifest) byte-for-byte as a downstream consumer receives it @status:spec/done |
+| @fact:ROW-SURFACE-HUMAN-INTENT Human intent @status:spec/done | An `assert_eq!` on a string @status:spec/done | A person reading the output and confirming it says what they meant @status:spec/done |
 
-##THE-MANUAL-TIER-IS-THAT-LAST-MILE The manual tier is that last mile. @impl/done
+@fact:THE-MANUAL-TIER-IS-THAT-LAST-MILE The manual tier is that last mile. @status:impl/done
 
-##THE-MANUAL-TIER-COMPLEMENTS-AND-DOES-NOT-REPLACE It **complements** the automated
-suite; it does **not** replace it. @impl/done
+@fact:THE-MANUAL-TIER-COMPLEMENTS-AND-DOES-NOT-REPLACE It **complements** the automated
+suite; it does **not** replace it. @status:impl/done
 
-##DELETING-AN-AUTOMATED-TEST-GETS-THE-TRADE-BACKWARDS Deleting an automated test because
+@fact:DELETING-AN-AUTOMATED-TEST-GETS-THE-TRADE-BACKWARDS Deleting an automated test because
 "the manual walkthrough covers it" gets the trade exactly backwards —
 the fast tier stays the refactor loop, and the manual tier is the
-slower, higher-confidence pass laid over the top. @impl/done
+slower, higher-confidence pass laid over the top. @status:impl/done
 
 ## What a manual test is {#what}
 
-##A-MANUAL-TEST-IS-A-SELF-CONTAINED-MARKDOWN-WALKTHROUGH A manual test is a **self-contained markdown walkthrough that a human
+@fact:A-MANUAL-TEST-IS-A-SELF-CONTAINED-MARKDOWN-WALKTHROUGH A manual test is a **self-contained markdown walkthrough that a human
 executes top to bottom and finishes with no ambient state left
-behind**. @impl/done
+behind**. @status:impl/done
 
-##IT-READS-LIKE-A-RECIPE It reads like a recipe: preconditions, a clean-slate setup,
+@fact:IT-READS-LIKE-A-RECIPE It reads like a recipe: preconditions, a clean-slate setup,
 a numbered sequence of steps — each a command block plus an
 "Expected" paragraph — a teardown, and a list of what to collect if a
-step diverges. @impl/done
+step diverges. @status:impl/done
 
-##OPEN-IT-FOLLOW-IT-AND-KNOW-PRECISELY-WHICH-STEP-DIVERGED Open the file, follow it, and either every step
-matches its Expected or one does not and you know precisely which. @impl/done
+@fact:OPEN-IT-FOLLOW-IT-AND-KNOW-PRECISELY-WHICH-STEP-DIVERGED Open the file, follow it, and either every step
+matches its Expected or one does not and you know precisely which. @status:impl/done
 
 ## What a manual test is NOT {#not}
 
-- ##NOT-A-REPLACEMENT-FOR-THE-AUTOMATED-TIER **Not a replacement for the automated tier.** If a check *can* be
+- @fact:NOT-A-REPLACEMENT-FOR-THE-AUTOMATED-TIER **Not a replacement for the automated tier.** If a check *can* be
   made fast and hermetic, it belongs in the automated suite, where it
-  runs on every change. The manual tier is for what genuinely cannot. @impl/done
-- ##NOT-EXPLORATORY-TESTING **Not exploratory testing.** Exploration is unscripted, one-off,
+  runs on every change. The manual tier is for what genuinely cannot. @status:impl/done
+- @fact:NOT-EXPLORATORY-TESTING **Not exploratory testing.** Exploration is unscripted, one-off,
   and discards its steps. A manual test is scripted, repeatable, and
   **versioned next to the code** — the same reader running it next
   quarter takes the same path and expects the same output. If the
-  product changes, the walkthrough is edited, not improvised around. @impl/done
+  product changes, the walkthrough is edited, not improvised around. @status:impl/done
 
 ## When to run {#when}
 
-##three-triggers-lead Three triggers, each independent: @impl/done
+@fact:three-triggers-lead Three triggers, each independent: @status:impl/done
 
 | Trigger | Why it fires the tier |
 |---------|-----------------------|
-| ##ROW-TRIGGER-BEFORE-TAGGING-ANY-MILESTONE **Before tagging any milestone** @impl/done | The tag claims the shipped features work end to end. Walk every manual test the index marks required for those features first. @impl/done |
-| ##ROW-TRIGGER-AFTER-AN-INTEGRATION-SURFACE-CHANGE **After a change to an integration surface** @impl/done | Auth, per-user layout, consumer-facing artifacts, network I/O — run the relevant walkthroughs *even when the automated suite stays green*. Green fakes do not prove a changed real surface. @impl/done |
-| ##ROW-TRIGGER-WHEN-A-USER-FILES-AN-INTEGRATION-BUG **When a user files an integration bug** @impl/done | Capture their steps as a new manual test. It becomes both the reproducer that confirms the fix and the guard against regression. @impl/done |
+| @fact:ROW-TRIGGER-BEFORE-TAGGING-ANY-MILESTONE **Before tagging any milestone** @status:impl/done | The tag claims the shipped features work end to end. Walk every manual test the index marks required for those features first. @status:impl/done |
+| @fact:ROW-TRIGGER-AFTER-AN-INTEGRATION-SURFACE-CHANGE **After a change to an integration surface** @status:impl/done | Auth, per-user layout, consumer-facing artifacts, network I/O — run the relevant walkthroughs *even when the automated suite stays green*. Green fakes do not prove a changed real surface. @status:impl/done |
+| @fact:ROW-TRIGGER-WHEN-A-USER-FILES-AN-INTEGRATION-BUG **When a user files an integration bug** @status:impl/done | Capture their steps as a new manual test. It becomes both the reproducer that confirms the fix and the guard against regression. @status:impl/done |
 
 ## Who runs it {#who}
 
-##A-HUMAN-RUNS-IT-BECAUSE-THE-TIER-EXISTS-FOR-HUMAN-EYES A **human** runs it, because the reason the tier exists is human eyes
-on real output. @impl/done
+@fact:A-HUMAN-RUNS-IT-BECAUSE-THE-TIER-EXISTS-FOR-HUMAN-EYES A **human** runs it, because the reason the tier exists is human eyes
+on real output. @status:impl/done
 
-##AN-AGENT-MAY-PRE-RUN-THE-WALKTHROUGH An **agent** may *pre-run* the walkthrough — execute
+@fact:AN-AGENT-MAY-PRE-RUN-THE-WALKTHROUGH An **agent** may *pre-run* the walkthrough — execute
 each step and flag any whose result diverges from its Expected
-paragraph — and that triage is genuinely useful. @impl/done
+paragraph — and that triage is genuinely useful. @status:impl/done
 
-##THE-PRE-RUN-IS-NOT-THE-SIGN-OFF But the pre-run is
-not the sign-off. @impl/done
+@fact:THE-PRE-RUN-IS-NOT-THE-SIGN-OFF But the pre-run is
+not the sign-off. @status:impl/done
 
-##only-a-person-can-judge-that-the-output-says-what-was-meant Only a person can read the tool's real output and
-judge "yes, that is what I meant". @spec/done
+@fact:only-a-person-can-judge-that-the-output-says-what-was-meant Only a person can read the tool's real output and
+judge "yes, that is what I meant". @status:spec/done
 
-##RECORD-THE-PRE-RUN-AS-TRIAGE-THE-PASS-ONLY-OVER-A-HUMAN-SIGNATURE Record the agent's pre-run as
-triage; record the pass only over a human signature. @impl/done
+@fact:RECORD-THE-PRE-RUN-AS-TRIAGE-THE-PASS-ONLY-OVER-A-HUMAN-SIGNATURE Record the agent's pre-run as
+triage; record the pass only over a human signature. @status:impl/done
 
 ## The directory convention {#directory}
 
-##MANUAL-TESTS-LIVE-IN-A-DEDICATED-DIRECTORY-AT-THE-REPOSITORY-ROOT Manual tests live in a dedicated **`manual-tests/`** directory at the
+@fact:MANUAL-TESTS-LIVE-IN-A-DEDICATED-DIRECTORY-AT-THE-REPOSITORY-ROOT Manual tests live in a dedicated **`manual-tests/`** directory at the
 repository root, separate from end-user documentation — this is a
 contributor-facing checklist for how the product is verified, not how
-it is used. @impl/done
+it is used. @status:impl/done
 
-- ##ONE-MARKDOWN-FILE-PER-SCENARIO **One markdown file per scenario**, named for the milestone or
+- @fact:ONE-MARKDOWN-FILE-PER-SCENARIO **One markdown file per scenario**, named for the milestone or
   feature it covers with a short slug: `m1-first-run-smoke.md`,
   `auth-real-remote.md`. The filename is the index entry; there is no
-  second registry to keep in sync. @impl/done
-- ##AN-INDEX-README-IN-THE-DIRECTORY **An index `README.md`** in the directory: a table of the files,
+  second registry to keep in sync. @status:impl/done
+- @fact:AN-INDEX-README-IN-THE-DIRECTORY **An index `README.md`** in the directory: a table of the files,
   what each covers, and which milestone requires it. New test, new
-  row. @impl/done
-- ##KEEP-EACH-FILE-TO-ONE-SCENARIO **Keep each file to one scenario.** A walkthrough that has grown
+  row. @status:impl/done
+- @fact:KEEP-EACH-FILE-TO-ONE-SCENARIO **Keep each file to one scenario.** A walkthrough that has grown
   past a screen or two of steps is usually two scenarios wearing one
-  filename — split it. @impl/done
+  filename — split it. @status:impl/done
 
 ## Re-derive for your project {#re-derive}
 
-##re-derive-lead Do not copy this protocol's surfaces verbatim — copy the *task*, and
-let the agent enumerate the surfaces this project actually has: @impl/done
+@fact:re-derive-lead Do not copy this protocol's surfaces verbatim — copy the *task*, and
+let the agent enumerate the surfaces this project actually has: @status:impl/done
 
 ```
 Read this flow's documents (your project installed them — typically `vibedeps/flow-manual-tests/<version>/spec/flows/manual-tests/`, check `vibe.lock`) in full, then adapt the tier to this
@@ -138,12 +138,12 @@ project:
 
 ## Summary {#summary}
 
-- ##SUM-THE-TWO-TIERS-ARE-COMPLEMENTARY The automated tier proves the logic on fakes; the manual tier
-  proves the world. Complementary, never a substitute. @impl/done
-- ##SUM-WHAT-A-MANUAL-TEST-IS A manual test is a self-contained walkthrough run top to bottom
+- @fact:SUM-THE-TWO-TIERS-ARE-COMPLEMENTARY The automated tier proves the logic on fakes; the manual tier
+  proves the world. Complementary, never a substitute. @status:impl/done
+- @fact:SUM-WHAT-A-MANUAL-TEST-IS A manual test is a self-contained walkthrough run top to bottom
   that leaves no ambient state — scripted and versioned, not
-  exploratory. @impl/done
-- ##SUM-THE-THREE-TRIGGERS Run it before a milestone tag, after any integration-surface
-  change, and to reproduce a user's integration bug. @impl/done
-- ##SUM-AGENT-PRE-RUNS-HUMAN-SIGNS-OFF An agent pre-runs and flags mismatches; a human signs off. @impl/done
-- ##SUM-ONE-FILE-PER-SCENARIO-INDEXED-BY-A-README One file per scenario under `manual-tests/`, indexed by a README. @impl/done
+  exploratory. @status:impl/done
+- @fact:SUM-THE-THREE-TRIGGERS Run it before a milestone tag, after any integration-surface
+  change, and to reproduce a user's integration bug. @status:impl/done
+- @fact:SUM-AGENT-PRE-RUNS-HUMAN-SIGNS-OFF An agent pre-runs and flags mismatches; a human signs off. @status:impl/done
+- @fact:SUM-ONE-FILE-PER-SCENARIO-INDEXED-BY-A-README One file per scenario under `manual-tests/`, indexed by a README. @status:impl/done

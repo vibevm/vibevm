@@ -613,11 +613,11 @@ server-side mirroring or move to a shared-forge workflow"* — and `:157` says
 exactly that, in the flow's own words, at
 `spec/common/PROP-016-source-mirrors.md:72`:
 
-> 1. ##open-server-side **Server-side mirroring.** When a host must originate
+> 1. @fact:open-server-side **Server-side mirroring.** When a host must originate
 > writes outside `cargo xtask mirror` (e.g. heavy web-UI merging on one host),
 > add **one-directional server-side mirroring** (a GitHub Action mirroring
 > GitHub→GitVerse, or GitVerse's own pull-mirror for the reverse). It touches CI
-> secrets (an owner act), so it is deferred until needed. @spec/work
+> secrets (an owner act), so it is deferred until needed. @status:spec/work
 
 Condition, remedy verbatim, reason for deferral, and a state marker — which is
 the whole distinction between a trigger and a someday-maybe. The section header
@@ -758,7 +758,7 @@ author, and `.github/` is absent.
 judged this exact sentence.** The rule both restate is
 `fanout-mechanics.md:83-84`:
 
-> ##THE-FAN-OUT-IS-THE-ONLY-WAY-HISTORY-REACHES-A-HOST This is the *only* way
+> @fact:THE-FAN-OUT-IS-THE-ONLY-WAY-HISTORY-REACHES-A-HOST This is the *only* way
 > history reaches a host: not `git push host-a`, not a click in a web UI — the
 > fan-out.
 
@@ -824,8 +824,8 @@ makes the mirrored set a per-target declaration.
 thirty verdicts where a spec diff would improve the document.** The fact
 (`daily-loop.md:184-185`) is:
 
-> - ##SUM-EVERY-HOST-HOLDS-THE-FULL-HISTORY Every host holds the full history, so
->   the set grows and shrinks without data loss. @impl/done
+> - @fact:SUM-EVERY-HOST-HOLDS-THE-FULL-HISTORY Every host holds the full history, so
+>   the set grows and shrinks without data loss. @status:impl/done
 
 The consequent is true and is carried by three confirmed body rows
 (`##ONBOARD-STEP-FIRST-FAN-OUT`, `##OFFBOARDING-NEVER-SUBTRACTS-A-COMMIT`,
@@ -1082,7 +1082,7 @@ inference drawn from it.**
 confirmed on the identical clause.** The row (`MANAGED-BLOCKS-PROTOCOL.md:135`)
 is:
 
-> | ##ROW-STATE-PRESENT **Present** | Exactly one opener, then exactly one closer,
+> | @fact:ROW-STATE-PRESENT **Present** | Exactly one opener, then exactly one closer,
 > in order | **Update or remove the body between them.** |
 
 The verdict grants the classification half in full and better than the flow asks
@@ -1100,8 +1100,8 @@ over `strip()` at `:180-210`, wired to the CLI at `main.rs:427`, and pinned by t
 round-trip tests (`harness.rs:392-408`, `:431-462`). And the **summary of this
 very table** says the same sentence and is **confirmed**:
 
-> - ##SUM-THREE-STATES Three states: absent → create at end of file; **present →
->   update or remove the body**; malformed → hard stop, human decides. @impl/done
+> - @fact:SUM-THREE-STATES Three states: absent → create at end of file; **present →
+>   update or remove the body**; malformed → hard stop, human decides. @status:impl/done
 > — `MANAGED-BLOCKS-PROTOCOL.md:294-295`, re-judged confirmed in wave 6 with
 > *"every clause has a carrier once the perimeter includes the adopter"*.
 
@@ -1122,9 +1122,9 @@ members of the disjunction exist in the perimeter**: update in the host engine
 in the batch: every one of its five constituents is judged confirmed, including
 the clause it is drifted for.** The fact (`:292-293`) is:
 
-> - ##SUM-MARKER-PROPERTIES-AND-VERSIONING Markers must be unique, greppable,
+> - @fact:SUM-MARKER-PROPERTIES-AND-VERSIONING Markers must be unique, greppable,
 >   paired, and carry an internal do-not-edit notice. **Version the marker format
->   from day one.** @impl/done
+>   from day one.** @status:impl/done
 
 It restates four table rows and one body rule. The verdict grants the four and
 drifts the fifth. Measured against the verdict cache at HEAD:

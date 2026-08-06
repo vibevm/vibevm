@@ -32,11 +32,11 @@ Design it sits on: [`PHASE-T-SPEC.md` §13](PHASE-T-SPEC.md#parallel), especiall
 | red exhibit — perturb, confirm, restore | **yes**, batched | never |
 | reading the diff and gating | **yes** | never |
 
-- ##W-ONE-COLUMN-IS-THE-POINT **The writer's column has two rows.** Everything else was moved out,
+- @fact:W-ONE-COLUMN-IS-THE-POINT **The writer's column has two rows.** Everything else was moved out,
   and the move is not politeness toward a weak model — it is the project's own
   doctrine applied to itself: the strong author materialises the structural
   decision, the weak reader fills a named input.
-- ##W-NO-DERIVED-IDENTIFIERS **The writer never types an identifier it could get wrong.** The
+- @fact:W-NO-DERIVED-IDENTIFIERS **The writer never types an identifier it could get wrong.** The
   `spec://` URI, the revision, the file path and the three test names arrive as
   literals in the packet. A mistyped `verifies` tag produces a test that exists
   and is invisible to every count this phase produces (§11.5) — the most
@@ -154,7 +154,7 @@ pasted verbatim — including §3, which is the phase.
 > ```rust
 > #[test]
 > fn shorthand() {
->     let m = parse_shorthand("@impl").unwrap();
+>     let m = parse_shorthand("@status:impl").unwrap();
 >     assert!(m.state.is_some());   // vacuous: true of every possible state
 > }
 > ```
@@ -169,14 +169,14 @@ pasted verbatim — including §3, which is the phase.
 > #[test]
 > fn canonical_bare_shorthand_defaults_to_work() {
 >     // literal written from the fact, before anything was run
->     assert_eq!(parse_shorthand("@impl"), Ok(Marker::new(Stage::Impl, State::Work)));
+>     assert_eq!(parse_shorthand("@status:impl"), Ok(Marker::new(Stage::Impl, State::Work)));
 > }
 >
 > #[specmark::verifies("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#SHORTHAND-BARE", r = 3)]
 > #[test]
 > fn boundary_unknown_is_the_one_exception_and_defaults_to_hold() {
 >     // the fact says "exactly one exception" — that clause IS the boundary case
->     assert_eq!(parse_shorthand("@unknown"), Ok(Marker::new(Stage::Unknown, State::Hold)));
+>     assert_eq!(parse_shorthand("@status:unknown"), Ok(Marker::new(Stage::Unknown, State::Hold)));
 > }
 >
 > #[specmark::verifies("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#VOCAB-CLOSED", r = 2)]
@@ -244,11 +244,11 @@ pasted verbatim — including §3, which is the phase.
 | `tests:` | three names, composed by the boss from the fact's own clauses |
 | `tier:` | §7's assignment, decided at packing time |
 
-- ##W-BOSS-TYPES-THE-URI-ONCE **The boss extracts the URI and revision mechanically**, from the same
+- @fact:W-BOSS-TYPES-THE-URI-ONCE **The boss extracts the URI and revision mechanically**, from the same
   source the coverage checker will read (§10.1). A URI typed by hand at either
   end is a silent hole; typed once and copied twice, it either works everywhere
   or fails visibly at the first check.
-- ##W-PACKET-SIZE-IS-A-BUDGET **Size a packet by facts, not by files** — the campaign's own ×1.6
+- @fact:W-PACKET-SIZE-IS-A-BUDGET **Size a packet by facts, not by files** — the campaign's own ×1.6
   lesson in another costume. Start at **≤8 facts (~24 tests)** per packet until a
   real run says otherwise; the calibration packet (§12) exists to produce that
   number.
@@ -261,30 +261,30 @@ pasted verbatim — including §3, which is the phase.
 git -c core.longpaths=true worktree add -b phase-t/<scope> ../vibevm-t-<scope> <SCAFFOLD_SHA>
 ```
 
-- ##W-LONGPATHS-BELONGS-HERE **The `core.longpaths` flag is not optional and it belongs to this
+- @fact:W-LONGPATHS-BELONGS-HERE **The `core.longpaths` flag is not optional and it belongs to this
   step.** `git worktree add` on this repository overflows Windows MAX_PATH on
   the deep `vibedeps/` paths and fails opaquely (F19). It used to sit in the
   writer's prompt, where the one reader who could not have diagnosed the failure
   was the one being asked to handle it.
-- ##W-RECORD-THREE-ARTEFACTS **Record three artefacts or the checks have no denominator:** the
+- @fact:W-RECORD-THREE-ARTEFACTS **Record three artefacts or the checks have no denominator:** the
   scaffold sha, `scaffold.txt` (every file the scaffold pass created), and one
   `scope-<name>.txt` per packet (its path list, verbatim as pasted). Without
   them «it merged cleanly» is a count with nothing to compare against.
 
 ### 4.2 While the writers run {#while}
 
-- ##W-DO-NOT-MOVE-MAIN Do not commit to `main`, do not merge, do not pull. Every worktree
+- @fact:W-DO-NOT-MOVE-MAIN Do not commit to `main`, do not merge, do not pull. Every worktree
   grew from the scaffold commit and every check compares against it.
-- ##W-DO-NOT-HELP **Do not fix a problem a writer reports.** It is a finding and it goes
+- @fact:W-DO-NOT-HELP **Do not fix a problem a writer reports.** It is a finding and it goes
   in the ledger; fixing it mid-run puts the tree out of step with the work being
   written against it.
-- ##W-EXPECT-UNTESTABLE **Expect a large untestable return rate**, and do not treat it as
+- @fact:W-EXPECT-UNTESTABLE **Expect a large untestable return rate**, and do not treat it as
   under-performance. A returned fact with a stated sentence is a valid output of
   the routine's step 1 — arguably its most honest one.
 
 ### 4.3 Verify the split BEFORE integrating {#verify-first}
 
-##W-VERIFY-BEFORE-MERGE The checks run while the trees are still separate. Integrating first
+@fact:W-VERIFY-BEFORE-MERGE The checks run while the trees are still separate. Integrating first
 destroys the cheapest evidence — after a clean merge over an overlapping
 partition, the tree looks exactly like a correct one.
 
@@ -303,17 +303,17 @@ for w in <scope names>; do comm -23 "$D/$w" <(sort scope-$w.txt); done
 sort -u "$D"/* > "$D/all"; comm -13 "$D/all" <(sort scaffold.txt)
 ```
 
-- ##W-CHECK-2-IS-THE-ONE-MISSED **Check 2 is the one an intersection test alone does not give you.**
+- @fact:W-CHECK-2-IS-THE-ONE-MISSED **Check 2 is the one an intersection test alone does not give you.**
   A writer can stray into a file *no other writer* touched: the intersection
   stays empty and the violation is invisible. Only comparing each tree to **its
   own** list catches it. *(This procedure's first draft had check 1 and not check
   2 — the omission is recorded because it is the same shape as everything else
   this campaign has found: a check with no denominator.)*
-- ##W-CHECK-3-IS-NOT-A-FAILURE **An unfilled scaffolded file is not automatically wrong.** It is a
+- @fact:W-CHECK-3-IS-NOT-A-FAILURE **An unfilled scaffolded file is not automatically wrong.** It is a
   component where every fact came back untestable, and the writer's report says
   so. Reconcile check 3 against those reports **by name**; a file that is empty
   and *not* in a report is the real gap.
-- ##W-IF-A-CHECK-FIRES **If check 1 or 2 fires: stop.** The partition was wrong, which means
+- @fact:W-IF-A-CHECK-FIRES **If check 1 or 2 fires: stop.** The partition was wrong, which means
   the packing was wrong, and that is what gets fixed — not the tree.
 
 ### 4.4 The wave build, and then the batched red exhibit {#build-and-exhibit}
@@ -330,13 +330,13 @@ that is worth recording, not worth a silent fix.
 
 Then the exhibit, once, for the wave:
 
-- ##W-PERTURB-VALUE-NOT-TYPE Perturb **one expected literal in every file at once** — the VALUE,
+- @fact:W-PERTURB-VALUE-NOT-TYPE Perturb **one expected literal in every file at once** — the VALUE,
   never the TYPE (`3` → `4`, not `3` → `"x"`), so each failure stays inside its
   own test instead of breaking the crate.
-- ##W-CONFIRM-EXACTLY-THOSE Run once. Confirm **exactly** the perturbed tests failed — not «some
+- @fact:W-CONFIRM-EXACTLY-THOSE Run once. Confirm **exactly** the perturbed tests failed — not «some
   failed». A file whose perturbed test still passes has a dead assertion, and
   that file is rejected.
-- ##W-RESTORE-AND-RECONFIRM Restore all of them, run again, confirm green. **This is the step
+- @fact:W-RESTORE-AND-RECONFIRM Restore all of them, run again, confirm green. **This is the step
   that is easiest to half-finish**, which is why it is held by the one party
   that can see the whole loop.
 
@@ -347,16 +347,16 @@ cargo fmt --all                                 # writers do not format
 bash tools/self-check.sh ; echo "EXIT=$?"       # the REAL exit code, never a piped tail
 ```
 
-- ##W-FIRST-TIME-TOGETHER **This run is the first time the test sets run together.** Disjoint
+- @fact:W-FIRST-TIME-TOGETHER **This run is the first time the test sets run together.** Disjoint
   *files* do not imply independent *tests*: a shared fixture, a fixed tempdir
   name, a bound port or global state can collide, and nothing earlier could have
   caught it.
-- ##W-NEVER-REBASE **Never rebase a writer's branch and never force anything.** Rule 4
+- @fact:W-NEVER-REBASE **Never rebase a writer's branch and never force anything.** Rule 4
   forbids it, and the disjoint file sets mean a rebase buys nothing.
-- ##W-THEN-TIER-AUDIT Then the tier audit (§7): compare each test's wall-clock against the
+- @fact:W-THEN-TIER-AUDIT Then the tier audit (§7): compare each test's wall-clock against the
   tier it was **assigned at packing time**. A fast-tier test that is not fast is
   a mis-assignment to fix, not a boundary to redraw.
-- ##W-THEN-COVERAGE Then the three coverage checks (§10.1) — file, fact, tag. **The tag
+- @fact:W-THEN-COVERAGE Then the three coverage checks (§10.1) — file, fact, tag. **The tag
   check is the one that catches a writer whose tests exist and are invisible**,
   and it is the failure this whole packet design is built to make rare.
 

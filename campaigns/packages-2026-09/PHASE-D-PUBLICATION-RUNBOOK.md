@@ -78,7 +78,7 @@ the lane's budget on noise permanently to save one small reviewed build once.
 4. **Verify the lane**: `grep -c "\.\./flows/" spec/boot/STATIC.md` → **0**
    (today: 69); `address-repair.py --verify` green; `cargo xtask sync-engines
    --check` still green (33 pairs; .md-only edits touch no engine);
-   `bash tools/self-check.sh` → 0; fork-(б) only: `grep -c "@impl/done"
+   `bash tools/self-check.sh` → 0; fork-(б) only: `grep -c "@status:impl/done"
    spec/boot/STATIC.md` → 0.
 5. **Refresh the campaign mirror**: `vibe progress mirror --campaign
    campaigns/packages-2026-09` (the new ts-lang README enters the corpus

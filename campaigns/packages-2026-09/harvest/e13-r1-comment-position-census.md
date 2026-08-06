@@ -78,14 +78,14 @@ and `position is a resource` over the whole tree excluding `vibedeps/`:
   file exists** — `Glob rule-position-is-a-resource*` over the package tree
   returns zero files; the three INDEX lines say "named, not yet authored".
 - **ATLAS finding catalog:** `core-ai-native/v0.8.0/spec/appendix/ATLAS.md:95`
-  (`##FINDING-R3-003 — Position is a resource: critical invariants at file
+  (`@fact:FINDING-R3-003 — Position is a resource: critical invariants at file
   edges, file length bounded`) and the v0.7.0 twin
   `core-ai-native/v0.7.0/spec/appendix/ATLAS.md:92`. ATLAS names the *finding
   family* ("invariants at file edges, file length bounded"); it describes no
   checker.
 - **Tool docs tie the phrase to the file-LENGTH rule only:**
   `go-ai-native-lang/v0.1.0/spec/go/tools/conform-frontend-go.md:34`
-  (`##RULE-FILE-LENGTH-BUDGET the file-length budget (position is a resource,
+  (`@fact:RULE-FILE-LENGTH-BUDGET the file-length budget (position is a resource,
   guide §3)`) and
   `typescript-ai-native-lang/v0.6.0/spec/typescript/tools/conform-frontend-typescript.md:23`
   (`##RULE-FILE-LENGTH-BUDGET the file-length budget (position is a resource)`).

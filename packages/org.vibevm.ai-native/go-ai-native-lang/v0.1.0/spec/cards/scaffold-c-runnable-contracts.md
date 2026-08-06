@@ -2,35 +2,35 @@
 
 <status stage="spec" state="done"/>
 
-##status-line **Discipline v0.2 · BETA · T2 · Go** @impl/done
+@fact:status-line **Discipline v0.2 · BETA · T2 · Go** @status:impl/done
 
 ## Band 1 — Identity & Recognition {#band-one-identity}
 
-##CLASSIFICATION Classification: layer=E (verification); mechanism=scaffold C. @impl/done
+@fact:CLASSIFICATION Classification: layer=E (verification); mechanism=scaffold C. @status:impl/done
 
-##INTENT Intent: Express pre/post-conditions and invariants as EXECUTING checks attached to the unit and restated at use sites — so a paged reader gets ground truth without simulating the body. Go has no `debug_assert!` and no `asserts`-narrowing; the projection is an explicit `invariant` helper (panicking — the invariant-violation channel IS panic, guide §5) plus property tests backing behavioral claims. @impl/done
+@fact:INTENT Intent: Express pre/post-conditions and invariants as EXECUTING checks attached to the unit and restated at use sites — so a paged reader gets ground truth without simulating the body. Go has no `debug_assert!` and no `asserts`-narrowing; the projection is an explicit `invariant` helper (panicking — the invariant-violation channel IS panic, guide §5) plus property tests backing behavioral claims. @status:impl/done
 
-##ALSO-KNOWN-AS Also Known As: design by contract; invariant check; precondition; `must`-helper; property test; `testing/quick`; fuzz property. @spec/done
+@fact:ALSO-KNOWN-AS Also Known As: design by contract; invariant check; precondition; `must`-helper; property test; `testing/quick`; fuzz property. @status:spec/done
 
-##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a function has a non-obvious precondition; a cross-cell invariant is relied upon far from where it is established (R3-009); a behavioral claim is currently only in a godoc comment. *Detector seed:* a comment asserting a property ("already deduplicated", "sorted by name", "non-nil after init") with no adjacent runnable check → recognition fires (a prose claim is adversarial if it lies, R2C-004). @impl/done
+@fact:APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a function has a non-obvious precondition; a cross-cell invariant is relied upon far from where it is established (R3-009); a behavioral claim is currently only in a godoc comment. *Detector seed:* a comment asserting a property ("already deduplicated", "sorted by name", "non-nil after init") with no adjacent runnable check → recognition fires (a prose claim is adversarial if it lies, R2C-004). @status:impl/done
 
 ## Band 2 — Justification & Tradeoffs {#band-two-justification}
 
-##MOTIVATION Motivation: A weak agent edits a planner relying on "actions are sorted by resource id" stated only in a godoc three packages away. It cannot do the whole-program inference to confirm. An `invariant(slices.IsSortedFunc(actions, byID), "actions sorted by id — spec://…#req-plan-order")` at the use site either holds or panics in the loop — the invariant is local ground truth. @spec/done
+@fact:MOTIVATION Motivation: A weak agent edits a planner relying on "actions are sorted by resource id" stated only in a godoc three packages away. It cannot do the whole-program inference to confirm. An `invariant(slices.IsSortedFunc(actions, byID), "actions sorted by id — spec://…#req-plan-order")` at the use site either holds or panics in the loop — the invariant is local ground truth. @status:spec/done
 
-##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Invariant helper* (a two-line `func invariant(cond bool, msg string)` that panics — cheap, greppable, uniform) · *Use-site witness* (the restated check where the invariant is relied upon) · *Property test* (`testing/quick` for simple laws; a fuzz target for parser-shaped ones) · *Boundary validator* (explicit checks on decoded DTOs, guide §1). @impl/done
+@fact:STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Invariant helper* (a two-line `func invariant(cond bool, msg string)` that panics — cheap, greppable, uniform) · *Use-site witness* (the restated check where the invariant is relied upon) · *Property test* (`testing/quick` for simple laws; a fuzz target for parser-shaped ones) · *Boundary validator* (explicit checks on decoded DTOs, guide §1). @status:impl/done
 
-##COLLABORATIONS Collaborations: Defines "valid"/"equivalent" for Class D oracles; pairs with Class B (types for identity/protocol, contracts for value invariants); failures speak the Class F grammar (the message carries the REQ URI). @impl/done
+@fact:COLLABORATIONS Collaborations: Defines "valid"/"equivalent" for Class D oracles; pairs with Class B (types for identity/protocol, contracts for value invariants); failures speak the Class F grammar (the message carries the REQ URI). @status:impl/done
 
-##GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* make load-bearing invariants machine-checked at the point of reliance. *Non-Goals:* NOT checking everything everywhere (hot-path cost is real and Go has no compiled-out assert tier — scope to seams and load-bearing sites; a `//go:build debug`-tagged variant is legal where a check is truly hot); NOT a substitute for the spec that JUSTIFIES the invariant; NOT input validation of untrusted data (that is the boundary's parse step). @impl/done
+@fact:GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* make load-bearing invariants machine-checked at the point of reliance. *Non-Goals:* NOT checking everything everywhere (hot-path cost is real and Go has no compiled-out assert tier — scope to seams and load-bearing sites; a `//go:build debug`-tagged variant is legal where a check is truly hot); NOT a substitute for the spec that JUSTIFIES the invariant; NOT input validation of untrusted data (that is the boundary's parse step). @status:impl/done
 
-##CONSEQUENCES Consequences: (+) invariants become local and checkable; (+) a paged reader trusts the check, not distant prose; (+) the panic message cites the REQ (Class F), so a trip is navigable. (−) restatements can drift — keep them checks (which fail, not mislead); (−) always-on runtime cost — scope deliberately, tag-gate the hot ones. @spec/done
+@fact:CONSEQUENCES Consequences: (+) invariants become local and checkable; (+) a paged reader trusts the check, not distant prose; (+) the panic message cites the REQ (Class F), so a trip is navigable. (−) restatements can drift — keep them checks (which fail, not mislead); (−) always-on runtime cost — scope deliberately, tag-gate the hot ones. @status:spec/done
 
-##ALTERNATIVES Alternatives: a defined type/constructor (Class B) when the invariant is identity or construction-shape; a comment (rejected — lies silently); moving the check into the type is always preferred when possible ("restructure beats testify"). @spec/done
+@fact:ALTERNATIVES Alternatives: a defined type/constructor (Class B) when the invariant is identity or construction-shape; a comment (rejected — lies silently); moving the check into the type is always preferred when possible ("restructure beats testify"). @status:spec/done
 
-##RISKS-AND-ASSUMPTIONS Risks & Assumptions: assumes the invariant is expressible as a cheap predicate. *Sunset:* if a type/constructor later encodes the invariant statically, the check retires there (and a lingering one is deviation debt). @spec/done
+@fact:RISKS-AND-ASSUMPTIONS Risks & Assumptions: assumes the invariant is expressible as a cheap predicate. *Sunset:* if a type/constructor later encodes the invariant statically, the check retires there (and a lingering one is deviation debt). @status:spec/done
 
-##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: DR1-019 (contracts give success criterion without body, theory), R3-009 (use-site restatement, theory), R2C-004 (prose lies harm, benchmark). Class: benchmark + theory. Tag: **[E-mid]**. @spec/done
+@fact:EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: DR1-019 (contracts give success criterion without body, theory), R3-009 (use-site restatement, theory), R2C-004 (prose lies harm, benchmark). Class: benchmark + theory. Tag: **[E-mid]**. @status:spec/done
 
 ## Band 3 — Operation {#band-three-operation}
 

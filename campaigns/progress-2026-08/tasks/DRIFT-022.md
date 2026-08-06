@@ -180,13 +180,13 @@ Budget signal: past ~3 files, stop and return.
   `spec/modules/vibe-registry/PROP-010-local-package-cache.md:68` —
 
   > ```
-  > ##USER-LEVEL-REGISTRIES **Decision.** A **user-level default registry configuration** — `[[registry]]` (and `[[mirror]]`) entries in the existing user config (`~/.config/vibe/config.toml`, the `UserConfig` layer that already promotes `[env]` per `VIBEVM-SPEC.md` §9.5). It supplies registry configuration when no project does, and seeds a new one: @spec/done
+  > @fact:USER-LEVEL-REGISTRIES **Decision.** A **user-level default registry configuration** — `[[registry]]` (and `[[mirror]]`) entries in the existing user config (`~/.config/vibe/config.toml`, the `UserConfig` layer that already promotes `[env]` per `VIBEVM-SPEC.md` §9.5). It supplies registry configuration when no project does, and seeds a new one: @status:spec/done
   > ```
 
   `spec/modules/vibe-registry/PROP-010-local-package-cache.md:74` —
 
   > ```
-  > - ##PROJECT-OVERRIDES Project-level `[[registry]]` always overrides the user-level default — the same precedence the `UserConfig` `[env]` layer already follows (the project / live value wins). @spec/done
+  > - @fact:PROJECT-OVERRIDES Project-level `[[registry]]` always overrides the user-level default — the same precedence the `UserConfig` `[env]` layer already follows (the project / live value wins). @status:spec/done
   > ```
 
   Both are incidental cross-references; neither states which names are

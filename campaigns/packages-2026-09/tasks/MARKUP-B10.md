@@ -12,18 +12,18 @@ the multi-sentence blockquote.
 
 ## Two marked siblings now {#siblings}
 
-##B10-TWO-SIBLINGS B8 (`discovery-prompt` + `decision-records`, `e654c86f`) and B9
+@fact:B10-TWO-SIBLINGS B8 (`discovery-prompt` + `decision-records`, `e654c86f`) and B9
 (`spec-genres` + `wal` + `addressable-specs`, `b1689359`) are both landed
 `world` flows of the same shape — README, boot snippet, `spec/flows/<name>/`
 documents, and in B9's case a `SKILL.md` too. **Read the corresponding file in
 both before marking yours.**
 
-##B10-WHERE-THEY-AGREE-IS-SETTLED **Where B8 and B9 agree, the case is settled and no ruling is needed** —
+@fact:B10-WHERE-THEY-AGREE-IS-SETTLED **Where B8 and B9 agree, the case is settled and no ruling is needed** —
 that is what two independent batches converging means. **Where they disagree,
 say so with both file references**; that is the most useful thing you can
 report, and it is how rulings 39–41 were found.
 
-##B10-B9-FOLLOWED-B8-EXPLICITLY B9's report named the places it followed B8 on cases no ruling covered:
+@fact:B10-B9-FOLLOWED-B8-EXPLICITLY B9's report named the places it followed B8 on cases no ruling covered:
 example cells take their row's stage, a semicolon-joined pointer pair stays one
 unit, a normative colon lead-in takes UPPER. **Those three now have two batches
 behind them.** Treat them as settled and do not re-derive.
@@ -53,14 +53,14 @@ behind them.** Treat them as settled and do not re-derive.
 
 ## Sizing, and an honest note on how weak this test is {#sizing}
 
-##B10-COMPOSITION **Measured composition: 130 cells, 201 items, 156 paragraphs** — a
+@fact:B10-COMPOSITION **Measured composition: 130 cells, 201 items, 156 paragraphs** — a
 26.7 % cell share.
 
-##B10-THREE-CONSTANT-PREDICTION B9 corrected the sizing rule to **three constants — paragraphs × 2.13,
+@fact:B10-THREE-CONSTANT-PREDICTION B9 corrected the sizing rule to **three constants — paragraphs × 2.13,
 pre-existing list items × 1.00, table cells × 1.00** — because only paragraphs
 multiply. Applied here: `156 × 2.13 + 201 + 130 = ` **≈ 663 units**.
 
-##B10-THIS-TEST-DISCRIMINATES-WEAKLY **Say plainly that this is a weak test, unlike B9's.** B9's composition
+@fact:B10-THIS-TEST-DISCRIMINATES-WEAKLY **Say plainly that this is a weak test, unlike B9's.** B9's composition
 made the competing models disagree widely (779 / 797 / 739 / 981 against a
 measured 776). Here the three-constant rule says 663 and B8's superseded
 two-constant rule says 676 — **2 % apart**, which no single measurement can
@@ -74,20 +74,20 @@ Verified by the reviewer against a gate run at dispatch. **You do not need to
 re-run anything** — the boundaries below forbid it, and there is no instruction
 here that contradicts them.
 
-- ##B10-EXPECT-RESIDUAL **Residual: ZERO.** `health-audit/…/SKILL.md` is in scope and fully
+- @fact:B10-EXPECT-RESIDUAL **Residual: ZERO.** `health-audit/…/SKILL.md` is in scope and fully
   markable — DRIFT-037 closed F-092 on 2026-07-27, so its frontmatter is no
   longer a countable unit.
-- ##B10-EXPECT-RESIDUAL-FILES **No file may carry a residual.**
-- ##B10-EXPECT-CORPUS-TOTAL **Corpus-wide unmarked afterwards: 2 102** — it stands at 2 589 and this
+- @fact:B10-EXPECT-RESIDUAL-FILES **No file may carry a residual.**
+- @fact:B10-EXPECT-CORPUS-TOTAL **Corpus-wide unmarked afterwards: 2 102** — it stands at 2 589 and this
   batch owes all 487.
 
 ## What this batch is likely to surface {#expect}
 
-##B10-F097-DOES-NOT-REACH-HERE **F-097 does not reach this batch.** None of the sixteen files cites
+@fact:B10-F097-DOES-NOT-REACH-HERE **F-097 does not reach this batch.** None of the sixteen files cites
 `flow:atomic-commits` — checked. If you meet a dead `flow:` reference it is a
 **new** finding and should be reported as one.
 
-##B10-EXPECT-CHECKLIST-GENRE `audit-checklist.md` is a **checklist** and `rejected-designs.md` is a
+@fact:B10-EXPECT-CHECKLIST-GENRE `audit-checklist.md` is a **checklist** and `rejected-designs.md` is a
 **catalogue of things deliberately not built** — two shapes the campaign has not
 marked before. A rejected design is a decision record's «considered and
 rejected» field at document scale: ruling 10 sends rationale to `@spec/done`,

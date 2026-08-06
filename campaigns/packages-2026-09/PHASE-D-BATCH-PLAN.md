@@ -555,7 +555,7 @@ What is delegated and what is not:
 *Both were paid for on 2026-07-29, when 24 obligations were delegated onto
 owner routes and had to be reverted wholesale by owner ruling.*
 
-- ##ROUTE-BEFORE-FALSIFIER **A batch is cut by `closure_route` FIRST, and by
+- @fact:ROUTE-BEFORE-FALSIFIER **A batch is cut by `closure_route` FIRST, and by
   `falsifier` only inside it.** The first wave was cut the other way — by
   `falsifier == "self"`, «the package is wrong about itself» — and 24 of the 28
   obligations it handed out turned out to sit on `release`, `sync-from-code` or
@@ -564,21 +564,21 @@ owner routes and had to be reverted wholesale by owner ruling.*
   earlier and was not read when the work was handed out. Nothing was *closed*
   without approval, because no verdict moved; what landed was the right work in
   the wrong order, and it cost a full revert.
-- ##NEVER-CHAIN-MERGE-AND-SEAL **Never chain `merge-verdicts.py` and
+- @fact:NEVER-CHAIN-MERGE-AND-SEAL **Never chain `merge-verdicts.py` and
   `progress seal` in one shell command.** `merge-verdicts.py` refuses as a whole
   and writes nothing, and a `&&` chain still runs the seal — which then vouches
   the file's *old* verdicts against its *new* text, which is precisely the
   staleness `processed_hash` exists to catch. Run the merge, read its output,
   then seal. This cost nothing in the end only because the merge succeeded on
   the next attempt against unchanged text.
-- ##CITED-ANCHORS-ARE-NOT-DEFINITIONS **An `##ANCHOR` inside backticks is a
+- @fact:CITED-ANCHORS-ARE-NOT-DEFINITIONS **An `##ANCHOR` inside backticks is a
   citation, not a definition.** A helper that maps changed lines to anchors by
   scanning for `##NAME` will attribute an edit to an anchor the file merely
   *quotes* — three times in one batch, twice for host anchors this package cites
   and once for its own risk id. `merge-verdicts.py` caught all three with «not an
   addressable anchor of this file», which is its third useful refusal in this
   phase.
-- ##A-REAL-DEFECT-CONVICTING-THE-WRONG-SENTENCE **The commonest false verdict on the sync route is not a
+- @fact:A-REAL-DEFECT-CONVICTING-THE-WRONG-SENTENCE **The commonest false verdict on the sync route is not a
   mis-measurement — it is a misattribution.** Wave 7's tail batch: **all three of
   its false verdicts were a sentence convicted of its neighbour's defect**, and
   two more anchors survived on evidence belonging to a different rule. The
@@ -597,7 +597,7 @@ owner routes and had to be reverted wholesale by owner ruling.*
   **capability**, a **practice**, or a **rule**: an unexercised capability is
   not a false capability, and a rule the consumer breaks is §3.6(b), not a
   wrong sentence.
-- ##READ-FURTHER-BEFORE-SEARCHING-WIDER **The cheapest disproof is usually twelve lines down, not in
+- @fact:READ-FURTHER-BEFORE-SEARCHING-WIDER **The cheapest disproof is usually twelve lines down, not in
   another directory.** §3.7 and its wave-6 mirror both say *widen the
   perimeter*, and that is right — but wave 7 found the complement, and it is
   cheaper. **Three of one batch's four false verdicts were settled by reading
@@ -611,7 +611,7 @@ owner routes and had to be reverted wholesale by owner ruling.*
   **Before widening: read the whole section, its scope carve-outs, and the rules
   on either side of the anchor.** A document that contradicts itself under your
   reading is telling you the reading is wrong.
-- ##THE-CAMPAIGN-IS-INSIDE-ITS-OWN-CORPUS **A search over this repository finds this campaign's own
+- @fact:THE-CAMPAIGN-IS-INSIDE-ITS-OWN-CORPUS **A search over this repository finds this campaign's own
   records, and they are not evidence about the subject.** The campaign writes
   its findings into `campaigns/**`, into `spec/terraforms/`'s §7 LOG, and into
   harvest files — all inside the tree it measures. So a grep for the very term a
@@ -636,7 +636,7 @@ owner routes and had to be reverted wholesale by owner ruling.*
   practice `git-conventional-commits` and `git-atomic-commits` are judged
   against. **Any figure over `git log` names the HEAD it was taken at, and a
   figure quoted from an earlier wave is re-measured rather than carried.**
-- ##ABSENCE-NAMES-ITS-PERIMETER **A demotion whose whole basis is an absence
+- @fact:ABSENCE-NAMES-ITS-PERIMETER **A demotion whose whole basis is an absence
   must name the perimeter it searched, in the record, before the marker moves.**
   Two demotions in the first wave rested on «nothing captures a golden
   transcript», from a grep over one crate's `src/`. The transcripts exist —

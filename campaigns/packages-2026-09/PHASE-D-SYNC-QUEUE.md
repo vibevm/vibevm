@@ -110,7 +110,7 @@ own summary.** Sixty-five lines below, in the same file,
 `##SUM-THE-BIDIRECTIONAL-GRAPH` still reads:
 
 > `Implements:` markers plus `Test:` lines form a bidirectional graph that pays
-> off with zero tooling. @impl/done
+> off with zero tooling. @status:impl/done
 
 `grep -rc '^Test: ' spec/` returns **0**. So the summary asserts a form with no
 instances, in a document whose body anchor has already been corrected away from

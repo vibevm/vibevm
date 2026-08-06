@@ -2,7 +2,7 @@
 
 _Phase D, batch D10. **This file answers nothing.** [`BACKLOG.md` #b-007](../../../BACKLOG.md#b-007)
 is filed «as a question to answer rather than work to schedule», and
-##B007-WHY-IT-IS-A-QUESTION-NOT-A-TASK puts the genre decision on the owner's
+@fact:B007-WHY-IT-IS-A-QUESTION-NOT-A-TASK puts the genre decision on the owner's
 desk. This document produces the decision material — a decidable criterion, a
 sized estimate, a recommended form, three costed options — and marks its own
 preference as the campaign's recommendation. **The ruling is the owner's.**_
@@ -23,7 +23,7 @@ modifications that are **not** this batch's and were not touched
 2026-07-31 rulings, the wind-down mirror rollout, and an `ai-native` closing-rule
 fix). **Every figure below was re-verified at `fffcb494` and every one holds** —
 `154 → 4`, `158 → 7`, the fractality `33 → 14`, and the twelve routed anchors
-are unchanged, because the two files that moved (`BACKLOG.md` ##B009-DISPOSITION
+are unchanged, because the two files that moved (`BACKLOG.md` @fact:B009-DISPOSITION
 `open → done`, and one new `F-220` routing entry for `#COMPOSES-WAL`) touch
 nothing this file measures. Recorded rather than silently re-based, per
 ##THE-CAMPAIGN-IS-INSIDE-ITS-OWN-CORPUS: *«any figure over `git log` names the
@@ -36,7 +36,7 @@ this file alone contributes **14 Decision labels and 2 complete records**, so
 writing a proposal about decision records nearly doubled the campaign's own
 measured adoption of them. §3.1's table therefore reports `campaigns/**`
 **excluding `harvest/d10-*`**, and says so in the row. The trap named at
-##THE-CAMPAIGN-IS-INSIDE-ITS-OWN-CORPUS has no sharper instance than a document
+@fact:THE-CAMPAIGN-IS-INSIDE-ITS-OWN-CORPUS has no sharper instance than a document
 that changes the metric it is arguing about by existing.
 
 **Every count below names the command that produced it**, per
@@ -102,7 +102,7 @@ removing it removes the premise the current framing rests on.**
 re-measured on 2026-07-31 and concluded: *«The practice is adopted, and adopted
 well, in the sibling project: 14 of 34, about 41 %»* — and on that basis
 reframed B-007 from «whether to adopt» to *«why the PROP tree is the outlier»*.
-`BACKLOG.md` ##B007-WHAT-IS-MEASURED carries the same figure.
+`BACKLOG.md` @fact:B007-WHAT-IS-MEASURED carries the same figure.
 
 The figure reproduces. Its content does not survive being opened.
 
@@ -274,28 +274,28 @@ both.
 
 **The three ways a section fails, named so a classifier can cite one.**
 
-- ##N1-DEFINITIONAL **N1 · definitional.** The section fixes a term, a grammar,
+- @fact:N1-DEFINITIONAL **N1 · definitional.** The section fixes a term, a grammar,
   or an identity that everything downstream is keyed on. Changing it is a
   migration, not a re-decision. *(Fails Q1: X is ours.)*
-- ##N2-DOWNSTREAM **N2 · downstream of a recorded choice.** The section states a
+- @fact:N2-DOWNSTREAM **N2 · downstream of a recorded choice.** The section states a
   consequence of a decision taken elsewhere. The reopenable point is upstream,
   and putting a record here creates a second writer for one fact — this
   campaign's single most-repeated finding. *(Fails Q3: the loser belongs to the
   upstream section.)*
-- ##N3-DESCRIPTIVE **N3 · descriptive.** The `Decision` label is doing the work
+- @fact:N3-DESCRIPTIVE **N3 · descriptive.** The `Decision` label is doing the work
   of a heading over a layout, a schema, a route table, a command surface.
   Nothing was in contention; the section describes what the module *is*.
   *(Fails Q3.)*
 
 **And the three ways it passes.**
 
-- ##R1-EXTERNAL **R1 · external dependency.** The choice is forced by a third
+- @fact:R1-EXTERNAL **R1 · external dependency.** The choice is forced by a third
   party's behaviour, licence, format, limit, or version — a crate, `git`, an
   agent's config schema, an OS path limit. The third party can change without
   asking us.
-- ##R2-MEASURED-THRESHOLD **R2 · measured threshold.** The value is a number or
+- @fact:R2-MEASURED-THRESHOLD **R2 · measured threshold.** The value is a number or
   a cut-off chosen against an observation. New measurement moves it.
-- ##R3-LIVE-ALTERNATIVE **R3 · live alternative.** A named alternative was
+- @fact:R3-LIVE-ALTERNATIVE **R3 · live alternative.** A named alternative was
   declined for a reason that is itself contingent — cost, effort, immaturity,
   «not needed yet». New evidence revives it. **An explicit deferral is always
   R3**: `##MARK-HONEST-DEFERRALS-AS-DEFERRED-NOT-REJECTED` says a deferral has a
@@ -303,13 +303,13 @@ both.
 
 **Two calibration notes, both learned from §6.1.**
 
-- ##CRITERION-CAPABILITY-VS-PRACTICE **Ask what the sentence asserts before
+- @fact:CRITERION-CAPABILITY-VS-PRACTICE **Ask what the sentence asserts before
   classifying it.** §6.1's `##A-REAL-DEFECT-CONVICTING-THE-WRONG-SENTENCE`
   distinguishes a *capability*, a *practice*, and a *rule*. The same split binds
   here: a section describing a **capability the system offers** is N3 unless the
   capability's shape was contested; a section stating a **rule the project keeps**
   is reopenable only if the rule has a stated scope limit.
-- ##CRITERION-READ-THE-WHOLE-SECTION **Read the whole section before answering
+- @fact:CRITERION-READ-THE-WHOLE-SECTION **Read the whole section before answering
   Q3.** §6.1's `##READ-FURTHER-BEFORE-SEARCHING-WIDER` applies verbatim: in this
   corpus the loser is very often present, twelve lines below the Decision line,
   unlabelled. §2 shows two such sections and §3 measures how common it is.
@@ -325,10 +325,10 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 
 `spec/modules/vibe-registry/PROP-001-git-backend.md:225,231`:
 
-> ##FRESHNESS-TTL **Decision:** the default freshness TTL is **1 hour**, checked
+> @fact:FRESHNESS-TTL **Decision:** the default freshness TTL is **1 hour**, checked
 > against `meta.toml.last_pulled_at`. …
 >
-> ##ttl-why **Why 1 hour:** short enough to pick up new package versions within
+> @fact:ttl-why **Why 1 hour:** short enough to pick up new package versions within
 > one working session, long enough to amortise network round-trips over a burst
 > of installs. **Revisit once real usage arrives.**
 
@@ -350,14 +350,14 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 
 `spec/modules/vibe-registry/PROP-002-decentralized-registry.md:538,544,546`:
 
-> ##RESOLVO-PRIMARY **Decision.** The primary depsolver is the
+> @fact:RESOLVO-PRIMARY **Decision.** The primary depsolver is the
 > [`resolvo`](https://crates.io/crates/resolvo) crate (pure Rust,
 > BSD-3-Clause-or-Apache-2.0, used by Pixi and Rattler at conda scale). …
 >
-> ##NOT-PUBGRUB **Not** `pubgrub` — the algorithm does not handle virtual
+> @fact:NOT-PUBGRUB **Not** `pubgrub` — the algorithm does not handle virtual
 > packages or disjunctions, undershoot relative to PROP-000 §18.
 >
-> ##LIBSOLV-FALLBACK-SLOT **libsolv as explicit fallback.** … a future
+> @fact:LIBSOLV-FALLBACK-SLOT **libsolv as explicit fallback.** … a future
 > `LibsolvSolver` (FFI to C libsolv, BSD-3-Clause) drops in as a feature-gated
 > alternative **if resolvo ever hits a ceiling we can't raise**. …
 
@@ -379,13 +379,13 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 
 `spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:58,60,61`:
 
-> ##BARE-TAGS **Decision.** The block is delimited by the literal **bare tags**
+> @fact:BARE-TAGS **Decision.** The block is delimited by the literal **bare tags**
 > `<vibevm>` and `</vibevm>` …
 >
-> - ##bare-tags-why Bare tags are chosen over HTML-comment delimiters
+> - @fact:bare-tags-why Bare tags are chosen over HTML-comment delimiters
 >   (`<!-- vibevm:begin -->` …): they read unambiguously to an LLM, the file's
 >   primary consumer.
-> - ##cosmetic-cost A markdown renderer may display a bare non-standard tag
+> - @fact:cosmetic-cost A markdown renderer may display a bare non-standard tag
 >   oddly — an accepted cosmetic cost, **addressed separately if it ever
 >   matters**.
 
@@ -402,11 +402,11 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 
 `spec/modules/vibe-registry/PROP-008-qualified-naming.md:59,63`:
 
-> ##IDENTITY-TUPLE **Decision.** Package identity becomes
+> @fact:IDENTITY-TUPLE **Decision.** Package identity becomes
 > `(group, name, version, content_hash)`. `kind` **leaves the identity tuple**.
 > …
 >
-> - ##GROUP-CHANGE-NEW-PACKAGE Changing a package's `group` is a new package,
+> - @fact:GROUP-CHANGE-NEW-PACKAGE Changing a package's `group` is a new package,
 >   not a rename — same discipline as changing `name`.
 
 - **Q1 · condition** — none external. Every term in the tuple is one this
@@ -429,7 +429,7 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 
 `spec/common/PROP-000.md:77`:
 
-> - ##LAYOUT-PER-SPEC **Decision:** Per `VIBEVM-SPEC.md` §4.2.
+> - @fact:LAYOUT-PER-SPEC **Decision:** Per `VIBEVM-SPEC.md` §4.2.
 
 - **Q3 · loser** — nothing. The line delegates to another document. ✘
 - **Verdict: not reopenable — ##N3-DESCRIPTIVE.** This is the clearest instance
@@ -441,7 +441,7 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 
 `spec/modules/vibe-workspace/PROP-009-loading-model.md:148`:
 
-> ##UNIFORM-MODEL **Decision.** The loading model is uniform: a single-package
+> @fact:UNIFORM-MODEL **Decision.** The loading model is uniform: a single-package
 > project is a degenerate (zero-member) workspace. `Workspace::discover` already
 > degenerates cleanly (PROP-007 §2.3).
 
@@ -454,7 +454,7 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 ### Two calibration cases the corpus already settled for us {#ex-calibration}
 
 - **The host has already written a «not reopenable» verdict, in the flow's own
-  field.** `spec/common/PROP-000.md:23` — `##LANG-REVISIT **When to revisit:**
+  field.** `spec/common/PROP-000.md:23` — `@fact:LANG-REVISIT **When to revisit:**
   Never, in the scope of v1. If Rust proves inadequate for a future milestone,
   open a new PROP superseding this one.` By `##ROW-TRIGGER-LATER` that is a bad
   trigger; by §1 it is an **honest N1 classification wearing the trigger
@@ -463,7 +463,7 @@ inside the `spec/common` + `spec/modules` perimeter the census measures.
 - **The host has already reopened a record correctly, unprompted.**
   `spec/modules/vibe-index/PROP-005-package-index.md:820,822` —
   `##WORKSPACE-MEMBER **Decision (revised 2026-05-22).**` followed by
-  `##fold-in-why **Why this reverses the original standalone-workspace
+  `@fact:fold-in-why **Why this reverses the original standalone-workspace
   decision.** … It rotted silently against the M1.17 / M1.18 manifest-schema
   churn`. Dated, in place, with the superseded option and its measured failure.
   That is `##OUTCOME-CHANGED` and `##CONSEQUENCE-EVOLUTION-IS-AN-EDIT` executed
@@ -622,7 +622,7 @@ on.
 
 ### 4.1 One of B-007's three candidates is forbidden by the installed flow {#no-silo}
 
-`BACKLOG.md` ##B007-THE-QUESTION offers three shapes: *«as a section inside the
+`BACKLOG.md` @fact:B007-THE-QUESTION offers three shapes: *«as a section inside the
 PROP/FEAT that owns the decision, as a separate `spec/decisions/` genre, or as
 the four-field block the `decision-records` flow already prescribes»*.
 
@@ -630,15 +630,15 @@ the four-field block the `decision-records` flow already prescribes»*.
 snippet compiles into `spec/boot/STATIC.md`), and it forbids the silo in four
 places:
 
-- `25-flow-decision-records.md:27` ##NO-SEPARATE-ADR-DIRECTORY — *«There is no
+- `25-flow-decision-records.md:27` @fact:NO-SEPARATE-ADR-DIRECTORY — *«There is no
   separate ADR directory and no immutable numbered log.»* Line 29,
-  ##GOVERNING-SPEC-SECTION-IS-THE-RECORD — *«The spec section that governs the
+  @fact:GOVERNING-SPEC-SECTION-IS-THE-RECORD — *«The spec section that governs the
   value IS the record.»*
-- `DECISION-RECORDS-PROTOCOL.md` ##CONSEQUENCE-NO-ADR-DIRECTORY — *«No `adr/`
+- `DECISION-RECORDS-PROTOCOL.md` @fact:CONSEQUENCE-NO-ADR-DIRECTORY — *«No `adr/`
   directory. The spec tree is the only home.»*
 - the same file's `#placement` table, ##ROW-ADR-SILO, which types
   `adr/0007-use-blake3.md` as the **classic** practice this protocol departs
-  from — with the reason at ##a-record-in-a-silo-is-never-looked-up and
+  from — with the reason at @fact:a-record-in-a-silo-is-never-looked-up and
   ##SILOS-PRESERVE-TECHNICALLY-AND-LOSE-PRACTICALLY.
 - `##SUM-RECORDS-LIVE-AT-THE-ANCHOR` in the summary.
 
@@ -664,16 +664,16 @@ therefore two live options, not three.
 **All four complete host records use one convention, and it is consistent
 4 for 4.** From `PROP-043-progress-markup.md:91-99` verbatim:
 
-> ##DECISION-ELEMENT-NAME **Decision — element name `status`, not `progress`.**
+> @fact:DECISION-ELEMENT-NAME **Decision — element name `status`, not `progress`.**
 >
-> - ##element-name-why **Why:** `<progress>` is an HTML5 element: GitHub-class
+> - @fact:element-name-why **Why:** `<progress>` is an HTML5 element: GitHub-class
 >   sanitizers strip it, and `html:true` renderers (VS Code preview) draw a
 >   literal progress-bar widget mid-spec. `status` is not an HTML element and
 >   renders inert.
-> - ##element-name-rejected **Considered and rejected:** `progress` (HTML
+> - @fact:element-name-rejected **Considered and rejected:** `progress` (HTML
 >   collision), `vp`/`prg` (unreadable), HTML comments (invisible in raw
 >   reading, defeating the point).
-> - ##element-name-revisit **Revisit when:** the XML storage frontend lands and
+> - @fact:element-name-revisit **Revisit when:** the XML storage frontend lands and
 >   element naming is re-grounded in a schema.
 
 The convention, stated so it can be followed without re-deriving it:
@@ -703,11 +703,11 @@ field is a grep away from an undercount, and pinning one is a free line in
 whichever ruling lands.
 
 **And a calibration point that argues for tolerance, not rigour.** One of the
-four complete records reads `##freeze-revisit **Revisit when:** never expected;
+four complete records reads `@fact:freeze-revisit **Revisit when:** never expected;
 the cycle-of-improvement premise is core.` (`PROP-043:141`) — a **«never»
 trigger inside a record that otherwise passes every field test.** Read against
 `##ROW-TRIGGER-LATER` that is a defect; read against §1 it is an honest
-##N1-DEFINITIONAL classification written in the trigger's slot, exactly as
+@fact:N1-DEFINITIONAL classification written in the trigger's slot, exactly as
 `##LANG-REVISIT` does. **Whichever option is chosen should sanction that
 sentence explicitly**, or the host will be scored down for its most honest
 records.
@@ -722,19 +722,19 @@ favour of this shape over the sibling project's three-label dialect
   stub trigger fails visibly rather than passing as prose. The three-label
   dialect folds the why into the decision sentence, and an unlabelled why cannot
   be judged separately from the claim it supports — which is exactly the defect
-  ##B004-THE-GENERAL-SHAPE describes for fenced content.
+  @fact:B004-THE-GENERAL-SHAPE describes for fenced content.
 - **One open sub-question, not decided here.** The house style puts three of the
   four fields in the **kebab / service** register, which
-  `PROP-043` ##DECISION-TWO-REGISTERS defines as *«status lines, lead-ins,
+  `PROP-043` @fact:DECISION-TWO-REGISTERS defines as *«status lines, lead-ins,
   connective prose»* — non-binding. A *why* is evidence and belongs there; a
-  **trigger** arguably does not, since ##TRIGGER-SAYS-THIS-DECISION-STANDS-UNTIL-X
+  **trigger** arguably does not, since @fact:TRIGGER-SAYS-THIS-DECISION-STANDS-UNTIL-X
   makes it a rule that *«both forbids re-litigation before X and mandates it
   after»*. Whether `##<thing>-revisit` should be `##REVISIT-<THING>` is a
   one-line ruling the owner may fold into whichever option is chosen.
 
 ### 4.3 What the genre map's new row would read — and why it should probably not be a row {#genre-row}
 
-`BACKLOG.md` ##B007-WHY-IT-IS-A-QUESTION-NOT-A-TASK notes that *«`spec-genres`'
+`BACKLOG.md` @fact:B007-WHY-IT-IS-A-QUESTION-NOT-A-TASK notes that *«`spec-genres`'
 own map does not carry an ADR row today»*. **On reading the map, that is
 correct and deliberate: the map already places decision records as a
 *mutability*, not a genre.**
@@ -778,7 +778,7 @@ has proposed yet ([§5](#options), option A′).
 **If the owner does want the map amended, the minimal honest change is a
 mutability statement, not a row** — for the host's instance,
 `spec/design/README.md`, a fourth column or a sentence under
-##genre-table-lead reading approximately:
+@fact:genre-table-lead reading approximately:
 
 > **Decision records are a section form, not a directory.** A reopenable choice
 > in `common/` or `modules/` carries its four fields — Decision · Why ·
@@ -987,7 +987,7 @@ verdict.)*
 ## §6 — The campaign's recommendation {#recommendation}
 
 > **This is the campaign's recommendation, not a ruling.** B-007 is
-> ##B007-DISPOSITION `open` *«as a question to answer rather than work to
+> @fact:B007-DISPOSITION `open` *«as a question to answer rather than work to
 > schedule»*, and the genre decision is the owner's. Nothing below has been
 > applied and no verdict has moved.
 
@@ -995,11 +995,11 @@ verdict.)*
 document-argued backfill of `spec/common/`. Written as the record it proposes,
 so the form can be judged on its own example.**
 
-##DECISION-ADR-GENRE **Decision — the four-field block, inside the owning
+@fact:DECISION-ADR-GENRE **Decision — the four-field block, inside the owning
 section, required forward-only; backfilled only over `spec/common/`; no
 `spec/decisions/`, now or later.**
 
-- ##adr-genre-why **Why.** Four measurements, each with its command in this
+- @fact:adr-genre-why **Why.** Four measurements, each with its command in this
   file. *(i)* The premise for a large backfill has been withdrawn: the «41 % in
   the sibling project» figure is **14 vendored copies of the flow's own template
   and worked examples**, counted twice; the specspace's own adoption is **0 of
@@ -1018,7 +1018,7 @@ section, required forward-only; backfilled only over `spec/common/`; no
   labels and 0 complete records** — the practice is inverted against the map
   ([§4.3](#genre-row)).
 
-- ##adr-genre-rejected **Considered and rejected.**
+- @fact:adr-genre-rejected **Considered and rejected.**
   - **A — backfill all ≈ 60** — rejected: its expensive half is ≈ 55 owner
     rulings that cannot be delegated, and producing them on a schedule is the
     `##ROW-ANTI-BACKFILLED-MEMORY` failure. Not rejected *in principle*: A′ is
@@ -1046,7 +1046,7 @@ section, required forward-only; backfilled only over `spec/common/`; no
     directory. What is owed is a **mutability statement**, drafted at the end of
     [§4.3](#genre-row).
 
-- ##adr-genre-revisit **Revisit when.** Re-run the census
+- @fact:adr-genre-revisit **Revisit when.** Re-run the census
   (`adr-census.py spec/common spec/modules`, excluding `vibedeps/**` and
   `.vibe/**`) **at the close of the next campaign**. Two triggers, either one
   reopening this:

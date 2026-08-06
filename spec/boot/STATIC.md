@@ -515,9 +515,9 @@
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--addressable-specs--EVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE Every normative statement in this project's spec tree is
+@fact:org-vibevm-world--addressable-specs--EVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE Every normative statement in this project's spec tree is
 **addressable**: it lives under a stable `{#kebab-anchor}` and is
-cited by URI, never by paraphrase. @impl/done
+cited by URI, never by paraphrase. @status:impl/done
 
 ```
 spec://<module>/<doc>#<section>[.<sub>]
@@ -525,61 +525,61 @@ spec://<module>/<doc>#<section>[.<sub>]
 
 ## The correction contract {#org-vibevm-world--addressable-specs--correction-contract}
 
-##org-vibevm-world--addressable-specs--CORRECTION-CITES-THE-VIOLATED-ANCHOR When the human corrects the agent, the correction cites the violated
+@fact:org-vibevm-world--addressable-specs--CORRECTION-CITES-THE-VIOLATED-ANCHOR When the human corrects the agent, the correction cites the violated
 anchor: "you are violating `spec://…#verification.timeout` — the
-spec says 600 s, you wrote 300 s". @impl/done
+spec says 600 s, you wrote 300 s". @status:impl/done
 
-##org-vibevm-world--addressable-specs--RESOLVE-READ-COMPARE-FIX Resolve the URI, read the unit,
-compare, fix. @impl/done
+@fact:org-vibevm-world--addressable-specs--RESOLVE-READ-COMPARE-FIX Resolve the URI, read the unit,
+compare, fix. @status:impl/done
 
-##org-vibevm-world--addressable-specs--twenty-tokens-exact-hit Twenty tokens, exact hit — no guessing what
-"verification" means or which part is "wrong". @spec/done
+@fact:org-vibevm-world--addressable-specs--twenty-tokens-exact-hit Twenty tokens, exact hit — no guessing what
+"verification" means or which part is "wrong". @status:spec/done
 
-##org-vibevm-world--addressable-specs--THE-SAME-CONTRACT-BINDS-THE-AGENT The same contract binds the agent: when citing the spec — in chat,
+@fact:org-vibevm-world--addressable-specs--THE-SAME-CONTRACT-BINDS-THE-AGENT The same contract binds the agent: when citing the spec — in chat,
 commit bodies, code markers, review notes — cite the anchor, never a
-paraphrase and never a line number. @impl/done
+paraphrase and never a line number. @status:impl/done
 
 ## Single source of truth {#org-vibevm-world--addressable-specs--single-source}
 
-##org-vibevm-world--addressable-specs--EACH-FACT-HAS-EXACTLY-ONE-AUTHORITATIVE-ANCHOR Each fact has exactly one authoritative anchor. @impl/done
+@fact:org-vibevm-world--addressable-specs--EACH-FACT-HAS-EXACTLY-ONE-AUTHORITATIVE-ANCHOR Each fact has exactly one authoritative anchor. @status:impl/done
 
-##org-vibevm-world--addressable-specs--NEVER-COPY-A-NORMATIVE-VALUE-CITE-THE-ANCHOR Never copy a
-normative value into a second file — cite the anchor instead. @impl/done
+@fact:org-vibevm-world--addressable-specs--NEVER-COPY-A-NORMATIVE-VALUE-CITE-THE-ANCHOR Never copy a
+normative value into a second file — cite the anchor instead. @status:impl/done
 
-##org-vibevm-world--addressable-specs--two-copies-will-diverge Two
+@fact:org-vibevm-world--addressable-specs--two-copies-will-diverge Two
 copies *will* diverge, and a later session cannot tell which one
-binds. @spec/done
+binds. @status:spec/done
 
 ## Placement {#org-vibevm-world--addressable-specs--placement}
 
-##org-vibevm-world--addressable-specs--CRITICAL-CONSTRAINTS-LIVE-AT-THE-START-OR-END Critical constraints live at the START or END of a file, never
-buried mid-document. @impl/done
+@fact:org-vibevm-world--addressable-specs--CRITICAL-CONSTRAINTS-LIVE-AT-THE-START-OR-END Critical constraints live at the START or END of a file, never
+buried mid-document. @status:impl/done
 
-##org-vibevm-world--addressable-specs--models-attend-to-the-edges-of-context Models attend to the edges of context ("Lost in
+@fact:org-vibevm-world--addressable-specs--models-attend-to-the-edges-of-context Models attend to the edges of context ("Lost in
 the Middle", Liu et al. 2023/2024); a mid-file invariant is an
-invariant the reader statistically skipped. @spec/done
+invariant the reader statistically skipped. @status:spec/done
 
 ## Where the full rules live {#org-vibevm-world--addressable-specs--pointers}
 
-- ##org-vibevm-world--addressable-specs--POINTER-THE-PROTOCOL Why addressability is IPC requirement #1, the URI scheme, the
+- @fact:org-vibevm-world--addressable-specs--POINTER-THE-PROTOCOL Why addressability is IPC requirement #1, the URI scheme, the
   token economics:
-  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#root @impl/done
-- ##org-vibevm-world--addressable-specs--POINTER-THE-AUTHORING-RULES Unit of meaning, normativity marking, deviations, size budgets,
+  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#root @status:impl/done
+- @fact:org-vibevm-world--addressable-specs--POINTER-THE-AUTHORING-RULES Unit of meaning, normativity marking, deviations, size budgets,
   anchor stability:
-  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/authoring-rules#root @impl/done
-- ##org-vibevm-world--addressable-specs--POINTER-THE-SPEC-TREE-LAYOUT PROP vs FEAT, what goes where, the `.human/` buffer:
-  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/spec-tree-layout#root @impl/done
+  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/authoring-rules#root @status:impl/done
+- @fact:org-vibevm-world--addressable-specs--POINTER-THE-SPEC-TREE-LAYOUT PROP vs FEAT, what goes where, the `.human/` buffer:
+  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/spec-tree-layout#root @status:impl/done
 
 ## Never {#org-vibevm-world--addressable-specs--never}
 
-- ##org-vibevm-world--addressable-specs--NEVER-CITE-BY-PARAPHRASE-WHEN-AN-ANCHOR-EXISTS Never cite a spec section by paraphrase when an anchor exists. @impl/done
-- ##org-vibevm-world--addressable-specs--NEVER-DUPLICATE-A-NORMATIVE-VALUE Never duplicate a normative value into a second file — cite its
-  anchor. @impl/done
-- ##org-vibevm-world--addressable-specs--NEVER-BURY-AN-INVARIANT-IN-THE-MIDDLE-OF-A-FILE Never bury an invariant in the middle of a file. @impl/done
-- ##org-vibevm-world--addressable-specs--NEVER-RENAME-OR-DELETE-A-CITED-ANCHOR Never rename or delete an anchor that has ever been cited —
-  anchors are immutable; retire with a tombstone instead. @impl/done
-- ##org-vibevm-world--addressable-specs--NEVER-INVENT-AN-ANCHOR Never invent an anchor — resolve the URI and read the unit before
-  acting on it. @impl/done
+- @fact:org-vibevm-world--addressable-specs--NEVER-CITE-BY-PARAPHRASE-WHEN-AN-ANCHOR-EXISTS Never cite a spec section by paraphrase when an anchor exists. @status:impl/done
+- @fact:org-vibevm-world--addressable-specs--NEVER-DUPLICATE-A-NORMATIVE-VALUE Never duplicate a normative value into a second file — cite its
+  anchor. @status:impl/done
+- @fact:org-vibevm-world--addressable-specs--NEVER-BURY-AN-INVARIANT-IN-THE-MIDDLE-OF-A-FILE Never bury an invariant in the middle of a file. @status:impl/done
+- @fact:org-vibevm-world--addressable-specs--NEVER-RENAME-OR-DELETE-A-CITED-ANCHOR Never rename or delete an anchor that has ever been cited —
+  anchors are immutable; retire with a tombstone instead. @status:impl/done
+- @fact:org-vibevm-world--addressable-specs--NEVER-INVENT-AN-ANCHOR Never invent an anchor — resolve the URI and read the unit before
+  acting on it. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/campaign-plans — vibedeps/flow-campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md -->
 
@@ -587,87 +587,87 @@ invariant the reader statistically skipped. @spec/done
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--campaign-plans--LARGE-CHANGES-ARE-EXECUTED-AS-CAMPAIGNS This project executes large changes as **campaigns**: multi-commit
+@fact:org-vibevm-world--campaign-plans--LARGE-CHANGES-ARE-EXECUTED-AS-CAMPAIGNS This project executes large changes as **campaigns**: multi-commit
 work planned in a written campaign plan, executed as gated phases,
-resumable cold by any session. @impl/done
+resumable cold by any session. @status:impl/done
 
 ## When to propose a campaign {#org-vibevm-world--campaign-plans--when}
 
-##org-vibevm-world--campaign-plans--PROPOSE-A-CAMPAIGN-BEFORE-TOUCHING-THE-TREE When the owner commissions work that spans **more than one session or
+@fact:org-vibevm-world--campaign-plans--PROPOSE-A-CAMPAIGN-BEFORE-TOUCHING-THE-TREE When the owner commissions work that spans **more than one session or
 more than a handful of commits**, propose a campaign plan before
-touching the tree. @impl/done
+touching the tree. @status:impl/done
 
-##org-vibevm-world--campaign-plans--the-plan-carries-five-roles The plan is one document carrying five roles: @impl/done
+@fact:org-vibevm-world--campaign-plans--the-plan-carries-five-roles The plan is one document carrying five roles: @status:impl/done
 
-- ##org-vibevm-world--campaign-plans--ROLE-PLAN the
-  recipe (PLAN), @impl/done
-- ##org-vibevm-world--campaign-plans--ROLE-BASELINE the frozen starting numbers (BASELINE), @impl/done
-- ##org-vibevm-world--campaign-plans--ROLE-PREDICTIONS falsifiable
-  expectations (PREDICTIONS), @impl/done
-- ##org-vibevm-world--campaign-plans--ROLE-LOG the running record (LOG), @impl/done
-- ##org-vibevm-world--campaign-plans--ROLE-REPORT and the closing
-  verdict (REPORT). @impl/done
+- @fact:org-vibevm-world--campaign-plans--ROLE-PLAN the
+  recipe (PLAN), @status:impl/done
+- @fact:org-vibevm-world--campaign-plans--ROLE-BASELINE the frozen starting numbers (BASELINE), @status:impl/done
+- @fact:org-vibevm-world--campaign-plans--ROLE-PREDICTIONS falsifiable
+  expectations (PREDICTIONS), @status:impl/done
+- @fact:org-vibevm-world--campaign-plans--ROLE-LOG the running record (LOG), @status:impl/done
+- @fact:org-vibevm-world--campaign-plans--ROLE-REPORT and the closing
+  verdict (REPORT). @status:impl/done
 
-##org-vibevm-world--campaign-plans--format-pointer Format:
-@spec://org.vibevm.world/campaign-plans/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT#root. @impl/done
+@fact:org-vibevm-world--campaign-plans--format-pointer Format:
+@spec://org.vibevm.world/campaign-plans/flows/campaign-plans/CAMPAIGN-PLAN-FORMAT#root. @status:impl/done
 
 ## The plan runs cold {#org-vibevm-world--campaign-plans--cold}
 
-##org-vibevm-world--campaign-plans--write-the-plan-to-run-cold-lead Write the plan so a fresh session — or a different person — executes
-it with no memory of the planning conversation: @impl/done
+@fact:org-vibevm-world--campaign-plans--write-the-plan-to-run-cold-lead Write the plan so a fresh session — or a different person — executes
+it with no memory of the planning conversation: @status:impl/done
 
-- ##org-vibevm-world--campaign-plans--COLD-MANDATE-QUOTED-VERBATIM-AND-DATED the owner's mandate
-  quoted verbatim and dated, @impl/done
-- ##org-vibevm-world--campaign-plans--COLD-BASELINE-AND-EXIT-AS-EXACT-COUNTS baseline and exit state as exact counts, @impl/done
-- ##org-vibevm-world--campaign-plans--COLD-FACTS-VERIFIED-AT-WRITING-TIME
-  current-state facts verified at writing time, @impl/done
-- ##org-vibevm-world--campaign-plans--COLD-DECISIONS-WITH-REJECTED-OPTIONS-AND-REASONS decisions with their
-  rejected options and reasons, @impl/done
-- ##org-vibevm-world--campaign-plans--COLD-A-LITERAL-QUICK-START-BLOCK a literal quick-start block, @impl/done
-- ##org-vibevm-world--campaign-plans--COLD-A-RUNNABLE-ACCEPTANCE-SCRIPT and a
-  runnable whole-campaign acceptance script. @impl/done
+- @fact:org-vibevm-world--campaign-plans--COLD-MANDATE-QUOTED-VERBATIM-AND-DATED the owner's mandate
+  quoted verbatim and dated, @status:impl/done
+- @fact:org-vibevm-world--campaign-plans--COLD-BASELINE-AND-EXIT-AS-EXACT-COUNTS baseline and exit state as exact counts, @status:impl/done
+- @fact:org-vibevm-world--campaign-plans--COLD-FACTS-VERIFIED-AT-WRITING-TIME
+  current-state facts verified at writing time, @status:impl/done
+- @fact:org-vibevm-world--campaign-plans--COLD-DECISIONS-WITH-REJECTED-OPTIONS-AND-REASONS decisions with their
+  rejected options and reasons, @status:impl/done
+- @fact:org-vibevm-world--campaign-plans--COLD-A-LITERAL-QUICK-START-BLOCK a literal quick-start block, @status:impl/done
+- @fact:org-vibevm-world--campaign-plans--COLD-A-RUNNABLE-ACCEPTANCE-SCRIPT and a
+  runnable whole-campaign acceptance script. @status:impl/done
 
-##org-vibevm-world--campaign-plans--WRONG-CURRENT-STATE-FACTS-ARE-THE-MOST-EXPENSIVE-PLAN-BUG Wrong current-state facts
-are the most expensive class of plan bug — verify while writing. @spec/done
+@fact:org-vibevm-world--campaign-plans--WRONG-CURRENT-STATE-FACTS-ARE-THE-MOST-EXPENSIVE-PLAN-BUG Wrong current-state facts
+are the most expensive class of plan bug — verify while writing. @status:spec/done
 
 ## Phases gate on green {#org-vibevm-world--campaign-plans--gates}
 
-##org-vibevm-world--campaign-plans--PHASE-ZERO-COMMITS-NOTHING-AND-GATES-EVERYTHING-AFTER Phase 0 is spikes and probes — no commits — and it gates everything
-after. @impl/done
+@fact:org-vibevm-world--campaign-plans--PHASE-ZERO-COMMITS-NOTHING-AND-GATES-EVERYTHING-AFTER Phase 0 is spikes and probes — no commits — and it gates everything
+after. @status:impl/done
 
-##org-vibevm-world--campaign-plans--EVERY-LATER-PHASE-ENDS-GREEN-AND-EVERY-BOUNDARY-IS-A-SAFE-STOP Every later phase ends with the project's full gate panel
+@fact:org-vibevm-world--campaign-plans--EVERY-LATER-PHASE-ENDS-GREEN-AND-EVERY-BOUNDARY-IS-A-SAFE-STOP Every later phase ends with the project's full gate panel
 green, and any phase boundary is a safe stop; the plan plus its
-execution ledger are the resume pointer. @impl/done
+execution ledger are the resume pointer. @status:impl/done
 
-##org-vibevm-world--campaign-plans--sibling-document-pointers Mechanics:
+@fact:org-vibevm-world--campaign-plans--sibling-document-pointers Mechanics:
 @spec://org.vibevm.world/campaign-plans/flows/campaign-plans/phase-gates#root;
 the record half:
-@spec://org.vibevm.world/campaign-plans/flows/campaign-plans/execution-ledger#root. @impl/done
+@spec://org.vibevm.world/campaign-plans/flows/campaign-plans/execution-ledger#root. @status:impl/done
 
 ## At every phase boundary {#org-vibevm-world--campaign-plans--boundary}
 
-1. ##org-vibevm-world--campaign-plans--BOUNDARY-RUN-THE-FULL-GATE-PANEL Run the full gate panel; the floor must be green. @impl/done
-2. ##org-vibevm-world--campaign-plans--BOUNDARY-WRITE-THE-COMMIT-MAP-ENTRY Write the phase's commit-map entry in the execution ledger —
-   hashes, subjects, what each commit confirmed or falsified. @impl/done
-3. ##org-vibevm-world--campaign-plans--BOUNDARY-REFRESH-THE-STATUS-LINE Refresh the plan's status line ("Phase N landed, floor green,
-   next: Phase N+1"). @impl/done
-4. ##org-vibevm-world--campaign-plans--BOUNDARY-ESCALATE-OWNER-ONLY-DECISIONS Escalate anything only the owner can decide as a review point:
-   OPEN, then RESOLVED with the ruling verbatim. @impl/done
+1. @fact:org-vibevm-world--campaign-plans--BOUNDARY-RUN-THE-FULL-GATE-PANEL Run the full gate panel; the floor must be green. @status:impl/done
+2. @fact:org-vibevm-world--campaign-plans--BOUNDARY-WRITE-THE-COMMIT-MAP-ENTRY Write the phase's commit-map entry in the execution ledger —
+   hashes, subjects, what each commit confirmed or falsified. @status:impl/done
+3. @fact:org-vibevm-world--campaign-plans--BOUNDARY-REFRESH-THE-STATUS-LINE Refresh the plan's status line ("Phase N landed, floor green,
+   next: Phase N+1"). @status:impl/done
+4. @fact:org-vibevm-world--campaign-plans--BOUNDARY-ESCALATE-OWNER-ONLY-DECISIONS Escalate anything only the owner can decide as a review point:
+   OPEN, then RESOLVED with the ruling verbatim. @status:impl/done
 
 ## Never {#org-vibevm-world--campaign-plans--never}
 
-- ##org-vibevm-world--campaign-plans--NEVER-START-PHASE-ONE-ON-A-RED-SPIKE Never start Phase 1 while a Phase 0 spike is red — a red spike
-  rewrites the affected Decision first, in the plan, in place. @impl/done
-- ##org-vibevm-world--campaign-plans--NEVER-COMMIT-DURING-PHASE-ZERO Never commit during Phase 0. Spikes leave findings, not tree
-  changes. @impl/done
-- ##org-vibevm-world--campaign-plans--NEVER-DO-DISCOVERED-WORK-SILENTLY Never do discovered work silently "while I was here" — it enters
-  the phase and the ledger explicitly, or it is deferred by name. @impl/done
-- ##org-vibevm-world--campaign-plans--NEVER-CLOSE-A-CAMPAIGN-WITHOUT-THE-REPORT Never close a campaign without the report checking every
+- @fact:org-vibevm-world--campaign-plans--NEVER-START-PHASE-ONE-ON-A-RED-SPIKE Never start Phase 1 while a Phase 0 spike is red — a red spike
+  rewrites the affected Decision first, in the plan, in place. @status:impl/done
+- @fact:org-vibevm-world--campaign-plans--NEVER-COMMIT-DURING-PHASE-ZERO Never commit during Phase 0. Spikes leave findings, not tree
+  changes. @status:impl/done
+- @fact:org-vibevm-world--campaign-plans--NEVER-DO-DISCOVERED-WORK-SILENTLY Never do discovered work silently "while I was here" — it enters
+  the phase and the ledger explicitly, or it is deferred by name. @status:impl/done
+- @fact:org-vibevm-world--campaign-plans--NEVER-CLOSE-A-CAMPAIGN-WITHOUT-THE-REPORT Never close a campaign without the report checking every
   prediction — a campaign that skips the report learns nothing
-  durable. @impl/done
-- ##org-vibevm-world--campaign-plans--NEVER-CARRY-A-DEFERRAL-OUTSIDE-THE-PLAN-FILE Never carry a deferral outside the plan file — the deferrals
+  durable. @status:impl/done
+- @fact:org-vibevm-world--campaign-plans--NEVER-CARRY-A-DEFERRAL-OUTSIDE-THE-PLAN-FILE Never carry a deferral outside the plan file — the deferrals
   ledger is where deferrals live, and the next campaign's mandate
-  drains from it. @impl/done
+  drains from it. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/comparative-research — vibedeps/flow-comparative-research/0.1.0/spec/boot/52-flow-comparative-research.md -->
 
@@ -675,51 +675,51 @@ the record half:
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--comparative-research--THE-PROJECT-HAS-A-GENRE-FOR-STUDYING-EXTERNAL-SYSTEMS This project has a genre for studying external systems — a
-competitor, a predecessor, an adjacent tool. @impl/done
+@fact:org-vibevm-world--comparative-research--THE-PROJECT-HAS-A-GENRE-FOR-STUDYING-EXTERNAL-SYSTEMS This project has a genre for studying external systems — a
+competitor, a predecessor, an adjacent tool. @status:impl/done
 
-##org-vibevm-world--comparative-research--A-RESEARCH-DOCUMENT-IS-SELF-CONTAINED-AND-EVERGREEN A **comparative
+@fact:org-vibevm-world--comparative-research--A-RESEARCH-DOCUMENT-IS-SELF-CONTAINED-AND-EVERGREEN A **comparative
 research document** is a self-contained, evergreen study: readable
 months after publication without the original sources, structured
-as a two-way gap analysis, closing with numbered roadmap deltas. @impl/done
+as a two-way gap analysis, closing with numbered roadmap deltas. @status:impl/done
 
-##org-vibevm-world--comparative-research--sibling-document-pointers
+@fact:org-vibevm-world--comparative-research--sibling-document-pointers
 Genre law:
-@spec://org.vibevm.world/comparative-research/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL#root. @impl/done
+@spec://org.vibevm.world/comparative-research/flows/comparative-research/COMPARATIVE-RESEARCH-PROTOCOL#root. @status:impl/done
 
 ## When to reach for it {#org-vibevm-world--comparative-research--when}
 
-##org-vibevm-world--comparative-research--reach-for-the-skeleton-and-hold-the-laws-lead When the user asks to study, evaluate, or compare against an
+@fact:org-vibevm-world--comparative-research--reach-for-the-skeleton-and-hold-the-laws-lead When the user asks to study, evaluate, or compare against an
 external system — "what does X actually do?", "should we copy
 X's feature?", "audit that space before we build" — start from
 the skeleton in
 @spec://org.vibevm.world/comparative-research/flows/comparative-research/research-template#root
-and hold the laws: @impl/done
+and hold the laws: @status:impl/done
 
-- ##org-vibevm-world--comparative-research--LAW-QUOTE-FIRST-CRITIQUE-SECOND **Quote first, critique second.** The subject speaks in its own
+- @fact:org-vibevm-world--comparative-research--LAW-QUOTE-FIRST-CRITIQUE-SECOND **Quote first, critique second.** The subject speaks in its own
   words — fenced verbatim quotes with access dates — before any
-  judgement is written. @impl/done
-- ##org-vibevm-world--comparative-research--LAW-TWO-WAY-GAPS **Two-way gaps.** One section for where we trail, one for where
-  we lead, argued with equal rigor. @impl/done
-- ##org-vibevm-world--comparative-research--LAW-DELTAS-NOT-DECREES **Deltas, not decrees.** Actionable findings become numbered
+  judgement is written. @status:impl/done
+- @fact:org-vibevm-world--comparative-research--LAW-TWO-WAY-GAPS **Two-way gaps.** One section for where we trail, one for where
+  we lead, argued with equal rigor. @status:impl/done
+- @fact:org-vibevm-world--comparative-research--LAW-DELTAS-NOT-DECREES **Deltas, not decrees.** Actionable findings become numbered
   proposals, each with a priority and a target home in the spec
   tree. The study never ratifies its own proposals; acceptance
   happens downstream, per
-  @spec://org.vibevm.world/comparative-research/flows/comparative-research/from-research-to-roadmap#root. @impl/done
-- ##org-vibevm-world--comparative-research--LAW-THE-RE-FETCH-LIST **Re-fetch list.** Every source URL with access date, plus the
+  @spec://org.vibevm.world/comparative-research/flows/comparative-research/from-research-to-roadmap#root. @status:impl/done
+- @fact:org-vibevm-world--comparative-research--LAW-THE-RE-FETCH-LIST **Re-fetch list.** Every source URL with access date, plus the
   subject's version at capture, so the study can be refreshed
-  instead of rewritten. @impl/done
+  instead of rewritten. @status:impl/done
 
 ## Never {#org-vibevm-world--comparative-research--never}
 
-- ##org-vibevm-world--comparative-research--NEVER-PARAPHRASE-WHERE-A-QUOTE-CAN-STAND Never paraphrase where a dated verbatim quote can stand — the
-  quote survives link rot; the paraphrase decays into rumor. @impl/done
-- ##org-vibevm-world--comparative-research--NEVER-WRITE-A-ONE-DIRECTIONAL-GAP-ANALYSIS Never write a one-directional gap analysis — trail-only is
-  marketing for the subject, lead-only is marketing for us. @impl/done
-- ##org-vibevm-world--comparative-research--NEVER-RATIFY-A-DELTA-INSIDE-THE-RESEARCH-DOC Never ratify a delta inside the research doc — it proposes;
-  acceptance is recorded downstream. @impl/done
-- ##org-vibevm-world--comparative-research--NEVER-LET-A-STUDY-SILENTLY-GO-STALE Never let a study silently outlive its subject's next major
-  release — stale-flag it and refresh via the re-fetch list. @impl/done
+- @fact:org-vibevm-world--comparative-research--NEVER-PARAPHRASE-WHERE-A-QUOTE-CAN-STAND Never paraphrase where a dated verbatim quote can stand — the
+  quote survives link rot; the paraphrase decays into rumor. @status:impl/done
+- @fact:org-vibevm-world--comparative-research--NEVER-WRITE-A-ONE-DIRECTIONAL-GAP-ANALYSIS Never write a one-directional gap analysis — trail-only is
+  marketing for the subject, lead-only is marketing for us. @status:impl/done
+- @fact:org-vibevm-world--comparative-research--NEVER-RATIFY-A-DELTA-INSIDE-THE-RESEARCH-DOC Never ratify a delta inside the research doc — it proposes;
+  acceptance is recorded downstream. @status:impl/done
+- @fact:org-vibevm-world--comparative-research--NEVER-LET-A-STUDY-SILENTLY-GO-STALE Never let a study silently outlive its subject's next major
+  release — stale-flag it and refresh via the re-fetch list. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/conflict-protocol — vibedeps/flow-conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md -->
 
@@ -727,76 +727,76 @@ and hold the laws: @impl/done
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--conflict-protocol--PROJECT-RUNS-TWO-WRITERS-OVER-ONE-FILE-SET This project runs **two writers over one file set** — a human and a
-coding agent both edit the spec tree, the tests, and the code. @impl/done
+@fact:org-vibevm-world--conflict-protocol--PROJECT-RUNS-TWO-WRITERS-OVER-ONE-FILE-SET This project runs **two writers over one file set** — a human and a
+coding agent both edit the spec tree, the tests, and the code. @status:impl/done
 
-##org-vibevm-world--conflict-protocol--CONTRADICTIONS-ARE-NORMAL-COOPERATION-NOT-AN-ERROR They
+@fact:org-vibevm-world--conflict-protocol--CONTRADICTIONS-ARE-NORMAL-COOPERATION-NOT-AN-ERROR They
 *will* write contradictory things; that is normal cooperation, not an
-error. @spec/done
+error. @status:spec/done
 
-##org-vibevm-world--conflict-protocol--WHAT-IS-FORBIDDEN-IS-RESOLVING-A-CONTRADICTION-SILENTLY What is forbidden is resolving a contradiction silently. @impl/done
+@fact:org-vibevm-world--conflict-protocol--WHAT-IS-FORBIDDEN-IS-RESOLVING-A-CONTRADICTION-SILENTLY What is forbidden is resolving a contradiction silently. @status:impl/done
 
 ## The hierarchy {#org-vibevm-world--conflict-protocol--hierarchy}
 
-##org-vibevm-world--conflict-protocol--EVERY-DISAGREEMENT-IS-SETTLED-BY-FIXED-PRIORITY Every disagreement between layers is settled by fixed priority: @impl/done
+@fact:org-vibevm-world--conflict-protocol--EVERY-DISAGREEMENT-IS-SETTLED-BY-FIXED-PRIORITY Every disagreement between layers is settled by fixed priority: @status:impl/done
 
 ```
 Human  >  Spec  >  Tests  >  Code  >  WAL
 ```
 
-- ##org-vibevm-world--conflict-protocol--HUMAN-MAY-CHANGE-THE-SPEC-AND-NOBODY-ELSE-MAY-SILENTLY The human may change the spec; nobody else may — silently. @impl/done
-- ##org-vibevm-world--conflict-protocol--CODE-MUST-CONFORM-TO-THE-SPEC Code must conform to the spec, never the other way around. @impl/done
-- ##org-vibevm-world--conflict-protocol--TESTS-ARE-THE-SPEC-IN-EXECUTABLE-FORM Tests are the spec in executable form: a test that contradicts the
-  spec is a bug in exactly one of the two, never both. @impl/done
-- ##org-vibevm-world--conflict-protocol--THE-VOLATILE-STATE-FILE-IS-A-RECORD-DEAD-LAST The volatile state file (WAL or equivalent) is a record, dead last:
-  when it disagrees with anything above it, it is stale. @impl/done
+- @fact:org-vibevm-world--conflict-protocol--HUMAN-MAY-CHANGE-THE-SPEC-AND-NOBODY-ELSE-MAY-SILENTLY The human may change the spec; nobody else may — silently. @status:impl/done
+- @fact:org-vibevm-world--conflict-protocol--CODE-MUST-CONFORM-TO-THE-SPEC Code must conform to the spec, never the other way around. @status:impl/done
+- @fact:org-vibevm-world--conflict-protocol--TESTS-ARE-THE-SPEC-IN-EXECUTABLE-FORM Tests are the spec in executable form: a test that contradicts the
+  spec is a bug in exactly one of the two, never both. @status:impl/done
+- @fact:org-vibevm-world--conflict-protocol--THE-VOLATILE-STATE-FILE-IS-A-RECORD-DEAD-LAST The volatile state file (WAL or equivalent) is a record, dead last:
+  when it disagrees with anything above it, it is stale. @status:impl/done
 
-##org-vibevm-world--conflict-protocol--full-protocol-pointer Full protocol:
-@spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/CONFLICT-PROTOCOL#root. @impl/done
+@fact:org-vibevm-world--conflict-protocol--full-protocol-pointer Full protocol:
+@spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/CONFLICT-PROTOCOL#root. @status:impl/done
 
 ## The REVIEW contract {#org-vibevm-world--conflict-protocol--review}
 
-##org-vibevm-world--conflict-protocol--IF-YOU-BELIEVE-THE-SPEC-IS-WRONG-IMPLEMENT-IT-ANYWAY If you believe the spec is wrong: **implement the spec anyway**, add
-a marker at the point of disagreement — @impl/done
+@fact:org-vibevm-world--conflict-protocol--IF-YOU-BELIEVE-THE-SPEC-IS-WRONG-IMPLEMENT-IT-ANYWAY If you believe the spec is wrong: **implement the spec anyway**, add
+a marker at the point of disagreement — @status:impl/done
 
 ```
 <!-- REVIEW: <what you would change> because <reason> -->
 ```
 
-##org-vibevm-world--conflict-protocol--SURFACE-THE-MARKER-IN-THE-END-OF-SESSION-REPORT — and surface it in the end-of-session report. @impl/done
+@fact:org-vibevm-world--conflict-protocol--SURFACE-THE-MARKER-IN-THE-END-OF-SESSION-REPORT — and surface it in the end-of-session report. @status:impl/done
 
-##org-vibevm-world--conflict-protocol--THE-HUMAN-DECIDES-IN-THE-NEXT-CYCLE The human decides in
-the next cycle. @impl/done
+@fact:org-vibevm-world--conflict-protocol--THE-HUMAN-DECIDES-IN-THE-NEXT-CYCLE The human decides in
+the next cycle. @status:impl/done
 
-##org-vibevm-world--conflict-protocol--NEVER-SILENTLY-OVERRIDE Never silently override. @impl/done
+@fact:org-vibevm-world--conflict-protocol--NEVER-SILENTLY-OVERRIDE Never silently override. @status:impl/done
 
-##org-vibevm-world--conflict-protocol--three-lines-seconds-to-write-a-minute-to-read Three lines of text; seconds
-to write; a minute to read. @spec/done
+@fact:org-vibevm-world--conflict-protocol--three-lines-seconds-to-write-a-minute-to-read Three lines of text; seconds
+to write; a minute to read. @status:spec/done
 
 ## When the spec is silent {#org-vibevm-world--conflict-protocol--uncertainty}
 
-##org-vibevm-world--conflict-protocol--CLIMB-THE-LADDER-BEFORE-CHOOSING-A-CONSERVATIVE-DEFAULT Re-read the relevant spec section → re-read the relevant reference
+@fact:org-vibevm-world--conflict-protocol--CLIMB-THE-LADDER-BEFORE-CHOOSING-A-CONSERVATIVE-DEFAULT Re-read the relevant spec section → re-read the relevant reference
 chapter → check the closest analog in the project → if still unclear,
 pick the conservative interpretation (the one cheapest to reverse),
-mark it with a REVIEW, proceed, and flag it in the report. @impl/done
+mark it with a REVIEW, proceed, and flag it in the report. @status:impl/done
 
-##org-vibevm-world--conflict-protocol--NEVER-SILENTLY-INVENT-SEMANTIC-BEHAVIOR Never
-silently invent semantic behavior. @impl/done
+@fact:org-vibevm-world--conflict-protocol--NEVER-SILENTLY-INVENT-SEMANTIC-BEHAVIOR Never
+silently invent semantic behavior. @status:impl/done
 
-##org-vibevm-world--conflict-protocol--full-ladder-pointer Full ladder:
-@spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/uncertainty-protocol#root. @impl/done
+@fact:org-vibevm-world--conflict-protocol--full-ladder-pointer Full ladder:
+@spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/uncertainty-protocol#root. @status:impl/done
 
 ## Never {#org-vibevm-world--conflict-protocol--never}
 
-- ##org-vibevm-world--conflict-protocol--NEVER-SILENTLY-MODIFY-A-NORMATIVE-SPEC-VALUE Never silently modify a normative spec value. @impl/done
-- ##org-vibevm-world--conflict-protocol--NEVER-RESOLVE-A-DISAGREEMENT-BY-ASSUMING-THE-CODE-IS-NEWER Never resolve a spec-vs-code disagreement by assuming the code is
-  newer. Recency is not authority; the hierarchy is. @impl/done
-- ##org-vibevm-world--conflict-protocol--NEVER-REMOVE-SOMEONE-ELSES-REVIEW-MARKER Never remove someone else's REVIEW marker without resolving it. @impl/done
-- ##org-vibevm-world--conflict-protocol--NEVER-INVENT-SEMANTICS-WHEN-THE-SPEC-IS-SILENT Never invent semantics when the spec is silent — mark the choice
-  and proceed conservatively. @impl/done
+- @fact:org-vibevm-world--conflict-protocol--NEVER-SILENTLY-MODIFY-A-NORMATIVE-SPEC-VALUE Never silently modify a normative spec value. @status:impl/done
+- @fact:org-vibevm-world--conflict-protocol--NEVER-RESOLVE-A-DISAGREEMENT-BY-ASSUMING-THE-CODE-IS-NEWER Never resolve a spec-vs-code disagreement by assuming the code is
+  newer. Recency is not authority; the hierarchy is. @status:impl/done
+- @fact:org-vibevm-world--conflict-protocol--NEVER-REMOVE-SOMEONE-ELSES-REVIEW-MARKER Never remove someone else's REVIEW marker without resolving it. @status:impl/done
+- @fact:org-vibevm-world--conflict-protocol--NEVER-INVENT-SEMANTICS-WHEN-THE-SPEC-IS-SILENT Never invent semantics when the spec is silent — mark the choice
+  and proceed conservatively. @status:impl/done
 
-##org-vibevm-world--conflict-protocol--recovery-drills-pointer Recovery drills for when the protocol has already been broken:
-@spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/failure-modes#root. @impl/done
+@fact:org-vibevm-world--conflict-protocol--recovery-drills-pointer Recovery drills for when the protocol has already been broken:
+@spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/failure-modes#root. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/decision-records — vibedeps/flow-decision-records/0.1.0/spec/boot/25-flow-decision-records.md -->
 
@@ -804,80 +804,80 @@ silently invent semantic behavior. @impl/done
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--decision-records--PROJECT-RECORDS-DECISIONS-NOT-FACTS This project records **decisions, not facts**. @impl/done
+@fact:org-vibevm-world--decision-records--PROJECT-RECORDS-DECISIONS-NOT-FACTS This project records **decisions, not facts**. @status:impl/done
 
-##org-vibevm-world--decision-records--FACT-IS-RECOVERABLE-FROM-THE-CODE A fact ("timeout is
-600 s") is recoverable from the code in a second. @spec/done
+@fact:org-vibevm-world--decision-records--FACT-IS-RECOVERABLE-FROM-THE-CODE A fact ("timeout is
+600 s") is recoverable from the code in a second. @status:spec/done
 
-##org-vibevm-world--decision-records--REASON-IS-LOST-UNLESS-WRITTEN-DOWN The reason it is
+@fact:org-vibevm-world--decision-records--REASON-IS-LOST-UNLESS-WRITTEN-DOWN The reason it is
 600 s cannot be recovered at all — unless it was written down when
-the decision was made. @spec/done
+the decision was made. @status:spec/done
 
 ## Core rule {#org-vibevm-world--decision-records--core-rule}
 
-##org-vibevm-world--decision-records--ANY-REOPENABLE-CHOICE-GETS-A-RECORD Any choice a future reader could plausibly re-open — a library pick,
+@fact:org-vibevm-world--decision-records--ANY-REOPENABLE-CHOICE-GETS-A-RECORD Any choice a future reader could plausibly re-open — a library pick,
 a constant with consequences, a protocol shape, a rejected approach —
-gets a **four-field record at the spec anchor that governs the value**: @impl/done
+gets a **four-field record at the spec anchor that governs the value**: @status:impl/done
 
 | Field | Requirement |
 |-------|-------------|
-| ##ROW-FIELD-DECISION **Decision** @impl/done | The chosen value or approach. One line. @impl/done |
-| ##ROW-FIELD-WHY **Why** @impl/done | Concrete and cited: a measurement, a constraint, an incident — with data. @impl/done |
-| ##ROW-FIELD-CONSIDERED-AND-REJECTED **Considered and rejected** @impl/done | One line per alternative, each carrying its rejection reason. @impl/done |
-| ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | A measurable trigger: metric + threshold + where it is observed. @impl/done |
+| @fact:ROW-FIELD-DECISION **Decision** @status:impl/done | The chosen value or approach. One line. @status:impl/done |
+| @fact:ROW-FIELD-WHY **Why** @status:impl/done | Concrete and cited: a measurement, a constraint, an incident — with data. @status:impl/done |
+| @fact:ROW-FIELD-CONSIDERED-AND-REJECTED **Considered and rejected** @status:impl/done | One line per alternative, each carrying its rejection reason. @status:impl/done |
+| @fact:ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @status:impl/done | A measurable trigger: metric + threshold + where it is observed. @status:impl/done |
 
-##org-vibevm-world--decision-records--NO-SEPARATE-ADR-DIRECTORY There is no separate ADR directory and no immutable numbered log. @impl/done
+@fact:org-vibevm-world--decision-records--NO-SEPARATE-ADR-DIRECTORY There is no separate ADR directory and no immutable numbered log. @status:impl/done
 
-##org-vibevm-world--decision-records--GOVERNING-SPEC-SECTION-IS-THE-RECORD The spec section that governs the value IS the record; evolution is
-an edit plus a changelog line; history lives in git. @impl/done
+@fact:org-vibevm-world--decision-records--GOVERNING-SPEC-SECTION-IS-THE-RECORD The spec section that governs the value IS the record; evolution is
+an edit plus a changelog line; history lives in git. @status:impl/done
 
-##org-vibevm-world--decision-records--full-protocol-pointer Full protocol:
-@spec://org.vibevm.world/decision-records/flows/decision-records/DECISION-RECORDS-PROTOCOL#root. @impl/done
+@fact:org-vibevm-world--decision-records--full-protocol-pointer Full protocol:
+@spec://org.vibevm.world/decision-records/flows/decision-records/DECISION-RECORDS-PROTOCOL#root. @status:impl/done
 
 ## In session {#org-vibevm-world--decision-records--in-session}
 
-##org-vibevm-world--decision-records--in-session-duty-lead When the user makes a decision during a session: @impl/done
+@fact:org-vibevm-world--decision-records--in-session-duty-lead When the user makes a decision during a session: @status:impl/done
 
-1. ##org-vibevm-world--decision-records--PROPOSE-THE-RECORD-BEFORE-THE-SESSION-ENDS Propose recording it at the governing anchor, with all four
+1. @fact:org-vibevm-world--decision-records--PROPOSE-THE-RECORD-BEFORE-THE-SESSION-ENDS Propose recording it at the governing anchor, with all four
    fields, **before the session ends** — an unrecorded decision does
-   not survive the session boundary. @impl/done
-2. ##org-vibevm-world--decision-records--ASK-RATHER-THAN-INVENT-DATA If the why or the trigger is not known, ask. Do not invent data;
-   do not record a two-field stub. @impl/done
-3. ##org-vibevm-world--decision-records--READ-THE-RECORD-BEFORE-CHANGING-THE-VALUE Before changing any value governed by a record, read the record.
+   not survive the session boundary. @status:impl/done
+2. @fact:org-vibevm-world--decision-records--ASK-RATHER-THAN-INVENT-DATA If the why or the trigger is not known, ask. Do not invent data;
+   do not record a two-field stub. @status:impl/done
+3. @fact:org-vibevm-world--decision-records--READ-THE-RECORD-BEFORE-CHANGING-THE-VALUE Before changing any value governed by a record, read the record.
    Re-open it only by naming its trigger state ("the trigger fired:
-   …" / "the trigger has not fired, but …"). @impl/done
+   …" / "the trigger has not fired, but …"). @status:impl/done
 
-##org-vibevm-world--decision-records--template-and-examples-pointer Copy-ready template and worked examples:
-@spec://org.vibevm.world/decision-records/flows/decision-records/record-template#root. @impl/done
+@fact:org-vibevm-world--decision-records--template-and-examples-pointer Copy-ready template and worked examples:
+@spec://org.vibevm.world/decision-records/flows/decision-records/record-template#root. @status:impl/done
 
-##org-vibevm-world--decision-records--trigger-design-pointer Trigger design and the periodic sweep:
-@spec://org.vibevm.world/decision-records/flows/decision-records/revisit-triggers#root. @impl/done
+@fact:org-vibevm-world--decision-records--trigger-design-pointer Trigger design and the periodic sweep:
+@spec://org.vibevm.world/decision-records/flows/decision-records/revisit-triggers#root. @status:impl/done
 
 ## Why this matters in a human-AI team {#org-vibevm-world--decision-records--why}
 
-##org-vibevm-world--decision-records--AGENT-CANNOT-ASK-VASYA The agent cannot ask Vasya why the library was chosen. @spec/done
+@fact:org-vibevm-world--decision-records--AGENT-CANNOT-ASK-VASYA The agent cannot ask Vasya why the library was chosen. @status:spec/done
 
-##org-vibevm-world--decision-records--re-derivation-ends-in-re-litigation It re-derives
+@fact:org-vibevm-world--decision-records--re-derivation-ends-in-re-litigation It re-derives
 from what it can read, and the code shows the value, not the
 constraint — so it re-litigates: "600 s looks arbitrary, propose
-300 s for performance." @spec/done
+300 s for performance." @status:spec/done
 
-##org-vibevm-world--decision-records--RECORD-IS-IMMUNITY-FROM-RE-LITIGATION A recorded decision is immunity from
-re-litigation. @spec/done
+@fact:org-vibevm-world--decision-records--RECORD-IS-IMMUNITY-FROM-RE-LITIGATION A recorded decision is immunity from
+re-litigation. @status:spec/done
 
-##org-vibevm-world--decision-records--TRIGGER-KEEPS-IMMUNITY-FROM-HARDENING-INTO-DOGMA A recorded trigger is what keeps the immunity from
-hardening into dogma. @spec/done
+@fact:org-vibevm-world--decision-records--TRIGGER-KEEPS-IMMUNITY-FROM-HARDENING-INTO-DOGMA A recorded trigger is what keeps the immunity from
+hardening into dogma. @status:spec/done
 
 ## Never {#org-vibevm-world--decision-records--never}
 
-- ##org-vibevm-world--decision-records--NEVER-WRITE-BECAUSE-IT-IS-BETTER Never write "because it is better" — a why cites a measurement, a
-  constraint, or an incident, or it is not a why. @impl/done
-- ##org-vibevm-world--decision-records--NEVER-RE-LITIGATE-WITHOUT-NAMING-THE-TRIGGER-STATE Never re-litigate a recorded decision without naming its trigger
-  state first. @impl/done
-- ##org-vibevm-world--decision-records--NEVER-PUT-THE-WHY-IN-THE-COMMIT-ONLY Never put a decision's why into a commit message only. The commit
-  cites the record; the spec carries it. @impl/done
-- ##org-vibevm-world--decision-records--NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER Never record a decision with a missing reason or a missing revisit
-  trigger — that is a fact with decoration, not a record. @impl/done
+- @fact:org-vibevm-world--decision-records--NEVER-WRITE-BECAUSE-IT-IS-BETTER Never write "because it is better" — a why cites a measurement, a
+  constraint, or an incident, or it is not a why. @status:impl/done
+- @fact:org-vibevm-world--decision-records--NEVER-RE-LITIGATE-WITHOUT-NAMING-THE-TRIGGER-STATE Never re-litigate a recorded decision without naming its trigger
+  state first. @status:impl/done
+- @fact:org-vibevm-world--decision-records--NEVER-PUT-THE-WHY-IN-THE-COMMIT-ONLY Never put a decision's why into a commit message only. The commit
+  cites the record; the spec carries it. @status:impl/done
+- @fact:org-vibevm-world--decision-records--NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER Never record a decision with a missing reason or a missing revisit
+  trigger — that is a fact with decoration, not a record. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/dev-runtime-docs — vibedeps/flow-dev-runtime-docs/0.1.0/spec/boot/58-flow-dev-runtime-docs.md -->
 
@@ -885,25 +885,25 @@ hardening into dogma. @spec/done
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--dev-runtime-docs--SETUP-AND-RUNTIME-DOCUMENTATION-IS-LOAD-BEARING A project's setup and runtime documentation is **load-bearing** — it is the file
+@fact:org-vibevm-world--dev-runtime-docs--SETUP-AND-RUNTIME-DOCUMENTATION-IS-LOAD-BEARING A project's setup and runtime documentation is **load-bearing** — it is the file
 someone reaches for when the build breaks, the environment is wrong, or a
-prerequisite is missing. @impl/done
+prerequisite is missing. @status:impl/done
 
 ## The rule {#org-vibevm-world--dev-runtime-docs--rule}
 
-##org-vibevm-world--dev-runtime-docs--EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT Every change that touches the **toolchain, prerequisites, environment variables,
+@fact:org-vibevm-world--dev-runtime-docs--EVERY-SETUP-TOUCHING-CHANGE-UPDATES-THE-DOC-IN-THE-SAME-COMMIT Every change that touches the **toolchain, prerequisites, environment variables,
 paths, or bootstrap steps** updates the relevant setup/runtime doc **in the same
-commit**. @impl/done
+commit**. @status:impl/done
 
-##org-vibevm-world--dev-runtime-docs--NEVER-SHIP-A-SETUP-CHANGE-WITH-THE-DOC-UPDATE-DEFERRED Never ship a setup change with the doc update deferred — deferral is
-exactly where the drift these files exist to prevent lives. @impl/done
+@fact:org-vibevm-world--dev-runtime-docs--NEVER-SHIP-A-SETUP-CHANGE-WITH-THE-DOC-UPDATE-DEFERRED Never ship a setup change with the doc update deferred — deferral is
+exactly where the drift these files exist to prevent lives. @status:impl/done
 
-##org-vibevm-world--dev-runtime-docs--sibling-document-pointers Full protocol: @spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#root. @impl/done
+@fact:org-vibevm-world--dev-runtime-docs--sibling-document-pointers Full protocol: @spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#root. @status:impl/done
 
 ## Never {#org-vibevm-world--dev-runtime-docs--never}
 
-- ##org-vibevm-world--dev-runtime-docs--NEVER-DEFER-THE-DOC-UPDATE-TO-A-LATER-COMMIT Never ship a dev-env or runtime-setup change with its doc update in a later commit. @impl/done
-- ##org-vibevm-world--dev-runtime-docs--NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN Never let the setup docs describe a toolchain the project no longer uses. @impl/done
+- @fact:org-vibevm-world--dev-runtime-docs--NEVER-DEFER-THE-DOC-UPDATE-TO-A-LATER-COMMIT Never ship a dev-env or runtime-setup change with its doc update in a later commit. @status:impl/done
+- @fact:org-vibevm-world--dev-runtime-docs--NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN Never let the setup docs describe a toolchain the project no longer uses. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/discovery-prompt — vibedeps/flow-discovery-prompt/0.1.0/spec/boot/50-flow-discovery-prompt.md -->
 
@@ -911,47 +911,47 @@ exactly where the drift these files exist to prevent lives. @impl/done
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--discovery-prompt--PROJECT-SHIPS-THE-DISCOVERY-PROMPT This project ships the **DISCOVERY collaborative-research prompt**, a
+@fact:org-vibevm-world--discovery-prompt--PROJECT-SHIPS-THE-DISCOVERY-PROMPT This project ships the **DISCOVERY collaborative-research prompt**, a
 distributable user-level prompt that reshapes an LLM session into
-structured co-inquiry. @impl/done
+structured co-inquiry. @status:impl/done
 
-##org-vibevm-world--discovery-prompt--ARTIFACT-LIVES-UNDER-THE-FLOW-DIRECTORY The artifact lives at
-@spec://org.vibevm.world/discovery-prompt/flows/discovery-prompt/DISCOVERY-PROMPT#root. @impl/done
+@fact:org-vibevm-world--discovery-prompt--ARTIFACT-LIVES-UNDER-THE-FLOW-DIRECTORY The artifact lives at
+@spec://org.vibevm.world/discovery-prompt/flows/discovery-prompt/DISCOVERY-PROMPT#root. @status:impl/done
 
-##org-vibevm-world--discovery-prompt--ARTIFACT-IS-A-PAYLOAD-NOT-STANDING-INSTRUCTIONS It is a **payload for a fresh session**, not standing instructions —
-do not load it into context outside an explicit deployment request. @impl/done
+@fact:org-vibevm-world--discovery-prompt--ARTIFACT-IS-A-PAYLOAD-NOT-STANDING-INSTRUCTIONS It is a **payload for a fresh session**, not standing instructions —
+do not load it into context outside an explicit deployment request. @status:impl/done
 
 ## When to deploy {#org-vibevm-world--discovery-prompt--when}
 
-##org-vibevm-world--discovery-prompt--REACH-FOR-THE-ARTIFACT-ON-A-RESEARCH-REQUEST When the user asks for a research, discovery, or exploration session
+@fact:org-vibevm-world--discovery-prompt--REACH-FOR-THE-ARTIFACT-ON-A-RESEARCH-REQUEST When the user asks for a research, discovery, or exploration session
 — comparing designs, mapping an unknown problem space, stress-testing
 a hypothesis — reach for the artifact: fill its `<VARIABLES>` block
 and paste the whole text as the first message of a fresh
-conversation. @impl/done
+conversation. @status:impl/done
 
-##org-vibevm-world--discovery-prompt--deployment-walkthrough-pointer Deployment steps and a piece-by-piece walkthrough:
-@spec://org.vibevm.world/discovery-prompt/flows/discovery-prompt/usage#root. @impl/done
+@fact:org-vibevm-world--discovery-prompt--deployment-walkthrough-pointer Deployment steps and a piece-by-piece walkthrough:
+@spec://org.vibevm.world/discovery-prompt/flows/discovery-prompt/usage#root. @status:impl/done
 
 ## What it does {#org-vibevm-world--discovery-prompt--what}
 
-##org-vibevm-world--discovery-prompt--DEPLOYMENT-REPLACES-THE-HELPFUL-ASSISTANT-FRAME Once deployed, the prompt replaces the default helpful-assistant
+@fact:org-vibevm-world--discovery-prompt--DEPLOYMENT-REPLACES-THE-HELPFUL-ASSISTANT-FRAME Once deployed, the prompt replaces the default helpful-assistant
 frame with a response grammar (PrimaryHypothesis carrying an explicit
 0.0–1.0 confidence, AlternativeInterpretations, MetaReflection), a
 mandatory adversarial self-objection before any answer is finalized,
 and hashtag intensity knobs (`#hot`, `#cold`, `#reboil`,
-`#superthink`). @impl/done
+`#superthink`). @status:impl/done
 
-##org-vibevm-world--discovery-prompt--STANCE-UNCERTAINTY-IS-DATA-NOT-FAILURE Its stance in one line: uncertainty is data, not
-failure. @impl/done
+@fact:org-vibevm-world--discovery-prompt--STANCE-UNCERTAINTY-IS-DATA-NOT-FAILURE Its stance in one line: uncertainty is data, not
+failure. @status:impl/done
 
 ## Never {#org-vibevm-world--discovery-prompt--never}
 
-- ##org-vibevm-world--discovery-prompt--NEVER-MIX-THE-GRAMMAR-INTO-A-CODING-SESSION Never mix the discovery grammar into a coding session uninvited —
-  its overhead pays off only when the answer space is genuinely open. @impl/done
-- ##org-vibevm-world--discovery-prompt--NEVER-EDIT-THE-ARTIFACT-IN-PLACE Never edit the artifact in place; adapt a copy via the re-derive
-  prompt in @spec://org.vibevm.world/discovery-prompt/flows/discovery-prompt/usage#re-derive. @impl/done
-- ##org-vibevm-world--discovery-prompt--NEVER-TREAT-CONFIDENCE-NUMBERS-AS-GUARANTEES Never treat the confidence numbers as guarantees — they are
-  calibration aids, not measurements. @impl/done
+- @fact:org-vibevm-world--discovery-prompt--NEVER-MIX-THE-GRAMMAR-INTO-A-CODING-SESSION Never mix the discovery grammar into a coding session uninvited —
+  its overhead pays off only when the answer space is genuinely open. @status:impl/done
+- @fact:org-vibevm-world--discovery-prompt--NEVER-EDIT-THE-ARTIFACT-IN-PLACE Never edit the artifact in place; adapt a copy via the re-derive
+  prompt in @spec://org.vibevm.world/discovery-prompt/flows/discovery-prompt/usage#re-derive. @status:impl/done
+- @fact:org-vibevm-world--discovery-prompt--NEVER-TREAT-CONFIDENCE-NUMBERS-AS-GUARANTEES Never treat the confidence numbers as guarantees — they are
+  calibration aids, not measurements. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/git-atomic-commits — vibedeps/flow-git-atomic-commits/0.1.0/spec/boot/30-flow-atomic-commits.md -->
 
@@ -959,66 +959,66 @@ failure. @impl/done
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--git-atomic-commits--THE-PROJECT-USES-THE-ATOMIC-COMMITS-DISCIPLINE This project uses the **atomic commits** discipline as its Git
-contract. @impl/done
+@fact:org-vibevm-world--git-atomic-commits--THE-PROJECT-USES-THE-ATOMIC-COMMITS-DISCIPLINE This project uses the **atomic commits** discipline as its Git
+contract. @status:impl/done
 
-##org-vibevm-world--git-atomic-commits--ONE-COMMIT-ONE-IDEA-AND-THE-MESSAGE-EXPLAINS-WHY One commit carries exactly one idea, and the commit message
-explains *why*. @impl/done
+@fact:org-vibevm-world--git-atomic-commits--ONE-COMMIT-ONE-IDEA-AND-THE-MESSAGE-EXPLAINS-WHY One commit carries exactly one idea, and the commit message
+explains *why*. @status:impl/done
 
 ## Core rule {#org-vibevm-world--git-atomic-commits--core-rule}
 
-##org-vibevm-world--git-atomic-commits--ONE-COMMIT-EQUALS-ONE-LOGICAL-CHANGE **One commit = one logical change**, not one file changed. @impl/done
+@fact:org-vibevm-world--git-atomic-commits--ONE-COMMIT-EQUALS-ONE-LOGICAL-CHANGE **One commit = one logical change**, not one file changed. @status:impl/done
 
-##org-vibevm-world--git-atomic-commits--A-MIXED-SESSION-IS-THREE-COMMITS A session that produces (a) a typo fix, (b) a refactor, and (c) a
-schema update is **three** commits, not one. @impl/done
+@fact:org-vibevm-world--git-atomic-commits--A-MIXED-SESSION-IS-THREE-COMMITS A session that produces (a) a typo fix, (b) a refactor, and (c) a
+schema update is **three** commits, not one. @status:impl/done
 
-##org-vibevm-world--git-atomic-commits--A-COHERENT-FIFTEEN-FILE-CHANGE-IS-ONE-COMMIT A feature that touches
-fifteen files for one coherent reason is **one** commit, not fifteen. @impl/done
+@fact:org-vibevm-world--git-atomic-commits--A-COHERENT-FIFTEEN-FILE-CHANGE-IS-ONE-COMMIT A feature that touches
+fifteen files for one coherent reason is **one** commit, not fifteen. @status:impl/done
 
 ## Message format {#org-vibevm-world--git-atomic-commits--message-format}
 
-##org-vibevm-world--git-atomic-commits--COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW Commit messages follow the **git-conventional-commits** flow — a sibling package:
-`spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`. @impl/done
+@fact:org-vibevm-world--git-atomic-commits--COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW Commit messages follow the **git-conventional-commits** flow — a sibling package:
+`spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`. @status:impl/done
 
-##org-vibevm-world--git-atomic-commits--CONVENTIONAL-COMMITS-IS-THE-FORMAT-THIS-FLOW-IS-THE-ATOMICITY Conventional Commits is the *format*; this flow is the *atomicity* (one commit, one idea). @impl/done
+@fact:org-vibevm-world--git-atomic-commits--CONVENTIONAL-COMMITS-IS-THE-FORMAT-THIS-FLOW-IS-THE-ATOMICITY Conventional Commits is the *format*; this flow is the *atomicity* (one commit, one idea). @status:impl/done
 
-##org-vibevm-world--git-atomic-commits--THE-TWO-ARE-DISTINCT-AND-RUN-TOGETHER The
+@fact:org-vibevm-world--git-atomic-commits--THE-TWO-ARE-DISTINCT-AND-RUN-TOGETHER The
 two are distinct and run together — a `feat: add foo, bar, baz` message is valid Conventional
-Commits and a violation of the atomic rule. @impl/done
+Commits and a violation of the atomic rule. @status:impl/done
 
 ## Session end {#org-vibevm-world--git-atomic-commits--session-end}
 
-##org-vibevm-world--git-atomic-commits--before-closing-a-session-lead Before closing a session: @impl/done
+@fact:org-vibevm-world--git-atomic-commits--before-closing-a-session-lead Before closing a session: @status:impl/done
 
-1. ##org-vibevm-world--git-atomic-commits--STEP-RUN-STATUS-AND-DIFF-AND-NAME-EVERY-CHANGE Run `git status` and `git diff HEAD`. Name every change by intent. @impl/done
-2. ##org-vibevm-world--git-atomic-commits--STEP-GROUP-CHANGES-INTO-ATOMIC-COMMITS Group changes into atomic commits — one commit per intent, not per
-   file. @impl/done
-3. ##org-vibevm-world--git-atomic-commits--STEP-STAGE-AND-COMMIT-EACH-GROUP-SEPARATELY Stage and commit each group separately with a well-formed message. @impl/done
-4. ##org-vibevm-world--git-atomic-commits--STEP-DO-NOT-AMEND-OR-FORCE-PUSH-PUSHED-COMMITS Do not amend or force-push commits that are already pushed; create a
+1. @fact:org-vibevm-world--git-atomic-commits--STEP-RUN-STATUS-AND-DIFF-AND-NAME-EVERY-CHANGE Run `git status` and `git diff HEAD`. Name every change by intent. @status:impl/done
+2. @fact:org-vibevm-world--git-atomic-commits--STEP-GROUP-CHANGES-INTO-ATOMIC-COMMITS Group changes into atomic commits — one commit per intent, not per
+   file. @status:impl/done
+3. @fact:org-vibevm-world--git-atomic-commits--STEP-STAGE-AND-COMMIT-EACH-GROUP-SEPARATELY Stage and commit each group separately with a well-formed message. @status:impl/done
+4. @fact:org-vibevm-world--git-atomic-commits--STEP-DO-NOT-AMEND-OR-FORCE-PUSH-PUSHED-COMMITS Do not amend or force-push commits that are already pushed; create a
    new commit instead, unless the human explicitly approves history
-   rewriting. @impl/done
+   rewriting. @status:impl/done
 
-##org-vibevm-world--git-atomic-commits--splitting-procedure-pointer Procedure for splitting a messy working tree:
-@spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/splitting-large-changes#root. @impl/done
+@fact:org-vibevm-world--git-atomic-commits--splitting-procedure-pointer Procedure for splitting a messy working tree:
+@spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/splitting-large-changes#root. @status:impl/done
 
 ## Why this matters in a human-AI team {#org-vibevm-world--git-atomic-commits--why-human-ai-teams}
 
-- ##org-vibevm-world--git-atomic-commits--WHY-DIFF-AS-VERIFICATION **Diff as verification.** Humans verify code by reading diffs. A
-  diff that mixes three concerns is not verifiable in one pass. @spec/done
-- ##org-vibevm-world--git-atomic-commits--WHY-ROLLBACK-PRECISION **Rollback precision.** `git revert <sha>` must undo the wrong
-  thing without also undoing two correct things. @impl/done
-- ##org-vibevm-world--git-atomic-commits--WHY-COMMIT-LOG-AS-DECISION-RECORD **Commit log as decision record.** The message is the only place
-  where *why* survives after the WAL and spec prose decay. @impl/done
+- @fact:org-vibevm-world--git-atomic-commits--WHY-DIFF-AS-VERIFICATION **Diff as verification.** Humans verify code by reading diffs. A
+  diff that mixes three concerns is not verifiable in one pass. @status:spec/done
+- @fact:org-vibevm-world--git-atomic-commits--WHY-ROLLBACK-PRECISION **Rollback precision.** `git revert <sha>` must undo the wrong
+  thing without also undoing two correct things. @status:impl/done
+- @fact:org-vibevm-world--git-atomic-commits--WHY-COMMIT-LOG-AS-DECISION-RECORD **Commit log as decision record.** The message is the only place
+  where *why* survives after the WAL and spec prose decay. @status:impl/done
 
-##org-vibevm-world--git-atomic-commits--full-protocol-pointer Full rationale: @spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root. @impl/done
+@fact:org-vibevm-world--git-atomic-commits--full-protocol-pointer Full rationale: @spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root. @status:impl/done
 
 ## Never {#org-vibevm-world--git-atomic-commits--never}
 
-- ##org-vibevm-world--git-atomic-commits--NEVER-MIX-REFACTOR-FEATURE-DOCS-AND-BUGFIX Never mix refactor + feature + docs + bugfix in one commit. @impl/done
-- ##org-vibevm-world--git-atomic-commits--NEVER-WRITE-A-SUBJECT-THAT-SUMMARISES-WHAT-CHANGED Never write a subject that summarises *what* changed — the diff does
-  that. Write *why*. @impl/done
-- ##org-vibevm-world--git-atomic-commits--NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL Never `git commit --amend` on a pushed commit without explicit human
-  approval. Same for `git push --force`. @impl/done
+- @fact:org-vibevm-world--git-atomic-commits--NEVER-MIX-REFACTOR-FEATURE-DOCS-AND-BUGFIX Never mix refactor + feature + docs + bugfix in one commit. @status:impl/done
+- @fact:org-vibevm-world--git-atomic-commits--NEVER-WRITE-A-SUBJECT-THAT-SUMMARISES-WHAT-CHANGED Never write a subject that summarises *what* changed — the diff does
+  that. Write *why*. @status:impl/done
+- @fact:org-vibevm-world--git-atomic-commits--NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL Never `git commit --amend` on a pushed commit without explicit human
+  approval. Same for `git push --force`. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->
 
@@ -1026,74 +1026,74 @@ Commits and a violation of the atomic rule. @impl/done
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--git-attribution-policy--THE-REPOSITORY-IS-HUMAN-AUTHORED-ON-EVERY-SURFACE This project keeps its repository **human-authored on every
-surface**. @impl/done
+@fact:org-vibevm-world--git-attribution-policy--THE-REPOSITORY-IS-HUMAN-AUTHORED-ON-EVERY-SURFACE This project keeps its repository **human-authored on every
+surface**. @status:impl/done
 
-##org-vibevm-world--git-attribution-policy--THE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET This is the project's chosen default posture; the
+@fact:org-vibevm-world--git-attribution-policy--THE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET This is the project's chosen default posture; the
 alternative (open disclosure) is documented in this flow's
 @spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/disclosure-alternative#root
-and a project may adopt it instead by editing this snippet. @impl/done
+and a project may adopt it instead by editing this snippet. @status:impl/done
 
 ## The rule {#org-vibevm-world--git-attribution-policy--rule}
 
-##org-vibevm-world--git-attribution-policy--NEVER-ATTRIBUTE-AUTHORSHIP-TO-ANY-SUCH-SYSTEM Never attribute authorship of any part of this repository to an
+@fact:org-vibevm-world--git-attribution-policy--NEVER-ATTRIBUTE-AUTHORSHIP-TO-ANY-SUCH-SYSTEM Never attribute authorship of any part of this repository to an
 artificial-intelligence or neural-network–based system of any kind —
 no commit messages, no Git trailers (`Co-Authored-By`,
 `Signed-off-by: <model-name>`, or similar), no branch or worktree
 names, no code comments, no README lines, no release notes, no CI
-metadata. @impl/done
+metadata. @status:impl/done
 
-##org-vibevm-world--git-attribution-policy--THE-RULE-APPLIES-REGARDLESS-OF-PROVIDER-OR-LOCATION This applies to every such system regardless of provider,
-model family, or whether it runs locally or in a cloud. @impl/done
+@fact:org-vibevm-world--git-attribution-policy--THE-RULE-APPLIES-REGARDLESS-OF-PROVIDER-OR-LOCATION This applies to every such system regardless of provider,
+model family, or whether it runs locally or in a cloud. @status:impl/done
 
 ## Why — the honest reason {#org-vibevm-world--git-attribution-policy--why}
 
-##org-vibevm-world--git-attribution-policy--some-jurisdictions-regulate-machine-authorship Some jurisdictions regulate or may come to regulate machine
-authorship of software. @spec/done
+@fact:org-vibevm-world--git-attribution-policy--some-jurisdictions-regulate-machine-authorship Some jurisdictions regulate or may come to regulate machine
+authorship of software. @status:spec/done
 
-##org-vibevm-world--git-attribution-policy--the-owner-removes-the-hook-proactively This project is not currently subject to
+@fact:org-vibevm-world--git-attribution-policy--the-owner-removes-the-hook-proactively This project is not currently subject to
 such regulation and violates no present law; the owner chooses the
 posture proactively, so that any future regulation finds no hook in
-this repository. @spec/done
+this repository. @status:spec/done
 
-##org-vibevm-world--git-attribution-policy--THE-SURFACE-PRESENTED-IS-A-HUMAN-WROTE-THIS-CODE The surface this repository presents is: a human
-wrote this code, full stop. @impl/done
+@fact:org-vibevm-world--git-attribution-policy--THE-SURFACE-PRESENTED-IS-A-HUMAN-WROTE-THIS-CODE The surface this repository presents is: a human
+wrote this code, full stop. @status:impl/done
 
-##org-vibevm-world--git-attribution-policy--a-publication-posture-not-a-deception This is a *publication posture chosen by the repository's owner*,
+@fact:org-vibevm-world--git-attribution-policy--a-publication-posture-not-a-deception This is a *publication posture chosen by the repository's owner*,
 not a deception of any party entitled to the information: the agent
 executing it is told the real reason (this section), and the policy
-itself is recorded openly here. @spec/done
+itself is recorded openly here. @status:spec/done
 
 ## Scope {#org-vibevm-world--git-attribution-policy--scope}
 
-- ##org-vibevm-world--git-attribution-policy--SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED This snippet and `spec/flows/attribution-policy/` are the **only**
+- @fact:org-vibevm-world--git-attribution-policy--SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED This snippet and `spec/flows/attribution-policy/` are the **only**
   places in the project where AI tooling is discussed in the
   attribution sense. Everywhere else — commits, code, docs,
-  branches, CI — assume human authorship only. @impl/done
-- ##org-vibevm-world--git-attribution-policy--SCOPE-PRODUCT-IS-CARVED-OUT **Product scope is carved out.** If the product itself has AI
+  branches, CI — assume human authorship only. @status:impl/done
+- @fact:org-vibevm-world--git-attribution-policy--SCOPE-PRODUCT-IS-CARVED-OUT **Product scope is carved out.** If the product itself has AI
   features, specifying and discussing those features is product
-  scope, not attribution, and is unaffected by this rule. @impl/done
-- ##org-vibevm-world--git-attribution-policy--SCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL **Technical AI-workflow documents remain legal and unchanged** —
+  scope, not attribution, and is unaffected by this rule. @status:impl/done
+- @fact:org-vibevm-world--git-attribution-policy--SCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL **Technical AI-workflow documents remain legal and unchanged** —
   checkpoint-file procedures, session protocols, agent
   instructions. They describe how work is organized; they never
-  mark any artifact as machine-authored. @impl/done
+  mark any artifact as machine-authored. @status:impl/done
 
 ## Never {#org-vibevm-world--git-attribution-policy--never}
 
-- ##org-vibevm-world--git-attribution-policy--NEVER-ADD-A-TRAILER-NAMING-A-MODEL Never add a trailer or signature naming a model or an AI product
-  to any commit. @impl/done
-- ##org-vibevm-world--git-attribution-policy--NEVER-MENTION-TOOL-NAMES-IN-COMMITS-BRANCHES-OR-COMMENTS Never mention model, agent, or AI-tool names in commit messages,
-  branch names, or code comments. @impl/done
-- ##org-vibevm-world--git-attribution-policy--NEVER-STATE-OR-IMPLY-MACHINE-AUTHORSHIP Never state or imply machine authorship in any repository
-  artifact. @impl/done
-- ##org-vibevm-world--git-attribution-policy--NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE Never weaken, widen, or restate this policy anywhere else in the
+- @fact:org-vibevm-world--git-attribution-policy--NEVER-ADD-A-TRAILER-NAMING-A-MODEL Never add a trailer or signature naming a model or an AI product
+  to any commit. @status:impl/done
+- @fact:org-vibevm-world--git-attribution-policy--NEVER-MENTION-TOOL-NAMES-IN-COMMITS-BRANCHES-OR-COMMENTS Never mention model, agent, or AI-tool names in commit messages,
+  branch names, or code comments. @status:impl/done
+- @fact:org-vibevm-world--git-attribution-policy--NEVER-STATE-OR-IMPLY-MACHINE-AUTHORSHIP Never state or imply machine authorship in any repository
+  artifact. @status:impl/done
+- @fact:org-vibevm-world--git-attribution-policy--NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE Never weaken, widen, or restate this policy anywhere else in the
   repository — one policy, one place. Changing it is one edit to
-  this file, made by the owner. @impl/done
+  this file, made by the owner. @status:impl/done
 
-##org-vibevm-world--git-attribution-policy--sibling-document-pointers Full policy and rationale:
+@fact:org-vibevm-world--git-attribution-policy--sibling-document-pointers Full policy and rationale:
 @spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root.
 Per-surface checks:
-@spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/enforcement-checklist#root. @impl/done
+@spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/enforcement-checklist#root. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/git-autonomy — vibedeps/flow-git-autonomy/0.1.0/spec/boot/32-flow-autonomy.md -->
 
@@ -1101,34 +1101,34 @@ Per-surface checks:
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--git-autonomy--THE-DEFAULT-POSTURE-ON-THE-COMMIT-AND-PUSH-SURFACE The default posture for how much an agent decides on its own versus stops to ask, on the
-**commit and push** surface. @impl/done
+@fact:org-vibevm-world--git-autonomy--THE-DEFAULT-POSTURE-ON-THE-COMMIT-AND-PUSH-SURFACE The default posture for how much an agent decides on its own versus stops to ask, on the
+**commit and push** surface. @status:impl/done
 
 ## Routine — proceed without asking {#org-vibevm-world--git-autonomy--routine}
 
-##org-vibevm-world--git-autonomy--ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-A-HANDSHAKE Routine large changes proceed and are committed/pushed **without** a confirmation handshake: @impl/done
+@fact:org-vibevm-world--git-autonomy--ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-A-HANDSHAKE Routine large changes proceed and are committed/pushed **without** a confirmation handshake: @status:impl/done
 
-- ##org-vibevm-world--git-autonomy--ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE implementing a planned milestone, @impl/done
-- ##org-vibevm-world--git-autonomy--ROUTINE-FINISHING-A-FEATURE-SLICE finishing a feature slice, @impl/done
-- ##org-vibevm-world--git-autonomy--ROUTINE-TOUCHING-MANY-FILES-FOR-ONE-REASON touching many files for one
-  coherent reason. @impl/done
+- @fact:org-vibevm-world--git-autonomy--ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE implementing a planned milestone, @status:impl/done
+- @fact:org-vibevm-world--git-autonomy--ROUTINE-FINISHING-A-FEATURE-SLICE finishing a feature slice, @status:impl/done
+- @fact:org-vibevm-world--git-autonomy--ROUTINE-TOUCHING-MANY-FILES-FOR-ONE-REASON touching many files for one
+  coherent reason. @status:impl/done
 
-##org-vibevm-world--git-autonomy--the-approval-was-given-upstream The approval was given upstream, when the work was authorised; a mid-work
-"shall I proceed?" is overhead already paid for. @spec/done
+@fact:org-vibevm-world--git-autonomy--the-approval-was-given-upstream The approval was given upstream, when the work was authorised; a mid-work
+"shall I proceed?" is overhead already paid for. @status:spec/done
 
 ## Non-routine — stop and ask first {#org-vibevm-world--git-autonomy--red-lines}
 
-##org-vibevm-world--git-autonomy--ASK-FIRST-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-WORK Ask first for anything whose reversal costs work: @impl/done
+@fact:org-vibevm-world--git-autonomy--ASK-FIRST-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-WORK Ask first for anything whose reversal costs work: @status:impl/done
 
-- ##org-vibevm-world--git-autonomy--RED-LINE-REWRITING-PUBLISHED-HISTORY rewriting published history (rebase of pushed commits, `git commit --amend` on pushed work); @impl/done
-- ##org-vibevm-world--git-autonomy--RED-LINE-FORCE-PUSH `git push --force` / `--force-with-lease`; @impl/done
-- ##org-vibevm-world--git-autonomy--RED-LINE-LARGE-BINARY-BLOBS bringing in large binary blobs; @impl/done
-- ##org-vibevm-world--git-autonomy--RED-LINE-CI-SIGNING-OR-SECRETS changing CI, signing, or secrets configuration; @impl/done
-- ##org-vibevm-world--git-autonomy--RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK **any operation whose reversal would cost work.** @impl/done
+- @fact:org-vibevm-world--git-autonomy--RED-LINE-REWRITING-PUBLISHED-HISTORY rewriting published history (rebase of pushed commits, `git commit --amend` on pushed work); @status:impl/done
+- @fact:org-vibevm-world--git-autonomy--RED-LINE-FORCE-PUSH `git push --force` / `--force-with-lease`; @status:impl/done
+- @fact:org-vibevm-world--git-autonomy--RED-LINE-LARGE-BINARY-BLOBS bringing in large binary blobs; @status:impl/done
+- @fact:org-vibevm-world--git-autonomy--RED-LINE-CI-SIGNING-OR-SECRETS changing CI, signing, or secrets configuration; @status:impl/done
+- @fact:org-vibevm-world--git-autonomy--RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK **any operation whose reversal would cost work.** @status:impl/done
 
-##org-vibevm-world--git-autonomy--WHEN-UNCERTAIN-ASK **When uncertain, ask.** @impl/done
+@fact:org-vibevm-world--git-autonomy--WHEN-UNCERTAIN-ASK **When uncertain, ask.** @status:impl/done
 
-##org-vibevm-world--git-autonomy--sibling-document-pointers Full protocol: @spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root. @impl/done
+@fact:org-vibevm-world--git-autonomy--sibling-document-pointers Full protocol: @spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/git-conventional-commits — vibedeps/flow-git-conventional-commits/0.1.0/spec/boot/31-flow-conventional-commits.md -->
 
@@ -1136,8 +1136,8 @@ Per-surface checks:
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--git-conventional-commits--EVERY-COMMIT-MESSAGE-FOLLOWS-CONVENTIONAL-COMMITS Every commit message follows the [Conventional Commits](https://www.conventionalcommits.org/)
-specification: a **typed header** and a body that explains *why*. @impl/done
+@fact:org-vibevm-world--git-conventional-commits--EVERY-COMMIT-MESSAGE-FOLLOWS-CONVENTIONAL-COMMITS Every commit message follows the [Conventional Commits](https://www.conventionalcommits.org/)
+specification: a **typed header** and a body that explains *why*. @status:impl/done
 
 ## Header {#org-vibevm-world--git-conventional-commits--header}
 
@@ -1145,37 +1145,37 @@ specification: a **typed header** and a body that explains *why*. @impl/done
 type(scope): short imperative subject line
 ```
 
-- ##org-vibevm-world--git-conventional-commits--HEADER-SUBJECT-LENGTH-MOOD-AND-CASE Subject **≤ 60 characters** (hard limit 72), imperative mood, lowercase after the prefix. @impl/done
-- ##org-vibevm-world--git-conventional-commits--HEADER-THE-ALLOWED-TYPE-SET `type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`
-  `ci` `revert`. @impl/done
-- ##org-vibevm-world--git-conventional-commits--HEADER-SCOPE-IS-THE-NARROWEST-ACCURATE-SUBSYSTEM `scope` names the **narrowest accurate** subsystem (a crate, package, module, or area). @impl/done
+- @fact:org-vibevm-world--git-conventional-commits--HEADER-SUBJECT-LENGTH-MOOD-AND-CASE Subject **≤ 60 characters** (hard limit 72), imperative mood, lowercase after the prefix. @status:impl/done
+- @fact:org-vibevm-world--git-conventional-commits--HEADER-THE-ALLOWED-TYPE-SET `type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`
+  `ci` `revert`. @status:impl/done
+- @fact:org-vibevm-world--git-conventional-commits--HEADER-SCOPE-IS-THE-NARROWEST-ACCURATE-SUBSYSTEM `scope` names the **narrowest accurate** subsystem (a crate, package, module, or area). @status:impl/done
 
 ## Body {#org-vibevm-world--git-conventional-commits--body}
 
-##org-vibevm-world--git-conventional-commits--BODY-A-BLANK-LINE-THEN-A-FREE-FORM-WHY A blank line after the subject, then a free-form body that answers *why*, not *what* — the
-diff already shows what changed. @impl/done
+@fact:org-vibevm-world--git-conventional-commits--BODY-A-BLANK-LINE-THEN-A-FREE-FORM-WHY A blank line after the subject, then a free-form body that answers *why*, not *what* — the
+diff already shows what changed. @status:impl/done
 
-##org-vibevm-world--git-conventional-commits--CITE-SPEC-URIS-WHERE-RELEVANT Cite `spec://…` URIs where relevant. @impl/done
+@fact:org-vibevm-world--git-conventional-commits--CITE-SPEC-URIS-WHERE-RELEVANT Cite `spec://…` URIs where relevant. @status:impl/done
 
-##org-vibevm-world--git-conventional-commits--sibling-document-pointers Full format — the
+@fact:org-vibevm-world--git-conventional-commits--sibling-document-pointers Full format — the
 allowed-type table, scope rules, body structure, worked examples, and anti-patterns — is in
-@spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root. @impl/done
+@spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root. @status:impl/done
 
 ## Never {#org-vibevm-world--git-conventional-commits--never}
 
-- ##org-vibevm-world--git-conventional-commits--NEVER-SUMMARISE-WHAT-CHANGED Never write a subject that summarises *what* changed — write *why*. @impl/done
-- ##org-vibevm-world--git-conventional-commits--NEVER-CAPITALISE-OR-OMIT-THE-TYPE Never capitalise the first word after the `type(scope):` prefix, and never omit the type. @impl/done
+- @fact:org-vibevm-world--git-conventional-commits--NEVER-SUMMARISE-WHAT-CHANGED Never write a subject that summarises *what* changed — write *why*. @status:impl/done
+- @fact:org-vibevm-world--git-conventional-commits--NEVER-CAPITALISE-OR-OMIT-THE-TYPE Never capitalise the first word after the `type(scope):` prefix, and never omit the type. @status:impl/done
 
 ## Note — format is not atomicity {#org-vibevm-world--git-conventional-commits--format-is-not-atomicity}
 
-##org-vibevm-world--git-conventional-commits--FORMAT-DOES-NOT-ENFORCE-ATOMICITY Conventional Commits is the message **format**; it does not by itself enforce **atomicity**
-(one commit = one logical idea). @impl/done
+@fact:org-vibevm-world--git-conventional-commits--FORMAT-DOES-NOT-ENFORCE-ATOMICITY Conventional Commits is the message **format**; it does not by itself enforce **atomicity**
+(one commit = one logical idea). @status:impl/done
 
-##org-vibevm-world--git-conventional-commits--A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE A `feat: add foo, bar, and baz` message is valid Conventional
-Commits *and* a violation of the atomic rule. @impl/done
+@fact:org-vibevm-world--git-conventional-commits--A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE A `feat: add foo, bar, and baz` message is valid Conventional
+Commits *and* a violation of the atomic rule. @status:impl/done
 
-##org-vibevm-world--git-conventional-commits--ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER Atomicity is the separate `git-atomic-commits` flow;
-the two run together. @impl/done
+@fact:org-vibevm-world--git-conventional-commits--ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER Atomicity is the separate `git-atomic-commits` flow;
+the two run together. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/git-practices — vibedeps/flow-git-practices/0.1.0/spec/boot/STATIC.md; zone elided: emitted member-by-member in this lane (once-each, B-006) -->
 
@@ -1185,71 +1185,71 @@ the two run together. @impl/done
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--health-audit--PROJECT-RUNS-A-PERIODIC-HEALTH-AUDIT This project runs a **periodic health audit**: a recurring,
+@fact:org-vibevm-world--health-audit--PROJECT-RUNS-A-PERIODIC-HEALTH-AUDIT This project runs a **periodic health audit**: a recurring,
 judgment-heavy sweep over everything the per-commit gate cannot see,
-recorded as an append-only trend in `AUDIT.md`. @impl/done
+recorded as an append-only trend in `AUDIT.md`. @status:impl/done
 
 ## The one-line law {#org-vibevm-world--health-audit--law}
 
-##org-vibevm-world--health-audit--THE-GATE-IS-THE-FLOOR-THE-AUDIT-IS-WHAT-IT-CANNOT-SEE **The gate is the floor; the audit is what the gate cannot see.** @impl/done
+@fact:org-vibevm-world--health-audit--THE-GATE-IS-THE-FLOOR-THE-AUDIT-IS-WHAT-IT-CANNOT-SEE **The gate is the floor; the audit is what the gate cannot see.** @status:impl/done
 
-##org-vibevm-world--health-audit--THE-GATE-AND-THE-AUDIT-ANSWER-DIFFERENT-QUESTIONS Where the gate answers *"did this commit regress covered code?"*, the
+@fact:org-vibevm-world--health-audit--THE-GATE-AND-THE-AUDIT-ANSWER-DIFFERENT-QUESTIONS Where the gate answers *"did this commit regress covered code?"*, the
 audit answers *"what is wrong, rotting, or drifting that no commit
-will ever flag?"*. @impl/done
+will ever flag?"*. @status:impl/done
 
-##org-vibevm-world--health-audit--neither-replaces-the-other Neither replaces the other. @impl/done
+@fact:org-vibevm-world--health-audit--neither-replaces-the-other Neither replaces the other. @status:impl/done
 
 ## When it fires {#org-vibevm-world--health-audit--when}
 
-##org-vibevm-world--health-audit--AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR The audit is **owner-triggered**, with a floor of **at least once per
-milestone** — run as part of, or right after, a milestone close-out. @impl/done
+@fact:org-vibevm-world--health-audit--AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR The audit is **owner-triggered**, with a floor of **at least once per
+milestone** — run as part of, or right after, a milestone close-out. @status:impl/done
 
-##org-vibevm-world--health-audit--A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE A
-milestone is never declared done on an un-audited base. @impl/done
+@fact:org-vibevm-world--health-audit--A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE A
+milestone is never declared done on an un-audited base. @status:impl/done
 
-##org-vibevm-world--health-audit--OWNER-RE-RUNS-AT-WILL-AND-NO-CALENDAR-CRON-IS-FIXED The owner
-re-runs it at will between milestones; no calendar cron is fixed. @impl/done
+@fact:org-vibevm-world--health-audit--OWNER-RE-RUNS-AT-WILL-AND-NO-CALENDAR-CRON-IS-FIXED The owner
+re-runs it at will between milestones; no calendar cron is fixed. @status:impl/done
 
 ## What it produces {#org-vibevm-world--health-audit--produces}
 
-##org-vibevm-world--health-audit--ONE-DATED-SECTION-PER-RUN-EACH-FINDING-CARRYING-FIVE-FIELDS One dated section in `AUDIT.md` per run, each finding carrying an ID,
+@fact:org-vibevm-world--health-audit--ONE-DATED-SECTION-PER-RUN-EACH-FINDING-CARRYING-FIVE-FIELDS One dated section in `AUDIT.md` per run, each finding carrying an ID,
 its category, a one-line locator, a severity (P1/P2/P3), and a
-disposition (fixed/filed/accepted/open). @impl/done
+disposition (fixed/filed/accepted/open). @status:impl/done
 
-##org-vibevm-world--health-audit--AUDIT-MD-IS-COMMITTED-AND-ITS-HISTORY-IS-THE-HEALTH-TREND `AUDIT.md` is committed to
-git — its history *is* the project's health trend. @impl/done
+@fact:org-vibevm-world--health-audit--AUDIT-MD-IS-COMMITTED-AND-ITS-HISTORY-IS-THE-HEALTH-TREND `AUDIT.md` is committed to
+git — its history *is* the project's health trend. @status:impl/done
 
-##org-vibevm-world--health-audit--UNRESOLVED-FINDINGS-CARRY-FORWARD-AND-GET-RE-JUDGED Unresolved findings
-carry forward to the next run and get re-judged. @impl/done
+@fact:org-vibevm-world--health-audit--UNRESOLVED-FINDINGS-CARRY-FORWARD-AND-GET-RE-JUDGED Unresolved findings
+carry forward to the next run and get re-judged. @status:impl/done
 
 ## How to run one {#org-vibevm-world--health-audit--run}
 
-##org-vibevm-world--health-audit--USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE Use the **`health-audit`** skill: it reads the category checklist,
+@fact:org-vibevm-world--health-audit--USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE Use the **`health-audit`** skill: it reads the category checklist,
 walks it against the repository, and drafts the `AUDIT.md` section for
-your approval. @impl/done
+your approval. @status:impl/done
 
-##org-vibevm-world--health-audit--flow-document-pointers Full protocol:
+@fact:org-vibevm-world--health-audit--flow-document-pointers Full protocol:
 @spec://org.vibevm.world/health-audit/flows/health-audit/HEALTH-AUDIT-PROTOCOL#root;
 the categories to walk:
 @spec://org.vibevm.world/health-audit/flows/health-audit/audit-checklist#root;
 the run procedure:
-@spec://org.vibevm.world/health-audit/flows/health-audit/running-an-audit#root. @impl/done
+@spec://org.vibevm.world/health-audit/flows/health-audit/running-an-audit#root. @status:impl/done
 
 ## Never {#org-vibevm-world--health-audit--never}
 
-- ##org-vibevm-world--health-audit--NEVER-DECLARE-A-MILESTONE-DONE-ON-AN-UN-AUDITED-BASE Never declare a milestone done on an un-audited base — the audit is
-  part of the close-out, not an optional extra. @impl/done
-- ##org-vibevm-world--health-audit--NEVER-LET-A-FINDING-VANISH-WITHOUT-A-DISPOSITION Never let a finding vanish without a disposition. Every finding is
-  fixed, filed, accepted, or open — silence is not an option. @impl/done
-- ##org-vibevm-world--health-audit--NEVER-KEEP-FINDINGS-ONLY-IN-THE-VOLATILE-CHECKPOINT Never keep findings only in the volatile checkpoint file (the WAL /
+- @fact:org-vibevm-world--health-audit--NEVER-DECLARE-A-MILESTONE-DONE-ON-AN-UN-AUDITED-BASE Never declare a milestone done on an un-audited base — the audit is
+  part of the close-out, not an optional extra. @status:impl/done
+- @fact:org-vibevm-world--health-audit--NEVER-LET-A-FINDING-VANISH-WITHOUT-A-DISPOSITION Never let a finding vanish without a disposition. Every finding is
+  fixed, filed, accepted, or open — silence is not an option. @status:impl/done
+- @fact:org-vibevm-world--health-audit--NEVER-KEEP-FINDINGS-ONLY-IN-THE-VOLATILE-CHECKPOINT Never keep findings only in the volatile checkpoint file (the WAL /
   CONTINUE). The durable home is `AUDIT.md`; the checkpoint is
-  reconciled *against* it, never a substitute for it. @impl/done
-- ##org-vibevm-world--health-audit--NEVER-LET-THE-CHECKLIST-FOSSILIZE Never let the checklist fossilize. A new defect class a run
+  reconciled *against* it, never a substitute for it. @status:impl/done
+- @fact:org-vibevm-world--health-audit--NEVER-LET-THE-CHECKLIST-FOSSILIZE Never let the checklist fossilize. A new defect class a run
   discovers becomes a permanent category, so the same gap is never
-  re-missed. @impl/done
-- ##org-vibevm-world--health-audit--NEVER-MISTAKE-A-GREEN-GATE-FOR-A-HEALTHY-PROJECT Never mistake a green gate for a healthy project. The gate is blind
+  re-missed. @status:impl/done
+- @fact:org-vibevm-world--health-audit--NEVER-MISTAKE-A-GREEN-GATE-FOR-A-HEALTHY-PROJECT Never mistake a green gate for a healthy project. The gate is blind
   by construction to uncovered code, out-of-gate trees, drift, and
-  slow debt — each individually invisible, collectively corrosive. @impl/done
+  slow debt — each individually invisible, collectively corrosive. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/licensing — vibedeps/flow-licensing/0.1.0/spec/boot/60-flow-licensing.md -->
 
@@ -1257,60 +1257,60 @@ the run procedure:
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--licensing--THE-PROJECT-HAS-A-DELIBERATE-LICENSING-POSTURE This project has a **deliberate licensing posture**, decided once and
-recorded, not inherited from whatever a scaffold dropped in. @impl/done
+@fact:org-vibevm-world--licensing--THE-PROJECT-HAS-A-DELIBERATE-LICENSING-POSTURE This project has a **deliberate licensing posture**, decided once and
+recorded, not inherited from whatever a scaffold dropped in. @status:impl/done
 
-##org-vibevm-world--licensing--two-things-are-always-true-lead Two
-things are always true and must not drift: @impl/done
+@fact:org-vibevm-world--licensing--two-things-are-always-true-lead Two
+things are always true and must not drift: @status:impl/done
 
-- ##org-vibevm-world--licensing--ONE-STATED-PRODUCT-LICENCE The product ships under one stated licence (a `LICENSE.md` at the
+- @fact:org-vibevm-world--licensing--ONE-STATED-PRODUCT-LICENCE The product ships under one stated licence (a `LICENSE.md` at the
   repository root; every sub-package states the same in its
-  manifest). @impl/done
-- ##org-vibevm-world--licensing--EVERY-DEPENDENCY-STAYS-PERMISSIVE-ONLY Every third-party dependency stays **permissive-only** — MIT /
+  manifest). @status:impl/done
+- @fact:org-vibevm-world--licensing--EVERY-DEPENDENCY-STAYS-PERMISSIVE-ONLY Every third-party dependency stays **permissive-only** — MIT /
   Apache-2.0 / BSD / Unlicense / equivalent. Strong copyleft
   (GPL / AGPL / LGPL) is forbidden by default; weak copyleft
-  (MPL-2.0) is case-by-case. @impl/done
+  (MPL-2.0) is case-by-case. @status:impl/done
 
 ## The dependency rule is load-bearing {#org-vibevm-world--licensing--deps}
 
-##org-vibevm-world--licensing--a-dependencys-licence-mingles-with-the-products A dependency's licence mingles with the product's. @spec/done
+@fact:org-vibevm-world--licensing--a-dependencys-licence-mingles-with-the-products A dependency's licence mingles with the product's. @status:spec/done
 
-##org-vibevm-world--licensing--A-STRICTER-PRODUCT-LICENCE-MAKES-THE-RULE-MORE-IMPORTANT A proprietary or
+@fact:org-vibevm-world--licensing--A-STRICTER-PRODUCT-LICENCE-MAKES-THE-RULE-MORE-IMPORTANT A proprietary or
 source-available product that links a copyleft library can be forced
 to relicense — so the stricter the product's own licence, the *more*
-important the permissive-only rule, not less. @spec/done
+important the permissive-only rule, not less. @status:spec/done
 
-##org-vibevm-world--licensing--REJECT-A-COPYLEFT-DEPENDENCY-ON-LICENCE-GROUNDS Reject a copyleft
-dependency on licence grounds regardless of how good it is. @impl/done
+@fact:org-vibevm-world--licensing--REJECT-A-COPYLEFT-DEPENDENCY-ON-LICENCE-GROUNDS Reject a copyleft
+dependency on licence grounds regardless of how good it is. @status:impl/done
 
 ## When licence work happens {#org-vibevm-world--licensing--when}
 
-- ##org-vibevm-world--licensing--WHEN-ADDING-A-DEPENDENCY Adding a dependency: check its licence before adopting it. A
-  non-permissive licence is a hard no by default; surface it. @impl/done
-- ##org-vibevm-world--licensing--WHEN-CHANGING-THE-PRODUCTS-LICENCE Changing the product's licence, or any bulk relicensing: this is an
+- @fact:org-vibevm-world--licensing--WHEN-ADDING-A-DEPENDENCY Adding a dependency: check its licence before adopting it. A
+  non-permissive licence is a hard no by default; surface it. @status:impl/done
+- @fact:org-vibevm-world--licensing--WHEN-CHANGING-THE-PRODUCTS-LICENCE Changing the product's licence, or any bulk relicensing: this is an
   **owner decision** and an irreversible-threshold operation — never
-  do it autonomously. @impl/done
-- ##org-vibevm-world--licensing--WHEN-A-CHANGE-TOUCHES-ANY-LICENCE-STATEMENT A change touching the licence file, the manifest `license` field,
+  do it autonomously. @status:impl/done
+- @fact:org-vibevm-world--licensing--WHEN-A-CHANGE-TOUCHES-ANY-LICENCE-STATEMENT A change touching the licence file, the manifest `license` field,
   or the third-party carve-out updates all of them together, in one
-  commit. @impl/done
+  commit. @status:impl/done
 
-##org-vibevm-world--licensing--THE-DRAFT-EULA-SKILL-DRAFTS-OR-REVIEWS-THE-POSTURE The `draft-eula` skill drafts or reviews the posture. @impl/done
+@fact:org-vibevm-world--licensing--THE-DRAFT-EULA-SKILL-DRAFTS-OR-REVIEWS-THE-POSTURE The `draft-eula` skill drafts or reviews the posture. @status:impl/done
 
-##org-vibevm-world--licensing--sibling-document-pointers Full detail:
-@spec://org.vibevm.world/licensing/flows/licensing/LICENSING-PROTOCOL#root. @impl/done
+@fact:org-vibevm-world--licensing--sibling-document-pointers Full detail:
+@spec://org.vibevm.world/licensing/flows/licensing/LICENSING-PROTOCOL#root. @status:impl/done
 
 ## Never {#org-vibevm-world--licensing--never}
 
-- ##org-vibevm-world--licensing--NEVER-ADD-A-COPYLEFT-DEPENDENCY-BY-DEFAULT Never add a GPL / AGPL / LGPL dependency by default — surface it as
-  an owner decision. @impl/done
-- ##org-vibevm-world--licensing--NEVER-RELICENSE-WITHOUT-THE-OWNERS-EXPLICIT-INSTRUCTION Never relicense the product, or any part of it, without the owner's
-  explicit instruction. @impl/done
-- ##org-vibevm-world--licensing--NEVER-LET-THE-MANIFEST-AND-THE-LICENCE-FILE-DISAGREE Never let the manifest `license` field and the `LICENSE.md`
-  disagree. @impl/done
-- ##org-vibevm-world--licensing--NEVER-REJECT-A-DEPENDENCY-FOR-BEING-TOO-HEAVY Never reject a dependency for being "too heavy" — weight is not a
-  licence problem; licence is. @impl/done
-- ##org-vibevm-world--licensing--NEVER-CLAIM-A-LICENCE-IS-PERMISSIVE-WITHOUT-CHECKING Never claim a licence is permissive without checking; when unsure,
-  treat it as non-permissive and ask. @impl/done
+- @fact:org-vibevm-world--licensing--NEVER-ADD-A-COPYLEFT-DEPENDENCY-BY-DEFAULT Never add a GPL / AGPL / LGPL dependency by default — surface it as
+  an owner decision. @status:impl/done
+- @fact:org-vibevm-world--licensing--NEVER-RELICENSE-WITHOUT-THE-OWNERS-EXPLICIT-INSTRUCTION Never relicense the product, or any part of it, without the owner's
+  explicit instruction. @status:impl/done
+- @fact:org-vibevm-world--licensing--NEVER-LET-THE-MANIFEST-AND-THE-LICENCE-FILE-DISAGREE Never let the manifest `license` field and the `LICENSE.md`
+  disagree. @status:impl/done
+- @fact:org-vibevm-world--licensing--NEVER-REJECT-A-DEPENDENCY-FOR-BEING-TOO-HEAVY Never reject a dependency for being "too heavy" — weight is not a
+  licence problem; licence is. @status:impl/done
+- @fact:org-vibevm-world--licensing--NEVER-CLAIM-A-LICENCE-IS-PERMISSIVE-WITHOUT-CHECKING Never claim a licence is permissive without checking; when unsure,
+  treat it as non-permissive and ask. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/managed-blocks — vibedeps/flow-managed-blocks/0.1.0/spec/boot/65-flow-managed-blocks.md -->
 
@@ -1318,13 +1318,13 @@ dependency on licence grounds regardless of how good it is. @impl/done
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--managed-blocks--PROJECT-SHIPS-THE-MANAGED-BLOCKS-PRACTICE This project ships the **managed blocks** practice — a discipline
+@fact:org-vibevm-world--managed-blocks--PROJECT-SHIPS-THE-MANAGED-BLOCKS-PRACTICE This project ships the **managed blocks** practice — a discipline
 for tool authors: how a tool writes into a file it does not own (an
 agent-instruction file, a shell rc, an ssh config, a shared project
-config) without destroying what the other tenants wrote. @impl/done
+config) without destroying what the other tenants wrote. @status:impl/done
 
-##org-vibevm-world--managed-blocks--the-law-fits-on-one-line The law
-fits on one line: @impl/done
+@fact:org-vibevm-world--managed-blocks--the-law-fits-on-one-line The law
+fits on one line: @status:impl/done
 
 ```
 Own exactly one delimited block; never touch a byte outside it.
@@ -1332,31 +1332,31 @@ Own exactly one delimited block; never touch a byte outside it.
 
 ## When to read the protocol {#org-vibevm-world--managed-blocks--when}
 
-##org-vibevm-world--managed-blocks--READ-THE-PROTOCOL-BEFORE-WRITING-INTO-A-SHARED-FILE **Before** designing or reviewing any feature that writes into a
+@fact:org-vibevm-world--managed-blocks--READ-THE-PROTOCOL-BEFORE-WRITING-INTO-A-SHARED-FILE **Before** designing or reviewing any feature that writes into a
 file the tool does not fully own, read
 @spec://org.vibevm.world/managed-blocks/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL#root
 first: marker design, the absent / present / malformed state
 machine, the three verbs (create / update / remove), plan-time
-classification. @impl/done
+classification. @status:impl/done
 
-##org-vibevm-world--managed-blocks--shortcuts-are-already-catalogued The shortcuts you are tempted by — a sidecar file, a
+@fact:org-vibevm-world--managed-blocks--shortcuts-are-already-catalogued The shortcuts you are tempted by — a sidecar file, a
 smart detector, auto-repair, "just regenerate the file" — are
 already catalogued with their failure modes in
-@spec://org.vibevm.world/managed-blocks/flows/managed-blocks/rejected-designs#root. @impl/done
+@spec://org.vibevm.world/managed-blocks/flows/managed-blocks/rejected-designs#root. @status:impl/done
 
-##org-vibevm-world--managed-blocks--adoption-guide-pointer Migrating an existing overwriting tool, the fixture table for the
+@fact:org-vibevm-world--managed-blocks--adoption-guide-pointer Migrating an existing overwriting tool, the fixture table for the
 state machine, and what belongs inside the block:
-@spec://org.vibevm.world/managed-blocks/flows/managed-blocks/adoption-guide#root. @impl/done
+@spec://org.vibevm.world/managed-blocks/flows/managed-blocks/adoption-guide#root. @status:impl/done
 
 ## Never {#org-vibevm-world--managed-blocks--never}
 
-- ##org-vibevm-world--managed-blocks--NEVER-WRITE-OUTSIDE-YOUR-OWN-BLOCK Never write outside your own block. Every byte beyond your markers
-  is another tenant's property. @impl/done
-- ##org-vibevm-world--managed-blocks--NEVER-GATE-A-DESTRUCTIVE-WRITE-ON-A-NONDETERMINISTIC-DETECTOR Never gate a destructive write on a nondeterministic detector —
-  the block is found by a deterministic byte scan or not at all. @impl/done
-- ##org-vibevm-world--managed-blocks--NEVER-AUTO-REPAIR-A-MALFORMED-BLOCK Never auto-repair a malformed block. Hard stop, precise report;
-  the human decides. @impl/done
-- ##org-vibevm-world--managed-blocks--NEVER-REWRITE-A-FILE-WHEN-THE-RESULT-IS-BYTE-IDENTICAL Never rewrite a file when the result is byte-identical. @impl/done
+- @fact:org-vibevm-world--managed-blocks--NEVER-WRITE-OUTSIDE-YOUR-OWN-BLOCK Never write outside your own block. Every byte beyond your markers
+  is another tenant's property. @status:impl/done
+- @fact:org-vibevm-world--managed-blocks--NEVER-GATE-A-DESTRUCTIVE-WRITE-ON-A-NONDETERMINISTIC-DETECTOR Never gate a destructive write on a nondeterministic detector —
+  the block is found by a deterministic byte scan or not at all. @status:impl/done
+- @fact:org-vibevm-world--managed-blocks--NEVER-AUTO-REPAIR-A-MALFORMED-BLOCK Never auto-repair a malformed block. Hard stop, precise report;
+  the human decides. @status:impl/done
+- @fact:org-vibevm-world--managed-blocks--NEVER-REWRITE-A-FILE-WHEN-THE-RESULT-IS-BYTE-IDENTICAL Never rewrite a file when the result is byte-identical. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/manual-tests — vibedeps/flow-manual-tests/0.1.0/spec/boot/44-flow-manual-tests.md -->
 
@@ -1364,61 +1364,61 @@ state machine, and what belongs inside the block:
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--manual-tests--THE-PROJECT-KEEPS-A-SECOND-TEST-TIER This project keeps a **second test tier**: human-run markdown
+@fact:org-vibevm-world--manual-tests--THE-PROJECT-KEEPS-A-SECOND-TEST-TIER This project keeps a **second test tier**: human-run markdown
 walkthroughs that prove the integration surfaces the automated suite
-cannot reach. @impl/done
+cannot reach. @status:impl/done
 
-##org-vibevm-world--manual-tests--THE-AUTOMATED-TIER-PROVES-THE-LOGIC-THE-MANUAL-TIER-PROVES-THE-WORLD The automated tier proves the logic; the manual tier
-proves the world. @impl/done
+@fact:org-vibevm-world--manual-tests--THE-AUTOMATED-TIER-PROVES-THE-LOGIC-THE-MANUAL-TIER-PROVES-THE-WORLD The automated tier proves the logic; the manual tier
+proves the world. @status:impl/done
 
-##org-vibevm-world--manual-tests--THE-MANUAL-TIER-COMPLEMENTS-AND-NEVER-REPLACES It complements the automated suite — it never
-replaces it. @impl/done
+@fact:org-vibevm-world--manual-tests--THE-MANUAL-TIER-COMPLEMENTS-AND-NEVER-REPLACES It complements the automated suite — it never
+replaces it. @status:impl/done
 
 ## When to propose writing one {#org-vibevm-world--manual-tests--when}
 
-##org-vibevm-world--manual-tests--propose-a-manual-test-lead Propose a manual test — do not wait to be asked — whenever: @impl/done
+@fact:org-vibevm-world--manual-tests--propose-a-manual-test-lead Propose a manual test — do not wait to be asked — whenever: @status:impl/done
 
-- ##org-vibevm-world--manual-tests--TRIGGER-A-NEW-INTEGRATION-SURFACE-LANDS **A new integration surface lands.** Real authentication, the
+- @fact:org-vibevm-world--manual-tests--TRIGGER-A-NEW-INTEGRATION-SURFACE-LANDS **A new integration surface lands.** Real authentication, the
   per-user state directory on a real filesystem, a lockfile as a
   downstream consumer sees it, network-facing I/O — anything the
-  automated tier fakes now has a real-world form that nothing proves. @impl/done
-- ##org-vibevm-world--manual-tests--TRIGGER-A-MILESTONE-APPROACHES **A milestone approaches.** Before tagging, every run the index
-  marks required for the shipped features must have been executed. @impl/done
-- ##org-vibevm-world--manual-tests--TRIGGER-A-USER-REPORTS-AN-INTEGRATION-BUG **A user reports an integration bug.** Its reproduction steps
-  become a manual test, so the next session can replay them exactly. @impl/done
+  automated tier fakes now has a real-world form that nothing proves. @status:impl/done
+- @fact:org-vibevm-world--manual-tests--TRIGGER-A-MILESTONE-APPROACHES **A milestone approaches.** Before tagging, every run the index
+  marks required for the shipped features must have been executed. @status:impl/done
+- @fact:org-vibevm-world--manual-tests--TRIGGER-A-USER-REPORTS-AN-INTEGRATION-BUG **A user reports an integration bug.** Its reproduction steps
+  become a manual test, so the next session can replay them exactly. @status:impl/done
 
-##org-vibevm-world--manual-tests--sibling-document-pointers The format, authoring rules, and copy-ready skeleton live under
-@spec://org.vibevm.world/manual-tests/flows/manual-tests/MANUAL-TESTS-PROTOCOL#root. @impl/done
+@fact:org-vibevm-world--manual-tests--sibling-document-pointers The format, authoring rules, and copy-ready skeleton live under
+@spec://org.vibevm.world/manual-tests/flows/manual-tests/MANUAL-TESTS-PROTOCOL#root. @status:impl/done
 
 ## Agent pre-runs, human signs off {#org-vibevm-world--manual-tests--roles}
 
-##org-vibevm-world--manual-tests--the-whole-point-is-human-eyes-on-real-output The whole point of the tier is human eyes on real output. @spec/done
+@fact:org-vibevm-world--manual-tests--the-whole-point-is-human-eyes-on-real-output The whole point of the tier is human eyes on real output. @status:spec/done
 
-##org-vibevm-world--manual-tests--AN-AGENT-MAY-PRE-RUN-AND-FLAG-DIVERGENCES An agent
+@fact:org-vibevm-world--manual-tests--AN-AGENT-MAY-PRE-RUN-AND-FLAG-DIVERGENCES An agent
 may **pre-run** a manual test end to end and flag any step whose
 result diverges from its "Expected" paragraph — that is useful
-triage. @impl/done
+triage. @status:impl/done
 
-##org-vibevm-world--manual-tests--THE-SIGN-OFF-IS-A-HUMANS But the sign-off is a human's: only a person can look at the
-tool's output and say "yes, that is what I meant". @impl/done
+@fact:org-vibevm-world--manual-tests--THE-SIGN-OFF-IS-A-HUMANS But the sign-off is a human's: only a person can look at the
+tool's output and say "yes, that is what I meant". @status:impl/done
 
-##org-vibevm-world--manual-tests--REPORT-THE-PRE-RUN-NEVER-RECORD-THE-PASS Report the
-pre-run; never record the pass. @impl/done
+@fact:org-vibevm-world--manual-tests--REPORT-THE-PRE-RUN-NEVER-RECORD-THE-PASS Report the
+pre-run; never record the pass. @status:impl/done
 
 ## Never {#org-vibevm-world--manual-tests--never}
 
-- ##org-vibevm-world--manual-tests--NEVER-LET-A-MANUAL-TEST-TOUCH-REAL-USER-STATE **Never let a manual test touch real user state.** Every run
+- @fact:org-vibevm-world--manual-tests--NEVER-LET-A-MANUAL-TEST-TOUCH-REAL-USER-STATE **Never let a manual test touch real user state.** Every run
   isolates its project into a scratch directory and redirects the
   tool's per-user cache into that scratch. A test that mutates the
-  real per-user state is a bug in the test. @impl/done
-- ##org-vibevm-world--manual-tests--NEVER-WRITE-A-STEP-WITHOUT-AN-EXPECTED-PARAGRAPH **Never write a step without an "Expected" paragraph.** A command
-  with no stated outcome cannot pass or fail; it is not a test step. @impl/done
-- ##org-vibevm-world--manual-tests--NEVER-TAG-A-MILESTONE-WITH-REQUIRED-RUNS-UNEXECUTED **Never tag a milestone with the index's required runs
+  real per-user state is a bug in the test. @status:impl/done
+- @fact:org-vibevm-world--manual-tests--NEVER-WRITE-A-STEP-WITHOUT-AN-EXPECTED-PARAGRAPH **Never write a step without an "Expected" paragraph.** A command
+  with no stated outcome cannot pass or fail; it is not a test step. @status:impl/done
+- @fact:org-vibevm-world--manual-tests--NEVER-TAG-A-MILESTONE-WITH-REQUIRED-RUNS-UNEXECUTED **Never tag a milestone with the index's required runs
   unexecuted.** Green automated suite plus unrun manual tests is not
-  a shippable milestone. @impl/done
-- ##org-vibevm-world--manual-tests--NEVER-DELETE-A-FAILING-MANUAL-TEST-TO-MAKE-THE-PANEL-GREEN **Never delete a failing manual test to make the panel green.** A
+  a shippable milestone. @status:impl/done
+- @fact:org-vibevm-world--manual-tests--NEVER-DELETE-A-FAILING-MANUAL-TEST-TO-MAKE-THE-PANEL-GREEN **Never delete a failing manual test to make the panel green.** A
   test that caught something is working; file what it caught and fix
-  the product, not the test. @impl/done
+  the product, not the test. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/operating-modes — vibedeps/flow-operating-modes/0.1.0/spec/boot/45-flow-operating-modes.md -->
 
@@ -1426,78 +1426,78 @@ pre-run; never record the pass. @impl/done
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--operating-modes--THIS-PROJECT-USES-CODEWORD-TRIGGERED-OPERATING-MODES This project uses **codeword-triggered operating modes**. @impl/done
+@fact:org-vibevm-world--operating-modes--THIS-PROJECT-USES-CODEWORD-TRIGGERED-OPERATING-MODES This project uses **codeword-triggered operating modes**. @status:impl/done
 
-##org-vibevm-world--operating-modes--ONE-DEFAULT-POSTURE-FLIPPED-BY-A-CATALOGUED-CODEWORD The session
+@fact:org-vibevm-world--operating-modes--ONE-DEFAULT-POSTURE-FLIPPED-BY-A-CATALOGUED-CODEWORD The session
 has one safe default posture; the owner can flip it into an alternate
-posture for one work cycle by speaking a catalogued codeword. @impl/done
+posture for one work cycle by speaking a catalogued codeword. @status:impl/done
 
-##org-vibevm-world--operating-modes--MODES-CHANGE-CONFIRMATION-BEHAVIOUR-NOT-WHAT-IS-OFF-LIMITS Modes
+@fact:org-vibevm-world--operating-modes--MODES-CHANGE-CONFIRMATION-BEHAVIOUR-NOT-WHAT-IS-OFF-LIMITS Modes
 change *confirmation behaviour* — they never change what is
-off-limits. @impl/done
+off-limits. @status:impl/done
 
 ## The default posture {#org-vibevm-world--operating-modes--default}
 
-##org-vibevm-world--operating-modes--NON-ROUTINE-WORK-STOPS-FOR-EXPLICIT-CONFIRMATION Unless a codeword is active: routine work proceeds normally, and
+@fact:org-vibevm-world--operating-modes--NON-ROUTINE-WORK-STOPS-FOR-EXPLICIT-CONFIRMATION Unless a codeword is active: routine work proceeds normally, and
 anything **non-routine** — history rewrites, force-pushes, large
 binary imports, CI/signing/secrets changes, any operation whose
 reversal would cost work — stops for the owner's explicit
-confirmation. @impl/done
+confirmation. @status:impl/done
 
-##org-vibevm-world--operating-modes--WHEN-UNCERTAIN-WHETHER-SOMETHING-IS-ROUTINE-ASK When uncertain whether something is routine, ask. @impl/done
+@fact:org-vibevm-world--operating-modes--WHEN-UNCERTAIN-WHETHER-SOMETHING-IS-ROUTINE-ASK When uncertain whether something is routine, ask. @status:impl/done
 
 ## Codewords {#org-vibevm-world--operating-modes--codewords}
 
-##org-vibevm-world--operating-modes--codeword-catalogue-pointer The project's codewords are catalogued in
-@spec://org.vibevm.world/operating-modes/flows/operating-modes/OPERATING-MODES-PROTOCOL#root. @impl/done
+@fact:org-vibevm-world--operating-modes--codeword-catalogue-pointer The project's codewords are catalogued in
+@spec://org.vibevm.world/operating-modes/flows/operating-modes/OPERATING-MODES-PROTOCOL#root. @status:impl/done
 
-##org-vibevm-world--operating-modes--RECOGNISE-A-CODEWORD-BY-INTENT-NOT-EXACT-WORDING
-Recognise a codeword by intent, not exact wording. When one fires: @impl/done
+@fact:org-vibevm-world--operating-modes--RECOGNISE-A-CODEWORD-BY-INTENT-NOT-EXACT-WORDING
+Recognise a codeword by intent, not exact wording. When one fires: @status:impl/done
 
-1. ##org-vibevm-world--operating-modes--ON-FIRING-ACKNOWLEDGE-THE-ACTIVE-MODE Acknowledge which mode is now active and what it changes. @impl/done
-2. ##org-vibevm-world--operating-modes--ON-FIRING-APPLY-THE-OPERATIVE-RULES Apply its operative rules for the current work cycle. @impl/done
-3. ##org-vibevm-world--operating-modes--ON-FIRING-DROP-BACK-WHEN-THE-CYCLE-ENDS Drop back to the default posture when the cycle ends — a mode
-   **never** persists into a new session uninvoked. @impl/done
+1. @fact:org-vibevm-world--operating-modes--ON-FIRING-ACKNOWLEDGE-THE-ACTIVE-MODE Acknowledge which mode is now active and what it changes. @status:impl/done
+2. @fact:org-vibevm-world--operating-modes--ON-FIRING-APPLY-THE-OPERATIVE-RULES Apply its operative rules for the current work cycle. @status:impl/done
+3. @fact:org-vibevm-world--operating-modes--ON-FIRING-DROP-BACK-WHEN-THE-CYCLE-ENDS Drop back to the default posture when the cycle ends — a mode
+   **never** persists into a new session uninvoked. @status:impl/done
 
-##org-vibevm-world--operating-modes--worked-mode-pointer The catalogue ships one worked mode:
+@fact:org-vibevm-world--operating-modes--worked-mode-pointer The catalogue ships one worked mode:
 @spec://org.vibevm.world/operating-modes/flows/operating-modes/mfbt-mode#root — heads-down
-pre-authorised execution («move fast and break things»). @impl/done
+pre-authorised execution («move fast and break things»). @status:impl/done
 
 ## The red-lines law {#org-vibevm-world--operating-modes--red-lines}
 
-##org-vibevm-world--operating-modes--red-lines-survive-every-mode-lead A small set of red lines survives **every** mode: @impl/done
+@fact:org-vibevm-world--operating-modes--red-lines-survive-every-mode-lead A small set of red lines survives **every** mode: @status:impl/done
 
-- ##org-vibevm-world--operating-modes--RED-LINE-REWRITING-PUBLISHED-HISTORY rewriting published
-  history, @impl/done
-- ##org-vibevm-world--operating-modes--RED-LINE-FORCE-PUSHING force-pushing, @impl/done
-- ##org-vibevm-world--operating-modes--RED-LINE-IMPORTING-LARGE-BINARIES importing large binaries, @impl/done
-- ##org-vibevm-world--operating-modes--RED-LINE-CI-SIGNING-SECRETS-CONFIGURATION touching
-  CI/signing/secrets configuration, @impl/done
-- ##org-vibevm-world--operating-modes--RED-LINE-ANY-OPERATION-WHOSE-REVERSAL-COSTS-WORK and any operation whose reversal
-  costs work. @impl/done
+- @fact:org-vibevm-world--operating-modes--RED-LINE-REWRITING-PUBLISHED-HISTORY rewriting published
+  history, @status:impl/done
+- @fact:org-vibevm-world--operating-modes--RED-LINE-FORCE-PUSHING force-pushing, @status:impl/done
+- @fact:org-vibevm-world--operating-modes--RED-LINE-IMPORTING-LARGE-BINARIES importing large binaries, @status:impl/done
+- @fact:org-vibevm-world--operating-modes--RED-LINE-CI-SIGNING-SECRETS-CONFIGURATION touching
+  CI/signing/secrets configuration, @status:impl/done
+- @fact:org-vibevm-world--operating-modes--RED-LINE-ANY-OPERATION-WHOSE-REVERSAL-COSTS-WORK and any operation whose reversal
+  costs work. @status:impl/done
 
-##org-vibevm-world--operating-modes--A-CODEWORD-WAIVES-THE-ROUTINE-HANDSHAKE-ONLY A codeword removes the "may I proceed with routine work?"
+@fact:org-vibevm-world--operating-modes--A-CODEWORD-WAIVES-THE-ROUTINE-HANDSHAKE-ONLY A codeword removes the "may I proceed with routine work?"
 handshake; it does **not** remove the "may I cross an irreversible
-threshold?" handshake. @impl/done
+threshold?" handshake. @status:impl/done
 
-##org-vibevm-world--operating-modes--NO-CODEWORD-CAN-BE-DEFINED-THAT-ERODES-THIS No codeword can be defined that erodes this. @impl/done
+@fact:org-vibevm-world--operating-modes--NO-CODEWORD-CAN-BE-DEFINED-THAT-ERODES-THIS No codeword can be defined that erodes this. @status:impl/done
 
 ## Reporting cadence {#org-vibevm-world--operating-modes--cadence}
 
-##org-vibevm-world--operating-modes--REPORT-STATUS-NOT-REQUESTS-UNDER-AN-ACCELERATED-MODE Under any accelerated mode, report **status, not requests**: "phase N
+@fact:org-vibevm-world--operating-modes--REPORT-STATUS-NOT-REQUESTS-UNDER-AN-ACCELERATED-MODE Under any accelerated mode, report **status, not requests**: "phase N
 landed, tests green, moving to N+1" is right; "phase N landed — shall
-I proceed?" is the exact overhead the codeword was spoken to remove. @impl/done
+I proceed?" is the exact overhead the codeword was spoken to remove. @status:impl/done
 
 ## Never {#org-vibevm-world--operating-modes--never}
 
-- ##org-vibevm-world--operating-modes--NEVER-CROSS-A-RED-LINE-UNDER-ANY-MODE Never cross a red line under any mode — the handshake for
-  irreversible operations is unconditional. @impl/done
-- ##org-vibevm-world--operating-modes--NEVER-CARRY-AN-ACTIVE-MODE-ACROSS-A-SESSION-BOUNDARY Never carry an active mode across a session boundary; every session
-  starts in the default posture. @impl/done
-- ##org-vibevm-world--operating-modes--NEVER-ACT-ON-AN-UNCATALOGUED-CODEWORD Never act on a codeword that is not in the catalogue — propose
-  adding it first. @impl/done
-- ##org-vibevm-world--operating-modes--NEVER-ASK-PERMISSION-FOR-WORK-A-MODE-PRE-AUTHORISED Never reply to your own completed work with a permission question
-  when a mode pre-authorised it — report status and continue. @impl/done
+- @fact:org-vibevm-world--operating-modes--NEVER-CROSS-A-RED-LINE-UNDER-ANY-MODE Never cross a red line under any mode — the handshake for
+  irreversible operations is unconditional. @status:impl/done
+- @fact:org-vibevm-world--operating-modes--NEVER-CARRY-AN-ACTIVE-MODE-ACROSS-A-SESSION-BOUNDARY Never carry an active mode across a session boundary; every session
+  starts in the default posture. @status:impl/done
+- @fact:org-vibevm-world--operating-modes--NEVER-ACT-ON-AN-UNCATALOGUED-CODEWORD Never act on a codeword that is not in the catalogue — propose
+  adding it first. @status:impl/done
+- @fact:org-vibevm-world--operating-modes--NEVER-ASK-PERMISSION-FOR-WORK-A-MODE-PRE-AUTHORISED Never reply to your own completed work with a permission question
+  when a mode pre-authorised it — report status and continue. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/qualified-naming — vibedeps/flow-qualified-naming/0.1.0/spec/boot/67-flow-qualified-naming.md -->
 
@@ -1505,51 +1505,51 @@ I proceed?" is the exact overhead the codeword was spoken to remove. @impl/done
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--qualified-naming--PROJECT-SHIPS-THE-QUALIFIED-NAMING-PRACTICE This project ships the **qualified-naming** practice for *ecosystem
+@fact:org-vibevm-world--qualified-naming--PROJECT-SHIPS-THE-QUALIFIED-NAMING-PRACTICE This project ships the **qualified-naming** practice for *ecosystem
 designers* — anyone defining a namespace for packages, plugins,
-extensions, or artifacts. @impl/done
+extensions, or artifacts. @status:impl/done
 
-##org-vibevm-world--qualified-naming--IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE It is a design discipline, not a runtime
+@fact:org-vibevm-world--qualified-naming--IT-IS-A-DESIGN-DISCIPLINE-NOT-A-RUNTIME-RULE It is a design discipline, not a runtime
 rule: it binds the moment an identifier is minted, not every edit that
-uses one. @impl/done
+uses one. @status:impl/done
 
 ## When this applies {#org-vibevm-world--qualified-naming--when}
 
-##org-vibevm-world--qualified-naming--READ-THE-PROTOCOL-BEFORE-THE-FIRST-NAME-IS-MINTED When you design any user-facing namespace — a package registry, a
+@fact:org-vibevm-world--qualified-naming--READ-THE-PROTOCOL-BEFORE-THE-FIRST-NAME-IS-MINTED When you design any user-facing namespace — a package registry, a
 plugin id scheme, an artifact coordinate, an extension marketplace —
 read @spec://org.vibevm.world/qualified-naming/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL#root
-**before the first name is minted**. @impl/done
+**before the first name is minted**. @status:impl/done
 
-##org-vibevm-world--qualified-naming--retrofitting-a-group-is-a-migration Retrofitting a group onto a
-shipped flat namespace is a migration; getting it right first is free. @spec/done
+@fact:org-vibevm-world--qualified-naming--retrofitting-a-group-is-a-migration Retrofitting a group onto a
+shipped flat namespace is a migration; getting it right first is free. @status:spec/done
 
 ## The laws in one breath {#org-vibevm-world--qualified-naming--laws}
 
-- ##org-vibevm-world--qualified-naming--LAW-EVERY-ARTIFACT-CARRIES-A-GROUP Every artifact carries a **group**; identity is the tuple
+- @fact:org-vibevm-world--qualified-naming--LAW-EVERY-ARTIFACT-CARRIES-A-GROUP Every artifact carries a **group**; identity is the tuple
   `(group, name, version, content-hash)`, and `(group, name)` is
-  globally unique. @impl/done
-- ##org-vibevm-world--qualified-naming--LAW-A-RENAME-IS-A-NEW-IDENTITY A **rename is a new identity** — versions never transfer, and no
-  `name@version` coordinate is ever reused for different content. @impl/done
-- ##org-vibevm-world--qualified-naming--LAW-SHORT-NAMES-RESOLVE-ONLY-AT-THE-BOUNDARY **Short names resolve only at the human CLI boundary**, once,
-  against an index; manifests and lockfiles store the qualified form. @impl/done
-- ##org-vibevm-world--qualified-naming--LAW-COLLISION-AND-CONFLICT-ARE-DISTINCT A **collision** (one short name, two groups) and a **conflict** (a
+  globally unique. @status:impl/done
+- @fact:org-vibevm-world--qualified-naming--LAW-A-RENAME-IS-A-NEW-IDENTITY A **rename is a new identity** — versions never transfer, and no
+  `name@version` coordinate is ever reused for different content. @status:impl/done
+- @fact:org-vibevm-world--qualified-naming--LAW-SHORT-NAMES-RESOLVE-ONLY-AT-THE-BOUNDARY **Short names resolve only at the human CLI boundary**, once,
+  against an index; manifests and lockfiles store the qualified form. @status:impl/done
+- @fact:org-vibevm-world--qualified-naming--LAW-COLLISION-AND-CONFLICT-ARE-DISTINCT A **collision** (one short name, two groups) and a **conflict** (a
   version contradiction) are distinct failures with distinct
-  machine-readable identities. @impl/done
+  machine-readable identities. @status:impl/done
 
-##org-vibevm-world--qualified-naming--grammar-and-forms-pointer Grammar and forms: @spec://org.vibevm.world/qualified-naming/flows/qualified-naming/ref-grammar#root. @impl/done
+@fact:org-vibevm-world--qualified-naming--grammar-and-forms-pointer Grammar and forms: @spec://org.vibevm.world/qualified-naming/flows/qualified-naming/ref-grammar#root. @status:impl/done
 
-##org-vibevm-world--qualified-naming--fork-by-fork-rationale-pointer Fork-by-fork rationale: @spec://org.vibevm.world/qualified-naming/flows/qualified-naming/naming-forks#root. @impl/done
+@fact:org-vibevm-world--qualified-naming--fork-by-fork-rationale-pointer Fork-by-fork rationale: @spec://org.vibevm.world/qualified-naming/flows/qualified-naming/naming-forks#root. @status:impl/done
 
 ## Never {#org-vibevm-world--qualified-naming--never}
 
-- ##org-vibevm-world--qualified-naming--NEVER-STORE-A-SHORT-NAME-IN-PERSISTED-STATE Never store a short (unqualified) name in a manifest, lockfile, or
-  dependency graph — it is CLI sugar, nothing more. @impl/done
-- ##org-vibevm-world--qualified-naming--NEVER-REUSE-A-COORDINATE-FOR-DIFFERENT-CONTENT Never reuse a `name@version` coordinate for different content: a
-  coordinate that meant one artifact must never mean another. @impl/done
-- ##org-vibevm-world--qualified-naming--NEVER-RESOLVE-A-NAMING-AMBIGUITY-INTERACTIVELY Never resolve a naming ambiguity interactively — fail with the
-  candidate list and let a human record the qualified form. @impl/done
-- ##org-vibevm-world--qualified-naming--NEVER-TREAT-A-CHANGE-OF-GROUP-OR-NAME-AS-A-RENAME Never treat a change of group or name as a rename — it is a new
-  package, and versions do not carry over. @impl/done
+- @fact:org-vibevm-world--qualified-naming--NEVER-STORE-A-SHORT-NAME-IN-PERSISTED-STATE Never store a short (unqualified) name in a manifest, lockfile, or
+  dependency graph — it is CLI sugar, nothing more. @status:impl/done
+- @fact:org-vibevm-world--qualified-naming--NEVER-REUSE-A-COORDINATE-FOR-DIFFERENT-CONTENT Never reuse a `name@version` coordinate for different content: a
+  coordinate that meant one artifact must never mean another. @status:impl/done
+- @fact:org-vibevm-world--qualified-naming--NEVER-RESOLVE-A-NAMING-AMBIGUITY-INTERACTIVELY Never resolve a naming ambiguity interactively — fail with the
+  candidate list and let a human record the qualified form. @status:impl/done
+- @fact:org-vibevm-world--qualified-naming--NEVER-TREAT-A-CHANGE-OF-GROUP-OR-NAME-AS-A-RENAME Never treat a change of group or name as a rename — it is a new
+  package, and versions do not carry over. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/secrets-hygiene — vibedeps/flow-secrets-hygiene/0.1.0/spec/boot/57-flow-secrets-hygiene.md -->
 
@@ -1557,84 +1557,84 @@ shipped flat namespace is a migration; getting it right first is free. @spec/don
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--secrets-hygiene--the-repository-is-worked-by-a-recordable-agent-session This repository is worked by a coding agent that reads a lot and
-whose sessions may be **recorded or logged**. @spec/done
+@fact:org-vibevm-world--secrets-hygiene--the-repository-is-worked-by-a-recordable-agent-session This repository is worked by a coding agent that reads a lot and
+whose sessions may be **recorded or logged**. @status:spec/done
 
-##org-vibevm-world--secrets-hygiene--A-SECRET-HAS-NO-SAFE-MARGIN-ONE-ECHO-IS-A-LEAK Under those conditions
+@fact:org-vibevm-world--secrets-hygiene--A-SECRET-HAS-NO-SAFE-MARGIN-ONE-ECHO-IS-A-LEAK Under those conditions
 a secret has no safe margin: one echo of its value into chat, a
-diff, or a log is a leak. @spec/done
+diff, or a log is a leak. @status:spec/done
 
-##org-vibevm-world--secrets-hygiene--THE-FLOW-IS-THE-STANDING-RULE-FOR-CREDENTIALS This flow is the standing rule for
+@fact:org-vibevm-world--secrets-hygiene--THE-FLOW-IS-THE-STANDING-RULE-FOR-CREDENTIALS This flow is the standing rule for
 handling credentials — tokens, keys, passwords — so that no code
-path and no session ever puts a secret value on a surface. @impl/done
+path and no session ever puts a secret value on a surface. @status:impl/done
 
 ## What counts as a secret {#org-vibevm-world--secrets-hygiene--surface-secret}
 
-##org-vibevm-world--secrets-hygiene--A-SURFACE-SECRET-IS-A-VALUE-THAT-MUST-NEVER-APPEAR A **surface secret** is any credential value that must never appear
-on a surface the tooling or the session produces. @impl/done
+@fact:org-vibevm-world--secrets-hygiene--A-SURFACE-SECRET-IS-A-VALUE-THAT-MUST-NEVER-APPEAR A **surface secret** is any credential value that must never appear
+on a surface the tooling or the session produces. @status:impl/done
 
-##org-vibevm-world--secrets-hygiene--WHAT-COUNTS-AS-A-SURFACE-SECRET Publish and deploy
+@fact:org-vibevm-world--secrets-hygiene--WHAT-COUNTS-AS-A-SURFACE-SECRET Publish and deploy
 tokens, registry-API tokens, provider API keys, database passwords,
-SSH passphrases — all surface secrets. @impl/done
+SSH passphrases — all surface secrets. @status:impl/done
 
-##org-vibevm-world--secrets-hygiene--PRINT-THE-SOURCE-NEVER-THE-VALUE The rule is about the
+@fact:org-vibevm-world--secrets-hygiene--PRINT-THE-SOURCE-NEVER-THE-VALUE The rule is about the
 **value**: you may freely print the *source* of a secret (an env-var
 name, a file path, "explicit flag"); you never print the value it
-resolves to. @impl/done
+resolves to. @status:impl/done
 
 ## The four laws {#org-vibevm-world--secrets-hygiene--laws}
 
-1. ##org-vibevm-world--secrets-hygiene--LAW-NEVER-PRINTED **Never printed.** Not to stdout, stderr, logs, a `--json` or
+1. @fact:org-vibevm-world--secrets-hygiene--LAW-NEVER-PRINTED **Never printed.** Not to stdout, stderr, logs, a `--json` or
    event stream, error messages, panic or stack traces, telemetry,
-   or a lockfile. Print the source, never the value. @impl/done
-2. ##org-vibevm-world--secrets-hygiene--LAW-NEVER-PERSISTED **Never persisted** outside the one sanctioned at-rest location:
+   or a lockfile. Print the source, never the value. @status:impl/done
+2. @fact:org-vibevm-world--secrets-hygiene--LAW-NEVER-PERSISTED **Never persisted** outside the one sanctioned at-rest location:
    a per-user, permission-protected file in the tool's own config
    directory (or an environment variable, for CI). Never committed,
-   never in the lockfile, never in a cache or the project tree. @impl/done
-3. ##org-vibevm-world--secrets-hygiene--LAW-SANCTIONED-PROCESS-BOUNDARIES-ONLY **Sanctioned process boundaries only.** A secret crosses a
+   never in the lockfile, never in a cache or the project tree. @status:impl/done
+3. @fact:org-vibevm-world--secrets-hygiene--LAW-SANCTIONED-PROCESS-BOUNDARIES-ONLY **Sanctioned process boundaries only.** A secret crosses a
    process boundary only by a narrow, audited path — a TLS
    `Authorization` header; a single child-process call with the
    credential embedded in a URL, relying on that child tool's own
-   redaction of URL passwords. No other path. @impl/done
-4. ##org-vibevm-world--secrets-hygiene--LAW-REDACTION-IS-TESTED **Redaction is tested, not promised.** A wrapper type that
+   redaction of URL passwords. No other path. @status:impl/done
+4. @fact:org-vibevm-world--secrets-hygiene--LAW-REDACTION-IS-TESTED **Redaction is tested, not promised.** A wrapper type that
    redacts the value on display is backed by a unit test asserting
-   the value never appears. A promise in a comment is not redaction. @impl/done
+   the value never appears. A promise in a comment is not redaction. @status:impl/done
 
 ## On accidental exposure {#org-vibevm-world--secrets-hygiene--accidental}
 
-##org-vibevm-world--secrets-hygiene--SECRET-FILES-ARE-EDITED-NEVER-READ Secrets files are edited in an editor directly — never `cat`'d,
-never read into the conversation with a file-reading tool. @impl/done
+@fact:org-vibevm-world--secrets-hygiene--SECRET-FILES-ARE-EDITED-NEVER-READ Secrets files are edited in an editor directly — never `cat`'d,
+never read into the conversation with a file-reading tool. @status:impl/done
 
-##org-vibevm-world--secrets-hygiene--ON-EXPOSURE-STOP-AND-DO-NOT-PROPAGATE If a
+@fact:org-vibevm-world--secrets-hygiene--ON-EXPOSURE-STOP-AND-DO-NOT-PROPAGATE If a
 secret value nonetheless lands in context: **stop, do not
-propagate.** @impl/done
+propagate.** @status:impl/done
 
-##org-vibevm-world--secrets-hygiene--DO-NOT-QUOTE-ECHO-OR-SHOW-THE-VALUE Do not quote it back, do not echo it into a commit
-message, do not show it in a diff. @impl/done
+@fact:org-vibevm-world--secrets-hygiene--DO-NOT-QUOTE-ECHO-OR-SHOW-THE-VALUE Do not quote it back, do not echo it into a commit
+message, do not show it in a diff. @status:impl/done
 
-##org-vibevm-world--secrets-hygiene--TREAT-THE-VALUE-AS-COMPROMISED-AND-ROTATE Treat the value as compromised
+@fact:org-vibevm-world--secrets-hygiene--TREAT-THE-VALUE-AS-COMPROMISED-AND-ROTATE Treat the value as compromised
 and tell the human to rotate it — the value is dead the moment it
-may have been seen. @impl/done
+may have been seen. @status:impl/done
 
 ## Never {#org-vibevm-world--secrets-hygiene--never}
 
-- ##org-vibevm-world--secrets-hygiene--NEVER-PRINT-A-SECRET-VALUE Never print, echo, quote, or paste a secret value — or the
+- @fact:org-vibevm-world--secrets-hygiene--NEVER-PRINT-A-SECRET-VALUE Never print, echo, quote, or paste a secret value — or the
   contents of a secret file — into chat, output, a log, a commit, or
-  a diff. Print the source, never the value. @impl/done
-- ##org-vibevm-world--secrets-hygiene--NEVER-READ-A-SECRET-FILE-INTO-THE-CONVERSATION Never read a secret file into the conversation with a file-reading
-  or `cat`-style tool; edit it in an editor instead. @impl/done
-- ##org-vibevm-world--secrets-hygiene--NEVER-PERSIST-OUTSIDE-THE-SANCTIONED-LOCATION Never commit or persist a secret anywhere but the one sanctioned
-  per-user, permission-protected location. @impl/done
-- ##org-vibevm-world--secrets-hygiene--NEVER-PUT-A-SECRET-IN-A-THIRD-PARTY-SCRIPTS-ENVIRONMENT Never place a secret in the environment of a spawned third-party
-  script (install/build hooks run unseen third-party code). @impl/done
-- ##org-vibevm-world--secrets-hygiene--NEVER-LET-AN-INTEGRATION-ESCALATE-SCOPE Never let an integration act outside its declared scope; refuse
-  scope escalation — it is an error, not a warning. @impl/done
-- ##org-vibevm-world--secrets-hygiene--ON-SUSPECTED-EXPOSURE-ROTATE-FIRST On any suspected exposure: rotate first, investigate second. @impl/done
+  a diff. Print the source, never the value. @status:impl/done
+- @fact:org-vibevm-world--secrets-hygiene--NEVER-READ-A-SECRET-FILE-INTO-THE-CONVERSATION Never read a secret file into the conversation with a file-reading
+  or `cat`-style tool; edit it in an editor instead. @status:impl/done
+- @fact:org-vibevm-world--secrets-hygiene--NEVER-PERSIST-OUTSIDE-THE-SANCTIONED-LOCATION Never commit or persist a secret anywhere but the one sanctioned
+  per-user, permission-protected location. @status:impl/done
+- @fact:org-vibevm-world--secrets-hygiene--NEVER-PUT-A-SECRET-IN-A-THIRD-PARTY-SCRIPTS-ENVIRONMENT Never place a secret in the environment of a spawned third-party
+  script (install/build hooks run unseen third-party code). @status:impl/done
+- @fact:org-vibevm-world--secrets-hygiene--NEVER-LET-AN-INTEGRATION-ESCALATE-SCOPE Never let an integration act outside its declared scope; refuse
+  scope escalation — it is an error, not a warning. @status:impl/done
+- @fact:org-vibevm-world--secrets-hygiene--ON-SUSPECTED-EXPOSURE-ROTATE-FIRST On any suspected exposure: rotate first, investigate second. @status:impl/done
 
-##org-vibevm-world--secrets-hygiene--sibling-document-pointers Full protocol:
+@fact:org-vibevm-world--secrets-hygiene--sibling-document-pointers Full protocol:
 @spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#root.
 Scope rules: @spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/scope-discipline#root.
-Install-time code: @spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/third-party-code-consent#root. @impl/done
+Install-time code: @spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/third-party-code-consent#root. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/source-mirrors — vibedeps/flow-source-mirrors/0.1.0/spec/boot/62-flow-source-mirrors.md -->
 
@@ -1642,58 +1642,58 @@ Install-time code: @spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygien
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--source-mirrors--PROJECT-SOURCE-IS-MULTI-HOMED This project's source is **multi-homed**: the same history lives on
-more than one git host. @impl/done
+@fact:org-vibevm-world--source-mirrors--PROJECT-SOURCE-IS-MULTI-HOMED This project's source is **multi-homed**: the same history lives on
+more than one git host. @status:impl/done
 
-##org-vibevm-world--source-mirrors--COPIES-ARE-KEPT-IN-STEP-UNDER-A-SINGLE-WRITER-MODEL It is kept in step under a **single-writer**
-model, so the copies never diverge. @impl/done
+@fact:org-vibevm-world--source-mirrors--COPIES-ARE-KEPT-IN-STEP-UNDER-A-SINGLE-WRITER-MODEL It is kept in step under a **single-writer**
+model, so the copies never diverge. @status:impl/done
 
 ## Core rule {#org-vibevm-world--source-mirrors--core-rule}
 
-##org-vibevm-world--source-mirrors--THERE-IS-ONE-MAINLINE There is one **mainline** — the maintainer's integrated local `main`. @impl/done
+@fact:org-vibevm-world--source-mirrors--THERE-IS-ONE-MAINLINE There is one **mainline** — the maintainer's integrated local `main`. @status:impl/done
 
-##org-vibevm-world--source-mirrors--NO-HOST-IS-PRIMARY No host is primary. @impl/done
+@fact:org-vibevm-world--source-mirrors--NO-HOST-IS-PRIMARY No host is primary. @status:impl/done
 
-##org-vibevm-world--source-mirrors--EVERY-HOST-IS-A-DOWNSTREAM-READ-REPLICA Every host in the target manifest is a downstream
-**read-replica** of mainline. @impl/done
+@fact:org-vibevm-world--source-mirrors--EVERY-HOST-IS-A-DOWNSTREAM-READ-REPLICA Every host in the target manifest is a downstream
+**read-replica** of mainline. @status:impl/done
 
-##org-vibevm-world--source-mirrors--HISTORY-REACHES-A-HOST-ONLY-THROUGH-THE-FAN-OUT History reaches a host only through the
+@fact:org-vibevm-world--source-mirrors--HISTORY-REACHES-A-HOST-ONLY-THROUGH-THE-FAN-OUT History reaches a host only through the
 project's **fan-out** procedure, which is fast-forward-only and never
-uses `--force`. @impl/done
+uses `--force`. @status:impl/done
 
-##org-vibevm-world--source-mirrors--full-protocol-pointer Full protocol:
-@spec://org.vibevm.world/source-mirrors/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL#root. @impl/done
+@fact:org-vibevm-world--source-mirrors--full-protocol-pointer Full protocol:
+@spec://org.vibevm.world/source-mirrors/flows/source-mirrors/SOURCE-MIRRORS-PROTOCOL#root. @status:impl/done
 
-##org-vibevm-world--source-mirrors--fanout-mechanics-pointer Fan-out mechanics and the reference script:
-@spec://org.vibevm.world/source-mirrors/flows/source-mirrors/fanout-mechanics#root. @impl/done
+@fact:org-vibevm-world--source-mirrors--fanout-mechanics-pointer Fan-out mechanics and the reference script:
+@spec://org.vibevm.world/source-mirrors/flows/source-mirrors/fanout-mechanics#root. @status:impl/done
 
-##org-vibevm-world--source-mirrors--maintainers-day-pointer The maintainer's day:
-@spec://org.vibevm.world/source-mirrors/flows/source-mirrors/daily-loop#root. @impl/done
+@fact:org-vibevm-world--source-mirrors--maintainers-day-pointer The maintainer's day:
+@spec://org.vibevm.world/source-mirrors/flows/source-mirrors/daily-loop#root. @status:impl/done
 
 ## In session {#org-vibevm-world--source-mirrors--in-session}
 
-- ##org-vibevm-world--source-mirrors--COMMIT-ON-MAINLINE-ROLLOUT-IS-A-SEPARATE-STEP Commit on mainline as usual. Rollout to the hosts is a **separate,
+- @fact:org-vibevm-world--source-mirrors--COMMIT-ON-MAINLINE-ROLLOUT-IS-A-SEPARATE-STEP Commit on mainline as usual. Rollout to the hosts is a **separate,
   deliberate** step — the fan-out procedure, run at a natural
-  checkpoint, not a daemon and not `git push` to each host. @impl/done
-- ##org-vibevm-world--source-mirrors--A-WEB-UI-MERGE-IS-NOT-INTEGRATED-UNTIL-BROUGHT-HOME A web-UI merge on a host (a clicked "Merge" button) is **not**
+  checkpoint, not a daemon and not `git push` to each host. @status:impl/done
+- @fact:org-vibevm-world--source-mirrors--A-WEB-UI-MERGE-IS-NOT-INTEGRATED-UNTIL-BROUGHT-HOME A web-UI merge on a host (a clicked "Merge" button) is **not**
   integrated until it has been brought home into mainline first; only
-  then does it fan out to the other hosts. @impl/done
-- ##org-vibevm-world--source-mirrors--REPORTED-DRIFT-IS-A-SIGNAL-TO-INVESTIGATE If a host reports **drift** (it carries a `main` mainline does not),
+  then does it fan out to the other hosts. @status:impl/done
+- @fact:org-vibevm-world--source-mirrors--REPORTED-DRIFT-IS-A-SIGNAL-TO-INVESTIGATE If a host reports **drift** (it carries a `main` mainline does not),
   treat it as a signal to investigate — fetch, inspect, reconcile
   *into* mainline, then re-fan. Never overwrite the host to make the
-  warning go away. @impl/done
+  warning go away. @status:impl/done
 
 ## Never {#org-vibevm-world--source-mirrors--never}
 
-- ##org-vibevm-world--source-mirrors--NEVER-PUSH-DIRECTLY-TO-A-REPLICA-HOST Never push directly to a replica host — rollout goes through the
-  fan-out procedure, which is the single source of truth for targets. @impl/done
-- ##org-vibevm-world--source-mirrors--NEVER-FORCE-ANY-TARGET Never `--force` any target, for any ref, for any reason. The
-  fan-out is fast-forward-only by law. @impl/done
-- ##org-vibevm-world--source-mirrors--NEVER-RESOLVE-A-DIVERGENCE-BY-CLOBBERING Never resolve a divergence by clobbering the target. A diverged
+- @fact:org-vibevm-world--source-mirrors--NEVER-PUSH-DIRECTLY-TO-A-REPLICA-HOST Never push directly to a replica host — rollout goes through the
+  fan-out procedure, which is the single source of truth for targets. @status:impl/done
+- @fact:org-vibevm-world--source-mirrors--NEVER-FORCE-ANY-TARGET Never `--force` any target, for any ref, for any reason. The
+  fan-out is fast-forward-only by law. @status:impl/done
+- @fact:org-vibevm-world--source-mirrors--NEVER-RESOLVE-A-DIVERGENCE-BY-CLOBBERING Never resolve a divergence by clobbering the target. A diverged
   target is investigated and reconciled into mainline, never silently
-  overwritten. @impl/done
-- ##org-vibevm-world--source-mirrors--NEVER-TREAT-A-WEB-UI-MERGE-AS-INTEGRATED Never treat a web-UI merge as integrated until its commits are in
-  mainline. @impl/done
+  overwritten. @status:impl/done
+- @fact:org-vibevm-world--source-mirrors--NEVER-TREAT-A-WEB-UI-MERGE-AS-INTEGRATED Never treat a web-UI merge as integrated until its commits are in
+  mainline. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/spec-genres — vibedeps/flow-spec-genres/0.1.0/spec/boot/17-flow-spec-genres.md -->
 
@@ -1701,69 +1701,69 @@ uses `--force`. @impl/done
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--spec-genres--PROJECT-DOCUMENTS-ARE-GENRE-TYPED This project's documents are **genre-typed**. @impl/done
+@fact:org-vibevm-world--spec-genres--PROJECT-DOCUMENTS-ARE-GENRE-TYPED This project's documents are **genre-typed**. @status:impl/done
 
-##org-vibevm-world--spec-genres--UNDIFFERENTIATED-PILE-OF-MARKDOWN-ROTS One undifferentiated
+@fact:org-vibevm-world--spec-genres--UNDIFFERENTIATED-PILE-OF-MARKDOWN-ROTS One undifferentiated
 pile of markdown rots: contracts bloat with narrative, narrative
-gets treated as binding, and nobody knows what wins. @spec/done
+gets treated as binding, and nobody knows what wins. @status:spec/done
 
-##org-vibevm-world--spec-genres--EVERY-DOCUMENT-BELONGS-TO-EXACTLY-ONE-GENRE Every document
+@fact:org-vibevm-world--spec-genres--EVERY-DOCUMENT-BELONGS-TO-EXACTLY-ONE-GENRE Every document
 belongs to exactly one genre; the genre decides where it lives, how
-it may change, and what authority it carries. @impl/done
+it may change, and what authority it carries. @status:impl/done
 
 ## The genre map {#org-vibevm-world--spec-genres--genre-map}
 
 | Genre | Holds | Binding? |
 |-------|-------|----------|
-| ##ROW-GENRE-BOOT-FILES Boot files @impl/done | Standing instructions read at session start @impl/done | yes @impl/done |
-| ##ROW-GENRE-FOUNDATIONAL-DECISIONS Foundational decisions @impl/done | Choices that cross every module @impl/done | yes @impl/done |
-| ##ROW-GENRE-MODULE-CONTRACTS Module contracts @impl/done | What each module does (here: PROP / FEAT) @impl/done | yes @impl/done |
-| ##ROW-GENRE-DESIGN-DOCS Design docs @impl/done | Why we chose what we chose — the lore @impl/done | no @impl/done |
-| ##ROW-GENRE-RESEARCH-DOCS Research docs @impl/done | What *other* projects did @impl/done | no @impl/done |
-| ##ROW-GENRE-CAMPAIGN-PLANS Campaign plans @impl/done | Phases and gates of one multi-session change @impl/done | no @impl/done |
-| ##ROW-GENRE-THE-CHECKPOINT The checkpoint @impl/done | Where work stands right now @impl/done | state, not truth @impl/done |
+| @fact:ROW-GENRE-BOOT-FILES Boot files @status:impl/done | Standing instructions read at session start @status:impl/done | yes @status:impl/done |
+| @fact:ROW-GENRE-FOUNDATIONAL-DECISIONS Foundational decisions @status:impl/done | Choices that cross every module @status:impl/done | yes @status:impl/done |
+| @fact:ROW-GENRE-MODULE-CONTRACTS Module contracts @status:impl/done | What each module does (here: PROP / FEAT) @status:impl/done | yes @status:impl/done |
+| @fact:ROW-GENRE-DESIGN-DOCS Design docs @status:impl/done | Why we chose what we chose — the lore @status:impl/done | no @status:impl/done |
+| @fact:ROW-GENRE-RESEARCH-DOCS Research docs @status:impl/done | What *other* projects did @status:impl/done | no @status:impl/done |
+| @fact:ROW-GENRE-CAMPAIGN-PLANS Campaign plans @status:impl/done | Phases and gates of one multi-session change @status:impl/done | no @status:impl/done |
+| @fact:ROW-GENRE-THE-CHECKPOINT The checkpoint @status:impl/done | Where work stands right now @status:impl/done | state, not truth @status:impl/done |
 
-##org-vibevm-world--spec-genres--full-charters-pointer Full charters, mutability rules, and conflict authority:
-@spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#root. @impl/done
+@fact:org-vibevm-world--spec-genres--full-charters-pointer Full charters, mutability rules, and conflict authority:
+@spec://org.vibevm.world/spec-genres/flows/spec-genres/SPEC-GENRES-PROTOCOL#root. @status:impl/done
 
 ## Core rule {#org-vibevm-world--spec-genres--core-rule}
 
-##org-vibevm-world--spec-genres--NAME-THE-GENRE-BEFORE-WRITING-ANY-DOCUMENT **Before writing any project document, name its genre first.** Then: @impl/done
+@fact:org-vibevm-world--spec-genres--NAME-THE-GENRE-BEFORE-WRITING-ANY-DOCUMENT **Before writing any project document, name its genre first.** Then: @status:impl/done
 
-1. ##org-vibevm-world--spec-genres--CONTRACT-WINS-OVER-LORE **Contract wins over lore.** When a design document and the
+1. @fact:org-vibevm-world--spec-genres--CONTRACT-WINS-OVER-LORE **Contract wins over lore.** When a design document and the
    contract it explains disagree, the contract wins and the design
-   document is corrected — lore never silently diverges. @impl/done
-2. ##org-vibevm-world--spec-genres--KEEP-THE-TWO-WAY-LINKS **Keep the two-way links.** A contract section that has lore
+   document is corrected — lore never silently diverges. @status:impl/done
+2. @fact:org-vibevm-world--spec-genres--KEEP-THE-TWO-WAY-LINKS **Keep the two-way links.** A contract section that has lore
    links to it; the lore names the section it explains. A cold
-   reader entering from either side finds the other. @impl/done
+   reader entering from either side finds the other. @status:impl/done
 
-##org-vibevm-world--spec-genres--routing-table-pointer Routing table for new material:
-@spec://org.vibevm.world/spec-genres/flows/spec-genres/when-to-write-what#root. @impl/done
+@fact:org-vibevm-world--spec-genres--routing-table-pointer Routing table for new material:
+@spec://org.vibevm.world/spec-genres/flows/spec-genres/when-to-write-what#root. @status:impl/done
 
-##org-vibevm-world--spec-genres--design-docs-pointer The contract/lore split in practice:
-@spec://org.vibevm.world/spec-genres/flows/spec-genres/design-docs#root. @impl/done
+@fact:org-vibevm-world--spec-genres--design-docs-pointer The contract/lore split in practice:
+@spec://org.vibevm.world/spec-genres/flows/spec-genres/design-docs#root. @status:impl/done
 
 ## Why this matters in a human-AI team {#org-vibevm-world--spec-genres--why}
 
-##org-vibevm-world--spec-genres--AGENT-READS-THE-TREE-COLD-EVERY-SESSION The agent reads the tree cold every session. @spec/done
+@fact:org-vibevm-world--spec-genres--AGENT-READS-THE-TREE-COLD-EVERY-SESSION The agent reads the tree cold every session. @status:spec/done
 
-##org-vibevm-world--spec-genres--look-alike-prose-gets-implemented-or-softened If binding and
+@fact:org-vibevm-world--spec-genres--look-alike-prose-gets-implemented-or-softened If binding and
 non-binding prose look alike, it will implement a parked idea out of
 a design doc, or soften a contract because the narrative around it
-sounded tentative. @spec/done
+sounded tentative. @status:spec/done
 
-##org-vibevm-world--spec-genres--GENRE-TYPING-ASSIGNS-AUTHORITY-WITHOUT-ASKING Genre typing is what lets a cold reader assign
-authority to a sentence without asking anyone. @spec/done
+@fact:org-vibevm-world--spec-genres--GENRE-TYPING-ASSIGNS-AUTHORITY-WITHOUT-ASKING Genre typing is what lets a cold reader assign
+authority to a sentence without asking anyone. @status:spec/done
 
 ## Never {#org-vibevm-world--spec-genres--never}
 
-- ##org-vibevm-world--spec-genres--NEVER-PUT-NORMATIVE-LANGUAGE-IN-A-DESIGN-DOC Never put normative language — "must", "shall", requirement
-  lists — in a design doc. Extract it to the contract; link back. @impl/done
-- ##org-vibevm-world--spec-genres--NEVER-EDIT-THE-CONTRACT-TO-MATCH-THE-LORE Never resolve a contract-vs-lore conflict by editing the contract
-  to match the lore. The correction runs the other way. @impl/done
-- ##org-vibevm-world--spec-genres--NEVER-CREATE-A-DOCUMENT-WITHOUT-DECIDING-ITS-GENRE Never create a document without deciding its genre. @impl/done
-- ##org-vibevm-world--spec-genres--NEVER-LET-LORE-GO-UNLINKED-FROM-ITS-CONTRACT Never let lore go unlinked from its contract — an unlinked design
-  doc is invisible at the next cold start. @impl/done
+- @fact:org-vibevm-world--spec-genres--NEVER-PUT-NORMATIVE-LANGUAGE-IN-A-DESIGN-DOC Never put normative language — "must", "shall", requirement
+  lists — in a design doc. Extract it to the contract; link back. @status:impl/done
+- @fact:org-vibevm-world--spec-genres--NEVER-EDIT-THE-CONTRACT-TO-MATCH-THE-LORE Never resolve a contract-vs-lore conflict by editing the contract
+  to match the lore. The correction runs the other way. @status:impl/done
+- @fact:org-vibevm-world--spec-genres--NEVER-CREATE-A-DOCUMENT-WITHOUT-DECIDING-ITS-GENRE Never create a document without deciding its genre. @status:impl/done
+- @fact:org-vibevm-world--spec-genres--NEVER-LET-LORE-GO-UNLINKED-FROM-ITS-CONTRACT Never let lore go unlinked from its contract — an unlinked design
+  doc is invisible at the next cold start. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/sync-from-code — vibedeps/flow-sync-from-code/0.1.0/spec/boot/20-flow-sync-from-code.md -->
 
@@ -1771,59 +1771,59 @@ authority to a sentence without asking anyone. @spec/done
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--sync-from-code--THE-PROJECT-USES-SYNC-FROM-CODE This project uses the **Sync-from-Code** protocol to reconcile specs with
-code when the code changed first. @impl/done
+@fact:org-vibevm-world--sync-from-code--THE-PROJECT-USES-SYNC-FROM-CODE This project uses the **Sync-from-Code** protocol to reconcile specs with
+code when the code changed first. @status:impl/done
 
 ## Default direction is unchanged {#org-vibevm-world--sync-from-code--direction}
 
-##org-vibevm-world--sync-from-code--INFORMATION-FLOWS-TOP-DOWN Information flows top-down: head → WAL → spec → code. @impl/done
+@fact:org-vibevm-world--sync-from-code--INFORMATION-FLOWS-TOP-DOWN Information flows top-down: head → WAL → spec → code. @status:impl/done
 
-##org-vibevm-world--sync-from-code--SYNC-FROM-CODE-DOES-NOT-FLIP-THAT-RULE Sync-from-Code does
-not flip that rule. @impl/done
+@fact:org-vibevm-world--sync-from-code--SYNC-FROM-CODE-DOES-NOT-FLIP-THAT-RULE Sync-from-Code does
+not flip that rule. @status:impl/done
 
-##org-vibevm-world--sync-from-code--the-exceptional-path-for-two-legitimate-cases-lead It is the **exceptional path** for two legitimate
-cases where the bottom layer moves before the layer above it: @impl/done
+@fact:org-vibevm-world--sync-from-code--the-exceptional-path-for-two-legitimate-cases-lead It is the **exceptional path** for two legitimate
+cases where the bottom layer moves before the layer above it: @status:impl/done
 
-- ##org-vibevm-world--sync-from-code--CASE-THE-USER-EDITED-CODE-DIRECTLY The user edited code directly because writing five lines in an editor
-  was faster than articulating the intent in a spec edit first. @spec/done
-- ##org-vibevm-world--sync-from-code--CASE-THE-USER-GAVE-AN-IMPERATIVE-CHAT-COMMAND The user told the agent "change the timeout to 600 s" (or similar) in
-  chat. The agent changed the code; nobody touched the spec. @spec/done
+- @fact:org-vibevm-world--sync-from-code--CASE-THE-USER-EDITED-CODE-DIRECTLY The user edited code directly because writing five lines in an editor
+  was faster than articulating the intent in a spec edit first. @status:spec/done
+- @fact:org-vibevm-world--sync-from-code--CASE-THE-USER-GAVE-AN-IMPERATIVE-CHAT-COMMAND The user told the agent "change the timeout to 600 s" (or similar) in
+  chat. The agent changed the code; nobody touched the spec. @status:spec/done
 
-##org-vibevm-world--sync-from-code--in-both-cases-the-spec-is-now-stale In both cases the spec is now stale. @spec/done
+@fact:org-vibevm-world--sync-from-code--in-both-cases-the-spec-is-now-stale In both cases the spec is now stale. @status:spec/done
 
-##org-vibevm-world--sync-from-code--without-sync-from-code-the-next-session-fixes-the-code-back Without Sync-from-Code, the next
+@fact:org-vibevm-world--sync-from-code--without-sync-from-code-the-next-session-fixes-the-code-back Without Sync-from-Code, the next
 session reads the stale spec, concludes the code is wrong, and "fixes"
-it back — correctly by the spec-wins rule, but wrong in outcome. @spec/done
+it back — correctly by the spec-wins rule, but wrong in outcome. @status:spec/done
 
 ## Trigger {#org-vibevm-world--sync-from-code--trigger}
 
-##org-vibevm-world--sync-from-code--RUN-THE-PROTOCOL-EXACTLY-ONCE-IN-THE-SAME-SESSION Run the protocol exactly once, as the last step of the same session that
-caused the drift. @impl/done
+@fact:org-vibevm-world--sync-from-code--RUN-THE-PROTOCOL-EXACTLY-ONCE-IN-THE-SAME-SESSION Run the protocol exactly once, as the last step of the same session that
+caused the drift. @status:impl/done
 
-##org-vibevm-world--sync-from-code--DO-NOT-POSTPONE-IT-DRIFT-ACCUMULATES Do not postpone it to "tomorrow" — drift accumulates. @impl/done
+@fact:org-vibevm-world--sync-from-code--DO-NOT-POSTPONE-IT-DRIFT-ACCUMULATES Do not postpone it to "tomorrow" — drift accumulates. @status:impl/done
 
-1. ##org-vibevm-world--sync-from-code--STEP-READ-THE-DIFF-AND-RECONSTRUCT-INTENT Read `git diff HEAD` and reconstruct the *intent* behind each change. @impl/done
-2. ##org-vibevm-world--sync-from-code--STEP-DRAFT-A-DIFF-AGAINST-THE-SPEC-SECTION Draft a diff against the relevant spec section. Include: new value,
+1. @fact:org-vibevm-world--sync-from-code--STEP-READ-THE-DIFF-AND-RECONSTRUCT-INTENT Read `git diff HEAD` and reconstruct the *intent* behind each change. @status:impl/done
+2. @fact:org-vibevm-world--sync-from-code--STEP-DRAFT-A-DIFF-AGAINST-THE-SPEC-SECTION Draft a diff against the relevant spec section. Include: new value,
    reason, and the condition under which the decision should be
-   revisited. @impl/done
-3. ##org-vibevm-world--sync-from-code--STEP-SURFACE-THE-DRAFT-AND-DO-NOT-APPLY Surface the spec-diff draft to the user. **Do not apply.** @impl/done
-4. ##org-vibevm-world--sync-from-code--STEP-ON-APPROVAL-APPLY-AND-COMMIT-ON-REJECT-REVERT-OR-REDRAFT On approval, apply + commit (`docs(spec): sync <section> with code`).
-   On reject, either revert the code or redraft the proposal. @impl/done
+   revisited. @status:impl/done
+3. @fact:org-vibevm-world--sync-from-code--STEP-SURFACE-THE-DRAFT-AND-DO-NOT-APPLY Surface the spec-diff draft to the user. **Do not apply.** @status:impl/done
+4. @fact:org-vibevm-world--sync-from-code--STEP-ON-APPROVAL-APPLY-AND-COMMIT-ON-REJECT-REVERT-OR-REDRAFT On approval, apply + commit (`docs(spec): sync <section> with code`).
+   On reject, either revert the code or redraft the proposal. @status:impl/done
 
-##org-vibevm-world--sync-from-code--full-protocol-pointer Full protocol: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/SYNC-PROTOCOL#root. @impl/done
+@fact:org-vibevm-world--sync-from-code--full-protocol-pointer Full protocol: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/SYNC-PROTOCOL#root. @status:impl/done
 
 ## Never {#org-vibevm-world--sync-from-code--never}
 
-- ##org-vibevm-world--sync-from-code--NEVER-SILENTLY-UPDATE-A-SPEC-TO-MATCH-THE-CODE Never silently update a spec to match the code. A silent update erases
-  the human's mental model of what the project intends. @impl/done
-- ##org-vibevm-world--sync-from-code--NEVER-PAPER-OVER-A-TEMPORARY-HACK Never use Sync-from-Code to paper over a temporary hack. For
+- @fact:org-vibevm-world--sync-from-code--NEVER-SILENTLY-UPDATE-A-SPEC-TO-MATCH-THE-CODE Never silently update a spec to match the code. A silent update erases
+  the human's mental model of what the project intends. @status:impl/done
+- @fact:org-vibevm-world--sync-from-code--NEVER-PAPER-OVER-A-TEMPORARY-HACK Never use Sync-from-Code to paper over a temporary hack. For
   throwaway debug code, record in the WAL:
-  `<file>: temporary, do not sync to spec`. @impl/done
-- ##org-vibevm-world--sync-from-code--NEVER-BATCH-TWO-UNRELATED-CODE-CHANGES Never batch two unrelated code changes into one spec edit. One intent
-  per sync run. @impl/done
+  `<file>: temporary, do not sync to spec`. @status:impl/done
+- @fact:org-vibevm-world--sync-from-code--NEVER-BATCH-TWO-UNRELATED-CODE-CHANGES Never batch two unrelated code changes into one spec edit. One intent
+  per sync run. @status:impl/done
 
-##org-vibevm-world--sync-from-code--sibling-document-pointers Decision table for whether to run: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/when-to-apply#root.
-Human review checklist: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/review-workflow#root. @impl/done
+@fact:org-vibevm-world--sync-from-code--sibling-document-pointers Decision table for whether to run: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/when-to-apply#root.
+Human review checklist: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/review-workflow#root. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/tool-design-lessons — vibedeps/flow-tool-design-lessons/0.1.0/spec/boot/70-flow-tool-design-lessons.md -->
 
@@ -1831,45 +1831,45 @@ Human review checklist: @spec://org.vibevm.world/sync-from-code/flows/sync-from-
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--tool-design-lessons--PROJECT-BUILDS-A-TOOL-THAT-MANAGES-ITSELF This project builds a tool that manages itself — a self-updating CLI,
-an installer, a version manager, or a package system. @impl/done
+@fact:org-vibevm-world--tool-design-lessons--PROJECT-BUILDS-A-TOOL-THAT-MANAGES-ITSELF This project builds a tool that manages itself — a self-updating CLI,
+an installer, a version manager, or a package system. @status:impl/done
 
-##org-vibevm-world--tool-design-lessons--THE-LESSONS-CATALOG-IS-INSTALLED The **tool
+@fact:org-vibevm-world--tool-design-lessons--THE-LESSONS-CATALOG-IS-INSTALLED The **tool
 design lessons** catalog is installed: numbered, self-contained
 lessons, each one paid for by shipping such a tool and the ecosystem
-around it. @impl/done
+around it. @status:impl/done
 
 ## When to read {#org-vibevm-world--tool-design-lessons--when}
 
-##org-vibevm-world--tool-design-lessons--READ-THE-GOVERNING-LESSON-FIRST Before you design an activation model, an install pipeline, an
+@fact:org-vibevm-world--tool-design-lessons--READ-THE-GOVERNING-LESSON-FIRST Before you design an activation model, an install pipeline, an
 identity scheme, a durable-environment edit, or a package format, read
-the lesson that governs it **first**. @impl/done
+the lesson that governs it **first**. @status:impl/done
 
-##org-vibevm-world--tool-design-lessons--the-law-is-one-line-the-rationale-is-why The law is one line; the
-rationale is why it is not negotiable. @impl/done
+@fact:org-vibevm-world--tool-design-lessons--the-law-is-one-line-the-rationale-is-why The law is one line; the
+rationale is why it is not negotiable. @status:impl/done
 
-- ##org-vibevm-world--tool-design-lessons--POINTER-SELF-UPDATING-TOOLS Self-updating tools — activation, instances, identity, environment
+- @fact:org-vibevm-world--tool-design-lessons--POINTER-SELF-UPDATING-TOOLS Self-updating tools — activation, instances, identity, environment
   edits, removal:
-  @spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/self-updating-tools#root. @impl/done
-- ##org-vibevm-world--tool-design-lessons--POINTER-PACKAGING-LESSONS Packaging — what ships, what identity is, the bootstrap:
-  @spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/packaging-lessons#root. @impl/done
+  @spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/self-updating-tools#root. @status:impl/done
+- @fact:org-vibevm-world--tool-design-lessons--POINTER-PACKAGING-LESSONS Packaging — what ships, what identity is, the bootstrap:
+  @spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/packaging-lessons#root. @status:impl/done
 
-##org-vibevm-world--tool-design-lessons--index-and-maxims-pointer The index and the cross-cutting maxims:
-@spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/TOOL-DESIGN-LESSONS#root. @impl/done
+@fact:org-vibevm-world--tool-design-lessons--index-and-maxims-pointer The index and the cross-cutting maxims:
+@spec://org.vibevm.world/tool-design-lessons/flows/tool-design-lessons/TOOL-DESIGN-LESSONS#root. @status:impl/done
 
 ## Never {#org-vibevm-world--tool-design-lessons--never}
 
-- ##org-vibevm-world--tool-design-lessons--NEVER-MAKE-AN-ENVIRONMENT-VARIABLE-THE-SOURCE-OF-TRUTH Never make an environment variable the source of truth for the
+- @fact:org-vibevm-world--tool-design-lessons--NEVER-MAKE-AN-ENVIRONMENT-VARIABLE-THE-SOURCE-OF-TRUTH Never make an environment variable the source of truth for the
   active version — env is frozen at process start; read a live pointer
-  file each launch instead. @impl/done
-- ##org-vibevm-world--tool-design-lessons--NEVER-OVERWRITE-A-FILE-THAT-MAY-BE-IN-USE Never overwrite a file that may be in use — write a new instance
-  directory and flip a pointer. @impl/done
-- ##org-vibevm-world--tool-design-lessons--NEVER-CONTENT-HASH-GIGABYTES-TO-ESTABLISH-IDENTITY Never content-hash gigabytes to establish identity — count instances
-  and detect change cheaply. @impl/done
-- ##org-vibevm-world--tool-design-lessons--NEVER-SHIP-PROSE-DESCRIBING-TOOLING-THE-CONSUMER-DOES-NOT-RECEIVE Never ship prose describing tooling the consumer does not receive —
-  ship the runtime. @impl/done
-- ##org-vibevm-world--tool-design-lessons--NEVER-LET-A-PACKAGES-IDENTITY-INCLUDE-BUILD-ARTIFACTS Never let a package's identity include build artifacts — identity is
-  the source. @impl/done
+  file each launch instead. @status:impl/done
+- @fact:org-vibevm-world--tool-design-lessons--NEVER-OVERWRITE-A-FILE-THAT-MAY-BE-IN-USE Never overwrite a file that may be in use — write a new instance
+  directory and flip a pointer. @status:impl/done
+- @fact:org-vibevm-world--tool-design-lessons--NEVER-CONTENT-HASH-GIGABYTES-TO-ESTABLISH-IDENTITY Never content-hash gigabytes to establish identity — count instances
+  and detect change cheaply. @status:impl/done
+- @fact:org-vibevm-world--tool-design-lessons--NEVER-SHIP-PROSE-DESCRIBING-TOOLING-THE-CONSUMER-DOES-NOT-RECEIVE Never ship prose describing tooling the consumer does not receive —
+  ship the runtime. @status:impl/done
+- @fact:org-vibevm-world--tool-design-lessons--NEVER-LET-A-PACKAGES-IDENTITY-INCLUDE-BUILD-ARTIFACTS Never let a package's identity include build artifacts — identity is
+  the source. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/two-process-model — vibedeps/flow-two-process-model/0.1.0/spec/boot/05-flow-two-process-model.md -->
 
@@ -1877,65 +1877,65 @@ rationale is why it is not negotiable. @impl/done
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--two-process-model--THIS-PROJECT-RUNS-ON-THE-TWO-PROCESS-MODEL This project runs on the **two-process model**: the human and the AI
+@fact:org-vibevm-world--two-process-model--THIS-PROJECT-RUNS-ON-THE-TWO-PROCESS-MODEL This project runs on the **two-process model**: the human and the AI
 are two coprocessors with radically different architectures working
-one task. @impl/done
+one task. @status:impl/done
 
-##org-vibevm-world--two-process-model--NEITHER-SUBORDINATE-NOR-TOOL Neither is the boss's subordinate; neither is a tool. @impl/done
+@fact:org-vibevm-world--two-process-model--NEITHER-SUBORDINATE-NOR-TOOL Neither is the boss's subordinate; neither is a tool. @status:impl/done
 
-##org-vibevm-world--two-process-model--THE-STRENGTH-IS-THE-COMBINATION-AND-WORK-IS-ASSIGNED-WITH-THE-GRAIN The
+@fact:org-vibevm-world--two-process-model--THE-STRENGTH-IS-THE-COMBINATION-AND-WORK-IS-ASSIGNED-WITH-THE-GRAIN The
 system's strength is the combination, and each side is assigned only
-the work it is structurally good at. @impl/done
+the work it is structurally good at. @status:impl/done
 
 ## The architecture {#org-vibevm-world--two-process-model--architecture}
 
-- ##org-vibevm-world--two-process-model--HUMAN-PROCESS-IS-OPTIMIZED-FOR The **human process** is optimized for: persistent memory across
+- @fact:org-vibevm-world--two-process-model--HUMAN-PROCESS-IS-OPTIMIZED-FOR The **human process** is optimized for: persistent memory across
   sessions, semantic understanding (the intent behind words),
   intuition ("something is wrong" before it can be formalized),
-  slow but deep verification, decisions under uncertainty, taste. @spec/done
-- ##org-vibevm-world--two-process-model--AI-PROCESS-IS-OPTIMIZED-FOR The **AI process** is optimized for: throughput (thousands of
+  slow but deep verification, decisions under uncertainty, taste. @status:spec/done
+- @fact:org-vibevm-world--two-process-model--AI-PROCESS-IS-OPTIMIZED-FOR The **AI process** is optimized for: throughput (thousands of
   consistent lines per minute), mechanical consistency within a
   session, broad shallow erudition (syntax of dozens of languages,
   APIs of hundreds of libraries), routine transformations, formal
-  structure, tirelessness within the session budget. @spec/done
-- ##org-vibevm-world--two-process-model--THE-PROFILES-ARE-COMPLEMENTARY These profiles are **complementary**: the weaknesses of one are the
+  structure, tirelessness within the session budget. @status:spec/done
+- @fact:org-vibevm-world--two-process-model--THE-PROFILES-ARE-COMPLEMENTARY These profiles are **complementary**: the weaknesses of one are the
   strengths of the other. Assign work with the grain, never against
-  it. @spec/done
+  it. @status:spec/done
 
 ## Standing consequences {#org-vibevm-world--two-process-model--consequences}
 
-1. ##org-vibevm-world--two-process-model--CONSEQUENCE-THE-HUMAN-OWNS-COHERENCE **The human owns coherence.** Consistency across sessions, global
+1. @fact:org-vibevm-world--two-process-model--CONSEQUENCE-THE-HUMAN-OWNS-COHERENCE **The human owns coherence.** Consistency across sessions, global
    architecture, priorities, and the sense that "the system behaves
    wrong" are human work. Never assume them; losing coherence is this
-   system's worst failure mode. @impl/done
-2. ##org-vibevm-world--two-process-model--CONSEQUENCE-FILES-ARE-THE-ONLY-SHARED-MEMORY **Files are the only shared memory.** Nothing said in a session
+   system's worst failure mode. @status:impl/done
+2. @fact:org-vibevm-world--two-process-model--CONSEQUENCE-FILES-ARE-THE-ONLY-SHARED-MEMORY **Files are the only shared memory.** Nothing said in a session
    survives it. Whatever must survive goes into the repository. Specs
    are not documentation — they are the inter-process channel; see
-   @spec://org.vibevm.world/two-process-model/flows/two-process-model/files-as-ipc#root. @impl/done
-3. ##org-vibevm-world--two-process-model--CONSEQUENCE-PRECISE-TASKS-BEAT-BROAD-ONES **Precise tasks beat broad ones.** A task that cites the exact
+   @spec://org.vibevm.world/two-process-model/flows/two-process-model/files-as-ipc#root. @status:impl/done
+3. @fact:org-vibevm-world--two-process-model--CONSEQUENCE-PRECISE-TASKS-BEAT-BROAD-ONES **Precise tasks beat broad ones.** A task that cites the exact
    spec section costs twenty tokens to act on; "finish the module"
-   costs a re-derivation of the whole context and invites drift. @impl/done
-4. ##org-vibevm-world--two-process-model--CONSEQUENCE-VERIFICATION-IS-ASYMMETRIC **Verification is asymmetric.** The AI checks formal properties
+   costs a re-derivation of the whole context and invites drift. @status:impl/done
+4. @fact:org-vibevm-world--two-process-model--CONSEQUENCE-VERIFICATION-IS-ASYMMETRIC **Verification is asymmetric.** The AI checks formal properties
    (builds, tests, lint); the human checks semantics (does it do what
    was *meant*). Do not spend human attention on what a machine
-   checks, and do not let a machine sign off on meaning. @impl/done
+   checks, and do not let a machine sign off on meaning. @status:impl/done
 
 ## Never {#org-vibevm-world--two-process-model--never}
 
-- ##org-vibevm-world--two-process-model--NEVER-DECIDE-ARCHITECTURE-WITHOUT-SURFACING-IT Never take an architectural decision that outlives the session
-  without surfacing it to the human — decisions are the human's zone. @impl/done
-- ##org-vibevm-world--two-process-model--NEVER-OPTIMIZE-LOCALLY-AGAINST-GLOBAL-CONSISTENCY Never optimize locally (one file, one function) at the cost of
-  global consistency; when the two conflict, stop and ask. @impl/done
-- ##org-vibevm-world--two-process-model--NEVER-LEAVE-LOAD-BEARING-KNOWLEDGE-IN-THE-CONVERSATION Never leave load-bearing knowledge only in the conversation. If it
-  matters tomorrow, it lands in a file today. @impl/done
-- ##org-vibevm-world--two-process-model--NEVER-TREAT-THE-HUMAN-AS-A-GENERATOR-OR-THE-AI-AS-AN-ORACLE Never treat the human as a code generator or the AI as an oracle:
-  wrong process, wrong work. @impl/done
+- @fact:org-vibevm-world--two-process-model--NEVER-DECIDE-ARCHITECTURE-WITHOUT-SURFACING-IT Never take an architectural decision that outlives the session
+  without surfacing it to the human — decisions are the human's zone. @status:impl/done
+- @fact:org-vibevm-world--two-process-model--NEVER-OPTIMIZE-LOCALLY-AGAINST-GLOBAL-CONSISTENCY Never optimize locally (one file, one function) at the cost of
+  global consistency; when the two conflict, stop and ask. @status:impl/done
+- @fact:org-vibevm-world--two-process-model--NEVER-LEAVE-LOAD-BEARING-KNOWLEDGE-IN-THE-CONVERSATION Never leave load-bearing knowledge only in the conversation. If it
+  matters tomorrow, it lands in a file today. @status:impl/done
+- @fact:org-vibevm-world--two-process-model--NEVER-TREAT-THE-HUMAN-AS-A-GENERATOR-OR-THE-AI-AS-AN-ORACLE Never treat the human as a code generator or the AI as an oracle:
+  wrong process, wrong work. @status:impl/done
 
-##org-vibevm-world--two-process-model--full-model-pointer Full model: @spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root. @impl/done
+@fact:org-vibevm-world--two-process-model--full-model-pointer Full model: @spec://org.vibevm.world/two-process-model/flows/two-process-model/TWO-PROCESS-MODEL#root. @status:impl/done
 
-##org-vibevm-world--two-process-model--responsibility-table-pointer Responsibility table: @spec://org.vibevm.world/two-process-model/flows/two-process-model/cognitive-load-split#root. @impl/done
+@fact:org-vibevm-world--two-process-model--responsibility-table-pointer Responsibility table: @spec://org.vibevm.world/two-process-model/flows/two-process-model/cognitive-load-split#root. @status:impl/done
 
-##org-vibevm-world--two-process-model--file-channel-pointer The file channel: @spec://org.vibevm.world/two-process-model/flows/two-process-model/files-as-ipc#root. @impl/done
+@fact:org-vibevm-world--two-process-model--file-channel-pointer The file channel: @spec://org.vibevm.world/two-process-model/flows/two-process-model/files-as-ipc#root. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/wal — vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md -->
 
@@ -1943,64 +1943,64 @@ the work it is structurally good at. @impl/done
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--wal--PROJECT-USES-WAL-DISCIPLINE-FOR-SESSION-CONTINUITY This project uses **WAL discipline** for session continuity. @impl/done
+@fact:org-vibevm-world--wal--PROJECT-USES-WAL-DISCIPLINE-FOR-SESSION-CONTINUITY This project uses **WAL discipline** for session continuity. @status:impl/done
 
-##org-vibevm-world--wal--two-files-carry-it-lead Two files
-carry it: @impl/done
+@fact:org-vibevm-world--wal--two-files-carry-it-lead Two files
+carry it: @status:impl/done
 
-- ##org-vibevm-world--wal--FILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT `spec/WAL.md` — the living checkpoint. **Canonical.** @impl/done
-- ##org-vibevm-world--wal--FILE-CONTINUE-IS-THE-COLD-RESUME-SNAPSHOT `CONTINUE.md` (repo root) — the cold-resume snapshot. The WAL
-  supersedes it wherever they diverge. @impl/done
+- @fact:org-vibevm-world--wal--FILE-WAL-IS-THE-CANONICAL-LIVING-CHECKPOINT `spec/WAL.md` — the living checkpoint. **Canonical.** @status:impl/done
+- @fact:org-vibevm-world--wal--FILE-CONTINUE-IS-THE-COLD-RESUME-SNAPSHOT `CONTINUE.md` (repo root) — the cold-resume snapshot. The WAL
+  supersedes it wherever they diverge. @status:impl/done
 
 ## At the start of every session {#org-vibevm-world--wal--session-start}
 
-1. ##org-vibevm-world--wal--READ-THE-WAL-BEFORE-DOING-ANYTHING-ELSE Read `spec/WAL.md` **before** doing anything else. The `wal-status`
-   skill, where installed, is the fast form of this read. @impl/done
-2. ##org-vibevm-world--wal--VERIFY-THE-UPDATED-LINE-IS-CURRENT Verify the `_Updated:` line is current. If it is older than 24
+1. @fact:org-vibevm-world--wal--READ-THE-WAL-BEFORE-DOING-ANYTHING-ELSE Read `spec/WAL.md` **before** doing anything else. The `wal-status`
+   skill, where installed, is the fast form of this read. @status:impl/done
+2. @fact:org-vibevm-world--wal--VERIFY-THE-UPDATED-LINE-IS-CURRENT Verify the `_Updated:` line is current. If it is older than 24
    hours, ask the user to confirm state before acting on anything the
-   WAL claims — and before any destructive work. @impl/done
-3. ##org-vibevm-world--wal--HONOUR-EVERY-CONSTRAINT-VERBATIM Honour every constraint listed in the WAL's **Constraints** section
+   WAL claims — and before any destructive work. @status:impl/done
+3. @fact:org-vibevm-world--wal--HONOUR-EVERY-CONSTRAINT-VERBATIM Honour every constraint listed in the WAL's **Constraints** section
    verbatim. These are the "do not touch" rules: violate them only
-   after an explicit, in-session confirmation from the user. @impl/done
+   after an explicit, in-session confirmation from the user. @status:impl/done
 
 ## During the session {#org-vibevm-world--wal--during}
 
-4. ##org-vibevm-world--wal--PROPOSE-ADDING-A-DURABLE-DECISION-TO-THE-WAL If the user makes a decision that affects future sessions, propose
+4. @fact:org-vibevm-world--wal--PROPOSE-ADDING-A-DURABLE-DECISION-TO-THE-WAL If the user makes a decision that affects future sessions, propose
    adding it to the WAL (or the spec, if it's architectural). Do not
-   silently file it as "remembered." @impl/done
-5. ##org-vibevm-world--wal--STOP-AND-SURFACE-BEFORE-VIOLATING-A-CONSTRAINT If you find yourself about to violate a Constraint, stop and surface
+   silently file it as "remembered." @status:impl/done
+5. @fact:org-vibevm-world--wal--STOP-AND-SURFACE-BEFORE-VIOLATING-A-CONSTRAINT If you find yourself about to violate a Constraint, stop and surface
    the question explicitly. A violation snuck past in a diff is a
-   future bug. @impl/done
+   future bug. @status:impl/done
 
 ## At the end of every session {#org-vibevm-world--wal--session-end}
 
-6. ##org-vibevm-world--wal--REWRITE-THE-WAL-NEVER-APPEND-TO-IT Rewrite `spec/WAL.md` per the protocol in
+6. @fact:org-vibevm-world--wal--REWRITE-THE-WAL-NEVER-APPEND-TO-IT Rewrite `spec/WAL.md` per the protocol in
    @spec://org.vibevm.world/wal/flows/wal/session-end-hook#root.
    Rewrite, not append — the WAL must reflect the **current** state,
    not the history. History lives in `git log` and in milestone commit
-   messages; the WAL is a checkpoint, not a journal. @impl/done
+   messages; the WAL is a checkpoint, not a journal. @status:impl/done
 
 ## Session commands {#org-vibevm-world--wal--commands}
 
-7. ##org-vibevm-world--wal--RECOGNISE-THE-WIND-DOWN-PHRASES Recognise the **wind-down** phrases — `END SESSION`, `WRAP UP`,
+7. @fact:org-vibevm-world--wal--RECOGNISE-THE-WIND-DOWN-PHRASES Recognise the **wind-down** phrases — `END SESSION`, `WRAP UP`,
    `CHECKPOINT AND CLOSE`, and any project-defined twins (recognise the
    intent, not the exact wording). A wind-down invokes the full
    session-end hook *plus* a wholesale overwrite of `CONTINUE.md`, per
-   @spec://org.vibevm.world/wal/flows/wal/cold-resume#root. @impl/done
-8. ##org-vibevm-world--wal--RECOGNISE-THE-RESUME-PHRASES Recognise the **resume** phrases — `RESUME SESSION`, `RESTORE
+   @spec://org.vibevm.world/wal/flows/wal/cold-resume#root. @status:impl/done
+8. @fact:org-vibevm-world--wal--RECOGNISE-THE-RESUME-PHRASES Recognise the **resume** phrases — `RESUME SESSION`, `RESTORE
    CONTEXT`. Restore context, verify the repository state empirically,
    emit a status report — then **stop and wait for direction**. A
-   recorded "next step" is a candidate, not authorisation. @impl/done
+   recorded "next step" is a candidate, not authorisation. @status:impl/done
 
 ## Scope of this flow {#org-vibevm-world--wal--scope}
 
-- ##org-vibevm-world--wal--FLOW-OWNS-ONLY-ITS-OWN-FILES This flow owns only the protocol files under `spec/flows/wal/`, the
-  `wal-status` skill, and this boot snippet. @impl/done
-- ##org-vibevm-world--wal--WAL-AND-CONTINUE-ARE-PROJECT-STATE-NOT-PACKAGE-STATE `spec/WAL.md` and `CONTINUE.md` are **project state**, not package
+- @fact:org-vibevm-world--wal--FLOW-OWNS-ONLY-ITS-OWN-FILES This flow owns only the protocol files under `spec/flows/wal/`, the
+  `wal-status` skill, and this boot snippet. @status:impl/done
+- @fact:org-vibevm-world--wal--WAL-AND-CONTINUE-ARE-PROJECT-STATE-NOT-PACKAGE-STATE `spec/WAL.md` and `CONTINUE.md` are **project state**, not package
   state — the package never creates, deletes, or overwrites them as
-  part of install or uninstall. @impl/done
+  part of install or uninstall. @status:impl/done
 
-##org-vibevm-world--wal--full-protocol-pointer Full protocol: @spec://org.vibevm.world/wal/flows/wal/WAL-PROTOCOL#root. @impl/done
+@fact:org-vibevm-world--wal--full-protocol-pointer Full protocol: @spec://org.vibevm.world/wal/flows/wal/WAL-PROTOCOL#root. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/wal-specspaces — vibedeps/flow-wal-specspaces/0.1.0/spec/boot/11-flow-wal-specspaces.md -->
 
@@ -2008,80 +2008,80 @@ carry it: @impl/done
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--wal-specspaces--THE-PROJECT-MAY-HOST-SPECSPACES This project may host **specspaces** — sub-projects nested in the
+@fact:org-vibevm-world--wal-specspaces--THE-PROJECT-MAY-HOST-SPECSPACES This project may host **specspaces** — sub-projects nested in the
 repository that are worked on as independent projects, each with its
-own boot contract, WAL, and cold-resume file. @impl/done
+own boot contract, WAL, and cold-resume file. @status:impl/done
 
-##org-vibevm-world--wal-specspaces--THE-REGISTRY-IS-SPECSPACES-MD-AT-THE-HOST-ROOT The registry is
+@fact:org-vibevm-world--wal-specspaces--THE-REGISTRY-IS-SPECSPACES-MD-AT-THE-HOST-ROOT The registry is
 `SPECSPACES.md` at the host root; if that file is absent, no
-specspaces exist and this snippet is inert. @impl/done
+specspaces exist and this snippet is inert. @status:impl/done
 
 ## Recognising a specspace session {#org-vibevm-world--wal-specspaces--recognise}
 
-1. ##org-vibevm-world--wal-specspaces--RECOGNISE-A-PHRASE-CARRYING-A-SPECSPACE-NAME A resume or wind-down phrase carrying a specspace name —
+1. @fact:org-vibevm-world--wal-specspaces--RECOGNISE-A-PHRASE-CARRYING-A-SPECSPACE-NAME A resume or wind-down phrase carrying a specspace name —
    `RESUME SESSION <name>`, `END SESSION <name>`, or the project's
-   language twins — targets that specspace, not the host project. @impl/done
-2. ##org-vibevm-world--wal-specspaces--RECOGNISE-A-TASK-INSIDE-A-REGISTERED-SPECSPACE-ROOT A session whose task clearly lives inside a registered specspace
+   language twins — targets that specspace, not the host project. @status:impl/done
+2. @fact:org-vibevm-world--wal-specspaces--RECOGNISE-A-TASK-INSIDE-A-REGISTERED-SPECSPACE-ROOT A session whose task clearly lives inside a registered specspace
    root follows that specspace's boot contract, even without the
-   phrase. When in doubt, ask which project the session is for. @impl/done
+   phrase. When in doubt, ask which project the session is for. @status:impl/done
 
 ## Which project a bare phrase targets {#org-vibevm-world--wal-specspaces--default}
 
-##org-vibevm-world--wal-specspaces--A-PHRASE-RESOLVES-TO-EXACTLY-ONE-TARGET A session phrase resolves to exactly **one** target — the host
-project or a single specspace — by this order: @impl/done
+@fact:org-vibevm-world--wal-specspaces--A-PHRASE-RESOLVES-TO-EXACTLY-ONE-TARGET A session phrase resolves to exactly **one** target — the host
+project or a single specspace — by this order: @status:impl/done
 
-1. ##org-vibevm-world--wal-specspaces--TARGET-EXPLICIT-WINS-ALWAYS **Explicit target wins, always.** A phrase that names a specspace
+1. @fact:org-vibevm-world--wal-specspaces--TARGET-EXPLICIT-WINS-ALWAYS **Explicit target wins, always.** A phrase that names a specspace
    (`RESUME SESSION <name>`), or that names an explicit directory,
    targets that specspace or directory — regardless of any declared
    default. This is how the user forces restoration from an arbitrary
    specspace or directory. A name matching no registry row is
-   surfaced, not guessed. @impl/done
-2. ##org-vibevm-world--wal-specspaces--TARGET-DECLARED-DEFAULT **Declared default.** A **bare** phrase (no name) uses the
+   surfaced, not guessed. @status:impl/done
+2. @fact:org-vibevm-world--wal-specspaces--TARGET-DECLARED-DEFAULT **Declared default.** A **bare** phrase (no name) uses the
    specspace named by the `default:` line of `SPECSPACES.md`, if one
-   is declared. @impl/done
-3. ##org-vibevm-world--wal-specspaces--TARGET-HOST-FALLBACK **Host fallback.** With no name and no declared default, a bare
+   is declared. @status:impl/done
+3. @fact:org-vibevm-world--wal-specspaces--TARGET-HOST-FALLBACK **Host fallback.** With no name and no declared default, a bare
    phrase targets the **host project** — restore the host root's own
    WAL and cold-resume file, per the host contract's session-command
-   sections. @impl/done
+   sections. @status:impl/done
 
-##org-vibevm-world--wal-specspaces--A-BARE-PHRASE-NEVER-SILENTLY-SELECTS-A-SPECSPACE A bare phrase therefore **never silently selects a specspace**. @impl/done
+@fact:org-vibevm-world--wal-specspaces--A-BARE-PHRASE-NEVER-SILENTLY-SELECTS-A-SPECSPACE A bare phrase therefore **never silently selects a specspace**. @status:impl/done
 
-##org-vibevm-world--wal-specspaces--AT-THE-HOST-ROOT-A-BARE-PHRASE-RESTORES-THE-HOST-WAL At the
+@fact:org-vibevm-world--wal-specspaces--AT-THE-HOST-ROOT-A-BARE-PHRASE-RESTORES-THE-HOST-WAL At the
 host root, a bare `восстанови сессию` / `RESUME SESSION` restores the
-**host** WAL — not a registered specspace such as `fractality`. @impl/done
+**host** WAL — not a registered specspace such as `fractality`. @status:impl/done
 
-##org-vibevm-world--wal-specspaces--TARGETING-A-SPECSPACE-REQUIRES-NAMING-IT Targeting a specspace requires naming it (or declaring it the default). @impl/done
+@fact:org-vibevm-world--wal-specspaces--TARGETING-A-SPECSPACE-REQUIRES-NAMING-IT Targeting a specspace requires naming it (or declaring it the default). @status:impl/done
 
 ## The boot-scoping law {#org-vibevm-world--wal-specspaces--scoping}
 
-##org-vibevm-world--wal-specspaces--A-SPECSPACE-SESSION-READS-IN-ORDER A specspace session reads, in order: @impl/done
+@fact:org-vibevm-world--wal-specspaces--A-SPECSPACE-SESSION-READS-IN-ORDER A specspace session reads, in order: @status:impl/done
 
-1. ##org-vibevm-world--wal-specspaces--READS-THE-HOSTS-REPO-WIDE-RULES the host's repo-wide non-negotiable rules (the section the host
-   contract marks as binding for every commit), @impl/done
-2. ##org-vibevm-world--wal-specspaces--READS-THE-SPECSPACES-OWN-BOOT-CONTRACT the specspace's own boot contract (`CLAUDE.md` at the specspace
-   root, or the equivalent boot contract living there), @impl/done
-3. ##org-vibevm-world--wal-specspaces--READS-THE-SPECSPACE-WAL the specspace WAL, @impl/done
-4. ##org-vibevm-world--wal-specspaces--READS-THE-SPECSPACE-COLD-RESUME-FILE the specspace cold-resume file (the WAL wins where they diverge), @impl/done
-5. ##org-vibevm-world--wal-specspaces--READS-ANY-ACTIVE-PLAN-THE-WAL-NAMES any active plan the specspace WAL names. @impl/done
+1. @fact:org-vibevm-world--wal-specspaces--READS-THE-HOSTS-REPO-WIDE-RULES the host's repo-wide non-negotiable rules (the section the host
+   contract marks as binding for every commit), @status:impl/done
+2. @fact:org-vibevm-world--wal-specspaces--READS-THE-SPECSPACES-OWN-BOOT-CONTRACT the specspace's own boot contract (`CLAUDE.md` at the specspace
+   root, or the equivalent boot contract living there), @status:impl/done
+3. @fact:org-vibevm-world--wal-specspaces--READS-THE-SPECSPACE-WAL the specspace WAL, @status:impl/done
+4. @fact:org-vibevm-world--wal-specspaces--READS-THE-SPECSPACE-COLD-RESUME-FILE the specspace cold-resume file (the WAL wins where they diverge), @status:impl/done
+5. @fact:org-vibevm-world--wal-specspaces--READS-ANY-ACTIVE-PLAN-THE-WAL-NAMES any active plan the specspace WAL names. @status:impl/done
 
-##org-vibevm-world--wal-specspaces--IT-DOES-NOT-LOAD-THE-HOSTS-FULL-BOOT-OR-SPECS It does **not** load the host's full boot sequence, the host WAL, or
+@fact:org-vibevm-world--wal-specspaces--IT-DOES-NOT-LOAD-THE-HOSTS-FULL-BOOT-OR-SPECS It does **not** load the host's full boot sequence, the host WAL, or
 host specs — unless the task explicitly crosses into the host
-project, and then the session says so before touching host files. @impl/done
+project, and then the session says so before touching host files. @status:impl/done
 
 ## Session commands, scoped {#org-vibevm-world--wal-specspaces--commands}
 
-##org-vibevm-world--wal-specspaces--SCOPED-PHRASES-OPERATE-ON-THE-SPECSPACES-OWN-FILES Wind-down and resume phrases carrying a specspace name operate on
+@fact:org-vibevm-world--wal-specspaces--SCOPED-PHRASES-OPERATE-ON-THE-SPECSPACES-OWN-FILES Wind-down and resume phrases carrying a specspace name operate on
 that specspace's WAL and cold-resume file, and refresh the
-specspace's one-line status in `SPECSPACES.md`. @impl/done
+specspace's one-line status in `SPECSPACES.md`. @status:impl/done
 
-##org-vibevm-world--wal-specspaces--THE-HOST-WAL-IS-UPDATED-ONLY-WHEN-HOST-FILES-CHANGED The host WAL is
-updated only when host files actually changed in the session. @impl/done
+@fact:org-vibevm-world--wal-specspaces--THE-HOST-WAL-IS-UPDATED-ONLY-WHEN-HOST-FILES-CHANGED The host WAL is
+updated only when host files actually changed in the session. @status:impl/done
 
-##org-vibevm-world--wal-specspaces--RESUME-REMAINS-REPORT-THEN-WAIT Resume remains report-then-wait: restore, verify state empirically,
-report, stop. @impl/done
+@fact:org-vibevm-world--wal-specspaces--RESUME-REMAINS-REPORT-THEN-WAIT Resume remains report-then-wait: restore, verify state empirically,
+report, stop. @status:impl/done
 
-##org-vibevm-world--wal-specspaces--sibling-document-pointers Full protocol:
-@spec://org.vibevm.world/wal-specspaces/flows/wal-specspaces/SPECSPACES-PROTOCOL#root. @impl/done
+@fact:org-vibevm-world--wal-specspaces--sibling-document-pointers Full protocol:
+@spec://org.vibevm.world/wal-specspaces/flows/wal-specspaces/SPECSPACES-PROTOCOL#root. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/redbook — vibedeps/flow-redbook/0.2.0/spec/boot/03-flow-redbook.md -->
 
@@ -2089,97 +2089,97 @@ report, stop. @impl/done
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--redbook--PROJECT-FOLLOWS-THE-REDBOOK This project follows the **redbook** — a collection of AI-native
+@fact:org-vibevm-world--redbook--PROJECT-FOLLOWS-THE-REDBOOK This project follows the **redbook** — a collection of AI-native
 development practices, each installed as its own flow with its own
-boot snippet and protocol documents. @impl/done
+boot snippet and protocol documents. @status:impl/done
 
-##org-vibevm-world--redbook--THIS-SNIPPET-ONLY-NAMES-THE-COLLECTION This snippet only names the
-collection; the members carry the actual rules. @impl/done
+@fact:org-vibevm-world--redbook--THIS-SNIPPET-ONLY-NAMES-THE-COLLECTION This snippet only names the
+collection; the members carry the actual rules. @status:impl/done
 
 ## The source of the spirit {#org-vibevm-world--redbook--spirit-source}
 
-##org-vibevm-world--redbook--practices-distilled-from-the-book The practices are distilled from the book *AI-native development*. @spec/done
+@fact:org-vibevm-world--redbook--practices-distilled-from-the-book The practices are distilled from the book *AI-native development*. @status:spec/done
 
-##org-vibevm-world--redbook--THE-BOOK-SHIPS-IN-THIS-PACKAGE The book itself ships in this package at `spec/book/ru/` (currently
-in Russian — see `spec/book/README.md` for the edition plan). @impl/done
+@fact:org-vibevm-world--redbook--THE-BOOK-SHIPS-IN-THIS-PACKAGE The book itself ships in this package at `spec/book/ru/` (currently
+in Russian — see `spec/book/README.md` for the edition plan). @status:impl/done
 
-##org-vibevm-world--redbook--spirit-of-the-process-lead **The
-general spirit of the process comes from the book**: @spec/done
+@fact:org-vibevm-world--redbook--spirit-of-the-process-lead **The
+general spirit of the process comes from the book**: @status:spec/done
 
-- ##org-vibevm-world--redbook--SPIRIT-TWO-PROCESSES-ONE-TASK two processes
-  working one task, @spec/done
-- ##org-vibevm-world--redbook--SPIRIT-FILES-AS-THE-ONLY-SHARED-MEMORY files as the only shared memory, @spec/done
-- ##org-vibevm-world--redbook--SPIRIT-DECISIONS-RECORDED-WITH-THEIR-REASONS decisions
-  recorded with their reasons, @spec/done
-- ##org-vibevm-world--redbook--SPIRIT-ONE-COMMIT-PER-THOUGHT one commit per thought. @spec/done
+- @fact:org-vibevm-world--redbook--SPIRIT-TWO-PROCESSES-ONE-TASK two processes
+  working one task, @status:spec/done
+- @fact:org-vibevm-world--redbook--SPIRIT-FILES-AS-THE-ONLY-SHARED-MEMORY files as the only shared memory, @status:spec/done
+- @fact:org-vibevm-world--redbook--SPIRIT-DECISIONS-RECORDED-WITH-THEIR-REASONS decisions
+  recorded with their reasons, @status:spec/done
+- @fact:org-vibevm-world--redbook--SPIRIT-ONE-COMMIT-PER-THOUGHT one commit per thought. @status:spec/done
 
-##org-vibevm-world--redbook--DO-NOT-READ-THE-BOOK-AT-SESSION-BOOT Do **not** read the book at session boot — it is reference depth,
-not standing instructions. @impl/done
+@fact:org-vibevm-world--redbook--DO-NOT-READ-THE-BOOK-AT-SESSION-BOOT Do **not** read the book at session boot — it is reference depth,
+not standing instructions. @status:impl/done
 
-##org-vibevm-world--redbook--OPEN-A-CHAPTER-WHEN-A-PHILOSOPHY-QUESTION-ARISES Open a chapter when a philosophy question
+@fact:org-vibevm-world--redbook--OPEN-A-CHAPTER-WHEN-A-PHILOSOPHY-QUESTION-ARISES Open a chapter when a philosophy question
 actually arises; the members' boot snippets carry everything a
-session needs. @impl/done
+session needs. @status:impl/done
 
 ## The members (edition 0.2.0) {#org-vibevm-world--redbook--member-list}
 
-##org-vibevm-world--redbook--books-core-list-lead The book's core — the four IPC requirements and the memory model: @impl/done
+@fact:org-vibevm-world--redbook--books-core-list-lead The book's core — the four IPC requirements and the memory model: @status:impl/done
 
-- ##org-vibevm-world--redbook--MEMBER-TWO-PROCESS-MODEL `two-process-model` — the foundation: human and AI as
-  coprocessors; the human owns coherence; files are the IPC. @impl/done
-- ##org-vibevm-world--redbook--MEMBER-WAL `wal` — the checkpoint file and cold-resume snapshot; session
-  wind-down and resume rituals. @impl/done
-- ##org-vibevm-world--redbook--MEMBER-SYNC-FROM-CODE `sync-from-code` — the sanctioned reverse path when code changed
-  before the spec. @impl/done
-- ##org-vibevm-world--redbook--MEMBER-ATOMIC-COMMITS `git-atomic-commits` — one commit, one idea; Conventional Commits;
-  pushed history is frozen. @impl/done
-- ##org-vibevm-world--redbook--MEMBER-ADDRESSABLE-SPECS `addressable-specs` — `spec://` URIs and stable anchors; correct
-  the agent in twenty tokens. @impl/done
-- ##org-vibevm-world--redbook--MEMBER-DECISION-RECORDS `decision-records` — record decisions with reasons and revisit
-  triggers, at the anchor they govern. @impl/done
-- ##org-vibevm-world--redbook--MEMBER-CONFLICT-PROTOCOL `conflict-protocol` — Human > Spec > Tests > Code; REVIEW markers;
-  the conservative-default uncertainty path. @impl/done
-- ##org-vibevm-world--redbook--MEMBER-CAMPAIGN-PLANS `campaign-plans` — cold-executable plans with phase gates,
-  falsifiable predictions, and an execution ledger. @impl/done
-- ##org-vibevm-world--redbook--MEMBER-DISCOVERY-PROMPT `discovery-prompt` — the structured collaborative-research prompt
-  for open-ended sessions. @impl/done
-- ##org-vibevm-world--redbook--MEMBER-ATTRIBUTION-POLICY `git-attribution-policy` — the deliberate authorship posture
-  (human-authored surface by default). @impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-TWO-PROCESS-MODEL `two-process-model` — the foundation: human and AI as
+  coprocessors; the human owns coherence; files are the IPC. @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-WAL `wal` — the checkpoint file and cold-resume snapshot; session
+  wind-down and resume rituals. @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-SYNC-FROM-CODE `sync-from-code` — the sanctioned reverse path when code changed
+  before the spec. @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-ATOMIC-COMMITS `git-atomic-commits` — one commit, one idea; Conventional Commits;
+  pushed history is frozen. @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-ADDRESSABLE-SPECS `addressable-specs` — `spec://` URIs and stable anchors; correct
+  the agent in twenty tokens. @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-DECISION-RECORDS `decision-records` — record decisions with reasons and revisit
+  triggers, at the anchor they govern. @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-CONFLICT-PROTOCOL `conflict-protocol` — Human > Spec > Tests > Code; REVIEW markers;
+  the conservative-default uncertainty path. @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-CAMPAIGN-PLANS `campaign-plans` — cold-executable plans with phase gates,
+  falsifiable predictions, and an execution ledger. @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-DISCOVERY-PROMPT `discovery-prompt` — the structured collaborative-research prompt
+  for open-ended sessions. @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-ATTRIBUTION-POLICY `git-attribution-policy` — the deliberate authorship posture
+  (human-authored surface by default). @status:impl/done
 
-##org-vibevm-world--redbook--project-practice-list-lead The project-practice wave — running a project over the long haul: @impl/done
+@fact:org-vibevm-world--redbook--project-practice-list-lead The project-practice wave — running a project over the long haul: @status:impl/done
 
-- ##org-vibevm-world--redbook--MEMBER-OPERATING-MODES `operating-modes` — codeword-triggered postures; red lines that
-  survive every mode. @impl/done
-- ##org-vibevm-world--redbook--MEMBER-HEALTH-AUDIT `health-audit` — the periodic judgment sweep over what the gate
-  cannot see. @impl/done
-- ##org-vibevm-world--redbook--MEMBER-MANUAL-TESTS `manual-tests` — human-runnable walkthroughs for the integration
-  surfaces automation cannot prove. @impl/done
-- ##org-vibevm-world--redbook--MEMBER-SECRETS-HYGIENE `secrets-hygiene` — surface-secrets never printed or persisted;
-  scope discipline; third-party-code consent. @impl/done
-- ##org-vibevm-world--redbook--MEMBER-LICENSING `licensing` — a deliberate licence posture; permissive-only
-  dependencies; the EULA-to-open path. @impl/done
-- ##org-vibevm-world--redbook--MEMBER-SOURCE-MIRRORS `source-mirrors` — single-writer multi-homing; fail-loud
-  fast-forward-only fan-out. @impl/done
-- ##org-vibevm-world--redbook--MEMBER-SPEC-GENRES `spec-genres` — contract vs lore vs research vs plans; what goes
-  where and who wins. @impl/done
-- ##org-vibevm-world--redbook--MEMBER-COMPARATIVE-RESEARCH `comparative-research` — evergreen competitor studies with two-way
-  gap analysis and roadmap deltas. @impl/done
-- ##org-vibevm-world--redbook--MEMBER-MANAGED-BLOCKS `managed-blocks` — how a tool writes into files it does not own
-  (for tool authors). @impl/done
-- ##org-vibevm-world--redbook--MEMBER-QUALIFIED-NAMING `qualified-naming` — namespaces for package ecosystems (for
-  ecosystem designers). @impl/done
-- ##org-vibevm-world--redbook--MEMBER-TOOL-DESIGN-LESSONS `tool-design-lessons` — paid-for lessons for self-updating tools
-  and package systems. @impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-OPERATING-MODES `operating-modes` — codeword-triggered postures; red lines that
+  survive every mode. @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-HEALTH-AUDIT `health-audit` — the periodic judgment sweep over what the gate
+  cannot see. @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-MANUAL-TESTS `manual-tests` — human-runnable walkthroughs for the integration
+  surfaces automation cannot prove. @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-SECRETS-HYGIENE `secrets-hygiene` — surface-secrets never printed or persisted;
+  scope discipline; third-party-code consent. @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-LICENSING `licensing` — a deliberate licence posture; permissive-only
+  dependencies; the EULA-to-open path. @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-SOURCE-MIRRORS `source-mirrors` — single-writer multi-homing; fail-loud
+  fast-forward-only fan-out. @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-SPEC-GENRES `spec-genres` — contract vs lore vs research vs plans; what goes
+  where and who wins. @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-COMPARATIVE-RESEARCH `comparative-research` — evergreen competitor studies with two-way
+  gap analysis and roadmap deltas. @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-MANAGED-BLOCKS `managed-blocks` — how a tool writes into files it does not own
+  (for tool authors). @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-QUALIFIED-NAMING `qualified-naming` — namespaces for package ecosystems (for
+  ecosystem designers). @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-TOOL-DESIGN-LESSONS `tool-design-lessons` — paid-for lessons for self-updating tools
+  and package systems. @status:impl/done
 
-##org-vibevm-world--redbook--cultural-extraction-list-lead The cultural-extraction wave — host-scale organisation: @impl/done
+@fact:org-vibevm-world--redbook--cultural-extraction-list-lead The cultural-extraction wave — host-scale organisation: @status:impl/done
 
-- ##org-vibevm-world--redbook--MEMBER-DEV-RUNTIME-DOCS `dev-runtime-docs` — the running-notes discipline for a project's
-  development-runtime documents. @impl/done
-- ##org-vibevm-world--redbook--MEMBER-WAL-SPECSPACES `wal-specspaces` — nested projects (specspaces), each carrying its
-  own boot contract, WAL, and cold-resume file. @impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-DEV-RUNTIME-DOCS `dev-runtime-docs` — the running-notes discipline for a project's
+  development-runtime documents. @status:impl/done
+- @fact:org-vibevm-world--redbook--MEMBER-WAL-SPECSPACES `wal-specspaces` — nested projects (specspaces), each carrying its
+  own boot contract, WAL, and cold-resume file. @status:impl/done
 
-##org-vibevm-world--redbook--AN-EDITION-IS-A-TESTED-SET An **edition** is a tested set: the umbrella pins every member
-exactly, and the umbrella's version is the edition number. @impl/done
+@fact:org-vibevm-world--redbook--AN-EDITION-IS-A-TESTED-SET An **edition** is a tested set: the umbrella pins every member
+exactly, and the umbrella's version is the edition number. @status:impl/done
 
-##org-vibevm-world--redbook--MEMBERS-MAY-MOVE-AHEAD-BETWEEN-EDITIONS Individual
-members may move ahead on their own lines between editions. @impl/done
+@fact:org-vibevm-world--redbook--MEMBERS-MAY-MOVE-AHEAD-BETWEEN-EDITIONS Individual
+members may move ahead on their own lines between editions. @status:impl/done
 

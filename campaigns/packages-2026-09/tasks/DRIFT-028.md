@@ -190,7 +190,7 @@ Not written by this task (§5 keeps `spec/**` off-limits). Offered as drafts.
 
 **§3.4, new anchor `##STATE-VOID`:**
 
-> ##STATE-VOID `void` — the unit no longer asserts anything. Named for a
+> @fact:STATE-VOID `void` — the unit no longer asserts anything. Named for a
 > **void contract**: without effect, not the programming sense of "still
 > works, discouraged". The unit was either split into heirs and left as a
 > pointer to them, or cancelled with no replacement; its text survives only so

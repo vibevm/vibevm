@@ -90,7 +90,7 @@ Three perimeter rules bind every figure in this file:
 
 ### 0.1 The count is 19, not 16 — and 21 verdicts are owed {#count}
 
-##THE-COUNT-IS-NINETEEN-NOT-SIXTEEN `PHASE-D-HOST-OBLIGATIONS.md` line 33 reads
+@fact:THE-COUNT-IS-NINETEEN-NOT-SIXTEEN `PHASE-D-HOST-OBLIGATIONS.md` line 33 reads
 `health-audit | 16`. At HEAD the routing record carries **19**:
 
 ```bash
@@ -113,7 +113,7 @@ The host-obligations file carries its own instruction — *«Not hand-maintained
 regenerate the counts, do not re-type them»* — and the regeneration has not run
 since. **The figure to act on is 19.**
 
-##TWO-DRIFT-VERDICTS-ARE-JUDGED-AND-UNROUTED **A second gap is larger and runs
+@fact:TWO-DRIFT-VERDICTS-ARE-JUDGED-AND-UNROUTED **A second gap is larger and runs
 the other way: the package carries 21 non-`confirmed` verdicts and only 19 are
 routed.**
 
@@ -154,7 +154,7 @@ obligation:
 
 ### 0.2 Nineteen anchors, six claims {#collapse}
 
-##NINETEEN-ANCHORS-ARE-SIX-CLAIMS The nineteen do not need nineteen rulings.
+@fact:NINETEEN-ANCHORS-ARE-SIX-CLAIMS The nineteen do not need nineteen rulings.
 Sorted by *what the host is actually being asked to do*, they are **six**:
 
 | # | the claim | anchors | carried by |
@@ -173,8 +173,8 @@ are four anchors and, between them, about an hour.
 
 ### 0.3 One anchor is convicted of its neighbour's defect {#misattribution}
 
-##THE-SKILL-POINTER-IS-A-PACKAGE-DEFECT-NOT-A-HOST-ONE §6.1's
-##A-REAL-DEFECT-CONVICTING-THE-WRONG-SENTENCE prescribes two cheap checks, and
+@fact:THE-SKILL-POINTER-IS-A-PACKAGE-DEFECT-NOT-A-HOST-ONE §6.1's
+@fact:A-REAL-DEFECT-CONVICTING-THE-WRONG-SENTENCE prescribes two cheap checks, and
 the first — *«read the neighbouring anchors' verdicts; if the same evidence
 appears under a `confirmed` neighbour, one of the two attributions is wrong»* —
 fires on the unrouted `SKILL.md` pair.
@@ -201,7 +201,7 @@ for the boss. Both `SKILL.md` pointers would move together.
 
 ### 0.4 The perimeter is three consumers, not one {#perimeter}
 
-##THREE-PROJECTS-INSTALL-THIS-FLOW-AND-ONE-HAS-AN-AUDIT-MD Wave 7 routed its
+@fact:THREE-PROJECTS-INSTALL-THIS-FLOW-AND-ONE-HAS-AN-AUDIT-MD Wave 7 routed its
 three anchors saying the perimeter «WIDENED — the fractality specspace installs
 the same flow and fails the same rule». At HEAD it is wider than that:
 
@@ -304,8 +304,8 @@ grep -n "vibe:static" spec/boot/STATIC.md | awk -F: '$1>900 && $1<1050'
 
 **The claim** (`spec/boot/42-flow-health-audit.md:24`, at HEAD):
 
-> ##A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE A
-> milestone is never declared done on an un-audited base. @impl/done
+> @fact:A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE A
+> milestone is never declared done on an un-audited base. @status:impl/done
 
 **What kind of sentence.** A **rule** — normative, present-tense, addressed to
 the adopting project. Not a capability (nothing is claimed to exist) and not a
@@ -436,9 +436,9 @@ real closure; the cost is that the next milestone reopens it verbatim.
 
 **The claim** (`spec/boot/42-flow-health-audit.md:57`, at HEAD):
 
-> - ##NEVER-DECLARE-A-MILESTONE-DONE-ON-AN-UN-AUDITED-BASE Never declare a
+> - @fact:NEVER-DECLARE-A-MILESTONE-DONE-ON-AN-UN-AUDITED-BASE Never declare a
 >   milestone done on an un-audited base — the audit is part of the close-out,
->   not an optional extra. @impl/done
+>   not an optional extra. @status:impl/done
 
 **What kind of sentence.** A **rule**, in the `#never` register — the same rule
 as §1.1 with one clause added: *«part of the close-out, not an optional
@@ -467,9 +467,9 @@ floor in negative register. Costing it separately would double-count.
 
 **The claim** (`spec/boot/42-flow-health-audit.md:44`, at HEAD):
 
-> ##USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE Use the **`health-audit`** skill: it
+> @fact:USE-THE-HEALTH-AUDIT-SKILL-TO-RUN-ONE Use the **`health-audit`** skill: it
 > reads the category checklist, walks it against the repository, and drafts the
-> `AUDIT.md` section for your approval. @impl/done
+> `AUDIT.md` section for your approval. @status:impl/done
 
 **What kind of sentence.** This is the one anchor in the nineteen where the
 §6.1 capability/practice/rule test does real work. It is an **instruction whose
@@ -587,9 +587,9 @@ record's form.**_
 
 **The claim** (`HEALTH-AUDIT-PROTOCOL.md:28`, at HEAD):
 
-> ##THE-AUDIT-IS-A-DIFFERENT-KIND-OF-CHECK The audit is a different kind of check — a deliberate, periodic,
+> @fact:THE-AUDIT-IS-A-DIFFERENT-KIND-OF-CHECK The audit is a different kind of check — a deliberate, periodic,
 > breadth-first sweep, run with human or agent **judgment**, that
-> inventories what the gate cannot see and records the result durably. @impl/done
+> inventories what the gate cannot see and records the result durably. @status:impl/done
 
 **What kind of sentence.** A **definition** — the flow defining its own subject
 — which under §6.1's test is the *rule* family rather than capability or
@@ -633,8 +633,8 @@ grep -nE '\*\*not\*\* (a fresh full sweep|the full)' AUDIT.md
 
 **The claim** (`HEALTH-AUDIT-PROTOCOL.md:64`, at HEAD):
 
-> ##AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT An audit run walks a category checklist breadth-first — one category
-> group per blind spot: @impl/done
+> @fact:AN-AUDIT-RUN-WALKS-ONE-CATEGORY-GROUP-PER-BLIND-SPOT An audit run walks a category checklist breadth-first — one category
+> group per blind spot: @status:impl/done
 
 **What kind of sentence.** A **rule** in descriptive dress. «An audit run
 walks…» reads as a practice claim but its subject is *an audit run* generically,
@@ -825,7 +825,7 @@ three of four.
 
 **The claim** (`HEALTH-AUDIT-PROTOCOL.md:114`, at HEAD):
 
-> | ##ROW-FIELD-ID **ID** @impl/done | `<run-date>-NN` — unique within the run, stable across carry-forward. @impl/done |
+> | @fact:ROW-FIELD-ID **ID** @status:impl/done | `<run-date>-NN` — unique within the run, stable across carry-forward. @status:impl/done |
 
 **What kind of sentence.** A **rule** — a format prescription with two
 properties (uniqueness within the run, stability across carry-forward).
@@ -885,7 +885,7 @@ picks by imitation of whichever section it read.
 
 **The claim** (`HEALTH-AUDIT-PROTOCOL.md:140`, at HEAD):
 
-> | ##ROW-DISP-FILED **filed** @impl/done | Too large to fix in the run. It becomes tracked work — a checkpoint "known issues" entry, a `TASKS.md` line, or a design note — and the finding records where it was filed. @impl/done |
+> | @fact:ROW-DISP-FILED **filed** @status:impl/done | Too large to fix in the run. It becomes tracked work — a checkpoint "known issues" entry, a `TASKS.md` line, or a design note — and the finding records where it was filed. @status:impl/done |
 
 **What kind of sentence.** A **rule with an illustration attached**, and the two
 halves must be read separately — this is the §6.1 test doing real work for the
@@ -972,13 +972,13 @@ has never used.
 
 **The claims** (`HEALTH-AUDIT-PROTOCOL.md:192` and `:264`, at HEAD):
 
-> ##AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR The audit is **owner-triggered**, with a recommended floor of **once
+> @fact:AUDIT-IS-OWNER-TRIGGERED-WITH-A-ONCE-PER-MILESTONE-FLOOR The audit is **owner-triggered**, with a recommended floor of **once
 > per milestone** — run as part of, or immediately after, a milestone
 > close-out, so **a milestone is never declared done on an un-audited
-> base**. @impl/done
+> base**. @status:impl/done
 
-> - ##SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE Owner-triggered, floor once per milestone. A milestone is never
->   declared done on an un-audited base. @impl/done
+> - @fact:SUM-OWNER-TRIGGERED-FLOOR-ONCE-PER-MILESTONE Owner-triggered, floor once per milestone. A milestone is never
+>   declared done on an un-audited base. @status:impl/done
 
 **What kind of sentence.** Both **rules**; the second is the §summary
 restatement of the first, carried per W1's summary-restatement precedent.
@@ -1014,13 +1014,13 @@ adopts in the whole set._
 
 **The claims** (`running-an-audit.md:13` and `:24`, at HEAD):
 
-> ##A-RUN-MUST-FINISH-THE-INVENTORY A run must finish the **inventory**. @impl/done
+> @fact:A-RUN-MUST-FINISH-THE-INVENTORY A run must finish the **inventory**. @status:impl/done
 
-> 2. ##STEP-WALK-THE-CHECKLIST-BREADTH-FIRST **Walk the checklist breadth-first.** Go category by category
+> 2. @fact:STEP-WALK-THE-CHECKLIST-BREADTH-FIRST **Walk the checklist breadth-first.** Go category by category
 >    through [`audit-checklist.md`](audit-checklist.md) — A, then B, then
 >    C, then D, then any project-specific rows. Run each mechanical aid;
 >    where there is no aid (A3 especially), read with judgment. Breadth
->    first: touch every category once before going deep on any one. @impl/done
+>    first: touch every category once before going deep on any one. @status:impl/done
 
 **What kind of sentence.** Both **rules** — the first a one-line obligation, the
 second a numbered procedure step. The second is the most operationally precise
@@ -1050,10 +1050,10 @@ work.
 
 **The claim** (`running-an-audit.md:54`, at HEAD):
 
-> 7. ##STEP-COMMIT-THE-SECTION-AND-EACH-FIX-SEPARATELY **Commit.** Commit `AUDIT.md` as its own change — e.g.
+> 7. @fact:STEP-COMMIT-THE-SECTION-AND-EACH-FIX-SEPARATELY **Commit.** Commit `AUDIT.md` as its own change — e.g.
 >    `docs(audit): <run-date> health audit` — and each in-run fix as its
 >    own separate commit. The audit section and the fixes are different
->    ideas; they are different commits. @impl/done
+>    ideas; they are different commits. @status:impl/done
 
 **What kind of sentence.** A **rule**, and one that overlaps the host's own
 `git-practices` atomicity rule (Rule 3) — so it is not a foreign import.
@@ -1118,7 +1118,7 @@ practice, and one historical commit stays non-conforming forever.
 
 **The claim** (`running-an-audit.md:90`, at HEAD):
 
-> ##EVERY-FINDING-IS-ONE-TABLE-ROW-CARRYING-THE-FIVE-FIELDS Every finding is one table row carrying the five fields. @impl/done
+> @fact:EVERY-FINDING-IS-ONE-TABLE-ROW-CARRYING-THE-FIVE-FIELDS Every finding is one table row carrying the five fields. @status:impl/done
 
 **What kind of sentence.** A **rule** about *form*, and the distinction matters:
 it prescribes a container (one table row), not content (the five fields). The
@@ -1183,16 +1183,16 @@ run picks by imitating whichever section it happens to read first.
 > **This is the anchor where reading twelve lines further into the flow
 > (`##THE-DISP-COLUMN-RECORDS-WHERE-THE-FINDING-WENT`) turns an apparent
 > conflict into no conflict at all** — §6.1's
-> ##READ-FURTHER-BEFORE-SEARCHING-WIDER applied to the costing rather than to
+> @fact:READ-FURTHER-BEFORE-SEARCHING-WIDER applied to the costing rather than to
 > the measuring.
 
 ### 3.4 `##OWES-A-COMPLETE-INVENTORY` — four sub-obligations, and the one that has silently decayed {#f-164-owes}
 
 **The claim** (`running-an-audit.md:140`, at HEAD):
 
-> - ##OWES-A-COMPLETE-INVENTORY **Owes:** a complete inventory. Every category walked, every finding
+> - @fact:OWES-A-COMPLETE-INVENTORY **Owes:** a complete inventory. Every category walked, every finding
 >   recorded and dispositioned, every prior `open`/`filed` finding
->   carried forward and re-judged, the checkpoint reconciled. @impl/done
+>   carried forward and re-judged, the checkpoint reconciled. @status:impl/done
 
 **What kind of sentence.** A **rule enumerating four obligations**, judged as a
 list per W1's precedent for enumerated obligations — a rule that owes four
@@ -1290,8 +1290,8 @@ wave 2 (2026-07-29)._
 
 **The claim** (`audit-checklist.md:224`, at HEAD):
 
-> - ##SUM-FOUR-GROUPS-WALKED-BREADTH-FIRST Four groups: A test integrity, B rot outside the gate, C drift,
->   D debt. Walk all four breadth-first. @impl/done
+> - @fact:SUM-FOUR-GROUPS-WALKED-BREADTH-FIRST Four groups: A test integrity, B rot outside the gate, C drift,
+>   D debt. Walk all four breadth-first. @status:impl/done
 
 **What kind of sentence.** A **rule in summary register**, carrying the verdict
 of the two rules it summarises — the same treatment `##SUM-OWNER-TRIGGERED…`
@@ -1311,7 +1311,7 @@ own.
 > **RECOMMENDATION — follows §2.2; no separate ruling.** One note for the boss,
 > the mirror of the one in [§2.1](#f-141-different): this is a **summary
 > convicted on the failure of one of the two rules it summarises**, which is
-> §6.1's ##A-REAL-DEFECT-CONVICTING-THE-WRONG-SENTENCE shape *(«a summary
+> §6.1's @fact:A-REAL-DEFECT-CONVICTING-THE-WRONG-SENTENCE shape *(«a summary
 > convicted on a measurement that its body rows are `confirmed` against»)*. Here
 > it survives the check — the body rows it summarises are `drift` too, not
 > `confirmed`, so the summary carries a real verdict rather than a borrowed one.
@@ -1333,9 +1333,9 @@ cost._
 
 **The claim** (`HEALTH-AUDIT-PROTOCOL.md:122`, at HEAD):
 
-> - ##SEVERITY-P1-BLOCKER **P1 — blocker.** A correctness gap, or a defect that can ship wrong
+> - @fact:SEVERITY-P1-BLOCKER **P1 — blocker.** A correctness gap, or a defect that can ship wrong
 >   behavior. Must be resolved before the next milestone is declared
->   shipped. @impl/done
+>   shipped. @status:impl/done
 
 **What kind of sentence.** A **definition plus an obligation**. The definition
 half is adopted verbatim by the host (`AUDIT.md:9`: «`P1` blocker (resolve
@@ -1446,8 +1446,8 @@ Routed wave 2 (2026-07-29)._
 
 **The claim** (`README.md:17`, at HEAD):
 
-> ##A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE A
-> milestone is never declared done on an un-audited base. @impl/done
+> @fact:A-MILESTONE-IS-NEVER-DECLARED-DONE-ON-AN-UN-AUDITED-BASE A
+> milestone is never declared done on an un-audited base. @status:impl/done
 
 **What kind of sentence.** A **rule** — byte-identical to the boot snippet's
 `:24` and to the last clause of `PROTOCOL:192`. Same sentence, third file.
@@ -1486,12 +1486,12 @@ and the aids are where it earns its own section._
 
 **The claim** (`SKILL.md:28`, at HEAD):
 
-> 4. ##WALK-THE-CHECKLIST-BREADTH-FIRST-AND-RUN-EACH-AID Walk the checklist breadth-first — A test integrity, B rot outside
+> 4. @fact:WALK-THE-CHECKLIST-BREADTH-FIRST-AND-RUN-EACH-AID Walk the checklist breadth-first — A test integrity, B rot outside
 >    the gate, C drift, D debt, plus any project-specific rows. Run each
 >    mechanical aid (coverage tool, `grep` for skip markers / `TODO` /
 >    suppressions, dependency audit, CI-config-vs-tree diff). For A3
 >    (tests that encode the wrong behavior), read assertions against
->    intent — there is no mechanical aid. @impl/done
+>    intent — there is no mechanical aid. @status:impl/done
 
 **What kind of sentence.** A **rule** (a skill procedure step) that also names
 **four capabilities** — the four aids. Under §6.1's test the two must be

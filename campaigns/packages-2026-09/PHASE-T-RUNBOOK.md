@@ -49,27 +49,27 @@ run's deliverable is a corrected packet template, not tests.
 3. Let it run. It writes files inside the worktree the boss already made, and
    it stops.
 
-- ##RB-ONE-PACKET-ONE-SESSION **One packet per session.** Do not paste a second packet into a
+- @fact:RB-ONE-PACKET-ONE-SESSION **One packet per session.** Do not paste a second packet into a
   session that has finished one; open a new one. Two packets in one session is
   how two path lists end up blurred together.
-- ##RB-SUBAGENTS-ARE-OPTIONAL **If the harness offers sub-agents, they consume the same packets.**
+- @fact:RB-SUBAGENTS-ARE-OPTIONAL **If the harness offers sub-agents, they consume the same packets.**
   One session can take several packets and hand one to each sub-agent — that is
   a scheduling convenience and changes nothing about the work. If it offers
   none, open more sessions. The design does not depend on the answer.
-- ##RB-ORDER-IRRELEVANT **Order does not matter and neither does overlap in time.** The
+- @fact:RB-ORDER-IRRELEVANT **Order does not matter and neither does overlap in time.** The
   packets share nothing and wait for nothing.
 
 ## Step 2 — while they run {#step-2}
 
 **Do nothing to the repository.** In particular:
 
-- ##RB-NO-MAIN-MOVES **Do not commit to `main`**, do not merge, do not pull anything into
+- @fact:RB-NO-MAIN-MOVES **Do not commit to `main`**, do not merge, do not pull anything into
   it. Every worktree grew from the scaffold commit and the checks compare
   against it.
-- ##RB-NO-HELPING **Do not fix a problem a session reports.** A reported problem is a
+- @fact:RB-NO-HELPING **Do not fix a problem a session reports.** A reported problem is a
   finding and it goes in the ledger; fixing it mid-run puts the tree out of step
   with the work being written against it.
-- ##RB-NO-REDS-TO-SEE **You will NOT see failing tests in the transcripts, and that is
+- @fact:RB-NO-REDS-TO-SEE **You will NOT see failing tests in the transcripts, and that is
   correct.** Nothing is run during writing — the red exhibit happens later, in
   one batch, on the boss's side. *(The first version told you to expect reds.
   That belonged to a design where the writer ran the suite.)*
@@ -101,10 +101,10 @@ checks for the exit gate.
 | a session invents a type or function that does not exist | it built a surface, which is forbidden | keep the output, flag it; the test should have been `#[ignore]`d instead, and the boss decides |
 | everything finished very fast | the triage may have been thin, or the packets were | bring the reports back; the counts will say |
 
-- ##RB-STOPPING-IS-CHEAP **Stopping is always safe.** Nothing integrates until you come back,
+- @fact:RB-STOPPING-IS-CHEAP **Stopping is always safe.** Nothing integrates until you come back,
   so a half-finished packet costs only the work not yet done. There is no state
   to unwind.
-- ##RB-A-BAD-PACKET-IS-THE-USUAL-CAUSE **When a session misbehaves, suspect the packet first.** It is the
+- @fact:RB-A-BAD-PACKET-IS-THE-USUAL-CAUSE **When a session misbehaves, suspect the packet first.** It is the
   only thing the session was given. Every batch in this campaign has found a
   factual error in its own brief; the packets will be no different, and a
   session that reports one has done its job.

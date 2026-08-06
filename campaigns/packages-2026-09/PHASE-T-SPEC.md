@@ -101,15 +101,15 @@ becomes testable the day it is built — and until then, **a fact marked
 `@impl/done` whose surface does not exist is drift.** The marker says the thing
 is implemented and it is not.
 
-- ##UNBUILT-IS-A-VERDICT-CORRECTION **Every T-unbuilt fact is a verdict correction owed to the ledger.**
+- @fact:UNBUILT-IS-A-VERDICT-CORRECTION **Every T-unbuilt fact is a verdict correction owed to the ledger.**
   Phase C confirmed these markers; a test written from the fact is often the
   first time anyone executed the claim, and executing is what Phase C's evidence
   join could not do for a surface that is absent. **This is Phase T earning its
   place beyond coverage** — it audits the earlier phase.
-- ##UNBUILT-ROUTINE-CATCHES-IT-AT-STEP-1 Routine step 1 catches most of it for free: «given ⟨X⟩, ⟨the thing⟩
+- @fact:UNBUILT-ROUTINE-CATCHES-IT-AT-STEP-1 Routine step 1 catches most of it for free: «given ⟨X⟩, ⟨the thing⟩
   ⟨does Y⟩» cannot be written when there is no *thing*. The failed sentence is
   the report.
-- ##UNBUILT-RATE-IS-A-PHASE-FINDING **If T-unbuilt is more than a few per cent of the in-scope facts,
+- @fact:UNBUILT-RATE-IS-A-PHASE-FINDING **If T-unbuilt is more than a few per cent of the in-scope facts,
   stop and report.** That is not a tuning parameter — it says Phases C and E did
   not finish what they recorded, and the right response is to say so, not to
   absorb it into a testing phase.
@@ -138,10 +138,10 @@ A packet gives the worker:
 
 Two hard rules follow:
 
-- ##ORACLE-EXPECTED-BEFORE-RUN **The expected value is written before anything is executed.** A
+- @fact:ORACLE-EXPECTED-BEFORE-RUN **The expected value is written before anything is executed.** A
   test whose expected value was copied from a run of the code is invalid,
   however green it is.
-- ##ORACLE-NOT-DERIVABLE-IS-UNTESTABLE **If the expected value cannot be derived from the fact's text, the
+- @fact:ORACLE-NOT-DERIVABLE-IS-UNTESTABLE **If the expected value cannot be derived from the fact's text, the
   fact is not T-testable** — the worker returns it to the triage with a
   reason. It does not guess.
 
@@ -180,7 +180,7 @@ Step 3 is the whole method compressed. **A literal cannot be copied from a run
 that has not happened yet**, so writing it first is what mechanically prevents
 the test from mirroring the code. Everything else supports that one move.
 
-##ROUTINE-SPLIT-IS-FREE **The 5/2 split costs the method nothing**, which is why it is safe to
+@fact:ROUTINE-SPLIT-IS-FREE **The 5/2 split costs the method nothing**, which is why it is safe to
 make. The routine already forbids running before the expected value is written,
 so steps 1–5 are build-free by construction; 6 and 7 are confirmation, and
 confirmation is exactly the part that batches (§13.5). A writer that stops at 5
@@ -200,7 +200,7 @@ Each of these is **vacuous**: it passes whether or not the fact is true.
 | `assert!(true)`, an empty body, a test that only checks "does not panic" | passes on any implementation, including an empty one |
 | `assert!(err.is_err())` for a `negative` test | the fact names *which* failure; assert that variant, and its message where the fact quotes one |
 
-- ##BANNED-NO-LITERAL-IS-SUSPECT **An assertion containing no literal is suspect by default** and must
+- @fact:BANNED-NO-LITERAL-IS-SUSPECT **An assertion containing no literal is suspect by default** and must
   carry a one-line comment saying why a literal is impossible. This is
   greppable, so the reviewer's sample is cheap.
 
@@ -208,7 +208,7 @@ Each of these is **vacuous**: it passes whether or not the fact is true.
 
 The fact, real, from PROP-043 §3.7:
 
-> ##WORKED-FACT-QUOTED `@impl` ⇒ `<status stage="impl" state="work"/>` — bare shorthand defaults
+> @fact:WORKED-FACT-QUOTED `@impl` ⇒ `<status stage="impl" state="work"/>` — bare shorthand defaults
 > to `state="work"`, with exactly one exception: `@unknown` ⇒ `state="hold"`.
 
 **Useless — and this is what a worker shown the implementation writes:**
@@ -253,20 +253,20 @@ fn negative_a_typo_dies_with_a_nearest_legal_value_hint() {
 
 Three things to take from the pair, and they generalise:
 
-- ##WORKED-CLAUSES-BECOME-KINDS **The fact's own clauses hand you the kinds.** «defaults to work» is
+- @fact:WORKED-CLAUSES-BECOME-KINDS **The fact's own clauses hand you the kinds.** «defaults to work» is
   the canonical case; «with exactly one exception» *is* the boundary case,
   named by the fact itself; the closed-vocabulary rule beside it supplies the
   negative. You are not inventing cases — you are **enumerating the sentence**.
-- ##WORKED-NEGATIVE-ASSERTS-THE-PROMISE The negative test asserts the **promise**, not the failure.
+- @fact:WORKED-NEGATIVE-ASSERTS-THE-PROMISE The negative test asserts the **promise**, not the failure.
   `##VOCAB-CLOSED` promises a nearest-legal-value hint; `is_err()` would have
   passed on a parser that returned a bare "invalid". The fact said more, so the
   test says more.
-- ##WORKED-NO-IMPLEMENTATION-NEEDED **None of the three needed the implementation.** They needed the
+- @fact:WORKED-NO-IMPLEMENTATION-NEEDED **None of the three needed the implementation.** They needed the
   signature, the type names, and the sentence.
 
 ### 3.4 The hand test — the worker's own check before submitting {#hand-test}
 
-##HAND-TEST **Cover the implementation with your hand. Can you still say why this
+@fact:HAND-TEST **Cover the implementation with your hand. Can you still say why this
 assertion is right?**
 
 If the only answer is *«because that is what it returned»*, **delete the test
@@ -298,17 +298,17 @@ The purpose is **not** per-test mutation coverage. It is to catch the case where
 the test does not work at all — where the thing is not even lexically
 expressible and the worker has written something that cannot fail.
 
-##FALSIFY-ONE-PER-PACKET **Per packet, at least one test must be exhibited red.** The cheap
+@fact:FALSIFY-ONE-PER-PACKET **Per packet, at least one test must be exhibited red.** The cheap
 mechanism: once the test passes, perturb its **expected value** to a wrong one,
 confirm red, restore, and record both outputs in the packet's record. This
 proves the test executes and its assertion is live.
 
-##FALSIFY-BOSS-PERFORMS-IT **The exhibit is performed by the boss, not by the writer**, batched
+@fact:FALSIFY-BOSS-PERFORMS-IT **The exhibit is performed by the boss, not by the writer**, batched
 across the wave (§13.5). The writer never runs the suite, so it cannot perform
 this step; and the step's failure mode is a perturbation left un-restored, which
 belongs with the party that can see the whole loop.
 
-##FALSIFY-STRONGER-AVAILABLE The stronger form — perturb the **code** instead, proving the
+@fact:FALSIFY-STRONGER-AVAILABLE The stronger form — perturb the **code** instead, proving the
 test binds to the behaviour and not merely to itself — is available where a
 packet's fact is important enough to pay for it. It is not the default.
 
@@ -324,10 +324,10 @@ A packet that reports no red exhibit is **not accepted**.
 invalidates.** A Phase T test is written from the fact's text, never from the
 code. Therefore:
 
-- ##WAVE-CODE-FIX-DOES-NOT-INVALIDATE **A code fix does not invalidate a test.** A test that was red
+- @fact:WAVE-CODE-FIX-DOES-NOT-INVALIDATE **A code fix does not invalidate a test.** A test that was red
   because the code disagreed with the fact simply **starts passing**. It was
   right all along.
-- ##WAVE-FACT-CHANGE-INVALIDATES **A fact change does.** When a red is resolved the other way —
+- @fact:WAVE-FACT-CHANGE-INVALIDATES **A fact change does.** When a red is resolved the other way —
   reality is right, the spec was wrong, so the fact is corrected through
   sync-from-code — every test written from the old wording is now testing a
   claim that no longer exists.
@@ -337,22 +337,22 @@ section is about discovering them while they are cheap.
 
 ### 5.5.1 The invalidation is already instrumented — pin the edges {#pinning}
 
-- ##WAVE-PIN-EVERY-EDGE **Every `verifies` edge carries `r=N`**, the fact's revision, and this
+- @fact:WAVE-PIN-EVERY-EDGE **Every `verifies` edge carries `r=N`**, the fact's revision, and this
   is not optional. PROP-014's two-tier revisions with **asymmetric
   invalidation** then do the work: a spec bump flips every edge pinned to the
   old revision to *suspect*, while a code change leaves edges valid — which is
   exactly the asymmetry above, already built.
-- ##WAVE-INVALIDATION-IS-LOCATABLE **The blast radius of a fact correction is therefore a query, not a
+- @fact:WAVE-INVALIDATION-IS-LOCATABLE **The blast radius of a fact correction is therefore a query, not a
   search.** Bump the fact, and the tests bound to its old revision name
   themselves. Twenty thousand tests are only frightening if finding the
   affected ones is manual; pinned, it is a list.
-- ##WAVE-WITHOUT-PINS-THE-FEAR-IS-JUSTIFIED Without `r=N` the owner's worry is entirely justified and no
+- @fact:WAVE-WITHOUT-PINS-THE-FEAR-IS-JUSTIFIED Without `r=N` the owner's worry is entirely justified and no
   batching rescues it — you would be grepping prose to find what a wording
   change broke.
 
 ### 5.5.2 Wave 0 is a calibration, and its output is a number {#wave-zero}
 
-##WAVE-ZERO-MEASURES-THE-RED-RATE **The first wave is deliberately small — one or two cells — and its
+@fact:WAVE-ZERO-MEASURES-THE-RED-RATE **The first wave is deliberately small — one or two cells — and its
 deliverable is not tests. It is the red rate:** of the facts tested, how many
 turned out to disagree with reality, and of those, how many resolved as *the
 fact was wrong* rather than *the code was wrong*.
@@ -382,11 +382,11 @@ A wave is closed when **all four** hold, and none may be deferred into the next:
 4. The floor is green on the merged result.
 ```
 
-- ##WAVE-SWARM-CANNOT-CLOSE-A-RED **A worker never resolves a red — it only surfaces it.** Which of the
+- @fact:WAVE-SWARM-CANNOT-CLOSE-A-RED **A worker never resolves a red — it only surfaces it.** Which of the
   two verdicts applies is a judgement about the spec, and a fact correction is a
   spec edit needing the owner. The swarm's job ends at «this test fails and here
   is the fact it was written from».
-- ##WAVE-T-CONTAINS-CODE-CHANGES **This means Phase T contains code changes, and §0 should not be read
+- @fact:WAVE-T-CONTAINS-CODE-CHANGES **This means Phase T contains code changes, and §0 should not be read
   as denying it.** T is not «after all code changes» — it is **where the last of
   them are discovered**, because writing a real test from a fact is the first
   time many facts are executed at all. Phase E is where code changes were
@@ -399,28 +399,28 @@ The hard case is not a small fix. It is a fact whose implication is
 **structural**: a new type, a new trait, a whole second interface — contracts
 changing across many files at once.
 
-##NEVER-BUILD-A-SURFACE **Phase T does not build it. Ever.** The moment a red requires **new API
+@fact:NEVER-BUILD-A-SURFACE **Phase T does not build it. Ever.** The moment a red requires **new API
 surface** rather than a behaviour correction, the wave stops treating it as a
 fix and treats it as a **sized report**.
 
 And the test is not discarded — it is the most useful thing in the exchange:
 
-- ##UNBUILT-TEST-IS-THE-SPEC **The written test stays, `#[ignore]`d, with the reason on the
+- @fact:UNBUILT-TEST-IS-THE-SPEC **The written test stays, `#[ignore]`d, with the reason on the
   attribute and its `verifies` edge intact.** It was written from the fact, it
   is addressable, and it is executable the day the surface exists. **The test
   becomes the specification of the missing work**, and un-ignoring it is that
   work's acceptance criterion. A test waiting for a surface is a deliverable,
   not a failure.
-- ##UNBUILT-BOUNDS-THE-PHASE **This is what bounds the phase.** Without it, one fact implying two
+- @fact:UNBUILT-BOUNDS-THE-PHASE **This is what bounds the phase.** Without it, one fact implying two
   web interfaces turns a testing phase into a rewrite, and every estimate in
   §11 becomes fiction. With it, T's output for such a fact is one ignored test
   and one line in a report — cheap, honest, and complete.
-- ##UNBUILT-CROSS-CUTTING-IS-A-SCOPING-DOC **When the implication is cross-cutting, the by-product is a scoping
+- @fact:UNBUILT-CROSS-CUTTING-IS-A-SCOPING-DOC **When the implication is cross-cutting, the by-product is a scoping
   document the owner gets for free.** «Two web interfaces» is not one missing
   surface, it is a design decision; Phase T contributes *the list of facts that
   assume it, the tests already written from them, and the count*. Nobody has to
   go find them afterwards — the `verifies` edges name them.
-- ##UNBUILT-IS-PHASE-E-WORK-FOUND-LATE **Structurally, this is Phase E work discovered late**, and naming it
+- @fact:UNBUILT-IS-PHASE-E-WORK-FOUND-LATE **Structurally, this is Phase E work discovered late**, and naming it
   that keeps the boundary honest: E planned the code changes, T finds the
   remainder, and anything needing new surface goes back out to a task or a
   campaign rather than being absorbed into a wave.
@@ -440,19 +440,19 @@ routes by severity, not by which wave noticed it:
 | **P2** | a missing surface, a feature the corpus assumes and the code lacks | [`BACKLOG.md`](../../BACKLOG.md) — the next wave drains from it |
 | **P3** | noted, no action planned | `BACKLOG.md`, disposition `accepted` |
 
-- ##ROUTE-UNBUILT-IS-P2-BY-CONSTRUCTION **Every T-unbuilt fact (§2.1) is a P2 by construction**, and the
+- @fact:ROUTE-UNBUILT-IS-P2-BY-CONSTRUCTION **Every T-unbuilt fact (§2.1) is a P2 by construction**, and the
   `#[ignore]`d test already written from it **is** the specification of the
   work. `BACKLOG.md` cites the anchor and the test; it restates neither.
-- ##ROUTE-SEVERITY-IS-THE-REVIEWERS **A worker never assigns severity.** It reports the observation; the
+- @fact:ROUTE-SEVERITY-IS-THE-REVIEWERS **A worker never assigns severity.** It reports the observation; the
   reviewer classifies. The one exception runs the other way — a worker that
   believes it has found something alarming stops its own packet immediately and
   says so, and the interruption needs no permission even though the
   classification is not its to make.
-- ##ROUTE-GATE-BLINDNESS-IS-P1 **A gate that is green because it is not looking is P1, not P2.**
+- @fact:ROUTE-GATE-BLINDNESS-IS-P1 **A gate that is green because it is not looking is P1, not P2.**
   This programme found that shape three times before Phase T opened, and each
   instance was green and wrong. That is a structural-integrity failure, not a
   gap in coverage.
-- ##ROUTE-NOT-A-DUMPING-GROUND `BACKLOG.md` is not where inconvenient reds go to be forgotten. A
+- @fact:ROUTE-NOT-A-DUMPING-GROUND `BACKLOG.md` is not where inconvenient reds go to be forgotten. A
   red is only a finding after the reviewer has decided it is neither a code fix
   nor a fact correction — the two verdicts of §5.5.3 come first, and «file it»
   is not a third verdict a wave may reach on its own.
@@ -470,26 +470,26 @@ Three roles, and conflating them is how a deferral becomes invisible:
 Two of the reviewer's decisions are safe for an agent and two are not, and the
 difference is whether the agent has an incentive to get it wrong:
 
-- ##DECIDE-SAFE-FOR-AN-AGENT **Code-wrong versus fact-wrong is diagnostic** — evidence-based, visible
+- @fact:DECIDE-SAFE-FOR-AN-AGENT **Code-wrong versus fact-wrong is diagnostic** — evidence-based, visible
   in the diff, and wrong answers are caught by the next reader. An agent owns it.
-- ##DECIDE-DEFERRAL-IS-NOT-SAFE **«This is a finding, not work» shrinks the wave, and the agent
+- @fact:DECIDE-DEFERRAL-IS-NOT-SAFE **«This is a finding, not work» shrinks the wave, and the agent
   deciding it is the agent that wants to move on.** Saying «the reviewer
   decides» is circular there. **So: every P2 and P3 filed during a wave appears
   in that wave's report to the owner**, not only in `BACKLOG.md`. A deferral is
   visible at the moment it is taken, rather than discoverable later by someone
   opening a file nobody opens.
-- ##DECIDE-SEVERITY-IS-ONE-WAY **Severity moves up freely and down only through the owner.** An
+- @fact:DECIDE-SEVERITY-IS-ONE-WAY **Severity moves up freely and down only through the owner.** An
   agent — worker or reviewer — may **escalate** to P1 without permission and may
   **never downgrade** from it. Under-calling a P1 is the failure that costs
   something irreversible; over-calling one costs a conversation.
-- ##DECIDE-FACT-EDIT-IS-THE-OWNERS **A fact correction is never an agent's to land.** The reviewer
+- @fact:DECIDE-FACT-EDIT-IS-THE-OWNERS **A fact correction is never an agent's to land.** The reviewer
   diagnoses «the spec was wrong»; the edit itself goes through sync-from-code
   with the owner's approval, exactly as every scope ruling in this campaign did.
   The agent's verdict is a proposal with evidence attached.
 
 ### 5.5.6 Do not over-specify, or a code fix will invalidate after all {#no-over-spec}
 
-##WAVE-ASSERT-NO-MORE-THAN-THE-FACT **Assert exactly what the fact promises and nothing more.** The one
+@fact:WAVE-ASSERT-NO-MORE-THAN-THE-FACT **Assert exactly what the fact promises and nothing more.** The one
 way a *code* fix does break a Phase T test is over-specification: a fact
 promising «a nearest-legal-value hint» is satisfied by any message containing
 the suggestion, and a test asserting the **exact string** breaks when the
@@ -534,12 +534,12 @@ classification over 20 000 tests is a second statement with its own writer, and
 producing it means re-reading every test. **The tier is a property of the test,
 known by whoever writes it, and it costs one token at authoring time.**
 
-- ##T-TIER-AT-WRITE **The worker assigns the tier as it writes the test.** Never a later
+- @fact:T-TIER-AT-WRITE **The worker assigns the tier as it writes the test.** Never a later
   pass, never inferred from a stopwatch.
-- ##T-FIRST-PASS-IS-FULL **The first authoring pass is full coverage** — every T-testable
+- @fact:T-FIRST-PASS-IS-FULL **The first authoring pass is full coverage** — every T-testable
   fact, slowly and deliberately. Tiering governs what runs *when*, never what
   gets *written*.
-- ##T-MEASURE-VALIDATES **The timing run still happens, and its job changes**: it no longer
+- @fact:T-MEASURE-VALIDATES **The timing run still happens, and its job changes**: it no longer
   produces the tiers, it **audits** them. A test in the fast tier that is not
   fast is a mis-assignment to fix, and the run is what finds it.
 
@@ -565,14 +565,14 @@ has not started. Deferred deliberately; §7.3 records the upgrade path.
 
 Until then both ride the two carriers Phase T already has:
 
-- ##T-CARRIER-VERIFIES **The edge:** `#[specmark::verifies("spec://…#FACT")]` — sugar that
+- @fact:T-CARRIER-VERIFIES **The edge:** `#[specmark::verifies("spec://…#FACT")]` — sugar that
   already exists **specifically for tests** and is shorter than the general
   form. This is the carrier §10's coverage count reads.
-- ##T-CARRIER-KIND **The kind:** a test-name prefix — `canonical_…`, `boundary_…`,
+- @fact:T-CARRIER-KIND **The kind:** a test-name prefix — `canonical_…`, `boundary_…`,
   `negative_…`, `property_…`. Greppable, so §10's «three *distinct* kinds»
   becomes a mechanical check instead of a human reading tests. **Without this
   the exit gate is not checkable at all**, which is why it is not optional.
-- ##T-CARRIER-TIER **The tier:** `#[ignore]` marks the **slow** tier — cargo-native,
+- @fact:T-CARRIER-TIER **The tier:** `#[ignore]` marks the **slow** tier — cargo-native,
   and `--include-ignored` is the full run. `fast` vs `floor` is the file:
   `spec_tests.rs` and `spec_tests_io.rs` beside the cell (§6), so the dev loop
   selects by target and the split stays visible from the path, which was the
@@ -616,22 +616,22 @@ be resolved by a tool that cannot see fact grain.
 
 ## 9. What the phase must not do {#never}
 
-- ##NEVER-READ-BODY Never show the implementation body to a test-writing worker. §3 is the
+- @fact:NEVER-READ-BODY Never show the implementation body to a test-writing worker. §3 is the
   phase's value and this is how it is lost.
-- ##NEVER-DESCRIBE-THE-CODE **Never write a test that describes how the code is built.** A test
+- @fact:NEVER-DESCRIBE-THE-CODE **Never write a test that describes how the code is built.** A test
   states what the fact means; if the code were rewritten from scratch against
   the same fact, every test in this phase must still pass. That is the
   definition of a real test here, and §3.4's hand test is how a worker checks
   it in one question.
-- ##NEVER-INVENT-EXPECTED Never let an expected value come from running the code. An
+- @fact:NEVER-INVENT-EXPECTED Never let an expected value come from running the code. An
   undeliverable expectation means the fact is not T-testable.
-- ##NEVER-FORCE-THREE Never force a third kind that does not exist. Two honest kinds and a
+- @fact:NEVER-FORCE-THREE Never force a third kind that does not exist. Two honest kinds and a
   reason is the correct output.
-- ##NEVER-TOUCH-HAND-TESTS Never write outside `spec_tests.rs`. Hand-written tests are not the
+- @fact:NEVER-TOUCH-HAND-TESTS Never write outside `spec_tests.rs`. Hand-written tests are not the
   swarm's to edit.
-- ##NEVER-WEAKEN-GATE Never weaken an assertion, a golden, or a gate to make a new test
+- @fact:NEVER-WEAKEN-GATE Never weaken an assertion, a golden, or a gate to make a new test
   pass. A conflict is a finding.
-- ##NEVER-ACCEPT-WITHOUT-RED Never accept a packet with no red exhibit (§5).
+- @fact:NEVER-ACCEPT-WITHOUT-RED Never accept a packet with no red exhibit (§5).
 
 ## 10. Exit gate — enumerating this phase's own steps (amendment A1) {#exit}
 
@@ -671,7 +671,7 @@ were lost?*
 anything `test/done`**, so its facts stay unmarked and are invisible to that
 check. It catches over-claiming; the question is about under-delivering.
 
-##COVERAGE-NEEDS-A-DENOMINATOR **The missing piece is a denominator, for the eighth time in this
+@fact:COVERAGE-NEEDS-A-DENOMINATOR **The missing piece is a denominator, for the eighth time in this
 programme.** A fact with zero edges is indistinguishable from a fact nobody
 attempted — *unless the list of facts that were supposed to get tests exists as
 an artefact*. §2's exit says «the three counts, recorded». **Counts are not
@@ -693,18 +693,18 @@ C. TAG grain     — count of #[test] in spec_tests*.rs  vs  count of verifies e
                    way a nonexistent one is.
 ```
 
-- ##COVERAGE-C-IS-THE-SUBTLE-ONE **Check C is the one that would otherwise be missed**, and it is the
+- @fact:COVERAGE-C-IS-THE-SUBTLE-ONE **Check C is the one that would otherwise be missed**, and it is the
   likeliest real failure: a worker under budget pressure writes the test and
   forgets the tag. The result reads as *fewer facts covered* when the truth is
   *tests exist and are unfindable* — a much better position to be in, and one
   you cannot act on without knowing it.
-- ##COVERAGE-EACH-NAMES-WHAT-IS-MISSING All three **name** what is missing, never report a count. «97 % of
+- @fact:COVERAGE-EACH-NAMES-WHAT-IS-MISSING All three **name** what is missing, never report a count. «97 % of
   facts covered» is the shape of statement this programme has now caught being
   wrong seven times.
 
 ### 10.1.2 The phase ships the checker, not the rule {#ship-the-checker}
 
-##COVERAGE-A-RULE-WITH-NO-CHECKER-IS-A-WISH The Discipline's own law: **a rule with no checker is a WISH.** A
+@fact:COVERAGE-A-RULE-WITH-NO-CHECKER-IS-A-WISH The Discipline's own law: **a rule with no checker is a WISH.** A
 coverage claim verified by a human reading reports is exactly that. So the
 checker — an `xtask` subcommand or equivalent — **is a deliverable of Phase T,
 not a follow-up**, and §10's exit gate is not met until it runs and is green.
@@ -746,16 +746,16 @@ assembles it:
 | the **kind** | the test-name prefix `canonical_` / `boundary_` / `negative_` / `property_` | `grep` |
 | the **tier** | `#[ignore]` and the file it sits in | `cargo` |
 
-- ##REG-COVERAGE-IS-A-QUERY **The exit gate's coverage count is therefore a query, not a census.**
+- @fact:REG-COVERAGE-IS-A-QUERY **The exit gate's coverage count is therefore a query, not a census.**
   «Every T-testable fact carries ≥3 edges of distinct kinds» is answered from the
   extracted index plus a grep — nothing is tallied by hand or by a model, and
   nothing rots between the tests and the count.
-- ##REG-DETECTOR-ALREADY-EXISTS `progress-core/src/evidence.rs:61` already flags a unit marked
+- @fact:REG-DETECTOR-ALREADY-EXISTS `progress-core/src/evidence.rs:61` already flags a unit marked
   `test/done` with zero `verifies` edges. **Built, and never given an input.**
 
 ### 11.5.1 The prerequisite this creates, and it is not optional {#registry-proof}
 
-##REG-PROVE-ONE-EDGE-FIRST **Measured 2026-07-26: the `verifies` edge has ZERO producers anywhere in
+@fact:REG-PROVE-ONE-EDGE-FIRST **Measured 2026-07-26: the `verifies` edge has ZERO producers anywhere in
 this repository.** The carrier is specified, documented for tests in all three
 language guides, and **has never once been exercised**. That is the same shape
 as every assumption this campaign has been burned by.
@@ -812,28 +812,28 @@ The executor is **not** a Claude-grade session. It is GLM — the same populatio
 the Discipline's own weak-reader results are about — and the first draft of this
 design was written for a reader it will not get.
 
-- ##P-DOCTRINE-APPLIES-TO-OURSELVES **The project's own doctrine binds this phase's prompts.** The
+- @fact:P-DOCTRINE-APPLIES-TO-OURSELVES **The project's own doctrine binds this phase's prompts.** The
   strong author materialises the structural decision; the weak reader fills a
   named input (scaffold card A, in this corpus's own words). A prompt that asks
   a weak writer to *derive* five invariants per test has moved the expensive
   cognition to the cheap process, which is the inversion the whole discipline
   exists to prevent.
-- ##P-PRECOMPUTE-EVERY-DERIVABLE-FIELD **Everything derivable is precomputed into the packet by the boss**
+- @fact:P-PRECOMPUTE-EVERY-DERIVABLE-FIELD **Everything derivable is precomputed into the packet by the boss**
   — the `spec://` URI, the revision `r=N`, the target file path, the three test
   names, the tier. The writer copies literals and writes assertions. It never
   derives an identifier, because a mistyped `verifies` tag is a test that exists
   and is invisible to every count this phase produces (§11.5), and that is the
   single most expensive failure available to a weak writer.
-- ##P-INLINE-NEVER-CITE **The routine is inlined, never cited.** A weak reader told to «read
+- @fact:P-INLINE-NEVER-CITE **The routine is inlined, never cited.** A weak reader told to «read
   §3.1» skims it. §3.1's seven steps, §3.2's ban list and §3.3's worked pair are
   pasted into the packet in full. They are ~60 lines and they are the phase.
-- ##P-ONE-DECISION-PER-STEP **One decision per step.** Where the first draft asked for judgement
+- @fact:P-ONE-DECISION-PER-STEP **One decision per step.** Where the first draft asked for judgement
   («balance by estimated tests», «choose the kind»), the packet carries the
   answer and the writer executes it.
 
 ### 13.0.1 The packet is the unit, and it serves both levels {#packet-is-the-unit}
 
-##P-SAME-PACKET-BOTH-LEVELS **One packet = one component = one writer**, and the *same* packet text
+@fact:P-SAME-PACKET-BOTH-LEVELS **One packet = one component = one writer**, and the *same* packet text
 works whether it is consumed by a whole GLM session or by one sub-agent inside
 one. This is deliberate: whether a ZCode-class harness offers native sub-agent
 orchestration is **not verified**, and no part of this design may depend on the
@@ -845,7 +845,7 @@ answer.
 | the session lead does no cargo, no git, no merge | the same, per session |
 | **the packets are identical** | **the packets are identical** |
 
-##P-NO-BET-ON-UNVERIFIED-CAPABILITY The first draft bet the whole parallel design on ten sub-agents
+@fact:P-NO-BET-ON-UNVERIFIED-CAPABILITY The first draft bet the whole parallel design on ten sub-agents
 existing inside an account. Making the packet the unit removes the bet instead
 of hedging it: if fan-out exists it is a scheduling convenience, and if it does
 not, nothing about the work changes.
@@ -862,25 +862,25 @@ run begins:
 | the `mod spec_tests;` line in the cell's parent | **yes**, when two cells share one parent | the scaffold pass — §13.3 |
 | `Cargo.toml` dev-dependencies | **yes**, if a test needs a new one | pre-provision before the split |
 
-- ##P-NOT-A-MERGE-PROBLEM Nothing else is shared. Workers do not run `vibe progress`, do not
+- @fact:P-NOT-A-MERGE-PROBLEM Nothing else is shared. Workers do not run `vibe progress`, do not
   write campaign state, and do not touch each other's crates. **This is not a
   merge problem; it is a file-ownership problem**, and merging is only where an
   unsolved ownership problem shows up.
 
 ### 13.2 The partition unit is the cell, never the fact {#partition}
 
-- ##P-CELL-IS-THE-UNIT **Group the triage's T-testable facts by the cell whose public surface
+- @fact:P-CELL-IS-THE-UNIT **Group the triage's T-testable facts by the cell whose public surface
   they constrain, then assign whole cells.** §2's triage already produces that
   mapping — it is the phase's first output and it is exactly the partition key,
   so no separate scoping step is needed.
-- ##P-NEVER-SPLIT-A-CELL **Never split a cell across accounts.** One cell is one
+- @fact:P-NEVER-SPLIT-A-CELL **Never split a cell across accounts.** One cell is one
   `spec_tests.rs` with one writer, and a worker that has seen a cell's other
   facts writes better tests for the next one.
-- ##P-SPANNING-FACTS-BIND-CELLS **A fact spanning two cells binds them into one unit.** Take the
+- @fact:P-SPANNING-FACTS-BIND-CELLS **A fact spanning two cells binds them into one unit.** Take the
   connected components (union-find over facts that touch more than one cell) and
   pack the *components*, not the cells. Otherwise one fact needs two accounts to
   agree, which is the coordination this design exists to avoid.
-- ##P-BALANCE-BY-TESTS **Balance by estimated tests (≈ 3 × T-testable facts in the
+- @fact:P-BALANCE-BY-TESTS **Balance by estimated tests (≈ 3 × T-testable facts in the
   component), not by fact count and never by file count** — B1 measured 46 units
   per file and B2's remainder 28, so file count is a 1.6× lie about cost.
   Greedy largest-first into two bins is deterministic, so the split is
@@ -893,12 +893,12 @@ swarm will write and declares it:** an empty `spec_tests.rs` (and
 `spec_tests_io.rs` where the cell needs it) for every in-scope cell, plus the
 `mod` line in each parent, plus any dev-dependency a kind will need.
 
-- ##P-SCAFFOLD-WHY After it, **every parallel write is to a leaf file that already exists
+- @fact:P-SCAFFOLD-WHY After it, **every parallel write is to a leaf file that already exists
   and is already declared.** No worker edits a shared file at all, so the two
   branches touch provably disjoint paths and git merges them without a conflict
   to resolve. **The scaffold pass is what converts a merge risk into an
   invariant.**
-- ##P-SCAFFOLD-IS-ALSO-THE-DENOMINATOR It doubles as the denominator (this campaign's most-repeated
+- @fact:P-SCAFFOLD-IS-ALSO-THE-DENOMINATOR It doubles as the denominator (this campaign's most-repeated
   lesson): the scaffold list is the set of files that **must** be non-empty at
   the end. Any that is still empty is named. Without it, «both branches merged
   cleanly» is a count with nothing to compare against.
@@ -908,10 +908,10 @@ swarm will write and declares it:** an empty `spec_tests.rs` (and
 **Parallel writers know nothing about each other.** Whatever the harness, there
 is no coordinator spanning two accounts and no runtime channel between them.
 
-- ##P-STATIC-OR-NOTHING **The split is static or it does not exist.** Neither can ask which
+- @fact:P-STATIC-OR-NOTHING **The split is static or it does not exist.** Neither can ask which
   cells are its own, so the answer is a literal path list in its prompt,
   computed by the boss before either starts.
-- ##P-WRITER-NEVER-RUNS-GIT **No writer runs git. Not worktree, not branch, not commit.** The boss
+- @fact:P-WRITER-NEVER-RUNS-GIT **No writer runs git. Not worktree, not branch, not commit.** The boss
   provisions every worktree and makes every commit. Three reasons, and the third
   is the one that decides it: the Windows `core.longpaths` failure is opaque and
   a weak reader cannot diagnose it; a commit is where the attribution rule
@@ -920,11 +920,11 @@ is no coordinator spanning two accounts and no runtime channel between them.
   check needs in order to still have two distinguishable sides to compare.
   *(The first draft opened the worker prompt with a `git worktree add` recipe.
   That was the single least realistic instruction in the design.)*
-- ##P-SCAFFOLD-IS-THE-ONLY-SYNC **The scaffold commit is the one synchronisation point**, and it
+- @fact:P-SCAFFOLD-IS-THE-ONLY-SYNC **The scaffold commit is the one synchronisation point**, and it
   happens *before* parallelism. Both prompts name the same starting sha. That
   is why the scaffold cannot be one of the two workers — the other would have
   to wait for it, and waiting needs a channel neither has.
-- ##P-NEITHER-MERGES **Neither agent merges.** Each commits on its branch and stops. Not
+- @fact:P-NEITHER-MERGES **Neither agent merges.** Each commits on its branch and stops. Not
   because merging disjoint files is hard, but because §13.5's check **requires
   seeing both branches**, and an agent that merges its own can only see one
   side. Handing the verification to someone structurally unable to perform it
@@ -941,29 +941,29 @@ sub-agents in one worktree do not build in parallel — they queue, and the
 parallelism evaporates. **The objection is right, and the answer is not to
 tolerate the queue but to remove cargo from the parallel path.**
 
-- ##P-AUTHORING-IS-BUILD-FREE **Authoring is build-free by construction, and §3 already said so.**
+- @fact:P-AUTHORING-IS-BUILD-FREE **Authoring is build-free by construction, and §3 already said so.**
   The routine forbids running anything before the expected value is written —
   the fact's text is the oracle, so a test is *written* from a signature and a
   sentence. Running is only confirmation. **The sub-agents therefore write text
   and never invoke cargo once.**
-- ##P-BOSS-RUNS-WAVE-BUILDS **The BOSS runs the one wave build**
+- @fact:P-BOSS-RUNS-WAVE-BUILDS **The BOSS runs the one wave build**
   (`cargo test --workspace --no-run`), routes each compile error back by path,
   and repeats until it compiles. *(The first draft gave this to the session
   lead. A GLM lead is exactly as weak at a stateful build-and-route loop as the
   sub-agents it would be routing to — the level was wrong, not the mechanism.)*
-- ##P-BATCHED-RED-EXHIBIT **The red exhibits batch too, and they are also the boss's.** Perturb
+- @fact:P-BATCHED-RED-EXHIBIT **The red exhibits batch too, and they are also the boss's.** Perturb
   one literal in **every** file at once, run once, confirm exactly those failed,
   restore all, run again. Every file still gets its exhibit; the check is not
   weakened. **Two builds for the wave instead of two per test.**
-- ##P-RESTORE-IS-WHY-THE-BOSS-HOLDS-IT The restore step is the reason this cannot be delegated at all.
+- @fact:P-RESTORE-IS-WHY-THE-BOSS-HOLDS-IT The restore step is the reason this cannot be delegated at all.
   A perturbation that is not put back leaves a permanently failing test, the
   failure surfaces far from its cause, and the party best placed to forget it is
   the one that has just written two hundred files. The boss perturbs, records,
   and restores in one bounded loop it can see the whole of.
-- ##P-THE-ARITHMETIC The scale of it: a wave of ten sub-agents × five tests is **150 cargo
+- @fact:P-THE-ARITHMETIC The scale of it: a wave of ten sub-agents × five tests is **150 cargo
   invocations** under the naive design and **three** under this one. The
   serialised resource is touched O(waves), not O(tests).
-- ##P-ACCOUNTS-NEVER-CONTENDED **The two accounts never contended in the first place** — `target/` is
+- @fact:P-ACCOUNTS-NEVER-CONTENDED **The two accounts never contended in the first place** — `target/` is
   relative to the worktree root, so separate worktrees already have separate
   build directories. The contention was only ever *within* an account, and it is
   now gone from there too.
@@ -983,17 +983,17 @@ the boss before the account is opened** (§13.4). The worktree matters more than
 the branch: separate `target/` directories mean the two runs do not contend on
 the cargo build lock, which they otherwise would for every compile.
 
-- ##P-LONGPATHS-IS-THE-BOSS-S `git worktree add` on this repository overflows Windows MAX_PATH on
+- @fact:P-LONGPATHS-IS-THE-BOSS-S `git worktree add` on this repository overflows Windows MAX_PATH on
   the deep `vibedeps/` paths and fails opaquely; provisioning passes
   `-c core.longpaths=true`. This is a paid-for fact (F19) and it now lives
   where it is actionable — in the boss's provisioning step, not in a prompt
   handed to a reader who could not have diagnosed the failure.
 
-- ##P-BRANCH-NAMES **Name the branches for their scope, never for the tool.** The
+- @fact:P-BRANCH-NAMES **Name the branches for their scope, never for the tool.** The
   attribution policy forbids model, agent or AI-tool names in **branch names**
   as plainly as in commit messages. `phase-t/batch-a` and `phase-t/batch-b`,
   not the vendor.
-- ##P-PACKET-IS-A-PATH-LIST Each packet lists **its cells by path** and states the boundary in the
+- @fact:P-PACKET-IS-A-PATH-LIST Each packet lists **its cells by path** and states the boundary in the
   form every task in this campaign has used: *you may write only inside these
   paths; a file outside them is out of bounds.* That boundary has held across
   ten tasks.
@@ -1017,16 +1017,16 @@ into a file the other never touched leaves the intersection empty. The full
 procedure with commands is
 [`PHASE-T-WORKER-PROMPT.md` §5](PHASE-T-WORKER-PROMPT.md#boss).
 
-- ##P-VERIFY-IS-THE-POINT Step 1 is the invariant §13.3 bought; if it is ever non-empty the
+- @fact:P-VERIFY-IS-THE-POINT Step 1 is the invariant §13.3 bought; if it is ever non-empty the
   partition was wrong and the merge that «worked» hid it. **Check it even when
   the merge is clean** — especially then.
 
 ### 13.8 The honest ceiling {#ceiling-parallel}
 
-- ##P-NOT-TWO-TIMES **Expect materially less than 2×.** Two accounts double model
+- @fact:P-NOT-TWO-TIMES **Expect materially less than 2×.** Two accounts double model
   throughput and share one machine's CPU and disk; seven package workspaces each
   own a `target/`, and two worktrees double that. The gain is real and it is not
   the factor the account count suggests.
-- ##P-SCALES-PAST-TWO Nothing here is specific to two. The partition is over components and
+- @fact:P-SCALES-PAST-TWO Nothing here is specific to two. The partition is over components and
   the scaffold is single-writer, so **N accounts work the same way** — the only
   change is the bin count. Two is where it should be proven.

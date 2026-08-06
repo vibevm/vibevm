@@ -118,7 +118,7 @@ implementation at spec, engine, driver, deployment or demo layer.
 both `@impl/done`, both resting on the same unauthored card (each stack's own
 `cards/INDEX.md` lists it as pending). `R-021` is cited in the Go guide at
 `:148` and at `:405` (`fan-in/fan-out topologies as public surface are hidden
-control flow (R-021). @impl/done`). Both stacks are mine, so I could have
+control flow (R-021). @status:impl/done`). Both stacks are mine, so I could have
 repaired them — I did not, because **no drift verdict covers those anchors**,
 and §3.1 closes an obligation by editing *and re-judging every anchor in its
 list*. Moving a marker no verdict can be re-judged against would put the
@@ -316,7 +316,7 @@ $ find . -path ./target -prune -o -type d -name "vibe-tcg*" -print
 ```
 
 Zero `.rs` files. The only live document that mentions it is PROP-026, whose §4
-is marked `@spec/done` under an explicit banner — `##RETIRED-SECTIONS-KEPT
+is marked `@spec/done` under an explicit banner — `@fact:RETIRED-SECTIONS-KEPT
 §3–§5 below describe the retired topology and stay as the design record` — and
 whose §0 carries `##TOPOLOGY-RETIRED` ("the TOPOLOGY half … the `vibe-tcg`
 registry crate — is retired") and `##TCG-CRATE-DELETED` at `:42`. **The host has

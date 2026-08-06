@@ -25,17 +25,17 @@ where a hand edit is the exact failure the floor's step 6 exists to catch.
 This is the **first batch outside `core-ai-native`** and the first for a
 language stack, so three things change:
 
-- ##B5-GUIDE-IS-THE-BULK `spec/go/GUIDE-AI-NATIVE-GO.md` is the largest file and a **language
+- @fact:B5-GUIDE-IS-THE-BULK `spec/go/GUIDE-AI-NATIVE-GO.md` is the largest file and a **language
   guide**, not a mechanism spec: version floors, gate lists, licence flags,
   suppression policy. Most of it is `@impl/done` — these are rules in force —
   but claims about **Go the language** («gofmt ended formatting debates») are
   outside-world facts and ruling 10 sends them to `@spec/done`.
-- ##B5-CARDS-ARE-A-GENRE `spec/cards/*.md` are **pattern cards** in the format
+- @fact:B5-CARDS-ARE-A-GENRE `spec/cards/*.md` are **pattern cards** in the format
   `01-PATTERN-CARD-FORMAT.md` defines — Band 1 identity, Band 2 justification,
   Band 3 a fenced `card-ops` block. **The Band-3 fence is code and carries no
   markers** (`##FENCE-AWARE`); its `trigger:` / `routine:` / `checker:` lines
   are inside it and are not units.
-- ##B5-GO-CARRIER-IS-A-COMMENT Go's spec carrier is `//spec:verifies <uri> r=<N>` and its siblings —
+- @fact:B5-GO-CARRIER-IS-A-COMMENT Go's spec carrier is `//spec:verifies <uri> r=<N>` and its siblings —
   a **line comment**, not an attribute. Where the guide documents that syntax,
   it is prose about a carrier; mark it, do not confuse it with a marker.
 
@@ -43,10 +43,10 @@ language stack, so three things change:
 
 Named so they are recognised rather than rediscovered:
 
-- ##B5-EXPECT-VERSION-CLAIMS The guide states tool versions and licence facts (Go 1.24,
+- @fact:B5-EXPECT-VERSION-CLAIMS The guide states tool versions and licence facts (Go 1.24,
   staticcheck MIT, golangci-lint GPL-3.0). Those are checkable and may be
   **stale** — that is a finding, reported, never fixed.
-- ##B5-EXPECT-ENGINE-HISTORY DRIFT-036 found this package's vendored engine had frozen at
+- @fact:B5-EXPECT-ENGINE-HISTORY DRIFT-036 found this package's vendored engine had frozen at
   vendoring time and missed what the gate carried while it sat outside.
   It is synced now. **If a document claims something about the engine version
   it ships, check it against the tree before marking** — that exact claim was

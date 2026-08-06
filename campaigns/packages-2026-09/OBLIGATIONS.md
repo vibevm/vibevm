@@ -89,7 +89,7 @@ is what a closure updates._
 
 | id | n | route | packages | rule | reason (first line) |
 |---|---:|---|---|---|---|
-| `F-220` ⚑ | 2 | `release` | addressable-specs, source-mirrors | `r-nothing-exists` | one recorded measurement corrected in passing: 'the Next section cites repository paths' tested a rule that does not exist — flow:wal ##SECTION-NEXT :… |
+| `F-220` ⚑ | 2 | `release` | addressable-specs, source-mirrors | `r-nothing-exists` | one recorded measurement corrected in passing: 'the Next section cites repository paths' tested a rule that does not exist — flow:wal @fact:SECTION-NEXT :… |
 | `F-234` | 2 | `build-or-demote` | git-conventional-commits | `r-zero-instances` | **measured for the first time by this batch, and it is the largest single format gap found.** The failure the rule literally names is nearly absent — … |
 | `F-244` | 2 | `build-or-demote` | qualified-naming | `r-nothing-exists` | DRIFT on the first half, with the second half settled unusually well. NEVER DISAMBIGUATES is enforced by the types themselves: `qualified_name()` excl… |
 | `F-258` | 2 | `build-or-demote` | wal-specspaces | `r-nothing-exists` | DRIFT on two of the field's four requirements, measured. «Refreshed at every wind-down» holds — 22 commits touch SPECSPACES.md and their subjects are … |

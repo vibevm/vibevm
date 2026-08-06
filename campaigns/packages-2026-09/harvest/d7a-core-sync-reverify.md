@@ -1547,7 +1547,7 @@ Hand-authored tags remain as the human-override lane. **This PROP defines the
 format that the future generator will target.**»*
 
 The verdict: *«nothing constructs `EdgeProvenance::Generated` … The convergence
-this fact marks @impl/done is **conditional on** a `vibe build` that does not
+this fact marks @status:impl/done is **conditional on** a `vibe build` that does not
 generate code yet.»* **The verdict states the sentence's own antecedent and files
 it as the defect.** «Once X, then Y» is not falsified by ¬X; the sentence
 explicitly calls the generator *future* and claims only that the format is

@@ -2,57 +2,57 @@
 
 <status stage="spec" state="done"/>
 
-##status-line *Status: component brief at FULL seven-section parity (problem · design
+@fact:status-line *Status: component brief at FULL seven-section parity (problem · design
 stance · component shape · staged ambition · licensing · risk register ·
-summary).* @impl/done
+summary).* @status:impl/done
 
-##COMMISSIONED-BY-THE-GO-AI-NATIVE-MANDATE *Commissioned 2026-07-17 by the GO-AI-NATIVE-PLAN mandate as the
+@fact:COMMISSIONED-BY-THE-GO-AI-NATIVE-MANDATE *Commissioned 2026-07-17 by the GO-AI-NATIVE-PLAN mandate as the
 Go member of the agentic tcg line — the sibling of `go-ai-native-tcg.md`
 (token-level, VERY-FAR-future by the owner's ruling) and of the shipped
-TS/Rust twins.* @impl/done
+TS/Rust twins.* @status:impl/done
 
-##companion-documents *Mechanism specs:
+@fact:companion-documents *Mechanism specs:
 [`TCG-ORACLE-GO-v0.1`](../mechanisms/TCG-ORACLE-GO-v0.1.md),
 [`TCG-PROTOCOL-GO-v0.1`](../mechanisms/TCG-PROTOCOL-GO-v0.1.md); the
 product-side MCP seam is vibevm's PROP-026 (the `language` parameter was
-cut for exactly this kind of arrival: a new value, not new tools).* @impl/done
+cut for exactly this kind of arrival: a new value, not new tools).* @status:impl/done
 
 ## 1. What problem it solves {#problem}
 
-##GO-AGENTS-LEARN-TYPE-ERRORS-AT-WRITE-GRAIN Go is the Discipline's third supported language, and a Go-editing agent
+@fact:GO-AGENTS-LEARN-TYPE-ERRORS-AT-WRITE-GRAIN Go is the Discipline's third supported language, and a Go-editing agent
 today learns about a type error at write-grain latency: write the file,
 run `go build`/`go vet` (fast, but a full write-and-shell round trip),
-parse stderr, retry. @spec/done
+parse stderr, retry. @status:spec/done
 
-##MOST-OF-THE-MASKS-VALUE-IS-DELIVERABLE-WITHOUT-IT The TS and Rust campaigns proved that most of a
+@fact:MOST-OF-THE-MASKS-VALUE-IS-DELIVERABLE-WITHOUT-IT The TS and Rust campaigns proved that most of a
 logit-mask's value is deliverable WITHOUT the mask — information ("what
 is in scope, does this type-check"), feedback latency (milliseconds on a
 warm session instead of a write-and-run loop), and generation-time
 discipline (the gate's own rules answered while writing) — as tools the
-agent consults. @spec/done
+agent consults. @status:spec/done
 
-##GUARANTEE-STAYS-WITH-THE-FLOOR The mask's GUARANTEE stays with the floor; the oracle
-makes red floor iterations rare. @impl/done
+@fact:GUARANTEE-STAYS-WITH-THE-FLOOR The mask's GUARANTEE stays with the floor; the oracle
+makes red floor iterations rare. @status:impl/done
 
-##GO-TWIN-HAS-THE-FRIENDLIEST-FIDELITY-STORY The Go twin arrives with the friendliest fidelity story of the three,
+@fact:GO-TWIN-HAS-THE-FRIENDLIEST-FIDELITY-STORY The Go twin arrives with the friendliest fidelity story of the three,
 stated up front rather than discovered later: **gopls stands on
 `go/types`, the reference library implementation of the Go
 specification** — the same framework `go vet` builds on — while the gc
 compiler type-checks with types2, go/types' deliberately-synchronized
-port. @spec/done
+port. @status:spec/done
 
-##ORACLE-SITS-BETWEEN-THE-TS-AND-RUST-TWINS The oracle is therefore far closer to "the compiler's own answer"
+@fact:ORACLE-SITS-BETWEEN-THE-TS-AND-RUST-TWINS The oracle is therefore far closer to "the compiler's own answer"
 than rust-analyzer is to rustc, and one honest step short of the TS
-oracle (which IS tsc's engine). @spec/done
+oracle (which IS tsc's engine). @status:spec/done
 
-##FLOOR-REMAINS-THE-TRUTH The floor (`go-ai-native floor` — the seven
+@fact:FLOOR-REMAINS-THE-TRUTH The floor (`go-ai-native floor` — the seven
 steps: gofmt → vet → tests → staticcheck+exhaustive → conform → specmap
 → test-gate; the compile rides inside `go test ./...`) remains the
-truth, verbatim. @impl/done
+truth, verbatim. @status:impl/done
 
 ## 2. Design stance (consequences of what we know) {#design-stance}
 
-- ##STANCE-STAND-ON-THE-CONSUMERS-GOPLS **Stand on the consumer's gopls, over LSP.** The oracle process is
+- @fact:STANCE-STAND-ON-THE-CONSUMERS-GOPLS **Stand on the consumer's gopls, over LSP.** The oracle process is
   the CONSUMER's own `gopls` (PATH → GOBIN → GOPATH/bin resolution from
   the project root; absence is a recipe-carrying error, never a silent
   skip — `go install golang.org/x/tools/gopls@latest`). No bespoke type
@@ -61,41 +61,41 @@ truth, verbatim. @impl/done
   rebuild the completions/hover gopls already ships. (A far-future
   embedding via `golang.org/x/tools` public APIs is the Go analog of
   the far-backlogged `ra_ap_*` line — re-enters planning only by the
-  owner's word.) @impl/done
-- ##STANCE-OVERLAYS-NEVER-DISK **Overlays, never disk.** LSP text-document overlays (`didOpen` /
+  owner's word.) @status:impl/done
+- @fact:STANCE-OVERLAYS-NEVER-DISK **Overlays, never disk.** LSP text-document overlays (`didOpen` /
   `didChange` with monotonic per-document versions) validate the
   HYPOTHETICAL edit before it lands. A hypothetical new file in an
-  existing package participates via `didOpen` alone. @impl/done
-- ##STANCE-BOTH-DIAGNOSTICS-CHANNELS **Both diagnostics channels, capability-negotiated.** gopls's
+  existing package participates via `didOpen` alone. @status:impl/done
+- @fact:STANCE-BOTH-DIAGNOSTICS-CHANNELS **Both diagnostics channels, capability-negotiated.** gopls's
   diagnostics have historically been push-model; pull support is newer.
   The bridge prefers pull when granted and otherwise collects pushed
   diagnostics for the target document under a bounded settle window —
   whichever the shipped gopls grants is pinned by the live chain
   (TCG-ORACLE-GO §2). No heuristic is trusted untested — the Rust
-  campaign's falsified progress-drain lesson is inherited as a warning. @impl/done
-- ##STANCE-ENRICHMENT-IS-IN-PROCESS **Enrichment is in-process — one engine, zero drift.** The gate's
+  campaign's falsified progress-drain lesson is inherited as a warning. @status:impl/done
+- @fact:STANCE-ENRICHMENT-IS-IN-PROCESS **Enrichment is in-process — one engine, zero drift.** The gate's
   fact source (the stdlib-only go-extract sidecar) is spawned by the
   same bridge machinery the conform frontend uses, so the relay runs
   the REAL conform rules (`go_ai_native_conform::build_rules` →
   `conform_core::check`) on the overlay content. Findings come back
   flagged against the project's frozen ratchet baseline, with Class-F
   advice citing GUIDE REQs; a finding-parity test diffs the relay's
-  finding set against `go-ai-native-conform check` on the same file. @impl/done
-- ##STANCE-DUAL-TRANSPORT **Dual transport, agent's choice** (PROP-018 §2.8): a persistent
+  finding set against `go-ai-native-conform check` on the same file. @status:impl/done
+- @fact:STANCE-DUAL-TRANSPORT **Dual transport, agent's choice** (PROP-018 §2.8): a persistent
   `serve` relay for MCP hosts, and one-shot CLI forms
   (`vibe bin exec go-ai-native-tcg -- validate …`) for agents without
-  MCP. Same protocol shape on both. @impl/done
-- ##STANCE-CAPABILITY-ROUTING-IS-FREE **Capability routing is free here.** A tool you may ignore does not
+  MCP. Same protocol shape on both. @status:impl/done
+- @fact:STANCE-CAPABILITY-ROUTING-IS-FREE **Capability routing is free here.** A tool you may ignore does not
   distort (DR1-015 inverted) — and the TS battery's Stage-A null adds
   the honest complement: a tool merely offered may not help until
   delivery binds. This brief ships mechanics; delivery experiments are
-  the backlogged cross-language Stage B. @impl/done
+  the backlogged cross-language Stage B. @status:impl/done
 
 ## 3. Component shape (how it fits vibevm) {#component-shape}
 
-##three-processes-lead Three processes; enrichment happens inside the relay (the Rust twin's
+@fact:three-processes-lead Three processes; enrichment happens inside the relay (the Rust twin's
 topology, with go-extract as the fact sidecar where Rust calls a
-library): @impl/done
+library): @status:impl/done
 
 ```
 agent ──MCP (tcg_validate/tcg_scope/tcg_complete/tcg_type,
@@ -116,17 +116,17 @@ agent ──MCP (tcg_validate/tcg_scope/tcg_complete/tcg_type,
                                                hover, completion)
 ```
 
-- ##COMPONENT-THE-BRIDGE **The bridge** (`crates/go-ai-native-tcg-bridge`, this package): the
+- @fact:COMPONENT-THE-BRIDGE **The bridge** (`crates/go-ai-native-tcg-bridge`, this package): the
   LSP client as a seam — Content-Length framing, capability-negotiated
   handshake, overlay/version bookkeeping, readiness wait with a
   `degraded` flag, five-way typed error taxonomy, replay-tested without
-  gopls. @impl/done
-- ##COMPONENT-THE-CLI **The CLI** (`crates/go-ai-native-tcg`, bin **`go-ai-native-tcg`**,
+  gopls. @status:impl/done
+- @fact:COMPONENT-THE-CLI **The CLI** (`crates/go-ai-native-tcg`, bin **`go-ai-native-tcg`**,
   the package's 4th `[[binary]]`): `serve` (the enriching relay;
   self-inits with the project's conform.toml topology so a host's first
   frame can be `validate`) + one-shot ops + `bench` (the corpus/latency
-  harness). @impl/done
-- ##COMPONENT-THE-PRODUCT-SEAM **The product seam** (vibevm, PROP-027; PROP-026 §2 keeps the
+  harness). @status:impl/done
+- @fact:COMPONENT-THE-PRODUCT-SEAM **The product seam** (vibevm, PROP-027; PROP-026 §2 keeps the
   grammar): the SAME four `tcg_*` tools, served by this family's own standalone
   MCP package `mcp:org.vibevm.ai-native/go-ai-native-mcp` — no new tools, and
   `language` survives only as a validated compat parameter that refuses a
@@ -134,14 +134,14 @@ agent ──MCP (tcg_validate/tcg_scope/tcg_complete/tcg_type,
   `vibe mcp serve` + `vibe-tcg` slot-dispatch topology this row described was
   retired whole (PROP-026 ##SUPERSEDED-TOPOLOGY, ##TCG-CRATE-DELETED); the
   enum-value promise re-reads as «a new language is a new mcp package shipping
-  the SAME tool grammar» (##ENUM-BET-REREAD). @impl/done
-- ##COMPONENT-DETERMINISM-AND-AUDITABILITY **Determinism and auditability:** given (project state, overlay set,
+  the SAME tool grammar» (##ENUM-BET-REREAD). @status:impl/done
+- @fact:COMPONENT-DETERMINISM-AND-AUDITABILITY **Determinism and auditability:** given (project state, overlay set,
   policy, gopls version), answers are deterministic modulo gopls's own
-  analysis; enriched findings cite `spec://` REQs; nothing samples. @impl/done
+  analysis; enriched findings cite `spec://` REQs; nothing samples. @status:impl/done
 
 ## 4. Staged ambition {#staged-ambition}
 
-- ##STAGE-A-CONSULTATION-ORACLE **Stage A — the consultation oracle (THIS brief):** validate / scope /
+- @fact:STAGE-A-CONSULTATION-ORACLE **Stage A — the consultation oracle (THIS brief):** validate / scope /
   complete / type over LSP overlays, discipline-enriched, MCP +
   one-shot delivery, mechanics proven by the differential corpus and
   the bench baseline on `research/go-demo`. *Specified, not built — the
@@ -154,70 +154,70 @@ agent ──MCP (tcg_validate/tcg_scope/tcg_complete/tcg_type,
   Rust baseline and no Go run — so nothing has been measured on
   `research/go-demo` and the mechanics are unproven rather than proven.
   The Rust and TypeScript twins of this line stand: their corpora and
-  baselines are both real.* @spec/done
-- ##STAGE-B-RICHER-DISCIPLINE-ADVICE **Stage B — richer discipline advice:** defined-type constructor
+  baselines are both real.* @status:spec/done
+- @fact:STAGE-B-RICHER-DISCIPLINE-ADVICE **Stage B — richer discipline advice:** defined-type constructor
   suggestions at seams, policy-ranked completions, cell-topology
-  answers — fields the protocol already carries. @spec/done
-- ##STAGE-C-DELIVERY-EXPERIMENTS **Stage C — delivery experiments** (cross-language, with the TS and
+  answers — fields the protocol already carries. @status:spec/done
+- @fact:STAGE-C-DELIVERY-EXPERIMENTS **Stage C — delivery experiments** (cross-language, with the TS and
   Rust twins, when the owner commissions the delivery line): MCP-mounted
-  and write-path-hook arms over a Go task battery on `research/go-demo`. @spec/done
-- ##STAGE-D-X-TOOLS-EMBEDDING **Stage D — the x/tools embedding (FAR BACKLOG):** in-process
+  and write-path-hook arms over a Go task battery on `research/go-demo`. @status:spec/done
+- @fact:STAGE-D-X-TOOLS-EMBEDDING **Stage D — the x/tools embedding (FAR BACKLOG):** in-process
   semantic access replacing the LSP child — richer scope/brand answers,
   custom traversals — at the cost of pinning an analyzer version.
-  Re-enters planning only by the owner's word. @spec/done
-- ##STAGE-E-TOKEN-LEVEL-TCG **Stage E — token-level TCG** (`go-ai-native-tcg.md`, VERY-FAR-future
+  Re-enters planning only by the owner's word. @status:spec/done
+- @fact:STAGE-E-TOKEN-LEVEL-TCG **Stage E — token-level TCG** (`go-ai-native-tcg.md`, VERY-FAR-future
   by the owner's 2026-07-17 ruling): the same oracle answers a
   logit-masker inside a decode loop when an inference substrate exists.
-  Nothing here is thrown away; the consumer of the answers changes. @spec/done
+  Nothing here is thrown away; the consumer of the answers changes. @status:spec/done
 
 ## 5. Licensing posture {#licensing}
 
-- ##LICENSING-GOPLS-AND-X-TOOLS gopls / golang.org/x/tools: BSD-3 — and the consumer brings their own
-  binary (we spawn, never link, never vendor). @spec/done
-- ##LICENSING-LSP LSP: an open specification; the client is in-house code. @spec/done
-- ##LICENSING-GO-EXTRACT go-extract: in-house, stdlib-only Go. @impl/done
-- ##LICENSING-CONFORM-ENGINES The conform engines: in-house (this package + vendored
-  core-ai-native copies). @impl/done
-- ##LICENSING-NET-NOTHING-VIRAL Net: nothing viral anywhere near the critical path; the owner's
+- @fact:LICENSING-GOPLS-AND-X-TOOLS gopls / golang.org/x/tools: BSD-3 — and the consumer brings their own
+  binary (we spawn, never link, never vendor). @status:spec/done
+- @fact:LICENSING-LSP LSP: an open specification; the client is in-house code. @status:spec/done
+- @fact:LICENSING-GO-EXTRACT go-extract: in-house, stdlib-only Go. @status:impl/done
+- @fact:LICENSING-CONFORM-ENGINES The conform engines: in-house (this package + vendored
+  core-ai-native copies). @status:impl/done
+- @fact:LICENSING-NET-NOTHING-VIRAL Net: nothing viral anywhere near the critical path; the owner's
   "minimum external tooling" ideal is met — one official ecosystem
-  binary plus our own code. @impl/done
+  binary plus our own code. @status:impl/done
 
 ## 6. The honest risk register {#risk-register}
 
-- ##RISK-GOPLS-IS-GO-TYPES-NOT-THE-COMPILER **gopls is go/types, not the compiler — the defining nuance, owned in
+- @fact:RISK-GOPLS-IS-GO-TYPES-NOT-THE-COMPILER **gopls is go/types, not the compiler — the defining nuance, owned in
   the spec.** The delta to types2 is a synchronized pair, far tighter
   than r-a↔rustc, but saved-state assumptions, `go.mod` resolution
   under pure overlays, and vet-only findings can diverge from the
   floor's verdict. The corpus curates within competence, a mapping
   table makes the delta inspectable, documented-gap cases keep known
   silences visible, and every consumer-facing doc says: the floor is
-  the truth. @spec/done
-- ##RISK-NO-GUARANTEE-BY-CONSTRUCTION **No guarantee by construction.** The agent may ignore the oracle —
+  the truth. @status:spec/done
+- @fact:RISK-NO-GUARANTEE-BY-CONSTRUCTION **No guarantee by construction.** The agent may ignore the oracle —
   the TS Stage-A null says a merely-offered tool goes unconsulted by
   weak models. Mechanics ship here; delivery binding is Stage C's
-  measured question. @spec/done
-- ##RISK-DIAGNOSTICS-CHANNEL-VARIANCE **Diagnostics-channel variance across gopls versions.** Push vs pull
+  measured question. @status:spec/done
+- @fact:RISK-DIAGNOSTICS-CHANNEL-VARIANCE **Diagnostics-channel variance across gopls versions.** Push vs pull
   differs by release; both paths ship, capability-gated, and the live
   chain pins the shipped behavior. Replay transcripts keep the unit
-  suite gopls-free either way. @spec/done
-- ##RISK-COLD-INIT-ON-LARGE-WORKSPACES **Cold init on large workspaces.** Module graph loading dominates;
+  suite gopls-free either way. @status:spec/done
+- @fact:RISK-COLD-INIT-ON-LARGE-WORKSPACES **Cold init on large workspaces.** Module graph loading dominates;
   posted targets (< 15 s demo-class) move only with a recorded REPORT
   reason; the eager-init-at-serve-start posture and the `degraded`
-  flag are the mitigations. @spec/done
-- ##RISK-WINDOWS-CHILD-LIFECYCLE **Windows child lifecycle.** The house lesson set applies
+  flag are the mitigations. @status:spec/done
+- @fact:RISK-WINDOWS-CHILD-LIFECYCLE **Windows child lifecycle.** The house lesson set applies
   (verbatim-free paths into URIs, kill-on-drop, shutdown/exit dance,
-  no-zombie assertions). @impl/done
-- ##RISK-SCOPE-CREEP-TOWARD-AN-LSP-RELAY **Scope creep toward an LSP relay.** The surface is the four
+  no-zombie assertions). @status:impl/done
+- @fact:RISK-SCOPE-CREEP-TOWARD-AN-LSP-RELAY **Scope creep toward an LSP relay.** The surface is the four
   queries + lifecycle, full stop (PROP-026 §6);
-  rename/code-actions/references go through the owner. @impl/done
+  rename/code-actions/references go through the owner. @status:impl/done
 
 ## 7. One-line summary {#summary}
 
-##ONE-LINE-SUMMARY `vibe-agentic-tcg-go` gives a coding agent millisecond-class,
+@fact:ONE-LINE-SUMMARY `vibe-agentic-tcg-go` gives a coding agent millisecond-class,
 overlay-true Go answers — gopls diagnostics of unwritten edits,
 in-scope symbols, type-valid completions, and discipline findings from
 the same conform engine as the gate — through the same four `tcg_*`
 tools the TS and Rust twins proved (`language: "go"`), honestly
 labelled as go/types' answer rather than the compiler's, so agents stop
 paying the write-and-rerun tax while the mask (the only thing this is
-NOT) waits for an inference substrate on its own very-far-future track. @impl/done
+NOT) waits for an inference substrate on its own very-far-future track. @status:impl/done

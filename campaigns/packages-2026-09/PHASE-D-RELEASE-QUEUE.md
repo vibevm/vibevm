@@ -85,7 +85,7 @@ moved, and an `@spec://` address can. That is why the owner's ruling puts the
 repair in the packages and not in the compiler — and it is also why the repair
 **cannot be verified by editing a package**.
 
-- ##A1-EVERY-ROUTE-NEEDS-PUBLICATION **The consequence for the queue.** `spec/boot/STATIC.md` is
+- @fact:A1-EVERY-ROUTE-NEEDS-PUBLICATION **The consequence for the queue.** `spec/boot/STATIC.md` is
   generated from `vibedeps/` — its own provenance comments say so
   (`<!-- vibe:static org.vibevm.world/addressable-specs — vibedeps/flow-addressable-specs/0.1.0/… -->`).
   So a package edit reaches the lane only through a version bump and
@@ -118,7 +118,7 @@ repair in the packages and not in the compiler — and it is also why the repair
   missing access dates, and it enters this family only because
   `##LAW-DELTAS-NOT-DECREES`' sentence happens to end in a dangling pointer.
   **So: 47 verdicts blocked on publication, 7 not.**
-- ##A1-THE-EDIT-IS-A-COMMAND **The edit is prepared as a transformation, not as 62 hand edits.**
+- @fact:A1-THE-EDIT-IS-A-COMMAND **The edit is prepared as a transformation, not as 62 hand edits.**
   `tasks/address-repair.py` computes every replacement, refuses to apply if any
   emitted address does not resolve, and is line-indexed rather than text-wide
   (a whole-text replace was caught being wrong — `two-process-model` carries the
@@ -127,7 +127,7 @@ repair in the packages and not in the compiler — and it is also why the repair
   PROP-035 §6 grammar · 0 residual `../flows/` after the rewrite.** The 62
   constructs cover all 69 raw occurrences because 7 carry the path twice, once
   as visible link text.
-- ##A1-ALL-POINTERS-NO-EMBEDS **The `#embed` half of the ruling has no member here.** The owner
+- @fact:A1-ALL-POINTERS-NO-EMBEDS **The `#embed` half of the ruling has no member here.** The owner
   ruled `@spec://` for pointers and `#embed` where the target belongs in the
   lane. Read line by line, **all 69 are pointers** — «Full protocol:», «Full
   model:», «Full rationale:», «Grammar and forms:», «Responsibility table:»,
@@ -135,7 +135,7 @@ repair in the packages and not in the compiler — and it is also why the repair
   form copies the house form already live in the host's own spec
   (`spec/common/PROP-000.md:161-164`, `PROP-016:8`):
   `spec://<group>/<name>/<doc-path>#<anchor>`, no `.md`, always an anchor.
-- ##A1-F240-IS-SCOPED-AT-TWO-AND-THE-DEFECT-IS-IN-SEVENTEEN **`F-240`'s scope is wrong, and this is the one thing here that
+- @fact:A1-F240-IS-SCOPED-AT-TWO-AND-THE-DEFECT-IS-IN-SEVENTEEN **`F-240`'s scope is wrong, and this is the one thing here that
   changes what the owner should approve.** The root-relative variant — a
   re-derive prompt whose first instruction is `Read spec/flows/<name>/ …` —
   is recorded in two packages and **present in seventeen**: addressable-specs,

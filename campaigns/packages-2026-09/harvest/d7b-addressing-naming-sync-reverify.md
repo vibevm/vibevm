@@ -179,7 +179,7 @@ carries `/refs/`)».*
 Three measurements, each refuting a different part of it.
 
 **(i) `refs/book/` is not a never-read line — the same boot file tells the
-session to read it.** `spec/boot/00-core.md:26` reads *«##NOTOUCH-REFS-BOOK
+session to read it.** `spec/boot/00-core.md:26` reads *«@fact:NOTOUCH-REFS-BOOK
 `refs/book/` — the user's book, read-only reference material.»* Eight lines
 later, at `spec/boot/00-core.md:34`, comes the heading **`## Reading layers (per
 book, refs/book/)`**, and the boot contract derives its whole two-process reading
@@ -319,7 +319,7 @@ the third-party corpus bears on this obligation.
 correct as written. For `##ROW-HOME-FEATURE-SCOPE`, *if* the owner routes it to
 the package rather than to the host, the correction is one Home cell:
 
-> | ##ROW-HOME-FEATURE-SCOPE A feature's scope and acceptance criteria @impl/done | `spec/modules/<m>/FEAT-*` — or a campaign plan where the project runs slices as plans (`flow:campaign-plans`) @impl/done |
+> | @fact:ROW-HOME-FEATURE-SCOPE A feature's scope and acceptance criteria @status:impl/done | `spec/modules/<m>/FEAT-*` — or a campaign plan where the project runs slices as plans (`flow:campaign-plans`) @status:impl/done |
 
 It is written out here to be read, not applied: it edits a shipped row, so it is a
 `sync-from-code` spec diff the owner approves, and it also pre-empts the
@@ -611,18 +611,18 @@ three — the facts are correct as written. For the two graph anchors the
 correction is to carry the wave-6 amendment across, in the smallest form that
 makes each true without weakening it. `authoring-rules.md:100-103`:
 
-> ##RECORD-THE-TEST-NAME-IN-THE-UNIT Record the test name in the unit
+> @fact:RECORD-THE-TEST-NAME-IN-THE-UNIT Record the test name in the unit
 > once it exists (`Test: …`); that line is half of the bidirectional
 > graph described in the
 > [protocol §graph](ADDRESSABLE-SPECS-PROTOCOL.md#graph) — and where the
 > project mechanizes that graph, the same half is authored as a tag on the
-> test and rendered back at the unit instead, per that section. @impl/done
+> test and rendered back at the unit instead, per that section. @status:impl/done
 
 and `authoring-rules.md:217`:
 
-> - ##SUM-EVERY-CONTRACT-IMPLIES-A-TEST Every contract implies a test; the unit
+> - @fact:SUM-EVERY-CONTRACT-IMPLIES-A-TEST Every contract implies a test; the unit
 >   names it, by a `Test:` line or by a rendered edge where the graph is
->   mechanized. @impl/done
+>   mechanized. @status:impl/done
 
 Both are shipped-prose edits on a `sync-from-code` obligation, so **the owner
 approves them**; they are written out here and not applied. Whoever applies them
@@ -841,16 +841,16 @@ later superset, and none of it reaches the book. Reported, not counted.
 **Proposed correction (NOT APPLIED).** For `##SUM-THE-BIDIRECTIONAL-GRAPH`, carry
 the wave-6 amendment across — `ADDRESSABLE-SPECS-PROTOCOL.md:286-287`:
 
-> - ##SUM-THE-BIDIRECTIONAL-GRAPH `Implements:` markers plus `Test:` lines form a
+> - @fact:SUM-THE-BIDIRECTIONAL-GRAPH `Implements:` markers plus `Test:` lines form a
 >   bidirectional graph that pays off with zero tooling — and where the graph is
 >   mechanized, the same two edges are authored as code-side tags and the
->   spec-side view is rendered (§[graph](#graph)). @impl/done
+>   spec-side view is rendered (§[graph](#graph)). @status:impl/done
 
 For `##ROW-SEGMENT-MODULE`, *if* the owner routes it to the package, the minimal
 true form of the Meaning cell is one that points at the unit already carrying the
 rest — `ADDRESSABLE-SPECS-PROTOCOL.md:80`:
 
-> | ##ROW-SEGMENT-MODULE `<module>` @impl/done | spec module — a directory under `spec/modules/`, or `common`; for a package, its full coordinate `<group>/<name>` (§[modules](#modules)) @impl/done | `com.example.shop` @impl/done |
+> | @fact:ROW-SEGMENT-MODULE `<module>` @status:impl/done | spec module — a directory under `spec/modules/`, or `common`; for a package, its full coordinate `<group>/<name>` (§[modules](#modules)) @status:impl/done | `com.example.shop` @status:impl/done |
 
 Neither is applied. Both are shipped-prose edits on a `sync-from-code` obligation
 and therefore the owner's to approve; and the second one should not land alone —
@@ -1318,8 +1318,8 @@ consumer should keep and want no edit. The fourth,
 this batch — the count it asserts is about its own package and is wrong there. The
 minimal true form, `ref-grammar.md:108`:
 
-> ##the-single-storage-rule-stated-once The single storage rule, stated here as the
-> anchor every restatement echoes: @impl/done
+> @fact:the-single-storage-rule-stated-once The single storage rule, stated here as the
+> anchor every restatement echoes: @status:impl/done
 
 That preserves the intent (one authoritative home, the reason being drift) without
 asserting a count the package's own arrangement contradicts. **Not applied**: it is

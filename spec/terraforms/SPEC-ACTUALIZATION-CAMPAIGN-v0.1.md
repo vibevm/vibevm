@@ -641,7 +641,7 @@ because it is the part wave 2 turned into amendments.*
   способом» — table body cells are units, marked in-cell; (3) list
   items get hashtag addressing — «Элементам списков стоит придумать
   адресацию с помощью хэштегов … формат типа `1. #RULE-001 Текст
-  правила @freeze/done`», refined to **`##RULE-001`** (double hash) «чтобы
+  правила @status:freeze/done`», refined to **`##RULE-001`** (double hash) «чтобы
   их отличать» from the `#use`-family directives; (4) «каждый абзац,
   каждый элемент списка … который имеет статус, нужно разметить с
   помощью якоря» — the anchored-when-marked law: a marked unit without

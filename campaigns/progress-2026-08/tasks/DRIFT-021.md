@@ -202,11 +202,11 @@ Budget signal: past ~5 files, stop and return.
   `spec/modules/vibe-registry/PROP-002-decentralized-registry.md:590-594`,
   verbatim:
 
-  > ##PUB-TOKEN-LOADING **Token loading.** The publish token loader (`crate::token::load_token(host)`) iterates these sources in order, returning the first non-empty value: @impl/done
+  > @fact:PUB-TOKEN-LOADING **Token loading.** The publish token loader (`crate::token::load_token(host)`) iterates these sources in order, returning the first non-empty value: @status:impl/done
   >
-  > 1. ##TOK-ENV-VAR `VIBEVM_PUBLISH_TOKEN` environment variable (host-agnostic; useful for CI). @impl/done
-  > 2. ##TOK-PER-HOST-FILE `~/.vibe/<host-prefix>.publish.token` — per-host file. The prefix is the first label of the host (`github` for `github.com`, `gitverse` for `gitverse.ru`, `gitlab` for `gitlab.com`). @impl/done
-  > 3. ##TOK-LEGACY-FALLBACK `~/.vibe/git.publish.token` — legacy host-agnostic fallback. @impl/done
+  > 1. @fact:TOK-ENV-VAR `VIBEVM_PUBLISH_TOKEN` environment variable (host-agnostic; useful for CI). @status:impl/done
+  > 2. @fact:TOK-PER-HOST-FILE `~/.vibe/<host-prefix>.publish.token` — per-host file. The prefix is the first label of the host (`github` for `github.com`, `gitverse` for `gitverse.ru`, `gitlab` for `gitlab.com`). @status:impl/done
+  > 3. @fact:TOK-LEGACY-FALLBACK `~/.vibe/git.publish.token` — legacy host-agnostic fallback. @status:impl/done
 
   The code's four runtime legs are now exactly this list **plus one
   higher-precedence leg the spec omits**: `VIBEVM_PUBLISH_TOKEN_<HOST>`
@@ -215,7 +215,7 @@ Budget signal: past ~5 files, stop and return.
   legs; it is now one. Same defect, same anchor family, in
   `spec/boot/90-user.md:26`, verbatim:
 
-  > ##TOKEN-FILE-CONVENTION **Token file convention.** Per-host file под `~/.vibe/<host-prefix>.publish.token` (`github.publish.token`, `gitverse.publish.token`, etc.) — первый label хоста. Legacy host-agnostic путь `~/.vibe/git.publish.token` остаётся как fallback. Env-var `VIBEVM_PUBLISH_TOKEN` — высший приоритет, для CI. @impl/done
+  > @fact:TOKEN-FILE-CONVENTION **Token file convention.** Per-host file под `~/.vibe/<host-prefix>.publish.token` (`github.publish.token`, `gitverse.publish.token`, etc.) — первый label хоста. Legacy host-agnostic путь `~/.vibe/git.publish.token` остаётся как fallback. Env-var `VIBEVM_PUBLISH_TOKEN` — высший приоритет, для CI. @status:impl/done
 
   `VIBEVM_PUBLISH_TOKEN` is not "высший приоритет" — the host-specific
   form outranks it. Both were already true before DRIFT-021; neither was

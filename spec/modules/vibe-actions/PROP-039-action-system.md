@@ -2,301 +2,301 @@
 
 <status stage="impl" state="done" comment="C 2026-07-25: crates/vibe-actions ships (address/action/context/invoke/keymap/i18n/gate/aiui) with the Spec-2 TUI as its first consumer; fact grain 2026-07-24"/>
 
-##status-line **Status: IMPLEMENTED** (requirements authored 2026-07-15, owner-commissioned;
+@fact:status-line **Status: IMPLEMENTED** (requirements authored 2026-07-15, owner-commissioned;
 verified against the tree 2026-07-25 by the spec-actualization campaign). The **contract** for the crate
 `vibe-actions` — a frontend-agnostic, addressable, programmatically-drivable behaviour layer — which
 ships with its `address` / `action` / `context` / `invoke` / `keymap` / `i18n` / `gate` / `aiui` modules
-and runs the Spec-2 `vibe tree` TUI as its first consumer. @impl/done
+and runs the Spec-2 `vibe tree` TUI as its first consumer. @status:impl/done
 
-##related **Related:** design-doc [`spec/design/action-system.md`](../../design/action-system.md) (the *why* +
+@fact:related **Related:** design-doc [`spec/design/action-system.md`](../../design/action-system.md) (the *why* +
 architecture); the clean-room study
 [`legacy-spec/research/action-systems-vscode-idea.md`](../../../legacy-spec/research/action-systems-vscode-idea.md)
 (obligations DO1–DO18, deltas Δ1–Δ16); [PROP-037](../vibe-cli/PROP-037-tree-tui.md) (the `vibe tree`
 TUI — the first consumer, revised by Spec 2); the `qualified-naming` and `addressable-specs` flows
 (the address discipline this extends to behaviour). Mandate + acceptance:
-[`legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md#mandate`](../../../legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md#mandate). @spec/done
+[`legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md#mandate`](../../../legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md#mandate). @status:spec/done
 
-##language-note **Language:** the shipped UI is English; a real i18n mechanism ships (§8) with English the default,
-mandatory-complete locale. @spec/done
+@fact:language-note **Language:** the shipped UI is English; a real i18n mechanism ships (§8) with English the default,
+mandatory-complete locale. @status:spec/done
 
-- ##granular-directive This contract is deliberately **granular and addressable** (owner directive): every feature is its
-  own `{#anchor}` REQ cited by the code via `specmark`. @spec/done
-- ##req-unit-of-work A REQ is the unit of work. @spec/done
-- ##delta-mapping Each Δ from the study maps to one or more REQs here. @spec/done
+- @fact:granular-directive This contract is deliberately **granular and addressable** (owner directive): every feature is its
+  own `{#anchor}` REQ cited by the code via `specmark`. @status:spec/done
+- @fact:req-unit-of-work A REQ is the unit of work. @status:spec/done
+- @fact:delta-mapping Each Δ from the study maps to one or more REQs here. @status:spec/done
 
 ---
 
 ## 1. Overview & the frontend-agnostic invariant {#overview}
 
-##ACTIONS-CRATE-DEF REQ. `vibe-actions` is a standalone Rust crate that models **what a UI can do** as first-class,
+@fact:ACTIONS-CRATE-DEF REQ. `vibe-actions` is a standalone Rust crate that models **what a UI can do** as first-class,
 addressable **Actions**, independent of any rendering technology. It is the behaviour-layer twin of
-`spec://`: `spec://` addresses facts, `action://` addresses behaviour. @spec/done
+`spec://`: `spec://` addresses facts, `action://` addresses behaviour. @status:spec/done
 
-##no-render-dep REQ {#no-render-dep}. The crate has **zero rendering dependencies** — it must not depend on
+@fact:no-render-dep REQ {#no-render-dep}. The crate has **zero rendering dependencies** — it must not depend on
 `ratatui`, `crossterm`, any GUI/DOM toolkit, or any terminal type. This invariant is what makes every
 surface (the TUI, a future web UI, an IDE plugin) and the headless **AIUI** (§11.3) possible; it is
 verified by a dependency-graph check in the crate's gate. Nothing in `core / model / controller`
-logic may reference a rendering type. @spec/done
+logic may reference a rendering type. @status:spec/done
 
 ## 2. Addressing {#addressing}
 
 ### 2.1 The address grammar {#address-grammar}
 
-##ADDRESS-GRAMMAR REQ. An action is named by an **`ActionAddr`** with the textual form
+@fact:ADDRESS-GRAMMAR REQ. An action is named by an **`ActionAddr`** with the textual form
 `action://<group>/<name>[?<params>]`, where `<group>` is a dotted namespace (e.g. `vibe.tree`,
 `core`), `<name>` is a dotted/kebab identifier (e.g. `copy.markdown`, `search.everywhere`), and the
 optional `<params>` is a `&`-separated `key=value` query carrying invocation parameters (§5).
 `(group, name)` is the identity; the query is *not* part of identity. Examples:
 `action://vibe.tree/copy.markdown`, `action://vibe.tree/sort?by=name&dir=asc`,
-`action://core/search.everywhere`. @spec/done
+`action://core/search.everywhere`. @status:spec/done
 
-##address-parse REQ {#address-parse}. `ActionAddr` round-trips: `parse(display(a)) == a` for the identity part, and
-parsing rejects a malformed address with a typed error (never a panic). @spec/done
+@fact:address-parse REQ {#address-parse}. `ActionAddr` round-trips: `parse(display(a)) == a` for the identity part, and
+parsing rejects a malformed address with a typed error (never a panic). @status:spec/done
 
 ### 2.2 Uniqueness, rename & alias {#address-uniqueness}
 
-##ADDRESS-UNIQUENESS REQ. `(group, name)` is **globally unique** within a running registry (§4.1). A **rename** is a *new
+@fact:ADDRESS-UNIQUENESS REQ. `(group, name)` is **globally unique** within a running registry (§4.1). A **rename** is a *new
 identity*; the old address is retired as a **tombstone** or kept as an explicit **alias** that
 resolves to the new one — an address that has ever been published is never silently repurposed
-(the `qualified-naming` rule, applied to behaviour). Aliases are resolvable and enumerable. @spec/done
+(the `qualified-naming` rule, applied to behaviour). Aliases are resolvable and enumerable. @status:spec/done
 
 ## 3. The Action value {#action-value}
 
 ### 3.1 Fields {#action-fields}
 
-##ACTION-FIELDS-DEF REQ. An **`Action`** carries exactly: its `ActionAddr`; a **`Presentation`** (§3.3); a **`ParamSchema`**
+@fact:ACTION-FIELDS-DEF REQ. An **`Action`** carries exactly: its `ActionAddr`; a **`Presentation`** (§3.3); a **`ParamSchema`**
 (§5, possibly empty); an **enablement** predicate (§6.2); an **`invoke`** (§7.1); a **`Capability`**
-(§7.2); and **`SearchMeta`** (§10.4 — synonyms/aliases/abbreviations/keywords). No other state. @spec/done
+(§7.2); and **`SearchMeta`** (§10.4 — synonyms/aliases/abbreviations/keywords). No other state. @status:spec/done
 
 ### 3.2 The immutable resolved snapshot {#action-snapshot}
 
-##SNAPSHOT-IMMUTABLE REQ. What a surface renders or an AI observes for an action is an **immutable resolved snapshot**
+@fact:SNAPSHOT-IMMUTABLE REQ. What a surface renders or an AI observes for an action is an **immutable resolved snapshot**
 (address + resolved presentation + resolved enablement for a given context), never a live mutable
 object. Change is delivered by re-resolution, not mutation (avoids the incumbents' live-mutable
-`Presentation`/`Action` hazards). @spec/done
+`Presentation`/`Action` hazards). @status:spec/done
 
 ### 3.3 Presentation & the mandatory human-legibility discipline {#presentation}
 
-##PRESENTATION-DISCIPLINE REQ. `Presentation` carries a **name** and a **description**, plus an optional icon/glyph and
+@fact:PRESENTATION-DISCIPLINE REQ. `Presentation` carries a **name** and a **description**, plus an optional icon/glyph and
 optional category. Both name and description are **mandatory, non-empty, meaningful** localizable
 messages (§8) — an action with an empty or placeholder name/description is a **contract violation**
 caught by the legibility gate (§8.4). Both are **first-class searchable fields** (§10 — the fallback
 match lane). This is the owner's founding discipline (DO5): filling them is part of building any UI
-on this system, not optional decoration. @spec/done
+on this system, not optional decoration. @status:spec/done
 
 ## 4. The registry {#registry}
 
 ### 4.1 Registration & collision {#registry-collision}
 
-##REGISTRY-COLLISION-ERROR REQ. Actions register into an enumerable **`Registry`**. Registering a `(group, name)` already present
+@fact:REGISTRY-COLLISION-ERROR REQ. Actions register into an enumerable **`Registry`**. Registering a `(group, name)` already present
 is a **hard, deterministic error** (not a silent override, not a log-and-drop) — a *collision* in the
 `qualified-naming` sense, distinct from a *conflict*. Registration returns a typed result; the error
-names both the incumbent and the newcomer. @spec/done
+names both the incumbent and the newcomer. @status:spec/done
 
-##registry-override REQ {#registry-override}. Layered override, if ever needed, is an **explicit** operation
+@fact:registry-override REQ {#registry-override}. Layered override, if ever needed, is an **explicit** operation
 (`override_of(addr)`) with uniform semantics and is itself collision-checked — never an accidental
-consequence of registration order. @spec/done
+consequence of registration order. @status:spec/done
 
 ### 4.2 Referential integrity {#registry-integrity}
 
-##REFERENTIAL-INTEGRITY REQ. Any reference to an action **by address** from another structure (a keymap binding §9, a menu
+@fact:REFERENTIAL-INTEGRITY REQ. Any reference to an action **by address** from another structure (a keymap binding §9, a menu
 placement, a Search-Everywhere action provider §10.4) is **validated at registration/build time** —
 a reference to an unregistered address **fails loud** then, never silently at click time (fixes the
-incumbents' string-reference-with-no-check gap, DO2). @spec/done
+incumbents' string-reference-with-no-check gap, DO2). @status:spec/done
 
 ### 4.3 Enumeration {#registry-enumeration}
 
-##REGISTRY-ENUMERABLE REQ. The registry is **fully enumerable** — every registered action (and alias) is reachable by
+@fact:REGISTRY-ENUMERABLE REQ. The registry is **fully enumerable** — every registered action (and alias) is reachable by
 iteration. This backs the enumerable-registry golden (§12.2), Search Everywhere's action provider
-(§10.4), and the AIUI `list_actions` (§11.3). @spec/done
+(§10.4), and the AIUI `list_actions` (§11.3). @status:spec/done
 
 ## 5. Parameters {#parameters}
 
 ### 5.1 The schema {#param-schema}
 
-##PARAM-SCHEMA-DEF REQ. An action declares a **typed, serialisable, named-parameter schema** (`ParamSchema`): each
+@fact:PARAM-SCHEMA-DEF REQ. An action declares a **typed, serialisable, named-parameter schema** (`ParamSchema`): each
 parameter has a name, a type, optionality, and an optional default. Parameters are **named**, not
 positional. An action with no inputs declares an empty schema. Simple parameters are expressible in
-the address query (§2.1); richer ones are passed as structured `ParamValues`. @spec/done
+the address query (§2.1); richer ones are passed as structured `ParamValues`. @status:spec/done
 
 ### 5.2 Validation {#param-validation}
 
-##PARAM-VALIDATION-LAW REQ. `ParamValues` are **validated against the schema at invoke time** (§7.1): a type mismatch, a
+@fact:PARAM-VALIDATION-LAW REQ. `ParamValues` are **validated against the schema at invoke time** (§7.1): a type mismatch, a
 missing required parameter, or an unknown parameter is a typed error before the action body runs
-(fixes the incumbents' `unknown[]` / phantom-`DataKey` gap, DO3). @spec/done
+(fixes the incumbents' `unknown[]` / phantom-`DataKey` gap, DO3). @status:spec/done
 
 ## 6. Context & enablement {#context}
 
 ### 6.1 The typed context snapshot {#context-snapshot}
 
-##CONTEXT-TYPEMAP REQ. Enablement and invocation read a **typed context snapshot** — a `TypeId`-keyed typemap (`Ctx`)
+@fact:CONTEXT-TYPEMAP REQ. Enablement and invocation read a **typed context snapshot** — a `TypeId`-keyed typemap (`Ctx`)
 holding strongly-typed values a surface has published (e.g. the current selection, the active mode).
 Reading a key yields `Option<&T>` with the real type `T` — no stringly keys, no unchecked casts, no
-nullable-`Object` (fixes VSCode's stringly `when` and IntelliJ's phantom `DataKey`, DO4). @spec/done
+nullable-`Object` (fixes VSCode's stringly `when` and IntelliJ's phantom `DataKey`, DO4). @status:spec/done
 
 ### 6.2 The enablement predicate {#enablement}
 
-##ENABLEMENT-PURE REQ. An action's enablement is a **pure, fast function** `Fn(&Ctx) -> Enablement`, where
+@fact:ENABLEMENT-PURE REQ. An action's enablement is a **pure, fast function** `Fn(&Ctx) -> Enablement`, where
 `Enablement { visible: bool, enabled: bool, reason: Option<Localized> }`. It **must not** render,
 block, touch a UI thread, or mutate — it is evaluated over an immutable snapshot, so there is no
 EDT/BGT hazard (the class of bug that is IntelliJ's biggest pain). Visibility (hide) and enablement
-(grey-out) are the two independent axes (kept from VSCode's `when` vs `precondition`). @spec/done
+(grey-out) are the two independent axes (kept from VSCode's `when` vs `precondition`). @status:spec/done
 
 ### 6.3 Introspection {#context-introspection}
 
-##CONTEXT-INTROSPECTABLE REQ. The context is **introspectable**: a surface (and the AIUI) can enumerate which keys a `Ctx`
+@fact:CONTEXT-INTROSPECTABLE REQ. The context is **introspectable**: a surface (and the AIUI) can enumerate which keys a `Ctx`
 carries, and a disabled action exposes its **`reason`** ("why disabled") — neither is possible in the
-incumbents. This backs both the legibility of the UI and the AIUI. @spec/done
+incumbents. This backs both the legibility of the UI and the AIUI. @status:spec/done
 
 ## 7. Invocation {#invocation}
 
 ### 7.1 `invoke` — the primary interface {#invoke}
 
-##INVOKE-PRIMARY REQ. `invoke(addr, params, ctx) -> Future<InvokeResult>` is **the** way an action runs; a key press,
+@fact:INVOKE-PRIMARY REQ. `invoke(addr, params, ctx) -> Future<InvokeResult>` is **the** way an action runs; a key press,
 a menu click, a Search-Everywhere selection, and an AIUI call are all thin callers of it. It is
 **async**, returns a **typed result/error** (`InvokeResult`), validates params (§5.2) and the
 capability (§7.2) first, and is **cancellable** (a cancellation token threads through). The result is
-first-class (not recovered out-of-band as in IntelliJ). @spec/done
+first-class (not recovered out-of-band as in IntelliJ). @status:spec/done
 
 ### 7.2 The capability scope {#capabilities}
 
-##CAPABILITY-SCOPE REQ. Each action declares a **`Capability`** (e.g. `Safe`, `Mutating`, `Dangerous`), and `invoke`
+@fact:CAPABILITY-SCOPE REQ. Each action declares a **`Capability`** (e.g. `Safe`, `Mutating`, `Dangerous`), and `invoke`
 checks it against the caller's granted scope before running. This is inert for the trusted local TUI
 but is the seam a networked surface (a future web UI) or an AIUI needs to refuse an out-of-scope
-action (DO14). No action bypasses the check. @spec/done
+action (DO14). No action bypasses the check. @status:spec/done
 
 ## 8. i18n {#i18n}
 
 ### 8.1 The address-keyed catalogue {#i18n-catalogue}
 
-##I18N-ADDRESS-KEYED REQ. Presentation strings are **`Msg { key, default_en }`** where `key` is **derived from the address**
+@fact:I18N-ADDRESS-KEYED REQ. Presentation strings are **`Msg { key, default_en }`** where `key` is **derived from the address**
 (`action.<group>/<name>.name`, `.description`) — one canonical mapping, no second key namespace to
 drift (IntelliJ's strength) — and `default_en` is the **inline English** default carried at the
 declaration site (VSCode's strength: self-documenting, always present). A `Catalogue { locale,
 entries, parent }` resolves a key through a parent chain terminating in an `en` catalogue **seeded
 from the inline defaults**, so a release lookup can never miss (no sentinel, no panic). The on-disk
-catalogue format is Fluent (`fluent`-family), with named args + plurals. @spec/done
+catalogue format is Fluent (`fluent`-family), with named args + plurals. @status:spec/done
 
 ### 8.2 The resolved label keeps the original {#i18n-resolved}
 
-##RESOLVED-LABEL REQ. A resolved label is **`ResolvedLabel { value, original_en }`** — the localized value plus the
+@fact:RESOLVED-LABEL REQ. A resolved label is **`ResolvedLabel { value, original_en }`** — the localized value plus the
 English original. Search Everywhere (§10) indexes **both**, so a user typing the English name finds
-an action under any locale (copies VSCode `localize2`). @spec/done
+an action under any locale (copies VSCode `localize2`). @status:spec/done
 
 ### 8.3 English default & locale swap {#i18n-fallback}
 
-##I18N-FALLBACK-LAW REQ. English is the **default, mandatory-complete** locale and the terminating fallback. Other locales
+@fact:I18N-FALLBACK-LAW REQ. English is the **default, mandatory-complete** locale and the terminating fallback. Other locales
 may lag and fall back silently. Locale switch is atomic (`ArcSwap<Catalogue>`); a package may ship
 `locales/<lang>.ftl`, and a dedicated language-pack package may override, merged by explicit priority
-(language-pack > package locale > inline English). @spec/done
+(language-pack > package locale > inline English). @status:spec/done
 
 ### 8.4 The human-legibility gate {#legibility-gate}
 
-##LEGIBILITY-GATE-LAW REQ (floor gate). A CI/floor gate enumerates the registry (§4.3) and asserts, **against the English
+@fact:LEGIBILITY-GATE-LAW REQ (floor gate). A CI/floor gate enumerates the registry (§4.3) and asserts, **against the English
 surface**, that every action's `name` and `description` are present, non-empty, and non-placeholder,
 and that every derived `MessageKey` resolves in the shipped `en` catalogue. A violation fails the
 floor, exactly as untested domain logic does. Other locales are not gated (they may lag). A `pseudo`
-locale QA build surfaces un-externalized strings. @spec/done
+locale QA build surfaces un-externalized strings. @status:spec/done
 
 ## 9. Keymap {#keymap}
 
 ### 9.1 Bindings {#keymap-bindings}
 
-##KEYMAP-BINDINGS-DEF REQ. A **`Keymap`** maps a key (or chord) to a `(ActionAddr, ParamValues)` binding, gated by an
+@fact:KEYMAP-BINDINGS-DEF REQ. A **`Keymap`** maps a key (or chord) to a `(ActionAddr, ParamValues)` binding, gated by an
 optional enablement/`when`-equivalent over the typed context. Bindings reference actions **by address**
-and are subject to referential-integrity (§4.2). @spec/done
+and are subject to referential-integrity (§4.2). @status:spec/done
 
 ### 9.2 The pure resolver {#keymap-resolver}
 
-##KEYMAP-RESOLVER-PURE REQ. Resolution is a **pure function** returning a **3-state result** — `NoMatch | NeedMoreChords |
+@fact:KEYMAP-RESOLVER-PURE REQ. Resolution is a **pure function** returning a **3-state result** — `NoMatch | NeedMoreChords |
 Found(addr, params)` (copies VSCode's `ResultKind`). Ambiguity (several bindings on one key) is
 resolved by enablement + weight (IntelliJ's first-enabled model). **Chord timers, IME, and focus
-walking live in the surface adapter**, never in the resolver. @spec/done
+walking live in the surface adapter**, never in the resolver. @status:spec/done
 
 ### 9.3 Conflicts are surfaced {#keymap-conflicts}
 
-##KEYMAP-CONFLICTS-SURFACED REQ. A binding conflict (two enabled bindings competing for one key/chord) is **surfaced** via an
-introspection API — not resolved silently (fixes the incumbents' silent/advisory-only handling, DO11). @spec/done
+@fact:KEYMAP-CONFLICTS-SURFACED REQ. A binding conflict (two enabled bindings competing for one key/chord) is **surfaced** via an
+introspection API — not resolved silently (fixes the incumbents' silent/advisory-only handling, DO11). @status:spec/done
 
 ## 10. Search Everywhere {#search-everywhere}
 
-##se-acceptance The acceptance feature: one window that searches packages, every package-card field, and all actions,
-with a hybrid "All" tab + per-category tabs, invoking a found action in place. @spec/done
+@fact:se-acceptance The acceptance feature: one window that searches packages, every package-card field, and all actions,
+with a hybrid "All" tab + per-category tabs, invoking a found action in place. @status:spec/done
 
 ### 10.1 The provider trait {#se-provider}
 
-##SE-PROVIDER-TRAIT REQ. A searchable source is a **`SearchProvider`** implementing the **two-phase** contract:
+@fact:SE-PROVIDER-TRAIT REQ. A searchable source is a **`SearchProvider`** implementing the **two-phase** contract:
 `enumerate(query) -> stream of cheap keys` (streamed, cancellable, scope-aware — never a full
 materialization) and `resolve(key) -> hits` (heavy items, produced **only for matched keys**). It also
 supplies identity + tab presentation (`id`, `group_name`, `sort_weight`, `separate_tab`), an
 `ItemAccessor` (`{label, description, key}` for the one shared ranker), an `on_selected(hit, mods) ->
 Close | Stay` (navigate/act), and a `render_row(hit) -> RowDescriptor` (§10.5). This is the minimal
 "searchable structured universe" contract distilled from IntelliJ; it is open enough that new sources
-plug in without touching the engine. @spec/done
+plug in without touching the engine. @status:spec/done
 
 ### 10.2 The engine {#se-engine}
 
-##SE-ENGINE-LAW REQ. The engine, on each keystroke: **debounces** (~90–120 ms) and **cancels** the prior run; selects
+@fact:SE-ENGINE-LAW REQ. The engine, on each keystroke: **debounces** (~90–120 ms) and **cancels** the prior run; selects
 the active provider set (one for a category tab, all filter-enabled for "All") with a per-provider cap
 (single 30 / All 15); has each provider **enumerate** keys, **matches** them with one scorer, and
 **resolves** only survivors. Hits are ranked on **one commensurable scale** (§10.3), **recency-weighted**
 with an **exact-match floor**, **deduped keeping the higher score** across providers, and drained
 **round-robin** from per-provider bounded queues into one flat list (the single-threaded adaptation of
 IntelliJ's back-pressured merge). A per-provider **"more…"** row re-queries that provider and **freezes**
-the rows above (no reshuffle under the cursor). @spec/done
+the rows above (no reshuffle under the cursor). @status:spec/done
 
 ### 10.3 Matching, ranking & the fallback lane {#se-ranking}
 
-##SE-RANKING-LAW REQ. One scorer produces **both a score and the highlight ranges** (fixes VSCode's two-engine
+@fact:SE-RANKING-LAW REQ. One scorer produces **both a score and the highlight ranges** (fixes VSCode's two-engine
 mismatch, DO7). The match-tier ladder is: exact → prefix → CamelCase/subsequence → substring →
 **word-in-name/description** (the fallback lane — the owner's "search by name and description when
 other criteria don't match"). Ordering is score DESC, tie → provider `sort_weight` DESC. Providers
-must emit scores on the **one shared scale** (the make-or-break hybrid-list rule). @spec/done
+must emit scores on the **one shared scale** (the make-or-break hybrid-list rule). @status:spec/done
 
 ### 10.4 Providers at ship + reserved {#se-providers}
 
-##SE-PROVIDERS-SHIP REQ. Three providers ship: **`PackageProvider`** (keys = package FQNs from the `PackageTree`; navigate
+@fact:SE-PROVIDERS-SHIP REQ. Three providers ship: **`PackageProvider`** (keys = package FQNs from the `PackageTree`; navigate
 = reveal the node); **`PackageFieldProvider`** (keys = **every field of every package detail card** —
 name, version, kind, license, load-type, origin, path, deps, diagnostics…; navigate = open the card on
 that field — the owner's "search inside all card fields"); **`ActionProvider`** (keys = action
 address + name + description + `SearchMeta` synonyms/aliases/abbreviations; `on_selected` = **invoke** the
 action — perform→`Close`, a toggle→`Stay`; disabled actions render greyed with their `reason` and
 right-aligned keybinding). A **`StructureProvider`** (AI-Native specmap spec/code nodes) is **reserved
-against the same trait** and added later **without engine changes** (DO16). @spec/done
+against the same trait** and added later **without engine changes** (DO16). @status:spec/done
 
 ### 10.5 The normalized renderer {#se-renderer}
 
-##SE-RENDERER-NORMALIZED REQ. All result rows render through **one** normalized `RowDescriptor { icon?, primary, secondary
+@fact:SE-RENDERER-NORMALIZED REQ. All result rows render through **one** normalized `RowDescriptor { icon?, primary, secondary
 (e.g. a keybinding), group, enabled, kind }`, so every category looks uniform (the study's ADAPT note;
-avoids IntelliJ's per-provider renderers). @spec/done
+avoids IntelliJ's per-provider renderers). @status:spec/done
 
 ### 10.6 Tabs {#se-tabs}
 
-##SE-TABS-LAW REQ. Tabs are built **from the providers**: sort by `sort_weight`; prepend an **"All"** tab when there
+@fact:SE-TABS-LAW REQ. Tabs are built **from the providers**: sort by `sort_weight`; prepend an **"All"** tab when there
 is more than one provider; one tab per `separate_tab` provider. The "All" tab searches every
 filter-enabled provider and carries a **category checkbox filter**; a single tab restricts to its
 provider and hides group headers. `Tab`/`Shift-Tab` cycle. This is the IntelliJ hybrid-All + per-tab
-UX the owner named. @spec/done
+UX the owner named. @status:spec/done
 
 ## 11. Surfaces & the AIUI {#surfaces}
 
 ### 11.1 The Surface trait {#surface-trait}
 
-##SURFACE-TRAIT-DEF REQ. A **`Surface`** is the adapter seam between the core and a concrete frontend: it `present`s a
+@fact:SURFACE-TRAIT-DEF REQ. A **`Surface`** is the adapter seam between the core and a concrete frontend: it `present`s a
 `ModelView` and yields `Event`s. A visual surface renders; a headless surface's `present` is a no-op.
 No core / model / controller code depends on a `Surface` implementation or a rendering type (§1
-invariant). @spec/done
+invariant). @status:spec/done
 
 ### 11.2 The serialisable model view {#model-view}
 
-##MODEL-VIEW-DEF REQ. The observable UI state is a **serialisable `ModelView`** snapshot (focus, open modals, visible
+@fact:MODEL-VIEW-DEF REQ. The observable UI state is a **serialisable `ModelView`** snapshot (focus, open modals, visible
 rows, current tree/selection, the active tab, the set of enabled actions with their addresses +
 reasons). It is a pure projection of the Model and carries **no rendering types** — so an AI reads
-structured state, never pixels. @spec/done
+structured state, never pixels. @status:spec/done
 
 ### 11.3 The headless AIUI surface {#aiui}
 
-##AIUI-REFERENCE REQ (**built**; the in-process form ships). The core offers a **headless AIUI** surface:
+@fact:AIUI-REFERENCE REQ (**built**; the in-process form ships). The core offers a **headless AIUI** surface:
 `list_actions(filter?)` (enumerate the registry with live enablement + reasons + params),
 `invoke(addr, args)` (the same `invoke` as §7.1), `state() -> ModelView` (§11.2), and
 `search(query, tab?)` (drive §10 programmatically). `vibe-actions/src/aiui.rs` implements
@@ -305,46 +305,46 @@ section in its own `--help`. Because enablement is pure + introspectable, the
 model is serialisable, and invocation is address-based, this surface is a thin adapter with a no-op
 `present`. The architecture must keep it a thin adapter — it was **prototyped on the TUI**, and the
 remaining JSON-RPC / MCP bindings are further adapters over the same surface. This is the founding
-AIUI goal (DO18): the headless surface is the **reference**; visual surfaces are projections. @impl/done
+AIUI goal (DO18): the headless surface is the **reference**; visual surfaces are projections. @status:impl/done
 
 ## 12. Discipline & gates {#discipline}
 
 ### 12.1 AI-Native Rust {#ai-native}
 
-##AI-NATIVE-DISCIPLINE REQ. The crate follows the AI-Native Rust discipline (`spec://org.vibevm.ai-native/core-ai-native`):
+@fact:AI-NATIVE-DISCIPLINE REQ. The crate follows the AI-Native Rust discipline (`spec://org.vibevm.ai-native/core-ai-native`):
 every module `scope!`s its governing REQ anchor from this PROP; a REQ is the unit of work; the
-`conform` baseline for the crate is empty (zero slack). @spec/done
+`conform` baseline for the crate is empty (zero slack). @status:spec/done
 
 ### 12.2 The floor gates {#gates}
 
-##FLOOR-GATES-TWO REQ. Two gates beyond the standard floor: the **human-legibility gate** (§8.4) and an
+@fact:FLOOR-GATES-TWO REQ. Two gates beyond the standard floor: the **human-legibility gate** (§8.4) and an
 **enumerable-registry golden** that asserts every registered action resolves, has a valid address,
-carries mandatory presentation, and is reachable by enumeration. Both are part of `self-check`. @spec/done
+carries mandatory presentation, and is reachable by enumeration. Both are part of `self-check`. @status:spec/done
 
 ## 13. Non-goals {#non-goals}
 
-- ##ng-aiui-not-built **Superseded — the AIUI surface was built** (§11.3): this non-goal aged behind its own delivery.
+- @fact:ng-aiui-not-built **Superseded — the AIUI surface was built** (§11.3): this non-goal aged behind its own delivery.
   `vibe-actions/src/aiui.rs` ships `list_actions` + `invoke` and `vibe aiui state` projects the ModelView; the TUI
   was the prototype. What remains out of scope here is the *remote* binding (JSON-RPC / MCP), an adapter over the
-  same surface. @impl/done
-- ##ng-other-surfaces **Web / VSCode / JetBrains / Zed surfaces are not built now** — the crate is designed so they are
-  additional `Surface` adapters. @spec/done
-- ##ng-ml-reranker **An ML reranker for Search Everywhere is deferred** — the ranking (§10.3) leaves the exact-match
-  floor as the slot an ML pass would sit above. @spec/done
-- ##ng-locales **Localization content (non-English catalogues) is not shipped now** — the mechanism ships; English
-  is the only mandatory-complete locale (§8.3). @spec/done
+  same surface. @status:impl/done
+- @fact:ng-other-surfaces **Web / VSCode / JetBrains / Zed surfaces are not built now** — the crate is designed so they are
+  additional `Surface` adapters. @status:spec/done
+- @fact:ng-ml-reranker **An ML reranker for Search Everywhere is deferred** — the ranking (§10.3) leaves the exact-match
+  floor as the slot an ML pass would sit above. @status:spec/done
+- @fact:ng-locales **Localization content (non-English catalogues) is not shipped now** — the mechanism ships; English
+  is the only mandatory-complete locale (§8.3). @status:spec/done
 
 ## 14. Decision records {#decisions}
 
-- ##decision-records-home The load-bearing decisions (four-field: Decision · Why · Rejected · Revisit) are recorded at their
+- @fact:decision-records-home The load-bearing decisions (four-field: Decision · Why · Rejected · Revisit) are recorded at their
   governing anchors above and narrated in the design-doc
-  [`spec/design/action-system.md#decisions`](../../design/action-system.md#decisions) (D1–D10). @spec/done
-- ##decision-bindings-summary Summary
+  [`spec/design/action-system.md#decisions`](../../design/action-system.md#decisions) (D1–D10). @status:spec/done
+- @fact:decision-bindings-summary Summary
   of the bindings: URI address `action://` (§2.1, D1); collision-erroring registry (§4.1, D2); typed
   context + pure enablement (§6, D3); programmatic-invocation-primary + the AIUI reference surface (§7,
   §11.3, D4); the two-phase provider Search Everywhere (§10, D5); address-keyed i18n with English
   inline + `{value, original_en}` (§8, D6); the English-only legibility gate (§8.4, D7); one normalized
   renderer (§10.5, D8); the pure 3-state keymap resolver (§9.2, D9); one commensurable recency-weighted
-  ranker (§10.3, D10). @spec/done
-- ##review-points-resolved All owner review points RP1–RP5 are resolved
-  (`legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md#review-points`). @spec/done
+  ranker (§10.3, D10). @status:spec/done
+- @fact:review-points-resolved All owner review points RP1–RP5 are resolved
+  (`legacy-spec/research/ACTION-SYSTEM-RESEARCH-PLAN-v0.1.md#review-points`). @status:spec/done

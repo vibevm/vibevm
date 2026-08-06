@@ -14,13 +14,13 @@ would otherwise re-ask.
 
 ## Three marked siblings {#siblings}
 
-##B11-THREE-SIBLINGS B8 (`e654c86f`), B9 (`b1689359`) and B10 are all landed `world` batches
+@fact:B11-THREE-SIBLINGS B8 (`e654c86f`), B9 (`b1689359`) and B10 are all landed `world` batches
 of this shape. **Read the corresponding file in the nearest one before marking
 yours.** B10 is closest in genre — protocol documents plus a catalogue — and its
 `rejected-designs.md` is the reference for anything that reads as a record of
 what was *not* built. `tool-design-lessons` is a strong candidate for that shape.
 
-##B11-AGREEMENT-IS-SETTLED **Where two or more siblings agree, the case is settled** — follow it and
+@fact:B11-AGREEMENT-IS-SETTLED **Where two or more siblings agree, the case is settled** — follow it and
 do not re-derive. **Where they disagree, report with all references.** B10
 checked thirteen shapes across B8 and B9 and found zero disagreements; that is
 the coverage bar for this section, not a formality.
@@ -51,17 +51,17 @@ correction was needed.
 
 ## Sizing — the rule was falsified, and this batch tests what replaced it {#sizing}
 
-##B11-NO-POINT-PREDICTION **There is no point prediction, deliberately.** B9 produced a paragraph
+@fact:B11-NO-POINT-PREDICTION **There is no point prediction, deliberately.** B9 produced a paragraph
 multiplier of ×2.13 from two measurements and `BATCH-PLAN.md` locked it as
 «stable to 0.7 %»; B10 came in at **×2.365**, 11.6 % high, and the rule is now a
 **range: ~2.2 ± 15 %**. Two points cannot show stability, and this brief will
 not repeat the mistake by quoting one number as if it were reliable.
 
-##B11-COMPOSITION **Measured composition: 119 cells, 145 items, 186 paragraphs** — 41 %
+@fact:B11-COMPOSITION **Measured composition: 119 cells, 145 items, 186 paragraphs** — 41 %
 paragraphs, against B10's 32 % and B8's 25 %. **The most paragraph-heavy batch
 so far.**
 
-##B11-THE-REAL-HYPOTHESIS B10 proposed that the multiplier **tracks paragraph density rather than
+@fact:B11-THE-REAL-HYPOTHESIS B10 proposed that the multiplier **tracks paragraph density rather than
 package or genre** — its dense protocol documents ran ×2.5–2.9 and its READMEs
 ×1.71–2.00. **B11 is the test of that hypothesis, and it is a sharp one:** if
 density drives the multiplier, this batch should land **at or above ×2.3**; if
@@ -75,21 +75,21 @@ is what tests the hypothesis, not the batch total.
 Verified by the reviewer against a gate run at dispatch. **You are not asked to
 re-run anything**, and nothing here contradicts the boundaries below.
 
-- ##B11-EXPECT-RESIDUAL **Residual: ZERO.** No file in scope ships a `SKILL.md` or opens with
+- @fact:B11-EXPECT-RESIDUAL **Residual: ZERO.** No file in scope ships a `SKILL.md` or opens with
   frontmatter.
-- ##B11-EXPECT-RESIDUAL-FILES **No file may carry a residual.**
-- ##B11-EXPECT-CORPUS-TOTAL **Corpus-wide unmarked afterwards: 1 651** — it stands at 2 102 and this
+- @fact:B11-EXPECT-RESIDUAL-FILES **No file may carry a residual.**
+- @fact:B11-EXPECT-CORPUS-TOTAL **Corpus-wide unmarked afterwards: 1 651** — it stands at 2 102 and this
   batch owes all 451.
 
 ## F-097 reaches exactly one file {#f097}
 
-##B11-F097-ONE-FILE `source-mirrors/…/README.md` cites a dead package name. **F-097 was
+@fact:B11-F097-ONE-FILE `source-mirrors/…/README.md` cites a dead package name. **F-097 was
 widened on 2026-07-27 after a sweep of every package reference against every
 declared name: four names are dead** — `atomic-commits`, `attribution-policy`,
 `conventional-commits`, `autonomy`, all renamed to `git-*` — across 21 files and
 33 references, six of which are literal `vibe install` command lines.
 
-##B11-DO-NOT-REFILE **Mark it, do not fix it, do not re-file it.** A *fifth* dead name would
+@fact:B11-DO-NOT-REFILE **Mark it, do not fix it, do not re-file it.** A *fifth* dead name would
 be a new finding; these four are not. The fix is one wave-level DRIFT under
 sync-from-code.
 

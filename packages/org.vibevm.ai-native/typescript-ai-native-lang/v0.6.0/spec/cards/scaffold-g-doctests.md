@@ -2,35 +2,35 @@
 
 <status stage="spec" state="done"/>
 
-##status-line **Discipline v0.2 · BETA · T2 · TypeScript** @impl/done
+@fact:status-line **Discipline v0.2 · BETA · T2 · TypeScript** @status:impl/done
 
 ## Band 1 — Identity & Recognition {#band-one-identity}
 
-##CLASSIFICATION Classification: layer=C (meta) + G (empirics); mechanism=scaffold G. @impl/done
+@fact:CLASSIFICATION Classification: layer=C (meta) + G (empirics); mechanism=scaffold G. @status:impl/done
 
-##INTENT Intent: Ship one type-checked, runnable example per public seam showing the ONE canonical way to use it — a few-shot usage signal that cannot drift into a lie because it must type-check (Twoslash) and/or run. @impl/done
+@fact:INTENT Intent: Ship one type-checked, runnable example per public seam showing the ONE canonical way to use it — a few-shot usage signal that cannot drift into a lie because it must type-check (Twoslash) and/or run. @status:impl/done
 
-##ALSO-KNOWN-AS Also Known As: doctest; Twoslash; `@example` JSDoc; usage example; example-driven docs; golden usage; runnable spec-by-example; `expectTypeOf`/`tsd` type-level example. @spec/done
+@fact:ALSO-KNOWN-AS Also Known As: doctest; Twoslash; `@example` JSDoc; usage example; example-driven docs; golden usage; runnable spec-by-example; `expectTypeOf`/`tsd` type-level example. @status:spec/done
 
-##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a public seam has no type-checked example of canonical use; usage is documented only in prose; multiple usage idioms coexist with no canonical one. *Detector seed:* an `export`ed seam item with no Twoslash/`@example` demonstrating construction+use → recognition fires (the reference-library result, R2C-008; examples are the executable half of "primitives + notes"). @impl/done
+@fact:APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a public seam has no type-checked example of canonical use; usage is documented only in prose; multiple usage idioms coexist with no canonical one. *Detector seed:* an `export`ed seam item with no Twoslash/`@example` demonstrating construction+use → recognition fires (the reference-library result, R2C-008; examples are the executable half of "primitives + notes"). @status:impl/done
 
 ## Band 2 — Justification & Tradeoffs {#band-two-justification}
 
-##MOTIVATION Motivation: A weak agent imitates whatever usage it sees nearby (R3-006). If the nearest example is a prose snippet that has drifted, it imitates a lie. A Twoslash example that lies fails the docs build, so the imitated signal is guaranteed truthful — and it shows the single canonical idiom, suppressing idiom-divergence. @spec/done
+@fact:MOTIVATION Motivation: A weak agent imitates whatever usage it sees nearby (R3-006). If the nearest example is a prose snippet that has drifted, it imitates a lie. A Twoslash example that lies fails the docs build, so the imitated signal is guaranteed truthful — and it shows the single canonical idiom, suppressing idiom-divergence. @status:spec/done
 
-##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Twoslash example* (type-checked code in the docs) · *`@example` JSDoc* (validated) · *examples/ cell* (larger compiled scenario, built in CI) · *canonical idiom* (the one blessed usage). @impl/done
+@fact:STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Twoslash example* (type-checked code in the docs) · *`@example` JSDoc* (validated) · *examples/ cell* (larger compiled scenario, built in CI) · *canonical idiom* (the one blessed usage). @status:impl/done
 
-##COLLABORATIONS Collaborations: Encodes the canonical idiom Class B's branded/typed surface enforces; runs in the Class E loop; its truthfulness backs §10 prose discipline; pairs with the type-level tests (guide §12) for generic surfaces. @impl/done
+@fact:COLLABORATIONS Collaborations: Encodes the canonical idiom Class B's branded/typed surface enforces; runs in the Class E loop; its truthfulness backs §10 prose discipline; pairs with the type-level tests (guide §12) for generic surfaces. @status:impl/done
 
-##GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* every public seam carries ≥1 type-checked example of canonical use. *Non-Goals:* NOT exhaustive examples (one canonical each); NOT a replacement for property tests (examples show usage, tests check behavior). @impl/done
+@fact:GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* every public seam carries ≥1 type-checked example of canonical use. *Non-Goals:* NOT exhaustive examples (one canonical each); NOT a replacement for property tests (examples show usage, tests check behavior). @status:impl/done
 
-##CONSEQUENCES Consequences: (+) the imitated few-shot signal cannot lie; (+) one canonical idiom suppresses divergence. (−) examples are code to maintain; (−) over-exampling bloats — one canonical per seam. @spec/done
+@fact:CONSEQUENCES Consequences: (+) the imitated few-shot signal cannot lie; (+) one canonical idiom suppresses divergence. (−) examples are code to maintain; (−) over-exampling bloats — one canonical per seam. @status:spec/done
 
-##ALTERNATIVES Alternatives: prose examples (drift silently); separate example files (fine, but Twoslash sits at the point of use). Prefer type-checked, co-located. @spec/done
+@fact:ALTERNATIVES Alternatives: prose examples (drift silently); separate example files (fine, but Twoslash sits at the point of use). Prefer type-checked, co-located. @status:spec/done
 
-##RISKS-AND-ASSUMPTIONS Risks & Assumptions: assumes the seam has a canonical usage worth blessing. *Sunset:* none material. @spec/done
+@fact:RISKS-AND-ASSUMPTIONS Risks & Assumptions: assumes the seam has a canonical usage worth blessing. *Sunset:* none material. @status:spec/done
 
-##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R2C-008 (executable reference material transformative, benchmark), R3-006 (codebase as few-shot prompt, theory), H4 (lying prose harms). Class: benchmark + theory. Tag: **[E-strong]**. @spec/done
+@fact:EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R2C-008 (executable reference material transformative, benchmark), R3-006 (codebase as few-shot prompt, theory), H4 (lying prose harms). Class: benchmark + theory. Tag: **[E-strong]**. @status:spec/done
 
 ## Band 3 — Operation {#band-three-operation}
 

@@ -84,7 +84,7 @@ one either way.
 
 > `##THE-FAMILY-GROWS-TO-INCLUDE-ATTRIBUTION-AND-AUTONOMY` The family grows to
 > include **human-authored attribution** and **commit autonomy** as those
-> members land. @spec/done
+> members land. @status:spec/done
 
 *"As those members land"* places both in the future. All four members exist, are
 pinned, are installed and are locked:
@@ -308,7 +308,7 @@ that is `PROP-024`'s wording, not this package's —
 `spec/common/PROP-024-code-bearing-packages.md:123`:
 
 > `##VIBEIGNORE-EXTENDS` plus **any glob listed in** an optional `.vibeignore` at
-> the package root. **@spec/done**
+> the package root. **@status:spec/done**
 
 The two sentences are deliberately different: PROP-024 says *any glob listed in*
 the file, the package says *an optional … ignore file*. **And the host's own

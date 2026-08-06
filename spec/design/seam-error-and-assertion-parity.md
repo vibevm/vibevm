@@ -2,11 +2,11 @@
 
 <status stage="spec" state="work" comment="the B-033 + B-030 + B-049 design (волна Б, батч 2), riding the parity-principle lift (map §5 fork №9, RULED 2026-08-04). Boss-authored on the E11 census pair; no owner map-fork inside this batch (the two nearest — №2 units, №9 parity home — are already taken). The cut below is worker-elaborated at the named refinement points."/>
 
-##companion-line **Companion to:** [`BACKLOG.md` B-033](../../BACKLOG.md#b-033) (the dedicated Go seam-error rule + its message half + the TS twin), [B-030](../../BACKLOG.md#b-030) (conformance-assertion presence — build Go, survey Rust/TS), [B-049](../../BACKLOG.md#b-049) (`[rust] floor_disable`); the fork it discharges is [`TOOLING-MAP.md` §5 №9](../../TOOLING-MAP.md#forks) (the parity-principle home, taken). Evidence, measured before any build: [`e11-r1-seam-errors-census.md`](../../campaigns/packages-2026-09/harvest/e11-r1-seam-errors-census.md) (the seam-error paradigm, two halves) and [`e11-r2-assertions-census.md`](../../campaigns/packages-2026-09/harvest/e11-r2-assertions-census.md) (the assertion idiom, Rust/TS survey). The prior batch's design is [`gate-parity-config.md`](gate-parity-config.md) — this one builds on its symmetric per-language surface. Non-normative; the PROPs and the backlog rulings win. @spec/work
+@fact:companion-line **Companion to:** [`BACKLOG.md` B-033](../../BACKLOG.md#b-033) (the dedicated Go seam-error rule + its message half + the TS twin), [B-030](../../BACKLOG.md#b-030) (conformance-assertion presence — build Go, survey Rust/TS), [B-049](../../BACKLOG.md#b-049) (`[rust] floor_disable`); the fork it discharges is [`TOOLING-MAP.md` §5 №9](../../TOOLING-MAP.md#forks) (the parity-principle home, taken). Evidence, measured before any build: [`e11-r1-seam-errors-census.md`](../../campaigns/packages-2026-09/harvest/e11-r1-seam-errors-census.md) (the seam-error paradigm, two halves) and [`e11-r2-assertions-census.md`](../../campaigns/packages-2026-09/harvest/e11-r2-assertions-census.md) (the assertion idiom, Rust/TS survey). The prior batch's design is [`gate-parity-config.md`](gate-parity-config.md) — this one builds on its symmetric per-language surface. Non-normative; the PROPs and the backlog rulings win. @status:spec/work
 
 ## 1. The measured basis {#basis}
 
-##basis-seam **Seam errors — one paradigm, three states (census R1).** The Rust
+@fact:basis-seam **Seam errors — one paradigm, three states (census R1).** The Rust
 paradigm is one fact (`Fact::ErrorVariant`, `facts.rs:66-73`) carrying both the
 Display `message` and the owning-enum `enum_attrs`, and two rules each gating a
 different field: `ErrorMessageCitesReq` (`diagnostics.rs:229-282`, fires when the
@@ -20,9 +20,9 @@ because `go-extract` never reads an `Error()` body (census R1 Q2). **TS has
 neither half** — no error fact, no error rule; the extractor emits nothing carrying
 union shape, variant members, or a `spec://` reference on an error type (R1 Q4),
 though the guide promises «`E` a discriminated union of named error variants
-carrying `spec://` REQ references» (`GUIDE-AI-NATIVE-TYPESCRIPT.md:152,159`). @spec/work
+carrying `spec://` REQ references» (`GUIDE-AI-NATIVE-TYPESCRIPT.md:152,159`). @status:spec/work
 
-##basis-assertion **Conformance assertions — Go idiom live, gate blind (census
+@fact:basis-assertion **Conformance assertions — Go idiom live, gate blind (census
 R2).** The Go idiom `var _ seams.X = (*Impl)(nil)` is live (four demo sites, the
 guide's own `— MUST` example at `GUIDE-AI-NATIVE-GO.md:201`) and the guide
 PROMISES «conform checks its presence (T-syn)» while self-annotating that promise
@@ -33,31 +33,31 @@ the `ValueSpec` branch skips every `_`-named var (`extract.go:461-463`,
 (`GUIDE-AI-NATIVE-RUST.md:68`), and the guide makes no promise that a gate checks
 a written assertion (R2 Q3). TS promises branded seams / `satisfies never` /
 type-level tests (`GUIDE-AI-NATIVE-TYPESCRIPT.md:130,154,237`); the gate checks
-none and the extractor emits no fact for any (R2 Q4). @spec/work
+none and the extractor emits no fact for any (R2 Q4). @status:spec/work
 
-##basis-floor **The floor asymmetry (B-049, parity loop row 13).** Go and TS
+@fact:basis-floor **The floor asymmetry (B-049, parity loop row 13).** Go and TS
 consumers disable a floor step with a recorded reason (`GoConfig`/`TsConfig`
 `floor_disable`, enforced with a loud print + hard-fail on an unknown step); the
 Rust floor (`rust-ai-native-cli/src/floor.rs:46-141`) runs every step
 unconditionally and `RustConfig` has no such field — the loop's one asymmetry
-pointing the wrong way. @spec/work
+pointing the wrong way. @status:spec/work
 
-##basis-wire **The wire every new signal rides (census R1 Q5, R2 Q2).** The
+@fact:basis-wire **The wire every new signal rides (census R1 Q5, R2 Q2).** The
 `ts_env_read` pathway (B-039) is the proven four-hop template:
 extractor emit → bridge `RawFact` arm → engine `Fact` → rule match → driver mount.
 Adding a `Fact` **variant** bumps the frontend version and retires cache slots
 (`facts.rs:5-8`) AND is a cross-package ripple (batch-1 lesson, §8 sixth paid
-fact); adding a `Kind` VALUE to the existing `GoUnsafe` fact is neither. @spec/work
+fact); adding a `Kind` VALUE to the existing `GoUnsafe` fact is neither. @status:spec/work
 
 ## 2. The boss decisions (no owner fork inside this batch) {#decisions}
 
-##dec-no-fork **No map fork opens here.** The two nearest owner forks are taken
+@fact:dec-no-fork **No map fork opens here.** The two nearest owner forks are taken
 (№2 gate units, №9 parity home). Every choice below is a boss design decision on
 measured fact, not an owner decision — recorded so the workers elaborate, never
 redraw. Should elaboration surface a genuine owner fork, it stops for the owner
-one at a time (the standing rule); none is expected. @spec/work
+one at a time (the standing rule); none is expected. @status:spec/work
 
-##dec-one-go-rule **One Go rule, both halves, per-half fingerprints.** The Go doc
+@fact:dec-one-go-rule **One Go rule, both halves, per-half fingerprints.** The Go doc
 promises a single named rule — «`seam-error-cites-req` — a seam's closed error set
 carries its REQ URI» (`conform-frontend-go.md:41`). Go's idiom is one struct type
 with two obligations (carry the `spec://` URI as a `Spec` field; render it in
@@ -67,17 +67,17 @@ lacks: one Go rule checking both halves is not weaker than two Rust rules checki
 one half each (the parity test is strength, not id count — §4). The baseline
 granularity Rust's two ids give is preserved by **two distinct fingerprints** off
 the one rule (`…-structure|…` and `…-message|…`), so the ratchet still tightens
-each half independently and SARIF still separates them. @spec/work
+each half independently and SARIF still separates them. @status:spec/work
 
-##dec-ts-twin-now **The TS twin builds now, conservatively, with its limit
+@fact:dec-ts-twin-now **The TS twin builds now, conservatively, with its limit
 recorded.** The parity principle (being lifted this batch) forbids leaving TS
 weaker without a recorded reason, and «TS has nothing» is not a reason — it is the
 gap. So `ts-seam-error-cites-req` is built now. Detection is the honest-minimal
 form (the batch-1 `ts-flag-sites` precedent: build the detectable core, record the
 undetectable remainder as a documented limit, never a silent claim). The exact
-discriminated-union-error heuristic is a measured refinement point (§3.3). @spec/work
+discriminated-union-error heuristic is a measured refinement point (§3.3). @status:spec/work
 
-##dec-b030-verdicts **B-030's survey verdicts.** *Go* — **build** the presence
+@fact:dec-b030-verdicts **B-030's survey verdicts.** *Go* — **build** the presence
 rule; the written `var _` assertion is the one seam-conformance signal that can
 drift, so a presence check earns its keep (owner ruling 2.2a). *Rust* — **record
 the reason, do not build**: the compiler at the use site is the assertion
@@ -89,9 +89,9 @@ promise-without-check, but its build (detecting `expectTypeOf`/`tsd`/
 `@ts-expect-error`/`satisfies never` presence) is a distinct rule over a distinct
 surface from the Go `var _` scan; it is named as parity debt carried by the B-035
 loop, not silently dropped and not crammed into this batch (BUILD-FIRST is
-honoured by a named carrier, not by same-batch delivery). @spec/work
+honoured by a named carrier, not by same-batch delivery). @status:spec/work
 
-##dec-facts **The fact plan (ripple-minimising).** The Go **message** half rides a
+@fact:dec-facts **The fact plan (ripple-minimising).** The Go **message** half rides a
 new `GoUnsafe` KIND `seam_error_message_no_req` — no new `Fact` variant, no ripple.
 The Go **assertion** signal needs seam+impl names the `GoUnsafe {kind, line}` fact
 cannot carry, and overloading the ban-census `go_unsafe` with a POSITIVE signal is
@@ -99,13 +99,13 @@ semantically wrong — so a new `Fact::GoConformance` variant. The TS seam-error
 signal needs union/citation shape no existing TS fact carries — a new
 `Fact::TsSeamError` variant. Two new variants → two ripples; the engine-spine
 worker greps the whole tree and budgets exhaustive-match arms in every frontend
-(§5, S1). @spec/work
+(§5, S1). @status:spec/work
 
 ## 3. The design past the decisions (boss-settled, worker-elaborated) {#design}
 
 ### 3.1 B-033 Go — `go-seam-error-cites-req` {#design-go-seam}
 
-##go-seam-structure **Structure half — promote, don't rebuild.** The
+@fact:go-seam-structure **Structure half — promote, don't rebuild.** The
 `seam_error_missing_req` `go_unsafe` fact already flows (extractor unchanged for
 this half). Build a dedicated rule `GoSeamErrorCitesReq` (`rules/go.rs`) that
 matches `Fact::GoUnsafe { kind: "seam_error_missing_req", .. }` and emits under
@@ -114,9 +114,9 @@ matches `Fact::GoUnsafe { kind: "seam_error_missing_req", .. }` and emits under
 the kind is owned by exactly one rule. *Уточни (worker):* the exact current arm
 lines and the deviation-honour / `!in_test` guards to carry across verbatim
 (`rules/go.rs:96-98`, `:145`). *Проверь:* the `seam_error_missing_req` kind is
-listed in the engine kinds docstring (`facts.rs:119-128`) and stays. @spec/work
+listed in the engine kinds docstring (`facts.rs:119-128`) and stays. @status:spec/work
 
-##go-seam-message **Message half — the new go-extract input.** `go-extract` gains
+@fact:go-seam-message **Message half — the new go-extract input.** `go-extract` gains
 the ability to read an `Error()` method body's rendered text and emit
 `GoUnsafe { kind: "seam_error_message_no_req", line }` when the type owns an
 `Error()` whose format/return strings carry no `spec://` substring — the direct Go
@@ -132,19 +132,19 @@ missing BOTH halves reports two findings at one site, distinct fingerprints. *П
 the clean live demo (`research/go-demo/internal/seams/errors.go:35-40`, renders
 `violates REQ %s`) stays green and the dirty fixture
 (`test/fixtures/dirty/internal/cells/plan/plan.go:22`, renders `plan: %d`) goes
-red on the message half. @spec/work
+red on the message half. @status:spec/work
 
 ### 3.2 B-033 TS — `ts-seam-error-cites-req` {#design-ts-seam}
 
-##ts-seam-fact **The new signal.** `ts-extract` emits a `ts_seam_error` record for
+@fact:ts-seam-fact **The new signal.** `ts-extract` emits a `ts_seam_error` record for
 a discriminated-union error type alias, carrying: the alias symbol, whether it
 cites a `spec://` REQ (via a JSDoc `@implements`/`@documents` marker on the alias
 OR a `spec://` substring in a variant member), and the line. The bridge lowers it
 to `Fact::TsSeamError { symbol, cites_req, line, in_test }`; the rule
 `TsSeamErrorCitesReq` fires when `!cites_req`, fingerprint
-`ts-seam-error-cites-req|{file}|{symbol}`. @spec/work
+`ts-seam-error-cites-req|{file}|{symbol}`. @status:spec/work
 
-##ts-seam-heuristic **The detection heuristic — measured, conservative (refinement
+@fact:ts-seam-heuristic **The detection heuristic — measured, conservative (refinement
 point).** *Измерь и реши (worker), recorded in the report's Decisions:* what makes
 a type alias «an error union `E`» in the ts-extract AST. The conservative default
 to measure against `research/ts-demo` and the guide's canonical form
@@ -156,19 +156,19 @@ tightest form that matches the guide idiom and does not false-positive on
 non-error unions; **whatever the heuristic cannot see is recorded as a documented
 limit in the guide, never silently claimed** (the `ts-flag-sites` `if(flag)`
 precedent). *Проверь:* ts-demo gains one citing error union (green) and a dirty
-fixture carries a non-citing one (red). @spec/work
+fixture carries a non-citing one (red). @status:spec/work
 
 ### 3.3 B-030 Go — `go-conformance-assertion` {#design-go-assertion}
 
-##go-assert-extract **The extractor stops discarding.** `go-extract` recognises
+@fact:go-assert-extract **The extractor stops discarding.** `go-extract` recognises
 `var _ <seam> = (*<Impl>)(nil)` in the `ValueSpec` branch BEFORE the `_`-skip
 (`extract.go:461-463`) and emits a conformance-assertion record carrying the seam
 interface name, the impl type name, and the line. *Проверь (worker) — the
 near-misses the pattern must NOT match:* `var _ = New` and `var _ *Type`
 (`codemod.rs:61,63`) are not conformance assertions — the match requires the exact
-`= (*Ident)(nil)` RHS shape. @spec/work
+`= (*Ident)(nil)` RHS shape. @status:spec/work
 
-##go-assert-rule **The rule fires on absence (the `cell-has-oracle` shape).**
+@fact:go-assert-rule **The rule fires on absence (the `cell-has-oracle` shape).**
 `GoConformanceAssertion` keys on the cell set (existing cell/`Item` facts under
 `cells_dir`) and the new `Fact::GoConformance` facts, and fires for a cell that
 declares an impl of a seam with no matching assertion — the same absence-check
@@ -178,33 +178,33 @@ type implementing a seam, or the cell's registered impl) — measure what the ce
 facts already carry and pick the predicate the demo satisfies. Mounted conditional
 on `cells_dir` (the `GoCellIsolation` template, `go driver lib.rs:56-58`), so a
 project without cells never runs it; findings land soft through the ratchet
-baseline until the tree is clean (`##B030-FORM`). @spec/work
+baseline until the tree is clean (`##B030-FORM`). @status:spec/work
 
-##go-assert-survey **The survey verdicts land as recorded reasons.** Per
+@fact:go-assert-survey **The survey verdicts land as recorded reasons.** Per
 `#dec-b030-verdicts`: the Rust reason (compiler-is-the-assertion) and the TS
 routed-build are written into the parity table's assertion row (B-035 loop) and
-the guides' honest self-annotations — not left as silent asymmetries. @spec/work
+the guides' honest self-annotations — not left as silent asymmetries. @status:spec/work
 
 ### 3.4 B-049 — `[rust] floor_disable` {#design-floor}
 
-##floor-twin **Mirror the Go/TS mechanic exactly.** `RustConfig` gains
+@fact:floor-twin **Mirror the Go/TS mechanic exactly.** `RustConfig` gains
 `floor_disable` (the uniform section shape already reserves the slot —
 `gate-parity-config.md#fork-shape`); `rust-ai-native-cli/src/floor.rs` reads it and
 disables named steps with the twins' enforcement — a loud print of every
 disablement and a hard-fail on an unknown step name. *Проверь (worker):* the step
 names match the Rust floor's actual steps (`floor.rs:46-141`); an unknown name
 fails loudly; a disabled step prints and is skipped. Disjoint from every other
-slice in this batch (own files) — its own lane. @spec/work
+slice in this batch (own files) — its own lane. @status:spec/work
 
 ## 4. The parity-principle lift (boss contract diff, fork №9) {#parity-lift}
 
-##lift-home **The home, ruled.** Map fork №9 (2026-08-04): «Ядро дисциплины» — the
+@fact:lift-home **The home, ruled.** Map fork №9 (2026-08-04): «Ядро дисциплины» — the
 language-neutral guiding layer of `core-ai-native`, manifesto level, one home, the
 stacks cite. The carrier is [`00-MANIFESTO.md`](../../packages/org.vibevm.ai-native/core-ai-native/v0.8.0/spec/00-MANIFESTO.md)
 §4 (where the strictness lives), a boss-authored clause set the language guides
-cite. @spec/work
+cite. @status:spec/work
 
-##lift-principle **The principle (owner verbatim, 2026-08-02, B-035 anchor):**
+@fact:lift-principle **The principle (owner verbatim, 2026-08-02, B-035 anchor):**
 «Мы по условию идеи не должны делать поддержку других языков … хуже, чем это
 сделано для Rust. А по факту мы почему-то начинаем ослаблять правила без видимой
 причины». Lifted to a discipline law: **no language projection enforces the
@@ -213,17 +213,17 @@ analogue, the gap is recorded with its reason — never left silent.** It is the
 projection-level twin of `##BAN-WITHOUT-HATCH-IS-A-BUG`: an unexplained asymmetry
 between projections is a bug in the discipline exactly as a reasonless deviation is
 a bug in the code. The pilot (Rust) is the current reference bar, not a permanent
-privilege; Python inherits the law on arrival. @spec/work
+privilege; Python inherits the law on arrival. @status:spec/work
 
-##lift-citation **The stacks cite, they do not restate.** Each language guide adds
+@fact:lift-citation **The stacks cite, they do not restate.** Each language guide adds
 one citation to the new manifesto anchor beside its own conformance section (Go
 `##CONFORMANCE-IS-MADE-LOUD`, TS `##RULE-FAILURE-ON-A-SEAM-IS-A-TYPED-VALUE`, Rust
 its scaffold-F row), so the principle has one home and N pointers — the
-`gate-parity-config` home-and-pointers pattern. @spec/work
+`gate-parity-config` home-and-pointers pattern. @status:spec/work
 
 ## 5. The build cut {#cut}
 
-##cut-s1 **S1 — engine spine (one thread, cargo-heavy):** in canonical
+@fact:cut-s1 **S1 — engine spine (one thread, cargo-heavy):** in canonical
 `core-ai-native/v0.8.0` only — `facts.rs` (`Fact::GoConformance`, `Fact::TsSeamError`,
 the new `seam_error_message_no_req` kind documented in the kinds docstring);
 `rules/go.rs` (`GoSeamErrorCitesReq` consuming both Go kinds with per-half
@@ -234,9 +234,9 @@ grep the whole tree for exhaustive `Fact` matches and add arms for the two new
 variants in every frontend (the Rust FE total sort, health census, any consumer).
 Self-verify: canonical engine check + test + `clippy -D warnings` + `wc -l ≤ 600`
 per changed `.rs` (split `rules/go.rs` along seams if it crosses the budget). One
-thread because `facts.rs`/`mod.rs` are shared and the ripple crosses packages. @spec/work
+thread because `facts.rs`/`mod.rs` are shared and the ripple crosses packages. @status:spec/work
 
-##cut-s2 **S2a ∥ S2b — extractors + bridges (two disjoint lanes, after S1 lands +
+@fact:cut-s2 **S2a ∥ S2b — extractors + bridges (two disjoint lanes, after S1 lands +
 `sync-engines`):** *S2a (Go):* `extract.go` reads `Error()` bodies (emit
 `seam_error_message_no_req`) and recognises `var _ Seam = (*Impl)(nil)` before the
 `_`-skip (emit the conformance record); `go-bridge` gains the `RawFact` arm →
@@ -244,24 +244,24 @@ thread because `facts.rs`/`mod.rs` are shared and the ripple crosses packages. @
 verify the kind flows). *S2b (TS):* `extract.ts` detects the error union (§3.2
 heuristic) and emits `ts_seam_error`; `ts-bridge` gains `RawFact::TsSeamError` →
 `Fact::TsSeamError`. Disjoint files (go-* vs ts-*) → parallel. Self-verify: each
-extractor's own `go test` / `node --test` + the bridge crate's `cargo check`/test. @spec/work
+extractor's own `go test` / `node --test` + the bridge crate's `cargo check`/test. @status:spec/work
 
-##cut-s3 **S3 — driver mounts + B-049 (parallel, disjoint):** Go driver
+@fact:cut-s3 **S3 — driver mounts + B-049 (parallel, disjoint):** Go driver
 `build_rules` mounts `GoSeamErrorCitesReq` (always) + `GoConformanceAssertion`
 (conditional on `cells_dir`); TS driver mounts `TsSeamErrorCitesReq`; B-049 (its
 own lane, may run as early as alongside S1 — disjoint from `facts.rs`/`rules`):
 `RustConfig.floor_disable` + rust floor enforcement. Self-verify: each driver
-crate's check/test/clippy; a live demo exhibit at real exit. @spec/work
+crate's check/test/clippy; a live demo exhibit at real exit. @status:spec/work
 
-##cut-s4 **S4 — docs + demo + fixtures + citations (doc lane, after the rules are
+@fact:cut-s4 **S4 — docs + demo + fixtures + citations (doc lane, after the rules are
 real):** the Go guide's `##RULE-SEAM-ERROR-CONTRACT` and `##CONFORMANCE-IS-MADE-LOUD`
 self-annotations die (the rule and the message half are built; the assertion
 presence is checked); the TS guide's «Specified, not built» seam-error note dies
 and its type-level-test routed-build is named honestly; the parity-principle
 citation lands in all three guides (`#lift-citation`); demo/fixtures gain the
-citing and non-citing exhibits for each new rule (red exhibit per new rule). @spec/work
+citing and non-citing exhibits for each new rule (red exhibit per new rule). @status:spec/work
 
-##cut-boss-tail **The boss tail per slice:** review by WORKER-REPORT (existence part
+@fact:cut-boss-tail **The boss tail per slice:** review by WORKER-REPORT (existence part
 of the set-compare), `cargo xtask sync-engines` from the host root whenever a
 package crate changed, `cargo fmt --all` + fmt per package manifest, `vibe install`
 rematerialise after canonical package edits, `cargo clean -p` before diagnosing any
@@ -269,11 +269,11 @@ stale-fingerprint build, panel bare with the tail read on an untouched tree,
 commits per Rules 1–4, `meta.md` per worker. After the batch: the B-035 loop pass
 №2 re-cuts the parity table, and the F-185 family re-judgement drains through
 `vibe progress mirror --campaign` → `merge-verdicts.py` → seal (never chained;
-seal takes explicit paths). @spec/work
+seal takes explicit paths). @status:spec/work
 
 ## 6. Acceptance {#acceptance}
 
-##acceptance-list Measured, not narrated: (1) `go-seam-error-cites-req` is a
+@fact:acceptance-list Measured, not narrated: (1) `go-seam-error-cites-req` is a
 distinct rule id emitting two fingerprints — a dirty seam error red on both halves,
 the clean demo green — exhibited; (2) `ts-seam-error-cites-req` reds a non-citing
 error union and greens a citing one on the demo, its limit documented — exhibited;
@@ -283,4 +283,4 @@ step with a loud print and hard-fails an unknown one — exhibited; (5) the pari
 principle reads once in the manifesto and is cited by three guides; (6) the panel
 green with the tail read; (7) the B-035 loop table shows no language cell weaker
 than Rust without a recorded reason, and F-185's family re-judgement rides the
-landing. @spec/work
+landing. @status:spec/work

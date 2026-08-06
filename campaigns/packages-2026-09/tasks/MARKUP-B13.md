@@ -13,12 +13,12 @@ rulings 3, 20, 35, 48 and 49 all outrank.**
 
 ## Five marked siblings {#siblings}
 
-##B13-FIVE-SIBLINGS B8, B9, B10, B11 and B12 are landed `world` batches of this shape. Read
+@fact:B13-FIVE-SIBLINGS B8, B9, B10, B11 and B12 are landed `world` batches of this shape. Read
 the nearest sibling's corresponding file before marking yours. B12's report is
 the most useful on colons — it worked eight two-segment cases and two
 three-segment ones and stated its reasoning for each.
 
-##B13-NAMING-VARIANCE-TO-SETTLE **One naming variance is open and you should close it by following the
+@fact:B13-NAMING-VARIANCE-TO-SETTLE **One naming variance is open and you should close it by following the
 majority.** Two names coexist for the same unit: `##sibling-document-pointers`
 (source-mirrors, qualified-naming, and B12 throughout) and
 `##companion-document-pointers` (decision-records, health-audit). **Use
@@ -49,10 +49,10 @@ recent. Say in your report if a file's wording makes it wrong.
 
 ## The first prediction from a reproducible counter {#sizing}
 
-##B13-COMPOSITION **Measured composition: 82 cells, 168 items, 128 paragraphs, and 274
+@fact:B13-COMPOSITION **Measured composition: 82 cells, 168 items, 128 paragraphs, and 274
 sentences.**
 
-##B13-THE-COUNTER-IS-NOW-REPRODUCIBLE **The sentence figure is the first one this campaign can trust across
+@fact:B13-THE-COUNTER-IS-NOW-REPRODUCIBLE **The sentence figure is the first one this campaign can trust across
 implementations.** B12 wrote its counting rule down and it went into
 `BATCH-PLAN.md` verbatim; a second, independent implementation at review now
 reproduces **B11 at 381 against its published 382, and B12 at 320 exactly**. The
@@ -60,7 +60,7 @@ single defect in the reviewer's earlier counter — the one that produced the
 35 % disagreement — was that it read **indented continuation lines of list
 items** as paragraph prose.
 
-##B13-PREDICTION **Predicted: 543–565 units** (`1.07–1.15 × 274 + 168 + 82`). This is a
+@fact:B13-PREDICTION **Predicted: 543–565 units** (`1.07–1.15 × 274 + 168 + 82`). This is a
 band because the coefficient has moved twice — 1.068, 1.092, 1.094, 1.153 across
 four batches — and the plan says to quote the band and treat an outlier as
 informative. **Report your own sentence count under the recorded rule**; if it
@@ -72,32 +72,32 @@ than the batch total.
 Verified by the reviewer against a gate run at dispatch. **You are not asked to
 re-run anything.**
 
-- ##B13-EXPECT-RESIDUAL **Residual: ZERO.** No `SKILL.md` and no frontmatter in scope.
-- ##B13-EXPECT-RESIDUAL-FILES **No file may carry a residual.**
-- ##B13-EXPECT-CORPUS-TOTAL **Corpus-wide unmarked afterwards: 870** — it stands at 1 248 and this
+- @fact:B13-EXPECT-RESIDUAL **Residual: ZERO.** No `SKILL.md` and no frontmatter in scope.
+- @fact:B13-EXPECT-RESIDUAL-FILES **No file may carry a residual.**
+- @fact:B13-EXPECT-CORPUS-TOTAL **Corpus-wide unmarked afterwards: 870** — it stands at 1 248 and this
   batch owes all 378.
 
 ## F-097 reaches five files, including the renamed package itself {#f097}
 
-##B13-F097-FIVE-SITES `git-attribution-policy`'s own `README.md` and its three flow documents,
+@fact:B13-F097-FIVE-SITES `git-attribution-policy`'s own `README.md` and its three flow documents,
 plus `secrets-hygiene/README.md`, cite dead names. **This is the package whose
 own `vibe install` / `vibe uninstall` lines name `flow:attribution-policy`** —
 the sharpest instance in the whole finding, in the file a consumer reads first.
 
-##B13-STILL-DO-NOT-FIX **Mark them, do not fix them, do not re-file.** Four names are dead
+@fact:B13-STILL-DO-NOT-FIX **Mark them, do not fix them, do not re-file.** Four names are dead
 corpus-wide, all renamed to `git-*` by `520e7478`. A **fifth** would be new, and
 the review checks for one mechanically.
 
 ## What this batch is likely to surface {#expect}
 
-##B13-EXPECT-ATTRIBUTION-SELF-REFERENCE `attribution-policy` is the flow that forbids naming AI tooling
+@fact:B13-EXPECT-ATTRIBUTION-SELF-REFERENCE `attribution-policy` is the flow that forbids naming AI tooling
 anywhere in the repository, and it is also the one document family permitted to
 discuss the topic. **Mark it exactly as you would any other flow** — the policy
 governs the repository's authored surface, not the markup grammar, and a marker
 is not authorship. If you find yourself reasoning about whether a marker
 violates the policy, that is the answer: it does not.
 
-##B13-EXPECT-SECRETS-DISCIPLINE `secrets-hygiene` documents token handling. **Its prose names env-var
+@fact:B13-EXPECT-SECRETS-DISCIPLINE `secrets-hygiene` documents token handling. **Its prose names env-var
 names and file paths, which is exactly what the flow says is safe to print.**
 Do not treat a path or a variable name as a secret; do not quote any value you
 encounter anywhere in the repository. Nothing in this batch should require you

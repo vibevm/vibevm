@@ -34,7 +34,7 @@ The three structured-diagnostics channels the guides promise, and their state:
 > *Rule:* every custom check emits "violates REQ-X: <why>; fix surface: <where>",
 > never bare free text (R3-011). The parity this rests on … is a discipline law
 > in the manifesto (`spec://org.vibevm.ai-native/core-ai-native/00-MANIFESTO#parity-across-projections`).
-> @impl/done
+> @status:impl/done
 
 **Vehicle (verbatim):** "custom clippy lints" — a custom **clippy** lint class.
 The clause is marked `@impl/done`, i.e. the guide asserts it as shipped; the
@@ -50,7 +50,7 @@ census below shows the channel is in fact unbuilt (Q3).
 > REQ and the fix surface; the Compiler API's diagnostics are already coded
 > (TS2322 etc.) — wrap them with REQ context. *Rule:* every custom check emits
 > "violates REQ <uri>: <why>; fix surface: <where>", never bare free text
-> (R3-011). Error text is the agent's percept. @impl/done
+> (R3-011). Error text is the agent's percept. @status:impl/done
 
 **Vehicle (verbatim):** "Custom `@typescript-eslint` rules". Note the grammar
 token is `<uri>` here (a full URI), whereas the Rust guide writes `REQ-X`.
@@ -64,7 +64,7 @@ token is `<uri>` here (a full URI), whereas the Rust guide writes `REQ-X`.
 > Seam error types render `violates REQ <spec-uri>: <why>; fix surface: <where>`
 > (§5); custom checks emit the same grammar; conform emits SARIF. *Rule:* every
 > custom check and every seam error is agent-actionable — REQ URI + fix surface,
-> never bare free text (R3-011). @impl/done
+> never bare free text (R3-011). @status:impl/done
 
 **Vehicle (verbatim):** "custom checks emit the same grammar" — the Go guide
 names **no** vehicle. It does not say `go vet`-analyzer, `staticcheck`, a

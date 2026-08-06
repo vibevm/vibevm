@@ -825,7 +825,7 @@ distinction it turns on.**
 
 Line 56 reads, in full:
 
-> ##A-SKELETON-OF-THIS-TEXT-SHIPS-WITH-THE-DRAFT-EULA-SKILL A skeleton of this
+> @fact:A-SKELETON-OF-THIS-TEXT-SHIPS-WITH-THE-DRAFT-EULA-SKILL A skeleton of this
 > text ships with the `draft-eula` skill.
 
 It is a claim about **shipping**. The skeleton ships: it is in the package
@@ -1274,7 +1274,7 @@ crates/vibe-cli/tests/cli_pkg_cycle.rs:719:    /// Pure transitives (never decla
 The integration test's own doc says a pure transitive's uninstall **succeeds and
 leaves the manifest untouched** — the opposite of refused. **So the code and the
 tests agree with the package, and it is the host's `PROP-002
-##LF-ROOT-DEPENDENCIES` (`@impl/done`) and `lockfile.rs:120` that assert a
+@fact:LF-ROOT-DEPENDENCIES` (`@status:impl/done`) and `lockfile.rs:120` that assert a
 refusal nothing performs.**
 
 Measured today, `vibe uninstall org.vibevm.world/health-audit` — a pure

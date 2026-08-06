@@ -40,29 +40,29 @@ Stated here so the review can be run mechanically
 (`tools/batch-review.py`). A brief that does not state them has not predicted
 anything.
 
-- ##B7-EXPECT-RESIDUAL **Residual after the batch: exactly 2 unmarked units**, one in each
+- @fact:B7-EXPECT-RESIDUAL **Residual after the batch: exactly 2 unmarked units**, one in each
   `SKILL.md`, and zero everywhere else.
-- ##B7-EXPECT-RESIDUAL-FILES **The residual files are** `spec/skills/rust-ai-native-sweep/SKILL.md`
+- @fact:B7-EXPECT-RESIDUAL-FILES **The residual files are** `spec/skills/rust-ai-native-sweep/SKILL.md`
   and `spec/skills/rust-ai-native-terraform/SKILL.md`.
-- ##B7-EXPECT-CORPUS-TOTAL **Corpus-wide unmarked after the batch: 3 630** — it stands at 3 940
+- @fact:B7-EXPECT-CORPUS-TOTAL **Corpus-wide unmarked after the batch: 3 630** — it stands at 3 940
   today and this batch owes 310 of it (312 units less the 2 that cannot be
   marked).
 
 ## Two twins now, and this one is the original {#twins}
 
-##B7-TWO-REFERENCES `go-ai-native-lang` (B5, 665 units) and `typescript-ai-native-lang`
+@fact:B7-TWO-REFERENCES `go-ai-native-lang` (B5, 665 units) and `typescript-ai-native-lang`
 (B6, 581 units) are both marked, reviewed and landed. **Read the go and the
 TypeScript sibling of each file before marking it.** Where the two twins agree,
 follow them; where they disagree, that disagreement is itself information and it
 goes in your report.
 
-##B7-RUST-IS-THE-SOURCE-NOT-A-PROJECTION **This package is the original the other two were projected from**,
+@fact:B7-RUST-IS-THE-SOURCE-NOT-A-PROJECTION **This package is the original the other two were projected from**,
 not a third copy. So where its wording differs from both twins, the likely
 reading is that **rust is the source and the twins paraphrased** — do not
 "correct" toward the twins. `##FORM-ONLY` binds: reuse the author's words, and
 the author is here.
 
-##B7-README-RETURNS **The README is back.** B6 had none, so no file in it took `doc` or an
+@fact:B7-README-RETURNS **The README is back.** B6 had none, so no file in it took `doc` or an
 `audience`; B7 has exactly one such file. Ruling 7: `doc/done` +
 `audience="user"`. Two marked precedents, both landed:
 `packages/org.vibevm.ai-native/rust-ai-native/v0.7.0/README.md` (the Phase A
@@ -72,7 +72,7 @@ takes `impl` (boot snippet, both `SKILL.md`) or `spec` (guide, nine cards, two
 
 ## Ruling 30 fires here, once, and it is already located {#ruling-30}
 
-##B7-LAZY-CONTINUATION-AT-GUIDE-63 `spec/rust/GUIDE-AI-NATIVE-RUST.md:63` — «A ban with no escape hatch is
+@fact:B7-LAZY-CONTINUATION-AT-GUIDE-63 `spec/rust/GUIDE-AI-NATIVE-RUST.md:63` — «A ban with no escape hatch is
 a discipline bug; a deviation with no reason is a code bug.» sits at column 0
 directly after a bullet, so markdown folds it into that bullet and the bullet
 ends up asserting something it does not assert. **This is the same sentence, in
@@ -80,17 +80,17 @@ the same position, that B6 repaired in the TypeScript guide.** Insert the blank
 line, give it its own anchor, mark it. Ruling 30 governs; ruling 14 is the
 whitespace licence.
 
-##B7-LOOK-FOR-MORE That is the one this brief located by measurement. **Look for others** —
+@fact:B7-LOOK-FOR-MORE That is the one this brief located by measurement. **Look for others** —
 the class is «section-level sentence at column 0 immediately after a list item»
 — and report any you repair, with the line number.
 
 ## Two things this batch is likely to surface {#expect}
 
-##B7-EXPECT-VERSION-CLAIMS The guide and the tool briefs state toolchain versions, crate names and
+@fact:B7-EXPECT-VERSION-CLAIMS The guide and the tool briefs state toolchain versions, crate names and
 licence facts. Those are checkable against `vibe.toml` and the tree and may be
 **stale**. That is a finding, reported, never fixed.
 
-##B7-EXPECT-HOST-ONLY-CITATION `spec/rust/tools/vibe-agentic-tcg-rust.md:156` cites
+@fact:B7-EXPECT-HOST-ONLY-CITATION `spec/rust/tools/vibe-agentic-tcg-rust.md:156` cites
 `spec/boot/90-user.md` — a path that exists in the **host** repository and not
 in the package a consumer installs. The TypeScript twin carries the identical
 citation and B6 reported it; **the go twin does not**. Confirm the shape here

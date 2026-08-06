@@ -2,22 +2,22 @@
 
 <status stage="spec" state="done"/>
 
-##scope-of-this-document **Scope of this document.** A copy-ready skeleton for a comparative
+@fact:scope-of-this-document **Scope of this document.** A copy-ready skeleton for a comparative
 research document, then a clause-by-clause commentary on each
-section, then one short worked fragment. @impl/done
+section, then one short worked fragment. @status:impl/done
 
-##sibling-document-pointers The laws these clauses
+@fact:sibling-document-pointers The laws these clauses
 enforce live in
 [`COMPARATIVE-RESEARCH-PROTOCOL.md`](COMPARATIVE-RESEARCH-PROTOCOL.md);
-this file is the shape you fill. @impl/done
+this file is the shape you fill. @status:impl/done
 
 ## The skeleton {#skeleton}
 
-##COPY-THE-BLOCK-AND-FILL-EACH-PLACEHOLDER Copy this whole block into a new research document and fill each
-placeholder. @impl/done
+@fact:COPY-THE-BLOCK-AND-FILL-EACH-PLACEHOLDER Copy this whole block into a new research document and fill each
+placeholder. @status:impl/done
 
-##KEEP-THE-SECTION-ORDER Keep the section order — it is the reading shape a
-cold reader navigates by. @impl/done
+@fact:KEEP-THE-SECTION-ORDER Keep the section order — it is the reading shape a
+cold reader navigates by. @status:impl/done
 
 ```markdown
 # <SUBJECT> comparative research and <PROJECT> roadmap deltas
@@ -111,42 +111,42 @@ table against what changed:
 
 ## Clause-by-clause commentary {#commentary}
 
-- ##CLAUSE-STATUS-LINE **Status line.** State up front that the document ratifies
+- @fact:CLAUSE-STATUS-LINE **Status line.** State up front that the document ratifies
   nothing. This is the deltas-not-decrees law made visible on line
-  one, so no reader mistakes a proposal for a decision. @impl/done
-- ##CLAUSE-PURPOSE **Purpose.** One paragraph, and it must contain the two-way promise
+  one, so no reader mistakes a proposal for a decision. @status:impl/done
+- @fact:CLAUSE-PURPOSE **Purpose.** One paragraph, and it must contain the two-way promise
   — "what they do well *and* what they don't." A purpose that
   promises only trailing gaps has pre-committed to a one-directional
-  study. @impl/done
-- ##CLAUSE-SOURCE-CORPUS-AND-TABLE **Source corpus + table.** Every source with an access date and the
+  study. @status:impl/done
+- @fact:CLAUSE-SOURCE-CORPUS-AND-TABLE **Source corpus + table.** Every source with an access date and the
   subject's version. This table is half of the re-fetch list; filling
-  it now is cheaper than reconstructing it later. @impl/done
-- ##CLAUSE-READING-SHAPE **Reading shape.** A one-line section map so a cold reader navigates
+  it now is cheaper than reconstructing it later. @status:impl/done
+- @fact:CLAUSE-READING-SHAPE **Reading shape.** A one-line section map so a cold reader navigates
   without reading linearly. Months later, this is how a refresher
-  finds the delta table in ten seconds. @impl/done
-- ##CLAUSE-SECTION-ONE-IN-THEIR-OWN-WORDS **§1 in their own words.** The subject's pitch, quoted, before any
+  finds the delta table in ten seconds. @status:impl/done
+- @fact:CLAUSE-SECTION-ONE-IN-THEIR-OWN-WORDS **§1 in their own words.** The subject's pitch, quoted, before any
   analysis. If your document opens with your *summary* of their pitch,
-  you have already broken the quote-first law. @impl/done
-- ##CLAUSE-SECTION-TWO-INVENTORY **§2 inventory.** Quote-then-map, one capability at a time. "Maps
+  you have already broken the quote-first law. @status:impl/done
+- @fact:CLAUSE-SECTION-TWO-INVENTORY **§2 inventory.** Quote-then-map, one capability at a time. "Maps
   to: no equivalent" is a finding, not a blank — it is a §3 gap in
-  the making. @impl/done
-- ##CLAUSE-SECTIONS-THREE-AND-FOUR **§3 trail / §4 lead.** Both are mandatory. A document that ships
+  the making. @status:impl/done
+- @fact:CLAUSE-SECTIONS-THREE-AND-FOUR **§3 trail / §4 lead.** Both are mandatory. A document that ships
   with §4 empty has not looked hard enough — every project made
-  *some* decision its competitor did not. @impl/done
-- ##CLAUSE-SECTION-FIVE-DELTAS **§5 deltas.** Numbered, prioritized, homed. The number is what the
+  *some* decision its competitor did not. @status:impl/done
+- @fact:CLAUSE-SECTION-FIVE-DELTAS **§5 deltas.** Numbered, prioritized, homed. The number is what the
   downstream pipeline cites when a delta is accepted or rejected
-  ([`from-research-to-roadmap.md`](from-research-to-roadmap.md)). @impl/done
-- ##CLAUSE-SECTION-SIX-OPEN-QUESTIONS **§6 open questions.** What the sources did not answer. Honest gaps
-  in the study itself, and the first questions to ask on refresh. @impl/done
-- ##CLAUSE-SECTION-SEVEN-RE-FETCH-LIST **§7 re-fetch list.** The refresh recipe: which URLs in what order,
-  and the capture version — without it, refresh becomes rewrite. @impl/done
+  ([`from-research-to-roadmap.md`](from-research-to-roadmap.md)). @status:impl/done
+- @fact:CLAUSE-SECTION-SIX-OPEN-QUESTIONS **§6 open questions.** What the sources did not answer. Honest gaps
+  in the study itself, and the first questions to ask on refresh. @status:impl/done
+- @fact:CLAUSE-SECTION-SEVEN-RE-FETCH-LIST **§7 re-fetch list.** The refresh recipe: which URLs in what order,
+  and the capture version — without it, refresh becomes rewrite. @status:impl/done
 
 ## Worked fragment {#worked}
 
-##a-short-invented-illustration A short invented illustration — a study of a generic build tool
-*Quarry*: two quotes, one delta. @impl/done
+@fact:a-short-invented-illustration A short invented illustration — a study of a generic build tool
+*Quarry*: two quotes, one delta. @status:impl/done
 
-##real-documents-run-longer Real documents run longer. @spec/done
+@fact:real-documents-run-longer Real documents run longer. @status:spec/done
 
 ```markdown
 ## 1. Quarry in its own words {#quarry-words}
@@ -190,21 +190,21 @@ so offline-first stays the default. Ratified here: nothing.
 **Capture date:** 2026-07-01. **Subject version at capture:** Quarry 3.2.
 ```
 
-##the-fragment-obeys-all-five-laws-lead The fragment obeys all five laws in miniature: @impl/done
+@fact:the-fragment-obeys-all-five-laws-lead The fragment obeys all five laws in miniature: @status:impl/done
 
-- ##MINIATURE-LAWS-ONE-AND-TWO dated verbatim quotes
-  (Laws 1-2), @impl/done
-- ##MINIATURE-LAW-THREE §4 answering §3 the other way (Law 3), @impl/done
-- ##MINIATURE-LAW-FOUR D1 numbered and
-  ratifying nothing (Law 4), @impl/done
-- ##MINIATURE-LAW-FIVE a closing re-fetch list carrying the capture date and the
-  subject's version at capture (Law 5). @impl/done
+- @fact:MINIATURE-LAWS-ONE-AND-TWO dated verbatim quotes
+  (Laws 1-2), @status:impl/done
+- @fact:MINIATURE-LAW-THREE §4 answering §3 the other way (Law 3), @status:impl/done
+- @fact:MINIATURE-LAW-FOUR D1 numbered and
+  ratifying nothing (Law 4), @status:impl/done
+- @fact:MINIATURE-LAW-FIVE a closing re-fetch list carrying the capture date and the
+  subject's version at capture (Law 5). @status:impl/done
 
 ## Summary {#summary}
 
-- ##SUM-COPY-THE-SKELETON-WHOLE Copy the skeleton whole; keep the section order — it is the reading
-  shape. @impl/done
-- ##SUM-FILL-THE-SOURCE-TABLE-AS-YOU-FETCH Fill the source table as you fetch; it is half the re-fetch list. @impl/done
-- ##SUM-QUOTE-BEFORE-MAPPING Quote before mapping; map "no equivalent" as a real finding. @impl/done
-- ##SUM-SHIP-BOTH-GAP-DIRECTIONS Ship §3 *and* §4; an empty lead section means you stopped early. @impl/done
-- ##SUM-NUMBER-PRIORITIZE-AND-HOME-EVERY-DELTA Number, prioritize, and home every delta; ratify none. @impl/done
+- @fact:SUM-COPY-THE-SKELETON-WHOLE Copy the skeleton whole; keep the section order — it is the reading
+  shape. @status:impl/done
+- @fact:SUM-FILL-THE-SOURCE-TABLE-AS-YOU-FETCH Fill the source table as you fetch; it is half the re-fetch list. @status:impl/done
+- @fact:SUM-QUOTE-BEFORE-MAPPING Quote before mapping; map "no equivalent" as a real finding. @status:impl/done
+- @fact:SUM-SHIP-BOTH-GAP-DIRECTIONS Ship §3 *and* §4; an empty lead section means you stopped early. @status:impl/done
+- @fact:SUM-NUMBER-PRIORITIZE-AND-HOME-EVERY-DELTA Number, prioritize, and home every delta; ratify none. @status:impl/done

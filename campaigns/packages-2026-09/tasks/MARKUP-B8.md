@@ -13,13 +13,13 @@ see and which must therefore be reported by name.
 
 ## This batch has no twin, and that is what makes it different {#no-twin}
 
-##B8-FIRST-WORLD-BATCH B5, B6 and B7 were three projections of one skeleton, and by B7 two
+@fact:B8-FIRST-WORLD-BATCH B5, B6 and B7 were three projections of one skeleton, and by B7 two
 marked siblings decided most cases before they were asked. **B8 has none.** It
 is the first batch in the `world` namespace: flow packages, whose shape is a
 README, a boot snippet, and protocol documents under `spec/flows/<name>/`. There
 are no cards, no `mechanisms/`, no `tools/`, and no sibling to read first.
 
-##B8-IS-THE-GENRE-CALIBRATION **So this batch is a calibration, and its report is worth more than its
+@fact:B8-IS-THE-GENRE-CALIBRATION **So this batch is a calibration, and its report is worth more than its
 markup.** The nine batches after it are all `world` flows. Cases the
 thirty-three conventions do not decide here will be locked and will bind
 B9–B16, exactly as B1a's fifteen bound everything after it. **Report every case
@@ -27,7 +27,7 @@ you had to think about, including the ones you resolved confidently** — a
 convention that felt obvious to you is one the next batch may resolve the other
 way.
 
-##B8-MULTIPLIER-IS-UNMEASURED-HERE **The ×1.7 sizing multiplier does not apply and must not be assumed.**
+@fact:B8-MULTIPLIER-IS-UNMEASURED-HERE **The ×1.7 sizing multiplier does not apply and must not be assumed.**
 It was measured three times and all three were language stacks (×1.62, ×1.72,
 ×1.75). `BATCH-PLAN.md` says to re-measure at the first `world` batch rather
 than trust a constant drawn from three similar things. **Your final unit count
@@ -48,12 +48,12 @@ is a measurement this campaign does not have yet** — report it plainly.
 | `discovery-prompt/…/README.md` | 11 |
 | `discovery-prompt/…/spec/boot/50-flow-discovery-prompt.md` | 6 |
 
-##B8-DISCOVERY-PROMPT-IS-EXCLUDED **`DISCOVERY-PROMPT.md` is NOT yours** — owner ruling F-096, 2026-07-27.
+@fact:B8-DISCOVERY-PROMPT-IS-EXCLUDED **`DISCOVERY-PROMPT.md` is NOT yours** — owner ruling F-096, 2026-07-27.
 It left the corpus as a **prompt payload, not a claim**: `confirmed` has no
 meaning applied to a line addressed to another model. Do not mark it, do not
 open it to «check consistency», do not report drift in it.
 
-##B8-CITATIONS-INTO-IT-ARE-FINE **`usage.md` cites the excluded file throughout, and that is correct.**
+@fact:B8-CITATIONS-INTO-IT-ARE-FINE **`usage.md` cites the excluded file throughout, and that is correct.**
 An exclusion is about *measurement*, not about links — a document in the corpus
 may cite a document outside it. A broken-looking cross-reference into
 `DISCOVERY-PROMPT.md` is **not** a finding on those grounds alone.
@@ -65,25 +65,25 @@ gate run at dispatch time** — DRIFT-037 and the F-096 exclusion both move the
 corpus total, and a number carried from a document instead of a command is this
 campaign's most repeated defect.
 
-- ##B8-EXPECT-RESIDUAL **Residual after the batch: ZERO.** Neither package has a `SKILL.md`
+- @fact:B8-EXPECT-RESIDUAL **Residual after the batch: ZERO.** Neither package has a `SKILL.md`
   and no file in scope opens with `---`, so F-092 does not reach this batch.
   **This is the first batch in the campaign that can finish at zero unmarked**,
   and «2» is therefore not an acceptable outcome here.
-- ##B8-EXPECT-RESIDUAL-FILES **No file may carry a residual.** There is no exempt list.
-- ##B8-EXPECT-CORPUS-TOTAL **Corpus-wide unmarked afterwards: 3 630 − 9 (DRIFT-037) − 169 (F-096)
+- @fact:B8-EXPECT-RESIDUAL-FILES **No file may carry a residual.** There is no exempt list.
+- @fact:B8-EXPECT-CORPUS-TOTAL **Corpus-wide unmarked afterwards: 3 630 − 9 (DRIFT-037) − 169 (F-096)
   − 286 = 3 166**, if both land first. Confirm the starting number with a gate
   run; do not trust this arithmetic.
 
 ## Two things this batch is likely to surface {#expect}
 
-##B8-EXPECT-TEMPLATE-GENRE `record-template.md` is a **template with worked examples** — a genre
+@fact:B8-EXPECT-TEMPLATE-GENRE `record-template.md` is a **template with worked examples** — a genre
 the campaign has not marked before. A filled-in example inside a template is not
 obviously a fact about this project; it may be closer to the F-096 shape than to
 a contract. **Mark it and report the discomfort** rather than deciding: do not
 invent an exclusion, and do not stretch a stage to fit. Ruling 11 says
 `@unknown` is cheap and honest.
 
-##B8-EXPECT-SELF-DESCRIBING-FLOWS These two packages describe **how this project records decisions and
+@fact:B8-EXPECT-SELF-DESCRIBING-FLOWS These two packages describe **how this project records decisions and
 runs research** — so their prose is about our own practice, which makes ruling
 10's discriminator (checkable against this repository → `@impl`; outside world,
 motivation or future → `@spec`) do more work than usual. A flow that states its

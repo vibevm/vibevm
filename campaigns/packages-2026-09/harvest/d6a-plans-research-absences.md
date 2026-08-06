@@ -749,13 +749,13 @@ collision is observed to mislead a reader in practice.»*
 On the sentence's own trailing clause — *«including "do nothing", if the study
 weighed it»* — the verdict says no located study weighs it. The status-quo
 alternative is weighed explicitly at three landings:
-`spec/common/PROP-031-algorithmic-refactoring.md:110` `##REJ-LLM-REWRITE **LLM
+`spec/common/PROP-031-algorithmic-refactoring.md:110` `@fact:REJ-LLM-REWRITE **LLM
 free-form file-rewriting (the status quo).** The problem, not a solution …`;
 `spec/modules/vibe-workspace/PROP-012-managed-redirect-block.md:166`
-`##REJ-WHOLE-FILE **The whole-file overwrite** (the shipped Phase-4 status quo).
+`@fact:REJ-WHOLE-FILE **The whole-file overwrite** (the shipped Phase-4 status quo).
 Rejected …`; and
 `packages/org.vibevm.ai-native/rust-ai-native-lang/v0.7.0/spec/cards/scaffold-d-differential-oracle.md:52`
-`##ALTERNATIVE-MANUAL-REVIEW *Manual review:* the status quo; fails exactly where
+`@fact:ALTERNATIVE-MANUAL-REVIEW *Manual review:* the status quo; fails exactly where
 we need it`. The clause is conditional («if the study weighed it») and is
 therefore not falsifiable by an absence in any case.
 

@@ -66,7 +66,7 @@ From Phase B/C evidence — do not re-discover:
    counts.
 
 Edge cases: `>##ID` with no space (valid markdown) mints the anchor. `> >
-##ID` (nested, spaced) mints it. `>` alone on the line is not a unit and
+@fact:ID` (nested, spaced) mints it. `>` alone on the line is not a unit and
 never reaches this function. A blockquote line whose text begins `> > ` but
 whose content is `#hash` is not an anchor (one `#`, not two).
 

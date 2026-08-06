@@ -4244,10 +4244,10 @@ aspirational — and every one is still live for the phases that remain.
   a ruling** (what does specmap track; are facts addressable; how do the two
   maps cooperate) — answered in chat, the trait-signature correction stays
   presented and unruled. **Item 7's own follow-up question became B-027**:
-  the «Specified, not built» facts carry markers inconsistently (@spec/done
-  vs @impl/done — партія 1a's own mix), the owner's guessed `@impl/planned`
+  the «Specified, not built» facts carry markers inconsistently (@status:spec/done
+  vs @status:impl/done — партія 1a's own mix), the owner's guessed `@impl/planned`
   exists in the grammar as `@impl/plan`, and the proposed audit rule
-  (not-planned → @spec/done; planned-with-backlog-entry → @impl/plan) waits
+  (not-planned → @status:spec/done; planned-with-backlog-entry → @status:impl/plan) waits
   for his word before the sweep. F-206 `deferred` naming B-026; F-146 stays
   open on the one unruled item. Registry **105 / 226 — 18 deferred, 87 open;
   owed 69, every one on the sync route**.
@@ -4300,7 +4300,7 @@ aspirational — and every one is still live for the phases that remain.
   **B-029** (planned); 2.2 (а)+(б): the assertion fact carries the sanctioned
   annotation on the §3.8 bench, and **B-030** (planned) builds the Go check
   and surveys Rust/TS for the same promise-vs-gate gap — the owner's own
-  extension; 2.3: the owner-confirmed **##TIER-VOCABULARY legend** landed at
+  extension; 2.3: the owner-confirmed **@fact:TIER-VOCABULARY legend** landed at
   the frontend table and TWO-TIERS re-judged confirmed — the W2-era
   taxonomy-convicted-of-a-missing-enum misattribution falls with the
   definition in place. SUM-THE-URI-SCHEME confirmed per the wave-7
@@ -4858,7 +4858,7 @@ aspirational — and every one is still live for the phases that remain.
   **Transport first-blood:** one of two
   workers skipped the mandated WORKER-REPORT while echoing TASK-DONE;
   one `-c` rework fixed it; two rework rules paid for and recorded in
-  the law's `#fact-first-live-fanout`. @spec/done
+  the law's `#fact-first-live-fanout`. @status:spec/done
 
 - **2026-08-04 · release-события — рулинг владельца.** On the boss's
   «publication of the six consumer packages is a release event held
@@ -4873,7 +4873,7 @@ aspirational — and every one is still live for the phases that remain.
   would only multiply; the registry's release-route rows and the
   in-slot edits already track exactly what will ship. If the owner
   wants numbers fixed earlier, the boss mints the seven slots on his
-  word. @spec/done
+  word. @status:spec/done
 
 - **2026-08-04 · Phase E, second slice — the ruled re-judgements drain
   and B-006 goes to the owner as a sketch.** The routine half executed
@@ -4901,7 +4901,7 @@ aspirational — and every one is still live for the phases that remain.
   — compose-time once-each elision recommended, three forks, W3's
   per-node-qualify rider, two-packet worker cut. **Implementation
   holds for the ruling; B-031/B-028 stay queued behind it per the
-  wave order.** @spec/done
+  wave order.** @status:spec/done
 
 - **2026-08-04 · B-006 ruled, hardened twice by the owner, and LANDED
   the same day.** The ruling: «согласен с твоими рекомендациями a1 b1
@@ -4944,7 +4944,7 @@ aspirational — and every one is still live for the phases that remain.
   one-lane on purpose: the two perimeters share `render_static`.
   Worker archives: `cache/agents/sorted/E4-W{1,2}-*/` (logs, stamped
   reports, meta with verdicts). **Wave А continues: B-031 next, then
-  B-028.** @spec/done
+  B-028.** @status:spec/done
 
 - **2026-08-04 · B-031 opens — the census lands, the sketch goes to
   the owner.** On the owner's «продолжай», wave А moved to B-031. The
@@ -4963,7 +4963,7 @@ aspirational — and every one is still live for the phases that remain.
   the rename hint, a dry-run-first one-commit migration, F-169/F-147
   re-judgements riding the landing. **Three forks to the owner
   (coordinate form / legacy behaviour / migration perimeter);
-  implementation holds for the ruling. B-028 stays queued behind.** @spec/done
+  implementation holds for the ruling. B-028 stays queued behind.** @status:spec/done
 
 - **2026-08-04 · B-031 ruled — and the owner adds a fourth point,
   addressed to the boss by name.** The ruling, verbatim: «1.
@@ -4987,7 +4987,7 @@ aspirational — and every one is still live for the phases that remain.
   named in the design's W3. The build starts on the ruling: W1
   (resolver + identity, claudez) → W2 (the migration script, dry-run
   first) → W3 (boss: PROP edits, re-seal, re-judgements, panel,
-  mirrors). @spec/done
+  mirrors). @status:spec/done
 
 - **2026-08-04 · B-031 LANDS — the host is `org.vibevm.core/vibevm`,
   and the exception is dead.** Two claudez slices, both ПРИНЯТО first
@@ -5024,7 +5024,7 @@ aspirational — and every one is still live for the phases that remain.
   the 2026-08-02 ruling text now shows the new form) — the ruled
   perimeter, applied consistently; JSON records alone keep the
   original spellings. **Wave А's build queue is drained: B-028 — a
-  decision entry, not a build — is the next fork, to the owner.** @spec/done
+  decision entry, not a build — is the next fork, to the owner.** @status:spec/done
 
 - **2026-08-04 · B-028 ruled and landed — ВОЛНА А ЗАКРЫТА ЦЕЛИКОМ.**
   On the fork's presentation the owner ruled the version half's
@@ -5053,7 +5053,7 @@ aspirational — and every one is still live for the phases that remain.
   boundary. Panel green, tail read. **Волна А: B-011 → B-006 → B-031 →
   B-028 — все посажены под мандатом фазы E. Дальше по карте — волны
   Б/В/Г, добром пока не покрытые, и стоячие пересуды остальных
-  deferred-строк по мере их строек.** @spec/done
+  deferred-строк по мере их строек.** @status:spec/done
 
 - **2026-08-04 · НОВЫЙ МАНДАТ — добро на ВСЕ оставшиеся волны.** On
   the wave-А close report and the Б/В/Г explainer, the owner, verbatim:
@@ -5077,7 +5077,7 @@ aspirational — and every one is still live for the phases that remain.
   publication waits for the refactor's end; versions stay unbumped
   to the pre-publication boundary. Wind-down executed the same
   message: WAL/CONTINUE rewritten, the map refreshed at the wave
-  boundary, the start prompt handed to the owner in chat. @spec/done
+  boundary, the start prompt handed to the owner in chat. @status:spec/done
 
 - **2026-08-04 · Волна Б открывается: цензус-тройка → развилка №2
   взята → B-003 посажен тем же часом.** The batch-1 opener ran
@@ -5109,7 +5109,7 @@ aspirational — and every one is still live for the phases that remain.
   0 findings, the four remaining reds the row's recorded
   not-defects (`082e205b`; sync-engines ×6 + vibedeps in step).
   The TS floor's twin hole censused and FILED, not ridden: B-048.
-  Next: W1 (engine Config v2) on the ruled shape. @spec/done
+  Next: W1 (engine Config v2) on the ruled shape. @status:spec/done
 
 - **2026-08-04 · B-029 + B-034 LAND — the config surface is symmetric
   and the coverage invariant speaks three languages.** Three claudez
@@ -5147,7 +5147,7 @@ aspirational — and every one is still live for the phases that remain.
   and ts-demo «2 cell(s) gated, 0 exempt», both 0 new findings.
   Волна Г rode alongside: the B-040 seams census (`a8037735`).
   Remaining in batch 1: W3 (the carriers' doc sweep) + W4 (the
-  TS-shaped flag rule, B-039) — both in flight as this entry lands. @spec/done
+  TS-shaped flag rule, B-039) — both in flight as this entry lands. @status:spec/done
 
 - **2026-08-04 · БАТЧ 1 ВОЛНЫ Б ЗАКРЫВАЕТСЯ ЦЕЛИКОМ — B-029 + B-034 +
   B-039 посажены, B-003 попутно, луп B-035 пройден, панель зелёная,
@@ -5191,7 +5191,7 @@ aspirational — and every one is still live for the phases that remain.
   when B-033 completes the family). Live exhibits, real exits:
   go-demo 6/0, ts-demo 2/0, both 0 new. Mirrors fanned. **Next:
   батч 2 (B-033 + B-030) — и развилка №9 карты (дом
-  паритет-принципа) уходит владельцу вместе с кандидатами лупа.** @spec/done
+  паритет-принципа) уходит владельцу вместе с кандидатами лупа.** @status:spec/done
 
 - **2026-08-04 · БАТЧ 2 ВОЛНЫ Б ПОСТРОЕН ЦЕЛИКОМ — B-033 + B-030 + B-049 +
   подъём принципа паритета.** One long autonomous run (the continuation
@@ -5238,7 +5238,7 @@ aspirational — and every one is still live for the phases that remain.
   **Mirrors are behind** (21 commits local `main`; the fan-out held for an
   explicit wind-down). **Next:** the F-185 re-judge + backlog rows CLOSE batch
   2; then батч 3 (B-036 + B-037 + B-038, map fork №1 with B-038) → батч 4
-  (B-025 + B-026) → M-PARITY → волны В/Г. @spec/done
+  (B-025 + B-026) → M-PARITY → волны В/Г. @status:spec/done
 
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 

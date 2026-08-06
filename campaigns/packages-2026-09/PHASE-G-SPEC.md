@@ -48,13 +48,13 @@ the living corpus may cite into `docs-legacy/` as a normative source** —
 archive-provenance pointers only. It is history kept readable, not a place to
 draw from.
 
-- ##G-ARCHIVE-NOT-DELETE It is an archive, not a deletion. The 43 files are the only record of
+- @fact:G-ARCHIVE-NOT-DELETE It is an archive, not a deletion. The 43 files are the only record of
   what was documented, and the new tree is written *against* them — a fact
   present there and absent in the new docs is a **regression to report**, not a
   simplification.
-- ##G-ARCHIVE-STAYS-UNOBSERVED `docs-legacy/` joins no include glob. It was unobserved before the
+- @fact:G-ARCHIVE-STAYS-UNOBSERVED `docs-legacy/` joins no include glob. It was unobserved before the
   move and stays so; moving it does not make it a contract.
-- ##G-README-DEVGUIDE-DECIDED `README.md` and `DEV-GUIDE.md` are **not** part of the move by
+- @fact:G-README-DEVGUIDE-DECIDED `README.md` and `DEV-GUIDE.md` are **not** part of the move by
   default — a repository root's README is its front door and a dev guide is
   load-bearing setup documentation (the `dev-runtime-docs` flow governs it, and
   that flow requires setup docs to change in the same commit as the toolchain
@@ -85,13 +85,13 @@ task files. Documentation is the largest surface on which it could happen, and
 the one-way citation law is what prevents it structurally rather than by
 vigilance.
 
-- ##G-CITE-NOT-COPY A doc page carries **prose the reader needs and citations for every
+- @fact:G-CITE-NOT-COPY A doc page carries **prose the reader needs and citations for every
   claim it makes**. Where it would state a normative value, it cites the anchor
   that governs it.
-- ##G-EDGE-IS-DOCUMENTS The citation is a `documents` edge (PROP-014's edge kinds:
+- @fact:G-EDGE-IS-DOCUMENTS The citation is a `documents` edge (PROP-014's edge kinds:
   `implements · verifies · documents · deviates · informs`), so the link is
   machine-visible, not merely a markdown href.
-- ##G-SPEC-STAYS-IGNORANT **No spec file gains a back-link.** The spec tree does not know the
+- @fact:G-SPEC-STAYS-IGNORANT **No spec file gains a back-link.** The spec tree does not know the
   documentation exists. A spec edit is never blocked by a doc edit.
 
 ### 3.2 The consequence the one-way law creates, and its instrument {#one-way-cost}
@@ -146,10 +146,10 @@ its input is empty.** Phase G does not write a table of contents by hand; it
 runs that command, and if the command returns nothing the *judgment pass* is
 what is missing, not the documentation.
 
-- ##G-DO-NOT-HAND-BUILD-TOC **Never hand-assemble what the report generates.** A hand-built TOC
+- @fact:G-DO-NOT-HAND-BUILD-TOC **Never hand-assemble what the report generates.** A hand-built TOC
   is a derived value with its own writer — §3.1's whole argument, committed
   inside the phase meant to demonstrate it.
-- ##G-AUDIENCE-GAP-IS-KNOWN The `audience` vocabulary has a known gap (F-082): a package's boot
+- @fact:G-AUDIENCE-GAP-IS-KNOWN The `audience` vocabulary has a known gap (F-082): a package's boot
   snippet is read by a **consuming project's session**, which is none of
   `user` / `author` / `dev` cleanly. Phase G will hit it on every flow package.
   Resolve it as a vocabulary amendment before the guides, not during them.
@@ -175,7 +175,7 @@ So the one-way rule is not a deviation from that flow's «keep the two-way links
 — that rule governs **lore explaining a contract**, and a User Guide is not
 lore. It is a genre the map does not cover.
 
-- ##G-ADD-GENRE-ROW Phase G adds the row: *documentation — holds what a consumer needs to
+- @fact:G-ADD-GENRE-ROW Phase G adds the row: *documentation — holds what a consumer needs to
   use the product; binding? no; cites contracts one-way and is never cited by
   them*. Without it the next session must re-derive the same conclusion, and the
   flow's own law is «never create a document without deciding its genre».
@@ -186,19 +186,19 @@ lore. It is a genre the map does not cover.
 
 Declared stack: **node.js · Qwik v2 · Tailwind · TypeScript**.
 
-- ##G-QWIK-READING **Reading to confirm before the manifest is written:** the directive
+- @fact:G-QWIK-READING **Reading to confirm before the manifest is written:** the directive
   says «quick.dev (v2)». Taken as **Qwik** (`qwik.dev`) v2 — it is the only
   framework matching that name and it fits node + Tailwind + TypeScript. A
   wrong framework name frozen into a published manifest is a rotting literal of
   exactly the kind this campaign keeps finding, so it is confirmed with the
   owner, not inferred silently.
-- ##G-WEB-RESERVE-WHY Reserving now is right under `qualified-naming`: `(group, name)` is
+- @fact:G-WEB-RESERVE-WHY Reserving now is right under `qualified-naming`: `(group, name)` is
   globally unique and **a rename is a new identity** with no version carry-over.
   Reserving costs a manifest; renaming later costs the coordinate.
-- ##G-WEB-CONSUMES-DOC The site consumes `org.vibevm.doc/doc` as a dependency and adds no
+- @fact:G-WEB-CONSUMES-DOC The site consumes `org.vibevm.doc/doc` as a dependency and adds no
   content of its own — the same content-minimal shape PROP-028 gives family
   aggregators. Its own facts would otherwise be a second copy, §3.1 again.
-- ##G-WEB-IS-TYPESCRIPT-DISCIPLINE When it is built, it is TypeScript under the installed
+- @fact:G-WEB-IS-TYPESCRIPT-DISCIPLINE When it is built, it is TypeScript under the installed
   `typescript-ai-native` stack, not an exception to it.
 
 ## 8. Exit gate — enumerating this phase's own steps (A1) {#exit}

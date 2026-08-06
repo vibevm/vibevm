@@ -2,31 +2,31 @@
 
 <status stage="spec" state="work" comment="B0 2026-07-24: DRAFT; the S5 open questions need an owner design session"/>
 
-##milestone-line **Milestone:** design proposal; implementation follows [PROP-008](PROP-008-qualified-naming.md) (qualified naming, `M1.19`), on which the identity-keyed cache depends — provisionally `M1.20` (owner to confirm in [`ROADMAP.md`](../../../ROADMAP.md)). Not implementation-locked. @spec/work
+@fact:milestone-line **Milestone:** design proposal; implementation follows [PROP-008](PROP-008-qualified-naming.md) (qualified naming, `M1.19`), on which the identity-keyed cache depends — provisionally `M1.20` (owner to confirm in [`ROADMAP.md`](../../../ROADMAP.md)). Not implementation-locked. @status:spec/work
 
-##status-line **Status:** DRAFT — requirements captured in owner discussions on 2026-05-21; draft 2 adopted the cache-keying and user-config decisions (§2.3, §2.4). The remaining §5 open questions need an owner design session before implementation. @spec/work
+@fact:status-line **Status:** DRAFT — requirements captured in owner discussions on 2026-05-21; draft 2 adopted the cache-keying and user-config decisions (§2.3, §2.4). The remaining §5 open questions need an owner design session before implementation. @status:spec/work
 
-##related **Related:** [PROP-002](PROP-002-decentralized-registry.md) (the decentralized registry — `[[registry]]`, `[[mirror]]`, `[[override]]`, and the registry cache this PROP elevates); [PROP-008](PROP-008-qualified-naming.md) (qualified naming — the registry-independent package identity the cache is keyed by); [PROP-009](../vibe-workspace/PROP-009-loading-model.md) (the loading model — `vibedeps/`, materialisation, `vibe.lock`); [PROP-005](../vibe-index/PROP-005-package-index.md) (the package index — offline search); [PROP-007](../vibe-workspace/PROP-007-workspace.md) (workspaces — members). @spec/done
+@fact:related **Related:** [PROP-002](PROP-002-decentralized-registry.md) (the decentralized registry — `[[registry]]`, `[[mirror]]`, `[[override]]`, and the registry cache this PROP elevates); [PROP-008](PROP-008-qualified-naming.md) (qualified naming — the registry-independent package identity the cache is keyed by); [PROP-009](../vibe-workspace/PROP-009-loading-model.md) (the loading model — `vibedeps/`, materialisation, `vibe.lock`); [PROP-005](../vibe-index/PROP-005-package-index.md) (the package index — offline search); [PROP-007](../vibe-workspace/PROP-007-workspace.md) (workspaces — members). @status:spec/done
 
-##owner-sanction-line **Owner sanction:** this PROP extends `VIBEVM-SPEC.md` §8.3 (cache layout), §9 (CLI surface), and §9.5 (the user-level config layer). The spec edits land at implementation time and require explicit owner sanction — not yet granted; this PROP is the requirements record. @spec/work
+@fact:owner-sanction-line **Owner sanction:** this PROP extends `VIBEVM-SPEC.md` §8.3 (cache layout), §9 (CLI surface), and §9.5 (the user-level config layer). The spec edits land at implementation time and require explicit owner sanction — not yet granted; this PROP is the requirements record. @status:spec/work
 
 ---
 
 ## 1. Motivation {#motivation}
 
-- ##cache-exists vibevm already keeps a registry cache (`VIBEVM_REGISTRY_CACHE` / `vibe_registry::default_cache_root()`): registry repositories are cloned there, and `vibe install` / `vibe update` fetch through it. @spec/done
-- ##cache-incidental But the cache is an *implementation detail* — an opaque download accelerator, not a deliberate, inspectable, first-class store. @spec/done
-- ##no-offline-mode *(The motivation as captured; both halves have since been answered.)* There was no `--offline` mode: every `vibe install` / `vibe update` that re-resolved walked the network, and `vibe install` always re-resolved. `--offline` shipped with [PROP-002 §2.2.2.1](PROP-002-decentralized-registry.md), and PROP-011's freshness skip ended the unconditional re-resolve. @spec/done
-- ##no-local-resolve A developer behind an air-gap, on a slow link, or simply wanting fast deterministic iteration had no way to say *resolve against what I already have*. `--offline`, the embedded and project-local registries (PROP-030) and the lockfile-respecting install now say exactly that; what this PROP still adds is the **machine-global accretive store** behind them. @spec/done
+- @fact:cache-exists vibevm already keeps a registry cache (`VIBEVM_REGISTRY_CACHE` / `vibe_registry::default_cache_root()`): registry repositories are cloned there, and `vibe install` / `vibe update` fetch through it. @status:spec/done
+- @fact:cache-incidental But the cache is an *implementation detail* — an opaque download accelerator, not a deliberate, inspectable, first-class store. @status:spec/done
+- @fact:no-offline-mode *(The motivation as captured; both halves have since been answered.)* There was no `--offline` mode: every `vibe install` / `vibe update` that re-resolved walked the network, and `vibe install` always re-resolved. `--offline` shipped with [PROP-002 §2.2.2.1](PROP-002-decentralized-registry.md), and PROP-011's freshness skip ended the unconditional re-resolve. @status:spec/done
+- @fact:no-local-resolve A developer behind an air-gap, on a slow link, or simply wanting fast deterministic iteration had no way to say *resolve against what I already have*. `--offline`, the embedded and project-local registries (PROP-030) and the lockfile-respecting install now say exactly that; what this PROP still adds is the **machine-global accretive store** behind them. @status:spec/done
 
-- ##maven-model The model is the Maven `~/.m2` repository: a **machine-global, accretive package store** that resolution can run against with no network. vibevm adapts it. @spec/done
-- ##consumers-already-offline The crucial adaptation is that vibevm already commits `vibedeps/` (PROP-009 §2.1) — so a *consumer* of a project is already fully offline: a fresh clone boots and reads its spec corpus with no `vibe install` at all. @spec/done
-- ##CACHE-FOR-AUTHORS The cache is therefore not for consumers. It is for **authors**, and — the headline of this PROP — for **work that does not exist yet**. @spec/done
+- @fact:maven-model The model is the Maven `~/.m2` repository: a **machine-global, accretive package store** that resolution can run against with no network. vibevm adapts it. @status:spec/done
+- @fact:consumers-already-offline The crucial adaptation is that vibevm already commits `vibedeps/` (PROP-009 §2.1) — so a *consumer* of a project is already fully offline: a fresh clone boots and reads its spec corpus with no `vibe install` at all. @status:spec/done
+- @fact:CACHE-FOR-AUTHORS The cache is therefore not for consumers. It is for **authors**, and — the headline of this PROP — for **work that does not exist yet**. @status:spec/done
 
-- ##scaffold-scenario A developer (or an agent) who has used `flow:wal` once, in any project on the machine, should be able to create a *new module* inside a workspace, or `vibe init` an *entirely new project*, that depends on `flow:wal` — and install it with no network. @spec/done
-- ##accrete-across-projects The cache accretes across every project on the machine; new work draws from it. @spec/done
-- ##agent-use-case This is the property that makes the Maven local repository load-bearing, and it matters doubly for vibevm's agent use case: an agent that rapidly scaffolds modules and projects turns a per-scaffold network round-trip into a local copy. @spec/done
-- ##with-without Without this, every new module is gated on the network; with it, the machine's accumulated corpus is instantly reusable. @spec/done
+- @fact:scaffold-scenario A developer (or an agent) who has used `flow:wal` once, in any project on the machine, should be able to create a *new module* inside a workspace, or `vibe init` an *entirely new project*, that depends on `flow:wal` — and install it with no network. @status:spec/done
+- @fact:accrete-across-projects The cache accretes across every project on the machine; new work draws from it. @status:spec/done
+- @fact:agent-use-case This is the property that makes the Maven local repository load-bearing, and it matters doubly for vibevm's agent use case: an agent that rapidly scaffolds modules and projects turns a per-scaffold network round-trip into a local copy. @status:spec/done
+- @fact:with-without Without this, every new module is gated on the network; with it, the machine's accumulated corpus is instantly reusable. @status:spec/done
 
 ---
 
@@ -34,157 +34,157 @@
 
 ### 2.1 The cache is a machine-global, accretive store {#global}
 
-##CACHE-MACHINE-GLOBAL **Decision.** The package cache is **machine-global**, not project-scoped — one store per machine, at a default path, overridable by `VIBEVM_REGISTRY_CACHE` (the existing env-var) and by a user-config key. @spec/done
+@fact:CACHE-MACHINE-GLOBAL **Decision.** The package cache is **machine-global**, not project-scoped — one store per machine, at a default path, overridable by `VIBEVM_REGISTRY_CACHE` (the existing env-var) and by a user-config key. @status:spec/done
 
-- ##CACHE-POPULATION-SHARED Every package fetched for *any* project populates it; *any* project — including projects and members that do not yet exist — resolves and materialises from it. @spec/done
+- @fact:CACHE-POPULATION-SHARED Every package fetched for *any* project populates it; *any* project — including projects and members that do not yet exist — resolves and materialises from it. @status:spec/done
 
-- ##CACHE-ACCRETIVE The cache is **accretive**: a package version, once cached, is never evicted automatically. @spec/done
-- ##accretion-why Versions are immutable (PROP-002), so a cached version is permanently valid; accretion is the point. @spec/done
-- ##EXPLICIT-RECLAIM Reclaiming space is an explicit operator action (§2.8), never a surprise. @spec/done
+- @fact:CACHE-ACCRETIVE The cache is **accretive**: a package version, once cached, is never evicted automatically. @status:spec/done
+- @fact:accretion-why Versions are immutable (PROP-002), so a cached version is permanently valid; accretion is the point. @status:spec/done
+- @fact:EXPLICIT-RECLAIM Reclaiming space is an explicit operator action (§2.8), never a surprise. @status:spec/done
 
-##explicit-not-incidental This is largely true of `default_cache_root()` already; PROP-010 makes it **explicit, documented, and load-bearing** rather than incidental. @spec/done
+@fact:explicit-not-incidental This is largely true of `default_cache_root()` already; PROP-010 makes it **explicit, documented, and load-bearing** rather than incidental. @status:spec/done
 
 ### 2.2 The cache serves work that does not exist yet {#scaffolding}
 
-##SCAFFOLDING-FIRST-CLASS **Decision.** The cache is designed to serve **new modules and new projects**, not only dependency changes in an existing project. This is a first-class requirement, not an emergent side effect. @spec/done
+@fact:SCAFFOLDING-FIRST-CLASS **Decision.** The cache is designed to serve **new modules and new projects**, not only dependency changes in an existing project. This is a first-class requirement, not an emergent side effect. @status:spec/done
 
-- ##NEW-MEMBER **A new workspace member** (PROP-007) declares its own `[requires]`. Unified resolution (PROP-009 §2.7) folds it into the workspace graph; with a warm cache and `--offline` (§2.5) the member's dependencies resolve and materialise with no network. @spec/done
-- ##NEW-PROJECT **A new project** — `vibe init` followed by `vibe install` — resolves its `[requires]` from the same machine-global cache. A package pulled for an earlier, unrelated project is immediately reusable; the new project never re-downloads it. @spec/done
+- @fact:NEW-MEMBER **A new workspace member** (PROP-007) declares its own `[requires]`. Unified resolution (PROP-009 §2.7) folds it into the workspace graph; with a warm cache and `--offline` (§2.5) the member's dependencies resolve and materialise with no network. @status:spec/done
+- @fact:NEW-PROJECT **A new project** — `vibe init` followed by `vibe install` — resolves its `[requires]` from the same machine-global cache. A package pulled for an earlier, unrelated project is immediately reusable; the new project never re-downloads it. @status:spec/done
 
-- ##mechanism-rests The mechanism rests on three decisions below: the cache is machine-global (§2.1), keyed by package identity so it is registry-config-independent (§2.3), and reachable offline (§2.5–§2.6) — and a new project inherits coherent registry configuration automatically (§2.4). @spec/done
-- ##GUARANTEE-AND-NAME PROP-010's job is to **guarantee and name** this workflow as a supported, first-class path. @spec/done
-- ##agent-fast-path For an agent scaffolding many modules or projects in one session the cache becomes the dominant fast path: the first use of a package downloads it; every later module or project draws the cached copy. @spec/done
+- @fact:mechanism-rests The mechanism rests on three decisions below: the cache is machine-global (§2.1), keyed by package identity so it is registry-config-independent (§2.3), and reachable offline (§2.5–§2.6) — and a new project inherits coherent registry configuration automatically (§2.4). @status:spec/done
+- @fact:GUARANTEE-AND-NAME PROP-010's job is to **guarantee and name** this workflow as a supported, first-class path. @status:spec/done
+- @fact:agent-fast-path For an agent scaffolding many modules or projects in one session the cache becomes the dominant fast path: the first use of a package downloads it; every later module or project draws the cached copy. @status:spec/done
 
 ### 2.3 The cache is keyed by package identity {#identity}
 
-##IDENTITY-KEYED **Decision.** The cache is keyed by **qualified package identity** as defined by PROP-008 — not by registry URL. A cached package version is addressed by its identity (`group` / `name` / `version`) and validated by `content_hash`; the registry that served it is not part of the key. @spec/done
+@fact:IDENTITY-KEYED **Decision.** The cache is keyed by **qualified package identity** as defined by PROP-008 — not by registry URL. A cached package version is addressed by its identity (`group` / `name` / `version`) and validated by `content_hash`; the registry that served it is not part of the key. @status:spec/done
 
-- ##REGISTRY-INDEPENDENT A package version pulled once is reusable by every project on the machine **regardless of which `[[registry]]` each project configures** — a mirror, a different organisation hosting the same package, or a redirect target all resolve to the same cache entry when the identity matches. This is what makes §2.2 seamless: offline resolution and materialisation become registry-config-independent — a new project draws on the cache by package identity, not by reproducing some earlier project's registry list. @spec/done
-- ##HASH-INTEGRITY-GATE `content_hash` is the integrity gate: a cache entry is valid only if its content hashes to the recorded hash. Two sources claiming the same identity with divergent bytes are a collision, surfaced per PROP-008's collision rules, never silently merged. @spec/done
-- ##SEQUENCED-AFTER-008 **Dependency.** Identity-keying requires PROP-008 (qualified naming) to be implemented — `group` and the qualified identity must exist first. PROP-010 is therefore sequenced *after* PROP-008: the cache is identity-keyed from the start, with no URL-keyed interim to migrate later (§6). @spec/done
+- @fact:REGISTRY-INDEPENDENT A package version pulled once is reusable by every project on the machine **regardless of which `[[registry]]` each project configures** — a mirror, a different organisation hosting the same package, or a redirect target all resolve to the same cache entry when the identity matches. This is what makes §2.2 seamless: offline resolution and materialisation become registry-config-independent — a new project draws on the cache by package identity, not by reproducing some earlier project's registry list. @status:spec/done
+- @fact:HASH-INTEGRITY-GATE `content_hash` is the integrity gate: a cache entry is valid only if its content hashes to the recorded hash. Two sources claiming the same identity with divergent bytes are a collision, surfaced per PROP-008's collision rules, never silently merged. @status:spec/done
+- @fact:SEQUENCED-AFTER-008 **Dependency.** Identity-keying requires PROP-008 (qualified naming) to be implemented — `group` and the qualified identity must exist first. PROP-010 is therefore sequenced *after* PROP-008: the cache is identity-keyed from the start, with no URL-keyed interim to migrate later (§6). @status:spec/done
 
 ### 2.4 User-level default registry configuration {#user-registries}
 
-##USER-LEVEL-REGISTRIES **Decision.** A **user-level default registry configuration** — `[[registry]]` (and `[[mirror]]`) entries in the existing user config (`~/.config/vibe/config.toml`, the `UserConfig` layer that already promotes `[env]` per `VIBEVM-SPEC.md` §9.5). It supplies registry configuration when no project does, and seeds a new one: @spec/done
+@fact:USER-LEVEL-REGISTRIES **Decision.** A **user-level default registry configuration** — `[[registry]]` (and `[[mirror]]`) entries in the existing user config (`~/.config/vibe/config.toml`, the `UserConfig` layer that already promotes `[env]` per `VIBEVM-SPEC.md` §9.5). It supplies registry configuration when no project does, and seeds a new one: @status:spec/done
 
-- ##INIT-SEEDS `vibe init` seeds a new project's `[[registry]]` blocks from the user-level default instead of the hardcoded `vibespecs` defaults. A developer or organisation sets its registries once, machine-wide, and every new project inherits them. Absent any user-level config, `vibe init` falls back to today's hardcoded defaults — backward-compatible. @spec/done
-- ##PROJECTLESS-SOURCE `vibe cache add` (§2.8) and other registry operations invoked outside any project use the user-level registries as their source. @spec/done
-- ##MEMBER-INHERITS A new member added to a workspace already inherits the workspace's registries (resolution is unified at the root, PROP-009 §2.7); the user-level default matters at the *project* boundary — the new-project case — and for project-less invocations. @spec/done
+- @fact:INIT-SEEDS `vibe init` seeds a new project's `[[registry]]` blocks from the user-level default instead of the hardcoded `vibespecs` defaults. A developer or organisation sets its registries once, machine-wide, and every new project inherits them. Absent any user-level config, `vibe init` falls back to today's hardcoded defaults — backward-compatible. @status:spec/done
+- @fact:PROJECTLESS-SOURCE `vibe cache add` (§2.8) and other registry operations invoked outside any project use the user-level registries as their source. @status:spec/done
+- @fact:MEMBER-INHERITS A new member added to a workspace already inherits the workspace's registries (resolution is unified at the root, PROP-009 §2.7); the user-level default matters at the *project* boundary — the new-project case — and for project-less invocations. @status:spec/done
 
-- ##PROJECT-OVERRIDES Project-level `[[registry]]` always overrides the user-level default — the same precedence the `UserConfig` `[env]` layer already follows (the project / live value wins). @spec/done
-- ##halves-of-scaffolding Identity-keying (§2.3) makes the *offline* path registry-independent; the user-level default makes a new project's *online* operations and *pre-warming* coherent without hardcoding or hand-editing. The two decisions are the offline and online halves of §2.2. @spec/done
+- @fact:PROJECT-OVERRIDES Project-level `[[registry]]` always overrides the user-level default — the same precedence the `UserConfig` `[env]` layer already follows (the project / live value wins). @status:spec/done
+- @fact:halves-of-scaffolding Identity-keying (§2.3) makes the *offline* path registry-independent; the user-level default makes a new project's *online* operations and *pre-warming* coherent without hardcoding or hand-editing. The two decisions are the offline and online halves of §2.2. @status:spec/done
 
 ### 2.5 `--offline` — the network-forbidden policy {#offline}
 
-##OFFLINE-FLAG **Decision.** A global `--offline` flag forbids all network access for the invocation. @spec/done
+@fact:OFFLINE-FLAG **Decision.** A global `--offline` flag forbids all network access for the invocation. @status:spec/done
 
-##OFFLINE-LAYERING It resolves through the established CLI config layering — flag, then a `VIBE_OFFLINE` environment variable, then a user-config `[net]` key; the flag wins. This mirrors the resolved-posture pattern already used for `--unattended` / `VIBE_UNATTENDED` (`output::resolve_unattended`). @spec/done
+@fact:OFFLINE-LAYERING It resolves through the established CLI config layering — flag, then a `VIBE_OFFLINE` environment variable, then a user-config `[net]` key; the flag wins. This mirrors the resolved-posture pattern already used for `--unattended` / `VIBE_UNATTENDED` (`output::resolve_unattended`). @status:spec/done
 
-- ##OFFLINE-LOCAL-ONLY Under `--offline`, resolution and fetch must be satisfiable entirely from local sources — the cache (§2.7), `[[mirror]]` entries with a `file://` URL, and the project's own `vibe.lock` + `vibedeps/`. @spec/done
-- ##OFFLINE-HARD-ERROR Anything not available locally is a **hard error with an actionable message**: it names the missing package and version and tells the operator how to recover (run once online, `vibe cache add`, or `vibe registry vendor`). @spec/done
-- ##OFFLINE-NO-DEGRADE `--offline` never silently degrades to a partial result. @spec/done
+- @fact:OFFLINE-LOCAL-ONLY Under `--offline`, resolution and fetch must be satisfiable entirely from local sources — the cache (§2.7), `[[mirror]]` entries with a `file://` URL, and the project's own `vibe.lock` + `vibedeps/`. @status:spec/done
+- @fact:OFFLINE-HARD-ERROR Anything not available locally is a **hard error with an actionable message**: it names the missing package and version and tells the operator how to recover (run once online, `vibe cache add`, or `vibe registry vendor`). @status:spec/done
+- @fact:OFFLINE-NO-DEGRADE `--offline` never silently degrades to a partial result. @status:spec/done
 
-##ONLINE-DEFAULT Online remains the default and is unchanged: it walks the network for freshness and populates the cache as it goes. `--offline` is purely additive. @spec/done
+@fact:ONLINE-DEFAULT Online remains the default and is unchanged: it walks the network for freshness and populates the cache as it goes. `--offline` is purely additive. @status:spec/done
 
 ### 2.6 Offline resolution {#resolution}
 
-##RESOLVER-OFFLINE-MODE **Decision.** The resolver gains an offline mode — `MultiRegistryResolver::with_offline(true)`, a builder method beside the existing `with_strict_auth`. Offline resolution reads version lists and manifests from the cache, addressed by package identity (§2.3), and never runs `git fetch` / `git ls-remote` / archive fetch. @spec/done
+@fact:RESOLVER-OFFLINE-MODE **Decision.** The resolver gains an offline mode — `MultiRegistryResolver::with_offline(true)`, a builder method beside the existing `with_strict_auth`. Offline resolution reads version lists and manifests from the cache, addressed by package identity (§2.3), and never runs `git fetch` / `git ls-remote` / archive fetch. @status:spec/done
 
-- ##AS-OF-LAST-REFRESH Offline resolution is therefore computed against the cache **as of its last refresh**. This is correct and expected — Maven `mvn -o` and `cargo --offline` have the same property — but it must be explicit: a `--offline` resolve may pick an older version than an online resolve would. @spec/done
-- ##SYNC-COMPANION The companion is `vibe registry sync` (already implemented), the deliberate "refresh the cache while the network is available" step. @spec/done
-- ##intended-workflow The intended workflow is `vibe registry sync` online, then `vibe install --offline` later — the analogue of `mvn` then `mvn -o`. @spec/done
+- @fact:AS-OF-LAST-REFRESH Offline resolution is therefore computed against the cache **as of its last refresh**. This is correct and expected — Maven `mvn -o` and `cargo --offline` have the same property — but it must be explicit: a `--offline` resolve may pick an older version than an online resolve would. @status:spec/done
+- @fact:SYNC-COMPANION The companion is `vibe registry sync` (already implemented), the deliberate "refresh the cache while the network is available" step. @status:spec/done
+- @fact:intended-workflow The intended workflow is `vibe registry sync` online, then `vibe install --offline` later — the analogue of `mvn` then `mvn -o`. @status:spec/done
 
-##SKIP-RESOLUTION-SYNERGY There is a strong synergy with the deferred *skip-resolution-when-fresh* optimisation (when `vibe.lock` is already consistent with every node's `[requires]`, no resolution runs at all, so no network is touched): once that lands, the common path is offline-clean for free, and `--offline` governs specifically the resolution path taken when dependencies genuinely changed. The two should be designed together. @spec/done
+@fact:SKIP-RESOLUTION-SYNERGY There is a strong synergy with the deferred *skip-resolution-when-fresh* optimisation (when `vibe.lock` is already consistent with every node's `[requires]`, no resolution runs at all, so no network is touched): once that lands, the common path is offline-clean for free, and `--offline` governs specifically the resolution path taken when dependencies genuinely changed. The two should be designed together. @status:spec/done
 
 ### 2.7 Cache layout and population {#layout}
 
-##LOCAL-INDEX-VIEW **Decision.** The cache is keyed by package identity (§2.3) and carries a **local index view** — identity → versions present — so the resolver and the management commands (§2.8) answer cache queries without walking the whole store. @spec/done
+@fact:LOCAL-INDEX-VIEW **Decision.** The cache is keyed by package identity (§2.3) and carries a **local index view** — identity → versions present — so the resolver and the management commands (§2.8) answer cache queries without walking the whole store. @status:spec/done
 
-##layout-open The on-disk layout — per-identity extracted directories versus git clones indexed by identity — is an open question (§5.1); identity-keying leans toward extracted, version-keyed directories that map one-to-one onto identity. @spec/work
+@fact:layout-open The on-disk layout — per-identity extracted directories versus git clones indexed by identity — is an open question (§5.1); identity-keying leans toward extracted, version-keyed directories that map one-to-one onto identity. @status:spec/work
 
-##CACHE-FILLS The cache fills as a side effect of any online `vibe install` / `vibe update` / `vibe registry sync`, and by deliberate pre-warming (`vibe cache add`, §2.8). It is never auto-evicted (§2.1). @spec/done
+@fact:CACHE-FILLS The cache fills as a side effect of any online `vibe install` / `vibe update` / `vibe registry sync`, and by deliberate pre-warming (`vibe cache add`, §2.8). It is never auto-evicted (§2.1). @status:spec/done
 
 ### 2.8 Cache management surface {#management}
 
-##CACHE-COMMANDS **Decision.** The cache becomes operator-visible through a command family. @spec/done
+@fact:CACHE-COMMANDS **Decision.** The cache becomes operator-visible through a command family. @status:spec/done
 
-##namespace-leaning The namespace — top-level `vibe cache` versus `vibe registry cache` — is an open question (§5.2), with a leaning toward **top-level `vibe cache`**: the cache is machine-global and serves work with no project at all (a not-yet-created project has no `[[registry]]` config to hang a `vibe registry` subcommand on). @spec/work
+@fact:namespace-leaning The namespace — top-level `vibe cache` versus `vibe registry cache` — is an open question (§5.2), with a leaning toward **top-level `vibe cache`**: the cache is machine-global and serves work with no project at all (a not-yet-created project has no `[[registry]]` config to hang a `vibe registry` subcommand on). @status:spec/work
 
-- ##CMD-PATH `vibe cache path` — print the cache root. @spec/done
-- ##CMD-LIST `vibe cache list` — the packages and versions present locally; the offline-resolvable inventory. @spec/done
-- ##CMD-ADD `vibe cache add <pkgref>…` — deliberately pre-warm: fetch a package and its dependency closure into the cache while online, so a later `--offline` run finds it. The "I am about to go offline, pull down what I will need" workflow. It fetches from the project's `[[registry]]` when run inside a project, otherwise from the user-level registries (§2.4). @spec/done
-- ##CMD-CLEAN `vibe cache clean` — reclaim space: all, by age, or by package. @spec/done
+- @fact:CMD-PATH `vibe cache path` — print the cache root. @status:spec/done
+- @fact:CMD-LIST `vibe cache list` — the packages and versions present locally; the offline-resolvable inventory. @status:spec/done
+- @fact:CMD-ADD `vibe cache add <pkgref>…` — deliberately pre-warm: fetch a package and its dependency closure into the cache while online, so a later `--offline` run finds it. The "I am about to go offline, pull down what I will need" workflow. It fetches from the project's `[[registry]]` when run inside a project, otherwise from the user-level registries (§2.4). @status:spec/done
+- @fact:CMD-CLEAN `vibe cache clean` — reclaim space: all, by age, or by package. @status:spec/done
 
-##SYNC-VENDOR-COMPLEMENT These complement, and do not replace, the existing `vibe registry sync` (refresh the cache) and `vibe registry vendor` (export a project's locked set to a `file://` mirror — see §6). @spec/done
+@fact:SYNC-VENDOR-COMPLEMENT These complement, and do not replace, the existing `vibe registry sync` (refresh the cache) and `vibe registry vendor` (export a project's locked set to a `file://` mirror — see §6). @status:spec/done
 
 ### 2.9 Layering — the cache, `vibedeps/`, and the lockfile {#layering}
 
-##LAYERS-EXPLICIT **Decision.** PROP-010 changes none of the three existing layers; it makes their relationship explicit. @spec/done
+@fact:LAYERS-EXPLICIT **Decision.** PROP-010 changes none of the three existing layers; it makes their relationship explicit. @status:spec/done
 
-- ##LAYER-CACHE **The cache** — machine-global, accretive, identity-keyed, the *source* of package content. Shared across every project on the machine. @spec/done
-- ##LAYER-VIBEDEPS **`vibedeps/`** — per-project, committed, the *materialised* dependency content for that project's locked resolution (PROP-009 §2.1). Produced by copying from the cache. @spec/done
-- ##LAYER-LOCK **`vibe.lock`** — per-project, the pinned resolution (PROP-009). @spec/done
+- @fact:LAYER-CACHE **The cache** — machine-global, accretive, identity-keyed, the *source* of package content. Shared across every project on the machine. @status:spec/done
+- @fact:LAYER-VIBEDEPS **`vibedeps/`** — per-project, committed, the *materialised* dependency content for that project's locked resolution (PROP-009 §2.1). Produced by copying from the cache. @status:spec/done
+- @fact:LAYER-LOCK **`vibe.lock`** — per-project, the pinned resolution (PROP-009). @status:spec/done
 
-##OFFLINE-FLOW An offline `vibe install` of a new project resolves `[requires]` against the cache, then materialises each resolved package by copying from the cache into the new project's `vibedeps/`. No layer is bypassed; the cache simply becomes a first-class, offline-capable, registry-independent source feeding materialisation. @spec/done
+@fact:OFFLINE-FLOW An offline `vibe install` of a new project resolves `[requires]` against the cache, then materialises each resolved package by copying from the cache into the new project's `vibedeps/`. No layer is bypassed; the cache simply becomes a first-class, offline-capable, registry-independent source feeding materialisation. @status:spec/done
 
 ---
 
 ## 3. Command and crate surface {#surface}
 
-- ##SURF-OFFLINE-FLAG A global `--offline` flag (and `VIBE_OFFLINE`) on the `vibe` CLI (§2.5). @spec/done
-- ##SURF-CACHE-CMDS `vibe cache path` / `list` / `add` / `clean` (§2.8). @spec/done
-- ##SURF-CORE `vibe-core` — the `UserConfig` schema gains a `[[registry]]` / `[[mirror]]` section and a `[net]` key (§2.4, §2.5). @spec/done
-- ##SURF-REGISTRY `vibe-registry` — the identity-keyed cache and its local index view, `MultiRegistryResolver::with_offline(...)` (§2.3, §2.6, §2.7). Depends on PROP-008's identity types. @spec/done
-- ##SURF-CLI `vibe-cli` — flag wiring, the resolved offline posture, `vibe init` seeding registries from the user-level default, the `vibe cache` commands, actionable cache-miss errors. @spec/done
-- ##SURF-SYNC-VENDOR `vibe registry sync` / `vibe registry vendor` — unchanged; documented as the cache's refresh and export companions. @spec/done
+- @fact:SURF-OFFLINE-FLAG A global `--offline` flag (and `VIBE_OFFLINE`) on the `vibe` CLI (§2.5). @status:spec/done
+- @fact:SURF-CACHE-CMDS `vibe cache path` / `list` / `add` / `clean` (§2.8). @status:spec/done
+- @fact:SURF-CORE `vibe-core` — the `UserConfig` schema gains a `[[registry]]` / `[[mirror]]` section and a `[net]` key (§2.4, §2.5). @status:spec/done
+- @fact:SURF-REGISTRY `vibe-registry` — the identity-keyed cache and its local index view, `MultiRegistryResolver::with_offline(...)` (§2.3, §2.6, §2.7). Depends on PROP-008's identity types. @status:spec/done
+- @fact:SURF-CLI `vibe-cli` — flag wiring, the resolved offline posture, `vibe init` seeding registries from the user-level default, the `vibe cache` commands, actionable cache-miss errors. @status:spec/done
+- @fact:SURF-SYNC-VENDOR `vibe registry sync` / `vibe registry vendor` — unchanged; documented as the cache's refresh and export companions. @status:spec/done
 
 ---
 
 ## 4. Migration {#migration}
 
-- ##ABANDON-NOT-MIGRATE The existing registry cache is keyed by registry URL; the identity-keyed cache (§2.3) is a different layout. The existing cache is **abandoned, not migrated** — a cache is reconstructible from registries, never authoritative data. @spec/done
-- ##REPOPULATE The first run on the new layout repopulates from the network; the stale URL-keyed directory can be removed by hand or by a one-shot cleanup. @spec/done
-- ##one-time-cost A single re-download is an acceptable one-time cost for a pre-release tool, and it avoids carrying a re-keying migration path that would exist only once. @spec/done
+- @fact:ABANDON-NOT-MIGRATE The existing registry cache is keyed by registry URL; the identity-keyed cache (§2.3) is a different layout. The existing cache is **abandoned, not migrated** — a cache is reconstructible from registries, never authoritative data. @status:spec/done
+- @fact:REPOPULATE The first run on the new layout repopulates from the network; the stale URL-keyed directory can be removed by hand or by a one-shot cleanup. @status:spec/done
+- @fact:one-time-cost A single re-download is an acceptable one-time cost for a pre-release tool, and it avoids carrying a re-keying migration path that would exist only once. @status:spec/done
 
-##ADDITIVE-OTHERWISE Everything else is additive: a project that never passes `--offline` and sets no user-level registry config sees identical behaviour. @spec/done
+@fact:ADDITIVE-OTHERWISE Everything else is additive: a project that never passes `--offline` and sets no user-level registry config sees identical behaviour. @status:spec/done
 
 ---
 
 ## 5. Open questions {#open}
 
-1. ##OPEN-LAYOUT **Cache layout** — per-identity extracted directories, or git clones indexed by identity? Extracted maps cleanly onto identity and materialises faster; clones carry every version and git-level integrity for free but duplicate what extraction would hold. @spec/work
-2. ##OPEN-NAMESPACE **Command namespace** — `vibe cache …` (top-level, project-independent) versus `vibe registry cache …`. @spec/work
-3. ##OPEN-STALENESS **Staleness signalling** — should an `--offline` run warn when the cache is older than some threshold, or when an online resolve would likely differ? @spec/work
-4. ##OPEN-EVICTION **Eviction** — pure manual `vibe cache clean`, or an optional size cap / LRU? @spec/work
-5. ##OPEN-SCAFFOLD-UX **Scaffolding UX** — should `vibe init` and new-member creation actively report "your declared `[requires]` are fully cached — you can work offline", or stay silent? @spec/work
+1. @fact:OPEN-LAYOUT **Cache layout** — per-identity extracted directories, or git clones indexed by identity? Extracted maps cleanly onto identity and materialises faster; clones carry every version and git-level integrity for free but duplicate what extraction would hold. @status:spec/work
+2. @fact:OPEN-NAMESPACE **Command namespace** — `vibe cache …` (top-level, project-independent) versus `vibe registry cache …`. @status:spec/work
+3. @fact:OPEN-STALENESS **Staleness signalling** — should an `--offline` run warn when the cache is older than some threshold, or when an online resolve would likely differ? @status:spec/work
+4. @fact:OPEN-EVICTION **Eviction** — pure manual `vibe cache clean`, or an optional size cap / LRU? @status:spec/work
+5. @fact:OPEN-SCAFFOLD-UX **Scaffolding UX** — should `vibe init` and new-member creation actively report "your declared `[requires]` are fully cached — you can work offline", or stay silent? @status:spec/work
 
-##draft2-resolved Resolved in draft 2: cache keying (§2.3 — keyed by PROP-008 package identity) and the project-less registry source (§2.4 — a user-level default registry configuration). @spec/done
+@fact:draft2-resolved Resolved in draft 2: cache keying (§2.3 — keyed by PROP-008 package identity) and the project-less registry source (§2.4 — a user-level default registry configuration). @status:spec/done
 
 ---
 
 ## 6. Rejected / deferred alternatives {#rejected}
 
-- ##REJ-OFFLINE-DEFAULT **Make offline the default, auto-detecting the network.** Rejected — implicit mode-switching makes a build's inputs unpredictable. Online stays the explicit default; `--offline` is an explicit opt-in. (The *common* path still avoids the network once skip-resolution-when-fresh lands — but by being a no-op, not by guessing.) @spec/done
-- ##REJ-URL-KEYED-INTERIM **A URL-keyed cache now, re-keyed to identity later.** Rejected — it would carry a one-time re-keying migration for no benefit. PROP-010 is instead sequenced after PROP-008 (§2.3) so the cache is identity-keyed from day one. @spec/done
-- ##REJ-REPLACE-VENDOR **Replace `vibe registry vendor` with the cache.** Rejected — they solve different problems. `vendor` exports *one project's locked set* to a portable `file://` mirror for handing to an air-gapped machine or another person. The cache is the *machine-local accretive store* of everything that machine has used. Both stay. @spec/done
-- ##REJ-PROJECT-SCOPED **A project-scoped cache.** Rejected — it defeats §2.2 entirely. A per-project cache cannot serve a project that does not exist yet. @spec/done
+- @fact:REJ-OFFLINE-DEFAULT **Make offline the default, auto-detecting the network.** Rejected — implicit mode-switching makes a build's inputs unpredictable. Online stays the explicit default; `--offline` is an explicit opt-in. (The *common* path still avoids the network once skip-resolution-when-fresh lands — but by being a no-op, not by guessing.) @status:spec/done
+- @fact:REJ-URL-KEYED-INTERIM **A URL-keyed cache now, re-keyed to identity later.** Rejected — it would carry a one-time re-keying migration for no benefit. PROP-010 is instead sequenced after PROP-008 (§2.3) so the cache is identity-keyed from day one. @status:spec/done
+- @fact:REJ-REPLACE-VENDOR **Replace `vibe registry vendor` with the cache.** Rejected — they solve different problems. `vendor` exports *one project's locked set* to a portable `file://` mirror for handing to an air-gapped machine or another person. The cache is the *machine-local accretive store* of everything that machine has used. Both stay. @status:spec/done
+- @fact:REJ-PROJECT-SCOPED **A project-scoped cache.** Rejected — it defeats §2.2 entirely. A per-project cache cannot serve a project that does not exist yet. @status:spec/done
 
 ---
 
 ## 7. Phase plan {#phases}
 
-##phases-sequencing Sequenced after PROP-008 (M1.19), on which §2.3 depends. @spec/done
+@fact:phases-sequencing Sequenced after PROP-008 (M1.19), on which §2.3 depends. @status:spec/done
 
-1. ##PHASE-1-IDENTITY-CACHE **The identity-keyed cache** — the cache keyed by PROP-008 package identity; a documented, stable layout (§5.1); the local index view; `vibe cache path` / `vibe cache list`. `vibe-registry` + `vibe-cli`. @impl/plan
-2. ##PHASE-2-USER-REGISTRIES **User-level default registry configuration** — `[[registry]]` / `[[mirror]]` in `UserConfig`; `vibe init` seeds from it; project config overrides. `vibe-core` + `vibe-cli`. @impl/plan
-3. ##PHASE-3-OFFLINE **`--offline`** — the global flag, `VIBE_OFFLINE`, the resolved posture; `MultiRegistryResolver` offline mode (resolve from the cache, never touch the network); actionable cache-miss errors. @impl/plan
-4. ##PHASE-4-PREWARM **Pre-warm + clean** — `vibe cache add` (deliberate population) and `vibe cache clean`. @impl/plan
-5. ##PHASE-5-SCAFFOLDING **Scaffolding integration** — guarantee a new project (`vibe init` + `vibe install --offline`) and a new workspace member resolve and materialise from the cache, end to end; the §2.2 workflow plus any §5.5 UX hint. @impl/plan
-6. ##PHASE-6-DOCS **Docs + `VIBEVM-SPEC.md`** — §8.3 / §9 / §9.5 edits under owner sanction; a `docs/` page for the cache and offline mode. @impl/plan
+1. @fact:PHASE-1-IDENTITY-CACHE **The identity-keyed cache** — the cache keyed by PROP-008 package identity; a documented, stable layout (§5.1); the local index view; `vibe cache path` / `vibe cache list`. `vibe-registry` + `vibe-cli`. @status:impl/plan
+2. @fact:PHASE-2-USER-REGISTRIES **User-level default registry configuration** — `[[registry]]` / `[[mirror]]` in `UserConfig`; `vibe init` seeds from it; project config overrides. `vibe-core` + `vibe-cli`. @status:impl/plan
+3. @fact:PHASE-3-OFFLINE **`--offline`** — the global flag, `VIBE_OFFLINE`, the resolved posture; `MultiRegistryResolver` offline mode (resolve from the cache, never touch the network); actionable cache-miss errors. @status:impl/plan
+4. @fact:PHASE-4-PREWARM **Pre-warm + clean** — `vibe cache add` (deliberate population) and `vibe cache clean`. @status:impl/plan
+5. @fact:PHASE-5-SCAFFOLDING **Scaffolding integration** — guarantee a new project (`vibe init` + `vibe install --offline`) and a new workspace member resolve and materialise from the cache, end to end; the §2.2 workflow plus any §5.5 UX hint. @status:impl/plan
+6. @fact:PHASE-6-DOCS **Docs + `VIBEVM-SPEC.md`** — §8.3 / §9 / §9.5 edits under owner sanction; a `docs/` page for the cache and offline mode. @status:impl/plan
 
 ---
 
 ## 8. Version history {#history}
 
-- ##HISTORY-DRAFT-1 **2026-05-21 — draft 1.** Requirements captured in an owner discussion: the cache as a machine-global, accretive store that serves not only dependency changes in the current project but new modules and new projects (§2.2); the `--offline` policy flag; offline resolution against the cache; a `vibe cache` management surface. Cache keying and the project-less registry source were left as open questions. @spec/done
-- ##HISTORY-DRAFT-2 **2026-05-21 — draft 2.** The owner adopted two draft-1 open questions as decisions: the cache is keyed by PROP-008 qualified package identity (§2.3), making it registry-config-independent; and a user-level default registry configuration (§2.4) seeds new projects and supplies project-less invocations. The keying decision sequences PROP-010 implementation after PROP-008 (M1.19) so the cache is identity-keyed from the start. Five open questions remain — cache layout, command namespace, staleness signalling, eviction, scaffolding UX — for a follow-up owner design session. Not yet implementation-ready. @spec/done
+- @fact:HISTORY-DRAFT-1 **2026-05-21 — draft 1.** Requirements captured in an owner discussion: the cache as a machine-global, accretive store that serves not only dependency changes in the current project but new modules and new projects (§2.2); the `--offline` policy flag; offline resolution against the cache; a `vibe cache` management surface. Cache keying and the project-less registry source were left as open questions. @status:spec/done
+- @fact:HISTORY-DRAFT-2 **2026-05-21 — draft 2.** The owner adopted two draft-1 open questions as decisions: the cache is keyed by PROP-008 qualified package identity (§2.3), making it registry-config-independent; and a user-level default registry configuration (§2.4) seeds new projects and supplies project-less invocations. The keying decision sequences PROP-010 implementation after PROP-008 (M1.19) so the cache is identity-keyed from the start. Five open questions remain — cache layout, command namespace, staleness signalling, eviction, scaffolding UX — for a follow-up owner design session. Not yet implementation-ready. @status:spec/done

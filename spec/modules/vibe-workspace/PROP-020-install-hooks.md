@@ -2,7 +2,7 @@
 
 <status stage="impl" state="done" comment="C 2026-07-25: the hook subsystem ships (HooksDecl parse + hooks.rs runner + apply wiring); motivation, rejected and out-of-scope facts stay spec-stage; fact grain 2026-07-24"/>
 
-##status-line **Status: IMPLEMENTED** (specified 2026-06-24 in an owner-requested design
+@fact:status-line **Status: IMPLEMENTED** (specified 2026-06-24 in an owner-requested design
 session; verified against the tree 2026-07-25 by the spec-actualization
 campaign). `[hooks]` parses in `vibe-core` (`manifest/package/hooks.rs`),
 `vibe-workspace/src/hooks.rs` runs the whole contract — the pre/post phases, the
@@ -14,9 +14,9 @@ four orthogonal specs carved from the bridge-packages design (the others:
 [PROP-022](PROP-022-materialization-modes.md) materialization modes,
 [PROP-023](../vibe-registry/PROP-023-bridge-packages.md) bridge packages). The
 four compose to solve bridge packages but each stands alone — hooks exist for
-*any* package, not only bridges. @impl/done
+*any* package, not only bridges. @status:impl/done
 
-##related **Related:** [PROP-009](PROP-009-loading-model.md) (the install/materialise
+@fact:related **Related:** [PROP-009](PROP-009-loading-model.md) (the install/materialise
 pipeline hooks slot into), [PROP-007](PROP-007-workspace.md) (workspace +
 `vibedeps/`), [PROP-022](PROP-022-materialization-modes.md) (a hook's
 working tree is the materialised slot; how its edits are reset on update is a
@@ -24,7 +24,7 @@ materialization-mode property), [PROP-015 §2.6](../vibe-mcp/PROP-015-mcp-integr
 (skill projection reads the slot a hook prepared), [PROP-019 §2.13](../../common/PROP-019-version-manager.md#security)
 (the same "a build/script the user installs is code they chose to run" trust
 posture), [PROP-000 §20](../../common/PROP-000.md#token-secrecy) (the publish
-token a hook never sees). @spec/done
+token a hook never sees). @status:spec/done
 
 ---
 
@@ -32,115 +32,115 @@ token a hook never sees). @spec/done
 
 ### 1.1 The problem — install is pure file I/O, with no preparation step {#problem}
 
-- ##install-pure-io Today `vibe install` resolves, fetches, materialises a package's tree into
+- @fact:install-pure-io Today `vibe install` resolves, fetches, materialises a package's tree into
   `vibedeps/`, regenerates boot artefacts, and writes the lockfile — all pure
-  file copying. @impl/done
-- ##no-preparation-step A package that needs a *preparation* step after its content
+  file copying. @status:impl/done
+- @fact:no-preparation-step A package that needs a *preparation* step after its content
   lands (normalise a vendored layout, generate a derived file, assemble a clean
-  skill subtree out of an upstream repo's mess) has nowhere to put it. @impl/done
+  skill subtree out of an upstream repo's mess) has nowhere to put it. @status:impl/done
 
-- ##forcing-case-bridges The forcing case is bridge packages ([PROP-023](../vibe-registry/PROP-023-bridge-packages.md)):
+- @fact:forcing-case-bridges The forcing case is bridge packages ([PROP-023](../vibe-registry/PROP-023-bridge-packages.md)):
   a maintainer wraps someone else's repository whose structure does not match
   vibevm conventions, and needs to *bring it into order* before vibevm's skill
-  machinery reads it. @spec/done
-- ##hooks-universal But the need is general — any package may want a
+  machinery reads it. @status:spec/done
+- @fact:hooks-universal But the need is general — any package may want a
   post-materialise step — so hooks are a **universal** mechanism, not a
-  bridge-only feature. @spec/done
+  bridge-only feature. @status:spec/done
 
 ### 1.2 What this is — declared lifecycle scripts, run per package {#what}
 
-- ##WHAT-HOOKS-ARE A package may declare `pre-install` / `post-install` scripts in its manifest.
+- @fact:WHAT-HOOKS-ARE A package may declare `pre-install` / `post-install` scripts in its manifest.
   vibevm runs them at fixed points in the install pipeline, in the package's own
-  materialised slot, choosing the right interpreter for the host OS. @impl/done
-- ##EFFECTS-EPHEMERAL Their
+  materialised slot, choosing the right interpreter for the host OS. @status:impl/done
+- @fact:EFFECTS-EPHEMERAL Their
   effects are **ephemeral**: re-installing or updating the package resets the
   slot first (per [PROP-022](PROP-022-materialization-modes.md)), then re-runs
   the hooks, so a hook is a pure function of the package content, never an
-  accreting pile of edits. @impl/done
+  accreting pile of edits. @status:impl/done
 
 ## 2. Decisions {#decisions}
 
 ### 2.1 Two phases, anchored to the materialise pipeline {#phases}
 
-##req-phases `req r1` @impl/done
+@fact:req-phases `req r1` @status:impl/done
 
-##ONE-PER-PHASE A package declares at most one script per phase: @impl/done
+@fact:ONE-PER-PHASE A package declares at most one script per phase: @status:impl/done
 
-- ##PHASE-PRE-INSTALL **`pre-install`** — runs immediately after the package's slot is fully
+- @fact:PHASE-PRE-INSTALL **`pre-install`** — runs immediately after the package's slot is fully
   populated (content materialised, submodules fetched per
   [PROP-021](../vibe-registry/PROP-021-submodule-sources.md)) and **before**
   vibevm uses the slot (before boot regeneration, before any later
   `vibe skill` projection reads it). This is the "bring the tree into order"
-  hook. @impl/done
-- ##PHASE-POST-INSTALL **`post-install`** — runs after the install run is durable for that package
+  hook. @status:impl/done
+- @fact:PHASE-POST-INSTALL **`post-install`** — runs after the install run is durable for that package
   (lockfile written, boot artefacts regenerated). For finalisation that needs
-  the package already registered. @impl/done
+  the package already registered. @status:impl/done
 
-##CWD-IS-SLOT The hook's **working directory is the package's materialised slot**; it sees
-exactly the tree vibevm will use. @impl/done
+@fact:CWD-IS-SLOT The hook's **working directory is the package's materialised slot**; it sees
+exactly the tree vibevm will use. @status:impl/done
 
-- ##RESET-THEN-RERUN **On update / reinstall, hook effects are reset, then hooks re-run.** The slot
+- @fact:RESET-THEN-RERUN **On update / reinstall, hook effects are reset, then hooks re-run.** The slot
   is first returned to its pristine materialised state — for `snapshot`/
   `hardlink` modes by re-materialising from cache, for `in-place` mode by
   `git clean -dfx` ([PROP-022 §2.4](PROP-022-materialization-modes.md#in-place))
-  — so a previous run's edits never compound. @impl/done
-- ##RESET-IS-MODE-PROPERTY This reset is a
-  materialization-mode property; hooks only define *when* the re-run happens. @impl/done
+  — so a previous run's edits never compound. @status:impl/done
+- @fact:RESET-IS-MODE-PROPERTY This reset is a
+  materialization-mode property; hooks only define *when* the re-run happens. @status:impl/done
 
 ### 2.2 Interpreter selection is OS-derived {#script-selection}
 
-##req-interpreter `req r1` @impl/done
+@fact:req-interpreter `req r1` @status:impl/done
 
-##SCRIPT-FORMS A package ships a phase script as `<base>.sh` (portable, POSIX shell) and/or
-`<base>.ps1` (PowerShell). The runner picks per host: @impl/done
+@fact:SCRIPT-FORMS A package ships a phase script as `<base>.sh` (portable, POSIX shell) and/or
+`<base>.ps1` (PowerShell). The runner picks per host: @status:impl/done
 
-- ##UNIX-SELECTION **Unix (macOS / Linux):** run `<base>.sh` via `bash`. A `.ps1` is ignored. @impl/done
-- ##WINDOWS-SELECTION **Windows:** prefer `<base>.sh` via **Git Bash** when a `bash` is found
+- @fact:UNIX-SELECTION **Unix (macOS / Linux):** run `<base>.sh` via `bash`. A `.ps1` is ignored. @status:impl/done
+- @fact:WINDOWS-SELECTION **Windows:** prefer `<base>.sh` via **Git Bash** when a `bash` is found
   (one cross-platform script for `.sh` packages); else fall back to
   `<base>.ps1` via **PowerShell** when one is found. A phase that declares a
   script but finds no usable interpreter is a hard error with a remediation
-  hint — never a silent skip. @impl/done
+  hint — never a silent skip. @status:impl/done
 
-- ##HOOK-ENV The runner passes a documented environment: `VIBE_PACKAGE_GROUP`,
+- @fact:HOOK-ENV The runner passes a documented environment: `VIBE_PACKAGE_GROUP`,
   `VIBE_PACKAGE_NAME`, `VIBE_PACKAGE_VERSION`, `VIBE_PACKAGE_KIND`,
   `VIBE_PACKAGE_DIR` (the slot, also CWD), `VIBE_HOOK_PHASE`.
   ([PROP-024 §2.3](../../common/PROP-024-code-bearing-packages.md#build) adds
   `VIBE_PROJECT_ROOT`, the workspace absolute root, so a build hook can target a
-  gitignored build dir *outside* the slot; it lands with that work.) @impl/done
-- ##TOKEN-NEVER-IN-ENV The publish token
+  gitignored build dir *outside* the slot; it lands with that work.) @status:impl/done
+- @fact:TOKEN-NEVER-IN-ENV The publish token
   ([PROP-000 §20](../../common/PROP-000.md#token-secrecy)) is **never** placed in
-  a hook's environment. @impl/done
+  a hook's environment. @status:impl/done
 
-##RUNNER-SEAM The process runner is an injectable seam (`HookRunner`) so tests assert the
-selection logic and argument/env shape without spawning real processes. @impl/done
+@fact:RUNNER-SEAM The process runner is an injectable seam (`HookRunner`) so tests assert the
+selection logic and argument/env shape without spawning real processes. @status:impl/done
 
 ### 2.3 Trust gate — allow-list of groups, plus first-run consent {#trust-gate}
 
-##req-trust `req r1` @impl/done
+@fact:req-trust `req r1` @status:impl/done
 
-##TRUST-CHEAP Running a package's hook is running third-party code at install time. Until a
-content-scanning gate exists (§4), trust is governed cheaply: @impl/done
+@fact:TRUST-CHEAP Running a package's hook is running third-party code at install time. Until a
+content-scanning gate exists (§4), trust is governed cheaply: @status:impl/done
 
-- ##ALLOW-LIST **Allow-listed groups run silently.** A config key (global
+- @fact:ALLOW-LIST **Allow-listed groups run silently.** A config key (global
   `~/.vibe/config.toml` `[hooks].allowed_groups`, with a project-level
   override) lists trusted package groups. **`org.vibevm` is in the allow-list
   by default.** A package whose group is allow-listed runs its hooks with no
-  prompt. @impl/done
-- ##FIRST-RUN-CONSENT **Other groups need consent.** On the first hook run of a non-allow-listed
+  prompt. @status:impl/done
+- @fact:FIRST-RUN-CONSENT **Other groups need consent.** On the first hook run of a non-allow-listed
   package, vibevm prints what will run (phase, script path, group) and asks
   `y/n`. Declining skips the hook and marks the package install as
-  hooks-skipped (surfaced, not silent). @impl/done
-- ##NON-INTERACTIVE-SAFETY **Non-interactive safety.** With `--assume-yes` / in CI, allow-listed
+  hooks-skipped (surfaced, not silent). @status:impl/done
+- @fact:NON-INTERACTIVE-SAFETY **Non-interactive safety.** With `--assume-yes` / in CI, allow-listed
   packages still run; a non-allow-listed package's hook is **not** run
   silently — the install **aborts** with a hint to either allow-list the group
   or pass an explicit `--allow-hooks` opt-in. A script must never execute
-  unseen third-party code by default. @impl/done
+  unseen third-party code by default. @status:impl/done
 
 ### 2.4 Hooks are declared in the manifest {#manifest}
 
-##req-manifest-hooks `req r1` @impl/done
+@fact:req-manifest-hooks `req r1` @status:impl/done
 
-##HOOKS-TABLE Hooks live in a package-role `[hooks]` table in `vibe.toml`: @impl/done
+@fact:HOOKS-TABLE Hooks live in a package-role `[hooks]` table in `vibe.toml`: @status:impl/done
 
 ```toml
 [hooks]
@@ -148,66 +148,66 @@ pre-install  = "hooks/prepare"   # base path, relative to package root
 post-install = "hooks/finalise"
 ```
 
-- ##BASE-PATH-VALUE The value is a **base path without extension**; the runner resolves `.sh` /
-  `.ps1` beside it per §2.2. @impl/done
-- ##PACKAGE-ONLY-TABLE The table is package-only (its presence on a
+- @fact:BASE-PATH-VALUE The value is a **base path without extension**; the runner resolves `.sh` /
+  `.ps1` beside it per §2.2. @status:impl/done
+- @fact:PACKAGE-ONLY-TABLE The table is package-only (its presence on a
   `[project]`-role manifest is a validation error, like the other package-only
-  sections). @impl/done
-- ##ABSENT-DEFAULT An empty/absent `[hooks]` means no hooks — the common case. @impl/done
+  sections). @status:impl/done
+- @fact:ABSENT-DEFAULT An empty/absent `[hooks]` means no hooks — the common case. @status:impl/done
 
 ### 2.5 Failure semantics are phase-specific {#failure}
 
-##req-failure `req r1` @impl/done
+@fact:req-failure `req r1` @status:impl/done
 
-##STREAMS-AND-EXIT A hook's stdout/stderr stream to the user. A non-zero exit is handled by
-phase: @impl/done
+@fact:STREAMS-AND-EXIT A hook's stdout/stderr stream to the user. A non-zero exit is handled by
+phase: @status:impl/done
 
-- ##FAIL-PRE-ABORTS **`pre-install` failure → the package install aborts.** The slot is rolled
+- @fact:FAIL-PRE-ABORTS **`pre-install` failure → the package install aborts.** The slot is rolled
   back (removed) and the install reports the failing package; vibevm never
-  registers or projects from a package whose preparation failed. @impl/done
-- ##FAIL-POST-FLAGS **`post-install` failure → the package is installed but flagged.** The
+  registers or projects from a package whose preparation failed. @status:impl/done
+- @fact:FAIL-POST-FLAGS **`post-install` failure → the package is installed but flagged.** The
   package is already durable (lockfile written); the failure surfaces as a
-  warning with the captured output, never a silent success. @impl/done
+  warning with the captured output, never a silent success. @status:impl/done
 
 ## 3. Rejected alternatives {#rejected}
 
-- ##REJ-INLINE-COMMANDS **Inline `command = "..."` strings in the manifest** instead of files —
+- @fact:REJ-INLINE-COMMANDS **Inline `command = "..."` strings in the manifest** instead of files —
   rejected: a versioned script file is auditable, diffable, and platform-split
-  (`.sh`/`.ps1`); an inline string hides the code in TOML and resists review. @spec/done
-- ##REJ-BOTH-EXTENSIONS **Running every matching extension on Windows** (`.sh` *and* `.ps1`) —
+  (`.sh`/`.ps1`); an inline string hides the code in TOML and resists review. @status:spec/done
+- @fact:REJ-BOTH-EXTENSIONS **Running every matching extension on Windows** (`.sh` *and* `.ps1`) —
   rejected: one logical hook per phase keeps behaviour predictable; the
-  selection is a single deterministic choice (§2.2). @spec/done
-- ##REJ-GENERAL-LIFECYCLE **A general lifecycle (`pre-uninstall`, `pre-build`, …)** now — deferred:
+  selection is a single deterministic choice (§2.2). @status:spec/done
+- @fact:REJ-GENERAL-LIFECYCLE **A general lifecycle (`pre-uninstall`, `pre-build`, …)** now — deferred:
   only the two phases the bridge case needs are specified; more can be added
-  later behind their own anchors without disturbing these. @spec/done
+  later behind their own anchors without disturbing these. @status:spec/done
 
 ## 4. Out of scope {#out-of-scope}
 
-- ##OOS-CONTENT-SCANNING **Content scanning / the LLM "antivirus".** A future gate that inspects a
+- @fact:OOS-CONTENT-SCANNING **Content scanning / the LLM "antivirus".** A future gate that inspects a
   package's hooks (and code) for malicious behaviour is far-backlog. Until it
   lands, hook execution is an **explicitly accepted risk** governed only by
   §2.3's allow-list + consent. This is the deliberate posture, not an
-  oversight — recorded here as the project's stance. @spec/done
-- ##OOS-SANDBOXING **Sandboxing / capability-limiting** hooks (containers, seccomp). Hooks run
-  with the user's privileges, like `cargo build` scripts or `npm postinstall`. @spec/done
-- ##OOS-NON-GIT-RESET **Non-git slot reset for `in-place`** — a hook over an `in-place`
+  oversight — recorded here as the project's stance. @status:spec/done
+- @fact:OOS-SANDBOXING **Sandboxing / capability-limiting** hooks (containers, seccomp). Hooks run
+  with the user's privileges, like `cargo build` scripts or `npm postinstall`. @status:spec/done
+- @fact:OOS-NON-GIT-RESET **Non-git slot reset for `in-place`** — a hook over an `in-place`
   ([PROP-022 §2.4](PROP-022-materialization-modes.md#in-place)) package whose
   source is not git has no cheap reset; `in-place` therefore requires a git
-  source (PROP-022 §4). @spec/done
+  source (PROP-022 §4). @status:spec/done
 
 ## 5. Acceptance {#acceptance}
 
-- ##ACC-PHASE-TIMING A package with `[hooks].pre-install` runs the script in its slot before boot
-  regeneration; `post-install` runs after the lockfile is written. @impl/done
-- ##ACC-INTERPRETER Interpreter selection follows §2.2 on each OS; a declared hook with no usable
-  interpreter errors rather than silently skipping. @impl/done
-- ##ACC-CONSENT An allow-listed group (incl. `org.vibevm` by default) runs hooks with no
+- @fact:ACC-PHASE-TIMING A package with `[hooks].pre-install` runs the script in its slot before boot
+  regeneration; `post-install` runs after the lockfile is written. @status:impl/done
+- @fact:ACC-INTERPRETER Interpreter selection follows §2.2 on each OS; a declared hook with no usable
+  interpreter errors rather than silently skipping. @status:impl/done
+- @fact:ACC-CONSENT An allow-listed group (incl. `org.vibevm` by default) runs hooks with no
   prompt; a non-allow-listed package prompts interactively and **aborts** in a
-  non-interactive run without `--allow-hooks`. @impl/done
-- ##ACC-FAILURE-SEMANTICS A `pre-install` non-zero exit rolls back the slot and fails the package; a
-  `post-install` failure installs-but-flags. @impl/done
-- ##ACC-RESET-RERUN Updating a package resets the prior hook's edits (per the materialization
-  mode) before re-running the hooks. @impl/done
-- ##ACC-RUNNER-SEAM The `HookRunner` seam lets tests assert selection/env/failure paths without
-  spawning real processes. @impl/done
-- ##ACC-FLOOR-GREEN Full `self-check.sh` green; conform 0/0/0; specmap clean. @impl/done
+  non-interactive run without `--allow-hooks`. @status:impl/done
+- @fact:ACC-FAILURE-SEMANTICS A `pre-install` non-zero exit rolls back the slot and fails the package; a
+  `post-install` failure installs-but-flags. @status:impl/done
+- @fact:ACC-RESET-RERUN Updating a package resets the prior hook's edits (per the materialization
+  mode) before re-running the hooks. @status:impl/done
+- @fact:ACC-RUNNER-SEAM The `HookRunner` seam lets tests assert selection/env/failure paths without
+  spawning real processes. @status:impl/done
+- @fact:ACC-FLOOR-GREEN Full `self-check.sh` green; conform 0/0/0; specmap clean. @status:impl/done

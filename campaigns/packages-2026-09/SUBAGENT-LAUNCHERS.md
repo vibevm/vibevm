@@ -2,7 +2,7 @@
 
 <status stage="impl" state="done" comment="owner directive 2026-08-03; launchers reworked and verified the same day (the ALPHA/BRAVO matrix below); the mode switch is the owner's lever"/>
 
-##the-directive **The owner's directive (2026-08-03, chat, near-verbatim):**
+@fact:the-directive **The owner's directive (2026-08-03, chat, near-verbatim):**
 доработать запускаторы `claudez` / `claudez2`, чтобы они работали с `-c` как
 обычная `claude` и годились как субагенты; написать инструкцию, как фазы E и T
 используют их вместо нативных агентов; **переключение native ↔ claudez остаётся
@@ -14,19 +14,19 @@
 
 ## 1. The switch — owned by the owner {#switch}
 
-##switch-file The switch is one line in
+@fact:switch-file The switch is one line in
 [`SUBAGENT-MODE.toml`](SUBAGENT-MODE.toml) beside this file:
 `mode = "claudez"` or `mode = "native"`. The boss re-reads it **before every
 fan-out**, so an edit takes effect immediately — mid-phase, mid-batch, any
 time. Saying it in chat works too (the boss updates the file so the state
 stays durable).
 
-##switch-native `native` means exactly what Phase D ran: the harness's
+@fact:switch-native `native` means exactly what Phase D ran: the harness's
 built-in `opus5` subagents through the Agent tool. `claudez` means workers
 are **Claude Code processes on GLM-5.2** spawned through the launchers below.
 Fractality stays out of this campaign either way (plan §6 `#delegation`).
 
-##switch-does-not-change **What the mode never changes:** verdicts, anchor
+@fact:switch-does-not-change **What the mode never changes:** verdicts, anchor
 routing, review of delegated output, spec/plan authoring, commits and
 pushes stay the boss's in both modes (the never-delegate set); briefs cite
 durable files only; Rules 1–4 bind identically; the presentation format to
@@ -34,7 +34,7 @@ the owner is unaffected.
 
 ## 2. The transport — what the launchers are {#transport}
 
-##launchers-what Machine facts (this box; the launchers live OUTSIDE the
+@fact:launchers-what Machine facts (this box; the launchers live OUTSIDE the
 repository): `C:\Users\olegc\opt\bin\{claudez,claudez2}` (bash) and
 `{claudez.ps1,claudez2.ps1}` (PowerShell). Each sets the z.ai
 Anthropic-compatible gateway env (`ANTHROPIC_BASE_URL`, bearer from a token
@@ -42,7 +42,7 @@ file, model triple `glm-5.2[1m]` for opus/sonnet + `glm-5-turbo` for haiku)
 and hands off to `claude`, **passing every argument through** — so `-p`,
 `-c`, `--resume`, `--allowedTools` behave exactly as with plain `claude`.
 
-##launchers-state-contract **The state contract that makes them
+@fact:launchers-state-contract **The state contract that makes them
 subagent-grade (reworked 2026-08-03):** the two launchers keep SEPARATE
 Claude state dirs, so in one and the same cwd each launcher's `-c` continues
 **its own** latest conversation and never steals the sibling's thread:
@@ -52,12 +52,12 @@ Claude state dirs, so in one and the same cwd each launcher's `-c` continues
 | `claudez` | `~/.vibe/zai.api.token` | `~/.claude-glm` | `CLAUDEZ_CONFIG_DIR`, `ZAI_API_TOKEN_FILE` |
 | `claudez2` | `~/.vibe/zai.api.token.2` | `~/.claude-glm2` | `CLAUDEZ2_CONFIG_DIR`, `ZAI_API_TOKEN_FILE_2` |
 
-##launchers-effort **Effort is max by construction** (owner, 2026-08-03):
+@fact:launchers-effort **Effort is max by construction** (owner, 2026-08-03):
 both launchers export `MAX_THINKING_TOKENS=32000` — Claude Code's
 thinking-budget lever; harmless if the gateway model ignores it. Override:
 `CLAUDEZ_MAX_THINKING`.
 
-##launchers-verified **Verified 2026-08-03, the ALPHA/BRAVO matrix:** in one
+@fact:launchers-verified **Verified 2026-08-03, the ALPHA/BRAVO matrix:** in one
 scratch cwd, `claudez -p` seeded codeword ALPHA, `claudez2 -p` seeded BRAVO
 (fresh `~/.claude-glm2` bootstrapped headless, second token live); then
 `claudez -c -p` answered **ALPHA** and `claudez2 -c -p` answered **BRAVO** —
@@ -65,14 +65,14 @@ from bash AND from PowerShell (`Get-Command` resolves both to the `.ps1`
 scripts; cross-shell continuation hits the same per-launcher thread). Eight
 runs, exit 0 each.
 
-##launchers-conversation-key **The `-c` scoping rule to build on:** claude
+@fact:launchers-conversation-key **The `-c` scoping rule to build on:** claude
 keys conversations by (config dir, cwd). One worker = one cwd (its
 worktree) = one continuable thread per launcher. `-c` in a cwd with no
 prior thread errors — expected, same as plain `claude`.
 
 ## 3. Phase E — the worker lifecycle {#phase-e}
 
-##e-task-cut **1 · Cut the task (boss).** One E-task = one build/fix with an
+@fact:e-task-cut **1 · Cut the task (boss).** One E-task = one build/fix with an
 explicit file perimeter, acceptance, and a self-verify command (`cargo
 check -p …` class, never the full floor — cold worktree economics). The
 packet inlines everything derivable (paths, names, exact edits where known),
@@ -80,7 +80,7 @@ cites durable files only, and ALWAYS carries the heartbeat clause
 (`#obs-heartbeats`) and the report template (`#worker-report`) with the
 task-id substituted.
 
-##e-draft-scaffold **1b · High-level drafts are Fable's — with embedded
+@fact:e-draft-scaffold **1b · High-level drafts are Fable's — with embedded
 refinement points (owner, 2026-08-03).** Where a task needs a design-grade
 skeleton, the boss authors the high-level draft itself (never delegated)
 and **embeds, inside the draft, named instructions for the worker to
@@ -91,14 +91,14 @@ skeleton. This keeps the expensive judgement in the strong author and the
 detailed elaboration in the cheap writer — and every filled point comes
 back accounted for in the report's Decisions section.
 
-##e-parallel-routing **2 · Route the parallelism (boss, owner's rules
+@fact:e-parallel-routing **2 · Route the parallelism (boss, owner's rules
 2026-08-03).** Intersect the candidate tasks' file perimeters BEFORE
 spawning: **disjoint perimeters → parallel workers**, merged after review;
 **a many-place, cross-cutting edit (perimeters intersect or the edit
 sprawls) → one thread**, no parallelism. When in doubt, one thread — a
 serialized hour is cheaper than an interleaved conflict.
 
-##e-parallel-coefficient **The parallelism coefficient (owner, 2026-08-03):
+@fact:e-parallel-coefficient **The parallelism coefficient (owner, 2026-08-03):
 up to 5 workers per launcher — 10 total across the two lanes.** Thread
 isolation holds at any count by construction: claude keys conversations by
 (state dir, cwd), and one worker = one worktree = one cwd, so N workers of
@@ -114,12 +114,12 @@ doc/test-text packets parallelize freely; *(iii)* account throttling on
 long sustained runs is unprobed — the stream-json logs make it visible
 (429s / stalls), and the boss thins the fleet if it appears.
 
-##e-worktree **3 · Provision (boss).** One worktree per worker:
+@fact:e-worktree **3 · Provision (boss).** One worktree per worker:
 `git worktree add .wt/<task-id> -b wt/<task-id>` — own cwd, own thread, own
 branch. Workers never run git; `-c core.longpaths=true` if provisioning
 trips MAX_PATH (the F19 lesson).
 
-##e-spawn **4 · Spawn (boss, background, live log straight into the
+@fact:e-spawn **4 · Spawn (boss, background, live log straight into the
 archive).** Bash form — note `--output-format stream-json --verbose` and
 the log path (§5's contract: the live log is written DIRECTLY into the
 durable archive, so a crash of anything can lose nothing):
@@ -147,13 +147,13 @@ every action the worker takes, which is what §5's 30-second status contract
 polls. Every packet also MANDATES heartbeats (emphatically — see
 `#obs-heartbeats`).
 
-##e-correction-loop **5 · The `-c` correction loop (what the rework
+@fact:e-correction-loop **5 · The `-c` correction loop (what the rework
 bought).** The boss reads `git -C .wt/<task-id> diff` as a PR. Small
 misses do not cost a re-spawn: `( cd .wt/<task-id> && claudez -c -p
 "Review notes: …" … )` continues THAT worker's conversation with its full
 context. Same flag, same semantics as plain `claude -c`.
 
-##e-merge **6 · Merge (boss).** Apply the reviewed diff into the host tree
+@fact:e-merge **6 · Merge (boss).** Apply the reviewed diff into the host tree
 (`git apply` / merge the `wt/` branch), run `cargo fmt --all` (workers
 don't fmt), run the real gates, **`cargo xtask sync-engines`** whenever a
 package crate changed (the vendor-forward law of §5-E; the panel gates it),
@@ -161,7 +161,7 @@ commit per Rules 1–4, remove the worktree.
 
 ## 4. Phase T — the swarm on the launchers {#phase-t}
 
-##t-transport **The T-spec already anticipated this executor** — «GLM
+@fact:t-transport **The T-spec already anticipated this executor** — «GLM
 sessions (ZCode-class harness)», two accounts, the packet as the unit
 (PHASE-T-SPEC.md §13, «not verified» whether the harness offers sub-agents).
 **Now it is verified and concrete:** the ZCode-class harness is Claude Code
@@ -173,7 +173,7 @@ runs every cargo invocation, performs every red exhibit, makes every
 commit; writers only write test text; §13.1's collision list governs the
 file split.
 
-##t-fanout **Fan-out shape:** N packets → up to **5 workers per lane, 10
+@fact:t-fanout **Fan-out shape:** N packets → up to **5 workers per lane, 10
 total** (`claudez` lane + `claudez2` lane — `#e-parallel-coefficient`),
 each in its own worktree per §13's file-split law; `-c` serves the
 per-packet correction loop exactly as in Phase E. Isolated test-file
@@ -186,7 +186,7 @@ heartbeats, the 30-second poll.
 
 ## 5. Observability and the log archive — the 30-second contract {#observability}
 
-##obs-directive **The owner's directive (2026-08-03, second message,
+@fact:obs-directive **The owner's directive (2026-08-03, second message,
 near-verbatim):** статус воркера должен быть доступен по ходу работы — раз
 в ~30 секунд, не по завершении многочасовой задачи; heartbeat и/или лог, по
 которому видно, когда последний раз что-то происходило; после отработки
@@ -194,7 +194,7 @@ near-verbatim):** статус воркера должен быть доступ
 чтобы всегда можно было понять, откуда что произошло — **traceability
 всего, что происходило**.
 
-##obs-two-layers **Two liveness layers, and which one is primary.**
+@fact:obs-two-layers **Two liveness layers, and which one is primary.**
 *Layer 1 (always-on, free):* the `stream-json --verbose` log — one
 timestamped JSONL line per turn and per tool call. File growth = activity;
 the last event's `timestamp` (or the file's mtime) = «when did something
@@ -204,7 +204,7 @@ primary** — measured 2026-08-03: a GLM worker skipped one of three
 mandated heartbeats while working correctly, so a missing heartbeat with a
 growing log is NOT a stall; a silent log is.
 
-##obs-heartbeats **The heartbeat clause every packet carries (emphatic —
+@fact:obs-heartbeats **The heartbeat clause every packet carries (emphatic —
 weak writers skip soft asks):** «Перед КАЖДЫМ шагом, без исключений,
 выполни shell-командой: `echo "PROGRESS: <номер и суть шага>"`.
 Предпоследним действием напиши файл `WORKER-REPORT-<task-id>.md` (шаблон —
@@ -213,7 +213,7 @@ weak writers skip soft asks):** «Перед КАЖДЫМ шагом, без и�
 `--allowedTools`. Heartbeats land inside tool-result events in the JSONL
 and are grepped out by the status one-liner below.
 
-##obs-status-oneliner **The boss's status poll (~every 30 s per live
+@fact:obs-status-oneliner **The boss's status poll (~every 30 s per live
 worker, and always before assuming anything):**
 
 ```sh
@@ -230,7 +230,7 @@ on stall: read the tail, then kill / correct via the `-c` loop /
 re-commission. Never a blind multi-hour wait — the cadence is the
 owner's ~30 s.
 
-##obs-mtime-is-not-liveness-either **Correction (2026-08-05): with a thinking
+@fact:obs-mtime-is-not-liveness-either **Correction (2026-08-05): with a thinking
 budget set, mtime NEVER goes stale, so the rule above cannot fire.** The log
 gains a line per thinking token, so a worker on a long silent turn keeps its
 mtime one second old while doing nothing observable — measured here at five
@@ -246,7 +246,7 @@ read that line, and count the worker's tool calls
 (`grep -o '"name":"Edit"' "$L" | wc -l`) — a task that should be editing and
 has zero Edits after its reading phase is the real stall signal.
 
-##obs-archive **The archive — where every log lives and stays.** Root:
+@fact:obs-archive **The archive — where every log lives and stays.** Root:
 `C:\Users\olegc\git\v\cache\agents\` (machine-local, OUTSIDE the repo,
 sibling of the checkout):
 
@@ -255,14 +255,14 @@ sibling of the checkout):
 | `sorted/<task-id>/` | everything bound to a task: one directory per task, named by its campaign id/anchor (`E-…`, `T-…`, `F-…`, `B-…`) so it is findable later; inside — the run log(s) `<YYYY-MM-DD-HH-MM>-<launcher>-run.jsonl` and `meta.md` |
 | `unsorted/` | runs bound to no task — probes, matrix checks, ad-hoc experiments (`<YYYY-MM-DD>-<slug>-<launcher>.jsonl`) |
 
-##obs-write-directly **Live logs are written DIRECTLY into the archive
+@fact:obs-write-directly **Live logs are written DIRECTLY into the archive
 path** (the spawn form above) — «пересохранение» is then a finalisation,
 not a rescue copy, and no crash of the boss, the worker, or the box can
 lose a byte already logged. If a log was ever started elsewhere, the boss
 moves it into the tree at completion — the boss OWNS knowing where every
 worker's log is.
 
-##obs-meta **Finalisation (boss, at worker completion):** write
+@fact:obs-meta **Finalisation (boss, at worker completion):** write
 `meta.md` beside the log — task id + one-line goal, worktree/branch,
 launcher and lane, start/end (the first/last event timestamps are already
 in the JSONL), exit status, the review verdict (applied / corrected via
@@ -273,19 +273,19 @@ into the same directory under a stamped name
 the report holds the worker's account; `meta.md` holds the judgement —
 together they are the traceability the directive asks for.
 
-##obs-verify-by-artifacts **Acceptance is by artifacts, never by the final
+@fact:obs-verify-by-artifacts **Acceptance is by artifacts, never by the final
 string** — measured the same day: asked to reply exactly `FINISHED`, the
 GLM worker replied «ЗАВЕРШЕНО»; its files were nonetheless correct. The
 boss verifies the diff/files/gates; the result text is colour, not signal.
 
 ## 6. The worker report — the acceptance-cost minimiser {#worker-report}
 
-##report-directive **The owner's directive (2026-08-03, fourth message,
+@fact:report-directive **The owner's directive (2026-08-03, fourth message,
 near-verbatim):** минифицировать усилия босса на приёмку — при составлении
 задачи вписывать, чтобы субагент в конце исполнения написал подробный отчёт
 о сделанном в виде, удобном босс-модели для ревью.
 
-##report-contract **The contract: every packet ends with a report file.**
+@fact:report-contract **The contract: every packet ends with a report file.**
 The worker's last two actions, in order: write
 **`WORKER-REPORT-<task-id>.md`** at the worktree root per the template
 below, then `echo "TASK-DONE"`. The template is INLINED into every packet
@@ -312,7 +312,7 @@ measured; they skim citations).
 - <or: none>
 ```
 
-##report-why-cheap **Why this makes acceptance cheap — the boss's flow over
+@fact:report-why-cheap **Why this makes acceptance cheap — the boss's flow over
 it:** *(i)* cross-check «Changed files» against `git -C <worktree> status`
 — a mechanical set-compare: a file in the diff but not in the report, or
 claimed but absent, is an instant red flag; *(ii)* read the diff WITH the
@@ -323,7 +323,7 @@ the weak-writer failure they exist to surface — mandatory even when
 report routes the review; it never replaces it** — the diff stays the
 ground truth and review stays the boss's (the never-delegate law).
 
-##report-rejection **The boss's rejection right (owner, 2026-08-03,
+@fact:report-rejection **The boss's rejection right (owner, 2026-08-03,
 near-verbatim: Fable должен мочь НЕ ПРИНЯТЬ работу и отправить на
 доработку, если суждения в любой части или реализация покажутся
 неверными).** Acceptance has four verdicts, and «accepted» is not the
@@ -337,7 +337,7 @@ two failed reworks the economics have inverted — reclaim boss-side) ·
 `meta.md`; a rejection names the wrong decision/implementation precisely —
 «переделай» without the what-and-why is not a review.
 
-##report-no-conflict **No cross-worker conflicts, by construction and by
+@fact:report-no-conflict **No cross-worker conflicts, by construction and by
 name** (owner's question, 2026-08-03): parallel workers live in SEPARATE
 worktrees — two reports never share a directory; the per-task-id filename
 makes the file self-identifying even outside that discipline; and at
@@ -346,7 +346,7 @@ finalisation the boss moves it to `sorted/<task-id>/` under a stamped name
 never clobber each other. The report file NEVER merges into the host tree
 — it is a worktree artifact bound for the archive.
 
-##report-probe **Measured 2026-08-03 (probe-report-01, claudez2 lane, log
+@fact:report-probe **Measured 2026-08-03 (probe-report-01, claudez2 lane, log
 `unsorted/2026-08-03-report-probe-claudez2.jsonl`):** a GLM worker filled
 the template exactly — exhaustive file list including the report itself,
 per-point acceptance with `file:line` evidence, verbatim self-verify output
@@ -355,27 +355,27 @@ cross-check against the tree took seconds.
 
 ## 7. Secrets and safety {#safety}
 
-##safety-tokens The bearer tokens live in `~/.vibe/zai.api.token{,.2}` —
+@fact:safety-tokens The bearer tokens live in `~/.vibe/zai.api.token{,.2}` —
 the launchers read them themselves; the boss never prints them, never
 passes them in args, never points a worker at `~/.vibe`. Worker packets
 reference worktree-relative paths only.
 
-##safety-review Delegated output is advisory until the diff is read and the
+@fact:safety-review Delegated output is advisory until the diff is read and the
 gates are green — in both modes, always. A `failed`/non-zero worker exit
 does not mean discard: read the worktree first (the fractality lesson).
 
 ## 8. Standing facts {#facts}
 
-##fact-verified-date Launchers reworked + full matrix verified 2026-08-03;
+@fact:fact-verified-date Launchers reworked + full matrix verified 2026-08-03;
 if a launcher regresses, re-run the ALPHA/BRAVO matrix from `#launchers-verified`
 before blaming the harness.
 
-##fact-interactive-use The launchers stay ordinary interactive commands too
+@fact:fact-interactive-use The launchers stay ordinary interactive commands too
 — the rework changed state homes and headers, not the owner's daily use;
 `claudez2`'s history before 2026-08-03 remains under `~/.claude-glm` (the
 old shared dir) and is reachable by pointing `CLAUDEZ2_CONFIG_DIR` there.
 
-##fact-first-live-fanout **First mandate-work fan-out (2026-08-03, E1 —
+@fact:fact-first-live-fanout **First mandate-work fan-out (2026-08-03, E1 —
 the B-022/B-023 evidence sweeps, one worker per lane):** both artifacts
 accepted; but one of two workers **skipped the mandated closing
 `WORKER-REPORT` outright** — echoed `TASK-DONE` with no report file —
@@ -390,7 +390,7 @@ that section's replacement text verbatim** — a template-following weak
 writer re-fills the template as-is and treats surrounding instructions
 as soft asks. Runs and meta: `cache/agents/sorted/E1-B023-SWEEP/`.
 
-##fact-code-slice-self-verify **Code-slice self-verify includes clippy
+@fact:fact-code-slice-self-verify **Code-slice self-verify includes clippy
 (2026-08-04, paid at the W1–W4 landing):** four accepted code slices
 passed their packet's `cargo check` + `cargo test` self-verify and the
 boss's re-runs — and the panel's `clippy -D warnings` still failed on
@@ -400,7 +400,7 @@ self-verify block therefore includes
 check/test; the boss's merge tail runs the workspace clippy before the
 panel. Doc/evidence packets are unaffected.
 
-##fact-panel-background-form **The panel's background form (2026-08-04,
+@fact:fact-panel-background-form **The panel's background form (2026-08-04,
 paid the expensive way):** `bash tools/self-check.sh; echo EXIT=$?`
 run as a background task always completes «successfully» — the echo
 swallows the real exit, and the boss read the task notification as
@@ -410,7 +410,7 @@ background as the bare `bash tools/self-check.sh` so the task's own
 exit code IS the panel's, and **the mirror fan-out waits for the read
 tail, never for the notification.**
 
-##fact-a-truncated-pipe-reads-green **A pipe can hide a red run without
+@fact:fact-a-truncated-pipe-reads-green **A pipe can hide a red run without
 swallowing its exit code — `head` is enough (2026-08-05):** after merging two
 code slices the boss ran `cargo test --workspace 2>&1 | grep -E "^test result…"
 | head -40`, saw forty `ok` lines and called it green. `test result: FAILED.
@@ -424,7 +424,7 @@ a verdict from one. Related in shape to `#fact-panel-background-form`, where an
 `echo` swallowed the exit — same disease, different disguise, and this one was
 self-inflicted at the boss's own keyboard.
 
-##fact-the-tail-is-the-crates-the-packet-did-not-name **The boss tail lands
+@fact:fact-the-tail-is-the-crates-the-packet-did-not-name **The boss tail lands
 exactly in the crates the packet's self-verify did not name (2026-08-05):** the
 wire-validation slice was verified over `vibe-core`, `vibe-registry` and
 `vibe-resolver` — all green, correctly — and broke twelve tests in
@@ -434,7 +434,7 @@ seen it and was not asked to. **A packet that tightens a shared type names the
 consumer crates it CAN check and the boss budgets a workspace run for the rest**
 — the split is the method working, not the worker missing something.
 
-##fact-code-slice-file-budget **Code-slice self-verify includes the
+@fact:fact-code-slice-file-budget **Code-slice self-verify includes the
 file-length budget (2026-08-04, paid at the B-006 landing — the second
 consecutive slice where the panel caught a class the packets did not
 gate):** two accepted code slices passed check + tests + clippy, and
@@ -449,7 +449,7 @@ conform engine stays the boss's panel (a cold worktree cannot afford
 the xtask build), but the one budget it keeps tripping on is a
 one-liner any worker can check.
 
-##fact-new-engine-files-scope **New engine files carry `specmark::scope!`
+@fact:fact-new-engine-files-scope **New engine files carry `specmark::scope!`
 (2026-08-04, paid at the W1 landing — the third consecutive class the
 packets did not gate):** an accepted engine slice created two new
 submodule files with tests, budgets and clippy all green, and the
@@ -459,7 +459,7 @@ engine crate therefore orders the cheap form in the packet itself:
 «каждый новый файл несёт `specmark::scope!(…)` тем же юнитом, что его
 соседи по крейту» — the real self-trace gate stays the boss's panel.
 
-##fact-gitignored-state-misses-the-worktree **A packet may only cite what
+@fact:fact-gitignored-state-misses-the-worktree **A packet may only cite what
 git carries (2026-08-05, paid on the first hygiene fan-out):** the campaign
 mirror lives at `campaigns/*/run/mirror/` and that path is **gitignored**, so
 a fresh worktree has `run/` without it. Both workers were pointed at mirror
@@ -474,7 +474,7 @@ not provisioned — but the mirror stays the definition, and deriving anchors
 any other way is a divergence to be reported rather than a shortcut to be
 taken.
 
-##fact-one-thread-one-writer **A `-c` correction sent while the first run is
+@fact:fact-one-thread-one-writer **A `-c` correction sent while the first run is
 still alive makes two writers on one worktree (2026-08-05, caught before it
 cost anything):** conversations are keyed by (state dir, cwd), so a mid-flight
 `-c` does not queue behind the running turn — it starts a second process
@@ -483,7 +483,7 @@ the originals. **Send a `-c` only after the run it corrects has ended**; a
 worker that must learn something mid-flight learns it from the filesystem
 instead — put the file where the packet said it would be.
 
-##fact-engine-enum-ripple **An engine enum change is a cross-package
+@fact:fact-engine-enum-ripple **An engine enum change is a cross-package
 ripple (2026-08-04, paid at the W4 landing, twice):** adding a `Fact`
 variant compiled green in the slice's own workspace and then broke the
 RUST frontend's deliberately-total sort and the Rust health census in
@@ -502,7 +502,7 @@ failing the FIXED code against a pre-change engine rmeta —
 `cargo clean -p <crate>` puts the build back on real sources before
 any deeper diagnosis.
 
-##fact-the-status-grep-matches-the-packet **The status one-liner reports
+@fact:fact-the-status-grep-matches-the-packet **The status one-liner reports
 `TASK-DONE` before the worker ever says it (2026-08-05, caught before it
 cost anything):** `--output-format stream-json` logs the **prompt** too, and
 every packet quotes its own closing clause verbatim — so
@@ -516,7 +516,7 @@ liveness read that does work: `grep -o '"command":"echo \\"PROGRESS[^"]*'`
 (the worker's own tool CALLS, which the packet text cannot forge) and
 `ls WORKER-REPORT-<task-id>.md`.
 
-##fact-the-follow-up-packet-drops-the-clause **A follow-up packet written
+@fact:fact-the-follow-up-packet-drops-the-clause **A follow-up packet written
 against a finding drops the boilerplate the first packet carried — and
 observability is the first casualty (2026-08-05):** the B-056 collision
 packet was authored mid-session from a worker's escalation and **omitted the
@@ -528,14 +528,14 @@ is the packet's — and a packet assembled from a review note is exactly the
 one that skips it. Same for the report template and the self-verify block:
 copy the closing three sections before writing the body.
 
-##fact-log-volume-is-thinking-telemetry **Log size is not activity
+@fact:fact-log-volume-is-thinking-telemetry **Log size is not activity
 (2026-08-05):** with `MAX_THINKING_TOKENS` set, the stream-json log carries
 one `{"subtype":"thinking_tokens"}` line **per token** — a two-minute-old
 log is already megabytes and grows while the worker only thinks. Judge by
 the last non-telemetry event, not by bytes:
 `grep -v '"subtype":"thinking_tokens"' "$LOG" | tail -c 300`.
 
-##fact-the-result-event-is-the-terminal-signal **The stream-json `result`
+@fact:fact-the-result-event-is-the-terminal-signal **The stream-json `result`
 event is the completion signal that cannot be forged, and it outranks both
 alternatives (2026-08-05):** `grep -c '"type":"result"' "$LOG"` goes from 0 to
 1 exactly when the run ends, and the line carries `duration_ms`. It beats the
@@ -549,7 +549,7 @@ weak writer still drops them — so the poll reads, in order: the `result`
 event for «is it over», the last non-telemetry event for «what is it doing»,
 and the report file on disk for «did it deliver».
 
-##fact-the-spawn-form-costs-the-notification **The spawn form printed in
+@fact:fact-the-spawn-form-costs-the-notification **The spawn form printed in
 `#e-spawn` defeats the completion notification it is supposed to produce
 (2026-08-05):** the trailing `&` inside `( … ) > "$LOG" 2>&1 &` detaches the
 worker from the harness task, so the task exits within a second and the boss
@@ -562,7 +562,7 @@ the backgrounding** — then `##WAL-C-COMPLETION-SIGNAL`'s «notification plus
 report file» is a signal the boss actually receives, instead of one it has to
 poll for.
 
-##fact-the-panel-owns-the-user-home-for-its-whole-run **The panel's
+@fact:fact-the-panel-owns-the-user-home-for-its-whole-run **The panel's
 user-home tripwire is a GLOBAL window, and any `vibe` command the boss runs
 beside it fires the gate (2026-08-05, paid on a false red):** `self-check`
 snapshots the operator's real `~/.vibe` at start and compares it after
@@ -581,7 +581,7 @@ the panel alone, and read the tail rather than the summary. Same disease as
 `#fact-a-truncated-pipe-reads-green` from the other direction — there a green
 reading hid a red run; here a red reading accused an innocent.
 
-##fact-a-prefix-grep-on-the-command-string-reads-a-worker-that-did-nothing
+@fact:fact-a-prefix-grep-on-the-command-string-reads-a-worker-that-did-nothing
 **The mirror image of `#fact-the-status-grep-matches-the-packet`, and it costs
 a correct worker its acceptance (2026-08-06, caught one step before the
 rejection was sent):** the boss polled a live run with
@@ -604,7 +604,7 @@ disease as `#fact-the-status-grep-matches-the-packet` from the other side:
 there a grep hit invented a finished worker, here a grep miss invented an idle
 one. The grep is not the measurement; the field is.
 
-##fact-finalisation-is-coupled-to-worktree-removal **Report archiving silently
+@fact:fact-finalisation-is-coupled-to-worktree-removal **Report archiving silently
 depends on the worktree being removable (2026-08-05):** `#obs-meta` puts the
 move of `WORKER-REPORT-<id>.md` into the archive at finalisation, and in
 practice finalisation happens when the boss tears the worktree down — so a
@@ -616,7 +616,7 @@ archived anyway and **two never were** (`P-GOFLAG-RULE`,
 looked complete. Archive the report the moment the run ends, as its own step,
 before any cleanup — the two operations have no reason to be one.
 
-##fact-a-cd-in-the-boss-command-silently-retargets-the-correction **A `cd` at
+@fact:fact-a-cd-in-the-boss-command-silently-retargets-the-correction **A `cd` at
 the top of the boss's own command sends the `-c` correction to a different
 worker — and the default wrong destination is the host repository itself
 (2026-08-06, caught with nothing damaged):** conversations are keyed by (state

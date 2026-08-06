@@ -59,7 +59,7 @@ lines).
 
 ## Two rules that bind every line below
 
-- ##NEVER-INVENT-A-WHY **A why is sourced or it is `TODO(owner)`.** Every *Why*
+- @fact:NEVER-INVENT-A-WHY **A why is sourced or it is `TODO(owner)`.** Every *Why*
   and every *Considered and rejected* drafted in [§3](#backfill) is quoted or
   paraphrased from **the section's own prose, its PROP's history lines, or the
   frozen `VIBEVM-SPEC.md` it cites** — with the source anchor named on the same
@@ -68,7 +68,7 @@ lines).
   confidence; the data is gone»* — and d10's `##backfilled-reasoning-is-fiction`
   bind this batch directly, because a backfill **is** the anti-pattern unless
   every field is sourced.
-- ##THE-CAMPAIGN-IS-INSIDE-ITS-OWN-CORPUS-D12 **This campaign's own plans are not
+- @fact:THE-CAMPAIGN-IS-INSIDE-ITS-OWN-CORPUS-D12 **This campaign's own plans are not
   host practice.** `campaigns/**` carries many complete four-field blocks —
   including in this file. None is counted as host-PROP adoption anywhere below;
   every census command in this file is scoped to `spec/common`.
@@ -373,7 +373,7 @@ quotes two of them.
 | calibration: `##WORKSPACE-MEMBER` / `##fold-in-why` | `PROP-005-package-index.md:820,822` | ✔ verbatim |
 | house style: `##DECISION-ELEMENT-NAME` + three fields | `PROP-043-progress-markup.md:91,93,96,98` | ✔ verbatim |
 
-##EMPHASIS-IS-ADDED-IN-D10 **Emphasis note — d10 bolds two phrases the source
+@fact:EMPHASIS-IS-ADDED-IN-D10 **Emphasis note — d10 bolds two phrases the source
 does not.** d10 §2 renders `##ttl-why` as *«**Revisit once real usage
 arrives.**»* and `##cosmetic-cost` as *«**addressed separately if it ever
 matters**»*. At HEAD both phrases are **unbolded** in the source:
@@ -491,25 +491,25 @@ Two consequences the boss should carry into the closure pass:
 
 ### 3.0 How these were drafted, and the four rules that constrained them {#drafting-rules}
 
-- ##RULE-CITE-NEVER-RESTATE **A field cites the anchor that already carries the
+- @fact:RULE-CITE-NEVER-RESTATE **A field cites the anchor that already carries the
   fact; it never restates it.** The corpus's most common defect — this
   campaign's single most-repeated finding — is a second writer for one fact.
   Nine of the twelve sections already carry their loser, their why, or both **in
   prose, unlabelled**; the insert adds the *label and the address*, pointing at
   the existing anchor. That is d10 §3.4's finding executed:
   **this is relabelling, not authoring.**
-- ##RULE-SOURCED-OR-TODO **Sourced or `TODO(owner)`.** Every field below names
+- @fact:RULE-SOURCED-OR-TODO **Sourced or `TODO(owner)`.** Every field below names
   where it came from. Three sources were admissible: the section's own prose,
   the PROP's `§7` history (`PROP-024` `##HIST-DRAFT-1` is the only one in
   `spec/common`), and the frozen [`VIBEVM-SPEC.md`](../../../VIBEVM-SPEC.md)
   where the section cites it. Nothing else.
-- ##RULE-TRIGGERS-ARE-THE-OWNERS **Every trigger is marked OWNER CONFIRMS.**
+- @fact:RULE-TRIGGERS-ARE-THE-OWNERS **Every trigger is marked OWNER CONFIRMS.**
   Eleven of the twelve need one written for the first time. A trigger names a
   signal *this project actually watches*
   (`#COLLECT-THE-SIGNAL-OR-REWRITE-THE-TRIGGER`), and a worker cannot decide
   that. Each proposal below names its **metric + threshold + observation point**
   so the owner is confirming a concrete thing, not approving a blank.
-- ##RULE-NO-ANCHOR-IS-RENAMED **No existing anchor is renamed or reworded.** An
+- @fact:RULE-NO-ANCHOR-IS-RENAMED **No existing anchor is renamed or reworded.** An
   anchor is an address; renaming one breaks every citation into it
   (`#NEVER-DELETE-A-RECORD-REWRITE-IT`). Every insert is **additive**. Where a
   section's existing units are already labelled `**Why:**` or
@@ -549,28 +549,28 @@ to be published. Q3 — named below. **The best-equipped section in
 
 **Current text** (`spec/common/PROP-000.md:47-57`, elided in the middle):
 
-> - ##LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive
+> - @fact:LICENSE-EULA **Decision:** vibevm ships under the **Universal Permissive
 >   License 1.0** (UPL-1.0) — open source, relicensed 2026-07-12. … The
 >   project's first phase shipped under a placeholder proprietary EULA; that
->   phase is over. @impl/done
-> - ##NO-CRATES-IO Crates in this workspace set `license-file = "LICENSE.md"`
->   and `publish = false` … @spec/done
+>   phase is over. @status:impl/done
+> - @fact:NO-CRATES-IO Crates in this workspace set `license-file = "LICENSE.md"`
+>   and `publish = false` … @status:spec/done
 >
-> - ##LICENSE-OWNER-CALL **Why:** Owner's call, taken 2026-07-12 and executed
+> - @fact:LICENSE-OWNER-CALL **Why:** Owner's call, taken 2026-07-12 and executed
 >   the same day: the whole shipped surface — the host tree and every
 >   `packages/org.vibevm.*` package — carries UPL-1.0, so a consumer of any part
->   of vibevm gets one permissive licence and no per-package archaeology. @spec/done
-> - ##LICENSE-SPEC-DEFERS `VIBEVM-SPEC.md` §1 explicitly defers the *produced*
->   software's license to the owner; the owner's choice is UPL-1.0. @spec/done
+>   of vibevm gets one permissive licence and no per-package archaeology. @status:spec/done
+> - @fact:LICENSE-SPEC-DEFERS `VIBEVM-SPEC.md` §1 explicitly defers the *produced*
+>   software's license to the owner; the owner's choice is UPL-1.0. @status:spec/done
 >
 > …
 >
-> ##LICENSE-REVISIT **When to revisit:** the previous trigger — "when the owner
+> @fact:LICENSE-REVISIT **When to revisit:** the previous trigger — "when the owner
 > decides to relicense (most likely UPL 1.0)" — **fired on 2026-07-12** and is
 > spent. Re-open when either (a) a crate is to be published to crates.io: swap
 > `license-file` for the SPDX string `license = "UPL-1.0"` and drop
 > `publish = false`; or (b) a dependency or contribution arrives under terms
-> UPL-1.0 cannot absorb. @spec/done
+> UPL-1.0 cannot absorb. @status:spec/done
 
 **Fields present: Decision ✔ · Why ✔ (`##LICENSE-OWNER-CALL`) · Revisit ✔
 (`##LICENSE-REVISIT`). Missing: Considered and rejected — one unit.**
@@ -613,10 +613,10 @@ named alternative, explicitly deferred with its extension point documented ⇒
 
 **Current text** (`spec/common/PROP-000.md:124-128`):
 
-> - ##GRAPH-BUILTIN-NODES **Decision:** Built-in nodes only in v1 (content-only
->   plugin contribution model per `VIBEVM-SPEC.md` §5.4). @spec/done
-> - ##RUNNER-SEQUENTIAL Runner is sequential (no parallelism) in v1 per §5.2. @spec/done
-> - ##TYPED-VALUES Typed value system per §5.3. @spec/done
+> - @fact:GRAPH-BUILTIN-NODES **Decision:** Built-in nodes only in v1 (content-only
+>   plugin contribution model per `VIBEVM-SPEC.md` §5.4). @status:spec/done
+> - @fact:RUNNER-SEQUENTIAL Runner is sequential (no parallelism) in v1 per §5.2. @status:spec/done
+> - @fact:TYPED-VALUES Typed value system per §5.3. @status:spec/done
 
 **Fields present: Decision only. Missing: all three.**
 
@@ -663,25 +663,25 @@ Q3 — the declined `target =` field is named on the very next line.
 
 **Current text** (`spec/common/PROP-000.md:170-181`, elided):
 
-> - ##MIRROR-LAYOUT **Decision:** vibevm packages use a **mirror layout**. Every
+> - @fact:MIRROR-LAYOUT **Decision:** vibevm packages use a **mirror layout**. Every
 >   entry in a package's `writes.files` is simultaneously (a) the path of the
 >   file inside the package directory and (b) the path at which it will be
->   installed in the consumer's project. @spec/done
-> - ##NO-TARGET-FIELD There is no separate `target = "…"` field per entry;
->   `writes.files` is the single source of truth for "where does this file go?" @spec/done
+>   installed in the consumer's project. @status:spec/done
+> - @fact:NO-TARGET-FIELD There is no separate `target = "…"` field per entry;
+>   `writes.files` is the single source of truth for "where does this file go?" @status:spec/done
 >
 > …
 >
-> ##BOOT-SNIPPET-EXCEPTION **Boot snippets are the one exception.** The
+> @fact:BOOT-SNIPPET-EXCEPTION **Boot snippets are the one exception.** The
 > `[boot_snippet]` table carries an explicit `source` field naming the path
 > inside the package (conventionally under `boot/`), while the target is always
-> the fixed `spec/boot/<filename>`. @spec/done
+> the fixed `spec/boot/<filename>`. @status:spec/done
 >
-> - ##MIRROR-WHY-DRIFT **Why:** a single source of truth for source-and-target
+> - @fact:MIRROR-WHY-DRIFT **Why:** a single source of truth for source-and-target
 >   paths eliminates a whole class of authoring bug where the package layout
->   drifts from the declared writes. @spec/done
-> - ##MIRROR-WHY-READABLE It also makes a package directory instantly
->   readable … @spec/done
+>   drifts from the declared writes. @status:spec/done
+> - @fact:MIRROR-WHY-READABLE It also makes a package directory instantly
+>   readable … @status:spec/done
 
 **Fields present: Decision ✔ · Why ✔ (`##MIRROR-WHY-DRIFT`). Missing:
 Considered and rejected (the loser is written at `##NO-TARGET-FIELD`, unlabelled)
@@ -717,28 +717,28 @@ the footprint-rejection policy, with two recorded consequences.
 
 **Current text** (`spec/common/PROP-000.md:208-224`, elided):
 
-> - ##DEP-WEIGHT-NOT-FACTOR **Decision:** Binary size, crate count, transitive
->   dep weight are NOT decision factors when selecting third-party libraries. @spec/done
-> - ##PICK-STRONGEST Pick the strongest available library for the job … @spec/done
+> - @fact:DEP-WEIGHT-NOT-FACTOR **Decision:** Binary size, crate count, transitive
+>   dep weight are NOT decision factors when selecting third-party libraries. @status:spec/done
+> - @fact:PICK-STRONGEST Pick the strongest available library for the job … @status:spec/done
 >
-> - ##WHY-PRECEDENT **Why:** Software of comparable surface area (Chrome, modern
+> - @fact:WHY-PRECEDENT **Why:** Software of comparable surface area (Chrome, modern
 >   IDEs, production package managers) routinely ships tens to hundreds of
->   dependencies and remains fast and capable. @spec/done
-> - ##WHY-DEBT Under-specifying a load-bearing component to save megabytes
->   creates ongoing architectural debt … @spec/done
+>   dependencies and remains fast and capable. @status:spec/done
+> - @fact:WHY-DEBT Under-specifying a load-bearing component to save megabytes
+>   creates ongoing architectural debt … @status:spec/done
 >
-> ##reject-reasons-lead **Legitimate reasons to reject a dep:** @spec/done
+> @fact:reject-reasons-lead **Legitimate reasons to reject a dep:** @status:spec/done
 >
-> - ##REJECT-LICENSE non-permissive license …, ##REJECT-ABANDONED abandoned
->   upstream, ##REJECT-SECURITY demonstrated security issues …,
->   ##REJECT-ERGONOMICS fundamentally bad API ergonomics …
+> - @fact:REJECT-LICENSE non-permissive license …, @fact:REJECT-ABANDONED abandoned
+>   upstream, @fact:REJECT-SECURITY demonstrated security issues …,
+>   @fact:REJECT-ERGONOMICS fundamentally bad API ergonomics …
 >
-> ##TOO-HEAVY-NOT-REASON "Too heavy" alone is **not** a reason. @spec/done
+> @fact:TOO-HEAVY-NOT-REASON "Too heavy" alone is **not** a reason. @status:spec/done
 >
-> - ##READMISSIBLE **Concrete consequences:** libraries previously rejected on
->   footprint grounds are re-admissible. Notable: `libsolv` …, `git2` … @spec/done
-> - ##PROP-001-PRUNE The size-based argument in [PROP-001 §2.1] against `git2`
->   is to be pruned … @spec/done
+> - @fact:READMISSIBLE **Concrete consequences:** libraries previously rejected on
+>   footprint grounds are re-admissible. Notable: `libsolv` …, `git2` … @status:spec/done
+> - @fact:PROP-001-PRUNE The size-based argument in [PROP-001 §2.1] against `git2`
+>   is to be pruned … @status:spec/done
 
 **Fields present: Decision ✔ · Why ✔ (`##WHY-PRECEDENT`). Missing: Considered
 and rejected (written unlabelled across `##READMISSIBLE` / `##PROP-001-PRUNE` /
@@ -775,20 +775,20 @@ below the Decision.
 
 **Current text** (`spec/common/PROP-000.md:230-239`, elided):
 
-> - ##JTD-SSOT **Decision:** JSON Type Definition (RFC 8927) schemas are the
+> - @fact:JTD-SSOT **Decision:** JSON Type Definition (RFC 8927) schemas are the
 >   single source of truth for every client/server and machine-to-machine
->   contract in this project. @spec/done
-> - ##JTD-CODEGEN Rust types — and types in any future non-Rust clients — are
->   **generated** from JTD schemas via `jtd-codegen`, not hand-maintained. @spec/done
-> - ##NO-DUPLICATION No client/server duplication is permitted on contracts. @spec/done
+>   contract in this project. @status:spec/done
+> - @fact:JTD-CODEGEN Rust types — and types in any future non-Rust clients — are
+>   **generated** from JTD schemas via `jtd-codegen`, not hand-maintained. @status:spec/done
+> - @fact:NO-DUPLICATION No client/server duplication is permitted on contracts. @status:spec/done
 >
-> - ##JTD-WHY-SKEW **Why:** duplication between a server contract and a
+> - @fact:JTD-WHY-SKEW **Why:** duplication between a server contract and a
 >   hand-written client is a classic source of version-skew bugs; schema-first
->   codegen eliminates that class of bug categorically. @spec/done
-> - ##JTD-OVER-JSONSCHEMA JTD specifically (over JSON Schema / OpenAPI alone)
+>   codegen eliminates that class of bug categorically. @status:spec/done
+> - @fact:JTD-OVER-JSONSCHEMA JTD specifically (over JSON Schema / OpenAPI alone)
 >   because JTD is deliberately narrower: its schema grammar is constructed so
 >   every JTD schema maps to a clean static type in every target language, with
->   no language-specific escape hatches. @spec/done
+>   no language-specific escape hatches. @status:spec/done
 
 **Fields present: Decision ✔ · Why ✔ (`##JTD-WHY-SKEW`). Missing: Considered
 and rejected (written unlabelled at `##JTD-OVER-JSONSCHEMA`) and Revisit.**
@@ -824,18 +824,18 @@ not from a measurement, which is a weaker why than the other eleven carry.
 **Current text** (`spec/common/PROP-018-agentic-standalone-modes.md:99-111`,
 elided):
 
-> - ##MODE-INFERRED **Decision.** Mode is not a global flag the user sets; it is
+> - @fact:MODE-INFERRED **Decision.** Mode is not a global flag the user sets; it is
 >   **inferred per operation from how vibevm was reached and what backend is
->   available.** @spec/done
-> - ##OP-DECLARES An operation declares whether it needs inference; if it does,
->   the active backend decides the realisation: @spec/done
+>   available.** @status:spec/done
+> - @fact:OP-DECLARES An operation declares whether it needs inference; if it does,
+>   the active backend decides the realisation: @status:spec/done
 >
-> - ##REACH-SUBPROCESS reached as a **subprocess of an agent** … → the **relay
->   backend** … @spec/done
-> - ##REACH-STANDALONE-ENGINE reached **standalone** with a built-in engine
->   available (future) → the **built-in backend** … @spec/done
-> - ##REACH-STANDALONE-NO-ENGINE reached **standalone** with no engine (today) →
->   a reasoning operation **fails loud** … @spec/done
+> - @fact:REACH-SUBPROCESS reached as a **subprocess of an agent** … → the **relay
+>   backend** … @status:spec/done
+> - @fact:REACH-STANDALONE-ENGINE reached **standalone** with a built-in engine
+>   available (future) → the **built-in backend** … @status:spec/done
+> - @fact:REACH-STANDALONE-NO-ENGINE reached **standalone** with no engine (today) →
+>   a reasoning operation **fails loud** … @status:spec/done
 
 **Fields present: Decision only. Missing: all three.**
 
@@ -872,22 +872,22 @@ carries that evidence.
 **Current text** (`spec/common/PROP-018-agentic-standalone-modes.md:156-170`,
 elided), plus its loser from §5 (`:372`):
 
-> - ##SKILL-SECTION-NOT-KIND **Decision.** A package declares which of its files
+> - @fact:SKILL-SECTION-NOT-KIND **Decision.** A package declares which of its files
 >   are **skills** for agents in a dedicated manifest section — **not** by
 >   introducing a package kind of its own. The kind register (`package_ref.rs`,
->   `VIBEVM-SPEC.md` §4.1) stays closed to skills. @spec/done
-> - ##ANY-KIND-RATIONALE Rationale: skills can live inside a package of *any*
+>   `VIBEVM-SPEC.md` §4.1) stays closed to skills. @status:spec/done
+> - @fact:ANY-KIND-RATIONALE Rationale: skills can live inside a package of *any*
 >   kind and be structured any way. A `tool` package `vim` can ship the tool
 >   itself **plus** a skill for driving vim — one self-contained package, two
 >   artefact classes. Kind answers "what is this package"; the new section
->   answers "what does it project into an agent." @spec/done
-> - ##MCP-HALF-SUPERSEDED This unit's original text sketched MCP servers as a
+>   answers "what does it project into an agent." @status:spec/done
+> - @fact:MCP-HALF-SUPERSEDED This unit's original text sketched MCP servers as a
 >   second any-kind section; that half is SUPERSEDED — MCP servers became their
 >   own `mcp` kind with their own laws, owner resolution 2026-07-07:
->   [PROP-027](…). The skill law here is unchanged. @spec/done
+>   [PROP-027](…). The skill law here is unchanged. @status:spec/done
 >
-> *(§5, line 372)* — ##OOS-FIFTH-KIND **A fifth package kind** — explicitly
-> rejected (§2.4). @spec/done
+> *(§5, line 372)* — @fact:OOS-FIFTH-KIND **A fifth package kind** — explicitly
+> rejected (§2.4). @status:spec/done
 
 **Fields present: Decision ✔ · a Why **under the wrong label** — `Rationale:` at
 `##ANY-KIND-RATIONALE` · the loser at `##OOS-FIFTH-KIND`, in §5. Missing: a
@@ -930,26 +930,26 @@ alternative is named in a lead-in with **two** numbered reasons.
 **Current text** (`spec/common/PROP-018-agentic-standalone-modes.md:227-255`,
 elided):
 
-> - ##RELAY-PARKS **Decision.** When a reasoning operation runs under the relay
+> - @fact:RELAY-PARKS **Decision.** When a reasoning operation runs under the relay
 >   backend, it does not act. It writes an `Intent` … to a **single-slot
 >   mailbox**, the project-local `.vibe/agentic/command.md` (§3), and returns a
->   pointer telling the caller to drain it. @spec/done
-> - ##DRAIN-VERB The **consumer seam is one command**, `vibe command` … @spec/done
+>   pointer telling the caller to drain it. @status:spec/done
+> - @fact:DRAIN-VERB The **consumer seam is one command**, `vibe command` … @status:spec/done
 >
-> ##two-step-lead Two properties make the two-step (produce → `vibe command`)
-> worth its seam rather than just printing the intent from the producer: @spec/done
+> @fact:two-step-lead Two properties make the two-step (produce → `vibe command`)
+> worth its seam rather than just printing the intent from the producer: @status:spec/done
 >
-> 1. ##SEAM-UNIFORMITY **Uniformity.** *Any* vibevm command that discovers
+> 1. @fact:SEAM-UNIFORMITY **Uniformity.** *Any* vibevm command that discovers
 >    mid-run it needs reasoning parks an intent the same way … The agent learns
->    one drain verb, not per-command stdout parsing. @spec/done
-> 2. ##SEAM-DECOUPLING **Decoupling.** Producer and consumer need not be the
->    same invocation … @spec/done
+>    one drain verb, not per-command stdout parsing. @status:spec/done
+> 2. @fact:SEAM-DECOUPLING **Decoupling.** Producer and consumer need not be the
+>    same invocation … @status:spec/done
 >
-> - ##NO-WRITE-BACK **MVP carries no write-back** (`req r4`): the relay is
->   fire-and-forget. @spec/done
-> - ##AGENT-ORCHESTRATES The calling agent orchestrates the conversation … @spec/done
-> - ##SKILL-STATES-NO-CHANNEL The installed skill (§2.9) states this contract
->   explicitly … (Full bidirectional conversations are §6.) @spec/done
+> - @fact:NO-WRITE-BACK **MVP carries no write-back** (`req r4`): the relay is
+>   fire-and-forget. @status:spec/done
+> - @fact:AGENT-ORCHESTRATES The calling agent orchestrates the conversation … @status:spec/done
+> - @fact:SKILL-STATES-NO-CHANNEL The installed skill (§2.9) states this contract
+>   explicitly … (Full bidirectional conversations are §6.) @status:spec/done
 
 **Fields present: Decision ✔ · Why and loser both written, both unlabelled
 (`##two-step-lead` + `##SEAM-UNIFORMITY` + `##SEAM-DECOUPLING`). Missing: all
@@ -982,28 +982,28 @@ both already written with reasons, in §4.
 **Current text** (`spec/common/PROP-024-code-bearing-packages.md:116-143`,
 elided):
 
-> ##SHIPPABLE-TREE-DEF **Decision.** A package's **shippable tree** is its
-> directory minus a build-output denylist: @spec/done
+> @fact:SHIPPABLE-TREE-DEF **Decision.** A package's **shippable tree** is its
+> directory minus a build-output denylist: @status:spec/done
 >
 > ```
 > .git/        .vibe/        target/        node_modules/
 > ```
 >
-> - ##VIBEIGNORE-EXTENDS plus any glob listed in an optional `.vibeignore` … @spec/done
-> - ##SHIPPABLE-CONSUMERS The `content_hash` …, the snapshot copy …, and the
->   verbatim materialised slot … all operate over the **shippable tree** … @spec/done
+> - @fact:VIBEIGNORE-EXTENDS plus any glob listed in an optional `.vibeignore` … @status:spec/done
+> - @fact:SHIPPABLE-CONSUMERS The `content_hash` …, the snapshot copy …, and the
+>   verbatim materialised slot … all operate over the **shippable tree** … @status:spec/done
 >
-> - ##WHY-SOURCE-IDENTITY **Why.** Identity is the *source*, never build
+> - @fact:WHY-SOURCE-IDENTITY **Why.** Identity is the *source*, never build
 >   artifacts: build output is non-deterministic (timestamps, host paths,
 >   incremental state) and may be gigabytes — hashing or copying it would make
->   identity unstable and materialisation ruinous … @spec/done
-> - ##SOURCE-IS-SHIPPED … @spec/done
-> - ##DENYLIST-NOT-SELECTION The denylist formalises "what was never source", it
->   does not introduce selection. @spec/done
+>   identity unstable and materialisation ruinous … @status:spec/done
+> - @fact:SOURCE-IS-SHIPPED … @status:spec/done
+> - @fact:DENYLIST-NOT-SELECTION The denylist formalises "what was never source", it
+>   does not introduce selection. @status:spec/done
 >
-> *(§4, lines 279, 297)* — ##REJ-HASH-BUILD-OUTPUT **Hash and copy build output
+> *(§4, lines 279, 297)* — @fact:REJ-HASH-BUILD-OUTPUT **Hash and copy build output
 > too** — rejected: non-deterministic and potentially gigabytes … ·
-> ##REJ-ALLOW-LIST **A per-file `[ship]`/`[files]` allow-list in the manifest**
+> @fact:REJ-ALLOW-LIST **A per-file `[ship]`/`[files]` allow-list in the manifest**
 > — rejected: it resurrects the per-file write list PROP-009 §2.6 retired …
 
 **Fields present: Decision ✔ · Why ✔ (`##WHY-SOURCE-IDENTITY`) · both losers
@@ -1035,28 +1035,28 @@ handling. Q2 — a spike this project already ran. Q3 — `##REJ-CONSUMER-MEMBER
 **Current text** (`spec/common/PROP-024-code-bearing-packages.md:175-211`,
 elided):
 
-> - ##OWN-WORKSPACE **Decision.** A code-bearing package carries its **own**
+> - @fact:OWN-WORKSPACE **Decision.** A code-bearing package carries its **own**
 >   workspace manifest (for Rust, a root `Cargo.toml` with `[workspace]`) — it
->   is a standalone, independently-buildable project. @spec/done
-> - ##PATH-DEP-LAW A language-native consumer that needs a shipped crate …
->   references it **by path into the materialised slot** … @spec/done
+>   is a standalone, independently-buildable project. @status:spec/done
+> - @fact:PATH-DEP-LAW A language-native consumer that needs a shipped crate …
+>   references it **by path into the materialised slot** … @status:spec/done
 >
-> - ##WORKSPACE-EXCLUDE The consumer **excludes** `vibedeps/` … so the slot's
+> - @fact:WORKSPACE-EXCLUDE The consumer **excludes** `vibedeps/` … so the slot's
 >   crates belong to the *package's* workspace, not the consumer's — Cargo
 >   forbids a directory living in two workspaces, and this is the standard
->   resolution for a repo that contains a sub-project with its own workspace. @spec/done
-> - ##PIN-ONCE The slot path is version-qualified; pinning it once … means a
->   package version bump touches a single line. @spec/done
+>   resolution for a repo that contains a sub-project with its own workspace. @status:spec/done
+> - @fact:PIN-ONCE The slot path is version-qualified; pinning it once … means a
+>   package version bump touches a single line. @status:spec/done
 >
-> - ##SPIKE-FIRST **Spike before the irreversible move.** Cross-workspace
+> - @fact:SPIKE-FIRST **Spike before the irreversible move.** Cross-workspace
 >   path-deps and the `exclude` topology are validated empirically on the target
 >   host (Windows, where `canonicalize()` adds a `\\?\` prefix and Cargo path
->   handling has sharp edges) *before* any crate is physically relocated. @spec/done
-> - ##SPIKE-FALLBACK The fallback, if cross-workspace path-deps prove unworkable
+>   handling has sharp edges) *before* any crate is physically relocated. @status:spec/done
+> - @fact:SPIKE-FALLBACK The fallback, if cross-workspace path-deps prove unworkable
 >   on a host, is §4's rejected-but-retained alternative (the consumer adds the
->   slot crates as its own workspace members) — chosen only on evidence. @spec/done
+>   slot crates as its own workspace members) — chosen only on evidence. @status:spec/done
 >
-> *(§4, line 282)* — ##REJ-CONSUMER-MEMBERS **Consumer adds the slot crates as
+> *(§4, line 282)* — @fact:REJ-CONSUMER-MEMBERS **Consumer adds the slot crates as
 > its own workspace members** … — *considered*; rejected as the primary model
 > because it denies the package standalone-buildability (a package would not be
 > a project) and couples the consumer's workspace membership to generated
@@ -1091,18 +1091,18 @@ deferred alternative, both in §4.
 **Current text** (`spec/common/PROP-024-code-bearing-packages.md:217-230`,
 elided):
 
-> - ##SELF-HOST-VENDORED **Decision.** vibevm consumes its own discipline
->   toolchain from the **committed** `vibedeps/` slot. @spec/done
-> - ##CLEAN-CLONE-BUILDS Because `vibedeps/` is committed (PROP-009 §2.1), a
+> - @fact:SELF-HOST-VENDORED **Decision.** vibevm consumes its own discipline
+>   toolchain from the **committed** `vibedeps/` slot. @status:spec/done
+> - @fact:CLEAN-CLONE-BUILDS Because `vibedeps/` is committed (PROP-009 §2.1), a
 >   fresh clone builds from a clean checkout **with no prior `vibe install`** …
->   already exists in the tree. @spec/done
-> - ##NO-CHICKEN-EGG There is no chicken-and-egg: the toolchain a build needs is
->   vendored beside the code that needs it. @spec/done
+>   already exists in the tree. @status:spec/done
+> - @fact:NO-CHICKEN-EGG There is no chicken-and-egg: the toolchain a build needs is
+>   vendored beside the code that needs it. @status:spec/done
 >
-> *(§4, lines 289, 293)* — ##REJ-IN-PLACE **`materialization = "in-place"` for
+> *(§4, lines 289, 293)* — @fact:REJ-IN-PLACE **`materialization = "in-place"` for
 > tool packages** — rejected: `in-place` slots are `.gitignore`d and unversioned
 > …; the discipline toolchain must be **vendored and versioned** so a clone is
-> buildable offline (§2.5). · ##REJ-CRATES-IO **Publish the tool crates to
+> buildable offline (§2.5). · @fact:REJ-CRATES-IO **Publish the tool crates to
 > crates.io and depend on the published versions** — deferred: the installed
 > package *is* the distribution … crates.io publication is an optional later
 > convenience for non-vibe Rust consumers, not a requirement of this model.
@@ -1154,27 +1154,27 @@ spent»* — what this record needs is not a first trigger but a **fresh** one.
 **Current text** (`spec/common/PROP-024-code-bearing-packages.md:236-259`,
 elided), plus the §7 history line (`:338`):
 
-> ##PLACEMENT-LAW **Decision.** The discipline's tools are code and obey the
+> @fact:PLACEMENT-LAW **Decision.** The discipline's tools are code and obey the
 > four-layer model: L4 (implemented checkers) ships in the package whose
-> language they check. @spec/done
+> language they check. @status:spec/done
 >
-> - ##THIS-PASS-WHOLE-TOOLCHAIN For **this pass**, the **entire Rust discipline
+> - @fact:THIS-PASS-WHOLE-TOOLCHAIN For **this pass**, the **entire Rust discipline
 >   toolchain** … ships in `stack:org.vibevm.ai-native/rust-ai-native-lang`. Its
 >   centre of gravity is Rust, and shipping the toolchain whole avoids carving
->   language-neutral cores out under time pressure. @spec/done
-> - ##CORE-STAYS-PROMPT-ONLY **The condition fired.** `flow:…/core-ai-native`
+>   language-neutral cores out under time pressure. @status:spec/done
+> - @fact:CORE-STAYS-PROMPT-ONLY **The condition fired.** `flow:…/core-ai-native`
 >   was to stay **prompt-only** … until a second language actually needed the
 >   shared engine. The TypeScript pilot shipped, so core-ai-native now **authors
 >   the neutral engines** …, which each `-lang` and `-mcp` package vendors
->   byte-identically. @impl/done
-> - ##DEFERRED-ENGINE-SPLIT **Deferred (documented):** the language-neutral
+>   byte-identically. @status:impl/done
+> - @fact:DEFERRED-ENGINE-SPLIT **Deferred (documented):** the language-neutral
 >   conform engine (`conform-core`) is a genuine L1 artifact … taken when the
 >   first non-Rust pilot needs it (YAGNI until then). … **Executed** — the
 >   TypeScript pilot was that demand, and the neutral halves now live in
->   core-ai-native, vendored into each family by `cargo xtask sync-engines`. @impl/done
+>   core-ai-native, vendored into each family by `cargo xtask sync-engines`. @status:impl/done
 >
-> *(§7, line 338)* — ##HIST-DRAFT-1 **2026-06-27 — draft 1.** … `conform-core`
-> ships in the Rust stack now with the L1 engine-extraction deferred (§2.6). @spec/done
+> *(§7, line 338)* — @fact:HIST-DRAFT-1 **2026-06-27 — draft 1.** … `conform-core`
+> ships in the Rust stack now with the L1 engine-extraction deferred (§2.6). @status:spec/done
 
 **Fields present: Decision ✔ · a deferral with its condition, its firing and its
 outcome, all in place. Missing: a labelled Why, a labelled Considered and
@@ -1206,7 +1206,7 @@ from the other ten and should be read as one.
 **Offered, not counted.** The ruling scopes the backfill to `spec/common`'s
 **35 `Decision`-labelled sections**; this claim is not one of them, so it is
 outside the twelve. It is raised because d10's criterion says
-*«##CRITERION-UNIT-IS-THE-CLAIM — the classification unit is the claim, not the
+*«@fact:CRITERION-UNIT-IS-THE-CLAIM — the classification unit is the claim, not the
 section»*, and this is the sharpest instance in `spec/common`.
 
 **`PROP-000` §7 `#registry`.** The section's `Decision` label is `##REG-M0`
@@ -1214,21 +1214,21 @@ section»*, and this is the sharpest instance in `spec/common`.
 milestone-scope statement, superseded in place by `##REG-M1`. But the section
 also carries this, unlabelled (`PROP-000.md:108-113`):
 
-> ##SPLIT-HOST-POSTURE **Source repositories — split-host posture.** The vibevm
+> @fact:SPLIT-HOST-POSTURE **Source repositories — split-host posture.** The vibevm
 > project and the package registry live on **separate hosts** by deliberate
 > decision (2026-04-29). …
 >
-> - ##REG-MIGRATION-WHY The migration from `git@gitverse.ru:vibespecs/*`
+> - @fact:REG-MIGRATION-WHY The migration from `git@gitverse.ru:vibespecs/*`
 >   happened on 2026-04-29 because GitVerse's public REST API does not expose
 >   org-scoped repo creation (`POST /orgs/{org}/repos` returns 404 / WAF 403;
 >   documented exhaustively in [PROP-002 §2.10] and
 >   `crates/vibe-publish/src/gitverse.rs`). Without that endpoint
->   `vibe registry publish` cannot fully drive the publish loop end to end. @spec/done
-> - ##REG-GITHUB-WORKS GitHub's equivalent endpoint works natively, so the
->   registry organization moved while the vibevm project repository stays put. @spec/done
-> - ##REG-HASH-STABLE Identity is content-hashed (PROP-002 §2.1) — the lockfile's
+>   `vibe registry publish` cannot fully drive the publish loop end to end. @status:spec/done
+> - @fact:REG-GITHUB-WORKS GitHub's equivalent endpoint works natively, so the
+>   registry organization moved while the vibevm project repository stays put. @status:spec/done
+> - @fact:REG-HASH-STABLE Identity is content-hashed (PROP-002 §2.1) — the lockfile's
 >   `source_url` rotates but no `content_hash` value is invalidated by the host
->   change. @spec/done
+>   change. @status:spec/done
 
 **All three gates pass, and the why is the best-evidenced in `spec/common`:** a
 named upstream endpoint, its two failure codes, the file that documents it, and
@@ -1347,7 +1347,7 @@ Plus **four rulings that are not triggers**, each raised in place above:
 
 ### 5.3 Two findings this batch produced that are not part of the four blocks {#findings}
 
-- ##FINDING-PLACEMENT-LAW-IS-A-CALIBRATION-CASE **`PROP-024` `##PLACEMENT-LAW`
+- @fact:FINDING-PLACEMENT-LAW-IS-A-CALIBRATION-CASE **`PROP-024` `##PLACEMENT-LAW`
   is a second worked instance of a correctly-honoured revisit trigger, and d10
   missed it.** d10 §2 `#ex-calibration` reports one — `PROP-005`
   `##WORKSPACE-MEMBER`, in `spec/modules` — as evidence that *«the placement
@@ -1357,7 +1357,7 @@ Plus **four rulings that are not triggers**, each raised in place above:
   ([§3.12](#r-placement)). **Two instances is a practice, not an accident**, and
   it strengthens the ruling's case: the host already reopens records correctly
   when it has a condition — what it lacks is the condition, in 7 sections of 154.
-- ##FINDING-DEBT-IS-CONCENTRATED **The `spec/common` debt is concentrated by
+- @fact:FINDING-DEBT-IS-CONCENTRATED **The `spec/common` debt is concentrated by
   file and inverted by age.** All 35 labels sit in three of twelve files, and
   the reopenable share runs **PROP-024 4/6 · PROP-000 5/18 · PROP-018 3/11** —
   the *newest* document, written against live external constraints, owes

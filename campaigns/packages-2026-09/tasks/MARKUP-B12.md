@@ -10,14 +10,14 @@ this batch.** Two are struck (18, 19).
 
 ## Four marked siblings {#siblings}
 
-##B12-FOUR-SIBLINGS B8, B9, B10 and B11 are all landed `world` batches of this shape. **Read
+@fact:B12-FOUR-SIBLINGS B8, B9, B10 and B11 are all landed `world` batches of this shape. **Read
 the corresponding file in the nearest sibling before marking yours.** B11 is the
 most recent and its report is the most useful: it settled how a labelled-field
 genre is treated (ruling 46 confines ruling 32 to pattern cards, so a
 four-field *lesson* deconstructs normally) and it found the one place the
 siblings disagreed.
 
-##B12-THE-RECONCILED-DISAGREEMENT **That disagreement is settled and you should not re-open it.** B9 split
+@fact:B12-THE-RECONCILED-DISAGREEMENT **That disagreement is settled and you should not re-open it.** B9 split
 a colon with three post-colon segments; B10 kept one with five. Ruling 44
 reconciles them: **ruling 20's verdict test gates the colon rules.** A
 post-colon item that is a *table-of-contents entry* cannot carry an independent
@@ -50,9 +50,9 @@ and matching `BATCH-PLAN.md` exactly; no correction was needed.
 
 ## Sizing — and read the caveat before the number {#sizing}
 
-##B12-COMPOSITION **Measured composition: 96 cells, 159 items, 148 paragraphs.**
+@fact:B12-COMPOSITION **Measured composition: 96 cells, 159 items, 148 paragraphs.**
 
-##B12-TWO-PREDICTIONS-NOT-ONE B11 replaced the paragraph rule with a mechanism: deconstruction makes
+@fact:B12-TWO-PREDICTIONS-NOT-ONE B11 replaced the paragraph rule with a mechanism: deconstruction makes
 roughly **one unit per sentence**, so `1.08 × sentences + items + cells`. Sizing
 this batch with it produced **two different answers**, and that is the finding
 rather than a nuisance:
@@ -62,7 +62,7 @@ rather than a nuisance:
   reported 382** — a 35 % disagreement — and 426 corrected by that measured bias
   is ≈316 → **596 units**.
 
-##B12-STATE-YOUR-COUNTING-RULE **So there is no single prediction here, deliberately, and your job is to
+@fact:B12-STATE-YOUR-COUNTING-RULE **So there is no single prediction here, deliberately, and your job is to
 make the next one possible.** Report your sentence count **together with the
 rule you counted by** — what you do with abbreviations, inline code, list text,
 and what you treat as a paragraph. The coefficient is bound to a counter that
@@ -75,21 +75,21 @@ this campaign's own recurring lesson turning up in its planning arithmetic.
 Verified by the reviewer against a gate run at dispatch. **You are not asked to
 re-run anything.**
 
-- ##B12-EXPECT-RESIDUAL **Residual: ZERO.** No `SKILL.md` and no frontmatter in scope.
-- ##B12-EXPECT-RESIDUAL-FILES **No file may carry a residual.**
-- ##B12-EXPECT-CORPUS-TOTAL **Corpus-wide unmarked afterwards: 1 248** — it stands at 1 651 and this
+- @fact:B12-EXPECT-RESIDUAL **Residual: ZERO.** No `SKILL.md` and no frontmatter in scope.
+- @fact:B12-EXPECT-RESIDUAL-FILES **No file may carry a residual.**
+- @fact:B12-EXPECT-CORPUS-TOTAL **Corpus-wide unmarked afterwards: 1 248** — it stands at 1 651 and this
   batch owes all 403.
 
 ## F-097 reaches four of your files {#f097}
 
-##B12-F097-FOUR-SITES `campaign-plans/README.md`, `two-process-model/README.md`,
+@fact:B12-F097-FOUR-SITES `campaign-plans/README.md`, `two-process-model/README.md`,
 `operating-modes/README.md` and
 `two-process-model/…/spec/flows/two-process-model/files-as-ipc.md` cite dead
 package names. Four names are dead corpus-wide — `atomic-commits`,
 `attribution-policy`, `conventional-commits`, `autonomy` — all renamed to
 `git-*` by `520e7478`, all declared correctly under the new name.
 
-##B12-MARK-DO-NOT-FIX **Mark them, do not fix them, do not re-file.** A **fifth** dead name
+@fact:B12-MARK-DO-NOT-FIX **Mark them, do not fix them, do not re-file.** A **fifth** dead name
 would be a new finding, and the review now checks for one mechanically.
 
 ## Boundaries {#boundaries}

@@ -2,14 +2,14 @@
 
 <status stage="doc" state="done" audience="user"/>
 
-##SERVED-OVER-MCP-AS-ONE-STDIO-BINARY The AI-Native Go discipline served over MCP: one stdio binary, the
+@fact:SERVED-OVER-MCP-AS-ONE-STDIO-BINARY The AI-Native Go discipline served over MCP: one stdio binary, the
 discipline command surface plus the tcg type oracle, launched by an agent
-host straight from this package's slot. @impl/done
+host straight from this package's slot. @status:impl/done
 
-##SERVING-NEEDS-NO-VIBE-ON-THE-MACHINE Serving needs no vibe anywhere on
-the machine (PROP-027 §2.6). @impl/done
+@fact:SERVING-NEEDS-NO-VIBE-ON-THE-MACHINE Serving needs no vibe anywhere on
+the machine (PROP-027 §2.6). @status:impl/done
 
-> ##campaign-in-flight-note Campaign in flight: built end-to-end per
+> @fact:campaign-in-flight-note Campaign in flight: built end-to-end per
 > GO-AI-NATIVE-PLAN v0.1, the campaign plan, which is authored outside
 > this package; the server brief is `spec/tools/discipline-mcp-go.md`.
-> This README is finalized at campaign close. @spec/done
+> This README is finalized at campaign close. @status:spec/done

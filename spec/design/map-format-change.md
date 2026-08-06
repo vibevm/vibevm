@@ -2,7 +2,7 @@
 
 <status stage="spec" state="work" comment="boss design for волна В (B-019а + B-016 half 1 + B-017, with B-024 and B-014 decided alongside), captured 2026-08-04 on the E-V2/E-V3 census pair; carries the map's forks №3, №4 and №5"/>
 
-##authority-line **Non-normative** (`spec/design/` genre). The contract stays in
+@fact:authority-line **Non-normative** (`spec/design/` genre). The contract stays in
 PROP-014 and in the discipline packages' own specs; this document records why
 волна В's format change is shaped the way it is, and what the workers were told
 to elaborate. The owner's rulings behind it were filed as backlog entries
@@ -10,105 +10,105 @@ to elaborate. The owner's rulings behind it were filed as backlog entries
 divergence — but two of the three have since been drained and their rows are
 gone (B-016 built whole; B-019 built in its fingerprint third), so only B-017
 is still a live link. A row that is closed leaves its ruling in the commit that
-closed it, not in an address. @doc/done
+closed it, not in an address. @status:doc/done
 
-##standing-on The measurement this design stands on — two read-only censuses
+@fact:standing-on The measurement this design stands on — two read-only censuses
 taken before a line was written, plus a noise measurement cut for the owner's
 fork on fingerprint substance:
 [`harvest/e17-map-format-census.md`](../../campaigns/packages-2026-09/harvest/e17-map-format-census.md)
 (the format's own facts) and
 [`harvest/e16-b024-lifecycle-vocab-census.md`](../../campaigns/packages-2026-09/harvest/e16-b024-lifecycle-vocab-census.md)
 (the lifecycle vocabularies B-024 merges). Every number below is theirs unless
-it says «boss-measured». @doc/done
+it says «boss-measured». @status:doc/done
 
-##one-change-law **Why one change and not three.** Each of the three entries
+@fact:one-change-law **Why one change and not three.** Each of the three entries
 says so in its own words, and the dependency spine states it once: a map-format
 change forces a full regeneration of every committed index and, once the map
 travels inside packages, a re-pin of every lockfile that carries one. Three
 bumps would pay that cost three times for one release's worth of value. The
-entries ride together or they wait. @spec/done
+entries ride together or they wait. @status:spec/done
 
 ## 1. What the censuses changed about the plan {#census-changed}
 
-##finding-manifest-is-strict **The manifest parser refuses unknown keys, and a
+@fact:finding-manifest-is-strict **The manifest parser refuses unknown keys, and a
 test pins it.** `Manifest` carries `deny_unknown_fields`, so today's `vibe`
 *fails* on a `vibe.toml` that grew a key — a new key is a manifest-schema bump,
 never an additive field. The backlog anticipated exactly this and named the
 precondition: introduce the key together with a minimum-version mechanic, not
-«на вырост». @spec/done
+«на вырост». @status:spec/done
 
-##finding-min-version-exists **That precondition is already met.**
+@fact:finding-min-version-exists **That precondition is already met.**
 `Compatibility.min_vibe_version` exists, and it is not a stub: it is propagated
 into the registry index entry and into the publish post-hook. So the lever the
 backlog demanded before B-017 could start is in the tree, and B-017's blocking
 dependency is discharged by measurement rather than by construction. What the
 census did *not* measure is whether an installing `vibe` actually refuses an
-older self — that check belongs to the build. @spec/work
+older self — that check belongs to the build. @status:spec/work
 
-##finding-map-feeds-identity **A map dropped into a package feeds that
+@fact:finding-map-feeds-identity **A map dropped into a package feeds that
 package's identity.** The content hash covers the entire shippable file tree
 minus five build-output names; the manifest declares no file list, so a
 generated `specmap.json` is not excludable by any existing mechanism. Placing
 one inside a package therefore re-pins its lockfile entry whenever the map's
 bytes change — which is on essentially every edit the scan sees. This is the
 half of B-016 the entry called cheap, and it is cheap in code and expensive in
-policy. @spec/done
+policy. @status:spec/done
 
-##finding-precedent-exists **The precedent is already in the tree, not
+@fact:finding-precedent-exists **The precedent is already in the tree, not
 hypothetical.** The fractality package ships a `specmap.json` inside its own
 directory today. Whatever the policy decides, it is ratifying or reversing an
-existing practice rather than inventing one. @doc/done
+existing practice rather than inventing one. @status:doc/done
 
-##finding-namespace-is-consumer-assigned **A package's spec namespace is
+@fact:finding-namespace-is-consumer-assigned **A package's spec namespace is
 assigned by the consumer, never declared by the package.** The `<namespace>`
 segment of `spec://<namespace>/…` comes from the reading project's own
 `[[external_specs]]` table; package identity is `(group, name, version)` and
 carries no spec namespace at all. A self-shipped map's URIs therefore have **no
 authoritative namespace** — two consumers of the same package can mint two
 different addresses for the same unit. B-016 half 1 cannot ship without a rule
-here, and the rule is a second manifest key. @spec/done
+here, and the rule is a second manifest key. @status:spec/done
 
-##finding-item-has-neither **The code item has neither a fingerprint nor an end
+@fact:finding-item-has-neither **The code item has neither a fingerprint nor an end
 of range.** Both are net-new fields, so B-019(а) is a real schema bump and not a
 tweak — and the end-of-range it needs is the same datum B-016 half 2 needs later
 to answer «show me the fragment». Adding it now is the cheap move that also
-pre-pays that half. @spec/done
+pre-pays that half. @status:spec/done
 
-##finding-host-index-ungated **The host index is described as gated and is
+@fact:finding-host-index-ungated **The host index is described as gated and is
 not.** Three documents say the committed index is «regenerated by `cargo xtask
 specmap` and gated by `--check`»; the `--check` path exists in code and no panel
 step runs it. Boss-measured the same day: `cargo xtask specmap --check` exits 1
 against the committed artefact, and the drift it named was 139 units added, 19
 removed, 26 edges added, 24 removed. This is B-014's other half arriving inside
-this design rather than ahead of it. @impl/done
+this design rather than ahead of it. @status:impl/done
 
 ## 2. B-019(а) — the code item gains a span and a fingerprint {#b019a}
 
-##b019a-shape **The shape.** `code_item` gains two fields: `end_line`, the
+@fact:b019a-shape **The shape.** `code_item` gains two fields: `end_line`, the
 1-based last line of the item's span including its attributes and doc comment,
 and `fingerprint`, a string. Both are produced by the **scanner**, not by the
 index builder — the index composes scanners through a trait and the neutral core
-never learns a language. @spec/done
+never learns a language. @status:spec/done
 
-##b019a-optional **Both fields are OPTIONAL, and that is a parity decision
+@fact:b019a-optional **Both fields are OPTIONAL, and that is a parity decision
 rather than a convenience.** Three scanners fill this struct and only one of
 them can fill these fields today; a required field would force the other two to
 invent a value, and an invented `end_line` is a lie the map would then serve to
 whoever asks for a fragment. Absent means *this scanner does not produce it* —
 visible in the data, with its reason recorded beside the scanner. It also keeps
 a schema-2 index parseable, so the thirteen indexes in the tree regenerate on
-their own producers' schedule instead of all at once. @spec/done
+their own producers' schedule instead of all at once. @status:spec/done
 
-##b019a-ripple **The ripple this carries, named because Rust makes it
+@fact:b019a-ripple **The ripple this carries, named because Rust makes it
 mandatory.** Adding a field to a struct breaks every literal construction of it,
 optional or not — the compiler finds them only under `--all-targets`. The three
 scanners construct `CodeItem` literally, and two of them live in other packages
 compiling against **vendored** copies of the engine, so they do not break until
 the vendor sync runs. The landing is therefore two slices with the sync between
 them, not one: engine and the Rust scanner first, the Go and TypeScript scan
-crates second. @impl/plan
+crates second. @status:impl/plan
 
-##b019a-self-describing **The fingerprint string is self-describing, and this
+@fact:b019a-self-describing **The fingerprint string is self-describing, and this
 is the load-bearing decision of the whole section.** It is written
 `<scheme>:<hex>` — the scheme name travels *inside the value*, exactly as the
 spec unit's `content_hash` already writes `sha256:<hex>`. The consequence is
@@ -116,18 +116,18 @@ that changing what a fingerprint hashes later is a **regeneration**, not another
 schema bump: readers compare fingerprints for equality and never parse them, so
 a mixed-scheme index is legible and a scheme migration is one regeneration wide.
 The owner's fork below therefore chooses the *first* scheme, not the only one
-this format can ever carry. @spec/done
+this format can ever carry. @status:spec/done
 
-##b019a-substance **The substance — owner fork №3, taken 2026-08-04: the token
+@fact:b019a-substance **The substance — owner fork №3, taken 2026-08-04: the token
 stream, with doc comments counted as code.** The measurement came first
 ([`harvest/e15-b019a-fingerprint-noise.md`](../../campaigns/packages-2026-09/harvest/e15-b019a-fingerprint-noise.md)):
 a token scheme that drops doc comments would call 7.5 % of this history's raw
 changes cosmetic, one that keeps them calls 2.2 %, and the gap is 105
 doc-comment edits — which in this codebase are frequently where the spec
 relationship is actually written. So a formatter run and an ordinary `//` note
-leave the fingerprint alone; a rewritten `///` does not. @spec/done
+leave the fingerprint alone; a rewritten `///` does not. @status:spec/done
 
-##b019a-scheme-per-scanner **Rust ships the token scheme; Go and TypeScript ship
+@fact:b019a-scheme-per-scanner **Rust ships the token scheme; Go and TypeScript ship
 raw text, and that is a recorded gap with a route.** The Rust scanner already
 holds everything it needs — `syn` and `proc-macro2` with span locations, a
 token-rendering helper, and `span().end()` for the range — so its cost is zero.
@@ -135,38 +135,38 @@ Go's and TypeScript's item records come from their own extractors, in their own
 toolchains; teaching those to emit a token stream is two foreign-toolchain
 builds and does not gate this format change. Because the fingerprint value names
 its own scheme, their upgrade later is a regeneration rather than another bump —
-which is precisely what `##b019a-self-describing` was chosen for. @spec/work
+which is precisely what `##b019a-self-describing` was chosen for. @status:spec/work
 
-##b019a-parity **Parity is a per-scanner obligation, and a scanner that cannot
+@fact:b019a-parity **Parity is a per-scanner obligation, and a scanner that cannot
 meet it records why.** The Rust scanner already parses with `syn` over
 `proc-macro2` with span locations enabled, so both the span and a token stream
 are available to it at no new dependency cost. A scanner in another language
 that cannot produce the chosen substance falls back to the other one **and
 records the reason and the route**, per the parity law — a gap is never silent,
-and an inversion is a gap too. @spec/done
+and an inversion is a gap too. @status:spec/done
 
-##b019a-what-it-buys **What it buys, stated as the milestone it serves.**
+@fact:b019a-what-it-buys **What it buys, stated as the milestone it serves.**
 M-DRIFT: the map notices a code edit before a human does. Today the map is blind
 to code changing under a requirement — the suspects table only catches the spec
 moving while the affirmation did not. The fingerprint is the mirror of that
-mechanism on the code side. @doc/done
+mechanism on the code side. @status:doc/done
 
 ## 3. B-016 half 1 — the map rides inside the package {#b016-half1}
 
-##b016-truck-already-drives **The truck already drives.** A package travels as a
+@fact:b016-truck-already-drives **The truck already drives.** A package travels as a
 whole directory with no file list, so the map file itself costs nothing to
 transport. Everything expensive about this half is policy and reading, not
-shipping. @doc/done
+shipping. @status:doc/done
 
-##b016-namespace-key **The package declares its own spec namespace.** This is
+@fact:b016-namespace-key **The package declares its own spec namespace.** This is
 the new rule the census demands: a manifest key naming the namespace under which
 the package's own spec units are addressed, so that every consumer mints the
 same URI for the same unit. Consumer-side `[[external_specs]]` stays as the
 override for a package that declares none — brownfield keeps working — but a
 package that ships a map declares its namespace or the map is not generated for
-it. @spec/work
+it. @status:spec/work
 
-##b016-identity-policy **The identity question is answered explicitly, not by
+@fact:b016-identity-policy **The identity question is answered explicitly, not by
 default.** A shipped map is derived state, and the identity rule excludes build
 output precisely so that identity means source. Two coherent answers exist —
 *(i)* the map is part of the package's identity like any other file, so a code
@@ -175,24 +175,24 @@ from the hash as generated output, which keeps pins stable and lets a package's
 shipped map and its shipped source disagree. **This design takes (i)**: a pin
 that moves when the package's meaning moves is the property the lockfile exists
 to give, and a map excluded from identity is a map a consumer cannot trust it
-received. The noise is real and is the price. @spec/work
+received. The noise is real and is the price. @status:spec/work
 
-##b016-reader-is-the-work **The consumer-side reader is the actual build.** No
+@fact:b016-reader-is-the-work **The consumer-side reader is the actual build.** No
 code in the tree reads a prebuilt map for a foreign package: foreign markdown is
 re-parsed for URI resolution only, and `trace explain` builds a fresh in-memory
 map over the project's own tree. The reader this half adds is the seam B-018.4
 consumes, and it is a **second, non-committed** resolver map assembled at query
 time — the committed index stays byte-reproducible, which is the property the
-whole gate rests on. @spec/done
+whole gate rests on. @status:spec/done
 
 ## 4. B-017 — the privacy tier {#b017}
 
-##b017-shape **The shape.** One manifest key with three values — `open`,
+@fact:b017-shape **The shape.** One manifest key with three values — `open`,
 `contract`, `none` — applied **producer-side**, so a closed project's bytes never
 leave its machine and no server is trusted to filter. `open` ships the map as
-generated; `none` ships no map at all. @spec/done
+generated; `none` ships no map at all. @status:spec/done
 
-##b017-contract-content **What `contract` contains — owner fork №5.** The
+@fact:b017-contract-content **What `contract` contains — owner fork №5.** The
 design's own note deferred this «until a real closed consumer is at the table»,
 and the census confirms there is no such consumer in the tree. Two ways to
 honour that without stalling the wave: ship `open` and `none` now and have
@@ -201,9 +201,9 @@ honour that without stalling the wave: ship `open` and `none` now and have
 and edges kept, code items reduced to symbol and kind with file, line, span and
 fingerprint dropped, which leaks the shape of the contract and nothing about the
 code's layout. The second is implementable today and needs no signature
-extraction; it is the recommendation carried to the owner. @spec/work
+extraction; it is the recommendation carried to the owner. @status:spec/work
 
-##b017-name-clash **The word `contract` is already taken, and by a neighbour —
+@fact:b017-name-clash **The word `contract` is already taken, and by a neighbour —
 which is the hazard, not the coincidence.** The spec compiler's normal-package
 format splits a spec into a `contract` (the small exposed surface, the header)
 and a `source` (the heavy implementation, the translation unit), linked by
@@ -211,9 +211,9 @@ and a `source` (the heavy implementation, the translation unit), linked by
 the same word for a *code-side* notion — «signatures without bodies» — inherited
 from the specmap design. Two different objects, one word, and similar enough
 that the substitution is not noticed on reading. Raised by the owner
-2026-08-04. @spec/done
+2026-08-04. @status:spec/done
 
-##b017-tier-from-the-split **The candidate the clash suggests: define the tier
+@fact:b017-tier-from-the-split **The candidate the clash suggests: define the tier
 BY that split rather than beside it.** `contract` would mean *ship the contract
 documents, withhold the source documents* — and the map that travels with them
 carries the contract anchors and the edges among them and simply lacks the
@@ -222,9 +222,9 @@ extracting, and the privacy boundary coincides with the boundary a package
 author already draws by hand instead of asking for a second one. The word stops
 being a clash and becomes one concept used twice. **Not decided — this is the
 recommendation carried to the owner's fork №5, and it supersedes the
-field-redaction shape sketched above.** @spec/work
+field-redaction shape sketched above.** @status:spec/work
 
-##b017-replace-is-the-gradient **`:replace` is the privacy gradient at section
+@fact:b017-replace-is-the-gradient **`:replace` is the privacy gradient at section
 grain, not a hazard to publication (owner, 2026-08-04, correcting this
 document's first reading).** A contract section may carry the minimum an
 outsider needs; where the source exists, that minimum is replaced by the full
@@ -233,17 +233,17 @@ The boss's first reading — that a replaced contract section hands an outsider
 text its own author calls superseded — does not survive the check: **an outsider
 reads precisely the contract document under either mode**, because they have no
 source at all. The merge mode governs the *insider's* view and says nothing
-about what leaves the package. No publishability rule follows from it. @spec/done
+about what leaves the package. No publishability rule follows from it. @status:spec/done
 
-##b017-one-checkable-rule **One publishability rule does survive, and it is
+@fact:b017-one-checkable-rule **One publishability rule does survive, and it is
 about references rather than modes.** A section living only in the source is
 invisible to an outsider — legitimate privacy by absence — but a `#use` or an
 `@spec://` reaching from the contract into such an anchor dangles for whoever
 receives the contract alone. That is mechanically checkable. Everything else
 reduces to «the contract must be true standing alone», which is a property of
-authorship that no gate can hold. @spec/work
+authorship that no gate can hold. @status:spec/work
 
-##b017-floor-not-stump **Consequence for the loader, and it strengthens the
+@fact:b017-floor-not-stump **Consequence for the loader, and it strengthens the
 degradation case.** If a contract's minimum is an honest floor rather than a
 truncation, then «the source is absent» is a package's **legitimate outward
 view**, not a damaged build. Today the compiler fails there — not because the
@@ -252,26 +252,26 @@ distinguisher is the manifest declaration, which is the same key §4 introduces.
 So the privacy tier, the `:replace` mode and the loader's degradation are one
 mechanism seen from three sides: the tier says what shipped, `:replace` says
 what is visible per section, and the degradation says how to read it when the
-source is not there. @spec/work
+source is not there. @status:spec/work
 
-##b017-link-is-never-stripped **The `#source` line ships with the contract
+@fact:b017-link-is-never-stripped **The `#source` line ships with the contract
 (owner, 2026-08-04).** Producer-side redaction does not remove the directive.
 Stripping it would cost one loader branch less and lose the link permanently: a
 consumer who later obtains the implementation legitimately — bought it, signed
 for it, moved inside the company — would never get the merge, because the
 reference was cut at publication time. The link is cheap to carry and impossible
-to restore. @spec/done
+to restore. @status:spec/done
 
-##b017-one-source-per-document **Measured while answering the owner: one
+@fact:b017-one-source-per-document **Measured while answering the owner: one
 contract document takes exactly ONE source.** The compiler reads the **first**
 `#source` directive in a document's text and never looks for a second — a
 second one is swallowed in silence, with no warning. A contract *package* may
 still have several sources, because each of its documents may point at a
 different one, possibly in a different package; the pairing is
 document-to-document, not package-to-package. The silent swallow is filed
-separately. @impl/done
+separately. @status:impl/done
 
-##b017-own-project-vs-foreign **The owner's harder question: absence of the
+@fact:b017-own-project-vs-foreign **The owner's harder question: absence of the
 source is normal in a foreign product and an ERROR at home — so what carries
 the distinction?** Four candidates, told apart by who declares. *(A) The
 consumer's coordinate* — «is this package mine» — breaks precisely on this
@@ -286,9 +286,9 @@ references an anchor that only the source provides; the exact linker analogue.
 knowing that a reference reaches a source-only anchor requires the real
 contract↔source edges, and today those are hand-drawn. That is the link table,
 unbuilt. Building D before the table would be guessing. The honest cost of C:
-a SECOND key, on the consumer's side. @spec/work
+a SECOND key, on the consumer's side. @status:spec/work
 
-##b017-distinction-deferred **The owner deferred the whole distinction
+@fact:b017-distinction-deferred **The owner deferred the whole distinction
 (2026-08-04): «различать свой и чужой проект пока не надо… разработчик сам
 сможет с помощью каких-то инструментов проверить, есть ли у пакета
 реализации».** So none of the four candidates is built now, and no strictness
@@ -297,83 +297,83 @@ distinction, one behaviour serves everyone, and «is the implementation present�
 becomes a question a **tool answers on request** rather than one a build fails
 on. That reading points at graceful degradation as the single behaviour, with
 the absence reported rather than fatal — but it is a reading, not a ruling, and
-nothing is built on it until the owner returns to the question. @spec/plan
+nothing is built on it until the owner returns to the question. @status:spec/plan
 
-##b017-standing-on-a-demonstration **What that candidate is owed before it can
+@fact:b017-standing-on-a-demonstration **What that candidate is owed before it can
 be leaned on.** Publishing contracts apart from their sources means a `#source`
 that crosses a package boundary. Measured: the directive carries a full address
 and resolves through the ordinary resolver, whose error set includes «no
 installed slot for package» — so nothing forbids it. Also measured: **live uses
 of `#source` in this tree number zero**, so the mechanism is built and never
 exercised. The demonstration is a separate, read-only task; the tier's shape
-does not ship on an untested assumption. @impl/plan
+does not ship on an untested assumption. @status:impl/plan
 
-##b017-one-bump **Both keys ride one manifest bump.** The namespace key of §3
+@fact:b017-one-bump **Both keys ride one manifest bump.** The namespace key of §3
 and the profile key here are two keys in one schema change, gated behind
 `min_vibe_version` — the same lever, paid once. Introducing them in separate
 releases would make the second one break every consumer that had just upgraded
-for the first. @spec/done
+for the first. @status:spec/done
 
 ## 5. The bump itself — what a 2 → 3 touches {#bump}
 
-##bump-route-alive **The route is alive and was repaired for exactly this
+@fact:bump-route-alive **The route is alive and was repaired for exactly this
 moment.** The JTD schema is the source of truth, `jtd-codegen` produces the
 generated wire module, and `cargo xtask check-codegen` byte-compares the result.
 B-013 closed the broken relocation in August so this bump would not be the run
-that discovers it. @impl/done
+that discovers it. @status:impl/done
 
-##bump-surfaces **The surfaces, named once so none is missed:** the JTD schema;
+@fact:bump-surfaces **The surfaces, named once so none is missed:** the JTD schema;
 the generated wire module; the canonical example beside the schema; the scanner
 that fills the new fields; every exhaustive consumer of the changed struct; the
 six vendored engine copies; and the committed indexes themselves, which are
-regenerated rather than hand-edited. @spec/done
+regenerated rather than hand-edited. @status:spec/done
 
-##bump-vendor-order **The vendor order is not optional.** Host crates path-depend
+@fact:bump-vendor-order **The vendor order is not optional.** Host crates path-depend
 on the package crates, so the vendored copies are hand-synced first and
 `sync-engines --check` verifies afterwards — the tool will not build against a
-tree whose copies disagree with it. @impl/done
+tree whose copies disagree with it. @status:impl/done
 
 ## 6. B-014 — decided here, and not the way it first looked {#b014}
 
-##b014-two-halves **B-014 is two independent halves and only one of them is
+@fact:b014-two-halves **B-014 is two independent halves and only one of them is
 obvious.** Half one — regenerate the committed index and commit it — landed
 during this design's own measurement pass, and took the dangling-edge count from
-seventeen to zero once two stale citations were repaired alongside it. @impl/done
+seventeen to zero once two stale citations were repaired alongside it. @status:impl/done
 
-##b014-gate-decision **Half two — whether the host index gains a freshness gate
+@fact:b014-gate-decision **Half two — whether the host index gains a freshness gate
 — is answered «not as a byte-compare».** The index records each unit's heading
 line, and that line is documented in the schema as volatile decoration: it moves
 whenever anything above the heading is edited. A byte-compare gate would
 therefore fire on nearly every documentation commit in a documentation-heavy
 repository, and a gate that fires on ordinary work is a gate people learn to
-regenerate past without reading. The house already knows this failure mode. @spec/work
+regenerate past without reading. The house already knows this failure mode. @status:spec/work
 
-##b014-what-instead **What is gated instead: the parts that are not
+@fact:b014-what-instead **What is gated instead: the parts that are not
 decoration.** A freshness check that compares the index's *content* — units,
 their content hashes, code items, edges — while ignoring the derived line
 numbers fires only when the tree's meaning moved without the artefact following.
 That check is worth having and is cheap once the format change is in, because
 the same pass already recomputes every hash. It rides this change rather than
-preceding it. @spec/work
+preceding it. @status:spec/work
 
 ## 7. What this change deliberately does not do {#non-goals}
 
-##non-goal-fragments **It does not build fragments-by-hash.** B-016 half 2 needs
+@fact:non-goal-fragments **It does not build fragments-by-hash.** B-016 half 2 needs
 an address type, a store, and a fetch verb, and its unresolved design question —
 what a code-side fragment *is* — is owner fork №4. This change gives that half
-the one datum it was missing (the end of the range) and stops there. @spec/done
+the one datum it was missing (the end of the range) and stops there. @status:spec/done
 
-##non-goal-command-nodes **It does not add the command or error-variant nodes.**
+@fact:non-goal-command-nodes **It does not add the command or error-variant nodes.**
 B-019 (б) and (в) are separate node types with their own extraction and, for
 (в), an unresolved question about which engine owns the data. They are not
-blocked by this change and they do not ride it. @spec/done
+blocked by this change and they do not ride it. @status:spec/done
 
-##non-goal-signatures **It does not add signatures to the map.** A `contract`
+@fact:non-goal-signatures **It does not add signatures to the map.** A `contract`
 tier defined over signatures would need signature extraction in every scanner;
 §4's recommendation defines the tier over data the map already carries precisely
-so this change does not grow that limb. @spec/done
+so this change does not grow that limb. @status:spec/done
 
-##non-goal-vocabulary **It does not merge the lifecycle vocabularies.** B-024's
+@fact:non-goal-vocabulary **It does not merge the lifecycle vocabularies.** B-024's
 census measured that the specmap lifecycle status has zero carriers and one
 display-only consumer, so the merge is a separate, cheap change that needs no
-format bump at all — deriving a status costs nothing in the wire format. @spec/done
+format bump at all — deriving a status costs nothing in the wire format. @status:spec/done

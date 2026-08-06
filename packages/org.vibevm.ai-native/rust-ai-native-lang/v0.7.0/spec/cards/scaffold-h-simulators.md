@@ -2,35 +2,35 @@
 
 <status stage="spec" state="done"/>
 
-##status-line **Discipline v0.2 · BETA** @impl/done
+@fact:status-line **Discipline v0.2 · BETA** @status:impl/done
 
 ## Band 1 — Identity & Recognition {#band-one-identity}
 
-##CLASSIFICATION Classification: layer=E (verification) + H (weak-reader); mechanism=scaffold H. @impl/done
+@fact:CLASSIFICATION Classification: layer=E (verification) + H (weak-reader); mechanism=scaffold H. @status:impl/done
 
-##INTENT Intent: Ship a small runnable model of a subsystem's behavior the reader can EXECUTE to understand or predict — offloading the execution-prediction that weak models fail at, without running the whole system. @impl/done
+@fact:INTENT Intent: Ship a small runnable model of a subsystem's behavior the reader can EXECUTE to understand or predict — offloading the execution-prediction that weak models fail at, without running the whole system. @status:impl/done
 
-##ALSO-KNOWN-AS Also Known As: reference implementation; in-memory fake; executable spec; oracle model; test double / simulator. @spec/done
+@fact:ALSO-KNOWN-AS Also Known As: reference implementation; in-memory fake; executable spec; oracle model; test double / simulator. @status:spec/done
 
-##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a subsystem has non-obvious dynamics (a state machine, a protocol, a fixpoint); understanding requires mentally simulating execution; an external dependency must be reasoned about offline. *Detector seed:* a subsystem whose behavior is documented in prose-describing-execution, with no runnable model or fake → recognition fires (execution-prediction is weak models' weakest point — CRUXEval ~63% even for strong models). @impl/done
+@fact:APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a subsystem has non-obvious dynamics (a state machine, a protocol, a fixpoint); understanding requires mentally simulating execution; an external dependency must be reasoned about offline. *Detector seed:* a subsystem whose behavior is documented in prose-describing-execution, with no runnable model or fake → recognition fires (execution-prediction is weak models' weakest point — CRUXEval ~63% even for strong models). @status:impl/done
 
 ## Band 2 — Justification & Tradeoffs {#band-two-justification}
 
-##MOTIVATION Motivation: A weak agent must modify the resolver's conditional-dependency fixpoint. It cannot mentally simulate the solve→probe→add→re-solve convergence. A runnable reference model it can step through (feed inputs, watch the fixpoint converge) replaces mental simulation with execution — the EsoLang library shipped exactly this (a local Befunge simulator) and it carried the weak-agent gain. @spec/done
+@fact:MOTIVATION Motivation: A weak agent must modify the resolver's conditional-dependency fixpoint. It cannot mentally simulate the solve→probe→add→re-solve convergence. A runnable reference model it can step through (feed inputs, watch the fixpoint converge) replaces mental simulation with execution — the EsoLang library shipped exactly this (a local Befunge simulator) and it carried the weak-agent gain. @status:spec/done
 
-##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Reference model* (runnable, small) · *In-memory fake* (of external deps) · *Stepping interface* (inspect intermediate state). @impl/done
+@fact:STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Reference model* (runnable, small) · *In-memory fake* (of external deps) · *Stepping interface* (inspect intermediate state). @status:impl/done
 
-##COLLABORATIONS Collaborations: Provides the comparator for Class D oracles; backs Class C contracts (the model defines expected behavior); pairs with Class G (the model's usage is doctested). @impl/done
+@fact:COLLABORATIONS Collaborations: Provides the comparator for Class D oracles; backs Class C contracts (the model defines expected behavior); pairs with Class G (the model's usage is doctested). @status:impl/done
 
-##GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* make non-obvious dynamics executable, not just described. *Non-Goals:* NOT a second production implementation (a reference model, kept simple); NOT for trivially-obvious subsystems. @impl/done
+@fact:GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* make non-obvious dynamics executable, not just described. *Non-Goals:* NOT a second production implementation (a reference model, kept simple); NOT for trivially-obvious subsystems. @status:impl/done
 
-##CONSEQUENCES Consequences: (+) the reader runs instead of simulates; (+) doubles as a Class D comparator. (−) a model is code to keep in sync — drift detection or a conformance test against production; (−) over-modeling wastes effort — only non-obvious dynamics. @spec/done
+@fact:CONSEQUENCES Consequences: (+) the reader runs instead of simulates; (+) doubles as a Class D comparator. (−) a model is code to keep in sync — drift detection or a conformance test against production; (−) over-modeling wastes effort — only non-obvious dynamics. @status:spec/done
 
-##ALTERNATIVES Alternatives: prose describing behavior (weak readers can't execute prose); reading the production code directly (the thing too complex to simulate). The model is the offload. @spec/done
+@fact:ALTERNATIVES Alternatives: prose describing behavior (weak readers can't execute prose); reading the production code directly (the thing too complex to simulate). The model is the offload. @status:spec/done
 
-##RISKS-AND-ASSUMPTIONS Risks & Assumptions: assumes the subsystem's behavior is modelable simply; a model that drifts from production misleads — conformance-test it. *Sunset:* if the production code becomes simple enough to read directly, the model retires. @spec/done
+@fact:RISKS-AND-ASSUMPTIONS Risks & Assumptions: assumes the subsystem's behavior is modelable simply; a model that drifts from production misleads — conformance-test it. *Sunset:* if the production code becomes simple enough to read directly, the model retires. @status:spec/done
 
-##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R2C-008 (simulator in the transformative library, benchmark), DR2-019 (execution-prediction weakness, benchmark). Class: benchmark. Tag: **[E-strong]**. @spec/done
+@fact:EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R2C-008 (simulator in the transformative library, benchmark), DR2-019 (execution-prediction weakness, benchmark). Class: benchmark. Tag: **[E-strong]**. @status:spec/done
 
 ## Band 3 — Operation {#band-three-operation}
 

@@ -545,7 +545,7 @@ queue's F-115.
 
 **What the measurement shows.** The bullet reads: «`schemas/specmap.jtd.json` —
 the wire schema of `specmap.json` (the generated types in
-`specmap-core/src/generated/` derive from it …). @impl/done». Both paths are
+`specmap-core/src/generated/` derive from it …). @status:impl/done». Both paths are
 wrong, in two different ways.
 
 *(a) The schema is not in the package, nor in what a consumer installs.*
@@ -980,7 +980,7 @@ Two hits per copy of the engine: `:119` is a **doc comment** and `:147` is the
 
 **Per stack:**
 - **go `:236`** claims **only** the length half — «A conform check warns on files
-  over the length budget. @impl/done». **Correct as written**; judged `confirmed`,
+  over the length budget. @status:impl/done». **Correct as written**; judged `confirmed`,
   correctly.
 - **typescript `:128`** claims **both**, in the same conjunction as Rust — «warns
   on files over a length threshold **and on invariant-bearing comments in the
@@ -1156,7 +1156,7 @@ in the demo consumer». Third judgement class on one id. No Go copy.
 **Proposed correction (NOT APPLIED):** the prescription is sound; the `@impl/done`
 and the bare id are not. Suggested: `*(R-060 — cited as retained; no card and no
 ATLAS entry is authored for it, and no checker enforces declared matrices.)*
-Declared test matrices, never 2^n. @spec/done`
+Declared test matrices, never 2^n. @status:spec/done`
 
 **Recommendation per anchor:**
 - `##NAMES-ARE-TOKEN-PROGRAMS` → **drift stands, correction prepared — RUST ONLY.**
@@ -2016,7 +2016,7 @@ package and are host-grounded. Recorded, not touched.
 
 ### `##TSCONFIG-DEFECT-CATCHERS` (`:90`) → **FALSE**
 
-The verdict, whole: «five flags named as defect-catchers and marked @impl/done,
+The verdict, whole: «five flags named as defect-catchers and marked @status:impl/done,
 and **the discipline's own demonstration project sets none of them:
 `research/ts-demo/tsconfig.json` carries the four mandatory beyond-strict flags
 and neither `noUnusedLocals`, `noUnusedParameters` nor
@@ -2167,7 +2167,7 @@ package's own `bench.rs`.
 `typescript-ai-native-lang/v0.6.0/spec/typescript/mechanisms/TCG-ORACLE-v0.1.md#TARGET-WARM-VALIDATE-AND-COMPLETE` (`:153`)
 
 The anchor is a conjunction: «warm `validate` p50 < 150 ms **and** `complete` p50
-< 200 ms on demo-class trees. @impl/done». **Half of it is measured and met; half
+< 200 ms on demo-class trees. @status:impl/done». **Half of it is measured and met; half
 has no instrument.**
 
 ```

@@ -2,35 +2,35 @@
 
 <status stage="spec" state="done"/>
 
-##status-line **Discipline v0.2 · BETA · T2 · TypeScript** @impl/done
+@fact:status-line **Discipline v0.2 · BETA · T2 · TypeScript** @status:impl/done
 
 ## Band 1 — Identity & Recognition {#band-one-identity}
 
-##CLASSIFICATION Classification: layer=E (verification); mechanism=scaffold C. @impl/done
+@fact:CLASSIFICATION Classification: layer=E (verification); mechanism=scaffold C. @status:impl/done
 
-##INTENT Intent: Express pre/post-conditions and invariants as EXECUTING assertions attached to the unit and restated at use sites — so a paged reader gets ground truth without simulating the body. Uniquely in TypeScript, an **assertion function** (`asserts x is T`) both checks at runtime AND narrows the static type — one artifact carrying the contract in both worlds. @impl/done
+@fact:INTENT Intent: Express pre/post-conditions and invariants as EXECUTING assertions attached to the unit and restated at use sites — so a paged reader gets ground truth without simulating the body. Uniquely in TypeScript, an **assertion function** (`asserts x is T`) both checks at runtime AND narrows the static type — one artifact carrying the contract in both worlds. @status:impl/done
 
-##ALSO-KNOWN-AS Also Known As: design by contract; assertion function; type guard; `invariant()`/`tiny-invariant`; runtime contract; refinement; schema validation; require/ensure. @spec/done
+@fact:ALSO-KNOWN-AS Also Known As: design by contract; assertion function; type guard; `invariant()`/`tiny-invariant`; runtime contract; refinement; schema validation; require/ensure. @status:spec/done
 
-##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a function has a non-obvious precondition; a cross-cell invariant is relied upon far from where it is established (R3-009); a behavioral claim is currently only in prose; an `unknown`/wide value is used as if narrowed without a check. *Detector seed:* a comment asserting a property ("already validated", "non-empty", "sorted") with no adjacent runnable check, OR a value narrowed by a bare `as` instead of a guard → recognition fires (a prose claim is adversarial if it lies, R2C-004; a bare `as` is the erasure hazard, §8). @impl/done
+@fact:APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a function has a non-obvious precondition; a cross-cell invariant is relied upon far from where it is established (R3-009); a behavioral claim is currently only in prose; an `unknown`/wide value is used as if narrowed without a check. *Detector seed:* a comment asserting a property ("already validated", "non-empty", "sorted") with no adjacent runnable check, OR a value narrowed by a bare `as` instead of a guard → recognition fires (a prose claim is adversarial if it lies, R2C-004; a bare `as` is the erasure hazard, §8). @status:impl/done
 
 ## Band 2 — Justification & Tradeoffs {#band-two-justification}
 
-##MOTIVATION Motivation: A weak agent edits a function relying on "input already validated", stated only in a JSDoc three modules away. It cannot do the whole-program inference to confirm. An `assertIsValid(input)` — an `asserts` function — either throws at runtime OR narrows the type so downstream code statically sees the validated type. The invariant becomes local ground truth AND a compile-time fact. @spec/done
+@fact:MOTIVATION Motivation: A weak agent edits a function relying on "input already validated", stated only in a JSDoc three modules away. It cannot do the whole-program inference to confirm. An `assertIsValid(input)` — an `asserts` function — either throws at runtime OR narrows the type so downstream code statically sees the validated type. The invariant becomes local ground truth AND a compile-time fact. @status:spec/done
 
-##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Assertion function* (`asserts x is T` — the TS-unique dual checker) · *`invariant()`/`tiny-invariant`* (throwing predicate) · *Schema* (Zod/Valibot as an executable contract at boundaries) · *Use-site witness* (assertion where the invariant is relied upon) · *Property test* (behavioral backing, `fast-check`). @impl/done
+@fact:STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Assertion function* (`asserts x is T` — the TS-unique dual checker) · *`invariant()`/`tiny-invariant`* (throwing predicate) · *Schema* (Zod/Valibot as an executable contract at boundaries) · *Use-site witness* (assertion where the invariant is relied upon) · *Property test* (behavioral backing, `fast-check`). @status:impl/done
 
-##COLLABORATIONS Collaborations: Defines "valid"/"equivalent" for Class D oracles; pairs with Class B (types for protocol/identity, contracts for value invariants); the §2 boundary schemas ARE Class-C contracts at the erasure edge; failures emit Class F diagnostics. @impl/done
+@fact:COLLABORATIONS Collaborations: Defines "valid"/"equivalent" for Class D oracles; pairs with Class B (types for protocol/identity, contracts for value invariants); the §2 boundary schemas ARE Class-C contracts at the erasure edge; failures emit Class F diagnostics. @status:impl/done
 
-##GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* make load-bearing invariants machine-checked at the point of reliance, narrowing the type where possible. *Non-Goals:* NOT validating everything everywhere (cost) — boundary + load-bearing invariants only; NOT a substitute for the spec that JUSTIFIES the invariant; NOT a `console.assert` stripped in production — use a throwing assertion. @impl/done
+@fact:GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* make load-bearing invariants machine-checked at the point of reliance, narrowing the type where possible. *Non-Goals:* NOT validating everything everywhere (cost) — boundary + load-bearing invariants only; NOT a substitute for the spec that JUSTIFIES the invariant; NOT a `console.assert` stripped in production — use a throwing assertion. @status:impl/done
 
-##CONSEQUENCES Consequences: (+) invariants become local, checkable, AND type-narrowing; (+) a paged reader trusts the assertion, not distant prose. (−) restatements can drift — keep them assertions (which throw, not mislead); (−) runtime cost on hot paths — scope to seams/boundaries. @spec/done
+@fact:CONSEQUENCES Consequences: (+) invariants become local, checkable, AND type-narrowing; (+) a paged reader trusts the assertion, not distant prose. (−) restatements can drift — keep them assertions (which throw, not mislead); (−) runtime cost on hot paths — scope to seams/boundaries. @status:spec/done
 
-##ALTERNATIVES Alternatives: a branded type (Class B) when the invariant is identity/protocol; a bare `as` (rejected — lies silently, the erasure hazard §8); a comment (rejected — lies silently). @spec/done
+@fact:ALTERNATIVES Alternatives: a branded type (Class B) when the invariant is identity/protocol; a bare `as` (rejected — lies silently, the erasure hazard §8); a comment (rejected — lies silently). @status:spec/done
 
-##RISKS-AND-ASSUMPTIONS Risks & Assumptions: assumes the invariant is expressible as a runnable predicate; an assertion function with a wrong predicate narrows to a FALSE type — test the predicate itself. *Sunset:* if a branded type or a schema makes the invariant statically guaranteed, the assert retires there. @spec/done
+@fact:RISKS-AND-ASSUMPTIONS Risks & Assumptions: assumes the invariant is expressible as a runnable predicate; an assertion function with a wrong predicate narrows to a FALSE type — test the predicate itself. *Sunset:* if a branded type or a schema makes the invariant statically guaranteed, the assert retires there. @status:spec/done
 
-##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: DR1-019 (contracts give success criterion without body, theory), R3-009 (use-site restatement, theory), R2C-004 (prose lies harm, benchmark). Class: benchmark + theory. Tag: **[E-mid]**. @spec/done
+@fact:EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: DR1-019 (contracts give success criterion without body, theory), R3-009 (use-site restatement, theory), R2C-004 (prose lies harm, benchmark). Class: benchmark + theory. Tag: **[E-mid]**. @status:spec/done
 
 ## Band 3 — Operation {#band-three-operation}
 

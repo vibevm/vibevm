@@ -31,16 +31,16 @@ B1 was the guiding layer: prose about the discipline. These are the **mechanism
 specs the shipped checkers implement**, and `spec://org.vibevm.ai-native/core-ai-native/mechanisms/…`
 is what code tags actually cite. Three consequences:
 
-- ##B2-ANCHORS-ARE-LOAD-BEARING **An anchor minted here may be cited from code.** PROP-014 is the
+- @fact:B2-ANCHORS-ARE-LOAD-BEARING **An anchor minted here may be cited from code.** PROP-014 is the
   document that defines the citation grammar itself. Anchor names in this batch
   are held to a higher bar than B1's: read the surrounding heading anchors and
   match their idiom before minting a new fact id.
-- ##B2-PROP-014-JUST-CHANGED **`PROP-014`'s anchor clause was amended by the reviewer on
+- @fact:B2-PROP-014-JUST-CHANGED **`PROP-014`'s anchor clause was amended by the reviewer on
   2026-07-26**, immediately before this batch, to record the widened anchor
   grammar and case-sensitivity. Mark what is there now; do not be surprised that
   it disagrees with older statements elsewhere in the corpus — that disagreement
   is a **finding**, not something to fix.
-- ##B2-ATLAS-IS-A-LEDGER **`ATLAS.md` is a findings ledger, not a contract.** Its entries are
+- @fact:B2-ATLAS-IS-A-LEDGER **`ATLAS.md` is a findings ledger, not a contract.** Its entries are
   dated research results with evidence classes (`_benchmark · high · refines:H4_`).
   Treat each entry as one fact, keep its evidence tag inside the unit, and
   expect `@spec/done` to dominate — these are claims about the outside world,
