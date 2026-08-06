@@ -46,6 +46,7 @@ pub mod show;
 pub mod skill;
 pub mod specmap;
 pub mod term;
+pub mod tools;
 pub mod trace;
 pub mod tree;
 pub mod uninstall;

@@ -196,6 +196,10 @@ fn main() -> ExitCode {
             commands::vars::run(args, rows)
         }
         Command::Progress(args) => commands::progress::run(&ctx, args),
+        Command::Tools { json } => {
+            let cwd = std::env::current_dir().unwrap_or_else(|_| ".".into());
+            commands::tools::run(&cwd, json)
+        }
         Command::Bin { cmd } => {
             let cwd = std::env::current_dir().unwrap_or_else(|_| ".".into());
             match cmd {

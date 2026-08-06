@@ -44,6 +44,7 @@ pub mod hooks;
 pub mod install;
 pub mod materialization;
 pub mod publish;
+pub mod tools;
 pub mod vibedeps;
 
 mod expand;

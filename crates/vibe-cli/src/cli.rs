@@ -208,6 +208,16 @@ pub enum Command {
     #[command(name = "self")]
     Vvm(VvmArgs),
 
+    /// The registry of what this project can invoke: every `[[binary]]` and
+    /// every `[[mcp_server]]` the installed packages declare, in one table.
+    /// The boot lane already names which language disciplines are installed;
+    /// this names what they brought that can be RUN. `--json` for agents.
+    Tools {
+        /// Emit the registry as JSON rather than a table.
+        #[arg(long)]
+        json: bool,
+    },
+
     /// Build and dispatch the tools installed packages declare via
     /// `[[binary]]` (PROP-025): `list` the table, `build` (consent-gated)
     /// into the slot, `path` an artifact, `exec` through the project's

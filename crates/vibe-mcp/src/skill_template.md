@@ -78,6 +78,12 @@ package state from filenames or commit history.
 
 Tools:
 
+- **`list_tools()`** — the registry of what this project lets you RUN:
+  every `[[binary]]` an installed package declares (a PATH-facing
+  executable) and every `[[mcp_server]]` (an agent-facing server), each
+  with its declaring package and the author's own description. Takes no
+  arguments. A project with nothing installed returns an empty list, not
+  an error.
 - **`query_package(name)`** — returns the lockfile entry for an
   installed package: kind, name, version, content_hash, registry,
   source_url, source_ref, resolved_commit, files_written, features,
@@ -94,6 +100,11 @@ Tools:
 If the user asks about installed packages — what's installed, what
 version, what features are active, what files a package contributed
 — call `query_package` first. Don't infer.
+
+If you need to know what you can *invoke* — which discipline gates,
+type oracles or servers this project brought — call `list_tools`. The
+session's boot lane already tells you which language guides the project
+follows; it does not tell you what they shipped that runs.
 
 ### The discipline servers (per-language MCP, PROP-027)
 

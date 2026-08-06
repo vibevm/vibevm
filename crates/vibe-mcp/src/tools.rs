@@ -48,7 +48,55 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
         Box::new(MaterialiseSubskillMcpTool),
         Box::new(AgenticExplainMcpTool),
         Box::new(ExplainMcpTool),
+        Box::new(ListToolsMcpTool),
     ]
+}
+
+// ---------------------------------------------------------------------------
+// list_tools
+// ---------------------------------------------------------------------------
+
+/// The registry of what this project can invoke. Read-only.
+///
+/// The **second surface** over `vibe_workspace::tools::collect_tools`, the
+/// first being `vibe tools`. Neither computes: both call the library and
+/// render. That is `flow:omnichannel` dogfooded rather than described —
+/// delete either surface on paper and only presentation is lost.
+///
+/// Why an agent needs it: the boot lane already names which language
+/// disciplines a project follows, so "which guides do I hold?" is answered
+/// before it is asked. What those packages brought that can be RUN is a
+/// different question, and it reached no agent until this tool existed.
+///
+/// ```
+/// use vibe_mcp::tools::{McpTool, ListToolsMcpTool};
+/// assert_eq!(ListToolsMcpTool.descriptor().name, "list_tools");
+/// ```
+#[cell(seam = "McpTool", variant = "list_tools")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools")]
+pub struct ListToolsMcpTool;
+
+impl McpTool for ListToolsMcpTool {
+    fn descriptor(&self) -> ToolDescriptor {
+        ToolDescriptor {
+            name: "list_tools".to_string(),
+            description:
+                "List every tool the installed packages declare in this project: each `[[binary]]` (a PATH-facing executable) and each `[[mcp_server]]` (an agent-facing server), with the declaring package and the author's own description. Use this to find out what the project lets you RUN — the boot lane already says which language disciplines it follows, but not what they brought. Read-only; a project with nothing installed returns an empty list rather than an error."
+                    .to_string(),
+            input_schema: json!({
+                "type": "object",
+                "properties": {},
+                "additionalProperties": false
+            }),
+        }
+    }
+
+    fn run(&self, _args: &Value, ctx: &ServerContext) -> Result<Value, ToolError> {
+        let tools = vibe_workspace::tools::collect_tools(&ctx.project_root)
+            .map_err(|e| ToolError::Internal(format!("collecting tools: {e}")))?;
+        serde_json::to_value(&tools)
+            .map_err(|e| ToolError::Internal(format!("serialising tools: {e}")))
+    }
 }
 
 // ---------------------------------------------------------------------------
