@@ -108283,7 +108283,13 @@
           "KIND-VALIDATION": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "the mechanism: crates/vibe-resolver/src/kind_check.rs:20-32 `assert_kind_matches(requested: Option<PackageKind>, actual: PackageKind, package: &str) -> Result<(), SolveError>` — `Some(req) if req != actual` yields `SolveError::KindMismatch { package, requested, actual }`",
+              "the error variant: crates/vibe-resolver/src/error.rs:104 `KindMismatch { .. }`",
+              "call site 1 — naive solver (covers `sat` by delegation): crates/vibe-resolver/src/naive.rs:182",
+              "call site 2 — resolvo engine, root solvables: crates/vibe-resolver/src/resolvo_engine/mod.rs:208",
+              "the behaviour is tested, not merely present: crates/vibe-resolver/src/naive/tests.rs:494 `kind_prefix_mismatch_is_a_kind_mismatch` seeds a `flow` package and solves `feat:org.vibevm/wal`, asserting the error and the message naming both kinds",
+              "the reserved exit code is live: crates/vibe-cli/src/exit_code.rs:23 `pub const TYPE_MISMATCH: u8 = 4;` and :100-105 map `SolveError::KindMismatch` — directly and through `vibe_install::Error::Solve` — onto it, with the mapping itself tested at :174-187",
+              "RE-JUDGED 2026-08-06 under AUDIT 2026-08-06-01. The previous verdict was `confirmed` on a paragraph shared with 88 other anchors, and it was FALSE when formed: no such type existed and the exit code was dead, which four package-side twins recorded as `drift` in the same campaign run. This verdict is per-fact, and the claim is true of the code cited above."
             ]
           },
           "SHORT-CLI-ONLY": {
@@ -108621,7 +108627,7 @@
           }
         },
         "verified_at": "2026-08-05T22:47:43Z",
-        "verify_batch": "c4f1-registry-rest + d2a + RJ1"
+        "verify_batch": "c4f1-registry-rest + d2a + RJ1 + B4-HOST-KIND-VALIDATION"
       }
     },
     "spec/modules/vibe-registry/PROP-010-local-package-cache.md": {
