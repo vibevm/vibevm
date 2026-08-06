@@ -60,3 +60,11 @@ desktop.ini
 # Python bytecode from the campaign task scripts (campaigns/**/tasks/*.py).
 __pycache__/
 *.pyc
+
+# Worker worktrees. Phase E and T provision one git worktree per delegated
+# task under `.wt/<task-id>/`, each a full checkout of this repository, and
+# tear it down at acceptance. The same argument as the campaign mirror above,
+# only louder: they sit in `git status` for the length of a fan-out and a
+# careless `git add -A` would sweep in several thousand files. The convention
+# was observed and is now unstageable.
+/.wt/
