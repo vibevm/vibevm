@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T15:05:11Z",
+  "updated_at": "2026-08-06T15:07:27Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -59419,7 +59419,316 @@
       },
       "marker_count": 37,
       "unit_count": 8,
-      "issue_count": 0
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "4d19850da609feb2108114f78901450dc051210fe9558596c25e85b47c64df92",
+        "verdicts": {
+          "self-uri": {
+            "v": "confirmed",
+            "src": [
+              1
+            ],
+            "ev": [
+              "the self-address matches the package's own coordinates — group org.vibevm.world, name omnichannel, flow omnichannel, document OMNICHANNEL-PROTOCOL — and is the address the host's PROP-000 §21 and PROP-037 §0 both cite successfully"
+            ]
+          },
+          "PROTOCOL-STATEMENT": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "source 1: it is the rule the whole document elaborates, and the boot snippet compresses it without contradiction",
+              "source 2: the host adopted it as a declared floor rather than as prose — PROP-000 §21 states library + CLI + MCP, plus TUI where one exists, and cites this document for the rule itself",
+              "and a working instance exists: `vibe explain` and the MCP `explain` are two surfaces over one function in vibe-trace, whose module doc states the split explicitly"
+            ]
+          },
+          "THE-SECOND-SURFACE-IS-WHERE-IT-HURTS": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the two failure modes it predicts for the second surface — reimplement, or reach into a place never meant to be an interface — are both present in the host's census: two MCP tools have no CLI twin, and one reads the same data as `vibe list` while building its output by hand",
+              "the reimplementation case is the one that produced a real defect, and it is the subject of the sibling fact below"
+            ]
+          },
+          "TWO-SURFACES-THAT-DIVERGE-ARE-INDISTINGUISHABLE-FROM-A-BUG": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the specimen is exact and dated: `vibe list --json` and the MCP `query_package` printed different file paths on Windows until 2026-08-06, one using the platform separator and one normalising",
+              "and the fact's central claim — nobody can say which is wrong without a third place — held literally: both behaviours were defensible on their own terms, and the question was settled only by creating the third place",
+              "that third place is now `files_written_posix()` in crates/vibe-core/src/manifest/lockfile.rs, called by both surfaces"
+            ]
+          },
+          "THE-DIVERGENCE-IS-SMALL-AND-SILENT": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the fact names three examples — a path separator, a rounding, a default — and the host's instance is literally the first of the three",
+              "the «survives review» clause is measured rather than assumed: the divergence lived through the review of both surfaces and was found only when somebody compared their outputs field by field, which is what the surfaces census did",
+              "so «a structural answer rather than care» is the conclusion the evidence supports: care was applied and did not catch it"
+            ]
+          },
+          "THIS-IS-ABOUT-DELIVERY-NOT-ABOUT-CODE-STYLE": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "source 1: the package carries no language, no linter and no code-shape rule — it is a `world` flow, the group for cross-cutting practices",
+              "source 2: the placement argument was the owner's and it changed the design — the boss had recommended seating this rule inside the AI-Native discipline's manifesto, and the owner asked why a rule about how a capability reaches a user would live in a guide about writing AI-native code",
+              "the host bears out the independence: the rule binds `vibe self` and `vibe list`, subsystems that predate any discipline package"
+            ]
+          },
+          "IT-IS-INSTALLED-BY-CHOICE": {
+            "v": "confirmed",
+            "src": [
+              1,
+              3
+            ],
+            "ev": [
+              "source 3: the host chose it — vibe.lock:16 carries `flow:org.vibevm.world/omnichannel@^0.1.0` as a declared requirement, not a transitive one",
+              "source 1: the four siblings it names are all real packages in the same group — git practices, addressable specs, campaign plans and source mirrors — so the genre claim is checkable rather than rhetorical"
+            ]
+          },
+          "ONE-LIST-SO-EVERY-PROJECT-MEANS-THE-SAME-THING": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "source 1: the table below it is the list, and the boot snippet reproduces the same three classes with the same members",
+              "source 2: the host uses these words rather than its own — its floor names library, CLI, MCP and TUI, and names LSP and IDE from the agent-facing class when declining them"
+            ]
+          },
+          "ROW-CLASS-LIBRARY": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "the row's substantive claim is the mandatory-once-there-is-more-than-one clause, and the host honours it in the case that matters: `explain` has two surfaces and one shared function beneath them",
+              "the «not a surface» framing is what makes the vocabulary coherent — a library has no user reaching it, which is the definition the class list turns on"
+            ]
+          },
+          "ROW-CLASS-LOCAL": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "the shared problem it names — rendering one dataset into different views for a human at the machine — is exactly the host's `vibe tree`, which ships a TUI and a separate plain renderer over one model",
+              "and the class's characteristic failure appeared in the host in this class specifically: the `list` / `query_package` path divergence is a rendering disagreement, not a contract or a schema one"
+            ]
+          },
+          "ROW-CLASS-AGENT": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "what the class shares — tool description, schema, and what an agent can discover without being told — is observable in the host's MCP crate, where each tool carries its own descriptor prose written for a reader the library never sees",
+              "and the practical consequence the class predicts is measured: adding a tool costs a descriptor plus one registration line, because the shared part is already shared"
+            ]
+          },
+          "ROW-CLASS-NETWORKED": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "the class's shared concern — contract versioning and compatibility with clients you do not deploy — is precisely the reasoning the host used when deciding to GENERATE the index's wire types and accept their permissiveness: a record read from a foreign registry may be built by a newer tool, so strictness there breaks old clients",
+              "so the class is not a taxonomy for its own sake; it predicted the axis on which that decision turned"
+            ]
+          },
+          "THE-CLASS-IS-THE-USEFUL-UNIT": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "the claim is that the class decides what repeats, and the three thinness rules below are the demonstration: each is stated per class because each class fails differently",
+              "source 2: the host's own instance splits along class lines rather than surface lines — its local surfaces share a model, its agent-facing surface shares a function, and nothing is shared across the two classes"
+            ]
+          },
+          "THIN-IS-DEFINED-PER-CLASS-NOT-GLOBALLY": {
+            "v": "confirmed",
+            "src": [
+              1
+            ],
+            "ev": [
+              "the three rules that follow it are genuinely different rules rather than one restated — presentation versus description-and-schema versus wire contract — which is what the fact asserts",
+              "and the asymmetry is load-bearing: a single global rule would either forbid an MCP tool its own prose or permit a CLI its own decisions"
+            ]
+          },
+          "THIN-LOCAL": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "the boundary it draws — the surface may own presentation entirely and may not own a decision — is the one the host applied to its TUI on 2026-08-06, and applied as a test rather than a preference",
+              "the diagnostic clause is the operative one and it is what PROP-037 §0 adopted verbatim: if removing the surface would lose a rule about what is true, the rule is in the wrong place"
+            ]
+          },
+          "THIN-AGENT": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "the exception it carves — the surface owns its description and schema, because an MCP tool's prose is written for a reader the library never sees — is exactly how the host's MCP tools are built, each carrying its own descriptor",
+              "and «it owns nothing else» is the half that bites: the host's `query_package` owned its output rendering, which this clause forbids, and that ownership is what produced the divergence"
+            ]
+          },
+          "THIN-NETWORKED": {
+            "v": "confirmed",
+            "src": [
+              1
+            ],
+            "ev": [
+              "«may translate, may not compute» is the sharpest formulation of the three and it is a real distinction: a wire type may reshape what the library returns and may not decide anything the library did not",
+              "the host has no networked surface of its own to check this against; the verdict rests on the rule's coherence with its siblings and on the index server, whose routes translate the in-memory index and compute nothing"
+            ]
+          },
+          "THE-TEST-IS-DELETION-OF-THE-SURFACE": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "the test is used outside this package, which is the strongest evidence a test can have: the host's TUI completion boundary is this test applied to one surface, ruled by the owner and recorded with the three alternatives it beat",
+              "the phrase «anything but presentation and transport» carries both the local and the networked class in one sentence, which is why it can settle arguments across classes rather than only inside one"
+            ]
+          },
+          "A-PROJECT-DECLARES-WHICH-SURFACES-IT-OWES": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "source 2: the host declared, in PROP-000 §21, and the declaration is doing the work the fact says it should — it answers «should this have an MCP tool?» once rather than per capability",
+              "the failure it names — answered by whoever is writing it, differently each time — is what the census measured before the declaration existed: of five MCP tools, two had no CLI twin at all, which is the signature of a per-capability answer"
+            ]
+          },
+          "AN-UNDECLARED-SURFACE-IS-NOT-A-DEBT": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "exercised in the declining direction on 2026-08-06, which is the honest test of a permission-shaped rule: LSP and IDE extensions are named as deliberately not declared, on the owner's ruling that he will open that work himself",
+              "and the host records the consequence explicitly rather than leaving it implied — PROP-000 §21 says their absence is a choice and not a gap, citing this rule",
+              "the clause's stated purpose — keeping the vocabulary from reading as a checklist — is the same job the never-list's last entry does, deliberately twice"
+            ]
+          },
+          "A-NEW-CAPABILITY-IS-BORN-WITH-THE-DECLARED-SET": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the host's first capability after adopting the flow followed it: `vibe tools` shipped with roster logic in a shared crate, a CLI surface and an MCP surface, built as this flow's dogfood",
+              "the escape clause's condition — recorded WHERE THE CAPABILITY IS SPECIFIED, not in a plan — is the substantive part, and it is the same law as «a plan is temporary»: a reason filed in a disposable zone disappears with it",
+              "the auto-publication work of 2026-08-06 used the clause as written, recording its single-surface reason in the contract rather than in the programme"
+            ]
+          },
+          "A-HAND-KEPT-COVERAGE-TABLE-ROTS": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the general claim — a restated fact diverges from what it restates, reliably and without announcing it — is this campaign's most-measured finding, met seven times in the programme that produced this package",
+              "and the specific one is measured here too: the surfaces census is a hand-made table, and this session already found one of its neighbours stale — the kind vocabulary written fourteen times, of which the compiler keeps two honest"
+            ]
+          },
+          "THE-VOCABULARY-IS-MACHINE-READABLE-SO-THE-TABLE-CAN-BE-A-QUERY": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "marked `spec/plan`, and honestly: no derived table exists",
+              "the property it claims — being able to derive it — is checkable and holds, which is the difference between a plan and a wish: the map carries 56 command nodes by invocation path, the MCP tools are registered in one place, and the TUI screens are enumerable",
+              "the fact separates the two carefully — deriving it is a separate build; being able to derive it is a property of this vocabulary — and only the second is claimed here"
+            ]
+          },
+          "NEVER-DEFINE-A-CAPABILITY-INSIDE-A-SURFACE": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "the imperative form of `PROTOCOL-STATEMENT`, and the host's floor states the target while the census states the distance: 10 of 29 top-level commands still keep their substance inside the CLI",
+              "the verdict is that this is the project's rule, not that the tree already satisfies it — PROP-000 §21 says the same in its own words"
+            ]
+          },
+          "NEVER-TREAT-ONE-SURFACE-AS-THE-REFERENCE": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "«the library is the reference, or there is none» is the operative half, and the host's repair took the first branch: one renderer, both callers, rather than making the CLI's output authoritative",
+              "the failure it forbids is subtle enough to survive review, which is why it is stated separately from its neighbour: porting from a surface passes a check that asks only whether the logic is shared"
+            ]
+          },
+          "NEVER-LET-TWO-SURFACES-ANSWER-DIFFERENTLY": {
+            "v": "confirmed",
+            "src": [
+              2
+            ],
+            "ev": [
+              "the second clause is the one with teeth — when they do diverge, the fix belongs in the library and not in whichever surface was reported — and the host's repair obeyed it: the reported side was the CLI's JSON, and the fix landed in the lockfile type both callers use",
+              "fixing the reported surface would have left the two agreeing by coincidence, which is the state that decays"
+            ]
+          },
+          "NEVER-HAND-MAINTAIN-THE-TABLE": {
+            "v": "confirmed",
+            "src": [
+              1
+            ],
+            "ev": [
+              "the imperative twin of `A-HAND-KEPT-COVERAGE-TABLE-ROTS`, in this document's own never-list genre; no hand-maintained coverage table exists in the host to contradict it — the census is dated and cited as a measurement rather than kept current"
+            ]
+          },
+          "NEVER-READ-THE-VOCABULARY-AS-A-CHECKLIST": {
+            "v": "confirmed",
+            "src": [
+              1,
+              2
+            ],
+            "ev": [
+              "the imperative twin of `AN-UNDECLARED-SURFACE-IS-NOT-A-DEBT`, and the host's LSP decision is the instance: a surface named in the vocabulary and deliberately not owed",
+              "«it is a naming scheme; the floor is the project's own declaration» is the sentence that makes the whole vocabulary safe to publish — without it, a list of nine surfaces reads as nine obligations"
+            ]
+          }
+        },
+        "verified_at": "2026-08-06T15:07:27Z",
+        "verify_batch": "DEBT-2026-08-06-K"
+      }
     },
     "packages/org.vibevm.world/operating-modes/v0.1.0/README.md": {
       "content_hash": "d237a53f2209ee78087618a80e40acc4dc6d31e8a2ee387d83a402249dff6c59",
