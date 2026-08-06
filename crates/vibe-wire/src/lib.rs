@@ -13,6 +13,34 @@
 //! Migration of existing hand-written `Serialize` structs to
 //! JTD-derived types lands incrementally — `vibe init --json` was the
 //! first consumer.
+//!
+//! # Every generated type here is permissive, and that is not a decision
+//!
+//! None of these types carries `#[serde(deny_unknown_fields)]`: an
+//! unexpected field on the wire is silently ignored. The hand-written
+//! types in this project do the opposite — strictness is the house style
+//! there, in roughly 63 places — so one class of type follows one policy
+//! and the other class follows the reverse, and until 2026-08-06 nobody
+//! had chosen either.
+//!
+//! It is written down because the state is easy to misread as
+//! deliberate. It is not: **the generator cannot emit it.** Measured
+//! 2026-08-06 — no key in any of our schemas controls it; JTD's own
+//! `additionalProperties` works the *opposite* way (setting it OPENS the
+//! form); and it is validation semantics rather than a promise about
+//! generated Rust. Of the workarounds, a wrapper type does not work
+//! (strictness is consumed where fields are declared) and a separate
+//! `impl` file cannot work at all (it is a container attribute the derive
+//! consumes at the definition site). Only post-processing the generator's
+//! output could.
+//!
+//! There is a real argument for keeping it permissive, and the owner's
+//! ruling of 2026-08-06 rests on it: an index record is read from a
+//! foreign registry, possibly written by a newer tool, and strictness
+//! there means a new field breaks old clients. For a format that arrives
+//! from outside, permissiveness is forward compatibility. The point of
+//! this note is that softness becomes a deliberate choice rather than an
+//! accident of tooling.
 
 #![forbid(unsafe_code)]
 // jtd-codegen 0.4.1 emits structs with `pub camelCase` field names
