@@ -5,15 +5,21 @@
 # install procedure. New machines run the install command from the
 # README to populate this directory.
 #
-# Top-level `.sh` and `.ps1` scripts ARE committed — vendored helper
+# Top-level `.sh`, `.ps1` and `.py` scripts ARE committed — vendored helper
 # scripts (e.g. `self-check.sh`) live here and are part of the source
-# tree, not generated tooling output.
+# tree, not generated tooling output. Python joined that list when a
+# corpus-wide migration needed a committed, re-runnable inverse: a script
+# that can undo a rewrite is worthless if it is not in the history beside
+# the rewrite. It does not belong in a campaign zone — those are disposable
+# by design, and this project has already paid for filing durable things
+# there.
 *
 !.gitignore
 !*/
 !*/README.md
 !*.sh
 !*.ps1
+!*.py
 # The progress dashboard (campaign plan §7) is committed source, not a
 # vendored binary: zero-dependency node:http server + one static page.
 !progress-dashboard/serve.mjs
