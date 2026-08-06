@@ -67647,12 +67647,21 @@
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#a6"
     },
     {
+      "anchor": "debt",
+      "content_hash": "sha256:743744e9decae3fdd5d9efbf8216474fa859b5c901abf765b423a0f0190f04c4",
+      "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
+      "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
+      "heading": "4b. Judging debt — asked, answered and landed on 2026-08-06",
+      "line": 727,
+      "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#debt"
+    },
+    {
       "anchor": "undecided",
       "content_hash": "sha256:a6d79f249526bc3e8c768da7058fe3afd3a5e1f7f06d3579e6f2318ae6f45075",
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "5. What was NOT decided and must not be invented",
-      "line": 727,
+      "line": 785,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#undecided"
     },
     {
@@ -67661,7 +67670,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "6. Standing items untouched by this conversation",
-      "line": 738,
+      "line": 796,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#standing"
     },
     {
@@ -67670,7 +67679,7 @@
       "doc_path": "terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1",
       "file": "spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md",
       "heading": "7. Requires the owner's hands, not a decision",
-      "line": 749,
+      "line": 807,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1#hands"
     },
     {
