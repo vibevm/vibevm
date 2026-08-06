@@ -7,48 +7,48 @@ description: Draft or review a project's license posture — the placeholder EUL
 
 # Draft or review a licence posture {#root}
 
-##DRAFTING-OR-REVIEWING-A-LICENSING-POSTURE You are drafting or reviewing a project's licensing posture from the
-`flow:licensing` protocol. @impl/done
+@fact:DRAFTING-OR-REVIEWING-A-LICENSING-POSTURE You are drafting or reviewing a project's licensing posture from the
+`flow:licensing` protocol. @status:impl/done
 
-##PRODUCE-A-DRAFT-THE-DECISION-IS-THE-OWNERS Produce a draft for the owner; the licence
-choice and any relicensing are the owner's decision, never yours. @impl/done
+@fact:PRODUCE-A-DRAFT-THE-DECISION-IS-THE-OWNERS Produce a draft for the owner; the licence
+choice and any relicensing are the owner's decision, never yours. @status:impl/done
 
-##STATE-PLAINLY-GUIDANCE-NOT-LEGAL-ADVICE State plainly that this is guidance, not legal advice. @impl/done
+@fact:STATE-PLAINLY-GUIDANCE-NOT-LEGAL-ADVICE State plainly that this is guidance, not legal advice. @status:impl/done
 
 ## Procedure {#procedure}
 
-1. ##DETERMINE-THE-POSTURE **Determine the posture.** Ask (or infer from context) which the
+1. @fact:DETERMINE-THE-POSTURE **Determine the posture.** Ask (or infer from context) which the
    owner wants: permissive open, proprietary/source-available, or the
    placeholder with relicense intent. If unclear, ask — do not
-   assume. @impl/done
-2. ##DRAFT-THE-LICENSE-FILE **Draft the `LICENSE.md`.** For the placeholder, fill the skeleton
+   assume. @status:impl/done
+2. @fact:DRAFT-THE-LICENSE-FILE **Draft the `LICENSE.md`.** For the placeholder, fill the skeleton
    in `spec/flows/licensing/eula-template.md`: product name,
    copyright, the interim grant, the relicense-intent clause (name the
    target licence; keep it only if opening is genuinely intended), and
    the third-party carve-out. For a permissive posture, use the target
    licence's official text verbatim and set the manifest field to its
-   SPDX id. @impl/done
-3. ##CHECK-DEPENDENCIES **Check dependencies.** Run the ecosystem's licence listing over
+   SPDX id. @status:impl/done
+3. @fact:CHECK-DEPENDENCIES **Check dependencies.** Run the ecosystem's licence listing over
    the FULL resolved graph (not just direct deps). Classify each
    against the allow/deny table in
    `spec/flows/licensing/dependency-licenses.md`. Flag anything
-   copyleft, unclear, or missing as an owner decision. @impl/done
-4. ##SYNC-THE-STATEMENTS **Sync the statements.** Ensure the `LICENSE.md`, every manifest
+   copyleft, unclear, or missing as an owner decision. @status:impl/done
+4. @fact:SYNC-THE-STATEMENTS **Sync the statements.** Ensure the `LICENSE.md`, every manifest
    `license` field, and any README badge agree. A disagreement is a
-   finding. @impl/done
-5. ##POINT-THE-CARVE-OUT-AT-THE-GENERATED-LIST **Point the carve-out at the generated list**, and name any
-   study-only material for removal before redistribution. @impl/done
+   finding. @status:impl/done
+5. @fact:POINT-THE-CARVE-OUT-AT-THE-GENERATED-LIST **Point the carve-out at the generated list**, and name any
+   study-only material for removal before redistribution. @status:impl/done
 
 ## Output {#output}
 
-##present-as-a-draft-lead Present as a draft: @impl/done
+@fact:present-as-a-draft-lead Present as a draft: @status:impl/done
 
-- ##OUTPUT-THE-PROPOSED-LICENSE-FILE the proposed `LICENSE.md`, @impl/done
-- ##OUTPUT-THE-MANIFEST-FIELD-VALUE the manifest field
-  value, @impl/done
-- ##OUTPUT-THE-DEPENDENCY-CHECK-RESULT the dependency-check result (with any violations called out), @impl/done
-- ##OUTPUT-THE-SYNC-STATUS and the sync status. @impl/done
+- @fact:OUTPUT-THE-PROPOSED-LICENSE-FILE the proposed `LICENSE.md`, @status:impl/done
+- @fact:OUTPUT-THE-MANIFEST-FIELD-VALUE the manifest field
+  value, @status:impl/done
+- @fact:OUTPUT-THE-DEPENDENCY-CHECK-RESULT the dependency-check result (with any violations called out), @status:impl/done
+- @fact:OUTPUT-THE-SYNC-STATUS and the sync status. @status:impl/done
 
-##DO-NOT-APPLY-WITHOUT-THE-OWNERS-EXPLICIT-APPROVAL Do not apply the licence choice or any
+@fact:DO-NOT-APPLY-WITHOUT-THE-OWNERS-EXPLICIT-APPROVAL Do not apply the licence choice or any
 relicensing without the owner's explicit approval — both are
-irreversible-threshold decisions. @impl/done
+irreversible-threshold decisions. @status:impl/done

@@ -2,22 +2,22 @@
 
 <status stage="spec" state="done"/>
 
-##scope-of-this-document **Scope of this document.** The copy-ready shape of a decision
+@fact:scope-of-this-document **Scope of this document.** The copy-ready shape of a decision
 record, what each of the four fields must contain, two fully worked
-examples, and the anti-pattern table. @impl/done
+examples, and the anti-pattern table. @status:impl/done
 
-##companion-document-pointers The reasoning behind the
+@fact:companion-document-pointers The reasoning behind the
 practice lives in
 [`DECISION-RECORDS-PROTOCOL.md`](DECISION-RECORDS-PROTOCOL.md);
-trigger design in [`revisit-triggers.md`](revisit-triggers.md). @impl/done
+trigger design in [`revisit-triggers.md`](revisit-triggers.md). @status:impl/done
 
 ## The template {#template}
 
-##PASTE-UNDER-THE-GOVERNING-SPEC-HEADING Paste under the spec heading that governs the value. @impl/done
+@fact:PASTE-UNDER-THE-GOVERNING-SPEC-HEADING Paste under the spec heading that governs the value. @status:impl/done
 
-##GIVE-THAT-HEADING-AN-EXPLICIT-ANCHOR Give that
+@fact:GIVE-THAT-HEADING-AN-EXPLICIT-ANCHOR Give that
 heading an explicit anchor — a record is only as good as its
-address. @impl/done
+address. @status:impl/done
 
 ```markdown
 ### <The thing decided> {#<stable-anchor>}
@@ -39,17 +39,17 @@ upstream constraint and version>.
 
 | Field | Passes when | Fails when |
 |-------|-------------|------------|
-| ##ROW-FIELD-DECISION **Decision** @impl/done | A reader can act on it without asking anyone. @impl/done | It hedges ("probably", "for now") without a trigger. @impl/done |
-| ##ROW-FIELD-WHY **Why** @impl/done | It cites data someone could check: a log, a count, a benchmark, a version. @impl/done | It appeals to taste ("cleaner") or restates the decision. @impl/done |
-| ##ROW-FIELD-CONSIDERED-AND-REJECTED **Considered and rejected** @impl/done | Each line names the loser *and* the reason it lost. @impl/done | It lists losers without reasons — or lists nothing. @impl/done |
-| ##ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @impl/done | Metric + threshold + observation point; a stranger can answer "has it fired?". @impl/done | "Later", "when it breaks", "when we refactor". @impl/done |
+| @fact:ROW-FIELD-DECISION **Decision** @status:impl/done | A reader can act on it without asking anyone. @status:impl/done | It hedges ("probably", "for now") without a trigger. @status:impl/done |
+| @fact:ROW-FIELD-WHY **Why** @status:impl/done | It cites data someone could check: a log, a count, a benchmark, a version. @status:impl/done | It appeals to taste ("cleaner") or restates the decision. @status:impl/done |
+| @fact:ROW-FIELD-CONSIDERED-AND-REJECTED **Considered and rejected** @status:impl/done | Each line names the loser *and* the reason it lost. @status:impl/done | It lists losers without reasons — or lists nothing. @status:impl/done |
+| @fact:ROW-FIELD-WHEN-TO-REVISIT **When to revisit** @status:impl/done | Metric + threshold + observation point; a stranger can answer "has it fired?". @status:impl/done | "Later", "when it breaks", "when we refactor". @status:impl/done |
 
 ## Worked example: a constant with consequences {#example-timeout}
 
-##worked-example-session-narration The session that produced this record: the human measured VPN
+@fact:worked-example-session-narration The session that produced this record: the human measured VPN
 delivery latency, raised a timeout from 300 s to 600 s, and wrote
 the record into the spec section governing verification timing —
-same session, before close. @unknown
+same session, before close. @status:unknown
 
 ```markdown
 ### Verification timeout {#verification.timeout}
@@ -71,7 +71,7 @@ logs/vpn-test-2026-03-05.log, 847 messages, 128 users.
 per the network monitoring dashboard.
 ```
 
-##side-by-side-lead The difference this buys, side by side: @impl/done
+@fact:side-by-side-lead The difference this buys, side by side: @status:impl/done
 
 ```
 Before:  "Timeout: 600 s"
@@ -79,26 +79,26 @@ After:   "600 s, because VPN false positives — measured, here is
           the data, here is what lost, here is when to reconsider."
 ```
 
-##the-first-line-is-a-fact The first line is a fact; the code already says it. @spec/done
+@fact:the-first-line-is-a-fact The first line is a fact; the code already says it. @status:spec/done
 
-##the-second-line-is-a-decision The second is a
+@fact:the-second-line-is-a-decision The second is a
 decision: the next session that reads `TIMEOUT = 600` and feels the
 urge to "optimise" it back to 300 finds an 847-message measurement
-standing in the way. @spec/done
+standing in the way. @status:spec/done
 
-##that-is-the-immunity-working That is the immunity working. @spec/done
+@fact:that-is-the-immunity-working That is the immunity working. @status:spec/done
 
-##field-by-field-lead Field by field: @impl/done
+@fact:field-by-field-lead Field by field: @status:impl/done
 
-- ##WHY-SURVIVES-AUDIT-BECAUSE-IT-IS-CHECKABLE The **why** survives audit because it is *checkable*: the log file
+- @fact:WHY-SURVIVES-AUDIT-BECAUSE-IT-IS-CHECKABLE The **why** survives audit because it is *checkable*: the log file
   is named, the sample size is stated. A why with data can be
   re-verified or outgrown; a why without data can only be believed
-  or ignored. @impl/done
-- ##REJECTIONS-ARE-ONE-LINE-EACH The **rejections** are one line each — enough to stop the
+  or ignored. @status:impl/done
+- @fact:REJECTIONS-ARE-ONE-LINE-EACH The **rejections** are one line each — enough to stop the
   re-proposal ("what about adaptive timeouts?"), cheap enough to
-  write in the same minute. @impl/done
-- ##TRIGGER-NAMES-THE-WORLD-STATE-THAT-REOPENS-THE-QUESTION The **trigger** names the exact world-state that reopens the
-  question, and where to look for it. @impl/done
+  write in the same minute. @status:impl/done
+- @fact:TRIGGER-NAMES-THE-WORLD-STATE-THAT-REOPENS-THE-QUESTION The **trigger** names the exact world-state that reopens the
+  question, and where to look for it. @status:impl/done
 
 ## Worked example: a library choice {#example-library}
 
@@ -124,34 +124,34 @@ NIST-approved hash, or blake3 upstream ships no release for
 24 months.
 ```
 
-##note-the-trigger-shape Note the trigger's shape: two disjunct conditions, both observable —
+@fact:note-the-trigger-shape Note the trigger's shape: two disjunct conditions, both observable —
 one an unambiguous external event, one a threshold on a fact anyone
-can check from the upstream repository today. @spec/done
+can check from the upstream repository today. @status:spec/done
 
-##either-condition-fires-unprompted Either can be answered
+@fact:either-condition-fires-unprompted Either can be answered
 yes-or-no by a stranger without the project instrumenting anything —
 though neither fires itself: what fires a trigger is a re-read
-([`revisit-triggers.md` §periodic-sweep](revisit-triggers.md#periodic-sweep)). @spec/done
+([`revisit-triggers.md` §periodic-sweep](revisit-triggers.md#periodic-sweep)). @status:spec/done
 
 ## Anti-patterns {#anti-patterns}
 
 | Anti-pattern | Example | Why it fails | Fix |
 |--------------|---------|--------------|-----|
-| ##ROW-ANTI-TAUTOLOGY Tautology @impl/done | "600 s, because that is our timeout." @impl/done | We do X because we do X — restates the decision, zero information. @impl/done | Name the observation that forced the value. @impl/done |
-| ##ROW-ANTI-UNFALSIFIABLE-WHY Unfalsifiable why @impl/done | "blake3 felt cleaner." / "because it is better." @impl/done | Cannot be checked, cannot be outgrown; blocks revisiting forever without justifying anything. @impl/done | Cite a measurement, constraint, or incident. @impl/done |
-| ##ROW-ANTI-REJECTIONS-WITHOUT-REASONS Rejections without reasons @impl/done | "Considered: adaptive timeout, 300 s + retry." @impl/done | The evaluation gets re-run; the bare list answers nothing. @impl/done | One line per loser, each with the reason it lost. @impl/done |
-| ##ROW-ANTI-REVISIT-LATER "Revisit: later" @impl/done | "Revisit when needed." @impl/done | Never fires; the record hardens into a sacred cow. @impl/done | Metric + threshold + observation point. @impl/done |
-| ##ROW-ANTI-WHY-IN-THE-COMMIT-ONLY Why lives in the commit only @impl/done | Reasoning in the commit body; spec carries the bare value. @impl/done | Commit history is not in the reading path at the anchor; the agent reads the section, not `git log`. @impl/done | The spec carries the why; the commit cites the anchor. @impl/done |
-| ##ROW-ANTI-BACKFILLED-MEMORY Backfilled memory @impl/done | Writing the why a week later, from recollection. @impl/done | Reconstructed reasoning is fiction with confidence; the data is gone. @impl/done | Record in the session that decides — or mark the why TODO(owner). @impl/done |
+| @fact:ROW-ANTI-TAUTOLOGY Tautology @status:impl/done | "600 s, because that is our timeout." @status:impl/done | We do X because we do X — restates the decision, zero information. @status:impl/done | Name the observation that forced the value. @status:impl/done |
+| @fact:ROW-ANTI-UNFALSIFIABLE-WHY Unfalsifiable why @status:impl/done | "blake3 felt cleaner." / "because it is better." @status:impl/done | Cannot be checked, cannot be outgrown; blocks revisiting forever without justifying anything. @status:impl/done | Cite a measurement, constraint, or incident. @status:impl/done |
+| @fact:ROW-ANTI-REJECTIONS-WITHOUT-REASONS Rejections without reasons @status:impl/done | "Considered: adaptive timeout, 300 s + retry." @status:impl/done | The evaluation gets re-run; the bare list answers nothing. @status:impl/done | One line per loser, each with the reason it lost. @status:impl/done |
+| @fact:ROW-ANTI-REVISIT-LATER "Revisit: later" @status:impl/done | "Revisit when needed." @status:impl/done | Never fires; the record hardens into a sacred cow. @status:impl/done | Metric + threshold + observation point. @status:impl/done |
+| @fact:ROW-ANTI-WHY-IN-THE-COMMIT-ONLY Why lives in the commit only @status:impl/done | Reasoning in the commit body; spec carries the bare value. @status:impl/done | Commit history is not in the reading path at the anchor; the agent reads the section, not `git log`. @status:impl/done | The spec carries the why; the commit cites the anchor. @status:impl/done |
+| @fact:ROW-ANTI-BACKFILLED-MEMORY Backfilled memory @status:impl/done | Writing the why a week later, from recollection. @status:impl/done | Reconstructed reasoning is fiction with confidence; the data is gone. @status:impl/done | Record in the session that decides — or mark the why TODO(owner). @status:impl/done |
 
 ## Summary {#summary}
 
-- ##SUM-PASTE-AT-THE-GOVERNING-ANCHOR Paste the template at the governing anchor; never under a heading
-  without one. @impl/done
-- ##SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER Why with data; rejections with reasons; trigger with metric,
-  threshold, and observation point. @impl/done
-- ##SUM-THE-BEFORE-AFTER-TEST The before/after test: if the record only says what the code
+- @fact:SUM-PASTE-AT-THE-GOVERNING-ANCHOR Paste the template at the governing anchor; never under a heading
+  without one. @status:impl/done
+- @fact:SUM-DATA-REASONS-AND-A-MEASURABLE-TRIGGER Why with data; rejections with reasons; trigger with metric,
+  threshold, and observation point. @status:impl/done
+- @fact:SUM-THE-BEFORE-AFTER-TEST The before/after test: if the record only says what the code
   already says, it is a fact with decoration — complete it or delete
-  it. @impl/done
-- ##SUM-RECORD-IN-THE-DECIDING-SESSION Record in the same session the decision is made. Backfilled whys
-  are fiction. @impl/done
+  it. @status:impl/done
+- @fact:SUM-RECORD-IN-THE-DECIDING-SESSION Record in the same session the decision is made. Backfilled whys
+  are fiction. @status:impl/done

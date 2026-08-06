@@ -2,35 +2,35 @@
 
 <status stage="spec" state="done"/>
 
-##status-line **Discipline v0.2 · BETA · [E-hyp] — validate before relying on it** @impl/done
+@fact:status-line **Discipline v0.2 · BETA · [E-hyp] — validate before relying on it** @status:impl/done
 
 ## Band 1 — Identity & Recognition {#band-one-identity}
 
-##CLASSIFICATION Classification: layer=H (weak-reader) + A (language-shape); mechanism=scaffold I. @impl/done
+@fact:CLASSIFICATION Classification: layer=H (weak-reader) + A (language-shape); mechanism=scaffold I. @status:impl/done
 
-##INTENT Intent: Offer a capability-demanding multi-file change as ONE parameterized, checked operation — converting an edit a weak agent cannot safely coordinate into a parameter-filling task. @impl/done
+@fact:INTENT Intent: Offer a capability-demanding multi-file change as ONE parameterized, checked operation — converting an edit a weak agent cannot safely coordinate into a parameter-filling task. @status:impl/done
 
-##ALSO-KNOWN-AS Also Known As: codemod; AST rewrite; refactoring script; scripted migration; semantic patch. @spec/done
+@fact:ALSO-KNOWN-AS Also Known As: codemod; AST rewrite; refactoring script; scripted migration; semantic patch. @status:spec/done
 
-##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a common change touches many files atomically (add a cell, register a variant, rename across a trait surface); the edit's size is itself the failure driver (Rust failures correlate with edit size/file count, R2C-006); the weakest swarm tier cannot coordinate it by hand. *Detector seed:* a recurring change-type that reliably requires touching >1 file in lockstep → recognition fires. @impl/done
+@fact:APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a common change touches many files atomically (add a cell, register a variant, rename across a trait surface); the edit's size is itself the failure driver (Rust failures correlate with edit size/file count, R2C-006); the weakest swarm tier cannot coordinate it by hand. *Detector seed:* a recurring change-type that reliably requires touching >1 file in lockstep → recognition fires. @status:impl/done
 
 ## Band 2 — Justification & Tradeoffs {#band-two-justification}
 
-##MOTIVATION Motivation: A weak agent asked to "rename this seam across its 7 call-sites + the registry + the error enum" desynchronizes them. A `codemod rename-seam --from X --to Y` **would** perform the change atomically and verifiably, the agent filling two parameters instead of coordinating seven edits — that operation is specified and not yet built. The shipped codemod surface today is one verb, `rust-ai-native codemod add-cell --crate-dir <dir> --cell <cell> --seam <seam> --variant <variant> --spec-uri <uri>`, which scaffolds a cell atomically and rolls back on failure. This mirrors how constrained decoding lifts weak models (DR1-015): collapse the hard task into a constrained, parameterized one. @spec/done
+@fact:MOTIVATION Motivation: A weak agent asked to "rename this seam across its 7 call-sites + the registry + the error enum" desynchronizes them. A `codemod rename-seam --from X --to Y` **would** perform the change atomically and verifiably, the agent filling two parameters instead of coordinating seven edits — that operation is specified and not yet built. The shipped codemod surface today is one verb, `rust-ai-native codemod add-cell --crate-dir <dir> --cell <cell> --seam <seam> --variant <variant> --spec-uri <uri>`, which scaffolds a cell atomically and rolls back on failure. This mirrors how constrained decoding lifts weak models (DR1-015): collapse the hard task into a constrained, parameterized one. @status:spec/done
 
-##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Codemod* (`syn`-based AST rewrite or cargo-integrated operation) · *Parameters* (the small named inputs) · *Atomic application* (all-or-nothing) · *Post-check* (compiles + tests green). @impl/done
+@fact:STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Codemod* (`syn`-based AST rewrite or cargo-integrated operation) · *Parameters* (the small named inputs) · *Atomic application* (all-or-nothing) · *Post-check* (compiles + tests green). @status:impl/done
 
-##COLLABORATIONS Collaborations: Implements bulk application of Classes A/B/G in raids; emits Class F diagnostics on failure; the Class D oracle wraps it when it changes behavior. @impl/done
+@fact:COLLABORATIONS Collaborations: Implements bulk application of Classes A/B/G in raids; emits Class F diagnostics on failure; the Class D oracle wraps it when it changes behavior. @status:impl/done
 
-##GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* convert capability-demanding multi-file edits into parameterized operations for the weak swarm. *Non-Goals:* NOT a general refactoring IDE; NOT for one-off changes; NOT a production compiler. @impl/done
+@fact:GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* convert capability-demanding multi-file edits into parameterized operations for the weak swarm. *Non-Goals:* NOT a general refactoring IDE; NOT for one-off changes; NOT a production compiler. @status:impl/done
 
-##CONSEQUENCES Consequences: (+) the weakest tier can perform edits otherwise beyond it; (+) atomicity kills desync and phantom diffs. (−) codemods are code to maintain and test; (−) **[E-hyp] risk:** parameterizing a codemod may itself exceed the weakest models — the very build/use boundary in question. @spec/done
+@fact:CONSEQUENCES Consequences: (+) the weakest tier can perform edits otherwise beyond it; (+) atomicity kills desync and phantom diffs. (−) codemods are code to maintain and test; (−) **[E-hyp] risk:** parameterizing a codemod may itself exceed the weakest models — the very build/use boundary in question. @status:spec/done
 
-##ALTERNATIVES Alternatives: hand-editing (fails at scale for weak agents); a generator (Class A) when the artifact is derivable rather than transformed. Codemods are for TRANSFORMING existing code. @spec/done
+@fact:ALTERNATIVES Alternatives: hand-editing (fails at scale for weak agents); a generator (Class A) when the artifact is derivable rather than transformed. Codemods are for TRANSFORMING existing code. @status:spec/done
 
-##RISKS-AND-ASSUMPTIONS Risks & Assumptions: **assumes weak agents can correctly parameterize the operation** — UNVALIDATED; this is the prime pilot (R4) question. If false, restrict the weakest tier to fixed-parameter invocations only. *Sunset:* if language/tooling makes the change trivial, the codemod retires. @spec/done
+@fact:RISKS-AND-ASSUMPTIONS Risks & Assumptions: **assumes weak agents can correctly parameterize the operation** — UNVALIDATED; this is the prime pilot (R4) question. If false, restrict the weakest tier to fixed-parameter invocations only. *Sunset:* if language/tooling makes the change trivial, the codemod retires. @status:spec/done
 
-##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: first-principles from R3-013 (ownership graph bounds throughput) + R2C-006 (edit size drives Rust failure) + DR1-015 (constraints lift weak models). NOT in the follow-up. Class: theory. Tag: **[E-hyp]**. @spec/done
+@fact:EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: first-principles from R3-013 (ownership graph bounds throughput) + R2C-006 (edit size drives Rust failure) + DR1-015 (constraints lift weak models). NOT in the follow-up. Class: theory. Tag: **[E-hyp]**. @status:spec/done
 
 ## Band 3 — Operation {#band-three-operation}
 

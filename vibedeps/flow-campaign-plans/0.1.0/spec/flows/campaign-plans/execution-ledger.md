@@ -2,58 +2,58 @@
 
 <status stage="spec" state="done"/>
 
-##scope-of-this-document **Scope of this document.** This file defines the *record half* of a
+@fact:scope-of-this-document **Scope of this document.** This file defines the *record half* of a
 campaign: flipping the status line, the execution-record block, the
 per-phase commit maps, the honesty rules, the closing report, and the
-deferrals ledger that seeds the next campaign. @impl/done
+deferrals ledger that seeds the next campaign. @status:impl/done
 
-##sibling-document-pointers The authoring half:
+@fact:sibling-document-pointers The authoring half:
 [`CAMPAIGN-PLAN-FORMAT.md`](CAMPAIGN-PLAN-FORMAT.md); phase
-mechanics: [`phase-gates.md`](phase-gates.md). @impl/done
+mechanics: [`phase-gates.md`](phase-gates.md). @status:impl/done
 
 ## Why the record half exists {#why}
 
-##THE-PLAN-SAYS-WHAT-SHOULD-HAPPEN-THE-LEDGER-WHAT-DID The plan says what should happen; the ledger says what did. @impl/done
+@fact:THE-PLAN-SAYS-WHAT-SHOULD-HAPPEN-THE-LEDGER-WHAT-DID The plan says what should happen; the ledger says what did. @status:impl/done
 
-##COMMITS-ALONE-CANNOT-CARRY-THE-COMPARISON Commits
+@fact:COMMITS-ALONE-CANNOT-CARRY-THE-COMPARISON Commits
 alone cannot carry the comparison — a hash proves a change landed,
 not that it landed *as planned*, confirmed a prediction, or corrected
-a decision. @impl/done
+a decision. @status:impl/done
 
-##THE-LEDGER-BINDS-INTENT-TO-REAL-COMMITS The ledger binds the two: every phase's real commits
+@fact:THE-LEDGER-BINDS-INTENT-TO-REAL-COMMITS The ledger binds the two: every phase's real commits
 mapped onto the plan's intent, with divergence stated where it
-occurred. @impl/done
+occurred. @status:impl/done
 
-##A-FUTURE-READER-NEEDS-THIS-FILE-PLUS-GIT-LOG A future reader audits the campaign from this file plus
-`git log` and needs nothing else. @impl/done
+@fact:A-FUTURE-READER-NEEDS-THIS-FILE-PLUS-GIT-LOG A future reader audits the campaign from this file plus
+`git log` and needs nothing else. @status:impl/done
 
 ## Flipping the status line {#status-flip}
 
-##the-status-line-is-the-lifecycle-indicator-lead The plan's status line is the campaign's single lifecycle indicator: @impl/done
+@fact:the-status-line-is-the-lifecycle-indicator-lead The plan's status line is the campaign's single lifecycle indicator: @status:impl/done
 
 | State | When |
 |---|---|
-| ##ROW-STATE-PLANNED `PLANNED` @impl/done | authored; optionally annotated `ACCEPTED with owner amendments, <date>` after review @impl/done |
-| ##ROW-STATE-EXECUTING `EXECUTING` @impl/done | flipped when Phase 0 opens; since Phase 0 commits nothing, the flip rides the plan-amendment commit that records the Phase 0 findings, or Phase 1's first commit @impl/done |
-| ##ROW-STATE-EXECUTED `EXECUTED <date>` @impl/done | flipped at close, together with the prepended execution record @impl/done |
+| @fact:ROW-STATE-PLANNED `PLANNED` @status:impl/done | authored; optionally annotated `ACCEPTED with owner amendments, <date>` after review @status:impl/done |
+| @fact:ROW-STATE-EXECUTING `EXECUTING` @status:impl/done | flipped when Phase 0 opens; since Phase 0 commits nothing, the flip rides the plan-amendment commit that records the Phase 0 findings, or Phase 1's first commit @status:impl/done |
+| @fact:ROW-STATE-EXECUTED `EXECUTED <date>` @status:impl/done | flipped at close, together with the prepended execution record @status:impl/done |
 
-##THE-LINES-TAIL-IS-REFRESHED-AT-EVERY-LATER-BOUNDARY At every later phase boundary the executing session refreshes the
+@fact:THE-LINES-TAIL-IS-REFRESHED-AT-EVERY-LATER-BOUNDARY At every later phase boundary the executing session refreshes the
 line's tail — "Phase N landed, floor green, next: Phase N+1" — as
-part of that phase's commit set. @impl/done
+part of that phase's commit set. @status:impl/done
 
-##THE-STATUS-LINE-MUST-NEVER-LAG-THE-TREE The status line is what a cold
-session reads first; it must never lag the tree. @impl/done
+@fact:THE-STATUS-LINE-MUST-NEVER-LAG-THE-TREE The status line is what a cold
+session reads first; it must never lag the tree. @status:impl/done
 
 ## The execution-record block {#execution-record}
 
-##A-SUMMARY-BLOCK-IS-PREPENDED-AT-CLOSE At close, a summary block is **prepended** into the plan's status
+@fact:A-SUMMARY-BLOCK-IS-PREPENDED-AT-CLOSE At close, a summary block is **prepended** into the plan's status
 area — the first thing any future reader sees, above the now-historic
-planning prose. It carries: @impl/done
+planning prose. It carries: @status:impl/done
 
-- ##EXECUTION-RECORD-THE-COMMIT-RANGE the commit range, @impl/done
-- ##EXECUTION-RECORD-THE-PER-PHASE-DELTAS the per-phase deltas
-  against the target arithmetic, @impl/done
-- ##EXECUTION-RECORD-THE-VERDICT-ON-EVERY-PREDICTION and the verdict on every prediction. @impl/done
+- @fact:EXECUTION-RECORD-THE-COMMIT-RANGE the commit range, @status:impl/done
+- @fact:EXECUTION-RECORD-THE-PER-PHASE-DELTAS the per-phase deltas
+  against the target arithmetic, @status:impl/done
+- @fact:EXECUTION-RECORD-THE-VERDICT-ON-EVERY-PREDICTION and the verdict on every prediction. @status:impl/done
 
 ```
 _Execution record: all six phases ran to the exit state — baseline
@@ -64,17 +64,17 @@ stale-trio premise (§0 correction) and the one-third waiver rate
 journal carries the checkpoint._
 ```
 
-##note-the-shape-of-the-execution-record Note the shape: exact counts against the plan's own §0, the hash
+@fact:note-the-shape-of-the-execution-record Note the shape: exact counts against the plan's own §0, the hash
 range, falsifications named with their observed values, and a pointer
-to the project's journal for the session-level checkpoint. @impl/done
+to the project's journal for the session-level checkpoint. @status:impl/done
 
 ## Per-phase commit maps {#commit-maps}
 
-##EACH-EXECUTED-PHASE-GETS-A-LEDGER-SECTION Each executed phase gets a ledger section: `EXECUTED <date>` plus a
-commit map. @impl/done
+@fact:EACH-EXECUTED-PHASE-GETS-A-LEDGER-SECTION Each executed phase gets a ledger section: `EXECUTED <date>` plus a
+commit map. @status:impl/done
 
-##ONE-ENTRY-PER-COMMIT One entry per commit — **hash, the conventional-commit
-subject, what it did, and what it confirmed or falsified**: @impl/done
+@fact:ONE-ENTRY-PER-COMMIT One entry per commit — **hash, the conventional-commit
+subject, what it did, and what it confirmed or falsified**: @status:impl/done
 
 ```
 ### Phase 3 — EXECUTED (2026-07-07); commit map
@@ -90,70 +90,70 @@ subject, what it did, and what it confirmed or falsified**: @impl/done
   9/9 — no target moved.
 ```
 
-##THE-MAP-IS-WRITTEN-AT-THE-BOUNDARY-NOT-AT-CLOSE The map is written at the phase boundary, while the reasoning is
-fresh — not reconstructed at close. @impl/done
+@fact:THE-MAP-IS-WRITTEN-AT-THE-BOUNDARY-NOT-AT-CLOSE The map is written at the phase boundary, while the reasoning is
+fresh — not reconstructed at close. @status:impl/done
 
-##DRIFTED-SUBJECTS-ARE-RECORDED-WITH-THE-DRIFT Planned subjects that drifted
+@fact:DRIFTED-SUBJECTS-ARE-RECORDED-WITH-THE-DRIFT Planned subjects that drifted
 during execution are recorded with the drift ("split into two
-commits: the fixture change deserved its own revert point"). @impl/done
+commits: the fixture change deserved its own revert point"). @status:impl/done
 
 ## Honesty rules {#honesty}
 
-##the-ledgers-value-is-its-honesty-lead The ledger's value is exactly proportional to its honesty: @impl/done
+@fact:the-ledgers-value-is-its-honesty-lead The ledger's value is exactly proportional to its honesty: @status:impl/done
 
-- ##HONESTY-SAY-NO-TARGET-MOVED-WHERE-IT-IS-TRUE **Say "no target moved" where it is true.** A close panel that
+- @fact:HONESTY-SAY-NO-TARGET-MOVED-WHERE-IT-IS-TRUE **Say "no target moved" where it is true.** A close panel that
   reports numbers without saying whether they shifted reads as
   concealment in audit. "Corpus 9/9 — no target moved" costs five
-  words and closes the question. @impl/done
-- ##HONESTY-EXECUTION-MAY-CORRECT-THE-PLAN-AND-SAYS-SO **Execution may correct the plan's own decisions — and says so.**
+  words and closes the question. @status:impl/done
+- @fact:HONESTY-EXECUTION-MAY-CORRECT-THE-PLAN-AND-SAYS-SO **Execution may correct the plan's own decisions — and says so.**
   The plan is not sacred; silent divergence is the sin. When
   execution proves a decision wrong or unnecessary, the ledger entry
   states it and the Decision is amended in place, as in the Phase 3
-  map above. @impl/done
-- ##HONESTY-FALSIFIED-PREDICTIONS-ARE-FINDINGS **Falsified predictions are findings, not failures.** They are
+  map above. @status:impl/done
+- @fact:HONESTY-FALSIFIED-PREDICTIONS-ARE-FINDINGS **Falsified predictions are findings, not failures.** They are
   recorded twice: at the prediction (in place, so the planning prose
   never misleads a re-reader) and in the execution record's verdict
-  list. @impl/done
-- ##HONESTY-DISCOVERED-WORK-APPEARS-WITH-ITS-COMMITS **Discovered work appears with its commits.** An entry that was not
+  list. @status:impl/done
+- @fact:HONESTY-DISCOVERED-WORK-APPEARS-WITH-ITS-COMMITS **Discovered work appears with its commits.** An entry that was not
   in the plan says so explicitly — the
   [`phase-gates.md` §discovered-work](phase-gates.md#discovered-work)
-  rule, enforced at write time. @impl/done
+  rule, enforced at write time. @status:impl/done
 
 ## The closing report {#report}
 
-##the-campaign-closes-by-checking-every-prediction-lead The campaign closes by checking **every prediction, one by one**: @impl/done
+@fact:the-campaign-closes-by-checking-every-prediction-lead The campaign closes by checking **every prediction, one by one**: @status:impl/done
 
-- ##VERDICT-HELD held (with the observed value), @impl/done
-- ##VERDICT-FALSIFIED falsified (with the observed value
-  and where the correction landed), @impl/done
-- ##VERDICT-SURPRISED or surprised (something happened
-  the predictions never addressed). @impl/done
+- @fact:VERDICT-HELD held (with the observed value), @status:impl/done
+- @fact:VERDICT-FALSIFIED falsified (with the observed value
+  and where the correction landed), @status:impl/done
+- @fact:VERDICT-SURPRISED or surprised (something happened
+  the predictions never addressed). @status:impl/done
 
-##THEN-THE-LESSONS Then the lessons: which decisions execution amended, which rules or
-estimates misfired, what the next campaign inherits. @impl/done
+@fact:THEN-THE-LESSONS Then the lessons: which decisions execution amended, which rules or
+estimates misfired, what the next campaign inherits. @status:impl/done
 
-##A-CAMPAIGN-THAT-SKIPS-THE-REPORT-LEARNS-NOTHING-DURABLE **A campaign that skips the report learns nothing durable.** @impl/done
+@fact:A-CAMPAIGN-THAT-SKIPS-THE-REPORT-LEARNS-NOTHING-DURABLE **A campaign that skips the report learns nothing durable.** @status:impl/done
 
-##only-the-learning-compounds-across-campaigns The work
+@fact:only-the-learning-compounds-across-campaigns The work
 survives in the commits either way; the *learning* — which planning
 assumptions held, which estimates were systematically off — survives
-only here, and it is the only part that compounds across campaigns. @spec/done
+only here, and it is the only part that compounds across campaigns. @status:spec/done
 
-##IN-THE-ONE-FILE-DIALECT-THE-REPORT-IS-NOT-A-SEPARATE-DOCUMENT In the one-file dialect the report is not a separate document: it is
+@fact:IN-THE-ONE-FILE-DIALECT-THE-REPORT-IS-NOT-A-SEPARATE-DOCUMENT In the one-file dialect the report is not a separate document: it is
 the execution-record block plus the per-prediction verdicts recorded
-in place. @impl/done
+in place. @status:impl/done
 
-##RUN-THE-ACCEPTANCE-SCRIPT-BEFORE-WRITING-THE-REPORT Before writing it, run the whole-campaign acceptance script
-on a green floor; the report cites its output. @impl/done
+@fact:RUN-THE-ACCEPTANCE-SCRIPT-BEFORE-WRITING-THE-REPORT Before writing it, run the whole-campaign acceptance script
+on a green floor; the report cites its output. @status:impl/done
 
 ## The deferrals ledger {#deferrals}
 
-##EVERY-DEFERRAL-IS-NAMED-WITH-AN-OWNER-AND-A-DISPOSITION Everything the campaign chose not to do is **named** — one line each,
-with an owner (who decides its fate) and a disposition. @impl/done
+@fact:EVERY-DEFERRAL-IS-NAMED-WITH-AN-OWNER-AND-A-DISPOSITION Everything the campaign chose not to do is **named** — one line each,
+with an owner (who decides its fate) and a disposition. @status:impl/done
 
-##NOTHING-EVAPORATES Nothing
+@fact:NOTHING-EVAPORATES Nothing
 evaporates: at close, every piece of leftover work is either in a
-commit or in this ledger. @impl/done
+commit or in this ledger. @status:impl/done
 
 ```
 - DEF-3 — mirror publish: EXECUTABLE, held on the owner's word
@@ -162,15 +162,15 @@ commit or in this ledger. @impl/done
   this campaign built as its prerequisite.
 ```
 
-##A-DEFERRAL-IS-NOT-A-TODO-A-PROMISE-OR-A-MENTAL-NOTE A deferral is not a TODO comment in code, not a chat promise, not a
-mental note — those all evaporate. @impl/done
+@fact:A-DEFERRAL-IS-NOT-A-TODO-A-PROMISE-OR-A-MENTAL-NOTE A deferral is not a TODO comment in code, not a chat promise, not a
+mental note — those all evaporate. @status:impl/done
 
-##A-DEFERRAL-LIVES-IN-THE-PLAN-FILE-UNTIL-DRAINED It lives in the plan file, under
-its campaign, until a later campaign drains it. @impl/done
+@fact:A-DEFERRAL-LIVES-IN-THE-PLAN-FILE-UNTIL-DRAINED It lives in the plan file, under
+its campaign, until a later campaign drains it. @status:impl/done
 
 ## The lineage law {#lineage}
 
-##the-next-mandate-is-drained-from-the-deferrals-ledger-lead The next campaign's mandate is drained **from** the deferrals ledger: @impl/done
+@fact:the-next-mandate-is-drained-from-the-deferrals-ledger-lead The next campaign's mandate is drained **from** the deferrals ledger: @status:impl/done
 
 ```
 Campaign A closes:  "§15 DEF-3 — mirror publish stays held (owner call)."
@@ -178,28 +178,28 @@ Campaign B opens:   Mandate (owner, dated): "close every §15 deferral
                     of campaign A." DEF-3 becomes Phase 4.
 ```
 
-##a-real-chain-anonymized A real chain, anonymized: a self-sufficiency campaign closed with
+@fact:a-real-chain-anonymized A real chain, anonymized: a self-sufficiency campaign closed with
 six named deferrals; later the owner's commissioning words for the
 follow-up were, in substance, "take everything listed in the
 previous campaign's deferral ledger and plan its implementation" —
 and the new plan's opening table mapped each of them to the phase
-that closes it. @spec/done
+that closes it. @status:spec/done
 
-##THE-LEDGER-OF-ONE-CAMPAIGN-IS-THE-RAW-MANDATE-OF-THE-NEXT The ledger of one campaign *is* the raw mandate
+@fact:THE-LEDGER-OF-ONE-CAMPAIGN-IS-THE-RAW-MANDATE-OF-THE-NEXT The ledger of one campaign *is* the raw mandate
 of the next; the chain never breaks, and nothing is re-discovered
-from scratch. @impl/done
+from scratch. @status:impl/done
 
 ## Summary {#summary}
 
-- ##SUM-THE-STATUS-LINE-IS-THE-LIFECYCLE The status line is the lifecycle: PLANNED → EXECUTING →
-  EXECUTED <date>, refreshed at every phase boundary. @impl/done
-- ##SUM-AT-CLOSE-PREPEND-THE-EXECUTION-RECORD At close, prepend the execution record: commit range, deltas
-  against the arithmetic, a verdict on every prediction. @impl/done
-- ##SUM-COMMIT-MAPS-BIND-HASHES-TO-PLANNED-SUBJECTS Per-phase commit maps bind hashes to planned subjects and state
+- @fact:SUM-THE-STATUS-LINE-IS-THE-LIFECYCLE The status line is the lifecycle: PLANNED → EXECUTING →
+  EXECUTED <date>, refreshed at every phase boundary. @status:impl/done
+- @fact:SUM-AT-CLOSE-PREPEND-THE-EXECUTION-RECORD At close, prepend the execution record: commit range, deltas
+  against the arithmetic, a verdict on every prediction. @status:impl/done
+- @fact:SUM-COMMIT-MAPS-BIND-HASHES-TO-PLANNED-SUBJECTS Per-phase commit maps bind hashes to planned subjects and state
   what each commit confirmed or falsified — written at the boundary,
-  not reconstructed later. @impl/done
-- ##SUM-THE-HONESTY-RULES Honesty rules: "no target moved" said aloud; corrected decisions
-  said aloud; falsified predictions recorded in place. @impl/done
-- ##SUM-SKIPPING-THE-REPORT-LEARNS-NOTHING-DURABLE A campaign that skips the report learns nothing durable. @impl/done
-- ##SUM-DEFERRALS-LIVE-IN-THE-LEDGER-AND-SEED-THE-NEXT-MANDATE Deferrals live in the ledger, named and owned — and the next
-  campaign's mandate drains from it. @impl/done
+  not reconstructed later. @status:impl/done
+- @fact:SUM-THE-HONESTY-RULES Honesty rules: "no target moved" said aloud; corrected decisions
+  said aloud; falsified predictions recorded in place. @status:impl/done
+- @fact:SUM-SKIPPING-THE-REPORT-LEARNS-NOTHING-DURABLE A campaign that skips the report learns nothing durable. @status:impl/done
+- @fact:SUM-DEFERRALS-LIVE-IN-THE-LEDGER-AND-SEED-THE-NEXT-MANDATE Deferrals live in the ledger, named and owned — and the next
+  campaign's mandate drains from it. @status:impl/done

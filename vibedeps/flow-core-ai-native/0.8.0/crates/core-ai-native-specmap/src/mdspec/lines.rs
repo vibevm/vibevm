@@ -87,13 +87,19 @@ pub(crate) fn list_item_content(line: &str) -> Option<usize> {
     None
 }
 
-/// A `##<ID>` fact anchor at `line[start..]` (leading whitespace skipped):
-/// `##`, a valid fact id, then whitespace or end-of-line. Returns the id
-/// and the trimmed remainder of the line — the fact's lead text, kept as
-/// the unit heading.
+/// A fact anchor at `line[start..]` (leading whitespace skipped): the opener,
+/// a valid fact id, then whitespace or end-of-line. Returns the id and the
+/// trimmed remainder of the line — the fact's lead text, kept as the unit
+/// heading.
 ///
-/// `##` followed by an invalid id — a non-letter head (`##9bad`) or an id
-/// run glued to a non-space glyph (`##bad!`) — is ordinary prose: `None`,
+/// Two openers are accepted, and they mean exactly the same thing: the
+/// qualified `@fact:<ID>`, which names its own key, and the legacy `##<ID>`.
+/// A corpus is rewritten from one into the other in a single pass, so a
+/// reader that knows only one of them would drop every unit it does not
+/// recognise — which is precisely what a map is least able to survive.
+///
+/// An opener followed by an invalid id — a non-letter head (`##9bad`) or an
+/// id run glued to a non-space glyph (`##bad!`) — is ordinary prose: `None`,
 /// and (unlike a malformed heading anchor) no warning (PROP-014 §2.1). The
 /// id charset is [`is_valid_fact_id`], which a heading anchor now takes too —
 /// one grammar, two grains; only the reaction to a bad name differs, prose
@@ -101,7 +107,10 @@ pub(crate) fn list_item_content(line: &str) -> Option<usize> {
 pub(crate) fn fact_anchor_at(line: &str, start: usize) -> Option<(String, String)> {
     let seg = &line[start..];
     let lead_ws = seg.len() - seg.trim_start().len();
-    let rest = seg[lead_ws..].strip_prefix("##")?;
+    let body = &seg[lead_ws..];
+    let rest = body
+        .strip_prefix("@fact:")
+        .or_else(|| body.strip_prefix("##"))?;
     let id_len = rest
         .chars()
         .take_while(|&c| c.is_ascii_alphanumeric() || c == '-' || c == '_')

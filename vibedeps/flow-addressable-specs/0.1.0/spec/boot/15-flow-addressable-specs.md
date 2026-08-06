@@ -2,9 +2,9 @@
 
 <status stage="impl" state="done"/>
 
-##EVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE Every normative statement in this project's spec tree is
+@fact:EVERY-NORMATIVE-STATEMENT-IS-ADDRESSABLE Every normative statement in this project's spec tree is
 **addressable**: it lives under a stable `{#kebab-anchor}` and is
-cited by URI, never by paraphrase. @impl/done
+cited by URI, never by paraphrase. @status:impl/done
 
 ```
 spec://<module>/<doc>#<section>[.<sub>]
@@ -12,58 +12,58 @@ spec://<module>/<doc>#<section>[.<sub>]
 
 ## The correction contract {#correction-contract}
 
-##CORRECTION-CITES-THE-VIOLATED-ANCHOR When the human corrects the agent, the correction cites the violated
+@fact:CORRECTION-CITES-THE-VIOLATED-ANCHOR When the human corrects the agent, the correction cites the violated
 anchor: "you are violating `spec://…#verification.timeout` — the
-spec says 600 s, you wrote 300 s". @impl/done
+spec says 600 s, you wrote 300 s". @status:impl/done
 
-##RESOLVE-READ-COMPARE-FIX Resolve the URI, read the unit,
-compare, fix. @impl/done
+@fact:RESOLVE-READ-COMPARE-FIX Resolve the URI, read the unit,
+compare, fix. @status:impl/done
 
-##twenty-tokens-exact-hit Twenty tokens, exact hit — no guessing what
-"verification" means or which part is "wrong". @spec/done
+@fact:twenty-tokens-exact-hit Twenty tokens, exact hit — no guessing what
+"verification" means or which part is "wrong". @status:spec/done
 
-##THE-SAME-CONTRACT-BINDS-THE-AGENT The same contract binds the agent: when citing the spec — in chat,
+@fact:THE-SAME-CONTRACT-BINDS-THE-AGENT The same contract binds the agent: when citing the spec — in chat,
 commit bodies, code markers, review notes — cite the anchor, never a
-paraphrase and never a line number. @impl/done
+paraphrase and never a line number. @status:impl/done
 
 ## Single source of truth {#single-source}
 
-##EACH-FACT-HAS-EXACTLY-ONE-AUTHORITATIVE-ANCHOR Each fact has exactly one authoritative anchor. @impl/done
+@fact:EACH-FACT-HAS-EXACTLY-ONE-AUTHORITATIVE-ANCHOR Each fact has exactly one authoritative anchor. @status:impl/done
 
-##NEVER-COPY-A-NORMATIVE-VALUE-CITE-THE-ANCHOR Never copy a
-normative value into a second file — cite the anchor instead. @impl/done
+@fact:NEVER-COPY-A-NORMATIVE-VALUE-CITE-THE-ANCHOR Never copy a
+normative value into a second file — cite the anchor instead. @status:impl/done
 
-##two-copies-will-diverge Two
+@fact:two-copies-will-diverge Two
 copies *will* diverge, and a later session cannot tell which one
-binds. @spec/done
+binds. @status:spec/done
 
 ## Placement {#placement}
 
-##CRITICAL-CONSTRAINTS-LIVE-AT-THE-START-OR-END Critical constraints live at the START or END of a file, never
-buried mid-document. @impl/done
+@fact:CRITICAL-CONSTRAINTS-LIVE-AT-THE-START-OR-END Critical constraints live at the START or END of a file, never
+buried mid-document. @status:impl/done
 
-##models-attend-to-the-edges-of-context Models attend to the edges of context ("Lost in
+@fact:models-attend-to-the-edges-of-context Models attend to the edges of context ("Lost in
 the Middle", Liu et al. 2023/2024); a mid-file invariant is an
-invariant the reader statistically skipped. @spec/done
+invariant the reader statistically skipped. @status:spec/done
 
 ## Where the full rules live {#pointers}
 
-- ##POINTER-THE-PROTOCOL Why addressability is IPC requirement #1, the URI scheme, the
+- @fact:POINTER-THE-PROTOCOL Why addressability is IPC requirement #1, the URI scheme, the
   token economics:
-  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#root @impl/done
-- ##POINTER-THE-AUTHORING-RULES Unit of meaning, normativity marking, deviations, size budgets,
+  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL#root @status:impl/done
+- @fact:POINTER-THE-AUTHORING-RULES Unit of meaning, normativity marking, deviations, size budgets,
   anchor stability:
-  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/authoring-rules#root @impl/done
-- ##POINTER-THE-SPEC-TREE-LAYOUT PROP vs FEAT, what goes where, the `.human/` buffer:
-  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/spec-tree-layout#root @impl/done
+  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/authoring-rules#root @status:impl/done
+- @fact:POINTER-THE-SPEC-TREE-LAYOUT PROP vs FEAT, what goes where, the `.human/` buffer:
+  @spec://org.vibevm.world/addressable-specs/flows/addressable-specs/spec-tree-layout#root @status:impl/done
 
 ## Never {#never}
 
-- ##NEVER-CITE-BY-PARAPHRASE-WHEN-AN-ANCHOR-EXISTS Never cite a spec section by paraphrase when an anchor exists. @impl/done
-- ##NEVER-DUPLICATE-A-NORMATIVE-VALUE Never duplicate a normative value into a second file — cite its
-  anchor. @impl/done
-- ##NEVER-BURY-AN-INVARIANT-IN-THE-MIDDLE-OF-A-FILE Never bury an invariant in the middle of a file. @impl/done
-- ##NEVER-RENAME-OR-DELETE-A-CITED-ANCHOR Never rename or delete an anchor that has ever been cited —
-  anchors are immutable; retire with a tombstone instead. @impl/done
-- ##NEVER-INVENT-AN-ANCHOR Never invent an anchor — resolve the URI and read the unit before
-  acting on it. @impl/done
+- @fact:NEVER-CITE-BY-PARAPHRASE-WHEN-AN-ANCHOR-EXISTS Never cite a spec section by paraphrase when an anchor exists. @status:impl/done
+- @fact:NEVER-DUPLICATE-A-NORMATIVE-VALUE Never duplicate a normative value into a second file — cite its
+  anchor. @status:impl/done
+- @fact:NEVER-BURY-AN-INVARIANT-IN-THE-MIDDLE-OF-A-FILE Never bury an invariant in the middle of a file. @status:impl/done
+- @fact:NEVER-RENAME-OR-DELETE-A-CITED-ANCHOR Never rename or delete an anchor that has ever been cited —
+  anchors are immutable; retire with a tombstone instead. @status:impl/done
+- @fact:NEVER-INVENT-AN-ANCHOR Never invent an anchor — resolve the URI and read the unit before
+  acting on it. @status:impl/done

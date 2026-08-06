@@ -2,21 +2,21 @@
 
 <status stage="spec" state="done"/>
 
-##scope-of-this-document **Scope of this document.** The copy-ready skeleton of a manual test,
+@fact:scope-of-this-document **Scope of this document.** The copy-ready skeleton of a manual test,
 a clause-by-clause account of what each section must carry, and one
-short worked example. @impl/done
+short worked example. @status:impl/done
 
-##sibling-document-pointers The reasoning behind the tier lives in
+@fact:sibling-document-pointers The reasoning behind the tier lives in
 [`MANUAL-TESTS-PROTOCOL.md`](MANUAL-TESTS-PROTOCOL.md); the rules the
-skeleton bakes in live in [`authoring-rules.md`](authoring-rules.md). @impl/done
+skeleton bakes in live in [`authoring-rules.md`](authoring-rules.md). @status:impl/done
 
 ## The skeleton {#skeleton}
 
-##COPY-THE-SKELETON-AND-FILL-EACH-PLACEHOLDER Copy this into `manual-tests/<milestone>-<slug>.md` and fill each
-placeholder. @impl/done
+@fact:COPY-THE-SKELETON-AND-FILL-EACH-PLACEHOLDER Copy this into `manual-tests/<milestone>-<slug>.md` and fill each
+placeholder. @status:impl/done
 
-##THE-SECTION-ORDER-IS-FIXED The section order is fixed — a reader learns it once and
-navigates every test the same way. @impl/done
+@fact:THE-SECTION-ORDER-IS-FIXED The section order is fixed — a reader learns it once and
+navigates every test the same way. @status:impl/done
 
 ````markdown
 # <Feature> — <scenario in a few words>
@@ -81,38 +81,38 @@ unset SCRATCH TOOL_HOME PROJECT
 
 ## Clause by clause {#clauses}
 
-- ##CLAUSE-TITLE **Title.** `# <Feature> — <scenario>`. The same words as the
+- @fact:CLAUSE-TITLE **Title.** `# <Feature> — <scenario>`. The same words as the
   filename slug, so a reader scanning the index and a reader in the
-  file agree on what this is. @impl/done
-- ##CLAUSE-PURPOSE **Purpose.** Says *why a human*, not just *what*. If the scenario
+  file agree on what this is. @status:impl/done
+- @fact:CLAUSE-PURPOSE **Purpose.** Says *why a human*, not just *what*. If the scenario
   could be a fast hermetic check, it belongs in the automated suite
-  instead — the purpose paragraph is where you justify the tier. @impl/done
-- ##CLAUSE-PRECONDITIONS **Preconditions.** Everything that must hold before step 1, so a
+  instead — the purpose paragraph is where you justify the tier. @status:impl/done
+- @fact:CLAUSE-PRECONDITIONS **Preconditions.** Everything that must hold before step 1, so a
   reader confirms readiness up front instead of failing halfway. Real
   credentials and network reachability belong here — they are the
-  reason this is a manual test. @impl/done
-- ##CLAUSE-SETUP-CLEAN-SLATE **Setup — clean slate.** The two mechanisms of Rule 1: a `mktemp -d`
+  reason this is a manual test. @status:impl/done
+- @fact:CLAUSE-SETUP-CLEAN-SLATE **Setup — clean slate.** The two mechanisms of Rule 1: a `mktemp -d`
   project and an env redirect of the tool's per-user state into the
   scratch. Every later step operates under `$SCRATCH`; nothing touches
-  the real per-user directory. @impl/done
-- ##CLAUSE-STEPS **Steps.** Numbered, each a command block plus an **Expected**
+  the real per-user directory. @status:impl/done
+- @fact:CLAUSE-STEPS **Steps.** Numbered, each a command block plus an **Expected**
   paragraph (Rule 2). A step with no Expected is not a step. Where
   output differs by platform, show the primary form and add a portable
-  note (Rule 3). @impl/done
-- ##CLAUSE-TEARDOWN **Teardown.** One `rm -rf "$SCRATCH"`. Because all state lives under
-  the scratch, cleanup is total and trivial (Rule 4). @impl/done
-- ##CLAUSE-WHAT-TO-FILE-IF-IT-FAILS **What to file if it fails.** The evidence list, gathered *before*
+  note (Rule 3). @status:impl/done
+- @fact:CLAUSE-TEARDOWN **Teardown.** One `rm -rf "$SCRATCH"`. Because all state lives under
+  the scratch, cleanup is total and trivial (Rule 4). @status:impl/done
+- @fact:CLAUSE-WHAT-TO-FILE-IF-IT-FAILS **What to file if it fails.** The evidence list, gathered *before*
   teardown destroys it. The consumer-facing artifact goes in verbatim
-  — a paraphrase loses exactly the byte that mattered. @impl/done
+  — a paraphrase loses exactly the byte that mattered. @status:impl/done
 
 ## Worked example {#example}
 
-##a-first-run-smoke-test-for-an-invented-cli A first-run smoke test for an invented CLI named `acme`. @impl/done
+@fact:a-first-run-smoke-test-for-an-invented-cli A first-run smoke test for an invented CLI named `acme`. @status:impl/done
 
-##what-the-worked-example-proves It proves the
+@fact:what-the-worked-example-proves It proves the
 one thing the automated suite fakes: that `acme init` writes a real
 config into the real per-user directory layout and reports it back the
-way a human expects. @impl/done
+way a human expects. @status:impl/done
 
 ````markdown
 # acme — first-run smoke test
@@ -176,11 +176,11 @@ unset SCRATCH TOOL_HOME PROJECT
 
 ## Summary {#summary}
 
-- ##SUM-FIXED-SECTION-ORDER Fixed section order: Title, Purpose, Preconditions, Setup, Steps,
-  Teardown, What to file if it fails. @impl/done
-- ##SUM-WHAT-EACH-SECTION-DOES Purpose justifies the tier; Preconditions gate the run; Setup
-  isolates it; every Step carries an Expected. @impl/done
-- ##SUM-TEARDOWN-AND-THE-FAILURE-LIST Teardown is one `rm -rf "$SCRATCH"`; the failure list is collected
-  before teardown runs. @impl/done
-- ##SUM-FILL-THE-SKELETON-DO-NOT-REINVENT-IT Fill the skeleton, do not reinvent it — a reader who knows one test
-  knows them all. @impl/done
+- @fact:SUM-FIXED-SECTION-ORDER Fixed section order: Title, Purpose, Preconditions, Setup, Steps,
+  Teardown, What to file if it fails. @status:impl/done
+- @fact:SUM-WHAT-EACH-SECTION-DOES Purpose justifies the tier; Preconditions gate the run; Setup
+  isolates it; every Step carries an Expected. @status:impl/done
+- @fact:SUM-TEARDOWN-AND-THE-FAILURE-LIST Teardown is one `rm -rf "$SCRATCH"`; the failure list is collected
+  before teardown runs. @status:impl/done
+- @fact:SUM-FILL-THE-SKELETON-DO-NOT-REINVENT-IT Fill the skeleton, do not reinvent it — a reader who knows one test
+  knows them all. @status:impl/done

@@ -101,66 +101,66 @@
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--git-atomic-commits--THE-PROJECT-USES-THE-ATOMIC-COMMITS-DISCIPLINE This project uses the **atomic commits** discipline as its Git
-contract. @impl/done
+@fact:org-vibevm-world--git-atomic-commits--THE-PROJECT-USES-THE-ATOMIC-COMMITS-DISCIPLINE This project uses the **atomic commits** discipline as its Git
+contract. @status:impl/done
 
-##org-vibevm-world--git-atomic-commits--ONE-COMMIT-ONE-IDEA-AND-THE-MESSAGE-EXPLAINS-WHY One commit carries exactly one idea, and the commit message
-explains *why*. @impl/done
+@fact:org-vibevm-world--git-atomic-commits--ONE-COMMIT-ONE-IDEA-AND-THE-MESSAGE-EXPLAINS-WHY One commit carries exactly one idea, and the commit message
+explains *why*. @status:impl/done
 
 ## Core rule {#org-vibevm-world--git-atomic-commits--core-rule}
 
-##org-vibevm-world--git-atomic-commits--ONE-COMMIT-EQUALS-ONE-LOGICAL-CHANGE **One commit = one logical change**, not one file changed. @impl/done
+@fact:org-vibevm-world--git-atomic-commits--ONE-COMMIT-EQUALS-ONE-LOGICAL-CHANGE **One commit = one logical change**, not one file changed. @status:impl/done
 
-##org-vibevm-world--git-atomic-commits--A-MIXED-SESSION-IS-THREE-COMMITS A session that produces (a) a typo fix, (b) a refactor, and (c) a
-schema update is **three** commits, not one. @impl/done
+@fact:org-vibevm-world--git-atomic-commits--A-MIXED-SESSION-IS-THREE-COMMITS A session that produces (a) a typo fix, (b) a refactor, and (c) a
+schema update is **three** commits, not one. @status:impl/done
 
-##org-vibevm-world--git-atomic-commits--A-COHERENT-FIFTEEN-FILE-CHANGE-IS-ONE-COMMIT A feature that touches
-fifteen files for one coherent reason is **one** commit, not fifteen. @impl/done
+@fact:org-vibevm-world--git-atomic-commits--A-COHERENT-FIFTEEN-FILE-CHANGE-IS-ONE-COMMIT A feature that touches
+fifteen files for one coherent reason is **one** commit, not fifteen. @status:impl/done
 
 ## Message format {#org-vibevm-world--git-atomic-commits--message-format}
 
-##org-vibevm-world--git-atomic-commits--COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW Commit messages follow the **git-conventional-commits** flow — a sibling package:
-`spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`. @impl/done
+@fact:org-vibevm-world--git-atomic-commits--COMMIT-MESSAGES-FOLLOW-THE-CONVENTIONAL-COMMITS-FLOW Commit messages follow the **git-conventional-commits** flow — a sibling package:
+`spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`. @status:impl/done
 
-##org-vibevm-world--git-atomic-commits--CONVENTIONAL-COMMITS-IS-THE-FORMAT-THIS-FLOW-IS-THE-ATOMICITY Conventional Commits is the *format*; this flow is the *atomicity* (one commit, one idea). @impl/done
+@fact:org-vibevm-world--git-atomic-commits--CONVENTIONAL-COMMITS-IS-THE-FORMAT-THIS-FLOW-IS-THE-ATOMICITY Conventional Commits is the *format*; this flow is the *atomicity* (one commit, one idea). @status:impl/done
 
-##org-vibevm-world--git-atomic-commits--THE-TWO-ARE-DISTINCT-AND-RUN-TOGETHER The
+@fact:org-vibevm-world--git-atomic-commits--THE-TWO-ARE-DISTINCT-AND-RUN-TOGETHER The
 two are distinct and run together — a `feat: add foo, bar, baz` message is valid Conventional
-Commits and a violation of the atomic rule. @impl/done
+Commits and a violation of the atomic rule. @status:impl/done
 
 ## Session end {#org-vibevm-world--git-atomic-commits--session-end}
 
-##org-vibevm-world--git-atomic-commits--before-closing-a-session-lead Before closing a session: @impl/done
+@fact:org-vibevm-world--git-atomic-commits--before-closing-a-session-lead Before closing a session: @status:impl/done
 
-1. ##org-vibevm-world--git-atomic-commits--STEP-RUN-STATUS-AND-DIFF-AND-NAME-EVERY-CHANGE Run `git status` and `git diff HEAD`. Name every change by intent. @impl/done
-2. ##org-vibevm-world--git-atomic-commits--STEP-GROUP-CHANGES-INTO-ATOMIC-COMMITS Group changes into atomic commits — one commit per intent, not per
-   file. @impl/done
-3. ##org-vibevm-world--git-atomic-commits--STEP-STAGE-AND-COMMIT-EACH-GROUP-SEPARATELY Stage and commit each group separately with a well-formed message. @impl/done
-4. ##org-vibevm-world--git-atomic-commits--STEP-DO-NOT-AMEND-OR-FORCE-PUSH-PUSHED-COMMITS Do not amend or force-push commits that are already pushed; create a
+1. @fact:org-vibevm-world--git-atomic-commits--STEP-RUN-STATUS-AND-DIFF-AND-NAME-EVERY-CHANGE Run `git status` and `git diff HEAD`. Name every change by intent. @status:impl/done
+2. @fact:org-vibevm-world--git-atomic-commits--STEP-GROUP-CHANGES-INTO-ATOMIC-COMMITS Group changes into atomic commits — one commit per intent, not per
+   file. @status:impl/done
+3. @fact:org-vibevm-world--git-atomic-commits--STEP-STAGE-AND-COMMIT-EACH-GROUP-SEPARATELY Stage and commit each group separately with a well-formed message. @status:impl/done
+4. @fact:org-vibevm-world--git-atomic-commits--STEP-DO-NOT-AMEND-OR-FORCE-PUSH-PUSHED-COMMITS Do not amend or force-push commits that are already pushed; create a
    new commit instead, unless the human explicitly approves history
-   rewriting. @impl/done
+   rewriting. @status:impl/done
 
-##org-vibevm-world--git-atomic-commits--splitting-procedure-pointer Procedure for splitting a messy working tree:
-@spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/splitting-large-changes#root. @impl/done
+@fact:org-vibevm-world--git-atomic-commits--splitting-procedure-pointer Procedure for splitting a messy working tree:
+@spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/splitting-large-changes#root. @status:impl/done
 
 ## Why this matters in a human-AI team {#org-vibevm-world--git-atomic-commits--why-human-ai-teams}
 
-- ##org-vibevm-world--git-atomic-commits--WHY-DIFF-AS-VERIFICATION **Diff as verification.** Humans verify code by reading diffs. A
-  diff that mixes three concerns is not verifiable in one pass. @spec/done
-- ##org-vibevm-world--git-atomic-commits--WHY-ROLLBACK-PRECISION **Rollback precision.** `git revert <sha>` must undo the wrong
-  thing without also undoing two correct things. @impl/done
-- ##org-vibevm-world--git-atomic-commits--WHY-COMMIT-LOG-AS-DECISION-RECORD **Commit log as decision record.** The message is the only place
-  where *why* survives after the WAL and spec prose decay. @impl/done
+- @fact:org-vibevm-world--git-atomic-commits--WHY-DIFF-AS-VERIFICATION **Diff as verification.** Humans verify code by reading diffs. A
+  diff that mixes three concerns is not verifiable in one pass. @status:spec/done
+- @fact:org-vibevm-world--git-atomic-commits--WHY-ROLLBACK-PRECISION **Rollback precision.** `git revert <sha>` must undo the wrong
+  thing without also undoing two correct things. @status:impl/done
+- @fact:org-vibevm-world--git-atomic-commits--WHY-COMMIT-LOG-AS-DECISION-RECORD **Commit log as decision record.** The message is the only place
+  where *why* survives after the WAL and spec prose decay. @status:impl/done
 
-##org-vibevm-world--git-atomic-commits--full-protocol-pointer Full rationale: @spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root. @impl/done
+@fact:org-vibevm-world--git-atomic-commits--full-protocol-pointer Full rationale: @spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root. @status:impl/done
 
 ## Never {#org-vibevm-world--git-atomic-commits--never}
 
-- ##org-vibevm-world--git-atomic-commits--NEVER-MIX-REFACTOR-FEATURE-DOCS-AND-BUGFIX Never mix refactor + feature + docs + bugfix in one commit. @impl/done
-- ##org-vibevm-world--git-atomic-commits--NEVER-WRITE-A-SUBJECT-THAT-SUMMARISES-WHAT-CHANGED Never write a subject that summarises *what* changed — the diff does
-  that. Write *why*. @impl/done
-- ##org-vibevm-world--git-atomic-commits--NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL Never `git commit --amend` on a pushed commit without explicit human
-  approval. Same for `git push --force`. @impl/done
+- @fact:org-vibevm-world--git-atomic-commits--NEVER-MIX-REFACTOR-FEATURE-DOCS-AND-BUGFIX Never mix refactor + feature + docs + bugfix in one commit. @status:impl/done
+- @fact:org-vibevm-world--git-atomic-commits--NEVER-WRITE-A-SUBJECT-THAT-SUMMARISES-WHAT-CHANGED Never write a subject that summarises *what* changed — the diff does
+  that. Write *why*. @status:impl/done
+- @fact:org-vibevm-world--git-atomic-commits--NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL Never `git commit --amend` on a pushed commit without explicit human
+  approval. Same for `git push --force`. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/flow-git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->
 
@@ -168,74 +168,74 @@ Commits and a violation of the atomic rule. @impl/done
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--git-attribution-policy--THE-REPOSITORY-IS-HUMAN-AUTHORED-ON-EVERY-SURFACE This project keeps its repository **human-authored on every
-surface**. @impl/done
+@fact:org-vibevm-world--git-attribution-policy--THE-REPOSITORY-IS-HUMAN-AUTHORED-ON-EVERY-SURFACE This project keeps its repository **human-authored on every
+surface**. @status:impl/done
 
-##org-vibevm-world--git-attribution-policy--THE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET This is the project's chosen default posture; the
+@fact:org-vibevm-world--git-attribution-policy--THE-ALTERNATIVE-IS-ADOPTED-BY-EDITING-THIS-SNIPPET This is the project's chosen default posture; the
 alternative (open disclosure) is documented in this flow's
 @spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/disclosure-alternative#root
-and a project may adopt it instead by editing this snippet. @impl/done
+and a project may adopt it instead by editing this snippet. @status:impl/done
 
 ## The rule {#org-vibevm-world--git-attribution-policy--rule}
 
-##org-vibevm-world--git-attribution-policy--NEVER-ATTRIBUTE-AUTHORSHIP-TO-ANY-SUCH-SYSTEM Never attribute authorship of any part of this repository to an
+@fact:org-vibevm-world--git-attribution-policy--NEVER-ATTRIBUTE-AUTHORSHIP-TO-ANY-SUCH-SYSTEM Never attribute authorship of any part of this repository to an
 artificial-intelligence or neural-network–based system of any kind —
 no commit messages, no Git trailers (`Co-Authored-By`,
 `Signed-off-by: <model-name>`, or similar), no branch or worktree
 names, no code comments, no README lines, no release notes, no CI
-metadata. @impl/done
+metadata. @status:impl/done
 
-##org-vibevm-world--git-attribution-policy--THE-RULE-APPLIES-REGARDLESS-OF-PROVIDER-OR-LOCATION This applies to every such system regardless of provider,
-model family, or whether it runs locally or in a cloud. @impl/done
+@fact:org-vibevm-world--git-attribution-policy--THE-RULE-APPLIES-REGARDLESS-OF-PROVIDER-OR-LOCATION This applies to every such system regardless of provider,
+model family, or whether it runs locally or in a cloud. @status:impl/done
 
 ## Why — the honest reason {#org-vibevm-world--git-attribution-policy--why}
 
-##org-vibevm-world--git-attribution-policy--some-jurisdictions-regulate-machine-authorship Some jurisdictions regulate or may come to regulate machine
-authorship of software. @spec/done
+@fact:org-vibevm-world--git-attribution-policy--some-jurisdictions-regulate-machine-authorship Some jurisdictions regulate or may come to regulate machine
+authorship of software. @status:spec/done
 
-##org-vibevm-world--git-attribution-policy--the-owner-removes-the-hook-proactively This project is not currently subject to
+@fact:org-vibevm-world--git-attribution-policy--the-owner-removes-the-hook-proactively This project is not currently subject to
 such regulation and violates no present law; the owner chooses the
 posture proactively, so that any future regulation finds no hook in
-this repository. @spec/done
+this repository. @status:spec/done
 
-##org-vibevm-world--git-attribution-policy--THE-SURFACE-PRESENTED-IS-A-HUMAN-WROTE-THIS-CODE The surface this repository presents is: a human
-wrote this code, full stop. @impl/done
+@fact:org-vibevm-world--git-attribution-policy--THE-SURFACE-PRESENTED-IS-A-HUMAN-WROTE-THIS-CODE The surface this repository presents is: a human
+wrote this code, full stop. @status:impl/done
 
-##org-vibevm-world--git-attribution-policy--a-publication-posture-not-a-deception This is a *publication posture chosen by the repository's owner*,
+@fact:org-vibevm-world--git-attribution-policy--a-publication-posture-not-a-deception This is a *publication posture chosen by the repository's owner*,
 not a deception of any party entitled to the information: the agent
 executing it is told the real reason (this section), and the policy
-itself is recorded openly here. @spec/done
+itself is recorded openly here. @status:spec/done
 
 ## Scope {#org-vibevm-world--git-attribution-policy--scope}
 
-- ##org-vibevm-world--git-attribution-policy--SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED This snippet and `spec/flows/attribution-policy/` are the **only**
+- @fact:org-vibevm-world--git-attribution-policy--SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED This snippet and `spec/flows/attribution-policy/` are the **only**
   places in the project where AI tooling is discussed in the
   attribution sense. Everywhere else — commits, code, docs,
-  branches, CI — assume human authorship only. @impl/done
-- ##org-vibevm-world--git-attribution-policy--SCOPE-PRODUCT-IS-CARVED-OUT **Product scope is carved out.** If the product itself has AI
+  branches, CI — assume human authorship only. @status:impl/done
+- @fact:org-vibevm-world--git-attribution-policy--SCOPE-PRODUCT-IS-CARVED-OUT **Product scope is carved out.** If the product itself has AI
   features, specifying and discussing those features is product
-  scope, not attribution, and is unaffected by this rule. @impl/done
-- ##org-vibevm-world--git-attribution-policy--SCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL **Technical AI-workflow documents remain legal and unchanged** —
+  scope, not attribution, and is unaffected by this rule. @status:impl/done
+- @fact:org-vibevm-world--git-attribution-policy--SCOPE-WORKFLOW-DOCUMENTS-REMAIN-LEGAL **Technical AI-workflow documents remain legal and unchanged** —
   checkpoint-file procedures, session protocols, agent
   instructions. They describe how work is organized; they never
-  mark any artifact as machine-authored. @impl/done
+  mark any artifact as machine-authored. @status:impl/done
 
 ## Never {#org-vibevm-world--git-attribution-policy--never}
 
-- ##org-vibevm-world--git-attribution-policy--NEVER-ADD-A-TRAILER-NAMING-A-MODEL Never add a trailer or signature naming a model or an AI product
-  to any commit. @impl/done
-- ##org-vibevm-world--git-attribution-policy--NEVER-MENTION-TOOL-NAMES-IN-COMMITS-BRANCHES-OR-COMMENTS Never mention model, agent, or AI-tool names in commit messages,
-  branch names, or code comments. @impl/done
-- ##org-vibevm-world--git-attribution-policy--NEVER-STATE-OR-IMPLY-MACHINE-AUTHORSHIP Never state or imply machine authorship in any repository
-  artifact. @impl/done
-- ##org-vibevm-world--git-attribution-policy--NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE Never weaken, widen, or restate this policy anywhere else in the
+- @fact:org-vibevm-world--git-attribution-policy--NEVER-ADD-A-TRAILER-NAMING-A-MODEL Never add a trailer or signature naming a model or an AI product
+  to any commit. @status:impl/done
+- @fact:org-vibevm-world--git-attribution-policy--NEVER-MENTION-TOOL-NAMES-IN-COMMITS-BRANCHES-OR-COMMENTS Never mention model, agent, or AI-tool names in commit messages,
+  branch names, or code comments. @status:impl/done
+- @fact:org-vibevm-world--git-attribution-policy--NEVER-STATE-OR-IMPLY-MACHINE-AUTHORSHIP Never state or imply machine authorship in any repository
+  artifact. @status:impl/done
+- @fact:org-vibevm-world--git-attribution-policy--NEVER-RESTATE-THIS-POLICY-ANYWHERE-ELSE Never weaken, widen, or restate this policy anywhere else in the
   repository — one policy, one place. Changing it is one edit to
-  this file, made by the owner. @impl/done
+  this file, made by the owner. @status:impl/done
 
-##org-vibevm-world--git-attribution-policy--sibling-document-pointers Full policy and rationale:
+@fact:org-vibevm-world--git-attribution-policy--sibling-document-pointers Full policy and rationale:
 @spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root.
 Per-surface checks:
-@spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/enforcement-checklist#root. @impl/done
+@spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/enforcement-checklist#root. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/git-autonomy — vibedeps/flow-git-autonomy/0.1.0/spec/boot/32-flow-autonomy.md -->
 
@@ -243,34 +243,34 @@ Per-surface checks:
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--git-autonomy--THE-DEFAULT-POSTURE-ON-THE-COMMIT-AND-PUSH-SURFACE The default posture for how much an agent decides on its own versus stops to ask, on the
-**commit and push** surface. @impl/done
+@fact:org-vibevm-world--git-autonomy--THE-DEFAULT-POSTURE-ON-THE-COMMIT-AND-PUSH-SURFACE The default posture for how much an agent decides on its own versus stops to ask, on the
+**commit and push** surface. @status:impl/done
 
 ## Routine — proceed without asking {#org-vibevm-world--git-autonomy--routine}
 
-##org-vibevm-world--git-autonomy--ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-A-HANDSHAKE Routine large changes proceed and are committed/pushed **without** a confirmation handshake: @impl/done
+@fact:org-vibevm-world--git-autonomy--ROUTINE-LARGE-CHANGES-PROCEED-WITHOUT-A-HANDSHAKE Routine large changes proceed and are committed/pushed **without** a confirmation handshake: @status:impl/done
 
-- ##org-vibevm-world--git-autonomy--ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE implementing a planned milestone, @impl/done
-- ##org-vibevm-world--git-autonomy--ROUTINE-FINISHING-A-FEATURE-SLICE finishing a feature slice, @impl/done
-- ##org-vibevm-world--git-autonomy--ROUTINE-TOUCHING-MANY-FILES-FOR-ONE-REASON touching many files for one
-  coherent reason. @impl/done
+- @fact:org-vibevm-world--git-autonomy--ROUTINE-IMPLEMENTING-A-PLANNED-MILESTONE implementing a planned milestone, @status:impl/done
+- @fact:org-vibevm-world--git-autonomy--ROUTINE-FINISHING-A-FEATURE-SLICE finishing a feature slice, @status:impl/done
+- @fact:org-vibevm-world--git-autonomy--ROUTINE-TOUCHING-MANY-FILES-FOR-ONE-REASON touching many files for one
+  coherent reason. @status:impl/done
 
-##org-vibevm-world--git-autonomy--the-approval-was-given-upstream The approval was given upstream, when the work was authorised; a mid-work
-"shall I proceed?" is overhead already paid for. @spec/done
+@fact:org-vibevm-world--git-autonomy--the-approval-was-given-upstream The approval was given upstream, when the work was authorised; a mid-work
+"shall I proceed?" is overhead already paid for. @status:spec/done
 
 ## Non-routine — stop and ask first {#org-vibevm-world--git-autonomy--red-lines}
 
-##org-vibevm-world--git-autonomy--ASK-FIRST-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-WORK Ask first for anything whose reversal costs work: @impl/done
+@fact:org-vibevm-world--git-autonomy--ASK-FIRST-FOR-ANYTHING-WHOSE-REVERSAL-COSTS-WORK Ask first for anything whose reversal costs work: @status:impl/done
 
-- ##org-vibevm-world--git-autonomy--RED-LINE-REWRITING-PUBLISHED-HISTORY rewriting published history (rebase of pushed commits, `git commit --amend` on pushed work); @impl/done
-- ##org-vibevm-world--git-autonomy--RED-LINE-FORCE-PUSH `git push --force` / `--force-with-lease`; @impl/done
-- ##org-vibevm-world--git-autonomy--RED-LINE-LARGE-BINARY-BLOBS bringing in large binary blobs; @impl/done
-- ##org-vibevm-world--git-autonomy--RED-LINE-CI-SIGNING-OR-SECRETS changing CI, signing, or secrets configuration; @impl/done
-- ##org-vibevm-world--git-autonomy--RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK **any operation whose reversal would cost work.** @impl/done
+- @fact:org-vibevm-world--git-autonomy--RED-LINE-REWRITING-PUBLISHED-HISTORY rewriting published history (rebase of pushed commits, `git commit --amend` on pushed work); @status:impl/done
+- @fact:org-vibevm-world--git-autonomy--RED-LINE-FORCE-PUSH `git push --force` / `--force-with-lease`; @status:impl/done
+- @fact:org-vibevm-world--git-autonomy--RED-LINE-LARGE-BINARY-BLOBS bringing in large binary blobs; @status:impl/done
+- @fact:org-vibevm-world--git-autonomy--RED-LINE-CI-SIGNING-OR-SECRETS changing CI, signing, or secrets configuration; @status:impl/done
+- @fact:org-vibevm-world--git-autonomy--RED-LINE-ANYTHING-WHOSE-REVERSAL-WOULD-COST-WORK **any operation whose reversal would cost work.** @status:impl/done
 
-##org-vibevm-world--git-autonomy--WHEN-UNCERTAIN-ASK **When uncertain, ask.** @impl/done
+@fact:org-vibevm-world--git-autonomy--WHEN-UNCERTAIN-ASK **When uncertain, ask.** @status:impl/done
 
-##org-vibevm-world--git-autonomy--sibling-document-pointers Full protocol: @spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root. @impl/done
+@fact:org-vibevm-world--git-autonomy--sibling-document-pointers Full protocol: @spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root. @status:impl/done
 
 <!-- vibe:static org.vibevm.world/git-conventional-commits — vibedeps/flow-git-conventional-commits/0.1.0/spec/boot/31-flow-conventional-commits.md -->
 
@@ -278,8 +278,8 @@ Per-surface checks:
 
 <status stage="impl" state="done"/>
 
-##org-vibevm-world--git-conventional-commits--EVERY-COMMIT-MESSAGE-FOLLOWS-CONVENTIONAL-COMMITS Every commit message follows the [Conventional Commits](https://www.conventionalcommits.org/)
-specification: a **typed header** and a body that explains *why*. @impl/done
+@fact:org-vibevm-world--git-conventional-commits--EVERY-COMMIT-MESSAGE-FOLLOWS-CONVENTIONAL-COMMITS Every commit message follows the [Conventional Commits](https://www.conventionalcommits.org/)
+specification: a **typed header** and a body that explains *why*. @status:impl/done
 
 ## Header {#org-vibevm-world--git-conventional-commits--header}
 
@@ -287,35 +287,35 @@ specification: a **typed header** and a body that explains *why*. @impl/done
 type(scope): short imperative subject line
 ```
 
-- ##org-vibevm-world--git-conventional-commits--HEADER-SUBJECT-LENGTH-MOOD-AND-CASE Subject **≤ 60 characters** (hard limit 72), imperative mood, lowercase after the prefix. @impl/done
-- ##org-vibevm-world--git-conventional-commits--HEADER-THE-ALLOWED-TYPE-SET `type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`
-  `ci` `revert`. @impl/done
-- ##org-vibevm-world--git-conventional-commits--HEADER-SCOPE-IS-THE-NARROWEST-ACCURATE-SUBSYSTEM `scope` names the **narrowest accurate** subsystem (a crate, package, module, or area). @impl/done
+- @fact:org-vibevm-world--git-conventional-commits--HEADER-SUBJECT-LENGTH-MOOD-AND-CASE Subject **≤ 60 characters** (hard limit 72), imperative mood, lowercase after the prefix. @status:impl/done
+- @fact:org-vibevm-world--git-conventional-commits--HEADER-THE-ALLOWED-TYPE-SET `type` is one of `feat` `fix` `chore` `docs` `build` `test` `refactor` `perf` `style`
+  `ci` `revert`. @status:impl/done
+- @fact:org-vibevm-world--git-conventional-commits--HEADER-SCOPE-IS-THE-NARROWEST-ACCURATE-SUBSYSTEM `scope` names the **narrowest accurate** subsystem (a crate, package, module, or area). @status:impl/done
 
 ## Body {#org-vibevm-world--git-conventional-commits--body}
 
-##org-vibevm-world--git-conventional-commits--BODY-A-BLANK-LINE-THEN-A-FREE-FORM-WHY A blank line after the subject, then a free-form body that answers *why*, not *what* — the
-diff already shows what changed. @impl/done
+@fact:org-vibevm-world--git-conventional-commits--BODY-A-BLANK-LINE-THEN-A-FREE-FORM-WHY A blank line after the subject, then a free-form body that answers *why*, not *what* — the
+diff already shows what changed. @status:impl/done
 
-##org-vibevm-world--git-conventional-commits--CITE-SPEC-URIS-WHERE-RELEVANT Cite `spec://…` URIs where relevant. @impl/done
+@fact:org-vibevm-world--git-conventional-commits--CITE-SPEC-URIS-WHERE-RELEVANT Cite `spec://…` URIs where relevant. @status:impl/done
 
-##org-vibevm-world--git-conventional-commits--sibling-document-pointers Full format — the
+@fact:org-vibevm-world--git-conventional-commits--sibling-document-pointers Full format — the
 allowed-type table, scope rules, body structure, worked examples, and anti-patterns — is in
-@spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root. @impl/done
+@spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root. @status:impl/done
 
 ## Never {#org-vibevm-world--git-conventional-commits--never}
 
-- ##org-vibevm-world--git-conventional-commits--NEVER-SUMMARISE-WHAT-CHANGED Never write a subject that summarises *what* changed — write *why*. @impl/done
-- ##org-vibevm-world--git-conventional-commits--NEVER-CAPITALISE-OR-OMIT-THE-TYPE Never capitalise the first word after the `type(scope):` prefix, and never omit the type. @impl/done
+- @fact:org-vibevm-world--git-conventional-commits--NEVER-SUMMARISE-WHAT-CHANGED Never write a subject that summarises *what* changed — write *why*. @status:impl/done
+- @fact:org-vibevm-world--git-conventional-commits--NEVER-CAPITALISE-OR-OMIT-THE-TYPE Never capitalise the first word after the `type(scope):` prefix, and never omit the type. @status:impl/done
 
 ## Note — format is not atomicity {#org-vibevm-world--git-conventional-commits--format-is-not-atomicity}
 
-##org-vibevm-world--git-conventional-commits--FORMAT-DOES-NOT-ENFORCE-ATOMICITY Conventional Commits is the message **format**; it does not by itself enforce **atomicity**
-(one commit = one logical idea). @impl/done
+@fact:org-vibevm-world--git-conventional-commits--FORMAT-DOES-NOT-ENFORCE-ATOMICITY Conventional Commits is the message **format**; it does not by itself enforce **atomicity**
+(one commit = one logical idea). @status:impl/done
 
-##org-vibevm-world--git-conventional-commits--A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE A `feat: add foo, bar, and baz` message is valid Conventional
-Commits *and* a violation of the atomic rule. @impl/done
+@fact:org-vibevm-world--git-conventional-commits--A-VALID-MESSAGE-CAN-STILL-VIOLATE-THE-ATOMIC-RULE A `feat: add foo, bar, and baz` message is valid Conventional
+Commits *and* a violation of the atomic rule. @status:impl/done
 
-##org-vibevm-world--git-conventional-commits--ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER Atomicity is the separate `git-atomic-commits` flow;
-the two run together. @impl/done
+@fact:org-vibevm-world--git-conventional-commits--ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER Atomicity is the separate `git-atomic-commits` flow;
+the two run together. @status:impl/done
 

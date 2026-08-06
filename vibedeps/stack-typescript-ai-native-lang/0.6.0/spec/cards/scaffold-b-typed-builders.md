@@ -2,35 +2,35 @@
 
 <status stage="spec" state="done"/>
 
-##status-line **Discipline v0.2 · BETA · T2 · TypeScript** @impl/done
+@fact:status-line **Discipline v0.2 · BETA · T2 · TypeScript** @status:impl/done
 
 ## Band 1 — Identity & Recognition {#band-one-identity}
 
-##CLASSIFICATION Classification: layer=E (verification); mechanism=scaffold B. @impl/done
+@fact:CLASSIFICATION Classification: layer=E (verification); mechanism=scaffold B. @status:impl/done
 
-##INTENT Intent: Make the statistically-likely wrong call un-representable, so a hallucinated edit fails `tsc` before runtime — encoding protocol correctness AND nominal identity in types rather than docstrings. The TypeScript twist: structural typing makes same-shaped values interchangeable, so the first job is **branding** — manually recovering the nominal safety Rust's newtypes give for free. @impl/done
+@fact:INTENT Intent: Make the statistically-likely wrong call un-representable, so a hallucinated edit fails `tsc` before runtime — encoding protocol correctness AND nominal identity in types rather than docstrings. The TypeScript twist: structural typing makes same-shaped values interchangeable, so the first job is **branding** — manually recovering the nominal safety Rust's newtypes give for free. @status:impl/done
 
-##ALSO-KNOWN-AS Also Known As: branded types; nominal types; opaque types; discriminated union; phantom type; typestate builder; sealed union; `satisfies`-exhaustiveness; make-illegal-states-unrepresentable. @spec/done
+@fact:ALSO-KNOWN-AS Also Known As: branded types; nominal types; opaque types; discriminated union; phantom type; typestate builder; sealed union; `satisfies`-exhaustiveness; make-illegal-states-unrepresentable. @status:spec/done
 
-##APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a seam has a usage protocol (order of calls, required fields, valid states); a meaning-bearing primitive (`string`, `number`) crosses a boundary where its identity matters; an API takes multiple same-typed args or a boolean flag. *Detector seed:* a pub seam fn taking a bare `string`/`number`/`boolean` or two same-typed params, OR a runtime "is-ready" check, OR a same-shaped type used where a distinct identity is meant → recognition fires (~94% of compile errors are type-level; structural typing will NOT catch the identity swap without branding). @impl/done
+@fact:APPLICABILITY-RECOGNITION Applicability / Recognition: Apply when — a seam has a usage protocol (order of calls, required fields, valid states); a meaning-bearing primitive (`string`, `number`) crosses a boundary where its identity matters; an API takes multiple same-typed args or a boolean flag. *Detector seed:* a pub seam fn taking a bare `string`/`number`/`boolean` or two same-typed params, OR a runtime "is-ready" check, OR a same-shaped type used where a distinct identity is meant → recognition fires (~94% of compile errors are type-level; structural typing will NOT catch the identity swap without branding). @status:impl/done
 
 ## Band 2 — Justification & Tradeoffs {#band-two-justification}
 
-##MOTIVATION Motivation: A weak agent calls `transfer(fromAccount, toAccount, amount)` where `fromAccount` and `toAccount` are both `string`, and swaps them — structurally identical, `tsc` is silent, money moves the wrong way. With branded `AccountId` (or a builder requiring `.from(AccountId(...)).to(...)`), the swap or a bare `string` fails `tsc`; the error surfaces in the loop, not in production. @spec/done
+@fact:MOTIVATION Motivation: A weak agent calls `transfer(fromAccount, toAccount, amount)` where `fromAccount` and `toAccount` are both `string`, and swaps them — structurally identical, `tsc` is silent, money moves the wrong way. With branded `AccountId` (or a builder requiring `.from(AccountId(...)).to(...)`), the swap or a bare `string` fails `tsc`; the error surfaces in the loop, not in production. @status:spec/done
 
-##STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Branded type* (primitive + erased brand tag) · *Discriminated union* (tagged variants; illegal states absent) · *Typestate / phantom-parameter builder* (type-mandatory required fields, encoded call order) · *Sealed union + `satisfies`* (closed extension, exhaustiveness). @impl/done
+@fact:STRUCTURE-AND-PARTICIPANTS Structure & Participants: *Branded type* (primitive + erased brand tag) · *Discriminated union* (tagged variants; illegal states absent) · *Typestate / phantom-parameter builder* (type-mandatory required fields, encoded call order) · *Sealed union + `satisfies`* (closed extension, exhaustiveness). @status:impl/done
 
-##COLLABORATIONS Collaborations: Shrinks the input space Class D oracles must cover; the compiler under the maxed `tsconfig` (guide §1) is the Class E loop's primary checker; pairs with Class C for runtime invariants types can't express; the §2 boundary schemas PRODUCE branded types at the erasure edge. @impl/done
+@fact:COLLABORATIONS Collaborations: Shrinks the input space Class D oracles must cover; the compiler under the maxed `tsconfig` (guide §1) is the Class E loop's primary checker; pairs with Class C for runtime invariants types can't express; the §2 boundary schemas PRODUCE branded types at the erasure edge. @status:impl/done
 
-##GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* convert probable hallucinations — identity swaps, missing fields, wrong call order — into compile errors at seams. *Non-Goals:* NOT branding every local primitive (ergonomic cost) — scope to seam surfaces; NOT type-level wizardry (the §0 OOD tail); NOT a replacement for runtime validation at the erasure boundary (§2 — brands are erased). @impl/done
+@fact:GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* convert probable hallucinations — identity swaps, missing fields, wrong call order — into compile errors at seams. *Non-Goals:* NOT branding every local primitive (ergonomic cost) — scope to seam surfaces; NOT type-level wizardry (the §0 OOD tail); NOT a replacement for runtime validation at the erasure boundary (§2 — brands are erased). @status:impl/done
 
-##CONSEQUENCES Consequences: (+) a whole class of misuse becomes uncompilable; (+) the type IS the protocol doc. (−) branding ergonomics cost for human contributors (a branding helper eases it); (−) over-typing fights idiom — scope tightly; (−) brands are ERASED — they guard compile-time identity, not runtime, so they must be paired with §2 validators at any untyped boundary. @spec/done
+@fact:CONSEQUENCES Consequences: (+) a whole class of misuse becomes uncompilable; (+) the type IS the protocol doc. (−) branding ergonomics cost for human contributors (a branding helper eases it); (−) over-typing fights idiom — scope tightly; (−) brands are ERASED — they guard compile-time identity, not runtime, so they must be paired with §2 validators at any untyped boundary. @status:spec/done
 
-##ALTERNATIVES Alternatives: runtime validation (errors surface late — in production, not the loop); a contract (Class C) when the invariant is a value range, not a protocol/identity; a plain type alias (rejected — structural, gives no nominal guard). @spec/done
+@fact:ALTERNATIVES Alternatives: runtime validation (errors surface late — in production, not the loop); a contract (Class C) when the invariant is a value range, not a protocol/identity; a plain type alias (rejected — structural, gives no nominal guard). @status:spec/done
 
-##RISKS-AND-ASSUMPTIONS Risks & Assumptions: assumes the protocol/identity is type-expressible; brands do not survive a runtime boundary (that is §2's job, not B's). *Sunset:* none material. Strong models may be mildly distorted by over-constraint — keep branding/typestate proportional. @spec/done
+@fact:RISKS-AND-ASSUMPTIONS Risks & Assumptions: assumes the protocol/identity is type-expressible; brands do not survive a runtime boundary (that is §2's job, not B's). *Sunset:* none material. Strong models may be mildly distorted by over-constraint — keep branding/typestate proportional. @status:spec/done
 
-##EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R3-008 (misuse-resistance, theory), DR2-012/R2C-005 (94% type-level errors; type-awareness cuts compile errors, benchmark). Class: benchmark + theory. Tag: **[E-mid]**. @spec/done
+@fact:EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: R3-008 (misuse-resistance, theory), DR2-012/R2C-005 (94% type-level errors; type-awareness cuts compile errors, benchmark). Class: benchmark + theory. Tag: **[E-mid]**. @status:spec/done
 
 ## Band 3 — Operation {#band-three-operation}
 
