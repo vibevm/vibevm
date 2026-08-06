@@ -120,10 +120,25 @@ already built.
       their crate. And the doc sweep's count is wrong for the third time (234
       over 38 files) against a directory unchanged since July.
 
+- [x] `feat(specmap)`: **[B-019](б) slice 1 built** — 56 command nodes enter the
+      map (`vibe` 29, `vibe-index` 14, `xtask` 13), recognised by clap's own
+      derive so a new subcommand cannot be added without appearing. The
+      acceptance number caught the one real defect that review did not: two
+      crates declare `pub enum Command` and the join matched on type name alone,
+      so the map claimed 29 commands `vibe-index` does not have. The join is
+      crate-local now, with a test proved failing without it.
+- [x] `docs(backlog)` + `docs(campaign)`: **[B-063] filed** — markup validation
+      sits in no gate while the owner-guide said it sat in the panel; proved by
+      this session's own five unmarked facts reaching a commit unremarked. And
+      the transport law gains the `-c` routing hazard: a `cd` before the
+      subshell sends a correction to the repository root instead of the worker.
+
 ### What the next session picks up, in order
 
-1. **B-019(б) slice 2 and 3** — nesting (68 subcommands) and the `explain`
-   acceptance, per [`command-nodes.md`](spec/design/command-nodes.md) `#cut`.
+1. **B-019(б) slice 2 and 3** — nesting and the `explain` acceptance, per
+   [`command-nodes.md`](spec/design/command-nodes.md) `#cut`. **Slice 2's number
+   is deliberately unmeasured** — do not take the census's 68, which is the host
+   CLI's subcommand total and not a map figure; slice 1's history is exactly why.
 2. **The owner's court, now with material under each:** B-019(в)'s systems
    boundary · B-046's three options *plus* the typed-marker question under them
    · B-047's split item (give the four-layer model a home, then refine it) ·
