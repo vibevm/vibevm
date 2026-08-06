@@ -3,8 +3,11 @@
 <status stage="impl" state="done" action="continue" comment="C 2026-07-25: §5-§13 shipped as vibe-spec (07-15), rename (07-16), normal+static AOT end to end (07-20); the §13 JIT loader and §10 link tables remain"/>
 
 @fact:status-line **Status: IMPLEMENTED** (designed 2026-07-14 at the owner's request — the flagship "static-compiler vision"; verified against the tree 2026-07-25 by the spec-actualization campaign). §17 records the compiler shipping three times over: §5–§13 as the `vibe-spec` crate wired into `bootgen` (2026-07-15), the link-type rename (2026-07-16), and `normal + static` compiled end to end with the `link × format` question resolved as eager AOT (2026-07-20). **What remains:** the structural / JIT loader of §13 (`normal + dynamic`) and the §10 link tables, both still marked *(provisional)*. @status:impl/done
+
 @fact:extends **Extends:** [PROP-009](PROP-009-loading-model.md) (the loading model — inclusion types, the two-tree model, the `STATIC.md` / `INDEX.md` artifacts). This PROP turns PROP-009's "ordered list of contributions" into a real **preprocessor + linker**. @status:spec/done
+
 @fact:supersedes-line **Supersedes / folds in:** [PROP-034](PROP-034-transitive-links-boot-graph.md) (transitive links + the static boot-link graph). PROP-034's linker becomes the *emission layer* of this system (§12); PROP-034 is retained as the narrower, already-drafted contract for that layer until this PROP is ratified. @status:spec/done
+
 @fact:related **Related:** [PROP-028](../../common/PROP-028-package-families.md) (families — the aggregator role), [PROP-029](../../common/PROP-029-fully-qualified-addresses.md) (`spec://` addressing, the `/` group↔name joiner), [PROP-008](../vibe-registry/PROP-008-qualified-naming.md) (pkgref grammar `kind:group/name@version`), the `addressable-specs` flow (anchor / section grammar), [`spec/design/loading-and-boot-model.md`](../../design/loading-and-boot-model.md) (the static/dynamic-linking metaphor this PROP completes), [PROP-014 specmap](../../../packages/org.vibevm.ai-native/core-ai-native/v0.7.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md) (the `uri↔file` index the router extends). @status:spec/done
 
 ---

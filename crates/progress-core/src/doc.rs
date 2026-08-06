@@ -140,6 +140,19 @@ pub enum IssueCode {
     /// author writes `@fact/image:` today and learns in a year that nothing
     /// ever read it.
     FenceBinding,
+    /// A second fact anchor swallowed into the body of another.
+    ///
+    /// A fact anchor is the first token of its paragraph (`@fact:<ID>`,
+    /// `@fact/<type>:<ID>`, or the legacy `##<ID>`). When two anchored facts
+    /// sit on neighbouring lines with no blank line between them, Markdown
+    /// folds them into a single paragraph: only the first keeps its address,
+    /// and the second's anchor becomes body text of the first. Its marker
+    /// still parses, its prose reads identically, and the gate stayed silent —
+    /// yet no verdict can ever bind to the swallowed anchor again, because it
+    /// no longer has an address. The space between the lines was load-bearing,
+    /// and its absence cost nine days of orphaned verdicts before this check
+    /// existed. Fix: insert a blank line before the swallowed anchor.
+    SwallowedAnchor,
 }
 
 /// One fully parsed document.

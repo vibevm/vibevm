@@ -7,8 +7,10 @@
 ```
 
 @fact:status-legend **Status:** queued | in-progress | review | done | returned @status:spec/done
+
 @fact:EXECUTOR-SPLIT **Executor:** Fable when budget allows, otherwise Opus. **Reviewer:** Fable
 always (normative text is judgment territory). @status:spec/done
+
 @fact:wave-field **Wave:** <stitching wave number> @status:spec/done
 
 ## 1. Goal {#goal}

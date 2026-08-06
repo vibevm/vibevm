@@ -39,7 +39,9 @@
 ## 5. Risks, named {#risks}
 
 @fact:risk-two-resolvers **Two resolvers, one grammar.** `FileResolver` (vibe-spec) and the specmap engine both resolve host addresses; the design changes one code path and one config value, and the build's acceptance must exercise **both** (a `vibe check`-class pass + a specmap re-mint over the migrated tree). @status:spec/work
+
 @fact:risk-mass-rewrite **A ~1 800-occurrence rewrite is a mass edit.** Mitigations: scripted with a dry-run diff the boss reads; the panel and both gates green before commit; the lane regenerated and byte-compared (only expected lines move); anchors re-judged verdict-first rather than assumed. @status:spec/work
+
 @fact:risk-muscle-memory **Muscle memory and stale citations.** Every future hand-typed `spec://org.vibevm.core/vibevm/…` fails loudly with the hint — that is the designed behaviour, not a regression; the PROP-029 changelog carries the rename record (the addressable-specs tombstone law applied to an authority). @status:spec/work
 
 ### 5.1 The refactor's own metadata survives the rename — the owner-assigned check, executed {#metadata-check}

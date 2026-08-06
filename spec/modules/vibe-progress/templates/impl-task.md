@@ -7,8 +7,11 @@
 ```
 
 @fact:status-legend **Status:** queued | in-progress | review | done | returned @status:spec/done
+
 @fact:EXECUTOR-SPLIT **Executor:** Opus. **Reviewer:** Fable, against §6 verbatim. @status:spec/done
+
 @fact:cluster-field **Cluster:** <registry | workspace | resolver | cli | common> @status:spec/done
+
 @fact:UNIT-STABILITY **Unit-stability check (release precondition):** every anchor cited in §2 has
 no open obligation in the findings ledger and no `unknown` marker. @status:spec/done
 

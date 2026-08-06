@@ -3,8 +3,11 @@
 <status stage="impl" state="done" comment="B2 2026-07-25: shipped registry contract (M1.1-revision + M1.6 + the M1.13/M1.14 auth/git-source/redirect slices); status line still says accepted-only and the Phase A acceptance boxes stay unchecked - F-032"/>
 
 @fact:milestone-line **Milestone:** M1.1-revision ([`ROADMAP.md`](../../../ROADMAP.md#m11-revision--decentralized-per-package-registry-active-started-2026-04-24)). Phase B lands in M1.6. @status:impl/done
+
 @fact:status-line **Status:** accepted 2026-04-24. @status:impl/done
+
 @fact:supersedes-line **Supersedes (partially):** [PROP-001](PROP-001-git-backend.md) §2.3 (`Registry` trait), §2.4 (cache layout), §2.6 (lockfile `source_uri` format). PROP-001 §2.1 (shell-out-to-git), §2.2 (`GitBackend` trait), §2.5 (freshness TTL), §2.7 (Windows UX) remain authoritative. @status:impl/done
+
 @fact:related **Related:** [spec://org.vibevm.core/vibevm/common/PROP-000](../../common/PROP-000.md) (especially §15 — dep weight, §16 — JTD, §17 — production architecture, §18 — complexity ≥ RPM), [`VIBEVM-SPEC.md` §7](../../../VIBEVM-SPEC.md) (manifest / lockfile schemas), [`VIBEVM-SPEC.md` §8](../../../VIBEVM-SPEC.md) (registry). @status:spec/done
 
 ---

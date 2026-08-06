@@ -12,8 +12,9 @@
 //! The pipeline is split along its responsibility seams: run-matched
 //! delimiters ([`delimiters`]), block collection ([`blocks`]),
 //! heading/unit segmentation ([`units`]), fact segmentation ([`facts`]),
-//! marker scanning ([`markers`]), and the anchor laws ([`anchors`]). This
-//! module keeps the orchestrator and the shared hash.
+//! the swallowed-anchor check ([`swallowed`]), marker scanning ([`markers`]),
+//! and the anchor laws ([`anchors`]). This module keeps the orchestrator and
+//! the shared hash.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#parsing");
 
@@ -22,6 +23,7 @@ mod blocks;
 mod delimiters;
 mod facts;
 mod markers;
+mod swallowed;
 mod units;
 
 use crate::doc::ParsedDoc;
@@ -30,6 +32,7 @@ use blocks::collect_blocks;
 use facts::{bind_covered_blocks, segment_facts};
 use markers::scan_markers;
 use sha2::{Digest, Sha256};
+use swallowed::check_swallowed_anchors;
 use units::collect_units;
 
 /// Parse one Markdown document.
@@ -43,6 +46,7 @@ pub fn parse_document(path: &str, text: &str) -> ParsedDoc {
     collect_blocks(&lines, &mut doc);
     collect_units(&lines, &mut doc);
     segment_facts(&mut doc);
+    check_swallowed_anchors(&mut doc);
     bind_covered_blocks(&mut doc);
     scan_markers(&mut doc);
     check_anchor_laws(&mut doc);

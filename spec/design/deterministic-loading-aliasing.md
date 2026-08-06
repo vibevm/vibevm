@@ -108,8 +108,11 @@
 ## 9. Deliberately out of this slice {#out-of-scope}
 
 @fact:oos-strip **The marker strip itself** — B-011 is «aliasing design first»; the strip builds on top once aliases + qualification land (its own entry when commissioned). @status:spec/work
+
 @fact:oos-b006 **The git-family double emission** (B-006) — a dedup/hoisting matter; qualification makes the duplicate *visible as* a same-origin repeat rather than a collision, but removing it is B-006's own build. @status:spec/work
+
 @fact:oos-b031 **The host-as-package root** (B-031) and the grammar-superset decision (B-028) — adjacent loading-plane builds, sequenced after B-011 in wave А. @status:spec/work
+
 @fact:oos-hot-attach **A hot-attach UX** for dynamic library lanes (§6) — the naming guarantees are this slice; the workflow that writes the INDEX entry is not. @status:spec/work
 
 ## 10. Implementation shape (for the worker cut, after approval) {#implementation}

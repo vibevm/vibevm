@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-06T16:21:39Z",
+  "updated_at": "2026-08-06T17:05:42Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -94553,9 +94553,9 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 53,
+      "markers": 56,
       "units": 13,
-      "facts": 52,
+      "facts": 55,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -95188,9 +95188,9 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 27,
+      "markers": 29,
       "units": 10,
-      "facts": 26,
+      "facts": 28,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -96411,6 +96411,23 @@
         "verified_at": "2026-08-05T19:33:11Z",
         "verify_batch": "H12-map-format + G6-citations-move"
       }
+    },
+    {
+      "path": "spec/design/map-query-language.md",
+      "effective": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "explicit": {
+        "stage": "spec",
+        "state": "work"
+      },
+      "markers": 34,
+      "units": 6,
+      "facts": 33,
+      "unmarked": 0,
+      "issues": 0,
+      "campaign": {}
     },
     {
       "path": "spec/design/multiple-sources-and-plugins.md",
@@ -100289,9 +100306,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 144,
+      "markers": 152,
       "units": 62,
-      "facts": 143,
+      "facts": 151,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -106239,9 +106256,9 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 23,
+      "markers": 26,
       "units": 10,
-      "facts": 22,
+      "facts": 25,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -106407,9 +106424,9 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 16,
+      "markers": 18,
       "units": 7,
-      "facts": 15,
+      "facts": 17,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -107124,9 +107141,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 369,
+      "markers": 372,
       "units": 36,
-      "facts": 368,
+      "facts": 371,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -118445,9 +118462,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 155,
+      "markers": 158,
       "units": 22,
-      "facts": 154,
+      "facts": 157,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
