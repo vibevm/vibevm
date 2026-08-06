@@ -194,6 +194,8 @@ fn from_github_cell_scans_through_the_seam() {
             clone_into,
             timeout: std::time::Duration::from_secs(30),
             skip_forks: true,
+            org_cache_path: None,
+            probe_freshness: false,
         },
     };
     let walk = FromClonesOptions {

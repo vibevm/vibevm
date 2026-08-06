@@ -332,6 +332,71 @@ before PROP-008; `kind` left package identity, so `<name>` alone is the key. @st
 
 @fact:CADENCE-TARGET Incremental is the default cadence target (one run per minute on an active org); full is the bootstrap path and the "trust nothing" recovery option. @status:impl/done
 
+#### 2.8.1 The organisation image, and what keeps caching it honest {#cache-org}
+
+@fact:CACHE-ORG-THE-COST-IS-THE-SMALL-HALF **Enumerating the organisation on
+every operation is a cost, and the cost is the small half of the problem.** For
+local clones it is a directory walk and cheap. For a git host it is a paged API
+walk on every single operation. But the reason to think about it is not speed —
+it is that the picture is stale the moment it is taken. @status:impl/done
+
+@fact:CACHE-ORG-THE-AXIS-IS-NOT-HOW-MANY-WORKERS **The premise «between
+operations nobody can change the organisation» is already false, and not because
+of sibling workers** *(owner accepted this correction, 2026-08-06)*. A developer
+publishing a package creates a repository and pushes a tag **straight to the git
+host**, never passing through the index service. The image goes stale with one
+worker exactly as with ten. The real axis is whether every change goes through
+the index — and today none has to. @status:impl/done
+
+@fact:CACHE-ORG-IS-ON-BY-DEFAULT **`--cache-org` is on by default** *(owner
+ruling, 2026-08-06)*, with an explicit negative form to turn it off. The name
+describes the mechanism rather than the assumption, which is deliberate: the
+assumption the default must NOT make is the one the fact above rejects. @status:impl/done
+
+@fact:CACHE-ORG-THE-FRESHNESS-CHECK-IS-A-CONDITION-NOT-AN-IMPROVEMENT **The
+cheap freshness check is what makes that default honest, and it is therefore not
+an enhancement.** Git hosts answer «has anything changed» with a conditional
+request that costs almost nothing and needs no walk; the cached image carries the
+validator its enumeration came with, and every run offers it back. Without this
+step, «on by default» would silently mean the very assumption the owner
+rejected. With it, the image is cached and never treated as truth without asking.
+@status:impl/done
+
+@fact:CACHE-ORG-CANNOT-CHECK-MEANS-ENUMERATE **A host that gives no validator
+makes the index enumerate, never trust.** The absence of an answer is not an
+answer. This is the direction the whole design has to fail in, because the
+opposite default — no validator, assume fresh — is indistinguishable from a
+working cache right up until a package cannot be found. @status:impl/done
+
+@fact:CACHE-ORG-BELONGS-TO-ITS-ORGANISATION **An image is keyed to the
+organisation and the API base it came from**, and a cache taken for one is never
+used for another. Cheap to state, expensive to omit: the failure would be an
+index confidently serving another organisation's picture. @status:impl/done
+
+@fact:CACHE-ORG-HIT-AND-MISS-ARE-VISIBLE **Hit and miss are reported, in both
+renderings.** An operator must be able to tell «this came from the cache» from
+«this was enumerated», because a cache that silently serves stale data is
+indistinguishable from one that works — which is the disease this whole section
+is written against. @status:impl/done
+
+@fact:RESCAN-ORG-IS-UNCONDITIONAL **`rescan-org` is its own verb and it is
+unconditional** *(owner ruling, 2026-08-06)*. It enumerates regardless of the
+cache and regardless of any validator, and refreshes the image. It exists
+because a missed change is invisible from the inside: no freshness mechanism
+promises completeness, and a full walk does. Webhooks ([§2.16](#webhooks))
+reduce how often it is needed; they never remove the need. @status:impl/done
+
+@fact:CACHE-ORG-APPLIES-WHERE-ENUMERATION-IS-EXPENSIVE The cache and its
+freshness check govern the host-API path. For a local-clone walk the enumeration
+is a directory read, and wrapping a validator around it would buy nothing and
+add a way to be wrong. @status:impl/done
+
+@fact:CACHE-ORG-FIRST-RUN-IS-UNCHANGED **With no image on disk the behaviour is
+exactly what it was** — enumerate, build, write the image — with no warning and
+no error, and turning the flag off leaves no image and no report field. A
+default that changes the first run's behaviour is a default that has to be
+explained; this one does not. @status:impl/done
+
 @fact:triggers-lead **Triggers.** @status:impl/done
 
 - @fact:TRIGGER-CLI **CLI:** `vibe-index reindex <data-dir> --from-clones <org-dir>` — direct invocation. @status:impl/done

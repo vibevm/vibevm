@@ -11,6 +11,7 @@ extern crate tempfile;
 const SUBCOMMANDS: &[&str] = &[
     "init",
     "reindex",
+    "rescan-org",
     "get",
     "list",
     "search",

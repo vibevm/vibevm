@@ -20,6 +20,7 @@ pub mod outdated;
 pub mod purls;
 pub mod reindex;
 pub mod remove;
+pub mod rescan_org;
 pub mod search;
 pub mod serve;
 pub mod stop;
@@ -63,6 +64,10 @@ pub enum Command {
 
     /// (Re)build the index from authoritative package state.
     Reindex(reindex::Args),
+
+    /// Re-enumerate the org unconditionally and refresh the org-image
+    /// cache (ignores the cache + validator).
+    RescanOrg(rescan_org::Args),
 
     /// Read one package entry from the index.
     Get(get::Args),
@@ -113,6 +118,7 @@ pub fn dispatch(command: Command) -> Result<()> {
     match command {
         Command::Init(args) => init::run(args),
         Command::Reindex(args) => reindex::run(args),
+        Command::RescanOrg(args) => rescan_org::run(args),
         Command::Get(args) => get::run(args),
         Command::List(args) => list::run(args),
         Command::Search(args) => search::run(args),

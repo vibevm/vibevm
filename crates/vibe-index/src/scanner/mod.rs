@@ -17,10 +17,15 @@ pub mod from_clones;
 pub mod from_github;
 pub mod git_cli;
 pub mod manifest;
+pub mod org_cache;
 pub mod org_walk;
 
 pub use from_clones::FromClonesPackageScanner;
-pub use from_github::{FromGithubOptions, FromGithubPackageScanner, clone_org, list_repos};
+pub use from_github::{
+    CondOutcome, FromGithubOptions, FromGithubPackageScanner, clone_org, clone_repos_into,
+    list_repos, list_repos_conditional, resolve_repos,
+};
+pub use org_cache::{OrgCache, Validator};
 pub use org_walk::{FromClonesOptions, ScanReport, SkipNote, scan_org_dir};
 
 /// The scan seam (PROP-005 §2.8): one cell per source kind, selected

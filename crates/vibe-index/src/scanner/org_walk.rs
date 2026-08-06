@@ -44,6 +44,12 @@ pub struct ScanReport {
     /// the reindex driver as `<data-dir>/state/checkpoint.json` so
     /// the next `--incremental` run can skip unchanged repos.
     pub snapshots: BTreeMap<String, RepoSnapshot>,
+    /// Org-image cache outcome, surfaced for visibility (Р5):
+    /// `Some(true)` = served from a fresh cache (304 hit);
+    /// `Some(false)` = re-enumerated; `None` = caching not in use
+    /// (`--from-clones`, or `--from-github --no-cache-org`). Only the
+    /// `from-github` scanner sets this (Р6).
+    pub org_cache_hit: Option<bool>,
 }
 
 #[derive(Debug, Clone)]
@@ -159,6 +165,7 @@ pub fn scan_org_dir_with_filter(
         entries,
         skipped,
         snapshots,
+        org_cache_hit: None,
     })
 }
 
