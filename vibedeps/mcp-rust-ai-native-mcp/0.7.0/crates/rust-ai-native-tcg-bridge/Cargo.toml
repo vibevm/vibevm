@@ -22,4 +22,5 @@ specmark.workspace = true
 thiserror.workspace = true
 
 [dev-dependencies]
+sysinfo.workspace = true
 tempfile.workspace = true

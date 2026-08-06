@@ -56,10 +56,13 @@ pub fn render(rules: &[&dyn Rule], findings: &[Finding]) -> String {
             // it is simply marked, never failing the gate (`diff` keeps
             // acknowledged out of `new`). `justification` carries the
             // deviation's recorded reason text when the frontend captured
-            // it (TypeScript/Go facts carry `reason`); the Rust facts
-            // carry only the boolean, so it falls back to a fixed marker
-            // — plumbing the reason through the rust-syn frontend is a
-            // recorded leftover (see WORKER-REPORT).
+            // it: TypeScript/Go facts carry `reason`, and the three Rust
+            // facts carry it too with the rules threading it through
+            // (B-053, engine half done); but the rust-syn frontend does
+            // not populate the Rust field yet, so a Rust acknowledged
+            // finding still falls back to the fixed marker until that
+            // frontend second pass lands. The render is generic over the
+            // status: `Some(text)` -> that text, `None` -> the marker.
             if let FindingStatus::DeviationAcknowledged { reason } = &f.status {
                 let justification = reason.clone().unwrap_or_else(|| {
                     "acknowledged in-source deviation (#[spec(deviates)] testimony)".to_string()
@@ -416,6 +419,7 @@ mod tests {
                 line: 5,
                 in_test: false,
                 in_deviation: false,
+                reason: None,
             }],
         )];
         let findings = check(&[&gate], &facts, None);
@@ -430,10 +434,13 @@ mod tests {
 
     /// B-025: an acknowledged deviation STAYS in the SARIF, marked with
     /// an `inSource` suppression whose justification is the recorded
-    /// reason. (The Rust facts carry no reason text — the rust-syn
-    /// plumbing is a leftover — so the Rust driver falls back to a
-    /// fixed marker; this test uses a direct construction to prove the
-    /// reason IS rendered when present, which is the TS/Go path.)
+    /// reason. The render is source-agnostic, so this test constructs a
+    /// finding directly to prove a present `reason` IS the
+    /// `justification` — the path TS/Go have always taken and the three
+    /// Rust rules now thread too (B-053). A Rust finding is still
+    /// `reason: None` in practice until the rust-syn frontend populates
+    /// the field, which then falls back to the fixed marker (covered by
+    /// the rule tests in `rules::tests`).
     #[test]
     fn acknowledged_finding_renders_with_in_source_suppression() {
         use crate::Finding;

@@ -35,6 +35,26 @@ fragment, not a thought. @impl/done
 ##longer-units-page-badly Longer units
 page badly and churn on every edit. @spec/done
 
+##A-FENCE-CARRIES-NO-ANCHOR-AND-THAT-IS-DELIBERATE **Content inside a fenced
+block carries no anchor, and cannot be given one.** A fence is a payload — the
+reader copies it out, pastes it somewhere, runs it — so an anchor written
+inside would travel with the copy and corrupt what it is a copy of. Directives
+inside a fence are ignored for exactly the reason headings inside one are. @impl/done
+
+##AN-INSTRUCTION-INSIDE-A-FENCE-IS-UNVERIFIED-BY-CONSTRUCTION The consequence
+is the part authors underestimate: **a fence carrying an INSTRUCTION rather
+than an illustration is unverified by construction.** No instrument can test
+its claim, none can register that a fix landed, and whether any of it is ever
+checked depends on which nearby anchor a reader happens to pick up. And these
+are exactly the lines most likely to be *run*: quick-start blocks, copy-paste
+prompts, worked commands. @spec/done
+
+##A-CHECKABLE-CLAIM-BELONGS-OUTSIDE-THE-FENCE So put every checkable claim
+**outside** the fence, in an anchored sentence next to it, and keep inside only
+what must be copied verbatim. A path, a version, a command name asserted inside
+a fence is a fact with no address and no reader — assert it in the prose that
+introduces the block, where it can be judged, and let the block demonstrate it. @spec/done
+
 ## Normativity is marked, not implied {#normativity}
 
 ##A-READER-MUST-NEVER-GUESS-WHETHER-A-SENTENCE-BINDS A reader — human or model — must never guess whether a sentence
@@ -132,9 +152,24 @@ tax multiplied by the number of sessions the project will ever run. @spec/done
 
 | File | Budget | When over |
 |------|--------|-----------|
-| ##ROW-BUDGET-BOOT-FILE Boot file (always loaded) @impl/done | ≤ 500 tokens @impl/done | cut; move detail into flow docs and cite @impl/done |
+| ##ROW-BUDGET-BOOT-FILE Boot file, authored (always loaded) @impl/done | ≤ 500 tokens @impl/done | cut; move detail into flow docs and cite @impl/done |
 | ##ROW-BUDGET-WAL WAL / continuation state @impl/done | ≤ 3000 tokens @impl/done | collapse completed items to one line each @impl/done |
 | ##ROW-BUDGET-MODULE-SPEC One module spec document @impl/done | ≤ 5000 tokens @impl/done | split into submodules @impl/done |
+
+##BUDGETS-GOVERN-AUTHORED-DOCUMENTS-ONLY Every budget above governs an
+**authored** document. A **generated** artifact carries none — and the proof
+is in the last column: "cut", "collapse" and "split" are instructions to a
+writer, and a compiler's output has no writer to receive them. Its size is
+whatever the resolution graph says the session must have, so trimming it means
+changing what the project declared it needs, which is a different decision in a
+different file. @impl/done
+
+##COMPILING-INTO-THE-LANE-IS-NOT-A-BUDGET-BREACH It follows that a project
+which *compiles* its boot lane out of installed sources is not in breach when
+that lane grows, and "the artifact is over budget" is not a finding against it.
+The cost that stays real is the **session's** context — a live measurement
+about one run, not a static rule about one file, and this table is not where it
+is settled. @impl/done
 
 ##rule-of-thumb-500-tokens-is-a-page Rule of thumb: 500 tokens is roughly 375 English words — one page. @impl/done
 

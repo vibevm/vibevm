@@ -383,3 +383,22 @@ fn overloaded_warnings_are_deterministically_ordered() {
     assert!(ov[0].message.contains("x::first"));
     assert!(ov[1].message.contains("x::second"));
 }
+
+/// Refinement #3 (composition): the default scanner set — Rust plus JTD —
+/// is byte-stable against the Rust-only scan when `schema_roots` is empty.
+/// The JTD scanner walks zero roots and contributes nothing, so the
+/// committed `specmap.json` is identical, proved by byte comparison (not by
+/// assertion). This is the regression gate: a project with no schema roots
+/// changes by not one byte through the seam.
+#[test]
+fn empty_schema_roots_is_byte_stable_against_rust_only() {
+    let tmp = synthetic_tree();
+    let cfg = Config::default(); // schema_roots empty
+    let rust_only = build_with_scanner(tmp.path(), &cfg, &crate::scanner::RustScanner);
+    let default = build_with_scanner(tmp.path(), &cfg, &crate::scanner::DefaultScanner::new());
+    assert_eq!(
+        to_canonical_bytes(&rust_only).unwrap(),
+        to_canonical_bytes(&default).unwrap(),
+        "empty schema_roots must reproduce the Rust-only index byte for byte"
+    );
+}

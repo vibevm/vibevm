@@ -68,3 +68,6 @@ proc-macro2 = { version = "1", features = ["span-locations"] }
 
 # Dev / test
 tempfile = "3"
+# Process-table probe for the no-zombie live test (same form as the
+# fractality pod's loopback test). Pinned: 0.38+ needs rustc > 1.93.
+sysinfo = "=0.37.2"

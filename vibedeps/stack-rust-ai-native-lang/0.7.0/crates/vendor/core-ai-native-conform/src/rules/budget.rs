@@ -35,17 +35,17 @@ use super::req_message;
 ///     facts: vec![
 ///         Fact::UnsafeUse {
 ///             context: "block".into(), line: 5,
-///             in_test: false, in_deviation: false,
+///             in_test: false, in_deviation: false, reason: None,
 ///         },
 ///         // Testified boundary — MARKED acknowledged, not skipped.
 ///         Fact::UnsafeUse {
 ///             context: "block".into(), line: 9,
-///             in_test: false, in_deviation: true,
+///             in_test: false, in_deviation: true, reason: None,
 ///         },
 ///         // Test context — still a Live finding.
 ///         Fact::UnsafeUse {
 ///             context: "block".into(), line: 40,
-///             in_test: true, in_deviation: false,
+///             in_test: true, in_deviation: false, reason: None,
 ///         },
 ///     ],
 /// };
@@ -87,6 +87,7 @@ impl Rule for UnsafeGate {
                     line,
                     in_test: _,
                     in_deviation,
+                    reason,
                 } = f
                 {
                     // The ordinal advances over every unsafe use —
@@ -104,10 +105,14 @@ impl Rule for UnsafeGate {
                     // finding), because unsoundness in tests is still
                     // unsoundness. Only `in_deviation` — a `#[spec(deviates)]`
                     // testimony on the carrying fn — is an acknowledged
-                    // deviation. (The Rust facts carry no reason TEXT, so
-                    // the status's `reason` is None here; TS/Go do carry it.)
+                    // deviation. The fact's `reason` rides the status
+                    // straight to the SARIF `justification`, exactly the
+                    // TS/Go path (B-053); `reason: None` falls back to the
+                    // fixed marker in `sarif::render`, verbatim as before.
                     let status = if *in_deviation {
-                        FindingStatus::DeviationAcknowledged { reason: None }
+                        FindingStatus::DeviationAcknowledged {
+                            reason: reason.clone(),
+                        }
                     } else {
                         FindingStatus::Live
                     };
@@ -225,13 +230,13 @@ impl Rule for FileLength {
 ///     crate_name: "x".into(),
 ///     facts: vec![
 ///         Fact::UnwrapUse {
-///             method: "unwrap".into(), line: 9, in_test: false, in_deviation: false,
+///             method: "unwrap".into(), line: 9, in_test: false, in_deviation: false, reason: None,
 ///         },
 ///         Fact::UnwrapUse {
-///             method: "unwrap".into(), line: 90, in_test: true, in_deviation: false,
+///             method: "unwrap".into(), line: 90, in_test: true, in_deviation: false, reason: None,
 ///         },
 ///         Fact::UnwrapUse {
-///             method: "expect".into(), line: 120, in_test: false, in_deviation: true,
+///             method: "expect".into(), line: 120, in_test: false, in_deviation: true, reason: None,
 ///         },
 ///     ],
 /// };
@@ -273,6 +278,7 @@ impl Rule for NoUnwrapInDomain {
                     line,
                     in_test,
                     in_deviation,
+                    reason,
                 } = f
                 else {
                     continue;
@@ -284,6 +290,8 @@ impl Rule for NoUnwrapInDomain {
                 // `#[spec(deviates)]`) is an acknowledged deviation that
                 // B-025 stamps instead of skips. Keeping these two apart
                 // is the whole point: scope ≠ status (see UnsafeGate).
+                // The fact's `reason` rides the status to SARIF (B-053),
+                // matching the UnsafeGate / AmbientEnv path.
                 if *in_test {
                     continue;
                 }
@@ -291,7 +299,9 @@ impl Rule for NoUnwrapInDomain {
                 let ordinal = *counter;
                 *counter += 1;
                 let status = if *in_deviation {
-                    FindingStatus::DeviationAcknowledged { reason: None }
+                    FindingStatus::DeviationAcknowledged {
+                        reason: reason.clone(),
+                    }
                 } else {
                     FindingStatus::Live
                 };
@@ -342,9 +352,9 @@ impl Rule for NoUnwrapInDomain {
 ///     file: "crates/x/src/deep.rs".into(),
 ///     crate_name: "x".into(),
 ///     facts: vec![
-///         Fact::EnvRead { method: "var".into(), line: 9, in_test: false, in_deviation: false },
+///         Fact::EnvRead { method: "var".into(), line: 9, in_test: false, in_deviation: false, reason: None },
 ///         // A testified read is MARKED acknowledged, not skipped.
-///         Fact::EnvRead { method: "var".into(), line: 20, in_test: false, in_deviation: true },
+///         Fact::EnvRead { method: "var".into(), line: 20, in_test: false, in_deviation: true, reason: None },
 ///     ],
 /// };
 /// let findings = rule.check(&[domain]);
@@ -356,7 +366,7 @@ impl Rule for NoUnwrapInDomain {
 ///     file: "crates/x/src/main.rs".into(),
 ///     crate_name: "x".into(),
 ///     facts: vec![Fact::EnvRead {
-///         method: "var".into(), line: 5, in_test: false, in_deviation: false,
+///         method: "var".into(), line: 5, in_test: false, in_deviation: false, reason: None,
 ///     }],
 /// };
 /// assert!(rule.check(&[root]).is_empty());
@@ -406,6 +416,7 @@ impl Rule for AmbientEnv {
                     line,
                     in_test,
                     in_deviation,
+                    reason,
                 } = f
                 else {
                     continue;
@@ -413,7 +424,9 @@ impl Rule for AmbientEnv {
                 // `in_test` is scope (the rule does not apply to test
                 // reads) — skipped. `in_deviation` is an acknowledged
                 // deviation — B-025 stamps it, not skips it. Scope ≠
-                // status (see UnsafeGate / NoUnwrapInDomain).
+                // status (see UnsafeGate / NoUnwrapInDomain). The fact's
+                // `reason` rides the status to SARIF (B-053), matching
+                // the UnsafeGate / NoUnwrapInDomain path.
                 if *in_test {
                     continue;
                 }
@@ -421,7 +434,9 @@ impl Rule for AmbientEnv {
                 let ordinal = *counter;
                 *counter += 1;
                 let status = if *in_deviation {
-                    FindingStatus::DeviationAcknowledged { reason: None }
+                    FindingStatus::DeviationAcknowledged {
+                        reason: reason.clone(),
+                    }
                 } else {
                     FindingStatus::Live
                 };

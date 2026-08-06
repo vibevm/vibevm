@@ -26,6 +26,11 @@ use crate::{content_hash, fwd};
 mod lines;
 use lines::{fact_anchor_at, fence_mask, heading_level, list_item_content, parse_heading};
 
+/// Enumerable markdown exclusion (`Config::spec_exclude`): compiles the
+/// patterns once, tests every candidate file, and reports stale / invalid
+/// patterns. A child module for the file-length budget, like `lines`.
+mod excludes;
+
 /// Parsed kind line: `` `<kind> r<N>[ <status>]` `` + optional same-line prose.
 struct KindLine {
     kind: SpecUnitKind,
@@ -404,10 +409,17 @@ fn parse_units_with(
 }
 
 /// Walk each `<spec_root>/**/*.md` under the repo root, then the explicit
-/// [`Config::root_spec_docs`]. Deterministic order.
+/// [`Config::root_spec_docs`]. Deterministic order. [`Config::spec_exclude`]
+/// is applied to **both** halves — a match leaves the inventory before it is
+/// parsed — by the same law the progress gate applies its `exclude` after its
+/// includes. A pattern that matched nothing, or that is not a valid glob,
+/// speaks up through its own warning (see [`SpecExcludes`]).
 pub fn scan_spec_tree(root: &Path, cfg: &Config) -> (Vec<SpecUnit>, Vec<Warning>) {
     let mut units = Vec::new();
     let mut warnings = Vec::new();
+    let (mut excludes, bad_globs) = excludes::SpecExcludes::compile(&cfg.spec_exclude);
+    // Bad globs are discovered before any walk, so they lead the warnings.
+    warnings.extend(bad_globs);
     for spec_root_rel in &cfg.spec_roots {
         let spec_root = root.join(spec_root_rel);
         for entry in WalkDir::new(&spec_root)
@@ -424,6 +436,12 @@ pub fn scan_spec_tree(root: &Path, cfg: &Config) -> (Vec<SpecUnit>, Vec<Warning>
             }
             let rel = path.strip_prefix(root).unwrap_or(path);
             let file_rel = fwd(rel);
+            // `file_rel` is the exact string the SpecUnit would carry as
+            // `file`; matching it (not the OS path) is what the exclude key
+            // pays for — the printed path and the matched path are one.
+            if excludes.matches(&file_rel) {
+                continue;
+            }
             match std::fs::read_to_string(path) {
                 Ok(text) => {
                     let (mut u, mut w) = parse_units_with(
@@ -450,6 +468,12 @@ pub fn scan_spec_tree(root: &Path, cfg: &Config) -> (Vec<SpecUnit>, Vec<Warning>
         if !path.exists() {
             continue;
         }
+        // The exclude applies to this half too: `name` is the exact string a
+        // SpecUnit minted from a root doc carries as `file`, so it is what the
+        // pattern is tested against — uniformly with the spec-roots half.
+        if excludes.matches(name) {
+            continue;
+        }
         match std::fs::read_to_string(&path) {
             Ok(text) => {
                 let (mut u, mut w) = parse_units(name, &text, &cfg.namespace);
@@ -464,6 +488,9 @@ pub fn scan_spec_tree(root: &Path, cfg: &Config) -> (Vec<SpecUnit>, Vec<Warning>
             }),
         }
     }
+    // Stale patterns can only be known once both halves have walked, so they
+    // trail the warnings.
+    warnings.extend(excludes.stale_warnings());
     (units, warnings)
 }
 

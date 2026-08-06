@@ -31,9 +31,11 @@ specmark::scope!("spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014
 pub mod generated;
 
 pub mod config;
+pub mod cscan;
 pub mod explain;
 pub mod fingerprint;
 pub mod index;
+pub mod jtd;
 pub mod ledger;
 pub mod mdspec;
 pub mod ratchet;

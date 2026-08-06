@@ -14,6 +14,7 @@ use crate::facts::{Fact, Frontend, SourceFacts};
 /// let log = core_ai_native_conform::ExtractionLog::default();
 /// assert_eq!(log.cached, 0);
 /// assert!(log.extracted.is_empty());
+/// assert!(log.dead_excludes.is_empty());
 /// ```
 #[derive(Debug, Default)]
 pub struct ExtractionLog {
@@ -21,6 +22,10 @@ pub struct ExtractionLog {
     pub extracted: Vec<String>,
     /// Cache hits.
     pub cached: usize,
+    /// `[rust] exclude_substrings` entries that matched no source this
+    /// run — dead exclusions, surfaced so the silence of a key that does
+    /// nothing is visible (B-059). Advisory; the gate is unaffected.
+    pub dead_excludes: Vec<String>,
 }
 
 /// Content-addressed fact store under `<repo>/target/conform/facts/`.
@@ -99,7 +104,8 @@ impl Store {
         frontend: &dyn Frontend,
         log: &mut ExtractionLog,
     ) -> Result<Vec<SourceFacts>> {
-        let sources = workspace_sources(repo, &self.roots, &self.exclude);
+        let (sources, dead) = workspace_sources(repo, &self.roots, &self.exclude);
+        announce_dead("rust", log, dead);
         self.extract_sources(sources, frontend, log)
     }
 
@@ -220,17 +226,39 @@ pub(crate) fn crate_dir_name(dir: &Path) -> Option<String> {
         .map(|n| n.to_string_lossy().into_owned())
 }
 
+/// Surface `[<section>] exclude_substrings` entries that matched no
+/// source this pass (B-059): a dead exclusion used to be invisible — the
+/// gate ran on, the entry filtered nothing, nobody knew. Announced on
+/// stderr (the same non-fatal channel [`sarif`](crate::sarif) uses for a
+/// skipped report) and recorded in the log for structured consumers. The
+/// gate is unaffected.
+fn announce_dead(section: &'static str, log: &mut ExtractionLog, dead: Vec<String>) {
+    for d in &dead {
+        eprintln!(
+            "conform: `[{section}] exclude_substrings` entry {d:?} matched no source this \
+             run — a dead exclusion was invisible; the gate is unaffected."
+        );
+    }
+    log.dead_excludes.extend(dead);
+}
+
+/// One scanned source: `(repo-rel file, crate name, module path, absolute
+/// path)`. A type alias keeps the source-gatherers' return shapes readable
+/// (and under clippy's complexity threshold).
+type SourceEntry = (String, String, String, PathBuf);
+
 /// Enumerate the configured source roots as `(repo-rel file, crate
 /// name, module path, absolute path)`. A `<dir>/*` root scans each
 /// subdirectory of `<dir>` as one crate; any other root is a literal
 /// crate dir. `src/` and `tests/` of each are walked (tests carry the
 /// Class-D oracle facts), and files whose path contains an `exclude`
-/// substring are skipped.
+/// substring are skipped. Returns the kept sources and the `exclude`
+/// substrings that matched none of them (dead exclusions — B-059).
 fn workspace_sources(
     repo: &Path,
     roots: &[String],
     exclude: &[String],
-) -> Vec<(String, String, String, PathBuf)> {
+) -> (Vec<SourceEntry>, Vec<String>) {
     let mut crate_dirs: Vec<PathBuf> = Vec::new();
     for root in roots {
         if let Some(parent) = root.strip_suffix("/*") {
@@ -251,6 +279,12 @@ fn workspace_sources(
     crate_dirs.sort();
     crate_dirs.dedup();
 
+    // One hit counter per exclude substring, accumulated over the whole
+    // pass — every crate, src/ + tests/. B-059: an entry that hits zero
+    // is a dead exclusion; the counter spans the whole pass (not one
+    // crate) so a string that filters files in one crate and none in
+    // another still counts as live.
+    let mut hits = vec![0u32; exclude.len()];
     let mut out = Vec::new();
     for crate_dir in crate_dirs {
         let crate_name = crate_dir_name(&crate_dir).unwrap_or_default();
@@ -270,20 +304,38 @@ fn workspace_sources(
                 }
                 let rel_in_crate = path.strip_prefix(&crate_dir).unwrap_or(path);
                 let rel_fwd = rel_in_crate.to_string_lossy().replace('\\', "/");
-                if exclude.iter().any(|s| rel_fwd.contains(s.as_str())) {
-                    continue;
-                }
-                let module = module_path(&crate_ident, &rel_fwd);
                 let file = path
                     .strip_prefix(repo)
                     .unwrap_or(path)
                     .to_string_lossy()
                     .replace('\\', "/");
+                // B-059: match BOTH path spaces — the in-crate path
+                // (`src/lib.rs`, the old reading) and the repo-relative
+                // path (`crates/foo/src/lib.rs`, the space a finding's
+                // address lives in). One config key, one meaning; each hit
+                // is recorded so a dead entry can be named afterwards.
+                let mut excluded = false;
+                for (i, s) in exclude.iter().enumerate() {
+                    if rel_fwd.contains(s.as_str()) || file.contains(s.as_str()) {
+                        hits[i] += 1;
+                        excluded = true;
+                    }
+                }
+                if excluded {
+                    continue;
+                }
+                let module = module_path(&crate_ident, &rel_fwd);
                 out.push((file, crate_name.clone(), module, path.to_path_buf()));
             }
         }
     }
-    out
+    let dead = exclude
+        .iter()
+        .zip(&hits)
+        .filter(|(_, h)| **h == 0)
+        .map(|(s, _)| s.clone())
+        .collect();
+    (out, dead)
 }
 
 /// TypeScript source extensions the flat walk accepts.
@@ -492,44 +544,4 @@ pub fn sort_source_facts(mut all: Vec<SourceFacts>) -> Vec<SourceFacts> {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::config::Config;
-
-    struct NullFrontend;
-    impl Frontend for NullFrontend {
-        fn id(&self) -> &'static str {
-            "null"
-        }
-        fn version(&self) -> &'static str {
-            "0"
-        }
-        fn extract(&self, _f: &str, _c: &str, _m: &str, _t: &str) -> Vec<Fact> {
-            Vec::new()
-        }
-    }
-
-    /// A `.` root attributes its files to the project directory's own
-    /// basename — the scanner half of the single-crate fix (the
-    /// validator half is pinned in `config.rs`). Before the shared
-    /// `crate_dir_name` derivation this came out as the empty string,
-    /// so every crate-keyed rule silently skipped the whole tree.
-    #[test]
-    fn dot_root_names_the_project_directory() {
-        let tmp = tempfile::tempdir().unwrap();
-        let root = tmp.path();
-        std::fs::create_dir_all(root.join("src")).unwrap();
-        std::fs::write(root.join("src").join("lib.rs"), "pub fn f() {}\n").unwrap();
-        let cfg: Config = toml::from_str("[rust]\nroots = [\".\"]\n").unwrap();
-
-        let store = Store::for_rust(root, &cfg);
-        let mut log = ExtractionLog::default();
-        let facts = store
-            .extract_workspace(root, &NullFrontend, &mut log)
-            .unwrap();
-
-        let expected = root.file_name().unwrap().to_string_lossy().into_owned();
-        assert_eq!(facts.len(), 1, "one source file scanned");
-        assert_eq!(facts[0].crate_name, expected);
-    }
-}
+mod tests;

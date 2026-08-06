@@ -283,6 +283,17 @@ impl<T: Transport> LspClient<T> {
     }
 }
 
+/// `child_pid` reaches the transport's observability seam from the client
+/// layer (a supervisor or test holds the client, never the transport) —
+/// see [`ChildTransport::child_pid`] for why the seam exists.
+impl LspClient<ChildTransport> {
+    /// The child PID, delegated to the transport — see
+    /// [`ChildTransport::child_pid`].
+    pub fn child_pid(&self) -> u32 {
+        self.transport.child_pid()
+    }
+}
+
 /// The production transport: a spawned rust-analyzer child on piped
 /// stdio with a reader thread, kill-on-drop (ORACLE-RUST §7).
 pub struct ChildTransport {
@@ -340,6 +351,17 @@ impl ChildTransport {
             stdin,
             frames: rx,
         })
+    }
+
+    /// The spawned rust-analyzer child's OS PID — an OBSERVABILITY SEAM,
+    /// not a capability leak. The no-zombie property (ORACLE-RUST §7)
+    /// promises that killing the wrapper kills the child; this PID lets a
+    /// supervisor or integration test ASK THE OPERATING SYSTEM whether
+    /// that promise holds (is the process really gone?) instead of
+    /// trusting the shutdown dance. It deliberately exposes no `Child`
+    /// handle — kill and wait stay owned by this transport's `Drop`.
+    pub fn child_pid(&self) -> u32 {
+        self.child.id()
     }
 }
 

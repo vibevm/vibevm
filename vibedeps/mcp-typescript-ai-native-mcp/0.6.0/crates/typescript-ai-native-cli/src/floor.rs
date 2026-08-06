@@ -65,6 +65,19 @@ pub fn run_floor(root: &Path, opts: &FloorOptions) -> Result<()> {
     }
     let is_disabled = |step: &str| disabled.iter().any(|d| d.step == step);
 
+    // The floor perimeter the per-root steps walk — the policy's TS roots
+    // (conform.toml [typescript].roots, default ["src"]). Named in every
+    // per-root step's header so a reader sees what was scanned, not a bare
+    // `.`. Empty roots render as `<empty>` and the step then walks nothing
+    // — the same degenerate posture the tests step takes (it too loops the
+    // roots and adds nothing when they are empty); we do not fall back to
+    // `.`, which would re-open the hole this perimeter closes.
+    let ts_perimeter = if config.typescript.roots.is_empty() {
+        "<empty>".to_string()
+    } else {
+        config.typescript.roots.join(", ")
+    };
+
     let mut outcomes: Vec<StepOutcome> = Vec::new();
     let record = |outcomes: &mut Vec<StepOutcome>, label: &'static str, ok: bool| {
         if !ok {
@@ -74,12 +87,18 @@ pub fn run_floor(root: &Path, opts: &FloorOptions) -> Result<()> {
         ok
     };
 
-    // 1. Formatting — the cheapest signal first.
+    // 1. Formatting — the cheapest signal first. Scoped to the policy's
+    // TS roots: unscoped, prettier walks the deliberately-broken fixtures
+    // under tools/ and paints the floor red on files meant to be crooked
+    // (B-048 — the TS twin of Go's B-003, closed via the same perimeter).
     if !is_disabled("prettier") {
-        header(opts, "prettier --check .");
+        header(
+            opts,
+            &format!("prettier --check (floor perimeter: {ts_perimeter})"),
+        );
         let ok = match crate::tools::tool_command(root, "prettier") {
             Some(mut cmd) => {
-                cmd.args(["--check", "."]);
+                cmd.arg("--check").args(&config.typescript.roots);
                 run_tool_step(cmd)?
             }
             None => {
@@ -137,12 +156,13 @@ pub fn run_floor(root: &Path, opts: &FloorOptions) -> Result<()> {
         }
     }
 
-    // 4. Lint.
+    // 4. Lint. Scoped to the same TS roots as formatting and tests —
+    // unscoped eslint walks those same broken fixtures (B-048).
     if !is_disabled("eslint") {
-        header(opts, "eslint .");
+        header(opts, &format!("eslint (floor perimeter: {ts_perimeter})"));
         let ok = match crate::tools::tool_command(root, "eslint") {
             Some(mut cmd) => {
-                cmd.arg(".");
+                cmd.args(&config.typescript.roots);
                 run_tool_step(cmd)?
             }
             None => {

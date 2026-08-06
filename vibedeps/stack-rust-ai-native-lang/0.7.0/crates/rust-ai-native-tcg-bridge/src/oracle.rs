@@ -89,6 +89,14 @@ impl RustOracle<ChildTransport> {
             quiescent,
         })
     }
+
+    /// The spawned rust-analyzer child's OS PID, delegated to the
+    /// transport's observability seam ([`ChildTransport::child_pid`]). A
+    /// test asks the OS whether kill-on-drop actually reaped the child —
+    /// the no-zombie property (ORACLE-RUST §7), made checkable.
+    pub fn child_pid(&self) -> u32 {
+        self.client.child_pid()
+    }
 }
 
 impl<T: Transport> RustOracle<T> {

@@ -99,7 +99,56 @@ trait Frontend {
 
 ##GATE-EXIT-CODE-IS-THE-ACCEPTANCE-CRITERION Gate command: `conform check --baseline conform-baseline.json --scope crates/vibe-resolver` — exit code is the acceptance criterion the Playbook relies on; no human judgment in the loop (A3). @impl/done
 
-## 6. Open questions {#open}
+## 6. The policy file — where a key lives, and why {#policy}
+
+##kind-line-policy `req r1` @impl/done
+
+##THE-ENGINE-OWNS-THE-SCHEMA-THE-CONSUMER-OWNS-THE-VALUES The gate is
+config-driven: `conform.toml` at the project root is the **consumer's**
+policy, and this engine owns its **schema**. The split is PROP-024's — the
+policy stays with the consumer, the engine ships in the package — so a
+project decides which crates are gated without forking a rule, and no
+project can invent a key the engine does not define. @impl/done
+
+##A-KEY-IS-ROOT-WHEN-IT-MODELS-NO-LANGUAGE **The rule that places a key:
+a key sits at the ROOT when it models no language, and inside a
+`[<language>]` section when it does.** The language sections are
+homogeneous by construction — each owns the same `roots` / `gated` /
+`exempt` shape over its own unit — while a key the engine reads
+identically whatever produced the facts has no business being written
+three times. @impl/done
+
+##THE-ROOT-KEYS-ARE-DESCRIBED-HERE-AND-NOWHERE-ELSE **The root keys are
+described here, once.** `max_file_lines` — the per-file line budget every
+frontend feeds (default 600). `invariant_comment_markers` — the
+invariant-marker vocabulary, the labeled colon-bearing tags; empty
+disables the rule that reads it. `invariant_comment_min_file_lines` — the
+file length below which that rule stays silent, because on a short file
+"thirds" mean nothing (default 120). `sarif_reports` — where a floor step
+deposits foreign-linter SARIF reports for the gate to read back in; one
+deposit point for every linter, since each report names its own tool and
+the engine never needs to know which language it concerns. Beside them sit
+the per-language tables `[rust]`, `[typescript]` and `[go]`, each described
+by its own stack's conform-surface document. @impl/done
+
+##A-SURFACE-DOCUMENT-CITES-THE-ROOT-KEYS-RATHER-THAN-RESTATING-THEM **A
+stack's conform-surface document names which root keys its rules read and
+cites this section for what they mean — it does not restate their
+defaults.** Three surface documents restating one default is three writers
+for one truth, and the third copy is where it goes stale. The
+per-**language** section is the surface document's own to describe in
+full, because there the key and its meaning genuinely belong to that
+stack. @impl/done
+
+##A-RETIRED-KEY-BECOMES-A-LOUD-TOMBSTONE-NOT-A-REMOVAL **A key that moves
+is retired as a loud tombstone, never deleted.** Nine flat root keys moved
+into `[rust]` and each remains declared, typed to accept any shape, so its
+presence is caught and rejected with a targeted move hint rather than
+serde's generic unknown-field error. A silently-ignored stale key is a
+project believing it is gated when it is not — the same disease as a dead
+exclusion, and the same cure: say the name out loud. @impl/done
+
+## 7. Open questions {#open}
 
 1. ##OPEN-RUST-T-SEM-BACKEND rust-analyzer crates vs `rustc_driver` for Rust T-sem (stability vs fidelity) — decide when the first T-sem Rust rule actually lands; none of the Phase ≤4 checks need it. @spec/done
 2. ##OPEN-QUERY-DSL-SHAPE Query DSL: shape and whether rules become data (loadable rule-packs) — after 30 in-tree rules. @spec/done

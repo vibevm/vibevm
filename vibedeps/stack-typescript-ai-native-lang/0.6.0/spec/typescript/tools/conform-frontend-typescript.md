@@ -20,10 +20,12 @@
 
 ##frontend-answers-the-structural-half-lead `typescript-ai-native-conform-frontend` answers the **other** half — the *structural / architectural* rules no type checker expresses, the ones `conform check` already enforces for Rust: @impl/done
 
-- ##RULE-FILE-LENGTH-BUDGET the file-length budget (position is a resource), carried as the root `conform.toml` key `max_file_lines` (default 600), with two sibling **root** keys for the `invariant-comment-position` rule (R3-003) — `invariant_comment_markers` (the marker vocabulary; default the five labeled markers `INVARIANT:` / `WARNING:` / `PANICS:` / `MUST:` / `NEVER:`, and empty disables the rule) and `invariant_comment_min_file_lines` (the floor below which a file is skipped whole, a «third» meaning nothing; default 120); all three are root keys, language-neutral, NOT under `[typescript]`; @impl/done
+- ##RULE-FILE-LENGTH-BUDGET the file-length budget (position is a resource), carried by the root `conform.toml` key `max_file_lines`, with two sibling root keys feeding `invariant-comment-position` (R3-003) — `invariant_comment_markers` and `invariant_comment_min_file_lines`; a fourth, `sarif_reports`, feeds the SARIF-ingest path described below. All four are root keys, language-neutral, NOT under `[typescript]`, and what they mean and default to is described once, in `ENGINE-CONFORM §6` (the policy file) — this surface names which ones the TS rules read, not their values; @impl/done
 - ##RULE-CELL-ISOLATION cell isolation (a cell imports seams + core only, never sibling cells); @impl/done
 - ##RULE-BANS-AS-FACTS the bans-as-facts (`any` / unchecked `as` / `!` / `@ts-ignore` in domain code — the §8 set) surfaced as conform findings in the Class-F `violates REQ …; fix surface: …` grammar, navigable back to the governing card; @impl/done
 - ##RULE-DEVIATION-ESCAPE-HATCH the deviation escape hatch (`@ts-expect-error -- reason`, a recorded `deviates`), honoured the way `#[spec(deviates)]` is for Rust. @impl/done
+
+##THE-SARIF-CITATION-PATH-IS-FED-BY-FOREIGN-LINTERS-NOT-BY-TS-EXTRACT One more rule is mounted in this gate and is deliberately absent from the list above: `lint-suppression-needs-reason`, whose facts come from SARIF **ingest** — eslint and its plugins — rather than from this frontend. It is fed by the fourth root key, `sarif_reports`, and it is the T-sem citation path: a Discipline rule citing a foreign linter's diagnosis as its own evidence. Listing it beside the extractor's own rules would claim a fact source this frontend does not have. @impl/done
 
 ##eslint-could-express-some-of-these ESLint *could* express some of these as custom rules. @spec/done
 

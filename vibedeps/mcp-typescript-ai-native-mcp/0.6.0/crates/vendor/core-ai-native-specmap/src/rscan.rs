@@ -17,6 +17,7 @@ use syn::spanned::Spanned;
 use walkdir::WalkDir;
 
 use crate::config::Config;
+use crate::cscan;
 use crate::fwd;
 
 fn verb_to_wire(v: specmark_grammar::Verb) -> EdgeVerb {
@@ -40,6 +41,11 @@ struct FileScan<'a> {
     items: Vec<CodeItem>,
     edges: Vec<Edge>,
     warnings: Vec<Warning>,
+    /// `#[derive(Parser)]` roots seen this file — half of the crate-wide
+    /// command join (`cscan`); resolved against `cmd_enums` after the walk.
+    roots: Vec<cscan::CommandRoot>,
+    /// `#[derive(Subcommand)]` enums seen this file — the other half.
+    cmd_enums: Vec<cscan::CommandEnum>,
 }
 
 impl FileScan<'_> {
@@ -167,10 +173,16 @@ impl FileScan<'_> {
                 syn::Item::Struct(s) => {
                     let symbol = format!("{module}::{}", s.ident);
                     self.tag_item(&s.attrs, s, &symbol, "struct", line);
+                    if let Some(root) = cscan::observe_root(s, self.file, self.crate_name) {
+                        self.roots.push(root);
+                    }
                 }
                 syn::Item::Enum(e) => {
                     let symbol = format!("{module}::{}", e.ident);
                     self.tag_item(&e.attrs, e, &symbol, "enum", line);
+                    if let Some(en) = cscan::observe_enum(e, self.file, self.crate_name) {
+                        self.cmd_enums.push(en);
+                    }
                 }
                 syn::Item::Union(u) => {
                     let symbol = format!("{module}::{}", u.ident);
@@ -250,19 +262,33 @@ impl FileScan<'_> {
     }
 }
 
-/// Scan one source file (testable on strings).
-pub fn scan_source(
-    file: &str,
-    crate_name: &str,
-    module: &str,
-    text: &str,
-) -> (Vec<CodeItem>, Vec<Edge>, Vec<Warning>) {
+/// One file's full scan: items, edges, warnings, plus the command roots /
+/// enums collected for the crate-wide join (`cscan`). `pub(crate)` — these
+/// are the join's inputs, not a per-file result a public caller sees; the
+/// public [`scan_source`] returns only the file's items / edges / warnings.
+pub(crate) struct FileScanOutput {
+    pub(crate) items: Vec<CodeItem>,
+    pub(crate) edges: Vec<Edge>,
+    pub(crate) warnings: Vec<Warning>,
+    pub(crate) roots: Vec<cscan::CommandRoot>,
+    pub(crate) cmd_enums: Vec<cscan::CommandEnum>,
+}
+
+/// Scan one source file into its items / edges / warnings **and** the
+/// command roots / enums it declares, for the crate-wide join (`cscan`).
+/// `pub(crate)` — the join's inputs are internal; [`scan_source`] is the
+/// public, three-tuple seam. The root and the enum it points at may live in
+/// different files, so the join runs after the walk, not here
+/// (command-nodes.md `##x-the-join-is-crate-wide`).
+pub(crate) fn scan_file(file: &str, crate_name: &str, module: &str, text: &str) -> FileScanOutput {
     let mut scan = FileScan {
         file,
         crate_name,
         items: Vec::new(),
         edges: Vec::new(),
         warnings: Vec::new(),
+        roots: Vec::new(),
+        cmd_enums: Vec::new(),
     };
     match syn::parse_file(text) {
         Ok(ast) => scan.walk_items(&ast.items, module),
@@ -271,7 +297,30 @@ pub fn scan_source(
             scan.warn("unparseable-source", format!("syn cannot parse: {e}"), line);
         }
     }
-    (scan.items, scan.edges, scan.warnings)
+    FileScanOutput {
+        items: scan.items,
+        edges: scan.edges,
+        warnings: scan.warnings,
+        roots: scan.roots,
+        cmd_enums: scan.cmd_enums,
+    }
+}
+
+/// Scan one source file (testable on strings).
+///
+/// The public per-file seam: items / edges / warnings only. It does not
+/// produce command nodes — those come from the crate-wide `cscan` join in
+/// [`scan_workspace`] — so the join's intermediate `roots` / `cmd_enums`
+/// stay out of the public contract (a public caller such as a tracing
+/// fragment reader destructures exactly this three-tuple).
+pub fn scan_source(
+    file: &str,
+    crate_name: &str,
+    module: &str,
+    text: &str,
+) -> (Vec<CodeItem>, Vec<Edge>, Vec<Warning>) {
+    let o = scan_file(file, crate_name, module, text);
+    (o.items, o.edges, o.warnings)
 }
 
 /// Module path for a source file inside one crate.
@@ -314,6 +363,8 @@ pub fn scan_workspace(root: &Path, cfg: &Config) -> (Vec<CodeItem>, Vec<Edge>, V
     let mut items = Vec::new();
     let mut edges = Vec::new();
     let mut warnings = Vec::new();
+    let mut roots = Vec::new();
+    let mut cmd_enums = Vec::new();
 
     for crate_dir in cfg.scan_dirs(root) {
         let crate_name = crate_dir
@@ -345,10 +396,12 @@ pub fn scan_workspace(root: &Path, cfg: &Config) -> (Vec<CodeItem>, Vec<Edge>, V
             let file = fwd(rel);
             match std::fs::read_to_string(path) {
                 Ok(text) => {
-                    let (mut i, mut e, mut w) = scan_source(&file, &crate_name, &module, &text);
-                    items.append(&mut i);
-                    edges.append(&mut e);
-                    warnings.append(&mut w);
+                    let mut o = scan_file(&file, &crate_name, &module, &text);
+                    items.append(&mut o.items);
+                    edges.append(&mut o.edges);
+                    warnings.append(&mut o.warnings);
+                    roots.append(&mut o.roots);
+                    cmd_enums.append(&mut o.cmd_enums);
                 }
                 Err(err) => warnings.push(Warning {
                     code: "unreadable-file".to_string(),
@@ -359,6 +412,13 @@ pub fn scan_workspace(root: &Path, cfg: &Config) -> (Vec<CodeItem>, Vec<Edge>, V
             }
         }
     }
+    // Crate-wide join: every file has been walked, so roots collected across
+    // files can now be matched against enums collected across files — the
+    // join cannot run per-file because a root names an enum in another file
+    // (command-nodes.md `##x-the-join-is-crate-wide`).
+    let (cmd_items, cmd_warns) = cscan::join_commands(&roots, &cmd_enums);
+    items.extend(cmd_items);
+    warnings.extend(cmd_warns);
     (items, edges, warnings)
 }
 
