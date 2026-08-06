@@ -188,17 +188,28 @@ unit itself. @status:impl/done
 
 ### 3.7 Shorthand {#shorthand}
 
-@fact:SHORTHAND-FORMS `@<stage>/<state>` and `@<stage>` are macro-equivalents of a point marker: @status:impl/done
+@fact:SHORTHAND-FORMS `@status:<stage>/<state>` and `@status:<stage>` are macro-equivalents of a
+point marker. The **legacy** spellings `@<stage>/<state>` and `@<stage>` mean
+exactly the same and are still read, so a document written before the
+qualified form keeps parsing. @status:impl/done
 
-- @fact:SHORTHAND-FULL `@test/plan` ⇒ `<status stage="test" state="plan"/>` @status:impl/done
-- @fact:SHORTHAND-BARE `@impl` ⇒ `<status stage="impl" state="work"/>` — bare shorthand defaults to
-  `state="work"`, with exactly one exception: `@unknown` ⇒ `state="hold"`.
-  (`@freeze` ⇒ `freeze/work`: "freezing now".) @status:impl/done
+- @fact:SHORTHAND-FULL `@status:test/plan` ⇒ `<status stage="test" state="plan"/>` @status:impl/done
+- @fact:SHORTHAND-BARE `@status:impl` ⇒ `<status stage="impl" state="work"/>` — bare shorthand defaults to
+  `state="work"`, with exactly one exception: `@status:unknown` ⇒ `state="hold"`.
+  (`@status:freeze` ⇒ `freeze/work`: "freezing now".) @status:impl/done
 
+- @fact:SHORTHAND-NAMES-ITS-KEY **Why the key is named.** These documents share the `@` space with
+  foreign annotation grammars — JSDoc, TypeScript directives, npm scopes,
+  Java annotations, and plain `x@y` addresses. Without a key the reader must
+  tell its own tokens from those by a vocabulary of stages and states, which
+  answers "is this mine?" with a dictionary lookup instead of with the token's
+  own shape. @status:impl/done
 - @fact:SHORTHAND-DISAMBIGUATION **Disambiguation against the `@spec://` directive grammar** (in-place spec
-  citations): after `@spec` the scanner looks ahead — `://` follows ⇒ foreign
-  directive, not ours; `/<state>`, whitespace, or end-of-token follows ⇒
-  shorthand. @status:impl/done
+  citations) applies to the **legacy** form only: after `@spec` the scanner
+  looks ahead — `://` follows ⇒ foreign directive, not ours; `/<state>`,
+  whitespace, or end-of-token follows ⇒ shorthand. The qualified form needs no
+  lookahead: `@status:spec/done` cannot be confused with `@spec://…`, because
+  the key is stated before the value. @status:impl/done
 - @fact:SHORTHAND-STANDALONE A shorthand is recognized only as a standalone token at the start
 or end of a paragraph's text, never mid-sentence, never inside code or links. @status:impl/done
 
@@ -216,7 +227,7 @@ or end of a paragraph's text, never mid-sentence, never inside code or links. @s
    per the amendment above). This is the only legal standalone position
    inside a body. @status:impl/done
 3. @fact:PLACE-PARAGRAPH **Paragraph** — marker **inside the paragraph's own text**: the first
-   token (right after the newlines, or right after the paragraph's `##<ID>`
+   token (right after the newlines, or right after the paragraph's `@fact:<ID>`
    anchor) or the last token (right before them). @status:impl/done
 4. @fact:PLACE-LIST-ITEM **List item** *(fact amendment, 2026-07-24 — owner-directed)* — every
    item of a bulleted or numbered list is a **unit of its own**, at every
@@ -224,25 +235,31 @@ or end of a paragraph's text, never mid-sentence, never inside code or links. @s
    the item's own text**: the first or last token of the item (before any
    nested sub-items, which carry their own markers). @status:impl/done
 
-   - @fact:FACT-ANCHOR-SYNTAX **Fact anchors — the anchored-when-marked law** *(owner, 2026-07-24)*.
-     A stable fact address is written `##<ID>` as the **first token** of a
-     paragraph or list item (double hash — deliberately distinct from the
-     single-hash foreign directives `#use` / `#embed` / `#source`, and from
-     headings, which require a space after the hashes). @status:impl/done
+   - @fact:FACT-ANCHOR-SYNTAX **Fact anchors — the anchored-when-marked law** *(owner, 2026-07-24;
+     spelling amended 2026-08-06)*. A stable fact address is written
+     `@fact:<ID>` as the **first token** of a paragraph or list item. The
+     **legacy** spelling `##<ID>` means the same and is still read. @status:impl/done
+   - @fact:FACT-ANCHOR-NAMES-ITS-KEY **Why the key is named.** `##<ID>` was never a heading — an ATX
+     heading requires a space after the hashes, and this markup is written
+     closed up — but it reads like one to a markdown linter, to a parser
+     outside CommonMark, and to the eye. `@fact:` states what the token is
+     instead of relying on a reader knowing what it is not. @status:impl/done
    - @fact:FACT-ID-GRAMMAR `<ID>` is
      `[A-Za-z][A-Za-z0-9_-]*`; the unit is then addressable as
      `spec://…/<doc>#<ID>`, sharing one address space with the heading
-     `{#anchor}`s — a duplicate across both forms is a `check` error. @status:impl/done
+     `{#anchor}`s — a duplicate across both forms is a `check` error. The
+     **address is unchanged by the spelling**: it names the id, never the
+     opener. @status:impl/done
    - @fact:ANCHORED-WHEN-MARKED **Every unit that carries a status marker — paragraph or list item —
-     MUST also carry a `##<ID>` anchor**; a marked, anchor-less unit is a
+     MUST also carry a `@fact:<ID>` anchor**; a marked, anchor-less unit is a
      `check` error. @status:impl/done
    - @fact:ANCHOR-MARKER-POSITIONS The marker may stand immediately after the anchor
      (`1. ##RULE-001 rule text @freeze/done` — the owner's canonical
      example shape) or as the unit's last token. @status:impl/done
 
    - @fact:DECISION-TWO-REGISTERS **Decision — two anchor-id registers (owner ruling, 2026-07-24).**
-     `##UPPER-SLUG` names a **normative fact** (a law, rule, carrier,
-     changelog entry — content with binding weight); `##kebab-case`
+     `@fact:UPPER-SLUG` names a **normative fact** (a law, rule, carrier,
+     changelog entry — content with binding weight); `@fact:kebab-case`
      names a **service unit** (status lines, lead-ins, connective
      prose). @status:impl/done
    - @fact:registers-why **Why:** the register itself carries the normativity
@@ -257,7 +274,7 @@ or end of a paragraph's text, never mid-sentence, never inside code or links. @s
      check tooling. @status:spec/done
 
    - @fact:TABLE-ADDRESSING **Table addressing** *(proposed 2026-07-24, this session — same
-     syntax, no new grammar)*. A `##<ID>` as the first token of the
+     syntax, no new grammar)*. A `@fact:<ID>` as the first token of the
      **first cell of a body row** addresses that **row**
      (`| ##ROW-PKGREF pkgref | … |`); in **any other cell** it addresses
      that **cell**; the **whole table** is addressed by the anchor of its
@@ -455,7 +472,7 @@ include = ["spec/**/*.md", "packages/**/*.md"]   # the default when absent
 and live in the cache and baseline — **never in the markup** (§7.5). @status:impl/done
 
 @fact:FACT-GRAIN-EVIDENCE *Fact-grain evidence (2026-07-24, owner-directed):* the specmap side
-recognises `##<ID>` fact anchors as addressable units (PROP-014 §2.1, the
+recognises `@fact:<ID>` fact anchors as addressable units (PROP-014 §2.1, the
 fact amendment's twin), so `implements`/`verifies` edges land **per fact**
 and the provider's mismatch checks apply at the campaign grain, not only
 per section. @status:impl/done
@@ -540,11 +557,11 @@ drift row already closed. The map is the source; the count is a view of it. @sta
   and delimiter rows of a table are structure. A marker counts for the
   unit whose text carries it (first/last token of that unit, or a
   fragment wrapper inside it). @status:impl/done
-- @fact:PARSE-FACT-ANCHORS **Fact anchors** *(fact amendment, 2026-07-24)*: a `##<ID>` first token
+- @fact:PARSE-FACT-ANCHORS **Fact anchors** *(fact amendment, 2026-07-24)*: a `@fact:<ID>` first token
   of a paragraph or list item is that unit's anchor, recorded alongside
   the heading anchors; the scanner enforces the anchored-when-marked law
   (§3.8) — a marked unit with no anchor, and a duplicate id, are `check`
-  errors. `##` inside code spans/fences is opaque, as all markup is. @status:impl/done
+  errors. An opener inside code spans/fences is opaque, as all markup is. @status:impl/done
 - @fact:PARSE-XML-GRAMMAR The element grammar is XML: attributes quoted, point markers self-closed.
   A future XML storage frontend consumes the same attribute schema natively;
   the markup language does not change. @status:impl/done
