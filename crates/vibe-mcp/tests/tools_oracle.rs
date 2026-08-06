@@ -8,7 +8,7 @@
 use serde_json::{Value, json};
 use vibe_mcp::tools::{
     AgenticExplainMcpTool, ListToolsMcpTool, MaterialiseSubskillMcpTool, McpTool, QueryMcpTool,
-    QueryPackageMcpTool, ReadSubskillMcpTool, default_tools,
+    QueryPackageMcpTool, ReadSubskillMcpTool, SelectMcpTool, default_tools,
 };
 use vibe_mcp::{ServerContext, dispatch_one};
 
@@ -176,6 +176,69 @@ fn query_cell_uri_filter_returns_exactly_one_spec_unit() {
     assert_eq!(results.len(), 1);
     assert_eq!(results[0]["source"], "spec");
     assert_eq!(results[0]["uri"], "spec://demo/D#req-r");
+}
+
+// --- select (А5b: the traversal level over the same shared library) ------
+
+/// The `select` cell answers through the SAME library the CLI drives — the
+/// grammar, the walk and the rendering all live in `vibe_trace::select`, and
+/// the tool only passes a string through. Driving it here is also this cell's
+/// behaviour oracle: without it the cell has no integration test in its crate
+/// and the discipline gate says so (`cell-has-oracle`, R-040).
+#[test]
+fn select_cell_answers_through_the_shared_library() {
+    let (_dir, ctx) = project_with_specmap();
+    let out = SelectMcpTool
+        .run(&json!({"where": "kind:fn"}), &ctx)
+        .unwrap();
+    let results = out["results"].as_array().expect("results array");
+    assert!(!results.is_empty(), "the fixture plants `fn`s");
+    // The envelope states the grammar it was parsed under and echoes the query,
+    // so a consumer can branch on the version without asking for it.
+    assert_eq!(out["grammar"], 1);
+    assert_eq!(out["query"], "kind:fn");
+    // Seeds are reported at hop 0 — the distance is what separates what was
+    // asked for from what a walk would have dragged in.
+    assert!(results.iter().all(|r| r["depth"] == 0));
+    assert_eq!(out["count"], results.len());
+    assert_eq!(out["truncated"], false);
+}
+
+/// `depth` expands the seed set and keeps the seeds, and every hit carries the
+/// hop it was reached at. The fixture's spec unit is the seed; whatever the
+/// walk adds arrives at a strictly greater depth.
+#[test]
+fn select_cell_depth_keeps_the_seed_and_reports_the_hop() {
+    let (_dir, ctx) = project_with_specmap();
+    let out = SelectMcpTool
+        .run(&json!({"where": "uri:spec://demo/D#req-r depth:1"}), &ctx)
+        .unwrap();
+    let results = out["results"].as_array().expect("results array");
+    let seeds: Vec<&Value> = results.iter().filter(|r| r["depth"] == 0).collect();
+    assert_eq!(seeds.len(), 1, "the seed stays in the answer: {results:?}");
+    assert_eq!(seeds[0]["uri"], "spec://demo/D#req-r");
+    assert!(
+        results.iter().all(|r| r["depth"].as_u64().unwrap() <= 1),
+        "nothing is reached beyond the requested depth: {results:?}"
+    );
+}
+
+/// A query the grammar cannot read is an ARGUMENT error naming the offending
+/// token — never a silent fall-through to "everything", and never a map build.
+#[test]
+fn select_cell_refuses_an_unreadable_query_by_naming_the_token() {
+    let (_dir, ctx) = project_with_specmap();
+    let err = SelectMcpTool
+        .run(&json!({"where": "kind:fn frobnicate:x"}), &ctx)
+        .expect_err("an unknown predicate is refused");
+    let msg = format!("{err}");
+    assert!(msg.contains("frobnicate:x"), "names the token: {msg}");
+    assert!(msg.contains("lacks:"), "lists what was expected: {msg}");
+
+    let empty = SelectMcpTool
+        .run(&json!({"where": "   "}), &ctx)
+        .expect_err("an empty query is refused rather than read as everything");
+    assert!(format!("{empty}").contains("empty"));
 }
 
 // --- list_tools (В3: the registry surface over the shared library) -------
