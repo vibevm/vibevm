@@ -68,10 +68,13 @@ deleting, narrowing, restructuring are all permitted): @status:spec/plan
   declaration. Old data would parse successfully and be understood wrongly:
   the one unfixable failure. (For coordinates this is already standing law:
   `spec://org.vibevm.world/qualified-naming/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL#root`.) @status:spec/plan
-- @fact:FORBID-BYTE-MUTATION Never change bytes at an existing address —
-  including republishing a version with different content. A correct client
-  cannot even detect this break; it silently poisons every hash, cache and
-  lockfile downstream. @status:spec/plan
+- @fact:FORBID-BYTE-MUTATION Never change bytes at an existing address — and
+  an "address" is a **frozen** coordinate: a version whose manifest carries
+  `frozen = true`, plus any content-hash-named object. Republishing a frozen
+  version with different content is the break a correct client cannot even
+  detect; it silently poisons every hash, cache and lockfile downstream. An
+  *unfrozen* version is not an address but a declared channel (§2a), and its
+  content flowing is normal life, not a violation. @status:spec/plan
 - @fact:FORBID-SILENCE Never answer silence for a name that ever existed. Every
   once-valid name resolves to the current thing, a forwarding pointer, or a
   tombstone with a reason. Silence is indistinguishable from network failure;
@@ -84,6 +87,32 @@ deleting, narrowing, restructuring are all permitted): @status:spec/plan
 - @fact:FORBID-HANDWRITTEN-WIRE Never hand-write a parser or writer for one of
   our own wire formats inside this tree. Not a goal in itself: it is the
   mechanism by which the first four violations happen unnoticed. @status:spec/plan
+
+@fact:THE-FREEZE-MODEL **2a. Frozen and mutable versions (owner rulings,
+2026-08-10).** A version is a **mutable channel by default**: its content may
+change under the same version string, `vibe update` brings the fresh snapshot
+without regard for hash continuity, and the lockfile pins the snapshot's own
+`content_hash` plus an opaque provider locator for reproduction. The
+**freeze** is the package author's one-way act: `frozen = true` in the
+manifest — never a registry's opinion, never part of the version string. The
+carrier decisions and their reasons: *(i)* the flag lives **inside the hashed
+content**, so a frozen snapshot self-describes even offline and every registry
+serving those bytes necessarily agrees — in a multi-registry world with no
+global journal, content is the only carrier that cannot diverge; registries
+merely *observe* a freeze in their journals and project it into catalogs;
+*(ii)* the version string carries version ordering **only** — two entities
+never share one name, which keeps the full matrix expressible: a frozen
+prerelease (an immutable published beta) and a mutable bare version (being
+stabilised in place) are both legal; *(iii)* the transition is **one-way and
+single** — unfreezing is forbidden, further work is a new version string; a
+registry may never accept a frozen coordinate's re-publication with different
+bytes; *(iv)* same coordinate + different bytes + any party claiming frozen =
+**loud conflict** through the candidate machinery, never a quiet pick.
+**Every surface that shows a version shows its frozen state** — machine
+outputs carry the field by schema; CLI, TUI, GUI and MCP render it always
+(the Maven lesson: mutability a human cannot see is mutability that will
+surprise them). Yank remains journal-borne — it is the act frozen content can
+no longer carry itself. @status:spec/done
 
 ## 3. Truth and projection {#truth}
 

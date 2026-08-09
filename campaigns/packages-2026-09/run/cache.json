@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-09T21:43:19Z",
+  "updated_at": "2026-08-09T21:53:07Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -94339,7 +94339,7 @@
       }
     },
     "spec/common/PROP-044-change-native-formats.md": {
-      "content_hash": "1f1b6daef5ca60c94ea396d2af38643f3686371851e109ecf6b8c7c92268557e",
+      "content_hash": "805d9b9022a5cada65be752b82a14e774ffe73b22d2eadd606a588b39a77beb8",
       "rollup": {
         "explicit": [
           "spec",
@@ -94353,15 +94353,15 @@
           "spec",
           "work"
         ],
-        "marker_count": 51,
-        "fact_count": 50,
+        "marker_count": 52,
+        "fact_count": 51,
         "unmarked_facts": 0
       },
-      "marker_count": 51,
+      "marker_count": 52,
       "unit_count": 11,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "1f1b6daef5ca60c94ea396d2af38643f3686371851e109ecf6b8c7c92268557e",
+        "processed_hash": "805d9b9022a5cada65be752b82a14e774ffe73b22d2eadd606a588b39a77beb8",
         "verdicts": {
           "PURPOSE": {
             "v": "confirmed",
@@ -94414,7 +94414,7 @@
           "FORBID-BYTE-MUTATION": {
             "v": "confirmed",
             "ev": [
-              "Content-addressing as the recovery mechanism: vibe.lock pins content_hash (crates/vibe-core/src/manifest/lockfile.rs); OCI digest law and cargo 'do not rewrite' (discovery 02 §1.1 Q7, §1.2 Q7); convened verdict Z3 second clause"
+              "Re-judged after the owner's freeze rulings of 2026-08-10 narrowed the law's object from any published version to FROZEN coordinates (manifest frozen=true) plus content-hash-named objects; the earlier verdict was correct for the text it judged — the unconditional form matched the pre-freeze-concept design; the refinement is the owner's own proposal («у пакета есть свойство frozen… тогда оно фризится навсегда») and the channel legality mirrors his standing practice recorded at BACKLOG.md #b-067 and the 2026-07-26 no-bump-per-edit ruling in progress.toml comments"
             ]
           },
           "FORBID-SILENCE": {
@@ -94662,10 +94662,16 @@
             "ev": [
               "Owner ruling 2026-08-10 in-session: «репозитории теоретически могут жить не только в Git… Git это просто форма представления… сама система по смыслу не должна быть завязана на гит»; the provider seam already exists in-tree (scanner from_clones/from_github/from_gitverse — crates/vibe-index/src/scanner/; PROP-001 is named 'git backend'; PROP-005 §9 tracks the OCI-hosted-index question); content_hash is computed over file bytes, not git objects (crates/vibe-index/src/content_hash.rs), so the universal-verifier claim is measured, not aspirational"
             ]
+          },
+          "THE-FREEZE-MODEL": {
+            "v": "confirmed",
+            "ev": [
+              "Owner rulings 2026-08-10 in-session: frozen as a package property surviving forever once set; carrier = manifest flag, not the version string («Я бы всё же не смешивал две сущности в одном имени и оставил флаг в манифесте»); display obligation on all surfaces («все инструменты командной строки, GUI, TUI… должны выводить»); multi-registry divergence argument his own; the orthogonality argument (frozen prerelease = immutable published beta) and the content-carried-cannot-diverge argument from this session's analysis; latest_stable already filters prereleases (crates/vibe-index/src/types/entry/aggregate.rs:47-55) so the stability axis stays separate; yank-in-journal split per the journal's own definition (facts sources cannot carry)"
+            ]
           }
         },
-        "verified_at": "2026-08-09T21:43:19Z",
-        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING + PROVIDER-NEUTRALITY-RULING"
+        "verified_at": "2026-08-09T21:53:07Z",
+        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING + PROVIDER-NEUTRALITY-RULING + FREEZE-MODEL-RULING"
       }
     },
     "spec/design/README.md": {

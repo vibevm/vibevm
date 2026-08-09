@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-09T21:42:53Z",
+  "updated_at": "2026-08-09T21:52:41Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -93540,15 +93540,15 @@
         "stage": "spec",
         "state": "work"
       },
-      "markers": 51,
+      "markers": 52,
       "units": 11,
-      "facts": 50,
+      "facts": 51,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "6ec1c4f2597dcd1f96edc527380ad771ac2a9097eda3268010e3889a5edcb8e8",
+        "processed_hash": "1f1b6daef5ca60c94ea396d2af38643f3686371851e109ecf6b8c7c92268557e",
         "summary": {
-          "confirmed": 49
+          "confirmed": 50
         },
         "verdicts": {
           "PURPOSE": {
@@ -93844,10 +93844,16 @@
             "ev": [
               "Owner ruling 2026-08-10 in-session, quoted near-verbatim inside the fact itself; it supersedes the earlier de-facto-publication reading (this session's own report and the discovery framing of a silently-closing window); operationalised as TZ D13 + Ф5.3 (formats/EPOCHS.toml public flag, owner-only line, three gate modes) in the same landing"
             ]
+          },
+          "PROVIDER-NEUTRALITY": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-10 in-session: «репозитории теоретически могут жить не только в Git… Git это просто форма представления… сама система по смыслу не должна быть завязана на гит»; the provider seam already exists in-tree (scanner from_clones/from_github/from_gitverse — crates/vibe-index/src/scanner/; PROP-001 is named 'git backend'; PROP-005 §9 tracks the OCI-hosted-index question); content_hash is computed over file bytes, not git objects (crates/vibe-index/src/content_hash.rs), so the universal-verifier claim is measured, not aspirational"
+            ]
           }
         },
-        "verified_at": "2026-08-09T21:06:12Z",
-        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING"
+        "verified_at": "2026-08-09T21:43:19Z",
+        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING + PROVIDER-NEUTRALITY-RULING"
       }
     },
     {
