@@ -28656,7 +28656,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:cfb82c4505203ba4884c549389407f803d21e6485d9e61d162e2b80068954df2",
+      "content_hash": "sha256:b4c091aa4942823401d0e0b542d46d8004b743ec26fba0dd9f4cb459efad998f",
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "PROP-044: Change-native formats — surviving perpetual evolution",
@@ -29034,7 +29034,7 @@
     },
     {
       "anchor": "obligations",
-      "content_hash": "sha256:47e11e90f304db3c2c244189be39349a15268fcffbe5e52b81392f4047b54e9a",
+      "content_hash": "sha256:4911ef8e3d1b910a67576e19a5bfeebb54a21353185a472225f5fce40ac9d527",
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "7. Obligations have types; stability is a mechanism",
@@ -29069,12 +29069,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#STABILITY-IS-A-FLAG"
     },
     {
+      "anchor": "THE-PUBLIC-SWITCH",
+      "content_hash": "sha256:7c92733f3078a04c8eb641171a6add5dca898029e5f3b4e3a01fb4b00dc93eb2",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**The pre-publication regime, and the switch only the",
+      "line": 336,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#THE-PUBLIC-SWITCH"
+    },
+    {
       "anchor": "agents",
       "content_hash": "sha256:cf58dff2bc83f755c893c6e64e2ea7ee413cc194a416e00038486602a2c48472",
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "8. Laws for AI agents — gates, not admonitions",
-      "line": 336,
+      "line": 358,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#agents"
     },
     {
@@ -29083,7 +29092,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Governing rule: a policy that exists only in",
-      "line": 338,
+      "line": 360,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-PROSE-IS-BROKEN"
     },
     {
@@ -29092,7 +29101,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The gate set.** G1: all wire I/O through",
-      "line": 345,
+      "line": 367,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-GATES"
     },
     {
@@ -29101,7 +29110,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**A gate's message is the only documentation that is",
-      "line": 364,
+      "line": 386,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-MESSAGES"
     },
     {
@@ -29110,7 +29119,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**8a. The wire-work decision path — what an agent",
-      "line": 373,
+      "line": 395,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#WIRE-DECISION-PATH"
     },
     {
@@ -29119,7 +29128,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "9. Honest risks and revisit triggers",
-      "line": 390,
+      "line": 412,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#risks"
     },
     {
@@ -29128,7 +29137,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The recoverability bet.** Upstream sources vanish —",
-      "line": 392,
+      "line": 414,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RECOVERABILITY"
     },
     {
@@ -29137,7 +29146,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The journal/projection rework is a real rebuild, not an",
-      "line": 400,
+      "line": 422,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RMW-VOLUME"
     },
     {
@@ -29146,7 +29155,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Foreign `curl | jq` will happen regardless of",
-      "line": 407,
+      "line": 429,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RAW-PARSERS"
     },
     {
@@ -29155,7 +29164,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The degenerate-first guard.** The epoch machinery",
-      "line": 413,
+      "line": 435,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-OVERENGINEERING"
     },
     {
@@ -29164,7 +29173,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Signature and authenticity remain parked by the",
-      "line": 421,
+      "line": 443,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-SECURITY-PARKED"
     },
     {
@@ -29173,7 +29182,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "10. Sources — the two-way links",
-      "line": 429,
+      "line": 451,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#sources"
     },
     {
@@ -29182,7 +29191,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**This contract's lore and evidence, so a cold reader entering",
-      "line": 431,
+      "line": 453,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#SOURCES"
     },
     {

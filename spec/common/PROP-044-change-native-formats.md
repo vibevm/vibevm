@@ -333,6 +333,28 @@ ahead of it; on the day, the refusal carries the recipe. Heavy breaks batch
 into trains — parallel publication and support windows are fixed costs per
 train, not per change. @status:spec/plan
 
+@fact:THE-PUBLIC-SWITCH **The pre-publication regime, and the switch only the
+owner can flip (owner ruling, 2026-08-10, near-verbatim: «я пока ничего не
+публиковал на большую публику… я хочу, чтобы мы не применяли миграции до тех
+пор, пока я не скажу, что состоялось первое представление публике… технически
+этот факт нельзя определить никак — только владелец может сказать, что это
+произошло»).** Until that declaration the system is in the pre-publication
+regime: breaking is free *and unmigrated* — no codemods run, no bot PRs, no
+parallel worlds, no sunset calendars; break machinery reports instead of
+demanding (corpora regenerate freely, break notes are optional records);
+readers of old shapes are conveniences deletable at will; the standing user
+recipe is «regenerate / re-init / re-fetch». The fact of the first public
+presentation is technically undetectable **by design** and must never be
+inferred from technical events — not from a push, not from the default
+registry filling, not from a tag; any earlier «de-facto publication» reading
+is superseded by this ruling. The switch is one owner-only line
+(`public = true` in `formats/EPOCHS.toml`), and flipping it is the single
+moment obligations, migrations, support windows and the handshake vow
+activate. The wave-0 slots (epoch markers, recipe identity, must-understand,
+yank) are still built early — not because the window is closing silently, but
+because they are cheap now, constrain today's breaking not at all, and are
+what makes the later freeze possible at all. @status:spec/done
+
 ## 8. Laws for AI agents — gates, not admonitions {#agents}
 
 @fact:AGENT-PROSE-IS-BROKEN **Governing rule: a policy that exists only in

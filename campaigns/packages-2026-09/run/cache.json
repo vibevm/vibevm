@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-09T20:57:23Z",
+  "updated_at": "2026-08-09T21:06:12Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -94339,7 +94339,7 @@
       }
     },
     "spec/common/PROP-044-change-native-formats.md": {
-      "content_hash": "67dcce87691f3668bf3e0ca159d13a93d0eee68d2d75317cc26a35e99e1a2230",
+      "content_hash": "6ec1c4f2597dcd1f96edc527380ad771ac2a9097eda3268010e3889a5edcb8e8",
       "rollup": {
         "explicit": [
           "spec",
@@ -94353,15 +94353,15 @@
           "spec",
           "work"
         ],
-        "marker_count": 49,
-        "fact_count": 48,
+        "marker_count": 50,
+        "fact_count": 49,
         "unmarked_facts": 0
       },
-      "marker_count": 49,
+      "marker_count": 50,
       "unit_count": 11,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "67dcce87691f3668bf3e0ca159d13a93d0eee68d2d75317cc26a35e99e1a2230",
+        "processed_hash": "6ec1c4f2597dcd1f96edc527380ad771ac2a9097eda3268010e3889a5edcb8e8",
         "verdicts": {
           "PURPOSE": {
             "v": "confirmed",
@@ -94650,10 +94650,16 @@
             "ev": [
               "Two-way links law (spec-genres: contract links lore, lore names its contract); all three targets exist in-tree this landing: spec/design/change-native-formats-verdict.md, spec/research/schema-evolution-2026-08/ (with 12-HANDOFF.md §2 reading order), campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md; contract-wins rule restated from the genre map"
             ]
+          },
+          "THE-PUBLIC-SWITCH": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-10 in-session, quoted near-verbatim inside the fact itself; it supersedes the earlier de-facto-publication reading (this session's own report and the discovery framing of a silently-closing window); operationalised as TZ D13 + Ф5.3 (formats/EPOCHS.toml public flag, owner-only line, three gate modes) in the same landing"
+            ]
           }
         },
-        "verified_at": "2026-08-09T20:57:23Z",
-        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS"
+        "verified_at": "2026-08-09T21:06:12Z",
+        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING"
       }
     },
     "spec/design/README.md": {
