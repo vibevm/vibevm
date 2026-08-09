@@ -28655,6 +28655,510 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-033#unexercised-removed"
     },
     {
+      "anchor": "root",
+      "content_hash": "sha256:a00f8cabdf90db3b8b0fd43648e178460d47e0158cafbbeb5305b4556dfa1a82",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "PROP-044: Change-native formats — surviving perpetual evolution",
+      "line": 1,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#root"
+    },
+    {
+      "anchor": "PURPOSE",
+      "content_hash": "sha256:e224443ba4344563d3d9e87ce80d7e171be68ea3cd7e5a9c95b6d5003c8d15d2",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**What this document is.** The standing ideology for every durable",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#PURPOSE"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:cd0034aa6b1ae2184f7f0c18e83c98c55c7609ec3b76388e77875dec4541e689",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "1. The environment, in the owner's words",
+      "line": 14,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#mandate"
+    },
+    {
+      "anchor": "MANDATE-VERBATIM",
+      "content_hash": "sha256:665f07cdb0326e003dee63f6df10fd959077cb55dce2e9fb4734f0ec030b5b6e",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**The owner's mandate (2026-08-09, verbatim, the frame",
+      "line": 16,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANDATE-VERBATIM"
+    },
+    {
+      "anchor": "THE-INVERSION",
+      "content_hash": "sha256:49802d70f965355c40da675341992ca6bda77260fd19ee5f01805f521699a86e",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**The inversion this forces.** Stability-era ecosystems",
+      "line": 31,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#THE-INVERSION"
+    },
+    {
+      "anchor": "TWO-CLOCKS",
+      "content_hash": "sha256:a84088a21c88858b8be76210d9f2c1faa9a60e33c8dd761dae514e0a1676bf08",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**Product clocks and wire clocks are different clocks.** Ten",
+      "line": 39,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#TWO-CLOCKS"
+    },
+    {
+      "anchor": "laws",
+      "content_hash": "sha256:aff8682cfb6dff06f3473aaf9a4b72fad80dbeca826581bdaad654094ec0b7e0",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "2. The two laws, and the short list of the forbidden",
+      "line": 46,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#laws"
+    },
+    {
+      "anchor": "LAW-NO-LYING",
+      "content_hash": "sha256:e4bdb0963693dcc99393d1cc572b9d1a377b64275088bffeb7e1ff9cedacc136",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**Law 1 — break freely; never lie.** A break that announces",
+      "line": 48,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#LAW-NO-LYING"
+    },
+    {
+      "anchor": "LAW-NO-UNRECOVERABLE",
+      "content_hash": "sha256:16941a7512d3e2f4fa1199bd4286cc61892b4d53e639fae630d073ecbc688db3",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**Law 2 — delete freely; never make state",
+      "line": 55,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#LAW-NO-UNRECOVERABLE"
+    },
+    {
+      "anchor": "forbidden-lead",
+      "content_hash": "sha256:0b84b9b625098e24ea1be354a75625d1a2dbdb67a51580897e9d2348a31df39c",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "From these two laws, the complete list of the absolutely",
+      "line": 62,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#forbidden-lead"
+    },
+    {
+      "anchor": "FORBID-IDENTIFIER-REUSE",
+      "content_hash": "sha256:8fc7d46541a11c8cfa3c0f0496877a5dfb35035b13f3e760271a4a9f98a97ad8",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "Never reuse an identifier — a field name, a",
+      "line": 66,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FORBID-IDENTIFIER-REUSE"
+    },
+    {
+      "anchor": "FORBID-BYTE-MUTATION",
+      "content_hash": "sha256:d9db67a4b8fea20637bdeaff699230b38cef9bcd5e0e62ebda5264b71c208fe9",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "Never change bytes at an existing address —",
+      "line": 71,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FORBID-BYTE-MUTATION"
+    },
+    {
+      "anchor": "FORBID-SILENCE",
+      "content_hash": "sha256:339478d8d99c0c99780621256d7304311430b0eff39dca292e0dd801321e303b",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "Never answer silence for a name that ever existed. Every",
+      "line": 75,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FORBID-SILENCE"
+    },
+    {
+      "anchor": "FORBID-SECRET-TRUTH",
+      "content_hash": "sha256:10a12a810455f611a8a91ca6aa1a8d5134519706e7dbee23b8b993ca08559d04",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "Never create unrecoverable state: an authoritative",
+      "line": 80,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FORBID-SECRET-TRUTH"
+    },
+    {
+      "anchor": "FORBID-HANDWRITTEN-WIRE",
+      "content_hash": "sha256:75d2acdcd4148affc166950f401c1efe9b3cd9369aa9f97f1f7e4f3a8ea6216d",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "Never hand-write a parser or writer for one of",
+      "line": 84,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FORBID-HANDWRITTEN-WIRE"
+    },
+    {
+      "anchor": "truth",
+      "content_hash": "sha256:f5696190466227be104c44ac5065056cee7b825f501747482f2f25f45f58a1a8",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "3. Truth and projection",
+      "line": 88,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#truth"
+    },
+    {
+      "anchor": "TRUTH-KERNEL",
+      "content_hash": "sha256:2e8e19a4c9812fc24d842da28078b5c915da6f15fb6f535c1268c6238b310092",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**The authoritative core is small, and everything else is",
+      "line": 90,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#TRUTH-KERNEL"
+    },
+    {
+      "anchor": "DERIVED-IS-DISPOSABLE",
+      "content_hash": "sha256:c9a9bfc3c3bf87850015f7b3bba17d3230489f42df12bd0d7aa2bfdc680304cb",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**Derived and deletable at any moment:** the entire",
+      "line": 98,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#DERIVED-IS-DISPOSABLE"
+    },
+    {
+      "anchor": "MANIFEST-IS-THE-CENTRE",
+      "content_hash": "sha256:904cf15f2f36855df8adf990bc8525c7ba1ad95665348d275f48f9933a78ea77",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**How this squares with \"we manage packages that",
+      "line": 104,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-IS-THE-CENTRE"
+    },
+    {
+      "anchor": "MEMBERSHIP-IS-TESTED",
+      "content_hash": "sha256:61ae16669364c98c4515705773ce3d2e9fa953c81ed166b2b92c0baca7fc555b",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**Membership in \"derived\" is machine-tested, not",
+      "line": 122,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MEMBERSHIP-IS-TESTED"
+    },
+    {
+      "anchor": "ONE-ETERNAL-FILE",
+      "content_hash": "sha256:b53a609e99e02e271ac16fb8e7263c056f12a62993f3ed7ce648be0e5221deac",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**Exactly one file is eternal: the handshake.** A tiny",
+      "line": 128,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#ONE-ETERNAL-FILE"
+    },
+    {
+      "anchor": "machinery",
+      "content_hash": "sha256:c77ae9cd888e049dc7edc902a66519cf4b4b525f0f8b5897c0b2d6f70f4d387c",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "4. The machinery",
+      "line": 138,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#machinery"
+    },
+    {
+      "anchor": "MACHINERY-LEAD",
+      "content_hash": "sha256:f99bc124d9b3e9372945ea43bf33d4810eba8c278a9858d40c3ab21eea82b9ca",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "Compatibility here is a property of machinery around",
+      "line": 140,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MACHINERY-LEAD"
+    },
+    {
+      "anchor": "M-FORMAT-REGISTRY",
+      "content_hash": "sha256:b2e9889dd84631fa09eae35842764a07f03a373e5f27f8d5ba7feec2a2505abc",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**4.1 The format registry.** `formats/REGISTRY.toml`",
+      "line": 144,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-FORMAT-REGISTRY"
+    },
+    {
+      "anchor": "M-SCHEMA-DESCRIBES-FORM",
+      "content_hash": "sha256:698b789c93879c18eb1af2f6bc8ac59eefb968a04c57b7eb426e2d8242ee57fc",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**4.2 Schemas describe form; the generator owns",
+      "line": 152,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-SCHEMA-DESCRIBES-FORM"
+    },
+    {
+      "anchor": "M-OPEN-ENUM-FROM-CLOSED",
+      "content_hash": "sha256:442bb27330b4a519b1f0fffa9cc38d5ae124a55c5205ff82208f8234ae635f2d",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**4.2a The vocabulary resolution.** From a",
+      "line": 164,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-OPEN-ENUM-FROM-CLOSED"
+    },
+    {
+      "anchor": "M-CANONICAL-BYTES",
+      "content_hash": "sha256:281f3406a75d59782e370d3771e7f73a224975f1e0e72ad7a35135b2d98655ef",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**4.3 Canonical bytes, deterministic writers.** One",
+      "line": 173,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-CANONICAL-BYTES"
+    },
+    {
+      "anchor": "M-JOURNAL-NOT-RMW",
+      "content_hash": "sha256:b48c4b59c966cce6d61cb0cb49ef8b6e5f476d0b47f7e973d2ed2a52f149e54c",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**4.4 Journal and projection — no read-modify-write.**",
+      "line": 180,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-JOURNAL-NOT-RMW"
+    },
+    {
+      "anchor": "M-MUST-UNDERSTAND",
+      "content_hash": "sha256:a2c6166aad12e565eff19d323a612c9c6567a407ffba4275edb44ff5f1aa7223",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**4.5 must-understand and record quarantine.** Each",
+      "line": 189,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-MUST-UNDERSTAND"
+    },
+    {
+      "anchor": "M-EPOCHS",
+      "content_hash": "sha256:76f8ce417b5b7006a1129f566d5695b67ea17b4c6c329a454a0290c949182ee9",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**4.6 Epochs are parallel worlds, not mutations.** A heavy break",
+      "line": 198,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-EPOCHS"
+    },
+    {
+      "anchor": "M-BREAK-WINDOW",
+      "content_hash": "sha256:a7ec057e641843cb5997afa829f9d86c26a2aba9f36baabb8978dc7f7d8bdd0a",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**4.7 Breaking is a switched resource; recipes are data.**",
+      "line": 206,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-BREAK-WINDOW"
+    },
+    {
+      "anchor": "placement",
+      "content_hash": "sha256:2508119ef55e91e38ef36717f5ccf6a3e254ac3f14b85efe702f7a8f7baa4742",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "5. Placement and computed policy",
+      "line": 219,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#placement"
+    },
+    {
+      "anchor": "PLACEMENT-LADDER",
+      "content_hash": "sha256:afdc559d1c10805455b0cf6910d6ea4723dbee75a1a97732cffa23b211d0a0c6",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**The placement ladder.** Cost of change grows",
+      "line": 221,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#PLACEMENT-LADDER"
+    },
+    {
+      "anchor": "POLICY-IS-COMPUTED",
+      "content_hash": "sha256:cbe36904b3ffb84bd0b797dde64a7a1718793eb5daef31f52214046063edf144",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**A format's policy is computed, not chosen**, from",
+      "line": 228,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#POLICY-IS-COMPUTED"
+    },
+    {
+      "anchor": "MIGRATION-TAXONOMY",
+      "content_hash": "sha256:597b58f72b37a3767c9317e4ea7d60dd5b09f94a6bb0065e9f238469a3524eac",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**Migrations come in three kinds, and two must not",
+      "line": 238,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MIGRATION-TAXONOMY"
+    },
+    {
+      "anchor": "our-formats",
+      "content_hash": "sha256:896d422cf717771513a13096fb87be42c61dd3c985e1807fd3a1fb04a62ca421",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "6. The formats of this project, by name",
+      "line": 250,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#our-formats"
+    },
+    {
+      "anchor": "FMT-CATALOG",
+      "content_hash": "sha256:8931a6ecc60ab714b7f124dc6bd26221455f5778c4230160e7cf2218c5596cb8",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**6.1 The catalog is three things with three fates.** The",
+      "line": 252,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-CATALOG"
+    },
+    {
+      "anchor": "FMT-CATALOG-VERSION",
+      "content_hash": "sha256:1e9ef8190498629410f477e1d43baeb61cce9624558c253a4f2ce5cd8d5dbf1a",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**The catalog's version stops being a number nobody",
+      "line": 267,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-CATALOG-VERSION"
+    },
+    {
+      "anchor": "FMT-MANIFEST",
+      "content_hash": "sha256:ccd2f3d01b5d49fdf7ee5cc4903ae1209600bb9f2b6bba07871b8409c5e39d44",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**6.2 `vibe.toml` is the most expensive format in the",
+      "line": 272,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-MANIFEST"
+    },
+    {
+      "anchor": "FMT-LOCKFILE",
+      "content_hash": "sha256:344896224ad58ac524294028ceb47154501c047d2d705bf9c6491e23147cf7b4",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**6.3 `vibe.lock` is the cheapest format and becomes free by",
+      "line": 287,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-LOCKFILE"
+    },
+    {
+      "anchor": "FMT-CONFIGS",
+      "content_hash": "sha256:b3680d06b14dff1c23e759dd38790c3a0936927e5c0aae5335fdd63c00908d4a",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**6.4 Configs are preferences, not data — failure is",
+      "line": 295,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-CONFIGS"
+    },
+    {
+      "anchor": "FMT-UNINVENTORIED",
+      "content_hash": "sha256:9ea603b2eff32e313078772b7d728c520c095078067e828b5a3b384cae9ed39f",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**6.5 Surfaces nobody inventoried are formats too.**",
+      "line": 302,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-UNINVENTORIED"
+    },
+    {
+      "anchor": "obligations",
+      "content_hash": "sha256:47e11e90f304db3c2c244189be39349a15268fcffbe5e52b81392f4047b54e9a",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "7. Obligations have types; stability is a mechanism",
+      "line": 308,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#obligations"
+    },
+    {
+      "anchor": "OBLIGATION-TYPES",
+      "content_hash": "sha256:2355f9d5fcb2012697fb9db19a2eca8074f4ef39bac8838c5aa926345c41eccf",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**Three types of obligation, and only two eternal ones.**",
+      "line": 310,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#OBLIGATION-TYPES"
+    },
+    {
+      "anchor": "OBLIGATION-PROCEDURE",
+      "content_hash": "sha256:396672bcd339bac2a0e92940e5170cf5b33d8381f53079f65055448539d7a5c4",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**An obligation without a written breaking procedure",
+      "line": 319,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#OBLIGATION-PROCEDURE"
+    },
+    {
+      "anchor": "STABILITY-IS-A-FLAG",
+      "content_hash": "sha256:c29a2b9c919ad6e3b20a51618a29d07ed614e6eeaff974ca6726d5cc4f2671f0",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**A period of stability is a closed break window plus",
+      "line": 328,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#STABILITY-IS-A-FLAG"
+    },
+    {
+      "anchor": "agents",
+      "content_hash": "sha256:4df22f459a8ac2eb94fa507ad39f82b8bad6476e868cf4f7faa853a1082073a0",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "8. Laws for AI agents — gates, not admonitions",
+      "line": 336,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#agents"
+    },
+    {
+      "anchor": "AGENT-PROSE-IS-BROKEN",
+      "content_hash": "sha256:f57f4e852e10ff4656492a507ba127bda69eb9ec1683e2e79aefc2a3f430cfc3",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**Governing rule: a policy that exists only in",
+      "line": 338,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-PROSE-IS-BROKEN"
+    },
+    {
+      "anchor": "AGENT-GATES",
+      "content_hash": "sha256:ba46d6a9a3e2fcbff600b320a1d3240a18c0389254143b5421d415f661405029",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**The gate set.** G1: all wire I/O through",
+      "line": 345,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-GATES"
+    },
+    {
+      "anchor": "AGENT-MESSAGES",
+      "content_hash": "sha256:8a3d2d929b2746221b26aab50bcca7336ea00067ab66a41fc1ae0e82692aedd7",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**A gate's message is the only documentation that is",
+      "line": 364,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-MESSAGES"
+    },
+    {
+      "anchor": "risks",
+      "content_hash": "sha256:b14924b22dac73796c71777a33cf08f2cfed865f0320b699d71fd1f213b24704",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "9. Honest risks and revisit triggers",
+      "line": 373,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#risks"
+    },
+    {
+      "anchor": "RISK-RECOVERABILITY",
+      "content_hash": "sha256:bb3688668f621687ce62db1f0a4337cf5104f9eb5c2e750c8a61ca8e13892363",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**The recoverability bet.** Upstream sources vanish —",
+      "line": 375,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RECOVERABILITY"
+    },
+    {
+      "anchor": "RISK-RMW-VOLUME",
+      "content_hash": "sha256:9ef44b4c9981d665abeb8342a5765295b7d39fa92bf07f86a625a5208f7000e5",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**The journal/projection rework is a real rebuild, not an",
+      "line": 383,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RMW-VOLUME"
+    },
+    {
+      "anchor": "RISK-RAW-PARSERS",
+      "content_hash": "sha256:1f705b0f1c8d67c70990d96fa9be49deafb7c3c09bad2057b35f126250c27d9c",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**Foreign `curl | jq` will happen regardless of",
+      "line": 390,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RAW-PARSERS"
+    },
+    {
+      "anchor": "RISK-OVERENGINEERING",
+      "content_hash": "sha256:397a66134a1deeb6f0ffdc6c93f1aaf5a7f5b6a40078f9470924d66af9835f24",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**The degenerate-first guard.** The epoch machinery",
+      "line": 396,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-OVERENGINEERING"
+    },
+    {
+      "anchor": "RISK-SECURITY-PARKED",
+      "content_hash": "sha256:7574dc83b4db87ea31fd4e6dceb9259b3f80d442336a0d8561b0b52f5d03df90",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**Signature and authenticity remain parked by the",
+      "line": 404,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-SECURITY-PARKED"
+    },
+    {
       "anchor": "genre-definition",
       "content_hash": "sha256:f0d43088fbe4d452eaadeef5ac8818562d5fddb734c3dfd99f990a565c791bc1",
       "doc_path": "design/README",

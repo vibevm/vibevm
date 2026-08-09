@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-09T19:28:09Z",
+  "updated_at": "2026-08-09T20:26:40Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -94336,6 +94336,312 @@
         },
         "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c3d-common-tail"
+      }
+    },
+    "spec/common/PROP-044-change-native-formats.md": {
+      "content_hash": "1af6e8913c5e4c1da48682de28c9d22757a7c63df25e15e1a09e47ba8d552441",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "work"
+        ],
+        "computed": [
+          "spec",
+          "plan"
+        ],
+        "effective": [
+          "spec",
+          "work"
+        ],
+        "marker_count": 47,
+        "fact_count": 46,
+        "unmarked_facts": 0
+      },
+      "marker_count": 47,
+      "unit_count": 10,
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "1af6e8913c5e4c1da48682de28c9d22757a7c63df25e15e1a09e47ba8d552441",
+        "verdicts": {
+          "PURPOSE": {
+            "v": "confirmed",
+            "ev": [
+              "Owner commission 2026-08-09 in-session: «Мне нужен а) Документ с описанием идеологии… чтобы я мог отдавать его ИИ агентам… б) конкретное решение… в виде супер подробного ТЗ»; the named TZ exists at campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md (same landing)"
+            ]
+          },
+          "MANDATE-VERBATIM": {
+            "v": "confirmed",
+            "ev": [
+              "Quoted from the owner's message of 2026-08-09 (this session), lightly elided; the same directive is independently recorded in C:/Users/olegc/git/v/discovery/vibevm-schema-evolution-discovery/12-HANDOFF.md §4 and spec/boot/90-user.md ##EFFORT-IS-NOT-A-CONSTRAINT"
+            ]
+          },
+          "THE-INVERSION": {
+            "v": "confirmed",
+            "ev": [
+              "Discovery corpus 02 §3 C1/C12 and 04 §4.2 document the stability toolkit (additive-only, never-rename, multi-year windows) as the industry frame; the convened Fable verdict (2026-08-09, task a0198d6c) §0 derives the cost-vs-frequency inversion adopted here"
+            ]
+          },
+          "TWO-CLOCKS": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict §4.1: product clocks vs wire clocks; mechanism = deliberate acts gated by M-BREAK-WINDOW (formats/EPOCHS.toml, G7/G8), defined in this document §4.7"
+            ]
+          },
+          "LAW-NO-LYING": {
+            "v": "confirmed",
+            "ev": [
+              "Silent-wrong-answer as the one unfixable failure: Cloudflare 2025-11-18 post-mortem (discovery 04 §1.15.1 — old readers 'kept working' with bot score zero), cargo features2 misread (discovery 02 §1.1 Q5), apt Multi-Arch silent downgrade (02 §1.3); convened verdict Z3/§4.4 names the family"
+            ]
+          },
+          "LAW-NO-UNRECOVERABLE": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict Z1 + §3: recoverability is what purchases the right to break; the rebuild test (this doc §3 MEMBERSHIP-IS-TESTED) is its checker; consistent with PROP-005 #truth (repos authoritative, index derived hot cache)"
+            ]
+          },
+          "forbidden-lead": {
+            "v": "confirmed",
+            "ev": [
+              "Lead sentence for the five FORBID items below; the deliberate contrast (renames/deletions permitted) is the inversion of discovery 02 §3 C1/C10 stability laws, per the convened verdict §4.4"
+            ]
+          },
+          "FORBID-IDENTIFIER-REUSE": {
+            "v": "confirmed",
+            "ev": [
+              "RPM sha/sha1 and group-value redefinition as the only fatal breaks in 20 years: discovery 02 §5 R24/R28; coordinate immutability is existing project law: packages/org.vibevm.world qualified-naming flow (NEVER-REUSE-A-COORDINATE-FOR-DIFFERENT-CONTENT, compiled into spec/boot/STATIC.md)"
+            ]
+          },
+          "FORBID-BYTE-MUTATION": {
+            "v": "confirmed",
+            "ev": [
+              "Content-addressing as the recovery mechanism: vibe.lock pins content_hash (crates/vibe-core/src/manifest/lockfile.rs); OCI digest law and cargo 'do not rewrite' (discovery 02 §1.1 Q7, §1.2 Q7); convened verdict Z3 second clause"
+            ]
+          },
+          "FORBID-SILENCE": {
+            "v": "confirmed",
+            "ev": [
+              "schema.org supersededBy never-delete rule (discovery 04 §1.7); cargo yanked-since-2014 (refs/src/cargo/crates/cargo-util-schemas/src/index.rs:30-34); convened verdict §4.4 п.3 (silence indistinguishable from network failure)"
+            ]
+          },
+          "FORBID-SECRET-TRUTH": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict Z1/§3 (membership machine-tested by rebuild); the failure precedent in-tree: index once carried facts nothing else held would break PROP-005 #truth 'reality wins' — the law makes the promotion mandatory"
+            ]
+          },
+          "FORBID-HANDWRITTEN-WIRE": {
+            "v": "confirmed",
+            "ev": [
+              "Owner mandate 2026-08-09: «Сейчас там просто serde и агенты пишут кучу ерунды»; measured consequence classes: BACKLOG.md B-070 (vocabulary in ~14 homes), BindingSite dual serialisation (crates/vibe-index/src/index/inverted.rs:88 vs crates/vibe-registry/src/index_client/wire.rs:93)"
+            ]
+          },
+          "TRUTH-KERNEL": {
+            "v": "confirmed",
+            "ev": [
+              "Extends PROP-005 #truth (package repos authoritative; index derived) with the journal for facts sources cannot carry (yank/rename/ownership — measured absent: no yank/tombstone in crates/vibe-index/src, B9 of the TZ baseline); convened verdict §3 item list adopted verbatim"
+            ]
+          },
+          "MANIFEST-IS-THE-CENTRE": {
+            "v": "confirmed",
+            "ev": [
+              "Answers the owner's question of 2026-08-09 («как это согласуется с тем что мы делаем систему, которая управляет пакетами, у которых есть манифесты?»); manifest-as-source provenance is existing behaviour: PROP-005 #entry field provenance reads vibe.toml at the tagged ref; lockfile reproducibility via content_hash join key (PROP-005 #trust)"
+            ]
+          },
+          "DERIVED-IS-DISPOSABLE": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-005 #truth declares the index a regenerable hot cache; vibe.lock self-declares regenerable (crates/vibe-core/src/manifest/lockfile.rs:40-45); aggregates recomputed at write (crates/vibe-index/src/index/memory.rs:247-248, types/entry/aggregate.rs finalise)"
+            ]
+          },
+          "MEMBERSHIP-IS-TESTED": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict §3 ('удали и пересобери; если отличается — нашёл тайную истину'); operationalised as the TZ's cargo xtask rebuild --check (Ф3.2/Ф5.1); ordering rationale (built early) from verdict §7 wave 1"
+            ]
+          },
+          "ONE-ETERNAL-FILE": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict Z2 (handshake with successor; in-band forwarding because transport is raw git files — PROP-005 #form-factor raw-URL consumption); priced as the single vow per verdict §8 п.4; TZ D8 implements a degenerate first form"
+            ]
+          },
+          "MACHINERY-LEAD": {
+            "v": "confirmed",
+            "ev": [
+              "Section lead; the machinery-not-format thesis is the convened verdict §0; each sub-item carries its own fact and evidence below"
+            ]
+          },
+          "M-FORMAT-REGISTRY": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict M1 (registry + generated FormatId makes unregistered formats untypeable); uninventoried-surface hazard measured: schemas/ holds 7 CLI report JTDs and no catalog schema (B10 of TZ baseline; PROP-005 #entry 'This section IS the schema')"
+            ]
+          },
+          "M-SCHEMA-DESCRIBES-FORM": {
+            "v": "confirmed",
+            "ev": [
+              "Spike 2026-08-09 (this session, scratchpad): jtd-codegen 0.4.1 emitted #[serde(tag=\"kind\")] for a discriminator schema, a closed enum without fallback, and Option<Box<T>> optionals; crates/vibe-wire/src/lib.rs:17-43 records deny_unknown_fields as unemittable; poverty-of-JTD rationale from convened verdict M2"
+            ]
+          },
+          "M-OPEN-ENUM-FROM-CLOSED": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict §3 (generator emits open Rust enum from closed JTD enum, Unknown(String) arm mandatory); dissolves the trilemma recorded in discovery 11 §2.9 (tag+catch-all+codegen mutually incompatible under stock tooling); feasibility to be proven by TZ Ф0.2 PoC — the doc claims the design, not a shipped artifact"
+            ]
+          },
+          "M-CANONICAL-BYTES": {
+            "v": "confirmed",
+            "ev": [
+              "Determinism-as-instrument: measured counterexample in-tree — generated_at: Utc::now() at crates/vibe-index/src/index/memory.rs:249 defeats rebuild-compare while gzip is deliberately deterministic (index/primary.rs:61-65); BACKLOG.md B-072; convened verdict Z6"
+            ]
+          },
+          "M-JOURNAL-NOT-RMW": {
+            "v": "confirmed",
+            "ev": [
+              "Six read-modify-write paths measured (discovery 11 §2.1, re-verified this session: add.rs:51→122, remove.rs:35→57, reindex.rs:218→281, packages.rs:256/304/333); tolerant-without-capture-deletes hazard from discovery 11 §2.1; the dissolution (journal+projection, G4 writer-input ban) from convened verdict M5/§2.4"
+            ]
+          },
+          "M-MUST-UNDERSTAND": {
+            "v": "confirmed",
+            "ev": [
+              "Record-level gating precedent: cargo index v field skips the record, not the file (refs/src/cargo/crates/cargo-util-schemas/src/index.rs:65-87); the writer-declares inversion and quarantine-at-use from convened verdict Z4/§4.3; signature-ordering dependency in RISK-SECURITY-PARKED"
+            ]
+          },
+          "M-EPOCHS": {
+            "v": "confirmed",
+            "ev": [
+              "New-path-for-breaking precedent: PyPI/NuGet/Debian new-URL/new-extension (discovery 02 §1.8b Q8, §1.3 Q8); git refs/frozen worlds free of charge (discovery 02 §7 GLM review п.1-2); parallel-worlds framing from convened verdict M6/§4.1 trains"
+            ]
+          },
+          "M-BREAK-WINDOW": {
+            "v": "confirmed",
+            "ev": [
+              "Break window flag + break notes + wire-diff from convened verdict Z7/M3/M9; recipe identity: content_hash exclusion list is a code constant today (crates/vibe-index/src/content_hash.rs:29 SHIPPABLE_EXCLUDES) and the parity test guards copies not time (tests/content_hash_parity.rs) — discovery 11 §2.6"
+            ]
+          },
+          "PLACEMENT-LADDER": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict §4.3(8) ladder adopted; the one-rule-for-weak-authors framing is its stated purpose; rung costs justified by FMT-* policies below (lockfile free by regeneration, manifest decade-long per FMT-MANIFEST)"
+            ]
+          },
+          "POLICY-IS-COMPUTED": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict §6 2×2 grid (recoverable × parser count); vibe.toml as sole worst-quadrant resident measured: authored, no epoch field (vibe-core/src/manifest/document.rs), read by agents in foreign repos; owner-decision requirement for new worst-quadrant formats via M-FORMAT-REGISTRY registry entry"
+            ]
+          },
+          "MIGRATION-TAXONOMY": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict §3 (derived: no migrations — rebuild; authored: codemods comment-preserving; shims banned with the frozen-reader exception); comment-preserving machinery exists in-tree: crates/vibe-core/src/manifest/mod.rs merge_preserving_comments (discovery 11 §4 п.7); bot-PR capability follows from git-org registry (PROP-002)"
+            ]
+          },
+          "FMT-CATALOG": {
+            "v": "confirmed",
+            "ev": [
+              "Three-way split measured: by-name+repomd are the only re-read types, exports never read back (primary::read/parse zero callers — discovery 11 §2.2, re-checked); generated-reader law motivated by the same finding; narrow-gate and disposable-repo-declaration from convened verdict §6.1"
+            ]
+          },
+          "FMT-CATALOG-VERSION": {
+            "v": "confirmed",
+            "ev": [
+              "Version compared nowhere and overwritten by writer constant: crates/vibe-index/src/index/memory.rs:273 (copy), :245 (stamp) — discovery 11 §1.4(в); the dissolution (epoch-in-path + must-understand) from convened verdict §6.1 last bullet"
+            ]
+          },
+          "FMT-MANIFEST": {
+            "v": "confirmed",
+            "ev": [
+              "No epoch/version field today (B13 of TZ baseline; vibe-core/src/manifest/document.rs:66 deny_unknown_fields); de-facto external surface argument from convened verdict §6.2 (agents read files); absence≠1 rationale from discovery worker G4 §4; generated published projection = discovery 02 §3 C13 authored/published split re-derived from recoverability"
+            ]
+          },
+          "FMT-LOCKFILE": {
+            "v": "confirmed",
+            "ev": [
+              "Current behaviour measured: CURRENT_SCHEMA_VERSION=5, != rejected, next install regenerates (crates/vibe-core/src/manifest/lockfile.rs:40-50,430); silent-regenerate + --frozen from convened verdict §6.3; bottom-rung consequence ties to PLACEMENT-LADDER"
+            ]
+          },
+          "FMT-CONFIGS": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict §6.4 (load() -> Config, no Result; strict-fail only where wrong reading corrupts results); consistent with vibe-settings layered scopes (PROP-040) and the 10-releases-a-day mandate"
+            ]
+          },
+          "FMT-UNINVENTORIED": {
+            "v": "confirmed",
+            "ev": [
+              "Measured surfaces: schemas/*.jtd.json (7 CLI reports), crates/vibe-cli/resources/package-tree.schema.v1.json, MCP tool schemas in crates/vibe-mcp/src/tools.rs, subskill manifests (vibe-subskill.toml); the finding that none are inventoried as formats is the convened verdict §6.5"
+            ]
+          },
+          "OBLIGATION-TYPES": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict §4.2 typology (two eternal honesty vows, expiring windows, everything else revocable); satisfies the owner's «любое обязательство однажды нарушим» by construction — almost nothing is vowed"
+            ]
+          },
+          "OBLIGATION-PROCEDURE": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict §4.2 (procedure-or-hope; rehearsed sunsets; asymmetric friction extend-free/shorten-owner-act); rehearsal precedent: Twitter blackout tests before v1 retirement (discovery 04 §1.13.2)"
+            ]
+          },
+          "STABILITY-IS-A-FLAG": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict §4.1 (break_window_open flag as the mechanism; trains batch heavy breaks; published expiry inside the retiring world); the honest-contract phrasing («знаешь дату, починка — одна команда») from the same section"
+            ]
+          },
+          "AGENT-PROSE-IS-BROKEN": {
+            "v": "confirmed",
+            "ev": [
+              "House law restated for this domain: 'a rule with no checker is a WISH' (core-ai-native boot snippet, compiled into spec/boot); three-level preference and three-directory freedom from convened verdict §5"
+            ]
+          },
+          "AGENT-GATES": {
+            "v": "confirmed",
+            "ev": [
+              "G1–G15 adopted from convened verdict §5 table with in-tree targets verified: G5 targets memory.rs:249 Utc::now(); G9 targets the ~14 vocabulary homes (B-070) and BindingSite pair; G15 targets merge_preserving_comments capability; implementation phased in TZ Ф2–Ф6"
+            ]
+          },
+          "AGENT-MESSAGES": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict §5 closing requirements (gate message = the documentation actually read; no decisions the agent gets wrong; intent/form/policy split); consistent with house error style (errors cite REQ + fix surface, rust stack boot snippet)"
+            ]
+          },
+          "RISK-RECOVERABILITY": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict §8 п.1 (upstream sources vanish → archive subsystem or silent degradation); trigger formulated here; no archive subsystem exists in-tree today (no content-addressed source store outside git hosts)"
+            ]
+          },
+          "RISK-RMW-VOLUME": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict §8 п.2 (rework may exceed budget; measure first); gate operationalised as TZ Ф0.1 M-RMW with the named fallback (temporary capture) explicitly labelled a compromise"
+            ]
+          },
+          "RISK-RAW-PARSERS": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict §8 п.3 (curl|jq reality; no telemetry ever — discovery 11 §2.7 measured the no-signal property of raw git files); posture: assume raw parsing, keep the gate boring"
+            ]
+          },
+          "RISK-OVERENGINEERING": {
+            "v": "confirmed",
+            "ev": [
+              "Convened verdict §8 п.6 (degenerate-first; a walked-around gate manufactures false confidence); scaling trigger = first real epoch train; TZ D8/D12 implement the degenerate form"
+            ]
+          },
+          "RISK-SECURITY-PARKED": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-01 recorded at BACKLOG.md #b-015 (park security until owner notice); ordering addition (slots before tolerance, downgrade-attack hazard) from discovery 11 §1.6 item 1 and 12-HANDOFF §6; TZ D7 builds slots only"
+            ]
+          }
+        },
+        "verified_at": "2026-08-09T20:26:40Z",
+        "verify_batch": "PROP044-SAME-PASS"
       }
     },
     "spec/design/README.md": {
