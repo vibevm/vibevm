@@ -1,215 +1,171 @@
-# CONTINUE — cold-resume snapshot (2026-08-06, wind-down №17)
+# CONTINUE — cold-resume snapshot (2026-08-10, wind-down №18)
 
-> ## ⚠️ ЭТОТ ФАЙЛ ОТСТАЛ. Актуальное состояние — 2026-08-09
->
-> Работа, которую этот снимок называет следующей (А5b → аудит TUI → хвост P1 →
-> дешёвые строки), **исполнена 2026-08-06**. Всё, что ниже раздела «Where work
-> stands», по-прежнему верно как карта репозитория и список действующих решений;
-> **список следующих работ — нет**.
->
-> **С тех пор** сессия 2026-08-09 провела исследование эволюции форматов
-> (вопрос владельца о генерации типов каталога из схем). Три круга: четыре
-> веб-исследователя, пять GLM-воркеров, финальное ревью отдельной моделью.
-> Решения нет — до дизайна не дошли.
->
-> **Всё состояние этой работы — в хэндоффе, ВНЕ репозитория:**
->
-> ```
-> C:\Users\olegc\git\v\discovery\vibevm-schema-evolution-discovery\12-HANDOFF.md
-> ```
->
-> Загрузочная последовательность туда не заглядывает — этот указатель
-> единственный. В хэндоффе: пять вопросов владельца с состоянием каждого, полный
-> список обязательного чтения (12 документов, ~12 400 строк), пять мест, где
-> прежний разбор экономил усилия, и что в каждом меняется.
->
-> **Промт для следующей сессии** — [`NEXT-SESSION-PROMPT.md`](NEXT-SESSION-PROMPT.md),
-> переписан 2026-08-09. Он требует прочитать материал **до** разговора с
-> владельцем и запрещает начинать работу без его слова.
->
-> **Новая директива владельца, действует всегда:** усилий не экономить; объём
-> работ не является доводом. Записана в `spec/boot/90-user.md`, читается при
-> загрузке каждой сессии.
-
-**Do not quote numbers from here — measure:**
-`python campaigns/packages-2026-09/tasks/summary.py` ·
-`python campaigns/packages-2026-09/tasks/judging-debt.py` ·
-`python campaigns/packages-2026-09/tasks/text-stability.py` ·
-`python campaigns/packages-2026-09/tasks/drift-registry.py`
-— **after** `vibe progress scan`, or they answer about the cache.
-`spec/WAL.md` is rewritten by this same wind-down and **supersedes** this file.
+**Не цитируй числа отсюда — меряй:**
+`vibe progress scan --campaign campaigns/packages-2026-09` →
+`python campaigns/packages-2026-09/tasks/{summary,judging-debt,text-stability}.py`.
+`spec/WAL.md` переписан этим же сворачиванием и **главнее** этого файла.
+Промт для новой сессии — [`NEXT-SESSION-PROMPT.md`](NEXT-SESSION-PROMPT.md).
 
 ## TL;DR
 
-**The programme of 2026-08-06 is executed as far as it can go without the
-owner.** Group Б was closed in the previous session; В1–В3 too; this session
-closed **А1, А2, А3, А4 and А5a**, and stopped **А6** and **В4** on
-measurements that change what the owner decided rather than on difficulty.
+Сессия 2026-08-09/10 закрыла разбор **вопроса №1 владельца** (формат каталога
+пакетов) проектным предложением. Владелец перевернул рамку: мы строим систему
+для **среды перманентного перелома** (10 релизов в день, формат сменится ещё
+десять раз, поломки у пользователей — принятая цена; Maven/RPM — модели
+стабильности, нам не образец). По его предложению был созван отдельный
+Fable-совет; его вердикт («одноразовые миры») синтезирован с трёхкруговым
+исследованием в три документа:
 
-**The corpus owes nothing unjudged and nothing orphaned** — 142 and 5 this
-morning, both zero now. Ten files sealed.
+> ### 📄 [`spec/common/PROP-044-change-native-formats.md`](spec/common/PROP-044-change-native-formats.md) — идеология (контракт)
+> ### 📄 [`spec/design/change-native-formats-verdict.md`](spec/design/change-native-formats-verdict.md) — вердикт совета (лоре)
+> ### 📄 [`campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md`](campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md) — ТЗ исполнителю
 
-The next session's work is named in [`NEXT-SESSION-PROMPT.md`](NEXT-SESSION-PROMPT.md),
-in the order the owner asked for: **А5b → the TUI thinness audit → the P1 tail
-→ the cheap rows → then drain `BACKLOG.md` and refresh `TOOLING-MAP.md`.**
+Суть: истина — исходники пакетов + журнал фактов реестра; всё опубликованное —
+одноразовая, побайтово восстановимая проекция; вечен один файл-рукопожатие;
+ломать можно — врать нельзя; политика провода живёт в нашем генераторе, а не в
+рукописном serde; правило — не «не ломать», а «не ломать необъявленно».
 
-The plan file is still the plan for what remains of the programme:
+**Статус: предложение готово, НЕ ратифицировано.** Старт фазы 0 ТЗ — только
+со слова владельца.
 
-> ### 📄 [`spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md`](spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md)
+## Четыре рулинга владельца этой сессии (все уже в спеке)
 
-## What this session built
+1. **Допубликационный переключатель** (`PROP-044 ##THE-PUBLIC-SWITCH`,
+   ТЗ D13): до объявления владельцем «первый показ публике состоялся» миграции
+   не применяются вовсе, машинерия перелома отчётная; факт публикации
+   **технически неопределим по построению** и никогда не выводится из событий
+   (пуш, наполнение реестра, тег); переключатель — строка `public = true`,
+   меняет только владелец.
+2. **Нейтральность к провайдеру хранения** (`##PROVIDER-NEUTRALITY`): git —
+   форма представления, не семантика. Четыре обязательства провайдера
+   (неизменный снимок / канал / вопрос свежести / перечисление);
+   авторитетный акт — всегда событие журнала; универсальный проверяльщик —
+   наш `content_hash`; локаторы (`source_ref`, `resolved_commit`) —
+   непрозрачные строки провайдера.
+3. **Модель заморозки** (`##THE-FREEZE-MODEL`, ТЗ D14): версия по умолчанию —
+   мутабельный канал; фриз — односторонний акт автора `frozen = true` в
+   манифесте, **внутри хэшируемого содержимого** (реестры только наблюдают
+   журналом; версия несёт только порядок — замороженная бета выразима);
+   несовпадение хэша: у замороженной — тревога, у канала — новость;
+   **каждая поверхность, показывающая версию, показывает статус**. Побочно
+   навсегда растворён B-067.
+4. **Смертность плана** (ТЗ §11): посадка фазы сворачивает её секцию в
+   могильник в том же коммите со спек-диффом; закрытие плана убирает ссылки
+   на него из PROP-044; чекер «спека не ссылается на закрытый план» — дефер.
 
-| | |
-|---|---|
-| **А1** | the index server publishes itself — and **refuses to start** if `state/` is not gitignored, because publishing is a `git add -A` away from the server's own bearer tokens |
-| **А2** | a private index becomes readable. The unmeasured question was answered first: the client could not authenticate **at all**. The half a mechanical reading would miss — a refused probe is now distinguishable from a missing index |
-| **А3** | the organisation image is cached, with a cheap conditional freshness check that is what makes «on by default» honest rather than an improvement on it |
-| **А4** | webhooks specified with the operator guide **inside the spec**, on the owner's ruling; its fenced walkthrough deliberately unmarked, because it describes a route that does not exist |
-| **А5a** | the map can be **searched**, not only asked about — three filters under a hard ceiling, library + CLI + MCP |
-| **debt** | 176 facts judged, ten files sealed, unjudged and orphaned both to zero |
+## Блокер и действие человека
 
-## The three things worth reading before touching anything
+**Блокер:** ратификация PROP-044 владельцем. **Действие:** прочитать три
+документа (порядок в `NEXT-SESSION-PROMPT.md`), сказать «да»/правки, и
+решить открытые ручки: политика резолвера для публичных каналов (D14),
+уровень лога (D11), четыре идентичностных пункта (см. ниже).
 
-**1. Instruments caught six errors; attention caught none.** The map's ratchet
-found five untagged items (my packet had dropped the `scope!` clause — the
-documented failure mode of a packet assembled mid-session). Conform caught two
-environment reads outside its sanctioned list, one of them pre-existing and
-newly unsanctioned only because its file had moved. Conform again caught an
-`.unwrap()` hiding behind a real invariant and a false assumption. The length
-budget threw a file over 600 **after formatting**, twice. `merge-verdicts`
-refused two batches — and one refusal proved my own evidence text was lying
-about itself.
+## Не заведено, ждёт рулинга — идентичность (разбор 2026-08-10)
 
-**2. A measurement refused, and it saved five verdicts.** Five «orphaned
-verdicts» had stood since 2026-07-28. The anchors were all present; what was
-lost was **addressability**, to a missing blank line — two facts on consecutive
-lines are one paragraph, and only the first keeps an address. The repair was
-three blank lines. The prepared repair — prune the five — would have destroyed
-five valid judgements to tidy a number. Filed as **B-074**: in this markup
-whitespace is load-bearing, and the one mechanism that can lose an address
-leaves no trace in any gate.
+Рекомендации выданы в чате, в ТЗ НЕ занесены (нужно слово владельца):
+модель доверия группы — записать «заявка, не удостоверение»; конвенция для
+авторов без доменов (`io.github.<user>`-класс); грамматика — группа ≥2
+сегментов, судьба `_` в группе, запрет `+build` в публикуемых версиях;
+**слот `vibedeps/<kind>-<name>/<версия>` противоречит идентичности** (группы
+нет, вид есть: коллизия одноимённых пакетов разных групп; смена вида
+переселяет слот) — сменить на слот от идентичности, пока публики нет.
 
-**3. The corpus's largest evidence blob names a file that has never existed.**
-`PROP-005` carries 279 verdicts across four paragraphs, one of which covers
-**276**. Inside it: «the shipped JTD at
-`crates/vibe-index/schemas/index-entry.jtd.json`». No such file, no such
-directory, and `git log` across all refs shows it was never added or deleted.
-The earlier P1 specimen was findable because the corpus contradicted itself;
-this one has no contradicting twin. Recorded in `AUDIT.md` under the open P1.
+## Где стоит работа
 
-## Where work stands
+- Ветка `main`, дерево чистое; **~16 коммитов раскатаны этим сворачиванием**
+  (`cargo xtask mirror`; если расхождение с origin ненулевое — раскатка не
+  прошла, это первое, что проверить).
+- Полная панель (`bash tools/self-check.sh`) зелёная — последний прогон этим
+  сворачиванием (см. WAL).
+- Судейский долг: **0 неосуждённых, 0 осиротевших**; каждый новый документ
+  сессии осуждён и запечатан тем же заходом (46+35+2+1+1+2 вердиктов).
+- Корпус 281 файл; вердиктов 12 223 при 98.2 %, per-fact 63.8 %.
+- Карта (`specmap.json`) чиста, двигалась с каждой правкой спек.
+- Открытые находки аудита — активное подмножество в [`AUDIT.md`](AUDIT.md)
+  (P1 `2026-08-06-01` — planка доказательства, вопрос №4 владельца).
+- Два worktree от старых fractality-прогонов числятся в глобальном доме — к
+  этой работе отношения не имеют.
 
-- Branch `main`, tree clean, `.wt/` empty (and now gitignored), every worker
-  report archived **with its `meta.md`** — four workers this session.
-- **Panel green** (`bash tools/self-check.sh`, exit 0, read from the tail).
-- **26 commits ahead of origin — NOTHING IS PUSHED.** The rollout is
-  `cargo xtask mirror` and this wind-down runs it; if it did not, that is the
-  first thing to check.
-- Corpus 278 files. Verdicts ~12 065 at 98.2 %, **63.0 % per-fact**.
-- Judging debt: **0 unjudged, 0 orphaned**, 42 stale (mostly this session's own
-  edits — `text-stability.py` names which facts actually moved).
+## Пять вопросов владельца (якорь: `BACKLOG.md #owner-decisions`)
 
-## Non-obvious findings worth carrying
+| # | вопрос | состояние |
+|---|---|---|
+| 1 | формат каталога | **предложение готово, не ратифицировано** (три документа) |
+| 2 | недетерминированная запись | растворяется фазами Ф2–Ф3 ТЗ |
+| 3 | логи сервера | решение D11 в ТЗ; уровень по умолчанию — за владельцем |
+| 4 | планка доказательства | не тронут; владельца |
+| 5 | соединение движков | не тронут; нужно только «да» владельца |
 
-- **A dated measurement is kept dated, not rewritten.** `command-nodes.md`'s
-  «what is measured today» section had four readings moved by the very build it
-  commissioned. Rewriting them would keep the conclusion and erase the
-  reasoning; the section is reframed as evidence for a decision and one fact
-  carries the re-measurement.
-- **A review correction can destroy coverage.** The `-c` round I sent А2 was
-  right and removed the only tests of the positive case — the mock servers are
-  plain HTTP, so once the scheme gate moved to the attachment step those tests
-  became false. The gap was mine; I closed it rather than spending a third round.
-- **`vibe tools` shipped with no spec document at all** — its only durable
-  record was a disposable plan and a rewritten WAL. А5a deliberately did not
-  repeat that.
-- **A worker's refusal is the useful output.** А1 reported that the index stamps
-  a fresh timestamp on every write, so a redundant upsert still commits, and did
-  not work around it. That is B-072.
+## Неочевидные находки сессии (сверх документов)
 
-## Repository map
+- **Спайк jtd-codegen 0.4.1** (воспроизводим): discriminator →
+  `#[serde(tag)]` РАБОТАЕТ (тегирование объединения снимает блокер
+  генерации); enum генерится закрытым; optional → `Option<Box<T>>`;
+  строгость не эмитится. Поэтому политика — в нашем слое (ТЗ D4, Ф0.2 PoC).
+- **Исследование импортировано в репозиторий**:
+  `spec/research/schema-evolution-2026-08/` (41 файл, вне размечаемого
+  корпуса — `spec/research/**` не в include-глобах; README-PROVENANCE
+  объясняет). Оригинал в `C:\Users\olegc\git\v\discovery\…` оставлен.
+- **Пересуждение при правке факта**: `merge-verdicts.py --force` + evidence
+  «что заменяет и почему прежний был верен» + повторный `seal` — путь
+  обкатан на `FORBID-BYTE-MUTATION`.
+- Коллизия id: якорь заголовка `{#x}` и `@fact:x` в одном файле — ошибка
+  скана (DuplicateId); имена фактов не должны совпадать с якорями секций.
+- `latest_stable` уже фильтрует prerelease (`aggregate.rs`) — ось
+  «стабильность строки версии» отдельна от оси «замороженность», обе живут.
 
-- `spec/` — PROP/FEAT contracts (`common/`, `modules/`), `boot/` (`STATIC.md`
-  is the priority lane), `design/`, `terraforms/` (**the programme**), `WAL.md`.
-- `campaigns/packages-2026-09/` — the live campaign: `harvest/`, `tasks/`
-  (`summary.py`, `judging-debt.py`, `text-stability.py`, `drift-registry.py`,
-  `merge-verdicts.py`), `run/`, `SUBAGENT-LAUNCHERS.md` + `SUBAGENT-MODE.toml`.
-- `crates/` — 19 crates + xtask. New this session: `vibe-index/src/publish.rs`,
-  `vibe-index/src/scanner/org_cache.rs`, `vibe-index/src/cli/rescan_org.rs`,
-  `vibe-registry/src/index_client/` (was one file),
-  `vibe-trace/src/search.rs` + `search/tests.rs`, `vibe-cli/src/commands/query.rs`,
-  `vibe-mcp/src/tools/query.rs`.
-- Root: `BACKLOG.md` (**21 live rows, 38 tombstones**), `TOOLING-MAP.md`
-  (**dated 2026-08-04, two days behind the tree — one fact now says so**),
-  `TASKS.md`, `AUDIT.md`, `NEXT-SESSION-PROMPT.md`, `specmap.json` (gated),
-  `CLAUDE.md`/`AGENTS.md`/`GEMINI.md` (byte-identical).
+## Карта репозитория
 
-## Decisions in force
+- `spec/common/PROP-044…` — новый контракт; `spec/design/…verdict.md` — его
+  лоре; `spec/research/schema-evolution-2026-08/` — база исследования.
+- `campaigns/packages-2026-09/` — живая кампания: ТЗ, `tasks/*.py`
+  (замеры/суждение), `run/` (кэш вердиктов), `SUBAGENT-LAUNCHERS.md`
+  (транспортный закон воркеров — читать ЦЕЛИКОМ перед фан-аутом).
+- `crates/` — 19 крейтов + xtask; предмет ТЗ: `vibe-index` (types/, index/,
+  scanner/, server/), `vibe-registry/src/index_client/`,
+  `vibe-core/src/manifest/`.
+- Корень: `BACKLOG.md` (якорь пяти вопросов), `AUDIT.md`, `TASKS.md`,
+  `NEXT-SESSION-PROMPT.md`, `specmap.json`, `CLAUDE.md`≡`AGENTS.md`≡`GEMINI.md`.
 
-- **A capability lives in a library; surfaces are thin.** Floor: library + CLI +
-  MCP, TUI where one exists. LSP/IDE deliberately undeclared — and an
-  undeclared surface is not a debt.
-- **A plan is temporary** — deletable once executed; content moves into the
-  specs; statements cite spec elements, never plan rows.
-- **Content moved into a specification is judged in the same pass that moves
-  it.** Enforced by `seal` refusing a half-judged file.
-- **A re-judgement records what it replaces**, including that the earlier
-  verdict was correct when formed.
-- **A fence is an example until marked** `@fact/code:`.
-- **Every marker names its key** — `@fact:` / `@status:`. The canonical form
-  for hashing is the LEGACY one.
-- **The TUI is finished when it is thin** — deletion on paper. Perimeter now
-  written down: the two `tui/` trees, 63 files, 18 426 lines, 258 tests.
-- **State the perimeter with the number** · **measure before building** ·
-  **a grep lies in both directions**.
-- Rollout is `cargo xtask mirror` only. After any engine or stack-crate edit —
-  `cargo xtask sync-engines`. A new `scope!` file or edited `spec/` text —
-  `cargo xtask specmap` in the same landing.
+## Решения в силе (длинно — в PROP-044; здесь опорные)
 
-## Recent commits
+- Способность живёт в библиотеке; поверхности тонкие. План временный;
+  содержимое переезжает в спеки; могильники — опора процесса.
+- Контент, переехавший в спеку, судится тем же заходом; `seal` отказывает
+  полуосуждённому файлу. Правка текста спеки двигает карту в той же посадке.
+- Усилия не экономятся; объём работ — не довод (загрузочный файл владельца).
+- Раскатка — только `cargo xtask mirror`, fast-forward. Никогда `git add -A`.
+  Коммиты через heredoc. Правила 1–4 связывают каждый коммит.
+- Вся идеология форматов — PROP-044; его четыре рулинга владельца выше.
 
-```
-38d2d2d3 docs(backlog): three rows stop being true, and the map says how far behind it is
-609215dc docs(backlog): В4's engine boundary was settled; its consumer boundary was not
-471e3b1b feat(trace): the map can be searched, not only asked about (А5a)
-57d9e8c4 feat(index): the organisation image is cached, and a cheap check keeps it honest (А3)
-d51723c8 docs(backlog): a second fact anchor in one paragraph is swallowed silently (B-074)
-d77a975b fix(design): three blank lines, and the corpus owes nothing on either count
-f13ad415 docs(backlog): generating the index's wire types costs more than the table said (B-073)
-c0b6d7d4 docs(audit): the largest evidence blob names a file that has never existed
-bd5eeeec docs(design): command nodes judged — and the corpus owes nothing unjudged
-b0e5c797 docs(campaign): the omnichannel protocol judged; the package now owes nothing
-cb6cf79d docs(campaign): the omnichannel package's own README, judged and sealed
-d5700553 docs(campaign): the omnichannel boot snippet is judged and sealed
-ffdd3525 docs(campaign): the markup and debt laws, judged by the session that ran them
-e74b23a1 docs(campaign): a plan's temporariness, judged against a day of closing plans
-c45faff1 docs(campaign): the two-homes rule judged, and four files stop being stale
-ec380862 docs(campaign): the plan-closure law is judged against the tree that follows it
-7410aaf5 chore(git): worker worktrees become unstageable, not merely un-staged
-ed2ca404 feat(registry): a private index becomes readable (А2)
-5f486cd7 docs(backlog): two findings the А1 review turned up (B-071, B-072)
-8a8aba12 feat(index): the server carries its own result to the host (А1)
-18c3dcd8 docs(tui): the boundary's own measurement gets the perimeter it never stated
-bf4703e1 docs(campaign): the surface-floor facts are judged, one by one
-be3fc4f4 feat(index): webhooks, and the guide that changes when the contract does (А4)
-ece4505b docs(progress): the owner's guide stops teaching the spelling it retired
-dc8bdb86 fix(campaign): the stability instrument reads the markup the corpus now writes
-```
-
-## Quick-start
+## Быстрый старт
 
 ```sh
 cargo run -q -p vibe-cli --bin vibe -- progress scan --campaign campaigns/packages-2026-09
-cargo run -q -p vibe-cli --bin vibe -- progress mirror --campaign campaigns/packages-2026-09
-python campaigns/packages-2026-09/tasks/summary.py
 python campaigns/packages-2026-09/tasks/judging-debt.py
-bash tools/self-check.sh          # real exit, read the tail; bare form in background
+bash tools/self-check.sh          # реальный код выхода, вердикт из хвоста
 cargo xtask specmap --check
-cargo xtask sync-engines          # after ANY engine or stack-crate edit
-cargo xtask mirror                # rollout, fast-forward only
-vibe query --kind command --limit 5   # NEW: search the map
-vibe-index rescan-org --help          # NEW: the unconditional org walk
+cargo xtask mirror --check        # синхронность зеркал
 ```
 
-_The WAL is the canonical living state; believe it over this file where they
-diverge. `NEXT-SESSION-PROMPT.md` carries the order the owner asked for._
+## Последние коммиты (свежие сверху)
+
+```
+5303b087 docs(campaign): the freeze lands in the executor's plan as D14
+5786fa1e docs(spec): a version freezes by its author's flag, and every surface says so
+6da8e6d8 docs(spec): the semantics never bind to git, only to provider obligations
+98d8c9b8 docs(campaign): the plan schedules its own death
+3cf1db13 docs(campaign): the TZ obeys the public switch
+31662d29 docs(spec): the public switch is the owner's word, not a technical event
+7c9ee9c7 docs(campaign): the TZ gains the decisions an executor would otherwise reinvent
+a9609270 docs(design): the convened verdict becomes durable lore, linked both ways
+b5767e14 docs(research): the schema-evolution study moves inside the walls
+256789c1 docs(campaign): the executor gets the code shapes, not just the file list
+d9c29cd1 docs(backlog): the first owner question points at its proposal
+408cfb3e docs(campaign): the first change-native build gets a TZ a weaker agent can run
+8797128e docs(spec): change-native formats get their ideology, judged in the same pass
+5bc2e377 docs(handoff): the prompt gains the entry point that survives a wind-down
+2f4a8af3 docs(backlog): the pyramid gets a durable floor, because I built it on sand
+```
+
+_WAL — канонное живое состояние; при расхождении верить ему, не этому файлу._
