@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-09T21:06:12Z",
+  "updated_at": "2026-08-09T21:43:19Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -94339,7 +94339,7 @@
       }
     },
     "spec/common/PROP-044-change-native-formats.md": {
-      "content_hash": "6ec1c4f2597dcd1f96edc527380ad771ac2a9097eda3268010e3889a5edcb8e8",
+      "content_hash": "1f1b6daef5ca60c94ea396d2af38643f3686371851e109ecf6b8c7c92268557e",
       "rollup": {
         "explicit": [
           "spec",
@@ -94353,15 +94353,15 @@
           "spec",
           "work"
         ],
-        "marker_count": 50,
-        "fact_count": 49,
+        "marker_count": 51,
+        "fact_count": 50,
         "unmarked_facts": 0
       },
-      "marker_count": 50,
+      "marker_count": 51,
       "unit_count": 11,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "6ec1c4f2597dcd1f96edc527380ad771ac2a9097eda3268010e3889a5edcb8e8",
+        "processed_hash": "1f1b6daef5ca60c94ea396d2af38643f3686371851e109ecf6b8c7c92268557e",
         "verdicts": {
           "PURPOSE": {
             "v": "confirmed",
@@ -94656,10 +94656,16 @@
             "ev": [
               "Owner ruling 2026-08-10 in-session, quoted near-verbatim inside the fact itself; it supersedes the earlier de-facto-publication reading (this session's own report and the discovery framing of a silently-closing window); operationalised as TZ D13 + Ф5.3 (formats/EPOCHS.toml public flag, owner-only line, three gate modes) in the same landing"
             ]
+          },
+          "PROVIDER-NEUTRALITY": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-10 in-session: «репозитории теоретически могут жить не только в Git… Git это просто форма представления… сама система по смыслу не должна быть завязана на гит»; the provider seam already exists in-tree (scanner from_clones/from_github/from_gitverse — crates/vibe-index/src/scanner/; PROP-001 is named 'git backend'; PROP-005 §9 tracks the OCI-hosted-index question); content_hash is computed over file bytes, not git objects (crates/vibe-index/src/content_hash.rs), so the universal-verifier claim is measured, not aspirational"
+            ]
           }
         },
-        "verified_at": "2026-08-09T21:06:12Z",
-        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING"
+        "verified_at": "2026-08-09T21:43:19Z",
+        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING + PROVIDER-NEUTRALITY-RULING"
       }
     },
     "spec/design/README.md": {

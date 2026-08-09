@@ -125,6 +125,30 @@ bytes (`rebuild --check`). A difference means a secret truth was found, and its
 home is the journal. This one test closes an entire class of architecture
 drift, which is why it is built early, not last. @status:spec/plan
 
+@fact:PROVIDER-NEUTRALITY **Storage-provider neutrality (owner ruling,
+2026-08-10): git is a representation, never the semantics.** Repositories may
+live outside git, so the system's meaning binds only to **provider
+obligations**, of which git is implementation №1: *(i)* serve an immutable
+snapshot for a durable reference, *(ii)* serve a mutable named channel and
+answer "what snapshot is behind it now", *(iii)* answer a cheap freshness
+question about a channel, *(iv)* enumerate an organisation. How a provider
+honours them is its own business — the git provider uses tags, branches,
+commits and history; an object store would use versioned objects and
+retention; an OCI registry, digests. Three consequences bind every design in
+this document: **the authoritative act is always a journal event, never a
+storage operation** (a tag is how the git provider *implements* a freeze-like
+obligation, not what the freeze *is*); **the universal verifier is our own
+`content_hash`**, computed over file bytes and already provider-neutral — the
+system never trusted a provider's reference semantics, it verifies content,
+so a provider that lies is caught by the same check everywhere; and **wire
+fields that locate content at a provider (`source_ref`, `resolved_commit` and
+kin) are opaque locator strings owned by the provider named in the URL — no
+reader interprets their internal shape.** Wherever this document says "git"
+("free because the transport is git", "raw files in git"), read it as the git
+provider's way of meeting an obligation — the durability of frozen worlds is
+an obligation every provider must meet, which git happens to get free from
+history immutability. @status:spec/done
+
 @fact:ONE-ETERNAL-FILE **Exactly one file is eternal: the handshake.** A tiny
 document — `{vibe, worlds[], min_client, notice, successor}` — through which a
 client of any age learns which worlds currently exist, where they live, what to
