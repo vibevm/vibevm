@@ -463,3 +463,121 @@ P5 — словарь видов существует в одном месте; 
 **СТОП-ВЛАДЕЛЕЦ (сводно):** вердикт Ф0.1 если превышен бюджет (D3);
 уровень лога по умолчанию (D11); смена вида `content_hash` в локфайле
 (Ф1.3); ратификация PROP-044 до старта фазы 1.
+
+---
+
+## Приложение А. Формы кода — исполнитель их НЕ переизобретает
+
+Формы ниже — часть решений, не предложения. Отклонение от формы = отклонение
+от ТЗ (докладывается, не делается молча). Имена полей/типов — точные.
+
+**А.1 Реестр форматов** (`formats/REGISTRY.toml`), запись на формат:
+
+```toml
+[format.index-entry]
+epoch = 1
+schema = "schemas/index/e1/entry.jtd.json"   # или "none"
+recoverable = true
+foreign_parsers = "many"                      # none | ours | many
+corpus = "formats/corpora/index/e1"           # или "none"
+sunset = "none"
+```
+
+Генерируемое (`cargo xtask codegen` → `crates/vibe-wire/src/generated/format_id.rs`):
+
+```rust
+pub enum FormatId { IndexEntry, IndexRepomd, IndexByName, Journal, Hello, /* … все записи реестра */ }
+impl FormatId {
+    pub fn epoch(self) -> u32 { /* из TOML */ }
+    pub fn recoverable(self) -> bool { /* из TOML */ }
+    pub fn foreign_parsers(self) -> ForeignParsers { /* из TOML */ }
+}
+```
+
+Тест полноты: перечень вариантов enum == перечень секций TOML (падает при
+рассинхроне в любую сторону).
+
+**А.2 Журнал** (`crates/vibe-index/src/journal/`), запись NDJSON:
+
+```json
+{"at":"2026-08-09T12:00:00Z","actor":"vibe-index 0.1.0","event":{"kind":"published","entry":{ /* VersionEntry */ }}}
+```
+
+```rust
+pub struct JournalRecord { pub at: DateTime<Utc>, pub actor: String, pub event: Event }
+#[serde(tag = "kind", rename_all = "snake_case")]
+pub enum Event {
+    Published { entry: VersionEntry },
+    Yanked   { group: Group, name: String, version: Version, reason: String },
+    Removed  { group: Group, name: String, version: Option<Version> },
+    Renamed  { from: (Group, String), to: (Group, String) },
+    Notice   { group: Group, name: String, text: String },
+}
+```
+
+Файлы: `journal/2026-08.ndjson` (только дозапись, fsync после записи);
+`journal/checkpoint.json` `{last_file, last_offset}`. Схема журнала —
+`schemas/journal/e1/`, запись в реестре форматов.
+
+**А.3 Проектор** (`crates/vibe-index/src/journal/project.rs`):
+
+```rust
+/// Чистая функция: без часов, без IO, без чтения каталога.
+pub fn project(events: impl Iterator<Item = JournalRecord>) -> Index
+```
+
+Мутация сервера/CLI: `validate(вход)` → `journal::append(event)` →
+`let idx = project(journal::replay())` → `idx.write_to(dir, ctx)`.
+Инкрементальная перепроекция — оптимизация ПОЗЖЕ; в этом ТЗ replay целиком
+(объёмы фикстурные и малые; порог для оптимизации фиксируется в отчёте).
+
+**А.4 Детерминизм:**
+
+```rust
+pub struct WriteCtx { pub at: DateTime<Utc> }        // время — вход
+pub fn write_to(&self, data_dir: &Path, ctx: &WriteCtx) -> Result<()>
+```
+
+`Utc::now()` / `SystemTime::now()` в `crates/vibe-index/src/{index,types,journal}/**`
+запрещены grep-шагом панели (список модулей в шаге поимённо).
+
+**А.5 wiregen** (`xtask/src/wiregen/`), четыре преобразования выхода
+jtd-codegen, в этом порядке:
+
+1. Закрытый enum → открытый: `pub enum PackageKind { Flow, …, Lang, Unknown(String) }`
+   + ручные `impl Serialize/Deserialize` в том же генерируемом файле
+   (`Unknown` пишет исходную строку как есть; известные — как раньше).
+2. camelCase-поля → snake_case (снимает `#![allow(non_snake_case)]`).
+3. По `metadata."x-empty"` схемы: `"omit"` → `Vec<T>` + `skip_serializing_if
+   = "Vec::is_empty"`; `"emit"` → `Vec<T>` без skip; отсутствие аннотации на
+   коллекции — ОШИБКА генерации (решение обязано быть записано в схеме).
+4. По реестру: `foreign_parsers = "none"` → добавить `#[serde(deny_unknown_fields)]`.
+
+**А.6 `hello.json`:**
+
+```json
+{"vibe":"hello/1","worlds":[{"epoch":1,"path":"."}]}
+```
+
+Клиент (`index_client`): `GET hello.json` → 404 ⇒ сегодняшний путь без
+изменений; 200 ⇒ выбрать мир своей эпохи; своей нет ⇒ отказ с перечнем
+миров и рецептом. Ключи `min_client`, `notice`, `sunset`, `successor` —
+опциональны, absent-если-нет.
+
+**А.7 Карантин:**
+
+```rust
+pub struct Quarantined { pub group: Group, pub name: String, pub version: Version, pub missing: Vec<String> }
+```
+
+`Index` несёт `quarantined: Vec<Quarantined>` (в память при load/project, в
+файлы НЕ пишется); любой ответ по имени с карантинными версиями включает
+`unavailable {version, missing, recipe}`; recipe — из каталога рецептов, не
+литерал по месту.
+
+**А.8 Слои исполнения.** Это ТЗ — план; на каждую фазу босс режет ПАКЕТ по
+транспортному закону зоны (`SUBAGENT-LAUNCHERS.md`): контекст компилируется в
+пакет (точные файлы из фазы + формы из этого приложения + self-verify
+`cargo check`-классом), `wall_secs` щедрый, отчёт WORKER-REPORT обязателен.
+Воркеры не запускают git; диффы читает, правит и коммитит босс; после
+каждой фазы — полная панель.
