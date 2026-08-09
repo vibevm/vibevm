@@ -8,11 +8,29 @@ from 142 and 5. Panel green, 26 commits, mirrors rolled out by this wind-down.
 Six errors this session, every one caught by an instrument.)_
 
 @fact:WAL-READ-THE-PROMPT-FIRST **The next session's work and its order live in
-`NEXT-SESSION-PROMPT.md` at the repository root**, written to the owner's
-instruction: А5b → the TUI thinness audit → the P1 tail → the cheap rows → then
-drain `BACKLOG.md` and refresh `TOOLING-MAP.md`. The programme file
+`NEXT-SESSION-PROMPT.md` at the repository root**, rewritten 2026-08-09. The
+programme it used to name — А5b → the TUI thinness audit → the P1 tail → the
+cheap rows — **was executed on 2026-08-06**; the programme file
 (`spec/terraforms/OWNER-PROGRAMME-2026-08-06-CAMPAIGN-v0.1.md`) still governs
 what remains of group А. @status:impl/done
+
+@fact:WAL-THE-DISCOVERY-LIVES-OUTSIDE-THE-REPO **A live investigation's whole
+state sits OUTSIDE this repository and the boot sequence cannot find it.**
+`C:\Users\olegc\git\v\discovery\vibevm-schema-evolution-discovery\12-HANDOFF.md`
+— the schema-evolution investigation opened 2026-08-09 on the owner's question
+about generating the index's wire types from schemas. Three rounds: four web
+researchers, five GLM workers, a final review by a separate model. **No decision
+was taken — the design was not reached.** The handoff carries the owner's five
+open questions with the state of each, the mandatory reading list (12 documents,
+~12 400 lines), and the five places the earlier analysis economised effort. The
+pointer in `CONTINUE.md` and this fact are the only two ways a cold session
+learns it exists. @status:impl/done
+
+@fact:WAL-EFFORT-IS-NOT-A-CONSTRAINT **Standing owner directive, 2026-08-09:
+never economise effort, and the volume of work is never an argument.** Recorded
+where every session reads it (`spec/boot/90-user.md`), not here. Its operative
+test: a decision whose justification collapses when the word «cheap» is removed
+from it is not a decision. @status:impl/done
 
 @fact:WAL-NUMBERS-COME-FROM-COMMANDS **Every number below is reproduced by
 commands; run them rather than quoting this file — and rescan first, or they

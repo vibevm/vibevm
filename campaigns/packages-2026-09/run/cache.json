@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-06T17:19:11Z",
+  "updated_at": "2026-08-09T19:28:09Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -87612,7 +87612,7 @@
       }
     },
     "spec/boot/90-user.md": {
-      "content_hash": "da61458f26f58261927c4112dacce002662f15ee24308b48d802ff96ab25cee1",
+      "content_hash": "0fdb7535965c45fb1002e89d13750f6013a37cf5704beeafab98fef54bf9f260",
       "rollup": {
         "computed": [
           "impl",
@@ -87622,15 +87622,15 @@
           "impl",
           "done"
         ],
-        "marker_count": 31,
-        "fact_count": 31,
+        "marker_count": 36,
+        "fact_count": 36,
         "unmarked_facts": 0
       },
-      "marker_count": 31,
-      "unit_count": 7,
+      "marker_count": 36,
+      "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "da61458f26f58261927c4112dacce002662f15ee24308b48d802ff96ab25cee1",
+        "processed_hash": "0fdb7535965c45fb1002e89d13750f6013a37cf5704beeafab98fef54bf9f260",
         "verdicts": {
           "user-overrides-intro": {
             "v": "confirmed",
@@ -87817,10 +87817,45 @@
             "ev": [
               "PROP-006 S2 mfbt section exists; red lines preserved per flow"
             ]
+          },
+          "EFFORT-IS-NOT-A-CONSTRAINT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/90-user.md  the directive carries the owner's words verbatim, given 2026-08-09 in chat: «Никогда не экономь усилия, делай хорошо даже если придется делать сложно и долго… Мы уже три месяца (!) делаем проект, который будучи реализован просто делался бы за один вечер - это ПРАВИЛЬНО»",
+              "an owner directive recorded at the anchor that governs it, in the user-owned boot snippet that every session reads. Judged as a directive: the claim is that this instruction was given and now binds, and the quotation is the evidence."
+            ]
+          },
+          "VOLUME-OF-WORK-IS-NEVER-AN-ARGUMENT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/90-user.md  the operative test it states: a decision whose justification collapses when «cheap» is removed from it is not a decision",
+              "this is the directive made checkable rather than restated. Judged on whether the test follows from the directive: the directive removes effort as a constraint, so a justification resting on effort has nothing left standing — the test is the directive's contrapositive, not an addition to it."
+            ]
+          },
+          "WHERE-THIS-BITES-IN-PRACTICE": {
+            "v": "confirmed",
+            "ev": [
+              "C:/Users/olegc/git/v/discovery/vibevm-schema-evolution-discovery/12-HANDOFF.md  §5 — the five places, each named with what changes: scope reduction taken as good news; fallbacks narrowed by present need; the cheapest capture mechanism; the version left as one integer; the task itself swapped from schema-first to attribute-patching",
+              "the fact claims the defect was found five times in one analysis on 2026-08-09 and that it presents as good sense rather than as laziness. Both halves are checkable against the handoff section above, which enumerates all five with the reasoning that made each feel correct at the time."
+            ]
+          },
+          "THE-SCOPE-OF-THIS-DIRECTIVE": {
+            "v": "confirmed",
+            "ev": [
+              "C:/Users/olegc/git/v/discovery/vibevm-schema-evolution-discovery/12-HANDOFF.md  §7 — the recorded case where the directive means doing LESS: the reserved namespace for foreign keys in the manifest, dropped because the manifest is not an external surface, so it would be a mechanism built for a consumer that does not exist",
+              "the fact bounds the directive so it cannot be read as permission to inflate work. The bound is exercised rather than asserted: one live recommendation was removed under it in the same analysis."
+            ]
+          },
+          "THIS-GENERALISES-THE-QUALITY-BAR": {
+            "v": "confirmed",
+            "ev": [
+              "spec/boot/90-user.md  ##TS-QUALITY-BAR — the earlier directive of 2026-07-07: «production-grade work, not a sketch… No «MVP» framing, no stub subcommands left as the shipped surface… spend whatever tokens/time that takes»",
+              "clause by clause: the earlier directive is scoped to one toolchain and forbids sketch-grade execution; this one is scoped to the whole project and forbids sketch-grade DECISION-MAKING. The generalisation claim holds because the older text already contains the effort clause («spend whatever tokens/time that takes») applied narrowly, and this one lifts it."
+            ]
           }
         },
-        "verified_at": "2026-07-26T10:23:56Z",
-        "verify_batch": "c0-boot"
+        "verified_at": "2026-08-09T19:28:09Z",
+        "verify_batch": "c0-boot + EFFORT-DIRECTIVE"
       }
     },
     "spec/common/PROP-000.md": {

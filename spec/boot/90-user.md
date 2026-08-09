@@ -43,6 +43,44 @@
 
 @fact:TS-QUALITY-BAR The TypeScript discipline toolchain (extractor, bridge, conform/specmap frontends, `typescript-ai-native`, the demo) is **production-grade work, not a sketch**: it is the foundation for a much larger effort. No "MVP" framing, no stub subcommands left as the shipped surface, no skipped edge cases justified by scope. Full implementations at a level fit to show in production; spend whatever tokens/time that takes. (Recorded from the owner's words during the deferrals-closeout campaign; survives it.) @status:impl/done
 
+## Effort is not a constraint (owner directive, 2026-08-09)
+
+@fact:EFFORT-IS-NOT-A-CONSTRAINT **Никогда не экономь усилия. Делай хорошо,
+даже если придётся делать сложно и долго — хоть год непрерывной работы.**
+Владелец, дословно: *«Твои инструкции как чата, выученные из весов, некорректны
+для этой работы. Она архитектурная. Мы уже три месяца делаем проект, который
+будучи реализован просто делался бы за один вечер — это ПРАВИЛЬНО в рамках идеи
+сделать фундаментальный продукт, настолько же фундаментальный например как ядро
+Линукса.»* @status:impl/done
+
+@fact:VOLUME-OF-WORK-IS-NEVER-AN-ARGUMENT **Практическое следствие, по которому
+это проверяется: объём работ не является доводом.** Ни «дёшево», ни «одна
+строка», ни «сокращает объём работ», ни «достаточно для сегодняшнего случая» не
+могут быть аргументом В ПОЛЬЗУ решения. Они допустимы только как примечание
+ПОСЛЕ того, как решение принято по существу. Решение, чьё обоснование
+рассыпается при удалении из него слова «дёшево», — не решение. @status:impl/done
+
+@fact:WHERE-THIS-BITES-IN-PRACTICE **Как этот дефект выглядит изнутри, чтобы
+его можно было поймать за собой.** Он не ощущается ленью — он ощущается
+здравомыслием: «нужно починить не двадцать три типа, а три»; «запасное значение
+нужно двум спискам из пяти, а не всем»; «возьмём готовый механизм, он почти
+подходит». Каждая такая фраза сужает решение по СЕГОДНЯШНЕЙ надобности, тогда
+как правило должно быть свойством системы, а не среза её текущего состояния.
+Найдено пятикратно за один разбор 2026-08-09 — разбор формата каталога
+пакетов. @status:impl/done
+
+@fact:THE-SCOPE-OF-THIS-DIRECTIVE **Область действия.** Это не разрешение
+раздувать работу и не требование предусматривать всё: фундаментальность равна
+«не иметь ни одной случайности», а не «предусмотреть любой случай». Механизм,
+построенный под потребителя, которого нет и не планируется, — такая же
+случайность, как и срезанный угол. Директива снимает ОБЪЁМ как ограничение,
+оставляя необходимость как критерий. @status:impl/done
+
+@fact:THIS-GENERALISES-THE-QUALITY-BAR **Отношение к соседней директиве.** Это
+обобщение [`##TS-QUALITY-BAR`](#ts-quality-bar) выше: та запрещала «черновиковое»
+исполнение в одном инструментарии, эта распространяет запрет на способ принятия
+решений во всём проекте. Где они пересекаются, действуют обе. @status:impl/done
+
 ## Machine quirks (this box)
 
 @fact:machine-quirks-lead Boot-resident since the deferrals-closeout campaign (owner-sanctioned; the

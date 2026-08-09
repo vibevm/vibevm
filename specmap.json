@@ -18350,12 +18350,57 @@
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#TS-QUALITY-BAR"
     },
     {
+      "anchor": "EFFORT-IS-NOT-A-CONSTRAINT",
+      "content_hash": "sha256:a352c97c46d29b3f5cd66758bd458f97f14a25ca6db8ef297e193c6932c3a20e",
+      "doc_path": "boot/90-user",
+      "file": "spec/boot/90-user.md",
+      "heading": "**Никогда не экономь усилия. Делай хорошо,",
+      "line": 48,
+      "uri": "spec://org.vibevm.core/vibevm/boot/90-user#EFFORT-IS-NOT-A-CONSTRAINT"
+    },
+    {
+      "anchor": "VOLUME-OF-WORK-IS-NEVER-AN-ARGUMENT",
+      "content_hash": "sha256:9a07fa9ac6e00168eb7b4840e96a23357f832ef23c5caa6e22d3eca360d56df9",
+      "doc_path": "boot/90-user",
+      "file": "spec/boot/90-user.md",
+      "heading": "**Практическое следствие, по которому",
+      "line": 56,
+      "uri": "spec://org.vibevm.core/vibevm/boot/90-user#VOLUME-OF-WORK-IS-NEVER-AN-ARGUMENT"
+    },
+    {
+      "anchor": "WHERE-THIS-BITES-IN-PRACTICE",
+      "content_hash": "sha256:92e5b53978aee1534f9f8f626efb5021844ac96ddd1cddcd53b2aa5ab26c5c20",
+      "doc_path": "boot/90-user",
+      "file": "spec/boot/90-user.md",
+      "heading": "**Как этот дефект выглядит изнутри, чтобы",
+      "line": 63,
+      "uri": "spec://org.vibevm.core/vibevm/boot/90-user#WHERE-THIS-BITES-IN-PRACTICE"
+    },
+    {
+      "anchor": "THE-SCOPE-OF-THIS-DIRECTIVE",
+      "content_hash": "sha256:0fd4391e82d2c2fd2b2404555d4612618b175063f26de1218cfea73f0b93a048",
+      "doc_path": "boot/90-user",
+      "file": "spec/boot/90-user.md",
+      "heading": "**Область действия.** Это не разрешение",
+      "line": 72,
+      "uri": "spec://org.vibevm.core/vibevm/boot/90-user#THE-SCOPE-OF-THIS-DIRECTIVE"
+    },
+    {
+      "anchor": "THIS-GENERALISES-THE-QUALITY-BAR",
+      "content_hash": "sha256:7c4922bb411af6f716b7460eb6311441fecc7f7b17106437aee0f71e229ba2af",
+      "doc_path": "boot/90-user",
+      "file": "spec/boot/90-user.md",
+      "heading": "**Отношение к соседней директиве.** Это",
+      "line": 79,
+      "uri": "spec://org.vibevm.core/vibevm/boot/90-user#THIS-GENERALISES-THE-QUALITY-BAR"
+    },
+    {
       "anchor": "machine-quirks-lead",
       "content_hash": "sha256:01747edcb64850a3fa462d1353533a041592284eb9fac540ae881e9e2e5eda10",
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "Boot-resident since the deferrals-closeout campaign (owner-sanctioned; the",
-      "line": 48,
+      "line": 86,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#machine-quirks-lead"
     },
     {
@@ -18364,7 +18409,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "Edits through editor tools only — PowerShell 5.1 corrupts UTF-8-no-BOM",
-      "line": 52,
+      "line": 90,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-EDITOR-TOOLS"
     },
     {
@@ -18373,7 +18418,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "`self-check.sh` through Git Bash, not WSL; check the REAL exit code",
-      "line": 54,
+      "line": 92,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-SELF-CHECK-BASH"
     },
     {
@@ -18382,7 +18427,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "Commits via `git commit -F - <<'MSG'` heredoc only. @status:impl/done",
-      "line": 56,
+      "line": 94,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-COMMIT-HEREDOC"
     },
     {
@@ -18391,7 +18436,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "Windows UAC blocks test executables named `*install*` (os-740). @status:impl/done",
-      "line": 57,
+      "line": 95,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-UAC-INSTALL"
     },
     {
@@ -18400,7 +18445,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "`bash … > \"$VAR/file\" 2>&1` with an unset `$VAR` writes to `/file` and",
-      "line": 58,
+      "line": 96,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-VAR-REDIRECT"
     },
     {
@@ -18409,7 +18454,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.md). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading). @status:impl/done",
-      "line": 64,
+      "line": 102,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#operating-modes-intro"
     },
     {
@@ -18418,7 +18463,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "Codewords currently in force: @status:impl/done",
-      "line": 66,
+      "line": 104,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#codewords-lead"
     },
     {
@@ -18427,7 +18472,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**«move fast and break things»** ([PROP-006 §2](../common/PROP-006-operating-modes.md#mfbt)) — pre-authorised heads-down execution. Maximum scope, testable phases, no mid-work confirmations, full reasoning depth. The four `CLAUDE.md` rules survive unchanged; only Rule 4's \"ask before routine large changes\" is suspended. Non-routine red lines (force-push, history rewrite, large blobs, CI / signing / secrets, irreversible ops) STILL require explicit owner confirmation when active. @status:impl/done",
-      "line": 68,
+      "line": 106,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CODEWORD-MFBT"
     },
     {
