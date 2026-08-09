@@ -28656,7 +28656,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:a00f8cabdf90db3b8b0fd43648e178460d47e0158cafbbeb5305b4556dfa1a82",
+      "content_hash": "sha256:cfb82c4505203ba4884c549389407f803d21e6485d9e61d162e2b80068954df2",
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "PROP-044: Change-native formats — surviving perpetual evolution",
@@ -29070,7 +29070,7 @@
     },
     {
       "anchor": "agents",
-      "content_hash": "sha256:4df22f459a8ac2eb94fa507ad39f82b8bad6476e868cf4f7faa853a1082073a0",
+      "content_hash": "sha256:cf58dff2bc83f755c893c6e64e2ea7ee413cc194a416e00038486602a2c48472",
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "8. Laws for AI agents — gates, not admonitions",
@@ -29105,12 +29105,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-MESSAGES"
     },
     {
+      "anchor": "WIRE-DECISION-PATH",
+      "content_hash": "sha256:6d42b6bb4800db60bbf2a4e3bb56150cfe7b543bffc5ed9cb1c8fb6ac31e97f1",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**8a. The wire-work decision path — what an agent",
+      "line": 373,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#WIRE-DECISION-PATH"
+    },
+    {
       "anchor": "risks",
-      "content_hash": "sha256:b14924b22dac73796c71777a33cf08f2cfed865f0320b699d71fd1f213b24704",
+      "content_hash": "sha256:27215a7e010545b205a3f7833420e526793a78dee64c957cb0049851f59677eb",
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "9. Honest risks and revisit triggers",
-      "line": 373,
+      "line": 390,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#risks"
     },
     {
@@ -29119,7 +29128,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The recoverability bet.** Upstream sources vanish —",
-      "line": 375,
+      "line": 392,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RECOVERABILITY"
     },
     {
@@ -29128,7 +29137,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The journal/projection rework is a real rebuild, not an",
-      "line": 383,
+      "line": 400,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RMW-VOLUME"
     },
     {
@@ -29137,7 +29146,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Foreign `curl | jq` will happen regardless of",
-      "line": 390,
+      "line": 407,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RAW-PARSERS"
     },
     {
@@ -29146,7 +29155,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The degenerate-first guard.** The epoch machinery",
-      "line": 396,
+      "line": 413,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-OVERENGINEERING"
     },
     {
@@ -29155,8 +29164,26 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Signature and authenticity remain parked by the",
-      "line": 404,
+      "line": 421,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-SECURITY-PARKED"
+    },
+    {
+      "anchor": "sources",
+      "content_hash": "sha256:5a536bfa9d2fe7489c8b31ee4cf61da29219f0a6eb8a3e5321073e7e6d81b981",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "10. Sources — the two-way links",
+      "line": 429,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#sources"
+    },
+    {
+      "anchor": "SOURCES",
+      "content_hash": "sha256:9cf76c68cbb980da149c9c35e1e2c91ef3bd9ef2b7d54f8783b69cc29de9004d",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**This contract's lore and evidence, so a cold reader entering",
+      "line": 431,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#SOURCES"
     },
     {
       "anchor": "genre-definition",
@@ -30048,6 +30075,438 @@
       "heading": "PROP-039 carries one granular addressable REQ per Δ (Δ1–Δ16), organised by the §2 modules, each",
       "line": 277,
       "uri": "spec://org.vibevm.core/vibevm/design/action-system#CONTRACT-POINTER"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:949e762c8a2412a386e80b3c6217ab7339ff9f7561f48c70ac5f22a3fceb5dd9",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "Change-native formats — the convened verdict",
+      "line": 1,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#root"
+    },
+    {
+      "anchor": "what-this-is",
+      "content_hash": "sha256:315929e2c4c8c88ee95bd964b42ad281cbda6b8cf133682b33388351a17cfba1",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**What this document is.** The owner reframed the",
+      "line": 5,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#what-this-is"
+    },
+    {
+      "anchor": "essence",
+      "content_hash": "sha256:ff1719ac4f3e9c746a35edbbd8ee434c1ac19943e178e1b21bf92ba7824bfbcc",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "0. The essence in one paragraph",
+      "line": 17,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#essence"
+    },
+    {
+      "anchor": "the-essence",
+      "content_hash": "sha256:910ec75dfc53183d7bf919a8029aa9f10e0fb8852f18d495f2b8f79712cba15a",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Stable ecosystems pay for compatibility *inside the schema*** —",
+      "line": 19,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#the-essence"
+    },
+    {
+      "anchor": "architectures",
+      "content_hash": "sha256:786335dc9cd373d7097287507730ea76d6ba0a60b9739823e3874f5f494e155e",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "1. Four architectures, compared as wholes",
+      "line": 38,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#architectures"
+    },
+    {
+      "anchor": "method",
+      "content_hash": "sha256:a84885d92136ec19b4b6c2529b47e9daffb2c3e784ac29f2d34f77c388d24d2f",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Each candidate was built as a coherent system** — its own source",
+      "line": 40,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#method"
+    },
+    {
+      "anchor": "arch-a",
+      "content_hash": "sha256:e81f360484f3afce2c84d9198f50c7213146c98a13da3b29d46f330984cc8930",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "1.1 Architecture A — «Disposable worlds» (chosen)",
+      "line": 45,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#arch-a"
+    },
+    {
+      "anchor": "a-principle",
+      "content_hash": "sha256:683e4cc24786b9e210cbe21b852977188940d2543ad347c72e76e15827828adb",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Organising principle:** truth lives outside published",
+      "line": 47,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#a-principle"
+    },
+    {
+      "anchor": "a-how",
+      "content_hash": "sha256:718e8cfe8fae71a2dfd9d615008fa5b4c399d65613fe898336fdf87fa387a7c3",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**How it works.** Truth = (package sources at immutable git",
+      "line": 52,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#a-how"
+    },
+    {
+      "anchor": "a-integration",
+      "content_hash": "sha256:225145e27b6752e6f3204cc25d3a52a2bf39c2048ed2470bffcde3223eeaf47a",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Integration — the parts multiply:** determinism → the",
+      "line": 65,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#a-integration"
+    },
+    {
+      "anchor": "a-death",
+      "content_hash": "sha256:cee7a66a4212b2114432bdade6a875e40e0114d6390eb2ae666fbec26bdadda5",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**How it dies.** If even one fact turns out to be authoritative",
+      "line": 76,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#a-death"
+    },
+    {
+      "anchor": "arch-b",
+      "content_hash": "sha256:f1422d69a410fb11995a513432aeb147a01253e73b59202309bfc63559ddeb77",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "1.2 Architecture B — «Immutable herbarium» (rejected)",
+      "line": 83,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#arch-b"
+    },
+    {
+      "anchor": "b-principle",
+      "content_hash": "sha256:0c9bb119cc229c779cf333a3c21a6a2e614fe569e0671841052c4bf733f66919",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Principle:** nothing published is ever rewritten;",
+      "line": 85,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#b-principle"
+    },
+    {
+      "anchor": "b-rejection",
+      "content_hash": "sha256:50db2d7a3d464014be24610dfa1ea133d410c768bf972cadae905611454a4e2d",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Why rejected as a whole.** Very high integration inside",
+      "line": 91,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#b-rejection"
+    },
+    {
+      "anchor": "b-taken",
+      "content_hash": "sha256:95e89657a1f2667ad92ee22f9517c9c55bff87fe1de43ccdc3306e072926a418",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**What was taken from it, as an absolute law:** bytes at an",
+      "line": 102,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#b-taken"
+    },
+    {
+      "anchor": "arch-c",
+      "content_hash": "sha256:cd90d855ab8f9c3897ba95d640dfaa50a0d75d5286d0cd9592e1eb63a2af43f4",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "1.3 Architecture C — «The eternal line under machine supervision» (rejected)",
+      "line": 108,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#arch-c"
+    },
+    {
+      "anchor": "c-principle",
+      "content_hash": "sha256:ab9206dea5193ceaf79bb6d84429e38457efcfcaf4b6c74538461cbe7bde62e2",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Principle:** one format lives forever; compatibility is",
+      "line": 110,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#c-principle"
+    },
+    {
+      "anchor": "c-rejection",
+      "content_hash": "sha256:aa02c9d3b61572c63f5c7d57c64762bed8d736946a50d24434d1852ad944551e",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Why rejected.** (1) It contradicts the mandate directly:",
+      "line": 116,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#c-rejection"
+    },
+    {
+      "anchor": "c-taken",
+      "content_hash": "sha256:09ed85ffe9e0efc869645000f6d28f77cc8a846c9ab4cea9574cb4e675e21c9b",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**What was taken, with the verdict inverted.** The detector",
+      "line": 130,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#c-taken"
+    },
+    {
+      "anchor": "arch-d",
+      "content_hash": "sha256:6a68dcfec5aa8be4c7be92cbb0bdcb823b056df04318158ddfd4709a3f86110b",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "1.4 Architecture D — «Format as program» (rejected briefly)",
+      "line": 136,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#arch-d"
+    },
+    {
+      "anchor": "d-rejection",
+      "content_hash": "sha256:62d8d9aad2813145e8ab68d4ec792477a6b2051bef08bf328b3e156a5ef5294b",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Data carries (or names) its own reader** — an artifact",
+      "line": 138,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#d-rejection"
+    },
+    {
+      "anchor": "comparison",
+      "content_hash": "sha256:b67cb69cdb225d99fd462108a138e50489c59d9ff7dc10c2817e0f83233cde6f",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "1.5 The comparison that decided it",
+      "line": 148,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#comparison"
+    },
+    {
+      "anchor": "comparison-table",
+      "content_hash": "sha256:b078116804131a26596f98c2293a6f03b6bd0510e90abc4811ccae424f3ed132",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Behaviour under ten breaks a week:** A — routine (a",
+      "line": 150,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#comparison-table"
+    },
+    {
+      "anchor": "why-a-is-possible",
+      "content_hash": "sha256:6d59297298e7c30ab1a8338e21b217c3d9e312c06243e575a85014a8f6332a79",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**The reason A is possible for us and was not for",
+      "line": 157,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#why-a-is-possible"
+    },
+    {
+      "anchor": "dissolves",
+      "content_hash": "sha256:460c092ebe03e7cdb4888bf0083a53bf7c0d9ea6d6cedc221285dc0dace9f41b",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "2. What the verdict dissolves from the earlier analysis",
+      "line": 166,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#dissolves"
+    },
+    {
+      "anchor": "dissolves-capture",
+      "content_hash": "sha256:fe21a44f874f9a33e6d1d7049692f6e5047e8f95c6dbdb257ade127d74f30397",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**The discovery's most valuable finding — «tolerance",
+      "line": 168,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#dissolves-capture"
+    },
+    {
+      "anchor": "dissolves-version-question",
+      "content_hash": "sha256:8e4e6fb1d8de95f298cef71b3378df3ea54d13407e23260da1a9d1f2963e4a5a",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**The «is the version a gate or a",
+      "line": 181,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#dissolves-version-question"
+    },
+    {
+      "anchor": "dissolves-vocab-trilemma",
+      "content_hash": "sha256:afbd74e60fb92be1f4f8aeb137a3f8dfdc6999f77b0d33ce3be5ce4187913deb",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**The vocabulary trilemma** («tagging +",
+      "line": 189,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#dissolves-vocab-trilemma"
+    },
+    {
+      "anchor": "mandate-answers",
+      "content_hash": "sha256:0bc62044ac57797eda388c162e5e358cce60a513cbc001a581b138a2bd13a957",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "3. Answers the mandate demanded",
+      "line": 198,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#mandate-answers"
+    },
+    {
+      "anchor": "stability-mechanism",
+      "content_hash": "sha256:f03367afc60a59eec189260f984c7e66cbf37e1760d5af191ac645fbe3d5a2b5",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**«A period of stability» is a mechanism, not a",
+      "line": 200,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#stability-mechanism"
+    },
+    {
+      "anchor": "obligations-typed",
+      "content_hash": "sha256:f9abdb037dcc86bca81497fb3998780322f86fbadd8c49a51a67d8f385e04d81",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Obligations are typed, and the types are three.**",
+      "line": 212,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#obligations-typed"
+    },
+    {
+      "anchor": "blast-radius",
+      "content_hash": "sha256:d0be8a61082240237e1aa39429f1e1000e578d3c38b46136fb4011b196bc429c",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Blast-radius containment, eight mechanisms:** layers with",
+      "line": 225,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#blast-radius"
+    },
+    {
+      "anchor": "forbidden-derivation",
+      "content_hash": "sha256:31941bdc848a4b5c456a80f744d258311458102f07f944c05c24858540b4f4ac",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Why exactly the forbidden five are forbidden:**",
+      "line": 240,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#forbidden-derivation"
+    },
+    {
+      "anchor": "grid",
+      "content_hash": "sha256:b72401d25eabb8d988ad405d9a379227c871420a7d161c2d64e605eebcc525e1",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "4. Per-format placement — the computed grid",
+      "line": 251,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#grid"
+    },
+    {
+      "anchor": "the-computed-grid",
+      "content_hash": "sha256:b2fca69c33879a09f16bd0d6c27ce363af0400d73ff878c4bfb28b87a9e3659b",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Policy is computed from two axes** — recoverable without a human?",
+      "line": 253,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#the-computed-grid"
+    },
+    {
+      "anchor": "catalog-split",
+      "content_hash": "sha256:d07dc07dc0fbeb402d4e31503932690dc74a59d70b82acd19e543d55f18fa52d",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**The catalog is three things with three fates:** the",
+      "line": 262,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#catalog-split"
+    },
+    {
+      "anchor": "manifest-tax",
+      "content_hash": "sha256:1b10d258077e67c7e4e04590851b9dc7c8e80ae87ffcc3ac2bb2012a1d75083a",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**`vibe.toml` — the honest stability tax, paid in one",
+      "line": 274,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#manifest-tax"
+    },
+    {
+      "anchor": "lockfile-free",
+      "content_hash": "sha256:023fc499a030edc95ac82e094e3df033242b7df0fa83ec26201b77319eb4e57b",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**`vibe.lock` becomes free by construction:** valid only",
+      "line": 286,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#lockfile-free"
+    },
+    {
+      "anchor": "configs-never-fail",
+      "content_hash": "sha256:654d2c510094ba8490adc6d2ce65f1ad861d293fe2186af17e8fae1a7bfcfb11",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Configs are preferences, not data:** loading cannot",
+      "line": 292,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#configs-never-fail"
+    },
+    {
+      "anchor": "uninventoried",
+      "content_hash": "sha256:8a55c9ab41f7e4b1ae1916694e178f82f78ff575c232f76d7e4044b801244578",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Surfaces nobody had inventoried are formats too** — the",
+      "line": 298,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#uninventoried"
+    },
+    {
+      "anchor": "ordering",
+      "content_hash": "sha256:23c0df247d04334f81dd0991231f8a451e6706d19bbff8bb74032eff0ad8538c",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "5. Ordering: by irreversibility, not by value",
+      "line": 304,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#ordering"
+    },
+    {
+      "anchor": "build-order",
+      "content_hash": "sha256:9ace9e020908014e153f7327c937a318034dd63fbe15c99a6d73cbcfd325687c",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**What is built first is what cannot be done after",
+      "line": 306,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#build-order"
+    },
+    {
+      "anchor": "do-not",
+      "content_hash": "sha256:1aab717c660dba1f4630698b76a331177f60e16cab88c53708bad975d4a6f24e",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**The named do-nots:** do not describe the catalog in schemas",
+      "line": 321,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#do-not"
+    },
+    {
+      "anchor": "wrongness",
+      "content_hash": "sha256:552164335ce6c06754b674d3554d366515f41f106ab4abcbd084f3d1ea84237f",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "6. The verdict's own honest wrongness budget",
+      "line": 330,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#wrongness"
+    },
+    {
+      "anchor": "wrong-recoverability",
+      "content_hash": "sha256:e030f17d2b72cd89a56e4aa1bc7f2cb3ba47509b234b994b519df91cc62cd633",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Most likely wrong:** the recoverability bet.",
+      "line": 332,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#wrong-recoverability"
+    },
+    {
+      "anchor": "wrong-rmw-cost",
+      "content_hash": "sha256:e9c7724d70d20b2abbd432ff0a431687ca452461a01d2270f1044f9edd872123",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Second: the journal/projection rework is a real",
+      "line": 339,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#wrong-rmw-cost"
+    },
+    {
+      "anchor": "wrong-raw-parsers",
+      "content_hash": "sha256:7a3d1b345baca0fb5c73238ed941caa4fd73f803a0d7ad6cd3dc73eeb6874549",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Third: «own the consumers' parsers» may not work** —",
+      "line": 344,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#wrong-raw-parsers"
+    },
+    {
+      "anchor": "wrong-vows",
+      "content_hash": "sha256:86bbe7a44fb59d0f6e14521593390ed197671b80d033005f4f7830d23b763756",
+      "doc_path": "design/change-native-formats-verdict",
+      "file": "spec/design/change-native-formats-verdict.md",
+      "heading": "**Fourth: the one eternal file is still a vow**, reduced but",
+      "line": 350,
+      "uri": "spec://org.vibevm.core/vibevm/design/change-native-formats-verdict#wrong-vows"
     },
     {
       "anchor": "root",

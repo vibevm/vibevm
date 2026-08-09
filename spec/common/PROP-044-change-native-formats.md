@@ -370,6 +370,23 @@ each have exactly one machine answer — policy from the generator, placement
 from the ladder, epoch from the wire-diff. The agent brings *intent*; the
 schema fixes form; the generator fixes policy. @status:spec/plan
 
+@fact:WIRE-DECISION-PATH **8a. The wire-work decision path — what an agent
+does when its task touches a format, in order, no steps skipped:**
+(1) *Name the format.* Find it in `formats/REGISTRY.toml`; absent → this task
+mints a format, which is an owner-visible act — stop and surface. (2) *Place
+the fact.* Walk the ladder (§5) from the bottom: does the lockfile bear it?
+the exports? only then higher — and a new `vibe.toml` key is a years-long
+obligation demanding its own break note. (3) *Edit the schema, never the
+type.* The change is made in `schemas/<format>/e<N>/…`; collections carry an
+explicit empty-policy annotation; vocabularies live here and nowhere else.
+(4) *Regenerate* (`cargo xtask codegen`) and write behaviour only against
+generated types. (5) *Run the wire-diff.* Empty → done. Non-empty → write the
+break note (what · who fixes · recipe), and let the diff class decide: additive
+under must-understand → light break, no epoch; shape or meaning of existing
+data → epoch question, which is an owner fork. (6) *Never touch* `generated/**`
+by hand, vendored copies, or another epoch's frozen schema — those three edits
+are always wrong regardless of intent. @status:spec/plan
+
 ## 9. Honest risks and revisit triggers {#risks}
 
 @fact:RISK-RECOVERABILITY **The recoverability bet.** Upstream sources vanish —
@@ -408,3 +425,18 @@ must-understand set and the signature *slot* exist in the schema before any
 tolerance ships, because a tolerant reader that can silently ignore a future
 signature field is a downgrade attack waiting; slots are irreversible-window
 work, cryptography is not. @status:spec/plan
+
+## 10. Sources — the two-way links {#sources}
+
+@fact:SOURCES **This contract's lore and evidence, so a cold reader entering
+from either side finds the other:** the architectural reasoning with rejected
+alternatives is
+[`spec/design/change-native-formats-verdict.md`](../design/change-native-formats-verdict.md)
+(the convened-council verdict, recorded near-verbatim); the research it stands
+on — ten data-at-rest ecosystems, eight serialization formats, the
+client-survival study, the wire census of this tree, four adversarial worker
+reviews and the reviewer's verdict — is imported whole at
+[`spec/research/schema-evolution-2026-08/`](../research/schema-evolution-2026-08/)
+(reading order: its `12-HANDOFF.md §2`); the build plan is
+`campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md`. Where lore and
+this contract disagree, this contract wins and the lore is corrected. @status:spec/plan

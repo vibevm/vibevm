@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-09T20:26:40Z",
+  "updated_at": "2026-08-09T20:57:23Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -94339,7 +94339,7 @@
       }
     },
     "spec/common/PROP-044-change-native-formats.md": {
-      "content_hash": "1af6e8913c5e4c1da48682de28c9d22757a7c63df25e15e1a09e47ba8d552441",
+      "content_hash": "67dcce87691f3668bf3e0ca159d13a93d0eee68d2d75317cc26a35e99e1a2230",
       "rollup": {
         "explicit": [
           "spec",
@@ -94353,15 +94353,15 @@
           "spec",
           "work"
         ],
-        "marker_count": 47,
-        "fact_count": 46,
+        "marker_count": 49,
+        "fact_count": 48,
         "unmarked_facts": 0
       },
-      "marker_count": 47,
-      "unit_count": 10,
+      "marker_count": 49,
+      "unit_count": 11,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "1af6e8913c5e4c1da48682de28c9d22757a7c63df25e15e1a09e47ba8d552441",
+        "processed_hash": "67dcce87691f3668bf3e0ca159d13a93d0eee68d2d75317cc26a35e99e1a2230",
         "verdicts": {
           "PURPOSE": {
             "v": "confirmed",
@@ -94638,10 +94638,22 @@
             "ev": [
               "Owner ruling 2026-08-01 recorded at BACKLOG.md #b-015 (park security until owner notice); ordering addition (slots before tolerance, downgrade-attack hazard) from discovery 11 §1.6 item 1 and 12-HANDOFF §6; TZ D7 builds slots only"
             ]
+          },
+          "WIRE-DECISION-PATH": {
+            "v": "confirmed",
+            "ev": [
+              "Operationalises the council's §5 closing (agent brings intent; schema fixes form; generator fixes policy) into a six-step path; each step lands on machinery defined in §§4-5 of this document and phased in the TZ (registry Ф1.1, schemas Ф4.1, codegen Ф4.2, wire-diff Ф5.2, break notes Ф1.5/Ф5.2)"
+            ]
+          },
+          "SOURCES": {
+            "v": "confirmed",
+            "ev": [
+              "Two-way links law (spec-genres: contract links lore, lore names its contract); all three targets exist in-tree this landing: spec/design/change-native-formats-verdict.md, spec/research/schema-evolution-2026-08/ (with 12-HANDOFF.md §2 reading order), campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md; contract-wins rule restated from the genre map"
+            ]
           }
         },
-        "verified_at": "2026-08-09T20:26:40Z",
-        "verify_batch": "PROP044-SAME-PASS"
+        "verified_at": "2026-08-09T20:57:23Z",
+        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS"
       }
     },
     "spec/design/README.md": {
@@ -95378,6 +95390,246 @@
         },
         "verified_at": "2026-08-03T11:11:46Z",
         "verify_batch": "c2-design + d2b"
+      }
+    },
+    "spec/design/change-native-formats-verdict.md": {
+      "content_hash": "7aa06299bd8b526aa62d59c351956ff8617a3eb10e51feb725ec82ee046529e2",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "done"
+        ],
+        "computed": [
+          "spec",
+          "done"
+        ],
+        "effective": [
+          "spec",
+          "done"
+        ],
+        "marker_count": 36,
+        "fact_count": 35,
+        "unmarked_facts": 0
+      },
+      "marker_count": 36,
+      "unit_count": 13,
+      "issue_count": 0,
+      "campaign": {
+        "processed_hash": "7aa06299bd8b526aa62d59c351956ff8617a3eb10e51feb725ec82ee046529e2",
+        "verdicts": {
+          "what-this-is": {
+            "v": "confirmed",
+            "ev": [
+              "Provenance: the owner proposed convening a separate Fable instance (message 2026-08-09 in-session); the council ran as background task a0198d6c and returned this verdict; recorded the same day; contract link resolves to spec/common/PROP-044-change-native-formats.md; research link resolves to spec/research/schema-evolution-2026-08/ (imported this session)"
+            ]
+          },
+          "the-essence": {
+            "v": "confirmed",
+            "ev": [
+              "Faithful summary of the council's §0; the truth-not-in-artifact premise matches PROP-005 #truth (repos authoritative, index a derived hot cache) and the derived-status of vibe.lock (crates/vibe-core/src/manifest/lockfile.rs:40-45)"
+            ]
+          },
+          "method": {
+            "v": "confirmed",
+            "ev": [
+              "The council's §1 explicitly built each candidate with source of truth, survival story, machinery, and death mode, then compared integration in a four-row table"
+            ]
+          },
+          "a-principle": {
+            "v": "confirmed",
+            "ev": [
+              "Council §1 architecture A statement, recorded verbatim in sense; the epoch/quarter/handshake cadence is its own framing"
+            ]
+          },
+          "a-how": {
+            "v": "confirmed",
+            "ev": [
+              "Council §1 A mechanics; the three reader questions and two break speeds correspond to PROP-044 §4.5 (must-understand/quarantine) and §4.6 (epochs) which normativise them"
+            ]
+          },
+          "a-integration": {
+            "v": "confirmed",
+            "ev": [
+              "Council §1 A integration chain; each link is separately grounded: determinism→rebuild test (PROP-044 §3 MEMBERSHIP-IS-TESTED), no-RMW→free tolerance (measured six RMW paths, discovery 11 §2.1), generator→one-commit policy (PROP-044 §4.2)"
+            ]
+          },
+          "a-death": {
+            "v": "confirmed",
+            "ev": [
+              "Council §1 A death modes; the secret-truth failure is the exact inverse of the rebuild test, and the epoch-cost failure is bounded by the trains mechanism (council §4.1)"
+            ]
+          },
+          "b-principle": {
+            "v": "confirmed",
+            "ev": [
+              "Council §1 B; the Nix/Unison/OCI family attribution matches the content-addressed models in the research corpus (spec/research/schema-evolution-2026-08/02 §1.2 OCI; 04 §1.8.8 Iceberg field-ids analogue)"
+            ]
+          },
+          "b-rejection": {
+            "v": "confirmed",
+            "ev": [
+              "Council §1 B rejection: aggregates are mutable by nature (latest_stable computed at crates/vibe-index/src/types/entry/aggregate.rs:47-55; counters at index/memory.rs:247-248), so the herbarium returns the format problem in the pointer layer without machinery; the growing-kind-zoo burden on weak agents is its §1 argument"
+            ]
+          },
+          "b-taken": {
+            "v": "confirmed",
+            "ev": [
+              "Council §1 B 'что взято': byte-immutability at addresses — already the qualified-naming coordinate law (NEVER-REUSE-A-COORDINATE-FOR-DIFFERENT-CONTENT, spec/boot/STATIC.md compiled lane); the determinism reconciliation is council's own and sound: same inputs → same bytes → rebuild indistinguishable from no-change"
+            ]
+          },
+          "c-principle": {
+            "v": "confirmed",
+            "ev": [
+              "Council §1 C; the Protobuf+Buf+Confluent model is documented at spec/research/schema-evolution-2026-08/03 §1.1 (field numbers, reserved) and 04 §1.8.1 (buf breaking categories)"
+            ]
+          },
+          "c-rejection": {
+            "v": "confirmed",
+            "ev": [
+              "Council §1 C rejection, three arguments; the vestige-graveyard is the measured cargo features2/name_v2 pattern (research 02 §1.1 Q5, §3 C1 'you never get to narrow a type'); the semantic-blindness examples are this tree's measured spots: content_hash constant (crates/vibe-index/src/content_hash.rs:29), latest_stable computation (aggregate.rs:47-55), BindingSite dual definition (inverted.rs:88 vs index_client/wire.rs:93)"
+            ]
+          },
+          "c-taken": {
+            "v": "confirmed",
+            "ev": [
+              "Council §1 C 'что взято, с инверсией': detector mandatory, verdict inverted from refusal to demanded break-note; normativised as PROP-044 §4.7 (G7) — the same machine, the opposite sentence"
+            ]
+          },
+          "d-rejection": {
+            "v": "confirmed",
+            "ev": [
+              "Council §1 D: WASM-reader-by-pointer rejected on supply-chain attack surface and loss of static checkability; the min_client grain survives in the handshake (PROP-044 §3 ONE-ETERNAL-FILE)"
+            ]
+          },
+          "comparison-table": {
+            "v": "confirmed",
+            "ev": [
+              "Council's comparison row 'ведёт себя при 10 переломах/нед.'; the A-seam-sewn-by-determinism observation is its table's own note"
+            ]
+          },
+          "why-a-is-possible": {
+            "v": "confirmed",
+            "ev": [
+              "Council §1 closing: neighbours' published metadata is authoritative (Maven Central POMs, RPM repodata as primary — research 02 §1.6/§1.7), ours is derived (PROP-005 #truth); the one inherited-cause spot is vibe.toml in foreign repos, and PROP-044 §6.2 pays the tax exactly there"
+            ]
+          },
+          "dissolves-capture": {
+            "v": "confirmed",
+            "ev": [
+              "The capture finding it dissolves: discovery 11 §2.1 (six paths listed, re-verified this session at add.rs:51→122, remove.rs:35→57, reindex.rs:218→281, packages.rs:256/304/333); serde flatten/deny incompatibility per 11 §1.7; the dissolution and the G4 writer-input ban are council §2.4, normativised at PROP-044 §4.4"
+            ]
+          },
+          "dissolves-version-question": {
+            "v": "confirmed",
+            "ev": [
+              "Measured absurdity: schema_version compared nowhere (grep across crates — only lockfile.rs:430 compares, and that is vibe.lock), overwritten at memory.rs:245, copied at :273 — discovery 11 §1.4(в); the path/must-understand split is council §6.1 final bullet"
+            ]
+          },
+          "dissolves-vocab-trilemma": {
+            "v": "confirmed",
+            "ev": [
+              "The trilemma as recorded: discovery 11 §2.9 (tag+catch-all+codegen conflict under stock tooling; jtd-codegen emits closed enums — re-verified by this session's spike); the open-emit resolution is council §3 'роль кодогенерации', normativised at PROP-044 §4.2a; feasibility gated by TZ Ф0.2 PoC"
+            ]
+          },
+          "stability-mechanism": {
+            "v": "confirmed",
+            "ev": [
+              "Council §4.1 three layers (flag, trains, published expiry); the flag is TZ Ф5.3 (formats/EPOCHS.toml), the honest-contract phrasing is the council's; planned-maintenance framing consistent with Slack/Signal forced-upgrade-as-routine precedent (research 04 §1.15.7)"
+            ]
+          },
+          "obligations-typed": {
+            "v": "confirmed",
+            "ev": [
+              "Council §4.2 typology and procedure-or-hope rule; rehearsal precedent: Twitter blackout tests (research 04 §1.13.2); asymmetric friction (extend free / shorten owner-act) is the council's own mechanism, normativised at PROP-044 §7"
+            ]
+          },
+          "blast-radius": {
+            "v": "confirmed",
+            "ev": [
+              "Council §4.3 eight mechanisms; the DRY-across-trust-boundary bomb is instantiated by the measured BindingSite pair (inverted.rs:88 kebab-case writer vs wire.rs:93 lowercase reader, agreeing only because both variants are single words); the ladder is PROP-044 §5"
+            ]
+          },
+          "forbidden-derivation": {
+            "v": "confirmed",
+            "ev": [
+              "Council §4.4 derivations; identifier-reuse as the un-redownloadable failure matches RPM's only fatal breaks in 20 years (research 02 R24/R28: sha/sha1 spelling, group-value redefinition); byte-mutation undetectability follows from content-hash join (PROP-005 #trust); the note of what is NOT forbidden is the council's closing"
+            ]
+          },
+          "the-computed-grid": {
+            "v": "confirmed",
+            "ev": [
+              "Council §6 grid; quadrant residents verified: vibe.lock regenerates (lockfile.rs:44), catalog many-parser derived (PROP-005 #optional raw-HTTP consumers), vibe.toml authored+foreign (172 manifests counted, 44 authored — G4 measurement); owner-decision guard for new worst-quadrant formats normativised at PROP-044 §5"
+            ]
+          },
+          "catalog-split": {
+            "v": "confirmed",
+            "ev": [
+              "Three-way split grounded in measurement: primary::read/parse have zero callers and by-cap/by-purl are erased on every write (discovery 11 §2.2; inverted.rs clear_dir in memory.rs:174-177) while by-name+repomd are the re-read pair; generated-reader law and narrow-gate are council §6.1; disposable-repo declaration is its closing permission"
+            ]
+          },
+          "manifest-tax": {
+            "v": "confirmed",
+            "ev": [
+              "Council §6.2; epoch-absence-as-pre-epoch (not 'assume 1') follows worker G4's analysis of absence semantics for hand-written formats (research 09 §4); strictness-with-hints asymmetry argued at 07 §4/09 §3; authored/published split converges with research 02 §3 C13 from a different premise"
+            ]
+          },
+          "lockfile-free": {
+            "v": "confirmed",
+            "ev": [
+              "Council §6.3; baseline behaviour measured (lockfile.rs:50 CURRENT=5, :430 != reject, regenerate-next-install comment :44-46); the silent-regenerate + --frozen design normativised at PROP-044 §6.3; mechanics deferred by name in TZ Приложение Б.6"
+            ]
+          },
+          "configs-never-fail": {
+            "v": "confirmed",
+            "ev": [
+              "Council §6.4; normativised at PROP-044 §6.4 (G14); the strict-where-corrupting/graceful-where-comfort split is the council's asymmetry principle"
+            ]
+          },
+          "uninventoried": {
+            "v": "confirmed",
+            "ev": [
+              "Council §6.5; surfaces verified in-tree: schemas/*.jtd.json (7 report schemas), crates/vibe-cli/resources/package-tree.schema.v1.json, MCP tools in crates/vibe-mcp/src/tools.rs, vibe-subskill.toml manifests; none carried a format-registry notion before this work"
+            ]
+          },
+          "build-order": {
+            "v": "confirmed",
+            "ev": [
+              "Council §7 waves; the convergence note is real: discovery 11 §6 'Первым — дёшево, необратимо' lists BindingSite parity, content_hash identity, determinism decision, must-understand — near-coincident with wave 0 from the opposite frame; TZ phases Ф1–Ф6 implement this order"
+            ]
+          },
+          "do-not": {
+            "v": "confirmed",
+            "ev": [
+              "Council §7 'Чего не делать' three items with its reasons (schema-after-RMW-death ordering; capture-as-symptom; degenerate-first epochs) — carried into TZ (запреты + D8/D12) verbatim in sense"
+            ]
+          },
+          "wrong-recoverability": {
+            "v": "confirmed",
+            "ev": [
+              "Council §8 п.1 self-assessment; the from-clones seed mitigation added at plan level (TZ Приложение Б.6) — the indexer's --from-clones walk exists today (PROP-005 #reindex ##SRC-FROM-CLONES)"
+            ]
+          },
+          "wrong-rmw-cost": {
+            "v": "confirmed",
+            "ev": [
+              "Council §8 п.2; operationalised as TZ Ф0.1 M-RMW measurement gate with the named fallback labelled a compromise"
+            ]
+          },
+          "wrong-raw-parsers": {
+            "v": "confirmed",
+            "ev": [
+              "Council §8 п.3; the no-telemetry-by-construction property measured at discovery 11 §2.7 (raw git files, deliberately dumb mirrors); posture normativised at PROP-044 §9 RISK-RAW-PARSERS"
+            ]
+          },
+          "wrong-vows": {
+            "v": "confirmed",
+            "ev": [
+              "Council §8 пп.4-6 condensed: successor-bounded handshake vow (PROP-044 §3), identity immutability already law (qualified-naming) but identity-break undesigned, and the over-engineering guard (degenerate-first, PROP-044 §9 RISK-OVERENGINEERING)"
+            ]
+          }
+        },
+        "verified_at": "2026-08-09T20:57:23Z",
+        "verify_batch": "VERDICT-LORE-SAME-PASS"
       }
     },
     "spec/design/command-nodes.md": {
