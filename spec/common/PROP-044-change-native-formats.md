@@ -73,7 +73,7 @@ deleting, narrowing, restructuring are all permitted): @status:spec/plan
   `frozen = true`, plus any content-hash-named object. Republishing a frozen
   version with different content is the break a correct client cannot even
   detect; it silently poisons every hash, cache and lockfile downstream. An
-  *unfrozen* version is not an address but a declared channel (§2a), and its
+  *unfrozen* version is not an address but a **snapshot** (§2a), and its
   content flowing is normal life, not a violation. @status:spec/plan
 - @fact:FORBID-SILENCE Never answer silence for a name that ever existed. Every
   once-valid name resolves to the current thing, a forwarding pointer, or a
@@ -88,15 +88,16 @@ deleting, narrowing, restructuring are all permitted): @status:spec/plan
   our own wire formats inside this tree. Not a goal in itself: it is the
   mechanism by which the first four violations happen unnoticed. @status:spec/plan
 
-@fact:THE-FREEZE-MODEL **2a. Frozen and mutable versions (owner rulings,
-2026-08-10).** A version is a **mutable channel by default**: its content may
-change under the same version string, `vibe update` brings the fresh snapshot
-without regard for hash continuity, and the lockfile pins the snapshot's own
+@fact:THE-FREEZE-MODEL **2a. Frozen and snapshot versions (owner rulings,
+2026-08-10; terminology fixed 2026-08-13).** A version is a **snapshot by
+default** — the word carries its Maven sense, *mutable*: content may change
+under the same version string, `vibe update` brings the fresh content without
+regard for hash continuity, and the lockfile pins the delivered capture's
 `content_hash` plus an opaque provider locator for reproduction. The
 **freeze** is the package author's one-way act: `frozen = true` in the
 manifest — never a registry's opinion, never part of the version string. The
 carrier decisions and their reasons: *(i)* the flag lives **inside the hashed
-content**, so a frozen snapshot self-describes even offline and every registry
+content**, so a frozen version self-describes even offline and every registry
 serving those bytes necessarily agrees — in a multi-registry world with no
 global journal, content is the only carrier that cannot diverge; registries
 merely *observe* a freeze in their journals and project it into catalogs;
@@ -113,6 +114,23 @@ outputs carry the field by schema; CLI, TUI, GUI and MCP render it always
 (the Maven lesson: mutability a human cannot see is mutability that will
 surprise them). Yank remains journal-borne — it is the act frozen content can
 no longer carry itself. @status:spec/done
+
+@fact:TERMS-SNAPSHOT-FROZEN-CHANNEL **2b. The terminology, fixed explicitly
+(owner ruling, 2026-08-13) — one boolean axis, three words, no synonyms.**
+**snapshot** ≡ `frozen = false` (the default: content may flow under the
+version string; a hash mismatch is *news*) and **frozen** ≡ `frozen = true`
+(the one-way author act: bytes immutable; a hash mismatch is an *alarm*) are
+**antonyms — the two states of the one `frozen` axis, with no third state.**
+The word **channel** belongs exclusively to the *other* axis: an
+author-named version pointer (`stable`, `beta`, … —
+[PROP-005 §2.14](../modules/vibe-index/PROP-005-package-index.md#channels)); a
+channel may point at a snapshot or at a frozen version — the axes are
+orthogonal, and «замороженная бета» stays expressible. A storage provider's
+immutable point-in-time object is a **capture** and its mutable named
+pointer a **named ref** (`##PROVIDER-NEUTRALITY`) — never "snapshot", never
+"channel". One pre-existing distinct sense is *not* renamed here:
+`materialization = "snapshot"` (PROP-022 §2.2, the vendored-copy mode) —
+flagged to the owner as a rename candidate, not silently changed. @status:spec/done
 
 ## 3. Truth and projection {#truth}
 
@@ -158,9 +176,9 @@ drift, which is why it is built early, not last. @status:spec/plan
 2026-08-10): git is a representation, never the semantics.** Repositories may
 live outside git, so the system's meaning binds only to **provider
 obligations**, of which git is implementation №1: *(i)* serve an immutable
-snapshot for a durable reference, *(ii)* serve a mutable named channel and
-answer "what snapshot is behind it now", *(iii)* answer a cheap freshness
-question about a channel, *(iv)* enumerate an organisation. How a provider
+capture for a durable reference, *(ii)* serve a mutable named ref and
+answer "what capture is behind it now", *(iii)* answer a cheap freshness
+question about a named ref, *(iv)* enumerate an organisation. How a provider
 honours them is its own business — the git provider uses tags, branches,
 commits and history; an object store would use versioned objects and
 retention; an OCI registry, digests. Three consequences bind every design in
