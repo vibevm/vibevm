@@ -69,7 +69,7 @@ naming = "fqdn"
 - @fact:REG-FIELD-NAME `name` — local alias, used in lockfile `registry` field and in `[[override]]` / `[[mirror]]` targeting. @status:impl/done
 - @fact:REG-FIELD-URL `url` — **organization root URL**, not a package repo URL. A registry is a hosting-org; packages are children of it. @status:impl/done
 - @fact:REG-FIELD-REF `ref` — reserved for a future registry-level metadata branch (e.g. capability index, trust policy). Not consumed today. @status:impl/done
-- @fact:REG-FIELD-NAMING `naming` — convention for mapping a pkgref to a package repo name under this org. Values: `"fqdn"` (**default** — `org.vibevm.world/wal` → `<org>/org.vibevm.world_wal`; introduced and made the default by [PROP-008 §2.5](PROP-008-qualified-naming.md#repo-naming), shipped M1.19), `"kind-name"` (legacy — `flow:wal` → `<org>/flow-wal`; the default this section originally declared, superseded by PROP-008), `"name"` (if name collisions are impossible in a given registry), `"kind/name"` (for hosts supporting nested repos). Other registries may ship with different conventions; the setting is per-registry, not global. @status:impl/done
+- @fact:REG-FIELD-NAMING `naming` — convention for mapping a pkgref to a package repo name under this org. Values: `"fqdn"` (**default** — `org.vibevm.world/wal` → `<org>/org.vibevm.world.wal`; introduced and made the default by [PROP-008 §2.5](PROP-008-qualified-naming.md#repo-naming), shipped M1.19 as a `_`-joined form and re-ruled to the dot join 2026-08-13), `"kind-name"` (legacy — `flow:wal` → `<org>/flow-wal`; the default this section originally declared, superseded by PROP-008), `"name"` (if name collisions are impossible in a given registry), `"kind/name"` (for hosts supporting nested repos). Other registries may ship with different conventions; the setting is per-registry, not global. @status:impl/done
 
 @fact:REGISTRY-WALK-ORDER Resolution: the solver iterates registries in array order; the first that has a satisfying match for a pkgref wins. Versions of the same pkgref are **not** unioned across registries — this prevents a lower-trust registry from influencing resolve when a higher-trust one already has a valid answer. @status:impl/done
 
@@ -539,8 +539,10 @@ tags: v0.1.0, v0.2.0, v1.3.0-rc.1
 └── <canonical-url-hash>/
     ├── meta.toml                 # { canonical_url, last_mirror_used?, last_synced_at }
     └── packages/
-        └── <kind>-<name>/
-            ├── clone/            # per-package git working tree
+        └── <group>.<name>/
+            ├── clone/            # per-package git working tree — the
+            │                     # directory is keyed by identity (PROP-008),
+            │                     # never by the registry's URL-side repo name
             └── meta.toml         # { source_url_last_used, last_synced_at, last_known_tags[] }
 ```
 

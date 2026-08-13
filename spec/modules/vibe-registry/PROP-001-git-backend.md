@@ -15,7 +15,7 @@
 @fact:superseded-lead The following decisions in this PROP were revised by [PROP-002](PROP-002-decentralized-registry.md) when the registry model moved from monorepo-as-registry to decentralized per-package repos. Use PROP-002 as the authoritative source for these: @status:spec/done
 
 - @fact:SUP-REGISTRY-TRAIT **§2.3 `Registry` trait** — the single-registry trait is extended by a `MultiRegistryResolver` coordinating several `[[registry]]` entries, each wrapped as a `GitPackageRegistry`. The monorepo-era `GitRegistry` is retired. @status:spec/done
-- @fact:SUP-CACHE-LAYOUT **§2.4 Cache layout** — `~/.vibe/registries/<hash>/clone/` (one clone per registry URL) is replaced by `~/.vibe/registries/<canonical-url-hash>/packages/<kind>-<name>/{clone,meta.toml}` (one clone per package). @status:spec/done
+- @fact:SUP-CACHE-LAYOUT **§2.4 Cache layout** — `~/.vibe/registries/<hash>/clone/` (one clone per registry URL) is replaced by `~/.vibe/registries/<canonical-url-hash>/packages/<kind>-<name>/{clone,meta.toml}` (one clone per package; the package directory was later re-keyed by identity to `<group>.<name>` — PROP-002 §2.6). @status:spec/done
 - @fact:SUP-SOURCE-URI **§2.6 Lockfile `source_uri` format** — `git+<transport>://<host>/<path>.git#<kind>/<name>/v<ver>` (path-in-monorepo) is replaced by full lockfile fields: `registry`, `source_url`, `source_ref`, `resolved_commit`, `content_hash`; `#fragment` is no longer used. @status:spec/done
 
 @fact:NOT-SUPERSEDED What is **not** superseded (and remains authoritative here): §2.1 (shell-out-to-git backend choice), §2.2 (`GitBackend` trait), §2.5 (1-hour freshness TTL), §2.7 (Windows UX and stderr classification). @status:spec/done
