@@ -123,7 +123,7 @@ version string; a hash mismatch is *news*) and **frozen** ≡ `frozen = true`
 **antonyms — the two states of the one `frozen` axis, with no third state.**
 The word **channel** belongs exclusively to the *other* axis: an
 author-named version pointer (`stable`, `beta`, … —
-[PROP-005 §2.14](../modules/vibe-index/PROP-005-package-index.md#channels)); a
+[PROP-005 §2.18](../modules/vibe-index/PROP-005-package-index.md#channels)); a
 channel may point at a snapshot or at a frozen version — the axes are
 orthogonal, and «замороженная бета» stays expressible. A storage provider's
 immutable point-in-time object is a **capture** and its mutable named

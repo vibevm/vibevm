@@ -846,6 +846,101 @@ none, `git commit` fails and that failure takes the path above — logged and
 counted, never fatal to the write. Inventing a fallback author would put a name
 in an organisation's published history that nobody chose. @status:impl/done
 
+### 2.18 Channels — author-named version pointers {#channels}
+
+@fact:channels-req `req r2` @status:spec/plan
+
+@fact:CHANNELS-ARE-AUTHOR-POINTERS **Decision (owner rulings, 2026-08-13; not
+built — this section is the contract the build will follow).** A **channel**
+is an author-controlled named pointer `(group, name, channel) → version` —
+npm's dist-tags and Docker's tags are the prior art. The pointer map is
+**flat**: several channels may point at one version (a release that is both
+`latest` and `stable` is the everyday case), and no promotion semantics
+(`beta` → `stable` as a registry operation) are baked into the format —
+promotion is the author's workflow, not registry law. A channel may point at
+a snapshot or at a frozen version (PROP-044 §2b) — the axes are orthogonal. @status:spec/plan
+
+- @fact:CHANNEL-NAME-GRAMMAR **Channel-name grammar:** `[a-z][a-z0-9-]*` — it
+  must not start with a digit (versions do) or a version-requirement operator
+  (`^ ~ = < > *`), which is what makes `@beta` unambiguous in a pkgref's
+  version position. @status:spec/plan
+- @fact:CHANNELS-AUTHORITY-IS-THE-JOURNAL **Authority is the journal; the
+  catalog only projects.** Channel state changes are registry facts:
+  `Published` carries the manifest-declared channels (below), and the explicit
+  acts `ChannelSet {group, name, channel, version}` / `ChannelUnset` retarget
+  or clear a pointer. No hand-edited pointer file exists anywhere — a
+  hand-written `vibeversions.toml` inside the derived catalog would be a
+  secretly-authoritative fact (PROP-044 law 2). The projection lands the map
+  in the `NameEntry` (`channels: {stable → 1.1.0, beta → 1.2.0-rc.1}`) — the
+  same `by-name/<name>.json` candidate file the resolver already fetches, so
+  channels cost **zero additional round-trips**. @status:spec/plan
+- @fact:MANIFEST-CHANNELS-ARE-PUBLISH-TIME-FACTS **The manifest declares
+  membership as a publish-time fact, never as the pointer.** `[package]
+  channels = ["stable", "lts-2026"]` (a list — multiplicity is first-class;
+  the singular `channel = "…"` is rejected with a did-you-mean) records which
+  channels this version was *published into* — immutable with the content,
+  honest forever. Publication moves each named pointer to this version (npm's
+  `publish --tag` semantics), so **routine channel management is just
+  publishing** — no separate command. The pointer itself cannot live in the
+  manifest: retargeting `stable` back to a frozen `1.1.0` (the rollback — the
+  main use case) would require editing frozen bytes, which is forbidden;
+  that act is the journal's `ChannelSet`, via `vibe registry channel set
+  <group>:<name> stable 1.1.0`. @status:spec/plan
+- @fact:LATEST-AND-STABLE-ARE-BUILT-IN **LATEST and STABLE are the two
+  built-in channels** (Maven's `<latest>`/`<release>` pair). A channel is
+  *authored* from the first explicit act (a manifest declaration or a
+  `channel set`) and stays authored until `channel unset`; while unauthored it
+  is **computed at projection time**: STABLE = the greatest non-prerelease
+  version, LATEST = the greatest version outright — both by the ordering
+  below. A new publication without declarations does **not** move an
+  authored pointer: if the author said `stable = 1.2.0`, releasing 1.3.0 does
+  not silently make it stable. @status:spec/plan
+- @fact:VERSION-ORDERING-WITH-BUILD-TIEBREAK **The ordering (owner ruling,
+  2026-08-13): SemVer precedence first, natural-sort tie-break on build
+  metadata second.** SemVer 2.0.0 is not modified: `+build` is legal in
+  published versions, the **coordinate is the full version string including
+  `+…`** (uniqueness is hard on the string), and precedence ignores metadata
+  exactly as the standard demands — every foreign semver library agrees with
+  us. Where SemVer declares two versions equal, our resolver breaks the tie
+  deterministically: versions **with** metadata outrank the bare version (a
+  `+stamp` is a rebuild atop it), and among metadata the greater under
+  **natural sort** (digit runs compare numerically, text lexicographically)
+  is the fresher — so `+20260813…` beats yesterday's stamp. Reproduction is
+  never at stake — the lockfile pins `content_hash` — the tie-break only
+  answers "which is latest", and only those who chose to publish `+` twins
+  pay the axis any attention. @status:spec/plan
+- @fact:RESOLVER-DEFAULT-IS-STABLE-THEN-LATEST **The resolver default (owner
+  ruling, 2026-08-13): `vibe install pkg` with no requirement and no channel
+  takes STABLE when it exists, else LATEST — and the frozen/snapshot state
+  does not influence selection at all.** Selection and integrity are separate
+  axes: the chosen version is pinned by hash in the lockfile, and *after*
+  selection the freeze contract governs mismatches (frozen — alarm; snapshot —
+  news). Requesting a channel is the explicit act: `{ channel = "beta" }` on
+  a dependency in `vibe.toml` (mutually exclusive with a version
+  requirement) or `@beta` in a pkgref's version position. @status:spec/plan
+- @fact:CHANNEL-RESOLUTION-PINS **Resolution through a channel pins
+  `{channel, resolved version, content_hash, locator}`** in the lockfile:
+  `vibe install` reproduces the pin; `vibe update` re-follows the pointer;
+  `--locked` turns any drift into a loud CI error. @status:spec/plan
+- @fact:DEAD-POINTER-IS-LOUD **An authored pointer at a dead target is a loud
+  state.** When a channel's target version is yanked or removed, computed
+  channels simply recompute past it, but an *authored* pointer refuses at
+  resolve time with a recipe («stable указывает на отозванную 1.2.0 — автор
+  должен переставить или снять; потребитель может явно взять версию»).
+  Silently hopping to "the next best" would be a choice the author never
+  made. @status:spec/plan
+- @fact:CHANNELS-DEGRADED-RESOLUTION **The degraded ladder (catalog
+  unreachable).** (1) A lockfile answers without the catalog at all —
+  resolve-by-lock never needs it. (2) No lock but a local catalog cache →
+  resolve against the cache, loudly stamped «по снимку каталога от <даты>».
+  (3) Cold resolve with the provider alive → enumerate versions at the
+  provider (`ls-remote --tags`-class), read manifests at tags, and let the
+  **local resolver** reconstruct channels from the publish-time `channels`
+  declarations — approximate exactly where the author manually retargeted,
+  and the output says so («по перечислению провайдера, каталог недоступен»).
+  (4) Neither reachable → refusal with a recipe. Degradation is always
+  announced, never silent (PROP-044 law 1). @status:spec/plan
+
 ---
 
 ## 3. Architecture {#architecture}
