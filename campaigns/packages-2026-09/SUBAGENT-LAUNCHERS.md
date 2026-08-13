@@ -637,3 +637,128 @@ subshell printed the worktree, and the correction reached the right thread.
 Related in shape to `#fact-one-thread-one-writer` (the other way a `-c` finds
 the wrong writer) and to `##WAL-C-SHELL-TRAPS`, whose "cwd is persistent" line
 was written about paths in commands and turns out to govern worker routing too.
+
+@fact:fact-a-bare-cd-retargets-every-later-command-not-only-the-correction **A
+bare `cd` retargets not only the `-c` correction but every command that follows
+it, for the rest of the session (2026-08-14, caught by `git status`, nothing
+damaged):** the fact above frames the trap as "a `cd` before `( … )` sends the
+correction to the wrong worker". That framing is too narrow. The trap is that
+the Bash tool's working directory **persists between calls**, so the first bare
+`cd` silently rebases everything after it. Measured here: the boss re-ran a
+spike's acceptance as `cd /…/.wt/F0-GENPOC && cargo test …` — the run itself
+correct — and the cwd stayed in the worker's worktree, after which *(i)* a
+`grep -rn … crates/` written with a RELATIVE path read the worktree's files
+instead of the host's and reported ten just-made edits as "gone" (they were
+intact — the edits had gone through an editor tool with ABSOLUTE paths);
+*(ii)* `cargo fmt --all` formatted the disposable worktree while the host stayed
+unformatted; *(iii)* `git status` reported the worktree's state.
+
+Two rules, and the second is the general one. *(i)* **The boss never bare-`cd`s:**
+a command that must run in a worktree is `( cd .wt/<id> && … )`, or it addresses
+its target explicitly (`--manifest-path`, `git -C <path>`, an absolute path).
+*(ii)* **A verification must use the same addressing mode as the edit it
+verifies** — a relative-path grep after an absolute-path edit is not a weaker
+check, it is a check of a *different tree*, and it answers confidently about the
+wrong one. The tell that costs one second: `git status` listing files that
+cannot exist in the host tree (here `_spike-genpoc/` and a `WORKER-REPORT-…` at
+the root). Same disease as `#fact-the-status-grep-matches-the-packet` and
+`#fact-a-prefix-grep-on-the-command-string-reads-a-worker-that-did-nothing`: in
+all three the instrument silently measured something other than the thing.
+
+@fact:fact-a-piped-echo-reports-the-exit-of-the-pipe-not-the-command **`cmd |
+tail; echo "EXIT=$?"` reports `tail`'s exit, and it will say 0 over a failure
+(2026-08-14, same session, twice):** `cargo xtask specmap --manifest-path …`
+errored with "unexpected argument", and the trailing `echo` printed `EXIT=0`
+because `$?` belonged to the last element of the pipeline. `##WAL-C-SHELL`
+already demands real exit codes; this is the specific shape that defeats the
+demand while *looking* like compliance. The form that works: run the command
+with its output redirected to a file, capture `$?` immediately, then read the
+file — `( … ) > /tmp/x.log 2>&1; echo "EXIT=$?"; tail -6 /tmp/x.log`. Sibling of
+`#fact-panel-background-form` (an `echo` swallowing the panel's exit) and
+`#fact-a-truncated-pipe-reads-green` (a `head` hiding the red line).
+
+@fact:fact-provisioning-carries-the-gitignored-tooling-a-packet-cites **The
+gitignored-state law, paid in advance instead of after a lost run
+(2026-08-14):** the F0-GENPOC packet needed `jtd-codegen`, whose binary is
+gitignored (`tools/.gitignore:16`) and therefore absent from a fresh worktree.
+The boss ran `git check-ignore` on it *before* spawning, copied it into the
+worktree, and ran it once itself to seed the worker's input fixture — so the
+packet could say "this input is already on your disk, verify it" instead of
+"generate it". Cost: one command; the worker never met the missing-tool path.
+**Before a packet cites any artifact, check `git check-ignore` on it and
+provision what git does not carry** — the negative form of this
+(`#fact-gitignored-state-misses-the-worktree`) cost a whole run.
+
+## 9. What a clean fan-out looked like {#clean-fanout}
+
+@fact:fanout-first-pass-acceptance **Measured 2026-08-14 — three packets, two
+lanes, 3/3 accepted on the first pass, zero `-c` rework cycles** (the phase-0
+spikes of the change-native build: `F0-RMW` and `F0-INVENTORY` on `claudez`,
+`F0-GENPOC` on `claudez2`; runs and reports under
+`cache/agents/sorted/F0-*/`). Given how much of this file records failures,
+the shape that produced a clean run is worth recording with the same care.
+
+@fact:fanout-perimeters-intersect-on-writes-not-reads **Route parallelism on the
+WRITE perimeter, not the read perimeter.** `#e-parallel-routing` says disjoint
+perimeters parallelise; in practice the two measurement packets read heavily
+overlapping trees (both walked `crates/vibe-index/`) and that cost nothing,
+because each was allowed to create exactly **two** files: its own finding and
+its own report. Reads never conflict; only writes do. Stating the write
+perimeter as a closed list of two paths — rather than as a directory — is what
+made the overlap safe, and it is also what let the boss verify "nothing else was
+touched" as a set comparison rather than a judgement.
+
+@fact:fanout-one-cargo-worker-per-lane **Two doc/measurement workers ran
+concurrently on the SAME launcher with no interference; the cargo-heavy one got
+the other lane to itself.** Thread isolation held exactly as
+`#launchers-conversation-key` predicts (one worker = one worktree = one cwd), and
+the box never saw two cold `cargo` builds at once. The weighting rule from
+`#e-parallel-coefficient` is confirmed in the small: text packets are free to
+stack, cargo packets are the scarce slot.
+
+@fact:fanout-inline-the-deliverable-skeleton **Inline the deliverable's section
+headings verbatim in the packet, and demand a fixed field set per section.** All
+three packets carried the finding's exact `##`-headings and, inside repeating
+sections, an explicit list of fields ("reads / mutates / writes / what blocks the
+target form / classification — one word / lines affected"). Every finding came
+back structurally reviewable: the boss could diff a claim against the tree
+without first reverse-engineering the document's shape. This is the same
+mechanism as `#report-contract` (weak writers follow inlined templates and skim
+citations), applied to the deliverable rather than to the report.
+
+@fact:fanout-demand-per-claim-confirm-or-refute **Ask for each baseline claim to
+be confirmed OR refuted with a citation — never for "verify the baseline".** The
+`F0-GENPOC` packet listed five recorded properties of the generator's output and
+required a verdict plus a line-number citation for each. The worker confirmed
+four and **refused the fifth**, on the ground that the sample schema contained no
+`discriminator` and therefore did not exercise the claim at all — "true of the
+generator, not provable from this file". A blanket "check the baseline" invites a
+blanket "checked"; a per-claim table with a citation column makes the honest
+answer the cheap one. Two of the three findings corrected the plan's stated
+facts, and both corrections came from this shape.
+
+@fact:fanout-the-finding-outlives-the-worktree **When the work product is a
+throwaway worktree, the finding must inline the code, or the knowledge dies with
+the directory.** `F0-GENPOC` built a spike crate that was never meant to reach
+the host tree; the packet therefore ordered the finding to carry the
+post-processor and the generated result verbatim inside fenced blocks, and said
+plainly why ("this is not duplication, it is the only carrier"). The worktree was
+removed; the proof survives in `harvest/f0-gen-poc.md`.
+
+@fact:fanout-a-typo-is-a-boss-tail-fix-not-a-rework **A cosmetic defect is fixed
+in the boss's tail; only wrong judgement or wrong implementation earns a `-c`
+rework.** One finding arrived with an unbalanced closing code fence — one
+character, no bearing on any claim. Sending it back would have cost a full model
+turn to save a one-line edit, and `#report-rejection` reserves rejection for
+wrong decisions and wrong code. Fixed in place, recorded in `meta.md` as a
+defect rather than passed over in silence.
+
+@fact:fanout-verify-the-numbers-not-the-narrative **Acceptance re-measured every
+load-bearing number by hand, and that is what makes "ПРИНЯТО" mean anything.**
+For `F0-RMW` the boss re-ran the greps behind all six read-modify-write paths,
+the five clock sites, the fifteen strictness attributes and every file and test
+count; for `F0-GENPOC` it re-ran the acceptance suite itself (4/4, exit 0); for
+`F0-INVENTORY` it independently confirmed the two claims that corrected the plan.
+Everything matched. The one flaw found was a transcription artifact in a block
+the report called "verbatim" — a duplicated fragment of one line — which changed
+no conclusion but is exactly why the rule is *re-measure*, not *re-read*.
