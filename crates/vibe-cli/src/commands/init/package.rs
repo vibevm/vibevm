@@ -140,7 +140,7 @@ fn create_package_dirs_from_fields(
         };
         let manifest_text = format!(
             "[package]\ngroup = \"{group}\"\nname = \"{name}\"\nkind = \"{kind}\"\n\
-             version = \"{version}\"\n{authors_line}\
+             version = \"{version}\"\nepoch = 1\n{authors_line}\
              license = \"{license}\"\ndescription = \"{description}\"\nformat = \"{format}\"\n\n\
              [boot_snippet]\nsource = \"spec/boot/10-tool-{name}.md\"\ncategory = \"tool\"\nlink = \"{link}\"\n",
             license = fields.license,

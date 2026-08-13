@@ -79,6 +79,7 @@ fn package_meta_as_package_ref_pins_exact() {
         group: Group::parse("org.vibevm").unwrap(),
         kind: PackageKind::Flow,
         version: semver::Version::parse("0.3.0").unwrap(),
+        epoch: None,
         authors: vec![],
         license: None,
         description: None,
@@ -333,4 +334,42 @@ include = ["SKILL.md", "references/**/*.md"]
         s.include,
         vec!["SKILL.md".to_string(), "references/**/*.md".to_string()]
     );
+}
+
+// --- PROP-044 §6.2 — the manifest-format epoch -----------------------
+
+#[test]
+fn package_meta_without_epoch_is_pre_epoch_not_epoch_one() {
+    // A `[package]` table with no `epoch` field parses to `epoch = None`,
+    // and serialises without the field — the distinct pre-epoch state.
+    let p: PackageMeta = toml::from_str(
+        "name = \"x\"\ngroup = \"org.demo\"\nkind = \"tool\"\nversion = \"0.1.0\"\n",
+    )
+    .unwrap();
+    assert!(p.epoch.is_none());
+    let rendered = toml::to_string(&p).unwrap();
+    assert!(!rendered.contains("epoch"), "{rendered}");
+}
+
+#[test]
+fn package_meta_roundtrips_an_explicit_epoch() {
+    // An explicit `epoch` survives a serialise → parse round trip intact.
+    let p: PackageMeta = toml::from_str(
+        "name = \"x\"\ngroup = \"org.demo\"\nkind = \"tool\"\nversion = \"0.1.0\"\nepoch = 3\n",
+    )
+    .unwrap();
+    assert_eq!(p.epoch, Some(3));
+    let rendered = toml::to_string(&p).unwrap();
+    let back: PackageMeta = toml::from_str(&rendered).unwrap();
+    assert_eq!(back.epoch, Some(3));
+}
+
+#[test]
+fn epoch_is_not_a_string() {
+    // `epoch` is an integer; a quoted value is a parse error, never a
+    // silent string coercion.
+    toml::from_str::<PackageMeta>(
+        "name = \"x\"\ngroup = \"org.demo\"\nkind = \"tool\"\nversion = \"0.1.0\"\nepoch = \"1\"\n",
+    )
+    .unwrap_err();
 }

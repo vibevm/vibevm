@@ -82,6 +82,16 @@ pub struct PackageMeta {
     pub group: Group,
     pub kind: PackageKind,
     pub version: semver::Version,
+    /// `[package].epoch` — the manifest-format epoch this file is authored
+    /// against (PROP-044 §6.2). **Absence is not `epoch = 1`**: a manifest
+    /// with no `epoch` is in the distinct *pre-epoch* state and is read for
+    /// all time by the frozen pre-epoch reader — today's parse — never by a
+    /// later epoch's reader that merely assumes the first. New manifests are
+    /// authored with `epoch = 1` by `vibe init`; existing ones stay as they
+    /// are until a codemod wave rewrites them, and `vibe check` reports the
+    /// absence as info so the pre-epoch population stays countable.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub epoch: Option<u32>,
     #[serde(default)]
     pub authors: Vec<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]

@@ -57,8 +57,9 @@ pub mod checks;
 
 pub use checks::{
     ActivationConflictCheck, BootDirectoryCheck, FeaturesGraphCheck, I18nCoverageCheck,
-    LocalSourceFreshnessCheck, LockfileFilesCheck, ManifestValidityCheck, RedirectBlockCheck,
-    ReviewAgingCheck, SubskillStructureCheck, WalFreshnessCheck, WalWellformedCheck,
+    LocalSourceFreshnessCheck, LockfileFilesCheck, ManifestEpochCheck, ManifestValidityCheck,
+    RedirectBlockCheck, ReviewAgingCheck, SubskillStructureCheck, WalFreshnessCheck,
+    WalWellformedCheck,
 };
 
 /// Stable identifier for a single check. Used in [`Finding::check`]
@@ -108,6 +109,10 @@ pub enum CheckId {
     /// so the materialised `vibedeps/` copy is stale. Warning; remedy
     /// `vibe install --assume-yes`.
     LocalSourceFreshness,
+    /// PROP-044 §6.2 — a package manifest whose `[package].epoch` is unset
+    /// is in the distinct *pre-epoch* state; reported as info so the
+    /// pre-epoch population stays countable until a codemod wave rewrites it.
+    ManifestEpoch,
     /// PROP-038 §3 — every per-unit boot artifact's recorded fingerprint
     /// matches a fresh recomputation (the hybrid linker's dirty-subgraph is
     /// consistent); a stale artifact warns to `vibe reinstall`.
@@ -129,6 +134,7 @@ impl CheckId {
             CheckId::ActivationConflict => "activation_conflict",
             CheckId::RedirectBlock => "redirect_block",
             CheckId::LocalSourceFreshness => "local_source_freshness",
+            CheckId::ManifestEpoch => "manifest_epoch",
             CheckId::BootGraphIntegrity => "boot_graph_integrity",
         }
     }
@@ -151,6 +157,7 @@ impl CheckId {
             CheckId::ActivationConflict,
             CheckId::RedirectBlock,
             CheckId::LocalSourceFreshness,
+            CheckId::ManifestEpoch,
         ]
     }
 }
@@ -278,6 +285,21 @@ impl CheckReport {
             message: msg.into(),
         });
     }
+    pub(crate) fn info(
+        &mut self,
+        check: CheckId,
+        path: Option<PathBuf>,
+        line: Option<usize>,
+        msg: impl Into<String>,
+    ) {
+        self.push(Finding {
+            check,
+            severity: Severity::Info,
+            path,
+            line,
+            message: msg.into(),
+        });
+    }
 }
 
 /// Tunable thresholds for one [`check_project`] run. `Default` carries
@@ -359,7 +381,7 @@ pub trait Check {
 /// use vibe_check::{CheckId, all_checks};
 ///
 /// let checks = all_checks();
-/// assert_eq!(checks.len(), 12);
+/// assert_eq!(checks.len(), 13);
 /// assert_eq!(checks[0].id(), CheckId::ManifestValidity);
 /// ```
 pub fn all_checks() -> Vec<Box<dyn Check>> {
@@ -376,6 +398,7 @@ pub fn all_checks() -> Vec<Box<dyn Check>> {
         Box::new(I18nCoverageCheck),
         Box::new(ActivationConflictCheck),
         Box::new(LocalSourceFreshnessCheck),
+        Box::new(ManifestEpochCheck),
     ]
 }
 
@@ -534,6 +557,7 @@ mod tests {
                 CheckId::I18nCoverage,
                 CheckId::ActivationConflict,
                 CheckId::LocalSourceFreshness,
+                CheckId::ManifestEpoch,
             ]
         );
     }
