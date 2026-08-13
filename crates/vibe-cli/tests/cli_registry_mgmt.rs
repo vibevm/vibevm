@@ -1756,7 +1756,7 @@ fn install_unattended_skips_confirm_like_assume_yes() {
     assert!(
         project
             .path()
-            .join("vibedeps/org.vibevm.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md")
+            .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md")
             .is_file()
     );
 }
@@ -3817,7 +3817,7 @@ fn reinstall_regenerates_deleted_boot_artifacts() {
     // snippet — boot is recomputed from the materialised tree, not lost.
     let index_body = fs::read_to_string(&index).unwrap();
     assert!(
-        index_body.contains("vibedeps/org.vibevm.wal/0.2.0/spec/boot/10-flow-wal.md"),
+        index_body.contains("vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.md"),
         "regenerated INDEX.md must name the materialised dependency boot:\n{index_body}"
     );
 }
@@ -3872,7 +3872,7 @@ fn reinstall_non_force_bails_when_vibedeps_slot_missing() {
         .success();
 
     // Delete the materialised slot — the lockfile still records org.vibevm.world/wal.
-    fs::remove_dir_all(project.path().join("vibedeps/org.vibevm.wal")).unwrap();
+    fs::remove_dir_all(project.path().join("vibedeps/org.vibevm.world.wal")).unwrap();
 
     user.vibe()
         .arg("reinstall")
@@ -3954,7 +3954,7 @@ fn reinstall_force_refetches_corrupted_vibedeps() {
     // Corrupt a content file inside the materialised `vibedeps/` slot.
     let corrupted = project
         .path()
-        .join("vibedeps/org.vibevm.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md");
+        .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md");
     assert!(
         corrupted.is_file(),
         "org.vibevm.world/wal ships WAL-PROTOCOL.md"

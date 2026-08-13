@@ -36,13 +36,14 @@ impl Check for LockfileFilesCheck {
         };
 
         // Under the loading model (PROP-009 §2.1) a package is materialised
-        // verbatim into `vibedeps/<kind>-<name>/<version>/`. Check 8 verifies
-        // that the lockfile and that tree agree.
+        // verbatim into `vibedeps/<group>.<name>/<version>/` (PROP-022 §2.1,
+        // identity-keyed). Check 8 verifies that the lockfile and that tree
+        // agree.
 
         // 1. Every locked package has its `vibedeps/` slot on disk.
         let mut expected: std::collections::BTreeSet<String> = std::collections::BTreeSet::new();
         for pkg in &lockfile.packages {
-            let slot = format!("vibedeps/{}-{}/{}", pkg.kind, pkg.name, pkg.version);
+            let slot = format!("vibedeps/{}.{}/{}", pkg.group, pkg.name, pkg.version);
             if !project_root.join(&slot).is_dir() {
                 report.err(
                     CheckId::LockfileFiles,
