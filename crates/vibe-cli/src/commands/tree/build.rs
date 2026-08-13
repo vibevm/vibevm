@@ -68,11 +68,11 @@ pub fn build_tree(root: &Path) -> Result<PackageTree> {
         .iter()
         .map(|c| (c.origin.as_str(), c.source_path.as_str()))
         .collect();
-    // INDEX.md slot (kind, name) → the entry, for the packages it names.
+    // INDEX.md slot (group, name) → the entry, for the packages it names.
     let mut index_by_slot: BTreeMap<(String, String), &super::model::IndexEntry> = BTreeMap::new();
     for entry in &index.entries {
-        if let Some((kind, name)) = artifacts::slot_package(&entry.path) {
-            index_by_slot.insert((kind.to_string(), name), entry);
+        if let Some((group, name)) = artifacts::slot_package(&entry.path) {
+            index_by_slot.insert((group, name), entry);
         }
     }
 
@@ -211,7 +211,7 @@ fn build_package(
     suggested: Option<LinkType>,
 ) -> Package {
     let id = qualified(p);
-    let slot_key = (p.kind.as_str().to_string(), p.name.to_string());
+    let slot_key = (p.group.to_string(), p.name.to_string());
 
     // Effective lane, read from the committed artifacts (PROP-036 §2.3).
     let (load_type, in_static, in_index, boot_path, condition) =

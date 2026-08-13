@@ -6,7 +6,7 @@
 //! and each language stack ships a byte-identical VENDORED copy under its
 //! own `crates/vendor/`. A Cargo path-dep cannot cross package slots: the
 //! authored layout (`packages/org.vibevm/<name>/v<ver>/`) and the
-//! materialised layout (`vibedeps/<kind>-<name>/<ver>/`) disagree on both
+//! materialised layout (`vibedeps/<group>.<name>/<ver>/`) disagree on both
 //! directory naming and version prefix, and every slot must stay a
 //! self-buildable workspace (PROP-024 §2.4). Vendoring keeps that
 //! property; this gate makes divergence mechanically impossible.
@@ -490,7 +490,7 @@ mod tests {
         let tmp = tempfile::tempdir().expect("tempdir");
         let root = tmp.path();
         for rel in [
-            "real-lang/v0.1.0/vibedeps/stack-x/0.1.0/crates/vendor/engine/src/lib.rs",
+            "real-lang/v0.1.0/vibedeps/org.x.x/0.1.0/crates/vendor/engine/src/lib.rs",
             "real-lang/v0.1.0/.vibe/cache/org.x/y/v0.1.0/crates/vendor/engine/src/lib.rs",
             "real-lang/v0.1.0/target/debug/crates/vendor/engine/src/lib.rs",
             "real-lang/v0.1.0/tools/vendor/thing.js",

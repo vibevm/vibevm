@@ -214,7 +214,7 @@ fn materialise_deferred_in_place<S: InstallSource + ?Sized>(
         vibedeps::ensure_gitignored(
             &workspace.root,
             &vibedeps::in_place_slot_rel_path(
-                f.cached.package_meta().kind,
+                &f.cached.package_meta().group,
                 &f.cached.resolved.name,
             ),
         )?;

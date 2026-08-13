@@ -37,7 +37,7 @@ use crate::Explain;
 const MAP_FILENAME: &str = "package.specmap.json";
 
 /// The materialisation tree at the project root (PROP-009 §2.1):
-/// `vibedeps/<kind>-<name>/<version>/` holds each installed package verbatim.
+/// `vibedeps/<group>.<name>/<version>/` holds each installed package verbatim.
 const VIBEDEPS_DIR: &str = "vibedeps";
 
 /// What discovery learned about one installed coordinate.
@@ -146,7 +146,7 @@ fn coordinate_of(target: &str) -> Option<String> {
 fn discover(root: &Path) -> Resolver {
     let mut by_coordinate: BTreeMap<String, Vec<SlotRec>> = BTreeMap::new();
     for kind_name_dir in subdirs(&root.join(VIBEDEPS_DIR)) {
-        // An in-place slot carries `.git` at the `<kind>-<name>` level and
+        // An in-place slot carries `.git` at the `<group>.<name>` level and
         // holds the package directly (PROP-022 §2.4); a snapshot slot holds
         // `<version>/` subdirs and never carries `.git`.
         if kind_name_dir.join(".git").exists() {
@@ -313,14 +313,14 @@ mod tests {
         );
     }
 
-    /// Write an installed-package slot under `<root>/vibedeps/flow-demo/0.1.0/`
+    /// Write an installed-package slot under `<root>/vibedeps/org.demo.demo/0.1.0/`
     /// that carries a real map: the package's `specmap.toml` namespace already
     /// equals its coordinate, so the engine builds addresses under it directly
     /// (the host's own posture; no nickname→coordinate remap needed). The map
     /// is built with the same engine `vibe specmap` uses and written as
     /// `package.specmap.json`.
     fn slot_with_map(root: &Path) -> PathBuf {
-        let slot = root.join("vibedeps/flow-demo/0.1.0");
+        let slot = root.join("vibedeps/org.demo.demo/0.1.0");
         fs::create_dir_all(&slot).unwrap();
         fs::write(
             slot.join("vibe.toml"),
@@ -403,7 +403,7 @@ mod tests {
     #[test]
     fn an_installed_package_without_a_map_says_it_does_not_participate() {
         let tmp = tempfile::tempdir().unwrap();
-        let slot = tmp.path().join("vibedeps/flow-demo/0.1.0");
+        let slot = tmp.path().join("vibedeps/org.demo.demo/0.1.0");
         fs::create_dir_all(&slot).unwrap();
         fs::write(
             slot.join("vibe.toml"),

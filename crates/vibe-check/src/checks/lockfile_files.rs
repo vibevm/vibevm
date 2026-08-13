@@ -154,7 +154,7 @@ content_hash = "sha256:00"
 files_written = []
 "#;
         fs::write(project.path().join("vibe.lock"), lockfile).unwrap();
-        // No vibedeps/flow-wal/0.1.0/ slot on disk — the error.
+        // No vibedeps/org.vibevm.wal/0.1.0/ slot on disk — the error.
         let report = check_project(project.path(), &opts());
         assert!(
             report
@@ -178,7 +178,7 @@ files_written = []
             "[meta]\ngenerated_by = \"vibe-test\"\ngenerated_at = \"2026-05-04T00:00:00Z\"\nschema_version = 5\n",
         )
         .unwrap();
-        fs::create_dir_all(project.path().join("vibedeps/flow-ghost/1.0.0")).unwrap();
+        fs::create_dir_all(project.path().join("vibedeps/org.vibevm.ghost/1.0.0")).unwrap();
         let report = check_project(project.path(), &opts());
         assert!(
             report

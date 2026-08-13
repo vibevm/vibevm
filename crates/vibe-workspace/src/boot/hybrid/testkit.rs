@@ -49,7 +49,7 @@ pub(crate) fn unit(name: &str, edges: &[(&str, LinkType)]) -> (UnitId, UnitInput
     (
         id(name),
         UnitInput {
-            own_boot_path: Some(format!("vibedeps/flow-{name}/1.0.0/boot.md")),
+            own_boot_path: Some(format!("vibedeps/org.vibevm.{name}/1.0.0/boot.md")),
             origin: format!("org.vibevm/{name}"),
             when: None,
             edges: mk_edges(edges),

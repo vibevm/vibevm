@@ -30,7 +30,7 @@ fn dep(name: &str, has_boot: bool, requires: &[&str]) -> DependencyBoot {
         kind: PackageKind::Flow,
         group: org(),
         name: name.to_string(),
-        boot_path: has_boot.then(|| format!("vibedeps/flow-{name}/1.0.0/boot.md")),
+        boot_path: has_boot.then(|| format!("vibedeps/org.vibevm.{name}/1.0.0/boot.md")),
         category: None,
         declared_link: None,
         suggested_link: None,

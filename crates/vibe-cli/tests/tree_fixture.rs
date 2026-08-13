@@ -42,15 +42,15 @@ version = "0.1.0"
 /// Effective static lane. The separator is space + U+2014 em-dash + space
 /// (`artifacts::MARKER_SEP`); each marker's origin is the package `group/name`.
 const STATIC_MD: &str = "\
-<!-- vibe:static org.vibevm/crit \u{2014} vibedeps/flow-crit/1.0.0/boot.md -->
+<!-- vibe:static org.vibevm/crit \u{2014} vibedeps/org.vibevm.crit/1.0.0/boot.md -->
 
 # crit boot body
 
-<!-- vibe:static org.vibevm/umbrella \u{2014} vibedeps/flow-umbrella/1.0.0/boot.md -->
+<!-- vibe:static org.vibevm/umbrella \u{2014} vibedeps/org.vibevm.umbrella/1.0.0/boot.md -->
 
 # umbrella boot body
 
-<!-- vibe:static org.vibevm/member \u{2014} vibedeps/flow-member/1.0.0/boot.md -->
+<!-- vibe:static org.vibevm/member \u{2014} vibedeps/org.vibevm.member/1.0.0/boot.md -->
 
 # member boot body
 ";
@@ -61,11 +61,11 @@ const INDEX_MD: &str = r#"schema = 1
 static = "spec/boot/STATIC.md"
 
 [[entry]]
-path = "vibedeps/flow-dyn/1.0.0/boot.md"
+path = "vibedeps/org.vibevm.dyn/1.0.0/boot.md"
 kind = "dynamic"
 
 [[entry]]
-path = "vibedeps/flow-gated/1.0.0/boot.md"
+path = "vibedeps/org.vibevm.gated/1.0.0/boot.md"
 kind = "dynamic"
 when = "os:linux"
 "#;

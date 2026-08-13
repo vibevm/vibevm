@@ -31,12 +31,12 @@ fn golden_splice_qualifies_colliding_labels_and_emits_preamble_and_tombstone() {
     let ws = TempDir::new().unwrap();
     let alpha = write_simple_boot(
         ws.path(),
-        "flow-alpha",
+        "org.demo.alpha",
         "# Alpha {#root}\n\n##FACT the alpha fact.\n",
     );
     let beta = write_simple_boot(
         ws.path(),
-        "flow-beta",
+        "org.demo.beta",
         "# Beta {#root}\n\n##FACT the beta fact.\n",
     );
     let b = boot(vec![
@@ -88,7 +88,11 @@ fn render_static_omits_the_tombstone_when_no_label_was_renamed() {
     // The tombstone appears only when the qualify phase renamed something. A
     // label-free lane carries no tombstone (and the preamble still leads).
     let ws = TempDir::new().unwrap();
-    let p = write_simple_boot(ws.path(), "flow-plain", "Plain prose, no labels at all.");
+    let p = write_simple_boot(
+        ws.path(),
+        "org.demo.plain",
+        "Plain prose, no labels at all.",
+    );
     let b = boot(vec![entry(&p, LinkType::Static, "org.demo/plain")]);
     let text = render_static(&b, ws.path(), &coord()).unwrap().unwrap();
     // The tombstone's specific opener is absent (the preamble documents a
@@ -106,7 +110,7 @@ fn render_static_omits_the_tombstone_when_no_label_was_renamed() {
 /// forbids `@!` in a `simple` contribution).
 #[cfg(test)]
 fn write_aliaser_fixture(ws: &Path) -> String {
-    let base = ws.join("vibedeps/demo-aliaser/1.0.0/spec");
+    let base = ws.join("vibedeps/com.example.hello.aliaser/1.0.0/spec");
     let write = |rel: &str, body: &str| {
         let p = base.join(rel);
         fs::create_dir_all(p.parent().unwrap()).unwrap();
@@ -119,7 +123,7 @@ fn write_aliaser_fixture(ws: &Path) -> String {
          Sees @!pre here.\n",
     );
     write("contract/prelude.md", "# Prelude {#root}\n\nPRELUDE_BODY\n");
-    "vibedeps/demo-aliaser/1.0.0/spec/contract/greeting.md".to_string()
+    "vibedeps/com.example.hello.aliaser/1.0.0/spec/contract/greeting.md".to_string()
 }
 
 #[test]
@@ -160,7 +164,7 @@ fn render_static_errors_when_a_simple_contribution_carries_an_as_clause() {
     let ws = TempDir::new().unwrap();
     let p = write_simple_boot(
         ws.path(),
-        "flow-bad",
+        "org.demo.bad",
         "# Bad {#root}\n#use spec://org.demo/other/doc#root as dep\nbody\n",
     );
     let b = boot(vec![entry(&p, LinkType::Static, "org.demo/bad")]);
@@ -176,7 +180,11 @@ fn render_static_errors_when_a_simple_contribution_carries_an_as_clause() {
 fn render_static_errors_when_a_simple_contribution_carries_at_bang() {
     // R3: an `@!<Alias>` use is likewise `normal`-format machinery.
     let ws = TempDir::new().unwrap();
-    let p = write_simple_boot(ws.path(), "flow-bad2", "# Bad {#root}\nSees @!dep here.\n");
+    let p = write_simple_boot(
+        ws.path(),
+        "org.demo.bad2",
+        "# Bad {#root}\nSees @!dep here.\n",
+    );
     let b = boot(vec![entry(&p, LinkType::Static, "org.demo/bad2")]);
     let err = render_static(&b, ws.path(), &coord()).unwrap_err();
     let WorkspaceError::InlineCompile { reason } = err else {
@@ -215,8 +223,8 @@ fn fs_section_source_surfaces_qualified_candidates_on_a_short_anchor_miss() {
 /// short link; without per-node qualify the dep's labels would be
 /// mis-attributed to the host's origin. Each package lives in its own
 /// `vibedeps/<slot>/1.0.0/spec/…` slot, matched by the `-<name>` suffix the
-/// resolver keys on (name `host` → slot `demo-host`; name `dep` → slot
-/// `demo-dep`). Returns the host contract's workspace-relative path.
+/// resolver keys on (identity `com.example.host/host` → slot `com.example.host.host`; `com.example.dep/dep` → slot
+/// `com.example.dep.dep`). Returns the host contract's workspace-relative path.
 #[cfg(test)]
 fn write_cross_pkg_fixture(ws: &Path) -> String {
     let write = |slot: &str, rel: &str, body: &str| {
@@ -225,7 +233,7 @@ fn write_cross_pkg_fixture(ws: &Path) -> String {
         fs::write(&p, body).unwrap();
     };
     write(
-        "demo-host",
+        "com.example.host.host",
         "contract/host.md",
         "# Host {#root}\n\
          #use spec://com.example.dep/dep/contract/dep#root\n\
@@ -233,11 +241,11 @@ fn write_cross_pkg_fixture(ws: &Path) -> String {
          HOST_BODY\n",
     );
     write(
-        "demo-dep",
+        "com.example.dep.dep",
         "contract/dep.md",
         "# Dep {#root}\n##THE-RULE the rule\nDEP_BODY\n",
     );
-    "vibedeps/demo-host/1.0.0/spec/contract/host.md".to_string()
+    "vibedeps/com.example.host.host/1.0.0/spec/contract/host.md".to_string()
 }
 
 #[test]

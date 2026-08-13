@@ -99,9 +99,9 @@ fn slot_rel_path(dep: &ResolvedDep) -> String {
         .as_ref()
         .is_some_and(|p| p.materialization.is_in_place());
     if in_place {
-        vibedeps::in_place_slot_rel_path(dep.kind, &dep.name)
+        vibedeps::in_place_slot_rel_path(&dep.group, &dep.name)
     } else {
-        vibedeps::slot_rel_path(dep.kind, &dep.name, &dep.version)
+        vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version)
     }
 }
 

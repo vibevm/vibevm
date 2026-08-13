@@ -34,7 +34,7 @@
 @fact:TWO-TREES **Decision.** A node's authored `spec/` and its materialised dependencies live in physically separate trees. `vibe install` **never writes into any node's authored `spec/`**. @status:impl/done
 
 - @fact:TREE-AUTHORED Authored `spec/` — written only by the node's author. Unchanged definition. @status:impl/done
-- @fact:TREE-VIBEDEPS Materialised dependencies — a `vibedeps/` tree at the **absolute workspace root** (PROP-007 §2.3), written only by `vibe`. One slot per resolved package, `vibedeps/<kind>-<name>/<version>/`, holding the package's published tree verbatim ([PROP-024 §2.2](../../common/PROP-024-code-bearing-packages.md#shippable-tree) re-scopes "published" to the **shippable tree** — source minus build output — for code-bearing packages). A package's prompt content lives under its own `spec/`, so a boot snippet materialises at `vibedeps/<slot>/spec/boot/<file>` (PROP-024 §2.1). Unified resolution (PROP-007 §2.4) guarantees one version per package, so one slot serves the whole workspace. @status:impl/done
+- @fact:TREE-VIBEDEPS Materialised dependencies — a `vibedeps/` tree at the **absolute workspace root** (PROP-007 §2.3), written only by `vibe`. One slot per resolved package, `vibedeps/<group>.<name>/<version>/` (identity-keyed, PROP-022 §2.1 — owner ruling 2026-08-13), holding the package's published tree verbatim ([PROP-024 §2.2](../../common/PROP-024-code-bearing-packages.md#shippable-tree) re-scopes "published" to the **shippable tree** — source minus build output — for code-bearing packages). A package's prompt content lives under its own `spec/`, so a boot snippet materialises at `vibedeps/<slot>/spec/boot/<file>` (PROP-024 §2.1). Unified resolution (PROP-007 §2.4) guarantees one version per package, so one slot serves the whole workspace. @status:impl/done
 - @fact:VIBEDEPS-COMMITTED `vibedeps/` is **committed** to the repository. A fresh clone is immediately bootable with no `vibe install`; the dependency corpus is visible and diffable; this matches the spec-driven principle that the committed spec corpus is the product. @status:impl/done
 
 - @fact:MIRROR-RETIRED **Consequence — the mirror layout is retired.** `VIBEVM-SPEC.md` §13.1's mirror layout (a package's `[writes]` entry is both source and target path) worked only because a dependency landed at one fixed path in every project. @status:impl/done
@@ -195,7 +195,7 @@ when = "os:windows"
 
 @fact:resolved-lead The eight questions opened in draft 1 were resolved in an owner session on 2026-05-21. @status:impl/done
 
-1. @fact:RES-VIBEDEPS **`vibedeps/` directory** — the materialised-dependency tree (§2.1); slot layout `vibedeps/<kind>-<name>/<version>/`. @status:impl/done
+1. @fact:RES-VIBEDEPS **`vibedeps/` directory** — the materialised-dependency tree (§2.1); slot layout `vibedeps/<group>.<name>/<version>/`. @status:impl/done
 2. @fact:RES-REINSTALL **`vibe reinstall`** — the regeneration command (§2.10), replacing the working name `vibe boot`; it regenerates a node and every ancestor to the root, and `--force` re-fetches a subtree from source. @status:impl/done
 3. @fact:RES-INDEX-TOML **`INDEX.md` is a TOML manifest** — `schema` / `static` / `[[entry]]` (§2.3); machine-precise over an LLM-native list. @status:impl/done
 4. @fact:RES-WRITES-RETIRED **`[writes]` is retired** (§2.6) — a package's footprint is its verbatim tree under its `vibedeps/` slot. @status:impl/done

@@ -40,12 +40,12 @@ fn own_tree() -> tempfile::TempDir {
     tmp
 }
 
-/// An installed-package slot under `<root>/vibedeps/flow-demo/0.1.0/` that
+/// An installed-package slot under `<root>/vibedeps/org.demo.demo/0.1.0/` that
 /// carries a real schema-3 map. The carried map is the *checkpoint* a body
 /// edit drifts against. Mirrors `foreign::tests::slot_with_map`, kept local so
 /// the fragment tests are self-contained.
 fn slot_with_map(root: &Path) -> std::path::PathBuf {
-    let slot = root.join("vibedeps/flow-demo/0.1.0");
+    let slot = root.join("vibedeps/org.demo.demo/0.1.0");
     fs::create_dir_all(&slot).unwrap();
     fs::write(
         slot.join("vibe.toml"),

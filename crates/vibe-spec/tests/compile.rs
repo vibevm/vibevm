@@ -72,7 +72,7 @@ fn a_contract_folds_a_source_in_a_different_package() {
     // Package A — the contract. A slot dir is matched by its `-<name>` suffix.
     let contract = ws
         .path()
-        .join("vibedeps/red-pkg-a/1.0.0/spec/contract/SPEC.md");
+        .join("vibedeps/org.alpha.pkg-a/1.0.0/spec/contract/SPEC.md");
     std::fs::create_dir_all(contract.parent().unwrap()).unwrap();
     std::fs::write(
         &contract,
@@ -91,7 +91,7 @@ fn a_contract_folds_a_source_in_a_different_package() {
     // `sec-only` exists only on this side.
     let source = ws
         .path()
-        .join("vibedeps/blue-pkg-b/1.0.0/spec/source/IMPL.md");
+        .join("vibedeps/org.beta.pkg-b/1.0.0/spec/source/IMPL.md");
     std::fs::create_dir_all(source.parent().unwrap()).unwrap();
     std::fs::write(
         &source,
@@ -167,7 +167,7 @@ fn a_contract_currently_fails_when_its_source_package_is_absent() {
     // into `pkg-b`.
     let contract = ws
         .path()
-        .join("vibedeps/red-pkg-a/1.0.0/spec/contract/SPEC.md");
+        .join("vibedeps/org.alpha.pkg-a/1.0.0/spec/contract/SPEC.md");
     std::fs::create_dir_all(contract.parent().unwrap()).unwrap();
     std::fs::write(
         &contract,

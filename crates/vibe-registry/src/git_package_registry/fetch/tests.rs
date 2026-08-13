@@ -570,7 +570,7 @@ fn materialise_in_place_clones_then_updates_the_slot() {
         .unwrap();
 
     // The slot is absent → a fresh clone lands directly in it.
-    let slot = slot_parent.path().join("vibedeps/feat-giant");
+    let slot = slot_parent.path().join("vibedeps/org.vibevm.giant");
     let placed = r.materialise_in_place(&resolved, &slot).unwrap();
     assert_eq!(placed.source_uri, url);
     assert_eq!(placed.source_ref, "v1.0.0");

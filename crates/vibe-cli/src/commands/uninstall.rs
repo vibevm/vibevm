@@ -43,7 +43,7 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
         bail!("`{pkgref}` resolved without a group — internal: `qualify_locked` should qualify");
     };
 
-    // The materialised slot is keyed by `(kind, name, version)`; the
+    // The materialised slot is keyed by `(group, name, version)`; the
     // resolved version and the package `kind` (metadata) are both read
     // from the lockfile entry.
     let locked = lockfile.find(group, &pkgref.name).ok_or_else(|| {
@@ -55,18 +55,17 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
         )
     })?;
     let version = locked.version.clone();
-    let kind = locked.kind;
     // The recorded materialization mode drives the PROP-022 §2.6 destructive
     // guard below — an in-place slot is a non-vendored git clone.
     let mode = locked.materialization;
 
     // The slot path depends on the mode: an in-place slot is the unversioned
-    // `vibedeps/<kind>-<name>/` git working tree (PROP-022 §2.4); every other
+    // `vibedeps/<group>.<name>/` git working tree (PROP-022 §2.4); every other
     // mode is the versioned slot.
     let slot = if mode.is_in_place() {
-        vibedeps::in_place_slot_rel_path(kind, &pkgref.name)
+        vibedeps::in_place_slot_rel_path(&locked.group, &pkgref.name)
     } else {
-        vibedeps::slot_rel_path(kind, &pkgref.name, &version)
+        vibedeps::slot_rel_path(&locked.group, &pkgref.name, &version)
     };
     if !ctx.is_json() && !ctx.is_quiet() {
         ctx.heading(&format!(
@@ -123,10 +122,10 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
     // Remove the package's materialised slot — the unversioned in-place git
     // working tree, or the versioned snapshot/hardlink slot.
     if mode.is_in_place() {
-        vibedeps::remove_in_place_slot(&workspace.root, kind, &pkgref.name)
+        vibedeps::remove_in_place_slot(&workspace.root, &locked.group, &pkgref.name)
             .context("removing the in-place vibedeps/ slot")?;
     } else {
-        vibedeps::remove_slot(&workspace.root, kind, &pkgref.name, &version)
+        vibedeps::remove_slot(&workspace.root, &locked.group, &pkgref.name, &version)
             .context("removing the vibedeps/ slot")?;
     }
 

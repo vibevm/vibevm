@@ -4,7 +4,7 @@
 //! absolute workspace root, one slot per package:
 //!
 //! ```text
-//! <workspace-root>/vibedeps/<kind>-<name>/<version>/
+//! <workspace-root>/vibedeps/<group>.<name>/<version>/
 //! ```
 //!
 //! The slot holds the package's published tree **verbatim**. Unified
@@ -24,7 +24,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use vibe_core::PackageKind;
+use vibe_core::Group;
 
 use crate::WorkspaceError;
 
@@ -32,25 +32,25 @@ use crate::WorkspaceError;
 pub const VIBEDEPS_DIR: &str = "vibedeps";
 
 /// The slot path for one resolved package, relative to the workspace root
-/// and forward-slashed: `vibedeps/<kind>-<name>/<version>`.
+/// and forward-slashed: `vibedeps/<group>.<name>/<version>`.
 ///
 /// Root-relative and forward-slashed so it is portable across machines —
 /// the same property [`WorkspaceMember::rel_path`](crate::WorkspaceMember)
 /// carries.
-pub fn slot_rel_path(kind: PackageKind, name: &str, version: &semver::Version) -> String {
-    format!("{VIBEDEPS_DIR}/{kind}-{name}/{version}")
+pub fn slot_rel_path(group: &Group, name: &str, version: &semver::Version) -> String {
+    format!("{VIBEDEPS_DIR}/{group}.{name}/{version}")
 }
 
 /// The absolute on-disk slot path — `workspace_root` joined with
 /// [`slot_rel_path`]. In-memory only; never persist an absolute path.
 pub fn slot_abs_path(
     workspace_root: &Path,
-    kind: PackageKind,
+    group: &Group,
     name: &str,
     version: &semver::Version,
 ) -> PathBuf {
     let mut p = workspace_root.join(VIBEDEPS_DIR);
-    p.push(format!("{kind}-{name}"));
+    p.push(format!("{group}.{name}"));
     p.push(version.to_string());
     p
 }
@@ -58,16 +58,16 @@ pub fn slot_abs_path(
 /// `true` iff the slot for this package already exists on disk.
 pub fn is_materialised(
     workspace_root: &Path,
-    kind: PackageKind,
+    group: &Group,
     name: &str,
     version: &semver::Version,
 ) -> bool {
-    slot_abs_path(workspace_root, kind, name, version).is_dir()
+    slot_abs_path(workspace_root, group, name, version).is_dir()
 }
 
 /// Materialise a resolved package into its `vibedeps/` slot — copy the
 /// package's published content tree (`content_src`) verbatim into
-/// `vibedeps/<kind>-<name>/<version>/`.
+/// `vibedeps/<group>.<name>/<version>/`.
 ///
 /// **Idempotent.** An existing slot is cleared first, so re-materialising
 /// the same package yields a byte-identical slot and stale files from an
@@ -83,14 +83,14 @@ pub fn is_materialised(
 /// the materialised footprint.
 pub fn materialise(
     workspace_root: &Path,
-    kind: PackageKind,
+    group: &Group,
     name: &str,
     version: &semver::Version,
     content_src: &Path,
 ) -> Result<Vec<PathBuf>, WorkspaceError> {
     materialise_with(
         workspace_root,
-        kind,
+        group,
         name,
         version,
         content_src,
@@ -115,14 +115,14 @@ pub enum CopyMode {
 /// footprint is identical — only the on-disk byte-sharing differs.
 pub fn materialise_with(
     workspace_root: &Path,
-    kind: PackageKind,
+    group: &Group,
     name: &str,
     version: &semver::Version,
     content_src: &Path,
     mode: CopyMode,
 ) -> Result<Vec<PathBuf>, WorkspaceError> {
-    let slot = slot_abs_path(workspace_root, kind, name, version);
-    let slot_label = slot_rel_path(kind, name, version);
+    let slot = slot_abs_path(workspace_root, group, name, version);
+    let slot_label = slot_rel_path(group, name, version);
 
     if !content_src.is_dir() {
         return Err(WorkspaceError::Io {
@@ -150,11 +150,11 @@ pub fn materialise_with(
 /// slot was present and deleted, `false` when there was nothing to remove.
 pub fn remove_slot(
     workspace_root: &Path,
-    kind: PackageKind,
+    group: &Group,
     name: &str,
     version: &semver::Version,
 ) -> Result<bool, WorkspaceError> {
-    let slot = slot_abs_path(workspace_root, kind, name, version);
+    let slot = slot_abs_path(workspace_root, group, name, version);
     if !slot.exists() {
         return Ok(false);
     }
@@ -165,34 +165,34 @@ pub fn remove_slot(
 // --- in-place materialization (PROP-022 §2.4) ---------------------------
 //
 // An `in-place` package is placed as a project-local git working tree in an
-// **unversioned** slot — `vibedeps/<kind>-<name>/` with no `/<version>/` —
+// **unversioned** slot — `vibedeps/<group>.<name>/` with no `/<version>/` —
 // keeping its `.git` so git manages it in place. The slot is moved into
 // position from a fetched clone (no per-file snapshot copy) and `.gitignore`d
 // (not vendored, §2.7).
 
 /// The unversioned slot path for an `in-place` package, relative to the
-/// workspace root and forward-slashed: `vibedeps/<kind>-<name>` (PROP-022
+/// workspace root and forward-slashed: `vibedeps/<group>.<name>` (PROP-022
 /// §2.4 — one working clone whose version is the current git ref, so the
 /// path carries no `/<version>/`).
-pub fn in_place_slot_rel_path(kind: PackageKind, name: &str) -> String {
-    format!("{VIBEDEPS_DIR}/{kind}-{name}")
+pub fn in_place_slot_rel_path(group: &Group, name: &str) -> String {
+    format!("{VIBEDEPS_DIR}/{group}.{name}")
 }
 
 /// The absolute on-disk path of an `in-place` slot — `workspace_root` joined
 /// with [`in_place_slot_rel_path`]. In-memory only; never persisted.
-pub fn in_place_slot_abs_path(workspace_root: &Path, kind: PackageKind, name: &str) -> PathBuf {
+pub fn in_place_slot_abs_path(workspace_root: &Path, group: &Group, name: &str) -> PathBuf {
     workspace_root
         .join(VIBEDEPS_DIR)
-        .join(format!("{kind}-{name}"))
+        .join(format!("{group}.{name}"))
 }
 
 /// `true` iff an `in-place` slot is materialised for this package — the
 /// unversioned slot directory exists and is a git working tree (carries
 /// `.git`). The `.git` presence is what distinguishes an in-place slot from
-/// a `<kind>-<name>/` directory that merely groups versioned snapshot slots,
+/// a `<group>.<name>/` directory that merely groups versioned snapshot slots,
 /// so [`prune_stale_slots`](crate::install) leaves it untouched.
-pub fn is_in_place_slot(workspace_root: &Path, kind: PackageKind, name: &str) -> bool {
-    in_place_slot_abs_path(workspace_root, kind, name)
+pub fn is_in_place_slot(workspace_root: &Path, group: &Group, name: &str) -> bool {
+    in_place_slot_abs_path(workspace_root, group, name)
         .join(".git")
         .exists()
 }
@@ -206,17 +206,17 @@ pub fn is_in_place_slot(workspace_root: &Path, kind: PackageKind, name: &str) ->
 /// git working tree manageable in place.
 pub fn materialise_in_place(
     workspace_root: &Path,
-    kind: PackageKind,
+    group: &Group,
     name: &str,
     clone_src: &Path,
 ) -> Result<(), WorkspaceError> {
-    let slot = in_place_slot_abs_path(workspace_root, kind, name);
+    let slot = in_place_slot_abs_path(workspace_root, group, name);
     if !clone_src.is_dir() {
         return Err(WorkspaceError::Io {
             path: clone_src.to_path_buf(),
             reason: format!(
                 "in-place clone source for `{}` does not exist or is not a directory",
-                in_place_slot_rel_path(kind, name)
+                in_place_slot_rel_path(group, name)
             ),
         });
     }
@@ -233,10 +233,10 @@ pub fn materialise_in_place(
 /// Remove an `in-place` slot if present. Returns `true` when one was deleted.
 pub fn remove_in_place_slot(
     workspace_root: &Path,
-    kind: PackageKind,
+    group: &Group,
     name: &str,
 ) -> Result<bool, WorkspaceError> {
-    let slot = in_place_slot_abs_path(workspace_root, kind, name);
+    let slot = in_place_slot_abs_path(workspace_root, group, name);
     if !slot.exists() {
         return Ok(false);
     }

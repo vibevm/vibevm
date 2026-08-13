@@ -171,7 +171,7 @@ pub fn check(workspace: &Workspace, lockfile: &Lockfile) -> Freshness {
     // be tolerated. A fresh clone with a committed `vibedeps/` satisfies
     // this; a gitignored or hand-deleted slot does not.
     for p in &lockfile.packages {
-        if !vibedeps::is_materialised(&workspace.root, p.kind, p.name.as_str(), &p.version) {
+        if !vibedeps::is_materialised(&workspace.root, &p.group, p.name.as_str(), &p.version) {
             return stale(format!(
                 "`{}/{}@{}` has no materialised vibedeps/ slot",
                 p.group, p.name, p.version
@@ -267,7 +267,6 @@ mod tests {
     use std::fs;
     use std::path::Path;
     use tempfile::TempDir;
-    use vibe_core::PackageKind;
 
     fn write(dir: &Path, rel: &str, body: &str) {
         let p = dir.join(rel);
@@ -310,8 +309,9 @@ mod tests {
 
     /// Create an empty `vibedeps/` slot directory so `is_materialised`
     /// reports the package as present.
-    fn materialise_slot(ws: &Workspace, kind: PackageKind, name: &str, version: &str) {
-        fs::create_dir_all(ws.vibedeps_slot(kind, name, &ver(version))).unwrap();
+    fn materialise_slot(ws: &Workspace, name: &str, version: &str) {
+        let group = vibe_core::Group::parse("org.vibevm").unwrap();
+        fs::create_dir_all(ws.vibedeps_slot(&group, name, &ver(version))).unwrap();
     }
 
     /// A `[[package]]` table for a registry-resolved dependency. Carries a
@@ -362,7 +362,7 @@ mod tests {
         let (_t, ws) =
             workspace_with_requires("[requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n");
         let lf = lockfile(&["org.vibevm/wal"], &registry_pkg("flow", "wal", "0.3.2"));
-        materialise_slot(&ws, PackageKind::Flow, "wal", "0.3.2");
+        materialise_slot(&ws, "wal", "0.3.2");
         assert_eq!(check(&ws, &lf), Freshness::Fresh);
     }
 
@@ -383,7 +383,7 @@ mod tests {
         let (_t, ws) =
             workspace_with_requires("[requires.packages]\n\"org.vibevm/wal\" = \"^0.4\"\n");
         let lf = lockfile(&["org.vibevm/wal"], &registry_pkg("flow", "wal", "0.3.2"));
-        materialise_slot(&ws, PackageKind::Flow, "wal", "0.3.2");
+        materialise_slot(&ws, "wal", "0.3.2");
         match check(&ws, &lf) {
             Freshness::Stale(r) => assert!(r.contains("outside the constraint"), "{r}"),
             other => panic!("expected Stale, got {other:?}"),
@@ -397,7 +397,7 @@ mod tests {
         let (_t, ws) =
             workspace_with_requires("[requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n");
         let lf = lockfile(&["org.vibevm/wal"], &registry_pkg("flow", "wal", "0.3.2"));
-        materialise_slot(&ws, PackageKind::Flow, "wal", "0.3.2");
+        materialise_slot(&ws, "wal", "0.3.2");
         assert!(check(&ws, &lf).is_fresh());
     }
 
@@ -415,8 +415,8 @@ mod tests {
                 registry_pkg("feat", "auth", "1.0.0"),
             ),
         );
-        materialise_slot(&ws, PackageKind::Flow, "wal", "0.3.2");
-        materialise_slot(&ws, PackageKind::Feat, "auth", "1.0.0");
+        materialise_slot(&ws, "wal", "0.3.2");
+        materialise_slot(&ws, "auth", "1.0.0");
         match check(&ws, &lf) {
             Freshness::Stale(r) => assert!(r.contains("root set"), "{r}"),
             other => panic!("expected Stale, got {other:?}"),
@@ -461,7 +461,7 @@ mod tests {
             &["org.vibevm/wal"],
             &local_pkg("flow", "wal", "0.3.2", &src),
         );
-        materialise_slot(&ws, PackageKind::Flow, "wal", "0.3.2");
+        materialise_slot(&ws, "wal", "0.3.2");
         match check(&ws, &lf) {
             Freshness::Stale(r) => assert!(
                 r.contains("in-workspace file://") && r.contains("mutable working tree"),
@@ -482,7 +482,7 @@ mod tests {
             &["org.vibevm/wal"],
             &local_pkg("flow", "wal", "0.3.2", "file:///external/registry/wal"),
         );
-        materialise_slot(&ws, PackageKind::Flow, "wal", "0.3.2");
+        materialise_slot(&ws, "wal", "0.3.2");
         assert!(check(&ws, &lf).is_fresh());
     }
 
@@ -500,7 +500,7 @@ mod tests {
             &["org.vibevm/giant"],
             &local_in_place_pkg("feat", "giant", "1.0.0", &src),
         );
-        materialise_slot(&ws, PackageKind::Feat, "giant", "1.0.0");
+        materialise_slot(&ws, "giant", "1.0.0");
         assert!(check(&ws, &lf).is_fresh());
     }
 

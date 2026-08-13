@@ -155,9 +155,13 @@ impl FileResolver {
                 self_name: name.clone(),
                 version: v.clone(),
             }),
-            Authority::Package { name, version, .. } => {
-                Ok(self.package_slot(name, version.as_deref())?.join("spec"))
-            }
+            Authority::Package {
+                group,
+                name,
+                version,
+            } => Ok(self
+                .package_slot(group, name, version.as_deref())?
+                .join("spec")),
             Authority::Host(h) => Err(ResolveError::LegacyHostAuthority {
                 given: h.clone(),
                 hint: self.legacy_host_hint(h),
@@ -189,26 +193,28 @@ impl FileResolver {
         }
     }
 
-    /// Find a package's materialised slot: `vibedeps/<kind>-<name>/<version>`.
-    /// The address carries no `kind`, so the slot is matched by the `-<name>`
-    /// suffix (kind + name is unique). An explicit `@version` names the slot
-    /// version; an absent one resolves to the **freshest installed** version
-    /// (semver-newest; the owner's optional-version rule, B-028 2026-08-04). A
-    /// directory whose name does not look like a version (it does not start
-    /// with a digit) is ignored as a candidate — if none remain, the slot is
-    /// treated as not installed. Lockfile-backed selection is the layer above.
-    fn package_slot(&self, name: &str, version: Option<&str>) -> Result<PathBuf, ResolveError> {
-        let vibedeps = self.ws_root.join("vibedeps");
-        let suffix = format!("-{name}");
-        let slot_dir = read_dir_or_empty(&vibedeps)
-            .map(|e| e.path())
-            .find(|p| {
-                p.is_dir()
-                    && p.file_name()
-                        .and_then(|s| s.to_str())
-                        .is_some_and(|n| n.ends_with(&suffix))
-            })
-            .ok_or_else(|| ResolveError::PackageSlotNotFound(name.to_string()))?;
+    /// Find a package's materialised slot: `vibedeps/<group>.<name>/<version>`
+    /// (PROP-022 §2.1 — the slot is keyed by identity, so the address's own
+    /// `<group>/<name>` names the directory exactly; no suffix scan). An
+    /// explicit `@version` names the slot version; an absent one resolves to
+    /// the **freshest installed** version (semver-newest; the owner's
+    /// optional-version rule, B-028 2026-08-04). A directory whose name does
+    /// not look like a version (it does not start with a digit) is ignored as
+    /// a candidate — if none remain, the slot is treated as not installed.
+    /// Lockfile-backed selection is the layer above.
+    fn package_slot(
+        &self,
+        group: &str,
+        name: &str,
+        version: Option<&str>,
+    ) -> Result<PathBuf, ResolveError> {
+        let slot_dir = self
+            .ws_root
+            .join("vibedeps")
+            .join(format!("{group}.{name}"));
+        if !slot_dir.is_dir() {
+            return Err(ResolveError::PackageSlotNotFound(name.to_string()));
+        }
 
         match version {
             Some(v) => Ok(slot_dir.join(v)),
@@ -380,7 +386,7 @@ mod tests {
         let ws = tempfile::TempDir::new().unwrap();
         let doc = ws
             .path()
-            .join("vibedeps/flow-demo/1.0.0/spec/contract/API.md");
+            .join("vibedeps/org.vibevm.demo.demo/1.0.0/spec/contract/API.md");
         fs::create_dir_all(doc.parent().unwrap()).unwrap();
         fs::write(&doc, "# API\n").unwrap();
         let r = FileResolver::new(ws.path(), host_coord());
@@ -463,8 +469,8 @@ mod tests {
     /// Build a vibedeps slot `<kind>-<name>` holding the given installed
     /// versions, each with `spec/API.md` (the doc every F-test resolves).
     /// Returns the slot path so a caller may add non-version neighbours.
-    fn make_versions(ws: &Path, kind: &str, name: &str, versions: &[&str]) -> PathBuf {
-        let slot = ws.join("vibedeps").join(format!("{kind}-{name}"));
+    fn make_versions(ws: &Path, group: &str, name: &str, versions: &[&str]) -> PathBuf {
+        let slot = ws.join("vibedeps").join(format!("{group}.{name}"));
         for v in versions {
             let dir = slot.join(v).join("spec");
             fs::create_dir_all(&dir).unwrap();
@@ -477,7 +483,7 @@ mod tests {
     fn f1_a_single_installed_version_is_taken() {
         // F1: one installed version — an absent `@version` takes it (as before).
         let ws = tempfile::TempDir::new().unwrap();
-        make_versions(ws.path(), "flow", "widget", &["1.0.0"]);
+        make_versions(ws.path(), "org.demo", "widget", &["1.0.0"]);
         let r = FileResolver::new(ws.path(), host_coord());
         let addr = SpecAddress::parse("spec://org.demo/widget/API").unwrap();
         let file = r.resolve_file(&addr).unwrap();
@@ -489,7 +495,7 @@ mod tests {
         // F2: `0.9.0` and `0.10.0` — the freshest is `0.10.0` (numeric segment
         // compare, not lexicographic).
         let ws = tempfile::TempDir::new().unwrap();
-        make_versions(ws.path(), "flow", "widget", &["0.9.0", "0.10.0"]);
+        make_versions(ws.path(), "org.demo", "widget", &["0.9.0", "0.10.0"]);
         let r = FileResolver::new(ws.path(), host_coord());
         let addr = SpecAddress::parse("spec://org.demo/widget/API").unwrap();
         let file = r.resolve_file(&addr).unwrap();
@@ -500,7 +506,7 @@ mod tests {
     fn f3_a_release_beats_its_pre_release() {
         // F3: `1.0.0` and `1.0.0-alpha` — the release `1.0.0` is fresher.
         let ws = tempfile::TempDir::new().unwrap();
-        make_versions(ws.path(), "flow", "widget", &["1.0.0", "1.0.0-alpha"]);
+        make_versions(ws.path(), "org.demo", "widget", &["1.0.0", "1.0.0-alpha"]);
         let r = FileResolver::new(ws.path(), host_coord());
         let addr = SpecAddress::parse("spec://org.demo/widget/API").unwrap();
         let file = r.resolve_file(&addr).unwrap();
@@ -512,7 +518,7 @@ mod tests {
         // F4: an explicit `@version` names the exact slot — including one that
         // is NOT the freshest (pinning `1.0.0` under a newer `2.0.0`).
         let ws = tempfile::TempDir::new().unwrap();
-        make_versions(ws.path(), "flow", "widget", &["1.0.0", "2.0.0"]);
+        make_versions(ws.path(), "org.demo", "widget", &["1.0.0", "2.0.0"]);
         let r = FileResolver::new(ws.path(), host_coord());
         let addr = SpecAddress::parse("spec://org.demo/widget@1.0.0/API").unwrap();
         let file = r.resolve_file(&addr).unwrap();
@@ -525,7 +531,7 @@ mod tests {
         // holds only a non-version folder (`notes`, B-028 У1): such a directory
         // is not a version candidate, so the candidate set is empty.
         let ws = tempfile::TempDir::new().unwrap();
-        let slot = make_versions(ws.path(), "flow", "widget", &[]);
+        let slot = make_versions(ws.path(), "org.demo", "widget", &[]);
         fs::create_dir_all(slot.join("notes")).unwrap();
         let r = FileResolver::new(ws.path(), host_coord());
         let addr = SpecAddress::parse("spec://org.demo/widget/API").unwrap();
@@ -540,7 +546,7 @@ mod tests {
     fn f6_more_segments_at_equal_prefix_is_newer() {
         // F6: `1.2` and `1.2.1` — the freshest is `1.2.1` (more segments).
         let ws = tempfile::TempDir::new().unwrap();
-        make_versions(ws.path(), "flow", "widget", &["1.2", "1.2.1"]);
+        make_versions(ws.path(), "org.demo", "widget", &["1.2", "1.2.1"]);
         let r = FileResolver::new(ws.path(), host_coord());
         let addr = SpecAddress::parse("spec://org.demo/widget/API").unwrap();
         let file = r.resolve_file(&addr).unwrap();

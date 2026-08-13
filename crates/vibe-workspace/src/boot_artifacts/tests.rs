@@ -79,7 +79,7 @@ pub(super) fn entry_normal(path: &str, origin: &str) -> BootEntry {
 /// (so the compile must tree-shake it away, PROP-035 §7.2).
 #[cfg(test)]
 fn write_greeter_fixture(ws: &Path) -> String {
-    let base = ws.join("vibedeps/flow-greeter/1.0.0/spec");
+    let base = ws.join("vibedeps/com.example.hello.greeter/1.0.0/spec");
     let write = |rel: &str, body: &str| {
         let p = base.join(rel);
         fs::create_dir_all(p.parent().unwrap()).unwrap();
@@ -101,7 +101,7 @@ fn write_greeter_fixture(ws: &Path) -> String {
         "contract/unused.md",
         "# Unused {#root}\n\nUNUSED_SHOULD_NOT_APPEAR\n",
     );
-    "vibedeps/flow-greeter/1.0.0/spec/contract/greeting.md".to_string()
+    "vibedeps/com.example.hello.greeter/1.0.0/spec/contract/greeting.md".to_string()
 }
 
 #[test]
@@ -120,7 +120,7 @@ fn render_index_carries_static_and_dynamic_entries_in_order() {
         entry("spec/boot/00-core.md", LinkType::Dynamic, "."),
         // Conditional (a `when`) → gated INCLUDE (kind "dynamic").
         entry_when(
-            "vibedeps/stack-rust/2.1.0/boot/rust.md",
+            "vibedeps/org.vibevm.rust/2.1.0/boot/rust.md",
             LinkType::Dynamic,
             Some(WhenCondition::Os(TargetOs::Linux)),
             "stack:rust",
@@ -150,7 +150,7 @@ fn render_index_inline_pointer_present_only_with_static_entries() {
 
     let with = render_index(
         &boot(vec![entry(
-            "vibedeps/flow-crit/1.0.0/boot.md",
+            "vibedeps/org.vibevm.crit/1.0.0/boot.md",
             LinkType::Static,
             "flow:crit",
         )]),
@@ -167,7 +167,7 @@ fn render_index_inline_pointer_present_only_with_static_entries() {
 #[test]
 fn render_index_emits_when_on_a_dynamic_entry() {
     let b = boot(vec![entry_when(
-        "vibedeps/stack-windows/1.0.0/boot.md",
+        "vibedeps/org.vibevm.windows/1.0.0/boot.md",
         LinkType::Dynamic,
         Some(WhenCondition::Os(TargetOs::Windows)),
         "stack:windows",
@@ -186,7 +186,7 @@ fn render_index_unconditional_entry_is_kind_static() {
     // A dynamically-linked entry with no `when` is read directly — kind
     // "static", and no `when` key.
     let b = boot(vec![entry_when(
-        "vibedeps/stack-rust/2.1.0/boot.md",
+        "vibedeps/org.vibevm.rust/2.1.0/boot.md",
         LinkType::Dynamic,
         None,
         "stack:rust",
@@ -206,7 +206,7 @@ fn render_index_excludes_static_lane_entries() {
     // the dynamic entry is indexed.
     let b = boot(vec![
         entry(
-            "vibedeps/flow-crit/1.0.0/boot.md",
+            "vibedeps/org.vibevm.crit/1.0.0/boot.md",
             LinkType::Static,
             "flow:crit",
         ),
@@ -231,12 +231,12 @@ fn render_static_is_none_without_static_entries() {
 #[test]
 fn render_static_concatenates_contributions_verbatim() {
     let ws = TempDir::new().unwrap();
-    let crit = ws.path().join("vibedeps/flow-crit/1.0.0/boot.md");
+    let crit = ws.path().join("vibedeps/org.vibevm.crit/1.0.0/boot.md");
     fs::create_dir_all(crit.parent().unwrap()).unwrap();
     fs::write(&crit, "# Critical discipline\n\nAlways do the thing.").unwrap();
 
     let b = boot(vec![entry(
-        "vibedeps/flow-crit/1.0.0/boot.md",
+        "vibedeps/org.vibevm.crit/1.0.0/boot.md",
         LinkType::Static,
         "flow:crit",
     )]);
@@ -252,7 +252,7 @@ fn render_static_expands_an_embed_directive() {
     // The payoff (PROP-035 §8): a #embed in a static contribution is
     // expanded when STATIC.md is compiled.
     let ws = TempDir::new().unwrap();
-    let contrib = ws.path().join("vibedeps/flow-x/1.0.0/boot.md");
+    let contrib = ws.path().join("vibedeps/org.vibevm.x/1.0.0/boot.md");
     fs::create_dir_all(contrib.parent().unwrap()).unwrap();
     fs::write(
         &contrib,
@@ -264,7 +264,7 @@ fn render_static_expands_an_embed_directive() {
     fs::write(&target, "# Target {#root}\nEMBEDDED CONTENT").unwrap();
 
     let b = boot(vec![entry(
-        "vibedeps/flow-x/1.0.0/boot.md",
+        "vibedeps/org.vibevm.x/1.0.0/boot.md",
         LinkType::Static,
         "flow:x",
     )]);
@@ -278,11 +278,11 @@ fn render_static_without_directives_is_left_verbatim() {
     // The guard: a directive-free lane is not touched by the compiler, so
     // vibevm's own boot stays byte-identical until it adopts the format.
     let ws = TempDir::new().unwrap();
-    let contrib = ws.path().join("vibedeps/flow-y/1.0.0/boot.md");
+    let contrib = ws.path().join("vibedeps/org.vibevm.y/1.0.0/boot.md");
     fs::create_dir_all(contrib.parent().unwrap()).unwrap();
     fs::write(&contrib, "# Y\n\nplain boot content, no directives.").unwrap();
     let b = boot(vec![entry(
-        "vibedeps/flow-y/1.0.0/boot.md",
+        "vibedeps/org.vibevm.y/1.0.0/boot.md",
         LinkType::Static,
         "flow:y",
     )]);
@@ -393,7 +393,7 @@ fn render_static_normal_differs_from_simple_on_the_same_file() {
 fn render_static_errors_on_a_missing_contribution() {
     let ws = TempDir::new().unwrap();
     let b = boot(vec![entry(
-        "vibedeps/flow-gone/1.0.0/boot.md",
+        "vibedeps/org.vibevm.gone/1.0.0/boot.md",
         LinkType::Static,
         "flow:gone",
     )]);

@@ -149,12 +149,12 @@ fn exhibit_a_append_only_composition_is_byte_stable() {
     let ws = TempDir::new().unwrap();
     let alpha = write_simple_boot(
         ws.path(),
-        "flow-alpha",
+        "org.demo.alpha",
         "# Alpha {#root}\n\n##THE-RULE the alpha rule.\n",
     );
     let beta = write_simple_boot(
         ws.path(),
-        "flow-beta",
+        "org.demo.beta",
         "# Beta {#root}\n\n##THE-RULE the beta rule.\n",
     );
     let origin_a = "org.demo/alpha";
@@ -248,7 +248,7 @@ fn exhibit_b_alias_survives_a_cleaned_carrier() {
     // only through B's `#use`, exactly as the aliaser fixture's prelude is.
     write_spec_doc(
         ws.path(),
-        "flow-alpha",
+        "org.demo.alpha",
         "rule.md",
         "# The canonical rule {#root}\n\nRULE_BODY — the alpha source-of-truth.\n",
     );
@@ -259,7 +259,7 @@ fn exhibit_b_alias_survives_a_cleaned_carrier() {
     // whole compiled closure is qualified.
     let beta_contract = write_spec_doc(
         ws.path(),
-        "flow-beta",
+        "org.demo.beta",
         "boot/contract.md",
         "# Beta contract {#beta-root}\n\
          #use spec://org.demo/alpha/rule#root as ARULE\n\
@@ -290,7 +290,7 @@ fn exhibit_b_alias_survives_a_cleaned_carrier() {
 
     // (2) The alias's address resolves through the FILE resolver against the
     // `vibedeps/` SOURCE tree — `section_text` reads
-    // `vibedeps/flow-alpha/1.0.0/spec/rule.md`. The resolver never consults the
+    // `vibedeps/org.demo.alpha/1.0.0/spec/rule.md`. The resolver never consults the
     // lane string: it is constructed from the workspace root and reads only the
     // source files. The alias binds to the address, never to compiled text.
     let src = FsSectionSource::new(FileResolver::new(ws.path(), coord()));
@@ -333,12 +333,12 @@ fn exhibit_c_a_missed_short_anchor_answers_with_qualified_heirs() {
     let ws = TempDir::new().unwrap();
     let alpha = write_simple_boot(
         ws.path(),
-        "flow-alpha",
+        "org.demo.alpha",
         "# Alpha {#root}\n\n##THE-RULE the alpha rule.\n",
     );
     let beta = write_simple_boot(
         ws.path(),
-        "flow-beta",
+        "org.demo.beta",
         "# Beta {#root}\n\n##THE-RULE the beta rule.\n",
     );
     let lane_ab = render_static(

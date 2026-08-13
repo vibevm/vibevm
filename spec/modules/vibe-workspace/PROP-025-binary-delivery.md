@@ -115,7 +115,7 @@ crate = "crates/rust-ai-native-cli" # package-relative crate directory
 
 - @fact:CROSS-DEP-IMPOSSIBLE A stack crate cannot Cargo-`path`-dep on a core-ai-native crate across
   slots: the authored layout (`packages/org.vibevm/<name>/v<ver>/`) and the
-  materialised layout (`vibedeps/<kind>-<name>/<ver>/`) disagree on both
+  materialised layout (`vibedeps/<group>.<name>/<ver>/`) disagree on both
   directory naming and version prefix, and each slot must stay a
   self-buildable workspace (PROP-024 §2.4). @status:impl/done
 - @fact:V1-VENDOR-SYNC v1 answers this with

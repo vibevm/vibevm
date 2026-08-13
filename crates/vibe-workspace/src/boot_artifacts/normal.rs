@@ -70,7 +70,7 @@ pub(super) fn compile_normal_entry(
 /// `origin` is the entry's `<group>/<name>` provenance (a hoisted entry may
 /// append a ` [shared by …]` suffix, dropped here); `path` is the
 /// workspace-relative path of the contract inside the package's `vibedeps/`
-/// slot (e.g. `vibedeps/flow-greeter/1.0.0/spec/contract/greeting.md`). The
+/// slot (e.g. `vibedeps/com.example.hello.greeter/1.0.0/spec/contract/greeting.md`). The
 /// doc-path is the segment after the slot's `spec/` root minus the `.md`
 /// extension (`contract/greeting`); the seed carries no anchor, so it names the
 /// whole document (`DocTree` resolves an empty anchor to the root). Returns
@@ -97,7 +97,7 @@ mod tests {
         // origin, doc-path from the slot's `spec/` root minus `.md`.
         let s = normal_seed(
             "com.example.hello/greeter",
-            "vibedeps/flow-greeter/1.0.0/spec/contract/greeting.md",
+            "vibedeps/com.example.hello.greeter/1.0.0/spec/contract/greeting.md",
         )
         .unwrap();
         assert_eq!(
@@ -108,7 +108,7 @@ mod tests {
         // A hoisted entry's ` [shared by …]` origin suffix is dropped.
         let h = normal_seed(
             "com.example.hello/greeter [shared by a/b]",
-            "vibedeps/flow-greeter/1.0.0/spec/contract/greeting.md",
+            "vibedeps/com.example.hello.greeter/1.0.0/spec/contract/greeting.md",
         )
         .unwrap();
         assert_eq!(

@@ -22,7 +22,7 @@ use anyhow::{Context, Result, bail};
 use dialoguer::Confirm;
 use vibe_core::manifest::{LockedPackage, Lockfile, Manifest, SourceKind};
 use vibe_core::user_config::SlotIntegrity;
-use vibe_core::{Group, PackageKind, PackageRef, VersionSpec};
+use vibe_core::{Group, PackageRef, VersionSpec};
 use vibe_install::InstallSource;
 use vibe_registry::{CachedPackage, ResolvedPackage};
 use vibe_workspace::Workspace;
@@ -43,7 +43,6 @@ use crate::output;
 /// confirmation instead of re-cloned.
 struct PendingInPlace {
     pkgref: PackageRef,
-    kind: PackageKind,
     group: Group,
     name: String,
     version: semver::Version,
@@ -155,11 +154,10 @@ pub fn run(ctx: &output::Context, args: UpdateArgs, embedded_root: Option<PathBu
         let pkgref = exact_pinned_pkgref(node);
         if let Some(old) = lockfile.find(&node.group, &node.name)
             && old.materialization.is_in_place()
-            && vibedeps::is_in_place_slot(&workspace.root, old.kind, &node.name)
+            && vibedeps::is_in_place_slot(&workspace.root, &old.group, &node.name)
         {
             pending_in_place.push(PendingInPlace {
                 pkgref,
-                kind: old.kind,
                 group: node.group.clone(),
                 name: node.name.clone(),
                 version: node.version.clone(),
@@ -200,13 +198,13 @@ pub fn run(ctx: &output::Context, args: UpdateArgs, embedded_root: Option<PathBu
     // which signals "already placed" to the materialise pass (it runs the hook
     // but skips any move).
     for p in pending_in_place {
-        let slot = vibedeps::in_place_slot_abs_path(&workspace.root, p.kind, &p.name);
+        let slot = vibedeps::in_place_slot_abs_path(&workspace.root, &p.group, &p.name);
         let placed = resolver
             .materialise_in_place(&p.pkgref, &slot)
             .with_context(|| format!("updating in-place `{}/{}`", p.group, p.name))?;
         vibedeps::ensure_gitignored(
             &workspace.root,
-            &vibedeps::in_place_slot_rel_path(p.kind, &p.name),
+            &vibedeps::in_place_slot_rel_path(&p.group, &p.name),
         )
         .context("gitignoring the in-place slot")?;
         let cached = CachedPackage {
@@ -283,7 +281,7 @@ pub fn run(ctx: &output::Context, args: UpdateArgs, embedded_root: Option<PathBu
             cached.resolved.group, name, old_v, cached.resolved.version
         ));
         if !cached.package_meta().materialization.is_in_place() {
-            vibedeps::remove_slot(&workspace.root, cached.package_meta().kind, name, &old_v)
+            vibedeps::remove_slot(&workspace.root, &cached.package_meta().group, name, &old_v)
                 .context("removing the superseded vibedeps/ slot")?;
         }
     }

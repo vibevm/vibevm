@@ -28,7 +28,7 @@ use specmark::verifies;
 /// (so this test cannot silently duplicate the project-registry path), and
 /// the install resolves through the global layer — proven by the lockfile's
 /// `source_url` (`git+file://…/org.vibevm.world.wal.git`) and the
-/// materialised `vibedeps/flow-wal/0.2.0/` slot.
+/// materialised `vibedeps/org.vibevm.world.wal/0.2.0/` slot.
 ///
 /// The short name `vibe install wal` is deliberately NOT covered here: a
 /// hermetic per-package git registry carries no PROP-005 package index, so
@@ -136,14 +136,14 @@ fn default_path_installs_via_global_registry() {
 
     // The materialised `vibedeps/` slot — the real
     // `org.vibevm.world/wal@0.2.0` tree the registry was seeded from.
-    let slot = project.path().join("vibedeps/flow-wal/0.2.0");
+    let slot = project.path().join("vibedeps/org.vibevm.world.wal/0.2.0");
     assert!(
         slot.join("vibe.toml").is_file(),
-        "expected vibedeps/flow-wal/0.2.0/vibe.toml after install"
+        "expected vibedeps/org.vibevm.world.wal/0.2.0/vibe.toml after install"
     );
     assert!(
         slot.join("README.md").is_file(),
-        "expected vibedeps/flow-wal/0.2.0/README.md after install"
+        "expected vibedeps/org.vibevm.world.wal/0.2.0/README.md after install"
     );
 
     // Cache: exactly one registry bucket. This is the assertion that is

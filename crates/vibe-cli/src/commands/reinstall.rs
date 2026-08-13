@@ -80,16 +80,16 @@ fn run_regenerate(
     // name, the right one per mode.
     let slot_present = |p: &vibe_core::manifest::LockedPackage| {
         if p.materialization.is_in_place() {
-            vibedeps::is_in_place_slot(&workspace.root, p.kind, &p.name)
+            vibedeps::is_in_place_slot(&workspace.root, &p.group, &p.name)
         } else {
-            vibedeps::is_materialised(&workspace.root, p.kind, &p.name, &p.version)
+            vibedeps::is_materialised(&workspace.root, &p.group, &p.name, &p.version)
         }
     };
     let slot_label = |p: &vibe_core::manifest::LockedPackage| {
         if p.materialization.is_in_place() {
-            vibedeps::in_place_slot_rel_path(p.kind, &p.name)
+            vibedeps::in_place_slot_rel_path(&p.group, &p.name)
         } else {
-            vibedeps::slot_rel_path(p.kind, &p.name, &p.version)
+            vibedeps::slot_rel_path(&p.group, &p.name, &p.version)
         }
     };
     let missing: Vec<String> = lockfile

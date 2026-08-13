@@ -460,7 +460,7 @@ fn stage_node_regenerates_boot_for_the_published_shape() {
         tmp.path(),
         "packages/a/spec/boot/INDEX.md",
         "schema = 1\n\n[[entry]]\n\
-         path = \"vibedeps/flow-dep/1.0.0/boot/dep.md\"\nkind = \"static\"\n",
+         path = \"vibedeps/org.vibevm.dep/1.0.0/boot/dep.md\"\nkind = \"static\"\n",
     );
     // A stale INLINE.md left over from a dev-tree inline dependency.
     write(

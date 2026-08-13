@@ -171,7 +171,7 @@ fn install_via_redirect_pass_through_tag() {
     // version)`, regardless of the redirect indirection.
     let materialised = project
         .path()
-        .join("vibedeps/flow-internal/0.1.0/spec/flows/internal/MANIFEST.md");
+        .join("vibedeps/org.vibevm.internal/0.1.0/spec/flows/internal/MANIFEST.md");
     assert!(
         materialised.is_file(),
         "expected target's content at {}",

@@ -447,9 +447,9 @@ fn node_dependency_boot(
                 .as_ref()
                 .is_some_and(|p| p.materialization.is_in_place());
             let slot = if in_place {
-                vibedeps::in_place_slot_rel_path(dep.kind, &dep.name)
+                vibedeps::in_place_slot_rel_path(&dep.group, &dep.name)
             } else {
-                vibedeps::slot_rel_path(dep.kind, &dep.name, &dep.version)
+                vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version)
             };
             let snippet = dep.manifest.boot_snippet.as_ref();
             // PROP-038 §2.1: a dependency that statically links a child is read

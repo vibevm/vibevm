@@ -90,13 +90,13 @@ pub(super) fn try_in_place_incremental(
     if !old.materialization.is_in_place() {
         return Ok(None);
     }
-    let kind = old.kind;
+    let _ = old.kind;
     // A `.gitignore`d in-place slot that was deleted is restored by a re-clone
     // (§2.7), not an incremental fetch — fall back to the normal path.
-    if !vibedeps::is_in_place_slot(workspace_root, kind, &node.name) {
+    if !vibedeps::is_in_place_slot(workspace_root, &old.group, &node.name) {
         return Ok(None);
     }
-    let slot = vibedeps::in_place_slot_abs_path(workspace_root, kind, &node.name);
+    let slot = vibedeps::in_place_slot_abs_path(workspace_root, &old.group, &node.name);
     // Read the live slot's manifest locally (no network) for the resolution,
     // conditional-dep, and feature passes. A slot with no readable `[package]`
     // table is not a trustworthy incremental base — re-clone it instead.

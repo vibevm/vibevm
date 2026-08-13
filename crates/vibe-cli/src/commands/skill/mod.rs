@@ -76,7 +76,7 @@ fn collect_skills(project_root: &Path) -> Result<Vec<DeclaredSkill>> {
         let lockfile = Lockfile::read(&lock_path)
             .with_context(|| format!("reading lockfile `{}`", lock_path.display()))?;
         for pkg in &lockfile.packages {
-            let slot = ws.vibedeps_slot(pkg.kind, &pkg.name, &pkg.version);
+            let slot = ws.vibedeps_slot(&pkg.group, &pkg.name, &pkg.version);
             let manifest_path = slot.join(Manifest::FILENAME);
             if !manifest_path.exists() {
                 continue;

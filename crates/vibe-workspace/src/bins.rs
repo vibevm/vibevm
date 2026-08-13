@@ -121,7 +121,7 @@ impl DeclaredBinary {
     ///     },
     ///     package: "org.vibevm/typescript-ai-native-lang".into(),
     ///     group: "org.vibevm".into(),
-    ///     slot: std::path::PathBuf::from("vibedeps/stack-typescript-ai-native-lang/0.4.0"),
+    ///     slot: std::path::PathBuf::from("vibedeps/org.vibevm.typescript-ai-native-lang/0.4.0"),
     /// };
     /// assert!(bin.release_artifact().to_string_lossy().contains("release"));
     /// ```
@@ -161,7 +161,7 @@ impl DeclaredBinary {
     ///     },
     ///     package: "org.vibevm/typescript-ai-native-lang".into(),
     ///     group: "org.vibevm".into(),
-    ///     slot: std::path::PathBuf::from("vibedeps/stack-typescript-ai-native-lang/0.4.0"),
+    ///     slot: std::path::PathBuf::from("vibedeps/org.vibevm.typescript-ai-native-lang/0.4.0"),
     /// };
     /// // No build on disk at this synthetic slot → falls back to release.
     /// let artifact = bin.artifact();
@@ -196,7 +196,7 @@ pub fn collect_binaries(project_root: &Path) -> Result<Vec<DeclaredBinary>, Bins
         detail: e.to_string(),
     })?;
     for pkg in &lockfile.packages {
-        let slot = ws.vibedeps_slot(pkg.kind, &pkg.name, &pkg.version);
+        let slot = ws.vibedeps_slot(&pkg.group, &pkg.name, &pkg.version);
         let manifest_path = slot.join(Manifest::FILENAME);
         if !manifest_path.exists() {
             continue;
@@ -265,7 +265,7 @@ pub fn collect_mcp_servers(project_root: &Path) -> Result<Vec<DeclaredMcpServer>
         detail: e.to_string(),
     })?;
     for pkg in &lockfile.packages {
-        let slot = ws.vibedeps_slot(pkg.kind, &pkg.name, &pkg.version);
+        let slot = ws.vibedeps_slot(&pkg.group, &pkg.name, &pkg.version);
         let manifest_path = slot.join(Manifest::FILENAME);
         if !manifest_path.exists() {
             continue;
@@ -375,7 +375,7 @@ files_written = []
         let slot = dir
             .path()
             .join("vibedeps")
-            .join("stack-typescript-ai-native-lang")
+            .join("org.vibevm.typescript-ai-native-lang")
             .join("0.4.0");
         std::fs::create_dir_all(&slot).expect("slot");
         std::fs::write(

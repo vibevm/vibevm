@@ -71,7 +71,7 @@ pub fn substituted_args(decl_args: &[String], project_root: &Path) -> Vec<String
 ///
 /// let ConfigPayload::Json(v) = vibe_mcp::pkg_servers::entry_payload(
 ///     Agent::ClaudeCode,
-///     "C:/p/vibedeps/mcp-d/0.5.0/target/release/d.exe",
+///     "C:/p/vibedeps/com.example.d/0.5.0/target/release/d.exe",
 ///     &["--path".to_string(), "C:/p".to_string()],
 /// ) else {
 ///     panic!("Claude Code uses JSON");

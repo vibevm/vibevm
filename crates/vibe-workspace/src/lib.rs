@@ -33,8 +33,8 @@ use std::path::{Path, PathBuf};
 
 use specmark::spec;
 use thiserror::Error;
+use vibe_core::RelPath;
 use vibe_core::manifest::Manifest;
-use vibe_core::{PackageKind, RelPath};
 
 pub mod bins;
 pub mod boot;
@@ -436,14 +436,14 @@ impl Workspace {
 
     /// The absolute slot path for a resolved package within this
     /// workspace's `vibedeps/` tree:
-    /// `<root>/vibedeps/<kind>-<name>/<version>`.
+    /// `<root>/vibedeps/<group>.<name>/<version>`.
     pub fn vibedeps_slot(
         &self,
-        kind: PackageKind,
+        group: &vibe_core::Group,
         name: &str,
         version: &semver::Version,
     ) -> PathBuf {
-        vibedeps::slot_abs_path(&self.root, kind, name, version)
+        vibedeps::slot_abs_path(&self.root, group, name, version)
     }
 
     /// Look up a member by its root-relative path (forward-slashed).

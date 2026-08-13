@@ -162,21 +162,19 @@ pub fn read_index(text: &str) -> Result<IndexParse> {
     })
 }
 
-/// Map a boot-file path to the `(kind, name)` of the package that owns it,
+/// Map a boot-file path to the `(group, name)` of the package that owns it,
 /// or `None` for a host-authored path. A materialised slot path is
-/// `vibedeps/<kind>-<name>/<version>/…`; the second component encodes the
-/// kind prefix and the package name.
-pub fn slot_package(path: &str) -> Option<(&'static str, String)> {
+/// `vibedeps/<group>.<name>/<version>/…`; the second component encodes the
+/// package identity.
+pub fn slot_package(path: &str) -> Option<(String, String)> {
     let rest = path
         .strip_prefix("vibedeps/")
         .or_else(|| path.strip_prefix("vibedeps\\"))?;
     let slot = rest.split(['/', '\\']).next()?;
-    for kind in ["flow", "feat", "stack", "tool", "mcp", "lang"] {
-        if let Some(name) = slot.strip_prefix(&format!("{kind}-")) {
-            return Some((kind, name.to_string()));
-        }
-    }
-    None
+    // The slot is identity-keyed, `<group>.<name>` (PROP-022 §2.1): the name
+    // is a single dot-free LDH label, so the last dot is always the boundary.
+    let (group, name) = slot.rsplit_once('.')?;
+    Some((group.to_string(), name.to_string()))
 }
 
 #[cfg(test)]
@@ -188,12 +186,12 @@ mod tests {
         let text = "\
 <!-- header -->
 
-<!-- vibe:static org.vibevm.world/addressable-specs \u{2014} vibedeps/flow-addressable-specs/0.1.0/spec/boot/15.md -->
+<!-- vibe:static org.vibevm.world/addressable-specs \u{2014} vibedeps/org.vibevm.world.addressable-specs/0.1.0/spec/boot/15.md -->
 
 # Addressable Specs
 
 body line
-<!-- vibe:static org.vibevm.world/redbook \u{2014} vibedeps/flow-redbook/0.2.0/spec/boot/03.md -->
+<!-- vibe:static org.vibevm.world/redbook \u{2014} vibedeps/org.vibevm.world.redbook/0.2.0/spec/boot/03.md -->
 
 # Redbook
 ";
@@ -202,7 +200,7 @@ body line
         assert_eq!(c[0].origin, "org.vibevm.world/addressable-specs");
         assert_eq!(
             c[0].source_path,
-            "vibedeps/flow-addressable-specs/0.1.0/spec/boot/15.md"
+            "vibedeps/org.vibevm.world.addressable-specs/0.1.0/spec/boot/15.md"
         );
         assert_eq!(c[0].order, 0);
         assert_eq!(c[1].origin, "org.vibevm.world/redbook");
@@ -232,7 +230,7 @@ body line
     #[test]
     fn attributes_a_nested_embed_span() {
         let text = "\
-<!-- vibe:static org.vibevm.world/x \u{2014} vibedeps/flow-x/0.1.0/b.md -->
+<!-- vibe:static org.vibevm.world/x \u{2014} vibedeps/org.vibevm.world.x/0.1.0/b.md -->
 
 <!-- embed: spec://org.vibevm.core/vibevm/a/b#c -->
 inner
@@ -259,7 +257,7 @@ path = \"spec/boot/00-core.md\"
 kind = \"static\"
 
 [[entry]]
-path = \"vibedeps/stack-rust-ai-native-lang/0.7.0/spec/boot/20.md\"
+path = \"vibedeps/org.vibevm.ai-native.rust-ai-native-lang/0.7.0/spec/boot/20.md\"
 kind = \"dynamic\"
 when = \"os:linux\"
 ";
@@ -278,12 +276,15 @@ when = \"os:linux\"
     #[test]
     fn maps_a_slot_path_to_its_package() {
         assert_eq!(
-            slot_package("vibedeps/stack-rust-ai-native-lang/0.7.0/spec/boot/20.md"),
-            Some(("stack", "rust-ai-native-lang".to_string()))
+            slot_package("vibedeps/org.vibevm.ai-native.rust-ai-native-lang/0.7.0/spec/boot/20.md"),
+            Some((
+                "org.vibevm.ai-native".to_string(),
+                "rust-ai-native-lang".to_string()
+            ))
         );
         assert_eq!(
-            slot_package("vibedeps/flow-redbook/0.2.0/spec/boot/03.md"),
-            Some(("flow", "redbook".to_string()))
+            slot_package("vibedeps/org.vibevm.world.redbook/0.2.0/spec/boot/03.md"),
+            Some(("org.vibevm.world".to_string(), "redbook".to_string()))
         );
         // A host-authored path maps to no package.
         assert_eq!(slot_package("spec/boot/00-core.md"), None);

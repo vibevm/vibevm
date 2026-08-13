@@ -75,10 +75,12 @@ impl FileResolver {
         };
         let pat = name.as_str();
 
-        // Scan every vibedeps/ slot, split each directory name on its FIRST
-        // hyphen into `<kind>-<name>` (РТ-3), and keep the package name where it
-        // matches the pattern. The group is not consulted (РТ-2): slots are
-        // matched by name, and a group could not change which slots match.
+        // Scan every vibedeps/ slot, split each directory name on its LAST
+        // dot into `<group>.<name>` (РТ-3; the slot is identity-keyed and the
+        // name is a single dot-free LDH label, so the last dot is always the
+        // boundary), and keep the package name where it matches the pattern.
+        // The group is not consulted (РТ-2): slots are matched by name, and
+        // matching stays group-blind even now that the directory carries one.
         let vibedeps = self.ws_root.join("vibedeps");
         let mut matched: Vec<(String, PathBuf)> = Vec::new();
         for entry in read_dir_or_empty(&vibedeps) {
@@ -89,10 +91,10 @@ impl FileResolver {
             let Some(dir_name) = slot_dir.file_name().and_then(|s| s.to_str()) else {
                 continue;
             };
-            // Cut on the FIRST hyphen: left = kind, right = package name (the
-            // name itself may contain hyphens, e.g. flow-plugin-alpha).
-            let Some((_kind, pkg_name)) = dir_name.split_once('-') else {
-                continue; // not a `<kind>-<name>` slot
+            // Cut on the LAST dot: left = group, right = package name (the
+            // name never contains a dot; the group may contain many).
+            let Some((_group, pkg_name)) = dir_name.rsplit_once('.') else {
+                continue; // not a `<group>.<name>` slot
             };
             if pkg_name.is_empty() || !name_matches(pat, pkg_name) {
                 continue;
@@ -231,10 +233,10 @@ mod tests {
         SelfCoordinate::new(Some("org.vibevm.core".into()), "vibevm".into())
     }
 
-    /// Build a vibedeps slot `<kind>-<name>` holding the given versions, each
+    /// Build a vibedeps slot `<group>.<name>` holding the given versions, each
     /// with `spec/contract/API.md` — the document every G-test resolves.
-    fn make_plugin(ws: &Path, kind: &str, name: &str, versions: &[&str]) {
-        let slot = ws.join("vibedeps").join(format!("{kind}-{name}"));
+    fn make_plugin(ws: &Path, group: &str, name: &str, versions: &[&str]) {
+        let slot = ws.join("vibedeps").join(format!("{group}.{name}"));
         for v in versions {
             let dir = slot.join(v).join("spec").join("contract");
             fs::create_dir_all(&dir).unwrap();
@@ -244,10 +246,10 @@ mod tests {
 
     /// A slot with a version directory but NO document — installed yet not a
     /// member of a set whose address names `contract/API`.
-    fn make_slot_no_doc(ws: &Path, kind: &str, name: &str, version: &str) {
+    fn make_slot_no_doc(ws: &Path, group: &str, name: &str, version: &str) {
         let dir = ws
             .join("vibedeps")
-            .join(format!("{kind}-{name}"))
+            .join(format!("{group}.{name}"))
             .join(version);
         fs::create_dir_all(&dir).unwrap();
     }
@@ -266,8 +268,8 @@ mod tests {
         // G1: `plugin-*` yields exactly two addresses, alpha → beta (sorted by
         // name, byte order). The addresses are built canonically (РТ-4).
         let ws = tempfile::TempDir::new().unwrap();
-        make_plugin(ws.path(), "flow", "plugin-alpha", &["1.0.0"]);
-        make_plugin(ws.path(), "flow", "plugin-beta", &["1.0.0"]);
+        make_plugin(ws.path(), "org.vibevm.plugins", "plugin-alpha", &["1.0.0"]);
+        make_plugin(ws.path(), "org.vibevm.plugins", "plugin-beta", &["1.0.0"]);
         let r = FileResolver::new(ws.path(), coord());
         let pat = SpecAddress::parse("spec://org.vibevm.plugins/plugin-*/contract/API").unwrap();
         let got = r.expand_pattern(&pat).unwrap();
@@ -284,8 +286,8 @@ mod tests {
         // G2: slots created in reverse order (beta before alpha) — the read
         // order must not change the result; the sort decides it.
         let ws = tempfile::TempDir::new().unwrap();
-        make_plugin(ws.path(), "flow", "plugin-beta", &["1.0.0"]);
-        make_plugin(ws.path(), "flow", "plugin-alpha", &["1.0.0"]);
+        make_plugin(ws.path(), "org.vibevm.plugins", "plugin-beta", &["1.0.0"]);
+        make_plugin(ws.path(), "org.vibevm.plugins", "plugin-alpha", &["1.0.0"]);
         let r = FileResolver::new(ws.path(), coord());
         let pat = SpecAddress::parse("spec://org.vibevm.plugins/plugin-*/contract/API").unwrap();
         assert_eq!(
@@ -299,9 +301,9 @@ mod tests {
         // G3: `flow-widget` sits alongside — its name does not match `plugin-*`,
         // so it is not a member.
         let ws = tempfile::TempDir::new().unwrap();
-        make_plugin(ws.path(), "flow", "plugin-alpha", &["1.0.0"]);
-        make_plugin(ws.path(), "flow", "plugin-beta", &["1.0.0"]);
-        make_plugin(ws.path(), "flow", "widget", &["1.0.0"]);
+        make_plugin(ws.path(), "org.vibevm.plugins", "plugin-alpha", &["1.0.0"]);
+        make_plugin(ws.path(), "org.vibevm.plugins", "plugin-beta", &["1.0.0"]);
+        make_plugin(ws.path(), "org.vibevm.plugins", "widget", &["1.0.0"]);
         let r = FileResolver::new(ws.path(), coord());
         let pat = SpecAddress::parse("spec://org.vibevm.plugins/plugin-*/contract/API").unwrap();
         assert_eq!(
@@ -316,8 +318,8 @@ mod tests {
         // no `contract/API` document — it is not a member, and that is not an
         // error (law 3: membership is name AND document).
         let ws = tempfile::TempDir::new().unwrap();
-        make_plugin(ws.path(), "flow", "plugin-alpha", &["1.0.0"]);
-        make_slot_no_doc(ws.path(), "flow", "plugin-gamma", "1.0.0");
+        make_plugin(ws.path(), "org.vibevm.plugins", "plugin-alpha", &["1.0.0"]);
+        make_slot_no_doc(ws.path(), "org.vibevm.plugins", "plugin-gamma", "1.0.0");
         let r = FileResolver::new(ws.path(), coord());
         let pat = SpecAddress::parse("spec://org.vibevm.plugins/plugin-*/contract/API").unwrap();
         assert_eq!(
@@ -331,7 +333,7 @@ mod tests {
         // G5: a glob matching nothing is Ok(vec![]), not a "source not found"
         // error (law 4 — patterns degrade naturally).
         let ws = tempfile::TempDir::new().unwrap();
-        make_plugin(ws.path(), "flow", "widget", &["1.0.0"]); // not plugin-*
+        make_plugin(ws.path(), "org.vibevm.plugins", "widget", &["1.0.0"]); // not plugin-*
         let r = FileResolver::new(ws.path(), coord());
         let pat = SpecAddress::parse("spec://org.vibevm.plugins/plugin-*/contract/API").unwrap();
         let got = r.expand_pattern(&pat).unwrap();
@@ -344,7 +346,12 @@ mod tests {
         // points at the 2.0.0 slot — verified by resolve_file on the result
         // (law 6 — B-028's freshest rule, applied at resolve time).
         let ws = tempfile::TempDir::new().unwrap();
-        make_plugin(ws.path(), "flow", "plugin-alpha", &["1.0.0", "2.0.0"]);
+        make_plugin(
+            ws.path(),
+            "org.vibevm.plugins",
+            "plugin-alpha",
+            &["1.0.0", "2.0.0"],
+        );
         let r = FileResolver::new(ws.path(), coord());
         let pat = SpecAddress::parse("spec://org.vibevm.plugins/plugin-*/contract/API").unwrap();
         let got = r.expand_pattern(&pat).unwrap();
@@ -359,8 +366,8 @@ mod tests {
         // flow-plugin-alpha), NOT the package `alpha` (directory flow-alpha) —
         // the cut is on the FIRST hyphen: kind | name.
         let ws = tempfile::TempDir::new().unwrap();
-        make_plugin(ws.path(), "flow", "plugin-alpha", &["1.0.0"]); // flow-plugin-alpha
-        make_plugin(ws.path(), "flow", "alpha", &["1.0.0"]); // flow-alpha → name "alpha"
+        make_plugin(ws.path(), "org.vibevm.plugins", "plugin-alpha", &["1.0.0"]); // …plugins.plugin-alpha
+        make_plugin(ws.path(), "org.vibevm.plugins", "alpha", &["1.0.0"]); // …plugins.alpha → name "alpha"
         let r = FileResolver::new(ws.path(), coord());
         let pat = SpecAddress::parse("spec://org.vibevm.plugins/plugin-*/contract/API").unwrap();
         assert_eq!(
@@ -376,8 +383,8 @@ mod tests {
         //      tail); `plugin-` sorts before `plugin-alpha` (shorter prefix).
         //  (b) `*` matches every installed name.
         let ws = tempfile::TempDir::new().unwrap();
-        make_plugin(ws.path(), "flow", "plugin-", &["1.0.0"]);
-        make_plugin(ws.path(), "flow", "plugin-alpha", &["1.0.0"]);
+        make_plugin(ws.path(), "org.vibevm.plugins", "plugin-", &["1.0.0"]);
+        make_plugin(ws.path(), "org.vibevm.plugins", "plugin-alpha", &["1.0.0"]);
         let r = FileResolver::new(ws.path(), coord());
 
         let pat = SpecAddress::parse("spec://org.vibevm.plugins/plugin-*/contract/API").unwrap();
@@ -440,7 +447,7 @@ mod tests {
         // РТ-4: a built address carries the pattern's anchor and a consistent
         // raw, and round-trips through parse (well-formed).
         let ws = tempfile::TempDir::new().unwrap();
-        make_plugin(ws.path(), "flow", "plugin-alpha", &["1.0.0"]);
+        make_plugin(ws.path(), "org.vibevm.plugins", "plugin-alpha", &["1.0.0"]);
         let r = FileResolver::new(ws.path(), coord());
         let pat =
             SpecAddress::parse("spec://org.vibevm.plugins/plugin-*/contract/API#root").unwrap();

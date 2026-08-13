@@ -50,7 +50,7 @@ fn full_install_cycle() {
     // `vibe.toml`, `README.md`, `spec/boot/10-flow-wal.md`, and
     // `spec/flows/wal/*.md` files (plus a skill and LICENSE, not asserted
     // here).
-    let slot = project.path().join("vibedeps/flow-wal/0.2.0");
+    let slot = project.path().join("vibedeps/org.vibevm.world.wal/0.2.0");
     for rel in [
         "vibe.toml",
         "README.md",
@@ -61,7 +61,7 @@ fn full_install_cycle() {
     ] {
         assert!(
             slot.join(rel).is_file(),
-            "expected `vibedeps/flow-wal/0.2.0/{rel}` after install"
+            "expected `vibedeps/org.vibevm.world.wal/0.2.0/{rel}` after install"
         );
     }
     // The OLD mirror paths must NOT exist any more.
@@ -98,7 +98,7 @@ fn full_install_cycle() {
     // freshly-installed package's boot into INDEX.md — the manifest
     // `[requires]` is merged before the boot artifacts are regenerated.
     assert!(
-        index.contains("vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md"),
+        index.contains("vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.md"),
         "INDEX.md must name the installed dependency's boot snippet:\n{index}"
     );
     // The fixtures declare no `link = "static"` dependency, so there is
@@ -232,7 +232,7 @@ fn install_second_install_is_idempotent() {
     assert!(
         project
             .path()
-            .join("vibedeps/flow-wal/0.2.0/vibe.toml")
+            .join("vibedeps/org.vibevm.world.wal/0.2.0/vibe.toml")
             .is_file(),
         "vibedeps/ slot must survive a re-install"
     );
@@ -257,7 +257,7 @@ fn install_skips_a_present_slot_on_re_install() {
     let registry = make_wal_dir_registry(reg_home.path());
     user.init_project(project.path());
 
-    // First install materialises the `vibedeps/flow-wal/0.2.0` slot.
+    // First install materialises the `vibedeps/org.vibevm.world.wal/0.2.0` slot.
     user.vibe()
         .arg("install")
         .arg("org.vibevm.world/wal")
@@ -292,7 +292,10 @@ fn install_skips_a_present_slot_on_re_install() {
     let report = docs.last().unwrap();
     let skipped = report["skipped"].as_array().unwrap();
     assert_eq!(skipped.len(), 1, "the present slot must be skipped");
-    assert_eq!(skipped[0].as_str().unwrap(), "vibedeps/flow-wal/0.2.0");
+    assert_eq!(
+        skipped[0].as_str().unwrap(),
+        "vibedeps/org.vibevm.world.wal/0.2.0"
+    );
     assert!(
         report["materialised"].as_array().unwrap().is_empty(),
         "nothing is freshly materialised on a no-op re-install"
@@ -337,7 +340,10 @@ fn install_reports_json() {
     // were rebuilt.
     let materialised = last["materialised"].as_array().unwrap();
     assert_eq!(materialised.len(), 1);
-    assert_eq!(materialised[0].as_str().unwrap(), "vibedeps/flow-wal/0.2.0");
+    assert_eq!(
+        materialised[0].as_str().unwrap(),
+        "vibedeps/org.vibevm.world.wal/0.2.0"
+    );
     assert_eq!(last["nodes_regenerated"].as_array().unwrap().len(), 1);
 }
 
@@ -666,7 +672,7 @@ fn install_from_manifest_uses_requires() {
     assert!(
         project
             .path()
-            .join("vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md")
+            .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md")
             .is_file(),
         "the package tree is materialised verbatim into vibedeps/"
     );
@@ -687,7 +693,7 @@ fn install_from_manifest_uses_requires() {
     // foundation and user-override boot).
     let index = fs::read_to_string(project.path().join("spec/boot/INDEX.md")).unwrap();
     assert!(
-        index.contains("vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md"),
+        index.contains("vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.md"),
         "INDEX.md must name the dependency's boot file under its slot:\n{index}"
     );
 }
@@ -950,14 +956,14 @@ fn install_from_git_source_with_tag_records_source_kind_git() {
     assert!(
         project
             .path()
-            .join("vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md")
+            .join("vibedeps/org.vibevm.world.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md")
             .is_file(),
         "git-source install must materialise the package tree into vibedeps/"
     );
     assert!(
         project
             .path()
-            .join("vibedeps/flow-wal/0.2.0/vibe.toml")
+            .join("vibedeps/org.vibevm.world.wal/0.2.0/vibe.toml")
             .is_file()
     );
 }
@@ -1091,7 +1097,7 @@ fn install_git_source_then_repeat_install_no_args_is_idempotent() {
     assert!(
         project
             .path()
-            .join("vibedeps/flow-wal/0.2.0/vibe.toml")
+            .join("vibedeps/org.vibevm.world.wal/0.2.0/vibe.toml")
             .is_file()
     );
 }

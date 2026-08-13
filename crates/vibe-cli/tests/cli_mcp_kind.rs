@@ -35,11 +35,11 @@ fn mcp_kind_installs_and_its_exact_pin_selects_the_pinned_stack() {
 
     // The mcp slot materialises under the kind-prefixed dir, tree verbatim
     // (the [[mcp_server]]-referenced binary crate included).
-    let mcp_slot = project.path().join("vibedeps/mcp-pin-server/0.1.0");
+    let mcp_slot = project.path().join("vibedeps/org.vibevm.pin-server/0.1.0");
     for rel in ["vibe.toml", "crates/pin-server-mcp/src/main.rs"] {
         assert!(
             mcp_slot.join(rel).is_file(),
-            "expected `vibedeps/mcp-pin-server/0.1.0/{rel}` after install"
+            "expected `vibedeps/org.vibevm.pin-server/0.1.0/{rel}` after install"
         );
     }
 
@@ -49,14 +49,14 @@ fn mcp_kind_installs_and_its_exact_pin_selects_the_pinned_stack() {
     assert!(
         project
             .path()
-            .join("vibedeps/stack-pin-stack/0.1.0/vibe.toml")
+            .join("vibedeps/org.vibevm.pin-stack/0.1.0/vibe.toml")
             .is_file(),
         "the pinned stack version must be materialised"
     );
     assert!(
         !project
             .path()
-            .join("vibedeps/stack-pin-stack/0.2.0")
+            .join("vibedeps/org.vibevm.pin-stack/0.2.0")
             .exists(),
         "the newer stack version must NOT be selected over the exact pin"
     );
@@ -119,7 +119,7 @@ fn mcp_install_registers_and_uninstall_removes_package_servers() {
     let entry = &doc["mcpServers"]["pin-server"];
     let command = entry["command"].as_str().expect("command string");
     assert!(
-        command.contains("vibedeps/mcp-pin-server/0.1.0")
+        command.contains("vibedeps/org.vibevm.pin-server/0.1.0")
             || command.contains("vibedeps\\mcp-pin-server\\0.1.0"),
         "command launches the slot artifact directly: {command}"
     );

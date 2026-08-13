@@ -14,6 +14,13 @@ fn version(s: &str) -> semver::Version {
     semver::Version::parse(s).unwrap()
 }
 
+/// The one test group — slots are keyed by identity, and every case here
+/// exercises layout, not group variety.
+#[cfg(test)]
+fn g(s: &str) -> Group {
+    Group::parse(s).unwrap()
+}
+
 /// Write `body` to `dir/rel`, creating parent directories.
 #[cfg(test)]
 fn write(dir: &Path, rel: &str, body: &str) {
@@ -23,17 +30,17 @@ fn write(dir: &Path, rel: &str, body: &str) {
 }
 
 #[test]
-fn slot_rel_path_is_kind_name_version() {
-    let rel = slot_rel_path(PackageKind::Flow, "wal", &version("0.3.0"));
-    assert_eq!(rel, "vibedeps/flow-wal/0.3.0");
+fn slot_rel_path_is_group_name_version() {
+    let rel = slot_rel_path(&g("org.vibevm"), "wal", &version("0.3.0"));
+    assert_eq!(rel, "vibedeps/org.vibevm.wal/0.3.0");
 }
 
 #[test]
 fn slot_abs_path_joins_under_workspace_root() {
     let root = Path::new("ws-root");
-    let abs = slot_abs_path(root, PackageKind::Stack, "rust", &version("2.1.0"));
+    let abs = slot_abs_path(root, &g("org.vibevm"), "rust", &version("2.1.0"));
     assert!(abs.starts_with(root));
-    assert!(abs.ends_with(Path::new("vibedeps/stack-rust/2.1.0")));
+    assert!(abs.ends_with(Path::new("vibedeps/org.vibevm.rust/2.1.0")));
 }
 
 #[test]
@@ -50,14 +57,14 @@ fn materialise_copies_the_tree_verbatim() {
 
     let written = materialise(
         ws.path(),
-        PackageKind::Flow,
+        &g("org.vibevm"),
         "wal",
         &version("0.3.0"),
         src.path(),
     )
     .unwrap();
 
-    let slot = ws.path().join("vibedeps/flow-wal/0.3.0");
+    let slot = ws.path().join("vibedeps/org.vibevm.wal/0.3.0");
     assert_eq!(
         fs::read_to_string(slot.join("vibe.toml")).unwrap(),
         "[package]\ngroup = \"org.vibevm\"\nname = \"wal\"\n"
@@ -94,14 +101,14 @@ fn materialise_skips_dot_git() {
 
     let written = materialise(
         ws.path(),
-        PackageKind::Flow,
+        &g("org.vibevm"),
         "w",
         &version("1.0.0"),
         src.path(),
     )
     .unwrap();
 
-    let slot = ws.path().join("vibedeps/flow-w/1.0.0");
+    let slot = ws.path().join("vibedeps/org.vibevm.w/1.0.0");
     assert!(slot.join("vibe.toml").is_file());
     assert!(slot.join("boot/snippet.md").is_file());
     assert!(!slot.join(".git").exists());
@@ -120,7 +127,7 @@ fn materialise_is_idempotent_and_clears_stale_files() {
     write(src1.path(), "stale.md", "remove me");
     materialise(
         ws.path(),
-        PackageKind::Feat,
+        &g("org.vibevm"),
         "auth",
         &version("0.1.0"),
         src1.path(),
@@ -132,14 +139,14 @@ fn materialise_is_idempotent_and_clears_stale_files() {
     write(src2.path(), "vibe.toml", "v2");
     let written = materialise(
         ws.path(),
-        PackageKind::Feat,
+        &g("org.vibevm"),
         "auth",
         &version("0.1.0"),
         src2.path(),
     )
     .unwrap();
 
-    let slot = ws.path().join("vibedeps/feat-auth/0.1.0");
+    let slot = ws.path().join("vibedeps/org.vibevm.auth/0.1.0");
     assert_eq!(fs::read_to_string(slot.join("vibe.toml")).unwrap(), "v2");
     assert!(
         !slot.join("stale.md").exists(),
@@ -154,7 +161,7 @@ fn materialise_errors_when_source_missing() {
     let missing = ws.path().join("no-such-source");
     let err = materialise(
         ws.path(),
-        PackageKind::Flow,
+        &g("org.vibevm"),
         "ghost",
         &version("0.1.0"),
         &missing,
@@ -170,13 +177,13 @@ fn is_materialised_reflects_slot_presence() {
     write(src.path(), "vibe.toml", "x");
     assert!(!is_materialised(
         ws.path(),
-        PackageKind::Tool,
+        &g("org.vibevm"),
         "fmt",
         &version("1.0.0")
     ));
     materialise(
         ws.path(),
-        PackageKind::Tool,
+        &g("org.vibevm"),
         "fmt",
         &version("1.0.0"),
         src.path(),
@@ -184,7 +191,7 @@ fn is_materialised_reflects_slot_presence() {
     .unwrap();
     assert!(is_materialised(
         ws.path(),
-        PackageKind::Tool,
+        &g("org.vibevm"),
         "fmt",
         &version("1.0.0")
     ));
@@ -197,22 +204,22 @@ fn remove_slot_deletes_and_reports() {
     write(src.path(), "vibe.toml", "x");
     materialise(
         ws.path(),
-        PackageKind::Flow,
+        &g("org.vibevm"),
         "wal",
         &version("0.3.0"),
         src.path(),
     )
     .unwrap();
 
-    assert!(remove_slot(ws.path(), PackageKind::Flow, "wal", &version("0.3.0")).unwrap());
+    assert!(remove_slot(ws.path(), &g("org.vibevm"), "wal", &version("0.3.0")).unwrap());
     assert!(!is_materialised(
         ws.path(),
-        PackageKind::Flow,
+        &g("org.vibevm"),
         "wal",
         &version("0.3.0")
     ));
     // A second removal finds nothing to do.
-    assert!(!remove_slot(ws.path(), PackageKind::Flow, "wal", &version("0.3.0")).unwrap());
+    assert!(!remove_slot(ws.path(), &g("org.vibevm"), "wal", &version("0.3.0")).unwrap());
 }
 
 #[test]
@@ -227,14 +234,14 @@ fn materialise_hardlink_mode_places_the_full_tree() {
     write(src.path(), "boot/s.md", "# s");
     let written = materialise_with(
         ws.path(),
-        PackageKind::Flow,
+        &g("org.vibevm"),
         "w",
         &version("1.0.0"),
         src.path(),
         CopyMode::Hardlink,
     )
     .unwrap();
-    let slot = ws.path().join("vibedeps/flow-w/1.0.0");
+    let slot = ws.path().join("vibedeps/org.vibevm.w/1.0.0");
     // Hardlinked (or copy-fallback) — either way the content is present
     // and the footprint matches a copy materialisation.
     assert_eq!(fs::read_to_string(slot.join("vibe.toml")).unwrap(), "x");
@@ -251,10 +258,10 @@ fn materialise_hardlink_mode_places_the_full_tree() {
     r = 1
 )]
 fn in_place_slot_path_is_unversioned() {
-    let rel = in_place_slot_rel_path(PackageKind::Feat, "chromium");
-    assert_eq!(rel, "vibedeps/feat-chromium");
-    let abs = in_place_slot_abs_path(Path::new("ws"), PackageKind::Feat, "chromium");
-    assert!(abs.ends_with(Path::new("vibedeps/feat-chromium")));
+    let rel = in_place_slot_rel_path(&g("org.vibevm"), "chromium");
+    assert_eq!(rel, "vibedeps/org.vibevm.chromium");
+    let abs = in_place_slot_abs_path(Path::new("ws"), &g("org.vibevm"), "chromium");
+    assert!(abs.ends_with(Path::new("vibedeps/org.vibevm.chromium")));
 }
 
 #[test]
@@ -270,14 +277,14 @@ fn materialise_in_place_moves_the_clone_keeping_git() {
     write(clone.path(), ".git/HEAD", "ref: refs/heads/main\n");
     write(clone.path(), "src/main.rs", "fn main() {}");
 
-    materialise_in_place(ws.path(), PackageKind::Feat, "giant", clone.path()).unwrap();
+    materialise_in_place(ws.path(), &g("org.vibevm"), "giant", clone.path()).unwrap();
 
-    let slot = ws.path().join("vibedeps/feat-giant");
+    let slot = ws.path().join("vibedeps/org.vibevm.giant");
     assert!(slot.join("vibe.toml").is_file());
     assert!(slot.join("src/main.rs").is_file());
     // The `.git` is preserved — the slot stays a git working tree.
     assert!(slot.join(".git/HEAD").is_file());
-    assert!(is_in_place_slot(ws.path(), PackageKind::Feat, "giant"));
+    assert!(is_in_place_slot(ws.path(), &g("org.vibevm"), "giant"));
     // The source was moved, not copied.
     assert!(!clone.path().join("vibe.toml").exists());
 }
@@ -295,13 +302,13 @@ fn is_in_place_slot_false_for_a_versioned_snapshot() {
     write(src.path(), "vibe.toml", "x");
     materialise(
         ws.path(),
-        PackageKind::Flow,
+        &g("org.vibevm"),
         "wal",
         &version("0.3.0"),
         src.path(),
     )
     .unwrap();
-    assert!(!is_in_place_slot(ws.path(), PackageKind::Flow, "wal"));
+    assert!(!is_in_place_slot(ws.path(), &g("org.vibevm"), "wal"));
 }
 
 #[test]
@@ -310,11 +317,11 @@ fn remove_in_place_slot_deletes_and_reports() {
     let clone = TempDir::new().unwrap();
     write(clone.path(), ".git/HEAD", "ref: refs/heads/main\n");
     write(clone.path(), "f", "x");
-    materialise_in_place(ws.path(), PackageKind::Tool, "big", clone.path()).unwrap();
-    assert!(remove_in_place_slot(ws.path(), PackageKind::Tool, "big").unwrap());
-    assert!(!is_in_place_slot(ws.path(), PackageKind::Tool, "big"));
+    materialise_in_place(ws.path(), &g("org.vibevm"), "big", clone.path()).unwrap();
+    assert!(remove_in_place_slot(ws.path(), &g("org.vibevm"), "big").unwrap());
+    assert!(!is_in_place_slot(ws.path(), &g("org.vibevm"), "big"));
     // A second removal finds nothing to do.
-    assert!(!remove_in_place_slot(ws.path(), PackageKind::Tool, "big").unwrap());
+    assert!(!remove_in_place_slot(ws.path(), &g("org.vibevm"), "big").unwrap());
 }
 
 #[test]
@@ -324,11 +331,11 @@ fn remove_in_place_slot_deletes_and_reports() {
 )]
 fn ensure_gitignored_appends_once() {
     let ws = TempDir::new().unwrap();
-    ensure_gitignored(ws.path(), "vibedeps/feat-giant").unwrap();
+    ensure_gitignored(ws.path(), "vibedeps/org.vibevm.giant").unwrap();
     let gi = fs::read_to_string(ws.path().join(".gitignore")).unwrap();
-    assert!(gi.contains("vibedeps/feat-giant/"), "{gi}");
+    assert!(gi.contains("vibedeps/org.vibevm.giant/"), "{gi}");
     // Idempotent — a second call does not duplicate the entry.
-    ensure_gitignored(ws.path(), "vibedeps/feat-giant").unwrap();
+    ensure_gitignored(ws.path(), "vibedeps/org.vibevm.giant").unwrap();
     let gi2 = fs::read_to_string(ws.path().join(".gitignore")).unwrap();
-    assert_eq!(gi2.matches("vibedeps/feat-giant").count(), 1, "{gi2}");
+    assert_eq!(gi2.matches("vibedeps/org.vibevm.giant").count(), 1, "{gi2}");
 }

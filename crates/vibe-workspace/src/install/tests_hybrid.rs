@@ -45,7 +45,7 @@ fn dynamic_dep_statically_links_its_child_into_a_per_unit_static_md() {
     let parent_static = fs::read_to_string(
         ws_dir
             .path()
-            .join("vibedeps/flow-parent/1.0.0/spec/boot/STATIC.md"),
+            .join("vibedeps/org.vibevm.parent/1.0.0/spec/boot/STATIC.md"),
     )
     .unwrap();
     assert!(parent_static.contains("# parent boot"), "{parent_static}");
@@ -65,7 +65,7 @@ fn dynamic_dep_statically_links_its_child_into_a_per_unit_static_md() {
     assert!(
         !ws_dir
             .path()
-            .join("vibedeps/flow-child/1.0.0/spec/boot/STATIC.md")
+            .join("vibedeps/org.vibevm.child/1.0.0/spec/boot/STATIC.md")
             .exists()
     );
 
@@ -73,11 +73,11 @@ fn dynamic_dep_statically_links_its_child_into_a_per_unit_static_md() {
     // raw snippet — so loading parent pulls child with it.
     let root_index = fs::read_to_string(ws_dir.path().join("spec/boot/INDEX.md")).unwrap();
     assert!(
-        root_index.contains("vibedeps/flow-parent/1.0.0/spec/boot/STATIC.md"),
+        root_index.contains("vibedeps/org.vibevm.parent/1.0.0/spec/boot/STATIC.md"),
         "{root_index}"
     );
     assert!(
-        !root_index.contains("vibedeps/flow-parent/1.0.0/boot/parent.md"),
+        !root_index.contains("vibedeps/org.vibevm.parent/1.0.0/boot/parent.md"),
         "the raw snippet must not be the INDEX target: {root_index}"
     );
 }
@@ -142,7 +142,7 @@ fn a_package_shared_by_two_units_is_hoisted_to_the_root() {
     let a_static = fs::read_to_string(
         ws_dir
             .path()
-            .join("vibedeps/flow-a/1.0.0/spec/boot/STATIC.md"),
+            .join("vibedeps/org.vibevm.a/1.0.0/spec/boot/STATIC.md"),
     )
     .unwrap();
     assert!(a_static.contains("# a boot"), "{a_static}");
@@ -197,7 +197,7 @@ fn an_unchanged_reinstall_skips_a_package_via_its_fingerprint() {
 
     let parent_index = ws_dir
         .path()
-        .join("vibedeps/flow-parent/1.0.0/spec/boot/INDEX.md");
+        .join("vibedeps/org.vibevm.parent/1.0.0/spec/boot/INDEX.md");
     let index_text = fs::read_to_string(&parent_index).unwrap();
     assert!(
         index_text.contains("# vibe:fp "),
@@ -262,7 +262,7 @@ fn a_changed_static_child_forces_the_parent_to_regenerate() {
     apply_resolution(&ws, &[parent, child_v1], SlotIntegrity::TrustPresence, None).unwrap();
     let parent_static_path = ws_dir
         .path()
-        .join("vibedeps/flow-parent/1.0.0/spec/boot/STATIC.md");
+        .join("vibedeps/org.vibevm.parent/1.0.0/spec/boot/STATIC.md");
     assert!(
         fs::read_to_string(&parent_static_path)
             .unwrap()
@@ -338,7 +338,7 @@ fn switching_a_child_from_dynamic_to_static_regenerates_the_parent() {
     };
     let parent_static_path = ws_dir
         .path()
-        .join("vibedeps/flow-parent/1.0.0/spec/boot/STATIC.md");
+        .join("vibedeps/org.vibevm.parent/1.0.0/spec/boot/STATIC.md");
 
     // Child dynamic — the parent has no static child, so no STATIC.md.
     let ws = Workspace::load(ws_dir.path()).unwrap();
@@ -405,7 +405,7 @@ fn verify_boot_graph_detects_a_stale_artifact() {
     // Corrupt the parent's recorded fingerprint — verify must flag it stale.
     let parent_index = ws_dir
         .path()
-        .join("vibedeps/flow-parent/1.0.0/spec/boot/INDEX.md");
+        .join("vibedeps/org.vibevm.parent/1.0.0/spec/boot/INDEX.md");
     let text = fs::read_to_string(&parent_index).unwrap();
     let stored = super::super::boot_artifacts::read_fingerprint(&text).unwrap();
     fs::write(&parent_index, text.replace(&stored, "deadbeef")).unwrap();

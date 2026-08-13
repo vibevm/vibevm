@@ -36,7 +36,7 @@ mode). @status:spec/done
 
 - @fact:today-single-policy Today every package is materialised the same way: clone into the live-git
   cache, strip `.git` into a snapshot, then **full recursive copy** of that tree
-  into the `vibedeps/<kind>-<name>/<version>/` slot. @status:impl/done
+  into the `vibedeps/<group>.<name>/<version>/` slot (identity-keyed — owner ruling 2026-08-13; the slot carried `<kind>-<name>` before that ruling, which collided same-named packages of different groups and moved a package on a kind change). @status:impl/done
 - @fact:snapshot-right-for-ordinary This is right for ordinary
   packages and gives the lockfile a stable `content_hash` and a committable,
   offline-reproducible vendored slot. @status:impl/done
@@ -126,7 +126,7 @@ full tree walk is unacceptable. vibevm never walks the tree: @status:impl/done
   `vibedeps/`; there is deliberately no cross-project sharing, which removes
   the concurrent-mutation problem a shared global clone would create. @status:impl/done
 - @fact:IP-UNVERSIONED-PATH **The slot path is not version-qualified.** An `in-place` slot is
-  `vibedeps/<kind>-<name>/` (no `/<version>/`): one working clone whose version
+  `vibedeps/<group>.<name>/` (no `/<version>/`): one working clone whose version
   is the current git ref. Versioning the path would mean two on-disk copies of
   the giant — the opposite of the goal. @status:impl/done
 - @fact:IP-REQUIRES-GIT **Requires a git source.** Incremental update and `git clean` reset both need

@@ -132,12 +132,12 @@ fn general_install_defers_in_place_instead_of_recloning() {
     // manifest and a sentinel that must survive (proof nothing was moved).
     write(
         root,
-        "vibedeps/feat-giant/.git/HEAD",
+        "vibedeps/org.vibevm.giant/.git/HEAD",
         "ref: refs/heads/main\n",
     );
     write(
         root,
-        "vibedeps/feat-giant/vibe.toml",
+        "vibedeps/org.vibevm.giant/vibe.toml",
         "[package]\n\
          group = \"org.vibevm\"\n\
          name = \"giant\"\n\
@@ -145,7 +145,7 @@ fn general_install_defers_in_place_instead_of_recloning() {
          version = \"1.0.0\"\n\
          materialization = \"in-place\"\n",
     );
-    write(root, "vibedeps/feat-giant/SENTINEL", "must survive");
+    write(root, "vibedeps/org.vibevm.giant/SENTINEL", "must survive");
 
     let source = MockSource {
         graph: ResolvedGraph {
@@ -199,18 +199,18 @@ fn general_install_defers_in_place_instead_of_recloning() {
     assert_eq!(placed[0].0, "giant");
     assert_eq!(
         placed[0].1,
-        root.join("vibedeps").join("feat-giant"),
+        root.join("vibedeps").join("org.vibevm.giant"),
         "the incremental fetch must target the unversioned in-place slot",
     );
 
     // The live slot was updated in place, never moved or re-cloned: its `.git`
     // and the sentinel both survive.
     assert!(
-        root.join("vibedeps/feat-giant/.git/HEAD").is_file(),
+        root.join("vibedeps/org.vibevm.giant/.git/HEAD").is_file(),
         "the in-place slot's git working tree must survive an incremental update",
     );
     assert!(
-        root.join("vibedeps/feat-giant/SENTINEL").is_file(),
+        root.join("vibedeps/org.vibevm.giant/SENTINEL").is_file(),
         "an incrementally-updated in-place slot must not be moved or cleared",
     );
 

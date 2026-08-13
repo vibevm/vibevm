@@ -198,8 +198,8 @@ fn materialise_resolution(
         // `.git`) into the slot instead of the per-file snapshot copy, and
         // `.gitignore` it (not vendored, §2.7).
         if is_in_place(dep) {
-            let rel = vibedeps::in_place_slot_rel_path(dep.kind, &dep.name);
-            let slot_abs = vibedeps::in_place_slot_abs_path(workspace_root, dep.kind, &dep.name);
+            let rel = vibedeps::in_place_slot_rel_path(&dep.group, &dep.name);
+            let slot_abs = vibedeps::in_place_slot_abs_path(workspace_root, &dep.group, &dep.name);
             // The install layer may have already placed the slot directly — an
             // incremental in-place update (PROP-022 §2.4), `git fetch`-ed onto
             // the existing `.git` rather than re-cloned — signalled by the
@@ -207,7 +207,7 @@ fn materialise_resolution(
             // move; the slot is already current and we only run the hook.
             let already_placed = dep.content_dir == slot_abs;
             if !already_placed
-                && vibedeps::is_in_place_slot(workspace_root, dep.kind, &dep.name)
+                && vibedeps::is_in_place_slot(workspace_root, &dep.group, &dep.name)
                 && slot_integrity == SlotIntegrity::TrustPresence
             {
                 skipped.push(rel);
@@ -216,7 +216,7 @@ fn materialise_resolution(
             if !already_placed {
                 vibedeps::materialise_in_place(
                     workspace_root,
-                    dep.kind,
+                    &dep.group,
                     &dep.name,
                     &dep.content_dir,
                 )?;
@@ -238,7 +238,8 @@ fn materialise_resolution(
                     Ok(Some(report)) => hook_reports.push(report),
                     Ok(None) => {}
                     Err(err) => {
-                        let _ = vibedeps::remove_in_place_slot(workspace_root, dep.kind, &dep.name);
+                        let _ =
+                            vibedeps::remove_in_place_slot(workspace_root, &dep.group, &dep.name);
                         return Err(WorkspaceError::from(err));
                     }
                 }
@@ -246,8 +247,9 @@ fn materialise_resolution(
             materialised.push(rel);
             continue;
         }
-        let slot = vibedeps::slot_rel_path(dep.kind, &dep.name, &dep.version);
-        let present = vibedeps::is_materialised(workspace_root, dep.kind, &dep.name, &dep.version);
+        let slot = vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version);
+        let present =
+            vibedeps::is_materialised(workspace_root, &dep.group, &dep.name, &dep.version);
         // A mutable local `file://` source (PROP-011 §2.6) is never
         // presence-trusted: slot-present-for-a-version is not a proxy for
         // correctness when the source is a working tree edited in place, so it
@@ -258,7 +260,7 @@ fn materialise_resolution(
         }
         vibedeps::materialise_with(
             workspace_root,
-            dep.kind,
+            &dep.group,
             &dep.name,
             &dep.version,
             &dep.content_dir,
@@ -279,7 +281,7 @@ fn materialise_resolution(
                     // PROP-020 §2.5 — preparation failed; vibevm never uses a
                     // half-prepared slot, so roll it back before surfacing.
                     let _ =
-                        vibedeps::remove_slot(workspace_root, dep.kind, &dep.name, &dep.version);
+                        vibedeps::remove_slot(workspace_root, &dep.group, &dep.name, &dep.version);
                     return Err(WorkspaceError::from(err));
                 }
             }
@@ -310,9 +312,9 @@ fn run_dep_hook(
     // The hook runs in the package's materialised slot — the unversioned
     // in-place working tree (PROP-022 §2.4), or the versioned snapshot slot.
     let slot = if is_in_place(dep) {
-        vibedeps::in_place_slot_abs_path(workspace_root, dep.kind, &dep.name)
+        vibedeps::in_place_slot_abs_path(workspace_root, &dep.group, &dep.name)
     } else {
-        vibedeps::slot_abs_path(workspace_root, dep.kind, &dep.name, &dep.version)
+        vibedeps::slot_abs_path(workspace_root, &dep.group, &dep.name, &dep.version)
     };
     let version = dep.version.to_string();
     let kind = dep.kind.to_string();
@@ -420,9 +422,9 @@ fn run_post_install_with(
         // Match the slot label `apply_resolution` reported — the unversioned
         // in-place path (PROP-022 §2.4) or the versioned snapshot path.
         let slot = if is_in_place(dep) {
-            vibedeps::in_place_slot_rel_path(dep.kind, &dep.name)
+            vibedeps::in_place_slot_rel_path(&dep.group, &dep.name)
         } else {
-            vibedeps::slot_rel_path(dep.kind, &dep.name, &dep.version)
+            vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version)
         };
         if !fresh.contains(slot.as_str()) {
             continue;

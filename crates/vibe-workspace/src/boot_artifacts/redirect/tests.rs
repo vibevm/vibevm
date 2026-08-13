@@ -64,12 +64,12 @@ fn write_boot_artifacts_writes_index_and_redirects() {
 #[test]
 fn write_boot_artifacts_writes_inline_when_present() {
     let ws = TempDir::new().unwrap();
-    let crit = ws.path().join("vibedeps/flow-crit/1.0.0/boot.md");
+    let crit = ws.path().join("vibedeps/org.vibevm.crit/1.0.0/boot.md");
     fs::create_dir_all(crit.parent().unwrap()).unwrap();
     fs::write(&crit, "# discipline").unwrap();
 
     let b = boot(vec![entry(
-        "vibedeps/flow-crit/1.0.0/boot.md",
+        "vibedeps/org.vibevm.crit/1.0.0/boot.md",
         LinkType::Static,
         "flow:crit",
     )]);
@@ -81,13 +81,13 @@ fn write_boot_artifacts_writes_inline_when_present() {
 #[test]
 fn write_boot_artifacts_removes_a_stale_inline() {
     let ws = TempDir::new().unwrap();
-    let crit = ws.path().join("vibedeps/flow-crit/1.0.0/boot.md");
+    let crit = ws.path().join("vibedeps/org.vibevm.crit/1.0.0/boot.md");
     fs::create_dir_all(crit.parent().unwrap()).unwrap();
     fs::write(&crit, "# discipline").unwrap();
 
     // First generation has an static contribution.
     let with_inline = boot(vec![entry(
-        "vibedeps/flow-crit/1.0.0/boot.md",
+        "vibedeps/org.vibevm.crit/1.0.0/boot.md",
         LinkType::Static,
         "flow:crit",
     )]);

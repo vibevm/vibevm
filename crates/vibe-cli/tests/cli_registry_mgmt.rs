@@ -152,7 +152,7 @@ fn update_bumps_to_new_version_and_remateralises() {
     assert!(
         project
             .path()
-            .join("vibedeps/flow-wal/0.1.0/spec/flows/wal/B.md")
+            .join("vibedeps/org.vibevm.wal/0.1.0/spec/flows/wal/B.md")
             .is_file(),
         "the v0.1.0 tree (with B.md) is materialised into its slot"
     );
@@ -191,7 +191,7 @@ fn update_bumps_to_new_version_and_remateralises() {
     // empty under the loading model.
     assert!(entry.files_written.is_empty());
 
-    let slot = project.path().join("vibedeps/flow-wal/0.2.0");
+    let slot = project.path().join("vibedeps/org.vibevm.wal/0.2.0");
     assert_eq!(
         fs::read_to_string(slot.join("spec/flows/wal/A.md")).unwrap(),
         "v2 A — changed!\n"
@@ -762,11 +762,14 @@ fn update_keeps_pinned_version_when_constraint_excludes_newer() {
     assert!(
         project
             .path()
-            .join("vibedeps/flow-wal/0.1.0/vibe.toml")
+            .join("vibedeps/org.vibevm.wal/0.1.0/vibe.toml")
             .is_file()
     );
     assert!(
-        !project.path().join("vibedeps/flow-wal/0.2.0").exists(),
+        !project
+            .path()
+            .join("vibedeps/org.vibevm.wal/0.2.0")
+            .exists(),
         "the excluded v0.2.0 must not be materialised"
     );
 }
@@ -1093,7 +1096,7 @@ fn install_with_features_records_active_features_in_lockfile() {
         .success();
 
     // The package tree is materialised verbatim into its slot.
-    let slot = project.path().join("vibedeps/flow-feat-pkg/0.1.0");
+    let slot = project.path().join("vibedeps/org.vibevm.feat-pkg/0.1.0");
     assert!(
         slot.join("spec/feats/feat-pkg/CORE.md").is_file(),
         "the package tree is materialised verbatim into vibedeps/"
@@ -1153,7 +1156,7 @@ fn install_no_default_features_drops_default_feature_from_lockfile() {
     assert!(
         project
             .path()
-            .join("vibedeps/flow-feat-pkg/0.1.0/spec/feats/feat-pkg/CORE.md")
+            .join("vibedeps/org.vibevm.feat-pkg/0.1.0/spec/feats/feat-pkg/CORE.md")
             .is_file()
     );
     let lock: vibe_core::manifest::Lockfile =
@@ -1753,7 +1756,7 @@ fn install_unattended_skips_confirm_like_assume_yes() {
     assert!(
         project
             .path()
-            .join("vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md")
+            .join("vibedeps/org.vibevm.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md")
             .is_file()
     );
 }
@@ -2766,7 +2769,9 @@ fn omnibus_install_exercises_every_prop003_surface() {
     // Each package's whole published tree is materialised verbatim into
     // its own `vibedeps/` slot — base content, subskill directories,
     // and i18n sidecars all ride along as plain files.
-    let alpha_slot = project.path().join("vibedeps/flow-integration-alpha/0.1.0");
+    let alpha_slot = project
+        .path()
+        .join("vibedeps/org.vibevm.integration-alpha/0.1.0");
     assert!(alpha_slot.join("vibe.toml").is_file());
     assert!(
         alpha_slot
@@ -2795,14 +2800,14 @@ fn omnibus_install_exercises_every_prop003_surface() {
     assert!(
         project
             .path()
-            .join("vibedeps/flow-integration-beta/0.1.0/vibe.toml")
+            .join("vibedeps/org.vibevm.integration-beta/0.1.0/vibe.toml")
             .is_file(),
         "the conditionally-pulled beta is materialised into its own slot"
     );
     assert!(
         project
             .path()
-            .join("vibedeps/stack-integration-rust/0.1.0/vibe.toml")
+            .join("vibedeps/org.vibevm.integration-rust/0.1.0/vibe.toml")
             .is_file()
     );
 
@@ -3812,7 +3817,7 @@ fn reinstall_regenerates_deleted_boot_artifacts() {
     // snippet — boot is recomputed from the materialised tree, not lost.
     let index_body = fs::read_to_string(&index).unwrap();
     assert!(
-        index_body.contains("vibedeps/flow-wal/0.2.0/spec/boot/10-flow-wal.md"),
+        index_body.contains("vibedeps/org.vibevm.wal/0.2.0/spec/boot/10-flow-wal.md"),
         "regenerated INDEX.md must name the materialised dependency boot:\n{index_body}"
     );
 }
@@ -3867,7 +3872,7 @@ fn reinstall_non_force_bails_when_vibedeps_slot_missing() {
         .success();
 
     // Delete the materialised slot — the lockfile still records org.vibevm.world/wal.
-    fs::remove_dir_all(project.path().join("vibedeps/flow-wal")).unwrap();
+    fs::remove_dir_all(project.path().join("vibedeps/org.vibevm.wal")).unwrap();
 
     user.vibe()
         .arg("reinstall")
@@ -3949,7 +3954,7 @@ fn reinstall_force_refetches_corrupted_vibedeps() {
     // Corrupt a content file inside the materialised `vibedeps/` slot.
     let corrupted = project
         .path()
-        .join("vibedeps/flow-wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md");
+        .join("vibedeps/org.vibevm.wal/0.2.0/spec/flows/wal/WAL-PROTOCOL.md");
     assert!(
         corrupted.is_file(),
         "org.vibevm.world/wal ships WAL-PROTOCOL.md"
