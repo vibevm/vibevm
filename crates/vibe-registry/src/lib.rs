@@ -336,8 +336,15 @@ pub struct InPlaceMaterialised {
 }
 
 mod error;
+mod hash_recipe;
 mod shippable;
 
 pub use error::RegistryError;
-pub use shippable::compute_content_hash;
+// The ordering half of the recipe is public for the same reason `vibe-index`
+// publishes its copy: the property "recipe 1's order does not depend on the
+// host separator" is provable only against a function callable without a
+// filesystem, and a guarantee that holds for one of two lockstep copies is a
+// guarantee about neither.
+pub use hash_recipe::{RecipeId, order_entries, order_paths};
 pub(crate) use shippable::copy_dir_recursive;
+pub use shippable::{compute_content_hash, compute_content_hash_with};

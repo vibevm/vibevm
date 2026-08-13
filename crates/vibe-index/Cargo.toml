@@ -49,3 +49,8 @@ predicates = { workspace = true }
 # Linking this isolates the test process's per-user settings home before the
 # first `#[test]` runs, so a bare `cargo_bin` child cannot reach `~/.vibe`.
 vibe-test-support = { workspace = true }
+# The content-hash parity test cross-checks `vibe-index`'s and `vibe-registry`'s
+# twin hashers byte-for-byte for each recipe (PROP-005 §3.2's promised parity
+# gate). A dev-dependency never ships in the library (PROP-005 §3.2), so the
+# standalone-redistribution rationale for the duplicated hasher still holds.
+vibe-registry = { workspace = true }

@@ -305,9 +305,11 @@ before PROP-008; `kind` left package identity, so `<name>` alone is the key. @st
 
 @fact:req-trust `req r1` @status:impl/done
 
-@fact:HASH-JOIN-KEY **Decision.** `content_hash` is the join key between the index and the lockfile. A consumer that fetches `flow:wal@0.1.0` via the index records the same `content_hash` in the lockfile that a no-index fetch would have produced. **Index entries are advisory; the bytes are authoritative.** @status:impl/done
+@fact:HASH-JOIN-KEY **Decision.** The **digest** of `content_hash` is the join key between the index and the lockfile, and it joins only **at a stated recipe** ([PROP-002 §2.1](../vibe-registry/PROP-002-decentralized-registry.md#identity)). A consumer that fetches `flow:wal@0.1.0` via the index records the digest a no-index fetch would have produced — for every tree except the ones recipe 1 exists to disambiguate, where the two recipes deliberately disagree and that disagreement is the point. **Index entries are advisory; the bytes are authoritative.** @status:impl/done
 
-@fact:TWO-INTEGRITY-LAYERS The `repomd.json::files[*].sha256` covers integrity of the index files themselves. The per-entry `content_hash` covers integrity of the package content. The two are independent: a tampered index file fails its file-hash check; a tampered package repo (force-pushed tag) fails its content-hash check at fetch time. @status:impl/done
+@fact:HASH-LABELS-DIFFER-BY-DESIGN-TODAY The index and the lockfile currently stand at **different** recipes: the index emits `sha256-tree/1:`, the lockfile keeps the bare `sha256:` until its own format moves. So their strings are deliberately unequal, and nothing compares them as strings — the index client does not read the field at all. Written down because the asymmetry looks like a defect to a cold reader and is instead the thing that keeps a live lockfile from being rewritten by a change it did not ask for. @status:impl/done
+
+@fact:TWO-INTEGRITY-LAYERS The `repomd.json::files[*].sha256` covers integrity of the index files themselves. The per-entry `content_hash` covers integrity of the package content, and carries its recipe so a check compares like with like. The two are independent: a tampered index file fails its file-hash check; a tampered package repo (force-pushed tag) fails its content-hash check at fetch time. @status:impl/done
 
 @fact:trust-oos **Out of scope for v0:** GPG-signed `repomd.json.asc`, Merkle-log audit trail (Go sumdb-style). [§9](#open) tracks both. @status:spec/done
 

@@ -1,6 +1,8 @@
 //! The shippable tree (PROP-024 §2.2): identity is the source,
-//! never build artifacts. The exclusion list MUST stay in lockstep
-//! with `vibe-index`'s content_hash port (PROP-005 §3.2).
+//! never build artifacts. The content-hash algorithm exists in two recipes
+//! (PROP-044 §4.7) and is duplicated verbatim-in-intent in `vibe-index`'s
+//! `content_hash` port — the two MUST stay in lockstep (PROP-005 §3.2), and a
+//! parity test (`vibe-index`'s `tests/content_hash_parity.rs`) gates that.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-024#shippable-tree");
 
@@ -11,19 +13,17 @@ use sha2::{Digest, Sha256};
 use walkdir::WalkDir;
 
 use crate::RegistryError;
-
-/// Build-output dir/file names a package's shippable tree excludes (PROP-024
-/// §2.2): identity is the source, not artifacts. MUST stay in lockstep with
-/// the identical list in `vibe-index`'s content_hash port (PROP-005 §3.2).
-const SHIPPABLE_EXCLUDES: &[&str] = &[".git", ".vibe", "target", "node_modules", ".vibeignore"];
+use crate::hash_recipe::{LEGACY0_EXCLUDES, RecipeId, order_entries};
 
 /// Prune build output from a [`WalkDir`] walk so the hash and slot cover only
 /// the shippable tree — per-entry, so an excluded dir is skipped, not entered.
-fn is_shippable(entry: &walkdir::DirEntry) -> bool {
+/// The list is recipe 0's frozen [`LEGACY0_EXCLUDES`]; recipe 1's data-driven
+/// list is identical today and carries the same lockstep obligation.
+fn is_shippable(entry: &walkdir::DirEntry, excludes: &[&str]) -> bool {
     entry
         .file_name()
         .to_str()
-        .map(|name| !SHIPPABLE_EXCLUDES.contains(&name))
+        .map(|name| !excludes.contains(&name))
         .unwrap_or(true)
 }
 
@@ -34,7 +34,7 @@ pub(crate) fn copy_dir_recursive(src: &Path, dst: &Path) -> Result<(), RegistryE
     })?;
     for entry in WalkDir::new(src)
         .into_iter()
-        .filter_entry(is_shippable)
+        .filter_entry(|e| is_shippable(e, LEGACY0_EXCLUDES))
         .filter_map(|e| e.ok())
     {
         let rel = entry.path().strip_prefix(src).unwrap_or(entry.path());
@@ -60,35 +60,71 @@ pub(crate) fn copy_dir_recursive(src: &Path, dst: &Path) -> Result<(), RegistryE
     Ok(())
 }
 
-/// sha256 of concatenated (rel_path_bytes || 0x00 || file_bytes || 0x00) for
-/// every file in the package, traversed in sorted order for determinism.
+/// Compute the content hash of `pkg_dir`'s shippable tree under `recipe`.
 ///
 /// This is the **identity** half of the `(group, name, version,
-/// content_hash)` tuple (PROP-002 §2.1). Reads every file under
-/// `pkg_dir`:
+/// content_hash)` tuple (PROP-002 §2.1). The bytes fed to SHA-256 per file
+/// are `normalised_path || 0x00 || file_bytes || 0x00`, identical across
+/// recipes; the two recipes differ only in file ORDER (recipe 1 normalises
+/// separators before ordering, recipe 0 orders the platform path first) and
+/// in the wire label. [`compute_content_hash`] (recipe 0, this crate's
+/// default) delegates here.
+///
+/// Reads every file under `pkg_dir`:
 ///
 /// ```no_run
-/// use std::path::{Path, PathBuf};
+/// use std::path::Path;
 /// use vibe_registry::compute_content_hash;
 ///
 /// let hash = compute_content_hash(Path::new("path/to/package")).unwrap();
 /// assert!(hash.starts_with("sha256:"));
 /// ```
-pub fn compute_content_hash(pkg_dir: &Path) -> Result<String, RegistryError> {
-    let mut files: Vec<PathBuf> = WalkDir::new(pkg_dir)
+pub fn compute_content_hash_with(
+    recipe: RecipeId,
+    pkg_dir: &Path,
+) -> Result<String, RegistryError> {
+    let excludes: Vec<&str> = match recipe {
+        RecipeId::Legacy0 => LEGACY0_EXCLUDES.to_vec(),
+        RecipeId::Tree1 => crate::hash_recipe::recipe1_excludes(),
+    };
+
+    // Walk the shippable tree, pairing each file with its raw relative path
+    // string. Recipe 0 is lossy on non-UTF-8 (frozen behaviour); recipe 1
+    // makes non-UTF-8 a hard error — two distinct invalid names would
+    // otherwise collide to one hash (PROP-044 §4.7).
+    let mut entries: Vec<(String, PathBuf)> = Vec::new();
+    for entry in WalkDir::new(pkg_dir)
         .into_iter()
-        .filter_entry(is_shippable)
+        .filter_entry(|e| is_shippable(e, &excludes))
         .filter_map(|e| e.ok())
         .filter(|e| e.file_type().is_file())
-        .map(|e| e.path().to_path_buf())
-        .collect();
-    files.sort();
+    {
+        let path = entry.path().to_path_buf();
+        let rel = path.strip_prefix(pkg_dir).unwrap_or(&path);
+        let raw = match recipe {
+            RecipeId::Legacy0 => rel.to_string_lossy().into_owned(),
+            RecipeId::Tree1 => rel
+                .to_str()
+                .ok_or_else(|| RegistryError::Io {
+                    path: path.clone(),
+                    source: std::io::Error::new(
+                        std::io::ErrorKind::InvalidData,
+                        "relative path is not valid UTF-8; recipe 1 (sha256-tree/1) requires \
+                         UTF-8 paths so two distinct non-UTF-8 names cannot collide to one hash",
+                    ),
+                })?
+                .to_owned(),
+        };
+        entries.push((raw, path));
+    }
+
+    // The file rides through the ordering beside its path, so nothing has to
+    // be looked back up afterwards — see `order_entries`.
+    let ordered = order_entries(recipe, entries);
 
     let mut hasher = Sha256::new();
-    for path in &files {
-        let rel = path.strip_prefix(pkg_dir).unwrap_or(path);
-        let rel_normalized = rel.to_string_lossy().replace('\\', "/");
-        hasher.update(rel_normalized.as_bytes());
+    for (norm, path) in &ordered {
+        hasher.update(norm.as_bytes());
         hasher.update([0]);
         let bytes = fs::read(path).map_err(|source| RegistryError::Io {
             path: path.clone(),
@@ -103,7 +139,14 @@ pub fn compute_content_hash(pkg_dir: &Path) -> Result<String, RegistryError> {
         let _ = write!(&mut s, "{b:02x}");
         s
     });
-    Ok(format!("sha256:{hex}"))
+    Ok(format!("{}{hex}", recipe.label()))
+}
+
+/// Compute the content hash of `pkg_dir`'s shippable tree with this crate's
+/// default recipe — recipe 0 (`sha256:`), the form every lockfile in
+/// existence already carries. Thin wrapper over [`compute_content_hash_with`].
+pub fn compute_content_hash(pkg_dir: &Path) -> Result<String, RegistryError> {
+    compute_content_hash_with(RecipeId::Legacy0, pkg_dir)
 }
 
 #[cfg(test)]

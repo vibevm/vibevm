@@ -1,0 +1,27 @@
+# formats/hash_recipes/1.toml — recipe 1 of the tree content hash
+# (PROP-044 §4.7 `##M-BREAK-WINDOW`: every derived value carries its recipe id,
+# and every recipe is frozen by a golden test, so changing a computation
+# becomes a visible new recipe instead of a silent change of every value in
+# the world).
+#
+# Wire label: `sha256-tree/1:<hex>`.
+#
+# Recipe 0 — the pre-recipe behaviour — is deliberately NOT a file: it is
+# frozen verbatim in code, because a frozen recipe that can be edited is not
+# frozen. It exists only so hashes written before recipes were named stay
+# readable.
+
+schema = 1
+
+# Directory / file names pruned from the walk: identity is the shippable
+# source, never build output (PROP-024 §2.2).
+excludes = [".git", ".vibe", "target", "node_modules", ".vibeignore"]
+
+# Path separators are normalised BEFORE ordering, not after — see `sort`.
+path_normalisation = "backslash-to-slash"
+
+# Byte order over the NORMALISED relative path string. Recipe 0 sorted the
+# platform `PathBuf` first and normalised afterwards, which makes the order
+# depend on the host separator whenever a sibling's name shares a directory's
+# prefix and continues with a byte between 0x2F and 0x5C.
+sort = "bytewise-normalised"

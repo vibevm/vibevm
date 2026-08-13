@@ -23,6 +23,11 @@ use serde::{Deserialize, Serialize};
 /// along. It was `serde(transparent)` until 2026-08-05, on a reason that only
 /// ever justified the wire SHAPE: `transparent` and `try_from`/`into` emit the
 /// same bare string, and only one of them notices a malformed value arriving.
+/// [`parse`] accepts TWO prefixes now (PROP-044 §4.7): the bare `sha256:`
+/// (recipe 0, what every lockfile in existence already carries) and
+/// `sha256-tree/1:` (recipe 1, the index-side hasher's new label); a reader
+/// accepts both for the same reason the recipe id exists at all — a value
+/// must say how it was computed, and old values said it by omission.
 /// The newtype's other job is keeping the identity hash from being confused
 /// with the many other strings around it (`source_url`, `source_ref`,
 /// `resolved_commit`); [`from_validated`] still wraps a hash a trusted producer
@@ -35,7 +40,10 @@ use serde::{Deserialize, Serialize};
 ///
 /// let h = ContentHash::parse("sha256:e3b0c44298fc1c14").unwrap();
 /// assert_eq!(h.as_str(), "sha256:e3b0c44298fc1c14");
-/// assert!(ContentHash::parse("md5:whatever").is_err()); // wrong algorithm
+/// // Recipe 1 (the index-side label) parses too — old and new forms are both
+/// // readable, and the value records which recipe made it.
+/// assert!(ContentHash::parse("sha256-tree/1:e3b0c44298fc1c14").is_ok());
+/// assert!(ContentHash::parse("md5:whatever").is_err()); // unknown algorithm
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(try_from = "String", into = "String")]
@@ -47,24 +55,37 @@ impl ContentHash {
     /// the format against an algorithm change.
     pub const PREFIX: &'static str = "sha256:";
 
-    /// Parse a `sha256:<hex>` hash, checking the algorithm prefix and that
-    /// the digest is non-empty lowercase hex. Lenient on length — test
-    /// fixtures and truncated-display hashes are accepted as long as the
-    /// shape is right.
+    /// Every algorithm prefix `parse` accepts, newest first. `sha256:` is
+    /// recipe 0 — the pre-recipe form, still written by the registry-side
+    /// hasher and by every lockfile in existence; `sha256-tree/1:` is recipe 1
+    /// (PROP-044 §4.7), emitted by the index. A reader accepts both for the
+    /// same reason the recipe id exists at all: a value must say how it was
+    /// computed, and old values said it by omission.
+    pub const ACCEPTED_PREFIXES: &'static [&'static str] = &["sha256-tree/1:", "sha256:"];
+
+    /// Parse a `<algo-prefix><hex>` hash, checking the algorithm prefix
+    /// (one of [`ACCEPTED_PREFIXES`]) and that the digest is non-empty hex.
+    /// Lenient on length — test fixtures and truncated-display hashes are
+    /// accepted as long as the shape is right.
     pub fn parse(input: &str) -> Result<Self, crate::Error> {
-        let Some(hex) = input.strip_prefix(Self::PREFIX) else {
-            return Err(crate::Error::BadContentHash {
-                input: input.to_owned(),
-                reason: format!("missing the `{}` algorithm prefix", Self::PREFIX),
-            });
-        };
-        if hex.is_empty() || !hex.bytes().all(|b| b.is_ascii_hexdigit()) {
-            return Err(crate::Error::BadContentHash {
-                input: input.to_owned(),
-                reason: "the digest after the prefix must be non-empty hexadecimal".into(),
-            });
+        for prefix in Self::ACCEPTED_PREFIXES {
+            if let Some(hex) = input.strip_prefix(prefix) {
+                if hex.is_empty() || !hex.bytes().all(|b| b.is_ascii_hexdigit()) {
+                    return Err(crate::Error::BadContentHash {
+                        input: input.to_owned(),
+                        reason: "the digest after the prefix must be non-empty hexadecimal".into(),
+                    });
+                }
+                return Ok(ContentHash(input.to_owned()));
+            }
         }
-        Ok(ContentHash(input.to_owned()))
+        Err(crate::Error::BadContentHash {
+            input: input.to_owned(),
+            reason: format!(
+                "missing a recognised algorithm prefix; expected one of {}",
+                Self::ACCEPTED_PREFIXES.join(" / ")
+            ),
+        })
     }
 
     /// Wrap a hash already produced by a trusted hasher
@@ -121,5 +142,83 @@ impl PartialEq<str> for ContentHash {
 impl PartialEq<&str> for ContentHash {
     fn eq(&self, other: &&str) -> bool {
         self.0 == *other
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::manifest::LockedPackage;
+
+    #[test]
+    fn parse_accepts_both_recipe_labels() {
+        // Recipe 0 (legacy) and recipe 1 (tree) both parse — old values stay
+        // readable, new values carry their recipe (PROP-044 §4.7).
+        let legacy = ContentHash::parse("sha256:e3b0c44298fc1c14").unwrap();
+        assert_eq!(legacy.as_str(), "sha256:e3b0c44298fc1c14");
+        let tree = ContentHash::parse("sha256-tree/1:e3b0c44298fc1c14").unwrap();
+        assert_eq!(tree.as_str(), "sha256-tree/1:e3b0c44298fc1c14");
+    }
+
+    #[test]
+    fn parse_rejects_unknown_algorithm() {
+        // A third algorithm — or no prefix at all — is rejected.
+        assert!(ContentHash::parse("md5:d41d8cd98f00b204").is_err());
+        assert!(ContentHash::parse("e3b0c44298fc1c14").is_err());
+    }
+
+    #[test]
+    fn parse_rejects_empty_or_non_hex_tail() {
+        assert!(ContentHash::parse("sha256:").is_err());
+        assert!(ContentHash::parse("sha256-tree/1:").is_err());
+        assert!(ContentHash::parse("sha256:nothex").is_err());
+    }
+
+    #[test]
+    fn locked_package_with_legacy_hash_reads_as_today() {
+        // A lockfile entry carrying the pre-recipe `sha256:` form deserialises
+        // unchanged — the old value said its recipe by omission, and the
+        // reader still honours that. This is the shape every lockfile already
+        // on disk has.
+        let toml_src = r#"
+            kind = "flow"
+            name = "wal"
+            group = "org.vibevm"
+            version = "0.3.0"
+            registry = "vibespecs"
+            source_url = "git@gitverse.ru:vibespecs/flow-wal.git"
+            content_hash = "sha256:abc"
+            source_kind = "registry"
+        "#;
+        let p: LockedPackage = toml::from_str(toml_src).unwrap();
+        assert_eq!(p.content_hash.as_str(), "sha256:abc");
+    }
+
+    #[test]
+    fn locked_package_accepts_recipe_1_hash() {
+        // The new label round-trips through the lockfile shape too.
+        let toml_src = r#"
+            kind = "flow"
+            name = "wal"
+            group = "org.vibevm"
+            version = "0.3.0"
+            registry = "vibespecs"
+            source_url = "git@gitverse.ru:vibespecs/flow-wal.git"
+            content_hash = "sha256-tree/1:abc"
+            source_kind = "registry"
+        "#;
+        let p: LockedPackage = toml::from_str(toml_src).unwrap();
+        assert_eq!(p.content_hash.as_str(), "sha256-tree/1:abc");
+    }
+
+    #[test]
+    fn each_form_survives_a_string_round_trip() {
+        // `into = "String"` emits exactly the bytes that arrived, so a hash's
+        // recipe survives a lockfile write+read cycle.
+        for input in ["sha256:abc", "sha256-tree/1:abc"] {
+            let h = ContentHash::parse(input).unwrap();
+            let wire: String = h.into();
+            assert_eq!(wire, input);
+        }
     }
 }
