@@ -1,6 +1,6 @@
 # PROP-044: Change-native formats — surviving perpetual evolution {#root}
 
-<status stage="spec" state="work" comment="commissioned by the owner 2026-08-09 (mandate quoted in §1); synthesised from the schema-evolution discovery corpus, this session's tree measurements, and a separately convened Fable verdict; awaiting the owner's ratification — the TZ that builds it gates on his word"/>
+<status stage="spec" state="done" comment="commissioned by the owner 2026-08-09 (mandate quoted in §1); synthesised from the schema-evolution discovery corpus, tree measurements, and a separately convened Fable verdict; RATIFIED by the owner 2026-08-13 («Ратификацию на сам PROP-044 даю») — the standing format ideology; build phases unlocked (TZ-CHANGE-NATIVE-FORMATS Ф0+, wave-2 TZ)"/>
 
 @fact:PURPOSE **What this document is.** The standing ideology for every durable
 data format this project reads or writes — package format, manifests, catalog,
