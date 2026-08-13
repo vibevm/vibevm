@@ -4,6 +4,7 @@
 // `*.jtd.json` schema under `schemas/`. Editing
 // this file by hand will be overwritten on the next codegen run.
 
+pub mod format_id;
 pub mod init_report;
 pub mod install_plan;
 pub mod install_report;

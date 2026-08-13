@@ -1,0 +1,199 @@
+# formats/REGISTRY.toml — the format registry (PROP-044 §4.1 `##M-FORMAT-REGISTRY`).
+#
+# Every surface a foreign parser reads is inventoried here. From this file the
+# `FormatId` enum is generated (`cargo xtask codegen` →
+# `crates/vibe-wire/src/generated/format_id/mod.rs`), so an unregistered format
+# is *inexpressible in the type system*, not merely discouraged: an unnumbered
+# format is a format that will be broken without anyone noticing.
+#
+# Read by: the codegen generator (`xtask/src/codegen.rs`), the
+# `format_id_completeness` test, and — via the generated `FormatId` — every
+# `wire::publish/load(FormatId, …)` call site (the gate G1 of PROP-044 §8).
+#
+# Per record: `id` (the `[format.<id>]` key), `epoch`, `schema` (a path or
+# "none"), `recoverable` (bool), `foreign_parsers` (none | ours | many),
+# `corpus` (a path or "none"), `sunset` (a date or "none").
+#
+# The `recoverable` and `foreign_parsers` axes are not free choices: a format's
+# policy is *computed* from them — see PROP-044 §5 `##POLICY-IS-COMPUTED`.
+# `recoverable` = rebuildable without a human (delete and reproject from the
+# authoritative core, §3); `foreign_parsers` = how many independent parsers read
+# it (raw `curl | jq` parsing is assumed — `##RISK-RAW-PARSERS`).
+#
+# Schema paths for not-yet-built formats (the index catalog, journal, handshake)
+# are the plan-assigned paths, recorded here as-is (Ф4.1 / Ф3.1 / Ф6.1).
+# `cli-package-tree` points at a JSON Schema 2020-12 file (not JTD); the codegen
+# generator leaves it untouched — its routing keys on the `*.jtd.json` suffix.
+#
+# `narrow-public-gate` is deliberately absent: it does not exist yet and is not
+# built by this TZ (D12, wave 3); a variant nothing can use is an inventory of
+# the non-existent. It enters on the first line of wave 3.
+
+# ── CLI machine-JSON reports (7 JTD + 1 JSON Schema), PROP-044 §6.5 ──────────
+[format.cli-init-report]
+epoch = 1
+schema = "schemas/init_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.cli-install-plan]
+epoch = 1
+schema = "schemas/install_plan.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.cli-install-report]
+epoch = 1
+schema = "schemas/install_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.cli-list-report]
+epoch = 1
+schema = "schemas/list_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.cli-registry-publish-report]
+epoch = 1
+schema = "schemas/registry_publish_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.cli-registry-sync-report]
+epoch = 1
+schema = "schemas/registry_sync_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.cli-uninstall-report]
+epoch = 1
+schema = "schemas/uninstall_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# The sole CLI format on JSON Schema 2020-12 (not JTD); the generator does not
+# touch it — codegen routing keys on the `*.jtd.json` suffix (Ф1.1 ruling 4).
+[format.cli-package-tree]
+epoch = 1
+schema = "crates/vibe-cli/resources/package-tree.schema.v1.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# ── Catalog (PROP-044 §6.1 — three fates) ───────────────────────────────────
+# `index-entry` is the portable `VersionEntry` record: it is both a line of
+# `primary.jsonl` and an element of `versions[]` inside `by-name/<name>.json`.
+[format.index-entry]
+epoch = 1
+schema = "schemas/index/e1/entry.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index/e1"
+sunset = "none"
+
+[format.index-repomd]
+epoch = 1
+schema = "schemas/index/e1/repomd.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index/e1"
+sunset = "none"
+
+[format.index-primary]
+epoch = 1
+schema = "schemas/index/e1/entry.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index/e1"
+sunset = "none"
+
+[format.index-by-name]
+epoch = 1
+schema = "schemas/index/e1/by_name.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index/e1"
+sunset = "none"
+
+[format.index-by-cap]
+epoch = 1
+schema = "schemas/index/e1/by_cap.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.index-by-purl]
+epoch = 1
+schema = "schemas/index/e1/by_purl.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# ── Authored formats (authored, not derived) ────────────────────────────────
+[format.manifest]
+epoch = 1
+schema = "none"
+recoverable = false
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.lockfile]
+epoch = 1
+schema = "none"
+recoverable = true
+foreign_parsers = "ours"
+corpus = "none"
+sunset = "none"
+
+# ── Uninventoried surfaces (PROP-044 §6.5) ──────────────────────────────────
+[format.mcp-tools]
+epoch = 1
+schema = "none"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.config]
+epoch = 1
+schema = "none"
+recoverable = false
+foreign_parsers = "none"
+corpus = "none"
+sunset = "none"
+
+# ── Planned — built by later phases of this TZ (Ф3.1, Ф6.1) ─────────────────
+[format.journal]
+epoch = 1
+schema = "schemas/journal/e1/journal.jtd.json"
+recoverable = false
+foreign_parsers = "ours"
+corpus = "none"
+sunset = "none"
+
+[format.handshake]
+epoch = 1
+schema = "schemas/hello/e1/hello.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"

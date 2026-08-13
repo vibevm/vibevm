@@ -13,3 +13,7 @@ description = "Generated Rust types for vibevm wire contracts (JTD-driven, see P
 [dependencies]
 serde.workspace = true
 serde_json.workspace = true
+
+[dev-dependencies]
+# The `format_id_completeness` test parses the format registry.
+toml.workspace = true
