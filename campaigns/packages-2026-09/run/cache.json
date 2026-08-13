@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-13T16:50:24Z",
+  "updated_at": "2026-08-13T17:37:25Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -87859,7 +87859,7 @@
       }
     },
     "spec/common/PROP-000.md": {
-      "content_hash": "d578aeae28810864db6d3ab06b234263ddce463802cdbabdaeb429640b89727f",
+      "content_hash": "bf20a4a3231a9ec97c332a76d8d3854f6461678df8bc3ce7daa687ce04655712",
       "rollup": {
         "explicit": [
           "spec",
@@ -87885,7 +87885,7 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 161,
         "marker_count": 162,
-        "processed_hash": "d578aeae28810864db6d3ab06b234263ddce463802cdbabdaeb429640b89727f",
+        "processed_hash": "bf20a4a3231a9ec97c332a76d8d3854f6461678df8bc3ce7daa687ce04655712",
         "verdicts": {
           "DOC-PINS": {
             "v": "confirmed",
@@ -88256,7 +88256,7 @@
           "CACHE-PACKAGES": {
             "v": "confirmed",
             "ev": [
-              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+              "Stale layout corrected to shipped reality: .vibe/cache/<group>/<name>/<version> — verified on disk (.vibe/cache/org.vibevm.world/wal et al.); the earlier <kind>/<name> spelling lagged the code and no code composes kind-keyed project cache. Status impl/done now that the letter matches the tree"
             ]
           },
           "GRAPH-BUILTIN-NODES": {
@@ -89023,8 +89023,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-13T16:50:24Z",
-        "verify_batch": "c3b-prop-000 + d1 + D14 + D20 + H4-stale-host + H6-stale-host-tail + DEBT-2026-08-06-C + IDENT-2026-08-13-rejudge"
+        "verified_at": "2026-08-13T17:36:33Z",
+        "verify_batch": "c3b-prop-000 + d1 + D14 + D20 + H4-stale-host + H6-stale-host-tail + DEBT-2026-08-06-C + IDENT-2026-08-13-rejudge + COPY-2026-08-13"
       }
     },
     "spec/common/PROP-006-operating-modes.md": {
@@ -91684,7 +91684,7 @@
       }
     },
     "spec/common/PROP-024-code-bearing-packages.md": {
-      "content_hash": "7d36407b80c1154a2834b3da74f0400ad71a1e2ab8151f347c6b67a0a83b585b",
+      "content_hash": "806e7e58107f255622891d8bc2312ecf91516a7061ec86d2b9590b60dc6c53f4",
       "rollup": {
         "explicit": [
           "spec",
@@ -91710,7 +91710,7 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 76,
         "marker_count": 77,
-        "processed_hash": "7d36407b80c1154a2834b3da74f0400ad71a1e2ab8151f347c6b67a0a83b585b",
+        "processed_hash": "806e7e58107f255622891d8bc2312ecf91516a7061ec86d2b9590b60dc6c53f4",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -91722,8 +91722,7 @@
           "related": {
             "v": "confirmed",
             "ev": [
-              "cites vibedeps/flow-core-ai-native/0.6.0/spec/mechanisms/... - the 0.6.0 slot no longer exists (only 0.7.0); dead links -> F-044",
-              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
+              "Dead pointers repaired: mechanism-spec links now target the installed slot vibedeps/org.vibevm.ai-native.core-ai-native/0.8.0 (old flow-core-ai-native/0.7.0 slot no longer exists after df5d4563); the §2.2 parenthetical says copy-mode tree per the rename. Link targets verified present on disk"
             ]
           },
           "SANCTION-GRANTED": {
@@ -92246,8 +92245,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-01T07:27:17Z",
-        "verify_batch": "c3d-common-tail + d2d + D14"
+        "verified_at": "2026-08-13T17:36:33Z",
+        "verify_batch": "c3d-common-tail + d2d + D14 + COPY-2026-08-13"
       }
     },
     "spec/common/PROP-028-package-families.md": {
@@ -94344,7 +94343,7 @@
       }
     },
     "spec/common/PROP-044-change-native-formats.md": {
-      "content_hash": "253683506f808a351747074302f5d4b181c526f6aab7b8fbdf0f07278c59a614",
+      "content_hash": "ecbbcfc01c93366f7229afd61c01c42343d36379b0e87feefd6aa320979d37c9",
       "rollup": {
         "explicit": [
           "spec",
@@ -94366,7 +94365,7 @@
       "unit_count": 11,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "253683506f808a351747074302f5d4b181c526f6aab7b8fbdf0f07278c59a614",
+        "processed_hash": "ecbbcfc01c93366f7229afd61c01c42343d36379b0e87feefd6aa320979d37c9",
         "verdicts": {
           "PURPOSE": {
             "v": "confirmed",
@@ -94677,12 +94676,12 @@
           "TERMS-SNAPSHOT-FROZEN-CHANNEL": {
             "v": "confirmed",
             "ev": [
-              "Owner rulings 2026-08-13 verbatim («snapshot/frozen - это антонимы? Надо бы прописать это явно в терминологии» + «незафиксированную версию называть \"snapshot\" по аналогии с maven» + «слово \"канал\" отдать новому механизму»); the capture/named-ref renames applied in the same landing (PROVIDER-NEUTRALITY text, commit 3106bf0d); PROP-022 materialization=\"snapshot\" deliberately not renamed — flagged, as the fact states"
+              "Updated the flagged-sense clause: the owner ruled «copy» the same day, so the block now records completion — snapshot carries exactly one sense. Code: Materialization::Copy + legacy refusal recipe (package.rs); prior text was true when the flag stood open"
             ]
           }
         },
-        "verified_at": "2026-08-13T16:50:24Z",
-        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING + PROVIDER-NEUTRALITY-RULING + FREEZE-MODEL-RULING + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge"
+        "verified_at": "2026-08-13T17:36:33Z",
+        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING + PROVIDER-NEUTRALITY-RULING + FREEZE-MODEL-RULING + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge + COPY-2026-08-13"
       }
     },
     "spec/design/README.md": {
@@ -106404,7 +106403,7 @@
       }
     },
     "spec/modules/vibe-mcp/PROP-027-mcp-packages.md": {
-      "content_hash": "9f7c54fcb9d7fd20488b8bc1705e5f5e18c12778470a69568e5ab243d0b37148",
+      "content_hash": "eca5b465bb89f6d39c1ba0886ae9e30695af21b8e93aaad5a144b20ca9415f4b",
       "rollup": {
         "explicit": [
           "impl",
@@ -106430,7 +106429,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (18 cells); document <status> judged as _elements",
         "fact_count": 75,
         "marker_count": 76,
-        "processed_hash": "9f7c54fcb9d7fd20488b8bc1705e5f5e18c12778470a69568e5ab243d0b37148",
+        "processed_hash": "eca5b465bb89f6d39c1ba0886ae9e30695af21b8e93aaad5a144b20ca9415f4b",
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -106483,7 +106482,7 @@
           "KIND-REGISTER": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+              "Slot statement re-keyed to the identity form vibedeps/<group>.<name>/<version> per the 2026-08-13 ruling; disk agrees (vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/0.7.0 exists); prior kind-prefixed text was true until df5d4563"
             ]
           },
           "TABLE-ONLY-IN-KIND": {
@@ -106781,8 +106780,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T14:55:40Z",
-        "verify_batch": "c4f2-mcp-settings"
+        "verified_at": "2026-08-13T17:36:33Z",
+        "verify_batch": "c4f2-mcp-settings + COPY-2026-08-13"
       }
     },
     "spec/modules/vibe-progress/OWNER-GUIDE.md": {
@@ -107203,7 +107202,7 @@
       }
     },
     "spec/modules/vibe-progress/PROP-043-progress-markup.md": {
-      "content_hash": "fd2bb091208c2daf291c9d1566df1a71518b9da7ce9945e11736cd51f9f4c079",
+      "content_hash": "c4412037448c5115930f3ee2d52c1c7f8ec77ef051be33624b5f70d1534a5883",
       "rollup": {
         "explicit": [
           "impl",
@@ -107247,7 +107246,7 @@
           "related": {
             "v": "confirmed",
             "ev": [
-              "verified against progress-core sources + live CLI this session"
+              "Dead pointer repaired to the installed slot (org.vibevm.ai-native.core-ai-native/0.8.0); target verified present. File deliberately left UNSEALED: its 30 standing-stale facts belong to the owner-ordered proof-bar re-judgement campaign and this session did not verify them"
             ]
           },
           "memory-accumulated": {
@@ -108348,7 +108347,7 @@
           }
         },
         "verified_at": "2026-08-03T11:11:46Z",
-        "verify_batch": "c4a-vibe-progress + d2f + E + DEBT-2026-08-06-H"
+        "verify_batch": "c4a-vibe-progress + d2f + E + DEBT-2026-08-06-H + COPY-2026-08-13-p43"
       }
     },
     "spec/modules/vibe-progress/templates/harvest-card.md": {
@@ -117542,7 +117541,7 @@
       }
     },
     "spec/modules/vibe-workspace/PROP-009-loading-model.md": {
-      "content_hash": "90efac1fd30f9f9e9cd479e8d01ffef4f493087625597af4e2d272fa1f750201",
+      "content_hash": "511b16f37a75baec5ebc1f77a5eedd80885e73663e5bb2a7fd8a0670dced8e01",
       "rollup": {
         "explicit": [
           "impl",
@@ -117568,7 +117567,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 103,
         "marker_count": 104,
-        "processed_hash": "90efac1fd30f9f9e9cd479e8d01ffef4f493087625597af4e2d272fa1f750201",
+        "processed_hash": "511b16f37a75baec5ebc1f77a5eedd80885e73663e5bb2a7fd8a0670dced8e01",
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -117723,7 +117722,7 @@
           "ARTIFACT-INDEX-MD": {
             "v": "confirmed",
             "ev": [
-              "artifacts live and consumed daily: STATIC.md (verbatim priority lane — this session read it first), INDEX.md TOML manifest (schema=1, static pointer, [[entry]] path/kind — the live file matches the §2.3 grammar byte-for-byte); pure file-reading preserved; redirect is the PROP-012 managed <vibevm> block (live in CLAUDE.md)"
+              "Illustrative INDEX entry re-keyed to the identity slot form the generator now writes (spec/boot/INDEX.md shows the same shape live)"
             ]
           },
           "ARTIFACTS-GENERATED": {
@@ -118255,8 +118254,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-13T16:50:24Z",
-        "verify_batch": "c4d1-workspace-big3 + d2a + H4-stale-host + H6-stale-host-tail + IDENT-2026-08-13-rejudge"
+        "verified_at": "2026-08-13T17:36:33Z",
+        "verify_batch": "c4d1-workspace-big3 + d2a + H4-stale-host + H6-stale-host-tail + IDENT-2026-08-13-rejudge + COPY-2026-08-13"
       }
     },
     "spec/modules/vibe-workspace/PROP-011-incremental-install.md": {
@@ -119789,7 +119788,7 @@
       }
     },
     "spec/modules/vibe-workspace/PROP-022-materialization-modes.md": {
-      "content_hash": "354a2230043f977fd957ece37b6b85493cbe61adb03a7f98dcac42d690515b8c",
+      "content_hash": "9722ba9bcf353c24a98ff68053e2d4c2efbcede12cd9d6b509002c2ebd2711b6",
       "rollup": {
         "explicit": [
           "impl",
@@ -119815,25 +119814,24 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 52,
         "marker_count": 53,
-        "processed_hash": "354a2230043f977fd957ece37b6b85493cbe61adb03a7f98dcac42d690515b8c",
+        "processed_hash": "9722ba9bcf353c24a98ff68053e2d4c2efbcede12cd9d6b509002c2ebd2711b6",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
             "ev": [
-              "F-018 extended (c4d2): the materialization-mode system ships wholesale under the same 'proposed' header as its PROP-020 sibling — Materialization enum with Snapshot default + InPlace + is_in_place doctests (vibe-core package.rs:265-277), hardlink/in-place machinery through vibe-install (fetched.rs/apply.rs/plan.rs, materialise_in_place seam, deferred in-place incremental git-fetch path, --recurse-submodules clone), submodule snapshot-embedding in git_package_registry/fetch.rs, the destructive guard in commands/uninstall.rs — one re-mark sweep with the header fix",
-              "D d1 2026-07-25 (F-018 closed for this file): status line rewritten to IMPLEMENTED citing the Materialization enum + install machinery + destructive guard, document element -> impl/done, drifted facts re-marked spec/done -> impl/done"
+              "Word-level: enum default named Copy per owner ruling «4. copy» 2026-08-13; code: crates/vibe-core/src/manifest/package.rs Materialization::Copy #[default], wire kebab \"copy\". Rest of the fact unchanged and previously true under the old name"
             ]
           },
           "related": {
             "v": "confirmed",
             "ev": [
-              "link roster live (PROP-019 §2.15/§2.16 placer/by-reference prior art anchors resolve)"
+              "Word-level: .git-stripped content tree in the PROP-010 cross-reference; targets unchanged"
             ]
           },
           "today-single-policy": {
             "v": "confirmed",
             "ev": [
-              "Slot path updated to `<group>.<name>` with the ruling and the two defects of the old key named (cross-group collision; kind-change moves the slot); prior text true until df5d4563. Code: vibedeps.rs:41 + re-materialised tree"
+              "Second word-level pass on this fact today (snapshot → content tree for the stripped intermediate); slot text from the earlier pass unchanged; code unchanged"
             ]
           },
           "snapshot-right-for-ordinary": {
@@ -119884,8 +119882,7 @@
           "SNAPSHOT-DEFAULT": {
             "v": "confirmed",
             "ev": [
-              "F-018 extended (c4d2): the materialization-mode system ships wholesale under the same 'proposed' header as its PROP-020 sibling — Materialization enum with Snapshot default + InPlace + is_in_place doctests (vibe-core package.rs:265-277), hardlink/in-place machinery through vibe-install (fetched.rs/apply.rs/plan.rs, materialise_in_place seam, deferred in-place incremental git-fetch path, --recurse-submodules clone), submodule snapshot-embedding in git_package_registry/fetch.rs, the destructive guard in commands/uninstall.rs — one re-mark sweep with the header fix",
-              "D d1 2026-07-25 (F-018 closed for this file): status line rewritten to IMPLEMENTED citing the Materialization enum + install machinery + destructive guard, document element -> impl/done, drifted facts re-marked spec/done -> impl/done"
+              "Renamed default recorded with its ruling and the refusal-not-alias policy; code: manual Deserialize refuses \"snapshot\" with the rename recipe (package.rs), test materialization_refuses_the_legacy_snapshot_name_with_the_recipe. Prior text true under the pre-ruling name"
             ]
           },
           "MODE-IN-DESCRIPTOR": {
@@ -119905,7 +119902,7 @@
           "SNAPSHOT-PIPELINE": {
             "v": "confirmed",
             "ev": [
-              "impl/done and live: the status-quo pipeline is today's shipped default path"
+              "Only the word for the .git-stripped intermediate changed (snapshot → content tree) per PROP-044 §2b hygiene; the pipeline itself byte-identical in behaviour (vibedeps.rs materialise/copy_tree unchanged)"
             ]
           },
           "STRIP-EXTENDED": {
@@ -119923,8 +119920,7 @@
           "SUBMODULE-EMBEDDED": {
             "v": "confirmed",
             "ev": [
-              "F-018 extended (c4d2): the materialization-mode system ships wholesale under the same 'proposed' header as its PROP-020 sibling — Materialization enum with Snapshot default + InPlace + is_in_place doctests (vibe-core package.rs:265-277), hardlink/in-place machinery through vibe-install (fetched.rs/apply.rs/plan.rs, materialise_in_place seam, deferred in-place incremental git-fetch path, --recurse-submodules clone), submodule snapshot-embedding in git_package_registry/fetch.rs, the destructive guard in commands/uninstall.rs — one re-mark sweep with the header fix",
-              "D d1 2026-07-25 (F-018 closed for this file): status line rewritten to IMPLEMENTED citing the Materialization enum + install machinery + destructive guard, document element -> impl/done, drifted facts re-marked spec/done -> impl/done"
+              "Word-level: embedded into the copied tree (was: the snapshot); PROP-021 §2.3 anchor #snapshot-embedding untouched (anchors immutable)"
             ]
           },
           "HOOK-RESET-REMATERIALISE": {
@@ -119944,8 +119940,7 @@
           "HARDLINK-MODE": {
             "v": "confirmed",
             "ev": [
-              "F-018 extended (c4d2): the materialization-mode system ships wholesale under the same 'proposed' header as its PROP-020 sibling — Materialization enum with Snapshot default + InPlace + is_in_place doctests (vibe-core package.rs:265-277), hardlink/in-place machinery through vibe-install (fetched.rs/apply.rs/plan.rs, materialise_in_place seam, deferred in-place incremental git-fetch path, --recurse-submodules clone), submodule snapshot-embedding in git_package_registry/fetch.rs, the destructive guard in commands/uninstall.rs — one re-mark sweep with the header fix",
-              "D d1 2026-07-25 (F-018 closed for this file): status line rewritten to IMPLEMENTED citing the Materialization enum + install machinery + destructive guard, document element -> impl/done, drifted facts re-marked spec/done -> impl/done"
+              "Word-level: cached snapshot → cached content tree; the VVM placer mechanics text unchanged and still matching CopyMode::Hardlink (vibedeps.rs)"
             ]
           },
           "HARDLINK-FALLBACK": {
@@ -120027,8 +120022,7 @@
           "ID-COPY-MODES": {
             "v": "confirmed",
             "ev": [
-              "F-018 extended (c4d2): the materialization-mode system ships wholesale under the same 'proposed' header as its PROP-020 sibling — Materialization enum with Snapshot default + InPlace + is_in_place doctests (vibe-core package.rs:265-277), hardlink/in-place machinery through vibe-install (fetched.rs/apply.rs/plan.rs, materialise_in_place seam, deferred in-place incremental git-fetch path, --recurse-submodules clone), submodule snapshot-embedding in git_package_registry/fetch.rs, the destructive guard in commands/uninstall.rs — one re-mark sweep with the header fix",
-              "D d1 2026-07-25 (F-018 closed for this file): status line rewritten to IMPLEMENTED citing the Materialization enum + install machinery + destructive guard, document element -> impl/done, drifted facts re-marked spec/done -> impl/done"
+              "Mode list respelled copy/hardlink; identity semantics unchanged (content_hash over slot tree)"
             ]
           },
           "ID-IN-PLACE": {
@@ -120076,8 +120070,7 @@
           "VENDORED-COPY-MODES": {
             "v": "confirmed",
             "ev": [
-              "F-018 extended (c4d2): the materialization-mode system ships wholesale under the same 'proposed' header as its PROP-020 sibling — Materialization enum with Snapshot default + InPlace + is_in_place doctests (vibe-core package.rs:265-277), hardlink/in-place machinery through vibe-install (fetched.rs/apply.rs/plan.rs, materialise_in_place seam, deferred in-place incremental git-fetch path, --recurse-submodules clone), submodule snapshot-embedding in git_package_registry/fetch.rs, the destructive guard in commands/uninstall.rs — one re-mark sweep with the header fix",
-              "D d1 2026-07-25 (F-018 closed for this file): status line rewritten to IMPLEMENTED citing the Materialization enum + install machinery + destructive guard, document element -> impl/done, drifted facts re-marked spec/done -> impl/done"
+              "Mode list respelled; vendoring semantics unchanged (slots committed, offline-reproducible — the re-materialised tree in commit df5d4563 is itself the live demonstration)"
             ]
           },
           "IN-PLACE-NOT-VENDORED": {
@@ -120132,15 +120125,13 @@
           "ACC-FIELD-PARSES": {
             "v": "confirmed",
             "ev": [
-              "F-018 extended (c4d2): the materialization-mode system ships wholesale under the same 'proposed' header as its PROP-020 sibling — Materialization enum with Snapshot default + InPlace + is_in_place doctests (vibe-core package.rs:265-277), hardlink/in-place machinery through vibe-install (fetched.rs/apply.rs/plan.rs, materialise_in_place seam, deferred in-place incremental git-fetch path, --recurse-submodules clone), submodule snapshot-embedding in git_package_registry/fetch.rs, the destructive guard in commands/uninstall.rs — one re-mark sweep with the header fix",
-              "D d1 2026-07-25 (F-018 closed for this file): status line rewritten to IMPLEMENTED citing the Materialization enum + install machinery + destructive guard, document element -> impl/done, drifted facts re-marked spec/done -> impl/done"
+              "Acceptance extended with the legacy-refusal clause, and it holds: test materialization_refuses_the_legacy_snapshot_name_with_the_recipe asserts the recipe; roundtrip test covers copy/hardlink/in-place"
             ]
           },
           "ACC-MODE-BEHAVIORS": {
             "v": "confirmed",
             "ev": [
-              "F-018 extended (c4d2): the materialization-mode system ships wholesale under the same 'proposed' header as its PROP-020 sibling — Materialization enum with Snapshot default + InPlace + is_in_place doctests (vibe-core package.rs:265-277), hardlink/in-place machinery through vibe-install (fetched.rs/apply.rs/plan.rs, materialise_in_place seam, deferred in-place incremental git-fetch path, --recurse-submodules clone), submodule snapshot-embedding in git_package_registry/fetch.rs, the destructive guard in commands/uninstall.rs — one re-mark sweep with the header fix",
-              "D d1 2026-07-25 (F-018 closed for this file): status line rewritten to IMPLEMENTED citing the Materialization enum + install machinery + destructive guard, document element -> impl/done, drifted facts re-marked spec/done -> impl/done"
+              "Respelled first word; behaviours proven by the green workspace suite (materialise/hardlink/in-place tests unchanged)"
             ]
           },
           "ACC-IN-PLACE-IDENTITY": {
@@ -120172,8 +120163,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-13T16:50:24Z",
-        "verify_batch": "c4d2-workspace-rest + d1 + IDENT-2026-08-13-rejudge"
+        "verified_at": "2026-08-13T17:36:33Z",
+        "verify_batch": "c4d2-workspace-rest + d1 + IDENT-2026-08-13-rejudge + COPY-2026-08-13"
       }
     },
     "spec/modules/vibe-workspace/PROP-025-binary-delivery.md": {

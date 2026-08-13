@@ -4445,8 +4445,8 @@
       "item_kind": "enum",
       "line": 256,
       "symbol": "vibe_core::manifest::package::Materialization",
-      "end_line": 299,
-      "fingerprint": "tok1:d882207c263659b7f15691b988970b711f31f67052c92453ad872a8d10c615e7"
+      "end_line": 304,
+      "fingerprint": "tok1:65c877351cb20d9e0003f1d107267a7129b6ac1a44c706c1c1024ba849765ec8"
     },
     {
       "crate_name": "vibe-core",
@@ -8838,7 +8838,16 @@
       "line": 40,
       "symbol": "vibe_workspace::materialization::guard_destructive",
       "end_line": 97,
-      "fingerprint": "tok1:af470e166bcf30549f647588a873a046b150bd3c3340e0a3d02a1830323b137a"
+      "fingerprint": "tok1:1900998ce686f6bb7742eab1b253749f308854366824d637d3ce947244989334"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/materialization.rs",
+      "item_kind": "fn",
+      "line": 104,
+      "symbol": "vibe_workspace::materialization::tests::copy_and_hardlink_are_never_guarded",
+      "end_line": 123,
+      "fingerprint": "tok1:3dc02c0ae9f61ce3aaec971b4433bd5a1f22663f725a0a0443fc954ab3c37f14"
     },
     {
       "crate_name": "vibe-workspace",
@@ -8866,15 +8875,6 @@
       "symbol": "vibe_workspace::materialization::tests::in_place_opt_in_proceeds_in_any_session",
       "end_line": 154,
       "fingerprint": "tok1:898b53b3d2f7bd00e21b7d5a101a1030c0a44d9099cb3a47faa6fc9688d774a8"
-    },
-    {
-      "crate_name": "vibe-workspace",
-      "file": "crates/vibe-workspace/src/materialization.rs",
-      "item_kind": "fn",
-      "line": 104,
-      "symbol": "vibe_workspace::materialization::tests::snapshot_and_hardlink_are_never_guarded",
-      "end_line": 123,
-      "fingerprint": "tok1:6b30ab1d500c78d4e7339420e95ccd6ff9a14e35836a16ec7ad46e700a2553fb"
     },
     {
       "crate_name": "vibe-workspace",
@@ -12766,7 +12766,7 @@
     {
       "file": "crates/vibe-core/src/manifest/package.rs",
       "from_symbol": "vibe_core::manifest::package::Materialization",
-      "line": 279,
+      "line": 284,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#modes",
       "verb": "implements",
@@ -16885,6 +16885,15 @@
     },
     {
       "file": "crates/vibe-workspace/src/materialization.rs",
+      "from_symbol": "vibe_workspace::materialization::tests::copy_and_hardlink_are_never_guarded",
+      "line": 105,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/materialization.rs",
       "from_symbol": "vibe_workspace::materialization::tests::in_place_aborts_only_when_non_interactive_and_not_opted_in",
       "line": 126,
       "provenance": "authored",
@@ -16905,15 +16914,6 @@
       "file": "crates/vibe-workspace/src/materialization.rs",
       "from_symbol": "vibe_workspace::materialization::tests::in_place_opt_in_proceeds_in_any_session",
       "line": 139,
-      "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
-      "verb": "verifies",
-      "pinned_r": 1
-    },
-    {
-      "file": "crates/vibe-workspace/src/materialization.rs",
-      "from_symbol": "vibe_workspace::materialization::tests::snapshot_and_hardlink_are_never_guarded",
-      "line": 105,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
       "verb": "verifies",
@@ -18477,7 +18477,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:6f125a6af91e48bc0370c1bc8775fcf3533dcac5759eeffdea23eb70d2d0ad1e",
+      "content_hash": "sha256:5ebcd28fe3f513da1c88634ad35b6802d860b6a264eb6d5e1241531387e0172e",
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "PROP-000: Foundational technical decisions",
@@ -18954,7 +18954,7 @@
     },
     {
       "anchor": "registry",
-      "content_hash": "sha256:48e6c78488a6ba7e8743ca41ae32e0642d5c94abd69a011a16fce4dce78c82a8",
+      "content_hash": "sha256:a011466270909081991a109a4e2c8ff70cd7fa5a0d1ca52a0bf08ef6358bb0ab",
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "7. Registry model (M0 vs M1)",
@@ -19125,10 +19125,10 @@
     },
     {
       "anchor": "CACHE-PACKAGES",
-      "content_hash": "sha256:d2eb850357914e61ee39c49383e6dc5f061b495b951489b91dfc8ad20370017c",
+      "content_hash": "sha256:99b097e52deb073d2fe2486c1f6d2f6fa82c2d55eb68158afd3f55467fadb5c2",
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
-      "heading": "`<project>/.vibe/cache/<kind>/<name>/<version>/` for per-package cache. See `VIBEVM-SPEC.md` §8.3. @status:spec/done",
+      "heading": "`<project>/.vibe/cache/<group>/<name>/<version>/` for per-package cache — identity-keyed, as the shipped tree already is (`.vibe/cache/org.vibevm.world/wal/…` on disk; the earlier `<kind>/<name>` spelling lagged the code). See `VIBEVM-SPEC.md` §8.3. @status:impl/done",
       "line": 123,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#CACHE-PACKAGES"
     },
@@ -24660,7 +24660,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:7054c8a1010af8fb7951913fa3003d479935850841e9ffaaf814e1d26b814950",
+      "content_hash": "sha256:595e6d7b0fd56ac8a080773ae52a053b222510a382f8cdab0beabf0feb5951fd",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "PROP-024 — Code-bearing packages (a package is a project)",
@@ -24678,7 +24678,7 @@
     },
     {
       "anchor": "related",
-      "content_hash": "sha256:d2f60ed8da5aa2eef1326dbe5d5f47f37963ed864007eaf74703f8d04dc459d4",
+      "content_hash": "sha256:d083554c318f966197704c85e72fd07bf53cd2f5193031dcdf880f6ab70071c8",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "**Related:** [PROP-002 §2.1](../modules/vibe-registry/PROP-002-decentralized-registry.md#identity)",
@@ -24831,7 +24831,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:6c09def3a36f9aa5690f1bf79f3d99af2d157328c4e31a1f4f5005ada86e6749",
+      "content_hash": "sha256:dbca32376ce670c42b28474b6dca8e8565fe95ba568639983446a22139ca5936",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "2. Decisions",
@@ -25101,7 +25101,7 @@
     },
     {
       "anchor": "consume",
-      "content_hash": "sha256:a40d9b28972879ed68880e302eaa434a31eeb36125f0d5d8c9366c703c0c44cd",
+      "content_hash": "sha256:f01911338253bc22295e49c2e33af64bd333e315ba4d7adb042bf6c6320b56f9",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "2.4 Consuming shipped code — external-path-dep, no nested workspace",
@@ -25209,7 +25209,7 @@
     },
     {
       "anchor": "bootstrap",
-      "content_hash": "sha256:74e8145b3f2edd08a8b7dc4a74d5791a87a876afa8267a48b09595f922a8869e",
+      "content_hash": "sha256:f0fef6c670c15f58c90e0ece00830625538ce88839b09f0882383061a0f5bb15",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "2.5 Self-hosting bootstrap — the toolchain is vendored",
@@ -25236,7 +25236,7 @@
     },
     {
       "anchor": "CLEAN-CLONE-BUILDS",
-      "content_hash": "sha256:5c15218e348bc23848d7d564cd49c054a6802e9bd8986fca3784a9177e2cb536",
+      "content_hash": "sha256:55a61565e965f95e9d79af9ac560f87cc4316193d4b03930d35f22b27ed653bf",
       "doc_path": "common/PROP-024",
       "file": "spec/common/PROP-024-code-bearing-packages.md",
       "heading": "Because `vibedeps/` is committed (PROP-009 §2.1), a fresh clone",
@@ -28665,7 +28665,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:73f49eb18dad2651bb7811e9868eea95dd0c063a2685c3f2605bfce040918bfc",
+      "content_hash": "sha256:9a2b4ecbba188c6ad976ee07a6ac7758a69bf50bea2d7a1b90f654050ee2f6c2",
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "PROP-044: Change-native formats — surviving perpetual evolution",
@@ -28719,7 +28719,7 @@
     },
     {
       "anchor": "laws",
-      "content_hash": "sha256:f2ddc7e1d1e138d21ed21e764e41f543f1e20541555538eccd4c4b4f957d0df8",
+      "content_hash": "sha256:41213814860528af1b82c71fcb78244569a86e2c52ef381d38490f0665369c77",
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "2. The two laws, and the short list of the forbidden",
@@ -28809,7 +28809,7 @@
     },
     {
       "anchor": "TERMS-SNAPSHOT-FROZEN-CHANNEL",
-      "content_hash": "sha256:5cf55bf09167a825f69317e5884d8164c5b3d8f16ece201f23345cd37f8f75bf",
+      "content_hash": "sha256:2d6549a974e41e5bb364658f3d053c5609cf14f9aed542fda9d3bab25955cd06",
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**2b. The terminology, fixed explicitly",
@@ -28822,7 +28822,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "3. Truth and projection",
-      "line": 135,
+      "line": 137,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#truth"
     },
     {
@@ -28831,7 +28831,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The authoritative core is small, and everything else is",
-      "line": 137,
+      "line": 139,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#TRUTH-KERNEL"
     },
     {
@@ -28840,7 +28840,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Derived and deletable at any moment:** the entire",
-      "line": 145,
+      "line": 147,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#DERIVED-IS-DISPOSABLE"
     },
     {
@@ -28849,7 +28849,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**How this squares with \"we manage packages that",
-      "line": 151,
+      "line": 153,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-IS-THE-CENTRE"
     },
     {
@@ -28858,7 +28858,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Membership in \"derived\" is machine-tested, not",
-      "line": 169,
+      "line": 171,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MEMBERSHIP-IS-TESTED"
     },
     {
@@ -28867,7 +28867,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Storage-provider neutrality (owner ruling,",
-      "line": 175,
+      "line": 177,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#PROVIDER-NEUTRALITY"
     },
     {
@@ -28876,7 +28876,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Exactly one file is eternal: the handshake.** A tiny",
-      "line": 199,
+      "line": 201,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#ONE-ETERNAL-FILE"
     },
     {
@@ -28885,7 +28885,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "4. The machinery",
-      "line": 209,
+      "line": 211,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#machinery"
     },
     {
@@ -28894,7 +28894,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "Compatibility here is a property of machinery around",
-      "line": 211,
+      "line": 213,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MACHINERY-LEAD"
     },
     {
@@ -28903,7 +28903,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**4.1 The format registry.** `formats/REGISTRY.toml`",
-      "line": 215,
+      "line": 217,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-FORMAT-REGISTRY"
     },
     {
@@ -28912,7 +28912,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**4.2 Schemas describe form; the generator owns",
-      "line": 223,
+      "line": 225,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-SCHEMA-DESCRIBES-FORM"
     },
     {
@@ -28921,7 +28921,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**4.2a The vocabulary resolution.** From a",
-      "line": 235,
+      "line": 237,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-OPEN-ENUM-FROM-CLOSED"
     },
     {
@@ -28930,7 +28930,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**4.3 Canonical bytes, deterministic writers.** One",
-      "line": 244,
+      "line": 246,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-CANONICAL-BYTES"
     },
     {
@@ -28939,7 +28939,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**4.4 Journal and projection — no read-modify-write.**",
-      "line": 251,
+      "line": 253,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-JOURNAL-NOT-RMW"
     },
     {
@@ -28948,7 +28948,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**4.5 must-understand and record quarantine.** Each",
-      "line": 260,
+      "line": 262,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-MUST-UNDERSTAND"
     },
     {
@@ -28957,7 +28957,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**4.6 Epochs are parallel worlds, not mutations.** A heavy break",
-      "line": 269,
+      "line": 271,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-EPOCHS"
     },
     {
@@ -28966,7 +28966,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**4.7 Breaking is a switched resource; recipes are data.**",
-      "line": 277,
+      "line": 279,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-BREAK-WINDOW"
     },
     {
@@ -28975,7 +28975,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "5. Placement and computed policy",
-      "line": 290,
+      "line": 292,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#placement"
     },
     {
@@ -28984,7 +28984,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The placement ladder.** Cost of change grows",
-      "line": 292,
+      "line": 294,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#PLACEMENT-LADDER"
     },
     {
@@ -28993,7 +28993,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**A format's policy is computed, not chosen**, from",
-      "line": 299,
+      "line": 301,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#POLICY-IS-COMPUTED"
     },
     {
@@ -29002,7 +29002,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Migrations come in three kinds, and two must not",
-      "line": 309,
+      "line": 311,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MIGRATION-TAXONOMY"
     },
     {
@@ -29011,7 +29011,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "6. The formats of this project, by name",
-      "line": 321,
+      "line": 323,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#our-formats"
     },
     {
@@ -29020,7 +29020,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**6.1 The catalog is three things with three fates.** The",
-      "line": 323,
+      "line": 325,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-CATALOG"
     },
     {
@@ -29029,7 +29029,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The catalog's version stops being a number nobody",
-      "line": 338,
+      "line": 340,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-CATALOG-VERSION"
     },
     {
@@ -29038,7 +29038,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**6.2 `vibe.toml` is the most expensive format in the",
-      "line": 343,
+      "line": 345,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-MANIFEST"
     },
     {
@@ -29047,7 +29047,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**6.3 `vibe.lock` is the cheapest format and becomes free by",
-      "line": 358,
+      "line": 360,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-LOCKFILE"
     },
     {
@@ -29056,7 +29056,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**6.4 Configs are preferences, not data — failure is",
-      "line": 366,
+      "line": 368,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-CONFIGS"
     },
     {
@@ -29065,7 +29065,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**6.5 Surfaces nobody inventoried are formats too.**",
-      "line": 373,
+      "line": 375,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-UNINVENTORIED"
     },
     {
@@ -29074,7 +29074,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "7. Obligations have types; stability is a mechanism",
-      "line": 379,
+      "line": 381,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#obligations"
     },
     {
@@ -29083,7 +29083,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Three types of obligation, and only two eternal ones.**",
-      "line": 381,
+      "line": 383,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#OBLIGATION-TYPES"
     },
     {
@@ -29092,7 +29092,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**An obligation without a written breaking procedure",
-      "line": 390,
+      "line": 392,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#OBLIGATION-PROCEDURE"
     },
     {
@@ -29101,7 +29101,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**A period of stability is a closed break window plus",
-      "line": 399,
+      "line": 401,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#STABILITY-IS-A-FLAG"
     },
     {
@@ -29110,7 +29110,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The pre-publication regime, and the switch only the",
-      "line": 407,
+      "line": 409,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#THE-PUBLIC-SWITCH"
     },
     {
@@ -29119,7 +29119,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "8. Laws for AI agents — gates, not admonitions",
-      "line": 429,
+      "line": 431,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#agents"
     },
     {
@@ -29128,7 +29128,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Governing rule: a policy that exists only in",
-      "line": 431,
+      "line": 433,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-PROSE-IS-BROKEN"
     },
     {
@@ -29137,7 +29137,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The gate set.** G1: all wire I/O through",
-      "line": 438,
+      "line": 440,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-GATES"
     },
     {
@@ -29146,7 +29146,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**A gate's message is the only documentation that is",
-      "line": 457,
+      "line": 459,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-MESSAGES"
     },
     {
@@ -29155,7 +29155,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**8a. The wire-work decision path — what an agent",
-      "line": 466,
+      "line": 468,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#WIRE-DECISION-PATH"
     },
     {
@@ -29164,7 +29164,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "9. Honest risks and revisit triggers",
-      "line": 483,
+      "line": 485,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#risks"
     },
     {
@@ -29173,7 +29173,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The recoverability bet.** Upstream sources vanish —",
-      "line": 485,
+      "line": 487,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RECOVERABILITY"
     },
     {
@@ -29182,7 +29182,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The journal/projection rework is a real rebuild, not an",
-      "line": 493,
+      "line": 495,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RMW-VOLUME"
     },
     {
@@ -29191,7 +29191,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Foreign `curl | jq` will happen regardless of",
-      "line": 500,
+      "line": 502,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RAW-PARSERS"
     },
     {
@@ -29200,7 +29200,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The degenerate-first guard.** The epoch machinery",
-      "line": 506,
+      "line": 508,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-OVERENGINEERING"
     },
     {
@@ -29209,7 +29209,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Signature and authenticity remain parked by the",
-      "line": 514,
+      "line": 516,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-SECURITY-PARKED"
     },
     {
@@ -29218,7 +29218,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "10. Sources — the two-way links",
-      "line": 522,
+      "line": 524,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#sources"
     },
     {
@@ -29227,7 +29227,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**This contract's lore and evidence, so a cold reader entering",
-      "line": 524,
+      "line": 526,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#SOURCES"
     },
     {
@@ -46017,7 +46017,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:02be81e308b88fb80914ed57fec0672d88ebc0411b06bf6708fb7ea6974a700a",
+      "content_hash": "sha256:d6b88c5d4fc9b53c7de3c5a9e2592b8052b937378b8c748180443b16496aae2c",
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
       "heading": "PROP-027 — `mcp` packages: the agent-server kind and its delivery",
@@ -46089,7 +46089,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:57a03c313810c57f9888514d5d66f9638dc375d2c9eda559876b51696bf9c122",
+      "content_hash": "sha256:39ad9ce6bd5efba06b0b8176cd231bb8f88363ca95eee8c27ad035f6fc95717e",
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
       "heading": "2. Decisions",
@@ -46098,7 +46098,7 @@
     },
     {
       "anchor": "kind",
-      "content_hash": "sha256:5f2eba2d0c59b732d7c239ae5fbd50ab7193676eb51788c17d612a1f16c44067",
+      "content_hash": "sha256:9ddd05fa70c066f08e06a7bd8bf89435f01d66e567c18b15eedb81549546b0d6",
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
       "heading": "2.1 The `mcp` kind",
@@ -46125,7 +46125,7 @@
     },
     {
       "anchor": "KIND-REGISTER",
-      "content_hash": "sha256:a61f729decdfdc4986d23478eb3304d289e8206e5ae0890ca48551dbe0b00519",
+      "content_hash": "sha256:1f157ceb6ecff72fa451e182c5e8c73d83fb20722b3e5e88f576b039bbfc7bad",
       "doc_path": "modules/vibe-mcp/PROP-027",
       "file": "spec/modules/vibe-mcp/PROP-027-mcp-packages.md",
       "heading": "`kind = \"mcp\"` joins the installable",
@@ -46989,7 +46989,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:a7c9605c629cd8a9bb1ec6c4d85fd3d706177e8c763ad1b95c547277909fc8d4",
+      "content_hash": "sha256:324d7c556420ebc64caa3b88d883d9dc1b0467bb49206db3334b3823f46631a1",
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "PROP-043 — Progress Control: inline status markup and the `vibe progress` tool",
@@ -47016,7 +47016,7 @@
     },
     {
       "anchor": "related",
-      "content_hash": "sha256:f3dea414eb807f0d320444d7ee75c4a924850a1d33359c31e76c5b7cb4b8271f",
+      "content_hash": "sha256:fde4daba1266895663b0e28d8929696acdc2c7839a965df74519f31e3ee94ad4",
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**Depends on / relates to** (all as *external companions* — see the",
@@ -62784,7 +62784,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:408cb54fdc86b0d4d15aef7fbe4918c21977b62b288017533cba78d9c59af04f",
+      "content_hash": "sha256:3940e2460bd6662b689023e4260bb82c4209e50c9cf063e3a26801dfb2eae341",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
       "heading": "PROP-009: Loading model — computed boot composition and the effective spec",
@@ -62901,7 +62901,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:dd960f36bdabb819b578758648df50ae840b5fe154ca73524484beac40a418ce",
+      "content_hash": "sha256:a065a5122110241620c6513acc3972dccff77662a08085543bf128c4a1f1d31b",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
       "heading": "2. Decisions",
@@ -63027,7 +63027,7 @@
     },
     {
       "anchor": "artifacts",
-      "content_hash": "sha256:83d0daa3e2b7ad19c2f1058782c6cf3e9141b56d8c5f6aa5b2bfc3bca6397d9c",
+      "content_hash": "sha256:a6972c54e9daabac75ed991cf14e0b24f7d5a2e89effdf4bd3003c6609fb17e4",
       "doc_path": "modules/vibe-workspace/PROP-009",
       "file": "spec/modules/vibe-workspace/PROP-009-loading-model.md",
       "heading": "2.3 Generated boot artifacts",
@@ -66384,7 +66384,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:ebdb3dae08e1b84f67b21ba0895adace15656f924948395ee269883ea774a2dc",
+      "content_hash": "sha256:27771156b157c002cb718524bb70098ffce95ca0ef0767ab69f9330a9801a3c5",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "PROP-022 — Materialization modes",
@@ -66393,7 +66393,7 @@
     },
     {
       "anchor": "status-line",
-      "content_hash": "sha256:453d50a6d29685d9e0c029afa422eb81fe14716abafdfe167c7d732303fdcfb7",
+      "content_hash": "sha256:0ac5c50795de39aece2c6d7cbad18fdc58025af555cd64ab5665a578da41beb6",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "**Status: IMPLEMENTED** (specified 2026-06-24 in an owner-requested design",
@@ -66402,7 +66402,7 @@
     },
     {
       "anchor": "related",
-      "content_hash": "sha256:b2176d44011afd3758e0ea541a15969455732a6880596da93df05ad0b040fdfe",
+      "content_hash": "sha256:1a18df21f4b62346694bbc15cc476cc6d90e2e63c43eefbb2e137bf4079cc46b",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "**Related:** [PROP-009](PROP-009-loading-model.md) (the materialise step into",
@@ -66411,7 +66411,7 @@
     },
     {
       "anchor": "motivation",
-      "content_hash": "sha256:257cf7700cfc9ed5daa9d2a14d8f1b25359e0bddb674f493b404827924aafec1",
+      "content_hash": "sha256:b5a0063ab3fcd51300f94db8c48e8df836287dce464082fd377210ee4e1c5904",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "1. Motivation",
@@ -66420,7 +66420,7 @@
     },
     {
       "anchor": "problem",
-      "content_hash": "sha256:501498e1bc7801f1d02d1ead48e1e7ff853b0f416b486e92663a1ecc1785cf3e",
+      "content_hash": "sha256:f4647406ecb167c8d43741468762b98a333c75b6cc3e1cf7add2fea5ca2c6506",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "1.1 The problem — one materialisation policy does not fit every package",
@@ -66429,7 +66429,7 @@
     },
     {
       "anchor": "today-single-policy",
-      "content_hash": "sha256:9845df2fbf7d726fff2cfdac29bf6d76c439b890c955e7cde6b8cba4c1d97d70",
+      "content_hash": "sha256:72605d8d0ac9b3e96dcf4707535b2c4d24dbc6d26ceb54a154c248728a11d14b",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "Today every package is materialised the same way: clone into the live-git",
@@ -66483,7 +66483,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:71908d38eef2017a22e5b862125b1d109ab1c6c288e594ebbabab35334fb4574",
+      "content_hash": "sha256:f58671b66675d75513438666372227430563404bc7ad62bef8faadbff6d5e337",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "2. Decisions",
@@ -66492,7 +66492,7 @@
     },
     {
       "anchor": "modes",
-      "content_hash": "sha256:7f761a1a567cded51064d2633bbe05d13e7433ad9c114d0e223ca5b3bc55a5a1",
+      "content_hash": "sha256:ec94e528e584d4a65306e55fa65f2fd9e62b792f1947fe728c89cd46ed4c1c71",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "2.1 Three modes, declared in the descriptor",
@@ -66519,10 +66519,10 @@
     },
     {
       "anchor": "SNAPSHOT-DEFAULT",
-      "content_hash": "sha256:a9783b20436eda0c044609b48c77fcec30575a226cced0746a61a249027320e7",
+      "content_hash": "sha256:ccc6b38e7445ff4305e5f0755c806fe0736c8c894a74423e6b72a6f2d524c75d",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
-      "heading": "`snapshot` is the default and the only mode an ordinary package needs. @status:impl/done",
+      "heading": "`copy` is the default and the only mode an ordinary package needs. (It was named `snapshot` until the owner's 2026-08-13 terminology ruling reserved that word for the unfrozen version — PROP-044 §2b; the legacy spelling is refused with the rename recipe, never aliased.) @status:impl/done",
       "line": 71,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#SNAPSHOT-DEFAULT"
     },
@@ -66537,10 +66537,10 @@
     },
     {
       "anchor": "snapshot",
-      "content_hash": "sha256:bd0035f7f17f5a6778882a2355b512cf1fbe614cd7cfcb1905919fb1a161d309",
+      "content_hash": "sha256:8b46e6577ee77eccd8883462185b9c903c25efa4c46ee5d74639d26a75612898",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
-      "heading": "2.2 `snapshot` — the vendored full copy (default)",
+      "heading": "2.2 `copy` — the vendored full copy (default)",
       "line": 76,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#snapshot"
     },
@@ -66555,10 +66555,10 @@
     },
     {
       "anchor": "SNAPSHOT-PIPELINE",
-      "content_hash": "sha256:2188060a6388c33a8447c28a42485cfda17d188f1077faeb5fd9c51555865729",
+      "content_hash": "sha256:4ba46c82bca2ca2ec0407a78add9a62f7acb3c276c54143e465d58987efaa9b5",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
-      "heading": "The status quo: live-git cache → `.git`-stripped snapshot → full recursive",
+      "heading": "The status quo: live-git cache → `.git`-stripped content tree → full",
       "line": 80,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#SNAPSHOT-PIPELINE"
     },
@@ -66582,7 +66582,7 @@
     },
     {
       "anchor": "SUBMODULE-EMBEDDED",
-      "content_hash": "sha256:8f1bd71c5d8438d82c776b297842720d99131be249ff1dcc26cdc8779ab69e02",
+      "content_hash": "sha256:dbd6b546f1977e60bc068ce321ddbdec51aac89d7b59c99a25e07c4274ea511b",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "Submodule",
@@ -66600,7 +66600,7 @@
     },
     {
       "anchor": "hardlink",
-      "content_hash": "sha256:c19ef2eadc06aac882ac4686cc7301bfd37de1eea650ccfbd79d26d593c9ae63",
+      "content_hash": "sha256:162e38bd31747501bff6333ee8bfdcaf74a473ada46aa5e3f5893487d545e3f6",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "2.3 `hardlink` — per-file hardlink, copy on change",
@@ -66618,7 +66618,7 @@
     },
     {
       "anchor": "HARDLINK-MODE",
-      "content_hash": "sha256:003147b87e8f17a922419ee8d94b1b94dc3844297f269bef720184211f3e9580",
+      "content_hash": "sha256:2830f17d3ee61c119c7e224c9148a905f85b4fda4503a6310e6d3257d3a7e9ba",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "For packages **big in bytes but modest in file count**. Instead of copying",
@@ -66726,7 +66726,7 @@
     },
     {
       "anchor": "identity",
-      "content_hash": "sha256:c0bc0b997607a01301e68bb6cc3b75ed03fe92a3a63a8b0f63d91ec3e50147fc",
+      "content_hash": "sha256:699d02dd81ab4f8ac3aa00ea9d131c8821a9be388abb60477f2d006969f676b1",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "2.5 Identity follows the mode",
@@ -66744,10 +66744,10 @@
     },
     {
       "anchor": "ID-COPY-MODES",
-      "content_hash": "sha256:c13863258991a098ed0212f1e743e32f2d00153a370b8e6ecbd2d511dc777b0d",
+      "content_hash": "sha256:5381dc01ea88ee54674f218405f586c1c3c1b1ddb74550a9ec2d25db5282c910",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
-      "heading": "**`snapshot` / `hardlink`** — `content_hash` over the slot tree (the existing",
+      "heading": "**`copy` / `hardlink`** — `content_hash` over the slot tree (the existing",
       "line": 139,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#ID-COPY-MODES"
     },
@@ -66807,7 +66807,7 @@
     },
     {
       "anchor": "vendoring",
-      "content_hash": "sha256:20ab6bbaca34f5e36f1965081fe1f8c4b3644881430caf412aa55a286ec2fdae",
+      "content_hash": "sha256:ad81288b3fe9ca5a4a5ee27eb850802d2313cc1a3e30fa87565864b913db729b",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "2.7 Vendoring differs by mode",
@@ -66825,10 +66825,10 @@
     },
     {
       "anchor": "VENDORED-COPY-MODES",
-      "content_hash": "sha256:48e4bc9605bf84a1befc479e6e954b4c33a0fafcbc2e1567e39419732e2ca1c3",
+      "content_hash": "sha256:7c3e99cc1e3ffb7915f9a8575cafd45620280a0ad960f2d6e88019a253ff7db0",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
-      "heading": "**`snapshot` / `hardlink`** are vendored — the slot is committed into the",
+      "heading": "**`copy` / `hardlink`** are vendored — the slot is committed into the",
       "line": 165,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#VENDORED-COPY-MODES"
     },
@@ -66924,7 +66924,7 @@
     },
     {
       "anchor": "acceptance",
-      "content_hash": "sha256:fb621eea71ab2828bd4c0fb6cc6a9d1ce933df44b1c9f7dee39a4fd691da2ec8",
+      "content_hash": "sha256:2863fc08f1f91f9776232a377f47622a732f7bdcd2f5bd2169eb45b46565f610",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "5. Acceptance",
@@ -66933,20 +66933,20 @@
     },
     {
       "anchor": "ACC-FIELD-PARSES",
-      "content_hash": "sha256:2e84e1c85b4185cc716250a48f5d7bd06a3fe7a50d8e2844bfea9a04fdffdb1e",
+      "content_hash": "sha256:4bb373229203bdd1519cd68dcf89b59a971ab711f7e89c28b83cddab1f8f25a6",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
-      "heading": "`[package].materialization` parses to `snapshot` (default) / `hardlink` /",
+      "heading": "`[package].materialization` parses to `copy` (default) / `hardlink` /",
       "line": 199,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#ACC-FIELD-PARSES"
     },
     {
       "anchor": "ACC-MODE-BEHAVIORS",
-      "content_hash": "sha256:2f63d6c0b2f580fdc6e73cee00692e00037997d9cebc56a7d47f1f957da6d69f",
+      "content_hash": "sha256:033adea687fd6a4727834efb5d126fbcc9af0c12812c849dcd9331e401d9ff3b",
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
-      "heading": "`snapshot` behaves exactly as today; `hardlink` shares unchanged files by",
-      "line": 201,
+      "heading": "`copy` behaves exactly as today; `hardlink` shares unchanged files by",
+      "line": 202,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#ACC-MODE-BEHAVIORS"
     },
     {
@@ -66955,7 +66955,7 @@
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "`in-place` identity is `resolved_commit`; no full-tree hash is computed. @status:impl/done",
-      "line": 204,
+      "line": 205,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#ACC-IN-PLACE-IDENTITY"
     },
     {
@@ -66964,7 +66964,7 @@
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "A destructive op on an `in-place` slot confirms interactively / requires",
-      "line": 205,
+      "line": 206,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#ACC-DESTRUCTIVE-GUARD"
     },
     {
@@ -66973,7 +66973,7 @@
       "doc_path": "modules/vibe-workspace/PROP-022",
       "file": "spec/modules/vibe-workspace/PROP-022-materialization-modes.md",
       "heading": "Full `self-check.sh` green; conform 0/0/0; specmap clean. @status:impl/done",
-      "line": 207,
+      "line": 208,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#ACC-FLOOR-GREEN"
     },
     {
@@ -71920,7 +71920,7 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-core/src/manifest/package.rs",
-      "line": 279,
+      "line": 284,
       "message": "edge `vibe_core::manifest::package::Materialization` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#modes` carries no kind/revision line yet"
     },
     {
@@ -72641,7 +72641,7 @@
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/materialization.rs",
       "line": 105,
-      "message": "edge `vibe_workspace::materialization::tests::snapshot_and_hardlink_are_never_guarded` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#destructive-guard` carries no kind/revision line yet"
+      "message": "edge `vibe_workspace::materialization::tests::copy_and_hardlink_are_never_guarded` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#destructive-guard` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",

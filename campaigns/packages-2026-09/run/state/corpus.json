@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-13T16:44:30Z",
+  "updated_at": "2026-08-13T17:37:25Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -87117,7 +87117,7 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 161,
         "marker_count": 162,
-        "processed_hash": "80bbcb789bb9789c760d9b15723a124f6d09abb73140939a0d0824214cdba2cc",
+        "processed_hash": "bf20a4a3231a9ec97c332a76d8d3854f6461678df8bc3ce7daa687ce04655712",
         "summary": {
           "confirmed": 182,
           "unverifiable": 1
@@ -87456,8 +87456,7 @@
           "HOST-REGISTRY-GITHUB": {
             "v": "confirmed",
             "ev": [
-              "says per-package repos are <kind>-<name> per NamingConvention::KindName; Fqdn (<group>_<name>) is the default since M1.19 and legacy flow-* repos are archived (90-user REGISTRY-VIBESPECS, global_registry.rs:113) -> F-043",
-              "D d1 2026-07-25 (F-043): fqdn repo naming <group>_<name> (NamingConvention::Fqdn, default since M1.19); the kind-name repos recorded as archived"
+              "Repo-name form updated `<group>_<name>` → `<group>.<name>` with the live-repo rename follow-up named; prior text true for the M1.19 era. The org pointer and archived-kind-name history unchanged"
             ]
           },
           "REG-MIGRATION-WHY": {
@@ -87493,7 +87492,7 @@
           "CACHE-PACKAGES": {
             "v": "confirmed",
             "ev": [
-              "tree-verified 2026-07-25: all 7 SS2 crates exist (vibe-cli/core/graph/registry/install/llm/check; workspace now 17 crates - era-M0 enumeration, not contradicted); publish=false + license-file=LICENSE.md in workspace Cargo.toml; .vibe/ and /refs/ gitignored (refs/src covered); root manual-tests/ exists with M1.x-<slug>.md naming + README index; schemas/*.jtd.json + crates/vibe-wire/src/generated committed; RUNTIME-GUIDE.md + DEV-GUIDE.md exist; resolvo 0.11 pinned (workspace + vibe-resolver); PROP-001 SS2.1 size argument PRUNED (its ARG-PRUNED cites SS15 - the instruction executed); exit codes/observability live (exit_code.rs, --json/--quiet in help); git-practices flows in STATIC.md; token laws exercised all campaign (c0 evidence); fixtures/registry/flow/wal mirror layout in place; INV-VOCABULARY correctly lists five kinds incl. mcp"
+              "Stale layout corrected to shipped reality: .vibe/cache/<group>/<name>/<version> — verified on disk (.vibe/cache/org.vibevm.world/wal et al.); the earlier <kind>/<name> spelling lagged the code and no code composes kind-keyed project cache. Status impl/done now that the letter matches the tree"
             ]
           },
           "GRAPH-BUILTIN-NODES": {
@@ -88260,8 +88259,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-04T23:36:33Z",
-        "verify_batch": "c3b-prop-000 + d1 + D14 + D20 + H4-stale-host + H6-stale-host-tail + DEBT-2026-08-06-C"
+        "verified_at": "2026-08-13T17:36:33Z",
+        "verify_batch": "c3b-prop-000 + d1 + D14 + D20 + H4-stale-host + H6-stale-host-tail + DEBT-2026-08-06-C + IDENT-2026-08-13-rejudge + COPY-2026-08-13"
       }
     },
     {
@@ -90920,7 +90919,7 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 76,
         "marker_count": 77,
-        "processed_hash": "7d36407b80c1154a2834b3da74f0400ad71a1e2ab8151f347c6b67a0a83b585b",
+        "processed_hash": "806e7e58107f255622891d8bc2312ecf91516a7061ec86d2b9590b60dc6c53f4",
         "summary": {
           "confirmed": 88
         },
@@ -90935,8 +90934,7 @@
           "related": {
             "v": "confirmed",
             "ev": [
-              "cites vibedeps/flow-core-ai-native/0.6.0/spec/mechanisms/... - the 0.6.0 slot no longer exists (only 0.7.0); dead links -> F-044",
-              "D d2d 2026-07-25: registry/workspace/families nits closed - promised-absent surfaces (--trust-mirror, vibe list --overrides, lockfile [meta].solver, vibe update --features) re-marked spec/done and named as unbuilt; resolved parking-lot entries and fired deferrals record their resolution; the qualified cache path, the go family, core-ai-native 0.8.0 and the live vibedeps slot corrected"
+              "Dead pointers repaired: mechanism-spec links now target the installed slot vibedeps/org.vibevm.ai-native.core-ai-native/0.8.0 (old flow-core-ai-native/0.7.0 slot no longer exists after df5d4563); the §2.2 parenthetical says copy-mode tree per the rename. Link targets verified present on disk"
             ]
           },
           "SANCTION-GRANTED": {
@@ -91459,8 +91457,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-01T07:27:17Z",
-        "verify_batch": "c3d-common-tail + d2d + D14"
+        "verified_at": "2026-08-13T17:36:33Z",
+        "verify_batch": "c3d-common-tail + d2d + D14 + COPY-2026-08-13"
       }
     },
     {
@@ -91760,9 +91758,9 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor; <status> elements judged as _elements",
         "fact_count": 30,
         "marker_count": 32,
-        "processed_hash": "fc5d1de3fe9940ded91a844a4eba896bf61f71d581f95db62d4b6f68bec3105c",
+        "processed_hash": "ae52a76ae1152dd66bfe851154d05bbffdecbf2a432e35b306026772a9b44e72",
         "summary": {
-          "confirmed": 27
+          "confirmed": 28
         },
         "verdicts": {
           "status-line": {
@@ -91800,7 +91798,7 @@
           "joiner-why": {
             "v": "confirmed",
             "ev": [
-              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+              "Replaces the joiner-never-dot citation, which was TRUE while the name-grammar guarantee was not leaned on; the owner's 2026-08-13 ruling makes the flat carrier dotted and the fact now records the divergence from the addressable-specs #modules letter with its reason (single dot-free LDH label ⇒ last-dot split deterministic) and names the upstream refresh follow-up — nothing silently ignored"
             ]
           },
           "carriers-lead": {
@@ -91836,7 +91834,7 @@
           "CARRIER-REPO-SWAP": {
             "v": "confirmed",
             "ev": [
-              "address law observed across the tree: manifests/lockfiles/INDEX entries carry qualified group/name forms (stack:org.vibevm.ai-native/rust-ai-native-lang etc. in the generated boot); the three carriers match live examples (spec:// authorities in STATIC.md, repo naming per PROP-008 SS2.5 Fqdn - global_registry.rs:113); the 2026-07-12 group restructure is the recorded first SS3 refactor; rename engine genuinely future (no FEAT); scope rules consistent (host specs use spec://vibevm authority; demo fixtures as written)"
+              "Replaces `/`→`_` with `/`→`.`, TRUE before the ruling; new letter matches code (project.rs:313 dot join) and host charsets ([A-Za-z0-9._-] allows the dot on GitHub/GitVerse); the pre-ruling joiner and the live-repo rename pointer recorded in the fact"
             ]
           },
           "ADDR-STRUCTURE-FREE": {
@@ -91934,10 +91932,16 @@
               "TOOLING-MAP `##WAVE-A` records B-031 with the same figure and residue 0; both anchors exist in this file in the states the changelog describes",
               "found: every element of the changelog line is observable - the two anchors in their stated states, and the migration figure agreeing with the map."
             ]
+          },
+          "CHANGELOG-DOT-JOINER": {
+            "v": "confirmed",
+            "ev": [
+              "Changelog record of the 2026-08-13 landing; the carriers it names changed in commits 7a5d8f4b (LDH grammar) and fb7760da (dot join, crates/vibe-core/src/manifest/project.rs:313 now {group}.{name}); divergence from addressable-specs #modules recorded in ##joiner-why the same landing"
+            ]
           }
         },
-        "verified_at": "2026-08-04T23:36:33Z",
-        "verify_batch": "c3a-common-small + H4-stale-host + H6-stale-host-tail"
+        "verified_at": "2026-08-13T16:50:24Z",
+        "verify_batch": "c3a-common-small + H4-stale-host + H6-stale-host-tail + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge"
       }
     },
     {
@@ -93546,9 +93550,9 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "805d9b9022a5cada65be752b82a14e774ffe73b22d2eadd606a588b39a77beb8",
+        "processed_hash": "ecbbcfc01c93366f7229afd61c01c42343d36379b0e87feefd6aa320979d37c9",
         "summary": {
-          "confirmed": 51
+          "confirmed": 52
         },
         "verdicts": {
           "PURPOSE": {
@@ -93602,7 +93606,7 @@
           "FORBID-BYTE-MUTATION": {
             "v": "confirmed",
             "ev": [
-              "Re-judged after the owner's freeze rulings of 2026-08-10 narrowed the law's object from any published version to FROZEN coordinates (manifest frozen=true) plus content-hash-named objects; the earlier verdict was correct for the text it judged — the unconditional form matched the pre-freeze-concept design; the refinement is the owner's own proposal («у пакета есть свойство frozen… тогда оно фризится навсегда») and the channel legality mirrors his standing practice recorded at BACKLOG.md #b-067 and the 2026-07-26 no-bump-per-edit ruling in progress.toml comments"
+              "One word: `declared channel (§2a)` → `snapshot (§2a)` per the terminology ruling; the law itself byte-for-byte otherwise. Prior text true under old vocabulary"
             ]
           },
           "FORBID-SILENCE": {
@@ -93848,18 +93852,24 @@
           "PROVIDER-NEUTRALITY": {
             "v": "confirmed",
             "ev": [
-              "Owner ruling 2026-08-10 in-session: «репозитории теоретически могут жить не только в Git… Git это просто форма представления… сама система по смыслу не должна быть завязана на гит»; the provider seam already exists in-tree (scanner from_clones/from_github/from_gitverse — crates/vibe-index/src/scanner/; PROP-001 is named 'git backend'; PROP-005 §9 tracks the OCI-hosted-index question); content_hash is computed over file bytes, not git objects (crates/vibe-index/src/content_hash.rs), so the universal-verifier claim is measured, not aspirational"
+              "Meaning unchanged (2026-08-10 ruling stands); word-level edit only: obligations now serve a `capture` behind a `named ref`, freeing `snapshot`/`channel` for their 2026-08-13 senses. Prior text true under old vocabulary"
             ]
           },
           "THE-FREEZE-MODEL": {
             "v": "confirmed",
             "ev": [
-              "Owner rulings 2026-08-10 in-session: frozen as a package property surviving forever once set; carrier = manifest flag, not the version string («Я бы всё же не смешивал две сущности в одном имени и оставил флаг в манифесте»); display obligation on all surfaces («все инструменты командной строки, GUI, TUI… должны выводить»); multi-registry divergence argument his own; the orthogonality argument (frozen prerelease = immutable published beta) and the content-carried-cannot-diverge argument from this session's analysis; latest_stable already filters prereleases (crates/vibe-index/src/types/entry/aggregate.rs:47-55) so the stability axis stays separate; yank-in-journal split per the journal's own definition (facts sources cannot carry)"
+              "Meaning unchanged — the 2026-08-10 freeze rulings stand; edits are the 2026-08-13 terminology fix (mutable channel → snapshot; snapshot-as-capture untangled) the owner ordered explicitly. Prior wording was true under the old vocabulary; new wording is the same ruling in the fixed vocabulary — commit 3106bf0d"
+            ]
+          },
+          "TERMS-SNAPSHOT-FROZEN-CHANNEL": {
+            "v": "confirmed",
+            "ev": [
+              "Updated the flagged-sense clause: the owner ruled «copy» the same day, so the block now records completion — snapshot carries exactly one sense. Code: Materialization::Copy + legacy refusal recipe (package.rs); prior text was true when the flag stood open"
             ]
           }
         },
-        "verified_at": "2026-08-09T21:53:07Z",
-        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING + PROVIDER-NEUTRALITY-RULING + FREEZE-MODEL-RULING"
+        "verified_at": "2026-08-13T17:36:33Z",
+        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING + PROVIDER-NEUTRALITY-RULING + FREEZE-MODEL-RULING + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge + COPY-2026-08-13"
       }
     },
     {
@@ -99071,7 +99081,7 @@
         "coverage_note": "verdicts keyed by fact anchors; table cell-markers inherit their row anchor; <status> elements judged as _elements",
         "fact_count": 99,
         "marker_count": 100,
-        "processed_hash": "0dbdd3b2653908418911c036da3f4bc18c239fb95bb0745f8203589332a13bcd",
+        "processed_hash": "b99822111a94ecd1e2b5a5f2aaffb46137b82992a10693723aabeee685dd0b4d",
         "summary": {
           "confirmed": 78
         },
@@ -99247,7 +99257,7 @@
           "fork-kind-out-of-repo-name": {
             "v": "confirmed",
             "ev": [
-              "shipped-reality checks 2026-07-25: exit code 7 = AMBIGUOUS_PACKAGE (exit_code.rs:33); one vibe.toml per node + vibe.lock at root (boot facts, c0); Fqdn repo naming org.vibevm_wal (global_registry.rs:113, PROP-008 SS2.5); qualified-in-manifests + kind-prefix-optional match the shipped grammar; publication model matches vibe workspace publish / vibe registry publish; dated session-log entries are records true at their dates (PROP-008 unimplemented as of 2026-05-21 entry - it shipped later as M1.19)"
+              "Lore corrected to the contract (spec-genres law): the fork's example literal now shows the dot composite the 2026-08-13 ruling produced; the row already wrote `<group>.<name>` as the shape, so the correction makes the example match its own template. Prior literal true for the `_` era"
             ]
           },
           "fork-kind-prefix-optional": {
@@ -99546,8 +99556,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T13:00:46Z",
-        "verify_batch": "c2-design + d2b"
+        "verified_at": "2026-08-13T16:50:24Z",
+        "verify_batch": "c2-design + d2b + IDENT-2026-08-13-rejudge"
       }
     },
     {
@@ -102437,9 +102447,9 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 278,
         "marker_count": 279,
-        "processed_hash": "22dfd9c67bc9c377bc87d4c9868dadc41341c22fbd3504f0390c54707d792c75",
+        "processed_hash": "09c93bc564202d97bf35f264aa9daccee7a3fe4ec049fb48105f6bd7c393b852",
         "summary": {
-          "confirmed": 308,
+          "confirmed": 319,
           "drift": 2,
           "unverifiable": 1
         },
@@ -104521,10 +104531,76 @@
               "and with the flag off there is no image written and no cache field in the report, which is a clean opt-out rather than a suppressed feature",
               "the standard the fact sets for itself — a default that changes the first run has to be explained — is met by not changing it"
             ]
+          },
+          "channels-req": {
+            "v": "confirmed",
+            "ev": [
+              "Requirement marker for §2.18; substance in the facts below"
+            ]
+          },
+          "CHANNELS-ARE-AUTHOR-POINTERS": {
+            "v": "confirmed",
+            "ev": [
+              "Owner rulings 2026-08-13: channels proposed by owner («можем ли мы сделать понятие channel? … набор тегов, который учитывает резолвер»), multiplicity confirmed («Нужно чтобы все команды, манифесты, способ хранения … поддерживали множественность каналов»); flat-map/no-promotion shape stated (Docker/npm prior art) and accepted"
+            ]
+          },
+          "CHANNEL-NAME-GRAMMAR": {
+            "v": "confirmed",
+            "ev": [
+              "Design record: grammar [a-z][a-z0-9-]* chosen so @channel is unambiguous in the pkgref version position — versions start with a digit (semver), requirement operators are ^ ~ = < > * (crates/vibe-core version-spec parsing); spec/plan, not built"
+            ]
+          },
+          "CHANNELS-AUTHORITY-IS-THE-JOURNAL": {
+            "v": "confirmed",
+            "ev": [
+              "Design record consistent with PROP-044 law 2 (hand file in derived catalog = secret truth) and provider-neutrality (authoritative act = journal event); owner's vibeversions.toml proposal resolved in-session to projection-not-carrier without objection; NameEntry/by-name carrier is the existing candidate-file machinery (PROP-008 §2.8)"
+            ]
+          },
+          "MANIFEST-CHANNELS-ARE-PUBLISH-TIME-FACTS": {
+            "v": "confirmed",
+            "ev": [
+              "Owner asked for manifest-borne channel data for offline resolution and for auto-pickup on publish («чтобы … не приходилось руками делать vibe registry channel set, чтобы данные о каналах подхватывались из манифеста») — both recorded; pointer-cannot-live-in-manifest argument: retargeting to a frozen version would edit frozen bytes (PROP-044 §2a one-way freeze)"
+            ]
+          },
+          "LATEST-AND-STABLE-ARE-BUILT-IN": {
+            "v": "confirmed",
+            "ev": [
+              "Owner proposal 2026-08-13 («два ярлыка LATEST и STABLE, которые вруную может переключать автор») unified with channels in-session; Maven latest/release prior art; authored-from-first-act rule recorded (new publication does not silently move an authored pointer)"
+            ]
+          },
+          "VERSION-ORDERING-WITH-BUILD-TIEBREAK": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-13 verbatim («Давай не портить SemVerse 2 … всё после + сортируется в Natural Sort Order … самая большая дата (самая свежая) оказалась сверху … пусть люди … сами вляпаются»); coordinate = full string, precedence untouched, tie-break only — recorded; computation home named as the LATEST/STABLE fallbacks (latest_stable in crates/vibe-index/src/types/entry/aggregate.rs is the existing prerelease-filtering half)"
+            ]
+          },
+          "RESOLVER-DEFAULT-IS-STABLE-THEN-LATEST": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-13 verbatim («vibe install pkg рабтает так: статус замороженности/snapshot неважен. Берется stable если имеется (даже незамороженная), если нет - latest»); closes the ТЗ D14 СТОП the same landing (commit 1e2c9ebe)"
+            ]
+          },
+          "CHANNEL-RESOLUTION-PINS": {
+            "v": "confirmed",
+            "ev": [
+              "Design record extending the D14 lockfile-pin model (PROP-044 §2a: pin = capture hash + locator) to channel-followed resolution; --locked loud-drift semantics are ТЗ D9's, referenced not restated"
+            ]
+          },
+          "DEAD-POINTER-IS-LOUD": {
+            "v": "confirmed",
+            "ev": [
+              "Design record answering the owner's re-registration/yank rebuild question («нужно перестроить каналы»); computed recompute vs authored loud-refusal split stated in-session and not objected; never-silence law PROP-044 §2 FORBID-SILENCE is the governing constraint"
+            ]
+          },
+          "CHANNELS-DEGRADED-RESOLUTION": {
+            "v": "confirmed",
+            "ev": [
+              "Owner asked the ladder explicitly 2026-08-13 («если сервис реестра по какой-то причине недоступен, как именно будут ресолвиться пакеты …возможно, нам в сам пакет в vibe.toml нужно внедрить метаинформацию»); four-step ladder + manifest-declared reconstruction recorded as he proposed, with announced-degradation per PROP-044 law 1"
+            ]
           }
         },
-        "verified_at": "2026-08-06T17:13:49Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A"
+        "verified_at": "2026-08-13T16:50:24Z",
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new"
       }
     },
     {
@@ -105426,7 +105502,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (18 cells); document <status> judged as _elements",
         "fact_count": 75,
         "marker_count": 76,
-        "processed_hash": "9f7c54fcb9d7fd20488b8bc1705e5f5e18c12778470a69568e5ab243d0b37148",
+        "processed_hash": "eca5b465bb89f6d39c1ba0886ae9e30695af21b8e93aaad5a144b20ca9415f4b",
         "summary": {
           "confirmed": 58
         },
@@ -105482,7 +105558,7 @@
           "KIND-REGISTER": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED: the mcp kind is in the five-kind register (INV-VOCABULARY, c3b), the manifest laws ship (mcp packages parse; PROP-024 code-bearing rules apply), and the sovereign per-family servers are installed on this machine (mcp:org.vibevm.ai-native/rust-ai-native-mcp + typescript twin — the boot-resident facts; this session's Blender/vibevm MCP roster proves the loader path)"
+              "Slot statement re-keyed to the identity form vibedeps/<group>.<name>/<version> per the 2026-08-13 ruling; disk agrees (vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/0.7.0 exists); prior kind-prefixed text was true until df5d4563"
             ]
           },
           "TABLE-ONLY-IN-KIND": {
@@ -105780,8 +105856,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T14:55:40Z",
-        "verify_batch": "c4f2-mcp-settings"
+        "verified_at": "2026-08-13T17:36:33Z",
+        "verify_batch": "c4f2-mcp-settings + COPY-2026-08-13"
       }
     },
     {
@@ -106238,7 +106314,7 @@
           "related": {
             "v": "confirmed",
             "ev": [
-              "verified against progress-core sources + live CLI this session"
+              "Dead pointer repaired to the installed slot (org.vibevm.ai-native.core-ai-native/0.8.0); target verified present. File deliberately left UNSEALED: its 30 standing-stale facts belong to the owner-ordered proof-bar re-judgement campaign and this session did not verify them"
             ]
           },
           "memory-accumulated": {
@@ -107339,7 +107415,7 @@
           }
         },
         "verified_at": "2026-08-03T11:11:46Z",
-        "verify_batch": "c4a-vibe-progress + d2f + E + DEBT-2026-08-06-H"
+        "verify_batch": "c4a-vibe-progress + d2f + E + DEBT-2026-08-06-H + COPY-2026-08-13-p43"
       }
     },
     {
@@ -107787,7 +107863,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 92,
         "marker_count": 93,
-        "processed_hash": "5597ebf68c3fa320e5e015deb81d8eb3f0145b5d822095b02d3cfda82b77c184",
+        "processed_hash": "71d41a593cd036ca37262b38d43098dd11e1863e6841e66b82cd99891f23b745",
         "summary": {
           "confirmed": 93
         },
@@ -107831,7 +107907,7 @@
           "SUP-CACHE-LAYOUT": {
             "v": "confirmed",
             "ev": [
-              "header + superseded-arc precise: PROP-002 authoritative for trait/cache/source-uri (its shipped forms verified in c4b); NOT-SUPERSEDED set (shell-out, GitBackend, TTL, Windows UX) verified live below; ARG-PRUNED cites PROP-000 §15 and the prune was executed (verified c3b)"
+              "Supersession note gains the re-keying clause (later re-keyed to `<group>.<name>` — PROP-002 §2.6); the historical replacement it records stays as written. Cache code composes {group}.{name} since commit fb7760da (git_package_registry/mod.rs package_clone_dir)"
             ]
           },
           "SUP-SOURCE-URI": {
@@ -108354,8 +108430,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-03T11:11:46Z",
-        "verify_batch": "c4b-registry-core + d2d"
+        "verified_at": "2026-08-13T16:50:24Z",
+        "verify_batch": "c4b-registry-core + d2d + IDENT-2026-08-13-rejudge"
       }
     },
     {
@@ -108378,9 +108454,9 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (74 cells); document <status> judged as _elements",
         "fact_count": 359,
         "marker_count": 360,
-        "processed_hash": "9e16727195e3c6207d7e27e02cc8bc74f25ad65635c78affca8c0ee9e300259d",
+        "processed_hash": "80581fea1f0d305dda760cff00da9e20d88ce75330a7dc9dbe99d8cc7998050b",
         "summary": {
-          "confirmed": 297,
+          "confirmed": 308,
           "drift": 1
         },
         "verdicts": {
@@ -108538,7 +108614,7 @@
           "REG-FIELD-NAMING": {
             "v": "confirmed",
             "ev": [
-              "registry model live: project.rs parse + git_package_registry (mod/fetch/lookup) + multi_registry_resolver (mod/attempt/dispatch/refresh) = 20 implements; naming fqdn default per PROP-008 §2.5 (live vibespecs repos use org.vibevm_wal shape; 90-user boot fact); walk order = first-match-wins in walk.rs, no cross-registry union"
+              "Example updated to the dot form with the supersession chain in place (shipped M1.19 as `_`, re-ruled to `.` 2026-08-13); code agrees: project.rs:313. Prior text was true for the shipped `_` era"
             ]
           },
           "REGISTRY-WALK-ORDER": {
@@ -110198,10 +110274,76 @@
               "spec/common/PROP-000.md:  ## 18. Complexity expectation: higher than RPM {#complexity}",
               "all four PROP-000 sections this fact points a reader at exist with the numbering it quotes, and VIBEVM-SPEC.md is present at the repository root. First judgement — the anchor had no address until today."
             ]
+          },
+          "TWO-TIER-PUBLISH": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-13 verbatim («если нет - искать и пушить в существующий пакет … если у нас админские права организации - еще и мочь создавать пакеты (возможно интерактивно спросить …)»); recorded spec/plan — build explicitly deferred to its own slice; branch-on-existence design stated in-session and accepted"
+            ]
+          },
+          "TIER-UPDATE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/plan record; feasibility grounded: direct-git publish path exists today (crates/vibe-publish/src/direct_git.rs, --repo-url), repo-name composition exists (NamingConvention::repo_name, crates/vibe-core/src/manifest/project.rs:313), ls-remote probing is the ShellGit backend's standard call"
+            ]
+          },
+          "TIER-CREATE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/plan record of the owner's interactive-confirmation + --create design (his words: «такого пакета еще нет, сделать? и конечно флаг для автоматического создания»); creation flow it wraps is today's adapter path (vibe-publish/src/creator.rs, github.rs)"
+            ]
+          },
+          "RIGHTS-CHECKED-AT-THE-ACTION": {
+            "v": "confirmed",
+            "ev": [
+              "spec/plan design record; the fine-grained-token caveat is a GitHub API fact (repo-scoped PATs expose no org membership yet can push), which is why existence—not rights—branches the flow; membership endpoints named for diagnostics only"
+            ]
+          },
+          "LEAST-PRIVILEGE-IS-THE-NORM": {
+            "v": "confirmed",
+            "ev": [
+              "Consequence record of the two-tier design: updates need repo-scoped creds only (SSH suffices — no token source consulted on the update tier), org tokens stay with moderators; consistent with the vouching act in PROP-008 §2.10"
+            ]
+          },
+          "lifecycle-req": {
+            "v": "confirmed",
+            "ev": [
+              "Requirement marker for §2.13; substance carried by the four facts below"
+            ]
+          },
+          "lifecycle-lead": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-13 verbatim («Ничто не должно технически помешать нам удалить пакет и через какое-то время вместо него поставить новый. Но пользователь должен понять, что пакет изменился»); the visible-change guarantee is the section's design answer, recorded same-day"
+            ]
+          },
+          "REMOVAL-IS-A-JOURNAL-ACT": {
+            "v": "confirmed",
+            "ev": [
+              "spec/plan record; grounded in PROP-044 §3 truth kernel (journal holds what sources cannot carry: removal) and ТЗ Ф3.1/А.2 Removed event + tombstone slots (D7); rebuild-restores argument follows from journal+projection design"
+            ]
+          },
+          "NAME-REUSE-IS-LEGAL-AND-VISIBLE": {
+            "v": "confirmed",
+            "ev": [
+              "spec/plan record of the owner's conclusion; visibility mechanism = journal chain Removed→Published, surfaced by resolvers — the design answer he accepted in-session («мы можем это сделать?» — да, этим механизмом)"
+            ]
+          },
+          "CONSENT-IS-PER-PACKAGE": {
+            "v": "confirmed",
+            "ev": [
+              "Owner asked for the recovery path 2026-08-13 («сделать install --force или что-то такое … должен мочь согласиться»); recorded per-package --accept-new with re-pin-as-record; the no-blanket-force reasoning (accepting one break must not accept a second) stated and not objected"
+            ]
+          },
+          "FORCE-REPLACE-IS-A-DECLARED-ACT": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-13 verbatim («посмотри на git push --force, мы можем сделать аналог для пакетов? … нужна … по юридическим причинам»; loud refusal + consent required); recorded as append-only declared replacement with mandatory --reason; ForceReplaced event slot added to ТЗ А.2 the same landing"
+            ]
           }
         },
-        "verified_at": "2026-08-06T17:09:48Z",
-        "verify_batch": "c4b-registry-core + d2d + A2-INDEXAUTH + S18-SWALLOWED-RESTORED"
+        "verified_at": "2026-08-13T16:50:24Z",
+        "verify_batch": "c4b-registry-core + d2d + A2-INDEXAUTH + S18-SWALLOWED-RESTORED + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge"
       }
     },
     {
@@ -110224,9 +110366,9 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (8 cells); document <status> judged as _elements",
         "fact_count": 99,
         "marker_count": 100,
-        "processed_hash": "43bf8dd17e23f3cdc195928861469a5a28039293a7885138d0b070d6808b8389",
+        "processed_hash": "b58fe6a744a2995b7970ea4c3a1cbdd191d38e31fe3dbb47047fcf037a6325af",
         "summary": {
-          "confirmed": 93
+          "confirmed": 102
         },
         "verdicts": {
           "milestone-line": {
@@ -110337,7 +110479,7 @@
           "GROUP-GRAMMAR": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "Replaces the [a-z0-9_-]+ letter, which was TRUE until 2026-08-13: Group::parse then admitted `_` (the old charset match arm) and the fact matched it. Owner re-ruled («настоящие домены», «убери везде»); new LDH letter now enforced at crates/vibe-core/src/package_ref.rs:60-77 (edge-hyphen + no-underscore loop), tests package_ref/tests.rs group_segments_are_ldh_labels, doctest rejects org_x.vibevm — commit 7a5d8f4b"
             ]
           },
           "GROUP-CANONICAL": {
@@ -110493,13 +110635,13 @@
           "JOINER-UNDERSCORE": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "Replaces the `_`-joiner decision, TRUE as written until 2026-08-13: repo_name composed {group}_{name} (project.rs:313 old form) and its rationale held under the then-charset. Both premises removed by the same ruling (groups LDH, composite must be a real FQDN); new dot letter matches code: crates/vibe-core/src/manifest/project.rs:313 now Ok(format!(\"{group}.{name}\")), doctest asserts org.vibevm.wal — commit fb7760da"
             ]
           },
           "COLLISION-FREE-REPO": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "Only the composed form changed (`<group>_<name>` → `<group>.<name>`); the collision-freedom argument is unchanged and still follows from (group,name) uniqueness (§2.2). Prior text was true for the prior joiner"
             ]
           },
           "SHORT-CLI-FAT-REPO": {
@@ -110689,7 +110831,7 @@
           "MIG-CANONICAL": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "History fact — one sentence APPENDED (pending renames land on the dot form per the 2026-08-13 ruling); the historical body (org.vibevm_wal-era renames as they happened) deliberately unrewritten. Prior text was true and remains true as history"
             ]
           },
           "MIG-TEST-ORGS": {
@@ -110804,10 +110946,64 @@
               "collision behaviour preserved on the local route: short_name.rs:190-192 sends two locked groups to `InstallError::AmbiguousPackage`, the same verdict as the index route (PROP-008 §2.7)",
               "new fact, first judgement — introduced by 64d66c64 (B-045) on 2026-08-06"
             ]
+          },
+          "SEGMENT-COUNT-IS-REGISTRY-POLICY": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-13 verbatim in-session («требование больше 2 сегментов — это политика конкретного репозитория»); core letter matches code: crates/vibe-core/src/package_ref.rs:56 loops split('.') with no minimum count — Group::parse(\"acme\") passes (test group_accepts_valid keeps \"a\")"
+            ]
+          },
+          "req-trust": {
+            "v": "confirmed",
+            "ev": [
+              "Requirement marker for §2.10; the section's facts below carry the substance — marker judged as present and correctly typed (req r2, spec/done: ruling recorded, mechanisms partly future)"
+            ]
+          },
+          "GROUP-IS-A-CLAIM": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-13 verbatim («сегодня группа — это заявка, а не удостоверение» accepted; «Модель доверия у нас очень простая…»); consistent with GROUP-CONVENTION (core never enforced shape) and with no verification code existing: grep dns/resolve/verify over vibe-registry finds no domain check"
+            ]
+          },
+          "DOMAIN-NEVER-VERIFIED": {
+            "v": "confirmed",
+            "ev": [
+              "Negative claim verified by absence: no DNS/domain-existence lookup anywhere in crates/vibe-registry or vibe-core (no resolver dependency, no such call site); recorded as a standing prohibition so it stays deliberate"
+            ]
+          },
+          "ORG-VOUCHES-WITHIN-A-REGISTRY": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-13 («легитимность будет проверять администратор/модератор/мантейнер репозитория — так же как … OpenVSX.org»); mechanism today is literal org membership: publish requires org repo-creation rights (PROP-002 §2.10 adapters + scope discipline)"
+            ]
+          },
+          "CROSS-REGISTRY-TRUTH-IS-THE-HASH": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-13 («В разных реестрах могут лежать одинаковые пакеты под одним именем. Это нормальная тема»); machinery exists: priority-ordered [[registry]] (PROP-002 §2.2, impl) and lockfile content_hash pin (schema v5, vibe-core/src/manifest/lockfile.rs)"
+            ]
+          },
+          "DEFAULT-TRUSTED-REGISTRIES": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-13 («наш базовые репозитории https://github.com/vibespecs и https://gitverse.ru/vibespecs являются основными и доверенными по-умолчанию»); matches vibe init defaults already written into project manifests (root vibe.toml [[registry]] pair, crates/vibe-cli/src/commands/init/mod.rs:289 area)"
+            ]
+          },
+          "DOMAINLESS-IS-REGISTRY-POLICY": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-13 verbatim («Зачем нам вообще нужна конвенция для бездоменных? … это уже дело конкретного репозитория»), superseding the earlier bless-one-convention recommendation; no core code enforces any convention (GROUP-CONVENTION unchanged impl)"
+            ]
+          },
+          "trust-lifecycle-pointer": {
+            "v": "confirmed",
+            "ev": [
+              "Pointer fact: targets exist — PROP-002 §2.13 {#lifecycle} and §2.10 {#publish} written in the same landing (commit 13c8638a)"
+            ]
           }
         },
-        "verified_at": "2026-08-05T22:47:43Z",
-        "verify_batch": "c4f1-registry-rest + d2a + RJ1 + B4-HOST-KIND-VALIDATION"
+        "verified_at": "2026-08-13T16:50:24Z",
+        "verify_batch": "c4f1-registry-rest + d2a + RJ1 + B4-HOST-KIND-VALIDATION + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge"
       }
     },
     {
@@ -116375,7 +116571,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 103,
         "marker_count": 104,
-        "processed_hash": "92d588ce7dfd01366b9899b3c4b7c85f37f0baca67e221d40ba6664c559e70cf",
+        "processed_hash": "511b16f37a75baec5ebc1f77a5eedd80885e73663e5bb2a7fd8a0670dced8e01",
         "summary": {
           "confirmed": 110
         },
@@ -116465,7 +116661,7 @@
           "TREE-VIBEDEPS": {
             "v": "confirmed",
             "ev": [
-              "two trees LIVE in this very repo: authored spec/ + committed vibedeps/ (this session booted from vibedeps/flow-*/ paths); slot layout <kind>-<name>/<version>/ verified on disk; mirror layout retired ([writes] absent from every manifest in tree)"
+              "Slot template updated to `vibedeps/<group>.<name>/<version>/` per the 2026-08-13 ruling; prior `<kind>-<name>` text was true until commit df5d4563 (vibedeps.rs slot_rel_path now {group}.{name}; host tree re-materialised, 37 slots)"
             ]
           },
           "VIBEDEPS-COMMITTED": {
@@ -116533,7 +116729,7 @@
           "ARTIFACT-INDEX-MD": {
             "v": "confirmed",
             "ev": [
-              "artifacts live and consumed daily: STATIC.md (verbatim priority lane — this session read it first), INDEX.md TOML manifest (schema=1, static pointer, [[entry]] path/kind — the live file matches the §2.3 grammar byte-for-byte); pure file-reading preserved; redirect is the PROP-012 managed <vibevm> block (live in CLAUDE.md)"
+              "Illustrative INDEX entry re-keyed to the identity slot form the generator now writes (spec/boot/INDEX.md shows the same shape live)"
             ]
           },
           "ARTIFACTS-GENERATED": {
@@ -116857,7 +117053,7 @@
           "RES-VIBEDEPS": {
             "v": "confirmed",
             "ev": [
-              "resolved questions: all eight recorded resolutions match shipped reality (vibedeps/, reinstall, TOML INDEX, [writes] retired, activation vocab shared via when/if_os one grammar, [boot] table, v1.5 view, sanction granted+landed)"
+              "Same slot-template update as TREE-VIBEDEPS; code: crates/vibe-workspace/src/vibedeps.rs:41"
             ]
           },
           "RES-REINSTALL": {
@@ -117065,8 +117261,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-04T23:36:33Z",
-        "verify_batch": "c4d1-workspace-big3 + d2a + H4-stale-host + H6-stale-host-tail"
+        "verified_at": "2026-08-13T17:36:33Z",
+        "verify_batch": "c4d1-workspace-big3 + d2a + H4-stale-host + H6-stale-host-tail + IDENT-2026-08-13-rejudge + COPY-2026-08-13"
       }
     },
     {
@@ -118606,7 +118802,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 52,
         "marker_count": 53,
-        "processed_hash": "27f1bad149d671ea82ae3e1bcec989cd35194721d97a49f9bda474803abc0e7f",
+        "processed_hash": "9722ba9bcf353c24a98ff68053e2d4c2efbcede12cd9d6b509002c2ebd2711b6",
         "summary": {
           "confirmed": 53
         },
@@ -118614,20 +118810,19 @@
           "status-line": {
             "v": "confirmed",
             "ev": [
-              "F-018 extended (c4d2): the materialization-mode system ships wholesale under the same 'proposed' header as its PROP-020 sibling — Materialization enum with Snapshot default + InPlace + is_in_place doctests (vibe-core package.rs:265-277), hardlink/in-place machinery through vibe-install (fetched.rs/apply.rs/plan.rs, materialise_in_place seam, deferred in-place incremental git-fetch path, --recurse-submodules clone), submodule snapshot-embedding in git_package_registry/fetch.rs, the destructive guard in commands/uninstall.rs — one re-mark sweep with the header fix",
-              "D d1 2026-07-25 (F-018 closed for this file): status line rewritten to IMPLEMENTED citing the Materialization enum + install machinery + destructive guard, document element -> impl/done, drifted facts re-marked spec/done -> impl/done"
+              "Word-level: enum default named Copy per owner ruling «4. copy» 2026-08-13; code: crates/vibe-core/src/manifest/package.rs Materialization::Copy #[default], wire kebab \"copy\". Rest of the fact unchanged and previously true under the old name"
             ]
           },
           "related": {
             "v": "confirmed",
             "ev": [
-              "link roster live (PROP-019 §2.15/§2.16 placer/by-reference prior art anchors resolve)"
+              "Word-level: .git-stripped content tree in the PROP-010 cross-reference; targets unchanged"
             ]
           },
           "today-single-policy": {
             "v": "confirmed",
             "ev": [
-              "impl/done and accurate as the snapshot-mode description (cache → strip → copy)"
+              "Second word-level pass on this fact today (snapshot → content tree for the stripped intermediate); slot text from the earlier pass unchanged; code unchanged"
             ]
           },
           "snapshot-right-for-ordinary": {
@@ -118678,8 +118873,7 @@
           "SNAPSHOT-DEFAULT": {
             "v": "confirmed",
             "ev": [
-              "F-018 extended (c4d2): the materialization-mode system ships wholesale under the same 'proposed' header as its PROP-020 sibling — Materialization enum with Snapshot default + InPlace + is_in_place doctests (vibe-core package.rs:265-277), hardlink/in-place machinery through vibe-install (fetched.rs/apply.rs/plan.rs, materialise_in_place seam, deferred in-place incremental git-fetch path, --recurse-submodules clone), submodule snapshot-embedding in git_package_registry/fetch.rs, the destructive guard in commands/uninstall.rs — one re-mark sweep with the header fix",
-              "D d1 2026-07-25 (F-018 closed for this file): status line rewritten to IMPLEMENTED citing the Materialization enum + install machinery + destructive guard, document element -> impl/done, drifted facts re-marked spec/done -> impl/done"
+              "Renamed default recorded with its ruling and the refusal-not-alias policy; code: manual Deserialize refuses \"snapshot\" with the rename recipe (package.rs), test materialization_refuses_the_legacy_snapshot_name_with_the_recipe. Prior text true under the pre-ruling name"
             ]
           },
           "MODE-IN-DESCRIPTOR": {
@@ -118699,7 +118893,7 @@
           "SNAPSHOT-PIPELINE": {
             "v": "confirmed",
             "ev": [
-              "impl/done and live: the status-quo pipeline is today's shipped default path"
+              "Only the word for the .git-stripped intermediate changed (snapshot → content tree) per PROP-044 §2b hygiene; the pipeline itself byte-identical in behaviour (vibedeps.rs materialise/copy_tree unchanged)"
             ]
           },
           "STRIP-EXTENDED": {
@@ -118717,8 +118911,7 @@
           "SUBMODULE-EMBEDDED": {
             "v": "confirmed",
             "ev": [
-              "F-018 extended (c4d2): the materialization-mode system ships wholesale under the same 'proposed' header as its PROP-020 sibling — Materialization enum with Snapshot default + InPlace + is_in_place doctests (vibe-core package.rs:265-277), hardlink/in-place machinery through vibe-install (fetched.rs/apply.rs/plan.rs, materialise_in_place seam, deferred in-place incremental git-fetch path, --recurse-submodules clone), submodule snapshot-embedding in git_package_registry/fetch.rs, the destructive guard in commands/uninstall.rs — one re-mark sweep with the header fix",
-              "D d1 2026-07-25 (F-018 closed for this file): status line rewritten to IMPLEMENTED citing the Materialization enum + install machinery + destructive guard, document element -> impl/done, drifted facts re-marked spec/done -> impl/done"
+              "Word-level: embedded into the copied tree (was: the snapshot); PROP-021 §2.3 anchor #snapshot-embedding untouched (anchors immutable)"
             ]
           },
           "HOOK-RESET-REMATERIALISE": {
@@ -118738,8 +118931,7 @@
           "HARDLINK-MODE": {
             "v": "confirmed",
             "ev": [
-              "F-018 extended (c4d2): the materialization-mode system ships wholesale under the same 'proposed' header as its PROP-020 sibling — Materialization enum with Snapshot default + InPlace + is_in_place doctests (vibe-core package.rs:265-277), hardlink/in-place machinery through vibe-install (fetched.rs/apply.rs/plan.rs, materialise_in_place seam, deferred in-place incremental git-fetch path, --recurse-submodules clone), submodule snapshot-embedding in git_package_registry/fetch.rs, the destructive guard in commands/uninstall.rs — one re-mark sweep with the header fix",
-              "D d1 2026-07-25 (F-018 closed for this file): status line rewritten to IMPLEMENTED citing the Materialization enum + install machinery + destructive guard, document element -> impl/done, drifted facts re-marked spec/done -> impl/done"
+              "Word-level: cached snapshot → cached content tree; the VVM placer mechanics text unchanged and still matching CopyMode::Hardlink (vibedeps.rs)"
             ]
           },
           "HARDLINK-FALLBACK": {
@@ -118801,8 +118993,7 @@
           "IP-UNVERSIONED-PATH": {
             "v": "confirmed",
             "ev": [
-              "F-018 extended (c4d2): the materialization-mode system ships wholesale under the same 'proposed' header as its PROP-020 sibling — Materialization enum with Snapshot default + InPlace + is_in_place doctests (vibe-core package.rs:265-277), hardlink/in-place machinery through vibe-install (fetched.rs/apply.rs/plan.rs, materialise_in_place seam, deferred in-place incremental git-fetch path, --recurse-submodules clone), submodule snapshot-embedding in git_package_registry/fetch.rs, the destructive guard in commands/uninstall.rs — one re-mark sweep with the header fix",
-              "D d1 2026-07-25 (F-018 closed for this file): status line rewritten to IMPLEMENTED citing the Materialization enum + install machinery + destructive guard, document element -> impl/done, drifted facts re-marked spec/done -> impl/done"
+              "In-place slot path updated to `vibedeps/<group>.<name>/`; unversioned-clone semantics unchanged; code: vibedeps.rs:178 in_place_slot_rel_path now {group}.{name} — commit df5d4563"
             ]
           },
           "IP-REQUIRES-GIT": {
@@ -118822,8 +119013,7 @@
           "ID-COPY-MODES": {
             "v": "confirmed",
             "ev": [
-              "F-018 extended (c4d2): the materialization-mode system ships wholesale under the same 'proposed' header as its PROP-020 sibling — Materialization enum with Snapshot default + InPlace + is_in_place doctests (vibe-core package.rs:265-277), hardlink/in-place machinery through vibe-install (fetched.rs/apply.rs/plan.rs, materialise_in_place seam, deferred in-place incremental git-fetch path, --recurse-submodules clone), submodule snapshot-embedding in git_package_registry/fetch.rs, the destructive guard in commands/uninstall.rs — one re-mark sweep with the header fix",
-              "D d1 2026-07-25 (F-018 closed for this file): status line rewritten to IMPLEMENTED citing the Materialization enum + install machinery + destructive guard, document element -> impl/done, drifted facts re-marked spec/done -> impl/done"
+              "Mode list respelled copy/hardlink; identity semantics unchanged (content_hash over slot tree)"
             ]
           },
           "ID-IN-PLACE": {
@@ -118871,8 +119061,7 @@
           "VENDORED-COPY-MODES": {
             "v": "confirmed",
             "ev": [
-              "F-018 extended (c4d2): the materialization-mode system ships wholesale under the same 'proposed' header as its PROP-020 sibling — Materialization enum with Snapshot default + InPlace + is_in_place doctests (vibe-core package.rs:265-277), hardlink/in-place machinery through vibe-install (fetched.rs/apply.rs/plan.rs, materialise_in_place seam, deferred in-place incremental git-fetch path, --recurse-submodules clone), submodule snapshot-embedding in git_package_registry/fetch.rs, the destructive guard in commands/uninstall.rs — one re-mark sweep with the header fix",
-              "D d1 2026-07-25 (F-018 closed for this file): status line rewritten to IMPLEMENTED citing the Materialization enum + install machinery + destructive guard, document element -> impl/done, drifted facts re-marked spec/done -> impl/done"
+              "Mode list respelled; vendoring semantics unchanged (slots committed, offline-reproducible — the re-materialised tree in commit df5d4563 is itself the live demonstration)"
             ]
           },
           "IN-PLACE-NOT-VENDORED": {
@@ -118927,15 +119116,13 @@
           "ACC-FIELD-PARSES": {
             "v": "confirmed",
             "ev": [
-              "F-018 extended (c4d2): the materialization-mode system ships wholesale under the same 'proposed' header as its PROP-020 sibling — Materialization enum with Snapshot default + InPlace + is_in_place doctests (vibe-core package.rs:265-277), hardlink/in-place machinery through vibe-install (fetched.rs/apply.rs/plan.rs, materialise_in_place seam, deferred in-place incremental git-fetch path, --recurse-submodules clone), submodule snapshot-embedding in git_package_registry/fetch.rs, the destructive guard in commands/uninstall.rs — one re-mark sweep with the header fix",
-              "D d1 2026-07-25 (F-018 closed for this file): status line rewritten to IMPLEMENTED citing the Materialization enum + install machinery + destructive guard, document element -> impl/done, drifted facts re-marked spec/done -> impl/done"
+              "Acceptance extended with the legacy-refusal clause, and it holds: test materialization_refuses_the_legacy_snapshot_name_with_the_recipe asserts the recipe; roundtrip test covers copy/hardlink/in-place"
             ]
           },
           "ACC-MODE-BEHAVIORS": {
             "v": "confirmed",
             "ev": [
-              "F-018 extended (c4d2): the materialization-mode system ships wholesale under the same 'proposed' header as its PROP-020 sibling — Materialization enum with Snapshot default + InPlace + is_in_place doctests (vibe-core package.rs:265-277), hardlink/in-place machinery through vibe-install (fetched.rs/apply.rs/plan.rs, materialise_in_place seam, deferred in-place incremental git-fetch path, --recurse-submodules clone), submodule snapshot-embedding in git_package_registry/fetch.rs, the destructive guard in commands/uninstall.rs — one re-mark sweep with the header fix",
-              "D d1 2026-07-25 (F-018 closed for this file): status line rewritten to IMPLEMENTED citing the Materialization enum + install machinery + destructive guard, document element -> impl/done, drifted facts re-marked spec/done -> impl/done"
+              "Respelled first word; behaviours proven by the green workspace suite (materialise/hardlink/in-place tests unchanged)"
             ]
           },
           "ACC-IN-PLACE-IDENTITY": {
@@ -118967,8 +119154,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T14:37:13Z",
-        "verify_batch": "c4d2-workspace-rest + d1"
+        "verified_at": "2026-08-13T17:36:33Z",
+        "verify_batch": "c4d2-workspace-rest + d1 + IDENT-2026-08-13-rejudge + COPY-2026-08-13"
       }
     },
     {
@@ -118991,7 +119178,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 45,
         "marker_count": 46,
-        "processed_hash": "8d50a37b2c4e3b8421b60f9e912fb9ae726ed88e0a1d72e1fb95bfd0b2d8b8b1",
+        "processed_hash": "a40ead7fe92f06e555884c8937f368e15797ff99a13bbb380a38c22471191b81",
         "summary": {
           "confirmed": 46
         },
@@ -119173,7 +119360,7 @@
           "CROSS-DEP-IMPOSSIBLE": {
             "v": "confirmed",
             "ev": [
-              "v1 shipped exactly as §9 cuts it: [[binary]] parse + lint, slot-resident consent-gated builds, vibe bin list/build/path/exec live (help text matches §4 verbatim; exec = lockfile→slot→artifact, no PATH search), staleness by slot residency; v2 surface honestly spec/done (no bin sync in the CLI, no shims, no cross_paths rewrite, no GC/vars row); the boot-resident 'vibe bin exec rust-ai-native' fact is this machine's daily proof"
+              "Only the materialised-layout template inside the fact changed to `<group>.<name>`; the impossibility argument (authored vs materialised layouts disagree) unchanged and still true — xtask/src/sync_engines.rs doc echoes the same update"
             ]
           },
           "V1-VENDOR-SYNC": {
@@ -119273,8 +119460,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T14:37:13Z",
-        "verify_batch": "c4d2-workspace-rest"
+        "verified_at": "2026-08-13T16:50:24Z",
+        "verify_batch": "c4d2-workspace-rest + IDENT-2026-08-13-rejudge"
       }
     },
     {
