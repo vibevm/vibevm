@@ -120,7 +120,7 @@
 - @fact:split-host-revisit **Revisit when:** the halves re-open separately. The publish-loop half: GitVerse's `POST /orgs/{org}/repos` starts returning 2xx — observation point: one request against gitverse.ru; the probe and its failure codes are documented in [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.md#publish). The leading-role half: by the owner's notice from external observation — deliberately no code-observable trigger, per the same-day B-015 precedent (`BACKLOG.md`). @status:spec/done
 
 - @fact:CACHE-REGISTRIES **Cache location:** `~/.vibe/registries/<hash>/` for cloned registries. @status:spec/done
-- @fact:CACHE-PACKAGES `<project>/.vibe/cache/<kind>/<name>/<version>/` for per-package cache. See `VIBEVM-SPEC.md` §8.3. @status:spec/done
+- @fact:CACHE-PACKAGES `<project>/.vibe/cache/<group>/<name>/<version>/` for per-package cache — identity-keyed, as the shipped tree already is (`.vibe/cache/org.vibevm.world/wal/…` on disk; the earlier `<kind>/<name>` spelling lagged the code). See `VIBEVM-SPEC.md` §8.3. @status:impl/done
 
 ---
 

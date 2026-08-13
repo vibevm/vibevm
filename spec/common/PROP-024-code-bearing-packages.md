@@ -20,9 +20,9 @@ the working checkers, not a prose description of them. @status:impl/done
 (in-workspace `file://` mutability — the dev loop that re-materialises edited
 package source), [PROP-020](../modules/vibe-workspace/PROP-020-install-hooks.md)
 (the `post-install` build hook), [PROP-022 §2.2](../modules/vibe-workspace/PROP-022-materialization-modes.md#snapshot)
-(the snapshot copy — re-scoped here), the discipline mechanism specs
-[ENGINE-CONFORM](../../vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md) and
-[PROP-014](../../vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md)
+(the `copy`-mode tree — re-scoped here), the discipline mechanism specs
+[ENGINE-CONFORM](../../vibedeps/org.vibevm.ai-native.core-ai-native/0.8.0/spec/mechanisms/ENGINE-CONFORM-v0.1.md) and
+[PROP-014](../../vibedeps/org.vibevm.ai-native.core-ai-native/0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md)
 (the tools that relocate; the specs themselves now ship in
 `flow:org.vibevm.ai-native/core-ai-native` — `spec://org.vibevm.ai-native/core-ai-native/mechanisms/…`). @status:spec/done
 
@@ -185,7 +185,7 @@ so there is nothing in the slot to reset. @status:spec/done
 ```toml
 # consumer's root Cargo.toml — one pinned alias, updated once per package bump
 [workspace.dependencies]
-specmark = { path = "vibedeps/stack-rust-ai-native-lang/0.2.0/crates/specmark" }
+specmark = { path = "vibedeps/org.vibevm.ai-native.rust-ai-native-lang/0.2.0/crates/specmark" }
 
 [workspace]
 exclude = ["vibedeps", "packages"]   # disclaim the package's own workspaces
@@ -223,7 +223,7 @@ neither the slot nor the consumer's own `target/`. @status:spec/done
   `vibedeps/` slot. @status:spec/done
 - @fact:CLEAN-CLONE-BUILDS Because `vibedeps/` is committed (PROP-009 §2.1), a fresh clone
   builds from a clean checkout **with no prior `vibe install`** — the path-dep
-  target (`vibedeps/stack-rust-ai-native-lang/0.2.0/crates/specmark`, …) already exists
+  target (`vibedeps/org.vibevm.ai-native.rust-ai-native-lang/0.2.0/crates/specmark`, …) already exists
   in the tree. @status:spec/done
 - @fact:NO-CHICKEN-EGG There is no chicken-and-egg: the toolchain a build needs is vendored
   beside the code that needs it. @status:spec/done

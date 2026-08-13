@@ -16,7 +16,7 @@ and the fact-grain specmap consumption. @status:impl/done
 separability law, §2): the `addressable-specs` flow (anchors, `spec://` URIs),
 [PROP-035](../vibe-workspace/PROP-035-spec-compiler.md) (the document IR whose
 Markdown/XML dual-frontend model this markup targets),
-[PROP-014 specmap](../../../vibedeps/flow-core-ai-native/0.7.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md)
+[PROP-014 specmap](../../../vibedeps/org.vibevm.ai-native.core-ai-native/0.8.0/spec/mechanisms/PROP-014-specmap-bidirectional-traceability.md)
 (spec↔code traceability — consumed through the evidence-provider seam, §6),
 [PROP-029](../../common/PROP-029-fully-qualified-addresses.md) (`spec://`
 grammar). The first consumer is the spec-actualization campaign

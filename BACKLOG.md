@@ -467,7 +467,7 @@ structure, and it goes when the file does.
   by the D10 proposal pass.** The fractality «14 complete records» are, by file,
   **8 files carrying all four fields, all 8 vendored copies of the
   `decision-records` flow's own template, protocol, boot snippet and worked
-  examples** (under `*/vibedeps/flow-decision-records/` and
+  examples** (under `*/vibedeps/org.vibevm.world.decision-records/` and
   `flow-comparative-research/`, ×2 vendoring packages) — **0 authored**; the
   specspace's own authored decision blocks are 9, in a three-label dialect,
   none complete. So the honest comparison is «nobody authors the four-field

@@ -50,7 +50,7 @@ Model Context Protocol servers. @status:impl/done
 
 - @fact:KIND-REGISTER `kind = "mcp"` joins the installable
   register (VIBEVM-SPEC §4.1); slots materialise under
-  `vibedeps/mcp-<name>/<version>/` like every other kind. @status:impl/done
+  `vibedeps/<group>.<name>/<version>/` like every other kind (the identity slot — PROP-022 §2.1, owner ruling 2026-08-13; the path carried a kind prefix before that ruling). @status:impl/done
 - @fact:TABLE-ONLY-IN-KIND The
   `[[mcp_server]]` table (§2.2) is **legal only in this kind** — the kind
   IS the taxonomy, enforced by `Manifest::validate`, not advisory. @status:impl/done

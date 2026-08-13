@@ -74,7 +74,7 @@ path = "spec/boot/00-core.md"
 kind = "static"
 
 [[entry]]
-path = "vibedeps/stack-windows/2.1.0/boot/windows.md"
+path = "vibedeps/org.vibevm.windows/2.1.0/boot/windows.md"
 kind = "dynamic"
 when = "os:windows"
 ```
