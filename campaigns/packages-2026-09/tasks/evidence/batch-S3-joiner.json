@@ -1,0 +1,38 @@
+{
+  "batch": "S3-JOINER",
+  "cluster": "world",
+  "files": {
+    "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md": {
+      "THE-SLASH-MAKES-THE-BOUNDARY-DETERMINISTIC": {
+        "v": "confirmed",
+        "ev": [
+          "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:161  (`[a-z0-9.-]`) nor the name (`[a-z0-9-]`), so the boundary splits",
+          "spec/modules/vibe-registry/PROP-008-qualified-naming.md:114  The split stays deterministic without a charset-excluded joiner: the name is a **single dot-free LDH label** (`validate_package_name`), so the **last dot** is always the boundary",
+          "spec/common/PROP-029-fully-qualified-addresses.md:23  `<group>.<name>` — `/` is illegal in a repo name; the name is the last label",
+          "REPLACES the 2026-07/08 verdict on this anchor, which was CORRECT WHEN MADE and is quoted here so the replacement is auditable. That verdict confirmed the unit's text `a dotted <group>.<name> would hide it`, and its own third evidence ref read `PROP-029:26  the flat repo-name carrier swaps /→_`. Both halves of that pairing were true at the time: the flow forbade the dot as a joiner, and vibevm's flat carrier joined with `_`, so flow and host agreed. The owner's identity rulings of 2026-08-13 moved the host — PROP-029:26 now reads `/`→`.` and PROP-008:114 carries the last-dot split — which left the flow's letter, not the old verdict, as the thing out of date. This verdict is filed against the REWRITTEN text: the slash case is unchanged and still holds (the surface allows `/`, so no grammar is consulted), and the removed over-claim is replaced by the observation that the unit's own name alphabet `[a-z0-9-]` already excludes the dot, so a dot-free name makes the last dot an equally deterministic boundary. src 1 is the unit's own alphabets; src 2 is the host stating the same split and enforcing it in `validate_package_name`."
+        ],
+        "src": [1, 2]
+      },
+      "A-JOINER-MUST-ADMIT-A-DETERMINISTIC-INVERSE-PARSE": {
+        "v": "confirmed",
+        "ev": [
+          "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:161  (`[a-z0-9.-]`) nor the name (`[a-z0-9-]`), so the boundary splits",
+          "spec/modules/vibe-registry/PROP-008-qualified-naming.md:114  The split stays deterministic without a charset-excluded joiner: the name is a **single dot-free LDH label** (`validate_package_name`), so the **last dot** is always the boundary — parse back by taking the last label as `name`, the rest as `group`.",
+          "spec/common/PROP-029-fully-qualified-addresses.md:25  Where the surface allows a `/` (pkgref, `spec://`) the `<group>/<name>` coordinate is byte-identical, so one substitution renames both.",
+          "confirmed: the fact states a two-route law — an out-of-alphabet separator, or a grammatical guarantee on one half — and BOTH routes are observably in force in this repository at once. Route one: `spec://` and pkgref join with `/`, a character in neither declared alphabet, and PROP-029 `##CARRIER-BYTE-IDENTITY` (25) records the payoff. Route two: the flat repo-name carrier joins with `.` and is split back deterministically, because PROP-008 `##JOINER-UNDERSCORE` (114) guarantees the name is a single dot-free LDH label and names the function that enforces it. The fact's refinement over the worker's draft — that the guaranteed half decides whether the FIRST or the LAST occurrence is the boundary — is what makes the law general rather than an accident of which half vibevm happens to constrain; vibevm constrains the second half, hence the last dot."
+        ],
+        "src": [1, 2]
+      },
+      "A-BLANKET-DOT-BAN-COSTS-THE-FLAT-SURFACES": {
+        "v": "confirmed",
+        "ev": [
+          "spec/common/PROP-029-fully-qualified-addresses.md:26  The flat repo-name carrier swaps `/`→`.` (owner ruling 2026-08-13): GitHub / GitVerse names allow `[A-Za-z0-9._-]`, the dot is legal there, and with both halves LDH the whole composite is a valid reversed FQDN — a real domain string, split back at the last dot.",
+          "spec/modules/vibe-registry/PROP-008-qualified-naming.md:52  Grammar (owner ruling 2026-08-13 — «настоящие домены»): dot-separated segments, each an **LDH hostname label** — `[a-z0-9-]+`, ASCII lowercase, hyphen never at a label edge; `_` is forbidden (it is not legal in a domain).",
+          "spec/modules/vibe-registry/PROP-008-qualified-naming.md:114  **Owner ruling 2026-08-13** («убери подчёркивания везде, чтобы получились настоящие FQDN с доменными правилами»), superseding the 2026-05 `_`-joiner decision recorded in this unit's earlier text.",
+          "confirmed: every clause of the fact resolves to a host statement. `/` illegal on the flat surface — PROP-029 `##CARRIER-REPO-NAME` (23). The domain-contradiction the ban would force — PROP-008 `##GROUP-GRAMMAR` (52) forbids `_` precisely because it is not legal in a domain, so a `_`-joined composite is the joiner that contradicts the surface's own rules. Both halves LDH ⇒ valid reversed FQDN — PROP-029:26 verbatim. The dated instance — the same 2026-08-13 owner ruling, quoted at PROP-008:114. The residual `_` clause is scoped to ecosystems whose name grammar gives no guarantee, which is not vibevm's case and is therefore a general-law clause, not a claim about this repository."
+        ],
+        "src": [1, 2]
+      }
+    }
+  }
+}

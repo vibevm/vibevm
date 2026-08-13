@@ -156,10 +156,32 @@ coordinate `<group>/<name>`** — the name is the first path segment,
 `org.vibevm.ai-native/rust-ai-native-lang`), never a bare
 `rust-ai-native-lang`. @status:impl/done
 
-@fact:THE-SLASH-MAKES-THE-BOUNDARY-DETERMINISTIC The `/` matters: it is the one character in
-neither the group (`[a-z0-9.-]`) nor the name (`[a-z0-9-]`), so an
-algorithm splits the boundary deterministically — a dotted
-`<group>.<name>` would hide it, since groups are dotted reverse-DNS. @status:impl/done
+@fact:THE-SLASH-MAKES-THE-BOUNDARY-DETERMINISTIC Where the surface allows it
+(`spec://` authority, pkgref), `/` is the joiner — in neither the group
+(`[a-z0-9.-]`) nor the name (`[a-z0-9-]`), so the boundary splits
+deterministically with no grammar to consult. The dot is not thereby
+forbidden in general: the name alphabet `[a-z0-9-]` already excludes it,
+so a dot-free name makes the last dot the boundary just as deterministically
+— the old prohibition (groups are themselves dotted) was refuted by these
+same alphabets, not only by external ruling. @status:impl/done
+
+@fact:A-JOINER-MUST-ADMIT-A-DETERMINISTIC-INVERSE-PARSE The requirement on a
+joiner is not "not a dot" but that the coordinate admit a **deterministic
+inverse parse**, and exactly two things satisfy it. Either the separator lies
+outside both alphabets (`/` here, and `_` here) — then the split needs no
+grammar at all; or the grammar guarantees that one half cannot contain the
+separator, and then the *outermost* occurrence on that half's side is the
+boundary: a separator-free second half is split at the last occurrence, a
+separator-free first half at the first. An ecosystem whose grammar guarantees
+neither half must take the first route. @status:impl/done
+
+@fact:A-BLANKET-DOT-BAN-COSTS-THE-FLAT-SURFACES Flat surfaces — repository
+names, artifact names — commonly forbid `/` outright, so a blanket
+dot-prohibition forces those surfaces onto a joiner their own domain rules
+contradict, where a both-LDH `<group>.<name>` is itself a valid reversed
+FQDN. vibevm moved its flat carrier onto the dot by owner ruling 2026-08-13
+(`PROP-029` `##CARRIER-REPO-SWAP`, `##joiner-why`); `_` stays legal wherever
+the name grammar gives no guarantee. @status:impl/done
 
 @fact:THE-FULL-COORDINATE-IS-MECHANICALLY-REFACTORABLE A
 bare authority resolves only with ambient context (which package am I
