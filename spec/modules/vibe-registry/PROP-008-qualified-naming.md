@@ -174,6 +174,20 @@ Re-run with the qualified form, e.g. `vibe install org.vibevm.world/wal`.
 - @fact:EXPLORER-SEPARATE-LAYER The explorer is a separate, optional layer over the index — not part of PROP-008's implementation. PROP-005 §2.10 already reserves the hook (`vibe-index serve`, CORS-open read endpoints). @status:spec/done
 - @fact:EXPLORER-INDEX-OBLIGATION The only obligation on this refactor is that the index carry `group` and `workspace_origin` (§2.8) so the explorer is not a retrofit later. @status:spec/done
 
+### 2.10 Trust: the group is a claim, not a credential {#trust}
+
+@fact:req-trust `req r2` @status:spec/done
+
+@fact:GROUP-IS-A-CLAIM **Decision (owner ruling, 2026-08-13).** A `group` is a **claim, not a credential**. Nothing verifies that the author of `com.google/x` owns `google.com` — and nothing ever will: vibevm is decentralised and has no central verifier to delegate to (Maven's central domain verification is the model we deliberately do not inherit). The claim's grammar is domain-shaped (§2.1); its **semantics carry no domain-ownership assertion**. @status:spec/done
+
+- @fact:DOMAIN-NEVER-VERIFIED **Domain existence is never checked, in any layer, ever.** No resolver, registry client, publisher, or linter of the core performs a DNS lookup or any other existence/ownership test on a group. A future contributor "improving" this would be reverting an owner ruling. @status:spec/done
+- @fact:ORG-VOUCHES-WITHIN-A-REGISTRY **Within one registry, the organisation vouches for the group.** Legitimacy of a name is established at registration time by the registry's own admission mechanism — for the default registries, a moderator admitting the package (the OpenVSX model): creating the package repository is the act of vouching. Naming policy (≥ 2 segments, reverse-FQDN shape, squatting rules) is that registry's business, enforced by its moderation or registration surface — never by the core (§2.1). @status:spec/done
+- @fact:CROSS-REGISTRY-TRUTH-IS-THE-HASH **Across registries, truth is held by the content hash, not the name.** Two registries may serve different packages under one `(group, name)` — a local registry shadowing a well-known package with a patched build is a *legal, normal* configuration (the Maven-local-override pattern), not an attack by definition. The consumer's protections are structural: the priority-ordered `[[registry]]` list ([PROP-002 §2.2](PROP-002-decentralized-registry.md#registry-model)) says who is asked first, and the lockfile's `content_hash` pin says what may be reproduced. @status:spec/done
+- @fact:DEFAULT-TRUSTED-REGISTRIES **The default trust set is exactly two roots** — `https://github.com/vibespecs` and `https://gitverse.ru/vibespecs` — trusted by default as the registries `vibe init` writes. Every other registry is trusted **only** by the user's own act of adding it to their configuration (owner ruling, 2026-08-13). @status:spec/done
+- @fact:DOMAINLESS-IS-REGISTRY-POLICY **No blessed convention for authors without domains.** A group like `oleg.examples` — a domain that exists nowhere — is fully legal at the core and normal in a local registry. Whether a public registry admits it (or requires an `io.github.<user>`-class convention) is that registry's naming policy. The core blesses nothing (owner ruling, 2026-08-13, superseding the earlier recommendation to bless one convention). @status:spec/done
+
+@fact:trust-lifecycle-pointer Package **removal, name re-registration, and the visible-lineage obligation** that trust depends on are registry semantics and live in [PROP-002 §2.13](PROP-002-decentralized-registry.md#lifecycle); the two-tier publish flow that operationalises moderation is [PROP-002 §2.10](PROP-002-decentralized-registry.md#publish). @status:spec/done
+
 ---
 
 ## 3. Migration {#migration}
