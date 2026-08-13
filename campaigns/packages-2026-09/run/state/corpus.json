@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-13T17:37:25Z",
+  "updated_at": "2026-08-13T17:55:26Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -93538,11 +93538,11 @@
       "path": "spec/common/PROP-044-change-native-formats.md",
       "effective": {
         "stage": "spec",
-        "state": "work"
+        "state": "done"
       },
       "explicit": {
         "stage": "spec",
-        "state": "work"
+        "state": "done"
       },
       "markers": 53,
       "units": 11,

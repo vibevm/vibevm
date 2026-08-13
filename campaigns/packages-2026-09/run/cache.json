@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-13T17:37:25Z",
+  "updated_at": "2026-08-13T17:55:48Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -94343,11 +94343,11 @@
       }
     },
     "spec/common/PROP-044-change-native-formats.md": {
-      "content_hash": "ecbbcfc01c93366f7229afd61c01c42343d36379b0e87feefd6aa320979d37c9",
+      "content_hash": "0911996699c2127304bcd091e268fbcbef7b3e0c1c2171840780a766785d6b76",
       "rollup": {
         "explicit": [
           "spec",
-          "work"
+          "done"
         ],
         "computed": [
           "spec",
@@ -94355,7 +94355,7 @@
         ],
         "effective": [
           "spec",
-          "work"
+          "done"
         ],
         "marker_count": 53,
         "fact_count": 52,
@@ -94365,7 +94365,7 @@
       "unit_count": 11,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "ecbbcfc01c93366f7229afd61c01c42343d36379b0e87feefd6aa320979d37c9",
+        "processed_hash": "0911996699c2127304bcd091e268fbcbef7b3e0c1c2171840780a766785d6b76",
         "verdicts": {
           "PURPOSE": {
             "v": "confirmed",
@@ -94676,12 +94676,12 @@
           "TERMS-SNAPSHOT-FROZEN-CHANNEL": {
             "v": "confirmed",
             "ev": [
-              "Updated the flagged-sense clause: the owner ruled «copy» the same day, so the block now records completion — snapshot carries exactly one sense. Code: Materialization::Copy + legacy refusal recipe (package.rs); prior text was true when the flag stood open"
+              "Re-vouched against the on-disk text after the ratification-status edit: the §2b block records the completed copy-rename (Materialization::Copy, package.rs) and the one-sense end state; the file header now carries RATIFIED 2026-08-13 («Ратификацию на сам PROP-044 даю») — fact text verified byte-for-byte against the verdict claim"
             ]
           }
         },
-        "verified_at": "2026-08-13T17:36:33Z",
-        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING + PROVIDER-NEUTRALITY-RULING + FREEZE-MODEL-RULING + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge + COPY-2026-08-13"
+        "verified_at": "2026-08-13T17:55:48Z",
+        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING + PROVIDER-NEUTRALITY-RULING + FREEZE-MODEL-RULING + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge + COPY-2026-08-13 + RATIFY-2026-08-13"
       }
     },
     "spec/design/README.md": {
