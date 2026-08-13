@@ -689,6 +689,88 @@ packet could say "this input is already on your disk, verify it" instead of
 provision what git does not carry** — the negative form of this
 (`#fact-gitignored-state-misses-the-worktree`) cost a whole run.
 
+@fact:fact-a-dictated-coordinate-goes-stale-a-dictated-rule-does-not **Dictate the
+rule, and let the coordinate be the illustration (2026-08-14):** a packet told a
+worker to insert a module declaration "between `local_source_freshness` and
+`manifest_validity`", and also said the placement was alphabetical. Between those
+two names now sits `lockfile_files`, so the literal instruction was wrong and the
+stated rule was right. The worker followed the rule, put the line after
+`lockfile_files`, and said so in its Decisions section. It recovered **only
+because both were present** — a packet carrying the coordinate alone would have
+produced a defensible-looking wrong edit with nothing to catch it. Where a packet
+can give both, the rule is the instruction and the coordinate is an example of it.
+
+@fact:fact-declaring-a-dependency-moves-the-build-lock **A perimeter that names a
+manifest and not the build lock cannot be honoured (2026-08-14):** a packet's
+closed write list included `crates/<crate>/Cargo.toml` for a new dev-dependency
+and omitted `Cargo.lock`. Declaring a dependency necessarily moves the lock, so
+the worker's only options were to break the closed list or leave the tree
+inconsistent — it did the right thing and the boss's perimeter was simply wrong.
+**Whenever a packet touches a dependency, the lock file is part of its perimeter.**
+
+@fact:fact-scope-is-a-requirement-not-part-of-the-spec-prohibition **`scope!` is a
+requirement; `#[spec]` / `#[verifies]` are the prohibition — a packet that
+conflates them loses the requirement (2026-08-14, the THIRD recurrence of
+`#fact-new-engine-files-scope`):** the packet correctly forbade the worker from
+adding `#[spec]` / `#[verifies]` (the traceability map is the boss's), and in
+doing so silently dropped the standing order that every new `.rs` file carries
+`specmark::scope!`. The panel's specmap ratchet then flagged six orphans. The two
+look like one topic and are opposites — one is "do not decide the map", the other
+is "declare which unit this file belongs to". A packet creating files must state
+both, in that order, or the prohibition swallows the requirement.
+
+@fact:fact-a-standing-rule-not-inlined-is-a-rule-the-panel-enforces-instead **A
+standing project rule that is not inlined into the packet is enforced by the
+panel, at the boss's cost (2026-08-14):** the campaign plan bans `unwrap` /
+`expect` in domain logic; the packet did not repeat it; the worker wrote four
+`.expect()`s, all of them at "cannot fail by construction" sites; the conform gate
+caught all four. Weak writers follow inlined text and skim citations — already
+recorded for the report template (`#report-contract`), and it holds for the
+project's own rules too. **Copy the standing bans into the packet's §0 the same
+way the heartbeat clause and the report template are copied.**
+
+@fact:fact-a-cited-count-must-cite-every-test-result-line **A report that quotes a
+count must quote EVERY `test result` line the run printed (2026-08-14):** a report
+cited `cargo test -p vibe-core → 83 passed`, unchanged from before the packet,
+which read as "the required tests were never added". They had been: the crate has
+**two** test targets (238 and 83), the new tests are in the 238, and the report
+quoted one of the two lines. The work was right and the evidence was partial —
+the same disease as a truncated pipe (`#fact-a-truncated-pipe-reads-green`),
+seen from the reporting side. It cost one command to settle, and it would have
+cost a rejection to assume.
+
+@fact:fact-a-fixture-that-cannot-fail-proves-nothing-and-the-detector-may-be-downstream
+**The most expensive lesson of the session, and it is about verification, not
+about workers (2026-08-14).** A packet ordered a fixture built to exercise a
+divergence between an old computation and a new one. The fixture was accepted
+because, run against the NEW code, it diverged. It diverged only because the new
+code had silently changed the OLD computation — sorting a `Vec<PathBuf>` (whose
+`Ord` is component-wise) was reimplemented as sorting the raw string (byte-wise),
+which re-orders any tree holding a directory whose name prefixes a sibling file,
+and therefore silently moves that tree's hash. Against the TRUE old behaviour the
+fixture proved nothing at all: on the byte class the plan named, the two
+computations agree.
+
+Three guards were in place and none of them could fire. The pre-existing golden
+could not — its fixture has no such pair, which was already on record as a known
+trap. The new fixture's golden could not — the boss had deliberately frozen only
+the new recipe on it, for a defensible reason that happened to remove the only
+guard that mattered. The brand-new cross-implementation parity test could not —
+both copies changed identically, so "the two agree" stayed true.
+
+What caught it was a **consumer**: a freshness check that recomputes hashes and
+compares them to the lockfile went from zero warnings to seven, six of them on
+packages the change never touched, and back to one when the ordering was
+restored. Three rules follow. *(i)* **A fixture built to exercise a divergence
+must be shown to diverge against the behaviour being preserved, not against the
+code under review** — otherwise it certifies the very regression it was built to
+catch. *(ii)* **Freezing "only the new value" on a fixture is exactly where a
+frozen-behaviour guarantee loses its guard**; if the old value cannot honestly be
+frozen there, the property has to be pinned some other way, and saying so is part
+of the design. *(iii)* **Read the whole-panel diagnostic counts as evidence, not
+as noise** — a warning count that moves on an unrelated cell is the cheapest
+regression detector in the tree, and here it was the only one that worked.
+
 ## 9. What a clean fan-out looked like {#clean-fanout}
 
 @fact:fanout-first-pass-acceptance **Measured 2026-08-14 — three packets, two
