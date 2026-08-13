@@ -55,7 +55,6 @@ fn group_accepts_valid() {
         "a",
         "x.y.z",
         "dev.example-team",
-        "org.vibevm_internal",
         "h2o.mol",
     ] {
         Group::parse(g).unwrap_or_else(|_| panic!("should accept `{g}`"));
@@ -247,6 +246,31 @@ fn parse_rejects_bad_group() {
         PackageRef::parse("Org.Vibevm/wal").unwrap_err(),
         Error::BadGroup { .. }
     ));
+}
+
+#[test]
+fn group_segments_are_ldh_labels() {
+    // Owner ruling 2026-08-13 (PROP-008 §2.1): segments follow domain-label
+    // rules. `_` is not legal in a hostname and not legal here.
+    assert!(matches!(
+        Group::parse("org_x.vibevm").unwrap_err(),
+        Error::BadGroup { .. }
+    ));
+    // Hyphen never at a label edge.
+    assert!(Group::parse("org.-vibevm").is_err());
+    assert!(Group::parse("org.vibevm-").is_err());
+    // Interior hyphens — including doubled, as DNS allows — stay legal,
+    // and every live first-party group parses.
+    for live in [
+        "org.vibevm",
+        "org.vibevm.world",
+        "org.vibevm.core",
+        "org.vibevm.ai-native",
+        "org.vibevm.fractality",
+        "xn--e1afmkfd.example",
+    ] {
+        assert!(Group::parse(live).is_ok(), "{live} must parse");
+    }
 }
 
 #[test]

@@ -37,6 +37,8 @@ use crate::error::{Error, Result};
 /// assert_eq!(g.as_str(), "org.vibevm");
 /// assert!(Group::parse("Org.Vibevm").is_err());  // uppercase rejected
 /// assert!(Group::parse("org..vibevm").is_err()); // empty segment rejected
+/// assert!(Group::parse("org_x.vibevm").is_err()); // `_` rejected — labels are LDH
+/// assert!(Group::parse("org.-vibevm").is_err()); // hyphen never at a label edge
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(try_from = "String", into = "String")]
@@ -62,17 +64,24 @@ impl Group {
                         .into(),
                 });
             }
-            if let Some(bad) = segment
-                .chars()
-                .find(|c| !matches!(c, 'a'..='z' | '0'..='9' | '_' | '-'))
-            {
-                return Err(Error::BadGroup {
-                    input: input.to_owned(),
-                    reason: format!(
-                        "illegal character `{bad}` in segment `{segment}` — each segment \
-                         is one or more of `a`–`z`, `0`–`9`, `_`, `-`"
-                    ),
-                });
+            // Each segment is an LDH hostname label (PROP-008 §2.1, owner
+            // ruling 2026-08-13): `a`–`z`, `0`–`9`, `-`; hyphen never at a
+            // label edge; `_` is not legal in a domain and not legal here.
+            let bytes = segment.as_bytes();
+            for (idx, b) in bytes.iter().enumerate() {
+                let is_edge = idx == 0 || idx == bytes.len() - 1;
+                let ok = matches!(b, b'a'..=b'z' | b'0'..=b'9') || (*b == b'-' && !is_edge);
+                if !ok {
+                    return Err(Error::BadGroup {
+                        input: input.to_owned(),
+                        reason: format!(
+                            "illegal character `{}` in segment `{segment}` — each segment \
+                             is an LDH label: `a`–`z`, `0`–`9`, `-`, with `-` never at \
+                             the edge (spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#group)",
+                            *b as char
+                        ),
+                    });
+                }
             }
         }
         Ok(Group(trimmed.to_owned()))
