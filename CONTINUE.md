@@ -1,142 +1,165 @@
-# CONTINUE — cold-resume snapshot (2026-08-10, wind-down №18)
+# CONTINUE — cold-resume snapshot (2026-08-13, wind-down №19)
 
 **Не цитируй числа отсюда — меряй:**
 `vibe progress scan --campaign campaigns/packages-2026-09` →
 `python campaigns/packages-2026-09/tasks/{summary,judging-debt,text-stability}.py`.
 `spec/WAL.md` переписан этим же сворачиванием и **главнее** этого файла.
-Промт для новой сессии — [`NEXT-SESSION-PROMPT.md`](NEXT-SESSION-PROMPT.md).
+Вход новой сессии — [`NEXT-SESSION-PROMPT.md`](NEXT-SESSION-PROMPT.md)
+(переписан: теперь он **авторизует стройку**, не доклад-и-ждать).
 
 ## TL;DR
 
-Сессия 2026-08-09/10 закрыла разбор **вопроса №1 владельца** (формат каталога
-пакетов) проектным предложением. Владелец перевернул рамку: мы строим систему
-для **среды перманентного перелома** (10 релизов в день, формат сменится ещё
-десять раз, поломки у пользователей — принятая цена; Maven/RPM — модели
-стабильности, нам не образец). По его предложению был созван отдельный
-Fable-совет; его вердикт («одноразовые миры») синтезирован с трёхкруговым
-исследованием в три документа:
+Сессия 2026-08-13 получила от владельца ВСЕ ожидавшиеся рулинги и
+**ратификацию PROP-044** («Ратификацию на сам PROP-044 даю»), посадила
+рулинги идентичности одной посадкой (21 коммит), написала два новых плана
+строек и перевела вход следующей сессии в режим исполнения.
 
-> ### 📄 [`spec/common/PROP-044-change-native-formats.md`](spec/common/PROP-044-change-native-formats.md) — идеология (контракт)
-> ### 📄 [`spec/design/change-native-formats-verdict.md`](spec/design/change-native-formats-verdict.md) — вердикт совета (лоре)
-> ### 📄 [`campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md`](campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md) — ТЗ исполнителю
+**Село кодом и спеками (всё раскатано, панель зелёная):**
 
-Суть: истина — исходники пакетов + журнал фактов реестра; всё опубликованное —
-одноразовая, побайтово восстановимая проекция; вечен один файл-рукопожатие;
-ломать можно — врать нельзя; политика провода живёт в нашем генераторе, а не в
-рукописном serde; правило — не «не ломать», а «не ломать необъявленно».
+- **Грамматика группы = LDH-метки** (`[a-z0-9-]`, дефис не с краю, `_`
+  запрещён; ≥1 сегмент — ядро, ≥2 — политика реестра) — `Group::parse`.
+- **Плоская координата точкой:** репо-имя `<group>.<name>`
+  (`org.vibevm.world.wal`), кэш-каталоги так же; 7 мест композиции.
+- **Слот от идентичности:** `vibedeps/<group>.<name>/<version>` (+ in-place
+  без версии); 37 слотов перематериализованы, INDEX/STATIC перегенерированы.
+- **`materialization = "copy"`** (бывший `"snapshot"`): легаси-значение —
+  отказ с рецептом, не alias; слово snapshot теперь значит ровно одно.
+- **Спеки рулингов:** доверие (группа — заявка; org ручается; два корня
+  по умолчанию) + жизненный цикл (`Removed`+tombstone, видимая
+  перерегистрация, `--accept-new`, `--force-replace --reason`) + двухъярусный
+  publish — PROP-002 §2.10/§2.13, PROP-008 §2.10; терминология
+  snapshot↔frozen/канал/capture — PROP-044 §2b; **каналы целиком** —
+  PROP-005 §2.18; D11=warn и D14-умолчание (STABLE→LATEST, заморозка не
+  влияет на выбор) — СТОПы в ТЗ сняты; рулинги №4 (двухсортная планка) и №5
+  (движки не сливать) — в AUDIT/BACKLOG.
 
-**Статус: предложение готово, НЕ ратифицировано.** Старт фазы 0 ТЗ — только
-со слова владельца.
+**Планы (три, взаимно сцеплены):**
 
-## Четыре рулинга владельца этой сессии (все уже в спеке)
-
-1. **Допубликационный переключатель** (`PROP-044 ##THE-PUBLIC-SWITCH`,
-   ТЗ D13): до объявления владельцем «первый показ публике состоялся» миграции
-   не применяются вовсе, машинерия перелома отчётная; факт публикации
-   **технически неопределим по построению** и никогда не выводится из событий
-   (пуш, наполнение реестра, тег); переключатель — строка `public = true`,
-   меняет только владелец.
-2. **Нейтральность к провайдеру хранения** (`##PROVIDER-NEUTRALITY`): git —
-   форма представления, не семантика. Четыре обязательства провайдера
-   (неизменный снимок / канал / вопрос свежести / перечисление);
-   авторитетный акт — всегда событие журнала; универсальный проверяльщик —
-   наш `content_hash`; локаторы (`source_ref`, `resolved_commit`) —
-   непрозрачные строки провайдера.
-3. **Модель заморозки** (`##THE-FREEZE-MODEL`, ТЗ D14): версия по умолчанию —
-   мутабельный канал; фриз — односторонний акт автора `frozen = true` в
-   манифесте, **внутри хэшируемого содержимого** (реестры только наблюдают
-   журналом; версия несёт только порядок — замороженная бета выразима);
-   несовпадение хэша: у замороженной — тревога, у канала — новость;
-   **каждая поверхность, показывающая версию, показывает статус**. Побочно
-   навсегда растворён B-067.
-4. **Смертность плана** (ТЗ §11): посадка фазы сворачивает её секцию в
-   могильник в том же коммите со спек-диффом; закрытие плана убирает ссылки
-   на него из PROP-044; чекер «спека не ссылается на закрытый план» — дефер.
+1. [`TZ-CHANGE-NATIVE-FORMATS-v0.1.md`](campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md)
+   — главная стройка Ф0–Ф6; ратифицирована, фазы разрешены.
+2. [`TZ-IDENTITY-REGISTRY-BUILDS-v0.1.md`](campaigns/packages-2026-09/TZ-IDENTITY-REGISTRY-BUILDS-v0.1.md)
+   — слайсы рулингов: S1 двухъярусный publish, S2 переименование живых
+   `_`-репо (СТОП-ВЛАДЕЛЕЦ), S3 освежение joiner-юнита addressable-specs,
+   S4 каналы / S5 жизненный цикл (заперты до Ф3), S6 движки-по-данным,
+   S7 пересуд host-подмножества. §0 — карта гейтов.
+3. [`TZ-CHANGE-NATIVE-WAVE2-v0.1.md`](campaigns/packages-2026-09/TZ-CHANGE-NATIVE-WAVE2-v0.1.md)
+   — §0 **матрица покрытия PROP-044** (ответ «достаточно ли ТЗ»), W1
+   манифест (did-you-mean, `[reserved]`, схема, toml_edit-кодмоды), W2
+   локфайл D9 (`--locked`), W3 показ frozen на поверхностях, W4
+   не-каталожные форматы + G12/G13. Заперто до Ф1–Ф5. Волна 3 осознанно НЕ
+   написана (триггеры: первый поезд эпох; `public = true`).
 
 ## Блокер и действие человека
 
-**Блокер:** ратификация PROP-044 владельцем. **Действие:** прочитать три
-документа (порядок в `NEXT-SESSION-PROMPT.md`), сказать «да»/правки, и
-решить открытые ручки: политика резолвера для публичных каналов (D14),
-уровень лога (D11), четыре идентичностных пункта (см. ниже).
+**Блокера нет.** Всё разрешено: свежая сессия стартует по
+`NEXT-SESSION-PROMPT.md` и сразу исполняет (Ф0 — спайки без коммитов).
+За владельцем остаются только: **S2** (переименование `_`-репо в vibespecs —
+нужны org-права: `gh repo rename`, шаги в ТЗ) и нетронутые вопросы **№4-кампания
+S7 стартуема без него** и **№5 — построится S6**.
 
-## Не заведено, ждёт рулинга — идентичность (разбор 2026-08-10)
+## Рецепт следующего шага (дословно)
 
-Рекомендации выданы в чате, в ТЗ НЕ занесены (нужно слово владельца):
-модель доверия группы — записать «заявка, не удостоверение»; конвенция для
-авторов без доменов (`io.github.<user>`-класс); грамматика — группа ≥2
-сегментов, судьба `_` в группе, запрет `+build` в публикуемых версиях;
-**слот `vibedeps/<kind>-<name>/<версия>` противоречит идентичности** (группы
-нет, вид есть: коллизия одноимённых пакетов разных групп; смена вида
-переселяет слот) — сменить на слот от идентичности, пока публики нет.
-
-## Где стоит работа
-
-- Ветка `main`, дерево чистое; **~16 коммитов раскатаны этим сворачиванием**
-  (`cargo xtask mirror`; если расхождение с origin ненулевое — раскатка не
-  прошла, это первое, что проверить).
-- Полная панель (`bash tools/self-check.sh`) зелёная — последний прогон этим
-  сворачиванием (см. WAL).
-- Судейский долг: **0 неосуждённых, 0 осиротевших**; каждый новый документ
-  сессии осуждён и запечатан тем же заходом (46+35+2+1+1+2 вердиктов).
-- Корпус 281 файл; вердиктов 12 223 при 98.2 %, per-fact 63.8 %.
-- Карта (`specmap.json`) чиста, двигалась с каждой правкой спек.
-- Открытые находки аудита — активное подмножество в [`AUDIT.md`](AUDIT.md)
-  (P1 `2026-08-06-01` — planка доказательства, вопрос №4 владельца).
-- Два worktree от старых fractality-прогонов числятся в глобальном доме — к
-  этой работе отношения не имеют.
-
-## Пять вопросов владельца (якорь: `BACKLOG.md #owner-decisions`)
-
-| # | вопрос | состояние |
-|---|---|---|
-| 1 | формат каталога | **предложение готово, не ратифицировано** (три документа) |
-| 2 | недетерминированная запись | растворяется фазами Ф2–Ф3 ТЗ |
-| 3 | логи сервера | решение D11 в ТЗ; уровень по умолчанию — за владельцем |
-| 4 | планка доказательства | не тронут; владельца |
-| 5 | соединение движков | не тронут; нужно только «да» владельца |
+Вставить содержимое `NEXT-SESSION-PROMPT.md` (ниже черты) первым сообщением
+свежей сессии. Порядок там: boot → 4 документа целиком → короткий доклад →
+Ф0 (три спайка, выход в `harvest/f0-*.md`, БЕЗ коммитов) → Ф1… Независимая
+полоса при СТОПе: S1 → S3 → S6.
 
 ## Неочевидные находки сессии (сверх документов)
 
-- **Спайк jtd-codegen 0.4.1** (воспроизводим): discriminator →
-  `#[serde(tag)]` РАБОТАЕТ (тегирование объединения снимает блокер
-  генерации); enum генерится закрытым; optional → `Option<Box<T>>`;
-  строгость не эмитится. Поэтому политика — в нашем слое (ТЗ D4, Ф0.2 PoC).
-- **Исследование импортировано в репозиторий**:
-  `spec/research/schema-evolution-2026-08/` (41 файл, вне размечаемого
-  корпуса — `spec/research/**` не в include-глобах; README-PROVENANCE
-  объясняет). Оригинал в `C:\Users\olegc\git\v\discovery\…` оставлен.
-- **Пересуждение при правке факта**: `merge-verdicts.py --force` + evidence
-  «что заменяет и почему прежний был верен» + повторный `seal` — путь
-  обкатан на `FORBID-BYTE-MUTATION`.
-- Коллизия id: якорь заголовка `{#x}` и `@fact:x` в одном файле — ошибка
-  скана (DuplicateId); имена фактов не должны совпадать с якорями секций.
-- `latest_stable` уже фильтрует prerelease (`aggregate.rs`) — ось
-  «стабильность строки версии» отдельна от оси «замороженность», обе живут.
+- **Седьмое место композиции** пряталось в `vibe-check`
+  (`format!("vibedeps/{}-{}/{}")` — невидимо для шаблонных grep'ов по
+  `<kind>-<name>`); поймала только полная панель. Урок: искать и по
+  `format!`-строкам.
+- **Печать (seal) ручается за ВСЕ вердикты файла.** Печать файла со стоячим
+  stale = слепое поручительство; прецедент отката — `498e8c8b` (PROP-043).
+  Правило вписано в identity-ТЗ §1.4.
+- **`BACKLOG.md` вне судимого корпуса кампании** (`merge-verdicts`: «not
+  observed») — его правки судейского захода не требуют.
+- Док-комментарии кэш-функций и `init.rs` **уже писали `<group>.<name>`
+  точкой до рулинга** — код отставал от собственной документации.
+- `_` не было ни в одной живой группе/имени (сужение бесплатно); имена и
+  раньше были LDH (`validate_package_name`).
+- `prune_stale_slots` слеп к форме имени → перематериализация сама вычистила
+  37 старых слотов.
+- `specmap.toml` нёс external-root старым слотом (после починки 229→208
+  warnings).
+- Для волны 2 проверено: `toml_edit = "0.23"` уже в workspace (кодмоды W1
+  готовы к постройке); флага `--locked` в CLI нет (W2 вводит); `.vibe/cache`
+  уже identity-keyed (PROP-000:123 отставал — починено).
+- Ратификация пришла серединой хода и записана в 4 местах: статус PROP-044,
+  оба ТЗ, строка №1 в BACKLOG.
 
-## Карта репозитория
+## Где стоит работа
 
-- `spec/common/PROP-044…` — новый контракт; `spec/design/…verdict.md` — его
-  лоре; `spec/research/schema-evolution-2026-08/` — база исследования.
-- `campaigns/packages-2026-09/` — живая кампания: ТЗ, `tasks/*.py`
-  (замеры/суждение), `run/` (кэш вердиктов), `SUBAGENT-LAUNCHERS.md`
-  (транспортный закон воркеров — читать ЦЕЛИКОМ перед фан-аутом).
-- `crates/` — 19 крейтов + xtask; предмет ТЗ: `vibe-index` (types/, index/,
-  scanner/, server/), `vibe-registry/src/index_client/`,
-  `vibe-core/src/manifest/`.
-- Корень: `BACKLOG.md` (якорь пяти вопросов), `AUDIT.md`, `TASKS.md`,
-  `NEXT-SESSION-PROMPT.md`, `specmap.json`, `CLAUDE.md`≡`AGENTS.md`≡`GEMINI.md`.
+- Ветка `main`, дерево чистое; **21 коммит этой сессии раскатан**
+  (`cargo xtask mirror`; `mirror --check` — gitverse sync, github sync,
+  HEAD `6cd2f995`).
+- Полная панель `bash tools/self-check.sh` — **зелёная** (последний полный
+  прогон — слайс copy; после него только docs-коммиты).
+- Судейство: **0 неосуждённых, 0 осиротевших**; 33 файла stale — стоячий
+  долг, адресован кампанией S7 (рулинг №4). Новые/правленые факты сессии
+  (33+18+17+1) осуждены и запечатаны тем же заходом.
+- Открытые находки аудита — активное подмножество в [`AUDIT.md`](AUDIT.md);
+  `2026-08-06-01` (P1) переведена в «ruled — re-judgement campaign pending».
 
-## Решения в силе (длинно — в PROP-044; здесь опорные)
+## Карта репозитория (что где)
 
-- Способность живёт в библиотеке; поверхности тонкие. План временный;
-  содержимое переезжает в спеки; могильники — опора процесса.
-- Контент, переехавший в спеку, судится тем же заходом; `seal` отказывает
-  полуосуждённому файлу. Правка текста спеки двигает карту в той же посадке.
-- Усилия не экономятся; объём работ — не довод (загрузочный файл владельца).
-- Раскатка — только `cargo xtask mirror`, fast-forward. Никогда `git add -A`.
-  Коммиты через heredoc. Правила 1–4 связывают каждый коммит.
-- Вся идеология форматов — PROP-044; его четыре рулинга владельца выше.
+- `spec/common/PROP-044…` — ратифицированный контракт форматов;
+  `spec/modules/vibe-registry/PROP-002` (§2.10 publish, §2.13 lifecycle),
+  `PROP-008` (§2.1 грамматика, §2.5 репо-имя, §2.10 доверие);
+  `spec/modules/vibe-index/PROP-005` (§2.18 каналы);
+  `spec/modules/vibe-workspace/PROP-022` (слот, режим `copy`).
+- `campaigns/packages-2026-09/` — три ТЗ (выше), `tasks/*.py` (суд),
+  `run/` (кэш вердиктов), `harvest/` (сюда лягут находки Ф0),
+  `SUBAGENT-LAUNCHERS.md` (транспортный закон воркеров — босс читает ЦЕЛИКОМ
+  перед фан-аутом).
+- `crates/` — 19 крейтов + xtask; предмет строек: `vibe-publish` (S1),
+  `vibe-index` (Ф1–Ф6, S4), `vibe-core/manifest` (W1/W2),
+  `vibe-registry` (резолвер, S4/S5).
+- Корень: `BACKLOG.md` (пять вопросов: №1 ЗАКРЫТ ратификацией; №3/№4/№5
+  решены рулингами), `AUDIT.md`, `NEXT-SESSION-PROMPT.md`, `specmap.json`.
+
+## Решения в силе (опорные; длинно — в спеках)
+
+- **PROP-044 ратифицирован** — стоячий закон каждого формата; терминология
+  §2b обязательна (snapshot↔frozen антонимы; «канал» — указатели; capture —
+  провайдерское).
+- Идентичность: LDH-группы; композит `<group>.<name>` — валидный
+  обратный FQDN; слот и кэш — от идентичности; координата = полная строка
+  версии (включая `+…`), тай-брейк natural sort.
+- Доверие: группа — заявка; внутри реестра ручается организация
+  (модерация); между реестрами — `content_hash` + порядок реестров; корни
+  по умолчанию — оба vibespecs.
+- Резолвер: STABLE если есть, иначе LATEST; заморозка не влияет на выбор;
+  канал — явное согласие на мутабельность.
+- Усилия не экономятся; объём — не довод. Раскатка только `cargo xtask
+  mirror`. Никогда `git add -A`. Печать суда — только за проверенное.
+
+## Последние коммиты сессии (свежие сверху)
+
+```
+6cd2f995 docs(handoff): the entry prompt turns from report-and-wait to build
+560e8f67 chore(campaign): the ratification pass re-vouches the contract
+874561fd docs(campaign): wave 2 closes the coverage gaps PROP-044 still had
+7a81956e docs(spec): PROP-044 is ratified, and every gate that waited knows it
+c2dec4ef docs(campaign): the rulings get their build plan while the context is hot
+498e8c8b chore(campaign): the copy rename is judged, and a blind vouch is taken back
+d84cf5b6 docs(spec): dead slot pointers follow the re-materialised tree
+d4d6c475 feat(core): the default materialisation mode says copy
+6f4b5750 fix(check): the lockfile-files check composes the identity slot
+6e90854e chore(campaign): the identity rulings are judged in the same pass
+189152af docs(specmap): the map follows the identity rulings
+30049e81 docs(backlog): three owner rulings land in their rows
+1cd487b3 docs(audit): the proof bar splits by claim kind
+1e2c9ebe docs(campaign): the executor's plan absorbs the week's rulings
+9fc59c01 docs(spec): channels become author pointers with computed built-ins
+3106bf0d docs(spec): snapshot and frozen become antonyms across the contract
+13c8638a docs(spec): the group is a claim, and the registry vouches for it
+df5d4563 feat(workspace): the slot carries identity, not kind
+e55856b7 docs(spec): the dot join reaches every surface that spelled the old one
+fb7760da feat(registry): the flat coordinate joins group and name with a dot
+7a5d8f4b feat(core): group segments become LDH labels, matching real domains
+```
 
 ## Быстрый старт
 
@@ -146,26 +169,6 @@ python campaigns/packages-2026-09/tasks/judging-debt.py
 bash tools/self-check.sh          # реальный код выхода, вердикт из хвоста
 cargo xtask specmap --check
 cargo xtask mirror --check        # синхронность зеркал
-```
-
-## Последние коммиты (свежие сверху)
-
-```
-5303b087 docs(campaign): the freeze lands in the executor's plan as D14
-5786fa1e docs(spec): a version freezes by its author's flag, and every surface says so
-6da8e6d8 docs(spec): the semantics never bind to git, only to provider obligations
-98d8c9b8 docs(campaign): the plan schedules its own death
-3cf1db13 docs(campaign): the TZ obeys the public switch
-31662d29 docs(spec): the public switch is the owner's word, not a technical event
-7c9ee9c7 docs(campaign): the TZ gains the decisions an executor would otherwise reinvent
-a9609270 docs(design): the convened verdict becomes durable lore, linked both ways
-b5767e14 docs(research): the schema-evolution study moves inside the walls
-256789c1 docs(campaign): the executor gets the code shapes, not just the file list
-d9c29cd1 docs(backlog): the first owner question points at its proposal
-408cfb3e docs(campaign): the first change-native build gets a TZ a weaker agent can run
-8797128e docs(spec): change-native formats get their ideology, judged in the same pass
-5bc2e377 docs(handoff): the prompt gains the entry point that survives a wind-down
-2f4a8af3 docs(backlog): the pyramid gets a durable floor, because I built it on sand
 ```
 
 _WAL — канонное живое состояние; при расхождении верить ему, не этому файлу._
