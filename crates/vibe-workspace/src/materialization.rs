@@ -1,7 +1,7 @@
 //! Materialization-mode policy the install pipeline consults — currently the
 //! destructive-operation guard (PROP-022 §2.6).
 //!
-//! The *placement* of each mode (`snapshot` full copy, `hardlink`, the future
+//! The *placement* of each mode (`copy` (the vendored full copy), `hardlink`, the future
 //! `in-place` clone) lives in [`crate::vibedeps`]; this cell owns only the
 //! **decision** of whether a destructive operation may proceed on a slot of a
 //! given mode. It is a pure function over the mode and the caller's
@@ -17,7 +17,7 @@ use vibe_core::manifest::Materialization;
 /// `reinstall --force`, a version switch that re-clones, or any slot removal —
 /// may proceed on a slot of a given materialization mode (PROP-022 §2.6).
 ///
-/// A `snapshot` / `hardlink` slot is vendored and cheap to reconstruct
+/// A `copy` / `hardlink` slot is vendored and cheap to reconstruct
 /// (offline, from the project's own git), so its removal is unguarded. An
 /// `in-place` slot is a git-native, **non-vendored** working tree whose only
 /// restoration is a network re-clone — possibly a multi-hour download — so its
@@ -40,7 +40,7 @@ pub enum DestructiveGuard {
 /// Decide whether a destructive operation may proceed on a slot of the given
 /// materialization `mode` (PROP-022 §2.6).
 ///
-/// - **non-`in-place`** (`snapshot` / `hardlink`) → [`DestructiveGuard::Proceed`]:
+/// - **non-`in-place`** (`copy` / `hardlink`) → [`DestructiveGuard::Proceed`]:
 ///   vendored, offline-reproducible, no special guard.
 /// - **`in-place` + `opted_in`** (an explicit `--force` / `--assume-yes` /
 ///   `--unattended`) → [`DestructiveGuard::Proceed`]: the operator deliberately
@@ -57,9 +57,9 @@ pub enum DestructiveGuard {
 /// use vibe_core::manifest::Materialization;
 /// use vibe_workspace::materialization::{DestructiveGuard, guard_destructive};
 ///
-/// // A vendored snapshot slot is cheap to rebuild — never guarded.
+/// // A vendored copy slot is cheap to rebuild — never guarded.
 /// assert_eq!(
-///     guard_destructive(Materialization::Snapshot, false, false),
+///     guard_destructive(Materialization::Copy, false, false),
 ///     DestructiveGuard::Proceed,
 /// );
 /// // An in-place slot in a non-interactive run with no opt-in aborts.
@@ -106,10 +106,10 @@ mod tests {
         "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#destructive-guard",
         r = 1
     )]
-    fn snapshot_and_hardlink_are_never_guarded() {
+    fn copy_and_hardlink_are_never_guarded() {
         // Vendored modes reconstruct from the project's own git, so removing
         // their slot carries no special risk in any context.
-        for mode in [Materialization::Snapshot, Materialization::Hardlink] {
+        for mode in [Materialization::Copy, Materialization::Hardlink] {
             for interactive in [false, true] {
                 for opted_in in [false, true] {
                     assert_eq!(

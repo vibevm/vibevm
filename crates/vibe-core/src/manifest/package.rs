@@ -258,11 +258,16 @@ impl PublishPosture {
 /// `hardlink` shares bytes for few-but-large files; `in-place` avoids any
 /// per-file tree walk for repos with millions of files.
 ///
+/// The default mode is named `copy` (owner ruling 2026-08-13; it was
+/// `snapshot` before PROP-044 §2b reserved that word for the unfrozen
+/// version). The legacy spelling is refused with the rename recipe, not
+/// silently aliased — one idiom per operation.
+///
 /// ```
 /// use vibe_core::manifest::Materialization;
 ///
 /// // Default is the vendored full copy.
-/// assert_eq!(Materialization::default(), Materialization::Snapshot);
+/// assert_eq!(Materialization::default(), Materialization::Copy);
 /// assert!(Materialization::default().is_default());
 ///
 /// // The wire form is kebab-case (`in-place`).
@@ -274,21 +279,21 @@ impl PublishPosture {
 ///
 /// // `in-place` identity is the git commit, not a content hash (PROP-022 §2.5).
 /// assert!(Materialization::InPlace.is_in_place());
-/// assert!(!Materialization::Snapshot.is_in_place());
+/// assert!(!Materialization::Copy.is_in_place());
 /// ```
 #[spec(
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#modes",
     r = 1
 )]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Default)]
 #[serde(rename_all = "kebab-case")]
 pub enum Materialization {
-    /// The default: live-git cache → `.git`-stripped snapshot → full copy
-    /// into the slot. Identified by `content_hash`, vendored into the
+    /// The default: live-git cache → `.git`-stripped content tree → full
+    /// copy into the slot. Identified by `content_hash`, vendored into the
     /// project's git (PROP-022 §2.2).
     #[default]
-    Snapshot,
-    /// Per-file hardlink from the cached snapshot, copy on change, copy
+    Copy,
+    /// Per-file hardlink from the cached content tree, copy on change, copy
     /// fallback on cross-volume / unsupported filesystems (PROP-022 §2.3).
     /// For packages big in bytes but modest in file count.
     Hardlink,
@@ -298,11 +303,39 @@ pub enum Materialization {
     InPlace,
 }
 
+impl<'de> serde::Deserialize<'de> for Materialization {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let s = String::deserialize(deserializer)?;
+        match s.as_str() {
+            "copy" => Ok(Materialization::Copy),
+            "hardlink" => Ok(Materialization::Hardlink),
+            "in-place" => Ok(Materialization::InPlace),
+            // The pre-2026-08-13 name. Refused with the recipe rather than
+            // aliased: `snapshot` now names an unfrozen version (PROP-044
+            // §2b), and a quiet alias would keep the collision alive.
+            "snapshot" => Err(serde::de::Error::custom(
+                "`materialization = \"snapshot\"` was renamed to `\"copy\"` \
+                 (2026-08-13; `snapshot` now means an unfrozen version — \
+                 spec://org.vibevm.core/vibevm/common/PROP-044#laws); \
+                 fix: write `materialization = \"copy\"`",
+            )),
+            other => Err(serde::de::Error::custom(format!(
+                "unknown materialization `{other}` — one of `copy`, \
+                 `hardlink`, `in-place` \
+                 (spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#modes)"
+            ))),
+        }
+    }
+}
+
 impl Materialization {
-    /// `true` for the default mode (`snapshot`) — lets the serializer skip
+    /// `true` for the default mode (`copy`) — lets the serializer skip
     /// the field on a manifest that does not set it.
     pub fn is_default(&self) -> bool {
-        matches!(self, Materialization::Snapshot)
+        matches!(self, Materialization::Copy)
     }
 
     /// `true` iff this mode is `in-place` — the git-managed, commit-identified

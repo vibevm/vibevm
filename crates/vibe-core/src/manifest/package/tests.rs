@@ -226,23 +226,33 @@ when = "os:macos"
 
 // --- bridge-packages design: PROP-020/022/023 + PROP-015 ------------
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 struct MatWrap {
     v: Materialization,
 }
 
 #[test]
-fn materialization_default_is_snapshot() {
-    assert_eq!(Materialization::default(), Materialization::Snapshot);
+fn materialization_default_is_copy() {
+    assert_eq!(Materialization::default(), Materialization::Copy);
     assert!(Materialization::default().is_default());
-    assert!(!Materialization::Snapshot.is_in_place());
+    assert!(!Materialization::Copy.is_in_place());
     assert!(Materialization::InPlace.is_in_place());
+}
+
+#[test]
+fn materialization_refuses_the_legacy_snapshot_name_with_the_recipe() {
+    // The pre-2026-08-13 name is refused, not aliased (PROP-044 §2b freed
+    // `snapshot` for the unfrozen-version sense); the error carries the fix.
+    let err = toml::from_str::<MatWrap>("v = \"snapshot\"").unwrap_err();
+    let msg = err.to_string();
+    assert!(msg.contains("renamed to `\"copy\"`"), "{msg}");
+    assert!(msg.contains("materialization = \"copy\""), "{msg}");
 }
 
 #[test]
 fn materialization_roundtrips_kebab_case() {
     for (text, mode) in [
-        ("snapshot", Materialization::Snapshot),
+        ("copy", Materialization::Copy),
         ("hardlink", Materialization::Hardlink),
         ("in-place", Materialization::InPlace),
     ] {

@@ -4,7 +4,7 @@
 
 @fact:status-line **Status: IMPLEMENTED** (specified 2026-06-24 in an owner-requested design
 session; verified against the tree 2026-07-25 by the spec-actualization
-campaign). The `Materialization` enum ships with `Snapshot` as the default,
+campaign). The `Materialization` enum ships with `Copy` as the default (wire `copy`; named `Snapshot`/`snapshot` until the 2026-08-13 terminology ruling),
 `InPlace` beside it and a doctested `is_in_place` (`vibe-core` `package.rs`); the
 hardlink / in-place machinery runs through `vibe-install` (`plan.rs` /
 `fetched.rs` / `apply.rs`, the `materialise_in_place` seam); submodule
@@ -20,7 +20,7 @@ Materialization mode is a property of *any* package; a huge git package wants
 @fact:related **Related:** [PROP-009](PROP-009-loading-model.md) (the materialise step into
 `vibedeps/`), [PROP-007](PROP-007-workspace.md) (`vibedeps/` layout),
 [PROP-010](../vibe-registry/PROP-010-local-package-cache.md) (the live-git
-cache + `.git`-stripped snapshot the copy modes draw from),
+cache + `.git`-stripped content tree the copy modes draw from),
 [PROP-019 §2.15](../../common/PROP-019-version-manager.md#instances) (the VVM
 `placer` diff-copy/hardlink — direct prior art for `hardlink`),
 [PROP-019 §2.16](../../common/PROP-019-version-manager.md#provenance) (VVM
@@ -35,7 +35,7 @@ mode). @status:spec/done
 ### 1.1 The problem — one materialisation policy does not fit every package {#problem}
 
 - @fact:today-single-policy Today every package is materialised the same way: clone into the live-git
-  cache, strip `.git` into a snapshot, then **full recursive copy** of that tree
+  cache, strip `.git` into a content tree, then **full recursive copy** of that tree
   into the `vibedeps/<group>.<name>/<version>/` slot (identity-keyed — owner ruling 2026-08-13; the slot carried `<kind>-<name>` before that ruling, which collided same-named packages of different groups and moved a package on a kind change). @status:impl/done
 - @fact:snapshot-right-for-ordinary This is right for ordinary
   packages and gives the lockfile a stable `content_hash` and a committable,
@@ -65,20 +65,20 @@ borrow the two cost-avoidance primitives VVM already proved
 
 ```toml
 [package]
-materialization = "snapshot"   # default | "hardlink" | "in-place"
+materialization = "copy"       # default | "hardlink" | "in-place"
 ```
 
-- @fact:SNAPSHOT-DEFAULT `snapshot` is the default and the only mode an ordinary package needs. @status:impl/done
+- @fact:SNAPSHOT-DEFAULT `copy` is the default and the only mode an ordinary package needs. (It was named `snapshot` until the owner's 2026-08-13 terminology ruling reserved that word for the unfrozen version — PROP-044 §2b; the legacy spelling is refused with the rename recipe, never aliased.) @status:impl/done
 - @fact:MODE-IN-DESCRIPTOR The
   mode is published in the descriptor so a consumer sees, before installing, how
   a package will be placed. @status:impl/done
 
-### 2.2 `snapshot` — the vendored full copy (default) {#snapshot}
+### 2.2 `copy` — the vendored full copy (default) {#snapshot}
 
 @fact:req-snapshot `req r1` @status:impl/done
 
-- @fact:SNAPSHOT-PIPELINE The status quo: live-git cache → `.git`-stripped snapshot → full recursive
-  copy into the slot. @status:impl/done
+- @fact:SNAPSHOT-PIPELINE The status quo: live-git cache → `.git`-stripped content tree → full
+  recursive copy into the slot. @status:impl/done
 - @fact:STRIP-EXTENDED [PROP-024 §2.2](../../common/PROP-024-code-bearing-packages.md#shippable-tree)
   extends the `.git` strip to build output (`.vibe/`, `target/`, `node_modules/`,
   `.vibeignore` globs) for code-bearing packages, so such a package vendors its
@@ -86,7 +86,7 @@ materialization = "snapshot"   # default | "hardlink" | "in-place"
 - @fact:SLOT-SELF-CONTAINED The slot is a self-contained tree, identified by
   `content_hash` (§2.5), vendored into the project's git (§2.7). @status:impl/done
 - @fact:SUBMODULE-EMBEDDED Submodule
-  content is embedded into the snapshot
+  content is embedded into the copied tree
   ([PROP-021 §2.3](../vibe-registry/PROP-021-submodule-sources.md#snapshot-embedding)). @status:impl/done
 - @fact:HOOK-RESET-REMATERIALISE A hook's edits are reset on update by re-materialising the slot from cache
   (network-free). @status:impl/done
@@ -96,7 +96,7 @@ materialization = "snapshot"   # default | "hardlink" | "in-place"
 @fact:req-hardlink `req r1` @status:impl/done
 
 - @fact:HARDLINK-MODE For packages **big in bytes but modest in file count**. Instead of copying
-  file bytes, materialise hardlinks each file from the cached snapshot into the
+  file bytes, materialise hardlinks each file from the cached content tree into the
   slot; on update, only changed files are re-linked, the rest are left — the VVM
   `placer` algorithm ([PROP-019 §2.15](../../common/PROP-019-version-manager.md#instances)):
   a per-file manifest of `(rel, size, mtime, hash-for-small-files)`, large files
@@ -136,7 +136,7 @@ full tree walk is unacceptable. vibevm never walks the tree: @status:impl/done
 
 @fact:req-identity `req r1` @status:impl/done
 
-- @fact:ID-COPY-MODES **`snapshot` / `hardlink`** — `content_hash` over the slot tree (the existing
+- @fact:ID-COPY-MODES **`copy` / `hardlink`** — `content_hash` over the slot tree (the existing
   identity), `hardlink` computing it cheaply via the diff manifest. @status:impl/done
 - @fact:ID-IN-PLACE **`in-place`** — **`resolved_commit`**, not `content_hash`. The slot is a
   mutable git working tree (hooks edit it), so a content hash is neither stable
@@ -162,9 +162,9 @@ full tree walk is unacceptable. vibevm never walks the tree: @status:impl/done
 
 @fact:req-vendoring `req r1` @status:impl/done
 
-- @fact:VENDORED-COPY-MODES **`snapshot` / `hardlink`** are vendored — the slot is committed into the
+- @fact:VENDORED-COPY-MODES **`copy` / `hardlink`** are vendored — the slot is committed into the
   project's git and is offline-reproducible from it (a `hardlink` slot's bytes
-  are materialised into git on `git add` like any file). @status:impl/done
+  are materialised into git on `git add` like any file); a `copy` slot trivially so. @status:impl/done
 - @fact:IN-PLACE-NOT-VENDORED **`in-place`** is **not** vendored — the slot (a nested `.git` plus possibly
   millions of files) is `.gitignore`d in the project; restoration is a re-clone
   at the lockfile's `resolved_commit`. The honest trade: `in-place` packages
@@ -196,9 +196,10 @@ full tree walk is unacceptable. vibevm never walks the tree: @status:impl/done
 
 ## 5. Acceptance {#acceptance}
 
-- @fact:ACC-FIELD-PARSES `[package].materialization` parses to `snapshot` (default) / `hardlink` /
-  `in-place`; an unknown value is a manifest error. @status:impl/done
-- @fact:ACC-MODE-BEHAVIORS `snapshot` behaves exactly as today; `hardlink` shares unchanged files by
+- @fact:ACC-FIELD-PARSES `[package].materialization` parses to `copy` (default) / `hardlink` /
+  `in-place`; an unknown value is a manifest error, and the legacy `snapshot`
+  is refused with the rename recipe. @status:impl/done
+- @fact:ACC-MODE-BEHAVIORS `copy` behaves exactly as today; `hardlink` shares unchanged files by
   link with copy fallback and presents a full tree; `in-place` clones once into
   an unversioned, `.gitignore`d slot managed by git. @status:impl/done
 - @fact:ACC-IN-PLACE-IDENTITY `in-place` identity is `resolved_commit`; no full-tree hash is computed. @status:impl/done

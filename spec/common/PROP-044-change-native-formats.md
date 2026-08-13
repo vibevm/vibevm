@@ -128,9 +128,11 @@ channel may point at a snapshot or at a frozen version — the axes are
 orthogonal, and «замороженная бета» stays expressible. A storage provider's
 immutable point-in-time object is a **capture** and its mutable named
 pointer a **named ref** (`##PROVIDER-NEUTRALITY`) — never "snapshot", never
-"channel". One pre-existing distinct sense is *not* renamed here:
-`materialization = "snapshot"` (PROP-022 §2.2, the vendored-copy mode) —
-flagged to the owner as a rename candidate, not silently changed. @status:spec/done
+"channel". The one pre-existing distinct sense —
+`materialization = "snapshot"` (PROP-022 §2.2, the vendored-copy mode) — was
+flagged rather than silently changed, and the owner renamed it the same day:
+the mode is **`copy`**, so `snapshot` now carries exactly one sense in the
+system. @status:spec/done
 
 ## 3. Truth and projection {#truth}
 
