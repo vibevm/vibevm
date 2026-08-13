@@ -242,6 +242,20 @@ specifically: re-judge now, or when the tool can distinguish the grains?
 this. Found 2026-08-06 while landing `BACKLOG.md` B-045, whose build made the
 false clause retroactively true — which is how it surfaced at all.
 
+**Owner ruling 2026-08-13 — the proof bar splits by claim kind.** The owner
+chose the two-sort bar: a `confirmed` verdict on a claim about **code
+behaviour** requires per-fact evidence of its own (a `file:line`-class
+reference); a **structural / declarative** fact may legally carry a
+document-level verdict. Applied to the three questions: *(i)* shared-blob
+verdicts keep counting only where document grain is legal — and the summary
+keeps printing both grains, so neither number impersonates the other;
+*(ii)* the file:line requirement binds the behavioural subset, not all 4 151 —
+nothing is mass-invalidated by decree; *(iii)* the sub-bar host subset
+(behavioural claims riding shared blobs, the 90 `PROP-008` anchors first among
+them) is re-judged to the per-fact grain as its own future campaign slice — a
+deliberate work item, not a passing fix. Status moves to **ruled — re-judgement
+campaign pending**; the finding stays open until that campaign lands.
+
 **The unit cost of question (ii), measured rather than estimated
 (2026-08-06, later the same day).** Three facts of this very document came due
 for re-judgement when the corpus was rescanned — `##SHORT-AT-BOUNDARY` (its
