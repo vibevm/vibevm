@@ -27,7 +27,7 @@ use specmark::verifies;
 /// machine-global one. The project manifest stays clean of `[[registry]]`
 /// (so this test cannot silently duplicate the project-registry path), and
 /// the install resolves through the global layer — proven by the lockfile's
-/// `source_url` (`git+file://…/org.vibevm.world_wal.git`) and the
+/// `source_url` (`git+file://…/org.vibevm.world.wal.git`) and the
 /// materialised `vibedeps/flow-wal/0.2.0/` slot.
 ///
 /// The short name `vibe install wal` is deliberately NOT covered here: a
@@ -44,7 +44,7 @@ fn default_path_installs_via_global_registry() {
     }
 
     // 1. A hermetic per-package git registry under a temp dir — one bare
-    //    repo, `org.vibevm.world_wal.git`, seeded from the real
+    //    repo, `org.vibevm.world.wal.git`, seeded from the real
     //    `org.vibevm.world/wal@0.2.0` package tree (dogfood, not a fixture).
     let outer = tempfile::tempdir().unwrap();
     let org_root = make_per_package_registry(outer.path());
@@ -55,7 +55,7 @@ fn default_path_installs_via_global_registry() {
     //    `<settings>/registry.toml`, so this file is exactly what
     //    `GlobalRegistryConfig::load()` reads on the install path.
     let user = UserScratch::new();
-    // Org URL = parent of `org.vibevm.world_wal.git`. The `git+file://`
+    // Org URL = parent of `org.vibevm.world.wal.git`. The `git+file://`
     // prefix is the Cargo/pip lockfile convention; the resolver strips it
     // before invoking `git`, so it works with prefixed and bare forms.
     let url = format!(
@@ -65,7 +65,7 @@ fn default_path_installs_via_global_registry() {
     // A distinctive name (not "default") makes the lockfile proof
     // unambiguous: the package came from THIS global section, never from a
     // seeded default pair. `naming` defaults to `fqdn` (PROP-008 §3), so the
-    // resolver composes `<group>_<name>.git` — matching the seeded repo.
+    // resolver composes `<group>.<name>.git` — matching the seeded repo.
     let global_registry_toml =
         format!("[[registry]]\nname = \"hermetic-global\"\nurl = \"{url}\"\n");
     fs::write(user.settings.join("registry.toml"), global_registry_toml).unwrap();
@@ -127,8 +127,8 @@ fn default_path_installs_via_global_registry() {
         entry.source_url
     );
     assert!(
-        entry.source_url.ends_with("/org.vibevm.world_wal.git"),
-        "expected per-package URL ending in /org.vibevm.world_wal.git, got: {}",
+        entry.source_url.ends_with("/org.vibevm.world.wal.git"),
+        "expected per-package URL ending in /org.vibevm.world.wal.git, got: {}",
         entry.source_url
     );
     assert_eq!(entry.source_ref.as_deref(), Some("v0.2.0"));

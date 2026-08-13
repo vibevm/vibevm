@@ -93,7 +93,7 @@ category = "flow"
     run_git(&src, &["commit", "-m", "org.vibevm/wal@0.2.0"]);
     run_git(&src, &["tag", "v0.2.0"]);
 
-    let bare = root.join("org.vibevm_wal.git");
+    let bare = root.join("org.vibevm.wal.git");
     run_git(
         root,
         &[
@@ -356,7 +356,7 @@ fn user_config_promotes_vibe_registry_cache_into_runtime() {
         .next()
         .expect("bucket")
         .path();
-    let pkg_clone = bucket.join("packages/org.vibevm.world_wal/clone");
+    let pkg_clone = bucket.join("packages/org.vibevm.world.wal/clone");
     assert!(
         pkg_clone.join(".git").exists(),
         "per-package clone must land in user-config cache: {}",
@@ -823,7 +823,7 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
 
     // The vendor dir contains a bare repo for the package and a
     // README.md explaining how to wire it.
-    let bare_repo = vendor_dir.join("org.vibevm.world_wal.git");
+    let bare_repo = vendor_dir.join("org.vibevm.world.wal.git");
     assert!(
         bare_repo.is_dir(),
         "expected vendor bare repo at {}",
@@ -841,7 +841,7 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
     );
 
     // Verify the bare repo is a usable git source. `git ls-remote
-    // <vendor>/org.vibevm.world_wal.git` must list the v0.2.0 tag the
+    // <vendor>/org.vibevm.world.wal.git` must list the v0.2.0 tag the
     // install pulled in.
     let ls_out = std::process::Command::new("git")
         .args(["ls-remote", "--tags", bare_repo.to_str().unwrap()])
@@ -959,7 +959,7 @@ fn vendor_refuses_non_empty_out_dir_without_force() {
         "important.txt should be gone after --force vendor"
     );
     assert!(
-        vendor_dir.join("org.vibevm.world_wal.git").is_dir(),
+        vendor_dir.join("org.vibevm.world.wal.git").is_dir(),
         "vendored bare repo missing after --force"
     );
 }
@@ -3034,7 +3034,7 @@ version = "{version}"
         run_git(&src, &["commit", "-m", &format!("v{version}")]);
         run_git(&src, &["tag", &format!("v{version}")]);
 
-        let bare = org_dir.join(format!("org.vibevm_{name}.git"));
+        let bare = org_dir.join(format!("org.vibevm.{name}.git"));
         run_git(
             out_root,
             &[
@@ -3197,7 +3197,7 @@ version = "{version}"
         run_git(&src, &["commit", "-m", &format!("v{version}")]);
         run_git(&src, &["tag", &format!("v{version}")]);
 
-        let bare = org_dir.join(format!("org.vibevm_{name}.git"));
+        let bare = org_dir.join(format!("org.vibevm.{name}.git"));
         run_git(
             out_root,
             &[
@@ -3403,7 +3403,7 @@ version = "0.2.0"
     run_git(&src, &["commit", "-m", "v0.2.0"]);
     run_git(&src, &["tag", "v0.2.0"]);
 
-    let bare = org.join("org.vibevm_test-multi.git");
+    let bare = org.join("org.vibevm.test-multi.git");
     run_git(
         root,
         &[

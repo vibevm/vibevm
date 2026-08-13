@@ -12,7 +12,7 @@
 - @fact:ADDR-SHORT-NAMES Short or bare names survive only as a one-time human CLI input, resolved to the qualified form at the boundary (PROP-008 §2.6). @status:spec/done
 - @fact:ADDR-NO-BARE-ON-DISK Nothing on disk stores a bare name. @status:spec/done
 
-@fact:joiner-why Why the full coordinate is a self-contained global symbol, and why the group↔name joiner is a character in **neither** the group nor the name (so an algorithm splits the boundary deterministically — a dotted `<group>.<name>` would hide it), is the addressable-specs `#modules` unit. @status:spec/done
+@fact:joiner-why Why the full coordinate is a self-contained global symbol is the addressable-specs `#modules` unit. On the **joiner** vibevm now diverges from that unit's letter by owner ruling (2026-08-13): the flat carrier joins with `.`, because the composite must obey real domain rules, and the unit's premise — «a dotted `<group>.<name>` hides the boundary» — does not hold here: the name grammar guarantees a single dot-free LDH label, so the **last dot** splits the boundary deterministically. The upstream `#modules` unit still states joiner-never-`.`; refreshing it is a named follow-up of the 2026-08-13 landing, not silently ignored. @status:spec/done
 
 @fact:carriers-lead In vibevm the coordinate takes three textual carriers, one identity: @status:spec/done
 
@@ -20,10 +20,10 @@
 |---|---|---|
 | @fact:CARRIER-PKGREF pkgref (manifests, lockfiles, prose) @status:spec/done | `[<kind>:]<group>/<name>` @status:spec/done | `stack:org.vibevm.ai-native/rust-ai-native-lang` @status:spec/done |
 | @fact:CARRIER-SPEC-URI `spec://` authority (the `<module>` segment) @status:spec/done | `<group>/<name>` — the name is the first path segment @status:spec/done | `spec://org.vibevm.ai-native/rust-ai-native-lang/GUIDE#anchor` @status:spec/done |
-| @fact:CARRIER-REPO-NAME repo name (flat, one segment) @status:spec/done | `<group>_<name>` — `/` is illegal in a repo name @status:spec/done | `org.vibevm.ai-native_rust-ai-native-lang` @status:spec/done |
+| @fact:CARRIER-REPO-NAME repo name (flat, one segment) @status:spec/done | `<group>.<name>` — `/` is illegal in a repo name; the name is the last label @status:spec/done | `org.vibevm.ai-native.rust-ai-native-lang` @status:spec/done |
 
 - @fact:CARRIER-BYTE-IDENTITY Where the surface allows a `/` (pkgref, `spec://`) the `<group>/<name>` coordinate is byte-identical, so one substitution renames both. @status:spec/done
-- @fact:CARRIER-REPO-SWAP The flat repo-name carrier swaps `/`→`_` because GitHub / GitVerse names allow only `[A-Za-z0-9._-]`. @status:spec/done
+- @fact:CARRIER-REPO-SWAP The flat repo-name carrier swaps `/`→`.` (owner ruling 2026-08-13): GitHub / GitVerse names allow `[A-Za-z0-9._-]`, the dot is legal there, and with both halves LDH the whole composite is a valid reversed FQDN — a real domain string, split back at the last dot. The pre-ruling joiner was `_` (see PROP-008 §2.5 for the record and the rename of live `_`-joined repositories). @status:spec/done
 
 ## 2. Why — mechanical refactoring {#rationale}
 
@@ -50,3 +50,4 @@
 - @fact:CHANGELOG-CREATED [2026-07-12] Created — ratified alongside the `org.vibevm` → `org.vibevm.ai-native` / `org.vibevm.world` group restructure, the first refactor performed under §3. @status:spec/done
 - @fact:CHANGELOG-EXTRACTED [2026-07-14] The addressing principle (fully-qualified module authority, joiner-never-`.`) was extracted to the `addressable-specs` flow's `#modules` unit (reaching vibevm through redbook); §1–2 now cite it and keep only vibevm's concrete carriers, the mechanical-refactoring foundation, and the scope rules. @status:spec/done
 - @fact:CHANGELOG-B031 [2026-08-04] **The host exemption retired (B-031, owner-approved).** The root project became the package coordinate `org.vibevm.core/vibevm`; `##SCOPE-HOST` is a tombstone, `##SCOPE-SELF-COORDINATE` carries the live rule, and the authority rename (`spec://vibevm/…` → `spec://org.vibevm.core/vibevm/…`, 1 893 living-surface occurrences) was performed under §3's mechanical-refactoring foundation in one scripted pass. Design record: [`spec/design/host-as-package.md`](../design/host-as-package.md). @status:spec/work
+- @fact:CHANGELOG-DOT-JOINER [2026-08-13] **The flat carrier re-ruled to the dot join.** The owner's identity rulings («настоящие домены») narrowed group segments to LDH labels and made the repo-name carrier `<group>.<name>` — a valid reversed FQDN, split at the last dot. `##joiner-why` and `##CARRIER-REPO-SWAP` record the divergence from the addressable-specs `#modules` letter and why its premise no longer holds; PROP-008 §2.1/§2.5 carry the grammar and the convention. Live `_`-joined repositories in `vibespecs` rename as a follow-up (pre-public, host redirects cover old names). @status:spec/done

@@ -95,9 +95,9 @@ pub fn run_git(cwd: &Path, args: &[&str]) {
 /// per package, content at the repo root, tagged `v<semver>`.
 ///
 /// For this test we seed exactly one package: `org.vibevm.world/wal@0.2.0`
-/// → `<root>/org.vibevm.world_wal.git`. The "registry" is then `<root>`
+/// → `<root>/org.vibevm.world.wal.git`. The "registry" is then `<root>`
 /// itself — `MultiRegistryResolver` composes per-package URLs by
-/// appending `<group>_<name>.git` to the org URL (the `fqdn` naming
+/// appending `<group>.<name>.git` to the org URL (the `fqdn` naming
 /// convention, PROP-008 §3).
 ///
 /// Returns the org root path (not any single repo), since the install
@@ -117,7 +117,7 @@ pub fn make_per_package_registry(root: &Path) -> PathBuf {
     run_git(&src, &["commit", "-m", "org.vibevm.world/wal@0.2.0"]);
     run_git(&src, &["tag", "v0.2.0"]);
 
-    let bare = root.join("org.vibevm.world_wal.git");
+    let bare = root.join("org.vibevm.world.wal.git");
     run_git(
         root,
         &[
@@ -151,7 +151,7 @@ pub fn copy_tree(src: &Path, dst: &Path) {
 
 pub fn write_project_with_per_package_registry(project_dir: &Path, registry_url: &str) {
     // [[registry]] in PROP-002 shape, pointing at the per-package org URL.
-    // `naming` defaults to `fqdn` — repos resolve as `<group>_<name>.git`
+    // `naming` defaults to `fqdn` — repos resolve as `<group>.<name>.git`
     // (PROP-008 §3).
     let manifest = format!(
         r#"[project]

@@ -118,7 +118,7 @@ fn naming_convention_repo_name() {
     let org = Group::parse("org.vibevm").unwrap();
     assert_eq!(
         NamingConvention::Fqdn.repo_name(None, &org, "wal").unwrap(),
-        "org.vibevm_wal"
+        "org.vibevm.wal"
     );
     assert_eq!(
         NamingConvention::KindName

@@ -18,8 +18,8 @@ use crate::PublishError;
 /// use vibe_publish::RepoInfo;
 ///
 /// let info = RepoInfo {
-///     html_url: "https://github.com/vibespecs/org.vibevm_wal".to_string(),
-///     clone_url: "https://github.com/vibespecs/org.vibevm_wal.git".to_string(),
+///     html_url: "https://github.com/vibespecs/org.vibevm.wal".to_string(),
+///     clone_url: "https://github.com/vibespecs/org.vibevm.wal.git".to_string(),
 /// };
 /// assert!(info.clone_url.ends_with(".git"));
 /// ```
@@ -155,10 +155,10 @@ impl ValidatedOrg {
 /// // back the typed token those methods require…
 /// let org = host.validate_scope("vibespecs").expect("own org passes");
 /// assert_eq!(org.as_str(), "vibespecs");
-/// assert!(!host.repo_exists(&org, "org.vibevm_wal").unwrap());
+/// assert!(!host.repo_exists(&org, "org.vibevm.wal").unwrap());
 /// assert!(host
-///     .push_url(&org, "org.vibevm_wal")
-///     .ends_with("/vibespecs/org.vibevm_wal.git"));
+///     .push_url(&org, "org.vibevm.wal")
+///     .ends_with("/vibespecs/org.vibevm.wal.git"));
 /// // …and a foreign org is refused at that door, before any host method
 /// // can be reached — so the refusal is a property of the type, not a
 /// // call an impl can forget.

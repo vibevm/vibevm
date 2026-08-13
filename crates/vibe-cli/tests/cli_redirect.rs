@@ -107,14 +107,14 @@ fn install_via_redirect_pass_through_tag() {
         target_bare.to_string_lossy().replace('\\', "/")
     );
 
-    // Stub lives at `<org_root>/org.vibevm_internal.git` so the resolver's
+    // Stub lives at `<org_root>/org.vibevm.internal.git` so the resolver's
     // composed per-package URL hits it via the registry's naming
     // convention (fqdn — `<group>.<name>`).
     let org_root = outer_path.join("org-root");
     fs::create_dir_all(&org_root).unwrap();
     let _stub = make_redirect_stub_bare_repo(
         &org_root,
-        "org.vibevm_internal",
+        "org.vibevm.internal",
         &target_url,
         "pass-through-tag",
         None,
@@ -160,7 +160,7 @@ fn install_via_redirect_pass_through_tag() {
     );
     let via = entry.via_redirect.as_deref().unwrap();
     assert!(
-        via.contains("org.vibevm_internal") && !via.contains("external-flow-internal"),
+        via.contains("org.vibevm.internal") && !via.contains("external-flow-internal"),
         "expected stub URL in via_redirect, got: {via}"
     );
     assert_eq!(entry.registry.as_deref(), Some("default"));
@@ -215,7 +215,7 @@ group = "org.vibevm"
 version = "0.1.0"
 source_url = "git@example.invalid:external-flow-internal.git"
 content_hash = "sha256:abc"
-via_redirect = "https://stub.invalid/org.vibevm_internal"
+via_redirect = "https://stub.invalid/org.vibevm.internal"
 "#,
     )
     .unwrap();
@@ -241,7 +241,7 @@ via_redirect = "https://stub.invalid/org.vibevm_internal"
         .as_str()
         .expect("via_redirect surfaced in `vibe list --json`");
     assert!(
-        via.contains("org.vibevm_internal"),
+        via.contains("org.vibevm.internal"),
         "expected the stub URL in via_redirect JSON, got: {via}"
     );
 }
@@ -288,7 +288,7 @@ fn install_via_redirect_pinned_policy_uses_pinned_ref() {
     fs::create_dir_all(&org_root).unwrap();
     let _stub = make_redirect_stub_bare_repo(
         &org_root,
-        "org.vibevm_pinned",
+        "org.vibevm.pinned",
         &target_url,
         "pinned",
         Some("v1.0.0"),
@@ -359,7 +359,7 @@ fn install_via_redirect_identity_mismatch_rejected() {
     fs::create_dir_all(&org_root).unwrap();
     let _stub = make_redirect_stub_bare_repo(
         &org_root,
-        "org.vibevm_internal",
+        "org.vibevm.internal",
         &target_url,
         "pass-through-tag",
         None,
@@ -426,7 +426,7 @@ fn install_via_redirect_chain_rejected_at_hop_two() {
     );
     let hop2_stub = make_redirect_stub_bare_repo(
         &hop2_root,
-        "org.vibevm_chain-hop2",
+        "org.vibevm.chain-hop2",
         &hop2_target_url,
         "pass-through-tag",
         None,
@@ -440,7 +440,7 @@ fn install_via_redirect_chain_rejected_at_hop_two() {
     fs::create_dir_all(&org_root).unwrap();
     let _hop1_stub = make_redirect_stub_bare_repo(
         &org_root,
-        "org.vibevm_chain",
+        "org.vibevm.chain",
         &hop2_stub_url,
         "pass-through-tag",
         None,

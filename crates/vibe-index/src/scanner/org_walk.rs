@@ -292,7 +292,7 @@ mod tests {
                 &org,
                 "wal"
             ),
-            "https://github.com/vibespecs/org.vibevm_wal.git"
+            "https://github.com/vibespecs/org.vibevm.wal.git"
         );
         assert_eq!(
             source_url_for(

@@ -80,7 +80,7 @@ fn from_clones_cell_scans_through_the_seam() {
     let work = tempfile::tempdir().unwrap();
     let org = work.path().join("org");
     fs_must_create(&org);
-    let wal = org.join("org.vibevm_wal");
+    let wal = org.join("org.vibevm.wal");
     init_repo(&wal);
     commit_and_tag(
         &wal,
@@ -107,7 +107,7 @@ fn from_clones_cell_scans_through_the_seam() {
     assert_eq!(entry.group.to_string(), "org.vibevm");
     assert_eq!(entry.version.to_string(), "0.1.0");
     assert!(
-        report.snapshots.contains_key("org.vibevm_wal"),
+        report.snapshots.contains_key("org.vibevm.wal"),
         "walked repos record a checkpoint snapshot: {:?}",
         report.snapshots.keys().collect::<Vec<_>>()
     );
@@ -126,7 +126,7 @@ fn reindex_from_clones_walks_three_packages() {
     let org = work.path().join("vibespecs-org");
     fs_must_create(&org);
 
-    let wal = org.join("org.vibevm_wal");
+    let wal = org.join("org.vibevm.wal");
     init_repo(&wal);
     commit_and_tag(
         &wal,
@@ -134,7 +134,7 @@ fn reindex_from_clones_walks_three_packages() {
         "v0.1.0",
     );
 
-    let commits = org.join("org.vibevm_atomic-commits");
+    let commits = org.join("org.vibevm.atomic-commits");
     init_repo(&commits);
     commit_and_tag(
         &commits,
@@ -142,7 +142,7 @@ fn reindex_from_clones_walks_three_packages() {
         "v0.1.0",
     );
 
-    let rust = org.join("org.vibevm_rust");
+    let rust = org.join("org.vibevm.rust");
     init_repo(&rust);
     commit_and_tag(
         &rust,
@@ -233,7 +233,7 @@ fn reindex_skips_non_v_semver_tags() {
     let org = work.path().join("org");
     fs_must_create(&org);
 
-    let repo = org.join("org.vibevm_wal");
+    let repo = org.join("org.vibevm.wal");
     init_repo(&repo);
     commit_and_tag(&repo, &manifest_for("wal", "flow", "0.1.0", None), "v0.1.0");
     git(&repo, &["tag", "release-candidate"]);
@@ -323,7 +323,7 @@ fn incremental_skips_unchanged_repos_and_picks_up_new_tags() {
     let org = work.path().join("org");
     fs_must_create(&org);
 
-    let wal = org.join("org.vibevm_wal");
+    let wal = org.join("org.vibevm.wal");
     init_repo(&wal);
     commit_and_tag(
         &wal,
@@ -465,7 +465,7 @@ fn reindex_captures_current_schema_manifest() {
     let org = work.path().join("org");
     fs_must_create(&org);
 
-    let feat = org.join("org.vibevm_welcome");
+    let feat = org.join("org.vibevm.welcome");
     init_repo(&feat);
     let modern = r#"[package]
 group = "org.vibevm"
