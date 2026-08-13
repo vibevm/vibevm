@@ -101,7 +101,7 @@ pub fn materialise(
 /// How [`materialise_with`] places each file into a slot (PROP-022 §2.2/§2.3).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CopyMode {
-    /// Full byte copy — the default `snapshot` materialisation (PROP-022 §2.2).
+    /// Full byte copy — the default `copy` materialisation (PROP-022 §2.2).
     Copy,
     /// Hardlink each file from the source, falling back to a copy when the
     /// filesystem refuses (cross-volume / unsupported) — the `hardlink`
@@ -167,7 +167,7 @@ pub fn remove_slot(
 // An `in-place` package is placed as a project-local git working tree in an
 // **unversioned** slot — `vibedeps/<group>.<name>/` with no `/<version>/` —
 // keeping its `.git` so git manages it in place. The slot is moved into
-// position from a fetched clone (no per-file snapshot copy) and `.gitignore`d
+// position from a fetched clone (no per-file `copy`) and `.gitignore`d
 // (not vendored, §2.7).
 
 /// The unversioned slot path for an `in-place` package, relative to the
@@ -189,7 +189,7 @@ pub fn in_place_slot_abs_path(workspace_root: &Path, group: &Group, name: &str) 
 /// `true` iff an `in-place` slot is materialised for this package — the
 /// unversioned slot directory exists and is a git working tree (carries
 /// `.git`). The `.git` presence is what distinguishes an in-place slot from
-/// a `<group>.<name>/` directory that merely groups versioned snapshot slots,
+/// a `<group>.<name>/` directory that merely groups versioned `copy` slots,
 /// so [`prune_stale_slots`](crate::install) leaves it untouched.
 pub fn is_in_place_slot(workspace_root: &Path, group: &Group, name: &str) -> bool {
     in_place_slot_abs_path(workspace_root, group, name)
@@ -201,7 +201,8 @@ pub fn is_in_place_slot(workspace_root: &Path, group: &Group, name: &str) -> boo
 /// (`clone_src`, a working tree WITH its `.git`) into the unversioned slot
 /// (PROP-022 §2.4). A move — `rename` when source and slot share a volume, a
 /// recursive copy-then-remove across volumes — so a giant repo is placed
-/// without the per-file snapshot copy the mode exists to avoid. The `.git` is
+/// without the per-file `copy` materialisation the mode exists to avoid. The
+/// `.git` is
 /// preserved (unlike [`materialise`], which strips it) so the slot stays a
 /// git working tree manageable in place.
 pub fn materialise_in_place(

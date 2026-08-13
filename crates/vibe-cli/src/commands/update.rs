@@ -286,7 +286,7 @@ pub fn run(ctx: &output::Context, args: UpdateArgs, embedded_root: Option<PathBu
         }
     }
 
-    // Materialise the subtree (snapshot copy / hardlink / in-place move) and
+    // Materialise the subtree (copy / hardlink / in-place move) and
     // run each freshly-placed slot's pre-install hook (PROP-020 §2.1) — no
     // prune, no boot here; boot is regenerated below from the whole tree.
     // `Verify` re-materialises every named slot from the fresh fetch.

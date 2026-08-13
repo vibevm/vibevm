@@ -147,7 +147,7 @@ fn discover(root: &Path) -> Resolver {
     let mut by_coordinate: BTreeMap<String, Vec<SlotRec>> = BTreeMap::new();
     for kind_name_dir in subdirs(&root.join(VIBEDEPS_DIR)) {
         // An in-place slot carries `.git` at the `<group>.<name>` level and
-        // holds the package directly (PROP-022 §2.4); a snapshot slot holds
+        // holds the package directly (PROP-022 §2.4); a `copy` slot holds
         // `<version>/` subdirs and never carries `.git`.
         if kind_name_dir.join(".git").exists() {
             ingest_slot(&kind_name_dir, None, &mut by_coordinate);

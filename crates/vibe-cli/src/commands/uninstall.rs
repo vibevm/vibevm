@@ -120,7 +120,7 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
     }
 
     // Remove the package's materialised slot — the unversioned in-place git
-    // working tree, or the versioned snapshot/hardlink slot.
+    // working tree, or the versioned copy/hardlink slot.
     if mode.is_in_place() {
         vibedeps::remove_in_place_slot(&workspace.root, &locked.group, &pkgref.name)
             .context("removing the in-place vibedeps/ slot")?;

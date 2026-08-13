@@ -44,7 +44,7 @@ pub(super) fn fetch_node<S: InstallSource + ?Sized>(
 /// `git fetch` to [`apply`](crate::apply). This is what keeps a giant in-place
 /// repo (Chromium-scale) from being re-cloned on every full-pipeline install;
 /// only a *fresh* in-place package (no slot yet) clones, and every
-/// snapshot/hardlink package fetches exactly as before.
+/// copy/hardlink package fetches exactly as before.
 pub(super) fn fetch_or_defer<S: InstallSource + ?Sized>(
     source: &S,
     node: &ResolvedNode,
@@ -65,7 +65,7 @@ pub(super) fn fetch_or_defer<S: InstallSource + ?Sized>(
 /// against the live `.git` in [`apply`](crate::apply), post-confirmation, so a
 /// declined plan never advances the slot's commit (the plan stays
 /// read-mostly). Returns `None` for anything else — a fresh in-place install
-/// (no slot yet; restored by a re-clone per §2.7), or any snapshot/hardlink
+/// (no slot yet; restored by a re-clone per §2.7), or any copy/hardlink
 /// package — so the caller fetches it normally.
 ///
 /// The provisional `cached.cache_dir` IS the slot — the "already placed"

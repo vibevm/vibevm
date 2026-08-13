@@ -260,7 +260,7 @@ materialization = "in-place"
     let back: Lockfile = toml::from_str(&rendered).unwrap();
     assert_eq!(lf, back);
 
-    // The default `snapshot` is skipped on serialize, so every lockfile
+    // The default `copy` is skipped on serialize, so every lockfile
     // written before this field landed round-trips unchanged.
     let mut snap = lf.clone();
     snap.packages[0].materialization = Default::default();

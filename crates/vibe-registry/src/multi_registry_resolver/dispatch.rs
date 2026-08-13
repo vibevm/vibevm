@@ -83,10 +83,10 @@ impl MultiRegistryResolver {
 
     /// Place a registry-served `in-place` package directly into its project
     /// `slot` (PROP-022 §2.4) — a fresh clone, or an incremental `git fetch`
-    /// on an existing slot — bypassing the cache clone + snapshot copy. Routes
+    /// on an existing slot — bypassing the cache clone + `copy`. Routes
     /// to the [`GitPerPackageRegistry`] that resolved the package. The special
     /// source kinds (override / git-source / path-source / redirect) are not
-    /// in-place candidates; they keep the move-based snapshot path.
+    /// in-place candidates; they keep the move-based `copy` path.
     pub fn materialise_in_place(
         &self,
         resolution: &MultiResolution,

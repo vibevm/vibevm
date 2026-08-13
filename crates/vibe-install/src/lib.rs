@@ -111,7 +111,7 @@ pub trait InstallSource {
     /// Place an `in-place` package (PROP-022 §2.4) directly into its project
     /// `slot`: a fresh `git clone --recurse-submodules` when the slot is
     /// absent, an incremental `git fetch` + checkout when it already carries
-    /// `.git`. Bypasses the cache clone + the `.git`-stripped snapshot copy,
+    /// `.git`. Bypasses the cache clone + the `.git`-stripped `copy`,
     /// so a version bump on a giant repo transfers only changed objects. Used
     /// by scoped `vibe update <pkg>` and the general `vibe install` re-resolve
     /// (via [`apply`](crate::apply), which defers the in-place fetch past the

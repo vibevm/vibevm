@@ -439,7 +439,7 @@ fn node_dependency_boot(
         .iter()
         .map(|dep| {
             // An in-place dependency's boot snippet lives in its unversioned
-            // slot (PROP-022 §2.4); a snapshot/hardlink dep's in the versioned
+            // slot (PROP-022 §2.4); a copy/hardlink dep's in the versioned
             // one. Field access auto-derefs the `&&ResolvedDep`.
             let in_place = dep
                 .manifest

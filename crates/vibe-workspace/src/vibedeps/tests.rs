@@ -294,9 +294,9 @@ fn materialise_in_place_moves_the_clone_keeping_git() {
     "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
     r = 1
 )]
-fn is_in_place_slot_false_for_a_versioned_snapshot() {
+fn is_in_place_slot_false_for_a_versioned_copy() {
     let ws = TempDir::new().unwrap();
-    // A versioned snapshot slot has no `.git` at the <kind>-<name> level,
+    // A versioned `copy` slot has no `.git` at the <group>.<name> level,
     // so it is not mistaken for an in-place slot.
     let src = TempDir::new().unwrap();
     write(src.path(), "vibe.toml", "x");

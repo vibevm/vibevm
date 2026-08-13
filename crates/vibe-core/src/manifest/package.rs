@@ -69,7 +69,7 @@ pub use when::WhenCondition;
 /// assert_eq!(p.name, "wal");
 /// assert_eq!(p.kind, PackageKind::Feat);
 /// assert!(p.publish.is_default()); // `publish` defaults to true
-/// assert!(p.materialization.is_default()); // defaults to `snapshot`
+/// assert!(p.materialization.is_default()); // defaults to `copy`
 /// assert!(!p.bridge); // not a bridge by default
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -103,7 +103,7 @@ pub struct PackageMeta {
     #[serde(default, skip_serializing_if = "PublishPosture::is_default")]
     pub publish: PublishPosture,
     /// How this package is materialised on disk (PROP-022 §2.1). Default
-    /// `snapshot` (the vendored full copy); `hardlink` shares unchanged
+    /// `copy` (the vendored full copy); `hardlink` shares unchanged
     /// files by link; `in-place` is a git-native, project-local clone for
     /// giant repos. Skipped from the serialized form when default.
     #[serde(default, skip_serializing_if = "Materialization::is_default")]

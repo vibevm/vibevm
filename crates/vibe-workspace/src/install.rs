@@ -195,7 +195,7 @@ fn materialise_resolution(
     for dep in resolution {
         // PROP-022 §2.4 — an in-place package is a project-local git working
         // tree in an unversioned slot. Move the fetched clone (with its
-        // `.git`) into the slot instead of the per-file snapshot copy, and
+        // `.git`) into the slot instead of the per-file `copy`, and
         // `.gitignore` it (not vendored, §2.7).
         if is_in_place(dep) {
             let rel = vibedeps::in_place_slot_rel_path(&dep.group, &dep.name);
@@ -310,7 +310,7 @@ fn run_dep_hook(
         return Ok(None);
     }
     // The hook runs in the package's materialised slot — the unversioned
-    // in-place working tree (PROP-022 §2.4), or the versioned snapshot slot.
+    // in-place working tree (PROP-022 §2.4), or the versioned `copy` slot.
     let slot = if is_in_place(dep) {
         vibedeps::in_place_slot_abs_path(workspace_root, &dep.group, &dep.name)
     } else {
@@ -373,7 +373,7 @@ pub struct SubtreeOutcome {
 /// Materialise a **partial** resolution — a scoped `vibe update <pkg>` subtree
 /// — into `vibedeps/` and run each freshly-materialised slot's `pre-install`
 /// hook (PROP-020 §2.1), the same placement + hook flow [`apply_resolution`]
-/// performs (snapshot copy / hardlink / in-place move + rollback), but
+/// performs (copy / hardlink / in-place move + rollback), but
 /// **without** pruning unrelated slots or regenerating boot. A scoped update
 /// touches only the named subtree, so the caller removes any superseded slots
 /// itself and regenerates boot from the whole materialised tree afterwards;
@@ -420,7 +420,7 @@ fn run_post_install_with(
     let mut reports = Vec::new();
     for dep in resolution {
         // Match the slot label `apply_resolution` reported — the unversioned
-        // in-place path (PROP-022 §2.4) or the versioned snapshot path.
+        // in-place path (PROP-022 §2.4) or the versioned `copy` path.
         let slot = if is_in_place(dep) {
             vibedeps::in_place_slot_rel_path(&dep.group, &dep.name)
         } else {
@@ -443,8 +443,8 @@ fn run_post_install_with(
     Ok(reports)
 }
 
-/// The copy placement mode for a resolved **snapshot / hardlink** package
-/// (PROP-022 §2.1). `hardlink` shares bytes with the cache by link; `snapshot`
+/// The copy placement mode for a resolved **copy / hardlink** package
+/// (PROP-022 §2.1). `hardlink` shares bytes with the cache by link; `copy`
 /// (the default) is a full copy. An `in-place` package never reaches here — it
 /// is handled by [`materialise_resolution`]'s move-into-slot branch before any
 /// copy mode is chosen (PROP-022 §2.4).

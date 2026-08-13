@@ -5688,7 +5688,7 @@
       "line": 62,
       "symbol": "vibe_install::plan::fetch::try_in_place_incremental",
       "end_line": 146,
-      "fingerprint": "tok1:c05dfa0902e125a6e9643d8a7bd7d540e616eba4de52ebd794eca428653de887"
+      "fingerprint": "tok1:c72ed072ef1fc504344ca8144f519101d6e579f43687d22f2c7fd55524ad6470"
     },
     {
       "crate_name": "vibe-install",
@@ -8980,9 +8980,9 @@
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "item_kind": "fn",
       "line": 292,
-      "symbol": "vibe_workspace::vibedeps::tests::is_in_place_slot_false_for_a_versioned_snapshot",
+      "symbol": "vibe_workspace::vibedeps::tests::is_in_place_slot_false_for_a_versioned_copy",
       "end_line": 312,
-      "fingerprint": "tok1:43fea178530df736b8107b35f613ced3e5fdf181db63272fa7b09cbfadbe2e22"
+      "fingerprint": "tok1:fcc59c8a4894d230d704a86ff8eea2dd64a411ddc2579c6a400f1bbcf06282b2"
     },
     {
       "crate_name": "vibe-workspace",
@@ -17016,7 +17016,7 @@
     },
     {
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
-      "from_symbol": "vibe_workspace::vibedeps::tests::is_in_place_slot_false_for_a_versioned_snapshot",
+      "from_symbol": "vibe_workspace::vibedeps::tests::is_in_place_slot_false_for_a_versioned_copy",
       "line": 293,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
@@ -28665,7 +28665,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:9a2b4ecbba188c6ad976ee07a6ac7758a69bf50bea2d7a1b90f654050ee2f6c2",
+      "content_hash": "sha256:b6d89b2c2e91937c3e362902cc289fb4a5851c1bd166a9b6144f5b6424663c4c",
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "PROP-044: Change-native formats — surviving perpetual evolution",
@@ -72719,7 +72719,7 @@
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/vibedeps/tests.rs",
       "line": 293,
-      "message": "edge `vibe_workspace::vibedeps::tests::is_in_place_slot_false_for_a_versioned_snapshot` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place` carries no kind/revision line yet"
+      "message": "edge `vibe_workspace::vibedeps::tests::is_in_place_slot_false_for_a_versioned_copy` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
