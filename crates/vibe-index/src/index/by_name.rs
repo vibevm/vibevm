@@ -166,6 +166,9 @@ mod tests {
             i18n: Default::default(),
             boot_snippet: None,
             files_count: 1,
+            must_understand: vec![],
+            yanked: false,
+            frozen: false,
             indexed_at: now(),
             indexed_by: "vibe-index 0.1.0-dev".into(),
         }

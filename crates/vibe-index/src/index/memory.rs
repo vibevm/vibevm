@@ -16,9 +16,10 @@ use chrono::{DateTime, Utc};
 use vibe_core::Group;
 
 use crate::error::{Error, Result};
+use crate::index::quarantine::{Quarantined, missing_capabilities};
 use crate::index::{by_name, inverted, primary, repomd};
 use crate::types::{
-    NameEntry, NamingConvention, PackageEntry, Repomd, RepomdFileEntry, VersionEntry,
+    NameEntry, NamingConvention, PackageEntry, Repomd, RepomdFileEntry, Tombstone, VersionEntry,
 };
 
 /// In-RAM index key — the `(group, name)` package identity (PROP-008
@@ -68,6 +69,13 @@ pub struct Index {
     pub generator: String,
     pub generated_at: DateTime<Utc>,
     pub by_pkgref: BTreeMap<PkgKey, PackageEntry>,
+    /// Catalog records this reader refused to act on because their
+    /// `must_understand` names a capability it lacks (PROP-044 §4.5).
+    /// In memory only — never serialised into any catalog file.
+    pub quarantined: Vec<Quarantined>,
+    /// Per-name tombstones (PROP-044 §2) — in memory only; `write_to`
+    /// projects them back onto the by-name `NameEntry` it builds.
+    pub tombstones: BTreeMap<String, Tombstone>,
 }
 
 impl Index {
@@ -85,6 +93,8 @@ impl Index {
             generator: default_generator(),
             generated_at: Utc::now(),
             by_pkgref: BTreeMap::new(),
+            quarantined: Vec::new(),
+            tombstones: BTreeMap::new(),
         }
     }
 
@@ -193,6 +203,8 @@ impl Index {
         // `(group, name)` package sharing one bare name (PROP-008 §2.8).
         // `by_pkgref` iterates in `(group, name)` order, so each name's
         // candidates arrive group-sorted; `finalise` re-sorts defensively.
+        // A name carrying ONLY a tombstone gets its file too — a name
+        // that ever existed must answer, never fall silent (PROP-044 §2).
         let mut by_name_files: BTreeMap<String, NameEntry> = BTreeMap::new();
         for pkg in self.by_pkgref.values() {
             by_name_files
@@ -200,6 +212,12 @@ impl Index {
                 .or_insert_with(|| NameEntry::new(pkg.name.clone(), self.generated_at))
                 .packages
                 .push(pkg.clone());
+        }
+        for (name, ts) in &self.tombstones {
+            let slot = by_name_files
+                .entry(name.clone())
+                .or_insert_with(|| NameEntry::new(name.clone(), self.generated_at));
+            slot.tombstone = Some(ts.clone());
         }
         for name_entry in by_name_files.values_mut() {
             name_entry.finalise();
@@ -259,12 +277,46 @@ impl Index {
     /// of truth for the in-memory copy; missing files surface as
     /// errors. Each `by-name/<name>.json` candidate set is flattened
     /// back into the `(group, name)`-keyed map.
+    ///
+    /// Versions whose `must_understand` names a capability this build
+    /// lacks are refused here — above the parsers, which stay pure
+    /// bytes→types — and land in `quarantined` with a WARN instead of
+    /// entering `by_pkgref`. Tombstones ride the by-name files and are
+    /// collected into the in-memory carrier.
     pub fn load_from(data_dir: &Path) -> Result<Self> {
         let manifest = repomd::read(data_dir)?;
         let name_entries = by_name::read_all(data_dir)?;
         let mut by_pkgref: BTreeMap<PkgKey, PackageEntry> = BTreeMap::new();
+        let mut quarantined: Vec<Quarantined> = Vec::new();
+        let mut tombstones: BTreeMap<String, Tombstone> = BTreeMap::new();
         for name_entry in name_entries {
+            if let Some(ts) = name_entry.tombstone {
+                tombstones.insert(name_entry.name.clone(), ts);
+            }
             for mut pkg in name_entry.packages {
+                // Refuse versions this reader cannot honour (PROP-044
+                // §4.5): quarantine + WARN, and keep reading the rest.
+                pkg.versions.retain(|v| {
+                    let missing = missing_capabilities(&v.must_understand);
+                    if missing.is_empty() {
+                        true
+                    } else {
+                        tracing::warn!(
+                            group = %pkg.group,
+                            name = %pkg.name,
+                            version = %v.version,
+                            missing = %missing.join(","),
+                            "quarantined: must_understand names capabilities this build lacks"
+                        );
+                        quarantined.push(Quarantined {
+                            group: pkg.group.clone(),
+                            name: pkg.name.clone(),
+                            version: v.version.clone(),
+                            missing,
+                        });
+                        false
+                    }
+                });
                 pkg.finalise();
                 by_pkgref.insert((pkg.group.clone(), pkg.name.clone()), pkg);
             }
@@ -277,6 +329,8 @@ impl Index {
             generator: manifest.generator,
             generated_at: manifest.generated_at,
             by_pkgref,
+            quarantined,
+            tombstones,
         })
     }
 }
@@ -318,6 +372,15 @@ mod tests {
         Group::parse("org.vibevm").unwrap()
     }
 
+    /// The standing test index: registry `vibespecs` on example.invalid.
+    fn fresh_index() -> Index {
+        Index::new(
+            "vibespecs",
+            "https://example.invalid",
+            NamingConvention::Fqdn,
+        )
+    }
+
     fn entry(kind: PackageKind, group: Group, name: &str, version: &str) -> VersionEntry {
         VersionEntry {
             schema_version: VersionEntry::SCHEMA_VERSION,
@@ -348,6 +411,9 @@ mod tests {
             i18n: Default::default(),
             boot_snippet: None,
             files_count: 1,
+            must_understand: vec![],
+            yanked: false,
+            frozen: false,
             indexed_at: now(),
             indexed_by: "vibe-index 0.1.0-dev".into(),
         }
@@ -355,11 +421,7 @@ mod tests {
 
     #[test]
     fn upsert_replaces_existing_version() {
-        let mut idx = Index::new(
-            "vibespecs",
-            "https://example.invalid",
-            NamingConvention::Fqdn,
-        );
+        let mut idx = fresh_index();
         idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0"));
         idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0"));
         assert_eq!(idx.version_count(), 1);
@@ -367,11 +429,7 @@ mod tests {
 
     #[test]
     fn remove_version_works() {
-        let mut idx = Index::new(
-            "vibespecs",
-            "https://example.invalid",
-            NamingConvention::Fqdn,
-        );
+        let mut idx = fresh_index();
         idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0"));
         idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.2.0"));
         let v = "0.1.0".parse().unwrap();
@@ -382,11 +440,7 @@ mod tests {
     #[test]
     fn write_then_load_round_trips() {
         let tmp = tempdir().unwrap();
-        let mut idx = Index::new(
-            "vibespecs",
-            "https://example.invalid",
-            NamingConvention::Fqdn,
-        );
+        let mut idx = fresh_index();
         idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0"));
         idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.2.0"));
         idx.upsert(entry(PackageKind::Flow, org(), "atomic-commits", "0.1.0"));
@@ -408,11 +462,7 @@ mod tests {
         // collision. They land in one `by-name/wal.json` candidate set.
         let tmp = tempdir().unwrap();
         let acme = Group::parse("com.acme").unwrap();
-        let mut idx = Index::new(
-            "vibespecs",
-            "https://example.invalid",
-            NamingConvention::Fqdn,
-        );
+        let mut idx = fresh_index();
         idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0"));
         idx.upsert(entry(PackageKind::Feat, acme.clone(), "wal", "1.0.0"));
         idx.write_to(tmp.path()).unwrap();
@@ -431,11 +481,7 @@ mod tests {
     #[test]
     fn write_creates_repomd_with_file_hashes() {
         let tmp = tempdir().unwrap();
-        let mut idx = Index::new(
-            "vibespecs",
-            "https://example.invalid",
-            NamingConvention::Fqdn,
-        );
+        let mut idx = fresh_index();
         idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0"));
         idx.write_to(tmp.path()).unwrap();
         let manifest = repomd::read(tmp.path()).unwrap();
@@ -453,11 +499,7 @@ mod tests {
     #[test]
     fn write_replaces_stale_by_name_files() {
         let tmp = tempdir().unwrap();
-        let mut idx = Index::new(
-            "vibespecs",
-            "https://example.invalid",
-            NamingConvention::Fqdn,
-        );
+        let mut idx = fresh_index();
         idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0"));
         idx.write_to(tmp.path()).unwrap();
         // Drop the package; the old file MUST be gone after rewrite.
@@ -466,5 +508,92 @@ mod tests {
         idx.write_to(tmp.path()).unwrap();
         assert!(!by_name::file_path(tmp.path(), "wal").exists());
         assert!(by_name::file_path(tmp.path(), "atomic-commits").exists());
+    }
+
+    /// PROP-044 §4.5 — a version naming an unknown `must_understand`
+    /// capability is quarantined on load; its sibling versions keep
+    /// loading (the filter must not over-cut).
+    #[test]
+    fn load_quarantines_unknown_capability_and_keeps_the_rest() {
+        let tmp = tempdir().unwrap();
+        let mut idx = fresh_index();
+        let mut with_cap = entry(PackageKind::Flow, org(), "wal", "0.1.0");
+        with_cap.must_understand = vec!["x".into()];
+        idx.upsert(with_cap);
+        idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.2.0"));
+        idx.write_to(tmp.path()).unwrap();
+
+        let back = Index::load_from(tmp.path()).unwrap();
+        // The understood version is there…
+        let pkg = back.get(&org(), "wal").unwrap();
+        assert_eq!(pkg.versions.len(), 1);
+        assert_eq!(pkg.versions[0].version.to_string(), "0.2.0");
+        // …the quarantined one is not, and left exactly one record.
+        assert!(
+            !pkg.versions
+                .iter()
+                .any(|v| v.version.to_string() == "0.1.0")
+        );
+        assert_eq!(back.quarantined.len(), 1);
+        let q = &back.quarantined[0];
+        assert_eq!(q.name, "wal");
+        assert_eq!(q.version.to_string(), "0.1.0");
+        assert_eq!(q.missing, vec!["x".to_string()]);
+    }
+
+    /// PROP-044 §2 — a by-name tombstone survives a full
+    /// load → write → load round trip.
+    #[test]
+    fn tombstone_survives_load_and_write() {
+        let tmp = tempdir().unwrap();
+        let mut idx = fresh_index();
+        idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0"));
+        idx.tombstones.insert(
+            "wal".into(),
+            crate::types::Tombstone {
+                reason: "withdrawn by the owner".into(),
+                superseded_by: Some("org.vibevm/wal2".into()),
+            },
+        );
+        idx.write_to(tmp.path()).unwrap();
+        assert!(by_name::file_path(tmp.path(), "wal").exists());
+
+        let back = Index::load_from(tmp.path()).unwrap();
+        assert_eq!(
+            back.tombstones.get("wal").map(|t| t.reason.as_str()),
+            Some("withdrawn by the owner")
+        );
+        back.write_to(tmp.path()).unwrap();
+        let again = Index::load_from(tmp.path()).unwrap();
+        assert!(again.tombstones.contains_key("wal"));
+    }
+
+    /// PROP-044 §2, the case the tombstone slot exists for — a name
+    /// whose by-name file holds ONLY a tombstone still gets its file:
+    /// a name that ever existed must answer, never fall silent.
+    #[test]
+    fn tombstone_only_name_still_gets_its_by_name_file() {
+        let tmp = tempdir().unwrap();
+        let mut idx = fresh_index();
+        idx.tombstones.insert(
+            "dead-pkg".into(),
+            crate::types::Tombstone {
+                reason: "superseded".into(),
+                superseded_by: None,
+            },
+        );
+        idx.write_to(tmp.path()).unwrap();
+        assert!(
+            by_name::file_path(tmp.path(), "dead-pkg").exists(),
+            "a tombstone-only name must still get its by-name file"
+        );
+
+        let back = Index::load_from(tmp.path()).unwrap();
+        assert_eq!(back.package_count(), 0);
+        assert_eq!(back.tombstones.len(), 1);
+        // …and it survives the same round trip.
+        back.write_to(tmp.path()).unwrap();
+        let again = Index::load_from(tmp.path()).unwrap();
+        assert!(again.tombstones.contains_key("dead-pkg"));
     }
 }

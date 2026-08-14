@@ -92,6 +92,17 @@ pub struct PackageMeta {
     /// absence as info so the pre-epoch population stays countable.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub epoch: Option<u32>,
+    /// `[package].frozen` — the PROP-044 §2a immutability flag. Absence
+    /// (`false`) means the version is a **snapshot**: its content may
+    /// still flow under the same version string, and a hash mismatch is
+    /// NEWS, not alarm. `true` means **frozen**: the bytes are immutable,
+    /// and a hash mismatch is ALARM. The transition is one-way —
+    /// unfreezing is forbidden; further work on the package is a new
+    /// version line. The flag lives INSIDE the hashed content, so the
+    /// version is self-describing even offline and every registry
+    /// serving these bytes agrees with it.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub frozen: bool,
     #[serde(default)]
     pub authors: Vec<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]

@@ -80,6 +80,7 @@ fn package_meta_as_package_ref_pins_exact() {
         kind: PackageKind::Flow,
         version: semver::Version::parse("0.3.0").unwrap(),
         epoch: None,
+        frozen: false,
         authors: vec![],
         license: None,
         description: None,
@@ -372,4 +373,35 @@ fn epoch_is_not_a_string() {
         "name = \"x\"\ngroup = \"org.demo\"\nkind = \"tool\"\nversion = \"0.1.0\"\nepoch = \"1\"\n",
     )
     .unwrap_err();
+}
+
+// --- PROP-044 §2a — the `frozen` immutability flag ---------------------
+
+#[test]
+fn package_meta_frozen_defaults_false_and_skips_serialise() {
+    // Absent `frozen` is the **snapshot** posture (content may flow under
+    // the same version string), and a manifest that does not set it
+    // serialises without the field.
+    let p: PackageMeta = toml::from_str(
+        "name = \"x\"\ngroup = \"org.demo\"\nkind = \"tool\"\nversion = \"0.1.0\"\n",
+    )
+    .unwrap();
+    assert!(!p.frozen);
+    let rendered = toml::to_string(&p).unwrap();
+    assert!(!rendered.contains("frozen"), "{rendered}");
+}
+
+#[test]
+fn package_meta_roundtrips_an_explicit_frozen() {
+    // An explicit `frozen = true` survives a serialise → parse round
+    // trip intact — the version is self-describing in its own manifest.
+    let p: PackageMeta = toml::from_str(
+        "name = \"x\"\ngroup = \"org.demo\"\nkind = \"tool\"\nversion = \"0.1.0\"\nfrozen = true\n",
+    )
+    .unwrap();
+    assert!(p.frozen);
+    let rendered = toml::to_string(&p).unwrap();
+    assert!(rendered.contains("frozen = true"), "{rendered}");
+    let back: PackageMeta = toml::from_str(&rendered).unwrap();
+    assert!(back.frozen);
 }

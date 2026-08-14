@@ -39,6 +39,9 @@ fn sample_entry() -> VersionEntry {
             category: Some("flow".into()),
         }),
         files_count: 5,
+        must_understand: vec![],
+        yanked: false,
+        frozen: false,
         indexed_at: DateTime::parse_from_rfc3339("2026-05-06T12:00:00Z")
             .unwrap()
             .with_timezone(&Utc),
@@ -148,4 +151,61 @@ fn sort_key_orders_by_group_then_name_then_version() {
     let b = sample_entry(); // org.vibevm
     // com.acme sorts before org.vibevm regardless of name.
     assert!(a.sort_key() < b.sort_key());
+}
+
+// --- PROP-044 §2a/§4.5 — the four catalog-record slots -----------------
+
+#[test]
+fn empty_slots_are_omitted_from_the_wire() {
+    // All four slots empty: none of `must_understand`, `yanked`,
+    // `frozen` reaches the wire — old readers see the old shape.
+    let v = sample_entry();
+    assert!(v.must_understand.is_empty());
+    assert!(!v.yanked);
+    assert!(!v.frozen);
+    let json = serde_json::to_string(&v).unwrap();
+    assert!(!json.contains("must_understand"), "{json}");
+    assert!(!json.contains("yanked"), "{json}");
+    assert!(!json.contains("frozen"), "{json}");
+}
+
+#[test]
+fn set_slots_round_trip_through_json() {
+    let mut v = sample_entry();
+    v.must_understand = vec!["x".into()];
+    v.yanked = true;
+    v.frozen = true;
+    let json = serde_json::to_string(&v).unwrap();
+    assert!(json.contains("must_understand"), "{json}");
+    assert!(json.contains("yanked"), "{json}");
+    assert!(json.contains("frozen"), "{json}");
+    let back: VersionEntry = serde_json::from_str(&json).unwrap();
+    assert_eq!(back.must_understand, vec!["x".to_string()]);
+    assert!(back.yanked);
+    assert!(back.frozen);
+    assert_eq!(v, back);
+}
+
+#[test]
+fn tombstone_round_trips_and_absence_is_omitted() {
+    // A tombstone survives the wire intact…
+    let now = DateTime::parse_from_rfc3339("2026-05-06T12:00:00Z")
+        .unwrap()
+        .with_timezone(&Utc);
+    let mut ne = NameEntry::new("wal", now);
+    ne.tombstone = Some(Tombstone {
+        reason: "withdrawn by the owner".into(),
+        superseded_by: Some("org.vibevm/wal2".into()),
+    });
+    let json = serde_json::to_string(&ne).unwrap();
+    assert!(json.contains("tombstone"), "{json}");
+    let back: NameEntry = serde_json::from_str(&json).unwrap();
+    assert_eq!(back.tombstone, ne.tombstone);
+
+    // …and its absence stays off the wire.
+    let plain = NameEntry::new("wal", now);
+    let json = serde_json::to_string(&plain).unwrap();
+    assert!(!json.contains("tombstone"), "{json}");
+    let back: NameEntry = serde_json::from_str(&json).unwrap();
+    assert!(back.tombstone.is_none());
 }

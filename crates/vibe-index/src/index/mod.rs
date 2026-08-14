@@ -15,9 +15,11 @@ pub mod inverted;
 pub mod memory;
 pub mod persistence;
 pub mod primary;
+pub mod quarantine;
 pub mod repomd;
 pub mod search;
 
 pub use memory::Index;
 pub use persistence::{atomic_write, compute_sha256_hex, sha256_of_bytes};
+pub use quarantine::Quarantined;
 pub use search::{SearchHit, lookup_capability, lookup_purl, search, tokenise};

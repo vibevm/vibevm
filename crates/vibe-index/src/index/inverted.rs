@@ -337,6 +337,9 @@ mod tests {
                 category: None,
             }),
             files_count: 1,
+            must_understand: vec![],
+            yanked: false,
+            frozen: false,
             indexed_at: now(),
             indexed_by: "test".into(),
         }

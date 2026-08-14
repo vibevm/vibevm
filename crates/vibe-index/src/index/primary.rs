@@ -143,6 +143,9 @@ mod tests {
             i18n: Default::default(),
             boot_snippet: None,
             files_count: 1,
+            must_understand: vec![],
+            yanked: false,
+            frozen: false,
             indexed_at: DateTime::parse_from_rfc3339("2026-05-06T12:00:00Z")
                 .unwrap()
                 .with_timezone(&Utc),

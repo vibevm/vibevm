@@ -202,6 +202,17 @@ before PROP-008; `kind` left package identity, so `<name>` alone is the key. @st
 }
 ```
 
+@fact:BY-NAME-TOMBSTONE `tombstone` — `{reason, superseded_by?}`, carried by the candidate-set file **only when the bare name is buried**, and omitted from the wire otherwise (which is why the live example above does not show it). A name that ever existed answers with the current thing, a forwarding pointer, or a tombstone carrying a reason — never with silence ([PROP-044 §2](../../common/PROP-044-change-native-formats.md#laws)). The consequence that is easy to miss: the file is written **even when the name has no packages left**, because an absent file *is* the silence the law forbids. A buried name therefore looks like this: @status:impl/done
+
+```json
+{
+  "name": "wal-old",
+  "indexed_at": "2026-05-06T12:00:00Z",
+  "tombstone": { "reason": "renamed to `wal`", "superseded_by": "org.vibevm/wal" },
+  "packages": []
+}
+```
+
 @fact:BY-CAP **`by-cap/<capability-slug>.jsonl`** — for `vibe install --capability ui:landing-page` style queries (PROP-003 capability-driven resolution). Each line: `{"kind":"feat","name":"welcome-page","version":"0.3.0","capability":"ui:landing-page@0.3.0"}`. `<capability-slug>` is the capability string with `:` and `/` and `@` replaced by `--` (filesystem-safe; reversible). Optional in v0; populated when present. @status:impl/done
 
 @fact:BY-PURL **`by-purl/<purl-slug>.jsonl`** — for "what vibevm packages document this upstream library?" queries (PROP-003 §2.5.6 `describes`). Same shape as `by-cap`; `<purl-slug>` is the PURL with `/` replaced by `--`. @status:impl/done
@@ -280,10 +291,15 @@ before PROP-008; `kind` left package identity, so `<name>` alone is the key. @st
     "category": "flow"
   },
   "files_count": 5,
+  "must_understand": [],
+  "yanked": false,
+  "frozen": false,
   "indexed_at": "2026-05-06T12:00:00Z",
   "indexed_by": "vibe-index 0.1.0"
 }
 ```
+
+@fact:SLOTS-ARE-OMITTED-WHEN-EMPTY The three slots — `must_understand`, `yanked`, `frozen` — appear above in their *significant* form, but all three are **omitted from the wire when empty** (an empty list; `false`). A live record for an un-yanked snapshot package therefore carries none of them, and the same holds for `tombstone` on the candidate-set file ([§2.4](#layout)). Reading this example as "these keys are always present" is the one mistake it invites. @status:impl/done
 
 @fact:field-provenance-lead **Field provenance.** @status:impl/done
 
@@ -298,6 +314,9 @@ before PROP-008; `kind` left package identity, so `<name>` alone is the key. @st
 - @fact:PROV-REGISTRY `registry` — local alias from `[[registry]].name`. @status:impl/done
 - @fact:PROV-FILES-COUNT `files_count` — informational, useful for sanity-checking integrity diffs. @status:impl/done
 - @fact:PROV-INDEXED-AT `indexed_at` / `indexed_by` — provenance for the index entry itself (when, by which tool version). @status:impl/done
+- @fact:PROV-MUST-UNDERSTAND `must_understand` — the **reader** capabilities a consumer must have to act on this record ([PROP-044 §4.5](../../common/PROP-044-change-native-formats.md#machinery)) — a different vocabulary from the package's own `provides.capabilities`. Written by the projector; never read from `vibe.toml`. A reader that does not understand every string in the list **skips this record and says so**; unknown fields *outside* the list are ignored as before. This is the exact inversion of additive-only: the writer declares what is mandatory, per record, addressably and revocably, instead of the schema promising ignorability forever. @status:impl/done
+- @fact:PROV-YANKED `yanked` — the version is withdrawn. Journal-borne, not authored: frozen content cannot withdraw itself, so the fact arrives from the registry's facts journal and is projected here ([PROP-044 §2a](../../common/PROP-044-change-native-formats.md#laws)). @status:impl/done
+- @fact:PROV-FROZEN `frozen` — projected from the package manifest's `[package].frozen`, never a registry's opinion. Absence = `false` = **snapshot**: content may flow under the same version string, and a hash mismatch is *news*. `true` is the author's one-way freeze: bytes immutable, and a hash mismatch is an *alarm*. The flag lives inside the hashed content, so a version self-describes even offline and every registry serving those bytes necessarily agrees — a registry only *observes* the freeze in its journal and projects it ([PROP-044 §2a](../../common/PROP-044-change-native-formats.md#laws); terminology §2b — `snapshot` and `frozen` are the two states of one boolean axis, with no third). @status:impl/done
 
 @fact:FORWARD-COMPAT **Forward compatibility.** `schema_version: 1` is recorded at file scope (in `repomd.json`) and at entry scope. v2 entries with new fields can coexist in v1 files via `serde(default)` on consumers; readers of v2 written by an old vibevm gracefully ignore unknown fields. @status:impl/done
 

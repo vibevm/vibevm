@@ -59,18 +59,12 @@ pub struct Args {
 }
 
 pub fn run(args: Args) -> Result<()> {
-    // `--auto-commit-push` boots the self-publishing path. Its preflight
+    // `--auto-commit-push` boots the self-publishing path; its preflight
     // (a git working copy, `state/` gitignored) must pass before we
-    // serve a single mutation, and its WARN logs must be observable —
-    // so both the subscriber and the gate are gated on the flag, and
-    // the flag-off path is byte-for-byte the old server.
+    // serve a single mutation. Observability is unconditional — the
+    // binary installs the subscriber for every subcommand (one lever,
+    // `VIBE_LOG`) — so only the preflight gate stays under the flag.
     if args.auto_commit_push {
-        let filter = tracing_subscriber::EnvFilter::try_from_default_env()
-            .unwrap_or_else(|_| tracing_subscriber::EnvFilter::new("warn"));
-        let _ = tracing_subscriber::fmt()
-            .with_env_filter(filter)
-            .with_writer(std::io::stderr)
-            .try_init();
         crate::publish::preflight(&args.data_dir)?;
     }
 

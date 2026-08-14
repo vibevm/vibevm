@@ -110,6 +110,9 @@ pub fn run(args: Args) -> Result<()> {
         i18n: mfst::i18n_from(&manifest.i18n),
         boot_snippet: mfst::boot_snippet_from(&manifest.boot_snippet),
         files_count,
+        must_understand: Vec::new(),
+        yanked: false,
+        frozen: pkg.frozen,
         indexed_at: Utc::now(),
         indexed_by: format!("vibe-index {}", env!("CARGO_PKG_VERSION")),
     };
@@ -143,4 +146,52 @@ fn refuse_if_server_running(data_dir: &std::path::Path) -> Result<()> {
         )));
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// PROP-044 §2a — the manifest's `frozen` reaches the catalog entry
+    /// through the `add` projection path (one of the two disjoint paths
+    /// an entry is born from; the other is the org scanner).
+    #[test]
+    fn add_projects_manifest_frozen_into_the_entry() {
+        let tmp = tempfile::tempdir().unwrap();
+        let data = tmp.path().join("data");
+        Index::new(
+            "vibespecs",
+            "https://example.invalid/vibespecs",
+            NamingConvention::Fqdn,
+        )
+        .write_to(&data)
+        .unwrap();
+
+        let pkg_dir = tmp.path().join("pkg");
+        std::fs::create_dir_all(&pkg_dir).unwrap();
+        std::fs::write(
+            pkg_dir.join("vibe.toml"),
+            "[package]\ngroup = \"org.vibevm\"\nname = \"frozen-pkg\"\nkind = \"flow\"\nversion = \"0.1.0\"\nfrozen = true\n",
+        )
+        .unwrap();
+
+        run(Args {
+            data_dir: data.clone(),
+            manifest: pkg_dir.join("vibe.toml"),
+            repo_url: None,
+            r#ref: None,
+            commit: None,
+        })
+        .unwrap();
+
+        let back = Index::load_from(&data).unwrap();
+        let pkg = back
+            .get(&Group::parse("org.vibevm").unwrap(), "frozen-pkg")
+            .unwrap();
+        assert_eq!(pkg.versions.len(), 1);
+        assert!(
+            pkg.versions[0].frozen,
+            "manifest `frozen = true` must reach the catalog entry"
+        );
+    }
 }

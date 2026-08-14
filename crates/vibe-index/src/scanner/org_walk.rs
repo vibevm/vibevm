@@ -228,6 +228,9 @@ fn build_entry(
         i18n: mfst::i18n_from(&manifest.i18n),
         boot_snippet: mfst::boot_snippet_from(&manifest.boot_snippet),
         files_count,
+        must_understand: Vec::new(),
+        yanked: false,
+        frozen: pkg.frozen,
         indexed_at: opts.indexed_at,
         indexed_by: opts.generator.clone(),
     };
@@ -279,6 +282,60 @@ mod tests {
         assert!(parse_v_tag("0.1.0").is_none());
         assert!(parse_v_tag("v-not-semver").is_none());
         assert!(parse_v_tag("vibe").is_none());
+    }
+
+    /// PROP-044 §2a — the manifest's `frozen` reaches the catalog entry
+    /// through the org-scanner projection path (the second of the two
+    /// disjoint birth paths; `cli::add` covers the first). Skipped when
+    /// git is unavailable.
+    #[test]
+    fn scan_projects_manifest_frozen_into_the_entry() {
+        if std::process::Command::new("git")
+            .arg("--version")
+            .output()
+            .is_err()
+        {
+            return;
+        }
+        let parent = tempfile::tempdir().unwrap();
+        let repo = parent.path().join("flow-wal");
+        std::fs::create_dir_all(&repo).unwrap();
+        let git = |args: &[&str]| {
+            let s = std::process::Command::new("git")
+                .args(["-C", repo.to_str().unwrap()])
+                .args(args)
+                .status()
+                .unwrap();
+            assert!(s.success(), "git {args:?} failed");
+        };
+        git(&["init", "--quiet", "-b", "main"]);
+        git(&["config", "user.email", "test@test.invalid"]);
+        git(&["config", "user.name", "Test"]);
+        std::fs::write(
+            repo.join("vibe.toml"),
+            "[package]\ngroup = \"org.vibevm\"\nname = \"wal\"\nkind = \"flow\"\nversion = \"0.1.0\"\nfrozen = true\n",
+        )
+        .unwrap();
+        git(&["add", "."]);
+        git(&["commit", "--quiet", "-m", "initial"]);
+        git(&["tag", "v0.1.0"]);
+
+        let report = scan_org_dir(
+            parent.path(),
+            &FromClonesOptions {
+                registry: "vibespecs".into(),
+                registry_url: "https://example.invalid/vibespecs".into(),
+                naming: NamingConvention::Fqdn,
+                generator: "test".into(),
+                indexed_at: Utc::now(),
+            },
+        )
+        .unwrap();
+        assert_eq!(report.entries.len(), 1);
+        assert!(
+            report.entries[0].frozen,
+            "manifest `frozen = true` must reach the catalog entry via the scanner"
+        );
     }
 
     #[test]

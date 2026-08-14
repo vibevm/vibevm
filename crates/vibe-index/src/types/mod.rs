@@ -17,10 +17,15 @@ pub mod repomd;
 pub use entry::{
     BootSnippetEntry, CompatibilityEntry, ConflictsEntry, DeliveryMode, FeaturesEntry, I18nEntry,
     NameEntry, ObsoletesEntry, PackageEntry, ProvidesEntry, RequiresAnyEntry, RequiresEntry,
-    SubskillEntry, VersionEntry, WorkspaceOriginEntry,
+    SubskillEntry, Tombstone, VersionEntry, WorkspaceOriginEntry,
 };
 pub use kinds::{NamingConvention, PackageKind};
 pub use repomd::{Repomd, RepomdFileEntry};
+
+/// `skip_serializing_if` helper for boolean fields that default to `false`.
+pub(crate) fn is_false(b: &bool) -> bool {
+    !*b
+}
 
 /// Re-export of the reverse-FQDN [`Group`](vibe_core::Group) qualifier
 /// (PROP-008 §2.1) — part of every index entry's identity, surfaced here

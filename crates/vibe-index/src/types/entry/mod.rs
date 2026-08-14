@@ -24,7 +24,7 @@ mod aggregate;
 mod content;
 mod relations;
 
-pub use aggregate::{NameEntry, PackageEntry};
+pub use aggregate::{NameEntry, PackageEntry, Tombstone};
 pub use content::{
     BootSnippetEntry, DeliveryMode, FeaturesEntry, I18nEntry, SubskillEntry, WorkspaceOriginEntry,
 };
@@ -116,6 +116,27 @@ pub struct VersionEntry {
 
     pub files_count: u32,
 
+    /// Reader capabilities the consumer MUST have to act on this record
+    /// (PROP-044 §4.5). A reader that does not know at least one listed
+    /// string skips the record rather than guessing at its semantics.
+    /// Unknown fields OUTSIDE this list are ignored as before — only
+    /// entries here switch the reader from ignore to refuse.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub must_understand: Vec<String>,
+
+    /// The version's withdrawal — a journal fact, not an authorial one:
+    /// frozen content cannot yank itself. Absent (`false`) = live.
+    #[serde(default, skip_serializing_if = "crate::types::is_false")]
+    pub yanked: bool,
+
+    /// Projected from the package manifest (PROP-044 §2a), not the
+    /// registry's opinion: `false` = **snapshot** (content may flow
+    /// under the same version string; a hash mismatch is NEWS), `true`
+    /// = **frozen** (bytes immutable; a hash mismatch is ALARM). The
+    /// transition is one-way; further work is a new version line.
+    #[serde(default, skip_serializing_if = "crate::types::is_false")]
+    pub frozen: bool,
+
     pub indexed_at: DateTime<Utc>,
     pub indexed_by: String,
 }
@@ -164,6 +185,9 @@ impl VersionEntry {
             i18n: I18nEntry::default(),
             boot_snippet: None,
             files_count: 0,
+            must_understand: Vec::new(),
+            yanked: false,
+            frozen: false,
             indexed_at: Utc::now(),
             indexed_by: "vibe-index".to_string(),
         }

@@ -55,6 +55,20 @@ impl PackageEntry {
     }
 }
 
+/// A name that once existed, answering with its reason for being gone —
+/// and, when known, the thing to use instead. A name that ever existed
+/// answers with a current thing, a redirect pointer, or a tombstone with
+/// a reason, but NEVER silence (PROP-044 §2, the no-silence law).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Tombstone {
+    pub reason: String,
+    /// The successor this name's consumers should move to, when one is
+    /// recorded — a redirect pointer, never an automatic rewrite.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub superseded_by: Option<String>,
+}
+
 /// `by-name/<name>.json` — the candidate set for one bare package name
 /// (PROP-008 §2.8). A single HTTP GET per registry yields every package
 /// sharing the short name `<name>`, each carrying its own `group`; this
@@ -73,6 +87,12 @@ pub struct NameEntry {
     /// sorted by `group`. A length greater than one is a short-name
     /// collision (PROP-008 §2.7).
     pub packages: Vec<PackageEntry>,
+    /// The name's death record, when it has one. A name that ever
+    /// existed answers with a current thing (`packages`), a redirect
+    /// pointer (`superseded_by`), or this tombstone — never silence
+    /// (PROP-044 §2).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub tombstone: Option<Tombstone>,
 }
 
 impl NameEntry {
@@ -81,6 +101,7 @@ impl NameEntry {
             name: name.into(),
             indexed_at,
             packages: Vec::new(),
+            tombstone: None,
         }
     }
 
