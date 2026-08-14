@@ -35,7 +35,45 @@ owner's ruling and wins.
 
 ---
 
-## Current slice: draining the backlog (2026-08-06)
+## Current slice: change-native formats (owner mandate 2026-08-09)
+
+The slice in flight is the **change-native build** —
+[`campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md`](campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md),
+building the ratified contract
+[`PROP-044`](spec/common/PROP-044-change-native-formats.md). **Read the ТЗ, not
+this section, to know what to do next** — it carries the phases, the decisions
+with their rejected options, and the corrections each landing paid for.
+
+- [x] **Фаза 0** — spikes and measurements, no commits. Six findings under
+      `campaigns/packages-2026-09/harvest/`.
+- [x] **Фаза 1** — the irreversible slots: format registry, manifest epoch,
+      hash recipe identity, the four record slots, the symmetric union.
+      Closed 2026-08-14.
+- [x] **Фаза 2** — determinism: the clock became an input, the writer stopped
+      overwriting the schema version it read, a mutation that changes nothing
+      stopped leaving a trace. Closed 2026-08-14.
+- [ ] **Фаза 3** — the facts journal and projection (kills read-modify-write).
+      Gated GREEN by the phase-0 measurement
+      [`harvest/f0-rmw-volume.md`](campaigns/packages-2026-09/harvest/f0-rmw-volume.md).
+      **Two named mines land here**, both recorded in the ТЗ: quarantine-on-read
+      silently erases the records it filtered on the next write, and a full
+      `reindex` erases tombstones. Both are unreachable today and both are cured
+      by the journal, which is why they wait for it rather than for a patch.
+- [ ] **Фазы 4–6** — schema and generator, corpora and the break window,
+      handshake and quarantine.
+
+Independent lane, in
+[`TZ-IDENTITY-REGISTRY-BUILDS-v0.1.md`](campaigns/packages-2026-09/TZ-IDENTITY-REGISTRY-BUILDS-v0.1.md):
+**S1** and **S6** are measured and their one blocking boss question each is now
+answered in the plan — both are cuttable cold. **S7** is a judging campaign,
+runnable any time. **S2** needs the owner (org credentials).
+
+The 2026-08-06 programme below is **not cancelled by this file**; what remains
+of it, and in what order it re-enters, is the owner's to state.
+
+---
+
+## Previous slice: draining the backlog (2026-08-06) — superseded 2026-08-09
 
 The owner's course of 2026-08-05 stands: **drain `BACKLOG.md` first, stay away
 from the tests.** Every row is measured against the authored tree before any
