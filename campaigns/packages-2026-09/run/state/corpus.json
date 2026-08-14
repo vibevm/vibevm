@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-13T23:32:35Z",
+  "updated_at": "2026-08-14T08:44:58Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -91783,7 +91783,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor; <status> elements judged as _elements",
         "fact_count": 30,
         "marker_count": 32,
-        "processed_hash": "ae52a76ae1152dd66bfe851154d05bbffdecbf2a432e35b306026772a9b44e72",
+        "processed_hash": "681591a49d822325aa88ca852be99b3c6e52d56dc0b3e6afb9eb2fbbe182cf10",
         "summary": {
           "confirmed": 28
         },
@@ -91823,7 +91823,9 @@
           "joiner-why": {
             "v": "confirmed",
             "ev": [
-              "Replaces the joiner-never-dot citation, which was TRUE while the name-grammar guarantee was not leaned on; the owner's 2026-08-13 ruling makes the flat carrier dotted and the fact now records the divergence from the addressable-specs #modules letter with its reason (single dot-free LDH label ⇒ last-dot split deterministic) and names the upstream refresh follow-up — nothing silently ignored"
+              "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:168  @fact:A-JOINER-MUST-ADMIT-A-DETERMINISTIC-INVERSE-PARSE The requirement on a",
+              "packages/org.vibevm.world/addressable-specs/v0.1.0/spec/flows/addressable-specs/ADDRESSABLE-SPECS-PROTOCOL.md:178  @fact:A-BLANKET-DOT-BAN-COSTS-THE-FLAT-SURFACES Flat surfaces — repository",
+              "REPLACES the earlier verdict on this anchor, which was correct while the follow-up it named was still outstanding. The fact's closing sentence used to assert the upstream unit 'still states joiner-never-`.`'; that assertion became false when the unit was rewritten in the same session, so the sentence is replaced by the record that the follow-up landed and by the two anchors that now carry the letter. The paragraph above it — why the old premise fell — is deliberately kept rather than deleted with it, so a reader arriving from a citation still finds the reasoning and not just its conclusion."
             ]
           },
           "carriers-lead": {
@@ -91965,8 +91967,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-13T16:50:24Z",
-        "verify_batch": "c3a-common-small + H4-stale-host + H6-stale-host-tail + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge"
+        "verified_at": "2026-08-13T23:34:20Z",
+        "verify_batch": "c3a-common-small + H4-stale-host + H6-stale-host-tail + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge + F1-3-RECIPE"
       }
     },
     {
@@ -102472,9 +102474,9 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 278,
         "marker_count": 279,
-        "processed_hash": "09c93bc564202d97bf35f264aa9daccee7a3fe4ec049fb48105f6bd7c393b852",
+        "processed_hash": "80244080bba060d50b689a8c7c0476b0c52b471ff2a620348d269b1a0409895d",
         "summary": {
-          "confirmed": 319,
+          "confirmed": 320,
           "drift": 2,
           "unverifiable": 1
         },
@@ -103157,13 +103159,18 @@
           "HASH-JOIN-KEY": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/tests/content_hash_parity.rs:210  fn recipes_share_the_digest_on_a_normal_tree() {",
+              "crates/vibe-index/tests/content_hash_parity.rs:99  fn both_implementations_agree_at_recipe_0() {",
+              "crates/vibe-index/src/hash_recipe.rs:105  pub fn order_paths(recipe: RecipeId, rels: &[String]) -> Vec<String> {",
+              "REPLACES the earlier verdict on this anchor, which was correct while there was exactly one recipe and therefore nothing to state a recipe against. The fact now says the DIGEST joins, and joins only at a stated recipe. Both halves are exercised: `recipes_share_the_digest_on_a_normal_tree` (210) asserts the two recipes produce the same hex on the ordinary fixture — so the 'a consumer records what a no-index fetch would have produced' clause still holds for every tree that does not exercise the ordering ambiguity; and `both_implementations_agree_at_recipe_0` (99) is the cross-implementation check that makes 'at a stated recipe' mean something, comparing the index and registry hashers directly rather than each against a frozen constant. The advisory/authoritative clause is untouched and unaffected."
             ]
           },
           "TWO-INTEGRITY-LAYERS": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/hash_recipe.rs:40  RecipeId::Tree1 => \"sha256-tree/1:\",",
+              "crates/vibe-index/tests/content_hash_parity.rs:172  fn normalisation_precedes_ordering() {",
+              "REPLACES the earlier verdict, which was correct and remains correct in its two-layers substance — nothing about the file-hash / content-hash split changed. The single added clause is that the per-entry hash now carries its recipe, so an integrity check compares like with like instead of comparing two digests that were computed by different rules and happen to wear the same prefix. `normalisation_precedes_ordering` (172) is the platform-independent proof that recipe 1's rule is the one it claims to be."
             ]
           },
           "trust-oos": {
@@ -104622,10 +104629,19 @@
             "ev": [
               "Owner asked the ladder explicitly 2026-08-13 («если сервис реестра по какой-то причине недоступен, как именно будут ресолвиться пакеты …возможно, нам в сам пакет в vibe.toml нужно внедрить метаинформацию»); four-step ladder + manifest-declared reconstruction recorded as he proposed, with announced-degradation per PROP-044 law 1"
             ]
+          },
+          "HASH-LABELS-DIFFER-BY-DESIGN-TODAY": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/hash_recipe.rs:40  RecipeId::Tree1 => \"sha256-tree/1:\",",
+              "crates/vibe-core/src/content_hash.rs:64  pub const ACCEPTED_PREFIXES: &'static [&'static str] = &[\"sha256-tree/1:\", \"sha256:\"];",
+              "crates/vibe-registry/src/index_client/wire.rs  — `grep -n content_hash` over this file returns NOTHING: the index client's view type does not read the field at all, which is why the two labels never meet in a comparison.",
+              "confirmed: each clause resolves. The index emits recipe 1's label (hash_recipe.rs:40, and the crate's default `compute_content_hash` delegates to `Tree1`); the lockfile keeps the bare form because the registry-side hasher still defaults to `Legacy0`, and `LockedPackage.content_hash` would refuse anything else at deserialisation until `ACCEPTED_PREFIXES` (content_hash.rs:64) taught the newtype both. The 'nothing compares them as strings' clause is the negative measurement above — recorded because a negative is exactly what a later reader cannot reconstruct by looking."
+            ]
           }
         },
-        "verified_at": "2026-08-13T16:50:24Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new"
+        "verified_at": "2026-08-13T23:34:20Z",
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE"
       }
     },
     {
@@ -108479,7 +108495,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (74 cells); document <status> judged as _elements",
         "fact_count": 359,
         "marker_count": 360,
-        "processed_hash": "80581fea1f0d305dda760cff00da9e20d88ce75330a7dc9dbe99d8cc7998050b",
+        "processed_hash": "88174cc379a4c50a1bca7b6ce9a2026111dd12619e624c8a466faf388cd1ae7b",
         "summary": {
           "confirmed": 308,
           "drift": 1
@@ -108572,7 +108588,10 @@
           "IDENTITY-TUPLE": {
             "v": "confirmed",
             "ev": [
-              "identity live: fetch_with_expected_hash layers the content-hash check (fetch.rs:98,385-405 'source served content with unexpected content_hash'), provenance.rs newtypes keep SourceUrl informational citing §2.7; PROP-024 shippable-tree re-scope verified in c4a-era evidence (c3d); --trust-mirror gap ledgered separately (F-048)"
+              "formats/hash_recipes/1.toml:19  excludes = [\".git\", \".vibe\", \"target\", \"node_modules\", \".vibeignore\"]",
+              "crates/vibe-index/src/hash_recipe.rs:105  pub fn order_paths(recipe: RecipeId, rels: &[String]) -> Vec<String> {",
+              "crates/vibe-index/tests/content_hash_parity.rs:210  fn recipes_share_the_digest_on_a_normal_tree() {",
+              "REPLACES the earlier verdict, which was correct when the hash had exactly one spelling and the exclusion list lived as a constant in two crates. Every new clause resolves: the recipe's parameters are data (`formats/hash_recipes/1.toml`, whose exclusion list is the same set the constant carried — proved by `recipes_share_the_digest_on_a_normal_tree`, which would fail if the sets differed); the ordering rule is a callable function rather than an inline `sort` (order_paths:105), which is what makes recipe 0's and recipe 1's difference statable instead of implicit; and recipe 0 is deliberately NOT a file — a temporary edit to the recipe file was shown to fail the frozen golden and then reverted, which is the whole reason the identity carries a recipe id at all."
             ]
           },
           "IDENTITY-CONSEQUENCE": {
@@ -110367,8 +110386,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-13T16:50:24Z",
-        "verify_batch": "c4b-registry-core + d2d + A2-INDEXAUTH + S18-SWALLOWED-RESTORED + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge"
+        "verified_at": "2026-08-13T23:34:20Z",
+        "verify_batch": "c4b-registry-core + d2d + A2-INDEXAUTH + S18-SWALLOWED-RESTORED + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge + F1-3-RECIPE"
       }
     },
     {
