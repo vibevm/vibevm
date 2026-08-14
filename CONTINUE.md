@@ -1,4 +1,4 @@
-# CONTINUE — cold-resume snapshot (2026-08-14, wind-down №20)
+# CONTINUE — cold-resume snapshot (2026-08-14, wind-down №21)
 
 **Не цитируй числа отсюда — меряй:**
 `vibe progress scan --campaign campaigns/packages-2026-09` →
@@ -8,116 +8,143 @@
 
 ## TL;DR
 
-Сессия 2026-08-14 **исполнила фазу Ф0 целиком и посадила Ф1.1** главной стройки
-change-native форматов. Вся тяжёлая работа шла делегированно на GLM-воркерах
-(`claudez`/`claudez2`): **четыре пакета, 4/4 приняты с первого прохода, ни одного
-цикла доработки**. 8 коммитов, панель зелёная на каждой границе, оба зеркала
-синхронны на `d480f6c7`.
+Сессия 2026-08-14 посадила **Ф1.2 и Ф1.3** главной стройки change-native
+форматов и закрыла **S3** независимой полосы; ещё три пакета были **замерами**
+(Ф1.3, S6.1, S1) и легли находками. Делегирование: **6 пакетов, 6/6 приняты,
+ноль циклов доработки**. 8 коммитов, панель зелёная на каждой посадке, оба
+зеркала синхронны на `b2e7973e`.
 
-**Главное для решений:** вердикт Ф0.1 — переделка read-modify-write **влезает** в
-бюджет двух фаз, поэтому СТОП-ВЛАДЕЛЕЦ не сработал и запасной путь D3 не
-активирован. Владелец не заблокирован ничем.
+**Главное для решений — не код, а то, что замеры опровергли четыре записанных
+утверждения**, и одно из них было бы построено неверно, если бы Ф1.3 нарезали
+по плану как есть. Владелец не заблокирован ничем.
 
 ## Где стоит работа
 
-- Ветка `main`, дерево чистое, HEAD `d480f6c7`; **раскатано** (`cargo xtask
-  mirror --check` — gitverse sync, github sync).
+- Ветка `main`, дерево чистое, HEAD `b2e7973e`; **раскатано** (`cargo xtask
+  mirror --check` — gitverse sync, github sync); origin ahead/behind = 0/0.
 - Полная панель `bash tools/self-check.sh` — **`self-check: all green`**
-  (последний полный прогон — на слайсе Ф1.1; после него только docs-коммиты,
-  каждый проверен целевыми гейтами `specmap --check` + `progress check`).
+  (последний полный прогон — на слайсе Ф1.3, 1805 строк вывода).
+- `vibe check` — **0 errors, 1 warning, 44 info**. Оба ненулевых числа
+  ОЖИДАЕМЫ и объяснены ниже; рост любого из них — находка, а не шум.
 - Судейство: **0 неосуждённых, 0 осиротевших**; 33 файла stale — стоячий долг,
   адресован кампанией S7. Корпус 281 файл, 0 неразмеченных.
-- **`campaigns/**` и `spec/WAL.md` в судимый корпус НЕ входят** (проверено) —
-  правки планов, находок и WAL судейского долга не создают.
-- Воркеров нет, worktree'ов нет, логи и отчёты — в `cache/agents/sorted/F0-*`,
-  `F1-1-REGISTRY` (каждый с `meta.md`, несущим вердикт ревью).
+- Карта: 6051 спек-юнит / 1020 tagged items / 968 рёбер / **0 сирот**.
+- Воркеров нет, worktree'ов нет; логи и отчёты — в
+  `cache/agents/sorted/{F1-2-EPOCH,S3-JOINER,S6-MEASURE,F1-3-PROBE,F1-3-BUILD,S1-PROBE}/`,
+  каждый с `meta.md`, несущим вердикт ревью и разбор дефектов.
 
 ## Блокер и действие человека
 
-**Блокера нет.** За владельцем остаётся только **S2** — переименование живых
+**Блокера нет.** За владельцем остаётся **S2** — переименование живых
 `_`-репозиториев в org `vibespecs` (нужны org-права: `gh repo rename`, шаги в
-identity-ТЗ §S2). Это не блокирует главную полосу.
+identity-ТЗ §S2). Главную полосу не блокирует. Ближайший СТОП главной полосы
+(смена вида `content_hash` в локфайле) **обойдён по конструкции** — реестровая
+копия осталась на рецепте 0.
+
+## Два ожидаемых числа — не чинить
+
+1. **44 info `manifest_epoch`.** До-эпоховые манифесты под `packages/`,
+   помечаемые намеренно (Ф1.2, решение D5): отсутствие `epoch` — это состояние
+   «до эпох», а не «эпоха 1», и счётчик info есть сигнал, который осушит волна
+   кодмода. Периметр — все локально видимые манифесты с `[package]`, не только
+   корневой: диагностика, смотрящая в корень, молчала бы ровно о той популяции,
+   ради видимости которой заведена.
+2. **1 warning `local_source_freshness`** по `org.vibevm.world/addressable-specs`.
+   Следствие правки исходника пакета в S3 при намеренно НЕ запущенном
+   `vibe install` (§S3 шаг 3 запрещает). Гаснет следующим переизданием пакета.
 
 ## Рецепт следующего шага (дословно)
 
 Вставить содержимое [`NEXT-SESSION-PROMPT.md`](NEXT-SESSION-PROMPT.md) первым
-сообщением свежей сессии. Вход — **Ф1.2** (поле `epoch: Option<u32>` в
-`[package]`, `crates/vibe-core/src/manifest/package.rs`; отсутствие = состояние
-«до эпох», НЕ «эпоха 1»; `vibe init` и шаблоны пишут `epoch = 1`; `vibe check`
-сообщает отсутствие как info). Дальше Ф1.3 → Ф1.4 → Ф1.5, порядок жёсткий,
-каждый шаг отдельным коммитом.
+сообщением свежей сессии. Вход — **замер под Ф1.4**, затем сама Ф1.4 (слоты
+`must_understand` / `yanked` / `frozen` / `tombstone`; манифестный `frozen:
+Option<bool>` рядом с `epoch` в `crates/vibe-core/src/manifest/package.rs`).
+Дальше Ф1.5, порядок жёсткий, каждый шаг отдельным коммитом. Независимая полоса
+готова к нарезке: S1 и S6 — оба измерены, у каждого по одному вопросу, который
+решает БОСС при нарезке (см. ниже).
 
 ## Неочевидные находки этой сессии (сверх документов)
 
-**Форма `vibe-wire-gen` задана заранее.** Преобразования А.5 №3 (`x-empty`) и №4
-(строгость по роли) требуют входов, которых в сгенерированном Rust НЕТ —
-`metadata."x-empty"` из JTD-схемы и `foreign_parsers` из реестра. Значит Ф4.2 —
-конвейер `(схема + реестр + сгенерированный Rust) → Rust`, а не текстовый фильтр,
-как читается Приложение А.5. Тегированные объединения (`RepomdFileEntry`, Ф1.5)
-этим путём НЕ покрываются — нужен отдельный путь кодогенерации.
+**Регрессия, которую не мог поймать ни один golden — и поймал потребитель.**
+Реализация Ф1.3 сменила порядок рецепта 0: сортировку `Vec<PathBuf>` на
+сортировку строки. `Ord` у `Path` — **покомпонентный**, поэтому это разные
+порядки, и разница тихо сдвигает хэш всякого дерева, где имя каталога
+префиксует имя соседа. Три заслона были на месте и ни один не сработал: старый
+golden не имеет такой пары; новый golden морозил только рецепт 1 (решение
+босса, верное по причине и снявшее единственного нужного сторожа); кросс-тест
+реализаций остался истинным, потому что обе копии сломались одинаково. Поймал
+`vibe check`: 0 → 7 предупреждений, шесть по нетронутым пакетам, и обратно 1
+после починки. **Счётчики предупреждений панели — доказательство, а не шум.**
 
-**Заголовок выхода jtd-codegen врёт версию** (`v0.2.1` при бинаре 0.4.1) — пинить
-надо бинарь, а не верить строке. Сам бинарь **gitignored**
-(`tools/.gitignore:16`): свежий worktree его не несёт, провизия обязана копировать.
+**Посылка Б.3 опровергнута.** `Path::cmp` покомпонентный, разделителя не видит,
+значит рецепт 0 платформенно стабилен и записанное подозрение о расхождении
+Windows/Unix неверно. Рецепты различает порядок «по компонентам» против «по
+нормализованным байтам», и расходятся они ТОЛЬКО на соседе с байтом **ниже**
+`/` (`spec-x.md`, 0x2D); на байте, названном планом (`specX.md`, 0x58), они
+СОВПАДАЮТ — то есть фикстура такой формы не доказывала бы ничего.
 
-**Две ловушки Ф1.3 найдены до старта** — полностью в WAL
-`##WAL-KI-HASH-RECIPE-TRAPS`: третий участник `ContentHash` в `vibe-core`
-(проверка на границе десериализации отвергнет `sha256-tree/1:`) и golden-фикстура,
-которая не упражняет расхождение порядка, ради которого существует.
+**Продюсеров формы `sha256:` три, а не два.** Третий — `commit_content_hash`
+(`git_package_registry/fetch.rs:484`) — выводит хэш из коммита, а не из дерева,
+и именно он пишет `content_hash` в локфайл для in-place пакетов. Рецепт,
+описанный как «исключения + нормализация + порядок обхода», его не описывает.
 
-**Два дефекта плана исправлены находками:** команды `vibe load` не существует
-(схема принадлежит `vibe tree --json`, и это единственный CLI-формат не на JTD);
-`by-cap`/`by-purl` публикуются без ридера файла — открытое нарушение G11, которого
-Ф4.1 не видела (схемы добавлены).
+**Паритет-тест не сторожил того, чем назван** — звал одну реализацию и сверял с
+константой, хотя doc-комментарий обещал гейт расхождения между двумя.
 
-**`check-codegen` сравнивает с ИНДЕКСОМ** (`git diff --exit-code` по
-generated-каталогам) и не видит untracked. Слайс, трогающий `generated/**`,
-садится в порядке **стейдж → панель → коммит**; `git add` достаточно, чтобы гейт
-позеленел.
+**Координата движка conform в дереве двоится.** Компилируется ВЕНДОР-копия под
+`rust-ai-native-lang` (`Cargo.toml:103`), а не каталог
+`core-ai-native/v0.7.0/crates/core-ai-native-conform`: у первой восемь полей
+`Finding` и есть `freezeable`, у второй шесть и нет.
 
-**Переименование тестовой функции с `#[verifies(…)]` двигает specmap** — карта
-пересобирается тем же заходом, иначе панель красная на `specmap --check`.
+**Хост не различает «нет репозитория» и «приватный, невидимый твоим кредам»** —
+обоим отвечает `Repository not found`. Кодом не снимается.
 
-**Две shell-ловушки, оплаченные ошибками этой сессии** (обобщены в
-`SUBAGENT-LAUNCHERS.md` §8): голый `cd` уводит НЕ только `-c`-поправку, а все
-последующие команды (cwd персистентен), и проверка обязана адресоваться так же,
-как правка; `cmd | tail; echo $?` печатает код пайпа, а не команды.
+**Оплачено дважды: heredoc через оболочку съедает `\`.** Правки только
+editor-инструментами — правило дерева, и оно про это.
 
 ## Карта репозитория (что где)
 
 - `spec/common/PROP-044…` — ратифицированный контракт форматов; `spec/WAL.md` —
-  канонное живое состояние; `spec/modules/vibe-registry/PROP-002`, `PROP-008`,
-  `spec/modules/vibe-index/PROP-005`, `spec/modules/vibe-workspace/PROP-022`.
-- `campaigns/packages-2026-09/` — три ТЗ, `harvest/f0-*.md` (три находки Ф0),
-  `SUBAGENT-LAUNCHERS.md` (+ `SUBAGENT-MODE.toml` = `claudez`), `tasks/*.py` (суд),
-  `run/` (состояние сканера).
-- `formats/REGISTRY.toml` — **новое (Ф1.1)**: реестр 20 форматов, из него
-  генерируется `FormatId`.
-- `crates/` — 19 крейтов + `xtask`. Предмет ближайших шагов: `vibe-core/manifest`
-  (Ф1.2 эпоха, Ф1.4 слоты), `vibe-index` + `vibe-registry/shippable.rs` (Ф1.3
-  рецепт хэша), `vibe-index/types` (Ф1.4/Ф1.5), `vibe-wire` + `xtask/codegen.rs`
-  (Ф4).
-- Корень: `BACKLOG.md`, `AUDIT.md`, `NEXT-SESSION-PROMPT.md`, `specmap.json`,
-  `TASKS.md`.
+  канонное живое состояние; `spec/modules/vibe-registry/PROP-002` (§2.1
+  identity — теперь несёт рецепт), `PROP-008`, `spec/modules/vibe-index/PROP-005`
+  (§2.7 trust — digest joins at a stated recipe), `spec/common/PROP-029`.
+- `campaigns/packages-2026-09/` — три ТЗ, `harvest/` (шесть находок: три Ф0 и
+  три этой сессии), `SUBAGENT-LAUNCHERS.md` (+ `SUBAGENT-MODE.toml` = `claudez`),
+  `tasks/*.py` (суд), `tasks/evidence/*.json` (батчи вердиктов), `run/`.
+- `formats/` — `REGISTRY.toml` (20 форматов, из него генерируется `FormatId`) и
+  **новое (Ф1.3)** `hash_recipes/1.toml` (рецепт как данные).
+- `crates/` — 19 крейтов + `xtask`. Предмет ближайших шагов:
+  `vibe-index/types/entry/**` (Ф1.4/Ф1.5), `vibe-core/manifest/package.rs`
+  (Ф1.4 `frozen`), `vibe-index/{index,journal}` (Ф2/Ф3), `vibe-wire` +
+  `xtask/codegen.rs` (Ф4), `vibe-publish` (S1), `vibe-trace` (S6).
+- Корень: `BACKLOG.md`, `AUDIT.md`, `TASKS.md`, `NEXT-SESSION-PROMPT.md`,
+  `specmap.json`, `conform.toml`, `conform-baseline.json`.
 
 ## Открытые находки аудита
 
-Активное подмножество — в [`AUDIT.md`](AUDIT.md) (это durable-дом, здесь не
-зеркалится). На последнем прогоне: 13 находок, 9 open, 10 переходят дальше;
-`2026-08-06-01` (P1) — «ruled — re-judgement campaign pending», её исполняет
-кампания S7.
+Активное подмножество — в [`AUDIT.md`](AUDIT.md) (durable-дом, здесь не
+зеркалится). На последнем прогоне: 13 находок, 9 open; `2026-08-06-01` (P1) —
+«ruled — re-judgement campaign pending», её исполняет кампания S7.
 
 ## Решения в силе (опорные; длинно — в спеках)
 
 - **PROP-044 ратифицирован** — стоячий закон каждого формата; терминология §2b
   обязательна (snapshot ↔ frozen — антонимы; «канал» — авторский указатель;
-  capture — провайдерское; режим материализации — **`copy`**, и это слово
-  вычищено из дерева в смысле режима).
+  capture — провайдерское; режим материализации — `copy`).
+- **Хэш называет свой рецепт** (Ф1.3): `sha256-tree/1:` — рецепт 1, параметры
+  данными в `formats/hash_recipes/1.toml`; голый `sha256:` — рецепт 0,
+  заморожен В КОДЕ и НЕ конфигурируем, потому что рецепт, который можно
+  править, не заморожен. Индекс эмитит рецепт 1, реестр остаётся на рецепте 0 —
+  так локфайл не двигается и СТОП-ВЛАДЕЛЕЦ не срабатывает. Отвергнуто:
+  «считать по рецепту 1, метить старой меткой» — молчаливый перелом.
+- **Отсутствие `epoch` ≠ «эпоха 1»** (Ф1.2): это отдельное состояние «до эпох»,
+  навсегда читаемое замороженным ридером №0.
+- **Джойнер судится свойством, а не символом** (S3): требование —
+  детерминированный обратный разбор; его дают разделитель вне обоих алфавитов
+  ЛИБО грамматическая гарантия на одну половину, и тогда границей служит
+  крайнее вхождение со стороны гарантированной половины.
 - **Незарегистрированный формат невыразим в системе типов** — `FormatId`
-  генерируется из `formats/REGISTRY.toml`, тест полноты сверяет их как множества
-  в обе стороны. `FormatId` намеренно без serde (иначе попал бы под запрет Ф4.3).
-- Идентичность: LDH-группы; композит `<group>.<name>`; слот и кэш — от
-  идентичности; координата = полная строка версии.
+  генерируется из `formats/REGISTRY.toml`.
 - Допубликационный режим (D13): миграции не применяются, пока владелец не
   объявит первый показ публике; факт публикации НЕ выводится из технических
   событий.
@@ -129,6 +156,17 @@ generated-каталогам) и не видит untracked. Слайс, трог
 ## Последние коммиты (свежие сверху)
 
 ```
+b2e7973e docs(wal): the checkpoint drops a premise measurement refuted
+a774651d docs(launchers): six lessons the phase-1 fan-out paid for
+4910aa1f feat(hash): a content hash says which recipe produced it
+d2545c5f docs(harvest): the publish tiers are measured before they are built
+587fc7ef docs(harvest): the conform artifact is measured, not assumed
+b224aa67 docs(harvest): the hash radius is measured before the cut
+20771260 docs(addressable-specs): the joiner law stops naming one character
+2907a679 feat(manifest): a missing epoch stops meaning the first one
+5289cdb5 docs(wal): the checkpoint stops carrying a counter that ages
+c8389531 docs(continue): cold-resume checkpoint
+3d3c8dda docs(handoff): the entry prompt moves its start to the next step
 d480f6c7 docs(wal): the checkpoint follows two phases of progress
 fd817814 feat(wire): an unregistered format becomes untypeable
 5b3f5f10 docs(launchers): record what the phase-0 fan-out taught
@@ -143,17 +181,6 @@ c9b75cd4 docs(campaign): the baseline follows the measurement
 874561fd docs(campaign): wave 2 closes the coverage gaps PROP-044 still had
 7a81956e docs(spec): PROP-044 is ratified, and every gate that waited knows it
 c2dec4ef docs(campaign): the rulings get their build plan while the context is hot
-498e8c8b chore(campaign): the copy rename is judged, and a blind vouch is taken back
-d84cf5b6 docs(spec): dead slot pointers follow the re-materialised tree
-d4d6c475 feat(core): the default materialisation mode says copy
-6f4b5750 fix(check): the lockfile-files check composes the identity slot
-6e90854e chore(campaign): the identity rulings are judged in the same pass
-189152af docs(specmap): the map follows the identity rulings
-30049e81 docs(backlog): three owner rulings land in their rows
-1cd487b3 docs(audit): the proof bar splits by claim kind
-1e2c9ebe docs(campaign): the executor's plan absorbs the week's rulings
-9fc59c01 docs(spec): channels become author pointers with computed built-ins
-3106bf0d docs(spec): snapshot and frozen become antonyms across the contract
 ```
 
 ## Быстрый старт
