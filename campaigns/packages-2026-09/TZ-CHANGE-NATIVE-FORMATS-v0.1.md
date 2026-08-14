@@ -34,7 +34,7 @@
 
 | # | факт | где |
 |---|---|---|
-| B1 | `deny_unknown_fields` на каталоге — 15 мест | `crates/vibe-index/src/types/`: repomd.rs:15, entry/mod.rs:38, entry/content.rs ×5, entry/relations.rs ×6, entry/aggregate.rs ×2 |
+| B1 | `deny_unknown_fields` на каталоге — 15 мест | `crates/vibe-index/src/types/`: repomd.rs:15, entry/mod.rs:38, entry/content.rs ×5, entry/relations.rs ×6, entry/aggregate.rs ×2. **Поправка 2026-08-14: их ШЕСТНАДЦАТЬ.** Шестнадцатый — `Tombstone` (`entry/aggregate.rs:63`), заведённый посадкой Ф1.4 уже после этого замера: строка была верна 2026-08-09 и сдвинута нашей же работой. Поймано сторожем пакета Ф3.3 («иное число — остановись»), а не пересчётом на глаз; исполнитель остановился и доложил, как и требовалось. Мораль для следующих замеров этого плана: базовая линия стареет от собственных посадок, поэтому счётчик в шаге всегда пересчитывается, а не цитируется. |
 | B2 | Полей «пусто ≡ нет поля» — 21 (14 коллекций + 7 вложенных структур); вся поверхность пропуска — 35 | `types/entry/**`, гистограмма: `Option::is_none` ×14, `Vec::is_empty` ×12, `BTreeMap::is_empty` ×2, `*Entry::is_empty` ×7 |
 | B3 | Каталог перечитывается ради перезаписи на 6 путях | `cli/add.rs:51→122`, `cli/remove.rs:35→57`, `cli/reindex.rs:218→281`, `server/routes/packages.rs:256`, `:304`, `:333` (загрузка `cli/serve.rs:77`); седьмой `write_to` — `cli/init.rs:48`, только пишет |
 | B4 | Объединение полутегированное | `types/repomd.rs:42` `#[serde(untagged)]`; тег у `Directory` (`:44-50`), у `File` нет; тест `repomd.rs:132` утверждает `!json.contains("kind")` |
