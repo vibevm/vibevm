@@ -52,7 +52,12 @@ with their rejected options, and the corrections each landing paid for.
 - [x] **Фаза 2** — determinism: the clock became an input, the writer stopped
       overwriting the schema version it read, a mutation that changes nothing
       stopped leaving a trace. Closed 2026-08-14.
-- [~] **Фаза 3** — the facts journal and projection (kills read-modify-write).
+- [x] **Фаза 3** — the facts journal and projection (kills read-modify-write).
+      **Closed 2026-08-14**, eight steps, panel green at every one. The law it
+      existed to establish is now two commands rather than an argument:
+      `grep -rnw load_from` over every mutation path and the server boot returns
+      nothing, and `cargo xtask rebuild --check` compares a catalog byte-for-byte
+      against its journal's projection.
       Gated GREEN by the phase-0 measurement
       [`harvest/f0-rmw-volume.md`](campaigns/packages-2026-09/harvest/f0-rmw-volume.md),
       then measured again before the cut by three findings —
@@ -91,13 +96,17 @@ with their rejected options, and the corrections each landing paid for.
         whatever the catalog held beyond it. And the incremental merge did not
         need porting — it needed deleting, because the journal already holds
         what it was carrying forward.
-  - [ ] **Ф3.2d** — `xtask rebuild --check`. Last, because it is the only part
-        that reaches outside: the tooling crate depends on no product crate
-        today and the index is absent from the workspace dependency table.
-  - [ ] **Ф3.3** — drop `deny_unknown_fields` from the fifteen catalog
-        aggregates. Free once nothing read is ever written back — and it makes
-        `##FORWARD-COMPAT` true for the first time, since that fact has been
-        promising tolerant readers while the attribute forbade them.
+  - [x] **Ф3.2d** — `xtask rebuild --check` (`c896e218`): fold the journal into
+        a scratch catalog and byte-compare. It reads no catalog, not even for
+        the clock, and its failure message forbids the obvious wrong repair —
+        editing the journal to match the catalog would launder the secret truth
+        into the truth layer.
+  - [x] **Ф3.3** — strictness dropped (`dd3a1809`), and it was SIXTEEN
+        aggregates, not the fifteen the baseline recorded: the sixteenth was
+        added by this campaign's own phase-1 landing. Found because the packet
+        made its executor re-count and stop on a mismatch rather than trust the
+        table. `##FORWARD-COMPAT` is true for the first time since it was
+        written (`4c977582`).
 - [ ] **Фазы 4–6** — schema and generator, corpora and the break window,
       handshake and quarantine.
 
