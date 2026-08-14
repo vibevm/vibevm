@@ -1,0 +1,37 @@
+{
+  "batch": "F3-RECIPE-RECHECK",
+  "cluster": "host",
+  "files": {
+    "spec/modules/vibe-index/PROP-005-package-index.md": {
+      "HASH-JOIN-KEY": {
+        "v": "confirmed",
+        "ev": [
+          "crates/vibe-index/tests/content_hash_parity.rs:232  fn recipes_share_the_digest_on_a_normal_tree()",
+          "crates/vibe-index/tests/content_hash_parity.rs:108  fn both_implementations_agree_at_recipe_0()",
+          "crates/vibe-index/src/hash_recipe.rs:120  pub fn order_paths(recipe: RecipeId, rels: &[String]) -> Vec<String>",
+          "REPLACES the F1-3-RECIPE verdict, whose substance was correct then and is correct now — every clause re-resolves against the tree at 469b04c5. What it replaces is the ADDRESSING, not the judgement: three of its four refs named lines the file no longer carries. `recipes_share_the_digest_on_a_normal_tree` moved 210 -> 232, `both_implementations_agree_at_recipe_0` moved 99 -> 108, `order_paths` moved 105 -> 120, all because the two files grew during the F1.4 and F2.x landings. Re-measured by hand rather than re-read: the digest still joins only at a stated recipe (both recipes agree on the ordinary fixture, so a consumer records what a no-index fetch would have produced), and the cross-implementation check is what makes 'at a stated recipe' mean something rather than each side agreeing only with a frozen constant of its own. Refs now carry the SYMBOL NAME beside the line, so the next growth costs a grep instead of a re-derivation."
+        ]
+      },
+      "HASH-LABELS-DIFFER-BY-DESIGN-TODAY": {
+        "v": "confirmed",
+        "ev": [
+          "crates/vibe-index/src/hash_recipe.rs:43  RecipeId::Tree1 => \"sha256-tree/1:\",  (the arm; :40 is `pub fn label`)",
+          "crates/vibe-index/src/content_hash.rs:112  pub fn compute_content_hash(...)  — the index default, recipe 1",
+          "crates/vibe-registry/src/shippable.rs:148  pub fn compute_content_hash(...)  — the registry default, RecipeId::Legacy0, label \"sha256:\"",
+          "crates/vibe-core/src/content_hash.rs:64  pub const ACCEPTED_PREFIXES: &'static [&'static str] = &[\"sha256-tree/1:\", \"sha256:\"];",
+          "crates/vibe-registry/src/index_client/  — `grep -rn content_hash` over the whole module returns exactly two hits, mod.rs:7 and mod.rs:394, and BOTH are prose comments. No view type and no line of client code reads the field, which is why the two labels never meet in a string comparison.",
+          "REPLACES the F1-3-RECIPE verdict, which was correct and stays correct; the replacement re-measures each clause independently and fixes one drifted coordinate (the Tree1 arm is :43, not :40 — :40 names the enclosing `pub fn label`). The asymmetry is now provable in one line each: the index crate's default hasher delegates to recipe 1 while the registry crate's default hasher delegates to Legacy0, and those two defaults are what the catalog and the lockfile respectively receive. The 'nothing compares them as strings' clause is a NEGATIVE measurement and is restated with its command, because a negative is precisely what a later reader cannot reconstruct by looking at anything."
+        ]
+      },
+      "TWO-INTEGRITY-LAYERS": {
+        "v": "confirmed",
+        "ev": [
+          "crates/vibe-index/src/hash_recipe.rs:43  RecipeId::Tree1 => \"sha256-tree/1:\",  — the per-entry hash carries its recipe",
+          "crates/vibe-index/tests/content_hash_parity.rs:192  fn normalisation_precedes_ordering()",
+          "crates/vibe-index/src/index/memory.rs:221  RepomdFileEntry::file(primary_meta.size, primary_meta.sha256)  — the file-integrity layer, a bare per-file digest with no recipe label",
+          "REPLACES the F1-3-RECIPE verdict, correct then and now; the replacement refreshes `normalisation_precedes_ordering` (172 -> 192) and adds the coordinate for the OTHER layer, which the earlier evidence argued about but never cited. The two layers are now visible side by side: `repomd.json::files[*].sha256` is written from per-file digests in the writer (memory.rs:221 and the sibling inserts through :285), carries no recipe and needs none because it covers our own bytes at rest; the per-entry `content_hash` carries `sha256-tree/1:` because it covers foreign package content that a second implementation must be able to recompute by the same rule. Independence re-checked, not assumed: nothing in the writer derives one from the other."
+        ]
+      }
+    }
+  }
+}
