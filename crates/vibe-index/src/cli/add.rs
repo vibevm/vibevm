@@ -3,6 +3,12 @@
 //! directory (containing the manifest) is hashed to populate
 //! `content_hash`. Source URL / ref / commit are supplied via flags
 //! when the operator has them; otherwise sensible defaults apply.
+//!
+//! Ф3.2 journal form: the published catalog is never this writer's
+//! input (PROP-044 §4.4). The mutation is `validate → append →
+//! project → write_to` — the entry's registry identity comes from
+//! folding the journal, the fact lands in the journal first, and only
+//! the re-folded projection is written back as the catalog.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
@@ -15,8 +21,8 @@ use vibe_core::Group;
 
 use crate::content_hash::compute_content_hash;
 use crate::error::{Error, Result};
-use crate::index::Index;
-use crate::index::memory::WriteCtx;
+use crate::index::memory::{WriteCtx, default_generator};
+use crate::journal::{Event, JournalRecord, append, default_dir, project, replay};
 use crate::lock::ServerLock;
 use crate::scanner::manifest as mfst;
 use crate::types::{NamingConvention, PackageKind, VersionEntry};
@@ -53,14 +59,18 @@ pub fn run(args: Args) -> Result<()> {
     let at = Utc::now();
     refuse_if_server_running(&args.data_dir)?;
 
-    let mut index = Index::load_from(&args.data_dir).map_err(|e| match e {
-        Error::Io { .. } | Error::Malformed(_) => Error::InvalidInput(format!(
-            "data-dir `{}` does not look like an initialised index. \
-             Run `vibe-index init` first.",
-            args.data_dir.display()
-        )),
-        other => other,
-    })?;
+    // Ф3.2 — the catalog is never this writer's input (PROP-044 §4.4):
+    // the registry identity the entry below is stamped with comes from
+    // folding the journal, not from reading back a published catalog.
+    // The journal is read from disk exactly once; the record list then
+    // carries the appended fact in memory and is re-folded below.
+    let journal_dir = default_dir(&args.data_dir);
+    let mut records = replay(&journal_dir)?;
+    // An uninitialised data-dir refuses here, from the truth layer: a
+    // journal without an `Initialised` record folds into
+    // `Error::Unprojectable`, whose recipe names `vibe-index init` —
+    // the same guidance the failed catalog read used to give.
+    let index = project(records.iter().cloned())?;
 
     let manifest_bytes = std::fs::read(&args.manifest).map_err(|e| Error::Io {
         path: args.manifest.clone(),
@@ -126,8 +136,21 @@ pub fn run(args: Args) -> Result<()> {
         "adding {}:{}/{} @ {} ({})",
         entry.kind, entry.group, entry.name, entry.version, entry.content_hash
     );
-    index.upsert(entry);
-    index.write_to(&args.data_dir, &WriteCtx { at })?;
+    // Truth first (PROP-044 `##LAW-NO-UNRECOVERABLE`), the `init`
+    // order: the fact lands in the journal before the derived catalog
+    // is written, so a failed `write_to` leaves a journal without a
+    // catalog — recoverable by re-running the command — never a
+    // catalog whose truth never existed.
+    let record = JournalRecord {
+        at,
+        actor: default_generator(),
+        event: Event::Published {
+            entry: Box::new(entry),
+        },
+    };
+    append(&journal_dir, &record)?;
+    records.push(record);
+    project(records)?.write_to(&args.data_dir, &WriteCtx { at })?;
     Ok(())
 }
 
@@ -164,14 +187,22 @@ mod tests {
     fn add_projects_manifest_frozen_into_the_entry() {
         let tmp = tempfile::tempdir().unwrap();
         let data = tmp.path().join("data");
-        let at = Utc::now();
-        Index::new(
-            "vibespecs",
-            "https://example.invalid/vibespecs",
-            NamingConvention::Fqdn,
-            at,
+        // Setup writes the FACT an `init` would (Ф3.2: the journal is
+        // the truth), not a hand-built catalog — `add` no longer reads
+        // the catalog, so only an `Initialised` journal record makes
+        // this data-dir look initialised to it.
+        append(
+            &default_dir(&data),
+            &JournalRecord {
+                at: Utc::now(),
+                actor: default_generator(),
+                event: Event::Initialised {
+                    registry: "vibespecs".to_string(),
+                    registry_url: "https://example.invalid/vibespecs".to_string(),
+                    naming: NamingConvention::Fqdn,
+                },
+            },
         )
-        .write_to(&data, &WriteCtx { at })
         .unwrap();
 
         let pkg_dir = tmp.path().join("pkg");
@@ -191,13 +222,19 @@ mod tests {
         })
         .unwrap();
 
-        let back = Index::load_from(&data).unwrap();
-        let pkg = back
-            .get(&Group::parse("org.vibevm").unwrap(), "frozen-pkg")
-            .unwrap();
-        assert_eq!(pkg.versions.len(), 1);
-        assert!(
-            pkg.versions[0].frozen,
+        // Read the PUBLISHED artifact (the by-name catalog file), the
+        // same way consumers do — `add` itself no longer reads it, so
+        // the test must not either.
+        let by_name = data.join("by-name/frozen-pkg.json");
+        let parsed: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(&by_name).unwrap()).unwrap();
+        let versions = parsed["packages"][0]["versions"].as_array().unwrap();
+        assert_eq!(versions.len(), 1);
+        assert_eq!(
+            versions[0]
+                .get("frozen")
+                .and_then(serde_json::Value::as_bool),
+            Some(true),
             "manifest `frozen = true` must reach the catalog entry"
         );
     }
