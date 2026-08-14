@@ -52,13 +52,24 @@ with their rejected options, and the corrections each landing paid for.
 - [x] **Фаза 2** — determinism: the clock became an input, the writer stopped
       overwriting the schema version it read, a mutation that changes nothing
       stopped leaving a trace. Closed 2026-08-14.
-- [ ] **Фаза 3** — the facts journal and projection (kills read-modify-write).
+- [~] **Фаза 3** — the facts journal and projection (kills read-modify-write).
       Gated GREEN by the phase-0 measurement
-      [`harvest/f0-rmw-volume.md`](campaigns/packages-2026-09/harvest/f0-rmw-volume.md).
+      [`harvest/f0-rmw-volume.md`](campaigns/packages-2026-09/harvest/f0-rmw-volume.md),
+      then measured again before the cut by three findings —
+      [`f3-index-state-and-projection`](campaigns/packages-2026-09/harvest/f3-index-state-and-projection.md),
+      [`f3-journal-physics`](campaigns/packages-2026-09/harvest/f3-journal-physics.md),
+      [`f3-rmw-break-and-reset`](campaigns/packages-2026-09/harvest/f3-rmw-break-and-reset.md).
+      Seven rulings (Ж1–Ж7) and one owner fork (Ж8) are written into the ТЗ; read
+      them there.
       **Two named mines land here**, both recorded in the ТЗ: quarantine-on-read
-      silently erases the records it filtered on the next write, and a full
-      `reindex` erases tombstones. Both are unreachable today and both are cured
-      by the journal, which is why they wait for it rather than for a patch.
+      silently erases the records it filtered on the next write, and a `reindex`
+      erases tombstones — **both modes, not only `--full`**, since incremental
+      builds the same fresh index and carries only the versions. Both are
+      unreachable today and both are cured by the journal, which is why they wait
+      for it rather than for a patch.
+      A third mine turned out to be reachable and was fixed instead of waited on:
+      the reindex path shed the schema version of the catalog it read, violating
+      the invariant phase 2.2 had just landed (`66f38198`).
 - [ ] **Фазы 4–6** — schema and generator, corpora and the break window,
       handshake and quarantine.
 
