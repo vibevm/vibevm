@@ -3,12 +3,13 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
 use std::net::SocketAddr;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use clap::Parser;
 
 use crate::error::{Error, Result};
 use crate::index::Index;
+use crate::journal::{default_dir, project, replay};
 use crate::lock::ServerLock;
 use crate::server::rate_limit::DEFAULT_MAX_BUCKETS;
 use crate::server::{AppState, FileTokenStore, RateLimitConfig, build_app};
@@ -68,14 +69,14 @@ pub fn run(args: Args) -> Result<()> {
         crate::publish::preflight(&args.data_dir)?;
     }
 
-    let index = Index::load_from(&args.data_dir).map_err(|e| match e {
-        Error::Io { .. } | Error::Malformed(_) => Error::InvalidInput(format!(
-            "data-dir `{}` does not look like an initialised index. \
-             Run `vibe-index init` first.",
-            args.data_dir.display()
-        )),
-        other => other,
-    })?;
+    // Ф3.2c2 — the server boots from the journal (the truth layer),
+    // never from the catalog (PROP-044 §4.4): a data-dir whose catalog
+    // is richer than its journal would silently lose that surplus on
+    // the first mutation, which replaces the served state with the
+    // journal's projection. A data-dir with a catalog but no journal —
+    // born before `init` began recording `Initialised` — therefore
+    // refuses to boot rather than serve unrebuildable state.
+    let index = boot_index(&args.data_dir)?;
 
     let lock = ServerLock::try_acquire(&args.data_dir)?;
 
@@ -140,4 +141,36 @@ pub fn run(args: Args) -> Result<()> {
 
     drop(lock);
     Ok(())
+}
+
+/// The server's boot projection: fold the data-dir's journal and
+/// nothing else. The catalog on disk (`repomd.json`, `by-name/`, …)
+/// is a pure output of this fold — `serve` never reads it — so the
+/// served state is always one the truth layer can rebuild (PROP-044
+/// §4.4). Extracted from [`run`] so a test can drive the exact boot
+/// decision — rises from a journal-only data-dir, refuses a
+/// catalog-only one — without binding a listener.
+pub fn boot_index(data_dir: &Path) -> Result<Index> {
+    let journal_dir = default_dir(data_dir);
+    let records = replay(&journal_dir).map_err(|e| match e {
+        Error::Malformed(detail) => Error::InvalidInput(format!(
+            "data-dir `{}` holds a journal that cannot be read: {detail}. \
+             The journal is the truth layer — the catalog on disk cannot substitute for it \
+             (violates spec://org.vibevm.core/vibevm/common/PROP-044#truth; \
+              fix: restore the journal shard named above, or recreate the data-dir with `vibe-index init`)",
+            data_dir.display()
+        )),
+        other => other,
+    })?;
+    project(records).map_err(|e| match e {
+        Error::Unprojectable(reason) => Error::InvalidInput(format!(
+            "data-dir `{}` cannot be served from its journal: {reason}. \
+             A catalog on disk, if one is present, is a projection and is not an input \
+             (violates spec://org.vibevm.core/vibevm/common/PROP-044#truth; \
+              fix: this data-dir predates the journal — recreate it with `vibe-index init`, \
+              then publish into it again)",
+            data_dir.display()
+        )),
+        other => other,
+    })
 }

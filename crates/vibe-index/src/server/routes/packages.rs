@@ -16,8 +16,11 @@ use semver::Version;
 use serde::{Deserialize, Serialize};
 use vibe_core::Group;
 
-use crate::index::memory::WriteCtx;
+use crate::error::Error;
+use crate::index::Index;
+use crate::index::memory::{WriteCtx, default_generator};
 use crate::index::search;
+use crate::journal::{Event, JournalRecord, append, default_dir, project, replay};
 use crate::server::error::ApiError;
 use crate::server::state::AppState;
 use crate::types::{PackageKind, VersionEntry};
@@ -234,13 +237,17 @@ pub async fn upsert(
     Json(entry): Json<VersionEntry>,
 ) -> Result<(StatusCode, Json<UpsertResponse>), ApiError> {
     require_writeable(&state, &headers)?;
-    if entry.registry != state.index.read().await.registry {
+    // Ф3.2c2 — the scope check's registry value is the projection's.
+    // The in-memory copy IS a fold of the journal (boot and every
+    // mutation replace it wholesale), so this reads the journal's
+    // identity, never a catalog's.
+    let registry = state.index.read().await.registry.clone();
+    if entry.registry != registry {
         return Err(ApiError::bad_request(format!(
             "scope violation: entry.registry=`{}` differs from server registry=`{}` \
              (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; \
              fix: POST only entries whose `registry` matches this server's)",
-            entry.registry,
-            state.index.read().await.registry
+            entry.registry, registry
         )));
     }
     let kind = entry.kind;
@@ -248,34 +255,32 @@ pub async fn upsert(
     let name = entry.name.clone();
     let version = entry.version.clone();
 
-    let (created, changed) = {
-        let mut idx = state.index.write().await;
-        let existed = idx
+    // Ф3.2c2 — the fact is built up front so ONE value both answers
+    // "did the state change" (`Index::upsert`, F2-3, whole-value
+    // equality) and rides the journal. The probe fold it is applied to
+    // is discarded: the persisted catalog comes from re-folding the
+    // journal, never from the probe.
+    let event = Event::Published {
+        entry: Box::new(entry.clone()),
+    };
+    let (existed, changed) = mutate(&state, |probe| {
+        let existed = probe
             .get(&group, &name)
             .map(|p| p.versions.iter().any(|v| v.version == version))
             .unwrap_or(false);
-        // F2-3 — a mutation that changes nothing writes nothing: an
-        // identical repeat never reaches `write_to`, so no commit
-        // lands for an event that did not happen. The response is
-        // still success — the resource is already in the requested
-        // state, which is what idempotency means over HTTP.
-        let changed = idx.upsert(entry);
-        if changed {
-            // F2-1 — the clock enters at the mutation event;
-            // `write_to` never calls it itself, so one mutation
-            // event ⇒ one stamped tree.
-            let ctx = WriteCtx { at: Utc::now() };
-            idx.write_to(&state.data_dir, &ctx)
-                .map_err(|e| ApiError::internal(format!("could not persist index: {e} (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; fix: check the data dir is writable, then retry)")))?;
-        }
-        (!existed, changed)
-    };
+        let changed = probe.upsert(entry);
+        (existed, changed.then_some(event))
+    })
+    .await?;
 
+    // F2-3 — a mutation that changes nothing publishes nothing: the
+    // response is still success, because the resource is already in
+    // the requested state — which is what idempotency means over HTTP.
     if changed {
         state.stats.note_mutation();
         publish_mutation(&state, format!("index: upsert {group}/{name}@{version}")).await;
     }
-    let status = if created {
+    let status = if !existed {
         StatusCode::CREATED
     } else {
         StatusCode::OK
@@ -288,7 +293,7 @@ pub async fn upsert(
             group,
             name,
             version,
-            created,
+            created: !existed,
         }),
     ))
 }
@@ -312,17 +317,23 @@ pub async fn delete_version(
     let v: Version = version_str
         .parse()
         .map_err(|e| ApiError::bad_request(format!("`{version_str}` is not valid semver: {e} (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; fix: request a semver version like `0.1.0`)")))?;
-    let removed = {
-        let mut idx = state.index.write().await;
-        let r = idx.remove_version(&group, &name, &v);
-        if r {
-            let ctx = WriteCtx { at: Utc::now() };
-            idx.write_to(&state.data_dir, &ctx)
-                .map_err(|e| ApiError::internal(format!("could not persist index: {e} (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; fix: check the data dir is writable, then retry)")))?;
-        }
-        r
-    };
-    if removed {
+    // Ф3.2c2 — "is there something to remove" is answered by folding
+    // the journal BEFORE any record is appended: a removal of what
+    // never stood in the projection would be a fact that never held,
+    // and the journal carries no false facts.
+    let (removed, changed) = mutate(&state, |probe| {
+        let removed = probe.remove_version(&group, &name, &v);
+        (
+            removed,
+            removed.then_some(Event::Removed {
+                group: group.clone(),
+                name: name.clone(),
+                version: Some(v.clone()),
+            }),
+        )
+    })
+    .await?;
+    if changed {
         state.stats.note_mutation();
         publish_mutation(&state, format!("index: remove {group}/{name}@{v}")).await;
     }
@@ -342,17 +353,19 @@ pub async fn delete_package(
 ) -> Result<Json<DeleteResponse>, ApiError> {
     require_writeable(&state, &headers)?;
     let group = parse_group(&group_str)?;
-    let removed = {
-        let mut idx = state.index.write().await;
-        let r = idx.remove_package(&group, &name);
-        if r {
-            let ctx = WriteCtx { at: Utc::now() };
-            idx.write_to(&state.data_dir, &ctx)
-                .map_err(|e| ApiError::internal(format!("could not persist index: {e} (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; fix: check the data dir is writable, then retry)")))?;
-        }
-        r
-    };
-    if removed {
+    let (removed, changed) = mutate(&state, |probe| {
+        let removed = probe.remove_package(&group, &name);
+        (
+            removed,
+            removed.then_some(Event::Removed {
+                group: group.clone(),
+                name: name.clone(),
+                version: None,
+            }),
+        )
+    })
+    .await?;
+    if changed {
         state.stats.note_mutation();
         publish_mutation(&state, format!("index: remove {group}/{name}")).await;
     }
@@ -363,6 +376,90 @@ pub async fn delete_package(
         version: None,
         removed,
     }))
+}
+
+/// One journal-first mutation, shared by all three write routes
+/// (Ф3.2c2). The form is the CLI's — `validate → append → project →
+/// write_to`, truth first (PROP-044 `##LAW-NO-UNRECOVERABLE`): the
+/// record lands in the journal before the derived catalog is written,
+/// so a failed `write_to` leaves a journal the next mutation re-folds,
+/// never a catalog whose truth never existed.
+///
+/// The mutation's base is the journal ON DISK, never the in-memory
+/// copy: under the write lock the journal is replayed and folded, the
+/// `decide` closure mutates that fold and names the fact it caused,
+/// and the re-fold — journal plus the appended record — is what is
+/// BOTH written to disk and swapped into `state.index`, so memory and
+/// catalog can never disagree about where they came from. `decide`
+/// returning no event is a no-op (F2-3): a mutation that changes
+/// nothing writes no fact, no catalog and no commit.
+///
+/// Returns `(stood, changed)`: `stood` — did the target stand in the
+/// projection before the event (upsert inverts it into `created`; the
+/// deletes report it as `removed`); `changed` — was an event applied
+/// at all.
+async fn mutate<F>(state: &AppState, decide: F) -> Result<(bool, bool), ApiError>
+where
+    F: FnOnce(&mut Index) -> (bool, Option<Event>),
+{
+    let mut idx = state.index.write().await;
+    let journal_dir = default_dir(&state.data_dir);
+    let mut records =
+        replay(&journal_dir).map_err(|e| journal_refused("could not read the journal", e))?;
+    let mut probe = project(records.iter().cloned())
+        .map_err(|e| journal_refused("could not fold the journal into a catalog", e))?;
+    let (stood, event) = decide(&mut probe);
+    let Some(event) = event else {
+        // F2-3 — nothing changed: no record, no write, no publish.
+        return Ok((stood, false));
+    };
+    // F2-1 — the clock enters at the mutation event, once: the same
+    // `at` stamps the record and the catalog it projects to.
+    let at = Utc::now();
+    let record = JournalRecord {
+        at,
+        actor: default_generator(),
+        event,
+    };
+    append(&journal_dir, &record)
+        .map_err(|e| journal_refused("could not append the fact to the journal", e))?;
+    records.push(record);
+    let fresh = project(records)
+        .map_err(|e| journal_refused("could not fold the journal into a catalog", e))?;
+    // Truth first: the record is already durable, so a failed
+    // `write_to` leaves a journal whose next fold rebuilds the catalog
+    // — the mutation is recoverable, never lost. Memory takes the
+    // re-fold either way, so reads never serve a state the truth
+    // layer cannot reproduce.
+    let persisted = fresh.write_to(&state.data_dir, &WriteCtx { at });
+    *idx = fresh;
+    persisted.map_err(|e| {
+        ApiError::internal(format!(
+            "could not persist index: {e} — the fact is durable in the journal and the next mutation re-projects the catalog from it \
+             (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; \
+              fix: check the data dir is writable, then retry)"
+        ))
+    })?;
+    Ok((stood, true))
+}
+
+/// Map a truth-layer failure (the journal could not be read, folded,
+/// or appended to) onto the API's 500: the inner detail is kept raw,
+/// but its CLI-oriented recipe is replaced by the server's — the
+/// catalog is never this writer's input, so the mutation did not
+/// happen and nothing derived was touched.
+fn journal_refused(what: &str, e: Error) -> ApiError {
+    let detail = match e {
+        Error::Io { path, message } => format!("`{}`: {message}", path.display()),
+        Error::Malformed(m) | Error::Unprojectable(m) => m,
+        other => other.to_string(),
+    };
+    ApiError::internal(format!(
+        "{what}: {detail} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-044#truth; \
+          fix: the journal is the truth layer — restore the shard named above and retry; \
+          the catalog was not touched and the mutation did not happen)"
+    ))
 }
 
 fn require_writeable(state: &AppState, headers: &HeaderMap) -> Result<(), ApiError> {

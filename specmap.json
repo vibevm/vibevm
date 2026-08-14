@@ -5550,27 +5550,27 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/tests/seam_fakes.rs",
       "item_kind": "fn",
-      "line": 169,
+      "line": 177,
       "symbol": "vibe_index::tests::seam_fakes::the_injected_rate_limiter_blocks_through_the_middleware",
-      "end_line": 190,
+      "end_line": 198,
       "fingerprint": "tok1:73c39f13ab095fe44b826ccab49b2b37d8a46c44a9c50a139ec32423cb5f0dce"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/tests/seam_fakes.rs",
       "item_kind": "fn",
-      "line": 132,
+      "line": 140,
       "symbol": "vibe_index::tests::seam_fakes::write_is_authorised_by_the_injected_token_store",
-      "end_line": 149,
+      "end_line": 157,
       "fingerprint": "tok1:5b37bdfccca215b44aa321f03bad6baab66f3117f34fa90ffe992063245beebf"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/tests/seam_fakes.rs",
       "item_kind": "fn",
-      "line": 151,
+      "line": 159,
       "symbol": "vibe_index::tests::seam_fakes::write_is_refused_by_the_injected_token_store",
-      "end_line": 167,
+      "end_line": 175,
       "fingerprint": "tok1:196a8fad4cc59af41976e4632d28471351f5e69a36fc371e3f0699d10424e261"
     },
     {
@@ -5586,9 +5586,9 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/tests/server_writes.rs",
       "item_kind": "fn",
-      "line": 112,
+      "line": 145,
       "symbol": "vibe_index::tests::server_writes::post_packages_inserts_entry",
-      "end_line": 129,
+      "end_line": 162,
       "fingerprint": "tok1:73f23d47ebc429f405261674a1c061acafb6635acfb3d9df97d25c45eac0820b"
     },
     {
@@ -13897,7 +13897,7 @@
     {
       "file": "crates/vibe-index/tests/seam_fakes.rs",
       "from_symbol": "vibe_index::tests::seam_fakes::the_injected_rate_limiter_blocks_through_the_middleware",
-      "line": 170,
+      "line": 178,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http",
       "verb": "verifies",
@@ -13906,7 +13906,7 @@
     {
       "file": "crates/vibe-index/tests/seam_fakes.rs",
       "from_symbol": "vibe_index::tests::seam_fakes::write_is_authorised_by_the_injected_token_store",
-      "line": 133,
+      "line": 141,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#server-mode",
       "verb": "verifies",
@@ -13915,7 +13915,7 @@
     {
       "file": "crates/vibe-index/tests/seam_fakes.rs",
       "from_symbol": "vibe_index::tests::seam_fakes::write_is_refused_by_the_injected_token_store",
-      "line": 152,
+      "line": 160,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#server-mode",
       "verb": "verifies",
@@ -13933,7 +13933,7 @@
     {
       "file": "crates/vibe-index/tests/server_writes.rs",
       "from_symbol": "vibe_index::tests::server_writes::post_packages_inserts_entry",
-      "line": 113,
+      "line": 146,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#server-mode",
       "verb": "verifies",
@@ -72437,19 +72437,19 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-index/tests/seam_fakes.rs",
-      "line": 133,
+      "line": 141,
       "message": "edge `vibe_index::tests::seam_fakes::write_is_authorised_by_the_injected_token_store` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#server-mode` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-index/tests/seam_fakes.rs",
-      "line": 152,
+      "line": 160,
       "message": "edge `vibe_index::tests::seam_fakes::write_is_refused_by_the_injected_token_store` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#server-mode` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-index/tests/seam_fakes.rs",
-      "line": 170,
+      "line": 178,
       "message": "edge `vibe_index::tests::seam_fakes::the_injected_rate_limiter_blocks_through_the_middleware` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http` carries no kind/revision line yet"
     },
     {
@@ -72461,7 +72461,7 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-index/tests/server_writes.rs",
-      "line": 113,
+      "line": 146,
       "message": "edge `vibe_index::tests::server_writes::post_packages_inserts_entry` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#server-mode` carries no kind/revision line yet"
     },
     {

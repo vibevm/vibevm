@@ -16,8 +16,8 @@ use axum::http::{Method, Request, StatusCode, header};
 use chrono::{DateTime, Utc};
 use tower::util::ServiceExt;
 
-use vibe_index::index::Index;
-use vibe_index::index::memory::WriteCtx;
+use vibe_index::index::memory::default_generator;
+use vibe_index::journal::{Event, JournalRecord, append, default_dir, project, replay};
 use vibe_index::server::{AppState, FileTokenStore, build_app};
 use vibe_index::types::{
     BootSnippetEntry, NamingConvention, PackageKind, ProvidesEntry, VersionEntry,
@@ -109,14 +109,23 @@ fn setup(with_remote: bool) -> (tempfile::TempDir, PathBuf, Option<PathBuf>) {
     let data = scratch.path().join("data");
     std::fs::create_dir_all(&data).unwrap();
 
-    // A minimal valid index on disk so AppState can load it.
-    let idx = Index::new(
-        "vibespecs",
-        "https://example.invalid/vibespecs",
-        NamingConvention::Fqdn,
-        now(),
-    );
-    idx.write_to(&data, &WriteCtx { at: now() }).unwrap();
+    // Ф3.2c2 — seed the data-dir the way the server reads it: a
+    // journal carrying `Initialised` and nothing else. No catalog is
+    // written here — the catalog became an output of the first
+    // mutation, so the initial commit below carries only .gitignore.
+    append(
+        &default_dir(&data),
+        &JournalRecord {
+            at: now(),
+            actor: default_generator(),
+            event: Event::Initialised {
+                registry: "vibespecs".to_string(),
+                registry_url: "https://example.invalid/vibespecs".to_string(),
+                naming: NamingConvention::Fqdn,
+            },
+        },
+    )
+    .unwrap();
     std::fs::write(data.join(".gitignore"), "/state/\n").unwrap();
     let state_dir = data.join("state");
     std::fs::create_dir_all(&state_dir).unwrap();
@@ -154,7 +163,9 @@ fn setup(with_remote: bool) -> (tempfile::TempDir, PathBuf, Option<PathBuf>) {
 }
 
 fn build(data: &Path, auto: bool) -> axum::Router {
-    let idx = Index::load_from(data).unwrap();
+    // Ф3.2c2 — the app boots the way `serve` does: a fold of the
+    // journal, never a catalog read-back.
+    let idx = project(replay(&default_dir(data)).unwrap()).unwrap();
     let tokens = FileTokenStore::load(data).unwrap();
     let state =
         AppState::with_tokens(data.to_path_buf(), false, idx, tokens).with_auto_commit_push(auto);

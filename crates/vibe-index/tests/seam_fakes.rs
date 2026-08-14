@@ -9,8 +9,8 @@ use axum::body::Body;
 use axum::http::{Method, Request, StatusCode, header};
 use tower::util::ServiceExt;
 
-use vibe_index::index::Index;
-use vibe_index::index::memory::WriteCtx;
+use vibe_index::index::memory::default_generator;
+use vibe_index::journal::{Event, JournalRecord, append, default_dir, project, replay};
 use vibe_index::server::{
     AppState, RateDecision, RateLimitConfig, RateLimitKey, RateLimiter, TokenBucketRateLimiter,
     TokenStore, build_app,
@@ -84,16 +84,24 @@ fn state_with_seams(
     rate_limiter: Box<dyn RateLimiter>,
 ) -> (tempfile::TempDir, AppState) {
     let tmp = tempfile::tempdir().unwrap();
-    let idx = Index::new(
-        "vibespecs",
-        "https://example.invalid/vibespecs",
-        NamingConvention::Fqdn,
-        fixed_now(),
-    );
-    idx.write_to(tmp.path(), &WriteCtx { at: fixed_now() })
-        .unwrap();
-    let idx2 = Index::load_from(tmp.path()).unwrap();
-    let state = AppState::with_seams(tmp.path().to_path_buf(), false, idx2, tokens, rate_limiter);
+    // Ф3.2c2 — seed the truth layer, not a catalog: the write-route
+    // oracle reaches a real mutation, and a mutation folds the
+    // journal, which needs an `Initialised` record to fold.
+    append(
+        &default_dir(tmp.path()),
+        &JournalRecord {
+            at: fixed_now(),
+            actor: default_generator(),
+            event: Event::Initialised {
+                registry: "vibespecs".to_string(),
+                registry_url: "https://example.invalid/vibespecs".to_string(),
+                naming: NamingConvention::Fqdn,
+            },
+        },
+    )
+    .unwrap();
+    let idx = project(replay(&default_dir(tmp.path())).unwrap()).unwrap();
+    let state = AppState::with_seams(tmp.path().to_path_buf(), false, idx, tokens, rate_limiter);
     (tmp, state)
 }
 
