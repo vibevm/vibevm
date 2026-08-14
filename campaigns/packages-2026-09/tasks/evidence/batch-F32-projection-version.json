@@ -1,0 +1,18 @@
+{
+  "batch": "F32-PROJECTION-VERSION",
+  "cluster": "host",
+  "files": {
+    "spec/modules/vibe-index/PROP-005-package-index.md": {
+      "A-PROJECTION-READS-NOTHING-SO-ITS-OWN-VERSION-IS-TRUE": {
+        "v": "confirmed",
+        "ev": [
+          "crates/vibe-index/src/journal/project.rs  pub fn project(events: impl IntoIterator<Item = JournalRecord>) -> Result<Index>  — the fold builds the index from the events with `Index::new`, which stamps the crate's own SCHEMA_VERSION; nothing in the function reads a catalog",
+          "crates/vibe-index/src/index/memory.rs  fn write_to(&self, data_dir, ctx)  — the manifest takes `self.schema_version`, so a catalog written from a projection carries the projector's constant, which is exactly the artifact just built",
+          "crates/vibe-index/src/journal/quarantine-side: crates/vibe-index/src/index/quarantine.rs  pub const UNDERSTOOD: &[&str] = &[];  plus the refusal arms in project.rs — the protection the older rule reached for is the per-record capability refusal, not the catalog's label",
+          "crates/vibe-index/src/index/memory/tests.rs  fn foreign_schema_version_survives_load_and_write()  — the older rule's guard, still green, still guarding the paths that DO read a catalog before rewriting it",
+          "confirmed by reading both halves against the tree at the moment the projector landed. The new fact does not weaken the old one and does not restate it: the old rule binds a writer that READ a catalog, and the projector is the first writer in this crate that reads none. Its `Index::new` call is the same constructor `init` uses for a brand-new index, so the constant it stamps is a claim about the file it is writing rather than an overwrite of someone else's claim. The clause also names where the displaced protection went, which is the part a cold reader would otherwise have to reconstruct: an older build meeting a newer world refuses per record by capability, not by re-labelling a catalog."
+        ]
+      }
+    }
+  }
+}
