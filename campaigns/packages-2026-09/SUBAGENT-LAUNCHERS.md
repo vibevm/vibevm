@@ -847,6 +847,31 @@ skipped. That mattered: `clippy` had never run, and it was `clippy` that caught 
 900-byte enum variant no test would ever have failed on. A killed run's diff looks
 finished precisely because the parts that check it are the parts that are missing.
 
+@fact:fact-a-pruned-worktree-directory-retargets-git-at-the-host **After
+`git worktree prune`, a `git -C <that-directory>` command silently operates on
+the HOST repository (2026-08-14, caught with nothing damaged — by luck, not by
+design):** a worktree whose removal had failed on a Windows handle lock was
+deregistered anyway; `prune` then dropped its admin directory, leaving a full
+checkout whose `.git` file points at nothing. Git's discovery does not stop
+there — it walks UP, finds the real repository, and answers as the MAIN
+worktree. So `git -C .wt/<id> reset --hard main`, written to refresh a throwaway
+worktree, executed `reset --hard` against the host tree. It happened to be clean
+and already on `main`, so the command was a no-op; on a dirty tree it would have
+destroyed uncommitted work — a Rule-4 irreversible operation performed by
+accident, with no prompt and no diff to review.
+
+Two rules. *(i)* **After a failed `worktree remove`, delete the DIRECTORY before
+pruning, or leave both alone** — a pruned registration plus a surviving checkout
+is the trap, and it looks like an ordinary worktree from the outside. *(ii)*
+**`git -C <path>` is not a scope; it is a starting point for discovery.** The
+`-C` form was adopted here as the safe alternative to a bare `cd`
+(`#fact-a-bare-cd-retargets-every-later-command-not-only-the-correction`) and it
+IS safer — but only while the path is a real worktree. Verify with
+`git -C <path> rev-parse --abbrev-ref HEAD` before any writing verb: an answer
+naming the host's branch means the command is pointed at the host. Same disease
+as every other entry in this family — the instrument reporting confidently about
+something other than the thing.
+
 @fact:fact-the-gateway-model-is-observed-not-assumed **The gateway serves what it
 serves, and the log says which (2026-08-14):** `#launchers-what` records the model
 triple as `glm-5.2[1m]`; the `stream-json` log of this session's runs carries
