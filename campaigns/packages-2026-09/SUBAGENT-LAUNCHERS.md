@@ -847,36 +847,47 @@ skipped. That mattered: `clippy` had never run, and it was `clippy` that caught 
 900-byte enum variant no test would ever have failed on. A killed run's diff looks
 finished precisely because the parts that check it are the parts that are missing.
 
-@fact:fact-a-resumed-worker-writes-the-previous-tasks-report-from-memory **A `-c`
-resume finishes the PREVIOUS task's last intent first, and a report written that
-way is memory rather than observation (2026-08-14):** a worker killed two steps
-from the end of a build was resumed with a new packet. Its first act was not to
-read the new packet — it was to write the report the kill had prevented. The file
-appeared complete: every section filled, per-point acceptance, a quoted red proof,
-sixteen `test result:` lines, an explicit `CLIPPY-REAL-EXIT=0`.
+@fact:fact-a-killed-task-does-not-kill-the-worker-and-the-survivor-writes-late **A
+"killed" notification kills the harness TASK, not the worker process — the worker
+runs on, writes on, and finishes minutes later against whatever the boss has
+built in the meantime (2026-08-14, measured from the logs themselves):** two runs
+were reported killed within a minute of each other. Their `stream-json` logs kept
+GROWING for another five and nineteen minutes respectively, and both wrote their
+closing reports after the boss had already read their worktrees, accepted the
+work, landed it and moved the tree on.
 
-**Two of its load-bearing numbers describe a tree that never existed.** It claimed
-a file length matching neither the worker's own artifact nor the boss's landed
-version, and it claimed clippy green on an artifact the boss had personally
-measured RED minutes earlier — `large_enum_variant`, the very finding the kill had
-cost. Between the kill and the resume the boss had reset that worktree to the
-landed commit, so anything the resumed model re-ran answered about the FIXED code
-while the report narrated the killed run.
+Three consequences, and the third is the one that costs.
 
-The danger is the shape, not the numbers: this is the one artifact designed to
-make acceptance cheap (`#report-contract`), and a reconstructed one is
-indistinguishable from a real one by every mechanical check — the file exists, the
-template is filled, the evidence is quoted. It would have passed the set-compare.
-What caught it was `#fanout-verify-the-numbers-not-the-narrative`: the boss had
-re-measured the load-bearing numbers by hand and already knew the answer.
+**(1) A report that appears after a kill is written by a live process against a
+changed tree.** One such report claimed `CLIPPY-REAL-EXIT=0` on an artifact the
+boss had personally measured RED — `large_enum_variant` — and a file length
+matching neither the worker's own artifact nor the landed version. Both are
+explained without any dishonesty: the boss had reset that worktree to the landed
+commit, so the survivor's late self-verify answered about the FIXED code while
+its prose narrated the run it remembered. The numbers are real; the tree they
+describe never existed as one thing.
 
-Three rules. *(i)* **A report is evidence only about the run that produced it** —
-after a kill, the report is gone with the run, and one that appears later is a
-different genre. *(ii)* **Never `-c` a killed run into a new packet while treating
-its old deliverables as pending**: finish the old task's acceptance from the
-worktree, archive what exists, and let the resume carry only forward work.
-*(iii)* **Re-measure before archiving, not after** — an archived report is what a
-later session will read as the record of what happened.
+**(2) Cleaning up a killed run's worktree while its process is alive can make
+that worker write into the HOST tree.** The other survivor's own log names its
+report's `file_path` as the repository root — not its worktree — and it landed
+there after the boss had pruned that worktree's registration. A pruned worktree
+stops being a worktree (`#fact-a-pruned-worktree-directory-retargets-git-at-the-host`),
+and a live process inside it resolves its paths somewhere else. Nothing was
+damaged because the file was untracked and never staged, but the perimeter — the
+one guarantee that makes "nothing else was touched" a set comparison rather than
+a judgement — was breached by the CLEANUP, not by the worker.
+
+**(3) So the order is: confirm death, then clean.** A kill notification is not
+death; the log's growth is the liveness signal (`#obs-mtime-is-not-liveness-either`),
+and it answers this question too. Read the worktree, archive what exists, and
+leave the directory and its registration alone until the log has stopped growing.
+Never prune or reset a killed run's worktree on the strength of the notification.
+
+And the standing habit is what caught all of it: `#fanout-verify-the-numbers-not-the-narrative`.
+A late report passes every mechanical check there is — the file exists, the
+template is filled, the evidence is quoted, the set-compare balances. Only
+re-measuring the load-bearing numbers by hand separates it from the record of
+what happened.
 
 @fact:fact-a-pruned-worktree-directory-retargets-git-at-the-host **After
 `git worktree prune`, a `git -C <that-directory>` command silently operates on
