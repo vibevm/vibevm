@@ -255,6 +255,41 @@ fn tombstone_only_name_still_gets_its_by_name_file() {
     assert!(again.tombstones.contains_key("dead-pkg"));
 }
 
+/// F2-2, the preservation test: a catalog carrying a FOREIGN schema
+/// version survives a load → write round trip. The writer stamps its
+/// own constant only into artifacts it creates from scratch
+/// (`Index::new`); a version it READ is state, and re-stamping it
+/// with the reader's own constant would make a future-version
+/// catalog silently claim to be ours. Fails on any writer that
+/// reaches for the constant instead of the field.
+#[test]
+fn foreign_schema_version_survives_load_and_write() {
+    let src = tempdir().unwrap();
+    let mut idx = fresh_index();
+    idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0"));
+    idx.write_to(src.path(), &write_ctx()).unwrap();
+
+    // Pass the catalog off as a FUTURE writer's product: bump the
+    // manifest's schema_version above ours, touch nothing else.
+    let foreign = Repomd::SCHEMA_VERSION + 1;
+    let manifest_path = src.path().join(repomd::FILENAME);
+    let mut manifest: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(&manifest_path).unwrap()).unwrap();
+    manifest["schema_version"] = serde_json::json!(foreign);
+    std::fs::write(&manifest_path, serde_json::to_vec(&manifest).unwrap()).unwrap();
+
+    let back = Index::load_from(src.path()).unwrap();
+    assert_eq!(back.schema_version, foreign);
+
+    let dst = tempdir().unwrap();
+    back.write_to(dst.path(), &write_ctx()).unwrap();
+    let rewritten = repomd::read(dst.path()).unwrap();
+    assert_eq!(
+        rewritten.schema_version, foreign,
+        "the writer must re-stamp the version it read, not its own constant"
+    );
+}
+
 /// F2-1, the test the phase exists for: one index state + one
 /// `WriteCtx` ⇒ byte-identical output across two independent
 /// writes into two different directories. A writer that called

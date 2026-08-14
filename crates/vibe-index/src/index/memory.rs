@@ -273,9 +273,12 @@ impl Index {
             RepomdFileEntry::directory(inverted::entry_count_purl(data_dir)),
         );
 
-        // Stamp the manifest.
+        // Stamp the manifest. The schema version comes from STATE, not
+        // from this build's constant: a catalog this writer read keeps
+        // the version it carried (F2-2) — only `Index::new`, an
+        // artifact born from scratch, stamps the constant.
         let manifest = Repomd {
-            schema_version: Repomd::SCHEMA_VERSION,
+            schema_version: self.schema_version,
             registry: self.registry.clone(),
             registry_url: self.registry_url.clone(),
             naming: self.naming,

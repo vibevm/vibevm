@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-14T11:21:51Z",
+  "updated_at": "2026-08-14T11:35:46Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -103365,7 +103365,7 @@
       }
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {
-      "content_hash": "c9fa87ebbd76fa39970393716a9aa97a91b55addf6e191d8590b3591d34898c5",
+      "content_hash": "7578e01233cc14c31bc19070ededf64f41fd5a3878287b8f8f85ec22e3164981",
       "rollup": {
         "explicit": [
           "impl",
@@ -103379,11 +103379,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 330,
-        "fact_count": 329,
+        "marker_count": 331,
+        "fact_count": 330,
         "unmarked_facts": 0
       },
-      "marker_count": 330,
+      "marker_count": 331,
       "unit_count": 49,
       "issue_count": 0,
       "campaign": {
@@ -105633,10 +105633,21 @@
               "crates/vibe-index/src/index/memory/tests.rs  fn same_state_and_ctx_write_byte_identical_trees()  — одно состояние, один WriteCtx, два каталога, побайтовое сравнение всех файлов",
               "confirmed по каждой клаузе. «Писатель никогда не зовёт now()» — свип по обоим модулям пуст, и это не обещание в комментарии, а шаг панели, который был показан красным на пробной вставке и зелёным после отката. «CLI передаёт момент команды, сервер — момент события» — по одному вызову часов на команду и на мутацию соответственно, а не по одному на употребление: две записи одной команды, разошедшиеся на миллисекунду, были бы той же недетерминированностью, только мельче. «Одно состояние даёт одну последовательность байтов» — исполнимо, тестом побайтового сравнения двух записей одного состояния с одним контекстом. Клауза о том, что детерминизм есть инструмент, а не опрятность, — это причина, а не проверяемое утверждение, и она согласована с PROP-044 §4.3."
             ]
+          },
+          "THE-WRITER-KEEPS-THE-VERSION-IT-READ": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/index/memory.rs  — в конструкции манифеста внутри write_to: `schema_version: self.schema_version`, а не `Repomd::SCHEMA_VERSION`; комментарий на месте называет правило",
+              "crates/vibe-index/src/index/memory.rs  — Index::new продолжает ставить константу: это и есть «артефакт, порождённый с нуля»",
+              "crates/vibe-index/src/index/memory.rs  — load_from кладёт в поле прочитанное `manifest.schema_version`, то есть значение приходит из состояния",
+              "crates/vibe-index/src/index/memory/tests.rs  fn foreign_schema_version_survives_load_and_write()  — каталог с ЧУЖОЙ версией (константа + 1, то есть будущий писатель) переживает круг load → write; проверка через типизированный repomd::read в целевом каталоге",
+              "Тест прогнан против НЕПРАВЛЕНОГО писателя и УПАЛ там (`left: 1, right: 2`) — способность упасть показана, а не предположена; это и делает его доказательством СОХРАНЯЕМОГО поведения, а не спутником правки",
+              "confirmed. «Штампует свою константу только в артефакт, порождённый с нуля» — ровно два источника значения в коде, и они разведены: конструктор ставит константу, писатель берёт поле. «Прочитанный каталог сохраняет свою версию» — исполнимо тестом, и тест доказан способным упасть. Оговорка факта о том, что поведение при неподдерживаемой версии здесь НЕ решается, соответствует коду: ветвления по версии в писателе нет, шаг его и не вводил."
+            ]
           }
         },
         "verified_at": "2026-08-13T23:34:20Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION"
       }
     },
     "spec/modules/vibe-mcp/PROP-015-mcp-integration.md": {
