@@ -70,6 +70,25 @@ with their rejected options, and the corrections each landing paid for.
       A third mine turned out to be reachable and was fixed instead of waited on:
       the reindex path shed the schema version of the catalog it read, violating
       the invariant phase 2.2 had just landed (`66f38198`).
+  - [x] **Ф3.1** — the facts journal as a store: append-only NDJSON, monthly
+        shards, eleven event variants, the clock gate widened to cover it
+        (`8ba101d1`).
+  - [x] **Ф3.2a** — `init` writes the journal's first record, truth before
+        catalog (`64be15a8`).
+  - [x] **Ф3.2b** — the projector: a pure fold from events to catalog; six
+        variants fold, five refuse by name (`0c9ca4e0`).
+  - [ ] **Ф3.2c** — the six mutations rewired to
+        `validate → append → project → write_to`. Split three ways because they
+        are three different problems: the two CLI paths, the three server
+        handlers, then `reindex`/`rescan-org` — the last carries the watershed
+        and is the only one with real design left in it.
+  - [ ] **Ф3.2d** — `xtask rebuild --check`. Last, because it is the only part
+        that reaches outside: the tooling crate depends on no product crate
+        today and the index is absent from the workspace dependency table.
+  - [ ] **Ф3.3** — drop `deny_unknown_fields` from the fifteen catalog
+        aggregates. Free once nothing read is ever written back — and it makes
+        `##FORWARD-COMPAT` true for the first time, since that fact has been
+        promising tolerant readers while the attribute forbade them.
 - [ ] **Фазы 4–6** — schema and generator, corpora and the break window,
       handshake and quarantine.
 
