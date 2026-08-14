@@ -827,6 +827,35 @@ needed touching and said which files they had left alone and why. Without that
 line a closed list reads as a to-do, and a weak writer finds something to do in
 every entry — the perimeter stops bounding the work and starts prescribing it.
 
+@fact:fact-a-killed-run-is-not-a-verdict-and-the-kill-costs-the-tail **A killed
+run is not a verdict, and what a kill costs is precisely the tail the packet put
+last (2026-08-14):** two live workers stopped at the same instant — not by the
+boss, not by any error either packet could produce, and the simultaneity is what
+made an external cause the likely one. One had barely started and lost nothing.
+The other was at step 6/8 of building a module, and the work turned out
+**substantially complete**: every file written, the crate wired, the panel's gate
+widened with its comment, message and step label all updated together. Re-running
+it would have rebuilt what was already on disk.
+
+Two rules, and the second is the sharp one. *(i)* **Read the worktree before
+judging the status** — `#safety-review` already says a non-zero exit does not mean
+discard, and a kill is weaker evidence than an exit code, not stronger. *(ii)*
+**The steps a kill removes are the LAST ones, and packets put verification last**
+— here the casualties were `cargo clippy`, the two red proofs and the report. So
+the boss does not merely accept the work; it supplies exactly the tail that was
+skipped. That mattered: `clippy` had never run, and it was `clippy` that caught a
+900-byte enum variant no test would ever have failed on. A killed run's diff looks
+finished precisely because the parts that check it are the parts that are missing.
+
+@fact:fact-the-gateway-model-is-observed-not-assumed **The gateway serves what it
+serves, and the log says which (2026-08-14):** `#launchers-what` records the model
+triple as `glm-5.2[1m]`; the `stream-json` log of this session's runs carries
+`"model":"glm-5.3"` in its own event metadata. The launcher pins a model NAME and
+the gateway resolves it; the resolved model is therefore an observation, not a
+configuration, and the log is where it is observable. Worth knowing before
+attributing a behaviour change to a packet: the worker may not be the worker the
+last session measured.
+
 ## 9. What a clean fan-out looked like {#clean-fanout}
 
 @fact:fanout-first-pass-acceptance **Measured 2026-08-14 — three packets, two
