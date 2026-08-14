@@ -537,9 +537,10 @@ run_step "mcp packages' authored crates are the conform perimeter" \
 # compare" measure nothing, because two writes of one state stamp two
 # different instants (determinism is the measuring instrument,
 # PROP-044 §4.3). The perimeter is named by module directory, not by a
-# repo-wide mask: `crates/vibe-index/src/index` and
-# `crates/vibe-index/src/types`, recursively — a new file under either
-# is covered the day it lands.
+# repo-wide mask: `crates/vibe-index/src/index`,
+# `crates/vibe-index/src/types` and `crates/vibe-index/src/journal`,
+# recursively — a new file under any of them is covered the day it
+# lands.
 #
 # CODE only: a hit whose line opens with a comment marker is prose —
 # doc-comments legally show `Utc::now()` in examples (e.g. the scanner
@@ -551,13 +552,14 @@ check_index_clock_gate() {
   hits=$(grep -rnE 'Utc::now\(|SystemTime::now\(' \
       crates/vibe-index/src/index \
       crates/vibe-index/src/types \
+      crates/vibe-index/src/journal \
       2>/dev/null \
     | grep -vE ':[0-9]+:[[:space:]]*//')
   if [ -n "$hits" ]; then
     printf '%s\n' "$hits" >&2
     printf 'self-check: the index writer modules call the clock directly.\n' >&2
     printf 'self-check: the rule — time enters at the edge (CLI command or\n' >&2
-    printf 'self-check: server mutation event) and never inside index/ or types/:\n' >&2
+    printf 'self-check: server mutation event) and never inside index/, types/ or journal/:\n' >&2
     printf 'self-check: one state must produce one byte sequence, or "rebuild and\n' >&2
     printf 'self-check: compare" measures nothing (PROP-044 §4.3, F2-1).\n' >&2
     printf 'self-check: fix: pass the time as an argument — a WriteCtx for\n' >&2
@@ -566,7 +568,7 @@ check_index_clock_gate() {
   fi
   return 0
 }
-run_step "index clock gate (no Utc::now/SystemTime::now in index/ or types/)" \
+run_step "index clock gate (no Utc::now/SystemTime::now in index/, types/ or journal/)" \
   check_index_clock_gate || OVERALL=$?
 
 # 11. The vibeterm / vibeframe terminal products moved to a separate repo

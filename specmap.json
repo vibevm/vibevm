@@ -5152,6 +5152,42 @@
     },
     {
       "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/journal/mod.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_index::journal",
+      "end_line": 12,
+      "fingerprint": "tok1:1298ecd1f60d3e2836385e66aa6b2a02bb5a41fbfc527ec5573742758d45fb42"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/journal/record.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_index::journal::record",
+      "end_line": 9,
+      "fingerprint": "tok1:1298ecd1f60d3e2836385e66aa6b2a02bb5a41fbfc527ec5573742758d45fb42"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/journal/store.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_index::journal::store",
+      "end_line": 12,
+      "fingerprint": "tok1:1298ecd1f60d3e2836385e66aa6b2a02bb5a41fbfc527ec5573742758d45fb42"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/journal/tests.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_index::journal::tests",
+      "end_line": 6,
+      "fingerprint": "tok1:1298ecd1f60d3e2836385e66aa6b2a02bb5a41fbfc527ec5573742758d45fb42"
+    },
+    {
+      "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/lock.rs",
       "item_kind": "mod",
       "line": 12,
@@ -13475,6 +13511,38 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#cli",
       "verb": "implements",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-index/src/journal/mod.rs",
+      "from_symbol": "vibe_index::journal",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-index/src/journal/record.rs",
+      "from_symbol": "vibe_index::journal::record",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-index/src/journal/store.rs",
+      "from_symbol": "vibe_index::journal::store",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-index/src/journal/tests.rs",
+      "from_symbol": "vibe_index::journal::tests",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-index/src/lock.rs",

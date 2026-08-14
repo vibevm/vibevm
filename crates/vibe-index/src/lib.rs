@@ -22,6 +22,7 @@ pub mod content_hash;
 pub mod error;
 pub mod hash_recipe;
 pub mod index;
+pub mod journal;
 pub mod lock;
 pub mod lockfile;
 pub mod publish;
