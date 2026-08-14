@@ -23,6 +23,11 @@ rust-ai-native-conform.workspace = true
 conform-core.workspace = true
 rust-ai-native-conform-frontend.workspace = true
 rust-ai-native-cli.workspace = true
+vibe-index.workspace = true
+# The CLI path (not only the tests) needs a scratch directory to
+# reproject into; the tests were using it as a dev-dependency before.
+tempfile.workspace = true
 
 [dev-dependencies]
-tempfile.workspace = true
+# Test fixtures stamp journal records; DateTime is named, not inferred.
+chrono.workspace = true

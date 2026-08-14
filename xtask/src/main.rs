@@ -14,6 +14,10 @@
 //! - `specmap` — regenerate the canonical `specmap.json` traceability
 //!   index (PROP-014 §2.5); `--check` regenerates and byte-diffs, the
 //!   `check-codegen` idiom.
+//! - `rebuild` — prove a vibe-index data directory's catalog is
+//!   byte-identical to the projection of its journal (PROP-044 §3):
+//!   reprojection into a scratch dir from the journal alone, then a
+//!   byte-compare over the writer's surface; non-zero exit on drift.
 //! - `test-gate` / `tripwire` / `trace` / `health` / `fast-loop` /
 //!   `codemod` — thin shims over the packaged `rust-ai-native-cli` library
 //!   (stack:org.vibevm.ai-native/rust-ai-native-lang, PROP-024): the drivers ship with
@@ -33,6 +37,7 @@ mod batch_review;
 mod codegen;
 mod conform;
 mod mirror;
+mod rebuild;
 mod specmap;
 mod sync_engines;
 
@@ -40,6 +45,7 @@ use batch_review::{BatchReviewArgs, run_batch_review};
 use codegen::{run_check_codegen, run_codegen};
 use conform::{run_conform_check, run_conform_freeze};
 use mirror::run_mirror;
+use rebuild::run_rebuild;
 use specmap::run_specmap;
 use sync_engines::run_sync_engines;
 
@@ -226,6 +232,27 @@ enum Cmd {
         #[arg(long)]
         from: Option<String>,
     },
+
+    /// Prove a vibe-index data directory's catalog is byte-identical to
+    /// the projection of its journal (PROP-044 §3 — the journal is the
+    /// truth, the catalog a projection that can be torn down and
+    /// rebuilt at any moment). Rebuilds the projection into a scratch
+    /// directory from the journal ALONE — the catalog on disk is never
+    /// an input, not even its clock — and byte-compares the writer's
+    /// surface (`repomd.json`, `primary.jsonl[.gz]`, `by-name/`,
+    /// `by-cap/`, `by-purl/`). `state/` is the host's runtime state,
+    /// not a projection, and never counts. Non-zero exit on any drift.
+    /// No repair mode — this verb ships the proof only.
+    Rebuild {
+        /// Byte-compare the rebuilt projection against the catalog on
+        /// disk; non-zero exit on any drift.
+        #[arg(long)]
+        check: bool,
+
+        /// The data directory to check — holds the journal under
+        /// `state/journal/` and the catalog files beside it.
+        data_dir: PathBuf,
+    },
 }
 
 #[derive(Subcommand, Debug)]
@@ -409,6 +436,7 @@ fn main() -> Result<()> {
             )
         }
         Cmd::Mirror { check, from } => run_mirror(check, from.as_deref()),
+        Cmd::Rebuild { check, data_dir } => run_rebuild(check, &data_dir),
     }
 }
 

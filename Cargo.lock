@@ -4859,6 +4859,7 @@ name = "xtask"
 version = "0.1.0-dev"
 dependencies = [
  "anyhow",
+ "chrono",
  "clap",
  "core-ai-native-conform",
  "core-ai-native-specmap",
@@ -4870,6 +4871,7 @@ dependencies = [
  "serde_json",
  "tempfile",
  "toml 0.9.12+spec-1.1.0",
+ "vibe-index",
  "walkdir",
 ]
 
