@@ -247,24 +247,34 @@ pub async fn upsert(
     let group = entry.group.clone();
     let name = entry.name.clone();
     let version = entry.version.clone();
-    // F2-1 — the clock enters at the mutation event; `write_to` never
-    // calls it itself, so one mutation event ⇒ one stamped tree.
-    let ctx = WriteCtx { at: Utc::now() };
 
-    let created = {
+    let (created, changed) = {
         let mut idx = state.index.write().await;
         let existed = idx
             .get(&group, &name)
             .map(|p| p.versions.iter().any(|v| v.version == version))
             .unwrap_or(false);
-        idx.upsert(entry);
-        idx.write_to(&state.data_dir, &ctx)
-            .map_err(|e| ApiError::internal(format!("could not persist index: {e} (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; fix: check the data dir is writable, then retry)")))?;
-        !existed
+        // F2-3 — a mutation that changes nothing writes nothing: an
+        // identical repeat never reaches `write_to`, so no commit
+        // lands for an event that did not happen. The response is
+        // still success — the resource is already in the requested
+        // state, which is what idempotency means over HTTP.
+        let changed = idx.upsert(entry);
+        if changed {
+            // F2-1 — the clock enters at the mutation event;
+            // `write_to` never calls it itself, so one mutation
+            // event ⇒ one stamped tree.
+            let ctx = WriteCtx { at: Utc::now() };
+            idx.write_to(&state.data_dir, &ctx)
+                .map_err(|e| ApiError::internal(format!("could not persist index: {e} (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; fix: check the data dir is writable, then retry)")))?;
+        }
+        (!existed, changed)
     };
 
-    state.stats.note_mutation();
-    publish_mutation(&state, format!("index: upsert {group}/{name}@{version}")).await;
+    if changed {
+        state.stats.note_mutation();
+        publish_mutation(&state, format!("index: upsert {group}/{name}@{version}")).await;
+    }
     let status = if created {
         StatusCode::CREATED
     } else {

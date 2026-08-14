@@ -112,15 +112,26 @@ impl Index {
 
     /// Insert (or replace) `entry`'s package version. The host
     /// `PackageEntry` is created on first insert. `latest_stable` is
-    /// recomputed via [`PackageEntry::finalise`].
-    pub fn upsert(&mut self, entry: VersionEntry) {
+    /// recomputed via [`PackageEntry::finalise`]. Returns `true` iff
+    /// the state changed (F2-3): an entry equal to the one already
+    /// stored under the same version number touches nothing — a
+    /// mutation that changes nothing must not write, and must not
+    /// publish, anything.
+    pub fn upsert(&mut self, entry: VersionEntry) -> bool {
         let key = (entry.group.clone(), entry.name.clone());
         let pkg = self.by_pkgref.entry(key).or_insert_with(|| {
             PackageEntry::new(entry.group.clone(), entry.name.clone(), entry.indexed_at)
         });
+        // F2-3 — equality on the whole value, not the version number:
+        // a differing entry under the same number IS an update, while
+        // an identical one is a no-op that leaves the map untouched.
+        if pkg.versions.contains(&entry) {
+            return false;
+        }
         pkg.versions.retain(|v| v.version != entry.version);
         pkg.versions.push(entry);
         pkg.finalise();
+        true
     }
 
     /// Drop one specific version. Returns `true` iff the version was

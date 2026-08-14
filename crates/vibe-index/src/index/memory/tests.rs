@@ -290,6 +290,38 @@ fn foreign_schema_version_survives_load_and_write() {
     );
 }
 
+/// F2-3 — `upsert` reports whether it changed the state: `false` on
+/// an identical repeat, `true` on the first insert and on a
+/// DIFFERING entry under the same version number. The third case is
+/// the load-bearing one: an implementation comparing only the
+/// version number would answer `false` there and silently drop real
+/// updates.
+#[test]
+fn upsert_reports_whether_state_changed() {
+    let mut idx = fresh_index();
+    assert!(
+        idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0")),
+        "the first insert changes the state"
+    );
+    assert!(
+        !idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0")),
+        "an identical repeat changes nothing"
+    );
+    let mut differing = entry(PackageKind::Flow, org(), "wal", "0.1.0");
+    differing.description = Some("a real content change".into());
+    assert!(
+        idx.upsert(differing),
+        "a differing entry under the same version number is an update, not a no-op"
+    );
+    // …and the update actually landed, replacing the old value.
+    let pkg = idx.get(&org(), "wal").unwrap();
+    assert_eq!(pkg.versions.len(), 1);
+    assert_eq!(
+        pkg.versions[0].description.as_deref(),
+        Some("a real content change")
+    );
+}
+
 /// F2-1, the test the phase exists for: one index state + one
 /// `WriteCtx` ⇒ byte-identical output across two independent
 /// writes into two different directories. A writer that called

@@ -860,13 +860,9 @@ moved** — the upsert or the removal, with the package coordinate. Each of the
 three mutating routes knows its own change, so the index's history reads as a
 log of publications rather than a wall of identical messages. @status:impl/done
 
-@fact:AUTO-PUBLISH-EVERY-MUTATION-COMMITS-EVEN-A-NO-OP **A consequence worth
-knowing before it surprises somebody**, measured while building this: writing
-the index stamps a fresh generation time into `repomd.json` on every write. So a
-repeated identical upsert still produces a diff, and therefore a commit. The
-empty-diff path above is real and tested, but in practice it fires only on the
-overlap case, not on redundant writes. Whether the index's own write should be
-deterministic is a question about the format, not about this flag. @status:impl/done
+@fact:AUTO-PUBLISH-EVERY-MUTATION-COMMITS-EVEN-A-NO-OP <status stage="spec" state="void">Retired 2026-08-14 by the determinism phase. It recorded a real consequence of the writer stamping a fresh generation time on every write: a repeated identical upsert produced a diff and therefore a commit, so the empty-diff path fired only on the overlap case. Both halves of that consequence are gone — the writer takes its clock as an input (`##THE-WRITER-TAKES-ITS-CLOCK-AS-AN-INPUT`), and a mutation that changes nothing no longer writes at all (`##A-MUTATION-THAT-CHANGES-NOTHING-COMMITS-NOTHING`). Its closing sentence asked whether the index's own write should be deterministic and called that a question about the format rather than about this flag; the format answered yes. This tombstone stays so the old sentence's name is never reused and inbound links do not break.</status> @status:spec/void
+
+@fact:A-MUTATION-THAT-CHANGES-NOTHING-COMMITS-NOTHING **A mutation that changes nothing writes nothing, and therefore commits nothing.** An upsert whose entry equals the one already stored under that version number leaves the in-memory state untouched, never reaches the writer, and never reaches the publisher; the two removal routes have always behaved this way, and the upsert route now matches them. The response is still success — the resource is already in the requested state, which is what idempotency means over HTTP — and the distinction between *created* and *changed* is kept, because a differing entry under an existing version number is an update and must still land. Determinism alone would not have bought this: with the clock arriving per mutation event, a repeat would still have moved `generated_at` and produced a diff. The point is not to produce an empty diff but to not create the work, so that the catalog's history records events that actually happened. @status:impl/done
 
 @fact:AUTO-PUBLISH-COMMITTER-IDENTITY-IS-THE-OPERATORS **No identity is invented.**
 The commit uses whatever git identity the host is configured with; if there is

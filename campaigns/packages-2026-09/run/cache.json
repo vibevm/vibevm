@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-14T11:35:46Z",
+  "updated_at": "2026-08-14T11:45:50Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -103365,7 +103365,7 @@
       }
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {
-      "content_hash": "7578e01233cc14c31bc19070ededf64f41fd5a3878287b8f8f85ec22e3164981",
+      "content_hash": "34a287576d22ad334fb37dd5c4905ac9d1c74e9c15c8f5524c8b24dd8af5d2fc",
       "rollup": {
         "explicit": [
           "impl",
@@ -103379,11 +103379,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 331,
-        "fact_count": 330,
+        "marker_count": 333,
+        "fact_count": 331,
         "unmarked_facts": 0
       },
-      "marker_count": 331,
+      "marker_count": 333,
       "unit_count": 49,
       "issue_count": 0,
       "campaign": {
@@ -105388,9 +105388,10 @@
           "AUTO-PUBLISH-EVERY-MUTATION-COMMITS-EVEN-A-NO-OP": {
             "v": "confirmed",
             "ev": [
-              "the cause is in the index's own write path: crates/vibe-index/src/index/memory.rs stamps `generated_at: Utc::now()` on every `write_to`, so two identical writes produce different bytes",
-              "therefore a redundant upsert still yields a diff and a commit, and the empty-diff path can only fire on the overlap case the sibling fact describes — which is why that path is covered by a unit test on the function rather than by a repeated-upsert integration test that would have passed for the wrong reason",
-              "this was found by building the feature, not by reviewing it, and it is recorded rather than fixed: whether the index's write should be byte-deterministic is a question about the format and its consumers, not about this flag"
+              "spec/modules/vibe-index/PROP-005-package-index.md  — юнит несёт `<status stage=\"spec\" state=\"void\">` и `@status:spec/void` по домашней форме надгробия (образец: PROP-029 `##SCOPE-HOST`)",
+              "rg -n \"Utc::now\\(|SystemTime::now\\(\" crates/vibe-index/src/index crates/vibe-index/src/types → EXIT=1, пусто — первая половина retired-последствия («писатель штампует свежее время на каждой записи») больше не имеет места",
+              "crates/vibe-index/tests/auto_publish.rs  fn identical_repeat_upsert_publishes_exactly_one_commit()  — вторая половина («повтор даёт дифф и коммит») опровергнута исполнимо",
+              "REPLACES the earlier verdict. Прежний вердикт был верен: факт добросовестно описывал измеренное последствие своего времени. Теперь юнит выведен из строя надгробием, потому что ОБЕ половины описанного им состояния устранены — писатель больше не зовёт часы, а мутация без изменения не пишет вовсе. Якорь сохранён неизменным: он цитируется картой спек-диффов плана, а якоря не переименовывают. Вердикт «confirmed» относится к тексту надгробия, а не к retired-утверждению: надгробие проверяемо — оно называет двух наследников, и оба существуют в этом же файле, а устранение обеих половин показано командами выше. Закрывающий вопрос прежнего текста («стоит ли делать запись детерминированной — вопрос о формате») получил ответ: да, и это фаза 2."
             ]
           },
           "AUTO-PUBLISH-COMMITTER-IDENTITY-IS-THE-OPERATORS": {
@@ -105644,10 +105645,22 @@
               "Тест прогнан против НЕПРАВЛЕНОГО писателя и УПАЛ там (`left: 1, right: 2`) — способность упасть показана, а не предположена; это и делает его доказательством СОХРАНЯЕМОГО поведения, а не спутником правки",
               "confirmed. «Штампует свою константу только в артефакт, порождённый с нуля» — ровно два источника значения в коде, и они разведены: конструктор ставит константу, писатель берёт поле. «Прочитанный каталог сохраняет свою версию» — исполнимо тестом, и тест доказан способным упасть. Оговорка факта о том, что поведение при неподдерживаемой версии здесь НЕ решается, соответствует коду: ветвления по версии в писателе нет, шаг его и не вводил."
             ]
+          },
+          "A-MUTATION-THAT-CHANGES-NOTHING-COMMITS-NOTHING": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/index/memory.rs  pub fn upsert(&mut self, entry: VersionEntry) -> bool  — возвращает «изменилось ли»; сравнение `pkg.versions.contains(&entry)` есть равенство ЗНАЧЕНИЯ целиком, а не совпадение номера версии",
+              "crates/vibe-index/src/server/routes/packages.rs  — в обработчике upsert `write_to` и `publish_mutation` стоят под `if changed`; часы (`WriteCtx { at: Utc::now() }`) читаются тоже только внутри этой ветки",
+              "crates/vibe-index/src/server/routes/packages.rs  — два маршрута удаления ветвятся по `removed` и делали это всегда; шаг привёл upsert к ИХ форме, а не наоборот",
+              "crates/vibe-index/tests/auto_publish.rs  fn identical_repeat_upsert_publishes_exactly_one_commit()  — два одинаковых POST дают 201 затем 200, `rev-list --count HEAD` = 2 (начальный + один), и фильтр по теме коммита даёт ровно один upsert-коммит",
+              "crates/vibe-index/src/index/memory/tests.rs  — юнит-тест на три случая: первая вставка «изменилось», идентичный повтор «не изменилось», ОТЛИЧАЮЩАЯСЯ запись под тем же номером версии «изменилось»",
+              "Оба теста прогнаны против непра́вленого кода: юнит не компилировался вовсе (E0600 на `!()` — старая сигнатура возвращала `()`), приёмочный давал 3 коммита вместо 2",
+              "confirmed по каждой клаузе. «Не пишет и не публикует» — обе ветки под одним `if changed`, и счётчик мутаций тоже: воркер отдельно проверил, что счётчик никем не связан, прежде чем менять его смысл. «Удаления вели себя так всегда» — подтверждено чтением: `remove_version`/`remove_package` возвращают `bool` с самого начала, и оба обработчика по нему ветвились; правки они не потребовали. «Ответ остаётся успехом, и различие created/changed сохранено» — тест утверждает 201 затем 200, то есть HTTP-семантика не сдвинулась. «Одного детерминизма не хватило бы» — прямое следствие Ф2.1: часы приходят на СОБЫТИЕ мутации, поэтому у повтора они другие и `generated_at` всё равно сдвинулся бы; это и есть причина, по которой шаг убирает работу, а не догоняет её пустым диффом."
+            ]
           }
         },
         "verified_at": "2026-08-13T23:34:20Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT"
       }
     },
     "spec/modules/vibe-mcp/PROP-015-mcp-integration.md": {

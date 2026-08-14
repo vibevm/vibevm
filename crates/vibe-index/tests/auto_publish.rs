@@ -271,6 +271,43 @@ async fn delete_routes_publish_remove_messages() {
     );
 }
 
+/// F2-3: an identical repeat upsert creates no second commit. One
+/// real change ⇒ one commit; the catalog's history records events
+/// that actually happened, and the repeat still answers success —
+/// the resource is already in the requested state, which is exactly
+/// what idempotency means over HTTP.
+#[tokio::test]
+async fn identical_repeat_upsert_publishes_exactly_one_commit() {
+    if !git_available() {
+        return;
+    }
+    let (_scratch, data, _remote) = setup(true);
+    let app = build(&data, true);
+    let body = serde_json::to_value(entry(PackageKind::Flow, "wal", "0.1.0")).unwrap();
+    // First POST creates; the identical repeat re-asserts the same
+    // state and must still succeed (200, `created: false`).
+    for expected in [StatusCode::CREATED, StatusCode::OK] {
+        let resp = app
+            .clone()
+            .oneshot(req_post("/v1/packages", body.clone()))
+            .await
+            .unwrap();
+        assert_eq!(resp.status(), expected);
+        drain(resp).await;
+    }
+    // Exactly ONE commit beyond the initial one, naming the change.
+    assert_eq!(
+        git_out(&data, &["rev-list", "--count", "HEAD"]),
+        "2",
+        "the identical repeat must not add a commit"
+    );
+    let upsert_commits = git_out(&data, &["log", "--format=%s"])
+        .lines()
+        .filter(|l| *l == "index: upsert org.vibevm/wal@0.1.0")
+        .count();
+    assert_eq!(upsert_commits, 1, "one real change, one commit");
+}
+
 /// Acceptance point 5 / Р4: a push failure (no upstream configured)
 /// does not drop the request, the local commit still stands, and the
 /// failure counter moves.
