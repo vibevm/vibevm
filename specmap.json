@@ -4994,8 +4994,8 @@
       "item_kind": "enum",
       "line": 17,
       "symbol": "vibe_index::error::Error",
-      "end_line": 43,
-      "fingerprint": "tok1:81a8177315394ea32069f927bd6fd38dadb8ce2a3a3ba5833a5a863ba6540278"
+      "end_line": 57,
+      "fingerprint": "tok1:83b09f0659a523f9ff495b42cb5bbd07d30ef01702d3fd727e8c682ff284b6b6"
     },
     {
       "crate_name": "vibe-index",
@@ -5154,9 +5154,27 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/journal/mod.rs",
       "item_kind": "mod",
-      "line": 12,
+      "line": 13,
       "symbol": "vibe_index::journal",
-      "end_line": 12,
+      "end_line": 13,
+      "fingerprint": "tok1:1298ecd1f60d3e2836385e66aa6b2a02bb5a41fbfc527ec5573742758d45fb42"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/journal/project.rs",
+      "item_kind": "mod",
+      "line": 15,
+      "symbol": "vibe_index::journal::project",
+      "end_line": 15,
+      "fingerprint": "tok1:1298ecd1f60d3e2836385e66aa6b2a02bb5a41fbfc527ec5573742758d45fb42"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/journal/project_tests.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_index::journal::project_tests",
+      "end_line": 7,
       "fingerprint": "tok1:1298ecd1f60d3e2836385e66aa6b2a02bb5a41fbfc527ec5573742758d45fb42"
     },
     {
@@ -13515,7 +13533,23 @@
     {
       "file": "crates/vibe-index/src/journal/mod.rs",
       "from_symbol": "vibe_index::journal",
-      "line": 12,
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-index/src/journal/project.rs",
+      "from_symbol": "vibe_index::journal::project",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-index/src/journal/project_tests.rs",
+      "from_symbol": "vibe_index::journal::project_tests",
+      "line": 7,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root",
       "verb": "implements"

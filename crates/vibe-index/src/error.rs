@@ -40,4 +40,18 @@ pub enum Error {
           fix: re-run `vibe-index reindex` to rebuild the on-disk files)"
     )]
     Malformed(String),
+
+    /// The journal cannot be folded into a catalog: it establishes no
+    /// registry identity, or it names a fact whose carrier this build
+    /// has not built. Refusing is the point — the journal is the truth
+    /// and the catalog its projection (PROP-044 §3), so inventing an
+    /// identity or silently skipping a fact would make the catalog
+    /// assert a state the journal does not describe.
+    #[error(
+        "unprojectable journal: {0} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-044#truth; \
+          fix: run `vibe-index init` when the journal carries no identity; \
+          update vibe-index when an event names a carrier this build lacks)"
+    )]
+    Unprojectable(String),
 }
