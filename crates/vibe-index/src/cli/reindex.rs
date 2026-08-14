@@ -256,6 +256,10 @@ pub(crate) fn run_plan(plan: Plan) -> Result<()> {
         at,
     );
     next.generator = opts.generator.clone();
+    // The catalog's schema version is state, not a constant of whichever
+    // binary happens to be running: `next` continues a catalog that was
+    // READ here, so it keeps the version that catalog carried.
+    next.schema_version = existing.schema_version;
 
     if plan.mode == "incremental" {
         for entry in existing.iter_versions() {
