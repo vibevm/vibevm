@@ -14,6 +14,7 @@ use serde::Serialize;
 use crate::error::{Error, Result};
 use crate::index::Index;
 use crate::index::checkpoint::{self, Checkpoint};
+use crate::index::memory::WriteCtx;
 use crate::scanner::{
     FromClonesOptions, FromClonesPackageScanner, FromGithubOptions, FromGithubPackageScanner,
     PackageScanner, ScanReport,
@@ -213,6 +214,11 @@ pub(crate) struct Plan {
 /// persist the index + checkpoint, emit the summary. Both `reindex`
 /// and `rescan-org` reduce to this.
 pub(crate) fn run_plan(plan: Plan) -> Result<()> {
+    // F2-1 — the clock enters here, once per command: the same `at`
+    // stamps the scanner's `indexed_at`, the rebuilt index's
+    // `generated_at`, the checkpoint, and the written manifest.
+    let at = Utc::now();
+
     // Load existing index manifest to preserve registry name / URL /
     // naming. Refuse if the data dir was never `init`-ed.
     let existing = Index::load_from(&plan.data_dir).map_err(|e| match e {
@@ -229,7 +235,7 @@ pub(crate) fn run_plan(plan: Plan) -> Result<()> {
         registry_url: existing.registry_url.clone(),
         naming: existing.naming,
         generator: format!("vibe-index {}", env!("CARGO_PKG_VERSION")),
-        indexed_at: Utc::now(),
+        indexed_at: at,
     };
 
     let prior = if plan.mode == "incremental" {
@@ -243,7 +249,12 @@ pub(crate) fn run_plan(plan: Plan) -> Result<()> {
     // For incremental, retain entries for repos that the scanner
     // skipped due to "unchanged since last checkpoint". For full,
     // start fresh.
-    let mut next = Index::new(&existing.registry, &existing.registry_url, existing.naming);
+    let mut next = Index::new(
+        &existing.registry,
+        &existing.registry_url,
+        existing.naming,
+        at,
+    );
     next.generator = opts.generator.clone();
 
     if plan.mode == "incremental" {
@@ -278,7 +289,7 @@ pub(crate) fn run_plan(plan: Plan) -> Result<()> {
     for entry in &report.entries {
         next.upsert(entry.clone());
     }
-    next.write_to(&plan.data_dir)?;
+    next.write_to(&plan.data_dir, &WriteCtx { at })?;
 
     // Persist the new checkpoint regardless of mode — incremental
     // walks pick it up next time, full walks reset it.

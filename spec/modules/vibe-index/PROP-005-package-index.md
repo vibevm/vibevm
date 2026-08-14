@@ -446,10 +446,12 @@ Arc<RwLock<Index>>
 @fact:write-protocol-lead On every successful write, the server: @status:impl/done
 
 1. @fact:WRITE-MEMORY Updates the in-memory `Index`. @status:impl/done
-2. @fact:WRITE-RESERIALISE Re-serialises the affected files (`primary.jsonl`, the touched `by-name/<kind>/<name>.json`, optionally `by-cap` / `by-purl`). @status:impl/done
+2. @fact:WRITE-RESERIALISE Re-serialises the affected files (`primary.jsonl`, the touched `by-name/<name>.json`, optionally `by-cap` / `by-purl`). @status:impl/done
 3. @fact:WRITE-ATOMIC Writes each file atomically: `tmp` next to the destination, `fsync`, `rename`. @status:impl/done
 4. @fact:WRITE-REPOMD-LAST Updates `repomd.json` last (the manifest is replaced as a whole; readers that hold the old `repomd.json` see a consistent old view; readers that pick up the new `repomd.json` see consistent new files). @status:impl/done
 5. @fact:WRITE-AUTO-COMMIT Optionally (if `--auto-commit-push` flag is on): `git add -A && git commit -m "auto: index update" && git push origin <branch>` against the data directory if it is a git working tree. v0 ships without this — operator runs commit/push manually or via separate cron. v1 adds `--auto-commit-push`. @status:spec/done
+
+@fact:THE-WRITER-TAKES-ITS-CLOCK-AS-AN-INPUT **The writer never calls `now()`.** Every timestamp a write stamps — the manifest's `generated_at` and each candidate-set file's `indexed_at` — arrives as an argument: the CLI passes the moment its command began, the server passes the moment of the mutation event, and the index and entry modules contain no clock call at all (a panel step refuses one). One state therefore produces one byte sequence, which is what makes "rebuild and compare" a real verification, an empty diff a real no-op, and a wire-diff a quantitative measure of a break rather than a wall of timestamp churn ([PROP-044 §4.3](../../common/PROP-044-change-native-formats.md#machinery)). Determinism here is an instrument, not tidiness: without it every later recoverability check measures the clock instead of the content. @status:impl/done
 
 @fact:CONCURRENCY **Concurrency.** axum + tokio. Reads do not block reads. Writes block reads (RwLock) for the duration of the in-memory mutation; disk I/O happens after lock release for any path it can (e.g. `primary.jsonl` rewrites are queued and serialised by a single dedicated writer task). For the request rates we target (max ~10 writes/min during a publish burst, ~1000 reads/min during a CI install storm), a coarse RwLock is sufficient. @status:impl/done
 

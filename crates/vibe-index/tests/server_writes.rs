@@ -8,6 +8,7 @@ use specmark::verifies;
 use tower::util::ServiceExt;
 
 use vibe_index::index::Index;
+use vibe_index::index::memory::WriteCtx;
 use vibe_index::server::{AppState, FileTokenStore, build_app};
 use vibe_index::types::{
     BootSnippetEntry, Group, NamingConvention, PackageKind, ProvidesEntry, VersionEntry,
@@ -66,8 +67,9 @@ fn fresh_state(read_only: bool, with_token: Option<&str>) -> (tempfile::TempDir,
         "vibespecs",
         "https://example.invalid/vibespecs",
         NamingConvention::Fqdn,
+        now(),
     );
-    idx.write_to(tmp.path()).unwrap();
+    idx.write_to(tmp.path(), &WriteCtx { at: now() }).unwrap();
     let tokens = if let Some(t) = with_token {
         let state_dir = tmp.path().join("state");
         std::fs::create_dir_all(&state_dir).unwrap();

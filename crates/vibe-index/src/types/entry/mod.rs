@@ -149,12 +149,15 @@ impl VersionEntry {
     /// doctests reach for when only identity matters. Production entries
     /// are built field-by-field from a manifest (`vibe-index add`); this
     /// is the fixture builder, public so examples need not restate the
-    /// whole struct.
+    /// whole struct. The clock is an input like everywhere else: `at`
+    /// lands in `indexed_at` verbatim, so a fixture stamped twice with
+    /// one `at` is byte-identical (F2-1).
     pub fn minimal(
         kind: PackageKind,
         group: Group,
         name: impl Into<String>,
         version: Version,
+        at: DateTime<Utc>,
     ) -> Self {
         VersionEntry {
             schema_version: Self::SCHEMA_VERSION,
@@ -188,7 +191,7 @@ impl VersionEntry {
             must_understand: Vec::new(),
             yanked: false,
             frozen: false,
-            indexed_at: Utc::now(),
+            indexed_at: at,
             indexed_by: "vibe-index".to_string(),
         }
     }

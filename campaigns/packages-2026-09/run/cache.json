@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-14T10:38:26Z",
+  "updated_at": "2026-08-14T11:21:51Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -103365,7 +103365,7 @@
       }
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {
-      "content_hash": "820b56633dee29047e27d39fa702395812b83eec0cece3a275293660d8a10df5",
+      "content_hash": "c9fa87ebbd76fa39970393716a9aa97a91b55addf6e191d8590b3591d34898c5",
       "rollup": {
         "explicit": [
           "impl",
@@ -103379,11 +103379,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 329,
-        "fact_count": 328,
+        "marker_count": 330,
+        "fact_count": 329,
         "unmarked_facts": 0
       },
-      "marker_count": 329,
+      "marker_count": 330,
       "unit_count": 49,
       "issue_count": 0,
       "campaign": {
@@ -104220,7 +104220,10 @@
           "WRITE-RESERIALISE": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/index/by_name.rs  — файл кандидатов пишется как by-name/<name>.json; уровня <kind> в пути нет",
+              "spec/modules/vibe-index/PROP-005-package-index.md  ##BY-NAME — «The directory level keyed on `kind` before PROP-008; `kind` left package identity, so `<name>` alone is the key»",
+              "spec/modules/vibe-index/PROP-005-package-index.md  ##HISTORY-GROUP-NATIVE — «the `by-name/` layer was re-keyed from `by-name/<kind>/<name>.json` to the candidate-set file `by-name/<name>.json`»",
+              "REPLACES the earlier verdict on this anchor. Прежний вердикт был верен по существу — порядок шагов записи не изменился ни на йоту, — но текст факта нёс путь `by-name/<kind>/<name>.json`, снятый ещё переходом на group-native: тот же самый устаревший путь, который на этой же посадке исправлен и в `crates/vibe-index/docs/format.md`. Правка чисто координатная: заменён путь, все пять шагов протокола записи и их порядок оставлены дословно. Найдено попутно при правке соседнего абзаца и внесено объявленно, а не молча."
             ]
           },
           "WRITE-ATOMIC": {
@@ -105616,10 +105619,24 @@
               "formats/breaks/001.md  — записка перелома: что изменилось, почему эпоха не нужна, кто чинит, рецепт",
               "confirmed по каждой клаузе. «Каждая запись несёт тег и читатель диспетчеризуется по нему» — атрибут `tag` на объединении есть ровно это, и оба плеча лишились собственных полей-тегов, так что второго носителя не осталось. «Тег был полуприсутствующим до 2026-08-14» — прежний вид зафиксирован удалённым утверждением `!json.contains(\"kind\")`, которое теперь перевёрнуто, и мёртвым типом DirectoryTag. «Запись, потерявшая поле, читалась как ДРУГОЙ вид вместо отказа» — это свойство `untagged`-разбора, и оно теперь опровергнуто исполнимо: тест на строке 139 требует именно ошибки, а не догадки. Это тот случай, где тест доказывается против СОХРАНЯЕМОГО поведения: он падает, если тегирование откатить. «Записка — formats/breaks/001.md» — файл существует и несёт все поля PROP-044 §4.7."
             ]
+          },
+          "THE-WRITER-TAKES-ITS-CLOCK-AS-AN-INPUT": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/index/memory.rs  pub struct WriteCtx { pub at: DateTime<Utc> }  — часы как вход, с доком «a writer never calls now()»",
+              "crates/vibe-index/src/index/memory.rs  pub fn write_to(&self, data_dir: &Path, ctx: &WriteCtx) -> Result<()>  — оба штампа (Repomd.generated_at и NameEntry::new) берутся из ctx.at",
+              "crates/vibe-index/src/index/memory.rs  pub fn new(.., at: DateTime<Utc>) -> Self  — конструктор индекса тоже принимает часы, иначе гейт ловил бы его",
+              "crates/vibe-index/src/types/entry/mod.rs  pub fn minimal(.., at: DateTime<Utc>)  — фикстурный строитель тоже; #[cfg(test)] здесь недоступен, его зовут из tests/seam_fakes.rs, отдельной единицы компиляции",
+              "crates/vibe-index/src/cli/{init,add,remove,reindex}.rs  — по ОДНОМУ Utc::now() на команду; crates/vibe-index/src/server/routes/packages.rs — по одному на каждую из трёх мутаций",
+              "tools/self-check.sh  check_index_clock_gate + run_step «index clock gate» — периметр назван каталогами рекурсивно, doc-строки отфильтрованы по форме строки; шаг прогнан в панели (self-check: all green)",
+              "rg -n \"Utc::now\\(|SystemTime::now\\(\" crates/vibe-index/src/index crates/vibe-index/src/types → EXIT=1, пусто (проверено боссом на хосте после слияния)",
+              "crates/vibe-index/src/index/memory/tests.rs  fn same_state_and_ctx_write_byte_identical_trees()  — одно состояние, один WriteCtx, два каталога, побайтовое сравнение всех файлов",
+              "confirmed по каждой клаузе. «Писатель никогда не зовёт now()» — свип по обоим модулям пуст, и это не обещание в комментарии, а шаг панели, который был показан красным на пробной вставке и зелёным после отката. «CLI передаёт момент команды, сервер — момент события» — по одному вызову часов на команду и на мутацию соответственно, а не по одному на употребление: две записи одной команды, разошедшиеся на миллисекунду, были бы той же недетерминированностью, только мельче. «Одно состояние даёт одну последовательность байтов» — исполнимо, тестом побайтового сравнения двух записей одного состояния с одним контекстом. Клауза о том, что детерминизм есть инструмент, а не опрятность, — это причина, а не проверяемое утверждение, и она согласована с PROP-044 §4.3."
+            ]
           }
         },
         "verified_at": "2026-08-13T23:34:20Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK"
       }
     },
     "spec/modules/vibe-mcp/PROP-015-mcp-integration.md": {

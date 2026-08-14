@@ -11,9 +11,16 @@ use specmark::verifies;
 use tower::util::ServiceExt;
 
 use vibe_index::index::Index;
+use vibe_index::index::memory::WriteCtx;
 use vibe_index::server::rate_limit::DEFAULT_MAX_BUCKETS;
 use vibe_index::server::{AppState, FileTokenStore, RateLimitConfig, build_app};
 use vibe_index::types::NamingConvention;
+
+fn fixed_now() -> chrono::DateTime<chrono::Utc> {
+    chrono::DateTime::parse_from_rfc3339("2026-05-06T12:00:00Z")
+        .unwrap()
+        .with_timezone(&chrono::Utc)
+}
 
 fn fresh_state(
     rate_limit: RateLimitConfig,
@@ -24,8 +31,10 @@ fn fresh_state(
         "vibespecs",
         "https://example.invalid/vibespecs",
         NamingConvention::KindName,
+        fixed_now(),
     );
-    idx.write_to(tmp.path()).unwrap();
+    idx.write_to(tmp.path(), &WriteCtx { at: fixed_now() })
+        .unwrap();
     let tokens = if let Some(t) = with_token {
         let state_dir = tmp.path().join("state");
         std::fs::create_dir_all(&state_dir).unwrap();

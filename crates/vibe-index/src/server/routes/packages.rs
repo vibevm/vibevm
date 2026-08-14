@@ -11,10 +11,12 @@ use std::sync::Arc;
 use axum::Json;
 use axum::extract::{Path, Query, State};
 use axum::http::{HeaderMap, StatusCode, header};
+use chrono::Utc;
 use semver::Version;
 use serde::{Deserialize, Serialize};
 use vibe_core::Group;
 
+use crate::index::memory::WriteCtx;
 use crate::index::search;
 use crate::server::error::ApiError;
 use crate::server::state::AppState;
@@ -245,6 +247,9 @@ pub async fn upsert(
     let group = entry.group.clone();
     let name = entry.name.clone();
     let version = entry.version.clone();
+    // F2-1 — the clock enters at the mutation event; `write_to` never
+    // calls it itself, so one mutation event ⇒ one stamped tree.
+    let ctx = WriteCtx { at: Utc::now() };
 
     let created = {
         let mut idx = state.index.write().await;
@@ -253,7 +258,7 @@ pub async fn upsert(
             .map(|p| p.versions.iter().any(|v| v.version == version))
             .unwrap_or(false);
         idx.upsert(entry);
-        idx.write_to(&state.data_dir)
+        idx.write_to(&state.data_dir, &ctx)
             .map_err(|e| ApiError::internal(format!("could not persist index: {e} (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; fix: check the data dir is writable, then retry)")))?;
         !existed
     };
@@ -301,7 +306,8 @@ pub async fn delete_version(
         let mut idx = state.index.write().await;
         let r = idx.remove_version(&group, &name, &v);
         if r {
-            idx.write_to(&state.data_dir)
+            let ctx = WriteCtx { at: Utc::now() };
+            idx.write_to(&state.data_dir, &ctx)
                 .map_err(|e| ApiError::internal(format!("could not persist index: {e} (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; fix: check the data dir is writable, then retry)")))?;
         }
         r
@@ -330,7 +336,8 @@ pub async fn delete_package(
         let mut idx = state.index.write().await;
         let r = idx.remove_package(&group, &name);
         if r {
-            idx.write_to(&state.data_dir)
+            let ctx = WriteCtx { at: Utc::now() };
+            idx.write_to(&state.data_dir, &ctx)
                 .map_err(|e| ApiError::internal(format!("could not persist index: {e} (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; fix: check the data dir is writable, then retry)")))?;
         }
         r

@@ -28,6 +28,12 @@ pub type PkgKey = (Group, String);
 
 const SCHEMA_VERSION: u32 = 1;
 
+/// The clock, as an input. A writer never calls `now()`: one state must
+/// produce one byte sequence, or "rebuild and compare" measures nothing.
+pub struct WriteCtx {
+    pub at: DateTime<Utc>,
+}
+
 /// In-RAM index. Single-source-of-truth when the server is running;
 /// loaded from disk on CLI invocation.
 ///
@@ -43,6 +49,7 @@ const SCHEMA_VERSION: u32 = 1;
 ///     "vibespecs",
 ///     "https://github.com/vibespecs",
 ///     NamingConvention::Fqdn,
+///     "2026-05-06T12:00:00Z".parse().unwrap(),
 /// );
 /// let group = "org.vibevm".parse().unwrap();
 /// assert!(idx.get(&group, "wal").is_none());
@@ -52,6 +59,7 @@ const SCHEMA_VERSION: u32 = 1;
 ///     "org.vibevm".parse().unwrap(),
 ///     "wal",
 ///     "0.1.0".parse().unwrap(),
+///     "2026-05-06T12:00:00Z".parse().unwrap(),
 /// ));
 /// assert_eq!(idx.package_count(), 1);
 /// assert_eq!(idx.version_count(), 1);
@@ -79,11 +87,15 @@ pub struct Index {
 }
 
 impl Index {
-    /// Build an empty index for `registry` rooted at `registry_url`.
+    /// Build an empty index for `registry` rooted at `registry_url`,
+    /// stamped `at`. The clock enters here, at the edge — callers pass
+    /// the command's single clock reading; the writer modules never
+    /// call the clock themselves.
     pub fn new(
         registry: impl Into<String>,
         registry_url: impl Into<String>,
         naming: NamingConvention,
+        at: DateTime<Utc>,
     ) -> Self {
         Index {
             schema_version: SCHEMA_VERSION,
@@ -91,7 +103,7 @@ impl Index {
             registry_url: registry_url.into(),
             naming,
             generator: default_generator(),
-            generated_at: Utc::now(),
+            generated_at: at,
             by_pkgref: BTreeMap::new(),
             quarantined: Vec::new(),
             tombstones: BTreeMap::new(),
@@ -168,7 +180,10 @@ impl Index {
     /// `primary.jsonl` and every `by-name/<name>.json` candidate set,
     /// then stamps `repomd.json` last so partial views are always
     /// consistent against an older manifest until the new one lands.
-    pub fn write_to(&self, data_dir: &Path) -> Result<()> {
+    /// Every timestamped field — the manifest's `generated_at` and the
+    /// by-name `NameEntry` labels — comes from `ctx.at`: same index,
+    /// same `WriteCtx` ⇒ byte-identical output (F2-1).
+    pub fn write_to(&self, data_dir: &Path, ctx: &WriteCtx) -> Result<()> {
         std::fs::create_dir_all(data_dir).map_err(|e| Error::Io {
             path: data_dir.to_path_buf(),
             message: e.to_string(),
@@ -209,14 +224,14 @@ impl Index {
         for pkg in self.by_pkgref.values() {
             by_name_files
                 .entry(pkg.name.clone())
-                .or_insert_with(|| NameEntry::new(pkg.name.clone(), self.generated_at))
+                .or_insert_with(|| NameEntry::new(pkg.name.clone(), ctx.at))
                 .packages
                 .push(pkg.clone());
         }
         for (name, ts) in &self.tombstones {
             let slot = by_name_files
                 .entry(name.clone())
-                .or_insert_with(|| NameEntry::new(name.clone(), self.generated_at));
+                .or_insert_with(|| NameEntry::new(name.clone(), ctx.at));
             slot.tombstone = Some(ts.clone());
         }
         for name_entry in by_name_files.values_mut() {
@@ -264,7 +279,7 @@ impl Index {
             registry: self.registry.clone(),
             registry_url: self.registry_url.clone(),
             naming: self.naming,
-            generated_at: Utc::now(),
+            generated_at: ctx.at,
             generator: self.generator.clone(),
             package_count: self.package_count(),
             version_count: self.version_count(),
@@ -355,245 +370,5 @@ fn default_generator() -> String {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::types::{PackageKind, VersionEntry};
-    use chrono::{DateTime, Utc};
-    use tempfile::tempdir;
-    use vibe_core::Group;
-
-    fn now() -> DateTime<Utc> {
-        DateTime::parse_from_rfc3339("2026-05-06T12:00:00Z")
-            .unwrap()
-            .with_timezone(&Utc)
-    }
-
-    fn org() -> Group {
-        Group::parse("org.vibevm").unwrap()
-    }
-
-    /// The standing test index: registry `vibespecs` on example.invalid.
-    fn fresh_index() -> Index {
-        Index::new(
-            "vibespecs",
-            "https://example.invalid",
-            NamingConvention::Fqdn,
-        )
-    }
-
-    fn entry(kind: PackageKind, group: Group, name: &str, version: &str) -> VersionEntry {
-        VersionEntry {
-            schema_version: VersionEntry::SCHEMA_VERSION,
-            kind,
-            group,
-            name: name.into(),
-            version: version.parse().unwrap(),
-            content_hash: format!("sha256:{name}{version}"),
-            source_url: format!("https://example.invalid/{name}.git"),
-            source_ref: format!("v{version}"),
-            resolved_commit: None,
-            registry: "vibespecs".into(),
-            workspace_origin: None,
-            license: None,
-            authors: vec![],
-            description: None,
-            homepage: None,
-            keywords: vec![],
-            describes: None,
-            compatibility: Default::default(),
-            provides: Default::default(),
-            requires: Default::default(),
-            requires_any: vec![],
-            obsoletes: Default::default(),
-            conflicts: Default::default(),
-            features: Default::default(),
-            subskills: vec![],
-            i18n: Default::default(),
-            boot_snippet: None,
-            files_count: 1,
-            must_understand: vec![],
-            yanked: false,
-            frozen: false,
-            indexed_at: now(),
-            indexed_by: "vibe-index 0.1.0-dev".into(),
-        }
-    }
-
-    #[test]
-    fn upsert_replaces_existing_version() {
-        let mut idx = fresh_index();
-        idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0"));
-        idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0"));
-        assert_eq!(idx.version_count(), 1);
-    }
-
-    #[test]
-    fn remove_version_works() {
-        let mut idx = fresh_index();
-        idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0"));
-        idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.2.0"));
-        let v = "0.1.0".parse().unwrap();
-        assert!(idx.remove_version(&org(), "wal", &v));
-        assert_eq!(idx.version_count(), 1);
-    }
-
-    #[test]
-    fn write_then_load_round_trips() {
-        let tmp = tempdir().unwrap();
-        let mut idx = fresh_index();
-        idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0"));
-        idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.2.0"));
-        idx.upsert(entry(PackageKind::Flow, org(), "atomic-commits", "0.1.0"));
-        idx.upsert(entry(PackageKind::Stack, org(), "rust-cli", "0.1.0"));
-        idx.write_to(tmp.path()).unwrap();
-
-        let back = Index::load_from(tmp.path()).unwrap();
-        assert_eq!(back.registry, idx.registry);
-        assert_eq!(back.registry_url, idx.registry_url);
-        assert_eq!(back.naming, idx.naming);
-        assert_eq!(back.package_count(), 3);
-        assert_eq!(back.version_count(), 4);
-        assert!(back.get(&org(), "wal").is_some());
-    }
-
-    #[test]
-    fn candidate_set_collapses_a_shared_name_into_one_file() {
-        // Two groups publish a package called `wal` — a short-name
-        // collision. They land in one `by-name/wal.json` candidate set.
-        let tmp = tempdir().unwrap();
-        let acme = Group::parse("com.acme").unwrap();
-        let mut idx = fresh_index();
-        idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0"));
-        idx.upsert(entry(PackageKind::Feat, acme.clone(), "wal", "1.0.0"));
-        idx.write_to(tmp.path()).unwrap();
-
-        // One file, two candidates.
-        assert!(by_name::file_path(tmp.path(), "wal").exists());
-        let candidates = idx.candidates_for("wal");
-        assert_eq!(candidates.len(), 2);
-
-        let back = Index::load_from(tmp.path()).unwrap();
-        assert_eq!(back.package_count(), 2);
-        assert!(back.get(&org(), "wal").is_some());
-        assert!(back.get(&acme, "wal").is_some());
-    }
-
-    #[test]
-    fn write_creates_repomd_with_file_hashes() {
-        let tmp = tempdir().unwrap();
-        let mut idx = fresh_index();
-        idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0"));
-        idx.write_to(tmp.path()).unwrap();
-        let manifest = repomd::read(tmp.path()).unwrap();
-        assert!(matches!(
-            manifest.files.get("primary.jsonl"),
-            Some(RepomdFileEntry::File { .. })
-        ));
-        assert!(matches!(
-            manifest.files.get("by-name"),
-            Some(RepomdFileEntry::Directory { .. })
-        ));
-        assert!(manifest.files.contains_key("by-name/wal.json"));
-    }
-
-    #[test]
-    fn write_replaces_stale_by_name_files() {
-        let tmp = tempdir().unwrap();
-        let mut idx = fresh_index();
-        idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0"));
-        idx.write_to(tmp.path()).unwrap();
-        // Drop the package; the old file MUST be gone after rewrite.
-        idx.remove_package(&org(), "wal");
-        idx.upsert(entry(PackageKind::Flow, org(), "atomic-commits", "0.1.0"));
-        idx.write_to(tmp.path()).unwrap();
-        assert!(!by_name::file_path(tmp.path(), "wal").exists());
-        assert!(by_name::file_path(tmp.path(), "atomic-commits").exists());
-    }
-
-    /// PROP-044 §4.5 — a version naming an unknown `must_understand`
-    /// capability is quarantined on load; its sibling versions keep
-    /// loading (the filter must not over-cut).
-    #[test]
-    fn load_quarantines_unknown_capability_and_keeps_the_rest() {
-        let tmp = tempdir().unwrap();
-        let mut idx = fresh_index();
-        let mut with_cap = entry(PackageKind::Flow, org(), "wal", "0.1.0");
-        with_cap.must_understand = vec!["x".into()];
-        idx.upsert(with_cap);
-        idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.2.0"));
-        idx.write_to(tmp.path()).unwrap();
-
-        let back = Index::load_from(tmp.path()).unwrap();
-        // The understood version is there…
-        let pkg = back.get(&org(), "wal").unwrap();
-        assert_eq!(pkg.versions.len(), 1);
-        assert_eq!(pkg.versions[0].version.to_string(), "0.2.0");
-        // …the quarantined one is not, and left exactly one record.
-        assert!(
-            !pkg.versions
-                .iter()
-                .any(|v| v.version.to_string() == "0.1.0")
-        );
-        assert_eq!(back.quarantined.len(), 1);
-        let q = &back.quarantined[0];
-        assert_eq!(q.name, "wal");
-        assert_eq!(q.version.to_string(), "0.1.0");
-        assert_eq!(q.missing, vec!["x".to_string()]);
-    }
-
-    /// PROP-044 §2 — a by-name tombstone survives a full
-    /// load → write → load round trip.
-    #[test]
-    fn tombstone_survives_load_and_write() {
-        let tmp = tempdir().unwrap();
-        let mut idx = fresh_index();
-        idx.upsert(entry(PackageKind::Flow, org(), "wal", "0.1.0"));
-        idx.tombstones.insert(
-            "wal".into(),
-            crate::types::Tombstone {
-                reason: "withdrawn by the owner".into(),
-                superseded_by: Some("org.vibevm/wal2".into()),
-            },
-        );
-        idx.write_to(tmp.path()).unwrap();
-        assert!(by_name::file_path(tmp.path(), "wal").exists());
-
-        let back = Index::load_from(tmp.path()).unwrap();
-        assert_eq!(
-            back.tombstones.get("wal").map(|t| t.reason.as_str()),
-            Some("withdrawn by the owner")
-        );
-        back.write_to(tmp.path()).unwrap();
-        let again = Index::load_from(tmp.path()).unwrap();
-        assert!(again.tombstones.contains_key("wal"));
-    }
-
-    /// PROP-044 §2, the case the tombstone slot exists for — a name
-    /// whose by-name file holds ONLY a tombstone still gets its file:
-    /// a name that ever existed must answer, never fall silent.
-    #[test]
-    fn tombstone_only_name_still_gets_its_by_name_file() {
-        let tmp = tempdir().unwrap();
-        let mut idx = fresh_index();
-        idx.tombstones.insert(
-            "dead-pkg".into(),
-            crate::types::Tombstone {
-                reason: "superseded".into(),
-                superseded_by: None,
-            },
-        );
-        idx.write_to(tmp.path()).unwrap();
-        assert!(
-            by_name::file_path(tmp.path(), "dead-pkg").exists(),
-            "a tombstone-only name must still get its by-name file"
-        );
-
-        let back = Index::load_from(tmp.path()).unwrap();
-        assert_eq!(back.package_count(), 0);
-        assert_eq!(back.tombstones.len(), 1);
-        // …and it survives the same round trip.
-        back.write_to(tmp.path()).unwrap();
-        let again = Index::load_from(tmp.path()).unwrap();
-        assert!(again.tombstones.contains_key("dead-pkg"));
-    }
-}
+#[path = "memory/tests.rs"]
+mod tests;

@@ -16,6 +16,7 @@ use vibe_core::Group;
 use crate::content_hash::compute_content_hash;
 use crate::error::{Error, Result};
 use crate::index::Index;
+use crate::index::memory::WriteCtx;
 use crate::lock::ServerLock;
 use crate::scanner::manifest as mfst;
 use crate::types::{NamingConvention, PackageKind, VersionEntry};
@@ -46,6 +47,10 @@ pub struct Args {
 }
 
 pub fn run(args: Args) -> Result<()> {
+    // F2-1 — the clock enters here, once per command: the same `at`
+    // stamps the entry's `indexed_at` and the written manifest, so two
+    // records born of one command never differ by a millisecond.
+    let at = Utc::now();
     refuse_if_server_running(&args.data_dir)?;
 
     let mut index = Index::load_from(&args.data_dir).map_err(|e| match e {
@@ -113,7 +118,7 @@ pub fn run(args: Args) -> Result<()> {
         must_understand: Vec::new(),
         yanked: false,
         frozen: pkg.frozen,
-        indexed_at: Utc::now(),
+        indexed_at: at,
         indexed_by: format!("vibe-index {}", env!("CARGO_PKG_VERSION")),
     };
 
@@ -122,7 +127,7 @@ pub fn run(args: Args) -> Result<()> {
         entry.kind, entry.group, entry.name, entry.version, entry.content_hash
     );
     index.upsert(entry);
-    index.write_to(&args.data_dir)?;
+    index.write_to(&args.data_dir, &WriteCtx { at })?;
     Ok(())
 }
 
@@ -159,12 +164,14 @@ mod tests {
     fn add_projects_manifest_frozen_into_the_entry() {
         let tmp = tempfile::tempdir().unwrap();
         let data = tmp.path().join("data");
+        let at = Utc::now();
         Index::new(
             "vibespecs",
             "https://example.invalid/vibespecs",
             NamingConvention::Fqdn,
+            at,
         )
-        .write_to(&data)
+        .write_to(&data, &WriteCtx { at })
         .unwrap();
 
         let pkg_dir = tmp.path().join("pkg");

@@ -10,6 +10,7 @@ use axum::http::{Method, Request, StatusCode, header};
 use tower::util::ServiceExt;
 
 use vibe_index::index::Index;
+use vibe_index::index::memory::WriteCtx;
 use vibe_index::server::{
     AppState, RateDecision, RateLimitConfig, RateLimitKey, RateLimiter, TokenBucketRateLimiter,
     TokenStore, build_app,
@@ -72,6 +73,12 @@ impl RateLimiter for AlwaysDenyRateLimiter {
 /// A fresh server over an empty `vibespecs` index with both seams
 /// injected directly. No `admin.tokens` file is ever written — auth is
 /// whatever `tokens` decides.
+fn fixed_now() -> chrono::DateTime<chrono::Utc> {
+    chrono::DateTime::parse_from_rfc3339("2026-05-06T12:00:00Z")
+        .unwrap()
+        .with_timezone(&chrono::Utc)
+}
+
 fn state_with_seams(
     tokens: Box<dyn TokenStore>,
     rate_limiter: Box<dyn RateLimiter>,
@@ -81,8 +88,10 @@ fn state_with_seams(
         "vibespecs",
         "https://example.invalid/vibespecs",
         NamingConvention::Fqdn,
+        fixed_now(),
     );
-    idx.write_to(tmp.path()).unwrap();
+    idx.write_to(tmp.path(), &WriteCtx { at: fixed_now() })
+        .unwrap();
     let idx2 = Index::load_from(tmp.path()).unwrap();
     let state = AppState::with_seams(tmp.path().to_path_buf(), false, idx2, tokens, rate_limiter);
     (tmp, state)
@@ -102,6 +111,7 @@ fn sample_payload() -> serde_json::Value {
         Group::parse("org.vibevm").unwrap(),
         "wal",
         "0.1.0".parse().unwrap(),
+        fixed_now(),
     );
     e.registry = "vibespecs".into();
     serde_json::to_value(e).unwrap()

@@ -6,11 +6,13 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#i
 
 use std::path::PathBuf;
 
+use chrono::Utc;
 use clap::Parser;
 use vibe_core::Group;
 
 use crate::error::{Error, Result};
 use crate::index::Index;
+use crate::index::memory::WriteCtx;
 use crate::lock::ServerLock;
 
 #[derive(Debug, Parser)]
@@ -30,6 +32,9 @@ pub struct Args {
 }
 
 pub fn run(args: Args) -> Result<()> {
+    // F2-1 — the clock enters here, once per command: the removal's
+    // persist is stamped by the command moment, not by the writer.
+    let at = Utc::now();
     refuse_if_server_running(&args.data_dir)?;
 
     let mut index = Index::load_from(&args.data_dir)?;
@@ -54,7 +59,7 @@ pub fn run(args: Args) -> Result<()> {
             ),
         }));
     }
-    index.write_to(&args.data_dir)?;
+    index.write_to(&args.data_dir, &WriteCtx { at })?;
     println!(
         "removed {}/{}{}",
         args.group,

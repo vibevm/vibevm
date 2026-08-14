@@ -1,0 +1,31 @@
+{
+  "batch": "F2-1-CLOCK",
+  "cluster": "host",
+  "files": {
+    "spec/modules/vibe-index/PROP-005-package-index.md": {
+      "THE-WRITER-TAKES-ITS-CLOCK-AS-AN-INPUT": {
+        "v": "confirmed",
+        "ev": [
+          "crates/vibe-index/src/index/memory.rs  pub struct WriteCtx { pub at: DateTime<Utc> }  — часы как вход, с доком «a writer never calls now()»",
+          "crates/vibe-index/src/index/memory.rs  pub fn write_to(&self, data_dir: &Path, ctx: &WriteCtx) -> Result<()>  — оба штампа (Repomd.generated_at и NameEntry::new) берутся из ctx.at",
+          "crates/vibe-index/src/index/memory.rs  pub fn new(.., at: DateTime<Utc>) -> Self  — конструктор индекса тоже принимает часы, иначе гейт ловил бы его",
+          "crates/vibe-index/src/types/entry/mod.rs  pub fn minimal(.., at: DateTime<Utc>)  — фикстурный строитель тоже; #[cfg(test)] здесь недоступен, его зовут из tests/seam_fakes.rs, отдельной единицы компиляции",
+          "crates/vibe-index/src/cli/{init,add,remove,reindex}.rs  — по ОДНОМУ Utc::now() на команду; crates/vibe-index/src/server/routes/packages.rs — по одному на каждую из трёх мутаций",
+          "tools/self-check.sh  check_index_clock_gate + run_step «index clock gate» — периметр назван каталогами рекурсивно, doc-строки отфильтрованы по форме строки; шаг прогнан в панели (self-check: all green)",
+          "rg -n \"Utc::now\\(|SystemTime::now\\(\" crates/vibe-index/src/index crates/vibe-index/src/types → EXIT=1, пусто (проверено боссом на хосте после слияния)",
+          "crates/vibe-index/src/index/memory/tests.rs  fn same_state_and_ctx_write_byte_identical_trees()  — одно состояние, один WriteCtx, два каталога, побайтовое сравнение всех файлов",
+          "confirmed по каждой клаузе. «Писатель никогда не зовёт now()» — свип по обоим модулям пуст, и это не обещание в комментарии, а шаг панели, который был показан красным на пробной вставке и зелёным после отката. «CLI передаёт момент команды, сервер — момент события» — по одному вызову часов на команду и на мутацию соответственно, а не по одному на употребление: две записи одной команды, разошедшиеся на миллисекунду, были бы той же недетерминированностью, только мельче. «Одно состояние даёт одну последовательность байтов» — исполнимо, тестом побайтового сравнения двух записей одного состояния с одним контекстом. Клауза о том, что детерминизм есть инструмент, а не опрятность, — это причина, а не проверяемое утверждение, и она согласована с PROP-044 §4.3."
+        ]
+      },
+      "WRITE-RESERIALISE": {
+        "v": "confirmed",
+        "ev": [
+          "crates/vibe-index/src/index/by_name.rs  — файл кандидатов пишется как by-name/<name>.json; уровня <kind> в пути нет",
+          "spec/modules/vibe-index/PROP-005-package-index.md  ##BY-NAME — «The directory level keyed on `kind` before PROP-008; `kind` left package identity, so `<name>` alone is the key»",
+          "spec/modules/vibe-index/PROP-005-package-index.md  ##HISTORY-GROUP-NATIVE — «the `by-name/` layer was re-keyed from `by-name/<kind>/<name>.json` to the candidate-set file `by-name/<name>.json`»",
+          "REPLACES the earlier verdict on this anchor. Прежний вердикт был верен по существу — порядок шагов записи не изменился ни на йоту, — но текст факта нёс путь `by-name/<kind>/<name>.json`, снятый ещё переходом на group-native: тот же самый устаревший путь, который на этой же посадке исправлен и в `crates/vibe-index/docs/format.md`. Правка чисто координатная: заменён путь, все пять шагов протокола записи и их порядок оставлены дословно. Найдено попутно при правке соседнего абзаца и внесено объявленно, а не молча."
+        ]
+      }
+    }
+  }
+}

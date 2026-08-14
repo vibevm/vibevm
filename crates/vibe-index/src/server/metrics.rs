@@ -87,6 +87,9 @@ mod tests {
 
     #[test]
     fn renders_canonical_lines() {
+        let at = chrono::DateTime::parse_from_rfc3339("2026-05-06T12:00:00Z")
+            .unwrap()
+            .with_timezone(&chrono::Utc);
         let state = AppState::new(
             std::path::PathBuf::from("."),
             true,
@@ -94,6 +97,7 @@ mod tests {
                 "vibespecs",
                 "https://example.invalid",
                 crate::types::NamingConvention::KindName,
+                at,
             ),
         );
         let s = render(&state, 0, 0);

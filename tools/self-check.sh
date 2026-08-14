@@ -531,6 +531,44 @@ check_mcp_authored_denominator() {
 run_step "mcp packages' authored crates are the conform perimeter" \
   check_mcp_authored_denominator || OVERALL=$?
 
+# 10d. The index clock gate (F2-1). Time enters at the EDGE — the CLI
+# command moment or the server mutation event — and never inside the
+# writer modules: a writer that calls `now()` itself makes "rebuild and
+# compare" measure nothing, because two writes of one state stamp two
+# different instants (determinism is the measuring instrument,
+# PROP-044 §4.3). The perimeter is named by module directory, not by a
+# repo-wide mask: `crates/vibe-index/src/index` and
+# `crates/vibe-index/src/types`, recursively — a new file under either
+# is covered the day it lands.
+#
+# CODE only: a hit whose line opens with a comment marker is prose —
+# doc-comments legally show `Utc::now()` in examples (e.g. the scanner
+# doctest) — so lines starting with `//` are filtered by line shape
+# before the verdict. An inline trailing comment does NOT exempt a
+# line: only lines whose first non-blank content is the comment pass.
+check_index_clock_gate() {
+  local hits
+  hits=$(grep -rnE 'Utc::now\(|SystemTime::now\(' \
+      crates/vibe-index/src/index \
+      crates/vibe-index/src/types \
+      2>/dev/null \
+    | grep -vE ':[0-9]+:[[:space:]]*//')
+  if [ -n "$hits" ]; then
+    printf '%s\n' "$hits" >&2
+    printf 'self-check: the index writer modules call the clock directly.\n' >&2
+    printf 'self-check: the rule — time enters at the edge (CLI command or\n' >&2
+    printf 'self-check: server mutation event) and never inside index/ or types/:\n' >&2
+    printf 'self-check: one state must produce one byte sequence, or "rebuild and\n' >&2
+    printf 'self-check: compare" measures nothing (PROP-044 §4.3, F2-1).\n' >&2
+    printf 'self-check: fix: pass the time as an argument — a WriteCtx for\n' >&2
+    printf 'self-check: write_to, an `at` for Index::new / VersionEntry::minimal.\n' >&2
+    return 1
+  fi
+  return 0
+}
+run_step "index clock gate (no Utc::now/SystemTime::now in index/ or types/)" \
+  check_index_clock_gate || OVERALL=$?
+
 # 11. The vibeterm / vibeframe terminal products moved to a separate repo
 # (`vibevm-term`); their pure-logic tests (`node --test` for the shared
 # arg/keymap helpers, `vitest` for the vibeterm engine cells) live there now.

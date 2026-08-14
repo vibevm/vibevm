@@ -17,6 +17,7 @@ use chrono::{DateTime, Utc};
 use tower::util::ServiceExt;
 
 use vibe_index::index::Index;
+use vibe_index::index::memory::WriteCtx;
 use vibe_index::server::{AppState, FileTokenStore, build_app};
 use vibe_index::types::{
     BootSnippetEntry, NamingConvention, PackageKind, ProvidesEntry, VersionEntry,
@@ -113,8 +114,9 @@ fn setup(with_remote: bool) -> (tempfile::TempDir, PathBuf, Option<PathBuf>) {
         "vibespecs",
         "https://example.invalid/vibespecs",
         NamingConvention::Fqdn,
+        now(),
     );
-    idx.write_to(&data).unwrap();
+    idx.write_to(&data, &WriteCtx { at: now() }).unwrap();
     std::fs::write(data.join(".gitignore"), "/state/\n").unwrap();
     let state_dir = data.join("state");
     std::fs::create_dir_all(&state_dir).unwrap();

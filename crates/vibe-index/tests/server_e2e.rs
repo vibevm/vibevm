@@ -11,6 +11,7 @@ use specmark::verifies;
 use tower::util::ServiceExt;
 
 use vibe_index::index::Index;
+use vibe_index::index::memory::WriteCtx;
 use vibe_index::server::{AppState, build_app};
 use vibe_index::types::{
     BootSnippetEntry, Group, NamingConvention, PackageEntry, PackageKind, ProvidesEntry,
@@ -79,6 +80,7 @@ fn populated_state() -> (tempfile::TempDir, AppState) {
         "vibespecs",
         "https://example.invalid/vibespecs",
         NamingConvention::Fqdn,
+        now(),
     );
     idx.upsert(entry(
         PackageKind::Flow,
@@ -126,7 +128,7 @@ fn populated_state() -> (tempfile::TempDir, AppState) {
     pkg.versions.push(entry_with_subskill);
     pkg.finalise();
 
-    idx.write_to(tmp.path()).unwrap();
+    idx.write_to(tmp.path(), &WriteCtx { at: now() }).unwrap();
     let state = AppState::new(tmp.path().to_path_buf(), true, idx);
     (tmp, state)
 }

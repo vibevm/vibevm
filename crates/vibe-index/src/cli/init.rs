@@ -5,10 +5,12 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root
 
 use std::path::PathBuf;
 
+use chrono::Utc;
 use clap::Parser;
 
 use crate::cli::kinds::NamingConvention;
 use crate::error::{Error, Result};
+use crate::index::memory::WriteCtx;
 use crate::index::{Index, repomd};
 
 #[derive(Debug, Parser)]
@@ -38,14 +40,18 @@ pub struct Args {
 }
 
 pub fn run(args: Args) -> Result<()> {
+    // F2-1 — the clock enters here, once per command, at the edge.
+    // `index/` never calls `now()` itself: one state must produce one
+    // byte sequence, or "rebuild and compare" measures nothing.
+    let at = Utc::now();
     if repomd::exists(&args.data_dir) && !args.force {
         return Err(Error::InvalidInput(format!(
             "data directory `{}` already carries an index (use --force to overwrite)",
             args.data_dir.display()
         )));
     }
-    let index = Index::new(&args.registry, &args.registry_url, args.naming);
-    index.write_to(&args.data_dir)?;
+    let index = Index::new(&args.registry, &args.registry_url, args.naming, at);
+    index.write_to(&args.data_dir, &WriteCtx { at })?;
     write_gitignore(&args.data_dir)?;
     write_readme(&args.data_dir, &index.registry, &index.registry_url)?;
     println!(
