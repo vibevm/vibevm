@@ -883,6 +883,14 @@ and it answers this question too. Read the worktree, archive what exists, and
 leave the directory and its registration alone until the log has stopped growing.
 Never prune or reset a killed run's worktree on the strength of the notification.
 
+**The positive case, from the same session, because the rule is otherwise only a
+warning:** a third run was killed at 5 of 6 and its worktree was left untouched.
+Its late report then matched every number the boss had measured independently —
+the red proof's exit code, the lib-test count, three file lengths, the lint's
+exit. A late report is exactly as good as the tree it ran against. So the rule is
+not "distrust what arrives late"; it is **"do not change the tree under a
+survivor, and a late report stays worth reading"**.
+
 And the standing habit is what caught all of it: `#fanout-verify-the-numbers-not-the-narrative`.
 A late report passes every mechanical check there is — the file exists, the
 template is filled, the evidence is quoted, the set-compare balances. Only
