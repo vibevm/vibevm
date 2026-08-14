@@ -15,7 +15,6 @@ use serde::{Deserialize, Serialize};
 /// registry explorer can trace a package repository back to the monorepo
 /// it was generated from (PROP-008 §2.8 / §2.9).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
 pub struct WorkspaceOriginEntry {
     /// URL of the source monorepo the published copy was generated from.
     pub upstream: String,
@@ -34,7 +33,6 @@ pub struct WorkspaceOriginEntry {
 /// to activation lists; `exclusive` is the at-most-one-of named-group
 /// table.
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
 pub struct FeaturesEntry {
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub features: BTreeMap<String, Vec<String>>,
@@ -57,7 +55,6 @@ pub enum DeliveryMode {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
 pub struct SubskillEntry {
     pub path: String,
     pub delivery: DeliveryMode,
@@ -70,7 +67,6 @@ pub struct SubskillEntry {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
 pub struct I18nEntry {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub available: Vec<String>,
@@ -89,7 +85,6 @@ impl I18nEntry {
 /// now identified by its `source` path inside the package plus an
 /// ordering `category`.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
 pub struct BootSnippetEntry {
     /// Path to the boot file inside the package, e.g. `boot/10-flow-wal.md`.
     pub source: String,

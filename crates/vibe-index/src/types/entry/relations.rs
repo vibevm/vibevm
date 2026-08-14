@@ -11,7 +11,6 @@ use serde::{Deserialize, Serialize};
 use crate::types::kinds::PackageKind;
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
 pub struct CompatibilityEntry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub min_vibe_version: Option<String>,
@@ -26,7 +25,6 @@ impl CompatibilityEntry {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
 pub struct ProvidesEntry {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub capabilities: Vec<String>,
@@ -39,7 +37,6 @@ impl ProvidesEntry {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
 pub struct RequiresEntry {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub packages: Vec<String>,
@@ -54,13 +51,11 @@ impl RequiresEntry {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
 pub struct RequiresAnyEntry {
     pub one_of: Vec<String>,
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
 pub struct ObsoletesEntry {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub packages: Vec<String>,
@@ -73,7 +68,6 @@ impl ObsoletesEntry {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
 pub struct ConflictsEntry {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub packages: Vec<String>,

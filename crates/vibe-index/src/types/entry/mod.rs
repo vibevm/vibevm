@@ -34,8 +34,15 @@ pub use relations::{
 };
 
 /// Per-version index record. PROP-005 §2.6.
+///
+/// Reader tolerance (PROP-044 §4.4): unknown fields are read and
+/// ignored, never rejected — here and on every nested catalog type.
+/// Strictness here was never taste; it was loss protection for a
+/// read-modify-write catalog, where a reader that skipped what it did
+/// not understand would hand its writer a record already stripped of
+/// it. The catalog is now a projection of the journal — what is read
+/// is never written back — so there is nothing left to lose.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
 #[spec(
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry",
     r = 1

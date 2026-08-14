@@ -18,7 +18,6 @@ use super::VersionEntry;
 /// identity (PROP-008 §2.2). A [`NameEntry`] holds the candidate set:
 /// every `PackageEntry` that shares one bare `name`.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
 #[spec(
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry",
     r = 1
@@ -60,7 +59,6 @@ impl PackageEntry {
 /// answers with a current thing, a redirect pointer, or a tombstone with
 /// a reason, but NEVER silence (PROP-044 §2, the no-silence law).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
 pub struct Tombstone {
     pub reason: String,
     /// The successor this name's consumers should move to, when one is
@@ -75,7 +73,6 @@ pub struct Tombstone {
 /// is what makes CLI short-name resolution (PROP-008 §2.6) one round-trip
 /// per registry and lets a collision (PROP-008 §2.7) be detected at once.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
 #[spec(
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry",
     r = 1

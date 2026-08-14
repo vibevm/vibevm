@@ -12,7 +12,6 @@ use specmark::spec;
 use super::kinds::NamingConvention;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
 #[spec(
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout",
     r = 1

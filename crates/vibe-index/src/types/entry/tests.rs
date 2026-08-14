@@ -209,3 +209,73 @@ fn tombstone_round_trips_and_absence_is_omitted() {
     let back: NameEntry = serde_json::from_str(&json).unwrap();
     assert!(back.tombstone.is_none());
 }
+
+// --- F33 (PROP-044 §4.4): the tolerant catalog reader -------------------
+
+#[test]
+fn unknown_root_field_is_read() {
+    // A field this build does not know is the future arriving early, not
+    // an error — see the tolerance note on `VersionEntry` for why the
+    // strictness left and why dropping it is safe.
+    let v = sample_entry();
+    let mut value = serde_json::to_value(&v).unwrap();
+    value["future_field"] = serde_json::json!("written by a newer vibe");
+    let back: VersionEntry = serde_json::from_value(value).unwrap();
+    assert_eq!(back.name, "wal");
+}
+
+#[test]
+fn unknown_nested_section_field_is_read() {
+    // Tolerance is not only at the root: a nested section this build
+    // reads partially still parses, and every key it does know arrives
+    // intact.
+    let v = sample_entry();
+    let mut value = serde_json::to_value(&v).unwrap();
+    value["compatibility"] = serde_json::json!({
+        "min_vibe_version": "0.1.0",
+        "future_key": true,
+    });
+    let back: VersionEntry = serde_json::from_value(value).unwrap();
+    assert_eq!(
+        back.compatibility.min_vibe_version.as_deref(),
+        Some("0.1.0")
+    );
+}
+
+#[test]
+fn repomd_unknown_field_is_read() {
+    // `repomd.json` is a catalog file like the entries: a newer
+    // generator may write a key this reader does not know yet.
+    let json = r#"{
+        "schema_version": 1,
+        "registry": "vibespecs",
+        "registry_url": "https://github.com/vibespecs",
+        "naming": "fqdn",
+        "generated_at": "2026-05-06T12:00:00Z",
+        "generator": "vibe-index 0.1.0-dev",
+        "package_count": 3,
+        "version_count": 5,
+        "files": {},
+        "future_extension": "not in the type yet"
+    }"#;
+    let parsed: crate::types::Repomd = serde_json::from_str(json).unwrap();
+    assert_eq!(parsed.registry, "vibespecs");
+}
+
+#[test]
+fn unknown_field_is_read_but_not_written_back() {
+    // Tolerance ends at the pen: a field this build does not know is
+    // read — the record still answers — and dropped when the record is
+    // serialised again, because it has no home in this build's type.
+    // That is exactly why the catalog is written from the journal
+    // projection and never read-modify-written: a writer fed by this
+    // reader would silently strip the very fields the reader was made
+    // tolerant enough to accept. What is read is never written back
+    // (PROP-044 §4.4).
+    let v = sample_entry();
+    let mut value = serde_json::to_value(&v).unwrap();
+    value["future_field"] = serde_json::json!("written by a newer vibe");
+    let read: VersionEntry = serde_json::from_value(value).unwrap();
+    let rewritten = serde_json::to_value(&read).unwrap();
+    assert!(rewritten.get("future_field").is_none(), "{rewritten}");
+}
