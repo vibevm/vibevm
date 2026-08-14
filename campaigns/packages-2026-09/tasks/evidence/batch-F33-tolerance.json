@@ -1,0 +1,28 @@
+{
+  "batch": "F33-TOLERANCE",
+  "cluster": "host",
+  "files": {
+    "spec/modules/vibe-index/PROP-005-package-index.md": {
+      "FORWARD-COMPAT": {
+        "v": "confirmed",
+        "ev": [
+          "crates/vibe-index/src/types/entry/mod.rs  — `VersionEntry` no longer carries `#[serde(deny_unknown_fields)]`; the doc comment above it states the rule and the reason",
+          "crates/vibe-index/src/types/  — `grep -rc deny_unknown_fields` over the whole directory returns 0 in every file (aggregate.rs, content.rs, mod.rs, relations.rs, repomd.rs, kinds.rs, tests.rs, mod.rs). Sixteen attributes removed, not the fifteen the plan's baseline recorded — the sixteenth is `Tombstone`, added by this campaign's own phase-1 landing after the count was taken",
+          "crates/vibe-index/src/types/entry/tests.rs  fn unknown_root_field_is_read() / fn unknown_nested_section_field_is_read() / fn repomd_unknown_field_is_read() / fn unknown_field_is_read_but_not_written_back()  — four guards, all green",
+          "RED PROOF, re-run by the boss: re-adding the attribute to `VersionEntry` ALONE reddens two of those four with serde's own `unknown field `future_field`, expected one of …`, real exit 101; removed again, green.",
+          "REPLACES the earlier verdict, and the replacement is the interesting part: the earlier one confirmed a fact that was FALSE of the tree. The fact promised readers that gracefully ignore unknown fields while sixteen aggregates refused the whole file on the first unknown key. The contradiction was not an oversight — it could not be removed while every mutation read the catalog to rewrite it, because tolerance would then have silently DELETED the tolerated field on the next write, which is worse than refusing. Phase 3 removed the condition (a mutation is an append plus a reprojection, so nothing read is written back), and only then could the attribute go. The amended fact says all of that, including that it was false, so the next reader does not re-derive the history."
+        ]
+      },
+      "NEVER-SILENT-SCHEMA": {
+        "v": "confirmed",
+        "ev": [
+          "crates/vibe-index/src/index/quarantine.rs  pub const UNDERSTOOD: &[&str] = &[];  and  pub fn missing_capabilities(...)  — the per-record capability set that now carries the refusal",
+          "crates/vibe-index/src/index/memory.rs  fn load_from(...)  — a version naming a capability this build lacks is refused BY NAME into `quarantined` with a WARN, and the rest of the catalog still loads",
+          "crates/vibe-index/src/journal/project.rs  fn unprojectable(variant, carrier)  — the same discipline one floor up: an event whose carrier this build lacks stops the projection with a nameable cause rather than being skipped",
+          "crates/vibe-index/src/types/entry/tests.rs  fn unknown_field_is_read_but_not_written_back()  — the boundary between the two facts made testable: unknown FIELDS are tolerated, and tolerating them is not the same as acting on a record one does not understand",
+          "REPLACES the earlier verdict, which was correct while a catalog version number could still carry a refusal. It cannot now: the catalog is a projection any build rewrites from facts, so its version says only who wrote the file. The refusal itself is unchanged and is now louder — a per-record capability miss names the capability and offers a recipe, where a version compare could only say 'somewhere in here is something newer than you'. The amended fact separates the two questions explicitly, because the neighbouring fact tolerating unknown FIELDS reads as its contradiction until someone states that they answer different things."
+        ]
+      }
+    }
+  }
+}

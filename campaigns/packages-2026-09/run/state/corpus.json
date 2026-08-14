@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-14T15:37:47Z",
+  "updated_at": "2026-08-14T16:53:09Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -102476,7 +102476,7 @@
         "marker_count": 279,
         "processed_hash": "80244080bba060d50b689a8c7c0476b0c52b471ff2a620348d269b1a0409895d",
         "summary": {
-          "confirmed": 329,
+          "confirmed": 330,
           "drift": 2,
           "unverifiable": 1
         },
@@ -104748,10 +104748,20 @@
               "Оба теста прогнаны против непра́вленого кода: юнит не компилировался вовсе (E0600 на `!()` — старая сигнатура возвращала `()`), приёмочный давал 3 коммита вместо 2",
               "confirmed по каждой клаузе. «Не пишет и не публикует» — обе ветки под одним `if changed`, и счётчик мутаций тоже: воркер отдельно проверил, что счётчик никем не связан, прежде чем менять его смысл. «Удаления вели себя так всегда» — подтверждено чтением: `remove_version`/`remove_package` возвращают `bool` с самого начала, и оба обработчика по нему ветвились; правки они не потребовали. «Ответ остаётся успехом, и различие created/changed сохранено» — тест утверждает 201 затем 200, то есть HTTP-семантика не сдвинулась. «Одного детерминизма не хватило бы» — прямое следствие Ф2.1: часы приходят на СОБЫТИЕ мутации, поэтому у повтора они другие и `generated_at` всё равно сдвинулся бы; это и есть причина, по которой шаг убирает работу, а не догоняет её пустым диффом."
             ]
+          },
+          "A-PROJECTION-READS-NOTHING-SO-ITS-OWN-VERSION-IS-TRUE": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/journal/project.rs  pub fn project(events: impl IntoIterator<Item = JournalRecord>) -> Result<Index>  — the fold builds the index from the events with `Index::new`, which stamps the crate's own SCHEMA_VERSION; nothing in the function reads a catalog",
+              "crates/vibe-index/src/index/memory.rs  fn write_to(&self, data_dir, ctx)  — the manifest takes `self.schema_version`, so a catalog written from a projection carries the projector's constant, which is exactly the artifact just built",
+              "crates/vibe-index/src/journal/quarantine-side: crates/vibe-index/src/index/quarantine.rs  pub const UNDERSTOOD: &[&str] = &[];  plus the refusal arms in project.rs — the protection the older rule reached for is the per-record capability refusal, not the catalog's label",
+              "crates/vibe-index/src/index/memory/tests.rs  fn foreign_schema_version_survives_load_and_write()  — the older rule's guard, still green, still guarding the paths that DO read a catalog before rewriting it",
+              "confirmed by reading both halves against the tree at the moment the projector landed. The new fact does not weaken the old one and does not restate it: the old rule binds a writer that READ a catalog, and the projector is the first writer in this crate that reads none. Its `Index::new` call is the same constructor `init` uses for a brand-new index, so the constant it stamps is a claim about the file it is writing rather than an overwrite of someone else's claim. The clause also names where the displaced protection went, which is the part a cold reader would otherwise have to reconstruct: an older build meeting a newer world refuses per record by capability, not by re-labelling a catalog."
+            ]
           }
         },
         "verified_at": "2026-08-13T23:34:20Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION"
       }
     },
     {

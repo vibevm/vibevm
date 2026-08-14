@@ -5615,8 +5615,8 @@
       "item_kind": "struct",
       "line": 36,
       "symbol": "vibe_index::types::entry::VersionEntry",
-      "end_line": 142,
-      "fingerprint": "tok1:41ff21a3216da278b6c5cb52121dc23b3f3820d76ba93b53688b2f40ba4fdb77"
+      "end_line": 149,
+      "fingerprint": "tok1:764a01190f4483e74cf836a2a2e932f13c41a36e258f2f5b3ce0dd1c415f9f36"
     },
     {
       "crate_name": "vibe-index",
@@ -5631,10 +5631,10 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/types/entry/aggregate.rs",
       "item_kind": "struct",
-      "line": 72,
+      "line": 70,
       "symbol": "vibe_index::types::entry::aggregate::NameEntry",
-      "end_line": 96,
-      "fingerprint": "tok1:6c6f6688864bd122031a1d6c3b7e926bc9e348db4fd166cc39b502b3b3fe8a83"
+      "end_line": 93,
+      "fingerprint": "tok1:2df84c9422149a9da45c3a13a19b8f47bcd81df04709803de47363ab5f481780"
     },
     {
       "crate_name": "vibe-index",
@@ -5642,8 +5642,8 @@
       "item_kind": "struct",
       "line": 17,
       "symbol": "vibe_index::types::entry::aggregate::PackageEntry",
-      "end_line": 33,
-      "fingerprint": "tok1:f80a568701c28e68b2edca742fdc8bad222cf559d2affb75765f7950b07bf193"
+      "end_line": 32,
+      "fingerprint": "tok1:1e7733fe240c5f2cb863ef09780c7872627c6b4fbb54dd7b5692168ca2c85004"
     },
     {
       "crate_name": "vibe-index",
@@ -5696,16 +5696,16 @@
       "item_kind": "struct",
       "line": 14,
       "symbol": "vibe_index::types::repomd::Repomd",
-      "end_line": 36,
-      "fingerprint": "tok1:75eb1a74afaa09af4e268a48886991dc2071ca901a958842f4d403e8e8880140"
+      "end_line": 35,
+      "fingerprint": "tok1:2c5105a9713db9cfb25ce7befd82643150a9a6d77dbba47a909c37221e6ba2f0"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/types/repomd.rs",
       "item_kind": "fn",
-      "line": 89,
+      "line": 88,
       "symbol": "vibe_index::types::repomd::tests::repomd_round_trips",
-      "end_line": 99,
+      "end_line": 98,
       "fingerprint": "tok1:05d6a885b2b1ce5f56ef8a2c04c494fc25dfc30400b539f3876e1b0f5941a7b1"
     },
     {
@@ -13967,7 +13967,7 @@
     {
       "file": "crates/vibe-index/src/types/entry/mod.rs",
       "from_symbol": "vibe_index::types::entry::VersionEntry",
-      "line": 39,
+      "line": 46,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry",
       "verb": "implements",
@@ -13984,7 +13984,7 @@
     {
       "file": "crates/vibe-index/src/types/entry/aggregate.rs",
       "from_symbol": "vibe_index::types::entry::aggregate::NameEntry",
-      "line": 79,
+      "line": 76,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry",
       "verb": "implements",
@@ -13993,7 +13993,7 @@
     {
       "file": "crates/vibe-index/src/types/entry/aggregate.rs",
       "from_symbol": "vibe_index::types::entry::aggregate::PackageEntry",
-      "line": 22,
+      "line": 21,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry",
       "verb": "implements",
@@ -14043,7 +14043,7 @@
     {
       "file": "crates/vibe-index/src/types/repomd.rs",
       "from_symbol": "vibe_index::types::repomd::Repomd",
-      "line": 16,
+      "line": 15,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout",
       "verb": "implements",
@@ -14052,7 +14052,7 @@
     {
       "file": "crates/vibe-index/src/types/repomd.rs",
       "from_symbol": "vibe_index::types::repomd::tests::repomd_round_trips",
-      "line": 90,
+      "line": 89,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout",
       "verb": "verifies",
@@ -41551,7 +41551,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:2113330da5404eb16113d3087b0822e2a449b4a1e2e32366f15ed107e4206e37",
+      "content_hash": "sha256:fecc402fd8ff4569726dc21e0dcd6d4ba93b580764e2444eeded27e5f49eb6f1",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "PROP-005: Optional package index — per-org metadata + standalone index server",
@@ -41713,7 +41713,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:bdd6a4811bf159bb6316f94f502d6e29a7e61faf78de6db8becc233e512efe0d",
+      "content_hash": "sha256:b5674650ef28e016f06e42a0846b65c2aff0c5a7734767a04b806497aa9bf31a",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2. Decisions",
@@ -42298,7 +42298,7 @@
     },
     {
       "anchor": "entry",
-      "content_hash": "sha256:7a645c889860303b8fc4a0504d2c334bffbf96152a57f53a5a7649ad773cf579",
+      "content_hash": "sha256:6c9e1efc6ae5237f2d9335ea5ae59609d382ad47e1d023f367191f72f6a30fa5",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.6 Index entry shape (the canonical record)",
@@ -42469,10 +42469,10 @@
     },
     {
       "anchor": "FORWARD-COMPAT",
-      "content_hash": "sha256:d1e7470b7f98f53796c835a347bb90959691f5df5e9399a2be9d06aaf533dfe2",
+      "content_hash": "sha256:d43ef194efabc85f61b4e30c2a09126de85fd94bf58c135da944eda2f1e256a2",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
-      "heading": "**Forward compatibility.** `schema_version: 1` is recorded at file scope (in `repomd.json`) and at entry scope. v2 entries with new fields can coexist in v1 files via `serde(default)` on consumers; readers of v2 written by an old vibevm gracefully ignore unknown fields. @status:impl/done",
+      "heading": "**Forward compatibility.** `schema_version: 1` is recorded at file scope (in `repomd.json`) and at entry scope. Entries carrying fields a reader does not know coexist with it: unknown fields are tolerated, and known-but-absent ones default. **This sentence was false for as long as it stood.** Fifteen catalog aggregates carried `deny_unknown_fields`, so a reader meeting one unknown key refused the whole file — the opposite of what the fact promised — and the contradiction survived because nobody could remove the attribute safely. That was not caution: while every mutation read the catalog to rewrite it, tolerance would have SILENTLY DELETED the tolerated fields on the next write, which is worse than refusing. Phase 3 removed the condition rather than the symptom — a mutation is now an append to the journal plus a reprojection, so nothing read is ever written back, there is nothing to lose, and the strictness could finally go ([PROP-044 §4.4](../../common/PROP-044-change-native-formats.md#machinery)). What tolerance still does NOT mean is acting on a record one does not understand; that refusal moved to the per-record capability set (`##NEVER-SILENT-SCHEMA`). @status:impl/done",
       "line": 324,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#FORWARD-COMPAT"
     },
@@ -43261,7 +43261,7 @@
     },
     {
       "anchor": "never",
-      "content_hash": "sha256:296ec0c3c97f38c66d12eed1aefa35ff75b764b6fdc453dcbbaa6c4b199a5a2a",
+      "content_hash": "sha256:405f13fe2f5864612dd915910fb724549e9fe038f1b945438755851e1211bd42",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.15 What index must NEVER do",
@@ -43315,10 +43315,10 @@
     },
     {
       "anchor": "NEVER-SILENT-SCHEMA",
-      "content_hash": "sha256:cbc5c32ac1f6a12e88947463b83c20b1a005da6aabbb47e579da647d0fbaed1e",
+      "content_hash": "sha256:fb62e52a2936e794fba6c7d9bd6233c4d17ba5600f402844a18959eb7127a649",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
-      "heading": "**Never make breaking schema changes silently.** `schema_version` bumps. Old consumers parsing a higher schema must surface a \"your vibevm is older than this index; please upgrade\" message — not silently parse the subset they understand. @status:impl/done",
+      "heading": "**Never make breaking schema changes silently.** The refusal is what matters and it survives; where it LIVES moved with the journal. A build must never read the subset it understands and carry on as though it understood the whole — but the carrier of that refusal is no longer a version number on the catalog, because the catalog is a projection any build rewrites from facts. It is the per-record capability set: a record naming a capability the reader lacks is refused BY NAME, with a recipe, and the rest of the catalog still loads ([PROP-044 §4.5](../../common/PROP-044-change-native-formats.md#machinery)). That is strictly louder than a version compare, which could only say \"somewhere in here is something newer than you\". Unknown FIELDS are a different question and are answered by `##FORWARD-COMPAT`: they are tolerated, because tolerating them can no longer lose them. @status:impl/done",
       "line": 654,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#NEVER-SILENT-SCHEMA"
     },
@@ -72365,19 +72365,19 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-index/src/types/entry/aggregate.rs",
-      "line": 22,
+      "line": 21,
       "message": "edge `vibe_index::types::entry::aggregate::PackageEntry` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-index/src/types/entry/aggregate.rs",
-      "line": 79,
+      "line": 76,
       "message": "edge `vibe_index::types::entry::aggregate::NameEntry` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-index/src/types/entry/mod.rs",
-      "line": 39,
+      "line": 46,
       "message": "edge `vibe_index::types::entry::VersionEntry` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry` carries no kind/revision line yet"
     },
     {
@@ -72389,13 +72389,13 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-index/src/types/repomd.rs",
-      "line": 16,
+      "line": 15,
       "message": "edge `vibe_index::types::repomd::Repomd` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-index/src/types/repomd.rs",
-      "line": 90,
+      "line": 89,
       "message": "edge `vibe_index::types::repomd::tests::repomd_round_trips` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout` carries no kind/revision line yet"
     },
     {
