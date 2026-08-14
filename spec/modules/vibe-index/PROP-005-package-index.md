@@ -140,10 +140,12 @@ index_url = "https://github.com/vibespecs/index"  # default; explicit override a
   "version_count": 117,
   "files": {
     "primary.jsonl": {
+      "kind": "file",
       "size": 184522,
       "sha256": "<hex>"
     },
     "primary.jsonl.gz": {
+      "kind": "file",
       "size": 38421,
       "sha256": "<hex>"
     },
@@ -163,6 +165,7 @@ index_url = "https://github.com/vibespecs/index"  # default; explicit override a
 }
 ```
 
+- @fact:REPOMD-FILES-ARE-SYMMETRICALLY-TAGGED Every entry of `files` carries a `kind` tag — `"file"` or `"directory"` — and a reader dispatches on it rather than on which shape happens to fit. The tag was half-present until 2026-08-14: directories carried it, files did not, and the union was matched by shape, so an entry that lost a field was silently re-read as the *other* kind instead of being refused. A wrong answer that looks like a right one is the one failure re-fetching cannot cure ([PROP-044 §2](../../common/PROP-044-change-native-formats.md#laws)), which is why the asymmetry was broken deliberately rather than tolerated; the break note is `formats/breaks/001.md`. A `file` entry missing its tag is now a parse refusal. @status:impl/done
 - @fact:REPOMD-TRUST-POINT `repomd.json` is the **single point of trust**. A consumer fetches it once (with a small ETag round-trip later), then fetches whichever sub-files it actually needs, verifying each against the recorded `sha256`. @status:impl/done
 - @fact:repomd-pattern-heritage This pattern (manifest-with-checksums) is what RPM, Deb, and OCI all share, and is what gives us a path to GPG signing without re-architecting. @status:spec/done
 

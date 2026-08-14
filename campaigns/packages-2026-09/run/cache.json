@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-14T10:21:06Z",
+  "updated_at": "2026-08-14T10:38:26Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -103365,7 +103365,7 @@
       }
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {
-      "content_hash": "0d386b28f028c1b32f3fa32460ca094e187d4981c1eb36e3249f6185813302c0",
+      "content_hash": "820b56633dee29047e27d39fa702395812b83eec0cece3a275293660d8a10df5",
       "rollup": {
         "explicit": [
           "impl",
@@ -103379,11 +103379,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 328,
-        "fact_count": 327,
+        "marker_count": 329,
+        "fact_count": 328,
         "unmarked_facts": 0
       },
-      "marker_count": 328,
+      "marker_count": 329,
       "unit_count": 49,
       "issue_count": 0,
       "campaign": {
@@ -105604,10 +105604,22 @@
               "crates/vibe-index/src/index/memory.rs:575  fn tombstone_only_name_still_gets_its_by_name_file() {",
               "confirmed, and the second half is the load-bearing one. The shape {reason, superseded_by?} matches. 'Omitted when the name is alive' is the skip predicate. 'The file is written even when the name has no packages left' is the clause a reader would most easily take as decorative, and it is exactly the clause the tree would otherwise violate: write_to rebuilds every NameEntry from by_pkgref, so a name with zero packages would produce no file at all and the name would answer with silence. memory.rs:220 inserts the slot regardless, and the test at :575 is what proves it — it fails if the emit is dropped."
             ]
+          },
+          "REPOMD-FILES-ARE-SYMMETRICALLY-TAGGED": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/types/repomd.rs:43  #[serde(tag = \"kind\", rename_all = \"lowercase\")]  над pub enum RepomdFileEntry",
+              "crates/vibe-index/src/types/repomd.rs  — оба плеча объявлены без собственного поля-тега: Directory { entries: u32 }, File { size: u64, sha256: String }",
+              "crates/vibe-index/src/types/repomd.rs:113  assert!(json.contains(\"\\\"kind\\\":\\\"file\\\"\"));   — прежнее утверждение было ОБРАТНЫМ (!json.contains(\"kind\"))",
+              "crates/vibe-index/src/types/repomd.rs:139  fn untagged_file_shape_is_rejected_not_guessed() {   — запись без тега даёт is_err()",
+              "rg -n \"DirectoryTag\" crates/ → EXIT=1, пустой вывод: тип, носивший тег в одном плече, не существует нигде",
+              "formats/breaks/001.md  — записка перелома: что изменилось, почему эпоха не нужна, кто чинит, рецепт",
+              "confirmed по каждой клаузе. «Каждая запись несёт тег и читатель диспетчеризуется по нему» — атрибут `tag` на объединении есть ровно это, и оба плеча лишились собственных полей-тегов, так что второго носителя не осталось. «Тег был полуприсутствующим до 2026-08-14» — прежний вид зафиксирован удалённым утверждением `!json.contains(\"kind\")`, которое теперь перевёрнуто, и мёртвым типом DirectoryTag. «Запись, потерявшая поле, читалась как ДРУГОЙ вид вместо отказа» — это свойство `untagged`-разбора, и оно теперь опровергнуто исполнимо: тест на строке 139 требует именно ошибки, а не догадки. Это тот случай, где тест доказывается против СОХРАНЯЕМОГО поведения: он падает, если тегирование откатить. «Записка — formats/breaks/001.md» — файл существует и несёт все поля PROP-044 §4.7."
+            ]
           }
         },
         "verified_at": "2026-08-13T23:34:20Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED"
       }
     },
     "spec/modules/vibe-mcp/PROP-015-mcp-integration.md": {

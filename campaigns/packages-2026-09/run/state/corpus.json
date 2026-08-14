@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-14T10:21:06Z",
+  "updated_at": "2026-08-14T10:38:27Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -102464,9 +102464,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 328,
+      "markers": 329,
       "units": 49,
-      "facts": 327,
+      "facts": 328,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -102476,7 +102476,7 @@
         "marker_count": 279,
         "processed_hash": "80244080bba060d50b689a8c7c0476b0c52b471ff2a620348d269b1a0409895d",
         "summary": {
-          "confirmed": 320,
+          "confirmed": 325,
           "drift": 2,
           "unverifiable": 1
         },
@@ -104638,10 +104638,64 @@
               "crates/vibe-registry/src/index_client/wire.rs  — `grep -n content_hash` over this file returns NOTHING: the index client's view type does not read the field at all, which is why the two labels never meet in a comparison.",
               "confirmed: each clause resolves. The index emits recipe 1's label (hash_recipe.rs:40, and the crate's default `compute_content_hash` delegates to `Tree1`); the lockfile keeps the bare form because the registry-side hasher still defaults to `Legacy0`, and `LockedPackage.content_hash` would refuse anything else at deserialisation until `ACCEPTED_PREFIXES` (content_hash.rs:64) taught the newtype both. The 'nothing compares them as strings' clause is the negative measurement above — recorded because a negative is exactly what a later reader cannot reconstruct by looking."
             ]
+          },
+          "SLOTS-ARE-OMITTED-WHEN-EMPTY": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/types/entry/mod.rs:125  pub must_understand: Vec<String>,   (preceded by #[serde(default, skip_serializing_if = \"Vec::is_empty\")])",
+              "crates/vibe-index/src/types/entry/mod.rs:130  pub yanked: bool,   (preceded by #[serde(default, skip_serializing_if = \"crate::types::is_false\")])",
+              "crates/vibe-index/src/types/entry/mod.rs:138  pub frozen: bool,   (same attribute)",
+              "crates/vibe-index/src/types/entry/aggregate.rs:95  pub tombstone: Option<Tombstone>,   (preceded by #[serde(default, skip_serializing_if = \"Option::is_none\")])",
+              "crates/vibe-index/src/types/entry/tests.rs:159  fn empty_slots_are_omitted_from_the_wire() {",
+              "confirmed: the fact says the three slots appear in the example in their significant form but are omitted from the wire when empty, and that the same holds for `tombstone` on the candidate-set file. All four carry a skip predicate, and the test at tests.rs:159 asserts the negative directly — an entry with the slots empty serialises without their keys. The clause is written precisely because the example invites the opposite reading; the test is what keeps the prose from drifting back."
+            ]
+          },
+          "PROV-MUST-UNDERSTAND": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/index/quarantine.rs:18  pub const UNDERSTOOD: &[&str] = &[];",
+              "crates/vibe-index/src/index/quarantine.rs:33  pub fn missing_capabilities(must_understand: &[String]) -> Vec<String> {",
+              "crates/vibe-index/src/index/memory.rs:299  pkg.versions.retain(|v| {   (the refusal, above the parsers, inside Index::load_from)",
+              "crates/vibe-index/src/index/memory.rs:309  \"quarantined: must_understand names capabilities this build lacks\"",
+              "crates/vibe-index/src/index/memory.rs:517  fn load_quarantines_unknown_capability_and_keeps_the_rest() {",
+              "confirmed on every clause. 'Reader capabilities, a different vocabulary from provides.capabilities' — the module doc at quarantine.rs says so in as many words and the constant is named UNDERSTOOD, not `capabilities`. 'Written by the projector, never read from vibe.toml' — grep for must_understand in the two manifest→entry builders finds only `Vec::new()`. 'Skips this record and says so' — the retain at memory.rs:299 drops the version from by_pkgref and the warn at :309 is the saying; the test at :517 asserts BOTH halves, that the offending version is gone and that its sibling is still read, so an over-broad filter fails it. 'Unknown fields outside the list are ignored as before' is the pre-existing serde behaviour, untouched by this step."
+            ]
+          },
+          "PROV-YANKED": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/types/entry/mod.rs:130  pub yanked: bool,",
+              "crates/vibe-index/src/cli/add.rs:113-115  the manifest→entry literal sets `yanked: false` and never reads a manifest key of that name",
+              "crates/vibe-index/src/scanner/org_walk.rs:231-233  the second builder does the same",
+              "confirmed: the field exists in the record, and the fact's substantive claim — that the value is journal-borne rather than authored — is exercised negatively and deliberately. Both of the tree's only manifest→entry builders write `false` unconditionally; there is no manifest key for it and no route that sets it. That is the correct state for this step: the journal that will carry the fact is Phase 3, and a slot with no producer is exactly what the wave-0 window was opened for."
+            ]
+          },
+          "PROV-FROZEN": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-core/src/manifest/package.rs:105  pub frozen: bool,   (preceded by #[serde(default, skip_serializing_if = \"is_false\")], reusing the file's existing predicate)",
+              "crates/vibe-index/src/types/entry/mod.rs:138  pub frozen: bool,",
+              "crates/vibe-index/src/cli/add.rs:115  frozen: pkg.frozen,",
+              "crates/vibe-index/src/scanner/org_walk.rs:233  frozen: pkg.frozen,",
+              "crates/vibe-index/src/cli/add.rs:159  fn add_projects_manifest_frozen_into_the_entry() {",
+              "crates/vibe-index/src/scanner/org_walk.rs:292  fn scan_projects_manifest_frozen_into_the_entry() {",
+              "confirmed: 'projected from the package manifest, never a registry's opinion' is exercised on BOTH of the tree's manifest→entry paths — the add path and the org-scanner path — each with its own test, which matters because the two builders share no projector and a flag wired into only one would arrive through `add` and vanish on `reindex`. 'Absence = false = snapshot' is the serde default on both sides; there is no third state anywhere, no Option. 'The flag lives inside the hashed content' holds by construction: it is a key of the package's own vibe.toml at the tagged ref, which is what the content hash covers."
+            ]
+          },
+          "BY-NAME-TOMBSTONE": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/types/entry/aggregate.rs:64  pub struct Tombstone {   (reason: String; superseded_by: Option<String> under skip_serializing_if)",
+              "crates/vibe-index/src/types/entry/aggregate.rs:95  pub tombstone: Option<Tombstone>,",
+              "crates/vibe-index/src/index/memory.rs:220  slot.tombstone = Some(ts.clone());   (write_to creates the by-name slot when the name has no packages)",
+              "crates/vibe-index/src/index/memory.rs:547  fn tombstone_survives_load_and_write() {",
+              "crates/vibe-index/src/index/memory.rs:575  fn tombstone_only_name_still_gets_its_by_name_file() {",
+              "confirmed, and the second half is the load-bearing one. The shape {reason, superseded_by?} matches. 'Omitted when the name is alive' is the skip predicate. 'The file is written even when the name has no packages left' is the clause a reader would most easily take as decorative, and it is exactly the clause the tree would otherwise violate: write_to rebuilds every NameEntry from by_pkgref, so a name with zero packages would produce no file at all and the name would answer with silence. memory.rs:220 inserts the slot regardless, and the test at :575 is what proves it — it fails if the emit is dropped."
+            ]
           }
         },
         "verified_at": "2026-08-13T23:34:20Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS"
       }
     },
     {

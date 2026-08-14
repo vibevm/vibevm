@@ -1,0 +1,20 @@
+{
+  "batch": "F1-5-TAGGED",
+  "cluster": "host",
+  "files": {
+    "spec/modules/vibe-index/PROP-005-package-index.md": {
+      "REPOMD-FILES-ARE-SYMMETRICALLY-TAGGED": {
+        "v": "confirmed",
+        "ev": [
+          "crates/vibe-index/src/types/repomd.rs:43  #[serde(tag = \"kind\", rename_all = \"lowercase\")]  над pub enum RepomdFileEntry",
+          "crates/vibe-index/src/types/repomd.rs  — оба плеча объявлены без собственного поля-тега: Directory { entries: u32 }, File { size: u64, sha256: String }",
+          "crates/vibe-index/src/types/repomd.rs:113  assert!(json.contains(\"\\\"kind\\\":\\\"file\\\"\"));   — прежнее утверждение было ОБРАТНЫМ (!json.contains(\"kind\"))",
+          "crates/vibe-index/src/types/repomd.rs:139  fn untagged_file_shape_is_rejected_not_guessed() {   — запись без тега даёт is_err()",
+          "rg -n \"DirectoryTag\" crates/ → EXIT=1, пустой вывод: тип, носивший тег в одном плече, не существует нигде",
+          "formats/breaks/001.md  — записка перелома: что изменилось, почему эпоха не нужна, кто чинит, рецепт",
+          "confirmed по каждой клаузе. «Каждая запись несёт тег и читатель диспетчеризуется по нему» — атрибут `tag` на объединении есть ровно это, и оба плеча лишились собственных полей-тегов, так что второго носителя не осталось. «Тег был полуприсутствующим до 2026-08-14» — прежний вид зафиксирован удалённым утверждением `!json.contains(\"kind\")`, которое теперь перевёрнуто, и мёртвым типом DirectoryTag. «Запись, потерявшая поле, читалась как ДРУГОЙ вид вместо отказа» — это свойство `untagged`-разбора, и оно теперь опровергнуто исполнимо: тест на строке 139 требует именно ошибки, а не догадки. Это тот случай, где тест доказывается против СОХРАНЯЕМОГО поведения: он падает, если тегирование откатить. «Записка — formats/breaks/001.md» — файл существует и несёт все поля PROP-044 §4.7."
+        ]
+      }
+    }
+  }
+}
