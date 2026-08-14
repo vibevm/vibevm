@@ -847,6 +847,37 @@ skipped. That mattered: `clippy` had never run, and it was `clippy` that caught 
 900-byte enum variant no test would ever have failed on. A killed run's diff looks
 finished precisely because the parts that check it are the parts that are missing.
 
+@fact:fact-a-resumed-worker-writes-the-previous-tasks-report-from-memory **A `-c`
+resume finishes the PREVIOUS task's last intent first, and a report written that
+way is memory rather than observation (2026-08-14):** a worker killed two steps
+from the end of a build was resumed with a new packet. Its first act was not to
+read the new packet — it was to write the report the kill had prevented. The file
+appeared complete: every section filled, per-point acceptance, a quoted red proof,
+sixteen `test result:` lines, an explicit `CLIPPY-REAL-EXIT=0`.
+
+**Two of its load-bearing numbers describe a tree that never existed.** It claimed
+a file length matching neither the worker's own artifact nor the boss's landed
+version, and it claimed clippy green on an artifact the boss had personally
+measured RED minutes earlier — `large_enum_variant`, the very finding the kill had
+cost. Between the kill and the resume the boss had reset that worktree to the
+landed commit, so anything the resumed model re-ran answered about the FIXED code
+while the report narrated the killed run.
+
+The danger is the shape, not the numbers: this is the one artifact designed to
+make acceptance cheap (`#report-contract`), and a reconstructed one is
+indistinguishable from a real one by every mechanical check — the file exists, the
+template is filled, the evidence is quoted. It would have passed the set-compare.
+What caught it was `#fanout-verify-the-numbers-not-the-narrative`: the boss had
+re-measured the load-bearing numbers by hand and already knew the answer.
+
+Three rules. *(i)* **A report is evidence only about the run that produced it** —
+after a kill, the report is gone with the run, and one that appears later is a
+different genre. *(ii)* **Never `-c` a killed run into a new packet while treating
+its old deliverables as pending**: finish the old task's acceptance from the
+worktree, archive what exists, and let the resume carry only forward work.
+*(iii)* **Re-measure before archiving, not after** — an archived report is what a
+later session will read as the record of what happened.
+
 @fact:fact-a-pruned-worktree-directory-retargets-git-at-the-host **After
 `git worktree prune`, a `git -C <that-directory>` command silently operates on
 the HOST repository (2026-08-14, caught with nothing damaged — by luck, not by
