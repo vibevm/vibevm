@@ -10,8 +10,9 @@ use clap::Parser;
 
 use crate::cli::kinds::NamingConvention;
 use crate::error::{Error, Result};
-use crate::index::memory::WriteCtx;
+use crate::index::memory::{WriteCtx, default_generator};
 use crate::index::{Index, repomd};
+use crate::journal::{Event, JournalRecord, append, default_dir};
 
 #[derive(Debug, Parser)]
 #[command(about = "Initialise an empty index data directory.")]
@@ -51,6 +52,27 @@ pub fn run(args: Args) -> Result<()> {
         )));
     }
     let index = Index::new(&args.registry, &args.registry_url, args.naming, at);
+
+    // Truth first (PROP-044 `##LAW-NO-UNRECOVERABLE`): the journal
+    // record lands BEFORE the catalog write. A failed `write_to` then
+    // leaves a journal without a catalog — recoverable, a re-run of
+    // the command rebuilds the derived side — while the reverse order
+    // could leave a catalog whose truth never existed. A repeated
+    // `init --force` appends a SECOND Initialised record on purpose:
+    // re-initialisation with a different identity is a real fact, and
+    // last-one-wins is the projector's fold, not this writer's call.
+    append(
+        &default_dir(&args.data_dir),
+        &JournalRecord {
+            at,
+            actor: default_generator(),
+            event: Event::Initialised {
+                registry: args.registry.clone(),
+                registry_url: args.registry_url.clone(),
+                naming: args.naming,
+            },
+        },
+    )?;
     index.write_to(&args.data_dir, &WriteCtx { at })?;
     write_gitignore(&args.data_dir)?;
     write_readme(&args.data_dir, &index.registry, &index.registry_url)?;

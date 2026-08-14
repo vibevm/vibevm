@@ -379,7 +379,13 @@ pub fn data_dir_state(data_dir: &Path) -> PathBuf {
     data_dir.join("state")
 }
 
-fn default_generator() -> String {
+/// The generator label — `vibe-index <version>` — stamped into every
+/// artifact this binary writes. Two consumers since the journal
+/// landed: `Index::new` fills a fresh index's `generator` field with
+/// it, and the CLI edge (`init`) reuses it as the journal record's
+/// `actor`, so the one format string lives in exactly one place and
+/// the catalog and the journal never disagree about who wrote them.
+pub fn default_generator() -> String {
     format!("vibe-index {}", env!("CARGO_PKG_VERSION"))
 }
 

@@ -166,6 +166,58 @@ fn init_writes_gitignore_and_readme() {
 }
 
 #[test]
+fn init_writes_the_initialised_journal_record() {
+    let dir = tempfile::tempdir().unwrap();
+    let data = dir.path().join("data");
+    cmd()
+        .args([
+            "init",
+            data.to_str().unwrap(),
+            "--registry",
+            "vibespecs",
+            "--registry-url",
+            "https://example.invalid/vibespecs",
+        ])
+        .assert()
+        .success();
+
+    use vibe_index::index::repomd;
+    use vibe_index::journal::{Event, default_dir, replay};
+    use vibe_index::types::NamingConvention;
+
+    // One command, one fact: the journal holds exactly the
+    // Initialised record and nothing else.
+    let records = replay(&default_dir(&data)).unwrap();
+    assert_eq!(
+        records.len(),
+        1,
+        "a fresh `init` must journal exactly one record, got {records:?}"
+    );
+
+    // The fact names the identity the flags carried.
+    match &records[0].event {
+        Event::Initialised {
+            registry,
+            registry_url,
+            naming,
+        } => {
+            assert_eq!(registry, "vibespecs");
+            assert_eq!(registry_url, "https://example.invalid/vibespecs");
+            assert_eq!(*naming, NamingConvention::Fqdn);
+        }
+        other => panic!("expected Event::Initialised, got {other:?}"),
+    }
+
+    // One command, one clock reading: the record's `at` IS the
+    // catalog's `generated_at`.
+    let manifest = repomd::read(&data).unwrap();
+    assert_eq!(
+        records[0].at, manifest.generated_at,
+        "the journal record and the catalog manifest must carry the same instant"
+    );
+}
+
+#[test]
 fn init_preserves_existing_readme_on_force() {
     let dir = tempfile::tempdir().unwrap();
     init_at(dir.path());
