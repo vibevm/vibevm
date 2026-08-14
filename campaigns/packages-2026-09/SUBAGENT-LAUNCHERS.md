@@ -883,6 +883,16 @@ and it answers this question too. Read the worktree, archive what exists, and
 leave the directory and its registration alone until the log has stopped growing.
 Never prune or reset a killed run's worktree on the strength of the notification.
 
+**The mechanism, so the rule is a procedure and not a vigil.** No further
+notification is coming — the task is already "killed" — so the boss arms a
+watcher instead of polling by hand: a background loop that samples the log's
+size, counts consecutive unchanged samples, and exits once it has seen several
+in a row. Its completion IS the death notice, and it costs nothing while the
+worker is still working. Measured here: a run reported killed was still writing
+six seconds before the boss looked, and finished its red proof afterwards. A
+survivor left alone finishes the job; a survivor tidied up around it writes into
+the host.
+
 **The positive case, from the same session, because the rule is otherwise only a
 warning:** a third run was killed at 5 of 6 and its worktree was left untouched.
 Its late report then matched every number the boss had measured independently —
