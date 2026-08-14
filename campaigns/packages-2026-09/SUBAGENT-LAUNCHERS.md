@@ -771,6 +771,62 @@ of the design. *(iii)* **Read the whole-panel diagnostic counts as evidence, not
 as noise** — a warning count that moves on an unrelated cell is the cheapest
 regression detector in the tree, and here it was the only one that worked.
 
+@fact:fact-the-panel-stops-at-the-first-red-step **The panel ABORTS at its first
+failing step, so a red run says nothing about the steps after it (2026-08-14):**
+`self-check` was run over a landing that added a new step to the panel itself;
+the run failed at `cargo xtask specmap --check` and the log **ended there** —
+832 lines, nothing after. Every later step, including the one the landing had
+just built, never executed. The boss had to re-run the whole panel to learn
+whether its own new gate worked. Two rules. *(i)* **A green tail is the only
+proof that all steps ran**; a red one is evidence about its own step and about
+everything before it, and evidence about nothing after. *(ii)* When a landing
+adds or edits a panel step, the panel is run **twice** if the first run reds out
+anywhere — once to clear the failure, once to see the new step actually
+execute. Sibling of `#fact-panel-background-form` and
+`#fact-a-truncated-pipe-reads-green`: all three are the instrument reporting
+something other than what it was read as.
+
+@fact:fact-the-map-is-rebuilt-after-the-code-lands-not-before **`specmap` is run
+AFTER the worker's diff is applied, never before (2026-08-14, cost: one red
+panel):** the boss rebuilt the map for a spec edit, then applied a code slice
+that created a new `.rs` file carrying `specmark::scope!`. That file adds an
+edge, so the map went stale the moment the code landed and the panel refused it.
+The order that works is: apply → `cargo fmt --all` → `cargo xtask specmap` →
+panel. A map rebuilt before the code is a map of the tree that no longer exists.
+
+@fact:fact-a-second-task-continues-the-same-worker-with-a-boss-side-checkpoint
+**Two sequential steps can share one worker and one warm build — the boss just
+has to checkpoint between them (2026-08-14):** a phase's last two steps each
+needed their own commit (the plan's law), but a second worktree means a second
+cold `cargo` build and a second cold context. Instead: one worktree, packet A
+sent normally, then — **after A's run ended** (`#fact-one-thread-one-writer`) —
+packet B sent with `-c`, so the worker keeps A's context and the warm target.
+The diffs are separated by a boss-side `git -C .wt/<id> commit` between the two:
+after it the worktree is clean, so `git -C .wt/<id> diff` returns **B alone** and
+each step still lands as its own commit. Workers still never run git; the
+checkpoint is the boss's command against the worker's branch.
+
+@fact:fact-a-preservation-test-is-demanded-red-not-just-green **Demand the RED
+proof for any test that guards preserved behaviour — as an acceptance line, not
+as a hope (2026-08-14):** two packets asked the worker to state whether its new
+test would fail on the unpatched code, and both workers ran it there and quoted
+the failure (`left: 1, right: 2`; and a compile error `E0600` where a signature
+changed, which is the strongest form available). This is
+`#fact-a-fixture-that-cannot-fail-proves-nothing…` turned into a packet clause
+instead of a review hope: the packet says «тест обязан падать на сегодняшнем
+коде; если ты не уверен, что он падал бы, скажи об этом прямо», and the honest
+answer becomes the cheap one. A green-only test proves the new code does
+something; only the red run proves it guards the old thing.
+
+@fact:fact-name-the-files-that-probably-need-no-change **A closed write list may
+name files that probably need no change — say so, and the worker reports instead
+of inventing work (2026-08-14):** two packets listed four and five files while
+expecting one or two to move, and added «файл, которому правка не понадобилась,
+— законный и хороший результат: так и напиши». Both workers touched only what
+needed touching and said which files they had left alone and why. Without that
+line a closed list reads as a to-do, and a weak writer finds something to do in
+every entry — the perimeter stops bounding the work and starts prescribing it.
+
 ## 9. What a clean fan-out looked like {#clean-fanout}
 
 @fact:fanout-first-pass-acceptance **Measured 2026-08-14 — three packets, two
