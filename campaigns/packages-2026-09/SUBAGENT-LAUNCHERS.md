@@ -847,6 +847,21 @@ skipped. That mattered: `clippy` had never run, and it was `clippy` that caught 
 900-byte enum variant no test would ever have failed on. A killed run's diff looks
 finished precisely because the parts that check it are the parts that are missing.
 
+@fact:fact-cargo-test-stops-at-the-first-failing-target **`cargo test` stops after
+the first failing TARGET, so a red proof spanning several targets shows only part
+of what reddened (2026-08-14):** a gate was disabled to prove two tests guard it —
+one pre-existing, one new, in different integration targets. The run reported
+exactly one failure, in the target that happens to sort first, and the other
+target never executed. Read literally, that says the new test does not catch the
+defect; re-run with `--no-fail-fast` and both redden.
+
+The rule: **a red proof that spans targets is run with `--no-fail-fast`, or its
+silence about the later targets is read as evidence they passed.** Same family as
+`#fact-a-truncated-pipe-reads-green` and `#fact-panel-background-form` — the
+instrument reporting less than the truth while looking complete. The panel has the
+same shape and states it outright (`#fact-the-panel-stops-at-the-first-red-step`);
+this is that law one level down, inside a single `cargo test`.
+
 @fact:fact-a-killed-task-does-not-kill-the-worker-and-the-survivor-writes-late **A
 "killed" notification kills the harness TASK, not the worker process — the worker
 runs on, writes on, and finishes minutes later against whatever the boss has
