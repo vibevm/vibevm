@@ -4902,9 +4902,9 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/reindex.rs",
       "item_kind": "mod",
-      "line": 6,
+      "line": 14,
       "symbol": "vibe_index::cli::reindex",
-      "end_line": 6,
+      "end_line": 14,
       "fingerprint": "tok1:1298ecd1f60d3e2836385e66aa6b2a02bb5a41fbfc527ec5573742758d45fb42"
     },
     {
@@ -13303,7 +13303,7 @@
     {
       "file": "crates/vibe-index/src/cli/reindex.rs",
       "from_symbol": "vibe_index::cli::reindex",
-      "line": 6,
+      "line": 14,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root",
       "verb": "implements"

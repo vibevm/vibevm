@@ -2,24 +2,33 @@
 //! authoritative package state. Slice 3 lands the `--from-clones`
 //! source (walks a local org-dir of git clones). `--from-github`
 //! lands in slice 8.
+//!
+//! Ф3.2 journal form: the published catalog is never this writer's
+//! input (PROP-044 §4.4). The run is `fold → scan → append → project
+//! → write_to` — the registry identity comes from the journal's
+//! `Initialised` fact, the scan's entries land as `Published`
+//! records, and `--full` differs from `--incremental` by exactly one
+//! event: the `EntrySetReplaced` watershed asserting the scan's
+//! result is the whole published entry set.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
 use std::path::PathBuf;
 
-use chrono::Utc;
+use chrono::{DateTime, Utc};
 use clap::{ArgGroup, Parser};
 use serde::Serialize;
 
 use crate::error::{Error, Result};
 use crate::index::Index;
 use crate::index::checkpoint::{self, Checkpoint};
-use crate::index::memory::WriteCtx;
+use crate::index::memory::{WriteCtx, default_generator};
+use crate::journal::{Event, JournalRecord, append, default_dir, project, replay};
 use crate::scanner::{
     FromClonesOptions, FromClonesPackageScanner, FromGithubOptions, FromGithubPackageScanner,
     PackageScanner, ScanReport,
 };
-use crate::types::{NamingConvention, PackageKind, VersionEntry};
+use crate::types::PackageKind;
 
 #[derive(Debug, Parser)]
 #[command(
@@ -210,31 +219,30 @@ pub(crate) struct Plan {
     pub _temp_guard: Option<tempfile::TempDir>,
 }
 
-/// The shared reindex core: load the existing index, scan, rebuild,
-/// persist the index + checkpoint, emit the summary. Both `reindex`
-/// and `rescan-org` reduce to this.
+/// The shared reindex core: fold the journal, scan, append the run's
+/// facts, re-project, persist the catalog + checkpoint, emit the
+/// summary. Both `reindex` and `rescan-org` reduce to this.
 pub(crate) fn run_plan(plan: Plan) -> Result<()> {
     // F2-1 — the clock enters here, once per command: the same `at`
-    // stamps the scanner's `indexed_at`, the rebuilt index's
-    // `generated_at`, the checkpoint, and the written manifest.
+    // stamps the scanner's `indexed_at`, every journal record this
+    // run appends, the checkpoint, and the written manifest.
     let at = Utc::now();
 
-    // Load existing index manifest to preserve registry name / URL /
-    // naming. Refuse if the data dir was never `init`-ed.
-    let existing = Index::load_from(&plan.data_dir).map_err(|e| match e {
-        Error::Io { .. } | Error::Malformed(_) => Error::InvalidInput(format!(
-            "data-dir `{}` does not look like an initialised index. \
-             Run `vibe-index init` first.",
-            plan.data_dir.display()
-        )),
-        other => other,
-    })?;
+    // Ф3.2c3 — the catalog is never this writer's input (PROP-044
+    // §4.4): the registry identity the scanner is stamped with comes
+    // from folding the journal, not from reading back a published
+    // catalog. A data-dir that was never `init`-ed folds into
+    // `Error::Unprojectable`, whose recipe names that fix — the same
+    // guidance the failed catalog read used to give.
+    let journal_dir = default_dir(&plan.data_dir);
+    let mut records = replay(&journal_dir)?;
+    let existing = project(records.iter().cloned())?;
 
     let opts = FromClonesOptions {
         registry: existing.registry.clone(),
         registry_url: existing.registry_url.clone(),
         naming: existing.naming,
-        generator: format!("vibe-index {}", env!("CARGO_PKG_VERSION")),
+        generator: default_generator(),
         indexed_at: at,
     };
 
@@ -244,59 +252,47 @@ pub(crate) fn run_plan(plan: Plan) -> Result<()> {
         None
     };
 
-    let report = plan.scanner.scan(&opts, prior.as_ref())?;
+    let mut report = plan.scanner.scan(&opts, prior.as_ref())?;
 
-    // For incremental, retain entries for repos that the scanner
-    // skipped due to "unchanged since last checkpoint". For full,
-    // start fresh.
-    let mut next = Index::new(
-        &existing.registry,
-        &existing.registry_url,
-        existing.naming,
-        at,
-    );
-    next.generator = opts.generator.clone();
-    // The catalog's schema version is state, not a constant of whichever
-    // binary happens to be running: `next` continues a catalog that was
-    // READ here, so it keeps the version that catalog carried.
-    next.schema_version = existing.schema_version;
-
-    if plan.mode == "incremental" {
-        for entry in existing.iter_versions() {
-            // Map entry → repo name via the registry's naming
-            // convention; if that repo's snapshot was skipped (i.e.
-            // not in the new scan's `entries`), keep the entry.
-            let repo_name = existing
-                .naming
-                .repo_name(entry.kind, &entry.group, &entry.name);
-            let scanned_now = report
-                .snapshots
-                .get(&repo_name)
-                .map(|_| {
-                    // Repo is present in the scan; if entries from this
-                    // scan ALSO carry an entry for the same (group, name)
-                    // identity, that's the freshly walked source.
-                    // Otherwise the repo was skipped as unchanged — keep
-                    // the existing entry.
-                    report
-                        .entries
-                        .iter()
-                        .any(|e| e.group == entry.group && e.name == entry.name)
-                })
-                .unwrap_or(false);
-            let kept_unchanged = report.snapshots.contains_key(&repo_name) && !scanned_now;
-            if kept_unchanged {
-                next.upsert(entry.clone());
-            }
-        }
+    // The run's facts. `--full` differs from `--incremental` by
+    // exactly one event: the watershed asserting the scan's result is
+    // the whole published entry set. Incremental publishes only what
+    // it re-walked — entries the scanner skipped as unchanged stay in
+    // the journal as their original `Published` records, and the
+    // projection holds them with no merge step here.
+    let mut appended: Vec<JournalRecord> = Vec::with_capacity(report.entries.len() + 1);
+    if plan.mode == "full" {
+        appended.push(fact(
+            at,
+            Event::EntrySetReplaced {
+                source: plan.source.to_string(),
+            },
+        ));
     }
-    for entry in &report.entries {
-        next.upsert(entry.clone());
+    for entry in std::mem::take(&mut report.entries) {
+        appended.push(fact(
+            at,
+            Event::Published {
+                entry: Box::new(entry),
+            },
+        ));
     }
+    // Truth first (PROP-044 `##LAW-NO-UNRECOVERABLE`), the `init`
+    // order: every fact is durable in the journal before the derived
+    // catalog is written, so a failed `write_to` leaves a journal the
+    // next run re-projects — never a catalog whose truth never
+    // existed.
+    for record in &appended {
+        append(&journal_dir, record)?;
+    }
+    records.extend(appended);
+    let next = project(records)?;
     next.write_to(&plan.data_dir, &WriteCtx { at })?;
 
     // Persist the new checkpoint regardless of mode — incremental
-    // walks pick it up next time, full walks reset it.
+    // walks pick it up next time, full walks reset it. The checkpoint
+    // is the SCANNER's memory, not a catalog fact: it lives under the
+    // gitignored `state/` and never rides the journal.
     let new_checkpoint = Checkpoint {
         schema_version: 1,
         generated_at: Some(opts.indexed_at),
@@ -320,6 +316,18 @@ pub(crate) fn run_plan(plan: Plan) -> Result<()> {
         render_text(&summary);
     }
     Ok(())
+}
+
+/// One journal fact of this run: stamped by the command's single
+/// clock reading (F2-1) and authored by this binary's generator
+/// label, so the journal and the catalog it projects never disagree
+/// about who wrote them.
+fn fact(at: DateTime<Utc>, event: Event) -> JournalRecord {
+    JournalRecord {
+        at,
+        actor: default_generator(),
+        event,
+    }
 }
 
 #[derive(Debug, Serialize)]
@@ -494,17 +502,3 @@ fn render_text(summary: &Summary) {
         }
     }
 }
-
-// VersionEntry imported for documentation purposes — referenced by the
-// text-render block above is implicit; keep the use to silence unused
-// warnings if reorganisation ever drops the explicit reference.
-#[allow(dead_code)]
-fn _silence_unused(v: &VersionEntry) {
-    let _ = v;
-}
-
-// `NamingConvention` is referenced by Args via clap-derive on the
-// existing flag; importing it explicitly here so the use line above
-// reads naturally. Same housekeeping as `_silence_unused`.
-#[allow(dead_code)]
-fn _silence_naming(_n: NamingConvention) {}

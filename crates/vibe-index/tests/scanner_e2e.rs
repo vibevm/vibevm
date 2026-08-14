@@ -450,60 +450,12 @@ fn reindex_preserves_registry_metadata_from_init() {
     assert_eq!(repomd["naming"], "name");
 }
 
-/// F2-2, the reindex half: a catalog carrying a FOREIGN schema version
-/// keeps it across a reindex. `Index::new` stamps this build's constant,
-/// so the driver must carry the read version over explicitly.
-#[test]
-fn reindex_preserves_foreign_schema_version_of_read_catalog() {
-    use vibe_index::index::repomd;
-    use vibe_index::types::Repomd;
-
-    if !git_available() {
-        return;
-    }
-    let work = tempfile::tempdir().unwrap();
-    let org = work.path().join("org");
-    std::fs::create_dir_all(&org).unwrap();
-    let data = work.path().join("data");
-
-    cmd()
-        .args([
-            "init",
-            data.to_str().unwrap(),
-            "--registry",
-            "vibespecs",
-            "--registry-url",
-            "https://example.invalid/vibespecs",
-        ])
-        .assert()
-        .success();
-
-    // Pass the catalog off as a FUTURE writer's product: bump the
-    // manifest's schema_version above ours, touch nothing else.
-    let foreign = Repomd::SCHEMA_VERSION + 1;
-    let manifest_path = data.join("repomd.json");
-    let mut manifest: serde_json::Value =
-        serde_json::from_slice(&std::fs::read(&manifest_path).unwrap()).unwrap();
-    manifest["schema_version"] = serde_json::json!(foreign);
-    std::fs::write(&manifest_path, serde_json::to_vec(&manifest).unwrap()).unwrap();
-
-    cmd()
-        .args([
-            "reindex",
-            data.to_str().unwrap(),
-            "--from-clones",
-            org.to_str().unwrap(),
-            "--full",
-        ])
-        .assert()
-        .success();
-
-    let rewritten = repomd::read(&data).unwrap();
-    assert_eq!(
-        rewritten.schema_version, foreign,
-        "a reindex must keep the schema version of the catalog it read — the version is state, not a constant of whichever binary happens to be running"
-    );
-}
+// The journal-form cases live out of line for the 600-line file
+// budget, by the crate's own idiom (`memory.rs` + `memory/tests.rs`):
+// the module-tree position is unchanged, so they still reach the
+// fixtures above through `use super::*` instead of copying them.
+#[path = "scanner_e2e/journal_form.rs"]
+mod journal_form;
 
 #[test]
 fn reindex_captures_current_schema_manifest() {
