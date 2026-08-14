@@ -77,11 +77,20 @@ with their rejected options, and the corrections each landing paid for.
         catalog (`64be15a8`).
   - [x] **Ф3.2b** — the projector: a pure fold from events to catalog; six
         variants fold, five refuse by name (`0c9ca4e0`).
-  - [ ] **Ф3.2c** — the six mutations rewired to
-        `validate → append → project → write_to`. Split three ways because they
-        are three different problems: the two CLI paths, the three server
-        handlers, then `reindex`/`rescan-org` — the last carries the watershed
-        and is the only one with real design left in it.
+  - [x] **Ф3.2c** — the six mutations rewired to
+        `validate → append → project → write_to`, in three commits because they
+        were three different problems: the two CLI paths (`66c58f64`), the three
+        server handlers plus the boot (`7a72c14f`), and `reindex`/`rescan-org`
+        (`f157a997`). The phase's law is now a command anyone can re-run:
+        `grep -rnw load_from` over every mutation path and the server boot
+        returns nothing.
+        Two things fell out that were not goals. Booting the server from the
+        journal turned out to be a CONDITION of the rewire, not a nicety: with
+        the boot still reading a catalog, the first mutation would have replaced
+        the served state with the journal's projection and silently dropped
+        whatever the catalog held beyond it. And the incremental merge did not
+        need porting — it needed deleting, because the journal already holds
+        what it was carrying forward.
   - [ ] **Ф3.2d** — `xtask rebuild --check`. Last, because it is the only part
         that reaches outside: the tooling crate depends on no product crate
         today and the index is absent from the workspace dependency table.
