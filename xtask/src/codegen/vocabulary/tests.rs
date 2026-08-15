@@ -1,6 +1,9 @@
 //! Tests for the vocabulary substitution — split out of `vocabulary.rs`
 //! by the same `#[path]` idiom `index/memory.rs` uses, so neither half
-//! sits against the 600-line budget.
+//! sits against the 600-line budget. This half holds today's
+//! substitution guarantees — placement, pass-through, the refusals; the
+//! transitive-closure half (F41A2) lives in `tests_transitive.rs` and
+//! shares these fixtures.
 
 use super::*;
 use crate::repo_root;
@@ -10,26 +13,34 @@ use serde_json::json;
 /// before the vocabulary home existed — the value the substitution
 /// must reproduce exactly. The schemas no longer hold it inline, so
 /// this literal is the only witness of the "before" side.
-fn inline_package_kind() -> Value {
+pub(super) fn inline_package_kind() -> Value {
     json!({"enum": ["flow", "feat", "stack", "tool", "mcp", "lang"]})
 }
 
-/// A vocabulary home carrying the real `package_kind`, in a tempdir.
-fn vocabulary_home() -> Result<(tempfile::TempDir, PathBuf)> {
+/// A vocabulary home built from a name → fragment map, in a tempdir —
+/// the fixture base for every test; the composite shapes the later
+/// catalog step brings (a fragment pulling other fragments) are just
+/// entries in the same map.
+pub(super) fn home_with(pairs: Value) -> Result<(tempfile::TempDir, PathBuf)> {
     let dir = tempfile::tempdir()?;
     let path = dir.path().join("vocabularies.json");
-    let body = serde_json::to_string(&json!({"package_kind": inline_package_kind()}))?;
+    let body = serde_json::to_string(&pairs)?;
     std::fs::write(&path, body)?;
     Ok((dir, path))
 }
 
-fn write_schema(dir: &Path, name: &str, body: Value) -> Result<PathBuf> {
+/// A vocabulary home carrying the real `package_kind`, in a tempdir.
+fn vocabulary_home() -> Result<(tempfile::TempDir, PathBuf)> {
+    home_with(json!({"package_kind": inline_package_kind()}))
+}
+
+pub(super) fn write_schema(dir: &Path, name: &str, body: Value) -> Result<PathBuf> {
     let path = dir.join(name);
     std::fs::write(&path, serde_json::to_string(&body)?)?;
     Ok(path)
 }
 
-fn read_json(path: &Path) -> Result<Value> {
+pub(super) fn read_json(path: &Path) -> Result<Value> {
     let text = std::fs::read_to_string(path)?;
     Ok(serde_json::from_str(&text)?)
 }

@@ -10,15 +10,21 @@
 //!
 //! The shape: vocabularies live once in `formats/vocabularies.json`
 //! (name → the JTD fragment that becomes its `definitions` entry); a
-//! schema declares what it pulls in via `metadata.x-vocabularies`;
+//! schema declares what it pulls in via `metadata.x-vocabularies`, and a
+//! fragment may declare dependencies of its own by the same key.
 //! [`Vocabularies::resolve`] materialises the document the generator
-//! sees — the schema's own definitions plus the named fragments — as a
-//! scratch copy, leaving the authored schema untouched. The same pass
-//! refuses, with a recipe, every input that would otherwise reach
-//! jtd-codegen as a panic: a `{"ref": "x"}` with no matching definition
-//! dies inside the binary with `no entry found for key`, naming neither
-//! the schema nor the name.
+//! sees — the schema's own definitions plus the transitive closure of
+//! the named fragments, each placed with its `x-vocabularies` key
+//! stripped (the bookkeeping it names is already executed) and in
+//! sorted name order — as a scratch copy, leaving the authored schema
+//! untouched. The same pass refuses, with a recipe, every input that
+//! would otherwise reach jtd-codegen as a panic: a `{"ref": "x"}` with
+//! no matching definition dies inside the binary with `no entry found
+//! for key`, naming neither the schema nor the name — and a dependency
+//! chain that leaves the home, or loops back on itself, is refused with
+//! the route it took.
 
+use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
@@ -82,8 +88,12 @@ impl Vocabularies {
 
     /// Resolve one schema to the document the generator should read: the
     /// schema's own path when it declares no vocabularies, otherwise a
-    /// scratch copy whose `definitions` carry the fragments named in
-    /// `metadata.x-vocabularies`. The schema on disk is never rewritten.
+    /// scratch copy whose `definitions` carry the transitive closure of
+    /// the fragments named in `metadata.x-vocabularies` — a fragment may
+    /// pull fragments of its own by the same key, and they arrive with
+    /// it, unnamed by the schema, placed in sorted name order so one
+    /// input renders one document. The schema on disk is never
+    /// rewritten.
     ///
     /// Every schema passes the dangling-`ref` check, annotated or not —
     /// an unresolved reference is fatal inside the binary either way,
@@ -103,9 +113,23 @@ impl Vocabularies {
             check_dangling_refs(&doc, schema)?;
             return Ok(schema.to_path_buf());
         };
-        let names = expect_name_array(&annotation, schema)?;
+        let names = expect_name_array(&annotation, &format!("schema {}", schema.display()))?;
+        // Every fragment the annotation reaches — through fragments' own
+        // dependencies too. The cycle, chain and missing-name refusals
+        // fire in there, before anything is placed.
+        let closed = self.closure(&names, schema)?;
+        // The schema's own definitions, snapshotted before placement: the
+        // collision refusal below must fire on what the author wrote, not
+        // on a fragment an earlier iteration placed (the closure may
+        // deliver one name by several routes — a diamond — which is
+        // legal; clobbering the author's own definition is not).
+        let authored: BTreeSet<String> = doc
+            .get("definitions")
+            .and_then(Value::as_object)
+            .map(|own| own.keys().cloned().collect())
+            .unwrap_or_default();
 
-        // Place the named fragments. `definitions` may be absent — a
+        // Place the closed fragments. `definitions` may be absent — a
         // vocabulary-only schema is legal — in which case it is created;
         // a pre-existing non-object one is invalid JTD with nowhere to
         // put fragments, refused rather than clobbered. (`doc` itself is
@@ -128,30 +152,26 @@ impl Vocabularies {
                 schema.display()
             );
         };
-        for name in &names {
-            let Some(fragment) = self.fragments.get(name) else {
-                bail!(
-                    "schema {}: `metadata.x-vocabularies` names `{name}`, but \
-                     the vocabulary home {} has no `{name}`.\n\
-                     Fix: add a `{name}` entry to {} (or drop `{name}` from \
-                     the schema's `metadata.x-vocabularies`), then run \
-                     `cargo xtask codegen`.",
-                    schema.display(),
-                    self.home.display(),
-                    self.home.display()
-                );
-            };
-            if definitions.contains_key(name) {
+        // Sorted by name — the set's iteration order — so the traversal's
+        // visiting order never shows up in the rendered document.
+        for name in &closed {
+            if authored.contains(name) {
                 bail!(
                     "schema {}: vocabulary `{name}` collides with the \
                      schema's own `definitions.{name}` — a substitution must \
                      not silently overwrite a definition the schema carries.\n\
-                     Fix: rename the definition or remove `{name}` from \
-                     `metadata.x-vocabularies`, then run `cargo xtask codegen`.",
+                     Fix: rename the definition, or stop pulling `{name}` in — \
+                     directly in the schema's `metadata.x-vocabularies` or \
+                     through the fragment that names it — then run \
+                     `cargo xtask codegen`.",
                     schema.display()
                 );
             }
-            definitions.insert(name.clone(), fragment.clone());
+            let fragment = self
+                .fragments
+                .get(name)
+                .expect("the closure yields only names it saw in the home");
+            definitions.insert(name.clone(), fragment_for_definitions(fragment));
         }
 
         check_dangling_refs(&doc, schema)?;
@@ -174,20 +194,108 @@ impl Vocabularies {
             .with_context(|| format!("writing the resolved copy {}", copy.display()))?;
         Ok(copy)
     }
+
+    /// The transitive closure of `names` over fragment dependencies: a
+    /// fragment's own `metadata.x-vocabularies` names fragments the
+    /// schema never mentioned, and they arrive with it, however deep the
+    /// chain runs. Traversal follows declaration order, so a refusal
+    /// retells the chain as the author wrote it; the set's sorted
+    /// iteration is the placement order `resolve` relies on.
+    fn closure(&self, names: &[String], schema: &Path) -> Result<BTreeSet<String>> {
+        let mut closed = BTreeSet::new();
+        for name in names {
+            self.walk(name, &mut Vec::new(), &mut closed, schema)?;
+        }
+        Ok(closed)
+    }
+
+    /// One step of the closure walk: verify `name` in the home, take its
+    /// dependencies, descend. `path` is the route from a name the schema
+    /// declared down to here — the retelling every refusal along this
+    /// walk needs; `closed` carries names an earlier branch already
+    /// placed, which ends the walk where routes rejoin (a diamond)
+    /// instead of following them again.
+    fn walk(
+        &self,
+        name: &str,
+        path: &mut Vec<String>,
+        closed: &mut BTreeSet<String>,
+        schema: &Path,
+    ) -> Result<()> {
+        if let Some(looped_at) = path.iter().position(|seen| seen.as_str() == name) {
+            let mut route: Vec<&str> = path[looped_at..].iter().map(String::as_str).collect();
+            route.push(name);
+            bail!(
+                "schema {}: the vocabulary chain `{}` is a cycle — a \
+                 fragment cannot be substituted through itself.\n\
+                 Fix: break the loop — remove `{}` from the \
+                 `metadata.x-vocabularies` of one fragment along that chain \
+                 in {} — then run `cargo xtask codegen`.",
+                schema.display(),
+                route.join(" -> "),
+                name,
+                self.home.display()
+            );
+        }
+        if closed.contains(name) {
+            return Ok(());
+        }
+        let Some(fragment) = self.fragments.get(name) else {
+            if path.is_empty() {
+                bail!(
+                    "schema {}: `metadata.x-vocabularies` names `{name}`, but \
+                     the vocabulary home {} has no `{name}`.\n\
+                     Fix: add a `{name}` entry to {} (or drop `{name}` from \
+                     the schema's `metadata.x-vocabularies`), then run \
+                     `cargo xtask codegen`.",
+                    schema.display(),
+                    self.home.display(),
+                    self.home.display()
+                );
+            }
+            // A fragment's dependency named a stranger: retell the chain
+            // that led there, or the author hunts through the schema for
+            // a word they never wrote in it.
+            let parent = path[path.len() - 1].as_str();
+            let mut chain = format!("`metadata.x-vocabularies` pulls `{}`", path[0]);
+            for hop in &path[1..] {
+                chain.push_str(&format!(", which pulls `{hop}`"));
+            }
+            chain.push_str(&format!(", which pulls `{name}`"));
+            bail!(
+                "schema {}: {chain}, but the vocabulary home {} has no \
+                 `{name}`.\n\
+                 Fix: add a `{name}` entry to {} (or drop `{name}` from \
+                 `{parent}`'s `metadata.x-vocabularies`), then run \
+                 `cargo xtask codegen`.",
+                schema.display(),
+                self.home.display(),
+                self.home.display()
+            );
+        };
+        let deps = dependencies(fragment, name, &self.home)?;
+        path.push(name.to_string());
+        for dependency in &deps {
+            self.walk(dependency, path, closed, schema)?;
+        }
+        path.pop();
+        closed.insert(name.to_string());
+        Ok(())
+    }
 }
 
 /// `metadata.x-vocabularies` must be an array of vocabulary names —
 /// anything else is a broken annotation, and tolerating it (say,
 /// accepting a bare string) would only move the failure somewhere less
-/// legible.
-fn expect_name_array(annotation: &Value, schema: &Path) -> Result<Vec<String>> {
+/// legible. Schemas and fragments carry the key alike, so the refusal
+/// names whichever side is being read.
+fn expect_name_array(annotation: &Value, where_: &str) -> Result<Vec<String>> {
     let Some(items) = annotation.as_array() else {
         bail!(
-            "schema {}: `metadata.x-vocabularies` must be an array of \
+            "{where_}: `metadata.x-vocabularies` must be an array of \
              vocabulary names (strings), but it is {}.\n\
              Fix: write e.g. `\"x-vocabularies\": [\"package_kind\"]`, then \
              run `cargo xtask codegen`.",
-            schema.display(),
             json_kind(annotation)
         );
     };
@@ -195,17 +303,53 @@ fn expect_name_array(annotation: &Value, schema: &Path) -> Result<Vec<String>> {
     for item in items {
         let Some(name) = item.as_str() else {
             bail!(
-                "schema {}: `metadata.x-vocabularies` must be an array of \
+                "{where_}: `metadata.x-vocabularies` must be an array of \
                  vocabulary names (strings), but the array lists {}.\n\
                  Fix: write e.g. `\"x-vocabularies\": [\"package_kind\"]`, \
                  then run `cargo xtask codegen`.",
-                schema.display(),
                 json_kind(item)
             );
         };
         names.push(name.to_string());
     }
     Ok(names)
+}
+
+/// The dependencies a fragment declares by its own
+/// `metadata.x-vocabularies` — the same key, the same shape discipline,
+/// read from the fragment side of the home. A fragment without the key
+/// is a leaf and closes over nothing.
+fn dependencies(fragment: &Value, name: &str, home: &Path) -> Result<Vec<String>> {
+    let Some(annotation) = fragment
+        .get("metadata")
+        .and_then(|metadata| metadata.get("x-vocabularies"))
+    else {
+        return Ok(Vec::new());
+    };
+    expect_name_array(
+        annotation,
+        &format!("vocabulary `{name}` in {}", home.display()),
+    )
+}
+
+/// The fragment as it may enter a schema's `definitions`: its
+/// `metadata.x-vocabularies` is this layer's bookkeeping, already
+/// executed by the time the fragment is placed, and a reader of the
+/// resolved document must not see an instruction someone has carried
+/// out. Only that key goes — the fragment's remaining `metadata` stays
+/// as authored, and a `metadata` the removal empties goes with it.
+fn fragment_for_definitions(fragment: &Value) -> Value {
+    let mut placed = fragment.clone();
+    let Some(root) = placed.as_object_mut() else {
+        return placed;
+    };
+    if let Some(metadata) = root.get_mut("metadata").and_then(Value::as_object_mut) {
+        metadata.remove("x-vocabularies");
+        if metadata.is_empty() {
+            root.remove("metadata");
+        }
+    }
+    placed
 }
 
 /// Refuse a dangling `ref` — a name that is not in `definitions` after
@@ -274,3 +418,10 @@ fn json_kind(value: &Value) -> &'static str {
 #[cfg(test)]
 #[path = "vocabulary/tests.rs"]
 mod tests;
+
+// The transitive-closure half of the suite — split from `tests.rs` by
+// the same `#[path]` idiom when it outgrew the 600-line budget, along
+// the seam between today's substitution guarantees and F41A2's.
+#[cfg(test)]
+#[path = "vocabulary/tests_transitive.rs"]
+mod tests_transitive;
