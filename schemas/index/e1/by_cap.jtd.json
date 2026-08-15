@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "description": "`by-cap/<slug>.jsonl` — one line of the capability inverted index, epoch 1 (PROP-005 §2.4): a package version that provides one given capability, fetchable by a single HTTP GET. Root type `CapabilityRow`; every field required, no optionals, no collections. Source of truth for `crates/vibe-wire/src/generated/index/e1/by_cap/`.",
+    "x-vocabularies": ["package_kind", "group", "version"]
+  },
+  "properties": {
+    "kind": {
+      "ref": "package_kind"
+    },
+    "group": {
+      "ref": "group"
+    },
+    "name": {
+      "type": "string"
+    },
+    "version": {
+      "ref": "version"
+    },
+    "capability": {
+      "type": "string",
+      "metadata": {
+        "description": "The capability this row indexes — the canonical spelling as it lives inside the entry, not the filesystem-safe slug that names the file."
+      }
+    }
+  }
+}

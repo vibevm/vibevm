@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "description": "`by-name/<name>.json` — the candidate set for one bare package name, epoch 1 (PROP-008 §2.8): every package sharing that short name in one HTTP GET, each carrying its own `group`. Root type `NameEntry`; the per-version records inside `packages[].versions[]` are the shared `version_entry` vocabulary. Source of truth for `crates/vibe-wire/src/generated/index/e1/by_name/`.",
+    "x-vocabularies": ["version_entry", "group", "version", "timestamp"]
+  },
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "indexed_at": {
+      "ref": "timestamp"
+    },
+    "packages": {
+      "elements": {
+        "ref": "package_entry"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "One entry per `group` publishing a package called `name`, sorted by `group`; a length greater than one is a short-name collision (PROP-008 §2.7). The writer has no `skip_serializing_if`, so an empty candidate set is emitted as `[]`, never omitted."
+      }
+    }
+  },
+  "optionalProperties": {
+    "tombstone": {
+      "ref": "tombstone"
+    }
+  },
+  "definitions": {
+    "package_entry": {
+      "metadata": {
+        "description": "One package — every indexed version of a single `(group, name)` identity (PROP-008 §2.2). Local to this schema: nothing else consumes the aggregate (`journal` carries `version_entry` directly, not the per-name rollup)."
+      },
+      "properties": {
+        "group": {
+          "ref": "group"
+        },
+        "name": {
+          "type": "string"
+        },
+        "indexed_at": {
+          "ref": "timestamp"
+        },
+        "versions": {
+          "elements": {
+            "ref": "version_entry"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "Sorted ascending by `version`. No `skip_serializing_if` on the writer, so the list is emitted even when empty."
+          }
+        }
+      },
+      "optionalProperties": {
+        "latest_stable": {
+          "ref": "version",
+          "metadata": {
+            "description": "Newest non-prerelease version, recomputed by `finalise()`; absent when every version is a prerelease or the list is empty."
+          }
+        }
+      }
+    },
+    "tombstone": {
+      "metadata": {
+        "description": "A name's death record — its reason for being gone and, when known, the successor to move to (PROP-044 §2, the no-silence law). Local to this schema: `NameEntry` is its only consumer."
+      },
+      "properties": {
+        "reason": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "superseded_by": {
+          "type": "string",
+          "metadata": {
+            "description": "The successor this name's consumers should move to — a redirect pointer, never an automatic rewrite."
+          }
+        }
+      }
+    }
+  }
+}

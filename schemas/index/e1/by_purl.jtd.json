@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "description": "`by-purl/<slug>.jsonl` — one line of the PURL inverted index, epoch 1 (PROP-005 §2.13): a package version whose package- or subskill-level `describes` matches one given PURL. Root type `PurlRow`; every field required. Source of truth for `crates/vibe-wire/src/generated/index/e1/by_purl/`.",
+    "x-vocabularies": ["package_kind", "group", "version"]
+  },
+  "properties": {
+    "kind": {
+      "ref": "package_kind"
+    },
+    "group": {
+      "ref": "group"
+    },
+    "name": {
+      "type": "string"
+    },
+    "version": {
+      "ref": "version"
+    },
+    "purl": {
+      "type": "string",
+      "metadata": {
+        "description": "The package URL this row indexes — the canonical spelling as it lives inside the entry, not the filesystem-safe slug that names the file."
+      }
+    },
+    "binding_site": {
+      "ref": "binding_site"
+    }
+  },
+  "definitions": {
+    "binding_site": {
+      "metadata": {
+        "x-vocabulary": "closed",
+        "x-rust-type": "BindingSite",
+        "description": "Where the PURL was declared on the entry — `package` for the top-level `describes`, `subskill` for a subskill's. Closed vocabulary: paths are built from these values, so an unfamiliar one has no safe behaviour. The wire strings are the WRITER's form (`kebab-case` in `vibe-index`); the reader-side copy in `vibe-registry` spells them `lowercase`, which coincides only because both variants are single words — Phase 4.2 converges the two by re-export."
+      },
+      "enum": ["package", "subskill"]
+    }
+  }
+}

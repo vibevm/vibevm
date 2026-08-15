@@ -2,6 +2,54 @@
   "code_items": [
     {
       "crate_name": "<schema>",
+      "file": "schemas/index/e1/by_cap.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "by_cap",
+      "end_line": 26
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index/e1/by_name.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "by_name",
+      "end_line": 81
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index/e1/by_name.jtd.json",
+      "item_kind": "schema-def",
+      "line": 29,
+      "symbol": "by_name::package_entry",
+      "end_line": 61
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index/e1/by_name.jtd.json",
+      "item_kind": "schema-def",
+      "line": 62,
+      "symbol": "by_name::tombstone",
+      "end_line": 79
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index/e1/by_purl.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "by_purl",
+      "end_line": 39
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index/e1/by_purl.jtd.json",
+      "item_kind": "schema-def",
+      "line": 30,
+      "symbol": "by_purl::binding_site",
+      "end_line": 37
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/index/e1/entry.jtd.json",
       "item_kind": "schema",
       "line": 1,
