@@ -24,8 +24,10 @@
 
 ## Где стоит работа
 
-- Ветка `main`, дерево чистое, HEAD `672bd938`; **раскатано** (`cargo xtask
-  mirror` — gitverse ok, github ok); origin ahead/behind = 0/0.
+- Ветка `main`, дерево чистое; **последняя рабочая посадка — `672bd938`**, поверх
+  неё лежат только коммиты этого сворачивания (`CONTINUE`, `WAL`, промт,
+  освежённое состояние суда). **Раскатано** (`cargo xtask mirror` — gitverse ok,
+  github ok); origin ahead/behind = 0/0.
 - Полная панель `bash tools/self-check.sh` — **`self-check: all green`,
   реальный код выхода 0** (прогон на этом сворачивании, не «на прошлой границе»).
 - `vibe check` — **0 errors, 1 warning, 44 info**. Оба ненулевых числа
