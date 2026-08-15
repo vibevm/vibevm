@@ -8,3 +8,4 @@ pub mod by_cap;
 pub mod by_name;
 pub mod by_purl;
 pub mod entry;
+pub mod repomd;

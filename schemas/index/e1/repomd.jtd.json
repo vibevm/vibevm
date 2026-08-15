@@ -1,0 +1,80 @@
+{
+  "metadata": {
+    "description": "`repomd.json` — the per-index catalog manifest, epoch 1 (PROP-005 §2.4), modelled after RPM's `repomd.xml`. Root type `Repomd`: nine required fields; the `files` map is path-keyed and its values are the tagged union `RepomdFileEntry` (`kind` discriminator, lowercase tags). Source of truth for `crates/vibe-wire/src/generated/index/e1/repomd/`.",
+    "x-vocabularies": [
+      "naming_convention",
+      "timestamp"
+    ]
+  },
+  "properties": {
+    "schema_version": {
+      "type": "uint32"
+    },
+    "registry": {
+      "type": "string"
+    },
+    "registry_url": {
+      "type": "string"
+    },
+    "naming": {
+      "ref": "naming_convention"
+    },
+    "generated_at": {
+      "ref": "timestamp"
+    },
+    "generator": {
+      "type": "string"
+    },
+    "package_count": {
+      "type": "uint32"
+    },
+    "version_count": {
+      "type": "uint32"
+    },
+    "files": {
+      "values": {
+        "ref": "repomd_file_entry"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Path-keyed map of file and directory entries beneath the data directory (excluding `state/`). Keys are POSIX-style relative paths (`primary.jsonl`, `by-name`, …). No `skip_serializing_if` on the writer, so the map is emitted even when empty."
+      }
+    }
+  },
+  "definitions": {
+    "repomd_file_entry": {
+      "metadata": {
+        "description": "One entry of the manifest's `files` map — a tagged union keyed by `kind`: `directory` carries an entry count, `file` carries size + sha256. Tags are lowercase, per the writer's `#[serde(tag = \"kind\", rename_all = \"lowercase\")]`. Local to this schema: no other schema consumes the manifest's file table."
+      },
+      "discriminator": "kind",
+      "mapping": {
+        "directory": {
+          "properties": {
+            "entries": {
+              "type": "uint32",
+              "metadata": {
+                "description": "How many entries the directory holds (files in `by-cap/`, candidate sets in `by-name/`)."
+              }
+            }
+          }
+        },
+        "file": {
+          "properties": {
+            "size": {
+              "type": "uint32",
+              "metadata": {
+                "description": "File size in bytes. The writer's field is `u64` and JTD (RFC 8927) has no 64-bit integer type at all — `uint64` and `int64` are both rejected by the pinned generator as InvalidType (measured 2026-08-15). `uint32` is therefore the narrowest TRUE claim this language can make below 2^32, and a FALSE one at or above it: our own writer can emit a document this schema calls invalid. That divergence is recorded, not resolved — see the campaign plan's ruling on the size ceiling. What is settled is the failure mode: a size >= 2^32 makes the generated reader refuse loudly rather than truncate, so no wrong answer is ever presented as a right one (PROP-044 law 1). The alternatives were measured and are worse: an empty schema generates `Option<Value>`, losing the type AND the field's requiredness; `float64` breaks value equality and loses precision past 2^53; a string-encoded size changes the wire."
+              }
+            },
+            "sha256": {
+              "type": "string",
+              "metadata": {
+                "description": "Content hash, `sha256:`-prefixed hex."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

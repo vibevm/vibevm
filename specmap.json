@@ -540,6 +540,22 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/index/e1/repomd.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "repomd",
+      "end_line": 80
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index/e1/repomd.jtd.json",
+      "item_kind": "schema-def",
+      "line": 45,
+      "symbol": "repomd::repomd_file_entry",
+      "end_line": 78
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/uninstall_report.jtd.json",
       "item_kind": "schema",
       "line": 1,
