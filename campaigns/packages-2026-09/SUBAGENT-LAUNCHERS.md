@@ -956,6 +956,43 @@ configuration, and the log is where it is observable. Worth knowing before
 attributing a behaviour change to a packet: the worker may not be the worker the
 last session measured.
 
+@fact:fact-a-closed-write-list-must-name-the-file-a-sanctioned-split-creates **A
+closed write list and the file-length budget collide on every packet big enough
+to matter, and the packet must resolve it in advance (2026-08-15):** a code
+packet gave three paths as its closed perimeter and, in the same §0, ordered a
+split along a responsibility seam rather than a shave if any file crossed 600
+lines. The test file would have reached 638. The worker split it, created a
+fourth file, **named the collision in its Decisions section and asked the boss
+to veto or bless it** — which is the behaviour the report contract exists to
+produce, and it was blessed, because the split was prescribed and the list was
+merely incomplete.
+
+The rule the boss carries out of it: **a closed write list names the file a
+sanctioned split would create**, or says in as many words that a split may add
+one file and must be reported by name. Otherwise the perimeter — the thing that
+makes «nothing else was touched» a set comparison instead of a judgement —
+argues with the budget rule, and a weak writer resolves the argument by
+shaving. Same family as `#fact-name-the-files-that-probably-need-no-change`:
+both are a perimeter reading as an instruction it was never meant to give.
+
+@fact:fact-cargo-fmt-reaches-a-file-and-still-leaves-check-red **`cargo fmt`
+running clean does not mean `cargo fmt --check` will (2026-08-15, paid on a red
+panel at the boss's own keyboard):** a test module was split out by slicing text
+out of its parent, so the new file began with a blank line. `cargo fmt --all`
+REACHED it — it dedented the `use` block that had been indented inside the
+module — and still left the leading blank, which `cargo fmt --all --check` then
+failed on. So rustfmt was not idempotent on its own output here, and «fmt ran,
+exit 0» is not evidence the check passes; `cargo fmt` without `--check` exits 0
+on success whether or not the result is clean.
+
+Two rules. *(i)* **A file produced by text-slicing gets a `//!` header as its
+first line** — it documents why the split exists and it cannot be a leading
+blank. *(ii)* **The gate a landing must satisfy is the one the panel runs**, so
+verify with `--check`, never with the write-mode form. Same disease as
+`#fact-panel-background-form` and `#fact-a-truncated-pipe-reads-green`: the
+instrument reported something other than what it was read as — and this time
+the instrument was the boss's own.
+
 ## 9. What a clean fan-out looked like {#clean-fanout}
 
 @fact:fanout-first-pass-acceptance **Measured 2026-08-14 — three packets, two
