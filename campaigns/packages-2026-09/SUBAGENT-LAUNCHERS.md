@@ -993,6 +993,40 @@ verify with `--check`, never with the write-mode form. Same disease as
 instrument reported something other than what it was read as — and this time
 the instrument was the boss's own.
 
+@fact:fact-a-packet-touching-shared-data-names-the-crates-whose-tests-stand-on-it **A
+packet that changes shared DATA must name the crates whose tests assert on that
+data — the same law as for a shared type, one substrate over (2026-08-15):**
+`#fact-the-tail-is-the-crates-the-packet-did-not-name` says a slice tightening a
+shared TYPE names the consumer crates it can check and the boss budgets the
+rest. A slice that edits a shared data file has the identical shape and is
+easier to miss, because the file looks like content rather than like an
+interface. Measured here: a packet's acceptance named exactly the new test it
+asked for; the worker also edited `formats/vocabularies.json`, on which another
+crate's tests stand; nothing made it run them; the panel reddened at step 4 of
+51 on a test two steps older than the packet.
+
+The worker was not at fault and the work was correct — the acceptance simply
+described a smaller perimeter than the edit had. **Write the self-verify from
+what the change TOUCHES, not from what the change ADDS.**
+
+@fact:fact-a-test-that-reddens-on-a-legitimate-change-is-re-aimed-not-satisfied **When
+a guard reddens on a change the contract requires, narrow it to its invariant
+and prove the narrowing did not gut it (2026-08-15):** a green-proof test
+asserted a vocabulary fragment matched its former inline copy byte for byte.
+A later step gave that fragment the policy annotation the contract requires of
+every enum, and the test failed on metadata — which never reaches the wire. The
+assertion had grown stronger than the property it guards.
+
+Three moves, and the third is the one that separates this from quietly
+weakening a test. *(i)* Ask what the test GUARDS, not how to make it pass: here,
+that the migration did not change the vocabulary's values. *(ii)* Re-aim at
+exactly that — compare the schema form with policy stripped. *(iii)* **Prove
+the narrowed guard still fails on a real violation** — a seventh value was added
+to the vocabulary, the test failed, the value was removed, it passed. Without
+(iii) the narrowing is indistinguishable from deletion with extra steps, and the
+project's standing rule against making a panel green by editing its tests
+applies with full force.
+
 ## 9. What a clean fan-out looked like {#clean-fanout}
 
 @fact:fanout-first-pass-acceptance **Measured 2026-08-14 — three packets, two
