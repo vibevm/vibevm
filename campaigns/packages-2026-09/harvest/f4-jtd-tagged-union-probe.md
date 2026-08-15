@@ -1,0 +1,304 @@
+# F4-JTD-PROBE — что jtd-codegen 0.4.1 на самом деле делает с объединением, словарём и опциональным скаляром
+
+**Чем мерил:** боссов спайк — реальные прогоны `tools/jtd-codegen/jtd-codegen.exe`
+(версия по `--version`: `jtd-codegen 0.4.1`) по двум специально написанным
+JTD-схемам, вне продуктового дерева (обе схемы и весь выход — в scratchpad
+сессии; существенное приведено здесь целиком, потому что каталог одноразовый).
+**Что НЕ запускалось:** `cargo` любой, панель, тесты. **Дата:** 2026-08-15.
+
+**Зачем спайк вообще был нужен.** Находка Ф0.2
+([`f0-gen-poc.md`](f0-gen-poc.md) §2, строка 1 таблицы) честно записала, что
+утверждение базовой линии B11 «`discriminator` → `#[serde(tag)]` РАБОТАЕТ»
+**этим выходом не доказано** — в `schemas/list_report.jtd.json` нет
+`discriminator`, поэтому поведение просто не упражнялось. Между тем Ф4.1
+обязана описать `discriminator`'ом два формата сразу: `repomd.jtd.json`
+(тегированное объединение Ф1.5) и `journal.jtd.json` (одиннадцать вариантов
+события). Строить фазу на неупражнявшемся утверждении — это ровно та
+«фикстура, которая не может упасть», которую §8 запускалок называет самым
+дорогим уроком.
+
+## 1. ВЕРДИКТ
+
+`discriminator` **работает**, и все одиннадцать вариантов события выражаются.
+Но выход опровергает **три** записанных утверждения, и каждое из трёх меняет
+КОНСТРУКЦИЮ Ф4.2, а не её объём:
+
+1. **Постпроцессор Ф4.2 не может быть «Rust-текст → Rust-текст» даже для
+   преобразования №1.** Находка Ф0.2 §7 заключила: «Закрытый enum → открытый
+   (этот спайк). Чистая постобработка сгенерированного Rust, без второго
+   входа. ДОКАЗАНО». Доказана механика, но не вывод: политика открытости
+   назначается **пословарно** (план, Приложение Б.1: `PackageKind` —
+   открытый, `NamingConvention` — закрытый, `Event.kind` — закрытый,
+   `DeliveryMode` — открытый), а в сгенерированном Rust от этой политики нет
+   ни следа — оба словаря выходят синтаксически неразличимыми. Постпроцессор,
+   открывающий «всякий закрытый enum», откроет `NamingConvention`, что Б.1
+   прямо запрещает. Значит **вход из схемы нужен уже преобразованию №1**, а не
+   только №3.
+2. **Опциональный скаляр приходит как `Option<Box<T>>` — то есть с ТРЕТЬИМ
+   состоянием на оси, которую контракт объявил двухсоставной.** Ф1.4 решением
+   Р1 отвергла `Option<bool>` для `frozen`/`yanked` именно поэтому
+   (PROP-044 [`##TERMS-SNAPSHOT-FROZEN-CHANNEL`](../../spec/common/PROP-044-change-native-formats.md#laws)
+   — «одна булева ось без третьего состояния»). Генератор возвращает это
+   состояние сам. Значит у Ф4.2 есть **пятое** преобразование, которого
+   Приложение А.5 не называет: свернуть `Option<Box<скаляр>>` в
+   `скаляр + #[serde(default, skip_serializing_if = …)]`. Без него замена
+   рукописных типов реэкспортом сгенерированных **нарушает ратифицированный
+   контракт**.
+3. **Варианты тегированного объединения выходят newtype'ами, а не
+   структурными.** Приложение А.2 плана рисует `Published { entry: VersionEntry }`;
+   генератор даёт `Published(EventPublished)` с отдельной структурой на каждый
+   вариант. На проводе это одно и то же (serde внутренне-тегированный newtype
+   разворачивает поля рядом с тегом), в Rust — другое: каждое сопоставление в
+   проекторе меняет форму. Радиус — плечи `match` по всем одиннадцати
+   вариантам.
+
+Плюс два факта, которые НЕ опровержения, а недостающие входы:
+
+4. **`metadata` с ключами `x-…` генератор принимает молча** (exit 0, ни
+   предупреждения) и в Rust не переносит. Канал для аннотаций Ф4.2
+   (`x-empty`, и по п.1 — политика словаря) **существует и проверен**; читать
+   его обязан наш слой, а не jtd-codegen.
+5. **`timestamp` даёт `DateTime<FixedOffset>`, дерево живёт на `DateTime<Utc>`**
+   (26 вхождений в `crates/vibe-index/src`). Реэкспорт сгенерированного типа
+   без шестого преобразования сдвинул бы тип времени по всему крейту.
+
+## 2. Что упражнялось: схема-проба журнала
+
+Схема воспроизводит форму Приложения А.2 плана целиком: внешняя запись
+`{at, actor, event}`, `discriminator: "kind"` с **одиннадцатью** вариантами —
+включая вариант с ПУСТОЙ полезной нагрузкой (`entry_set_replaced`), вариант с
+вложенной структурой (`published` → `version_entry`), вариант с
+опциональным полем (`removed.version`) и два вложенных словаря
+(`naming_convention`, `package_kind`).
+
+```json
+{
+  "properties": {
+    "at": { "type": "timestamp" },
+    "actor": { "type": "string" },
+    "event": { "ref": "event" }
+  },
+  "definitions": {
+    "event": {
+      "discriminator": "kind",
+      "mapping": {
+        "initialised": { "properties": { "registry": {"type":"string"}, "registry_url": {"type":"string"},
+                                          "naming": {"ref":"naming_convention"}, "generator": {"type":"string"},
+                                          "schema_version": {"type":"uint32"} } },
+        "published":   { "properties": { "entry": { "ref": "version_entry" } } },
+        "frozen":      { "properties": { "group": {"type":"string"}, "name": {"type":"string"},
+                                          "version": {"type":"string"}, "content_hash": {"type":"string"} } },
+        "yanked":      { "properties": { "group": {"type":"string"}, "name": {"type":"string"},
+                                          "version": {"type":"string"}, "reason": {"type":"string"} } },
+        "removed":     { "properties": { "group": {"type":"string"}, "name": {"type":"string"} },
+                         "optionalProperties": { "version": { "type": "string" } } },
+        "renamed":     { "properties": { "from_group": {"type":"string"}, "from_name": {"type":"string"},
+                                          "to_group": {"type":"string"}, "to_name": {"type":"string"} } },
+        "notice":      { "properties": { "group": {"type":"string"}, "name": {"type":"string"}, "text": {"type":"string"} } },
+        "channel_set": { "properties": { "group": {"type":"string"}, "name": {"type":"string"},
+                                          "channel": {"type":"string"}, "version": {"type":"string"} } },
+        "channel_unset": { "properties": { "group": {"type":"string"}, "name": {"type":"string"}, "channel": {"type":"string"} } },
+        "force_replaced": { "properties": { "group": {"type":"string"}, "name": {"type":"string"}, "version": {"type":"string"},
+                                             "old_hash": {"type":"string"}, "new_hash": {"type":"string"}, "reason": {"type":"string"} } },
+        "entry_set_replaced": { "properties": {} }
+      }
+    },
+    "naming_convention": { "enum": ["fqdn", "flat"] },
+    "package_kind": { "enum": ["feat", "flow", "lang", "mcp", "stack", "tool"] },
+    "version_entry": {
+      "properties": { "group": {"type":"string"}, "name": {"type":"string"},
+                       "version": {"type":"string"}, "kind": {"ref":"package_kind"} },
+      "optionalProperties": { "keywords": {"elements":{"type":"string"}}, "yanked": {"type":"boolean"},
+                               "frozen": {"type":"boolean"}, "must_understand": {"elements":{"type":"string"}} }
+    }
+  }
+}
+```
+
+Прогон и его дословный вывод (код выхода 0):
+
+```
+📝 Writing Rust code to: …/spike/out
+📦 Generated Rust code.
+📦     Root schema converted into type: JournalRecord
+📦     Definition "event" converted into type: Event
+📦     Definition "naming_convention" converted into type: NamingConvention
+📦     Definition "package_kind" converted into type: PackageKind
+📦     Definition "version_entry" converted into type: VersionEntry
+```
+
+## 3. Выход по существу — что именно эмитировано
+
+Шапка файла: `// Code generated by jtd-codegen for Rust v0.2.1` — при бинаре
+**0.4.1**. Строка версии в артефакте недостоверна (это уже отмечала Ф0.2 §6);
+пинить надо бинарь.
+
+**Объединение — тег на месте, варианты newtype'ы:**
+
+```rust
+#[derive(Serialize, Deserialize)]
+#[serde(tag = "kind")]
+pub enum Event {
+    #[serde(rename = "channel_set")]        ChannelSet(EventChannelSet),
+    #[serde(rename = "channel_unset")]      ChannelUnset(EventChannelUnset),
+    #[serde(rename = "entry_set_replaced")] EntrySetReplaced(EventEntrySetReplaced),
+    #[serde(rename = "force_replaced")]     ForceReplaced(EventForceReplaced),
+    #[serde(rename = "frozen")]             Frozen(EventFrozen),
+    #[serde(rename = "initialised")]        Initialised(EventInitialised),
+    #[serde(rename = "notice")]             Notice(EventNotice),
+    #[serde(rename = "published")]          Published(EventPublished),
+    #[serde(rename = "removed")]            Removed(EventRemoved),
+    #[serde(rename = "renamed")]            Renamed(EventRenamed),
+    #[serde(rename = "yanked")]             Yanked(EventYanked),
+}
+```
+
+Одиннадцать из одиннадцати. Порядок вариантов — **алфавитный по строке
+провода**, не порядок `mapping` в схеме: генератор сортирует (в схеме
+`initialised` первый, в выходе — шестой). Для байт-стабильности это хорошо
+(порядок ключей JSON не зависит от порядка написания схемы), для читаемости
+диффа — то, о чём надо знать заранее.
+
+Пустой вариант выражается: `pub struct EventEntrySetReplaced {}` — на проводе
+`{"kind":"entry_set_replaced"}`.
+
+**Словари — оба закрытые и синтаксически НЕРАЗЛИЧИМЫЕ:**
+
+```rust
+#[derive(Serialize, Deserialize)]
+pub enum NamingConvention {           // Б.1: должен остаться ЗАКРЫТЫМ
+    #[serde(rename = "flat")] Flat,
+    #[serde(rename = "fqdn")] Fqdn,
+}
+
+#[derive(Serialize, Deserialize)]
+pub enum PackageKind {                // Б.1: должен стать ОТКРЫТЫМ
+    #[serde(rename = "feat")] Feat,
+    …
+    #[serde(rename = "tool")] Tool,
+}
+```
+
+Ровно одна и та же форма. Отличить их постпроцессору **не по чему** — вот
+почему вывод Ф0.2 §7.1 «без второго входа» неверен.
+
+**Опциональные поля — `Option<Box<T>>` даже для скаляра:**
+
+```rust
+pub struct VersionEntry {
+    …
+    #[serde(rename = "frozen")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub frozen: Option<Box<bool>>,          // ← третье состояние у булевой оси
+    #[serde(rename = "yanked")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub yanked: Option<Box<bool>>,
+    #[serde(rename = "must_understand")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub mustUnderstand: Option<Box<Vec<String>>>,
+}
+```
+
+Сегодняшний рукописный дом — `#[serde(default, skip_serializing_if = "is_false")]
+pub yanked: bool` (решение Р1 Ф1.4). Сгенерированный тип не эквивалентен ему:
+он ВВОДИТ различие «поля нет» против «поле есть и равно false», которое
+PROP-044 §2b объявляет несуществующим.
+
+**Время:** `pub at: DateTime<FixedOffset>` против рукописного
+`pub at: DateTime<Utc>` (`crates/vibe-index/src/journal/record.rs:23`).
+Сегодня ни один файл под `crates/vibe-wire/src/generated/` не импортирует
+`chrono` вовсе — это новая поверхность для крейта провода.
+
+**Имена полей:** идентификаторы camelCase (`newHash`, `contentHash`,
+`registryUrl`, `schemaVersion`, `mustUnderstand`) при верной строке провода в
+`#[serde(rename)]` — подтверждает B11 №5; закрывается преобразованием А.5 №2.
+
+## 4. Вторая проба: канал аннотаций
+
+Схема с `metadata` на словарях, на коллекции и на скаляре:
+
+```json
+{
+  "properties": {
+    "kind":   { "ref": "package_kind" },
+    "naming": { "ref": "naming_convention" },
+    "files":  { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+  },
+  "optionalProperties": {
+    "keywords": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+    "yanked":   { "type": "boolean", "metadata": { "x-default": "false" } }
+  },
+  "definitions": {
+    "package_kind":      { "metadata": { "x-vocabulary": "open"   }, "enum": ["feat","flow","lang","mcp","stack","tool"] },
+    "naming_convention": { "metadata": { "x-vocabulary": "closed" }, "enum": ["fqdn","flat"] }
+  }
+}
+```
+
+Результат: **exit 0, ни одного предупреждения**, выход побайтово такой же, как
+без аннотаций. То есть:
+
+- канал для `x-empty` (А.5 №3) **проверен и работает**;
+- канал для политики словаря (нужный по п.1 вердикта) — тот же самый, тоже
+  работает;
+- цена: `jtd-codegen` их **не переносит** в Rust, поэтому конвейер Ф4.2
+  обязателен — `(схема + реестр + сгенерированный Rust) → Rust`, как и
+  заключала Ф0.2 §7 для преобразований №3 и №4. Новое здесь только то, что
+  преобразование №1 попадает в тот же класс.
+
+## 5. Что из этого следует для нарезки Ф4
+
+**Ф4.1 (схемы).** Форма `discriminator`/`mapping` пригодна для
+`journal.jtd.json` и `repomd.jtd.json` — доказано прогоном. Каждая схема
+обязана нести:
+- `metadata."x-vocabulary": "open"|"closed"` на КАЖДОМ `enum` — отсутствие
+  аннотации должно быть ошибкой генерации, как А.5 №3 уже требует для
+  коллекций (решение обязано быть записано в схеме, а не выведено);
+- `metadata."x-empty"` на каждой коллекции (уже в А.5);
+- **новое:** аннотацию на опциональном скаляре, говорящую «это не Option, это
+  значение с умолчанием» — иначе п.2 вердикта воспроизводится в типе.
+
+**Ф4.2 (генератор).** Преобразований **шесть**, а не четыре:
+1. закрытый enum → открытый, **по аннотации схемы, а не по факту закрытости**;
+2. camelCase → snake_case (как в А.5);
+3. `x-empty` по схеме (как в А.5);
+4. `deny_unknown_fields` по реестру (как в А.5);
+5. **`Option<Box<скаляр>>` → `скаляр` + `default` + `skip_serializing_if`** по
+   аннотации умолчания — иначе ратифицированная двухсоставная ось получает
+   третье состояние;
+6. **`DateTime<FixedOffset>` → `DateTime<Utc>`** (либо явное решение босса
+   двинуть дерево на `FixedOffset`, что дороже и без выгоды).
+
+Плюс правило пропуска: **тегированное объединение постпроцессор не трогает.**
+Сегодня Ф0.2-сканер пропускает его СЛУЧАЙНО — `detect_serde_enum`
+(`f0-gen-poc.md` §3) ищет `pub enum` строкой сразу за `#[derive(…)]`, а у
+объединения между ними стоит `#[serde(tag = "kind")]`, и функция возвращает
+`None`. Результат верный, механизм — совпадение. В Ф4.2 пропуск должен быть
+НАЗВАННЫМ правилом с тестом, иначе первый же генератор, поставивший атрибут в
+другом порядке, начнёт переписывать объединения.
+
+**Радиус п.3 вердикта (newtype-варианты).** Замена рукописного `Event`
+реэкспортом сгенерированного меняет форму каждого плеча `match` в проекторе.
+Это цена, которую надо назвать в шаге Ф4.2 заранее, а не встретить при сборке.
+Альтернатива — оставить `Event` рукописным и описать схемой только те форматы,
+где типы реэкспортируются; но тогда `journal.jtd.json` описывает формат,
+типы которого живут отдельно, и G9 держится процедурой, а не машиной.
+Развилка боссова, и она названа здесь, а не оставлена исполнителю.
+
+## 6. Как воспроизвести
+
+Обе схемы приведены в §2 и §4 целиком — каталог спайка одноразовый, поэтому
+несущее приведено здесь (тот же приём, что у Ф0.2 §3). Из корня рабочего
+дерева:
+
+```bash
+tools/jtd-codegen/jtd-codegen.exe --version          # jtd-codegen 0.4.1
+mkdir -p /tmp/probe/out /tmp/probe/out2
+# положить §2 в /tmp/probe/journal_probe.jtd.json, §4 в /tmp/probe/meta_probe.jtd.json
+tools/jtd-codegen/jtd-codegen.exe /tmp/probe/journal_probe.jtd.json --rust-out /tmp/probe/out  --root-name journal_record
+tools/jtd-codegen/jtd-codegen.exe /tmp/probe/meta_probe.jtd.json    --rust-out /tmp/probe/out2 --root-name probe
+```
+
+Сверка утверждений §3 — чтением `out/mod.rs`; сверка §4 — тем, что
+`out2/mod.rs` не содержит ни одной подстроки `x-`.
+Рукописный двойник для сравнения: `crates/vibe-index/src/journal/record.rs:22-34`.
