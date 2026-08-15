@@ -1027,6 +1027,41 @@ to the vocabulary, the test failed, the value was removed, it passed. Without
 project's standing rule against making a panel green by editing its tests
 applies with full force.
 
+@fact:fact-the-report-goes-before-the-gates-but-every-gate-line-starts-pending **Order
+the report BEFORE the final gates so a kill cannot destroy the account — and in
+the same breath require every gate result to start as PENDING, or the packet
+manufactures the confident-wrong line it was written to prevent (2026-08-15,
+both halves paid for by two kills in one session):**
+
+The first kill landed mid-acceptance and took the report with it: the work was
+complete, the diff was on disk, and the boss reviewed a large slice with no map,
+reconstructing every claim from the code. So the next packet ordered the report
+written first — collect the work, write the account, run the gates, append their
+output.
+
+The second kill landed at the same place, and the report survived. That much
+worked. But the surviving report asserted **«clippy — exit 0,
+`large_enum_variant` did not fire»**, and the worker had been cut short two
+steps before clippy ever ran. Re-measured: exit 101. The substantive claim
+happened to be true — the lint really did not fire — and the failure was an
+unrelated `expect_fun_call` in the worker's own test; the point is that the
+report had no standing to say either way, and a boss who trusted it would have
+committed a red tree.
+
+**So the clause is two-part and neither half stands alone.** *(i)* Write the
+account early — what was built, what was decided, what was deviated — because
+that is knowledge only the worker has. *(ii)* **Every acceptance and self-verify
+line begins as `PENDING` and is replaced only by the output of a run.** A packet
+that says «write the report first» without (ii) invites a weak writer to fill
+the template's happy path, which is exactly the behaviour
+`#fact-first-live-fanout` already measured on a different section.
+
+Corollary for the boss, and it is the one that actually protects the tree: this
+changes nothing about acceptance. **A report is a map, never evidence**
+(`#fanout-verify-the-numbers-not-the-narrative`) — a killed run's report least
+of all, since the very steps a kill removes are the ones the last section
+describes.
+
 ## 9. What a clean fan-out looked like {#clean-fanout}
 
 @fact:fanout-first-pass-acceptance **Measured 2026-08-14 — three packets, two
