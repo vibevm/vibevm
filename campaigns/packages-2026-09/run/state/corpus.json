@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-14T16:53:09Z",
+  "updated_at": "2026-08-15T09:13:37Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -102476,8 +102476,8 @@
         "marker_count": 279,
         "processed_hash": "80244080bba060d50b689a8c7c0476b0c52b471ff2a620348d269b1a0409895d",
         "summary": {
-          "confirmed": 330,
-          "drift": 2,
+          "confirmed": 331,
+          "drift": 1,
           "unverifiable": 1
         },
         "verdicts": {
@@ -103140,14 +103140,13 @@
             ]
           },
           "FORWARD-COMPAT": {
-            "v": "drift",
+            "v": "confirmed",
             "ev": [
-              "spec/modules/vibe-index/PROP-005-package-index.md:302  @fact:FORWARD-COMPAT **Forward compatibility.** `schema_version: 1` is recorded at file scope (in `repomd.json`) and at entry scope. v2 entries with new fields can coexist in v1 files via `serde(default)` on consumers; readers of v2 written by an old vibevm gracefully ignore unknown fields. @status:impl/done",
-              "crates/vibe-index/src/types/entry/mod.rs:38  #[serde(deny_unknown_fields)]",
-              "crates/vibe-index/src/types/entry/mod.rs:37  #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]",
-              "crates/vibe-index/src/index/primary.rs:92          let entry: VersionEntry = serde_json::from_str(line).map_err(|e| {",
-              "crates/vibe-index/src/types/entry/relations.rs:14  #[serde(deny_unknown_fields)]",
-              "DRIFT — composite fact judged by clauses, and the impl/done claim does NOT hold. Clause 1 (schema_version recorded at file scope AND entry scope) is TRUE: Repomd.schema_version (types/repomd.rs:21) and VersionEntry.schema_version (mod.rs:44). But clauses 2 & 3 — 'v2 entries with new fields can coexist in v1 files via serde(default) on consumers; readers gracefully ignore unknown fields' — are CONTRADICTED by the tree: VersionEntry carries `#[serde(deny_unknown_fields)]` (mod.rs:38), and so does every sub-struct (content.rs:18,37,60,73,92; aggregate.rs:21,64; relations.rs:14,29,42,57,63,76). With deny_unknown_fields, deserialising a record that carries an extra/unknown field ERRORS — it does not 'gracefully ignore'. The primary.jsonl reader is exactly that deserialiser (primary.rs:92 `let entry: VersionEntry = serde_json::from_str(line)`). The reasoning is also mechanically wrong: `serde(default)` on individual fields supplies defaults for MISSING fields; it does not permit EXTRA fields, and deny_unknown_fields overrides any such leniency regardless. Searched the whole crate for a tolerant reader: no `allow_unknown`, no schema_version>1 gating (schema_version is only ever set/echoed, e.g. memory.rs:245,273 — never compared to branch behaviour). So a v2 entry with a new field in a v1 primary.jsonl would be rejected by `vibe-index`, not tolerated. This is the consequential lie in §2.6 the task warned about. Replaces the section-level paragraph that stamped #entry `confirmed` — for THIS fact the prior `confirmed` was WRONG; the forward-compatibility behaviour it promises is not implemented."
+              "crates/vibe-index/src/types/entry/mod.rs  — `VersionEntry` no longer carries `#[serde(deny_unknown_fields)]`; the doc comment above it states the rule and the reason",
+              "crates/vibe-index/src/types/  — `grep -rc deny_unknown_fields` over the whole directory returns 0 in every file (aggregate.rs, content.rs, mod.rs, relations.rs, repomd.rs, kinds.rs, tests.rs, mod.rs). Sixteen attributes removed, not the fifteen the plan's baseline recorded — the sixteenth is `Tombstone`, added by this campaign's own phase-1 landing after the count was taken",
+              "crates/vibe-index/src/types/entry/tests.rs  fn unknown_root_field_is_read() / fn unknown_nested_section_field_is_read() / fn repomd_unknown_field_is_read() / fn unknown_field_is_read_but_not_written_back()  — four guards, all green",
+              "RED PROOF, re-run by the boss: re-adding the attribute to `VersionEntry` ALONE reddens two of those four with serde's own `unknown field `future_field`, expected one of …`, real exit 101; removed again, green.",
+              "REPLACES the earlier verdict, and the replacement is the interesting part: the earlier one confirmed a fact that was FALSE of the tree. The fact promised readers that gracefully ignore unknown fields while sixteen aggregates refused the whole file on the first unknown key. The contradiction was not an oversight — it could not be removed while every mutation read the catalog to rewrite it, because tolerance would then have silently DELETED the tolerated field on the next write, which is worse than refusing. Phase 3 removed the condition (a mutation is an append plus a reprojection, so nothing read is written back), and only then could the attribute go. The amended fact says all of that, including that it was false, so the next reader does not re-derive the history."
             ]
           },
           "req-trust": {
@@ -103580,7 +103579,11 @@
           "NEVER-SILENT-SCHEMA": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/index/quarantine.rs  pub const UNDERSTOOD: &[&str] = &[];  and  pub fn missing_capabilities(...)  — the per-record capability set that now carries the refusal",
+              "crates/vibe-index/src/index/memory.rs  fn load_from(...)  — a version naming a capability this build lacks is refused BY NAME into `quarantined` with a WARN, and the rest of the catalog still loads",
+              "crates/vibe-index/src/journal/project.rs  fn unprojectable(variant, carrier)  — the same discipline one floor up: an event whose carrier this build lacks stops the projection with a nameable cause rather than being skipped",
+              "crates/vibe-index/src/types/entry/tests.rs  fn unknown_field_is_read_but_not_written_back()  — the boundary between the two facts made testable: unknown FIELDS are tolerated, and tolerating them is not the same as acting on a record one does not understand",
+              "REPLACES the earlier verdict, which was correct while a catalog version number could still carry a refusal. It cannot now: the catalog is a projection any build rewrites from facts, so its version says only who wrote the file. The refusal itself is unchanged and is now louder — a per-record capability miss names the capability and offers a recipe, where a version compare could only say 'somewhere in here is something newer than you'. The amended fact separates the two questions explicitly, because the neighbouring fact tolerating unknown FIELDS reads as its contradiction until someone states that they answer different things."
             ]
           },
           "design-crate-layout": {
@@ -104761,7 +104764,7 @@
           }
         },
         "verified_at": "2026-08-13T23:34:20Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE"
       }
     },
     {
