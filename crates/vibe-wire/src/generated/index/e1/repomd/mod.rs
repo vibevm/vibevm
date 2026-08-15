@@ -76,10 +76,10 @@ pub enum NamingConvention {
 #[serde(tag = "kind")]
 pub enum RepomdFileEntry {
     #[serde(rename = "directory")]
-    Directory(RepomdFileEntryDirectory),
+    Directory(Box<RepomdFileEntryDirectory>),
 
     #[serde(rename = "file")]
-    File(RepomdFileEntryFile),
+    File(Box<RepomdFileEntryFile>),
 }
 
 #[derive(Serialize, Deserialize)]

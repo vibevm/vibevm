@@ -16,10 +16,12 @@ use anyhow::{Context, Result, bail};
 use walkdir::WalkDir;
 
 mod format_id;
+mod postproc;
 mod vocabulary;
 
 use crate::repo_root;
 use format_id::emit_format_id;
+use postproc::rewrite_generated;
 use vocabulary::{Vocabularies, vocabularies_path};
 
 /// Locate the jtd-codegen binary. Prefer the project-local copy under
@@ -350,6 +352,11 @@ fn generate_into(
                 status.code()
             );
         }
+        // The generator's output takes its content pass before anything
+        // reads it: the arms of every discriminator union get their `Box`
+        // here, so no consumer — compiler, clippy, oracle — ever sees the
+        // unboxed form.
+        rewrite_generated(&sub_out.join("mod.rs"))?;
         leaves.push(sub_out);
     }
 
