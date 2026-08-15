@@ -1,0 +1,165 @@
+{
+  "metadata": {
+    "description": "`journal/<yyyy-mm>.ndjson` — the registry's journal of catalog facts, epoch 1 (PROP-044 §3): one `JournalRecord` per line, the TRUTH layer the catalog is a projection of — a writer never accepts as input what it itself published. Root type `JournalRecord`: the moment of the fact (`at`, supplied by the caller — the clock enters at the edge and never inside the journal, PROP-044 §4.3), the `actor`, and the `event` — a tagged union of eleven facts keyed by `kind`, snake_case tags per the writer's `#[serde(tag = \"kind\", rename_all = \"snake_case\")]`. Source of truth for `crates/vibe-wire/src/generated/journal/e1/journal/`.",
+    "x-rust-type": "JournalRecord",
+    "x-vocabularies": ["group", "naming_convention", "timestamp", "version", "version_entry"]
+  },
+  "properties": {
+    "at": {
+      "ref": "timestamp",
+      "metadata": {
+        "description": "The moment of the FACT, not of the writing: the caller supplies it, so the journal never runs a clock of its own."
+      }
+    },
+    "actor": {
+      "type": "string",
+      "metadata": {
+        "description": "Who wrote the record — a tool identity such as `vibe-index 0.1.0-dev`."
+      }
+    },
+    "event": {
+      "ref": "event"
+    }
+  },
+  "definitions": {
+    "event": {
+      "metadata": {
+        "description": "One registry fact — the eleven-variant `Event` union of `journal::record`. Not the namesake campaign journal of PROP-043: a different crate keeping a different law; this one is the package registry's journal of catalog facts. An arm's `kind` outside this mapping is rejected by the generated reader. The projection folds six of the eleven arms; `renamed`, `notice`, `channel_set`, `channel_unset` and `force_replaced` refuse by design (their carriers are not built in this vibe-index). Local to this schema: no other surface consumes the journal's event union.",
+        "x-rust-type": "Event"
+      },
+      "discriminator": "kind",
+      "mapping": {
+        "channel_set": {
+          "metadata": {
+            "description": "Pin one `version` of a package to a named `channel`."
+          },
+          "properties": {
+            "group": { "ref": "group" },
+            "name": { "type": "string" },
+            "channel": { "type": "string" },
+            "version": { "ref": "version" }
+          }
+        },
+        "channel_unset": {
+          "metadata": {
+            "description": "Unpin a `channel`: the identity and the channel name — the pin is gone, no version rides along."
+          },
+          "properties": {
+            "group": { "ref": "group" },
+            "name": { "type": "string" },
+            "channel": { "type": "string" }
+          }
+        },
+        "entry_set_replaced": {
+          "metadata": {
+            "description": "A full scan asserts its result IS the whole published-entry set as of this record. The projector clears the ENTRY set and keeps every registry fact — tombstones, yanks, freezes and notices are not scan products and a scan cannot re-derive them, so a watershed that dropped them would make state unrecoverable (PROP-044 law 2). `source` names where the scan came from."
+          },
+          "properties": {
+            "source": { "type": "string" }
+          }
+        },
+        "force_replaced": {
+          "metadata": {
+            "description": "Forced content replacement: the same `(group, name, version)` re-published under a different hash — `old_hash` → `new_hash`, the `reason` on the record."
+          },
+          "properties": {
+            "group": { "ref": "group" },
+            "name": { "type": "string" },
+            "version": { "ref": "version" },
+            "old_hash": { "type": "string" },
+            "new_hash": { "type": "string" },
+            "reason": { "type": "string" }
+          }
+        },
+        "frozen": {
+          "metadata": {
+            "description": "A freeze OBSERVED by this registry, not authored by it: the authority is the flag inside the package's hashed content (ruling D14); the event records when this registry saw the freeze and which `content_hash` it was tied to."
+          },
+          "properties": {
+            "group": { "ref": "group" },
+            "name": { "type": "string" },
+            "version": { "ref": "version" },
+            "content_hash": { "type": "string" }
+          }
+        },
+        "initialised": {
+          "metadata": {
+            "description": "The registry's identity, written by `init` as the journal's first record. It lives HERE and not in the catalog because a projection rebuilds the catalog from scratch: an identity readable only from `repomd.json` would be an authoritative fact living in a derived artifact (PROP-044 `##FORBID-SECRET-TRUTH`), and `rebuild --check` — tear down, reproject, compare — could never pass."
+          },
+          "properties": {
+            "registry": { "type": "string" },
+            "registry_url": { "type": "string" },
+            "naming": { "ref": "naming_convention" }
+          }
+        },
+        "notice": {
+          "metadata": {
+            "description": "A per-package notice — free text the registry carries for consumers of `(group, name)`; unprojectable into the catalog, so it lives in the journal only."
+          },
+          "properties": {
+            "group": { "ref": "group" },
+            "name": { "type": "string" },
+            "text": { "type": "string" }
+          }
+        },
+        "published": {
+          "metadata": {
+            "description": "A published version: the full per-version catalog record (`version_entry`, all thirty-three of its wire keys) towed by every journal rebuild. The Rust field is `Box<VersionEntry>` — a memory-layout measure against the catalog record (~900 bytes) dwarfing every other arm in `replay`'s vector; serde renders `Box<T>` exactly as `T`, so the box is invisible on the wire and the payload is the plain entry object."
+          },
+          "properties": {
+            "entry": { "ref": "version_entry" }
+          }
+        },
+        "removed": {
+          "metadata": {
+            "description": "A removal: one `version`, or — with `version` null — the whole package."
+          },
+          "properties": {
+            "group": { "ref": "group" },
+            "name": { "type": "string" }
+          },
+          "optionalProperties": {
+            "version": {
+              "ref": "version",
+              "metadata": {
+                "description": "Semantically optional, textually ALWAYS present: the Rust field is `Option<Version>` with no `skip_serializing_if`, so the writer emits the key for every removal — `\"version\": null` when the whole package goes, never an absent key. JTD (RFC 8927) has no nullable type and no present-but-null form, so `optionalProperties` is the nearest expressible claim and the schema is WIDER than the type: it admits an absent key the writer never writes, and a round-trip through the generated type drops the null (its `Option` skips on `None`). Presence therefore lives in Rust alone — the parity oracle exercises `Some`, the only value both forms carry identically. Recorded, not resolved, same as the `renamed` pair arity."
+              }
+            }
+          }
+        },
+        "renamed": {
+          "metadata": {
+            "description": "A package rename: `from` → `to`, each a `(group, name)` pair."
+          },
+          "properties": {
+            "from": {
+              "elements": { "type": "string" },
+              "metadata": {
+                "description": "Wire type: a PAIR `(group, name)` — a two-element array like `[\"org.vibevm\", \"wal\"]`. JTD (RFC 8927) has no tuple: `elements` describes a homogeneous string array of ANY length, so this schema accepts `[]`, one element or three, and cannot pin which position is the group. The schema is deliberately WIDER than the Rust type `(Group, String)`; the arity check lives only in the Rust reader, and nothing schema-validated may be assumed to be a pair. `x-empty: emit`: a required field the writer always serialises (no `skip_serializing_if`) — and a pair is never empty anyway.",
+                "x-empty": "emit"
+              }
+            },
+            "to": {
+              "elements": { "type": "string" },
+              "metadata": {
+                "description": "Wire type: a PAIR `(group, name)` — a two-element array like `[\"org.vibevm.core\", \"wal2\"]`. JTD (RFC 8927) has no tuple: `elements` describes a homogeneous string array of ANY length, so this schema accepts `[]`, one element or three, and cannot pin which position is the group. The schema is deliberately WIDER than the Rust type `(Group, String)`; the arity check lives only in the Rust reader, and nothing schema-validated may be assumed to be a pair. `x-empty: emit`: a required field the writer always serialises (no `skip_serializing_if`) — and a pair is never empty anyway.",
+                "x-empty": "emit"
+              }
+            }
+          }
+        },
+        "yanked": {
+          "metadata": {
+            "description": "One version withdrawn, with the `reason` on the record."
+          },
+          "properties": {
+            "group": { "ref": "group" },
+            "name": { "type": "string" },
+            "version": { "ref": "version" },
+            "reason": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

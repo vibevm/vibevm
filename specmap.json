@@ -114,6 +114,22 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/journal/e1/journal.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "journal",
+      "end_line": 165
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/journal/e1/journal.jtd.json",
+      "item_kind": "schema-def",
+      "line": 25,
+      "symbol": "journal::event",
+      "end_line": 163
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/list_report.jtd.json",
       "item_kind": "schema",
       "line": 1,

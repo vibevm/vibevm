@@ -263,6 +263,7 @@
   },
   "version_entry": {
     "metadata": {
+      "x-rust-type": "VersionEntry",
       "description": "Per-version catalog record (PROP-005 §2.6) — one line of `primary.jsonl`, one element of a `by-name` candidate's `versions[]`, one `POST /v1/packages` body. Shared as a vocabulary because `by_name` and `journal` carry it transitively and JTD has no cross-file refs (G9).",
       "x-vocabularies": [
         "group",

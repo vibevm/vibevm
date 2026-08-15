@@ -4,8 +4,4 @@
 // `*.jtd.json` schema under `schemas/` / `schemas/index/e1/` / `schemas/journal/e1/`. Editing
 // this file by hand will be overwritten on the next codegen run.
 
-pub mod by_cap;
-pub mod by_name;
-pub mod by_purl;
-pub mod entry;
-pub mod repomd;
+pub mod journal;
