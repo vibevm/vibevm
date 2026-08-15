@@ -1,0 +1,5 @@
+{
+  "package_kind": {
+    "enum": ["flow", "feat", "stack", "tool", "mcp", "lang"]
+  }
+}

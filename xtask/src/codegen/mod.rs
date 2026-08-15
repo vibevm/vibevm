@@ -16,9 +16,11 @@ use anyhow::{Context, Result, bail};
 use walkdir::WalkDir;
 
 mod format_id;
+mod vocabulary;
 
 use crate::repo_root;
 use format_id::emit_format_id;
+use vocabulary::{Vocabularies, vocabularies_path};
 
 /// Locate the jtd-codegen binary. Prefer the project-local copy under
 /// `tools/jtd-codegen/`; fall back to PATH if the local copy is
@@ -264,8 +266,19 @@ pub(crate) fn run_codegen() -> Result<()> {
         if groups.len() == 1 { "" } else { "s" },
     );
 
+    // Shared vocabularies, one home for the whole run (PROP-044 §8 G9):
+    // parsed once here, every schema below resolves against it.
+    let mut vocabularies = Vocabularies::load(&vocabularies_path(&root))?;
+
     for (schema_root, out_dir, schemas) in &groups {
-        generate_into(&binary, &root, schema_root, out_dir, schemas)?;
+        generate_into(
+            &binary,
+            &root,
+            schema_root,
+            out_dir,
+            schemas,
+            &mut vocabularies,
+        )?;
     }
     Ok(())
 }
@@ -277,13 +290,16 @@ pub(crate) fn run_codegen() -> Result<()> {
 /// (alphabetically sorted). Wiping first keeps `check-codegen` exact: what's
 /// on disk is exactly what the generator would produce from *only* the
 /// schemas routed to this dir, so a removed or rerouted schema cannot leave
-/// a stale submodule behind.
+/// a stale submodule behind. Each schema is first resolved through the
+/// shared vocabularies (`vocabulary.rs`): the generator reads the
+/// resolved document, never the authored file.
 fn generate_into(
     binary: &Path,
     root: &Path,
     schema_root: &Path,
     out_dir: &Path,
     schemas: &[PathBuf],
+    vocabularies: &mut Vocabularies,
 ) -> Result<()> {
     std::fs::create_dir_all(out_dir)
         .with_context(|| format!("creating output dir {}", out_dir.display()))?;
@@ -316,11 +332,15 @@ fn generate_into(
         let sub_out = schema_module_dir(schema_root, out_dir, schema)?;
         std::fs::create_dir_all(&sub_out)
             .with_context(|| format!("creating per-schema dir {}", sub_out.display()))?;
+        // The generator reads the vocabulary-resolved document — the
+        // authored schema itself for one without vocabularies, a scratch
+        // copy otherwise.
+        let resolved = vocabularies.resolve(schema)?;
         eprintln!("  - {} → {}/", schema.display(), sub_out.display());
         let status = Command::new(binary)
             .arg("--rust-out")
             .arg(&sub_out)
-            .arg(schema)
+            .arg(&resolved)
             .status()
             .with_context(|| format!("spawning {}", binary.display()))?;
         if !status.success() {

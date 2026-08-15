@@ -6,7 +6,8 @@
     },
     "rustOptions": {
       "package": "vibe_wire::registry_sync_report"
-    }
+    },
+    "x-vocabularies": ["package_kind"]
   },
   "properties": {
     "ok": {
@@ -30,16 +31,6 @@
     }
   },
   "definitions": {
-    "package_kind": {
-      "enum": [
-        "flow",
-        "feat",
-        "stack",
-        "tool",
-        "mcp",
-        "lang"
-      ]
-    },
     "refreshed_entry": {
       "properties": {
         "kind": {

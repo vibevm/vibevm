@@ -62,23 +62,15 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "list_report",
-      "end_line": 102
+      "end_line": 93
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/list_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 44,
+      "line": 35,
       "symbol": "list_report::list_entry",
-      "end_line": 100
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/list_report.jtd.json",
-      "item_kind": "schema-def",
-      "line": 34,
-      "symbol": "list_report::package_kind",
-      "end_line": 43
+      "end_line": 91
     },
     {
       "crate_name": "progress-core",
@@ -472,31 +464,23 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "registry_sync_report",
-      "end_line": 79
+      "end_line": 70
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/registry_sync_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 33,
-      "symbol": "registry_sync_report::package_kind",
-      "end_line": 42
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/registry_sync_report.jtd.json",
-      "item_kind": "schema-def",
-      "line": 43,
+      "line": 34,
       "symbol": "registry_sync_report::refreshed_entry",
-      "end_line": 64
+      "end_line": 55
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/registry_sync_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 65,
+      "line": 56,
       "symbol": "registry_sync_report::skipped_entry",
-      "end_line": 77
+      "end_line": 68
     },
     {
       "crate_name": "<schema>",
