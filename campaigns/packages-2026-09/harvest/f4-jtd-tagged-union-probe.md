@@ -313,9 +313,62 @@ help: consider boxing the large fields or introducing indirection in some other
 `#![allow(clippy::match_same_arms)]`. То есть путь (2) технически проторён —
 и именно поэтому его цена должна быть названа вслух, а не выбрана по удобству.
 
+## 4b. Четвёртая проба: G9 нарушен УЖЕ, и JTD его починить не может
+
+Закон G9 (PROP-044 §8
+[`##AGENT-GATES`](../../spec/common/PROP-044-change-native-formats.md#agents)):
+«a vocabulary exists in exactly one schema; both wire sides, Rust types, docs
+and prose lists are generated from it». Ф4.1 пишет `entry.jtd.json`, где нужен
+`package_kind`. Вопрос: где ему жить, чтобы копия была одна.
+
+**Факт, который надо было увидеть до Ф4.1: копий уже ДВЕ.** Словарь
+`package_kind` записан дословно в
+`schemas/list_report.jtd.json` (блок `definitions.package_kind`) и в
+`schemas/registry_sync_report.jtd.json` (там же по структуре) — шесть
+одинаковых значений в обоих. То есть G9 нарушен в слое схем **сегодня**, до
+всякой Ф4, и `entry.jtd.json` стала бы третьей копией, а не первым нарушением.
+
+**И JTD не даёт способа это починить.** Форма `ref` в JTD (RFC 8927)
+разрешается ТОЛЬКО против `definitions` того же документа: ни `$id`, ни
+URI-разрешения, ни межфайловых ссылок в языке нет. Проверено прогоном —
+схема с одним `{"ref": "package_kind"}` и пустыми `definitions`:
+
+```
+GEN4-EXIT=101
+thread 'main' panicked at 'no entry found for key',
+  /project/crates/core/src/codegen/mod.rs:123:44
+```
+
+Два вывода, и второй важнее первого. *(i)* Межфайловая ссылка невозможна —
+значит разделение словаря между схемами обязан взять на себя НАШ слой
+генерации, ровно по букве PROP-044 §4.2 («everything the language cannot
+express … is emitted by our own generator layer»): восьмой механизм —
+**включение словаря**, когда схема называет словарь ссылкой вида
+`metadata."x-vocabulary-ref": "package_kind"`, а наш слой подставляет его
+определение из ОДНОГО документа-словника перед вызовом jtd-codegen.
+*(ii)* На висячей ссылке jtd-codegen **паникует**, а не отказывает
+диагностикой — то есть у нашей ошибки формы сегодня нет ни сообщения, ни
+рецепта, только stack trace. Это прямо противоречит
+[`##AGENT-MESSAGES`](../../spec/common/PROP-044-change-native-formats.md#agents)
+(«a gate's message is the only documentation that is reliably read»), и валидацию
+ссылок наш слой обязан делать САМ, до спавна бинаря.
+
+*Отвергнутая альтернатива, названная чтобы её не изобретали заново:* сложить
+все форматы в один JTD-документ ради общих `definitions` — тогда каталог схем
+перестаёт быть каталогом форматов, путь схемы больше не несёт эпоху
+(PROP-044 §4.6), и ломается всё, ради чего Ф4.0 учит генератор ходить по
+подкаталогам.
+
 ## 5. Что из этого следует для нарезки Ф4
 
-**Ф4.1 (схемы).** Форма `discriminator`/`mapping` пригодна для
+**Ф4.1 (схемы) — и восьмой механизм генератора.** По §4b: словарь живёт в
+ОДНОМ документе-словнике, а схемы ссылаются на него аннотацией, которую
+подставляет наш слой; заодно этот слой валидирует ссылки сам, потому что на
+висячей jtd-codegen паникует. Две сегодняшние копии `package_kind` в
+`list_report` и `registry_sync_report` уходят в ту же подстановку — иначе Ф4
+закрывает G9 на новых форматах и оставляет открытым на старых.
+
+Форма `discriminator`/`mapping` пригодна для
 `journal.jtd.json` и `repomd.jtd.json` — доказано прогоном. Каждая схема
 обязана нести:
 - `metadata."x-vocabulary": "open"|"closed"` на КАЖДОМ `enum` — отсутствие
