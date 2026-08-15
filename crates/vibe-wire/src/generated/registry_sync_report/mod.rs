@@ -21,6 +21,8 @@ pub struct RegistrySyncReport {
     pub skipped: Vec<SkippedEntry>,
 }
 
+/// Installable package kind (VIBEVM-SPEC §4.1). Open vocabulary: the register
+/// grows by owner amendment, so a reader must not hard-fail on an unseen kind.
 #[derive(Serialize, Deserialize)]
 pub enum PackageKind {
     #[serde(rename = "feat")]

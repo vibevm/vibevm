@@ -2,6 +2,14 @@
   "code_items": [
     {
       "crate_name": "<schema>",
+      "file": "schemas/index/e1/entry.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "entry",
+      "end_line": 7
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/init_report.jtd.json",
       "item_kind": "schema",
       "line": 1,

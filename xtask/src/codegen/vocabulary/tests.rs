@@ -305,20 +305,43 @@ fn finds_refs_at_any_depth() -> Result<()> {
     Ok(())
 }
 
+/// A fragment's `metadata` is policy for our own layer — `x-vocabulary`,
+/// `x-empty`, `x-default`, `x-rust-type`, and a description jtd-codegen
+/// renders as a doc comment. None of it reaches the wire. Comparisons
+/// that ask "is this still the same vocabulary?" therefore ask about the
+/// schema form, and this strips the policy before they do.
+fn schema_form(fragment: &Value) -> Value {
+    let mut form = fragment.clone();
+    if let Some(object) = form.as_object_mut() {
+        object.remove("metadata");
+    }
+    form
+}
+
 /// §5 (green): the two report schemas as edited — no inline
 /// `definitions.package_kind`, an `x-vocabularies` annotation —
 /// resolve, against the real home, to documents whose
-/// `definitions.package_kind` equals by value the fragment they
-/// carried inline before the home existed. The wire does not move.
+/// `definitions.package_kind` has the same schema form as the fragment
+/// they carried inline before the home existed. The wire does not move.
+///
+/// The comparison is over the FORM, not the bytes, and the difference
+/// is load-bearing rather than a convenience. This test was written
+/// when the fragment was bare, and it reddened the moment F4.1b-1 gave
+/// `package_kind` the `x-vocabulary` annotation the contract requires of
+/// every enum — a legitimate change it had no business refusing. What it
+/// exists to guard is that the vocabulary's VALUES did not move in the
+/// migration; policy metadata moving is the mechanism working. Narrowed
+/// to the invariant, not weakened: add a value, drop one, or change a
+/// rename, and it still fails.
 #[test]
 fn report_schemas_resolve_to_the_inline_vocabulary_they_had() -> Result<()> {
     let root = repo_root()?;
     let mut vocabularies = Vocabularies::load(&vocabularies_path(&root))?;
     let home = read_json(&vocabularies_path(&root))?;
     assert_eq!(
-        home["package_kind"],
+        schema_form(&home["package_kind"]),
         inline_package_kind(),
-        "the home carries the fragment verbatim"
+        "the home carries the same vocabulary the schemas held inline"
     );
     for name in ["list_report", "registry_sync_report"] {
         let schema = root.join("schemas").join(format!("{name}.jtd.json"));
@@ -329,7 +352,7 @@ fn report_schemas_resolve_to_the_inline_vocabulary_they_had() -> Result<()> {
         );
         let doc = read_json(&resolved)?;
         assert_eq!(
-            doc["definitions"]["package_kind"],
+            schema_form(&doc["definitions"]["package_kind"]),
             inline_package_kind(),
             "{name}: the resolved vocabulary equals the inline one"
         );

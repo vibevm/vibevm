@@ -46,6 +46,13 @@ flate2 = "1"
 [dev-dependencies]
 assert_cmd = { workspace = true }
 predicates = { workspace = true }
+# The wire-parity oracle (tests/wire_parity_entry.rs) round-trips a fully
+# populated hand-written `VersionEntry` through the JTD-generated type, so
+# the schema in schemas/index/e1/entry.jtd.json is guarded against silently
+# dropping a field the writer emits. Dev-only on purpose: until F4.2 replaces
+# the hand-written types with re-exports of the generated ones, the library
+# itself keeps no runtime edge on vibe-wire.
+vibe-wire = { workspace = true }
 # Linking this isolates the test process's per-user settings home before the
 # first `#[test]` runs, so a bare `cargo_bin` child cannot reach `~/.vibe`.
 vibe-test-support = { workspace = true }

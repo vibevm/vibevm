@@ -1,0 +1,7 @@
+{
+  "metadata": {
+    "description": "Catalog per-version record, epoch 1 (PROP-044 §4.6). The record itself lives once in the shared vocabulary (`version_entry`) because `by_name` and `journal` carry it transitively and JTD has no cross-file references; this schema is the root that names it. Source of truth for `crates/vibe-wire/src/generated/index/e1/entry/`.",
+    "x-vocabularies": ["version_entry"]
+  },
+  "ref": "version_entry"
+}

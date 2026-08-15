@@ -1,5 +1,412 @@
 {
   "package_kind": {
+    "metadata": {
+      "x-vocabulary": "open",
+      "description": "Installable package kind (VIBEVM-SPEC §4.1). Open vocabulary: the register grows by owner amendment, so a reader must not hard-fail on an unseen kind."
+    },
     "enum": ["flow", "feat", "stack", "tool", "mcp", "lang"]
+  },
+  "delivery_mode": {
+    "metadata": {
+      "x-vocabulary": "open",
+      "description": "Subskill materialisation mode. Open vocabulary: modes are a growing register, not a closed set."
+    },
+    "enum": ["eager", "lazy-push", "lazy-pull"]
+  },
+  "group": {
+    "metadata": {
+      "x-rust-type": "Group",
+      "description": "Reverse-FQDN namespace qualifier (PROP-008 §2.1) — the `vibe_core::Group` newtype on the wire."
+    },
+    "type": "string"
+  },
+  "version": {
+    "metadata": {
+      "x-rust-type": "semver::Version",
+      "description": "Semantic version string — `semver::Version` in code."
+    },
+    "type": "string"
+  },
+  "timestamp": {
+    "metadata": {
+      "x-rust-type": "chrono::DateTime<Utc>",
+      "description": "RFC 3339 timestamp — `chrono::DateTime<Utc>` in code."
+    },
+    "type": "string"
+  },
+  "boot_snippet_entry": {
+    "metadata": {
+      "description": "`[boot_snippet]` projection (PROP-005 §2.6): a boot file identified by its `source` path plus an ordering `category`."
+    },
+    "properties": {
+      "source": {
+        "type": "string"
+      }
+    },
+    "optionalProperties": {
+      "category": {
+        "type": "string",
+        "metadata": {
+          "description": "Ordering band for the computed boot sequence — `foundation` / `flow` / `stack` / `user-override`."
+        }
+      }
+    }
+  },
+  "compatibility_entry": {
+    "metadata": {
+      "description": "Compatibility projection: the reader floor and the kinds this record requires.",
+      "x-vocabularies": ["package_kind"]
+    },
+    "optionalProperties": {
+      "min_vibe_version": {
+        "type": "string"
+      },
+      "requires_kinds": {
+        "elements": {
+          "ref": "package_kind"
+        },
+        "metadata": {
+          "x-empty": "omit"
+        }
+      }
+    }
+  },
+  "conflicts_entry": {
+    "metadata": {
+      "description": "Conflicts projection: packages this version cannot coexist with."
+    },
+    "optionalProperties": {
+      "packages": {
+        "elements": {
+          "type": "string"
+        },
+        "metadata": {
+          "x-empty": "omit"
+        }
+      }
+    }
+  },
+  "features_entry": {
+    "metadata": {
+      "description": "Feature table: feature names map to activation lists; `exclusive` is the at-most-one-of named-group table."
+    },
+    "optionalProperties": {
+      "features": {
+        "values": {
+          "elements": {
+            "type": "string"
+          }
+        },
+        "metadata": {
+          "x-empty": "omit"
+        }
+      },
+      "exclusive": {
+        "values": {
+          "elements": {
+            "type": "string"
+          }
+        },
+        "metadata": {
+          "x-empty": "omit"
+        }
+      }
+    }
+  },
+  "i18n_entry": {
+    "metadata": {
+      "description": "I18n availability: the locales a package carries and its default one."
+    },
+    "optionalProperties": {
+      "available": {
+        "elements": {
+          "type": "string"
+        },
+        "metadata": {
+          "x-empty": "omit"
+        }
+      },
+      "default": {
+        "type": "string"
+      }
+    }
+  },
+  "obsoletes_entry": {
+    "metadata": {
+      "description": "Obsoletes projection: packages this version replaces."
+    },
+    "optionalProperties": {
+      "packages": {
+        "elements": {
+          "type": "string"
+        },
+        "metadata": {
+          "x-empty": "omit"
+        }
+      }
+    }
+  },
+  "provides_entry": {
+    "metadata": {
+      "description": "Provides projection: the capabilities this version exposes."
+    },
+    "optionalProperties": {
+      "capabilities": {
+        "elements": {
+          "type": "string"
+        },
+        "metadata": {
+          "x-empty": "omit"
+        }
+      }
+    }
+  },
+  "requires_any_entry": {
+    "metadata": {
+      "description": "One any-of requirement: the list IS the entry, so an empty list is emitted, never omitted."
+    },
+    "properties": {
+      "one_of": {
+        "elements": {
+          "type": "string"
+        },
+        "metadata": {
+          "x-empty": "emit"
+        }
+      }
+    }
+  },
+  "requires_entry": {
+    "metadata": {
+      "description": "Requires projection: the packages and capabilities this version needs, all of them."
+    },
+    "optionalProperties": {
+      "packages": {
+        "elements": {
+          "type": "string"
+        },
+        "metadata": {
+          "x-empty": "omit"
+        }
+      },
+      "capabilities": {
+        "elements": {
+          "type": "string"
+        },
+        "metadata": {
+          "x-empty": "omit"
+        }
+      }
+    }
+  },
+  "subskill_entry": {
+    "metadata": {
+      "description": "Subskill delivery projection (PROP-005 §2.6).",
+      "x-vocabularies": ["delivery_mode"]
+    },
+    "properties": {
+      "path": {
+        "type": "string"
+      },
+      "delivery": {
+        "ref": "delivery_mode"
+      }
+    },
+    "optionalProperties": {
+      "describes": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "channels": {
+        "elements": {
+          "type": "string"
+        },
+        "metadata": {
+          "x-empty": "omit"
+        }
+      }
+    }
+  },
+  "workspace_origin_entry": {
+    "metadata": {
+      "description": "`[origin]` projection (PROP-007 §2.8): provenance of a copy published from a workspace member. `generated_at` is a plain ISO-8601 string in code, not a domain timestamp."
+    },
+    "properties": {
+      "upstream": {
+        "type": "string"
+      },
+      "path": {
+        "type": "string"
+      },
+      "generated_by": {
+        "type": "string"
+      },
+      "generated_at": {
+        "type": "string"
+      }
+    },
+    "optionalProperties": {
+      "commit": {
+        "type": "string"
+      }
+    }
+  },
+  "version_entry": {
+    "metadata": {
+      "description": "Per-version catalog record (PROP-005 §2.6) — one line of `primary.jsonl`, one element of a `by-name` candidate's `versions[]`, one `POST /v1/packages` body. Shared as a vocabulary because `by_name` and `journal` carry it transitively and JTD has no cross-file refs (G9).",
+      "x-vocabularies": [
+        "group",
+        "version",
+        "timestamp",
+        "package_kind",
+        "boot_snippet_entry",
+        "compatibility_entry",
+        "conflicts_entry",
+        "features_entry",
+        "i18n_entry",
+        "obsoletes_entry",
+        "provides_entry",
+        "requires_any_entry",
+        "requires_entry",
+        "subskill_entry",
+        "workspace_origin_entry"
+      ]
+    },
+    "properties": {
+      "schema_version": {
+        "type": "uint32"
+      },
+      "kind": {
+        "ref": "package_kind"
+      },
+      "group": {
+        "ref": "group"
+      },
+      "name": {
+        "type": "string"
+      },
+      "version": {
+        "ref": "version"
+      },
+      "content_hash": {
+        "type": "string"
+      },
+      "source_url": {
+        "type": "string"
+      },
+      "source_ref": {
+        "type": "string"
+      },
+      "registry": {
+        "type": "string"
+      },
+      "files_count": {
+        "type": "uint32"
+      },
+      "indexed_at": {
+        "ref": "timestamp"
+      },
+      "indexed_by": {
+        "type": "string"
+      }
+    },
+    "optionalProperties": {
+      "resolved_commit": {
+        "type": "string"
+      },
+      "workspace_origin": {
+        "ref": "workspace_origin_entry"
+      },
+      "license": {
+        "type": "string"
+      },
+      "authors": {
+        "elements": {
+          "type": "string"
+        },
+        "metadata": {
+          "x-empty": "omit"
+        }
+      },
+      "description": {
+        "type": "string"
+      },
+      "homepage": {
+        "type": "string"
+      },
+      "keywords": {
+        "elements": {
+          "type": "string"
+        },
+        "metadata": {
+          "x-empty": "omit"
+        }
+      },
+      "describes": {
+        "type": "string"
+      },
+      "compatibility": {
+        "ref": "compatibility_entry"
+      },
+      "provides": {
+        "ref": "provides_entry"
+      },
+      "requires": {
+        "ref": "requires_entry"
+      },
+      "requires_any": {
+        "elements": {
+          "ref": "requires_any_entry"
+        },
+        "metadata": {
+          "x-empty": "omit"
+        }
+      },
+      "obsoletes": {
+        "ref": "obsoletes_entry"
+      },
+      "conflicts": {
+        "ref": "conflicts_entry"
+      },
+      "features": {
+        "ref": "features_entry"
+      },
+      "subskills": {
+        "elements": {
+          "ref": "subskill_entry"
+        },
+        "metadata": {
+          "x-empty": "omit"
+        }
+      },
+      "i18n": {
+        "ref": "i18n_entry"
+      },
+      "boot_snippet": {
+        "ref": "boot_snippet_entry"
+      },
+      "must_understand": {
+        "elements": {
+          "type": "string"
+        },
+        "metadata": {
+          "x-empty": "omit"
+        }
+      },
+      "yanked": {
+        "type": "boolean",
+        "metadata": {
+          "x-default": false
+        }
+      },
+      "frozen": {
+        "type": "boolean",
+        "metadata": {
+          "x-default": false
+        }
+      }
+    }
   }
 }
