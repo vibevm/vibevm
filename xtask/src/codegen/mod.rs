@@ -126,6 +126,14 @@ fn schemas_under(dir: &Path) -> Result<Vec<PathBuf>> {
 /// directory carries its epoch (PROP-044 §4.6 — a heavy break mints the new
 /// world as a new path), so `index/e1/entry` and a future `index/e2/entry`
 /// must stay distinct modules.
+///
+/// Every path segment that becomes a module name is checked here, because
+/// nothing downstream would: an illegal segment is emitted verbatim into a
+/// `pub mod …;` line, codegen exits 0, and the refusal finally arrives as a
+/// parse error inside another crate. Measured — a `by-cap.jtd.json` produces
+/// `pub mod by-cap;` and breaks `vibe-wire`, naming neither the schema nor
+/// the fix. PROP-044 §8 `##AGENT-MESSAGES` asks the opposite: state what was
+/// violated and the exact next command.
 fn schema_module_dir(schema_root: &Path, out_dir: &Path, schema: &Path) -> Result<PathBuf> {
     let rel = schema.strip_prefix(schema_root).with_context(|| {
         format!(
@@ -135,7 +143,60 @@ fn schema_module_dir(schema_root: &Path, out_dir: &Path, schema: &Path) -> Resul
         )
     })?;
     let rel_dir = rel.parent().unwrap_or(Path::new(""));
-    Ok(out_dir.join(rel_dir).join(schema_stem(schema)?))
+    for segment in rel_dir {
+        check_module_ident(&segment.to_string_lossy(), schema, "directory")?;
+    }
+    let stem = schema_stem(schema)?;
+    check_module_ident(&stem, schema, "file name")?;
+    Ok(out_dir.join(rel_dir).join(stem))
+}
+
+/// Rust keywords (2021 edition, including the reserved set) — a schema or
+/// directory named after one of these is as unusable as a hyphenated one,
+/// and `type`, `crate` or `match` are ordinary words a schema author reaches
+/// for. Listed rather than approximated so the check closes the class.
+const RUST_KEYWORDS: &[&str] = &[
+    "abstract", "as", "async", "await", "become", "box", "break", "const", "continue", "crate",
+    "do", "dyn", "else", "enum", "extern", "false", "final", "fn", "for", "if", "impl", "in",
+    "let", "loop", "macro", "match", "mod", "move", "mut", "override", "priv", "pub", "ref",
+    "return", "self", "Self", "static", "struct", "super", "trait", "true", "try", "type",
+    "typeof", "union", "unsafe", "unsized", "use", "virtual", "where", "while", "yield",
+];
+
+/// Refuse a path segment that cannot be a module name, naming the schema,
+/// the offending segment and the fix — instead of letting the generator emit
+/// `pub mod <segment>;` and leaving a compiler in another crate to complain
+/// about a file nobody wrote by hand.
+fn check_module_ident(segment: &str, schema: &Path, what: &str) -> Result<()> {
+    let legal_shape = !segment.is_empty()
+        && segment
+            .chars()
+            .next()
+            .is_some_and(|c| c.is_ascii_alphabetic() || c == '_')
+        && segment
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || c == '_');
+    if !legal_shape {
+        bail!(
+            "schema {schema}: the {what} `{segment}` is not a Rust module name.\n\
+             Every directory and file name under a schema home becomes a `pub mod` \
+             segment, so it must be ASCII letters, digits and `_`, starting with a \
+             letter or `_`.\n\
+             Fix: rename it (a hyphen becomes an underscore — `by-cap` → `by_cap`), \
+             then run `cargo xtask codegen`.",
+            schema = schema.display(),
+        );
+    }
+    if RUST_KEYWORDS.contains(&segment) {
+        bail!(
+            "schema {schema}: the {what} `{segment}` is a Rust keyword and cannot \
+             be a module name.\n\
+             Fix: rename it (`{segment}` → `{segment}_`), then run \
+             `cargo xtask codegen`.",
+            schema = schema.display(),
+        );
+    }
+    Ok(())
 }
 
 /// The `mod.rs` tree for an output directory: every directory from `out_dir`
@@ -422,6 +483,41 @@ mod tests {
             out.join("index").join("e1").join("entry")
         );
         Ok(())
+    }
+
+    /// Measured before this guard existed: `by-cap.jtd.json` emitted
+    /// `pub mod by-cap;`, codegen exited 0, and `vibe-wire` failed to parse.
+    /// The refusal now names the schema, the segment and the rename.
+    #[test]
+    fn schema_module_dir_refuses_a_segment_that_is_not_a_module_name() {
+        let (root, out) = (Path::new("schemas"), Path::new("generated"));
+
+        let err = schema_module_dir(root, out, &root.join("by-cap.jtd.json"))
+            .expect_err("a hyphenated file name cannot be a module");
+        let msg = err.to_string();
+        assert!(msg.contains("by-cap"), "names the segment: {msg}");
+        assert!(msg.contains("by_cap"), "names the fix: {msg}");
+
+        let err = schema_module_dir(
+            root,
+            out,
+            &root.join("index").join("e-1").join("entry.jtd.json"),
+        )
+        .expect_err("a hyphenated DIRECTORY is just as fatal as a file name");
+        assert!(err.to_string().contains("e-1"), "names the directory");
+
+        let err = schema_module_dir(root, out, &root.join("type.jtd.json"))
+            .expect_err("a Rust keyword cannot be a module either");
+        assert!(
+            err.to_string().contains("keyword"),
+            "says why, not just that"
+        );
+
+        // The legal shapes the six real schemas use stay legal.
+        for good in ["by_cap", "by_purl", "entry", "repomd", "journal", "_x9"] {
+            schema_module_dir(root, out, &root.join(format!("{good}.jtd.json")))
+                .unwrap_or_else(|e| panic!("{good} must be accepted: {e}"));
+        }
     }
 
     /// The `mod.rs` tree registers every directory from the output root down
