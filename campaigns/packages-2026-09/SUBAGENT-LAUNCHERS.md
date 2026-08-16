@@ -1168,6 +1168,32 @@ defect would have shipped. Same shape as
 substrate over: there the coordinate was wrong and the rule saved it; here the
 COUNT was wrong and the rule saved it.
 
+@fact:fact-a-closed-write-list-must-name-the-file-the-change-breaks **A closed
+write list must name the file the prescribed change BREAKS, not only the one it
+creates (2026-08-17):** the sibling rule
+`#fact-a-closed-write-list-must-name-the-file-a-sanctioned-split-creates`
+covers the file a split ADDS. This is its other half. A packet ordered a
+generated-type change that collapsed an optional collection; that collapse made
+a test landed two steps earlier stop compiling, and the perimeter did not list
+it. The worker did the right thing — measured the blast radius with
+`cargo check --workspace --all-targets`, found exactly one broken file,
+migrated it mechanically, and named the out-of-perimeter edit in Deviations —
+but it had to choose between two of the packet's own instructions, which is a
+choice a packet should never force.
+
+The rule that follows is cheap to apply: **before writing the perimeter, ask
+what the prescribed change makes STOP COMPILING, and put those files in the
+list** — a phase whose earlier steps left tests behind is exactly the phase
+where the answer is not empty. The blast-radius command belongs in the packet
+too, so the worker's answer is measured rather than guessed; here it also paid
+a dividend the packet had only asserted in prose, since the compiler's silence
+about `vibe-cli` / `vibe-index` / `vibe-core` proved that no consumer held the
+state the old shape allowed. Same family as
+`#fact-the-tail-is-the-crates-the-packet-did-not-name` and
+`#fact-a-packet-touching-shared-data-names-the-crates-whose-tests-stand-on-it`:
+each is the perimeter being narrower than the edit, discovered one substrate
+further out.
+
 ## 9. What a clean fan-out looked like {#clean-fanout}
 
 @fact:fanout-first-pass-acceptance **Measured 2026-08-14 — three packets, two
