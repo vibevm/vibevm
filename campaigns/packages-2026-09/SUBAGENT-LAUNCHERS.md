@@ -1062,6 +1062,31 @@ changes nothing about acceptance. **A report is a map, never evidence**
 of all, since the very steps a kill removes are the ones the last section
 describes.
 
+@fact:fact-a-worktree-carries-claude-md-so-the-worker-boots-before-it-reads-the-packet
+**A worktree is a full checkout, so it carries `CLAUDE.md`, and the worker obeys
+its boot contract before it reads a word of the packet (2026-08-16, measured on
+both lanes):** each worker's opening `PROGRESS` line named the boot lane —
+`spec/boot/STATIC.md` (2186 lines), `INDEX.md` and its eight files, `spec/WAL.md`
+— and only then turned to the task. Nothing failed because of it: both packets
+were accepted on the first pass. But the reading is not free, and it is the
+PACKET's omission, not the worker's diligence: a packet built under
+delegation-rules scenario (1) compiles its context in, and then says nothing
+about the lane it just made redundant.
+
+The honest form, and it is one clause: **a compiled-context packet states which
+boot reading it needs and which it does not.** The four repo-wide rules bind
+every worker and are already inlined in §0; the static lane's 2186 lines of
+flow protocols are not what writing one file needs. Say so in the packet, or
+the worker correctly spends its window proving it read them. What NOT to do:
+tell a worker to skip `CLAUDE.md` itself — it carries the rules that bind the
+commit its diff becomes, and a worker that has not read them is a worker whose
+output the boss must re-derive from scratch.
+
+Related from the other side: `#fact-gitignored-state-misses-the-worktree` —
+there the worktree carried LESS than the packet assumed; here it carries MORE
+than the packet accounted for. Both are the same question asked once:
+**what exactly does a fresh worktree hand the worker, and did the packet say?**
+
 ## 9. What a clean fan-out looked like {#clean-fanout}
 
 @fact:fanout-first-pass-acceptance **Measured 2026-08-14 — three packets, two
