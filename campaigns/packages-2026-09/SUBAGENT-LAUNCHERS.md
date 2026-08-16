@@ -673,6 +673,20 @@ the root). Same disease as `#fact-the-status-grep-matches-the-packet` and
 `#fact-a-prefix-grep-on-the-command-string-reads-a-worker-that-did-nothing`: in
 all three the instrument silently measured something other than the thing.
 
+**Recurrence 2026-08-17, and it sharpens the rule in one place:** the trap fired
+on a READ-ONLY measurement — `cd .wt/<id> 2>/dev/null` written to shorten a
+grep — and the next command, an APPLY of the worker's patch into the host, ran
+in the worktree instead. The tell fired exactly as recorded (`git status`
+listing the packet and the report at the root). What contained it was not
+discipline but `git apply`'s atomicity: every hunk failed, so nothing was
+written. Beside it in the same command sat three `cp`s with no such protection —
+they happened to be self-copies and reported so, but a copy addressed the other
+way would have written into the worktree silently. So: the danger is not the
+`cd`-bearing command, it is **every command after it**, and the one that follows
+a measurement is usually the one that writes. Repair form, verified: `cd
+<absolute host root>` immediately followed by `pwd` and
+`git rev-parse --abbrev-ref HEAD` in the SAME command, before anything else runs.
+
 @fact:fact-a-piped-echo-reports-the-exit-of-the-pipe-not-the-command **`cmd |
 tail; echo "EXIT=$?"` reports `tail`'s exit, and it will say 0 over a failure
 (2026-08-14, same session, twice):** `cargo xtask specmap --manifest-path …`
