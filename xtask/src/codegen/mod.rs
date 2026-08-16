@@ -1,26 +1,31 @@
 //! `cargo xtask codegen` / `check-codegen` — regenerate the Rust types
 //! under each owning crate's `src/generated/` from the JTD schemas, and
-//! the CI drift check over the result. Schemas live in two homes: the
-//! host wire contracts under `schemas/` at the repo root, and the
-//! specmap schema inside the `core-ai-native` package (the traceability
-//! engine owns its own data model, schema included). A schema's generated
-//! module mirrors its path relative to its home, so a schema directory
-//! (which carries its epoch — PROP-044 §4.6) becomes a module path
-//! instead of being flattened away.
+//! the CI drift check over the result. This file is the driver: locating
+//! the pinned `jtd-codegen` binary, routing each schema home to the
+//! generated tree that owns its output, running the generator per schema
+//! through the vocabulary substitution and the post-processing passes,
+//! and writing the per-level `mod.rs` the layout rules prescribe. Those
+//! rules — where schemas live, which output tree each home owns, what a
+//! path segment must look like to become a module name, and the `mod.rs`
+//! tree those constraints imply — are `layout`'s half of the mechanism.
 
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
 use anyhow::{Context, Result, bail};
-use walkdir::WalkDir;
 
 mod format_id;
+mod layout;
 mod postproc;
 mod vocabulary;
 
 use crate::repo_root;
 use format_id::emit_format_id;
+use layout::{
+    module_tree, schema_module_dir, schemas_under, specmap_generated_dir, specmap_schema_dir,
+    vibe_wire_generated_dir,
+};
 use postproc::rewrite_generated;
 use vocabulary::{Vocabularies, vocabularies_path};
 
@@ -52,179 +57,6 @@ fn find_jtd_codegen(root: &Path) -> Result<PathBuf> {
             local.display()
         ),
     }
-}
-
-/// The authored specmap engine package: both the `specmap` schema and the
-/// generated types live inside `core-ai-native` (vendored stack copies catch
-/// up at release events, never from here).
-const SPECMAP_ENGINE_SLOT: &str = "packages/org.vibevm.ai-native/core-ai-native/v0.8.0";
-
-/// The engine package's own `schemas/` — the second schema home the
-/// codegen scans besides the host `schemas/` at the repo root.
-fn specmap_schema_dir(root: &Path) -> PathBuf {
-    root.join(SPECMAP_ENGINE_SLOT).join("schemas")
-}
-
-/// The engine crate's generated tree — the output home for every schema
-/// under the engine's own `schemas/` (`specmap` owns its data model there,
-/// so the traceability engine carries its types and can relocate without an
-/// engine → `vibe-wire` edge; Traceability Relocation Plan, Phase 1). One
-/// function so schema-home routing and `check-codegen`'s diff set agree on
-/// the exact path, never divergent literals.
-fn specmap_generated_dir(root: &Path) -> PathBuf {
-    root.join(SPECMAP_ENGINE_SLOT)
-        .join("crates/core-ai-native-specmap/src/generated")
-}
-
-/// The vibe-wire generated tree — the home of every host wire type and, since
-/// `FormatId` routes wire I/O through `wire::publish/load` (PROP-044 §4.1, gate
-/// G1), the home of the generated format-id enum too. One function so every
-/// site that needs the path (schema-home routing, the `format_id` emission
-/// branch, `check-codegen`'s diff set) compares against exactly one literal,
-/// never a divergent copy.
-fn vibe_wire_generated_dir(root: &Path) -> PathBuf {
-    root.join("crates/vibe-wire/src/generated")
-}
-
-/// `foo.jtd.json` → `foo`.
-fn schema_stem(schema: &Path) -> Result<String> {
-    schema
-        .file_name()
-        .and_then(|n| n.to_str())
-        .and_then(|n| n.strip_suffix(".jtd.json"))
-        .map(str::to_string)
-        .with_context(|| format!("schema name not `*.jtd.json`: {}", schema.display()))
-}
-
-/// Every `*.jtd.json` anywhere under `dir`, depth-first — subdirectories
-/// carry epochs (PROP-044 §4.6), so schemas live nested and the scan must
-/// reach them. The result is sorted: the walk order a filesystem hands back
-/// is not guaranteed, and everything downstream (grouping, emission,
-/// `check-codegen`) must stay byte-stable across platforms.
-fn schemas_under(dir: &Path) -> Result<Vec<PathBuf>> {
-    let mut schemas: Vec<PathBuf> = Vec::new();
-    for entry in WalkDir::new(dir) {
-        let path = entry
-            .with_context(|| format!("reading {}", dir.display()))?
-            .into_path();
-        if !path.is_file() {
-            continue;
-        }
-        let is_schema = path
-            .file_name()
-            .and_then(|n| n.to_str())
-            .map(|n| n.ends_with(".jtd.json"))
-            .unwrap_or(false);
-        if is_schema {
-            schemas.push(path);
-        }
-    }
-    schemas.sort();
-    Ok(schemas)
-}
-
-/// Where a schema's generated module lives: the schema's path relative to
-/// its schema home, mirrored under the output tree —
-/// `<root>/<rel_dir>/<stem>.jtd.json` → `<out_dir>/<rel_dir>/<stem>/`.
-/// Mirroring rather than flattening is contract, not taste: the schema's
-/// directory carries its epoch (PROP-044 §4.6 — a heavy break mints the new
-/// world as a new path), so `index/e1/entry` and a future `index/e2/entry`
-/// must stay distinct modules.
-///
-/// Every path segment that becomes a module name is checked here, because
-/// nothing downstream would: an illegal segment is emitted verbatim into a
-/// `pub mod …;` line, codegen exits 0, and the refusal finally arrives as a
-/// parse error inside another crate. Measured — a `by-cap.jtd.json` produces
-/// `pub mod by-cap;` and breaks `vibe-wire`, naming neither the schema nor
-/// the fix. PROP-044 §8 `##AGENT-MESSAGES` asks the opposite: state what was
-/// violated and the exact next command.
-fn schema_module_dir(schema_root: &Path, out_dir: &Path, schema: &Path) -> Result<PathBuf> {
-    let rel = schema.strip_prefix(schema_root).with_context(|| {
-        format!(
-            "schema {} is not under its schema home {}",
-            schema.display(),
-            schema_root.display()
-        )
-    })?;
-    let rel_dir = rel.parent().unwrap_or(Path::new(""));
-    for segment in rel_dir {
-        check_module_ident(&segment.to_string_lossy(), schema, "directory")?;
-    }
-    let stem = schema_stem(schema)?;
-    check_module_ident(&stem, schema, "file name")?;
-    Ok(out_dir.join(rel_dir).join(stem))
-}
-
-/// Rust keywords (2021 edition, including the reserved set) — a schema or
-/// directory named after one of these is as unusable as a hyphenated one,
-/// and `type`, `crate` or `match` are ordinary words a schema author reaches
-/// for. Listed rather than approximated so the check closes the class.
-const RUST_KEYWORDS: &[&str] = &[
-    "abstract", "as", "async", "await", "become", "box", "break", "const", "continue", "crate",
-    "do", "dyn", "else", "enum", "extern", "false", "final", "fn", "for", "if", "impl", "in",
-    "let", "loop", "macro", "match", "mod", "move", "mut", "override", "priv", "pub", "ref",
-    "return", "self", "Self", "static", "struct", "super", "trait", "true", "try", "type",
-    "typeof", "union", "unsafe", "unsized", "use", "virtual", "where", "while", "yield",
-];
-
-/// Refuse a path segment that cannot be a module name, naming the schema,
-/// the offending segment and the fix — instead of letting the generator emit
-/// `pub mod <segment>;` and leaving a compiler in another crate to complain
-/// about a file nobody wrote by hand.
-fn check_module_ident(segment: &str, schema: &Path, what: &str) -> Result<()> {
-    let legal_shape = !segment.is_empty()
-        && segment
-            .chars()
-            .next()
-            .is_some_and(|c| c.is_ascii_alphabetic() || c == '_')
-        && segment
-            .chars()
-            .all(|c| c.is_ascii_alphanumeric() || c == '_');
-    if !legal_shape {
-        bail!(
-            "schema {schema}: the {what} `{segment}` is not a Rust module name.\n\
-             Every directory and file name under a schema home becomes a `pub mod` \
-             segment, so it must be ASCII letters, digits and `_`, starting with a \
-             letter or `_`.\n\
-             Fix: rename it (a hyphen becomes an underscore — `by-cap` → `by_cap`), \
-             then run `cargo xtask codegen`.",
-            schema = schema.display(),
-        );
-    }
-    if RUST_KEYWORDS.contains(&segment) {
-        bail!(
-            "schema {schema}: the {what} `{segment}` is a Rust keyword and cannot \
-             be a module name.\n\
-             Fix: rename it (`{segment}` → `{segment}_`), then run \
-             `cargo xtask codegen`.",
-            schema = schema.display(),
-        );
-    }
-    Ok(())
-}
-
-/// The `mod.rs` tree for an output directory: every directory from `out_dir`
-/// down to each generated leaf gets a `mod.rs` listing its direct submodule
-/// children. Built by walking up from every leaf so intermediate directories
-/// (the epoch dirs between root and leaf) are registered even though no
-/// schema of their own sits there. `BTreeMap` / `BTreeSet` keep both the
-/// directory order and each child list sorted — determinism across platforms
-/// (the filesystem walk order is not guaranteed).
-fn module_tree(out_dir: &Path, leaves: &[PathBuf]) -> BTreeMap<PathBuf, BTreeSet<String>> {
-    let mut tree: BTreeMap<PathBuf, BTreeSet<String>> = BTreeMap::new();
-    for leaf in leaves {
-        let mut child = leaf.clone();
-        while child != *out_dir {
-            let (Some(parent), Some(name)) = (child.parent(), child.file_name()) else {
-                break;
-            };
-            tree.entry(parent.to_path_buf())
-                .or_default()
-                .insert(name.to_string_lossy().into_owned());
-            child = parent.to_path_buf();
-        }
-    }
-    tree
 }
 
 pub(crate) fn run_codegen() -> Result<()> {
@@ -447,140 +279,4 @@ pub(crate) fn run_check_codegen() -> Result<()> {
     }
     eprintln!("xtask check-codegen: clean.");
     Ok(())
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use tempfile::tempdir;
-
-    /// Nested schemas must be found at any depth, and the result must be
-    /// sorted — the walk order a filesystem gives is not guaranteed.
-    #[test]
-    fn schemas_under_finds_nested_schemas_in_sorted_order() -> Result<()> {
-        let dir = tempdir()?;
-        std::fs::write(dir.path().join("a.jtd.json"), "{}")?;
-        std::fs::create_dir_all(dir.path().join("sub").join("deep"))?;
-        std::fs::write(dir.path().join("sub").join("deep").join("b.jtd.json"), "{}")?;
-
-        let found = schemas_under(dir.path())?;
-        assert_eq!(
-            found,
-            vec![
-                dir.path().join("a.jtd.json"),
-                dir.path().join("sub").join("deep").join("b.jtd.json"),
-            ]
-        );
-        Ok(())
-    }
-
-    /// Only `*.jtd.json` FILES count: other extensions, backup tails, and a
-    /// directory merely named like a schema must not be picked up.
-    #[test]
-    fn schemas_under_skips_non_schema_entries() -> Result<()> {
-        let dir = tempdir()?;
-        std::fs::write(dir.path().join("x.json"), "{}")?;
-        std::fs::write(dir.path().join("y.jtd.json.bak"), "{}")?;
-        std::fs::create_dir_all(dir.path().join("z.jtd.json"))?;
-
-        assert_eq!(schemas_under(dir.path())?, Vec::<PathBuf>::new());
-        Ok(())
-    }
-
-    /// The output path mirrors the schema's path relative to its home:
-    /// root-level schemas keep today's flat layout, nested ones carry
-    /// their directory (the epoch — PROP-044 §4.6) into the module path.
-    #[test]
-    fn schema_module_dir_mirrors_schema_path() -> Result<()> {
-        let (root, out) = (Path::new("schemas"), Path::new("generated"));
-        assert_eq!(
-            schema_module_dir(root, out, &root.join("init_report.jtd.json"))?,
-            out.join("init_report")
-        );
-        assert_eq!(
-            schema_module_dir(root, out, &root.join("journal").join("journal.jtd.json"))?,
-            out.join("journal").join("journal")
-        );
-        assert_eq!(
-            schema_module_dir(
-                root,
-                out,
-                &root.join("index").join("e1").join("entry.jtd.json")
-            )?,
-            out.join("index").join("e1").join("entry")
-        );
-        Ok(())
-    }
-
-    /// Measured before this guard existed: `by-cap.jtd.json` emitted
-    /// `pub mod by-cap;`, codegen exited 0, and `vibe-wire` failed to parse.
-    /// The refusal now names the schema, the segment and the rename.
-    #[test]
-    fn schema_module_dir_refuses_a_segment_that_is_not_a_module_name() {
-        let (root, out) = (Path::new("schemas"), Path::new("generated"));
-
-        let err = schema_module_dir(root, out, &root.join("by-cap.jtd.json"))
-            .expect_err("a hyphenated file name cannot be a module");
-        let msg = err.to_string();
-        assert!(msg.contains("by-cap"), "names the segment: {msg}");
-        assert!(msg.contains("by_cap"), "names the fix: {msg}");
-
-        let err = schema_module_dir(
-            root,
-            out,
-            &root.join("index").join("e-1").join("entry.jtd.json"),
-        )
-        .expect_err("a hyphenated DIRECTORY is just as fatal as a file name");
-        assert!(err.to_string().contains("e-1"), "names the directory");
-
-        let err = schema_module_dir(root, out, &root.join("type.jtd.json"))
-            .expect_err("a Rust keyword cannot be a module either");
-        assert!(
-            err.to_string().contains("keyword"),
-            "says why, not just that"
-        );
-
-        // The legal shapes the six real schemas use stay legal.
-        for good in ["by_cap", "by_purl", "entry", "repomd", "journal", "_x9"] {
-            schema_module_dir(root, out, &root.join(format!("{good}.jtd.json")))
-                .unwrap_or_else(|e| panic!("{good} must be accepted: {e}"));
-        }
-    }
-
-    /// The `mod.rs` tree registers every directory from the output root down
-    /// to each leaf — intermediates included — each with its direct children
-    /// sorted, so `format_id` stays a child of the top level only.
-    #[test]
-    fn module_tree_registers_every_level_with_sorted_children() {
-        let out = Path::new("generated");
-        let leaves = vec![
-            out.join("format_id"),
-            out.join("init_report"),
-            out.join("index").join("e1").join("entry"),
-            out.join("index").join("e1").join("by_name"),
-            out.join("journal").join("e1").join("journal"),
-        ];
-        let tree = module_tree(out, &leaves);
-
-        let children_of = |dir: &Path| -> Vec<String> {
-            tree.get(dir)
-                .map(|set| set.iter().cloned().collect())
-                .unwrap_or_default()
-        };
-        assert_eq!(
-            children_of(out),
-            vec!["format_id", "index", "init_report", "journal"]
-        );
-        assert_eq!(children_of(&out.join("index")), vec!["e1"]);
-        assert_eq!(
-            children_of(&out.join("index").join("e1")),
-            vec!["by_name", "entry"]
-        );
-        assert_eq!(
-            children_of(&out.join("journal").join("e1")),
-            vec!["journal"]
-        );
-        // Exactly the directories on some root→leaf path carry a `mod.rs`.
-        assert_eq!(tree.len(), 5);
-    }
 }
