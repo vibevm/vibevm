@@ -18,6 +18,7 @@ use anyhow::{Context, Result, bail};
 mod format_id;
 mod layout;
 mod open_vocabulary;
+mod ordered_maps;
 mod postproc;
 mod snake_case;
 mod vocabulary;
@@ -228,9 +229,10 @@ fn generate_into(
         // reads it — over our own formats only (`FormatOwner`): first the
         // arms of every discriminator union get their `Box`, then field
         // identifiers become snake_case with the identity renames
-        // dropped, then the vocabularies open per the schema's
-        // `x-vocabulary`. The pass order is a rule, not a taste: boxing
-        // and snake-casing are keyed to the pinned emission shape and run
+        // dropped, then wire maps become ordered `BTreeMap`s, then the
+        // vocabularies open per the schema's `x-vocabulary`. The pass
+        // order is a rule, not a taste: boxing, snake-casing, and
+        // map-ordering are keyed to the pinned emission shape and run
         // while the file is still that emission; opening then writes
         // hand-rolled impls into it (the full rule lives in `postproc`'s
         // docs).
