@@ -120,19 +120,27 @@ branch. Workers never run git; `-c core.longpaths=true` if provisioning
 trips MAX_PATH (the F19 lesson).
 
 @fact:e-spawn **4 · Spawn (boss, background, live log straight into the
-archive).** Bash form — note `--output-format stream-json --verbose` and
-the log path (§5's contract: the live log is written DIRECTLY into the
-durable archive, so a crash of anything can lose nothing):
+archive).** Bash form — note `--output-format stream-json --verbose`, the
+log path (§5's contract: the live log is written DIRECTLY into the
+durable archive, so a crash of anything can lose nothing), and that the
+packet travels as a FILE in the worktree rather than inside the argument
+(`#fact-a-large-packet-cannot-travel-as-an-argument`):
 
 ```sh
 LOG=/c/Users/olegc/git/v/cache/agents/sorted/<task-id>/$(date +%F-%H-%M)-claudez-run.jsonl
 mkdir -p "$(dirname "$LOG")"
-( cd .wt/<task-id> && claudez -p "$(cat <packet-file>)" \
+cp <packet-file> .wt/<task-id>/PACKET-<task-id>.md
+( cd .wt/<task-id> && claudez -p "$POINTER" \
     --output-format stream-json --verbose \
     --allowedTools "Read" "Glob" "Grep" "Edit" "Write" \
       "Bash(echo:*)" "Bash(cargo check:*)" "Bash(cargo test:*)" "Bash(cargo fmt:*)" \
   ) > "$LOG" 2>&1
 ```
+
+`$POINTER` is one paragraph: your whole task is in `PACKET-<task-id>.md`
+at the root of this worktree, read it in full as your first action — plus
+a copy of the closing clauses (heartbeat, report file, the git ban), which
+a pointer prompt is exactly the place to drop.
 
 **No trailing `&`** — the harness backgrounds the call, and its completion
 notification is then the worker's, not a detached wrapper's
@@ -1086,6 +1094,34 @@ Related from the other side: `#fact-gitignored-state-misses-the-worktree` —
 there the worktree carried LESS than the packet assumed; here it carries MORE
 than the packet accounted for. Both are the same question asked once:
 **what exactly does a fresh worktree hand the worker, and did the packet say?**
+
+@fact:fact-a-large-packet-cannot-travel-as-an-argument **A packet big
+enough to compile its context in cannot travel as a command-line argument,
+and the refusal comes from the operating system rather than from the
+harness (2026-08-17):** `#e-spawn` used to substitute the packet into
+`-p "$(cat <packet-file>)"`. The F4.2b-1 packet — a compiled-context
+packet under delegation-rules scenario (1) — is 34 KB, and the run died
+before its first turn with `Argument list too long` and exit 126. The
+failure is a line of the launcher script, not a Claude error, so the JSONL
+holds nothing that names a packet; the form had worked until now only
+because every previous packet was shorter.
+
+**The form that works: the packet is a FILE at the worktree root
+(`PACKET-<task-id>.md`) and `-p` carries a short pointer to it**, plus a
+copy of the closing clauses — heartbeat, report file, the git ban —
+because a pointer prompt is precisely where boilerplate gets dropped
+(`#fact-the-follow-up-packet-drops-the-clause`, one substrate over). Two
+consequences worth having: the packet stays on the worker's disk, so a
+`-c` correction may CITE a section instead of restating it; and the
+worktree gains a second artifact never meant for the host, archived
+beside the report and never applied into the tree.
+
+The tell, if it recurs: the log stops at a few hundred bytes with no
+`init` event at all and the harness reports a non-zero exit within a
+second. That is not a killed worker
+(`#fact-a-killed-task-does-not-kill-the-worker-and-the-survivor-writes-late`)
+— nothing was ever spawned, so there is no survivor to leave alone and
+nothing in the worktree to read.
 
 ## 9. What a clean fan-out looked like {#clean-fanout}
 
