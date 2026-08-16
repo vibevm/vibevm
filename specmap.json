@@ -62,23 +62,23 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "init_report",
-      "end_line": 79
+      "end_line": 83
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/init_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 59,
+      "line": 63,
       "symbol": "init_report::outcome",
-      "end_line": 77
+      "end_line": 81
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/init_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 49,
+      "line": 53,
       "symbol": "init_report::outcome_action",
-      "end_line": 58
+      "end_line": 62
     },
     {
       "crate_name": "<schema>",
@@ -86,15 +86,15 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "install_plan",
-      "end_line": 70
+      "end_line": 75
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/install_plan.jtd.json",
       "item_kind": "schema-def",
-      "line": 25,
+      "line": 29,
       "symbol": "install_plan::plan_entry",
-      "end_line": 68
+      "end_line": 73
     },
     {
       "crate_name": "<schema>",
@@ -102,15 +102,15 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "install_report",
-      "end_line": 53
+      "end_line": 58
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/install_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 31,
+      "line": 35,
       "symbol": "install_report::applied_report",
-      "end_line": 51
+      "end_line": 56
     },
     {
       "crate_name": "<schema>",
@@ -134,15 +134,15 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "list_report",
-      "end_line": 93
+      "end_line": 101
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/list_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 35,
+      "line": 39,
       "symbol": "list_report::list_entry",
-      "end_line": 91
+      "end_line": 99
     },
     {
       "crate_name": "progress-core",
@@ -536,23 +536,23 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "registry_sync_report",
-      "end_line": 70
+      "end_line": 78
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/registry_sync_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 34,
+      "line": 42,
       "symbol": "registry_sync_report::refreshed_entry",
-      "end_line": 55
+      "end_line": 63
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/registry_sync_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 56,
+      "line": 64,
       "symbol": "registry_sync_report::skipped_entry",
-      "end_line": 68
+      "end_line": 76
     },
     {
       "crate_name": "<schema>",
@@ -576,7 +576,7 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "uninstall_report",
-      "end_line": 42
+      "end_line": 43
     },
     {
       "crate_name": "vibe-cli",

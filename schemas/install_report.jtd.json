@@ -24,6 +24,10 @@
     "installed": {
       "elements": {
         "ref": "applied_report"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Required member: an apply that installed nothing writes `[]`, never an absent key — omitting a required collection would produce a document invalid by this same schema (rule R21)."
       }
     }
   },
@@ -44,7 +48,8 @@
             "type": "string"
           },
           "metadata": {
-            "description": "Forward-slash-normalised paths of every file the install wrote."
+            "description": "Forward-slash-normalised paths of every file the install wrote. Required member: an entry that wrote nothing still writes `paths` as `[]` — omitting a required collection would produce a document invalid by this same schema (rule R21).",
+            "x-empty": "emit"
           }
         }
       }

@@ -5,7 +5,8 @@
 //! there; this crate carries the codegen output after our transformation
 //! layer in `xtask/src/codegen/postproc.rs` (boxing union arms, renaming
 //! field identifiers to snake_case while dropping the identity renames,
-//! rewriting map fields to canonically ordered `BTreeMap`s, opening
+//! rewriting map fields to canonically ordered `BTreeMap`s, collapsing
+//! optional collections per the schema's `x-empty`, opening
 //! vocabularies per the schema's `x-vocabulary`) — the files are
 //! still never hand-edited. `cargo
 //! xtask codegen` regenerates; `cargo xtask check-codegen` asserts no

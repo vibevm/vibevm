@@ -11,6 +11,9 @@ pub struct InstallPlan {
     /// Always `"install:plan"` for this report.
     pub command: String,
 
+    /// Required member: a plan with no entries writes `[]`, never an absent
+    /// key — omitting a required collection would produce a document invalid by
+    /// this same schema (rule R21).
     pub plans: Vec<PlanEntry>,
 }
 
@@ -30,6 +33,9 @@ pub struct PlanEntry {
     pub version: String,
 
     /// Forward-slash-normalised relative paths the install would create.
+    /// Required member: an entry that would write nothing still writes `writes`
+    /// as `[]` — omitting a required collection would produce a document
+    /// invalid by this same schema (rule R21).
     pub writes: Vec<String>,
 
     /// Filename of the boot snippet this package contributes, when one is

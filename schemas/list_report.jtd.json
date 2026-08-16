@@ -28,6 +28,10 @@
     "packages": {
       "elements": {
         "ref": "list_entry"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Required member: an empty project lists `[]` packages, never an absent key — omitting a required collection would produce a document invalid by this same schema (rule R21)."
       }
     }
   },
@@ -59,6 +63,10 @@
         "files_written": {
           "elements": {
             "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "Required member: an entry always writes `files_written`, `[]` when the install wrote no files — omitting a required collection would produce a document invalid by this same schema (rule R21)."
           }
         }
       },

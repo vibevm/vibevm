@@ -18,6 +18,10 @@
     "plans": {
       "elements": {
         "ref": "plan_entry"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Required member: a plan with no entries writes `[]`, never an absent key — omitting a required collection would produce a document invalid by this same schema (rule R21)."
       }
     }
   },
@@ -53,7 +57,8 @@
             "type": "string"
           },
           "metadata": {
-            "description": "Forward-slash-normalised relative paths the install would create."
+            "description": "Forward-slash-normalised relative paths the install would create. Required member: an entry that would write nothing still writes `writes` as `[]` — omitting a required collection would produce a document invalid by this same schema (rule R21).",
+            "x-empty": "emit"
           }
         }
       },

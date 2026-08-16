@@ -22,11 +22,19 @@
     "refreshed": {
       "elements": {
         "ref": "refreshed_entry"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Required member: a sync that refreshed nothing writes `[]`, never an absent key — omitting a required collection would produce a document invalid by this same schema (rule R21)."
       }
     },
     "skipped": {
       "elements": {
         "ref": "skipped_entry"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Required member: a sync that skipped nothing writes `[]`, never an absent key — omitting a required collection would produce a document invalid by this same schema (rule R21)."
       }
     }
   },

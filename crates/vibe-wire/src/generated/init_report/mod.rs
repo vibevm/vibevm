@@ -18,6 +18,9 @@ pub struct InitReport {
 
     pub ok: bool,
 
+    /// Required member: an idempotent init that touched nothing writes `[]`,
+    /// never an absent key — omitting a required collection would produce a
+    /// document invalid by this same schema (rule R21).
     pub outcomes: Vec<Outcome>,
 
     /// Forward-slash-normalised display path of the initialised directory.

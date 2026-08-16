@@ -12,8 +12,14 @@ pub struct RegistrySyncReport {
 
     pub ok: bool,
 
+    /// Required member: a sync that refreshed nothing writes `[]`, never an
+    /// absent key — omitting a required collection would produce a document
+    /// invalid by this same schema (rule R21).
     pub refreshed: Vec<RefreshedEntry>,
 
+    /// Required member: a sync that skipped nothing writes `[]`, never an
+    /// absent key — omitting a required collection would produce a document
+    /// invalid by this same schema (rule R21).
     pub skipped: Vec<SkippedEntry>,
 }
 

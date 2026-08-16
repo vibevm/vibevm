@@ -32,14 +32,16 @@ fn assert_ordered(_map: &std::collections::BTreeMap<String, Vec<String>>) {}
 /// `BTreeMap<String, Vec<String>>`. Before the ordered-maps pass this
 /// call site was a compile error — expected `&BTreeMap`, found
 /// `&HashMap` — and that refusal is the change's red form; the green
-/// run of this test is its after.
+/// run of this test is its after. The empty-policy pass later collapsed
+/// the field's `Option<Box<…>>` wrapper away (an optional `omit`
+/// collection), which is why the field passes directly, no `as_deref`.
 #[test]
 fn the_generated_map_field_is_an_ordered_map() {
     let entry = FeaturesEntry {
-        exclusive: None,
-        features: Some(Box::default()),
+        exclusive: BTreeMap::new(),
+        features: BTreeMap::default(),
     };
-    assert_ordered(entry.features.as_deref().expect("the features map is set"));
+    assert_ordered(&entry.features);
 }
 
 /// The behavioural guard: keys inserted in a NON-sorted order (`"z"`,
@@ -56,12 +58,12 @@ fn the_generated_map_field_is_an_ordered_map() {
 #[test]
 fn serialised_keys_appear_ascending_when_inserted_unsorted() {
     let entry = FeaturesEntry {
-        exclusive: None,
-        features: Some(Box::new(BTreeMap::from([
+        exclusive: BTreeMap::new(),
+        features: BTreeMap::from([
             ("z".to_string(), vec!["zebra".to_string()]),
             ("m".to_string(), vec!["mango".to_string()]),
             ("a".to_string(), vec!["apple".to_string()]),
-        ]))),
+        ]),
     };
     let wire = serde_json::to_string(&entry).expect("FeaturesEntry serialises");
     // Positions in the STRING: the promise is about bytes. A quoted

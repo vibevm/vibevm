@@ -15,8 +15,11 @@ pub struct UninstallReport {
     pub package: String,
 
     /// Forward-slash-normalised paths of every file removed. User-owned paths
-    /// (e.g. `spec/boot/00-core.md`, `spec/boot/90-user.md`, `spec/WAL.md`) are
-    /// filtered out at plan-time and never appear here.
+    /// (e.g. `spec/boot/00-core.md`, `spec/boot/90-user.md`, `spec/WAL.md`)
+    /// are filtered out at plan-time and never appear here. Required member:
+    /// a removal that took nothing still writes `paths` as `[]` — omitting a
+    /// required collection would produce a document invalid by this same schema
+    /// (rule R21).
     pub paths: Vec<String>,
 
     pub removed_count: u32,

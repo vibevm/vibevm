@@ -13,6 +13,9 @@ pub struct ListReport {
 
     pub ok: bool,
 
+    /// Required member: an empty project lists `[]` packages, never an absent
+    /// key — omitting a required collection would produce a document invalid by
+    /// this same schema (rule R21).
     pub packages: Vec<ListEntry>,
 
     pub project: String,
@@ -26,6 +29,9 @@ pub struct ListEntry {
 
     pub content_hash: String,
 
+    /// Required member: an entry always writes `files_written`, `[]` when the
+    /// install wrote no files — omitting a required collection would produce a
+    /// document invalid by this same schema (rule R21).
     pub files_written: Vec<String>,
 
     pub kind: PackageKind,

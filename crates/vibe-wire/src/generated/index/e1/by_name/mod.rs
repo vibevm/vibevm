@@ -43,15 +43,15 @@ pub struct CompatibilityEntry {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub min_vibe_version: Option<Box<String>>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub requires_kinds: Option<Box<Vec<PackageKind>>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub requires_kinds: Vec<PackageKind>,
 }
 
 /// Conflicts projection: packages this version cannot coexist with.
 #[derive(Serialize, Deserialize)]
 pub struct ConflictsEntry {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub packages: Option<Box<Vec<String>>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub packages: Vec<String>,
 }
 
 /// Subskill materialisation mode. Open vocabulary: modes are a growing
@@ -101,11 +101,11 @@ impl<'de> Deserialize<'de> for DeliveryMode {
 /// most-one-of named-group table.
 #[derive(Serialize, Deserialize)]
 pub struct FeaturesEntry {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub exclusive: Option<Box<BTreeMap<String, Vec<String>>>>,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub exclusive: BTreeMap<String, Vec<String>>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub features: Option<Box<BTreeMap<String, Vec<String>>>>,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub features: BTreeMap<String, Vec<String>>,
 }
 
 /// Reverse-FQDN namespace qualifier (PROP-008 §2.1) — the `vibe_core::Group`
@@ -115,8 +115,8 @@ pub type Group = String;
 /// I18n availability: the locales a package carries and its default one.
 #[derive(Serialize, Deserialize)]
 pub struct I18nEntry {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub available: Option<Box<Vec<String>>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub available: Vec<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub default: Option<Box<String>>,
@@ -125,8 +125,8 @@ pub struct I18nEntry {
 /// Obsoletes projection: packages this version replaces.
 #[derive(Serialize, Deserialize)]
 pub struct ObsoletesEntry {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub packages: Option<Box<Vec<String>>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub packages: Vec<String>,
 }
 
 /// One package — every indexed version of a single `(group, name)` identity
@@ -205,8 +205,8 @@ impl<'de> Deserialize<'de> for PackageKind {
 /// Provides projection: the capabilities this version exposes.
 #[derive(Serialize, Deserialize)]
 pub struct ProvidesEntry {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub capabilities: Option<Box<Vec<String>>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub capabilities: Vec<String>,
 }
 
 /// One any-of requirement: the list IS the entry, so an empty list is emitted,
@@ -220,11 +220,11 @@ pub struct RequiresAnyEntry {
 /// of them.
 #[derive(Serialize, Deserialize)]
 pub struct RequiresEntry {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub capabilities: Option<Box<Vec<String>>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub capabilities: Vec<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub packages: Option<Box<Vec<String>>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub packages: Vec<String>,
 }
 
 /// Subskill delivery projection (PROP-005 §2.6).
@@ -234,8 +234,8 @@ pub struct SubskillEntry {
 
     pub path: String,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub channels: Option<Box<Vec<String>>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub channels: Vec<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub describes: Option<Box<String>>,
@@ -293,8 +293,8 @@ pub struct VersionEntry {
 
     pub version: Version,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub authors: Option<Box<Vec<String>>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub authors: Vec<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub boot_snippet: Option<Box<BootSnippetEntry>>,
@@ -323,14 +323,14 @@ pub struct VersionEntry {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub i18n: Option<Box<I18nEntry>>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub keywords: Option<Box<Vec<String>>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub keywords: Vec<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub license: Option<Box<String>>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub must_understand: Option<Box<Vec<String>>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub must_understand: Vec<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub obsoletes: Option<Box<ObsoletesEntry>>,
@@ -341,14 +341,14 @@ pub struct VersionEntry {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub requires: Option<Box<RequiresEntry>>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub requires_any: Option<Box<Vec<RequiresAnyEntry>>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub requires_any: Vec<RequiresAnyEntry>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub resolved_commit: Option<Box<String>>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub subskills: Option<Box<Vec<SubskillEntry>>>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub subskills: Vec<SubskillEntry>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub workspace_origin: Option<Box<WorkspaceOriginEntry>>,

@@ -9,6 +9,9 @@ pub struct InstallReport {
     /// Always `"install"` for this report.
     pub command: String,
 
+    /// Required member: an apply that installed nothing writes `[]`, never an
+    /// absent key — omitting a required collection would produce a document
+    /// invalid by this same schema (rule R21).
     pub installed: Vec<AppliedReport>,
 
     pub ok: bool,
@@ -23,6 +26,9 @@ pub struct AppliedReport {
     /// Package label in `<kind>:<name>@<version>` form.
     pub package: String,
 
-    /// Forward-slash-normalised paths of every file the install wrote.
+    /// Forward-slash-normalised paths of every file the install wrote. Required
+    /// member: an entry that wrote nothing still writes `paths` as `[]` —
+    /// omitting a required collection would produce a document invalid by this
+    /// same schema (rule R21).
     pub paths: Vec<String>,
 }

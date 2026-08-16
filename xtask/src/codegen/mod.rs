@@ -15,6 +15,7 @@ use std::process::Command;
 
 use anyhow::{Context, Result, bail};
 
+mod empty_policy;
 mod format_id;
 mod layout;
 mod open_vocabulary;
@@ -229,13 +230,14 @@ fn generate_into(
         // reads it — over our own formats only (`FormatOwner`): first the
         // arms of every discriminator union get their `Box`, then field
         // identifiers become snake_case with the identity renames
-        // dropped, then wire maps become ordered `BTreeMap`s, then the
-        // vocabularies open per the schema's `x-vocabulary`. The pass
-        // order is a rule, not a taste: boxing, snake-casing, and
-        // map-ordering are keyed to the pinned emission shape and run
-        // while the file is still that emission; opening then writes
-        // hand-rolled impls into it (the full rule lives in `postproc`'s
-        // docs).
+        // dropped, then wire maps become ordered `BTreeMap`s, then
+        // optional collections collapse per the schema's `x-empty`, then
+        // the vocabularies open per the schema's `x-vocabulary`. The pass
+        // order is a rule, not a taste: boxing, snake-casing,
+        // map-ordering, and empty-policy are keyed to the pinned emission
+        // shape and run while the file is still that emission; opening
+        // then writes hand-rolled impls into it (the full rule lives in
+        // `postproc`'s docs).
         if owner == FormatOwner::Ours {
             rewrite_generated(&sub_out.join("mod.rs"), &resolved, schema)?;
         }

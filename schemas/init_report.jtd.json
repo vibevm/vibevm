@@ -42,6 +42,10 @@
     "outcomes": {
       "elements": {
         "ref": "outcome"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Required member: an idempotent init that touched nothing writes `[]`, never an absent key — omitting a required collection would produce a document invalid by this same schema (rule R21)."
       }
     }
   },
