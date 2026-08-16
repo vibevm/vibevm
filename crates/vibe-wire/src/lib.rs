@@ -2,7 +2,10 @@
 //!
 //! Every type under [`generated`] is **machine-generated** from a JTD
 //! schema in [`schemas/`](../../../schemas/) at the repo root. Source of truth lives
-//! there; this crate carries the codegen output verbatim. `cargo
+//! there; this crate carries the codegen output after our transformation
+//! layer in `xtask/src/codegen/postproc.rs` (boxing union arms, opening
+//! vocabularies per the schema's `x-vocabulary`) — the files are still
+//! never hand-edited. `cargo
 //! xtask codegen` regenerates; `cargo xtask check-codegen` asserts no
 //! drift (CI runs the latter). Per PROP-000 §16, JTD + codegen is the
 //! standing pattern for wire contracts in this project.

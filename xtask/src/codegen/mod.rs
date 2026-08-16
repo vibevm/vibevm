@@ -17,6 +17,7 @@ use anyhow::{Context, Result, bail};
 
 mod format_id;
 mod layout;
+mod open_vocabulary;
 mod postproc;
 mod vocabulary;
 
@@ -64,29 +65,42 @@ pub(crate) fn run_codegen() -> Result<()> {
 
     let binary = find_jtd_codegen(&root)?;
 
-    // Schema home → owning generated tree, iterated in this fixed order
-    // (deterministic across platforms). Routing keys on the HOME a schema
-    // came from, never on the schema's name: a second schema in the engine
-    // home lands in the engine's tree, not vibe-wire's.
+    // Schema home → owning generated tree → whose formats live there,
+    // iterated in this fixed order (deterministic across platforms).
+    // Routing keys on the HOME a schema came from, never on the schema's
+    // name: a second schema in the engine home lands in the engine's
+    // tree, not vibe-wire's. The third column is the same key answering
+    // the second question the home decides — whether our transformation
+    // layer governs the output — and it is stated here rather than
+    // re-derived downstream, so a home added tomorrow has to name its
+    // owner instead of defaulting to one silently.
     let homes = [
-        (root.join("schemas"), vibe_wire_generated_dir(&root)),
-        (specmap_schema_dir(&root), specmap_generated_dir(&root)),
+        (
+            root.join("schemas"),
+            vibe_wire_generated_dir(&root),
+            FormatOwner::Ours,
+        ),
+        (
+            specmap_schema_dir(&root),
+            specmap_generated_dir(&root),
+            FormatOwner::Foreign,
+        ),
     ];
 
     // Both homes are committed; a missing one is a broken checkout,
     // not an empty state.
-    let mut groups: Vec<(PathBuf, PathBuf, Vec<PathBuf>)> = Vec::new();
-    for (schema_root, out_dir) in homes {
+    let mut groups: Vec<(PathBuf, PathBuf, FormatOwner, Vec<PathBuf>)> = Vec::new();
+    for (schema_root, out_dir, owner) in homes {
         if !schema_root.exists() {
             bail!("schema directory not found at {}", schema_root.display());
         }
         let schemas = schemas_under(&schema_root)?;
         if !schemas.is_empty() {
-            groups.push((schema_root, out_dir, schemas));
+            groups.push((schema_root, out_dir, owner, schemas));
         }
     }
 
-    let total: usize = groups.iter().map(|g| g.2.len()).sum();
+    let total: usize = groups.iter().map(|g| g.3.len()).sum();
     if total == 0 {
         eprintln!("no `*.jtd.json` schemas found — nothing to do.");
         return Ok(());
@@ -104,17 +118,41 @@ pub(crate) fn run_codegen() -> Result<()> {
     // parsed once here, every schema below resolves against it.
     let mut vocabularies = Vocabularies::load(&vocabularies_path(&root))?;
 
-    for (schema_root, out_dir, schemas) in &groups {
+    for (schema_root, out_dir, owner, schemas) in &groups {
         generate_into(
             &binary,
             &root,
             schema_root,
             out_dir,
+            *owner,
             schemas,
             &mut vocabularies,
         )?;
     }
     Ok(())
+}
+
+/// Whose formats a schema home holds — the question Р10 of the
+/// change-native plan answers, and the reason the transformation layer
+/// is not applied everywhere the generator runs.
+///
+/// `Ours` is the host home `schemas/`: formats this project owns, whose
+/// policy (open vocabularies, canonical ordering, the empty-collection
+/// convention) our own layer emits per PROP-044 §4.2. `Foreign` is a
+/// vendored package's schema home — its output is that package's public
+/// Rust API, and our wire policy has no standing to bind it to our
+/// release train. Withholding the passes there costs nothing today: the
+/// engine's schema carries no discriminator union, so the boxing pass
+/// was already a no-op on it, which is checkable by regenerating and
+/// comparing bytes.
+///
+/// It is a named pair rather than a boolean because the answer is a
+/// property of the home the caller already knows literally, and a
+/// boolean at a call site says nothing about which way is which.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum FormatOwner {
+    Ours,
+    Foreign,
 }
 
 /// Wipe `out_dir` (preserving a `.gitkeep`) and regenerate `schemas` into it,
@@ -132,6 +170,7 @@ fn generate_into(
     root: &Path,
     schema_root: &Path,
     out_dir: &Path,
+    owner: FormatOwner,
     schemas: &[PathBuf],
     vocabularies: &mut Vocabularies,
 ) -> Result<()> {
@@ -184,11 +223,17 @@ fn generate_into(
                 status.code()
             );
         }
-        // The generator's output takes its content pass before anything
-        // reads it: the arms of every discriminator union get their `Box`
-        // here, so no consumer — compiler, clippy, oracle — ever sees the
-        // unboxed form.
-        rewrite_generated(&sub_out.join("mod.rs"))?;
+        // The generator's output takes its content passes before anything
+        // reads it — over our own formats only (`FormatOwner`): first the
+        // arms of every discriminator union get their `Box`, then the
+        // vocabularies open per the schema's `x-vocabulary`. The pass
+        // order is a rule, not a taste: boxing is keyed to the pinned
+        // emission shape and runs while the file is still that emission;
+        // opening then writes hand-rolled impls into it (the full rule
+        // lives in `postproc`'s docs).
+        if owner == FormatOwner::Ours {
+            rewrite_generated(&sub_out.join("mod.rs"), &resolved, schema)?;
+        }
         leaves.push(sub_out);
     }
 

@@ -47,6 +47,10 @@
   },
   "definitions": {
     "outcome_action": {
+      "metadata": {
+        "x-vocabulary": "open",
+        "description": "What `vibe init` did with one file. Open vocabulary: the register of outcomes is a growing account of what the command did to a file and may gain values (`replaced`, `skipped`); an unfamiliar outcome has an obviously safe behaviour — show the string as it came, in `Unknown`; and nothing builds a path or a decision from the value. Closed was rejected: a report written by a newer `vibe` would then break an older reader's parse outright, for no benefit."
+      },
       "enum": [
         "created",
         "kept"

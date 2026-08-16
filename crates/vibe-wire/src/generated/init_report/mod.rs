@@ -48,11 +48,47 @@ pub struct Outcome {
     pub reason: String,
 }
 
-#[derive(Serialize, Deserialize)]
+/// What `vibe init` did with one file. Open vocabulary: the register of
+/// outcomes is a growing account of what the command did to a file and may gain
+/// values (`replaced`, `skipped`); an unfamiliar outcome has an obviously safe
+/// behaviour — show the string as it came, in `Unknown`; and nothing builds
+/// a path or a decision from the value. Closed was rejected: a report written
+/// by a newer `vibe` would then break an older reader's parse outright, for
+/// no benefit.
 pub enum OutcomeAction {
-    #[serde(rename = "created")]
     Created,
-
-    #[serde(rename = "kept")]
     Kept,
+    /// A value this build does not know. The string is preserved
+    /// verbatim across a read/write cycle, so an older reader never
+    /// silently drops or rewrites a newer writer's vocabulary
+    /// (PROP-044 §4.2a).
+    Unknown(String),
+}
+
+impl Serialize for OutcomeAction {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let wire: &str = match self {
+            OutcomeAction::Created => "created",
+            OutcomeAction::Kept => "kept",
+            OutcomeAction::Unknown(value) => value.as_str(),
+        };
+        serializer.serialize_str(wire)
+    }
+}
+
+impl<'de> Deserialize<'de> for OutcomeAction {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let wire = String::deserialize(deserializer)?;
+        Ok(match wire.as_str() {
+            "created" => OutcomeAction::Created,
+            "kept" => OutcomeAction::Kept,
+            _ => OutcomeAction::Unknown(wire),
+        })
+    }
 }

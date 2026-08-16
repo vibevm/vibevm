@@ -4,7 +4,8 @@
 //! stable, and the loud refusals that keep a moved generator pin from
 //! being absorbed silently. The samples quote the pinned emission shape
 //! of jtd-codegen 0.4.1 verbatim — the pass exists to be exact about
-//! that shape, so the tests must be exact about it too.
+//! that shape, so the tests must be exact about it too. The second
+//! pass's tests live in `open_vocabulary/tests.rs`.
 
 use super::box_union_arms;
 use anyhow::Result;

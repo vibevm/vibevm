@@ -62,15 +62,15 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "init_report",
-      "end_line": 75
+      "end_line": 79
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/init_report.jtd.json",
       "item_kind": "schema-def",
-      "line": 55,
+      "line": 59,
       "symbol": "init_report::outcome",
-      "end_line": 73
+      "end_line": 77
     },
     {
       "crate_name": "<schema>",
@@ -78,7 +78,7 @@
       "item_kind": "schema-def",
       "line": 49,
       "symbol": "init_report::outcome_action",
-      "end_line": 54
+      "end_line": 58
     },
     {
       "crate_name": "<schema>",
