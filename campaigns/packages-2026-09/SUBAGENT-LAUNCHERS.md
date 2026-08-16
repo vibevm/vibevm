@@ -1137,6 +1137,37 @@ second. That is not a killed worker
 — nothing was ever spawned, so there is no survivor to leave alone and
 nothing in the worktree to read.
 
+@fact:fact-an-empty-output-is-a-claim-and-a-reproduction-script-is-a-fixture
+**A measurement script that returns nothing has made a claim, and the claim
+must be measured to the same standard as a worker's (2026-08-17, caught by a
+consumer one layer downstream):** a harvest finding proved "every field's wire
+string equals `snake_case(its identifier)` — zero exceptions" with an awk
+one-liner, printed the script in its reproduction section, and the boss copied
+that script into the packet as the step's evidence. The script could not fire
+on ANY field: its pattern anchored end-of-line right after the field's colon, a
+shape no emitted field has. Fed a field whose wire was deliberately made
+different, it stayed silent. There WAS an exception — a schema property named
+`ref`, a Rust keyword, escaped by the generator to `ref_` — and a pass built to
+the measured number would have moved that format's bytes silently.
+
+Three rules, and the third is the one that generalises past scripts.
+*(i)* **Before an empty output is read as a proof, feed the instrument a case
+it MUST flag.** This is `#fact-a-fixture-that-cannot-fail-proves-nothing-and-the-detector-may-be-downstream`
+applied to a measurement rather than to a test fixture, and the cost of the
+check is one line. *(ii)* **A reproduction script inside a finding is not
+documentation, it is a fixture** — it will be copied into packets, so its
+defects propagate from measurement into instruction, which is exactly the path
+taken here. *(iii)* **Write the packet's rule so it survives its own
+measurement being wrong.** The packet said "drop a rename only where it
+restates an identity", with "today that is all 309" as an aside; the worker
+executed the rule, kept the one rename that carried information, and named the
+disagreement with the packet's number in its Deviations. Had the packet said
+"drop all 309" — the tempting simplification the measurement invited — the
+defect would have shipped. Same shape as
+`#fact-a-dictated-coordinate-goes-stale-a-dictated-rule-does-not`, one
+substrate over: there the coordinate was wrong and the rule saved it; here the
+COUNT was wrong and the rule saved it.
+
 ## 9. What a clean fan-out looked like {#clean-fanout}
 
 @fact:fanout-first-pass-acceptance **Measured 2026-08-14 — three packets, two
