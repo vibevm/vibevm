@@ -7,44 +7,35 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize)]
 pub struct RegistryPublishReport {
     /// Always `"registry:publish"` for this report.
-    #[serde(rename = "command")]
     pub command: String,
 
     /// True iff this run created the repository (it didn't exist before).
     /// False iff the repo was reused — typical when re-publishing additional
     /// versions.
-    #[serde(rename = "created_repo")]
-    pub createdRepo: bool,
+    pub created_repo: bool,
 
     /// True iff `--dry-run` was passed. When true, no API calls or pushes were
     /// made; the report describes the planned action.
-    #[serde(rename = "dry_run")]
-    pub dryRun: bool,
+    pub dry_run: bool,
 
     /// Human-readable host name from the `RepoCreator` adapter — e.g.
     /// `"gitverse.ru"`.
-    #[serde(rename = "host")]
     pub host: String,
 
-    #[serde(rename = "ok")]
     pub ok: bool,
 
     /// Organization-root URL the package was published under, as recorded in
     /// `vibe.toml`'s `[[registry]].url`.
-    #[serde(rename = "org_url")]
-    pub orgUrl: String,
+    pub org_url: String,
 
     /// Repository name under the org, derived from the registry's `naming`
     /// convention. For default `kind-name` naming this is `<kind>-<name>`.
-    #[serde(rename = "repo_name")]
-    pub repoName: String,
+    pub repo_name: String,
 
     /// Clone URL of the per-package repository — what consumers' lockfile
     /// `source_url` would record.
-    #[serde(rename = "repo_url")]
-    pub repoUrl: String,
+    pub repo_url: String,
 
     /// The tag pushed for this release — typically `v<semver>`.
-    #[serde(rename = "tag")]
     pub tag: String,
 }

@@ -15,15 +15,12 @@ use std::collections::HashMap;
 #[derive(Serialize, Deserialize)]
 pub struct Journal {
     /// Who wrote the record — a tool identity such as `vibe-index 0.1.0-dev`.
-    #[serde(rename = "actor")]
     pub actor: String,
 
     /// The moment of the FACT, not of the writing: the caller supplies it, so
     /// the journal never runs a clock of its own.
-    #[serde(rename = "at")]
     pub at: Timestamp,
 
-    #[serde(rename = "event")]
     pub event: Event,
 }
 
@@ -31,12 +28,10 @@ pub struct Journal {
 /// `source` path plus an ordering `category`.
 #[derive(Serialize, Deserialize)]
 pub struct BootSnippetEntry {
-    #[serde(rename = "source")]
     pub source: String,
 
     /// Ordering band for the computed boot sequence — `foundation` / `flow` /
     /// `stack` / `user-override`.
-    #[serde(rename = "category")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub category: Option<Box<String>>,
 }
@@ -45,19 +40,16 @@ pub struct BootSnippetEntry {
 /// requires.
 #[derive(Serialize, Deserialize)]
 pub struct CompatibilityEntry {
-    #[serde(rename = "min_vibe_version")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub minVibeVersion: Option<Box<String>>,
+    pub min_vibe_version: Option<Box<String>>,
 
-    #[serde(rename = "requires_kinds")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub requiresKinds: Option<Box<Vec<PackageKind>>>,
+    pub requires_kinds: Option<Box<Vec<PackageKind>>>,
 }
 
 /// Conflicts projection: packages this version cannot coexist with.
 #[derive(Serialize, Deserialize)]
 pub struct ConflictsEntry {
-    #[serde(rename = "packages")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub packages: Option<Box<Vec<String>>>,
 }
@@ -153,16 +145,12 @@ pub enum Event {
 /// Pin one `version` of a package to a named `channel`.
 #[derive(Serialize, Deserialize)]
 pub struct EventChannelSet {
-    #[serde(rename = "channel")]
     pub channel: String,
 
-    #[serde(rename = "group")]
     pub group: Group,
 
-    #[serde(rename = "name")]
     pub name: String,
 
-    #[serde(rename = "version")]
     pub version: Version,
 }
 
@@ -170,13 +158,10 @@ pub struct EventChannelSet {
 /// version rides along.
 #[derive(Serialize, Deserialize)]
 pub struct EventChannelUnset {
-    #[serde(rename = "channel")]
     pub channel: String,
 
-    #[serde(rename = "group")]
     pub group: Group,
 
-    #[serde(rename = "name")]
     pub name: String,
 }
 
@@ -187,7 +172,6 @@ pub struct EventChannelUnset {
 /// unrecoverable (PROP-044 law 2). `source` names where the scan came from.
 #[derive(Serialize, Deserialize)]
 pub struct EventEntrySetReplaced {
-    #[serde(rename = "source")]
     pub source: String,
 }
 
@@ -196,22 +180,16 @@ pub struct EventEntrySetReplaced {
 /// record.
 #[derive(Serialize, Deserialize)]
 pub struct EventForceReplaced {
-    #[serde(rename = "group")]
     pub group: Group,
 
-    #[serde(rename = "name")]
     pub name: String,
 
-    #[serde(rename = "new_hash")]
-    pub newHash: String,
+    pub new_hash: String,
 
-    #[serde(rename = "old_hash")]
-    pub oldHash: String,
+    pub old_hash: String,
 
-    #[serde(rename = "reason")]
     pub reason: String,
 
-    #[serde(rename = "version")]
     pub version: Version,
 }
 
@@ -220,16 +198,12 @@ pub struct EventForceReplaced {
 /// when this registry saw the freeze and which `content_hash` it was tied to.
 #[derive(Serialize, Deserialize)]
 pub struct EventFrozen {
-    #[serde(rename = "content_hash")]
-    pub contentHash: String,
+    pub content_hash: String,
 
-    #[serde(rename = "group")]
     pub group: Group,
 
-    #[serde(rename = "name")]
     pub name: String,
 
-    #[serde(rename = "version")]
     pub version: Version,
 }
 
@@ -241,14 +215,11 @@ pub struct EventFrozen {
 /// pass.
 #[derive(Serialize, Deserialize)]
 pub struct EventInitialised {
-    #[serde(rename = "naming")]
     pub naming: NamingConvention,
 
-    #[serde(rename = "registry")]
     pub registry: String,
 
-    #[serde(rename = "registry_url")]
-    pub registryUrl: String,
+    pub registry_url: String,
 }
 
 /// A per-package notice — free text the registry carries for consumers of
@@ -256,13 +227,10 @@ pub struct EventInitialised {
 /// only.
 #[derive(Serialize, Deserialize)]
 pub struct EventNotice {
-    #[serde(rename = "group")]
     pub group: Group,
 
-    #[serde(rename = "name")]
     pub name: String,
 
-    #[serde(rename = "text")]
     pub text: String,
 }
 
@@ -274,17 +242,14 @@ pub struct EventNotice {
 /// payload is the plain entry object.
 #[derive(Serialize, Deserialize)]
 pub struct EventPublished {
-    #[serde(rename = "entry")]
     pub entry: VersionEntry,
 }
 
 /// A removal: one `version`, or — with `version` null — the whole package.
 #[derive(Serialize, Deserialize)]
 pub struct EventRemoved {
-    #[serde(rename = "group")]
     pub group: Group,
 
-    #[serde(rename = "name")]
     pub name: String,
 
     /// Semantically optional, textually ALWAYS present: the Rust field is
@@ -298,7 +263,6 @@ pub struct EventRemoved {
     /// Rust alone — the parity oracle exercises `Some`, the only value both
     /// forms carry identically. Recorded, not resolved, same as the `renamed`
     /// pair arity.
-    #[serde(rename = "version")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub version: Option<Box<Version>>,
 }
@@ -315,7 +279,6 @@ pub struct EventRenamed {
     /// schema-validated may be assumed to be a pair. `x-empty: emit`: a
     /// required field the writer always serialises (no `skip_serializing_if`) —
     /// and a pair is never empty anyway.
-    #[serde(rename = "from")]
     pub from: Vec<String>,
 
     /// Wire type: a PAIR `(group, name)` — a two-element array like
@@ -327,23 +290,18 @@ pub struct EventRenamed {
     /// schema-validated may be assumed to be a pair. `x-empty: emit`: a
     /// required field the writer always serialises (no `skip_serializing_if`) —
     /// and a pair is never empty anyway.
-    #[serde(rename = "to")]
     pub to: Vec<String>,
 }
 
 /// One version withdrawn, with the `reason` on the record.
 #[derive(Serialize, Deserialize)]
 pub struct EventYanked {
-    #[serde(rename = "group")]
     pub group: Group,
 
-    #[serde(rename = "name")]
     pub name: String,
 
-    #[serde(rename = "reason")]
     pub reason: String,
 
-    #[serde(rename = "version")]
     pub version: Version,
 }
 
@@ -351,11 +309,9 @@ pub struct EventYanked {
 /// most-one-of named-group table.
 #[derive(Serialize, Deserialize)]
 pub struct FeaturesEntry {
-    #[serde(rename = "exclusive")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub exclusive: Option<Box<HashMap<String, Vec<String>>>>,
 
-    #[serde(rename = "features")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub features: Option<Box<HashMap<String, Vec<String>>>>,
 }
@@ -367,11 +323,9 @@ pub type Group = String;
 /// I18n availability: the locales a package carries and its default one.
 #[derive(Serialize, Deserialize)]
 pub struct I18nEntry {
-    #[serde(rename = "available")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub available: Option<Box<Vec<String>>>,
 
-    #[serde(rename = "default")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub default: Option<Box<String>>,
 }
@@ -404,7 +358,6 @@ pub enum NamingConvention {
 /// Obsoletes projection: packages this version replaces.
 #[derive(Serialize, Deserialize)]
 pub struct ObsoletesEntry {
-    #[serde(rename = "packages")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub packages: Option<Box<Vec<String>>>,
 }
@@ -464,7 +417,6 @@ impl<'de> Deserialize<'de> for PackageKind {
 /// Provides projection: the capabilities this version exposes.
 #[derive(Serialize, Deserialize)]
 pub struct ProvidesEntry {
-    #[serde(rename = "capabilities")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub capabilities: Option<Box<Vec<String>>>,
 }
@@ -473,19 +425,16 @@ pub struct ProvidesEntry {
 /// never omitted.
 #[derive(Serialize, Deserialize)]
 pub struct RequiresAnyEntry {
-    #[serde(rename = "one_of")]
-    pub oneOf: Vec<String>,
+    pub one_of: Vec<String>,
 }
 
 /// Requires projection: the packages and capabilities this version needs, all
 /// of them.
 #[derive(Serialize, Deserialize)]
 pub struct RequiresEntry {
-    #[serde(rename = "capabilities")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub capabilities: Option<Box<Vec<String>>>,
 
-    #[serde(rename = "packages")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub packages: Option<Box<Vec<String>>>,
 }
@@ -493,21 +442,16 @@ pub struct RequiresEntry {
 /// Subskill delivery projection (PROP-005 §2.6).
 #[derive(Serialize, Deserialize)]
 pub struct SubskillEntry {
-    #[serde(rename = "delivery")]
     pub delivery: DeliveryMode,
 
-    #[serde(rename = "path")]
     pub path: String,
 
-    #[serde(rename = "channels")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub channels: Option<Box<Vec<String>>>,
 
-    #[serde(rename = "describes")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub describes: Option<Box<String>>,
 
-    #[serde(rename = "description")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<Box<String>>,
 }
@@ -524,123 +468,90 @@ pub type Version = String;
 /// transitively and JTD has no cross-file refs (G9).
 #[derive(Serialize, Deserialize)]
 pub struct VersionEntry {
-    #[serde(rename = "content_hash")]
-    pub contentHash: String,
+    pub content_hash: String,
 
-    #[serde(rename = "files_count")]
-    pub filesCount: u32,
+    pub files_count: u32,
 
-    #[serde(rename = "group")]
     pub group: Group,
 
-    #[serde(rename = "indexed_at")]
-    pub indexedAt: Timestamp,
+    pub indexed_at: Timestamp,
 
-    #[serde(rename = "indexed_by")]
-    pub indexedBy: String,
+    pub indexed_by: String,
 
-    #[serde(rename = "kind")]
     pub kind: PackageKind,
 
-    #[serde(rename = "name")]
     pub name: String,
 
-    #[serde(rename = "registry")]
     pub registry: String,
 
-    #[serde(rename = "schema_version")]
-    pub schemaVersion: u32,
+    pub schema_version: u32,
 
-    #[serde(rename = "source_ref")]
-    pub sourceRef: String,
+    pub source_ref: String,
 
-    #[serde(rename = "source_url")]
-    pub sourceUrl: String,
+    pub source_url: String,
 
-    #[serde(rename = "version")]
     pub version: Version,
 
-    #[serde(rename = "authors")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub authors: Option<Box<Vec<String>>>,
 
-    #[serde(rename = "boot_snippet")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub bootSnippet: Option<Box<BootSnippetEntry>>,
+    pub boot_snippet: Option<Box<BootSnippetEntry>>,
 
-    #[serde(rename = "compatibility")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub compatibility: Option<Box<CompatibilityEntry>>,
 
-    #[serde(rename = "conflicts")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub conflicts: Option<Box<ConflictsEntry>>,
 
-    #[serde(rename = "describes")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub describes: Option<Box<String>>,
 
-    #[serde(rename = "description")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<Box<String>>,
 
-    #[serde(rename = "features")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub features: Option<Box<FeaturesEntry>>,
 
-    #[serde(rename = "frozen")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub frozen: Option<Box<bool>>,
 
-    #[serde(rename = "homepage")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub homepage: Option<Box<String>>,
 
-    #[serde(rename = "i18n")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub i18n: Option<Box<I18nEntry>>,
 
-    #[serde(rename = "keywords")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub keywords: Option<Box<Vec<String>>>,
 
-    #[serde(rename = "license")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub license: Option<Box<String>>,
 
-    #[serde(rename = "must_understand")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub mustUnderstand: Option<Box<Vec<String>>>,
+    pub must_understand: Option<Box<Vec<String>>>,
 
-    #[serde(rename = "obsoletes")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub obsoletes: Option<Box<ObsoletesEntry>>,
 
-    #[serde(rename = "provides")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub provides: Option<Box<ProvidesEntry>>,
 
-    #[serde(rename = "requires")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub requires: Option<Box<RequiresEntry>>,
 
-    #[serde(rename = "requires_any")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub requiresAny: Option<Box<Vec<RequiresAnyEntry>>>,
+    pub requires_any: Option<Box<Vec<RequiresAnyEntry>>>,
 
-    #[serde(rename = "resolved_commit")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub resolvedCommit: Option<Box<String>>,
+    pub resolved_commit: Option<Box<String>>,
 
-    #[serde(rename = "subskills")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub subskills: Option<Box<Vec<SubskillEntry>>>,
 
-    #[serde(rename = "workspace_origin")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub workspaceOrigin: Option<Box<WorkspaceOriginEntry>>,
+    pub workspace_origin: Option<Box<WorkspaceOriginEntry>>,
 
-    #[serde(rename = "yanked")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub yanked: Option<Box<bool>>,
 }
@@ -650,19 +561,14 @@ pub struct VersionEntry {
 /// domain timestamp.
 #[derive(Serialize, Deserialize)]
 pub struct WorkspaceOriginEntry {
-    #[serde(rename = "generated_at")]
-    pub generatedAt: String,
+    pub generated_at: String,
 
-    #[serde(rename = "generated_by")]
-    pub generatedBy: String,
+    pub generated_by: String,
 
-    #[serde(rename = "path")]
     pub path: String,
 
-    #[serde(rename = "upstream")]
     pub upstream: String,
 
-    #[serde(rename = "commit")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub commit: Option<Box<String>>,
 }

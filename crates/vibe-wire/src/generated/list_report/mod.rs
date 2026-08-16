@@ -7,19 +7,14 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize)]
 pub struct ListReport {
     /// Always `"list"` for this report.
-    #[serde(rename = "command")]
     pub command: String,
 
-    #[serde(rename = "count")]
     pub count: u32,
 
-    #[serde(rename = "ok")]
     pub ok: bool,
 
-    #[serde(rename = "packages")]
     pub packages: Vec<ListEntry>,
 
-    #[serde(rename = "project")]
     pub project: String,
 }
 
@@ -27,49 +22,38 @@ pub struct ListReport {
 pub struct ListEntry {
     /// Filename of the package's boot snippet under `spec/boot/`, or null if
     /// absent.
-    #[serde(rename = "boot_snippet")]
-    pub bootSnippet: Option<Box<String>>,
+    pub boot_snippet: Option<Box<String>>,
 
-    #[serde(rename = "content_hash")]
-    pub contentHash: String,
+    pub content_hash: String,
 
-    #[serde(rename = "files_written")]
-    pub filesWritten: Vec<String>,
+    pub files_written: Vec<String>,
 
-    #[serde(rename = "kind")]
     pub kind: PackageKind,
 
-    #[serde(rename = "name")]
     pub name: String,
 
-    #[serde(rename = "source_url")]
-    pub sourceUrl: String,
+    pub source_url: String,
 
-    #[serde(rename = "version")]
     pub version: String,
 
     /// True iff this package was resolved through a `[[override]]` entry in
     /// `vibe.toml`.
-    #[serde(rename = "overridden")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub overridden: Option<Box<bool>>,
 
     /// `[[registry]].name` from `vibe.toml` that served this package. Absent
     /// for `--registry <path>` and legacy installs.
-    #[serde(rename = "registry")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub registry: Option<Box<String>>,
 
     /// Commit hash the ref resolved to. Reserved for resolver-aware installs.
-    #[serde(rename = "resolved_commit")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub resolvedCommit: Option<Box<String>>,
+    pub resolved_commit: Option<Box<String>>,
 
     /// Git ref the content was fetched at — typically `v<version>`. Absent for
     /// non-git sources.
-    #[serde(rename = "source_ref")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub sourceRef: Option<Box<String>>,
+    pub source_ref: Option<Box<String>>,
 }
 
 /// Installable package kind (VIBEVM-SPEC §4.1). Open vocabulary: the register

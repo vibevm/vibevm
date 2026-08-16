@@ -7,44 +7,34 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize)]
 pub struct InitReport {
     /// Always `"init"` for this report.
-    #[serde(rename = "command")]
     pub command: String,
 
     /// Number of files freshly created.
-    #[serde(rename = "created")]
     pub created: u32,
 
     /// Number of files left untouched because they already existed
     /// (idempotency).
-    #[serde(rename = "kept")]
     pub kept: u32,
 
-    #[serde(rename = "ok")]
     pub ok: bool,
 
-    #[serde(rename = "outcomes")]
     pub outcomes: Vec<Outcome>,
 
     /// Forward-slash-normalised display path of the initialised directory.
-    #[serde(rename = "path")]
     pub path: String,
 
-    #[serde(rename = "project")]
     pub project: String,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct Outcome {
-    #[serde(rename = "action")]
     pub action: OutcomeAction,
 
     /// Forward-slash-normalised path relative to the project root.
-    #[serde(rename = "path")]
     pub path: String,
 
     /// Human-readable label like "agent redirect" or "boot: project
     /// foundation".
-    #[serde(rename = "reason")]
     pub reason: String,
 }
 

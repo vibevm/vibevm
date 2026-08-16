@@ -7,25 +7,19 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize)]
 pub struct UninstallReport {
     /// Always `"uninstall"` for this report.
-    #[serde(rename = "command")]
     pub command: String,
 
-    #[serde(rename = "ok")]
     pub ok: bool,
 
     /// `<kind>:<name>` of the package that was removed.
-    #[serde(rename = "package")]
     pub package: String,
 
     /// Forward-slash-normalised paths of every file removed. User-owned paths
     /// (e.g. `spec/boot/00-core.md`, `spec/boot/90-user.md`, `spec/WAL.md`) are
     /// filtered out at plan-time and never appear here.
-    #[serde(rename = "paths")]
     pub paths: Vec<String>,
 
-    #[serde(rename = "removed_count")]
-    pub removedCount: u32,
+    pub removed_count: u32,
 
-    #[serde(rename = "version")]
     pub version: String,
 }

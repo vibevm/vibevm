@@ -7,29 +7,22 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize)]
 pub struct InstallReport {
     /// Always `"install"` for this report.
-    #[serde(rename = "command")]
     pub command: String,
 
-    #[serde(rename = "installed")]
     pub installed: Vec<AppliedReport>,
 
-    #[serde(rename = "ok")]
     pub ok: bool,
 
-    #[serde(rename = "project")]
     pub project: String,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct AppliedReport {
-    #[serde(rename = "files_written")]
-    pub filesWritten: u32,
+    pub files_written: u32,
 
     /// Package label in `<kind>:<name>@<version>` form.
-    #[serde(rename = "package")]
     pub package: String,
 
     /// Forward-slash-normalised paths of every file the install wrote.
-    #[serde(rename = "paths")]
     pub paths: Vec<String>,
 }

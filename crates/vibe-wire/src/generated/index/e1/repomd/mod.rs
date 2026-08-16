@@ -14,32 +14,23 @@ pub struct Repomd {
     /// directory (excluding `state/`). Keys are POSIX-style relative paths
     /// (`primary.jsonl`, `by-name`, …). No `skip_serializing_if` on the writer,
     /// so the map is emitted even when empty.
-    #[serde(rename = "files")]
     pub files: HashMap<String, RepomdFileEntry>,
 
-    #[serde(rename = "generated_at")]
-    pub generatedAt: Timestamp,
+    pub generated_at: Timestamp,
 
-    #[serde(rename = "generator")]
     pub generator: String,
 
-    #[serde(rename = "naming")]
     pub naming: NamingConvention,
 
-    #[serde(rename = "package_count")]
-    pub packageCount: u32,
+    pub package_count: u32,
 
-    #[serde(rename = "registry")]
     pub registry: String,
 
-    #[serde(rename = "registry_url")]
-    pub registryUrl: String,
+    pub registry_url: String,
 
-    #[serde(rename = "schema_version")]
-    pub schemaVersion: u32,
+    pub schema_version: u32,
 
-    #[serde(rename = "version_count")]
-    pub versionCount: u32,
+    pub version_count: u32,
 }
 
 /// Repository naming convention mapping a pkgref to a repo name (PROP-
@@ -86,14 +77,12 @@ pub enum RepomdFileEntry {
 pub struct RepomdFileEntryDirectory {
     /// How many entries the directory holds (files in `by-cap/`, candidate sets
     /// in `by-name/`).
-    #[serde(rename = "entries")]
     pub entries: u32,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct RepomdFileEntryFile {
     /// Content hash, `sha256:`-prefixed hex.
-    #[serde(rename = "sha256")]
     pub sha256: String,
 
     /// File size in bytes. The writer's field is `u64` and JTD (RFC 8927) has
@@ -109,7 +98,6 @@ pub struct RepomdFileEntryFile {
     /// empty schema generates `Option<Value>`, losing the type AND the field's
     /// requiredness; `float64` breaks value equality and loses precision past
     /// 2^53; a string-encoded size changes the wire.
-    #[serde(rename = "size")]
     pub size: u32,
 }
 

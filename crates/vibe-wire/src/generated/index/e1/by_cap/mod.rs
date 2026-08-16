@@ -11,19 +11,14 @@ use serde::{Deserialize, Serialize};
 pub struct ByCap {
     /// The capability this row indexes — the canonical spelling as it lives
     /// inside the entry, not the filesystem-safe slug that names the file.
-    #[serde(rename = "capability")]
     pub capability: String,
 
-    #[serde(rename = "group")]
     pub group: Group,
 
-    #[serde(rename = "kind")]
     pub kind: PackageKind,
 
-    #[serde(rename = "name")]
     pub name: String,
 
-    #[serde(rename = "version")]
     pub version: Version,
 }
 

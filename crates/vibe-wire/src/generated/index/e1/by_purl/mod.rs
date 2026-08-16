@@ -8,24 +8,18 @@ use serde::{Deserialize, Serialize};
 /// truth for `crates/vibe-wire/src/generated/index/e1/by_purl/`.
 #[derive(Serialize, Deserialize)]
 pub struct ByPurl {
-    #[serde(rename = "binding_site")]
-    pub bindingSite: BindingSite,
+    pub binding_site: BindingSite,
 
-    #[serde(rename = "group")]
     pub group: Group,
 
-    #[serde(rename = "kind")]
     pub kind: PackageKind,
 
-    #[serde(rename = "name")]
     pub name: String,
 
     /// The package URL this row indexes — the canonical spelling as it lives
     /// inside the entry, not the filesystem-safe slug that names the file.
-    #[serde(rename = "purl")]
     pub purl: String,
 
-    #[serde(rename = "version")]
     pub version: Version,
 }
 

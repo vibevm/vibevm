@@ -8,16 +8,12 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize)]
 pub struct RegistrySyncReport {
     /// Always `"registry:sync"` for this report.
-    #[serde(rename = "command")]
     pub command: String,
 
-    #[serde(rename = "ok")]
     pub ok: bool,
 
-    #[serde(rename = "refreshed")]
     pub refreshed: Vec<RefreshedEntry>,
 
-    #[serde(rename = "skipped")]
     pub skipped: Vec<SkippedEntry>,
 }
 
@@ -75,10 +71,8 @@ impl<'de> Deserialize<'de> for PackageKind {
 
 #[derive(Serialize, Deserialize)]
 pub struct RefreshedEntry {
-    #[serde(rename = "kind")]
     pub kind: PackageKind,
 
-    #[serde(rename = "name")]
     pub name: String,
 
     /// Git ref the clone was refreshed against — typically `v<version>` or a
@@ -87,18 +81,14 @@ pub struct RefreshedEntry {
     pub ref_: String,
 
     /// Either `registry:<name>` or `override`.
-    #[serde(rename = "via")]
     pub via: String,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct SkippedEntry {
-    #[serde(rename = "kind")]
     pub kind: PackageKind,
 
-    #[serde(rename = "name")]
     pub name: String,
 
-    #[serde(rename = "reason")]
     pub reason: String,
 }

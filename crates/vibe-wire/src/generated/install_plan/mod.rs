@@ -9,39 +9,31 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize)]
 pub struct InstallPlan {
     /// Always `"install:plan"` for this report.
-    #[serde(rename = "command")]
     pub command: String,
 
-    #[serde(rename = "plans")]
     pub plans: Vec<PlanEntry>,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct PlanEntry {
     /// `sha256:<hex>` over the package tree. The identity of the install.
-    #[serde(rename = "content_hash")]
-    pub contentHash: String,
+    pub content_hash: String,
 
     /// `<kind>:<name>` (no version).
-    #[serde(rename = "package")]
     pub package: String,
 
     /// URL the content was fetched from. Per PROP-002 §2.1 this is
     /// informational — identity is the content_hash.
-    #[serde(rename = "source_url")]
-    pub sourceUrl: String,
+    pub source_url: String,
 
     /// Resolved exact version, e.g. `"0.1.0"`.
-    #[serde(rename = "version")]
     pub version: String,
 
     /// Forward-slash-normalised relative paths the install would create.
-    #[serde(rename = "writes")]
     pub writes: Vec<String>,
 
     /// Filename of the boot snippet this package contributes, when one is
     /// present.
-    #[serde(rename = "boot_snippet")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub bootSnippet: Option<Box<String>>,
+    pub boot_snippet: Option<Box<String>>,
 }
