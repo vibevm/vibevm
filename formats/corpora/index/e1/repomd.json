@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "registry": "vibespecs",
+  "registry_url": "https://gitverse.ru/vibespecs",
+  "naming": "fqdn",
+  "generated_at": "2026-08-06T10:00:00Z",
+  "generator": "vibe-index 0.1.0-dev",
+  "package_count": 3,
+  "version_count": 5,
+  "files": {
+    "by-cap": {
+      "kind": "directory",
+      "entries": 3
+    },
+    "by-cap/interface--wal.jsonl": {
+      "kind": "file",
+      "size": 195,
+      "sha256": "sha256:ebe9698e81f3c9b0590378c2f4a35e597c5f5a17ed17974dbe9d51d0f2f2f14d"
+    },
+    "by-cap/org.vibevm--wal--checkpoint.jsonl": {
+      "kind": "file",
+      "size": 109,
+      "sha256": "sha256:fa56775f0742fd26fddfcb5bfcaaa2a9cc9c6e767ec1b78fc39bcfbf6af681ae"
+    },
+    "by-cap/probe--vocabulary.jsonl": {
+      "kind": "file",
+      "size": 111,
+      "sha256": "sha256:c96b928caa0992bfc80c9fe9266b39cf3e5cee2d6f05a5525b6ea9b36a518b70"
+    },
+    "by-name": {
+      "kind": "directory",
+      "entries": 2
+    },
+    "by-name/golden-probe.json": {
+      "kind": "file",
+      "size": 1210,
+      "sha256": "sha256:b4619dc941af64bb7e851101acc11e1f95af21bcc0bfd434c29c8a1b9b8b1861"
+    },
+    "by-name/wal.json": {
+      "kind": "file",
+      "size": 6072,
+      "sha256": "sha256:7fc30bfea1df37fdcbb3d368943d0a99fdde0ee0d3d766e5152d33a49b214417"
+    },
+    "by-purl": {
+      "kind": "directory",
+      "entries": 4
+    },
+    "by-purl/pkg--generic--probe-skill--0.1.0.jsonl": {
+      "kind": "file",
+      "size": 144,
+      "sha256": "sha256:908f2bc80a89ddaa3c91f66f16badfb180e129ff4a2f8ced2790104115706288"
+    },
+    "by-purl/pkg--generic--wal--0.1.0.jsonl": {
+      "kind": "file",
+      "size": 124,
+      "sha256": "sha256:ea818cd882fff1df4ffcddae14897898e0b23849039f19bdb460be61bd9c0c9b"
+    },
+    "by-purl/pkg--generic--wal-skill--0.8.0.jsonl": {
+      "kind": "file",
+      "size": 131,
+      "sha256": "sha256:d70bc2f78d97d5cfb49a77deba66406c919eeb68a71ca7d180d0ef20a09a37c9"
+    },
+    "by-purl/pkg--generic--wal-tool--1.0.0.jsonl": {
+      "kind": "file",
+      "size": 131,
+      "sha256": "sha256:dabc74dcae738e75ff4f9b4a1422e9236655281edfb6918e878c48219801c465"
+    },
+    "primary.jsonl": {
+      "kind": "file",
+      "size": 3951,
+      "sha256": "sha256:578fdb991ad057d0a61bd8e2db7624ce92ebd7834ab4100f7f12ea1a7f4c52ef"
+    },
+    "primary.jsonl.gz": {
+      "kind": "file",
+      "size": 1364,
+      "sha256": "sha256:addd3779a7ee190a8340339c36a32eb5873f0c00154ca586d75113f4b04f4908"
+    }
+  }
+}

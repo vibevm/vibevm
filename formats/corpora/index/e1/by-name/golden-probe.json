@@ -1,0 +1,41 @@
+{
+  "indexed_at": "2026-08-04T10:00:00Z",
+  "name": "golden-probe",
+  "packages": [
+    {
+      "group": "org.vibevm",
+      "indexed_at": "2026-08-04T10:00:00Z",
+      "name": "golden-probe",
+      "versions": [
+        {
+          "content_hash": "sha256:b4a8d0f2e6c91357bdf02468ace13579bdf02468ace13579bdf02468ace13579",
+          "files_count": 3,
+          "group": "org.vibevm",
+          "indexed_at": "2026-08-04T10:00:00Z",
+          "indexed_by": "vibe-index 0.1.0-dev",
+          "kind": "plugin",
+          "name": "golden-probe",
+          "registry": "vibespecs",
+          "schema_version": 1,
+          "source_ref": "v0.1.0",
+          "source_url": "https://gitverse.ru/vibevm/golden-probe.git",
+          "version": "0.1.0",
+          "description": "Vocabulary probe: an unknown kind riding the open wire",
+          "provides": {
+            "capabilities": [
+              "probe:vocabulary"
+            ]
+          },
+          "subskills": [
+            {
+              "delivery": "lazy-sync",
+              "path": "skills/probe/vocab",
+              "describes": "pkg:generic/probe-skill@0.1.0"
+            }
+          ]
+        }
+      ],
+      "latest_stable": "0.1.0"
+    }
+  ]
+}

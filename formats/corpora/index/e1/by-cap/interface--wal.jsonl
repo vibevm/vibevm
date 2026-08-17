@@ -1,0 +1,2 @@
+{"kind":"tool","group":"com.example","name":"wal","version":"1.0.0","capability":"interface:wal"}
+{"kind":"flow","group":"org.vibevm","name":"wal","version":"0.1.0","capability":"interface:wal"}

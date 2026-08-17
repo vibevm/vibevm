@@ -136,7 +136,7 @@ epoch = 1
 schema = "schemas/index/e1/by_cap.jtd.json"
 recoverable = true
 foreign_parsers = "many"
-corpus = "none"
+corpus = "formats/corpora/index/e1"
 sunset = "none"
 
 [format.index-by-purl]
@@ -144,7 +144,7 @@ epoch = 1
 schema = "schemas/index/e1/by_purl.jtd.json"
 recoverable = true
 foreign_parsers = "many"
-corpus = "none"
+corpus = "formats/corpora/index/e1"
 sunset = "none"
 
 # ── Authored formats (authored, not derived) ────────────────────────────────
@@ -187,7 +187,11 @@ epoch = 1
 schema = "schemas/journal/e1/journal.jtd.json"
 recoverable = false
 foreign_parsers = "ours"
-corpus = "none"
+# The same corpus: its `state/journal/` shards ARE this format's golden
+# bytes, and they are the corpus's authored half — every catalog file
+# beside them is projected from these. A record whose bytes the corpus
+# carries must name it, or the wire-diff has nowhere to look.
+corpus = "formats/corpora/index/e1"
 sunset = "none"
 
 [format.handshake]
