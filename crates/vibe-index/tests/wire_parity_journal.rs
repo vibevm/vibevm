@@ -143,33 +143,33 @@ fn fully_populated_entry() -> Box<VersionEntry> {
         homepage: Some("https://gitverse.ru/vibevm/vibevm".to_string()),
         keywords: vec!["wal".to_string(), "checkpoint".to_string()],
         describes: Some("pkg:generic/wal@1.2.3".to_string()),
-        compatibility: CompatibilityEntry {
+        compatibility: Some(CompatibilityEntry {
             min_vibe_version: Some("0.1.0".to_string()),
             requires_kinds: vec![PackageKind::Stack],
-        },
-        provides: ProvidesEntry {
+        }),
+        provides: Some(ProvidesEntry {
             capabilities: vec!["org.vibevm/wal/checkpoint".to_string()],
-        },
-        requires: RequiresEntry {
+        }),
+        requires: Some(RequiresEntry {
             packages: vec!["org.vibevm/core-ai-native".to_string()],
             capabilities: vec!["org.vibevm/wal/replay".to_string()],
-        },
+        }),
         requires_any: vec![RequiresAnyEntry {
             one_of: vec![
                 "org.vibevm/wal-specspaces".to_string(),
                 "org.vibevm/wal".to_string(),
             ],
         }],
-        obsoletes: ObsoletesEntry {
+        obsoletes: Some(ObsoletesEntry {
             packages: vec!["org.vibevm/wal-legacy".to_string()],
-        },
-        conflicts: ConflictsEntry {
+        }),
+        conflicts: Some(ConflictsEntry {
             packages: vec!["org.vibevm/wal-fork".to_string()],
-        },
-        features: FeaturesEntry {
+        }),
+        features: Some(FeaturesEntry {
             features,
             exclusive,
-        },
+        }),
         subskills: vec![SubskillEntry {
             path: "skills/wal/v08".to_string(),
             delivery: DeliveryMode::LazyPull,
@@ -177,10 +177,10 @@ fn fully_populated_entry() -> Box<VersionEntry> {
             description: Some("The v0.8 subskill".to_string()),
             channels: vec!["stable".to_string()],
         }],
-        i18n: I18nEntry {
+        i18n: Some(I18nEntry {
             available: vec!["en".to_string(), "ru".to_string()],
             default: Some("en".to_string()),
-        },
+        }),
         boot_snippet: Some(BootSnippetEntry {
             source: "boot/10-flow-wal.md".to_string(),
             category: Some("foundation".to_string()),

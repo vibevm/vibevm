@@ -12,9 +12,7 @@ use vibe_index::index::Index;
 use vibe_index::index::memory::{WriteCtx, default_generator};
 use vibe_index::journal::{Event, JournalRecord, append, default_dir, project, replay};
 use vibe_index::server::{AppState, FileTokenStore, build_app};
-use vibe_index::types::{
-    BootSnippetEntry, Group, NamingConvention, PackageKind, ProvidesEntry, VersionEntry,
-};
+use vibe_index::types::{BootSnippetEntry, Group, NamingConvention, PackageKind, VersionEntry};
 
 fn now() -> DateTime<Utc> {
     DateTime::parse_from_rfc3339("2026-05-06T12:00:00Z")
@@ -42,7 +40,7 @@ fn entry(kind: PackageKind, name: &str, version: &str) -> VersionEntry {
         keywords: vec![name.into()],
         describes: None,
         compatibility: Default::default(),
-        provides: ProvidesEntry::default(),
+        provides: None,
         requires: Default::default(),
         requires_any: vec![],
         obsoletes: Default::default(),

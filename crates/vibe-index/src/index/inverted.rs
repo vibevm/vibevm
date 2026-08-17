@@ -32,6 +32,11 @@ use crate::error::{Error, Result};
 use crate::index::persistence::{atomic_write, sha256_of_bytes};
 use crate::types::{PackageKind, VersionEntry};
 
+/// The PURL-binding vocabulary — the wire's own dictionary, re-exported
+/// from the generated tree so `PurlRow` (still hand-written here; its
+/// reader is a later step) spells the same strings the schema does.
+pub use crate::types::BindingSite;
+
 pub const BY_CAP_DIRNAME: &str = "by-cap";
 pub const BY_PURL_DIRNAME: &str = "by-purl";
 
@@ -84,16 +89,20 @@ pub struct PurlRow {
     pub binding_site: BindingSite,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum BindingSite {
-    Package,
-    Subskill,
-}
-
 // ---------------------------------------------------------------------------
 // Aggregation: walk all VersionEntry's and bucket per-slug.
 // ---------------------------------------------------------------------------
+
+/// Stable tie-break order for rows sharing one identity: a package
+/// binding outranks the same PURL declared on a subskill. The
+/// vocabulary is not `Copy` (it travels with the wire), so the rank
+/// is a read, not a discriminant cast.
+fn binding_site_rank(site: &BindingSite) -> u8 {
+    match site {
+        BindingSite::Package => 0,
+        BindingSite::Subskill => 1,
+    }
+}
 
 #[derive(Debug, Default, Clone)]
 pub struct InvertedView {
@@ -106,10 +115,12 @@ impl InvertedView {
         let mut by_capability: BTreeMap<String, Vec<CapabilityRow>> = BTreeMap::new();
         let mut by_purl: BTreeMap<String, Vec<PurlRow>> = BTreeMap::new();
         for entry in entries {
-            for cap in &entry.provides.capabilities {
+            // `provides` is presence-typed: an absent projection simply
+            // advertises nothing.
+            for cap in entry.provides.iter().flat_map(|p| p.capabilities.iter()) {
                 let slug = capability_slug(cap);
                 by_capability.entry(slug).or_default().push(CapabilityRow {
-                    kind: entry.kind,
+                    kind: entry.kind.clone(),
                     group: entry.group.clone(),
                     name: entry.name.clone(),
                     version: entry.version.clone(),
@@ -119,7 +130,7 @@ impl InvertedView {
             if let Some(purl) = &entry.describes {
                 let slug = purl_slug(purl);
                 by_purl.entry(slug).or_default().push(PurlRow {
-                    kind: entry.kind,
+                    kind: entry.kind.clone(),
                     group: entry.group.clone(),
                     name: entry.name.clone(),
                     version: entry.version.clone(),
@@ -131,7 +142,7 @@ impl InvertedView {
                 if let Some(purl) = &sub.describes {
                     let slug = purl_slug(purl);
                     by_purl.entry(slug).or_default().push(PurlRow {
-                        kind: entry.kind,
+                        kind: entry.kind.clone(),
                         group: entry.group.clone(),
                         name: entry.name.clone(),
                         version: entry.version.clone(),
@@ -155,12 +166,18 @@ impl InvertedView {
         }
         for rows in by_purl.values_mut() {
             rows.sort_by(|a, b| {
-                (&a.group, a.name.as_str(), &a.version, a.binding_site as u8).cmp(&(
-                    &b.group,
-                    b.name.as_str(),
-                    &b.version,
-                    b.binding_site as u8,
-                ))
+                (
+                    &a.group,
+                    a.name.as_str(),
+                    &a.version,
+                    binding_site_rank(&a.binding_site),
+                )
+                    .cmp(&(
+                        &b.group,
+                        b.name.as_str(),
+                        &b.version,
+                        binding_site_rank(&b.binding_site),
+                    ))
             });
         }
         InvertedView {
@@ -312,15 +329,15 @@ mod tests {
             homepage: None,
             keywords: vec![],
             describes: describes.map(|s| s.to_string()),
-            compatibility: Default::default(),
-            provides: ProvidesEntry {
+            compatibility: None,
+            provides: (!capabilities.is_empty()).then_some(ProvidesEntry {
                 capabilities: capabilities.iter().map(|s| s.to_string()).collect(),
-            },
-            requires: Default::default(),
+            }),
+            requires: None,
             requires_any: vec![],
-            obsoletes: Default::default(),
-            conflicts: Default::default(),
-            features: Default::default(),
+            obsoletes: None,
+            conflicts: None,
+            features: None,
             subskills: subskill_purls
                 .iter()
                 .map(|p| SubskillEntry {
@@ -331,7 +348,7 @@ mod tests {
                     channels: vec![],
                 })
                 .collect(),
-            i18n: Default::default(),
+            i18n: None,
             boot_snippet: Some(BootSnippetEntry {
                 source: format!("boot/{name}.md"),
                 category: None,

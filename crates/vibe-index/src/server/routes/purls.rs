@@ -40,7 +40,7 @@ pub async fn lookup(
     let hits = entries
         .iter()
         .map(|e| Hit {
-            kind: e.kind,
+            kind: e.kind.clone(),
             group: e.group.clone(),
             name: e.name.clone(),
             version: e.version.clone(),

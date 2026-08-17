@@ -9,17 +9,22 @@ use semver::Version;
 use serde::Serialize;
 use vibe_core::Group;
 
-use crate::cli::kinds::PackageKind;
+use crate::cli::kinds;
 use crate::error::{Error, Result};
 use crate::index::Index;
+use crate::types::PackageKind;
 
 #[derive(Debug, Parser)]
 #[command(about = "List packages in the index.")]
 pub struct Args {
     pub data_dir: PathBuf,
 
-    #[arg(long, value_enum)]
-    pub kind: Option<PackageKind>,
+    /// Keep only packages of this kind: flow, feat, stack, tool, mcp,
+    /// lang. The wire vocabulary is open, but the ARGUMENT speaks: a
+    /// kind this build does not know is refused with a message, not
+    /// filtered away in silence.
+    #[arg(long, value_name = "KIND")]
+    pub kind: Option<String>,
 
     #[arg(long, default_value_t = 50)]
     pub limit: usize,
@@ -56,17 +61,22 @@ struct PackageRow {
 
 pub fn run(args: Args) -> Result<()> {
     let index = Index::load_from(&args.data_dir)?;
+    let kind_filter = match &args.kind {
+        Some(raw) => Some(kinds::parse_kind_flag(raw)?),
+        None => None,
+    };
     let mut rows: Vec<PackageRow> = index
         .by_pkgref
         .values()
         .filter(|p| {
-            args.kind
-                .is_none_or(|k| p.versions.iter().any(|v| v.kind == k))
+            kind_filter
+                .as_ref()
+                .is_none_or(|k| p.versions.iter().any(|v| v.kind == *k))
         })
         .map(|p| {
             let description = p.versions.last().and_then(|v| v.description.clone());
             PackageRow {
-                kind: p.versions.first().map(|v| v.kind),
+                kind: p.versions.first().map(|v| v.kind.clone()),
                 group: p.group.clone(),
                 name: p.name.clone(),
                 versions: p.versions.iter().map(|v| v.version.clone()).collect(),

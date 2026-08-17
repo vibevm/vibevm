@@ -82,8 +82,8 @@ pub fn search(index: &Index, query: &str, kind_filter: Option<PackageKind>) -> V
         };
         // `kind` is per-version metadata (PROP-008 §2.3) — filter on
         // the version actually scored.
-        if let Some(k) = kind_filter
-            && latest.kind != k
+        if let Some(k) = &kind_filter
+            && latest.kind != *k
         {
             continue;
         }
@@ -96,7 +96,7 @@ pub fn search(index: &Index, query: &str, kind_filter: Option<PackageKind>) -> V
         hits.insert(
             key,
             SearchHit {
-                kind: latest.kind,
+                kind: latest.kind.clone(),
                 group: pkg.group.clone(),
                 name: pkg.name.clone(),
                 latest_stable: pkg.latest_stable.clone(),
@@ -122,11 +122,11 @@ pub fn lookup_capability<'a>(index: &'a Index, capability: &str) -> Vec<&'a Vers
     let mut out = Vec::new();
     for pkg in index.by_pkgref.values() {
         for v in &pkg.versions {
-            if v.provides
-                .capabilities
-                .iter()
-                .any(|c| capability_matches(c, cap_norm))
-            {
+            if v.provides.as_ref().is_some_and(|p| {
+                p.capabilities
+                    .iter()
+                    .any(|c| capability_matches(c, cap_norm))
+            }) {
                 out.push(v);
             }
         }
@@ -177,9 +177,11 @@ fn collect_tokens_for(entry: &VersionEntry) -> Vec<String> {
         text.push_str(k);
         text.push(' ');
     }
-    for c in &entry.provides.capabilities {
-        text.push_str(c);
-        text.push(' ');
+    if let Some(p) = &entry.provides {
+        for c in &p.capabilities {
+            text.push_str(c);
+            text.push(' ');
+        }
     }
     if let Some(p) = &entry.describes {
         text.push_str(p);

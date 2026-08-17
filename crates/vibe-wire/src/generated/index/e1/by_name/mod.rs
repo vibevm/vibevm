@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 /// inside `packages[].versions[]` are the shared `version_entry` vocabulary.
 /// Source of truth for `crates/vibe-wire/src/generated/index/e1/by_name/`.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct ByName {
+pub struct NameEntry {
     pub indexed_at: Timestamp,
 
     pub name: String,

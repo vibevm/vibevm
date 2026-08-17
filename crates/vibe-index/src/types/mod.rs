@@ -1,12 +1,16 @@
-//! Wire-types for the index — all `Serialize`/`Deserialize` shapes
+//! Wire-types for the index — the `Serialize`/`Deserialize` shapes
 //! that travel to disk (`primary.jsonl`, `by-name/<name>.json`,
 //! `repomd.json`) or out of the HTTP API.
 //!
-//! Types here mirror the `vibe.toml` schema in `vibe-core`
-//! deliberately rather than re-using `vibe-core::manifest`. PROP-005
-//! §3.2 explained the trade-off: standalone redistribution beats
-//! workspace re-use, so we duplicate the relevant subset and let a
-//! parity test (slice 3) catch divergence at CI time.
+//! The shapes are the generated wire types of `vibe-wire`, re-exported
+//! here so every `vibe_index::types::*` path keeps its meaning while
+//! the definition lives once, beside the schemas it is generated from
+//! (PROP-000 §16). PROP-005 §3.2's standalone-duplicate trade-off is
+//! retired: the wire edge is runtime now, because these types ARE the
+//! wire's types. Still hand-written and staying that way: `repomd`
+//! (its `size` is `u64` against the generated `u32` — an open owner
+//! decision, B-056 — and its file-entry union is tagged on this
+//! side's own law).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
@@ -21,11 +25,7 @@ pub use entry::{
 };
 pub use kinds::{NamingConvention, PackageKind};
 pub use repomd::{Repomd, RepomdFileEntry};
-
-/// `skip_serializing_if` helper for boolean fields that default to `false`.
-pub(crate) fn is_false(b: &bool) -> bool {
-    !*b
-}
+pub use vibe_wire::generated::index::e1::by_purl::BindingSite;
 
 /// Re-export of the reverse-FQDN [`Group`](vibe_core::Group) qualifier
 /// (PROP-008 §2.1) — part of every index entry's identity, surfaced here

@@ -89,7 +89,7 @@ fn parse_group(s: &str) -> Result<Group, ApiError> {
 /// The package's `kind` — metadata carried per version (PROP-008 §2.3).
 /// `None` only for the rare zero-version package row.
 fn package_kind(pkg: &crate::types::PackageEntry) -> Option<PackageKind> {
-    pkg.versions.first().map(|v| v.kind)
+    pkg.versions.first().map(|v| v.kind.clone())
 }
 
 pub async fn list_or_search(
@@ -133,7 +133,8 @@ pub async fn list_or_search(
         .values()
         .filter(|p| {
             q.kind
-                .is_none_or(|k| p.versions.iter().any(|v| v.kind == k))
+                .as_ref()
+                .is_none_or(|k| p.versions.iter().any(|v| v.kind == *k))
         })
         .map(|p| PackageRow {
             kind: package_kind(p),
@@ -250,7 +251,7 @@ pub async fn upsert(
             entry.registry, registry
         )));
     }
-    let kind = entry.kind;
+    let kind = entry.kind.clone();
     let group = entry.group.clone();
     let name = entry.name.clone();
     let version = entry.version.clone();

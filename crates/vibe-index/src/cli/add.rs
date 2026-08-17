@@ -88,7 +88,7 @@ pub fn run(args: Args) -> Result<()> {
     let content_hash = compute_content_hash(pkg_root)?;
     let source_ref = args.r#ref.unwrap_or_else(|| format!("v{version}"));
     let source_url = args.repo_url.unwrap_or_else(|| {
-        compose_default_repo_url(&index.registry_url, index.naming, kind, &group, &name)
+        compose_default_repo_url(&index.registry_url, &index.naming, &kind, &group, &name)
     });
     let files_count = walkdir::WalkDir::new(pkg_root)
         .into_iter()
@@ -156,8 +156,8 @@ pub fn run(args: Args) -> Result<()> {
 
 fn compose_default_repo_url(
     registry_url: &str,
-    naming: NamingConvention,
-    kind: PackageKind,
+    naming: &NamingConvention,
+    kind: &PackageKind,
     group: &Group,
     name: &str,
 ) -> String {

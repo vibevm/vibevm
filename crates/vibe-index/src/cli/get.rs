@@ -119,7 +119,7 @@ pub fn run(args: Args) -> Result<()> {
 fn render_text(pkg: &PackageEntry, versions: &[&VersionEntry]) {
     println!("group         : {}", pkg.group);
     println!("name          : {}", pkg.name);
-    if let Some(kind) = pkg.versions.first().map(|v| v.kind) {
+    if let Some(kind) = pkg.versions.first().map(|v| &v.kind) {
         println!("kind          : {kind}");
     }
     if let Some(latest) = &pkg.latest_stable {

@@ -51,9 +51,9 @@ fn entry(
         keywords: vec![name.into()],
         describes: describes.map(|s| s.to_string()),
         compatibility: Default::default(),
-        provides: ProvidesEntry {
+        provides: (!capabilities.is_empty()).then_some(ProvidesEntry {
             capabilities: capabilities.iter().map(|s| s.to_string()).collect(),
-        },
+        }),
         requires: Default::default(),
         requires_any: vec![],
         obsoletes: Default::default(),

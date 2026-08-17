@@ -1,5 +1,8 @@
 use super::*;
+use crate::types::PackageKind;
+use chrono::{DateTime, Utc};
 use specmark::verifies;
+use vibe_core::Group;
 
 // This module is pulled in via `#[cfg(test)] mod tests;`, so the
 // frontend sees the file standalone and cannot read the `cfg(test)` off
@@ -25,15 +28,18 @@ fn sample_entry() -> VersionEntry {
         homepage: None,
         keywords: vec!["wal".into()],
         describes: None,
-        compatibility: CompatibilityEntry::default(),
-        provides: ProvidesEntry::default(),
-        requires: RequiresEntry::default(),
+        // Empty projections are ABSENCE, not present-but-empty: the
+        // writer normalises emptiness to a missing key, so a fixture
+        // with nothing to say says nothing (§ the `is_empty` guards).
+        compatibility: None,
+        provides: None,
+        requires: None,
         requires_any: vec![],
-        obsoletes: ObsoletesEntry::default(),
-        conflicts: ConflictsEntry::default(),
-        features: FeaturesEntry::default(),
+        obsoletes: None,
+        conflicts: None,
+        features: None,
         subskills: vec![],
-        i18n: I18nEntry::default(),
+        i18n: None,
         boot_snippet: Some(BootSnippetEntry {
             source: "boot/10-flow-wal.md".into(),
             category: Some("flow".into()),
@@ -237,7 +243,9 @@ fn unknown_nested_section_field_is_read() {
     });
     let back: VersionEntry = serde_json::from_value(value).unwrap();
     assert_eq!(
-        back.compatibility.min_vibe_version.as_deref(),
+        back.compatibility
+            .as_ref()
+            .and_then(|c| c.min_vibe_version.as_deref()),
         Some("0.1.0")
     );
 }

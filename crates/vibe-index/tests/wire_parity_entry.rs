@@ -1,19 +1,23 @@
-//! Differential wire-parity oracle for the catalog entry schema
+//! Wire-parity oracle for the catalog entry schema
 //! (`schemas/index/e1/entry.jtd.json` → `vibe_wire::generated::index::e1::entry`).
 //!
-//! The hand-written `VersionEntry` and the JTD-generated one are *meant* to
-//! differ as Rust types: the generator emits `String` where the code carries
-//! `Group` / `semver::Version` / `chrono::DateTime<Utc>`, and
-//! `Option<Box<bool>>` where the code carries a `bool` with a `false`
-//! default. The **wire** must not differ: whatever the writer emits, the
-//! schema has to accept and hand back unchanged. A field missing from the
-//! schema would be silently dropped by the permissive generated reader —
-//! exactly the defect this oracle exists to catch, because a transcript of
-//! thirty-odd fields has no other guard against a missed one.
+//! The writer's `VersionEntry` and the schema's root used to be two types —
+//! hand-written here, JTD-generated there — and this oracle compared their
+//! wire forms. The re-export unified them: the writer's type IS the schema's
+//! type now, so the differential collapsed by design and the oracle's teeth
+//! moved to what still has two sides. What it guards after the step:
 //!
-//! Comparison is on `serde_json::Value`, not on strings: the two types order
-//! keys differently (the generator sorts), and `Value` equality is
-//! order-insensitive.
+//! * the census — a fully populated record puts exactly
+//!   `FULLY_POPULATED_KEY_COUNT` keys on the wire, so a schema edit that
+//!   thins the `version_entry` vocabulary (a field dropped, an optional made
+//!   required and skipped) changes the count here before anywhere else;
+//! * the serde layer the codegen stamps — renames, skip guards and defaults
+//!   must round-trip: an asymmetric attribute (skipped on write, required on
+//!   read) fails `from_value`, a wrong rename drifts the key set, and the
+//!   `Value`-level comparison names the drift.
+//!
+//! Comparison is on `serde_json::Value`, not on strings: key order is not
+//! part of the contract, and `Value` equality is order-insensitive.
 
 use std::collections::BTreeMap;
 
@@ -81,33 +85,33 @@ fn fully_populated_entry() -> VersionEntry {
         homepage: Some("https://gitverse.ru/vibevm/vibevm".to_string()),
         keywords: vec!["wal".to_string(), "checkpoint".to_string()],
         describes: Some("pkg:generic/wal@1.2.3".to_string()),
-        compatibility: CompatibilityEntry {
+        compatibility: Some(CompatibilityEntry {
             min_vibe_version: Some("0.1.0".to_string()),
             requires_kinds: vec![PackageKind::Stack],
-        },
-        provides: ProvidesEntry {
+        }),
+        provides: Some(ProvidesEntry {
             capabilities: vec!["org.vibevm/wal/checkpoint".to_string()],
-        },
-        requires: RequiresEntry {
+        }),
+        requires: Some(RequiresEntry {
             packages: vec!["org.vibevm/core-ai-native".to_string()],
             capabilities: vec!["org.vibevm/wal/replay".to_string()],
-        },
+        }),
         requires_any: vec![RequiresAnyEntry {
             one_of: vec![
                 "org.vibevm/wal-specspaces".to_string(),
                 "org.vibevm/wal".to_string(),
             ],
         }],
-        obsoletes: ObsoletesEntry {
+        obsoletes: Some(ObsoletesEntry {
             packages: vec!["org.vibevm/wal-legacy".to_string()],
-        },
-        conflicts: ConflictsEntry {
+        }),
+        conflicts: Some(ConflictsEntry {
             packages: vec!["org.vibevm/wal-fork".to_string()],
-        },
-        features: FeaturesEntry {
+        }),
+        features: Some(FeaturesEntry {
             features,
             exclusive,
-        },
+        }),
         subskills: vec![SubskillEntry {
             path: "skills/wal/v08".to_string(),
             delivery: DeliveryMode::LazyPull,
@@ -115,10 +119,10 @@ fn fully_populated_entry() -> VersionEntry {
             description: Some("The v0.8 subskill".to_string()),
             channels: vec!["stable".to_string()],
         }],
-        i18n: I18nEntry {
+        i18n: Some(I18nEntry {
             available: vec!["en".to_string(), "ru".to_string()],
             default: Some("en".to_string()),
-        },
+        }),
         boot_snippet: Some(BootSnippetEntry {
             source: "boot/10-flow-wal.md".to_string(),
             category: Some("foundation".to_string()),
@@ -132,16 +136,16 @@ fn fully_populated_entry() -> VersionEntry {
     }
 }
 
-/// The writer's output survives the schema unchanged: what the hand-written
-/// type emits, the generated type accepts and hands back byte-for-byte at
-/// the `Value` level. A field the schema forgot is dropped by the permissive
-/// generated reader, so the left side keeps it and the right side loses it —
-/// the assert names the drift.
+/// The writer's output survives the schema unchanged: what the record
+/// emits, the schema root accepts and hands back byte-for-byte at the
+/// `Value` level — the two were independent implementations once, and
+/// the comparison stays so that the day they drift apart again (a new
+/// hand-written field, a schema edit) the assert names the drift.
 #[test]
 fn fully_populated_entry_round_trips_through_the_generated_type() {
     let handwritten = fully_populated_entry();
 
-    let j1 = serde_json::to_value(&handwritten).expect("the hand-written type serialises");
+    let j1 = serde_json::to_value(&handwritten).expect("the writer's type serialises");
     // The fixture must not be sparse: every one of the 33 fields on the wire.
     assert_eq!(
         j1.as_object().map(|object| object.len()),
@@ -156,7 +160,7 @@ fn fully_populated_entry_round_trips_through_the_generated_type() {
     let j2 = serde_json::to_value(&generated).expect("the generated type serialises");
     assert_eq!(
         j1, j2,
-        "wire drift between the hand-written and the generated entry — a field \
-         the schema misses is silently dropped by the permissive reader"
+        "wire drift between the writer's record and the schema's root — a \
+         field the schema misses is silently dropped by the permissive reader"
     );
 }

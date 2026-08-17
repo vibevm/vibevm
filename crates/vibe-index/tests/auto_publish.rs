@@ -19,9 +19,7 @@ use tower::util::ServiceExt;
 use vibe_index::index::memory::default_generator;
 use vibe_index::journal::{Event, JournalRecord, append, default_dir, project, replay};
 use vibe_index::server::{AppState, FileTokenStore, build_app};
-use vibe_index::types::{
-    BootSnippetEntry, NamingConvention, PackageKind, ProvidesEntry, VersionEntry,
-};
+use vibe_index::types::{BootSnippetEntry, NamingConvention, PackageKind, VersionEntry};
 
 const TOKEN: &str = "topsecret";
 
@@ -80,7 +78,7 @@ fn entry(kind: PackageKind, name: &str, version: &str) -> VersionEntry {
         keywords: vec![name.into()],
         describes: None,
         compatibility: Default::default(),
-        provides: ProvidesEntry::default(),
+        provides: None,
         requires: Default::default(),
         requires_any: vec![],
         obsoletes: Default::default(),

@@ -8,9 +8,10 @@ use clap::Parser;
 use semver::Version;
 use serde::Serialize;
 
-use crate::cli::kinds::PackageKind;
+use crate::cli::kinds;
 use crate::error::{Error, Result};
 use crate::index::{Index, search};
+use crate::types::PackageKind;
 
 #[derive(Debug, Parser)]
 #[command(about = "Full-text search across the index.")]
@@ -18,8 +19,12 @@ pub struct Args {
     pub data_dir: PathBuf,
     pub query: String,
 
-    #[arg(long, value_enum)]
-    pub kind: Option<PackageKind>,
+    /// Keep only hits of this kind: flow, feat, stack, tool, mcp,
+    /// lang. The wire vocabulary is open, but the ARGUMENT speaks: a
+    /// kind this build does not know is refused with a message, not
+    /// filtered away in silence.
+    #[arg(long, value_name = "KIND")]
+    pub kind: Option<String>,
 
     #[arg(long, default_value_t = 20)]
     pub limit: usize,
@@ -48,7 +53,11 @@ struct HitRow {
 
 pub fn run(args: Args) -> Result<()> {
     let index = Index::load_from(&args.data_dir)?;
-    let hits = search::search(&index, &args.query, args.kind);
+    let kind_filter = match &args.kind {
+        Some(raw) => Some(kinds::parse_kind_flag(raw)?),
+        None => None,
+    };
+    let hits = search::search(&index, &args.query, kind_filter);
     let limited: Vec<&search::SearchHit> = hits.iter().take(args.limit).collect();
 
     if args.json {
@@ -59,7 +68,7 @@ pub fn run(args: Args) -> Result<()> {
             hits: limited
                 .iter()
                 .map(|h| HitRow {
-                    kind: h.kind,
+                    kind: h.kind.clone(),
                     name: h.name.clone(),
                     latest_stable: h.latest_stable.clone(),
                     score: h.score,

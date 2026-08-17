@@ -39,18 +39,18 @@ pub async fn lookup(
     let hits = entries
         .iter()
         .map(|e| Hit {
-            kind: e.kind,
+            kind: e.kind.clone(),
             group: e.group.clone(),
             name: e.name.clone(),
             version: e.version.clone(),
-            capability_advertised: e
-                .provides
-                .capabilities
-                .iter()
-                .find(|c: &&String| {
-                    c.starts_with(&capability) || capability.starts_with(c.as_str())
-                })
-                .cloned(),
+            capability_advertised: e.provides.as_ref().and_then(|p| {
+                p.capabilities
+                    .iter()
+                    .find(|c: &&String| {
+                        c.starts_with(&capability) || capability.starts_with(c.as_str())
+                    })
+                    .cloned()
+            }),
         })
         .collect::<Vec<_>>();
     Ok(Json(Response {

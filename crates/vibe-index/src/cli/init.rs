@@ -28,16 +28,35 @@ pub struct Args {
     #[arg(long, value_name = "URL")]
     pub registry_url: String,
 
-    /// Naming convention used by this org for package repo names.
-    /// Defaults to `fqdn` — the reverse-FQDN `<group>.<name>` shape
-    /// every group-native registry uses (PROP-008 §2.5).
-    #[arg(long, value_enum, default_value_t = NamingConvention::Fqdn)]
-    pub naming: NamingConvention,
+    /// Naming convention used by this org for package repo names:
+    /// `fqdn` (the default — the reverse-FQDN `<group>.<name>` shape
+    /// every group-native registry uses, PROP-008 §2.5), `kind-name`,
+    /// `name`, or `kind/name`. A closed vocabulary: repository paths
+    /// are built from it, so an unfamiliar value is refused, not
+    /// guessed.
+    #[arg(long, value_name = "NAMING", default_value = "fqdn")]
+    pub naming: String,
 
     /// Force initialisation even when the data directory already
     /// carries a repomd.json. The existing files are overwritten.
     #[arg(long)]
     pub force: bool,
+}
+
+/// Parse the `--naming` flag at the argument boundary. Unlike
+/// `--kind` this vocabulary is closed — there is no `Unknown` to
+/// carry — so an unfamiliar string is simply not a convention this
+/// build can build paths from.
+fn parse_naming_flag(value: &str) -> Result<NamingConvention> {
+    match value {
+        "fqdn" => Ok(NamingConvention::Fqdn),
+        "kind-name" => Ok(NamingConvention::KindName),
+        "name" => Ok(NamingConvention::Name),
+        "kind/name" => Ok(NamingConvention::KindSlashName),
+        other => Err(Error::InvalidInput(format!(
+            "naming convention `{other}` is unknown — expected one of: fqdn, kind-name, name, kind/name"
+        ))),
+    }
 }
 
 pub fn run(args: Args) -> Result<()> {
@@ -51,7 +70,8 @@ pub fn run(args: Args) -> Result<()> {
             args.data_dir.display()
         )));
     }
-    let index = Index::new(&args.registry, &args.registry_url, args.naming, at);
+    let naming = parse_naming_flag(&args.naming)?;
+    let index = Index::new(&args.registry, &args.registry_url, naming.clone(), at);
 
     // Truth first (PROP-044 `##LAW-NO-UNRECOVERABLE`): the journal
     // record lands BEFORE the catalog write. A failed `write_to` then
@@ -69,7 +89,7 @@ pub fn run(args: Args) -> Result<()> {
             event: Event::Initialised {
                 registry: args.registry.clone(),
                 registry_url: args.registry_url.clone(),
-                naming: args.naming,
+                naming,
             },
         },
     )?;

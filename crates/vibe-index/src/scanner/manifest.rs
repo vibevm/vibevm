@@ -9,11 +9,15 @@
 //! §3.2 / §9 item 11 record the reversal of the standalone-workspace
 //! decision this dependency rests on.
 //!
-//! What stays duplicated is deliberate and narrow: the four-variant
-//! [`PackageKind`] and `NamingConvention` in [`crate::types`] — frozen by
-//! `VIBEVM-SPEC.md` §4, and needing the `Ord` + `clap::ValueEnum` that the
-//! `vibe-core` originals do not derive. [`package_kind`] converts between
-//! the two with a total `match`.
+//! What stays converted is narrow: `vibe-core`'s closed four-variant
+//! [`PackageKind`](vibe_core::PackageKind) against the index's open wire
+//! vocabulary ([`crate::types::PackageKind`] — a re-export of the
+//! generated type, `Unknown(String)` and all). The manifest side is
+//! closed because `vibe.toml` is written by this build's own tooling;
+//! the wire side is open because a registry serves the future.
+//! [`package_kind`] converts between the two with a total `match`, and
+//! `FromStr` on the open side preserves an unfamiliar string verbatim
+//! for the wire to carry.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
@@ -74,17 +78,23 @@ pub fn package_kind(kind: CorePackageKind) -> PackageKind {
     }
 }
 
-pub fn compatibility_from(c: &Compatibility) -> CompatibilityEntry {
-    CompatibilityEntry {
+/// Every projection builder normalises emptiness to absence: the
+/// writer never emits a present-but-empty section (`"provides": {}`),
+/// so an empty projection becomes `None` at the source rather than at
+/// each call site.
+pub fn compatibility_from(c: &Compatibility) -> Option<CompatibilityEntry> {
+    let entry = CompatibilityEntry {
         min_vibe_version: c.min_vibe_version.clone(),
         requires_kinds: c.requires_kinds.iter().copied().map(package_kind).collect(),
-    }
+    };
+    (!entry.is_empty()).then_some(entry)
 }
 
-pub fn provides_from(p: &Provides) -> ProvidesEntry {
-    ProvidesEntry {
+pub fn provides_from(p: &Provides) -> Option<ProvidesEntry> {
+    let entry = ProvidesEntry {
         capabilities: p.capabilities.iter().map(|c| c.to_string()).collect(),
-    }
+    };
+    (!entry.is_empty()).then_some(entry)
 }
 
 /// Flatten `[requires]` into the index entry's string lists. Registry
@@ -92,7 +102,7 @@ pub fn provides_from(p: &Provides) -> ProvidesEntry {
 /// / `version.var` sources — which have no single constraint string —
 /// degrade to the bare `<group>/<name>`. Both lists are sorted, so the
 /// index is byte-deterministic.
-pub fn requires_from(r: &Requires) -> RequiresEntry {
+pub fn requires_from(r: &Requires) -> Option<RequiresEntry> {
     let mut packages: Vec<String> = r.packages.iter().map(|p| p.to_string()).collect();
     for (group, name) in r
         .git_packages
@@ -106,10 +116,11 @@ pub fn requires_from(r: &Requires) -> RequiresEntry {
     packages.sort();
     let mut capabilities: Vec<String> = r.capabilities.iter().map(|c| c.to_string()).collect();
     capabilities.sort();
-    RequiresEntry {
+    let entry = RequiresEntry {
         packages,
         capabilities,
-    }
+    };
+    (!entry.is_empty()).then_some(entry)
 }
 
 pub fn requires_any_from(list: &[RequiresAny]) -> Vec<RequiresAnyEntry> {
@@ -120,30 +131,34 @@ pub fn requires_any_from(list: &[RequiresAny]) -> Vec<RequiresAnyEntry> {
         .collect()
 }
 
-pub fn obsoletes_from(o: &Obsoletes) -> ObsoletesEntry {
-    ObsoletesEntry {
+pub fn obsoletes_from(o: &Obsoletes) -> Option<ObsoletesEntry> {
+    let entry = ObsoletesEntry {
         packages: o.packages.iter().map(|p| p.to_string()).collect(),
-    }
+    };
+    (!entry.is_empty()).then_some(entry)
 }
 
-pub fn conflicts_from(c: &ConflictsList) -> ConflictsEntry {
-    ConflictsEntry {
+pub fn conflicts_from(c: &ConflictsList) -> Option<ConflictsEntry> {
+    let entry = ConflictsEntry {
         packages: c.packages.iter().map(|p| p.to_string()).collect(),
-    }
+    };
+    (!entry.is_empty()).then_some(entry)
 }
 
-pub fn features_from(f: &FeaturesTable) -> FeaturesEntry {
-    FeaturesEntry {
+pub fn features_from(f: &FeaturesTable) -> Option<FeaturesEntry> {
+    let entry = FeaturesEntry {
         features: f.features.clone(),
         exclusive: f.exclusive.clone(),
-    }
+    };
+    (!entry.is_empty()).then_some(entry)
 }
 
-pub fn i18n_from(i: &I18nDecl) -> I18nEntry {
-    I18nEntry {
+pub fn i18n_from(i: &I18nDecl) -> Option<I18nEntry> {
+    let entry = I18nEntry {
         available: i.available.clone(),
         default: Some(i.canonical.clone()),
-    }
+    };
+    (!entry.is_empty()).then_some(entry)
 }
 
 pub fn boot_snippet_from(b: &Option<BootSnippet>) -> Option<BootSnippetEntry> {
@@ -260,6 +275,7 @@ fn declared_channels(a: &ActivationRules) -> Vec<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::types::VersionEntry;
 
     #[test]
     fn parse_manifest_minimal() {
@@ -299,8 +315,13 @@ capabilities = ["db:any@>=1.0"]
 one_of = ["org.vibevm/rust-cli@^0.1", "org.vibevm/rust-axum@^0.2"]
 "#;
         let m = parse_manifest(body).unwrap();
-        assert_eq!(provides_from(&m.provides).capabilities.len(), 1);
-        let req = requires_from(&m.requires);
+        assert_eq!(
+            provides_from(&m.provides)
+                .map(|p| p.capabilities.len())
+                .unwrap_or(0),
+            1
+        );
+        let req = requires_from(&m.requires).unwrap();
         // The modern `[requires.packages]` table flattens to a
         // `<group>/<name>@<constraint>` pkgref string.
         assert_eq!(req.packages, vec!["org.vibevm/wal@^0.1".to_string()]);
@@ -326,7 +347,7 @@ b = ["subskill:x/y"]
 group = ["a", "b"]
 "#;
         let m = parse_manifest(body).unwrap();
-        let f = features_from(&m.features);
+        let f = features_from(&m.features).unwrap();
         assert!(f.features.contains_key("default"));
         assert!(f.features.contains_key("a"));
         assert!(f.features.contains_key("b"));
@@ -334,6 +355,59 @@ group = ["a", "b"]
             f.exclusive.get("group").unwrap(),
             &vec!["a".to_string(), "b".to_string()]
         );
+    }
+
+    /// The writer's law: an empty projection is ABSENCE, not a
+    /// present-but-empty section. A manifest whose `[provides]` /
+    /// `[requires]` tables exist but carry nothing must produce an
+    /// entry whose wire form has NO key for them — `"provides": {}` is
+    /// a shape this writer never emits. The negative control in the
+    /// same test pins the other edge: a non-empty table DOES reach the
+    /// wire, so the absence above is normalisation, not a dropped
+    /// field.
+    #[test]
+    fn empty_projection_tables_never_reach_the_wire() {
+        let empty_tables = br#"
+[package]
+group = "org.vibevm"
+name = "wal"
+kind = "flow"
+version = "0.1.0"
+
+[provides]
+capabilities = []
+
+[requires]
+capabilities = []
+"#;
+        let m = parse_manifest(empty_tables).unwrap();
+        let mut v = VersionEntry::minimal(
+            PackageKind::Flow,
+            m.package.as_ref().unwrap().group.clone(),
+            "wal",
+            "0.1.0".parse().unwrap(),
+            chrono::Utc::now(),
+        );
+        v.provides = provides_from(&m.provides);
+        v.requires = requires_from(&m.requires);
+        let json = serde_json::to_string(&v).unwrap();
+        assert!(!json.contains("\"provides\""), "{json}");
+        assert!(!json.contains("\"requires\""), "{json}");
+
+        let filled = br#"
+[package]
+group = "org.vibevm"
+name = "wal"
+kind = "flow"
+version = "0.1.0"
+
+[provides]
+capabilities = ["ui:landing-page"]
+"#;
+        let m = parse_manifest(filled).unwrap();
+        v.provides = provides_from(&m.provides);
+        let json = serde_json::to_string(&v).unwrap();
+        assert!(json.contains("\"provides\""), "{json}");
     }
 
     #[test]

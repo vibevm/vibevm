@@ -1,6 +1,7 @@
 {
   "metadata": {
     "description": "`by-name/<name>.json` — the candidate set for one bare package name, epoch 1 (PROP-008 §2.8): every package sharing that short name in one HTTP GET, each carrying its own `group`. Root type `NameEntry`; the per-version records inside `packages[].versions[]` are the shared `version_entry` vocabulary. Source of truth for `crates/vibe-wire/src/generated/index/e1/by_name/`.",
+    "x-rust-type": "NameEntry",
     "x-vocabularies": ["version_entry", "group", "version", "timestamp"]
   },
   "properties": {

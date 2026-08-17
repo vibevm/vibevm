@@ -292,7 +292,7 @@ impl Index {
             schema_version: self.schema_version,
             registry: self.registry.clone(),
             registry_url: self.registry_url.clone(),
-            naming: self.naming,
+            naming: self.naming.clone(),
             generated_at: ctx.at,
             generator: self.generator.clone(),
             package_count: self.package_count(),

@@ -52,7 +52,7 @@ pub fn run(args: Args) -> Result<()> {
                 "subskill"
             };
             Row {
-                kind: e.kind,
+                kind: e.kind.clone(),
                 name: e.name.clone(),
                 version: e.version.clone(),
                 binding_site,

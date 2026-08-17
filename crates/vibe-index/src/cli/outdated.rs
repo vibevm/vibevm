@@ -72,7 +72,7 @@ pub fn run(args: Args) -> Result<()> {
             Some(_) => Status::UpToDate,
         };
         rows.push(Row {
-            kind: pkg.kind,
+            kind: pkg.kind.clone(),
             group: pkg.group.clone(),
             name: pkg.name.clone(),
             installed: pkg.version.clone(),

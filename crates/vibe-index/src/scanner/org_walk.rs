@@ -199,6 +199,14 @@ fn build_entry(
 
     let subskills = mfst::collect_subskills(&snapshot)?;
 
+    let source_url = source_url_for(
+        &opts.registry_url,
+        &opts.naming,
+        &kind,
+        &pkg.group,
+        &pkg.name,
+    );
+
     let entry = VersionEntry {
         schema_version: VersionEntry::SCHEMA_VERSION,
         kind,
@@ -206,7 +214,7 @@ fn build_entry(
         name: pkg.name.clone(),
         version: version.clone(),
         content_hash,
-        source_url: source_url_for(&opts.registry_url, opts.naming, kind, &pkg.group, &pkg.name),
+        source_url,
         source_ref: tag.to_string(),
         resolved_commit,
         registry: opts.registry.clone(),
@@ -244,8 +252,8 @@ pub fn parse_v_tag(tag: &str) -> Option<Version> {
 
 fn source_url_for(
     registry_url: &str,
-    naming: NamingConvention,
-    kind: PackageKind,
+    naming: &NamingConvention,
+    kind: &PackageKind,
     group: &Group,
     name: &str,
 ) -> String {
@@ -344,8 +352,8 @@ mod tests {
         assert_eq!(
             source_url_for(
                 "https://github.com/vibespecs",
-                NamingConvention::Fqdn,
-                PackageKind::Flow,
+                &NamingConvention::Fqdn,
+                &PackageKind::Flow,
                 &org,
                 "wal"
             ),
@@ -354,8 +362,8 @@ mod tests {
         assert_eq!(
             source_url_for(
                 "https://github.com/vibespecs",
-                NamingConvention::KindName,
-                PackageKind::Flow,
+                &NamingConvention::KindName,
+                &PackageKind::Flow,
                 &org,
                 "wal"
             ),
@@ -364,8 +372,8 @@ mod tests {
         assert_eq!(
             source_url_for(
                 "https://gitverse.ru/vibespecs/",
-                NamingConvention::Name,
-                PackageKind::Flow,
+                &NamingConvention::Name,
+                &PackageKind::Flow,
                 &org,
                 "wal"
             ),

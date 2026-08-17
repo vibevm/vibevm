@@ -435,16 +435,16 @@ impl Summary {
         source: &'static str,
         mode: &'static str,
     ) -> Self {
-        let mut by_kind: Vec<KindCount> = PackageKind::all()
+        let mut by_kind: Vec<KindCount> = PackageKind::known()
             .iter()
             .map(|k| KindCount {
-                kind: *k,
+                kind: k.clone(),
                 // `kind` is per-version metadata (PROP-008 §2.3) — a
                 // package's kind is the kind its versions carry.
                 count: index
                     .by_pkgref
                     .values()
-                    .filter(|p| p.versions.first().map(|v| v.kind) == Some(*k))
+                    .filter(|p| p.versions.first().is_some_and(|v| v.kind == *k))
                     .count() as u32,
             })
             .collect();

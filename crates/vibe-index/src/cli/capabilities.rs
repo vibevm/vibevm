@@ -44,17 +44,17 @@ pub fn run(args: Args) -> Result<()> {
     let rows: Vec<Row> = entries
         .iter()
         .map(|e| Row {
-            kind: e.kind,
+            kind: e.kind.clone(),
             name: e.name.clone(),
             version: e.version.clone(),
-            capability_advertised: e
-                .provides
-                .capabilities
-                .iter()
-                .find(|c: &&String| {
-                    c.starts_with(&args.capability) || args.capability.starts_with(c.as_str())
-                })
-                .cloned(),
+            capability_advertised: e.provides.as_ref().and_then(|p| {
+                p.capabilities
+                    .iter()
+                    .find(|c: &&String| {
+                        c.starts_with(&args.capability) || args.capability.starts_with(c.as_str())
+                    })
+                    .cloned()
+            }),
         })
         .collect();
 

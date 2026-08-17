@@ -1,15 +1,23 @@
-//! Differential wire-parity oracle for the `by-name` candidate-set schema
+//! Wire-parity oracle for the `by-name` candidate-set schema
 //! (`schemas/index/e1/by_name.jtd.json` →
 //! `vibe_wire::generated::index::e1::by_name`).
 //!
-//! Same law as the entry oracle: the hand-written `NameEntry` and the
-//! JTD-generated `ByName` are *meant* to differ as Rust types, but the
-//! **wire** must not — whatever the writer emits into
-//! `by-name/<name>.json`, the schema has to accept and hand back
-//! unchanged. Depth is the specific risk here: the record three levels
-//! down (`packages[].versions[]`) is the shared `version_entry`
-//! vocabulary, and a field it quietly dropped would surface nowhere
-//! else — the generated reader is permissive and would simply lose it.
+//! The writer's `NameEntry` and the schema's root used to be two types —
+//! hand-written here, JTD-generated `ByName` there — and this oracle
+//! compared their wire forms. The re-export unified them (the schema's
+//! `x-rust-type` names `NameEntry` and the writer re-exports it), so the
+//! differential collapsed by design and the oracle's teeth moved to what
+//! still has two sides. What it guards after the step:
+//!
+//! * the census at every depth — 4 keys on the name entry, 5 on each
+//!   package, 33 on each version record, so a schema edit that thins the
+//!   aggregate (a `package_entry` field dropped) or the shared
+//!   `version_entry` vocabulary changes a count here before anywhere
+//!   else; depth is the specific risk, because the record three levels
+//!   down is shared vocabulary and a field it lost would surface nowhere
+//!   else;
+//! * the serde layer the codegen stamps — renames and skip guards must
+//!   round-trip through `Value`, and the comparison names any drift.
 //!
 //! The fixture deliberately carries BOTH a non-empty `packages` list and
 //! a filled `tombstone`: the real writer never emits both (a name
@@ -27,7 +35,7 @@ use vibe_index::types::{
     I18nEntry, NameEntry, ObsoletesEntry, PackageEntry, PackageKind, ProvidesEntry,
     RequiresAnyEntry, RequiresEntry, SubskillEntry, Tombstone, VersionEntry, WorkspaceOriginEntry,
 };
-use vibe_wire::generated::index::e1::by_name::ByName;
+use vibe_wire::generated::index::e1::by_name::NameEntry as GeneratedNameEntry;
 
 /// Key counts a fully populated fixture puts on the wire at each nesting
 /// level: 4 on the `NameEntry` itself, 5 on each `PackageEntry`, 33 on
@@ -86,33 +94,33 @@ fn fully_populated_version() -> VersionEntry {
         homepage: Some("https://gitverse.ru/vibevm/vibevm".to_string()),
         keywords: vec!["wal".to_string(), "checkpoint".to_string()],
         describes: Some("pkg:generic/wal@1.2.3".to_string()),
-        compatibility: CompatibilityEntry {
+        compatibility: Some(CompatibilityEntry {
             min_vibe_version: Some("0.1.0".to_string()),
             requires_kinds: vec![PackageKind::Stack],
-        },
-        provides: ProvidesEntry {
+        }),
+        provides: Some(ProvidesEntry {
             capabilities: vec!["org.vibevm/wal/checkpoint".to_string()],
-        },
-        requires: RequiresEntry {
+        }),
+        requires: Some(RequiresEntry {
             packages: vec!["org.vibevm/core-ai-native".to_string()],
             capabilities: vec!["org.vibevm/wal/replay".to_string()],
-        },
+        }),
         requires_any: vec![RequiresAnyEntry {
             one_of: vec![
                 "org.vibevm/wal-specspaces".to_string(),
                 "org.vibevm/wal".to_string(),
             ],
         }],
-        obsoletes: ObsoletesEntry {
+        obsoletes: Some(ObsoletesEntry {
             packages: vec!["org.vibevm/wal-legacy".to_string()],
-        },
-        conflicts: ConflictsEntry {
+        }),
+        conflicts: Some(ConflictsEntry {
             packages: vec!["org.vibevm/wal-fork".to_string()],
-        },
-        features: FeaturesEntry {
+        }),
+        features: Some(FeaturesEntry {
             features,
             exclusive,
-        },
+        }),
         subskills: vec![SubskillEntry {
             path: "skills/wal/v08".to_string(),
             delivery: DeliveryMode::LazyPull,
@@ -120,10 +128,10 @@ fn fully_populated_version() -> VersionEntry {
             description: Some("The v0.8 subskill".to_string()),
             channels: vec!["stable".to_string()],
         }],
-        i18n: I18nEntry {
+        i18n: Some(I18nEntry {
             available: vec!["en".to_string(), "ru".to_string()],
             default: Some("en".to_string()),
-        },
+        }),
         boot_snippet: Some(BootSnippetEntry {
             source: "boot/10-flow-wal.md".to_string(),
             category: Some("foundation".to_string()),
@@ -159,16 +167,16 @@ fn fully_populated_name_entry() -> NameEntry {
 }
 
 /// The writer's output survives the schema unchanged at every depth:
-/// what the hand-written type emits, the generated type accepts and hands
-/// back byte-for-byte at the `Value` level. A field the schema forgot —
-/// including one three levels down, inside a version record — is dropped
-/// by the permissive generated reader, so the left side keeps it and the
-/// right side loses it, and the assert names the drift.
+/// what the record emits, the schema root accepts and hands back
+/// byte-for-byte at the `Value` level. The two were independent
+/// implementations once, and the comparison stays so that the day they
+/// drift apart again the assert names the drift — at any depth,
+/// including inside a version record three levels down.
 #[test]
 fn fully_populated_name_entry_round_trips_through_the_generated_type() {
     let handwritten = fully_populated_name_entry();
 
-    let j1 = serde_json::to_value(&handwritten).expect("the hand-written type serialises");
+    let j1 = serde_json::to_value(&handwritten).expect("the writer's type serialises");
     assert_eq!(
         j1.as_object().map(|object| object.len()),
         Some(NAME_ENTRY_KEY_COUNT),
@@ -188,13 +196,13 @@ fn fully_populated_name_entry_round_trips_through_the_generated_type() {
     );
 
     // The schema accepts everything the writer emits…
-    let generated: ByName =
+    let generated: GeneratedNameEntry =
         serde_json::from_value(j1.clone()).expect("the generated type parses the writer's output");
     // …and nothing is lost or added on the way back.
     let j2 = serde_json::to_value(&generated).expect("the generated type serialises");
     assert_eq!(
         j1, j2,
-        "wire drift between the hand-written and the generated by-name entry — a \
+        "wire drift between the writer's record and the schema's root — a \
          field the schema misses (at any depth) is silently dropped by the \
          permissive reader"
     );
