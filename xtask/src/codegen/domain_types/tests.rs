@@ -38,7 +38,18 @@ fn through_pipeline(src: &str, doc: Value, root_stem: &str) -> Result<String> {
         .join("e1")
         .join("by_purl.jtd.json");
     rewrite_generated(&file, &resolved, &schema, &strictness)?;
-    Ok(std::fs::read_to_string(&file)?)
+    let out = std::fs::read_to_string(&file)?;
+    // The trait floor is a LATER pass's subject, and `derive_floor`'s own
+    // suite is what asserts it lands. Normalise it back to the emission's
+    // derive form here so the expectations below speak about the pass
+    // this file is named for. The reason is structural rather than
+    // convenience: without it, every future pass that touches every type
+    // would force an edit in every other pass's expectations, and that
+    // coupling grows with the square of the pass count.
+    Ok(out.replace(
+        "#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]",
+        "#[derive(Serialize, Deserialize)]",
+    ))
 }
 
 /// The emission of a one-alias schema, snake-case pass input form: the

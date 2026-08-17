@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 /// Wire format for `vibe registry sync --json` — what was refreshed,
 /// what was skipped, and why. Source of truth for `crates/vibe-
 /// wire/src/generated/registry_sync_report.rs`.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RegistrySyncReport {
     /// Always `"registry:sync"` for this report.
     pub command: String,
@@ -25,6 +25,7 @@ pub struct RegistrySyncReport {
 
 /// Installable package kind (VIBEVM-SPEC §4.1). Open vocabulary: the register
 /// grows by owner amendment, so a reader must not hard-fail on an unseen kind.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PackageKind {
     Feat,
     Flow,
@@ -75,7 +76,7 @@ impl<'de> Deserialize<'de> for PackageKind {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RefreshedEntry {
     pub kind: PackageKind,
 
@@ -90,7 +91,7 @@ pub struct RefreshedEntry {
     pub via: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct SkippedEntry {
     pub kind: PackageKind,
 

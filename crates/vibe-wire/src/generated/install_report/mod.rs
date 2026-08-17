@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 /// Wire format for `vibe install --json` (the final apply report). Source of
 /// truth for `crates/vibe-wire/src/generated/install_report.rs`.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct InstallReport {
     /// Always `"install"` for this report.
     pub command: String,
@@ -19,7 +19,7 @@ pub struct InstallReport {
     pub project: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AppliedReport {
     pub files_written: u32,
 

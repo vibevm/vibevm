@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 /// before user confirmation when `--json` is set; consumers can dry-run by
 /// parsing this and aborting before apply. Source of truth for `crates/vibe-
 /// wire/src/generated/install_plan.rs`.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct InstallPlan {
     /// Always `"install:plan"` for this report.
     pub command: String,
@@ -17,7 +17,7 @@ pub struct InstallPlan {
     pub plans: Vec<PlanEntry>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PlanEntry {
     /// `sha256:<hex>` over the package tree. The identity of the install.
     pub content_hash: String,

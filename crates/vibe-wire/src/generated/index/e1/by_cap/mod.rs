@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 /// fetchable by a single HTTP GET. Root type `CapabilityRow`; every field
 /// required, no optionals, no collections. Source of truth for `crates/vibe-
 /// wire/src/generated/index/e1/by_cap/`.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ByCap {
     /// The capability this row indexes — the canonical spelling as it lives
     /// inside the entry, not the filesystem-safe slug that names the file.
@@ -28,6 +28,7 @@ pub type Group = vibe_core::Group;
 
 /// Installable package kind (VIBEVM-SPEC §4.1). Open vocabulary: the register
 /// grows by owner amendment, so a reader must not hard-fail on an unseen kind.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PackageKind {
     Feat,
     Flow,

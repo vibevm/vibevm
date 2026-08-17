@@ -18,7 +18,7 @@ use serde_json::{Value, json};
 const VOCAB_ENUM: &str = r#"/// Installable package kind (VIBEVM-SPEC §4.1). Open vocabulary: the
 /// register grows by owner amendment, so a reader must not hard-fail on
 /// an unseen kind.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum PackageKind {
     #[serde(rename = "feat")]
     Feat,
@@ -64,6 +64,7 @@ fn an_open_vocabulary_takes_the_open_form() -> Result<()> {
         r#"/// Installable package kind (VIBEVM-SPEC §4.1). Open vocabulary: the
 /// register grows by owner amendment, so a reader must not hard-fail on
 /// an unseen kind.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PackageKind {
     Feat,
     Flow,
@@ -136,7 +137,7 @@ fn a_closed_vocabulary_is_replayed_byte_for_byte() -> Result<()> {
 #[test]
 fn a_discriminator_union_next_to_a_vocabulary_is_skipped_verbatim() -> Result<()> {
     let union = r#"/// The union the scanner must not touch.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind")]
 pub enum RepomdFileEntry {
     #[serde(rename = "directory")]
@@ -161,7 +162,9 @@ pub enum RepomdFileEntry {
         "the vocabulary opened: {out}"
     );
     assert!(
-        !out.contains("#[derive(Serialize, Deserialize)]\npub enum PackageKind"),
+        !out.contains(
+            "#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]\npub enum PackageKind"
+        ),
         "the derive came off the opened enum: {out}"
     );
     Ok(())
@@ -173,9 +176,9 @@ pub enum RepomdFileEntry {
 /// converge.
 #[test]
 fn the_scanner_resyncs_after_a_union_between_two_vocabularies() -> Result<()> {
-    let union = "#[derive(Serialize, Deserialize)]\n#[serde(tag = \"kind\")]\npub enum Event {\n    #[serde(rename = \"frozen\")]\n    Frozen(Box<EventFrozen>),\n}\n";
+    let union = "#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]\n#[serde(tag = \"kind\")]\npub enum Event {\n    #[serde(rename = \"frozen\")]\n    Frozen(Box<EventFrozen>),\n}\n";
     let delivery = r#"/// Subskill materialisation mode.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum DeliveryMode {
     #[serde(rename = "eager")]
     Eager,
@@ -253,7 +256,7 @@ fn a_vocabulary_count_mismatch_refuses_with_both_counts() -> Result<()> {
 /// it refuses instead of corrupting the type.
 #[test]
 fn an_existing_unknown_variant_refuses() -> Result<()> {
-    let src = r#"#[derive(Serialize, Deserialize)]
+    let src = r#"#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Odd {
     #[serde(rename = "a")]
     Unknown,
@@ -386,7 +389,7 @@ fn an_enum_key_inside_metadata_is_data_not_a_site() -> Result<()> {
 /// pinned, and an unfamiliar line means the pin moved.
 #[test]
 fn an_unfamiliar_line_inside_a_vocabulary_refuses() {
-    let src = r#"#[derive(Serialize, Deserialize)]
+    let src = r#"#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Odd {
     #[serde(rename = "feat")]
     Feat,

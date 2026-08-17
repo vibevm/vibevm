@@ -8,7 +8,7 @@ use std::collections::BTreeMap;
 /// fields; the `files` map is path-keyed and its values are the tagged union
 /// `RepomdFileEntry` (`kind` discriminator, lowercase tags). Source of truth
 /// for `crates/vibe-wire/src/generated/index/e1/repomd/`.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Repomd {
     /// Path-keyed map of file and directory entries beneath the data
     /// directory (excluding `state/`). Keys are POSIX-style relative paths
@@ -43,7 +43,7 @@ pub struct Repomd {
 /// side test `naming_convention_serde_matches_vibe_core_wire` pins them, and
 /// Phase 4.2 converges the copies. Shared as a vocabulary because `repomd` and
 /// `journal` both carry it.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum NamingConvention {
     #[serde(rename = "fqdn")]
     Fqdn,
@@ -63,7 +63,7 @@ pub enum NamingConvention {
 /// are lowercase, per the writer's `#[serde(tag = "kind", rename_all =
 /// "lowercase")]`. Local to this schema: no other schema consumes the
 /// manifest's file table.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind")]
 pub enum RepomdFileEntry {
     #[serde(rename = "directory")]
@@ -73,14 +73,14 @@ pub enum RepomdFileEntry {
     File(Box<RepomdFileEntryFile>),
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RepomdFileEntryDirectory {
     /// How many entries the directory holds (files in `by-cap/`, candidate sets
     /// in `by-name/`).
     pub entries: u32,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RepomdFileEntryFile {
     /// Content hash, `sha256:`-prefixed hex.
     pub sha256: String,

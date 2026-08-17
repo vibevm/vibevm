@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 /// Wire format for `vibe uninstall --json`. Source of truth for `crates/vibe-
 /// wire/src/generated/uninstall_report.rs`.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct UninstallReport {
     /// Always `"uninstall"` for this report.
     pub command: String,

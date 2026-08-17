@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 /// Wire format for `vibe init --json`. Source of truth for `crates/vibe-
 /// wire/src/generated/init_report.rs`.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct InitReport {
     /// Always `"init"` for this report.
     pub command: String,
@@ -29,7 +29,7 @@ pub struct InitReport {
     pub project: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Outcome {
     pub action: OutcomeAction,
 
@@ -48,6 +48,7 @@ pub struct Outcome {
 /// a path or a decision from the value. Closed was rejected: a report written
 /// by a newer `vibe` would then break an older reader's parse outright, for
 /// no benefit.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum OutcomeAction {
     Created,
     Kept,

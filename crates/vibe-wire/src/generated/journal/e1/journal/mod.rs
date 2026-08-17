@@ -12,7 +12,7 @@ use std::collections::BTreeMap;
 /// eleven facts keyed by `kind`, snake_case tags per the writer's `#[serde(tag
 /// = "kind", rename_all = "snake_case")]`. Source of truth for `crates/vibe-
 /// wire/src/generated/journal/e1/journal/`.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct JournalRecord {
     /// Who wrote the record — a tool identity such as `vibe-index 0.1.0-dev`.
     pub actor: String,
@@ -26,7 +26,7 @@ pub struct JournalRecord {
 
 /// `[boot_snippet]` projection (PROP-005 §2.6): a boot file identified by its
 /// `source` path plus an ordering `category`.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct BootSnippetEntry {
     pub source: String,
 
@@ -38,7 +38,7 @@ pub struct BootSnippetEntry {
 
 /// Compatibility projection: the reader floor and the kinds this record
 /// requires.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CompatibilityEntry {
     /// Reader floor; an absent key declares no floor.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -49,7 +49,7 @@ pub struct CompatibilityEntry {
 }
 
 /// Conflicts projection: packages this version cannot coexist with.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ConflictsEntry {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub packages: Vec<String>,
@@ -57,6 +57,7 @@ pub struct ConflictsEntry {
 
 /// Subskill materialisation mode. Open vocabulary: modes are a growing
 /// register, not a closed set.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum DeliveryMode {
     Eager,
     LazyPull,
@@ -106,7 +107,7 @@ impl<'de> Deserialize<'de> for DeliveryMode {
 /// `channel_set`, `channel_unset` and `force_replaced` refuse by design (their
 /// carriers are not built in this vibe-index). Local to this schema: no other
 /// surface consumes the journal's event union.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind")]
 pub enum Event {
     #[serde(rename = "channel_set")]
@@ -144,7 +145,7 @@ pub enum Event {
 }
 
 /// Pin one `version` of a package to a named `channel`.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct EventChannelSet {
     pub channel: String,
 
@@ -157,7 +158,7 @@ pub struct EventChannelSet {
 
 /// Unpin a `channel`: the identity and the channel name — the pin is gone, no
 /// version rides along.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct EventChannelUnset {
     pub channel: String,
 
@@ -171,7 +172,7 @@ pub struct EventChannelUnset {
 /// — tombstones, yanks, freezes and notices are not scan products and a scan
 /// cannot re-derive them, so a watershed that dropped them would make state
 /// unrecoverable (PROP-044 law 2). `source` names where the scan came from.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct EventEntrySetReplaced {
     pub source: String,
 }
@@ -179,7 +180,7 @@ pub struct EventEntrySetReplaced {
 /// Forced content replacement: the same `(group, name, version)` re-published
 /// under a different hash — `old_hash` → `new_hash`, the `reason` on the
 /// record.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct EventForceReplaced {
     pub group: Group,
 
@@ -197,7 +198,7 @@ pub struct EventForceReplaced {
 /// A freeze OBSERVED by this registry, not authored by it: the authority is
 /// the flag inside the package's hashed content (ruling D14); the event records
 /// when this registry saw the freeze and which `content_hash` it was tied to.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct EventFrozen {
     pub content_hash: String,
 
@@ -214,7 +215,7 @@ pub struct EventFrozen {
 /// authoritative fact living in a derived artifact (PROP-044 `##FORBID-SECRET-
 /// TRUTH`), and `rebuild --check` — tear down, reproject, compare — could never
 /// pass.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct EventInitialised {
     pub naming: NamingConvention,
 
@@ -226,7 +227,7 @@ pub struct EventInitialised {
 /// A per-package notice — free text the registry carries for consumers of
 /// `(group, name)`; unprojectable into the catalog, so it lives in the journal
 /// only.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct EventNotice {
     pub group: Group,
 
@@ -241,13 +242,13 @@ pub struct EventNotice {
 /// record (~900 bytes) dwarfing every other arm in `replay`'s vector; serde
 /// renders `Box<T>` exactly as `T`, so the box is invisible on the wire and the
 /// payload is the plain entry object.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct EventPublished {
     pub entry: VersionEntry,
 }
 
 /// A removal: one `version`, or — with `version` null — the whole package.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct EventRemoved {
     pub group: Group,
 
@@ -275,7 +276,7 @@ pub struct EventRemoved {
 }
 
 /// A package rename: `from` → `to`, each a `(group, name)` pair.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct EventRenamed {
     /// Wire type: a PAIR `(group, name)` — a two-element array like
     /// `["org.vibevm", "wal"]`. JTD (RFC 8927) has no tuple: `elements`
@@ -301,7 +302,7 @@ pub struct EventRenamed {
 }
 
 /// One version withdrawn, with the `reason` on the record.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct EventYanked {
     pub group: Group,
 
@@ -314,7 +315,7 @@ pub struct EventYanked {
 
 /// Feature table: feature names map to activation lists; `exclusive` is the at-
 /// most-one-of named-group table.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct FeaturesEntry {
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub exclusive: BTreeMap<String, Vec<String>>,
@@ -328,7 +329,7 @@ pub struct FeaturesEntry {
 pub type Group = vibe_core::Group;
 
 /// I18n availability: the locales a package carries and its default one.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct I18nEntry {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub available: Vec<String>,
@@ -348,7 +349,7 @@ pub struct I18nEntry {
 /// side test `naming_convention_serde_matches_vibe_core_wire` pins them, and
 /// Phase 4.2 converges the copies. Shared as a vocabulary because `repomd` and
 /// `journal` both carry it.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum NamingConvention {
     #[serde(rename = "fqdn")]
     Fqdn,
@@ -364,7 +365,7 @@ pub enum NamingConvention {
 }
 
 /// Obsoletes projection: packages this version replaces.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ObsoletesEntry {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub packages: Vec<String>,
@@ -372,6 +373,7 @@ pub struct ObsoletesEntry {
 
 /// Installable package kind (VIBEVM-SPEC §4.1). Open vocabulary: the register
 /// grows by owner amendment, so a reader must not hard-fail on an unseen kind.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PackageKind {
     Feat,
     Flow,
@@ -423,7 +425,7 @@ impl<'de> Deserialize<'de> for PackageKind {
 }
 
 /// Provides projection: the capabilities this version exposes.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ProvidesEntry {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub capabilities: Vec<String>,
@@ -431,14 +433,14 @@ pub struct ProvidesEntry {
 
 /// One any-of requirement: the list IS the entry, so an empty list is emitted,
 /// never omitted.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RequiresAnyEntry {
     pub one_of: Vec<String>,
 }
 
 /// Requires projection: the packages and capabilities this version needs, all
 /// of them.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RequiresEntry {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub capabilities: Vec<String>,
@@ -448,7 +450,7 @@ pub struct RequiresEntry {
 }
 
 /// Subskill delivery projection (PROP-005 §2.6).
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct SubskillEntry {
     pub delivery: DeliveryMode,
 
@@ -476,7 +478,7 @@ pub type Version = semver::Version;
 /// one element of a `by-name` candidate's `versions[]`, one `POST /v1/packages`
 /// body. Shared as a vocabulary because `by_name` and `journal` carry it
 /// transitively and JTD has no cross-file refs (G9).
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct VersionEntry {
     pub content_hash: String,
 
@@ -574,7 +576,7 @@ pub struct VersionEntry {
 /// `[origin]` projection (PROP-007 §2.8): provenance of a copy published from
 /// a workspace member. `generated_at` is a plain ISO-8601 string in code, not a
 /// domain timestamp.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct WorkspaceOriginEntry {
     pub generated_at: String,
 

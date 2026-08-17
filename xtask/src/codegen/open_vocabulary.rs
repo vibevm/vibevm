@@ -37,10 +37,14 @@ use std::path::Path;
 use anyhow::{Context, Result, bail};
 use serde_json::{Map, Value};
 
-/// The derive line every generated type carries — the single derive form
-/// in jtd-codegen output (measured), and the anchor the vocabulary
-/// scanner keys on.
-const DERIVE_LINE: &str = "#[derive(Serialize, Deserialize)]";
+/// The derive line every generated type carries by the time this pass
+/// reads it, and the anchor the vocabulary scanner keys on.
+///
+/// jtd-codegen emits the serde pair alone; the trait-floor pass runs
+/// directly before this one and widens that line, so the literal lives
+/// in `derive_floor` and is borrowed here rather than restated — two
+/// copies of it would drift into a scanner that silently finds nothing.
+use super::derive_floor::{WITH_FLOOR as DERIVE_LINE, WITHOUT_SERDE};
 
 /// The pass entry the driver calls: read the schema-side policies off
 /// the document the generator read (`resolved` — the authored schema
@@ -519,6 +523,12 @@ fn emit_open_enum(
              identifier is not `Unknown`, then run `cargo xtask codegen`."
         );
     }
+    // The serde derive comes off — it would collide with the hand-rolled
+    // impls below — but nothing else does: the rest of the floor is what
+    // every other generated type keeps, and an opened vocabulary has no
+    // reason to be the one type that cannot be printed or compared.
+    out.push_str(WITHOUT_SERDE);
+    out.push('\n');
     out.push_str("pub enum ");
     out.push_str(name);
     out.push_str(" {\n");

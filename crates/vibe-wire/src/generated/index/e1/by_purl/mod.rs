@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 /// 005 §2.13): a package version whose package- or subskill-level `describes`
 /// matches one given PURL. Root type `PurlRow`; every field required. Source of
 /// truth for `crates/vibe-wire/src/generated/index/e1/by_purl/`.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ByPurl {
     pub binding_site: BindingSite,
 
@@ -30,7 +30,7 @@ pub struct ByPurl {
 /// side copy in `vibe-registry` spells them `lowercase`, which coincides only
 /// because both variants are single words — Phase 4.2 converges the two by
 /// re-export.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum BindingSite {
     #[serde(rename = "package")]
     Package,
@@ -45,6 +45,7 @@ pub type Group = vibe_core::Group;
 
 /// Installable package kind (VIBEVM-SPEC §4.1). Open vocabulary: the register
 /// grows by owner amendment, so a reader must not hard-fail on an unseen kind.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PackageKind {
     Feat,
     Flow,

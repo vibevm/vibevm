@@ -86,6 +86,7 @@ use std::path::Path;
 
 use anyhow::{Context, Result, bail};
 
+use super::derive_floor::apply_derive_floor;
 use super::domain_types::apply_domain_types;
 use super::empty_policy::apply_empty_policies;
 use super::open_vocabulary::open_vocabularies;
@@ -110,7 +111,10 @@ use super::strictness::{Strictness, apply_strictness};
 /// it runs fifth; the strictness pass is keyed to the shape just as
 /// much, so it runs sixth; the domain-types pass is keyed to the shape
 /// no less — the alias line, the declaration line and the import line
-/// it may have to take away — so it runs seventh; opening vocabularies
+/// it may have to take away — so it runs seventh; the trait-floor pass
+/// takes the one slot two constraints leave it, after the last pass
+/// that anchors on the PRISTINE derive line and before the one that has
+/// to read the widened one, so it runs eighth; opening vocabularies
 /// then writes hand-rolled impls into the file, and a shape-keyed pass
 /// running after it would be reading a document that is no longer the
 /// generator's.
@@ -130,7 +134,8 @@ pub(crate) fn rewrite_generated(
     let unboxed = apply_optional_shapes(&emptied, &name, resolved, schema)?;
     let strict = apply_strictness(&unboxed, &name, schema, strictness)?;
     let bound = apply_domain_types(&strict, &name, resolved, schema)?;
-    let opened = open_vocabularies(&bound, &name, resolved, schema)?;
+    let floored = apply_derive_floor(&bound, &name)?;
+    let opened = open_vocabularies(&floored, &name, resolved, schema)?;
     std::fs::write(file, opened).with_context(|| format!("writing the post-processed {}", name))?;
     Ok(())
 }

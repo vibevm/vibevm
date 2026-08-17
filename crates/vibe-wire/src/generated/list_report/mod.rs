@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 /// Wire format for `vibe list --json`. Source of truth for `crates/vibe-
 /// wire/src/generated/list_report.rs`.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ListReport {
     /// Always `"list"` for this report.
     pub command: String,
@@ -21,7 +21,7 @@ pub struct ListReport {
     pub project: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ListEntry {
     /// Filename of the package's boot snippet under `spec/boot/`, or null if
     /// absent.
@@ -66,6 +66,7 @@ pub struct ListEntry {
 
 /// Installable package kind (VIBEVM-SPEC §4.1). Open vocabulary: the register
 /// grows by owner amendment, so a reader must not hard-fail on an unseen kind.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PackageKind {
     Feat,
     Flow,

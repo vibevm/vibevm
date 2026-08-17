@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 /// Wire format for `vibe registry publish --json`. Source of truth for
 /// `crates/vibe-wire/src/generated/registry_publish_report.rs`.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RegistryPublishReport {
     /// Always `"registry:publish"` for this report.
     pub command: String,

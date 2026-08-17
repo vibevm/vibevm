@@ -15,6 +15,7 @@ use std::process::Command;
 
 use anyhow::{Context, Result, bail};
 
+mod derive_floor;
 mod domain_types;
 mod empty_policy;
 mod format_id;

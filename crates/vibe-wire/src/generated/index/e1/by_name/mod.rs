@@ -8,7 +8,7 @@ use std::collections::BTreeMap;
 /// carrying its own `group`. Root type `NameEntry`; the per-version records
 /// inside `packages[].versions[]` are the shared `version_entry` vocabulary.
 /// Source of truth for `crates/vibe-wire/src/generated/index/e1/by_name/`.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ByName {
     pub indexed_at: Timestamp,
 
@@ -26,7 +26,7 @@ pub struct ByName {
 
 /// `[boot_snippet]` projection (PROP-005 §2.6): a boot file identified by its
 /// `source` path plus an ordering `category`.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct BootSnippetEntry {
     pub source: String,
 
@@ -38,7 +38,7 @@ pub struct BootSnippetEntry {
 
 /// Compatibility projection: the reader floor and the kinds this record
 /// requires.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CompatibilityEntry {
     /// Reader floor; an absent key declares no floor.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -49,7 +49,7 @@ pub struct CompatibilityEntry {
 }
 
 /// Conflicts projection: packages this version cannot coexist with.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ConflictsEntry {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub packages: Vec<String>,
@@ -57,6 +57,7 @@ pub struct ConflictsEntry {
 
 /// Subskill materialisation mode. Open vocabulary: modes are a growing
 /// register, not a closed set.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum DeliveryMode {
     Eager,
     LazyPull,
@@ -100,7 +101,7 @@ impl<'de> Deserialize<'de> for DeliveryMode {
 
 /// Feature table: feature names map to activation lists; `exclusive` is the at-
 /// most-one-of named-group table.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct FeaturesEntry {
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub exclusive: BTreeMap<String, Vec<String>>,
@@ -114,7 +115,7 @@ pub struct FeaturesEntry {
 pub type Group = vibe_core::Group;
 
 /// I18n availability: the locales a package carries and its default one.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct I18nEntry {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub available: Vec<String>,
@@ -125,7 +126,7 @@ pub struct I18nEntry {
 }
 
 /// Obsoletes projection: packages this version replaces.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ObsoletesEntry {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub packages: Vec<String>,
@@ -134,7 +135,7 @@ pub struct ObsoletesEntry {
 /// One package — every indexed version of a single `(group, name)` identity
 /// (PROP-008 §2.2). Local to this schema: nothing else consumes the aggregate
 /// (`journal` carries `version_entry` directly, not the per-name rollup).
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PackageEntry {
     pub group: Group,
 
@@ -154,6 +155,7 @@ pub struct PackageEntry {
 
 /// Installable package kind (VIBEVM-SPEC §4.1). Open vocabulary: the register
 /// grows by owner amendment, so a reader must not hard-fail on an unseen kind.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PackageKind {
     Feat,
     Flow,
@@ -205,7 +207,7 @@ impl<'de> Deserialize<'de> for PackageKind {
 }
 
 /// Provides projection: the capabilities this version exposes.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ProvidesEntry {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub capabilities: Vec<String>,
@@ -213,14 +215,14 @@ pub struct ProvidesEntry {
 
 /// One any-of requirement: the list IS the entry, so an empty list is emitted,
 /// never omitted.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RequiresAnyEntry {
     pub one_of: Vec<String>,
 }
 
 /// Requires projection: the packages and capabilities this version needs, all
 /// of them.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RequiresEntry {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub capabilities: Vec<String>,
@@ -230,7 +232,7 @@ pub struct RequiresEntry {
 }
 
 /// Subskill delivery projection (PROP-005 §2.6).
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct SubskillEntry {
     pub delivery: DeliveryMode,
 
@@ -254,7 +256,7 @@ pub type Timestamp = chrono::DateTime<chrono::Utc>;
 /// A name's death record — its reason for being gone and, when known, the
 /// successor to move to (PROP-044 §2, the no-silence law). Local to this
 /// schema: `NameEntry` is its only consumer.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Tombstone {
     pub reason: String,
 
@@ -271,7 +273,7 @@ pub type Version = semver::Version;
 /// one element of a `by-name` candidate's `versions[]`, one `POST /v1/packages`
 /// body. Shared as a vocabulary because `by_name` and `journal` carry it
 /// transitively and JTD has no cross-file refs (G9).
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct VersionEntry {
     pub content_hash: String,
 
@@ -369,7 +371,7 @@ pub struct VersionEntry {
 /// `[origin]` projection (PROP-007 §2.8): provenance of a copy published from
 /// a workspace member. `generated_at` is a plain ISO-8601 string in code, not a
 /// domain timestamp.
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct WorkspaceOriginEntry {
     pub generated_at: String,
 
