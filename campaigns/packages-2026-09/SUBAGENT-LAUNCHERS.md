@@ -1344,6 +1344,32 @@ believe, because the bytes have exactly one origin. Sibling of
 there a test was re-aimed instead of satisfied, here a fixture was
 re-derived instead of patched.
 
+@fact:fact-the-git-ban-collides-with-proving-the-perimeter-so-the-packet-hands-over-the-substitute
+**The git ban and the "nothing outside the perimeter" acceptance line pull
+against each other, and the packet must resolve it or the worker will
+(2026-08-17):** a packet forbade git absolutely and, three sections later,
+demanded proof that no file outside its closed list had changed. The worker
+ran exactly one command — `git diff --stat` — which is read-only and changed
+nothing, but it is still the one thing the packet said never to do. The cause
+is not indiscipline: the acceptance line asks for a set comparison against the
+tree, and the obvious instrument for it is the forbidden one.
+
+**So the packet supplies the substitute in the same breath as the ban.** The
+forms already proven in this campaign: `find . -newer <the packet file> -type f`
+with the build and vendor trees excluded (used successfully by an earlier
+worker), or an explicit inventory — «созданы ровно эти файлы, изменён ровно
+этот» — with each path named. A worker that can prove its own perimeter never
+needs the verb.
+
+The reverse reading is worth stating too, because the fix is cheap and the
+alternative is expensive: a read-only git verb costs nothing HERE and costs a
+worktree everywhere else — `git worktree prune` and a `git -C` on a pruned
+directory both operate on the HOST
+(`#fact-a-pruned-worktree-directory-retargets-git-at-the-host`), and a ban
+with exceptions is a ban a weak writer will widen. The ban stays absolute;
+what changes is that the packet stops asking for something only the banned
+tool can give.
+
 ## 9. What a clean fan-out looked like {#clean-fanout}
 
 @fact:fanout-first-pass-acceptance **Measured 2026-08-14 — three packets, two
