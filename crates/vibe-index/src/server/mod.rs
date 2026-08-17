@@ -55,7 +55,10 @@ pub fn build_app(state: AppState) -> Router {
         // Liveness / readiness.
         .route("/healthz", get(routes::health::healthz))
         .route("/readyz", get(routes::health::readyz))
-        // Static index files (raw — same shape as on disk).
+        // Static index files (raw — same shape as on disk). The
+        // handshake leads the block: a client reads it before any
+        // world's manifest (Р41), and the table reads in client order.
+        .route("/v1/index/hello.json", get(routes::index_files::hello_json))
         .route(
             "/v1/index/repomd.json",
             get(routes::index_files::repomd_json),

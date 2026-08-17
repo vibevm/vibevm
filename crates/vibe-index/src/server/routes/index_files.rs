@@ -14,6 +14,15 @@ use axum::response::{IntoResponse, Response};
 use crate::server::error::ApiError;
 use crate::server::state::AppState;
 
+/// The eternal handshake `hello.json` — the file a client reads FIRST
+/// (PROP-044 `##ONE-ETERNAL-FILE`, TZ Р41), before any world's
+/// `repomd.json`: it is where a client of any age learns which worlds
+/// exist and where the handshake itself moved.
+pub async fn hello_json(State(state): State<Arc<AppState>>) -> Result<Response, ApiError> {
+    state.stats.note_request();
+    serve_file(&state.data_dir.join("hello.json"), "application/json").await
+}
+
 pub async fn repomd_json(State(state): State<Arc<AppState>>) -> Result<Response, ApiError> {
     state.stats.note_request();
     serve_file(&state.data_dir.join("repomd.json"), "application/json").await

@@ -44,7 +44,17 @@ pub use search::{SearchHit, lookup_capability, lookup_purl, search, tokenise};
 /// tomorrow too: the catalog IS what the writer writes. A blacklist
 /// would have to enumerate the world and would rot the day the
 /// directory grows a file nobody listed.
-pub const WRITER_FILES: [&str; 3] = ["repomd.json", "primary.jsonl", "primary.jsonl.gz"];
+///
+/// `hello.json` — the eternal handshake — leads the list because it is
+/// the file a client reads first, but it never enters the manifest's
+/// `files` map: `repomd.json` is the manifest of ONE world, while the
+/// handshake stands above worlds and dispatches to them (TZ Р39).
+pub const WRITER_FILES: [&str; 4] = [
+    "hello.json",
+    "repomd.json",
+    "primary.jsonl",
+    "primary.jsonl.gz",
+];
 
 /// The directory trees [`Index::write_to`] owns — the recursive part of
 /// its surface. Same single-home reason as [`WRITER_FILES`].

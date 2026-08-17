@@ -112,7 +112,7 @@ fn write_gitignore(data_dir: &std::path::Path) -> Result<()> {
         return Ok(());
     }
     let body = "# vibe-index — local server / runtime state.\n\
-        # Index files (repomd.json, primary.jsonl[.gz],\n\
+        # Index files (hello.json, repomd.json, primary.jsonl[.gz],\n\
         # by-name/, by-cap/, by-purl/) are tracked; everything\n\
         # under state/ is per-host runtime data and stays out of\n\
         # the source tree.\n\
@@ -136,7 +136,10 @@ fn write_readme(data_dir: &std::path::Path, registry: &str, registry_url: &str) 
         \n\
         ## Files\n\
         \n\
-        - `repomd.json` — manifest with sha256 of every other file.\n\
+        - `hello.json` — the eternal handshake: the client's entry point,\n\
+          naming the worlds that exist and where each lives.\n\
+        - `repomd.json` — manifest with sha256 of every other file of the\n\
+          catalog.\n\
         - `primary.jsonl` / `primary.jsonl.gz` — one `VersionEntry` per line.\n\
         - `by-name/<name>.json` — candidate set for one bare name (every group).\n\
         - `by-cap/<slug>.jsonl` — inverted index by advertised capability.\n\

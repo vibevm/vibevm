@@ -16,11 +16,14 @@ use chrono::{DateTime, Utc};
 use vibe_core::Group;
 
 use crate::error::{Error, Result};
+use crate::index::persistence::atomic_write;
 use crate::index::quarantine::{Quarantined, missing_capabilities};
 use crate::index::{by_name, inverted, primary, repomd};
 use crate::types::{
     NameEntry, NamingConvention, PackageEntry, Repomd, RepomdFileEntry, Tombstone, VersionEntry,
 };
+use vibe_wire::generated::format_id::FormatId;
+use vibe_wire::generated::hello::e1::hello::{Handshake, World};
 
 /// In-RAM index key — the `(group, name)` package identity (PROP-008
 /// §2.2). `kind` is metadata and no longer keys anything.
@@ -189,11 +192,13 @@ impl Index {
 
     /// Persist the index to `data_dir` atomically. Writes
     /// `primary.jsonl` and every `by-name/<name>.json` candidate set,
-    /// then stamps `repomd.json` last so partial views are always
-    /// consistent against an older manifest until the new one lands.
-    /// Every timestamped field — the manifest's `generated_at` and the
-    /// by-name `NameEntry` labels — comes from `ctx.at`: same index,
-    /// same `WriteCtx` ⇒ byte-identical output (F2-1).
+    /// then stamps `repomd.json` so partial views are always consistent
+    /// against an older manifest until the new one lands, and finally
+    /// the eternal handshake `hello.json` — above every world, so it
+    /// follows even the manifest (Р39). Every timestamped field — the
+    /// manifest's `generated_at` and the by-name `NameEntry` labels —
+    /// comes from `ctx.at`: same index, same `WriteCtx` ⇒
+    /// byte-identical output (F2-1).
     pub fn write_to(&self, data_dir: &Path, ctx: &WriteCtx) -> Result<()> {
         std::fs::create_dir_all(data_dir).map_err(|e| Error::Io {
             path: data_dir.to_path_buf(),
@@ -299,7 +304,14 @@ impl Index {
             version_count: self.version_count(),
             files,
         };
-        repomd::write(data_dir, &manifest)
+        repomd::write(data_dir, &manifest)?;
+
+        // The eternal handshake lands last, after the manifest, and
+        // stays OUTSIDE its `files` map (Р39): `repomd.json` is the
+        // manifest of one world, while the handshake stands above
+        // worlds and dispatches to them. Precedent for a root file the
+        // map does not carry: `.gitignore` and `README.md` from `init`.
+        write_handshake(data_dir)
     }
 
     /// Load an index from `data_dir`. The on-disk shape is the source
@@ -362,6 +374,39 @@ impl Index {
             tombstones,
         })
     }
+}
+
+/// Write the eternal handshake `hello.json` (PROP-044
+/// `##ONE-ETERNAL-FILE`) — the one document whose keys never change
+/// meaning, through which a client of any age finds the worlds that
+/// currently exist. A projection of the FORMAT REGISTRY, not of the
+/// journal (Р40): both numbers come from the generated `FormatId`,
+/// neither from a literal, and no clock enters — the handshake is a
+/// function of the registry and the binary, so two builds of one state
+/// produce the same bytes.
+///
+/// The degenerate first implementation (Р43, `##RISK-OVERENGINEERING`):
+/// one world, `path: "."`, every optional key absent. `vibe` is the
+/// handshake format's OWN version — a different family from the world's
+/// epoch (Р45), which is the catalog format family's number, read from
+/// `index-repomd` because `repomd.json` is the world's manifest; the
+/// epoch-agreement sentinel in vibe-wire holds that family to one value.
+fn write_handshake(data_dir: &Path) -> Result<()> {
+    let handshake = Handshake {
+        vibe: format!("hello/{}", FormatId::Handshake.epoch()),
+        worlds: vec![World {
+            epoch: FormatId::IndexRepomd.epoch(),
+            path: ".".to_string(),
+            sunset: None,
+        }],
+        min_client: None,
+        notice: None,
+        successor: None,
+    };
+    let mut bytes = serde_json::to_vec(&handshake)
+        .map_err(|e| Error::Malformed(format!("could not serialise the handshake: {e}")))?;
+    bytes.push(b'\n');
+    atomic_write(&data_dir.join("hello.json"), &bytes)
 }
 
 fn clear_by_name(data_dir: &Path) -> Result<()> {

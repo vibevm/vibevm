@@ -5449,8 +5449,8 @@
       "item_kind": "fn",
       "line": 36,
       "symbol": "vibe_index::server::build_app",
-      "end_line": 109,
-      "fingerprint": "tok1:f35f65c674ebbbb573ff64ea5ceb7360507b9d3eabe4397906f92b30e65c5e94"
+      "end_line": 112,
+      "fingerprint": "tok1:8963b44833310b622462fb6a6f60e857be42580db16aa7785569fef2ad666934"
     },
     {
       "crate_name": "vibe-index",
