@@ -8,6 +8,9 @@ use axum::response::{IntoResponse, Response};
 use crate::server::metrics as renderer;
 use crate::server::state::AppState;
 
+/// The counts are the WRITER's — everything the index HOLDS, including
+/// quarantined versions (R55.5): telemetry about contents, not an
+/// answer about a package — do not "fix" them to `usable_version_count`.
 pub async fn prometheus(State(state): State<Arc<AppState>>) -> Response {
     state.stats.note_request();
     let index = state.index.read().await;

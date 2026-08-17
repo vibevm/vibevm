@@ -19,7 +19,9 @@ use vibe_core::Group;
 use crate::error::Error;
 use crate::index::Index;
 use crate::index::memory::{WriteCtx, default_generator};
-use crate::index::quarantine::{usable_latest_stable, usable_versions};
+use crate::index::quarantine::{
+    Unavailable, unavailable_for, usable_latest_stable, usable_versions,
+};
 use crate::index::search;
 use crate::journal::{Event, JournalRecord, append, default_dir, project, replay};
 use crate::server::error::ApiError;
@@ -55,6 +57,10 @@ pub struct PackageRow {
     pub latest_stable: Option<Version>,
     pub versions: Vec<Version>,
     pub description: Option<String>,
+    /// Versions of this package this build refuses to act on — named,
+    /// not hidden (PROP-044 §4.5). Absent when there are none.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub unavailable: Vec<Unavailable>,
 }
 
 #[derive(Debug, Serialize)]
@@ -74,6 +80,10 @@ pub struct SearchHit {
     pub score: u32,
     pub matched_tokens: Vec<String>,
     pub description: Option<String>,
+    /// Versions of this hit's package this build refuses to act on —
+    /// named, not hidden (PROP-044 §4.5). Absent when there are none.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub unavailable: Vec<Unavailable>,
 }
 
 /// Parse a `{group}` path segment into a validated [`Group`]. A
@@ -110,12 +120,18 @@ pub async fn list_or_search(
             .take(limit)
             .map(|h| SearchHit {
                 kind: h.kind,
-                group: h.group,
-                name: h.name,
+                group: h.group.clone(),
+                name: h.name.clone(),
                 latest_stable: h.latest_stable,
                 score: h.score,
                 matched_tokens: h.matched_tokens,
                 description: h.description,
+                // The refusal rows live on the hit's PACKAGE (the hit
+                // names it), not on the scored version.
+                unavailable: index
+                    .get(&h.group, &h.name)
+                    .map(unavailable_for)
+                    .unwrap_or_default(),
             })
             .collect();
         let body = SearchResponse {
@@ -146,6 +162,7 @@ pub async fn list_or_search(
             description: usable_versions(p)
                 .next_back()
                 .and_then(|v| v.description.clone()),
+            unavailable: unavailable_for(p),
         })
         .collect();
     rows.sort_by(|a, b| a.group.cmp(&b.group).then(a.name.cmp(&b.name)));
@@ -180,6 +197,7 @@ pub async fn package_versions(
         name: pkg.name.clone(),
         latest_stable: usable_latest_stable(pkg).cloned(),
         versions: usable_versions(pkg).cloned().collect(),
+        unavailable: unavailable_for(pkg),
     }))
 }
 
@@ -191,6 +209,10 @@ pub struct PackageVersionsResponse {
     pub name: String,
     pub latest_stable: Option<Version>,
     pub versions: Vec<VersionEntry>,
+    /// Versions of this package this build refuses to act on — named,
+    /// not hidden (PROP-044 §4.5). Absent when there are none.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub unavailable: Vec<Unavailable>,
 }
 
 pub async fn single_version(
@@ -206,15 +228,26 @@ pub async fn single_version(
     let pkg = index
         .get(&group, &name)
         .ok_or_else(|| ApiError::not_found(format!("`{group}/{name}` is not in the index (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; fix: check the (group, name) identity, or publish the package first)")))?;
-    let entry = usable_versions(pkg)
-        .find(|e| e.version == v)
-        .ok_or_else(|| {
-            ApiError::not_found(format!(
-                "`{group}/{name}@{version_str}` is not in the index (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; fix: GET the package to list its versions, then request one that exists)"
-            ))
-        })?
-        .clone();
-    Ok(Json(entry))
+    let Some(entry) = usable_versions(pkg).find(|e| e.version == v) else {
+        // Not among the usable versions — but is it one this build
+        // REFUSES? A version that stands in the index yet cannot be
+        // acted on is named (R55.4: 404 stays, the BODY speaks), never
+        // folded into the same silence as a version that never existed.
+        if let Some(row) = unavailable_for(pkg).into_iter().find(|u| u.version == v) {
+            return Err(ApiError::unavailable(
+                format!(
+                    "`{group}/{name}@{version_str}` stands in the index, but this build \
+                     cannot act on it — {} (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http)",
+                    row.recipe
+                ),
+                row,
+            ));
+        }
+        return Err(ApiError::not_found(format!(
+            "`{group}/{name}@{version_str}` is not in the index (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; fix: GET the package to list its versions, then request one that exists)"
+        )));
+    };
+    Ok(Json(entry.clone()))
 }
 
 use axum::response::IntoResponse;

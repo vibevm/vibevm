@@ -7,6 +7,7 @@ use semver::Version;
 use serde::Serialize;
 use vibe_core::Group;
 
+use crate::index::quarantine::{self, Unavailable};
 use crate::index::search;
 use crate::server::error::ApiError;
 use crate::server::state::AppState;
@@ -18,6 +19,11 @@ pub struct Response {
     pub capability: String,
     pub hit_count: usize,
     pub hits: Vec<Hit>,
+    /// Unusable versions that WOULD have matched the requested
+    /// capability — named, not hidden (PROP-044 §4.5). Absent when
+    /// there are none.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub unavailable: Vec<Unavailable>,
 }
 
 #[derive(Serialize)]
@@ -36,6 +42,9 @@ pub async fn lookup(
     state.stats.note_request();
     let index = state.index.read().await;
     let entries = search::lookup_capability(&index, &capability);
+    let cap_norm = capability.trim().to_string();
+    let unavailable =
+        quarantine::refused_where(&index, |v| search::provides_capability(v, &cap_norm));
     let hits = entries
         .iter()
         .map(|e| Hit {
@@ -58,5 +67,6 @@ pub async fn lookup(
         capability,
         hit_count: hits.len(),
         hits,
+        unavailable,
     }))
 }

@@ -48,7 +48,8 @@ struct Row {
 pub fn run(args: Args) -> Result<()> {
     let index = Index::load_from(&args.data_dir)?;
     let entries = search::lookup_purl(&index, &args.purl);
-    let unavailable = unavailable_describing(&index, &args.purl);
+    let purl_norm = args.purl.trim().to_string();
+    let unavailable = quarantine::refused_where(&index, |v| search::describes_purl(v, &purl_norm));
     let rows: Vec<Row> = entries
         .iter()
         .map(|e| {
@@ -103,33 +104,4 @@ pub fn run(args: Args) -> Result<()> {
         }
     }
     Ok(())
-}
-
-/// The refusal pass: unusable versions that WOULD have matched the
-/// requested PURL. `search::lookup_purl` walks only the versions this
-/// build can act on (the answering default since F62A), so naming the
-/// refused ones takes a second pass over the RAW stored vector.
-///
-/// The pass lives in the verb, but the QUESTION it asks does not: both
-/// passes call `search::describes_purl`, so they cannot drift into
-/// answering different things about the same PURL.
-fn unavailable_describing(index: &Index, purl: &str) -> Vec<Unavailable> {
-    let q = purl.trim();
-    let mut out = Vec::new();
-    for pkg in index.by_pkgref.values() {
-        for v in &pkg.versions {
-            if quarantine::is_usable(v) || !search::describes_purl(v, q) {
-                continue;
-            }
-            let missing = quarantine::missing_capabilities(&v.must_understand);
-            out.push(Unavailable {
-                group: pkg.group.clone(),
-                name: pkg.name.clone(),
-                version: v.version.clone(),
-                recipe: quarantine::recipe_for(&missing),
-                missing,
-            });
-        }
-    }
-    out
 }

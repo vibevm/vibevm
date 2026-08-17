@@ -447,3 +447,11 @@ async fn unknown_group_in_url_yields_not_found() {
 }
 
 fn _silence_unused_pathbuf(_: PathBuf) {}
+
+// The `unavailable` surface guards (F62C) live out of line for the
+// 600-line file budget, by the crate's own idiom (`scanner_e2e.rs` →
+// `scanner_e2e/journal_form.rs`): the module-tree position is
+// unchanged and `use super::*` still reaches the fixtures — one
+// `entry` / `now` / `req` / `body_to_json` set, not a second copy.
+#[path = "server_e2e/unavailable.rs"]
+mod unavailable;

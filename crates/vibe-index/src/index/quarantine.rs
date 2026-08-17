@@ -135,17 +135,50 @@ pub fn unavailable_for(pkg: &PackageEntry) -> Vec<Unavailable> {
     pkg.versions
         .iter()
         .filter(|v| !is_usable(v))
-        .map(|v| {
-            let missing = missing_capabilities(&v.must_understand);
-            Unavailable {
-                group: pkg.group.clone(),
-                name: pkg.name.clone(),
-                version: v.version.clone(),
-                recipe: recipe_for(&missing),
-                missing,
-            }
-        })
+        .map(|v| row_for(pkg, v))
         .collect()
+}
+
+/// Every version in `index` this build refuses AND `matches` selects —
+/// the refusal half of a lookup.
+///
+/// Its sibling [`unavailable_for`] answers about ONE package; this one
+/// answers a QUERY. Four surfaces need exactly this walk — the
+/// `capabilities` and `purls` verbs, and their two HTTP twins — because
+/// a lookup that hides what it refused is the silence this phase
+/// exists to end, and the refused set is not reachable through the
+/// usable-side lookup.
+///
+/// `matches` is the caller's, and it is deliberately the SAME function
+/// the usable-side lookup asks (`search::provides_capability` /
+/// `search::describes_purl`), so the two halves of one answer cannot
+/// drift into selecting different things. One walk with four callers
+/// rather than four copies of a loop that must agree forever: this
+/// tree has already paid twice for copies that agreed by accident.
+pub fn refused_where(index: &Index, matches: impl Fn(&VersionEntry) -> bool) -> Vec<Unavailable> {
+    let mut out = Vec::new();
+    for pkg in index.by_pkgref.values() {
+        for v in &pkg.versions {
+            if is_usable(v) || !matches(v) {
+                continue;
+            }
+            out.push(row_for(pkg, v));
+        }
+    }
+    out
+}
+
+/// The one construction of an answer row, so a surface can never build
+/// a differently-shaped one.
+fn row_for(pkg: &PackageEntry, v: &VersionEntry) -> Unavailable {
+    let missing = missing_capabilities(&v.must_understand);
+    Unavailable {
+        group: pkg.group.clone(),
+        name: pkg.name.clone(),
+        version: v.version.clone(),
+        recipe: recipe_for(&missing),
+        missing,
+    }
 }
 
 #[cfg(test)]
