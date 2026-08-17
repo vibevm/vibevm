@@ -3001,6 +3001,16 @@ problem-details, различие машине нужно в теле, а сме
 
 ## 10. Приёмка всего ТЗ (прогоняется целиком, по порядку)
 
+**ПРОГНАНА ЦЕЛИКОМ 2026-08-17, после закрытия Ф6.2 — восемь шагов, все
+зелёные.** Числа прогона: панель `self-check: all green`, **53 шага**, реальный
+код выхода 0 (дважды — до и после); `check-codegen: clean`; детерминизм 3/3;
+`rebuild --check` — «byte-identical to its journal's projection (13 file(s))»;
+`wire-diff` — «1 corpus home(s) proven against their journals; no corpus bytes
+shifted vs the commit»; карантин 13 + 1; отказ 2 + 4 + 4; хэндшейк — оракул
+провода плюс 4 клиентских; `index_client` 23. Долг суда 0 неосуждённых /
+0 осиротевших; скан 281 файл, 13788 маркеров, 0 неразмеченных; `vibe check` —
+0 errors, 1 warning, 44 info.
+
 ```bash
 # 0. чистое дерево, панель зелёная до старта
 bash tools/self-check.sh ; echo "EXIT=$?"          # EXIT=0
@@ -3008,18 +3018,39 @@ bash tools/self-check.sh ; echo "EXIT=$?"          # EXIT=0
 cargo xtask check-codegen                           # exit 0
 # 2. детерминизм: двойная сборка
 cargo test -p vibe-index deterministic              # тесты Ф2 зелёные
-# 3. восстановимость
-cargo xtask rebuild --check                         # exit 0
+# 3. восстановимость (путь к корпусу — аргумент, не умолчание)
+cargo xtask rebuild --check formats/corpora/index/e1   # exit 0, 13 файлов
 # 4. корпуса и wire-diff
 cargo xtask wire-diff                               # exit 0 (без незакрытых diff)
-# 5. карантин и hello — e2e
-cargo test -p vibe-index quarantine hello           # зелёные
-cargo test -p vibe-registry index_client            # клиент: hello + fallback
+# 5. карантин, отказ и хэндшейк — e2e. ОДИН фильтр на прогон.
+cargo test -p vibe-index quarantine                 # предикат + загрузчик
+cargo test -p vibe-index unavailable                # ответ CLI и HTTP
+cargo test -p vibe-index handshake                  # оракул вечного файла
+cargo test -p vibe-registry index_client            # клиент: разбор ответов
+cargo test -p vibe-registry handshake               # клиент: hello + фолбэк
 # 6. рукописный провод запрещён
 #    (шаг внутри self-check; пробная вставка обязана уронить — см. Ф4.3)
 # 7. вся панель
 bash tools/self-check.sh ; echo "EXIT=$?"          # EXIT=0
 ```
+
+*Поправка к самому скрипту, найденная его первым полным прогоном
+2026-08-17 — и это дефект ИНСТРУМЕНТА ПРИЁМКИ, а не дерева.* Строка
+`cargo test -p vibe-index quarantine hello` была неверна дважды. **(i)** cargo
+берёт ОДИН фильтр: второе слово он молча трактует как часть первого, поэтому
+прогон означал не «два фильтра», а один, ничего не поймавший. **(ii)** Фильтр
+`hello` не ловит НИ ОДНОГО теста и не ловил никогда: оракул вечного файла
+назван `fully_populated_handshake_round_trips_through_the_generated_type` и
+`minimal_document_omits_every_optional_key`, то есть по слову `handshake`, а не
+`hello`. Приёмка прочиталась бы **зелёной над поверхностью, которую никто не
+прогонял** — ровно
+[`#fact-an-empty-output-is-a-claim-and-a-reproduction-script-is-a-fixture`](SUBAGENT-LAUNCHERS.md#facts):
+пустой вывод есть УТВЕРЖДЕНИЕ, и его меряют тем же мерилом, что и всякое
+другое. Поймано тем, что боссовому `EXIT=0` при пустом выводе был скормлен
+контрольный случай (`-- --list`), который инструмент обязан был показать.
+*Класс, шире случая:* всякая строка приёмки, чей ЗЕЛЁНЫЙ исход возможен при
+нуле прогнанных тестов, — не приёмка; прежде чем такую строку записать, её
+фильтру скармливают случай, который он обязан различить.
 
 **Предсказания (фальсифицируемы; проверяются в отчёте кампании):**
 P1 — повторный идентичный upsert не создаёт коммита (Ф2.3). P2 — каталог с
