@@ -12,7 +12,7 @@ use vibe_core::Group;
 
 use crate::error::{Error, Result};
 use crate::index::Index;
-use crate::index::quarantine::usable_latest_stable;
+use crate::index::quarantine::{Unavailable, unavailable_for, usable_latest_stable};
 use crate::lockfile;
 use crate::types::PackageKind;
 
@@ -44,6 +44,11 @@ struct Row {
     installed: Version,
     latest: Option<Version>,
     status: Status,
+    /// Versions of this name this build refuses to act on — the WHY
+    /// next to the row, not a status change: `unknown` stays `unknown`
+    /// (PROP-044 §4.5). Absent when there are none.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    unavailable: Vec<Unavailable>,
 }
 
 #[derive(Debug, Serialize, PartialEq, Eq, Clone, Copy)]
@@ -72,6 +77,12 @@ pub fn run(args: Args) -> Result<()> {
             }
             Some(_) => Status::UpToDate,
         };
+        // The refusal rows ride along; the STATUS above is untouched —
+        // `unknown` stays `unknown`, the row just says WHY now.
+        let unavailable = index
+            .get(&pkg.group, &pkg.name)
+            .map(unavailable_for)
+            .unwrap_or_default();
         rows.push(Row {
             kind: pkg.kind.clone(),
             group: pkg.group.clone(),
@@ -79,6 +90,7 @@ pub fn run(args: Args) -> Result<()> {
             installed: pkg.version.clone(),
             latest,
             status,
+            unavailable,
         });
     }
 
@@ -112,6 +124,15 @@ pub fn run(args: Args) -> Result<()> {
                 "  {} {}/{} {} {} {}",
                 arrow, row.group, row.name, row.installed, arrow, latest
             );
+            if !row.unavailable.is_empty() {
+                let listed = row
+                    .unavailable
+                    .iter()
+                    .map(|u| format!("{} (missing: {})", u.version, u.missing.join(",")))
+                    .collect::<Vec<_>>()
+                    .join("; ");
+                println!("    unavailable : {listed}");
+            }
         }
     }
     Ok(())

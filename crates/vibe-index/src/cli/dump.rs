@@ -8,7 +8,9 @@ use clap::{Parser, ValueEnum};
 
 use crate::error::{Error, Result};
 use crate::index::Index;
-use crate::index::quarantine::{usable_entries, usable_version_count};
+use crate::index::quarantine::{
+    Unavailable, unavailable_for, usable_entries, usable_version_count,
+};
 use crate::types::VersionEntry;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
@@ -39,6 +41,12 @@ pub fn run(args: Args) -> Result<()> {
     Ok(())
 }
 
+/// The JSONL stream stays one shape — a `VersionEntry` per line: a
+/// line of any other shape in this stream is a break in the wire, and
+/// `dump` is bulk export, not an answer by NAME, which is whom
+/// PROP-044's no-silence law addresses. The unusable set is visible in
+/// `--format json`, and the loader has already named every such
+/// version with a WARN line on stderr in this very run.
 fn dump_jsonl(index: &Index) -> Result<()> {
     for entry in usable_entries(index) {
         let line = serde_json::to_string(entry).map_err(|e| {
@@ -54,7 +62,9 @@ fn dump_jsonl(index: &Index) -> Result<()> {
 
 fn dump_json(index: &Index) -> Result<()> {
     let entries: Vec<&VersionEntry> = usable_entries(index).collect();
-    let payload = serde_json::json!({
+    let unavailable: Vec<Unavailable> =
+        index.by_pkgref.values().flat_map(unavailable_for).collect();
+    let mut payload = serde_json::json!({
         "schema_version": index.schema_version,
         "registry": index.registry,
         "registry_url": index.registry_url,
@@ -65,6 +75,15 @@ fn dump_json(index: &Index) -> Result<()> {
         "version_count": usable_version_count(index),
         "entries": entries,
     });
+    // The refusal rows ride NEXT TO the entries and vanish when empty —
+    // the same skip-empty rule every surface's `unavailable` field
+    // follows; `json!` cannot express it, so the field is inserted
+    // after the fact.
+    if !unavailable.is_empty()
+        && let Some(object) = payload.as_object_mut()
+    {
+        object.insert("unavailable".to_string(), serde_json::json!(unavailable));
+    }
     let pretty = serde_json::to_string_pretty(&payload)
         .map_err(|e| Error::Malformed(format!("could not serialise dump payload: {e}")))?;
     println!("{pretty}");

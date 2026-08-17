@@ -11,7 +11,9 @@ use vibe_core::Group;
 
 use crate::error::{Error, Result};
 use crate::index::Index;
-use crate::index::quarantine::{usable_latest_stable, usable_versions};
+use crate::index::quarantine::{
+    Unavailable, unavailable_for, usable_latest_stable, usable_versions,
+};
 use crate::types::{PackageEntry, VersionEntry};
 
 #[derive(Debug, Parser)]
@@ -39,6 +41,8 @@ struct GetEnvelope<'a> {
     group: &'a Group,
     name: &'a str,
     versions: Vec<&'a VersionEntry>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    unavailable: Vec<Unavailable>,
 }
 
 pub fn run(args: Args) -> Result<()> {
@@ -51,6 +55,7 @@ pub fn run(args: Args) -> Result<()> {
                 group: &args.group,
                 name: &args.name,
                 versions: vec![],
+                unavailable: vec![],
             };
             println!(
                 "{}",
@@ -65,18 +70,30 @@ pub fn run(args: Args) -> Result<()> {
         )));
     };
 
-    let versions: Vec<&VersionEntry> = match &args.version {
-        Some(v) => {
-            let req: semver::Version = v.parse().map_err(|e| {
-                Error::InvalidInput(format!("`--version {v}` is not valid semver: {e}"))
-            })?;
-            usable_versions(pkg)
-                .filter(|ve| ve.version == req)
-                .collect()
-        }
+    let req: Option<semver::Version> = match &args.version {
+        Some(v) => Some(v.parse().map_err(|e| {
+            Error::InvalidInput(format!("`--version {v}` is not valid semver: {e}"))
+        })?),
+        None => None,
+    };
+    let versions: Vec<&VersionEntry> = match &req {
+        Some(req) => usable_versions(pkg)
+            .filter(|ve| ve.version == *req)
+            .collect(),
         None => usable_versions(pkg).collect(),
     };
-    if versions.is_empty() {
+    // The refusal rows: every version this build cannot act on, narrowed
+    // to the ask when the ask named one version.
+    let mut unavailable = unavailable_for(pkg);
+    if let Some(req) = &req {
+        unavailable.retain(|u| &u.version == req);
+    }
+
+    if versions.is_empty() && unavailable.is_empty() {
+        // Nothing usable and nothing refused: the ask named a version
+        // this index does not hold at all (or the package row carries
+        // no versions). The honest `found:false` / error — no version
+        // exists to speak about, so `unavailable` stays silent too.
         if args.json {
             let env = GetEnvelope {
                 command: "get",
@@ -84,6 +101,7 @@ pub fn run(args: Args) -> Result<()> {
                 group: &args.group,
                 name: &args.name,
                 versions,
+                unavailable,
             };
             println!(
                 "{}",
@@ -96,17 +114,25 @@ pub fn run(args: Args) -> Result<()> {
             "package `{}/{}` has no version `{}` in the index",
             args.group,
             args.name,
-            args.version.unwrap()
+            req.as_ref().map(|v| v.to_string()).unwrap_or_default()
         )));
     }
 
+    // `found` keeps its meaning — the `(group, name)` identity STANDS
+    // in the index: `true` for a whole-package ask even when every
+    // version is refused (the refusal is named beside it, not hidden
+    // behind a `false`). A specific `--version` ask stays `false` when
+    // that version was not SERVED — the asked-for fact did not come
+    // back, `unavailable` says why.
+    let found = req.is_none() || !versions.is_empty();
     if args.json {
         let env = GetEnvelope {
             command: "get",
-            found: true,
+            found,
             group: &args.group,
             name: &args.name,
             versions,
+            unavailable,
         };
         println!(
             "{}",
@@ -114,12 +140,12 @@ pub fn run(args: Args) -> Result<()> {
                 .map_err(|e| Error::Malformed(format!("envelope: {e}")))?
         );
     } else {
-        render_text(pkg, &versions);
+        render_text(pkg, &versions, &unavailable);
     }
     Ok(())
 }
 
-fn render_text(pkg: &PackageEntry, versions: &[&VersionEntry]) {
+fn render_text(pkg: &PackageEntry, versions: &[&VersionEntry], unavailable: &[Unavailable]) {
     println!("group         : {}", pkg.group);
     println!("name          : {}", pkg.name);
     if let Some(kind) = usable_versions(pkg).next().map(|v| &v.kind) {
@@ -140,5 +166,12 @@ fn render_text(pkg: &PackageEntry, versions: &[&VersionEntry]) {
         }
         println!("    content_hash: {}", v.content_hash);
         println!("    source_url  : {}", v.source_url);
+    }
+    if !unavailable.is_empty() {
+        println!("unavailable   : {}", unavailable.len());
+        for u in unavailable {
+            println!("  - {}  missing: {}", u.version, u.missing.join(","));
+            println!("    {}", u.recipe);
+        }
     }
 }

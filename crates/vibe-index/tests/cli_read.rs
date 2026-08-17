@@ -429,74 +429,11 @@ fn quarantine_version_in_catalog(data: &Path, name: &str, version: &str) {
     std::fs::write(&file, serde_json::to_vec(&root).unwrap()).unwrap();
 }
 
-/// The F62A surface guard: since the loader KEEPS quarantined versions
-/// in the index, the only thing standing between them and the answer
-/// is the `quarantine::usable_*` accessors. This test pins the
-/// observable behaviour they must preserve: `get` answers a catalog
-/// carrying an unusable version EXACTLY as it answered when the
-/// loader used to drop the version — the version is absent from
-/// `versions`, `found:false` for a name whose every version is
-/// quarantined, byte-shaped like a name that never existed. Silence
-/// stays silence; the next step (speaking `unavailable`) is not this
-/// one.
-#[test]
-fn get_stays_silent_about_a_quarantined_version() {
-    let Some((_work, data)) = populated_index() else {
-        return;
-    };
-    // wal's ONLY version becomes unusable; rust keeps 0.1.0 usable and
-    // loses 0.2.0 to quarantine.
-    quarantine_version_in_catalog(&data, "wal", "0.1.0");
-    quarantine_version_in_catalog(&data, "rust", "0.2.0");
-
-    // A name whose every version is quarantined answers exactly like a
-    // name that never existed: found:false, versions:[].
-    let out = cmd()
-        .args(["get", data.to_str().unwrap(), "org.vibevm", "wal", "--json"])
-        .assert()
-        .success();
-    let stdout = String::from_utf8(out.get_output().stdout.clone()).unwrap();
-    let env: serde_json::Value = serde_json::from_str(&stdout).unwrap();
-    assert_eq!(env["found"], false);
-    assert_eq!(env["versions"].as_array().unwrap().len(), 0);
-
-    // The mixed package still answers, with only its usable version.
-    let out = cmd()
-        .args([
-            "get",
-            data.to_str().unwrap(),
-            "org.vibevm",
-            "rust",
-            "--json",
-        ])
-        .assert()
-        .success();
-    let stdout = String::from_utf8(out.get_output().stdout.clone()).unwrap();
-    let env: serde_json::Value = serde_json::from_str(&stdout).unwrap();
-    assert_eq!(env["found"], true);
-    let versions: Vec<&str> = env["versions"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .map(|v| v["version"].as_str().unwrap())
-        .collect();
-    assert_eq!(versions, vec!["0.1.0"]);
-
-    // And asking for the quarantined version by name finds nothing.
-    let out = cmd()
-        .args([
-            "get",
-            data.to_str().unwrap(),
-            "org.vibevm",
-            "rust",
-            "--version",
-            "0.2.0",
-            "--json",
-        ])
-        .assert()
-        .success();
-    let stdout = String::from_utf8(out.get_output().stdout.clone()).unwrap();
-    let env: serde_json::Value = serde_json::from_str(&stdout).unwrap();
-    assert_eq!(env["found"], false);
-    assert_eq!(env["versions"].as_array().unwrap().len(), 0);
-}
+// The `unavailable` surface guards (F62B) live out of line for the
+// 600-line file budget, by the crate's own idiom (`scanner_e2e.rs` →
+// `scanner_e2e/journal_form.rs`): the module-tree position is
+// unchanged and `use super::*` still reaches the fixtures — one
+// `cmd` / `populated_index` / `quarantine_version_in_catalog` set,
+// not a second copy.
+#[path = "cli_read/unavailable.rs"]
+mod unavailable;

@@ -121,17 +121,28 @@ pub fn lookup_capability<'a>(index: &'a Index, capability: &str) -> Vec<&'a Vers
     let mut out = Vec::new();
     for pkg in index.by_pkgref.values() {
         for v in usable_versions(pkg) {
-            if v.provides.as_ref().is_some_and(|p| {
-                p.capabilities
-                    .iter()
-                    .any(|c| capability_matches(c, cap_norm))
-            }) {
+            if provides_capability(v, cap_norm) {
                 out.push(v);
             }
         }
     }
     out.sort_by(|a, b| a.sort_key().cmp(&b.sort_key()));
     out
+}
+
+/// Does `entry` advertise the capability `query`?
+///
+/// One home for the rule, because two passes ask it and they must not
+/// disagree: this module's lookup walks the versions this build CAN
+/// act on, while the `capabilities` verb makes a second pass over the
+/// ones it cannot, to name them instead of hiding them (PROP-044
+/// §4.5). Two copies of a match predicate agree by accident until the
+/// day they do not — the defect this tree already paid for once (B7).
+pub(crate) fn provides_capability(entry: &VersionEntry, query: &str) -> bool {
+    entry
+        .provides
+        .as_ref()
+        .is_some_and(|p| p.capabilities.iter().any(|c| capability_matches(c, query)))
 }
 
 fn capability_matches(advertised: &str, query: &str) -> bool {
@@ -150,18 +161,27 @@ pub fn lookup_purl<'a>(index: &'a Index, purl: &str) -> Vec<&'a VersionEntry> {
     let q = purl.trim();
     for pkg in index.by_pkgref.values() {
         for v in usable_versions(pkg) {
-            let pkg_match = v.describes.as_deref() == Some(q);
-            let subskill_match = v
-                .subskills
-                .iter()
-                .any(|s| s.describes.as_deref() == Some(q));
-            if pkg_match || subskill_match {
+            if describes_purl(v, q) {
                 out.push(v);
             }
         }
     }
     out.sort_by(|a, b| a.sort_key().cmp(&b.sort_key()));
     out
+}
+
+/// Does `entry` bind the PURL `query` — as the package itself, or
+/// through one of its subskills?
+///
+/// Named for the same reason as [`provides_capability`]: the `purls`
+/// verb makes a second pass over the versions this build cannot act
+/// on, and the two passes must ask ONE question.
+pub(crate) fn describes_purl(entry: &VersionEntry, query: &str) -> bool {
+    entry.describes.as_deref() == Some(query)
+        || entry
+            .subskills
+            .iter()
+            .any(|s| s.describes.as_deref() == Some(query))
 }
 
 fn collect_tokens_for(entry: &VersionEntry) -> Vec<String> {

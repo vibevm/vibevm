@@ -11,6 +11,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry");
 
 use semver::Version;
+use serde::Serialize;
 use vibe_core::Group;
 
 use crate::index::Index;
@@ -84,6 +85,67 @@ pub fn usable_entries(index: &Index) -> impl Iterator<Item = &VersionEntry> {
 /// How many entries of `index` this build can act on.
 pub fn usable_version_count(index: &Index) -> u32 {
     usable_entries(index).count() as u32
+}
+
+/// One version an answering surface refused to serve, and why.
+///
+/// The shape EVERY surface uses. It carries the full coordinate even
+/// where the envelope around it already names the package: a row that
+/// identifies itself survives being copied out of its envelope by a
+/// script, and a context-dependent one does not.
+#[derive(Debug, Clone, Serialize)]
+pub struct Unavailable {
+    pub group: Group,
+    pub name: String,
+    pub version: Version,
+    pub missing: Vec<String>,
+    pub recipe: String,
+}
+
+/// The recipe an `unavailable` answer carries: what a person or a
+/// script does about a capability this build does not have.
+///
+/// One home, N surfaces — the text is built here and never written as
+/// a literal at a call site (PROP-044 §4.5 asks for a generated
+/// recipe, and a literal per surface is N texts that drift).
+///
+/// DEGENERATE BY MEASUREMENT, not by omission: `UNDERSTOOD` is empty,
+/// so every missing capability is one this build does not know, and
+/// there is no second class of recipe to write. The per-capability
+/// table this will grow into gets its first row from the first
+/// capability that lands — inventing rows for capabilities that do not
+/// exist would be machinery for a consumer that does not exist.
+pub fn recipe_for(missing: &[String]) -> String {
+    let caps = missing
+        .iter()
+        .map(|cap| format!("`{cap}`"))
+        .collect::<Vec<_>>()
+        .join(", ");
+    format!(
+        "this build does not understand {caps} (reader capabilities — \
+         spec://org.vibevm.core/vibevm/common/PROP-044#machinery); \
+         fix: update vibe-index to a build that names them, or ask for \
+         a version this build can act on"
+    )
+}
+
+/// Every version of `pkg` this build refuses, as answer rows.
+/// The complement of `usable_versions` over the same package.
+pub fn unavailable_for(pkg: &PackageEntry) -> Vec<Unavailable> {
+    pkg.versions
+        .iter()
+        .filter(|v| !is_usable(v))
+        .map(|v| {
+            let missing = missing_capabilities(&v.must_understand);
+            Unavailable {
+                group: pkg.group.clone(),
+                name: pkg.name.clone(),
+                version: v.version.clone(),
+                recipe: recipe_for(&missing),
+                missing,
+            }
+        })
+        .collect()
 }
 
 #[cfg(test)]
@@ -224,5 +286,87 @@ mod tests {
             walked,
             vec!["rust/1.0.0".to_string(), "wal/0.1.0".to_string()]
         );
+    }
+
+    /// The recipe names EVERY missing capability, in the order the
+    /// primitive listed them, and carries both parts — the explanation
+    /// with the PROP-044 anchor, and the `fix:` surface.
+    #[test]
+    fn recipe_names_every_capability_and_carries_both_parts() {
+        let recipe = recipe_for(&["a".into(), "b".into()]);
+        assert!(recipe.contains("`a`"), "recipe: {recipe}");
+        assert!(recipe.contains("`b`"), "recipe: {recipe}");
+        let a_first = recipe.find("`a`").unwrap() < recipe.find("`b`").unwrap();
+        assert!(a_first, "the primitive's order survives: {recipe}");
+        assert!(
+            recipe.contains(
+                "(reader capabilities — spec://org.vibevm.core/vibevm/common/PROP-044#machinery)"
+            ),
+            "recipe: {recipe}"
+        );
+        assert!(
+            recipe.starts_with("this build does not understand"),
+            "recipe: {recipe}"
+        );
+        assert!(
+            recipe.contains("fix: update vibe-index to a build that names them"),
+            "recipe: {recipe}"
+        );
+        assert!(
+            !recipe.contains("violates"),
+            "a refusal is legal — the accusative verb belongs to gates, not answers: {recipe}"
+        );
+    }
+
+    /// One capability and two produce different enumerations — the
+    /// recipe is built from the list, not a fixed sentence.
+    #[test]
+    fn recipe_distinguishes_one_capability_from_two() {
+        let one = recipe_for(&["a".into()]);
+        let two = recipe_for(&["a".into(), "b".into()]);
+        assert!(one.contains("`a`") && !one.contains("`b`"), "one: {one}");
+        assert!(two.contains("`a`") && two.contains("`b`"), "two: {two}");
+        assert_ne!(one, two);
+    }
+
+    /// `unavailable_for` is the EXACT complement of `usable_versions`
+    /// over the same package: lengths sum to the stored vector's, no
+    /// version appears on both sides, and each row carries the full
+    /// coordinate plus its own missing list and recipe.
+    #[test]
+    fn unavailable_for_is_the_exact_complement_of_usable_versions() {
+        let pkg = package(vec![
+            quarantined("wal", "0.1.0"),
+            entry("wal", "0.2.0"),
+            quarantined("wal", "0.3.0"),
+        ]);
+        let unavailable = unavailable_for(&pkg);
+        let usable: Vec<String> = usable_versions(&pkg)
+            .map(|v| v.version.to_string())
+            .collect();
+        assert_eq!(
+            unavailable.len() + usable.len(),
+            pkg.versions.len(),
+            "complement sizes must sum to the stored vector's"
+        );
+        let refused: Vec<String> = unavailable.iter().map(|u| u.version.to_string()).collect();
+        assert!(
+            refused.iter().all(|v| !usable.contains(v)),
+            "no version may be both usable and unavailable"
+        );
+        assert_eq!(refused, vec!["0.1.0".to_string(), "0.3.0".to_string()]);
+        let first = &unavailable[0];
+        assert_eq!(first.group.as_str(), "org.vibevm");
+        assert_eq!(first.name, "wal");
+        assert_eq!(first.missing, vec!["x".to_string()]);
+        assert_eq!(first.recipe, recipe_for(&["x".into()]));
+    }
+
+    /// A package with nothing quarantined answers with an empty vector
+    /// — surfaces skip the field/line entirely on this result.
+    #[test]
+    fn unavailable_for_is_empty_without_quarantine() {
+        let pkg = package(vec![entry("wal", "0.1.0"), entry("wal", "0.2.0")]);
+        assert!(unavailable_for(&pkg).is_empty());
     }
 }

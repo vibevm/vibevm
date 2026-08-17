@@ -9,6 +9,7 @@ use semver::Version;
 use serde::Serialize;
 
 use crate::error::{Error, Result};
+use crate::index::quarantine::{self, Unavailable};
 use crate::index::{Index, search};
 use crate::types::PackageKind;
 
@@ -28,6 +29,10 @@ struct Envelope {
     purl: String,
     hit_count: usize,
     hits: Vec<Row>,
+    /// Unusable versions that WOULD have matched the requested PURL —
+    /// named, not hidden (PROP-044 §4.5). Absent when there are none.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    unavailable: Vec<Unavailable>,
 }
 
 #[derive(Debug, Serialize)]
@@ -43,6 +48,7 @@ struct Row {
 pub fn run(args: Args) -> Result<()> {
     let index = Index::load_from(&args.data_dir)?;
     let entries = search::lookup_purl(&index, &args.purl);
+    let unavailable = unavailable_describing(&index, &args.purl);
     let rows: Vec<Row> = entries
         .iter()
         .map(|e| {
@@ -66,6 +72,7 @@ pub fn run(args: Args) -> Result<()> {
             purl: args.purl.clone(),
             hit_count: rows.len(),
             hits: rows,
+            unavailable,
         };
         println!(
             "{}",
@@ -81,6 +88,48 @@ pub fn run(args: Args) -> Result<()> {
                 r.kind, r.name, r.version, r.binding_site
             );
         }
+        if !unavailable.is_empty() {
+            println!("unavailable: {}", unavailable.len());
+            for u in &unavailable {
+                println!(
+                    "  - {}:{}@{}  missing: {}",
+                    u.group,
+                    u.name,
+                    u.version,
+                    u.missing.join(",")
+                );
+                println!("    {}", u.recipe);
+            }
+        }
     }
     Ok(())
+}
+
+/// The refusal pass: unusable versions that WOULD have matched the
+/// requested PURL. `search::lookup_purl` walks only the versions this
+/// build can act on (the answering default since F62A), so naming the
+/// refused ones takes a second pass over the RAW stored vector.
+///
+/// The pass lives in the verb, but the QUESTION it asks does not: both
+/// passes call `search::describes_purl`, so they cannot drift into
+/// answering different things about the same PURL.
+fn unavailable_describing(index: &Index, purl: &str) -> Vec<Unavailable> {
+    let q = purl.trim();
+    let mut out = Vec::new();
+    for pkg in index.by_pkgref.values() {
+        for v in &pkg.versions {
+            if quarantine::is_usable(v) || !search::describes_purl(v, q) {
+                continue;
+            }
+            let missing = quarantine::missing_capabilities(&v.must_understand);
+            out.push(Unavailable {
+                group: pkg.group.clone(),
+                name: pkg.name.clone(),
+                version: v.version.clone(),
+                recipe: quarantine::recipe_for(&missing),
+                missing,
+            });
+        }
+    }
+    out
 }

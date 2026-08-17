@@ -10,6 +10,7 @@ use serde::Serialize;
 
 use crate::cli::kinds;
 use crate::error::{Error, Result};
+use crate::index::quarantine::{Unavailable, unavailable_for};
 use crate::index::{Index, search};
 use crate::types::PackageKind;
 
@@ -49,6 +50,10 @@ struct HitRow {
     score: u32,
     matched_tokens: Vec<String>,
     description: Option<String>,
+    /// Versions of this hit's package this build refuses to act on —
+    /// named, not hidden (PROP-044 §4.5). Absent when there are none.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    unavailable: Vec<Unavailable>,
 }
 
 pub fn run(args: Args) -> Result<()> {
@@ -59,23 +64,31 @@ pub fn run(args: Args) -> Result<()> {
     };
     let hits = search::search(&index, &args.query, kind_filter);
     let limited: Vec<&search::SearchHit> = hits.iter().take(args.limit).collect();
+    // The refusal rows live on the hit's package, not on the scored
+    // version: a hit names a package, and the package's unusable
+    // versions are part of the honest answer about it.
+    let rows: Vec<HitRow> = limited
+        .iter()
+        .map(|h| HitRow {
+            kind: h.kind.clone(),
+            name: h.name.clone(),
+            latest_stable: h.latest_stable.clone(),
+            score: h.score,
+            matched_tokens: h.matched_tokens.clone(),
+            description: h.description.clone(),
+            unavailable: index
+                .get(&h.group, &h.name)
+                .map(unavailable_for)
+                .unwrap_or_default(),
+        })
+        .collect();
 
     if args.json {
         let env = Envelope {
             command: "search",
             query: args.query.clone(),
-            hit_count: limited.len(),
-            hits: limited
-                .iter()
-                .map(|h| HitRow {
-                    kind: h.kind.clone(),
-                    name: h.name.clone(),
-                    latest_stable: h.latest_stable.clone(),
-                    score: h.score,
-                    matched_tokens: h.matched_tokens.clone(),
-                    description: h.description.clone(),
-                })
-                .collect(),
+            hit_count: rows.len(),
+            hits: rows,
         };
         println!(
             "{}",
@@ -84,8 +97,8 @@ pub fn run(args: Args) -> Result<()> {
         );
     } else {
         println!("query     : {}", args.query);
-        println!("hits      : {}", limited.len());
-        for h in limited {
+        println!("hits      : {}", rows.len());
+        for h in &rows {
             print!("  {}:{}", h.kind, h.name);
             if let Some(latest) = &h.latest_stable {
                 print!(" @ {latest}");
@@ -93,6 +106,15 @@ pub fn run(args: Args) -> Result<()> {
             println!(" (score {})", h.score);
             if let Some(d) = &h.description {
                 println!("    {d}");
+            }
+            if !h.unavailable.is_empty() {
+                let listed = h
+                    .unavailable
+                    .iter()
+                    .map(|u| format!("{} (missing: {})", u.version, u.missing.join(",")))
+                    .collect::<Vec<_>>()
+                    .join("; ");
+                println!("    unavailable : {listed}");
             }
         }
     }

@@ -12,7 +12,9 @@ use vibe_core::Group;
 use crate::cli::kinds;
 use crate::error::{Error, Result};
 use crate::index::Index;
-use crate::index::quarantine::{usable_latest_stable, usable_versions};
+use crate::index::quarantine::{
+    Unavailable, unavailable_for, usable_latest_stable, usable_versions,
+};
 use crate::types::PackageKind;
 
 #[derive(Debug, Parser)]
@@ -58,6 +60,10 @@ struct PackageRow {
     versions: Vec<Version>,
     latest_stable: Option<Version>,
     description: Option<String>,
+    /// Versions of this package this build refuses to act on — named,
+    /// not hidden (PROP-044 §4.5). Absent when there are none.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    unavailable: Vec<Unavailable>,
 }
 
 pub fn run(args: Args) -> Result<()> {
@@ -85,6 +91,7 @@ pub fn run(args: Args) -> Result<()> {
                 versions: usable_versions(p).map(|v| v.version.clone()).collect(),
                 latest_stable: usable_latest_stable(p).cloned(),
                 description,
+                unavailable: unavailable_for(p),
             }
         })
         .collect();
@@ -126,6 +133,15 @@ pub fn run(args: Args) -> Result<()> {
             println!();
             if let Some(d) = &row.description {
                 println!("    {d}");
+            }
+            if !row.unavailable.is_empty() {
+                let listed = row
+                    .unavailable
+                    .iter()
+                    .map(|u| format!("{} (missing: {})", u.version, u.missing.join(",")))
+                    .collect::<Vec<_>>()
+                    .join("; ");
+                println!("    unavailable : {listed}");
             }
         }
     }
