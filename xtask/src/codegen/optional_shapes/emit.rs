@@ -293,12 +293,26 @@ fn classify_payload(
 
 /// The primitive payload types the pinned emission spells — the JTD
 /// `type` forms as jtd-codegen renders them.
+///
+/// The list is meant to be COMPLETE over those forms, and it had
+/// exactly one hole: JTD's `timestamp` renders as
+/// `DateTime<FixedOffset>`, and until a schema needed an OPTIONAL date
+/// no site ever asked. The two halves of this pass disagreed precisely
+/// there — the schema side classifies a `timestamp` member as a scalar
+/// (`ShapeClass::Scalar`), while this side had no class for its Rust
+/// spelling and refused rather than guess. A required date never
+/// reached here, because only an optional payload is reshaped.
+/// `chrono` is the pinned emission's spelling, not a choice of ours:
+/// the domain-types pass rewrites the alias afterwards (pass order is
+/// the law recorded in `postproc.rs`), so what this pass sees is always
+/// the raw `DateTime<FixedOffset>`.
 fn is_primitive(ty: &str) -> bool {
     matches!(
         ty,
         "String"
             | "bool"
             | "char"
+            | "DateTime<FixedOffset>"
             | "f32"
             | "f64"
             | "i8"

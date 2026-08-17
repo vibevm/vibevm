@@ -57,6 +57,19 @@ pub struct PackageEntry {
 pub type Version = String;
 "#;
 
+/// The ref-resolved DATE of the real `hello` output — the payload is
+/// the local alias the generator minted for a `timestamp` member. The
+/// form the tree carried nowhere until the handshake needed a world's
+/// sunset.
+const ALIAS_DATE: &str = r#"#[derive(Serialize, Deserialize)]
+pub struct World {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sunset: Option<Box<WorldSunset>>,
+}
+
+pub type WorldSunset = DateTime<FixedOffset>;
+"#;
+
 /// The required-nullable member of the real `list_report` output — no
 /// skip attribute, the generator's own wire for "always present,
 /// sometimes null".
@@ -196,6 +209,44 @@ pub struct PackageEntry {
 }
 
 pub type Version = String;
+"#
+    );
+    Ok(())
+}
+
+/// An OPTIONAL date — the form that had never reached this pass, and
+/// the one hole in its primitive list. The schema side always called a
+/// `timestamp` member a scalar; the Rust side knew every other `type`
+/// form's spelling and not this one, so the stitch refused rather than
+/// guessed and no schema in the tree could describe an optional date at
+/// all. A REQUIRED date never got here, because only an optional
+/// payload is reshaped — which is why the hole survived until the
+/// eternal handshake needed `worlds[].sunset`.
+#[test]
+fn an_optional_date_collapses_like_any_other_scalar() -> Result<()> {
+    let doc = json!({
+        "optionalProperties": {
+            "sunset": {
+                "ref": "world_sunset",
+                "metadata": { "x-default": null }
+            }
+        },
+        "definitions": {
+            "world_sunset": {
+                "metadata": { "x-rust-type": "chrono::DateTime<chrono::Utc>" },
+                "type": "timestamp"
+            }
+        }
+    });
+    assert_eq!(
+        apply(ALIAS_DATE, "hello/e1/hello/mod.rs", doc)?,
+        r#"#[derive(Serialize, Deserialize)]
+pub struct World {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub sunset: Option<WorldSunset>,
+}
+
+pub type WorldSunset = DateTime<FixedOffset>;
 "#
     );
     Ok(())
@@ -384,209 +435,5 @@ fn a_true_literal_refuses_like_any_other_named_default() -> Result<()> {
     Ok(())
 }
 
-/// A4.3's red: the schema describes two fields, the Rust carries one —
-/// the tally refuses, naming both counts.
-#[test]
-fn a_count_mismatch_refuses_with_both_numbers() -> Result<()> {
-    let doc = json!({
-        "optionalProperties": {
-            "superseded_by": {
-                "type": "string",
-                "metadata": { "x-default": null }
-            },
-            "license": {
-                "type": "string",
-                "metadata": { "x-default": null }
-            }
-        }
-    });
-    let err = apply(OPTIONAL_STRING, "by_name/mod.rs", doc)
-        .expect_err("one field in Rust against two sites in the schema");
-    let msg = err.to_string();
-    assert!(
-        msg.contains(
-            "describes 2 optional scalar / structure fields but the generated \
-             file carries 1"
-        ),
-        "names both counts: {msg}"
-    );
-    assert!(
-        msg.contains("cargo xtask codegen"),
-        "says what to do: {msg}"
-    );
-    Ok(())
-}
-
-/// A4.4's red: the schema keys `tombstone` as a structure, the field
-/// carries a scalar payload — the class disagrees between the sides.
-#[test]
-fn a_class_mismatch_between_the_sides_refuses() -> Result<()> {
-    let src = r#"#[derive(Serialize, Deserialize)]
-pub struct ByName {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub tombstone: Option<Box<String>>,
-}
-"#;
-    let doc = json!({
-        "optionalProperties": {
-            "tombstone": { "ref": "tombstone" }
-        },
-        "definitions": {
-            "tombstone": {
-                "properties": { "reason": { "type": "string" } }
-            }
-        }
-    });
-    let err = apply(src, "by_name/mod.rs", doc).expect_err("the class must agree from both sides");
-    let msg = err.to_string();
-    assert!(
-        msg.contains("the class disagrees between the sides"),
-        "names the disagreement: {msg}"
-    );
-    assert!(
-        msg.contains("keys `tombstone` as a structure"),
-        "names the schema's class: {msg}"
-    );
-    Ok(())
-}
-
-/// A payload the file declares as neither a `pub type` alias nor a
-/// `pub struct` — an optional vocabulary — has no shape rule; the schema
-/// here keys nothing, so the refusal must name the payload itself.
-#[test]
-fn an_undeclared_payload_type_refuses() -> Result<()> {
-    let src = r#"#[derive(Serialize, Deserialize)]
-pub struct Report {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub kind: Option<Box<PackageKind>>,
-}
-"#;
-    let err = apply(src, "report/mod.rs", json!({}))
-        .expect_err("an optional vocabulary has no shape rule");
-    assert!(
-        err.to_string().contains("`PackageKind`"),
-        "names the payload type: {err}"
-    );
-    Ok(())
-}
-
-/// The schema side of the same cut: an optional member resolving to a
-/// vocabulary enum refuses while the decisions are read.
-#[test]
-fn an_optional_vocabulary_member_refuses_on_the_schema_side() -> Result<()> {
-    let doc = json!({
-        "optionalProperties": {
-            "kind": { "ref": "package_kind" }
-        },
-        "definitions": {
-            "package_kind": { "enum": ["feat", "flow"] }
-        }
-    });
-    let err = shapes(doc).expect_err("an enum form is neither class");
-    let msg = err.to_string();
-    assert!(msg.contains("a vocabulary enum"), "names the form: {msg}");
-    assert!(
-        msg.contains("optionalProperties.kind"),
-        "names the site: {msg}"
-    );
-    Ok(())
-}
-
-/// An optional member that is also `nullable` refuses — no rule may be
-/// absent AND null at once, and no site of today's tree carries it.
-#[test]
-fn an_optional_member_with_nullable_refuses() -> Result<()> {
-    let doc = json!({
-        "optionalProperties": {
-            "label": { "type": "string", "nullable": true }
-        }
-    });
-    let err = shapes(doc).expect_err("absent-and-null is not a rule");
-    assert!(
-        err.to_string().contains("may be absent AND null at once"),
-        "names the combination: {err}"
-    );
-    Ok(())
-}
-
-/// A schema ruling a boolean site false-defaulted against a non-bool
-/// payload refuses: collapsing `Option<Box<String>>` to `bool` would
-/// hide a type disagreement behind a green run.
-#[test]
-fn a_false_default_against_a_non_bool_payload_refuses() -> Result<()> {
-    let src = r#"#[derive(Serialize, Deserialize)]
-pub struct ListEntry {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub overridden: Option<Box<String>>,
-}
-"#;
-    let doc = json!({
-        "optionalProperties": {
-            "overridden": {
-                "type": "boolean",
-                "metadata": { "x-default": false }
-            }
-        }
-    });
-    let err = apply(src, "list_report/mod.rs", doc)
-        .expect_err("a boolean ruling against a string payload");
-    assert!(
-        err.to_string().contains("collapsing a non-bool to `bool`"),
-        "names the disagreement: {err}"
-    );
-    Ok(())
-}
-
-/// A1's conflict: two sites sharing the (wire, class) key with
-/// DIFFERENT decisions refuse, the refusal naming the key and both.
-#[test]
-fn the_same_key_with_different_decisions_refuses() -> Result<()> {
-    let doc = json!({
-        "definitions": {
-            "left": {
-                "optionalProperties": {
-                    "flag": {
-                        "type": "boolean",
-                        "metadata": { "x-default": false }
-                    }
-                }
-            },
-            "right": {
-                "optionalProperties": {
-                    "flag": {
-                        "type": "string",
-                        "metadata": { "x-default": null }
-                    }
-                }
-            }
-        }
-    });
-    let err = shapes(doc).expect_err("one key cannot carry two shapes");
-    let msg = err.to_string();
-    assert!(msg.contains("`flag`"), "names the shared key: {msg}");
-    assert!(msg.contains("an Option value"), "names one decision: {msg}");
-    assert!(
-        msg.contains("a false-defaulted bool"),
-        "names the other decision: {msg}"
-    );
-    Ok(())
-}
-
-/// The real data, walked: the vocabulary home — wrapped as
-/// `definitions`, exactly where `Vocabularies::resolve` places every
-/// fragment — carries 22 sites this pass rules on (13 optional scalars
-/// and 9 optional structures) and two legal diamonds (`describes` and
-/// `description` each live in both `subskill_entry` and `version_entry`
-/// with the same decision), so the map holds one key per pair while the
-/// tally counts all four.
-#[test]
-fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
-    let home: Value = serde_json::from_str(include_str!("../../../../formats/vocabularies.json"))
-        .expect("the vocabulary home parses");
-    let doc_shapes = shapes(json!({ "definitions": home }))?;
-    assert_eq!(
-        doc_shapes.sites, 22,
-        "13 optional scalars + 9 optional structures"
-    );
-    Ok(())
-}
+#[path = "tests/stitch.rs"]
+mod stitch;
