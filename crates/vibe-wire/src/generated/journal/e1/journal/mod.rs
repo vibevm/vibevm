@@ -254,16 +254,22 @@ pub struct EventRemoved {
     pub name: String,
 
     /// Semantically optional, textually ALWAYS present: the Rust field is
-    /// `Option<Version>` with no `skip_serializing_if`, so the writer emits the
-    /// key for every removal — `"version": null` when the whole package goes,
-    /// never an absent key. JTD (RFC 8927) has no nullable type and no present-
-    /// but-null form, so `optionalProperties` is the nearest expressible claim
-    /// and the schema is WIDER than the type: it admits an absent key the
-    /// writer never writes, and a round-trip through the generated type drops
-    /// the null (its `Option` skips on `None`). Presence therefore lives in
-    /// Rust alone — the parity oracle exercises `Some`, the only value both
-    /// forms carry identically. Recorded, not resolved, same as the `renamed`
-    /// pair arity.
+    /// `Option<Version>` with no `skip_serializing_if`, so the writer emits
+    /// the key for every removal — `"version": null` when the whole package
+    /// goes, never an absent key. The reason first recorded here — that JTD
+    /// has no nullable form — is FALSE, and it was disproved by a sibling
+    /// schema in this very tree: RFC 8927 gives every schema a `nullable`
+    /// flag, and `schemas/list_report.jtd.json` uses it on `boot_snippet`,
+    /// where the pinned generator honours it by emitting an `Option` with no
+    /// skip attribute. The expressible form is therefore a REQUIRED `version`
+    /// carrying `"nullable": true`, which would make this schema describe
+    /// the writer exactly. It is not changed here because moving the field
+    /// between forms meets the transformation layer's required-nullable branch
+    /// and deserves its own step — filed as BACKLOG B-078 rather than done
+    /// in passing. Until then the schema stays WIDER than the type: it admits
+    /// an absent key the writer never writes, and a round-trip through the
+    /// generated type drops the null (its `Option` skips on `None`). The parity
+    /// oracle exercises `Some`, the only value both forms carry identically.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<Version>,
 }
