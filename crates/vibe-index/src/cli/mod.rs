@@ -5,7 +5,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
-use clap::{Parser, Subcommand};
+use clap::{Parser, Subcommand, ValueEnum};
 
 use crate::error::Result;
 
@@ -45,6 +45,39 @@ modes:
 
 Specification: spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005.";
 
+/// The operator's coarse dial for `vibe-index`'s one logging lever.
+///
+/// A closed set, not an `EnvFilter` directive string: the directive
+/// language belongs to `VIBE_LOG`, which stays the full-power lever, and a
+/// flag that also spoke it would be a second legal spelling of one thing.
+/// `off` is a member because `VIBE_LOG=off` is legal and a flag that cannot
+/// say what the variable can is an asymmetry nobody could explain.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
+#[value(rename_all = "lowercase")]
+pub enum LogLevel {
+    Off,
+    Error,
+    Warn,
+    Info,
+    Debug,
+    Trace,
+}
+
+impl LogLevel {
+    /// The `EnvFilter` directive this dial stands for — the exact string
+    /// written into `VIBE_LOG` before the subscriber reads it.
+    pub fn as_filter(self) -> &'static str {
+        match self {
+            LogLevel::Off => "off",
+            LogLevel::Error => "error",
+            LogLevel::Warn => "warn",
+            LogLevel::Info => "info",
+            LogLevel::Debug => "debug",
+            LogLevel::Trace => "trace",
+        }
+    }
+}
+
 #[derive(Debug, Parser)]
 #[command(
     name = "vibe-index",
@@ -53,6 +86,13 @@ Specification: spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005.";
     long_about = LONG_ABOUT,
 )]
 pub struct Cli {
+    /// Logging level for this run. Folds into the one lever `VIBE_LOG`,
+    /// which the subscriber reads exactly once at start-up; passing the
+    /// flag SETS that variable, so the process environment always
+    /// explains the output an operator sees.
+    #[arg(long, global = true, value_enum)]
+    pub log_level: Option<LogLevel>,
+
     #[command(subcommand)]
     pub command: Command,
 }
@@ -106,14 +146,10 @@ pub enum Command {
     Stop(stop::Args),
 }
 
-/// Parse `std::env::args` and dispatch the subcommand.
-pub fn run() -> Result<()> {
-    let cli = Cli::parse();
-    dispatch(cli.command)
-}
-
 /// Dispatcher exposed for in-process integration tests that build a
-/// `Command` value directly. Production callers go through [`run`].
+/// `Command` value directly. Production callers arrive from `main`:
+/// it parses `Cli`, folds `--log-level` into `VIBE_LOG`, installs the
+/// tracing subscriber, then hands `cli.command` here.
 pub fn dispatch(command: Command) -> Result<()> {
     match command {
         Command::Init(args) => init::run(args),
@@ -131,5 +167,55 @@ pub fn dispatch(command: Command) -> Result<()> {
         Command::Dump(args) => dump::run(args),
         Command::Serve(args) => serve::run(args),
         Command::Stop(args) => stop::run(args),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn every_dial_maps_to_its_own_filter_string() {
+        let all = [
+            (LogLevel::Off, "off"),
+            (LogLevel::Error, "error"),
+            (LogLevel::Warn, "warn"),
+            (LogLevel::Info, "info"),
+            (LogLevel::Debug, "debug"),
+            (LogLevel::Trace, "trace"),
+        ];
+        for (level, directive) in all {
+            assert_eq!(level.as_filter(), directive);
+        }
+        // Six dials, six distinct directives — the fold must not
+        // collapse two knobs onto one filter.
+        let mut directives: Vec<&str> = all.iter().map(|(l, _)| l.as_filter()).collect();
+        directives.sort_unstable();
+        directives.dedup();
+        assert_eq!(directives.len(), all.len());
+    }
+
+    #[test]
+    fn log_level_parses_before_the_subcommand() {
+        let cli = Cli::try_parse_from(["vibe-index", "--log-level", "debug", "dump", "/tmp/idx"])
+            .expect("the global flag must parse before the subcommand");
+        assert_eq!(cli.log_level, Some(LogLevel::Debug));
+    }
+
+    #[test]
+    fn log_level_parses_after_the_subcommand() {
+        // `global = true` is load-bearing: the operator's form
+        // `vibe-index <sub> … --log-level debug` must parse, and would
+        // be a clap parse error without it.
+        let cli = Cli::try_parse_from(["vibe-index", "dump", "/tmp/idx", "--log-level", "debug"])
+            .expect("the global flag must parse after the subcommand");
+        assert_eq!(cli.log_level, Some(LogLevel::Debug));
+    }
+
+    #[test]
+    fn absent_flag_leaves_the_lever_alone() {
+        let cli = Cli::try_parse_from(["vibe-index", "dump", "/tmp/idx"])
+            .expect("a plain invocation must parse");
+        assert_eq!(cli.log_level, None);
     }
 }

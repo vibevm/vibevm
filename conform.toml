@@ -97,6 +97,14 @@ env_roots = [
     "crates/vibe-core/src/settings.rs",
     "crates/vibe-settings/src/loader.rs",
     "crates/vibe-index/src/scanner/git_cli.rs",
+    # `vibe-index`'s composition root, for the same reason `vibe-cli`'s is
+    # here: it is the one place that resolves the logging lever. The global
+    # `--log-level` flag folds into `VIBE_LOG` by WRITING it at the top of
+    # main, so the tracing subscriber keeps reading exactly one place and the
+    # process environment stays the full truth about what an operator sees
+    # (PROP-044 build, decision Р51). The unsafe half of that write carries
+    # its own recorded deviation on the carrying fn.
+    "crates/vibe-index/src/main.rs",
     "crates/vibe-publish/src/post_hook.rs",
     "crates/vibe-publish/src/token.rs",
     "crates/vibe-registry/src/git_backend/shell.rs",

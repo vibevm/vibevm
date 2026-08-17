@@ -43,6 +43,28 @@ fn root_help_lists_every_subcommand() {
 }
 
 #[test]
+fn root_help_shows_the_global_log_level_flag() {
+    let out = cmd().arg("--help").assert().success();
+    let stdout = String::from_utf8(out.get_output().stdout.clone()).unwrap();
+    assert!(
+        stdout.contains("--log-level"),
+        "root --help is missing the global `--log-level` flag; output was:\n{stdout}"
+    );
+}
+
+#[test]
+fn log_level_flag_is_accepted_after_the_subcommand() {
+    // The operator's form is `vibe-index <sub> … --log-level off`;
+    // `global = true` on the argument is what makes that parse. The
+    // trailing `--help` keeps the subcommand side-effect free.
+    cmd()
+        .args(["dump", "--log-level", "off", "--help"])
+        .assert()
+        .success()
+        .stdout(predicate::str::is_empty().not());
+}
+
+#[test]
 fn version_flag_works() {
     cmd()
         .arg("--version")

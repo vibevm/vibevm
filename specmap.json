@@ -902,135 +902,135 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 90,
+      "line": 130,
       "symbol": "vibe-index add",
-      "end_line": 91,
+      "end_line": 131,
       "fingerprint": "tok1:da72f0df87568dbfdc20dc23f348ca10dd5c3edd8070fb00e6d0a05339bb3949"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 81,
+      "line": 121,
       "symbol": "vibe-index capabilities",
-      "end_line": 82,
+      "end_line": 122,
       "fingerprint": "tok1:2a0ccfd8c2352f7d0af00320840c63768ef4ba67efa8468a53527b2a8652f1f1"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 99,
+      "line": 139,
       "symbol": "vibe-index dump",
-      "end_line": 100,
+      "end_line": 140,
       "fingerprint": "tok1:a206c19f42df3685f2347e0b7b556424aa8fcdfd0f6ea78238fcfa19caf4b71b"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 72,
+      "line": 112,
       "symbol": "vibe-index get",
-      "end_line": 73,
+      "end_line": 113,
       "fingerprint": "tok1:db09ea8a2ebcecf4b80f67ce2ccd200ca08c2ce6cd4128c1f97e731894ddbb37"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 62,
+      "line": 102,
       "symbol": "vibe-index init",
-      "end_line": 63,
+      "end_line": 103,
       "fingerprint": "tok1:1124983beaa454c2a1802f6ec233ff28fd4c29870f8ae6030a61244e89f4e196"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 75,
+      "line": 115,
       "symbol": "vibe-index list",
-      "end_line": 76,
+      "end_line": 116,
       "fingerprint": "tok1:9154fe0c8dae8744613bf10d0e04c8c273fb4a0b13dc6cb7627dcb9761c18178"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 87,
+      "line": 127,
       "symbol": "vibe-index outdated",
-      "end_line": 88,
+      "end_line": 128,
       "fingerprint": "tok1:352b0138e98bfbd26ad7ff8b7fd06075b49e6781ba7111f692b661b5d6311912"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 84,
+      "line": 124,
       "symbol": "vibe-index purls",
-      "end_line": 85,
+      "end_line": 125,
       "fingerprint": "tok1:cf9d55fc3632a13692df67f6961ffba52eacfb5197f3934cdf2d9df0d0c8185e"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 65,
+      "line": 105,
       "symbol": "vibe-index reindex",
-      "end_line": 66,
+      "end_line": 106,
       "fingerprint": "tok1:da0a457f351bbd8c9f01d4110a41ffb3c3328beb5ebba047c9b5bd01d1d3f602"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 93,
+      "line": 133,
       "symbol": "vibe-index remove",
-      "end_line": 94,
+      "end_line": 134,
       "fingerprint": "tok1:58a468f20ed2e6eefc34d53b59c6162eb1ff219b64a66d2c0c82b9db48f95ac2"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 68,
+      "line": 108,
       "symbol": "vibe-index rescan-org",
-      "end_line": 70,
+      "end_line": 110,
       "fingerprint": "tok1:ec81197e317aac67c280474f180fd138183c14ddba479ae85541fc7c04e44f80"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 78,
+      "line": 118,
       "symbol": "vibe-index search",
-      "end_line": 79,
+      "end_line": 119,
       "fingerprint": "tok1:f7e0a5aab208c2f3943399c7fcfbab11c3fbc331efe3d097fcef328492902107"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 102,
+      "line": 142,
       "symbol": "vibe-index serve",
-      "end_line": 103,
+      "end_line": 143,
       "fingerprint": "tok1:14100f023aec73b166740c53afe37f35a9eccf0e1e2ea3b7c53dedfa3a05bc37"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 105,
+      "line": 145,
       "symbol": "vibe-index stop",
-      "end_line": 106,
+      "end_line": 146,
       "fingerprint": "tok1:2d355ea8ac47c7b746adac12c1c3a88e86c814177321bc8f581accbd6b389470"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 96,
+      "line": 136,
       "symbol": "vibe-index verify",
-      "end_line": 97,
+      "end_line": 137,
       "fingerprint": "tok1:f39c23737cc545cfeaae23c2f06e0824966ee59f1be4ac3f2df1b4021856d632"
     },
     {
@@ -4907,10 +4907,19 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/main.rs",
       "item_kind": "mod",
-      "line": 1,
+      "line": 2,
       "symbol": "vibe_index",
-      "end_line": 1,
+      "end_line": 2,
       "fingerprint": "tok1:1298ecd1f60d3e2836385e66aa6b2a02bb5a41fbfc527ec5573742758d45fb42"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/main.rs",
+      "item_kind": "fn",
+      "line": 26,
+      "symbol": "vibe_index::apply_log_level",
+      "end_line": 56,
+      "fingerprint": "tok1:fdc2000fe2b38186557d02305e580d4067b6195091c2c770df04d5a3cda3c7d5"
     },
     {
       "crate_name": "vibe-index",
@@ -13319,10 +13328,19 @@
     {
       "file": "crates/vibe-index/src/main.rs",
       "from_symbol": "vibe_index",
-      "line": 1,
+      "line": 2,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-index/src/main.rs",
+      "from_symbol": "vibe_index::apply_log_level",
+      "line": 31,
+      "provenance": "authored",
+      "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+      "verb": "deviates",
+      "reason": "unsafe-gate: the flag folds into the one lever by writing it, and the write runs at the very top of main — after the parse, before the subscriber, before the dispatcher and before any thread exists (`serve` boots its runtime far later); set_var's race is with concurrent readers, and none can be observing yet. The alternative composition — the flag OVERRIDING the variable in code — was rejected because it leaves an operator looking at a set VIBE_LOG that no longer explains the output"
     },
     {
       "file": "crates/vibe-index/src/cli/mod.rs",
