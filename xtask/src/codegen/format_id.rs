@@ -14,10 +14,11 @@ use anyhow::{Context, Result, anyhow, bail};
 /// One `[format.<id>]` record. The generated enum consumes `id`,
 /// `variant`, `epoch`, `recoverable` and `foreign_parsers`; `schema` is
 /// the strictness pass's key — the path whose generated output the
-/// record's `foreign_parsers` role rules (`strictness.rs`). `corpus` and
-/// `sunset` stay declarative in the TOML for later phases (golden
-/// corpora Ф5, the break window Ф5.3) and are not consumed here.
-pub(super) struct FormatEntry {
+/// record's `foreign_parsers` role rules (`strictness.rs`). `corpus` is
+/// `wire-diff`'s denominator — the golden-bytes home whose shift that
+/// verdict judges. `sunset` stays declarative in the TOML for later
+/// phases and is not consumed here.
+pub(crate) struct FormatEntry {
     /// The registry id, verbatim — what `FormatId::id()` returns, and
     /// the name the strictness map's refusals call the record by.
     pub(super) id: String,
@@ -31,14 +32,19 @@ pub(super) struct FormatEntry {
     /// has no generated output and no strictness policy; a path is what
     /// the pass keys its schema → role map by.
     pub(super) schema: String,
+    /// The record's golden-corpus home — a repo-relative path or
+    /// `"none"`. `"none"` has no corpus to prove; a path is what
+    /// `wire-diff` rebuilds and watches for byte shift.
+    pub(crate) corpus: String,
 }
 
 /// Parse `formats/REGISTRY.toml` into the reduced entries, in sorted id order
 /// (`toml::Value`'s table is a `BTreeMap`, so iteration is deterministic across
-/// platforms — `check-codegen` stays byte-stable). One loader, one truth: both
-/// readers of the registry — `emit_format_id` and the strictness pass — go
-/// through here, so a second parser can never disagree with the first.
-pub(super) fn load_format_registry(root: &Path) -> Result<Vec<FormatEntry>> {
+/// platforms — `check-codegen` stays byte-stable). One loader, one truth: every
+/// reader of the registry — `emit_format_id`, the strictness pass, and
+/// `wire-diff`'s corpus denominator — goes through here, so a second parser
+/// can never disagree with the first.
+pub(crate) fn load_format_registry(root: &Path) -> Result<Vec<FormatEntry>> {
     let path = root.join("formats/REGISTRY.toml");
     let text =
         std::fs::read_to_string(&path).with_context(|| format!("reading {}", path.display()))?;
@@ -61,6 +67,7 @@ pub(super) fn load_format_registry(root: &Path) -> Result<Vec<FormatEntry>> {
             );
         }
         let schema = require_str(entry, id, "schema", &path)?;
+        let corpus = require_str(entry, id, "corpus", &path)?;
         let variant = pascal_case(id).with_context(|| {
             format!(
                 "`{}`: id `{id}` is not a valid enum variant",
@@ -74,6 +81,7 @@ pub(super) fn load_format_registry(root: &Path) -> Result<Vec<FormatEntry>> {
             recoverable,
             foreign_parsers,
             schema,
+            corpus,
         });
     }
     Ok(entries)

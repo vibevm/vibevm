@@ -18,7 +18,9 @@ use anyhow::{Context, Result, bail};
 mod derive_floor;
 mod domain_types;
 mod empty_policy;
-mod format_id;
+// `wire-diff` reads the registry through this loader too (one loader,
+// one truth), so the module is crate-visible to it.
+pub(crate) mod format_id;
 mod layout;
 mod open_vocabulary;
 mod optional_shapes;

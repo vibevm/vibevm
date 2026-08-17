@@ -72,7 +72,7 @@ fn scratch_root(registry: &str, schemas: &[&str]) -> Result<TempDir> {
 /// One `[format.<id>]` record with every field the loader requires.
 fn record(id: &str, schema: &str, foreign_parsers: &str) -> String {
     format!(
-        "[format.{id}]\nepoch = 1\nschema = \"{schema}\"\nrecoverable = true\nforeign_parsers = \"{foreign_parsers}\"\n"
+        "[format.{id}]\nepoch = 1\nschema = \"{schema}\"\nrecoverable = true\nforeign_parsers = \"{foreign_parsers}\"\ncorpus = \"none\"\n"
     )
 }
 

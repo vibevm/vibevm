@@ -24,12 +24,6 @@
 //! second parser could disagree with the first, and the disagreement
 //! would surface as a gate forbidding what a report just promised.
 
-// Loaded one step ahead of its consumer: `wire-diff` (the next phase
-// step) is what calls `Epochs::load` outside the tests. Until it lands
-// nothing in the bin target reaches this module, so the bin build would
-// dead-code it; the allow retires together with that consumer.
-#![allow(dead_code)]
-
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, anyhow, bail};

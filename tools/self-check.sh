@@ -27,6 +27,12 @@
 #                                          needs the project-local
 #                                          jtd-codegen binary, installed per
 #                                          tool:org.vibevm.ai-native/jtd-codegen.
+#   6d. `cargo xtask wire-diff`           — the epoch verdict over the golden
+#                                          corpora: corpora re-proven against
+#                                          their journals, byte shift vs the
+#                                          commit judged by the EPOCHS.toml
+#                                          regime, so an unannounced wire
+#                                          break cannot land green.
 #   7. the core-ai-native package gate    — fmt + test + clippy on the
 #                                          AUTHORED neutral engine crates,
 #                                          which ship in their own excluded
@@ -482,6 +488,21 @@ run_step "cargo xtask check-codegen" cargo xtask check-codegen || OVERALL=$?
 # tag is an orphan and fails here rather than in a reader's confusion.
 # Regeneration is `cargo xtask specmap`.
 run_step "cargo xtask specmap --check" cargo xtask specmap --check || OVERALL=$?
+
+# 6d. The wire-diff verdict (PROP-044 §4.7 ##M-BREAK-WINDOW). The LAW this
+# step enforces: the gate does not forbid breaks — it makes an UNANNOUNCED
+# break impossible. Breaking in this project is lawful and cheap; breaking
+# unnoticed is not. The verb re-proves every registered golden corpus
+# against its journal (the rebuild projector, reused), asks git whether the
+# corpus bytes shifted vs the commit, and reads the regime out of
+# formats/EPOCHS.toml: pre-publication (public = false) a shift is green
+# but REPORTED — the step names what moved, so a green line is never
+# misread as "nothing changed"; a closed window rejects wire changes
+# outright; an open public window demands a break note added in the same
+# change (formats/breaks/NNN.md — git must see it as new, so an old note
+# never counts). Without this step the corpus and the flags were facts with
+# no verdict joining them: an unannounced break would land green.
+run_step "cargo xtask wire-diff" cargo xtask wire-diff || OVERALL=$?
 
 # 7. The AUTHORED neutral engines — conform-core, specmap-core, specmark,
 # specmark-grammar — ship in flow:org.vibevm.ai-native/core-ai-native as its OWN Cargo

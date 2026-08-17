@@ -18,6 +18,12 @@
 //!   byte-identical to the projection of its journal (PROP-044 §3):
 //!   reprojection into a scratch dir from the journal alone, then a
 //!   byte-compare over the writer's surface; non-zero exit on drift.
+//! - `wire-diff` — the epoch verdict over the golden corpora
+//!   (PROP-044 §4.7): re-proves each registered corpus against its
+//!   journal (the `rebuild` projector, reused), asks git whether the
+//!   corpus bytes shifted vs the commit, and reads the regime out of
+//!   `formats/EPOCHS.toml` — pre-publication it reports, a closed
+//!   window forbids, an open public window demands a fresh break note.
 //! - `test-gate` / `tripwire` / `trace` / `health` / `fast-loop` /
 //!   `codemod` — thin shims over the packaged `rust-ai-native-cli` library
 //!   (stack:org.vibevm.ai-native/rust-ai-native-lang, PROP-024): the drivers ship with
@@ -41,6 +47,7 @@ mod mirror;
 mod rebuild;
 mod specmap;
 mod sync_engines;
+mod wire_diff;
 
 use batch_review::{BatchReviewArgs, run_batch_review};
 use codegen::{run_check_codegen, run_codegen};
@@ -49,6 +56,7 @@ use mirror::run_mirror;
 use rebuild::run_rebuild;
 use specmap::run_specmap;
 use sync_engines::run_sync_engines;
+use wire_diff::run_wire_diff;
 
 #[derive(Parser, Debug)]
 #[command(
@@ -254,6 +262,26 @@ enum Cmd {
         /// `state/journal/` and the catalog files beside it.
         data_dir: PathBuf,
     },
+
+    /// The epoch verdict over the golden corpora (PROP-044 §4.7
+    /// `##M-BREAK-WINDOW` — the gate does not forbid breaks, it makes
+    /// an *unannounced* break impossible). For every
+    /// `formats/REGISTRY.toml` record whose `corpus` is not `"none"`,
+    /// re-proves the corpus is the byte-exact projection of its journal
+    /// (the `rebuild` projector, reused — one projector, one truth),
+    /// then asks git whether the corpus bytes shifted vs the commit
+    /// (`git diff --exit-code --name-only -- formats/corpora/`, the
+    /// `check-codegen` form), and reads the verdict regime out of
+    /// `formats/EPOCHS.toml` via `Epochs::load`. Pre-publication
+    /// (`public = false`) a shift is green but REPORTED — a break note
+    /// is optional until the owner declares the first public
+    /// presentation (D13). A closed window rejects changes under
+    /// `schemas/**` and `formats/**` outright. An open public window
+    /// demands a fresh break note under `formats/breaks/NNN.md` — one
+    /// git sees as added in this change (untracked or staged-add in
+    /// `git status --porcelain`), so an old note can never be credited.
+    /// Non-zero exit on every red verdict.
+    WireDiff,
 }
 
 #[derive(Subcommand, Debug)]
@@ -438,6 +466,7 @@ fn main() -> Result<()> {
         }
         Cmd::Mirror { check, from } => run_mirror(check, from.as_deref()),
         Cmd::Rebuild { check, data_dir } => run_rebuild(check, &data_dir),
+        Cmd::WireDiff => run_wire_diff(),
     }
 }
 
