@@ -1297,6 +1297,53 @@ side: while a worker holds a cargo lane, the boss's re-measurements must be
 box, and the panel's user-home tripwire has already fired once on exactly that
 kind of overlap (`#fact-the-panel-owns-the-user-home-for-its-whole-run`).
 
+@fact:fact-a-429-usage-limit-is-a-fourth-terminal-class-and-the-other-lane-has-its-own-quota
+**An account's usage limit is a FOURTH way a run ends, and unlike a 529 it
+does not clear by retrying (2026-08-17):** the `result` event arrives with
+`"terminal_reason":"api_error"` exactly as an overload does, but it carries
+`"api_error_status":429` and a message naming the window —
+«Usage limit reached for 5 hour. Your limit will reset at …». Read as a 529 it
+invites the retry that cannot work; read as a kill it invites the
+leave-the-survivor-alone protocol that does not apply. The tell is the same
+one grep plus the status: `grep -o '"api_error_status":[0-9]*'`, and eleven
+`{"subtype":"api_retry"}` events preceding it are the harness having already
+tried.
+
+**What it does NOT take with it: the other lane.** The two launchers hold
+separate tokens (`~/.vibe/zai.api.token` and `…token.2`), so their quotas are
+separate — a lane that is out until evening leaves the sibling lane fully
+alive, and one empty probe on it costs seconds to confirm
+(`claudez2 -p "Reply with exactly: PONG2"` → `terminal_reason: completed`).
+So the recovery move is not "wait five hours"; it is
+`#fact-a-dead-transport-reopens-the-calculus-it-does-not-reissue-the-packet`
+with one more option on the table.
+
+**And what it takes is the tail, exactly like a kill.** Measured here on the
+corpus step: the worker had built the fixture journal, the projected catalog
+and a 243-line test — everything except the verification the packet puts
+last. The catalog it left did NOT reproject (`files_count` 9 against the
+journal's 3), which is precisely the class of defect the missing final step
+exists to catch. **Read the worktree, then decide** — the work was worth
+keeping and the tail was worth taking back: on a warm host `target/` the
+boss's remaining job was three runs and two red proofs, while a fresh worker
+on the surviving lane would have started cold AND without the dead run's
+context (a different account is a different state dir, so `-c` reaches
+nothing).
+
+@fact:fact-a-corpus-is-regenerated-by-a-run-not-repaired-by-hand **When a
+committed fixture must BE the output of a function, regenerate it through
+that function — even when the diff is one field (2026-08-17):** the corpus's
+catalog differed from its journal's projection in a single `files_count`, and
+editing that number by hand would have produced the right bytes for the wrong
+reason — a catalog that happens to match rather than one the projection made.
+The move that keeps the property true: add a temporary `#[ignore]`d
+regenerator beside the comparison test, calling the SAME projection helper
+the test uses, run it explicitly, remove it. The proof then costs nothing to
+believe, because the bytes have exactly one origin. Sibling of
+`#fact-a-test-that-reddens-on-a-legitimate-change-is-re-aimed-not-satisfied`:
+there a test was re-aimed instead of satisfied, here a fixture was
+re-derived instead of patched.
+
 ## 9. What a clean fan-out looked like {#clean-fanout}
 
 @fact:fanout-first-pass-acceptance **Measured 2026-08-14 — three packets, two
