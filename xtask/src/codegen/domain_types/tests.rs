@@ -24,7 +24,12 @@ use crate::repo_root;
 /// Drive the production pipeline over a one-off emission and resolved
 /// document. The resolved file's stem names the root type the way
 /// jtd-codegen would: `holder.jtd.json` → `pub struct Holder`.
-fn through_pipeline(src: &str, doc: Value, root_stem: &str) -> Result<String> {
+///
+/// `pub(crate)` so the variant-naming suite beside it drives the same
+/// harness rather than a copy: two harnesses would drift, and a test
+/// that runs a different pipeline than production is exactly the
+/// fixture that cannot fail.
+pub(crate) fn through_pipeline(src: &str, doc: Value, root_stem: &str) -> Result<String> {
     let dir = tempfile::tempdir()?;
     let file = dir.path().join("mod.rs");
     std::fs::write(&file, src)?;

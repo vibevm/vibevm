@@ -8,14 +8,21 @@
 //! talking about. Nothing here touches Rust text; nothing in the parent
 //! reads a schema.
 
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 use anyhow::{Context, Result, bail};
 use serde_json::Value;
 
-/// One `x-rust-type` annotation the pass rules on: where it sits on
-/// the schema side, the name the generator emits for that definition,
-/// and the arm the definition's form decides.
+/// What one definition's naming annotations rule, gathered.
+///
+/// The two annotations are read INDEPENDENTLY, and that is deliberate:
+/// `x-rust-type` answers "what is this type called" and
+/// `x-rust-variants` answers "what are its variants called", so a
+/// definition may carry either, both, or neither. Requiring the first
+/// before reading the second would write today's tree — where the one
+/// definition needing variant names happens to name its type too — into
+/// the rule.
 pub(super) struct Ruling {
     /// The schema-side name for refusals: the `definitions` key, or
     /// `(the root)` for the document's root schema.
@@ -23,8 +30,20 @@ pub(super) struct Ruling {
     /// The name jtd-codegen derives from the schema's own file stem
     /// (the root) or from the definition's key — PascalCase of either.
     pub(super) emitted: String,
-    /// Which half of the declaration the annotation names.
-    pub(super) arm: Arm,
+    /// Which half of the declaration `x-rust-type` names, when the
+    /// definition carries it.
+    pub(super) arm: Option<Arm>,
+    /// `x-rust-variants`: wire value → the identifier the schema
+    /// chooses for the variant carrying it. Empty when the definition
+    /// carries no such annotation.
+    ///
+    /// Keyed by WIRE VALUE and never by the name the generator minted,
+    /// for the reason R16 gives about the whole layer: the minted name
+    /// is the generator's business (a PascalCase rule plus a collision
+    /// suffix), and a pass that keys on it re-implements the very rule
+    /// it exists to be independent of. The wire value is what both
+    /// sides carry verbatim.
+    pub(super) variants: BTreeMap<String, String>,
 }
 
 /// The arm a definition's JTD form puts its annotation on.
@@ -55,6 +74,23 @@ impl Keyword {
     }
 }
 
+/// Where a definition is declared, for a refusal to send its reader.
+///
+/// A definition reaches the generator either from the authored schema
+/// or from the one shared vocabulary document, substituted in — and the
+/// substitution records no provenance, so this pass cannot tell which.
+/// Naming only the schema would send an author to a file the annotation
+/// is not in, which is the same defect as a recipe that repairs the
+/// wrong thing; naming both is honest, and the definition's own key is
+/// the token to grep for.
+pub(super) fn declared_in(schema: &Path) -> String {
+    format!(
+        "{} (or `formats/vocabularies.json`, if the definition is a shared \
+         fragment substituted into it)",
+        schema.display()
+    )
+}
+
 /// The rulings of the document the generator read for one schema.
 pub(super) fn domain_rulings(resolved: &Path, schema: &Path) -> Result<Vec<Ruling>> {
     let text = std::fs::read_to_string(resolved)
@@ -69,26 +105,127 @@ pub(super) fn domain_rulings(resolved: &Path, schema: &Path) -> Result<Vec<Rulin
 /// so the tests drive the pure half without scratch files.
 fn rulings_from_doc(doc: &Value, root_stem: &str, schema: &Path) -> Result<Vec<Ruling>> {
     let mut rulings: Vec<Ruling> = Vec::new();
-    if let Some(annotation) = x_rust_type(doc, schema, "(the root)")? {
-        let arm = classify_arm(doc, "(the root)", &annotation, schema)?;
-        rulings.push(Ruling {
-            definition: "(the root)".to_string(),
-            emitted: pascal_case(root_stem),
-            arm,
-        });
+    if let Some(ruling) = ruling_for(doc, "(the root)", &pascal_case(root_stem), schema)? {
+        rulings.push(ruling);
     }
     let definitions = doc.get("definitions").and_then(Value::as_object);
     for (key, form) in definitions.into_iter().flatten() {
-        if let Some(annotation) = x_rust_type(form, schema, key)? {
-            let arm = classify_arm(form, key, &annotation, schema)?;
-            rulings.push(Ruling {
-                definition: key.clone(),
-                emitted: pascal_case(key),
-                arm,
-            });
+        if let Some(ruling) = ruling_for(form, key, &pascal_case(key), schema)? {
+            rulings.push(ruling);
         }
     }
     Ok(rulings)
+}
+
+/// Gather one definition's naming annotations, or `Ok(None)` when it
+/// carries neither — a definition the pass has no business with at all
+/// (`Entry` lives that way).
+fn ruling_for(
+    form: &Value,
+    definition: &str,
+    emitted: &str,
+    schema: &Path,
+) -> Result<Option<Ruling>> {
+    let arm = match x_rust_type(form, schema, definition)? {
+        Some(annotation) => Some(classify_arm(form, definition, &annotation, schema)?),
+        None => None,
+    };
+    let variants = x_rust_variants(form, schema, definition)?;
+    if arm.is_none() && variants.is_empty() {
+        return Ok(None);
+    }
+    Ok(Some(Ruling {
+        definition: definition.to_string(),
+        emitted: emitted.to_string(),
+        arm,
+        variants,
+    }))
+}
+
+/// The `metadata."x-rust-variants"` a node carries, validated against
+/// the definition's OWN wire values — a key naming a value the
+/// vocabulary does not have is a schema author's typo, and it is
+/// catchable here, before any Rust is read.
+fn x_rust_variants(
+    node: &Value,
+    schema: &Path,
+    definition: &str,
+) -> Result<BTreeMap<String, String>> {
+    let Some(found) = node.get("metadata").and_then(|m| m.get("x-rust-variants")) else {
+        return Ok(BTreeMap::new());
+    };
+    let Some(table) = found.as_object() else {
+        bail!(
+            "schema {}: the definition `{}` carries \
+             `metadata.\"x-rust-variants\"` = {found} — the annotation maps \
+             each wire value to the Rust identifier its variant should \
+             carry, so it must be an object.\n\
+             Fix: write it as {{\"<wire value>\": \"<Identifier>\"}}, then \
+             run `cargo xtask codegen`.",
+            declared_in(schema),
+            definition
+        );
+    };
+    let legal = wire_values(node);
+    if legal.is_empty() {
+        bail!(
+            "schema {}: the definition `{}` carries \
+             `metadata.\"x-rust-variants\"`, but its form has no variants — \
+             only an `enum` (whose values are the variants) or a \
+             `discriminator` (whose `mapping` keys are) can name them.\n\
+             Fix: drop the annotation, or give the definition a form that \
+             has variants, then run `cargo xtask codegen`.",
+            declared_in(schema),
+            definition
+        );
+    }
+    let mut chosen = BTreeMap::new();
+    for (wire, ident) in table {
+        if !legal.contains(wire.as_str()) {
+            let mut present: Vec<&str> = legal.iter().copied().collect();
+            present.sort_unstable();
+            bail!(
+                "schema {}: the definition `{}` names a Rust identifier for \
+                 the wire value `{wire}`, which this definition does not \
+                 have. Its values are: {}.\n\
+                 The annotation is keyed by WIRE VALUE — never by the name \
+                 the generator minted — so a key that is not a value of this \
+                 definition can never match anything.\n\
+                 Fix: correct the key, then run `cargo xtask codegen`.",
+                declared_in(schema),
+                definition,
+                present.join(", ")
+            );
+        }
+        let Value::String(ident) = ident else {
+            bail!(
+                "schema {}: the definition `{}` maps the wire value \
+                 `{wire}` to {ident} — a variant's Rust identifier is source \
+                 text spliced into the generated file, so it must be a \
+                 string.\n\
+                 Fix: quote the identifier, then run `cargo xtask codegen`.",
+                declared_in(schema),
+                definition
+            );
+        };
+        chosen.insert(wire.clone(), ident.clone());
+    }
+    Ok(chosen)
+}
+
+/// The wire values a definition's variants carry — an `enum`'s values or
+/// a `discriminator`'s mapping keys. Both forms have variants, and a
+/// rule that covered one of them would be a rule shaped by whichever
+/// form happened to need it first.
+fn wire_values(form: &Value) -> BTreeSet<&str> {
+    if let Some(values) = form.get("enum").and_then(Value::as_array) {
+        return values.iter().filter_map(Value::as_str).collect();
+    }
+    form.get("discriminator")
+        .and(form.get("mapping"))
+        .and_then(Value::as_object)
+        .map(|mapping| mapping.keys().map(String::as_str).collect())
+        .unwrap_or_default()
 }
 
 /// The `metadata."x-rust-type"` a node carries — `Ok(None)` when it
@@ -107,7 +244,7 @@ fn x_rust_type(node: &Value, schema: &Path, definition: &str) -> Result<Option<S
              Rust source text this pass splices into the generated file, so \
              it must be a string.\n\
              Fix: quote the annotation, then run `cargo xtask codegen`.",
-            schema.display(),
+            declared_in(schema),
             definition
         ),
     }
@@ -146,7 +283,7 @@ fn classify_arm(form: &Value, definition: &str, annotation: &str, schema: &Path)
          and refuses to guess.\n\
          Fix: give the definition one of those forms, or drop its \
          annotation, then run `cargo xtask codegen`.",
-        schema.display(),
+        declared_in(schema),
         definition
     );
 }

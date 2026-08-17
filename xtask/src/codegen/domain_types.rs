@@ -73,8 +73,10 @@ use std::path::Path;
 use anyhow::{Result, bail};
 
 mod rulings;
+mod variants;
 
-use rulings::{Arm, Keyword, Ruling, domain_rulings};
+use rulings::{Arm, Keyword, Ruling, declared_in, domain_rulings};
+use variants::rename_variants;
 
 /// The pass entry the driver calls: read the domain-type rulings off
 /// the document the generator read (`resolved` — the authored schema
@@ -153,7 +155,8 @@ fn apply_rulings(src: &str, file: &str, schema: &Path, rulings: &[Ruling]) -> Re
     }
     for ruling in rulings {
         match &ruling.arm {
-            Arm::RightSide(annotation) => {
+            None => {}
+            Some(Arm::RightSide(annotation)) => {
                 if !aliases.contains_key(ruling.emitted.as_str()) {
                     bail!(
                         "schema {}: the definition `{}` carries \
@@ -165,13 +168,13 @@ fn apply_rulings(src: &str, file: &str, schema: &Path, rulings: &[Ruling]) -> Re
                          Fix: restore the pinned jtd-codegen version, or \
                          teach `domain_types.rs` the new shape, then run \
                          `cargo xtask codegen`.",
-                        schema.display(),
+                        declared_in(schema),
                         ruling.definition,
                         ruling.emitted
                     );
                 }
             }
-            Arm::Name(annotation, keyword) => match decls.get(ruling.emitted.as_str()) {
+            Some(Arm::Name(annotation, keyword)) => match decls.get(ruling.emitted.as_str()) {
                 None => bail!(
                     "schema {}: the definition `{}` carries `x-rust-type` = \
                      `{annotation}` — the annotation names the emitted type, \
@@ -181,7 +184,7 @@ fn apply_rulings(src: &str, file: &str, schema: &Path, rulings: &[Ruling]) -> Re
                      Fix: restore the pinned jtd-codegen version, or teach \
                      `domain_types.rs` the new shape, then run \
                      `cargo xtask codegen`.",
-                    schema.display(),
+                    declared_in(schema),
                     ruling.definition,
                     keyword.as_str(),
                     ruling.emitted
@@ -195,7 +198,7 @@ fn apply_rulings(src: &str, file: &str, schema: &Path, rulings: &[Ruling]) -> Re
                      Fix: restore the pinned jtd-codegen version, or teach \
                      `domain_types.rs` the new shape, then run \
                      `cargo xtask codegen`.",
-                    schema.display(),
+                    declared_in(schema),
                     ruling.definition,
                     keyword.as_str(),
                     found.as_str(),
@@ -206,6 +209,15 @@ fn apply_rulings(src: &str, file: &str, schema: &Path, rulings: &[Ruling]) -> Re
         }
     }
 
+    // Phase 1b — variant names, applied inside their own declarations
+    // and nowhere else. It runs before the file-wide walk rather than
+    // inside it because the two rewrites have different SCOPES: a
+    // type's identifier is unique in its file, a variant's belongs to
+    // its enum, and mixing them would let a variant rename reach a
+    // same-named type elsewhere. Line count is preserved, so the
+    // indices phase 1 collected stay valid.
+    let src = &rename_variants(src, file, schema, rulings, &decls)?;
+
     // Phase 2 — substitute. The name arm renames whole tokens on every
     // line except the imports (a renamed type is declared in this file;
     // an import path names an external one); the right-side arm
@@ -214,7 +226,7 @@ fn apply_rulings(src: &str, file: &str, schema: &Path, rulings: &[Ruling]) -> Re
     let renames: BTreeMap<String, String> = rulings
         .iter()
         .filter_map(|ruling| match &ruling.arm {
-            Arm::Name(annotation, _) if *annotation != ruling.emitted => {
+            Some(Arm::Name(annotation, _)) if *annotation != ruling.emitted => {
                 Some((ruling.emitted.clone(), annotation.clone()))
             }
             _ => None,
@@ -223,7 +235,9 @@ fn apply_rulings(src: &str, file: &str, schema: &Path, rulings: &[Ruling]) -> Re
     let right_sides: BTreeMap<&str, &str> = rulings
         .iter()
         .filter_map(|ruling| match &ruling.arm {
-            Arm::RightSide(annotation) => Some((ruling.emitted.as_str(), annotation.as_str())),
+            Some(Arm::RightSide(annotation)) => {
+                Some((ruling.emitted.as_str(), annotation.as_str()))
+            }
             _ => None,
         })
         .collect();
