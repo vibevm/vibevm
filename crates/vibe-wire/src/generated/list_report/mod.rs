@@ -25,7 +25,7 @@ pub struct ListReport {
 pub struct ListEntry {
     /// Filename of the package's boot snippet under `spec/boot/`, or null if
     /// absent.
-    pub boot_snippet: Option<Box<String>>,
+    pub boot_snippet: Option<String>,
 
     pub content_hash: String,
 
@@ -43,23 +43,25 @@ pub struct ListEntry {
     pub version: String,
 
     /// True iff this package was resolved through a `[[override]]` entry in
-    /// `vibe.toml`.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub overridden: Option<Box<bool>>,
+    /// `vibe.toml`. PROP-044 §2b rules the boolean axis two-part with no third
+    /// state, so an absent key means `false` — exactly how the hand-written
+    /// twin already serialises it.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub overridden: bool,
 
     /// `[[registry]].name` from `vibe.toml` that served this package. Absent
     /// for `--registry <path>` and legacy installs.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub registry: Option<Box<String>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub registry: Option<String>,
 
     /// Commit hash the ref resolved to. Reserved for resolver-aware installs.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub resolved_commit: Option<Box<String>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub resolved_commit: Option<String>,
 
     /// Git ref the content was fetched at — typically `v<version>`. Absent for
     /// non-git sources.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub source_ref: Option<Box<String>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_ref: Option<String>,
 }
 
 /// Installable package kind (VIBEVM-SPEC §4.1). Open vocabulary: the register

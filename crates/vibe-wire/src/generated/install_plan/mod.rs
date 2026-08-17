@@ -40,6 +40,6 @@ pub struct PlanEntry {
 
     /// Filename of the boot snippet this package contributes, when one is
     /// present.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub boot_snippet: Option<Box<String>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub boot_snippet: Option<String>,
 }

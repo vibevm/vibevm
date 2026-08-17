@@ -14,7 +14,7 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "by_name",
-      "end_line": 81
+      "end_line": 83
     },
     {
       "crate_name": "<schema>",
@@ -22,15 +22,15 @@
       "item_kind": "schema-def",
       "line": 29,
       "symbol": "by_name::package_entry",
-      "end_line": 61
+      "end_line": 62
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/index/e1/by_name.jtd.json",
       "item_kind": "schema-def",
-      "line": 62,
+      "line": 63,
       "symbol": "by_name::tombstone",
-      "end_line": 79
+      "end_line": 81
     },
     {
       "crate_name": "<schema>",
@@ -86,7 +86,7 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "install_plan",
-      "end_line": 75
+      "end_line": 76
     },
     {
       "crate_name": "<schema>",
@@ -94,7 +94,7 @@
       "item_kind": "schema-def",
       "line": 29,
       "symbol": "install_plan::plan_entry",
-      "end_line": 73
+      "end_line": 74
     },
     {
       "crate_name": "<schema>",
@@ -118,7 +118,7 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "journal",
-      "end_line": 165
+      "end_line": 166
     },
     {
       "crate_name": "<schema>",
@@ -126,7 +126,7 @@
       "item_kind": "schema-def",
       "line": 25,
       "symbol": "journal::event",
-      "end_line": 163
+      "end_line": 164
     },
     {
       "crate_name": "<schema>",
@@ -134,7 +134,7 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "list_report",
-      "end_line": 101
+      "end_line": 105
     },
     {
       "crate_name": "<schema>",
@@ -142,7 +142,7 @@
       "item_kind": "schema-def",
       "line": 39,
       "symbol": "list_report::list_entry",
-      "end_line": 99
+      "end_line": 103
     },
     {
       "crate_name": "progress-core",

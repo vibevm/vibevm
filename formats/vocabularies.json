@@ -55,7 +55,8 @@
       "category": {
         "type": "string",
         "metadata": {
-          "description": "Ordering band for the computed boot sequence — `foundation` / `flow` / `stack` / `user-override`."
+          "description": "Ordering band for the computed boot sequence — `foundation` / `flow` / `stack` / `user-override`.",
+          "x-default": null
         }
       }
     }
@@ -67,7 +68,11 @@
     },
     "optionalProperties": {
       "min_vibe_version": {
-        "type": "string"
+        "type": "string",
+        "metadata": {
+          "description": "Reader floor; an absent key declares no floor.",
+          "x-default": null
+        }
       },
       "requires_kinds": {
         "elements": {
@@ -135,7 +140,11 @@
         }
       },
       "default": {
-        "type": "string"
+        "type": "string",
+        "metadata": {
+          "description": "Default locale; absent when the package declares none.",
+          "x-default": null
+        }
       }
     }
   },
@@ -222,10 +231,18 @@
     },
     "optionalProperties": {
       "describes": {
-        "type": "string"
+        "type": "string",
+        "metadata": {
+          "description": "The package this subskill describes; absent when it is not bound to one.",
+          "x-default": null
+        }
       },
       "description": {
-        "type": "string"
+        "type": "string",
+        "metadata": {
+          "description": "Human-readable summary; absent when the subskill carries none.",
+          "x-default": null
+        }
       },
       "channels": {
         "elements": {
@@ -257,7 +274,11 @@
     },
     "optionalProperties": {
       "commit": {
-        "type": "string"
+        "type": "string",
+        "metadata": {
+          "description": "Workspace HEAD the copy was generated from; absent for an uncommitted tree.",
+          "x-default": null
+        }
       }
     }
   },
@@ -323,13 +344,21 @@
     },
     "optionalProperties": {
       "resolved_commit": {
-        "type": "string"
+        "type": "string",
+        "metadata": {
+          "description": "Commit the ref resolved to at publish time; absent for non-git sources.",
+          "x-default": null
+        }
       },
       "workspace_origin": {
         "ref": "workspace_origin_entry"
       },
       "license": {
-        "type": "string"
+        "type": "string",
+        "metadata": {
+          "description": "SPDX expression; absent when the package declares none.",
+          "x-default": null
+        }
       },
       "authors": {
         "elements": {
@@ -340,10 +369,18 @@
         }
       },
       "description": {
-        "type": "string"
+        "type": "string",
+        "metadata": {
+          "description": "Human-readable summary; absent when the package declares none.",
+          "x-default": null
+        }
       },
       "homepage": {
-        "type": "string"
+        "type": "string",
+        "metadata": {
+          "description": "Project URL; absent when the package declares none.",
+          "x-default": null
+        }
       },
       "keywords": {
         "elements": {
@@ -354,7 +391,11 @@
         }
       },
       "describes": {
-        "type": "string"
+        "type": "string",
+        "metadata": {
+          "description": "PURL of the package this record describes; absent when unbound.",
+          "x-default": null
+        }
       },
       "compatibility": {
         "ref": "compatibility_entry"

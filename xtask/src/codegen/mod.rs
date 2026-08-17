@@ -19,6 +19,7 @@ mod empty_policy;
 mod format_id;
 mod layout;
 mod open_vocabulary;
+mod optional_shapes;
 mod ordered_maps;
 mod postproc;
 mod snake_case;
@@ -232,12 +233,14 @@ fn generate_into(
         // identifiers become snake_case with the identity renames
         // dropped, then wire maps become ordered `BTreeMap`s, then
         // optional collections collapse per the schema's `x-empty`, then
+        // optional scalars and structures lose their `Box` per the
+        // schema's `x-default` (and its two Box-free defaults), then
         // the vocabularies open per the schema's `x-vocabulary`. The pass
         // order is a rule, not a taste: boxing, snake-casing,
-        // map-ordering, and empty-policy are keyed to the pinned emission
-        // shape and run while the file is still that emission; opening
-        // then writes hand-rolled impls into it (the full rule lives in
-        // `postproc`'s docs).
+        // map-ordering, empty-policy, and optional-shapes are keyed to
+        // the pinned emission shape and run while the file is still that
+        // emission; opening then writes hand-rolled impls into it (the
+        // full rule lives in `postproc`'s docs).
         if owner == FormatOwner::Ours {
             rewrite_generated(&sub_out.join("mod.rs"), &resolved, schema)?;
         }

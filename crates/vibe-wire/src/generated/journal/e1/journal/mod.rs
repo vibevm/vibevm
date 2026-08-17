@@ -32,16 +32,17 @@ pub struct BootSnippetEntry {
 
     /// Ordering band for the computed boot sequence — `foundation` / `flow` /
     /// `stack` / `user-override`.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub category: Option<Box<String>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub category: Option<String>,
 }
 
 /// Compatibility projection: the reader floor and the kinds this record
 /// requires.
 #[derive(Serialize, Deserialize)]
 pub struct CompatibilityEntry {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub min_vibe_version: Option<Box<String>>,
+    /// Reader floor; an absent key declares no floor.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub min_vibe_version: Option<String>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub requires_kinds: Vec<PackageKind>,
@@ -263,8 +264,8 @@ pub struct EventRemoved {
     /// Rust alone — the parity oracle exercises `Some`, the only value both
     /// forms carry identically. Recorded, not resolved, same as the `renamed`
     /// pair arity.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub version: Option<Box<Version>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub version: Option<Version>,
 }
 
 /// A package rename: `from` → `to`, each a `(group, name)` pair.
@@ -326,8 +327,9 @@ pub struct I18nEntry {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub available: Vec<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub default: Option<Box<String>>,
+    /// Default locale; absent when the package declares none.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub default: Option<String>,
 }
 
 /// Repository naming convention mapping a pkgref to a repo name (PROP-
@@ -449,11 +451,13 @@ pub struct SubskillEntry {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub channels: Vec<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub describes: Option<Box<String>>,
+    /// The package this subskill describes; absent when it is not bound to one.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub describes: Option<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<Box<String>>,
+    /// Human-readable summary; absent when the subskill carries none.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
 }
 
 /// RFC 3339 timestamp — `chrono::DateTime<Utc>` in code.
@@ -495,65 +499,70 @@ pub struct VersionEntry {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub authors: Vec<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub boot_snippet: Option<Box<BootSnippetEntry>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub boot_snippet: Option<BootSnippetEntry>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub compatibility: Option<Box<CompatibilityEntry>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub compatibility: Option<CompatibilityEntry>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub conflicts: Option<Box<ConflictsEntry>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub conflicts: Option<ConflictsEntry>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub describes: Option<Box<String>>,
+    /// PURL of the package this record describes; absent when unbound.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub describes: Option<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<Box<String>>,
+    /// Human-readable summary; absent when the package declares none.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub features: Option<Box<FeaturesEntry>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub features: Option<FeaturesEntry>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub frozen: Option<Box<bool>>,
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub frozen: bool,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub homepage: Option<Box<String>>,
+    /// Project URL; absent when the package declares none.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub homepage: Option<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub i18n: Option<Box<I18nEntry>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub i18n: Option<I18nEntry>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub keywords: Vec<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub license: Option<Box<String>>,
+    /// SPDX expression; absent when the package declares none.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub license: Option<String>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub must_understand: Vec<String>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub obsoletes: Option<Box<ObsoletesEntry>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub obsoletes: Option<ObsoletesEntry>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub provides: Option<Box<ProvidesEntry>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub provides: Option<ProvidesEntry>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub requires: Option<Box<RequiresEntry>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub requires: Option<RequiresEntry>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub requires_any: Vec<RequiresAnyEntry>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub resolved_commit: Option<Box<String>>,
+    /// Commit the ref resolved to at publish time; absent for non-git sources.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub resolved_commit: Option<String>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub subskills: Vec<SubskillEntry>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub workspace_origin: Option<Box<WorkspaceOriginEntry>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub workspace_origin: Option<WorkspaceOriginEntry>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub yanked: Option<Box<bool>>,
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub yanked: bool,
 }
 
 /// `[origin]` projection (PROP-007 §2.8): provenance of a copy published from
@@ -569,6 +578,8 @@ pub struct WorkspaceOriginEntry {
 
     pub upstream: String,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub commit: Option<Box<String>>,
+    /// Workspace HEAD the copy was generated from; absent for an uncommitted
+    /// tree.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub commit: Option<String>,
 }

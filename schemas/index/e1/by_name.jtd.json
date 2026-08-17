@@ -54,7 +54,8 @@
         "latest_stable": {
           "ref": "version",
           "metadata": {
-            "description": "Newest non-prerelease version, recomputed by `finalise()`; absent when every version is a prerelease or the list is empty."
+            "description": "Newest non-prerelease version, recomputed by `finalise()`; absent when every version is a prerelease or the list is empty.",
+            "x-default": null
           }
         }
       }
@@ -72,7 +73,8 @@
         "superseded_by": {
           "type": "string",
           "metadata": {
-            "description": "The successor this name's consumers should move to — a redirect pointer, never an automatic rewrite."
+            "description": "The successor this name's consumers should move to — a redirect pointer, never an automatic rewrite.",
+            "x-default": null
           }
         }
       }

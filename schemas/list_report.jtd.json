@@ -74,25 +74,29 @@
         "registry": {
           "type": "string",
           "metadata": {
-            "description": "`[[registry]].name` from `vibe.toml` that served this package. Absent for `--registry <path>` and legacy installs."
+            "description": "`[[registry]].name` from `vibe.toml` that served this package. Absent for `--registry <path>` and legacy installs.",
+            "x-default": null
           }
         },
         "source_ref": {
           "type": "string",
           "metadata": {
-            "description": "Git ref the content was fetched at — typically `v<version>`. Absent for non-git sources."
+            "description": "Git ref the content was fetched at — typically `v<version>`. Absent for non-git sources.",
+            "x-default": null
           }
         },
         "resolved_commit": {
           "type": "string",
           "metadata": {
-            "description": "Commit hash the ref resolved to. Reserved for resolver-aware installs."
+            "description": "Commit hash the ref resolved to. Reserved for resolver-aware installs.",
+            "x-default": null
           }
         },
         "overridden": {
           "type": "boolean",
           "metadata": {
-            "description": "True iff this package was resolved through a `[[override]]` entry in `vibe.toml`."
+            "description": "True iff this package was resolved through a `[[override]]` entry in `vibe.toml`. PROP-044 §2b rules the boolean axis two-part with no third state, so an absent key means `false` — exactly how the hand-written twin already serialises it.",
+            "x-default": false
           }
         }
       }
