@@ -1,0 +1,90 @@
+{
+  "metadata": {
+    "description": "`hello.json` — the eternal handshake, epoch 1 (PROP-044 `##ONE-ETERNAL-FILE`, TZ D8): the one document whose keys never change meaning, through which a client of any age learns which worlds currently exist, where they live, what to do when it understands none of them, and where the handshake itself moved. Root type `Handshake` — the registry names the format `[format.handshake]`, so the name is DECLARED rather than minted from the stem. The key set is complete from day one (Р43): a degenerate first implementation may write only `vibe` and one world, but adding a key later would change the one file that may never change — a schema describing less describes a different format. Source of truth for `crates/vibe-wire/src/generated/hello/e1/hello/`.",
+    "x-rust-type": "Handshake"
+  },
+  "properties": {
+    "vibe": {
+      "type": "string",
+      "metadata": {
+        "description": "Version of the handshake format itself (`\"hello/1\"`) — not the catalog's version and not a world's epoch: a client that understands no value of this string refuses loudly (D8). The two version families never mix; `worlds[].epoch` is which catalog world a client can read."
+      }
+    },
+    "worlds": {
+      "elements": {
+        "ref": "world"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "The worlds that currently exist, one entry per epoch. The writer has no `skip_serializing_if` and the key is required: an empty list is emitted as `[]`, never omitted — a required collection paired with `omit` would be a separate refusal, since a writer omitting an empty required collection would emit a document invalid by its own schema."
+      }
+    }
+  },
+  "optionalProperties": {
+    "min_client": {
+      "ref": "min_client",
+      "metadata": {
+        "description": "The oldest client version able to read this index; absent declares no floor. `semver::Version` in code, declared by annotation (Р44, А.5а) — the tolerance the registry's `foreign_parsers = \"many\"` delivers covers unknown KEYS, never a lie about a known key's type.",
+        "x-default": null
+      }
+    },
+    "notice": {
+      "type": "string",
+      "metadata": {
+        "description": "Human-readable notice for a client that understands no world (D8: the handshake is the entry point for the client that has no entry point).",
+        "x-default": null
+      }
+    },
+    "successor": {
+      "type": "string",
+      "metadata": {
+        "description": "In-band forwarding pointer to where the handshake itself moved (PROP-044 `##ONE-ETERNAL-FILE`): the transport is raw files, so there is no redirect to lean on. Read and named in the refusal, never followed automatically (Р42).",
+        "x-default": null
+      }
+    }
+  },
+  "definitions": {
+    "world": {
+      "metadata": {
+        "description": "One epoch's world — a parallel catalog publication, not a mutation of the previous one (PROP-044 `##M-EPOCHS`). Local to this schema: the handshake is the aggregate's only consumer."
+      },
+      "properties": {
+        "epoch": {
+          "type": "uint32",
+          "metadata": {
+            "description": "The world's epoch — the number a client matches against the epoch it can itself read. The document carries it because dispatching to a world is exactly what the handshake is for; what Р45 forbids is the other side of the comparison — the CLIENT does not mint a constant of its own, it reads its epoch from `formats/REGISTRY.toml` through the generated `FormatId::epoch()`."
+          }
+        },
+        "path": {
+          "type": "string",
+          "metadata": {
+            "description": "Where the world lives relative to the index root; `\".\"` for the degenerate single-world case (D8)."
+          }
+        }
+      },
+      "optionalProperties": {
+        "sunset": {
+          "ref": "world_sunset",
+          "metadata": {
+            "description": "When this world stops being published and freezes (PROP-044 `##M-EPOCHS`); absent means no sunset announced. The date kind of the rest of the tree — RFC 3339, `chrono::DateTime<Utc>` in code (Р44: a bare `type: \"string\"` would give the date a second legal encoding in the system).",
+            "x-default": null
+          }
+        }
+      }
+    },
+    "min_client": {
+      "metadata": {
+        "description": "The `min_client` member's wire form — a semver string bound to `semver::Version` (Р44, А.5а). Local to this schema: the handshake is its only consumer.",
+        "x-rust-type": "semver::Version"
+      },
+      "type": "string"
+    },
+    "world_sunset": {
+      "metadata": {
+        "description": "The `sunset` member's wire form — a JTD `timestamp`, i.e. RFC 3339 on the wire, bound to `chrono::DateTime<chrono::Utc>` in code (Р44). Spelled `\"type\": \"timestamp\"` and not `\"type\": \"string\"` for the reason Р11 already settled for the shared `timestamp` fragment: a bare string would give a date a SECOND legal spelling in the system, and one thing is written one way. This is the first OPTIONAL date the tree ever carried, and it found the one hole in the optional-shapes pass — see `xtask/src/codegen/optional_shapes/emit.rs`, whose primitive list now spells the timestamp form. Local to this schema: the handshake is its only consumer.",
+        "x-rust-type": "chrono::DateTime<chrono::Utc>"
+      },
+      "type": "timestamp"
+    }
+  }
+}

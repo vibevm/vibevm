@@ -58,6 +58,38 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/hello/e1/hello.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "hello",
+      "end_line": 90
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/hello/e1/hello.jtd.json",
+      "item_kind": "schema-def",
+      "line": 75,
+      "symbol": "hello::min_client",
+      "end_line": 81
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/hello/e1/hello.jtd.json",
+      "item_kind": "schema-def",
+      "line": 47,
+      "symbol": "hello::world",
+      "end_line": 74
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/hello/e1/hello.jtd.json",
+      "item_kind": "schema-def",
+      "line": 82,
+      "symbol": "hello::world_sunset",
+      "end_line": 88
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/init_report.jtd.json",
       "item_kind": "schema",
       "line": 1,
