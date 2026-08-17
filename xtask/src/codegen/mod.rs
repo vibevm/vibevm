@@ -342,9 +342,26 @@ pub(crate) fn run_check_codegen() -> Result<()> {
         .context("spawning git diff")?;
     if !status.success() {
         bail!(
-            "generated code under {} is out of date relative to the JTD \
-             schemas and `formats/REGISTRY.toml`. Run `cargo xtask codegen` \
-             and commit the result.",
+            "generated code under {} differs from what this machine's \
+             jtd-codegen emits for the current schemas and \
+             `formats/REGISTRY.toml`.\n\n\
+             Two different things produce that difference, and the recipes \
+             are opposites — decide which before committing anything:\n\
+             1. The schemas moved and the tree did not. Fix: run \
+             `cargo xtask codegen` and commit the result.\n\
+             2. The generator is not the pinned build. This check compares \
+             the committed tree against the output of whatever binary was \
+             found — the project-local copy under `tools/jtd-codegen/` when \
+             present, otherwise `jtd-codegen` on PATH — so a different build \
+             reads as drift, and recipe 1 would commit ITS emission over \
+             ours. Fix: run `jtd-codegen --version`, compare it with the \
+             pin's single home \
+             (`packages/org.vibevm.ai-native/jtd-codegen/v0.1.0/README.md`), \
+             and install the pinned build per that recipe before \
+             regenerating.\n\n\
+             The distinction is load-bearing: eight post-processing passes \
+             are keyed to the pinned emission shape (`codegen/postproc.rs`), \
+             and the diff itself cannot tell you which cause produced it.",
             out_dirs
                 .iter()
                 .map(|d| d.display().to_string())
