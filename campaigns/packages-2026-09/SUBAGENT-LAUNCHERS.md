@@ -1194,6 +1194,64 @@ state the old shape allowed. Same family as
 each is the perimeter being narrower than the edit, discovered one substrate
 further out.
 
+@fact:fact-a-gateway-529-is-a-third-terminal-class **A gateway overload is a
+THIRD way a run ends, and it is neither a completion nor a kill (2026-08-17,
+twice in one hour):** the `result` event arrives — so the process really
+finished and `#fact-one-thread-one-writer` is satisfied, a `-c` may be sent at
+once — but it carries `"terminal_reason":"api_error"` and
+`"api_error_status":529`, and the harness reports plain `exit 1`. Read as a
+completion, the run looks like a worker that stopped for no reason; read as a
+kill, it invites the leave-the-survivor-alone protocol that does not apply,
+because there IS no survivor. The tell is one grep on the log:
+`grep -o '"terminal_reason":"[^"]*"\|"api_error_status":[0-9]*'`. The first
+failure came at turn 64 after 35 minutes of API time with the work half done;
+the second died on turn **1** after four `{"subtype":"api_retry"}` events, so
+the gateway's state is observable before any work is risked.
+
+The consequence that costs: **what a 529 takes is exactly the tail**, the same
+way a kill does (`#fact-a-killed-run-is-not-a-verdict-and-the-kill-costs-the-tail`)
+— here the packet's own `cargo clippy` line sat in the self-verify block and
+never ran, and the two lints it would have caught reddened the boss's panel
+instead. So the boss's tail after any api_error is not «finish the work», it is
+«run precisely the verification the packet ordered last».
+
+@fact:fact-the-workers-tests-outran-its-implementation **A worker's tests can
+encode a property its own implementation does not satisfy, and only the RED run
+separates «unverified» from «wrong» (2026-08-17):** the delivered pass carried
+23 unit tests, and two of them asserted layout properties the code got wrong —
+that a braced import shrunk to one survivor is written unbraced, and that a line
+removed from between two blanks takes the second blank. Both are properties of
+the panel rather than of taste (`cargo fmt --all --check` is its first step and
+a generated file is never hand-edited), and both tests were right. Six more
+failed on a single defect: the declaration matcher stripped the brace and left
+the trailing space glued to the identifier, so it answered «not a declaration»
+for every declaration jtd-codegen writes.
+
+Two rules. *(i)* **A diff read without a run is evidence about intent, not about
+behaviour** — every one of these eight failures is invisible to careful reading
+and instant to a `cargo test`; the review that matters is the one that executes.
+*(ii)* **«The worker verified nothing» and «the worker's artifacts are wrong»
+are different claims**, and conflating them is expensive in both directions:
+here the tests were the best thing in the delivery and the implementation was
+the weak part, which is the reverse of the usual suspicion. Sibling of
+`#fanout-verify-the-numbers-not-the-narrative`: there the report was re-measured,
+here the code was.
+
+@fact:fact-a-dead-transport-reopens-the-calculus-it-does-not-reissue-the-packet
+**When the transport dies mid-run, re-run the delegation calculus over what is
+LEFT — do not re-send the packet by reflex (2026-08-17):** after two 529s the
+obvious move was a third lane, and it would have been wrong. The expensive half
+— a 640-line pass with its arm classification and import analysis — was already
+on disk; what remained was a one-line matcher fix, three lines of wiring, a
+mechanical split, one import line, one doc phrase, and the gates. That
+remainder is the never-delegate shape almost exactly («sub-minute edits», plus a
+panel that is the boss's by definition), and the host tree runs those gates on a
+WARM `target/` while any worktree is cold. Reclaiming was the calculus, not
+impatience — and saying which of the two it was, out loud, is the part that
+keeps the directive honest. The general form: a failed run changes the
+REMAINING task, so the delegate-or-keep question is asked again about the
+remainder, never inherited from the original packet.
+
 ## 9. What a clean fan-out looked like {#clean-fanout}
 
 @fact:fanout-first-pass-acceptance **Measured 2026-08-14 — three packets, two
