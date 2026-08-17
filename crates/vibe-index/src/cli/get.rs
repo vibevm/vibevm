@@ -11,6 +11,7 @@ use vibe_core::Group;
 
 use crate::error::{Error, Result};
 use crate::index::Index;
+use crate::index::quarantine::{usable_latest_stable, usable_versions};
 use crate::types::{PackageEntry, VersionEntry};
 
 #[derive(Debug, Parser)]
@@ -69,9 +70,11 @@ pub fn run(args: Args) -> Result<()> {
             let req: semver::Version = v.parse().map_err(|e| {
                 Error::InvalidInput(format!("`--version {v}` is not valid semver: {e}"))
             })?;
-            pkg.versions.iter().filter(|ve| ve.version == req).collect()
+            usable_versions(pkg)
+                .filter(|ve| ve.version == req)
+                .collect()
         }
-        None => pkg.versions.iter().collect(),
+        None => usable_versions(pkg).collect(),
     };
     if versions.is_empty() {
         if args.json {
@@ -119,10 +122,10 @@ pub fn run(args: Args) -> Result<()> {
 fn render_text(pkg: &PackageEntry, versions: &[&VersionEntry]) {
     println!("group         : {}", pkg.group);
     println!("name          : {}", pkg.name);
-    if let Some(kind) = pkg.versions.first().map(|v| &v.kind) {
+    if let Some(kind) = usable_versions(pkg).next().map(|v| &v.kind) {
         println!("kind          : {kind}");
     }
-    if let Some(latest) = &pkg.latest_stable {
+    if let Some(latest) = usable_latest_stable(pkg) {
         println!("latest stable : {latest}");
     }
     println!("versions      : {}", versions.len());

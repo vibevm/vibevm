@@ -8,6 +8,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity");
 
 use super::*;
+use crate::index::quarantine;
 use crate::types::{PackageKind, VersionEntry};
 use chrono::{DateTime, Utc};
 use tempfile::tempdir;
@@ -169,8 +170,13 @@ fn write_replaces_stale_by_name_files() {
 }
 
 /// PROP-044 §4.5 — a version naming an unknown `must_understand`
-/// capability is quarantined on load; its sibling versions keep
-/// loading (the filter must not over-cut).
+/// capability is quarantined on load. Since the loader stopped
+/// DROPPING quarantined versions, this test guards the KEEP contract:
+/// the version STAYS in the index (the catalog is the journal's
+/// projection; a reader's capabilities never shrink what is held) AND
+/// leaves exactly one record in the quarantine carrier — while the
+/// named accessor (`quarantine::usable_versions`) refuses to serve
+/// it, so no answering surface can hand it out by accident.
 #[test]
 fn load_quarantines_unknown_capability_and_keeps_the_rest() {
     let tmp = tempdir().unwrap();
@@ -182,21 +188,47 @@ fn load_quarantines_unknown_capability_and_keeps_the_rest() {
     idx.write_to(tmp.path(), &write_ctx()).unwrap();
 
     let back = Index::load_from(tmp.path()).unwrap();
-    // The understood version is there…
+    // BOTH versions are held — the loader no longer drops the
+    // quarantined one…
     let pkg = back.get(&org(), "wal").unwrap();
-    assert_eq!(pkg.versions.len(), 1);
-    assert_eq!(pkg.versions[0].version.to_string(), "0.2.0");
-    // …the quarantined one is not, and left exactly one record.
-    assert!(
-        !pkg.versions
-            .iter()
-            .any(|v| v.version.to_string() == "0.1.0")
-    );
+    assert_eq!(pkg.versions.len(), 2);
+    // …the carrier names exactly it…
     assert_eq!(back.quarantined.len(), 1);
     let q = &back.quarantined[0];
     assert_eq!(q.name, "wal");
     assert_eq!(q.version.to_string(), "0.1.0");
     assert_eq!(q.missing, vec!["x".to_string()]);
+    // …and the named accessor does not hand it to any answerer.
+    let usable: Vec<String> = quarantine::usable_versions(pkg)
+        .map(|v| v.version.to_string())
+        .collect();
+    assert_eq!(usable, vec!["0.2.0".to_string()]);
+}
+
+/// The other half of the asymmetry: the WRITER never asks `is_usable`.
+/// A quarantined version that survived the load goes back out with the
+/// next `write_to` — the catalog stays the full projection of the
+/// journal, and a reader's capabilities never shrink what is written.
+#[test]
+fn quarantined_version_survives_a_load_write_round_trip() {
+    let tmp = tempdir().unwrap();
+    let mut idx = fresh_index();
+    let mut with_cap = entry(PackageKind::Flow, org(), "wal", "0.1.0");
+    with_cap.must_understand = vec!["x".into()];
+    idx.upsert(with_cap);
+    idx.write_to(tmp.path(), &write_ctx()).unwrap();
+
+    let back = Index::load_from(tmp.path()).unwrap();
+    assert_eq!(back.version_count(), 1);
+    back.write_to(tmp.path(), &write_ctx()).unwrap();
+
+    let again = Index::load_from(tmp.path()).unwrap();
+    assert_eq!(
+        again.version_count(),
+        1,
+        "the writer must re-project the quarantined version it holds"
+    );
+    assert_eq!(again.quarantined.len(), 1);
 }
 
 /// PROP-044 §2 — a by-name tombstone survives a full

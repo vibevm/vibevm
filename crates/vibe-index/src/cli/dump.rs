@@ -8,6 +8,7 @@ use clap::{Parser, ValueEnum};
 
 use crate::error::{Error, Result};
 use crate::index::Index;
+use crate::index::quarantine::{usable_entries, usable_version_count};
 use crate::types::VersionEntry;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
@@ -39,7 +40,7 @@ pub fn run(args: Args) -> Result<()> {
 }
 
 fn dump_jsonl(index: &Index) -> Result<()> {
-    for entry in index.iter_versions() {
+    for entry in usable_entries(index) {
         let line = serde_json::to_string(entry).map_err(|e| {
             Error::Malformed(format!(
                 "could not serialise {}:{}@{} — {e}",
@@ -52,7 +53,7 @@ fn dump_jsonl(index: &Index) -> Result<()> {
 }
 
 fn dump_json(index: &Index) -> Result<()> {
-    let entries: Vec<&VersionEntry> = index.iter_versions().collect();
+    let entries: Vec<&VersionEntry> = usable_entries(index).collect();
     let payload = serde_json::json!({
         "schema_version": index.schema_version,
         "registry": index.registry,
@@ -61,7 +62,7 @@ fn dump_json(index: &Index) -> Result<()> {
         "generated_at": index.generated_at,
         "generator": index.generator,
         "package_count": index.package_count(),
-        "version_count": index.version_count(),
+        "version_count": usable_version_count(index),
         "entries": entries,
     });
     let pretty = serde_json::to_string_pretty(&payload)

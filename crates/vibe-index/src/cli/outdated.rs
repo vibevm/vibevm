@@ -12,6 +12,7 @@ use vibe_core::Group;
 
 use crate::error::{Error, Result};
 use crate::index::Index;
+use crate::index::quarantine::usable_latest_stable;
 use crate::lockfile;
 use crate::types::PackageKind;
 
@@ -62,7 +63,7 @@ pub fn run(args: Args) -> Result<()> {
     for pkg in &lock.package {
         let latest = index
             .get(&pkg.group, &pkg.name)
-            .and_then(|p| p.latest_stable.clone());
+            .and_then(|p| usable_latest_stable(p).cloned());
         let status = match &latest {
             None => Status::Unknown,
             Some(l) if l > &pkg.version => {

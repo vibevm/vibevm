@@ -403,3 +403,100 @@ version = "0.1.0"
     assert_eq!(env["rows"][0]["status"], "unknown");
     assert_eq!(env["update_available"], 0);
 }
+
+/// Patch one version record inside a written `by-name/<name>.json`
+/// candidate set to carry a non-empty unknown `must_understand`. The
+/// manifest scanner cannot express the field (it always writes
+/// `Vec::new()`), so the catalog is patched post-reindex — the load
+/// path does not verify the manifest's checksums, only the JSON shape.
+fn quarantine_version_in_catalog(data: &Path, name: &str, version: &str) {
+    let file = data.join("by-name").join(format!("{name}.json"));
+    let mut root: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(&file).unwrap()).unwrap();
+    let mut patched = false;
+    for pkg in root["packages"].as_array_mut().unwrap() {
+        for v in pkg["versions"].as_array_mut().unwrap() {
+            if v["version"].as_str() == Some(version) {
+                v["must_understand"] = serde_json::json!(["some-future-capability"]);
+                patched = true;
+            }
+        }
+    }
+    assert!(
+        patched,
+        "the {name}@{version} fixture must exist before it can be quarantined"
+    );
+    std::fs::write(&file, serde_json::to_vec(&root).unwrap()).unwrap();
+}
+
+/// The F62A surface guard: since the loader KEEPS quarantined versions
+/// in the index, the only thing standing between them and the answer
+/// is the `quarantine::usable_*` accessors. This test pins the
+/// observable behaviour they must preserve: `get` answers a catalog
+/// carrying an unusable version EXACTLY as it answered when the
+/// loader used to drop the version — the version is absent from
+/// `versions`, `found:false` for a name whose every version is
+/// quarantined, byte-shaped like a name that never existed. Silence
+/// stays silence; the next step (speaking `unavailable`) is not this
+/// one.
+#[test]
+fn get_stays_silent_about_a_quarantined_version() {
+    let Some((_work, data)) = populated_index() else {
+        return;
+    };
+    // wal's ONLY version becomes unusable; rust keeps 0.1.0 usable and
+    // loses 0.2.0 to quarantine.
+    quarantine_version_in_catalog(&data, "wal", "0.1.0");
+    quarantine_version_in_catalog(&data, "rust", "0.2.0");
+
+    // A name whose every version is quarantined answers exactly like a
+    // name that never existed: found:false, versions:[].
+    let out = cmd()
+        .args(["get", data.to_str().unwrap(), "org.vibevm", "wal", "--json"])
+        .assert()
+        .success();
+    let stdout = String::from_utf8(out.get_output().stdout.clone()).unwrap();
+    let env: serde_json::Value = serde_json::from_str(&stdout).unwrap();
+    assert_eq!(env["found"], false);
+    assert_eq!(env["versions"].as_array().unwrap().len(), 0);
+
+    // The mixed package still answers, with only its usable version.
+    let out = cmd()
+        .args([
+            "get",
+            data.to_str().unwrap(),
+            "org.vibevm",
+            "rust",
+            "--json",
+        ])
+        .assert()
+        .success();
+    let stdout = String::from_utf8(out.get_output().stdout.clone()).unwrap();
+    let env: serde_json::Value = serde_json::from_str(&stdout).unwrap();
+    assert_eq!(env["found"], true);
+    let versions: Vec<&str> = env["versions"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|v| v["version"].as_str().unwrap())
+        .collect();
+    assert_eq!(versions, vec!["0.1.0"]);
+
+    // And asking for the quarantined version by name finds nothing.
+    let out = cmd()
+        .args([
+            "get",
+            data.to_str().unwrap(),
+            "org.vibevm",
+            "rust",
+            "--version",
+            "0.2.0",
+            "--json",
+        ])
+        .assert()
+        .success();
+    let stdout = String::from_utf8(out.get_output().stdout.clone()).unwrap();
+    let env: serde_json::Value = serde_json::from_str(&stdout).unwrap();
+    assert_eq!(env["found"], false);
+    assert_eq!(env["versions"].as_array().unwrap().len(), 0);
+}

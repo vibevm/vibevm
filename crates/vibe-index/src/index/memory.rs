@@ -80,9 +80,13 @@ pub struct Index {
     pub generator: String,
     pub generated_at: DateTime<Utc>,
     pub by_pkgref: BTreeMap<PkgKey, PackageEntry>,
-    /// Catalog records this reader refused to act on because their
-    /// `must_understand` names a capability it lacks (PROP-044 §4.5).
-    /// In memory only — never serialised into any catalog file.
+    /// The reader's RECORD of the versions it refuses to act on —
+    /// their `must_understand` names a capability it lacks (PROP-044
+    /// §4.5). A record, not a store: the entries themselves stay in
+    /// `by_pkgref`, and answering surfaces ask
+    /// `crate::index::quarantine::is_usable` rather than consulting
+    /// this list. In memory only — never serialised into any catalog
+    /// file.
     pub quarantined: Vec<Quarantined>,
     /// Per-name tombstones (PROP-044 §2) — in memory only; `write_to`
     /// projects them back onto the by-name `NameEntry` it builds.
@@ -178,6 +182,10 @@ impl Index {
         self.by_pkgref.len() as u32
     }
 
+    /// Count EVERY version the index holds, quarantined included: this
+    /// is the writer's number (it rides into `repomd.json`, which every
+    /// reader parses). An ANSWERING surface must ask
+    /// `crate::index::quarantine::usable_version_count` instead.
     pub fn version_count(&self) -> u32 {
         self.by_pkgref
             .values()
@@ -185,7 +193,11 @@ impl Index {
             .sum()
     }
 
-    /// Iterate every (group, name, version) entry in deterministic order.
+    /// Iterate every (group, name, version) entry in deterministic
+    /// order — ALL of them, quarantined included: the writer's
+    /// projections (`primary.jsonl`, the inverted views) must carry
+    /// everything the journal holds. An ANSWERING surface must ask
+    /// `crate::index::quarantine::usable_entries` instead.
     pub fn iter_versions(&self) -> impl Iterator<Item = &VersionEntry> {
         self.by_pkgref.values().flat_map(|p| p.versions.iter())
     }
@@ -320,10 +332,17 @@ impl Index {
     /// back into the `(group, name)`-keyed map.
     ///
     /// Versions whose `must_understand` names a capability this build
-    /// lacks are refused here — above the parsers, which stay pure
-    /// bytes→types — and land in `quarantined` with a WARN instead of
-    /// entering `by_pkgref`. Tombstones ride the by-name files and are
-    /// collected into the in-memory carrier.
+    /// lacks are detected here — above the parsers, which stay pure
+    /// bytes→types — and ENTER `by_pkgref` like every other version,
+    /// with a WARN and a record in `quarantined`. Nothing is dropped:
+    /// quarantine is the READER's judgement about a (record × build)
+    /// pair, made at the point of use — an ANSWERING surface asks
+    /// `crate::index::quarantine::is_usable` / the `usable_*`
+    /// accessors and never serves such a version, while the WRITER
+    /// path (`write_to`) deliberately does not ask, because the catalog
+    /// is the projection of the journal and a reader's capabilities
+    /// never shrink what is written. Tombstones ride the by-name files
+    /// and are collected into the in-memory carrier.
     pub fn load_from(data_dir: &Path) -> Result<Self> {
         let manifest = repomd::read(data_dir)?;
         let name_entries = by_name::read_all(data_dir)?;
@@ -335,29 +354,32 @@ impl Index {
                 tombstones.insert(name_entry.name.clone(), ts);
             }
             for mut pkg in name_entry.packages {
-                // Refuse versions this reader cannot honour (PROP-044
-                // §4.5): quarantine + WARN, and keep reading the rest.
-                pkg.versions.retain(|v| {
+                // Record versions this reader cannot honour (PROP-044
+                // §4.5): quarantine + WARN — but never drop them. The
+                // version STAYS in `by_pkgref`: an ANSWERING surface
+                // asks `quarantine::is_usable` and never serves it,
+                // while the WRITER path projects everything the journal
+                // holds, and a reader's capabilities never shrink what
+                // is written.
+                for v in &pkg.versions {
                     let missing = missing_capabilities(&v.must_understand);
                     if missing.is_empty() {
-                        true
-                    } else {
-                        tracing::warn!(
-                            group = %pkg.group,
-                            name = %pkg.name,
-                            version = %v.version,
-                            missing = %missing.join(","),
-                            "quarantined: must_understand names capabilities this build lacks"
-                        );
-                        quarantined.push(Quarantined {
-                            group: pkg.group.clone(),
-                            name: pkg.name.clone(),
-                            version: v.version.clone(),
-                            missing,
-                        });
-                        false
+                        continue;
                     }
-                });
+                    tracing::warn!(
+                        group = %pkg.group,
+                        name = %pkg.name,
+                        version = %v.version,
+                        missing = %missing.join(","),
+                        "quarantined: must_understand names capabilities this build lacks"
+                    );
+                    quarantined.push(Quarantined {
+                        group: pkg.group.clone(),
+                        name: pkg.name.clone(),
+                        version: v.version.clone(),
+                        missing,
+                    });
+                }
                 pkg.finalise();
                 by_pkgref.insert((pkg.group.clone(), pkg.name.clone()), pkg);
             }

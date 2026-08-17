@@ -5222,9 +5222,9 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/index/quarantine.rs",
       "item_kind": "mod",
-      "line": 5,
+      "line": 11,
       "symbol": "vibe_index::index::quarantine",
-      "end_line": 5,
+      "end_line": 11,
       "fingerprint": "tok1:d4ca64893c2adb34d7e9ae6a3e5002a68ec4259bf3b5b39f834634d4c86e5209"
     },
     {
@@ -5249,10 +5249,10 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/index/search.rs",
       "item_kind": "fn",
-      "line": 64,
+      "line": 65,
       "symbol": "vibe_index::index::search::search",
-      "end_line": 117,
-      "fingerprint": "tok1:1ab3c1b8c77e8c3767cdbc8504c774450a1cc7e0e594fce60ac649d873da1f5e"
+      "end_line": 116,
+      "fingerprint": "tok1:2cf4cce9e08bfbaafccc1c876e8cf9940e1a994a87e53a4acbc936a50a306fef"
     },
     {
       "crate_name": "vibe-index",
@@ -13604,7 +13604,7 @@
     {
       "file": "crates/vibe-index/src/index/quarantine.rs",
       "from_symbol": "vibe_index::index::quarantine",
-      "line": 5,
+      "line": 11,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry",
       "verb": "implements"
@@ -13628,7 +13628,7 @@
     {
       "file": "crates/vibe-index/src/index/search.rs",
       "from_symbol": "vibe_index::index::search::search",
-      "line": 64,
+      "line": 65,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#cli",
       "verb": "implements",
@@ -72417,7 +72417,7 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-index/src/index/search.rs",
-      "line": 64,
+      "line": 65,
       "message": "edge `vibe_index::index::search::search` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#cli` carries no kind/revision line yet"
     },
     {

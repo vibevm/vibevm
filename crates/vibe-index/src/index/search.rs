@@ -16,6 +16,7 @@ use specmark::spec;
 use vibe_core::Group;
 
 use crate::index::Index;
+use crate::index::quarantine::{usable_latest_stable, usable_versions};
 use crate::types::{PackageKind, VersionEntry};
 
 const STOPWORDS: &[&str] = &[
@@ -72,11 +73,9 @@ pub fn search(index: &Index, query: &str, kind_filter: Option<PackageKind>) -> V
     }
     let mut hits: BTreeMap<(Group, String), SearchHit> = BTreeMap::new();
     for pkg in index.by_pkgref.values() {
-        let latest = pkg
-            .versions
-            .iter()
+        let latest = usable_versions(pkg)
             .rfind(|v| v.version.pre.is_empty())
-            .or_else(|| pkg.versions.last());
+            .or_else(|| usable_versions(pkg).next_back());
         let Some(latest) = latest else {
             continue;
         };
@@ -99,7 +98,7 @@ pub fn search(index: &Index, query: &str, kind_filter: Option<PackageKind>) -> V
                 kind: latest.kind.clone(),
                 group: pkg.group.clone(),
                 name: pkg.name.clone(),
-                latest_stable: pkg.latest_stable.clone(),
+                latest_stable: usable_latest_stable(pkg).cloned(),
                 score: matched.len() as u32,
                 matched_tokens: matched.into_iter().cloned().collect(),
                 description: latest.description.clone(),
@@ -121,7 +120,7 @@ pub fn lookup_capability<'a>(index: &'a Index, capability: &str) -> Vec<&'a Vers
     let cap_norm = capability.trim();
     let mut out = Vec::new();
     for pkg in index.by_pkgref.values() {
-        for v in &pkg.versions {
+        for v in usable_versions(pkg) {
             if v.provides.as_ref().is_some_and(|p| {
                 p.capabilities
                     .iter()
@@ -150,7 +149,7 @@ pub fn lookup_purl<'a>(index: &'a Index, purl: &str) -> Vec<&'a VersionEntry> {
     let mut out = Vec::new();
     let q = purl.trim();
     for pkg in index.by_pkgref.values() {
-        for v in &pkg.versions {
+        for v in usable_versions(pkg) {
             let pkg_match = v.describes.as_deref() == Some(q);
             let subskill_match = v
                 .subskills

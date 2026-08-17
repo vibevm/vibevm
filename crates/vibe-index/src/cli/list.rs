@@ -12,6 +12,7 @@ use vibe_core::Group;
 use crate::cli::kinds;
 use crate::error::{Error, Result};
 use crate::index::Index;
+use crate::index::quarantine::{usable_latest_stable, usable_versions};
 use crate::types::PackageKind;
 
 #[derive(Debug, Parser)]
@@ -71,16 +72,18 @@ pub fn run(args: Args) -> Result<()> {
         .filter(|p| {
             kind_filter
                 .as_ref()
-                .is_none_or(|k| p.versions.iter().any(|v| v.kind == *k))
+                .is_none_or(|k| usable_versions(p).any(|v| v.kind == *k))
         })
         .map(|p| {
-            let description = p.versions.last().and_then(|v| v.description.clone());
+            let description = usable_versions(p)
+                .next_back()
+                .and_then(|v| v.description.clone());
             PackageRow {
-                kind: p.versions.first().map(|v| v.kind.clone()),
+                kind: usable_versions(p).next().map(|v| v.kind.clone()),
                 group: p.group.clone(),
                 name: p.name.clone(),
-                versions: p.versions.iter().map(|v| v.version.clone()).collect(),
-                latest_stable: p.latest_stable.clone(),
+                versions: usable_versions(p).map(|v| v.version.clone()).collect(),
+                latest_stable: usable_latest_stable(p).cloned(),
                 description,
             }
         })

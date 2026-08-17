@@ -19,6 +19,7 @@ use vibe_core::Group;
 use crate::error::Error;
 use crate::index::Index;
 use crate::index::memory::{WriteCtx, default_generator};
+use crate::index::quarantine::{usable_latest_stable, usable_versions};
 use crate::index::search;
 use crate::journal::{Event, JournalRecord, append, default_dir, project, replay};
 use crate::server::error::ApiError;
@@ -89,7 +90,7 @@ fn parse_group(s: &str) -> Result<Group, ApiError> {
 /// The package's `kind` — metadata carried per version (PROP-008 §2.3).
 /// `None` only for the rare zero-version package row.
 fn package_kind(pkg: &crate::types::PackageEntry) -> Option<PackageKind> {
-    pkg.versions.first().map(|v| v.kind.clone())
+    usable_versions(pkg).next().map(|v| v.kind.clone())
 }
 
 pub async fn list_or_search(
@@ -134,15 +135,17 @@ pub async fn list_or_search(
         .filter(|p| {
             q.kind
                 .as_ref()
-                .is_none_or(|k| p.versions.iter().any(|v| v.kind == *k))
+                .is_none_or(|k| usable_versions(p).any(|v| v.kind == *k))
         })
         .map(|p| PackageRow {
             kind: package_kind(p),
             group: p.group.clone(),
             name: p.name.clone(),
-            latest_stable: p.latest_stable.clone(),
-            versions: p.versions.iter().map(|v| v.version.clone()).collect(),
-            description: p.versions.last().and_then(|v| v.description.clone()),
+            latest_stable: usable_latest_stable(p).cloned(),
+            versions: usable_versions(p).map(|v| v.version.clone()).collect(),
+            description: usable_versions(p)
+                .next_back()
+                .and_then(|v| v.description.clone()),
         })
         .collect();
     rows.sort_by(|a, b| a.group.cmp(&b.group).then(a.name.cmp(&b.name)));
@@ -175,8 +178,8 @@ pub async fn package_versions(
         kind: package_kind(pkg),
         group: pkg.group.clone(),
         name: pkg.name.clone(),
-        latest_stable: pkg.latest_stable.clone(),
-        versions: pkg.versions.clone(),
+        latest_stable: usable_latest_stable(pkg).cloned(),
+        versions: usable_versions(pkg).cloned().collect(),
     }))
 }
 
@@ -203,9 +206,7 @@ pub async fn single_version(
     let pkg = index
         .get(&group, &name)
         .ok_or_else(|| ApiError::not_found(format!("`{group}/{name}` is not in the index (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; fix: check the (group, name) identity, or publish the package first)")))?;
-    let entry = pkg
-        .versions
-        .iter()
+    let entry = usable_versions(pkg)
         .find(|e| e.version == v)
         .ok_or_else(|| {
             ApiError::not_found(format!(
