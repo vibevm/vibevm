@@ -24,9 +24,11 @@ mod open_vocabulary;
 mod optional_shapes;
 mod ordered_maps;
 mod postproc;
+mod shared_module;
 mod snake_case;
 mod strictness;
 mod vocabulary;
+mod write;
 
 use crate::repo_root;
 use format_id::emit_format_id;
@@ -34,9 +36,10 @@ use layout::{
     module_tree, schema_module_dir, schemas_under, specmap_generated_dir, specmap_schema_dir,
     vibe_wire_generated_dir,
 };
-use postproc::rewrite_generated;
+use postproc::{StrictnessSource, rewrite_generated};
 use strictness::Strictness;
 use vocabulary::{Vocabularies, vocabularies_path};
+use write::write_generated;
 
 /// Locate the jtd-codegen binary. Prefer the project-local copy under
 /// `tools/jtd-codegen/`; fall back to PATH if the local copy is
@@ -223,20 +226,54 @@ fn generate_into(
     // overwrites whatever is there. To keep several schemas in one tree
     // without each stomping the others, give every schema its own
     // subdirectory and synthesise a `mod.rs` per level re-exporting them.
-    let mut leaves: Vec<PathBuf> = Vec::new();
+    //
+    // The host home runs THREE phases, not one loop: substitution puts
+    // a shared fragment into every schema that names it, so a single
+    // pass would emit the fragment's type once per module — distinct
+    // Rust types that merely look alike. Phase 1 resolves every schema
+    // once and KEEPS the closure each resolution places (the engine
+    // home shares the phase, taking only the resolved copies from it).
+    // Phase 2 — host home only, and only when anything is shared —
+    // emits the shared module every re-export points at, guarded
+    // against a strictness divergence among the fragments' consumers.
+    // Phase 3 emits each schema's module as always, then replaces its
+    // copies of the closure's blocks with re-exports of the shared
+    // types (the engine home gets none of this: our wire policy has no
+    // standing over a vendored package's public Rust API, exactly as
+    // it gets none of the post-processing).
+    let mut resolved: Vec<(PathBuf, vocabulary::Resolved)> = Vec::new();
     for schema in schemas {
+        let resolution = vocabularies.resolve(schema)?;
+        resolved.push((schema.clone(), resolution));
+    }
+
+    let mut shared: Option<shared_module::SharedModule> = None;
+    let mut rewire_stats: Vec<shared_module::RewireStats> = Vec::new();
+    if owner == FormatOwner::Ours && resolved.iter().any(|(_, r)| !r.vocabularies.is_empty()) {
+        shared_module::guard_shared_strictness(root, &resolved)?;
+        let shared_doc = vocabularies.shared_schema()?;
+        let shared_file = shared_module::emit_shared_module(
+            binary,
+            out_dir,
+            &shared_doc,
+            &vocabularies_path(root),
+        )?;
+        shared = Some(shared_module::SharedModule::load(&shared_file)?);
+    }
+
+    let mut leaves: Vec<PathBuf> = Vec::new();
+    if shared.is_some() {
+        leaves.push(out_dir.join(shared_module::SHARED_MODULE));
+    }
+    for (schema, resolution) in &resolved {
         let sub_out = schema_module_dir(schema_root, out_dir, schema)?;
         std::fs::create_dir_all(&sub_out)
             .with_context(|| format!("creating per-schema dir {}", sub_out.display()))?;
-        // The generator reads the vocabulary-resolved document — the
-        // authored schema itself for one without vocabularies, a scratch
-        // copy otherwise.
-        let resolved = vocabularies.resolve(schema)?;
         eprintln!("  - {} → {}/", schema.display(), sub_out.display());
         let status = Command::new(binary)
             .arg("--rust-out")
             .arg(&sub_out)
-            .arg(&resolved)
+            .arg(&resolution.doc)
             .status()
             .with_context(|| format!("spawning {}", binary.display()))?;
         if !status.success() {
@@ -261,11 +298,25 @@ fn generate_into(
         // map-ordering, empty-policy, optional-shapes, and strictness
         // are keyed to the pinned emission shape and run while the file
         // is still that emission; opening then writes hand-rolled impls
-        // into it (the full rule lives in `postproc`'s docs).
+        // into it (the full rule lives in `postproc`'s docs). The
+        // replacement then swaps the closure's blocks for re-exports of
+        // the shared module's types — byte-checked, in place.
         if owner == FormatOwner::Ours {
-            rewrite_generated(&sub_out.join("mod.rs"), &resolved, schema, strictness)?;
+            let module_file = sub_out.join("mod.rs");
+            rewrite_generated(
+                &module_file,
+                &resolution.doc,
+                schema,
+                StrictnessSource::Registry(strictness),
+            )?;
+            if let Some(module) = &shared {
+                rewire_stats.push(module.rewire(&module_file, schema, &resolution.vocabularies)?);
+            }
         }
         leaves.push(sub_out);
+    }
+    if let Some(module) = &shared {
+        shared_module::check_counter(&rewire_stats, &module.names())?;
     }
 
     // The vibe-wire generated tree also carries `format_id`, emitted from
@@ -296,7 +347,10 @@ fn generate_into(
     let sources = sources.join(" / ");
 
     // One `mod.rs` per directory on every root→leaf path, each listing its
-    // direct children (sorted by construction — `module_tree`).
+    // direct children (sorted by construction — `module_tree`). The root
+    // of a home that carries a shared module says so: a reader meeting a
+    // `pub use` inside a generated file must not mistake it for a hand
+    // edit, and the header is where that reader looks first.
     let tree = module_tree(out_dir, &leaves);
     let declared: usize = tree.values().map(BTreeSet::len).sum();
     for (dir, children) in &tree {
@@ -307,13 +361,20 @@ fn generate_into(
         top.push_str(&format!(
             "// `*.jtd.json` schema under {sources}. Editing\n"
         ));
-        top.push_str("// this file by hand will be overwritten on the next codegen run.\n\n");
+        top.push_str("// this file by hand will be overwritten on the next codegen run.\n");
+        if dir == out_dir && shared.is_some() {
+            top.push_str("//\n");
+            top.push_str("// The `shared` submodule is the one home of the vocabulary\n");
+            top.push_str("// fragments (`formats/vocabularies.json`) the schemas pull in;\n");
+            top.push_str("// every other submodule re-exports its types (`pub use`) instead\n");
+            top.push_str("// of carrying its own copies — one type per name, emitted once.\n");
+        }
+        top.push('\n');
         for name in children {
             top.push_str(&format!("pub mod {name};\n"));
         }
         let top_path = dir.join("mod.rs");
-        std::fs::write(&top_path, top)
-            .with_context(|| format!("writing {}", top_path.display()))?;
+        write_generated(&top_path, &top)?;
     }
 
     eprintln!(

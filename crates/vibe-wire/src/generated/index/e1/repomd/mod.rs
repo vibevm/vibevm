@@ -33,37 +33,7 @@ pub struct Repomd {
     pub version_count: u32,
 }
 
-/// Repository naming convention mapping a pkgref to a repo name (PROP-008
-/// §2.5). Closed vocabulary: repository paths are built from these values, so
-/// an unfamiliar one has no safe behaviour. The four wire strings are explicit
-/// per-variant renames, not one rename rule — `kind-name` and `kind/name`
-/// are not derivable from a single case convention. That same fact is why
-/// `x-rust-variants` exists here: from `kind/name` the generator mints a
-/// collision-suffixed identifier over the one it already gave `kind-name`,
-/// and no case rule produces a meaningful name — so the name is DECLARED
-/// rather than derived, keyed by the wire value both sides carry verbatim. (A
-/// description becomes a doc comment in the emitted file and passes through
-/// the very renames the code does, so quoting a pre-rename identifier here
-/// would leave the emitted doc naming something that no longer exists.)
-/// Two copies exist in code (`vibe-index/src/types/kinds.rs` and `vibe-
-/// core/src/manifest/project.rs`) with identical strings today; the index-
-/// side test `naming_convention_serde_matches_vibe_core_wire` pins them, and
-/// Phase 4.2 converges the copies. Shared as a vocabulary because `repomd` and
-/// `journal` both carry it.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub enum NamingConvention {
-    #[serde(rename = "fqdn")]
-    Fqdn,
-
-    #[serde(rename = "kind-name")]
-    KindName,
-
-    #[serde(rename = "kind/name")]
-    KindSlashName,
-
-    #[serde(rename = "name")]
-    Name,
-}
+pub use crate::generated::shared::NamingConvention;
 
 /// One entry of the manifest's `files` map — a tagged union keyed by `kind`:
 /// `directory` carries an entry count, `file` carries size + sha256. Tags
@@ -108,5 +78,4 @@ pub struct RepomdFileEntryFile {
     pub size: u32,
 }
 
-/// RFC 3339 timestamp — `chrono::DateTime<Utc>` in code.
-pub type Timestamp = chrono::DateTime<chrono::Utc>;
+pub use crate::generated::shared::Timestamp;

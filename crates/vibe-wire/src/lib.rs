@@ -19,6 +19,19 @@
 //! drift (CI runs the latter). Per PROP-000 §16, JTD + codegen is the
 //! standing pattern for wire contracts in this project.
 //!
+//! One more layer phase runs after those passes, and it explains the
+//! `pub use` lines the generated files carry: the vocabulary fragments
+//! a schema pulls in (`metadata.x-vocabularies`, home
+//! `formats/vocabularies.json`) are emitted ONCE, into
+//! [`generated::shared`], and every schema module that pulls a fragment
+//! re-exports its type instead of redeclaring it — byte-checked against
+//! the shared block, swapped in place by
+//! `xtask/src/codegen/shared_module.rs`. A `pub use` inside a generated
+//! file is therefore machine-written like everything around it, not a
+//! hand edit; one type per name (`a::VersionEntry` and
+//! `b::VersionEntry` were distinct types before this phase, identical
+//! bytes and all).
+//!
 //! See [`tools/jtd-codegen/README.md`](../../../tools/jtd-codegen/README.md) for the
 //! generator install procedure and pinned version.
 //!

@@ -13,7 +13,7 @@
 use anyhow::Result;
 use serde_json::{Value, json};
 
-use crate::codegen::postproc::rewrite_generated;
+use crate::codegen::postproc::{StrictnessSource, rewrite_generated};
 use crate::codegen::strictness::Strictness;
 use crate::repo_root;
 
@@ -32,7 +32,12 @@ fn through_pipeline(src: &str, doc: Value, root_stem: &str) -> Result<String> {
         .join("index")
         .join("e1")
         .join("by_purl.jtd.json");
-    rewrite_generated(&file, &resolved, &schema, &strictness)?;
+    rewrite_generated(
+        &file,
+        &resolved,
+        &schema,
+        StrictnessSource::Registry(&strictness),
+    )?;
     Ok(std::fs::read_to_string(&file)?)
 }
 

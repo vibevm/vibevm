@@ -68,7 +68,7 @@ fn transitive_dependencies_arrive_without_being_named() -> Result<()> {
     )?;
 
     let mut vocabularies = Vocabularies::load(&home)?;
-    let doc = read_json(&vocabularies.resolve(&schema)?)?;
+    let doc = read_json(&vocabularies.resolve(&schema)?.doc)?;
 
     assert!(
         doc["definitions"].get("version_entry").is_some(),
@@ -104,7 +104,7 @@ fn dependencies_close_deeper_than_one_hop() -> Result<()> {
     )?;
 
     let mut vocabularies = Vocabularies::load(&home)?;
-    let doc = read_json(&vocabularies.resolve(&schema)?)?;
+    let doc = read_json(&vocabularies.resolve(&schema)?.doc)?;
     for name in ["a", "b", "c"] {
         assert!(
             doc["definitions"].get(name).is_some(),
@@ -134,7 +134,7 @@ fn a_diamond_places_the_shared_tail_once() -> Result<()> {
     )?;
 
     let mut vocabularies = Vocabularies::load(&home)?;
-    let doc = read_json(&vocabularies.resolve(&schema)?)?;
+    let doc = read_json(&vocabularies.resolve(&schema)?.doc)?;
     let placed: BTreeSet<&str> = doc["definitions"]
         .as_object()
         .expect("definitions is an object")
@@ -258,7 +258,7 @@ fn placed_fragments_lose_their_x_vocabularies_key() -> Result<()> {
     )?;
 
     let mut vocabularies = Vocabularies::load(&home)?;
-    let doc = read_json(&vocabularies.resolve(&schema)?)?;
+    let doc = read_json(&vocabularies.resolve(&schema)?.doc)?;
 
     let placed = &doc["definitions"]["version_entry"];
     assert!(
@@ -299,8 +299,8 @@ fn resolving_twice_renders_identical_documents() -> Result<()> {
     )?;
 
     let mut vocabularies = Vocabularies::load(&home)?;
-    let first = vocabularies.resolve(&schema)?;
-    let second = vocabularies.resolve(&schema)?;
+    let first = vocabularies.resolve(&schema)?.doc;
+    let second = vocabularies.resolve(&schema)?.doc;
     assert_ne!(first, second, "two resolutions, two scratch copies");
     assert_eq!(
         std::fs::read_to_string(&first)?,

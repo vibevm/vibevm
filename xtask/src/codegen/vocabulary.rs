@@ -17,7 +17,12 @@
 //! the named fragments, each placed with its `x-vocabularies` key
 //! stripped (the bookkeeping it names is already executed) and in
 //! sorted name order — as a scratch copy, leaving the authored schema
-//! untouched. The same pass refuses, with a recipe, every input that
+//! untouched, and hands back the closure it placed beside the copy: the
+//! same substitution seen from the schema side is the map the shared
+//! module's phase consumes (a fragment placed into N schemas would
+//! otherwise be emitted N times, and [`Vocabularies::shared_schema`]
+//! exists so it is emitted once). The same pass refuses, with a
+//! recipe, every input that
 //! would otherwise reach jtd-codegen as a panic: a `{"ref": "x"}` with
 //! no matching definition dies inside the binary with `no entry found
 //! for key`, naming neither the schema nor the name — and a dependency
@@ -39,6 +44,13 @@ pub(crate) fn vocabularies_path(root: &Path) -> PathBuf {
     root.join("formats").join("vocabularies.json")
 }
 
+/// The scratch file name of the synthetic shared document. The
+/// generator mints the parasitic root's name from the stem, so the stem
+/// and the module name are one decision: `shared.jtd.json` →
+/// `generated::shared` with the alias `pub type Shared = …` the
+/// shared-module phase strips.
+pub(crate) const SHARED_STEM: &str = "shared.jtd.json";
+
 /// `formats/vocabularies.json` parsed once per codegen run, plus the
 /// scratch area holding resolved schema copies for the generator. The
 /// scratch lives exactly as long as the struct — dropping it mid-run
@@ -56,6 +68,23 @@ pub(crate) struct Vocabularies {
     /// equally named schemas from different homes cannot overwrite each
     /// other's copy.
     issued: usize,
+}
+
+/// The document the generator reads for one schema, plus the vocabulary
+/// closure that document carries — the pair the driver used to reduce to
+/// the path alone, dropping the closure on the floor. The names are the
+/// shared-module phase's map: the fragments a schema's module must
+/// re-export from `generated::shared` rather than redeclare, so `a::
+/// VersionEntry` and `b::VersionEntry` are one type, not two that happen
+/// to look alike.
+#[derive(Debug)]
+pub(crate) struct Resolved {
+    /// The path handed to the generator: the authored schema when it
+    /// declares no vocabularies, the scratch copy otherwise.
+    pub(crate) doc: PathBuf,
+    /// Every fragment placed into the document — named by the schema's
+    /// `metadata.x-vocabularies` or arriving with one it named.
+    pub(crate) vocabularies: BTreeSet<String>,
 }
 
 impl Vocabularies {
@@ -93,13 +122,15 @@ impl Vocabularies {
     /// pull fragments of its own by the same key, and they arrive with
     /// it, unnamed by the schema, placed in sorted name order so one
     /// input renders one document. The schema on disk is never
-    /// rewritten.
+    /// rewritten. The closure comes back beside the copy, because the
+    /// driver's next question is which blocks of the emitted module that
+    /// substitution makes redundant.
     ///
     /// Every schema passes the dangling-`ref` check, annotated or not —
     /// an unresolved reference is fatal inside the binary either way,
     /// and this is the only place positioned to say which file and which
     /// name, instead of letting a panic say nothing.
-    pub(crate) fn resolve(&mut self, schema: &Path) -> Result<PathBuf> {
+    pub(crate) fn resolve(&mut self, schema: &Path) -> Result<Resolved> {
         let text = std::fs::read_to_string(schema)
             .with_context(|| format!("reading schema {}", schema.display()))?;
         let mut doc: Value =
@@ -111,7 +142,10 @@ impl Vocabularies {
             .cloned()
         else {
             check_dangling_refs(&doc, schema)?;
-            return Ok(schema.to_path_buf());
+            return Ok(Resolved {
+                doc: schema.to_path_buf(),
+                vocabularies: BTreeSet::new(),
+            });
         };
         let names = expect_name_array(&annotation, &format!("schema {}", schema.display()))?;
         // Every fragment the annotation reaches — through fragments' own
@@ -192,6 +226,47 @@ impl Vocabularies {
             .with_context(|| format!("rendering the resolved copy of {}", schema.display()))?;
         std::fs::write(&copy, rendered)
             .with_context(|| format!("writing the resolved copy {}", copy.display()))?;
+        Ok(Resolved {
+            doc: copy,
+            vocabularies: closed,
+        })
+    }
+
+    /// The synthetic document for the shared module: `definitions` are
+    /// EVERY fragment of the home, and there is no root form — so the
+    /// generator emits each fragment's type once (it emits all
+    /// `definitions`, reachable or not, measured) plus one parasitic
+    /// root alias, `pub type Shared = Option<Value>;`, the stem of the
+    /// scratch copy minting the name, which the shared-module phase
+    /// strips. Every fragment is placed through the same
+    /// `fragment_for_definitions` cut `resolve` places through, so a
+    /// block here comes out byte-identical to the copies the schema
+    /// modules carry — the property the replacement pass stitches on.
+    /// The document lives in the same scratch area as the resolved
+    /// schema copies; nothing is written into the repository.
+    pub(crate) fn shared_schema(&mut self) -> Result<PathBuf> {
+        let mut definitions = Map::new();
+        for (name, fragment) in &self.fragments {
+            definitions.insert(name.clone(), fragment_for_definitions(fragment));
+        }
+        let mut root = Map::new();
+        root.insert("definitions".to_string(), Value::Object(definitions));
+        let doc = Value::Object(root);
+        // A fragment nobody pulls can still dangle a `ref` — every
+        // schema-side check above ran on documents that name their
+        // fragments, and this one names them all. The home is the file
+        // to name in the refusal.
+        check_dangling_refs(&doc, &self.home)?;
+
+        let copy_dir = self.scratch.path().join(format!("{:04}", self.issued));
+        self.issued += 1;
+        std::fs::create_dir_all(&copy_dir)
+            .with_context(|| format!("creating {}", copy_dir.display()))?;
+        let copy = copy_dir.join(SHARED_STEM);
+        let rendered = serde_json::to_string_pretty(&doc)
+            .context("rendering the synthetic shared document")?;
+        std::fs::write(&copy, rendered)
+            .with_context(|| format!("writing the synthetic shared document {}", copy.display()))?;
         Ok(copy)
     }
 

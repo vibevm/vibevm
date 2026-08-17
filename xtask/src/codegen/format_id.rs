@@ -251,7 +251,7 @@ pub(super) fn emit_format_id(root: &Path, out_dir: &Path) -> Result<()> {
     let sub_out = out_dir.join("format_id");
     std::fs::create_dir_all(&sub_out).with_context(|| format!("creating {}", sub_out.display()))?;
     let target = sub_out.join("mod.rs");
-    std::fs::write(&target, out).with_context(|| format!("writing {}", target.display()))?;
+    super::write::write_generated(&target, &out)?;
     eprintln!("  - formats/REGISTRY.toml → {}/", sub_out.display());
     Ok(())
 }

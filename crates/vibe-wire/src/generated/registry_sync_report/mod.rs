@@ -23,58 +23,7 @@ pub struct RegistrySyncReport {
     pub skipped: Vec<SkippedEntry>,
 }
 
-/// Installable package kind (VIBEVM-SPEC §4.1). Open vocabulary: the register
-/// grows by owner amendment, so a reader must not hard-fail on an unseen kind.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum PackageKind {
-    Feat,
-    Flow,
-    Lang,
-    Mcp,
-    Stack,
-    Tool,
-    /// A value this build does not know. The string is preserved
-    /// verbatim across a read/write cycle, so an older reader never
-    /// silently drops or rewrites a newer writer's vocabulary
-    /// (PROP-044 §4.2a).
-    Unknown(String),
-}
-
-impl Serialize for PackageKind {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        let wire: &str = match self {
-            PackageKind::Feat => "feat",
-            PackageKind::Flow => "flow",
-            PackageKind::Lang => "lang",
-            PackageKind::Mcp => "mcp",
-            PackageKind::Stack => "stack",
-            PackageKind::Tool => "tool",
-            PackageKind::Unknown(value) => value.as_str(),
-        };
-        serializer.serialize_str(wire)
-    }
-}
-
-impl<'de> Deserialize<'de> for PackageKind {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        let wire = String::deserialize(deserializer)?;
-        Ok(match wire.as_str() {
-            "feat" => PackageKind::Feat,
-            "flow" => PackageKind::Flow,
-            "lang" => PackageKind::Lang,
-            "mcp" => PackageKind::Mcp,
-            "stack" => PackageKind::Stack,
-            "tool" => PackageKind::Tool,
-            _ => PackageKind::Unknown(wire),
-        })
-    }
-}
+pub use crate::generated::shared::PackageKind;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RefreshedEntry {

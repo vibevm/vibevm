@@ -5,6 +5,8 @@
 //! transitive-closure half (F41A2) lives in `tests_transitive.rs` and
 //! shares these fixtures.
 
+use std::collections::BTreeSet;
+
 use super::*;
 use crate::repo_root;
 use serde_json::json;
@@ -72,10 +74,15 @@ fn substitution_places_the_fragment_into_definitions() -> Result<()> {
     let resolved = vocabularies.resolve(&schema)?;
 
     assert_ne!(
-        resolved, schema,
+        resolved.doc, schema,
         "the generator must read a copy, not the schema"
     );
-    let doc = read_json(&resolved)?;
+    assert_eq!(
+        resolved.vocabularies,
+        BTreeSet::from(["package_kind".to_string()]),
+        "the closure comes back beside the copy"
+    );
+    let doc = read_json(&resolved.doc)?;
     assert_eq!(doc["definitions"]["package_kind"], inline_package_kind());
     assert_eq!(doc["properties"]["kind"], json!({"ref": "package_kind"}));
     assert_eq!(
@@ -107,7 +114,7 @@ fn schema_without_the_annotation_passes_through() -> Result<()> {
     )?;
 
     let mut vocabularies = Vocabularies::load(&home)?;
-    assert_eq!(vocabularies.resolve(&schema)?, schema);
+    assert_eq!(vocabularies.resolve(&schema)?.doc, schema);
     Ok(())
 }
 
@@ -347,10 +354,10 @@ fn report_schemas_resolve_to_the_inline_vocabulary_they_had() -> Result<()> {
         let schema = root.join("schemas").join(format!("{name}.jtd.json"));
         let resolved = vocabularies.resolve(&schema)?;
         assert_ne!(
-            resolved, schema,
+            resolved.doc, schema,
             "{name}: an annotated schema resolves to a copy"
         );
-        let doc = read_json(&resolved)?;
+        let doc = read_json(&resolved.doc)?;
         assert_eq!(
             schema_form(&doc["definitions"]["package_kind"]),
             inline_package_kind(),

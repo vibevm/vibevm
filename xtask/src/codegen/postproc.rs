@@ -95,11 +95,39 @@ use super::ordered_maps::ordered_maps;
 use super::snake_case::snake_case_fields;
 use super::strictness::{Strictness, apply_strictness};
 
-/// Read `file`, run all eight post-processing passes over it, write the
+/// How the strictness slot is ruled for one emission — the only slot of
+/// the nine that asks a question the file itself cannot answer.
+///
+/// A schema module's role comes from `formats/REGISTRY.toml`, keyed by
+/// the schema's own path, and a document no record claims is refused
+/// there (PROP-044 §4.1: an unregistered format is inexpressible by
+/// design). The shared vocabulary module has no authored schema at all —
+/// it is emitted from a synthetic all-fragments document — so its
+/// verdict is decided one storey up, before any emission, by
+/// `shared_module::guard_shared_strictness`: a fragment any consumer
+/// reads under the `none` role is refused outright, which leaves the
+/// permissive reading as the only one this pipeline can produce.
+///
+/// It is a named pair rather than an `Option<&Strictness>` because
+/// `None` at a call site says nothing about WHY the registry is not
+/// being consulted, and the answer here is a property the caller knows
+/// literally — the same argument that made `FormatOwner` a named pair.
+pub(crate) enum StrictnessSource<'a> {
+    /// Ruled by the registry, through the schema's own path.
+    Registry(&'a Strictness),
+    /// Pre-ruled one storey up; the slot copies its input unchanged.
+    PreRuled,
+}
+
+/// Read `file`, run all nine post-processing passes over it, write the
 /// result back. Called in `generate_into` right after the generator
 /// succeeds — before the leaf is registered or anything compiles against
 /// it, so no consumer — compiler, clippy, oracle — ever sees the
-/// unprocessed form.
+/// unprocessed form. The shared vocabulary module goes through this same
+/// entry with `StrictnessSource::PreRuled`: the pass order is a
+/// normative value, so a second runner repeating it would be a second
+/// copy of it, and two copies of a normative value diverge
+/// (`spec://org.vibevm.world/addressable-specs/…#single-source`).
 ///
 /// Pass order is a rule, not a taste: a pass keyed to the generator's
 /// emission shape must run while the file is STILL that emission.
@@ -122,7 +150,7 @@ pub(crate) fn rewrite_generated(
     file: &Path,
     resolved: &Path,
     schema: &Path,
-    strictness: &Strictness,
+    strictness: StrictnessSource<'_>,
 ) -> Result<()> {
     let src = std::fs::read_to_string(file)
         .with_context(|| format!("reading generated {}", file.display()))?;
@@ -132,11 +160,17 @@ pub(crate) fn rewrite_generated(
     let ordered = ordered_maps(&snaked, &name)?;
     let emptied = apply_empty_policies(&ordered, &name, resolved, schema)?;
     let unboxed = apply_optional_shapes(&emptied, &name, resolved, schema)?;
-    let strict = apply_strictness(&unboxed, &name, schema, strictness)?;
+    let strict = match strictness {
+        StrictnessSource::Registry(registry) => {
+            apply_strictness(&unboxed, &name, schema, registry)?
+        }
+        StrictnessSource::PreRuled => unboxed,
+    };
     let bound = apply_domain_types(&strict, &name, resolved, schema)?;
     let floored = apply_derive_floor(&bound, &name)?;
     let opened = open_vocabularies(&floored, &name, resolved, schema)?;
-    std::fs::write(file, opened).with_context(|| format!("writing the post-processed {}", name))?;
+    super::write::write_generated(file, &opened)
+        .with_context(|| format!("writing the post-processed {name}"))?;
     Ok(())
 }
 
