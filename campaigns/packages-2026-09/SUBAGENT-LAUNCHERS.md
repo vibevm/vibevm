@@ -1252,6 +1252,51 @@ keeps the directive honest. The general form: a failed run changes the
 REMAINING task, so the delegate-or-keep question is asked again about the
 remainder, never inherited from the original packet.
 
+@fact:fact-a-throwaway-probe-is-a-legitimate-measurement-shape **A packet may
+order the worker to EDIT the tree purely to measure it, and that is a distinct
+packet genre with its own perimeter form (2026-08-17):** the recorded radius of
+a re-export had been estimated by reading, and reading had undercounted it — so
+the next packet ordered three probes: replace the definitions, run
+`cargo check --workspace --all-targets`, classify every error, restore the files,
+move to the next probe. The compiler answered 43 / 126 / 40 errors across five
+causes, and two of the causes were ones no reading had named.
+
+The genre needs three clauses a build packet does not. *(i)* **The write
+perimeter is split in two named lists** — the files written FOREVER (the finding
+and the report) and the files written TEMPORARILY, each of which the worker
+returns. *(ii)* **The restore is verified against a saved copy, not against
+git** — the worker cannot run git, so the packet orders it to copy the originals
+into the system temp dir before the first edit and `diff` against them at the
+end. That check is not ceremony: this worker's own diff caught two of its own
+slips (a dropped fragment of a `Cargo.toml` line, an added bracket pair in a doc
+string) that a careful reading would have missed. *(iii)* **The packet says the
+red IS the result** — «твоя работа не починить, а измерить» — or a competent
+worker spends its window fixing the errors the packet exists to count.
+
+What made it safe: the probe never leaves the worktree, so the host tree is
+untouched by construction, and the finding is the only carrier
+(`#fanout-the-finding-outlives-the-worktree`, one substrate over — there the
+carrier outlived a spike crate, here it outlives a reverted edit).
+
+@fact:fact-two-measurement-packets-parallelise-by-write-perimeter-even-when-one-is-cargo-heavy
+**A read-only measurement and a cargo-heavy probe run concurrently on the two
+lanes without interference, and the perimeter is what makes it safe — not the
+subject (2026-08-17):** both packets read the same trees (`crates/vibe-wire/`,
+`xtask/src/codegen/`, `crates/vibe-index/`), and one of them rewrote eight files
+in its own worktree while the other only counted. Zero conflicts, both accepted
+first pass, no `-c` cycles. `#fanout-perimeters-intersect-on-writes-not-reads`
+already says reads never conflict; what this adds is that a probe's temporary
+writes are still worktree-local, so a probing packet stacks against a reading
+one exactly like two readers do. The box weighting from
+`#e-parallel-coefficient` held as measured: one cargo lane, one text lane — the
+box never saw two cold builds.
+
+The boss's own work during the run is bound by the same rule from the other
+side: while a worker holds a cargo lane, the boss's re-measurements must be
+`grep`/`wc`-class, never a second `cargo` — the two would contend for the same
+box, and the panel's user-home tripwire has already fired once on exactly that
+kind of overlap (`#fact-the-panel-owns-the-user-home-for-its-whole-run`).
+
 ## 9. What a clean fan-out looked like {#clean-fanout}
 
 @fact:fanout-first-pass-acceptance **Measured 2026-08-14 — three packets, two
