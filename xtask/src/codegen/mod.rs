@@ -23,6 +23,7 @@ mod optional_shapes;
 mod ordered_maps;
 mod postproc;
 mod snake_case;
+mod strictness;
 mod vocabulary;
 
 use crate::repo_root;
@@ -32,6 +33,7 @@ use layout::{
     vibe_wire_generated_dir,
 };
 use postproc::rewrite_generated;
+use strictness::Strictness;
 use vocabulary::{Vocabularies, vocabularies_path};
 
 /// Locate the jtd-codegen binary. Prefer the project-local copy under
@@ -122,6 +124,14 @@ pub(crate) fn run_codegen() -> Result<()> {
     // parsed once here, every schema below resolves against it.
     let mut vocabularies = Vocabularies::load(&vocabularies_path(&root))?;
 
+    // Reader strictness, one registry for the whole run: the map from
+    // schema path to `foreign_parsers` role (`formats/REGISTRY.toml`,
+    // parsed by the one loader `format_id` already owns) is built once
+    // here exactly like the vocabularies, and every schema below is
+    // ruled on through it — the strictness pass refuses a schema the
+    // registry does not claim.
+    let strictness = Strictness::load(&root)?;
+
     for (schema_root, out_dir, owner, schemas) in &groups {
         generate_into(
             &binary,
@@ -131,6 +141,7 @@ pub(crate) fn run_codegen() -> Result<()> {
             *owner,
             schemas,
             &mut vocabularies,
+            &strictness,
         )?;
     }
     Ok(())
@@ -169,6 +180,11 @@ enum FormatOwner {
 /// a stale submodule behind. Each schema is first resolved through the
 /// shared vocabularies (`vocabulary.rs`): the generator reads the
 /// resolved document, never the authored file.
+// The driver's fixed signature: the binary and root, the home-routing
+// triple, the schemas, and the run's two once-per-run contexts — every
+// argument a distinct responsibility the call site already holds
+// literally (the vibe-cli precedent for a signature that will not fold).
+#[allow(clippy::too_many_arguments)]
 fn generate_into(
     binary: &Path,
     root: &Path,
@@ -177,6 +193,7 @@ fn generate_into(
     owner: FormatOwner,
     schemas: &[PathBuf],
     vocabularies: &mut Vocabularies,
+    strictness: &Strictness,
 ) -> Result<()> {
     std::fs::create_dir_all(out_dir)
         .with_context(|| format!("creating output dir {}", out_dir.display()))?;
@@ -235,14 +252,16 @@ fn generate_into(
         // optional collections collapse per the schema's `x-empty`, then
         // optional scalars and structures lose their `Box` per the
         // schema's `x-default` (and its two Box-free defaults), then
+        // the structs of `foreign_parsers = "none"` formats take
+        // `#[serde(deny_unknown_fields)]` per the registry's role, then
         // the vocabularies open per the schema's `x-vocabulary`. The pass
         // order is a rule, not a taste: boxing, snake-casing,
-        // map-ordering, empty-policy, and optional-shapes are keyed to
-        // the pinned emission shape and run while the file is still that
-        // emission; opening then writes hand-rolled impls into it (the
-        // full rule lives in `postproc`'s docs).
+        // map-ordering, empty-policy, optional-shapes, and strictness
+        // are keyed to the pinned emission shape and run while the file
+        // is still that emission; opening then writes hand-rolled impls
+        // into it (the full rule lives in `postproc`'s docs).
         if owner == FormatOwner::Ours {
-            rewrite_generated(&sub_out.join("mod.rs"), &resolved, schema)?;
+            rewrite_generated(&sub_out.join("mod.rs"), &resolved, schema, strictness)?;
         }
         leaves.push(sub_out);
     }

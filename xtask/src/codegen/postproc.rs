@@ -1,14 +1,16 @@
 //! Post-processing passes over jtd-codegen output — content edits the
 //! generator's emission gets before anything else reads the file.
 //!
-//! This file is the driver plus the first pass; the other five —
+//! This file is the driver plus the first pass; the other six —
 //! renaming field identifiers to snake_case (dropping the identity
 //! renames), turning wire maps into ordered `BTreeMap`s, collapsing
 //! optional collections per the schema's `x-empty`, lifting the `Box`
 //! off optional scalars and structures per the schema's `x-default`,
-//! and opening vocabularies per the schema's `x-vocabulary` — live in
-//! the sibling `snake_case`, `ordered_maps`, `empty_policy`,
-//! `optional_shapes`, and `open_vocabulary` modules, split along those
+//! stamping `#[serde(deny_unknown_fields)]` on the structs of formats
+//! the registry marks `foreign_parsers = "none"`, and opening
+//! vocabularies per the schema's `x-vocabulary` — live in the sibling
+//! `snake_case`, `ordered_maps`, `empty_policy`, `optional_shapes`,
+//! `strictness`, and `open_vocabulary` modules, split along those
 //! responsibility seams as the set outgrew the 600-line budget.
 //!
 //! The passes run in a fixed ORDER, and the order is a rule, not a
@@ -25,7 +27,12 @@
 //! optional-shapes pass is keyed to the shape likewise (the same skip
 //! attribute over the `Option<Box<…>>` field lines the empty-policy
 //! pass left standing — the scalars and structures), so it runs fifth.
-//! Opening vocabularies then writes hand-rolled `impl Serialize` /
+//! The strictness pass is keyed to the shape as well (the
+//! `#[derive(Serialize, Deserialize)]` line directly above a
+//! `pub struct … {` line — the exact place it inserts its attribute),
+//! so it runs sixth, ruled by the `foreign_parsers` role the format's
+//! registry record carries rather than by anything the file itself
+//! says. Opening vocabularies then writes hand-rolled `impl Serialize` /
 //! `impl Deserialize` blocks into the file — text the pinned emission
 //! shape does not contain — and any shape-keyed pass running after it
 //! would be reading a document that is no longer the generator's. The
@@ -75,8 +82,9 @@ use super::open_vocabulary::open_vocabularies;
 use super::optional_shapes::apply_optional_shapes;
 use super::ordered_maps::ordered_maps;
 use super::snake_case::snake_case_fields;
+use super::strictness::{Strictness, apply_strictness};
 
-/// Read `file`, run all six post-processing passes over it, write the
+/// Read `file`, run all seven post-processing passes over it, write the
 /// result back. Called in `generate_into` right after the generator
 /// succeeds — before the leaf is registered or anything compiles against
 /// it, so no consumer — compiler, clippy, oracle — ever sees the
@@ -89,10 +97,17 @@ use super::snake_case::snake_case_fields;
 /// pass is keyed to the shape as well, so it runs third; the
 /// empty-policy pass is keyed to the shape just the same, so it runs
 /// fourth; the optional-shapes pass is keyed to the shape likewise, so
-/// it runs fifth; opening vocabularies then writes hand-rolled impls
-/// into the file, and a shape-keyed pass running after it would be
-/// reading a document that is no longer the generator's.
-pub(crate) fn rewrite_generated(file: &Path, resolved: &Path, schema: &Path) -> Result<()> {
+/// it runs fifth; the strictness pass is keyed to the shape just as
+/// much, so it runs sixth; opening vocabularies then writes
+/// hand-rolled impls into the file, and a shape-keyed pass running
+/// after it would be reading a document that is no longer the
+/// generator's.
+pub(crate) fn rewrite_generated(
+    file: &Path,
+    resolved: &Path,
+    schema: &Path,
+    strictness: &Strictness,
+) -> Result<()> {
     let src = std::fs::read_to_string(file)
         .with_context(|| format!("reading generated {}", file.display()))?;
     let name = file.display().to_string();
@@ -101,7 +116,8 @@ pub(crate) fn rewrite_generated(file: &Path, resolved: &Path, schema: &Path) -> 
     let ordered = ordered_maps(&snaked, &name)?;
     let emptied = apply_empty_policies(&ordered, &name, resolved, schema)?;
     let unboxed = apply_optional_shapes(&emptied, &name, resolved, schema)?;
-    let opened = open_vocabularies(&unboxed, &name, resolved, schema)?;
+    let strict = apply_strictness(&unboxed, &name, schema, strictness)?;
+    let opened = open_vocabularies(&strict, &name, resolved, schema)?;
     std::fs::write(file, opened).with_context(|| format!("writing the post-processed {}", name))?;
     Ok(())
 }

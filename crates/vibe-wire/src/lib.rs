@@ -8,7 +8,9 @@
 //! rewriting map fields to canonically ordered `BTreeMap`s, collapsing
 //! optional collections per the schema's `x-empty`, lifting the `Box`
 //! off optional scalars and structures per the schema's `x-default`,
-//! opening vocabularies per the schema's `x-vocabulary`) — the files are
+//! stamping `#[serde(deny_unknown_fields)]` on the structs of formats
+//! the registry marks `foreign_parsers = "none"`, opening vocabularies
+//! per the schema's `x-vocabulary`) — the files are
 //! still never hand-edited. `cargo
 //! xtask codegen` regenerates; `cargo xtask check-codegen` asserts no
 //! drift (CI runs the latter). Per PROP-000 §16, JTD + codegen is the
@@ -48,6 +50,16 @@
 //! from outside, permissiveness is forward compatibility. The point of
 //! this note is that softness becomes a deliberate choice rather than an
 //! accident of tooling.
+//!
+//! The mechanism the note said was missing now exists: the codegen
+//! post-processing stamps `#[serde(deny_unknown_fields)]` itself, and
+//! whether it does is not a per-type choice but the format's registry
+//! record — `foreign_parsers = "none"` in `formats/REGISTRY.toml` takes
+//! the attribute on every generated struct of that format's output,
+//! every other role keeps the permissive reading byte for byte. On
+//! today's registry no format with a built schema carries the `none`
+//! role, so the generated tree above is still entirely permissive —
+//! now as the registry's verdict rather than the generator's limit.
 
 #![forbid(unsafe_code)]
 

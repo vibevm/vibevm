@@ -11,24 +11,34 @@ use anyhow::{Context, Result, anyhow, bail};
 // schema stem to route on, so it is emitted from its own branch in
 // `generate_into` rather than looked up in `generated_dir_for`.
 
-/// One `[format.<id>]` record, reduced to the fields the generated enum needs.
-/// `schema`, `corpus` and `sunset` stay declarative in the TOML for later
-/// phases (golden corpora Ф5, the break window Ф5.3) and are not consumed here.
-struct FormatEntry {
-    /// The registry id, verbatim — what `FormatId::id()` returns.
-    id: String,
+/// One `[format.<id>]` record. The generated enum consumes `id`,
+/// `variant`, `epoch`, `recoverable` and `foreign_parsers`; `schema` is
+/// the strictness pass's key — the path whose generated output the
+/// record's `foreign_parsers` role rules (`strictness.rs`). `corpus` and
+/// `sunset` stay declarative in the TOML for later phases (golden
+/// corpora Ф5, the break window Ф5.3) and are not consumed here.
+pub(super) struct FormatEntry {
+    /// The registry id, verbatim — what `FormatId::id()` returns, and
+    /// the name the strictness map's refusals call the record by.
+    pub(super) id: String,
     /// `cli-init-report` → `CliInitReport`.
     variant: String,
     epoch: u32,
     recoverable: bool,
     /// `none` | `ours` | `many`, validated.
-    foreign_parsers: String,
+    pub(super) foreign_parsers: String,
+    /// The record's schema — a repo-relative path or `"none"`. `"none"`
+    /// has no generated output and no strictness policy; a path is what
+    /// the pass keys its schema → role map by.
+    pub(super) schema: String,
 }
 
 /// Parse `formats/REGISTRY.toml` into the reduced entries, in sorted id order
 /// (`toml::Value`'s table is a `BTreeMap`, so iteration is deterministic across
-/// platforms — `check-codegen` stays byte-stable).
-fn load_format_registry(root: &Path) -> Result<Vec<FormatEntry>> {
+/// platforms — `check-codegen` stays byte-stable). One loader, one truth: both
+/// readers of the registry — `emit_format_id` and the strictness pass — go
+/// through here, so a second parser can never disagree with the first.
+pub(super) fn load_format_registry(root: &Path) -> Result<Vec<FormatEntry>> {
     let path = root.join("formats/REGISTRY.toml");
     let text =
         std::fs::read_to_string(&path).with_context(|| format!("reading {}", path.display()))?;
@@ -50,6 +60,7 @@ fn load_format_registry(root: &Path) -> Result<Vec<FormatEntry>> {
                 path.display()
             );
         }
+        let schema = require_str(entry, id, "schema", &path)?;
         let variant = pascal_case(id).with_context(|| {
             format!(
                 "`{}`: id `{id}` is not a valid enum variant",
@@ -62,6 +73,7 @@ fn load_format_registry(root: &Path) -> Result<Vec<FormatEntry>> {
             epoch,
             recoverable,
             foreign_parsers,
+            schema,
         });
     }
     Ok(entries)
