@@ -107,8 +107,22 @@ with their rejected options, and the corrections each landing paid for.
         made its executor re-count and stop on a mismatch rather than trust the
         table. `##FORWARD-COMPAT` is true for the first time since it was
         written (`4c977582`).
-- [ ] **Фазы 4–6** — schema and generator, corpora and the break window,
-      handshake and quarantine.
+- [~] **Фаза 4** — schema and generator. **Ф4.0, Ф4.1 and Ф4.2a closed
+      2026-08-15; the whole Ф4.2b block closed 2026-08-17, seven steps of
+      seven.** The transformation layer now runs **nine** passes over every
+      emission of OUR schema home (the engine's home takes no policy at all):
+      arm boxing, snake_case, ordered maps, empty policy, optional shapes,
+      reader strictness, domain types, the trait floor, open vocabularies.
+      Their ORDER is a law written in `xtask/src/codegen/postproc.rs`, not a
+      taste — a pass keyed to the generator's emission shape runs while the
+      file is still that emission, and opening vocabularies writes hand-rolled
+      Rust so it goes last.
+      **Ф4.2c is in flight:** `-1` (trait floor, `95feb37f`) and `-2` (variant
+      names, `dca804db`) landed; `-3` (the re-export, one commit by the orphan
+      rule) and `-4` (the three readerless surfaces, G11) remain. Its four
+      rulings R24–R27 are in the ТЗ, measured by
+      [`harvest/f42c-reexport-radius.md`](campaigns/packages-2026-09/harvest/f42c-reexport-radius.md).
+- [ ] **Фазы 5–6** — corpora and the break window, handshake and quarantine.
 
 Independent lane, in
 [`TZ-IDENTITY-REGISTRY-BUILDS-v0.1.md`](campaigns/packages-2026-09/TZ-IDENTITY-REGISTRY-BUILDS-v0.1.md):
