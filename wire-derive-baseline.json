@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "crates": {
+    "progress-core": 11,
+    "vibe-actions": 7,
+    "vibe-cli": 41,
+    "vibe-core": 24,
+    "vibe-index": 24,
+    "vibe-mcp": 5,
+    "vibe-publish": 3,
+    "vibe-registry": 7,
+    "vibe-trace": 3,
+    "vibe-workspace": 2,
+    "xtask": 12
+  }
+}

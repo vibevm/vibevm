@@ -54,6 +54,13 @@
 # verified part used to be the generated <vibevm> block, so a hand-edit
 # that missed a sibling had nothing to catch it (F-217).
 #
+# Step 0d is the wire-derive ratchet: the per-crate count of handwritten
+# Serialize/Deserialize derive files outside **/generated/** is frozen in
+# wire-derive-baseline.json, and any growth — or a drop the baseline
+# never followed — fails the floor. PROP-044 §2 law 5 made a ratchet, not
+# a ban, because almost all of today's handwritten derive is lawful; the
+# law comment at the step says which and why.
+#
 # Wrapped around all of it: the user-home tripwire. The real per-user
 # settings home (`~/.vibe`, or `$VIBE_SETTINGS`) is hashed path-by-path
 # before the first step, and compared twice — right after the workspace
@@ -218,6 +225,131 @@ check_instruction_triple() {
 }
 run_step "instruction files identical (CLAUDE.md = AGENTS.md = GEMINI.md)" \
   check_instruction_triple || OVERALL=$?
+
+# 0d. The wire-derive ratchet (PROP-044 §2, law 5 — FORBID-HANDWRITTEN-WIRE).
+# The law bans a handwritten parser or writer of our own wire formats not as
+# an end in itself but because that is the mechanism by which the other four
+# bans break unnoticed. A flat ban is impossible today: handwritten
+# Serialize/Deserialize derives stand in 139 files across eleven crate keys
+# (measured 2026-08-17, frozen below), and almost all of it is lawful —
+# configs, CLI-local types, internal structs, foreign formats. A
+# named-exception list of that length rots within a week, so the form is a
+# RATCHET: today's count is frozen per crate in wire-derive-baseline.json
+# and any GROWTH goes red. New handwritten wire stops appearing silently;
+# not one lawful line is declared a violation today.
+#
+# Why PER-CRATE and not one number: a single sum hides a transfer — a crate
+# that shed ten files and a crate that gained ten net to the same total, and
+# the ratchet stays silent exactly where it must speak. Why a DROP is also
+# red, with a different recipe: a baseline the tree has moved past is not a
+# measurement but a CEILING — wire can grow back under it unnoticed, the
+# same reason the map is rebuilt in the same landing that moves the code.
+#
+# The unit is the FILE, not the occurrence: a file either carries
+# handwritten wire or it does not; counting lines is a precision the rule
+# does not use.
+#
+# CODE only, same line-shape filter as the clock gate below: a hit whose
+# first non-blank content is `//` is prose — doc-comments legally show
+# `#[derive(Serialize)]` while explaining what is banned (the codegen
+# postproc prose does exactly that). An inline trailing comment does NOT
+# exempt a line: only lines whose first non-blank content is the comment
+# pass.
+#
+# Why the baseline file explains nothing: JSON has no comments. The
+# neighbour gates explain themselves in their baseline FILES — conform.toml
+# carries its exemption reasons as TOML comments — and this gate cannot, so
+# its explanation lives here, next to the recipe.
+#
+# Lawful handwritten wire INSIDE the baseline, do not "fix" it: the
+# cli-package-tree format is registered against a JSON Schema 2020-12 file,
+# which the codegen generator deliberately does not touch (codegen routing
+# keys on the `*.jtd.json` suffix) — its handwritten emitter is lawful and
+# is counted inside vibe-cli's baseline number.
+WIRE_DERIVE_BASELINE="wire-derive-baseline.json"
+WIRE_DERIVE_PATTERN='^[[:space:]]*#\[derive\([^)]*(Serialize|Deserialize)'
+
+count_wire_derive_files() {
+  grep -rlE --include='*.rs' "$WIRE_DERIVE_PATTERN" "$1" 2>/dev/null \
+    | grep -v '/generated/' | wc -l | tr -d '[:space:]'
+}
+
+check_wire_derive_ratchet() {
+  local rc=0 sum=0 dir name measured frozen key
+  if [ ! -f "$WIRE_DERIVE_BASELINE" ]; then
+    printf 'self-check: `%s` is missing — the wire-derive ratchet has nothing\n' "$WIRE_DERIVE_BASELINE" >&2
+    printf 'self-check: to measure against. fix: re-freeze it from today'"'"'s tree\n' >&2
+    printf 'self-check: (schema 1, per-crate file counts outside **/generated/**).\n' >&2
+    return 1
+  fi
+  if ! jq -e '(.schema == 1) and (.crates | type == "object")
+              and ([.crates[] | type == "number"] | all)' \
+      "$WIRE_DERIVE_BASELINE" >/dev/null 2>&1; then
+    printf 'self-check: `%s` is not a schema-1 baseline of per-crate numbers\n' "$WIRE_DERIVE_BASELINE" >&2
+    printf 'self-check: ({"schema":1,"crates":{"<crate>":N,...}}). fix: re-freeze it\n' >&2
+    printf 'self-check: from today'"'"'s tree.\n' >&2
+    return 1
+  fi
+  for dir in crates/*/ xtask/; do
+    [ -d "$dir" ] || continue
+    name="${dir%/}"; name="${name#crates/}"
+    measured="$(count_wire_derive_files "$dir")"
+    # `tr -d '\r'`: a Windows-native jq writes CRLF even on a pipe, and a
+    # trailing CR makes `[ -gt ]`/`[ -d ]` misjudge silently.
+    frozen="$(jq -r --arg k "$name" '.crates[$k] // ""' "$WIRE_DERIVE_BASELINE" | tr -d '\r')"
+    if [ -z "$frozen" ]; then
+      if [ "$measured" -gt 0 ]; then
+        printf 'self-check: `%s` carries %d handwritten Serialize/Deserialize derive\n' "$name" "$measured" >&2
+        printf 'self-check: file(s) and is absent from %s. the rule — a new crate with\n' "$WIRE_DERIVE_BASELINE" >&2
+        printf 'self-check: handwritten wire must be NAMED, not silent (PROP-044 §2 law 5:\n' >&2
+        printf 'self-check: a handwritten parser or writer of our own format is the mechanism\n' >&2
+        printf 'self-check: by which the other four bans break unnoticed). fix: add `%s` to\n' "$name" >&2
+        printf 'self-check: %s in the same commit and say in the commit body what the type is.\n' "$WIRE_DERIVE_BASELINE" >&2
+        rc=1
+      fi
+      continue
+    fi
+    if [ "$measured" -gt "$frozen" ]; then
+      printf 'self-check: `%s` carries %d handwritten Serialize/Deserialize derive file(s);\n' "$name" "$measured" >&2
+      printf 'self-check: %s froze %d. the rule — handwritten wire grows only through a\n' "$WIRE_DERIVE_BASELINE" "$frozen" >&2
+      printf 'self-check: named decision, never silently (PROP-044 §2 law 5: a handwritten\n' >&2
+      printf 'self-check: parser or writer of our own format is the mechanism by which the\n' >&2
+      printf 'self-check: other four bans break unnoticed). fix: describe the format as a schema\n' >&2
+      printf 'self-check: and run `cargo xtask codegen`; if the new type is NOT our wire (a\n' >&2
+      printf 'self-check: config, a CLI-local struct, a foreign format), raise the `%s` count\n' "$name" >&2
+      printf 'self-check: in %s in the same commit and say in the commit body what the type is.\n' "$WIRE_DERIVE_BASELINE" >&2
+      rc=1
+    elif [ "$measured" -lt "$frozen" ]; then
+      printf 'self-check: `%s` carries %d handwritten Serialize/Deserialize derive file(s);\n' "$name" "$measured" >&2
+      printf 'self-check: %s froze %d — the rule has tightened past its baseline. the rule —\n' "$WIRE_DERIVE_BASELINE" "$frozen" >&2
+      printf 'self-check: a stale baseline is not a measurement but a CEILING: wire can grow\n' >&2
+      printf 'self-check: back under it unnoticed (PROP-044 §2 law 5). fix: lower the `%s`\n' "$name" >&2
+      printf 'self-check: count in %s in the same commit.\n' "$WIRE_DERIVE_BASELINE" >&2
+      rc=1
+    else
+      sum=$((sum + measured))
+    fi
+  done
+  for key in $(jq -r '.crates | keys[]' "$WIRE_DERIVE_BASELINE" | tr -d '\r'); do
+    case "$key" in
+      xtask) [ -d xtask ] && continue ;;
+      *) [ -d "crates/$key" ] && continue ;;
+    esac
+    printf 'self-check: %s names `%s`, which the tree no longer has — the baseline\n' "$WIRE_DERIVE_BASELINE" "$key" >&2
+    printf 'self-check: describes a tree that no longer exists. the rule — the ratchet\n' >&2
+    printf 'self-check: measures only while it measures the real tree (PROP-044 §2 law 5).\n' >&2
+    printf 'self-check: fix: drop the `%s` key from %s in the same commit.\n' "$key" "$WIRE_DERIVE_BASELINE" >&2
+    rc=1
+  done
+  if [ "$rc" -eq 0 ]; then
+    [ "$QUIET" -ne 0 ] ||
+      printf 'self-check: wire-derive ratchet holds: %d handwritten derive file(s) match %s.\n' \
+        "$sum" "$WIRE_DERIVE_BASELINE" >&2
+  fi
+  return "$rc"
+}
+run_step "wire-derive ratchet (handwritten Serialize/Deserialize derives vs wire-derive-baseline.json)" \
+  check_wire_derive_ratchet || OVERALL=$?
 
 # Machine obligations the stacks declare. The go stack's live oracle
 # needs gopls (TCG-ORACLE-GO §1) and the TS stack's structural gate
