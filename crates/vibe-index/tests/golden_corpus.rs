@@ -37,6 +37,7 @@ use std::path::{Path, PathBuf};
 
 use tempfile::TempDir;
 use vibe_index::index::memory::WriteCtx;
+use vibe_index::index::{WRITER_DIRS, WRITER_FILES};
 use vibe_index::journal;
 
 /// The corpus root: the journal lives under `state/journal/` inside
@@ -52,13 +53,6 @@ fn corpus_dir() -> PathBuf {
         .join("index")
         .join("e1")
 }
-
-/// The single files the catalog writer owns at the corpus root — the
-/// same fixed surface `xtask rebuild` compares.
-const WRITER_FILES: [&str; 3] = ["repomd.json", "primary.jsonl", "primary.jsonl.gz"];
-
-/// The directory trees the catalog writer owns.
-const WRITER_DIRS: [&str; 3] = ["by-name", "by-cap", "by-purl"];
 
 /// Project the corpus's journal into `target_dir`, exactly the way
 /// `xtask rebuild --check` does: replay, fold, write — the clock taken

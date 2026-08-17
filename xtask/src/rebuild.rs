@@ -27,16 +27,9 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use vibe_index::index::memory::WriteCtx;
+use vibe_index::index::{WRITER_DIRS, WRITER_FILES};
 use vibe_index::journal;
 use walkdir::WalkDir;
-
-/// The single files the catalog writer owns at the data directory's
-/// root — the fixed part of `Index::write_to`'s surface.
-const WRITER_FILES: [&str; 3] = ["repomd.json", "primary.jsonl", "primary.jsonl.gz"];
-
-/// The directory trees the catalog writer owns — the recursive part of
-/// its surface.
-const WRITER_DIRS: [&str; 3] = ["by-name", "by-cap", "by-purl"];
 
 /// The catalog's drift from its journal's projection, in the three
 /// ways two file sets can disagree.
