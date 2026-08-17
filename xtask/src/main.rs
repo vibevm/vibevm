@@ -36,6 +36,7 @@ use clap::{Parser, Subcommand};
 mod batch_review;
 mod codegen;
 mod conform;
+mod epochs;
 mod mirror;
 mod rebuild;
 mod specmap;

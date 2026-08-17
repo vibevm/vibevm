@@ -1,0 +1,36 @@
+# formats/EPOCHS.toml — the epochs flags (PROP-044 §4.7 `##M-BREAK-WINDOW`,
+# §7 `##STABILITY-IS-A-FLAG` and `##THE-PUBLIC-SWITCH`).
+#
+# THE PUBLIC SWITCH. `public` is flipped ONLY by the owner. The fact of the
+# first public presentation is technically underivable from any event — not
+# from a push, not from a tag, not from the registry filling — so no
+# automation may ever set it, infer it, or default it. Do not touch this
+# line unless you are the owner making that declaration.
+#
+# What changes when `public = true`: migrations switch on (codemods, bot
+# PRs), support windows and sunset calendars bind, break notes become
+# mandatory, epochs publish in parallel. Until then breaking is free AND
+# unmigrated — the standing user recipe is «regenerate / re-init /
+# re-fetch», and readers of old shapes are conveniences deletable at will.
+#
+# THE BREAK WINDOW. `break_window_open` is what «a period of stability»
+# actually is: not a virtue or a hope, but the state of this flag, visible
+# in the git log of one file. Closed (`= false`): changes under `schemas/**`
+# and `formats/**` are rejected outright. Open (`= true`, today): changes
+# are allowed — and once `public = true`, each wire-visible change also
+# requires a break note under `formats/breaks/NNN.md`.
+#
+# Read by: the one loader `xtask/src/epochs.rs`, the state watchdog test
+# beside it, and — from the next phase step — `cargo xtask wire-diff`,
+# whose entire behaviour these two flags decide: pre-publication it
+# reports, a closed window forbids, an open public window demands a note.
+#
+# The loader refuses a missing file (committed state: absence is a broken
+# checkout, not a default), an unknown key (a typo in a hand-edited file is
+# caught at the edit, PROP-044 §6.2 `##FMT-MANIFEST`), and a missing or
+# non-boolean key (a flag has no default to guess). It never guesses,
+# because a default the author never saw is exactly the accident this file
+# exists to make impossible.
+
+public = false
+break_window_open = true
