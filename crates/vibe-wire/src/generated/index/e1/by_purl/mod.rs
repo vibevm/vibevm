@@ -2,10 +2,14 @@
 
 use serde::{Deserialize, Serialize};
 
-/// `by-purl/<slug>.jsonl` — one line of the PURL inverted index, epoch 1 (PROP-
-/// 005 §2.13): a package version whose package- or subskill-level `describes`
-/// matches one given PURL. Root type `PurlRow`; every field required. Source of
-/// truth for `crates/vibe-wire/src/generated/index/e1/by_purl/`.
+/// `by-purl/<slug>.jsonl` — one line of the PURL inverted index, epoch 1
+/// (PROP-005 §2.13): a package version whose package- or subskill-level
+/// `describes` matches one given PURL. Root type `ByPurl` — the generator
+/// mints the root struct's name from the schema's stem, so the emitted
+/// name is `ByPurl`, not the hand-written twin `PurlRow`; a human-chosen
+/// Rust name is declared by an `x-rust-type` annotation, deferred until the
+/// twin retires. Every field required. Source of truth for `crates/vibe-
+/// wire/src/generated/index/e1/by_purl/`.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ByPurl {
     pub binding_site: BindingSite,

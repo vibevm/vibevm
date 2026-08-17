@@ -4,9 +4,12 @@ use serde::{Deserialize, Serialize};
 
 /// `by-cap/<slug>.jsonl` — one line of the capability inverted index, epoch
 /// 1 (PROP-005 §2.4): a package version that provides one given capability,
-/// fetchable by a single HTTP GET. Root type `CapabilityRow`; every field
-/// required, no optionals, no collections. Source of truth for `crates/vibe-
-/// wire/src/generated/index/e1/by_cap/`.
+/// fetchable by a single HTTP GET. Root type `ByCap` — the generator mints the
+/// root struct's name from the schema's stem, so the emitted name is `ByCap`,
+/// not the hand-written twin `CapabilityRow`; a human-chosen Rust name is
+/// declared by an `x-rust-type` annotation, deferred until the twin retires.
+/// Every field required, no optionals, no collections. Source of truth for
+/// `crates/vibe-wire/src/generated/index/e1/by_cap/`.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ByCap {
     /// The capability this row indexes — the canonical spelling as it lives

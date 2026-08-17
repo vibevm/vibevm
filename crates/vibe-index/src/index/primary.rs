@@ -7,10 +7,11 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout");
 
-use std::io::Write;
+use std::io::{Read, Write};
 use std::path::Path;
 
 use flate2::Compression;
+use flate2::read::GzDecoder;
 use flate2::write::GzEncoder;
 
 use crate::error::{Error, Result};
@@ -79,6 +80,31 @@ pub fn read(dir: &Path) -> Result<Vec<VersionEntry>> {
         message: e.to_string(),
     })?;
     parse(&bytes)
+}
+
+/// Read and parse the gzipped sibling `primary.jsonl.gz`. Compression
+/// here is a transport envelope, not a second format: the decompressed
+/// bytes flow through the same [`parse`] as the plain surface, so
+/// `VersionEntry` stays the one schema-generated reader for both
+/// (G11, PROP-044 §8) and the two files cannot drift apart.
+pub fn read_gz(dir: &Path) -> Result<Vec<VersionEntry>> {
+    let path = dir.join(FILENAME_GZ);
+    let bytes = std::fs::read(&path).map_err(|e| Error::Io {
+        path: path.clone(),
+        message: e.to_string(),
+    })?;
+    parse_gz(&bytes)
+}
+
+/// Decompress `primary.jsonl.gz` bytes, then run the plain surface's
+/// [`parse`] over what the envelope carried.
+pub fn parse_gz(bytes: &[u8]) -> Result<Vec<VersionEntry>> {
+    let mut decoder = GzDecoder::new(bytes);
+    let mut plain = Vec::new();
+    decoder
+        .read_to_end(&mut plain)
+        .map_err(|e| Error::Malformed(format!("primary.jsonl.gz does not decompress: {e}")))?;
+    parse(&plain)
 }
 
 pub fn parse(bytes: &[u8]) -> Result<Vec<VersionEntry>> {

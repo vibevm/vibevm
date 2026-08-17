@@ -26,6 +26,8 @@ use std::path::{Path, PathBuf};
 use semver::Version;
 use serde::{Deserialize, Serialize};
 use vibe_core::Group;
+use vibe_wire::generated::index::e1::by_cap::ByCap;
+use vibe_wire::generated::index::e1::by_purl::ByPurl;
 use walkdir::WalkDir;
 
 use crate::error::{Error, Result};
@@ -34,7 +36,7 @@ use crate::types::{PackageKind, VersionEntry};
 
 /// The PURL-binding vocabulary — the wire's own dictionary, re-exported
 /// from the generated tree so `PurlRow` (still hand-written here; its
-/// reader is a later step) spells the same strings the schema does.
+/// retirement is a later step) spells the same strings the schema does.
 pub use crate::types::BindingSite;
 
 pub const BY_CAP_DIRNAME: &str = "by-cap";
@@ -238,6 +240,64 @@ pub fn write_purl(data_dir: &Path, slug: &str, rows: &[PurlRow]) -> Result<Writt
         size: bytes.len() as u64,
         sha256: sha256_of_bytes(&bytes),
     })
+}
+
+// ---------------------------------------------------------------------------
+// On-disk read — into the schema-generated rows (G11, PROP-044 §8): the
+// reader belongs to the schema, not to the writer, so the hand-written
+// `CapabilityRow` / `PurlRow` above can drift from what consumers parse
+// only by failing a round-trip, never silently.
+// ---------------------------------------------------------------------------
+
+/// Parse `by-cap/<slug>.jsonl` bytes into the schema-generated
+/// [`ByCap`] rows. One record per line; blank lines are skipped and a
+/// malformed line fails naming its 1-based line number — the plain
+/// primary surface's rule ([`crate::index::primary::parse`]), not a
+/// new one.
+pub fn parse_capability(bytes: &[u8]) -> Result<Vec<ByCap>> {
+    parse_jsonl(bytes, &format!("{BY_CAP_DIRNAME}/<slug>.jsonl"))
+}
+
+/// Read and parse `by-cap/<slug>.jsonl` from `data_dir`.
+pub fn read_capability(data_dir: &Path, slug: &str) -> Result<Vec<ByCap>> {
+    let path = capability_file(data_dir, slug);
+    let bytes = std::fs::read(&path).map_err(|e| Error::Io {
+        path: path.clone(),
+        message: e.to_string(),
+    })?;
+    parse_capability(&bytes)
+}
+
+/// Parse `by-purl/<slug>.jsonl` bytes into the schema-generated
+/// [`ByPurl`] rows — same JSONL law as [`parse_capability`].
+pub fn parse_purl(bytes: &[u8]) -> Result<Vec<ByPurl>> {
+    parse_jsonl(bytes, &format!("{BY_PURL_DIRNAME}/<slug>.jsonl"))
+}
+
+/// Read and parse `by-purl/<slug>.jsonl` from `data_dir`.
+pub fn read_purl(data_dir: &Path, slug: &str) -> Result<Vec<ByPurl>> {
+    let path = purl_file(data_dir, slug);
+    let bytes = std::fs::read(&path).map_err(|e| Error::Io {
+        path: path.clone(),
+        message: e.to_string(),
+    })?;
+    parse_purl(&bytes)
+}
+
+fn parse_jsonl<T: serde::de::DeserializeOwned>(bytes: &[u8], surface: &str) -> Result<Vec<T>> {
+    let text = std::str::from_utf8(bytes)
+        .map_err(|e| Error::Malformed(format!("{surface} is not valid UTF-8: {e}")))?;
+    let mut out = Vec::new();
+    for (lineno, line) in text.lines().enumerate() {
+        if line.trim().is_empty() {
+            continue;
+        }
+        let row: T = serde_json::from_str(line).map_err(|e| {
+            Error::Malformed(format!("{surface} line {} is malformed: {e}", lineno + 1))
+        })?;
+        out.push(row);
+    }
+    Ok(out)
 }
 
 fn serialise_rows<'a, T: 'a, I, F>(rows: I, ser: F) -> Result<Vec<u8>>
