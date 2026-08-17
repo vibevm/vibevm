@@ -23,6 +23,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http");
 
 mod auth;
+mod handshake;
 mod wire;
 
 pub use auth::{BearerToken, IndexAuth};
@@ -107,9 +108,13 @@ pub enum IndexError {
 /// - [`ProbeOutcome::Found`] — the index answered; the client is ready.
 /// - [`ProbeOutcome::Absent`] — nothing answered here (404, connect-fail,
 ///   5xx): silent fall-through to `git ls-remote`, as before.
-/// - [`ProbeOutcome::Refused`] — the index is there but refused us
-///   (401/403). Surfaced via `UnreachableRegistry.reason` so a private
-///   index is **not** indistinguishable from a missing one.
+/// - [`ProbeOutcome::Refused`] — the index is there but this build
+///   cannot use it: it refused us (401/403), OR its handshake
+///   publishes no world this build reads (an unparseable body, an
+///   unknown handshake format, foreign epochs — each reason names
+///   the facts and the fix). Surfaced via `UnreachableRegistry.reason`
+///   so a private or newer-than-us index is **not** indistinguishable
+///   from a missing one.
 #[derive(Debug)]
 pub enum ProbeOutcome {
     Found(IndexClient),
@@ -119,9 +124,32 @@ pub enum ProbeOutcome {
 
 impl IndexClient {
     /// Probe the operator-supplied base URL with the registry's
-    /// [`IndexAuth`] plan. Returns [`ProbeOutcome::Found`] if
-    /// `<base>/repomd.json` OR `<base>/v1/index/repomd.json` responds
-    /// HTTP 200; [`ProbeOutcome::Refused`] if either responds 401/403
+    /// [`IndexAuth`] plan. The eternal handshake `hello.json` is
+    /// asked FIRST, at BOTH candidate bases (`<base>/v1/index` then
+    /// `<base>`), before any `repomd.json` probe: the handshake's
+    /// `successor` key is the in-band forwarding pointer for a moved
+    /// index, and it is readable exactly when the old address no
+    /// longer serves a catalog (PROP-044 `##ONE-ETERNAL-FILE`) — a
+    /// handshake sought only beside a found `repomd` would never be
+    /// read precisely when it matters. On HTTP 200 the handshake is
+    /// parsed by the generated type and its worlds matched against
+    /// the epoch this build reads (`FormatId::IndexRepomd.epoch()`
+    /// from the generated registry — the client mints no constant of
+    /// its own); the winning world's `path` refines `file_base`
+    /// (`"."` keeps the candidate untouched, no `/.` tail). A
+    /// handshake this build cannot use — an unparseable body, an
+    /// unknown handshake format, no world of its epoch — is
+    /// [`ProbeOutcome::Refused`] naming the offered epochs, this
+    /// build's epoch, and the fix (`successor` named, never
+    /// followed). The price of asking first is paid only by
+    /// handshake-less indexes: up to two extra GETs.
+    ///
+    /// When neither candidate answers `hello.json` with 200, the
+    /// probe keeps today's path unchanged — the compatibility with
+    /// pre-handshake indexes the format family requires: returns
+    /// [`ProbeOutcome::Found`] if `<base>/repomd.json` OR
+    /// `<base>/v1/index/repomd.json` responds HTTP 200;
+    /// [`ProbeOutcome::Refused`] if any probe step responds 401/403
     /// (the index is private — the reason carries regime-specific
     /// guidance); [`ProbeOutcome::Absent`] for anything else (404,
     /// connect-fail, 5xx — no index there). Probe timeout is short
@@ -141,7 +169,33 @@ impl IndexClient {
                 return ProbeOutcome::Absent;
             }
         };
-        for candidate in [format!("{trimmed}/v1/index"), trimmed.to_string()] {
+        let candidates = [format!("{trimmed}/v1/index"), trimmed.to_string()];
+        // The eternal handshake, asked first at every candidate —
+        // including the ones where no `repomd` will ever answer
+        // again (a moved index answers `successor` here, or nothing).
+        for candidate in &candidates {
+            match handshake::probe_candidate(&client, candidate, &auth) {
+                handshake::HandshakeProbe::Found { file_base } => {
+                    tracing::debug!(
+                        target: "vibe_registry::index_client",
+                        "probe succeeded via handshake at {candidate}"
+                    );
+                    return ProbeOutcome::Found(IndexClient {
+                        file_base,
+                        server_base: trimmed.to_string(),
+                        auth,
+                    });
+                }
+                handshake::HandshakeProbe::Refused { reason } => {
+                    return ProbeOutcome::Refused { reason };
+                }
+                handshake::HandshakeProbe::Absent => {}
+            }
+        }
+        // No handshake anywhere — today's `repomd.json` path, byte
+        // for byte: the compatibility surface for indexes without a
+        // handshake.
+        for candidate in candidates {
             let url = format!("{candidate}/repomd.json");
             match client.get(&url).send() {
                 Ok(resp) if resp.status().is_success() => {

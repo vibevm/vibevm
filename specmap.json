@@ -6761,9 +6761,9 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/index_client/mod.rs",
       "item_kind": "enum",
-      "line": 69,
+      "line": 70,
       "symbol": "vibe_registry::index_client::IndexError",
-      "end_line": 102,
+      "end_line": 103,
       "fingerprint": "tok1:71cd0162a7af8fcfc92cce3c5e8a241a6779d6da34e40feb8e23a5155fa08814"
     },
     {
@@ -6774,6 +6774,15 @@
       "symbol": "vibe_registry::index_client::auth",
       "end_line": 20,
       "fingerprint": "tok1:5be1f6f3e071f41fa5f7b9f253eb8fb2a7389f5aa5167456a440e301c1651f34"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/index_client/handshake.rs",
+      "item_kind": "mod",
+      "line": 18,
+      "symbol": "vibe_registry::index_client::handshake",
+      "end_line": 18,
+      "fingerprint": "tok1:3cd25bd6eaa92005cef577c22fb09f9349ef43e247fbe14a5eca5e92622cf4e1"
     },
     {
       "crate_name": "vibe-registry",
@@ -15001,7 +15010,7 @@
     {
       "file": "crates/vibe-registry/src/index_client/mod.rs",
       "from_symbol": "vibe_registry::index_client::IndexError",
-      "line": 70,
+      "line": 71,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http",
       "verb": "implements"
@@ -15012,6 +15021,14 @@
       "line": 20,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-auth",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/index_client/handshake.rs",
+      "from_symbol": "vibe_registry::index_client::handshake",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#truth",
       "verb": "implements"
     },
     {

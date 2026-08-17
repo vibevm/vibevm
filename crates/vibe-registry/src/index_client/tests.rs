@@ -89,3 +89,28 @@ fn authorization_attaches_only_for_a_bearer_plan_over_https() {
         &IndexAuth::HttpIncapable("ssh")
     ));
 }
+
+/// The whole truth table of the world-path refinement: `"."` (the
+/// degenerate single-world form) and any all-slashes path leave the
+/// candidate untouched — a glued-on `/.` or trailing `/` is a real
+/// URL defect class — while a real path joins with exactly one `/`
+/// on each side, whatever the document's padding.
+#[test]
+fn refine_file_base_joins_the_world_path_without_glue() {
+    let base = "https://idx.example.com/v1/index";
+    assert_eq!(super::handshake::refine_file_base(base, "."), base);
+    assert_eq!(super::handshake::refine_file_base(base, ""), base);
+    assert_eq!(super::handshake::refine_file_base(base, "/"), base);
+    assert_eq!(
+        super::handshake::refine_file_base(base, "e2"),
+        "https://idx.example.com/v1/index/e2"
+    );
+    assert_eq!(
+        super::handshake::refine_file_base(base, "e2/"),
+        "https://idx.example.com/v1/index/e2"
+    );
+    assert_eq!(
+        super::handshake::refine_file_base(base, "/e2/"),
+        "https://idx.example.com/v1/index/e2"
+    );
+}
