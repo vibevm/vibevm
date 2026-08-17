@@ -102,4 +102,4 @@ pub struct RepomdFileEntryFile {
 }
 
 /// RFC 3339 timestamp — `chrono::DateTime<Utc>` in code.
-pub type Timestamp = String;
+pub type Timestamp = chrono::DateTime<chrono::Utc>;

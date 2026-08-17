@@ -9,8 +9,11 @@
 //! optional collections per the schema's `x-empty`, lifting the `Box`
 //! off optional scalars and structures per the schema's `x-default`,
 //! stamping `#[serde(deny_unknown_fields)]` on the structs of formats
-//! the registry marks `foreign_parsers = "none"`, opening vocabularies
-//! per the schema's `x-vocabulary`) — the files are
+//! the registry marks `foreign_parsers = "none"`, binding the domain
+//! Rust types the schema's `x-rust-type` names — an alias's right side
+//! or a type's name, whichever the definition's form makes it, together
+//! with the import items such a substitution leaves with no user —
+//! opening vocabularies per the schema's `x-vocabulary`) — the files are
 //! still never hand-edited. `cargo
 //! xtask codegen` regenerates; `cargo xtask check-codegen` asserts no
 //! drift (CI runs the latter). Per PROP-000 §16, JTD + codegen is the

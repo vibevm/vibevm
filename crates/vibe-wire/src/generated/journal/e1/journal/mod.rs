@@ -13,7 +13,7 @@ use std::collections::BTreeMap;
 /// = "kind", rename_all = "snake_case")]`. Source of truth for `crates/vibe-
 /// wire/src/generated/journal/e1/journal/`.
 #[derive(Serialize, Deserialize)]
-pub struct Journal {
+pub struct JournalRecord {
     /// Who wrote the record — a tool identity such as `vibe-index 0.1.0-dev`.
     pub actor: String,
 
@@ -325,7 +325,7 @@ pub struct FeaturesEntry {
 
 /// Reverse-FQDN namespace qualifier (PROP-008 §2.1) — the `vibe_core::Group`
 /// newtype on the wire.
-pub type Group = String;
+pub type Group = vibe_core::Group;
 
 /// I18n availability: the locales a package carries and its default one.
 #[derive(Serialize, Deserialize)]
@@ -467,10 +467,10 @@ pub struct SubskillEntry {
 }
 
 /// RFC 3339 timestamp — `chrono::DateTime<Utc>` in code.
-pub type Timestamp = String;
+pub type Timestamp = chrono::DateTime<chrono::Utc>;
 
 /// Semantic version string — `semver::Version` in code.
-pub type Version = String;
+pub type Version = semver::Version;
 
 /// Per-version catalog record (PROP-005 §2.6) — one line of `primary.jsonl`,
 /// one element of a `by-name` candidate's `versions[]`, one `POST /v1/packages`

@@ -23,7 +23,7 @@
   },
   "group": {
     "metadata": {
-      "x-rust-type": "Group",
+      "x-rust-type": "vibe_core::Group",
       "description": "Reverse-FQDN namespace qualifier (PROP-008 §2.1) — the `vibe_core::Group` newtype on the wire."
     },
     "type": "string"
@@ -37,10 +37,10 @@
   },
   "timestamp": {
     "metadata": {
-      "x-rust-type": "chrono::DateTime<Utc>",
+      "x-rust-type": "chrono::DateTime<chrono::Utc>",
       "description": "RFC 3339 timestamp — `chrono::DateTime<Utc>` in code."
     },
-    "type": "string"
+    "type": "timestamp"
   },
   "boot_snippet_entry": {
     "metadata": {

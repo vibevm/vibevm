@@ -41,7 +41,7 @@ pub enum BindingSite {
 
 /// Reverse-FQDN namespace qualifier (PROP-008 §2.1) — the `vibe_core::Group`
 /// newtype on the wire.
-pub type Group = String;
+pub type Group = vibe_core::Group;
 
 /// Installable package kind (VIBEVM-SPEC §4.1). Open vocabulary: the register
 /// grows by owner amendment, so a reader must not hard-fail on an unseen kind.
@@ -96,4 +96,4 @@ impl<'de> Deserialize<'de> for PackageKind {
 }
 
 /// Semantic version string — `semver::Version` in code.
-pub type Version = String;
+pub type Version = semver::Version;

@@ -11,8 +11,14 @@ homepage.workspace = true
 description = "Generated Rust types for vibevm wire contracts (JTD-driven, see PROP-000 §16)"
 
 [dependencies]
+# The `x-rust-type` annotations name domain types verbatim (P23), so the
+# generated aliases bind against them: `vibe_core::Group`,
+# `semver::Version`, `chrono::DateTime<chrono::Utc>`.
+chrono.workspace = true
+semver.workspace = true
 serde.workspace = true
 serde_json.workspace = true
+vibe-core.workspace = true
 
 [dev-dependencies]
 # The `format_id_completeness` test parses the format registry.

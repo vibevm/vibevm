@@ -39,7 +39,11 @@ use vibe_index::types::{
     I18nEntry, NamingConvention, ObsoletesEntry, PackageKind, ProvidesEntry, RequiresAnyEntry,
     RequiresEntry, SubskillEntry, VersionEntry, WorkspaceOriginEntry,
 };
-use vibe_wire::generated::journal::e1::journal::Journal as GeneratedJournal;
+// Both sides are now called `JournalRecord` — the schema's
+// `x-rust-type` says so and the generator obeys it — so the alias is
+// what keeps the two apart, and it is load-bearing rather than
+// stylistic: dropping it collides with the hand-written import above.
+use vibe_wire::generated::journal::e1::journal::JournalRecord as GeneratedJournal;
 
 /// How many variants `Event` carries, counted from `journal/record.rs`
 /// (the harvest's §6 count agrees). Declared as a constant so the
