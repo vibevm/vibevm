@@ -130,17 +130,43 @@ with their rejected options, and the corrections each landing paid for.
       confirmed, two falsified and filed as `BACKLOG` B-081 / B-082. Two of the
       falsifications were only reachable by a run; re-reading the predictions
       would have confirmed all six.
-- [~] **Спек-диффы фаз Ф4 и Ф6** (ТЗ Приложение Б.5) — the one thing those
-      phases left unpaid. The appendix binds every phase to leave no lying
-      spec, and the diffs stopped at Ф3 (`c2132dd0`, `4c977582`). In flight
-      2026-08-18; the measurement behind it is
-      [`harvest/prop005-drift-a.md`](campaigns/packages-2026-09/harvest/prop005-drift-a.md)
-      and its sibling.
-- [ ] **§11 — смертность плана**: the executed phases' sections collapse into
-      tombstones, and both references to the plan file leave
-      `spec/common/PROP-044` (`##PURPOSE`, `##SOURCES`). Blocked on the line
-      above **by construction**, not by scheduling — the content has to reach
-      the specs before the plan may die.
+- [x] **Спек-диффы фаз Ф4 и Ф6** (ТЗ Приложение Б.5) — **CLOSED 2026-08-18.**
+      A pointed grep had found six lying statements; the full measured pass found
+      thirty, in three classes: the spec behind the code, the spec AHEAD of the
+      code while marked `impl/done`, and the spec contradicting itself. All are
+      corrected or honestly re-marked; five unbuilt promises became owner forks
+      (`BACKLOG` B-083…B-087). Measurements:
+      [`harvest/prop005-drift-a.md`](campaigns/packages-2026-09/harvest/prop005-drift-a.md),
+      [`-b.md`](campaigns/packages-2026-09/harvest/prop005-drift-b.md).
+- [x] **§11 предусловие — карта домов и спасение бездомного.** **CLOSED
+      2026-08-18.** Seventy rulings classified with citations
+      ([`plan-mortality-c.md`](campaigns/packages-2026-09/harvest/plan-mortality-c.md),
+      [`-d.md`](campaigns/packages-2026-09/harvest/plan-mortality-d.md),
+      [`-section1.md`](campaigns/packages-2026-09/harvest/plan-mortality-section1.md)):
+      `spec` 5 · `both` 22 · `code` 36 · `none` 7. All seven homeless rulings
+      now have homes, and Appendix Б.6's three deferrals were moved into the
+      deferrals ledger — the collapse would have deleted them while every reader
+      of the ledger believed it complete.
+- [ ] **§11 — смертность плана: сама свёртка.** Предусловие снято; свёртка
+      законна. **Рецепт, чтобы холодная сессия не переоткрывала:**
+      *(1)* прочесть план **ЦЕЛИКОМ** — свёртка есть переписывание набело, и
+      делать её, зная часть текста, нельзя (это причина, по которой сессия
+      2026-08-18 её не выполнила, прочитав ~40%);
+      *(2)* сохранить дословно §0 (базовая линия), §10 (приёмка + сверка
+      предсказаний) и §11;
+      *(3)* свернуть в могильники §1, §2, §3–§9 и приложения А и Б — форма:
+      «Closed \<дата\> by \<коммиты\>. The ruling and its reasoning now live in
+      \<дома\>», коммиты из таблиц «Коммиты посадки» трёх карт, дома из «Карт
+      домов»;
+      *(4)* дом бывает **двух** видов, и могильник говорит какого: якорь спеки
+      либо файл, чей докблок несёт рассуждение — карты уже размечены `spec` /
+      `code` / `both`;
+      *(5)* ссылок на план в `spec/**` **четыре, а не две**, как утверждает
+      §11.2: живые указатели `PROP-044` `##PURPOSE` и `##SOURCES` уходят,
+      провенанс-упоминания (`PROP-044:3` в комментарии `<status>` и
+      `spec/research/schema-evolution-2026-08/README-PROVENANCE.md:22`) остаются
+      — три жанра, а не два, объяснены в `BACKLOG` **B-088**; если файл плана
+      потом удаляется, провенанс-ссылка обязана указывать на коммит, а не на путь.
 
 Independent lane, in
 [`TZ-IDENTITY-REGISTRY-BUILDS-v0.1.md`](campaigns/packages-2026-09/TZ-IDENTITY-REGISTRY-BUILDS-v0.1.md):
