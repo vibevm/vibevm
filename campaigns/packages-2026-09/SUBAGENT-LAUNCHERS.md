@@ -1370,6 +1370,37 @@ with exceptions is a ban a weak writer will widen. The ban stays absolute;
 what changes is that the packet stops asking for something only the banned
 tool can give.
 
+@fact:fact-a-perimeter-cut-by-meaning-is-narrower-than-one-cut-by-counting **A
+fan-out cut along the CONCEPT the task names leaves out whatever the concept
+does not happen to cover — and the boss finds it only by counting the file
+(2026-08-18):** the plan-mortality measurement was split into two packets by
+«phase section», because the rule being executed speaks of phase sections. The
+two segments covered 2762 lines of a 3055-line file. The 293 lines nobody was
+assigned held the plan's architectural decisions, its execution rules and both
+appendices — that is, the highest-value prose in the document and the one place
+where a deferral lived with no copy anywhere else. Both homeless items the whole
+measurement was run to find (a ruling whose reasoning had no spec, and three
+named deferrals absent from the deferrals ledger) were in those 293 lines.
+
+Nothing was lost, because the gap was found before the collapse and closed by
+the boss in the same session. What it costs to find it late is the point: the
+task was «prepare a deletion», and a perimeter that under-covers a deletion
+deletes what it did not name.
+
+**The rule: when the work is destructive, cut the perimeter by COUNTING the
+artifact, not by naming the concept.** Sum the segments and compare to `wc -l`
+(or to the file list, or to the anchor count) before spawning; a remainder is
+either a third packet or an explicit boss-side item, never an accident. The
+cheap form is one line — `echo $((end1-start1 + end2-start2)) vs $(wc -l < file)`
+— and it is the same instrument-versus-thing discipline as
+`#fact-an-empty-output-is-a-claim-and-a-reproduction-script-is-a-fixture`, one
+substrate up: there a zero was read as evidence without a control, here a
+partition was read as complete without a sum.
+
+Related from the other side: `#fact-a-closed-write-list-must-name-the-file-the-change-breaks`
+is this same defect on the WRITE perimeter — there the list under-named what the
+change would break, here the split under-named what the measurement had to read.
+
 ## 9. What a clean fan-out looked like {#clean-fanout}
 
 @fact:fanout-first-pass-acceptance **Measured 2026-08-14 — three packets, two
