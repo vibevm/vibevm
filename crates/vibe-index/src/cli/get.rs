@@ -94,6 +94,16 @@ pub fn run(args: Args) -> Result<()> {
         // this index does not hold at all (or the package row carries
         // no versions). The honest `found:false` / error — no version
         // exists to speak about, so `unavailable` stays silent too.
+        //
+        // This branch printed `args.version.unwrap()` until Ф6.2b, and
+        // it is reachable WITHOUT `--version`: a package row holding no
+        // usable version made `get` PANIC instead of answering. The fix
+        // was not a guard in front of the `unwrap` — the branch was
+        // given a real answer, and the `unwrap` had nothing left to
+        // stand on. That is the shape the ban on `unwrap` in domain
+        // logic asks for, and the reason it is written here: a guard
+        // added in front would look like the same repair in a diff and
+        // would leave the branch still saying nothing.
         if args.json {
             let env = GetEnvelope {
                 command: "get",
