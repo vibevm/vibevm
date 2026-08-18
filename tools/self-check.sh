@@ -79,6 +79,15 @@
 # Each step prints a short header. On the first failure the script exits
 # non-zero; later steps are skipped (no "fix the next thing while broken"
 # slog). Pass `--keep-going` to run all steps even if earlier ones fail.
+#
+# What that costs the reader, said here because it has been paid for twice:
+# a run that went red says NOTHING about the steps after the red one — they
+# did not execute. So "the panel failed at step X" is not a report on the
+# panel, and a fixed X does not license a claim about X+1. After any repair
+# the panel is re-run END TO END, and the green tail is the only evidence
+# that every step ran. Measured 2026-08-14, when a new gate sat behind a
+# step that failed first and went untested in a run everyone read as
+# covering it; and again 2026-08-17, when a red run stopped at step 9 of 53.
 
 set -u
 
