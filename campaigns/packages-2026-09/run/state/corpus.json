@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-18T08:01:57Z",
+  "updated_at": "2026-08-18T08:21:42Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -102464,9 +102464,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 377,
+      "markers": 378,
       "units": 50,
-      "facts": 373,
+      "facts": 374,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -102476,7 +102476,7 @@
         "marker_count": 279,
         "processed_hash": "80244080bba060d50b689a8c7c0476b0c52b471ff2a620348d269b1a0409895d",
         "summary": {
-          "confirmed": 331,
+          "confirmed": 372,
           "drift": 1,
           "unverifiable": 1
         },
@@ -104761,10 +104761,256 @@
               "crates/vibe-index/src/index/memory/tests.rs  fn foreign_schema_version_survives_load_and_write()  — the older rule's guard, still green, still guarding the paths that DO read a catalog before rewriting it",
               "confirmed by reading both halves against the tree at the moment the projector landed. The new fact does not weaken the old one and does not restate it: the old rule binds a writer that READ a catalog, and the projector is the first writer in this crate that reads none. Its `Index::new` call is the same constructor `init` uses for a brand-new index, so the constant it stamps is a claim about the file it is writing rather than an overwrite of someone else's claim. The clause also names where the displaced protection went, which is the part a cold reader would otherwise have to reconstruct: an older build meeting a newer world refuses per record by capability, not by re-labelling a catalog."
             ]
+          },
+          "DISCOVERY-ASKS-THE-HANDSHAKE-FIRST": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-registry/src/index_client/mod.rs:172 builds the two candidates `<base>/v1/index` and `<base>`; :176-194 asks handshake::probe_candidate at each BEFORE any repomd probe; :198-208 is the repomd fallback loop over the same two candidates; handshake.rs:52 is the `{candidate}/hello.json` GET; handshake.rs:120-124 matches a world by `FormatId::IndexRepomd.epoch()` and refines file_base by its `path`"
+            ]
+          },
+          "WHY-THE-HANDSHAKE-IS-ASKED-BEFORE-THE-MANIFEST": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-registry/src/index_client/mod.rs:130-134 states the reason in the code's own words — `successor` is readable exactly when the old address no longer serves a catalog, so a handshake sought beside a found repomd would never be read when it matters; :144-145 records the price as up to two extra GETs paid only by handshake-less indexes"
+            ]
+          },
+          "A-PROBE-HAS-THREE-OUTCOMES-NOT-TWO": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-registry/src/index_client/mod.rs:118-123 `enum ProbeOutcome { Found, Absent, Refused { reason } }`; handshake.rs:30-42 gives the same three for the handshake probe; handshake.rs:168-198 `epoch_refusal` builds the reason carrying offered epochs, this build's epoch, the fix, and min_client/successor/notice when present; handshake.rs:204-221 the unknown-format and unparseable-body reasons"
+            ]
+          },
+          "A-SUCCESSOR-IS-NAMED-NEVER-FOLLOWED": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-registry/src/index_client/handshake.rs:165-167 states it as the code's own rule (auto-following needs a cycle watchman and a trust rule, neither decided); :189-193 appends the successor address to the refusal text and never requests it"
+            ]
+          },
+          "THE-KEY-DOES-NOT-EXIST-YET-AND-THE-SECTION-IS-STRICT": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-core/src/manifest/project.rs:109 `#[serde(deny_unknown_fields)]` on :110 `pub struct RegistrySection`, whose fields are name/url/ref/naming/auth/token_env/enabled; `grep -rn index_url crates/vibe-core/src` returns zero, measured against a control that finds 47 `deny_unknown_fields` in the same crate, so the zero is the tree's and not the instrument's"
+            ]
+          },
+          "INDEX-URL-TODAY-IS-AN-ENVIRONMENT-VARIABLE": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-registry/src/index_client/mod.rs `index_url_for` reads exactly `VIBEVM_INDEX_URL_{suffix}` from the process environment and nothing else; multi_registry_resolver/mod.rs:373-378 is the only caller, attaching the index client when that variable is set"
+            ]
+          },
+          "AN-ABSENT-INDEX-FALLS-BACK-WITHOUT-A-WORD": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-registry/src/index_client/mod.rs:109-110 documents Absent as the silent fall-through to `git ls-remote`; :219-224 returns Absent for 404/5xx/connect-failure while :211-217 returns Refused for 401/403, so only one of the three outcomes is quiet"
+            ]
+          },
+          "HELLO-JSON": {
+            "v": "confirmed",
+            "ev": [
+              "schemas/hello/e1/hello.jtd.json is the schema; crates/vibe-wire/src/generated/hello/e1/hello/mod.rs:5 is the generated type ('the eternal handshake, epoch 1'); crates/vibe-index/src/index/memory.rs:401-431 `write_handshake` atomically writes `hello.json` into the data directory; crates/vibe-index/src/index/mod.rs:52-57 lists it first in WRITER_FILES"
+            ]
+          },
+          "THE-HANDSHAKE-IS-NOT-AN-ENTRY-OF-THE-MANIFEST": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/index/mod.rs:48-51 states the reason in the code — repomd.json is the manifest of ONE world while the handshake stands above worlds and dispatches to them, so it never enters the `files` map; crates/vibe-registry/src/index_client/handshake.rs:94-104 refuses an unparseable 200 body loudly instead of falling through to repomd, which is what verifies the file in the absence of a manifest hash"
+            ]
+          },
+          "THE-WRITERS-OWN-SURFACE-IS-A-WHITELIST": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/index/mod.rs:52-57 WRITER_FILES (four root files) and :61 WRITER_DIRS (by-name, by-cap, by-purl); :27-46 the docblock naming both consumers (`cargo xtask rebuild --check` and the golden-corpus test), the reason the list is stated once, and the exclusions (README.md, .gitignore, the whole of state/)"
+            ]
+          },
+          "NO-SHIPPED-CONSUMER-VERIFIES-A-SUB-FILE-YET": {
+            "v": "confirmed",
+            "ev": [
+              "`grep -rni 'sha256|etag' crates/vibe-registry/src/index_client/` returns 0, against controls of 43 in crates/vibe-registry/src and 39 in crates/vibe-index/src/index — the silence is the client's, not the instrument's; the client's repomd use is the existence probe at index_client/mod.rs:199-208 only; crates/vibe-index/src/cli/verify.rs:1-2 is where the hash comparison actually lives, on the operator's side"
+            ]
+          },
+          "WHAT-IS-NEVERTHELESS-PROTECTED-AND-WHAT-IS-NOT": {
+            "v": "confirmed",
+            "ev": [
+              "PROP-005 §2.3 ##HASH-VERIFIED-ANYWAY and §2.14 ##INT-VERIFY-ANYWAY are the standing rule that content_hash is recomputed against the fetched bytes whatever path chose the version; combined with the measured zero above, the exposed surface is index metadata in transit and not package content"
+            ]
+          },
+          "TWO-SHAPES-STAY-HAND-WRITTEN-AND-SAY-WHY": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/types/mod.rs:10-13 names both exceptions and their reasons — repomd's `size` is u64 against the generated u32 (the open owner decision B-056) and its file-entry union is tagged on this side's own law; crates/vibe-index/src/index/memory.rs:75-94 is the in-RAM Index carrying `quarantined` (:90) and `tombstones` (:93), neither of which any catalog file serialises"
+            ]
+          },
+          "req-unavailable": {
+            "v": "confirmed",
+            "ev": [
+              "requirement marker for §2.19, matching the `req r1` markers every other decision section of this document carries"
+            ]
+          },
+          "THE-REFUSAL-IS-AN-ANSWER-NOT-AN-OMISSION": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/index/quarantine.rs:1-9 states the module is THE single home of the answer path's judgement; :134-140 `unavailable_for` and :158-169 `refused_where` produce the refusal rows the surfaces emit; seven CLI verbs (capabilities, dump, get, list, outdated, purls, search) and four server modules (error, routes/capabilities, routes/packages, routes/purls) consume them"
+            ]
+          },
+          "UNAVAILABLE-SHAPE": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/index/quarantine.rs:96-103 `pub struct Unavailable { group, name, version, missing, recipe }` with :91-95 stating why the full coordinate rides every row; :173-182 `row_for` is the single construction, and :174 fills `missing` from `missing_capabilities`, i.e. the subset this build lacks rather than the whole declaration"
+            ]
+          },
+          "THE-RECIPE-HAS-ONE-HOME": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/index/quarantine.rs:105-130 `recipe_for` is the only construction of the text, with :108-117 recording both the one-home rule and the deliberate degeneracy (UNDERSTOOD is empty at :28, so there is no second class of recipe to write); the tests at :328-363 hold the text's parts and its per-capability enumeration"
+            ]
+          },
+          "QUARANTINE-IS-A-READERS-JUDGEMENT-AND-IS-NEVER-CARRIED": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/index/quarantine.rs:51-58 `is_usable` derives the judgement from the record's own must_understand at the point of use; crates/vibe-index/src/index/memory.rs:76-90 records in the field's own docblock that the in-memory quarantine list is never serialised; the carriers do differ — memory.rs:350-395 fills it on load while crates/vibe-index/src/journal/project_tests.rs:90 asserts a projected catalog arrives with it empty — and the surfaces still agree because the predicate reads the record"
+            ]
+          },
+          "THE-SAFE-DEFAULT-IS-A-CONSTRUCTION-NOT-AN-AGREEMENT": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/index/quarantine.rs:60-88 the usable_* accessors with :61-63 stating that the writer's path must NOT use them; crates/vibe-index/src/server/routes/admin.rs:24-26 carries the mirror-image comment on the counters ('the counts are the WRITER's … do not \"fix\" them to usable_version_count'), so the asymmetry is documented on both sides as the fact claims"
+            ]
+          },
+          "WHICH-SURFACES-OWE-THE-ANSWER": {
+            "v": "confirmed",
+            "ev": [
+              "computing surfaces consume quarantine:: — seven CLI verbs (cli/{capabilities,dump,get,list,outdated,purls,search}.rs) and the server's error mapper plus routes/{capabilities,packages,purls}.rs; the verbatim-serving routes do not — crates/vibe-index/src/server/routes/index_files.rs reads bytes off disk through `serve_file` and consults no predicate"
+            ]
+          },
+          "THE-RAW-FILE-WAS-NEVER-THE-ONE-KEEPING-SILENT": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/server/routes/index_files.rs:111-126 `by_name_json` serves the stored file byte for byte; the record it returns carries must_understand whenever non-empty (crates/vibe-wire/src/generated/shared/mod.rs skip_serializing_if on that field), so the declaration explaining a refusal travels with the record"
+            ]
+          },
+          "A-REFUSED-VERSION-IS-A-404-CARRYING-ITS-REASON": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/server/error.rs:76-90 `ApiError::unavailable` keeps StatusCode::NOT_FOUND while naming the refusal as `vibe-index/error/unavailable` / 'version unavailable to this build'; :92-106 the problem-details Body carries `unavailable` as an RFC 7807 extension member, skipped when absent"
+            ]
+          },
+          "THE-ADMIN-SURFACE-IS-ONE-ROUTE": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/server/mod.rs:54-107 is the only `Router::new()` in the crate and registers 16 paths; :105 `GET /v1/admin/status` is the single admin route and :104 carries the code's own note that the reindex POST 'lands in slice 6'; routes/admin.rs holds the `status` handler alone; `grep -rn admin/reindex crates/` returns zero"
+            ]
+          },
+          "THE-BODY-CARRIES-NO-INSTANCE-MEMBER": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/server/error.rs:92-106 `struct Body` carries exactly `type` (renamed from `kind`), `title`, `status`, `detail` and the optional `unavailable`; no `instance` field exists on it or on any handler's construction"
+            ]
+          },
+          "MACHINE-OUTPUT-IS-PER-VERB-NOT-UNIVERSAL": {
+            "v": "confirmed",
+            "ev": [
+              "`pub json: bool` appears in exactly nine of the fifteen cli modules — capabilities, get, list, outdated, purls, reindex, rescan_org, search, verify — and in none of add, dump, init, remove, serve, stop; crates/vibe-index/src/cli/dump.rs:16-23 is the exception's reason, since `DumpFormat { Jsonl, Json }` already selects machine output"
+            ]
+          },
+          "THE-LOG-DIAL-AND-THE-VARIABLE-ARE-ONE-LEVER": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/cli/mod.rs:48-64 defines the six-value `LogLevel` and states in its own docblock why it is a closed set rather than a directive string; :88-94 declares it `global = true`; `as_filter` (:66-79) is the exact string written into `VIBE_LOG` before the subscriber reads it"
+            ]
+          },
+          "COUNTERS-ARE-NOT-A-FILE": {
+            "v": "confirmed",
+            "ev": [
+              "the counters live as atomics in crates/vibe-index/src/server/state.rs and are read by routes/admin.rs and routes/metrics.rs; `grep stats.json crates/vibe-index/src` returns zero against a live control (`server.lock` hits lock.rs:3,21 and cli/stop.rs:3,35), so the absent file is the tree's and not the instrument's"
+            ]
+          },
+          "THE-TRUTH-LIVES-UNDER-THE-DIRECTORY-THAT-IS-NOT-SERVED": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/journal/store.rs:29-31 puts the journal at `<data-dir>/state/journal`; crates/vibe-index/src/cli/serve.rs `boot_index` rises from the journal and refuses a catalog-only data directory in as many words ('the catalog on disk cannot substitute for it'); cli/init.rs writes the `.gitignore` that keeps `state/` out of the mirrored half"
+            ]
+          },
+          "THE-DIRECTORY-FSYNC-IS-NOT-DONE": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/index/persistence.rs:25-37 is the whole of `atomic_write` — create_dir_all, tmp sibling, write_all, `sync_all` on the FILE, rename — with no directory flush; the crate's four `sync_all` call sites (persistence.rs:33, journal/store.rs:56, lockfile.rs:82, server/auth.rs:116) are all file-level"
+            ]
+          },
+          "THE-HOOKS-TWO-SETTINGS-ARE-KEYED-BY-REGISTRY-NOT-BY-HOST": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-publish/src/post_hook.rs:5 documents the pair as `VIBEVM_INDEX_URL_<REGISTRY>` / `VIBEVM_INDEX_TOKEN_<REGISTRY>` and :49-62 reads both from the environment keyed by the registry alias; `grep -rn 'index_url|index_token' crates/vibe-core/src` returns zero, against a control of nine hits in crates/vibe-publish/src"
+            ]
+          },
+          "THE-JOURNALS-HALF-OF-THIS-CONTRACT-IS-ALREADY-MINTED": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/journal/record.rs:84-94 carries `ChannelSet {group, name, channel, version}` and `ChannelUnset {group, name, channel}`; crates/vibe-index/src/journal/project.rs:141-146 returns `unprojectable` for both rather than skipping them, and :205-211 is the message text quoted in the fact; the generated `VersionEntry` carries `channels` (crates/vibe-wire/src/generated/shared/mod.rs:232)"
+            ]
+          },
+          "THE-MUTATION-IS-WRITTEN-BY-ITS-OWN-HANDLER": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/server/routes/packages.rs:440-469 is the write path in full — take the index write-lock, replay the journal, project a probe, append, reproject, `write_to`, swap; `grep -rn 'mpsc|index_writer' crates/vibe-index/src` returns zero against a control of one `spawn_blocking` (packages.rs:543), which is the publication branch and the only blocking hand-off there is"
+            ]
+          },
+          "THERE-IS-NO-PRECEDENCE-MACHINE-YET": {
+            "v": "confirmed",
+            "ev": [
+              "`grep config.toml crates/vibe-index/src` returns zero against a live control (`checkpoint.json` hits index/checkpoint.rs and three scanner files); `grep VIBE_INDEX crates/vibe-index/src` returns exactly one hit, scanner/git_cli.rs:19 (`VIBE_INDEX_GIT`); every flag with a default takes it from its own clap declaration"
+            ]
+          },
+          "THE-METRICS-DEPENDENCY-WAS-NOT-TAKEN": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/server/metrics.rs:1-3 states the choice and its reason in the code ('we do not pull a prometheus crate … the surface is small enough to roll by hand and keep the dep tree minimal'); `grep prometheus crates/vibe-index/Cargo.toml` returns zero, against `axum` present at :40 as the control that the file and the pattern both work"
+            ]
+          },
+          "TOKIO-IS-NARROWED-NOT-FULL": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/Cargo.toml:41 — `tokio = { workspace = true, features = [\"signal\", \"sync\", \"time\", \"fs\"] }`"
+            ]
+          },
+          "dep-specmark": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/Cargo.toml:25 `specmark.workspace = true`; consumed by the `specmark::scope!` declaration every module of the crate carries and by the `#[spec]` tags the traceability map reads"
+            ]
+          },
+          "dep-vibe-wire": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/Cargo.toml:50 `vibe-wire = { workspace = true }` under a comment stating why it is a runtime and not a dev dependency ('the library's types ARE the wire's types')"
+            ]
+          },
+          "THE-PARITY-GATE-RUNS-TWO-FIXTURES-IN-TWO-RECIPES": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/tests/content_hash_parity.rs:69-79 names both fixture roots (`golden-flow-wal-0.1.0`, `golden-order-trap-0.1.0`) and :106-133 drives both recipes (Legacy0 / Tree1) through both implementations; the order-trap fixture's own files (`spec-x.md`, `specX.md`, `spec/inner/a.md`) are the byte class on which component-wise and byte-wise ordering part company"
+            ]
+          },
+          "THE-CRATE-CARRIES-NO-LICENCE-FILE-OF-ITS-OWN": {
+            "v": "confirmed",
+            "ev": [
+              "`crates/vibe-index/LICENSE` does not exist; crates/vibe-index/Cargo.toml:7 carries `license-file.workspace = true`; the repository's LICENSE.md is UPL-1.0"
+            ]
+          },
+          "THE-PANEL-NOW-HAS-STEPS-THAT-LOOK-ONLY-AT-THIS-CRATE": {
+            "v": "confirmed",
+            "ev": [
+              "tools/self-check.sh step 10d is 'The index clock gate (F2-1)' and greps exactly crates/vibe-index/src/{index,types,journal} recursively (:693-708, with the comment stating the perimeter is named by module directory rather than by a repo-wide mask); step 6b is `cargo xtask check-codegen` (:24), step 0d the wire-derive ratchet (:235-352), and specmap --check its own step"
+            ]
+          },
+          "ONLY-THE-CRON-LINE-REACHED-THE-HANDBOOK": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/docs/operator-handbook.md:90 carries the cron line verbatim; `grep post-receive` on that file returns zero against a control that finds `hook` at :61 and :111, so the missing script is the handbook's and not the pattern's"
+            ]
           }
         },
         "verified_at": "2026-08-13T23:34:20Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18"
       }
     },
     {

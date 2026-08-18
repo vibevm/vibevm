@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-18T08:01:56Z",
+  "updated_at": "2026-08-18T08:21:41Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -103365,7 +103365,7 @@
       }
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {
-      "content_hash": "39f0883a11fff88b105373aef7353e28404dd041407d6e3cb1fae408791ec123",
+      "content_hash": "c83df22f2b8f20478b0d1c0b38c2337c9778aad463cf8e834566baabce8d7adb",
       "rollup": {
         "explicit": [
           "impl",
@@ -103379,11 +103379,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 377,
-        "fact_count": 373,
+        "marker_count": 378,
+        "fact_count": 374,
         "unmarked_facts": 0
       },
-      "marker_count": 377,
+      "marker_count": 378,
       "unit_count": 50,
       "issue_count": 0,
       "campaign": {
@@ -105919,10 +105919,16 @@
             "ev": [
               "crates/vibe-index/docs/operator-handbook.md:90 carries the cron line verbatim; `grep post-receive` on that file returns zero against a control that finds `hook` at :61 and :111, so the missing script is the handbook's and not the pattern's"
             ]
+          },
+          "THE-SUBSCRIBER-IS-INSTALLED-UNCONDITIONALLY-AT-WARN": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/main.rs `init_tracing` installs the subscriber with no condition and its docblock carries the whole ruling verbatim — 'a binary's job, not the library's. One lever, VIBE_LOG (default warn); there is no RUST_LOG fallback and no second lever … WARN-level observability (quarantine refusals on load, auto-commit-push outcomes) must be on for every subcommand, not only the flag-gated ones'; the filter line is `EnvFilter::try_from_env(\"VIBE_LOG\").unwrap_or_else(|_| EnvFilter::new(\"warn\"))`, which is where the default lives. The ordering the fact claims is the numbered body of `main`: parse, then `apply_log_level` (which writes VIBE_LOG), then `init_tracing`, then dispatch — so --help and parse errors answer before any log. The two WARN sites the reason names are real: crates/vibe-index/src/index/memory.rs:374 logs 'quarantined: must_understand names capabilities this build lacks' on load, and the publish failure is counted and logged per PROP-005 §2.17."
+            ]
           }
         },
         "verified_at": "2026-08-13T23:34:20Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18"
       }
     },
     "spec/modules/vibe-mcp/PROP-015-mcp-integration.md": {
