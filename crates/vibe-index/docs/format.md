@@ -6,7 +6,8 @@ Spec: [`PROP-005 §2.4 / §2.6`](../../../spec/modules/vibe-index/PROP-005-packa
 
 ```
 <data-dir>/
-├── repomd.json                          manifest of every other file
+├── hello.json                           the eternal handshake — read FIRST
+├── repomd.json                          manifest of what the WRITER writes
 ├── primary.jsonl                        one VersionEntry per line, sorted
 ├── primary.jsonl.gz                     deterministic gzip sibling
 ├── by-name/
@@ -14,11 +15,54 @@ Spec: [`PROP-005 §2.4 / §2.6`](../../../spec/modules/vibe-index/PROP-005-packa
 ├── by-cap/<slug>.jsonl                  inverted index by capability
 ├── by-purl/<slug>.jsonl                 inverted index by `describes` PURL
 ├── README.md                            auto-generated pointer
-└── state/                               gitignored
+├── .gitignore                           written once by `init`; ignores /state/
+└── state/                               gitignored — never reaches a client
+    ├── journal/<YYYY>-<MM>.ndjson       the registry's fact journal — the TRUTH
     ├── server.lock                      PID file when `serve` is running
     ├── admin.tokens                     bearer tokens — keep 0600; nothing enforces it
+    ├── org-cache.json                   org-scan bookkeeping
     └── checkpoint.json                  incremental-reindex bookkeeping
 ```
+
+**The catalog is a projection; the journal is the truth.** Every
+mutation appends a fact to `state/journal/` and then reprojects the
+whole catalog from the journal — nothing here is ever read in order to
+be rewritten. So the files above hold no fact of their own, and
+`cargo xtask rebuild --check <data-dir>` proves it: it projects the
+journal into a scratch directory and asserts the catalog is
+byte-identical. A difference means the catalog carries something the
+journal does not describe, which is a derived artifact holding truth.
+
+**The proof ships; the repair does not.** `rebuild` has only
+`--check` — there is no verb that rewrites a damaged catalog from its
+journal in place, and that is a stated decision rather than a gap. What
+regenerates the catalog today is any mutation, because every mutation
+reprojects it wholesale. The direction of repair is fixed and only one
+way round: a catalog that disagrees with its journal is the wrong one,
+and editing the journal to match it would launder the discrepancy into
+the truth layer.
+
+The journal lives under `state/` because it is OURS and not the
+client's: the whole of `state/` is gitignored, absent from
+`repomd.json`, and served by no route.
+
+**`repomd.json` is the manifest of what the writer writes** — the
+catalog files and directories above it — not of every byte in the
+directory. "The writer" is the projection that emits the catalog, and
+it is not `init`: `README.md` and `.gitignore` are written once at
+initialisation and never again, `state/` is runtime data, and none of
+the three is catalog, which is why none is in the map. The rule is
+positive on purpose — compare the set the writer WRITES, rather than
+excluding a list of everything else, because a blacklist rots the day
+the directory grows a file nobody listed. `hello.json` is outside it
+for a different and load-bearing reason: `repomd.json` describes ONE
+world, while the handshake stands above worlds and dispatches to them.
+Making a per-world manifest vouch for the one file that outlives every
+world would invert the layers, and the inversion becomes unanswerable
+the day there are two worlds — whose `repomd` hashes the handshake?
+
+**`hello.json`** is documented with the discovery ladder it belongs to,
+in [`consumer-protocol.md`](consumer-protocol.md#discovery).
 
 The `<data-dir>` doubles as the working tree of a `git`-tracked
 index repository. Operators commit + push the non-`state/` content
@@ -45,22 +89,30 @@ inside the file's lines; the slug is only a lookup key.
   "package_count": 42,
   "version_count": 117,
   "files": {
-    "primary.jsonl":            { "size": 184522, "sha256": "sha256:..." },
-    "primary.jsonl.gz":         { "size": 42110,  "sha256": "sha256:..." },
+    "primary.jsonl":            { "kind": "file", "size": 184522, "sha256": "sha256:..." },
+    "primary.jsonl.gz":         { "kind": "file", "size": 42110,  "sha256": "sha256:..." },
     "by-name":                  { "kind": "directory", "entries": 42 },
-    "by-name/wal.json":         { "size": 5120,  "sha256": "sha256:..." },
+    "by-name/wal.json":         { "kind": "file", "size": 5120,  "sha256": "sha256:..." },
     "by-cap":                   { "kind": "directory", "entries": 7 },
-    "by-cap/wal.jsonl":         { "size": 890,   "sha256": "sha256:..." },
+    "by-cap/wal.jsonl":         { "kind": "file", "size": 890,   "sha256": "sha256:..." },
     "by-purl":                  { "kind": "directory", "entries": 3 }
   }
 }
 ```
 
-`files[*]` is either a `File` entry (`size` + `sha256`) or a
-`Directory` entry (`kind: "directory"` + `entries`). Tagged via
-serde untagged so a single map carries both shapes. `primary.jsonl.gz`
-is byte-deterministic (level 6, `mtime=0`), so its `sha256` is stable
-across machines for identical input.
+`files[*]` is a **tagged union**: every value carries `kind`, either
+`"file"` (with `size` + `sha256`) or `"directory"` (with `entries`).
+Tags are lowercase. Both arms carry the tag — a file entry without
+`kind` is **refused**, not guessed at, which is the whole point of the
+shape: an untagged union silently swallows a value it half-recognises,
+and it was the one type in this catalog that could. The change was a
+real wire break and carries its note in
+[`formats/breaks/001.md`](../../../formats/breaks/001.md); the recipe
+there is one line, because a derived catalog is rebuilt rather than
+migrated.
+
+`primary.jsonl.gz` is byte-deterministic (level 6, `mtime=0`), so its
+`sha256` is stable across machines for identical input.
 
 ## `primary.jsonl` — JSON Lines
 
@@ -182,10 +234,10 @@ friends carry `#[serde(default, skip_serializing_if =
 empty lists (`authors`, `keywords`, `requires_any`, `subskills`) are
 skipped via their `is_empty` guards. No field of the published index
 records — `VersionEntry`, `by-name`, the inverted files — ever
-serialises as `null`. The only nullable spots in the whole tree are
-`state/checkpoint.json`'s `generated_at` and `head_commit` (plain
-`Option`s without skip guards), and that file is gitignored runtime
-state, not part of the published index.
+serialises as `null`. The only nullable spots among the index's own
+files are `state/checkpoint.json`'s `generated_at` and `head_commit`
+(plain `Option`s without skip guards), and that file is gitignored
+runtime state, not part of the published index.
 
 The four reader-facing slots added in this cycle follow the same
 omission rule, and it cuts the deepest there: `must_understand` (an
@@ -195,10 +247,15 @@ empty**. A real `primary.jsonl` line for an un-yanked snapshot
 package carries none of the four.
 
 - `must_understand` — capabilities a reader **must** understand to act
-  on this record. A reader that does not know at least one of the
-  listed strings skips the record (today — with a warning). Unknown
-  fields *outside* this list are ignored as before; the list is the
-  explicit exception to that rule.
+  on this record. A reader missing one of the listed strings may not
+  use that version — but the record is **kept, marked and answered
+  about**, never dropped. The loader notes it with a WARN and every
+  surface that computes an answer says `unavailable` with what is
+  missing and what to do; the raw file still hands the record back word
+  for word, `must_understand` included. Unknown fields *outside* this
+  list are ignored as before; the list is the explicit exception to
+  that rule. The refusal's shape is in
+  [`consumer-protocol.md`](consumer-protocol.md#unavailable).
 - `yanked` — the version is withdrawn. The fact comes from the
   registry journal, not from the author's manifest: frozen content
   cannot yank itself.

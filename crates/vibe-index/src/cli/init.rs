@@ -138,14 +138,17 @@ fn write_readme(data_dir: &std::path::Path, registry: &str, registry_url: &str) 
         \n\
         - `hello.json` — the eternal handshake: the client's entry point,\n\
           naming the worlds that exist and where each lives.\n\
-        - `repomd.json` — manifest with sha256 of every other file of the\n\
-          catalog.\n\
+        - `repomd.json` — manifest with sha256 of every catalog file the\n\
+          writer produces. `hello.json` is deliberately outside it: this\n\
+          manifest describes ONE world, the handshake stands above worlds.\n\
         - `primary.jsonl` / `primary.jsonl.gz` — one `VersionEntry` per line.\n\
         - `by-name/<name>.json` — candidate set for one bare name (every group).\n\
         - `by-cap/<slug>.jsonl` — inverted index by advertised capability.\n\
         - `by-purl/<slug>.jsonl` — inverted index by `describes` PURL.\n\
-        - `state/` — gitignored runtime data (server PID, admin tokens,\n\
-          incremental-reindex checkpoint).\n\
+        - `state/` — gitignored runtime data, never published: the fact\n\
+          JOURNAL this catalog is projected from, plus the server PID,\n\
+          admin tokens and the incremental-reindex checkpoint. Back up\n\
+          `state/journal/`; everything above it is derived.\n\
         \n\
         ## Maintenance\n\
         \n\
