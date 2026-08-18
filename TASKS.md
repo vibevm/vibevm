@@ -107,22 +107,40 @@ with their rejected options, and the corrections each landing paid for.
         made its executor re-count and stop on a mismatch rather than trust the
         table. `##FORWARD-COMPAT` is true for the first time since it was
         written (`4c977582`).
-- [~] **Фаза 4** — schema and generator. **Ф4.0, Ф4.1 and Ф4.2a closed
-      2026-08-15; the whole Ф4.2b block closed 2026-08-17, seven steps of
-      seven.** The transformation layer now runs **nine** passes over every
-      emission of OUR schema home (the engine's home takes no policy at all):
-      arm boxing, snake_case, ordered maps, empty policy, optional shapes,
-      reader strictness, domain types, the trait floor, open vocabularies.
-      Their ORDER is a law written in `xtask/src/codegen/postproc.rs`, not a
-      taste — a pass keyed to the generator's emission shape runs while the
-      file is still that emission, and opening vocabularies writes hand-rolled
-      Rust so it goes last.
-      **Ф4.2c is in flight:** `-1` (trait floor, `95feb37f`) and `-2` (variant
-      names, `dca804db`) landed; `-3` (the re-export, one commit by the orphan
-      rule) and `-4` (the three readerless surfaces, G11) remain. Its four
-      rulings R24–R27 are in the ТЗ, measured by
+- [x] **Фаза 4** — schema and generator. **CLOSED 2026-08-17.** Ф4.0, Ф4.1 and
+      Ф4.2a landed 2026-08-15; the whole Ф4.2b block closed 2026-08-17, seven
+      steps of seven; Ф4.2c closed the same day, four of four (`95feb37f`,
+      `dca804db`, `37496cab`, `53f8c429`, `b7464ea0`); Ф4.3 closed with the
+      hand-written-wire ban standing as a panel step (`ee4f7230`). The
+      transformation layer runs **nine** passes over every emission of OUR
+      schema home (the engine's home takes no policy at all): arm boxing,
+      snake_case, ordered maps, empty policy, optional shapes, reader
+      strictness, domain types, the trait floor, open vocabularies. Their ORDER
+      is a law written in `xtask/src/codegen/postproc.rs`, not a taste — a pass
+      keyed to the generator's emission shape runs while the file is still that
+      emission, and opening vocabularies writes hand-rolled Rust so it goes
+      last. Its rulings R24–R27 are in the ТЗ, measured by
       [`harvest/f42c-reexport-radius.md`](campaigns/packages-2026-09/harvest/f42c-reexport-radius.md).
-- [ ] **Фазы 5–6** — corpora and the break window, handshake and quarantine.
+- [x] **Фаза 5** — corpora and the break window. **CLOSED 2026-08-17**: golden
+      corpora (`29043890`), `wire-diff` (`ecd2e955`).
+- [x] **Фаза 6** — handshake and quarantine. **CLOSED 2026-08-17**: Ф6.1 in
+      five steps (through `5c023848`), Ф6.2 in four (`5fabcea6`, `fa50b653`,
+      `0798614f`, `ce3de248`). §10's whole-ТЗ acceptance ran end to end and was
+      green, and predictions P1–P6 were checked **by running them** — four
+      confirmed, two falsified and filed as `BACKLOG` B-081 / B-082. Two of the
+      falsifications were only reachable by a run; re-reading the predictions
+      would have confirmed all six.
+- [~] **Спек-диффы фаз Ф4 и Ф6** (ТЗ Приложение Б.5) — the one thing those
+      phases left unpaid. The appendix binds every phase to leave no lying
+      spec, and the diffs stopped at Ф3 (`c2132dd0`, `4c977582`). In flight
+      2026-08-18; the measurement behind it is
+      [`harvest/prop005-drift-a.md`](campaigns/packages-2026-09/harvest/prop005-drift-a.md)
+      and its sibling.
+- [ ] **§11 — смертность плана**: the executed phases' sections collapse into
+      tombstones, and both references to the plan file leave
+      `spec/common/PROP-044` (`##PURPOSE`, `##SOURCES`). Blocked on the line
+      above **by construction**, not by scheduling — the content has to reach
+      the specs before the plan may die.
 
 Independent lane, in
 [`TZ-IDENTITY-REGISTRY-BUILDS-v0.1.md`](campaigns/packages-2026-09/TZ-IDENTITY-REGISTRY-BUILDS-v0.1.md):
