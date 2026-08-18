@@ -1370,6 +1370,52 @@ with exceptions is a ban a weak writer will widen. The ban stays absolute;
 what changes is that the packet stops asking for something only the banned
 tool can give.
 
+@fact:fact-the-scope-clause-is-checked-against-the-directory-not-assumed **The
+`scope!` clause binds `src/`, and whether it binds a `tests/` directory is a
+question about THAT crate, answered by looking (2026-08-18):**
+`#fact-new-engine-files-scope` and
+`#fact-scope-is-a-requirement-not-part-of-the-spec-prohibition` both say a new
+`.rs` file carries `specmark::scope!`, stated flatly. Measured: in
+`crates/vibe-index` the marker stands in **70** files under `src/` and in **0**
+of the **24** files under `tests/` — a uniformity, not an oversight, since the
+traceability map's perimeter is the product surface rather than its harness.
+
+And the reason the clause must be *checked* rather than restated: the answer is
+not repo-wide. `crates/vibe-resolver/tests/compile_fail.rs` does carry the
+marker. So a packet that orders «every new file carries `scope!`» is right in
+one crate's `tests/` and wrong in another's, and a packet that orders «tests
+never carry it» is wrong the other way.
+
+**The clause a packet creating test files should carry:** «a new file under
+`src/` carries `specmark::scope!` with the same unit as its neighbours; for a
+file under `tests/`, look at what the sibling test files in THIS crate do and
+match them — by running the check, not by assuming either way.» A rule whose
+correct answer differs per directory is a rule a packet must delegate to
+observation, or it manufactures a panel failure in one crate and an
+inconsistency in the next.
+
+@fact:fact-a-new-guard-brings-its-own-fixture-and-never-edits-the-shared-one **A
+packet adding a guard builds its OWN fixture; reddening an existing test by
+editing the shared one is a defect of the edit, not a licence to edit the test
+(2026-08-18):** a quarantine step's measurement listed seven server tests that
+would have gone red had the shared `populated_state()` fixture been changed to
+carry a quarantined version — the fixture is referenced 25 times across two test
+files. Redness produced by changing a FIXTURE proves nothing about the code: it
+proves the fixture moved. Paying for it costs the re-aiming of seven guards and
+buys no evidence at all.
+
+Two rules, and the second is the one packets keep needing. *(i)* **A new guard
+gets a new fixture**, named for what it guards, and the shared one stays as it
+is. *(ii)* **A pre-existing test going red under an ADDITIVE change is a defect
+in the change** — the packet says so in as many words, because the cheap move a
+weak writer reaches for is to adjust the assertion, and the adjustment is
+indistinguishable in the diff from a legitimate re-aim. Its legitimate sibling is
+already recorded: a test that reddens on a change the CONTRACT requires is
+re-aimed and proved to still fail on a real violation
+(`#fact-a-test-that-reddens-on-a-legitimate-change-is-re-aimed-not-satisfied`).
+The difference between the two is the whole judgement, and it is why the packet
+must name which one it expects.
+
 @fact:fact-a-perimeter-cut-by-meaning-is-narrower-than-one-cut-by-counting **A
 fan-out cut along the CONCEPT the task names leaves out whatever the concept
 does not happen to cover — and the boss finds it only by counting the file
