@@ -7,9 +7,12 @@ data format this project reads or writes — package format, manifests, catalog,
 lockfile, configs, CLI JSON, MCP tool schemas. It is written to be handed to an
 AI agent as context: it states the laws, the machinery they require, the policy
 for each format, and the machine gates that make the laws enforceable against
-authors weaker than their reviewers. The build plan that first implements it is
-`campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md` (a plan, and
-therefore disposable; this document is the contract). @status:spec/plan
+authors weaker than their reviewers. The first build that implemented it closed
+2026-08-17, and what it decided now lives where it binds — the catalog's own
+contract [PROP-005](../modules/vibe-index/PROP-005-package-index.md) and the
+docblocks of the generator layer under `xtask/src/codegen/`. The plan that
+carried that build was disposable by construction; this document is the
+contract. @status:spec/plan
 
 ## 1. The environment, in the owner's words {#mandate}
 
@@ -532,6 +535,8 @@ on — ten data-at-rest ecosystems, eight serialization formats, the
 client-survival study, the wire census of this tree, four adversarial worker
 reviews and the reviewer's verdict — is imported whole at
 [`spec/research/schema-evolution-2026-08/`](../research/schema-evolution-2026-08/)
-(reading order: its `12-HANDOFF.md §2`); the build plan is
-`campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md`. Where lore and
+(reading order: its `12-HANDOFF.md §2`); the first build that implemented this
+contract left its reasoning at the anchors of
+[PROP-005](../modules/vibe-index/PROP-005-package-index.md) and in the docblocks
+its phases wrote, never in the plan that carried it. Where lore and
 this contract disagree, this contract wins and the lore is corrected. @status:spec/plan

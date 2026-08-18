@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-18T08:30:25Z",
+  "updated_at": "2026-08-18T19:19:53Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -94370,7 +94370,7 @@
       }
     },
     "spec/common/PROP-044-change-native-formats.md": {
-      "content_hash": "0911996699c2127304bcd091e268fbcbef7b3e0c1c2171840780a766785d6b76",
+      "content_hash": "b9cd872fe253f008af72f80eb133191187b6a3402a537bfaa7b48af9c9061836",
       "rollup": {
         "explicit": [
           "spec",
