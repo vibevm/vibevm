@@ -40,7 +40,15 @@
 
 @fact:req-optional `req r1` @status:impl/done
 
-@fact:INDEX-OPTIONAL **Decision.** The index layer is **strictly additive**. Every existing vibevm code path keeps working exactly as today when no index is present. Consumers detect a registry's index by HTTP GET on a well-known path (`<index-base>/repomd.json`); 404 → fall back to the live `git ls-remote` path that exists today. No registry is required to have an index. No project is required to consume one. @status:impl/done
+@fact:INDEX-OPTIONAL **Decision.** The index layer is **strictly additive**. Every existing vibevm code path keeps working exactly as today when no index is present. No registry is required to have an index. No project is required to consume one; a consumer that finds none falls back to the live `git ls-remote` path that exists today. @status:impl/done
+
+@fact:DISCOVERY-ASKS-THE-HANDSHAKE-FIRST **Discovery is a ladder, and the eternal handshake is its first rung.** A consumer probes two candidate bases in order — `<index-url>/v1/index`, then `<index-url>` — and at each one asks `hello.json` **before** any `repomd.json`. A 200 whose body parses as a handshake and carries a world of the epoch this build reads settles the probe: that world's `path` refines the base every later file is fetched from. Only «no handshake here» (404, 5xx, connect failure) moves on to the next candidate and, when neither answers, to the `repomd.json` probe at the same two bases — the compatibility surface for indexes published before the handshake existed. Nothing at all → the live path, silently, exactly as before. @status:impl/done
+
+@fact:WHY-THE-HANDSHAKE-IS-ASKED-BEFORE-THE-MANIFEST **Asked first, not asked beside** — because `successor` is the in-band forwarding pointer for an index that MOVED, and it is readable exactly when the old address no longer serves a catalog. A handshake sought only next to a `repomd.json` that answered would be read in every case except the one it exists for. The price is up to two extra GETs, and it is paid only by indexes that have no handshake. @status:impl/done
+
+@fact:A-PROBE-HAS-THREE-OUTCOMES-NOT-TWO **A probe answers `found`, `absent`, or `refused`, and the third is what keeps this section honest.** «Absent» is the only outcome that falls through quietly, because it is the one that means what the fall-through assumes: nothing is published here. An index that IS there and cannot serve this consumer — it refused us (401/403), its body does not parse as a handshake, its handshake format is one this build does not read, or it publishes no world of this build's epoch — answers **`refused`**, carrying the offered epochs, this build's epoch, a recipe, and whatever the document said in `min_client` / `notice` / `successor`. Collapsing that into «absent» would make a private, broken or newer-than-us index indistinguishable from a missing one, which is the silence [PROP-044 §2](../../common/PROP-044-change-native-formats.md#laws) forbids: a break that announces itself is normal life, a riddle is what strands users. @status:impl/done
+
+@fact:A-SUCCESSOR-IS-NAMED-NEVER-FOLLOWED **A `successor` is named to the operator, never followed by the client.** Automatic following needs a cycle watchman and a trust rule for the address it lands on, and neither is decided; naming the address costs the human one command and invents no policy. @status:impl/done
 
 @fact:optional-rationale-lead **Rationale.** @status:spec/done
 
@@ -79,7 +87,7 @@
 - @fact:not-hosted-single-vendor Single-vendor. We rejected this shape in [PROP-002 §1](../vibe-registry/PROP-002-decentralized-registry.md#motivation) (the "Nix's failure pattern"). Centralising the index is the same anti-pattern at one layer up. @status:spec/done
 - @fact:not-hosted-available HTTP service is **available** (§2.5) — the `vibe-index serve` mode lets an operator run one — but it is not the default consumption path. Most consumers go through static raw-HTTP files in the index git repo. @status:spec/done
 
-@fact:INDEX-URL-CONFIG **Configurable but defaulted.** A `[[registry]]` block can pin a custom index location: @status:impl/done
+@fact:INDEX-URL-CONFIG **Configurable but defaulted — the specified form, which the manifest does not yet carry.** A `[[registry]]` block pins a custom index location: @status:spec/plan
 
 ```toml
 [[registry]]
@@ -93,7 +101,13 @@ index_url = "https://github.com/vibespecs/index"  # default; explicit override a
 # index_url = "none"
 ```
 
-@fact:INDEX-URL-DEFAULT Default: `<registry-url>/index`. Resolver tries the default location when `index_url` is unset; 404 / connect-failure on the index → silent fallback to live ls-remote (no error message; the operator did not promise an index). @status:impl/done
+@fact:INDEX-URL-DEFAULT Default: `<registry-url>/index`; the resolver tries the default location when `index_url` is unset. @status:spec/plan
+
+@fact:THE-KEY-DOES-NOT-EXIST-YET-AND-THE-SECTION-IS-STRICT **Neither the key nor the default is built, and the manifest section is strict — so the block above is a parse refusal today, not a working example.** `RegistrySection` carries `deny_unknown_fields` and the fields `name` / `url` / `ref` / `naming` / `auth` / `token_env` / `enabled`; an `index_url` line in a real `vibe.toml` fails to load. Recorded rather than deleted because the requirement stands and only its implementation is missing — but a reader copying this block gets an error, which is why the status marker above says `plan` and not `done`. @status:impl/done
+
+@fact:INDEX-URL-TODAY-IS-AN-ENVIRONMENT-VARIABLE **What locates an index today is one environment variable per registry:** `VIBEVM_INDEX_URL_<REGISTRY>`, read by the resolver when it attaches an index client, and the only source there is. It is deliberately weaker than the manifest field it stands in for — an env var is per-shell and per-run, so an index configured this way travels with neither the project nor the lockfile — and that is precisely why it does not close the requirement above. @status:impl/done
+
+@fact:AN-ABSENT-INDEX-FALLS-BACK-WITHOUT-A-WORD 404 / connect-failure on the index → **silent** fallback to live `ls-remote`: no error message, because the operator never promised an index. This half is built, and it is the `absent` outcome of [`##A-PROBE-HAS-THREE-OUTCOMES-NOT-TWO`](#optional) — the other two outcomes are never silent. @status:impl/done
 
 ### 2.3 Source of truth: package repos remain authoritative; index is a hot cache {#truth}
 
@@ -114,6 +128,7 @@ index_url = "https://github.com/vibespecs/index"  # default; explicit override a
 
 ```
 <index-root>/
+├── hello.json                                 # the eternal handshake — read FIRST, dispatches to a world
 ├── repomd.json                                # manifest — hashes & metadata for all other files
 ├── primary.jsonl                              # one line per (group, name, version)
 ├── primary.jsonl.gz                           # gzipped variant
@@ -125,6 +140,12 @@ index_url = "https://github.com/vibespecs/index"  # default; explicit override a
 │   └── <purl-slug>.jsonl                      # describes-index — pkgrefs that describe this PURL
 └── README.md                                  # human-readable "what is this directory" pointer
 ```
+
+@fact:HELLO-JSON **`hello.json`** — the eternal handshake ([PROP-044 §3](../../common/PROP-044-change-native-formats.md#truth)): `{vibe, worlds[], min_client?, notice?, successor?}`, the one document whose keys never change meaning, through which a client of any age learns which worlds this index currently serves, where each lives, and where the handshake itself moved. Its shape is `schemas/hello/e1/hello.jtd.json` and its type is generated like every other wire type ([§2.12](#types)); the index writes it, and [§2.1](#optional) is where a consumer reads it. @status:impl/done
+
+@fact:THE-HANDSHAKE-IS-NOT-AN-ENTRY-OF-THE-MANIFEST **The handshake is deliberately absent from `repomd.json::files`, and the asymmetry is the design.** `repomd.json` is the manifest of **one** world; the handshake stands **above** worlds and dispatches to them, so a world's manifest can no more vouch for it than a chapter can vouch for the table of contents. The consequence to hold: the handshake is the one served file the manifest's `sha256` map does not cover, and what verifies it instead is that it **parses** — an HTTP 200 whose body is not a handshake is a loud refusal naming the broken index, never a quiet fall-through to `repomd.json` ([§2.1](#optional)). @status:impl/done
+
+@fact:THE-WRITERS-OWN-SURFACE-IS-A-WHITELIST **What the writer owns is a stated whitelist, not whatever the directory happens to hold** — four root files (`hello.json`, `repomd.json`, `primary.jsonl`, `primary.jsonl.gz`) and three trees (`by-name/`, `by-cap/`, `by-purl/`), named once in the code so the two readers that ask "is this catalog still the projection of its journal?" — `cargo xtask rebuild --check` and the golden-corpus test — cannot compare different sets. The rest of the directory is not the writer's and is not compared: `README.md` and `.gitignore` are written once by `init`, and the whole of `state/` ([§2.13](#persistence)) is the server's own bookkeeping. A blacklist would have to enumerate the world and would rot the day the directory grew a file nobody listed. @status:impl/done
 
 @fact:REPOMD **`repomd.json`** — the manifest, modelled after RPM's `repomd.xml`: @status:impl/done
 
@@ -166,7 +187,9 @@ index_url = "https://github.com/vibespecs/index"  # default; explicit override a
 ```
 
 - @fact:REPOMD-FILES-ARE-SYMMETRICALLY-TAGGED Every entry of `files` carries a `kind` tag — `"file"` or `"directory"` — and a reader dispatches on it rather than on which shape happens to fit. The tag was half-present until 2026-08-14: directories carried it, files did not, and the union was matched by shape, so an entry that lost a field was silently re-read as the *other* kind instead of being refused. A wrong answer that looks like a right one is the one failure re-fetching cannot cure ([PROP-044 §2](../../common/PROP-044-change-native-formats.md#laws)), which is why the asymmetry was broken deliberately rather than tolerated; the break note is `formats/breaks/001.md`. A `file` entry missing its tag is now a parse refusal. @status:impl/done
-- @fact:REPOMD-TRUST-POINT `repomd.json` is the **single point of trust**. A consumer fetches it once (with a small ETag round-trip later), then fetches whichever sub-files it actually needs, verifying each against the recorded `sha256`. @status:impl/done
+- @fact:REPOMD-TRUST-POINT `repomd.json` is the **single point of trust**. A consumer fetches it once (with a small ETag round-trip later), then fetches whichever sub-files it actually needs, verifying each against the recorded `sha256`. @status:spec/plan
+- @fact:NO-SHIPPED-CONSUMER-VERIFIES-A-SUB-FILE-YET **No shipped consumer does that yet, and saying so is the point of writing it down.** The index client asks `repomd.json` as an existence probe and then fetches the candidate-set file directly: it reads no `sha256` and sends no `ETag` — measured as zero occurrences of either in the client, against 43 elsewhere in the same crate, so the zero is the client's silence and not the instrument's. The comparison the fact above describes exists only as the operator verb `vibe-index verify`, run against a data directory, which is a different party at a different time. @status:impl/done
+- @fact:WHAT-IS-NEVERTHELESS-PROTECTED-AND-WHAT-IS-NOT **What that leaves exposed is metadata in transit, not content.** `content_hash` is verified against the actually-fetched bytes at fetch time no matter how the version was chosen ([§2.3](#truth)), so a tampered index can misdirect a consumer toward the wrong version — it cannot make it install bytes nobody checked. A substituted `by-name` file, by contrast, is read as it arrives. Both halves belong in one sentence: an integrity story stated only in its strong half is the kind of claim a reader plans around and a defect hides behind. @status:impl/done
 - @fact:repomd-pattern-heritage This pattern (manifest-with-checksums) is what RPM, Deb, and OCI all share, and is what gives us a path to GPG signing without re-architecting. @status:spec/done
 
 @fact:PRIMARY-JSONL **`primary.jsonl`** — newline-delimited JSON, one record per `(group, name, version)`. Lines are sorted by `(group, name, version)` — the PROP-008 §2.2 identity ordering. Each line is one §2.6 entry. JSONL is chosen over JSON-array because: @status:impl/done
@@ -239,13 +262,13 @@ before PROP-008; `kind` left package identity, so `<name>` alone is the key. @st
 
 @fact:one-binary-why **Why one binary, not two.** Same code paths (the in-memory `Index` struct, the persistence layer, the scanner) are shared. Two binaries would force consumers to install both. clap-style subcommand dispatch handles the mode selection. @status:spec/done
 
-@fact:distribution-pointer **Distribution.** The utility lives in `crates/vibe-index/` at the repository root — outside the main Cargo workspace under `crates/`. This is deliberate: §6 explains the separate-workspace decision and what it buys for redistribution. @status:spec/work
+@fact:distribution-pointer **Distribution.** The utility lives at `crates/vibe-index/` as a **member of the top-level vibevm workspace** — built, tested and gated by the same `cargo … --workspace` invocations as every other crate. [§6](#distribution) records why the original standalone-workspace decision was reversed and what the reversal bought. @status:impl/done
 
 ### 2.6 Index entry shape (the canonical record) {#entry}
 
 @fact:req-entry `req r1` @status:impl/done
 
-@fact:ENTRY-SCHEMA **Decision.** Every `(group, name, version)` entry carries the following fields. This is the schema lines of `primary.jsonl` follow, and the elements each `by-name/<name>.json` candidate's `versions[]` carry. **This section IS the schema** — measured 2026-08-05: there is no JTD file for the index entry anywhere in the tree, and `crates/vibe-index/schemas/` does not exist. The types are hand-written against this text (`crates/vibe-index/src/types/entry/`, whose own docblock says «Schema pinned in PROP-005 §2.6»), which is a different arrangement from the seven wire reports under the root `schemas/`, where the JTD file is the authority and the Rust is generated and gated by `cargo xtask check-codegen`. @status:impl/done
+@fact:ENTRY-SCHEMA **Decision.** Every `(group, name, version)` entry carries the following fields. This is the shape lines of `primary.jsonl` follow, and the elements each `by-name/<name>.json` candidate's `versions[]` carry. **The authority for that shape is `schemas/index/e1/entry.jtd.json`; this section is its reading aid.** The JTD file is the source of truth, the Rust is generated from it into `crates/vibe-wire/src/generated/` and re-exported through `crates/vibe-index/src/types/entry/`, and `cargo xtask check-codegen` refuses any drift between the two. The record is defined once, in the shared `version_entry` vocabulary, because the candidate-set file and the journal carry it transitively and the schema language has no cross-file reference — `entry.jtd.json` is the root that names it. So the index entry stands in exactly the same arrangement as the wire reports under the root `schemas/`, not a different one. Where this section and the schema disagree, **the schema wins and this section is the defect**. What this section carries that the schema cannot is the *provenance* below — where each field comes from — and that is a copy of nothing. @status:impl/done
 
 ```json
 {
@@ -317,7 +340,7 @@ before PROP-008; `kind` left package identity, so `<name>` alone is the key. @st
 - @fact:PROV-REGISTRY `registry` — local alias from `[[registry]].name`. @status:impl/done
 - @fact:PROV-FILES-COUNT `files_count` — informational, useful for sanity-checking integrity diffs. @status:impl/done
 - @fact:PROV-INDEXED-AT `indexed_at` / `indexed_by` — provenance for the index entry itself (when, by which tool version). @status:impl/done
-- @fact:PROV-MUST-UNDERSTAND `must_understand` — the **reader** capabilities a consumer must have to act on this record ([PROP-044 §4.5](../../common/PROP-044-change-native-formats.md#machinery)) — a different vocabulary from the package's own `provides.capabilities`. Written by the projector; never read from `vibe.toml`. A reader that does not understand every string in the list **skips this record and says so**; unknown fields *outside* the list are ignored as before. This is the exact inversion of additive-only: the writer declares what is mandatory, per record, addressably and revocably, instead of the schema promising ignorability forever. @status:impl/done
+- @fact:PROV-MUST-UNDERSTAND `must_understand` — the **reader** capabilities a consumer must have to act on this record ([PROP-044 §4.5](../../common/PROP-044-change-native-formats.md#machinery)) — a different vocabulary from the package's own `provides.capabilities`. Written by the projector; never read from `vibe.toml`. A reader that does not understand every string in the list **skips this record and says so** — what «says so» is, exactly, is [§2.19](#unavailable); unknown fields *outside* the list are ignored as before. This is the exact inversion of additive-only: the writer declares what is mandatory, per record, addressably and revocably, instead of the schema promising ignorability forever. @status:impl/done
 - @fact:PROV-YANKED `yanked` — the version is withdrawn. Journal-borne, not authored: frozen content cannot withdraw itself, so the fact arrives from the registry's facts journal and is projected here ([PROP-044 §2a](../../common/PROP-044-change-native-formats.md#laws)). @status:impl/done
 - @fact:PROV-FROZEN `frozen` — projected from the package manifest's `[package].frozen`, never a registry's opinion. Absence = `false` = **snapshot**: content may flow under the same version string, and a hash mismatch is *news*. `true` is the author's one-way freeze: bytes immutable, and a hash mismatch is an *alarm*. The flag lives inside the hashed content, so a version self-describes even offline and every registry serving those bytes necessarily agrees — a registry only *observes* the freeze in its journal and projects it ([PROP-044 §2a](../../common/PROP-044-change-native-formats.md#laws); terminology §2b — `snapshot` and `frozen` are the two states of one boolean axis, with no third). @status:impl/done
 
@@ -339,7 +362,7 @@ before PROP-008; `kind` left package identity, so `<name>` alone is the key. @st
 
 @fact:req-reindex `req r1` @status:impl/done
 
-@fact:TWO-REINDEX-MODES **Decision.** Two regeneration modes, both available via CLI (`vibe-index reindex`) and HTTP (`POST /v1/admin/reindex`): @status:impl/done
+@fact:TWO-REINDEX-MODES **Decision.** Two regeneration modes. Both are available via the CLI (`vibe-index reindex`); the HTTP trigger is specified and unbuilt ([§2.10](#http)): @status:impl/done
 
 @fact:FULL-REINDEX **Full reindex.** Walk every package repo in the org; for each repo, list tags; for each `v<semver>` tag, read `vibe.toml` and `subskills/**/vibe-subskill.toml` at that ref; compute `content_hash`; assemble §2.6 entry. Replace the in-memory index wholesale, then atomic-write the on-disk files. @status:impl/done
 
@@ -424,7 +447,7 @@ explained; this one does not. @status:impl/done
 @fact:triggers-lead **Triggers.** @status:impl/done
 
 - @fact:TRIGGER-CLI **CLI:** `vibe-index reindex <data-dir> --from-clones <org-dir>` — direct invocation. @status:impl/done
-- @fact:TRIGGER-HTTP **HTTP:** `POST /v1/admin/reindex` body `{"mode":"full"|"incremental","source":"clones"|"github","args":{...}}`. Auth required. Returns a job id; status pollable at `GET /v1/admin/reindex/<job-id>` (in v1 — v0 just blocks until done). @status:impl/done
+- @fact:TRIGGER-HTTP **HTTP:** `POST /v1/admin/reindex` body `{"mode":"full"|"incremental","source":"clones"|"github","args":{...}}`. Auth required. Returns a job id; status pollable at `GET /v1/admin/reindex/<job-id>` (in v1 — v0 just blocks until done). **Specified, not built** — the router carries no such route ([§2.10](#http) `##THE-ADMIN-SURFACE-IS-ONE-ROUTE`); until it does, the operator's trigger is the CLI verb, reached by cron or by whatever the host's own hook mechanism can invoke. @status:spec/plan
 - @fact:TRIGGER-GIT-HOOK **git hook (server-side, on the index repo's host):** owner installs a `post-receive` hook on the org's hosted git that posts to `POST /v1/admin/reindex` whenever a package repo gets a push to a `v*` tag. Documented in §11; not shipped as part of the binary. @status:spec/done
 - @fact:TRIGGER-CRON **cron:** `crontab` line invokes `vibe-index reindex --incremental` every N minutes. Documented; not enforced. @status:spec/done
 
@@ -471,7 +494,9 @@ Arc<RwLock<Index>>
 GET    /healthz                                   # liveness
 GET    /readyz                                    # readiness (index loaded, no in-flight reindex)
 
-# Static index files (raw — same shape as the on-disk files; mirror-friendly)
+# Static index files (raw — same shape as the on-disk files; mirror-friendly).
+# The handshake leads the block because it leads the client (§2.1).
+GET    /v1/index/hello.json
 GET    /v1/index/repomd.json
 GET    /v1/index/primary.jsonl
 GET    /v1/index/primary.jsonl.gz
@@ -492,47 +517,53 @@ DELETE /v1/packages/{group}/{name}/{version}      # remove one version
 DELETE /v1/packages/{group}/{name}                # remove all versions of a package
 
 # Admin (auth required)
-POST   /v1/admin/reindex                          # body: { mode, source, args }
+POST   /v1/admin/reindex                          # body: { mode, source, args } — SPECIFIED, NOT BUILT
 GET    /v1/admin/status                           # uptime, last reindex, pkg count, server version
 
 # Observability
 GET    /metrics                                   # Prometheus text format
 ```
 
+@fact:THE-ADMIN-SURFACE-IS-ONE-ROUTE **The admin surface the server actually builds is one route — `GET /v1/admin/status`.** The reindex trigger above is specified and unbuilt: the router registers **16 paths** and none of them is it, the handler module holds `status` alone, and the code's own note («reindex POST lands in slice 6») describes a slice that closed without it. The requirement is not withdrawn here — code conforms to the spec and not the reverse — but three places in this document asserted it as shipped, so all three now say `plan` and the fork (build it, or retire it in favour of the CLI verb) is `BACKLOG.md` B-085. It is not a paper cut: [§11](#wire-up)'s documented `post-receive` hook posts to exactly this route, so an operator following that recipe wires a hook to nothing. @status:impl/done
+
 @fact:HTTP-AUTH **Authentication.** Bearer tokens via `Authorization: Bearer <token>`. Tokens are read from `<data-dir>/state/admin.tokens` (one token per line; comment lines start with `#`). Read endpoints accept missing/invalid tokens silently. Write endpoints require a valid token; mismatch → 401 with a generic message ("authentication required"; do not echo the supplied token nor say which valid prefix it matched). Tokens never appear in logs (logging redacts the `Authorization` header). @status:impl/done
 
 @fact:HTTP-LOCKDOWN **Per-host lockdown.** By default the server binds to `127.0.0.1:8412` — local-only. Operators expose externally by setting `--bind 0.0.0.0:8412` and putting it behind a reverse proxy with TLS. v0 does not ship TLS termination; this is the reverse proxy's job. (Same posture as `cargo`'s sparse index protocol: the upstream is HTTP — TLS is for the CDN / proxy in front.) @status:impl/done
 
-@fact:HTTP-ERRORS **Errors.** Application/json error shape, taken from RFC 7807 Problem Details (lightweight subset): @status:impl/done
+@fact:HTTP-ERRORS **Errors.** Application/json error shape, taken from RFC 7807 Problem Details (lightweight subset) — four members always, and one extension member when the error is a quarantine refusal ([§2.19](#unavailable)): @status:impl/done
 
 ```json
-{ "type": "vibe-index/error/integrity-mismatch", "title": "content_hash mismatch", "status": 409, "detail": "…", "instance": "/v1/packages/flow/wal/0.1.0" }
+{ "type": "vibe-index/error/integrity-mismatch", "title": "content_hash mismatch", "status": 409, "detail": "…" }
 ```
+
+@fact:THE-BODY-CARRIES-NO-INSTANCE-MEMBER **`instance` is not emitted, and the subset is the four members above plus `unavailable`.** RFC 7807 makes every member optional, so omitting `instance` is conformance rather than a gap — but naming a member the body does not carry teaches a client to look for it. What the body does carry beyond the four is the refusal row, as an extension member, which is the mechanism that RFC provides for precisely this and the reason the status can stay `404` while the answer stops being «not found». @status:impl/done
 
 ### 2.11 CLI surface {#cli}
 
 @fact:req-cli `req r1` @status:impl/done
 
-@fact:CLI-SURFACE **Decision.** `vibe-index <subcommand> [args]`. All subcommands accept `--data-dir <path>` (or use `$VIBE_INDEX_DATA_DIR`, default `./vibe-index-data`). All emit human-readable text by default; `--json` for machine-readable shape mirroring the HTTP API responses. @status:impl/done
+@fact:CLI-SURFACE **Decision.** `vibe-index [--log-level LEVEL] <subcommand> <data-dir> [args]`. The data directory is a **required positional** on every verb — the one argument no invocation can omit, so it is not dressed as an option. One global flag stands above the verbs: `--log-level off|error|warn|info|debug|trace`. @status:impl/done
 
 ```
 # Lifecycle
-vibe-index init <data-dir> [--registry NAME --registry-url URL --naming fqdn|kind-name|name|kind/name]
-vibe-index dump <data-dir> [--format jsonl|json|toml]
-vibe-index verify <data-dir>                         # recompute file hashes, check repomd
+vibe-index init <data-dir> --registry NAME --registry-url URL [--naming fqdn|kind-name|name|kind/name] [--force]
+vibe-index dump <data-dir> [--format jsonl|json]
+vibe-index verify <data-dir> [--json]                # recompute file hashes, check repomd
 
 # Reindex
-vibe-index reindex <data-dir> --from-clones <org-dir>           [--full | --incremental]
-vibe-index reindex <data-dir> --from-github <org> [--token-file FILE]  [--full | --incremental]
-vibe-index reindex <data-dir> --from-gitverse <org>             # emits stub-not-implemented today
+vibe-index reindex <data-dir> --from-clones <org-dir>                  [--full | --incremental] [--json]
+vibe-index reindex <data-dir> --from-github <org> [--token-file FILE] [--api-base URL] [--clone-cache DIR]
+                                                    [--cache-org | --no-cache-org] [--full | --incremental] [--json]
+vibe-index reindex <data-dir> --from-gitverse <org>                    # emits stub-not-implemented today
+vibe-index rescan-org <data-dir> --from-github <org> [--token-file FILE] [--api-base URL] [--clone-cache DIR] [--json]
 
 # Read
-vibe-index get <data-dir> <group> <name> [--version V]
-vibe-index list <data-dir> [--kind K] [--limit N] [--offset M]
-vibe-index search <data-dir> <query> [--kind K] [--limit N]
-vibe-index capabilities <data-dir> <capability>
-vibe-index purls <data-dir> <purl>
-vibe-index outdated <data-dir> [--lockfile PATH]                # given a vibe.lock, print upgrade candidates
+vibe-index get <data-dir> <group> <name> [--version V] [--json]
+vibe-index list <data-dir> [--kind K] [--limit N] [--offset M] [--json]
+vibe-index search <data-dir> <query> [--kind K] [--limit N] [--json]
+vibe-index capabilities <data-dir> <capability> [--json]
+vibe-index purls <data-dir> <purl> [--json]
+vibe-index outdated <data-dir> [--lockfile PATH] [--json]        # given a vibe.lock, print upgrade candidates
 
 # Write (CLI-mode; refused if server is holding the lock)
 vibe-index add <data-dir> --manifest <package.toml-path> --repo-url URL [--ref REF --commit SHA]
@@ -540,8 +571,13 @@ vibe-index remove <data-dir> <group> <name> [--version V]
 
 # Server
 vibe-index serve <data-dir> [--bind ADDR] [--auth-tokens-file FILE] [--read-only] [--auto-commit-push]
+                            [--rate-limit-per-token N] [--rate-limit-per-ip N]
 vibe-index stop <data-dir>                                       # graceful shutdown via lock-file PID
 ```
+
+@fact:MACHINE-OUTPUT-IS-PER-VERB-NOT-UNIVERSAL **`--json` is a property of nine verbs, not of the binary.** Every verb that ANSWERS a question carries it — `get`, `list`, `search`, `capabilities`, `purls`, `outdated`, `verify`, `reindex`, `rescan-org`; the six that perform an action and report only success (`init`, `add`, `remove`, `dump`, `serve`, `stop`) do not. `dump` is the instructive exception: it is machine output already, so a `--json` switch on it would be a second spelling of `--format json`. Saying «all subcommands» would send a script author looking for a flag six verbs do not have. @status:impl/done
+
+@fact:THE-LOG-DIAL-AND-THE-VARIABLE-ARE-ONE-LEVER `--log-level` is global (it may be written before or after the subcommand) and it folds into the one lever `VIBE_LOG`, which the subscriber reads exactly once at start-up: passing the flag SETS that variable, so the process environment always explains the output an operator is looking at. The flag speaks a closed set of six values while the variable keeps the full directive language — one thing with a coarse dial and a fine one, never two spellings of the same power. @status:impl/done
 
 @fact:HELP-SMOKE **Help-text smoke** lives under `crates/vibe-index/tests/help_smoke.rs`, mirroring `every_subcommand_renders_help` in `vibe-cli`. @status:impl/done
 
@@ -549,7 +585,9 @@ vibe-index stop <data-dir>                                       # graceful shut
 
 @fact:req-types `req r1` @status:impl/done
 
-@fact:RUST-TYPES **Decision.** Rust types live in `crates/vibe-index/src/types/`, **hand-written against §2.6 rather than generated** — there is no JTD schema for them (measured 2026-08-05), so the text is the contract and the compiler checks nothing between them: @status:impl/done
+@fact:RUST-TYPES **Decision.** The catalog's wire types are **generated from the schemas of [§2.6](#entry) and re-exported**, never written by hand: the definitions live in `vibe_wire::generated` beside the JTD they come from, `crates/vibe-index/src/types/` re-exports them so every `vibe_index::types::*` path keeps its meaning, and `cargo xtask check-codegen` is the gate that refuses a drift between schema and type. `VersionEntry` comes from the shared `version_entry` vocabulary; `NameEntry` / `PackageEntry` / `Tombstone` from `schemas/index/e1/by_name.jtd.json`; `BindingSite` from `by_purl`. @status:impl/done
+
+@fact:TWO-SHAPES-STAY-HAND-WRITTEN-AND-SAY-WHY Two shapes stay hand-written, and each says why. `Repomd` / `RepomdFileEntry` — its `size` is a `u64` where the schema language reaches only `u32` (an open owner fork, `BACKLOG.md` B-056), and its `files` union is tagged by this document's own law ([§2.4](#layout)). And `Index` below, which is not a wire type at all: it is the server's in-RAM state, no single document ever carries it, and it holds two members the catalog deliberately never serialises — the reader's quarantine record and the per-name tombstones the writer projects back onto the candidate-set files: @status:impl/done
 
 ```rust
 pub struct Index {
@@ -557,30 +595,36 @@ pub struct Index {
     pub registry: String,
     pub registry_url: String,
     pub naming: NamingConvention,
-    pub generated_at: DateTime<Utc>,
     pub generator: String,
+    pub generated_at: DateTime<Utc>,
 
     pub by_pkgref: BTreeMap<PkgKey, PackageEntry>,
-    pub by_capability: BTreeMap<String, BTreeSet<VersionedPkgKey>>,
-    pub by_purl: BTreeMap<String, BTreeSet<VersionedPkgKey>>,
-    pub text_index: TextIndex,
+    /// The reader's record of the versions it refused to act on —
+    /// in memory only, never written into any catalog file.
+    pub quarantined: Vec<Quarantined>,
+    /// Per-name tombstones; `write_to` projects them back onto the
+    /// `by-name/<name>.json` it builds.
+    pub tombstones: BTreeMap<String, Tombstone>,
 }
 
+// generated — schemas/index/e1/by_name.jtd.json
 pub struct PackageEntry {
-    pub kind: PackageKind,
+    pub group: Group,
     pub name: String,
+    pub indexed_at: Timestamp,
+    pub versions: Vec<VersionEntry>,        // ascending by version
     pub latest_stable: Option<Version>,
-    pub versions: BTreeMap<Version, VersionEntry>,
-    pub indexed_at: DateTime<Utc>,
 }
 
-pub struct VersionEntry { /* §2.6 schema, one-to-one */ }
+// generated — the shared `version_entry` vocabulary (§2.6)
+pub struct VersionEntry { /* … */ }
 ```
 
-@fact:PKGKEY-SHAPE `PkgKey = (PackageKind, String)` — interned for cheap clones.
-`VersionedPkgKey = (PkgKey, Version)`. @status:impl/done
+@fact:PKGKEY-SHAPE `PkgKey = (Group, String)` — the `(group, name)` identity of
+PROP-008 §2.2, and the order `by_pkgref` walks in. `kind` is metadata and
+identifies nothing, so it is not part of the key. @status:impl/done
 
-@fact:TEXT-INDEX `TextIndex` — simple inverted index in v0: `BTreeMap<String, BTreeSet<VersionedPkgKey>>` mapping each tokenised word from name / description / keywords / capabilities / purls to the matching pkgrefs. Token = lowercased ASCII word; ~30-stopword filter (same filter `vibe-check::activation_conflict` uses, deliberately reused for consistency). Search: tokenise query, intersect token-postings, rank by term-overlap. Good enough for ≤10k packages; tantivy is a v1 upgrade if it isn't. @status:impl/done
+@fact:TEXT-INDEX **Search keeps no stored index.** The postings are built per query against the loaded `Index` (`index/search.rs`) rather than held as a field, so no mutation has anything to invalidate. Token = lowercased ASCII alphanumeric run; ~30-stopword filter (the same list `vibe-check::activation_conflict` uses, deliberately reused for consistency). Ranking is term-overlap — one point per query token a hit carries — with the `(group, name)` identity breaking ties. Good enough for ≤10k packages; tantivy is a v1 upgrade if it isn't. Search answers only over what this build can act on: it asks the `quarantine::usable_*` accessors, never `pkg.versions` raw ([§2.6](#entry)). @status:impl/done
 
 ### 2.13 Persistence layer {#persistence}
 
@@ -590,23 +634,29 @@ pub struct VersionEntry { /* §2.6 schema, one-to-one */ }
 
 ```
 <data-dir>/
+├── hello.json                        # the eternal handshake (§2.4)
 ├── repomd.json                       # the manifest (§2.4)
 ├── primary.jsonl
 ├── primary.jsonl.gz
 ├── by-name/
-│   └── <kind>/
-│       └── <name>.json
+│   └── <name>.json                   # no <kind>/ level — kind left package identity (PROP-008)
 ├── by-cap/
 │   └── <slug>.jsonl
 ├── by-purl/
 │   └── <slug>.jsonl
 ├── README.md                         # auto-generated; explains "this is a vibevm index"
+├── .gitignore                        # written by `init`; covers state/
 └── state/                            # NOT mirrored (gitignored when data-dir is a git working tree)
+    ├── journal/<YYYY>-<MM>.ndjson    # the registry facts journal — the AUTHORITATIVE layer
     ├── server.lock                   # PID file, present only when serve is running
     ├── admin.tokens                  # bearer tokens (gitignored)
     ├── checkpoint.json               # incremental-reindex bookkeeping (last commit/tag per repo)
-    └── stats.json                    # counters for /metrics endpoint
+    └── org-cache.json                # the organisation image and its validator (§2.8.1)
 ```
+
+@fact:THE-TRUTH-LIVES-UNDER-THE-DIRECTORY-THAT-IS-NOT-SERVED **The one thing to notice in that tree: `state/` is not mirrored, and the journal lives there.** Everything above `state/` is a projection and may be deleted and rebuilt; `state/journal/` is the layer it is rebuilt FROM ([§2.3](#truth)), and the server refuses to start without it. So the directory's gitignore boundary and its truth boundary run in opposite directions — the served half is disposable, the unserved half is not — and an operator who backs up «the index» by copying what the mirror carries has backed up the derivative and left the original. @status:impl/done
+
+@fact:COUNTERS-ARE-NOT-A-FILE **`/metrics` counts from memory, not from a file.** The counters are atomics in the server's own state and reset with the process, which is what an operational counter means; no `state/stats.json` exists, and a reader looking for one would find a durable-looking name for a volatile fact. @status:impl/done
 
 @fact:DATA-DIR-IS-WORKTREE The data-dir doubles as a git working tree of the org's `index` repo. `state/` is `.gitignore`d (the `init` subcommand writes a default `.gitignore`). Operators commit + push the rest manually, or via `--auto-commit-push` — built 2026-08-06, contract in [§2.17](#auto-publish). @status:impl/done
 
@@ -615,9 +665,11 @@ pub struct VersionEntry { /* §2.6 schema, one-to-one */ }
 1. @fact:AW-TMP Write `F.tmp` next to `F`. @status:impl/done
 2. @fact:AW-FSYNC `fsync(F.tmp)`. @status:impl/done
 3. @fact:AW-RENAME `rename(F.tmp, F)`. @status:impl/done
-4. @fact:AW-FSYNC-DIR `fsync(parent_dir(F))` on POSIX. (No-op on Windows where the directory has no fsync semantics; rename itself is atomic.) @status:impl/done
+4. @fact:AW-FSYNC-DIR `fsync(parent_dir(F))` on POSIX. (No-op on Windows where the directory has no fsync semantics; rename itself is atomic.) @status:spec/plan
 
-@fact:REPOMD-LAST-LAW `repomd.json` is replaced **last** in any batch update, so a reader that fetches `repomd.json` first then chases hashes always sees consistent files. @status:impl/done
+@fact:THE-DIRECTORY-FSYNC-IS-NOT-DONE **Step 4 is not performed, anywhere.** Every `sync_all` in the crate is on a FILE — the temp file here, the journal shard, the lockfile, a test fixture — and no code path opens a directory to flush it. Steps 1–3 are exactly as written and the temp file is `<F>.tmp.<pid>`, which changes nothing about the contract. What step 4 buys is the durability of the *rename* across a power loss on POSIX: without it the new bytes are safe and the directory entry pointing at them may not be, so a crash can leave the old name resolving to nothing rather than to either version. That is a narrow window and a real one, it costs a few lines to close, and it is filed as `BACKLOG.md` B-087 rather than quietly dropped from the protocol — a durability step deleted because nobody implemented it is how a guarantee becomes folklore. @status:impl/done
+
+@fact:REPOMD-LAST-LAW `repomd.json` is replaced **last among the files it vouches for**, so a reader that fetches `repomd.json` first then chases hashes always sees consistent files. The handshake is written after it and is the one root file that does not weaken the rule, because the manifest never claimed it ([§2.4](#layout)) — the precedent being `README.md` and `.gitignore`, which `init` writes and the map does not carry either. @status:impl/done
 
 ### 2.14 Integration with the rest of vibevm {#integration}
 
@@ -625,21 +677,22 @@ pub struct VersionEntry { /* §2.6 schema, one-to-one */ }
 
 @fact:consumer-side-lead **Consumer side (`vibe-cli`, `vibe-registry`).** @status:impl/done
 
-- @fact:INT-FAST-PATH `crates/vibe-registry/src/multi_registry_resolver.rs` gains an optional **index-aware fast path**. Before falling back to per-repo `git ls-remote`, it tries `HTTP GET <registry.index_url>/repomd.json`. On 200, it reads `by-name/<name>.json` for the pkgref, selects the candidate whose `group` matches, and picks the matching version locally — zero ls-remote calls. On 404 / connect failure, fall through to today's path. @status:impl/done
+- @fact:INT-FAST-PATH `crates/vibe-registry/src/multi_registry_resolver/` carries an optional **index-aware fast path**. Before falling back to per-repo `git ls-remote`, it opens a session by the discovery ladder of [§2.1](#optional) — the handshake first, the manifest as the compatibility tail — and on success reads `by-name/<name>.json` for the pkgref, selects the candidate whose `group` matches, and picks the matching version locally: zero ls-remote calls. An `absent` probe falls through to today's path; a `refused` one surfaces its reason instead of pretending nothing was there. @status:impl/done
 - @fact:INT-VERIFY-ANYWAY Index-derived `content_hash` does NOT replace fetch-time verification. The actual `git fetch` still happens; the post-fetch `compute_content_hash` still runs; mismatch still errors out per [PROP-002 §2.1](../vibe-registry/PROP-002-decentralized-registry.md#identity). @status:impl/done
 
 @fact:publisher-side-lead **Publisher side (`vibe-publish`).** @status:impl/done
 
-- @fact:INT-PUBLISH-HOOK `crates/vibe-publish/src/lib.rs::Publisher::publish` gets an optional post-publish hook: if the registry has an `index_url` configured AND a `[[registry]].index_token` (env: `VIBEVM_INDEX_TOKEN_<HOST>`), Publisher POSTs the new entry to `<index_url>/v1/packages` after a successful `push_release`. Failure of the index POST does NOT fail the publish — it logs a warning and the operator's next `vibe-index reindex` covers the gap. @status:impl/done
+- @fact:INT-PUBLISH-HOOK `crates/vibe-publish/src/post_hook.rs` carries an optional post-publish hook: when **both** `VIBEVM_INDEX_URL_<REGISTRY>` and `VIBEVM_INDEX_TOKEN_<REGISTRY>` are set for the registry being published to, the publisher POSTs the new entry to `<index-url>/v1/packages` with a bearer token after a successful `push_release`. Failure of the index POST does NOT fail the publish — it logs a warning and the operator's next `vibe-index reindex` covers the gap. @status:impl/done
+- @fact:THE-HOOKS-TWO-SETTINGS-ARE-KEYED-BY-REGISTRY-NOT-BY-HOST **Both settings are per-REGISTRY environment variables, and the distinction matters.** The suffix is the registry's local alias from `[[registry]].name`, not the host — one host can serve several registries and one registry can move hosts, so keying on the host would name the wrong thing in both directions. The manifest fields this document once promised (`index_url`, `index_token`) do not exist ([§2.2](#form-factor)), so the environment is not one source among several here: it is the only one. @status:impl/done
 - @fact:INT-DIRECT-PUSH Direct-push (`--repo-url`) bypasses index updates entirely (no registry context). @status:impl/done
 
 @fact:outdated-lead **`vibe outdated` (M1.10 follow-up).** @status:impl/done
 
-- @fact:INT-OUTDATED-FAST Adds a fast path: when a registry has an index, query `by-name/<kind>/<name>.json` for the latest version instead of `git ls-remote`. Same envelope shape; ~100× faster for large lockfiles. @status:impl/done
+- @fact:INT-OUTDATED-FAST Adds a fast path: when a registry has an index, query `by-name/<name>.json` for the latest version instead of `git ls-remote`. Same envelope shape; ~100× faster for large lockfiles. @status:impl/done
 
 @fact:search-lead **`vibe search` (M2.10 — this is what unblocks it).** @status:impl/done
 
-- @fact:INT-SEARCH Walks every configured registry's `index_url`, fetches `primary.jsonl.gz`, scans for matches against the user's query. Index is the enabling layer for M2.10; `vibe search` is the headline consumer of this PROP. @status:impl/done
+- @fact:INT-SEARCH Walks every configured registry's index through the same client the resolver uses — probe, then query — rather than downloading `primary.jsonl.gz` and scanning it locally. The whole-file scan was the shape this document first imagined and is not what shipped: asking the index a question keeps the bandwidth proportional to the answer instead of to the catalog, and it puts one discovery ladder ([§2.1](#optional)) under every consumer instead of two. Index is the enabling layer for M2.10; `vibe search` is the headline consumer of this PROP. @status:impl/done
 
 @fact:INT-SLICED Each integration point is a separate slice. v0 of `vibe-index` ships without any of them — the index can be populated and consumed via raw HTTP / git clone before vibevm consumers know about it. Integration slices land in M2.10 / M1.10 follow-ups. @status:impl/done
 
@@ -651,7 +704,7 @@ pub struct VersionEntry { /* §2.6 schema, one-to-one */ }
 - @fact:NEVER-MODIFY-REPOS **Never modify package repos.** The index utility reads package repos (for the `--from-clones` walk) but never writes to them. @status:impl/done
 - @fact:NEVER-ECHO-TOKENS **Never echo tokens.** Same discipline as [PROP-000 §20](../../common/PROP-000.md#token-secrecy). Auth tokens for the server, GitHub API tokens for `--from-github`, publish tokens propagated through hooks — none ever appear in stdout / stderr / logs / JSON envelopes. @status:impl/done
 - @fact:NEVER-ASSUME-MIRROR **Never assume mirror infrastructure.** The index is opt-in everywhere; no consumer or publisher fails because the index disappeared. @status:impl/done
-- @fact:NEVER-SILENT-SCHEMA **Never make breaking schema changes silently.** The refusal is what matters and it survives; where it LIVES moved with the journal. A build must never read the subset it understands and carry on as though it understood the whole — but the carrier of that refusal is no longer a version number on the catalog, because the catalog is a projection any build rewrites from facts. It is the per-record capability set: a record naming a capability the reader lacks is refused BY NAME, with a recipe, and the rest of the catalog still loads ([PROP-044 §4.5](../../common/PROP-044-change-native-formats.md#machinery)). That is strictly louder than a version compare, which could only say "somewhere in here is something newer than you". Unknown FIELDS are a different question and are answered by `##FORWARD-COMPAT`: they are tolerated, because tolerating them can no longer lose them. @status:impl/done
+- @fact:NEVER-SILENT-SCHEMA **Never make breaking schema changes silently.** The refusal is what matters and it survives; where it LIVES moved with the journal. A build must never read the subset it understands and carry on as though it understood the whole — but the carrier of that refusal is no longer a version number on the catalog, because the catalog is a projection any build rewrites from facts. It is the per-record capability set: a record naming a capability the reader lacks is refused BY NAME, with a recipe, and the rest of the catalog still loads ([PROP-044 §4.5](../../common/PROP-044-change-native-formats.md#machinery); the answer's shape and the surfaces that owe it are [§2.19](#unavailable)). That is strictly louder than a version compare, which could only say "somewhere in here is something newer than you". Unknown FIELDS are a different question and are answered by `##FORWARD-COMPAT`: they are tolerated, because tolerating them can no longer lose them. @status:impl/done
 
 ### 2.16 Webhooks — feeding the index instead of polling it {#webhooks}
 
@@ -886,6 +939,7 @@ npm's dist-tags and Docker's tags are the prior art. The pointer map is
 promotion is the author's workflow, not registry law. A channel may point at
 a snapshot or at a frozen version (PROP-044 §2b) — the axes are orthogonal. @status:spec/plan
 
+- @fact:THE-JOURNALS-HALF-OF-THIS-CONTRACT-IS-ALREADY-MINTED **What already exists, so nobody mints it twice:** the journal's event vocabulary carries `ChannelSet {group, name, channel, version}` and `ChannelUnset {group, name, channel}` in exactly the shape below, and the generated entry types carry a `channels` list. What is NOT built is the projection and the surfaces. And the projector's treatment of that gap is the load-bearing part: meeting a channel act it **refuses the whole projection by name** — «the journal holds a `ChannelSet` record, but its carrier (channels) is not built in this vibe-index; skipping the record would project a catalog the journal does not describe» — rather than skipping the record and continuing. The journal is truth ([§2.3](#truth)); a projector that quietly dropped an event it did not understand would publish a catalog asserting a state nobody recorded, which is the one failure re-fetching cannot cure. `Renamed`, `Notice` and `ForceReplaced` stand in the same place for the same reason. @status:impl/done
 - @fact:CHANNEL-NAME-GRAMMAR **Channel-name grammar:** `[a-z][a-z0-9-]*` — it
   must not start with a digit (versions do) or a version-requirement operator
   (`^ ~ = < > *`), which is what makes `@beta` unambiguous in a pkgref's
@@ -967,6 +1021,26 @@ a snapshot or at a frozen version (PROP-044 §2b) — the axes are orthogonal. @
   (4) Neither reachable → refusal with a recipe. Degradation is always
   announced, never silent (PROP-044 law 1). @status:spec/plan
 
+### 2.19 The `unavailable` answer — what a surface says about a version it will not serve {#unavailable}
+
+@fact:req-unavailable `req r1` @status:impl/done
+
+@fact:THE-REFUSAL-IS-AN-ANSWER-NOT-AN-OMISSION **Decision.** A surface that cannot act on a record does not drop it — it **names it**. [PROP-044 §4.5](../../common/PROP-044-change-native-formats.md#machinery) gives the law («the refusal surfaces at the point of use with a generated recipe»); this section gives its shape in this catalog. A version whose `must_understand` ([§2.6](#entry)) names a capability this build lacks is **unavailable to this build**, and every surface that computes an answer says so out loud. Quietly narrowing the answer instead would be the silence [PROP-044 §2](../../common/PROP-044-change-native-formats.md#laws) forbids: the package exists and cannot be found, which is a riddle rather than a break. @status:impl/done
+
+@fact:UNAVAILABLE-SHAPE **The answer row is one shape, used by every surface:** `{group, name, version, missing, recipe}`. It carries the **full coordinate even where the envelope around it already names the package** — a row that identifies itself survives being copied out of its envelope by a script, and a context-dependent one does not. `missing` is exactly the subset of the record's `must_understand` this build does not understand — not the whole declaration, because a reader that understands three of four capabilities must be told about the fourth, not about all four. `recipe` is the generated text that says what a person or a script does about it. @status:impl/done
+
+@fact:THE-RECIPE-HAS-ONE-HOME **The recipe is built in one place and never written as a literal at a call site.** One home, N surfaces: a literal per surface is N texts that drift, and the one that drifts is the one nobody reads until it matters. It is **degenerate today by measurement, not by omission** — no reader capability has been built yet, so every missing capability is one this build simply does not know and there is no second class of recipe to write. The per-capability table this grows into gets its first row from the first capability that lands; inventing rows for capabilities that do not exist would be machinery for a consumer that does not exist. @status:impl/done
+
+@fact:QUARANTINE-IS-A-READERS-JUDGEMENT-AND-IS-NEVER-CARRIED **Quarantine is the READER's judgement about a (record × build) pair, never a property of the record** — so it is derived at the point of use from the record's own `must_understand` and is **never stored on the wire**. The consequence worth the ink: the command line and the server agree **by construction**, not by two implementations being kept in step. The predicate reads the record, so it does not matter which carrier the record arrived in — and the carriers genuinely differ, since a catalog LOADED from disk arrives with a quarantine record while one PROJECTED from the journal arrives with an empty one. Two surfaces that agreed only because someone remembered to update both would disagree the first time one of them was forgotten. @status:impl/done
+
+@fact:THE-SAFE-DEFAULT-IS-A-CONSTRUCTION-NOT-AN-AGREEMENT **The safe default is a property of the construction.** The answering path asks the **named accessors** (`quarantine::usable_*`) and never reads the stored version list or `latest_stable` raw; the **writer's** path, the mutations, and the operational counters ask the raw state deliberately — the catalog is the projection of the journal ([§2.3](#truth)), and a reader's capabilities have no business shrinking what is WRITTEN or miscounting what the index HOLDS. The asymmetry is stated in the doc-comments of both sides, and that statement is the only defence against the next author reaching for the wrong accessor: the two calls look identical at the call site and differ only in what they mean. @status:impl/done
+
+@fact:WHICH-SURFACES-OWE-THE-ANSWER **Which surfaces owe it, as a rule rather than a list** — because a list rots and a rule does not: **every surface that COMPUTES an answer owes the refusal; a surface that serves a stored file verbatim does not.** Computing covers each read verb that selects, narrows, ranks or aggregates, and each HTTP route that answers from the in-RAM index. Serving verbatim covers the raw file routes of [§2.10](#http). @status:impl/done
+
+@fact:THE-RAW-FILE-WAS-NEVER-THE-ONE-KEEPING-SILENT **The raw candidate-set file is not silent, and making it «speak» could only mean removing information from it.** `by-name/<name>.json` hands back the record word for word, `must_understand` included — and that declaration IS the explanation of the refusal, delivered to a client that can then apply its own capability set rather than ours. Silence lived exactly in the surfaces that computed an answer and dropped a record without a word; the file that says everything was never the problem. @status:impl/done
+
+@fact:A-REFUSED-VERSION-IS-A-404-CARRYING-ITS-REASON **Over HTTP the status stays `404` and the body carries the reason.** «You did not get the thing» is preserved for every client that only reads status codes, while the problem document's `type` and `title` name the refusal in its own words — not «resource not found» — and an **extension member** carries the whole answer row ([§2.10](#http) fixes the RFC 7807 shape; extension members are what that RFC provides for exactly this). The judgement rides the envelope and never enters the record: a `VersionEntry` is generated from the schema and says nothing about any reader. @status:impl/done
+
 ---
 
 ## 3. Architecture {#architecture}
@@ -977,81 +1051,71 @@ a snapshot or at a frozen version (PROP-044 §2b) — the axes are orthogonal. @
 
 ```
 crates/vibe-index/                          # a member of the vibevm workspace
-├── Cargo.toml                              # depends on vibe-core; no [workspace] table
+├── Cargo.toml                              # depends on vibe-core + vibe-wire; no [workspace] table
 ├── README.md                               # operator-facing — how to run, common recipes
-├── LICENSE                                 # EULA (vibevm's proprietary license)
 ├── src/
 │   ├── main.rs                             # bin entrypoint — clap dispatch
 │   ├── lib.rs                              # exports, top-level Error/Result
-│   ├── cli/
-│   │   ├── mod.rs                          # subcommand router
-│   │   ├── init.rs
-│   │   ├── reindex.rs
-│   │   ├── add.rs
-│   │   ├── remove.rs
-│   │   ├── get.rs
-│   │   ├── list.rs
-│   │   ├── search.rs
-│   │   ├── verify.rs
-│   │   ├── dump.rs
-│   │   ├── outdated.rs
-│   │   ├── capabilities.rs
-│   │   ├── purls.rs
-│   │   ├── serve.rs
-│   │   └── stop.rs
+│   ├── error.rs
+│   ├── cli/                                # one file per verb (§2.11) + kinds.rs
+│   ├── journal/                            # THE AUTHORITATIVE LAYER (§2.3)
+│   │   ├── record.rs                       # the event vocabulary
+│   │   ├── store.rs                        # append-only shards under state/journal/
+│   │   ├── project.rs                      # journal → catalog; refuses unbuilt carriers
+│   │   └── mod.rs
 │   ├── index/
-│   │   ├── mod.rs                          # Arc<RwLock<Index>>
+│   │   ├── mod.rs                          # the writer's owned surface (§2.4)
 │   │   ├── memory.rs                       # Index struct + ops
+│   │   ├── quarantine.rs                   # the reader's judgement + the refusal (§2.19)
 │   │   ├── persistence.rs                  # atomic write/read of files
 │   │   ├── primary.rs                      # JSONL serialise/parse
-│   │   ├── by_name.rs                      # per-package JSON
+│   │   ├── by_name.rs                      # candidate-set JSON
+│   │   ├── inverted.rs                     # by-cap / by-purl
 │   │   ├── repomd.rs                       # repomd.json
 │   │   ├── checkpoint.rs                   # incremental-reindex state
-│   │   └── search.rs                       # text index
+│   │   └── search.rs                       # per-query postings, not a stored index
 │   ├── scanner/
 │   │   ├── mod.rs                          # source-of-truth walkers
-│   │   ├── from_clones.rs                  # walk org-dir clones via git2 / shell git
+│   │   ├── from_clones.rs                  # walk org-dir clones via shell git
 │   │   ├── from_github.rs                  # GitHub REST API walk
-│   │   └── from_gitverse.rs                # stub today
+│   │   ├── org_walk.rs                     # the organisation enumeration
+│   │   ├── org_cache.rs                    # the org image + its validator (§2.8.1)
+│   │   ├── manifest.rs                     # parses through vibe-core
+│   │   └── git_cli.rs                      # the shelled-out git
 │   ├── server/
-│   │   ├── mod.rs                          # axum app builder
-│   │   ├── routes/
-│   │   │   ├── health.rs
-│   │   │   ├── index_files.rs              # /v1/index/*
-│   │   │   ├── packages.rs                 # /v1/packages*
-│   │   │   ├── capabilities.rs
-│   │   │   ├── purls.rs
-│   │   │   ├── admin.rs                    # /v1/admin/*
-│   │   │   └── metrics.rs
+│   │   ├── mod.rs                          # axum app builder — the 16 routes of §2.10
+│   │   ├── routes/                         # health · index_files · packages · capabilities
+│   │   │                                   #   · purls · admin · metrics
 │   │   ├── auth.rs
-│   │   ├── error.rs                        # RFC-7807 mapper
+│   │   ├── error.rs                        # RFC-7807 mapper + the refusal extension
+│   │   ├── rate_limit.rs                   # per-token / per-IP buckets (§9 Q10)
+│   │   ├── metrics.rs                      # hand-rolled text serialiser
 │   │   └── state.rs                        # AppState
-│   ├── types/                              # Serializable schema types
+│   ├── types/                              # re-export seam over the generated wire types
 │   │   ├── mod.rs
-│   │   ├── entry.rs                        # VersionEntry + sub-types
-│   │   ├── repomd.rs
+│   │   ├── entry/                          # aggregate · content · relations
+│   │   ├── repomd.rs                       # the one hand-written shape (§2.12)
 │   │   └── kinds.rs                        # PackageKind, NamingConvention dupes
+│   ├── publish.rs                          # auto-commit-and-push (§2.17)
+│   ├── lock.rs                             # the single-writer PID lock
+│   ├── lockfile.rs                         # reading a vibe.lock for `outdated`
+│   ├── hash_recipe.rs                      # the recipe a content_hash rides with
 │   └── content_hash.rs                     # mirrors vibe-registry::compute_content_hash exactly
 ├── fixtures/
-│   ├── sample-org/
-│   │   ├── flow-wal/
-│   │   ├── flow-atomic-commits/
-│   │   └── stack-rust/
-│   └── golden-index/
-│       ├── repomd.json
-│       └── primary.jsonl
-├── tests/
-│   ├── help_smoke.rs                       # clap renders help for every subcommand
-│   ├── cli_e2e.rs                          # init + reindex + get + search round-trips
-│   ├── server_e2e.rs                       # spawn server, drive HTTP API, shut down
-│   ├── persistence_atomic.rs               # crash-mid-write recovery
-│   ├── content_hash_parity.rs              # hash matches vibe-registry's exactly
-│   └── scan_clones.rs                      # walks fixtures/sample-org/
+│   ├── golden-flow-wal-0.1.0/              # the parity fixture
+│   └── golden-order-trap-0.1.0/            # the tree where recipes 0 and 1 disagree
+├── tests/                                  # help_smoke · cli_{lifecycle,read,write} · server_e2e
+│                                           #   · server_writes · auto_publish · rate_limit_e2e
+│                                           #   · org_cache_e2e · scanner_e2e · from_github_e2e
+│                                           #   · golden_corpus · round_trip_published
+│                                           #   · content_hash_parity · six wire_parity_*
 └── docs/
     ├── operator-handbook.md
     ├── consumer-protocol.md                # HTTP API reference
     └── format.md                           # repomd / primary / by-name / by-cap / by-purl
 ```
+
+@fact:THE-CRATE-CARRIES-NO-LICENCE-FILE-OF-ITS-OWN **There is no `LICENSE` inside the crate, and that is the correct state.** `Cargo.toml` carries `license-file.workspace = true`, so the crate inherits the repository's licence rather than keeping a second copy that can disagree with it — the same single-home rule this document applies to normative values, applied to the one value a licence is. The repository's licence is UPL-1.0. @status:impl/done
 
 ### 3.2 Dependencies {#deps}
 
@@ -1060,7 +1124,7 @@ crates/vibe-index/                          # a member of the vibevm workspace
 @fact:deps-lead Minimal Rust crates to keep redistribution clean: @status:impl/done
 
 - @fact:dep-clap `clap` (derive) — CLI dispatch. @status:impl/done
-- @fact:dep-tokio `tokio` (full) — async runtime for the server. @status:impl/done
+- @fact:dep-tokio `tokio` — async runtime for the server, with the four features named below. @status:impl/done
 - @fact:dep-axum `axum` — HTTP framework. Mature, minimal, integrates with `tower` middleware. @status:impl/done
 - @fact:dep-tower `tower` / `tower-http` — auth, CORS, tracing layers. @status:impl/done
 - @fact:dep-serde `serde` / `serde_json` — JSON. @status:impl/done
@@ -1075,9 +1139,17 @@ crates/vibe-index/                          # a member of the vibevm workspace
 - @fact:dep-git `gix` (or shell-out via `std::process::Command`) — read git tags / show files at refs. Decision §3.3. @status:impl/done
 - @fact:dep-reqwest `reqwest` — `--from-github` HTTP client. @status:impl/done
 - @fact:dep-tempfile `tempfile` — atomic write helpers. @status:impl/done
-- @fact:dep-prometheus `prometheus` — `/metrics` endpoint. @status:impl/done
+- @fact:dep-prometheus <status stage="spec" state="void">Retired 2026-08-18 by measurement: the `prometheus` crate is not a dependency and never became one — `/metrics` renders the exposition format from a hand-written serialiser. The heir is `##THE-METRICS-DEPENDENCY-WAS-NOT-TAKEN` below, which records the choice and its reason. This tombstone stays so the anchor's name is never reused and inbound links do not break.</status> @status:spec/void
+- @fact:dep-specmark `specmark` — the in-code spec markers (`scope!`, `#[spec]`) the traceability map is built from. @status:impl/done
+- @fact:dep-vibe-wire `vibe-wire` — the generated wire types this crate's `types` module re-exports ([§2.12](#types)). A runtime dependency, not a test one: the library's types ARE the wire's types. @status:impl/done
 
-@fact:VIBE-CORE-DEP **`vibe-core` dependency.** `vibe-index` parses `vibe.toml` and `vibe-subskill.toml` through `vibe-core`'s own `Manifest` / `SubskillManifest` types, so the index can never drift from the manifest schema. This reverses the proposal's original standalone-no-`vibe-core` stance — [§6](#distribution) records the reversal, [§9](#open) item 11 the de-rot finding that forced it. What stays duplicated is small and stable: the four-variant `PackageKind` / `NamingConvention` (`src/types/kinds.rs`, frozen by `VIBEVM-SPEC.md` §4, needing the `Ord` + `clap::ValueEnum` the `vibe-core` originals lack) and the `compute_content_hash` algorithm (`src/content_hash.rs`, gated by `tests/content_hash_parity.rs` against a byte-for-byte copy of `fixtures/registry/flow/wal/v0.1.0/`). `compute_content_hash` folds into `vibe-core` once it is lowered out of `vibe-registry`. @status:impl/done
+@fact:THE-METRICS-DEPENDENCY-WAS-NOT-TAKEN **No `prometheus` crate is pulled, and the omission is the design.** `/metrics` renders the Prometheus text exposition format from a hand-written serialiser, because the surface is a handful of counters and the exposition format is stable text — so the dependency would buy formatting we can write once and cost a tree we then carry forever. This is what «minimal crates to keep redistribution clean» means when it is applied rather than stated. @status:impl/done
+
+@fact:TOKIO-IS-NARROWED-NOT-FULL `tokio` is taken with four features — `signal`, `sync`, `time`, `fs` — not `full`. `full` is the shape a project reaches for before it knows what it uses; naming the four is the same discipline as the paragraph above, one level down. @status:impl/done
+
+@fact:VIBE-CORE-DEP **`vibe-core` dependency.** `vibe-index` parses `vibe.toml` and `vibe-subskill.toml` through `vibe-core`'s own `Manifest` / `SubskillManifest` types, so the index can never drift from the manifest schema. This reverses the proposal's original standalone-no-`vibe-core` stance — [§6](#distribution) records the reversal, [§9](#open) item 11 the de-rot finding that forced it. What stays duplicated is small and stable: the four-variant `PackageKind` / `NamingConvention` (`src/types/kinds.rs`, frozen by `VIBEVM-SPEC.md` §4, needing the `Ord` + `clap::ValueEnum` the `vibe-core` originals lack) and the `compute_content_hash` algorithm (`src/content_hash.rs`, gated by `tests/content_hash_parity.rs`). `compute_content_hash` folds into `vibe-core` once it is lowered out of `vibe-registry`. @status:impl/done
+
+@fact:THE-PARITY-GATE-RUNS-TWO-FIXTURES-IN-TWO-RECIPES **The parity gate is wider than one fixture and one algorithm.** It runs BOTH implementations over BOTH fixtures in BOTH recipes: `fixtures/golden-flow-wal-0.1.0/` is the ordinary package, and `fixtures/golden-order-trap-0.1.0/` is the tree built to make recipes 0 and 1 disagree — a directory whose name is continued by a sibling file at a byte below `/`, the only shape on which component-wise and byte-wise ordering part company ([PROP-002 §2.1](../vibe-registry/PROP-002-decentralized-registry.md#identity)). A single fixture would let the two implementations agree by accident on every tree that never exercises the difference, which is exactly how a hash regression once reached a consumer before any golden noticed. @status:impl/done
 
 @fact:not-pulling-lead **Deliberately NOT pulling:** @status:spec/done
 
@@ -1097,13 +1169,17 @@ crates/vibe-index/                          # a member of the vibevm workspace
 
 - @fact:THREAD-CLI-SYNC CLI mode: synchronous. tokio runtime is created only in `serve` subcommand. @status:impl/done
 - @fact:THREAD-SERVER-ASYNC Server mode: tokio multi-thread runtime. Routes are async; `Arc<RwLock<Index>>` is `tokio::sync::RwLock` (async lock). @status:impl/done
-- @fact:THREAD-WRITER-TASK Disk writes serialised through a single dedicated tokio task: `index_writer`. The server posts mutations to it via an mpsc channel; the writer applies them in order. This avoids fsync stalls blocking the request handlers. @status:impl/done
+- @fact:THREAD-WRITER-TASK <status stage="spec" state="void">Retired 2026-08-18 by measurement. It described a dedicated `index_writer` tokio task fed by an mpsc channel, so that fsync stalls would not block the request handlers. Neither the task nor the channel was ever built — measured as zero occurrences of both names in the crate, against a live control — and the problem they were designed for dissolved when a mutation became an append to the journal plus a reprojection. The heir is `##THE-MUTATION-IS-WRITTEN-BY-ITS-OWN-HANDLER` below. This tombstone stays so the old sentence's name is never reused and inbound links do not break.</status> @status:spec/void
+
+@fact:THE-MUTATION-IS-WRITTEN-BY-ITS-OWN-HANDLER **Each mutating handler does the whole write itself, under the index's async write-lock:** replay the journal, project a probe, append the event, reproject, write the catalog, swap the in-memory index. There is no writer task and no channel to post to. The queue that the task was reaching for turned out to be unnecessary once mutations became journal appends: a handler holds the lock for one append plus one projection, and the operations it serialises are publish events rather than a hot path ([§2.17](#auto-publish) makes the same argument about awaiting the push). What IS serialised separately is publication — its own lock, and a blocking thread, because a git command must not run on the async executor. @status:impl/done
 
 ### 3.5 Configuration precedence {#config}
 
 @fact:design-config `design r1` @status:impl/done
 
-@fact:CONFIG-PRECEDENCE For every flag with a default, precedence is: explicit CLI flag > env var (`VIBE_INDEX_*`) > on-disk config (`<data-dir>/state/config.toml`, optional) > built-in default. Same shape `vibe show config` already uses on the consumer side. @status:impl/done
+@fact:CONFIG-PRECEDENCE For every flag with a default, precedence is: explicit CLI flag > env var (`VIBE_INDEX_*`) > on-disk config (`<data-dir>/state/config.toml`, optional) > built-in default. Same shape `vibe show config` already uses on the consumer side. @status:spec/plan
+
+@fact:THERE-IS-NO-PRECEDENCE-MACHINE-YET **None of that ladder exists.** There is no `config.toml` anywhere in the crate and no `VIBE_INDEX_*` family: a flag with a default gets it from its own declaration, full stop. Two environment variables do exist and neither is part of a precedence chain — `VIBE_INDEX_GIT` overrides the git binary the scanner shells out to, and `VIBE_LOG` is the logging lever `--log-level` folds into ([§2.11](#cli)). The requirement stands and the fork is `BACKLOG.md` B-086: build the ladder, or say plainly that this binary is configured by flags and two named variables. What must not survive is the middle state, where a document describes a resolution order an operator can neither use nor observe. @status:impl/done
 
 ---
 
@@ -1210,11 +1286,11 @@ crates/vibe-index/                          # a member of the vibevm workspace
 @fact:tests-lead Per slice (specifics in §4); cumulative state at GA: @status:impl/done
 
 - @fact:TEST-UNIT **Unit:** every type round-trips through serde JSON / TOML; every CLI subcommand has at least one happy-path test; every server route has at least one happy-path + one auth-fail test. @status:impl/done
-- @fact:TEST-INTEGRATION **Integration:** full-reindex against `fixtures/sample-org/` produces a byte-identical `primary.jsonl` to `fixtures/golden-index/primary.jsonl`. Incremental reindex applied to the same starting state is byte-identical to a full reindex. @status:impl/done
-- @fact:TEST-PARITY **Parity:** `tests/content_hash_parity.rs` runs the same fixture package through `vibe-registry::compute_content_hash` AND `crates/vibe-index/src/content_hash.rs`, asserts equality. CI gates the merge if they diverge. @status:impl/done
+- @fact:TEST-INTEGRATION **Integration:** the byte-identity check moved out of the crate's own fixtures and into the campaign's golden corpus — `formats/corpora/index/e1/` holds a journal and the catalog it projects to, `tests/golden_corpus.rs` compares them, and `cargo xtask rebuild --check` tears the catalog down and rebuilds it from the journal. Incremental reindex applied to the same starting state is still byte-identical to a full one. The move is the point: the golden now lives beside the format registry that governs it rather than beside one consumer of it. @status:impl/done
+- @fact:TEST-PARITY **Parity:** `tests/content_hash_parity.rs` runs both implementations over both fixtures in both recipes ([§3.2](#deps)), and asserts equality within each recipe. CI gates the merge if they diverge. @status:impl/done
 - @fact:TEST-E2E **End-to-end:** `tests/server_e2e.rs` spawns the server in-process (axum's `oneshot` style), drives every documented route over HTTP, asserts response shapes. @status:impl/done
 - @fact:TEST-CRASH **Crash recovery:** `tests/persistence_atomic.rs` simulates mid-write crash by failing the rename step; asserts the previous version remains readable. @status:impl/done
-- @fact:TEST-HERMETIC **Hermetic vs live:** all tests above run hermetically (no network). A separate `cli_live_e2e.rs` (`#[ignore]`-d, opt-in via `cargo test -- --ignored`) walks `--from-github vibespecs` against the real registry to confirm the API walk works against actual infrastructure. @status:impl/done
+- @fact:TEST-HERMETIC **Hermetic, with no live tier at all:** every test runs without network, and the GitHub API walk is proved against a **mock REST server on a random port whose canned responses point at local bare repositories**, so `git clone` resolves entirely against the filesystem (`tests/from_github_e2e.rs`). The opt-in live run against the real registry this section once promised does not exist and is not owed: a test that needs the internet and a real organisation is one nobody runs, so it proves nothing on the day it would have mattered, while the mock proves the walk's shape on every commit. What it deliberately does not prove is that the real host still answers the way the mock does — that question belongs to the manual tier, not to an ignored test. @status:impl/done
 
 ---
 
@@ -1228,7 +1304,9 @@ crates/vibe-index/                          # a member of the vibevm workspace
 
 @fact:REDISTRIBUTION **Redistribution.** An org owner who wants to host their own index server clones the vibevm repository and runs `cargo install --path crates/vibe-index`. The "vendor only the subdirectory" affordance is gone; in exchange the binary can never ship a stale view of the manifest schema. The HTTP-server deps (`axum` / `tower` / `tower-http`) enter the workspace `Cargo.lock` — `reqwest` was already there for the `vibe-registry` index client, so the marginal cost is `tower` / `tower-http` / `flate2`. @status:impl/done
 
-@fact:GATE-COVERS **Gate.** `tools/self-check.sh` no longer special-cases a second workspace — steps 1–2 (`cargo test --workspace`, `cargo clippy --workspace`) cover `vibe-index` like any member. @status:impl/done
+@fact:GATE-COVERS **Gate.** `tools/self-check.sh` no longer special-cases a second workspace — the workspace-wide steps (fmt, then `cargo test --workspace`, then `cargo clippy --workspace --all-targets -- -D warnings`) cover `vibe-index` like any member. @status:impl/done
+
+@fact:THE-PANEL-NOW-HAS-STEPS-THAT-LOOK-ONLY-AT-THIS-CRATE **What has changed since is the opposite of a special case: the panel grew steps that look *specifically* at this crate, and they are the interesting half.** A clock gate greps `crates/vibe-index/src/{index,types,journal}` for any call that reads the wall clock, because determinism here is an instrument rather than a preference ([§2.9](#server-mode)); `check-codegen` refuses a drift between the schemas and the generated types ([§2.12](#types)); `specmap --check` refuses a stale traceability map; and the wire-derive ratchet refuses a hand-written wire. None of them is a workspace step, and none of them would fire from `cargo test` alone — which is why the number of steps in the panel is not a proxy for what it checks. @status:impl/done
 
 ---
 
@@ -1333,7 +1411,9 @@ done
 */5 * * * *  vibe-index reindex /home/owner/vibespecs-index --incremental --from-clones /var/lib/vibespecs-mirror >>/var/log/vibe-index.log 2>&1
 ```
 
-@fact:wire-up-not-shipped These live in `crates/vibe-index/docs/operator-handbook.md` rather than as shipped binaries — operators integrate at their own host, and the hook shape varies enough across hosting platforms that one-size-fits-all isn't worth shipping. @status:spec/done
+@fact:wire-up-not-shipped Neither is shipped as a binary — operators integrate at their own host, and the hook shape varies enough across hosting platforms that one-size-fits-all isn't worth shipping. @status:spec/done
+
+@fact:ONLY-THE-CRON-LINE-REACHED-THE-HANDBOOK **Of the two, only the cron line is in `crates/vibe-index/docs/operator-handbook.md`; the `post-receive` hook is documented here and nowhere else.** That is worth stating rather than quietly fixing, because the hook posts to `POST /v1/admin/reindex` — the route [§2.10](#http) records as specified and unbuilt. So the artefact that did not reach the handbook is the one that would not have worked from it, and copying it across before the route exists would turn a documentation gap into a support ticket. @status:impl/done
 
 ---
 

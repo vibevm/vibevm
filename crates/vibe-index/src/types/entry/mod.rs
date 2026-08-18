@@ -1,6 +1,7 @@
 //! `VersionEntry` — the canonical per-version index record, and the
 //! re-export seam that makes the index's types the wire's types.
-//! Schema pinned in PROP-005 §2.6. Every line of `primary.jsonl` is
+//! Schema: `schemas/index/e1/entry.jtd.json`, described for a reader by
+//! PROP-005 §2.6. Every line of `primary.jsonl` is
 //! one of these; every element of a `by-name/<name>.json` candidate's
 //! `versions[]` is one of these; every `POST /v1/packages` body is one
 //! of these.
