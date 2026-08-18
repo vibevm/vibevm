@@ -43,6 +43,50 @@ picked up. The authoritative statement of each is
   `PROP-026-tcg-tool-family.md` carry wave-1 verdicts formed against text
   Phase D changed afterwards.
 
+## Named by the change-native formats plan, moved here so they survive it {#change-native}
+
+The change-native formats plan (`TZ-CHANGE-NATIVE-FORMATS-v0.1.md`) deferred
+four things by name — one in its decision D12, three in its appendix Б.6 — and
+kept them in the plan itself. That was correct while the plan was alive and is
+wrong the moment it is collapsed into tombstones: **the ledger is where
+deferrals live, and the next campaign's mandate drains from the ledger, not
+from a dead document.** Measured 2026-08-18 before the collapse: none of the
+four was in this file, against a control showing the file and the search both
+worked. Each is restated here in full, so nothing has to be read out of the
+plan to act on it.
+
+- **Wave 3 of PROP-044 — the narrow public projection, generated clients, the
+  codemod bot, sunset rehearsals** *(plan decision D12)*. Not built, not
+  designed here, deferred as a set rather than as four separate tails, because
+  they share one precondition: they are the machinery of an ecosystem with
+  external consumers, and there are none yet. *Trigger:* the owner's
+  declaration that the first public presentation has happened — the same single
+  line that flips `public = true` in `formats/EPOCHS.toml`
+  ([PROP-044 `##THE-PUBLIC-SWITCH`](../../spec/common/PROP-044-change-native-formats.md#risks)).
+  Nothing technical may infer it.
+- **The lockfile's own change-native mechanics** *(Б.6, and decision D9 is its
+  contract)*. `vibe.lock` should be valid only for the exact (epoch, generator
+  hash, recipe ids) that built it, with any mismatch silently regenerating and
+  `--locked` turning that into a loud CI error. Deferred because it travels
+  with the manifest projection, and that is the next plan's subject; until
+  then the lockfile lives exactly as it does today. *Trigger:* the manifest/
+  lockfile plan opening.
+- **Journal compaction** *(Б.6)*. Shard rotation plus checkpoints are
+  sufficient for years at fixture volumes, so no compaction is built and none
+  is designed. What is deliberately NOT recorded here is a threshold in
+  megabytes or records: naming one now would be a number with no measurement
+  behind it. *Trigger:* the first journal whose replay is slow enough for
+  someone to notice — and the measurement that notices it is the threshold.
+- **The content-addressed source archive** *(Б.6; it is contingency for
+  PROP-044's own risk №1)*. If upstream sources vanish — deleted repositories,
+  force-pushes, privatisation — rebuild-from-truth stops being possible and the
+  index silently becomes authoritative, which is the way this architecture is
+  most likely to be wrong. The seed already exists and needs no invention: the
+  clone tree `--from-clones` that the indexer supports anyway. *Trigger:* the
+  first unreachable source that the journal references — and the trigger is
+  stated as an observation rather than a date precisely because the risk is not
+  on a schedule.
+
 ## The engine re-mint, deferred — and what it blocks {#engine}
 
 **RESOLVED 2026-07-26 — and by a command, not by the re-mint this section was
