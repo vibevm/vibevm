@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-18T08:30:26Z",
+  "updated_at": "2026-08-18T15:22:13Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -102476,7 +102476,7 @@
         "marker_count": 279,
         "processed_hash": "80244080bba060d50b689a8c7c0476b0c52b471ff2a620348d269b1a0409895d",
         "summary": {
-          "confirmed": 373,
+          "confirmed": 377,
           "drift": 1,
           "unverifiable": 1
         },
@@ -105013,10 +105013,34 @@
             "ev": [
               "crates/vibe-index/src/main.rs `init_tracing` installs the subscriber with no condition and its docblock carries the whole ruling verbatim — 'a binary's job, not the library's. One lever, VIBE_LOG (default warn); there is no RUST_LOG fallback and no second lever … WARN-level observability (quarantine refusals on load, auto-commit-push outcomes) must be on for every subcommand, not only the flag-gated ones'; the filter line is `EnvFilter::try_from_env(\"VIBE_LOG\").unwrap_or_else(|_| EnvFilter::new(\"warn\"))`, which is where the default lives. The ordering the fact claims is the numbered body of `main`: parse, then `apply_log_level` (which writes VIBE_LOG), then `init_tracing`, then dispatch — so --help and parse errors answer before any log. The two WARN sites the reason names are real: crates/vibe-index/src/index/memory.rs:374 logs 'quarantined: must_understand names capabilities this build lacks' on load, and the publish failure is counted and logged per PROP-005 §2.17."
             ]
+          },
+          "THE-TRAIT-FLOOR-STOPS-SHORT-OF-DEFAULT": {
+            "v": "confirmed",
+            "ev": [
+              "measured on the generated tree: every struct in crates/vibe-wire/src/generated/shared/mod.rs carries `#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]` and none carries Default — `VersionEntry` included; `grep -rn 'impl Default for VersionEntry' crates/` returns zero. The reasoning the fact states is the emitting pass's own: xtask/src/codegen/derive_floor.rs documents why the floor is unconditional (the four traits are properties of the Rust representation, the wire knows nothing of them) and why Default is excluded ('does this type have a meaningful empty value' is a judgement about the type rather than a fact about its form, so it belongs to the hand-written impls beside this tree)."
+            ]
+          },
+          "A-RECORD-LITERAL-NAMES-EVERY-FIELD": {
+            "v": "confirmed",
+            "ev": [
+              "follows from the measured absence above and was verified on the tree by the segment-C mapping pass: no `..Default::default()` tail exists on any VersionEntry literal, and the eight `Default::default` lines in crates/vibe-index/src are on sub-structures (index/primary.rs:161-169), not on the record. The guard-gap the fact names is real by the same measurement: nothing in the tree asserts the record has no Default, so deriving one would go green."
+            ]
+          },
+          "WHAT-THE-RE-EXPORT-COST-AND-WHY-IT-WAS-PAID": {
+            "v": "confirmed",
+            "ev": [
+              "the three classes are visible in today's tree: `PackageKind` in crates/vibe-wire/src/generated/shared/mod.rs derives `Debug, Clone, PartialEq, Eq` and NOT `Copy`, so the Copy loss is real and its call sites clone; `Ord`/`Hash`/`PartialOrd` appear on none of the generated shapes and no consumer asks for them; `Default` is restored by hand in crates/vibe-wire/src/behaviour/. The counts deliberately live in the dated measurement campaigns/packages-2026-09/harvest/f42c-reexport-radius.md rather than in the spec sentence, which is what keeps the fact from rotting."
+            ]
+          },
+          "AN-EPOCH-ARRIVES-IN-A-FRAGMENTS-NAME": {
+            "v": "confirmed",
+            "ev": [
+              "the shared home holds fragments by name once — crates/vibe-wire/src/generated/shared/mod.rs declares each vocabulary type a single time and every schema module re-exports rather than redeclares, the mechanism documented at crates/vibe-wire/src/lib.rs (the shared-module phase, 'one type per name'). The epoch half is the forward-looking rule and is marked `spec/done` rather than `impl/done` precisely because no second epoch exists: `grep epoch` over the shared module and over formats/vocabularies.json returns zero, against a control of five `x-rust-type` hits in the same file. Its revisit trigger is stated in the fact."
+            ]
           }
         },
         "verified_at": "2026-08-13T23:34:20Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18"
       }
     },
     {
