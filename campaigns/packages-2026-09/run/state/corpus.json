@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-19T01:19:38Z",
+  "updated_at": "2026-08-19T02:22:55Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -104851,7 +104851,10 @@
           "TWO-SHAPES-STAY-HAND-WRITTEN-AND-SAY-WHY": {
             "v": "confirmed",
             "ev": [
-              "crates/vibe-index/src/types/mod.rs:10-13 names both exceptions and their reasons — repomd's `size` is u64 against the generated u32 (the open owner decision B-056) and its file-entry union is tagged on this side's own law; crates/vibe-index/src/index/memory.rs:75-94 is the in-RAM Index carrying `quarantined` (:90) and `tombstones` (:93), neither of which any catalog file serialises"
+              "crates/vibe-index/src/types/mod.rs:10-13 — докблок называет оба исключения и их причины: `repomd` остаётся рукописным, потому что его `size` есть `u64` против сгенерированного `u32` (открытая владельческая развилка, :12 — теперь `BACKLOG.md` B-091), а его union записей файла размечен по закону этой же стороны",
+              "crates/vibe-index/src/index/memory.rs:90 `pub quarantined: Vec<Quarantined>` и :93 `pub tombstones: BTreeMap<String, Tombstone>` — оба члена in-RAM `Index`; комментарий :91-92 прямо говорит «in memory only», то есть ни один не сериализуется ни в один файл каталога, что и есть вторая половина утверждения факта",
+              "координата, которую факт называет как дом развилки, разрешается: `BACKLOG.md` `##B091-OPTIONS` и `##B091-DISPOSITION` несут те же три выхода и то же `open`. Проверено дифом множеств: дублей `{#...}` в `BACKLOG.md` после посадки ноль, при контроле на версии из `HEAD`, где дубликат `{#b-056}` присутствует — то есть раньше та же ссылка приземлялась на закрытую строку",
+              "множество якорей `PROP-005` не сдвинулось этой правкой: 442 против 442 дифом рабочего дерева против `HEAD`, при контроле подсаженной подмены одного имени, которую тот же диф показывает двумя строками. Правка задела прозу факта, а не его адрес, поэтому вердикт restated, а не заведён заново"
             ]
           },
           "req-unavailable": {
@@ -105152,7 +105155,7 @@
           }
         },
         "verified_at": "2026-08-13T23:34:20Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8 + W9 + W10"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8 + W9 + W10 + B091-COORD-REPAIR-2026-08-19"
       }
     },
     {
