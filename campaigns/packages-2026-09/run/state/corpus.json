@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-19T01:09:59Z",
+  "updated_at": "2026-08-19T01:19:38Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -102490,7 +102490,7 @@
         "marker_count": 279,
         "processed_hash": "80244080bba060d50b689a8c7c0476b0c52b471ff2a620348d269b1a0409895d",
         "summary": {
-          "confirmed": 390,
+          "confirmed": 391,
           "drift": 1,
           "unverifiable": 1
         },
@@ -105142,10 +105142,17 @@
               "Measured: PROP-005 §2.18 names `Renamed` among the arms the projector refuses because their carriers are unbuilt — both halves of that sentence stop holding when the arm leaves and retirement gains a projected carrier.",
               "Recorded as an obligation of the phase that makes the change, per this project's rule that a landing does not leave a spec lying about the tree it describes."
             ]
+          },
+          "THE-RETIREMENT-VERB-IS-BURY": {
+            "v": "confirmed",
+            "ev": [
+              "Owner naming 2026-08-19, chosen from three candidates with the reasoning shown; `yank` was taken from its ecosystem precedent in the same act.",
+              "The name is not minted for the command: this contract already spells the state that way — §2.4 says the tombstone is «carried by the candidate-set file only when the bare name is buried», and introduces the worked example as «a buried name therefore looks like this»."
+            ]
           }
         },
         "verified_at": "2026-08-13T23:34:20Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8 + W9"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8 + W9 + W10"
       }
     },
     {
@@ -111576,7 +111583,7 @@
         "marker_count": 93,
         "processed_hash": "16b4c47e68cdc8f18c14dbd429cf65789578c6077d870b6e1f308a525c259fd2",
         "summary": {
-          "confirmed": 107
+          "confirmed": 108
         },
         "verdicts": {
           "milestone-line": {
@@ -112236,10 +112243,17 @@
               "Three questions closed by the owner on 2026-08-19: the layout (§5.1), plus two rules this document did not previously carry (cache precedence, the three absences).",
               "The sequencing dependency named in §2.3 — qualified naming — is implemented: `group` is live across the tree and the cache can be identity-keyed from the start as that section required."
             ]
+          },
+          "NAMESPACE-IS-TOP-LEVEL-VIBE-CACHE": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-19, confirming the leaning this document had recorded since its draft and closing §5.2.",
+              "The reason is the document's own and is structural: §2.2 makes the headline case work that has no project yet, and a not-yet-created project carries no [[registry]] section for a `vibe registry` subcommand to attach to."
+            ]
           }
         },
         "verified_at": "2026-07-25T14:52:12Z",
-        "verify_batch": "c4f1-registry-rest + d2d + W8"
+        "verify_batch": "c4f1-registry-rest + d2d + W8 + W10"
       }
     },
     {
