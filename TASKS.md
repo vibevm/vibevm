@@ -130,10 +130,19 @@ with nothing going red. **The producer must be a fact, never a field write.**
         kinds with the plain word «rename» — `PROP-044:146` and
         `crates/vibe-index/docs/operator-handbook.md:22`. Both stay true after
         the collapse; whether they are reworded is the owner's call.
-- [ ] `feat(vibe-index)`: **the yank verb.** One verb and nothing else: the
+- [x] `feat(vibe-index)`: **the yank verb.** One verb and nothing else: the
       journal fact exists, the projector already applies it by setting the
       flag, and the wire already omits it when false. Independent of the
-      retirement work.
+      retirement work. **Landed** — plus two things the line did not
+      anticipate. The contract gained the **rule** rather than the instance:
+      both refusals (`nothing to act on`, `already in that state`) are now
+      recorded as properties of every withdrawal verb, so `bury` inherits
+      them; and the server-lock guard was hoisted out of its third copy
+      instead of being written a fourth time for `bury`. Both guards proved
+      red before green — neutering either drops exactly its own test.
+      *(Two perimeter lessons paid: `tests/help_smoke.rs` was outside the
+      write list although the change breaks it, and nothing went red for the
+      omission — filed as B-094.)*
 - [ ] `feat(vibe-index)`: **`vibe-index bury`** — the retirement verb. Depends
       on the fact above. Named by the owner 2026-08-19, and the name was not
       invented: the contract already calls this state «buried», so the command
