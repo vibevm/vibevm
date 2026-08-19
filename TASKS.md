@@ -56,17 +56,25 @@ mutation builds its state that way and writes it out, so a tombstone placed by
 anything but a journal fact is erased by the next unrelated publish, silently,
 with nothing going red. **The producer must be a fact, never a field write.**
 
-- [ ] `fix(backlog)` + `docs(spec)`: **the `B-056` coordinate is used twice.**
-      One row (closed, contract-document inheritance) and one row (open, the
-      schema language cannot express the type our own writer writes) carry the
-      same id and the same anchor. A link lands on the closed one, which
-      announces itself as closed — and a ratified spec points at that
-      coordinate for the open fork. The live row takes a free number, the
-      closed one keeps its own, and the pointer in
-      [`PROP-005 §2.12`](spec/modules/vibe-index/PROP-005-package-index.md#types)
-      retargets. **Independent of everything else; smallest item here.**
-      *(The u64-vs-u32 question the live row carries stays an owner fork — this
-      item repairs the address, not the argument.)*
+- [x] `fix(backlog)`: **the `B-056` coordinate was used twice — repaired.** The
+      live row (the schema language cannot express the type our own writer
+      writes) is now **`B-091`**, anchor and all eleven facts; the closed row
+      (contract-document inheritance) keeps `B-056`. Three live pointers
+      retargeted — this file's `B-078` cross-reference,
+      [`PROP-005 §2.12`](spec/modules/vibe-index/PROP-005-package-index.md#types),
+      and `crates/vibe-index/src/types/mod.rs`'s docblock.
+      **Which row moved was decided by counting, not by taste:** 24 authored
+      files name `B-056`, eighteen of them the closed row (seven sites in
+      `crates/vibe-spec/**`, `PROP-035` §7.3, the wave-Г design), and none of
+      the live row's anchors is cited outside `BACKLOG.md`. The six
+      `##B056-…` names that ARE cited externally belong to the closed row and
+      **already resolved to nothing** before this landing — they died when
+      that row became a tombstone, so the rename took nothing from them.
+      Three dated records aiming at the live row (the Ф4 tombstone in the
+      collapsed change-native plan, two `harvest/` findings) keep their text;
+      the route back sits in the `{#b-056}` tombstone where such a link lands.
+      *(The u64-vs-u32 question stays an owner fork — this repaired the
+      address, not the argument.)*
 - [ ] `feat(vibe-index)`: **the retirement fact replaces `renamed`.** One
       journal fact carrying `reason` plus an optional successor; the `renamed`
       arm leaves the vocabulary. Touches the journal schema, the generated

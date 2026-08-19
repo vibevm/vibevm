@@ -41663,7 +41663,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:4fbbf327528627f405c54b79c9e5df5b737db9daf213ab92c32f7a34e8a81e69",
+      "content_hash": "sha256:94671d9b512ac4194ba9103d3a999f30392f8ff247e5ba37d4d5ddcb20567d25",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "PROP-005: Optional package index — per-org metadata + standalone index server",
@@ -41825,7 +41825,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:20e16226b779f700c5e7221f737856127fcbaa075c4085525098a62aadef29dd",
+      "content_hash": "sha256:0a8bacd49596e6e46f06f0ceb4318c897500f65bb22ac18658145a0b52b026e9",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2. Decisions",
@@ -43373,7 +43373,7 @@
     },
     {
       "anchor": "types",
-      "content_hash": "sha256:26419f412522281afe6887278352064ec76204afaf3d184d014a8260576ec86f",
+      "content_hash": "sha256:053aab1dba06090224254042c7b3fe8d82f59e377e2f369259f54b364819bb2e",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.12 Data structures",
@@ -43400,10 +43400,10 @@
     },
     {
       "anchor": "TWO-SHAPES-STAY-HAND-WRITTEN-AND-SAY-WHY",
-      "content_hash": "sha256:aac2f099eeccf88a3c5abb433d8afb3ec07360ef146e1b930150da271cd589bb",
+      "content_hash": "sha256:82199ae29c231152c8c63828cdca9a6d8e20799f4273dcc4523b4ec924624551",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
-      "heading": "Two shapes stay hand-written, and each says why. `Repomd` / `RepomdFileEntry` — its `size` is a `u64` where the schema language reaches only `u32` (an open owner fork, `BACKLOG.md` B-056), and its `files` union is tagged by this document's own law ([§2.4](#layout)). And `Index` below, which is not a wire type at all: it is the server's in-RAM state, no single document ever carries it, and it holds two members the catalog deliberately never serialises — the reader's quarantine record and the per-name tombstones the writer projects back onto the candidate-set files: @status:impl/done",
+      "heading": "Two shapes stay hand-written, and each says why. `Repomd` / `RepomdFileEntry` — its `size` is a `u64` where the schema language reaches only `u32` (an open owner fork, `BACKLOG.md` B-091 — filed as B-056 and renumbered 2026-08-19, because that coordinate carried a closed row too and a reader following it landed there), and its `files` union is tagged by this document's own law ([§2.4](#layout)). And `Index` below, which is not a wire type at all: it is the server's in-RAM state, no single document ever carries it, and it holds two members the catalog deliberately never serialises — the reader's quarantine record and the per-name tombstones the writer projects back onto the candidate-set files: @status:impl/done",
       "line": 611,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#TWO-SHAPES-STAY-HAND-WRITTEN-AND-SAY-WHY"
     },
