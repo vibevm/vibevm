@@ -8,6 +8,13 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 extern crate tempfile;
 
+// Hand-maintained, and the assertions below run in ONE direction only:
+// every name here must appear in `--help`, but a subcommand present in
+// `--help` and absent here is invisible to this gate. So a new verb can
+// be added without the smoke test noticing, which is a norm with no
+// checker — filed as `BACKLOG.md` B-094 with the measurement that found
+// it (the `yank` line below was added by hand, after the fact, exactly
+// because nothing failed without it).
 const SUBCOMMANDS: &[&str] = &[
     "init",
     "reindex",
@@ -20,6 +27,7 @@ const SUBCOMMANDS: &[&str] = &[
     "outdated",
     "add",
     "remove",
+    "yank",
     "verify",
     "dump",
     "serve",

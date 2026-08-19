@@ -23,7 +23,6 @@ use crate::content_hash::compute_content_hash;
 use crate::error::{Error, Result};
 use crate::index::memory::{WriteCtx, default_generator};
 use crate::journal::{Event, JournalRecord, append, default_dir, project, replay};
-use crate::lock::ServerLock;
 use crate::scanner::manifest as mfst;
 use crate::types::{NamingConvention, PackageKind, VersionEntry};
 
@@ -57,7 +56,7 @@ pub fn run(args: Args) -> Result<()> {
     // stamps the entry's `indexed_at` and the written manifest, so two
     // records born of one command never differ by a millisecond.
     let at = Utc::now();
-    refuse_if_server_running(&args.data_dir)?;
+    super::refuse_if_server_running(&args.data_dir)?;
 
     // Ф3.2 — the catalog is never this writer's input (PROP-044 §4.4):
     // the registry identity the entry below is stamped with comes from
@@ -164,16 +163,6 @@ fn compose_default_repo_url(
     let trimmed = registry_url.trim_end_matches('/');
     let repo = naming.repo_name(kind, group, name);
     format!("{trimmed}/{repo}.git")
-}
-
-fn refuse_if_server_running(data_dir: &std::path::Path) -> Result<()> {
-    if let Some(pid) = ServerLock::read_pid(data_dir) {
-        return Err(Error::InvalidInput(format!(
-            "a vibe-index server is running on this data dir (PID {pid}). \
-             Use the HTTP API or stop the server first."
-        )));
-    }
-    Ok(())
 }
 
 #[cfg(test)]

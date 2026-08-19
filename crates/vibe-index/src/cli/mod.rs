@@ -7,7 +7,8 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root
 
 use clap::{Parser, Subcommand, ValueEnum};
 
-use crate::error::Result;
+use crate::error::{Error, Result};
+use crate::lock::ServerLock;
 
 pub mod add;
 pub mod capabilities;
@@ -25,6 +26,27 @@ pub mod search;
 pub mod serve;
 pub mod stop;
 pub mod verify;
+pub mod yank;
+
+/// Every CLI-mode verb that WRITES refuses while a server holds the data
+/// directory: the server is the single writer in its mode (§2.9), and two
+/// writers over one catalog is the state the lock exists to make
+/// impossible.
+///
+/// It lives here rather than beside each verb because it is a property of
+/// the dispatch surface, not of any one command — and because the copies
+/// had reached three, which is where "one idiom per operation" stops
+/// being satisfied by repetition. `add`, `remove` and `yank` call it;
+/// every future writing verb calls it instead of carrying a fourth copy.
+pub(crate) fn refuse_if_server_running(data_dir: &std::path::Path) -> Result<()> {
+    if let Some(pid) = ServerLock::read_pid(data_dir) {
+        return Err(Error::InvalidInput(format!(
+            "a vibe-index server is running on this data dir (PID {pid}). \
+             Use the HTTP API or stop the server first."
+        )));
+    }
+    Ok(())
+}
 
 const ABOUT: &str = "Standalone package index utility for vibevm-shaped registries.";
 
@@ -133,6 +155,10 @@ pub enum Command {
     /// Remove one or all versions of a package from the index.
     Remove(remove::Args),
 
+    /// Yank one version of a package: the entry stays, fresh
+    /// resolution stops choosing it.
+    Yank(yank::Args),
+
     /// Recompute file hashes and check `repomd.json` integrity.
     Verify(verify::Args),
 
@@ -163,6 +189,7 @@ pub fn dispatch(command: Command) -> Result<()> {
         Command::Outdated(args) => outdated::run(args),
         Command::Add(args) => add::run(args),
         Command::Remove(args) => remove::run(args),
+        Command::Yank(args) => yank::run(args),
         Command::Verify(args) => verify::run(args),
         Command::Dump(args) => dump::run(args),
         Command::Serve(args) => serve::run(args),

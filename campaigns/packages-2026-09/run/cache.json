@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-19T02:43:39Z",
+  "updated_at": "2026-08-19T03:16:14Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -103379,7 +103379,7 @@
       }
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {
-      "content_hash": "19b8e86901ff0d740204f3cf0a8a646d6e7823434e4eb3dcf924a1674cfc274b",
+      "content_hash": "0502eead810654a3a83931baf37a3afd2c24c6effd19fe6f436df5cc1e87c5d4",
       "rollup": {
         "explicit": [
           "impl",
@@ -103393,11 +103393,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 407,
-        "fact_count": 402,
+        "marker_count": 413,
+        "fact_count": 408,
         "unmarked_facts": 0
       },
-      "marker_count": 407,
+      "marker_count": 413,
       "unit_count": 50,
       "issue_count": 0,
       "campaign": {
@@ -104309,7 +104309,9 @@
           "CLI-SURFACE": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "блок поверхности перечисляет ровно то, что диспетчер умеет: `crates/vibe-index/src/cli/mod.rs` регистрирует `yank` в трёх местах (`pub mod yank;` :28, вариант `Yank(yank::Args)` :139, плечо `Command::Yank(args) => yank::run(args)` :171), и `vibe-index --help` печатает его строку",
+              "формы флагов совпадают с объявленными: `yank.rs:43-50` делает `--version` и `--reason` обязательными, что и написано в блоке; `--json` не добавлен, как предписывает `##MACHINE-OUTPUT-IS-PER-VERB-NOT-UNIVERSAL` для глагола действия",
+              "строка `bury` в блоке описывает НЕ построенное и помечена в тексте комментарием про отсутствие группы; она остаётся честной ровно потому, что рядом стоит `##BURY-TAKES-A-BARE-NAME-AND-NO-GROUP` со статусом `spec/plan`, а не выдаёт себя за существующую команду"
             ]
           },
           "HELP-SMOKE": {
@@ -106080,10 +106082,58 @@
               "основание решения цитируется дословно из этого же документа: `##BY-NAME-TOMBSTONE` (§2.4) говорит «carried by the candidate-set file **only when the bare name is buried**», а его рабочий пример несёт `\"packages\": []` рядом с надгробием — то есть форма «пакеты и камень одновременно» контрактом не описана нигде",
               "поле «когда пересматривать» не декоративно: оно называет отличимое состояние («имя закрыто» переживает переоткрытие), которому потребовался бы СВОЙ носитель, а не правка этого — то есть триггер указывает на новый механизм, а не на переспор о значении"
             ]
+          },
+          "A-WITHDRAWAL-VERB-REFUSES-FOR-TWO-DIFFERENT-REASONS": {
+            "v": "confirmed",
+            "ev": [
+              "правило описывает построенное, а не желаемое: `crates/vibe-index/src/cli/yank.rs:78-97` задаёт обе проверки ПРОЕКЦИИ журнала (`probe` на :71) и возвращает ошибку до `append` на :113 — то есть отказавшая команда оставляет журнал ровно таким, каким нашла",
+              "«против проекции, а не против каталога» — не декларация: `yank.rs:66` читает журнал `replay`, `:71` сворачивает его `project`, и каталога на диске команда не открывает вовсе; та же форма у `remove.rs:52-58`, названного в спеке предшественником",
+              "«применимо ко всем трём глаголам» проверяемо по построенной половине: `remove` несёт R1 (`cli/remove.rs:69-83`), `yank` несёт оба, `bury` не построен и потому факт стоит `spec/plan`, а не `impl/done`"
+            ]
+          },
+          "REFUSE-NOTHING-TO-ACT-ON": {
+            "v": "confirmed",
+            "ev": [
+              "`crates/vibe-index/src/cli/yank.rs:81-86` — `let Some(entry) = standing else { return Err(...) }`, сообщение `«…is not in the index — nothing to yank»` (:87), возврат ДО `append`",
+              "прецедент, на который опирается формулировка, существует дословно: `crates/vibe-index/src/cli/remove.rs:74` и `:78` дают ту же пару сообщений для версии и для пакета, и шапка `remove.rs` называет ту же причину — журнал не несёт ложных фактов",
+              "доказано красным: тест `yank_of_missing_version_is_refused_and_the_journal_does_not_grow` падает на реализации без этого предохранителя (прогон воркера: 2 failed из 6), и «журнал не вырос» проверяется побайтовым сравнением сырых шардов, а не счётом записей"
+            ]
+          },
+          "REFUSE-A-CHANGE-THAT-CHANGES-NOTHING": {
+            "v": "confirmed",
+            "ev": [
+              "цитируемый якорь существует и говорит именно это: `##A-MUTATION-THAT-CHANGES-NOTHING-COMMITS-NOTHING` в §2.17 того же документа (проверено грепом; раздел `{#auto-publish}` открывается на 892, факт стоит на 961) — то есть правило здесь применено, а не заведено заново",
+              "реализация: `crates/vibe-index/src/cli/yank.rs:91-97` — `if entry.yanked { return Err(...) }`, до всякого `append`; сообщение прямо называет само правило («a repeated yank changes nothing, so the journal records no second fact»)",
+              "красное доказательство воспроизведено БОССОМ независимо и уже поверх собственной правки файла: обезвреженное условие роняет ровно `re_yank_of_a_yanked_version_is_refused_and_the_journal_does_not_grow` (5 passed / 1 failed) и ни один другой тест; файл восстановлен байт-в-байт (`cmp` — совпало)"
+            ]
+          },
+          "THE-TWO-MESSAGES-MUST-DIFFER": {
+            "v": "confirmed",
+            "ev": [
+              "сообщения действительно различны и различие не косметическое: `yank.rs:87` («nothing to yank») против `:97` («already yanked — a repeated yank changes nothing…»)",
+              "различие УТВЕРЖДЕНО тестами, а не оставлено на совесть: `yank.rs:264` требует подстроку `nothing to yank`, `:290` — `already yanked`, и текст ассерта на `:291` прямо называет, почему первое сообщение на втором случае было бы вредным",
+              "довод факта («оператор пойдёт искать несуществующую проблему») — то же рассуждение, что уже принято в этом документе для `##A-PROBE-HAS-THREE-OUTCOMES-NOT-TWO`: различимые состояния не схлопываются в одно сообщение, когда различение стоит ноль"
+            ]
+          },
+          "BURY-TAKES-A-BARE-NAME-AND-NO-GROUP": {
+            "v": "confirmed",
+            "ev": [
+              "форма факта журнала уже такова: `crates/vibe-index/src/journal/record.rs:95` объявляет `Buried { name: String, reason, superseded_by }` — голое имя, без `Group`, в отличие от `Yanked`/`Removed`/`Frozen`, которые несут `group` рядом с `name`",
+              "основание — не вкус, а раскладка файлов: `##BY-NAME-TOMBSTONE` (§2.4) кладёт надгробие на `by-name/<name>.json`, файл набора кандидатов, охватывающий все группы; носитель в памяти согласован — `Index.tombstones` есть `BTreeMap<String, Tombstone>`, ключ строка-имя, а не пара",
+              "проекция уже ведёт себя по этому правилу и это доказано тестом: `crates/vibe-index/src/journal/burial_tests.rs::a_burial_closes_the_name_across_every_group` публикует одно имя в двух группах и утверждает, что одно погребение уносит обе. Сам глагол не построен, поэтому статус факта `spec/plan`"
+            ]
+          },
+          "THE-SUCCESSOR-IS-NOT-VALIDATED": {
+            "v": "confirmed",
+            "ev": [
+              "провод типизирует поле как простую строку без всякой формы: `schemas/index/e1/by_name.jtd.json:74` — `\"superseded_by\": { \"type\": \"string\" }` в `optionalProperties`, и его же описание называет поле «a redirect pointer, never an automatic rewrite»",
+              "журнальная половина зеркалит ту же форму: `schemas/journal/e1/journal.jtd.json`, арм `buried`, `superseded_by` в `optionalProperties` типа `string` — то есть ни одна из двух схем не выражает «должен существовать в этом индексе»",
+              "довод факта проверяем на существующем поведении, и проверен с разбором форм: все вхождения `superseded_by` в `crates/` (вне генерируемого дерева) — это объявление поля (`journal/record.rs:103`), проектор, копирующий значение ДОСЛОВНО в надгробие (`journal/project.rs:158,172`), и тесты. **Ни одно место его не разрешает, не следует за ним и не сверяет его с индексом.** Значит валидация вводила бы обязательство, которого формат не брал, и запрещала бы обычный случай — перенаправление на пакет из другого реестра или ещё не опубликованный"
+            ]
           }
         },
         "verified_at": "2026-08-13T23:34:20Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8 + W9 + W10 + B091-COORD-REPAIR-2026-08-19 + BURIED-RETIREMENT-FACT-2026-08-19"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8 + W9 + W10 + B091-COORD-REPAIR-2026-08-19 + BURIED-RETIREMENT-FACT-2026-08-19 + YANK-VERB-AND-REFUSAL-RULES-2026-08-19"
       }
     },
     "spec/modules/vibe-mcp/PROP-015-mcp-integration.md": {

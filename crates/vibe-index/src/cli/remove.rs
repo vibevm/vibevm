@@ -19,7 +19,6 @@ use vibe_core::Group;
 use crate::error::{Error, Result};
 use crate::index::memory::{WriteCtx, default_generator};
 use crate::journal::{Event, JournalRecord, append, default_dir, project, replay};
-use crate::lock::ServerLock;
 
 #[derive(Debug, Parser)]
 #[command(about = "Remove one or all versions of a package from the index.")]
@@ -41,7 +40,7 @@ pub fn run(args: Args) -> Result<()> {
     // F2-1 — the clock enters here, once per command: the removal's
     // persist is stamped by the command moment, not by the writer.
     let at = Utc::now();
-    refuse_if_server_running(&args.data_dir)?;
+    super::refuse_if_server_running(&args.data_dir)?;
 
     // Ф3.2 — the catalog is never this writer's input (PROP-044 §4.4):
     // the journal is read from disk exactly once, folded into the
@@ -107,15 +106,5 @@ pub fn run(args: Args) -> Result<()> {
             .map(|v| format!(" @ {v}"))
             .unwrap_or_default()
     );
-    Ok(())
-}
-
-fn refuse_if_server_running(data_dir: &std::path::Path) -> Result<()> {
-    if let Some(pid) = ServerLock::read_pid(data_dir) {
-        return Err(Error::InvalidInput(format!(
-            "a vibe-index server is running on this data dir (PID {pid}). \
-             Use the HTTP API or stop the server first."
-        )));
-    }
     Ok(())
 }
