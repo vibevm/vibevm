@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-19T00:50:34Z",
+  "updated_at": "2026-08-19T01:09:59Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -103379,7 +103379,7 @@
       }
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {
-      "content_hash": "8b230b61db9d041f39f8575507edc17d1553d75becc6b7fe8a9c4cdd97fe7c22",
+      "content_hash": "9c99ff16b84f5269da98ec53e381137a2486d17811d0b78cf6193eb892e35e09",
       "rollup": {
         "explicit": [
           "impl",
@@ -103393,11 +103393,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 399,
-        "fact_count": 395,
+        "marker_count": 406,
+        "fact_count": 401,
         "unmarked_facts": 0
       },
-      "marker_count": 399,
+      "marker_count": 406,
       "unit_count": 50,
       "issue_count": 0,
       "campaign": {
@@ -106019,10 +106019,52 @@
               "`yank` has a borrowable precedent (crates.io); the neighbouring words for retirement — deprecate, retract, relocate — each mean something adjacent but not this.",
               "Left to the owner deliberately, consistent with this project's rule that a name a human will reach for is declared rather than derived."
             ]
+          },
+          "A-RENAME-IS-A-RETIREMENT-THAT-NAMES-ITS-SUCCESSOR": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-19, given as «сразу сделай вариант B» after the two options were laid out: one journal fact carrying reason plus an optional successor, and the `renamed` arm retired.",
+              "The catalog side needs nothing new: the tombstone already carries {reason, superseded_by?} on the candidate-set file (PROP-005 §2.4 BY-NAME-TOMBSTONE)."
+            ]
+          },
+          "WHY-THE-TOMBSTONE-ALREADY-IS-THE-RENAME-CARRIER": {
+            "v": "confirmed",
+            "ev": [
+              "This document's own worked example of a tombstone is a rename: {\"reason\": \"renamed to `wal`\", \"superseded_by\": \"org.vibevm/wal\"} in §2.4 — so the carrier was designed for this case rather than adapted to it.",
+              "The standing naming law forbids the alternative's premise: `org.vibevm.world/qualified-naming` LAW-A-RENAME-IS-A-NEW-IDENTITY — «a rename is a new identity — versions never transfer» — so a first-class rename relation would assert a continuity the law denies."
+            ]
+          },
+          "WHY-ONE-JOURNAL-FACT-AND-NOT-TWO": {
+            "v": "confirmed",
+            "ev": [
+              "Measured shape of the existing arm: `Renamed { from: (Group, String), to: (Group, String) }` in crates/vibe-index/src/journal/record.rs carries no reason field, while the tombstone requires one — so it cannot express the general retirement.",
+              "Given that, the two facts would differ only in whether the successor is optional; and the usual reason to keep a distinction the projection folds (the journal records what happened) does not apply, because under the naming law «renamed A→B» asserts nothing beyond «A is closed, B is where to look»."
+            ]
+          },
+          "THE-VOCABULARY-CHANGE-IS-DECLARED-AND-ITS-MOMENT-IS-NOW": {
+            "v": "confirmed",
+            "ev": [
+              "Measured: nothing emits the arm — a grep for Event::Renamed across crates/ returns only the projector's refusal and three test sites (journal/project_tests.rs, journal/tests.rs, tests/wire_parity_journal.rs).",
+              "Measured: the projector refuses it by design rather than skipping it (crates/vibe-index/src/journal/project.rs, the `unprojectable` path), and the schema's own description lists `renamed` among the arms that refuse — so no recorded rename exists to migrate."
+            ]
+          },
+          "THE-STALE-SENTENCE-THIS-CREATES": {
+            "v": "confirmed",
+            "ev": [
+              "Measured: PROP-005 §2.18 names `Renamed` among the arms the projector refuses because their carriers are unbuilt — both halves of that sentence stop holding when the arm leaves and retirement gains a projected carrier.",
+              "Recorded as an obligation of the phase that makes the change, per this project's rule that a landing does not leave a spec lying about the tree it describes."
+            ]
+          },
+          "THE-RETIREMENT-VERB-IS-BURY": {
+            "v": "confirmed",
+            "ev": [
+              "Owner naming 2026-08-19, chosen from three candidates with the reasoning shown; `yank` was taken from its ecosystem precedent in the same act.",
+              "The name is not minted for the command: this contract already spells the state that way — §2.4 says the tombstone is «carried by the candidate-set file only when the bare name is buried», and introduces the worked example as «a buried name therefore looks like this»."
+            ]
           }
         },
         "verified_at": "2026-08-13T23:34:20Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8 + W9 + W10"
       }
     },
     "spec/modules/vibe-mcp/PROP-015-mcp-integration.md": {
@@ -112473,7 +112515,7 @@
       }
     },
     "spec/modules/vibe-registry/PROP-010-local-package-cache.md": {
-      "content_hash": "11aceac4b936e289a36f22a5a5ae78dcbd6fb37c207e872e21a08f6e8d5e28d4",
+      "content_hash": "99de20005e54d5bf60a30195d169b8252610775d88195c7618710a1f64e0b30a",
       "rollup": {
         "explicit": [
           "spec",
@@ -112487,11 +112529,11 @@
           "spec",
           "work"
         ],
-        "marker_count": 112,
-        "fact_count": 109,
+        "marker_count": 115,
+        "fact_count": 110,
         "unmarked_facts": 0
       },
-      "marker_count": 112,
+      "marker_count": 115,
       "unit_count": 18,
       "issue_count": 0,
       "campaign": {
@@ -113158,10 +113200,17 @@
               "Three questions closed by the owner on 2026-08-19: the layout (§5.1), plus two rules this document did not previously carry (cache precedence, the three absences).",
               "The sequencing dependency named in §2.3 — qualified naming — is implemented: `group` is live across the tree and the cache can be identity-keyed from the start as that section required."
             ]
+          },
+          "NAMESPACE-IS-TOP-LEVEL-VIBE-CACHE": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-19, confirming the leaning this document had recorded since its draft and closing §5.2.",
+              "The reason is the document's own and is structural: §2.2 makes the headline case work that has no project yet, and a not-yet-created project carries no [[registry]] section for a `vibe registry` subcommand to attach to."
+            ]
           }
         },
         "verified_at": "2026-07-25T14:52:12Z",
-        "verify_batch": "c4f1-registry-rest + d2d + W8"
+        "verify_batch": "c4f1-registry-rest + d2d + W8 + W10"
       }
     },
     "spec/modules/vibe-registry/PROP-021-submodule-sources.md": {

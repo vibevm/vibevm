@@ -130,7 +130,9 @@
 
 @fact:CACHE-COMMANDS **Decision.** The cache becomes operator-visible through a command family. @status:spec/done
 
-@fact:namespace-leaning The namespace — top-level `vibe cache` versus `vibe registry cache` — is an open question (§5.2), with a leaning toward **top-level `vibe cache`**: the cache is machine-global and serves work with no project at all (a not-yet-created project has no `[[registry]]` config to hang a `vibe registry` subcommand on). @status:spec/work
+@fact:namespace-leaning <status stage="spec" state="void">Retired 2026-08-19 when the owner confirmed the leaning it recorded. It stated that the namespace was open between top-level `vibe cache` and `vibe registry cache`, and leaned toward the former. Heir: [`##NAMESPACE-IS-TOP-LEVEL-VIBE-CACHE`](#management). This line stays so its name is never reused and inbound links do not break.</status> @status:spec/void
+
+@fact:NAMESPACE-IS-TOP-LEVEL-VIBE-CACHE **Decision (owner, 2026-08-19): the family is top-level `vibe cache …`.** The reason is the one the leaning already carried and the owner confirmed: the store is machine-global and its headline case is work that has no project yet — and a not-yet-created project has no `[[registry]]` section for a `vibe registry` subcommand to hang on. Putting the store under the registry family would make its most important use the one place the name does not fit. @status:spec/work
 
 - @fact:CMD-PATH `vibe cache path` — print the cache root. @status:spec/done
 - @fact:CMD-LIST `vibe cache list` — the packages and versions present locally; the offline-resolvable inventory. @status:spec/done
@@ -175,7 +177,7 @@
 ## 5. Open questions {#open}
 
 1. @fact:OPEN-LAYOUT <status stage="spec" state="void">**RESOLVED by the owner 2026-08-19** — per-identity extracted directories; clones rejected. The ruling and its reasoning are [`##LAYOUT-EXTRACTED-DIRECTORIES`](#layout). This line stays so the question's name is never reused and inbound links do not break.</status> @status:spec/void
-2. @fact:OPEN-NAMESPACE **Command namespace** — `vibe cache …` (top-level, project-independent) versus `vibe registry cache …`. @status:spec/work
+2. @fact:OPEN-NAMESPACE <status stage="spec" state="void">**RESOLVED by the owner 2026-08-19** — top-level `vibe cache …`. The ruling and its reasoning are [`##NAMESPACE-IS-TOP-LEVEL-VIBE-CACHE`](#management). This line stays so the question's name is never reused and inbound links do not break.</status> @status:spec/void
 3. @fact:OPEN-STALENESS **Staleness signalling** — should an `--offline` run warn when the cache is older than some threshold, or when an online resolve would likely differ? @status:spec/work
 4. @fact:OPEN-EVICTION **Eviction** — pure manual `vibe cache clean`, or an optional size cap / LRU? @status:spec/work
 5. @fact:OPEN-SCAFFOLD-UX **Scaffolding UX** — should `vibe init` and new-member creation actively report "your declared `[requires]` are fully cached — you can work offline", or stay silent? @status:spec/work

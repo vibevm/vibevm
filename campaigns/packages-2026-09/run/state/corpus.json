@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-19T00:50:35Z",
+  "updated_at": "2026-08-19T01:09:59Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -93579,7 +93579,7 @@
       "campaign": {
         "processed_hash": "0911996699c2127304bcd091e268fbcbef7b3e0c1c2171840780a766785d6b76",
         "summary": {
-          "confirmed": 52
+          "confirmed": 54
         },
         "verdicts": {
           "PURPOSE": {
@@ -93893,10 +93893,24 @@
             "ev": [
               "Re-vouched against the on-disk text after the ratification-status edit: the §2b block records the completed copy-rename (Materialization::Copy, package.rs) and the one-sense end state; the file header now carries RATIFIED 2026-08-13 («Ратификацию на сам PROP-044 даю») — fact text verified byte-for-byte against the verdict claim"
             ]
+          },
+          "THE-JOURNAL-STAYS-APPEND-ONLY-AND-THAT-HAS-A-PRICE": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-19: the journal stays append-only and the redaction case is not to be built now.",
+              "Measured: the journal is never truncated — a full reindex writes an EntrySetReplaced watershed instead of shortening the shards (crates/vibe-index/src/cli/reindex.rs), so a published name remains named in the journal after catalog-side removal."
+            ]
+          },
+          "JOURNAL-REDACTION-IS-A-SEPARATE-MECHANISM-NOT-BUILT": {
+            "v": "confirmed",
+            "ev": [
+              "Owner instruction 2026-08-19: mark it in the specification as something that can be implemented separately when it is needed, and do not build it now.",
+              "Measured: nothing in the tree approximates it — the journal store offers append and replay only (crates/vibe-index/src/journal/store.rs), with no edit or truncate path."
+            ]
           }
         },
         "verified_at": "2026-08-13T17:55:48Z",
-        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING + PROVIDER-NEUTRALITY-RULING + FREEZE-MODEL-RULING + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge + COPY-2026-08-13 + RATIFY-2026-08-13"
+        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING + PROVIDER-NEUTRALITY-RULING + FREEZE-MODEL-RULING + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge + COPY-2026-08-13 + RATIFY-2026-08-13 + W8"
       }
     },
     {
@@ -102464,9 +102478,9 @@
         "stage": "impl",
         "state": "done"
       },
-      "markers": 399,
+      "markers": 406,
       "units": 50,
-      "facts": 395,
+      "facts": 401,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -102476,7 +102490,7 @@
         "marker_count": 279,
         "processed_hash": "80244080bba060d50b689a8c7c0476b0c52b471ff2a620348d269b1a0409895d",
         "summary": {
-          "confirmed": 377,
+          "confirmed": 390,
           "drift": 1,
           "unverifiable": 1
         },
@@ -105037,10 +105051,101 @@
             "ev": [
               "the shared home holds fragments by name once — crates/vibe-wire/src/generated/shared/mod.rs declares each vocabulary type a single time and every schema module re-exports rather than redeclares, the mechanism documented at crates/vibe-wire/src/lib.rs (the shared-module phase, 'one type per name'). The epoch half is the forward-looking rule and is marked `spec/done` rather than `impl/done` precisely because no second epoch exists: `grep epoch` over the shared module and over formats/vocabularies.json returns zero, against a control of five `x-rust-type` hits in the same file. Its revisit trigger is stated in the fact."
             ]
+          },
+          "WITHDRAWAL-IS-TWO-OPERATIONS-AND-NEITHER-OF-THEM-IS-REMOVE": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-19: yank and tombstone are two different operations, and full deletion must remain available beside them.",
+              "The three outcomes are distinguishable in the format already: `yanked` is a per-version flag on the entry, `tombstone` is per-name on the candidate-set file, and removal leaves neither."
+            ]
+          },
+          "OP-REMOVE": {
+            "v": "confirmed",
+            "ev": [
+              "Measured: `vibe-index remove` exists (crates/vibe-index/src/cli/remove.rs) and emits the Removed journal fact; the HTTP DELETE routes emit the same (crates/vibe-index/src/server/routes/packages.rs).",
+              "The projector applies it: crates/vibe-index/src/journal/project.rs handles Event::Removed."
+            ]
+          },
+          "OP-YANK": {
+            "v": "confirmed",
+            "ev": [
+              "Measured: the Yanked journal fact exists in the vocabulary (crates/vibe-index/src/journal/record.rs) and the projector applies it by setting `yanked = true` on the version (crates/vibe-index/src/journal/project.rs).",
+              "Measured: nothing in production emits it — a grep for Event::Yanked outside the journal module returns only crates/vibe-index/tests/wire_parity_journal.rs, while the same grep for Event::Published returns ten producing sites."
+            ]
+          },
+          "OP-RETIRE": {
+            "v": "confirmed",
+            "ev": [
+              "Measured: no journal fact produces a tombstone — the projector's match in crates/vibe-index/src/journal/project.rs has no arm that writes one.",
+              "Measured: the carrier `Index.tombstones` is declared at crates/vibe-index/src/index/memory.rs:93 and populated only inside load_from (:351), i.e. by reading a catalog that already carries tombstones on its by-name files."
+            ]
+          },
+          "A-TOMBSTONE-THAT-IS-NOT-A-JOURNAL-FACT-ERASES-ITSELF": {
+            "v": "confirmed",
+            "ev": [
+              "Measured: tombstones enter the in-memory index only in load_from (crates/vibe-index/src/index/memory.rs:351); project() in crates/vibe-index/src/journal/project.rs never sets them, so a journal-built state carries none.",
+              "Measured: write_to emits from self.tombstones (crates/vibe-index/src/index/memory.rs:259), so a mutation — which builds state by projecting the journal and then writes — would overwrite the by-name files with an empty tombstone set. Unreachable today only because no producer exists."
+            ]
+          },
+          "WHY-THREE-AND-NOT-ONE": {
+            "v": "confirmed",
+            "ev": [
+              "The three differ in what a reader is owed afterwards — silence, a still-present record carrying the flag, or a tombstone with a successor — which is the axis a caller selects on.",
+              "Two of the three are not undone by re-running the verb: removal deletes and a tombstone is a recorded claim, so a mode flag would put an irreversible choice one keystroke from a reversible one."
+            ]
+          },
+          "YANK-IS-A-VERB-AWAY": {
+            "v": "confirmed",
+            "ev": [
+              "Measured, both halves: the projector's Yanked arm sets the flag, and the wire omits `yanked` when false (PROP-005 §2.6 SLOTS-ARE-OMITTED-WHEN-EMPTY) — so the only missing piece is an emitter.",
+              "Measured for the contrast: Event::Renamed is refused outright by the projector with an `unprojectable` error naming the unbuilt carrier, rather than skipped — so retirement cannot be reached by reusing rename."
+            ]
+          },
+          "THE-RETIREMENT-VERB-NEEDS-A-NAME": {
+            "v": "confirmed",
+            "ev": [
+              "`yank` has a borrowable precedent (crates.io); the neighbouring words for retirement — deprecate, retract, relocate — each mean something adjacent but not this.",
+              "Left to the owner deliberately, consistent with this project's rule that a name a human will reach for is declared rather than derived."
+            ]
+          },
+          "A-RENAME-IS-A-RETIREMENT-THAT-NAMES-ITS-SUCCESSOR": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-19, given as «сразу сделай вариант B» after the two options were laid out: one journal fact carrying reason plus an optional successor, and the `renamed` arm retired.",
+              "The catalog side needs nothing new: the tombstone already carries {reason, superseded_by?} on the candidate-set file (PROP-005 §2.4 BY-NAME-TOMBSTONE)."
+            ]
+          },
+          "WHY-THE-TOMBSTONE-ALREADY-IS-THE-RENAME-CARRIER": {
+            "v": "confirmed",
+            "ev": [
+              "This document's own worked example of a tombstone is a rename: {\"reason\": \"renamed to `wal`\", \"superseded_by\": \"org.vibevm/wal\"} in §2.4 — so the carrier was designed for this case rather than adapted to it.",
+              "The standing naming law forbids the alternative's premise: `org.vibevm.world/qualified-naming` LAW-A-RENAME-IS-A-NEW-IDENTITY — «a rename is a new identity — versions never transfer» — so a first-class rename relation would assert a continuity the law denies."
+            ]
+          },
+          "WHY-ONE-JOURNAL-FACT-AND-NOT-TWO": {
+            "v": "confirmed",
+            "ev": [
+              "Measured shape of the existing arm: `Renamed { from: (Group, String), to: (Group, String) }` in crates/vibe-index/src/journal/record.rs carries no reason field, while the tombstone requires one — so it cannot express the general retirement.",
+              "Given that, the two facts would differ only in whether the successor is optional; and the usual reason to keep a distinction the projection folds (the journal records what happened) does not apply, because under the naming law «renamed A→B» asserts nothing beyond «A is closed, B is where to look»."
+            ]
+          },
+          "THE-VOCABULARY-CHANGE-IS-DECLARED-AND-ITS-MOMENT-IS-NOW": {
+            "v": "confirmed",
+            "ev": [
+              "Measured: nothing emits the arm — a grep for Event::Renamed across crates/ returns only the projector's refusal and three test sites (journal/project_tests.rs, journal/tests.rs, tests/wire_parity_journal.rs).",
+              "Measured: the projector refuses it by design rather than skipping it (crates/vibe-index/src/journal/project.rs, the `unprojectable` path), and the schema's own description lists `renamed` among the arms that refuse — so no recorded rename exists to migrate."
+            ]
+          },
+          "THE-STALE-SENTENCE-THIS-CREATES": {
+            "v": "confirmed",
+            "ev": [
+              "Measured: PROP-005 §2.18 names `Renamed` among the arms the projector refuses because their carriers are unbuilt — both halves of that sentence stop holding when the arm leaves and retirement gains a projected carrier.",
+              "Recorded as an obligation of the phase that makes the change, per this project's rule that a landing does not leave a spec lying about the tree it describes."
+            ]
           }
         },
         "verified_at": "2026-08-13T23:34:20Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8 + W9"
       }
     },
     {
@@ -111459,9 +111564,9 @@
         "stage": "spec",
         "state": "work"
       },
-      "markers": 112,
+      "markers": 115,
       "units": 18,
-      "facts": 109,
+      "facts": 110,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -111471,7 +111576,7 @@
         "marker_count": 93,
         "processed_hash": "16b4c47e68cdc8f18c14dbd429cf65789578c6077d870b6e1f308a525c259fd2",
         "summary": {
-          "confirmed": 93
+          "confirmed": 107
         },
         "verdicts": {
           "milestone-line": {
@@ -112033,10 +112138,108 @@
             "ev": [
               "accurate: DRAFT — ROADMAP M1.20 carries it as 'DRAFT design'; the elevated store is genuinely unbuilt (cache remains the PROP-001-era accelerator)"
             ]
+          },
+          "LAYOUT-EXTRACTED-DIRECTORIES": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-19, given verbatim as «распакованные каталоги» after being shown the two candidates this document's own §5.1 had left open.",
+              "The alternative it rejects is measured, not assumed: crates/vibe-registry/src/git_registry.rs refreshes a clone with `git fetch` + `git reset --hard origin/<ref>`, i.e. a clone is brought to whatever the origin says now."
+            ]
+          },
+          "WHY-EXTRACTED-AND-NOT-AN-ARCHIVE": {
+            "v": "confirmed",
+            "ev": [
+              "Materialisation is a directory copy into vibedeps/ — PROP-009's model, restated in this document's own §2.9 OFFLINE-FLOW.",
+              "content_hash is computed over the shippable tree (crates/vibe-core/src/content_hash.rs), so the extracted form is the representation the integrity gate already checks."
+            ]
+          },
+          "WHY-NOT-CLONES": {
+            "v": "confirmed",
+            "ev": [
+              "A clone's refresh IS a call to its origin: crates/vibe-registry/src/git_registry.rs, `git fetch` + `git reset --hard`.",
+              "Identity-keying is this document's §2.3 decision; a clone is keyed by origin URL, which contradicts it rather than merely differing."
+            ]
+          },
+          "CLONES-KEEP-THEIR-OWN-JOB": {
+            "v": "confirmed",
+            "ev": [
+              "The clone cache's recorded purpose survives: PROP-001 rejects cache-per-project because it would duplicate one clone into every project on the machine.",
+              "Measured: the clone cache root is ~/.vibe/registries/<url-hash>, one slot per registry URL (crates/vibe-core/src/settings.rs)."
+            ]
+          },
+          "A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-19: a package present in the local store is used and materialised even when it exists in no repository at all.",
+              "Distinct from --offline, which this document's §2.5 defines as a network-forbidden policy; this rule governs a run where the network was consulted and answered absent."
+            ]
+          },
+          "WHY-THE-CACHE-OUTRANKS-A-SILENT-REGISTRY": {
+            "v": "confirmed",
+            "ev": [
+              "The store's entries are validated against content_hash — this document's §2.3 HASH-INTEGRITY-GATE.",
+              "A registry that no longer lists a version reports its present inventory; it makes no claim about bytes already fetched and already verified."
+            ]
+          },
+          "THE-BEHAVIOUR-THIS-CONTRADICTS-TODAY": {
+            "v": "confirmed",
+            "ev": [
+              "Measured in crates/vibe-registry/src/git_package_registry/fetch.rs, bootstrap_or_update_at: when `update` fails the code calls remove_dir_all on the clone directory and re-bootstraps from the same URL.",
+              "The doc-comment at that site states the purpose of the wipe — letting the next mirror in the chain take over without stale state — so the constraint named here is the code's own stated reason, not an inference."
+            ]
+          },
+          "AN-ABSENCE-HAS-THREE-SHAPES-AND-TWO-ANSWERS": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-19 on the client-side behaviour: cache hit materialises; nothing anywhere and nothing recorded is the same error as a package that never existed; a tombstone is read to the user rather than collapsed into that error.",
+              "The three shapes are distinguishable in the data: the tombstone carries reason and superseded_by on the candidate-set file (PROP-005 §2.4 BY-NAME-TOMBSTONE)."
+            ]
+          },
+          "ABSENCE-CACHED": {
+            "v": "confirmed",
+            "ev": [
+              "Row of the owner's 2026-08-19 ruling: a cached package is used and materialised, and the user is told nothing because nothing failed.",
+              "Consistent with this document's §2.9 OFFLINE-FLOW, where materialisation copies from the cache into vibedeps/."
+            ]
+          },
+          "ABSENCE-WITHDRAWN": {
+            "v": "confirmed",
+            "ev": [
+              "Row of the owner's 2026-08-19 ruling: where a tombstone stands, its reason and successor are what the user is shown.",
+              "The carrier exists in the format: PROP-005 §2.4 BY-NAME-TOMBSTONE defines {reason, superseded_by?} on the candidate-set file."
+            ]
+          },
+          "ABSENCE-NEVER-THERE": {
+            "v": "confirmed",
+            "ev": [
+              "Row of the owner's 2026-08-19 ruling: gone with no record, or never existed, produce the same error — the one a typo in vibe.toml produces.",
+              "Owner's follow-up the same day narrowed the justification to mechanism rather than policy: full deletion is invoked by an operator and the tool does not ask what for."
+            ]
+          },
+          "THE-LAST-TWO-ARE-DELIBERATELY-INDISTINGUISHABLE": {
+            "v": "confirmed",
+            "ev": [
+              "Owner ruling 2026-08-19, corrected by the owner the same day: deletion is a mechanism, its reasons are the operator's, and the tool builds the mechanism rather than the policy.",
+              "The illustration retained (a complaint about the name itself, where a residue would have to be named after the removed thing) is marked in the text as one case rather than the justification."
+            ]
+          },
+          "THE-CARVE-OUT-FROM-THE-NEVER-SILENT-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "The law being carved out is real and cited: PROP-005 §2.4 BY-NAME-TOMBSTONE states that a name which ever existed answers with the current thing, a forwarding pointer, or a tombstone — never with silence.",
+              "The carve-out is named rather than left implicit, which is what the conflict protocol requires of a contradiction between two recorded statements."
+            ]
+          },
+          "draft3-resolved": {
+            "v": "confirmed",
+            "ev": [
+              "Three questions closed by the owner on 2026-08-19: the layout (§5.1), plus two rules this document did not previously carry (cache precedence, the three absences).",
+              "The sequencing dependency named in §2.3 — qualified naming — is implemented: `group` is live across the tree and the cache can be identity-keyed from the start as that section required."
+            ]
           }
         },
         "verified_at": "2026-07-25T14:52:12Z",
-        "verify_batch": "c4f1-registry-rest + d2d"
+        "verify_batch": "c4f1-registry-rest + d2d + W8"
       }
     },
     {
