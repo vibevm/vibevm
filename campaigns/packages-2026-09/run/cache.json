@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-19T03:16:14Z",
+  "updated_at": "2026-08-19T03:32:49Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -103379,7 +103379,7 @@
       }
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {
-      "content_hash": "0502eead810654a3a83931baf37a3afd2c24c6effd19fe6f436df5cc1e87c5d4",
+      "content_hash": "563d41c3303d93f73b65403aae5587cc34ad830416b25e3f56fd09930eb2f4ad",
       "rollup": {
         "explicit": [
           "impl",
@@ -103393,11 +103393,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 413,
-        "fact_count": 408,
+        "marker_count": 415,
+        "fact_count": 410,
         "unmarked_facts": 0
       },
-      "marker_count": 413,
+      "marker_count": 415,
       "unit_count": 50,
       "issue_count": 0,
       "campaign": {
@@ -105988,16 +105988,17 @@
           "OP-YANK": {
             "v": "confirmed",
             "ev": [
-              "Measured: the Yanked journal fact exists in the vocabulary (crates/vibe-index/src/journal/record.rs) and the projector applies it by setting `yanked = true` on the version (crates/vibe-index/src/journal/project.rs).",
-              "Measured: nothing in production emits it — a grep for Event::Yanked outside the journal module returns only crates/vibe-index/tests/wire_parity_journal.rs, while the same grep for Event::Published returns ten producing sites."
+              "строка состояния сдвинута с «all but the verb» на «built», и это проверяемо: `crates/vibe-index/src/cli/yank.rs` эмитит `Event::Yanked` (`:101`), проектор ставит флаг (`journal/project.rs`, плечо `Event::Yanked` через `mark_version`), провод опускает флаг при `false`",
+              "глагол виден снаружи: `cli/mod.rs` регистрирует его в трёх местах, и `tests/help_smoke.rs` гоняет `yank --help` через свой список",
+              "статус переставлен на `impl/done` вместе с текстом — обещание закрыто постройкой, а не переформулировкой"
             ]
           },
           "OP-RETIRE": {
             "v": "confirmed",
             "ev": [
-              "строка таблицы теперь называет глагол (`bury`) и состояние «all but the verb», и обе половины проверяемы: `crates/vibe-index/src/journal/record.rs:95` объявляет арм `Buried { name, reason, superseded_by }`, а `crates/vibe-index/src/journal/project.rs:155-175` его сворачивает",
-              "«nothing emits the fact yet» проверено с разбором форм, а не одним грепом: единственное вхождение `Event::Buried` вне тестов — `crates/vibe-index/src/journal/project.rs:155`, и это СОПОСТАВЛЕНИЕ С ОБРАЗЦОМ (плечо `match`), то есть сторона потребителя; все три конструктора лежат в тестах (`journal/tests.rs:244`, `journal/burial_tests.rs`, `tests/wire_parity_journal.rs`). Ни один путь CLI или сервера факта не строит — ровно то же состояние, в каком стоит `yank`",
-              "прежний текст строки («**not built.** No journal fact produces a tombstone») стал бы ложным обеими половинами: факт есть и он порождает надгробие. Это одно из трёх утверждений о состоянии в §2.11, которых не назвал ни `##THE-STALE-SENTENCE-THIS-CREATES`, ни чек-лист"
+              "строка состояния сдвинута на «built»: `crates/vibe-index/src/cli/bury.rs:102-107` эмитит `Event::Buried`, проектор его сворачивает (`journal/project.rs:155-175`), и это единственное плечо союза, ПОРОЖДАЮЩЕЕ носитель",
+              "«роняет пакеты имени во всех группах» доказано тестом с двумя группами: `bury.rs::bury_erects_a_tombstone_and_drops_the_name_in_every_group` ставит `wal` в `org.vibevm` и `org.other`, после похорон утверждает `is_none()` по каждой группе отдельно плюс `candidates_for(\"wal\").is_empty()`",
+              "имя глагола в строке («the `bury` verb») больше не опережает код: команда существует, `bury --help` печатает `bury [OPTIONS] --reason <TEXT> <DATA_DIR> <NAME>`"
             ]
           },
           "A-TOMBSTONE-THAT-IS-NOT-A-JOURNAL-FACT-ERASES-ITSELF": {
@@ -106018,9 +106019,9 @@
           "YANK-IS-A-VERB-AWAY": {
             "v": "confirmed",
             "ev": [
-              "утверждение о `yank` не тронуто и по-прежнему верно: `crates/vibe-index/src/journal/project.rs` содержит арм `Event::Yanked`, ставящий `e.yanked = true` через `mark_version`",
-              "утверждение о снятии заменено на измеренное: носитель построен, `crates/vibe-index/src/journal/project.rs:168` вставляет `Tombstone`, а `:167` роняет пакеты имени через `by_pkgref.retain(|(_, held), _| held != &name)` — по ГОЛОМУ имени, поэтому оба соседа по группе уходят одним фактом",
-              "фраза «Retirement is genuinely unbuilt» сохранена в тексте как прежнее состояние, а не стёрта — это требование адресуемости к правке цитируемого якоря: у него есть вердикт, и читатель, пришедший по старой цитате, должен увидеть, что именно изменилось"
+              "три состояния, которые перечисляет факт, — не риторика, а история этого якоря в git: «retirement is genuinely unbuilt» (до `7e63fe07`), «both remaining operations are one verb away» (между `7e63fe07` и этой посадкой), «neither is away from anything» (сейчас)",
+              "нынешнее утверждение проверяемо целиком: `yank` эмитит факт и проектор ставит `yanked = true`; `bury` эмитит факт, а проектор роняет пакеты имени по всем группам и оставляет надгробие (`journal/project.rs:167-175`)",
+              "правило «якорь сохраняется, текст правится» соблюдено буквально: множество якорей `PROP-005` продифено против HEAD этой же посадкой — 449 против 451, удалённых ноль, добавлены ровно два новых факта, ни один цитируемый якорь не переименован"
             ]
           },
           "THE-RETIREMENT-VERB-NEEDS-A-NAME": {
@@ -106094,17 +106095,17 @@
           "REFUSE-NOTHING-TO-ACT-ON": {
             "v": "confirmed",
             "ev": [
-              "`crates/vibe-index/src/cli/yank.rs:81-86` — `let Some(entry) = standing else { return Err(...) }`, сообщение `«…is not in the index — nothing to yank»` (:87), возврат ДО `append`",
-              "прецедент, на который опирается формулировка, существует дословно: `crates/vibe-index/src/cli/remove.rs:74` и `:78` дают ту же пару сообщений для версии и для пакета, и шапка `remove.rs` называет ту же причину — журнал не несёт ложных фактов",
-              "доказано красным: тест `yank_of_missing_version_is_refused_and_the_journal_does_not_grow` падает на реализации без этого предохранителя (прогон воркера: 2 failed из 6), и «журнал не вырос» проверяется побайтовым сравнением сырых шардов, а не счётом записей"
+              "формулировка исправлена на ту, что не перекрывает соседа: «a bare name carrying neither packages nor a tombstone» вместо прежнего «no such name in any group», которое было истинно и про похороненное имя",
+              "исполнено во всех трёх глаголах и в каждом по своей координате: `remove.rs:74`/`:78`, `yank.rs:81-86`, `bury.rs:82-87`; во всех трёх возврат стоит ДО `append`, и во всех трёх тест сравнивает сырые байты журнала до и после",
+              "«это правило `remove` несёт с постройки» проверено по коду, а не по памяти: шапка `crates/vibe-index/src/cli/remove.rs` называет ту же причину — журнал не несёт ложных фактов — и её ветвь отказа старше обоих новых глаголов"
             ]
           },
           "REFUSE-A-CHANGE-THAT-CHANGES-NOTHING": {
             "v": "confirmed",
             "ev": [
-              "цитируемый якорь существует и говорит именно это: `##A-MUTATION-THAT-CHANGES-NOTHING-COMMITS-NOTHING` в §2.17 того же документа (проверено грепом; раздел `{#auto-publish}` открывается на 892, факт стоит на 961) — то есть правило здесь применено, а не заведено заново",
-              "реализация: `crates/vibe-index/src/cli/yank.rs:91-97` — `if entry.yanked { return Err(...) }`, до всякого `append`; сообщение прямо называет само правило («a repeated yank changes nothing, so the journal records no second fact»)",
-              "красное доказательство воспроизведено БОССОМ независимо и уже поверх собственной правки файла: обезвреженное условие роняет ровно `re_yank_of_a_yanked_version_is_refused_and_the_journal_does_not_grow` (5 passed / 1 failed) и ни один другой тест; файл восстановлен байт-в-байт (`cmp` — совпало)"
+              "правило исполнено обоими новыми глаголами: `crates/vibe-index/src/cli/yank.rs:91` (`if entry.yanked`) и `crates/vibe-index/src/cli/bury.rs:92` (`if buried`), оба до всякого `append`",
+              "цитируемый якорь существует и говорит именно это: `##A-MUTATION-THAT-CHANGES-NOTHING-COMMITS-NOTHING` в §2.17 того же документа",
+              "перестановка правила на первое место в списке — следствие разбиения, а не смена смысла: более специфичное условие названо раньше более общего, чтобы перечисление читалось как partition; сам текст правила не изменился"
             ]
           },
           "THE-TWO-MESSAGES-MUST-DIFFER": {
@@ -106130,10 +106131,27 @@
               "журнальная половина зеркалит ту же форму: `schemas/journal/e1/journal.jtd.json`, арм `buried`, `superseded_by` в `optionalProperties` типа `string` — то есть ни одна из двух схем не выражает «должен существовать в этом индексе»",
               "довод факта проверяем на существующем поведении, и проверен с разбором форм: все вхождения `superseded_by` в `crates/` (вне генерируемого дерева) — это объявление поля (`journal/record.rs:103`), проектор, копирующий значение ДОСЛОВНО в надгробие (`journal/project.rs:158,172`), и тесты. **Ни одно место его не разрешает, не следует за ним и не сверяет его с индексом.** Значит валидация вводила бы обязательство, которого формат не брал, и запрещала бы обычный случай — перенаправление на пакет из другого реестра или ещё не опубликованный"
             ]
+          },
+          "THE-TWO-REFUSALS-MUST-PARTITION-AND-NAIVELY-THEY-OVERLAP": {
+            "v": "confirmed",
+            "ev": [
+              "перекрытие реально и проверяемо по определениям: `bury` спрашивает проекцию `probe.candidates_for(&args.name)` (`crates/vibe-index/src/cli/bury.rs:80`), а погребение роняет пакеты имени во всех группах (`journal/project.rs:167` — `by_pkgref.retain(|(_, held), _| held != &name)`), поэтому у похороненного имени кандидатов НОЛЬ, и «здесь ничего не стоит» истинно про него тоже",
+              "реализация выбрала вторую из двух форм, которые факт признаёт равносильными: `bury.rs:82` — `if standing.is_empty() && !buried` (конъюнкция), затем `:92` — `if buried`. Порядок проверок при этом обратный тому, что перечислен в списке правил, и именно поэтому факт требует СВОЙСТВА, а не порядка",
+              "разбиение доказано красным по обеим ветвям: `crates/vibe-index/src/cli/bury.rs::bury_of_missing_name_is_refused_and_the_journal_does_not_grow` и `::re_bury_of_a_buried_name_is_refused_and_the_journal_does_not_grow` падают оба при снятых стражах (прогон воркера: 3 passed / 2 failed) и требуют РАЗНЫХ подстрок (`nothing to bury` против `already buried`)",
+              "утверждение о наивном прочтении не гипотетично: оно описывает ровно тот текст, что стоял в этом документе с посадки `0bce27e6` до этой — правила были перечислены без конъюнкции и без оговорки о порядке, то есть контракт был раскатан в перекрывающемся виде"
+            ]
+          },
+          "REFUSING-AN-EMPTY-NAME-IS-WHAT-KEEPS-REMOVE-S-PROMISE": {
+            "v": "confirmed",
+            "ev": [
+              "гарантия, которую защищает правило, записана дословно: `spec/modules/vibe-registry/PROP-010-local-package-cache.md` `##THE-LAST-TWO-ARE-DELIBERATELY-INDISTINGUISHABLE` — «A fully deleted package is therefore indistinguishable from one that never existed» (проверено грепом: фраза встречается там ровно один раз)",
+              "механизм, которым надгробие вернуло бы имя на провод, существует и построен: `Index::write_to` пишет `by-name/<name>.json` ДАЖЕ когда пакетов не осталось — комментарий в `crates/vibe-index/src/index/memory.rs` говорит «A name carrying ONLY a tombstone gets its file too», — то есть камень на опустошённом имени был бы не пометкой в памяти, а файлом, написанным ради чтения",
+              "правило исполнено: `crates/vibe-index/src/cli/bury.rs:82` отказывает при `standing.is_empty() && !buried`, а имя, опустошённое `remove`, даёт ровно это сочетание — ни кандидатов, ни надгробия"
+            ]
           }
         },
         "verified_at": "2026-08-13T23:34:20Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8 + W9 + W10 + B091-COORD-REPAIR-2026-08-19 + BURIED-RETIREMENT-FACT-2026-08-19 + YANK-VERB-AND-REFUSAL-RULES-2026-08-19"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8 + W9 + W10 + B091-COORD-REPAIR-2026-08-19 + BURIED-RETIREMENT-FACT-2026-08-19 + YANK-VERB-AND-REFUSAL-RULES-2026-08-19 + BURY-VERB-AND-THE-PARTITION-2026-08-19"
       }
     },
     "spec/modules/vibe-mcp/PROP-015-mcp-integration.md": {

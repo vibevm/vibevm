@@ -143,10 +143,20 @@ with nothing going red. **The producer must be a fact, never a field write.**
       *(Two perimeter lessons paid: `tests/help_smoke.rs` was outside the
       write list although the change breaks it, and nothing went red for the
       omission — filed as B-094.)*
-- [ ] `feat(vibe-index)`: **`vibe-index bury`** — the retirement verb. Depends
+- [x] `feat(vibe-index)`: **`vibe-index bury`** — the retirement verb. Depends
       on the fact above. Named by the owner 2026-08-19, and the name was not
       invented: the contract already calls this state «buried», so the command
-      and the state it produces speak one word. **No longer blocked.**
+      and the state it produces speak one word. **Landed, and with it all three
+      withdrawal operations exist** — `remove`, `yank`, `bury`. Five guards,
+      both refusals proved red. The one thing worth carrying forward is what
+      writing the contract found before the code existed: the two refusal
+      rules, landed an hour earlier, **overlapped** — a buried name stands in
+      no group, so «nothing here» was true of it too, and a naive verb would
+      answer «no such name» about a name whose tombstone it holds. Corrected
+      to a partition, with the reason the plainer condition is a conjunction:
+      let `bury` plant a stone on a name emptied by `remove`, and the deleted
+      package's name is back on the wire, undoing the very guarantee `remove`
+      makes.
 - [ ] `feat(vibe-registry)`: **the local package store.** Extracted
       per-identity directories keyed by `(group, name, version)` and validated
       by the `content_hash` the lockfile already pins; a hit outranks a

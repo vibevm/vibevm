@@ -28,6 +28,7 @@ const SUBCOMMANDS: &[&str] = &[
     "add",
     "remove",
     "yank",
+    "bury",
     "verify",
     "dump",
     "serve",

@@ -11,6 +11,7 @@ use crate::error::{Error, Result};
 use crate::lock::ServerLock;
 
 pub mod add;
+pub mod bury;
 pub mod capabilities;
 pub mod dump;
 pub mod get;
@@ -36,8 +37,9 @@ pub mod yank;
 /// It lives here rather than beside each verb because it is a property of
 /// the dispatch surface, not of any one command — and because the copies
 /// had reached three, which is where "one idiom per operation" stops
-/// being satisfied by repetition. `add`, `remove` and `yank` call it;
-/// every future writing verb calls it instead of carrying a fourth copy.
+/// being satisfied by repetition. All four writing verbs call it —
+/// `add`, `remove`, `yank`, `bury` — and every future one calls it
+/// instead of adding a fifth copy.
 pub(crate) fn refuse_if_server_running(data_dir: &std::path::Path) -> Result<()> {
     if let Some(pid) = ServerLock::read_pid(data_dir) {
         return Err(Error::InvalidInput(format!(
@@ -159,6 +161,10 @@ pub enum Command {
     /// resolution stops choosing it.
     Yank(yank::Args),
 
+    /// Close a bare name for every group, leaving a tombstone that
+    /// names why it is gone and, when there is one, where to move.
+    Bury(bury::Args),
+
     /// Recompute file hashes and check `repomd.json` integrity.
     Verify(verify::Args),
 
@@ -190,6 +196,7 @@ pub fn dispatch(command: Command) -> Result<()> {
         Command::Add(args) => add::run(args),
         Command::Remove(args) => remove::run(args),
         Command::Yank(args) => yank::run(args),
+        Command::Bury(args) => bury::run(args),
         Command::Verify(args) => verify::run(args),
         Command::Dump(args) => dump::run(args),
         Command::Serve(args) => serve::run(args),
