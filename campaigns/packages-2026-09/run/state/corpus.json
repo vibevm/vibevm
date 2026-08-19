@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-19T03:32:54Z",
+  "updated_at": "2026-08-19T04:10:16Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -111700,7 +111700,10 @@
           "cache-exists": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "утверждение о существовании кэша верно: `vibe_registry::default_cache_root()` объявлен в `crates/vibe-registry/src/registry_cache.rs` и реэкспортирован `crates/vibe-registry/src/lib.rs:40`",
+              "**исправленное имя переменной проверено с обеих сторон**: код читает `VIBE_REGISTRY_CACHE` (`crates/vibe-registry/src/registry_cache.rs:30` — `std::env::var_os(\"VIBE_REGISTRY_CACHE\")`), и то же имя стоит в проводе `vibe show config` (`crates/vibe-cli/src/commands/show/config.rs:114`), в изоляции тестов (`crates/vibe-test-support/src/isolate.rs:52`) и в сообщении об ошибке (`crates/vibe-registry/src/error.rs:109`)",
+              "прежнее имя не читает НИКТО: греп по `crates/` на `VIBEVM_REGISTRY_CACHE` пуст, при живом контроле — тот же греп на `VIBE_REGISTRY_CACHE` даёт десятки попаданий. То есть документ два месяца называл переменную, которой нет, и оператор, ему последовавший, заключил бы, что переопределение не работает",
+              "статус сдвинут `spec/done` → `impl/done`: факт описывает существующий механизм и теперь называет его верно, то есть перестал быть утверждением о намерении"
             ]
           },
           "cache-incidental": {
@@ -111768,7 +111771,9 @@
           "CACHE-MACHINE-GLOBAL": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "правка касается только имени переменной в скобке; само решение (склад машинно-глобален, а не проектен) не тронуто и остаётся `spec/done`, потому что машинно-глобального склада ПАКЕТОВ действительно нет — сегодня по этому пути живёт клон-кэш реестров",
+              "адрес, на который теперь ссылается текст, существует: `crates/vibe-registry/src/registry_cache.rs` читает `VIBE_REGISTRY_CACHE` и вычисляет корень",
+              "замер, стоящий за правкой, записан датированной находкой: `campaigns/packages-2026-09/harvest/prop010-current-state.md` §6 — «документ дважды пишет `VIBEVM_REGISTRY_CACHE`, код читает `VIBE_REGISTRY_CACHE`», с контролем непустоты"
             ]
           },
           "CACHE-POPULATION-SHARED": {
@@ -112340,7 +112345,7 @@
           }
         },
         "verified_at": "2026-07-25T14:52:12Z",
-        "verify_batch": "c4f1-registry-rest + d2d + W8 + W10"
+        "verify_batch": "c4f1-registry-rest + d2d + W8 + W10 + PROP010-ENV-VAR-NAME-2026-08-19"
       }
     },
     {

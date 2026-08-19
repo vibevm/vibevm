@@ -55241,7 +55241,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:6dc7e629914d876f4fee6af64ae750f919200508b4df84d5426de3868790f232",
+      "content_hash": "sha256:39ff4bd06c6e1fa134e1922896f52398c4f7675f1a879be63941faf9f2499eec",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "PROP-010: The local package cache — a shared offline store",
@@ -55286,7 +55286,7 @@
     },
     {
       "anchor": "motivation",
-      "content_hash": "sha256:bcc0ba73cff723c2e10f8168860b4dcc06fe810f8c8b61b7ff31fff3a4960806",
+      "content_hash": "sha256:2452375f86ffb92348136118397b692ad50a7cdb2c52d325f1d448e7dd15c26b",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "1. Motivation",
@@ -55295,10 +55295,10 @@
     },
     {
       "anchor": "cache-exists",
-      "content_hash": "sha256:065cf467c4ab4ad6198ae95d65044e4b54c9fc887b167496d6dff034ef2ec032",
+      "content_hash": "sha256:18a95ef2dd92e5246a32683b9cb793a5539d03fabf87a3536c7a0e140a2b47b5",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "vibevm already keeps a registry cache (`VIBEVM_REGISTRY_CACHE` / `vibe_registry::default_cache_root()`): registry repositories are cloned there, and `vibe install` / `vibe update` fetch through it. @status:spec/done",
+      "heading": "vibevm already keeps a registry cache (`VIBE_REGISTRY_CACHE` / `vibe_registry::default_cache_root()`): registry repositories are cloned there, and `vibe install` / `vibe update` fetch through it. **The variable is `VIBE_REGISTRY_CACHE`; this document said `VIBEVM_` in both places until 2026-08-19, and nothing in the tree ever read that name** — an operator following the spec would have set a variable no code consults and concluded the override does not work. @status:impl/done",
       "line": 17,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#cache-exists"
     },
@@ -55394,7 +55394,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:9121a1c68bbee58f8c0503061b1add4dd3325106fc6ce3130d9148e4ff60d02b",
+      "content_hash": "sha256:0806a6960287ba50853fcc6e7de72ad2b6ab72aac0a6172fcb1a0b59c2f43bec",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "2. Decisions",
@@ -55403,7 +55403,7 @@
     },
     {
       "anchor": "global",
-      "content_hash": "sha256:8a51215aaae226ed37b228e12f250a4aea4f754e43f467b05c70801ca5633a4c",
+      "content_hash": "sha256:cde617cc5f42fe825bde5c22d06056e14f9367bb30605fb9b1c11d838608541e",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "2.1 The cache is a machine-global, accretive store",
@@ -55412,10 +55412,10 @@
     },
     {
       "anchor": "CACHE-MACHINE-GLOBAL",
-      "content_hash": "sha256:3009637723a76426bb82def70c8d53f92b661549a05cd5133e3ac1c1042d0bc0",
+      "content_hash": "sha256:3ef444c048a758844ea29c8c61809b9165c791a7feeeab2616999571cc4cb715",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Decision.** The package cache is **machine-global**, not project-scoped — one store per machine, at a default path, overridable by `VIBEVM_REGISTRY_CACHE` (the existing env-var) and by a user-config key. @status:spec/done",
+      "heading": "**Decision.** The package cache is **machine-global**, not project-scoped — one store per machine, at a default path, overridable by `VIBE_REGISTRY_CACHE` (the existing env-var — read at `registry_cache.rs`, and named correctly here only since 2026-08-19) and by a user-config key. @status:spec/done",
       "line": 37,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CACHE-MACHINE-GLOBAL"
     },

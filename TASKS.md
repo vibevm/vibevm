@@ -157,19 +157,52 @@ with nothing going red. **The producer must be a fact, never a field write.**
       let `bury` plant a stone on a name emptied by `remove`, and the deleted
       package's name is back on the wire, undoing the very guarantee `remove`
       makes.
-- [ ] `feat(vibe-registry)`: **the local package store.** Extracted
-      per-identity directories keyed by `(group, name, version)` and validated
-      by the `content_hash` the lockfile already pins; a hit outranks a
-      registry that no longer lists the version. **The hard half is not the
-      store but what it replaces:** the per-package fetch path today DELETES
-      its local clone when an update fails, and that wipe exists so the next
-      mirror takes over without stale state — so mirror failover owes a
-      mechanism that is not "destroy the only copy". Sequencing dependency
-      (qualified naming) is long since satisfied, and the command family is
-      named: **top-level `vibe cache …`** (owner, 2026-08-19). Three questions
-      in [`PROP-010 §5`](spec/modules/vibe-registry/PROP-010-local-package-cache.md#open)
-      stay open — staleness signalling, eviction, scaffolding UX — and **none
-      of the three blocks building.**
+- [ ] **the local package store — one line in this list, five commits in the
+      tree.** The scope was measured before anything was cut
+      ([`harvest/prop010-current-state.md`](campaigns/packages-2026-09/harvest/prop010-current-state.md)):
+      a verdict for each of PROP-010's **107** facts, sum reconciled —
+      **BUILT 17 · PARTLY 26 · NOT BUILT 21 · not-a-build-claim 43**. The
+      document carries **zero** `impl/done`, so it claims none of itself is
+      built; two-thirds of its 64 build claims already have code. A cut taken
+      from its statuses would have been a plan about a tree that does not
+      exist.
+      - [ ] `feat(vibe-registry)`: **the store.** NOT from scratch — the
+            extracted per-identity layout already exists, project-scoped, at
+            `<workspace-root>/.vibe/cache/<group>/<name>/v<version>/` (created
+            by `init`, used by `reinstall` and `update`). The work is to
+            promote it: project scope → machine-global, rewritten → never
+            overwritten, incidental → **read as a source**, validated by the
+            `content_hash` the lockfile already pins. **The hard half is what
+            it replaces:** the fetch path DELETES its clone when an update
+            fails (`git_package_registry/fetch.rs`, the `update` → wipe →
+            re-bootstrap branch), and that wipe serves mirror failover. It may
+            stay — but only once extraction happens on a SUCCESSFUL fetch,
+            because the window between them is exactly the loss of the only
+            copy.
+      - [ ] `feat(vibe-registry)`: **a cache hit outranks a silent registry.**
+            `MultiRegistryResolver::with_offline` does not exist (measured);
+            today the narrowing happens above the resolver, and the cache is
+            not a resolution source at all.
+      - [ ] `feat(vibe-cli)`: **the `vibe cache …` family** — `path` / `list` /
+            `add` / `clean`. Nothing of it exists (measured against a control
+            that finds the live `vibe registry`).
+      - [ ] `feat(vibe-cli)`: **the global `--offline` posture** — the flag on
+            the root, `VIBE_OFFLINE`, a `[net]` config key, resolved like
+            `--unattended`. **Do not mistake it for the one that exists:**
+            `vibe install --offline` is PROP-030/PROP-002's, subcommand-scoped
+            and older than PROP-010's intent.
+      - [ ] *(owner fork — surfaced by the measurement, blocks the item above
+            it only)* **where user-level registry configuration lives.**
+            PROP-010 §2.4 proposes `UserConfig`. A functional predecessor
+            already ships in a DIFFERENT file under a different PROP:
+            `~/.vibe/registry.toml` (`GlobalRegistryConfig`, PROP-002 §2.2.2),
+            with hardcoded seeding and project-first merge. Extending the
+            shipped file and moving to `UserConfig` are both defensible and
+            they are not the same promise to an operator who already has one.
+      - *(the three questions in
+        [`PROP-010 §5`](spec/modules/vibe-registry/PROP-010-local-package-cache.md#open)
+        — staleness signalling, eviction, scaffolding UX — stay open and block
+        none of the five.)*
 - [ ] *(owner fork, blocks nothing)* **what a full rescan does with a package
       it can no longer see.** Narrowed by the 2026-08-19 rulings but not
       closed: the client is now protected (a cache hit wins; index absence

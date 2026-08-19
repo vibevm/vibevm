@@ -14,7 +14,7 @@
 
 ## 1. Motivation {#motivation}
 
-- @fact:cache-exists vibevm already keeps a registry cache (`VIBEVM_REGISTRY_CACHE` / `vibe_registry::default_cache_root()`): registry repositories are cloned there, and `vibe install` / `vibe update` fetch through it. @status:spec/done
+- @fact:cache-exists vibevm already keeps a registry cache (`VIBE_REGISTRY_CACHE` / `vibe_registry::default_cache_root()`): registry repositories are cloned there, and `vibe install` / `vibe update` fetch through it. **The variable is `VIBE_REGISTRY_CACHE`; this document said `VIBEVM_` in both places until 2026-08-19, and nothing in the tree ever read that name** — an operator following the spec would have set a variable no code consults and concluded the override does not work. @status:impl/done
 - @fact:cache-incidental But the cache is an *implementation detail* — an opaque download accelerator, not a deliberate, inspectable, first-class store. @status:spec/done
 - @fact:no-offline-mode *(The motivation as captured; both halves have since been answered.)* There was no `--offline` mode: every `vibe install` / `vibe update` that re-resolved walked the network, and `vibe install` always re-resolved. `--offline` shipped with [PROP-002 §2.2.2.1](PROP-002-decentralized-registry.md), and PROP-011's freshness skip ended the unconditional re-resolve. @status:spec/done
 - @fact:no-local-resolve A developer behind an air-gap, on a slow link, or simply wanting fast deterministic iteration had no way to say *resolve against what I already have*. `--offline`, the embedded and project-local registries (PROP-030) and the lockfile-respecting install now say exactly that; what this PROP still adds is the **machine-global accretive store** behind them. @status:spec/done
@@ -34,7 +34,7 @@
 
 ### 2.1 The cache is a machine-global, accretive store {#global}
 
-@fact:CACHE-MACHINE-GLOBAL **Decision.** The package cache is **machine-global**, not project-scoped — one store per machine, at a default path, overridable by `VIBEVM_REGISTRY_CACHE` (the existing env-var) and by a user-config key. @status:spec/done
+@fact:CACHE-MACHINE-GLOBAL **Decision.** The package cache is **machine-global**, not project-scoped — one store per machine, at a default path, overridable by `VIBE_REGISTRY_CACHE` (the existing env-var — read at `registry_cache.rs`, and named correctly here only since 2026-08-19) and by a user-config key. @status:spec/done
 
 - @fact:CACHE-POPULATION-SHARED Every package fetched for *any* project populates it; *any* project — including projects and members that do not yet exist — resolves and materialises from it. @status:spec/done
 
