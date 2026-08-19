@@ -35,7 +35,83 @@ owner's ruling and wins.
 
 ---
 
-## Current slice: change-native formats (owner mandate 2026-08-09)
+## Current slice: withdrawal, the local store, and one id repair (owner rulings 2026-08-19)
+
+Five rulings taken in conversation on 2026-08-19 and recorded at their
+governing anchors the same day (`4882df53` and the commit carrying the rename
+decision). **Read the anchors, not this list, for the reasoning** — this
+section is only the order the commits come in.
+
+The rulings live at: the store's shape and the three absences in
+[`PROP-010 §2.6–§2.7`](spec/modules/vibe-registry/PROP-010-local-package-cache.md#resolution);
+withdrawal's three operations and the rename collapse in
+[`PROP-005 §2.11`](spec/modules/vibe-index/PROP-005-package-index.md#cli);
+the journal's append-only reach in
+[`PROP-044 §3`](spec/common/PROP-044-change-native-formats.md#truth).
+
+**One mine governs the first three items and is the reason they are ordered
+this way:** tombstones enter the index only when a catalog is READ from disk —
+a state projected from the journal carries none. Since the journal phase a
+mutation builds its state that way and writes it out, so a tombstone placed by
+anything but a journal fact is erased by the next unrelated publish, silently,
+with nothing going red. **The producer must be a fact, never a field write.**
+
+- [ ] `fix(backlog)` + `docs(spec)`: **the `B-056` coordinate is used twice.**
+      One row (closed, contract-document inheritance) and one row (open, the
+      schema language cannot express the type our own writer writes) carry the
+      same id and the same anchor. A link lands on the closed one, which
+      announces itself as closed — and a ratified spec points at that
+      coordinate for the open fork. The live row takes a free number, the
+      closed one keeps its own, and the pointer in
+      [`PROP-005 §2.12`](spec/modules/vibe-index/PROP-005-package-index.md#types)
+      retargets. **Independent of everything else; smallest item here.**
+      *(The u64-vs-u32 question the live row carries stays an owner fork — this
+      item repairs the address, not the argument.)*
+- [ ] `feat(vibe-index)`: **the retirement fact replaces `renamed`.** One
+      journal fact carrying `reason` plus an optional successor; the `renamed`
+      arm leaves the vocabulary. Touches the journal schema, the generated
+      event, the projector (a NEW arm that produces a tombstone — the first
+      producer that ever has), the eleven-variant oracle, and a break note
+      under `formats/breaks/`. **Also owed by this commit:** the sentence in
+      [`PROP-005 §2.18`](spec/modules/vibe-index/PROP-005-package-index.md#channels)
+      that lists `Renamed` among the arms refusing for want of a carrier stops
+      being true in both halves at once. Cheap only while nothing emits
+      `renamed` and no rename has been recorded — both true today.
+- [ ] `feat(vibe-index)`: **the yank verb.** One verb and nothing else: the
+      journal fact exists, the projector already applies it by setting the
+      flag, and the wire already omits it when false. Independent of the
+      retirement work.
+- [ ] `feat(vibe-index)`: **`vibe-index bury`** — the retirement verb. Depends
+      on the fact above. Named by the owner 2026-08-19, and the name was not
+      invented: the contract already calls this state «buried», so the command
+      and the state it produces speak one word. **No longer blocked.**
+- [ ] `feat(vibe-registry)`: **the local package store.** Extracted
+      per-identity directories keyed by `(group, name, version)` and validated
+      by the `content_hash` the lockfile already pins; a hit outranks a
+      registry that no longer lists the version. **The hard half is not the
+      store but what it replaces:** the per-package fetch path today DELETES
+      its local clone when an update fails, and that wipe exists so the next
+      mirror takes over without stale state — so mirror failover owes a
+      mechanism that is not "destroy the only copy". Sequencing dependency
+      (qualified naming) is long since satisfied, and the command family is
+      named: **top-level `vibe cache …`** (owner, 2026-08-19). Three questions
+      in [`PROP-010 §5`](spec/modules/vibe-registry/PROP-010-local-package-cache.md#open)
+      stay open — staleness signalling, eviction, scaffolding UX — and **none
+      of the three blocks building.**
+- [ ] *(owner fork, blocks nothing)* **what a full rescan does with a package
+      it can no longer see.** Narrowed by the 2026-08-19 rulings but not
+      closed: the client is now protected (a cache hit wins; index absence
+      falls back to git), so what remains is the index side. Today the scan
+      holds the prior set and the new set in memory at once and **never
+      compares them** — it uses the prior one for three config fields and
+      discards the rest — then records a claim that the scanned set IS the
+      whole published set. Computing and reporting the difference is a missing
+      check rather than a decision; whether an unexplained disappearance
+      should also raise, or bury with a reason, is the owner's.
+
+---
+
+## Previous slice: change-native formats (owner mandate 2026-08-09) — CLOSED
 
 The slice in flight is the **change-native build** —
 [`campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md`](campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md),
