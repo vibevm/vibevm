@@ -233,13 +233,21 @@ fn mark_version(
 }
 
 /// The journal names a fact whose carrier this build has not built
-/// (this fold covers exactly six variants). Refusing is deliberate:
-/// the journal is the truth (PROP-044 §3), so silently skipping one of
-/// its facts would project a catalog the journal does not describe.
-/// The refusal is a gate — the day a writer first records such an
-/// event, projection stops with a nameable cause instead of quietly
-/// diverging. Their handling arrives with the slices those carriers
-/// belong to.
+/// (this fold covers seven of the eleven variants; four refuse).
+/// Refusing is deliberate: the journal is the truth (PROP-044 §3), so
+/// silently skipping one of its facts would project a catalog the
+/// journal does not describe. The refusal is a gate — the day a writer
+/// first records such an event, projection stops with a nameable cause
+/// instead of quietly diverging. Their handling arrives with the slices
+/// those carriers belong to.
+///
+/// It said SIX until the retirement fact landed, and the count moved
+/// because a carrier was built rather than because an arm was added:
+/// `renamed` left the vocabulary and `buried` took its place, folding
+/// instead of refusing. Worth the two extra words, because a count in
+/// prose is the one kind of stale statement a search for the thing's
+/// NAME cannot find — the perimeter measured for that landing swept
+/// `renam` and could not have caught this line.
 fn unprojectable(variant: &str, carrier: &str) -> Error {
     Error::Unprojectable(format!(
         "the journal holds a `{variant}` record, but its carrier ({carrier}) \
