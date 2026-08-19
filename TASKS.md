@@ -77,14 +77,49 @@ with nothing going red. **The producer must be a fact, never a field write.**
       address, not the argument.)*
 - [ ] `feat(vibe-index)`: **the retirement fact replaces `renamed`.** One
       journal fact carrying `reason` plus an optional successor; the `renamed`
-      arm leaves the vocabulary. Touches the journal schema, the generated
-      event, the projector (a NEW arm that produces a tombstone — the first
-      producer that ever has), the eleven-variant oracle, and a break note
-      under `formats/breaks/`. **Also owed by this commit:** the sentence in
-      [`PROP-005 §2.18`](spec/modules/vibe-index/PROP-005-package-index.md#channels)
-      that lists `Renamed` among the arms refusing for want of a carrier stops
-      being true in both halves at once. Cheap only while nothing emits
-      `renamed` and no rename has been recorded — both true today.
+      arm leaves the vocabulary. **The perimeter is measured, not guessed** —
+      [`harvest/renamed-perimeter.md`](campaigns/packages-2026-09/harvest/renamed-perimeter.md)
+      counts it by file rather than by concept: 4567 hits over 525 files,
+      classified A=98 / B=4467 / C=2 with the sum reconciled, of which
+      **eleven files need an edit or a regeneration** and fourteen more carry
+      the words without owing anything.
+      - **Eleven that move:** the journal schema (including `:27`, whose prose
+        says FIVE arms refuse and will say four), the hand-written arm in
+        `journal/record.rs:75`, the projector's refusing branch
+        (`journal/project.rs:135-136` — it becomes the first arm that ever
+        PRODUCES a tombstone), two test files, the eleven-variant oracle at
+        four separate points (`:20` the pair doc, `:79` the `ARM_WIRE_SHAPES`
+        row, `:280` the constructor, `:373` the pair-arity pin), the
+        regenerated `vibe-wire` journal module, and a break note under
+        `formats/breaks/`.
+      - **The spec debt is bigger than one sentence.** `PROP-005` §2.18's
+        listing of `Renamed` among the arms refusing for want of a carrier is
+        the half the contract names itself
+        (`##THE-STALE-SENTENCE-THIS-CREATES`). It does **not** name three more
+        claims in §2.11 that the same commit falsifies: `##OP-RETIRE`'s
+        state-today column («**not built.** No journal fact produces a
+        tombstone…»), `##YANK-IS-A-VERB-AWAY`'s «Retirement is genuinely
+        unbuilt», and `##A-TOMBSTONE-THAT-IS-NOT-A-JOURNAL-FACT-ERASES-ITSELF`'s
+        «Nothing can reach this today because nothing produces a tombstone at
+        all». A promise is repaired by STATUS, and so is its mirror image — a
+        recorded absence that stops being absent.
+      - **The break is free, and that is measured too:** no record anywhere in
+        the tree carries `"kind":"renamed"` as DATA — proved beside a control
+        that finds `"kind":"yanked"` in
+        `formats/corpora/index/e1/state/journal/2026-08.ndjson:2`, so the
+        instrument does see records. `Event::Renamed` occurs four times in
+        `crates/`, all of them the projector's refusal and three test
+        constructors; nothing emits it.
+      - **The Russian half of the perimeter is closed too** — the count's own
+        §9 named the limit (the substring catches Latin spelling only), and a
+        boss-side sweep for «переименов» found 40 files of which the only live
+        contract/lore hits (`PROP-044:29`,
+        `spec/design/deterministic-loading-aliasing.md:25`,
+        `spec/design/host-as-package.md:49`) are all about something else.
+      - *(owner fork, blocks nothing)* two prose enumerations name the fact
+        kinds with the plain word «rename» — `PROP-044:146` and
+        `crates/vibe-index/docs/operator-handbook.md:22`. Both stay true after
+        the collapse; whether they are reworded is the owner's call.
 - [ ] `feat(vibe-index)`: **the yank verb.** One verb and nothing else: the
       journal fact exists, the projector already applies it by setting the
       flag, and the wire already omits it when false. Independent of the
