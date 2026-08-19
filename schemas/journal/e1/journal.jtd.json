@@ -24,11 +24,39 @@
   "definitions": {
     "event": {
       "metadata": {
-        "description": "One registry fact — the eleven-variant `Event` union of `journal::record`. Not the namesake campaign journal of PROP-043: a different crate keeping a different law; this one is the package registry's journal of catalog facts. An arm's `kind` outside this mapping is rejected by the generated reader. The projection folds six of the eleven arms; `renamed`, `notice`, `channel_set`, `channel_unset` and `force_replaced` refuse by design (their carriers are not built in this vibe-index). Local to this schema: no other surface consumes the journal's event union.",
+        "description": "One registry fact — the eleven-variant `Event` union of `journal::record`. Not the namesake campaign journal of PROP-043: a different crate keeping a different law; this one is the package registry's journal of catalog facts. An arm's `kind` outside this mapping is rejected by the generated reader. The projection folds seven of the eleven arms; `notice`, `channel_set`, `channel_unset` and `force_replaced` refuse by design (their carriers are not built in this vibe-index). Local to this schema: no other surface consumes the journal's event union.",
         "x-rust-type": "Event"
       },
       "discriminator": "kind",
       "mapping": {
+        "buried": {
+          "metadata": {
+            "description": "A bare name closed: why it went and, when there is one, the successor to move to. This is the ONE retirement fact — a rename is a retirement that names its successor (PROP-005 §2.11), so no separate rename arm exists and none is coming. Its projection is the first arm in this union that PRODUCES a carrier (a tombstone) rather than folding a version or refusing."
+          },
+          "properties": {
+            "name": {
+              "type": "string",
+              "metadata": {
+                "description": "The bare name — deliberately NOT a `(group, name)` pair, unlike every other identity-bearing arm here. A tombstone is carried by the candidate-set file `by-name/<name>.json`, which spans every group at once (PROP-005 §2.4), so burying a name closes it for all of them. The asymmetry is the file layout's, not this schema's."
+              }
+            },
+            "reason": {
+              "type": "string",
+              "metadata": {
+                "description": "Required, and that is the load-bearing difference from the `renamed` arm this replaces: a tombstone cannot exist without a reason (PROP-005 §2.4), and the old arm carried none. A retirement with an empty reason answers the no-silence law with silence."
+              }
+            }
+          },
+          "optionalProperties": {
+            "superseded_by": {
+              "type": "string",
+              "metadata": {
+                "description": "The successor this name's consumers should move to — a redirect pointer, never an automatic rewrite. Same field, same meaning and same optionality as `tombstone.superseded_by` in `schemas/index/e1/by_name.jtd.json`, because the projection copies it across verbatim. Absent when a name was closed with nowhere to go.",
+                "x-default": null
+              }
+            }
+          }
+        },
         "channel_set": {
           "metadata": {
             "description": "Pin one `version` of a package to a named `channel`."
@@ -124,27 +152,6 @@
               "metadata": {
                 "description": "Semantically optional, textually ALWAYS present: the Rust field is `Option<Version>` with no `skip_serializing_if`, so the writer emits the key for every removal — `\"version\": null` when the whole package goes, never an absent key. The reason first recorded here — that JTD has no nullable form — is FALSE, and it was disproved by a sibling schema in this very tree: RFC 8927 gives every schema a `nullable` flag, and `schemas/list_report.jtd.json` uses it on `boot_snippet`, where the pinned generator honours it by emitting an `Option` with no skip attribute. The expressible form is therefore a REQUIRED `version` carrying `\"nullable\": true`, which would make this schema describe the writer exactly. It is not changed here because moving the field between forms meets the transformation layer's required-nullable branch and deserves its own step — filed as BACKLOG B-078 rather than done in passing. Until then the schema stays WIDER than the type: it admits an absent key the writer never writes, and a round-trip through the generated type drops the null (its `Option` skips on `None`). The parity oracle exercises `Some`, the only value both forms carry identically.",
                 "x-default": null
-              }
-            }
-          }
-        },
-        "renamed": {
-          "metadata": {
-            "description": "A package rename: `from` → `to`, each a `(group, name)` pair."
-          },
-          "properties": {
-            "from": {
-              "elements": { "type": "string" },
-              "metadata": {
-                "description": "Wire type: a PAIR `(group, name)` — a two-element array like `[\"org.vibevm\", \"wal\"]`. JTD (RFC 8927) has no tuple: `elements` describes a homogeneous string array of ANY length, so this schema accepts `[]`, one element or three, and cannot pin which position is the group. The schema is deliberately WIDER than the Rust type `(Group, String)`; the arity check lives only in the Rust reader, and nothing schema-validated may be assumed to be a pair. `x-empty: emit`: a required field the writer always serialises (no `skip_serializing_if`) — and a pair is never empty anyway.",
-                "x-empty": "emit"
-              }
-            },
-            "to": {
-              "elements": { "type": "string" },
-              "metadata": {
-                "description": "Wire type: a PAIR `(group, name)` — a two-element array like `[\"org.vibevm.core\", \"wal2\"]`. JTD (RFC 8927) has no tuple: `elements` describes a homogeneous string array of ANY length, so this schema accepts `[]`, one element or three, and cannot pin which position is the group. The schema is deliberately WIDER than the Rust type `(Group, String)`; the arity check lives only in the Rust reader, and nothing schema-validated may be assumed to be a pair. `x-empty: emit`: a required field the writer always serialises (no `skip_serializing_if`) — and a pair is never empty anyway.",
-                "x-empty": "emit"
               }
             }
           }

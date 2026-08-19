@@ -23,7 +23,7 @@ use crate::error::{Error, Result};
 use crate::index::Index;
 use crate::index::memory::PkgKey;
 use crate::journal::record::{Event, JournalRecord};
-use crate::types::{NamingConvention, PackageEntry, VersionEntry};
+use crate::types::{NamingConvention, PackageEntry, Tombstone, VersionEntry};
 
 /// Fold a journal into the catalog it describes.
 ///
@@ -49,6 +49,14 @@ use crate::types::{NamingConvention, PackageEntry, VersionEntry};
 /// - `Yanked` / `Frozen` set their flag on the named version iff it
 ///   stands in the projection at that point of the fold (see
 ///   [`mark_version`]).
+/// - `Buried` drops every package holding that bare name — across
+///   groups, since the candidate-set file spans them — and leaves a
+///   tombstone in its place. It is the only arm that CREATES a
+///   carrier, and it is why the tombstone map is no longer filled
+///   solely by reading a catalog off disk: a tombstone written by
+///   anything other than a fact would be erased by the next mutation,
+///   silently, because a mutation builds its state from this fold and
+///   writes that out (PROP-005 §2.11).
 ///
 /// `generated_at` is the `at` of the LAST applied record: the value is
 /// derivable from the events themselves, so the function stays pure —
@@ -93,6 +101,18 @@ pub fn project(events: impl IntoIterator<Item = JournalRecord>) -> Result<Index>
                 initialised = true;
             }
             Event::Published { entry } => {
+                // A name that has packages is not buried, so it cannot
+                // carry a tombstone: §2.4 says the candidate-set file
+                // carries one "only when the bare name is buried", and
+                // its worked example shows an empty package list beside
+                // it. A publish under a buried name therefore re-opens
+                // the name and takes the stone with it, keeping the
+                // file's two states disjoint — which is the property
+                // that lets a reader tell "gone" from "here" without
+                // consulting anything else. The journal keeps the
+                // burial forever either way; this is the projection's
+                // answer, not a deletion of the fact.
+                idx.tombstones.remove(&entry.name);
                 idx.upsert(*entry);
             }
             Event::Removed {
@@ -132,8 +152,26 @@ pub fn project(events: impl IntoIterator<Item = JournalRecord>) -> Result<Index>
                     e.frozen = true
                 });
             }
-            Event::Renamed { .. } => {
-                return Err(unprojectable("Renamed", "package rename"));
+            Event::Buried {
+                name,
+                reason,
+                superseded_by,
+            } => {
+                // The first arm of this union that PRODUCES a carrier
+                // instead of folding a version or refusing. The two
+                // halves are one act and neither stands alone: the
+                // name's packages go (a buried name's candidate file
+                // carries `"packages": []` — PROP-005 §2.4), and the
+                // tombstone is what remains, because an absent answer
+                // IS the silence the no-silence law forbids.
+                idx.by_pkgref.retain(|(_, held), _| held != &name);
+                idx.tombstones.insert(
+                    name,
+                    Tombstone {
+                        reason,
+                        superseded_by,
+                    },
+                );
             }
             Event::Notice { .. } => {
                 return Err(unprojectable("Notice", "per-package notice"));

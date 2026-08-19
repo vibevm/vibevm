@@ -429,20 +429,15 @@ fn yank_and_freeze_on_a_missing_version_fold_as_noops() {
     assert_eq!(index.generated_at, t4);
 }
 
-/// Group 8 — each of the five variants without a carrier refuses, and
-/// the error names the variant it met.
+/// Group 8 — each of the four variants without a carrier refuses, and
+/// the error names the variant it met. There were five until `Renamed`
+/// left the vocabulary: retirement gained a carrier, so its arm folds
+/// now instead of refusing (Group 10).
 #[test]
 fn unprojectable_variants_are_refused_by_name() {
     let t1 = at("2026-08-01T12:00:00Z");
     let t2 = at("2026-08-02T12:00:00Z");
     let cases: Vec<(&str, Event)> = vec![
-        (
-            "Renamed",
-            Event::Renamed {
-                from: (org(), "old-name".into()),
-                to: (org(), "new-name".into()),
-            },
-        ),
         (
             "Notice",
             Event::Notice {

@@ -241,9 +241,10 @@ fn every_event_variant_survives_round_trip() {
         ),
         record(
             stamp,
-            Event::Renamed {
-                from: (org(), "old-name".into()),
-                to: (org(), "new-name".into()),
+            Event::Buried {
+                name: "old-name".into(),
+                reason: "renamed to `new-name`".into(),
+                superseded_by: Some("org.vibevm/new-name".into()),
             },
         ),
         record(

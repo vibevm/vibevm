@@ -75,9 +75,19 @@ with nothing going red. **The producer must be a fact, never a field write.**
       the route back sits in the `{#b-056}` tombstone where such a link lands.
       *(The u64-vs-u32 question stays an owner fork — this repaired the
       address, not the argument.)*
-- [ ] `feat(vibe-index)`: **the retirement fact replaces `renamed`.** One
+- [x] `feat(vibe-index)`: **the retirement fact replaces `renamed`.** One
       journal fact carrying `reason` plus an optional successor; the `renamed`
-      arm leaves the vocabulary. **The perimeter is measured, not guessed** —
+      arm leaves the vocabulary. **Landed** — the `buried` arm, the projector's
+      first PRODUCING arm, six guards in `journal/burial_tests.rs` (split out
+      along the producer/folder seam because `project_tests.rs` sat at the
+      600-line budget), the oracle recounted, break note `formats/breaks/002.md`,
+      and five spec statements corrected in `PROP-005`. **Every guard was proved
+      red before it was believed green** — four fail with the producer neutered,
+      two with the re-open clearing neutered — and one design question the plan
+      had not asked was decided and recorded at its anchor
+      (`##A-PUBLISH-UNDER-A-BURIED-NAME-RE-OPENS-IT`): a publish under a buried
+      name clears the stone, because §2.4 describes no file that carries both.
+      **The perimeter is measured, not guessed** —
       [`harvest/renamed-perimeter.md`](campaigns/packages-2026-09/harvest/renamed-perimeter.md)
       counts it by file rather than by concept: 4567 hits over 525 files,
       classified A=98 / B=4467 / C=2 with the sum reconciled, of which

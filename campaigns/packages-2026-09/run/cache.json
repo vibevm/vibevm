@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-19T01:45:22Z",
+  "updated_at": "2026-08-19T02:43:39Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -103379,7 +103379,7 @@
       }
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {
-      "content_hash": "ba1db9c7fcc44013fef074b9ffb28e96d2bc5d6d03a98a6cbcb54d4ba7bef764",
+      "content_hash": "19b8e86901ff0d740204f3cf0a8a646d6e7823434e4eb3dcf924a1674cfc274b",
       "rollup": {
         "explicit": [
           "impl",
@@ -103393,11 +103393,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 406,
-        "fact_count": 401,
+        "marker_count": 407,
+        "fact_count": 402,
         "unmarked_facts": 0
       },
-      "marker_count": 406,
+      "marker_count": 407,
       "unit_count": 50,
       "issue_count": 0,
       "campaign": {
@@ -105874,7 +105874,9 @@
           "THE-JOURNALS-HALF-OF-THIS-CONTRACT-IS-ALREADY-MINTED": {
             "v": "confirmed",
             "ev": [
-              "crates/vibe-index/src/journal/record.rs:84-94 carries `ChannelSet {group, name, channel, version}` and `ChannelUnset {group, name, channel}`; crates/vibe-index/src/journal/project.rs:141-146 returns `unprojectable` for both rather than skipping them, and :205-211 is the message text quoted in the fact; the generated `VersionEntry` carries `channels` (crates/vibe-wire/src/generated/shared/mod.rs:232)"
+              "утверждение о `ChannelSet`/`ChannelUnset` не тронуто и проверяемо: оба арма стоят в `schemas/journal/e1/journal.jtd.json` и оба отказывают в `crates/vibe-index/src/journal/project.rs`",
+              "правка касается только списка соседей по отказу: `Renamed` из него ушёл вместе с армом, а `Notice` и `ForceReplaced` остались — оба по-прежнему возвращают `unprojectable` в том же файле",
+              "`crates/vibe-index/src/journal/project_tests.rs::unprojectable_variants_are_refused_by_name` перечисляет ровно четыре случая вместо пяти, и его докблок называет причину — это тест, который покраснел бы, останься список прежним"
             ]
           },
           "THE-MUTATION-IS-WRITTEN-BY-ITS-OWN-HANDLER": {
@@ -105991,15 +105993,17 @@
           "OP-RETIRE": {
             "v": "confirmed",
             "ev": [
-              "Measured: no journal fact produces a tombstone — the projector's match in crates/vibe-index/src/journal/project.rs has no arm that writes one.",
-              "Measured: the carrier `Index.tombstones` is declared at crates/vibe-index/src/index/memory.rs:93 and populated only inside load_from (:351), i.e. by reading a catalog that already carries tombstones on its by-name files."
+              "строка таблицы теперь называет глагол (`bury`) и состояние «all but the verb», и обе половины проверяемы: `crates/vibe-index/src/journal/record.rs:95` объявляет арм `Buried { name, reason, superseded_by }`, а `crates/vibe-index/src/journal/project.rs:155-175` его сворачивает",
+              "«nothing emits the fact yet» проверено с разбором форм, а не одним грепом: единственное вхождение `Event::Buried` вне тестов — `crates/vibe-index/src/journal/project.rs:155`, и это СОПОСТАВЛЕНИЕ С ОБРАЗЦОМ (плечо `match`), то есть сторона потребителя; все три конструктора лежат в тестах (`journal/tests.rs:244`, `journal/burial_tests.rs`, `tests/wire_parity_journal.rs`). Ни один путь CLI или сервера факта не строит — ровно то же состояние, в каком стоит `yank`",
+              "прежний текст строки («**not built.** No journal fact produces a tombstone») стал бы ложным обеими половинами: факт есть и он порождает надгробие. Это одно из трёх утверждений о состоянии в §2.11, которых не назвал ни `##THE-STALE-SENTENCE-THIS-CREATES`, ни чек-лист"
             ]
           },
           "A-TOMBSTONE-THAT-IS-NOT-A-JOURNAL-FACT-ERASES-ITSELF": {
             "v": "confirmed",
             "ev": [
-              "Measured: tombstones enter the in-memory index only in load_from (crates/vibe-index/src/index/memory.rs:351); project() in crates/vibe-index/src/journal/project.rs never sets them, so a journal-built state carries none.",
-              "Measured: write_to emits from self.tombstones (crates/vibe-index/src/index/memory.rs:259), so a mutation — which builds state by projecting the journal and then writes — would overwrite the by-name files with an empty tombstone set. Unreachable today only because no producer exists."
+              "мина закрыта построением, и это проверяемо: производителем надгробия является ФАКТ (`crates/vibe-index/src/journal/project.rs:155` арм `Event::Buried`), а не запись поля, поэтому всякая последующая мутация, строящая состояние тем же свёртыванием, воспроизводит камень заново",
+              "страж существует и доказан красным: `crates/vibe-index/src/journal/burial_tests.rs::a_tombstone_survives_an_unrelated_publish` хоронит имя, публикует ПОСЛЕ этого посторонний пакет и утверждает, что камень стоит; при обезвреженном `tombstones.insert` тест падает (прогон 2026-08-19: 4 упавших из 6)",
+              "статус сдвинут `spec/plan` → `impl/done` именно потому, что утверждение перестало быть предсказанием: сегодня оно описывает построенный код, а не то, чего надо избежать"
             ]
           },
           "WHY-THREE-AND-NOT-ONE": {
@@ -106012,8 +106016,9 @@
           "YANK-IS-A-VERB-AWAY": {
             "v": "confirmed",
             "ev": [
-              "Measured, both halves: the projector's Yanked arm sets the flag, and the wire omits `yanked` when false (PROP-005 §2.6 SLOTS-ARE-OMITTED-WHEN-EMPTY) — so the only missing piece is an emitter.",
-              "Measured for the contrast: Event::Renamed is refused outright by the projector with an `unprojectable` error naming the unbuilt carrier, rather than skipped — so retirement cannot be reached by reusing rename."
+              "утверждение о `yank` не тронуто и по-прежнему верно: `crates/vibe-index/src/journal/project.rs` содержит арм `Event::Yanked`, ставящий `e.yanked = true` через `mark_version`",
+              "утверждение о снятии заменено на измеренное: носитель построен, `crates/vibe-index/src/journal/project.rs:168` вставляет `Tombstone`, а `:167` роняет пакеты имени через `by_pkgref.retain(|(_, held), _| held != &name)` — по ГОЛОМУ имени, поэтому оба соседа по группе уходят одним фактом",
+              "фраза «Retirement is genuinely unbuilt» сохранена в тексте как прежнее состояние, а не стёрта — это требование адресуемости к правке цитируемого якоря: у него есть вердикт, и читатель, пришедший по старой цитате, должен увидеть, что именно изменилось"
             ]
           },
           "THE-RETIREMENT-VERB-NEEDS-A-NAME": {
@@ -106047,15 +106052,17 @@
           "THE-VOCABULARY-CHANGE-IS-DECLARED-AND-ITS-MOMENT-IS-NOW": {
             "v": "confirmed",
             "ev": [
-              "Measured: nothing emits the arm — a grep for Event::Renamed across crates/ returns only the projector's refusal and three test sites (journal/project_tests.rs, journal/tests.rs, tests/wire_parity_journal.rs).",
-              "Measured: the projector refuses it by design rather than skipping it (crates/vibe-index/src/journal/project.rs, the `unprojectable` path), and the schema's own description lists `renamed` among the arms that refuse — so no recorded rename exists to migrate."
+              "перелом объявлен ровно тем способом, который факт предписывает: `formats/breaks/002.md` — вторая записка репозитория и первая, трогающая слой истины; `cargo xtask wire-diff` при этом зелёный («no corpus bytes shifted vs the commit»), потому что ни одна запись корпуса не несла этот арм",
+              "«nearly free» перестало быть утверждением на веру: отсутствие записей `\"kind\":\"renamed\"` во всём дереве измерено рядом с контролем, находящим `\"kind\":\"yanked\"` в `formats/corpora/index/e1/state/journal/2026-08.ndjson:2` — замер записан в `campaigns/packages-2026-09/harvest/renamed-perimeter.md` §8",
+              "время глаголов сдвинуто с настоящего на прошедшее сознательно: дешевизна перелома есть свойство МОМЕНТА, а не слоя, и записка `002.md` в разделе «Notes for the next note» называет это прямо"
             ]
           },
           "THE-STALE-SENTENCE-THIS-CREATES": {
             "v": "confirmed",
             "ev": [
-              "Measured: PROP-005 §2.18 names `Renamed` among the arms the projector refuses because their carriers are unbuilt — both halves of that sentence stop holding when the arm leaves and retirement gains a projected carrier.",
-              "Recorded as an obligation of the phase that makes the change, per this project's rule that a landing does not leave a spec lying about the tree it describes."
+              "названная обязанность исполнена: `spec/modules/vibe-index/PROP-005-package-index.md:972` (§2.18) больше не перечисляет `Renamed` среди отказывающих армов и объясняет, что его преемник пошёл в другую сторону — обрёл носитель",
+              "добавленная половина факта измерена, а не предположена: тем же коммитом стали ложными ещё ТРИ утверждения о состоянии в §2.11 — строка `##OP-RETIRE`, `##YANK-IS-A-VERB-AWAY` и `##A-TOMBSTONE-THAT-IS-NOT-A-JOURNAL-FACT-ERASES-ITSELF`; все три перечислены в `campaigns/packages-2026-09/harvest/renamed-perimeter.md` §4 как класс A",
+              "вывод, который факт теперь несёт, подтверждается собственной историей документа: контракт предсказал одно устаревающее предложение и получил четыре, что и есть довод в пользу счёта периметра по файлу"
             ]
           },
           "THE-RETIREMENT-VERB-IS-BURY": {
@@ -106064,10 +106071,19 @@
               "Owner naming 2026-08-19, chosen from three candidates with the reasoning shown; `yank` was taken from its ecosystem precedent in the same act.",
               "The name is not minted for the command: this contract already spells the state that way — §2.4 says the tombstone is «carried by the candidate-set file only when the bare name is buried», and introduces the worked example as «a buried name therefore looks like this»."
             ]
+          },
+          "A-PUBLISH-UNDER-A-BURIED-NAME-RE-OPENS-IT": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-index/src/journal/project.rs:115 `idx.tombstones.remove(&entry.name);` стоит в арме `Event::Published` ПЕРЕД `idx.upsert(*entry)` — то есть публикация под похороненным именем действительно снимает камень, а не оставляет файл, несущий и пакеты, и надгробие",
+              "crates/vibe-index/src/journal/burial_tests.rs::a_publish_after_a_burial_re_opens_the_name_and_clears_the_stone утверждает обе половины: `index.get(&org(), \"wal-old\").is_some()` и `!index.tombstones.contains_key(\"wal-old\")`; вторая проверка доказана КРАСНОЙ — с обезвреженным `tombstones.remove` тест падает (прогон 2026-08-19: 2 упавших из 6, вторым `re_opening_is_per_name_exactly_as_burial_is`)",
+              "основание решения цитируется дословно из этого же документа: `##BY-NAME-TOMBSTONE` (§2.4) говорит «carried by the candidate-set file **only when the bare name is buried**», а его рабочий пример несёт `\"packages\": []` рядом с надгробием — то есть форма «пакеты и камень одновременно» контрактом не описана нигде",
+              "поле «когда пересматривать» не декоративно: оно называет отличимое состояние («имя закрыто» переживает переоткрытие), которому потребовался бы СВОЙ носитель, а не правка этого — то есть триггер указывает на новый механизм, а не на переспор о значении"
+            ]
           }
         },
         "verified_at": "2026-08-13T23:34:20Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8 + W9 + W10 + B091-COORD-REPAIR-2026-08-19"
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8 + W9 + W10 + B091-COORD-REPAIR-2026-08-19 + BURIED-RETIREMENT-FACT-2026-08-19"
       }
     },
     "spec/modules/vibe-mcp/PROP-015-mcp-integration.md": {

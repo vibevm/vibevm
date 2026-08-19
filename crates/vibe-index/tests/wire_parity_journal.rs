@@ -13,20 +13,30 @@
 //! to any single-arm spot check, so the fixture exercises ALL eleven arms
 //! and the asserts count keys on each.
 //!
-//! Two places where the schema is deliberately wider than the Rust type,
-//! both recorded in the schema and re-stated here so the fixture's choices
-//! are not read as accidents:
+//! ONE place where the schema is deliberately wider than the Rust type,
+//! recorded in the schema and re-stated here so the fixture's choice is
+//! not read as an accident:
 //!
-//! * `renamed.from`/`to` are Rust pairs `(Group, String)`; JTD (RFC 8927)
-//!   has no tuple, so the generated arm holds `Vec<String>` and the schema
-//!   cannot check arity. The fixture pins the two-element wire shape the
-//!   Rust type guarantees; the round-trip itself compares JSON values, so
-//!   the pair passes through the wider `Vec` unmolested.
 //! * `removed.version` is `Option<Version>` with no `skip_serializing_if`
 //!   — the writer ALWAYS emits the key (`null` for a whole-package
 //!   removal), while the generated `Option` skips on `None`. The two forms
 //!   agree only for `Some`, so the fixture carries `Some` — exactly the
 //!   value a parity oracle can and should prove.
+//!
+//! There were two. The second was `renamed.from`/`to`, Rust pairs
+//! `(Group, String)` that JTD (RFC 8927) can only describe as string
+//! arrays of ANY length, so the schema could not check arity and this
+//! oracle pinned it by hand. That arm left the vocabulary with the
+//! retirement collapse, and the widening left with it — nothing here
+//! replaces the pin because nothing carries a tuple any more.
+//!
+//! Its successor is the counter-example worth naming: `buried` holds an
+//! optional `superseded_by` and BOTH sides skip it on `None`, so the two
+//! forms agree on either value rather than only on one. That is the shape
+//! `removed.version` still owes (`BACKLOG.md` B-078), and the fixture
+//! below carries `Some` for the same reason `removed` does — a present
+//! value is what a parity oracle can prove — not because absence would
+//! diverge.
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -67,6 +77,11 @@ const PUBLISHED_ENTRY_KEY_COUNT: usize = 33;
 /// arm's own fields. Counted per arm so a fixture (or schema) that
 /// thinned one arm is caught on each arm independently.
 const ARM_WIRE_SHAPES: &[(&str, usize)] = &[
+    // Four keys: the tag, `name`, `reason` and the optional
+    // `superseded_by` the fixture supplies. With no successor the arm is
+    // three — both sides skip the absent key, so that shape is a
+    // narrowing of this one and not a second wire form.
+    ("buried", 4),
     ("channel_set", 5),
     ("channel_unset", 4),
     ("entry_set_replaced", 2),
@@ -76,7 +91,6 @@ const ARM_WIRE_SHAPES: &[(&str, usize)] = &[
     ("notice", 4),
     ("published", 2),
     ("removed", 4),
-    ("renamed", 3),
     ("yanked", 5),
 ];
 
@@ -202,6 +216,17 @@ fn fixture_records() -> Vec<JournalRecord> {
     vec![
         record(
             stamp,
+            Event::Buried {
+                // Distinct strings in every position, so a schema that
+                // swapped `name` for `reason` — or dropped the successor
+                // into either — cannot pass by symmetry.
+                name: "old-name".to_string(),
+                reason: "renamed to `new-name`".to_string(),
+                superseded_by: Some("org.vibevm.core/new-name".to_string()),
+            },
+        ),
+        record(
+            stamp,
             Event::ChannelSet {
                 group: org(),
                 name: "wal".to_string(),
@@ -273,19 +298,6 @@ fn fixture_records() -> Vec<JournalRecord> {
                 group: org(),
                 name: "wal".to_string(),
                 version: Some(v("1.2.3")),
-            },
-        ),
-        record(
-            stamp,
-            Event::Renamed {
-                // Distinct groups and names in every position, so a
-                // schema that swapped or flattened the pair members
-                // cannot pass by symmetry.
-                from: (org(), "old-name".to_string()),
-                to: (
-                    Group::parse("org.vibevm.core").expect("the fixture group parses"),
-                    "new-name".to_string(),
-                ),
             },
         ),
         record(
@@ -370,16 +382,20 @@ fn every_event_variant_round_trips_through_the_generated_type() {
                  the always-present writer and the skipping generated type \
                  render identically"
             ),
-            "renamed" => {
-                for member in ["from", "to"] {
-                    assert_eq!(
-                        event[member].as_array().map(Vec::len),
-                        Some(2),
-                        "the Rust pair `(Group, String)` is a two-element \
-                         array on the wire — the schema cannot check this, \
-                         this pin can: {member}"
-                    );
-                }
+            "buried" => {
+                assert_eq!(
+                    event["name"],
+                    serde_json::json!("old-name"),
+                    "`name` is a bare string, not a `(group, name)` pair — \
+                     the one identity-bearing arm shaped that way, because \
+                     a tombstone rides on a per-name candidate file"
+                );
+                assert_eq!(
+                    event["superseded_by"],
+                    serde_json::json!("org.vibevm.core/new-name"),
+                    "the successor rides as the same string the tombstone \
+                     carries, so the projection copies it across untouched"
+                );
             }
             _ => {}
         }

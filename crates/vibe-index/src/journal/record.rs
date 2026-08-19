@@ -72,9 +72,35 @@ pub enum Event {
         name: String,
         version: Option<Version>,
     },
-    Renamed {
-        from: (Group, String),
-        to: (Group, String),
+    /// A bare name closed — the third and last of the withdrawal
+    /// operations, beside [`Event::Yanked`] (one version) and
+    /// [`Event::Removed`] (deletion). It is the ONE retirement fact:
+    /// a rename is a retirement that names its successor (PROP-005
+    /// §2.11), so the `renamed` arm this replaces has no heir of its
+    /// own and none is coming.
+    ///
+    /// `name` is bare, not a `(Group, String)` pair as every other
+    /// identity-bearing arm here carries — and the asymmetry is the
+    /// file layout's rather than this type's: a tombstone rides on
+    /// `by-name/<name>.json`, the candidate-set file that spans every
+    /// group at once (PROP-005 §2.4), so burying a name closes it for
+    /// all of them.
+    ///
+    /// `reason` is required, which is the difference that decided the
+    /// collapse: a tombstone cannot exist without one, and `renamed`
+    /// carried none — keeping both would have meant either
+    /// synthesising prose into a required field or adding a reason to
+    /// `renamed`, after which the two differed only in whether the
+    /// successor was optional. That is one thing spelled twice.
+    Buried {
+        name: String,
+        reason: String,
+        /// Absent from the wire when `None` — the field is
+        /// `optionalProperties` in the schema, matching
+        /// `tombstone.superseded_by` byte for byte, because the
+        /// projection copies it across verbatim.
+        #[serde(skip_serializing_if = "Option::is_none")]
+        superseded_by: Option<String>,
     },
     Notice {
         group: Group,

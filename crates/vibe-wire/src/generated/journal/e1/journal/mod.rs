@@ -32,16 +32,19 @@ pub use crate::generated::shared::ConflictsEntry;
 pub use crate::generated::shared::DeliveryMode;
 
 /// One registry fact — the eleven-variant `Event` union of `journal::record`.
-/// Not the namesake campaign journal of PROP-043: a different crate keeping
-/// a different law; this one is the package registry's journal of catalog
-/// facts. An arm's `kind` outside this mapping is rejected by the generated
-/// reader. The projection folds six of the eleven arms; `renamed`, `notice`,
-/// `channel_set`, `channel_unset` and `force_replaced` refuse by design (their
-/// carriers are not built in this vibe-index). Local to this schema: no other
-/// surface consumes the journal's event union.
+/// Not the namesake campaign journal of PROP-043: a different crate keeping a
+/// different law; this one is the package registry's journal of catalog facts.
+/// An arm's `kind` outside this mapping is rejected by the generated reader.
+/// The projection folds seven of the eleven arms; `notice`, `channel_set`,
+/// `channel_unset` and `force_replaced` refuse by design (their carriers
+/// are not built in this vibe-index). Local to this schema: no other surface
+/// consumes the journal's event union.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind")]
 pub enum Event {
+    #[serde(rename = "buried")]
+    Buried(Box<EventBuried>),
+
     #[serde(rename = "channel_set")]
     ChannelSet(Box<EventChannelSet>),
 
@@ -69,11 +72,37 @@ pub enum Event {
     #[serde(rename = "removed")]
     Removed(Box<EventRemoved>),
 
-    #[serde(rename = "renamed")]
-    Renamed(Box<EventRenamed>),
-
     #[serde(rename = "yanked")]
     Yanked(Box<EventYanked>),
+}
+
+/// A bare name closed: why it went and, when there is one, the successor to
+/// move to. This is the ONE retirement fact — a rename is a retirement that
+/// names its successor (PROP-005 §2.11), so no separate rename arm exists and
+/// none is coming. Its projection is the first arm in this union that PRODUCES
+/// a carrier (a tombstone) rather than folding a version or refusing.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct EventBuried {
+    /// The bare name — deliberately NOT a `(group, name)` pair, unlike
+    /// every other identity-bearing arm here. A tombstone is carried by the
+    /// candidate-set file `by-name/<name>.json`, which spans every group at
+    /// once (PROP-005 §2.4), so burying a name closes it for all of them. The
+    /// asymmetry is the file layout's, not this schema's.
+    pub name: String,
+
+    /// Required, and that is the load-bearing difference from the `renamed`
+    /// arm this replaces: a tombstone cannot exist without a reason (PROP-005
+    /// §2.4), and the old arm carried none. A retirement with an empty reason
+    /// answers the no-silence law with silence.
+    pub reason: String,
+
+    /// The successor this name's consumers should move to — a
+    /// redirect pointer, never an automatic rewrite. Same field, same
+    /// meaning and same optionality as `tombstone.superseded_by` in
+    /// `schemas/index/e1/by_name.jtd.json`, because the projection copies it
+    /// across verbatim. Absent when a name was closed with nowhere to go.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub superseded_by: Option<String>,
 }
 
 /// Pin one `version` of a package to a named `channel`.
@@ -205,32 +234,6 @@ pub struct EventRemoved {
     /// oracle exercises `Some`, the only value both forms carry identically.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version: Option<Version>,
-}
-
-/// A package rename: `from` → `to`, each a `(group, name)` pair.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct EventRenamed {
-    /// Wire type: a PAIR `(group, name)` — a two-element array like
-    /// `["org.vibevm", "wal"]`. JTD (RFC 8927) has no tuple: `elements`
-    /// describes a homogeneous string array of ANY length, so this schema
-    /// accepts `[]`, one element or three, and cannot pin which position is
-    /// the group. The schema is deliberately WIDER than the Rust type `(Group,
-    /// String)`; the arity check lives only in the Rust reader, and nothing
-    /// schema-validated may be assumed to be a pair. `x-empty: emit`: a
-    /// required field the writer always serialises (no `skip_serializing_if`) —
-    /// and a pair is never empty anyway.
-    pub from: Vec<String>,
-
-    /// Wire type: a PAIR `(group, name)` — a two-element array like
-    /// `["org.vibevm.core", "wal2"]`. JTD (RFC 8927) has no tuple: `elements`
-    /// describes a homogeneous string array of ANY length, so this schema
-    /// accepts `[]`, one element or three, and cannot pin which position is
-    /// the group. The schema is deliberately WIDER than the Rust type `(Group,
-    /// String)`; the arity check lives only in the Rust reader, and nothing
-    /// schema-validated may be assumed to be a pair. `x-empty: emit`: a
-    /// required field the writer always serialises (no `skip_serializing_if`) —
-    /// and a pair is never empty anyway.
-    pub to: Vec<String>,
 }
 
 /// One version withdrawn, with the `reason` on the record.

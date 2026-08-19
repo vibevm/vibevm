@@ -21,6 +21,10 @@ pub use record::{Event, JournalRecord};
 pub use store::{append, default_dir, replay};
 
 #[cfg(test)]
+#[path = "burial_tests.rs"]
+mod burial_tests;
+
+#[cfg(test)]
 #[path = "project_tests.rs"]
 mod project_tests;
 
