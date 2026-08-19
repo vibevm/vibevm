@@ -147,6 +147,25 @@ yank, rename, removal, ownership, security notice; (4) the schemas, hash
 recipes and the generator in this repository — the contract *is* source code;
 (5) the format registry and break notes — the ledger of what we broke. @status:spec/plan
 
+@fact:THE-JOURNAL-STAYS-APPEND-ONLY-AND-THAT-HAS-A-PRICE **Decision (owner,
+2026-08-19): the journal is append-only, it is not truncated, and the reach
+of that rule is stated here rather than discovered.** Because every
+publication is a permanent record, **a name published once is named in the
+journal for good** — removing a package from the catalog, and even deleting
+its source repository, does not unname it there. The catalog is a projection
+and can be rebuilt without the name; the journal cannot be edited to forget
+it. @status:spec/plan
+
+@fact:JOURNAL-REDACTION-IS-A-SEPARATE-MECHANISM-NOT-BUILT **Deliberately not
+built, and named so it is not mistaken for an oversight.** An operator may
+one day need a removal that reaches the journal itself — the mechanism is
+theirs to invoke and this project does not ask what for. No current plan
+contains it, nothing in the tree approximates it, and no existing verb is to
+be widened into it: a facility that can edit the truth layer must be its own
+deliberate operation, because the property every other rule here leans on is
+that the journal is the one thing nothing rewrites. *Revisit when:* an
+operator states a need that catalog-side removal cannot satisfy. @status:spec/plan
+
 @fact:DERIVED-IS-DISPOSABLE **Derived and deletable at any moment:** the entire
 catalog (every wire type it serves), `vibe.lock`, caches, generated types,
 clients, validators and docs, published projections, CLI JSON outputs, all

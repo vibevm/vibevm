@@ -94,13 +94,35 @@
 - @fact:SYNC-COMPANION The companion is `vibe registry sync` (already implemented), the deliberate "refresh the cache while the network is available" step. @status:spec/done
 - @fact:intended-workflow The intended workflow is `vibe registry sync` online, then `vibe install --offline` later — the analogue of `mvn` then `mvn -o`. @status:spec/done
 
+@fact:A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY **Decision (owner, 2026-08-19).** A package version present in the cache is **usable, and materialises, even when it exists in no registry at all** — deleted upstream, the whole organisation gone, every mirror down. This is not the `--offline` policy: `--offline` forbids the network, while this governs a run where the network is allowed, was consulted, and answered "no such package". @status:spec/work
+
+- @fact:WHY-THE-CACHE-OUTRANKS-A-SILENT-REGISTRY **Why the cache wins.** The store holds content validated against `content_hash` ([§2.3](#identity)) — bytes we already fetched and already verified. A registry that no longer lists a version has told us about *its* present inventory, which is not evidence that the verified bytes on this disk are wrong. Treating an upstream removal as a reason to refuse content we hold would make every consumer's build hostage to a repository we do not control, which is precisely the failure the store exists to prevent. @status:spec/work
+- @fact:THE-BEHAVIOUR-THIS-CONTRADICTS-TODAY **What this rule contradicts in today's code, said here so it is not discovered during implementation.** The per-package fetch path currently **deletes** its local clone when an update fails — origin unreachable, ref missing, repository gone — and then re-bootstraps from the same URL. So the present behaviour destroys the last local copy at exactly the moment this rule needs it. That wipe is not gratuitous: it exists so the next mirror in the chain takes over without stale state. Implementation therefore owes mirror failover a mechanism that is not "delete the only copy" — the extracted store is separate from the clone, which is what makes both possible at once. @status:spec/work
+
+@fact:AN-ABSENCE-HAS-THREE-SHAPES-AND-TWO-ANSWERS **Decision (owner, 2026-08-19).** When a package cannot be supplied, what the user is told depends on which of three absences it is: @status:spec/work
+
+| the package | what the user is told |
+|---|---|
+| @fact:ABSENCE-CACHED is in the cache @status:spec/work | nothing — it is used and materialised ([`##A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY`](#resolution)) @status:spec/work |
+| @fact:ABSENCE-WITHDRAWN is gone, but a tombstone stands for its name @status:spec/work | **the tombstone's reason and its successor** — we know it existed and why it went ([PROP-005 §2.4](../vibe-index/PROP-005-package-index.md#layout)) @status:spec/work |
+| @fact:ABSENCE-NEVER-THERE is gone with no record, or never existed @status:spec/work | **"no such package"** — the same error a typo in `vibe.toml` produces @status:spec/work |
+
+- @fact:THE-LAST-TWO-ARE-DELIBERATELY-INDISTINGUISHABLE **The third row is not a shortfall — it is the requirement.** Full deletion is a **mechanism the operator invokes**; this project builds it and does not ask what it is for. What the mechanism owes is that deletion actually deletes: a residue that still names the deleted package would defeat the operation for a whole class of the reasons an operator might have. The clearest illustration is a complaint about the *name itself* — there a tombstone would have to be named after the very thing being removed, and would reproduce what it was meant to record — but that is one case, not the justification. A fully deleted package is therefore indistinguishable from one that never existed, and a reader who cannot tell them apart is getting the correct answer. @status:spec/work
+- @fact:THE-CARVE-OUT-FROM-THE-NEVER-SILENT-LAW **This carves an exception out of a law already recorded, and the exception is named rather than left to be noticed.** [PROP-005 §2.4](../vibe-index/PROP-005-package-index.md#layout) states that a name which ever existed answers with the current thing, a forwarding pointer, or a tombstone — never with silence. That law governs **withdrawal**, where a record is kept on purpose. Full deletion is the other operation: it removes the fact that there was anything to answer about, and the silence is the deliverable. The two must never be conflated, because choosing deletion where withdrawal was meant destroys recoverable history, and choosing withdrawal where deletion was demanded leaves the violation standing. @status:spec/work
+
 @fact:SKIP-RESOLUTION-SYNERGY There is a strong synergy with the deferred *skip-resolution-when-fresh* optimisation (when `vibe.lock` is already consistent with every node's `[requires]`, no resolution runs at all, so no network is touched): once that lands, the common path is offline-clean for free, and `--offline` governs specifically the resolution path taken when dependencies genuinely changed. The two should be designed together. @status:spec/done
 
 ### 2.7 Cache layout and population {#layout}
 
 @fact:LOCAL-INDEX-VIEW **Decision.** The cache is keyed by package identity (§2.3) and carries a **local index view** — identity → versions present — so the resolver and the management commands (§2.8) answer cache queries without walking the whole store. @status:spec/done
 
-@fact:layout-open The on-disk layout — per-identity extracted directories versus git clones indexed by identity — is an open question (§5.1); identity-keying leans toward extracted, version-keyed directories that map one-to-one onto identity. @status:spec/work
+@fact:layout-open <status stage="spec" state="void">Retired 2026-08-19 when the owner ruled the layout. It recorded that the on-disk form was undecided between extracted per-identity directories and git clones indexed by identity, and leaned toward the former. The lean was right and the question is closed; the heir is [`##LAYOUT-EXTRACTED-DIRECTORIES`](#layout) below. This line stays so its name is never reused and inbound links do not break.</status> @status:spec/void
+
+@fact:LAYOUT-EXTRACTED-DIRECTORIES **Decision (owner, 2026-08-19).** The on-disk layout is **per-identity extracted directories**, one per `(group, name, version)`. Git clones indexed by identity are rejected. @status:spec/work
+
+- @fact:WHY-EXTRACTED-AND-NOT-AN-ARCHIVE **Why extracted rather than an archive.** Materialisation into `vibedeps/` is a directory copy, and `content_hash` is computed over the shippable tree — so the extracted form is already the thing the integrity gate checks. An archive would add a packing step and a second on-disk representation of one artifact, which then has to be kept in agreement with the first. @status:spec/work
+- @fact:WHY-NOT-CLONES **Why not clones, and this is the load-bearing half.** A clone is bound to the liveness of its origin **by construction**: refreshing it *is* a call to the origin, and the refresh brings it to whatever the origin says now. A store whose entries heal toward upstream cannot be the thing that survives upstream — and surviving upstream is the entire purpose of [`##A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY`](#resolution). A clone is also keyed by *where the bytes came from*, which contradicts identity-keying ([§2.3](#identity)) rather than merely differing from it. @status:spec/work
+- @fact:CLONES-KEEP-THEIR-OWN-JOB The registry clone cache does not go away and is not in competition: it exists so one registry is not re-cloned for every project on the machine, which is a separate and still-valid purpose. What changes is that it stops being the only local copy of package content, and therefore stops being load-bearing for availability. @status:spec/work
 
 @fact:CACHE-FILLS The cache fills as a side effect of any online `vibe install` / `vibe update` / `vibe registry sync`, and by deliberate pre-warming (`vibe cache add`, §2.8). It is never auto-evicted (§2.1). @status:spec/done
 
@@ -152,13 +174,15 @@
 
 ## 5. Open questions {#open}
 
-1. @fact:OPEN-LAYOUT **Cache layout** — per-identity extracted directories, or git clones indexed by identity? Extracted maps cleanly onto identity and materialises faster; clones carry every version and git-level integrity for free but duplicate what extraction would hold. @status:spec/work
+1. @fact:OPEN-LAYOUT <status stage="spec" state="void">**RESOLVED by the owner 2026-08-19** — per-identity extracted directories; clones rejected. The ruling and its reasoning are [`##LAYOUT-EXTRACTED-DIRECTORIES`](#layout). This line stays so the question's name is never reused and inbound links do not break.</status> @status:spec/void
 2. @fact:OPEN-NAMESPACE **Command namespace** — `vibe cache …` (top-level, project-independent) versus `vibe registry cache …`. @status:spec/work
 3. @fact:OPEN-STALENESS **Staleness signalling** — should an `--offline` run warn when the cache is older than some threshold, or when an online resolve would likely differ? @status:spec/work
 4. @fact:OPEN-EVICTION **Eviction** — pure manual `vibe cache clean`, or an optional size cap / LRU? @status:spec/work
 5. @fact:OPEN-SCAFFOLD-UX **Scaffolding UX** — should `vibe init` and new-member creation actively report "your declared `[requires]` are fully cached — you can work offline", or stay silent? @status:spec/work
 
 @fact:draft2-resolved Resolved in draft 2: cache keying (§2.3 — keyed by PROP-008 package identity) and the project-less registry source (§2.4 — a user-level default registry configuration). @status:spec/done
+
+@fact:draft3-resolved Resolved by the owner 2026-08-19, in the session that measured the clone cache against this document's own motivation: the on-disk layout (§2.7 — extracted per-identity directories), and two rules this document did not previously carry — a cache hit outranks a registry that no longer lists the version (§2.6), and the three shapes of absence with the two answers they get (§2.6). **Four questions remain open (§5.2–§5.5) and none of them blocks building.** The dependency this document was sequenced behind — qualified naming — has been implemented since it was written, so the sequencing note in §2.3 is satisfied rather than pending. @status:spec/work
 
 ---
 
