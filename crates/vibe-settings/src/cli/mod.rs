@@ -218,16 +218,36 @@ pub fn run_prefs<'a>(
 
 // ── set ─────────────────────────────────────────────────────────────────────
 
-/// Scope-check a declared key (§7 `#scope-matrix`) and produce the mutated layer
-/// table. Unknown keys are allowed (they warn at `check`); a declared key in a
-/// forbidden layer is [`PrefsError::WrongLayer`].
-fn set_key(
-    schema: &Schema,
-    raw: &LayeredRaw,
-    key: &str,
-    value: toml::Value,
-    layer: Layer,
-) -> Result<PrefsOutcome, PrefsError> {
+/// Scope-check a declared key against `layer` (§7 `#scope-matrix`) — the
+/// standalone form of the gate [`set_key`] runs, public so surfaces that edit a
+/// layer without going through [`PrefsOp::Set`] (the prefs TUI's provenance
+/// clear, which *removes* a key) refuse exactly the writes the CLI `set`
+/// refuses, with the same typed error. Unknown keys are allowed (they warn at
+/// `check`); a declared key in a forbidden layer is [`PrefsError::WrongLayer`].
+///
+/// ```
+/// use vibe_settings::cli::{PrefsError, check_writable};
+/// use vibe_settings::loader::Layer;
+/// use vibe_settings::schema::{KeyMeta, KeyType, Schema, Scope};
+///
+/// let mut schema = Schema::new();
+/// schema.register(
+///     KeyMeta::new("node.path", KeyType::String, Scope::Machine, "a machine path")?,
+/// )?;
+/// // Machine is L1-only — L3 is refused…
+/// assert!(matches!(
+///     check_writable(&schema, "node.path", Layer::L3),
+///     Err(PrefsError::WrongLayer { .. })
+/// ));
+/// // …L1 passes, and an unknown key is allowed everywhere.
+/// assert!(check_writable(&schema, "node.path", Layer::L1).is_ok());
+/// assert!(check_writable(&schema, "undeclared", Layer::L3).is_ok());
+/// # Ok::<(), vibe_settings::schema::SchemaError>(())
+/// ```
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#scope-matrix"
+)]
+pub fn check_writable(schema: &Schema, key: &str, layer: Layer) -> Result<(), PrefsError> {
     if let Some(meta) = schema.get(key) {
         let allowed = meta.scope.writable_layers();
         if !allowed.contains(&layer) {
@@ -243,8 +263,68 @@ fn set_key(
             });
         }
     }
+    Ok(())
+}
+
+/// Scope-check `key` against `layer` (§7 `#scope-matrix`) and, when allowed,
+/// set it at its dotted path in `table` — the in-place core of [`set_key`],
+/// public so TUI surfaces apply multi-key edits through the same library gate
+/// the CLI `set` goes through: the host owns the loaded layer table and the
+/// atomic persist, this cell owns the gate + the dotted mutation. A declared
+/// key in a forbidden layer is [`PrefsError::WrongLayer`] and `table` is left
+/// untouched.
+///
+/// ```
+/// use vibe_settings::cli::{PrefsError, set_in_layer};
+/// use vibe_settings::loader::Layer;
+/// use vibe_settings::schema::{KeyMeta, KeyType, Schema, Scope};
+///
+/// let mut schema = Schema::new();
+/// schema.register(
+///     KeyMeta::new("tree.palette", KeyType::String, Scope::User, "palette")?,
+/// )?;
+/// let mut table = toml::Table::new();
+/// set_in_layer(
+///     &schema,
+///     &mut table,
+///     "tree.palette",
+///     toml::Value::String("rosé-pine".into()),
+///     Layer::L3,
+/// )?;
+/// assert_eq!(
+///     table.get("tree").and_then(|t| t.as_table())
+///         .and_then(|t| t.get("palette")).and_then(|v| v.as_str()),
+///     Some("rosé-pine"),
+/// );
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#prefs-command"
+)]
+pub fn set_in_layer(
+    schema: &Schema,
+    table: &mut toml::Table,
+    key: &str,
+    value: toml::Value,
+    layer: Layer,
+) -> Result<(), PrefsError> {
+    check_writable(schema, key, layer)?;
+    set_dotted(table, key, value);
+    Ok(())
+}
+
+/// Scope-check a declared key (§7 `#scope-matrix`) and produce the mutated layer
+/// table. Unknown keys are allowed (they warn at `check`); a declared key in a
+/// forbidden layer is [`PrefsError::WrongLayer`].
+fn set_key(
+    schema: &Schema,
+    raw: &LayeredRaw,
+    key: &str,
+    value: toml::Value,
+    layer: Layer,
+) -> Result<PrefsOutcome, PrefsError> {
     let mut table = raw.layer(layer).clone();
-    set_dotted(&mut table, key, value);
+    set_in_layer(schema, &mut table, key, value, layer)?;
     Ok(PrefsOutcome::LayerWritten { layer, table })
 }
 
@@ -409,8 +489,11 @@ fn walk_leaves(table: &toml::Table, prefix: String, f: &mut impl FnMut(String, &
 }
 
 /// Insert `value` at a dotted path, creating intermediate tables as needed. A
-/// kind conflict at an intermediate segment (non-table where descent is needed)
-/// is a silent no-op — the caller's `check` surfaces the inconsistency.
+/// prior scalar where descent is needed (a file that had `vibe = "x"`, then
+/// `vibe.tree.mode` arrives) is replaced by a table so the path lands — the
+/// write recovers instead of silently dropping the key (the semantics the
+/// `vibe tree` TUI's removed local copy carried; adopted here when that copy
+/// was replaced by [`set_in_layer`], so every surface writes identically).
 fn set_dotted(table: &mut toml::Table, path: &str, value: toml::Value) {
     let mut segments: Vec<&str> = path.split('.').collect();
     let Some(last) = segments.pop() else {
@@ -421,10 +504,19 @@ fn set_dotted(table: &mut toml::Table, path: &str, value: toml::Value) {
         let entry = current
             .entry(seg.to_owned())
             .or_insert_with(|| toml::Value::Table(toml::Table::new()));
-        let toml::Value::Table(sub) = entry else {
-            return;
-        };
-        current = sub;
+        match entry {
+            toml::Value::Table(sub) => current = sub,
+            other => {
+                *other = toml::Value::Table(toml::Table::new());
+                // Re-borrow the now-Table entry; the `let-else` is unreachable
+                // (the preceding line set it to a Table) but keeps the borrow
+                // checker happy without an `expect`.
+                let toml::Value::Table(sub) = other else {
+                    return;
+                };
+                current = sub;
+            }
+        }
     }
     current.insert(last.to_owned(), value);
 }

@@ -261,8 +261,8 @@ impl TreeSettings {
     /// The conventional file path for a given layer (PROP-040 §3). Used by the
     /// `vibe prefs` settings form to write a key to the chosen write-layer
     /// (PROP-041 §4 `#write-layer-choice`) — the form mirrors this cell's
-    /// persist path (load → set-dotted → diff → atomic-write) against whichever
-    /// layer the user picked.
+    /// persist path (load → library dotted-set → diff → atomic-write) against
+    /// whichever layer the user picked.
     #[must_use]
     pub fn layer_path(&self, layer: Layer) -> &std::path::Path {
         match layer {
@@ -349,9 +349,11 @@ impl TreeSettings {
 
     /// Persist a single key to the L1 layer atomically (PROP-037 §9, PROP-040
     /// §6 `#diff-from-default`): load the current L1 table (preserving the
-    /// other keys), set the one dotted path, diff against the schema defaults,
-    /// and install via a sibling `.tmp` + rename. A key set to its default is
-    /// dropped from the file by the diff.
+    /// other keys), set the one dotted path through the library's scope-checked
+    /// gate ([`vibe_settings::cli::set_in_layer`] — the same call the CLI
+    /// `prefs set` and the prefs TUI form go through), diff against the schema
+    /// defaults, and install via a sibling `.tmp` + rename. A key set to its
+    /// default is dropped from the file by the diff.
     pub fn set(&self, path: &str, value: toml::Value) {
         if let Err(err) = self.try_set(path, value) {
             tracing::warn!(
@@ -368,18 +370,22 @@ impl TreeSettings {
     fn try_set(&self, path: &str, value: toml::Value) -> Result<(), SetError> {
         let mut table = vibe_settings::loader::load_layer(&self.l1)
             .map_err(|err| SetError::Load(err.to_string()))?;
-        set_dotted(&mut table, path, value);
+        vibe_settings::cli::set_in_layer(&self.schema, &mut table, path, value, Layer::L1)
+            .map_err(|err| SetError::Scope(err.to_string()))?;
         let diffed = diff_from_default(&table, &self.schema);
         write_layer(&self.l1, &diffed, Layer::L1).map_err(|err| SetError::Write(err.to_string()))
     }
 }
 
-/// Why a [`TreeSettings::set`] failed — a load or a write; the inner message
-/// carries the underlying typed error's `Display` (kept as a string so this
-/// stays a thin, dependency-light enum).
+/// Why a [`TreeSettings::set`] failed — a load, a scope refusal, or a write;
+/// the inner message carries the underlying typed error's `Display` (kept as a
+/// string so this stays a thin, dependency-light enum). `Scope` is unreachable
+/// while every `vibe.tree.*` key is [`Scope::User`] — it is the guard that
+/// keeps a future restricted key refusing here instead of silently landing.
 #[derive(Debug)]
 enum SetError {
     Load(String),
+    Scope(String),
     Write(String),
 }
 
@@ -387,6 +393,7 @@ impl std::fmt::Display for SetError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             SetError::Load(msg) => write!(f, "load L1 failed: {msg}"),
+            SetError::Scope(msg) => write!(f, "scope refused the L1 write: {msg}"),
             SetError::Write(msg) => write!(f, "write L1 failed: {msg}"),
         }
     }
@@ -545,37 +552,6 @@ fn detect_env_tier() -> Tier {
     let colorterm = std::env::var("COLORTERM").ok();
     let term = std::env::var("TERM").ok();
     detect_tier(colorterm.as_deref(), term.as_deref())
-}
-
-/// Insert `value` at a dotted `path` in `table`, creating intermediate tables.
-pub(crate) fn set_dotted(table: &mut toml::Table, path: &str, value: toml::Value) {
-    let mut segments = path.split('.');
-    let Some(last) = segments.next_back() else {
-        return;
-    };
-    let mut current = table;
-    for seg in segments {
-        let entry = current
-            .entry(seg.to_owned())
-            .or_insert_with(|| toml::Value::Table(toml::Table::new()));
-        match entry {
-            toml::Value::Table(t) => current = t,
-            // A prior scalar at this segment blocks descent; replace it with a
-            // table so the dotted path lands (a settings file that had
-            // `vibe = "x"` then `vibe.tree.mode` is recovered, not panicked).
-            other => {
-                *other = toml::Value::Table(toml::Table::new());
-                // Re-borrow the now-Table entry; the `let-else` is unreachable
-                // (the preceding line set it to a Table) but keeps the borrow
-                // checker happy without an `expect`.
-                let toml::Value::Table(t) = other else {
-                    return;
-                };
-                current = t;
-            }
-        }
-    }
-    current.insert(last.to_owned(), value);
 }
 
 /// Locate the L1 root (PROP-040 §3) — `<settings-dir>` via the one

@@ -46,16 +46,11 @@ impl Form {
             return Ok(());
         };
         let field_idx = self.focus;
-        let scope = self.fields[field_idx].meta.scope;
-        // #write-layer-choice — refuse a layer the key's scope forbids (same
-        // gate as apply; PROP-040 §7 #scope-matrix).
-        if !scope.writable_layers().contains(&self.write_layer) {
-            return Err(ApplyError::ScopeForbidden {
-                key,
-                scope: scope.label().to_owned(),
-                layer: self.write_layer.label().to_owned(),
-            });
-        }
+        // #write-layer-choice — refuse a layer the key's scope forbids through
+        // the library gate the CLI `prefs set` uses (same gate as apply;
+        // PROP-040 §7 #scope-matrix) — a clear cannot go through
+        // `PrefsOp::Set`, so the standalone check is the library call here.
+        vibe_settings::cli::check_writable(schema, &key, self.write_layer)?;
 
         // Write phase: load → remove_dotted → diff → atomic write.
         let layer = self.write_layer;
@@ -144,12 +139,25 @@ mod tests {
 
     use super::super::LayerPaths;
 
+    /// Flag (Scope::User) + the machine-path scope-forbidden fixture —
+    /// declared because the library gate is schema-driven (production fields
+    /// derive their metas from the schema, so the two always agree).
     fn schema() -> Schema {
         let mut s = Schema::new();
         s.register(
             KeyMeta::new("vibe.tree.flag", KeyType::Bool, Scope::User, "a flag")
                 .unwrap()
                 .with_default(toml::Value::Boolean(true)),
+        )
+        .unwrap();
+        s.register(
+            KeyMeta::new(
+                "vibe.tree.machine_path",
+                KeyType::String,
+                Scope::Machine,
+                "a machine path",
+            )
+            .unwrap(),
         )
         .unwrap();
         s

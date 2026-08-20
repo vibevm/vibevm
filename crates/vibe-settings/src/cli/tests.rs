@@ -107,6 +107,109 @@ fn set_declared_key_refuses_wrong_layer() {
 }
 
 #[test]
+fn check_writable_is_the_standalone_scope_gate() {
+    // The same refusal `PrefsOp::Set` yields, callable for surfaces that edit
+    // a layer without a Set op (the TUI provenance clear).
+    let mut s = Schema::new();
+    s.register(
+        KeyMeta::new(
+            "node.path",
+            KeyType::String,
+            Scope::Machine,
+            "a machine path",
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    let err = check_writable(&s, "node.path", Layer::L3).unwrap_err();
+    assert_eq!(
+        err,
+        PrefsError::WrongLayer {
+            key: "node.path".into(),
+            scope: "machine".into(),
+            layer: Layer::L3,
+            allowed: "L1".into(),
+        }
+    );
+    assert!(check_writable(&s, "node.path", Layer::L1).is_ok());
+    // An unknown key is allowed everywhere (it warns at `check`, not here).
+    assert!(check_writable(&s, "undeclared", Layer::L3).is_ok());
+}
+
+#[test]
+fn set_in_layer_mutates_the_table_and_refuses_a_forbidden_layer_untouched() {
+    let mut s = Schema::new();
+    s.register(
+        KeyMeta::new(
+            "node.path",
+            KeyType::String,
+            Scope::Machine,
+            "a machine path",
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    // Allowed layer → the dotted path lands in the caller's table.
+    let mut table = toml::Table::new();
+    set_in_layer(
+        &s,
+        &mut table,
+        "node.path",
+        toml::Value::String("/usr/bin".into()),
+        Layer::L1,
+    )
+    .unwrap();
+    assert_eq!(
+        table
+            .get("node")
+            .and_then(|t| t.as_table())
+            .and_then(|t| t.get("path"))
+            .and_then(|v| v.as_str()),
+        Some("/usr/bin")
+    );
+    // Forbidden layer → WrongLayer and the table is left untouched.
+    let mut table = toml::Table::new();
+    assert!(matches!(
+        set_in_layer(
+            &s,
+            &mut table,
+            "node.path",
+            toml::Value::String("/usr/bin".into()),
+            Layer::L3,
+        ),
+        Err(PrefsError::WrongLayer { .. })
+    ));
+    assert!(table.is_empty(), "refusal mutates nothing");
+}
+
+#[test]
+fn set_in_layer_recovers_a_scalar_blocking_the_dotted_descent() {
+    // A layer that had `vibe = "x"` then receives `vibe.tree.mode` — the
+    // scalar is replaced by a table so the path lands (the recovery semantics
+    // the tree TUI's removed local set_dotted carried).
+    let s = Schema::new();
+    let mut table = toml::from_str("vibe = \"x\"\n").unwrap();
+    set_in_layer(
+        &s,
+        &mut table,
+        "vibe.tree.mode",
+        toml::Value::String("tabs".into()),
+        Layer::L1,
+    )
+    .unwrap();
+    assert_eq!(
+        table
+            .get("vibe")
+            .and_then(|v| v.as_table())
+            .and_then(|t| t.get("tree"))
+            .and_then(|v| v.as_table())
+            .and_then(|t| t.get("mode"))
+            .and_then(|v| v.as_str()),
+        Some("tabs")
+    );
+}
+
+#[test]
 fn list_reports_resolved_leaves_with_origin() {
     let l2: toml::Table = toml::from_str("a = 1\n[b]\nc = 2\n").unwrap();
     let raw = LayeredRaw {

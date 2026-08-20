@@ -884,7 +884,7 @@ untouched by policy, and this is the route back to what it read:
       confirmed×3 + seal; последняя ALPHA-NOTES-строка снята.
 - [ ] Партия 2а (в полёте): B-074+B-092-чекеры (codex, P2-CODEGEN),
       B-082 (codex, P2-FSYNC), B-076 (claudez, P2-MIRROR),
-      B-077 (claudez, P2-PREFS).
+      B-077 (claudez, P2-PREFS) ✓посажен.
 - [ ] Партия 2б (после 2а): B-068 (parse/, ждёт посадки B-074),
       B-075 (диагноз флаки), B-094 (clap dev-dep); B-088 — триггер
       «первый закрытый план» уточнить у владельца.

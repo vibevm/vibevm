@@ -197,6 +197,24 @@ fn persist_preserves_a_sibling_key_and_comments() {
 }
 
 #[test]
+fn set_recovers_a_scalar_blocking_the_dotted_descent() {
+    // An L1 that had `vibe = "x"` then receives `vibe.tree.mode` — the
+    // library's dotted set (set_in_layer) replaces the scalar with a table so
+    // the path lands; pinned here so the TUI keeps the recovery its old local
+    // set_dotted carried now that the mutation is the library's.
+    let dir = tempdir().unwrap();
+    let path = dir.path().join("settings.toml");
+    std::fs::write(&path, "vibe = \"x\"\n").unwrap();
+    let s = settings_in(dir.path());
+    s.set(
+        KEY_MODE,
+        toml::Value::String(mode_label(DisplayMode::Tabs).into()),
+    );
+    let rp = s.load();
+    assert_eq!(s.snapshot(&rp).mode, DisplayMode::Tabs, "the key landed");
+}
+
+#[test]
 fn classify_helper_is_total() {
     // Smoke: the classifier never panics on the conventional paths.
     let _ = classify(std::path::Path::new("/x/.vibe/settings.toml"));

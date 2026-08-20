@@ -2281,36 +2281,36 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "item_kind": "mod",
-      "line": 26,
+      "line": 28,
       "symbol": "vibe_cli::commands::prefs::tui::form::lifecycle",
-      "end_line": 28,
+      "end_line": 30,
       "fingerprint": "tok1:ba3d225a7cd5ce6507cde284ef22dfc1650e157697436c38180e2f670d2538eb"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "item_kind": "fn",
-      "line": 55,
+      "line": 56,
       "symbol": "vibe_cli::commands::prefs::tui::form::lifecycle::Form::apply",
-      "end_line": 131,
-      "fingerprint": "tok1:7bbd3d739a37a3449bc3396a75edbd53e8929749a935ad31e26b9bb1c38f6315"
+      "end_line": 126,
+      "fingerprint": "tok1:6e8c5625a5b15f949753fbff3f3327fd9fbd69b80509097c9b3d884f1c8af4dd"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "item_kind": "fn",
-      "line": 42,
+      "line": 43,
       "symbol": "vibe_cli::commands::prefs::tui::form::lifecycle::Form::is_modified",
-      "end_line": 53,
+      "end_line": 54,
       "fingerprint": "tok1:23722ec3d90e8070df2f9415fcd933402c105daaf0547825c86f1f87a092dd3a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "item_kind": "fn",
-      "line": 133,
+      "line": 128,
       "symbol": "vibe_cli::commands::prefs::tui::form::lifecycle::Form::reset",
-      "end_line": 150,
+      "end_line": 145,
       "fingerprint": "tok1:6f16bfd4574879b2dbd87efe95423b12c0431a7a0d515e5b8288fd027c89d0a8"
     },
     {
@@ -2337,8 +2337,8 @@
       "item_kind": "fn",
       "line": 29,
       "symbol": "vibe_cli::commands::prefs::tui::form::provenance_edit::Form::clear_focused",
-      "end_line": 92,
-      "fingerprint": "tok1:ff38620d4d7c69a4d568db1122d5ffd1aee6e210c9bcb66ac9348ad67fddef8a"
+      "end_line": 87,
+      "fingerprint": "tok1:66082b5c66b5ac1e3ba0a6ca687d98f9446a22c5a40762ddb319df952ec4c95b"
     },
     {
       "crate_name": "vibe-cli",
@@ -2866,9 +2866,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/mod.rs",
       "item_kind": "mod",
-      "line": 12,
+      "line": 13,
       "symbol": "vibe_cli::commands::tree",
-      "end_line": 12,
+      "end_line": 13,
       "fingerprint": "tok1:313128c14fca797fc3ffef9fce842473cfbb3bb9c513e848caa8aa187d39ee3d"
     },
     {
@@ -3280,10 +3280,10 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
       "item_kind": "fn",
-      "line": 399,
+      "line": 406,
       "symbol": "vibe_cli::commands::tree::tui::settings::build_schema",
-      "end_line": 523,
-      "fingerprint": "tok1:2fafa3252b2f6c3d768a154d94836e5b751bc13396c7b4415e20da3d40aebd7e"
+      "end_line": 534,
+      "fingerprint": "tok1:e0c4e2c1260c71a0f47ba35f3d5115b60b6ee3a52171495942db423836563820"
     },
     {
       "crate_name": "vibe-cli",
@@ -5676,25 +5676,25 @@
       "item_kind": "fn",
       "line": 19,
       "symbol": "vibe_index::index::persistence::atomic_write",
-      "end_line": 37,
-      "fingerprint": "tok1:b916a22b4c3c4f66a6d96177df4a319c0a250e16b127eb45f3c194b3f46925f6"
+      "end_line": 38,
+      "fingerprint": "tok1:44433bcba012afca369c4c14231eca36b1265251b91bbe867d02d2a2dade0ff0"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/index/persistence.rs",
       "item_kind": "fn",
-      "line": 102,
+      "line": 120,
       "symbol": "vibe_index::index::persistence::tests::atomic_write_does_not_leave_tmp_behind",
-      "end_line": 113,
+      "end_line": 131,
       "fingerprint": "tok1:6461e508bd36b426cca19b884cda40af499ecccd3b81e2c3c0c0debf03fd8d99"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/index/persistence.rs",
       "item_kind": "fn",
-      "line": 89,
+      "line": 107,
       "symbol": "vibe_index::index::persistence::tests::atomic_write_replaces_existing",
-      "end_line": 100,
+      "end_line": 118,
       "fingerprint": "tok1:25aadc5b45619b668e94935071e906b926f85d5eddaff0b46bcbe895ca11e7f0"
     },
     {
@@ -8599,10 +8599,28 @@
       "crate_name": "vibe-settings",
       "file": "crates/vibe-settings/src/cli/mod.rs",
       "item_kind": "fn",
+      "line": 221,
+      "symbol": "vibe_settings::cli::check_writable",
+      "end_line": 267,
+      "fingerprint": "tok1:b9c9836b90a40a3599fd59f13576bcb9fa57a394f15321171f0edb44503e3c48"
+    },
+    {
+      "crate_name": "vibe-settings",
+      "file": "crates/vibe-settings/src/cli/mod.rs",
+      "item_kind": "fn",
       "line": 169,
       "symbol": "vibe_settings::cli::run_prefs",
       "end_line": 217,
       "fingerprint": "tok1:8dc5891294c8652a68c60219600755d17be87f68093e3d49617cebc5c16b1091"
+    },
+    {
+      "crate_name": "vibe-settings",
+      "file": "crates/vibe-settings/src/cli/mod.rs",
+      "item_kind": "fn",
+      "line": 269,
+      "symbol": "vibe_settings::cli::set_in_layer",
+      "end_line": 314,
+      "fingerprint": "tok1:e0d45bba08468c4bc66d024af71ea538607c8011809342407b88622779b1931d"
     },
     {
       "crate_name": "vibe-settings",
@@ -11184,7 +11202,7 @@
     {
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "from_symbol": "vibe_cli::commands::prefs::tui::form::lifecycle",
-      "line": 26,
+      "line": 28,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle",
       "verb": "implements"
@@ -11192,7 +11210,7 @@
     {
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "from_symbol": "vibe_cli::commands::prefs::tui::form::lifecycle::Form::apply",
-      "line": 62,
+      "line": 63,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#write-layer-choice",
       "verb": "implements"
@@ -11200,7 +11218,7 @@
     {
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "from_symbol": "vibe_cli::commands::prefs::tui::form::lifecycle::Form::is_modified",
-      "line": 45,
+      "line": 46,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle",
       "verb": "implements"
@@ -11208,7 +11226,7 @@
     {
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "from_symbol": "vibe_cli::commands::prefs::tui::form::lifecycle::Form::reset",
-      "line": 137,
+      "line": 132,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle",
       "verb": "implements"
@@ -11704,7 +11722,7 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/mod.rs",
       "from_symbol": "vibe_cli::commands::tree",
-      "line": 12,
+      "line": 13,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-036#command",
       "verb": "implements"
@@ -12072,7 +12090,7 @@
     {
       "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
       "from_symbol": "vibe_cli::commands::tree::tui::settings::build_schema",
-      "line": 411,
+      "line": 422,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -14326,7 +14344,7 @@
     {
       "file": "crates/vibe-index/src/index/persistence.rs",
       "from_symbol": "vibe_index::index::persistence::tests::atomic_write_does_not_leave_tmp_behind",
-      "line": 103,
+      "line": 121,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#persistence",
       "verb": "verifies",
@@ -14335,7 +14353,7 @@
     {
       "file": "crates/vibe-index/src/index/persistence.rs",
       "from_symbol": "vibe_index::index::persistence::tests::atomic_write_replaces_existing",
-      "line": 90,
+      "line": 108,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#persistence",
       "verb": "verifies",
@@ -17059,8 +17077,24 @@
     },
     {
       "file": "crates/vibe-settings/src/cli/mod.rs",
+      "from_symbol": "vibe_settings::cli::check_writable",
+      "line": 247,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#scope-matrix",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-settings/src/cli/mod.rs",
       "from_symbol": "vibe_settings::cli::run_prefs",
       "line": 198,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#prefs-command",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-settings/src/cli/mod.rs",
+      "from_symbol": "vibe_settings::cli::set_in_layer",
+      "line": 301,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#prefs-command",
       "verb": "implements"
@@ -42606,7 +42640,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:37450730795fb900f9e27024c8f4860411d8c63a83b80392c6bc8014561b783b",
+      "content_hash": "sha256:b83a6f71df7502881b49607cc1967bf31cd4af9f5e9d0363146129cc5d4e8128",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "PROP-005: Optional package index — per-org metadata + standalone index server",
@@ -42768,7 +42802,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:9d8cfc49fb06f48baabbf15aee395040bbdd6e13a1b3cff9b309668fe1c1cce0",
+      "content_hash": "sha256:56576e13572ffd7f87e34697bb16e599869b036bdfb5704ca912989a99cdc23c",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2. Decisions",
@@ -44514,7 +44548,7 @@
     },
     {
       "anchor": "persistence",
-      "content_hash": "sha256:3db0eeb8bfcab2fef5905ce999beb685611532ca9cd8aa0783c49a98a9fdc718",
+      "content_hash": "sha256:2ec26591180750bd6f6969a1fc24337e1cf10e7e315558f7856d593cf0605b84",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.13 Persistence layer",
@@ -44604,19 +44638,19 @@
     },
     {
       "anchor": "AW-FSYNC-DIR",
-      "content_hash": "sha256:6b1458010c33d7f587f05513fb15f2e39951024128b32ab7d1591e47663987ff",
+      "content_hash": "sha256:47cfe4fa065a7bd0f6e261bda2340771f754285cccd7e0c3631b6ec91d841f11",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
-      "heading": "`fsync(parent_dir(F))` on POSIX. (No-op on Windows where the directory has no fsync semantics; rename itself is atomic.) @status:spec/plan",
+      "heading": "`fsync(parent_dir(F))` on POSIX. (No-op on Windows where the directory has no fsync semantics; rename itself is atomic.) @status:impl/done",
       "line": 718,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#AW-FSYNC-DIR"
     },
     {
       "anchor": "THE-DIRECTORY-FSYNC-IS-NOT-DONE",
-      "content_hash": "sha256:ce3ab678d08820c7d085a8d4fb74dc186f0037ba041a3cc84bc22b450a69059a",
+      "content_hash": "sha256:70135c4b7045747bfcf98884a2369f294998f6290cc96d376c2db1e333baabb2",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
-      "heading": "**Step 4 is not performed, anywhere.** Every `sync_all` in the crate is on a FILE — the temp file here, the journal shard, the lockfile, a test fixture — and no code path opens a directory to flush it. Steps 1–3 are exactly as written and the temp file is `<F>.tmp.<pid>`, which changes nothing about the contract. What step 4 buys is the durability of the *rename* across a power loss on POSIX: without it the new bytes are safe and the directory entry pointing at them may not be, so a crash can leave the old name resolving to nothing rather than to either version. That is a narrow window and a real one, it costs a few lines to close, and it is filed as `BACKLOG.md` B-087 rather than quietly dropped from the protocol — a durability step deleted because nobody implemented it is how a guarantee becomes folklore. @status:impl/done",
+      "heading": "**Step 4 went unperformed until 2026-08-20; it is now `atomic_write`'s closing act.** The anchor keeps the finding's name: for one campaign every `sync_all` in the crate was on a FILE and no code path opened a directory to flush it — the gap was filed as `BACKLOG.md` B-087 rather than quietly dropped from the protocol, because a durability step deleted for being unimplemented is how a guarantee becomes folklore. What step 4 buys is the durability of the *rename* across a power loss on POSIX: without it the new bytes are safe and the directory entry pointing at them may not be. The B-087 landing closed it the conservative way — the code caught up to the protocol as ratified: `fsync_parent_dir` in `index/persistence.rs` runs after the rename (POSIX real, errors surfaced, never swallowed; Windows a no-op with the reason recorded in code, exactly as this step's own parenthesis allows), and every production projection writer reaches it through the one `atomic_write`. The journal shard stays outside by measured verdict, not omission: it is an append-in-place NDJSON write with no tmp→rename, so this protocol does not describe it; the lockfile and auth `sync_all` sites are test fixtures on read-only production paths. @status:impl/done",
       "line": 720,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#THE-DIRECTORY-FSYNC-IS-NOT-DONE"
     },
@@ -62757,7 +62791,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:8837cbec72d16abf87d6a95ea34c87f83e3d4f16acc8525c3909a9b48f57914d",
+      "content_hash": "sha256:949f226efce0fa8e86142758ba95a5790b579f1397c7a82998f7026d23c71945",
       "doc_path": "modules/vibe-settings/PROP-040",
       "file": "spec/modules/vibe-settings/PROP-040-settings.md",
       "heading": "PROP-040: the vibevm settings system — application/user preferences (`vibe-settings`)",
@@ -63198,25 +63232,25 @@
     },
     {
       "anchor": "show-origins",
-      "content_hash": "sha256:98085e27b9b1f6bc2b25e809c7da3fd12920f8411a6f17c9d512f8f92d35ec0b",
+      "content_hash": "sha256:7d86cbb11af98f76a9c8bf64c7823c6b538c76ae3a4f61fa0f277dcf940dc8f8",
       "doc_path": "modules/vibe-settings/PROP-040",
       "file": "spec/modules/vibe-settings/PROP-040-settings.md",
-      "heading": "8. The layer-order law, made visible — `--show-origins`",
+      "heading": "8. The layer-order law, made visible — `show-origins`",
       "line": 205,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#show-origins"
     },
     {
       "anchor": "show-origins-req",
-      "content_hash": "sha256:a013042dc532004c107ffcd44b43ddf7161adb257917c31391e5bfeda68c91a5",
+      "content_hash": "sha256:22c4bff2ddf443f95230fad6d4bf0aff0ec030f9a778e4b1ed1e366b68b13608",
       "doc_path": "modules/vibe-settings/PROP-040",
       "file": "spec/modules/vibe-settings/PROP-040-settings.md",
-      "heading": "REQ {#show-origins} (Δ-03, imperative 2). `vibe prefs --show-origins` prints, for every key, the",
+      "heading": "REQ {#show-origins} (Δ-03, imperative 2). `vibe prefs show-origins [key]` prints, for every key (or the one named), the",
       "line": 207,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#show-origins-req"
     },
     {
       "anchor": "prefs-command",
-      "content_hash": "sha256:18cbfe454b74ceed1443cd278132e45a65aebc8f28deb268eefa3ba47fcb51a0",
+      "content_hash": "sha256:6d1e8d3550c8725ae835a608467c400d629688d1e23bceaae622ca5b5f20ad5c",
       "doc_path": "modules/vibe-settings/PROP-040",
       "file": "spec/modules/vibe-settings/PROP-040-settings.md",
       "heading": "REQ {#prefs-command}. The `vibe prefs` command surface: `vibe prefs get <key>`, `vibe prefs set <key>",
@@ -63450,7 +63484,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:d1700aa8a7262c5b843032b34c53de3c82130baf674c07d57f9bb63f983399fc",
+      "content_hash": "sha256:75d95223dabb5765a432c2e5bf300a5bc88d04bfa995d4c6dac93fae63267ce9",
       "doc_path": "modules/vibe-settings/PROP-041",
       "file": "spec/modules/vibe-settings/PROP-041-settings-ui.md",
       "heading": "PROP-041: the vibevm settings UI — the `vibe prefs` TUI surface (`vibe-settings-ui`)",
@@ -63747,7 +63781,7 @@
     },
     {
       "anchor": "provenance",
-      "content_hash": "sha256:120622caa90c99fa73c871d1697d741290e8c9fdee74bbc5d3b64f518a5061d1",
+      "content_hash": "sha256:e3ba968a31ec64d97d12243f57b67e9f1b207bf85ad8812f47b3cc8c21b4e298",
       "doc_path": "modules/vibe-settings/PROP-041",
       "file": "spec/modules/vibe-settings/PROP-041-settings-ui.md",
       "heading": "5. The provenance view — \"where does this value come from?\"",
@@ -63756,7 +63790,7 @@
     },
     {
       "anchor": "provenance-view",
-      "content_hash": "sha256:ecf5b185008f227b55484145b8ea8d4676494f79a44d5136b9d9bfaf48452972",
+      "content_hash": "sha256:d469d8ff116746b096008ef6379ddc3dea19b3eb2df6f20c4f613dd6a814f962",
       "doc_path": "modules/vibe-settings/PROP-041",
       "file": "spec/modules/vibe-settings/PROP-041-settings-ui.md",
       "heading": "REQ {#provenance-view} (PROP-040 §5, §8). A field shows its **provenance** on demand: the resolved",
@@ -73912,7 +73946,7 @@
     {
       "code": "dangling-edge",
       "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
-      "line": 411,
+      "line": 422,
       "message": "edge `vibe_cli::commands::tree::tui::settings::build_schema` --deviates--> `spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`: no spec unit carries this anchor"
     },
     {
@@ -74428,13 +74462,13 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-index/src/index/persistence.rs",
-      "line": 90,
+      "line": 108,
       "message": "edge `vibe_index::index::persistence::tests::atomic_write_replaces_existing` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#persistence` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-index/src/index/persistence.rs",
-      "line": 103,
+      "line": 121,
       "message": "edge `vibe_index::index::persistence::tests::atomic_write_does_not_leave_tmp_behind` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#persistence` carries no kind/revision line yet"
     },
     {

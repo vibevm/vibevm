@@ -11,7 +11,9 @@
 //!
 //! `apply` mirrors [`TreeSettings::try_set`] exactly, parameterised by the
 //! chosen layer: load the layer table ([`load_layer`]), set each modified dotted
-//! path ([`set_dotted`]), diff against the schema defaults
+//! path through the library's scope-checked gate ([`set_in_layer`] — the same
+//! call the CLI `prefs set` and the tree TUI go through, so every surface
+//! refuses and writes identically), diff against the schema defaults
 //! ([`diff_from_default`] — a key set to its default is dropped from the file),
 //! and install atomically ([`write_layer`] — sibling `.tmp` + rename). Writing
 //! to a layer the key's `scope` forbids is refused up front with a typed error
@@ -19,7 +21,7 @@
 //!
 //! [`TreeSettings::try_set`]: crate::commands::tree::tui::settings::TreeSettings::try_set
 //! [`load_layer`]: vibe_settings::loader::load_layer
-//! [`set_dotted`]: crate::commands::tree::tui::settings::set_dotted
+//! [`set_in_layer`]: vibe_settings::cli::set_in_layer
 //! [`diff_from_default`]: vibe_settings::persist::diff_from_default
 //! [`write_layer`]: vibe_settings::persist::write_layer
 
@@ -28,12 +30,11 @@ specmark::scope!(
 );
 
 use specmark::spec;
+use vibe_settings::cli::{PrefsError, check_writable, set_in_layer};
 use vibe_settings::loader::load_layer;
 use vibe_settings::persist::{diff_from_default, write_layer};
 use vibe_settings::resolver::ResolvedPrefs;
 use vibe_settings::schema::Schema;
-
-use crate::commands::tree::tui::settings::set_dotted;
 
 use super::Form;
 use super::control::TextKind;
@@ -73,20 +74,11 @@ impl Form {
             if field.control.current_value() == field.baseline {
                 continue; // unmodified — skipped.
             }
-            // #write-layer-choice — refuse a layer the key's scope forbids
-            // (PROP-040 §7 #scope-matrix).
-            if !field
-                .meta
-                .scope
-                .writable_layers()
-                .contains(&self.write_layer)
-            {
-                return Err(ApplyError::ScopeForbidden {
-                    key: field.key.clone(),
-                    scope: field.meta.scope.label().to_owned(),
-                    layer: self.write_layer.label().to_owned(),
-                });
-            }
+            // #write-layer-choice — refuse a layer the key's scope forbids,
+            // through the library gate the CLI `prefs set` uses (PROP-040 §7
+            // #scope-matrix), so both surfaces refuse the same writes with the
+            // same reason.
+            check_writable(schema, &field.key, self.write_layer)?;
             // An Int text field whose string is not an integer is invalid (§6
             // #validation-feedback gates apply; the inline-error render is a
             // later phase — the typed error carries the reason).
@@ -103,7 +95,10 @@ impl Form {
             }
         }
 
-        // Write phase — mirror TreeSettings::try_set against the chosen layer.
+        // Write phase — mirror TreeSettings::try_set against the chosen layer:
+        // every mutation goes through the library's scope-checked dotted set,
+        // and the single `write_layer` below is the only disk touch (a refusal
+        // mid-loop leaves nothing on disk).
         let layer = self.write_layer;
         let path = self.write_path();
         let mut table = load_layer(path).map_err(|err| ApplyError::Load {
@@ -113,7 +108,7 @@ impl Form {
         for field in &self.fields {
             let current = field.control.current_value();
             if current != field.baseline {
-                set_dotted(&mut table, &field.key, current);
+                set_in_layer(schema, &mut table, &field.key, current, layer)?;
             }
         }
         let diffed = diff_from_default(&table, schema);
@@ -252,6 +247,23 @@ impl std::fmt::Display for ApplyError {
 
 impl std::error::Error for ApplyError {}
 
+impl From<PrefsError> for ApplyError {
+    /// Map the library's typed scope refusal onto the form's render error —
+    /// same key, scope, and layer, so the form refuses exactly the writes the
+    /// CLI `prefs set` refuses and shows the same reason.
+    fn from(err: PrefsError) -> Self {
+        match err {
+            PrefsError::WrongLayer {
+                key, scope, layer, ..
+            } => ApplyError::ScopeForbidden {
+                key,
+                scope,
+                layer: layer.label().to_owned(),
+            },
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::super::control::{FieldControl, build_control};
@@ -264,7 +276,10 @@ mod tests {
 
     use super::super::LayerPaths;
 
-    /// A schema with a Bool key (Scope::User) + an Int key (Scope::User).
+    /// A schema with a Bool key (Scope::User) + an Int key (Scope::User) + a
+    /// String key (Scope::Machine — the scope-forbidden fixture; declared here
+    /// because the library gate is schema-driven and production fields derive
+    /// their metas from the schema, so the two always agree).
     fn schema() -> Schema {
         let mut s = Schema::new();
         s.register(
@@ -277,6 +292,16 @@ mod tests {
             KeyMeta::new("vibe.tree.tier", KeyType::Int, Scope::User, "tier")
                 .unwrap()
                 .with_default(toml::Value::Integer(3)),
+        )
+        .unwrap();
+        s.register(
+            KeyMeta::new(
+                "vibe.tree.machine_path",
+                KeyType::String,
+                Scope::Machine,
+                "a machine path",
+            )
+            .unwrap(),
         )
         .unwrap();
         s
@@ -420,6 +445,53 @@ mod tests {
             other => panic!("expected ScopeForbidden, got {other:?}"),
         }
         assert!(msg.contains("scope-matrix"), "cites the REQ: {msg}");
+    }
+
+    #[test]
+    fn apply_scope_refusal_is_the_librarys_refusal() {
+        // The form's gate IS the library's gate: for the same key/layer the
+        // CLI `prefs set` refuses (`run_prefs(Set)` → `PrefsError::WrongLayer`),
+        // apply refuses with the same key/scope/layer data — the lock that
+        // keeps the TUI from re-growing its own scope check.
+        let dir = tempdir().unwrap();
+        let schema = schema();
+        let mut form = Form::for_test(
+            "Machine",
+            "a page",
+            vec![field(
+                "vibe.tree.machine_path",
+                KeyType::String,
+                Scope::Machine,
+                Some(&toml::Value::String("/usr/bin".into())),
+            )],
+            Layer::L3,
+            paths(&dir),
+        );
+        if let FieldControl::Text { field, .. } = &mut form.fields[0].control {
+            field.type_char('!');
+        }
+        let form_err = match form.apply(&schema).unwrap_err() {
+            ApplyError::ScopeForbidden { key, scope, layer } => (key, scope, layer),
+            other => panic!("expected ScopeForbidden, got {other:?}"),
+        };
+        let cli_err = match vibe_settings::cli::run_prefs(
+            vibe_settings::cli::PrefsOp::Set {
+                key: "vibe.tree.machine_path",
+                value: toml::Value::String("/usr/bin!".into()),
+                layer: Layer::L3,
+            },
+            &schema,
+            &LayeredRaw::default(),
+            &toml::Table::new(),
+            &toml::Table::new(),
+        )
+        .unwrap_err()
+        {
+            PrefsError::WrongLayer {
+                key, scope, layer, ..
+            } => (key, scope, layer.label().to_owned()),
+        };
+        assert_eq!(form_err, cli_err);
     }
 
     #[test]
