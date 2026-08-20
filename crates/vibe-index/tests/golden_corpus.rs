@@ -120,6 +120,24 @@ fn corpus_surface(corpus: &Path) -> BTreeSet<PathBuf> {
     files
 }
 
+/// The corpus freezes the format epoch, not the version of the binary that
+/// happens to replay it. Keep the authored corpus byte-stable on disk while
+/// making its display-only generator stamp follow the running binary.
+fn expected_committed_bytes(rel: &Path, committed: Vec<u8>) -> Vec<u8> {
+    if rel != Path::new("repomd.json") {
+        return committed;
+    }
+
+    let mut repomd: serde_json::Value =
+        serde_json::from_slice(&committed).expect("the committed repomd is valid JSON");
+    repomd["generator"] =
+        serde_json::Value::String(format!("vibe-index {}", env!("CARGO_PKG_VERSION")));
+    let mut expected =
+        serde_json::to_vec_pretty(&repomd).expect("the normalised repomd serialises");
+    expected.push(b'\n');
+    expected
+}
+
 /// The first diverging line of two byte sequences, as `(line number,
 /// committed line, projected line)` — `None` when the bytes are equal.
 /// Line numbers are 1-based, matching how a text editor counts them.
@@ -207,6 +225,7 @@ fn the_catalog_is_the_projection_of_its_journal() {
                 let projected_bytes = fs::read(projection_dir.join(rel))
                     .unwrap_or_else(|e| panic!("reading projection `{}`: {e}", rel.display()));
                 let committed_bytes = fs::read(corpus.join(rel))
+                    .map(|bytes| expected_committed_bytes(rel, bytes))
                     .unwrap_or_else(|e| panic!("reading corpus `{}`: {e}", rel.display()));
                 if projected_bytes == committed_bytes {
                     continue;

@@ -1,6 +1,6 @@
 [package]
 name = "vibe-index"
-version = "0.1.0-dev"
+version.workspace = true
 edition = "2024"
 rust-version = "1.93"
 authors = ["Oleg Chirukhin"]

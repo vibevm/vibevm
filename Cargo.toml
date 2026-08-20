@@ -50,7 +50,7 @@ default-members = [
 ]
 
 [workspace.package]
-version = "0.1.0-dev"
+version = "1.0.0"
 edition = "2024"
 rust-version = "1.93"
 authors = ["Oleg Chirukhin"]
@@ -64,29 +64,29 @@ categories = ["command-line-utilities", "development-tools"]
 
 [workspace.dependencies]
 # Local crates
-progress-core = { path = "crates/progress-core", version = "0.1.0-dev" }
-vibe-actions = { path = "crates/vibe-actions", version = "0.1.0-dev" }
-vibe-settings = { path = "crates/vibe-settings", version = "0.1.0-dev" }
-vibe-core = { path = "crates/vibe-core", version = "0.1.0-dev" }
-vibe-graph = { path = "crates/vibe-graph", version = "0.1.0-dev" }
-vibe-index = { path = "crates/vibe-index", version = "0.1.0-dev" }
-vibe-install = { path = "crates/vibe-install", version = "0.1.0-dev" }
-vibe-registry = { path = "crates/vibe-registry", version = "0.1.0-dev" }
-vibe-resolver = { path = "crates/vibe-resolver", version = "0.1.0-dev" }
-vibe-llm = { path = "crates/vibe-llm", version = "0.1.0-dev" }
-vibe-mcp = { path = "crates/vibe-mcp", version = "0.1.0-dev" }
-vibe-check = { path = "crates/vibe-check", version = "0.1.0-dev" }
-vibe-publish = { path = "crates/vibe-publish", version = "0.1.0-dev" }
-vibe-spec = { path = "crates/vibe-spec", version = "0.1.0-dev" }
+progress-core = { path = "crates/progress-core", version = "1.0.0" }
+vibe-actions = { path = "crates/vibe-actions", version = "1.0.0" }
+vibe-settings = { path = "crates/vibe-settings", version = "1.0.0" }
+vibe-core = { path = "crates/vibe-core", version = "1.0.0" }
+vibe-graph = { path = "crates/vibe-graph", version = "1.0.0" }
+vibe-index = { path = "crates/vibe-index", version = "1.0.0" }
+vibe-install = { path = "crates/vibe-install", version = "1.0.0" }
+vibe-registry = { path = "crates/vibe-registry", version = "1.0.0" }
+vibe-resolver = { path = "crates/vibe-resolver", version = "1.0.0" }
+vibe-llm = { path = "crates/vibe-llm", version = "1.0.0" }
+vibe-mcp = { path = "crates/vibe-mcp", version = "1.0.0" }
+vibe-check = { path = "crates/vibe-check", version = "1.0.0" }
+vibe-publish = { path = "crates/vibe-publish", version = "1.0.0" }
+vibe-spec = { path = "crates/vibe-spec", version = "1.0.0" }
 # Test-only: linking it isolates the test process's per-user settings home
 # before the first `#[test]` runs (DRIFT-020). Consume as a dev-dependency.
-vibe-test-support = { path = "crates/vibe-test-support", version = "0.1.0-dev" }
+vibe-test-support = { path = "crates/vibe-test-support", version = "1.0.0" }
 # The host's traceability-explain capability (PROP-014 §2.6): build the
 # specmap fresh and render a target's subgraph. Shared one-to-one by the
 # `vibe explain` CLI surface and the `explain` MCP tool.
-vibe-trace = { path = "crates/vibe-trace", version = "0.1.0-dev" }
-vibe-wire = { path = "crates/vibe-wire", version = "0.1.0-dev" }
-vibe-workspace = { path = "crates/vibe-workspace", version = "0.1.0-dev" }
+vibe-trace = { path = "crates/vibe-trace", version = "1.0.0" }
+vibe-wire = { path = "crates/vibe-wire", version = "1.0.0" }
+vibe-workspace = { path = "crates/vibe-workspace", version = "1.0.0" }
 
 # Code-bearing package crates (PROP-024): the ENGINE-CONFORM + specmap
 # traceability toolchains live in the discipline packages, consumed by

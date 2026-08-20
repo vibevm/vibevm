@@ -85,7 +85,7 @@ inside the file's lines; the slug is only a lookup key.
   "registry_url": "https://github.com/vibespecs",
   "naming": "kind-name",
   "generated_at": "2026-05-06T12:00:00Z",
-  "generator": "vibe-index 0.1.0-dev",
+  "generator": "vibe-index 1.0.0",
   "package_count": 42,
   "version_count": 117,
   "files": {
@@ -223,7 +223,7 @@ pure metadata).
   "boot_snippet": { "source": "boot/10-flow-wal.md", "category": "flow" },
   "files_count": 5,
   "indexed_at": "2026-05-06T12:00:00Z",
-  "indexed_by": "vibe-index 0.1.0-dev"
+  "indexed_by": "vibe-index 1.0.0"
 }
 ```
 

@@ -47,7 +47,7 @@ pub struct InstallRequest {
     /// caret default.
     pub exact: bool,
     /// Lockfile provenance stamp for a freshly created `vibe.lock`,
-    /// e.g. `vibe 0.1.0-dev`.
+    /// e.g. `vibe 1.0.0`.
     pub generated_by: String,
 }
 

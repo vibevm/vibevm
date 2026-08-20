@@ -2264,7 +2264,7 @@ dependencies = [
 
 [[package]]
 name = "progress-core"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "chrono",
@@ -3887,7 +3887,7 @@ checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
 
 [[package]]
 name = "vibe-actions"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "core-ai-native-specmark",
  "serde",
@@ -3898,7 +3898,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-check"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
@@ -3912,7 +3912,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-cli"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "arboard",
@@ -3968,7 +3968,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-core"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
@@ -3986,7 +3986,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-graph"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "indexmap",
@@ -3997,7 +3997,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-index"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "assert_cmd",
  "axum",
@@ -4028,7 +4028,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-install"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "core-ai-native-specmark",
  "semver",
@@ -4043,7 +4043,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-llm"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "thiserror 2.0.18",
@@ -4051,7 +4051,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-mcp"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
@@ -4069,7 +4069,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-publish"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "axum",
@@ -4091,7 +4091,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-registry"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "axum",
@@ -4113,7 +4113,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-resolver"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "core-ai-native-specmark",
  "proptest",
@@ -4131,7 +4131,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-settings"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "core-ai-native-specmark",
  "serde",
@@ -4143,7 +4143,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-spec"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "tempfile",
  "thiserror 2.0.18",
@@ -4151,7 +4151,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-test-support"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "assert_cmd",
  "tempfile",
@@ -4160,7 +4160,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-trace"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmap",
@@ -4174,7 +4174,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-wire"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "chrono",
  "semver",
@@ -4186,7 +4186,7 @@ dependencies = [
 
 [[package]]
 name = "vibe-workspace"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "core-ai-native-specmark",
  "glob",
@@ -4861,7 +4861,7 @@ checksum = "ea6fc2961e4ef194dcbfe56bb845534d0dc8098940c7e5c012a258bfec6701bd"
 
 [[package]]
 name = "xtask"
-version = "0.1.0-dev"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "chrono",
