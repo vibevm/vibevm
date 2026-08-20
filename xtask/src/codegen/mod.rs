@@ -25,6 +25,7 @@ mod layout;
 mod open_vocabulary;
 mod optional_shapes;
 mod ordered_maps;
+mod output_tree;
 mod postproc;
 mod shared_module;
 mod snake_case;
@@ -38,6 +39,7 @@ use layout::{
     module_tree, schema_module_dir, schemas_under, specmap_generated_dir, specmap_schema_dir,
     vibe_wire_generated_dir,
 };
+use output_tree::StagedOutputTree;
 use postproc::{StrictnessSource, rewrite_generated};
 use strictness::Strictness;
 use vocabulary::{Vocabularies, vocabularies_path};
@@ -102,18 +104,23 @@ pub(crate) fn run_codegen() -> Result<()> {
 
     // Both homes are committed; a missing one is a broken checkout,
     // not an empty state.
-    let mut groups: Vec<(PathBuf, PathBuf, FormatOwner, Vec<PathBuf>)> = Vec::new();
+    let mut groups: Vec<GenerationGroup> = Vec::new();
     for (schema_root, out_dir, owner) in homes {
         if !schema_root.exists() {
             bail!("schema directory not found at {}", schema_root.display());
         }
         let schemas = schemas_under(&schema_root)?;
         if !schemas.is_empty() {
-            groups.push((schema_root, out_dir, owner, schemas));
+            groups.push(GenerationGroup {
+                schema_root,
+                live_out_dir: out_dir,
+                owner,
+                schemas,
+            });
         }
     }
 
-    let total: usize = groups.iter().map(|g| g.3.len()).sum();
+    let total: usize = groups.iter().map(|group| group.schemas.len()).sum();
     if total == 0 {
         eprintln!("no `*.jtd.json` schemas found — nothing to do.");
         return Ok(());
@@ -139,17 +146,34 @@ pub(crate) fn run_codegen() -> Result<()> {
     // registry does not claim.
     let strictness = Strictness::load(&root)?;
 
-    for (schema_root, out_dir, owner, schemas) in &groups {
+    // Prepare every output first, beside its live tree and on the same
+    // volume. From this point until the install loop, every writer sees only
+    // a `.new-*` tree; a failed generator or an interrupted process cannot
+    // erase the committed live output. Publication starts only after ALL
+    // output trees have been generated successfully.
+    let mut staged: Vec<StagedOutputTree> = Vec::with_capacity(groups.len());
+    for group in &groups {
+        staged.push(StagedOutputTree::prepare(&group.live_out_dir)?);
+    }
+
+    for (group, output) in groups.iter().zip(&staged) {
         generate_into(
             &binary,
             &root,
-            schema_root,
-            out_dir,
-            *owner,
-            schemas,
+            group,
+            output.fresh(),
             &mut vocabularies,
             &strictness,
         )?;
+    }
+
+    for (group, output) in groups.iter().zip(staged) {
+        output.install().with_context(|| {
+            format!(
+                "publishing complete generated tree {}",
+                group.live_out_dir.display()
+            )
+        })?;
     }
     Ok(())
 }
@@ -177,53 +201,31 @@ enum FormatOwner {
     Foreign,
 }
 
-/// Wipe `out_dir` (preserving a `.gitkeep`) and regenerate `schemas` into it,
-/// each into its own submodule mirroring its path relative to `schema_root`
+/// One schema home and the live output tree it owns.
+struct GenerationGroup {
+    schema_root: PathBuf,
+    live_out_dir: PathBuf,
+    owner: FormatOwner,
+    schemas: Vec<PathBuf>,
+}
+
+/// Regenerate one group into a fresh sibling of its live output tree, each
+/// schema in its own submodule mirroring its path relative to `schema_root`
 /// (`<rel_dir>/<stem>.jtd.json` → `<rel_dir>/<stem>/`), then synthesise a
 /// `mod.rs` on every level of the tree, each listing its direct submodules
-/// (alphabetically sorted). Wiping first keeps `check-codegen` exact: what's
-/// on disk is exactly what the generator would produce from *only* the
-/// schemas routed to this dir, so a removed or rerouted schema cannot leave
-/// a stale submodule behind. Each schema is first resolved through the
-/// shared vocabularies (`vocabulary.rs`): the generator reads the
-/// resolved document, never the authored file.
-// The driver's fixed signature: the binary and root, the home-routing
-// triple, the schemas, and the run's two once-per-run contexts — every
-// argument a distinct responsibility the call site already holds
-// literally (the vibe-cli precedent for a signature that will not fold).
-#[allow(clippy::too_many_arguments)]
+/// (alphabetically sorted). A fresh empty tree keeps `check-codegen` exact:
+/// removed or rerouted schemas cannot leave stale modules, while the live
+/// tree remains intact until every group succeeds. Each schema is first
+/// resolved through the shared vocabularies (`vocabulary.rs`): the generator
+/// reads the resolved document, never the authored file.
 fn generate_into(
     binary: &Path,
     root: &Path,
-    schema_root: &Path,
+    group: &GenerationGroup,
     out_dir: &Path,
-    owner: FormatOwner,
-    schemas: &[PathBuf],
     vocabularies: &mut Vocabularies,
     strictness: &Strictness,
 ) -> Result<()> {
-    std::fs::create_dir_all(out_dir)
-        .with_context(|| format!("creating output dir {}", out_dir.display()))?;
-
-    for entry in
-        std::fs::read_dir(out_dir).with_context(|| format!("scanning {}", out_dir.display()))?
-    {
-        let entry = entry.context("reading entry under out_dir")?;
-        let path = entry.path();
-        // Preserve a `.gitkeep` if present so an empty (no-schema) state still
-        // leaves a tracked path; everything else is codegen output.
-        if path.file_name().and_then(|n| n.to_str()) == Some(".gitkeep") {
-            continue;
-        }
-        if path.is_dir() {
-            std::fs::remove_dir_all(&path)
-                .with_context(|| format!("removing stale {}", path.display()))?;
-        } else {
-            std::fs::remove_file(&path)
-                .with_context(|| format!("removing stale {}", path.display()))?;
-        }
-    }
-
     // jtd-codegen 0.4.1 writes a single `mod.rs` per `--rust-out` and
     // overwrites whatever is there. To keep several schemas in one tree
     // without each stomping the others, give every schema its own
@@ -244,14 +246,15 @@ fn generate_into(
     // standing over a vendored package's public Rust API, exactly as
     // it gets none of the post-processing).
     let mut resolved: Vec<(PathBuf, vocabulary::Resolved)> = Vec::new();
-    for schema in schemas {
+    for schema in &group.schemas {
         let resolution = vocabularies.resolve(schema)?;
         resolved.push((schema.clone(), resolution));
     }
 
     let mut shared: Option<shared_module::SharedModule> = None;
     let mut rewire_stats: Vec<shared_module::RewireStats> = Vec::new();
-    if owner == FormatOwner::Ours && resolved.iter().any(|(_, r)| !r.vocabularies.is_empty()) {
+    if group.owner == FormatOwner::Ours && resolved.iter().any(|(_, r)| !r.vocabularies.is_empty())
+    {
         shared_module::guard_shared_strictness(root, &resolved)?;
         let shared_doc = vocabularies.shared_schema()?;
         let shared_file = shared_module::emit_shared_module(
@@ -268,7 +271,7 @@ fn generate_into(
         leaves.push(out_dir.join(shared_module::SHARED_MODULE));
     }
     for (schema, resolution) in &resolved {
-        let sub_out = schema_module_dir(schema_root, out_dir, schema)?;
+        let sub_out = schema_module_dir(&group.schema_root, out_dir, schema)?;
         std::fs::create_dir_all(&sub_out)
             .with_context(|| format!("creating per-schema dir {}", sub_out.display()))?;
         eprintln!("  - {} → {}/", schema.display(), sub_out.display());
@@ -303,7 +306,7 @@ fn generate_into(
         // into it (the full rule lives in `postproc`'s docs). The
         // replacement then swaps the closure's blocks for re-exports of
         // the shared module's types — byte-checked, in place.
-        if owner == FormatOwner::Ours {
+        if group.owner == FormatOwner::Ours {
             let module_file = sub_out.join("mod.rs");
             rewrite_generated(
                 &module_file,
@@ -329,14 +332,15 @@ fn generate_into(
     // lists it alphabetically alongside the schema submodules, and a freshly
     // placed file under `generated/` can never be swept away by the next
     // codegen run.
-    if out_dir == vibe_wire_generated_dir(root) {
+    if group.live_out_dir == vibe_wire_generated_dir(root) {
         emit_format_id(root, out_dir)?;
         leaves.push(out_dir.join("format_id"));
     }
 
     // The header names the tree's actual schema home(s), repo-relative —
     // the two generated trees read their schemas from different places.
-    let mut sources: Vec<String> = schemas
+    let mut sources: Vec<String> = group
+        .schemas
         .iter()
         .filter_map(|s| s.parent())
         .map(|d| {
@@ -381,7 +385,7 @@ fn generate_into(
 
     eprintln!(
         "xtask codegen: {} ({} submodule{}).",
-        out_dir.display(),
+        group.live_out_dir.display(),
         declared,
         if declared == 1 { "" } else { "s" }
     );

@@ -865,8 +865,9 @@ untouched by policy, and this is the route back to what it read:
 смены exit-семантики; код догоняет ратифицированный протокол) — на
 вето владельца при ревью волны.
 
-- [ ] **B-093** — codegen atomic-swap (новый каталог + перестановка
-      указателя). Воркер: codex, `.wt/P2-CODEGEN`.
+- [x] **B-093** — **закрыт**: staged sibling + двойной rename с
+      откатом (`output_tree.rs`, 4 юнита); живой SIGPIPE оставил дерево
+      целым, debris самоубирается. Воркер: codex, `.wt/P2-CODEGEN`.
 - [x] **B-087** — **закрыт**: `fsync_parent_dir` после rename в одном
       `atomic_write` (7 писателей проекций); замер сузил 4 сайта до 1
       (journal append-in-place, lockfile/auth — fixtures). PROP-005
