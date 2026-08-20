@@ -882,7 +882,7 @@ untouched by policy, and this is the route back to what it read:
 - [x] **B-098** — **закрыт боссом** (b78fb87d): истина — сабкоманда
       `show-origins [key]`; 4 цитаты в PROP-040/041 переписаны, суд
       confirmed×3 + seal; последняя ALPHA-NOTES-строка снята.
-- [ ] Партия 2а (в полёте): B-074+B-092-чекеры (codex, P2-CODEGEN),
+- [x] Партия 2а — **посажена целиком**: B-074+B-092-чекеры (codex, P2-CODEGEN) ✓,
       B-082 (codex, P2-FSYNC) ✓посажен, B-076 (claudez, P2-MIRROR) ✓посажен,
       B-077 (claudez, P2-PREFS) ✓посажен.
 - [ ] Партия 2б (после 2а): B-068 (parse/, ждёт посадки B-074),

@@ -8,34 +8,26 @@
 //! identically, `vibe progress check` stays silent, yet no verdict can ever
 //! bind to the swallowed anchor again, because it no longer has an address.
 //!
-//! This phase walks each fact's body, line by line, and flags any further
-//! anchor found at a line start as an [`IssueCode::SwallowedAnchor`]. It reuses
-//! [`crate::parse::facts::take_fact_id`] — an existing entry point over the ONE
-//! anchor grammar reader ([`facts::parse_anchor`]) — rather than a second
-//! recogniser, so a fact's own anchor and a swallowed one can never drift apart
-//! into two slightly different grammars (the failure mode `parse_anchor`'s
-//! doc-comment warns this markup has already paid for three times).
+//! This phase walks each fact's continuation lines and flags a definition-form
+//! anchor at a later line start as an [`IssueCode::SwallowedAnchor`]. It reuses
+//! [`crate::parse::facts::take_fact_id`] and
+//! [`crate::parse::facts::fact_anchor_is_qualified`], which share the ONE
+//! anchor-token grammar reader, rather than layering a second lexer over the
+//! parser. `Block::scan_text` has already blanked inline-code contents, and
+//! fenced blocks never reach this phase.
 //!
 //! [`facts::parse_anchor`]: crate::parse::facts::parse_anchor
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#parsing");
 
 use crate::doc::{BlockKind, Issue, IssueCode, ParsedDoc, Severity};
-use crate::parse::facts::take_fact_id;
+use crate::parse::facts::{fact_anchor_is_qualified, take_fact_id};
 
 /// Detect fact anchors swallowed into another fact's body.
 ///
-/// For every fact of every `Text` block, scan the lines *after* its own anchor
-/// line: if any of them opens with a fact anchor, that anchor has lost its
-/// address (the two facts parse as one paragraph because no blank line
-/// separates them) and is reported as [`IssueCode::SwallowedAnchor`].
-///
-/// **Line start.** A swallowed anchor is recognised by the same rule that
-/// recognises a fact's own first token: leading whitespace and a blockquote
-/// `>` prefix are skipped, then [`take_fact_id`] is asked for an anchor. A list
-/// marker (`- `) needs no special case here, because a line that opens one is
-/// its own countable unit — segmentation never leaves it inside another fact's
-/// body — so the two positions share one grammar instead of two.
+/// For every fact of every `Text` block, scan the continuation lines after its
+/// own anchor line. An `@fact:<ID>` at a later line start is body text rather
+/// than an address, because no blank line separated the two definitions.
 ///
 /// **Placement.** Immediately after [`facts::segment_facts`] and before
 /// [`facts::bind_covered_blocks`]. The check reads only the segmented fact
@@ -56,12 +48,9 @@ pub(super) fn check_swallowed_anchors(doc: &mut ParsedDoc) {
         }
         let scan = &b.scan_text;
         for f in &b.facts {
-            // Byte offsets (into `scan`) of each line start inside this fact's
-            // body. Line 0 carries the fact's own anchor — already recorded as
-            // `f.id` — so a swallowed anchor can only live on a later line.
             let body_s = f.span.0;
             let body_e = f.span.1;
-            let mut line_starts: Vec<usize> = vec![body_s];
+            let mut line_starts = vec![body_s];
             for (i, ch) in scan[body_s..body_e].char_indices() {
                 if ch == '\n' {
                     line_starts.push(body_s + i + 1);
@@ -71,16 +60,17 @@ pub(super) fn check_swallowed_anchors(doc: &mut ParsedDoc) {
             for k in 1..line_starts.len() {
                 let ls = line_starts[k];
                 let le = if k + 1 < line_starts.len() {
-                    line_starts[k + 1] - 1 // stop just before this line's '\n'
+                    line_starts[k + 1] - 1
                 } else {
                     body_e
                 };
-                // Reuse the one anchor reader: an anchor at this line start is
-                // a fact that lost its address to the paragraph above it.
                 let (Some(swallowed), _) = take_fact_id(scan, ls, le) else {
                     continue;
                 };
-                let line = f.line + k; // body line k is `f.line + k` in source
+                if !fact_anchor_is_qualified(scan, ls, le) {
+                    continue;
+                }
+                let line = f.line + k;
                 let own = match &f.id {
                     Some(id) => format!("fact `{id}`"),
                     None => "an unanchored paragraph".to_string(),
@@ -90,11 +80,11 @@ pub(super) fn check_swallowed_anchors(doc: &mut ParsedDoc) {
                     line,
                     code: IssueCode::SwallowedAnchor,
                     message: format!(
-                        "line {line}: {own} swallows a second fact anchor `{swallowed}` — \
-                         with no blank line between them they parse as one paragraph, so \
-                         `{swallowed}` became body text and lost its address (its marker \
-                         still stands, but no verdict can bind to it). \
-                         Fix: insert a blank line before `{swallowed}`."
+                        "line {line}: definition-form fact anchor `@fact:{swallowed}` is not \
+                         the first token of {own}; it became body text and lost its address \
+                         (its marker still stands, but no verdict can bind to it). \
+                         Fix: make `@fact:{swallowed}` the first token of its own paragraph \
+                         by inserting a blank line before it."
                     ),
                 });
             }
@@ -156,14 +146,16 @@ mod tests {
             assert!(i.severity == Severity::Error);
         }
         assert!(
-            issues.iter().any(|i| i.message.contains("`status-line`")),
+            issues
+                .iter()
+                .any(|i| i.message.contains("`@fact:status-line`")),
             "names status-line: {:?}",
             issues
         );
         assert!(
             issues
                 .iter()
-                .any(|i| i.message.contains("`authority-line`")),
+                .any(|i| i.message.contains("`@fact:authority-line`")),
             "names authority-line: {:?}",
             issues
         );
@@ -194,7 +186,8 @@ mod tests {
 
     // ---- ПРОВЕРЬ-5: the five false positives that must NOT fire -------------
 
-    /// 2.2.1 — a mention of `@fact:` MID-LINE (not at a line start) is prose.
+    /// A mid-line mention is prose. B-074 is specifically the newline-without-
+    /// blank-line shape that looks like a second paragraph to the author.
     #[test]
     fn mid_line_mention_is_not_swallowed() {
         let text = "# Doc {#doc}\n\n\
@@ -213,6 +206,32 @@ mod tests {
              @fact:A The shorthand `@fact:example` is blanked from the scan.\n";
         let doc = parse_document("x.md", text);
         assert_eq!(fact_ids(&doc), ["A"]);
+        assert!(swallowed(&doc).is_empty(), "issues: {:#?}", doc.issues);
+    }
+
+    /// A fenced block is an example surface. Its contents never enter a Text
+    /// block and therefore cannot become a swallowed definition.
+    #[test]
+    fn mention_inside_fence_is_not_swallowed() {
+        let text = "# Doc {#doc}\n\n\
+             @fact:A The rule above the example.\n\n\
+             ```markdown\n\
+             @fact:B example only\n\
+             ```\n";
+        let doc = parse_document("x.md", text);
+        assert_eq!(fact_ids(&doc), ["A"]);
+        assert!(swallowed(&doc).is_empty(), "issues: {:#?}", doc.issues);
+    }
+
+    /// The blank line is the load-bearing fix: each definition becomes the
+    /// first token of its own paragraph and neither one is swallowed.
+    #[test]
+    fn blank_line_keeps_both_definition_addresses() {
+        let text = "# Doc {#doc}\n\n\
+             @fact:A first fact\n\n\
+             @fact:B second fact\n";
+        let doc = parse_document("x.md", text);
+        assert_eq!(fact_ids(&doc), ["A", "B"]);
         assert!(swallowed(&doc).is_empty(), "issues: {:#?}", doc.issues);
     }
 
@@ -270,19 +289,16 @@ mod tests {
 
     // ---- the two anchor spellings, and the blockquote prefix ---------------
 
-    /// Both the qualified `@fact:<ID>` and the legacy `##<ID>` spellings are
-    /// swallowed the same way: the one grammar reader serves both.
+    /// The legacy `##<ID>` spelling is also the citation spelling. Only the
+    /// definition-form `@fact:<ID>` is subject to this placement diagnostic.
     #[test]
-    fn both_anchor_spellings_are_caught() {
+    fn legacy_citation_form_is_not_a_swallowed_definition() {
         let text = "# Doc {#doc}\n\n\
              @fact:FIRST qualified form\n\
              ##SECOND legacy form\n";
         let doc = parse_document("x.md", text);
         assert_eq!(fact_ids(&doc), ["FIRST"]);
-        let issues = swallowed(&doc);
-        assert_eq!(issues.len(), 1);
-        assert!(issues[0].message.contains("`SECOND`"));
-        assert_eq!(issues[0].line, 4); // 1 heading, 2 blank, 3 FIRST, 4 SECOND
+        assert!(swallowed(&doc).is_empty(), "issues: {:#?}", doc.issues);
     }
 
     /// A blockquote prefix is skipped just as it is for a fact's own anchor,
@@ -296,7 +312,7 @@ mod tests {
         assert_eq!(fact_ids(&doc), ["QUOTE-A"]);
         let issues = swallowed(&doc);
         assert_eq!(issues.len(), 1);
-        assert!(issues[0].message.contains("`QUOTE-B`"));
+        assert!(issues[0].message.contains("`@fact:QUOTE-B`"));
     }
 
     /// A swallowed anchor on the continuation line of a list item is caught
@@ -310,6 +326,6 @@ mod tests {
         assert_eq!(fact_ids(&doc), ["ITEM"]);
         let issues = swallowed(&doc);
         assert_eq!(issues.len(), 1);
-        assert!(issues[0].message.contains("`SWALLOWED`"));
+        assert!(issues[0].message.contains("`@fact:SWALLOWED`"));
     }
 }

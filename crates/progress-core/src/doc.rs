@@ -130,7 +130,8 @@ pub enum IssueCode {
     /// A marked paragraph/list item with no `##<ID>` fact anchor
     /// (the anchored-when-marked law, PROP-043 §3.8).
     MissingAnchor,
-    /// A `##<ID>` / `{#anchor}` id minted twice in one document.
+    /// A `@fact:<ID>` / legacy `##<ID>` / `{#anchor}` id minted twice in one
+    /// document. The duplicate diagnostic names both definition lines.
     DuplicateId,
     /// An anchor naming an object type that does not bind: an unknown type,
     /// or a type with no matching block adjacent to it.

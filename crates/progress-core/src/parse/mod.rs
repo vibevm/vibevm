@@ -49,7 +49,7 @@ pub fn parse_document(path: &str, text: &str) -> ParsedDoc {
     check_swallowed_anchors(&mut doc);
     bind_covered_blocks(&mut doc);
     scan_markers(&mut doc);
-    check_anchor_laws(&mut doc);
+    check_anchor_laws(&mut doc, text);
     doc.fact_count = doc.blocks.iter().map(|b| b.facts.len()).sum();
     doc
 }
