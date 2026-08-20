@@ -187,7 +187,7 @@ index_url = "https://github.com/vibespecs/index"  # default; explicit override a
 ```
 
 - @fact:REPOMD-FILES-ARE-SYMMETRICALLY-TAGGED Every entry of `files` carries a `kind` tag — `"file"` or `"directory"` — and a reader dispatches on it rather than on which shape happens to fit. The tag was half-present until 2026-08-14: directories carried it, files did not, and the union was matched by shape, so an entry that lost a field was silently re-read as the *other* kind instead of being refused. A wrong answer that looks like a right one is the one failure re-fetching cannot cure ([PROP-044 §2](../../common/PROP-044-change-native-formats.md#laws)), which is why the asymmetry was broken deliberately rather than tolerated; the break note is `formats/breaks/001.md`. A `file` entry missing its tag is now a parse refusal. @status:impl/done
-- @fact:REPOMD-TRUST-POINT `repomd.json` is the **single point of trust**. A consumer fetches it once (with a small ETag round-trip later), then fetches whichever sub-files it actually needs, verifying each against the recorded `sha256`. @status:spec/plan
+- @fact:REPOMD-TRUST-POINT `repomd.json` is the format's **point of trust**: it records a `sha256` for every file beneath it, which is what makes «verify the catalog» a single well-posed question. Today the party that asks it is the **operator** — `vibe-index verify` re-hashes a data directory against the manifest — and that is the whole shipped claim (formulation narrowed to what exists, owner ruling 2026-08-20, BACKLOG.md B-084). The consumer-side half — fetch it once with an ETag round-trip, then verify each fetched sub-file against the recorded hash — is deliberately deferred to the post-1.0 campaign (`campaigns/packages-2026-09/deferrals.md#release-1-0`), together with the reader-predicate question it shares with B-080. @status:impl/done
 - @fact:NO-SHIPPED-CONSUMER-VERIFIES-A-SUB-FILE-YET **No shipped consumer does that yet, and saying so is the point of writing it down.** The index client asks `repomd.json` as an existence probe and then fetches the candidate-set file directly: it reads no `sha256` and sends no `ETag` — measured as zero occurrences of either in the client, against 43 elsewhere in the same crate, so the zero is the client's silence and not the instrument's. The comparison the fact above describes exists only as the operator verb `vibe-index verify`, run against a data directory, which is a different party at a different time. @status:impl/done
 - @fact:WHAT-IS-NEVERTHELESS-PROTECTED-AND-WHAT-IS-NOT **What that leaves exposed is metadata in transit, not content.** `content_hash` is verified against the actually-fetched bytes at fetch time no matter how the version was chosen ([§2.3](#truth)), so a tampered index can misdirect a consumer toward the wrong version — it cannot make it install bytes nobody checked. A substituted `by-name` file, by contrast, is read as it arrives. Both halves belong in one sentence: an integrity story stated only in its strong half is the kind of claim a reader plans around and a defect hides behind. @status:impl/done
 - @fact:repomd-pattern-heritage This pattern (manifest-with-checksums) is what RPM, Deb, and OCI all share, and is what gives us a path to GPG signing without re-architecting. @status:spec/done
@@ -362,7 +362,7 @@ before PROP-008; `kind` left package identity, so `<name>` alone is the key. @st
 
 @fact:req-reindex `req r1` @status:impl/done
 
-@fact:TWO-REINDEX-MODES **Decision.** Two regeneration modes. Both are available via the CLI (`vibe-index reindex`); the HTTP trigger is specified and unbuilt ([§2.10](#http)): @status:impl/done
+@fact:TWO-REINDEX-MODES **Decision.** Two regeneration modes. Both are available via the CLI (`vibe-index reindex`); the HTTP trigger was withdrawn by owner ruling 2026-08-20 (`##TRIGGER-HTTP`): @status:impl/done
 
 @fact:FULL-REINDEX **Full reindex.** Walk every package repo in the org; for each repo, list tags; for each `v<semver>` tag, read `vibe.toml` and `subskills/**/vibe-subskill.toml` at that ref; compute `content_hash`; assemble §2.6 entry. Replace the in-memory index wholesale, then atomic-write the on-disk files. @status:impl/done
 
@@ -452,7 +452,7 @@ explained; this one does not. @status:impl/done
 @fact:triggers-lead **Triggers.** @status:impl/done
 
 - @fact:TRIGGER-CLI **CLI:** `vibe-index reindex <data-dir> --from-clones <org-dir>` — direct invocation. @status:impl/done
-- @fact:TRIGGER-HTTP **HTTP:** `POST /v1/admin/reindex` body `{"mode":"full"|"incremental","source":"clones"|"github","args":{...}}`. Auth required. Returns a job id; status pollable at `GET /v1/admin/reindex/<job-id>` (in v1 — v0 just blocks until done). **Specified, not built** — the router carries no such route ([§2.10](#http) `##THE-ADMIN-SURFACE-IS-ONE-ROUTE`); until it does, the operator's trigger is the CLI verb, reached by cron or by whatever the host's own hook mechanism can invoke. @status:spec/plan
+- @fact:TRIGGER-HTTP **HTTP: withdrawn.** The route this fact used to specify — `POST /v1/admin/reindex` with a pollable job id — was **retired by owner ruling 2026-08-20 (BACKLOG.md B-085)** without ever being built: reindexation is an *operator verb*, not a network operation. The reasoning is the one [§2.16](#webhooks) already applied to webhooks: a network trigger for a heavy rebuild is a DoS lever, and handing it to the admin token deserves a deliberate decision, not an inherited TODO. The operator's trigger is the CLI verb — reached by cron, a host-native scheduler, or the host's own hook mechanism invoking the CLI ([§11](#wire-up)). A route may return post-1.0 at the first real operator's need (`campaigns/packages-2026-09/deferrals.md#release-1-0`). @status:impl/done
 - @fact:TRIGGER-GIT-HOOK **git hook (server-side, on the index repo's host):** owner installs a `post-receive` hook on the org's hosted git that posts to `POST /v1/admin/reindex` whenever a package repo gets a push to a `v*` tag. Documented in §11; not shipped as part of the binary. @status:spec/done
 - @fact:TRIGGER-CRON **cron:** `crontab` line invokes `vibe-index reindex --incremental` every N minutes. Documented; not enforced. @status:spec/done
 
@@ -529,7 +529,7 @@ GET    /v1/admin/status                           # uptime, last reindex, pkg co
 GET    /metrics                                   # Prometheus text format
 ```
 
-@fact:THE-ADMIN-SURFACE-IS-ONE-ROUTE **The admin surface the server actually builds is one route — `GET /v1/admin/status`.** The reindex trigger above is specified and unbuilt: the router registers **16 paths** and none of them is it, the handler module holds `status` alone, and the code's own note («reindex POST lands in slice 6») describes a slice that closed without it. The requirement is not withdrawn here — code conforms to the spec and not the reverse — but three places in this document asserted it as shipped, so all three now say `plan` and the fork (build it, or retire it in favour of the CLI verb) is `BACKLOG.md` B-085. It is not a paper cut: [§11](#wire-up)'s documented `post-receive` hook posts to exactly this route, so an operator following that recipe wires a hook to nothing. @status:impl/done
+@fact:THE-ADMIN-SURFACE-IS-ONE-ROUTE **The admin surface the server builds is one route — `GET /v1/admin/status` — and since 2026-08-20 that is the *specified* surface, not a gap.** The reindex trigger spent months as «specified and unbuilt»: the router registers **16 paths** and none of them was it, the handler module holds `status` alone, and the code's own note («reindex POST lands in slice 6») described a slice that closed without it. The fork `BACKLOG.md` B-085 recorded — build it, or retire it in favour of the CLI verb — was resolved by owner ruling 2026-08-20: **retired**. `##TRIGGER-HTTP` carries the reasoning, [§11](#wire-up)'s hook recipe now invokes the CLI verb, and the route returns, if ever, at the first real operator's need. @status:impl/done
 
 @fact:HTTP-AUTH **Authentication.** Bearer tokens via `Authorization: Bearer <token>`. Tokens are read from `<data-dir>/state/admin.tokens` (one token per line; comment lines start with `#`). Read endpoints accept missing/invalid tokens silently. Write endpoints require a valid token; mismatch → 401 with a generic message ("authentication required"; do not echo the supplied token nor say which valid prefix it matched). Tokens never appear in logs (logging redacts the `Authorization` header). @status:impl/done
 
@@ -1437,19 +1437,20 @@ $ */5 * * * *  vibe-index reindex /home/owner/vibespecs-index --incremental --fr
 
 @fact:wire-up-lead For operators wiring the index into their hosting: @status:spec/done
 
-@fact:WIRE-POST-RECEIVE **git `post-receive` hook on the org's hosted git** (Forgejo/Gitea/GitVerse-style) — push to a package repo triggers an HTTP POST to the index server: @status:spec/done
+@fact:WIRE-POST-RECEIVE **git `post-receive` hook on the org's hosted git** (Forgejo/Gitea/GitVerse-style) — push to a package repo triggers an *incremental CLI reindex* on the index host (the HTTP trigger was withdrawn — `##TRIGGER-HTTP`; the hook therefore invokes the operator verb, over ssh when the index lives on another machine, directly when it is local): @status:spec/done
 
 ```sh
 #!/bin/sh
 # /var/git/<org>/<repo>.git/hooks/post-receive
+# Runs on the git host. Same machine as the index: drop the ssh wrapper
+# and call the verb directly.
 while read oldrev newrev refname; do
     case "$refname" in
         refs/tags/v*)
-            curl -sf -X POST "https://index.example/v1/admin/reindex" \
-                -H "Authorization: Bearer $(cat /etc/vibe-index/admin.token)" \
-                -H "content-type: application/json" \
-                -d '{"mode":"incremental","source":"clones"}' \
-                || echo "vibe-index reindex POST failed (non-fatal)"
+            ssh index-host 'vibe-index reindex /var/lib/vibespecs-index \
+                --incremental --from-clones /var/lib/vibespecs-mirror' \
+                >>/var/log/vibe-index-hook.log 2>&1 \
+                || echo "vibe-index reindex failed (non-fatal)"
             ;;
     esac
 done
@@ -1463,7 +1464,7 @@ done
 
 @fact:wire-up-not-shipped Neither is shipped as a binary — operators integrate at their own host, and the hook shape varies enough across hosting platforms that one-size-fits-all isn't worth shipping. @status:spec/done
 
-@fact:ONLY-THE-CRON-LINE-REACHED-THE-HANDBOOK **Of the two, only the cron line is in `crates/vibe-index/docs/operator-handbook.md`; the `post-receive` hook is documented here and nowhere else.** That is worth stating rather than quietly fixing, because the hook posts to `POST /v1/admin/reindex` — the route [§2.10](#http) records as specified and unbuilt. So the artefact that did not reach the handbook is the one that would not have worked from it, and copying it across before the route exists would turn a documentation gap into a support ticket. @status:impl/done
+@fact:ONLY-THE-CRON-LINE-REACHED-THE-HANDBOOK **Of the two, only the cron line is in `crates/vibe-index/docs/operator-handbook.md`; the `post-receive` hook is documented here and nowhere else.** Worth keeping stated: the hook's earlier form posted to `POST /v1/admin/reindex` — a route that never shipped and was withdrawn 2026-08-20 (`##TRIGGER-HTTP`) — so the artefact that did not reach the handbook was exactly the one that would not have worked from it. The recipe above now invokes the CLI verb; copying it into the handbook becomes legitimate the day an operator asks for it. @status:impl/done
 
 ---
 

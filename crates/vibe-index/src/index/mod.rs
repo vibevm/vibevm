@@ -2,10 +2,11 @@
 //!
 //! The [`Index`] struct holds the canonical RAM copy. Persistence
 //! reads and writes the on-disk files described in PROP-005 §2.4
-//! atomically (tmp + rename + fsync). Slice 2 ships the read/write
-//! pipeline for `repomd.json`, `primary.jsonl`, and
-//! `by-name/<kind>/<name>.json`. `by-cap/` and `by-purl/` join in
-//! later slices.
+//! atomically (tmp + rename + fsync). Slice 2 shipped the read/write
+//! pipeline for `repomd.json`, `primary.jsonl`, and the by-name layer —
+//! keyed then on `by-name/<kind>/<name>.json`, re-keyed to
+//! `by-name/<name>.json` when PROP-008 Phase 7 removed `kind` from
+//! package identity. `by-cap/` and `by-purl/` joined in later slices.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout");
 

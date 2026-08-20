@@ -101,7 +101,8 @@ pub fn build_app(state: AppState) -> Router {
             get(routes::capabilities::lookup),
         )
         .route("/v1/purls/{purl}", get(routes::purls::lookup))
-        // Admin (read-only in slice 5; reindex POST lands in slice 6).
+        // Admin (read-only). The reindex POST was withdrawn 2026-08-20:
+        // reindexation is an operator verb (PROP-005 ##TRIGGER-HTTP).
         .route("/v1/admin/status", get(routes::admin::status))
         // Observability.
         .route("/metrics", get(routes::metrics::prometheus))

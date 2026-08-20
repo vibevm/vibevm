@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-20T06:05:57Z",
+  "updated_at": "2026-08-20T06:49:18Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -102521,7 +102521,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 278,
         "marker_count": 279,
-        "processed_hash": "80244080bba060d50b689a8c7c0476b0c52b471ff2a620348d269b1a0409895d",
+        "processed_hash": "efc4010cc0e82aabd0bc228e63fc02b14d6602b5ad974d1a1af55cb7c0966d54",
         "summary": {
           "confirmed": 403,
           "drift": 1,
@@ -102854,12 +102854,7 @@
           "REPOMD-TRUST-POINT": {
             "v": "confirmed",
             "ev": [
-              "crates/vibe-index/src/cli/verify.rs:78      for (rel_path, entry) in &manifest.files {",
-              "crates/vibe-index/src/cli/verify.rs:89                  let actual_sha = persistence::sha256_of_bytes(&bytes);",
-              "crates/vibe-index/src/cli/verify.rs:91                  if actual_size != *size || &actual_sha != sha256 {",
-              "crates/vibe-index/src/index/memory.rs:255          repomd::write(data_dir, &manifest)",
-              "crates/vibe-index/src/index/repomd.rs:1  //! `repomd.json` — the per-index manifest, written last on every",
-              "Composite fact judged by clauses. Clause 1 (single point of trust: fetch repomd, then fetch sub-files, verify each against the recorded sha256) — verify.rs::check walks manifest.files (verify.rs:78), reads each sub-file, recomputes its sha256 (verify.rs:89) and compares size+sha against the recorded values (verify.rs:91), flagging any mismatch. Clause 2 (consistent view) — repomd is written LAST on every batch flush (memory.rs:255; docblock repomd.rs:1-3), so a hash-chasing reader never sees a half-updated set. Replaces the shared paragraph; outcome correct, now self-evidenced (this is the consumer-side trust path the shared block only gestured at)."
+              "сужение по рулингу 2026-08-20 (B-084): факт теперь утверждает ровно существующее — sha256 на каждый файл в манифесте (writer memory.rs, схема repomd), операторская сверка cli/verify.rs; потребительская половина названа отложенной с адресом леджера deferrals.md#release-1-0; соседи NO-SHIPPED-CONSUMER-VERIFIES (замер нулей) и WHAT-IS-NEVERTHELESS-PROTECTED согласованы и не тронуты"
             ]
           },
           "repomd-pattern-heritage": {
@@ -103235,7 +103230,7 @@
           "TWO-REINDEX-MODES": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "оба режима в CLI (cli/reindex.rs, --incremental/--from-clones/--from-github); хвост про HTTP-триггер теперь отсылает к отзыву ##TRIGGER-HTTP, а не утверждает «specified and unbuilt»"
             ]
           },
           "FULL-REINDEX": {
@@ -103307,7 +103302,7 @@
           "TRIGGER-HTTP": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "переписан отзывом по рулингу 2026-08-20 (B-085): маршрута в router нет (server/mod.rs — 16 путей, admin только GET status), глагол CLI существует; DoS-довод §2.16 распространён на админ-токен; возврат — леджер deferrals.md#release-1-0 строка «HTTP-триггер переиндексации»"
             ]
           },
           "TRIGGER-GIT-HOOK": {
@@ -104325,7 +104320,7 @@
           "WIRE-POST-RECEIVE": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "рецепт §11 переведён с curl POST на CLI-глагол (ssh/локально), форма вызова дословно совпадает с cron-строкой WIRE-CRON (positional data-dir + --incremental --from-clones); informational, not shipped — статус spec/done честен"
             ]
           },
           "WIRE-CRON": {
@@ -104949,7 +104944,7 @@
           "THE-ADMIN-SURFACE-IS-ONE-ROUTE": {
             "v": "confirmed",
             "ev": [
-              "crates/vibe-index/src/server/mod.rs:54-107 is the only `Router::new()` in the crate and registers 16 paths; :105 `GET /v1/admin/status` is the single admin route and :104 carries the code's own note that the reindex POST 'lands in slice 6'; routes/admin.rs holds the `status` handler alone; `grep -rn admin/reindex crates/` returns zero"
+              "GET /v1/admin/status — единственный админ-маршрут (server/mod.rs:105, routes/admin.rs только status); развилка B-085 решена отзывом; устаревший комментарий «slice 6» в server/mod.rs:104 заменён отзывной формулировкой этой же посадкой"
             ]
           },
           "THE-BODY-CARRIES-NO-INSTANCE-MEMBER": {
@@ -105059,7 +105054,7 @@
           "ONLY-THE-CRON-LINE-REACHED-THE-HANDBOOK": {
             "v": "confirmed",
             "ev": [
-              "crates/vibe-index/docs/operator-handbook.md:90 carries the cron line verbatim; `grep post-receive` on that file returns zero against a control that finds `hook` at :61 and :111, so the missing script is the handbook's and not the pattern's"
+              "хендбук operator-handbook.md несёт cron-строку, post-receive-хука в нём нет (греп); историческая причина (маршрут не существовал) сохранена как история с датой отзыва"
             ]
           },
           "THE-SUBSCRIBER-IS-INSTALLED-UNCONDITIONALLY-AT-WARN": {
@@ -105295,8 +105290,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-13T23:34:20Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8 + W9 + W10 + B091-COORD-REPAIR-2026-08-19 + BURIED-RETIREMENT-FACT-2026-08-19 + YANK-VERB-AND-REFUSAL-RULES-2026-08-19 + BURY-VERB-AND-THE-PARTITION-2026-08-19 + OWNER-RULINGS-STORE-AND-RESCAN-2026-08-20"
+        "verified_at": "2026-08-20T06:49:17Z",
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8 + W9 + W10 + B091-COORD-REPAIR-2026-08-19 + BURIED-RETIREMENT-FACT-2026-08-19 + YANK-VERB-AND-REFUSAL-RULES-2026-08-19 + BURY-VERB-AND-THE-PARTITION-2026-08-19 + OWNER-RULINGS-STORE-AND-RESCAN-2026-08-20 + C3-TRUTH"
       }
     },
     {

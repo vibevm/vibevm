@@ -5222,9 +5222,9 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/index/mod.rs",
       "item_kind": "mod",
-      "line": 10,
+      "line": 11,
       "symbol": "vibe_index::index",
-      "end_line": 10,
+      "end_line": 11,
       "fingerprint": "tok1:5cd37479f727211c71f73c50e6e711ad2714cf2ccac58e6a7b2c3973db3e2d8b"
     },
     {
@@ -5557,7 +5557,7 @@
       "item_kind": "fn",
       "line": 36,
       "symbol": "vibe_index::server::build_app",
-      "end_line": 112,
+      "end_line": 113,
       "fingerprint": "tok1:8963b44833310b622462fb6a6f60e857be42580db16aa7785569fef2ad666934"
     },
     {
@@ -13767,7 +13767,7 @@
     {
       "file": "crates/vibe-index/src/index/mod.rs",
       "from_symbol": "vibe_index::index",
-      "line": 10,
+      "line": 11,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout",
       "verb": "implements"
@@ -42015,7 +42015,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:6ecffbbc1cade2b759559b1b70849133ccb4ae4ec8850c21679d7629b874018d",
+      "content_hash": "sha256:04c01a78bf1938120459ea37dd59f9a1491d169a1fc41c12f97791de8e9177c6",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "PROP-005: Optional package index — per-org metadata + standalone index server",
@@ -42177,7 +42177,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:7f15e38c7c4177c133a149694a47dc49a09f91b9051ebfa8c6a5e9b0bcd62499",
+      "content_hash": "sha256:437fb24e829d8bbb0cf4dedd28ee346cd365389c28e31cf5b3088835fc556345",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2. Decisions",
@@ -42564,7 +42564,7 @@
     },
     {
       "anchor": "layout",
-      "content_hash": "sha256:beb1591e599b190052965c6c60a96c4e913d93bc030660007660371472b73fa7",
+      "content_hash": "sha256:3b60904fb155869cc762db705687186ecf25f171ef348ce0c95551ce382b4a3a",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.4 File layout inside the index repo",
@@ -42636,10 +42636,10 @@
     },
     {
       "anchor": "REPOMD-TRUST-POINT",
-      "content_hash": "sha256:e6fb302b8fd495c8e5a75ae89d5f32116e7e12b76eff68a5814bc6536ea836a8",
+      "content_hash": "sha256:3ac83e090365a74d25400531c32a8f8bd5157c6a13d0a4af2509edf3cb660712",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
-      "heading": "`repomd.json` is the **single point of trust**. A consumer fetches it once (with a small ETag round-trip later), then fetches whichever sub-files it actually needs, verifying each against the recorded `sha256`. @status:spec/plan",
+      "heading": "`repomd.json` is the format's **point of trust**: it records a `sha256` for every file beneath it, which is what makes «verify the catalog» a single well-posed question. Today the party that asks it is the **operator** — `vibe-index verify` re-hashes a data directory against the manifest — and that is the whole shipped claim (formulation narrowed to what exists, owner ruling 2026-08-20, BACKLOG.md B-084). The consumer-side half — fetch it once with an ETag round-trip, then verify each fetched sub-file against the recorded hash — is deliberately deferred to the post-1.0 campaign (`campaigns/packages-2026-09/deferrals.md#release-1-0`), together with the reader-predicate question it shares with B-080. @status:impl/done",
       "line": 190,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#REPOMD-TRUST-POINT"
     },
@@ -43104,7 +43104,7 @@
     },
     {
       "anchor": "reindex",
-      "content_hash": "sha256:28fd899e74d4f551e6fb6c80dc5d57066e31c3b44e7df3d63ccf52596c801c33",
+      "content_hash": "sha256:0602ba30484d9b4cc4baa41c09fc5645c54b29d107932c1e01e444a5c298ed9a",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.8 Reindexation: full and incremental",
@@ -43122,10 +43122,10 @@
     },
     {
       "anchor": "TWO-REINDEX-MODES",
-      "content_hash": "sha256:26b2e4c6f37e873edb86f1281827a0ff50cf4cd541a776a4cf561f0f28c43543",
+      "content_hash": "sha256:f9fef6a1c222ea2a1467c9ffa7f5ed7d47a0e8d4a6f5a754eba328aba35d6723",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
-      "heading": "**Decision.** Two regeneration modes. Both are available via the CLI (`vibe-index reindex`); the HTTP trigger is specified and unbuilt ([§2.10](#http)): @status:impl/done",
+      "heading": "**Decision.** Two regeneration modes. Both are available via the CLI (`vibe-index reindex`); the HTTP trigger was withdrawn by owner ruling 2026-08-20 (`##TRIGGER-HTTP`): @status:impl/done",
       "line": 365,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#TWO-REINDEX-MODES"
     },
@@ -43212,7 +43212,7 @@
     },
     {
       "anchor": "cache-org",
-      "content_hash": "sha256:9f9f28332aff431cad578c6ab5e53b81b01e18254908794955b127793475374c",
+      "content_hash": "sha256:39bf9803ac5683847bcfe94b640568028a0f0b790a22b6d2ef70ec7b469f5d17",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.8.1 The organisation image, and what keeps caching it honest",
@@ -43356,10 +43356,10 @@
     },
     {
       "anchor": "TRIGGER-HTTP",
-      "content_hash": "sha256:9b27b91320a7590c996011ea520e51a60aaef11a301eb4c2b0fbc6ff65fc9c77",
+      "content_hash": "sha256:1a5e0ea63eacdc7dfab6ee531e4b9f000dc5580fb79db0f6f917663cc1cadc06",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
-      "heading": "**HTTP:** `POST /v1/admin/reindex` body `{\"mode\":\"full\"|\"incremental\",\"source\":\"clones\"|\"github\",\"args\":{...}}`. Auth required. Returns a job id; status pollable at `GET /v1/admin/reindex/<job-id>` (in v1 — v0 just blocks until done). **Specified, not built** — the router carries no such route ([§2.10](#http) `##THE-ADMIN-SURFACE-IS-ONE-ROUTE`); until it does, the operator's trigger is the CLI verb, reached by cron or by whatever the host's own hook mechanism can invoke. @status:spec/plan",
+      "heading": "**HTTP: withdrawn.** The route this fact used to specify — `POST /v1/admin/reindex` with a pollable job id — was **retired by owner ruling 2026-08-20 (BACKLOG.md B-085)** without ever being built: reindexation is an *operator verb*, not a network operation. The reasoning is the one [§2.16](#webhooks) already applied to webhooks: a network trigger for a heavy rebuild is a DoS lever, and handing it to the admin token deserves a deliberate decision, not an inherited TODO. The operator's trigger is the CLI verb — reached by cron, a host-native scheduler, or the host's own hook mechanism invoking the CLI ([§11](#wire-up)). A route may return post-1.0 at the first real operator's need (`campaigns/packages-2026-09/deferrals.md#release-1-0`). @status:impl/done",
       "line": 455,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#TRIGGER-HTTP"
     },
@@ -43518,7 +43518,7 @@
     },
     {
       "anchor": "http",
-      "content_hash": "sha256:b7eadf1b4ed5c4fd2486948138c4a0ac6bde95ac65ac80f60e8b70981c5fb53e",
+      "content_hash": "sha256:90ad3a9902c26f493490facb6ef238dfacff1b17141e354d90068f3e7e8fa63d",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.10 HTTP API surface",
@@ -43545,10 +43545,10 @@
     },
     {
       "anchor": "THE-ADMIN-SURFACE-IS-ONE-ROUTE",
-      "content_hash": "sha256:d1e6b87dac3386aa83cfa9261dd8e715ba5259a91b494e32f19942222db838e5",
+      "content_hash": "sha256:d8ed6b0e84fdb50ee85bc5f1653f373ec8b3d95954979bfcb04f97fc5e19aa66",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
-      "heading": "**The admin surface the server actually builds is one route — `GET /v1/admin/status`.** The reindex trigger above is specified and unbuilt: the router registers **16 paths** and none of them is it, the handler module holds `status` alone, and the code's own note («reindex POST lands in slice 6») describes a slice that closed without it. The requirement is not withdrawn here — code conforms to the spec and not the reverse — but three places in this document asserted it as shipped, so all three now say `plan` and the fork (build it, or retire it in favour of the CLI verb) is `BACKLOG.md` B-085. It is not a paper cut: [§11](#wire-up)'s documented `post-receive` hook posts to exactly this route, so an operator following that recipe wires a hook to nothing. @status:impl/done",
+      "heading": "**The admin surface the server builds is one route — `GET /v1/admin/status` — and since 2026-08-20 that is the *specified* surface, not a gap.** The reindex trigger spent months as «specified and unbuilt»: the router registers **16 paths** and none of them was it, the handler module holds `status` alone, and the code's own note («reindex POST lands in slice 6») described a slice that closed without it. The fork `BACKLOG.md` B-085 recorded — build it, or retire it in favour of the CLI verb — was resolved by owner ruling 2026-08-20: **retired**. `##TRIGGER-HTTP` carries the reasoning, [§11](#wire-up)'s hook recipe now invokes the CLI verb, and the route returns, if ever, at the first real operator's need. @status:impl/done",
       "line": 532,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#THE-ADMIN-SURFACE-IS-ONE-ROUTE"
     },
@@ -45984,7 +45984,7 @@
     },
     {
       "anchor": "wire-up",
-      "content_hash": "sha256:b2d8cd01357b46ae6240d18136fb0fe3b3c63fd2f30758c35c9e991773ea6a1a",
+      "content_hash": "sha256:054b70e703fb5c9efa23fe15fd0d8f198ef6c29ab15e4d415800770c735ad27a",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "11. Wire-up scripts (informational, not shipped)",
@@ -46002,10 +46002,10 @@
     },
     {
       "anchor": "WIRE-POST-RECEIVE",
-      "content_hash": "sha256:045b3b02c2cc91d561370d0ff94ab7b1e1aa105946930c5de7d452567a0aa102",
+      "content_hash": "sha256:5b6d78f0add9a44a92009520254e92d0faca881a9a6e79d5be06316f64367521",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
-      "heading": "**git `post-receive` hook on the org's hosted git** (Forgejo/Gitea/GitVerse-style) — push to a package repo triggers an HTTP POST to the index server: @status:spec/done",
+      "heading": "**git `post-receive` hook on the org's hosted git** (Forgejo/Gitea/GitVerse-style) — push to a package repo triggers an *incremental CLI reindex* on the index host (the HTTP trigger was withdrawn — `##TRIGGER-HTTP`; the hook therefore invokes the operator verb, over ssh when the index lives on another machine, directly when it is local): @status:spec/done",
       "line": 1440,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#WIRE-POST-RECEIVE"
     },
@@ -46015,7 +46015,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**cron line:** @status:spec/done",
-      "line": 1458,
+      "line": 1459,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#WIRE-CRON"
     },
     {
@@ -46024,16 +46024,16 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "Neither is shipped as a binary — operators integrate at their own host, and the hook shape varies enough across hosting platforms that one-size-fits-all isn't worth shipping. @status:spec/done",
-      "line": 1464,
+      "line": 1465,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#wire-up-not-shipped"
     },
     {
       "anchor": "ONLY-THE-CRON-LINE-REACHED-THE-HANDBOOK",
-      "content_hash": "sha256:677f47ffec23b0007189b6c87086a9769a4a028ce44cce502af6f2516de1e47e",
+      "content_hash": "sha256:d855265700afdfd152fefc4d1874820cd5c1fb1838512f02a9cec9b951d27fbd",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
-      "heading": "**Of the two, only the cron line is in `crates/vibe-index/docs/operator-handbook.md`; the `post-receive` hook is documented here and nowhere else.** That is worth stating rather than quietly fixing, because the hook posts to `POST /v1/admin/reindex` — the route [§2.10](#http) records as specified and unbuilt. So the artefact that did not reach the handbook is the one that would not have worked from it, and copying it across before the route exists would turn a documentation gap into a support ticket. @status:impl/done",
-      "line": 1466,
+      "heading": "**Of the two, only the cron line is in `crates/vibe-index/docs/operator-handbook.md`; the `post-receive` hook is documented here and nowhere else.** Worth keeping stated: the hook's earlier form posted to `POST /v1/admin/reindex` — a route that never shipped and was withdrawn 2026-08-20 (`##TRIGGER-HTTP`) — so the artefact that did not reach the handbook was exactly the one that would not have worked from it. The recipe above now invokes the CLI verb; copying it into the handbook becomes legitimate the day an operator asks for it. @status:impl/done",
+      "line": 1467,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#ONLY-THE-CRON-LINE-REACHED-THE-HANDBOOK"
     },
     {
@@ -46042,7 +46042,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "12. Version history",
-      "line": 1470,
+      "line": 1471,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#history"
     },
     {
@@ -46051,7 +46051,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**2026-05-06 — draft 1.** Initial proposal. Open for review. @status:spec/done",
-      "line": 1472,
+      "line": 1473,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#HISTORY-DRAFT-1"
     },
     {
@@ -46060,7 +46060,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**2026-05-22 — reconciled with the implementation, then folded into the workspace.** A state review found PROP-005 already implemented (slices 1–10 + M2.10 `vibe search`) but rotted; the de-rot realigned the scanner with the current `vibe.toml` schema and corrected this document (§2.6 `boot_snippet`, the `vibe.toml` filename, §2.10 rate-limiter status). The fold then moved `vibe-index` from its own `services/` workspace into `crates/vibe-index/` and switched it to parse through `vibe-core::Manifest` — §3.2, §6, and §9 item 11 are revised for the reversed standalone-workspace decision. @status:spec/done",
-      "line": 1473,
+      "line": 1474,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#HISTORY-RECONCILED"
     },
     {
@@ -46069,7 +46069,7 @@
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "**2026-05-22 — group-native (PROP-008 Phase 7).** The index entry gained the mandatory `group` field and the optional `workspace_origin` (§2.6); the `by-name/` layer was re-keyed from `by-name/<kind>/<name>.json` to the candidate-set file `by-name/<name>.json` (§2.4) — one GET per registry now yields every group sharing a bare name; `primary.jsonl` / `by-cap` / `by-purl` sort on the `(group, name, version)` identity; the HTTP `/v1/packages/{group}/{name}` routes, the `vibe-index get/remove` CLI, and the `naming = \"fqdn\"` default followed. The `vibe-registry` index client and the `vibe-publish` post-publish hook were realigned to the new shape. PROP-008 §2.8's index extension is shipped. @status:spec/done",
-      "line": 1474,
+      "line": 1475,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#HISTORY-GROUP-NATIVE"
     },
     {
