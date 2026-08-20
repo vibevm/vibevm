@@ -1647,6 +1647,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/cache/check.rs",
+      "item_kind": "mod",
+      "line": 26,
+      "symbol": "vibe_cli::commands::cache::check",
+      "end_line": 26,
+      "fingerprint": "tok1:a8e48b73f01b9a810d8ea1405031076906e5684cf132420c9894b573034757ab"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/cache/clean.rs",
       "item_kind": "mod",
       "line": 16,
@@ -6620,7 +6629,7 @@
       "line": 17,
       "symbol": "vibe_registry::error::RegistryError",
       "end_line": 197,
-      "fingerprint": "tok1:eb59c53507940dd4adc70942c441f2a06be5d9a73607bdb1e9d3d10ddb513160"
+      "fingerprint": "tok1:89d7050d3d9d3dff7bdcc78d738f09abfe9eba89a32da9df8e661a83282db863"
     },
     {
       "crate_name": "vibe-registry",
@@ -7115,6 +7124,15 @@
       "line": 39,
       "symbol": "vibe_registry::store",
       "end_line": 39,
+      "fingerprint": "tok1:3b8af4f7e2987457c86d6cdf452adc701ff8313e1e2a832c3cf2cbf2d9dcd6eb"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/store/tests.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "vibe_registry::store::tests",
+      "end_line": 7,
       "fingerprint": "tok1:3b8af4f7e2987457c86d6cdf452adc701ff8313e1e2a832c3cf2cbf2d9dcd6eb"
     },
     {
@@ -10411,6 +10429,14 @@
       "file": "crates/vibe-cli/src/commands/cache/add.rs",
       "from_symbol": "vibe_cli::commands::cache::add",
       "line": 18,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/cache/check.rs",
+      "from_symbol": "vibe_cli::commands::cache::check",
+      "line": 26,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary",
       "verb": "implements"
@@ -15435,6 +15461,14 @@
       "file": "crates/vibe-registry/src/store.rs",
       "from_symbol": "vibe_registry::store",
       "line": 39,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#layout",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/store/tests.rs",
+      "from_symbol": "vibe_registry::store::tests",
+      "line": 7,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#layout",
       "verb": "implements"
@@ -55449,7 +55483,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:0981a0b930bde906a6c410daa085b1b570db0c2d94bb3cb9ccfb4db3391632df",
+      "content_hash": "sha256:3d1fe603283c9083c22034a7cccd17d55bc385e559f1048f4a404e47e97b07e1",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "PROP-010: The local package cache — a shared offline store",
@@ -55602,7 +55636,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:a0a7ea3753cc583ef2e7c531789feaddad72b6f86f44d14bef265e150d9b3534",
+      "content_hash": "sha256:7b15c8d7171faecc7999531397d0aeddea41cea1e274d4c937a0e50c9e6c8614",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "2. Decisions",
@@ -56088,7 +56122,7 @@
     },
     {
       "anchor": "layout",
-      "content_hash": "sha256:5242744cd3c4db582beeaa63a20f65c4f60656f80546b004c0a796cf2ef7065e",
+      "content_hash": "sha256:76f21dda32d217e70837926557547536b196636b13e3c0da128d56bdef90d6c5",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "2.7 Cache layout and population",
@@ -56214,25 +56248,25 @@
     },
     {
       "anchor": "VERIFICATION-IS-A-COMMAND-NOT-A-TAX",
-      "content_hash": "sha256:de1cb7b441952b23b8b89024a3d4675c683d218c860f862b2ee9be78eabefcc0",
+      "content_hash": "sha256:140dfbc70f2d0a495ec5e9fdd194fe02610e1fdbd2ab4aac115f281280e9b100",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Verification is a command an operator runs, not a cost every install pays** (owner, 2026-08-20). Re-hashing the store on every resolve would make a ten-gigabyte dependency unusable; the integrity sweep therefore lives in `vibe cache check` ([§2.8](#management)) and the ordinary path does not pay it. @status:impl/work",
+      "heading": "**Verification is a command an operator runs, not a cost every install pays** (owner, 2026-08-20). Re-hashing the store on every resolve would make a ten-gigabyte dependency unusable; the integrity sweep therefore lives in `vibe cache check` ([§2.8](#management)) and the ordinary path does not pay it. @status:impl/done",
       "line": 150,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#VERIFICATION-IS-A-COMMAND-NOT-A-TAX"
     },
     {
       "anchor": "A-MISMATCH-IS-NAMED-NEVER-SWALLOWED",
-      "content_hash": "sha256:5fe65209aa1467fc5df8beb5f5b2fa77c03082aa810114bd84797e434625d4d0",
+      "content_hash": "sha256:71ecdf8c310afe6e2ba0ac81aefd14a8157d97bf9c299f117a597d65ba3be8ad",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**A mismatch is named.** When the sweep finds content that no longer hashes to what the lockfile pinned, it says which package and offers repair — it never silently re-downloads and never silently uses the altered bytes. *(The read path already keeps this: an entry read as the materialisation source under a pin that no longer matches fails as `StoreEntryMismatch`, naming the package, the entry path and both hashes; the sweep itself is `vibe cache check`, pending.)* @status:impl/work",
+      "heading": "**A mismatch is named.** When the sweep finds content that no longer hashes to what the lockfile pinned, it says which package and offers repair — it never silently re-downloads and never silently uses the altered bytes. *(Both halves hold: the read path fails as `StoreEntryMismatch` naming the package, the entry path and both hashes; the sweep — `vibe cache check` — names every mismatched identity with both hashes and repairs only under the explicit `--repair`.)* @status:impl/done",
       "line": 151,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#A-MISMATCH-IS-NAMED-NEVER-SWALLOWED"
     },
     {
       "anchor": "management",
-      "content_hash": "sha256:1edcedc2ceff49db3fcd1b21e84e79ca6695115d6f4ead96705d5d714c0d43bc",
+      "content_hash": "sha256:346ffa23573ff845ffb4d451c1d2f20f71cfd5d5d516796c3ddd7fa231edbe15",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "2.8 Cache management surface",
@@ -56241,10 +56275,10 @@
     },
     {
       "anchor": "CACHE-COMMANDS",
-      "content_hash": "sha256:58ff5dd5a535d693de91091e939c07c2d42c2106809fda70230e62800534607a",
+      "content_hash": "sha256:f9f50e1545cc12cf97c183776a5a72705ae284b507c90327c29309e891b93837",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Decision.** The cache becomes operator-visible through a command family. @status:impl/work",
+      "heading": "**Decision.** The cache becomes operator-visible through a command family. @status:impl/done",
       "line": 155,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CACHE-COMMANDS"
     },
@@ -56304,64 +56338,64 @@
     },
     {
       "anchor": "CMD-CHECK",
-      "content_hash": "sha256:bab0c3ffa7240cdef5e9efe315a9ada01a063823d81605aa7eec5a005cbdabda",
+      "content_hash": "sha256:425c58a348a503862b4045f7e99c4dcc7adc7524ddd67b87cdac2adcebb59e49",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "`vibe cache check` (owner, 2026-08-20) — **the integrity sweep, and the only place the store is fully re-hashed.** It walks every entry, recomputes the content hash, and reports each one that no longer matches what was recorded. It is the answer to «how do you forbid overwriting»: nothing forbids it, and this is what notices. @status:spec/work",
+      "heading": "`vibe cache check` (owner, 2026-08-20) — **the integrity sweep, and the only place the store is fully re-hashed.** It walks every entry, recomputes the content hash, and reports each one that no longer matches what was recorded. It is the answer to «how do you forbid overwriting»: nothing forbids it, and this is what notices. *(«What was recorded» is an integrity sidecar `v<version>.sha256` written once beside the entry at insert — beside, not inside, or the record would change the very tree it pins; an entry without one is the honest `unrecorded` class, not an error.)* @status:impl/done",
       "line": 165,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CMD-CHECK"
     },
     {
       "anchor": "CMD-CHECK-REPAIR",
-      "content_hash": "sha256:2d103b5fd2a77d7e775240427c4f16875b109d93ad04a34cf0616fab3cb40f93",
+      "content_hash": "sha256:ea371f93ddf4aa93146039b29144e28ae1c65007db9a178d2f3b427037ecd108",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "`vibe cache check --repair` (owner, 2026-08-20) — the same sweep, and then it fixes what it found. @status:spec/work",
+      "heading": "`vibe cache check --repair` (owner, 2026-08-20) — the same sweep, and then it fixes what it found. @status:impl/done",
       "line": 166,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CMD-CHECK-REPAIR"
     },
     {
       "anchor": "REPAIR-CLIMBS-A-LADDER-CHEAPEST-FIRST",
-      "content_hash": "sha256:309afe07372c8ec24400899d953870984cd6b9d05e35d5cb432f43a3d8eeab7e",
+      "content_hash": "sha256:2ca82238366c5f2cbe593c1a0e0e806ba775ef6b5fa4f4d06b63923bd055dec0",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Decision (owner, 2026-08-20): repair tries the cheap local restore before the expensive re-fetch, and the order is the whole point.** A ten-gigabyte dependency must not be re-downloaded because one file was touched. @status:spec/work",
+      "heading": "**Decision (owner, 2026-08-20): repair tries the cheap local restore before the expensive re-fetch, and the order is the whole point.** A ten-gigabyte dependency must not be re-downloaded because one file was touched. @status:impl/done",
       "line": 168,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#REPAIR-CLIMBS-A-LADDER-CHEAPEST-FIRST"
     },
     {
       "anchor": "REPAIR-STEP-IS-IT-A-CLONE",
-      "content_hash": "sha256:50241f85304951c090c55680f27a779fc10ea3a527b49a7a9b164e7215aa2189",
+      "content_hash": "sha256:2aeb5c4b47465772139bafdbd76f90c7aba497083cc433e052d62cf1d057e130",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**First establish what the entry IS.** An entry that is a git working copy can be restored locally; an extracted directory carrying no `.git` cannot, and skips to the last rung. This check is not a formality — the store's own layout strips `.git`, so both shapes exist on disk. @status:spec/work",
+      "heading": "**First establish what the entry IS.** An entry that is a git working copy can be restored locally; an extracted directory carrying no `.git` cannot, and skips to the last rung. This check is not a formality — the store's own layout strips `.git`, so both shapes exist on disk. @status:impl/done",
       "line": 170,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#REPAIR-STEP-IS-IT-A-CLONE"
     },
     {
       "anchor": "REPAIR-STEP-LOCAL-RESTORE",
-      "content_hash": "sha256:b3f8a658c42ec4fa273b14cca2a3d49b5902130a899a8bc38037033f58e72f69",
+      "content_hash": "sha256:cff299d8724b20e0b2e290459c963caab821f0bba36faa5b404283d0fc84e82c",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**For a git working copy: discard local damage** — remove untracked and ignored files, then hard-reset the tree to the commit the entry is pinned to. Re-hash. If it matches, repair is done and nothing was downloaded. @status:spec/work",
+      "heading": "**For a git working copy: discard local damage** — remove untracked and ignored files, then hard-reset the tree to the commit the entry is pinned to. Re-hash. If it matches, repair is done and nothing was downloaded. *(Measured 2026-08-20 at the build: the store records a content hash and no commit, so this rung has nothing to reset TO — a mismatched git copy is honestly classified «unrepairable locally» and takes the re-fetch rung; the rung revives if the store ever records the pinned commit.)* @status:impl/work",
       "line": 171,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#REPAIR-STEP-LOCAL-RESTORE"
     },
     {
       "anchor": "REPAIR-STEP-REFETCH",
-      "content_hash": "sha256:4dee808185d283dd7ddbfbad3fd9cd561d282567b18a3ee7e7fc35b82befee45",
+      "content_hash": "sha256:fb45d2d1a91cabd1b998cdba4709af876628fc3b91f8ad2dee0ff2361b22d88b",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Otherwise re-fetch the entry from scratch**, which is correct but is the expensive rung and therefore the last one. @status:spec/work",
+      "heading": "**Otherwise re-fetch the entry from scratch**, which is correct but is the expensive rung and therefore the last one. @status:impl/done",
       "line": 172,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#REPAIR-STEP-REFETCH"
     },
     {
       "anchor": "REPAIR-DOES-NOT-PULL",
-      "content_hash": "sha256:a667e0a4125c347fd265dcbeb83a9ce4ded7d30a31fb5f49e9828d360ec557f1",
+      "content_hash": "sha256:1de1e0ff75e4978b736d8a58026a2c9feaf94bb7a223bbe08d580c4a2b39edef",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Repair never advances the entry to a newer commit** — no fetch-and-merge step belongs on this ladder, and the reason is what repair MEANS. The hash being restored belongs to one pinned version; moving the working copy forward would change the content that is being checked, turning a repairable entry into a guaranteed mismatch and then into a needless re-download. Advancing to a newer version is `vibe update`'s job and is a different intent from «make this entry be what it was recorded to be». @status:spec/work",
+      "heading": "**Repair never advances the entry to a newer commit** — no fetch-and-merge step belongs on this ladder, and the reason is what repair MEANS. The hash being restored belongs to one pinned version; moving the working copy forward would change the content that is being checked, turning a repairable entry into a guaranteed mismatch and then into a needless re-download. Advancing to a newer version is `vibe update`'s job and is a different intent from «make this entry be what it was recorded to be». @status:impl/done",
       "line": 174,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#REPAIR-DOES-NOT-PULL"
     },

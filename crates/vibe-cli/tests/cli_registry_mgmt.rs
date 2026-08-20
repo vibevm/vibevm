@@ -3705,6 +3705,7 @@ fn every_subcommand_renders_help() {
         &["cache", "list"],
         &["cache", "add"],
         &["cache", "clean"],
+        &["cache", "check"],
         &["version"],
     ];
 

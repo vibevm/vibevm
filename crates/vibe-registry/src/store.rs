@@ -92,6 +92,54 @@ pub fn entry_dir(root: &Path, group: &Group, name: &str, version: &semver::Versi
         .join(format!("v{version}"))
 }
 
+// ---------------------------------------------------------------------------
+// The integrity sidecar (PROP-010 §2.7/§2.8, boss ruling 2026-08-20):
+// `vibe cache check` reports each entry "that no longer matches what
+// was RECORDED" — and the record is a one-line sidecar file
+// `<name>/v<version>.sha256`, a SIBLING of the version directory
+// (never inside it: a file inside the entry would change the very
+// tree the hash covers). This is not a second index representation
+// (the layout stays the index) — it is the integrity record the spec
+// demands. Written by [`insert_at`] write-once; dies with its entry;
+// an entry without one is the "unrecorded" class, never an error.
+// ---------------------------------------------------------------------------
+
+/// The sidecar path for one entry — `<root>/<group>/<name>/v<version>.sha256`.
+fn sidecar_path(root: &Path, group: &Group, name: &str, version: &semver::Version) -> PathBuf {
+    root.join(group.as_str())
+        .join(name)
+        .join(format!("v{version}.sha256"))
+}
+
+/// The hash recorded for one entry, or `None` when it has no sidecar
+/// (inserted before hash recording existed, or the sidecar write was
+/// interrupted) — the "unrecorded" class of `vibe cache check`, not an
+/// error. The line is returned as recorded (trimmed); a malformed
+/// record simply never matches a computed hash and is named as a
+/// mismatch by the sweep.
+pub fn recorded_hash(
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+) -> Result<Option<String>, RegistryError> {
+    recorded_hash_at(&store_root()?, group, name, version)
+}
+
+/// Record the integrity sidecar for one entry as `hash` (a
+/// `sha256:<hex>` line) — **write-once**: an existing sidecar is never
+/// rewritten (`Ok(false)`). Written through a temp sibling + rename,
+/// the same atomicity discipline as the entry itself. Called by
+/// [`insert_at`] for every fresh insert and by `vibe cache check
+/// --repair` for unrecorded entries.
+pub fn record_hash(
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+    hash: &str,
+) -> Result<bool, RegistryError> {
+    record_hash_at(&store_root()?, group, name, version, hash)
+}
+
 /// Insert `src`'s shippable tree as the entry for
 /// `(group, name, version)` in the machine store — **write-once**.
 ///
@@ -220,6 +268,13 @@ pub(crate) fn remove_entry_at(
         path: entry.clone(),
         source,
     })?;
+    // The sidecar dies with its entry — best-effort (the entry is
+    // already gone; a sidecar that somehow outlives it is inert: the
+    // walks only ever read directories).
+    let sidecar = sidecar_path(root, group, name, version);
+    if sidecar.exists() {
+        let _ = fs::remove_file(&sidecar);
+    }
     // The name directory (and then the group directory) must not
     // survive as an empty husk naming the deleted package.
     if let Some(name_dir) = entry.parent() {
@@ -336,17 +391,100 @@ pub(crate) fn insert_at(
         return Err(e);
     }
     match fs::rename(&tmp, &entry) {
-        Ok(()) => Ok(InsertOutcome::Inserted(entry)),
+        Ok(()) => {
+            // The integrity record lands beside the entry the moment
+            // the entry itself is authoritative (boss ruling: rename
+            // entry → record sidecar via tmp+rename). Best-effort: a
+            // hash or write that fails leaves the entry whole but
+            // unrecorded — `vibe cache check` names that class, and
+            // its `--repair` records it; failing an insert that
+            // landed would only strand an AlreadyPresent entry with
+            // no record forever.
+            if let Ok(hash) = crate::shippable::compute_content_hash(&entry) {
+                let _ = record_hash_at(root, group, name, version, &hash);
+            }
+            Ok(InsertOutcome::Inserted(entry))
+        }
         Err(source) => {
             let _ = fs::remove_dir_all(&tmp);
             if entry.is_dir() {
                 // Another writer landed the same entry between our
                 // check and the rename — write-once means theirs
-                // stands, ours never existed.
+                // stands, ours never existed. Their insert recorded
+                // their sidecar; ours touches nothing.
                 Ok(InsertOutcome::AlreadyPresent(entry))
             } else {
                 Err(RegistryError::Io {
                     path: entry,
+                    source,
+                })
+            }
+        }
+    }
+}
+
+/// The root-taking core of [`recorded_hash`].
+pub(crate) fn recorded_hash_at(
+    root: &Path,
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+) -> Result<Option<String>, RegistryError> {
+    let sidecar = sidecar_path(root, group, name, version);
+    match fs::read_to_string(&sidecar) {
+        Ok(body) => {
+            let line = body.trim().to_string();
+            Ok((!line.is_empty()).then_some(line))
+        }
+        Err(source) if source.kind() == std::io::ErrorKind::NotFound => Ok(None),
+        Err(source) => Err(RegistryError::Io {
+            path: sidecar,
+            source,
+        }),
+    }
+}
+
+/// The root-taking core of [`record_hash`].
+pub(crate) fn record_hash_at(
+    root: &Path,
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+    hash: &str,
+) -> Result<bool, RegistryError> {
+    let sidecar = sidecar_path(root, group, name, version);
+    if sidecar.exists() {
+        // Write-once: an existing record for a living entry is never
+        // rewritten — it is the authority the sweep compares against.
+        return Ok(false);
+    }
+    let Some(parent) = sidecar.parent() else {
+        return Err(RegistryError::Io {
+            path: sidecar.clone(),
+            source: std::io::Error::new(
+                std::io::ErrorKind::InvalidInput,
+                "sidecar path has no parent directory",
+            ),
+        });
+    };
+    fs::create_dir_all(parent).map_err(|source| RegistryError::Io {
+        path: parent.to_path_buf(),
+        source,
+    })?;
+    let tmp = parent.join(format!("v{version}.sha256.tmp-{}", std::process::id()));
+    fs::write(&tmp, format!("{hash}\n")).map_err(|source| RegistryError::Io {
+        path: tmp.clone(),
+        source,
+    })?;
+    match fs::rename(&tmp, &sidecar) {
+        Ok(()) => Ok(true),
+        Err(source) => {
+            let _ = fs::remove_file(&tmp);
+            if sidecar.exists() {
+                Ok(false)
+            } else {
+                Err(RegistryError::Io {
+                    path: sidecar,
                     source,
                 })
             }
@@ -421,141 +559,5 @@ pub(crate) fn list_all_at(root: &Path) -> Vec<(Group, String, semver::Version)> 
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    /// A tiny shippable source tree for `insert_at`: a `vibe.toml`
-    /// carrying the identity the entry is keyed by.
-    fn src_pkg(root: &Path, group: &str, name: &str, version: &str) -> PathBuf {
-        let group_dir = group.replace('.', "-");
-        let dir = root.join(format!("src-{group_dir}-{name}-{version}"));
-        fs::create_dir_all(&dir).unwrap();
-        fs::write(
-            dir.join("vibe.toml"),
-            format!(
-                "[package]\ngroup = \"{group}\"\nname = \"{name}\"\nkind = \"flow\"\nversion = \"{version}\"\n"
-            ),
-        )
-        .unwrap();
-        dir
-    }
-
-    fn v(s: &str) -> semver::Version {
-        semver::Version::parse(s).unwrap()
-    }
-
-    fn g(s: &str) -> Group {
-        Group::parse(s).unwrap()
-    }
-
-    /// Removing the last version of a name prunes the empty
-    /// `<group>/<name>/` and `<group>/` directories — no husk survives
-    /// to name the deleted package.
-    #[test]
-    fn remove_entry_prunes_emptied_parents() {
-        let tmp = tempfile::tempdir().unwrap();
-        let root = tmp.path().join("store");
-        let src = src_pkg(tmp.path(), "org.example", "wal", "0.1.0");
-        insert_at(&root, &src, &g("org.example"), "wal", &v("0.1.0")).unwrap();
-        assert!(root.join("org.example/wal/v0.1.0").is_dir());
-
-        assert!(remove_entry_at(&root, &g("org.example"), "wal", &v("0.1.0")).unwrap());
-        assert!(!root.join("org.example/wal/v0.1.0").exists());
-        assert!(
-            !root.join("org.example/wal").exists(),
-            "the name dir must not linger"
-        );
-        assert!(
-            !root.join("org.example").exists(),
-            "the emptied group dir must not linger"
-        );
-    }
-
-    /// Removing one version of a multi-version name leaves its siblings
-    /// — and their parent directories — intact.
-    #[test]
-    fn remove_entry_keeps_sibling_versions() {
-        let tmp = tempfile::tempdir().unwrap();
-        let root = tmp.path().join("store");
-        for ver in ["0.1.0", "0.2.0"] {
-            let src = src_pkg(tmp.path(), "org.example", "wal", ver);
-            insert_at(&root, &src, &g("org.example"), "wal", &v(ver)).unwrap();
-        }
-        assert!(remove_entry_at(&root, &g("org.example"), "wal", &v("0.1.0")).unwrap());
-        assert!(!root.join("org.example/wal/v0.1.0").exists());
-        assert!(
-            root.join("org.example/wal/v0.2.0").is_dir(),
-            "the sibling survives"
-        );
-        // Absent identity: nothing removed, not an error.
-        assert!(!remove_entry_at(&root, &g("org.example"), "wal", &v("0.1.0")).unwrap());
-    }
-
-    /// `remove_name_at` takes every version of the name in one call and
-    /// reports how many entries died.
-    #[test]
-    fn remove_name_takes_all_versions_and_counts() {
-        let tmp = tempfile::tempdir().unwrap();
-        let root = tmp.path().join("store");
-        for ver in ["0.1.0", "0.2.0"] {
-            let src = src_pkg(tmp.path(), "org.example", "wal", ver);
-            insert_at(&root, &src, &g("org.example"), "wal", &v(ver)).unwrap();
-        }
-        // A second name keeps the group dir alive after wal goes.
-        let src = src_pkg(tmp.path(), "org.example", "other", "1.0.0");
-        insert_at(&root, &src, &g("org.example"), "other", &v("1.0.0")).unwrap();
-
-        assert_eq!(remove_name_at(&root, &g("org.example"), "wal").unwrap(), 2);
-        assert!(!root.join("org.example/wal").exists());
-        assert!(root.join("org.example/other/v1.0.0").is_dir());
-        assert!(
-            root.join("org.example").is_dir(),
-            "the group dir survives its living name"
-        );
-        assert_eq!(
-            remove_name_at(&root, &g("org.example"), "ghost").unwrap(),
-            0
-        );
-    }
-
-    /// The `--older-than` walk partitions by the entry directory's
-    /// mtime against the cutoff: everything is older than a far-future
-    /// cutoff, nothing is older than the epoch.
-    #[test]
-    fn older_than_partitions_by_cutoff() {
-        let tmp = tempfile::tempdir().unwrap();
-        let root = tmp.path().join("store");
-        let src = src_pkg(tmp.path(), "org.example", "wal", "0.1.0");
-        insert_at(&root, &src, &g("org.example"), "wal", &v("0.1.0")).unwrap();
-
-        let far_future = SystemTime::now() + std::time::Duration::from_secs(86_400 * 365);
-        assert_eq!(list_older_than_at(&root, far_future).len(), 1);
-        assert_eq!(
-            list_older_than_at(&root, SystemTime::UNIX_EPOCH).len(),
-            0,
-            "nothing predates the epoch"
-        );
-    }
-
-    /// `remove_all_at` empties the store but keeps the root itself, and
-    /// counts the entries that died.
-    #[test]
-    fn remove_all_empties_but_keeps_the_root() {
-        let tmp = tempfile::tempdir().unwrap();
-        let root = tmp.path().join("store");
-        for (name, ver) in [("wal", "0.1.0"), ("other", "1.0.0")] {
-            let src = src_pkg(tmp.path(), "org.example", name, ver);
-            insert_at(&root, &src, &g("org.example"), name, &v(ver)).unwrap();
-        }
-        // A foreign file in the root is not ours — it survives --all.
-        fs::write(root.join("foreign.txt"), "operator's own\n").unwrap();
-
-        assert_eq!(remove_all_at(&root).unwrap(), 2);
-        assert!(root.is_dir(), "the store root itself survives");
-        assert!(
-            root.join("foreign.txt").is_file(),
-            "a foreign file in the root is not ours to touch"
-        );
-        assert!(list_all_at(&root).is_empty());
-    }
-}
+#[path = "store/tests.rs"]
+mod tests;

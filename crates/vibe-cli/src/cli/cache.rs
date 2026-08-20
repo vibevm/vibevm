@@ -40,6 +40,20 @@ pub enum CacheSubcommand {
     /// surprise and never automatic (PROP-010 §2.1). Requires exactly
     /// one target: `--all`, `--package`, or `--older-than`.
     Clean(CacheCleanArgs),
+
+    /// The integrity sweep (PROP-010 §2.8 CMD-CHECK): walk every
+    /// store entry, recompute its content hash, and compare against
+    /// the recorded `v<version>.sha256` sidecar. **The only place the
+    /// store is fully re-hashed** — verification is a command an
+    /// operator runs, not a tax every install pays. Reports `ok` /
+    /// `mismatch` (identity, path, both hashes) / `unrecorded`
+    /// (no sidecar); exits non-zero when anything is not ok.
+    /// `--repair` then fixes what the sweep found, cheapest first:
+    /// unrecorded entries get a sidecar recorded from their current
+    /// bytes; mismatched entries are re-fetched at the SAME version
+    /// (`REPAIR-DOES-NOT-PULL` — never advanced, that is `vibe
+    /// update`'s job).
+    Check(CacheCheckArgs),
 }
 
 #[derive(Debug, clap::Args)]
@@ -84,4 +98,21 @@ pub struct CacheCleanArgs {
     /// Skip the `--all` confirmation prompt (non-interactive envs).
     #[arg(long, alias = "yes")]
     pub assume_yes: bool,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct CacheCheckArgs {
+    /// Fix what the sweep finds, cheapest first: record a sidecar for
+    /// unrecorded entries (from their current bytes); re-fetch
+    /// mismatched entries at the SAME version from the configured
+    /// registries (inside a project — the project's; outside — the
+    /// user-level ones).
+    #[arg(long)]
+    pub repair: bool,
+
+    /// Where to look for a project (`vibe.toml`) — its registries
+    /// serve `--repair` re-fetches; without one, the user-level
+    /// registries serve (PROP-010 §2.4).
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
 }

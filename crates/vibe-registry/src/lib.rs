@@ -352,5 +352,5 @@ pub(crate) use shippable::copy_dir_recursive;
 pub use shippable::{compute_content_hash, compute_content_hash_with};
 pub use store::{
     InsertOutcome, entry_dir, insert_from, list_all, list_older_than, list_versions, lookup,
-    remove_all, remove_entry, remove_name, store_root,
+    record_hash, recorded_hash, remove_all, remove_entry, remove_name, store_root,
 };

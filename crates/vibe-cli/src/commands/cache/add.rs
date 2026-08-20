@@ -32,34 +32,7 @@ use crate::commands::short_name;
 use crate::output;
 
 pub(crate) fn run(ctx: &output::Context, args: CacheAddArgs, root_offline: bool) -> Result<()> {
-    // The offline ladder resolved once, exactly like `vibe install`
-    // (PROP-010 §2.5): root `--offline` > `VIBE_OFFLINE` > user-config
-    // `[net].offline`.
-    let user_config = UserConfig::load().context("loading the user config")?;
-    let offline = output::resolve_offline(root_offline, user_config.net.offline);
-
-    let cwd = args
-        .path
-        .canonicalize()
-        .with_context(|| format!("canonicalizing `{}`", args.path.display()))?;
-    let cwd = crate::commands::init::strip_unc_public(cwd);
-    let in_project = cwd.join(Manifest::FILENAME).exists();
-
-    let global =
-        GlobalRegistryConfig::load().map_err(|e| anyhow!("loading ~/.vibe/registry.toml: {e}"))?;
-    let resolver = if in_project {
-        build_install_resolver(
-            &stub_install_args(cwd.clone()),
-            &Manifest::read(cwd.join(Manifest::FILENAME))?,
-            None,
-            &cwd,
-            &global,
-            offline,
-        )
-        .context("building the project's registry resolver")?
-    } else {
-        projectless_resolver(&global, offline)?
-    };
+    let (resolver, in_project) = cache_resolver(&args.path, root_offline)?;
 
     // Parse the CLI pkgrefs and qualify short names at the input
     // boundary (PROP-008 §2.6) — same seam `vibe install` uses, with
@@ -108,9 +81,49 @@ pub(crate) fn run(ctx: &output::Context, args: CacheAddArgs, root_offline: bool)
     emit(ctx, &store_root, in_project, &inserted, &already)
 }
 
-/// The user-level resolver for a projectless pre-warm (§2.4): the
-/// global config's sections are everything `MultiRegistryResolver`
-/// needs — a project contributes registries/mirrors/overrides through
+/// The registry resolver every cache-family command that needs to
+/// FETCH resolves through — shared by `add` (the pre-warm) and
+/// `check --repair` (the re-fetch rung), one construction site:
+/// inside a project, the project's own `[[registry]]` walk (the
+/// existing `build_install_resolver` path, manifest and all); outside
+/// one, the user-level `~/.vibe/registry.toml` registries (§2.4
+/// PROJECTLESS-SOURCE). Returns the resolver and whether a project
+/// was found (callers report the source they used).
+///
+/// The offline ladder is resolved here once, exactly like `vibe
+/// install` (PROP-010 §2.5): root `--offline` > `VIBE_OFFLINE` >
+/// user-config `[net].offline`.
+pub(crate) fn cache_resolver(path: &Path, root_offline: bool) -> Result<(InstallResolver, bool)> {
+    let user_config = UserConfig::load().context("loading the user config")?;
+    let offline = output::resolve_offline(root_offline, user_config.net.offline);
+
+    let cwd = path
+        .canonicalize()
+        .with_context(|| format!("canonicalizing `{}`", path.display()))?;
+    let cwd = crate::commands::init::strip_unc_public(cwd);
+    let in_project = cwd.join(Manifest::FILENAME).exists();
+
+    let global =
+        GlobalRegistryConfig::load().map_err(|e| anyhow!("loading ~/.vibe/registry.toml: {e}"))?;
+    let resolver = if in_project {
+        build_install_resolver(
+            &stub_install_args(cwd.clone()),
+            &Manifest::read(cwd.join(Manifest::FILENAME))?,
+            None,
+            &cwd,
+            &global,
+            offline,
+        )
+        .context("building the project's registry resolver")?
+    } else {
+        projectless_resolver(&global, offline)?
+    };
+    Ok((resolver, in_project))
+}
+
+/// The user-level resolver for a projectless fetch (§2.4): the global
+/// config's sections are everything `MultiRegistryResolver` needs — a
+/// project contributes registries/mirrors/overrides through
 /// `merge_effective`, and with no project there is nothing to merge,
 /// so the global sections stand alone.
 fn projectless_resolver(global: &GlobalRegistryConfig, offline: bool) -> Result<InstallResolver> {
@@ -124,10 +137,11 @@ fn projectless_resolver(global: &GlobalRegistryConfig, offline: bool) -> Result<
     }
     if eff.registries.is_empty() {
         bail!(
-            "no registry configured for a projectless `vibe cache add` — add a user-level \
-             registry to `~/.vibe/registry.toml` (`[[registry]]` with a `url`, e.g. a \
-             `file://` directory registry) or run inside a project whose `vibe.toml` \
-             declares its own `[[registry]]`."
+            "no registry configured for a projectless registry fetch (`vibe cache add` / \
+             `vibe cache check --repair`) — add a user-level registry to \
+             `~/.vibe/registry.toml` (`[[registry]]` with a `url`, e.g. a `file://` \
+             directory registry) or run inside a project whose `vibe.toml` declares \
+             its own `[[registry]]`."
         );
     }
     let multi = MultiRegistryResolver::open(&eff.registries, &eff.mirrors, &eff.overrides)

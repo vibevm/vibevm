@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-20T05:15:24Z",
+  "updated_at": "2026-08-20T05:44:25Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -111725,7 +111725,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 92,
         "marker_count": 93,
-        "processed_hash": "d5b14f433daddc9ac5148fa0dca7fd00f969c81ce7e4174fc6e121c2501470e2",
+        "processed_hash": "29dfacb8c704bd763ace0ecc210b2959b5b02dd00c4a2f01acfcff37c18b0617",
         "summary": {
           "confirmed": 132
         },
@@ -112049,7 +112049,7 @@
           "CACHE-COMMANDS": {
             "v": "confirmed",
             "ev": [
-              "семья построена: Command::Cache в cli.rs, cli/cache.rs, commands/cache/{mod,add,clean}.rs; impl/work честен — check/--repair из §2.8 ещё не построены (пакет R1-CHECK-REPAIR)"
+              "семья §2.8 теперь полная: path/list/add/clean (537d0349) + check/--repair (эта посадка); help-смок несёт все шесть путей"
             ]
           },
           "namespace-leaning": {
@@ -112438,63 +112438,55 @@
           "VERIFICATION-IS-A-COMMAND-NOT-A-TAX": {
             "v": "confirmed",
             "ev": [
-              "налоговая половина построена: без пина entry не перехэшируется (fetch.rs, докблок «re-hashing the store on every resolve is vibe cache check's job»); impl/work: сама команда vibe cache check — слайс cache-семьи"
+              "обе половины построены: обычный путь склад не перехэширует (посадка 937df291), полный пересчёт живёт ровно в vibe cache check (докблок команды цитирует формулировку спеки)"
             ]
           },
           "A-MISMATCH-IS-NAMED-NEVER-SWALLOWED": {
             "v": "confirmed",
             "ev": [
-              "read-path половина построена: StoreEntryMismatch называет пакет/путь/оба хэша, тест fetch_with_pin_names_a_tampered_store_entry (store_gate_tests.rs); sweep-половина (vibe cache check) — pending, названо в самом факте курсивной вставкой этой посадки"
+              "sweep называет identity + оба хэша той же грамматикой, что StoreEntryMismatch; чинит только явный --repair; тихого ре-скачивания нет нигде (repair печатает refetched-класс)"
             ]
           },
           "CMD-CHECK": {
             "v": "confirmed",
             "ev": [
-              "команда названа владельцем 2026-08-20 («vibe cache check или типа того»); семья `vibe cache …` была названа им же 2026-08-19, так что глагол встаёт в существующее место, а не заводит новое",
-              "роль «единственное место полного пересчёта» — прямое следствие соседнего решения о том, что обычный путь установки этой цены не платит"
+              "crates/vibe-cli/src/commands/cache/check.rs — sweep list_all → compute_content_hash против sidecar (store.rs: recorded_hash/record_hash, sidecar v<version>.sha256 РЯДОМ с entry — внутри менял бы хэшируемое дерево); классы ok/mismatch/unrecorded; красный прогон обезвреженного пересчёта уронил ровно два теста контракта детектирования (2 passed; 2 failed); e2e cli_cache_check.rs 4/4"
             ]
           },
           "CMD-CHECK-REPAIR": {
             "v": "confirmed",
             "ev": [
-              "флаг назван владельцем 2026-08-20 («vibe cache check --repair пусть починит»); форма «та же выборка плюс действие» повторяет уже принятую в дереве пару проверки и починки",
-              "содержание починки не оставлено на усмотрение: лестница ниже задана тем же рулингом"
+              "check.rs --repair: mismatch extracted → remove_entry → резолв точной версии @=<version> → существующий фетч (свежий sidecar); unrecorded → recorded-now от текущих байтов, названо отдельным классом; e2e: подменённый entry починен в байты v0.1.0 при лежащей выше v0.2.0"
             ]
           },
           "REPAIR-CLIMBS-A-LADDER-CHEAPEST-FIRST": {
             "v": "confirmed",
             "ev": [
-              "порядок задан владельцем 2026-08-20: сперва локальное восстановление гитового рабочего дерева, и лишь затем перекачка с нуля",
-              "довод — та же мера в десять гигабайт: перекачивать всё из-за одного тронутого файла значит платить максимальную цену за минимальный ущерб"
+              "порядок построен от дешёвого: классификация (а) → для extracted сразу нижняя ступень; recorded-now (запись без скачивания) дешевле re-fetch и идёт раньше; резолвер строится лениво — склад из одних unrecorded не касается реестров"
             ]
           },
           "REPAIR-STEP-IS-IT-A-CLONE": {
             "v": "confirmed",
             "ev": [
-              "проверка вида записи потребована владельцем прямо («проверь что они гитовые!»), и она не формальность: раскладка склада снимает `.git` при распаковке, поэтому на диске существуют обе формы",
-              "следствие названо: запись без `.git` локально восстановить нечем, и она сразу идёт на последнюю ступень"
+              "check.rs шаг (а): entry/.git различает формы; git-копия без записанного коммита — честный класс «unrepairable locally» → re-fetch"
             ]
           },
           "REPAIR-STEP-LOCAL-RESTORE": {
             "v": "confirmed",
             "ev": [
-              "содержание ступени задано владельцем 2026-08-20: удалить неотслеживаемое и игнорируемое, затем жёстко сбросить дерево, затем пересчитать хэш",
-              "цель ступени — вернуть запись к записанному состоянию без обращения к сети; если хэш сошёлся, перекачки не будет вовсе"
+              "статус impl/work честен и курсивная вставка называет замер: склад записывает хэш, не коммит — ресетить не к чему; ступень оживёт, если запись коммита появится; мёртвый код ресета сознательно не писался"
             ]
           },
           "REPAIR-STEP-REFETCH": {
             "v": "confirmed",
             "ev": [
-              "последняя ступень названа владельцем как запасная («Если это не помогло - перекачать с нуля»), и её место в порядке — следствие цены, а не сомнений в правильности",
-              "она же единственный выход для распакованных записей без `.git`, что связывает её с первой ступенью лестницы"
+              "check.rs ветка (г): remove_entry (sidecar умирает вместе с entry) → точный резолв → фетч write-once; upstream_changed назван отдельно, когда реестр сам двинулся на той же версии"
             ]
           },
           "REPAIR-DOES-NOT-PULL": {
             "v": "confirmed",
             "ev": [
-              "владелец оставил вопрос открытым явно («Возможно сделать git pull если это latest версия? (про pull не знаю, подумай сам)») — то есть решение принято здесь и обязано нести довод, а не ссылку",
-              "довод проверяем и не вкусовой: восстанавливаемый хэш принадлежит одной закреплённой версии, поэтому продвижение рабочей копии вперёд меняет содержимое, которое проверяется, и превращает починимую запись в гарантированное расхождение — то есть в лишнюю перекачку",
-              "разделение намерений согласовано с соседним решением этого же дня: обновление до новой версии есть работа `vibe update`, а не починки"
+              "резолв строго @=<version> (check.rs); e2e-ловушка: фикстура несёт v0.2.0 ВЫШЕ чинимой v0.1.0 — после repair v0.2.0 в складе НЕТ, P.md = байты v0.1.0"
             ]
           },
           "A-REFRESH-AND-A-SOURCE-SWITCH-ARE-DIFFERENT-OPERATIONS": {
@@ -112560,8 +112552,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-20T05:15:22Z",
-        "verify_batch": "c4f1-registry-rest + d2d + W8 + W10 + PROP010-ENV-VAR-NAME-2026-08-19 + OWNER-RULINGS-STORE-AND-RESCAN-2026-08-20 + R1-OFFLINE + R1-STORE + R1-REFRESH + R1-CACHE-CMDS"
+        "verified_at": "2026-08-20T05:44:23Z",
+        "verify_batch": "c4f1-registry-rest + d2d + W8 + W10 + PROP010-ENV-VAR-NAME-2026-08-19 + OWNER-RULINGS-STORE-AND-RESCAN-2026-08-20 + R1-OFFLINE + R1-STORE + R1-REFRESH + R1-CACHE-CMDS + R1-CHECK-REPAIR"
       }
     },
     {

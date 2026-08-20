@@ -188,8 +188,8 @@ pub enum RegistryError {
     #[error(
         "{detail} \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#layout; \
-          fix: delete that entry directory so the next fetch re-downloads it — \
-          `vibe cache check` will automate this when it ships)"
+          fix: run `vibe cache check --repair`, or delete that entry directory \
+          so the next fetch re-downloads it)"
     )]
     StoreEntryMismatch {
         detail: Box<StoreEntryMismatchDetail>,
