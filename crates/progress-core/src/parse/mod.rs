@@ -261,8 +261,11 @@ mod qualified_form_tests {
         );
         let issues = binding_issues(&d);
         assert_eq!(issues.len(), 1, "{:?}", d.issues);
-        assert!(issues[0].message.contains("image"), "{}", issues[0].message);
-        assert!(issues[0].message.contains("code"), "names what IS known");
+        assert_eq!(issues[0].line, 3);
+        assert_eq!(
+            issues[0].message,
+            "unknown fact type `image`; the one implemented type is `code`"
+        );
     }
 
     /// A typed anchor with no fence after it names a body it does not have.
@@ -272,7 +275,157 @@ mod qualified_form_tests {
             "a.md",
             "# T {#t}\n\n@fact/code:NOPE no fence follows @status:impl/done\n\nplain text\n",
         );
-        assert_eq!(binding_issues(&d).len(), 1, "{:?}", d.issues);
+        let issues = binding_issues(&d);
+        assert_eq!(issues.len(), 1, "{:?}", d.issues);
+        assert_eq!(
+            issues[0].message,
+            "`@fact/code:NOPE` is not followed by a fenced block"
+        );
+    }
+
+    /// Blank separator lines are layout, not intervening objects. The bound
+    /// body is durable source, not merely a line-range hint: a renderer can
+    /// print it and a verdict can stand against its own hash.
+    #[test]
+    fn blank_lines_are_allowed_and_the_fence_is_in_the_fact_body() {
+        let d = parse_document(
+            "a.md",
+            "# T {#t}\n\n\
+             @fact/code:PANEL the panel runs this @status:impl/done\n\n\n\n\
+             ```bash\n\
+             cargo test -p progress-core\n\
+             ```\n",
+        );
+        assert!(binding_issues(&d).is_empty(), "{:?}", d.issues);
+        let fact = d
+            .blocks
+            .iter()
+            .flat_map(|b| &b.facts)
+            .find(|f| f.id.as_deref() == Some("PANEL"))
+            .expect("fact");
+        assert!(fact.body.starts_with("@fact/code:PANEL"), "{}", fact.body);
+        assert!(
+            fact.body
+                .contains("```bash\ncargo test -p progress-core\n```"),
+            "{}",
+            fact.body
+        );
+        assert_eq!(fact.content_hash, content_hash(&fact.body));
+    }
+
+    /// The fence is part of this fact's identity, not just the enclosing
+    /// file's identity: changing one command makes this fact stale.
+    #[test]
+    fn editing_the_bound_fence_moves_the_fact_body_hash() {
+        let parse = |command: &str| {
+            let text = format!(
+                "# T {{#t}}\n\n@fact/code:RUN execute this @status:impl/done\n\n```bash\n{command}\n```\n"
+            );
+            let d = parse_document("a.md", &text);
+            let fact = d
+                .blocks
+                .iter()
+                .flat_map(|b| &b.facts)
+                .find(|f| f.id.as_deref() == Some("RUN"))
+                .expect("fact");
+            (fact.body.clone(), fact.content_hash.clone())
+        };
+        let (before_body, before_hash) = parse("cargo check");
+        let (after_body, after_hash) = parse("cargo test");
+        assert_ne!(before_body, after_body);
+        assert_ne!(before_hash, after_hash);
+    }
+
+    /// Any meaningful block breaks adjacency, even when a fence appears
+    /// later. The parser refuses the anchor at its own line instead of
+    /// searching forward and silently claiming across an intervening object.
+    #[test]
+    fn another_block_between_the_fact_and_fence_is_an_error() {
+        let d = parse_document(
+            "a.md",
+            "# T {#t}\n\n\
+             @fact/code:RUN execute this @status:impl/done\n\n\
+             <!-- an intervening block -->\n\n\
+             ```bash\ntrue\n```\n",
+        );
+        let issues = binding_issues(&d);
+        assert_eq!(issues.len(), 1, "{:?}", d.issues);
+        assert_eq!(issues[0].line, 3);
+        assert_eq!(
+            issues[0].message,
+            "`@fact/code:RUN` is not followed by a fenced block"
+        );
+    }
+
+    /// Binding changes ownership, not scanning: markers and definition-looking
+    /// tokens inside the fence remain opaque while the source still prints as
+    /// part of the owning fact's body.
+    #[test]
+    fn a_bound_fence_remains_opaque_to_marker_and_anchor_scans() {
+        let d = parse_document(
+            "a.md",
+            "# T {#t}\n\n\
+             @fact/code:RUN execute this @status:impl/done\n\n\
+             ```markdown\n\
+             @fact:INSIDE example only @status:idea/plan\n\
+             ```\n",
+        );
+        assert_eq!(d.error_count(), 0, "{:?}", d.issues);
+        assert_eq!(d.markers.len(), 1, "{:?}", d.markers);
+        let ids: Vec<&str> = d
+            .blocks
+            .iter()
+            .flat_map(|b| b.facts.iter().filter_map(|f| f.id.as_deref()))
+            .collect();
+        assert_eq!(ids, ["RUN"]);
+        let fact = d
+            .blocks
+            .iter()
+            .flat_map(|b| &b.facts)
+            .find(|f| f.id.as_deref() == Some("RUN"))
+            .expect("fact");
+        assert!(fact.body.contains("@fact:INSIDE"));
+    }
+
+    /// The default remains an example: an ordinary fact's printable body and
+    /// body hash stop at its own paragraph even when a fence follows.
+    #[test]
+    fn an_untyped_fact_body_still_excludes_the_following_fence() {
+        let d = parse_document(
+            "a.md",
+            "# T {#t}\n\n@fact:PLAIN prose @status:impl/done\n\n```text\nexample\n```\n",
+        );
+        let fact = d
+            .blocks
+            .iter()
+            .flat_map(|b| &b.facts)
+            .find(|f| f.id.as_deref() == Some("PLAIN"))
+            .expect("fact");
+        assert_eq!(fact.body, "@fact:PLAIN prose @status:impl/done");
+        assert_eq!(fact.content_hash, content_hash(&fact.body));
+        assert!(!fact.body.contains("example"));
+    }
+
+    /// Fact bodies preserve source bytes even though marker scanning blanks
+    /// inline code internally. Non-ASCII text is the offset-sensitive case.
+    #[test]
+    fn ordinary_fact_body_preserves_inline_code_verbatim() {
+        let d = parse_document(
+            "a.md",
+            "# T {#t}\n\n@fact:TEXT Keep `привет @status:idea/plan` opaque. @status:impl/done\n",
+        );
+        assert_eq!(d.error_count(), 0, "{:?}", d.issues);
+        assert_eq!(d.markers.len(), 1);
+        let fact = d
+            .blocks
+            .iter()
+            .flat_map(|b| &b.facts)
+            .find(|f| f.id.as_deref() == Some("TEXT"))
+            .expect("fact");
+        assert_eq!(
+            fact.body,
+            "@fact:TEXT Keep `привет @status:idea/plan` opaque. @status:impl/done"
+        );
     }
 
     /// Mixed spellings inside one document must both be read: during the

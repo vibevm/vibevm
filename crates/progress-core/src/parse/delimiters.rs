@@ -79,8 +79,9 @@ fn backtick_runs(s: &str) -> Vec<(usize, usize)> {
 }
 
 /// Blank out the **contents** of `` `inline code` `` spans so marker
-/// scanning never fires inside them (one space per non-newline character,
-/// so line structure and the span's own delimiters survive).
+/// scanning never fires inside them (one space per source byte for every
+/// non-newline character, so line structure, byte offsets, and the span's
+/// own delimiters survive).
 ///
 /// Spans are matched by backtick *run*, the way the code-span rule works:
 /// a run of N backticks opens a span that only a run of exactly N closes,
@@ -122,7 +123,7 @@ pub(super) fn blank_inline_code(s: &str) -> String {
     let mut out = String::with_capacity(s.len());
     for (i, c) in s.char_indices() {
         if blanked[i] && c != '\n' {
-            out.push(' ');
+            out.extend(std::iter::repeat_n(' ', c.len_utf8()));
         } else {
             out.push(c);
         }

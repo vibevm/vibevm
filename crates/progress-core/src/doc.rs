@@ -18,6 +18,13 @@ pub struct Block {
     /// Block text with inline-code spans blanked (marker scanning input).
     #[serde(skip)]
     pub scan_text: String,
+    /// Verbatim block text (fact-body construction input).
+    ///
+    /// Like [`Block::scan_text`], this is parser scratch. A fact copies its
+    /// own durable body out of it before the parse is cached; downstream
+    /// consumers read [`Fact::body`] rather than reaching back into a block.
+    #[serde(skip)]
+    pub source_text: String,
     /// The countable fact units of a Text block (empty for other kinds).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub facts: Vec<Fact>,
@@ -35,6 +42,19 @@ pub struct Fact {
     /// Byte span of the unit's own text inside the block's `scan_text`.
     #[serde(skip)]
     pub span: (usize, usize),
+    /// Verbatim source body of this fact.
+    ///
+    /// For an ordinary fact this is its paragraph/list item/table cell. For
+    /// `@fact/code:<ID>` it also contains the fenced block bound below the
+    /// paragraph, so renderers and verdict tooling cannot accidentally drop
+    /// the claim that lives in the fence.
+    pub body: String,
+    /// Stable content identity of [`Fact::body`].
+    ///
+    /// This uses the parser's shared markup-canonicalising hash. Editing the
+    /// attached fence therefore makes the fact stale just like editing its
+    /// prose does.
+    pub content_hash: String,
     /// Set by the marker scan: the unit carries its own marker.
     #[serde(default)]
     pub marked: bool,
@@ -158,9 +178,9 @@ pub enum IssueCode {
 
 /// One fully parsed document.
 ///
-/// Two `#[serde(skip)]` fields live inside — `Block::scan_text` and
-/// `Fact::span` — and they are the marker scanner's scratch: written by
-/// `parse`, read by `parse`, and by nothing downstream. Everything a
+/// Three `#[serde(skip)]` fields live inside — `Block::scan_text`,
+/// `Block::source_text`, and `Fact::span` — and they are parser scratch:
+/// written by `parse`, read by `parse`, and by nothing downstream. Everything a
 /// consumer reads is persisted, which is what lets the cache hand a
 /// `ParsedDoc` back instead of re-parsing (PROP-043 §7.1). `PartialEq` is
 /// derived so that equality can be *asserted* rather than argued about —

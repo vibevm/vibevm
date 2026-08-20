@@ -26,6 +26,7 @@ pub(super) fn collect_blocks(lines: &[&str], doc: &mut ParsedDoc) {
                 line_start: s,
                 line_end: end_line,
                 scan_text: blank_inline_code(&joined),
+                source_text: joined,
                 facts: Vec::new(),
             });
             text.clear();
@@ -42,6 +43,7 @@ pub(super) fn collect_blocks(lines: &[&str], doc: &mut ParsedDoc) {
             line_start: 1,
             line_end: fm,
             scan_text: blank_inline_code(&lines[..fm].join("\n")),
+            source_text: lines[..fm].join("\n"),
             facts: Vec::new(),
         });
     }
@@ -99,6 +101,7 @@ pub(super) fn collect_blocks(lines: &[&str], doc: &mut ParsedDoc) {
                 line_start: lineno,
                 line_end: lineno,
                 scan_text: (*raw).to_string(),
+                source_text: (*raw).to_string(),
                 facts: Vec::new(),
             });
             continue;

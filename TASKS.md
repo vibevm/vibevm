@@ -885,6 +885,6 @@ untouched by policy, and this is the route back to what it read:
 - [x] Партия 2а — **посажена целиком**: B-074+B-092-чекеры (codex, P2-CODEGEN) ✓,
       B-082 (codex, P2-FSYNC) ✓посажен, B-076 (claudez, P2-MIRROR) ✓посажен,
       B-077 (claudez, P2-PREFS) ✓посажен.
-- [ ] Партия 2б (после 2а): B-068 (parse/, ждёт посадки B-074),
+- [ ] Партия 2б: B-068 ✓посажен (typed-факт + грамматика PROP-043),
       B-075 (диагноз флаки), B-094 ✓посажен (derive-driven, дешевле прогноза); B-088 — триггер
       «первый закрытый план» уточнить у владельца.

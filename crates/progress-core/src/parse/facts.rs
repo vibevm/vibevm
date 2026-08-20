@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#parsing");
 
+use super::content_hash;
 use crate::doc::{BlockKind, Fact, FactKind, Issue, IssueCode, ParsedDoc, Severity};
 use specmark::spec;
 
@@ -318,13 +319,7 @@ pub(super) fn bind_covered_blocks(doc: &mut ParsedDoc) {
                     line: f.line,
                     code: IssueCode::FenceBinding,
                     message: format!(
-                        "`@fact/{ty}:` names an object type this markup does not implement \
-                         (known: {})",
-                        KNOWN_TYPES
-                            .iter()
-                            .map(|(n, _)| *n)
-                            .collect::<Vec<_>>()
-                            .join(", ")
+                        "unknown fact type `{ty}`; the one implemented type is `code`"
                     ),
                 });
                 continue;
@@ -349,8 +344,8 @@ pub(super) fn bind_covered_blocks(doc: &mut ParsedDoc) {
                     line: f.line,
                     code: IssueCode::FenceBinding,
                     message: format!(
-                        "`@fact/{ty}:` is not followed by a {ty} block — the anchor names \
-                         a body it does not have"
+                        "`@fact/{ty}:{}` is not followed by a fenced block",
+                        f.id.as_deref().unwrap_or("<missing-id>")
                     ),
                 }),
             }
@@ -358,7 +353,12 @@ pub(super) fn bind_covered_blocks(doc: &mut ParsedDoc) {
     }
 
     for (bi, fi, covers) in binds {
-        doc.blocks[bi].facts[fi].covers = Some(covers);
+        let fenced_body = doc.blocks[bi + 1].source_text.clone();
+        let fact = &mut doc.blocks[bi].facts[fi];
+        fact.body.push_str("\n\n");
+        fact.body.push_str(&fenced_body);
+        fact.content_hash = content_hash(&fact.body);
+        fact.covers = Some(covers);
     }
     doc.issues.extend(issues);
 }
@@ -373,6 +373,7 @@ pub(super) fn segment_facts(doc: &mut ParsedDoc) {
             continue;
         }
         let text = b.scan_text.clone();
+        let source = b.source_text.clone();
         // Line starts (byte offsets) inside the block text.
         let mut offs: Vec<usize> = vec![0];
         for (i, ch) in text.char_indices() {
@@ -413,8 +414,14 @@ pub(super) fn segment_facts(doc: &mut ParsedDoc) {
 
         let has_structure = classes.iter().any(|c| !matches!(c, L::Plain));
         if !has_structure {
-            b.facts
-                .push(mk_fact(FactKind::Para, &text, 0, text.len(), b.line_start));
+            b.facts.push(mk_fact(
+                FactKind::Para,
+                &text,
+                &source,
+                0,
+                text.len(),
+                b.line_start,
+            ));
             continue;
         }
 
@@ -443,7 +450,7 @@ pub(super) fn segment_facts(doc: &mut ParsedDoc) {
             let (s, _) = span_of(0);
             let (_, e) = span_of(end_li);
             b.facts
-                .push(mk_fact(FactKind::Lead, &text, s, e, b.line_start));
+                .push(mk_fact(FactKind::Lead, &text, &source, s, e, b.line_start));
             li = end_li + 1;
         }
         while li < n {
@@ -458,6 +465,7 @@ pub(super) fn segment_facts(doc: &mut ParsedDoc) {
                     b.facts.push(mk_fact(
                         FactKind::Item,
                         &text,
+                        &source,
                         content,
                         e,
                         b.line_start + li,
@@ -472,6 +480,7 @@ pub(super) fn segment_facts(doc: &mut ParsedDoc) {
                                 b.facts.push(mk_fact(
                                     FactKind::Cell,
                                     &text,
+                                    &source,
                                     cs,
                                     ce,
                                     b.line_start + li,
@@ -489,8 +498,14 @@ pub(super) fn segment_facts(doc: &mut ParsedDoc) {
                     }
                     let (s, _) = span_of(start);
                     let (_, e) = span_of(li);
-                    b.facts
-                        .push(mk_fact(FactKind::Para, &text, s, e, b.line_start + start));
+                    b.facts.push(mk_fact(
+                        FactKind::Para,
+                        &text,
+                        &source,
+                        s,
+                        e,
+                        b.line_start + start,
+                    ));
                     li += 1;
                 }
             }
@@ -498,16 +513,19 @@ pub(super) fn segment_facts(doc: &mut ParsedDoc) {
     }
 }
 
-fn mk_fact(kind: FactKind, text: &str, s: usize, e: usize, line: usize) -> Fact {
+fn mk_fact(kind: FactKind, text: &str, source: &str, s: usize, e: usize, line: usize) -> Fact {
     // Cells may carry an id too (first cell of a row ⇒ the row's address,
     // any other cell ⇒ that cell's — §3.8 table addressing); only the
     // anchored-when-marked obligation exempts cells.
     let (id, _) = take_fact_id(text, s, e);
+    let body = source[s..e].to_string();
     Fact {
         kind,
         id,
         line,
         span: (s, e),
+        content_hash: content_hash(&body),
+        body,
         marked: false,
         covers: None,
     }

@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-20T14:52:11Z",
+  "updated_at": "2026-08-20T15:27:13Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -174256,7 +174256,7 @@
       }
     },
     "spec/modules/vibe-progress/PROP-043-progress-markup.md": {
-      "content_hash": "c4412037448c5115930f3ee2d52c1c7f8ec77ef051be33624b5f70d1534a5883",
+      "content_hash": "23abfbc62042b5ecaf3493208eef2f836f2a407c3faf2362524194cdc2a6d951",
       "rollup": {
         "explicit": [
           "impl",
@@ -174270,11 +174270,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 191,
-        "fact_count": 190,
+        "marker_count": 192,
+        "fact_count": 191,
         "unmarked_facts": 0
       },
-      "marker_count": 191,
+      "marker_count": 192,
       "unit_count": 29,
       "issue_count": 0,
       "campaign": {
@@ -174282,7 +174282,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (14 cells); document <status> judged as _elements",
         "fact_count": 158,
         "marker_count": 159,
-        "processed_hash": "e44968da2676c7ab3fa984aabaafdc84fca83f13d3df0f9eb9249a776fba6eda",
+        "processed_hash": "23abfbc62042b5ecaf3493208eef2f836f2a407c3faf2362524194cdc2a6d951",
         "verdicts": {
           "self-uri": {
             "v": "confirmed",
@@ -175398,10 +175398,17 @@
               "the discipline held in a checkable way rather than an asserted one — every verdict written today carries evidence naming a file:line, a command output, or a resolvable anchor, and where a claim could not be verified the fact was repaired rather than confirmed",
               "the clearest instance runs the other way: judging the TUI boundary's manual-tests clause could have been a one-line confirmation and instead produced a correction, because the evidence was looked for before the verdict was written"
             ]
+          },
+          "PARSE-TYPED-FACT-CODE": {
+            "v": "confirmed",
+            "ev": [
+              "crates/progress-core/src/parse: parse_anchor_token reads opener/type/id for @fact/<type>:<ID> in the one shared anchor reader; bind_covered_blocks enforces the closed type set (unknown type = FenceBinding error naming <t> and the one implemented type), adjacency (blank lines fine, any other block breaks it, typed fact must close its text block), and attaches the fence verbatim into Fact::body + content_hash — fence edits stale the fact; PAYLOAD_SCHEMA bumped to 2 so pre-feature sidecars are cache misses, not incomplete warm parses",
+              "gates: progress-core 167 tests passed incl. unknown-type error, adjacency error, hash-changes-on-fence-edit, duplicate-across-forms; exhaustive markup check clean over 491 files (zero typed facts in the corpus today — no behaviour change)"
+            ]
           }
         },
-        "verified_at": "2026-08-03T11:11:46Z",
-        "verify_batch": "c4a-vibe-progress + d2f + E + DEBT-2026-08-06-H + COPY-2026-08-13-p43"
+        "verified_at": "2026-08-20T15:27:13Z",
+        "verify_batch": "c4a-vibe-progress + d2f + E + DEBT-2026-08-06-H + COPY-2026-08-13-p43 + P2-B068"
       }
     },
     "spec/modules/vibe-progress/templates/harvest-card.md": {

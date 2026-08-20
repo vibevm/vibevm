@@ -235,6 +235,22 @@ mod tests {
         assert!(swallowed(&doc).is_empty(), "issues: {:#?}", doc.issues);
     }
 
+    /// B-074 must use the shared opener/type/id reader: a typed definition on
+    /// a continuation line is swallowed in exactly the same way as the plain
+    /// qualified spelling.
+    #[test]
+    fn typed_definition_form_is_caught_when_swallowed() {
+        let text = "# Doc {#doc}\n\n\
+             @fact:FIRST first fact\n\
+             @fact/code:SECOND typed fact glued to it\n\n\
+             ```text\nclaim\n```\n";
+        let doc = parse_document("x.md", text);
+        assert_eq!(fact_ids(&doc), ["FIRST"]);
+        let issues = swallowed(&doc);
+        assert_eq!(issues.len(), 1, "issues: {:#?}", doc.issues);
+        assert!(issues[0].message.contains("`@fact:SECOND`"));
+    }
+
     /// 2.2.3 — a list where every item is its OWN fact (each opens with `- `)
     /// is three separate anchored units, not one fact with swallowed anchors.
     #[test]

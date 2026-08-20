@@ -275,11 +275,12 @@ fn cache_round_trips_and_tracks_currency() {
 /// carries the identity a verdict is formed against and none of the
 /// text that identity stands for.
 ///
-/// The two `#[serde(skip)]` fields are cleared on the freshly parsed
+/// The three `#[serde(skip)]` fields are cleared on the freshly parsed
 /// side before comparing, and that is the *whole* of the residue: they
-/// are the marker scanner's scratch (`Block::scan_text` is the blanked
-/// block text it scans, `Fact::span` indexes into it), written and read
-/// inside `parse` and by nothing downstream. Naming them here keeps the
+/// are parser scratch (`Block::scan_text` is the blanked block text it
+/// scans, `Block::source_text` is the verbatim construction input, and
+/// `Fact::span` indexes into both), written and read inside `parse` and by
+/// nothing downstream. Naming them here keeps the
 /// day someone reaches for them from being silent.
 #[test]
 fn cached_doc_round_trips_the_parse() {
@@ -308,6 +309,7 @@ fn cached_doc_round_trips_the_parse() {
     let mut expected = doc.clone();
     for b in &mut expected.blocks {
         b.scan_text = String::new();
+        b.source_text = String::new();
         for f in &mut b.facts {
             f.span = (0, 0);
         }

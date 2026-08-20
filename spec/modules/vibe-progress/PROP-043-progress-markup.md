@@ -584,6 +584,19 @@ drift row already closed. The map is the source; the count is a view of it. @sta
   the heading anchors; the scanner enforces the anchored-when-marked law
   (§3.8) — a marked unit with no anchor, and a duplicate id, are `check`
   errors. An opener inside code spans/fences is opaque, as all markup is. @status:impl/done
+- @fact:PARSE-TYPED-FACT-CODE **Typed fact — the fence joins the body** *(owner ruling variant D
+  2026-08-06; built 2026-08-20, B-068)*: `@fact/code:<ID>` is a fact
+  definition in the same position and id namespace as `@fact:<ID>`, whose
+  body is its own unit **plus the first fenced block after it** (blank
+  lines between are fine; any other block breaks the adjacency and is a
+  parse error, as is a typed fact that is not the last fact of its text
+  block). The attached fence enters the fact's content hash — editing the
+  fence stales the fact — while staying opaque to marker/anchor scans, as
+  all fences are. `code` is the one implemented type: an unknown type
+  (`@fact/<t>:`) is a parse error naming `<t>`, never a silent skip — a
+  grammar must not promise what it cannot check. By default a fence
+  remains an example belonging to no fact; the typed form is the opt-in
+  that turns it into a judgeable assertion. @status:impl/done
 - @fact:PARSE-XML-GRAMMAR The element grammar is XML: attributes quoted, point markers self-closed.
   A future XML storage frontend consumes the same attribute schema natively;
   the markup language does not change. @status:impl/done

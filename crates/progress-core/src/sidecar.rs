@@ -38,7 +38,7 @@ use std::path::{Path, PathBuf};
 
 /// Schema of the sidecar file. A foreign value reads as an empty store:
 /// the payload is regenerable, so there is nothing here worth migrating.
-pub const PAYLOAD_SCHEMA: u32 = 1;
+pub const PAYLOAD_SCHEMA: u32 = 2;
 
 /// The one file a payload bucket holds.
 pub const PAYLOAD_FILE: &str = "payloads.json";

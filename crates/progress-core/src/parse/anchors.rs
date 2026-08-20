@@ -154,6 +154,20 @@ mod tests {
     }
 
     #[test]
+    fn typed_and_untyped_forms_share_one_definition_namespace() {
+        let doc = parse_document(
+            "x.md",
+            "# H {#h}\n\n\
+             @fact:SAME ordinary definition\n\n\
+             @fact/code:SAME typed definition\n\n\
+             ```text\nclaim\n```\n",
+        );
+        let issues = duplicates(&doc);
+        assert_eq!(issues.len(), 1, "{:#?}", doc.issues);
+        assert!(issues[0].message.contains("lines 3 and 5"));
+    }
+
+    #[test]
     fn definition_form_inside_fence_is_not_a_definition() {
         let doc = parse_document(
             "x.md",
