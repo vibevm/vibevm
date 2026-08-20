@@ -3,6 +3,7 @@ name = "redbook"
 group = "org.vibevm.world"
 kind = "flow"
 version = "0.2.0"
+epoch = 1
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "The redbook collection: the AI-native development practices, distilled from the book into installable flows — one edition, one tested set"

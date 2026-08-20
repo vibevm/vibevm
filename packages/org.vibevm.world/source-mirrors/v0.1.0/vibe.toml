@@ -3,6 +3,7 @@ name = "source-mirrors"
 group = "org.vibevm.world"
 kind = "flow"
 version = "0.1.0"
+epoch = 1
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Single-writer source mirrors: one mainline, hosts as read-replicas, manifest-driven fast-forward-only fan-out that fails loud"

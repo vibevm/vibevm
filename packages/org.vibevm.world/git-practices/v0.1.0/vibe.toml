@@ -3,6 +3,7 @@ name = "git-practices"
 group = "org.vibevm.world"
 kind = "flow"
 version = "0.1.0"
+epoch = 1
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Git practices — the family aggregator for a repository's commit-and-push discipline: one install pulls the message format (conventional-commits) and the atomicity discipline (atomic-commits), and — as they land — human-authored attribution and commit autonomy. Content-minimal (PROP-028): no boot snippet of its own; each member ships theirs."

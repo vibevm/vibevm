@@ -3,6 +3,7 @@ name = "manual-tests"
 group = "org.vibevm.world"
 kind = "flow"
 version = "0.1.0"
+epoch = 1
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Human-runnable manual tests: markdown walkthroughs for the integration surfaces automated suites cannot prove"

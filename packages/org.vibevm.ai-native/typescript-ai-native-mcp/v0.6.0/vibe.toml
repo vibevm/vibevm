@@ -3,6 +3,7 @@ name = "typescript-ai-native-mcp"
 group = "org.vibevm.ai-native"
 kind = "mcp"
 version = "0.6.0"
+epoch = 1
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "The AI-Native TypeScript discipline over MCP: every typescript-ai-native command and the tcg type oracle as agent tools, served straight from the slot with no vibe in the runtime path"

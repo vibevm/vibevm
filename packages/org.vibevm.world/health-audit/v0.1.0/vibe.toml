@@ -3,6 +3,7 @@ name = "health-audit"
 group = "org.vibevm.world"
 kind = "flow"
 version = "0.1.0"
+epoch = 1
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "The periodic health audit: a recurring judgment sweep over what the per-commit gate is structurally blind to, recorded as an append-only trend"

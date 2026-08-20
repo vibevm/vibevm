@@ -3,6 +3,7 @@ name = "git-autonomy"
 group = "org.vibevm.world"
 kind = "flow"
 version = "0.1.0"
+epoch = 1
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Commit/push autonomy: routine large changes proceed without a confirmation handshake; a fixed set of non-routine, hard-to-reverse operations (history rewrites, force-push, large blobs, CI/signing/secrets) always stops and asks first"

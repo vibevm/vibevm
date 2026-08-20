@@ -3,6 +3,7 @@ name = "conflict-protocol"
 group = "org.vibevm.world"
 kind = "flow"
 version = "0.1.0"
+epoch = 1
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Conflict resolution for two writers on one file set: Human > Spec > Tests > Code, REVIEW markers, and the conservative-default uncertainty path"

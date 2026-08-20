@@ -3,6 +3,7 @@ name = "dev-runtime-docs"
 group = "org.vibevm.world"
 kind = "flow"
 version = "0.1.0"
+epoch = 1
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Load-bearing setup + runtime docs: a change to toolchain / prerequisites / env / paths ships with the doc update in the same commit, never deferred"

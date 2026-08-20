@@ -3,6 +3,7 @@ name = "go-ai-native-lang"
 group = "org.vibevm.ai-native"
 kind = "lang"
 version = "0.1.0"
+epoch = 1
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "AI-Native Go - the Go projection of the Discipline v0.2: gap closure over a prescriptive language (closed error sets, loud interface conformance, owned goroutines, no init()), cells and seams, the nine scaffolds in Go, //spec: directive traceability, and the nine scaffold cards"

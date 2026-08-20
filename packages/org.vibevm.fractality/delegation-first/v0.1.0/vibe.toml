@@ -3,6 +3,7 @@ name = "delegation-first"
 group = "org.vibevm.fractality"
 kind = "flow"
 version = "0.1.0"
+epoch = 1
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "The standing delegation directive for a boss–worker agent setup: delegate execution by default and reserve the expensive boss for judgment and review — the posture layer above the delegation-rules calculus"

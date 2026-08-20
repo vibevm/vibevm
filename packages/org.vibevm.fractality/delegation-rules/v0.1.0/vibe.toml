@@ -3,6 +3,7 @@ name = "delegation-rules"
 group = "org.vibevm.fractality"
 kind = "flow"
 version = "0.1.0"
+epoch = 1
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "The delegation policy layer for fractality bosses: a decidable routing matrix (delegate when verification is cheaper than generation) plus per-model playbooks for the worker fleet"

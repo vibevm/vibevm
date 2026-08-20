@@ -3,6 +3,7 @@ name = "rust-ai-native-lang"
 group = "org.vibevm.ai-native"
 kind = "lang"
 version = "0.7.0"
+epoch = 1
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "AI-Native Rust - the Rust projection of the Discipline v0.2: cells, naming, contract-first ordering, the nine scaffolds in Rust, errors as contract surface, and the vibe-tcg tool vision"

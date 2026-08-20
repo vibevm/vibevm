@@ -3,6 +3,7 @@ name = "comparative-research"
 group = "org.vibevm.world"
 kind = "flow"
 version = "0.1.0"
+epoch = 1
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Comparative research documents: evergreen competitor studies with two-way gap analysis and numbered roadmap deltas"

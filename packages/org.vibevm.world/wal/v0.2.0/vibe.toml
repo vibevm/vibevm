@@ -3,6 +3,7 @@ name = "wal"
 group = "org.vibevm.world"
 kind = "flow"
 version = "0.2.0"
+epoch = 1
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Write-Ahead Log discipline for human-AI development sessions: the checkpoint file, the cold-resume snapshot, and the session rituals around them"

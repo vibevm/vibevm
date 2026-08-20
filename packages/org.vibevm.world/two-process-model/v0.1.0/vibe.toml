@@ -3,6 +3,7 @@ name = "two-process-model"
 group = "org.vibevm.world"
 kind = "flow"
 version = "0.1.0"
+epoch = 1
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "The two-process model: human and AI as coprocessors with complementary architectures, files as the only shared memory"

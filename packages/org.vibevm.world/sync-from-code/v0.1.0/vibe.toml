@@ -3,6 +3,7 @@ name = "sync-from-code"
 group = "org.vibevm.world"
 kind = "flow"
 version = "0.1.0"
+epoch = 1
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Sync-from-Code protocol: reconcile specs with code when the code changed first"
