@@ -277,6 +277,7 @@ fn resolve_halts_on_auth_failed_against_authenticated_registry() {
         auth: vibe_core::manifest::AuthKind::CredentialHelper,
         token_env: None,
         enabled: true,
+        index_url: None,
     };
     let r = build_resolver(
         cache.path(),

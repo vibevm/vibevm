@@ -11,7 +11,8 @@ use semver::Version;
 use serde::Serialize;
 use vibe_core::PackageKind;
 use vibe_registry::{
-    BindingSite, IndexAuth, IndexClient, ProbeOutcome, PurlLookupHit, index_url_for,
+    BindingSite, IndexAuth, IndexClient, IndexUrlResolution, IndexUrlSource, ProbeOutcome,
+    PurlLookupHit, resolve_index_url,
 };
 
 use crate::output;
@@ -57,9 +58,16 @@ pub(super) fn run_purl_lookup(
     let mut by_kvn: HashMap<(PackageKind, String, Version), PurlHitRow> = HashMap::new();
 
     for reg in target_registries {
-        let Some(base) = index_url_for(&reg.name) else {
-            unconfigured.push(reg.name.clone());
-            continue;
+        // The B-083 ladder: env → `[[registry]].index_url` → the
+        // `<registry-url>/index` default. Explicit `none` is a
+        // deliberate index-off — the indexless bucket, same as before
+        // the ladder existed.
+        let (base, source) = match resolve_index_url(reg) {
+            IndexUrlResolution::Url { base, source } => (base, source),
+            IndexUrlResolution::Disabled => {
+                unconfigured.push(reg.name.clone());
+                continue;
+            }
         };
         // A2-INDEXAUTH — authenticate with the registry's own
         // credentials, and tell a refused (401/403) probe apart from a
@@ -73,6 +81,13 @@ pub(super) fn run_purl_lookup(
                     name: reg.name.clone(),
                     reason,
                 });
+                continue;
+            }
+            // The default rung is a guess the spec prescribes trying —
+            // nothing there means "this registry has no index", not an
+            // error worth an unreachable row.
+            ProbeOutcome::Absent if source == IndexUrlSource::Default => {
+                unconfigured.push(reg.name.clone());
                 continue;
             }
             ProbeOutcome::Absent => {

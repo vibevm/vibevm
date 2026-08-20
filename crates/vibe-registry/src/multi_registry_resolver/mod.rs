@@ -360,34 +360,48 @@ impl MultiRegistryResolver {
                 reg.auth,
                 token_env_name.as_deref(),
             )?;
-            // PROP-005 §2.10 slice 10 — when an upstream index is
-            // configured for this registry via env vars, attach the
-            // probed client. Probe is best-effort; absent or
-            // unreachable index leaves the registry on the existing
-            // git ls-remote path with no warning.
-            if let Some(url) = crate::index_client::index_url_for(&reg.name) {
-                // A2-INDEXAUTH — authenticate to this registry's index
-                // with the registry's own credentials (bearer from
-                // `auth`/`token_env`, the same source the git side
-                // reads). `for_registry` is the scheme gate: a token is
-                // attached only over `https://`.
-                let auth = crate::index_client::IndexAuth::for_registry(reg, &url);
-                match crate::index_client::IndexClient::probe(&url, auth) {
-                    crate::index_client::ProbeOutcome::Found(client) => {
-                        entry = entry.with_index_client(client);
+            // PROP-005 §2.2 INDEX-URL-CONFIG — the index-location
+            // ladder: env `VIBEVM_INDEX_URL_<REGISTRY>` (operator,
+            // per-run) > the `[[registry]].index_url` key (project
+            // property) > the default `<registry-url>/index`. `none`
+            // on either explicit step switches the index off. Probe is
+            // best-effort; absent or unreachable index leaves the
+            // registry on the existing git ls-remote path with no
+            // warning.
+            match crate::index_client::resolve_index_url(reg) {
+                crate::index_client::IndexUrlResolution::Url { base: url, .. } => {
+                    // A2-INDEXAUTH — authenticate to this registry's index
+                    // with the registry's own credentials (bearer from
+                    // `auth`/`token_env`, the same source the git side
+                    // reads). `for_registry` is the scheme gate: a token is
+                    // attached only over `https://`.
+                    let auth = crate::index_client::IndexAuth::for_registry(reg, &url);
+                    match crate::index_client::IndexClient::probe(&url, auth) {
+                        crate::index_client::ProbeOutcome::Found(client) => {
+                            entry = entry.with_index_client(client);
+                        }
+                        // The index is there but refused us (401/403) —
+                        // surface it, unlike the silent Absent fall-through,
+                        // so a private index is not mistaken for a missing
+                        // one.
+                        crate::index_client::ProbeOutcome::Refused { reason } => {
+                            tracing::warn!(
+                                target: "vibe_registry::index_client",
+                                "index for registry `{}` at `{url}` not used: {reason}",
+                                reg.name
+                            );
+                        }
+                        crate::index_client::ProbeOutcome::Absent => {}
                     }
-                    // The index is there but refused us (401/403) —
-                    // surface it, unlike the silent Absent fall-through,
-                    // so a private index is not mistaken for a missing
-                    // one.
-                    crate::index_client::ProbeOutcome::Refused { reason } => {
-                        tracing::warn!(
-                            target: "vibe_registry::index_client",
-                            "index for registry `{}` at `{url}` not used: {reason}",
-                            reg.name
-                        );
-                    }
-                    crate::index_client::ProbeOutcome::Absent => {}
+                }
+                crate::index_client::IndexUrlResolution::Disabled => {
+                    // `none` — an explicit step switched the index off
+                    // for this registry; nothing to probe.
+                    tracing::debug!(
+                        target: "vibe_registry::index_client",
+                        "index for registry `{}` disabled (index_url = \"none\")",
+                        reg.name
+                    );
                 }
             }
             sources.push(RegistrySource::Git(Arc::new(entry)));

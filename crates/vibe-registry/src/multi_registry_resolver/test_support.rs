@@ -145,6 +145,7 @@ mod fixtures {
             auth: vibe_core::manifest::AuthKind::None,
             token_env: None,
             enabled: true,
+            index_url: None,
         }
     }
 
@@ -161,6 +162,7 @@ mod fixtures {
             auth: vibe_core::manifest::AuthKind::TokenEnv,
             token_env: Some(env_var.to_string()),
             enabled: true,
+            index_url: None,
         }
     }
 

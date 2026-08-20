@@ -110,11 +110,13 @@ env_roots = [
     "crates/vibe-registry/src/git_backend/shell.rs",
     "crates/vibe-registry/src/git_package_registry/mod.rs",
     # Index-URL discovery — `VIBEVM_INDEX_URL_<REGISTRY>`. Was
-    # `index_client.rs`; the module became a directory on 2026-08-06 when the
-    # index client learned to authenticate and the file crossed its length
-    # budget. The path moved, the sanction did not: same function, same
-    # variable, same reason.
-    "crates/vibe-registry/src/index_client/mod.rs",
+    # `index_client.rs`, then `index_client/mod.rs` (2026-08-06, the auth
+    # split), now `index_client/locate.rs` (2026-08-20, the B-083 location
+    # ladder pushed mod.rs past its length budget and the whole
+    # where-is-the-index seam moved out). The path moves, the sanction does
+    # not: same function, same variable, same reason — and the env read is
+    # the ladder's top rung, still the only ambient read in the module.
+    "crates/vibe-registry/src/index_client/locate.rs",
     # Index-token discovery — the `token-env` variable for THIS registry's
     # index, read by exactly the algorithm the git side above uses for the same
     # registry's git transport. Sanctioned on the same grounds and no wider: it

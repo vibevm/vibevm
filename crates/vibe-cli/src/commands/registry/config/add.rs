@@ -104,6 +104,7 @@ pub(in crate::commands::registry) fn run_add(
         auth,
         token_env: args.token_env.clone(),
         enabled: true,
+        index_url: None,
     };
 
     match position_label {

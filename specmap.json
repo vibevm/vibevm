@@ -4340,72 +4340,72 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/global_registry.rs",
       "item_kind": "fn",
-      "line": 234,
+      "line": 236,
       "symbol": "vibe_core::global_registry::EffectiveRegistryConfig::local_only",
-      "end_line": 260,
+      "end_line": 262,
       "fingerprint": "tok1:ca9cdff2d139c2e90f8f191a937a80c1c416d63319024eec4f2db7de6b41d512"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/global_registry.rs",
       "item_kind": "enum",
-      "line": 154,
+      "line": 156,
       "symbol": "vibe_core::global_registry::GlobalRegistryError",
-      "end_line": 202,
+      "end_line": 204,
       "fingerprint": "tok1:1788328d10350fbb8b9e8bd7c419434dbbca9e0047adb9e8643749c0e7680a28"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/global_registry.rs",
       "item_kind": "fn",
-      "line": 263,
+      "line": 265,
       "symbol": "vibe_core::global_registry::merge_effective",
-      "end_line": 326,
+      "end_line": 328,
       "fingerprint": "tok1:a5514b1806d6ebafb2d31be2fddf9d952bee85d3ed83d4e23b89b5ac003019bb"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/global_registry.rs",
       "item_kind": "fn",
-      "line": 440,
+      "line": 442,
       "symbol": "vibe_core::global_registry::tests::global_config_accepts_any_registry_not_just_local",
-      "end_line": 462,
+      "end_line": 464,
       "fingerprint": "tok1:25b73c4b77d4cde6654467bc139bf91020e5f70e18f21b52ca2350b8e3438137"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/global_registry.rs",
       "item_kind": "fn",
-      "line": 428,
+      "line": 430,
       "symbol": "vibe_core::global_registry::tests::local_only_keeps_local_drops_remote",
-      "end_line": 438,
+      "end_line": 440,
       "fingerprint": "tok1:388c2c24c6e20e5b66d700e67cb795e7bd6c846d86896fde02a4c6cac657420c"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/global_registry.rs",
       "item_kind": "fn",
-      "line": 403,
+      "line": 405,
       "symbol": "vibe_core::global_registry::tests::merge_dedupes_overrides_by_pkgref_and_concatenates_mirrors",
-      "end_line": 426,
+      "end_line": 428,
       "fingerprint": "tok1:827cf71307535f2a0f8f6e1a8ea387cdd3fc211e33a2d2bf77f7c5ca6b263091"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/global_registry.rs",
       "item_kind": "fn",
-      "line": 384,
+      "line": 386,
       "symbol": "vibe_core::global_registry::tests::merge_is_project_first_and_dedupes_registries_by_name",
-      "end_line": 401,
+      "end_line": 403,
       "fingerprint": "tok1:c4d17ee00fbb5885bb58a83d1704b93a7cdd688f11e9ae3c305b3eba72c21703"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/global_registry.rs",
       "item_kind": "fn",
-      "line": 464,
+      "line": 466,
       "symbol": "vibe_core::global_registry::tests::url_is_local_truth_table",
-      "end_line": 482,
+      "end_line": 484,
       "fingerprint": "tok1:35e3e7174df931e3f103c6af689774ffef10ec90df758e834383c45c2978ed9b"
     },
     {
@@ -4439,54 +4439,54 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 487,
+      "line": 488,
       "symbol": "vibe_core::manifest::document::tests::mcp_kind_manifest_parses_under_its_laws",
-      "end_line": 501,
+      "end_line": 502,
       "fingerprint": "tok1:8c47d1d02d2acd0cacf3bdb93016ad219a39267352000af4f5e94708d6a2c34e"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 573,
+      "line": 574,
       "symbol": "vibe_core::manifest::document::tests::mcp_kind_requires_exact_pins",
-      "end_line": 590,
+      "end_line": 591,
       "fingerprint": "tok1:fead8cf0a052565b3d4dca69bb79ef8f0ba08d009a244e44d5bbf8b4a9bfe0de"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 527,
+      "line": 528,
       "symbol": "vibe_core::manifest::document::tests::mcp_kind_without_a_server_is_refused",
-      "end_line": 541,
+      "end_line": 542,
       "fingerprint": "tok1:0533caa937ddd842ca52dd263e7b47cc7a771062a59c78766279ff90bdd4e2f4"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 561,
+      "line": 562,
       "symbol": "vibe_core::manifest::document::tests::mcp_server_args_substitute_only_the_closed_set",
-      "end_line": 571,
+      "end_line": 572,
       "fingerprint": "tok1:e23e2a1c7d5693045022697146ae73b4df7399aa251c477427b35efdcb1f0570"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 543,
+      "line": 544,
       "symbol": "vibe_core::manifest::document::tests::mcp_server_binary_must_resolve_and_names_must_be_unique",
-      "end_line": 559,
+      "end_line": 560,
       "fingerprint": "tok1:a94215bf8d80192c02a59754b5b7fe5e433d36acf31f08903f9c317acfba587d"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "item_kind": "fn",
-      "line": 503,
+      "line": 504,
       "symbol": "vibe_core::manifest::document::tests::mcp_server_table_is_refused_outside_the_mcp_kind",
-      "end_line": 525,
+      "end_line": 526,
       "fingerprint": "tok1:87de873a3a59344f2f7cca9d369a0fe0cce21483e26c0eb8bc7450445d6e89c2"
     },
     {
@@ -6617,9 +6617,9 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/lib.rs",
       "item_kind": "fn",
-      "line": 275,
+      "line": 276,
       "symbol": "vibe_registry::CachedPackage::package_meta",
-      "end_line": 295,
+      "end_line": 296,
       "fingerprint": "tok1:1c0512c3543896942ac6f2f6a412095ca508daf24148bd85fa4af1b219bc1642"
     },
     {
@@ -6905,9 +6905,9 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/index_client/mod.rs",
       "item_kind": "enum",
-      "line": 70,
+      "line": 72,
       "symbol": "vibe_registry::index_client::IndexError",
-      "end_line": 103,
+      "end_line": 105,
       "fingerprint": "tok1:71cd0162a7af8fcfc92cce3c5e8a241a6779d6da34e40feb8e23a5155fa08814"
     },
     {
@@ -6927,6 +6927,42 @@
       "symbol": "vibe_registry::index_client::handshake",
       "end_line": 18,
       "fingerprint": "tok1:3cd25bd6eaa92005cef577c22fb09f9349ef43e247fbe14a5eca5e92622cf4e1"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/index_client/locate.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_registry::index_client::locate",
+      "end_line": 9,
+      "fingerprint": "tok1:bcf8f4dfee80f814df44e072138345a556d7d98f414fae2a132f0a7bd574a93d"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/index_client/locate.rs",
+      "item_kind": "fn",
+      "line": 203,
+      "symbol": "vibe_registry::index_client::locate::tests::ladder_defaults_to_registry_url_slash_index",
+      "end_line": 228,
+      "fingerprint": "tok1:6847bc9a1637af31db634a76bf6dd6fb6bf5b9ffe31c5af4dff5b00d6759ced8"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/index_client/locate.rs",
+      "item_kind": "fn",
+      "line": 161,
+      "symbol": "vibe_registry::index_client::locate::tests::ladder_env_beats_key_and_default",
+      "end_line": 180,
+      "fingerprint": "tok1:a2feb35e071bbdef2c1a847ca8ce1de351c5682b9380063dc96f85eae5e6bd77"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/index_client/locate.rs",
+      "item_kind": "fn",
+      "line": 182,
+      "symbol": "vibe_registry::index_client::locate::tests::ladder_key_beats_default",
+      "end_line": 201,
+      "fingerprint": "tok1:746d5a8069801400d793755d1103eef498f07e08e08280d7e11e106f8c395cc4"
     },
     {
       "crate_name": "vibe-registry",
@@ -7206,6 +7242,33 @@
       "symbol": "vibe_registry::tests::index_search::search_decodes_response_and_propagates_query_params",
       "end_line": 174,
       "fingerprint": "tok1:e5be17a0f72b658bd435f0bcaa98c8fe22f5b732364c681bd9cba80e3e0f4b27"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/tests/index_url_ladder.rs",
+      "item_kind": "fn",
+      "line": 254,
+      "symbol": "vibe_registry::tests::index_url_ladder::default_location_is_probed_when_no_key_is_set",
+      "end_line": 272,
+      "fingerprint": "tok1:3e1c7d38f20ea09f665ca02573a64dd8968b09d68a9c2b4f7973ea78d80f63cf"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/tests/index_url_ladder.rs",
+      "item_kind": "fn",
+      "line": 232,
+      "symbol": "vibe_registry::tests::index_url_ladder::manifest_key_attaches_index_without_env",
+      "end_line": 252,
+      "fingerprint": "tok1:a43fd8472e4327cc44227adbf17dd691aed74bf90db86a61329146cf138c1600"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/tests/index_url_ladder.rs",
+      "item_kind": "fn",
+      "line": 274,
+      "symbol": "vibe_registry::tests::index_url_ladder::none_switches_the_index_off_even_where_a_default_would_answer",
+      "end_line": 304,
+      "fingerprint": "tok1:c677a98de01e9e510a116428a8bc1a79db4d769adbd1076890ef98c706420550"
     },
     {
       "crate_name": "vibe-registry",
@@ -12948,7 +13011,7 @@
     {
       "file": "crates/vibe-core/src/global_registry.rs",
       "from_symbol": "vibe_core::global_registry::EffectiveRegistryConfig::local_only",
-      "line": 239,
+      "line": 241,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#offline-local",
       "verb": "implements"
@@ -12956,7 +13019,7 @@
     {
       "file": "crates/vibe-core/src/global_registry.rs",
       "from_symbol": "vibe_core::global_registry::GlobalRegistryError",
-      "line": 169,
+      "line": 171,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#global-config",
       "verb": "implements"
@@ -12964,7 +13027,7 @@
     {
       "file": "crates/vibe-core/src/global_registry.rs",
       "from_symbol": "vibe_core::global_registry::merge_effective",
-      "line": 291,
+      "line": 293,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#global-config",
       "verb": "implements"
@@ -12972,7 +13035,7 @@
     {
       "file": "crates/vibe-core/src/global_registry.rs",
       "from_symbol": "vibe_core::global_registry::tests::global_config_accepts_any_registry_not_just_local",
-      "line": 441,
+      "line": 443,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#global-config",
       "verb": "verifies"
@@ -12980,7 +13043,7 @@
     {
       "file": "crates/vibe-core/src/global_registry.rs",
       "from_symbol": "vibe_core::global_registry::tests::local_only_keeps_local_drops_remote",
-      "line": 429,
+      "line": 431,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#offline-local",
       "verb": "verifies"
@@ -12988,7 +13051,7 @@
     {
       "file": "crates/vibe-core/src/global_registry.rs",
       "from_symbol": "vibe_core::global_registry::tests::merge_dedupes_overrides_by_pkgref_and_concatenates_mirrors",
-      "line": 404,
+      "line": 406,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#global-config",
       "verb": "verifies"
@@ -12996,7 +13059,7 @@
     {
       "file": "crates/vibe-core/src/global_registry.rs",
       "from_symbol": "vibe_core::global_registry::tests::merge_is_project_first_and_dedupes_registries_by_name",
-      "line": 385,
+      "line": 387,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#global-config",
       "verb": "verifies"
@@ -13004,7 +13067,7 @@
     {
       "file": "crates/vibe-core/src/global_registry.rs",
       "from_symbol": "vibe_core::global_registry::tests::url_is_local_truth_table",
-      "line": 465,
+      "line": 467,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#offline-local",
       "verb": "verifies"
@@ -13037,7 +13100,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::mcp_kind_manifest_parses_under_its_laws",
-      "line": 488,
+      "line": 489,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest",
       "verb": "verifies"
@@ -13045,7 +13108,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::mcp_kind_requires_exact_pins",
-      "line": 574,
+      "line": 575,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#exact-pin",
       "verb": "verifies"
@@ -13053,7 +13116,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::mcp_kind_without_a_server_is_refused",
-      "line": 528,
+      "line": 529,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest",
       "verb": "verifies"
@@ -13061,7 +13124,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::mcp_server_args_substitute_only_the_closed_set",
-      "line": 562,
+      "line": 563,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest",
       "verb": "verifies"
@@ -13069,7 +13132,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::mcp_server_binary_must_resolve_and_names_must_be_unique",
-      "line": 544,
+      "line": 545,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest",
       "verb": "verifies"
@@ -13077,7 +13140,7 @@
     {
       "file": "crates/vibe-core/src/manifest/document/tests.rs",
       "from_symbol": "vibe_core::manifest::document::tests::mcp_server_table_is_refused_outside_the_mcp_kind",
-      "line": 504,
+      "line": 505,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#manifest",
       "verb": "verifies"
@@ -15050,7 +15113,7 @@
     {
       "file": "crates/vibe-registry/src/lib.rs",
       "from_symbol": "vibe_registry::CachedPackage::package_meta",
-      "line": 282,
+      "line": 283,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -15313,7 +15376,7 @@
     {
       "file": "crates/vibe-registry/src/index_client/mod.rs",
       "from_symbol": "vibe_registry::index_client::IndexError",
-      "line": 71,
+      "line": 73,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http",
       "verb": "implements"
@@ -15333,6 +15396,41 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#truth",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/index_client/locate.rs",
+      "from_symbol": "vibe_registry::index_client::locate",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/index_client/locate.rs",
+      "from_symbol": "vibe_registry::index_client::locate::tests::ladder_defaults_to_registry_url_slash_index",
+      "line": 204,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-registry/src/index_client/locate.rs",
+      "from_symbol": "vibe_registry::index_client::locate::tests::ladder_env_beats_key_and_default",
+      "line": 162,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-registry/src/index_client/locate.rs",
+      "from_symbol": "vibe_registry::index_client::locate::tests::ladder_key_beats_default",
+      "line": 183,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor",
+      "verb": "verifies",
+      "pinned_r": 1
     },
     {
       "file": "crates/vibe-registry/src/index_client/wire.rs",
@@ -15582,6 +15680,33 @@
       "line": 118,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#integration",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-registry/tests/index_url_ladder.rs",
+      "from_symbol": "vibe_registry::tests::index_url_ladder::default_location_is_probed_when_no_key_is_set",
+      "line": 257,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-registry/tests/index_url_ladder.rs",
+      "from_symbol": "vibe_registry::tests::index_url_ladder::manifest_key_attaches_index_without_env",
+      "line": 235,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor",
+      "verb": "verifies",
+      "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-registry/tests/index_url_ladder.rs",
+      "from_symbol": "vibe_registry::tests::index_url_ladder::none_switches_the_index_off_even_where_a_default_would_answer",
+      "line": 279,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor",
       "verb": "verifies",
       "pinned_r": 1
     },
@@ -42041,7 +42166,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:04c01a78bf1938120459ea37dd59f9a1491d169a1fc41c12f97791de8e9177c6",
+      "content_hash": "sha256:2441bd9a9b76233e60c8c98ec334c33f620d1224751aa5a3e0284717d51bd274",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "PROP-005: Optional package index — per-org metadata + standalone index server",
@@ -42203,7 +42328,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:437fb24e829d8bbb0cf4dedd28ee346cd365389c28e31cf5b3088835fc556345",
+      "content_hash": "sha256:9d8cfc49fb06f48baabbf15aee395040bbdd6e13a1b3cff9b309668fe1c1cce0",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2. Decisions",
@@ -42329,7 +42454,7 @@
     },
     {
       "anchor": "form-factor",
-      "content_hash": "sha256:25f873ecf4eb948b2d82897f867fdd6582971e8cf7f718f276f63b8d91de5e53",
+      "content_hash": "sha256:820b5190be9190c8254bf1b90eb001ea1a1d294d457d2ec7136673263916651d",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
       "heading": "2.2 Form factor: per-org **index** living in a separate git repository",
@@ -42491,37 +42616,37 @@
     },
     {
       "anchor": "INDEX-URL-CONFIG",
-      "content_hash": "sha256:8b9c0fdc68c84ee0860149e9ad55defd99aa47e86383f1ceba7bbddc2bed9070",
+      "content_hash": "sha256:881a164c87b933075a889c90a307ba3fa87c2fd1e3fe55bd6c58d556afa92512",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
-      "heading": "**Configurable but defaulted — the specified form, which the manifest does not yet carry.** A `[[registry]]` block pins a custom index location: @status:spec/plan",
+      "heading": "**Configurable but defaulted.** A `[[registry]]` block pins a custom index location — the key exists in `RegistrySection` (one type serving both the project `vibe.toml` and the machine-global `~/.vibe/registry.toml`, so the columns share one vocabulary), and this exact block parses (pinned by test `prop005_index_url_example_parses`, which carries it verbatim): @status:impl/done",
       "line": 90,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-URL-CONFIG"
     },
     {
       "anchor": "INDEX-URL-DEFAULT",
-      "content_hash": "sha256:d6ced6926369d8e27d21668b2d4134a377fb1e4f1221ed45e27917f3158cc061",
+      "content_hash": "sha256:8ad71d47a9562eb7fc8deb5f96779fb8b2dfcb7ddc252c4165b9974c3e797b49",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
-      "heading": "Default: `<registry-url>/index`; the resolver tries the default location when `index_url` is unset. @status:spec/plan",
+      "heading": "Default: `<registry-url>/index`; the resolver tries the default location when `index_url` is unset. Built as the bottom rung of the resolution ladder (`resolve_index_url`, `crates/vibe-registry/src/index_client/`): env override → manifest key → this default; the exact value `none` on either explicit rung disables the index deliberately (no probe, no network). A probe of the *default* rung finding nothing is a registry without an index, not an error — consumers (the resolver, `vibe search`) fall through quietly to the git path; only an *explicit* URL that fails to answer is surfaced. @status:impl/done",
       "line": 104,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-URL-DEFAULT"
     },
     {
       "anchor": "THE-KEY-DOES-NOT-EXIST-YET-AND-THE-SECTION-IS-STRICT",
-      "content_hash": "sha256:2cc3d0e21c05315549e1bec284ea307d83d192dd53b02d21e9298d5b5da9b3a9",
+      "content_hash": "sha256:92dbe6960105e2c5f94fc0783c55f623bdbd6916b549167ec6cbb788dac3b2ee",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
-      "heading": "**Neither the key nor the default is built, and the manifest section is strict — so the block above is a parse refusal today, not a working example.** `RegistrySection` carries `deny_unknown_fields` and the fields `name` / `url` / `ref` / `naming` / `auth` / `token_env` / `enabled`; an `index_url` line in a real `vibe.toml` fails to load. Recorded rather than deleted because the requirement stands and only its implementation is missing — but a reader copying this block gets an error, which is why the status marker above says `plan` and not `done`. @status:impl/done",
+      "heading": "**For three months this block was a parse refusal, and saying so was the point — until 2026-08-20, when the key landed (B-083, owner-ruled «построить ключ»).** `RegistrySection` carried `deny_unknown_fields` without `index_url`, so a reader copying the example got an error; the fact above honestly said `plan` while the tree disagreed with the document. The strictness itself was never the defect and stays: the section still refuses unknown fields, now with `index_url` among the known ones — pinned red-then-green by the landing (the pre-landing parse error is quoted in the worker report; `registry_section_still_refuses_unknown_fields_alongside_index_url` keeps the refusal honest). @status:impl/done",
       "line": 106,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#THE-KEY-DOES-NOT-EXIST-YET-AND-THE-SECTION-IS-STRICT"
     },
     {
       "anchor": "INDEX-URL-TODAY-IS-AN-ENVIRONMENT-VARIABLE",
-      "content_hash": "sha256:2a7f2ccf1e666c68deb989d16aabbfb3afe9302e37e4f22e80dfc3b09a9a512c",
+      "content_hash": "sha256:a690c0fc0663fea2385f975be5586df3e11991f681db125f6a8dc45ced036267",
       "doc_path": "modules/vibe-index/PROP-005",
       "file": "spec/modules/vibe-index/PROP-005-package-index.md",
-      "heading": "**What locates an index today is one environment variable per registry:** `VIBEVM_INDEX_URL_<REGISTRY>`, read by the resolver when it attaches an index client, and the only source there is. It is deliberately weaker than the manifest field it stands in for — an env var is per-shell and per-run, so an index configured this way travels with neither the project nor the lockfile — and that is precisely why it does not close the requirement above. @status:impl/done",
+      "heading": "**The environment variable `VIBEVM_INDEX_URL_<REGISTRY>` is the ladder's top rung — the operator's per-run re-point, no longer the only source.** Until 2026-08-20 it was the sole locator, deliberately weaker than the manifest field it stood in for (per-shell, per-run, travelling with neither project nor lockfile) — which is why it never closed the requirement above. Now it *overrides* the key: env beats `index_url` beats the default, and `none` at either explicit rung disables the index. The name normalization (`ASCII alphanumerics upper-cased, the rest to `_``) is unchanged. @status:impl/done",
       "line": 108,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#INDEX-URL-TODAY-IS-AN-ENVIRONMENT-VARIABLE"
     },
@@ -73988,6 +74113,24 @@
     },
     {
       "code": "pin-into-unmarked-unit",
+      "file": "crates/vibe-registry/src/index_client/locate.rs",
+      "line": 162,
+      "message": "edge `vibe_registry::index_client::locate::tests::ladder_env_beats_key_and_default` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor` carries no kind/revision line yet"
+    },
+    {
+      "code": "pin-into-unmarked-unit",
+      "file": "crates/vibe-registry/src/index_client/locate.rs",
+      "line": 183,
+      "message": "edge `vibe_registry::index_client::locate::tests::ladder_key_beats_default` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor` carries no kind/revision line yet"
+    },
+    {
+      "code": "pin-into-unmarked-unit",
+      "file": "crates/vibe-registry/src/index_client/locate.rs",
+      "line": 204,
+      "message": "edge `vibe_registry::index_client::locate::tests::ladder_defaults_to_registry_url_slash_index` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor` carries no kind/revision line yet"
+    },
+    {
+      "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-registry/tests/index_fast_path.rs",
       "line": 190,
       "message": "edge `vibe_registry::tests::index_fast_path::index_fast_path_serves_versions` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#integration` carries no kind/revision line yet"
@@ -74003,6 +74146,24 @@
       "file": "crates/vibe-registry/tests/index_search.rs",
       "line": 118,
       "message": "edge `vibe_registry::tests::index_search::search_decodes_response_and_propagates_query_params` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#integration` carries no kind/revision line yet"
+    },
+    {
+      "code": "pin-into-unmarked-unit",
+      "file": "crates/vibe-registry/tests/index_url_ladder.rs",
+      "line": 235,
+      "message": "edge `vibe_registry::tests::index_url_ladder::manifest_key_attaches_index_without_env` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor` carries no kind/revision line yet"
+    },
+    {
+      "code": "pin-into-unmarked-unit",
+      "file": "crates/vibe-registry/tests/index_url_ladder.rs",
+      "line": 257,
+      "message": "edge `vibe_registry::tests::index_url_ladder::default_location_is_probed_when_no_key_is_set` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor` carries no kind/revision line yet"
+    },
+    {
+      "code": "pin-into-unmarked-unit",
+      "file": "crates/vibe-registry/tests/index_url_ladder.rs",
+      "line": 279,
+      "message": "edge `vibe_registry::tests::index_url_ladder::none_switches_the_index_off_even_where_a_default_would_answer` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",

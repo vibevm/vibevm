@@ -24,9 +24,11 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http
 
 mod auth;
 mod handshake;
+mod locate;
 mod wire;
 
 pub use auth::{BearerToken, IndexAuth};
+pub use locate::{IndexUrlResolution, IndexUrlSource, index_url_for, resolve_index_url};
 pub use wire::{BindingSite, PurlLookupHit, PurlLookupResults, SearchHit, SearchResults};
 
 use std::time::Duration;
@@ -556,31 +558,6 @@ impl IndexClient {
 /// «no header here» test stays green.
 fn attaches_authorization(base_url: &str, auth: &IndexAuth) -> bool {
     base_url.starts_with("https://") && matches!(auth, IndexAuth::Bearer(_))
-}
-
-/// Resolve `<index_url>` for the named registry from environment.
-/// Mirrors the `VIBEVM_INDEX_URL_<REGISTRY>` shape used by
-/// `vibe-publish::post_hook`.
-pub fn index_url_for(registry: &str) -> Option<String> {
-    let suffix = registry_env_suffix(registry);
-    if suffix.is_empty() {
-        return None;
-    }
-    std::env::var(format!("VIBEVM_INDEX_URL_{suffix}"))
-        .ok()
-        .filter(|s| !s.trim().is_empty())
-}
-
-fn registry_env_suffix(registry: &str) -> String {
-    let mut out = String::with_capacity(registry.len());
-    for c in registry.chars() {
-        if c.is_ascii_alphanumeric() {
-            out.push(c.to_ascii_uppercase());
-        } else {
-            out.push('_');
-        }
-    }
-    out
 }
 
 #[cfg(test)]

@@ -30,7 +30,10 @@ use vibe_core::manifest::Manifest;
 use vibe_registry::search::cache::{self as search_cache, CacheKey};
 use vibe_registry::search::full_scan::{self as search_full_scan, FullScanHit};
 use vibe_registry::search::query;
-use vibe_registry::{IndexAuth, IndexClient, ProbeOutcome, SearchHit, index_url_for};
+use vibe_registry::{
+    IndexAuth, IndexClient, IndexUrlResolution, IndexUrlSource, ProbeOutcome, SearchHit,
+    resolve_index_url,
+};
 
 use crate::cli::SearchArgs;
 use crate::output;
@@ -177,8 +180,15 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
     let mut by_pkg: HashMap<(PackageKind, String), HitRow> = HashMap::new();
 
     for reg in &target_registries {
-        match index_url_for(&reg.name) {
-            Some(base) => {
+        // The B-083 ladder: env → `[[registry]].index_url` → the
+        // `<registry-url>/index` default. `served_by_index` = the index
+        // path answered for this registry (hits or a recorded failure);
+        // `false` falls through to the indexless path — an explicit
+        // `none`, or the default-rung guess finding nothing there (a
+        // registry without an index is not an error).
+        let served_by_index = match resolve_index_url(reg) {
+            IndexUrlResolution::Disabled => false,
+            IndexUrlResolution::Url { base, source } => 'index: {
                 let cache_key = CacheKey {
                     registry: &reg.name,
                     query: &query,
@@ -193,7 +203,7 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
                     for hit in cached.hits {
                         insert_hit_keep_highest(&mut by_pkg, make_hit_row(&hit, &reg.name));
                     }
-                    continue;
+                    break 'index true;
                 }
                 // A2-INDEXAUTH — authenticate with the registry's own
                 // credentials, and tell a refused (401/403) probe apart
@@ -207,7 +217,10 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
                             name: reg.name.clone(),
                             reason,
                         });
-                        continue;
+                        break 'index true;
+                    }
+                    ProbeOutcome::Absent if source == IndexUrlSource::Default => {
+                        break 'index false;
                     }
                     ProbeOutcome::Absent => {
                         unreachable.push(UnreachableRegistry {
@@ -216,7 +229,7 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
                                 "probe of `{base}/repomd.json` failed (server down or wrong URL)"
                             ),
                         });
-                        continue;
+                        break 'index true;
                     }
                 };
                 match client.search(&query, kind_filter, Some(args.limit)) {
@@ -242,8 +255,11 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
                         });
                     }
                 }
+                true
             }
-            None if full_scan => {
+        };
+        if !served_by_index {
+            if full_scan {
                 match run_full_scan_for_registry(&query, kind_filter, reg, &github_api_base) {
                     Ok(hits) => {
                         full_scanned.push(reg.name.clone());
@@ -261,8 +277,7 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
                         });
                     }
                 }
-            }
-            None => {
+            } else {
                 unconfigured.push(reg.name.clone());
             }
         }

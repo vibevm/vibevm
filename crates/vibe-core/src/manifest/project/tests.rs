@@ -156,6 +156,7 @@ fn resolve_token_env_name_derives_from_host() {
         auth: AuthKind::TokenEnv,
         token_env: None,
         enabled: true,
+        index_url: None,
     };
     assert_eq!(
         r.resolve_token_env_name().as_deref(),
@@ -173,6 +174,7 @@ fn resolve_token_env_name_honours_explicit_override() {
         auth: AuthKind::TokenEnv,
         token_env: Some("MY_CUSTOM_TOKEN".to_string()),
         enabled: true,
+        index_url: None,
     };
     assert_eq!(
         r.resolve_token_env_name().as_deref(),
@@ -190,11 +192,89 @@ fn resolve_token_env_name_handles_scp_form() {
         auth: AuthKind::Ssh,
         token_env: None,
         enabled: true,
+        index_url: None,
     };
     assert_eq!(
         r.resolve_token_env_name().as_deref(),
         Some("VIBEVM_REGISTRY_TOKEN_GITLAB_COMPANY_COM")
     );
+}
+
+// ----- `[[registry]].index_url` — the PROP-005 index-location key (B-083) --
+
+/// The TOML block from PROP-005 `##INDEX-URL-CONFIG`, verbatim — comments
+/// included — plus the two alternative `index_url` lines the block carries
+/// de-commented. B-083's whole defect was this block being a parse
+/// refusal: `RegistrySection` is strict (`deny_unknown_fields`) and did
+/// not know the key, so a reader copying the spec's example got a
+/// manifest-load error. Field-level asserts live below with the key
+/// itself; this test's job is the block parsing at all.
+#[test]
+fn prop005_index_url_example_parses() {
+    let verbatim = r#"
+name = "vibespecs"
+url = "https://github.com/vibespecs"
+naming = "kind-name"
+index_url = "https://github.com/vibespecs/index"  # default; explicit override allowed
+# or, to point at a hosted server:
+# index_url = "https://index.vibespecs.dev"
+# or, to disable index lookup entirely:
+# index_url = "none"
+"#;
+    let r: RegistrySection = toml::from_str(verbatim).unwrap();
+    assert_eq!(r.name, "vibespecs");
+    assert_eq!(
+        r.index_url.as_deref(),
+        Some("https://github.com/vibespecs/index")
+    );
+
+    let hosted = r#"
+name = "vibespecs"
+url = "https://github.com/vibespecs"
+naming = "kind-name"
+index_url = "https://index.vibespecs.dev"
+"#;
+    let r: RegistrySection = toml::from_str(hosted).unwrap();
+    assert_eq!(r.index_url.as_deref(), Some("https://index.vibespecs.dev"));
+
+    let disabled = r#"
+name = "vibespecs"
+url = "https://github.com/vibespecs"
+naming = "kind-name"
+index_url = "none"
+"#;
+    let r: RegistrySection = toml::from_str(disabled).unwrap();
+    // `"none"` is carried verbatim — the disable semantics live in the
+    // resolution ladder (vibe-registry), not in the schema.
+    assert_eq!(r.index_url.as_deref(), Some("none"));
+}
+
+#[test]
+fn registry_section_without_index_url_is_none() {
+    let r: RegistrySection = toml::from_str(
+        r#"
+name = "r"
+url = "https://github.com/vibespecs"
+"#,
+    )
+    .unwrap();
+    assert!(r.index_url.is_none());
+    // An unset key serializes away — a round-trip adds nothing.
+    let rendered = toml::to_string(&r).unwrap();
+    assert!(!rendered.contains("index_url"));
+}
+
+#[test]
+fn registry_section_still_refuses_unknown_fields_alongside_index_url() {
+    // The section stays strict with the new key present: a garbage
+    // extra key is a refusal, exactly as before the key existed.
+    let raw = r#"
+name = "r"
+url = "https://github.com/vibespecs"
+index_url = "https://github.com/vibespecs/index"
+bogus = 1
+"#;
+    assert!(toml::from_str::<RegistrySection>(raw).is_err());
 }
 
 #[test]
@@ -207,6 +287,7 @@ fn resolve_token_env_name_returns_none_for_file_url() {
         auth: AuthKind::TokenEnv,
         token_env: None,
         enabled: true,
+        index_url: None,
     };
     assert!(r.resolve_token_env_name().is_none());
 }

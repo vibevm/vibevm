@@ -148,6 +148,16 @@ pub struct RegistrySection {
     /// sync) and re-enabled by flipping the flag back — no re-add needed.
     #[serde(default = "default_true", skip_serializing_if = "is_true")]
     pub enabled: bool,
+
+    /// Location of this registry's index (PROP-005 §2.2
+    /// `#form-factor`). Unset means the default `<registry-url>/index`;
+    /// the exact value `"none"` switches index lookup off for this
+    /// registry; the env override `VIBEVM_INDEX_URL_<REGISTRY>` wins
+    /// over this key (an operator's per-run re-point beats a project
+    /// property). The resolution ladder lives in
+    /// `vibe_registry::index_client::resolve_index_url`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub index_url: Option<String>,
 }
 
 /// Authentication regime per `[[registry]]`. See PROP-002 §2.2.1 for

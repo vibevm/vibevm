@@ -10,15 +10,6 @@
 use super::*;
 
 #[test]
-fn registry_env_suffix_uppercases() {
-    assert_eq!(registry_env_suffix("vibespecs"), "VIBESPECS");
-    assert_eq!(
-        registry_env_suffix("vibespecs-gitverse"),
-        "VIBESPECS_GITVERSE"
-    );
-}
-
-#[test]
 fn at_strips_trailing_slash_and_defaults_to_no_auth() {
     let c = IndexClient::at("https://example.com/foo/");
     assert_eq!(c.file_base(), "https://example.com/foo");

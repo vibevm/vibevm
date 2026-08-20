@@ -114,6 +114,7 @@ pub fn default_registries() -> Vec<RegistrySection> {
             auth: AuthKind::None,
             token_env: None,
             enabled: true,
+            index_url: None,
         },
         RegistrySection {
             name: crate::manifest::DEFAULT_REGISTRY_GITVERSE_NAME.to_string(),
@@ -123,6 +124,7 @@ pub fn default_registries() -> Vec<RegistrySection> {
             auth: AuthKind::None,
             token_env: None,
             enabled: true,
+            index_url: None,
         },
     ]
 }

@@ -40,8 +40,9 @@ pub use git_backend::{GitBackend, GitError, ShellGit};
 pub use git_package_registry::GitPerPackageRegistry;
 pub use git_registry::{GitMonorepoRegistry, RegistryMeta, default_cache_root};
 pub use index_client::{
-    BearerToken, BindingSite, IndexAuth, IndexClient, IndexError, ProbeOutcome, PurlLookupHit,
-    PurlLookupResults, SearchHit, SearchResults, index_url_for,
+    BearerToken, BindingSite, IndexAuth, IndexClient, IndexError, IndexUrlResolution,
+    IndexUrlSource, ProbeOutcome, PurlLookupHit, PurlLookupResults, SearchHit, SearchResults,
+    index_url_for, resolve_index_url,
 };
 pub use local_registry::LocalRegistry;
 pub use multi_registry_resolver::{

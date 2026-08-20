@@ -294,6 +294,7 @@ fn resolve_registry_sections(args: &InitArgs) -> Vec<RegistrySection> {
             auth: vibe_core::manifest::AuthKind::None,
             token_env: None,
             enabled: true,
+            index_url: None,
         }];
     }
     Vec::new()
