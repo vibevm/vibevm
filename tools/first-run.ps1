@@ -6,12 +6,12 @@
 # What it does, in order:
 #   1. vibe self install        — build this checkout, publish it as
 #                                 instance 1, make it the active version.
-#   2. vibe self doctor --fix   — write the shims into ~/opt/bin and put
-#                                 ~/opt/bin on PATH (durable; new shells).
+#   2. vibe self doctor --fix   — write the shims into ~/.vibe/opt/bin and put
+#                                 ~/.vibe/opt/bin on PATH (durable; new shells).
 #   3. vibe self ls             — show what is installed.
 #
-# This edits your durable user PATH. To try VVM WITHOUT touching ~/opt or
-# PATH, skip this script and run:
+# This edits your durable user PATH. To try VVM WITHOUT touching ~/.vibe/opt
+# or PATH, skip this script and run:
 #   $env:VIBEVM_INSTALL_ROOT = (New-Item -ItemType Directory `
 #       (Join-Path $env:TEMP ([guid]::NewGuid()))).FullName
 #   cargo run -p vibe-cli -- self install
@@ -36,7 +36,7 @@ Write-Host 'first-run: building this checkout and installing it as your first ve
 Invoke-Vibe self install
 
 Write-Host ''
-Write-Host 'first-run: writing shims and putting ~/opt/bin on PATH...'
+Write-Host 'first-run: writing shims and putting ~/.vibe/opt/bin on PATH...'
 Invoke-Vibe self doctor --fix --yes
 
 Write-Host ''

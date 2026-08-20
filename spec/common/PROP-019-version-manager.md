@@ -93,6 +93,18 @@ versions), and unambiguous where `man` collided with the Unix manual page: @stat
 - @fact:CMD-UPDATE `self update` — rebuild and activate the latest in-tree version; a
   shorthand for `self install latest` (§2.7), carrying `--release` /
   `--profile` / `--force`. @status:spec/done
+- @fact:CMD-IMPORT `self import <PATH> --tag <X.Y.Z>` — put a READY-BUILT local `vibe`
+  executable into the inventory as an immutable `tag:` instance, reusing the
+  store/placer/lock/state machinery (built 2026-08-20 for the 1.0.0
+  distributive; the install.ps1 of the zip calls it instead of duplicating
+  `state.toml`). Local by construction: no network, no signature machinery —
+  the file is streamed through SHA-256 once, and that digest drives
+  idempotence: same tag + same digest reuses the instance; same tag +
+  DIFFERENT digest is refused (an immutable release is never silently
+  replaced) unless `--replace-candidate` deliberately adds a new inspection
+  instance beside the preserved old one. Optional `--commit`, `--profile`
+  (default `release`); inactive by default — `--use` flips `current` and
+  writes the shims. @status:impl/done
 - @fact:CMD-USE `self use <selector>` — make a version active by repointing the live
   `current` file — **no console reload** (§2.5). `--eval` prints the shell
   line for the current shell instead of touching the durable environment. @status:spec/done
@@ -160,8 +172,13 @@ $VIBEVM_INSTALL_ROOT/            install base — default: home dir
                                  committer's own tree (§2.7)
 ```
 
-- @fact:ROOT-DEFAULT `$VIBEVM_INSTALL_ROOT` defaults to the home dir → root `~/opt` in normal
-  use. One env var relocates everything; tests pin it to a temp dir. @status:spec/done
+- @fact:ROOT-DEFAULT `$VIBEVM_INSTALL_ROOT` (the install BASE) defaults to `~/.vibe` → root
+  `~/.vibe/opt` in normal use (owner ruling 2026-08-20, the release-1.0
+  install path; until then the default base was the bare home dir → `~/opt`).
+  An explicit override keeps its meaning — `<override>/opt` — and one env var
+  still relocates everything; tests pin it to a temp dir. A managed binary
+  keeps recognising its own root by shape (the trailing `opt` component),
+  so both generations of store keep working. @status:impl/done
 - @fact:INSTANCE-COUNTER `<instance>` is a monotonic counter (§9.4) — never a hash of the payload
   (§9.2). @status:spec/done
 - @fact:SHIM-STABLE The shim dir is stable; switching repoints `current`, never the shim. @status:spec/done
@@ -215,9 +232,15 @@ three layers: @status:spec/done
 - @fact:RULE-IDEMPOTENT **idempotent** (a marker guards the edit; no duplicate lines/entries), @status:spec/done
 - @fact:RULE-NEVER-CLOBBER **never clobber** (only our entry is added; the rest of `PATH` is
   preserved), @status:spec/done
-- @fact:RULE-OS-AWARE **OS/shell-aware** (Windows: `HKCU\Environment` via PowerShell's
-  `[Environment]` API, which broadcasts to new processes; POSIX: a marked
-  block in the detected shell's rc — bash/zsh/fish/`.profile`), @status:spec/done
+- @fact:RULE-OS-AWARE **OS/shell-aware** (Windows: raw `HKCU\Environment` — read WITHOUT
+  variable expansion, the value's registry kind preserved (`REG_SZ` stays
+  `REG_SZ`, `REG_EXPAND_SZ` stays `REG_EXPAND_SZ`, so a PATH carrying
+  `%USERPROFILE%\…` survives untouched), entries compared normalised
+  (expand+full-path+case-insensitive) for dedup while unrelated raw entries
+  are preserved byte-for-byte, and a `WM_SETTINGCHANGE` broadcast after the
+  write; the earlier `[Environment]` API form silently expanded references
+  and lost the kind. POSIX: a marked block in the detected shell's rc —
+  bash/zsh/fish/`.profile`), @status:impl/done
 - @fact:RULE-CONSENT and **consent + honesty** (mutating edits need a confirm / `-y` /
   `self doctor --fix`, print the diff, and say the change reaches only new
   shells). @status:spec/done
@@ -424,8 +447,14 @@ is tens of GB). Each instance records its **origin**: @status:spec/done
 - @fact:PROV-EXTERNAL `external` — a committer's own checkout, identified by its **canonical
   absolute path** (`source_path`); VVM never modifies or removes it, only
   remembers where it is. @status:spec/done
-- @fact:PROV-BINARY `binary` (far-backlog) — a prebuilt artifact identified by the publisher's
-  digest (computed once at publish, never re-hashed locally). @status:spec/done
+- @fact:PROV-BINARY `binary` — a prebuilt artifact. Two roads into this origin: the LOCAL
+  import (`self import`, shipped 2026-08-20) hashes the supplied file itself —
+  SHA-256 computed on this machine, stored as `payload_sha256`, driving
+  reuse/refusal; the FETCHED publisher artifact (far-backlog,
+  `self install --binary`) will be keyed by the publisher's digest computed
+  once at publish. The two must not be conflated: local import verifies
+  nothing about authorship, only integrity-identity of the bytes it was
+  handed. @status:impl/work
 
 - @fact:LINKED-SOURCE The remembered `source_path` makes an external source a **linked source**:
   `self install <id>` can rebuild from the recorded location from anywhere,
@@ -508,7 +537,8 @@ mockable and unit tests never clone, build, or edit the real environment: @statu
   managed clone paths, debug + release, diff-copy into instances), `self use`
   (live `current`, no reload), `self ls`/`current`/`which`, `self remove`
   (safe + `--all`), `self gc` (build cache + prune), `self doctor` (+ `--fix`),
-  `self env`, `self relocate` (§2.17), and `vibe vars`. @status:spec/done
+  `self env`, `self relocate` (§2.17), `self import` (local ready-built
+  payload, 2026-08-20), and `vibe vars`. @status:spec/done
 - @fact:MVP-RESOLUTION-ENV Selector resolution per §2.3; durable
   PATH/advisory-env per §2.6 across Windows (cmd/PowerShell/Git Bash), macOS
   (zsh/bash), Linux (bash/zsh/fish). @status:spec/done
@@ -518,7 +548,10 @@ mockable and unit tests never clone, build, or edit the real environment: @statu
 
 ## 5. Out of scope (now) {#out-of-scope}
 
-- @fact:OOS-BINARY Prebuilt-binary installs (`--binary`); @status:spec/done
+- @fact:OOS-BINARY FETCHED prebuilt-binary installs (`self install --binary` — network
+  download keyed by a publisher digest). The LOCAL half left this list on
+  2026-08-20: `self import` of an already-on-disk executable is in scope and
+  shipped (`##CMD-IMPORT`); @status:spec/done
 - @fact:OOS-OFFLINE offline / vendored builds; @status:spec/done
 - @fact:OOS-SIGNATURES cryptographic signature verification; @status:spec/done
 - @fact:OOS-REFLINK reflink/CoW placement (hardlink is the portable choice). @status:spec/done
@@ -567,6 +600,11 @@ mockable and unit tests never clone, build, or edit the real environment: @statu
   stale instance dirs built from the old tree, keeping the active instance; the
   active's source is repointed, not deleted. `--dry-run` changes nothing; a
   non-TTY run without `--yes` errors. @status:spec/done
+- @fact:ACC-IMPORT `self import` is inactive by default (`--use` alone activates);
+  importing the same tag with the same payload SHA-256 reuses the instance and
+  allocates nothing; a different payload under the same tag is refused with
+  the replace-candidate recipe; `--replace-candidate` preserves the previous
+  instance beside the new one. @status:impl/done
 - @fact:ACC-FLOOR-GREEN Full `self-check.sh` green; conform 0/0/0; specmap clean. @status:spec/done
 
 ## 9. Design rationale & questions explored {#rationale}
@@ -599,8 +637,11 @@ recording them so a cold reader sees *why*, not just *what*. @status:spec/done
 - @fact:KEY-NEVER-READS So the instance key never reads the payload (§9.4), and change detection
   for diff-copy hashes only **small** files, trusting `(size, mtime)` for
   large ones (§2.15). @status:spec/done
-- @fact:BINARY-PUBLISHER-DIGEST Future binary artifacts are keyed by the **publisher's** digest (computed
-  once at publish), never re-hashed locally. @status:spec/done
+- @fact:BINARY-PUBLISHER-DIGEST Future FETCHED binary artifacts are keyed by the **publisher's** digest
+  (computed once at publish), never re-hashed locally. The local `self
+  import` path is deliberately outside this rule: it has no publisher, so it
+  hashes the handed file once on entry — that digest is its identity, not a
+  verification of anyone's claim. @status:impl/done
 
 ### 9.3 Why whole-directory instances, not in-place file replace {#rationale-instances}
 

@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-20T11:23:39Z",
+  "updated_at": "2026-08-20T12:55:41Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -156796,7 +156796,7 @@
       }
     },
     "spec/common/PROP-019-version-manager.md": {
-      "content_hash": "9d179b5dffb4fc850e88d39cdf1577d534484aa1356feeb9d55235ab1b470dd3",
+      "content_hash": "21bb95ba0d2aafd582ddface80564296de8ea861f22c5b2b04d75f9f4f262d4a",
       "rollup": {
         "explicit": [
           "impl",
@@ -156810,11 +156810,11 @@
           "impl",
           "done"
         ],
-        "marker_count": 209,
-        "fact_count": 208,
+        "marker_count": 211,
+        "fact_count": 210,
         "unmarked_facts": 0
       },
-      "marker_count": 209,
+      "marker_count": 211,
       "unit_count": 37,
       "issue_count": 0,
       "campaign": {
@@ -156822,7 +156822,7 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 208,
         "marker_count": 209,
-        "processed_hash": "9d179b5dffb4fc850e88d39cdf1577d534484aa1356feeb9d55235ab1b470dd3",
+        "processed_hash": "21bb95ba0d2aafd582ddface80564296de8ea861f22c5b2b04d75f9f4f262d4a",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -158078,10 +158078,22 @@
             "ev": [
               "the doc <status> tag mirrors the proposed-era header - superseded with it, carried by F-005"
             ]
+          },
+          "CMD-IMPORT": {
+            "v": "confirmed",
+            "ev": [
+              "crates/vibe-cli/src/commands/vvm/import.rs — потоковый SHA256, reuse на same-hash, отказ на foreign-hash с рецептом --replace-candidate (тест import_reuses_same_hash_and_refuses_a_different_immutable_payload — красное живьём в отчёте воркера), --use пишет current+shims (тест replace_candidate_preserves_old_instance_and_use_writes_current_and_shims); cli/vvm.rs поверхность --tag/--commit/--profile(release)/--use/--replace-candidate; self --help несёт import (вывод в отчёте)"
+            ]
+          },
+          "ACC-IMPORT": {
+            "v": "confirmed",
+            "ev": [
+              "оба import-теста зелёные (2 passed), полный vibe-cli 452 unit passed; идемпотентность same-hash без аллокации instance подтверждена ассертом next_instance; inactive-by-default и --use — вторым тестом"
+            ]
           }
         },
-        "verified_at": "2026-07-25T13:28:04Z",
-        "verify_batch": "c3c-prop-018-019 + d2a"
+        "verified_at": "2026-08-20T12:55:41Z",
+        "verify_batch": "c3c-prop-018-019 + d2a + C9-VVM-CORE"
       }
     },
     "spec/common/PROP-024-code-bearing-packages.md": {

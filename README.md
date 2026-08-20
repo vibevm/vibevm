@@ -36,6 +36,13 @@ cargo run -p vibe-cli -- self install
 cargo run -p vibe-cli -- self doctor --fix
 ```
 
+A ready-built `vibe` executable (for example, from the release zip) enters the
+same managed inventory without a Rust toolchain:
+
+```bash
+vibe self import ./vibe.exe --tag 1.0.0 --use
+```
+
 Run `vibe self --help` for version switching, upgrades, removal, garbage collection, and relocation.
 
 ## Quick start

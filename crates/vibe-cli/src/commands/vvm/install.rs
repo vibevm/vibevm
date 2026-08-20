@@ -25,13 +25,13 @@ use super::placer::{self, Manifest};
 use super::store::{BINARY_NAME, VersionStore};
 use crate::output;
 
-/// A best-effort install lock so two installs do not race (PROP-019 §2.7).
-struct InstallLock {
+/// A best-effort store lock so source installs and local imports do not race.
+pub(crate) struct InstallLock {
     path: PathBuf,
 }
 
 impl InstallLock {
-    fn acquire(store: &VersionStore) -> Result<InstallLock> {
+    pub(crate) fn acquire(store: &VersionStore) -> Result<InstallLock> {
         let dir = store.data_dir();
         fs::create_dir_all(&dir).with_context(|| format!("creating `{}`", dir.display()))?;
         let path = dir.join(".install.lock");
@@ -42,7 +42,8 @@ impl InstallLock {
         {
             Ok(_) => Ok(InstallLock { path }),
             Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => bail!(
-                "another `vibe self install` is in progress (remove `{}` if it is stale)",
+                "another `vibe self install` or `self import` is in progress \
+                 (remove `{}` if it is stale)",
                 path.display()
             ),
             Err(e) => Err(e).with_context(|| format!("creating lock `{}`", path.display())),
@@ -116,6 +117,7 @@ pub(crate) fn perform_install(
             installed_at: req.now.to_string(),
             origin: req.origin,
             source_path: req.source_path.clone(),
+            payload_sha256: None,
         })?;
 
         let inst_dir = store.instance_dir(id, instance);

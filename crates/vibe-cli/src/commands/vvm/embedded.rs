@@ -59,6 +59,7 @@ mod tests {
             installed_at: "now".into(),
             origin: Origin::External,
             source_path: source_path.map(str::to_string),
+            payload_sha256: None,
         }
     }
 

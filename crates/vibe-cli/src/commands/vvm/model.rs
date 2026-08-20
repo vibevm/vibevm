@@ -222,6 +222,10 @@ pub struct InstallRecord {
     /// Canonical absolute path of the source — only for `external` origins.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source_path: Option<String>,
+    /// Integrity digest of a locally imported prebuilt payload. This is
+    /// populated only for `binary` origins and is not a signature.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub payload_sha256: Option<String>,
 }
 
 impl InstallRecord {
@@ -278,6 +282,7 @@ mod tests {
                 installed_at: "2026-06-17T00:00:00Z".into(),
                 origin: Origin::External,
                 source_path: Some("C:/src/vibevm".into()),
+                payload_sha256: None,
             }],
         };
         let text = toml::to_string(&state).unwrap();

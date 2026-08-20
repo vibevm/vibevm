@@ -3,7 +3,7 @@
 //!
 //! The durable writes sit behind the [`EnvPersister`] seam so tests drive
 //! the POSIX rc-file path in a temp file and never mutate the real machine;
-//! the Windows registry path is only ever taken by a live `man use`.
+//! the Windows registry path is only ever taken by a live `self use`.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#activation");
 
@@ -233,24 +233,39 @@ impl EnvPersister for RcFilePersister {
     }
 }
 
-/// A Windows persister: edits the user environment in the registry via
-/// PowerShell's `[Environment]` API, which broadcasts the change to new
-/// processes (PROP-019 §2.6). Not exercised by gate tests (it mutates the
-/// real user env); only a live `man use` takes this path.
+/// A Windows persister: edits the raw values in `HKCU\Environment`, preserving
+/// `REG_SZ` versus `REG_EXPAND_SZ`, then broadcasts `WM_SETTINGCHANGE`.
+/// Registry I/O is never exercised by gate tests because it mutates real user
+/// state; the pure PATH transformation below carries the test coverage.
 pub(crate) struct WindowsEnvPersister;
 
 impl EnvPersister for WindowsEnvPersister {
     fn set_vibevm_home(&self, home: &Path) -> Result<Persisted> {
-        ps_set_user_var("VIBEVM_HOME", &home.display().to_string())?;
+        let target = home.display().to_string();
+        let current = ps_get_user_var_raw("VIBEVM_HOME")?;
+        if current.as_ref().is_some_and(|value| value.value == target) {
+            return Ok(Persisted::Unchanged);
+        }
+        let kind = current
+            .map(|value| value.kind)
+            .unwrap_or(RegistryValueKind::String);
+        ps_set_user_var_raw("VIBEVM_HOME", &target, kind)?;
         Ok(Persisted::Changed)
     }
 
     fn ensure_on_path(&self, dir: &Path) -> Result<Persisted> {
-        let current = ps_get_user_var("Path")?.unwrap_or_default();
-        match path_with_prefix(&current, &dir.display().to_string()) {
+        let current = ps_get_user_var_raw("Path")?;
+        let raw = current
+            .as_ref()
+            .map(|value| value.value.as_str())
+            .unwrap_or_default();
+        match path_with_prefix(raw, &dir.display().to_string()) {
             None => Ok(Persisted::Unchanged),
             Some(next) => {
-                ps_set_user_var("Path", &next)?;
+                let kind = current
+                    .map(|value| value.kind)
+                    .unwrap_or(RegistryValueKind::ExpandString);
+                ps_set_user_var_raw("Path", &next, kind)?;
                 Ok(Persisted::Changed)
             }
         }
@@ -280,41 +295,208 @@ fn ps_quote(value: &str) -> String {
     value.replace('\'', "''")
 }
 
-fn ps_set_user_var(name: &str, value: &str) -> Result<()> {
-    run_powershell(&format!(
-        "[Environment]::SetEnvironmentVariable('{}', '{}', 'User')",
-        ps_quote(name),
-        ps_quote(value)
-    ))?;
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum RegistryValueKind {
+    String,
+    ExpandString,
+}
+
+impl RegistryValueKind {
+    fn powershell_name(self) -> &'static str {
+        match self {
+            RegistryValueKind::String => "String",
+            RegistryValueKind::ExpandString => "ExpandString",
+        }
+    }
+
+    fn parse(raw: &str) -> Result<Self> {
+        match raw {
+            "String" => Ok(RegistryValueKind::String),
+            "ExpandString" => Ok(RegistryValueKind::ExpandString),
+            other => bail!("unsupported HKCU\\Environment registry value kind `{other}`"),
+        }
+    }
+}
+
+#[derive(Debug)]
+struct RawUserVar {
+    value: String,
+    kind: RegistryValueKind,
+}
+
+#[derive(serde::Deserialize)]
+struct RawUserVarJson {
+    present: bool,
+    value: Option<String>,
+    kind: Option<String>,
+}
+
+fn ps_set_user_var_raw(name: &str, value: &str, kind: RegistryValueKind) -> Result<()> {
+    let script = format!(
+        r#"
+$key = [Microsoft.Win32.Registry]::CurrentUser.CreateSubKey('Environment', $true)
+try {{
+    $kind = [Microsoft.Win32.RegistryValueKind]::{kind}
+    $key.SetValue('{name}', '{value}', $kind)
+}} finally {{
+    if ($null -ne $key) {{ $key.Dispose() }}
+}}
+Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+public static class VvmEnvironmentBroadcast {{
+    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    public static extern IntPtr SendMessageTimeout(
+        IntPtr hWnd, uint msg, UIntPtr wParam, string lParam,
+        uint flags, uint timeout, out UIntPtr result);
+}}
+'@
+[UIntPtr]$result = [UIntPtr]::Zero
+[void][VvmEnvironmentBroadcast]::SendMessageTimeout(
+    [IntPtr]0xffff, 0x001A, [UIntPtr]::Zero, 'Environment', 0x0002, 5000, [ref]$result)
+"#,
+        name = ps_quote(name),
+        value = ps_quote(value),
+        kind = kind.powershell_name(),
+    );
+    run_powershell(&script)?;
     Ok(())
 }
 
-fn ps_get_user_var(name: &str) -> Result<Option<String>> {
-    let out = run_powershell(&format!(
-        "[Environment]::GetEnvironmentVariable('{}', 'User')",
-        ps_quote(name)
-    ))?;
-    Ok(if out.is_empty() { None } else { Some(out) })
+fn ps_get_user_var_raw(name: &str) -> Result<Option<RawUserVar>> {
+    let script = format!(
+        r#"
+$key = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Environment', $false)
+try {{
+    if ($null -eq $key -or -not ($key.GetValueNames() -contains '{name}')) {{
+        [pscustomobject]@{{ present = $false; value = $null; kind = $null }} |
+            ConvertTo-Json -Compress
+    }} else {{
+        $value = $key.GetValue(
+            '{name}', $null,
+            [Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)
+        $kind = $key.GetValueKind('{name}').ToString()
+        [pscustomobject]@{{ present = $true; value = [string]$value; kind = $kind }} |
+            ConvertTo-Json -Compress
+    }}
+}} finally {{
+    if ($null -ne $key) {{ $key.Dispose() }}
+}}
+"#,
+        name = ps_quote(name),
+    );
+    let out = run_powershell(&script)?;
+    let decoded: RawUserVarJson =
+        serde_json::from_str(&out).context("decoding raw HKCU\\Environment value")?;
+    if !decoded.present {
+        return Ok(None);
+    }
+    let kind = RegistryValueKind::parse(
+        decoded
+            .kind
+            .as_deref()
+            .context("raw registry value omitted its kind")?,
+    )?;
+    Ok(Some(RawUserVar {
+        value: decoded.value.unwrap_or_default(),
+        kind,
+    }))
 }
 
 /// Put `target` at the FRONT of a `;`-separated PATH, deduping any existing
-/// occurrence; `None` when it is already first. A version manager's shim dir
-/// must take precedence over any other `vibe` already on PATH (e.g. a stale
-/// `~/.cargo/bin/vibe`), so it is prepended, not appended (PROP-019 §2.6).
+/// normalized equivalent while preserving every unrelated entry byte-for-byte.
+/// `None` means the raw value already has the canonical result. A version
+/// manager's shim dir must take precedence over any other `vibe` on PATH, so
+/// it is prepended, not appended.
 fn path_with_prefix(current: &str, target: &str) -> Option<String> {
-    let mut parts: Vec<&str> = current.split(';').filter(|p| !p.is_empty()).collect();
-    if parts
-        .first()
-        .is_some_and(|p| p.eq_ignore_ascii_case(target))
-    {
-        return None;
+    let cwd = std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."));
+    path_with_prefix_core(current, target, &cwd, |name| std::env::var(name).ok())
+}
+
+fn path_with_prefix_core(
+    current: &str,
+    target: &str,
+    cwd: &Path,
+    lookup: impl Fn(&str) -> Option<String>,
+) -> Option<String> {
+    let target_normal = normalize_windows_path(target, cwd, &lookup);
+    let mut kept = Vec::new();
+    if !current.is_empty() {
+        for part in current.split(';') {
+            if !paths_equal(&normalize_windows_path(part, cwd, &lookup), &target_normal) {
+                kept.push(part);
+            }
+        }
     }
-    parts.retain(|p| !p.eq_ignore_ascii_case(target));
-    Some(if parts.is_empty() {
+    let next = if kept.is_empty() {
         target.to_string()
     } else {
-        format!("{target};{}", parts.join(";"))
-    })
+        format!("{target};{}", kept.join(";"))
+    };
+    (next != current).then_some(next)
+}
+
+fn normalize_windows_path(
+    raw: &str,
+    cwd: &Path,
+    lookup: &impl Fn(&str) -> Option<String>,
+) -> String {
+    let trimmed = raw.trim();
+    let unquoted = trimmed
+        .strip_prefix('"')
+        .and_then(|value| value.strip_suffix('"'))
+        .unwrap_or(trimmed);
+    let expanded = expand_percent_vars(unquoted, lookup);
+    let path = PathBuf::from(expanded);
+    let full = if path.is_absolute() {
+        path
+    } else {
+        cwd.join(path)
+    };
+    let mut clean = PathBuf::new();
+    for component in full.components() {
+        match component {
+            std::path::Component::CurDir => {}
+            std::path::Component::ParentDir => {
+                clean.pop();
+            }
+            other => clean.push(other.as_os_str()),
+        }
+    }
+    clean
+        .to_string_lossy()
+        .trim_end_matches(['\\', '/'])
+        .to_string()
+}
+
+fn expand_percent_vars(raw: &str, lookup: &impl Fn(&str) -> Option<String>) -> String {
+    let mut result = String::with_capacity(raw.len());
+    let mut cursor = 0;
+    while let Some(open_rel) = raw[cursor..].find('%') {
+        let open = cursor + open_rel;
+        result.push_str(&raw[cursor..open]);
+        let after_open = open + 1;
+        let Some(close_rel) = raw[after_open..].find('%') else {
+            result.push_str(&raw[open..]);
+            return result;
+        };
+        let close = after_open + close_rel;
+        let name = &raw[after_open..close];
+        if !name.is_empty()
+            && let Some(value) = lookup(name)
+        {
+            result.push_str(&value);
+        } else {
+            result.push_str(&raw[open..=close]);
+        }
+        cursor = close + 1;
+    }
+    result.push_str(&raw[cursor..]);
+    result
+}
+
+fn paths_equal(left: &str, right: &str) -> bool {
+    left.eq_ignore_ascii_case(right)
 }
 
 // --- rc block helpers ------------------------------------------------------
@@ -381,106 +563,5 @@ fn rebuild(pre: &str, block: &[String], post: &str) -> String {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use specmark::verifies;
-
-    #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#activation", r = 1)]
-    fn shell_detect_and_export_line() {
-        assert_eq!(Shell::detect(Some("/usr/bin/zsh")), Shell::Zsh);
-        assert_eq!(Shell::detect(Some("/bin/bash")), Shell::Bash);
-        assert_eq!(Shell::detect(Some("/usr/local/bin/fish")), Shell::Fish);
-        let home = Path::new("/opt/vibevm/versions/branch/main");
-        assert!(
-            Shell::Bash
-                .export_line(home)
-                .starts_with("export VIBEVM_HOME=")
-        );
-        assert!(
-            Shell::Fish
-                .export_line(home)
-                .starts_with("set -gx VIBEVM_HOME")
-        );
-        assert!(
-            Shell::Pwsh
-                .export_line(home)
-                .starts_with("$env:VIBEVM_HOME")
-        );
-    }
-
-    #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#activation", r = 1)]
-    fn shims_read_the_current_pointer() {
-        let tmp = tempfile::tempdir().unwrap();
-        write_shims(tmp.path()).unwrap();
-        let posix = fs::read_to_string(tmp.path().join("vibe")).unwrap();
-        assert!(posix.contains("vibevm/current"), "reads the live pointer");
-        assert!(
-            posix.contains("$VIBEVM_HOME"),
-            "falls back to the advisory env"
-        );
-        assert!(posix.contains(BINARY_NAME));
-        if cfg!(windows) {
-            let cmd = fs::read_to_string(tmp.path().join("vibe.cmd")).unwrap();
-            assert!(cmd.contains("current"));
-            assert!(cmd.contains(BINARY_NAME));
-        }
-    }
-
-    #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#path", r = 1)]
-    fn rc_persister_is_idempotent_and_repoints() {
-        let tmp = tempfile::tempdir().unwrap();
-        let rc = tmp.path().join(".bashrc");
-        fs::write(&rc, "# user's own line\nexport EDITOR=vim\n").unwrap();
-        let p = RcFilePersister::new(rc.clone(), Shell::Bash);
-
-        let home_a = Path::new("/opt/vibevm/versions/tag/1.0.0");
-        assert_eq!(p.set_vibevm_home(home_a).unwrap(), Persisted::Changed);
-        assert_eq!(
-            p.ensure_on_path(Path::new("/opt/bin")).unwrap(),
-            Persisted::Changed
-        );
-        // Re-applying the same values is a no-op.
-        assert_eq!(p.set_vibevm_home(home_a).unwrap(), Persisted::Unchanged);
-        assert_eq!(
-            p.ensure_on_path(Path::new("/opt/bin")).unwrap(),
-            Persisted::Unchanged
-        );
-
-        // Switching versions repoints the same line, not a second one.
-        let home_b = Path::new("/opt/vibevm/versions/branch/main");
-        assert_eq!(p.set_vibevm_home(home_b).unwrap(), Persisted::Changed);
-        let text = fs::read_to_string(&rc).unwrap();
-        assert_eq!(text.matches("export VIBEVM_HOME=").count(), 1);
-        assert_eq!(text.matches(BLOCK_BEGIN).count(), 1);
-        assert!(text.contains("branch/main"));
-        assert!(!text.contains("tag/1.0.0"));
-        // The user's own lines survive.
-        assert!(text.contains("export EDITOR=vim"));
-    }
-
-    #[test]
-    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#path", r = 1)]
-    fn path_with_prefix_moves_shim_dir_to_front() {
-        // Present but not first → moved to front (wins over an earlier
-        // ~/.cargo/bin/vibe).
-        assert_eq!(
-            path_with_prefix(r"C:\u\.cargo\bin;C:\u\opt\bin", r"C:\u\opt\bin").as_deref(),
-            Some(r"C:\u\opt\bin;C:\u\.cargo\bin")
-        );
-        // Absent → prepended.
-        assert_eq!(
-            path_with_prefix(r"C:\u\.cargo\bin", r"C:\u\opt\bin").as_deref(),
-            Some(r"C:\u\opt\bin;C:\u\.cargo\bin")
-        );
-        // Already first → no change.
-        assert!(path_with_prefix(r"C:\u\opt\bin;C:\u\.cargo\bin", r"C:\u\opt\bin").is_none());
-        // Empty → just the target.
-        assert_eq!(
-            path_with_prefix("", r"C:\u\opt\bin").as_deref(),
-            Some(r"C:\u\opt\bin")
-        );
-    }
-}
+#[path = "env_tests.rs"]
+mod tests;

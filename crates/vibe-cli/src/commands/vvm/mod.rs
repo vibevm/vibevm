@@ -13,6 +13,7 @@ mod embedded;
 mod env;
 mod error;
 mod git;
+mod import;
 mod install;
 mod model;
 mod placer;
@@ -30,7 +31,8 @@ use anyhow::Result;
 use dialoguer::Confirm;
 
 use crate::cli::{
-    ForcedKind, VvmArgs, VvmEnvArgs, VvmInstallArgs, VvmSubcommand, VvmUpdateArgs, VvmUseArgs,
+    ForcedKind, VvmArgs, VvmEnvArgs, VvmImportArgs, VvmInstallArgs, VvmSubcommand, VvmUpdateArgs,
+    VvmUseArgs,
 };
 use crate::output;
 
@@ -41,7 +43,7 @@ use store::VersionStore;
 pub(crate) use embedded::embedded_root_at;
 pub use selfloc::{derive_self, same_location};
 
-/// Env var naming the install base (defaults to the user's home dir); the
+/// Env var naming the install base (defaults to `~/.vibe`); the
 /// VVM root is `$VIBEVM_INSTALL_ROOT/opt`. Read at the composition root and
 /// overridden in tests to isolate installs under a temp dir (PROP-019 §2.4).
 pub const VIBEVM_INSTALL_ROOT_ENV: &str = "VIBEVM_INSTALL_ROOT";
@@ -57,7 +59,7 @@ pub const VIBEVM_HOME_ENV: &str = "VIBEVM_HOME";
 #[derive(Debug, Clone, Default)]
 pub struct VvmEnv {
     /// The resolved VVM root — `$VIBEVM_INSTALL_ROOT/opt`, defaulting to
-    /// `~/opt`.
+    /// `~/.vibe/opt`.
     pub root: Option<PathBuf>,
     /// The current working directory — for in-tree source detection on
     /// `self install` (PROP-019 §2.7).
@@ -78,9 +80,27 @@ impl VvmEnv {
     }
 }
 
+/// Resolve the VVM root without reading ambient process state.
+///
+/// A running managed binary owns its already-derived root. Otherwise an
+/// explicit `$VIBEVM_INSTALL_ROOT` names the install base, and the default
+/// base is `~/.vibe`.
+pub(crate) fn resolve_root(
+    managed_root: Option<PathBuf>,
+    install_base_override: Option<PathBuf>,
+    home: Option<PathBuf>,
+) -> Option<PathBuf> {
+    managed_root.or_else(|| {
+        install_base_override
+            .or_else(|| home.map(|path| path.join(".vibe")))
+            .map(|base| base.join("opt"))
+    })
+}
+
 pub fn run(ctx: &output::Context, args: VvmArgs, env: VvmEnv) -> Result<()> {
     match args.command {
         VvmSubcommand::Install(a) => run_install_cmd(ctx, &env, a),
+        VvmSubcommand::Import(a) => run_import_cmd(ctx, &env, a),
         VvmSubcommand::Update(a) => run_update_cmd(ctx, &env, a),
         VvmSubcommand::Use(a) => run_use_cmd(ctx, &env, a),
         VvmSubcommand::Ls => run_ls(ctx, &env),
@@ -92,6 +112,23 @@ pub fn run(ctx: &output::Context, args: VvmArgs, env: VvmEnv) -> Result<()> {
         VvmSubcommand::Env(a) => run_env_cmd(&env, a),
         VvmSubcommand::Relocate(a) => relocate::run_relocate_cmd(ctx, &env, a),
     }
+}
+
+fn run_import_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmImportArgs) -> Result<()> {
+    let store = env.store()?;
+    let profile = model::Profile::parse(&args.profile)?;
+    let now = chrono::Utc::now().to_rfc3339();
+    let req = import::ImportRequest {
+        executable: &args.path,
+        tag: &args.tag,
+        commit: args.commit.as_deref(),
+        profile,
+        activate: args.activate,
+        replace_candidate: args.replace_candidate,
+        now: &now,
+    };
+    import::perform_import(ctx, &store, &req)?;
+    Ok(())
 }
 
 fn same_record(a: &InstallRecord, b: &InstallRecord) -> bool {

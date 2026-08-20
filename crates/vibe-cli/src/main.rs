@@ -90,7 +90,7 @@ fn main() -> ExitCode {
     // one whose `current_exe` sits under a VVM install slot, so `derive_self`
     // resolves it (`self_loc`). A `cargo run` binary or a test harness is not
     // installed: it has no embedded registry and must NOT pick up the
-    // developer's `~/opt` one. Gate discovery on the running install and read
+    // developer's `~/.vibe/opt` one. Gate discovery on the running install and read
     // its active record's source path through that install's own root. Shared
     // by the install-family commands (install / update / reinstall).
     let discover_embedded_root = || -> Option<PathBuf> {
@@ -146,15 +146,14 @@ fn main() -> ExitCode {
         Command::Workspace(args) => commands::workspace::run(&ctx, args),
         Command::Vvm(args) => {
             // The root is the running version's own (current_exe-derived)
-            // when managed, else $VIBEVM_INSTALL_ROOT/opt, else ~/opt
+            // when managed, else $VIBEVM_INSTALL_ROOT/opt, else ~/.vibe/opt
             // (PROP-019 §2.5). Ambient reads live at the composition root.
             let vvm_env = commands::vvm::VvmEnv {
-                root: self_loc.as_ref().map(|l| l.root.clone()).or_else(|| {
-                    read_env_opt(commands::vvm::VIBEVM_INSTALL_ROOT_ENV)
-                        .map(PathBuf::from)
-                        .or_else(dirs::home_dir)
-                        .map(|base| base.join("opt"))
-                }),
+                root: commands::vvm::resolve_root(
+                    self_loc.as_ref().map(|l| l.root.clone()),
+                    read_env_opt(commands::vvm::VIBEVM_INSTALL_ROOT_ENV).map(PathBuf::from),
+                    dirs::home_dir(),
+                ),
                 cwd: std::env::current_dir().ok(),
                 home: dirs::home_dir(),
                 shell: read_env_opt("SHELL"),
@@ -163,12 +162,13 @@ fn main() -> ExitCode {
             commands::vvm::run(&ctx, args, vvm_env)
         }
         Command::Vars(args) => {
-            let install_base = self_loc
-                .as_ref()
-                .and_then(|l| l.root.parent().map(|p| p.display().to_string()))
-                .or_else(|| read_env_opt(commands::vvm::VIBEVM_INSTALL_ROOT_ENV))
-                .or_else(|| dirs::home_dir().map(|h| h.display().to_string()))
-                .unwrap_or_default();
+            let install_base = commands::vvm::resolve_root(
+                self_loc.as_ref().map(|l| l.root.clone()),
+                read_env_opt(commands::vvm::VIBEVM_INSTALL_ROOT_ENV).map(PathBuf::from),
+                dirs::home_dir(),
+            )
+            .and_then(|root| root.parent().map(|p| p.display().to_string()))
+            .unwrap_or_default();
             let home_actual = self_loc
                 .as_ref()
                 .map(|l| l.home.display().to_string())

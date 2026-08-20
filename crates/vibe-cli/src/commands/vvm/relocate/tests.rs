@@ -14,6 +14,7 @@ fn ext(kind: Kind, id: &str, instance: u64, path: &str) -> InstallRecord {
         installed_at: "now".into(),
         origin: Origin::External,
         source_path: Some(path.into()),
+        payload_sha256: None,
     }
 }
 
@@ -29,6 +30,7 @@ fn managed(kind: Kind, id: &str, instance: u64) -> InstallRecord {
         installed_at: "now".into(),
         origin: Origin::Managed,
         source_path: None,
+        payload_sha256: None,
     }
 }
 

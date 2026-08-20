@@ -297,6 +297,7 @@ mod tests {
             installed_at: "now".into(),
             origin: Origin::Managed,
             source_path: None,
+            payload_sha256: None,
         }
     }
 

@@ -5,6 +5,26 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#surface");
 
 use super::*;
+
+#[test]
+fn default_root_is_under_dot_vibe_and_not_the_legacy_home_opt() {
+    let home = PathBuf::from("C:/Users/tester");
+    let root = resolve_root(None, None, Some(home.clone())).unwrap();
+    assert_eq!(root, home.join(".vibe").join("opt"));
+    assert_ne!(root, home.join("opt"));
+}
+
+#[test]
+fn install_root_override_remains_the_install_base() {
+    let override_base = PathBuf::from("D:/vvm-test");
+    let root = resolve_root(
+        None,
+        Some(override_base.clone()),
+        Some(PathBuf::from("C:/Users/tester")),
+    )
+    .unwrap();
+    assert_eq!(root, override_base.join("opt"));
+}
 use crate::commands::vvm::model::{
     InstallRecord, Kind, Origin, Profile, Selector, State, VersionId,
 };
@@ -21,6 +41,7 @@ fn rec(kind: Kind, id: &str, instance: u64) -> InstallRecord {
         installed_at: "now".into(),
         origin: Origin::Managed,
         source_path: None,
+        payload_sha256: None,
     }
 }
 

@@ -128,6 +128,13 @@ env_roots = [
     # touches the environment.
     "crates/vibe-registry/src/index_client/auth.rs",
     "crates/vibe-registry/src/registry_cache.rs",
+    # The VVM's durable-environment surface (PROP-019): reading and writing
+    # the user PATH/VIBEVM_HOME IS this file's whole job, and the C9 safe
+    # PATH writer needs to expand arbitrary `%VAR%` references found inside
+    # the user's raw PATH purely to compare entries (normalisation, never
+    # configuration). The read cannot be threaded from a composition root
+    # because the variable NAMES come from the PATH data itself.
+    "crates/vibe-cli/src/commands/vvm/env.rs",
     # The vibe-index configuration ladder (PROP-005 ##CONFIG-PRECEDENCE,
     # B-086, built 2026-08-20): `live_env` is the ladder's env rung — a
     # config-resolution point reading exactly the variables the member

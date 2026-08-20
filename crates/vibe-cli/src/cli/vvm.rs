@@ -5,6 +5,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#surface");
 
 use clap::Subcommand;
+use std::path::PathBuf;
 
 #[derive(Debug, clap::Args)]
 pub struct VvmArgs {
@@ -16,6 +17,9 @@ pub struct VvmArgs {
 pub enum VvmSubcommand {
     /// Build and install a version of vibevm from source.
     Install(VvmInstallArgs),
+
+    /// Import a ready-built local vibe executable without network access.
+    Import(VvmImportArgs),
 
     /// Rebuild and activate the latest in-tree version — a shorthand for
     /// `self install latest`.
@@ -98,6 +102,34 @@ pub struct VvmInstallArgs {
     /// Rebuild even if this version is already installed.
     #[arg(long)]
     pub force: bool,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct VvmImportArgs {
+    /// Path to a ready-built vibe executable.
+    #[arg(value_name = "PATH-TO-EXE")]
+    pub path: PathBuf,
+
+    /// Release tag to inventory the executable under (for example 1.0.0).
+    #[arg(long, value_name = "X.Y.Z")]
+    pub tag: String,
+
+    /// Source commit that produced the executable, when known.
+    #[arg(long, value_name = "SHA")]
+    pub commit: Option<String>,
+
+    /// Build profile metadata (`debug` | `release`). Defaults to `release`.
+    #[arg(long, value_name = "PROFILE", default_value = "release")]
+    pub profile: String,
+
+    /// Activate the imported instance and write the stable shims.
+    #[arg(long = "use")]
+    pub activate: bool,
+
+    /// Admit a different payload as a new inspection candidate for this tag;
+    /// the previous immutable instance remains installed.
+    #[arg(long)]
+    pub replace_candidate: bool,
 }
 
 /// Flags for `self update` — `self install latest` with only the build
