@@ -13,14 +13,14 @@ pub(super) fn fetch_node<S: InstallSource + ?Sized>(
     source: &S,
     node: &ResolvedNode,
     lockfile: &Lockfile,
-    cache_root: &Path,
+    store_root: &Path,
     root_features: &FeatureRequest,
 ) -> Result<Fetched> {
     let pkgref = exact_pinned_pkgref(node);
     let expected = lockfile
         .find(&node.group, &node.name)
         .map(|p| p.content_hash.clone());
-    let cached = source.resolve_and_fetch(&pkgref, cache_root, expected.as_deref())?;
+    let cached = source.resolve_and_fetch(&pkgref, store_root, expected.as_deref())?;
     let req = if node.is_root {
         tailor_feature_request(root_features, &cached.manifest.features)
     } else {
@@ -49,13 +49,13 @@ pub(super) fn fetch_or_defer<S: InstallSource + ?Sized>(
     source: &S,
     node: &ResolvedNode,
     lockfile: &Lockfile,
-    cache_root: &Path,
+    store_root: &Path,
     root_features: &FeatureRequest,
     workspace_root: &Path,
 ) -> Result<Fetched> {
     match try_in_place_incremental(node, lockfile, workspace_root, root_features)? {
         Some(fetched) => Ok(fetched),
-        None => fetch_node(source, node, lockfile, cache_root, root_features),
+        None => fetch_node(source, node, lockfile, store_root, root_features),
     }
 }
 
@@ -175,7 +175,7 @@ pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
     source: &S,
     roots: &[PackageRef],
     lockfile: &Lockfile,
-    cache_root: &Path,
+    store_root: &Path,
     project_root: &Path,
     workspace_root: &Path,
     language_chain: &[String],
@@ -262,7 +262,7 @@ pub(super) fn expand_conditional_deps<S: InstallSource + ?Sized>(
                 source,
                 node,
                 lockfile,
-                cache_root,
+                store_root,
                 root_features,
                 workspace_root,
             )?);

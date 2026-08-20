@@ -28,7 +28,6 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface");
 
-use std::fs;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
@@ -223,25 +222,26 @@ fn run_force(
     )
     .context("building the install resolver")?;
 
-    // Bypass the cache — wipe the project package cache so every fetch
-    // re-downloads from source (PROP-009 §2.10).
-    let cache_root = workspace.root.join(".vibe/cache");
-    if cache_root.exists() {
-        fs::remove_dir_all(&cache_root)
-            .with_context(|| format!("clearing the cache `{}`", cache_root.display()))?;
-    }
-    fs::create_dir_all(&cache_root)
-        .with_context(|| format!("creating the cache dir `{}`", cache_root.display()))?;
-
     // Re-fetch every locked package at its exact pinned version — no
     // re-resolution, the lockfile decides the version. The recorded
     // `content_hash` is forwarded so a source serving disagreeing bytes
     // is rejected: `vibe reinstall` reproduces the lock, never drifts it.
+    //
+    // The old "wipe the project cache so every fetch re-downloads"
+    // step (PROP-009 §2.10) retired with the project cache itself:
+    // payload now lands in the machine-global store (`~/.vibe/cache/`,
+    // PROP-010 §2.7), which our code never rewrites — every fetch
+    // still walks the sources, and the pin gate plus the read-time
+    // entry check make the re-fetched bytes prove themselves against
+    // the lockfile regardless of what the store already holds.
+    let store_root =
+        vibe_registry::store::store_root().context("resolving the machine package store root")?;
+
     let mut resolution: Vec<ResolvedDep> = Vec::with_capacity(lockfile.packages.len());
     for locked in &lockfile.packages {
         let pkgref = exact_pkgref(locked.kind, &locked.group, &locked.name, &locked.version)?;
         let cached = resolver
-            .resolve_and_fetch(&pkgref, &cache_root, Some(&locked.content_hash))
+            .resolve_and_fetch(&pkgref, &store_root, Some(&locked.content_hash))
             .with_context(|| {
                 format!(
                     "re-fetching `{}/{}@{}` from source",

@@ -217,14 +217,18 @@ fn create_project(
     )?);
     outcomes.push(ensure_empty_lockfile(ctx, &path)?);
 
-    // 4. `.vibe/` cache.
-    ensure_dir(&path.join(".vibe/cache"))?;
+    // 4. `.vibe/` — the project-local state dir (settings, parked
+    //    agentic commands). Its `cache/` subdirectory is gone: payload
+    //    now lives in the machine-global store `~/.vibe/cache/`
+    //    (PROP-010 §2.7), and this .gitignore keeps the project-local
+    //    state out of the repository the same way it kept the cache.
+    ensure_dir(&path.join(".vibe"))?;
     outcomes.push(ensure_file(
         ctx,
         &path,
         &path.join(".vibe/.gitignore"),
         "*\n",
-        "gitignore: cache",
+        "gitignore: .vibe",
     )?);
 
     // 5. .gitignore at project root.

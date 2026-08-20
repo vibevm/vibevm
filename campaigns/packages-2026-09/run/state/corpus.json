@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-20T03:50:00Z",
+  "updated_at": "2026-08-20T04:39:19Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -111725,7 +111725,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 92,
         "marker_count": 93,
-        "processed_hash": "0fe33ea13181cddd422b38481cb76965a91e9eff3ddfe96ae681510cbbc11beb",
+        "processed_hash": "794e9ef61fe0a8b2b1afe9bb0155d697d283e848a829574cf350e0f38e3e7081",
         "summary": {
           "confirmed": 132
         },
@@ -111828,21 +111828,19 @@
           "CACHE-MACHINE-GLOBAL": {
             "v": "confirmed",
             "ev": [
-              "правка касается только имени переменной в скобке; само решение (склад машинно-глобален, а не проектен) не тронуто и остаётся `spec/done`, потому что машинно-глобального склада ПАКЕТОВ действительно нет — сегодня по этому пути живёт клон-кэш реестров",
-              "адрес, на который теперь ссылается текст, существует: `crates/vibe-registry/src/registry_cache.rs` читает `VIBE_REGISTRY_CACHE` и вычисляет корень",
-              "замер, стоящий за правкой, записан датированной находкой: `campaigns/packages-2026-09/harvest/prop010-current-state.md` §6 — «документ дважды пишет `VIBEVM_REGISTRY_CACHE`, код читает `VIBE_REGISTRY_CACHE`», с контролем непустоты"
+              "crates/vibe-registry/src/store.rs:78-82 — store_root() = vibe_core::settings::settings_dir().join(\"cache\"), без собственного override; текст факта скорректирован этой посадкой под поздний рулинг THE-STORE-IS-DOT-VIBE-CACHE (VIBE_REGISTRY_CACHE остаётся у клон-кэша, registry_cache.rs:29)"
             ]
           },
           "CACHE-POPULATION-SHARED": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "наполнение любым фетчем построено: git per-package (fetch.rs, insert_at на принятом источнике), Local/Monorepo (local_registry.rs, git_registry.rs), override/git-source/redirect (dispatch.rs, sources.rs, redirect_follow.rs); impl/work честен — «any project RESOLVES from it» ждёт R1-RESOLVER (store не источник резолва: plan/fetch.rs всегда идёт в source.resolve_and_fetch)"
             ]
           },
           "CACHE-ACCRETIVE": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "write-once: store.rs:155-156 (AlreadyPresent без перезаписи), красный прогон guard'а перемерен боссом (test result: FAILED, ассерт write-once violated); авто-выселения нет нигде (греп evict вне vibe-index пуст — контроль F harvest'а)"
             ]
           },
           "accretion-why": {
@@ -111902,19 +111900,19 @@
           "IDENTITY-KEYED": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "store.rs:88-92 — entry_dir = <root>/<group>/<name>/v<version>, URL реестра в ключе отсутствует; валидация пином при чтении как источника: fetch.rs ветка AlreadyPresent → compute_content_hash(entry) против пина, mismatch = StoreEntryMismatch (error.rs:195-210)"
             ]
           },
           "REGISTRY-INDEPENDENT": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "байты переиспользуются межреестрово по построению (ключ без URL); impl/work честен: сетевой обход при резолве ещё случается (клон бутстрапится до store-хита) — снятие сетевой зависимости = R1-RESOLVER"
             ]
           },
           "HASH-INTEGRITY-GATE": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "гейт на чтении под пином построен (fetch.rs AlreadyPresent-ветка); межзеркальная коллизия по-прежнему ловится cross-source гейтом ДО вставки (отравленное зеркало не пишется в склад — тест fetch_rejected_by_the_pin_leaves_no_store_entry); impl/work: «valid only if» как всеобщая валидность = vibe cache check"
             ]
           },
           "SEQUENCED-AFTER-008": {
@@ -112033,7 +112031,7 @@
           "LOCAL-INDEX-VIEW": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "store.rs:126-141 (list_versions/list_all + _at ядра :226-284) — обход раскладки per identity; прочтение «the layout is the index» записано в самом факте и в докблоке store.rs:14-19; тест rootless_store_roundtrip_write_once_and_index_views (tests/store.rs)"
             ]
           },
           "layout-open": {
@@ -112045,7 +112043,7 @@
           "CACHE-FILLS": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "side-effect наполнение построено всеми фетч-путями (см. CACHE-POPULATION-SHARED); impl/work: pre-warm `vibe cache add` не построен (команды §2.8 — слайс cache-семьи)"
             ]
           },
           "CACHE-COMMANDS": {
@@ -112249,7 +112247,7 @@
           "PHASE-1-IDENTITY-CACHE": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "фаза в работе: склад+раскладка+index view построены этой посадкой; из текста фазы не построены vibe cache path/list — слайс cache-семьи марафона (TASKS С1)"
             ]
           },
           "PHASE-2-USER-REGISTRIES": {
@@ -112303,8 +112301,7 @@
           "LAYOUT-EXTRACTED-DIRECTORIES": {
             "v": "confirmed",
             "ev": [
-              "Owner ruling 2026-08-19, given verbatim as «распакованные каталоги» after being shown the two candidates this document's own §5.1 had left open.",
-              "The alternative it rejects is measured, not assumed: crates/vibe-registry/src/git_registry.rs refreshes a clone with `git fetch` + `git reset --hard origin/<ref>`, i.e. a clone is brought to whatever the origin says now."
+              "entry = извлечённая директория shippable-дерева (copy_dir_recursive с LEGACY0_EXCLUDES), не клон: .git не попадает в entry; клоны остались отдельным слоем ~/.vibe/registries"
             ]
           },
           "WHY-EXTRACTED-AND-NOT-AN-ARCHIVE": {
@@ -112324,8 +112321,7 @@
           "CLONES-KEEP-THEIR-OWN-JOB": {
             "v": "confirmed",
             "ev": [
-              "The clone cache's recorded purpose survives: PROP-001 rejects cache-per-project because it would duplicate one clone into every project on the machine.",
-              "Measured: the clone cache root is ~/.vibe/registries/<url-hash>, one slot per registry URL (crates/vibe-core/src/settings.rs)."
+              "клон-кэш не тронут (registry_cache.rs, package_clone_dir); impl/work честен: «stops being load-bearing for availability» наступит с R1-RESOLVER (сегодня клон всё ещё обязателен на пути резолва)"
             ]
           },
           "A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY": {
@@ -112408,59 +112404,49 @@
           "THE-STORE-IS-DOT-VIBE-CACHE": {
             "v": "confirmed",
             "ev": [
-              "рулинг владельца 2026-08-20, принят в разговоре после того, как он опроверг единственное возражение против имени; соседи по каталогу существуют и заняты другим — `~/.vibe/registries/` лежит на диске этой машины и держит клоны реестров",
-              "дом настроек согласован с кодом, а не назначен: канонический каталог настроек в `crates/vibe-core/src/settings.rs` есть `.vibe`, и все аксессоры укоренены в нём"
+              "store.rs:78-82 — <settings-home>/cache; e2e cli_pkg_cycle.rs — entry под settings-home, проектный .vibe/cache не создаётся"
             ]
           },
           "THE-NAME-DOES-NOT-COLLIDE-BECAUSE-THE-OTHER-CACHE-GOES": {
             "v": "confirmed",
             "ev": [
-              "утверждение о роли проектной папки проверено по дереву: `crates/vibe-cli/src/commands/reinstall.rs` и `commands/update.rs` берут корень кэша как `workspace.root.join(\".vibe/cache\")`, а `commands/init/mod.rs` его создаёт — то есть это проектный суррогат источника, а не отдельный слой",
-              "трёхслойная раскладка, в которой его нет, записана в этом же документе (§2.9): склад — источник, `vibedeps/` — материализованное в проекте, `vibe.lock` — закреплённое разрешение",
-              "возражение и его опровержение принадлежат владельцу дословно: имя было вынесено как открытый вопрос и закрыто тем, что проектная папка не сосуществует со складом, а заменяется им"
+              "проектная cache/ удалена ТЕМ ЖЕ диффом: plan.rs (блок создания удалён), init/mod.rs (не создаёт), reinstall.rs/update.rs (wipe-блоки удалены); греп живых строителей `.vibe/cache` по crates после посадки — ноль (перемерено при ревью)"
             ]
           },
           "THE-PROJECT-CACHE-IS-REMOVED-BY-THE-SAME-WORK": {
             "v": "confirmed",
             "ev": [
-              "оговорка о периметре проверена по дереву: `.vibe/` проекта несёт не только `cache/` — `crates/vibe-cli/src/cli/agentic.rs` паркует команду в `.vibe/agentic/command.md`, `cli/prefs.rs` называет `.vibe/settings.toml` и `.vibe/settings.local.toml`. Значит удаляется подкаталог, а не каталог",
-              "на этом дереве проектный кэш непуст (три записи по группам), то есть удаление — реальная работа, а не формальность"
+              "тот же коммит несёт и склад и снос проектного подкаталога; сам .vibe/ проекта жив (init создаёт .vibe/ + .gitignore — init/mod.rs)"
             ]
           },
           "THE-EXTRACTED-LAYER-IS-PROMOTED-NOT-INVENTED": {
             "v": "confirmed",
             "ev": [
-              "существование слоя перемерено боссом при приёмке замера: `crates/vibe-registry/src/lib.rs` несёт пример пути `.vibe/cache/org.vibevm/wal/v0.2.0`, `local_registry.rs` — тот же корень, `commands/init/mod.rs` его создаёт, `reinstall.rs` и `update.rs` им пользуются",
-              "три названные перемены не выдуманы, а следуют из измеренного: уровень проектный (корень воркспейса), режим перезаписываемый (кэш пересоздаётся), роль побочная (из него копируют в `vibedeps/`, но резолвер к нему не ходит)",
-              "датированный замер, на который опирается факт, лежит в дереве: `campaigns/packages-2026-09/harvest/prop010-current-state.md`, вердикт каждому из 107 фактов со сходимостью суммы"
+              "раскладка entry идентична прежней проектной (<group>/<name>/v<version>, .git-stripped); изменены ровно три вещи рулинга: уровень (store_root вместо workspace-root), режим (write-once insert_at), роль (cache_dir = entry склада → vibedeps копирует из него, plan.rs:312-окрестность)"
             ]
           },
           "WRITTEN-ONCE-IS-A-RULE-FOR-OUR-CODE-NOT-A-CLAIM-ABOUT-THE-DISK": {
             "v": "confirmed",
             "ev": [
-              "формулировка исправлена по прямому возражению владельца 2026-08-20 («а как ты можешь запретить перезапись? Это же жесткий диск пользователя») — прежняя редакция обещала неисполнимое",
-              "три обязательства ниже разделены по исполнимости: первое целиком в нашей власти и тестируемо, второе есть команда, третье — форма сообщения; ни одно не требует контроля над файловой системой"
+              "все три обязательства: (1) no-rewrite — store.rs insert_at + красный прогон; (2) команда-не-налог — обычный путь не перехэширует склад (fetch.rs: хэш только клона либо entry-под-пином); (3) mismatch назван — StoreEntryMismatch с identity/путём/обоими хэшами"
             ]
           },
           "OUR-CODE-NEVER-REWRITES-AN-ENTRY": {
             "v": "confirmed",
             "ev": [
-              "это единственная половина правила, полностью зависящая от нас, и она проверяема тестом — тем же способом, каким крейт индекса уже доказывает, что мутация не читает каталог (грепом по путям записи)",
-              "сегодняшнее поведение противоположно и потому названо в соседнем факте: проектный кэш пересоздаётся, то есть перезапись сейчас есть норма"
+              "store.rs:155-156 ранний возврат AlreadyPresent; гоночная ветка rename-конфликта тоже отдаёт чужой entry нетронутым (:199-203); guard доказан красным (боссом, вывод в LOG ТЗ)"
             ]
           },
           "VERIFICATION-IS-A-COMMAND-NOT-A-TAX": {
             "v": "confirmed",
             "ev": [
-              "рулинг владельца 2026-08-20 дословно: «чексуммы установленных зависимостей обычно измерять не нужно. Сделай команду для проверки кэша, вот она пусть всё и пересчитывает»",
-              "довод о стоимости не абстрактен: тот же разговор задал меру — зависимость может весить десять гигабайт, и полный пересчёт на каждом разрешении делает инструмент непригодным"
+              "налоговая половина построена: без пина entry не перехэшируется (fetch.rs, докблок «re-hashing the store on every resolve is vibe cache check's job»); impl/work: сама команда vibe cache check — слайс cache-семьи"
             ]
           },
           "A-MISMATCH-IS-NAMED-NEVER-SWALLOWED": {
             "v": "confirmed",
             "ev": [
-              "форма ответа согласована с уже действующим законом этого дерева: расхождение записанного хэша с фактическим есть жёсткая ошибка целостности, называющая оба значения, а не молчаливое переиспользование (§2.3 этого документа)",
-              "альтернативы названы и отвергнуты в разговоре: молчаливая перекачка теряет причину, молчаливое использование теряет воспроизводимость"
+              "read-path половина построена: StoreEntryMismatch называет пакет/путь/оба хэша, тест fetch_with_pin_names_a_tampered_store_entry (store_gate_tests.rs); sweep-половина (vibe cache check) — pending, названо в самом факте курсивной вставкой этой посадки"
             ]
           },
           "CMD-CHECK": {
@@ -112581,8 +112567,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-20T03:49:58Z",
-        "verify_batch": "c4f1-registry-rest + d2d + W8 + W10 + PROP010-ENV-VAR-NAME-2026-08-19 + OWNER-RULINGS-STORE-AND-RESCAN-2026-08-20 + R1-OFFLINE"
+        "verified_at": "2026-08-20T04:39:17Z",
+        "verify_batch": "c4f1-registry-rest + d2d + W8 + W10 + PROP010-ENV-VAR-NAME-2026-08-19 + OWNER-RULINGS-STORE-AND-RESCAN-2026-08-20 + R1-OFFLINE + R1-STORE"
       }
     },
     {

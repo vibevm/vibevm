@@ -244,18 +244,20 @@ fn resolve_path_source_wins_over_same_pkgref_git_source() {
 }
 
 #[test]
-fn fetch_path_source_copies_local_dir_and_computes_hash() {
-    // PROP-007 §2.5: fetching a path-source package copies the local
-    // directory's content into the per-project package cache,
-    // excludes any `.git/`, and computes a content_hash over the
-    // copied tree. No git clone happens.
+fn fetch_path_source_reads_the_live_member_dir_and_hashes_it() {
+    // PROP-007 §2.5: fetching a path-source package does NOT touch the
+    // machine store — a path source is a live, mutable workspace
+    // member, and an identity-keyed write-once entry would freeze
+    // stale bytes. The member's own directory is the content source;
+    // the content_hash is computed over it, with `.git/` excluded by
+    // the recipe. No git clone happens.
     let cache = tempdir().unwrap();
     let pkg_cache = tempdir().unwrap();
     let ws = tempdir().unwrap();
     let fake = Arc::new(FakeBackend::default());
 
-    // Path-source package with a regular file AND a `.git/` subtree
-    // that must NOT make it into the cache.
+    // Path-source package with a regular file AND a `.git/` subtree —
+    // the member dir keeps it; the hash over the dir must exclude it.
     let pkg_dir = seed_path_package(ws.path(), "flow-local", "local", "flow", "0.2.0");
     fs::write(pkg_dir.join("README.md"), "# local package\n").unwrap();
     let git_dir = pkg_dir.join(".git");
@@ -267,7 +269,7 @@ fn fetch_path_source_copies_local_dir_and_computes_hash() {
         group: org(),
         name: "local".to_string(),
         version: None,
-        package_dir: pkg_dir,
+        package_dir: pkg_dir.clone(),
         workspace_rel: "flow-local".to_string(),
     };
     let r = build_resolver(cache.path(), vec![], vec![], vec![], fake.clone())
@@ -286,13 +288,34 @@ fn fetch_path_source_copies_local_dir_and_computes_hash() {
     // as the lockfile `source_url` for a path entry.
     assert_eq!(cached.source_uri, "flow-local");
     assert_eq!(cached.package_meta().version.to_string(), "0.2.0");
-    // Cache is populated with the package payload.
+    // A path source is a live, mutable workspace member, so its
+    // content is NOT written to the identity-keyed write-once store:
+    // `cache_dir` IS the member directory, read fresh on every fetch
+    // (a member edited under the same version must materialise its
+    // current bytes, not a stale frozen entry).
+    assert_eq!(cached.cache_dir, pkg_dir);
     assert!(cached.cache_dir.join("vibe.toml").exists());
     assert!(cached.cache_dir.join("README.md").exists());
-    // `.git/` was excluded.
-    assert!(!cached.cache_dir.join(".git").exists());
-    // content_hash computed over the copied tree.
-    assert!(cached.content_hash.starts_with("sha256:"));
+    // The member dir still carries its `.git/` (vibedeps
+    // materialisation strips it as it copies); what matters is that
+    // the hash — computed over this very tree — excludes it.
+    assert!(cached.cache_dir.join(".git").exists());
+    let stripped = tempdir().unwrap();
+    fs::write(
+        stripped.path().join("vibe.toml"),
+        fs::read(pkg_dir.join("vibe.toml")).unwrap(),
+    )
+    .unwrap();
+    fs::write(
+        stripped.path().join("README.md"),
+        fs::read(pkg_dir.join("README.md")).unwrap(),
+    )
+    .unwrap();
+    assert_eq!(
+        cached.content_hash,
+        compute_content_hash(stripped.path()).unwrap(),
+        "the content hash must exclude the member's .git/"
+    );
     // No git clone — `bootstrap` was never invoked.
     assert_eq!(fake.bootstrap_count(), 0);
 }

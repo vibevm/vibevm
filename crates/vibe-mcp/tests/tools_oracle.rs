@@ -65,7 +65,13 @@ fn project_with_locked(text: &str) -> (tempfile::TempDir, ServerContext) {
     )
     .unwrap();
     std::fs::write(dir.path().join("vibe.lock"), text).unwrap();
-    let ctx = ServerContext::new(dir.path().to_path_buf());
+    // The machine store is injected as a dir inside the project temp
+    // tree so its lifetime rides the returned TempDir and no test ever
+    // touches the real `~/.vibe/cache/`. Lazy-pull fixtures plant
+    // payload under `<store>/<group>/<name>/v<version>/` (PROP-010
+    // §2.7 — the fetch path's layout).
+    let store_root = dir.path().join("store-root");
+    let ctx = ServerContext::with_store_root(dir.path().to_path_buf(), &store_root);
     (dir, ctx)
 }
 
@@ -392,9 +398,12 @@ fn read_subskill_cell_unknown_subskill_errors() {
 #[test]
 fn materialise_subskill_cell_copies_lazy_pull_content() {
     let (dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
-    let cache_root = dir
-        .path()
-        .join(".vibe/cache/flow/wal/v0.1.0/subskills/sqlx/v08/spec/flows/wal");
+    let cache_root = ctx
+        .store_root
+        .join("org.vibevm")
+        .join("wal")
+        .join("v0.1.0")
+        .join("subskills/sqlx/v08/spec/flows/wal");
     std::fs::create_dir_all(&cache_root).unwrap();
     std::fs::write(
         cache_root.join("SQLX-NOTES.md"),
@@ -440,9 +449,12 @@ fn materialise_subskill_cell_no_op_for_non_lazy_pull() {
 #[test]
 fn materialise_subskill_cell_refuses_overwrite_without_force() {
     let (dir, ctx) = project_with_locked(LOCKFILE_FIXTURE);
-    let cache_root = dir
-        .path()
-        .join(".vibe/cache/flow/wal/v0.1.0/subskills/sqlx/v08/spec/flows/wal");
+    let cache_root = ctx
+        .store_root
+        .join("org.vibevm")
+        .join("wal")
+        .join("v0.1.0")
+        .join("subskills/sqlx/v08/spec/flows/wal");
     std::fs::create_dir_all(&cache_root).unwrap();
     std::fs::write(cache_root.join("SQLX-NOTES.md"), "from-cache").unwrap();
     let target_dir = dir.path().join("spec/flows/wal");

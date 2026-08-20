@@ -63,28 +63,29 @@ pub(crate) enum InstallResolver {
 }
 
 impl InstallSource for InstallResolver {
-    /// Resolve `pkgref` and materialise its content into the
-    /// per-project cache. `expected_hash` (typically the lockfile pin
-    /// for `(pkgref.kind, pkgref.name, version)`) is forwarded to the
-    /// multi-registry path's mirror-aware fetch so a source serving
-    /// disagreeing bytes can be skipped in favour of a matching one.
-    /// The local-directory path ignores the hint — there's only ever
-    /// one source on that path, and integrity is checked against the
-    /// lockfile pin at apply time.
+    /// Resolve `pkgref` and insert its content into the machine-global
+    /// store under `store_root` (PROP-010 §2.7). `expected_hash`
+    /// (typically the lockfile pin for `(pkgref.kind, pkgref.name,
+    /// version)`) is forwarded to the multi-registry path's
+    /// mirror-aware fetch so a source serving disagreeing bytes can be
+    /// skipped in favour of a matching one. The local-directory path
+    /// ignores the hint — there's only ever one source on that path,
+    /// and integrity is checked against the lockfile pin at apply
+    /// time.
     fn resolve_and_fetch(
         &self,
         pkgref: &PackageRef,
-        cache_root: &Path,
+        store_root: &Path,
         expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
         match self {
             InstallResolver::Local(r, _) => {
                 let resolved = r.resolve(pkgref)?;
-                r.fetch(&resolved, cache_root)
+                r.fetch(&resolved, store_root)
             }
             InstallResolver::Multi(m, _) => {
                 let resolution = m.resolve(pkgref)?;
-                m.fetch_with_expected_hash(&resolution, cache_root, expected_hash)
+                m.fetch_with_expected_hash(&resolution, store_root, expected_hash)
             }
             InstallResolver::Embedded {
                 locals,
@@ -109,7 +110,7 @@ impl InstallSource for InstallResolver {
                     for (idx, local) in locals.iter().enumerate() {
                         match local.resolve(pkgref) {
                             Ok(resolved) => {
-                                let mut cached = local.fetch(&resolved, cache_root)?;
+                                let mut cached = local.fetch(&resolved, store_root)?;
                                 if idx < *project_local_count {
                                     cached.is_local = true;
                                 } else {
@@ -139,7 +140,7 @@ impl InstallSource for InstallResolver {
                     match declared {
                         Some(m) => {
                             let resolution = m.resolve(pkgref)?;
-                            m.fetch_with_expected_hash(&resolution, cache_root, expected_hash)
+                            m.fetch_with_expected_hash(&resolution, store_root, expected_hash)
                         }
                         None => {
                             let group = pkgref.group.clone().ok_or_else(|| {

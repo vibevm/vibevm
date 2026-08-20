@@ -6,11 +6,11 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
 use std::collections::BTreeSet;
-use std::fs;
 use std::path::{Path, PathBuf};
 
 use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_core::{Group, PackageRef, VersionSpec};
+use vibe_registry::store;
 use vibe_registry::{CachedPackage, ResolvedPackage};
 use vibe_resolver::{
     FeatureRequest, ResolvedNode, conditional::ConditionalPredicate, expand_features,
@@ -103,14 +103,6 @@ pub fn plan<S: InstallSource + ?Sized>(
 
     // PROP-003 §2.7 language chain (caller override > project [i18n]).
     let language_chain = build_language_chain(request.language.as_deref(), &manifest);
-
-    // Cache layout matches §8.3: `.vibe/cache/<kind>/<name>/<version>/`.
-    // The cache lives at the absolute workspace root — one shared cache.
-    let cache_root = workspace.root.join(".vibe/cache");
-    fs::create_dir_all(&cache_root).map_err(|source| Error::CacheDir {
-        path: cache_root.display().to_string(),
-        source,
-    })?;
 
     // 1. Decide the effective root list. Three input shapes:
     //
@@ -248,13 +240,20 @@ pub fn plan<S: InstallSource + ?Sized>(
     //    the activation context, since context probes (`if_present`,
     //    `if_provides`, `if_describes_match`) depend on the union of
     //    capabilities, interfaces, and PURLs across the graph.
+    //
+    //    Fetched payload lands in the machine-global store
+    //    (`~/.vibe/cache/`, PROP-010 §2.7) — resolved here, once per
+    //    plan, through the settings chokepoint. The project no longer
+    //    has a `.vibe/cache/` copy: the store IS the source
+    //    `vibedeps/` materialises from.
+    let store_root = store::store_root()?;
     let mut fetched: Vec<Fetched> = Vec::with_capacity(graph.packages.len());
     for node in graph.iter() {
         fetched.push(fetch_or_defer(
             source,
             node,
             &lockfile,
-            &cache_root,
+            &store_root,
             &request.features,
             &workspace.root,
         )?);
@@ -288,7 +287,7 @@ pub fn plan<S: InstallSource + ?Sized>(
         source,
         &roots,
         &lockfile,
-        &cache_root,
+        &store_root,
         project_root,
         &workspace.root,
         &language_chain,

@@ -81,12 +81,39 @@ pub struct ServerContext {
     /// Project root — the directory containing `vibe.toml` and
     /// `vibe.lock`.
     pub project_root: PathBuf,
+    /// Root of the machine-global package store (`~/.vibe/cache/`,
+    /// PROP-010 §2.7) the lazy-pull subskill readers read payload
+    /// from. Carried on the context rather than resolved per call so
+    /// tests inject a temp root and never touch the real `~/.vibe`;
+    /// production gets it from the one settings chokepoint. (This
+    /// crate does not depend on `vibe-registry`, so the entry path is
+    /// joined from the documented layout rather than
+    /// `store::entry_dir` — the layout is the index, there is no
+    /// second representation to drift.)
+    pub store_root: PathBuf,
 }
 
 impl ServerContext {
     pub fn new(project_root: impl Into<PathBuf>) -> Self {
+        let store_root = vibe_core::settings::settings_dir()
+            .map(|home| home.join("cache"))
+            .unwrap_or_default();
         ServerContext {
             project_root: project_root.into(),
+            store_root,
+        }
+    }
+
+    /// A context whose store root is the caller's — the test seam for
+    /// the lazy-pull readers: a temp root keeps a test off the
+    /// operator's real `~/.vibe/cache/`.
+    pub fn with_store_root(
+        project_root: impl Into<PathBuf>,
+        store_root: impl Into<PathBuf>,
+    ) -> Self {
+        ServerContext {
+            project_root: project_root.into(),
+            store_root: store_root.into(),
         }
     }
 

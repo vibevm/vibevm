@@ -31,7 +31,7 @@ use crate::registry_cache::strip_git_plus_prefix;
 pub use crate::registry_cache::{DEFAULT_FRESHNESS_SECS, default_cache_root, normalize_url};
 use crate::{
     CachedPackage, LocalRegistry, Registry, RegistryError, ResolvedPackage, compute_content_hash,
-    copy_dir_recursive,
+    store,
 };
 
 /// Structure persisted to `<cache_root>/<hash>/meta.toml`.
@@ -185,24 +185,23 @@ impl Registry for GitMonorepoRegistry {
 
     /// Fetch overrides [`LocalRegistry::fetch`] so the lockfile
     /// `source_uri` encodes the registry's git URL instead of the
-    /// on-disk clone path.
+    /// on-disk clone path. The payload is inserted into the
+    /// machine-global store write-once (PROP-010 §2.7), same shape as
+    /// the local-directory path.
     fn fetch(
         &self,
         resolved: &ResolvedPackage,
-        cache_root: &Path,
+        store_root: &Path,
     ) -> Result<CachedPackage, RegistryError> {
-        let cache_dir = cache_root
-            .join(resolved.group.as_str())
-            .join(&resolved.name)
-            .join(format!("v{}", resolved.version));
-
-        if cache_dir.exists() {
-            fs::remove_dir_all(&cache_dir).map_err(|source| RegistryError::Io {
-                path: cache_dir.clone(),
-                source,
-            })?;
-        }
-        copy_dir_recursive(&resolved.source_dir, &cache_dir)?;
+        let content_hash = compute_content_hash(&resolved.source_dir)?;
+        let cache_dir = store::insert_at(
+            store_root,
+            &resolved.source_dir,
+            &resolved.group,
+            &resolved.name,
+            &resolved.version,
+        )?
+        .into_entry();
 
         let manifest_path = cache_dir.join(Manifest::FILENAME);
         let manifest = Manifest::read(&manifest_path)?;
@@ -212,7 +211,6 @@ impl Registry for GitMonorepoRegistry {
                 reason: "registry package manifest must carry a [package] table".to_string(),
             });
         }
-        let content_hash = compute_content_hash(&cache_dir)?;
 
         let source_uri = source_uri_for_git(
             &self.url,

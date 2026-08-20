@@ -42,7 +42,7 @@ impl InstallSource for MockSource {
     fn resolve_and_fetch(
         &self,
         pkgref: &PackageRef,
-        _cache_root: &Path,
+        _store_root: &Path,
         _expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
         // A deferred in-place package must never reach the re-clone path; if it

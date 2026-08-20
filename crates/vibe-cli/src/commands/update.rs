@@ -15,7 +15,6 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
-use std::fs;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
@@ -161,9 +160,10 @@ pub fn run(
         .solve(&roots)
         .context("dependency resolution failed")?;
 
-    let cache_root = workspace.root.join(".vibe/cache");
-    fs::create_dir_all(&cache_root)
-        .with_context(|| format!("creating cache dir `{}`", cache_root.display()))?;
+    // Fetched payload lands in the machine-global store (PROP-010
+    // §2.7) — no project cache directory exists to create.
+    let store_root =
+        vibe_registry::store::store_root().context("resolving the machine package store root")?;
 
     // Fetch every node of the named subtree. A package the lockfile already
     // records as in-place with a present slot is NOT re-fetched: it is updated
@@ -188,7 +188,7 @@ pub fn run(
             });
             continue;
         }
-        let cached = resolver.resolve_and_fetch(&pkgref, &cache_root, None)?;
+        let cached = resolver.resolve_and_fetch(&pkgref, &store_root, None)?;
         updated.push((cached, node.dependencies.clone()));
     }
     let total = updated.len() + pending_in_place.len();

@@ -15,26 +15,25 @@ use specmark::cell;
 use vibe_core::manifest::Manifest;
 use vibe_core::{Group, PackageRef, VersionSpec};
 
-use crate::{
-    CachedPackage, Registry, RegistryError, ResolvedPackage, compute_content_hash,
-    copy_dir_recursive,
-};
+use crate::{CachedPackage, Registry, RegistryError, ResolvedPackage, compute_content_hash, store};
 
 /// The M0 local-directory registry backend, laid out
 /// `<root>/<group>/<name>/v<version>/` per `VIBEVM-SPEC.md` §8.2.
 ///
 /// The blessed path — open the root, resolve a pkgref, fetch into the
-/// per-project cache (touches the filesystem at every step):
+/// machine-global store (touches the filesystem at every step):
 ///
 /// ```no_run
 /// use std::path::Path;
 /// use vibe_core::PackageRef;
-/// use vibe_registry::LocalRegistry;
+/// use vibe_registry::{LocalRegistry, store};
 ///
 /// let registry = LocalRegistry::new("path/to/registry").unwrap();
 /// let pkgref = PackageRef::parse("org.vibevm/wal@^0.1").unwrap();
 /// let resolved = registry.resolve(&pkgref).unwrap();
-/// let cached = registry.fetch(&resolved, Path::new(".vibe/cache")).unwrap();
+/// let cached = registry
+///     .fetch(&resolved, &store::store_root().unwrap())
+///     .unwrap();
 /// assert!(cached.content_hash.starts_with("sha256:"));
 /// ```
 #[cell(seam = "Registry", variant = "local")]
@@ -180,25 +179,29 @@ impl LocalRegistry {
         })
     }
 
-    /// Copy a resolved package into `<cache_root>/<group>/<name>/<version>/`
-    /// and return a `CachedPackage` with manifest and content hash populated.
+    /// Insert a resolved package into the machine-global store at
+    /// `<store_root>/<group>/<name>/v<version>/`, write-once
+    /// (PROP-010 §2.7), and return a `CachedPackage` with manifest and
+    /// content hash populated. The content hash is computed over the
+    /// source tree — the recipe's exclude set skips `.git` and build
+    /// output, so it equals the hash of the entry the store will hold.
+    /// An already-present entry is returned untouched (our code never
+    /// rewrites one); its manifest is read back so the
+    /// `CachedPackage` describes the bytes that will materialise.
     pub fn fetch(
         &self,
         resolved: &ResolvedPackage,
-        cache_root: &Path,
+        store_root: &Path,
     ) -> Result<CachedPackage, RegistryError> {
-        let cache_dir = cache_root
-            .join(resolved.group.as_str())
-            .join(&resolved.name)
-            .join(format!("v{}", resolved.version));
-
-        if cache_dir.exists() {
-            fs::remove_dir_all(&cache_dir).map_err(|source| RegistryError::Io {
-                path: cache_dir.clone(),
-                source,
-            })?;
-        }
-        copy_dir_recursive(&resolved.source_dir, &cache_dir)?;
+        let content_hash = compute_content_hash(&resolved.source_dir)?;
+        let cache_dir = store::insert_at(
+            store_root,
+            &resolved.source_dir,
+            &resolved.group,
+            &resolved.name,
+            &resolved.version,
+        )?
+        .into_entry();
 
         let manifest_path = cache_dir.join(Manifest::FILENAME);
         let manifest = Manifest::read(&manifest_path)?;
@@ -208,10 +211,9 @@ impl LocalRegistry {
                 reason: "registry package manifest must carry a [package] table".to_string(),
             });
         }
-        let content_hash = compute_content_hash(&cache_dir)?;
 
         // Build a source URI. On local-registry M0 we just encode the absolute
-        // source path. We intentionally do NOT include the cache path.
+        // source path. We intentionally do NOT include the store path.
         let source_uri = source_uri_for_local(&resolved.source_dir);
 
         Ok(CachedPackage {
@@ -250,9 +252,9 @@ impl Registry for LocalRegistry {
     fn fetch(
         &self,
         resolved: &ResolvedPackage,
-        cache_root: &Path,
+        store_root: &Path,
     ) -> Result<CachedPackage, RegistryError> {
-        LocalRegistry::fetch(self, resolved, cache_root)
+        LocalRegistry::fetch(self, resolved, store_root)
     }
 }
 

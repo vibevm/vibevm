@@ -258,17 +258,20 @@ impl McpTool for ReadSubskillMcpTool {
 
         // Per PROP-003 §2.5.0: eager / lazy-push subskills read from the
         // project tree; lazy-pull subskills never touch it and read from
-        // the package cache. The lockfile carries `files_written`
-        // (project-relative) and `cache_files` (subskill-root-relative);
-        // we use whichever matches the delivery mode, so the agent gets
-        // bytes regardless of how the package author shipped them.
+        // the machine-global package store. The lockfile carries
+        // `files_written` (project-relative) and `cache_files`
+        // (subskill-root-relative); we use whichever matches the
+        // delivery mode, so the agent gets bytes regardless of how the
+        // package author shipped them. The store entry is keyed by
+        // package identity (`<store>/<group>/<name>/v<version>/`,
+        // PROP-010 §2.7) — joined here from the documented layout
+        // because this crate does not depend on `vibe-registry`.
         let mut content = String::new();
         let mut paths_returned: Vec<Value> = Vec::new();
         if sub.delivery == "lazy-pull" {
             let cache_root = ctx
-                .project_root
-                .join(".vibe/cache")
-                .join(entry.kind.as_str())
+                .store_root
+                .join(entry.group.as_str())
                 .join(entry.name.as_str())
                 .join(format!("v{}", entry.version));
             let sub_root = cache_root.join("subskills").join(&sub.path);
@@ -404,10 +407,14 @@ impl McpTool for MaterialiseSubskillMcpTool {
                 "written": Vec::<Value>::new(),
             }));
         }
+        // The machine store entry for this package identity
+        // (`<store>/<group>/<name>/v<version>/`, PROP-010 §2.7) — the
+        // same layout the fetch path inserts into; the layout is the
+        // index, so the reader joins it rather than consulting a
+        // second representation.
         let cache_root = ctx
-            .project_root
-            .join(".vibe/cache")
-            .join(entry.kind.as_str())
+            .store_root
+            .join(entry.group.as_str())
             .join(entry.name.as_str())
             .join(format!("v{}", entry.version));
         let sub_root = cache_root.join("subskills").join(&sub.path);

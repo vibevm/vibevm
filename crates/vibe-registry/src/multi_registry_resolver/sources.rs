@@ -168,14 +168,15 @@ impl MultiRegistryResolver {
             .join("clone")
     }
 
-    /// Fetch a git-source-resolved package into the per-project cache.
-    /// Same shape as `fetch_override` but threads `dep.auth` /
-    /// `dep.token_env` through so private targets get token injection
-    /// and the M1.14 scrub-from-`.git/config` discipline applies.
+    /// Fetch a git-source-resolved package into the machine-global
+    /// store, write-once (PROP-010 §2.7). Same shape as
+    /// `fetch_override` but threads `dep.auth` / `dep.token_env`
+    /// through so private targets get token injection and the M1.14
+    /// scrub-from-`.git/config` discipline applies.
     pub(super) fn fetch_git_source(
         &self,
         resolution: &MultiResolution,
-        project_cache: &Path,
+        store_root: &Path,
         _expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
         let group = &resolution.resolved.group;
@@ -226,17 +227,18 @@ impl MultiRegistryResolver {
                 .ok();
         }
 
-        let dest = project_cache
-            .join(group.as_str())
-            .join(name)
-            .join(format!("v{}", resolution.resolved.version));
-        if dest.exists() {
-            std::fs::remove_dir_all(&dest).map_err(|source| RegistryError::Io {
-                path: dest.clone(),
-                source,
-            })?;
-        }
-        copy_dir_excluding_git(&clone_dir, &dest)?;
+        // Hash the clone directly (the recipe skips `.git`), then
+        // insert write-once into the machine store; an already-present
+        // entry is returned untouched, its manifest read back.
+        let content_hash = compute_content_hash(&clone_dir)?;
+        let dest = store::insert_at(
+            store_root,
+            &clone_dir,
+            group,
+            name,
+            &resolution.resolved.version,
+        )?
+        .into_entry();
         let manifest_path = dest.join(Manifest::FILENAME);
         let manifest = Manifest::read(&manifest_path)?;
         if manifest.package.is_none() {
@@ -245,7 +247,6 @@ impl MultiRegistryResolver {
                 reason: "registry package manifest must carry a [package] table".to_string(),
             });
         }
-        let content_hash = compute_content_hash(&dest)?;
 
         Ok(CachedPackage {
             resolved: ResolvedPackage {
@@ -270,16 +271,19 @@ impl MultiRegistryResolver {
         })
     }
 
-    /// Fetch a path-source-resolved package into the per-project cache.
-    /// Unlike git-source there is NO git clone — a path-source package
-    /// is a local directory. `resolution.resolved.source_dir` carries
-    /// the resolver-supplied absolute `package_dir`; we copy its content
-    /// (excluding any `.git/`) straight into the per-project package
-    /// cache and hash the copied tree. PROP-007 §2.5.
+    /// Fetch a path-source-resolved package (PROP-007 §2.5) — and the
+    /// one deliberate NON-store fetch: a path source is a live
+    /// workspace member, mutable under the same version, so an
+    /// identity-keyed write-once entry would freeze stale bytes the
+    /// first time it was fetched and serve them forever. The member's
+    /// own directory IS the content source: `cache_dir` points at it,
+    /// the hash is computed over it (the recipe skips any `.git/`),
+    /// and `vibedeps/` materialisation — which always re-materialises
+    /// a `source_mutable` package — strips `.git/` as it copies.
     pub(super) fn fetch_path_source(
         &self,
         resolution: &MultiResolution,
-        project_cache: &Path,
+        _store_root: &Path,
     ) -> Result<CachedPackage, RegistryError> {
         let group = &resolution.resolved.group;
         let name = resolution.resolved.name.as_str();
@@ -288,23 +292,7 @@ impl MultiRegistryResolver {
         let package_dir = resolution.resolved.source_dir.clone();
         let workspace_rel = resolution.source_url.clone();
 
-        let dest = project_cache
-            .join(group.as_str())
-            .join(name)
-            .join(format!("v{}", resolution.resolved.version));
-        if dest.exists() {
-            std::fs::remove_dir_all(&dest).map_err(|source| RegistryError::Io {
-                path: dest.clone(),
-                source,
-            })?;
-        }
-        // Copy the local directory's content into the cache, excluding
-        // any `.git/` — same exclusion the registry / override / git-
-        // source paths apply. A path-source package directory is
-        // ordinarily not a git checkout of its own, but a workspace
-        // member can be, so the exclusion is load-bearing.
-        copy_dir_excluding_git(&package_dir, &dest)?;
-        let manifest_path = dest.join(Manifest::FILENAME);
+        let manifest_path = package_dir.join(Manifest::FILENAME);
         let manifest = Manifest::read(&manifest_path)?;
         if manifest.package.is_none() {
             return Err(RegistryError::MalformedMeta {
@@ -312,16 +300,16 @@ impl MultiRegistryResolver {
                 reason: "registry package manifest must carry a [package] table".to_string(),
             });
         }
-        let content_hash = compute_content_hash(&dest)?;
+        let content_hash = compute_content_hash(&package_dir)?;
 
         Ok(CachedPackage {
             resolved: ResolvedPackage {
                 group: group.clone(),
                 name: name.to_string(),
                 version: resolution.resolved.version.clone(),
-                source_dir: package_dir,
+                source_dir: package_dir.clone(),
             },
-            cache_dir: dest,
+            cache_dir: package_dir,
             manifest,
             content_hash,
             // `source_uri` records the workspace-relative path — the

@@ -8,19 +8,22 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 use super::*;
 
 impl MultiRegistryResolver {
-    /// Materialise a previously-resolved package into the per-project cache.
-    /// The returned [`CachedPackage`] carries lockfile-v2 provenance
-    /// (`registry_name` / `source_ref` / `overridden`) populated by the
-    /// `GitPerPackageRegistry` impl or by the override path.
+    /// Fetch a previously-resolved package into the machine-global
+    /// store. The returned [`CachedPackage`] carries lockfile-v2
+    /// provenance (`registry_name` / `source_ref` / `overridden`)
+    /// populated by the `GitPerPackageRegistry` impl or by the
+    /// override path.
     pub fn fetch(
         &self,
         resolution: &MultiResolution,
-        project_cache: &Path,
+        store_root: &Path,
     ) -> Result<CachedPackage, RegistryError> {
-        self.fetch_with_expected_hash(resolution, project_cache, None)
+        self.fetch_with_expected_hash(resolution, store_root, None)
     }
 
-    /// Mirror-aware fetch with an optional cross-source content_hash gate.
+    /// Mirror-aware fetch with an optional cross-source content_hash
+    /// gate, inserting the accepted payload into the machine-global
+    /// store (PROP-010 §2.7).
     ///
     /// `expected_hash`, when supplied (typically the lockfile pin for
     /// this `(kind, name, version)`), is enforced source-by-source:
@@ -37,20 +40,20 @@ impl MultiRegistryResolver {
     pub fn fetch_with_expected_hash(
         &self,
         resolution: &MultiResolution,
-        project_cache: &Path,
+        store_root: &Path,
         expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
         if resolution.overridden {
-            return self.fetch_override(resolution, project_cache);
+            return self.fetch_override(resolution, store_root);
         }
         if resolution.is_path_source {
-            return self.fetch_path_source(resolution, project_cache);
+            return self.fetch_path_source(resolution, store_root);
         }
         if resolution.is_git_source {
-            return self.fetch_git_source(resolution, project_cache, expected_hash);
+            return self.fetch_git_source(resolution, store_root, expected_hash);
         }
         if resolution.via_redirect.is_some() {
-            return self.fetch_via_redirect(resolution, project_cache, expected_hash);
+            return self.fetch_via_redirect(resolution, store_root, expected_hash);
         }
         let registry_name =
             resolution
@@ -75,9 +78,9 @@ impl MultiRegistryResolver {
         // provenance correctly for a registry-served local source.
         match src {
             RegistrySource::Git(reg) => {
-                reg.fetch_with_expected_hash(&resolution.resolved, project_cache, expected_hash)
+                reg.fetch_with_expected_hash(&resolution.resolved, store_root, expected_hash)
             }
-            RegistrySource::Local(ls) => ls.registry.fetch(&resolution.resolved, project_cache),
+            RegistrySource::Local(ls) => ls.registry.fetch(&resolution.resolved, store_root),
         }
     }
 
@@ -123,7 +126,7 @@ impl MultiRegistryResolver {
     fn fetch_override(
         &self,
         resolution: &MultiResolution,
-        project_cache: &Path,
+        store_root: &Path,
     ) -> Result<CachedPackage, RegistryError> {
         let url = &resolution.source_url;
         let refname = resolution
@@ -136,17 +139,19 @@ impl MultiRegistryResolver {
         let clone_dir = self.override_clone_dir(group, name);
         ensure_clone_at(self.backend.as_ref(), url, &refname, &clone_dir)?;
 
-        let dest = project_cache
-            .join(group.as_str())
-            .join(name)
-            .join(format!("v{}", resolution.resolved.version));
-        if dest.exists() {
-            std::fs::remove_dir_all(&dest).map_err(|source| RegistryError::Io {
-                path: dest.clone(),
-                source,
-            })?;
-        }
-        copy_dir_excluding_git(&clone_dir, &dest)?;
+        // Hash the clone directly (the recipe skips `.git`), then insert
+        // write-once into the machine store — an already-present entry is
+        // returned untouched and its manifest read back, so the
+        // `CachedPackage` describes the bytes that will materialise.
+        let content_hash = compute_content_hash(&clone_dir)?;
+        let dest = store::insert_at(
+            store_root,
+            &clone_dir,
+            group,
+            name,
+            &resolution.resolved.version,
+        )?
+        .into_entry();
 
         let manifest_path = dest.join(Manifest::FILENAME);
         let manifest = Manifest::read(&manifest_path)?;
@@ -156,7 +161,6 @@ impl MultiRegistryResolver {
                 reason: "registry package manifest must carry a [package] table".to_string(),
             });
         }
-        let content_hash = compute_content_hash(&dest)?;
 
         Ok(CachedPackage {
             resolved: ResolvedPackage {

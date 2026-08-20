@@ -1,6 +1,6 @@
-//! Tests for the clone / materialise half — per-project cache
-//! population, mirror fall-through on the fetch path, the cross-source
-//! content-hash gate, and clone reuse via `update`.
+//! Tests for the clone / fetch half — write-once store population,
+//! mirror fall-through on the fetch path, the cross-source content-hash
+//! gate (before any store insert), and clone reuse via `update`.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
@@ -11,13 +11,13 @@ use tempfile::tempdir;
 use crate::git_package_registry::test_support::*;
 
 #[test]
-fn fetch_clones_and_populates_per_project_cache() {
+fn fetch_clones_and_populates_the_machine_store() {
     let cache = tempdir().unwrap();
-    let pkg_cache = tempdir().unwrap();
+    let store_root = tempdir().unwrap();
     let upstream = tempdir().unwrap();
     // Build a fake upstream tree at the seeded URL: vibe.toml
-    // plus a spec file and a stray `.git/` to make sure the copy
-    // strips it on the way to the cache.
+    // plus a spec file and a stray `.git/` to make sure the store
+    // insert strips it on the way to the entry.
     let pkg_root = upstream.path().join("pkg");
     fs::create_dir_all(pkg_root.join("spec")).unwrap();
     fs::write(
@@ -27,7 +27,7 @@ fn fetch_clones_and_populates_per_project_cache() {
     .unwrap();
     fs::write(pkg_root.join("spec/foo.md"), "content\n").unwrap();
     // Upstream tree has no .git/ — the FakeBackend creates one in
-    // dest after copying; we want to verify our extractor strips it.
+    // dest after copying; we want to verify our insert strips it.
 
     let fake = Arc::new(FakeBackend::default());
     let url = "git@host:org/org.vibevm.wal.git";
@@ -43,12 +43,21 @@ fn fetch_clones_and_populates_per_project_cache() {
 
     let p = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
-    let cached = r.fetch(&resolved, pkg_cache.path()).unwrap();
+    let cached = r.fetch(&resolved, store_root.path()).unwrap();
 
-    // Cache populated, no .git/ dragged through.
-    assert!(cached.cache_dir.join("vibe.toml").exists());
-    assert!(cached.cache_dir.join("spec/foo.md").exists());
-    assert!(!cached.cache_dir.join(".git").exists());
+    // The cache_dir IS the machine-store entry, laid out
+    // `<store>/<group>/<name>/v<version>/` (PROP-010 §2.7) — the path
+    // vibedeps materialisation will copy from.
+    let entry = store_root
+        .path()
+        .join("org.vibevm")
+        .join("wal")
+        .join("v0.1.0");
+    assert_eq!(cached.cache_dir, entry);
+    // Entry populated, no .git/ dragged through.
+    assert!(entry.join("vibe.toml").exists());
+    assert!(entry.join("spec/foo.md").exists());
+    assert!(!entry.join(".git").exists());
 
     // Manifest parsed and content_hash populated.
     assert_eq!(cached.package_meta().name, "wal");
@@ -70,7 +79,7 @@ fn fetch_falls_through_to_mirror_when_primary_unreachable() {
     // and still record the canonical primary URL as
     // `cached.source_uri` per PROP-002 §2.3 step 3.
     let cache = tempdir().unwrap();
-    let pkg_cache = tempdir().unwrap();
+    let store_root = tempdir().unwrap();
     let upstream = tempdir().unwrap();
     let pkg_root = upstream.path().join("pkg");
     fs::create_dir_all(&pkg_root).unwrap();
@@ -100,7 +109,7 @@ fn fetch_falls_through_to_mirror_when_primary_unreachable() {
 
     let p = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
-    let cached = r.fetch(&resolved, pkg_cache.path()).unwrap();
+    let cached = r.fetch(&resolved, store_root.path()).unwrap();
 
     // Materialised from the mirror.
     assert_eq!(cached.package_meta().name, "wal");
@@ -122,7 +131,7 @@ fn fetch_falls_through_to_mirror_when_primary_unreachable() {
 #[test]
 fn fetch_prefers_primary_when_both_reachable() {
     let cache = tempdir().unwrap();
-    let pkg_cache = tempdir().unwrap();
+    let store_root = tempdir().unwrap();
     let upstream = tempdir().unwrap();
     let pkg_root = upstream.path().join("pkg");
     fs::create_dir_all(&pkg_root).unwrap();
@@ -152,7 +161,7 @@ fn fetch_prefers_primary_when_both_reachable() {
 
     let p = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
-    let _ = r.fetch(&resolved, pkg_cache.path()).unwrap();
+    let _ = r.fetch(&resolved, store_root.path()).unwrap();
 
     // Bootstrap exactly once — primary won, mirror untouched.
     assert_eq!(fake.bootstrap_count(), 1);
@@ -174,7 +183,7 @@ fn fetch_falls_through_when_primary_update_fails() {
     // fall-through, primary must fail BOTH update AND bootstrap.
     // Drop primary's bootstrap seed before the second fetch.
     let cache = tempdir().unwrap();
-    let pkg_cache = tempdir().unwrap();
+    let store_root = tempdir().unwrap();
     let upstream = tempdir().unwrap();
     let pkg_root = upstream.path().join("pkg");
     fs::create_dir_all(&pkg_root).unwrap();
@@ -204,7 +213,7 @@ fn fetch_falls_through_when_primary_update_fails() {
     // First fetch lands the clone via primary.
     let p = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
-    let _ = r.fetch(&resolved, pkg_cache.path()).unwrap();
+    let _ = r.fetch(&resolved, store_root.path()).unwrap();
     assert_eq!(fake.bootstrap_count(), 1);
     assert_eq!(fake.update_count(), 0);
 
@@ -216,7 +225,7 @@ fn fetch_falls_through_when_primary_update_fails() {
     // Second fetch: update primary fails → wipe+re-bootstrap from
     // primary fails → fall through to mirror, which seeds a fresh
     // clone via bootstrap.
-    let _ = r.fetch(&resolved, pkg_cache.path()).unwrap();
+    let _ = r.fetch(&resolved, store_root.path()).unwrap();
     // Update was tried once (against primary, failed). Bootstrap
     // counts: 1 (initial primary) + 1 (re-bootstrap primary, fails
     // RepoNotFound after seed removed) + 1 (mirror, succeeds).
@@ -238,7 +247,7 @@ fn fetch_with_expected_hash_passes_through_when_no_pin() {
     // the trait/wrapper plumbing is wired and identical to the
     // existing single-source fetch behaviour.
     let cache = tempdir().unwrap();
-    let pkg_cache = tempdir().unwrap();
+    let store_root = tempdir().unwrap();
     let upstream = tempdir().unwrap();
     let pkg_root = upstream.path().join("pkg");
     fs::create_dir_all(&pkg_root).unwrap();
@@ -263,7 +272,7 @@ fn fetch_with_expected_hash_passes_through_when_no_pin() {
     let p = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
     let cached = r
-        .fetch_with_expected_hash(&resolved, pkg_cache.path(), None)
+        .fetch_with_expected_hash(&resolved, store_root.path(), None)
         .unwrap();
     assert!(cached.content_hash.starts_with("sha256:"));
     assert_eq!(cached.package_meta().name, "wal");
@@ -282,7 +291,7 @@ fn fetch_with_expected_hash_skips_mirror_with_disagreeing_content() {
     // mirror[0] serves B, hash check fails, fall through to
     // mirror[1] which serves A and matches.
     let cache = tempdir().unwrap();
-    let pkg_cache = tempdir().unwrap();
+    let store_root = tempdir().unwrap();
     let upstream = tempdir().unwrap();
 
     // Two distinct fixture trees → distinct content_hashes.
@@ -304,10 +313,11 @@ fn fetch_with_expected_hash_skips_mirror_with_disagreeing_content() {
     .unwrap();
     fs::write(pkg_b.join("README.md"), "# DIVERGENT content\n").unwrap();
 
-    // Compute the expected hash of pkg_a for the lockfile pin.
-    let temp_for_hash = tempdir().unwrap();
-    copy_dir_excluding_git(&pkg_a, temp_for_hash.path()).unwrap();
-    let expected_hash = compute_content_hash(temp_for_hash.path()).unwrap();
+    // Compute the expected hash of pkg_a for the lockfile pin. The
+    // recipe skips `.git` (and build output) at any depth, so hashing
+    // the fixture tree directly equals hashing the `.git`-stripped
+    // entry the store will hold.
+    let expected_hash = compute_content_hash(&pkg_a).unwrap();
 
     let primary_url = "https://primary.example/vibespecs/org.vibevm.wal.git";
     let mirror_a_url = "https://mirror-bad.example/vibespecs/org.vibevm.wal.git";
@@ -338,7 +348,7 @@ fn fetch_with_expected_hash_skips_mirror_with_disagreeing_content() {
     let p = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
     let cached = r
-        .fetch_with_expected_hash(&resolved, pkg_cache.path(), Some(&expected_hash))
+        .fetch_with_expected_hash(&resolved, store_root.path(), Some(&expected_hash))
         .unwrap();
 
     // Final material is canonical content.
@@ -365,7 +375,7 @@ fn fetch_with_expected_hash_returns_last_attempt_when_no_match() {
     // last successful CachedPackage with its (non-matching) hash;
     // vibe-install's `plan_install` then renders ContentDrift.
     let cache = tempdir().unwrap();
-    let pkg_cache = tempdir().unwrap();
+    let store_root = tempdir().unwrap();
     let upstream = tempdir().unwrap();
     let pkg_root = upstream.path().join("pkg");
     fs::create_dir_all(&pkg_root).unwrap();
@@ -396,7 +406,7 @@ fn fetch_with_expected_hash_returns_last_attempt_when_no_match() {
     let p = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
     let cached = r
-        .fetch_with_expected_hash(&resolved, pkg_cache.path(), Some(bogus_pin))
+        .fetch_with_expected_hash(&resolved, store_root.path(), Some(bogus_pin))
         .unwrap();
 
     // Returned cached carries the actual (non-matching) hash —
@@ -449,7 +459,7 @@ fn refresh_package_falls_through_to_mirror_when_primary_unreachable() {
 #[test]
 fn fetch_reuses_existing_clone_via_update() {
     let cache = tempdir().unwrap();
-    let pkg_cache = tempdir().unwrap();
+    let store_root = tempdir().unwrap();
     let upstream = tempdir().unwrap();
     let pkg_root = upstream.path().join("pkg");
     fs::create_dir_all(&pkg_root).unwrap();
@@ -473,8 +483,8 @@ fn fetch_reuses_existing_clone_via_update() {
     let p = PackageRef::parse("org.vibevm/wal@0.1.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
 
-    let _ = r.fetch(&resolved, pkg_cache.path()).unwrap();
-    let _ = r.fetch(&resolved, pkg_cache.path()).unwrap();
+    let _ = r.fetch(&resolved, store_root.path()).unwrap();
+    let _ = r.fetch(&resolved, store_root.path()).unwrap();
 
     // First fetch: bootstrap; second: update (clone exists from first).
     assert_eq!(fake.bootstrap_count(), 1);
@@ -488,7 +498,7 @@ fn fetch_reuses_existing_clone_via_update() {
 )]
 fn fetch_in_place_skips_the_cache_copy_and_keeps_git() {
     let cache = tempdir().unwrap();
-    let pkg_cache = tempdir().unwrap();
+    let store_root = tempdir().unwrap();
     let upstream = tempdir().unwrap();
     let pkg_root = upstream.path().join("pkg");
     fs::create_dir_all(&pkg_root).unwrap();
@@ -513,7 +523,7 @@ fn fetch_in_place_skips_the_cache_copy_and_keeps_git() {
     );
     let p = PackageRef::parse("org.vibevm/giant@1.0.0").unwrap();
     let resolved = r.resolve(&p).unwrap();
-    let cached = r.fetch(&resolved, pkg_cache.path()).unwrap();
+    let cached = r.fetch(&resolved, store_root.path()).unwrap();
 
     // In-place hands back the LIVE clone (keeps `.git`), not a stripped copy.
     assert!(
@@ -521,16 +531,16 @@ fn fetch_in_place_skips_the_cache_copy_and_keeps_git() {
         "in-place keeps the clone's .git"
     );
     assert!(cached.cache_dir.join("big.bin").exists());
-    // The `.git`-stripped per-project cache copy was NOT made — the tree
-    // walk the mode exists to avoid never ran.
-    let dest_cache = pkg_cache
+    // The `.git`-stripped store entry was NOT made — the tree walk
+    // the mode exists to avoid never ran.
+    let dest_cache = store_root
         .path()
         .join("org.vibevm")
         .join("giant")
         .join("v1.0.0");
     assert!(
         !dest_cache.exists(),
-        "no .git-stripped cache copy for an in-place package"
+        "no .git-stripped store entry for an in-place package"
     );
     // content_hash is a well-formed sha256 (commit-derived, not a tree walk).
     assert!(cached.content_hash.starts_with("sha256:"));

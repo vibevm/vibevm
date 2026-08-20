@@ -34,11 +34,11 @@
 
 ### 2.1 The cache is a machine-global, accretive store {#global}
 
-@fact:CACHE-MACHINE-GLOBAL **Decision.** The package cache is **machine-global**, not project-scoped — one store per machine, at a default path, overridable by `VIBE_REGISTRY_CACHE` (the existing env-var — read at `registry_cache.rs`, and named correctly here only since 2026-08-19) and by a user-config key. @status:spec/done
+@fact:CACHE-MACHINE-GLOBAL **Decision (override clause corrected 2026-08-20 to the later, more specific ruling).** The package store is **machine-global**, not project-scoped — one store per machine at `<settings-home>/cache`, relocated only with the settings home (`$VIBE_SETTINGS`); **no store-specific override exists** — [`##THE-STORE-IS-DOT-VIBE-CACHE`](#layout) is the governing ruling. (`VIBE_REGISTRY_CACHE`, which this decision originally named, governs the registry **clone** cache — a different layer that keeps its own job.) @status:impl/done
 
-- @fact:CACHE-POPULATION-SHARED Every package fetched for *any* project populates it; *any* project — including projects and members that do not yet exist — resolves and materialises from it. @status:spec/done
+- @fact:CACHE-POPULATION-SHARED Every package fetched for *any* project populates it; *any* project — including projects and members that do not yet exist — resolves and materialises from it. @status:impl/work
 
-- @fact:CACHE-ACCRETIVE The cache is **accretive**: a package version, once cached, is never evicted automatically. @status:spec/done
+- @fact:CACHE-ACCRETIVE The cache is **accretive**: a package version, once cached, is never evicted automatically. @status:impl/done
 - @fact:accretion-why Versions are immutable (PROP-002), so a cached version is permanently valid; accretion is the point. @status:spec/done
 - @fact:EXPLICIT-RECLAIM Reclaiming space is an explicit operator action (§2.8), never a surprise. @status:spec/done
 
@@ -57,10 +57,10 @@
 
 ### 2.3 The cache is keyed by package identity {#identity}
 
-@fact:IDENTITY-KEYED **Decision.** The cache is keyed by **qualified package identity** as defined by PROP-008 — not by registry URL. A cached package version is addressed by its identity (`group` / `name` / `version`) and validated by `content_hash`; the registry that served it is not part of the key. @status:spec/done
+@fact:IDENTITY-KEYED **Decision.** The cache is keyed by **qualified package identity** as defined by PROP-008 — not by registry URL. A cached package version is addressed by its identity (`group` / `name` / `version`) and validated by `content_hash`; the registry that served it is not part of the key. @status:impl/done
 
-- @fact:REGISTRY-INDEPENDENT A package version pulled once is reusable by every project on the machine **regardless of which `[[registry]]` each project configures** — a mirror, a different organisation hosting the same package, or a redirect target all resolve to the same cache entry when the identity matches. This is what makes §2.2 seamless: offline resolution and materialisation become registry-config-independent — a new project draws on the cache by package identity, not by reproducing some earlier project's registry list. @status:spec/done
-- @fact:HASH-INTEGRITY-GATE `content_hash` is the integrity gate: a cache entry is valid only if its content hashes to the recorded hash. Two sources claiming the same identity with divergent bytes are a collision, surfaced per PROP-008's collision rules, never silently merged. @status:spec/done
+- @fact:REGISTRY-INDEPENDENT A package version pulled once is reusable by every project on the machine **regardless of which `[[registry]]` each project configures** — a mirror, a different organisation hosting the same package, or a redirect target all resolve to the same cache entry when the identity matches. This is what makes §2.2 seamless: offline resolution and materialisation become registry-config-independent — a new project draws on the cache by package identity, not by reproducing some earlier project's registry list. @status:impl/work
+- @fact:HASH-INTEGRITY-GATE `content_hash` is the integrity gate: a cache entry is valid only if its content hashes to the recorded hash. Two sources claiming the same identity with divergent bytes are a collision, surfaced per PROP-008's collision rules, never silently merged. @status:impl/work
 - @fact:SEQUENCED-AFTER-008 **Dependency.** Identity-keying requires PROP-008 (qualified naming) to be implemented — `group` and the qualified identity must exist first. PROP-010 is therefore sequenced *after* PROP-008: the cache is identity-keyed from the start, with no URL-keyed interim to migrate later (§6). @status:spec/done
 
 ### 2.4 User-level default registry configuration {#user-registries}
@@ -125,30 +125,30 @@
 
 ### 2.7 Cache layout and population {#layout}
 
-@fact:LOCAL-INDEX-VIEW **Decision.** The cache is keyed by package identity (§2.3) and carries a **local index view** — identity → versions present — so the resolver and the management commands (§2.8) answer cache queries without walking the whole store. @status:spec/done
+@fact:LOCAL-INDEX-VIEW **Decision.** The cache is keyed by package identity (§2.3) and carries a **local index view** — identity → versions present — so the resolver and the management commands (§2.8) answer cache queries without walking the whole store. *(Built 2026-08-20 as the layout itself: `<store>/<group>/<name>/v<version>/` walked per identity IS the view — a second representation would drift; `store::lookup` / `list_versions` / `list_all` are the query surface.)* @status:impl/done
 
 @fact:layout-open <status stage="spec" state="void">Retired 2026-08-19 when the owner ruled the layout. It recorded that the on-disk form was undecided between extracted per-identity directories and git clones indexed by identity, and leaned toward the former. The lean was right and the question is closed; the heir is [`##LAYOUT-EXTRACTED-DIRECTORIES`](#layout) below. This line stays so its name is never reused and inbound links do not break.</status> @status:spec/void
 
-@fact:LAYOUT-EXTRACTED-DIRECTORIES **Decision (owner, 2026-08-19).** The on-disk layout is **per-identity extracted directories**, one per `(group, name, version)`. Git clones indexed by identity are rejected. @status:spec/work
+@fact:LAYOUT-EXTRACTED-DIRECTORIES **Decision (owner, 2026-08-19).** The on-disk layout is **per-identity extracted directories**, one per `(group, name, version)`. Git clones indexed by identity are rejected. @status:impl/done
 
 - @fact:WHY-EXTRACTED-AND-NOT-AN-ARCHIVE **Why extracted rather than an archive.** Materialisation into `vibedeps/` is a directory copy, and `content_hash` is computed over the shippable tree — so the extracted form is already the thing the integrity gate checks. An archive would add a packing step and a second on-disk representation of one artifact, which then has to be kept in agreement with the first. @status:spec/work
 - @fact:WHY-NOT-CLONES **Why not clones, and this is the load-bearing half.** A clone is bound to the liveness of its origin **by construction**: refreshing it *is* a call to the origin, and the refresh brings it to whatever the origin says now. A store whose entries heal toward upstream cannot be the thing that survives upstream — and surviving upstream is the entire purpose of [`##A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY`](#resolution). A clone is also keyed by *where the bytes came from*, which contradicts identity-keying ([§2.3](#identity)) rather than merely differing from it. @status:spec/work
-- @fact:CLONES-KEEP-THEIR-OWN-JOB The registry clone cache does not go away and is not in competition: it exists so one registry is not re-cloned for every project on the machine, which is a separate and still-valid purpose. What changes is that it stops being the only local copy of package content, and therefore stops being load-bearing for availability. @status:spec/work
+- @fact:CLONES-KEEP-THEIR-OWN-JOB The registry clone cache does not go away and is not in competition: it exists so one registry is not re-cloned for every project on the machine, which is a separate and still-valid purpose. What changes is that it stops being the only local copy of package content, and therefore stops being load-bearing for availability. @status:impl/work
 
-@fact:CACHE-FILLS The cache fills as a side effect of any online `vibe install` / `vibe update` / `vibe registry sync`, and by deliberate pre-warming (`vibe cache add`, §2.8). It is never auto-evicted (§2.1). @status:spec/done
+@fact:CACHE-FILLS The cache fills as a side effect of any online `vibe install` / `vibe update` / `vibe registry sync`, and by deliberate pre-warming (`vibe cache add`, §2.8). It is never auto-evicted (§2.1). @status:impl/work
 
-@fact:THE-STORE-IS-DOT-VIBE-CACHE **Decision (owner, 2026-08-20): the store is `~/.vibe/cache/`**, beside `~/.vibe/registries/` (the registry git clones, which keep their own separate job) and under the one settings home. @status:spec/work
+@fact:THE-STORE-IS-DOT-VIBE-CACHE **Decision (owner, 2026-08-20): the store is `~/.vibe/cache/`**, beside `~/.vibe/registries/` (the registry git clones, which keep their own separate job) and under the one settings home. @status:impl/done
 
-- @fact:THE-NAME-DOES-NOT-COLLIDE-BECAUSE-THE-OTHER-CACHE-GOES **The objection to this name, and why it does not survive.** «Cache» would mean two things — this store and the per-project `<workspace-root>/.vibe/cache/`. It would not: the project directory is precisely what this store **replaces**. Today a fetch extracts into it and `vibedeps/` is copied from there; once the machine store is the source, the project copy is pure duplication and goes. Three layers remain and none of them is it — the store (source), `vibedeps/` (materialised into the project, committed), `vibe.lock` (the pinned resolution). @status:spec/work
-- @fact:THE-PROJECT-CACHE-IS-REMOVED-BY-THE-SAME-WORK **The removal is part of this work, not a follow-up** — otherwise the collision the name was questioned for is real for the whole transition, which is exactly when the confusion costs most. Note the scope precisely: the subdirectory `cache/` goes; the project's `.vibe/` directory itself stays, since it also carries project settings and parked agentic commands. @status:spec/work
+- @fact:THE-NAME-DOES-NOT-COLLIDE-BECAUSE-THE-OTHER-CACHE-GOES **The objection to this name, and why it does not survive.** «Cache» would mean two things — this store and the per-project `<workspace-root>/.vibe/cache/`. It would not: the project directory is precisely what this store **replaces**. Today a fetch extracts into it and `vibedeps/` is copied from there; once the machine store is the source, the project copy is pure duplication and goes. Three layers remain and none of them is it — the store (source), `vibedeps/` (materialised into the project, committed), `vibe.lock` (the pinned resolution). @status:impl/done
+- @fact:THE-PROJECT-CACHE-IS-REMOVED-BY-THE-SAME-WORK **The removal is part of this work, not a follow-up** — otherwise the collision the name was questioned for is real for the whole transition, which is exactly when the confusion costs most. Note the scope precisely: the subdirectory `cache/` goes; the project's `.vibe/` directory itself stays, since it also carries project settings and parked agentic commands. @status:impl/done
 
-@fact:THE-EXTRACTED-LAYER-IS-PROMOTED-NOT-INVENTED **Decision (owner, 2026-08-20).** The extracted per-identity layer is **not built from scratch** — it already exists, project-scoped, at `<workspace-root>/.vibe/cache/<group>/<name>/v<version>/`, holding `.git`-stripped content, created at `vibe init` and used by the update and reinstall paths. The work is to change three things about it and nothing else: its **level** (per project → machine-global), its **mode** (freely rewritten → written once), and its **role** (an incidental by-product → a source resolution reads from first). Measured 2026-08-19, `campaigns/packages-2026-09/harvest/prop010-current-state.md`. @status:spec/work
+@fact:THE-EXTRACTED-LAYER-IS-PROMOTED-NOT-INVENTED **Decision (owner, 2026-08-20).** The extracted per-identity layer is **not built from scratch** — it already exists, project-scoped, at `<workspace-root>/.vibe/cache/<group>/<name>/v<version>/`, holding `.git`-stripped content, created at `vibe init` and used by the update and reinstall paths. The work is to change three things about it and nothing else: its **level** (per project → machine-global), its **mode** (freely rewritten → written once), and its **role** (an incidental by-product → a source resolution reads from first). Measured 2026-08-19, `campaigns/packages-2026-09/harvest/prop010-current-state.md`. @status:impl/done
 
-@fact:WRITTEN-ONCE-IS-A-RULE-FOR-OUR-CODE-NOT-A-CLAIM-ABOUT-THE-DISK **Decision (owner, 2026-08-20), and the wording matters because the naive reading is unimplementable.** The store cannot be made immutable — it is the operator's own disk and they may edit anything on it. «Written once» is therefore exactly three commitments, all of them ours to keep: @status:spec/work
+@fact:WRITTEN-ONCE-IS-A-RULE-FOR-OUR-CODE-NOT-A-CLAIM-ABOUT-THE-DISK **Decision (owner, 2026-08-20), and the wording matters because the naive reading is unimplementable.** The store cannot be made immutable — it is the operator's own disk and they may edit anything on it. «Written once» is therefore exactly three commitments, all of them ours to keep: @status:impl/done
 
-1. @fact:OUR-CODE-NEVER-REWRITES-AN-ENTRY **Our code never rewrites an entry in place.** A version is written when it is first fetched and is read-only to us afterwards. This is testable and is the only half of the rule that is fully in our hands. @status:spec/work
-2. @fact:VERIFICATION-IS-A-COMMAND-NOT-A-TAX **Verification is a command an operator runs, not a cost every install pays** (owner, 2026-08-20). Re-hashing the store on every resolve would make a ten-gigabyte dependency unusable; the integrity sweep therefore lives in `vibe cache check` ([§2.8](#management)) and the ordinary path does not pay it. @status:spec/work
-3. @fact:A-MISMATCH-IS-NAMED-NEVER-SWALLOWED **A mismatch is named.** When the sweep finds content that no longer hashes to what the lockfile pinned, it says which package and offers repair — it never silently re-downloads and never silently uses the altered bytes. @status:spec/work
+1. @fact:OUR-CODE-NEVER-REWRITES-AN-ENTRY **Our code never rewrites an entry in place.** A version is written when it is first fetched and is read-only to us afterwards. This is testable and is the only half of the rule that is fully in our hands. @status:impl/done
+2. @fact:VERIFICATION-IS-A-COMMAND-NOT-A-TAX **Verification is a command an operator runs, not a cost every install pays** (owner, 2026-08-20). Re-hashing the store on every resolve would make a ten-gigabyte dependency unusable; the integrity sweep therefore lives in `vibe cache check` ([§2.8](#management)) and the ordinary path does not pay it. @status:impl/work
+3. @fact:A-MISMATCH-IS-NAMED-NEVER-SWALLOWED **A mismatch is named.** When the sweep finds content that no longer hashes to what the lockfile pinned, it says which package and offers repair — it never silently re-downloads and never silently uses the altered bytes. *(The read path already keeps this: an entry read as the materialisation source under a pin that no longer matches fails as `StoreEntryMismatch`, naming the package, the entry path and both hashes; the sweep itself is `vibe cache check`, pending.)* @status:impl/work
 
 ### 2.8 Cache management surface {#management}
 
@@ -179,7 +179,7 @@
 
 @fact:LAYERS-EXPLICIT **Decision.** PROP-010 changes none of the three existing layers; it makes their relationship explicit. @status:spec/done
 
-- @fact:LAYER-CACHE **The cache** — machine-global, accretive, identity-keyed, the *source* of package content. Shared across every project on the machine. @status:spec/done
+- @fact:LAYER-CACHE **The cache** — machine-global, accretive, identity-keyed, the *source* of package content. Shared across every project on the machine. @status:impl/done
 - @fact:LAYER-VIBEDEPS **`vibedeps/`** — per-project, committed, the *materialised* dependency content for that project's locked resolution (PROP-009 §2.1). Produced by copying from the cache. @status:spec/done
 - @fact:LAYER-LOCK **`vibe.lock`** — per-project, the pinned resolution (PROP-009). @status:spec/done
 
@@ -236,7 +236,7 @@
 
 @fact:phases-sequencing Sequenced after PROP-008 (M1.19), on which §2.3 depends. @status:spec/done
 
-1. @fact:PHASE-1-IDENTITY-CACHE **The identity-keyed cache** — the cache keyed by PROP-008 package identity; a documented, stable layout (§5.1); the local index view; `vibe cache path` / `vibe cache list`. `vibe-registry` + `vibe-cli`. @status:impl/plan
+1. @fact:PHASE-1-IDENTITY-CACHE **The identity-keyed cache** — the cache keyed by PROP-008 package identity; a documented, stable layout (§5.1); the local index view; `vibe cache path` / `vibe cache list`. `vibe-registry` + `vibe-cli`. @status:impl/work
 2. @fact:PHASE-2-USER-REGISTRIES **User-level default registry configuration** — `[[registry]]` / `[[mirror]]` in `UserConfig`; `vibe init` seeds from it; project config overrides. `vibe-core` + `vibe-cli`. @status:impl/plan
 3. @fact:PHASE-3-OFFLINE **`--offline`** — the global flag, `VIBE_OFFLINE`, the resolved posture; `MultiRegistryResolver` offline mode (resolve from the cache, never touch the network); actionable cache-miss errors. @status:impl/work
 4. @fact:PHASE-4-PREWARM **Pre-warm + clean** — `vibe cache add` (deliberate population) and `vibe cache clean`. @status:impl/plan

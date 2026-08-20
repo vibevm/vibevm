@@ -1,12 +1,14 @@
 //! Clone / update orchestration for the per-package registry —
 //! mirror-aware fetch dispatch with the cross-source content-hash
-//! gate, and materialisation into the per-project cache (PROP-002
-//! §2.3 / §2.6). The clone-free lookup half (version listing,
+//! gate, then write-once insertion of the accepted payload into the
+//! machine-global store `~/.vibe/cache/` (PROP-002 §2.3 / §2.6;
+//! PROP-010 §2.7). The clone-free lookup half (version listing,
 //! archive-first manifest reads) lives in [`super::lookup`].
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use super::*;
+use crate::store::{self, InsertOutcome};
 
 impl GitPerPackageRegistry {
     /// Bootstrap (or refresh) the per-package clone at `clone_dir`
@@ -210,14 +212,15 @@ impl GitPerPackageRegistry {
         Ok(())
     }
 
-    /// Materialise the resolved package into the per-project cache. Clones
-    /// (or updates) the per-package repo at the requested tag, then copies
-    /// the worktree into `<cache_root>/<kind>/<name>/v<version>/`,
-    /// stripping `.git/`.
+    /// Fetch the resolved package into the machine-global store.
+    /// Clones (or updates) the per-package repo at the requested tag,
+    /// then — once a source is accepted — inserts the `.git`-stripped
+    /// worktree into `<store_root>/<group>/<name>/v<version>/`
+    /// write-once (PROP-010 §2.7).
     ///
     /// Mirror-aware: the primary URL is tried first, then each mirror
     /// in priority order. Whichever source lands the clone first wins
-    /// and the cache is materialised from that clone. The
+    /// and the store entry is inserted from that clone. The
     /// [`CachedPackage::source_uri`] is **always** the canonical
     /// primary URL — mirror URLs are an availability detail, not a
     /// lockfile-recorded identity (PROP-002 §2.3 step 3).
@@ -228,36 +231,53 @@ impl GitPerPackageRegistry {
     pub fn fetch(
         &self,
         resolved: &ResolvedPackage,
-        cache_root: &Path,
+        store_root: &Path,
     ) -> Result<CachedPackage, RegistryError> {
-        self.fetch_with_expected_hash(resolved, cache_root, None)
+        self.fetch_with_expected_hash(resolved, store_root, None)
     }
 
     /// Mirror-aware fetch with an optional cross-source content_hash
-    /// gate.
+    /// gate, inserting the accepted payload into the machine-global
+    /// store (PROP-010 §2.7).
     ///
     /// Walks the URL chain primary-first; for each URL that yields a
-    /// working clone, materialises the cache and computes the
-    /// content_hash:
+    /// working clone, computes the content hash and applies the gate:
     ///
     /// - If `expected_hash` is `None` (no lockfile pin), accept the
     ///   first source that lands content. Equivalent to [`Self::fetch`].
     /// - If `expected_hash` is `Some(h)`, accept the first source
     ///   whose computed hash equals `h`. Sources serving a disagreeing
     ///   hash trigger a `tracing::warn!` (mirror-integrity event) and
-    ///   the walk continues to the next URL — the cache is wiped
+    ///   the walk continues to the next URL — the clone is wiped
     ///   between attempts so a poisoned source cannot leave bytes
     ///   behind. This is the supply-chain check from
     ///   [PROP-002 §2.3](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#mirror).
     ///
+    /// **The store insert happens only for an accepted source** — the
+    /// store is written once (`~/.vibe/cache/`, PROP-010 §2.7), so a
+    /// rejected mirror's bytes must never become the entry. The
+    /// returned [`CachedPackage::cache_dir`] is the store entry's
+    /// path: `vibedeps/` materialisation reads its bytes from there.
+    /// When the entry already existed, `insert_at` rewrites nothing,
+    /// and — with a pin on record — the entry itself is verified
+    /// against the pin before it becomes the materialisation source:
+    /// a tampered store is named, never silently used and never
+    /// silently re-downloaded (PROP-010 §2.7, mismatch-is-named).
+    /// Without a pin the entry is trusted as-is; re-hashing the store
+    /// on every resolve is `vibe cache check`'s job, not a tax the
+    /// ordinary path pays.
+    ///
     /// If every URL is reached but none matches, the **last
     /// successful fetch's** [`CachedPackage`] is returned (with the
-    /// disagreeing hash); it is the caller's responsibility — today
-    /// `vibe-install`'s `plan_install` — to convert the stored hash
-    /// vs. lockfile-pin mismatch into the user-actionable
-    /// `ContentDrift` error. This split keeps registry-layer concerns
-    /// (sources, fallback, integrity attempts) separate from
-    /// install-layer concerns (lockfile-aware error rendering).
+    /// disagreeing hash — nothing was inserted); it is the caller's
+    /// responsibility — today `vibe-install`'s `plan_install` — to
+    /// convert the stored hash vs. lockfile-pin mismatch into the
+    /// user-actionable `ContentDrift` error. Its `cache_dir` points
+    /// at the wiped clone purely so the value is well-formed; the
+    /// caller consumes only `content_hash`, the drift signal. This
+    /// split keeps registry-layer concerns (sources, fallback,
+    /// integrity attempts) separate from install-layer concerns
+    /// (lockfile-aware error rendering).
     ///
     /// If every URL fails at the network layer (no source produced
     /// any content), the **primary's** error is surfaced — same
@@ -274,7 +294,7 @@ impl GitPerPackageRegistry {
     pub fn fetch_with_expected_hash(
         &self,
         resolved: &ResolvedPackage,
-        cache_root: &Path,
+        store_root: &Path,
         expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
         // PROP-002 §2.2.1 — bail before any clone work when this
@@ -285,10 +305,6 @@ impl GitPerPackageRegistry {
         let tag = format!("v{}", resolved.version);
         let (primary, mirrors) = self.package_urls(&resolved.group, &resolved.name)?;
         let clone_dir = self.package_clone_dir(&resolved.group, &resolved.name);
-        let dest_cache = cache_root
-            .join(resolved.group.as_str())
-            .join(&resolved.name)
-            .join(format!("v{}", resolved.version));
 
         let mut primary_err: Option<RegistryError> = None;
         let mut last_cached: Option<CachedPackage> = None;
@@ -316,7 +332,7 @@ impl GitPerPackageRegistry {
             //    recorded so a re-clone reconstructs identical content incl.
             //    submodule gitlinks (PROP-021 §2.4) and an in-place slot's
             //    identity is its commit (PROP-022 §2.5). The clone retains
-            //    `.git`; the per-project cache copy is `.git`-stripped.
+            //    `.git`; the store entry is `.git`-stripped.
             let clone_manifest_path = clone_dir.join(Manifest::FILENAME);
             let manifest = Manifest::read(&clone_manifest_path)?;
             let pkg = manifest
@@ -330,33 +346,144 @@ impl GitPerPackageRegistry {
 
             // An `in-place` package (PROP-022 §2.4) is placed as a git working
             // tree, so vibevm never walks its tree: skip the `.git`-stripped
-            // cache copy and the content-hash tree walk — the very cost the
+            // store copy and the content-hash tree walk — the very cost the
             // mode exists to avoid for a giant repo. The live clone is handed
             // back as the content dir for the move-into-slot step, and identity
             // is the commit (§2.5), recorded as a cheap commit-derived hash
             // rather than a tree hash.
-            let (cache_dir, content_hash) = if pkg.materialization.is_in_place() {
-                (
-                    clone_dir.clone(),
-                    commit_content_hash(resolved_commit.as_deref().unwrap_or_default()),
-                )
+            let in_place = pkg.materialization.is_in_place();
+            let content_hash = if in_place {
+                commit_content_hash(resolved_commit.as_deref().unwrap_or_default())
             } else {
-                if dest_cache.exists() {
-                    fs::remove_dir_all(&dest_cache).map_err(|source| RegistryError::Io {
-                        path: dest_cache.clone(),
+                // Hash straight off the clone: the recipe's exclude set
+                // skips `.git` (and build output) at every depth, so this
+                // equals the hash of the `.git`-stripped shippable tree
+                // the store entry will hold — no intermediate copy is
+                // needed to know what inserting would pin.
+                compute_content_hash(&clone_dir)?
+            };
+
+            // 3. Cross-source content_hash gate — BEFORE any store
+            //    insert (the store is written once; a source serving
+            //    disagreeing bytes must never become the entry).
+            let accepted = match expected_hash {
+                None => true,
+                Some(expected) => expected == content_hash,
+            };
+            if !accepted {
+                tracing::warn!(
+                    target: "vibe_registry",
+                    registry = %self.name,
+                    url = %url,
+                    expected = %expected_hash.unwrap_or_default(),
+                    actual = %content_hash,
+                    "source served content with unexpected content_hash; \
+                     falling through to next source"
+                );
+                // `cache_dir` points at the clone purely so the
+                // disagreeing `CachedPackage` is well-formed; the
+                // caller consumes only `content_hash` (the drift
+                // signal). The clone is wiped below and nothing is
+                // ever materialised from this value.
+                last_cached = Some(CachedPackage {
+                    resolved: resolved.clone(),
+                    cache_dir: clone_dir.clone(),
+                    manifest,
+                    content_hash: content_hash.clone(),
+                    source_uri: canonical_url.clone(),
+                    registry_name: Some(self.name.clone()),
+                    source_ref: Some(tag.clone()),
+                    resolved_commit,
+                    overridden: false,
+                    is_git_source: false,
+                    is_path_source: false,
+                    is_embedded: false,
+                    is_local: false,
+                    via_redirect: None,
+                });
+                // Wipe the local clone state so the next URL bootstraps
+                // fresh — a poisoned mirror's working tree must not
+                // survive into the next attempt.
+                if clone_dir.exists() {
+                    fs::remove_dir_all(&clone_dir).map_err(|source| RegistryError::Io {
+                        path: clone_dir.clone(),
                         source,
                     })?;
                 }
-                copy_dir_excluding_git(&clone_dir, &dest_cache)?;
-                (dest_cache.clone(), compute_content_hash(&dest_cache)?)
+                continue;
+            }
+
+            // 4. Accepted — insert into the machine store, write-once.
+            //    The entry path is what the resolution materialises
+            //    `vibedeps/` from: the bytes flow from the STORE, not
+            //    from this clone.
+            let cache_dir = if in_place {
+                clone_dir.clone()
+            } else {
+                match store::insert_at(
+                    store_root,
+                    &clone_dir,
+                    &resolved.group,
+                    &resolved.name,
+                    &resolved.version,
+                )? {
+                    InsertOutcome::Inserted(entry) => entry,
+                    // The §2.5 read gate: the entry pre-dated this
+                    // fetch, so the bytes vibedeps will copy are the
+                    // ENTRY's, not the fresh clone's that just passed
+                    // the pin — verify the entry itself and name a
+                    // mismatch instead of silently using altered bytes
+                    // (PROP-010 §2.7, mismatch-is-named). Without a pin
+                    // the entry is trusted as-is: re-hashing the store
+                    // on every fetch is `vibe cache check`'s job, not a
+                    // tax the ordinary path pays.
+                    InsertOutcome::AlreadyPresent(entry) => {
+                        if let Some(expected) = expected_hash {
+                            let actual = compute_content_hash(&entry)?;
+                            if actual != expected {
+                                return Err(RegistryError::StoreEntryMismatch {
+                                    detail: Box::new(crate::error::StoreEntryMismatchDetail {
+                                        group: resolved.group.clone(),
+                                        name: resolved.name.clone(),
+                                        version: resolved.version.clone(),
+                                        path: entry,
+                                        expected: expected.to_string(),
+                                        actual,
+                                    }),
+                                });
+                            }
+                        }
+                        entry
+                    }
+                }
             };
 
-            // 3. Cross-source content_hash gate.
-            let cached = CachedPackage {
+            if i > 0 {
+                if expected_hash.is_some() {
+                    tracing::info!(
+                        target: "vibe_registry",
+                        registry = %self.name,
+                        primary = %primary,
+                        served_by = %url,
+                        mirror_index = i - 1,
+                        "fetch served by mirror; content_hash matches lockfile pin"
+                    );
+                } else {
+                    tracing::info!(
+                        target: "vibe_registry",
+                        registry = %self.name,
+                        primary = %primary,
+                        served_by = %url,
+                        mirror_index = i - 1,
+                        "fetch served by mirror"
+                    );
+                }
+            }
+            return Ok(CachedPackage {
                 resolved: resolved.clone(),
                 cache_dir,
                 manifest,
-                content_hash: content_hash.clone(),
+                content_hash,
                 source_uri: canonical_url.clone(),
                 registry_name: Some(self.name.clone()),
                 source_ref: Some(tag.clone()),
@@ -367,56 +494,7 @@ impl GitPerPackageRegistry {
                 is_embedded: false,
                 is_local: false,
                 via_redirect: None,
-            };
-            match expected_hash {
-                None => {
-                    if i > 0 {
-                        tracing::info!(
-                            target: "vibe_registry",
-                            registry = %self.name,
-                            primary = %primary,
-                            served_by = %url,
-                            mirror_index = i - 1,
-                            "fetch served by mirror"
-                        );
-                    }
-                    return Ok(cached);
-                }
-                Some(expected) if expected == content_hash => {
-                    if i > 0 {
-                        tracing::info!(
-                            target: "vibe_registry",
-                            registry = %self.name,
-                            primary = %primary,
-                            served_by = %url,
-                            mirror_index = i - 1,
-                            "fetch served by mirror; content_hash matches lockfile pin"
-                        );
-                    }
-                    return Ok(cached);
-                }
-                Some(expected) => {
-                    tracing::warn!(
-                        target: "vibe_registry",
-                        registry = %self.name,
-                        url = %url,
-                        expected = %expected,
-                        actual = %content_hash,
-                        "source served content with unexpected content_hash; \
-                         falling through to next source"
-                    );
-                    last_cached = Some(cached);
-                    // Wipe the local clone state so the next URL bootstraps
-                    // fresh — a poisoned mirror's working tree must not
-                    // survive into the next attempt.
-                    if clone_dir.exists() {
-                        fs::remove_dir_all(&clone_dir).map_err(|source| RegistryError::Io {
-                            path: clone_dir.clone(),
-                            source,
-                        })?;
-                    }
-                }
-            }
+            });
         }
 
         // Every URL was exhausted.
@@ -432,47 +510,6 @@ impl GitPerPackageRegistry {
         }
         Err(primary_err.expect("primary URL must exist"))
     }
-}
-
-/// Recursively copy `src` into `dst`, excluding any `.git` directory at any
-/// depth. Used to materialise a clone into the package cache without
-/// dragging the git index along — the cache holds payload only, identity
-/// rides on `content_hash`. `pub(crate)` because the multi-registry
-/// resolver shares the same materialisation path for `[[override]]` clones.
-pub(crate) fn copy_dir_excluding_git(src: &Path, dst: &Path) -> Result<(), RegistryError> {
-    fs::create_dir_all(dst).map_err(|source| RegistryError::Io {
-        path: dst.to_path_buf(),
-        source,
-    })?;
-    for entry in walkdir::WalkDir::new(src)
-        .into_iter()
-        .filter_entry(|e| e.file_name() != std::ffi::OsStr::new(".git"))
-        .filter_map(|e| e.ok())
-    {
-        let rel = entry.path().strip_prefix(src).unwrap_or(entry.path());
-        if rel.as_os_str().is_empty() {
-            continue;
-        }
-        let target = dst.join(rel);
-        if entry.file_type().is_dir() {
-            fs::create_dir_all(&target).map_err(|source| RegistryError::Io {
-                path: target.clone(),
-                source,
-            })?;
-        } else if entry.file_type().is_file() {
-            if let Some(parent) = target.parent() {
-                fs::create_dir_all(parent).map_err(|source| RegistryError::Io {
-                    path: parent.to_path_buf(),
-                    source,
-                })?;
-            }
-            fs::copy(entry.path(), &target).map_err(|source| RegistryError::Io {
-                path: target.clone(),
-                source,
-            })?;
-        }
-    }
-    Ok(())
 }
 
 /// A cheap, stable `content_hash` for an `in-place` package — `sha256` of the
@@ -495,3 +532,7 @@ fn commit_content_hash(commit: &str) -> String {
 #[cfg(test)]
 #[path = "fetch/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "fetch/store_gate_tests.rs"]
+mod store_gate_tests;

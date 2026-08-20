@@ -176,4 +176,51 @@ pub enum RegistryError {
           fix: serve it from a git `[[registry]]`, or drop `materialization = \"in-place\"`)"
     )]
     InPlaceUnsupported { group: Group, name: String },
+
+    /// A store entry that was about to become the materialisation source
+    /// no longer hashes to the lockfile pin (PROP-010 §2.7 — a mismatch is
+    /// named, never swallowed). Our code never rewrites an entry, so bytes
+    /// that disagree with the pin were changed outside vibevm; the ordinary
+    /// path does not re-hash the store, this fires only where a pin exists
+    /// and the entry is actually read as the source. The payload is boxed
+    /// ([`StoreEntryMismatchDetail`]) so the enum stays under the
+    /// result-large-err budget every `Result<_, RegistryError>` fn pays.
+    #[error(
+        "{detail} \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#layout; \
+          fix: delete that entry directory so the next fetch re-downloads it — \
+          `vibe cache check` will automate this when it ships)"
+    )]
+    StoreEntryMismatch {
+        detail: Box<StoreEntryMismatchDetail>,
+    },
+}
+
+/// The structured payload of
+/// [`RegistryError::StoreEntryMismatch`] — which entry, which pin,
+/// what the entry actually hashes to. Renders as the mismatch's own
+/// sentence so the variant's grammar only adds the violated spec and
+/// the fix.
+#[derive(Debug)]
+pub struct StoreEntryMismatchDetail {
+    pub group: Group,
+    pub name: String,
+    pub version: semver::Version,
+    pub path: PathBuf,
+    pub expected: String,
+    pub actual: String,
+}
+
+impl std::fmt::Display for StoreEntryMismatchDetail {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let identity = format!("{}/{}@{}", self.group, self.name, self.version);
+        write!(
+            f,
+            "store entry for `{identity}` at `{}` hashes to {}, but the \
+             lockfile pins {}",
+            self.path.display(),
+            self.actual,
+            self.expected,
+        )
+    }
 }

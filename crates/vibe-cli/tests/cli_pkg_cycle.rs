@@ -135,12 +135,18 @@ fn full_install_cycle() {
         "the lockfile no longer records a boot_snippet filename"
     );
 
-    // Cache directory populated.
+    // The machine store (under the scratch settings home the child was
+    // isolated to) carries the write-once entry — and the project has
+    // no `.vibe/cache/` copy (PROP-010 §2.7).
     assert!(
-        project
-            .path()
-            .join(".vibe/cache/org.vibevm.world/wal/v0.2.0/vibe.toml")
-            .is_file()
+        user.settings
+            .join("cache/org.vibevm.world/wal/v0.2.0/vibe.toml")
+            .is_file(),
+        "the install must land the store entry under the settings home"
+    );
+    assert!(
+        !project.path().join(".vibe/cache").exists(),
+        "the project .vibe/cache must not be created"
     );
 
     // `vibe list` reflects the install.

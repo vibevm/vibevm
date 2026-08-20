@@ -15,8 +15,9 @@
 //!    [`GitBackend::fetch_file_at_ref`] — still no clone.
 //! 5. Only when the resolver commits to installing a specific version:
 //!    [`GitBackend::bootstrap`] (or [`GitBackend::update`] if the clone
-//!    already exists), copy the worktree into the per-project package
-//!    cache (excluding `.git/`), parse manifest, compute `content_hash`.
+//!    already exists), gate the content hash, and insert the worktree
+//!    (`.git`-stripped) into the machine-global store at
+//!    `~/.vibe/cache/` (PROP-010 §2.7), write-once.
 //!
 //! The cache layout follows PROP-002 §2.6:
 //!
@@ -60,7 +61,6 @@ mod lookup;
 mod urls;
 
 pub use auth::inject_token;
-pub(crate) use fetch::copy_dir_excluding_git;
 
 /// Per-package git registry — one organization URL, many package repos under it.
 #[cell(seam = "Registry", variant = "git-per-package")]
@@ -444,9 +444,9 @@ impl Registry for GitPerPackageRegistry {
     fn fetch(
         &self,
         resolved: &ResolvedPackage,
-        cache_root: &Path,
+        store_root: &Path,
     ) -> Result<CachedPackage, RegistryError> {
-        GitPerPackageRegistry::fetch(self, resolved, cache_root)
+        GitPerPackageRegistry::fetch(self, resolved, store_root)
     }
 }
 

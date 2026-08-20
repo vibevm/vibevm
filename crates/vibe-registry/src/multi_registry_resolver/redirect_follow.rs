@@ -220,7 +220,8 @@ impl MultiRegistryResolver {
             .join("clone")
     }
 
-    /// Fetch a redirect-resolved package — the target's content lives at
+    /// Fetch a redirect-resolved package into the machine-global store,
+    /// write-once (PROP-010 §2.7) — the target's content lives at
     /// `resolution.source_url`, fetched with auth from
     /// `resolution.redirect_target_auth` / `redirect_target_token_env`.
     /// The stub URL is preserved as `via_redirect` on the lockfile entry
@@ -228,7 +229,7 @@ impl MultiRegistryResolver {
     pub(super) fn fetch_via_redirect(
         &self,
         resolution: &MultiResolution,
-        project_cache: &Path,
+        store_root: &Path,
         _expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
         let group = &resolution.resolved.group;
@@ -270,17 +271,18 @@ impl MultiRegistryResolver {
                 .ok();
         }
 
-        let dest = project_cache
-            .join(group.as_str())
-            .join(name)
-            .join(format!("v{}", resolution.resolved.version));
-        if dest.exists() {
-            std::fs::remove_dir_all(&dest).map_err(|source| RegistryError::Io {
-                path: dest.clone(),
-                source,
-            })?;
-        }
-        copy_dir_excluding_git(&clone_dir, &dest)?;
+        // Hash the clone directly (the recipe skips `.git`), then
+        // insert write-once into the machine store; an already-present
+        // entry is returned untouched, its manifest read back.
+        let content_hash = compute_content_hash(&clone_dir)?;
+        let dest = store::insert_at(
+            store_root,
+            &clone_dir,
+            group,
+            name,
+            &resolution.resolved.version,
+        )?
+        .into_entry();
         let manifest_path = dest.join(Manifest::FILENAME);
         let manifest = Manifest::read(&manifest_path)?;
         if manifest.package.is_none() {
@@ -289,7 +291,6 @@ impl MultiRegistryResolver {
                 reason: "registry package manifest must carry a [package] table".to_string(),
             });
         }
-        let content_hash = compute_content_hash(&dest)?;
 
         Ok(CachedPackage {
             resolved: ResolvedPackage {

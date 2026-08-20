@@ -4063,52 +4063,52 @@
       "item_kind": "fn",
       "line": 20,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::full_install_cycle",
-      "end_line": 192,
-      "fingerprint": "tok1:bda166ed09d7e9a4f7cbf474b4744b516a854ce63e46c5f9571064985f403a68"
+      "end_line": 198,
+      "fingerprint": "tok1:d15d13d28f4be76e7727dc04d169a202c3f473181daf9c808146c19114620948"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "item_kind": "fn",
-      "line": 971,
+      "line": 977,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::install_from_git_source_with_branch_pins_lockfile_to_resolved_commit",
-      "end_line": 1024,
+      "end_line": 1030,
       "fingerprint": "tok1:e8d58bb505017a1517cabfbe51fcefe198138f6a68dddd0fe166c4cd7c693ea4"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "item_kind": "fn",
-      "line": 880,
+      "line": 886,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::install_from_git_source_with_tag_records_source_kind_git",
-      "end_line": 969,
+      "end_line": 975,
       "fingerprint": "tok1:01ea2863a28cdba7c26df6501efe049bb74b70f88147af30aabc35157277edf1"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "item_kind": "fn",
-      "line": 1035,
+      "line": 1041,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::install_git_source_then_repeat_install_no_args_is_idempotent",
-      "end_line": 1103,
+      "end_line": 1109,
       "fingerprint": "tok1:271c8565c6d01e168eb96e5593db505953ea3b6bc38429058576e32a271f209c"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "item_kind": "fn",
-      "line": 194,
+      "line": 200,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::install_second_install_is_idempotent",
-      "end_line": 243,
+      "end_line": 249,
       "fingerprint": "tok1:c6cf5c13a6e8c553910442bee22ac00da9c514de88b0567f971c9dd47e517a93"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "item_kind": "fn",
-      "line": 350,
+      "line": 356,
       "symbol": "vibe_cli::tests::cli_pkg_cycle::install_skips_resolution_when_the_lockfile_is_fresh",
-      "end_line": 403,
+      "end_line": 409,
       "fingerprint": "tok1:ef5e08b4327f9372a0f46cee1316b80cf1909fb7f448c96ecd5adcd87c24238f"
     },
     {
@@ -5909,7 +5909,7 @@
       "line": 148,
       "symbol": "vibe_install::plan::fetch::expand_conditional_deps",
       "end_line": 271,
-      "fingerprint": "tok1:121c548ac996f34451aeaca76b9faf3483e931c7a598a1b2144e80c2e164bcfa"
+      "fingerprint": "tok1:bb849ed133de2f7bfda96d4e61997ba34e223a001020a404f3d026fa84e5b1eb"
     },
     {
       "crate_name": "vibe-install",
@@ -5942,18 +5942,18 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 340,
+      "line": 367,
       "symbol": "vibe_mcp::ServerError",
-      "end_line": 365,
+      "end_line": 392,
       "fingerprint": "tok1:c391eeaf135e87c17945b45ae95430ec58e1df93c51caf0b62d0b153b9a2600f"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/lib.rs",
       "item_kind": "enum",
-      "line": 126,
+      "line": 153,
       "symbol": "vibe_mcp::ToolError",
-      "end_line": 173,
+      "end_line": 200,
       "fingerprint": "tok1:e79d26e9dd7294fe9e3a946b00d3e4a3945e5217541652345a9cc2ee4d6ec78a"
     },
     {
@@ -6284,9 +6284,9 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 461,
+      "line": 468,
       "symbol": "vibe_mcp::tools::AgenticExplainMcpTool",
-      "end_line": 473,
+      "end_line": 480,
       "fingerprint": "tok1:bb751a7ac693f9ebf04766449fa37569b5ef2770f50134a0d2254a810d6b39e3"
     },
     {
@@ -6302,9 +6302,9 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/tools.rs",
       "item_kind": "struct",
-      "line": 325,
+      "line": 328,
       "symbol": "vibe_mcp::tools::MaterialiseSubskillMcpTool",
-      "end_line": 335,
+      "end_line": 338,
       "fingerprint": "tok1:7a65232d99728dda7430a8f91d406bd4b6db0c79bece520d3c6c61700a8c63d0"
     },
     {
@@ -6554,9 +6554,9 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/lib.rs",
       "item_kind": "fn",
-      "line": 273,
+      "line": 275,
       "symbol": "vibe_registry::CachedPackage::package_meta",
-      "end_line": 293,
+      "end_line": 295,
       "fingerprint": "tok1:1c0512c3543896942ac6f2f6a412095ca508daf24148bd85fa4af1b219bc1642"
     },
     {
@@ -6574,8 +6574,8 @@
       "item_kind": "enum",
       "line": 17,
       "symbol": "vibe_registry::error::RegistryError",
-      "end_line": 179,
-      "fingerprint": "tok1:2f6361a4b74e9032048591360faf80f2657b62b1ae065b9f2b0502aafe4c0ad1"
+      "end_line": 197,
+      "fingerprint": "tok1:eb59c53507940dd4adc70942c441f2a06be5d9a73607bdb1e9d3d10ddb513160"
     },
     {
       "crate_name": "vibe-registry",
@@ -6671,9 +6671,9 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/mod.rs",
       "item_kind": "mod",
-      "line": 36,
+      "line": 37,
       "symbol": "vibe_registry::git_package_registry",
-      "end_line": 36,
+      "end_line": 37,
       "fingerprint": "tok1:073a54042a714ac0c09a1c976e7043858bc3df89bf453a33c48a6c17fbd2a964"
     },
     {
@@ -6689,19 +6689,28 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch.rs",
       "item_kind": "mod",
-      "line": 7,
+      "line": 8,
       "symbol": "vibe_registry::git_package_registry::fetch",
-      "end_line": 7,
+      "end_line": 8,
       "fingerprint": "tok1:073a54042a714ac0c09a1c976e7043858bc3df89bf453a33c48a6c17fbd2a964"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch.rs",
       "item_kind": "fn",
-      "line": 236,
+      "line": 239,
       "symbol": "vibe_registry::git_package_registry::fetch::GitPerPackageRegistry::fetch_with_expected_hash",
-      "end_line": 434,
-      "fingerprint": "tok1:2261a98db9b351d0243b69bcf622b1dc07f5d322e525a0cd6ea6c81a651f73e9"
+      "end_line": 512,
+      "fingerprint": "tok1:732f6e446fe920c633e735076eb81ad517856bf098f1f8551c8139298035f6c4"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_package_registry/fetch/store_gate_tests.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_registry::git_package_registry::fetch::store_gate_tests",
+      "end_line": 8,
+      "fingerprint": "tok1:073a54042a714ac0c09a1c976e7043858bc3df89bf453a33c48a6c17fbd2a964"
     },
     {
       "crate_name": "vibe-registry",
@@ -6716,18 +6725,18 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
       "item_kind": "fn",
-      "line": 484,
+      "line": 494,
       "symbol": "vibe_registry::git_package_registry::fetch::tests::fetch_in_place_skips_the_cache_copy_and_keeps_git",
-      "end_line": 538,
-      "fingerprint": "tok1:1a943b18cd22b6f07bc364ef23c0bfb59791141f513cf9771905f8f0a292dc84"
+      "end_line": 548,
+      "fingerprint": "tok1:d35c6b9c24567dc2de4c1eec8982985cfb72e504a870afffa94888fb43a07149"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
       "item_kind": "fn",
-      "line": 540,
+      "line": 550,
       "symbol": "vibe_registry::git_package_registry::fetch::tests::materialise_in_place_clones_then_updates_the_slot",
-      "end_line": 588,
+      "end_line": 598,
       "fingerprint": "tok1:ebd2632c2465ce71c5c539b3e2951453f2b9a7871f2181fc1ad435f91d15a831"
     },
     {
@@ -7035,6 +7044,15 @@
       "symbol": "vibe_registry::shippable",
       "end_line": 7,
       "fingerprint": "tok1:8197f033a6053a09d4fbb65918e5fd74c31072454155cf9e129d2a3fdfd3d4c7"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/store.rs",
+      "item_kind": "mod",
+      "line": 39,
+      "symbol": "vibe_registry::store",
+      "end_line": 39,
+      "fingerprint": "tok1:3b8af4f7e2987457c86d6cdf452adc701ff8313e1e2a832c3cf2cbf2d9dcd6eb"
     },
     {
       "crate_name": "vibe-registry",
@@ -12557,7 +12575,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "from_symbol": "vibe_cli::tests::cli_pkg_cycle::install_from_git_source_with_branch_pins_lockfile_to_resolved_commit",
-      "line": 972,
+      "line": 978,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source",
       "verb": "verifies",
@@ -12566,7 +12584,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "from_symbol": "vibe_cli::tests::cli_pkg_cycle::install_from_git_source_with_tag_records_source_kind_git",
-      "line": 881,
+      "line": 887,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source",
       "verb": "verifies",
@@ -12575,7 +12593,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "from_symbol": "vibe_cli::tests::cli_pkg_cycle::install_git_source_then_repeat_install_no_args_is_idempotent",
-      "line": 1041,
+      "line": 1047,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source",
       "verb": "verifies",
@@ -12584,7 +12602,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "from_symbol": "vibe_cli::tests::cli_pkg_cycle::install_second_install_is_idempotent",
-      "line": 200,
+      "line": 206,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
       "verb": "verifies"
@@ -12592,7 +12610,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
       "from_symbol": "vibe_cli::tests::cli_pkg_cycle::install_skips_resolution_when_the_lockfile_is_fresh",
-      "line": 354,
+      "line": 360,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail",
       "verb": "verifies"
@@ -14305,7 +14323,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ServerError",
-      "line": 350,
+      "line": 377,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"
@@ -14313,7 +14331,7 @@
     {
       "file": "crates/vibe-mcp/src/lib.rs",
       "from_symbol": "vibe_mcp::ToolError",
-      "line": 137,
+      "line": 164,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#errors",
       "verb": "implements"
@@ -14617,7 +14635,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::AgenticExplainMcpTool",
-      "line": 472,
+      "line": 479,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#transports",
       "verb": "implements"
@@ -14633,7 +14651,7 @@
     {
       "file": "crates/vibe-mcp/src/tools.rs",
       "from_symbol": "vibe_mcp::tools::MaterialiseSubskillMcpTool",
-      "line": 334,
+      "line": 337,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools",
       "verb": "implements"
@@ -14858,7 +14876,7 @@
     {
       "file": "crates/vibe-registry/src/lib.rs",
       "from_symbol": "vibe_registry::CachedPackage::package_meta",
-      "line": 280,
+      "line": 282,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -14965,7 +14983,7 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/mod.rs",
       "from_symbol": "vibe_registry::git_package_registry",
-      "line": 36,
+      "line": 37,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model",
       "verb": "implements"
@@ -14981,7 +14999,7 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch",
-      "line": 7,
+      "line": 8,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model",
       "verb": "implements"
@@ -14989,11 +15007,19 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch::GitPerPackageRegistry::fetch_with_expected_hash",
-      "line": 266,
+      "line": 286,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "no-unwrap-in-domain: primary_err is Some whenever the source loop exhausts — the primary URL exists by package_urls' type and its failure is recorded before any continue; lifting the primary out of the loop (the try_lookup shape) would duplicate the three-step per-source body this fn shares between primary and mirrors"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_package_registry/fetch/store_gate_tests.rs",
+      "from_symbol": "vibe_registry::git_package_registry::fetch::store_gate_tests",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
@@ -15006,7 +15032,7 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch::tests::fetch_in_place_skips_the_cache_copy_and_keeps_git",
-      "line": 485,
+      "line": 495,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -15015,7 +15041,7 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch::tests::materialise_in_place_clones_then_updates_the_slot",
-      "line": 541,
+      "line": 551,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -15292,6 +15318,14 @@
       "line": 7,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#shippable-tree",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/store.rs",
+      "from_symbol": "vibe_registry::store",
+      "line": 39,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#layout",
       "verb": "implements"
     },
     {
@@ -55304,7 +55338,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:83b1ace4ae66d03e72d7051029f44ec94f9d04bf7be4c22772a52ff63f1cb7e9",
+      "content_hash": "sha256:bba55e68e8b6155a735295f20266ba9e5b610c91b855ed1d183565ab9c4ddbc5",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "PROP-010: The local package cache — a shared offline store",
@@ -55457,7 +55491,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:060a49753868b1e6cec41e5a64072a303b1d0bc9c85b150c7f91c5aed939e9b3",
+      "content_hash": "sha256:5821f398d73f9e4624a7c541425b6c11c179f52b8c761300c4a7ce777a767fad",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "2. Decisions",
@@ -55466,7 +55500,7 @@
     },
     {
       "anchor": "global",
-      "content_hash": "sha256:cde617cc5f42fe825bde5c22d06056e14f9367bb30605fb9b1c11d838608541e",
+      "content_hash": "sha256:f54ee0b02a71778f541f41c18179365988831dfbe971ca7c7909f3ee7be3403f",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "2.1 The cache is a machine-global, accretive store",
@@ -55475,28 +55509,28 @@
     },
     {
       "anchor": "CACHE-MACHINE-GLOBAL",
-      "content_hash": "sha256:3ef444c048a758844ea29c8c61809b9165c791a7feeeab2616999571cc4cb715",
+      "content_hash": "sha256:2dbcdcef8ad18c09cf5894df3464582c4b5a814c80a915a674f3cf499bf1ca24",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Decision.** The package cache is **machine-global**, not project-scoped — one store per machine, at a default path, overridable by `VIBE_REGISTRY_CACHE` (the existing env-var — read at `registry_cache.rs`, and named correctly here only since 2026-08-19) and by a user-config key. @status:spec/done",
+      "heading": "**Decision (override clause corrected 2026-08-20 to the later, more specific ruling).** The package store is **machine-global**, not project-scoped — one store per machine at `<settings-home>/cache`, relocated only with the settings home (`$VIBE_SETTINGS`); **no store-specific override exists** — [`##THE-STORE-IS-DOT-VIBE-CACHE`](#layout) is the governing ruling. (`VIBE_REGISTRY_CACHE`, which this decision originally named, governs the registry **clone** cache — a different layer that keeps its own job.) @status:impl/done",
       "line": 37,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CACHE-MACHINE-GLOBAL"
     },
     {
       "anchor": "CACHE-POPULATION-SHARED",
-      "content_hash": "sha256:6abd1c8afe658890e2ebaee9c2a1ba9449eef56d67e0b216664936698475697f",
+      "content_hash": "sha256:0c8379035e1634d12718912d364fddc686141a853d7234bbdcd5ee3325f7b0e4",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "Every package fetched for *any* project populates it; *any* project — including projects and members that do not yet exist — resolves and materialises from it. @status:spec/done",
+      "heading": "Every package fetched for *any* project populates it; *any* project — including projects and members that do not yet exist — resolves and materialises from it. @status:impl/work",
       "line": 39,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CACHE-POPULATION-SHARED"
     },
     {
       "anchor": "CACHE-ACCRETIVE",
-      "content_hash": "sha256:d6fb6526079022ef624f9dcac07fc8b18139d7ae0d7e198c8c7c442c003ae2f9",
+      "content_hash": "sha256:9c452857922a744732af666508e31104495734e4fb9e045d8a52faefb3ba2c35",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "The cache is **accretive**: a package version, once cached, is never evicted automatically. @status:spec/done",
+      "heading": "The cache is **accretive**: a package version, once cached, is never evicted automatically. @status:impl/done",
       "line": 41,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CACHE-ACCRETIVE"
     },
@@ -55592,7 +55626,7 @@
     },
     {
       "anchor": "identity",
-      "content_hash": "sha256:7a61814ee657eb07ee33ce9e5c39406297b480dff5dfaa46a914d818ebfce74f",
+      "content_hash": "sha256:13d648fe785e554c02ab4def5514b4d588cb22d042eeb23282e2c391071a55a5",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "2.3 The cache is keyed by package identity",
@@ -55601,28 +55635,28 @@
     },
     {
       "anchor": "IDENTITY-KEYED",
-      "content_hash": "sha256:100122c39804bc20d9044bafd0bce93a9b5bf1bc00106cd747ada78403564ca5",
+      "content_hash": "sha256:c44e3cbd536c13cadf511b5592319248747794b4ee71e1d22398d9608ed00434",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Decision.** The cache is keyed by **qualified package identity** as defined by PROP-008 — not by registry URL. A cached package version is addressed by its identity (`group` / `name` / `version`) and validated by `content_hash`; the registry that served it is not part of the key. @status:spec/done",
+      "heading": "**Decision.** The cache is keyed by **qualified package identity** as defined by PROP-008 — not by registry URL. A cached package version is addressed by its identity (`group` / `name` / `version`) and validated by `content_hash`; the registry that served it is not part of the key. @status:impl/done",
       "line": 60,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#IDENTITY-KEYED"
     },
     {
       "anchor": "REGISTRY-INDEPENDENT",
-      "content_hash": "sha256:9cc49dab7d61e03aeeb139039be9b3d71e43e64ad97971b354b2cddbfd74bf4a",
+      "content_hash": "sha256:2393d19f488252872efe2cc50cc514921da7655d18fb713eb59517d0bae30b4a",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "A package version pulled once is reusable by every project on the machine **regardless of which `[[registry]]` each project configures** — a mirror, a different organisation hosting the same package, or a redirect target all resolve to the same cache entry when the identity matches. This is what makes §2.2 seamless: offline resolution and materialisation become registry-config-independent — a new project draws on the cache by package identity, not by reproducing some earlier project's registry list. @status:spec/done",
+      "heading": "A package version pulled once is reusable by every project on the machine **regardless of which `[[registry]]` each project configures** — a mirror, a different organisation hosting the same package, or a redirect target all resolve to the same cache entry when the identity matches. This is what makes §2.2 seamless: offline resolution and materialisation become registry-config-independent — a new project draws on the cache by package identity, not by reproducing some earlier project's registry list. @status:impl/work",
       "line": 62,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#REGISTRY-INDEPENDENT"
     },
     {
       "anchor": "HASH-INTEGRITY-GATE",
-      "content_hash": "sha256:ba47efb1469231e5a330a2161938fbd2bee002d7e5f3865f76bd3d1a743fa73b",
+      "content_hash": "sha256:8f5ded5c4b46278e33ea54927958d166ae3a71768e22350232747d4b4c37a28a",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "`content_hash` is the integrity gate: a cache entry is valid only if its content hashes to the recorded hash. Two sources claiming the same identity with divergent bytes are a collision, surfaced per PROP-008's collision rules, never silently merged. @status:spec/done",
+      "heading": "`content_hash` is the integrity gate: a cache entry is valid only if its content hashes to the recorded hash. Two sources claiming the same identity with divergent bytes are a collision, surfaced per PROP-008's collision rules, never silently merged. @status:impl/work",
       "line": 63,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#HASH-INTEGRITY-GATE"
     },
@@ -55943,7 +55977,7 @@
     },
     {
       "anchor": "layout",
-      "content_hash": "sha256:90c81dfc8648aec7f850803d5f04e73d953cb0fa533acace2b7ae633fbb629f8",
+      "content_hash": "sha256:76cb37e2e8a57ce6b6a216d2a8fa4052d298d35d78604b114cc8392288abbe27",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "2.7 Cache layout and population",
@@ -55952,10 +55986,10 @@
     },
     {
       "anchor": "LOCAL-INDEX-VIEW",
-      "content_hash": "sha256:76a48198ade8a02408f6c7a524736223cbf01e8cb1aa3e6cba01e2e66c513da7",
+      "content_hash": "sha256:13ad8b676b71f24adfc30c64513ea99b0bf6f764fda1f39b7338aba9b7206bf9",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Decision.** The cache is keyed by package identity (§2.3) and carries a **local index view** — identity → versions present — so the resolver and the management commands (§2.8) answer cache queries without walking the whole store. @status:spec/done",
+      "heading": "**Decision.** The cache is keyed by package identity (§2.3) and carries a **local index view** — identity → versions present — so the resolver and the management commands (§2.8) answer cache queries without walking the whole store. *(Built 2026-08-20 as the layout itself: `<store>/<group>/<name>/v<version>/` walked per identity IS the view — a second representation would drift; `store::lookup` / `list_versions` / `list_all` are the query surface.)* @status:impl/done",
       "line": 128,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#LOCAL-INDEX-VIEW"
     },
@@ -55970,10 +56004,10 @@
     },
     {
       "anchor": "LAYOUT-EXTRACTED-DIRECTORIES",
-      "content_hash": "sha256:17c5b799ccd0554d0df10a2d713f45908214ccd7f6ed53ed1df17a6d2a29a257",
+      "content_hash": "sha256:af09b1f745bf607558fc62e59848757b4811573d0823afd31b85b9d6e6d250c9",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Decision (owner, 2026-08-19).** The on-disk layout is **per-identity extracted directories**, one per `(group, name, version)`. Git clones indexed by identity are rejected. @status:spec/work",
+      "heading": "**Decision (owner, 2026-08-19).** The on-disk layout is **per-identity extracted directories**, one per `(group, name, version)`. Git clones indexed by identity are rejected. @status:impl/done",
       "line": 132,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#LAYOUT-EXTRACTED-DIRECTORIES"
     },
@@ -55997,91 +56031,91 @@
     },
     {
       "anchor": "CLONES-KEEP-THEIR-OWN-JOB",
-      "content_hash": "sha256:af9cfa19bfd23bcc74596301d376f02ef6451610480512f750baaec673e9fb4d",
+      "content_hash": "sha256:1ac061fe33766810991faead9d5ec749525fff78cd3c15a1f779a038bcf2422f",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "The registry clone cache does not go away and is not in competition: it exists so one registry is not re-cloned for every project on the machine, which is a separate and still-valid purpose. What changes is that it stops being the only local copy of package content, and therefore stops being load-bearing for availability. @status:spec/work",
+      "heading": "The registry clone cache does not go away and is not in competition: it exists so one registry is not re-cloned for every project on the machine, which is a separate and still-valid purpose. What changes is that it stops being the only local copy of package content, and therefore stops being load-bearing for availability. @status:impl/work",
       "line": 136,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CLONES-KEEP-THEIR-OWN-JOB"
     },
     {
       "anchor": "CACHE-FILLS",
-      "content_hash": "sha256:72e4962d83245eb169f28ec4881301bc6b5681e45001b17ab6fa2d1ca298e606",
+      "content_hash": "sha256:bf128a51b6d323b0a450a3d31fbcef834b7e741d45756a68fd1b193baaa056f3",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "The cache fills as a side effect of any online `vibe install` / `vibe update` / `vibe registry sync`, and by deliberate pre-warming (`vibe cache add`, §2.8). It is never auto-evicted (§2.1). @status:spec/done",
+      "heading": "The cache fills as a side effect of any online `vibe install` / `vibe update` / `vibe registry sync`, and by deliberate pre-warming (`vibe cache add`, §2.8). It is never auto-evicted (§2.1). @status:impl/work",
       "line": 138,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CACHE-FILLS"
     },
     {
       "anchor": "THE-STORE-IS-DOT-VIBE-CACHE",
-      "content_hash": "sha256:49bfc1e3023ea6e46fe642382c482d284378fc9f243fbc8863610557ce4206ed",
+      "content_hash": "sha256:767303c8c2e7435ecb0df23d0f6f78296ee15a7d362d02741fee403cee4411d7",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Decision (owner, 2026-08-20): the store is `~/.vibe/cache/`**, beside `~/.vibe/registries/` (the registry git clones, which keep their own separate job) and under the one settings home. @status:spec/work",
+      "heading": "**Decision (owner, 2026-08-20): the store is `~/.vibe/cache/`**, beside `~/.vibe/registries/` (the registry git clones, which keep their own separate job) and under the one settings home. @status:impl/done",
       "line": 140,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-STORE-IS-DOT-VIBE-CACHE"
     },
     {
       "anchor": "THE-NAME-DOES-NOT-COLLIDE-BECAUSE-THE-OTHER-CACHE-GOES",
-      "content_hash": "sha256:50f32f48c3b91a3e88b2dbd3d37f4f624421374a0c5bb39cb3c7fde56dff2ead",
+      "content_hash": "sha256:cafd8b8ea48c04a08a3ba258607ad74f9e7dfc366d118454d7d3ed38103bcfe3",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**The objection to this name, and why it does not survive.** «Cache» would mean two things — this store and the per-project `<workspace-root>/.vibe/cache/`. It would not: the project directory is precisely what this store **replaces**. Today a fetch extracts into it and `vibedeps/` is copied from there; once the machine store is the source, the project copy is pure duplication and goes. Three layers remain and none of them is it — the store (source), `vibedeps/` (materialised into the project, committed), `vibe.lock` (the pinned resolution). @status:spec/work",
+      "heading": "**The objection to this name, and why it does not survive.** «Cache» would mean two things — this store and the per-project `<workspace-root>/.vibe/cache/`. It would not: the project directory is precisely what this store **replaces**. Today a fetch extracts into it and `vibedeps/` is copied from there; once the machine store is the source, the project copy is pure duplication and goes. Three layers remain and none of them is it — the store (source), `vibedeps/` (materialised into the project, committed), `vibe.lock` (the pinned resolution). @status:impl/done",
       "line": 142,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-NAME-DOES-NOT-COLLIDE-BECAUSE-THE-OTHER-CACHE-GOES"
     },
     {
       "anchor": "THE-PROJECT-CACHE-IS-REMOVED-BY-THE-SAME-WORK",
-      "content_hash": "sha256:ff3fffa8cb62ef08fabbb60178bb26c14642243f4260c1b895e17054451e507c",
+      "content_hash": "sha256:9d709951067b1b373845da8b48e19d35322b35f0c5d264c44893a20f6cc82600",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**The removal is part of this work, not a follow-up** — otherwise the collision the name was questioned for is real for the whole transition, which is exactly when the confusion costs most. Note the scope precisely: the subdirectory `cache/` goes; the project's `.vibe/` directory itself stays, since it also carries project settings and parked agentic commands. @status:spec/work",
+      "heading": "**The removal is part of this work, not a follow-up** — otherwise the collision the name was questioned for is real for the whole transition, which is exactly when the confusion costs most. Note the scope precisely: the subdirectory `cache/` goes; the project's `.vibe/` directory itself stays, since it also carries project settings and parked agentic commands. @status:impl/done",
       "line": 143,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-PROJECT-CACHE-IS-REMOVED-BY-THE-SAME-WORK"
     },
     {
       "anchor": "THE-EXTRACTED-LAYER-IS-PROMOTED-NOT-INVENTED",
-      "content_hash": "sha256:9ec4beab4d7f075be9a62f6dc96d261419867e7de824ceea8ebe88c23b05e051",
+      "content_hash": "sha256:398c34369114be6dce745f3e22b94c8d56f9e98643b00b24fe6da5a775c939f9",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Decision (owner, 2026-08-20).** The extracted per-identity layer is **not built from scratch** — it already exists, project-scoped, at `<workspace-root>/.vibe/cache/<group>/<name>/v<version>/`, holding `.git`-stripped content, created at `vibe init` and used by the update and reinstall paths. The work is to change three things about it and nothing else: its **level** (per project → machine-global), its **mode** (freely rewritten → written once), and its **role** (an incidental by-product → a source resolution reads from first). Measured 2026-08-19, `campaigns/packages-2026-09/harvest/prop010-current-state.md`. @status:spec/work",
+      "heading": "**Decision (owner, 2026-08-20).** The extracted per-identity layer is **not built from scratch** — it already exists, project-scoped, at `<workspace-root>/.vibe/cache/<group>/<name>/v<version>/`, holding `.git`-stripped content, created at `vibe init` and used by the update and reinstall paths. The work is to change three things about it and nothing else: its **level** (per project → machine-global), its **mode** (freely rewritten → written once), and its **role** (an incidental by-product → a source resolution reads from first). Measured 2026-08-19, `campaigns/packages-2026-09/harvest/prop010-current-state.md`. @status:impl/done",
       "line": 145,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-EXTRACTED-LAYER-IS-PROMOTED-NOT-INVENTED"
     },
     {
       "anchor": "WRITTEN-ONCE-IS-A-RULE-FOR-OUR-CODE-NOT-A-CLAIM-ABOUT-THE-DISK",
-      "content_hash": "sha256:ad4195e2a1ba3bc1874d71abcfb0b202e08ed16ddaf3737b76b1347b3d893245",
+      "content_hash": "sha256:99d7410788a0d42bcff8e12e703418822430d844722b825b3730a7f80b5ec407",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Decision (owner, 2026-08-20), and the wording matters because the naive reading is unimplementable.** The store cannot be made immutable — it is the operator's own disk and they may edit anything on it. «Written once» is therefore exactly three commitments, all of them ours to keep: @status:spec/work",
+      "heading": "**Decision (owner, 2026-08-20), and the wording matters because the naive reading is unimplementable.** The store cannot be made immutable — it is the operator's own disk and they may edit anything on it. «Written once» is therefore exactly three commitments, all of them ours to keep: @status:impl/done",
       "line": 147,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#WRITTEN-ONCE-IS-A-RULE-FOR-OUR-CODE-NOT-A-CLAIM-ABOUT-THE-DISK"
     },
     {
       "anchor": "OUR-CODE-NEVER-REWRITES-AN-ENTRY",
-      "content_hash": "sha256:5cf2836eaa613ed9be715f1182c78b8dec0f212148965d7b3ed8ed03be0ac169",
+      "content_hash": "sha256:357c31ec8247b8e425e19d4fb93a0a328ffd03add0db37e0966a30a7b4bf38a6",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Our code never rewrites an entry in place.** A version is written when it is first fetched and is read-only to us afterwards. This is testable and is the only half of the rule that is fully in our hands. @status:spec/work",
+      "heading": "**Our code never rewrites an entry in place.** A version is written when it is first fetched and is read-only to us afterwards. This is testable and is the only half of the rule that is fully in our hands. @status:impl/done",
       "line": 149,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OUR-CODE-NEVER-REWRITES-AN-ENTRY"
     },
     {
       "anchor": "VERIFICATION-IS-A-COMMAND-NOT-A-TAX",
-      "content_hash": "sha256:bd970b9ce5dd26342232ed180492a83e304b3a6e21d06dce8520260b06bdf6cb",
+      "content_hash": "sha256:de1cb7b441952b23b8b89024a3d4675c683d218c860f862b2ee9be78eabefcc0",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Verification is a command an operator runs, not a cost every install pays** (owner, 2026-08-20). Re-hashing the store on every resolve would make a ten-gigabyte dependency unusable; the integrity sweep therefore lives in `vibe cache check` ([§2.8](#management)) and the ordinary path does not pay it. @status:spec/work",
+      "heading": "**Verification is a command an operator runs, not a cost every install pays** (owner, 2026-08-20). Re-hashing the store on every resolve would make a ten-gigabyte dependency unusable; the integrity sweep therefore lives in `vibe cache check` ([§2.8](#management)) and the ordinary path does not pay it. @status:impl/work",
       "line": 150,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#VERIFICATION-IS-A-COMMAND-NOT-A-TAX"
     },
     {
       "anchor": "A-MISMATCH-IS-NAMED-NEVER-SWALLOWED",
-      "content_hash": "sha256:f92153b7eeca129dfc57232763a04442571b17005b9cb741c04c43b30836c767",
+      "content_hash": "sha256:5fe65209aa1467fc5df8beb5f5b2fa77c03082aa810114bd84797e434625d4d0",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**A mismatch is named.** When the sweep finds content that no longer hashes to what the lockfile pinned, it says which package and offers repair — it never silently re-downloads and never silently uses the altered bytes. @status:spec/work",
+      "heading": "**A mismatch is named.** When the sweep finds content that no longer hashes to what the lockfile pinned, it says which package and offers repair — it never silently re-downloads and never silently uses the altered bytes. *(The read path already keeps this: an entry read as the materialisation source under a pin that no longer matches fails as `StoreEntryMismatch`, naming the package, the entry path and both hashes; the sweep itself is `vibe cache check`, pending.)* @status:impl/work",
       "line": 151,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#A-MISMATCH-IS-NAMED-NEVER-SWALLOWED"
     },
@@ -56231,7 +56265,7 @@
     },
     {
       "anchor": "layering",
-      "content_hash": "sha256:9747320b8f447a3a56b3678fb76feddfdbeae0ce30fb685e52d8dda2f2e276b1",
+      "content_hash": "sha256:c71b81de5c2fc096a600f8f8b2cd0a96cfd632bdbc891a2f4d131f0e26d36e55",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "2.9 Layering — the cache, `vibedeps/`, and the lockfile",
@@ -56249,10 +56283,10 @@
     },
     {
       "anchor": "LAYER-CACHE",
-      "content_hash": "sha256:41c60dc8a7ab850e91781f1da1c80d00c32734bec43700102161f2f8305a72bc",
+      "content_hash": "sha256:0b92ca494b4fcf5d25659c9391ff7b0f9da341291d87da04afd33d0edbcbbf66",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**The cache** — machine-global, accretive, identity-keyed, the *source* of package content. Shared across every project on the machine. @status:spec/done",
+      "heading": "**The cache** — machine-global, accretive, identity-keyed, the *source* of package content. Shared across every project on the machine. @status:impl/done",
       "line": 182,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#LAYER-CACHE"
     },
@@ -56519,7 +56553,7 @@
     },
     {
       "anchor": "phases",
-      "content_hash": "sha256:74f265dee32aeff4361f7ee38123d48c31253a5e3c4afb0010286febca12cb17",
+      "content_hash": "sha256:0d7dd14b4a8aca51202bb4026c10c7bd8acd0865bc4c543a47f7f65c45088345",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "7. Phase plan",
@@ -56537,10 +56571,10 @@
     },
     {
       "anchor": "PHASE-1-IDENTITY-CACHE",
-      "content_hash": "sha256:cc7dbb68b91dfabb966944027b18a7156566a5a58fbc5a247787c3a3bf167bec",
+      "content_hash": "sha256:3d06db07d6df4f65823f3983828152ebd89fc6e738e43d8e1c1b3eff0e497fcb",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**The identity-keyed cache** — the cache keyed by PROP-008 package identity; a documented, stable layout (§5.1); the local index view; `vibe cache path` / `vibe cache list`. `vibe-registry` + `vibe-cli`. @status:impl/plan",
+      "heading": "**The identity-keyed cache** — the cache keyed by PROP-008 package identity; a documented, stable layout (§5.1); the local index view; `vibe cache path` / `vibe cache list`. `vibe-registry` + `vibe-cli`. @status:impl/work",
       "line": 239,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#PHASE-1-IDENTITY-CACHE"
     },
@@ -73254,19 +73288,19 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
-      "line": 881,
+      "line": 887,
       "message": "edge `vibe_cli::tests::cli_pkg_cycle::install_from_git_source_with_tag_records_source_kind_git` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
-      "line": 972,
+      "line": 978,
       "message": "edge `vibe_cli::tests::cli_pkg_cycle::install_from_git_source_with_branch_pins_lockfile_to_resolved_commit` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/tests/cli_pkg_cycle.rs",
-      "line": 1041,
+      "line": 1047,
       "message": "edge `vibe_cli::tests::cli_pkg_cycle::install_git_source_then_repeat_install_no_args_is_idempotent` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source` carries no kind/revision line yet"
     },
     {
@@ -73704,13 +73738,13 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
-      "line": 485,
+      "line": 495,
       "message": "edge `vibe_registry::git_package_registry::fetch::tests::fetch_in_place_skips_the_cache_copy_and_keeps_git` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
-      "line": 541,
+      "line": 551,
       "message": "edge `vibe_registry::git_package_registry::fetch::tests::materialise_in_place_clones_then_updates_the_slot` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place` carries no kind/revision line yet"
     },
     {

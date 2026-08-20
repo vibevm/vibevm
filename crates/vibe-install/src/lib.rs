@@ -68,11 +68,11 @@ pub use record::{
 ///     fn resolve_and_fetch(
 ///         &self,
 ///         pkgref: &PackageRef,
-///         cache_root: &Path,
+///         store_root: &Path,
 ///         _expected_hash: Option<&str>,
 ///     ) -> Result<CachedPackage, RegistryError> {
 ///         let resolved = self.0.resolve(pkgref)?;
-///         self.0.fetch(&resolved, cache_root)
+///         self.0.fetch(&resolved, store_root)
 ///     }
 ///
 ///     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
@@ -94,13 +94,14 @@ pub use record::{
 /// }
 /// ```
 pub trait InstallSource {
-    /// Resolve `pkgref` and materialise its content into the cache.
+    /// Resolve `pkgref` and insert its content into the machine-global
+    /// store (`~/.vibe/cache/`, PROP-010 §2.7) under `store_root`.
     /// `expected_hash` (typically the lockfile pin) lets a
     /// mirror-aware source skip a source serving disagreeing bytes.
     fn resolve_and_fetch(
         &self,
         pkgref: &PackageRef,
-        cache_root: &Path,
+        store_root: &Path,
         expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError>;
 

@@ -33,6 +33,7 @@ mod local_registry;
 pub mod multi_registry_resolver;
 mod registry_cache;
 pub mod search;
+pub mod store;
 pub mod vendor;
 
 pub use git_backend::{GitBackend, GitError, ShellGit};
@@ -88,7 +89,7 @@ pub use multi_registry_resolver::{
 ///     fn fetch(
 ///         &self,
 ///         resolved: &ResolvedPackage,
-///         _cache_root: &Path,
+///         _store_root: &Path,
 ///     ) -> Result<CachedPackage, RegistryError> {
 ///         Err(RegistryError::UnknownPackage {
 ///             group: resolved.group.clone(),
@@ -115,7 +116,7 @@ pub trait Registry {
     fn fetch(
         &self,
         resolved: &ResolvedPackage,
-        cache_root: &Path,
+        store_root: &Path,
     ) -> Result<CachedPackage, RegistryError>;
 }
 
@@ -150,7 +151,8 @@ pub struct ResolvedPackage {
     pub source_dir: PathBuf,
 }
 
-/// A resolved package copied into the per-project cache.
+/// A resolved package inserted into the machine-global store
+/// (`~/.vibe/cache/<group>/<name>/v<version>/`, PROP-010 §2.7).
 ///
 /// Produced by [`Registry::fetch`]; the manifest comes off the cached
 /// copy and always carries a `[package]` table (guarded at every
@@ -174,7 +176,7 @@ pub struct ResolvedPackage {
 ///         version: semver::Version::parse("0.2.0").unwrap(),
 ///         source_dir: PathBuf::from("registry/org.vibevm/wal/v0.2.0"),
 ///     },
-///     cache_dir: PathBuf::from(".vibe/cache/org.vibevm/wal/v0.2.0"),
+///     cache_dir: PathBuf::from("~/.vibe/cache/org.vibevm/wal/v0.2.0"),
 ///     manifest,
 ///     content_hash: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 ///         .to_string(),
@@ -339,7 +341,7 @@ mod error;
 mod hash_recipe;
 mod shippable;
 
-pub use error::RegistryError;
+pub use error::{RegistryError, StoreEntryMismatchDetail};
 // The ordering half of the recipe is public for the same reason `vibe-index`
 // publishes its copy: the property "recipe 1's order does not depend on the
 // host separator" is provable only against a function callable without a
@@ -348,3 +350,6 @@ pub use error::RegistryError;
 pub use hash_recipe::{RecipeId, order_entries, order_paths};
 pub(crate) use shippable::copy_dir_recursive;
 pub use shippable::{compute_content_hash, compute_content_hash_with};
+pub use store::{
+    InsertOutcome, entry_dir, insert_from, list_all, list_versions, lookup, store_root,
+};
