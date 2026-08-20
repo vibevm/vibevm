@@ -2,163 +2,130 @@
 
 **The disciplined runtime for spec-driven vibecoding.**
 
-`vibe` is a CLI software project manager for spec-driven AI-assisted development. It manages installable building blocks — `flow`s (process disciplines), `feat`s (functional features), `stack`s (language/framework targets), `tool`s (utilities) — and assembles them into project-level spec content that AI agents read at session boot. Eventually (v1.5) it also drives the LLM-backed code-generation that turns those specs into working software.
+`vibe` is a CLI software project manager for spec-driven AI-assisted development. It resolves, installs, updates, inspects, and serves reusable specification packages, then computes the boot material that coding agents read inside a project.
 
-The headline pitch: keep the discipline of structured specifications, the leverage of AI-assisted coding, and the reproducibility of a real package manager — all in one binary.
+The installable kinds are `flow`, `feat`, `stack`, `tool`, `mcp`, and `lang`.
 
 ## Status
 
-Pre-1.0 development. Phase A of M1.1-revision is complete on `main`:
+The current release is **1.0.0**. This is a closed alpha, not a compatibility promise: **1.0.0 will break** while `public = false`. Until the owner declares the first public presentation, breaking changes may ship without migrations; the recovery path is re-init / re-fetch. Read [Alpha notes](docs/ALPHA-NOTES.md) before adopting the release and [CHANGELOG.md](CHANGELOG.md) before updating.
 
-- M0 walking skeleton: `vibe init` / `install` / `list` / `uninstall` against a local-directory registry.
-- M1.1: git-backed registry with shell-out `GitBackend`, `~/.vibe/registries/` cache.
-- M1.1-revision: decentralized per-package registry (`vibespecs/<kind>-<name>` under an org URL), `[[registry]]` array + `[[mirror]]` + `[[override]]` schema, content-addressed identity, lockfile schema v2, `MultiRegistryResolver`, `vibe registry sync` walking per-package clones, transitive dependency resolution via `NaiveDepSolver`, content_hash integrity check on plan, `vibe registry publish` maintainer command with GitVerse adapter, JTD wire-contract scaffolding.
+## Install vibevm from this checkout
 
-170+ tests across the workspace, clippy clean with `-D warnings` on every commit.
+The first-run scripts build the checkout, install it through the VibeVM Version Manager, create the `vibe` shims, and update `PATH`:
 
-What's still open: live migration of the three demo packages into the `vibespecs` org (one push away — needs owner sign-off), then the M1.2 (`vibe update`) / M1.3 (`vibe check`) / M1.4 (`vibe show`) command slices, then M1.5 (`vibe build` — the LLM-backed code-generation milestone). Full plan in [`ROADMAP.md`](ROADMAP.md).
+```powershell
+.\tools\first-run.ps1
+```
+
+```bash
+bash tools/first-run.sh
+```
+
+Open a new terminal, then verify the result:
+
+```bash
+vibe --version
+vibe self doctor
+```
+
+The default managed installation root is `~/.vibe/opt`: shims live in `~/.vibe/opt/bin/`, installed versions in `~/.vibe/opt/vibevm/`, and the active version is selected by the `current` pointer. To perform the initial install manually from the source tree:
+
+```bash
+cargo run -p vibe-cli -- self install
+cargo run -p vibe-cli -- self doctor --fix
+```
+
+Run `vibe self --help` for version switching, upgrades, removal, garbage collection, and relocation.
 
 ## Quick start
 
 ```bash
-# Build the binary.
-cargo build --release --workspace
+# Create a project in hello-vibe/.
+vibe init hello-vibe
 
-# Scaffold a new project tree.
-target/release/vibe init --path my-project
+# Install a package and record it in vibe.toml + vibe.lock.
+vibe install org.vibevm.world/wal --path hello-vibe
 
-# Install the canonical Write-Ahead Log discipline flow from the local fixture.
-target/release/vibe install flow:wal \
-    --registry fixtures/registry \
-    --path my-project \
-    --assume-yes
-
-# Inspect what's installed.
-target/release/vibe list --path my-project
+# Inspect and validate the result.
+vibe list --path hello-vibe
+vibe tree --plain --path hello-vibe
+vibe check --path hello-vibe
 ```
 
-For the live registry path (against `git@gitverse.ru:anarchic/vibespecs.git`, the M1.1 monorepo, until live migration to the per-package model lands), drop the `--registry` flag — `vibe init` writes the default registry into `vibe.toml`.
-
-Full command reference: [`docs/commands/`](docs/commands/). Authoring guides for new packages: [`docs/authoring-{flow,feat,stack}.md`](docs/).
-
-## First run — install vibevm with VVM
-
-vibevm distributes itself: the `vibe` binary manages its own versions through the **VibeVM Version Manager** (VVM — `vibe self`, [PROP-019](spec/common/PROP-019-version-manager.md)). You're in the source tree, so nothing needs cloning.
-
-**Fastest path** — a bootstrap script that does everything below (build, install the first version, write the shims, put `vibe` on PATH):
+`vibe install` with no package arguments reads `[requires].packages` from `vibe.toml`, which is the normal command after cloning an existing project:
 
 ```bash
-bash tools/first-run.sh           # bash · Git Bash · macOS · Linux
-```
-```powershell
-.\tools\first-run.ps1             # Windows PowerShell
+vibe install --path hello-vibe
 ```
 
-Then open a **new terminal** and run `vibe self ls`. The script edits your durable PATH; to try VVM *without* touching `~/opt`, use the isolated one-liner at the end of this section instead.
+The full core-command reference starts at [`docs/commands/`](docs/commands/).
 
-Prefer to run the steps yourself? Here they are:
+## Registries and search
+
+Projects declare registries as an ordered array. `index_url` is optional; it points search and index-backed lookups at the registry index. The environment override `VIBEVM_INDEX_URL_<REGISTRY>` wins, and the literal value `"none"` disables index lookup for that registry.
+
+```toml
+[[registry]]
+name = "vibespecs"
+url = "https://github.com/vibespecs"
+naming = "fqdn"
+index_url = "https://github.com/vibespecs/index"
+```
+
+Use `vibe registry list` to inspect effective project registry declarations, `vibe registry test` to probe them, and `vibe search <query>` to query configured indexes.
+
+## Machine-global package store and offline work
+
+Fetched package content is kept in the machine-global store at `~/.vibe/cache/`. This store is distinct from the registry clone cache under `~/.vibe/registries/`; the old project-local `.vibe/cache/` is not part of the 1.0.0 layout.
 
 ```bash
-# Build the current checkout and install it as your first version.
-cargo run -p vibe-cli -- self install
+# Inspect and pre-warm the package store.
+vibe cache path
+vibe cache list
+vibe cache add org.vibevm.world/wal --path hello-vibe
 
-# See it — the active version is marked with `*`.
-cargo run -q -p vibe-cli -- self ls
+# Verify store integrity, repairing explicitly if requested.
+vibe cache check
+vibe cache check --repair --path hello-vibe
+
+# Resolve and materialise without network access.
+vibe install --offline --path hello-vibe
 ```
 
-`self install` compiles the checkout and publishes it as **instance 1** under `~/opt/vibevm/versions/branch/<current-branch>/1/`, then flips the live `current` pointer to it. That instance is now the active version.
+`--offline` is also available through `VIBE_OFFLINE` and the user setting `[net].offline`. An offline miss is a hard, actionable error; it never silently falls back to a partial result. `vibe cache clean` removes content only after the operator chooses `--package`, `--older-than`, or `--all`.
 
-To run plain `vibe` from any shell, set up the shims and PATH once:
+## What a project contains
 
-```bash
-# Write the shims into ~/opt/bin and put ~/opt/bin on PATH (asks for consent).
-cargo run -p vibe-cli -- self doctor --fix
-```
+- `vibe.toml` — authored project/package/workspace declarations and direct requirements.
+- `vibe.lock` — the exact resolved package graph and content identities.
+- `vibedeps/` — per-project materialised package content, copied from the machine store.
+- `spec/boot/STATIC.md` and `spec/boot/INDEX.md` — the computed agent boot lanes.
+- `spec/WAL.md` — the project's living session checkpoint.
 
-Open a **new terminal** and `vibe self ls` works. From then on the loop is fast: `vibe self install` rebuilds, flips `current`, and the next `vibe` in the same shell picks it up — no console reload, and the running version is never locked while you reinstall.
+`vibe` keeps authored project specs separate from materialised dependencies. See [the loading model](docs/loading-model.md) and [architecture](docs/architecture.md) for the full layout.
 
-Good to know on the first run:
+## Documentation
 
-- **No selector means `latest`, which in-tree means *this checkout*.** VVM records it as an *external* source and remembers this tree's path, so a later `vibe self install` from anywhere rebuilds from here (a *linked rebuild*) — your sources are never copied into the install root.
-- **The first build is a full build.** It compiles into a managed `~/opt/vibevm/build` target dir, kept separate from this repo's own `target/` (so it never relinks a `vibe` that is running); later builds are incremental, and a byte-identical rebuild makes no new instance.
-- **Switch and inspect:** `vibe self use <selector>` switches the active version live, `vibe self current` / `vibe self which` show it, and `vibe vars` prints the variables vibevm actually uses versus your environment.
-- **Try it without touching `~/opt`:** prefix the install with an isolated root — `VIBEVM_INSTALL_ROOT="$(mktemp -d)" cargo run -p vibe-cli -- man install`.
+- [Alpha notes](docs/ALPHA-NOTES.md) — compatibility posture and recovery after breaking updates.
+- [Core command reference](docs/commands/) — operator-facing CLI pages checked against live `--help`.
+- [Architecture](docs/architecture.md) — crate boundaries, seams, and data flow.
+- [Runtime guide](RUNTIME-GUIDE.md) — machine requirements and runtime setup.
+- [Developer guide](DEV-GUIDE.md) — clone, build, test, and contributor setup.
+- [Changelog](CHANGELOG.md) — milestone history and release changes.
+- [Site manifest](docs/SITE-MANIFEST.toml) — machine-readable documentation inventory.
 
-Already built the binary (`cargo build --release --workspace`)? Use it directly instead of `cargo run` — e.g. `target/release/vibe self install`.
-
-## Documentation map
-
-| File | Audience | Purpose |
-| --- | --- | --- |
-| [`VIBEVM-SPEC.md`](VIBEVM-SPEC.md) | implementers / reviewers | The full project specification — package model, registry, CLI surface, build pipeline, acceptance checklists. Owner-frozen; amendments require explicit approval. |
-| [`ROADMAP.md`](ROADMAP.md) | implementers / reviewers | Long-form milestone plan with the "why" each milestone exists. |
-| [`spec/`](spec/) | implementers | PROP / FEAT documents with the binding architectural decisions. Start at [`spec/common/PROP-000.md`](spec/common/PROP-000.md), then any module-specific PROP under `spec/modules/`. |
-| [`docs/`](docs/) | end users | CLI reference + per-kind authoring guides. |
-| [`RUNTIME-GUIDE.md`](RUNTIME-GUIDE.md) | end users | What you need on your machine to run `vibe`. |
-| [`DEV-GUIDE.md`](DEV-GUIDE.md) | contributors | What you need to clone, build, test, and publish from this repo. |
-| [`CLAUDE.md`](CLAUDE.md) (and identical `AGENTS.md` / `GEMINI.md`) | AI agents working in the repo | The four non-negotiable rules + memory discipline + boot read-order. |
-| [`manual-tests/`](manual-tests/) | maintainers | Human-runnable smoke-tests; one file per scenario, walked before tagging a milestone. |
-| [`TASKS.md`](TASKS.md) | active contributors | Live checklist for the current work-slice. |
-| [`spec/WAL.md`](spec/WAL.md) | active contributors | Project-state checkpoint; rewritten each session, not appended. |
-| [`CHANGELOG.md`](CHANGELOG.md) | everyone | Curated milestone-by-milestone history of what landed when. |
-
-## The five kinds
-
-Every installable artefact in vibevm is exactly one of:
-
-- **`flow`** — a discipline / process module. Specs read at session boot that govern *how the team works* (commit conventions, WAL protocol, code-review rules). [Authoring](docs/authoring-flow.md).
-- **`feat`** — a functional feature. The *what* of a project, expressed as specification — purpose, behaviour rules, acceptance criteria. Stack-agnostic at authoring time. [Authoring](docs/authoring-feat.md).
-- **`stack`** — a language / framework target. The *how* a feat becomes real software — language, framework, conventions, capabilities provided. [Authoring](docs/authoring-stack.md).
-- **`tool`** — utilities. Reserved for v2+; not yet authorable.
-- **`mcp`** — an agent-server package: Model Context Protocol servers built from the package's own code (PROP-025 binaries), exact-pinned to the toolchain they serve, launched by agent hosts straight from the slot — no `vibe` in the runtime path (PROP-027).
-
-The register grows only by owner amendment (`VIBEVM-SPEC.md` §4.1); `app` — runnable graphical applications — is anticipated next.
-
-## Workspace layout
-
-```
-crates/
-├── vibe-cli/           # The `vibe` binary entry point (clap, output, dispatch).
-├── vibe-core/          # Manifest schemas, package identity, capabilities, errors.
-├── vibe-graph/         # Task graph builder + runner (M1.5 build pipeline).
-├── vibe-registry/      # Git-backed registry: ShellGit, GitPackageRegistry, MultiRegistryResolver.
-├── vibe-resolver/      # DepProvider / DepSolver traits, NaiveDepSolver impl.
-├── vibe-install/       # plan_install / apply_install / register_installed pipeline.
-├── vibe-publish/       # RepoCreator trait, GitVerseCreator, vibe registry publish.
-├── vibe-llm/           # LLM provider abstraction (M1.5 — stubs today).
-├── vibe-check/         # Spec linter (M1.3 — stubs today).
-└── vibe-wire/          # JTD-codegen'd wire types (populated by `cargo xtask codegen`).
-xtask/                  # `cargo xtask codegen` and check-codegen tooling.
-schemas/                # JTD source-of-truth for every wire contract.
-fixtures/registry/      # Hermetic e2e test fixture (M0 monorepo layout).
-manual-tests/           # Live smoke-tests — one file per scenario.
-docs/                   # End-user reference docs.
-spec/                   # PROP / FEAT documents and the WAL.
-tools/                  # Project-local toolchain binaries (gitignored content).
-```
-
-## Building and testing
+## Build and test from source
 
 ```bash
 cargo build --workspace
 cargo test --workspace
 cargo clippy --workspace --all-targets -- -D warnings
-cargo fmt --all
+cargo fmt --all -- --check
 ```
 
-Codegen for JTD types (after the one-time install of `jtd-codegen` per [`tools/jtd-codegen/README.md`](tools/jtd-codegen/README.md)):
-
-```bash
-cargo xtask codegen          # regenerate from schemas/
-cargo xtask check-codegen    # CI uses this to assert no schema drift
-```
-
-## Contributing
-
-Read [`CLAUDE.md`](CLAUDE.md) before your first commit — the four non-negotiable rules (attribution, Conventional Commits, group by meaning, autonomy on routine changes only) apply to every contribution. Setup procedure is in [`DEV-GUIDE.md`](DEV-GUIDE.md). Process disciplines for the project itself live under `spec/boot/` and are loaded at every session start.
-
-Issues / PRs: this repo lives at `https://gitverse.ru/vibevm/vibevm`. The package registry is a separate org at `https://gitverse.ru/vibespecs` (currently transitioning from the M1.1 monorepo at `anarchic/vibespecs`).
+Source mirrors: [GitHub](https://github.com/vibevm/vibevm) and [GitVerse](https://gitverse.ru/vibevm/vibevm). Package registries are configured independently per project.
 
 ## License
 
-vibevm itself ships under the proprietary EULA placeholder in [`LICENSE.md`](LICENSE.md) for the moment; the eventual target is UPL 1.0. Third-party dependencies are permissive-only (MIT / Apache-2.0 / BSD / Unlicense; MPL-2.0 case-by-case; GPL / AGPL / LGPL forbidden) per [PROP-000 §3](spec/common/PROP-000.md).
+vibevm is licensed under the [Universal Permissive License 1.0](LICENSE.md). Third-party components retain their own permissive licenses.

@@ -1,0 +1,134 @@
+schema = 1
+release = "1.0.0"
+
+[[page]]
+path = "README.md"
+title = "vibevm"
+audience = "operator"
+summary = "Install and use vibevm 1.0.0, configure registries, work with the machine-global package store, and start a project."
+
+[[page]]
+path = "docs/ALPHA-NOTES.md"
+title = "vibevm 1.0.0 alpha notes"
+audience = "operator"
+summary = "Defines the pre-publication compatibility posture and gives the re-init/re-fetch recovery recipe for breaking updates."
+
+[[page]]
+path = "CHANGELOG.md"
+title = "Changelog"
+audience = "operator"
+summary = "Curated release and milestone history, including the 1.0.0 operator-visible changes and format breaks."
+
+[[page]]
+path = "docs/README.md"
+title = "vibevm documentation"
+audience = "operator"
+summary = "Entry point for the curated 1.0.0 operator documentation and core command reference."
+
+[[page]]
+path = "docs/architecture.md"
+title = "vibevm — architecture"
+audience = "contributor"
+summary = "Maps the live crates, seams, install data flow, storage layout, and contributor reading order."
+
+[[page]]
+path = "docs/loading-model.md"
+title = "The loading model — how a vibevm project boots"
+audience = "contributor"
+summary = "Explains the separation between authored specs and materialised packages and how generated boot lanes are loaded."
+
+[[page]]
+path = "docs/version-syntax.md"
+title = "Version syntax in vibevm"
+audience = "operator"
+summary = "Explains package-reference version constraints, caret and tilde ranges, exact pins, and manifest-versus-lockfile behavior."
+
+[[page]]
+path = "docs/git-source-dependencies.md"
+title = "Git-source dependencies"
+audience = "operator"
+summary = "Shows how to declare and install a package directly from a git tag, branch, or revision instead of a registry."
+
+[[page]]
+path = "docs/registry-auth.md"
+title = "Authenticating against private registries"
+audience = "operator"
+summary = "Documents the registry authentication modes and their token, credential-helper, SSH, and failure-handling behavior."
+
+[[page]]
+path = "docs/registry-redirect.md"
+title = "Registry redirect"
+audience = "operator"
+summary = "Explains registry-side stub repositories that delegate a package coordinate to an external git source."
+
+[[page]]
+path = "docs/commands/init.md"
+title = "vibe init"
+audience = "operator"
+summary = "Scaffold projects, packages, and package groups using the live 1.0.0 positional forms and options."
+
+[[page]]
+path = "docs/commands/install.md"
+title = "vibe install"
+audience = "operator"
+summary = "Resolve, fetch, materialise, and record packages, including local, git-source, feature, and offline controls."
+
+[[page]]
+path = "docs/commands/update.md"
+title = "vibe update"
+audience = "operator"
+summary = "Refresh selected installed packages or the entire lockfile while preserving the command's explicit update intent."
+
+[[page]]
+path = "docs/commands/uninstall.md"
+title = "vibe uninstall"
+audience = "operator"
+summary = "Remove one package from project declarations and materialised state without implicitly purging the machine store."
+
+[[page]]
+path = "docs/commands/list.md"
+title = "vibe list"
+audience = "operator"
+summary = "List the packages, kinds, features, and subskill paths recorded in a project's lockfile."
+
+[[page]]
+path = "docs/commands/search.md"
+title = "vibe search"
+audience = "operator"
+summary = "Search configured registry indexes by text or exact Package URL with registry, kind, cache, and fallback controls."
+
+[[page]]
+path = "docs/commands/check.md"
+title = "vibe check"
+audience = "operator"
+summary = "Run deterministic spec-consistency checks with configurable WAL and review-marker age thresholds."
+
+[[page]]
+path = "docs/commands/cache.md"
+title = "vibe cache"
+audience = "operator"
+summary = "Inspect, pre-warm, verify, repair, and explicitly clean the machine-global package store."
+
+[[page]]
+path = "docs/commands/registry.md"
+title = "vibe registry"
+audience = "operator"
+summary = "Configure, test, synchronize, publish, redirect, and export package registries."
+
+[[page]]
+path = "docs/commands/show.md"
+title = "vibe show"
+audience = "operator"
+summary = "Inspect effective specs, configuration provenance, active features, subskills, and Package URL bindings."
+
+[[page]]
+path = "docs/commands/tree.md"
+title = "vibe tree"
+audience = "operator"
+summary = "Render the resolved dependency and boot tree as JSON, static text, a console TUI, or vibeterm."
+
+[[page]]
+path = "docs/commands/mcp.md"
+title = "vibe mcp"
+audience = "operator"
+summary = "Serve project state over MCP and install, inspect, upgrade, or remove coding-agent integrations."
