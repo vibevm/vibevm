@@ -1,6 +1,6 @@
 # TZ-RELEASE-1.0 v0.1 — релиз vibevm 1.0.0 (закрытая альфа) {#root}
 
-_STATUS: 2026-08-20 (вечер) · марафон ИДЁТ, AGENT-MODE=auto, лейны Codex(yolo)→claudez · **С0-С5 ЗАКРЫТЫ ВСЕ; ПРОДУКТ И МИР — 1.0.0** (панель границы С5 зелёная; vibe check 0 errors / 1 warning wal_wellformed; долг 0/0; `vibe --version` = «vibe 1.0.0»; 42 пакета с v1.0.0-слотами, 37 ремaterialised, boot-lane регенерирован) · Codex-лейн 10/10 живых задач принято · открытые владельческие развилки: B-095 (ширина счётчиков), booleans/`--limit` лестницы (R3-LADDER), nullable-enum postproc · далее: **С6 публикация в vibespecs** (пробы уже зелёные утром: org жив и пуст, токен есть) → E2E с настоящего реестра → EOL/hash · затем С7 credibility → С8 доки-А → С9 дистрибутив Windows → С10 гейт
+_STATUS: 2026-08-20 (вечер) · марафон ИДЁТ, AGENT-MODE=auto, лейны Codex(yolo)→claudez · **С0-С5 ЗАКРЫТЫ ВСЕ; ПРОДУКТ И МИР — 1.0.0** (панель границы С5 зелёная; vibe check 0 errors / 1 warning wal_wellformed; долг 0/0; `vibe --version` = «vibe 1.0.0»; 42 пакета с v1.0.0-слотами, 37 ремaterialised, boot-lane регенерирован) · Codex-лейн 10/10 живых задач принято · открытые владельческие развилки: B-095 (ширина счётчиков), booleans/`--limit` лестницы (R3-LADDER), nullable-enum postproc · **БЛОКЕР-С6 (владельцу): publish-токен GitHub мёртв (Bad credentials) — §10, нужен новый PAT в ~/.vibe/github.publish.token; С6 ждёт слова** · продолжаю независимые: С7 credibility → С8 доки-А → С9 дистрибутив Windows; С10-гейт — после С6
 
 <status stage="impl" state="plan" comment="написано 2026-08-20 по рулингам владельца того же дня; исполняется марафон-сессией по NEXT-SESSION-PROMPT.md; жанр — план кампании (не контракт); живёт в зоне кампании packages-2026-09 и исполняет её выход"/>
 
@@ -687,4 +687,19 @@ NEXT-SESSION-PROMPT.md (слово владельца) и по слайсам Т
 
 ## 10. BLOCKERS {#blockers}
 
-*(пусто — открытый блокер записывается сюда по §5.4 и попадает в доклад)*
+- **БЛОКЕР-С6 (владельцу, 2026-08-20): publish-токен GitHub мёртв —
+  публикация в vibespecs невозможна.** Что: `vibe registry publish
+  --dry-run` отказал; прямые пробы `api.github.com/user` с токеном из
+  `~/.vibe/github.publish.token` дают **Bad credentials** в обеих схемах
+  (`token` и `Bearer`) — токен истёк/отозван (утренняя проба проверяла
+  только СУЩЕСТВОВАНИЕ файла). Почему стоп: чеканка/обновление PAT —
+  секрет, красная линия Rule 4, только владелец. **Точное действие
+  владельца:** сминтить GitHub-токен с правом создания реп в org
+  `vibespecs` (classic PAT со scope `repo` у аккаунта-владельца org,
+  либо fine-grained с Resource owner = vibespecs и Repository
+  permissions: Administration Read/Write + Contents Read/Write) и
+  записать его одной строкой в `~/.vibe/github.publish.token`. После
+  этого сказать в чате слово — сессия перепроверит пробу и запустит
+  волну публикации (канарейка → 42 пакета → E2E → EOL/hash).
+  **Объём блока:** только С6 и publish-зависимые шаги С10; С7/С8/С9
+  независимы и продолжаются.
