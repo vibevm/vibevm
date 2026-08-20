@@ -870,8 +870,9 @@ untouched by policy, and this is the route back to what it read:
 - [ ] **B-087** — fsync каталога в атомарной записи vibe-index (4
       сайта). Воркер: codex, `.wt/P2-FSYNC`. Посадка: + статус-флип
       PROP-005 `##AW-FSYNC-DIR` (суд).
-- [ ] **B-090** — честный хвост `mirror --check` над Behind (exit
-      не меняется). Воркер: claudez, `.wt/P2-MIRROR`.
+- [x] **B-090** — **закрыт**: `check_tail` чистой fn + 5 оффлайн-тестов
+      (инвариант «не „in sync“ над Behind/Drift»); живой прогон поймал
+      настоящий Behind-хвост. Воркер: claudez, `.wt/P2-MIRROR`.
 - [ ] **B-096 (+B-097, B-099)** — схема prefs в не-TUI загрузчик;
       `tree --quiet`; help-строка set. Воркер: claudez, `.wt/P2-PREFS`.
       Посадка: снять строки из ALPHA-NOTES Known limitations.

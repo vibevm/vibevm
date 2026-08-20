@@ -16,7 +16,9 @@
 //! - `--check` — verify every target's `main` is at or behind local
 //!   mainline (an ancestor-or-equal, the fan-out's ancestry gate); push
 //!   nothing. Read-only, suitable for a health probe. A target legitimately
-//!   behind — the normal state between two fan-outs — is healthy, not drift.
+//!   behind — the normal state between two fan-outs — is healthy for the
+//!   exit verdict (not drift, not red), but it is not *in sync*: the tail
+//!   names it rather than claiming all targets are level.
 //! - `--from <name>` — fast-forward local mainline to a host's accepted-PR
 //!   merge (`git fetch` + `git merge --ff-only`) before fanning out: the bridge
 //!   for "I accepted/merged a PR via that host's web UI".
@@ -320,10 +322,14 @@ fn verify(root: &Path, targets: &[Target]) -> Result<()> {
     let (head, statuses) = probe::probe(root, targets)?;
     println!("mirror --check: local {MAINLINE} @ {}", short(&head));
     let mut drift = Vec::new();
+    let mut behind = Vec::new();
     for s in &statuses {
         match &s.state {
             SyncState::InSync => println!("  sync   {}", s.name),
-            SyncState::Behind(sha) => println!("  BEHIND {} at {}", s.name, short(sha)),
+            SyncState::Behind(sha) => {
+                println!("  BEHIND {} at {}", s.name, short(sha));
+                behind.push(s.name.as_str());
+            }
             SyncState::Drift(sha) => {
                 println!("  DRIFT  {} at {}", s.name, short(sha));
                 drift.push(s.name.as_str());
@@ -334,15 +340,47 @@ fn verify(root: &Path, targets: &[Target]) -> Result<()> {
             }
         }
     }
-    if !drift.is_empty() {
-        bail!(
-            "mirror --check: {} target(s) drifted from mainline: {}",
-            drift.len(),
-            drift.join(", ")
-        );
+    match check_tail(&drift, &behind) {
+        Ok(tail) => println!("{tail}"),
+        Err(verdict) => bail!("{verdict}"),
     }
-    println!("mirror --check: all targets in sync.");
     Ok(())
+}
+
+/// The tail `mirror --check` ends on, decided purely from the probed classes:
+/// all sync ⇒ the green "in sync" line; Behind without Drift/Missing ⇒ an
+/// honest "local ahead" tail (Behind is not drift — a fast-forward fixes it,
+/// so the exit stays Ok — but it is not *in sync*, and the tail may not claim
+/// the BEHIND lines above lie); Drift/Missing ⇒ the red verdict, naming any
+/// riding-along Behind too. `Ok` is the green tail to print; `Err` is the
+/// verdict to fail with. Extracted next to `probe`'s `classify` so the rule
+/// "the tail never contradicts the per-target lines" table-tests offline.
+fn check_tail(drift: &[&str], behind: &[&str]) -> Result<String, String> {
+    if !drift.is_empty() {
+        if behind.is_empty() {
+            return Err(format!(
+                "mirror --check: {} target(s) drifted from mainline: {}",
+                drift.len(),
+                drift.join(", ")
+            ));
+        }
+        return Err(format!(
+            "mirror --check: {} target(s) drifted from mainline: {}; {} target(s) behind \
+             (fast-forward catches up): {}",
+            drift.len(),
+            drift.join(", "),
+            behind.len(),
+            behind.join(", ")
+        ));
+    }
+    if !behind.is_empty() {
+        return Ok(format!(
+            "mirror --check: local ahead -- {} target(s) behind, fast-forward needed (push with \
+             cargo xtask mirror).",
+            behind.len()
+        ));
+    }
+    Ok("mirror --check: all targets in sync.".to_string())
 }
 
 fn pull_from(root: &Path, targets: &[Target], name: &str) -> Result<()> {
@@ -385,7 +423,7 @@ fn pull_from(root: &Path, targets: &[Target], name: &str) -> Result<()> {
 
 #[cfg(test)]
 mod tests {
-    use super::{normalize_url, push_args, remotes_matching};
+    use super::{check_tail, normalize_url, push_args, remotes_matching};
 
     fn remote(name: &str, url: &str) -> (String, String) {
         (name.to_string(), url.to_string())
@@ -471,5 +509,72 @@ mod tests {
             remotes_matching(&remotes, "git@gitverse.ru:vibevm/vibevm.git"),
             vec!["origin", "alias"]
         );
+    }
+
+    #[test]
+    fn check_tail_all_sync_still_says_so() {
+        // The one state that earns the green line.
+        assert_eq!(
+            check_tail(&[], &[]).unwrap(),
+            "mirror --check: all targets in sync."
+        );
+    }
+
+    #[test]
+    fn check_tail_behind_only_names_the_count_and_stays_green() {
+        // B-090: Behind alone keeps exit 0, but the tail names it — "all
+        // targets in sync" over BEHIND lines was the lie this fix removes.
+        let behind = vec!["gitverse", "github"];
+        assert_eq!(
+            check_tail(&[], &behind).unwrap(),
+            "mirror --check: local ahead -- 2 target(s) behind, fast-forward needed (push with \
+             cargo xtask mirror)."
+        );
+    }
+
+    #[test]
+    fn check_tail_drift_without_behind_is_the_unchanged_red_verdict() {
+        assert_eq!(
+            check_tail(&["hub-a"], &[]).unwrap_err(),
+            "mirror --check: 1 target(s) drifted from mainline: hub-a"
+        );
+    }
+
+    #[test]
+    fn check_tail_mixed_drift_and_behind_names_both_counts() {
+        // Drift is the verdict, but a riding-along Behind is named too — the
+        // red tail may not silently drop a class the lines above reported.
+        let verdict = check_tail(&["hub-a"], &["hub-b", "hub-c"]).unwrap_err();
+        assert!(
+            verdict.starts_with("mirror --check: 1 target(s) drifted from mainline: hub-a;"),
+            "drift leads the verdict: {verdict}"
+        );
+        assert!(
+            verdict.contains("2 target(s) behind (fast-forward catches up): hub-b, hub-c"),
+            "behind class and count named: {verdict}"
+        );
+    }
+
+    #[test]
+    fn check_tail_never_claims_in_sync_over_behind_or_drift() {
+        // The invariant the whole fix exists for, swept over every non-green
+        // class mix: no tail may assert what the per-target lines deny.
+        let empty: Vec<&str> = Vec::new();
+        let drifted = vec!["hub-a"];
+        let lagging = vec!["hub-b", "hub-c"];
+        for (drift, behind) in [
+            (drifted.as_slice(), empty.as_slice()),
+            (empty.as_slice(), lagging.as_slice()),
+            (drifted.as_slice(), lagging.as_slice()),
+        ] {
+            let tail = match check_tail(drift, behind) {
+                Ok(t) => t,
+                Err(v) => v,
+            };
+            assert!(
+                !tail.contains("in sync"),
+                "tail over drift/behind must not claim sync: {tail}"
+            );
+        }
     }
 }

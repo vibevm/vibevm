@@ -13,11 +13,14 @@ use super::{Target, git, load_targets, local_main, remote_main};
 /// `mirror --check` and `health --mirrors` read. The contract is ancestry,
 /// not equality (the fan-out's gate): a target whose `main` is an ancestor of
 /// mainline is `Behind` — legitimately behind and healthy — never `Drift`.
-/// The carried `String` is the target's `main` sha (for the health JSON).
+/// "Healthy" scopes to the exit verdict (behind is not drift, not red); it is
+/// not *in sync*, and `mirror --check`'s tail still names it. The carried
+/// `String` is the target's `main` sha (for the health JSON).
 pub(crate) enum SyncState {
     InSync,
-    /// Ancestor of mainline: behind, healthy (the normal state between two
-    /// fan-outs).
+    /// Ancestor of mainline: behind — healthy for the exit verdict (the
+    /// normal state between two fan-outs), though not *in sync*: the
+    /// `mirror --check` tail must still name it.
     Behind(String),
     /// Not an ancestor — diverged, or its tip is an object we do not have.
     Drift(String),
@@ -62,10 +65,11 @@ fn is_ancestor(root: &Path, remote: &str, head: &str) -> Ancestry {
 
 /// Pure decision: the sync state for a target whose tip is `remote`, given
 /// local `head` and the ancestry verdict. Equality is settled first (the only
-/// truly-green state); a non-equal ancestor is `Behind` (healthy); a
-/// non-ancestor or an unknown object is `Drift`. `ancestry` is consulted only
-/// when `remote == Some(sha)` with `sha != head` — for equal/missing the
-/// value passed is ignored. Extracted so the matrix is table-tested offline.
+/// truly-green state); a non-equal ancestor is `Behind` (healthy for the exit
+/// verdict — the check tail still names it); a non-ancestor or an unknown
+/// object is `Drift`. `ancestry` is consulted only when `remote == Some(sha)`
+/// with `sha != head` — for equal/missing the value passed is ignored.
+/// Extracted so the matrix is table-tested offline.
 fn classify(head: &str, remote: Option<&str>, ancestry: Ancestry) -> SyncState {
     match remote {
         None => SyncState::Missing,
@@ -78,9 +82,9 @@ fn classify(head: &str, remote: Option<&str>, ancestry: Ancestry) -> SyncState {
 }
 
 /// Probe every target's `main` against local mainline by ancestry (the
-/// fan-out's gate): equal ⇒ sync, an ancestor ⇒ behind (healthy), anything
-/// else ⇒ drift. Shared by `mirror --check` (which fails on drift) and
-/// `health --mirrors` (advisory).
+/// fan-out's gate): equal ⇒ sync, an ancestor ⇒ behind (healthy for the exit
+/// verdict — the check tail still names it), anything else ⇒ drift. Shared by
+/// `mirror --check` (which fails on drift) and `health --mirrors` (advisory).
 pub(super) fn probe(root: &Path, targets: &[Target]) -> Result<(String, Vec<TargetStatus>)> {
     let head = local_main(root)?;
     let mut statuses = Vec::with_capacity(targets.len());
