@@ -401,12 +401,10 @@ fn pick_version(
     // version, the refusal names the best of those and its missing
     // capabilities — the §4.5 point-of-application refusal.
     let skipped_versions: Vec<semver::Version> = skipped.iter().map(|(v, _)| v.clone()).collect();
-    if let Some(best) = pick_from(&skipped_versions) {
-        let missing = skipped
-            .iter()
-            .find(|(v, _)| *v == best)
-            .map(|(_, m)| m.clone())
-            .expect("the best skipped version is one of the skipped pairs");
+    let best_pair =
+        pick_from(&skipped_versions).and_then(|best| skipped.iter().find(|(v, _)| *v == best));
+    if let Some((best, missing)) = best_pair {
+        let (best, missing) = (best.clone(), missing.clone());
         return Err(RegistryError::AllVersionsUnusable {
             detail: Box::new(crate::AllVersionsUnusableDetail {
                 group: group.clone(),
