@@ -1,12 +1,52 @@
 # Changelog
 
-vibevm has not shipped a stable release yet — every commit on `main` is part of the path to v0.1.0. This file is a curated chronicle of what landed when, organised by milestone rather than commit-by-commit. The single source of truth for "what changed in this commit" is `git log`; this file is the source of truth for "what does this milestone mean".
+This file is a curated chronicle of what landed when, organised by milestone rather than commit-by-commit. The single source of truth for "what changed in this commit" is `git log`; this file is the source of truth for "what does this milestone mean".
 
 Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped by milestone. The "Unreleased" section accumulates work-in-progress.
 
 ---
 
 ## [Unreleased]
+
+_(nothing yet — 1.0.0 just shipped)_
+
+## [1.0.0] — 2026-08-20
+
+The first numbered release: the closed-alpha cut the release campaign
+(`campaigns/packages-2026-09/TZ-RELEASE-1.0-v0.1.md`) built in one
+autonomous marathon. **Semver honesty:** 1.0.0 will break — the
+pre-publication regime (PROP-044 D13, `public = false`) stays on, and
+`docs/ALPHA-NOTES.md` carries the operator recipe for breaking updates.
+Highlights of the release arc, on top of everything chronicled below:
+
+- **The machine-global package store** (`~/.vibe/cache/`, PROP-010):
+  write-once entries validated against the lockfile's `content_hash`, the
+  `vibe cache path|list|add|clean|check --repair` operator family, and the
+  store as a real resolution source — a version deleted from every registry
+  still installs from the store, and `--offline` (flag / `VIBE_OFFLINE` /
+  `[net].offline`) resolves from local sources only with loud misses.
+- **Wire truth wave** (PROP-044): integers wider than 32 bits ride as
+  canonical decimal strings (rule §4.2b + breaks/003); the journal's
+  `removed.version` is strictly required-nullable (breaks/004) with
+  absence a loud refusal across all nine generated required-nullable
+  fields; the catalog write is idempotent by content; seventeen
+  machine-JSON envelopes (7 `vibe-index` CLI + 10 HTTP `/v1/**`) are
+  minted formats with schemas, registry records, corpora and round-trip
+  oracles.
+- **Config truth**: `[[registry]].index_url` exists with the
+  env → key → default ladder; `vibe-index` gains the four-rung
+  configuration ladder with a visible source per value
+  (`vibe-index config`); PROP-005 stops asserting the unbuilt (the
+  reindex HTTP trigger is withdrawn, trust-point wording narrowed).
+- **Hygiene**: machine JSON prints one POSIX path form on every surface;
+  the package-kind vocabulary and its thirty-one hand copies sit under one
+  parity test; the discipline engines forget the word `vibedeps`
+  (policy `skip_dirs`).
+- **The 1.0.0 world**: all 42 canonical packages minted additive v1.0.0
+  slots (old slots frozen in place), every cross-package edge re-pinned
+  into the 1.0.0 world, the host workspace (20 crates) and the project
+  manifest at 1.0.0, vibedeps rematerialised, the boot lane regenerated.
+
 
 ### M1.19 — Qualified package naming (PROP-008)
 
