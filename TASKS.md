@@ -857,3 +857,23 @@ untouched by policy, and this is the route back to what it read:
 - was `TASKS.md:56` — `- [x] feat(packages-live): migrate three v0.1.0 flows
   to per-package repos in the vibespecs organization on GitHub` (published
   2026-04-29, all three tagged `v0.1.0`).
+
+## BACKLOG-волна P2 (слово владельца 2026-08-20, после релизного гейта)
+
+Мандат: открытые P2-строки BACKLOG, делегирование codexrunner+claudez.
+Развилки B-090/B-087 взяты консервативными ветками (честный хвост без
+смены exit-семантики; код догоняет ратифицированный протокол) — на
+вето владельца при ревью волны.
+
+- [ ] **B-093** — codegen atomic-swap (новый каталог + перестановка
+      указателя). Воркер: codex, `.wt/P2-CODEGEN`.
+- [ ] **B-087** — fsync каталога в атомарной записи vibe-index (4
+      сайта). Воркер: codex, `.wt/P2-FSYNC`. Посадка: + статус-флип
+      PROP-005 `##AW-FSYNC-DIR` (суд).
+- [ ] **B-090** — честный хвост `mirror --check` над Behind (exit
+      не меняется). Воркер: claudez, `.wt/P2-MIRROR`.
+- [ ] **B-096 (+B-097, B-099)** — схема prefs в не-TUI загрузчик;
+      `tree --quiet`; help-строка set. Воркер: claudez, `.wt/P2-PREFS`.
+      Посадка: снять строки из ALPHA-NOTES Known limitations.
+- [ ] Вторая партия (после посадок): B-074, B-076, B-068, B-075,
+      B-077, B-082 (+P3 B-088/B-092/B-094/B-098 по месту).
