@@ -36,6 +36,7 @@ pub use crate::generated::shared::Group;
 pub struct HitRow {
     /// The scored version's description, `null` when it declares none. The key
     /// is always present: the writer's `Option` carries no skip.
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub description: Option<String>,
 
     /// The kind of the scored version — metadata per PROP-008 §2.3; the kind
@@ -47,6 +48,7 @@ pub struct HitRow {
     /// occur from the search walk today (a hit exists exactly because a scored
     /// version does) but the writer's `Option` carries no skip, so the key is
     /// always present on the wire.
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub latest_stable: Option<Version>,
 
     /// The query tokens that matched the scored version, in set order. Required

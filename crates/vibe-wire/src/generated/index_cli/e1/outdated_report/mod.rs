@@ -51,6 +51,7 @@ pub struct OutdatedRow {
     /// for this package — a package absent from the index, or one whose every
     /// version is refused or a prerelease. The key is always present: the
     /// writer's `Option` carries no skip.
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub latest: Option<Version>,
 
     /// The locked package's bare name.

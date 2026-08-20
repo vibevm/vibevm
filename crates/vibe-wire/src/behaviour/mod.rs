@@ -11,11 +11,14 @@
 //! the type, and the consumers re-export these types instead of
 //! duplicating them, so that crate is this one. The layer is split by
 //! the same seam the generated side already has: vocabularies,
-//! per-record projections, and the records and aggregates themselves.
+//! per-record projections, the records and aggregates themselves, and
+//! the serde boundary helpers whose policy the generated shape cannot
+//! express.
 //!
 //! Nothing here is generated, and nothing here edits the generated
 //! files.
 
 pub mod projections;
 pub mod records;
+pub(crate) mod required_nullable;
 pub mod vocabularies;

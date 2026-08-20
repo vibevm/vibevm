@@ -42,6 +42,7 @@ pub struct CapabilityRow {
     /// own spelling, found by prefix overlap with the ask), `null` when the
     /// version's `provides` block carries no capabilities at all. The key is
     /// always present: the writer's `Option` carries no skip.
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub capability_advertised: Option<String>,
 
     /// The version's kind — metadata per PROP-008 §2.3.

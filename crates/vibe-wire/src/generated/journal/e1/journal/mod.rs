@@ -215,24 +215,18 @@ pub struct EventRemoved {
 
     pub name: String,
 
-    /// Semantically optional, textually ALWAYS present: the Rust field is
-    /// `Option<Version>` with no `skip_serializing_if`, so the writer emits
-    /// the key for every removal — `"version": null` when the whole package
-    /// goes, never an absent key. The reason first recorded here — that JTD
-    /// has no nullable form — is FALSE, and it was disproved by a sibling
-    /// schema in this very tree: RFC 8927 gives every schema a `nullable`
-    /// flag, and `schemas/list_report.jtd.json` uses it on `boot_snippet`,
-    /// where the pinned generator honours it by emitting an `Option` with no
-    /// skip attribute. The expressible form is therefore a REQUIRED `version`
-    /// carrying `"nullable": true`, which would make this schema describe
-    /// the writer exactly. It is not changed here because moving the field
-    /// between forms meets the transformation layer's required-nullable branch
-    /// and deserves its own step — filed as BACKLOG B-078 rather than done
-    /// in passing. Until then the schema stays WIDER than the type: it admits
-    /// an absent key the writer never writes, and a round-trip through the
-    /// generated type drops the null (its `Option` skips on `None`). The parity
-    /// oracle exercises `Some`, the only value both forms carry identically.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// One `version`, or null for the whole package. Required and nullable:
+    /// the key is ALWAYS on the wire — the Rust field is `Option<Version>`
+    /// with no `skip_serializing_if`, so the writer emits `"version": null`
+    /// when the whole package goes, never an absent key. Until 2026-08-
+    /// 20 this member sat in `optionalProperties` on the FALSE claim that
+    /// JTD has no nullable form (RFC 8927's `nullable` flag, already used
+    /// by `list_report.boot_snippet`, disproved it — B-078); the schema
+    /// now describes the writer verbatim, and the generated reader carries
+    /// `Option<Version>` with no skip attribute, so the generated and the hand-
+    /// written wire agree byte for byte. An absent `version` key is a parse
+    /// refusal — see `formats/breaks/004.md`.
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub version: Option<Version>,
 }
 

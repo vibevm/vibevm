@@ -25,6 +25,7 @@ pub struct ListReport {
 pub struct ListEntry {
     /// Filename of the package's boot snippet under `spec/boot/`, or null if
     /// absent.
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub boot_snippet: Option<String>,
 
     pub content_hash: String,

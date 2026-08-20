@@ -13,30 +13,25 @@
 //! to any single-arm spot check, so the fixture exercises ALL eleven arms
 //! and the asserts count keys on each.
 //!
-//! ONE place where the schema is deliberately wider than the Rust type,
-//! recorded in the schema and re-stated here so the fixture's choice is
-//! not read as an accident:
+//! The one place where the schema was deliberately wider than the Rust
+//! type is GONE (2026-08-20, B-078, `formats/breaks/004.md`):
+//! `removed.version` is now a required-nullable member, so the generated
+//! `Option<Version>` carries no skip attribute and both sides emit
+//! `"version": null` for a whole-package removal — the two forms agree
+//! on EITHER value, and `a_whole_package_removal_agrees_on_null` below
+//! proves the `None` half while the eleven-arm fixture keeps proving
+//! `Some`. An absent `version` key — the shape the old schema tolerated
+//! and the writer never produced — is now a parse refusal on the
+//! generated side (`the_old_absent_version_form_is_refused`).
 //!
-//! * `removed.version` is `Option<Version>` with no `skip_serializing_if`
-//!   — the writer ALWAYS emits the key (`null` for a whole-package
-//!   removal), while the generated `Option` skips on `None`. The two forms
-//!   agree only for `Some`, so the fixture carries `Some` — exactly the
-//!   value a parity oracle can and should prove.
-//!
-//! There were two. The second was `renamed.from`/`to`, Rust pairs
-//! `(Group, String)` that JTD (RFC 8927) can only describe as string
-//! arrays of ANY length, so the schema could not check arity and this
-//! oracle pinned it by hand. That arm left the vocabulary with the
-//! retirement collapse, and the widening left with it — nothing here
-//! replaces the pin because nothing carries a tuple any more.
-//!
-//! Its successor is the counter-example worth naming: `buried` holds an
-//! optional `superseded_by` and BOTH sides skip it on `None`, so the two
-//! forms agree on either value rather than only on one. That is the shape
-//! `removed.version` still owes (`BACKLOG.md` B-078), and the fixture
-//! below carries `Some` for the same reason `removed` does — a present
-//! value is what a parity oracle can prove — not because absence would
-//! diverge.
+//! Historical: there was a second widening — `renamed.from`/`to`, Rust
+//! pairs `(Group, String)` that JTD (RFC 8927) can only describe as
+//! string arrays of ANY length, so the schema could not check arity and
+//! this oracle pinned it by hand. That arm left the vocabulary with the
+//! retirement collapse, and the widening left with it. `buried` remains
+//! the counter-example shape: an optional `superseded_by` that BOTH
+//! sides skip on `None` — a genuinely absent-when-none member, which is
+//! exactly what `removed.version` never was.
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -378,9 +373,10 @@ fn every_event_variant_round_trips_through_the_generated_type() {
             "removed" => assert_eq!(
                 event["version"],
                 serde_json::json!("1.2.3"),
-                "the removed fixture carries `Some` — the only value both \
-                 the always-present writer and the skipping generated type \
-                 render identically"
+                "the removed fixture carries `Some`; the `None` half is \
+                 proved by `a_whole_package_removal_agrees_on_null` — since \
+                 the required-nullable reshape (breaks/004) both sides \
+                 render either value identically"
             ),
             "buried" => {
                 assert_eq!(
@@ -412,4 +408,53 @@ fn every_event_variant_round_trips_through_the_generated_type() {
              schema misses is dropped (or rejected) by the generated reader"
         );
     }
+}
+
+/// The `None` half of the `removed` parity (B-078, breaks/004): a
+/// whole-package removal rides as `"version": null` on BOTH sides —
+/// the hand-written writer always emitted it, and since the
+/// required-nullable reshape the generated type does too.
+#[test]
+fn a_whole_package_removal_agrees_on_null() {
+    let hand = record(
+        fixed_instant(),
+        Event::Removed {
+            group: org(),
+            name: "dead-probe".into(),
+            version: None,
+        },
+    );
+    let j1 = serde_json::to_value(&hand).expect("the hand-written record serialises");
+    assert_eq!(
+        j1["event"]["version"],
+        serde_json::Value::Null,
+        "the writer emits the key with null, never an absent key"
+    );
+    let generated: GeneratedJournal =
+        serde_json::from_value(j1.clone()).expect("the generated type parses the null form");
+    let j2 = serde_json::to_value(&generated).expect("the generated type serialises");
+    assert_eq!(
+        j1, j2,
+        "the generated type must re-emit the null, not skip the key"
+    );
+}
+
+/// The red proof of breaks/004: the shape the OLD schema tolerated and
+/// the writer never produced — a `removed` event with no `version` key
+/// at all — is refused loudly by the generated reader, not quietly
+/// defaulted to `None`.
+#[test]
+fn the_old_absent_version_form_is_refused() {
+    let old_form = serde_json::json!({
+        "at": "2026-08-06T10:00:00Z",
+        "actor": "vibe-index 0.1.0-dev",
+        "event": { "kind": "removed", "group": "org.vibevm", "name": "dead-probe" }
+    });
+    let parsed = serde_json::from_value::<GeneratedJournal>(old_form);
+    assert!(
+        parsed.is_err(),
+        "an absent `version` key must be a parse refusal — the member is \
+         required-nullable, and absence is exactly the form the writer \
+         never produced"
+    );
 }

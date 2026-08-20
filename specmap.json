@@ -190,15 +190,15 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "journal",
-      "end_line": 173
+      "end_line": 240
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/journal/e1/journal.jtd.json",
       "item_kind": "schema-def",
-      "line": 25,
+      "line": 31,
       "symbol": "journal::event",
-      "end_line": 171
+      "end_line": 238
     },
     {
       "crate_name": "<schema>",

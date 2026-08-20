@@ -253,10 +253,11 @@ pub type WorldSunset = DateTime<FixedOffset>;
 }
 
 /// The tree's own third row: a REQUIRED `nullable: true` member arrives
-/// as `Option<Box<…>>` with no skip attribute, and the pass's whole
-/// change to it is the lifted `Box` — `None` serialises as `null`.
+/// as `Option<Box<…>>` with no skip attribute. The pass lifts the `Box`
+/// and adds the shared deserializer: `None` still serialises as `null`,
+/// while an absent key becomes a parse refusal.
 #[test]
-fn a_required_nullable_member_lifts_the_box_and_adds_nothing() -> Result<()> {
+fn a_required_nullable_member_lifts_the_box_and_becomes_strict() -> Result<()> {
     let doc = json!({
         "properties": {
             "boot_snippet": {
@@ -271,6 +272,7 @@ fn a_required_nullable_member_lifts_the_box_and_adds_nothing() -> Result<()> {
 pub struct ListEntry {
     /// Filename of the package's boot snippet under `spec/boot/`, or null
     /// if absent.
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub boot_snippet: Option<String>,
 }
 "#

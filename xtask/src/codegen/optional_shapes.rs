@@ -29,22 +29,17 @@
 //! a skip predicate's.
 //!
 //! A third row the tree itself contributed (measured, absent from the
-//! phase inventory): a REQUIRED member with `nullable: true` —
-//! `list_report`'s `boot_snippet` — also arrives as `Option<Box<…>>`,
-//! and carries NO skip attribute. The rule covers it the way the schema
-//! states it: the key is required, `null` is a value it carries, so the
-//! `Option` stays, the `Box` goes, and no skip predicate is added —
-//! `None` serialises as `null`, which is the wire the hand-written
-//! writer already emits.
-//!
-//! The recorded deviation this pass must not pretend to fix: the journal
-//! schema's `removed.version` documents that the hand-written journal
-//! writer emits `"version": null` unconditionally (its `Option` carries
-//! no skip), while the generated type omits the null. JTD has no
-//! nullable type and no present-but-null form, so the schema is
-//! deliberately WIDER than the type there; `x-default: null` is the
-//! nearest expressible policy, and the difference stays recorded in the
-//! schema's own `description` — the pass neither widens nor "repairs" it.
+//! phase inventory): a REQUIRED member with `nullable: true` also arrives
+//! as `Option<Box<…>>` and carries NO skip attribute. The rule covers it
+//! the way the schema states it: the key is required, `null` is a value it
+//! carries, so the `Option` stays, the `Box` goes, and no skip predicate
+//! is added — `None` serialises as `null`. Reading needs one extra piece
+//! that JTD's generated Rust shape does not express on its own: serde's
+//! default treatment of an `Option<T>` accepts an ABSENT key as `None`.
+//! The pass therefore adds the shared required-nullable deserializer,
+//! which accepts a present value or `null` but makes absence a missing-
+//! field error. The rule is attached to the decision, not to any format,
+//! so every future required-nullable member gets the same strictness.
 //!
 //! The stitch: the schema side classifies each site by its RESOLVED form
 //! (a `ref` follows the document's own `definitions` — the vocabulary
@@ -121,8 +116,8 @@ enum Decision {
     /// the `x-default: false` boolean (an absent key means `false`).
     BoolFalse,
     /// A required `nullable: true` member: `Option<Box<T>>` → `Option<T>`
-    /// with the attribute run untouched — `None` writes `null`, the
-    /// writer's own wire.
+    /// with the shared strict deserializer — `None` writes `null`, while
+    /// an absent key is a parse refusal.
     RequiredNullable,
 }
 

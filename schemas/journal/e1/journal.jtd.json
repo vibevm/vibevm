@@ -2,7 +2,13 @@
   "metadata": {
     "description": "`journal/<yyyy-mm>.ndjson` — the registry's journal of catalog facts, epoch 1 (PROP-044 §3): one `JournalRecord` per line, the TRUTH layer the catalog is a projection of — a writer never accepts as input what it itself published. Root type `JournalRecord`: the moment of the fact (`at`, supplied by the caller — the clock enters at the edge and never inside the journal, PROP-044 §4.3), the `actor`, and the `event` — a tagged union of eleven facts keyed by `kind`, snake_case tags per the writer's `#[serde(tag = \"kind\", rename_all = \"snake_case\")]`. Source of truth for `crates/vibe-wire/src/generated/journal/e1/journal/`.",
     "x-rust-type": "JournalRecord",
-    "x-vocabularies": ["group", "naming_convention", "timestamp", "version", "version_entry"]
+    "x-vocabularies": [
+      "group",
+      "naming_convention",
+      "timestamp",
+      "version",
+      "version_entry"
+    ]
   },
   "properties": {
     "at": {
@@ -62,10 +68,18 @@
             "description": "Pin one `version` of a package to a named `channel`."
           },
           "properties": {
-            "group": { "ref": "group" },
-            "name": { "type": "string" },
-            "channel": { "type": "string" },
-            "version": { "ref": "version" }
+            "group": {
+              "ref": "group"
+            },
+            "name": {
+              "type": "string"
+            },
+            "channel": {
+              "type": "string"
+            },
+            "version": {
+              "ref": "version"
+            }
           }
         },
         "channel_unset": {
@@ -73,9 +87,15 @@
             "description": "Unpin a `channel`: the identity and the channel name — the pin is gone, no version rides along."
           },
           "properties": {
-            "group": { "ref": "group" },
-            "name": { "type": "string" },
-            "channel": { "type": "string" }
+            "group": {
+              "ref": "group"
+            },
+            "name": {
+              "type": "string"
+            },
+            "channel": {
+              "type": "string"
+            }
           }
         },
         "entry_set_replaced": {
@@ -83,7 +103,9 @@
             "description": "A full scan asserts its result IS the whole published-entry set as of this record. The projector clears the ENTRY set and keeps every registry fact — tombstones, yanks, freezes and notices are not scan products and a scan cannot re-derive them, so a watershed that dropped them would make state unrecoverable (PROP-044 law 2). `source` names where the scan came from."
           },
           "properties": {
-            "source": { "type": "string" }
+            "source": {
+              "type": "string"
+            }
           }
         },
         "force_replaced": {
@@ -91,12 +113,24 @@
             "description": "Forced content replacement: the same `(group, name, version)` re-published under a different hash — `old_hash` → `new_hash`, the `reason` on the record."
           },
           "properties": {
-            "group": { "ref": "group" },
-            "name": { "type": "string" },
-            "version": { "ref": "version" },
-            "old_hash": { "type": "string" },
-            "new_hash": { "type": "string" },
-            "reason": { "type": "string" }
+            "group": {
+              "ref": "group"
+            },
+            "name": {
+              "type": "string"
+            },
+            "version": {
+              "ref": "version"
+            },
+            "old_hash": {
+              "type": "string"
+            },
+            "new_hash": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            }
           }
         },
         "frozen": {
@@ -104,10 +138,18 @@
             "description": "A freeze OBSERVED by this registry, not authored by it: the authority is the flag inside the package's hashed content (ruling D14); the event records when this registry saw the freeze and which `content_hash` it was tied to."
           },
           "properties": {
-            "group": { "ref": "group" },
-            "name": { "type": "string" },
-            "version": { "ref": "version" },
-            "content_hash": { "type": "string" }
+            "group": {
+              "ref": "group"
+            },
+            "name": {
+              "type": "string"
+            },
+            "version": {
+              "ref": "version"
+            },
+            "content_hash": {
+              "type": "string"
+            }
           }
         },
         "initialised": {
@@ -115,9 +157,15 @@
             "description": "The registry's identity, written by `init` as the journal's first record. It lives HERE and not in the catalog because a projection rebuilds the catalog from scratch: an identity readable only from `repomd.json` would be an authoritative fact living in a derived artifact (PROP-044 `##FORBID-SECRET-TRUTH`), and `rebuild --check` — tear down, reproject, compare — could never pass."
           },
           "properties": {
-            "registry": { "type": "string" },
-            "registry_url": { "type": "string" },
-            "naming": { "ref": "naming_convention" }
+            "registry": {
+              "type": "string"
+            },
+            "registry_url": {
+              "type": "string"
+            },
+            "naming": {
+              "ref": "naming_convention"
+            }
           }
         },
         "notice": {
@@ -125,9 +173,15 @@
             "description": "A per-package notice — free text the registry carries for consumers of `(group, name)`; unprojectable into the catalog, so it lives in the journal only."
           },
           "properties": {
-            "group": { "ref": "group" },
-            "name": { "type": "string" },
-            "text": { "type": "string" }
+            "group": {
+              "ref": "group"
+            },
+            "name": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            }
           }
         },
         "published": {
@@ -135,7 +189,9 @@
             "description": "A published version: the full per-version catalog record (`version_entry`, all thirty-three of its wire keys) towed by every journal rebuild. The Rust field is `Box<VersionEntry>` — a memory-layout measure against the catalog record (~900 bytes) dwarfing every other arm in `replay`'s vector; serde renders `Box<T>` exactly as `T`, so the box is invisible on the wire and the payload is the plain entry object."
           },
           "properties": {
-            "entry": { "ref": "version_entry" }
+            "entry": {
+              "ref": "version_entry"
+            }
           }
         },
         "removed": {
@@ -143,16 +199,19 @@
             "description": "A removal: one `version`, or — with `version` null — the whole package."
           },
           "properties": {
-            "group": { "ref": "group" },
-            "name": { "type": "string" }
-          },
-          "optionalProperties": {
+            "group": {
+              "ref": "group"
+            },
+            "name": {
+              "type": "string"
+            },
             "version": {
               "ref": "version",
               "metadata": {
-                "description": "Semantically optional, textually ALWAYS present: the Rust field is `Option<Version>` with no `skip_serializing_if`, so the writer emits the key for every removal — `\"version\": null` when the whole package goes, never an absent key. The reason first recorded here — that JTD has no nullable form — is FALSE, and it was disproved by a sibling schema in this very tree: RFC 8927 gives every schema a `nullable` flag, and `schemas/list_report.jtd.json` uses it on `boot_snippet`, where the pinned generator honours it by emitting an `Option` with no skip attribute. The expressible form is therefore a REQUIRED `version` carrying `\"nullable\": true`, which would make this schema describe the writer exactly. It is not changed here because moving the field between forms meets the transformation layer's required-nullable branch and deserves its own step — filed as BACKLOG B-078 rather than done in passing. Until then the schema stays WIDER than the type: it admits an absent key the writer never writes, and a round-trip through the generated type drops the null (its `Option` skips on `None`). The parity oracle exercises `Some`, the only value both forms carry identically.",
+                "description": "One `version`, or null for the whole package. Required and nullable: the key is ALWAYS on the wire — the Rust field is `Option<Version>` with no `skip_serializing_if`, so the writer emits `\"version\": null` when the whole package goes, never an absent key. Until 2026-08-20 this member sat in `optionalProperties` on the FALSE claim that JTD has no nullable form (RFC 8927's `nullable` flag, already used by `list_report.boot_snippet`, disproved it — B-078); the schema now describes the writer verbatim, and the generated reader carries `Option<Version>` with no skip attribute, so the generated and the hand-written wire agree byte for byte. An absent `version` key is a parse refusal — see `formats/breaks/004.md`.",
                 "x-default": null
-              }
+              },
+              "nullable": true
             }
           }
         },
@@ -161,10 +220,18 @@
             "description": "One version withdrawn, with the `reason` on the record."
           },
           "properties": {
-            "group": { "ref": "group" },
-            "name": { "type": "string" },
-            "version": { "ref": "version" },
-            "reason": { "type": "string" }
+            "group": {
+              "ref": "group"
+            },
+            "name": {
+              "type": "string"
+            },
+            "version": {
+              "ref": "version"
+            },
+            "reason": {
+              "type": "string"
+            }
           }
         }
       }

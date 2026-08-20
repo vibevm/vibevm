@@ -36,6 +36,12 @@ const OPTION_FORM: &str = r#"#[serde(default, skip_serializing_if = "Option::is_
 /// key already means `false`, so `false` is the only value never written.
 const BOOL_FORM: &str = r#"#[serde(default, skip_serializing_if = "std::ops::Not::not")]"#;
 
+/// The attribute every required-nullable field carries. With no
+/// `default`, serde routes a present value (including `null`) through
+/// the helper and treats an absent key as a missing-field error.
+const REQUIRED_NULLABLE_FORM: &str =
+    r#"#[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]"#;
+
 /// The type declarations a generated file carries, as a first sweep
 /// reads them: the payload of an `Option<Box<…>>` field is classified
 /// against these — a `pub type` alias resolving to a primitive is a
@@ -111,7 +117,7 @@ pub(super) fn apply_with_shapes(src: &str, file: &str, shapes: &OptionalShapes) 
                     emit_type_line(body, chunk, ident, "bool", &mut out);
                 }
                 Decision::RequiredNullable => {
-                    replay_run_without_skip(&attrs, &mut out, file, line, ident)?;
+                    emit_required_nullable_run(&attrs, &mut out, file, line, ident, body, chunk)?;
                     emit_type_line(body, chunk, ident, &format!("Option<{inner}>"), &mut out);
                 }
             }
@@ -392,16 +398,18 @@ fn emit_rewritten_run(
     Ok(())
 }
 
-/// Replay a required-nullable field's attribute run byte for byte — the
-/// pinned emission writes no skip over it (`None` serialises as `null`,
-/// which IS the wire), so a run that carries one, or any attribute but a
-/// rename, is a moved pin and refuses.
-fn replay_run_without_skip(
+/// Replay a required-nullable field's generator-owned rename, refuse a
+/// moved emission, then add the strict deserializer at the field's own
+/// indentation. The pinned emission writes no skip over this form:
+/// `None` serialises as `null`, while the helper makes absence refuse.
+fn emit_required_nullable_run(
     attrs: &[(usize, &str, &str)],
     out: &mut String,
     file: &str,
     line: usize,
     ident: &str,
+    body: &str,
+    chunk: &str,
 ) -> Result<()> {
     for (_, attr_chunk, attr_text) in attrs {
         if *attr_text == OPTION_SKIP {
@@ -428,6 +436,11 @@ fn replay_run_without_skip(
             );
         }
     }
+    let indent = &body[..body.len() - body.trim_start().len()];
+    let ending = &chunk[body.len()..];
+    out.push_str(indent);
+    out.push_str(REQUIRED_NULLABLE_FORM);
+    out.push_str(if ending.is_empty() { "\n" } else { ending });
     Ok(())
 }
 

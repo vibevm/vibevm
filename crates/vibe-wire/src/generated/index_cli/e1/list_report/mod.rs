@@ -54,6 +54,7 @@ pub struct PackageRow {
     /// The description of the package's newest usable version, `null` when that
     /// version declares none. The key is always present: the writer's `Option`
     /// carries no skip.
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub description: Option<String>,
 
     /// The package's reverse-FQDN group qualifier.
@@ -69,12 +70,14 @@ pub struct PackageRow {
     /// (flow, feat, stack, tool, mcp, lang, or any future kind an older reader
     /// must carry verbatim) is stated here in prose; the day the pass learns
     /// that shape, this field should return to the ref.
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub kind: Option<String>,
 
     /// The newest non-prerelease version this build can act on
     /// (`usable_latest_stable`), `null` when every usable version is a
     /// prerelease or the usable set is empty. The key is always present: the
     /// writer's `Option` carries no skip.
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub latest_stable: Option<Version>,
 
     /// The package's bare name.
