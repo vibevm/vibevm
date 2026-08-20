@@ -73,16 +73,66 @@ pub struct ResolvedDep {
     pub source_mutable: bool,
 }
 
+/// The verdict of a `slot_integrity = verify` spot-check on a present
+/// slot (PROP-011 §2.3/§5.2) — produced by the caller-supplied
+/// [`SlotVerifier`] seam, consumed by the materialise pass below.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum SlotCheck {
+    /// The slot's tree hashes to the recorded `content_hash` — the fast
+    /// path may accept it without copying.
+    Verified,
+    /// The slot's tree diverges from the recorded `content_hash` —
+    /// re-materialise it and warn, naming the package and both hashes.
+    Diverged {
+        /// The hash the resolution records for this package (the lockfile
+        /// pin) — the wire form, `sha256:…` / `sha256-tree/1:…`.
+        expected: String,
+        /// The hash the present slot actually computed to.
+        actual: String,
+    },
+    /// The check could not run — no recorded hash to compare against, or
+    /// the slot could not be hashed. Falls back to re-materialising, the
+    /// pre-spot-check `verify` discipline, with no warn.
+    Unverifiable,
+}
+
+/// The `verify`-mode slot spot-check seam (PROP-011 §2.3/§5.2). The
+/// materialise pass calls it for a present, immutable slot **only** under
+/// [`SlotIntegrity::Verify`], handing the resolved dep and the slot's
+/// absolute path; the implementation hashes the slot and compares against
+/// the hash the resolution records.
+///
+/// A seam, not a call, because this crate deliberately depends on neither
+/// hash crate: `compute_content_hash` lives in `vibe-registry` (and its
+/// parity-locked port in `vibe-index`), and `vibe-install` — which does
+/// depend on `vibe-registry` — supplies the implementation. Callers that
+/// pass no verifier keep the shipped `verify` behaviour (re-materialise
+/// every slot), which is exactly what `vibe reinstall --force` and
+/// `vibe update` ask for.
+pub trait SlotVerifier {
+    /// Hash `slot_abs` and compare it against the hash recorded for `dep`.
+    fn verify_slot(&self, dep: &ResolvedDep, slot_abs: &Path) -> SlotCheck;
+}
+
 /// What [`apply_resolution`] did — for the caller to report.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct InstallOutcome {
     /// `vibedeps/` slot paths freshly materialised this run — a new or
-    /// version-bumped dependency whose content was copied.
+    /// version-bumped dependency whose content was copied, or a present
+    /// slot whose `verify` spot-check diverged and was overwritten.
     pub materialised: Vec<String>,
     /// `vibedeps/` slot paths skipped — already present for the resolved
-    /// version, trusted and not re-copied (PROP-011 §2.3). Empty when
-    /// `slot_integrity` is `Verify`.
+    /// version, trusted and not re-copied (PROP-011 §2.3). Under
+    /// `trust-presence` (the default) that trust is presence alone; under
+    /// `verify` a slot lands here only after its `content_hash` checked
+    /// out — and never when no [`SlotVerifier`] was supplied, which keeps
+    /// the always-re-copy discipline.
     pub skipped: Vec<String>,
+    /// One warn line per `verify`-mode slot whose hash diverged from the
+    /// recorded one (naming the package and both hashes) — the slot was
+    /// re-materialised; these lines are the record of why. Empty under
+    /// `trust-presence` and on a clean `verify` pass.
+    pub integrity_warnings: Vec<String>,
     /// `vibedeps/` slot paths pruned — present before, absent from this
     /// resolution (a version bump, or a dropped dependency).
     pub pruned: Vec<String>,
@@ -108,13 +158,38 @@ pub struct InstallOutcome {
 /// `slot_integrity` governs the PROP-011 §2.3 materialise-diff skip: with
 /// [`SlotIntegrity::TrustPresence`] a slot already on disk for the
 /// resolved version is trusted and not re-copied; with
-/// [`SlotIntegrity::Verify`] every slot is re-materialised. `vibe install`
-/// passes the user-config value; `vibe reinstall --force` passes `Verify`,
-/// since its whole purpose is to overwrite slots from a fresh fetch.
+/// [`SlotIntegrity::Verify`] a present slot is accepted only after its
+/// `content_hash` checks out — see [`apply_resolution_with`], which takes
+/// the verifying seam. This entry point carries no verifier, so `Verify`
+/// here is the shipped always-re-copy discipline — exactly what
+/// `vibe reinstall --force` (overwrite slots from a fresh fetch) and
+/// `vibe update` ask for.
 pub fn apply_resolution(
     workspace: &Workspace,
     resolution: &[ResolvedDep],
     slot_integrity: SlotIntegrity,
+    hooks: Option<&HookPolicy>,
+) -> Result<InstallOutcome, WorkspaceError> {
+    apply_resolution_with(workspace, resolution, slot_integrity, None, hooks)
+}
+
+/// The seam-injectable form of [`apply_resolution`]: `slot_verifier` is
+/// consulted — for a present, immutable slot, and only under
+/// [`SlotIntegrity::Verify`] (PROP-011 §2.3/§5.2) — before the fast path
+/// trusts the slot. A hash that matches the resolution's recorded
+/// `content_hash` accepts the slot **without** the re-copy (the
+/// always-re-copy behaviour `verify` shipped with was stricter and
+/// costlier than the contract: the spot-check replaces the copy, it does
+/// not add to it); a divergence re-materialises the slot and records a
+/// warn line naming the package and both hashes. `None` degrades `Verify`
+/// to the shipped always-re-copy discipline. Mutable in-workspace
+/// `file://` sources (§2.6) and `in-place` packages (PROP-022 §2.4) never
+/// reach the check — they re-materialise regardless of the setting.
+pub fn apply_resolution_with(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    slot_integrity: SlotIntegrity,
+    slot_verifier: Option<&dyn SlotVerifier>,
     hooks: Option<&HookPolicy>,
 ) -> Result<InstallOutcome, WorkspaceError> {
     // 0. Validate every node's `<vibevm>` instruction-file block before
@@ -125,16 +200,20 @@ pub fn apply_resolution(
     // 1. Materialise the resolution into `vibedeps/`. PROP-011 §2.3 — a
     //    slot already present for the resolved (immutable) version is
     //    trusted and skipped; only a new or version-bumped dependency
-    //    pays the recursive copy. `SlotIntegrity::Verify` opts out, so a
-    //    hand-edited slot is overwritten.
+    //    pays the recursive copy. Under `SlotIntegrity::Verify` that
+    //    trust is earned per-slot through the `slot_verifier` seam: a
+    //    hash match accepts the slot without the copy, a divergence
+    //    re-materialises it (with a warn line).
     let Materialised {
         materialised,
         skipped,
+        integrity_warnings,
         hook_reports,
     } = materialise_resolution(
         &workspace.root,
         resolution,
         slot_integrity,
+        slot_verifier,
         hooks,
         &SystemProbe,
         &SystemHookRunner,
@@ -153,6 +232,7 @@ pub fn apply_resolution(
     Ok(InstallOutcome {
         materialised,
         skipped,
+        integrity_warnings,
         pruned,
         nodes_regenerated,
         hook_reports,
@@ -161,11 +241,13 @@ pub fn apply_resolution(
 
 /// The slot bookkeeping [`apply_resolution`] needs back from the materialise
 /// pass: which slots it wrote, which it trusted-and-skipped (PROP-011 §2.3),
-/// and the `pre-install` hook reports it gathered (PROP-020 §2.1).
+/// the warn lines a `verify`-mode divergence produced, and the `pre-install`
+/// hook reports it gathered (PROP-020 §2.1).
 #[derive(Debug)]
 struct Materialised {
     materialised: Vec<String>,
     skipped: Vec<String>,
+    integrity_warnings: Vec<String>,
     hook_reports: Vec<HookReport>,
 }
 
@@ -176,21 +258,26 @@ struct Materialised {
 /// processes.
 ///
 /// PROP-011 §2.3: a slot already present for the resolved (immutable) version
-/// is trusted and skipped under [`SlotIntegrity::TrustPresence`]; only a new
-/// or version-bumped dependency pays the recursive copy and re-runs hooks (a
-/// skipped slot was never reset, so re-running its hook would compound an
-/// earlier run, PROP-020 §2.1). A `pre-install` failure removes the offending
-/// slot and aborts (PROP-020 §2.5).
+/// is trusted and skipped under [`SlotIntegrity::TrustPresence`]; under
+/// [`SlotIntegrity::Verify`] it is trusted only when the `slot_verifier`
+/// seam confirms its `content_hash` (a divergence re-materialises it and
+/// warns; no verifier keeps the always-re-copy discipline). Only a new,
+/// version-bumped, or untrusted dependency pays the recursive copy and
+/// re-runs hooks (a skipped slot was never reset, so re-running its hook
+/// would compound an earlier run, PROP-020 §2.1). A `pre-install` failure
+/// removes the offending slot and aborts (PROP-020 §2.5).
 fn materialise_resolution(
     workspace_root: &Path,
     resolution: &[ResolvedDep],
     slot_integrity: SlotIntegrity,
+    slot_verifier: Option<&dyn SlotVerifier>,
     hooks: Option<&HookPolicy>,
     probe: &dyn InterpreterProbe,
     runner: &dyn HookRunner,
 ) -> Result<Materialised, WorkspaceError> {
     let mut materialised = Vec::new();
     let mut skipped = Vec::new();
+    let mut integrity_warnings = Vec::new();
     let mut hook_reports = Vec::new();
     for dep in resolution {
         // PROP-022 §2.4 — an in-place package is a project-local git working
@@ -254,7 +341,45 @@ fn materialise_resolution(
         // presence-trusted: slot-present-for-a-version is not a proxy for
         // correctness when the source is a working tree edited in place, so it
         // falls through to re-materialise regardless of `slot_integrity`.
-        if present && slot_integrity == SlotIntegrity::TrustPresence && !dep.source_mutable {
+        //
+        // An immutable present slot is trusted per the `slot_integrity`
+        // strategy (§2.3/§5.2): `trust-presence` accepts it outright;
+        // `verify` first spot-checks its `content_hash` through the
+        // caller's `slot_verifier` seam — a matching hash accepts the
+        // slot WITHOUT the re-copy (the always-re-copy behaviour `verify`
+        // shipped with was stricter and costlier than the contract), a
+        // divergence re-materialises the slot and records a warn line,
+        // and no verifier at all (or an unverifiable slot) keeps the
+        // shipped always-re-copy discipline.
+        let trusted = present
+            && !dep.source_mutable
+            && match slot_integrity {
+                SlotIntegrity::TrustPresence => true,
+                SlotIntegrity::Verify => match slot_verifier {
+                    None => false,
+                    Some(verifier) => {
+                        let slot_abs = vibedeps::slot_abs_path(
+                            workspace_root,
+                            &dep.group,
+                            &dep.name,
+                            &dep.version,
+                        );
+                        match verifier.verify_slot(dep, &slot_abs) {
+                            SlotCheck::Verified => true,
+                            SlotCheck::Diverged { expected, actual } => {
+                                integrity_warnings.push(format!(
+                                    "{}/{}@{}: vibedeps slot hashes {actual}, locked hash is \
+                                     {expected} — re-materialising",
+                                    dep.group, dep.name, dep.version
+                                ));
+                                false
+                            }
+                            SlotCheck::Unverifiable => false,
+                        }
+                    }
+                },
+            };
+        if trusted {
             skipped.push(slot);
             continue;
         }
@@ -291,6 +416,7 @@ fn materialise_resolution(
     Ok(Materialised {
         materialised,
         skipped,
+        integrity_warnings,
         hook_reports,
     })
 }
@@ -362,11 +488,13 @@ pub fn run_post_install_hooks(
 }
 
 /// What [`materialise_subtree`] placed — the freshly-written and skipped slot
-/// labels plus the `pre-install` hook reports, for the scoped-update caller.
+/// labels, any `verify`-mode divergence warns, and the `pre-install` hook
+/// reports, for the scoped-update caller.
 #[derive(Debug)]
 pub struct SubtreeOutcome {
     pub materialised: Vec<String>,
     pub skipped: Vec<String>,
+    pub integrity_warnings: Vec<String>,
     pub hook_reports: Vec<HookReport>,
 }
 
@@ -378,7 +506,9 @@ pub struct SubtreeOutcome {
 /// touches only the named subtree, so the caller removes any superseded slots
 /// itself and regenerates boot from the whole materialised tree afterwards;
 /// pruning here would delete every slot outside the subtree. Runs against the
-/// production seams.
+/// production seams and with no [`SlotVerifier`], so `Verify` here keeps the
+/// always-re-copy discipline — the scoped update wants the fresh fetch's
+/// bytes placed, not a hash-checked skip.
 pub fn materialise_subtree(
     workspace_root: &Path,
     resolution: &[ResolvedDep],
@@ -388,11 +518,13 @@ pub fn materialise_subtree(
     let Materialised {
         materialised,
         skipped,
+        integrity_warnings,
         hook_reports,
     } = materialise_resolution(
         workspace_root,
         resolution,
         slot_integrity,
+        None,
         hooks,
         &SystemProbe,
         &SystemHookRunner,
@@ -400,6 +532,7 @@ pub fn materialise_subtree(
     Ok(SubtreeOutcome {
         materialised,
         skipped,
+        integrity_warnings,
         hook_reports,
     })
 }

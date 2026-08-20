@@ -392,4 +392,194 @@ fn apply_resolution_rematerialises_a_mutable_file_source_under_trust_presence() 
     );
 }
 
+// --- PROP-011 §5.2 — the `verify` slot spot-check ----------------------
+
+/// A [`SlotVerifier`] stub returning a fixed verdict — the unit-level
+/// stand-in for vibe-install's registry-hash implementation, so the
+/// trust branch is testable without the hash crates.
+#[cfg(test)]
+struct StubVerifier(SlotCheck);
+
+#[cfg(test)]
+impl SlotVerifier for StubVerifier {
+    fn verify_slot(&self, _dep: &ResolvedDep, _slot_abs: &Path) -> SlotCheck {
+        self.0.clone()
+    }
+}
+
+/// A [`SlotVerifier`] whose consultation is itself the failure — proves
+/// the paths that must never reach the check (`trust-presence`, the
+/// mutable-source boundary) really do not.
+#[cfg(test)]
+struct UntouchedVerifier;
+
+#[cfg(test)]
+impl SlotVerifier for UntouchedVerifier {
+    fn verify_slot(&self, _dep: &ResolvedDep, _slot_abs: &Path) -> SlotCheck {
+        panic!("the slot verifier must not be consulted on this path");
+    }
+}
+
+/// The standard §5.2 fixture: a one-node workspace plus a resolved `wal`
+/// dep. First materialises the slot (under `trust-presence`), then drops
+/// a sentinel INSIDE the slot — a re-copy clears it, a skip keeps it, so
+/// the sentinel is the observable difference between the two. The dep's
+/// content-tree `TempDir` rides along: it must outlive the fixture (the
+/// second apply re-copies from it on every diverged/untrusted path).
+#[cfg(test)]
+fn verified_slot_fixture() -> (Workspace, ResolvedDep, TempDir, TempDir, PathBuf) {
+    let ws_dir = TempDir::new().unwrap();
+    write(
+        ws_dir.path(),
+        "vibe.toml",
+        "[project]\nname = \"demo\"\nversion = \"0.1.0\"\n\n\
+         [requires.packages]\n\"org.vibevm/wal\" = \"^0.3\"\n",
+    );
+    write(ws_dir.path(), "spec/boot/00-core.md", "# core");
+    let (dep, pkg) = dep_with_boot(
+        "wal",
+        "0.3.0",
+        "[boot_snippet]\nsource = \"boot/wal.md\"\n",
+        "boot/wal.md",
+        "# wal",
+    );
+    let ws = Workspace::load(ws_dir.path()).unwrap();
+    apply_resolution(
+        &ws,
+        std::slice::from_ref(&dep),
+        SlotIntegrity::TrustPresence,
+        None,
+    )
+    .unwrap();
+    let sentinel = ws_dir.path().join("vibedeps/org.vibevm.wal/0.3.0/SENTINEL");
+    fs::write(&sentinel, "probe").unwrap();
+    (ws, dep, ws_dir, pkg, sentinel)
+}
+
+#[test]
+fn verify_accepts_a_hash_matching_slot_without_copying() {
+    let (ws, dep, _ws_dir, _pkg, sentinel) = verified_slot_fixture();
+    let verifier = StubVerifier(SlotCheck::Verified);
+
+    let outcome = apply_resolution_with(
+        &ws,
+        std::slice::from_ref(&dep),
+        SlotIntegrity::Verify,
+        Some(&verifier),
+        None,
+    )
+    .unwrap();
+    assert!(
+        outcome.materialised.is_empty(),
+        "a hash-matching slot must NOT be re-copied under verify"
+    );
+    assert_eq!(outcome.skipped, vec!["vibedeps/org.vibevm.wal/0.3.0"]);
+    assert!(outcome.integrity_warnings.is_empty());
+    assert!(
+        sentinel.is_file(),
+        "the spot-check accepting the slot must leave it untouched"
+    );
+}
+
+#[test]
+fn verify_rematerialises_a_diverged_slot_and_warns_with_both_hashes() {
+    let (ws, dep, _ws_dir, _pkg, sentinel) = verified_slot_fixture();
+    let verifier = StubVerifier(SlotCheck::Diverged {
+        expected: "sha256:lockedhash".to_string(),
+        actual: "sha256:slotthash".to_string(),
+    });
+
+    let outcome = apply_resolution_with(
+        &ws,
+        std::slice::from_ref(&dep),
+        SlotIntegrity::Verify,
+        Some(&verifier),
+        None,
+    )
+    .unwrap();
+    assert_eq!(outcome.materialised, vec!["vibedeps/org.vibevm.wal/0.3.0"]);
+    assert!(outcome.skipped.is_empty(), "a diverged slot is not trusted");
+    assert!(
+        !sentinel.exists(),
+        "a diverged slot must be re-materialised"
+    );
+    // The warn line names the package and BOTH hashes.
+    assert_eq!(outcome.integrity_warnings.len(), 1);
+    let warn = &outcome.integrity_warnings[0];
+    assert!(
+        warn.contains("org.vibevm/wal@0.3.0"),
+        "warn names the package: {warn}"
+    );
+    assert!(
+        warn.contains("sha256:lockedhash"),
+        "warn carries the locked hash: {warn}"
+    );
+    assert!(
+        warn.contains("sha256:slotthash"),
+        "warn carries the slot hash: {warn}"
+    );
+}
+
+#[test]
+fn verify_falls_back_to_recopying_an_unverifiable_slot_silently() {
+    let (ws, dep, _ws_dir, _pkg, sentinel) = verified_slot_fixture();
+    let verifier = StubVerifier(SlotCheck::Unverifiable);
+
+    let outcome = apply_resolution_with(
+        &ws,
+        std::slice::from_ref(&dep),
+        SlotIntegrity::Verify,
+        Some(&verifier),
+        None,
+    )
+    .unwrap();
+    assert_eq!(outcome.materialised, vec!["vibedeps/org.vibevm.wal/0.3.0"]);
+    assert!(outcome.skipped.is_empty());
+    assert!(
+        outcome.integrity_warnings.is_empty(),
+        "an unverifiable slot re-copies without claiming divergence"
+    );
+    assert!(!sentinel.exists());
+}
+
+#[test]
+fn trust_presence_never_consults_the_slot_verifier() {
+    let (ws, dep, _ws_dir, _pkg, sentinel) = verified_slot_fixture();
+
+    // The panicking verifier proves the fast path accepts by presence
+    // alone and never hashes under `trust-presence`.
+    let outcome = apply_resolution_with(
+        &ws,
+        std::slice::from_ref(&dep),
+        SlotIntegrity::TrustPresence,
+        Some(&UntouchedVerifier),
+        None,
+    )
+    .unwrap();
+    assert_eq!(outcome.skipped, vec!["vibedeps/org.vibevm.wal/0.3.0"]);
+    assert!(outcome.materialised.is_empty());
+    assert!(sentinel.is_file());
+}
+
+#[test]
+fn verify_still_never_trusts_a_mutable_file_source_slot() {
+    let (ws, mut dep, _ws_dir, _pkg, sentinel) = verified_slot_fixture();
+    dep.source_mutable = true;
+
+    // §2.6 boundary: even a verifier that would vouch for the slot is
+    // never asked — a mutable in-workspace `file://` source's slot is
+    // re-materialised regardless of `slot_integrity`.
+    let outcome = apply_resolution_with(
+        &ws,
+        std::slice::from_ref(&dep),
+        SlotIntegrity::Verify,
+        Some(&UntouchedVerifier),
+        None,
+    )
+    .unwrap();
+    assert_eq!(outcome.materialised, vec!["vibedeps/org.vibevm.wal/0.3.0"]);
+    assert!(outcome.skipped.is_empty());
+    assert!(!sentinel.exists());
+}
+
 // --- PROP-020 2.1 — pre-install hooks ride the materialise pass ---------

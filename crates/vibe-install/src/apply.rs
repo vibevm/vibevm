@@ -13,7 +13,7 @@ use vibe_resolver::ResolvedNode;
 use vibe_workspace::Workspace;
 use vibe_workspace::hooks::{HookPolicy, HookReport};
 use vibe_workspace::install::{
-    InstallOutcome, ResolvedDep, apply_resolution, run_post_install_hooks,
+    InstallOutcome, ResolvedDep, apply_resolution_with, run_post_install_hooks,
 };
 use vibe_workspace::vibedeps;
 
@@ -25,6 +25,7 @@ use crate::record::{
     exact_pinned_pkgref, finalize_pkgref_for_manifest, locked_package_from_fetched,
     merge_manifest_requires, merge_root_dependencies,
 };
+use crate::slot_verify::RegistrySlotVerifier;
 
 /// What [`apply`] did — the caller renders it.
 #[derive(Debug)]
@@ -42,7 +43,9 @@ pub struct ApplyReport {
 
 /// Apply a confirmed plan. `slot_integrity` selects the PROP-011 §2.3
 /// materialise-diff strategy (the caller reads it from the user
-/// config, so a malformed config fails before resolution, not here).
+/// config, so a malformed config fails before resolution, not here):
+/// `trust-presence` skips a present slot outright, `verify` first
+/// spot-checks its `content_hash` through [`RegistrySlotVerifier`].
 /// `source` is the same install source the plan ran against: the apply
 /// phase needs it to perform the deferred incremental `in-place` updates
 /// the plan held back from re-cloning (PROP-022 §2.4) — every other
@@ -128,8 +131,23 @@ pub fn apply<S: InstallSource + ?Sized>(
 
     // 8. Apply: materialise each package into vibedeps/, run each freshly
     //    populated slot's pre-install hook (PROP-020 §2.1), and regenerate
-    //    every node's boot artifacts.
-    let outcome = apply_resolution(&workspace, &resolution, slot_integrity, Some(hooks))?;
+    //    every node's boot artifacts. Under `slot_integrity = verify` a
+    //    present slot is spot-checked through the registry-hash seam
+    //    (PROP-011 §2.3/§5.2): a hash match accepts it without the copy,
+    //    a divergence re-materialises it and warns — the fetched set the
+    //    verifier reads is post-deferral, so an incrementally-updated
+    //    in-place slot (which never consults it) still records fresh.
+    let slot_verifier = RegistrySlotVerifier::from_fetched(&fetched);
+    let outcome = apply_resolution_with(
+        &workspace,
+        &resolution,
+        slot_integrity,
+        Some(&slot_verifier),
+        Some(hooks),
+    )?;
+    for warning in &outcome.integrity_warnings {
+        tracing::warn!(target: "vibe_install::apply", "{warning}");
+    }
 
     // 9. Rebuild the lockfile from the fresh resolution — an install
     //    re-resolves the whole graph, so the recorded package set is

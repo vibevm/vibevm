@@ -37,6 +37,7 @@ mod events;
 mod fetched;
 mod plan;
 mod record;
+mod slot_verify;
 
 pub use apply::{ApplyReport, apply};
 pub use error::Error;
