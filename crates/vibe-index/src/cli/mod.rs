@@ -5,7 +5,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
-use clap::{Parser, Subcommand, ValueEnum};
+use clap::{CommandFactory, Parser, Subcommand, ValueEnum};
 
 use crate::error::{Error, Result};
 use crate::lock::ServerLock;
@@ -138,6 +138,20 @@ pub struct Cli {
 
     #[command(subcommand)]
     pub command: Command,
+}
+
+/// The full clap tree as the derive itself declares it — the very
+/// object the binary renders `--help` from. The help smoke test
+/// (`tests/help_smoke.rs`) iterates this (`get_subcommands()`)
+/// instead of a hand-maintained name list, so a verb added to
+/// [`Command`] joins the smoke by itself and a verb that stops
+/// appearing in `--help`, or stops rendering, turns the gate red.
+/// The hand-list this replaces could only see names someone
+/// remembered to re-type: `yank` shipped in `--help` with the list
+/// none the wiser (BACKLOG B-094 — "a mark without which a
+/// subcommand can be added is a norm with no checker").
+pub fn command() -> clap::Command {
+    Cli::command()
 }
 
 #[derive(Debug, Subcommand)]

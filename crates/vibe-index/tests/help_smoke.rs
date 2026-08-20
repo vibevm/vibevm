@@ -1,5 +1,5 @@
-//! Help-text smoke test — every documented subcommand renders `--help`
-//! cleanly and `--version` round-trips. Mirrors the
+//! Help-text smoke test — every subcommand the clap derive knows
+//! renders `--help` cleanly and `--version` round-trips. Mirrors the
 //! `every_subcommand_renders_help` invariant the main `vibe-cli` crate
 //! holds; here it is the regression gate that every later slice's CLI
 //! addition must keep green.
@@ -8,33 +8,27 @@ use assert_cmd::Command;
 use predicates::prelude::*;
 extern crate tempfile;
 
-// Hand-maintained, and the assertions below run in ONE direction only:
-// every name here must appear in `--help`, but a subcommand present in
-// `--help` and absent here is invisible to this gate. So a new verb can
-// be added without the smoke test noticing, which is a norm with no
-// checker — filed as `BACKLOG.md` B-094 with the measurement that found
-// it (the `yank` line below was added by hand, after the fact, exactly
-// because nothing failed without it).
-const SUBCOMMANDS: &[&str] = &[
-    "init",
-    "reindex",
-    "rescan-org",
-    "get",
-    "list",
-    "search",
-    "capabilities",
-    "purls",
-    "outdated",
-    "add",
-    "remove",
-    "yank",
-    "bury",
-    "verify",
-    "dump",
-    "serve",
-    "stop",
-    "config",
-];
+use vibe_index::cli;
+
+// The subcommand list is not written in this file: it is read off the
+// clap tree (`cli::command()`), the same object the binary renders
+// `--help` from. Both directions hold by construction — a verb added
+// to the `Command` enum joins the smoke by itself, and a verb that
+// stops appearing in `--help`, or stops rendering its own help, turns
+// the gate red. The hand-maintained `const` this replaces ran in ONE
+// direction only and could see just the names someone remembered to
+// re-type: `yank` shipped in `--help` with the list none the wiser
+// (BACKLOG B-094 — the tree is now the source of truth).
+fn visible_subcommands() -> Vec<String> {
+    let root = cli::command();
+    root.get_subcommands()
+        // A `hide = true` verb is out of `--help` by design; the only
+        // exclusion allowed here is one the derive itself computes —
+        // never a spelled-out name.
+        .filter(|sub| !sub.is_hide_set())
+        .map(|sub| sub.get_name().to_owned())
+        .collect()
+}
 
 fn cmd() -> Command {
     vibe_test_support::cargo_bin("vibe-index")
@@ -44,10 +38,16 @@ fn cmd() -> Command {
 fn root_help_lists_every_subcommand() {
     let out = cmd().arg("--help").assert().success();
     let stdout = String::from_utf8(out.get_output().stdout.clone()).unwrap();
-    for sub in SUBCOMMANDS {
+    let visible = visible_subcommands();
+    assert!(
+        !visible.is_empty(),
+        "the clap tree knows no subcommands — the derive wiring broke"
+    );
+    for sub in &visible {
         assert!(
-            stdout.contains(sub),
-            "root --help is missing subcommand `{sub}`; output was:\n{stdout}"
+            stdout.contains(sub.as_str()),
+            "root --help is missing subcommand `{sub}` (present in the clap tree); \
+             output was:\n{stdout}"
         );
     }
 }
@@ -85,9 +85,9 @@ fn version_flag_works() {
 
 #[test]
 fn every_subcommand_renders_help() {
-    for sub in SUBCOMMANDS {
+    for sub in visible_subcommands() {
         cmd()
-            .args([sub, "--help"])
+            .args([sub.as_str(), "--help"])
             .assert()
             .success()
             .stdout(predicate::str::is_empty().not());

@@ -886,5 +886,5 @@ untouched by policy, and this is the route back to what it read:
       B-082 (codex, P2-FSYNC) ✓посажен, B-076 (claudez, P2-MIRROR) ✓посажен,
       B-077 (claudez, P2-PREFS) ✓посажен.
 - [ ] Партия 2б (после 2а): B-068 (parse/, ждёт посадки B-074),
-      B-075 (диагноз флаки), B-094 (clap dev-dep); B-088 — триггер
+      B-075 (диагноз флаки), B-094 ✓посажен (derive-driven, дешевле прогноза); B-088 — триггер
       «первый закрытый план» уточнить у владельца.
