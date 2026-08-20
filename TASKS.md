@@ -879,5 +879,12 @@ untouched by policy, and this is the route back to what it read:
       точка истины схемы (`build_schema` → `prefs::load`), `--quiet` =
       одна summary-строка, help про enriched write; 625 тестов vibe-cli
       зелёные; ALPHA-NOTES-строки сняты. Воркер: claudez, `.wt/P2-PREFS`.
-- [ ] Вторая партия (после посадок): B-074, B-076, B-068, B-075,
-      B-077, B-082 (+P3 B-088/B-092/B-094/B-098 по месту).
+- [x] **B-098** — **закрыт боссом** (b78fb87d): истина — сабкоманда
+      `show-origins [key]`; 4 цитаты в PROP-040/041 переписаны, суд
+      confirmed×3 + seal; последняя ALPHA-NOTES-строка снята.
+- [ ] Партия 2а (в полёте): B-074+B-092-чекеры (codex, P2-CODEGEN),
+      B-082 (codex, P2-FSYNC), B-076 (claudez, P2-MIRROR),
+      B-077 (claudez, P2-PREFS).
+- [ ] Партия 2б (после 2а): B-068 (parse/, ждёт посадки B-074),
+      B-075 (диагноз флаки), B-094 (clap dev-dep); B-088 — триггер
+      «первый закрытый план» уточнить у владельца.
