@@ -882,6 +882,46 @@ structure, and it goes when the file does.
 - @fact:B095-FORK **Развилка (владельцу).** *(а)* строгое правило по Rust-типу: все такие поля — строкой (единообразно; уродует счётчики; ломает свежие конверты — бесплатно при public=false); *(б)* уточнить правило: строкой едут поля с НЕограниченным доменом (size/total/epoch-время), структурно-ограниченные счётчики законно `uint32` с громким отказом за пределом — тогда admin-тоталы конвертируются, счётчики остаются; *(в)* сузить Rust-типы счётчиков до `u32` и снять вопрос на стороне писателя. Вариант (б) требует правки текста правила в PROP-044 — владельческий акт.
 - @fact:B095-ALSO **Той же строкой.** Пустой axum-404 на незнакомом маршруте против общего `ErrorResponse` зарегистрированных обработчиков — унификация требует server-правки; named, not masked (отчёт R2-ENVELOPES-HTTP §Отклонения-3).
 
+### B-096 — не-TUI поверхность `vibe prefs` живёт с пустой схемой {#b-096}
+
+| | |
+|---|---|
+| @fact:B096-ANCHOR **anchor** | [`spec://org.vibevm.core/vibevm/modules/PROP-041#cli`](spec/modules/vibe-cli/PROP-041-prefs-tui.md) — контракт CLI-поверхности prefs |
+| @fact:B096-LOCATOR **locator** | `prefs ui` строит схему из `TreeSettings`; общий CLI-загрузчик (`list`/`get`/`check`) оставляет `Schema::new()` — на чистых настройках `list` = «0 keys», `get vibe.tree.palette` не видит built-in default `rose-pine`, `check` диагностирует собственный объявленный ключ TUI как `unknown setting` |
+| @fact:B096-SEVERITY **severity** | P2 |
+| @fact:B096-DISPOSITION **disposition** | `open` — найдена агентским пре-прогоном MT-03 (С10.2, отчёт `campaigns/packages-2026-09/MT-PRERUN-2026-08-20.md`); в 1.0.0-alpha записана в известные ограничения `docs/ALPHA-NOTES.md`; починка — прокинуть schema-регистрацию TUI в общий загрузчик |
+| @fact:B096-FILED **filed by** | марафон 1.0.0, пре-прогон ручных тестов, 2026-08-20 |
+
+### B-097 — `vibe tree --quiet` не quiet {#b-097}
+
+| | |
+|---|---|
+| @fact:B097-ANCHOR **anchor** | `vibe tree --help`: «Reduce output to a single summary line» |
+| @fact:B097-LOCATOR **locator** | наблюдение пре-прогона: `--quiet` печатает то же 51-строчное plain-дерево, exit 0 — флаг объявлен и не применён |
+| @fact:B097-SEVERITY **severity** | P3 |
+| @fact:B097-DISPOSITION **disposition** | `open` — найдена пре-прогоном MT-02 (там же); правка одного флага + тест |
+| @fact:B097-FILED **filed by** | марафон 1.0.0, пре-прогон ручных тестов, 2026-08-20 |
+
+### B-098 — origins-поверхность prefs: контракт называет флаг, бинарь даёт сабкоманду {#b-098}
+
+| | |
+|---|---|
+| @fact:B098-ANCHOR **anchor** | [`spec://org.vibevm.core/vibevm/modules/PROP-041#cli`](spec/modules/vibe-cli/PROP-041-prefs-tui.md) — форма `--show-origins` |
+| @fact:B098-LOCATOR **locator** | `vibe prefs --show-origins` → exit 2 (`unexpected argument`); фактическая поверхность — `vibe prefs show-origins [key]`, работает корректно |
+| @fact:B098-SEVERITY **severity** | P3 |
+| @fact:B098-DISPOSITION **disposition** | `open` — дрейф спека-vs-код; решить, какая форма истинна (сабкоманда выглядит правильной — тогда правится спека) |
+| @fact:B098-FILED **filed by** | марафон 1.0.0, пре-прогон ручных тестов, 2026-08-20 |
+
+### B-099 — help `vibe prefs set` несёт устаревший phase-lore {#b-099}
+
+| | |
+|---|---|
+| @fact:B099-ANCHOR **anchor** | `vibe prefs set --help` |
+| @fact:B099-LOCATOR **locator** | текст «basic write; phase 2.7 enriches with diff-from-default + comment-preserve» — а enriched-персистентность уже реализована и вызывается этим же кодом |
+| @fact:B099-SEVERITY **severity** | P3 |
+| @fact:B099-DISPOSITION **disposition** | `open` — правка одной help-строки |
+| @fact:B099-FILED **filed by** | марафон 1.0.0, пре-прогон ручных тестов, 2026-08-20 |
+
 ### B-078 — «у JTD нет nullable» оказалось ложью, и записанное расхождение журнала стало разрешимым {#b-078}
 
 | | |

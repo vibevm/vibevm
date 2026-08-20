@@ -1185,3 +1185,100 @@ green after); campaign corpus 11 188 / 190 / 44 — 98.0 %, exhaustive
 - **2026-06-12-01's rider** (owner to confirm the 2026-06-11 history
   rewrite was intentional) — open, owner-court, P3 by age; third run
   carrying it.
+
+## Audit run — 2026-08-20 (release gate 1.0.0 — С10.1, DRAFT for owner approval)
+
+_Run by: agent, inside the release marathon (`TZ-RELEASE-1.0-v0.1.md` С10.1);
+the section is a **draft** — approval is the owner's at the manual
+inspection, per the TZ's own line («апрув секции — владельцу»). Scope:
+categories A–D breadth-first over the release arc (~51 commits,
+2026-08-19 → 08-20: wire wave, config ladder, 1.0.0 mint over 42
+packages, credibility report, docs variant A, Windows distributive);
+category E's depth program is not this run's subject. Gate at run time:
+panel green at the С5 boundary (the С10.3 roll-call re-runs it after
+this section); judging debt 0/0; `vibe check` 0 errors / 1 warning
+(`wal_wellformed`, closes at wind-down by protocol)._
+
+| ID | Cat | Finding | Sev | Disp |
+|---|---|---|---|---|
+| 2026-08-20-01 | C4 | The GitHub publish token (`~/.vibe/github.publish.token`) is dead — live API probes return `Bad credentials` under both auth schemes; the С6 publication wave (canary + 42 packages + real-registry E2E) cannot run. The outward surface (vibespecs org) still holds pre-1.0 packages only | P1 | filed — TZ §10 BLOCKERS, owner-court (mint a new PAT; exact recipe recorded there) |
+| 2026-08-20-02 | B1 | `distribution/windows/{install,uninstall}.ps1` sit outside every automated gate — the panel names no PowerShell step; their proof today is the recorded C9 sandbox smoke + AST parse in the worker run, both session acts, not gates | P3 | accepted for 1.0.0-alpha — the surface is exercised by the recorded smoke, the С10.2 pre-run, and the owner's own MT sign-off; a parse/smoke panel step is a post-1.0 candidate (checklist growth rule: mechanisable row migrates into the gate) |
+| 2026-08-20-03 | A1 | The VVM durable-PATH writer's raw `HKCU\Environment` write (`vvm/env.rs`) is covered by pure-core tests only (`path_with_prefix_core` — normalisation, dedup, kind logic); the registry write itself runs under no automated test | P3 | accepted — deliberate (audit-crate doctrine: no runtime env mutation in tests; the write layer is thin and exercised by the C9 smoke + `self doctor` verification) |
+| 2026-08-20-04 | D4 | New advisory since 08-03: `lru` 0.18.1 — RUSTSEC-2026-0253, unsound (`LruCache::pop()` panic-safety), transitive via `ratatui-core` into the vibe-cli TUI; no compatible fixed release today. The carried trio (fxhash / anyhow / event-listener) unchanged; **0 vulnerabilities**, 4 warnings total | P3 | open — re-check next run |
+| 2026-08-20-05 | A2 | `#[ignore]` census 5 → 7: the two new are platform-gated non-UTF-8-path parity tests in `vibe-index` (`content_hash_parity.rs`), each carrying an in-attribute reason string — the sound shape of the marker; the live-e2e set unchanged | P3 | accepted (the live-e2e half stays the standing 2026-05-23-04 row) |
+
+**Notes.**
+
+- **-01 is the release's honest state, not a surprise:** discovered by the
+  С6 probes, recorded as the TZ §10 blocker the same hour, `_STATUS`
+  carries it, and the inspection checklist marks every С6-dependent
+  roll-call row «ждёт токена». The audit row exists so the health
+  inventory — not only the campaign zone — remembers the release shipped
+  its gate with publication pending on an owner act.
+- **C-group beyond -01, walked:** C1 — the C8 docs wave (README truth
+  pass, `docs/commands/` 22 pages, ALPHA-NOTES, SITE-MANIFEST, CHANGELOG
+  1.0.0) is this run's doc-drift sweep; the README quick-start's new
+  `self import` line reproduces the smoke-verified command exactly. C2 —
+  the carried -09 row closes below (the dead `crates/vibe-index/schemas/`
+  citation no longer exists in PROP-005 after the release arc's truth
+  edits; the directory is confirmed absent; only PROP-013 still quotes
+  the finding, as history). C3 — mid-marathon the WAL/CONTINUE are
+  stale **by design**; boundary state lives in `_STATUS`/TASKS/LOG on
+  every landing, and the wind-down rewrites both per protocol. C4
+  beyond the token: the mirror fan-out ran green at every boundary of
+  the arc.
+- **A3 honestly bounded:** no fresh deep read beyond the arc's own
+  touched tests. One A3-positive act worth recording: the golden-corpus
+  suite went **back to strict byte equality** (the normalisation layer
+  removed once the 1.0.0 regeneration made bytes canonical again) — an
+  assertion that had drifted toward «current output» was returned to
+  «intended bytes».
+- **B2, checked:** the panel's `GATED_SLOTS` moved to the v1.0.0 slot
+  paths in the same commit that minted them; `sync-engines` grew
+  `frozen_targets` with a dead-entry warning (deliberate exclusions are
+  now named, not silent); the wire-derive ratchet's two raises
+  (vibe-index 26 — the new `config --json` envelope; vibe-wire 1 — a
+  test fixture) are named in the landing commit body, and the envelope's
+  schema mint is the recorded next envelope act.
+- **D1, walked:** the deferral ledger is triple-anchored by the TZ §4
+  table + `deferrals.md#release-1-0` + `BACKLOG.md` «пост-1.0» — no
+  orphaned deferral found; the open owner forks (B-095 counter widths,
+  ladder booleans/`--limit`, nullable-enum postproc, `config --json`
+  envelope mint) are all recorded in `_STATUS` and surface again in the
+  inspection checklist. D2: TODO-family src census 10 (was 11) — same
+  set, one retired with its code.
+- **D3 count moved 86 → 89**; the visible delta is seven
+  `#[allow(clippy::derivable_impls)]` in vibe-wire's handwritten
+  behaviour layer (a conform-exempt crate — generated-code
+  jurisdiction). The 2026-08-03-04 row itself is **unchanged and now
+  escalates**: its decision (one TUI-subsystem ruling covering 39 sites
+  + 15 named uncommented `dead_code` sites) goes to the owner on the
+  inspection checklist rather than riding a fourth run silently.
+
+**Carry-forward, re-judged.**
+
+- **2026-05-23-01** (A1, `vibe init` default-path e2e) — open, P3, unchanged.
+- **2026-05-23-04** (A2, live e2e set ignored) — open, P2, unchanged;
+  still coupled to `-07`; the С6 E2E (blocked on -01's token) is the
+  natural moment it revives.
+- **2026-05-23-05** (B1, manual-test fixture rot) — open, P3; the С10.2
+  MT pre-run reads MT-02/MT-03 against the live tree and reports
+  divergences into the inspection checklist — its findings, if any, are
+  this row's freshest measurement.
+- **2026-05-23-06 / -07** (C4, test orgs un-migrated) — open, P2,
+  owner-court; unchanged.
+- **2026-05-23-09** (C2, PROP-005 dead schemas citation) — **fixed,
+  closed this run**: the citation no longer exists in
+  `PROP-005-package-index.md` after the release arc's truth edits; the
+  directory remains absent; the audit spec's own historical quote is not
+  drift.
+- **2026-05-23-10** (C1, doc requalification sweep) — open, P3, but
+  narrowed: the C8 wave refreshed the command docs and README; what
+  remains of the row is the older guide/genre sweep.
+- **2026-05-23-11 / -12 / -13** (D1 family) — open, P3, unchanged;
+  `-12`'s home remains `BACKLOG.md`.
+- **2026-08-03-04** (D3, `#[allow]` shadow) — open, P2, **escalated to
+  the owner via the inspection checklist** (see note above).
+- **2026-06-12-01's rider** (confirm the 2026-06-11 history rewrite was
+  intentional) — open, owner-court, P3; fourth run carrying it — also
+  placed on the inspection checklist to end the ride.

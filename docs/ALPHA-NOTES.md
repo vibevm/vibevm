@@ -61,6 +61,22 @@ Two honesty rules still apply through those changes:
 
 These rules prevent a wrong answer from looking correct; they do not promise that an old answer remains supported.
 
+## Known alpha limitations (2026-08-20)
+
+Recorded honestly rather than fixed silently — each carries a tracked
+entry in the repository's `BACKLOG.md`:
+
+- `vibe tree --quiet` currently prints the full plain tree instead of
+  the promised single summary line (B-097).
+- The non-TUI `vibe prefs` commands (`list` / `get` / `check`) run
+  without the TUI's settings schema: on a clean profile `list` reports
+  no keys, `get` does not see built-in defaults, and `check` flags
+  keys the TUI itself declares. Writes and reads of explicitly-set
+  values work correctly; `vibe prefs ui` is unaffected (B-096).
+- Origins inspection is the `vibe prefs show-origins [key]` subcommand
+  (the `--show-origins` flag form some documents mention does not
+  exist) (B-098).
+
 ## Where to look before updating
 
 - [`CHANGELOG.md`](../CHANGELOG.md) — release and milestone changes, including operator-visible behavior.
