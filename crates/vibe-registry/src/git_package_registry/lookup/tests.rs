@@ -273,6 +273,100 @@ fn fetch_dep_manifest_reads_via_archive_without_clone() {
     assert_eq!(fake.update_count(), 0);
 }
 
+// --- B-080 (PROP-044 §4.5): the pick quarantines before it selects --
+
+fn candidate(version: &str, caps: &[&str]) -> IndexVersion {
+    IndexVersion {
+        version: version.parse().unwrap(),
+        must_understand: caps.iter().map(|s| s.to_string()).collect(),
+    }
+}
+
+/// The warn that accompanies every quarantine skip: it names the
+/// package, the version, and the missing capabilities — the
+/// operator's actionable facts, in the one construction of the line.
+#[test]
+fn skip_warning_names_package_version_and_capabilities() {
+    let line = skip_warning(
+        &org(),
+        "wal",
+        &"2.0.0".parse().unwrap(),
+        &["b080-test-capability".to_string()],
+    );
+    assert!(line.contains("org.vibevm/wal@2.0.0"), "warn: {line}");
+    assert!(line.contains("b080-test-capability"), "warn: {line}");
+    assert!(line.contains("PROP-044"), "warn: {line}");
+}
+
+/// Latest over a mixed set skips the quarantinable newest and picks
+/// the newest usable — the pick never lands on a version this reader
+/// cannot act on.
+#[test]
+fn pick_version_latest_skips_quarantinable_newest() {
+    let candidates = vec![candidate("1.0.0", &[]), candidate("2.0.0", &["b080-x"])];
+    let picked = pick_version(&org(), "wal", &candidates, &VersionSpec::Latest).unwrap();
+    assert_eq!(picked.to_string(), "1.0.0");
+}
+
+/// Git-path candidates declare nothing: the pick over them is exactly
+/// the old behaviour (newest non-prerelease), quarantine never fires.
+#[test]
+fn pick_version_untagged_candidates_behave_as_before() {
+    let candidates = vec![
+        candidate("0.1.0", &[]),
+        candidate("0.2.0", &[]),
+        candidate("1.0.0-rc.1", &[]),
+    ];
+    let picked = pick_version(&org(), "wal", &candidates, &VersionSpec::Latest).unwrap();
+    assert_eq!(picked.to_string(), "0.2.0");
+}
+
+/// Nothing left to pick, and the skipped versions matched the rule:
+/// the refusal is `AllVersionsUnusable` naming the best skip and its
+/// missing capability — not the anonymous `NoMatchingVersion`.
+#[test]
+fn pick_version_all_quarantined_refuses_with_the_capability() {
+    let candidates = vec![
+        candidate("1.0.0", &["b080-x"]),
+        candidate("2.0.0", &["b080-x"]),
+    ];
+    let err = pick_version(&org(), "wal", &candidates, &VersionSpec::Latest).unwrap_err();
+    match err {
+        RegistryError::AllVersionsUnusable { detail } => {
+            assert_eq!(detail.best.to_string(), "2.0.0");
+            assert_eq!(detail.missing, vec!["b080-x".to_string()]);
+        }
+        other => panic!("unexpected variant: {other:?}"),
+    }
+}
+
+/// A `Req` that matched only quarantined versions gets the same
+/// point-of-application refusal, naming the version it had to skip.
+#[test]
+fn pick_version_req_on_quarantined_only_refuses_with_best_skip() {
+    let candidates = vec![candidate("2.0.0", &["b080-x"])];
+    let req = VersionSpec::Req("^2.0".parse().unwrap());
+    let err = pick_version(&org(), "wal", &candidates, &req).unwrap_err();
+    match err {
+        RegistryError::AllVersionsUnusable { detail } => {
+            assert_eq!(detail.best.to_string(), "2.0.0");
+            assert_eq!(detail.req, "^2.0");
+        }
+        other => panic!("unexpected variant: {other:?}"),
+    }
+}
+
+/// Skipped versions the rule would NOT have matched leave the refusal
+/// as the plain `NoMatchingVersion` — a capability never masks what
+/// is genuinely "no such version".
+#[test]
+fn pick_version_no_match_stays_no_matching_version() {
+    let candidates = vec![candidate("1.0.0", &[]), candidate("2.0.0", &["b080-x"])];
+    let req = VersionSpec::Req("^9.0".parse().unwrap());
+    let err = pick_version(&org(), "wal", &candidates, &req).unwrap_err();
+    assert!(matches!(err, RegistryError::NoMatchingVersion { .. }));
+}
+
 #[test]
 fn fetch_dep_manifest_clone_fallback_uses_mirror_dispatch() {
     // GitHub-shape host: archive endpoint is unsupported. The

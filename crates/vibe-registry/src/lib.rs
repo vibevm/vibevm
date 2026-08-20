@@ -41,8 +41,8 @@ pub use git_package_registry::GitPerPackageRegistry;
 pub use git_registry::{GitMonorepoRegistry, RegistryMeta, default_cache_root};
 pub use index_client::{
     BearerToken, BindingSite, IndexAuth, IndexClient, IndexError, IndexUrlResolution,
-    IndexUrlSource, ProbeOutcome, PurlLookupHit, PurlLookupResults, SearchHit, SearchResults,
-    index_url_for, resolve_index_url,
+    IndexUrlSource, IndexVersion, ProbeOutcome, PurlLookupHit, PurlLookupResults, SearchHit,
+    SearchResults, index_url_for, resolve_index_url,
 };
 pub use local_registry::LocalRegistry;
 pub use multi_registry_resolver::{
@@ -342,7 +342,7 @@ mod error;
 mod hash_recipe;
 mod shippable;
 
-pub use error::{RegistryError, StoreEntryMismatchDetail};
+pub use error::{AllVersionsUnusableDetail, RegistryError, StoreEntryMismatchDetail};
 // The ordering half of the recipe is public for the same reason `vibe-index`
 // publishes its copy: the property "recipe 1's order does not depend on the
 // host separator" is provable only against a function callable without a

@@ -17,15 +17,11 @@ use vibe_core::Group;
 use crate::index::Index;
 use crate::types::{PackageEntry, VersionEntry};
 
-/// The reader capabilities this build understands.
-///
-/// Empty today: no capability has been built yet, so any non-empty
-/// `must_understand` names something this reader cannot honour. The list
-/// grows as capabilities land.
-///
-/// NOT the same vocabulary as a package's `provides.capabilities` — these are
-/// capabilities of the READER (PROP-044 §4.5), not of the package.
-pub const UNDERSTOOD: &[&str] = &[];
+/// The reader capabilities this build understands — the one shared
+/// registry, in [`vibe_core::capabilities`] (the lowest crate every
+/// reader sees), re-exported here so this module stays the index's
+/// single import point for the predicate (B-080).
+pub use vibe_core::capabilities::UNDERSTOOD;
 
 /// A catalog record the reader refused to act on, and why.
 ///
@@ -39,13 +35,11 @@ pub struct Quarantined {
 }
 
 /// The capabilities of `must_understand` this build does not understand.
-/// Empty result = the record may be acted on.
+/// Empty result = the record may be acted on. Delegates to the shared
+/// registry in [`vibe_core::capabilities`] — the same answer the
+/// registry client's version selector gets (B-080).
 pub fn missing_capabilities(must_understand: &[String]) -> Vec<String> {
-    must_understand
-        .iter()
-        .filter(|cap| !UNDERSTOOD.contains(&cap.as_str()))
-        .cloned()
-        .collect()
+    vibe_core::capabilities::missing_capabilities(must_understand)
 }
 
 /// The named predicate the answer path asks: may this build act on `entry`?

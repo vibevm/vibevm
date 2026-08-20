@@ -20,7 +20,7 @@ use tempfile::tempdir;
 use tokio::net::TcpListener;
 
 use vibe_core::manifest::NamingConvention;
-use vibe_core::{Group, PackageKind};
+use vibe_core::{Group, PackageKind, PackageRef};
 use vibe_registry::git_backend::GitBackend;
 use vibe_registry::{GitError, GitPerPackageRegistry, IndexAuth, IndexClient, ProbeOutcome};
 
@@ -148,6 +148,55 @@ fn name_entry_json(
                 "name": name,
                 "indexed_at": "2026-05-06T12:00:00Z",
                 "latest_stable": versions.last(),
+                "versions": entries,
+            }
+        ],
+    })
+}
+
+/// `name_entry_json` with per-version `must_understand` declarations
+/// (PROP-044 §4.5): each entry of `versions` pairs a version string
+/// with the capability list its record declares. The declared
+/// capability `b080-test-capability` is one no build names — the B-080
+/// fixture shape.
+fn name_entry_json_with_caps(
+    group: &str,
+    kind: PackageKind,
+    name: &str,
+    versions: &[(&str, &[&str])],
+) -> serde_json::Value {
+    let entries: Vec<serde_json::Value> = versions
+        .iter()
+        .map(|(v, caps)| {
+            let mut entry = serde_json::json!({
+                "schema_version": 1,
+                "kind": kind,
+                "group": group,
+                "name": name,
+                "version": v,
+                "content_hash": "sha256:0000",
+                "source_url": "https://example.invalid/x.git",
+                "source_ref": format!("v{v}"),
+                "registry": "vibespecs",
+                "files_count": 1,
+                "indexed_at": "2026-05-06T12:00:00Z",
+                "indexed_by": "mock",
+            });
+            if !caps.is_empty() {
+                entry["must_understand"] = serde_json::json!(caps);
+            }
+            entry
+        })
+        .collect();
+    serde_json::json!({
+        "name": name,
+        "indexed_at": "2026-05-06T12:00:00Z",
+        "packages": [
+            {
+                "group": group,
+                "name": name,
+                "indexed_at": "2026-05-06T12:00:00Z",
+                "latest_stable": versions.last().map(|(v, _)| *v),
                 "versions": entries,
             }
         ],
@@ -351,4 +400,154 @@ fn index_5xx_falls_through_to_git_backend() {
         err,
         vibe_registry::RegistryError::UnknownPackage { .. }
     ));
+}
+
+/// B-080 (PROP-044 §4.5) — the pick quarantines before it selects.
+/// The `by-name` file carries `must_understand =
+/// ["b080-test-capability"]` on 2.0.0 — a capability no reader build
+/// names — so Latest skips 2.0.0 (with a warn) and lands on 1.0.0,
+/// the newest version THIS reader may act on. Before the fix this
+/// test asserted 2.0.0: the picker was capability-blind because the
+/// client's `VersionEntryView` read exactly one field (`version`).
+#[test]
+fn resolve_latest_skips_quarantinable_version_b080() {
+    let mut canned = CannedFiles {
+        repomd_status: 200,
+        by_name: HashMap::new(),
+    };
+    canned.by_name.insert(
+        "wal".into(),
+        Some(name_entry_json_with_caps(
+            "org.vibevm",
+            PackageKind::Flow,
+            "wal",
+            &[("1.0.0", &[]), ("2.0.0", &["b080-test-capability"])],
+        )),
+    );
+    let mock = spawn_mock(canned);
+    let cache = tempdir().unwrap();
+    let backend = Arc::new(AlwaysMissing);
+    let registry = GitPerPackageRegistry::open_with_mirrors(
+        "vibespecs",
+        "https://example.invalid/vibespecs",
+        "main",
+        NamingConvention::Fqdn,
+        Vec::new(),
+        cache.path(),
+        backend,
+        3600,
+    )
+    .unwrap()
+    .with_index_client(IndexClient::at(&mock.base_url));
+
+    let pkgref = PackageRef::parse("org.vibevm/wal").unwrap();
+    let resolved = registry.resolve(&pkgref).unwrap();
+    assert_eq!(resolved.version.to_string(), "1.0.0");
+}
+
+/// B-080 (PROP-044 §4.5) — every version quarantined: the refusal is
+/// honest and lands at the point of application. `AllVersionsUnusable`
+/// names the best skipped version (2.0.0) and the capability this
+/// reader lacked; it never degrades to a pick the reader cannot act
+/// on, nor to the anonymous "no matching version".
+#[test]
+fn resolve_all_versions_quarantined_refuses_honestly_b080() {
+    let mut canned = CannedFiles {
+        repomd_status: 200,
+        by_name: HashMap::new(),
+    };
+    canned.by_name.insert(
+        "wal".into(),
+        Some(name_entry_json_with_caps(
+            "org.vibevm",
+            PackageKind::Flow,
+            "wal",
+            &[
+                ("1.0.0", &["b080-test-capability"]),
+                ("2.0.0", &["b080-test-capability", "b080-other"]),
+            ],
+        )),
+    );
+    let mock = spawn_mock(canned);
+    let cache = tempdir().unwrap();
+    let backend = Arc::new(AlwaysMissing);
+    let registry = GitPerPackageRegistry::open_with_mirrors(
+        "vibespecs",
+        "https://example.invalid/vibespecs",
+        "main",
+        NamingConvention::Fqdn,
+        Vec::new(),
+        cache.path(),
+        backend,
+        3600,
+    )
+    .unwrap()
+    .with_index_client(IndexClient::at(&mock.base_url));
+
+    let pkgref = PackageRef::parse("org.vibevm/wal").unwrap();
+    let err = registry.resolve(&pkgref).unwrap_err();
+    match &err {
+        vibe_registry::RegistryError::AllVersionsUnusable { detail } => {
+            assert_eq!(detail.group.to_string(), "org.vibevm");
+            assert_eq!(detail.name, "wal");
+            assert_eq!(detail.req, "latest");
+            assert_eq!(detail.best.to_string(), "2.0.0");
+            assert_eq!(
+                detail.missing,
+                vec!["b080-test-capability".to_string(), "b080-other".to_string()]
+            );
+        }
+        other => panic!("unexpected error variant: {other:?}"),
+    }
+    // The message names the capability — the operator's actionable
+    // fact, per §4.5 the refusal must carry.
+    let msg = err.to_string();
+    assert!(msg.contains("b080-test-capability"), "message: {msg}");
+    assert!(msg.contains("2.0.0"), "message: {msg}");
+    assert!(msg.contains("PROP-044"), "message: {msg}");
+}
+
+/// B-080 (PROP-044 §4.5) — a `Req` pinned at a quarantined version
+/// gets the same honest refusal: the requirement matched, the reader
+/// could not act on what it matched.
+#[test]
+fn resolve_req_on_quarantined_version_refuses_honestly_b080() {
+    let mut canned = CannedFiles {
+        repomd_status: 200,
+        by_name: HashMap::new(),
+    };
+    canned.by_name.insert(
+        "wal".into(),
+        Some(name_entry_json_with_caps(
+            "org.vibevm",
+            PackageKind::Flow,
+            "wal",
+            &[("2.0.0", &["b080-test-capability"])],
+        )),
+    );
+    let mock = spawn_mock(canned);
+    let cache = tempdir().unwrap();
+    let backend = Arc::new(AlwaysMissing);
+    let registry = GitPerPackageRegistry::open_with_mirrors(
+        "vibespecs",
+        "https://example.invalid/vibespecs",
+        "main",
+        NamingConvention::Fqdn,
+        Vec::new(),
+        cache.path(),
+        backend,
+        3600,
+    )
+    .unwrap()
+    .with_index_client(IndexClient::at(&mock.base_url));
+
+    let pkgref = PackageRef::parse("org.vibevm/wal@2.0.0").unwrap();
+    let err = registry.resolve(&pkgref).unwrap_err();
+    match &err {
+        vibe_registry::RegistryError::AllVersionsUnusable { detail } => {
+            assert_eq!(detail.best.to_string(), "2.0.0");
+            assert_eq!(detail.missing, vec!["b080-test-capability".to_string()]);
+        }
+        other => panic!("unexpected error variant: {other:?}"),
+    }
 }

@@ -12,6 +12,7 @@
 #![forbid(unsafe_code)]
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability");
 
+pub mod capabilities;
 pub mod capability_ref;
 pub mod content_hash;
 pub mod error;

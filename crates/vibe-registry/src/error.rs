@@ -63,6 +63,25 @@ pub enum RegistryError {
         req: String,
     },
 
+    /// Every candidate version that matched the requirement was one
+    /// this reader must quarantine (PROP-044 §4.5): its record's
+    /// `must_understand` names a reader capability this build lacks,
+    /// so the refusal surfaces here, at the point of application —
+    /// the reader never silently acts on a record it cannot honour
+    /// (B-080). The payload is boxed ([`AllVersionsUnusableDetail`])
+    /// so the enum stays under the result-large-err budget every
+    /// `Result<_, RegistryError>` fn pays — the same shape
+    /// [`RegistryError::StoreEntryMismatch`] already pays.
+    #[error(
+        "{detail} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-044#machinery; \
+          fix: update vibe to a build that understands them, or ask for a version \
+          this build can act on)"
+    )]
+    AllVersionsUnusable {
+        detail: Box<AllVersionsUnusableDetail>,
+    },
+
     /// A pkgref reached registry resolution without a `group`. A registry
     /// resolves by `(group, name)` identity (PROP-008 §2.2); a bare short
     /// name must be qualified at the CLI boundary first.
@@ -213,6 +232,32 @@ pub enum RegistryError {
         name: String,
         req: String,
     },
+}
+
+/// The structured payload of
+/// [`RegistryError::AllVersionsUnusable`] — which package, which
+/// requirement, the best version the pick had to skip, and the reader
+/// capabilities it lacks. Renders as the refusal's own sentence so
+/// the variant's grammar only adds the violated spec and the fix.
+#[derive(Debug)]
+pub struct AllVersionsUnusableDetail {
+    pub group: Group,
+    pub name: String,
+    pub req: String,
+    pub best: semver::Version,
+    pub missing: Vec<String>,
+}
+
+impl std::fmt::Display for AllVersionsUnusableDetail {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "every version of `{}/{}` matching `{}` was skipped — this reader \
+             does not understand capabilities their records declare; best skipped \
+             `{}` needs {:?}",
+            self.group, self.name, self.req, self.best, self.missing
+        )
+    }
 }
 
 /// The structured payload of

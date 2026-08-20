@@ -30,6 +30,36 @@ pub(super) struct PackageEntryView {
 #[derive(Debug, Deserialize)]
 pub(super) struct VersionEntryView {
     pub version: Version,
+    /// Capabilities the version's record says a reader must understand
+    /// to act on it (PROP-044 §4.5). `default` — records without the
+    /// field (every pre-capability index) read as declaring nothing,
+    /// exactly as before.
+    #[serde(default)]
+    pub must_understand: Vec<String>,
+}
+
+/// One `by-name` version entry as the client reads it: the version
+/// plus the capability declarations its record carries (PROP-044
+/// §4.5). The version selector needs both — a version whose
+/// `must_understand` names a capability this reader lacks must be
+/// skipped, not picked ([B-080]).
+///
+/// [B-080]: ../../../BACKLOG.md#b-080
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IndexVersion {
+    pub version: Version,
+    /// Empty on records that declare no capabilities — and on every
+    /// entry served by an index that predates the field.
+    pub must_understand: Vec<String>,
+}
+
+impl From<VersionEntryView> for IndexVersion {
+    fn from(v: VersionEntryView) -> Self {
+        IndexVersion {
+            version: v.version,
+            must_understand: v.must_understand,
+        }
+    }
 }
 
 /// Decoded body of the structured search route. Mirrors the wire
@@ -195,6 +225,30 @@ mod tests {
     fn binding_site_display_renders_lowercase_word() {
         assert_eq!(format!("{}", BindingSite::Package), "package");
         assert_eq!(format!("{}", BindingSite::Subskill), "subskill");
+    }
+
+    #[test]
+    fn version_entry_view_reads_must_understand_and_tolerates_its_absence() {
+        // B-080 (PROP-044 §4.5): the by-name record carries
+        // `must_understand` and the view reads it; a record without
+        // the field — every pre-capability index — declares nothing.
+        let with_caps: VersionEntryView = serde_json::from_value(serde_json::json!({
+            "version": "2.0.0",
+            "must_understand": ["b080-test-capability"]
+        }))
+        .unwrap();
+        assert_eq!(with_caps.version.to_string(), "2.0.0");
+        assert_eq!(
+            with_caps.must_understand,
+            vec!["b080-test-capability".to_string()]
+        );
+        let carried: IndexVersion = with_caps.into();
+        assert_eq!(carried.must_understand.len(), 1);
+
+        let plain: VersionEntryView =
+            serde_json::from_value(serde_json::json!({ "version": "1.0.0" })).unwrap();
+        assert_eq!(plain.version.to_string(), "1.0.0");
+        assert!(plain.must_understand.is_empty());
     }
 
     #[test]

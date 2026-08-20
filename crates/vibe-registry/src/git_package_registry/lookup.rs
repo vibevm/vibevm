@@ -7,6 +7,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use super::*;
+use crate::index_client::IndexVersion;
 
 impl GitPerPackageRegistry {
     /// Fetch `vibe.toml` at an arbitrary git ref (tag, branch,
@@ -111,18 +112,44 @@ impl GitPerPackageRegistry {
         Err(primary_err)
     }
 
-    /// Enumerate available versions for `<group>/<name>` *without cloning*.
-    /// Tags that don't match `v<semver>` are silently dropped.
+    /// Enumerate available versions for `<group>/<name>` *without
+    /// cloning*. Tags that don't match `v<semver>` are silently
+    /// dropped.
     ///
-    /// Mirror-aware: tries the primary URL first, then each mirror in
-    /// priority order. The first URL that yields a tag list wins. If
-    /// every URL says `RepoNotFound`, the result is `UnknownPackage`
-    /// (treated identically to the primary-only path).
+    /// Enumeration, not selection: the list carries every version the
+    /// sources name, capability-blind by contract. The selector
+    /// ([`Self::resolve`]) walks the same candidates with their
+    /// `must_understand` declarations in hand instead (B-080).
     pub fn list_versions(
         &self,
         group: &Group,
         name: &str,
     ) -> Result<Vec<semver::Version>, RegistryError> {
+        Ok(self
+            .list_candidates(group, name)?
+            .into_iter()
+            .map(|c| c.version)
+            .collect())
+    }
+
+    /// The candidate set [`Self::resolve`] picks over: every version
+    /// the index fast path or the git tag path can name, each carrying
+    /// the `must_understand` declarations its source stated (PROP-044
+    /// §4.5). The index path reads them off the `by-name` record; the
+    /// git tag path has no record to read at selection time, so its
+    /// candidates declare nothing — a picked version's manifest is
+    /// read (and its declarations honoured) only after the pick.
+    ///
+    /// Mirror-aware on the git half: tries the primary URL first,
+    /// then each mirror in priority order. The first URL that yields
+    /// a tag list wins. If every URL says `RepoNotFound`, the result
+    /// is `UnknownPackage` (treated identically to the primary-only
+    /// path).
+    fn list_candidates(
+        &self,
+        group: &Group,
+        name: &str,
+    ) -> Result<Vec<IndexVersion>, RegistryError> {
         // Index fast path (PROP-005 §2.10 slice 10). When the
         // registry has an upstream index attached, query it first.
         // 200 → return versions; 404 → fall through to git path
@@ -130,17 +157,17 @@ impl GitPerPackageRegistry {
         // mean "absent" — the index may be stale); other errors →
         // also fall through with a debug-level log.
         if let Some(client) = &self.index_client {
-            match client.list_versions(group, name) {
-                Ok(Some(versions)) => {
+            match client.list_version_entries(group, name) {
+                Ok(Some(entries)) => {
                     tracing::debug!(
                         target: "vibe_registry::index",
                         registry = %self.name,
                         group = %group,
                         name = %name,
-                        count = versions.len(),
+                        count = entries.len(),
                         "list_versions served from index"
                     );
-                    return Ok(versions);
+                    return Ok(entries);
                 }
                 Ok(None) => {
                     tracing::debug!(
@@ -155,6 +182,8 @@ impl GitPerPackageRegistry {
                     tracing::debug!(
                         target: "vibe_registry::index",
                         registry = %self.name,
+                        group = %group,
+                        name = %name,
                         error = %e,
                         "index lookup failed; falling through to git ls-remote"
                     );
@@ -187,7 +216,13 @@ impl GitPerPackageRegistry {
                 })
                 .collect();
             versions.sort();
-            Ok(versions)
+            Ok(versions
+                .into_iter()
+                .map(|version| IndexVersion {
+                    version,
+                    must_understand: Vec::new(),
+                })
+                .collect())
         })
     }
 
@@ -199,31 +234,20 @@ impl GitPerPackageRegistry {
     /// pkgref reaching this point without a `group` is an
     /// [`RegistryError::UnqualifiedPkgref`] — short names must be
     /// qualified at the CLI boundary first.
+    ///
+    /// The pick quarantines before it selects (PROP-044 §4.5): a
+    /// candidate whose `must_understand` names a reader capability
+    /// this build lacks is skipped with a warn and never picked, and a
+    /// candidate set with nothing left to pick refuses honestly (see
+    /// [`pick_version`]) instead of landing on a version this reader
+    /// cannot act on (B-080).
     pub fn resolve(&self, pkgref: &PackageRef) -> Result<ResolvedPackage, RegistryError> {
         let group = pkgref
             .group
             .as_ref()
             .ok_or_else(|| RegistryError::UnqualifiedPkgref(pkgref.to_string()))?;
-        let versions = self.list_versions(group, pkgref.name.as_str())?;
-        let picked = match &pkgref.version {
-            VersionSpec::Latest => versions.iter().rev().find(|v| v.pre.is_empty()).cloned(),
-            VersionSpec::Req(req) => versions
-                .iter()
-                .rev()
-                .find(|v| req.matches(v) && v.pre.is_empty())
-                .or_else(|| versions.iter().rev().find(|v| req.matches(v)))
-                .cloned(),
-        };
-        let Some(version) = picked else {
-            return Err(RegistryError::NoMatchingVersion {
-                group: group.clone(),
-                name: pkgref.name.to_string(),
-                req: match &pkgref.version {
-                    VersionSpec::Latest => "latest".to_string(),
-                    VersionSpec::Req(r) => r.to_string(),
-                },
-            });
-        };
+        let candidates = self.list_candidates(group, pkgref.name.as_str())?;
+        let version = pick_version(group, pkgref.name.as_str(), &candidates, &pkgref.version)?;
         Ok(ResolvedPackage {
             group: group.clone(),
             name: pkgref.name.to_string(),
@@ -299,6 +323,105 @@ impl GitPerPackageRegistry {
             reason: e.to_string(),
         })
     }
+}
+
+/// The one construction of a quarantine skip's warn line, so the
+/// shape an operator reads is the shape a test pins (PROP-044 §4.5).
+fn skip_warning(
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+    missing: &[String],
+) -> String {
+    format!(
+        "skipping {group}/{name}@{version}: this reader does not understand {missing:?} \
+         (must_understand — spec://org.vibevm.core/vibevm/common/PROP-044#machinery)"
+    )
+}
+
+/// The version selector (PROP-044 §4.5, B-080): pick the version
+/// `spec` names from `candidates`, quarantining every candidate whose
+/// `must_understand` names a reader capability this build lacks.
+///
+/// Each quarantine warns ([`skip_warning`]) and the pick runs over
+/// what survives. A survivor set with nothing to pick is the honest
+/// refusal — when a skipped version WOULD have matched the pick rule,
+/// [`RegistryError::AllVersionsUnusable`] names the best of them and
+/// what it needs; only a set with no match at all keeps the plain
+/// [`RegistryError::NoMatchingVersion`]. Either way the refusal
+/// surfaces here, at the point of application — the reader never
+/// silently lands on a version it cannot act on.
+///
+/// `candidates` arrive sorted ascending (both sources sort); the pick
+/// walks them in reverse, so "first match" is "newest match".
+fn pick_version(
+    group: &Group,
+    name: &str,
+    candidates: &[IndexVersion],
+    spec: &VersionSpec,
+) -> Result<semver::Version, RegistryError> {
+    let req_display = match spec {
+        VersionSpec::Latest => "latest".to_string(),
+        VersionSpec::Req(r) => r.to_string(),
+    };
+    // One pick rule, applied to whichever list survives: newest
+    // non-prerelease under `Latest`; under `Req` the newest
+    // non-prerelease that matches, else the newest match of any
+    // prerelease-ness.
+    let pick_from = |list: &[semver::Version]| -> Option<semver::Version> {
+        match spec {
+            VersionSpec::Latest => list.iter().rev().find(|v| v.pre.is_empty()).cloned(),
+            VersionSpec::Req(req) => list
+                .iter()
+                .rev()
+                .find(|v| req.matches(v) && v.pre.is_empty())
+                .or_else(|| list.iter().rev().find(|v| req.matches(v)))
+                .cloned(),
+        }
+    };
+    let mut usable: Vec<semver::Version> = Vec::new();
+    let mut skipped: Vec<(semver::Version, Vec<String>)> = Vec::new();
+    for c in candidates {
+        let missing = vibe_core::capabilities::missing_capabilities(&c.must_understand);
+        if missing.is_empty() {
+            usable.push(c.version.clone());
+        } else {
+            tracing::warn!(
+                target: "vibe_registry",
+                "{}",
+                skip_warning(group, name, &c.version, &missing)
+            );
+            skipped.push((c.version.clone(), missing));
+        }
+    }
+    if let Some(version) = pick_from(&usable) {
+        return Ok(version);
+    }
+    // Nothing usable: if the pick rule would have matched a skipped
+    // version, the refusal names the best of those and its missing
+    // capabilities — the §4.5 point-of-application refusal.
+    let skipped_versions: Vec<semver::Version> = skipped.iter().map(|(v, _)| v.clone()).collect();
+    if let Some(best) = pick_from(&skipped_versions) {
+        let missing = skipped
+            .iter()
+            .find(|(v, _)| *v == best)
+            .map(|(_, m)| m.clone())
+            .expect("the best skipped version is one of the skipped pairs");
+        return Err(RegistryError::AllVersionsUnusable {
+            detail: Box::new(crate::AllVersionsUnusableDetail {
+                group: group.clone(),
+                name: name.to_string(),
+                req: req_display,
+                best,
+                missing,
+            }),
+        });
+    }
+    Err(RegistryError::NoMatchingVersion {
+        group: group.clone(),
+        name: name.to_string(),
+        req: req_display,
+    })
 }
 
 #[cfg(test)]

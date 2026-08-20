@@ -29,7 +29,9 @@ mod wire;
 
 pub use auth::{BearerToken, IndexAuth};
 pub use locate::{IndexUrlResolution, IndexUrlSource, index_url_for, resolve_index_url};
-pub use wire::{BindingSite, PurlLookupHit, PurlLookupResults, SearchHit, SearchResults};
+pub use wire::{
+    BindingSite, IndexVersion, PurlLookupHit, PurlLookupResults, SearchHit, SearchResults,
+};
 
 use std::time::Duration;
 
@@ -278,20 +280,42 @@ impl IndexClient {
 
     /// Fetch the `by-name/<name>.json` candidate set and return the
     /// versions of the `(group, name)` package in ascending semver
-    /// order. Returns `Ok(None)` when the file is absent (404) **or**
-    /// the candidate set carries no package for `group` — both mean
+    /// order — the capability-declaration half of each record dropped.
+    /// The version selector must not use this (it would be
+    /// capability-blind, B-080); it asks
+    /// [`IndexClient::list_version_entries`] instead. Kept for the
+    /// enumeration surfaces that genuinely want every version listed.
+    ///
+    /// Returns `Ok(None)` when the file is absent (404) **or** the
+    /// candidate set carries no package for `group` — both mean
     /// "fall through to `git ls-remote`". `Ok(Some(versions))` on a
     /// hit; `Err(...)` for any other failure.
-    ///
-    /// The `by-name/` layer is keyed by bare `name` and holds the whole
-    /// candidate set — every group that publishes a package of that
-    /// name (PROP-008 §2.8). The lookup selects the candidate whose
-    /// `group` matches the requested `(group, name)` identity.
     pub fn list_versions(
         &self,
         group: &Group,
         name: &str,
     ) -> Result<Option<Vec<Version>>, IndexError> {
+        Ok(self
+            .list_version_entries(group, name)?
+            .map(|entries| entries.into_iter().map(|e| e.version).collect()))
+    }
+
+    /// [`IndexClient::list_versions`] without the blindness: each
+    /// returned [`IndexVersion`] carries the `must_understand`
+    /// declarations its record states on the wire (PROP-044 §4.5), so
+    /// the caller can skip versions this reader must quarantine.
+    /// Ordering and the `Ok(None)` fall-through contract are exactly
+    /// `list_versions`'s.
+    ///
+    /// The `by-name/` layer is keyed by bare `name` and holds the whole
+    /// candidate set — every group that publishes a package of that
+    /// name (PROP-008 §2.8). The lookup selects the candidate whose
+    /// `group` matches the requested `(group, name)` identity.
+    pub fn list_version_entries(
+        &self,
+        group: &Group,
+        name: &str,
+    ) -> Result<Option<Vec<IndexVersion>>, IndexError> {
         let url = format!("{}/by-name/{}.json", self.file_base, name);
         let client = Self::build_client(
             Duration::from_secs(FETCH_TIMEOUT_SECS),
@@ -325,8 +349,8 @@ impl IndexClient {
         let Some(pkg) = parsed.packages.into_iter().find(|p| &p.group == group) else {
             return Ok(None);
         };
-        let mut versions: Vec<Version> = pkg.versions.into_iter().map(|v| v.version).collect();
-        versions.sort();
+        let mut versions: Vec<IndexVersion> = pkg.versions.into_iter().map(Into::into).collect();
+        versions.sort_by(|a, b| a.version.cmp(&b.version));
         Ok(Some(versions))
     }
 

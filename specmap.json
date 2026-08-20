@@ -4673,6 +4673,15 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/capabilities.rs",
+      "item_kind": "mod",
+      "line": 13,
+      "symbol": "vibe_core::capabilities",
+      "end_line": 13,
+      "fingerprint": "tok1:8ce71ac157869b63bbca6a57ed8d516914f53c51cb942fae7e1e7a54ad066ce6"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/capability_ref.rs",
       "item_kind": "mod",
       "line": 26,
@@ -7044,8 +7053,8 @@
       "item_kind": "enum",
       "line": 17,
       "symbol": "vibe_registry::error::RegistryError",
-      "end_line": 216,
-      "fingerprint": "tok1:0dc54dd41b5e6c1b141986792245443dbe7ad395dcc31eab6f7291e5803a8eb5"
+      "end_line": 235,
+      "fingerprint": "tok1:62bd62b003399e66affdba44e8475107a23794412e8cf3b18ad1d8fb6d5c24a4"
     },
     {
       "crate_name": "vibe-registry",
@@ -7312,9 +7321,9 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/index_client/mod.rs",
       "item_kind": "enum",
-      "line": 72,
+      "line": 74,
       "symbol": "vibe_registry::index_client::IndexError",
-      "end_line": 105,
+      "end_line": 107,
       "fingerprint": "tok1:71cd0162a7af8fcfc92cce3c5e8a241a6779d6da34e40feb8e23a5155fa08814"
     },
     {
@@ -7627,18 +7636,18 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/tests/index_fast_path.rs",
       "item_kind": "fn",
-      "line": 232,
+      "line": 281,
       "symbol": "vibe_registry::tests::index_fast_path::index_404_falls_through_to_git_backend",
-      "end_line": 272,
+      "end_line": 321,
       "fingerprint": "tok1:45a717748afacaa34d3bbf69fd3c06e24eea16cdf636091444ad04afe72736c1"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/tests/index_fast_path.rs",
       "item_kind": "fn",
-      "line": 189,
+      "line": 238,
       "symbol": "vibe_registry::tests::index_fast_path::index_fast_path_serves_versions",
-      "end_line": 230,
+      "end_line": 279,
       "fingerprint": "tok1:d8bc8db42a502a41c5e5d67439f4ed6d4836ee24fc8a3aa86d88c6eedaf69ac5"
     },
     {
@@ -13429,6 +13438,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-core/src/capabilities.rs",
+      "from_symbol": "vibe_core::capabilities",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#machinery",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-core/src/capability_ref.rs",
       "from_symbol": "vibe_core::capability_ref",
       "line": 26,
@@ -15859,7 +15876,7 @@
     {
       "file": "crates/vibe-registry/src/index_client/mod.rs",
       "from_symbol": "vibe_registry::index_client::IndexError",
-      "line": 73,
+      "line": 75,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http",
       "verb": "implements"
@@ -16142,7 +16159,7 @@
     {
       "file": "crates/vibe-registry/tests/index_fast_path.rs",
       "from_symbol": "vibe_registry::tests::index_fast_path::index_404_falls_through_to_git_backend",
-      "line": 233,
+      "line": 282,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#integration",
       "verb": "verifies",
@@ -16151,7 +16168,7 @@
     {
       "file": "crates/vibe-registry/tests/index_fast_path.rs",
       "from_symbol": "vibe_registry::tests::index_fast_path::index_fast_path_serves_versions",
-      "line": 190,
+      "line": 239,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#integration",
       "verb": "verifies",
@@ -19461,12 +19478,21 @@
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#communication-style"
     },
     {
+      "anchor": "decode-identifiers-inline",
+      "content_hash": "sha256:3a3915c24bce371928dc40f6f2ed4308cf114a5b7138599504424852cac25b5d",
+      "doc_path": "boot/90-user",
+      "file": "spec/boot/90-user.md",
+      "heading": "**Идентификаторы расшифровываются на месте (владелец, 2026-08-20).** Упоминая в чате внутренний идентификатор — строку BACKLOG (`B-007`), находку аудита (`2026-05-23-11`), номер спеки (`PROP-044`), слайс ТЗ (`С6`) — сразу, в той же фразе, говори что это: одной короткой скобкой или придаточным («B-007 — вопрос о жанре ADR в спеках»). Владелец не обязан держать реестры в голове или ходить по файлам за расшифровкой; голый номер без сути — дефект ответа. Не относится к воркер-пакетам и коммитам (там периметр и так называет всё полным текстом). @status:impl/done",
+      "line": 9,
+      "uri": "spec://org.vibevm.core/vibevm/boot/90-user#decode-identifiers-inline"
+    },
+    {
       "anchor": "REPO-SPLIT-HOST-POSTURE",
       "content_hash": "sha256:6b1296046255e5a9e22b7e566ea48f274a59bd38d94abcc1b89a19cd63051074",
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**Source mirrors + registry split-host (updated 2026-06-14).** The vibevm *source* is multi-homed — mirrored across GitVerse (`vibevm/vibevm`) and GitHub (`vibevm/vibevm`), both public and canonical for reading (US↔GitHub, RU↔GitVerse), kept in sync by `cargo xtask mirror` under the benevolent-dictator / hub-and-spoke model ([PROP-016](../common/PROP-016-source-mirrors.md): mainline is the maintainer's single-writer local `main`; each host is a downstream read-replica). Separately, the *package registry* org lives on GitHub (`vibespecs`) — the deliberate split there is for publishing ([PROP-000 §7](../common/PROP-000.md#registry), [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.md#publish): GitVerse's public API does not expose org-scoped repo creation; GitHub's does). **Source mirroring and the package registry are orthogonal** — different GitHub orgs (`vibevm` vs `vibespecs`), different auth (SSH keys vs the publish token). @status:impl/done",
-      "line": 11,
+      "line": 13,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#REPO-SPLIT-HOST-POSTURE"
     },
     {
@@ -19475,7 +19501,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**vibevm source repo (this repository) — multi-homed:** GitVerse `git@gitverse.ru:vibevm/vibevm.git` (web `https://gitverse.ru/vibevm/vibevm`) and GitHub `git@github.com:vibevm/vibevm.git` (web `https://github.com/vibevm/vibevm`), both public and canonical for reading. Roll a change out to both with `cargo xtask mirror` (the target list is `mirrors.toml`), NOT `git push origin` (which only hits GitVerse). See [PROP-016](../common/PROP-016-source-mirrors.md). @status:impl/done",
-      "line": 13,
+      "line": 15,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#SRC-MULTI-HOMED"
     },
     {
@@ -19484,7 +19510,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**Package registry — GitHub organization `vibespecs`:** `https://github.com/vibespecs`. Per-package repos: `https://github.com/vibespecs/<group>.<name>` (`NamingConvention::Fqdn` per [PROP-008 §2.5](../modules/vibe-registry/PROP-008-qualified-naming.md#repo-naming) — e.g. `org.vibevm_wal`; default since M1.19). The legacy `flow-*` repos are archived read-only. All publishing and consumption of v0.1.0+ packages goes through GitHub. @status:impl/done",
-      "line": 14,
+      "line": 16,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#REGISTRY-VIBESPECS"
     },
     {
@@ -19493,7 +19519,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**Legacy package registry (read-only transition):** `git@gitverse.ru:anarchic/vibespecs.git` — three v0.1.0 flows in monorepo form, HEAD `2203239`, 2026-04-23. No new publishes here; kept readable for projects still on schema-v1 lockfiles. @status:impl/done",
-      "line": 15,
+      "line": 17,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#LEGACY-REGISTRY"
     },
     {
@@ -19502,7 +19528,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**Local fixtures.** `fixtures/registry/` (M0 monorepo shape, hermetic) — used by `cargo test`, never goes near a real registry. @status:impl/done",
-      "line": 16,
+      "line": 18,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#LOCAL-FIXTURES"
     },
     {
@@ -19511,7 +19537,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**SSH and HTTPS auth on this machine:** @status:impl/done",
-      "line": 18,
+      "line": 20,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#ssh-auth-lead"
     },
     {
@@ -19520,7 +19546,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**GitVerse SSH:** ключ настроен в Git Bash на этой машине под именем `olegchir@UNIT-2040`. `ssh -T git@gitverse.ru` подтверждает auth без shell-доступа (ожидаемо). @status:impl/done",
-      "line": 20,
+      "line": 22,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#GITVERSE-SSH"
     },
     {
@@ -19529,7 +19555,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**GitHub SSH (source / dev):** на этой машине есть SSH-ключ с полным доступом к GitHub от имени `olegchir` (`ssh -T git@github.com` → \"Hi olegchir! … successfully authenticated\"). Он используется для **dev-операций с исходниками** — `cargo xtask mirror` / push / fetch в `vibevm/vibevm` по **SSH-урлам**, не HTTPS. @status:impl/done",
-      "line": 21,
+      "line": 23,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#GITHUB-SSH"
     },
     {
@@ -19538,7 +19564,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**GitHub token (publish only):** `~/.vibe/github.publish.token` (1 line, file-scoped) используется **исключительно публишером** (`vibe registry publish`) — он внедряет его в push URL как `https://x-access-token:<TOKEN>@github.com/vibespecs/<repo>.git` на момент `git push`, после чего URL исчезает вместе с temp-веткой. Token **никогда** не используется для push исходников; SSH-ключ никогда не используется для publish пакетов. Modern git (≥ 2.31) редактирует пароли в собственных логах автоматически, поэтому stderr remains safe. @status:impl/done",
-      "line": 22,
+      "line": 24,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#GITHUB-PUBLISH-TOKEN"
     },
     {
@@ -19547,7 +19573,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**Token discipline (must-read).** `~/.vibe/github.publish.token` — surface-secret. **Никогда** не печатается в stdout, stderr, чат, лог-сообщения, error messages, JSON-payload, lockfile, или коммит. Все сессии этого репозитория ведутся под видеозапись; одно эхо токена = утечка. См. [PROP-000 §20](../common/PROP-000.md#token-secrecy) и [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.md#publish). Если случайно прочитал содержимое токена — не вставляй в ответ под видом цитаты, не дублируй в коммит-сообщения, не показывай в дифах. Файл редактируется только напрямую через editor, не через `cat` / `Read` / `echo` инструменты. @status:impl/done",
-      "line": 24,
+      "line": 26,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#TOKEN-DISCIPLINE"
     },
     {
@@ -19556,7 +19582,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**Token file convention.** Per-host file под `~/.vibe/<host-prefix>.publish.token` (`github.publish.token`, `gitverse.publish.token`, etc.) — первый label хоста. Legacy host-agnostic путь `~/.vibe/git.publish.token` остаётся как fallback. Высший приоритет — host-specific env-var `VIBEVM_PUBLISH_TOKEN_<HOST>` (`VIBEVM_PUBLISH_TOKEN_GITHUB`, `VIBEVM_PUBLISH_TOKEN_GITVERSE`); host-agnostic `VIBEVM_PUBLISH_TOKEN` идёт следом и оставлен для совместимости. Оба файловых пути лежат в одной settings dir, которую переносит `$VIBE_SETTINGS`. @status:impl/done",
-      "line": 26,
+      "line": 28,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#TOKEN-FILE-CONVENTION"
     },
     {
@@ -19565,7 +19591,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**Scope discipline.** `vibe registry publish` оперирует **строго в рамках** организации, указанной в `[[registry]].url` проекта. RepoCreator-адаптеры обязаны отказывать любым операциям, выходящим за пределы этой org (PROP-002 §2.10 — \"Never escalate scope\"). При работе с `vibespecs` на GitHub: создавать только `github.com/vibespecs/<repo>`; не уходить в `github.com/<любая-другая-org>`, не трогать `github.com/<user>` пространства имён, не вызывать никакие endpoint'ы, не относящиеся к target org. @status:impl/done",
-      "line": 28,
+      "line": 30,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#SCOPE-DISCIPLINE"
     },
     {
@@ -19574,7 +19600,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**Proven commands on this machine:** @status:impl/done",
-      "line": 30,
+      "line": 32,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#proven-commands-lead"
     },
     {
@@ -19583,7 +19609,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "Clone vibevm (verified): `git clone git@gitverse.ru:vibevm/vibevm.git`. @status:impl/done",
-      "line": 32,
+      "line": 34,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CMD-CLONE"
     },
     {
@@ -19592,7 +19618,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "First push to GitVerse (verified 2026-04-17 against a fresh empty repo): `git push -u origin main`. Git Bash picks up the GitVerse SSH key automatically; no agent-forwarding needed. @status:impl/done",
-      "line": 33,
+      "line": 35,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CMD-FIRST-PUSH"
     },
     {
@@ -19601,7 +19627,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "Routine push to GitVerse: `git push origin main`. Force-push and history rewrite are NOT done without owner approval — см. Rule 4 list в `CLAUDE.md`. @status:impl/done",
-      "line": 34,
+      "line": 36,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CMD-ROUTINE-PUSH"
     },
     {
@@ -19610,7 +19636,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "Roll a change out to ALL source mirrors (GitVerse + GitHub), verified 2026-06-14: `cargo xtask mirror` — reads `mirrors.toml`, pushes `main` + tags to every target fast-forward-only, never `--force`. `cargo xtask mirror --check` verifies sync; `cargo xtask mirror --from <name>` pulls a host's accepted-PR merge into mainline first. This is the standard rollout, preferred over a bare `git push origin`. See [PROP-016](../common/PROP-016-source-mirrors.md). @status:impl/done",
-      "line": 35,
+      "line": 37,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CMD-MIRROR"
     },
     {
@@ -19619,7 +19645,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "Publish to GitHub (verified 2026-04-29): `vibe registry publish fixtures/registry/flow/<name>/v0.1.0` — публишер сам создаёт репо в `vibespecs` org через `POST /orgs/vibespecs/repos`, пушит контент, тэгает версию. Token считывается из `~/.vibe/github.publish.token` без побочных эффектов. @status:impl/done",
-      "line": 36,
+      "line": 38,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CMD-PUBLISH"
     },
     {
@@ -19628,7 +19654,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**`eth-sri/type-constrained-code-generation` (PLDI'25, https://github.com/eth-sri/type-constrained-code-generation) is inspiration-only — NEVER a code source.** Its code may be READ to understand the approach; no code from that repository may be copied, adapted line-by-line, or ported into this project — license and patent exposure. The working method is clean-room: study what their code achieves, then write STRUCTURALLY DIFFERENT code that reaches the same behavior (identical results are fine; borrowed expression is not). This binds any future `vibe-tcg` / `vibe-tcg-ts` work. Apply the same posture to any other research repository until the owner explicitly clears its license/patent status. @status:impl/done",
-      "line": 40,
+      "line": 42,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CLEAN-ROOM-RULE"
     },
     {
@@ -19637,7 +19663,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "The TypeScript discipline toolchain (extractor, bridge, conform/specmap frontends, `typescript-ai-native`, the demo) is **production-grade work, not a sketch**: it is the foundation for a much larger effort. No \"MVP\" framing, no stub subcommands left as the shipped surface, no skipped edge cases justified by scope. Full implementations at a level fit to show in production; spend whatever tokens/time that takes. (Recorded from the owner's words during the deferrals-closeout campaign; survives it.) @status:impl/done",
-      "line": 44,
+      "line": 46,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#TS-QUALITY-BAR"
     },
     {
@@ -19646,7 +19672,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**Никогда не экономь усилия. Делай хорошо,",
-      "line": 48,
+      "line": 50,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#EFFORT-IS-NOT-A-CONSTRAINT"
     },
     {
@@ -19655,7 +19681,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**Практическое следствие, по которому",
-      "line": 56,
+      "line": 58,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#VOLUME-OF-WORK-IS-NEVER-AN-ARGUMENT"
     },
     {
@@ -19664,7 +19690,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**Как этот дефект выглядит изнутри, чтобы",
-      "line": 63,
+      "line": 65,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#WHERE-THIS-BITES-IN-PRACTICE"
     },
     {
@@ -19673,7 +19699,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**Область действия.** Это не разрешение",
-      "line": 72,
+      "line": 74,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#THE-SCOPE-OF-THIS-DIRECTIVE"
     },
     {
@@ -19682,7 +19708,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**Отношение к соседней директиве.** Это",
-      "line": 79,
+      "line": 81,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#THIS-GENERALISES-THE-QUALITY-BAR"
     },
     {
@@ -19691,7 +19717,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "Boot-resident since the deferrals-closeout campaign (owner-sanctioned; the",
-      "line": 86,
+      "line": 88,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#machine-quirks-lead"
     },
     {
@@ -19700,7 +19726,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "Edits through editor tools only — PowerShell 5.1 corrupts UTF-8-no-BOM",
-      "line": 90,
+      "line": 92,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-EDITOR-TOOLS"
     },
     {
@@ -19709,7 +19735,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "`self-check.sh` through Git Bash, not WSL; check the REAL exit code",
-      "line": 92,
+      "line": 94,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-SELF-CHECK-BASH"
     },
     {
@@ -19718,7 +19744,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "Commits via `git commit -F - <<'MSG'` heredoc only. @status:impl/done",
-      "line": 94,
+      "line": 96,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-COMMIT-HEREDOC"
     },
     {
@@ -19727,7 +19753,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "Windows UAC blocks test executables named `*install*` (os-740). @status:impl/done",
-      "line": 95,
+      "line": 97,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-UAC-INSTALL"
     },
     {
@@ -19736,7 +19762,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "`bash … > \"$VAR/file\" 2>&1` with an unset `$VAR` writes to `/file` and",
-      "line": 96,
+      "line": 98,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-VAR-REDIRECT"
     },
     {
@@ -19745,7 +19771,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**The vibevm version store lives at",
-      "line": 99,
+      "line": 101,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-VVM-STORE-MOVED-UNDER-DOT-VIBE"
     },
     {
@@ -19754,7 +19780,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**The last path component `opt` is",
-      "line": 108,
+      "line": 110,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-THE-OPT-NAME-IS-LORE-BEARING"
     },
     {
@@ -19763,7 +19789,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**A `vibe` shim finds its",
-      "line": 116,
+      "line": 118,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-A-SHIM-RESOLVES-RELATIVE-TO-ITSELF"
     },
     {
@@ -19772,7 +19798,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**The user `PATH` in",
-      "line": 123,
+      "line": 125,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#QUIRK-USER-PATH-IS-EXPANDABLE-AND-MUST-BE-READ-RAW"
     },
     {
@@ -19781,7 +19807,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "Trigger phrases that switch the session into an alternate working posture are catalogued in [PROP-006](../common/PROP-006-operating-modes.md). Recognise a codeword when the owner invokes it; otherwise treat the session as default posture (the four rules from `CLAUDE.md` in their plain reading). @status:impl/done",
-      "line": 132,
+      "line": 134,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#operating-modes-intro"
     },
     {
@@ -19790,7 +19816,7 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "Codewords currently in force: @status:impl/done",
-      "line": 134,
+      "line": 136,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#codewords-lead"
     },
     {
@@ -19799,12 +19825,12 @@
       "doc_path": "boot/90-user",
       "file": "spec/boot/90-user.md",
       "heading": "**«move fast and break things»** ([PROP-006 §2](../common/PROP-006-operating-modes.md#mfbt)) — pre-authorised heads-down execution. Maximum scope, testable phases, no mid-work confirmations, full reasoning depth. The four `CLAUDE.md` rules survive unchanged; only Rule 4's \"ask before routine large changes\" is suspended. Non-routine red lines (force-push, history rewrite, large blobs, CI / signing / secrets, irreversible ops) STILL require explicit owner confirmation when active. @status:impl/done",
-      "line": 136,
+      "line": 138,
       "uri": "spec://org.vibevm.core/vibevm/boot/90-user#CODEWORD-MFBT"
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:5ebcd28fe3f513da1c88634ad35b6802d860b6a264eb6d5e1241531387e0172e",
+      "content_hash": "sha256:efdb5fa2094e41a44dc318f4f4d92e9eab6adf002da951d9289cee398ab27294",
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "PROP-000: Foundational technical decisions",
@@ -20640,12 +20666,30 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#CI-MATRIX-M2"
     },
     {
+      "anchor": "decisions",
+      "content_hash": "sha256:33a049ae7af2a26cb66d61cc0227a60caba5769c225d0bd23004b741097f95e4",
+      "doc_path": "common/PROP-000",
+      "file": "spec/common/PROP-000.md",
+      "heading": "13. Decision records live inside PROPs",
+      "line": 165,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#decisions"
+    },
+    {
+      "anchor": "DECISIONS-LIVE-INSIDE-PROPS",
+      "content_hash": "sha256:7793d15194d3ae16311ce569e3b7b2066eaf157a6e3890b06920376ccdc829d7",
+      "doc_path": "common/PROP-000",
+      "file": "spec/common/PROP-000.md",
+      "heading": "Architectural decisions are recorded as an ADR-part **inside the PROP they belong to** — a section (or clearly-marked facts) stating the decision, the alternatives weighed, and why — never as standalone ADR files. One document carries a contract AND the reasoning that shaped it; a reader never chases a second file to learn why. (Owner ruling 2026-08-20, closing BACKLOG B-007.) @status:impl/done",
+      "line": 167,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#DECISIONS-LIVE-INSIDE-PROPS"
+    },
+    {
       "anchor": "commits",
       "content_hash": "sha256:4843c9d903767668634842538c7cc9bfdce89f10c838322951f5d6aa60c3b8d2",
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "12. Commit and push discipline",
-      "line": 165,
+      "line": 169,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#commits"
     },
     {
@@ -20654,7 +20698,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "The repository's commit-and-push discipline is the **git-practices** family (a host dependency), whose members carry the full text: @status:spec/done",
-      "line": 167,
+      "line": 171,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#GIT-PRACTICES-FAMILY"
     },
     {
@@ -20663,7 +20707,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "human-authored **attribution** — `spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root`; @status:spec/done",
-      "line": 169,
+      "line": 173,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#GP-ATTRIBUTION"
     },
     {
@@ -20672,7 +20716,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "the **Conventional Commits** message format — `spec://org.vibevm.world/git-conventional-commits/flows/conventional-commits/conventional-commits#root`; @status:spec/done",
-      "line": 170,
+      "line": 174,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#GP-CONVENTIONAL"
     },
     {
@@ -20681,7 +20725,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**atomicity**, one commit = one logical idea — `spec://org.vibevm.world/git-atomic-commits/flows/atomic-commits/ATOMIC-COMMITS-PROTOCOL#root`; @status:spec/done",
-      "line": 171,
+      "line": 175,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#GP-ATOMICITY"
     },
     {
@@ -20690,7 +20734,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "commit **autonomy** — routine proceeds, and the red lines (history rewrites, force-push, large blobs, CI / signing / secrets) stop and ask — `spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root`. @status:spec/done",
-      "line": 172,
+      "line": 176,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#GP-AUTONOMY"
     },
     {
@@ -20699,7 +20743,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Marked exception (owner ruling, 2026-08-01):** the attribution posture is enforced **procedurally, not mechanically** — the rules live in the boot contract and every session holds them; no commit hook, trailer scanner, or CI check exists or is planned, consistent with the standing no-CI decision. Recorded so the absence of machinery reads as a deliberate choice, not an oversight. @status:spec/done",
-      "line": 174,
+      "line": 178,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#ATTRIBUTION-ENFORCEMENT-EXCEPTION"
     },
     {
@@ -20708,7 +20752,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Marked exception (owner ruling, 2026-08-02):** the installed flow's single-place law (`spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/ATTRIBUTION-POLICY#root`, its boot snippet's `#SCOPE-THE-ONLY-PLACES-THE-TOPIC-IS-DISCUSSED`) is deliberately not kept literally by this host's **boot surfaces**: `spec/boot/00-core.md` (Rule 1's summary), the `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` triple (byte-identical by contract, gated by self-check step 0c), and the agent instruction files under `.claude/agents/` each carry a short digest of the four rules **by design** — «правила обязаны доезжать до каждого агента на старте»: a session reads its boot files and does not resolve links at boot, so boot reliability wins over single-statement purity. The legal restatement set is exactly: the boot surfaces above; this §12, the host's authoritative record; and the invariant roster's one-line echo (`##INV-HUMAN-AUTHORSHIP`), which names its source in the same sentence. Everything else cites the flow or this section; a new restatement outside a boot surface is a defect. @status:spec/done",
-      "line": 176,
+      "line": 180,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#ATTRIBUTION-BOOT-SURFACE-EXCEPTION"
     },
     {
@@ -20717,7 +20761,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "13. Package layout convention",
-      "line": 180,
+      "line": 184,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#package-layout"
     },
     {
@@ -20726,7 +20770,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Decision:** vibevm packages use a **mirror layout**. Every entry in a package's `writes.files` is simultaneously (a) the path of the file inside the package directory and (b) the path at which it will be installed in the consumer's project. @status:spec/done",
-      "line": 182,
+      "line": 186,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#MIRROR-LAYOUT"
     },
     {
@@ -20735,7 +20779,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "There is no separate `target = \"…\"` field per entry; `writes.files` is the single source of truth for \"where does this file go?\" @status:spec/done",
-      "line": 183,
+      "line": 187,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#NO-TARGET-FIELD"
     },
     {
@@ -20744,7 +20788,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "Concretely, the canonical `flow:wal@0.1.0` payload (vendored as a hermetic e2e test fixture under `fixtures/registry/flow/wal/v0.1.0/`) contains `spec/flows/wal/WAL-PROTOCOL.md` at exactly that relative path; after `vibe install flow:wal`, the file lives at `spec/flows/wal/WAL-PROTOCOL.md` inside the user's project. No mapping, no rewriting. @status:spec/done",
-      "line": 185,
+      "line": 189,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#mirror-example"
     },
     {
@@ -20753,7 +20797,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Boot snippets are the one exception.** The `[boot_snippet]` table carries an explicit `source` field naming the path inside the package (conventionally under `boot/`), while the target is always the fixed `spec/boot/<filename>`. @status:spec/done",
-      "line": 187,
+      "line": 191,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#BOOT-SNIPPET-EXCEPTION"
     },
     {
@@ -20762,7 +20806,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Why:** a single source of truth for source-and-target paths eliminates a whole class of authoring bug where the package layout drifts from the declared writes. @status:spec/done",
-      "line": 189,
+      "line": 193,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#MIRROR-WHY-DRIFT"
     },
     {
@@ -20771,7 +20815,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "It also makes a package directory instantly readable — a human looking at the tree knows exactly what will appear in a consumer's project without cross-referencing a separate mapping table. @status:spec/done",
-      "line": 190,
+      "line": 194,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#MIRROR-WHY-READABLE"
     },
     {
@@ -20780,7 +20824,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Considered and rejected:** a **per-entry `target = \"…\"` field** in `writes.files` — rejected because `writes.files` would stop being the single source of truth for *\"where does this file go?\"* (`##NO-TARGET-FIELD`), reviving the authoring-drift bug `##MIRROR-WHY-DRIFT` names and costing the package directory its at-a-glance readability (`##MIRROR-WHY-READABLE`). `[boot_snippet].source` is the **one retained exception**, not a rejection: its target is the fixed `spec/boot/<filename>` (`##BOOT-SNIPPET-EXCEPTION`). @status:spec/done",
-      "line": 191,
+      "line": 195,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#mirror-rejected"
     },
     {
@@ -20789,7 +20833,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Revisit when:** a **second** source/target exception is proposed — i.e. any manifest table beyond `[boot_snippet]` needing an install path that differs from its in-package path. Observation point: the manifest schema in [`crates/vibe-core`](../../crates/vibe-core/) — a per-entry target field appearing there *is* the fired state. One exception stands today; a second means the mirror rule is carrying less than `##MIRROR-LAYOUT` claims. @status:spec/done",
-      "line": 192,
+      "line": 196,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#mirror-revisit"
     },
     {
@@ -20798,7 +20842,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Where pinned:** `VIBEVM-SPEC.md` §13.1 shows the mirror-layout diagram and §13.2 the matching manifest. This PROP-000 entry is the decision record; the spec carries the operational definition. @status:spec/done",
-      "line": 194,
+      "line": 198,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#MIRROR-PINNED"
     },
     {
@@ -20807,7 +20851,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "`vibe-install` relies on this convention — the source path of a planned write is computed by joining `cache_dir` with the manifest's declared target path. @status:spec/done",
-      "line": 195,
+      "line": 199,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INSTALL-RELIES"
     },
     {
@@ -20816,7 +20860,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "14. Manual-test protocol",
-      "line": 199,
+      "line": 203,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#manual-tests"
     },
     {
@@ -20825,7 +20869,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Decision:** human-runnable smoke-tests live in [`manual-tests/`](../../manual-tests/) at the repo root, one Markdown file per scenario, named `<milestone>-<slug>.md` (e.g. `M1.1-git-registry-smoke.md`); the directory's own [`README.md`](../../manual-tests/README.md) carries the index. @status:spec/done",
-      "line": 201,
+      "line": 205,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#MT-LOCATION"
     },
     {
@@ -20834,7 +20878,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "The tier itself — why a project keeps a second, human-run test layer alongside the automated suite, what a manual test is and is not, when to run one, and who signs it off (a human, over an agent's pre-run) — is the `manual-tests` flow: `spec://org.vibevm.world/manual-tests/flows/manual-tests/MANUAL-TESTS-PROTOCOL#root`, with the four authoring rules in its `authoring-rules` document and the copy-ready skeleton in `test-template`. @status:spec/done",
-      "line": 202,
+      "line": 206,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#MT-FLOW-POINTER"
     },
     {
@@ -20843,7 +20887,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**vibevm's real-world surfaces.** `cargo test --workspace` uses fakes, tempdirs, and local bare repositories for speed and hermeticity (the flow's `spec://org.vibevm.world/manual-tests/flows/manual-tests/MANUAL-TESTS-PROTOCOL#why-second-tier`). @status:spec/done",
-      "line": 204,
+      "line": 208,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#MT-HERMETIC-SUITE"
     },
     {
@@ -20852,7 +20896,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "The manual tier is the last mile for what only the real world has here: SSH auth against GitVerse, the lockfile `source_uri` exactly as a downstream consumer receives it, the `~/.vibe/` layout on a user's actual filesystem, and a human confirming the CLI output says what they meant. @status:spec/done",
-      "line": 205,
+      "line": 209,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#MT-LAST-MILE"
     },
     {
@@ -20861,7 +20905,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**vibevm's bindings.** Every test isolates state with `mktemp -d` for the project and `VIBE_REGISTRY_CACHE` pointing inside the scratch dir for the registry cache — the user's real `~/.vibe/` is never touched by a run. @status:spec/done",
-      "line": 207,
+      "line": 211,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#MT-ISOLATION"
     },
     {
@@ -20870,7 +20914,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "Git Bash on Windows is the primary smoke-test environment (macOS and Linux must work too); where platform output differs (path separators, `.exe` suffix), the Windows form comes first with a portable note. @status:spec/done",
-      "line": 208,
+      "line": 212,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#MT-GIT-BASH"
     },
     {
@@ -20879,7 +20923,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**When to run** (the flow's `spec://org.vibevm.world/manual-tests/flows/manual-tests/MANUAL-TESTS-PROTOCOL#when`, against vibevm's surfaces): @status:spec/done",
-      "line": 210,
+      "line": 214,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#mt-when-lead"
     },
     {
@@ -20888,7 +20932,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "before tagging any milestone; @status:spec/done",
-      "line": 212,
+      "line": 216,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#MT-WHEN-TAGGING"
     },
     {
@@ -20897,7 +20941,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "after changes to the git backend, CLI arg parsing, or lockfile format even when `cargo test` stays green; @status:spec/done",
-      "line": 213,
+      "line": 217,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#MT-WHEN-CHANGES"
     },
     {
@@ -20906,7 +20950,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "and as reproducers whenever a user files an integration bug. @status:spec/done",
-      "line": 214,
+      "line": 218,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#MT-WHEN-REPRO"
     },
     {
@@ -20915,7 +20959,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "[`spec/WAL.md`](../WAL.md) names the outstanding manual runs for the current milestone — a practice that must not lapse: MT-02 and MT-03 have been awaiting owner sign-off since the TUI work landed, and a WAL that names none reads as \"nothing pending\". @status:spec/done",
-      "line": 216,
+      "line": 220,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#MT-WAL-NAMES"
     },
     {
@@ -20924,7 +20968,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "15. Dependency weight is not a decision factor",
-      "line": 220,
+      "line": 224,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#dep-weight"
     },
     {
@@ -20933,7 +20977,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Decision:** Binary size, crate count, transitive dep weight are NOT decision factors when selecting third-party libraries. @status:spec/done",
-      "line": 222,
+      "line": 226,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#DEP-WEIGHT-NOT-FACTOR"
     },
     {
@@ -20942,7 +20986,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "Pick the strongest available library for the job — for both the Rust CLI and any future Java / frontend side. @status:spec/done",
-      "line": 223,
+      "line": 227,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#PICK-STRONGEST"
     },
     {
@@ -20951,7 +20995,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Why:** Software of comparable surface area (Chrome, modern IDEs, production package managers) routinely ships tens to hundreds of dependencies and remains fast and capable. @status:spec/done",
-      "line": 225,
+      "line": 229,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#WHY-PRECEDENT"
     },
     {
@@ -20960,7 +21004,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "Under-specifying a load-bearing component to save megabytes creates ongoing architectural debt that is much more expensive to repay than the weight it saves. vibevm intends to be best-in-class, and best-in-class means using best-in-class primitives. @status:spec/done",
-      "line": 226,
+      "line": 230,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#WHY-DEBT"
     },
     {
@@ -20969,7 +21013,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Legitimate reasons to reject a dep:** @status:spec/done",
-      "line": 228,
+      "line": 232,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#reject-reasons-lead"
     },
     {
@@ -20978,7 +21022,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "non-permissive license (see §3 — MIT / Apache-2.0 / BSD / Unlicense only; GPL / AGPL / LGPL forbidden; MPL-2.0 allowed case by case, since its weak copyleft does not taint consumers), @status:spec/done",
-      "line": 230,
+      "line": 234,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#REJECT-LICENSE"
     },
     {
@@ -20987,7 +21031,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "abandoned upstream, @status:spec/done",
-      "line": 231,
+      "line": 235,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#REJECT-ABANDONED"
     },
     {
@@ -20996,7 +21040,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "demonstrated security issues (CVE history, unpatched known exploit), @status:spec/done",
-      "line": 232,
+      "line": 236,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#REJECT-SECURITY"
     },
     {
@@ -21005,7 +21049,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "fundamentally bad API ergonomics that would propagate into our own interfaces. @status:spec/done",
-      "line": 233,
+      "line": 237,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#REJECT-ERGONOMICS"
     },
     {
@@ -21014,7 +21058,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "\"Too heavy\" alone is **not** a reason. @status:spec/done",
-      "line": 235,
+      "line": 239,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TOO-HEAVY-NOT-REASON"
     },
     {
@@ -21023,7 +21067,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Concrete consequences:** libraries previously rejected on footprint grounds are re-admissible. Notable: `libsolv` (C, with Rust bindings), `git2` (wrapping `libgit2`), bundled native C deps, embedded interpreters when justified. @status:spec/done",
-      "line": 237,
+      "line": 241,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#READMISSIBLE"
     },
     {
@@ -21032,7 +21076,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "The size-based argument in [PROP-001 §2.1](../modules/vibe-registry/PROP-001-git-backend.md#backend) against `git2` is to be pruned — the remaining arguments (Windows SSH auth, shell-out diagnostic clarity) may still carry that decision, but not the size one. @status:spec/done",
-      "line": 238,
+      "line": 242,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#PROP-001-PRUNE"
     },
     {
@@ -21041,7 +21085,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Considered and rejected:** the **predecessor policy — reject a dependency on footprint** (binary size, crate count, transitive weight) — rejected, and its consequences already executed in this section: libraries previously refused on footprint grounds are re-admissible, `libsolv` and `git2` named (`##READMISSIBLE`), and PROP-001 §2.1's size-based argument against `git2` is marked for pruning (`##PROP-001-PRUNE`). Four grounds survive and are the *only* ones — licence, abandonment, demonstrated security issues, API ergonomics (`##REJECT-LICENSE` … `##REJECT-ERGONOMICS`); *\"too heavy\" alone is not a reason* (`##TOO-HEAVY-NOT-REASON`). @status:spec/done",
-      "line": 239,
+      "line": 243,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#dep-weight-rejected"
     },
     {
@@ -21050,7 +21094,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Revisit when:** the premise of `##WHY-PRECEDENT` — that weight does not cost us — stops holding: a dependency is admitted whose weight measurably degrades a user-visible surface (install time, first-run latency, release binary size), recorded as a finding. Observation points exist today — the release artefact's size and `cargo build --timings`; numeric thresholds were offered and not set (owner, 2026-08-01), so the trigger is event-shaped until numbers exist. @status:spec/done",
-      "line": 240,
+      "line": 244,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#dep-weight-revisit"
     },
     {
@@ -21059,7 +21103,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "16. JTD + codegen for wire contracts",
-      "line": 244,
+      "line": 248,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#jtd"
     },
     {
@@ -21068,7 +21112,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Decision:** JSON Type Definition (RFC 8927) schemas are the single source of truth for every client/server and machine-to-machine contract in this project. @status:spec/done",
-      "line": 246,
+      "line": 250,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT"
     },
     {
@@ -21077,7 +21121,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "Rust types — and types in any future non-Rust clients — are **generated** from JTD schemas via `jtd-codegen`, not hand-maintained. @status:spec/done",
-      "line": 247,
+      "line": 251,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-CODEGEN"
     },
     {
@@ -21086,7 +21130,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "No client/server duplication is permitted on contracts. @status:spec/done",
-      "line": 248,
+      "line": 252,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#NO-DUPLICATION"
     },
     {
@@ -21095,7 +21139,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Why:** duplication between a server contract and a hand-written client is a classic source of version-skew bugs; schema-first codegen eliminates that class of bug categorically. @status:spec/done",
-      "line": 250,
+      "line": 254,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-WHY-SKEW"
     },
     {
@@ -21104,7 +21148,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "JTD specifically (over JSON Schema / OpenAPI alone) because JTD is deliberately narrower: its schema grammar is constructed so every JTD schema maps to a clean static type in every target language, with no language-specific escape hatches. @status:spec/done",
-      "line": 251,
+      "line": 255,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-OVER-JSONSCHEMA"
     },
     {
@@ -21113,7 +21157,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Considered and rejected:** **JSON Schema / OpenAPI alone** — rejected: JTD is *\"deliberately narrower: its schema grammar is constructed so every JTD schema maps to a clean static type in every target language, with no language-specific escape hatches\"* (`##JTD-OVER-JSONSCHEMA`); **a hand-written client against each server contract** — rejected: that duplication is *\"a classic source of version-skew bugs\"* which codegen eliminates categorically (`##JTD-WHY-SKEW`, `##NO-DUPLICATION`). The boundary in the other direction is not a rejection: human-edited manifests stay TOML via `serde` — *\"JTD is for wire, not for configs humans hand-edit\"* (`##JTD-OUT-OF-SCOPE`). @status:spec/done",
-      "line": 252,
+      "line": 256,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#jtd-rejected"
     },
     {
@@ -21122,7 +21166,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Revisit when:** either upstream fails us — **`jtd-codegen` ships no release for 24 months** (observation point: its upstream repository, version-pinned in `tools/jtd-codegen/` per `##TC-BINARY`) — **or** a contract listed in `##JTD-IN-SCOPE` proves inexpressible in JTD's grammar and would need an escape hatch, which is the property `##JTD-OVER-JSONSCHEMA` bought the narrowness for. Observation point for the second: the first schema in `schemas/` that cannot be written. @status:spec/done",
-      "line": 253,
+      "line": 257,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#jtd-revisit"
     },
     {
@@ -21131,7 +21175,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**In scope:** LLM provider API wrappers (Anthropic, OpenAI, OpenRouter, Ollama), GitVerse public-API client, `vibe --json` CLI output, telemetry / event log formats, future hosted-registry HTTP surface. @status:spec/done",
-      "line": 255,
+      "line": 259,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-IN-SCOPE"
     },
     {
@@ -21140,7 +21184,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Out of scope:** human-authored manifests — `vibe.toml`, `vibe.lock`, `vibe-package.toml` — stay TOML via `serde`. JTD is for wire, not for configs humans hand-edit. @status:spec/done",
-      "line": 257,
+      "line": 261,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-OUT-OF-SCOPE"
     },
     {
@@ -21149,7 +21193,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Toolchain placement:** @status:spec/done",
-      "line": 259,
+      "line": 263,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#toolchain-lead"
     },
     {
@@ -21158,7 +21202,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "`jtd-codegen` binary in project-local `tools/jtd-codegen/` (gitignored; version pinned). @status:spec/done",
-      "line": 261,
+      "line": 265,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TC-BINARY"
     },
     {
@@ -21167,7 +21211,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "Schemas in `schemas/` at repo root, one `.jtd.json` file per contract, committed. @status:spec/done",
-      "line": 262,
+      "line": 266,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TC-SCHEMAS"
     },
     {
@@ -21176,7 +21220,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "Generated Rust code in `crates/vibe-wire/src/generated/`, committed, with a `// DO NOT EDIT — regenerate via cargo xtask codegen` header on every file. @status:spec/done",
-      "line": 263,
+      "line": 267,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TC-GENERATED"
     },
     {
@@ -21185,7 +21229,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "Regeneration via `cargo xtask codegen`. CI enforces zero drift (`cargo xtask codegen && git diff --exit-code`). @status:spec/done",
-      "line": 264,
+      "line": 268,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TC-REGEN"
     },
     {
@@ -21194,7 +21238,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Toolchain install ownership:** the coding agent sets up the codegen toolchain itself. @status:spec/done",
-      "line": 266,
+      "line": 270,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TC-AGENT-SETS-UP"
     },
     {
@@ -21203,7 +21247,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "Machine-global changes (PATH mutation, admin-level installs, env-var additions) go through `runas` with an operator confirmation at the moment of the change. @status:spec/done",
-      "line": 267,
+      "line": 271,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TC-RUNAS"
     },
     {
@@ -21212,7 +21256,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "17. Production architecture in the prototype phase",
-      "line": 271,
+      "line": 275,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#prod-arch"
     },
     {
@@ -21221,7 +21265,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Decision:** Load-bearing surfaces — lockfile schema, registry protocol, dep-resolver semantics, wire formats, identity model — are designed to production quality from day one. @status:spec/done",
-      "line": 273,
+      "line": 277,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#PROD-QUALITY-DAY-ONE"
     },
     {
@@ -21230,7 +21274,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "The project is a prototype today; the formats and protocols it chooses today are the ones its future users will be bound to. Changing them later is orders of magnitude more expensive than designing them correctly now. @status:spec/done",
-      "line": 274,
+      "line": 278,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#FORMATS-BIND"
     },
     {
@@ -21239,7 +21283,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Lens:** \"a principal engineer at a top-tier infrastructure company, designing a format or protocol that will be used by millions\" is one of the reflection lenses to reach for when a design decision lands. @status:spec/done",
-      "line": 276,
+      "line": 280,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#PRINCIPAL-LENS"
     },
     {
@@ -21248,7 +21292,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "It is **not** the only lens — \"the simplest thing that works\" remains valid for leaf features — but architecture-heavy surfaces prefer the principal-engineer lens. @status:spec/done",
-      "line": 277,
+      "line": 281,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#LENS-NOT-ONLY"
     },
     {
@@ -21257,7 +21301,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Consequences:** @status:spec/done",
-      "line": 279,
+      "line": 283,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#prod-consequences-lead"
     },
     {
@@ -21266,7 +21310,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "Prefer a recent-but-well-designed library over a tactical shortcut, even when the shortcut is cheaper in the short term. @status:spec/done",
-      "line": 281,
+      "line": 285,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#PC-PREFER-DESIGNED"
     },
     {
@@ -21275,7 +21319,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "Extension points, versioning markers, and forward-compatibility hooks land with the initial cut, not in a later \"hardening\" pass. @status:spec/done",
-      "line": 282,
+      "line": 286,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#PC-EXTENSION-POINTS"
     },
     {
@@ -21284,7 +21328,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "Reversibility matters: if a format or protocol decision is hard to reverse (lockfile schema, registry URL scheme, identity hash), lean heavier into design rigour before first commit. @status:spec/done",
-      "line": 283,
+      "line": 287,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#PC-REVERSIBILITY"
     },
     {
@@ -21293,7 +21337,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "\"We'll fix it later\" is a valid stance only for implementation quality inside a well-chosen architectural surface — not for the surface itself. @status:spec/done",
-      "line": 284,
+      "line": 288,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#PC-FIX-LATER-SCOPE"
     },
     {
@@ -21302,7 +21346,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "18. Complexity expectation: higher than RPM",
-      "line": 288,
+      "line": 292,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#complexity"
     },
     {
@@ -21311,7 +21355,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Decision:** The dependency / package model is designed to handle complexity **at least** matching RPM-class systems (zypper, DNF), and in several dimensions greater. @status:spec/done",
-      "line": 290,
+      "line": 294,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#RPM-CLASS-TARGET"
     },
     {
@@ -21320,7 +21364,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "Manifest grammar and lockfile schema reserve fields for — and the resolver implements — capabilities, provides / requires / obsoletes / conflicts / supplements / recommends, disjunctions (`A or B`), boolean rich-dep syntax, capability-based resolve, and multi-kind cross-deps. **Semantic (LLM-reviewed) conflicts are the one exception:** the heuristic static check ships ([PROP-003](../modules/vibe-resolver/PROP-003-dep-evolution.md) `CHECK-ACTIVATION-CONFLICT`) while the LLM lane waits on the unbuilt `vibe-llm` emission engine. All of it is designed in from day one, not deferred. @status:impl/done",
-      "line": 291,
+      "line": 295,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#RICH-DEPS-DAY-ONE"
     },
     {
@@ -21329,7 +21373,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Why:** vibevm's dependency surface is not simpler than RPM — it is wider. A `feat` package may require a `stack` providing a specific capability, `flow`s may declare semantic compatibility with other `flow`s, LLM-backed review adds a non-mechanical conflict dimension RPM never had. @status:spec/done",
-      "line": 293,
+      "line": 297,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#WIDER-THAN-RPM"
     },
     {
@@ -21338,7 +21382,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "Undershoot — picking a resolver that lacks virtual packages or disjunctions, or a manifest that cannot express capability-based requires — would force an incompatible schema migration after users exist. @status:spec/done",
-      "line": 294,
+      "line": 298,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#UNDERSHOOT-COST"
     },
     {
@@ -21347,7 +21391,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Resolver choice** (pinned in the module PROP): `resolvo` crate as the primary depsolver. @status:spec/done",
-      "line": 296,
+      "line": 300,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#RESOLVER-RESOLVO"
     },
     {
@@ -21356,7 +21400,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "`libsolv` as an explicit FFI-backed fallback behind a `DepSolver` trait (analogous to [PROP-001 §2.2](../modules/vibe-registry/PROP-001-git-backend.md#backend-trait)'s `GitBackend` pattern). @status:spec/done",
-      "line": 297,
+      "line": 301,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#RESOLVER-LIBSOLV-FALLBACK"
     },
     {
@@ -21365,7 +21409,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "PubGrub is rejected for the *primary* role — its algorithm does not handle virtual packages or disjunctions — but is acceptable for explanatory rendering of conflicts in CLI output if it proves superior there. @status:spec/done",
-      "line": 298,
+      "line": 302,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#RESOLVER-PUBGRUB-REJECTED"
     },
     {
@@ -21374,7 +21418,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "19. Load-bearing setup documentation",
-      "line": 302,
+      "line": 306,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#setup-docs"
     },
     {
@@ -21383,7 +21427,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Decision:** Two files at the repo root are load-bearing for the project: @status:spec/done",
-      "line": 304,
+      "line": 308,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#SETUP-DOCS"
     },
     {
@@ -21392,7 +21436,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "[`DEV-GUIDE.md`](../../DEV-GUIDE.md) — contributor-facing: everything to install on a fresh machine to clone, build, test, contribute to, and (if authorized) publish from this repository. @status:spec/done",
-      "line": 306,
+      "line": 310,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#DOC-DEV-GUIDE"
     },
     {
@@ -21401,7 +21445,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "[`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) — user-facing: everything to install and env-configure to run the shipped `vibe` CLI. @status:spec/done",
-      "line": 307,
+      "line": 311,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#DOC-RUNTIME-GUIDE"
     },
     {
@@ -21410,7 +21454,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "vibevm's setup docs are [`DEV-GUIDE.md`](../../DEV-GUIDE.md) (contributor / build) and [`RUNTIME-GUIDE.md`](../../RUNTIME-GUIDE.md) (runtime / user). The same-commit obligation that binds them is the `dev-runtime-docs` flow: `spec://org.vibevm.world/dev-runtime-docs/flows/dev-runtime-docs/DEV-RUNTIME-DOCS-PROTOCOL#obligation`. @status:spec/done",
-      "line": 309,
+      "line": 313,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#SETUP-DOCS-FLOW"
     },
     {
@@ -21419,7 +21463,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "20. Token secrecy and adapter scope",
-      "line": 313,
+      "line": 317,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy"
     },
     {
@@ -21428,7 +21472,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "`req r1` @status:spec/done",
-      "line": 315,
+      "line": 319,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#req-token-secrecy"
     },
     {
@@ -21437,7 +21481,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Decision.** Publish tokens, registry-API tokens, and any LLM-provider keys handled by vibevm are **surface secrets** in the sense of the `secrets-hygiene` flow (`spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#surface-secret`): their **value** MUST NOT appear on any surface vibevm produces, though their **source** (env-var name, file path) may be printed. @status:spec/done",
-      "line": 317,
+      "line": 321,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TOKEN-SURFACE-SECRET"
     },
     {
@@ -21446,7 +21490,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "vibevm's bindings of the flow's four laws (`spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#laws`): @status:spec/done",
-      "line": 318,
+      "line": 322,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#token-bindings-lead"
     },
     {
@@ -21455,7 +21499,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Never printed.** Not to stdout, stderr, the CLI log, the `--json` event stream, error messages, panic traces, telemetry, or the lockfile. The CLI prints the *source* of a token (explicit / env-var name / file path) but never the value. The in-process wrapper types (`vibe_publish::Token`, future `vibe_llm::ApiKey`) MUST redact on `Display` and `Debug` — verified by unit tests (the flow's `spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#law-tested`). @status:spec/done",
-      "line": 320,
+      "line": 324,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TS-NEVER-PRINTED"
     },
     {
@@ -21464,7 +21508,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Never persisted.** Not committed to the repository, not written into the lockfile, not embedded in cache files, not landed in the `.vibe/` tree. The single sanctioned at-rest location is the operator's `~/.vibe/<host>.publish.token` file (per-user, chmod-protected). @status:spec/done",
-      "line": 321,
+      "line": 325,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TS-NEVER-PERSISTED"
     },
     {
@@ -21473,7 +21517,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Sanctioned process boundaries.** The token may cross a process boundary only via: (a) the host API's `Authorization: Bearer …` header, sent over TLS; (b) a single `git remote add` / `git push` invocation where the token is embedded in the URL as `https://x-access-token:<TOKEN>@host/…` (modern git ≥ 2.31 redacts URL passwords in its own log output to `***`). No other path is allowed — in particular, never into a spawned third-party hook's environment (the flow's `#law-boundaries`). @status:spec/done",
-      "line": 322,
+      "line": 326,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TS-BOUNDARIES"
     },
     {
@@ -21482,7 +21526,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Adapter scope.** A `RepoCreator` impl MUST refuse to operate outside the organization specified in the project's `[[registry]].url`. A publish run targeting `github.com/vibespecs` may not create, modify, or even probe a repository under a different `github.com` org or under any user namespace. Adapter implementations carry an explicit org-prefix check and surface a `PublishError` on attempted scope escalation. (The general integration-scope discipline is the flow's `scope-discipline` document.) @status:spec/done",
-      "line": 323,
+      "line": 327,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TS-ADAPTER-SCOPE"
     },
     {
@@ -21491,7 +21535,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Why global, not module-local.** The blast radius of a leaked publish token is the entire organization it can reach (cross-repo writes, branch deletes, CI-secret reads); of an escalated adapter, the entire host account (the flow's `spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/SECRETS-HYGIENE-PROTOCOL#blast-radius`). Both are catastrophic beyond what module-local discipline can bound, so the rules are global and every code path touching a `Token` or a `RepoCreator` is audited. @status:spec/done",
-      "line": 325,
+      "line": 329,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#BLAST-RADIUS"
     },
     {
@@ -21500,7 +21544,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "On any suspected leak, rotate first (the flow's `#leak-drill`). @status:spec/done",
-      "line": 326,
+      "line": 330,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#ROTATE-FIRST"
     },
     {
@@ -21509,7 +21553,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Where pinned (operationally):** [PROP-002 §2.10](../modules/vibe-registry/PROP-002-decentralized-registry.md#publish) carries the publish-side mechanics; [`spec/boot/90-user.md`](../boot/90-user.md) carries the operator-facing rule for this machine. Both are subordinate to this PROP-000 entry. @status:spec/done",
-      "line": 328,
+      "line": 332,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#TOKEN-PINNED-WHERE"
     },
     {
@@ -21518,7 +21562,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "21. Surface floor — which channels a capability owes",
-      "line": 332,
+      "line": 336,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#surfaces"
     },
     {
@@ -21527,7 +21571,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Decision:** a capability lives in a **library**; the CLI, the TUI and the MCP server are thin surfaces over it. The rule and its vocabulary are the installed `omnichannel` flow: `spec://org.vibevm.world/omnichannel/flows/omnichannel/OMNICHANNEL-PROTOCOL#root`. This section declares only vibevm's own floor, which is what that flow asks each project to state for itself. @status:spec/done",
-      "line": 334,
+      "line": 338,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#SURFACE-DISCIPLINE-IS-THE-OMNICHANNEL-FLOW"
     },
     {
@@ -21536,7 +21580,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**vibevm's declared floor: library + CLI + MCP**, plus **TUI** where one exists (`vibe tree` has one today). A new capability ships with those, or with a recorded reason why one sufficed. @status:spec/plan",
-      "line": 336,
+      "line": 340,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#VIBEVM-DECLARES-LIBRARY-CLI-MCP"
     },
     {
@@ -21545,7 +21589,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**LSP and IDE extensions are deliberately NOT declared** (owner, 2026-08-06: he will open that work himself). By the flow's own rule an undeclared surface is not a debt, so their absence is a choice and not a gap to be closed. @status:spec/done",
-      "line": 338,
+      "line": 342,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#LSP-AND-IDE-ARE-NOT-DECLARED"
     },
     {
@@ -21554,7 +21598,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**This is a target, not a description of today.** The census that motivated the decision (`campaigns/packages-2026-09/harvest/g6-b047-surfaces-census.md`) measured the opposite in places: of 29 top-level commands, 19 keep their substance in a separate crate and **10 keep it inside `vibe-cli`** — the largest being the whole `vibe self` version manager. Of 5 MCP tools, 2 share a library function with their CLI twin, 2 have no CLI twin, and 1 reads the same data as `vibe list` while building its output by hand. @status:spec/done",
-      "line": 340,
+      "line": 344,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#THE-FLOOR-IS-A-TARGET-NOT-A-DESCRIPTION"
     },
     {
@@ -21563,7 +21607,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**The gap is not theoretical.** `vibe list --json` and the MCP `query_package` printed different values for one field on Windows until 2026-08-06, because each rendered the path itself — two surfaces of one capability answering one question differently, which is exactly the failure this floor exists to prevent. @status:spec/done",
-      "line": 342,
+      "line": 346,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#THE-DIVERGENCE-HAS-ALREADY-BEEN-PAID-FOR"
     },
     {
@@ -21572,7 +21616,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "Invariants",
-      "line": 346,
+      "line": 350,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#invariants"
     },
     {
@@ -21581,7 +21625,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "(These restate the most load-bearing rules from the spec and the book. If anything below seems violated in practice, stop and reconcile before proceeding.) @status:spec/done",
-      "line": 348,
+      "line": 352,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INVARIANTS-STOP-RULE"
     },
     {
@@ -21590,7 +21634,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Vocabulary lock.** Never use Maven's \"lifecycle/phase/goal\" or Bazel's internal terminology in user-facing or internal code. The installable kinds are `flow`, `feat`, `stack`, `tool`, `mcp`, `lang` — the register grows only by owner amendment to `VIBEVM-SPEC.md` §4.1 (`app` is anticipated). The canonical process discipline vocabulary is the one in `VIBEVM-SPEC.md` §4 and the book. @status:spec/done",
-      "line": 350,
+      "line": 354,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-VOCABULARY"
     },
     {
@@ -21599,7 +21643,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**`spec/` is fixed.** The directory name and role cannot be configured away in v1. @status:spec/done",
-      "line": 351,
+      "line": 355,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-SPEC-DIR"
     },
     {
@@ -21608,7 +21652,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**User-owned files are never written by `vibe`.** `spec/boot/00-core.md` and `spec/boot/90-user.md` are off-limits to install/uninstall/update. @status:spec/done",
-      "line": 352,
+      "line": 356,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-USER-FILES"
     },
     {
@@ -21617,7 +21661,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**One commit = one logical unit.** Commit messages follow the git-practices family (§12) and reference `spec://…` URIs where relevant. @status:spec/done",
-      "line": 353,
+      "line": 357,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-ATOMIC-COMMITS"
     },
     {
@@ -21626,7 +21670,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Dogfood.** vibevm is being built using the same discipline it enforces. The `spec/` tree in this repo IS `vibe init`'s reference output. @status:spec/done",
-      "line": 354,
+      "line": 358,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-DOGFOOD"
     },
     {
@@ -21635,7 +21679,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Human authorship is the only attribution.** The posture is the `attribution-policy` flow (a git-practices member, §12); everywhere else assume human authorship only. @status:spec/done",
-      "line": 355,
+      "line": 359,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-HUMAN-AUTHORSHIP"
     },
     {
@@ -21644,7 +21688,7 @@
       "doc_path": "common/PROP-000",
       "file": "spec/common/PROP-000.md",
       "heading": "**Tokens never appear in vibevm output.** See §20. Audited in unit tests; any new code path touching a `Token` or `RepoCreator` is reviewed for redaction and scope-escalation safety. @status:spec/done",
-      "line": 356,
+      "line": 360,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-000#INV-TOKEN-SECRECY"
     },
     {
@@ -40477,7 +40521,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:1e1656d099570a3ecf2b6299d1e5905bb3dc92aeee12dc1bdbc3c34d936f3851",
+      "content_hash": "sha256:9415e8e3f975eadad61dd66a7f819363d55cf398d202f2c35d4645fdf838cd20",
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "PROP-037: `vibe tree` — the interactive TUI application",
@@ -40522,7 +40566,7 @@
     },
     {
       "anchor": "done-definition",
-      "content_hash": "sha256:fb1f6f51c4d57a146ab9e7a0c36a5b62e4e50fb3feaad8f6ab7eb51154ac5e33",
+      "content_hash": "sha256:75912cc56a43942f221a773199a7cb7f699c6548290dd4dc3f0ff8570a567a12",
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "0. What \"finished\" means for this subsystem",
@@ -40621,10 +40665,10 @@
     },
     {
       "anchor": "THE-REMAINING-WORK-IS-BOUNDED-AND-NAMED",
-      "content_hash": "sha256:d459e20319cb1bf6f121fb6c8c25228457a3710dacd495b361b907aa00075df7",
+      "content_hash": "sha256:44f2076a195d55ff6791fbb8da0f04b7298c2888c4981305e4654acf865e0021",
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
-      "heading": "**The subsystem is therefore NOT",
+      "heading": "**The one bounded piece of work",
       "line": 112,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#THE-REMAINING-WORK-IS-BOUNDED-AND-NAMED"
     },
@@ -40634,7 +40678,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**Two candidates were weighed and",
-      "line": 120,
+      "line": 122,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#TWO-CANDIDATES-WERE-WEIGHED-AND-CLEARED"
     },
     {
@@ -40643,7 +40687,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**A correction to",
-      "line": 129,
+      "line": 131,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#ONE-MEASUREMENT-OF-THIS-SECTION-IS-SOFTER-THAN-IT-READS"
     },
     {
@@ -40652,7 +40696,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "1. Architecture — layers",
-      "line": 138,
+      "line": 140,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#architecture"
     },
     {
@@ -40661,7 +40705,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "The application separates, as fixed layers, (a) the vibevm data it renders, (b)",
-      "line": 140,
+      "line": 142,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#layers-intro"
     },
     {
@@ -40670,7 +40714,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "The one-line law: **styling never leaks into",
-      "line": 143,
+      "line": 145,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#LAYERING-LAW"
     },
     {
@@ -40679,7 +40723,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "1.1 The four layers",
-      "line": 146,
+      "line": 148,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#layers"
     },
     {
@@ -40688,7 +40732,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. The code is organized as four layers with one-directional dependencies",
-      "line": 148,
+      "line": 150,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#FOUR-LAYERS"
     },
     {
@@ -40697,7 +40741,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**vibevm backend** — `vibe-core` / `vibe-workspace` / `vibe-spec` (the",
-      "line": 151,
+      "line": 153,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#LAYER-BACKEND"
     },
     {
@@ -40706,7 +40750,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**Model** — the app's data: the borrowed/owned `PackageTree` plus all UI",
-      "line": 153,
+      "line": 155,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#LAYER-MODEL"
     },
     {
@@ -40715,7 +40759,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**View** — the component library (§2) and the theme (§2.2). Renders Model +",
-      "line": 155,
+      "line": 157,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#LAYER-VIEW"
     },
     {
@@ -40724,7 +40768,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**Controller** — event routing, the keymap registry (§5.1), the modal stack",
-      "line": 157,
+      "line": 159,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#LAYER-CONTROLLER"
     },
     {
@@ -40733,7 +40777,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "The MVC cycle: event → Controller (routes to the focused component / top modal,",
-      "line": 160,
+      "line": 162,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#MVC-CYCLE"
     },
     {
@@ -40742,7 +40786,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "1.2 The vibevm boundary",
-      "line": 164,
+      "line": 166,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#backend-boundary"
     },
     {
@@ -40751,7 +40795,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. The app consumes vibevm through exactly one seam — the `PackageTree` model",
-      "line": 166,
+      "line": 168,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#BACKEND-BOUNDARY-REQ"
     },
     {
@@ -40760,7 +40804,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "1.3 Model",
-      "line": 173,
+      "line": 175,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#model"
     },
     {
@@ -40769,7 +40813,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. The Model owns: the analyzed `PackageTree` (read-only vibevm data); and the",
-      "line": 175,
+      "line": 177,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#MODEL-REQ"
     },
     {
@@ -40778,7 +40822,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "1.4 View — components + theme",
-      "line": 183,
+      "line": 185,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#view"
     },
     {
@@ -40787,7 +40831,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. All on-screen output is produced by the component library (§2). A component",
-      "line": 185,
+      "line": 187,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#VIEW-REQ"
     },
     {
@@ -40796,7 +40840,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "1.5 Controller — events, keymap, modals, actions",
-      "line": 191,
+      "line": 193,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#controller"
     },
     {
@@ -40805,7 +40849,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. The Controller receives each terminal event and routes it: to the **top",
-      "line": 193,
+      "line": 195,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#CONTROLLER-REQ"
     },
     {
@@ -40814,7 +40858,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "1.6 English-only, i18n-ready",
-      "line": 202,
+      "line": 204,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#i18n"
     },
     {
@@ -40823,7 +40867,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. All user-facing strings are English and live behind a single string",
-      "line": 204,
+      "line": 206,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#I18N-READY-REQ"
     },
     {
@@ -40832,7 +40876,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "2. The component library",
-      "line": 211,
+      "line": 213,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#components"
     },
     {
@@ -40841,7 +40885,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "A reusable, vibevm-owned widget library — the abstraction that stops \"a million",
-      "line": 213,
+      "line": 215,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#component-library-intro"
     },
     {
@@ -40850,7 +40894,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "2.1 Component strategy — wrap, extend, or invent",
-      "line": 216,
+      "line": 218,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#component-strategy"
     },
     {
@@ -40859,7 +40903,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. Components are built in this order of preference: **(1) wrap** a `rat-widget`",
-      "line": 218,
+      "line": 220,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#COMPONENT-STRATEGY"
     },
     {
@@ -40868,7 +40912,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "2.2 The theme",
-      "line": 227,
+      "line": 229,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#theme"
     },
     {
@@ -40877,7 +40921,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. A single `Theme` value carries every color, text style, border style,",
-      "line": 229,
+      "line": 231,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#THEME-REQ"
     },
     {
@@ -40886,7 +40930,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "The visual language is **a first-class part of this contract**, not an",
-      "line": 236,
+      "line": 238,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#visual-language-note"
     },
     {
@@ -40895,7 +40939,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "2.2.1 Palette tokens",
-      "line": 242,
+      "line": 244,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#palette-tokens"
     },
     {
@@ -40904,7 +40948,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. Colour reaches a component only through a **`Palette`** — a data-driven",
-      "line": 244,
+      "line": 246,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#PALETTE-TOKENS-REQ"
     },
     {
@@ -40913,7 +40957,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. Five palettes ship, each a complete role→`Color` mapping. **Rosé Pine**",
-      "line": 250,
+      "line": 252,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#FIVE-PALETTES"
     },
     {
@@ -40922,7 +40966,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. A palette carries an `is_light` flag; `selection` is composed (`accent`",
-      "line": 258,
+      "line": 260,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#PALETTE-IS-LIGHT"
     },
     {
@@ -40931,7 +40975,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "2.2.2 Glyph vocabulary",
-      "line": 264,
+      "line": 266,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#glyph-vocabulary"
     },
     {
@@ -40940,7 +40984,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. Every glyph is a constant on the `Theme`, never a hardcoded string at a",
-      "line": 266,
+      "line": 268,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#GLYPH-CONSTANTS"
     },
     {
@@ -40949,7 +40993,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. In the primary UI (Tier ≥ 1) there are no `+`/`-`/`*`/`#`/`x`/`.` used as",
-      "line": 273,
+      "line": 275,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#NO-ASCII-SEMANTIC"
     },
     {
@@ -40958,7 +41002,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "2.2.3 Rendering tiers",
-      "line": 277,
+      "line": 279,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#rendering-tiers"
     },
     {
@@ -40967,7 +41011,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. Rendering degrades through four tiers — **3** (truecolor: full RGB, rounded",
-      "line": 279,
+      "line": 281,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#FOUR-TIERS"
     },
     {
@@ -40976,7 +41020,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. Tier detection is a **pure function** over the environment —",
-      "line": 285,
+      "line": 287,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#TIER-DETECTION"
     },
     {
@@ -40985,7 +41029,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. Degradation is a **projection**: one `Theme` is built for Tier 3 and",
-      "line": 300,
+      "line": 302,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#TIER-PROJECTION"
     },
     {
@@ -40994,7 +41038,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "2.2.4 Window aesthetics",
-      "line": 305,
+      "line": 307,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#window-aesthetics"
     },
     {
@@ -41003,7 +41047,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. A window (§2.3) is not a fallback: it composes a solid `base` panel, a",
-      "line": 307,
+      "line": 309,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#WINDOW-AESTHETICS-REQ"
     },
     {
@@ -41012,7 +41056,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "2.2.5 Spacing & rhythm",
-      "line": 313,
+      "line": 315,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#spacing"
     },
     {
@@ -41021,7 +41065,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. The theme's **spacing** (§2.2) is normative, not decorative: a component",
-      "line": 315,
+      "line": 317,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#SPACING-REQ"
     },
     {
@@ -41030,7 +41074,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**`PAD_X` = 2, `PAD_Y` = 1 — interior padding.** Inside every window/dialog",
-      "line": 321,
+      "line": 323,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#PAD-CONSTANTS"
     },
     {
@@ -41039,7 +41083,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**`GUTTER` = 1 — group gutter.** A control inside a `Group` frame (§2.6) is",
-      "line": 327,
+      "line": 329,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#GUTTER-CONSTANT"
     },
     {
@@ -41048,7 +41092,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**Rhythm.** Sibling controls are separated — framed groups by a blank row",
-      "line": 330,
+      "line": 332,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#RHYTHM-RULE"
     },
     {
@@ -41057,7 +41101,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "The values are lore-explained in the design doc §6 `#spacing-rhythm`; the footer",
-      "line": 334,
+      "line": 336,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#spacing-lore-note"
     },
     {
@@ -41066,7 +41110,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "2.3 Window / Panel",
-      "line": 337,
+      "line": 339,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#window"
     },
     {
@@ -41075,7 +41119,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. A `Window` component: a bordered, titled region drawn over a cleared rect,",
-      "line": 339,
+      "line": 341,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#WINDOW-COMPONENT"
     },
     {
@@ -41084,7 +41128,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "2.4 Menu — the dropdown list",
-      "line": 344,
+      "line": 346,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#menu"
     },
     {
@@ -41093,7 +41137,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. A `Menu` component: a centered, window-framed list of options; `↑`/`↓` move",
-      "line": 346,
+      "line": 348,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#MENU-COMPONENT"
     },
     {
@@ -41102,7 +41146,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "2.5 Button",
-      "line": 351,
+      "line": 353,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#button"
     },
     {
@@ -41111,7 +41155,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. A `Button` component: a labelled, focusable control; the focused button is",
-      "line": 353,
+      "line": 355,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#BUTTON-COMPONENT"
     },
     {
@@ -41120,7 +41164,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "2.6 Group / Fieldset",
-      "line": 357,
+      "line": 359,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#group"
     },
     {
@@ -41129,7 +41173,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. A `Group` component: a visually delimited cluster of child components",
-      "line": 359,
+      "line": 361,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#GROUP-COMPONENT"
     },
     {
@@ -41138,7 +41182,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "2.7 RadioGroup",
-      "line": 364,
+      "line": 366,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#radio-group"
     },
     {
@@ -41147,7 +41191,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. A `RadioGroup` component: a `Group` whose children are mutually-exclusive",
-      "line": 366,
+      "line": 368,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#RADIO-GROUP-COMPONENT"
     },
     {
@@ -41156,7 +41200,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "2.8 TextField",
-      "line": 371,
+      "line": 373,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#text-field"
     },
     {
@@ -41165,7 +41209,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. A `TextField` component: a single-line editable text input (the file-path",
-      "line": 373,
+      "line": 375,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#TEXT-FIELD-COMPONENT"
     },
     {
@@ -41174,7 +41218,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "2.9 Card / Form",
-      "line": 377,
+      "line": 379,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#card"
     },
     {
@@ -41183,7 +41227,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. A `Card` component: a `Window` laid out as a labelled vertical form — see",
-      "line": 379,
+      "line": 381,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#CARD-COMPONENT"
     },
     {
@@ -41192,7 +41236,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "2.10 The standard \"Coming Soon\" modal",
-      "line": 383,
+      "line": 385,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#coming-soon"
     },
     {
@@ -41201,7 +41245,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. A single reusable `ComingSoon` modal — a `Window` titled with the feature",
-      "line": 385,
+      "line": 387,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#COMING-SOON-MODAL"
     },
     {
@@ -41210,7 +41254,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "3. The Tree widget + filter pipeline",
-      "line": 393,
+      "line": 395,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#tree-widget"
     },
     {
@@ -41219,7 +41263,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "The core reusable abstraction: one tree widget, fed by a configurable pipeline. @status:spec/done",
-      "line": 395,
+      "line": 397,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#tree-abstraction-intro"
     },
     {
@@ -41228,7 +41272,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "3.1 The Tree widget",
-      "line": 397,
+      "line": 399,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#tree"
     },
     {
@@ -41237,7 +41281,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. A single `Tree` component renders a forest of `PackageTree` nodes — the",
-      "line": 399,
+      "line": 401,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#TREE-WIDGET-REQ"
     },
     {
@@ -41246,7 +41290,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "3.2 The filter / shape pipeline",
-      "line": 406,
+      "line": 408,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#tree-filters"
     },
     {
@@ -41255,7 +41299,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. Data reaches the `Tree` widget only after passing a configurable",
-      "line": 408,
+      "line": 410,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#FILTER-PIPELINE"
     },
     {
@@ -41264,7 +41308,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "3.3 The three tree shapes",
-      "line": 415,
+      "line": 417,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#tree-shapes"
     },
     {
@@ -41273,7 +41317,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. The pipeline offers three shapes, selectable per context on the F2 sort menu",
-      "line": 417,
+      "line": 419,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#THREE-SHAPES"
     },
     {
@@ -41282,7 +41326,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**(a) members-as-roots + full subtrees** — each package in the filter set is a",
-      "line": 420,
+      "line": 422,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#SHAPE-MEMBERS-ROOTS"
     },
     {
@@ -41291,7 +41335,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**(b) load-type forest** — a package is a root only if no other member of the",
-      "line": 423,
+      "line": 425,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#SHAPE-LOAD-FOREST"
     },
     {
@@ -41300,7 +41344,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**(c) pruned tree** — the tree from the declared roots, keeping only branches",
-      "line": 426,
+      "line": 428,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#SHAPE-PRUNED"
     },
     {
@@ -41309,7 +41353,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "All three are pipeline configurations over §3.2 — implementing them validates",
-      "line": 429,
+      "line": 431,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#shapes-validate"
     },
     {
@@ -41318,7 +41362,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "4. Modes",
-      "line": 434,
+      "line": 436,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#modes"
     },
     {
@@ -41327,7 +41371,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. `vibe tree` has three display modes, each a Tree-widget (§3.1) configuration",
-      "line": 436,
+      "line": 438,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#THREE-MODES"
     },
     {
@@ -41336,7 +41380,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "4.1 Tree mode",
-      "line": 439,
+      "line": 441,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#mode-tree"
     },
     {
@@ -41345,7 +41389,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. One tree over the whole package set (the current default). Filter = all;",
-      "line": 440,
+      "line": 442,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#MODE-TREE-REQ"
     },
     {
@@ -41354,7 +41398,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "4.2 Sub-tables mode",
-      "line": 443,
+      "line": 445,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#mode-subtables"
     },
     {
@@ -41363,7 +41407,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. **Several trees stacked vertically** — one Tree instance per effective-load",
-      "line": 444,
+      "line": 446,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#MODE-SUBTABLES-REQ"
     },
     {
@@ -41372,7 +41416,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "4.3 Tabs mode",
-      "line": 449,
+      "line": 451,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#mode-tabs"
     },
     {
@@ -41381,7 +41425,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. **One tree per tab** — a tab bar (`Static` / `Dynamic` / `No-boot`); the",
-      "line": 450,
+      "line": 452,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#MODE-TABS-REQ"
     },
     {
@@ -41390,7 +41434,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "4.4 Mode selection",
-      "line": 454,
+      "line": 456,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#mode-select"
     },
     {
@@ -41399,7 +41443,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. The active mode is chosen from the F3 menu (§7.1) — not a bare cycle key.",
-      "line": 455,
+      "line": 457,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#MODE-SELECT-REQ"
     },
     {
@@ -41408,7 +41452,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "5. The keymap",
-      "line": 460,
+      "line": 462,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#keymap"
     },
     {
@@ -41417,7 +41461,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "5.1 The mode-aware registry",
-      "line": 462,
+      "line": 464,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#keymap-registry"
     },
     {
@@ -41426,7 +41470,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. A single **keymap registry** maps each context (base mode, and each modal)",
-      "line": 464,
+      "line": 466,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#KEYMAP-REGISTRY-REQ"
     },
     {
@@ -41435,7 +41479,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "5.2 The F-key scheme + footer",
-      "line": 471,
+      "line": 473,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#keys"
     },
     {
@@ -41444,7 +41488,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. Primary actions are on function keys: `F1` Search Everywhere (§7.3), `F2`",
-      "line": 473,
+      "line": 475,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#F-KEY-SCHEME"
     },
     {
@@ -41453,7 +41497,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. The footer renders as **two centred rows** (§2.2.5 `#spacing`): the F-key",
-      "line": 479,
+      "line": 481,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#FOOTER-TWO-ROWS"
     },
     {
@@ -41462,7 +41506,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "5.3 Tree interaction keys",
-      "line": 486,
+      "line": 488,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#tree-keys"
     },
     {
@@ -41471,7 +41515,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. Within a tree: `↑`/`↓` move selection (+ scroll), `←`/`→` pan horizontally,",
-      "line": 488,
+      "line": 490,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#TREE-KEYS-REQ"
     },
     {
@@ -41480,7 +41524,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "5.4 Focus groups + Tab Order",
-      "line": 495,
+      "line": 497,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#focus-groups"
     },
     {
@@ -41489,7 +41533,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. A screen's controls are partitioned into **focus groups** — cohesive",
-      "line": 497,
+      "line": 499,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#FOCUS-GROUPS-REQ"
     },
     {
@@ -41498,7 +41542,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. The focused group is visually marked (the theme's selection/accent), so the",
-      "line": 506,
+      "line": 508,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#FOCUS-MARKED"
     },
     {
@@ -41507,7 +41551,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "6. The modal stack",
-      "line": 514,
+      "line": 516,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#modal-stack"
     },
     {
@@ -41516,7 +41560,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. Modals form a **stack**: opening a modal pushes it; it draws over",
-      "line": 516,
+      "line": 518,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#MODAL-STACK-REQ"
     },
     {
@@ -41525,7 +41569,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "7. Menus & dialogs",
-      "line": 525,
+      "line": 527,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#dialogs"
     },
     {
@@ -41534,7 +41578,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "7.1 F3 — the mode menu",
-      "line": 527,
+      "line": 529,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#f3-mode-menu"
     },
     {
@@ -41543,7 +41587,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. `F3` opens a `Menu` (§2.4) of the display modes (§4). Selecting one switches",
-      "line": 528,
+      "line": 530,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#F3-MODE-MENU-REQ"
     },
     {
@@ -41552,7 +41596,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "7.2 F2 — the sort menu",
-      "line": 531,
+      "line": 533,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#f2-sort-menu"
     },
     {
@@ -41561,7 +41605,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. `F2` opens a dialog whose content depends on the active mode: @status:spec/done",
-      "line": 532,
+      "line": 534,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#F2-SORT-MENU-REQ"
     },
     {
@@ -41570,7 +41614,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**tree & tabs modes** — one `RadioGroup` (§2.7): `alphabetical` / `topological`",
-      "line": 533,
+      "line": 535,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#sort-tree-tabs"
     },
     {
@@ -41579,7 +41623,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**sub-tables mode** — two `Group`s (§2.6): a \"sort\" group (`alphabetical` /",
-      "line": 535,
+      "line": 537,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#sort-subtables"
     },
     {
@@ -41588,7 +41632,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "The tree **shape** (§3.3) is also chosen here (a further group), per context.",
-      "line": 539,
+      "line": 541,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#SORT-SHAPE-HERE"
     },
     {
@@ -41597,7 +41641,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "7.3 F1 — Search Everywhere",
-      "line": 542,
+      "line": 544,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#f1-search"
     },
     {
@@ -41606,7 +41650,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. `F1` opens the **Search Everywhere** window — the `vibe-actions` Search",
-      "line": 543,
+      "line": 545,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#F1-SEARCH-REQ"
     },
     {
@@ -41615,7 +41659,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**Packages** — by name (`PackageProvider` over the `PackageTree`); selecting",
-      "line": 548,
+      "line": 550,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#PROVIDER-PACKAGES"
     },
     {
@@ -41624,7 +41668,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**Cards** — inside **every field** of the package detail cards (§8)",
-      "line": 550,
+      "line": 552,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#PROVIDER-CARDS"
     },
     {
@@ -41633,7 +41677,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**Actions** — all `vibe.tree` actions (§13.5) by address, **name, and",
-      "line": 553,
+      "line": 555,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#PROVIDER-ACTIONS"
     },
     {
@@ -41642,7 +41686,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "Matching falls back to the **name/description** lane when nothing matches by id or",
-      "line": 558,
+      "line": 560,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#SEARCH-ENGINE-NOTES"
     },
     {
@@ -41651,7 +41695,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "7.4 Escape — quit with confirmation",
-      "line": 564,
+      "line": 566,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#quit-confirm"
     },
     {
@@ -41660,7 +41704,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. At the base screen, `Esc` opens a confirm dialog (\"Really quit?\") with",
-      "line": 565,
+      "line": 567,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#QUIT-CONFIRM-REQ"
     },
     {
@@ -41669,7 +41713,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "8. The detail card",
-      "line": 572,
+      "line": 574,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#detail-card"
     },
     {
@@ -41678,7 +41722,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. `Enter` on a package opens the detail **Card** (§2.9) — a real form, not a",
-      "line": 574,
+      "line": 576,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#DETAIL-CARD-REQ"
     },
     {
@@ -41687,7 +41731,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "a light panel background with dark text (a \"paper\" card), distinct from the",
-      "line": 576,
+      "line": 578,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#card-paper"
     },
     {
@@ -41696,7 +41740,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**bold** field headers; blank-line / padded spacing between fields; @status:spec/done",
-      "line": 578,
+      "line": 580,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#card-headers"
     },
     {
@@ -41705,7 +41749,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "an `esc [x]` close affordance drawn as a pseudographic cross in the top-right",
-      "line": 579,
+      "line": 581,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#card-close"
     },
     {
@@ -41714,7 +41758,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "long values **wrap** (never truncate) and each wrapped value line can be",
-      "line": 581,
+      "line": 583,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#CARD-WRAP-COPY"
     },
     {
@@ -41723,7 +41767,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "`Esc` / the `[x]` closes it. @status:spec/done",
-      "line": 583,
+      "line": 585,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#card-esc"
     },
     {
@@ -41732,7 +41776,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "The card's content is the package detail from PROP-036 §2.11 (name, group,",
-      "line": 585,
+      "line": 587,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#CARD-CONTENT"
     },
     {
@@ -41741,7 +41785,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "9. Settings persistence",
-      "line": 591,
+      "line": 593,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#settings"
     },
     {
@@ -41750,7 +41794,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. UI state persists under `~/.vibe/tree/` as one or more JSON files. Saved:",
-      "line": 593,
+      "line": 595,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#SETTINGS-PERSISTENCE"
     },
     {
@@ -41759,7 +41803,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "10. The copy system",
-      "line": 602,
+      "line": 604,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#copy"
     },
     {
@@ -41768,7 +41812,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "10.1 Per-screen copy providers",
-      "line": 604,
+      "line": 606,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#copy-providers"
     },
     {
@@ -41777,7 +41821,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. Each screen (tree/sub-tables/tabs; the card) supplies a **copy provider** —",
-      "line": 605,
+      "line": 607,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#COPY-PROVIDERS-REQ"
     },
     {
@@ -41786,7 +41830,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "10.2 F6 copy / Shift+F6 copy-settings",
-      "line": 611,
+      "line": 613,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#copy-flow"
     },
     {
@@ -41795,7 +41839,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. `F6` copies the current screen straight to the clipboard as text (the",
-      "line": 612,
+      "line": 614,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#COPY-FLOW-REQ"
     },
     {
@@ -41804,7 +41848,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "10.3 Markdown export",
-      "line": 618,
+      "line": 620,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#copy-markdown"
     },
     {
@@ -41813,7 +41857,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. Markdown is a real serialization, not a screen-buffer scrape: the tree",
-      "line": 619,
+      "line": 621,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#MARKDOWN-EXPORT-REQ"
     },
     {
@@ -41822,7 +41866,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "10.4 PNG export",
-      "line": 623,
+      "line": 625,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#copy-png"
     },
     {
@@ -41831,7 +41875,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. PNG export (a rasterized tree image; a designed package info-card image) is",
-      "line": 624,
+      "line": 626,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#PNG-RESERVED"
     },
     {
@@ -41840,7 +41884,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "10.5 Destination — clipboard vs file",
-      "line": 628,
+      "line": 630,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#copy-dest"
     },
     {
@@ -41849,7 +41893,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. Clipboard writes via the platform clipboard. File destination pushes a",
-      "line": 629,
+      "line": 631,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#COPY-DEST-REQ"
     },
     {
@@ -41858,7 +41902,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "11. AI-Native Rust discipline",
-      "line": 636,
+      "line": 638,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#discipline"
     },
     {
@@ -41867,7 +41911,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. All code implementing this contract follows the AI-Native Rust discipline",
-      "line": 638,
+      "line": 640,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#DISCIPLINE-REQ"
     },
     {
@@ -41876,7 +41920,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "12. Non-goals",
-      "line": 650,
+      "line": 652,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#non-goals"
     },
     {
@@ -41885,7 +41929,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**Non-English localization content** — the i18n *mechanism* ships (PROP-039 §8,",
-      "line": 652,
+      "line": 654,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#NG-LOCALIZATION"
     },
     {
@@ -41894,7 +41938,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**PNG export** — reserved behind `ComingSoon` (§10.4) until the rasterization",
-      "line": 655,
+      "line": 657,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#NG-PNG"
     },
     {
@@ -41903,7 +41947,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**The AIUI surface itself** — not built now; this TUI is its prototype (§13.1,",
-      "line": 657,
+      "line": 659,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#NG-AIUI"
     },
     {
@@ -41912,7 +41956,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**PlantUML / Mermaid copy formats** — later additions to §10.2. @status:spec/done",
-      "line": 660,
+      "line": 662,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#NG-PLANTUML"
     },
     {
@@ -41921,7 +41965,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**A settings UI** — settings are edited via the menus (§7) and persisted (§9);",
-      "line": 661,
+      "line": 663,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#NG-SETTINGS-UI"
     },
     {
@@ -41930,7 +41974,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "**Non-tty operation** — `--json` / `--plain` (PROP-036) remain the machine and",
-      "line": 663,
+      "line": 665,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#NG-NON-TTY"
     },
     {
@@ -41939,7 +41983,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "13. Built on the action system (`vibe-actions`, PROP-039)",
-      "line": 668,
+      "line": 670,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#action-system"
     },
     {
@@ -41948,7 +41992,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "This TUI is the **first consumer** and the **prototype surface** of the action",
-      "line": 670,
+      "line": 672,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#action-system-intro"
     },
     {
@@ -41957,7 +42001,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "13.1 The TUI is a Surface; the Model is the serialisable view",
-      "line": 674,
+      "line": 676,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#as-surface"
     },
     {
@@ -41966,7 +42010,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. The TUI is a `Surface` (PROP-039 §11.1) over `vibe-actions`; it owns rendering",
-      "line": 675,
+      "line": 677,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#AS-SURFACE-REQ"
     },
     {
@@ -41975,7 +42019,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "13.2 Commands are addressed actions",
-      "line": 683,
+      "line": 685,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#as-actions"
     },
     {
@@ -41984,7 +42028,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. Every TUI command is a `vibe-actions` **Action** (PROP-039 §3) in the group",
-      "line": 684,
+      "line": 686,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#AS-ACTIONS-REQ"
     },
     {
@@ -41993,7 +42037,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "13.3 The keymap binds keys to addresses",
-      "line": 692,
+      "line": 694,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#as-keymap"
     },
     {
@@ -42002,7 +42046,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. The mode-aware keymap (§5.1) binds each key/chord, per context, to an",
-      "line": 693,
+      "line": 695,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#AS-KEYMAP-REQ"
     },
     {
@@ -42011,7 +42055,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "13.4 i18n is real",
-      "line": 699,
+      "line": 701,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#as-i18n"
     },
     {
@@ -42020,7 +42064,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. This **upgrades §1.6** from \"i18n-ready\" to the shipped `vibe-actions` i18n",
-      "line": 700,
+      "line": 702,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#AS-I18N-REQ"
     },
     {
@@ -42029,7 +42073,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "13.5 The action catalogue",
-      "line": 707,
+      "line": 709,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#action-catalogue"
     },
     {
@@ -42038,7 +42082,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. The `vibe.tree` actions at ship — each an addressed Action with a name +",
-      "line": 708,
+      "line": 710,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#ACTION-CATALOGUE-REQ"
     },
     {
@@ -42047,7 +42091,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. This catalogue is the **enumerable** source for both the footer and the Search",
-      "line": 723,
+      "line": 725,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#CATALOGUE-ENUMERABLE"
     },
     {
@@ -42056,7 +42100,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "13.6 What this leaves to PROP-039",
-      "line": 728,
+      "line": 730,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#as-boundary"
     },
     {
@@ -42065,7 +42109,7 @@
       "doc_path": "modules/vibe-cli/PROP-037",
       "file": "spec/modules/vibe-cli/PROP-037-tree-tui.md",
       "heading": "REQ. The action core — address, registry, params, context, invoke, i18n, the keymap",
-      "line": 729,
+      "line": 731,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#AS-BOUNDARY-REQ"
     },
     {
@@ -74774,13 +74818,13 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-registry/tests/index_fast_path.rs",
-      "line": 190,
+      "line": 239,
       "message": "edge `vibe_registry::tests::index_fast_path::index_fast_path_serves_versions` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#integration` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-registry/tests/index_fast_path.rs",
-      "line": 233,
+      "line": 282,
       "message": "edge `vibe_registry::tests::index_fast_path::index_404_falls_through_to_git_backend` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#integration` carries no kind/revision line yet"
     },
     {
