@@ -85,14 +85,23 @@ impl PlanObserver for CtxObserver<'_> {
     }
 }
 
-pub fn run(ctx: &output::Context, args: InstallArgs, embedded_root: Option<PathBuf>) -> Result<()> {
+pub fn run(
+    ctx: &output::Context,
+    args: InstallArgs,
+    embedded_root: Option<PathBuf>,
+    root_offline: bool,
+) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
     // PROP-011 §2.3 — the materialise-diff strategy, read once from the
-    // user config so a malformed config fails before any resolution.
-    let slot_integrity = UserConfig::load()
-        .context("loading the user config")?
-        .install
-        .slot_integrity;
+    // user config so a malformed config fails before any resolution. The
+    // same load supplies the `[net].offline` rung of the offline ladder.
+    let user_config = UserConfig::load().context("loading the user config")?;
+    let slot_integrity = user_config.install.slot_integrity;
+    // PROP-010 §2.5 — the resolved offline posture: CLI flag (root
+    // `--offline` OR this command's PROP-030 §3.1 `--offline`) >
+    // `VIBE_OFFLINE` > user-config `[net].offline`. Resolved here, once,
+    // so the resolver below receives a single boolean.
+    let offline = output::resolve_offline(root_offline || args.offline, user_config.net.offline);
 
     let mut manifest = Manifest::read(project_root.join(Manifest::FILENAME))?;
 
@@ -113,6 +122,7 @@ pub fn run(ctx: &output::Context, args: InstallArgs, embedded_root: Option<PathB
         embedded_root.as_deref(),
         &project_root,
         &global,
+        offline,
     )?;
 
     // Parse the CLI pkgrefs and qualify short names at the input

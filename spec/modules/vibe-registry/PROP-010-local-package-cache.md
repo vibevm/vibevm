@@ -80,15 +80,15 @@
 
 ### 2.5 `--offline` — the network-forbidden policy {#offline}
 
-@fact:OFFLINE-FLAG **Decision.** A global `--offline` flag forbids all network access for the invocation. @status:spec/done
+@fact:OFFLINE-FLAG **Decision.** A global `--offline` flag forbids all network access for the invocation. @status:impl/done
 
-@fact:OFFLINE-LAYERING It resolves through the established CLI config layering — flag, then a `VIBE_OFFLINE` environment variable, then a user-config `[net]` key; the flag wins. This mirrors the resolved-posture pattern already used for `--unattended` / `VIBE_UNATTENDED` (`output::resolve_unattended`). @status:spec/done
+@fact:OFFLINE-LAYERING It resolves through the established CLI config layering — flag, then a `VIBE_OFFLINE` environment variable, then a user-config `[net]` key; the flag wins. This mirrors the resolved-posture pattern already used for `--unattended` / `VIBE_UNATTENDED` (`output::resolve_unattended`). @status:impl/done
 
-- @fact:OFFLINE-LOCAL-ONLY Under `--offline`, resolution and fetch must be satisfiable entirely from local sources — the cache (§2.7), `[[mirror]]` entries with a `file://` URL, and the project's own `vibe.lock` + `vibedeps/`. @status:spec/done
-- @fact:OFFLINE-HARD-ERROR Anything not available locally is a **hard error with an actionable message**: it names the missing package and version and tells the operator how to recover (run once online, `vibe cache add`, or `vibe registry vendor`). @status:spec/done
-- @fact:OFFLINE-NO-DEGRADE `--offline` never silently degrades to a partial result. @status:spec/done
+- @fact:OFFLINE-LOCAL-ONLY Under `--offline`, resolution and fetch must be satisfiable entirely from local sources — the cache (§2.7), `[[mirror]]` entries with a `file://` URL, and the project's own `vibe.lock` + `vibedeps/`. @status:impl/work
+- @fact:OFFLINE-HARD-ERROR Anything not available locally is a **hard error with an actionable message**: it names the missing package and version and tells the operator how to recover (run once online, `vibe cache add`, or `vibe registry vendor`). @status:impl/work
+- @fact:OFFLINE-NO-DEGRADE `--offline` never silently degrades to a partial result. @status:impl/work
 
-@fact:ONLINE-DEFAULT Online remains the default and is unchanged: it walks the network for freshness and populates the cache as it goes. `--offline` is purely additive. @status:spec/done
+@fact:ONLINE-DEFAULT Online remains the default and is unchanged: it walks the network for freshness and populates the cache as it goes. `--offline` is purely additive. @status:impl/done
 
 ### 2.6 Offline resolution {#resolution}
 
@@ -189,7 +189,7 @@
 
 ## 3. Command and crate surface {#surface}
 
-- @fact:SURF-OFFLINE-FLAG A global `--offline` flag (and `VIBE_OFFLINE`) on the `vibe` CLI (§2.5). @status:spec/done
+- @fact:SURF-OFFLINE-FLAG A global `--offline` flag (and `VIBE_OFFLINE`) on the `vibe` CLI (§2.5). @status:impl/done
 - @fact:SURF-CACHE-CMDS `vibe cache path` / `list` / `add` / `clean` (§2.8). @status:spec/done
 - @fact:SURF-CORE `vibe-core` — the `UserConfig` schema gains a `[[registry]]` / `[[mirror]]` section and a `[net]` key (§2.4, §2.5). @status:spec/done
 - @fact:SURF-REGISTRY `vibe-registry` — the identity-keyed cache and its local index view, `MultiRegistryResolver::with_offline(...)` (§2.3, §2.6, §2.7). Depends on PROP-008's identity types. @status:spec/done
@@ -238,7 +238,7 @@
 
 1. @fact:PHASE-1-IDENTITY-CACHE **The identity-keyed cache** — the cache keyed by PROP-008 package identity; a documented, stable layout (§5.1); the local index view; `vibe cache path` / `vibe cache list`. `vibe-registry` + `vibe-cli`. @status:impl/plan
 2. @fact:PHASE-2-USER-REGISTRIES **User-level default registry configuration** — `[[registry]]` / `[[mirror]]` in `UserConfig`; `vibe init` seeds from it; project config overrides. `vibe-core` + `vibe-cli`. @status:impl/plan
-3. @fact:PHASE-3-OFFLINE **`--offline`** — the global flag, `VIBE_OFFLINE`, the resolved posture; `MultiRegistryResolver` offline mode (resolve from the cache, never touch the network); actionable cache-miss errors. @status:impl/plan
+3. @fact:PHASE-3-OFFLINE **`--offline`** — the global flag, `VIBE_OFFLINE`, the resolved posture; `MultiRegistryResolver` offline mode (resolve from the cache, never touch the network); actionable cache-miss errors. @status:impl/work
 4. @fact:PHASE-4-PREWARM **Pre-warm + clean** — `vibe cache add` (deliberate population) and `vibe cache clean`. @status:impl/plan
 5. @fact:PHASE-5-SCAFFOLDING **Scaffolding integration** — guarantee a new project (`vibe init` + `vibe install --offline`) and a new workspace member resolve and materialise from the cache, end to end; the §2.2 workflow plus any §5.5 UX hint. @status:impl/plan
 6. @fact:PHASE-6-DOCS **Docs + `VIBEVM-SPEC.md`** — §8.3 / §9 / §9.5 edits under owner sanction; a `docs/` page for the cache and offline mode. @status:impl/plan

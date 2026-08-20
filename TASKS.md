@@ -228,11 +228,16 @@ with nothing going red. **The producer must be a fact, never a field write.**
       - [ ] `feat(vibe-cli)`: **the `vibe cache …` family** — `path` / `list` /
             `add` / `clean`. Nothing of it exists (measured against a control
             that finds the live `vibe registry`).
-      - [ ] `feat(vibe-cli)`: **the global `--offline` posture** — the flag on
+      - [x] `feat(vibe-cli)`: **the global `--offline` posture** — the flag on
             the root, `VIBE_OFFLINE`, a `[net]` config key, resolved like
-            `--unattended`. **Do not mistake it for the one that exists:**
-            `vibe install --offline` is PROP-030/PROP-002's, subcommand-scoped
-            and older than PROP-010's intent.
+            `--unattended`. **Landed 2026-08-20** (marathon, slice С1):
+            root `--offline` (global) + `env_offline`/`resolve_offline`
+            ladder beside `resolve_unattended` + `[net].offline` in
+            UserConfig, wired through install/update/reinstall; ladder and
+            bail-before-network proven by unit + e2e; PROP-010 offline
+            family re-marked and re-judged same-pass (8 confirmed). The
+            pre-existing `vibe install --offline` (PROP-030) stays and ORs
+            into the same posture.
       - [x] *(owner fork — **ruled 2026-08-20**)* **where user-level registry
             configuration lives.** Answer: it stays where it already is —
             `~/.vibe/registry.toml`, its own file beside `~/.vibe/config.toml`,

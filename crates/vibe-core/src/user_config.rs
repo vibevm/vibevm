@@ -4,10 +4,13 @@
 //! VIBEVM-SPEC §9.5 places this file fourth in the configuration
 //! precedence chain (CLI flags > env vars > project `vibe.toml` >
 //! user-level config > built-in defaults). The user-config layer
-//! carries two sections: `[env]` — environment-variable defaults for
+//! carries the `[env]` section — environment-variable defaults for
 //! `VIBE_*` / `VIBEVM_*` names only, surfaced by `vibe show config` —
-//! and `[install]`, the install-
-//! behaviour settings of [PROP-011](../../../spec/modules/vibe-workspace/PROP-011-incremental-install.md).
+//! `[install]`, the install-
+//! behaviour settings of [PROP-011](../../../spec/modules/vibe-workspace/PROP-011-incremental-install.md),
+//! `[init]` (`vibe init` prompt defaults), and `[net]`, the network
+//! posture of [PROP-010](../../../spec/modules/vibe-registry/PROP-010-local-package-cache.md)
+//! §2.5.
 //!
 //! Path resolution:
 //!
@@ -58,6 +61,7 @@ use specmark::spec;
 /// let cfg = UserConfig::default();
 /// assert!(cfg.env.is_empty());
 /// assert!(cfg.install.is_default());
+/// assert!(cfg.net.is_default());
 /// ```
 #[derive(Debug, Default, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -87,6 +91,12 @@ pub struct UserConfig {
     /// for subsequent inits — npm's "license + author remember" pattern.
     #[serde(default, skip_serializing_if = "InitConfig::is_default")]
     pub init: InitConfig,
+
+    /// `[net]` — the network posture (PROP-010 §2.5). The lowest rung
+    /// of the offline ladder: the `--offline` flag wins, then the
+    /// `VIBE_OFFLINE` env-var, then this key.
+    #[serde(default, skip_serializing_if = "NetConfig::is_default")]
+    pub net: NetConfig,
 }
 
 /// `[install]` section — install-behaviour settings (PROP-011 §5.2).
@@ -138,6 +148,36 @@ pub struct InitConfig {
 impl InitConfig {
     pub fn is_default(&self) -> bool {
         *self == InitConfig::default()
+    }
+}
+
+/// `[net]` section — the network posture (PROP-010 §2.5).
+///
+/// ```
+/// use vibe_core::user_config::NetConfig;
+///
+/// let c: NetConfig = toml::from_str("offline = true").unwrap();
+/// assert!(c.offline);
+/// assert!(NetConfig::default().is_default());
+/// ```
+#[derive(Debug, Default, Clone, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct NetConfig {
+    /// Resolve every registry-touching invocation offline by default:
+    /// resolution and fetch must be satisfiable from local sources,
+    /// and a package not available locally is a hard error (PROP-010
+    /// §2.5). The lowest rung of the ladder — `--offline` and
+    /// `VIBE_OFFLINE` each win over this key. Default `false`: online
+    /// remains the default and is unchanged.
+    #[serde(default)]
+    pub offline: bool,
+}
+
+impl NetConfig {
+    /// `true` for the all-defaults section — lets the serializer skip
+    /// `[net]` entirely on a config that never set it.
+    pub fn is_default(&self) -> bool {
+        *self == NetConfig::default()
     }
 }
 

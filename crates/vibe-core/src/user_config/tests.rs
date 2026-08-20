@@ -139,6 +139,53 @@ fn load_from_rejects_an_unknown_install_key() {
     ));
 }
 
+// --- PROP-010 §2.5 — the `[net]` section ------------------------------------
+
+#[test]
+fn net_defaults_to_online() {
+    let cfg = UserConfig::default();
+    assert!(!cfg.net.offline);
+    assert!(cfg.net.is_default());
+}
+
+#[test]
+fn load_from_parses_net_offline() {
+    let dir = tempdir().unwrap();
+    let path = dir.path().join("config.toml");
+    std::fs::write(&path, "[net]\noffline = true\n").unwrap();
+    let cfg = UserConfig::load_from(&path).unwrap();
+    assert!(cfg.net.offline);
+    assert!(!cfg.net.is_default());
+}
+
+#[test]
+fn net_section_round_trips() {
+    let cfg = UserConfig {
+        net: NetConfig { offline: true },
+        ..Default::default()
+    };
+    let rendered = toml::to_string_pretty(&cfg).unwrap();
+    assert!(rendered.contains("[net]"), "{rendered}");
+    assert!(rendered.contains("offline = true"), "{rendered}");
+    let back: UserConfig = toml::from_str(&rendered).unwrap();
+    assert_eq!(cfg, back);
+}
+
+/// `deny_unknown_fields` holds INSIDE the section too: an unknown key
+/// under `[net]` is a parse error, not a silent no-op — a typo'd
+/// `offine` must not leave the operator offline-blind while they
+/// believe the posture is set.
+#[test]
+fn load_from_rejects_an_unknown_net_key() {
+    let dir = tempdir().unwrap();
+    let path = dir.path().join("config.toml");
+    std::fs::write(&path, "[net]\nbogus = true\n").unwrap();
+    assert!(matches!(
+        UserConfig::load_from(&path).unwrap_err(),
+        UserConfigError::Parse { .. }
+    ));
+}
+
 // --- One config home: the former location is named, never read ------------
 
 #[test]

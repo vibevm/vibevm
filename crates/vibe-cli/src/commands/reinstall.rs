@@ -50,6 +50,7 @@ pub fn run(
     ctx: &output::Context,
     args: ReinstallArgs,
     embedded_root: Option<PathBuf>,
+    root_offline: bool,
 ) -> Result<()> {
     let project_root = resolve_project_root(&args.path)?;
     let workspace = Workspace::discover(&project_root)
@@ -57,7 +58,14 @@ pub fn run(
     let lockfile = load_lockfile(&workspace.root)?;
 
     if args.force {
-        run_force(ctx, &workspace, &lockfile, &args, embedded_root.as_deref())
+        run_force(
+            ctx,
+            &workspace,
+            &lockfile,
+            &args,
+            embedded_root.as_deref(),
+            root_offline,
+        )
     } else {
         run_regenerate(ctx, &workspace, &lockfile, &args)
     }
@@ -129,12 +137,18 @@ fn run_regenerate(
 
 /// `vibe reinstall --force` — re-fetch every locked package from source,
 /// bypassing the project cache, then re-materialise and regenerate boot.
+///
+/// `root_offline` carries the invocation's offline posture (PROP-010
+/// §2.5): `--force` is the reinstall mode that touches the network, so
+/// the root flag / `VIBE_OFFLINE` / `[net].offline` ladder resolves here
+/// and narrows the resolver exactly as it does for `vibe install`.
 fn run_force(
     ctx: &output::Context,
     workspace: &Workspace,
     lockfile: &Lockfile,
     args: &ReinstallArgs,
     embedded_root: Option<&Path>,
+    root_offline: bool,
 ) -> Result<()> {
     // No locked packages — `--force` has nothing to re-fetch. Still
     // regenerate boot so a stale artifact is recomputed.
@@ -187,14 +201,25 @@ fn run_force(
     }
 
     // The resolver is built from the workspace root manifest — registries,
-    // mirrors, overrides, and git-source declarations are root-level.
+    // mirrors, overrides, and git-source declarations are root-level. The
+    // offline posture is resolved with the same ladder install uses
+    // (PROP-010 §2.5): root `--offline` > `VIBE_OFFLINE` > `[net].offline`.
+    // `vibe reinstall` carries no local `--offline` flag of its own.
     let global = vibe_core::GlobalRegistryConfig::load()?;
+    let offline = crate::output::resolve_offline(
+        root_offline,
+        vibe_core::user_config::UserConfig::load()
+            .context("loading the user config")?
+            .net
+            .offline,
+    );
     let resolver = build_install_resolver(
         &resolver_args(),
         &workspace.root_manifest,
         embedded_root,
         &workspace.root,
         &global,
+        offline,
     )
     .context("building the install resolver")?;
 

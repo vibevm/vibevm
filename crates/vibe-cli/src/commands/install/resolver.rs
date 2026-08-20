@@ -328,15 +328,18 @@ fn is_registry_absent(err: &RegistryError) -> bool {
 /// The effective declared-registry config for this invocation: the project
 /// manifest merged with the machine-global `~/.vibe/registry.toml`
 /// (project-first, PROP-002 §2.2.2), then narrowed to local-only sources
-/// under `--offline` (§2.2.2.1). `global` is loaded once at the composition
+/// under the offline posture (§2.2.2.1; PROP-010 §2.5 — root `--offline`,
+/// `VIBE_OFFLINE`, or user-config `[net].offline`, resolved by the caller
+/// via [`crate::output::resolve_offline`] so the CLI-flag > env > config
+/// ladder lives in one place). `global` is loaded once at the composition
 /// root and passed in, so this stays a pure, testable transform.
 fn effective_registry_config(
     manifest: &Manifest,
-    args: &InstallArgs,
     global: &GlobalRegistryConfig,
+    offline: bool,
 ) -> EffectiveRegistryConfig {
     let eff = merge_effective(manifest, global);
-    if args.offline { eff.local_only() } else { eff }
+    if offline { eff.local_only() } else { eff }
 }
 
 /// Open the declared multi-registry walk from a precomputed effective config —
@@ -368,12 +371,21 @@ fn open_multi_from(
 /// `global` is the machine-global registry config, loaded once at the caller
 /// (composition root) and threaded in so this function performs no filesystem
 /// I/O of its own and stays test-hermetic.
+///
+/// `offline` is the resolved offline posture (PROP-010 §2.5), NOT the
+/// `--offline` flag: the caller resolves the full ladder (CLI flag, then
+/// `VIBE_OFFLINE`, then `[net].offline`) via
+/// [`crate::output::resolve_offline`] — for `vibe install` ORing the root
+/// and the PROP-030 §3.1 local flag — and hands the result down, so the
+/// install-local flag, the env-var, and the config key all reach this
+/// narrowing point through the same one boolean.
 pub(crate) fn build_install_resolver(
     args: &InstallArgs,
     manifest: &Manifest,
     embedded_root: Option<&Path>,
     project_root: &Path,
     global: &GlobalRegistryConfig,
+    offline: bool,
 ) -> Result<InstallResolver> {
     let solver = validate_solver(args.solver.as_deref())?;
     if args.prefer_embedded && args.no_prefer_embedded {
@@ -400,8 +412,9 @@ pub(crate) fn build_install_resolver(
 
     // The declared walk: project `[[registry]]` merged with the machine-global
     // `~/.vibe/registry.toml` (project-first, PROP-002 §2.2.2), narrowed to
-    // local-only sources under `--offline` (§2.2.2.1). Computed once, shared.
-    let effective = effective_registry_config(manifest, args, global);
+    // local-only sources under the offline posture (§2.2.2.1). Computed once,
+    // shared.
+    let effective = effective_registry_config(manifest, global, offline);
 
     // PROP-030 §3.3: build the local-registry family. Project-local
     // (`<project_root>/packages/`) is discovered from the current project —
@@ -476,10 +489,12 @@ pub(crate) fn build_install_resolver(
     // for a git-source-only resolution).
     let has_git_source = args.git.is_some() || !manifest.requires.git_packages.is_empty();
     if effective.registries.is_empty() && !has_git_source {
-        // PROP-002 §2.2.2.1: under `--offline` the remote walk is disabled and
-        // no local registry survived, so there is nothing to resolve from —
-        // fail with an actionable message rather than reach the network.
-        if args.offline {
+        // PROP-002 §2.2.2.1: under the offline posture (root `--offline`,
+        // `VIBE_OFFLINE`, or `[net].offline` — PROP-010 §2.5) the remote walk
+        // is disabled and no local registry survived, so there is nothing to
+        // resolve from — fail with an actionable message rather than reach
+        // the network.
+        if offline {
             bail!(
                 "--offline: no local registry available to resolve from. \
                  Offline resolution needs a local (`file://`) `[[registry]]` — in the \

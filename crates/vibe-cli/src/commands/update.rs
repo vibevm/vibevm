@@ -50,11 +50,18 @@ struct PendingInPlace {
     dependencies: Vec<PackageRef>,
 }
 
-pub fn run(ctx: &output::Context, args: UpdateArgs, embedded_root: Option<PathBuf>) -> Result<()> {
+pub fn run(
+    ctx: &output::Context,
+    args: UpdateArgs,
+    embedded_root: Option<PathBuf>,
+    root_offline: bool,
+) -> Result<()> {
     // No arguments / `--all`: re-resolve the whole graph. That is the
-    // `vibe install` from-manifest path exactly, so delegate to it.
+    // `vibe install` from-manifest path exactly, so delegate to it — the
+    // root offline flag travels along and the delegate resolves the full
+    // posture against its own user-config load.
     if args.all || args.packages.is_empty() {
-        return super::install::run(ctx, install_args_from(&args), embedded_root);
+        return super::install::run(ctx, install_args_from(&args), embedded_root, root_offline);
     }
 
     // Scoped update: only the named packages and their subtrees move.
@@ -121,13 +128,28 @@ pub fn run(ctx: &output::Context, args: UpdateArgs, embedded_root: Option<PathBu
         )?);
     }
 
+    // PROP-010 §2.5 — the offline posture reaches `vibe update` through
+    // the same ladder as install: root `--offline` / `VIBE_OFFLINE` /
+    // user-config `[net].offline` (resolved via [`output::resolve_offline`]).
+    // `vibe update` carries no local `--offline` flag of its own, so the
+    // CLI rung here is the root flag alone. A scoped offline update with no
+    // local source fails in `build_install_resolver` with the same
+    // actionable bail `vibe install --offline` gives.
     let global = vibe_core::GlobalRegistryConfig::load()?;
+    let offline = output::resolve_offline(
+        root_offline,
+        vibe_core::user_config::UserConfig::load()
+            .context("loading the user config")?
+            .net
+            .offline,
+    );
     let resolver = build_install_resolver(
         &install_args_from(&args),
         &manifest,
         embedded_root.as_deref(),
         &project_root,
         &global,
+        offline,
     )?;
 
     ctx.heading(&format!(

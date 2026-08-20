@@ -124,6 +124,68 @@ fn unattended_cli_flag_overrides_falsy_env() {
     assert!(resolve_unattended(true));
 }
 
+// --- resolve_offline (PROP-010 §2.5: flag > VIBE_OFFLINE > [net].offline) ----
+
+#[test]
+fn offline_default_false_with_no_flag_no_env_no_config() {
+    let mut env = EnvGuard::lock();
+    env.unset("VIBE_OFFLINE");
+    assert!(!resolve_offline(false, false));
+}
+
+/// Flag over env: the flag rung resolves true even when the env-var
+/// is explicitly falsy.
+#[test]
+fn offline_cli_flag_wins_over_falsy_env() {
+    let mut env = EnvGuard::lock();
+    env.set("VIBE_OFFLINE", "0");
+    assert!(resolve_offline(true, false));
+}
+
+/// Env over config: a truthy `VIBE_OFFLINE` carries the posture with
+/// no flag and no config.
+#[test]
+fn offline_env_wins_with_no_flag_no_config() {
+    let mut env = EnvGuard::lock();
+    env.set("VIBE_OFFLINE", "1");
+    assert!(resolve_offline(false, false));
+}
+
+/// A falsy env-var does not shadow the config rung — it is absent,
+/// not "no": `[net].offline = true` still resolves offline.
+#[test]
+fn offline_config_applies_when_env_is_falsy() {
+    let mut env = EnvGuard::lock();
+    env.set("VIBE_OFFLINE", "0");
+    assert!(resolve_offline(false, true));
+}
+
+#[test]
+fn offline_env_truthy_values() {
+    let mut env = EnvGuard::lock();
+    for raw in ["1", "true", "TRUE", " yes ", "On", "yes"] {
+        env.set("VIBE_OFFLINE", raw);
+        assert!(
+            resolve_offline(false, false),
+            "VIBE_OFFLINE={raw:?} must resolve to true"
+        );
+    }
+}
+
+#[test]
+fn offline_env_falsy_values_or_empty_or_unset() {
+    let mut env = EnvGuard::lock();
+    for raw in ["", "0", "false", "no", "off", "garbage", "  "] {
+        env.set("VIBE_OFFLINE", raw);
+        assert!(
+            !resolve_offline(false, false),
+            "VIBE_OFFLINE={raw:?} must resolve to false"
+        );
+    }
+    env.unset("VIBE_OFFLINE");
+    assert!(!resolve_offline(false, false));
+}
+
 #[test]
 fn render_json_stamps_unattended_when_true() {
     let mut env = EnvGuard::lock();

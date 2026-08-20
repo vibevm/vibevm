@@ -91,6 +91,20 @@ pub struct Cli {
     #[arg(long, global = true)]
     pub unattended: bool,
 
+    /// PROP-010 §2.5: forbid network access for the invocation. Under
+    /// `--offline`, resolution and fetch must be satisfiable entirely
+    /// from local sources (the cache, `file://` mirrors, the project's
+    /// own `vibe.lock` + `vibedeps/`); anything not available locally
+    /// is a hard error with an actionable message — never a silent
+    /// degrade to a partial result. Falls back to the `VIBE_OFFLINE`
+    /// environment variable (truthy values: `1`, `true`, `yes`, `on`
+    /// — case-insensitive), then the user-config `[net].offline` key;
+    /// the flag wins on conflict. Online remains the default and is
+    /// unchanged. `vibe install --offline` (PROP-030 §3.1) stays and
+    /// ORs into the same posture as one more input.
+    #[arg(long, global = true)]
+    pub offline: bool,
+
     #[command(subcommand)]
     pub command: Command,
 }
@@ -334,4 +348,64 @@ pub enum BinCmd {
         /// Arguments handed to the tool unchanged.
         args: Vec<String>,
     },
+}
+
+#[cfg(test)]
+mod tests {
+    use clap::Parser;
+
+    use super::{Cli, Command};
+
+    /// The root `--offline` parses before any subcommand (PROP-010
+    /// §2.5): the posture is a property of the invocation, not of one
+    /// subcommand.
+    #[test]
+    fn offline_flag_parses_on_the_root() {
+        let cli = Cli::try_parse_from(["vibe", "--offline", "list"])
+            .expect("parse `vibe --offline list`");
+        assert!(cli.offline, "--offline reaches the root Cli");
+        let Command::List(_) = cli.command else {
+            panic!("argv did not parse to `list`");
+        };
+    }
+
+    /// Absent the flag, the root posture is online — the default.
+    #[test]
+    fn offline_defaults_to_false_on_the_root() {
+        let cli = Cli::try_parse_from(["vibe", "list"]).expect("parse `vibe list`");
+        assert!(!cli.offline);
+    }
+
+    /// `vibe install --offline` (PROP-030 §3.1) keeps parsing to the
+    /// subcommand's own flag — the posture absorbs it as one more
+    /// input, it does not replace it. Note clap's actual mechanics for
+    /// a global root arg that shares its id with a subcommand arg:
+    /// they are one argument, so both matches carry the value. That is
+    /// harmless here — `install::run` resolves the posture as
+    /// `root_offline || args.offline`.
+    #[test]
+    fn install_local_offline_flag_still_parses() {
+        let cli = Cli::try_parse_from(["vibe", "install", "--offline"])
+            .expect("parse `vibe install --offline`");
+        let Command::Install(args) = cli.command else {
+            panic!("argv did not parse to `install`");
+        };
+        assert!(args.offline, "--offline reaches InstallArgs");
+        assert!(cli.offline, "the shared id also sets the root field");
+    }
+
+    /// `vibe --offline install` sets the root posture — and, because
+    /// clap unifies the global root arg with the same-id subcommand
+    /// arg, `InstallArgs.offline` sees it too. Either way the OR in
+    /// `install::run` resolves the same posture.
+    #[test]
+    fn root_offline_reaches_the_install_command() {
+        let cli = Cli::try_parse_from(["vibe", "--offline", "install"])
+            .expect("parse `vibe --offline install`");
+        assert!(cli.offline);
+        let Command::Install(args) = cli.command else {
+            panic!("argv did not parse to `install`");
+        };
+        assert!(args.offline, "the shared id carries the root flag down");
+    }
 }

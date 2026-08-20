@@ -85,6 +85,30 @@ pub fn resolve_unattended(cli_flag: bool) -> bool {
     cli_flag || env_unattended()
 }
 
+/// Read the `VIBE_OFFLINE` env-var. Truthy values are `1`, `true`,
+/// `yes`, `on` (case-insensitive, leading/trailing whitespace
+/// ignored). Anything else — including the empty string and unset —
+/// resolves to `false`. Same vocabulary as [`env_unattended`], by
+/// design: one truthy dialect across every `VIBE_*` posture variable.
+fn env_offline() -> bool {
+    std::env::var("VIBE_OFFLINE")
+        .ok()
+        .map(|s| s.trim().to_ascii_lowercase())
+        .is_some_and(|s| matches!(s.as_str(), "1" | "true" | "yes" | "on"))
+}
+
+/// Resolve the offline posture (PROP-010 §2.5): CLI flag wins, then
+/// the `VIBE_OFFLINE` env-var, then the user-config `[net].offline`
+/// key. Unlike [`resolve_unattended`] the signature carries the
+/// config rung — `--offline` has a user-config key and `--unattended`
+/// does not — so the whole ladder lives in one function and the
+/// precedence cannot drift between call sites. `cli_flag` is the OR
+/// of every CLI-level input (the root `--offline` and, for
+/// `vibe install`, the PROP-030 §3.1 local `--offline`).
+pub fn resolve_offline(cli_flag: bool, config_offline: bool) -> bool {
+    cli_flag || env_offline() || config_offline
+}
+
 pub struct Context {
     pub mode: Mode,
     pub tick: Style,

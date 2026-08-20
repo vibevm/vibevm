@@ -105,7 +105,9 @@ fn main() -> ExitCode {
     let result = match cli.command {
         Command::Init(args) => commands::init::run(&ctx, args),
         Command::List(args) => commands::list::run(&ctx, args),
-        Command::Install(args) => commands::install::run(&ctx, args, discover_embedded_root()),
+        Command::Install(args) => {
+            commands::install::run(&ctx, args, discover_embedded_root(), cli.offline)
+        }
         Command::Outdated(args) => commands::outdated::run(&ctx, args),
         Command::Search(args) => {
             // The composition root reads the search command's
@@ -125,8 +127,12 @@ fn main() -> ExitCode {
         Command::Agentic(args) => commands::agentic::run(&ctx, args),
         Command::Drain(args) => commands::agentic::run_command(&ctx, args),
         Command::Uninstall(args) => commands::uninstall::run(&ctx, args),
-        Command::Update(args) => commands::update::run(&ctx, args, discover_embedded_root()),
-        Command::Reinstall(args) => commands::reinstall::run(&ctx, args, discover_embedded_root()),
+        Command::Update(args) => {
+            commands::update::run(&ctx, args, discover_embedded_root(), cli.offline)
+        }
+        Command::Reinstall(args) => {
+            commands::reinstall::run(&ctx, args, discover_embedded_root(), cli.offline)
+        }
         Command::Check(args) => commands::check::run(&ctx, args),
         Command::Explain(args) => commands::explain::run(&ctx, args),
         Command::Query(args) => commands::query::run(&ctx, args),

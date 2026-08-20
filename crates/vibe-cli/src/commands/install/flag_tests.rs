@@ -11,6 +11,7 @@
 
 use std::path::PathBuf;
 
+use rust_ai_native_env_audit::EnvGuard;
 use specmark::verifies;
 
 use super::*;
@@ -85,6 +86,8 @@ fn short_circuit_conflicts_with_embedded_last() {
         None,
         project_root.path(),
         &GlobalRegistryConfig::default(),
+        // offline posture (PROP-010 §2.5) — online for this test.
+        false,
     )
     .map(|_| ())
     .unwrap_err();
@@ -97,11 +100,13 @@ fn short_circuit_conflicts_with_embedded_last() {
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#knob")]
 fn offline_without_a_local_registry_bails_before_the_network() {
-    // PROP-030 §3.1 + PROP-002 §2.2.2.1: `--offline` with no embedded
-    // registry and no `--registry` (and no local registry in the merged
-    // effective set) has nothing local to resolve from. It must fail with
-    // an actionable message rather than fall through to the declared
-    // network walk (whose construction is what a plain install does).
+    // PROP-030 §3.1 + PROP-002 §2.2.2.1: the offline posture (today
+    // reachable through `vibe install --offline`; PROP-010 §2.5 widened it
+    // to the root flag / env / config ladder) with no embedded registry
+    // and no `--registry` (and no local registry in the merged effective
+    // set) has nothing local to resolve from. It must fail with an
+    // actionable message rather than fall through to the declared network
+    // walk (whose construction is what a plain install does).
     // A project root with no `packages/` so project-local does not rescue
     // the bail (this test asserts the bail fires).
     let mut args = base_args();
@@ -113,12 +118,48 @@ fn offline_without_a_local_registry_bails_before_the_network() {
         None,
         project_root.path(),
         &GlobalRegistryConfig::default(),
+        // the resolved posture — what `install::run` computes as
+        // `resolve_offline(root_offline || args.offline, [net].offline)`.
+        true,
     )
     .map(|_| ())
     .unwrap_err();
     assert!(
         err.to_string().contains("--offline"),
         "expected the offline bail; got: {err}"
+    );
+}
+
+/// PROP-010 §2.5 — the `VIBE_OFFLINE` rung: env alone (no flag, no
+/// config key) resolves the posture, and the resulting run bails with
+/// the same actionable message the `--offline` flag gives — the bail
+/// happens at resolver construction, before any network walk. The
+/// sibling test above drives the flag rung; this one drives env, so
+/// together they pin the ladder's two upper rungs to the same bail.
+#[test]
+fn env_offline_alone_bails_before_the_network_with_the_same_message() {
+    let mut env = EnvGuard::lock();
+    env.set("VIBE_OFFLINE", "1");
+    // No CLI flag, no config key — the env-var alone carries it.
+    let offline = crate::output::resolve_offline(false, false);
+    assert!(offline, "VIBE_OFFLINE=1 must resolve the posture");
+
+    let args = base_args();
+    let project_root = tempfile::tempdir().unwrap();
+    let err = build_install_resolver(
+        &args,
+        &empty_manifest(),
+        None,
+        project_root.path(),
+        &GlobalRegistryConfig::default(),
+        offline,
+    )
+    .map(|_| ())
+    .unwrap_err();
+    let msg = err.to_string();
+    assert!(
+        msg.contains("--offline: no local registry available"),
+        "expected the offline bail; got: {msg}"
     );
 }
 
@@ -140,6 +181,7 @@ fn prefer_local_conflicts_with_no_prefer_local() {
         None,
         project_root.path(),
         &GlobalRegistryConfig::default(),
+        false, // online posture — this test exercises the guard, not the bail
     )
     .map(|_| ())
     .unwrap_err();
@@ -198,6 +240,7 @@ fn project_local_packages_activate_resolver_without_vibe_embedded() {
         None,
         project_root.path(),
         &GlobalRegistryConfig::default(),
+        false, // online posture — the resolver must build, not bail
     );
     match resolver {
         Ok(_) => { /* the load-bearing assertion: success, not the bail */ }

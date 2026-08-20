@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-20T01:06:00Z",
+  "updated_at": "2026-08-20T03:49:58Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -112659,7 +112659,7 @@
       }
     },
     "spec/modules/vibe-registry/PROP-010-local-package-cache.md": {
-      "content_hash": "8b3b580d50d67b6cb6140031647b7ca4b2a87a34f2a4c82a63d0e5d5eeaea77e",
+      "content_hash": "0fe33ea13181cddd422b38481cb76965a91e9eff3ddfe96ae681510cbbc11beb",
       "rollup": {
         "explicit": [
           "spec",
@@ -112685,7 +112685,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 92,
         "marker_count": 93,
-        "processed_hash": "16b4c47e68cdc8f18c14dbd429cf65789578c6077d870b6e1f308a525c259fd2",
+        "processed_hash": "0fe33ea13181cddd422b38481cb76965a91e9eff3ddfe96ae681510cbbc11beb",
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -112921,37 +112921,40 @@
           "OFFLINE-FLAG": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "crates/vibe-cli/src/cli.rs:106 — `pub offline: bool` под `#[arg(long, global = true)]` на корневом Cli; тест offline_flag_parses_on_the_root в том же файле",
+              "статус impl/done поставлен этой посадкой — флаг построен, глобален, докблок цитирует PROP-010 §2.5"
             ]
           },
           "OFFLINE-LAYERING": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "crates/vibe-cli/src/output.rs:108 — `pub fn resolve_offline(cli_flag, config_offline) = cli_flag || env_offline() || config_offline`; env_offline (:93) читает VIBE_OFFLINE тем же truthy-словарём, что env_unattended",
+              "crates/vibe-core/src/user_config.rs:99,:165 — секция `[net]`/NetConfig.offline; лестница флаг>env>config доказана тестами output/tests.rs:130,:139"
             ]
           },
           "OFFLINE-LOCAL-ONLY": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "статус impl/work честен: local_only-сужение работает (resolver.rs:342), file://-реестры/зеркала/lock+vibedeps — по построенному PROP-002/030; склад (§2.7) источником резолва ещё НЕ является — это слайс R1-RESOLVER, недостающая часть названа статусом, не скрыта"
             ]
           },
           "OFFLINE-HARD-ERROR": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "жёсткий actionable bail построен: resolver.rs:498 «--offline: no local registry available to resolve from…»; статус impl/work: cache-miss-сообщение с именем пакета и рецептом (add/vendor) ждёт склада-источника (R1-RESOLVER)"
             ]
           },
           "OFFLINE-NO-DEGRADE": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "bail ДО сети доказан двумя e2e: flag_tests.rs:100 (флаг) и :140 (VIBE_OFFLINE=1 без флага, то же сообщение); тихой деградации нет ни на одной ступени лестницы; impl/work — глобальная политика на остальные сетевые глаголы доедет со складом"
             ]
           },
           "ONLINE-DEFAULT": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "crates/vibe-cli/src/commands/install/resolver.rs:342 — сужение только при offline=true, иначе effective нетронут; NetConfig::default().offline == false (доктест user_config.rs)",
+              "тест offline_defaults_to_false_on_the_root (cli.rs tests) — без флага постура онлайн"
             ]
           },
           "RESOLVER-OFFLINE-MODE": {
@@ -113077,7 +113080,7 @@
           "SURF-OFFLINE-FLAG": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "поверхность существует целиком: корневой флаг cli.rs:106 + VIBE_OFFLINE (output.rs:93) — ровно то, что перечисляет факт"
             ]
           },
           "SURF-CACHE-CMDS": {
@@ -113215,7 +113218,7 @@
           "PHASE-3-OFFLINE": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "фаза в работе (impl/work): глобальный флаг + VIBE_OFFLINE + [net] + резолв постуры построены этой посадкой (install/mod.rs:104, update.rs, reinstall.rs); осталось из текста фазы: MultiRegistryResolver offline-режим (with_offline) и cache-miss-ошибки — слайс R1-RESOLVER"
             ]
           },
           "PHASE-4-PREWARM": {
@@ -113535,8 +113538,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T14:52:12Z",
-        "verify_batch": "c4f1-registry-rest + d2d + W8 + W10 + PROP010-ENV-VAR-NAME-2026-08-19 + OWNER-RULINGS-STORE-AND-RESCAN-2026-08-20"
+        "verified_at": "2026-08-20T03:49:58Z",
+        "verify_batch": "c4f1-registry-rest + d2d + W8 + W10 + PROP010-ENV-VAR-NAME-2026-08-19 + OWNER-RULINGS-STORE-AND-RESCAN-2026-08-20 + R1-OFFLINE"
       }
     },
     "spec/modules/vibe-registry/PROP-021-submodule-sources.md": {

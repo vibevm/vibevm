@@ -614,288 +614,288 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 153,
+      "line": 167,
       "symbol": "vibe agentic",
-      "end_line": 158,
+      "end_line": 172,
       "fingerprint": "tok1:38d2c7c84dbc9027225d4def9f39afe3748240181c35a687610f0482adf04d8e"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 130,
+      "line": 144,
       "symbol": "vibe aiui",
-      "end_line": 134,
+      "end_line": 148,
       "fingerprint": "tok1:55e1694e709d4faadda95473101940a572d1d6169ceb282b3d53349b7c70303a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 225,
+      "line": 239,
       "symbol": "vibe bin",
-      "end_line": 232,
+      "end_line": 246,
       "fingerprint": "tok1:fa28839d0a2d9eb3130cab2ea9b2eeda91b18d37bd59b58be3537b394d89a27f"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 178,
+      "line": 192,
       "symbol": "vibe check",
-      "end_line": 179,
+      "end_line": 193,
       "fingerprint": "tok1:38fcbbc45c7ad30c975d15d0086afc07aa2e4fca1dfdf72c62f969ca46df6118"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 160,
+      "line": 174,
       "symbol": "vibe command",
-      "end_line": 166,
+      "end_line": 180,
       "fingerprint": "tok1:ef53bda5ded39eceee051d99ca027cdb39dced3df83fea0808f23940514540d6"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 234,
+      "line": 248,
       "symbol": "vibe explain",
-      "end_line": 241,
+      "end_line": 255,
       "fingerprint": "tok1:58c34bfb60261b47d8861f07462898d5ae5c28a9d44f2ae4624b8ed1a0bfe1f7"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 141,
+      "line": 155,
       "symbol": "vibe frame",
-      "end_line": 144,
+      "end_line": 158,
       "fingerprint": "tok1:4985ceaa5272c36e1c73077f882fc30a4aec1244e308099d8257582bec0f79a8"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 100,
+      "line": 114,
       "symbol": "vibe init",
-      "end_line": 101,
+      "end_line": 115,
       "fingerprint": "tok1:3d6986e0bcb4fb0c21b909f29fd453a077247d5b2361712ab268652df5294764"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 106,
+      "line": 120,
       "symbol": "vibe install",
-      "end_line": 107,
+      "end_line": 121,
       "fingerprint": "tok1:b38bd68a6fe42780d421692d2536b0c9df5b559fe60377adc411ac362e06b30f"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 103,
+      "line": 117,
       "symbol": "vibe list",
-      "end_line": 104,
+      "end_line": 118,
       "fingerprint": "tok1:2a1bcc9e9b5c5335104e94830edba85a9d3d095e366088576450e1ab3fe90946"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 123,
+      "line": 137,
       "symbol": "vibe mcp",
-      "end_line": 128,
+      "end_line": 142,
       "fingerprint": "tok1:f37a9c7d50509325b588f478574f851ff11d7bdafae86f5d4cef35c487b4cb73"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 109,
+      "line": 123,
       "symbol": "vibe outdated",
-      "end_line": 113,
+      "end_line": 127,
       "fingerprint": "tok1:d1073beb727d86daaab1588ec6deaaf7fc97e4a3df0fdb2548587e350480885a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 184,
+      "line": 198,
       "symbol": "vibe prefs",
-      "end_line": 188,
+      "end_line": 202,
       "fingerprint": "tok1:c37b655b66cbc0af9ccfdabf5d84ba9d067cbea39dd9d1c89b5e4a77f79d4009"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 295,
+      "line": 309,
       "symbol": "vibe progress",
-      "end_line": 298,
+      "end_line": 312,
       "fingerprint": "tok1:0343b59ebde2d3646b75f27f0c451ee131c5f3f4a2415b9d79ab4ef092fca9c0"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 243,
+      "line": 257,
       "symbol": "vibe query",
-      "end_line": 252,
+      "end_line": 266,
       "fingerprint": "tok1:36680144f94d98e3b9a8bd38c89c746ee621dbdfadb21422f0ff7bffe4c1e069"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 198,
+      "line": 212,
       "symbol": "vibe registry",
-      "end_line": 199,
+      "end_line": 213,
       "fingerprint": "tok1:510e526eda2f3774a369c2ecad541147e0de8643662891a8c9e2dd3af384f70e"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 174,
+      "line": 188,
       "symbol": "vibe reinstall",
-      "end_line": 176,
+      "end_line": 190,
       "fingerprint": "tok1:6e67dfc6071d8f65b58e5ff6a848695dc0f1da97f80ed1c92bf8f1f409d0f755"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 115,
+      "line": 129,
       "symbol": "vibe search",
-      "end_line": 121,
+      "end_line": 135,
       "fingerprint": "tok1:b47b591a719431fd92337bfb669e9141237a1180367223d594d4c2e9aa549524"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 254,
+      "line": 268,
       "symbol": "vibe select",
-      "end_line": 265,
+      "end_line": 279,
       "fingerprint": "tok1:16e391d4035c196770cac77470dedaa7ff004a71e0a48dc88ecc3b5aeccda1b1"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 207,
+      "line": 221,
       "symbol": "vibe self",
-      "end_line": 213,
+      "end_line": 227,
       "fingerprint": "tok1:3587ac93f410662938dfdb2e5a411a952a847f14338cd21bc4aaff4b1b1cdd23"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 181,
+      "line": 195,
       "symbol": "vibe show",
-      "end_line": 182,
+      "end_line": 196,
       "fingerprint": "tok1:12c7f4b09b59503b8a56b9c4b3965d3f73e0e62f78a2df10a7b4425c94c89cf5"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 146,
+      "line": 160,
       "symbol": "vibe skill",
-      "end_line": 151,
+      "end_line": 165,
       "fingerprint": "tok1:0f2269b52a3046796d5ce3c6c1633b17564ae4fa4b4a5f91d478e0f5404476ee"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 267,
+      "line": 281,
       "symbol": "vibe specmap",
-      "end_line": 275,
+      "end_line": 289,
       "fingerprint": "tok1:95fe1742b042d98c18fa9ddca05706d6b6a8129fb78a25ee827349929b9ba012"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 136,
+      "line": 150,
       "symbol": "vibe term",
-      "end_line": 139,
+      "end_line": 153,
       "fingerprint": "tok1:6de072333697fa577d56d6b6437e4be14b04ef83495a35d0db8c1a234077b846"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 215,
+      "line": 229,
       "symbol": "vibe tools",
-      "end_line": 223,
+      "end_line": 237,
       "fingerprint": "tok1:160baa5bced8144814d419728f9e456b1d4c9648edb498bb5b94cfcce812b2e0"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 277,
+      "line": 291,
       "symbol": "vibe trace",
-      "end_line": 286,
+      "end_line": 300,
       "fingerprint": "tok1:f3b1c393c3e385763d9a81c5ad9f9f19d6c16d2a1a2c0bbdad8db90494f7af9a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 190,
+      "line": 204,
       "symbol": "vibe tree",
-      "end_line": 196,
+      "end_line": 210,
       "fingerprint": "tok1:393ce608388756f7ed97be5ebf471984719290b1d49749d859430fcdb8f5757a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 168,
+      "line": 182,
       "symbol": "vibe uninstall",
-      "end_line": 169,
+      "end_line": 183,
       "fingerprint": "tok1:e7544f7fabc8952fa2a094e32d923d60121a134be5aca63306fdadd16b5a585f"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 171,
+      "line": 185,
       "symbol": "vibe update",
-      "end_line": 172,
+      "end_line": 186,
       "fingerprint": "tok1:14a6b49ed5a4cc88ad74c7c738b1db06604785819538b588a78d124d9b87f362"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 288,
+      "line": 302,
       "symbol": "vibe vars",
-      "end_line": 293,
+      "end_line": 307,
       "fingerprint": "tok1:af6c5c4b0395cb84cb619b17b19d77a249e673553a62f01587ef9cf48dd847ae"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 300,
+      "line": 314,
       "symbol": "vibe version",
-      "end_line": 301,
+      "end_line": 315,
       "fingerprint": "tok1:33315f272409a4c8ad6648ba9671fc4df16e2b163ceb37e3c58d6b44af2f16f1"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/cli.rs",
       "item_kind": "command",
-      "line": 201,
+      "line": 215,
       "symbol": "vibe workspace",
-      "end_line": 205,
+      "end_line": 219,
       "fingerprint": "tok1:ac2163fa0ecd131bbca2d73185a0d8cbf06ae47e50276d68a969ea05ac6ee8ac"
     },
     {
@@ -1649,46 +1649,46 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "item_kind": "fn",
-      "line": 50,
+      "line": 51,
       "symbol": "vibe_cli::commands::install::flag_tests::empty_manifest",
-      "end_line": 64,
+      "end_line": 65,
       "fingerprint": "tok1:a8b6d1799434ea5f6cb6a693e2a80a917e7594ba7a935a04edf17b867eb69b6e"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "item_kind": "fn",
-      "line": 97,
+      "line": 100,
       "symbol": "vibe_cli::commands::install::flag_tests::offline_without_a_local_registry_bails_before_the_network",
-      "end_line": 123,
-      "fingerprint": "tok1:1a205ea0be4a9b1cd9f1dc117a13a4a8ef6f62ea30265a39cbb6de983a128db7"
+      "end_line": 131,
+      "fingerprint": "tok1:eafc128de5957b63b65a0beb916108979a81a9e5766a406a50cfae78ef32d455"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "item_kind": "fn",
-      "line": 125,
+      "line": 166,
       "symbol": "vibe_cli::commands::install::flag_tests::prefer_local_conflicts_with_no_prefer_local",
-      "end_line": 150,
-      "fingerprint": "tok1:a48987084622323457fb0a247596cf506e2ead5a823e0319b8faaae2c1057445"
+      "end_line": 192,
+      "fingerprint": "tok1:384d298947546527d4c0198ff1cd0295d95e2b255fc1d9a13609d53521158f57"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "item_kind": "fn",
-      "line": 152,
+      "line": 194,
       "symbol": "vibe_cli::commands::install::flag_tests::project_local_packages_activate_resolver_without_vibe_embedded",
-      "end_line": 209,
-      "fingerprint": "tok1:58ef0a348e5ccbefd1a61785b886ace9f41204a5d96d37a284b761a0b7464093"
+      "end_line": 252,
+      "fingerprint": "tok1:8108302495a8ff70d87dcc08cb01440ad9db272185988a3e525bafdf3e7c0ae2"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "item_kind": "fn",
-      "line": 66,
+      "line": 67,
       "symbol": "vibe_cli::commands::install::flag_tests::short_circuit_conflicts_with_embedded_last",
-      "end_line": 95,
-      "fingerprint": "tok1:3c5d6969889cc8420af4cbc73ddd1e6efff8737650c86a63bf9cf499024d864c"
+      "end_line": 98,
+      "fingerprint": "tok1:7cb24e931bcc73737430cca15632ba4822e224f824e08fe23f1085fa2f8778bf"
     },
     {
       "crate_name": "vibe-cli",
@@ -4016,9 +4016,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/main.rs",
       "item_kind": "fn",
-      "line": 281,
+      "line": 287,
       "symbol": "vibe_cli::promote_user_config_env",
-      "end_line": 406,
+      "end_line": 412,
       "fingerprint": "tok1:f0612709ef928387b8644bab2915337cbcfbcc54cff8d3f3609c9fbc229d5ebd"
     },
     {
@@ -4889,18 +4889,18 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/user_config.rs",
       "item_kind": "mod",
-      "line": 42,
+      "line": 45,
       "symbol": "vibe_core::user_config",
-      "end_line": 42,
+      "end_line": 45,
       "fingerprint": "tok1:6e124561b3204d9a310f916e181d129be313c2ae025cceab7a70b8e1c3dc9e87"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/user_config.rs",
       "item_kind": "enum",
-      "line": 247,
+      "line": 287,
       "symbol": "vibe_core::user_config::UserConfigError",
-      "end_line": 295,
+      "end_line": 335,
       "fingerprint": "tok1:3ecee68e4bfeb05fca97ea9fcccead2f1855e4b227b06f68464c771e5ea792cb"
     },
     {
@@ -10345,7 +10345,7 @@
     {
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "from_symbol": "vibe_cli::commands::install::flag_tests::empty_manifest",
-      "line": 53,
+      "line": 54,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -10354,7 +10354,7 @@
     {
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "from_symbol": "vibe_cli::commands::install::flag_tests::offline_without_a_local_registry_bails_before_the_network",
-      "line": 98,
+      "line": 101,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#knob",
       "verb": "verifies"
@@ -10362,7 +10362,7 @@
     {
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "from_symbol": "vibe_cli::commands::install::flag_tests::prefer_local_conflicts_with_no_prefer_local",
-      "line": 128,
+      "line": 169,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local",
       "verb": "verifies",
@@ -10371,7 +10371,7 @@
     {
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "from_symbol": "vibe_cli::commands::install::flag_tests::project_local_packages_activate_resolver_without_vibe_embedded",
-      "line": 159,
+      "line": 201,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local",
       "verb": "verifies",
@@ -10380,7 +10380,7 @@
     {
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "from_symbol": "vibe_cli::commands::install::flag_tests::short_circuit_conflicts_with_embedded_last",
-      "line": 67,
+      "line": 68,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#knob",
       "verb": "verifies"
@@ -12492,7 +12492,7 @@
     {
       "file": "crates/vibe-cli/src/main.rs",
       "from_symbol": "vibe_cli::promote_user_config_env",
-      "line": 359,
+      "line": 365,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -13341,7 +13341,7 @@
     {
       "file": "crates/vibe-core/src/user_config.rs",
       "from_symbol": "vibe_core::user_config",
-      "line": 42,
+      "line": 45,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#materialise-diff",
       "verb": "implements"
@@ -13349,7 +13349,7 @@
     {
       "file": "crates/vibe-core/src/user_config.rs",
       "from_symbol": "vibe_core::user_config::UserConfigError",
-      "line": 262,
+      "line": 302,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#configuration-sources-in-precedence-order",
       "verb": "implements"
@@ -55304,7 +55304,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:af37dc23d3b2b0db27268d1700d044638baa1b64c5416691ab798979bf2ece97",
+      "content_hash": "sha256:83b1ace4ae66d03e72d7051029f44ec94f9d04bf7be4c22772a52ff63f1cb7e9",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "PROP-010: The local package cache — a shared offline store",
@@ -55457,7 +55457,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:2440068f79d2612761c20b0c9a201854bce387bd7b7f8fd69635a67ddd2946c1",
+      "content_hash": "sha256:060a49753868b1e6cec41e5a64072a303b1d0bc9c85b150c7f91c5aed939e9b3",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "2. Decisions",
@@ -55727,7 +55727,7 @@
     },
     {
       "anchor": "offline",
-      "content_hash": "sha256:6ecf4274463ddb5a63522297f1dfe9d3784d16fe42dfd7f37ea68d0f9fc0951b",
+      "content_hash": "sha256:1b45c1da96652619cff8825c9c20129cd6361dcb53379bddab5e66578117132b",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "2.5 `--offline` — the network-forbidden policy",
@@ -55736,55 +55736,55 @@
     },
     {
       "anchor": "OFFLINE-FLAG",
-      "content_hash": "sha256:a61a1dd1217e1d04d3b32809c5581f6c25c83a853682f7ed20c01b0210bb1375",
+      "content_hash": "sha256:9184da50d058d34a619d1bc8e9c5a4187f5215894b5e6051c8b9446624aed249",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Decision.** A global `--offline` flag forbids all network access for the invocation. @status:spec/done",
+      "heading": "**Decision.** A global `--offline` flag forbids all network access for the invocation. @status:impl/done",
       "line": 83,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-FLAG"
     },
     {
       "anchor": "OFFLINE-LAYERING",
-      "content_hash": "sha256:a3662fe67272cf6034de785f73081581bf1b7cc660484c69cd0c18856d1b4431",
+      "content_hash": "sha256:c19860fca103be999bf211166a8429d74cee23b7986d9e3f89670968f8f5c77e",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "It resolves through the established CLI config layering — flag, then a `VIBE_OFFLINE` environment variable, then a user-config `[net]` key; the flag wins. This mirrors the resolved-posture pattern already used for `--unattended` / `VIBE_UNATTENDED` (`output::resolve_unattended`). @status:spec/done",
+      "heading": "It resolves through the established CLI config layering — flag, then a `VIBE_OFFLINE` environment variable, then a user-config `[net]` key; the flag wins. This mirrors the resolved-posture pattern already used for `--unattended` / `VIBE_UNATTENDED` (`output::resolve_unattended`). @status:impl/done",
       "line": 85,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-LAYERING"
     },
     {
       "anchor": "OFFLINE-LOCAL-ONLY",
-      "content_hash": "sha256:293e9ebad5a126c11f44841825d42432a7de7e285466f342c67a02847dfe5039",
+      "content_hash": "sha256:d02ade4ce483bf0c48fcafc090af1bb16ccc9a525647c3b165a7cd2b03dd6e05",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "Under `--offline`, resolution and fetch must be satisfiable entirely from local sources — the cache (§2.7), `[[mirror]]` entries with a `file://` URL, and the project's own `vibe.lock` + `vibedeps/`. @status:spec/done",
+      "heading": "Under `--offline`, resolution and fetch must be satisfiable entirely from local sources — the cache (§2.7), `[[mirror]]` entries with a `file://` URL, and the project's own `vibe.lock` + `vibedeps/`. @status:impl/work",
       "line": 87,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-LOCAL-ONLY"
     },
     {
       "anchor": "OFFLINE-HARD-ERROR",
-      "content_hash": "sha256:637c0cd6e8806de2aeb77d9a67bc805957a4f9b12c3dac5a8293d9beea913380",
+      "content_hash": "sha256:90e09f7f1498a953ec52d46db828a456d03d0910d188852356c1bd7ceb5dd932",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "Anything not available locally is a **hard error with an actionable message**: it names the missing package and version and tells the operator how to recover (run once online, `vibe cache add`, or `vibe registry vendor`). @status:spec/done",
+      "heading": "Anything not available locally is a **hard error with an actionable message**: it names the missing package and version and tells the operator how to recover (run once online, `vibe cache add`, or `vibe registry vendor`). @status:impl/work",
       "line": 88,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-HARD-ERROR"
     },
     {
       "anchor": "OFFLINE-NO-DEGRADE",
-      "content_hash": "sha256:176e96dd942dae84ffa8c133022adafe7bf907cdaa4a2319b6b08ea21844a8a2",
+      "content_hash": "sha256:589d9065fad1133ed2b406d96af603294a45fdd6e7e9282381b38333306b8c51",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "`--offline` never silently degrades to a partial result. @status:spec/done",
+      "heading": "`--offline` never silently degrades to a partial result. @status:impl/work",
       "line": 89,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-NO-DEGRADE"
     },
     {
       "anchor": "ONLINE-DEFAULT",
-      "content_hash": "sha256:14ca68331f08ed657063e24875f9f4ac948b4ee359b6b7266226f636c60c1549",
+      "content_hash": "sha256:35260bc43eb766d80cd71afe0c60abfcf79855f749852f8f9545d2bd202eae72",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "Online remains the default and is unchanged: it walks the network for freshness and populates the cache as it goes. `--offline` is purely additive. @status:spec/done",
+      "heading": "Online remains the default and is unchanged: it walks the network for freshness and populates the cache as it goes. `--offline` is purely additive. @status:impl/done",
       "line": 91,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#ONLINE-DEFAULT"
     },
@@ -56285,7 +56285,7 @@
     },
     {
       "anchor": "surface",
-      "content_hash": "sha256:a7cdd9fef5eeb8f9f569c9755fce5d03f552b16b005408118f9ea2a46a126594",
+      "content_hash": "sha256:448c949456eb164e8d7a7d10b29fd6b0b1b669e866188dfcc125342bc4590634",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "3. Command and crate surface",
@@ -56294,10 +56294,10 @@
     },
     {
       "anchor": "SURF-OFFLINE-FLAG",
-      "content_hash": "sha256:2c353d337a541c142ace8e94205bfa02b967be78deef688de1880347c80516cd",
+      "content_hash": "sha256:d4ec873441e342fa37f03dfc0a4e33cc2379acd636d7359883bfe671120d94db",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "A global `--offline` flag (and `VIBE_OFFLINE`) on the `vibe` CLI (§2.5). @status:spec/done",
+      "heading": "A global `--offline` flag (and `VIBE_OFFLINE`) on the `vibe` CLI (§2.5). @status:impl/done",
       "line": 192,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#SURF-OFFLINE-FLAG"
     },
@@ -56519,7 +56519,7 @@
     },
     {
       "anchor": "phases",
-      "content_hash": "sha256:47a35e76f567615e934fc78dd7a49a2da76311f1053b6331338db3dc3dcea254",
+      "content_hash": "sha256:74f265dee32aeff4361f7ee38123d48c31253a5e3c4afb0010286febca12cb17",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "7. Phase plan",
@@ -56555,10 +56555,10 @@
     },
     {
       "anchor": "PHASE-3-OFFLINE",
-      "content_hash": "sha256:8da7c8bdf0927621433156154080cb7526291b3ad02864960c121a9c955d8c4c",
+      "content_hash": "sha256:92eba7cd92a566bcac9d16600adc4829b4f0c239e9f383971f6e1b7de28f8bef",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**`--offline`** — the global flag, `VIBE_OFFLINE`, the resolved posture; `MultiRegistryResolver` offline mode (resolve from the cache, never touch the network); actionable cache-miss errors. @status:impl/plan",
+      "heading": "**`--offline`** — the global flag, `VIBE_OFFLINE`, the resolved posture; `MultiRegistryResolver` offline mode (resolve from the cache, never touch the network); actionable cache-miss errors. @status:impl/work",
       "line": 241,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#PHASE-3-OFFLINE"
     },
@@ -73008,13 +73008,13 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
-      "line": 128,
+      "line": 169,
       "message": "edge `vibe_cli::commands::install::flag_tests::prefer_local_conflicts_with_no_prefer_local` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
-      "line": 159,
+      "line": 201,
       "message": "edge `vibe_cli::commands::install::flag_tests::project_local_packages_activate_resolver_without_vibe_embedded` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local` carries no kind/revision line yet"
     },
     {
