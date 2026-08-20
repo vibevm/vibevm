@@ -96,6 +96,71 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# ── vibe-index CLI machine-JSON reports (7 JTD), PROP-044 §6.5 / B-079 ───────
+# The `vibe-index` twin of the CLI section above: seven `--json` envelopes of
+# the index utility's read verbs, minted 2026-08-20 (owner act on B-079).
+# Same computed policy as every CLI report: rebuildable from the catalog it
+# answers over (`recoverable = true`), read by scripts and agents
+# (`foreign_parsers = "many"`). Each owns one JTD schema under
+# `schemas/index_cli/e1/` and one authored golden document under
+# `formats/corpora/index_cli/e1/`. The HTTP half of the same minting
+# (`/v1/**`) is a separate packet and is NOT registered here yet.
+[format.index-cli-get-report]
+epoch = 1
+schema = "schemas/index_cli/e1/get_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index_cli/e1"
+sunset = "none"
+
+[format.index-cli-list-report]
+epoch = 1
+schema = "schemas/index_cli/e1/list_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index_cli/e1"
+sunset = "none"
+
+[format.index-cli-search-report]
+epoch = 1
+schema = "schemas/index_cli/e1/search_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index_cli/e1"
+sunset = "none"
+
+[format.index-cli-capabilities-report]
+epoch = 1
+schema = "schemas/index_cli/e1/capabilities_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index_cli/e1"
+sunset = "none"
+
+[format.index-cli-purls-report]
+epoch = 1
+schema = "schemas/index_cli/e1/purls_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index_cli/e1"
+sunset = "none"
+
+[format.index-cli-outdated-report]
+epoch = 1
+schema = "schemas/index_cli/e1/outdated_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index_cli/e1"
+sunset = "none"
+
+[format.index-cli-verify-report]
+epoch = 1
+schema = "schemas/index_cli/e1/verify_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index_cli/e1"
+sunset = "none"
+
 # ── Catalog (PROP-044 §6.1 — three fates) ───────────────────────────────────
 # `index-entry` is the portable `VersionEntry` record: it is both a line of
 # `primary.jsonl` and an element of `versions[]` inside `by-name/<name>.json`.

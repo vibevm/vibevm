@@ -1,0 +1,65 @@
+{
+  "command": "list",
+  "registry": "vibespecs",
+  "package_count": 3,
+  "returned": 3,
+  "offset": 0,
+  "limit": 50,
+  "packages": [
+    {
+      "kind": "stack",
+      "group": "org.vibevm",
+      "name": "rust",
+      "versions": [
+        "0.1.0",
+        "0.2.0"
+      ],
+      "latest_stable": "0.2.0",
+      "description": null
+    },
+    {
+      "kind": "feat",
+      "group": "org.vibevm",
+      "name": "sqlx-skin",
+      "versions": [
+        "0.1.0",
+        "0.3.0"
+      ],
+      "latest_stable": "0.3.0",
+      "description": null,
+      "unavailable": [
+        {
+          "group": "org.vibevm",
+          "name": "sqlx-skin",
+          "version": "0.2.0",
+          "missing": [
+            "org.vibevm/subskills/lazy-materialisation@1"
+          ],
+          "recipe": "this build does not understand `org.vibevm/subskills/lazy-materialisation@1` (reader capabilities — spec://org.vibevm.core/vibevm/common/PROP-044#machinery); fix: update vibe-index to a build that names them, or ask for a version this build can act on"
+        }
+      ]
+    },
+    {
+      "kind": "flow",
+      "group": "org.vibevm",
+      "name": "wal",
+      "versions": [
+        "0.1.0",
+        "0.2.0"
+      ],
+      "latest_stable": "0.2.0",
+      "description": "Second release: stabilised the replay path",
+      "unavailable": [
+        {
+          "group": "org.vibevm",
+          "name": "wal",
+          "version": "1.0.0-rc.1",
+          "missing": [
+            "org.vibevm/wal/tombstone@1"
+          ],
+          "recipe": "this build does not understand `org.vibevm/wal/tombstone@1` (reader capabilities — spec://org.vibevm.core/vibevm/common/PROP-044#machinery); fix: update vibe-index to a build that names them, or ask for a version this build can act on"
+        }
+      ]
+    }
+  ]
+}

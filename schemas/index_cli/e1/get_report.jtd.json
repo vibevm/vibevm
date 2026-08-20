@@ -1,0 +1,94 @@
+{
+  "metadata": {
+    "description": "Wire format for `vibe-index get <data-dir> <group> <name> --json` (PROP-008 §2.2): one package's usable versions by its `(group, name)` identity, with the versions this build refused named beside them. Read by scripts and agents (PROP-044 §6.5 — a CLI `--json` report is a format plain text; `foreign_parsers = many`). Source of truth for the writer: `crates/vibe-index/src/cli/get.rs` (`GetEnvelope`); the generated reader this schema owns lives in `crates/vibe-wire/src/generated/index_cli/e1/get_report/`.",
+    "x-vocabularies": ["group", "version", "version_entry"]
+  },
+  "properties": {
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"get\"` for this report."
+      }
+    },
+    "found": {
+      "type": "boolean",
+      "metadata": {
+        "description": "Whether the asked-for fact came back: `true` for a whole-package ask whenever the `(group, name)` identity stands in the index — even when every version is refused — and for a `--version` ask exactly when that version was served. `false` names an identity (or version) the index does not hold or cannot act on; `unavailable` says why."
+      }
+    },
+    "group": {
+      "ref": "group",
+      "metadata": {
+        "description": "The reverse-FQDN group qualifier of the ask, echoed back verbatim."
+      }
+    },
+    "name": {
+      "type": "string",
+      "metadata": {
+        "description": "The bare package name of the ask, echoed back verbatim."
+      }
+    },
+    "versions": {
+      "elements": {
+        "ref": "version_entry"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Every version of the package this build can act on (`usable_versions`, PROP-044 §4.5), narrowed to the ask when `--version` named one. Required member: a not-found ask writes `[]`, never an absent key — the writer has no `skip_serializing_if` here."
+      }
+    }
+  },
+  "optionalProperties": {
+    "unavailable": {
+      "elements": {
+        "ref": "unavailable"
+      },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "Versions of this package this build refused to serve — named, not hidden (PROP-044 §4.5), narrowed to the ask when `--version` named one. Absent when there are none (the writer carries `skip_serializing_if = \"Vec::is_empty\"`)."
+      }
+    }
+  },
+  "definitions": {
+    "unavailable": {
+      "metadata": {
+        "description": "One version this build refused to serve, and why — the row every `vibe-index` answering surface carries (`crates/vibe-index/src/index/quarantine.rs`, `Unavailable`). It names the full coordinate even inside an envelope that already names the package: a row that identifies itself survives being copied out of its envelope by a script. Local to this schema family: `formats/vocabularies.json` does not (yet) carry it, and each of the six report schemas that need it declare their own copy."
+      },
+      "properties": {
+        "group": {
+          "ref": "group",
+          "metadata": {
+            "description": "The refused version's group."
+          }
+        },
+        "name": {
+          "type": "string",
+          "metadata": {
+            "description": "The refused version's bare package name."
+          }
+        },
+        "version": {
+          "ref": "version",
+          "metadata": {
+            "description": "The refused version."
+          }
+        },
+        "missing": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The reader capabilities of `must_understand` this build lacks, in the record's own order. Required member: a refusal always writes its list, `[]` never occurring in practice today (a row exists exactly because the list is non-empty) but lawful on the wire — the writer has no skip here."
+          }
+        },
+        "recipe": {
+          "type": "string",
+          "metadata": {
+            "description": "What a person or a script does about it — the fixed two-part text `recipe_for` builds (the explanation with the PROP-044 anchor, then the `fix:` surface)."
+          }
+        }
+      }
+    }
+  }
+}

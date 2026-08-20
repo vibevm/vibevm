@@ -1,0 +1,24 @@
+{
+  "command": "capabilities",
+  "capability": "interface:sqlx",
+  "hit_count": 1,
+  "hits": [
+    {
+      "kind": "feat",
+      "name": "sqlx-skin",
+      "version": "0.1.0",
+      "capability_advertised": "interface:sqlx"
+    }
+  ],
+  "unavailable": [
+    {
+      "group": "org.vibevm",
+      "name": "sqlx-skin",
+      "version": "0.2.0",
+      "missing": [
+        "org.vibevm/subskills/lazy-materialisation@1"
+      ],
+      "recipe": "this build does not understand `org.vibevm/subskills/lazy-materialisation@1` (reader capabilities — spec://org.vibevm.core/vibevm/common/PROP-044#machinery); fix: update vibe-index to a build that names them, or ask for a version this build can act on"
+    }
+  ]
+}

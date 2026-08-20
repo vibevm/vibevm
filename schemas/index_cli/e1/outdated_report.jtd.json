@@ -1,0 +1,139 @@
+{
+  "metadata": {
+    "description": "Wire format for `vibe-index outdated <data-dir> --json`: a `vibe.lock` diffed against the index — one row per locked package, with upgrade candidates counted and the refusals named beside their rows. Read by scripts and agents (PROP-044 §6.5 — a CLI `--json` report is a format plain text; `foreign_parsers = many`). Source of truth for the writer: `crates/vibe-index/src/cli/outdated.rs` (`Envelope`, `Row`, `Status`); the generated reader this schema owns lives in `crates/vibe-wire/src/generated/index_cli/e1/outdated_report/`.",
+    "x-vocabularies": ["group", "version", "package_kind"]
+  },
+  "properties": {
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"outdated\"` for this report."
+      }
+    },
+    "lockfile": {
+      "type": "string",
+      "metadata": {
+        "description": "The lockfile path as the ask spelled it (`--lockfile`, default `vibe.lock`) — a `PathBuf` on the wire, verbatim: an absolute ask echoes absolute, a relative one relative."
+      }
+    },
+    "update_available": {
+      "type": "uint32",
+      "metadata": {
+        "description": "How many rows carry `update-available` — the headline number of the report. `u32` in the writer."
+      }
+    },
+    "rows": {
+      "elements": {
+        "ref": "outdated_row"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "One row per `[[package]]` of the lockfile, in the lockfile's own order. Required member: an empty lockfile writes `[]`, never an absent key — the writer has no skip here."
+      }
+    }
+  },
+  "definitions": {
+    "outdated_row": {
+      "metadata": {
+        "description": "One locked package against the index: what is installed, what the newest usable stable is, and the verdict."
+      },
+      "properties": {
+        "kind": {
+          "ref": "package_kind",
+          "metadata": {
+            "description": "The locked package's kind — metadata per PROP-008 §2.3, read from the lockfile entry."
+          }
+        },
+        "group": {
+          "ref": "group",
+          "metadata": {
+            "description": "The locked package's group."
+          }
+        },
+        "name": {
+          "type": "string",
+          "metadata": {
+            "description": "The locked package's bare name."
+          }
+        },
+        "installed": {
+          "ref": "version",
+          "metadata": {
+            "description": "The version the lockfile pins."
+          }
+        },
+        "latest": {
+          "ref": "version",
+          "nullable": true,
+          "metadata": {
+            "description": "The newest non-prerelease version this build can act on (`usable_latest_stable`), `null` when the index holds no such version for this package — a package absent from the index, or one whose every version is refused or a prerelease. The key is always present: the writer's `Option` carries no skip."
+          }
+        },
+        "status": {
+          "ref": "status",
+          "metadata": {
+            "description": "The verdict: `update-available` when `latest` outranks `installed`, `up-to-date` when it does not, `unknown` when there is no `latest` to compare against."
+          }
+        }
+      },
+      "optionalProperties": {
+        "unavailable": {
+          "elements": {
+            "ref": "unavailable"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "Versions of this name this build refuses to act on — the WHY beside the row, never a status change: `unknown` stays `unknown` (PROP-044 §4.5). Absent when there are none (the writer carries `skip_serializing_if = \"Vec::is_empty\"`)."
+          }
+        }
+      }
+    },
+    "status": {
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The verdict on one locked package (closed vocabulary of three, kebab-case on the wire): `up-to-date` — the index's newest usable stable does not outrank the pin; `update-available` — it does; `unknown` — the index holds nothing comparable, and the row says why beside itself rather than guessing. Closed because every value already has a behaviour in the writer's `Status` enum — an unseen verdict has no safe reading."
+      },
+      "enum": ["up-to-date", "update-available", "unknown"]
+    },
+    "unavailable": {
+      "metadata": {
+        "description": "One version this build refused to act on, and why — the row every `vibe-index` answering surface carries (`crates/vibe-index/src/index/quarantine.rs`, `Unavailable`). Local to this schema family: `formats/vocabularies.json` does not (yet) carry it, and each of the six report schemas that need it declare their own copy."
+      },
+      "properties": {
+        "group": {
+          "ref": "group",
+          "metadata": {
+            "description": "The refused version's group."
+          }
+        },
+        "name": {
+          "type": "string",
+          "metadata": {
+            "description": "The refused version's bare package name."
+          }
+        },
+        "version": {
+          "ref": "version",
+          "metadata": {
+            "description": "The refused version."
+          }
+        },
+        "missing": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The reader capabilities of `must_understand` this build lacks, in the record's own order. Required member: a refusal always writes its list, `[]` never occurring in practice today (a row exists exactly because the list is non-empty) but lawful on the wire — the writer has no skip here."
+          }
+        },
+        "recipe": {
+          "type": "string",
+          "metadata": {
+            "description": "What a person or a script does about it — the fixed two-part text `recipe_for` builds (the explanation with the PROP-044 anchor, then the `fix:` surface)."
+          }
+        }
+      }
+    }
+  }
+}

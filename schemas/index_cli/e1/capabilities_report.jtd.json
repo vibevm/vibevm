@@ -1,0 +1,120 @@
+{
+  "metadata": {
+    "description": "Wire format for `vibe-index capabilities <data-dir> <capability> --json`: the provides-index lookup — packages advertising a capability, plus the unusable versions that WOULD have matched it. Read by scripts and agents (PROP-044 §6.5 — a CLI `--json` report is a format plain text; `foreign_parsers = many`). Source of truth for the writer: `crates/vibe-index/src/cli/capabilities.rs` (`Envelope`, `Row`); the generated reader this schema owns lives in `crates/vibe-wire/src/generated/index_cli/e1/capabilities_report/`.",
+    "x-vocabularies": ["group", "version", "package_kind"]
+  },
+  "properties": {
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"capabilities\"` for this report."
+      }
+    },
+    "capability": {
+      "type": "string",
+      "metadata": {
+        "description": "The capability the ask named, echoed back verbatim."
+      }
+    },
+    "hit_count": {
+      "type": "uint32",
+      "metadata": {
+        "description": "How many rows `hits` carries. `usize` in the writer; JTD (RFC 8927) stops at 32-bit integers, so `uint32` is the narrowest true claim this language can make."
+      }
+    },
+    "hits": {
+      "elements": {
+        "ref": "capability_row"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Every usable version advertising the capability, in the lookup's deterministic order. Required member: a capability nobody provides writes `[]`, never an absent key — the writer has no skip here."
+      }
+    }
+  },
+  "optionalProperties": {
+    "unavailable": {
+      "elements": {
+        "ref": "unavailable"
+      },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "Unusable versions that WOULD have matched the requested capability — named, not hidden (PROP-044 §4.5). Absent when there are none (the writer carries `skip_serializing_if = \"Vec::is_empty\"`)."
+      }
+    }
+  },
+  "definitions": {
+    "capability_row": {
+      "metadata": {
+        "description": "One version advertising the requested capability."
+      },
+      "properties": {
+        "kind": {
+          "ref": "package_kind",
+          "metadata": {
+            "description": "The version's kind — metadata per PROP-008 §2.3."
+          }
+        },
+        "name": {
+          "type": "string",
+          "metadata": {
+            "description": "The version's bare package name."
+          }
+        },
+        "version": {
+          "ref": "version",
+          "metadata": {
+            "description": "The version advertising the capability."
+          }
+        },
+        "capability_advertised": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The advertised capability string the row matched on (the entry's own spelling, found by prefix overlap with the ask), `null` when the version's `provides` block carries no capabilities at all. The key is always present: the writer's `Option` carries no skip."
+          }
+        }
+      }
+    },
+    "unavailable": {
+      "metadata": {
+        "description": "One version this build refused to act on, and why — the row every `vibe-index` answering surface carries (`crates/vibe-index/src/index/quarantine.rs`, `Unavailable`). Local to this schema family: `formats/vocabularies.json` does not (yet) carry it, and each of the six report schemas that need it declare their own copy."
+      },
+      "properties": {
+        "group": {
+          "ref": "group",
+          "metadata": {
+            "description": "The refused version's group."
+          }
+        },
+        "name": {
+          "type": "string",
+          "metadata": {
+            "description": "The refused version's bare package name."
+          }
+        },
+        "version": {
+          "ref": "version",
+          "metadata": {
+            "description": "The refused version."
+          }
+        },
+        "missing": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The reader capabilities of `must_understand` this build lacks, in the record's own order. Required member: a refusal always writes its list, `[]` never occurring in practice today (a row exists exactly because the list is non-empty) but lawful on the wire — the writer has no skip here."
+          }
+        },
+        "recipe": {
+          "type": "string",
+          "metadata": {
+            "description": "What a person or a script does about it — the fixed two-part text `recipe_for` builds (the explanation with the PROP-044 anchor, then the `fix:` surface)."
+          }
+        }
+      }
+    }
+  }
+}

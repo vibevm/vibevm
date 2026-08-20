@@ -49,57 +49,11 @@ pub enum RepomdFileEntry {
         /// standing rule for integers wider than 32 bits (2026-08-20):
         /// JTD has no 64-bit integer, so the string is the only wire
         /// form the schema can describe truthfully. See
-        /// [`wire_decimal_u64`] and `formats/breaks/003.md`.
-        #[serde(with = "wire_decimal_u64")]
+        /// [`crate::types::wire_decimal`] and `formats/breaks/003.md`.
+        #[serde(with = "crate::types::wire_decimal")]
         size: u64,
         sha256: String,
     },
-}
-
-/// Wire form of an integer wider than 32 bits: a canonical decimal
-/// string — ASCII digits only, no sign, no leading zeros except the
-/// bare `0`, value within `u64` (the owner's standing rule, 2026-08-20;
-/// JTD has no 64-bit integer type, so the schema says `string` and the
-/// *value* carries the number — `schemas/index/e1/repomd.jtd.json`,
-/// `files.*.size`).
-///
-/// Both directions are loud: a non-string JSON value, a non-numeric or
-/// non-canonical string (`"007"`, `"-1"`, `""`, `"abc"`) is a refusal,
-/// never a coercion or a quiet `0` (PROP-044 law 1 — a wrong answer
-/// must never look like a right one). The Rust type stays `u64`, so
-/// the field's arithmetic use is unchanged.
-mod wire_decimal_u64 {
-    use serde::{Deserialize, Deserializer, Serializer};
-
-    pub(super) fn serialize<S: Serializer>(value: &u64, serializer: S) -> Result<S::Ok, S::Error> {
-        serializer.serialize_str(&value.to_string())
-    }
-
-    pub(super) fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<u64, D::Error> {
-        let raw = String::deserialize(deserializer)?;
-        parse_canonical(&raw).ok_or_else(|| {
-            serde::de::Error::custom(format!(
-                "`{raw}` is not a canonical decimal u64 (ASCII digits only, no sign, \
-                 no leading zeros except the bare `0`, value within u64)"
-            ))
-        })
-    }
-
-    /// The canonical form accepted on the wire — exactly what
-    /// `u64::from_str` accepts for digits, tightened to reject leading
-    /// zeros and the empty string so one number has one spelling.
-    fn parse_canonical(raw: &str) -> Option<u64> {
-        // The explicit digit check closes `from_str`'s one leniency: it
-        // accepts a leading `+`, which would give one number a second
-        // spelling.
-        if raw.is_empty()
-            || (raw.len() > 1 && raw.starts_with('0'))
-            || !raw.bytes().all(|b| b.is_ascii_digit())
-        {
-            return None;
-        }
-        raw.parse().ok()
-    }
 }
 
 impl RepomdFileEntry {

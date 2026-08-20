@@ -17,6 +17,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root
 pub mod entry;
 pub mod kinds;
 pub mod repomd;
+pub(crate) mod wire_decimal;
 
 pub use entry::{
     BootSnippetEntry, CompatibilityEntry, ConflictsEntry, DeliveryMode, FeaturesEntry, I18nEntry,

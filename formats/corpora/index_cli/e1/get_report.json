@@ -1,0 +1,65 @@
+{
+  "command": "get",
+  "found": true,
+  "group": "org.vibevm",
+  "name": "wal",
+  "versions": [
+    {
+      "content_hash": "sha256:9f2c4a7b51e83d6f0aa2c4e9d7b83f15c6e0d2a8b9f4c1e7d3a5b8f2e6c9d4a1",
+      "files_count": 281,
+      "group": "org.vibevm",
+      "indexed_at": "2026-08-18T10:00:00Z",
+      "indexed_by": "vibe-index 0.1.0-dev",
+      "kind": "flow",
+      "name": "wal",
+      "registry": "vibespecs",
+      "schema_version": 1,
+      "source_ref": "v0.1.0",
+      "source_url": "https://gitverse.ru/vibevm/org.vibevm.wal.git",
+      "version": "0.1.0",
+      "authors": [
+        "Oleg Chirukhin"
+      ],
+      "description": "Write-ahead log discipline for the specspaces world",
+      "homepage": "https://gitverse.ru/vibevm/vibevm",
+      "keywords": [
+        "wal",
+        "checkpoint",
+        "journal"
+      ],
+      "license": "UPL-1.0",
+      "provides": {
+        "capabilities": [
+          "interface:wal"
+        ]
+      },
+      "resolved_commit": "0123456789abcdef0123456789abcdef01234567"
+    },
+    {
+      "content_hash": "sha256:3ab76f0d29c4e1a8b5d3f7c9e2a4d6b8f1c3e5a7d9b2f4e6c8a0d3b5f7e9c1a2",
+      "files_count": 290,
+      "group": "org.vibevm",
+      "indexed_at": "2026-08-19T10:00:00Z",
+      "indexed_by": "vibe-index 0.1.0-dev",
+      "kind": "flow",
+      "name": "wal",
+      "registry": "vibespecs",
+      "schema_version": 1,
+      "source_ref": "v0.2.0",
+      "source_url": "https://gitverse.ru/vibevm/org.vibevm.wal.git",
+      "version": "0.2.0",
+      "description": "Second release: stabilised the replay path"
+    }
+  ],
+  "unavailable": [
+    {
+      "group": "org.vibevm",
+      "name": "wal",
+      "version": "1.0.0-rc.1",
+      "missing": [
+        "org.vibevm/wal/tombstone@1"
+      ],
+      "recipe": "this build does not understand `org.vibevm/wal/tombstone@1` (reader capabilities — spec://org.vibevm.core/vibevm/common/PROP-044#machinery); fix: update vibe-index to a build that names them, or ask for a version this build can act on"
+    }
+  ]
+}

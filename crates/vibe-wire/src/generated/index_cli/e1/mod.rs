@@ -4,4 +4,10 @@
 // `*.jtd.json` schema under `schemas/` / `schemas/hello/e1/` / `schemas/index/e1/` / `schemas/index_cli/e1/` / `schemas/journal/e1/`. Editing
 // this file by hand will be overwritten on the next codegen run.
 
-pub mod hello;
+pub mod capabilities_report;
+pub mod get_report;
+pub mod list_report;
+pub mod outdated_report;
+pub mod purls_report;
+pub mod search_report;
+pub mod verify_report;

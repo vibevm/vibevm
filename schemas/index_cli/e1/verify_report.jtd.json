@@ -1,0 +1,106 @@
+{
+  "metadata": {
+    "description": "Wire format for `vibe-index verify <data-dir> --json`: the integrity check of one index data directory — file hashes recomputed against `repomd.json`, mismatches and missing files named, one honest `ok` verdict. Read by scripts and agents, CI above all (a failed check also exits non-zero — the JSON is what the pipeline logs; PROP-044 §6.5, `foreign_parsers = many`). Source of truth for the writer: `crates/vibe-index/src/cli/verify.rs` (`Report`, `Mismatch`); the generated reader this schema owns lives in `crates/vibe-wire/src/generated/index_cli/e1/verify_report/`."
+  },
+  "properties": {
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"verify\"` for this report."
+      }
+    },
+    "data_dir": {
+      "type": "string",
+      "metadata": {
+        "description": "The data directory as the ask spelled it — a `PathBuf` on the wire, verbatim: an absolute ask echoes absolute, a relative one relative."
+      }
+    },
+    "registry": {
+      "type": "string",
+      "metadata": {
+        "description": "The registry name the checked manifest announces, from `repomd.json`."
+      }
+    },
+    "package_count": {
+      "type": "uint32",
+      "metadata": {
+        "description": "The manifest's package count, echoed from `repomd.json`."
+      }
+    },
+    "version_count": {
+      "type": "uint32",
+      "metadata": {
+        "description": "The manifest's version count, echoed from `repomd.json`."
+      }
+    },
+    "files_checked": {
+      "type": "uint32",
+      "metadata": {
+        "description": "How many manifest entries were checked (files hashed, the `by-name` directory counted). `u32` in the writer."
+      }
+    },
+    "mismatches": {
+      "elements": {
+        "ref": "mismatch"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Every checked entry whose observed size or hash diverged from the manifest. Required member: a clean check writes `[]`, never an absent key — the writer has no skip here."
+      }
+    },
+    "missing": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Relative paths of manifest files that could not be read at all. Required member: a complete directory writes `[]`, never an absent key — the writer has no skip here."
+      }
+    },
+    "ok": {
+      "type": "boolean",
+      "metadata": {
+        "description": "The verdict: `mismatches` and `missing` are both empty. The command's exit code follows this field (non-zero on `false`) — a script may read either, and they cannot disagree."
+      }
+    }
+  },
+  "definitions": {
+    "mismatch": {
+      "metadata": {
+        "description": "One checked entry whose observed bytes diverged from what `repomd.json` claims — a file hash/size mismatch, or a `by-name` directory whose entry count moved. The `directory` flavour of the check (a moved entry count) reports `\"directory\"` in both sha256 fields and the counts as the entry sizes."
+      },
+      "properties": {
+        "path": {
+          "type": "string",
+          "metadata": {
+            "description": "The entry's path relative to the data directory, as the manifest keys it."
+          }
+        },
+        "expected_size": {
+          "type": "string",
+          "metadata": {
+            "description": "File size in bytes, encoded as a canonical decimal string - ASCII digits only, no sign, no leading zeros except the bare `0`, value within the unsigned 64-bit range. Integers wider than 32 bits ride the wire as decimal strings by the owner's standing rule (2026-08-20, PROP-044 `##M-WIDE-INTEGERS-AS-STRINGS`; first application `formats/breaks/003.md`): JTD has no 64-bit integer type, so the string form is the only way this schema can describe the writer's `u64` truthfully. A non-canonical string or a JSON number is refused loudly at value-parse time, never coerced. The size `repomd.json` records for this file."
+          }
+        },
+        "actual_size": {
+          "type": "string",
+          "metadata": {
+            "description": "File size in bytes, encoded as a canonical decimal string - ASCII digits only, no sign, no leading zeros except the bare `0`, value within the unsigned 64-bit range. Integers wider than 32 bits ride the wire as decimal strings by the owner's standing rule (2026-08-20, PROP-044 `##M-WIDE-INTEGERS-AS-STRINGS`; first application `formats/breaks/003.md`): JTD has no 64-bit integer type, so the string form is the only way this schema can describe the writer's `u64` truthfully. A non-canonical string or a JSON number is refused loudly at value-parse time, never coerced. The size the file actually has on disk."
+          }
+        },
+        "expected_sha256": {
+          "type": "string",
+          "metadata": {
+            "description": "The hash the manifest claims (`sha256:`-prefixed hex; the literal `\"directory\"` for the directory flavour of the check)."
+          }
+        },
+        "actual_sha256": {
+          "type": "string",
+          "metadata": {
+            "description": "The hash the recomputed bytes produced (`sha256:`-prefixed hex; the literal `\"directory\"` for the directory flavour of the check)."
+          }
+        }
+      }
+    }
+  }
+}

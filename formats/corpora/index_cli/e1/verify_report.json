@@ -1,0 +1,21 @@
+{
+  "command": "verify",
+  "data_dir": "index",
+  "registry": "vibespecs",
+  "package_count": 3,
+  "version_count": 6,
+  "files_checked": 3,
+  "mismatches": [
+    {
+      "path": "stale-projection.json",
+      "expected_size": "999",
+      "actual_size": "51",
+      "expected_sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "actual_sha256": "sha256:a06a46d7c43e4933d59a2f269b777f317c66b72ec8b46270f4c586b04412d868"
+    }
+  ],
+  "missing": [
+    "missing-artifact.json"
+  ],
+  "ok": false
+}

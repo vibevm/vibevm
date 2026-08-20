@@ -50,11 +50,51 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/capabilities_report.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "capabilities_report",
+      "end_line": 120
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/capabilities_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 47,
+      "symbol": "capabilities_report::capability_row",
+      "end_line": 78
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/capabilities_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 79,
+      "symbol": "capabilities_report::unavailable",
+      "end_line": 118
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/index/e1/entry.jtd.json",
       "item_kind": "schema",
       "line": 1,
       "symbol": "entry",
       "end_line": 7
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/get_report.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "get_report",
+      "end_line": 94
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/get_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 53,
+      "symbol": "get_report::unavailable",
+      "end_line": 92
     },
     {
       "crate_name": "<schema>",
@@ -162,6 +202,14 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/list_report.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "list_report",
+      "end_line": 155
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/list_report.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -175,6 +223,54 @@
       "line": 39,
       "symbol": "list_report::list_entry",
       "end_line": 103
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/list_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 54,
+      "symbol": "list_report::package_row",
+      "end_line": 113
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/list_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 114,
+      "symbol": "list_report::unavailable",
+      "end_line": 153
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/outdated_report.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "outdated_report",
+      "end_line": 139
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/outdated_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 36,
+      "symbol": "outdated_report::outdated_row",
+      "end_line": 90
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/outdated_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 91,
+      "symbol": "outdated_report::status",
+      "end_line": 97
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/outdated_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 98,
+      "symbol": "outdated_report::unavailable",
+      "end_line": 137
     },
     {
       "crate_name": "progress-core",
@@ -556,6 +652,38 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/purls_report.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "purls_report",
+      "end_line": 126
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/purls_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 78,
+      "symbol": "purls_report::binding_site",
+      "end_line": 84
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/purls_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 47,
+      "symbol": "purls_report::purl_row",
+      "end_line": 77
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/purls_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 85,
+      "symbol": "purls_report::unavailable",
+      "end_line": 124
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/registry_publish_report.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -604,11 +732,51 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/search_report.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "search_report",
+      "end_line": 136
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/search_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 36,
+      "symbol": "search_report::hit_row",
+      "end_line": 94
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/search_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 95,
+      "symbol": "search_report::unavailable",
+      "end_line": 134
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/uninstall_report.jtd.json",
       "item_kind": "schema",
       "line": 1,
       "symbol": "uninstall_report",
       "end_line": 43
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/verify_report.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "verify_report",
+      "end_line": 106
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_cli/e1/verify_report.jtd.json",
+      "item_kind": "schema-def",
+      "line": 68,
+      "symbol": "verify_report::mismatch",
+      "end_line": 104
     },
     {
       "crate_name": "vibe-cli",
@@ -5915,10 +6083,19 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/types/repomd.rs",
       "item_kind": "fn",
-      "line": 145,
+      "line": 99,
       "symbol": "vibe_index::types::repomd::tests::repomd_round_trips",
-      "end_line": 155,
+      "end_line": 109,
       "fingerprint": "tok1:05d6a885b2b1ce5f56ef8a2c04c494fc25dfc30400b539f3876e1b0f5941a7b1"
+    },
+    {
+      "crate_name": "vibe-index",
+      "file": "crates/vibe-index/src/types/wire_decimal.rs",
+      "item_kind": "mod",
+      "line": 16,
+      "symbol": "vibe_index::types::wire_decimal",
+      "end_line": 16,
+      "fingerprint": "tok1:5cd37479f727211c71f73c50e6e711ad2714cf2ccac58e6a7b2c3973db3e2d8b"
     },
     {
       "crate_name": "vibe-install",
@@ -14487,11 +14664,19 @@
     {
       "file": "crates/vibe-index/src/types/repomd.rs",
       "from_symbol": "vibe_index::types::repomd::tests::repomd_round_trips",
-      "line": 146,
+      "line": 100,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout",
       "verb": "verifies",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-index/src/types/wire_decimal.rs",
+      "from_symbol": "vibe_index::types::wire_decimal",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-install/src/lib.rs",
@@ -73971,7 +74156,7 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-index/src/types/repomd.rs",
-      "line": 146,
+      "line": 100,
       "message": "edge `vibe_index::types::repomd::tests::repomd_round_trips` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout` carries no kind/revision line yet"
     },
     {

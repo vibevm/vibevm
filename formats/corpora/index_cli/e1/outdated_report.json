@@ -1,0 +1,61 @@
+{
+  "command": "outdated",
+  "lockfile": "vibe.lock",
+  "update_available": 2,
+  "rows": [
+    {
+      "kind": "flow",
+      "group": "org.vibevm",
+      "name": "wal",
+      "installed": "0.2.0",
+      "latest": "0.2.0",
+      "status": "up-to-date",
+      "unavailable": [
+        {
+          "group": "org.vibevm",
+          "name": "wal",
+          "version": "1.0.0-rc.1",
+          "missing": [
+            "org.vibevm/wal/tombstone@1"
+          ],
+          "recipe": "this build does not understand `org.vibevm/wal/tombstone@1` (reader capabilities — spec://org.vibevm.core/vibevm/common/PROP-044#machinery); fix: update vibe-index to a build that names them, or ask for a version this build can act on"
+        }
+      ]
+    },
+    {
+      "kind": "stack",
+      "group": "org.vibevm",
+      "name": "rust",
+      "installed": "0.1.0",
+      "latest": "0.2.0",
+      "status": "update-available"
+    },
+    {
+      "kind": "feat",
+      "group": "org.vibevm",
+      "name": "sqlx-skin",
+      "installed": "0.1.0",
+      "latest": "0.3.0",
+      "status": "update-available",
+      "unavailable": [
+        {
+          "group": "org.vibevm",
+          "name": "sqlx-skin",
+          "version": "0.2.0",
+          "missing": [
+            "org.vibevm/subskills/lazy-materialisation@1"
+          ],
+          "recipe": "this build does not understand `org.vibevm/subskills/lazy-materialisation@1` (reader capabilities — spec://org.vibevm.core/vibevm/common/PROP-044#machinery); fix: update vibe-index to a build that names them, or ask for a version this build can act on"
+        }
+      ]
+    },
+    {
+      "kind": "tool",
+      "group": "org.vibevm",
+      "name": "ghost-pkg",
+      "installed": "0.3.0",
+      "latest": null,
+      "status": "unknown"
+    }
+  ]
+}

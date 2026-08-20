@@ -1,0 +1,126 @@
+{
+  "metadata": {
+    "description": "Wire format for `vibe-index purls <data-dir> <purl> --json`: the describes-index lookup — packages whose `describes` (whole-package or subskill) matches a PURL, plus the unusable versions that WOULD have matched it. Read by scripts and agents (PROP-044 §6.5 — a CLI `--json` report is a format plain text; `foreign_parsers = many`). Source of truth for the writer: `crates/vibe-index/src/cli/purls.rs` (`Envelope`, `Row`); the generated reader this schema owns lives in `crates/vibe-wire/src/generated/index_cli/e1/purls_report/`.",
+    "x-vocabularies": ["group", "version", "package_kind"]
+  },
+  "properties": {
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"purls\"` for this report."
+      }
+    },
+    "purl": {
+      "type": "string",
+      "metadata": {
+        "description": "The package URL the ask named, echoed back verbatim."
+      }
+    },
+    "hit_count": {
+      "type": "uint32",
+      "metadata": {
+        "description": "How many rows `hits` carries. `usize` in the writer; JTD (RFC 8927) stops at 32-bit integers, so `uint32` is the narrowest true claim this language can make."
+      }
+    },
+    "hits": {
+      "elements": {
+        "ref": "purl_row"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Every usable version describing the PURL, in the lookup's deterministic order. Required member: a PURL nothing describes writes `[]`, never an absent key — the writer has no skip here."
+      }
+    }
+  },
+  "optionalProperties": {
+    "unavailable": {
+      "elements": {
+        "ref": "unavailable"
+      },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "Unusable versions that WOULD have matched the requested PURL — named, not hidden (PROP-044 §4.5). Absent when there are none (the writer carries `skip_serializing_if = \"Vec::is_empty\"`)."
+      }
+    }
+  },
+  "definitions": {
+    "purl_row": {
+      "metadata": {
+        "description": "One version describing the requested PURL."
+      },
+      "properties": {
+        "kind": {
+          "ref": "package_kind",
+          "metadata": {
+            "description": "The version's kind — metadata per PROP-008 §2.3."
+          }
+        },
+        "name": {
+          "type": "string",
+          "metadata": {
+            "description": "The version's bare package name."
+          }
+        },
+        "version": {
+          "ref": "version",
+          "metadata": {
+            "description": "The version describing the PURL."
+          }
+        },
+        "binding_site": {
+          "ref": "binding_site",
+          "metadata": {
+            "description": "Where the `describes` binding was declared: the package as a whole, or one of its subskills."
+          }
+        }
+      }
+    },
+    "binding_site": {
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Which half of a package declared the `describes` binding (closed vocabulary of two): `package` — the version's own `describes` field matched the ask verbatim; `subskill` — a subskill's `describes` did (the version carries the binding transitively). Closed because both values name a place in the writer's own model — a third value would name a place that does not exist."
+      },
+      "enum": ["package", "subskill"]
+    },
+    "unavailable": {
+      "metadata": {
+        "description": "One version this build refused to act on, and why — the row every `vibe-index` answering surface carries (`crates/vibe-index/src/index/quarantine.rs`, `Unavailable`). Local to this schema family: `formats/vocabularies.json` does not (yet) carry it, and each of the six report schemas that need it declare their own copy."
+      },
+      "properties": {
+        "group": {
+          "ref": "group",
+          "metadata": {
+            "description": "The refused version's group."
+          }
+        },
+        "name": {
+          "type": "string",
+          "metadata": {
+            "description": "The refused version's bare package name."
+          }
+        },
+        "version": {
+          "ref": "version",
+          "metadata": {
+            "description": "The refused version."
+          }
+        },
+        "missing": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The reader capabilities of `must_understand` this build lacks, in the record's own order. Required member: a refusal always writes its list, `[]` never occurring in practice today (a row exists exactly because the list is non-empty) but lawful on the wire — the writer has no skip here."
+          }
+        },
+        "recipe": {
+          "type": "string",
+          "metadata": {
+            "description": "What a person or a script does about it — the fixed two-part text `recipe_for` builds (the explanation with the PROP-044 anchor, then the `fix:` surface)."
+          }
+        }
+      }
+    }
+  }
+}

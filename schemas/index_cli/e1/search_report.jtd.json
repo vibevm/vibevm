@@ -1,0 +1,136 @@
+{
+  "metadata": {
+    "description": "Wire format for `vibe-index search <data-dir> <query> --json`: full-text search over the index, scored, capped by `--limit`, optionally filtered by kind. Read by scripts and agents (PROP-044 §6.5 — a CLI `--json` report is a format plain text; `foreign_parsers = many`). Source of truth for the writer: `crates/vibe-index/src/cli/search.rs` (`Envelope`, `HitRow`); the generated reader this schema owns lives in `crates/vibe-wire/src/generated/index_cli/e1/search_report/`.",
+    "x-vocabularies": ["group", "version", "package_kind"]
+  },
+  "properties": {
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"search\"` for this report."
+      }
+    },
+    "query": {
+      "type": "string",
+      "metadata": {
+        "description": "The query as the ask spelled it, echoed back verbatim."
+      }
+    },
+    "hit_count": {
+      "type": "uint32",
+      "metadata": {
+        "description": "How many hits `hits` carries — the count AFTER the `--limit` cap. `usize` in the writer; JTD (RFC 8927) stops at 32-bit integers, so `uint32` is the narrowest true claim this language can make."
+      }
+    },
+    "hits": {
+      "elements": {
+        "ref": "hit_row"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "The capped hit list, sorted by descending score then `(group, name)`. Required member: a matchless query writes `[]`, never an absent key — the writer has no skip here."
+      }
+    }
+  },
+  "definitions": {
+    "hit_row": {
+      "metadata": {
+        "description": "One search hit — the package's newest scored version with the tokens that matched and the refusals named beside the package."
+      },
+      "properties": {
+        "kind": {
+          "ref": "package_kind",
+          "metadata": {
+            "description": "The kind of the scored version — metadata per PROP-008 §2.3; the kind filter, when the ask carried one, compared against exactly this."
+          }
+        },
+        "name": {
+          "type": "string",
+          "metadata": {
+            "description": "The hit package's bare name."
+          }
+        },
+        "latest_stable": {
+          "ref": "version",
+          "nullable": true,
+          "metadata": {
+            "description": "The version the hit scored (the newest version this build can act on — stable when one exists, otherwise the newest of any kind), `null` cannot occur from the search walk today (a hit exists exactly because a scored version does) but the writer's `Option` carries no skip, so the key is always present on the wire."
+          }
+        },
+        "score": {
+          "type": "uint32",
+          "metadata": {
+            "description": "The hit's relevance score (token overlap over the scored version's name, description and keywords). `u32` in the writer."
+          }
+        },
+        "matched_tokens": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The query tokens that matched the scored version, in set order. Required member: a hit exists exactly because this is non-empty, and the writer has no skip here — the empty list stays a lawful wire shape for the reader."
+          }
+        },
+        "description": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The scored version's description, `null` when it declares none. The key is always present: the writer's `Option` carries no skip."
+          }
+        }
+      },
+      "optionalProperties": {
+        "unavailable": {
+          "elements": {
+            "ref": "unavailable"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "Versions of the hit's package this build refuses to act on — named, not hidden (PROP-044 §4.5); they ride the hit's package, not the scored version. Absent when there are none (the writer carries `skip_serializing_if = \"Vec::is_empty\"`)."
+          }
+        }
+      }
+    },
+    "unavailable": {
+      "metadata": {
+        "description": "One version this build refused to act on, and why — the row every `vibe-index` answering surface carries (`crates/vibe-index/src/index/quarantine.rs`, `Unavailable`). Local to this schema family: `formats/vocabularies.json` does not (yet) carry it, and each of the six report schemas that need it declare their own copy."
+      },
+      "properties": {
+        "group": {
+          "ref": "group",
+          "metadata": {
+            "description": "The refused version's group."
+          }
+        },
+        "name": {
+          "type": "string",
+          "metadata": {
+            "description": "The refused version's bare package name."
+          }
+        },
+        "version": {
+          "ref": "version",
+          "metadata": {
+            "description": "The refused version."
+          }
+        },
+        "missing": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The reader capabilities of `must_understand` this build lacks, in the record's own order. Required member: a refusal always writes its list, `[]` never occurring in practice today (a row exists exactly because the list is non-empty) but lawful on the wire — the writer has no skip here."
+          }
+        },
+        "recipe": {
+          "type": "string",
+          "metadata": {
+            "description": "What a person or a script does about it — the fixed two-part text `recipe_for` builds (the explanation with the PROP-044 anchor, then the `fix:` surface)."
+          }
+        }
+      }
+    }
+  }
+}

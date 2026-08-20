@@ -58,7 +58,11 @@ pub struct Report {
 #[derive(Debug, Serialize)]
 pub struct Mismatch {
     pub path: String,
+    /// Canonical decimal string on the wire — the standing rule for
+    /// integers wider than 32 bits (PROP-044 §4.2b, breaks/003).
+    #[serde(with = "crate::types::wire_decimal")]
     pub expected_size: u64,
+    #[serde(with = "crate::types::wire_decimal")]
     pub actual_size: u64,
     pub expected_sha256: String,
     pub actual_sha256: String,
