@@ -15,6 +15,7 @@ use crate::index::Index;
 use crate::index::quarantine::{Unavailable, unavailable_for, usable_latest_stable};
 use crate::lockfile;
 use crate::types::PackageKind;
+use crate::wire_count::checked_u32;
 
 #[derive(Debug, Parser)]
 #[command(about = "Compare a vibe.lock against the index and report outdated entries.")]
@@ -64,7 +65,7 @@ pub fn run(args: Args) -> Result<()> {
     let lock = lockfile::read(&args.lockfile)?;
 
     let mut rows = Vec::with_capacity(lock.package.len());
-    let mut update_available = 0u32;
+    let mut update_available = 0usize;
     for pkg in &lock.package {
         let latest = index
             .get(&pkg.group, &pkg.name)
@@ -95,6 +96,7 @@ pub fn run(args: Args) -> Result<()> {
     }
 
     if args.json {
+        let update_available = checked_u32("update_available", update_available)?;
         let env = Envelope {
             command: "outdated",
             lockfile: args.lockfile.clone(),

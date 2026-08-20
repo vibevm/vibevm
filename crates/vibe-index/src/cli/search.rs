@@ -13,6 +13,7 @@ use crate::error::{Error, Result};
 use crate::index::quarantine::{Unavailable, unavailable_for};
 use crate::index::{Index, search};
 use crate::types::PackageKind;
+use crate::wire_count::checked_u32;
 
 #[derive(Debug, Parser)]
 #[command(about = "Full-text search across the index.")]
@@ -38,7 +39,7 @@ pub struct Args {
 struct Envelope {
     command: &'static str,
     query: String,
-    hit_count: usize,
+    hit_count: u32,
     hits: Vec<HitRow>,
 }
 
@@ -69,25 +70,28 @@ pub fn run(args: Args) -> Result<()> {
     // versions are part of the honest answer about it.
     let rows: Vec<HitRow> = limited
         .iter()
-        .map(|h| HitRow {
-            kind: h.kind.clone(),
-            name: h.name.clone(),
-            latest_stable: h.latest_stable.clone(),
-            score: h.score,
-            matched_tokens: h.matched_tokens.clone(),
-            description: h.description.clone(),
-            unavailable: index
-                .get(&h.group, &h.name)
-                .map(unavailable_for)
-                .unwrap_or_default(),
+        .map(|h| {
+            Ok(HitRow {
+                kind: h.kind.clone(),
+                name: h.name.clone(),
+                latest_stable: h.latest_stable.clone(),
+                score: checked_u32("score", h.score)?,
+                matched_tokens: h.matched_tokens.clone(),
+                description: h.description.clone(),
+                unavailable: index
+                    .get(&h.group, &h.name)
+                    .map(unavailable_for)
+                    .unwrap_or_default(),
+            })
         })
-        .collect();
+        .collect::<Result<_>>()?;
 
     if args.json {
+        let hit_count = checked_u32("hit_count", rows.len())?;
         let env = Envelope {
             command: "search",
             query: args.query.clone(),
-            hit_count: rows.len(),
+            hit_count,
             hits: rows,
         };
         println!(

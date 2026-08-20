@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-20T19:40:36Z",
+  "updated_at": "2026-08-20T20:08:15Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -160770,7 +160770,7 @@
       }
     },
     "spec/common/PROP-044-change-native-formats.md": {
-      "content_hash": "afe58424fc167a4824fc8f854b6eb89b937f84d5f977396e012b9bf80f51b445",
+      "content_hash": "01fdd5bd21ca3f41943f9dc8d9ca09e9c0011512fce1f7419a16aace2b7619c2",
       "rollup": {
         "explicit": [
           "spec",
@@ -160784,15 +160784,15 @@
           "spec",
           "done"
         ],
-        "marker_count": 56,
-        "fact_count": 55,
+        "marker_count": 57,
+        "fact_count": 56,
         "unmarked_facts": 0
       },
-      "marker_count": 56,
+      "marker_count": 57,
       "unit_count": 11,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "0fe99c7680c2b90f547c703f064b8f3e55218283344586a8bf40b3b6604ea9d9",
+        "processed_hash": "01fdd5bd21ca3f41943f9dc8d9ca09e9c0011512fce1f7419a16aace2b7619c2",
         "verdicts": {
           "PURPOSE": {
             "v": "confirmed",
@@ -161125,10 +161125,16 @@
             "ev": [
               "правило исполнено первой посадкой: писатель types/repomd.rs::wire_decimal_u64 (сериализация to_string, канон-разбор: только ASCII-цифры — включая отказ ведущему '+', без ведущих нулей, u64-диапазон, громкий custom-отказ); схема repomd size=string с канон-описанием; сгенерированный ридер String (codegen, руками не правлен); корпус переведён (11 значений); перелом поименован formats/breaks/003.md; красное — the_generated_reader_refuses_the_old_numeric_size_form (invalid type: integer, expected string — тип-ошибка, не коэрция); замер воркера: иных >32-битных полей в схемных типах нет, Timestamp = RFC3339 через словарь timestamp"
             ]
+          },
+          "WIDE-INTEGERS-CLASS-BOUNDARY": {
+            "v": "confirmed",
+            "ev": [
+              "built the same day it was ruled: crates/vibe-index/src/wire_count.rs checked_u32 (u32::try_from, loud CountOverflow/WireCountOverflow + 400/500 ApiError forms) guards the 22 count-class fields; admin.rs serialises uptime_seconds/requests_total/mutations_total via wire_decimal with string schemas; the deviation descriptions died in the same schema edits; 375 vibe-index tests + overflow E2E (offset=2^32 → 400 envelope) green"
+            ]
           }
         },
-        "verified_at": "2026-08-20T08:54:09Z",
-        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING + PROVIDER-NEUTRALITY-RULING + FREEZE-MODEL-RULING + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge + COPY-2026-08-13 + RATIFY-2026-08-13 + W8 + R2-WIRE64"
+        "verified_at": "2026-08-20T20:08:15Z",
+        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING + PROVIDER-NEUTRALITY-RULING + FREEZE-MODEL-RULING + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge + COPY-2026-08-13 + RATIFY-2026-08-13 + W8 + R2-WIRE64 + B095-BOUNDARY"
       }
     },
     "spec/design/README.md": {

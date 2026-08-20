@@ -14,8 +14,8 @@ pub struct PackageSearchResponse {
     /// Always `search` for this response.
     pub command: String,
 
-    /// How many hits survived offset and limit. The writer and client view use
-    /// usize; uint32 is JTD's widest exact unsigned integer.
+    /// How many hits survived offset and limit. Bounded by construction and
+    /// checked at the wire boundary.
     pub hit_count: u32,
 
     /// The selected scored hit list. Required: a matchless query writes an
@@ -59,7 +59,8 @@ pub struct SearchHit {
     /// The hit package's bare name.
     pub name: String,
 
-    /// The token-overlap relevance score consumed by the client view.
+    /// The number of distinct query tokens matched by the hit. Bounded by
+    /// construction and checked at the wire boundary.
     pub score: u32,
 
     /// Refused versions of the hit package, absent when none exist.

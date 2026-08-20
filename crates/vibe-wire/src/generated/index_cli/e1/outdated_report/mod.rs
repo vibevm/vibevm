@@ -26,7 +26,7 @@ pub struct OutdatedReport {
     pub rows: Vec<OutdatedRow>,
 
     /// How many rows carry `update-available` — the headline number of the
-    /// report. `u32` in the writer.
+    /// report. Bounded by construction and checked at the wire boundary.
     pub update_available: u32,
 }
 

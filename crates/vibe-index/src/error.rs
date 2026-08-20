@@ -54,4 +54,22 @@ pub enum Error {
           update vibe-index when an event names a carrier this build lacks)"
     )]
     Unprojectable(String),
+
+    /// A structurally bounded JSON-envelope count did not fit the
+    /// schema's exact `uint32` domain. Never truncate it.
+    #[error(
+        "cannot encode wire field `{field}` value {value}: exceeds uint32 \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-044#machinery; \
+          fix: reduce the result/page size or widen the field's schema and writer together)"
+    )]
+    WireCountOverflow { field: &'static str, value: usize },
+}
+
+impl From<crate::wire_count::CountOverflow> for Error {
+    fn from(error: crate::wire_count::CountOverflow) -> Self {
+        Self::WireCountOverflow {
+            field: error.field,
+            value: error.value,
+        }
+    }
 }

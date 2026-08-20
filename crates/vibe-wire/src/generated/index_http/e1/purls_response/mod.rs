@@ -15,8 +15,7 @@ pub struct PurlsResponse {
     pub command: String,
 
     /// How many usable hit rows the response carries; consumed by the client
-    /// view. The writer and view use usize; uint32 is JTD's widest exact
-    /// unsigned integer.
+    /// view. Bounded by construction and checked at the wire boundary.
     pub hit_count: u32,
 
     /// Every usable version describing the PURL, in lookup order. Required even

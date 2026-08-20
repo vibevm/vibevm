@@ -12,12 +12,13 @@ use crate::index::search;
 use crate::server::error::ApiError;
 use crate::server::state::AppState;
 use crate::types::PackageKind;
+use crate::wire_count::checked_u32;
 
 #[derive(Serialize)]
 pub struct Response {
     pub command: &'static str,
     pub capability: String,
-    pub hit_count: usize,
+    pub hit_count: u32,
     pub hits: Vec<Hit>,
     /// Unusable versions that WOULD have matched the requested
     /// capability — named, not hidden (PROP-044 §4.5). Absent when
@@ -62,10 +63,12 @@ pub async fn lookup(
             }),
         })
         .collect::<Vec<_>>();
+    let hit_count = checked_u32("hit_count", hits.len())
+        .map_err(|error| ApiError::internal(error.to_string()))?;
     Ok(Json(Response {
         command: "capabilities",
         capability,
-        hit_count: hits.len(),
+        hit_count,
         hits,
         unavailable,
     }))

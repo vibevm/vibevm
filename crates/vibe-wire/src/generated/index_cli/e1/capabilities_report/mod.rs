@@ -18,9 +18,8 @@ pub struct CapabilitiesReport {
     /// Always `"capabilities"` for this report.
     pub command: String,
 
-    /// How many rows `hits` carries. `usize` in the writer; JTD (RFC 8927)
-    /// stops at 32-bit integers, so `uint32` is the narrowest true claim this
-    /// language can make.
+    /// How many rows `hits` carries. Bounded by construction and checked at the
+    /// wire boundary.
     pub hit_count: u32,
 
     /// Every usable version advertising the capability, in the lookup's

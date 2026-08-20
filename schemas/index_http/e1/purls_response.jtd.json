@@ -14,7 +14,7 @@
     },
     "hit_count": {
       "type": "uint32",
-      "metadata": { "description": "How many usable hit rows the response carries; consumed by the client view. The writer and view use usize; uint32 is JTD's widest exact unsigned integer." }
+      "metadata": { "description": "How many usable hit rows the response carries; consumed by the client view. Bounded by construction and checked at the wire boundary." }
     },
     "hits": {
       "elements": { "ref": "purl_hit" },

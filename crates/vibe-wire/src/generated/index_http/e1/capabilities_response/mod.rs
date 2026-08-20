@@ -16,8 +16,8 @@ pub struct CapabilitiesResponse {
     /// Always `capabilities` for this response.
     pub command: String,
 
-    /// How many usable hit rows the response carries. The writer uses usize;
-    /// uint32 is JTD's widest exact unsigned integer.
+    /// How many usable hit rows the response carries. Bounded by construction
+    /// and checked at the wire boundary.
     pub hit_count: u32,
 
     /// Every usable version advertising the capability, in lookup order.

@@ -12,6 +12,7 @@ use crate::error::{Error, Result};
 use crate::index::quarantine::{self, Unavailable};
 use crate::index::{Index, search};
 use crate::types::PackageKind;
+use crate::wire_count::checked_u32;
 
 #[derive(Debug, Parser)]
 #[command(about = "List packages providing a given capability.")]
@@ -27,7 +28,7 @@ pub struct Args {
 struct Envelope {
     command: &'static str,
     capability: String,
-    hit_count: usize,
+    hit_count: u32,
     hits: Vec<Row>,
     /// Unusable versions that WOULD have matched the requested
     /// capability — named, not hidden (PROP-044 §4.5). Absent when
@@ -68,10 +69,11 @@ pub fn run(args: Args) -> Result<()> {
         .collect();
 
     if args.json {
+        let hit_count = checked_u32("hit_count", rows.len())?;
         let env = Envelope {
             command: "capabilities",
             capability: args.capability.clone(),
-            hit_count: rows.len(),
+            hit_count,
             hits: rows,
             unavailable,
         };

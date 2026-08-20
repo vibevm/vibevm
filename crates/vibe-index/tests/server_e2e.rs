@@ -324,6 +324,24 @@ async fn packages_list_returns_sorted_envelope() {
     assert_eq!(body["package_count"], 3);
 }
 
+#[cfg(target_pointer_width = "64")]
+#[tokio::test]
+async fn oversized_uint32_page_field_returns_problem_details() {
+    let (_tmp, state) = populated_state();
+    let app = build_app(state);
+    let resp = app
+        .oneshot(req(Method::GET, "/v1/packages?offset=4294967296"))
+        .await
+        .unwrap();
+    assert_eq!(resp.status(), StatusCode::BAD_REQUEST);
+    let body = body_to_json(resp.into_body()).await;
+    assert_eq!(body["type"], "vibe-index/error/bad-request");
+    assert_eq!(body["status"], 400);
+    let detail = body["detail"].as_str().unwrap();
+    assert!(detail.contains("wire field `offset` value 4294967296"));
+    assert!(detail.contains("exceeds uint32"));
+}
+
 #[tokio::test]
 async fn packages_search_via_query_param() {
     let (_tmp, state) = populated_state();
@@ -419,7 +437,32 @@ async fn admin_status_returns_counts() {
     assert_eq!(body["registry"], "vibespecs");
     assert_eq!(body["package_count"], 3);
     assert_eq!(body["version_count"], 4);
+    assert!(body["uptime_seconds"].as_str().is_some());
+    assert_eq!(body["requests_total"], "1");
+    assert_eq!(body["mutations_total"], "0");
     assert_eq!(body["read_only"], true);
+}
+
+#[tokio::test]
+async fn unknown_route_returns_the_standard_error_envelope() {
+    let (_tmp, state) = populated_state();
+    let app = build_app(state);
+    let resp = app
+        .oneshot(req(Method::GET, "/definitely-not-a-route"))
+        .await
+        .unwrap();
+    assert_eq!(resp.status(), StatusCode::NOT_FOUND);
+    assert_eq!(
+        resp.headers().get(header::CONTENT_TYPE).unwrap(),
+        "application/json"
+    );
+    let body = body_to_json(resp.into_body()).await;
+    let object = body.as_object().expect("problem details is an object");
+    assert_eq!(object.len(), 4, "ErrorResponse has exactly four members");
+    assert_eq!(body["type"], "vibe-index/error/not-found");
+    assert_eq!(body["title"], "resource not found");
+    assert_eq!(body["status"], 404);
+    assert!(body["detail"].as_str().unwrap().contains("not registered"));
 }
 
 #[tokio::test]

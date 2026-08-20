@@ -19,7 +19,7 @@
     "hit_count": {
       "type": "uint32",
       "metadata": {
-        "description": "How many hits survived offset and limit. The writer and client view use usize; uint32 is JTD's widest exact unsigned integer."
+        "description": "How many hits survived offset and limit. Bounded by construction and checked at the wire boundary."
       }
     },
     "hits": {
@@ -66,7 +66,7 @@
         "score": {
           "type": "uint32",
           "metadata": {
-            "description": "The token-overlap relevance score consumed by the client view."
+            "description": "The number of distinct query tokens matched by the hit. Bounded by construction and checked at the wire boundary."
           }
         },
         "matched_tokens": {

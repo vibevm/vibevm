@@ -106,10 +106,19 @@ pub fn build_app(state: AppState) -> Router {
         .route("/v1/admin/status", get(routes::admin::status))
         // Observability.
         .route("/metrics", get(routes::metrics::prometheus))
+        .fallback(unknown_route)
         .layer(rate_limit_layer)
         .layer(cors)
         .layer(TraceLayer::new_for_http())
         .with_state(state)
+}
+
+async fn unknown_route() -> ApiError {
+    ApiError::not_found(
+        "the requested HTTP route is not registered \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; \
+         fix: use one of the documented /v1/**, /healthz, /readyz, or /metrics routes)",
+    )
 }
 
 /// Rate-limit middleware. PROP-005 §9 Q10. Routes

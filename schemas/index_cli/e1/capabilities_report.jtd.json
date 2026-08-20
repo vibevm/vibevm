@@ -19,7 +19,7 @@
     "hit_count": {
       "type": "uint32",
       "metadata": {
-        "description": "How many rows `hits` carries. `usize` in the writer; JTD (RFC 8927) stops at 32-bit integers, so `uint32` is the narrowest true claim this language can make."
+        "description": "How many rows `hits` carries. Bounded by construction and checked at the wire boundary."
       }
     },
     "hits": {

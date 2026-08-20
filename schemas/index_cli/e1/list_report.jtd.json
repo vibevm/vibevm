@@ -19,25 +19,25 @@
     "package_count": {
       "type": "uint32",
       "metadata": {
-        "description": "How many packages matched the filter — the count BEFORE pagination. `u32` in the writer; counts past 2^32 cannot occur for a catalog held in memory."
+        "description": "How many packages matched the filter — the count BEFORE pagination. Bounded by construction and checked at the wire boundary."
       }
     },
     "returned": {
       "type": "uint32",
       "metadata": {
-        "description": "How many rows `packages` carries — at most `limit` of the matched set, counted past `offset`. `usize` in the writer; JTD (RFC 8927) stops at 32-bit integers, so `uint32` is the narrowest true claim this language can make."
+        "description": "How many rows `packages` carries — at most `limit` of the matched set, counted past `offset`. Bounded by construction and checked at the wire boundary."
       }
     },
     "offset": {
       "type": "uint32",
       "metadata": {
-        "description": "The pagination offset the ask carried (`--offset`, default 0). `usize` in the writer; a page index past 2^32 has no meaning."
+        "description": "The pagination offset the ask carried (`--offset`, default 0). Bounded by the wire contract and checked at the boundary."
       }
     },
     "limit": {
       "type": "uint32",
       "metadata": {
-        "description": "The page size the ask carried (`--limit`, default 50). `usize` in the writer; JTD (RFC 8927) stops at 32-bit integers, so `uint32` is the narrowest true claim this language can make."
+        "description": "The page size the ask carried (`--limit`, default 50). Bounded by the wire contract and checked at the boundary."
       }
     },
     "packages": {

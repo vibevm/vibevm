@@ -11,6 +11,7 @@ use serde::Serialize;
 use crate::error::{Error, Result};
 use crate::index::{by_name, persistence, repomd};
 use crate::types::{Repomd, RepomdFileEntry};
+use crate::wire_count::checked_u32;
 
 #[derive(Debug, Parser)]
 #[command(about = "Recompute file hashes and check repomd.json integrity.")]
@@ -77,7 +78,7 @@ impl Report {
 fn check(data_dir: &std::path::Path, manifest: &Repomd) -> Result<Report> {
     let mut mismatches = Vec::new();
     let mut missing = Vec::new();
-    let mut files_checked = 0;
+    let mut files_checked = 0usize;
 
     for (rel_path, entry) in &manifest.files {
         match entry {
@@ -127,7 +128,7 @@ fn check(data_dir: &std::path::Path, manifest: &Repomd) -> Result<Report> {
         registry: manifest.registry.clone(),
         package_count: manifest.package_count,
         version_count: manifest.version_count,
-        files_checked,
+        files_checked: checked_u32("files_checked", files_checked)?,
         ok: mismatches.is_empty() && missing.is_empty(),
         mismatches,
         missing,

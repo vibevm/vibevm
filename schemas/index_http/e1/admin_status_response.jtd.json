@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Wire format for `GET /v1/admin/status`: process identity, catalog counts and live telemetry. Source of truth for the writer: `crates/vibe-index/src/server/routes/admin.rs` (`Status`); the generated reader lives in `crates/vibe-wire/src/generated/index_http/e1/admin_status_response/`. The three `u64` telemetry fields are emitted today as JSON numbers; JTD has no 64-bit integer, so their uint32 declarations deliberately preserve loud refusal rather than silently round through float64 (reported as a server/schema deviation in the packet report).",
+    "description": "Wire format for `GET /v1/admin/status`: process identity, catalog counts and live telemetry. Source of truth for the writer: `crates/vibe-index/src/server/routes/admin.rs` (`Status`); the generated reader lives in `crates/vibe-wire/src/generated/index_http/e1/admin_status_response/`. Unbounded telemetry counters use canonical decimal strings; structurally bounded catalog counts use uint32 checked at the wire boundary.",
     "x-vocabularies": []
   },
   "properties": {
@@ -29,9 +29,9 @@
       }
     },
     "uptime_seconds": {
-      "type": "uint32",
+      "type": "string",
       "metadata": {
-        "description": "Whole seconds since server startup. The Rust writer is u64 and emits a JSON number; uint32 is JTD's widest exact unsigned integer and refuses larger values loudly."
+        "description": "Whole seconds since server startup, encoded as a canonical decimal u64 string: ASCII digits only, no sign, no leading zeros except `0`."
       }
     },
     "read_only": {
@@ -43,25 +43,25 @@
     "package_count": {
       "type": "uint32",
       "metadata": {
-        "description": "How many `(group, name)` packages the index holds, including packages whose versions this build quarantines."
+        "description": "How many `(group, name)` packages the index holds, including packages whose versions this build quarantines. Bounded by construction and checked at the wire boundary."
       }
     },
     "version_count": {
       "type": "uint32",
       "metadata": {
-        "description": "How many versions the index holds, including quarantined versions."
+        "description": "How many versions the index holds, including quarantined versions. Bounded by construction and checked at the wire boundary."
       }
     },
     "requests_total": {
-      "type": "uint32",
+      "type": "string",
       "metadata": {
-        "description": "Requests observed by this process, including the status request itself. The Rust writer is u64 and emits a JSON number; uint32 preserves exactness and loud refusal within JTD's range."
+        "description": "Requests observed by this process, including the status request itself, encoded as a canonical decimal u64 string: ASCII digits only, no sign, no leading zeros except `0`."
       }
     },
     "mutations_total": {
-      "type": "uint32",
+      "type": "string",
       "metadata": {
-        "description": "State-changing mutations completed by this process. The Rust writer is u64 and emits a JSON number; uint32 preserves exactness and loud refusal within JTD's range."
+        "description": "State-changing mutations completed by this process, encoded as a canonical decimal u64 string: ASCII digits only, no sign, no leading zeros except `0`."
       }
     }
   }

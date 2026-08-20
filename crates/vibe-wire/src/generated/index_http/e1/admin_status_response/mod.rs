@@ -6,10 +6,8 @@ use serde::{Deserialize, Serialize};
 /// counts and live telemetry. Source of truth for the writer: `crates/vibe-
 /// index/src/server/routes/admin.rs` (`Status`); the generated reader lives
 /// in `crates/vibe-wire/src/generated/index_http/e1/admin_status_response/`.
-/// The three `u64` telemetry fields are emitted today as JSON numbers; JTD
-/// has no 64-bit integer, so their uint32 declarations deliberately preserve
-/// loud refusal rather than silently round through float64 (reported as a
-/// server/schema deviation in the packet report).
+/// Unbounded telemetry counters use canonical decimal strings; structurally
+/// bounded catalog counts use uint32 checked at the wire boundary.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AdminStatusResponse {
     /// Always `admin:status` for this response.
@@ -18,13 +16,14 @@ pub struct AdminStatusResponse {
     /// The generator identity copied from the index at server boot.
     pub generator: String,
 
-    /// State-changing mutations completed by this process. The Rust writer is
-    /// u64 and emits a JSON number; uint32 preserves exactness and loud refusal
-    /// within JTD's range.
-    pub mutations_total: u32,
+    /// State-changing mutations completed by this process, encoded as a
+    /// canonical decimal u64 string: ASCII digits only, no sign, no leading
+    /// zeros except `0`.
+    pub mutations_total: String,
 
     /// How many `(group, name)` packages the index holds, including packages
-    /// whose versions this build quarantines.
+    /// whose versions this build quarantines. Bounded by construction and
+    /// checked at the wire boundary.
     pub package_count: u32,
 
     /// Whether mutation routes are disabled for this process.
@@ -36,16 +35,16 @@ pub struct AdminStatusResponse {
     /// The registry source URL held by the in-memory index.
     pub registry_url: String,
 
-    /// Requests observed by this process, including the status request itself.
-    /// The Rust writer is u64 and emits a JSON number; uint32 preserves
-    /// exactness and loud refusal within JTD's range.
-    pub requests_total: u32,
+    /// Requests observed by this process, including the status request itself,
+    /// encoded as a canonical decimal u64 string: ASCII digits only, no sign,
+    /// no leading zeros except `0`.
+    pub requests_total: String,
 
-    /// Whole seconds since server startup. The Rust writer is u64 and emits a
-    /// JSON number; uint32 is JTD's widest exact unsigned integer and refuses
-    /// larger values loudly.
-    pub uptime_seconds: u32,
+    /// Whole seconds since server startup, encoded as a canonical decimal u64
+    /// string: ASCII digits only, no sign, no leading zeros except `0`.
+    pub uptime_seconds: String,
 
     /// How many versions the index holds, including quarantined versions.
+    /// Bounded by construction and checked at the wire boundary.
     pub version_count: u32,
 }

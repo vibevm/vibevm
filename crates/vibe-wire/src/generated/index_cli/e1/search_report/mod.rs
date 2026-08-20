@@ -15,8 +15,7 @@ pub struct SearchReport {
     pub command: String,
 
     /// How many hits `hits` carries — the count AFTER the `--limit` cap.
-    /// `usize` in the writer; JTD (RFC 8927) stops at 32-bit integers, so
-    /// `uint32` is the narrowest true claim this language can make.
+    /// Bounded by construction and checked at the wire boundary.
     pub hit_count: u32,
 
     /// The capped hit list, sorted by descending score then `(group, name)`.
@@ -60,8 +59,9 @@ pub struct HitRow {
     /// The hit package's bare name.
     pub name: String,
 
-    /// The hit's relevance score (token overlap over the scored version's name,
-    /// description and keywords). `u32` in the writer.
+    /// The hit's relevance score (distinct query-token overlap over the scored
+    /// version's name, description and keywords). Bounded by construction and
+    /// checked at the wire boundary.
     pub score: u32,
 
     /// Versions of the hit's package this build refuses to act on — named,

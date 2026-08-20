@@ -36,7 +36,7 @@
     "files_checked": {
       "type": "uint32",
       "metadata": {
-        "description": "How many manifest entries were checked (files hashed, the `by-name` directory counted). `u32` in the writer."
+        "description": "How many manifest entries were checked (files hashed, the `by-name` directory counted). Bounded by construction and checked at the wire boundary."
       }
     },
     "mismatches": {

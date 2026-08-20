@@ -3,10 +3,10 @@
   "registry": "vibespecs",
   "registry_url": "https://github.com/vibespecs",
   "generator": "vibe-index 0.1.0-dev",
-  "uptime_seconds": 3600,
+  "uptime_seconds": "3600",
   "read_only": false,
   "package_count": 3,
   "version_count": 6,
-  "requests_total": 417,
-  "mutations_total": 12
+  "requests_total": "417",
+  "mutations_total": "12"
 }

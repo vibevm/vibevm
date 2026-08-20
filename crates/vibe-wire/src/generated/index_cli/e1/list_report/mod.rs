@@ -14,18 +14,16 @@ pub struct ListReport {
     /// Always `"list"` for this report.
     pub command: String,
 
-    /// The page size the ask carried (`--limit`, default 50). `usize` in the
-    /// writer; JTD (RFC 8927) stops at 32-bit integers, so `uint32` is the
-    /// narrowest true claim this language can make.
+    /// The page size the ask carried (`--limit`, default 50). Bounded by the
+    /// wire contract and checked at the boundary.
     pub limit: u32,
 
-    /// The pagination offset the ask carried (`--offset`, default 0). `usize`
-    /// in the writer; a page index past 2^32 has no meaning.
+    /// The pagination offset the ask carried (`--offset`, default 0). Bounded
+    /// by the wire contract and checked at the boundary.
     pub offset: u32,
 
     /// How many packages matched the filter — the count BEFORE pagination.
-    /// `u32` in the writer; counts past 2^32 cannot occur for a catalog held
-    /// in memory.
+    /// Bounded by construction and checked at the wire boundary.
     pub package_count: u32,
 
     /// The page of rows, sorted by `(group, name)`. Required member: a
@@ -38,9 +36,8 @@ pub struct ListReport {
     pub registry: String,
 
     /// How many rows `packages` carries — at most `limit` of the matched set,
-    /// counted past `offset`. `usize` in the writer; JTD (RFC 8927) stops at
-    /// 32-bit integers, so `uint32` is the narrowest true claim this language
-    /// can make.
+    /// counted past `offset`. Bounded by construction and checked at the wire
+    /// boundary.
     pub returned: u32,
 }
 

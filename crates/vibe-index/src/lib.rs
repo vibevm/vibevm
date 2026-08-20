@@ -30,5 +30,6 @@ pub mod publish;
 pub mod scanner;
 pub mod server;
 pub mod types;
+mod wire_count;
 
 pub use error::{Error, Result};

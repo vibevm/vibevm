@@ -16,6 +16,7 @@ use crate::index::quarantine::{
     Unavailable, unavailable_for, usable_latest_stable, usable_versions,
 };
 use crate::types::PackageKind;
+use crate::wire_count::checked_u32;
 
 #[derive(Debug, Parser)]
 #[command(about = "List packages in the index.")]
@@ -44,9 +45,9 @@ struct Envelope {
     command: &'static str,
     registry: String,
     package_count: u32,
-    returned: usize,
-    offset: usize,
-    limit: usize,
+    returned: u32,
+    offset: u32,
+    limit: u32,
     packages: Vec<PackageRow>,
 }
 
@@ -96,7 +97,7 @@ pub fn run(args: Args) -> Result<()> {
         })
         .collect();
     rows.sort_by(|a, b| a.group.cmp(&b.group).then(a.name.cmp(&b.name)));
-    let package_count = rows.len() as u32;
+    let package_count = checked_u32("package_count", rows.len())?;
     let returned: Vec<PackageRow> = rows
         .into_iter()
         .skip(args.offset)
@@ -104,13 +105,16 @@ pub fn run(args: Args) -> Result<()> {
         .collect();
 
     if args.json {
+        let returned_count = checked_u32("returned", returned.len())?;
+        let offset = checked_u32("offset", args.offset)?;
+        let limit = checked_u32("limit", args.limit)?;
         let env = Envelope {
             command: "list",
             registry: index.registry.clone(),
             package_count,
-            returned: returned.len(),
-            offset: args.offset,
-            limit: args.limit,
+            returned: returned_count,
+            offset,
+            limit,
             packages: returned,
         };
         println!(

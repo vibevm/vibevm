@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-20T19:40:31Z",
+  "updated_at": "2026-08-20T20:07:36Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -159215,9 +159215,9 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 56,
+      "markers": 57,
       "units": 11,
-      "facts": 55,
+      "facts": 56,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
@@ -166921,7 +166921,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (27 cells); document <status> judged as _elements",
         "fact_count": 136,
         "marker_count": 137,
-        "processed_hash": "b2c4ea2cb98f5d42c2e2e1bace623df52fc6d8efca26c7ab635ac0d5ea31ce50",
+        "processed_hash": "5efe12283b722f02e22a9022e21565f8f9ffb0961da04faa77272cb31892ec08",
         "summary": {
           "confirmed": 125
         },
@@ -167690,8 +167690,7 @@
           "THE-REMAINING-WORK-IS-BOUNDED-AND-NAMED": {
             "v": "confirmed",
             "ev": [
-              "BACKLOG.md {#b-077}  the row this fact points at exists and carries the locator, the shape of the fix and what the audit cleared",
-              "a plan-stage statement judged as a decision: the work is named, bounded to one defect, and filed. Its `spec/plan` marker says it is not built, and it is not."
+              "B-077 landed 2026-08-20 (commit d5dead2e): vibe-settings grew pub check_writable + set_in_layer with doctests, all three TUI persist copies now call the library (lifecycle apply, provenance clear, tree settings set), equivalence pinned by test; the fact's text now records the closure and points the residue at the dead-code hygiene drain"
             ]
           },
           "TWO-CANDIDATES-WERE-WEIGHED-AND-CLEARED": {
@@ -167712,8 +167711,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-06T17:09:48Z",
-        "verify_batch": "c4e-cli-actions + d2a + DEBT-2026-08-06-D + S18-SWALLOWED-RESTORED"
+        "verified_at": "2026-08-20T19:40:36Z",
+        "verify_batch": "c4e-cli-actions + d2a + DEBT-2026-08-06-D + S18-SWALLOWED-RESTORED + P037-B077-DONE"
       }
     },
     {

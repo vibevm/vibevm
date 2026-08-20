@@ -20,7 +20,8 @@ pub struct VerifyReport {
     pub data_dir: String,
 
     /// How many manifest entries were checked (files hashed, the `by-name`
-    /// directory counted). `u32` in the writer.
+    /// directory counted). Bounded by construction and checked at the wire
+    /// boundary.
     pub files_checked: u32,
 
     /// Every checked entry whose observed size or hash diverged from the

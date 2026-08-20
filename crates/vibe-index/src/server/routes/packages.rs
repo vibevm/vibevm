@@ -27,6 +27,7 @@ use crate::journal::{Event, JournalRecord, append, default_dir, project, replay}
 use crate::server::error::ApiError;
 use crate::server::state::AppState;
 use crate::types::{PackageKind, VersionEntry};
+use crate::wire_count::checked_u32;
 
 #[derive(Debug, Deserialize, Default)]
 pub struct ListSearchQuery {
@@ -41,9 +42,9 @@ pub struct ListResponse {
     pub command: &'static str,
     pub registry: String,
     pub package_count: u32,
-    pub returned: usize,
-    pub offset: usize,
-    pub limit: usize,
+    pub returned: u32,
+    pub offset: u32,
+    pub limit: u32,
     pub packages: Vec<PackageRow>,
 }
 
@@ -67,7 +68,7 @@ pub struct PackageRow {
 pub struct SearchResponse {
     pub command: &'static str,
     pub query: String,
-    pub hit_count: usize,
+    pub hit_count: u32,
     pub hits: Vec<SearchHit>,
 }
 
@@ -118,26 +119,31 @@ pub async fn list_or_search(
             .into_iter()
             .skip(offset)
             .take(limit)
-            .map(|h| SearchHit {
-                kind: h.kind,
-                group: h.group.clone(),
-                name: h.name.clone(),
-                latest_stable: h.latest_stable,
-                score: h.score,
-                matched_tokens: h.matched_tokens,
-                description: h.description,
-                // The refusal rows live on the hit's PACKAGE (the hit
-                // names it), not on the scored version.
-                unavailable: index
-                    .get(&h.group, &h.name)
-                    .map(unavailable_for)
-                    .unwrap_or_default(),
+            .map(|h| {
+                Ok(SearchHit {
+                    kind: h.kind,
+                    group: h.group.clone(),
+                    name: h.name.clone(),
+                    latest_stable: h.latest_stable,
+                    score: checked_u32("score", h.score)
+                        .map_err(|error| ApiError::bad_request(error.to_string()))?,
+                    matched_tokens: h.matched_tokens,
+                    description: h.description,
+                    // The refusal rows live on the hit's PACKAGE (the hit
+                    // names it), not on the scored version.
+                    unavailable: index
+                        .get(&h.group, &h.name)
+                        .map(unavailable_for)
+                        .unwrap_or_default(),
+                })
             })
-            .collect();
+            .collect::<Result<_, ApiError>>()?;
+        let hit_count = checked_u32("hit_count", hits.len())
+            .map_err(|error| ApiError::internal(error.to_string()))?;
         let body = SearchResponse {
             command: "search",
             query: query.clone(),
-            hit_count: hits.len(),
+            hit_count,
             hits,
         };
         return Ok(Json(body).into_response());
@@ -166,15 +172,22 @@ pub async fn list_or_search(
         })
         .collect();
     rows.sort_by(|a, b| a.group.cmp(&b.group).then(a.name.cmp(&b.name)));
-    let package_count = rows.len() as u32;
+    let package_count = checked_u32("package_count", rows.len())
+        .map_err(|error| ApiError::internal(error.to_string()))?;
     let returned: Vec<PackageRow> = rows.into_iter().skip(offset).take(limit).collect();
+    let returned_count = checked_u32("returned", returned.len())
+        .map_err(|error| ApiError::internal(error.to_string()))?;
+    let offset_wire =
+        checked_u32("offset", offset).map_err(|error| ApiError::bad_request(error.to_string()))?;
+    let limit_wire =
+        checked_u32("limit", limit).map_err(|error| ApiError::bad_request(error.to_string()))?;
     let body = ListResponse {
         command: "list",
         registry: index.registry.clone(),
         package_count,
-        returned: returned.len(),
-        offset,
-        limit,
+        returned: returned_count,
+        offset: offset_wire,
+        limit: limit_wire,
         packages: returned,
     };
     Ok(Json(body).into_response())

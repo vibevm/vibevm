@@ -280,6 +280,23 @@ than coerced. Timestamps are not this rule's business: they ride as RFC 3339
 through the `timestamp` vocabulary. First application: the catalog manifest's
 file `size` (`formats/breaks/003.md`). @status:impl/done
 
+@fact:WIDE-INTEGERS-CLASS-BOUNDARY **The class boundary is domain honesty, not
+the Rust type** *(ADR-part; owner accepted the recommendation 2026-08-20,
+closing BACKLOG B-095)*. The one question asked of a field: does its DOMAIN
+honestly fit `uint32`? A count bounded by construction (a page size capped in
+code, a result count bounded by the corpus) says `uint32` in the schema and
+crosses the boundary through a **checked** conversion — never a silent `as` —
+failing loudly on the unreachable overflow. A field whose domain does not fit
+(a lifetime request counter, an uptime) is this rule's subject and rides as
+the canonical decimal string, because a `uint32` schema would lie on a
+long-lived server and a JSON number breaks silently past 2⁵³ — the exact
+silent-drift genre this document exists to kill. There is no third category
+and no exception list: alternatives weighed were per-field exceptions (each
+invites the next negotiation) and float64 numbers (honest until they are
+not). Applied 2026-08-20 across both envelope families: three admin counters
+became strings, twenty-two count-class fields became checked `uint32`, and
+their recorded schema deviations died. @status:impl/done
+
 @fact:M-CANONICAL-BYTES **4.3 Canonical bytes, deterministic writers.** One
 state — one byte sequence: sorted keys, injected clocks (a writer never calls
 `now()`; time arrives as input), pinned encodings, deterministic compression.

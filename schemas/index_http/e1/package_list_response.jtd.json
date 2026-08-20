@@ -19,25 +19,25 @@
     "package_count": {
       "type": "uint32",
       "metadata": {
-        "description": "How many package rows matched before pagination. The writer narrows its in-memory length to u32."
+        "description": "How many package rows matched before pagination. Bounded by construction and checked at the wire boundary."
       }
     },
     "returned": {
       "type": "uint32",
       "metadata": {
-        "description": "How many rows the packages array carries. The writer uses usize; uint32 is JTD's widest exact unsigned integer and the practical page bound."
+        "description": "How many rows the packages array carries. Bounded by construction and checked at the wire boundary."
       }
     },
     "offset": {
       "type": "uint32",
       "metadata": {
-        "description": "The pagination offset applied to the matched rows. The writer uses usize; uint32 is the narrowest useful claim JTD can make."
+        "description": "The pagination offset applied to the matched rows. Bounded by the wire contract and checked at the boundary."
       }
     },
     "limit": {
       "type": "uint32",
       "metadata": {
-        "description": "The requested page size, defaulting to 50. The writer uses usize; uint32 is the narrowest useful claim JTD can make."
+        "description": "The requested page size, defaulting to 50. Bounded by the wire contract and checked at the boundary."
       }
     },
     "packages": {

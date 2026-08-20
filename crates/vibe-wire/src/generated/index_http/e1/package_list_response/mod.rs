@@ -13,16 +13,16 @@ pub struct PackageListResponse {
     /// Always `list` for this response.
     pub command: String,
 
-    /// The requested page size, defaulting to 50. The writer uses usize; uint32
-    /// is the narrowest useful claim JTD can make.
+    /// The requested page size, defaulting to 50. Bounded by the wire contract
+    /// and checked at the boundary.
     pub limit: u32,
 
-    /// The pagination offset applied to the matched rows. The writer uses
-    /// usize; uint32 is the narrowest useful claim JTD can make.
+    /// The pagination offset applied to the matched rows. Bounded by the wire
+    /// contract and checked at the boundary.
     pub offset: u32,
 
-    /// How many package rows matched before pagination. The writer narrows its
-    /// in-memory length to u32.
+    /// How many package rows matched before pagination. Bounded by construction
+    /// and checked at the wire boundary.
     pub package_count: u32,
 
     /// The selected page, sorted by `(group, name)`. Required: a matchless or
@@ -32,8 +32,8 @@ pub struct PackageListResponse {
     /// The registry name held by the in-memory index.
     pub registry: String,
 
-    /// How many rows the packages array carries. The writer uses usize; uint32
-    /// is JTD's widest exact unsigned integer and the practical page bound.
+    /// How many rows the packages array carries. Bounded by construction and
+    /// checked at the wire boundary.
     pub returned: u32,
 }
 

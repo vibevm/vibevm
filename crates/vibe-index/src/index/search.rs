@@ -31,7 +31,7 @@ pub struct SearchHit {
     pub group: Group,
     pub name: String,
     pub latest_stable: Option<semver::Version>,
-    pub score: u32,
+    pub score: usize,
     pub matched_tokens: Vec<String>,
     pub description: Option<String>,
 }
@@ -99,7 +99,7 @@ pub fn search(index: &Index, query: &str, kind_filter: Option<PackageKind>) -> V
                 group: pkg.group.clone(),
                 name: pkg.name.clone(),
                 latest_stable: usable_latest_stable(pkg).cloned(),
-                score: matched.len() as u32,
+                score: matched.len(),
                 matched_tokens: matched.into_iter().cloned().collect(),
                 description: latest.description.clone(),
             },
