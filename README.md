@@ -10,6 +10,22 @@ The installable kinds are `flow`, `feat`, `stack`, `tool`, `mcp`, and `lang`.
 
 The current release is **1.0.0**. This is a closed alpha, not a compatibility promise: **1.0.0 will break** while `public = false`. Until the owner declares the first public presentation, breaking changes may ship without migrations; the recovery path is re-init / re-fetch. Read [Alpha notes](docs/ALPHA-NOTES.md) before adopting the release and [CHANGELOG.md](CHANGELOG.md) before updating.
 
+## Install from the Windows distributive
+
+The release ships as `vibe-<version>-windows-x86_64.zip` (a static-CRT
+`vibe.exe` — no VC++ Redistributable needed — plus `install.ps1`,
+`uninstall.ps1`, `README-INSTALL.md`, `LICENSE.md`, `ALPHA-NOTES.md` and a
+`SHA256SUMS.txt` integrity manifest). Extract it, then:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install.ps1
+```
+
+The installer imports the binary into the managed store under
+`~/.vibe/opt`, activates it, and puts the shim directory on your user
+`PATH`; open a new terminal and run `vibe --version`. The authored
+sources of the installer live in [`distribution/windows/`](distribution/windows/).
+
 ## Install vibevm from this checkout
 
 The first-run scripts build the checkout, install it through the VibeVM Version Manager, create the `vibe` shims, and update `PATH`:

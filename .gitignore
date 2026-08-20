@@ -72,3 +72,4 @@ __pycache__/
 # careless `git add -A` would sweep in several thousand files. The convention
 # was observed and is now unstageable.
 /.wt/
+dist/
