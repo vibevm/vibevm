@@ -457,7 +457,7 @@ structure, and it goes when the file does.
 | @fact:B007-ANCHOR **anchor** | the question is about `spec/common/**` and `spec/modules/**` as a genre, not about one anchor. The rule it would satisfy is `spec://org.vibevm.world/decision-records/flows/decision-records/DECISION-RECORDS-PROTOCOL#root` |
 | @fact:B007-LOCATOR **locator** | 153 sections in `spec/common/` + `spec/modules/**` carry a bolded **Decision** label; 4 carry all four fields |
 | @fact:B007-SEVERITY **severity** | P2 |
-| @fact:B007-DISPOSITION **disposition** | `open` — **filed at owner request, 2026-07-31**, as a question to answer rather than work to schedule |
+| @fact:B007-DISPOSITION **disposition** | `closed` — **рулинг владельца 2026-08-20 (дословно): «в PROP файлах должна быть ADR часть, отдельных ADR-файлов не нужно»** — жанр решён: решения живут секцией внутри своего PROP, отдельный ADR-жанр не заводится; норма записана в PROP-000 §13 `##DECISIONS-LIVE-INSIDE-PROPS` |
 | @fact:B007-FILED **filed by** | the packages-actualization campaign, Phase D, wave 7 |
 
 - @fact:B007-THE-QUESTION **The question, in the owner's framing.** Should the specifications
@@ -559,7 +559,7 @@ structure, and it goes when the file does.
 | @fact:B015-ANCHOR **anchor** | тема §2.8.4 PROP-014 (specmap); полное досье — `campaigns/packages-2026-09/harvest/d14-b012-part-A.md`, раздел A5 |
 | @fact:B015-LOCATOR **locator** | подписи нет нигде в дереве (единственная crypto-зависимость — sha2 для контент-хэшей); две уже шипящиеся дороги «текст пакета → контекст агента» перечислены ниже |
 | @fact:B015-SEVERITY **severity** | P2 |
-| @fact:B015-DISPOSITION **disposition** | `open` — **запаркована решением владельца, НЕ строить до его специального уведомления**; кодовых триггеров нет намеренно. **Подтверждена 2026-08-20** («подписи пока не нужно») — релиз 1.0.0 тем уведомлением НЕ является |
+| @fact:B015-DISPOSITION **disposition** | `closed` — **рулинг владельца 2026-08-20: «только от порчи»** — программа подписи (аутентичность) не заводится; `SHA256SUMS.txt` дистрибутива остаётся честным чеком целостности, его дисклеймер — постоянная правда, не времянка |
 | @fact:B015-FILED **filed by** | решение владельца 2026-08-01 по исследованию B-012 |
 
 - @fact:B015-SUT **Суть, по-простому.** Задуманные инструменты для агентов будут отдавать текст из пакетов прямо в контекст агента. Текст в контексте агента — потенциальные команды: подложи в пакет вредный абзац — и читающий агент может быть им управляем (prompt injection). Защита — криптографическая подпись содержимого пакетов, чтобы читатель мог проверить «текст от автора, не подменён». Дизайн specmap изначально требовал: канал не шипится без подписи.
@@ -963,7 +963,7 @@ structure, and it goes when the file does.
 | @fact:B080-ANCHOR **anchor** | [`spec://org.vibevm.core/vibevm/common/PROP-044#machinery`](spec/common/PROP-044-change-native-formats.md#machinery) — §4.5: читатель, которому не хватает возможностей, карантинит запись, и отказ всплывает В ТОЧКЕ ПРИМЕНЕНИЯ |
 | @fact:B080-LOCATOR **locator** | `crates/vibe-registry/src/index_client/wire.rs` (`VersionEntryView` — одно поле `version`), `crates/vibe-registry/src/index_client/mod.rs` (`list_versions` отдаёт весь список), `crates/vibe-registry/src/git_package_registry/lookup.rs` (выбор `Latest`/`Req` по этому списку) |
 | @fact:B080-SEVERITY **severity** | P2 |
-| @fact:B080-DISPOSITION **disposition** | `open` — измерено замером Ф6.2c, названо решением Р55.2 и сознательно не сделано: починка требует переезда реестра возможностей читателя из `vibe-index` в общий дом |
+| @fact:B080-DISPOSITION **disposition** | `open` — **В РАБОТЕ по слову владельца 2026-08-20** («сделать тест/пример и проверить на нём»): синтетическая capability-фикстура + тест, красным доказывающий слепой выбор, затем починка — `must_understand` в клиентском view, реестр возможностей читателя в общий дом (`vibe-core`), выбор версии фильтрует непонимаемое |
 | @fact:B080-FILED **filed by** | фаза Ф6.2 кампании packages-2026-09, замер перед нарезкой Ф6.2c, 2026-08-17 |
 
 - @fact:B080-THE-FACT **Факт, измеренный, а не заподозренный.** Слово `must_understand` не встречается во всём `crates/vibe-registry/**` ни разу (греп с контрольной проверкой: тот же шаблон ловит десятки хитов в `vibe-index`). Клиентский `VersionEntryView` несёт РОВНО ОДНО поле — `version`. Значит клиент физически не может увидеть объявление, ради которого оно на проводе есть.

@@ -162,6 +162,10 @@
 
 ---
 
+## 13. Decision records live inside PROPs {#decisions}
+
+@fact:DECISIONS-LIVE-INSIDE-PROPS Architectural decisions are recorded as an ADR-part **inside the PROP they belong to** — a section (or clearly-marked facts) stating the decision, the alternatives weighed, and why — never as standalone ADR files. One document carries a contract AND the reasoning that shaped it; a reader never chases a second file to learn why. (Owner ruling 2026-08-20, closing BACKLOG B-007.) @status:impl/done
+
 ## 12. Commit and push discipline {#commits}
 
 @fact:GIT-PRACTICES-FAMILY The repository's commit-and-push discipline is the **git-practices** family (a host dependency), whose members carry the full text: @status:spec/done

@@ -1279,11 +1279,10 @@ truth; the P3 batch that caught it also paid two of the debts below.
   (2026-08-20): `slot_integrity = verify` now spot-checks the slot's
   `content_hash` instead of re-materialising every slot; half (b)
   (`pin_preferences`) still gates on the SAT solver (`-13`).
-- **2026-05-23-12** (D1) — narrowed further: the residue (`--archive`
-  on `vibe registry publish`) is **contract-less** — zero mentions in
-  spec/, crates/ and docs/ (measured 2026-08-20); building on a guess
-  would invent a design. Open, awaiting one owner sentence of intent —
-  or a close as not-wanted.
+- **2026-05-23-12** (D1) — **closed 2026-08-20 by the owner's word**:
+  the residue (`--archive`) is not wanted — «вспомню — попрошу добавить
+  напрямую». The row's other two thirds were long built; nothing
+  remains.
 - **2026-05-23-13** (D1, SAT solver ceiling) — open, P3, architectural.
 - **2026-08-05-14** (C2/B2, VersionEntry wire contract) — **closed by
   evolution, verified this run**: the C2 wire wave minted the index
@@ -1304,7 +1303,8 @@ truth; the P3 batch that caught it also paid two of the debts below.
   the ruling describes: facts come due as their texts move.
 - **2026-06-12-11** (D, hygiene census) — superseded by the 08-03
   refresh (recorded there); header never updated — effectively closed.
-- **2026-06-12-01's rider** (owner to confirm the 2026-06-11 history
-  rewrite) — open, owner-court; on the inspection checklist.
+- **2026-06-12-01's rider** — **closed 2026-08-20**: the owner
+  confirmed the 2026-06-11 history rewrite was intentional; the fourth
+  carry was its last.
 - **2026-08-20-01 … -05** (this run's own rows) — dispositions as
   filed above; `-04` (lru advisory) re-check next run.

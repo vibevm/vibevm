@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-20T19:09:19Z",
+  "updated_at": "2026-08-20T19:38:30Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -152477,9 +152477,9 @@
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "0fdb7535965c45fb1002e89d13750f6013a37cf5704beeafab98fef54bf9f260",
+        "processed_hash": "dbeda43e03c3510efa3ce97ebd38155e9785dae32427a7e57da7d8226ef63131",
         "summary": {
-          "confirmed": 38,
+          "confirmed": 39,
           "unverifiable": 2
         },
         "verdicts": {
@@ -152736,10 +152736,16 @@
               "конкретная потеря названа и она реальна: обычное чтение возвращает развёрнутую строку, где `%USERPROFILE%\\go\\bin` уже стал буквальным путём; запись такой строки обратно уничтожила бы ссылку на переменную",
               "приём проверен на обеих правках этой сессии: оба раза значение читалось неразвёрнутым, правилось строкой и записывалось с сохранением вида — после каждой правки тип перечитан и остался `ExpandString`, а `%USERPROFILE%\\go\\bin` уцелел"
             ]
+          },
+          "decode-identifiers-inline": {
+            "v": "confirmed",
+            "ev": [
+              "the owner's verbatim instruction this session (2026-08-20): «когда ты упоминаешь штуки типа B-007 сразу рассказывай что это такое»; recorded as a standing communication rule in the user-owned boot snippet the very hour it was given"
+            ]
           }
         },
-        "verified_at": "2026-08-09T19:28:09Z",
-        "verify_batch": "c0-boot + EFFORT-DIRECTIVE + MACHINE-FACTS-VVM-STORE-MOVE-2026-08-20"
+        "verified_at": "2026-08-20T19:09:25Z",
+        "verify_batch": "c0-boot + EFFORT-DIRECTIVE + MACHINE-FACTS-VVM-STORE-MOVE-2026-08-20 + P3-DECODE-RULE"
       }
     },
     {
@@ -152752,9 +152758,9 @@
         "stage": "spec",
         "state": "done"
       },
-      "markers": 183,
-      "units": 23,
-      "facts": 182,
+      "markers": 184,
+      "units": 24,
+      "facts": 183,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
