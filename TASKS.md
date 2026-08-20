@@ -44,8 +44,10 @@ owner's ruling and wins.
 
 - [x] **С0** — рамка: перекличка базиса, поправка кампании (T отменена,
       выход = релиз), проверка хуков. Сел 2026-08-20; числа в LOG ТЗ.
-- [ ] **С1** — склад пакетов: **пять коммитов секции ниже** (нарезка
-      2026-08-19/20 остаётся в силе, рулинги в PROP-010/PROP-005).
+- [x] **С1** — склад пакетов: **закрыт 2026-08-20, шесть посадок** — офлайн
+      (eb879a1b), склад (937df291), refresh/switch (3d99a0c8), cache-семья
+      (537d0349), check/--repair (71c0504f), резолвер (e541e5b2); каждая с
+      зелёной панелью, судом и раскаткой.
 - [ ] **С2** — проводная волна: B-091(б) · B-073(2) · B-078 · B-072-замер ·
       B-079-чеканка; break notes.
 - [ ] **С3** — конфиг и правда спек: B-083 build · B-084 narrow ·
@@ -225,10 +227,17 @@ with nothing going red. **The producer must be a fact, never a field write.**
             stay — but only once extraction happens on a SUCCESSFUL fetch,
             because the window between them is exactly the loss of the only
             copy.
-      - [ ] `feat(vibe-registry)`: **a cache hit outranks a silent registry.**
-            `MultiRegistryResolver::with_offline` does not exist (measured);
-            today the narrowing happens above the resolver, and the cache is
-            not a resolution source at all.
+      - [x] **LANDED 2026-08-20 (`e541e5b2`) — С1 закрыт этим коммитом.**
+            `feat(vibe-registry)`: **a cache hit outranks a silent registry.**
+            `with_offline` построен (резолв из local+склада, git-источники
+            в обход не входят, ноль сетевых вызовов на офлайн-пути); онлайн —
+            фолбэк доступности строго на формах отсутствия, едет на пине
+            лока через общий verify-gate, операционная ошибка не маскируется;
+            красное доказательство — обезвреженный фолбэк воспроизводит
+            прежнюю ошибку. 8 фактов PROP-010 пересужено, долг 0/0.
+            Открытый владельческий хвост: wire-форма провенанса
+            never-locked установки из склада (scaffolding, §2.2/PHASE-5) —
+            записан курсивом у A-CACHE-HIT в самой спеке.
       - [x] `feat(vibe-cli)`: **the `vibe cache …` family** — `path` / `list` /
             `add` / `clean`. **Landed 2026-08-20 (`537d0349`)**: top-level
             family per the ruling; path/list/add work outside any project
