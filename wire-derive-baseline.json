@@ -3,7 +3,7 @@
   "crates": {
     "progress-core": 11,
     "vibe-actions": 7,
-    "vibe-cli": 41,
+    "vibe-cli": 42,
     "vibe-core": 24,
     "vibe-index": 26,
     "vibe-mcp": 5,
