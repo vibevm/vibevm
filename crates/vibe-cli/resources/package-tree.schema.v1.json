@@ -49,7 +49,7 @@
         "id": { "$ref": "#/$defs/packageId" },
         "group": { "type": "string" },
         "name": { "type": "string" },
-        "kind": { "enum": ["flow", "feat", "stack", "tool", "mcp", "lang", "app"] },
+        "kind": { "enum": ["flow", "feat", "stack", "tool", "mcp", "lang"] },
         "version": { "type": "string" },
         "content_hash": { "type": ["string", "null"] },
         "source": { "$ref": "#/$defs/source" },

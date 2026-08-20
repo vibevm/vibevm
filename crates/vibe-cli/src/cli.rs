@@ -55,7 +55,7 @@ pub use workspace::*;
     version = env!("CARGO_PKG_VERSION"),
     about = "The disciplined runtime for spec-driven vibecoding.",
     long_about = "vibevm: a CLI software project manager for spec-driven AI-assisted development.\n\
-                  Manages installable building blocks — flows, feats, stacks, tools — and assembles\n\
+                  Manages installable building blocks — flow, feat, stack, tool, mcp, lang — and assembles\n\
                   them into project-level spec content that AI agents read at session boot."
 )]
 pub struct Cli {

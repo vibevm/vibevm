@@ -216,8 +216,8 @@ follow-up command; vibevm will not wait for one.
 ## Installing package skills into agents — `vibe skill`
 
 Packages can ship **skills** for coding agents (declared in a package's
-`[[skill]]` manifest table — separate from the package's kind, so a
-`tool`, `flow`, `feat`, or `stack` can all carry skills). `vibe skill`
+`[[skill]]` manifest table — separate from the package's kind, so a package
+of any kind (`flow`, `feat`, `stack`, `tool`, `mcp`, `lang`) can carry skills). `vibe skill`
 projects the skills declared by the project and its installed packages
 into agents' own skill directories (`.<agent>/skills/<name>/`). This is
 vibevm's **standalone mode** — no LLM required.

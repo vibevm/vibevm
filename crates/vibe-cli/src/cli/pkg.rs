@@ -327,8 +327,8 @@ pub struct SearchArgs {
     #[arg(long)]
     pub purl: Option<String>,
 
-    /// Restrict results to a single package kind (`flow`, `feat`,
-    /// `stack`, `tool`). Applies only to free-text search; PURL
+    /// Restrict results to a single package kind (`flow`, `feat`, `stack`, `tool`, `mcp`, `lang`).
+    /// Applies only to free-text search; PURL
     /// lookup ignores it.
     #[arg(long)]
     pub kind: Option<String>,
