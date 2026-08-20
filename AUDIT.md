@@ -1255,30 +1255,52 @@ this section); judging debt 0/0; `vibe check` 0 errors / 1 warning
   + 15 named uncommented `dead_code` sites) goes to the owner on the
   inspection checklist rather than riding a fourth run silently.
 
-**Carry-forward, re-judged.**
+**Carry-forward, re-judged — corrected the same evening.** The first
+version of this block copied the 2026-08-03 section's list instead of
+walking the headers — exactly the disease row `-12` names («a list read
+instead of run»), caught during the P3 batch hours later. Three rows
+were mis-carried as open that had closed in August (`-01`, `-05`,
+`-10`), and three later-filed rows were missed entirely (`2026-08-05-14`,
+`2026-08-06-01`, `2026-08-06-02`). This block is the walked-headers
+truth; the P3 batch that caught it also paid two of the debts below.
 
-- **2026-05-23-01** (A1, `vibe init` default-path e2e) — open, P3, unchanged.
+- **2026-05-23-01** (A1) — was mis-carried as open: **fixed 2026-08-06**
+  (`cli_default_path.rs` walks the fresh-user path).
 - **2026-05-23-04** (A2, live e2e set ignored) — open, P2, unchanged;
-  still coupled to `-07`; the С6 E2E (blocked on -01's token) is the
-  natural moment it revives.
-- **2026-05-23-05** (B1, manual-test fixture rot) — open, P3; the С10.2
-  MT pre-run reads MT-02/MT-03 against the live tree and reports
-  divergences into the inspection checklist — its findings, if any, are
-  this row's freshest measurement.
-- **2026-05-23-06 / -07** (C4, test orgs un-migrated) — open, P2,
-  owner-court; unchanged.
-- **2026-05-23-09** (C2, PROP-005 dead schemas citation) — **fixed,
-  closed this run**: the citation no longer exists in
-  `PROP-005-package-index.md` after the release arc's truth edits; the
-  directory remains absent; the audit spec's own historical quote is not
-  drift.
-- **2026-05-23-10** (C1, doc requalification sweep) — open, P3, but
-  narrowed: the C8 wave refreshed the command docs and README; what
-  remains of the row is the older guide/genre sweep.
-- **2026-05-23-11 / -12 / -13** (D1 family) — open, P3, unchanged;
-  `-12`'s home remains `BACKLOG.md`.
-- **2026-08-03-04** (D3, `#[allow]` shadow) — open, P2, **escalated to
-  the owner via the inspection checklist** (see note above).
-- **2026-06-12-01's rider** (confirm the 2026-06-11 history rewrite was
-  intentional) — open, owner-court, P3; fourth run carrying it — also
-  placed on the inspection checklist to end the ride.
+  coupled to `-07`; revives with the С6 E2E.
+- **2026-05-23-05** (B1) — was mis-carried as open: **fixed 2026-08-05**.
+- **2026-05-23-06 / -07** (C4, test orgs) — open, P2, owner-court.
+- **2026-05-23-09** (C2) — its citation half closed (this run verified
+  the dead `crates/vibe-index/schemas/` citation is gone from PROP-005);
+  its residue was `2026-08-05-14`, see below.
+- **2026-05-23-10** (C1) — was mis-carried as open-narrowed: **closed
+  2026-08-06** (the rule is written; the sweep refused on the record).
+- **2026-05-23-11** (D1) — half (a) **paid by the P3 batch**
+  (2026-08-20): `slot_integrity = verify` now spot-checks the slot's
+  `content_hash` instead of re-materialising every slot; half (b)
+  (`pin_preferences`) still gates on the SAT solver (`-13`).
+- **2026-05-23-12** (D1) — narrowed further: the residue (`--archive`
+  on `vibe registry publish`) is **contract-less** — zero mentions in
+  spec/, crates/ and docs/ (measured 2026-08-20); building on a guess
+  would invent a design. Open, awaiting one owner sentence of intent —
+  or a close as not-wanted.
+- **2026-05-23-13** (D1, SAT solver ceiling) — open, P3, architectural.
+- **2026-08-05-14** (C2/B2, VersionEntry wire contract) — **closed by
+  evolution, verified this run**: the C2 wire wave minted the index
+  schemas (`schemas/index/**`) and `VersionEntry` is now GENERATED
+  (`vibe-wire/src/generated/index/e1/by_name/mod.rs` re-exports the
+  generated `shared::VersionEntry`) under `check-codegen` like every
+  other wire type — the row's first branch happened.
+- **2026-08-06-01** (A1/E4, **P1**, per-fact evidence) — the built half
+  stands; the outstanding half (deliberate re-judgement of the PROP-008
+  anchors sharing the known-poisoned blob) was **still unpaid at this
+  run's first writing — measured live: 102 verdicts on the file, 84 on
+  the one shared blob, 18 own-evidence** — and is being paid by the
+  same P3 batch that corrected this block (an individual re-judgement
+  worker; its merge closes the half or records what refused).
+- **2026-06-12-11** (D, hygiene census) — superseded by the 08-03
+  refresh (recorded there); header never updated — effectively closed.
+- **2026-06-12-01's rider** (owner to confirm the 2026-06-11 history
+  rewrite) — open, owner-court; on the inspection checklist.
+- **2026-08-20-01 … -05** (this run's own rows) — dispositions as
+  filed above; `-04` (lru advisory) re-check next run.

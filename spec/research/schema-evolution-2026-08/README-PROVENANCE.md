@@ -19,7 +19,7 @@ mandatory-reading list live in `12-HANDOFF.md §2`.
   — the change-native formats ideology this study fed.
 - Lore: [`spec/design/change-native-formats-verdict.md`](../../design/change-native-formats-verdict.md)
   — the convened-council verdict that chose the architecture, recorded in full.
-- Plan: [`campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md`](../../../campaigns/packages-2026-09/TZ-CHANGE-NATIVE-FORMATS-v0.1.md).
+- Plan: the change-native build campaign this study fed (TZ v0.1) — executed whole and folded into its tombstone 2026-08-18; a closed plan is cited by name and date, never path-linked (the B-088 law).
 
 This subtree is deliberately **outside the progress-markup corpus**
 (`progress.toml` includes are enumerated and do not name `spec/research/**`):
