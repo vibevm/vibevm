@@ -13,7 +13,7 @@
 //! the same list as JSON, and neither computes anything the other does not.
 //! Delete either surface on paper and nothing but presentation is lost.
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#binaries");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#manifest");
 
 use std::path::Path;
 

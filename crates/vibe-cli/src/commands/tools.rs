@@ -10,7 +10,7 @@
 //! answered before it is asked. What binaries and servers those packages
 //! brought is a different question, and until now it reached no agent.
 
-specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#binaries");
+specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#manifest");
 
 use std::path::Path;
 

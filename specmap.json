@@ -2851,7 +2851,7 @@
       "line": 13,
       "symbol": "vibe_cli::commands::tools",
       "end_line": 13,
-      "fingerprint": "tok1:abfc8e9317aa52f2d1feb2d170893ef001a1c1a6624a448383883fc32a2bb6b1"
+      "fingerprint": "tok1:d60caeb80470cdee2b1a654aa0e6a604b43a9721d98b1bba07a1358bfb1c4800"
     },
     {
       "crate_name": "vibe-cli",
@@ -9817,7 +9817,7 @@
       "line": 16,
       "symbol": "vibe_workspace::tools",
       "end_line": 16,
-      "fingerprint": "tok1:abfc8e9317aa52f2d1feb2d170893ef001a1c1a6624a448383883fc32a2bb6b1"
+      "fingerprint": "tok1:d60caeb80470cdee2b1a654aa0e6a604b43a9721d98b1bba07a1358bfb1c4800"
     },
     {
       "crate_name": "vibe-workspace",
@@ -11708,7 +11708,7 @@
       "from_symbol": "vibe_cli::commands::tools",
       "line": 13,
       "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#binaries",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#manifest",
       "verb": "implements"
     },
     {
@@ -18225,7 +18225,7 @@
       "from_symbol": "vibe_workspace::tools",
       "line": 16,
       "provenance": "authored",
-      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#binaries",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#manifest",
       "verb": "implements"
     },
     {
@@ -73933,12 +73933,6 @@
     },
     {
       "code": "dangling-edge",
-      "file": "crates/vibe-cli/src/commands/tools.rs",
-      "line": 13,
-      "message": "edge `vibe_cli::commands::tools` --implements--> `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#binaries`: no spec unit carries this anchor"
-    },
-    {
-      "code": "dangling-edge",
       "file": "crates/vibe-cli/src/commands/trace.rs",
       "line": 9,
       "message": "edge `vibe_cli::commands::trace` --implements--> `spec://core-ai-native/mechanisms/PROP-014#index`: no spec unit carries this anchor"
@@ -75232,12 +75226,6 @@
       "file": "crates/vibe-workspace/src/publish/tests.rs",
       "line": 208,
       "message": "edge `vibe_workspace::publish::tests::topo_order_is_dependency_first` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#selective-publish` carries no kind/revision line yet"
-    },
-    {
-      "code": "dangling-edge",
-      "file": "crates/vibe-workspace/src/tools.rs",
-      "line": 16,
-      "message": "edge `vibe_workspace::tools` --implements--> `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#binaries`: no spec unit carries this anchor"
     },
     {
       "code": "pin-into-unmarked-unit",
