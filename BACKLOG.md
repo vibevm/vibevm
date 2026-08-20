@@ -35,6 +35,24 @@ deliberately later. Two different questions, two files, by owner ruling.
 
 @fact:MAP-WAVES-DIGEST Волны одной строкой (полные составы — в карте): **А** — детерминированная загрузка (B-011 самым высоким приоритетом → B-006/B-031/B-028); **Б** — паритет гейтов и новые классы правил (B-029/033/034/039/030 под циклом B-035 → B-036/037/038 → B-025/026); **В** — карта и её потребители (B-013 done 2026-08-03 → одна смена формата B-019а+B-016.1+B-017 → B-018 → B-020/021); **Г** — хост догоняет дисциплину (B-040, B-005, spec-метки схем) — оппортунистически. Вне волн: B-042 (далёкое будущее), B-015 (запаркована), B-043.
 
+## Пост-1.0 — мандат-заготовка следующей кампании {#post-1-0}
+
+@fact:POST10-MANDATE **Рулинг владельца 2026-08-20, дословно:** «Корзина 3 и
+всё остальное не сделанное нужно будет сделать отдельной кампанией сразу же
+после завершения 1.0.0 до конца — но потерять это ни в коем случае нельзя
+нужно это записать!!!» Релиз 1.0.0 исполняет
+[`campaigns/packages-2026-09/TZ-RELEASE-1.0-v0.1.md`](campaigns/packages-2026-09/TZ-RELEASE-1.0-v0.1.md);
+его §4 несёт полный поимённый список невключённого с причинами и
+триггерами, ledger-строки — в
+[`deferrals.md#release-1-0`](campaigns/packages-2026-09/deferrals.md#release-1-0).
+Этот раздел — корневой якорь, переживающий зону кампании: следующая
+кампания стартует отсюда. Крупное одной строкой: **фаза T** (тест-рой —
+отменена рулингом 2026-08-20, спеки сохраняются), **фаза G полная** (пакет
+`org.vibevm.doc`), **подпись пакетов** (B-015, ждёт уведомления),
+**wave 3 PROP-044** (ждёт `public = true`), **потребительская сверка
+repomd** (B-084-хвост), **CI**, **дистрибутивы Linux/Mac** (владелец, другие
+машины), и все живые P2/P3 строки этого файла, не взятые релизным ТЗ.
+
 ## The three severities {#severity}
 
 The scale is **P1 / P2 / P3**, taken from the `health-audit` flow rather than
@@ -223,7 +241,7 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
 | @fact:B073-ANCHOR **anchor** | рулинг владельца 2026-08-06, пункт А6 программы: «вариант (а) — генерировать». Замер выполнен 2026-08-06 перед постройкой, по стоячему закону «мерить, что уже построено, до того как строить» |
 | @fact:B073-LOCATOR **locator** | `crates/vibe-index/src/types/repomd.rs` и `crates/vibe-index/src/types/entry/{mod,aggregate,content,relations}.rs` — 18 публичных типов; генератор и его маршрутизация — `xtask/src/codegen.rs`; схем у индекса нет ни одной (в дереве девять `*.jtd.json`, все чужие) |
 | @fact:B073-SEVERITY **severity** | P2 |
-| @fact:B073-DISPOSITION **disposition** | `open` — **решение владельца остаётся в силе; изменилась ЦЕНА, и её надо предъявить прежде, чем строить** |
+| @fact:B073-DISPOSITION **disposition** | `planned` — **рулинг владельца 2026-08-20: вариант (2)** — файловый вариант `RepomdFileEntry` получает тег, `repomd` генерируется целиком (перелом бесплатен при `public = false`); исполняет `TZ-RELEASE-1.0` слайс С2.2 |
 | @fact:B073-FILED **filed by** | сессия 2026-08-06, замер под А6 |
 
 - @fact:B073-SUT **Суть, по-простому.** Владелец решил генерировать wire-типы индекса из схем, и причина решения верна: запись индекса читается из ЧУЖОГО реестра, возможно собранного более новым инструментом, — там строгость означает, что новое поле ломает старых клиентов. Но таблица цены, на которую опиралось решение, перечисляла только то, что генерация теряет (методы, spec-ссылки, строгость). Замер нашёл третий пункт, которого в таблице нет: **часть форм в JTD не выражается вовсе, а часть выражается иначе — и это меняет опубликованный формат.** @status:spec/done
@@ -316,7 +334,7 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
 | @fact:B067-ANCHOR **anchor** | закон именования: координата `name@version` не переиспользуется для другого содержимого. Миграция разметки 2026-08-06 изменила содержимое 38 пакетов, не тронув их версии |
 | @fact:B067-LOCATOR **locator** | `packages/org.vibevm.*/**` — 38 пакетов с изменённым содержимым при прежних версиях; `vibe.lock` фиксирует их как `source_kind = "local"` |
 | @fact:B067-SEVERITY **severity** | P2 — блокирует публикацию, не блокирует работу |
-| @fact:B067-DISPOSITION **disposition** | `open` — владелец разрешил бамп 2026-08-06; решено отложить до публикации, см. `@fact:B067-WHY-DEFERRED` |
+| @fact:B067-DISPOSITION **disposition** | `planned` — владелец разрешил бамп 2026-08-06; решено было отложить до публикации, см. `@fact:B067-WHY-DEFERRED`; **2026-08-20 поглощена волной 1.0.0** — рулинг «все пакеты бампятся до 1.0.0», исполняет `TZ-RELEASE-1.0` слайс С5 |
 | @fact:B067-FILED **filed by** | сессия 2026-08-06, миграция разметки |
 
 - @fact:B067-WHY-DEFERRED **Почему отложено, а не сделано.** Всё потребление сегодня локальное (`source_kind = "local"`, 36 пакетов из `file://`), а публикация — за границей этой работы. Координата в реестре не переиспользуется, пока туда ничего не публикуется. Бамп же идёт каскадом: `redbook` пинит каждого из 23 членов точной версией, поэтому это не 38 независимых правок, а связная волна. @status:spec/done
@@ -541,7 +559,7 @@ structure, and it goes when the file does.
 | @fact:B015-ANCHOR **anchor** | тема §2.8.4 PROP-014 (specmap); полное досье — `campaigns/packages-2026-09/harvest/d14-b012-part-A.md`, раздел A5 |
 | @fact:B015-LOCATOR **locator** | подписи нет нигде в дереве (единственная crypto-зависимость — sha2 для контент-хэшей); две уже шипящиеся дороги «текст пакета → контекст агента» перечислены ниже |
 | @fact:B015-SEVERITY **severity** | P2 |
-| @fact:B015-DISPOSITION **disposition** | `open` — **запаркована решением владельца, НЕ строить до его специального уведомления**; кодовых триггеров нет намеренно |
+| @fact:B015-DISPOSITION **disposition** | `open` — **запаркована решением владельца, НЕ строить до его специального уведомления**; кодовых триггеров нет намеренно. **Подтверждена 2026-08-20** («подписи пока не нужно») — релиз 1.0.0 тем уведомлением НЕ является |
 | @fact:B015-FILED **filed by** | решение владельца 2026-08-01 по исследованию B-012 |
 
 - @fact:B015-SUT **Суть, по-простому.** Задуманные инструменты для агентов будут отдавать текст из пакетов прямо в контекст агента. Текст в контексте агента — потенциальные команды: подложи в пакет вредный абзац — и читающий агент может быть им управляем (prompt injection). Защита — криптографическая подпись содержимого пакетов, чтобы читатель мог проверить «текст от автора, не подменён». Дизайн specmap изначально требовал: канал не шипится без подписи.
@@ -838,7 +856,7 @@ structure, and it goes when the file does.
 | @fact:B091-ANCHOR **anchor** | [`spec://org.vibevm.core/vibevm/common/PROP-044#machinery`](spec/common/PROP-044-change-native-formats.md#machinery) §4.2 — JTD выбран **за бедность**, чтобы агент не мог выразить опасное; это первый случай, когда бедность режет по живому полю |
 | @fact:B091-LOCATOR **locator** | `crates/vibe-index/src/types/repomd.rs:45` — `File { size: u64, … }`; схема `schemas/index/e1/repomd.jtd.json`, поле `size`, вынужденно `uint32` |
 | @fact:B091-SEVERITY **severity** | P2 |
-| @fact:B091-DISPOSITION **disposition** | `open` — расхождение записано и НЕ разрешено; развилка принадлежит владельцу, потому что каждый выход меняет либо провод, либо продуктовый тип |
+| @fact:B091-DISPOSITION **disposition** | `planned` — **рулинг владельца 2026-08-20: вариант (б)** — >32-битные числа на проводе кодируются десятичной строкой, общим правилом; исполняет `TZ-RELEASE-1.0` слайс С2.1 |
 | @fact:B091-FILED **filed by** | фаза Ф4.1b кампании packages-2026-09, посадка схемы манифеста каталога, 2026-08-15 — **заведена под номером `B-056`, перенумерована 2026-08-19** (`##B091-THE-RENUMBERING`) |
 
 - @fact:B091-THE-FACT **Факт, измеренный, а не вычитанный.** У JTD (RFC 8927) **нет 64-битного целого вовсе**: запинённый `jtd-codegen 0.4.1` отвергает и `uint64`, и `int64` как `InvalidType`. Писатель при этом объявляет `size: u64`. Значит схема, описывающая наш собственный формат, не может описать тип, которым он пишется.
@@ -874,7 +892,7 @@ structure, and it goes when the file does.
 | @fact:B079-ANCHOR **anchor** | [`spec://org.vibevm.core/vibevm/common/PROP-044#our-formats`](spec/common/PROP-044-change-native-formats.md#our-formats) — `##FMT-UNINVENTORIED`: «The seven CLI `--json` reports (scripts and agents parse them) … each is "something a foreign parser reads", each gets a registry entry, a schema, an epoch and a corpus» |
 | @fact:B079-LOCATOR **locator** | `crates/vibe-index/src/cli/{get,list,search,capabilities,purls,outdated,verify}.rs` — рукописные `Envelope`/`Row`-типы; в `formats/REGISTRY.toml` нет ни одной записи `cli-*` для `vibe-index` (реестр несёт семь `cli-*` отчётов `vibe` и `cli-package-tree`) |
 | @fact:B079-SEVERITY **severity** | P2 |
-| @fact:B079-DISPOSITION **disposition** | `open` — названо при нарезке Ф6.2b (решение Р54.2) и сознательно не сделано: чеканка формата есть владельческий акт по §8a контракта |
+| @fact:B079-DISPOSITION **disposition** | `planned` — **владельческий акт чеканки совершён 2026-08-20 («починить»)**: все конверты `vibe-index` (7 CLI `--json` + HTTP `/v1/**`) получают записи реестра, схемы, корпуса и round-trip; исполняет `TZ-RELEASE-1.0` слайс С2.5 |
 | @fact:B079-FILED **filed by** | фаза Ф6.2 кампании packages-2026-09, нарезка Ф6.2b, 2026-08-17 |
 
 - @fact:B079-THE-FACT **Факт, измеренный замером Ф6.2 §4, а не выведенный.** Ни один конверт ответа `vibe-index` — ни CLI `--json`, ни HTTP `/v1/**` — не входит в `formats/REGISTRY.toml` и не имеет схемы: ни JTD, ни JSON Schema. При этом их читают чужие: клиент `vibe-registry` расшифровывает HTTP-ответы собственными view-типами (`crates/vibe-registry/src/index_client/wire.rs`), а `--json`-отчёты по построению адресованы скриптам и агентам.
@@ -939,7 +957,7 @@ structure, and it goes when the file does.
 | @fact:B083-ANCHOR **anchor** | [`spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor`](spec/modules/vibe-index/PROP-005-package-index.md#form-factor) — `##INDEX-URL-CONFIG` (TOML-пример) и `##INDEX-URL-DEFAULT` («Default: `<registry-url>/index`») |
 | @fact:B083-LOCATOR **locator** | `crates/vibe-core/src/manifest/project.rs:109` (`#[serde(deny_unknown_fields)]`) и `:110` (`RegistrySection` — поля `name`/`url`/`ref`/`naming`/`auth`/`token_env`/`enabled`, без `index_url`); единственный существующий источник — `crates/vibe-registry/src/index_client/mod.rs` (`index_url_for` → `VIBEVM_INDEX_URL_<REGISTRY>`) |
 | @fact:B083-SEVERITY **severity** | P2 |
-| @fact:B083-DISPOSITION **disposition** | `open` — развилка владельца: построить ключ манифеста ИЛИ понизить требование до env-переменной; спека помечена `spec/plan` до рулинга |
+| @fact:B083-DISPOSITION **disposition** | `planned` — **рулинг владельца 2026-08-20: построить ключ** (env остаётся переопределением); исполняет `TZ-RELEASE-1.0` слайс С3.1 |
 | @fact:B083-FILED **filed by** | полный проход PROP-005 против дерева, кампания packages-2026-09, 2026-08-18 |
 
 - @fact:B083-THE-FACT **Факт, перемеренный боссом после воркера.** Слово `index_url` в `crates/vibe-core/src` встречается **ноль** раз; `RegistrySection` несёт `deny_unknown_fields`. Значит TOML-блок из спеки — не «пример, который пока не действует», а **отказ разбора**: пользователь, скопировавший его в свой `vibe.toml`, получит ошибку загрузки манифеста.
@@ -954,7 +972,7 @@ structure, and it goes when the file does.
 | @fact:B084-ANCHOR **anchor** | [`spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout`](spec/modules/vibe-index/PROP-005-package-index.md#layout) — `##REPOMD-TRUST-POINT`; рядом `#trust` `##TWO-INTEGRITY-LAYERS` |
 | @fact:B084-LOCATOR **locator** | `crates/vibe-registry/src/index_client/` — ноль вхождений `sha256`/`etag` (контроли: `crates/vibe-registry/src` → 43, `crates/vibe-index/src/index` → 39); потребительский путь `index_client/mod.rs:293` идёт за `by-name/<name>.json` напрямую; сверка живёт только в операторском глаголе `crates/vibe-index/src/cli/verify.rs` |
 | @fact:B084-SEVERITY **severity** | P2 |
-| @fact:B084-DISPOSITION **disposition** | `open` — развилка владельца: построить потребительскую сверку ИЛИ переписать «single point of trust» в то, чем манифест является сегодня; спека помечена `spec/plan` до рулинга |
+| @fact:B084-DISPOSITION **disposition** | `planned` — **рулинг владельца 2026-08-20: сузить формулировку под то, что есть**; потребительская сверка — пост-1.0 кампания (ledger `deferrals.md#release-1-0`); исполняет `TZ-RELEASE-1.0` слайс С3.2 |
 | @fact:B084-FILED **filed by** | полный проход PROP-005 против дерева, кампания packages-2026-09, 2026-08-18 |
 
 - @fact:B084-WHAT-IS-EXPOSED-IS-METADATA **Что именно обнажено — метаданные в пути, а не содержимое.** `content_hash` сверяется с фактически скачанными байтами в момент забора независимо от того, как выбрана версия ([PROP-005 §2.3](spec/modules/vibe-index/PROP-005-package-index.md#truth)), поэтому подменённый индекс способен НАПРАВИТЬ потребителя не туда, но не способен заставить его поставить непроверенные байты. Подменённый же `by-name`-файл читается как пришёл.
@@ -969,7 +987,7 @@ structure, and it goes when the file does.
 | @fact:B085-ANCHOR **anchor** | [`spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http`](spec/modules/vibe-index/PROP-005-package-index.md#http) — блок маршрутов; плюс `#reindex` `##TWO-REINDEX-MODES` и `##TRIGGER-HTTP`; потребитель обещания — `#wire-up` `##WIRE-POST-RECEIVE` |
 | @fact:B085-LOCATOR **locator** | `crates/vibe-index/src/server/mod.rs:54-107` — единственный `Router::new()` крейта, 16 путей, админ-поверхность одна (`:105` `GET /v1/admin/status`); `crates/vibe-index/src/server/routes/admin.rs` — единственный обработчик `status`; хит `admin/reindex` по `crates/` — ноль |
 | @fact:B085-SEVERITY **severity** | P2 |
-| @fact:B085-DISPOSITION **disposition** | `open` — развилка владельца: построить маршрут ИЛИ отозвать обещание в пользу CLI-глагола; спека помечена `spec/plan` до рулинга |
+| @fact:B085-DISPOSITION **disposition** | `planned` — **рулинг владельца 2026-08-20: отозвать ручку** (переиндексация — операторский глагол; маршрут — по нужде первого оператора, пост-1.0); исполняет `TZ-RELEASE-1.0` слайс С3.3 |
 | @fact:B085-FILED **filed by** | полный проход PROP-005 против дерева, кампания packages-2026-09, 2026-08-18 |
 
 - @fact:B085-WHY-IT-IS-NOT-A-DOC-BUG **Почему это не документационная опечатка.** §11 спеки даёт оператору готовый `post-receive`-хук, который делает `curl -X POST …/v1/admin/reindex`. Оператор, исполнивший рецепт, получает молча ничего не делающий хук: сервер ответит 404, `curl -sf` промолчит, `|| echo` напечатает «non-fatal». То есть обещание не просто не исполнено — оно ВСТРОЕНО в рабочий рецепт, который выглядит настроенным и не работает. Это ровно та форма, которую PROP-005 §2.16 сама называет худшей: «hook, который настроен и молча не приходит, выглядит как hook, которому нечего делать».
@@ -983,7 +1001,7 @@ structure, and it goes when the file does.
 | @fact:B086-ANCHOR **anchor** | [`spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#config`](spec/modules/vibe-index/PROP-005-package-index.md#config) — `##CONFIG-PRECEDENCE`; смежно `#cli` `##CLI-SURFACE` (`--data-dir` / `$VIBE_INDEX_DATA_DIR` / умолчание `./vibe-index-data`) |
 | @fact:B086-LOCATOR **locator** | греп `config.toml` по `crates/vibe-index/src` → **0** (контроль: `checkpoint.json` тем же грепом → хиты в `index/checkpoint.rs`, `scanner/org_cache.rs`, `scanner/org_walk.rs`); греп `VIBE_INDEX` → ровно один хит `scanner/git_cli.rs:19` (`VIBE_INDEX_GIT`); `data_dir` — обязательный позиционный во всех 15 глаголах |
 | @fact:B086-SEVERITY **severity** | P2 |
-| @fact:B086-DISPOSITION **disposition** | `open` — развилка владельца: построить лестницу ИЛИ сузить норму до «флаги + две именованные переменные»; спека помечена `spec/plan` до рулинга |
+| @fact:B086-DISPOSITION **disposition** | `planned` — **рулинг владельца 2026-08-20: построить полную лестницу** (флаг → env → файл настроек → умолчание, с видимым источником значения); исполняет `TZ-RELEASE-1.0` слайс С3.4 |
 | @fact:B086-FILED **filed by** | полный проход PROP-005 против дерева, кампания packages-2026-09, 2026-08-18 |
 
 - @fact:B086-THE-MIDDLE-STATE-IS-THE-DEFECT **Дефект — не отсутствие лестницы, а середина.** Ни один из четырёх уровней, кроме первого, не существует, и при этом две переменные окружения ЕСТЬ (`VIBE_INDEX_GIT`, `VIBE_LOG`) — но они не члены никакой цепочки и спекой не названы. Оператор, читающий §3.5, ищет `state/config.toml` и `VIBE_INDEX_*`-семейство; оператор, читающий код, находит две несвязанные переменные. Оба описания неполны, и ни одно не даёт предсказать поведение.
