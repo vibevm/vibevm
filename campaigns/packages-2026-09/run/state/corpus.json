@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-20T05:07:45Z",
+  "updated_at": "2026-08-20T05:15:24Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -111725,7 +111725,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 92,
         "marker_count": 93,
-        "processed_hash": "a8bd35ca9aaa1ab74badecfbdf4b881ac0074a2d1dcd1d57acba43fc8b328a12",
+        "processed_hash": "d5b14f433daddc9ac5148fa0dca7fd00f969c81ce7e4174fc6e121c2501470e2",
         "summary": {
           "confirmed": 132
         },
@@ -111852,7 +111852,7 @@
           "EXPLICIT-RECLAIM": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "crates/vibe-cli/src/commands/cache/clean.rs:31-43 — guard: clean без цели отказывает с подсказкой (красный прогон обезвреженного guard'а: 8 passed; 1 failed ровно свой тест); --all под confirm-контрактом uninstall; удаление печатает счёт"
             ]
           },
           "explicit-not-incidental": {
@@ -111938,7 +111938,7 @@
           "PROJECTLESS-SOURCE": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "commands/cache/add.rs:114 projectless_resolver — EffectiveRegistryConfig прямо из секций GlobalRegistryConfig (~/.vibe/registry.toml), тот же MultiRegistryResolver::open; e2e через file://-каталог-реестр в user-level конфиге"
             ]
           },
           "MEMBER-INHERITS": {
@@ -112043,13 +112043,13 @@
           "CACHE-FILLS": {
             "v": "confirmed",
             "ev": [
-              "side-effect наполнение построено всеми фетч-путями (см. CACHE-POPULATION-SHARED); impl/work: pre-warm `vibe cache add` не построен (команды §2.8 — слайс cache-семьи)"
+              "обе половины факта теперь построены: side-effect наполнение (посадка склада) + deliberate pre-warm vibe cache add (эта посадка); авто-выселения нет"
             ]
           },
           "CACHE-COMMANDS": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "семья построена: Command::Cache в cli.rs, cli/cache.rs, commands/cache/{mod,add,clean}.rs; impl/work честен — check/--repair из §2.8 ещё не построены (пакет R1-CHECK-REPAIR)"
             ]
           },
           "namespace-leaning": {
@@ -112061,25 +112061,25 @@
           "CMD-PATH": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "commands/cache/mod.rs:32 — печать store_root(); e2e вне проекта; --json конверт"
             ]
           },
           "CMD-LIST": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "commands/cache/mod.rs:51 — list_all() таблицей/--json/--quiet; пустой склад — не ошибка (JSON []); e2e"
             ]
           },
           "CMD-ADD": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "commands/cache/add.rs — предпрогрев с замыканием через существующий solve()+resolve_and_fetch (склад наполняется write-once сам); в проекте — реестры проекта, вне — user-level (projectless_resolver :114); e2e: замыкание parent+child, проект НЕ материализован, повторный add — AlreadyPresent с нетронутыми байтами"
             ]
           },
           "CMD-CLEAN": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "commands/cache/clean.rs — --all (confirm) / --package (имя или версия; отсутствующая цель — ошибка) / --older-than (по mtime; пусто — успех); store.rs removal API с прунингом опустевших каталогов группы; e2e все ветки"
             ]
           },
           "SYNC-VENDOR-COMPLEMENT": {
@@ -112127,7 +112127,7 @@
           "SURF-CACHE-CMDS": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "все четыре поверхности §3-строки построены: path/list/add/clean; help-смок cli_registry_mgmt.rs знает о семье (+5 путей — файл, который правка ломает, обновлён)"
             ]
           },
           "SURF-CORE": {
@@ -112247,7 +112247,7 @@
           "PHASE-1-IDENTITY-CACHE": {
             "v": "confirmed",
             "ev": [
-              "фаза в работе: склад+раскладка+index view построены этой посадкой; из текста фазы не построены vibe cache path/list — слайс cache-семьи марафона (TASKS С1)"
+              "фаза закрыта целиком: склад+раскладка+index view (посадка 937df291) + vibe cache path/list (эта посадка)"
             ]
           },
           "PHASE-2-USER-REGISTRIES": {
@@ -112265,7 +112265,7 @@
           "PHASE-4-PREWARM": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "add + clean построены и покрыты e2e (9 тестов cli_cache.rs); фаза закрыта"
             ]
           },
           "PHASE-5-SCAFFOLDING": {
@@ -112396,8 +112396,7 @@
           "NAMESPACE-IS-TOP-LEVEL-VIBE-CACHE": {
             "v": "confirmed",
             "ev": [
-              "Owner ruling 2026-08-19, confirming the leaning this document had recorded since its draft and closing §5.2.",
-              "The reason is the document's own and is structural: §2.2 makes the headline case work that has no project yet, and a not-yet-created project carries no [[registry]] section for a `vibe registry` subcommand to attach to."
+              "vibe cache — верхнеуровневая команда (Command::Cache, cli.rs); path/list/add работают в каталоге БЕЗ проекта (e2e cache_path_and_list_work_outside_any_project, cache_add_projectless_fills_store_with_closure_and_touches_no_project)"
             ]
           },
           "THE-STORE-IS-DOT-VIBE-CACHE": {
@@ -112561,8 +112560,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-20T05:07:44Z",
-        "verify_batch": "c4f1-registry-rest + d2d + W8 + W10 + PROP010-ENV-VAR-NAME-2026-08-19 + OWNER-RULINGS-STORE-AND-RESCAN-2026-08-20 + R1-OFFLINE + R1-STORE + R1-REFRESH"
+        "verified_at": "2026-08-20T05:15:22Z",
+        "verify_batch": "c4f1-registry-rest + d2d + W8 + W10 + PROP010-ENV-VAR-NAME-2026-08-19 + OWNER-RULINGS-STORE-AND-RESCAN-2026-08-20 + R1-OFFLINE + R1-STORE + R1-REFRESH + R1-CACHE-CMDS"
       }
     },
     {

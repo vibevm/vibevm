@@ -13,6 +13,7 @@ use clap::{Parser, Subcommand};
 
 mod agentic;
 mod aiui;
+mod cache;
 mod explain;
 mod inspect;
 mod mcp;
@@ -31,6 +32,7 @@ mod workspace;
 
 pub use agentic::*;
 pub use aiui::*;
+pub use cache::*;
 pub use explain::*;
 pub use inspect::*;
 pub use mcp::*;
@@ -211,6 +213,16 @@ pub enum Command {
 
     /// Manage the registry cache (clone, sync).
     Registry(RegistryArgs),
+
+    /// Operate on the machine-global package store `~/.vibe/cache/`
+    /// (PROP-010 §2.8): `path` prints its root, `list` the
+    /// offline-resolvable inventory, `add` pre-warms packages (and
+    /// their dependency closure) into it without touching any project,
+    /// `clean` reclaims space — all, by age, or by package, always as
+    /// an explicit operator action. Top-level on purpose: the store is
+    /// machine-global and its headline case is work that has no
+    /// project yet.
+    Cache(CacheArgs),
 
     /// Operate on a multi-package workspace (PROP-007). Today the one
     /// subcommand is `publish` — walk the workspace's self-publishing

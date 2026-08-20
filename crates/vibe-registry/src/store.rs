@@ -40,6 +40,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#l
 
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::time::SystemTime;
 
 use vibe_core::Group;
 
@@ -138,6 +139,148 @@ pub fn list_all() -> Vec<(Group, String, semver::Version)> {
         Ok(root) => list_all_at(&root),
         Err(_) => Vec::new(),
     }
+}
+
+// ---------------------------------------------------------------------------
+// Reclaim — the explicit operator half of the store's life (PROP-010
+// §2.1 EXPLICIT-RECLAIM, §2.8 `vibe cache clean`). Reclaim never
+// rewrites an entry: write-once binds our *writes*, and removal is a
+// different operation the operator performs on purpose — the store is
+// never auto-evicted (§2.1). Everything below is therefore shaped as
+// whole-directory removal plus empty-parent pruning, so a fully
+// removed name leaves no `<group>/<name>/` husk behind: a residue that
+// still named the deleted package would defeat the deletion.
+// ---------------------------------------------------------------------------
+
+/// Remove `dir` when it is empty — best-effort, never fatal: after the
+/// last version of a name is reclaimed the `<group>/<name>/` directory
+/// (and after the last name, the `<group>/` one) must not linger as a
+/// tombstone. A failure here is cosmetic, not a lost deletion.
+fn prune_empty_dir(dir: &Path) {
+    let is_empty = fs::read_dir(dir).is_ok_and(|mut entries| entries.next().is_none());
+    if is_empty {
+        let _ = fs::remove_dir(dir);
+    }
+}
+
+/// Reclaim one entry — `(group, name, version)` — from the machine
+/// store ([`remove_entry_at`] core). Returns `Ok(true)` iff an entry
+/// existed and was removed; `Ok(false)` when the identity was not in
+/// the store (nothing to reclaim is not an error — the caller decides
+/// whether an absent target is). An emptied `<group>/<name>/` chain is
+/// pruned so deletion leaves no residue.
+pub fn remove_entry(
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+) -> Result<bool, RegistryError> {
+    remove_entry_at(&store_root()?, group, name, version)
+}
+
+/// Reclaim every version of one `(group, name)` from the machine store
+/// ([`remove_name_at`] core). Returns how many version entries were
+/// removed — `0` when the name was not in the store.
+pub fn remove_name(group: &Group, name: &str) -> Result<usize, RegistryError> {
+    remove_name_at(&store_root()?, group, name)
+}
+
+/// Every entry whose store directory's mtime is strictly older than
+/// `cutoff` — the `--older-than` walk for `vibe cache clean`. Age is
+/// the entry directory's own mtime (when the version landed), not any
+/// file inside it. An unresolvable settings home holds no entries.
+pub fn list_older_than(cutoff: SystemTime) -> Vec<(Group, String, semver::Version)> {
+    match store_root() {
+        Ok(root) => list_older_than_at(&root, cutoff),
+        Err(_) => Vec::new(),
+    }
+}
+
+/// Reclaim the entire store contents ([`remove_all_at`] core) — the
+/// `--all` branch of `vibe cache clean`. Returns how many version
+/// entries were removed. The store **root** itself survives (empty):
+/// it is `$VIBE_SETTINGS`-owned territory that the next fetch simply
+/// refills, and a foreign non-directory file dropped in the root is
+/// not ours to touch (walk-as-index discipline — skipped, not fatal).
+pub fn remove_all() -> Result<usize, RegistryError> {
+    remove_all_at(&store_root()?)
+}
+
+/// The root-taking core of [`remove_entry`].
+pub(crate) fn remove_entry_at(
+    root: &Path,
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+) -> Result<bool, RegistryError> {
+    let entry = entry_dir(root, group, name, version);
+    if !entry.is_dir() {
+        return Ok(false);
+    }
+    fs::remove_dir_all(&entry).map_err(|source| RegistryError::Io {
+        path: entry.clone(),
+        source,
+    })?;
+    // The name directory (and then the group directory) must not
+    // survive as an empty husk naming the deleted package.
+    if let Some(name_dir) = entry.parent() {
+        prune_empty_dir(name_dir);
+        if let Some(group_dir) = name_dir.parent() {
+            prune_empty_dir(group_dir);
+        }
+    }
+    Ok(true)
+}
+
+/// The root-taking core of [`remove_name`].
+pub(crate) fn remove_name_at(
+    root: &Path,
+    group: &Group,
+    name: &str,
+) -> Result<usize, RegistryError> {
+    let name_dir = root.join(group.as_str()).join(name);
+    if !name_dir.is_dir() {
+        return Ok(0);
+    }
+    let removed = list_versions_at(root, group, name).len();
+    fs::remove_dir_all(&name_dir).map_err(|source| RegistryError::Io {
+        path: name_dir.clone(),
+        source,
+    })?;
+    prune_empty_dir(&root.join(group.as_str()));
+    Ok(removed)
+}
+
+/// The root-taking core of [`list_older_than`].
+pub(crate) fn list_older_than_at(
+    root: &Path,
+    cutoff: SystemTime,
+) -> Vec<(Group, String, semver::Version)> {
+    list_all_at(root)
+        .into_iter()
+        .filter(|(group, name, version)| {
+            fs::metadata(entry_dir(root, group, name, version))
+                .and_then(|meta| meta.modified())
+                .is_ok_and(|mtime| mtime < cutoff)
+        })
+        .collect()
+}
+
+/// The root-taking core of [`remove_all`].
+pub(crate) fn remove_all_at(root: &Path) -> Result<usize, RegistryError> {
+    let removed = list_all_at(root).len();
+    if let Ok(children) = fs::read_dir(root) {
+        for child in children.flatten() {
+            if !child.file_type().is_ok_and(|t| t.is_dir()) {
+                continue;
+            }
+            let path = child.path();
+            fs::remove_dir_all(&path).map_err(|source| RegistryError::Io {
+                path: path.clone(),
+                source,
+            })?;
+        }
+    }
+    Ok(removed)
 }
 
 /// The root-taking core of [`insert_from`]: insert into `root` laid
@@ -275,4 +418,144 @@ pub(crate) fn list_all_at(root: &Path) -> Vec<(Group, String, semver::Version)> 
     }
     out.sort_by(|a, b| (a.0.as_str(), a.1.as_str(), &a.2).cmp(&(b.0.as_str(), b.1.as_str(), &b.2)));
     out
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A tiny shippable source tree for `insert_at`: a `vibe.toml`
+    /// carrying the identity the entry is keyed by.
+    fn src_pkg(root: &Path, group: &str, name: &str, version: &str) -> PathBuf {
+        let group_dir = group.replace('.', "-");
+        let dir = root.join(format!("src-{group_dir}-{name}-{version}"));
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(
+            dir.join("vibe.toml"),
+            format!(
+                "[package]\ngroup = \"{group}\"\nname = \"{name}\"\nkind = \"flow\"\nversion = \"{version}\"\n"
+            ),
+        )
+        .unwrap();
+        dir
+    }
+
+    fn v(s: &str) -> semver::Version {
+        semver::Version::parse(s).unwrap()
+    }
+
+    fn g(s: &str) -> Group {
+        Group::parse(s).unwrap()
+    }
+
+    /// Removing the last version of a name prunes the empty
+    /// `<group>/<name>/` and `<group>/` directories — no husk survives
+    /// to name the deleted package.
+    #[test]
+    fn remove_entry_prunes_emptied_parents() {
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path().join("store");
+        let src = src_pkg(tmp.path(), "org.example", "wal", "0.1.0");
+        insert_at(&root, &src, &g("org.example"), "wal", &v("0.1.0")).unwrap();
+        assert!(root.join("org.example/wal/v0.1.0").is_dir());
+
+        assert!(remove_entry_at(&root, &g("org.example"), "wal", &v("0.1.0")).unwrap());
+        assert!(!root.join("org.example/wal/v0.1.0").exists());
+        assert!(
+            !root.join("org.example/wal").exists(),
+            "the name dir must not linger"
+        );
+        assert!(
+            !root.join("org.example").exists(),
+            "the emptied group dir must not linger"
+        );
+    }
+
+    /// Removing one version of a multi-version name leaves its siblings
+    /// — and their parent directories — intact.
+    #[test]
+    fn remove_entry_keeps_sibling_versions() {
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path().join("store");
+        for ver in ["0.1.0", "0.2.0"] {
+            let src = src_pkg(tmp.path(), "org.example", "wal", ver);
+            insert_at(&root, &src, &g("org.example"), "wal", &v(ver)).unwrap();
+        }
+        assert!(remove_entry_at(&root, &g("org.example"), "wal", &v("0.1.0")).unwrap());
+        assert!(!root.join("org.example/wal/v0.1.0").exists());
+        assert!(
+            root.join("org.example/wal/v0.2.0").is_dir(),
+            "the sibling survives"
+        );
+        // Absent identity: nothing removed, not an error.
+        assert!(!remove_entry_at(&root, &g("org.example"), "wal", &v("0.1.0")).unwrap());
+    }
+
+    /// `remove_name_at` takes every version of the name in one call and
+    /// reports how many entries died.
+    #[test]
+    fn remove_name_takes_all_versions_and_counts() {
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path().join("store");
+        for ver in ["0.1.0", "0.2.0"] {
+            let src = src_pkg(tmp.path(), "org.example", "wal", ver);
+            insert_at(&root, &src, &g("org.example"), "wal", &v(ver)).unwrap();
+        }
+        // A second name keeps the group dir alive after wal goes.
+        let src = src_pkg(tmp.path(), "org.example", "other", "1.0.0");
+        insert_at(&root, &src, &g("org.example"), "other", &v("1.0.0")).unwrap();
+
+        assert_eq!(remove_name_at(&root, &g("org.example"), "wal").unwrap(), 2);
+        assert!(!root.join("org.example/wal").exists());
+        assert!(root.join("org.example/other/v1.0.0").is_dir());
+        assert!(
+            root.join("org.example").is_dir(),
+            "the group dir survives its living name"
+        );
+        assert_eq!(
+            remove_name_at(&root, &g("org.example"), "ghost").unwrap(),
+            0
+        );
+    }
+
+    /// The `--older-than` walk partitions by the entry directory's
+    /// mtime against the cutoff: everything is older than a far-future
+    /// cutoff, nothing is older than the epoch.
+    #[test]
+    fn older_than_partitions_by_cutoff() {
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path().join("store");
+        let src = src_pkg(tmp.path(), "org.example", "wal", "0.1.0");
+        insert_at(&root, &src, &g("org.example"), "wal", &v("0.1.0")).unwrap();
+
+        let far_future = SystemTime::now() + std::time::Duration::from_secs(86_400 * 365);
+        assert_eq!(list_older_than_at(&root, far_future).len(), 1);
+        assert_eq!(
+            list_older_than_at(&root, SystemTime::UNIX_EPOCH).len(),
+            0,
+            "nothing predates the epoch"
+        );
+    }
+
+    /// `remove_all_at` empties the store but keeps the root itself, and
+    /// counts the entries that died.
+    #[test]
+    fn remove_all_empties_but_keeps_the_root() {
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path().join("store");
+        for (name, ver) in [("wal", "0.1.0"), ("other", "1.0.0")] {
+            let src = src_pkg(tmp.path(), "org.example", name, ver);
+            insert_at(&root, &src, &g("org.example"), name, &v(ver)).unwrap();
+        }
+        // A foreign file in the root is not ours — it survives --all.
+        fs::write(root.join("foreign.txt"), "operator's own\n").unwrap();
+
+        assert_eq!(remove_all_at(&root).unwrap(), 2);
+        assert!(root.is_dir(), "the store root itself survives");
+        assert!(
+            root.join("foreign.txt").is_file(),
+            "a foreign file in the root is not ours to touch"
+        );
+        assert!(list_all_at(&root).is_empty());
+    }
 }

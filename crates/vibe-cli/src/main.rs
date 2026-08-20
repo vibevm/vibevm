@@ -142,6 +142,7 @@ fn main() -> ExitCode {
         Command::Prefs(args) => commands::prefs::run(&ctx, args),
         Command::Tree(args) => commands::tree::run(&ctx, args),
         Command::Registry(args) => commands::registry::run(&ctx, args),
+        Command::Cache(args) => commands::cache::run(&ctx, args, cli.offline),
         Command::Workspace(args) => commands::workspace::run(&ctx, args),
         Command::Vvm(args) => {
             // The root is the running version's own (current_exe-derived)
@@ -447,6 +448,7 @@ fn needs_global_registry(cmd: &cli::Command) -> bool {
             | Command::Outdated(_)
             | Command::Search(_)
             | Command::Registry(_)
+            | Command::Cache(_)
     )
 }
 

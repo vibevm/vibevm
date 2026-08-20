@@ -40,7 +40,7 @@
 
 - @fact:CACHE-ACCRETIVE The cache is **accretive**: a package version, once cached, is never evicted automatically. @status:impl/done
 - @fact:accretion-why Versions are immutable (PROP-002), so a cached version is permanently valid; accretion is the point. @status:spec/done
-- @fact:EXPLICIT-RECLAIM Reclaiming space is an explicit operator action (§2.8), never a surprise. @status:spec/done
+- @fact:EXPLICIT-RECLAIM Reclaiming space is an explicit operator action (§2.8), never a surprise. @status:impl/done
 
 @fact:explicit-not-incidental This is largely true of `default_cache_root()` already; PROP-010 makes it **explicit, documented, and load-bearing** rather than incidental. @status:spec/done
 
@@ -72,7 +72,7 @@
 - @fact:THE-PRECEDENT-IS-GITMODULES-NOT-GITCONFIG **The precedent, stated accurately because the obvious one points the other way.** Git keeps **one** config file per scope — system, user, repository — and remotes sit in it beside everything else, so «git splits config by topic» is false. What git does do is exactly the distinction above: the thing that must be **shared with everyone** gets its own file (`.gitmodules`, versioned in the tree, listing where submodules come from), secrets get their own (`~/.git-credentials`), and `include` / `includeIf` exist so a config can be split and partly shared on purpose. Cargo agrees on the secret half (`credentials.toml` apart from `config.toml`) and not on the source half. So the split here follows the `.gitmodules` line of reasoning — shareability — and not a general habit of one-file-per-topic. @status:spec/work
 
 - @fact:INIT-SEEDS `vibe init` seeds a new project's `[[registry]]` blocks from the user-level default instead of the hardcoded `vibespecs` defaults. A developer or organisation sets its registries once, machine-wide, and every new project inherits them. Absent any user-level config, `vibe init` falls back to today's hardcoded defaults — backward-compatible. @status:spec/done
-- @fact:PROJECTLESS-SOURCE `vibe cache add` (§2.8) and other registry operations invoked outside any project use the user-level registries as their source. @status:spec/done
+- @fact:PROJECTLESS-SOURCE `vibe cache add` (§2.8) and other registry operations invoked outside any project use the user-level registries as their source. @status:impl/done
 - @fact:MEMBER-INHERITS A new member added to a workspace already inherits the workspace's registries (resolution is unified at the root, PROP-009 §2.7); the user-level default matters at the *project* boundary — the new-project case — and for project-less invocations. @status:spec/done
 
 - @fact:PROJECT-OVERRIDES Project-level `[[registry]]` always overrides the user-level default — the same precedence the `UserConfig` `[env]` layer already follows (the project / live value wins). @status:spec/done
@@ -135,7 +135,7 @@
 - @fact:WHY-NOT-CLONES **Why not clones, and this is the load-bearing half.** A clone is bound to the liveness of its origin **by construction**: refreshing it *is* a call to the origin, and the refresh brings it to whatever the origin says now. A store whose entries heal toward upstream cannot be the thing that survives upstream — and surviving upstream is the entire purpose of [`##A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY`](#resolution). A clone is also keyed by *where the bytes came from*, which contradicts identity-keying ([§2.3](#identity)) rather than merely differing from it. @status:spec/work
 - @fact:CLONES-KEEP-THEIR-OWN-JOB The registry clone cache does not go away and is not in competition: it exists so one registry is not re-cloned for every project on the machine, which is a separate and still-valid purpose. What changes is that it stops being the only local copy of package content, and therefore stops being load-bearing for availability. @status:impl/work
 
-@fact:CACHE-FILLS The cache fills as a side effect of any online `vibe install` / `vibe update` / `vibe registry sync`, and by deliberate pre-warming (`vibe cache add`, §2.8). It is never auto-evicted (§2.1). @status:impl/work
+@fact:CACHE-FILLS The cache fills as a side effect of any online `vibe install` / `vibe update` / `vibe registry sync`, and by deliberate pre-warming (`vibe cache add`, §2.8). It is never auto-evicted (§2.1). @status:impl/done
 
 @fact:THE-STORE-IS-DOT-VIBE-CACHE **Decision (owner, 2026-08-20): the store is `~/.vibe/cache/`**, beside `~/.vibe/registries/` (the registry git clones, which keep their own separate job) and under the one settings home. @status:impl/done
 
@@ -152,16 +152,16 @@
 
 ### 2.8 Cache management surface {#management}
 
-@fact:CACHE-COMMANDS **Decision.** The cache becomes operator-visible through a command family. @status:spec/done
+@fact:CACHE-COMMANDS **Decision.** The cache becomes operator-visible through a command family. @status:impl/work
 
 @fact:namespace-leaning <status stage="spec" state="void">Retired 2026-08-19 when the owner confirmed the leaning it recorded. It stated that the namespace was open between top-level `vibe cache` and `vibe registry cache`, and leaned toward the former. Heir: [`##NAMESPACE-IS-TOP-LEVEL-VIBE-CACHE`](#management). This line stays so its name is never reused and inbound links do not break.</status> @status:spec/void
 
-@fact:NAMESPACE-IS-TOP-LEVEL-VIBE-CACHE **Decision (owner, 2026-08-19): the family is top-level `vibe cache …`.** The reason is the one the leaning already carried and the owner confirmed: the store is machine-global and its headline case is work that has no project yet — and a not-yet-created project has no `[[registry]]` section for a `vibe registry` subcommand to hang on. Putting the store under the registry family would make its most important use the one place the name does not fit. @status:spec/work
+@fact:NAMESPACE-IS-TOP-LEVEL-VIBE-CACHE **Decision (owner, 2026-08-19): the family is top-level `vibe cache …`.** The reason is the one the leaning already carried and the owner confirmed: the store is machine-global and its headline case is work that has no project yet — and a not-yet-created project has no `[[registry]]` section for a `vibe registry` subcommand to hang on. Putting the store under the registry family would make its most important use the one place the name does not fit. @status:impl/done
 
-- @fact:CMD-PATH `vibe cache path` — print the cache root. @status:spec/done
-- @fact:CMD-LIST `vibe cache list` — the packages and versions present locally; the offline-resolvable inventory. @status:spec/done
-- @fact:CMD-ADD `vibe cache add <pkgref>…` — deliberately pre-warm: fetch a package and its dependency closure into the cache while online, so a later `--offline` run finds it. The "I am about to go offline, pull down what I will need" workflow. It fetches from the project's `[[registry]]` when run inside a project, otherwise from the user-level registries (§2.4). @status:spec/done
-- @fact:CMD-CLEAN `vibe cache clean` — reclaim space: all, by age, or by package. @status:spec/done
+- @fact:CMD-PATH `vibe cache path` — print the cache root. @status:impl/done
+- @fact:CMD-LIST `vibe cache list` — the packages and versions present locally; the offline-resolvable inventory. @status:impl/done
+- @fact:CMD-ADD `vibe cache add <pkgref>…` — deliberately pre-warm: fetch a package and its dependency closure into the cache while online, so a later `--offline` run finds it. The "I am about to go offline, pull down what I will need" workflow. It fetches from the project's `[[registry]]` when run inside a project, otherwise from the user-level registries (§2.4). @status:impl/done
+- @fact:CMD-CLEAN `vibe cache clean` — reclaim space: all, by age, or by package. @status:impl/done
 - @fact:CMD-CHECK `vibe cache check` (owner, 2026-08-20) — **the integrity sweep, and the only place the store is fully re-hashed.** It walks every entry, recomputes the content hash, and reports each one that no longer matches what was recorded. It is the answer to «how do you forbid overwriting»: nothing forbids it, and this is what notices. @status:spec/work
 - @fact:CMD-CHECK-REPAIR `vibe cache check --repair` (owner, 2026-08-20) — the same sweep, and then it fixes what it found. @status:spec/work
 
@@ -190,7 +190,7 @@
 ## 3. Command and crate surface {#surface}
 
 - @fact:SURF-OFFLINE-FLAG A global `--offline` flag (and `VIBE_OFFLINE`) on the `vibe` CLI (§2.5). @status:impl/done
-- @fact:SURF-CACHE-CMDS `vibe cache path` / `list` / `add` / `clean` (§2.8). @status:spec/done
+- @fact:SURF-CACHE-CMDS `vibe cache path` / `list` / `add` / `clean` (§2.8). @status:impl/done
 - @fact:SURF-CORE `vibe-core` — the `UserConfig` schema gains a `[[registry]]` / `[[mirror]]` section and a `[net]` key (§2.4, §2.5). @status:spec/done
 - @fact:SURF-REGISTRY `vibe-registry` — the identity-keyed cache and its local index view, `MultiRegistryResolver::with_offline(...)` (§2.3, §2.6, §2.7). Depends on PROP-008's identity types. @status:spec/done
 - @fact:SURF-CLI `vibe-cli` — flag wiring, the resolved offline posture, `vibe init` seeding registries from the user-level default, the `vibe cache` commands, actionable cache-miss errors. @status:spec/done
@@ -236,10 +236,10 @@
 
 @fact:phases-sequencing Sequenced after PROP-008 (M1.19), on which §2.3 depends. @status:spec/done
 
-1. @fact:PHASE-1-IDENTITY-CACHE **The identity-keyed cache** — the cache keyed by PROP-008 package identity; a documented, stable layout (§5.1); the local index view; `vibe cache path` / `vibe cache list`. `vibe-registry` + `vibe-cli`. @status:impl/work
+1. @fact:PHASE-1-IDENTITY-CACHE **The identity-keyed cache** — the cache keyed by PROP-008 package identity; a documented, stable layout (§5.1); the local index view; `vibe cache path` / `vibe cache list`. `vibe-registry` + `vibe-cli`. @status:impl/done
 2. @fact:PHASE-2-USER-REGISTRIES **User-level default registry configuration** — `[[registry]]` / `[[mirror]]` in `UserConfig`; `vibe init` seeds from it; project config overrides. `vibe-core` + `vibe-cli`. @status:impl/plan
 3. @fact:PHASE-3-OFFLINE **`--offline`** — the global flag, `VIBE_OFFLINE`, the resolved posture; `MultiRegistryResolver` offline mode (resolve from the cache, never touch the network); actionable cache-miss errors. @status:impl/work
-4. @fact:PHASE-4-PREWARM **Pre-warm + clean** — `vibe cache add` (deliberate population) and `vibe cache clean`. @status:impl/plan
+4. @fact:PHASE-4-PREWARM **Pre-warm + clean** — `vibe cache add` (deliberate population) and `vibe cache clean`. @status:impl/done
 5. @fact:PHASE-5-SCAFFOLDING **Scaffolding integration** — guarantee a new project (`vibe init` + `vibe install --offline`) and a new workspace member resolve and materialise from the cache, end to end; the §2.2 workflow plus any §5.5 UX hint. @status:impl/plan
 6. @fact:PHASE-6-DOCS **Docs + `VIBEVM-SPEC.md`** — §8.3 / §9 / §9.5 edits under owner sanction; a `docs/` page for the cache and offline mode. @status:impl/plan
 

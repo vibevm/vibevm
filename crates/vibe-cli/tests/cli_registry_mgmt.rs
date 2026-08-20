@@ -3700,6 +3700,11 @@ fn every_subcommand_renders_help() {
         &["registry", "set-mirror"],
         &["registry", "remove"],
         &["registry", "vendor"],
+        &["cache"], // shows the cache subcommand enum (PROP-010 §2.8)
+        &["cache", "path"],
+        &["cache", "list"],
+        &["cache", "add"],
+        &["cache", "clean"],
         &["version"],
     ];
 
