@@ -2270,6 +2270,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prefs/tui/form/apply_error.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_cli::commands::prefs::tui::form::apply_error",
+      "end_line": 8,
+      "fingerprint": "tok1:ba3d225a7cd5ce6507cde284ef22dfc1650e157697436c38180e2f670d2538eb"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/control.rs",
       "item_kind": "mod",
       "line": 17,
@@ -11198,6 +11207,14 @@
       "line": 157,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#form-per-type",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prefs/tui/form/apply_error.rs",
+      "from_symbol": "vibe_cli::commands::prefs::tui::form::apply_error",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle",
       "verb": "implements"
     },
     {

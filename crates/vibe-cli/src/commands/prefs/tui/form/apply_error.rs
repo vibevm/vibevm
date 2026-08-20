@@ -3,6 +3,10 @@
 //! budget). Variants cite the governing REQ anchors; `From<PrefsError>`
 //! carries the library''s scope refusal into the form unchanged.
 
+specmark::scope!(
+    "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle"
+);
+
 use vibe_settings::cli::PrefsError;
 
 // ── ApplyError ───────────────────────────────────────────────────────────────
