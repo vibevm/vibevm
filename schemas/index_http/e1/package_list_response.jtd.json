@@ -1,0 +1,155 @@
+{
+  "metadata": {
+    "description": "Wire format for list-mode `GET /v1/packages` (no `q` query): a paginated package row set assembled from the usable view of the index. Read by raw `curl | jq` consumers (`foreign_parsers = many`). Source of truth for the writer: `crates/vibe-index/src/server/routes/packages.rs` (`ListResponse`, `PackageRow`, `list_or_search`); the generated reader lives in `crates/vibe-wire/src/generated/index_http/e1/package_list_response/`.",
+    "x-vocabularies": ["group", "version", "package_kind"]
+  },
+  "properties": {
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `list` for this response."
+      }
+    },
+    "registry": {
+      "type": "string",
+      "metadata": {
+        "description": "The registry name held by the in-memory index."
+      }
+    },
+    "package_count": {
+      "type": "uint32",
+      "metadata": {
+        "description": "How many package rows matched before pagination. The writer narrows its in-memory length to u32."
+      }
+    },
+    "returned": {
+      "type": "uint32",
+      "metadata": {
+        "description": "How many rows the packages array carries. The writer uses usize; uint32 is JTD's widest exact unsigned integer and the practical page bound."
+      }
+    },
+    "offset": {
+      "type": "uint32",
+      "metadata": {
+        "description": "The pagination offset applied to the matched rows. The writer uses usize; uint32 is the narrowest useful claim JTD can make."
+      }
+    },
+    "limit": {
+      "type": "uint32",
+      "metadata": {
+        "description": "The requested page size, defaulting to 50. The writer uses usize; uint32 is the narrowest useful claim JTD can make."
+      }
+    },
+    "packages": {
+      "elements": {
+        "ref": "package_row"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "The selected page, sorted by `(group, name)`. Required: a matchless or fully offset request writes an empty array, never an absent key."
+      }
+    }
+  },
+  "definitions": {
+    "package_row": {
+      "metadata": {
+        "description": "One package identity with every version this build can act on and any refused versions named beside that usable set."
+      },
+      "properties": {
+        "kind": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The package kind read from a usable version, or null when the usable set is empty. The key is always present. Kept as a nullable string because the codegen layer does not yet transform nullable vocabulary refs into open enums."
+          }
+        },
+        "group": {
+          "ref": "group",
+          "metadata": {
+            "description": "The package's reverse-FQDN group qualifier."
+          }
+        },
+        "name": {
+          "type": "string",
+          "metadata": {
+            "description": "The package's bare name."
+          }
+        },
+        "latest_stable": {
+          "ref": "version",
+          "nullable": true,
+          "metadata": {
+            "description": "The newest non-prerelease version this build can act on, or null when none exists. The key is always present."
+          }
+        },
+        "versions": {
+          "elements": {
+            "ref": "version"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "Every version this build can act on, in ascending order. Required: an all-refused package writes an empty array."
+          }
+        },
+        "description": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The newest usable version's description, or null when it declares none. The key is always present."
+          }
+        }
+      },
+      "optionalProperties": {
+        "unavailable": {
+          "elements": {
+            "ref": "unavailable"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "Versions this build refuses to act on. Absent when there are none because the writer skips an empty vector."
+          }
+        }
+      }
+    },
+    "unavailable": {
+      "metadata": {
+        "description": "One package version this build refuses and the recovery recipe, mirroring `crates/vibe-index/src/index/quarantine.rs::Unavailable`."
+      },
+      "properties": {
+        "group": {
+          "ref": "group",
+          "metadata": {
+            "description": "The refused version's group qualifier."
+          }
+        },
+        "name": {
+          "type": "string",
+          "metadata": {
+            "description": "The refused version's bare package name."
+          }
+        },
+        "version": {
+          "ref": "version",
+          "metadata": {
+            "description": "The refused semantic version."
+          }
+        },
+        "missing": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "Reader capabilities named by the record but unknown to this build, in record order."
+          }
+        },
+        "recipe": {
+          "type": "string",
+          "metadata": {
+            "description": "The generated explanation and fix surface for the refusal."
+          }
+        }
+      }
+    }
+  }
+}

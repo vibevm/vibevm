@@ -1,0 +1,29 @@
+{
+  "metadata": {
+    "description": "Wire format shared by the JSON liveness and readiness responses (`GET /healthz`, `GET /readyz`). Source of truth for the writer: `crates/vibe-index/src/server/routes/health.rs` (`Health`, `healthz`, `readyz`); the generated reader lives in `crates/vibe-wire/src/generated/index_http/e1/health_response/`.",
+    "x-vocabularies": []
+  },
+  "properties": {
+    "status": {
+      "ref": "health_status",
+      "metadata": {
+        "description": "The probe verdict: `ok` from the liveness route or `ready` from the readiness route."
+      }
+    },
+    "registry": {
+      "type": "string",
+      "metadata": {
+        "description": "The registry name held by the in-memory index at probe time."
+      }
+    }
+  },
+  "definitions": {
+    "health_status": {
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The two probe states the server implements. Closed because each value names one concrete handler, not an extensible external register."
+      },
+      "enum": ["ok", "ready"]
+    }
+  }
+}

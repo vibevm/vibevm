@@ -1,0 +1,6 @@
+{
+  "type": "vibe-index/error/not-found",
+  "title": "resource not found",
+  "status": 404,
+  "detail": "`org.vibevm/missing` is not in the index (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; fix: check the (group, name) identity, or publish the package first)"
+}

@@ -1,0 +1,8 @@
+{
+  "command": "upsert",
+  "kind": "flow",
+  "group": "org.vibevm",
+  "name": "wal",
+  "version": "0.2.0",
+  "created": true
+}

@@ -1,0 +1,65 @@
+{
+  "metadata": {
+    "description": "Wire format for `GET /v1/purls/{purl}`: usable versions describing the PURL and refused versions that would also have matched. Read both by `crates/vibe-registry/src/index_client/wire.rs` (`PurlLookupResults`, `PurlLookupHit`, `BindingSite`) and raw `curl | jq` consumers. Source of truth for the writer: `crates/vibe-index/src/server/routes/purls.rs` (`Response`, `Hit`, `lookup`); the generated reader lives in `crates/vibe-wire/src/generated/index_http/e1/purls_response/`.",
+    "x-vocabularies": ["group", "version", "package_kind"]
+  },
+  "properties": {
+    "command": {
+      "type": "string",
+      "metadata": { "description": "Always `purls` for this response." }
+    },
+    "purl": {
+      "type": "string",
+      "metadata": { "description": "The requested package URL as supplied by the caller; consumed by the vibe-registry client view." }
+    },
+    "hit_count": {
+      "type": "uint32",
+      "metadata": { "description": "How many usable hit rows the response carries; consumed by the client view. The writer and view use usize; uint32 is JTD's widest exact unsigned integer." }
+    },
+    "hits": {
+      "elements": { "ref": "purl_hit" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Every usable version describing the PURL, in lookup order. Required even when empty and consumed by the client view."
+      }
+    }
+  },
+  "optionalProperties": {
+    "unavailable": {
+      "elements": { "ref": "unavailable" },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "Refused versions that would have matched the PURL, absent when none exist."
+      }
+    }
+  },
+  "definitions": {
+    "purl_hit": {
+      "metadata": { "description": "One usable package version describing the requested PURL. Every client-view field is present; `group` is a server addition tolerated by that view." },
+      "properties": {
+        "kind": { "ref": "package_kind", "metadata": { "description": "The version's installable kind, consumed by the client view." } },
+        "group": { "ref": "group", "metadata": { "description": "The package's reverse-FQDN group qualifier." } },
+        "name": { "type": "string", "metadata": { "description": "The package's bare name, consumed by the client view." } },
+        "version": { "ref": "version", "metadata": { "description": "The semantic version describing the PURL, consumed by the client view." } },
+        "binding_site": { "ref": "binding_site", "metadata": { "description": "Whether the package or one subskill declared the binding; consumed by the client view." } }
+      }
+    },
+    "binding_site": {
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Where the PURL binding originated: the version's package-level `describes` field or a subskill's `describes` field. Closed because both values name concrete places in the writer model."
+      },
+      "enum": ["package", "subskill"]
+    },
+    "unavailable": {
+      "metadata": { "description": "One package version this build refuses and the recovery recipe, mirroring `crates/vibe-index/src/index/quarantine.rs::Unavailable`." },
+      "properties": {
+        "group": { "ref": "group", "metadata": { "description": "The refused version's group qualifier." } },
+        "name": { "type": "string", "metadata": { "description": "The refused version's bare package name." } },
+        "version": { "ref": "version", "metadata": { "description": "The refused semantic version." } },
+        "missing": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit", "description": "Reader capabilities unknown to this build, in record order." } },
+        "recipe": { "type": "string", "metadata": { "description": "The generated explanation and fix surface for the refusal." } }
+      }
+    }
+  }
+}

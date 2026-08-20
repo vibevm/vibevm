@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "description": "Common JSON problem-details envelope for structured HTTP failures. `ApiError` emits it for 400, 401, 403, 404 and 500; the rate-limit middleware emits the same four required members for 429; quarantine refusals add `unavailable`. Source of truth: `crates/vibe-index/src/server/error.rs` (`ApiError`, private `Body`) and `crates/vibe-index/src/server/mod.rs` (`rate_limited_response`); the generated reader lives in `crates/vibe-wire/src/generated/index_http/e1/error_response/`.",
+    "x-vocabularies": ["group", "version"]
+  },
+  "properties": {
+    "type": {
+      "type": "string",
+      "metadata": {
+        "description": "Stable problem kind such as `vibe-index/error/not-found`, `.../unavailable` or `.../rate-limited`. A string rather than a closed enum: adding a new error kind must remain readable by older raw parsers."
+      }
+    },
+    "title": {
+      "type": "string",
+      "metadata": { "description": "Short human-readable problem title selected by the server error constructor." }
+    },
+    "status": {
+      "type": "uint16",
+      "metadata": { "description": "HTTP status code repeated in the body (400, 401, 403, 404, 429 or 500 today)." }
+    },
+    "detail": {
+      "type": "string",
+      "metadata": { "description": "Request-specific explanation and, where applicable, a fix surface." }
+    }
+  },
+  "optionalProperties": {
+    "unavailable": {
+      "ref": "unavailable",
+      "metadata": { "description": "The full refused-version row on `vibe-index/error/unavailable`; absent on every other problem kind." }
+    }
+  },
+  "definitions": {
+    "unavailable": {
+      "metadata": { "description": "One package version this build refuses and the recovery recipe, mirroring `crates/vibe-index/src/index/quarantine.rs::Unavailable`." },
+      "properties": {
+        "group": { "ref": "group", "metadata": { "description": "The refused version's group qualifier." } },
+        "name": { "type": "string", "metadata": { "description": "The refused version's bare package name." } },
+        "version": { "ref": "version", "metadata": { "description": "The refused semantic version." } },
+        "missing": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit", "description": "Reader capabilities unknown to this build, in record order." } },
+        "recipe": { "type": "string", "metadata": { "description": "The generated explanation and fix surface for the refusal." } }
+      }
+    }
+  }
+}

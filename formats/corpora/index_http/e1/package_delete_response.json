@@ -1,0 +1,7 @@
+{
+  "command": "delete",
+  "group": "org.vibevm",
+  "name": "wal",
+  "version": null,
+  "removed": true
+}

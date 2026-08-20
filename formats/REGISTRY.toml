@@ -161,6 +161,92 @@ foreign_parsers = "many"
 corpus = "formats/corpora/index_cli/e1"
 sunset = "none"
 
+# ── vibe-index structured HTTP responses (10 JTD), B-079 ───────────────────
+# Every envelope the live server assembles under `/v1/**`, plus the JSON probe
+# body shared by `/healthz` and `/readyz`, is rebuildable from process/catalog
+# state and is assumed to be read by raw `curl | jq` consumers. Raw
+# `/v1/index/*` routes and the unwrapped single-version response deliberately
+# reuse their existing registered index formats instead of minting aliases.
+[format.index-http-health-response]
+epoch = 1
+schema = "schemas/index_http/e1/health_response.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index_http/e1"
+sunset = "none"
+
+[format.index-http-package-list-response]
+epoch = 1
+schema = "schemas/index_http/e1/package_list_response.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index_http/e1"
+sunset = "none"
+
+[format.index-http-package-search-response]
+epoch = 1
+schema = "schemas/index_http/e1/package_search_response.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index_http/e1"
+sunset = "none"
+
+[format.index-http-package-versions-response]
+epoch = 1
+schema = "schemas/index_http/e1/package_versions_response.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index_http/e1"
+sunset = "none"
+
+[format.index-http-package-upsert-response]
+epoch = 1
+schema = "schemas/index_http/e1/package_upsert_response.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index_http/e1"
+sunset = "none"
+
+[format.index-http-package-delete-response]
+epoch = 1
+schema = "schemas/index_http/e1/package_delete_response.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index_http/e1"
+sunset = "none"
+
+[format.index-http-capabilities-response]
+epoch = 1
+schema = "schemas/index_http/e1/capabilities_response.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index_http/e1"
+sunset = "none"
+
+[format.index-http-purls-response]
+epoch = 1
+schema = "schemas/index_http/e1/purls_response.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index_http/e1"
+sunset = "none"
+
+[format.index-http-admin-status-response]
+epoch = 1
+schema = "schemas/index_http/e1/admin_status_response.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index_http/e1"
+sunset = "none"
+
+[format.index-http-error-response]
+epoch = 1
+schema = "schemas/index_http/e1/error_response.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/index_http/e1"
+sunset = "none"
+
 # ── Catalog (PROP-044 §6.1 — three fates) ───────────────────────────────────
 # `index-entry` is the portable `VersionEntry` record: it is both a line of
 # `primary.jsonl` and an element of `versions[]` inside `by-name/<name>.json`.

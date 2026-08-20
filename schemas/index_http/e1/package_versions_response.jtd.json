@@ -1,0 +1,62 @@
+{
+  "metadata": {
+    "description": "Wire format for `GET /v1/packages/{group}/{name}`: one package's usable full catalog entries and refused versions. Source of truth for the writer: `crates/vibe-index/src/server/routes/packages.rs` (`PackageVersionsResponse`, `package_versions`); the generated reader lives in `crates/vibe-wire/src/generated/index_http/e1/package_versions_response/`.",
+    "x-vocabularies": ["group", "version", "version_entry", "package_kind"]
+  },
+  "properties": {
+    "command": {
+      "type": "string",
+      "metadata": { "description": "Always `package` for this response." }
+    },
+    "kind": {
+      "type": "string",
+      "nullable": true,
+      "metadata": {
+        "description": "The package kind read from a usable version, or null when the usable set is empty. Always present; kept as a nullable string until codegen supports nullable open-vocabulary refs."
+      }
+    },
+    "group": {
+      "ref": "group",
+      "metadata": { "description": "The package's reverse-FQDN group qualifier." }
+    },
+    "name": {
+      "type": "string",
+      "metadata": { "description": "The package's bare name." }
+    },
+    "latest_stable": {
+      "ref": "version",
+      "nullable": true,
+      "metadata": { "description": "The newest usable non-prerelease version, or null when none exists. Always present." }
+    },
+    "versions": {
+      "elements": { "ref": "version_entry" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Every full catalog entry this build can act on, in ascending version order. The elements reuse the registered `index-entry` shape instead of minting a duplicate."
+      }
+    }
+  },
+  "optionalProperties": {
+    "unavailable": {
+      "elements": { "ref": "unavailable" },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "Versions this build refuses, absent when none exist."
+      }
+    }
+  },
+  "definitions": {
+    "unavailable": {
+      "metadata": {
+        "description": "One package version this build refuses and the recovery recipe, mirroring `crates/vibe-index/src/index/quarantine.rs::Unavailable`."
+      },
+      "properties": {
+        "group": { "ref": "group", "metadata": { "description": "The refused version's group qualifier." } },
+        "name": { "type": "string", "metadata": { "description": "The refused version's bare package name." } },
+        "version": { "ref": "version", "metadata": { "description": "The refused semantic version." } },
+        "missing": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit", "description": "Reader capabilities unknown to this build, in record order." } },
+        "recipe": { "type": "string", "metadata": { "description": "The generated explanation and fix surface for the refusal." } }
+      }
+    }
+  }
+}

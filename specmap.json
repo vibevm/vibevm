@@ -2,6 +2,14 @@
   "code_items": [
     {
       "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/admin_status_response.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "admin_status_response",
+      "end_line": 68
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/index/e1/by_cap.jtd.json",
       "item_kind": "schema",
       "line": 1,
@@ -74,11 +82,51 @@
     },
     {
       "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/capabilities_response.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "capabilities_response",
+      "end_line": 62
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/capabilities_response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 37,
+      "symbol": "capabilities_response::capability_hit",
+      "end_line": 50
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/capabilities_response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 51,
+      "symbol": "capabilities_response::unavailable",
+      "end_line": 60
+    },
+    {
+      "crate_name": "<schema>",
       "file": "schemas/index/e1/entry.jtd.json",
       "item_kind": "schema",
       "line": 1,
       "symbol": "entry",
       "end_line": 7
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/error_response.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "error_response",
+      "end_line": 44
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/error_response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 33,
+      "symbol": "error_response::unavailable",
+      "end_line": 42
     },
     {
       "crate_name": "<schema>",
@@ -95,6 +143,22 @@
       "line": 53,
       "symbol": "get_report::unavailable",
       "end_line": 92
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/health_response.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "health_response",
+      "end_line": 29
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/health_response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 21,
+      "symbol": "health_response::health_status",
+      "end_line": 27
     },
     {
       "crate_name": "<schema>",
@@ -271,6 +335,86 @@
       "line": 98,
       "symbol": "outdated_report::unavailable",
       "end_line": 137
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/package_delete_response.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "package_delete_response",
+      "end_line": 39
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/package_list_response.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "package_list_response",
+      "end_line": 155
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/package_list_response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 54,
+      "symbol": "package_list_response::package_row",
+      "end_line": 113
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/package_list_response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 114,
+      "symbol": "package_list_response::unavailable",
+      "end_line": 153
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/package_search_response.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "package_search_response",
+      "end_line": 114
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/package_search_response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 36,
+      "symbol": "package_search_response::search_hit",
+      "end_line": 100
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/package_search_response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 101,
+      "symbol": "package_search_response::unavailable",
+      "end_line": 112
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/package_upsert_response.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "package_upsert_response",
+      "end_line": 44
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/package_versions_response.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "package_versions_response",
+      "end_line": 62
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/package_versions_response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 49,
+      "symbol": "package_versions_response::unavailable",
+      "end_line": 60
     },
     {
       "crate_name": "progress-core",
@@ -681,6 +825,38 @@
       "line": 85,
       "symbol": "purls_report::unavailable",
       "end_line": 124
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/purls_response.jtd.json",
+      "item_kind": "schema",
+      "line": 1,
+      "symbol": "purls_response",
+      "end_line": 65
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/purls_response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 47,
+      "symbol": "purls_response::binding_site",
+      "end_line": 53
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/purls_response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 37,
+      "symbol": "purls_response::purl_hit",
+      "end_line": 46
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/index_http/e1/purls_response.jtd.json",
+      "item_kind": "schema-def",
+      "line": 54,
+      "symbol": "purls_response::unavailable",
+      "end_line": 63
     },
     {
       "crate_name": "<schema>",

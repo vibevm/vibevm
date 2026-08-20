@@ -1,0 +1,62 @@
+{
+  "metadata": {
+    "description": "Wire format for `GET /v1/capabilities/{capability}`: usable versions advertising the capability and refused versions that would also have matched. Source of truth for the writer: `crates/vibe-index/src/server/routes/capabilities.rs` (`Response`, `Hit`, `lookup`); the generated reader lives in `crates/vibe-wire/src/generated/index_http/e1/capabilities_response/`.",
+    "x-vocabularies": ["group", "version", "package_kind"]
+  },
+  "properties": {
+    "command": {
+      "type": "string",
+      "metadata": { "description": "Always `capabilities` for this response." }
+    },
+    "capability": {
+      "type": "string",
+      "metadata": { "description": "The requested capability as supplied by the caller." }
+    },
+    "hit_count": {
+      "type": "uint32",
+      "metadata": { "description": "How many usable hit rows the response carries. The writer uses usize; uint32 is JTD's widest exact unsigned integer." }
+    },
+    "hits": {
+      "elements": { "ref": "capability_hit" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Every usable version advertising the capability, in lookup order. Required even when empty."
+      }
+    }
+  },
+  "optionalProperties": {
+    "unavailable": {
+      "elements": { "ref": "unavailable" },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "Refused versions that would have matched the capability, absent when none exist."
+      }
+    }
+  },
+  "definitions": {
+    "capability_hit": {
+      "metadata": { "description": "One usable package version advertising the requested capability." },
+      "properties": {
+        "kind": { "ref": "package_kind", "metadata": { "description": "The version's installable kind." } },
+        "group": { "ref": "group", "metadata": { "description": "The package's reverse-FQDN group qualifier." } },
+        "name": { "type": "string", "metadata": { "description": "The package's bare name." } },
+        "version": { "ref": "version", "metadata": { "description": "The semantic version advertising the capability." } },
+        "capability_advertised": {
+          "type": "string",
+          "nullable": true,
+          "metadata": { "description": "The entry's own capability spelling selected by prefix overlap, or null when no concrete spelling was retained. The key is always present." }
+        }
+      }
+    },
+    "unavailable": {
+      "metadata": { "description": "One package version this build refuses and the recovery recipe, mirroring `crates/vibe-index/src/index/quarantine.rs::Unavailable`." },
+      "properties": {
+        "group": { "ref": "group", "metadata": { "description": "The refused version's group qualifier." } },
+        "name": { "type": "string", "metadata": { "description": "The refused version's bare package name." } },
+        "version": { "ref": "version", "metadata": { "description": "The refused semantic version." } },
+        "missing": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit", "description": "Reader capabilities unknown to this build, in record order." } },
+        "recipe": { "type": "string", "metadata": { "description": "The generated explanation and fix surface for the refusal." } }
+      }
+    }
+  }
+}

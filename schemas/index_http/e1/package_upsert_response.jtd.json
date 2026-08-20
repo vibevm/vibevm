@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "description": "Wire format for the success response from `POST /v1/packages`: the coordinate accepted by the journal-first mutation and whether it was newly created. Source of truth for the writer: `crates/vibe-index/src/server/routes/packages.rs` (`UpsertResponse`); the generated reader lives in `crates/vibe-wire/src/generated/index_http/e1/package_upsert_response/`.",
+    "x-vocabularies": ["group", "version", "package_kind"]
+  },
+  "properties": {
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `upsert` for this response."
+      }
+    },
+    "kind": {
+      "ref": "package_kind",
+      "metadata": {
+        "description": "The accepted package version's installable kind."
+      }
+    },
+    "group": {
+      "ref": "group",
+      "metadata": {
+        "description": "The accepted package's reverse-FQDN group qualifier."
+      }
+    },
+    "name": {
+      "type": "string",
+      "metadata": {
+        "description": "The accepted package's bare name."
+      }
+    },
+    "version": {
+      "ref": "version",
+      "metadata": {
+        "description": "The accepted semantic version."
+      }
+    },
+    "created": {
+      "type": "boolean",
+      "metadata": {
+        "description": "True when the coordinate did not stand before this request (HTTP 201); false for an existing coordinate (HTTP 200)."
+      }
+    }
+  }
+}

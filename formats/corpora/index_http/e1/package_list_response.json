@@ -1,0 +1,32 @@
+{
+  "command": "list",
+  "registry": "vibespecs",
+  "package_count": 1,
+  "returned": 1,
+  "offset": 0,
+  "limit": 50,
+  "packages": [
+    {
+      "kind": "flow",
+      "group": "org.vibevm",
+      "name": "wal",
+      "latest_stable": "0.2.0",
+      "versions": [
+        "0.1.0",
+        "0.2.0"
+      ],
+      "description": "Write-ahead log discipline",
+      "unavailable": [
+        {
+          "group": "org.vibevm",
+          "name": "wal",
+          "version": "1.0.0-rc.1",
+          "missing": [
+            "org.vibevm/wal/tombstone@1"
+          ],
+          "recipe": "this build does not understand `org.vibevm/wal/tombstone@1` (reader capabilities — spec://org.vibevm.core/vibevm/common/PROP-044#machinery); fix: update vibe-index to a build that names them, or ask for a version this build can act on"
+        }
+      ]
+    }
+  ]
+}
