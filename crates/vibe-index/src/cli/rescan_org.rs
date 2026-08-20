@@ -37,10 +37,14 @@ pub struct Args {
     #[arg(long, value_name = "FILE")]
     pub token_file: Option<PathBuf>,
 
-    /// GitHub REST API base URL. Defaults to `https://api.github.com`.
-    /// Override for tests or self-hosted GitHub Enterprise instances.
-    #[arg(long, value_name = "URL", default_value = "https://api.github.com")]
-    pub api_base: String,
+    /// GitHub REST API base URL. Defaults to `https://api.github.com`
+    /// — the default is the ladder's last rung, so
+    /// `VIBE_INDEX_API_BASE` and an `api-base` key in
+    /// `<data-dir>/state/config.toml` also feed this member (flag
+    /// beats env beats file beats default). Override for tests or
+    /// self-hosted GitHub Enterprise instances.
+    #[arg(long, value_name = "URL")]
+    pub api_base: Option<String>,
 
     /// Where the scanner clones repos. Defaults to a fresh tempdir
     /// removed at the end of the run. Pass an explicit path to keep a
@@ -54,12 +58,26 @@ pub struct Args {
 }
 
 pub fn run(args: Args) -> Result<()> {
+    // Ladder (PROP-005 §3.5, B-086): the same two scanner-facing
+    // members `reindex` resolves — `git` for the shell-out layer,
+    // `api-base` for the GitHub client.
+    let ladder = crate::config::Ladder::load(&args.data_dir)?;
+    crate::scanner::git_cli::set_binary(
+        crate::config::resolve_git(&ladder, &crate::config::live_env)?.value,
+    );
+    let api_base = crate::config::resolve_api_base(
+        &ladder,
+        args.api_base.as_deref(),
+        &crate::config::live_env,
+    )?
+    .value;
+
     // Р4 — probe_freshness = false: ignore the cache AND its validator,
     // enumerate every page unconditionally. The image is still
     // re-persisted (org_cache_path = Some) so the next run benefits.
     let (scanner, temp_guard) = build_github_scanner(
         args.token_file.as_deref(),
-        &args.api_base,
+        &api_base,
         &args.from_github,
         args.clone_cache.clone(),
         Some(org_cache::path(&args.data_dir)),

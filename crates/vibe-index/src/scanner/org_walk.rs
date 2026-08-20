@@ -59,6 +59,19 @@ pub struct SkipNote {
     pub reason: String,
 }
 
+/// Record a skip in the report AND surface it as a `tracing::warn!` —
+/// the docblock's promise: a skipped repo / tag / manifest is visible
+/// to the operator the moment it is skipped, not only when they go
+/// looking for the report. The report stays the record (it feeds the
+/// reindex summary); the warn is the surface.
+fn note_skip(skipped: &mut Vec<SkipNote>, note: SkipNote) {
+    match &note.tag {
+        Some(tag) => tracing::warn!("skipped {}@{tag}: {}", note.repo, note.reason),
+        None => tracing::warn!("skipped {}: {}", note.repo, note.reason),
+    }
+    skipped.push(note);
+}
+
 pub fn scan_org_dir(org_dir: &Path, opts: &FromClonesOptions) -> Result<ScanReport> {
     scan_org_dir_with_filter(org_dir, opts, None)
 }
@@ -99,21 +112,27 @@ pub fn scan_org_dir_with_filter(
             .map(|n| n.to_string_lossy().into_owned())
             .unwrap_or_default();
         if !git_cli::is_git_dir(&repo) {
-            skipped.push(SkipNote {
-                repo: repo_name,
-                tag: None,
-                reason: "not a git working tree (no .git found)".into(),
-            });
+            note_skip(
+                &mut skipped,
+                SkipNote {
+                    repo: repo_name,
+                    tag: None,
+                    reason: "not a git working tree (no .git found)".into(),
+                },
+            );
             continue;
         }
         let tags = match git_cli::list_tags(&repo) {
             Ok(t) => t,
             Err(e) => {
-                skipped.push(SkipNote {
-                    repo: repo_name,
-                    tag: None,
-                    reason: format!("could not list tags: {e}"),
-                });
+                note_skip(
+                    &mut skipped,
+                    SkipNote {
+                        repo: repo_name,
+                        tag: None,
+                        reason: format!("could not list tags: {e}"),
+                    },
+                );
                 continue;
             }
         };
@@ -132,7 +151,12 @@ pub fn scan_org_dir_with_filter(
             && prev == &snapshot
         {
             // Unchanged — caller copies entries from the previous
-            // index. Skip note is informational rather than a warning.
+            // index. Informational, deliberately NOT a warn (so it
+            // stays a plain push, not `note_skip`): an unchanged repo
+            // is the healthy path of every incremental run, and
+            // warning on it would bury the four defect-kind skips the
+            // docblock promises warnings for. Nothing was lost here —
+            // the entries carry forward from the previous index.
             skipped.push(SkipNote {
                 repo: repo_name,
                 tag: None,
@@ -143,20 +167,26 @@ pub fn scan_org_dir_with_filter(
 
         for tag in tags {
             let Some(version) = parse_v_tag(&tag) else {
-                skipped.push(SkipNote {
-                    repo: repo_name.clone(),
-                    tag: Some(tag.clone()),
-                    reason: "tag is not a `v<semver>` form".into(),
-                });
+                note_skip(
+                    &mut skipped,
+                    SkipNote {
+                        repo: repo_name.clone(),
+                        tag: Some(tag.clone()),
+                        reason: "tag is not a `v<semver>` form".into(),
+                    },
+                );
                 continue;
             };
             match build_entry(&repo, &repo_name, &tag, version, opts) {
                 Ok(entry) => entries.push(entry),
-                Err(e) => skipped.push(SkipNote {
-                    repo: repo_name.clone(),
-                    tag: Some(tag),
-                    reason: e.to_string(),
-                }),
+                Err(e) => note_skip(
+                    &mut skipped,
+                    SkipNote {
+                        repo: repo_name.clone(),
+                        tag: Some(tag),
+                        reason: e.to_string(),
+                    },
+                ),
             }
         }
     }
@@ -279,6 +309,127 @@ fn count_files(dir: &Path) -> Result<usize> {
 mod tests {
     use super::*;
     use crate::types::PackageKind;
+
+    /// A capture sink for `tracing_subscriber::fmt` — the warn lines
+    /// the scanner emits land in a buffer the test reads back, via a
+    /// scoped `with_default` subscriber (no global state, no races
+    /// with the crate's other tests). `make_writer` hands out clones
+    /// sharing one Arc, so the builder gets an owned writer that
+    /// satisfies `for<'writer> MakeWriter<'writer>`.
+    #[derive(Default, Clone)]
+    struct WarnCapture(std::sync::Arc<std::sync::Mutex<Vec<u8>>>);
+
+    impl WarnCapture {
+        fn contents(&self) -> Vec<u8> {
+            self.0.lock().unwrap().clone()
+        }
+    }
+
+    impl std::io::Write for WarnCapture {
+        fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+            self.0.lock().unwrap().extend_from_slice(buf);
+            Ok(buf.len())
+        }
+        fn flush(&mut self) -> std::io::Result<()> {
+            Ok(())
+        }
+    }
+
+    impl<'a> tracing_subscriber::fmt::MakeWriter<'a> for WarnCapture {
+        type Writer = WarnCapture;
+        fn make_writer(&'a self) -> Self::Writer {
+            self.clone()
+        }
+    }
+
+    /// Build a one-commit-one-tag repo under `parent`. `manifest` is
+    /// written when `Some` — `None` builds a repo whose tagged tree
+    /// carries no `vibe.toml` (the manifest-skip shape).
+    fn make_tagged_repo(parent: &Path, name: &str, tag: &str, manifest: Option<&str>) {
+        let repo = parent.join(name);
+        std::fs::create_dir_all(&repo).unwrap();
+        let git = |args: &[&str]| {
+            let s = std::process::Command::new("git")
+                .args(["-C", repo.to_str().unwrap()])
+                .args(args)
+                .status()
+                .unwrap();
+            assert!(s.success(), "git {args:?} failed");
+        };
+        git(&["init", "--quiet", "-b", "main"]);
+        git(&["config", "user.email", "test@test.invalid"]);
+        git(&["config", "user.name", "Test"]);
+        if let Some(body) = manifest {
+            std::fs::write(repo.join("vibe.toml"), body).unwrap();
+        }
+        std::fs::write(repo.join("README.md"), format!("# {tag}\n")).unwrap();
+        git(&["add", "."]);
+        git(&["commit", "--quiet", "-m", tag]);
+        git(&["tag", tag]);
+    }
+
+    /// The docblock's promise, made checkable: every defect-kind skip
+    /// (repo / tag / manifest) surfaces as a `tracing::warn!` naming
+    /// what was skipped and why — not only as a row in the report.
+    #[test]
+    fn skips_surface_as_tracing_warns() {
+        if std::process::Command::new("git")
+            .arg("--version")
+            .output()
+            .is_err()
+        {
+            return;
+        }
+        let parent = tempfile::tempdir().unwrap();
+
+        // Repo skip: a plain subdirectory with no `.git`.
+        std::fs::create_dir_all(parent.path().join("not-a-repo")).unwrap();
+        // Tag skip: a real repo whose only tag is not `v<semver>`.
+        make_tagged_repo(parent.path(), "odd-tags", "release-1", None);
+        // Manifest skip: a real repo tagged `v<semver>` with no
+        // `vibe.toml` at the tag.
+        make_tagged_repo(parent.path(), "no-manifest", "v0.2.0", None);
+
+        let capture = WarnCapture::default();
+        let subscriber = tracing_subscriber::fmt()
+            .with_max_level(tracing::Level::WARN)
+            .with_ansi(false)
+            .with_target(false)
+            .with_writer(capture.clone())
+            .finish();
+        let report = tracing::subscriber::with_default(subscriber, || {
+            scan_org_dir(
+                parent.path(),
+                &FromClonesOptions {
+                    registry: "vibespecs".into(),
+                    registry_url: "https://example.invalid/vibespecs".into(),
+                    naming: NamingConvention::Fqdn,
+                    generator: "test".into(),
+                    indexed_at: Utc::now(),
+                },
+            )
+            .unwrap()
+        });
+
+        let out = String::from_utf8(capture.contents()).unwrap();
+        assert!(
+            out.contains("skipped not-a-repo"),
+            "the repo skip must warn; captured:\n{out}"
+        );
+        assert!(
+            out.contains("skipped odd-tags@release-1"),
+            "the tag skip must warn; captured:\n{out}"
+        );
+        assert!(
+            out.contains("skipped no-manifest@v0.2.0"),
+            "the manifest skip must warn; captured:\n{out}"
+        );
+        // The warn is the surface, the report the record — both carry
+        // the note.
+        assert!(report.skipped.iter().any(|s| s.repo == "not-a-repo"));
+        assert!(report.skipped.iter().any(|s| s.repo == "odd-tags"));
+        assert!(report.skipped.iter().any(|s| s.repo == "no-manifest"));
+    }
 
     #[test]
     fn parse_v_tag_accepts_simple_form() {

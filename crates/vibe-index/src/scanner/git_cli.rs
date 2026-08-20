@@ -7,16 +7,42 @@
 //! a clean directory (no `.git/` left behind), resolve a tag to a
 //! commit SHA. Richer git operations land when the scanner needs
 //! them.
+//!
+//! Which binary to shell out to is a ladder member (PROP-005 §3.5,
+//! `BACKLOG.md` B-086): `VIBE_INDEX_GIT` (env) >
+//! `<data-dir>/state/config.toml`'s `git` key > the built-in `git`.
+//! There is no flag rung — `##CLI-SURFACE` has no `--git`.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
 use std::path::Path;
 use std::process::Command;
+use std::sync::OnceLock;
 
 use crate::error::{Error, Result};
 
+/// The ladder-resolved git binary, when a verb has already resolved
+/// the `git` member. Set once per process, before any scan or publish
+/// runs.
+static RESOLVED_BINARY: OnceLock<String> = OnceLock::new();
+
+/// Hand the shell-out layer a precedence-resolved git binary. Called
+/// by the verbs (`reindex`, `rescan-org`, `serve`) at `run()` entry;
+/// the value already accounts for the env rung, so [`binary`] prefers
+/// it over everything.
+pub fn set_binary(resolved: String) {
+    let _ = RESOLVED_BINARY.set(resolved);
+}
+
+/// The git binary to shell out to. The ladder-resolved value when a
+/// verb set one; otherwise `VIBE_INDEX_GIT` (the env rung) with `git`
+/// as the built-in default — exactly the behaviour callers that never
+/// resolve (the server's publish path) have always had.
 pub fn binary() -> String {
-    std::env::var("VIBE_INDEX_GIT").unwrap_or_else(|_| "git".to_string())
+    RESOLVED_BINARY
+        .get()
+        .cloned()
+        .unwrap_or_else(|| std::env::var("VIBE_INDEX_GIT").unwrap_or_else(|_| "git".to_string()))
 }
 
 /// Return `true` iff `path` looks like a git working tree (has a

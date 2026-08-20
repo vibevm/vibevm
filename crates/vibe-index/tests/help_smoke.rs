@@ -33,6 +33,7 @@ const SUBCOMMANDS: &[&str] = &[
     "dump",
     "serve",
     "stop",
+    "config",
 ];
 
 fn cmd() -> Command {

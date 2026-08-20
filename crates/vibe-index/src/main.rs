@@ -4,70 +4,64 @@ use std::process::ExitCode;
 
 use clap::Parser;
 use vibe_index::cli;
+use vibe_index::config::{self, Ladder};
 
 fn main() -> ExitCode {
     // 1. Parse — `--help` and parse errors answer before any log,
-    //    exactly as before this flag existed.
+    //    exactly as before the ladder existed.
     let cli = cli::Cli::parse();
-    // 2. Fold the flag into the ONE lever.
-    apply_log_level(cli.log_level);
-    // 3. The subscriber reads exactly one place.
-    init_tracing();
-    // 4. Work.
-    match cli::dispatch(cli.command) {
+    // 2. Read the file rung. It lives at
+    //    `<data-dir>/state/config.toml` and the data directory is the
+    //    required positional, so the ladder is loadable only now,
+    //    after the parse — the natural order `config.rs` documents. A
+    //    present-but-broken file refuses here, before any work: every
+    //    verb runs on a config layer it understands, or not at all.
+    let ladder = match cli.command.data_dir() {
+        Some(dir) => match Ladder::load(dir) {
+            Ok(ladder) => ladder,
+            Err(e) => return fail(e),
+        },
+        None => Ladder::absent(),
+    };
+    // 3. Resolve the logging member through the ladder — flag >
+    //    env > file > default — and install the subscriber on the
+    //    result. The flag no longer WRITES `VIBE_LOG`: with a file
+    //    rung in the ladder the process environment can no longer be
+    //    the full explanation of the output (a value may come from
+    //    inside the data directory), so the explanation the ruling
+    //    requires is the visible source — `vibe-index config
+    //    <data-dir>` names the rung behind every effective value
+    //    (Р51's fold is superseded by B-086's ruling; `VIBE_LOG`
+    //    itself keeps working unchanged, as the env rung).
+    let log = match config::resolve_log_filter(&ladder, cli.log_level, &config::live_env) {
+        Ok(log) => log,
+        Err(e) => return fail(e),
+    };
+    init_tracing(&log.value);
+    // 4. Work. The global flag rides along: it is the ladder's top
+    //    rung, and the `config` verb shows it as the value's source.
+    match cli::dispatch(cli.command, cli.log_level) {
         Ok(()) => ExitCode::SUCCESS,
-        Err(e) => {
-            eprintln!("error: {e}");
-            ExitCode::FAILURE
-        }
+        Err(e) => fail(e),
     }
 }
 
-/// Fold `--log-level` into the one lever. The flag WRITES `VIBE_LOG`,
-/// so `init_tracing` still reads exactly one place and the process
-/// environment stays the full truth about what an operator observes
-/// (Р51). Absent flag: nothing is written and `VIBE_LOG` (or the
-/// `warn` default) governs, exactly as before this flag existed.
-#[specmark::spec(
-    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
-    reason = "unsafe-gate: the flag folds into the one lever by writing it, \
-              and the write runs at the very top of main — after the parse, \
-              before the subscriber, before the dispatcher and before any \
-              thread exists (`serve` boots its runtime far later); set_var's \
-              race is with concurrent readers, and none can be observing \
-              yet. The alternative composition — the flag OVERRIDING the \
-              variable in code — was rejected because it leaves an operator \
-              looking at a set VIBE_LOG that no longer explains the output"
-)]
-fn apply_log_level(level: Option<cli::LogLevel>) {
-    let Some(level) = level else { return };
-    // SAFETY: vibe-index is a single-threaded CLI binary at this
-    // point. The write happens at the very top of `main`, before the
-    // dispatcher selects a subcommand and well before any thread is
-    // spawned (`serve` boots its tokio/axum runtime far later). The
-    // Rust 1.85+ `unsafe` marker on `set_var` exists to flag
-    // mid-execution multi-threaded mutation, which we are not doing
-    // here. No other thread can be observing the environment at this
-    // point.
-    #[allow(unsafe_code)]
-    unsafe {
-        std::env::set_var("VIBE_LOG", level.as_filter());
-    }
+fn fail(e: vibe_index::Error) -> ExitCode {
+    eprintln!("error: {e}");
+    ExitCode::FAILURE
 }
 
 /// Install the tracing subscriber unconditionally — a binary's job, not
-/// the library's. One lever, `VIBE_LOG` (default `warn`); there is no
-/// `RUST_LOG` fallback and no second lever — the global `--log-level`
-/// flag is not one either: it folds INTO `VIBE_LOG` (in `main`, before
-/// this runs), so the filter below reads exactly one place and cannot
-/// diverge from what the process environment says. WARN-level
-/// observability (quarantine refusals on load, auto-commit-push
-/// outcomes) must be on for every subcommand, not only the flag-gated
-/// ones.
-fn init_tracing() {
+/// the library's. One filter string, resolved by the config ladder
+/// (flag > env > file > the built-in `warn`); an unparseable
+/// `VIBE_LOG` directive still falls back to `warn`, exactly as before
+/// the ladder existed. WARN-level observability (quarantine refusals
+/// on load, auto-commit-push outcomes, scanner skips) must be on for
+/// every subcommand, not only the flag-gated ones.
+fn init_tracing(filter: &str) {
     use tracing_subscriber::{EnvFilter, fmt};
 
-    let filter = EnvFilter::try_from_env("VIBE_LOG").unwrap_or_else(|_| EnvFilter::new("warn"));
+    let filter = EnvFilter::try_new(filter).unwrap_or_else(|_| EnvFilter::new("warn"));
     let _ = fmt()
         .with_env_filter(filter)
         .with_target(false)

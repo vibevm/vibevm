@@ -22,19 +22,49 @@ pub enum DumpFormat {
     Json,
 }
 
+impl DumpFormat {
+    /// The ladder spelling of this format — the same kebab-case
+    /// vocabulary the flag takes, for the env rung
+    /// (`VIBE_INDEX_DUMP_FORMAT`) and the `dump-format` config key.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            DumpFormat::Jsonl => "jsonl",
+            DumpFormat::Json => "json",
+        }
+    }
+
+    /// Parse a ladder value for this member (env / config file — the
+    /// flag goes through clap). Trimmed, case-insensitive: the same
+    /// tolerance the flag has. `None` for anything outside the set;
+    /// the ladder's callers turn that into a loud refusal.
+    pub fn parse_member(raw: &str) -> Option<DumpFormat> {
+        match raw.trim().to_ascii_lowercase().as_str() {
+            "jsonl" => Some(DumpFormat::Jsonl),
+            "json" => Some(DumpFormat::Json),
+            _ => None,
+        }
+    }
+}
+
 #[derive(Debug, Parser)]
 #[command(about = "Dump the entire index to stdout.")]
 pub struct Args {
     pub data_dir: PathBuf,
 
-    /// Output format. Defaults to JSON Lines.
-    #[arg(long, value_enum, default_value_t = DumpFormat::Jsonl)]
-    pub format: DumpFormat,
+    /// Output format. Defaults to JSON Lines — the default is the
+    /// ladder's last rung, so `VIBE_INDEX_DUMP_FORMAT` and a
+    /// `dump-format` key in `<data-dir>/state/config.toml` also feed
+    /// this member (flag beats env beats file beats default).
+    #[arg(long, value_enum)]
+    pub format: Option<DumpFormat>,
 }
 
 pub fn run(args: Args) -> Result<()> {
+    let ladder = crate::config::Ladder::load(&args.data_dir)?;
+    let (format, _source) =
+        crate::config::resolve_dump_format(&ladder, args.format, &crate::config::live_env)?;
     let index = Index::load_from(&args.data_dir)?;
-    match args.format {
+    match format {
         DumpFormat::Jsonl => dump_jsonl(&index)?,
         DumpFormat::Json => dump_json(&index)?,
     }

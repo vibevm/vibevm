@@ -58,10 +58,14 @@ pub struct Args {
     #[arg(long, value_name = "FILE")]
     pub token_file: Option<PathBuf>,
 
-    /// GitHub REST API base URL. Defaults to `https://api.github.com`.
-    /// Override for tests or self-hosted GitHub Enterprise instances.
-    #[arg(long, value_name = "URL", default_value = "https://api.github.com")]
-    pub api_base: String,
+    /// GitHub REST API base URL. Defaults to `https://api.github.com`
+    /// — the default is the ladder's last rung, so
+    /// `VIBE_INDEX_API_BASE` and an `api-base` key in
+    /// `<data-dir>/state/config.toml` also feed this member (flag
+    /// beats env beats file beats default). Override for tests or
+    /// self-hosted GitHub Enterprise instances.
+    #[arg(long, value_name = "URL")]
+    pub api_base: Option<String>,
 
     /// Where the `--from-github` scanner clones repos. Defaults to a
     /// fresh tempdir that is removed at the end of the run. Pass an
@@ -109,6 +113,22 @@ pub fn run(args: Args) -> Result<()> {
         return emit_gitverse_stub(org, &args);
     }
 
+    // Ladder (PROP-005 §3.5, B-086): the two scanner-facing members
+    // resolve here, once, before any scanner is built — `git` for the
+    // shell-out layer, `api-base` for the GitHub client. Explicit
+    // flags stay the top rung, so a passed `--api-base` behaves
+    // exactly as before the ladder existed.
+    let ladder = crate::config::Ladder::load(&args.data_dir)?;
+    crate::scanner::git_cli::set_binary(
+        crate::config::resolve_git(&ladder, &crate::config::live_env)?.value,
+    );
+    let api_base = crate::config::resolve_api_base(
+        &ladder,
+        args.api_base.as_deref(),
+        &crate::config::live_env,
+    )?
+    .value;
+
     // Р1 — `--cache-org` is the default; `--no-cache-org` opts out.
     // The two are mutually exclusive (ArgGroup `cache_mode`); the
     // positive form is the named, help-documented affirmation, the
@@ -134,7 +154,7 @@ pub fn run(args: Args) -> Result<()> {
         };
         let (scanner, guard) = build_github_scanner(
             args.token_file.as_deref(),
-            &args.api_base,
+            &api_base,
             &org,
             args.clone_cache.clone(),
             cache_path,

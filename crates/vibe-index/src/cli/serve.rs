@@ -60,6 +60,14 @@ pub struct Args {
 }
 
 pub fn run(args: Args) -> Result<()> {
+    // Ladder (PROP-005 §3.5, B-086): resolve the `git` member once
+    // here so the auto-commit-push path below shells out through the
+    // same env > file > default chain the scanner verbs use.
+    let ladder = crate::config::Ladder::load(&args.data_dir)?;
+    crate::scanner::git_cli::set_binary(
+        crate::config::resolve_git(&ladder, &crate::config::live_env)?.value,
+    );
+
     // `--auto-commit-push` boots the self-publishing path; its preflight
     // (a git working copy, `state/` gitignored) must pass before we
     // serve a single mutation. Observability is unconditional — the

@@ -13,6 +13,7 @@ use crate::lock::ServerLock;
 pub mod add;
 pub mod bury;
 pub mod capabilities;
+pub mod config;
 pub mod dump;
 pub mod get;
 pub mod init;
@@ -100,6 +101,23 @@ impl LogLevel {
             LogLevel::Trace => "trace",
         }
     }
+
+    /// Parse a ladder value for this member — the env rung
+    /// (`VIBE_INDEX_LOG`) and the config-file key take the flag's
+    /// closed vocabulary. Trimmed, case-insensitive: the same
+    /// tolerance the flag has. Returns `None` for anything outside
+    /// the set; the ladder's callers turn that into a loud refusal.
+    pub fn parse_member(raw: &str) -> Option<LogLevel> {
+        match raw.trim().to_ascii_lowercase().as_str() {
+            "off" => Some(LogLevel::Off),
+            "error" => Some(LogLevel::Error),
+            "warn" => Some(LogLevel::Warn),
+            "info" => Some(LogLevel::Info),
+            "debug" => Some(LogLevel::Debug),
+            "trace" => Some(LogLevel::Trace),
+            _ => None,
+        }
+    }
 }
 
 #[derive(Debug, Parser)]
@@ -110,10 +128,11 @@ impl LogLevel {
     long_about = LONG_ABOUT,
 )]
 pub struct Cli {
-    /// Logging level for this run. Folds into the one lever `VIBE_LOG`,
-    /// which the subscriber reads exactly once at start-up; passing the
-    /// flag SETS that variable, so the process environment always
-    /// explains the output an operator sees.
+    /// Logging level for this run — the top rung of the config ladder
+    /// (`--log-level` > `VIBE_INDEX_LOG` / `VIBE_LOG` >
+    /// `<data-dir>/state/config.toml` > the built-in `warn`). Passing
+    /// the flag beats every other source; `vibe-index config
+    /// <data-dir>` names the source behind every effective value.
     #[arg(long, global = true, value_enum)]
     pub log_level: Option<LogLevel>,
 
@@ -176,13 +195,49 @@ pub enum Command {
 
     /// Gracefully stop a running server (PID-based).
     Stop(stop::Args),
+
+    /// Print effective configuration values with the source of each
+    /// (the config ladder's visible-source verb).
+    Config(config::Args),
+}
+
+impl Command {
+    /// The data directory this invocation addresses — the required
+    /// positional every verb carries (`##CLI-SURFACE`). The config
+    /// ladder's file rung lives inside it (`<data-dir>/state/config.toml`),
+    /// which is why `main` asks for this between parsing and resolving
+    /// anything.
+    pub fn data_dir(&self) -> Option<&std::path::Path> {
+        match self {
+            Command::Init(a) => Some(&a.data_dir),
+            Command::Reindex(a) => Some(&a.data_dir),
+            Command::RescanOrg(a) => Some(&a.data_dir),
+            Command::Get(a) => Some(&a.data_dir),
+            Command::List(a) => Some(&a.data_dir),
+            Command::Search(a) => Some(&a.data_dir),
+            Command::Capabilities(a) => Some(&a.data_dir),
+            Command::Purls(a) => Some(&a.data_dir),
+            Command::Outdated(a) => Some(&a.data_dir),
+            Command::Add(a) => Some(&a.data_dir),
+            Command::Remove(a) => Some(&a.data_dir),
+            Command::Yank(a) => Some(&a.data_dir),
+            Command::Bury(a) => Some(&a.data_dir),
+            Command::Verify(a) => Some(&a.data_dir),
+            Command::Dump(a) => Some(&a.data_dir),
+            Command::Serve(a) => Some(&a.data_dir),
+            Command::Stop(a) => Some(&a.data_dir),
+            Command::Config(a) => Some(&a.data_dir),
+        }
+    }
 }
 
 /// Dispatcher exposed for in-process integration tests that build a
 /// `Command` value directly. Production callers arrive from `main`:
-/// it parses `Cli`, folds `--log-level` into `VIBE_LOG`, installs the
-/// tracing subscriber, then hands `cli.command` here.
-pub fn dispatch(command: Command) -> Result<()> {
+/// it parses `Cli`, loads the config ladder, resolves the logging
+/// member, installs the tracing subscriber, then hands `cli.command`
+/// plus the global `--log-level` flag here — the flag is the ladder's
+/// top rung, and the `config` verb shows it as the value's source.
+pub fn dispatch(command: Command, log_level: Option<LogLevel>) -> Result<()> {
     match command {
         Command::Init(args) => init::run(args),
         Command::Reindex(args) => reindex::run(args),
@@ -201,6 +256,7 @@ pub fn dispatch(command: Command) -> Result<()> {
         Command::Dump(args) => dump::run(args),
         Command::Serve(args) => serve::run(args),
         Command::Stop(args) => stop::run(args),
+        Command::Config(args) => config::run(args, log_level),
     }
 }
 

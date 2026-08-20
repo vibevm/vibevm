@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-20T09:20:06Z",
+  "updated_at": "2026-08-20T09:32:48Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -103418,7 +103418,7 @@
       }
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {
-      "content_hash": "bc6ea090c51571111a872608003f26095e67a3ebfcd516f5e996732f1d0bf182",
+      "content_hash": "2daaa099b24082fc6010eeb97b3f2e887ed71349ff7c7e80938ef753b1c47e1e",
       "rollup": {
         "explicit": [
           "impl",
@@ -103444,7 +103444,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 278,
         "marker_count": 279,
-        "processed_hash": "bc6ea090c51571111a872608003f26095e67a3ebfcd516f5e996732f1d0bf182",
+        "processed_hash": "2daaa099b24082fc6010eeb97b3f2e887ed71349ff7c7e80938ef753b1c47e1e",
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -104737,7 +104737,7 @@
           "CONFIG-PRECEDENCE": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "машина config.rs: Ladder::resolve → Resolved{value, source}, порядок флаг→env(узкое имя первым)→строгий файл→умолчание; глагол vibe-index config <dir> [--json] печатает [source: …] на члене (образец вывода в отчёте R3-LADDER, живой прогон); строгий файл: неизвестный ключ — громкий отказ с exit 1 (тест на трёх глаголах); 4 члена подключены, ~17 — названное механическое продолжение с двумя владельческими развилками → статус honestly impl/work; красное: файл dump-format=json до правки игнорировался (1 строка JSONL), после — 30 строк pretty JSON с названным источником; приоритеты попарно юнитами + интеграцией (21 юнит лестницы, config_cmd.rs 9 тестов)"
             ]
           },
           "slices-lead": {
@@ -106208,8 +106208,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-20T09:20:06Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8 + W9 + W10 + B091-COORD-REPAIR-2026-08-19 + BURIED-RETIREMENT-FACT-2026-08-19 + YANK-VERB-AND-REFUSAL-RULES-2026-08-19 + BURY-VERB-AND-THE-PARTITION-2026-08-19 + OWNER-RULINGS-STORE-AND-RESCAN-2026-08-20 + C3-TRUTH + R3-INDEXURL"
+        "verified_at": "2026-08-20T09:32:48Z",
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8 + W9 + W10 + B091-COORD-REPAIR-2026-08-19 + BURIED-RETIREMENT-FACT-2026-08-19 + YANK-VERB-AND-REFUSAL-RULES-2026-08-19 + BURY-VERB-AND-THE-PARTITION-2026-08-19 + OWNER-RULINGS-STORE-AND-RESCAN-2026-08-20 + C3-TRUTH + R3-INDEXURL + R3-LADDER"
       }
     },
     "spec/modules/vibe-mcp/PROP-015-mcp-integration.md": {
