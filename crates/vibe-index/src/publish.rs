@@ -282,4 +282,57 @@ mod tests {
         let outcome = commit_and_push(dir.path(), "index: noop").unwrap();
         assert_eq!(outcome, PublishOutcome::NothingToCommit);
     }
+
+    /// B-072 — the fix's whole point, at the publish seam: an
+    /// identical re-upsert writes ZERO bytes (`write_to` compares the
+    /// projection against the disk before writing), so the publisher
+    /// finds a clean worktree and reports `NothingToCommit` (Р6).
+    /// Before the fix the fresh `generated_at` alone dirtied
+    /// `repomd.json`, and publishing a no-op mutation became a
+    /// timestamp-only commit.
+    #[test]
+    fn identical_reupsert_is_nothing_to_commit() {
+        if !git_available() {
+            return;
+        }
+        use crate::index::memory::{Index, WriteCtx};
+        use crate::types::{NamingConvention, PackageKind, VersionEntry};
+
+        let dir = tempdir().unwrap();
+        init_repo(dir.path());
+        std::fs::write(dir.path().join(".gitignore"), "/state/\n").unwrap();
+
+        // A one-entry catalog through the real writer path, committed.
+        let at = chrono::Utc::now();
+        let mut idx = Index::new(
+            "vibespecs",
+            "https://example.invalid",
+            NamingConvention::Fqdn,
+            at,
+        );
+        let make_entry = |at| {
+            VersionEntry::minimal(
+                PackageKind::Flow,
+                "org.vibevm".parse().unwrap(),
+                "wal",
+                "0.1.0".parse().unwrap(),
+                at,
+            )
+        };
+        assert!(idx.upsert(make_entry(at)), "the first insert changes state");
+        idx.write_to(dir.path(), &WriteCtx { at }).unwrap();
+        commit_all(dir.path(), "initial catalog");
+
+        // The identical repeat, an hour later by the wall clock: the
+        // upsert no-ops, the write compares and writes nothing.
+        let later = at + chrono::Duration::hours(1);
+        assert!(
+            !idx.upsert(make_entry(at)),
+            "the identical repeat changes no state"
+        );
+        idx.write_to(dir.path(), &WriteCtx { at: later }).unwrap();
+
+        let outcome = commit_and_push(dir.path(), "index: noop").unwrap();
+        assert_eq!(outcome, PublishOutcome::NothingToCommit);
+    }
 }

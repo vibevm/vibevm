@@ -25,6 +25,8 @@ use crate::types::{
 use vibe_wire::generated::format_id::FormatId;
 use vibe_wire::generated::hello::e1::hello::{Handshake, World};
 
+mod projection_compare;
+
 /// In-RAM index key — the `(group, name)` package identity (PROP-008
 /// §2.2). `kind` is metadata and no longer keys anything.
 pub type PkgKey = (Group, String);
@@ -202,16 +204,66 @@ impl Index {
         self.by_pkgref.values().flat_map(|p| p.versions.iter())
     }
 
-    /// Persist the index to `data_dir` atomically. Writes
-    /// `primary.jsonl` and every `by-name/<name>.json` candidate set,
-    /// then stamps `repomd.json` so partial views are always consistent
-    /// against an older manifest until the new one lands, and finally
-    /// the eternal handshake `hello.json` — above every world, so it
-    /// follows even the manifest (Р39). Every timestamped field — the
-    /// manifest's `generated_at` and the by-name `NameEntry` labels —
-    /// comes from `ctx.at`: same index, same `WriteCtx` ⇒
-    /// byte-identical output (F2-1).
+    /// Persist the index to `data_dir` atomically — **idempotent by
+    /// content** (B-072): if the projection of this exact state,
+    /// stamped the way the on-disk manifest is already stamped, is
+    /// byte-identical to what `data_dir` holds, NOTHING is written —
+    /// an identical mutation must change zero bytes on disk (and the
+    /// auto-publisher above then finds a clean `git status`, its
+    /// `NothingToCommit`). Only a projection that actually differs
+    /// earns the fresh `ctx.at` stamp. The write itself is unchanged:
+    /// `primary.jsonl` and every `by-name/<name>.json` candidate set
+    /// first, then `repomd.json` last among the files it vouches for
+    /// (`REPOMD-LAST-LAW`), and finally the eternal handshake
+    /// `hello.json` — above every world, so it follows even the
+    /// manifest (Р39). Every timestamped field — the manifest's
+    /// `generated_at` and the by-name `NameEntry` labels — comes from
+    /// `ctx.at`: same index, same `WriteCtx` ⇒ byte-identical output
+    /// (F2-1); same index, DIFFERENT `WriteCtx` ⇒ byte-identical too,
+    /// because an unchanged projection never reaches the stamp (B-072).
     pub fn write_to(&self, data_dir: &Path, ctx: &WriteCtx) -> Result<()> {
+        if self.already_projected(data_dir)? {
+            return Ok(());
+        }
+        self.project(data_dir, ctx)
+    }
+
+    /// B-072 — is the catalog on `data_dir` already EXACTLY the
+    /// projection of this state? Project into a scratch directory with
+    /// the stamp the on-disk manifest carries (no manifest — first
+    /// write, or a corrupt one — means no: the real write repairs it)
+    /// and byte-compare the projected file set against the disk. This
+    /// is the whole idempotence mechanism, and it deliberately lives
+    /// at the file-set level rather than inside the per-format
+    /// writers: reusing the projector itself means the comparison can
+    /// never drift from what a write would produce.
+    fn already_projected(&self, data_dir: &Path) -> Result<bool> {
+        let Ok(prev) = repomd::read(data_dir) else {
+            return Ok(false);
+        };
+        let scratch = tempfile::tempdir().map_err(|e| Error::Io {
+            path: std::env::temp_dir(),
+            message: e.to_string(),
+        })?;
+        let verdict = (|| -> Result<bool> {
+            self.project(
+                scratch.path(),
+                &WriteCtx {
+                    at: prev.generated_at,
+                },
+            )?;
+            projection_compare::projection_matches(scratch.path(), data_dir)
+        })();
+        let _ = std::fs::remove_dir_all(scratch.path());
+        verdict
+    }
+
+    /// The projection proper — the writer `write_to` always ran, now
+    /// named separately so the idempotence gate can run it against a
+    /// scratch directory with the previous stamp. Order and content
+    /// are untouched: manifest last of the files it vouches for
+    /// (`REPOMD-LAST-LAW`), handshake after it (Р39).
+    fn project(&self, data_dir: &Path, ctx: &WriteCtx) -> Result<()> {
         std::fs::create_dir_all(data_dir).map_err(|e| Error::Io {
             path: data_dir.to_path_buf(),
             message: e.to_string(),
