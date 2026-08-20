@@ -20,6 +20,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#edit-form");
 
+pub mod apply_error;
 pub mod control;
 pub mod lifecycle;
 pub mod provenance;

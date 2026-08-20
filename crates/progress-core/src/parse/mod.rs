@@ -18,6 +18,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#parsing");
 
+mod anchor_token;
 mod anchors;
 mod blocks;
 mod delimiters;

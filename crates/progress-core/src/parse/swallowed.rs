@@ -16,7 +16,7 @@
 //! parser. `Block::scan_text` has already blanked inline-code contents, and
 //! fenced blocks never reach this phase.
 //!
-//! [`facts::parse_anchor`]: crate::parse::facts::parse_anchor
+//! [`facts::parse_anchor`]: crate::parse::anchor_token::parse_anchor
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#parsing");
 
