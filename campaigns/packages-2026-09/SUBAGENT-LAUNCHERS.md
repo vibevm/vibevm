@@ -70,6 +70,17 @@ keys conversations by (config dir, cwd). One worker = one cwd (its
 worktree) = one continuable thread per launcher. `-c` in a cwd with no
 prior thread errors — expected, same as plain `claude`.
 
+@fact:launchers-parallelism-2026-08-20 **Параллельность и приоритет —
+рулинг владельца (2026-08-20, чат, near-verbatim):** «можешь делегировать
+задачи на разработку в запускалки claudez2 (в первую очередь) и claudez
+(во вторую очередь), уровень параллельности — вплоть до 5 на каждую
+запускалку». То есть: приоритет `claudez2` → `claudez`; до **5**
+одновременных воркеров на запускалку (каждый в своём worktree-cwd — правило
+(config dir, cwd) выше это уже допускает: пять cwd под одним config dir —
+пять независимых продолжаемых тредов). Правило «конфликтоопасные
+многоместные правки — одним потоком» из директивы 2026-08-03 остаётся в
+силе и приоритетнее ширины. @status:impl/done
+
 ## 3. Phase E — the worker lifecycle {#phase-e}
 
 @fact:e-task-cut **1 · Cut the task (boss).** One E-task = one build/fix with an
