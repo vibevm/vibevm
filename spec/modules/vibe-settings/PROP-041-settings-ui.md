@@ -111,7 +111,7 @@ refused with the reason (PROP-040 §7). @status:spec/done
 @fact:provenance-view REQ {#provenance-view} (PROP-040 §5, §8). A field shows its **provenance** on demand: the resolved
 value plus each layer's contribution (`default / L1 / L2 / L3 / CLI / env`), the winning `origin`
 (file:line where known), and which layers are shadowed. This is the visual form of `vibe prefs
---show-origins` (PROP-040 §8) — the first-class answer to "which layer is winning?". @status:spec/done
+show-origins` (PROP-040 §8) — the first-class answer to "which layer is winning?". @status:spec/done
 
 @fact:provenance-edit REQ {#provenance-edit}. From the provenance view the user can **override at a specific layer** (set L3
 without touching L2, or clear L3 to fall back to L2) — direct, layer-aware editing, not a single

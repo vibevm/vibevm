@@ -202,16 +202,16 @@ layer that its scope forbids is a typed error (the VSCode scope-target validatio
 
 ---
 
-## 8. The layer-order law, made visible — `--show-origins` {#show-origins}
+## 8. The layer-order law, made visible — `show-origins` {#show-origins}
 
-@fact:show-origins-req REQ {#show-origins} (Δ-03, imperative 2). `vibe prefs --show-origins` prints, for every key, the
+@fact:show-origins-req REQ {#show-origins} (Δ-03, imperative 2). `vibe prefs show-origins [key]` prints, for every key (or the one named), the
 **resolved value and its origin** — which layer set it, with `file:line` where known (the git
 `--show-origin` + VSCode `inspect()` combined). This is the first-class answer to "which layer is
 winning?" (§4.1.1) and the debugging surface for the AIUI. @status:spec/done
 
 @fact:prefs-command REQ {#prefs-command}. The `vibe prefs` command surface: `vibe prefs get <key>`, `vibe prefs set <key>
 <value> [--layer L1|L2|L3]`, `vibe prefs list`, `vibe prefs check` (validate all layers), `vibe prefs
-migrate`, `vibe prefs --show-origins`. (Distinct from `vibe show config`, which remains the
+migrate`, `vibe prefs show-origins [key]`. (Distinct from `vibe show config`, which remains the
 project-config view.) @status:spec/done
 
 ---

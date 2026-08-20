@@ -909,7 +909,7 @@ structure, and it goes when the file does.
 | @fact:B098-ANCHOR **anchor** | [`spec://org.vibevm.core/vibevm/modules/PROP-041#cli`](spec/modules/vibe-cli/PROP-041-prefs-tui.md) — форма `--show-origins` |
 | @fact:B098-LOCATOR **locator** | `vibe prefs --show-origins` → exit 2 (`unexpected argument`); фактическая поверхность — `vibe prefs show-origins [key]`, работает корректно |
 | @fact:B098-SEVERITY **severity** | P3 |
-| @fact:B098-DISPOSITION **disposition** | `open` — дрейф спека-vs-код; решить, какая форма истинна (сабкоманда выглядит правильной — тогда правится спека) |
+| @fact:B098-DISPOSITION **disposition** | `closed` — **закрыта 2026-08-20 (BACKLOG-волна P2, босс)**: истинной признана сабкоманда (живёт, работает, гибче — принимает опциональный ключ); четыре цитаты флаг-формы в PROP-040 (§8 заголовок, `##show-origins-req`, `##prefs-command`) и PROP-041 (`##provenance-view`) переписаны на `vibe prefs show-origins [key]`, якоря не тронуты; суд confirmed×3, оба файла запечатаны; строка ALPHA-NOTES снимается этой же посадкой |
 | @fact:B098-FILED **filed by** | марафон 1.0.0, пре-прогон ручных тестов, 2026-08-20 |
 
 ### B-099 — help `vibe prefs set` несёт устаревший phase-lore {#b-099}

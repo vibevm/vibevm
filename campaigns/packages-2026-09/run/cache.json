@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-20T14:38:36Z",
+  "updated_at": "2026-08-20T14:52:11Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -183369,7 +183369,7 @@
       }
     },
     "spec/modules/vibe-settings/PROP-040-settings.md": {
-      "content_hash": "7858318e90c4e16cbb3cd7106a589959c131b764cb92c2c5c28408d4bb790c1e",
+      "content_hash": "29dc33e15db88817d95571b46fb71435001d34460ce25b885566430dfb40562a",
       "rollup": {
         "explicit": [
           "impl",
@@ -183395,7 +183395,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (9 cells); document <status> judged as _elements",
         "fact_count": 73,
         "marker_count": 74,
-        "processed_hash": "7858318e90c4e16cbb3cd7106a589959c131b764cb92c2c5c28408d4bb790c1e",
+        "processed_hash": "29dc33e15db88817d95571b46fb71435001d34460ce25b885566430dfb40562a",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -183665,13 +183665,13 @@
           "show-origins-req": {
             "v": "confirmed",
             "ev": [
-              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+              "vibe prefs show-origins (subcommand, optional key) is the shipped surface: cli/prefs.rs PrefsSubcommand::ShowOrigins; live transcript in MT-PRERUN-2026-08-20.md shows resolved value + per-layer contributions + winning origin; the flag form the fact previously named exits 2 (unexpected argument) — the fact text now names the form that exists"
             ]
           },
           "prefs-command": {
             "v": "confirmed",
             "ev": [
-              "the settings system ships behind the DRAFT header (F-010): crates/vibe-settings exists, the three-level app-prefs store serves vibe prefs get/set/list/check/migrate/show-origins (CLI cites §8), and the L1 last-project setting PROP-036 §2.13 consumes is live; content laws verified against the shipped surface — the header is the drift, per the F-013/F-005 convention"
+              "the enumerated surface get/set/list/check/migrate/show-origins matches vibe prefs --help verbatim (MT-03 pre-run transcript); the one edit replaces the dead flag spelling with the live subcommand spelling"
             ]
           },
           "gitignore-autogen": {
@@ -183789,12 +183789,12 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T14:55:40Z",
-        "verify_batch": "c4f2-mcp-settings + d2a"
+        "verified_at": "2026-08-20T14:52:11Z",
+        "verify_batch": "c4f2-mcp-settings + d2a + P2-B098"
       }
     },
     "spec/modules/vibe-settings/PROP-041-settings-ui.md": {
-      "content_hash": "dd3c69c5baeed751d77e854903dae5189f4d4d667063cec152bf967e4b79509d",
+      "content_hash": "91a2f8629c166231a2ed571f51df3566bc5efa04bcb0782a5d23707b2a58ebc4",
       "rollup": {
         "explicit": [
           "impl",
@@ -183820,7 +183820,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 43,
         "marker_count": 44,
-        "processed_hash": "dd3c69c5baeed751d77e854903dae5189f4d4d667063cec152bf967e4b79509d",
+        "processed_hash": "91a2f8629c166231a2ed571f51df3566bc5efa04bcb0782a5d23707b2a58ebc4",
         "verdicts": {
           "status-line": {
             "v": "confirmed",
@@ -183994,7 +183994,7 @@
           "provenance-view": {
             "v": "confirmed",
             "ev": [
-              "the prefs TUI ships behind the DRAFT header (F-019): commands/prefs/tui/** with forms (the F-019 row names them), PROP-037 §5.2 binds F4 to it, and the owner-minted per-REQ anchors B2 recorded are the addressable surface; content confirmed against the shipped UI"
+              "the provenance view ships in prefs ui (MT-03 step 4, owner-eyes pending) and its CLI twin is the show-origins subcommand; only the cross-reference spelling changed to the form the binary accepts"
             ]
           },
           "provenance-edit": {
@@ -184088,8 +184088,8 @@
             ]
           }
         },
-        "verified_at": "2026-07-25T14:55:40Z",
-        "verify_batch": "c4f2-mcp-settings + d2a"
+        "verified_at": "2026-08-20T14:52:11Z",
+        "verify_batch": "c4f2-mcp-settings + d2a + P2-B098"
       }
     },
     "spec/modules/vibe-workspace/PROP-007-workspace.md": {
