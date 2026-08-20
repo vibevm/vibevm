@@ -9607,81 +9607,81 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 497,
+      "line": 498,
       "symbol": "vibe_workspace::install::tests_hooks::already_placed_in_place_slot_runs_hook_without_moving",
-      "end_line": 556,
+      "end_line": 557,
       "fingerprint": "tok1:039f6fbd78de8a01cffdc7a4392c33f787cfddf9fd3da985664bfc970868ad19"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 249,
+      "line": 250,
       "symbol": "vibe_workspace::install::tests_hooks::apply_resolution_places_an_in_place_package_in_an_unversioned_slot",
-      "end_line": 321,
+      "end_line": 322,
       "fingerprint": "tok1:eeb09497160592599ae5838a0619aca71705a748de83e3ad64dc2ff8340ac7f8"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 187,
+      "line": 188,
       "symbol": "vibe_workspace::install::tests_hooks::post_install_runs_for_materialised_slots_and_flags_failure",
-      "end_line": 245,
+      "end_line": 246,
       "fingerprint": "tok1:e6c927a6b11a0b991b8ed76f34186afbf1afa4e7ffda6aeec49ce08cd0de3ec6"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 424,
+      "line": 425,
       "symbol": "vibe_workspace::install::tests_hooks::pre_install_failure_rolls_back_an_in_place_slot",
-      "end_line": 449,
+      "end_line": 450,
       "fingerprint": "tok1:cd47de49424875f51d1ed2cd788a56943bb5acc3062a7ea6d898826a20420192"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 101,
+      "line": 102,
       "symbol": "vibe_workspace::install::tests_hooks::pre_install_failure_rolls_back_the_slot",
-      "end_line": 125,
+      "end_line": 126,
       "fingerprint": "tok1:be1b608aa0480699b0fb26bbebb26d5b9ea38a2f53c08a4b4a5989d17a8185bc"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 77,
+      "line": 78,
       "symbol": "vibe_workspace::install::tests_hooks::pre_install_hook_runs_for_an_allowed_group",
-      "end_line": 99,
+      "end_line": 100,
       "fingerprint": "tok1:f04f8fdba3c801437baaa6bbf67bac3c8f84098a70c8845ab19445d940462449"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 395,
+      "line": 396,
       "symbol": "vibe_workspace::install::tests_hooks::pre_install_hook_runs_in_an_in_place_slot",
-      "end_line": 422,
+      "end_line": 423,
       "fingerprint": "tok1:97da403aea34659eacaacf79ce6ce640ff0a79e2f11ba486281121bfaf4f4f20"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 323,
+      "line": 324,
       "symbol": "vibe_workspace::install::tests_hooks::prune_leaves_an_in_place_slot_untouched",
-      "end_line": 360,
+      "end_line": 361,
       "fingerprint": "tok1:84537d7fa41eaac426605de6fa9654db0fe3a3520c74eecd907ec613cc206199"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 127,
+      "line": 128,
       "symbol": "vibe_workspace::install::tests_hooks::untrusted_group_skips_the_hook_without_running_it",
-      "end_line": 153,
+      "end_line": 154,
       "fingerprint": "tok1:c6361ad301395cc64052d90c83a749fdd749e0dc7becb00376c897a977244761"
     },
     {
@@ -18043,7 +18043,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::already_placed_in_place_slot_runs_hook_without_moving",
-      "line": 498,
+      "line": 499,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -18052,7 +18052,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::apply_resolution_places_an_in_place_package_in_an_unversioned_slot",
-      "line": 250,
+      "line": 251,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -18061,7 +18061,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::post_install_runs_for_materialised_slots_and_flags_failure",
-      "line": 188,
+      "line": 189,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases",
       "verb": "verifies",
@@ -18070,7 +18070,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::pre_install_failure_rolls_back_an_in_place_slot",
-      "line": 425,
+      "line": 426,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#failure",
       "verb": "verifies",
@@ -18079,7 +18079,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::pre_install_failure_rolls_back_the_slot",
-      "line": 102,
+      "line": 103,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#failure",
       "verb": "verifies",
@@ -18088,7 +18088,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::pre_install_hook_runs_for_an_allowed_group",
-      "line": 78,
+      "line": 79,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases",
       "verb": "verifies",
@@ -18097,7 +18097,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::pre_install_hook_runs_in_an_in_place_slot",
-      "line": 396,
+      "line": 397,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases",
       "verb": "verifies",
@@ -18106,7 +18106,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::prune_leaves_an_in_place_slot_untouched",
-      "line": 324,
+      "line": 325,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -18115,7 +18115,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::untrusted_group_skips_the_hook_without_running_it",
-      "line": 128,
+      "line": 129,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#trust-gate",
       "verb": "verifies",
@@ -75134,55 +75134,55 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
-      "line": 78,
+      "line": 79,
       "message": "edge `vibe_workspace::install::tests_hooks::pre_install_hook_runs_for_an_allowed_group` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
-      "line": 102,
+      "line": 103,
       "message": "edge `vibe_workspace::install::tests_hooks::pre_install_failure_rolls_back_the_slot` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#failure` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
-      "line": 128,
+      "line": 129,
       "message": "edge `vibe_workspace::install::tests_hooks::untrusted_group_skips_the_hook_without_running_it` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#trust-gate` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
-      "line": 188,
+      "line": 189,
       "message": "edge `vibe_workspace::install::tests_hooks::post_install_runs_for_materialised_slots_and_flags_failure` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
-      "line": 250,
+      "line": 251,
       "message": "edge `vibe_workspace::install::tests_hooks::apply_resolution_places_an_in_place_package_in_an_unversioned_slot` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
-      "line": 324,
+      "line": 325,
       "message": "edge `vibe_workspace::install::tests_hooks::prune_leaves_an_in_place_slot_untouched` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
-      "line": 396,
+      "line": 397,
       "message": "edge `vibe_workspace::install::tests_hooks::pre_install_hook_runs_in_an_in_place_slot` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
-      "line": 425,
+      "line": 426,
       "message": "edge `vibe_workspace::install::tests_hooks::pre_install_failure_rolls_back_an_in_place_slot` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#failure` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
-      "line": 498,
+      "line": 499,
       "message": "edge `vibe_workspace::install::tests_hooks::already_placed_in_place_slot_runs_hook_without_moving` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place` carries no kind/revision line yet"
     },
     {
