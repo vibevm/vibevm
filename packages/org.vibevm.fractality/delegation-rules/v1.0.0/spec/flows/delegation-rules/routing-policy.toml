@@ -1,0 +1,38 @@
+# routing-policy.toml — the need-gate's capability-class policy table
+# (D-C3-10, Campaign 3). Rows address capability CLASSES, never model
+# names: the worker pool rotates (FD-16), so a profile declares its class
+# and the gate reads the matching row. This is the authored form of
+# fractality-core's compiled-in default (`RoutingPolicy::default`);
+# loading this file OVERRIDES the default, and a class the file omits
+# falls back to it — a class is never unpoliced.
+#
+# Canon: RLM-PLAN §4 D-C3-10; RD-2 (depth caps by class), RD-10 (the
+# advisor bar). The table stays hand-authored DATA in v1 — no learned
+# router (RD-20 defers that lever); its features are drawn from the
+# journal's per-worker × task-class outcome table (D-C3-8) as they accrue.
+# Keep this mirrored with `RoutingPolicy::default` in fractality-core.
+
+schema = 1
+
+# Weak (e.g. a small / turbo tier): cannot reliably drive recursion
+# (minRLM's nano inversion). Route its work; never make it a spawning
+# root; no advisor.
+[class.weak]
+max_depth = 0
+allow_experimental_depth2 = false
+advisor_enabled = false
+
+# Medium: decomposes one level; clears the advisor bar
+# (advisor_enabled ⇐ caller_class ≥ medium).
+[class.medium]
+max_depth = 1
+allow_experimental_depth2 = false
+advisor_enabled = true
+
+# Strong (a strong-coder root): one level by default; the only class
+# allowed to set the experimental depth-2 flag, and only for provably
+# super-linear tasks (RD-2).
+[class.strong]
+max_depth = 1
+allow_experimental_depth2 = true
+advisor_enabled = true

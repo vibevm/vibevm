@@ -1,0 +1,17 @@
+[package]
+name = "atomic-commits"
+group = "org.vibevm"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Atomic commits discipline: one commit = one idea, in Conventional Commits format"
+keywords = ["git", "commits", "discipline", "conventional-commits"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "boot/30-flow-atomic-commits.md"
+category = "flow"

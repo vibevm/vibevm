@@ -1,0 +1,2677 @@
+{
+  "code_items": [
+    {
+      "crate_name": "fractality-backend-claude-code",
+      "file": "crates/fractality-backend-claude-code/src/lib.rs",
+      "item_kind": "mod",
+      "line": 25,
+      "symbol": "fractality_backend_claude_code"
+    },
+    {
+      "crate_name": "fractality-backend-claude-code",
+      "file": "crates/fractality-backend-claude-code/src/env.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "fractality_backend_claude_code::env"
+    },
+    {
+      "crate_name": "fractality-backend-claude-code",
+      "file": "crates/fractality-backend-claude-code/src/envbuild.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_backend_claude_code::envbuild"
+    },
+    {
+      "crate_name": "fractality-backend-claude-code",
+      "file": "crates/fractality-backend-claude-code/src/invocation.rs",
+      "item_kind": "mod",
+      "line": 18,
+      "symbol": "fractality_backend_claude_code::invocation"
+    },
+    {
+      "crate_name": "fractality-backend-claude-code",
+      "file": "crates/fractality-backend-claude-code/src/stream.rs",
+      "item_kind": "mod",
+      "line": 26,
+      "symbol": "fractality_backend_claude_code::stream"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/main.rs",
+      "item_kind": "mod",
+      "line": 37,
+      "symbol": "fractality_cli"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/advise.rs",
+      "item_kind": "mod",
+      "line": 25,
+      "symbol": "fractality_cli::advise"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/boss.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "fractality_cli::boss"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/broker.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_cli::broker"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/fetch.rs",
+      "item_kind": "mod",
+      "line": 7,
+      "symbol": "fractality_cli::fetch"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/gate_cmd.rs",
+      "item_kind": "mod",
+      "line": 23,
+      "symbol": "fractality_cli::gate_cmd"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/harness.rs",
+      "item_kind": "mod",
+      "line": 21,
+      "symbol": "fractality_cli::harness"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/hook.rs",
+      "item_kind": "mod",
+      "line": 23,
+      "symbol": "fractality_cli::hook"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/mc_cmd.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "fractality_cli::mc_cmd"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/out.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "fractality_cli::out"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/route_cmd.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "fractality_cli::route_cmd"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/scoreboard.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "fractality_cli::scoreboard"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/session.rs",
+      "item_kind": "mod",
+      "line": 16,
+      "symbol": "fractality_cli::session"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/statusline.rs",
+      "item_kind": "mod",
+      "line": 13,
+      "symbol": "fractality_cli::statusline"
+    },
+    {
+      "crate_name": "fractality-cli",
+      "file": "crates/fractality-cli/src/swarm.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "fractality_cli::swarm"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/api.rs",
+      "item_kind": "mod",
+      "line": 24,
+      "symbol": "fractality_core::api"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/credibility.rs",
+      "item_kind": "mod",
+      "line": 21,
+      "symbol": "fractality_core::credibility"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/error.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "fractality_core::error"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/error.rs",
+      "item_kind": "enum",
+      "line": 11,
+      "symbol": "fractality_core::error::CoreError"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/fileref.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_core::fileref"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/ids.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "fractality_core::ids"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/journal.rs",
+      "item_kind": "mod",
+      "line": 19,
+      "symbol": "fractality_core::journal"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/journal_fold.rs",
+      "item_kind": "mod",
+      "line": 19,
+      "symbol": "fractality_core::journal_fold"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/needgate.rs",
+      "item_kind": "mod",
+      "line": 18,
+      "symbol": "fractality_core::needgate"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/node.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_core::node"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/packet.rs",
+      "item_kind": "mod",
+      "line": 19,
+      "symbol": "fractality_core::packet"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/profile.rs",
+      "item_kind": "mod",
+      "line": 17,
+      "symbol": "fractality_core::profile"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/routing.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_core::routing"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/run.rs",
+      "item_kind": "mod",
+      "line": 15,
+      "symbol": "fractality_core::run"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/session.rs",
+      "item_kind": "mod",
+      "line": 19,
+      "symbol": "fractality_core::session"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/time.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "fractality_core::time"
+    },
+    {
+      "crate_name": "fractality-core",
+      "file": "crates/fractality-core/src/worker.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_core::worker"
+    },
+    {
+      "crate_name": "fractality-initiative",
+      "file": "crates/fractality-initiative/src/nudge.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "fractality_initiative::nudge"
+    },
+    {
+      "crate_name": "fractality-initiative",
+      "file": "crates/fractality-initiative/src/route.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_initiative::route"
+    },
+    {
+      "crate_name": "fractality-initiative",
+      "file": "crates/fractality-initiative/src/scoreboard.rs",
+      "item_kind": "mod",
+      "line": 13,
+      "symbol": "fractality_initiative::scoreboard"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "item_kind": "mod",
+      "line": 26,
+      "symbol": "fractality_mc_client"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "item_kind": "enum",
+      "line": 28,
+      "symbol": "fractality_mc_client::ClientError"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/decisions.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "fractality_mc_client::decisions"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/home.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "fractality_mc_client::home"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "item_kind": "fn",
+      "line": 521,
+      "symbol": "fractality_mc_client::inherit_guard::Guard::restore_inherit"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "item_kind": "fn",
+      "line": 492,
+      "symbol": "fractality_mc_client::inherit_guard::Guard::strip_std_handles"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/lock.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "fractality_mc_client::lock"
+    },
+    {
+      "crate_name": "fractality-mc-client",
+      "file": "crates/fractality-mc-client/src/pod_leg.rs",
+      "item_kind": "mod",
+      "line": 15,
+      "symbol": "fractality_mc_client::pod_leg"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/lib.rs",
+      "item_kind": "mod",
+      "line": 39,
+      "symbol": "fractality_mission_control"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/main.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "fractality_mission_control"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/lib.rs",
+      "item_kind": "enum",
+      "line": 69,
+      "symbol": "fractality_mission_control::ServerError"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/admission.rs",
+      "item_kind": "mod",
+      "line": 24,
+      "symbol": "fractality_mission_control::admission"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/http.rs",
+      "item_kind": "mod",
+      "line": 25,
+      "symbol": "fractality_mission_control::http"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/http_decisions.rs",
+      "item_kind": "mod",
+      "line": 15,
+      "symbol": "fractality_mission_control::http_decisions"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/http_escalate.rs",
+      "item_kind": "mod",
+      "line": 18,
+      "symbol": "fractality_mission_control::http_escalate"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/http_pods.rs",
+      "item_kind": "mod",
+      "line": 29,
+      "symbol": "fractality_mission_control::http_pods"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/http_questions.rs",
+      "item_kind": "mod",
+      "line": 17,
+      "symbol": "fractality_mission_control::http_questions"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/http_sessions.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_mission_control::http_sessions"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/identity.rs",
+      "item_kind": "mod",
+      "line": 10,
+      "symbol": "fractality_mission_control::identity"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/journal_store.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_mission_control::journal_store"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/kill.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_mission_control::kill"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/metrics.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "fractality_mission_control::metrics"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/registry.rs",
+      "item_kind": "mod",
+      "line": 28,
+      "symbol": "fractality_mission_control::registry"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/scopes.rs",
+      "item_kind": "mod",
+      "line": 17,
+      "symbol": "fractality_mission_control::scopes"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/sessions.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_mission_control::sessions"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/sessions.rs",
+      "item_kind": "enum",
+      "line": 24,
+      "symbol": "fractality_mission_control::sessions::SessionError"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/state.rs",
+      "item_kind": "mod",
+      "line": 22,
+      "symbol": "fractality_mission_control::state"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/state.rs",
+      "item_kind": "enum",
+      "line": 66,
+      "symbol": "fractality_mission_control::state::RecordError"
+    },
+    {
+      "crate_name": "fractality-mission-control",
+      "file": "crates/fractality-mission-control/src/workspace.rs",
+      "item_kind": "mod",
+      "line": 14,
+      "symbol": "fractality_mission_control::workspace"
+    },
+    {
+      "crate_name": "fractality-pod",
+      "file": "crates/fractality-pod/src/main.rs",
+      "item_kind": "mod",
+      "line": 35,
+      "symbol": "fractality_pod"
+    },
+    {
+      "crate_name": "fractality-pod",
+      "file": "crates/fractality-pod/src/collect.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_pod::collect"
+    },
+    {
+      "crate_name": "fractality-pod",
+      "file": "crates/fractality-pod/src/pump.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "fractality_pod::pump"
+    },
+    {
+      "crate_name": "fractality-pod",
+      "file": "crates/fractality-pod/src/resolve.rs",
+      "item_kind": "mod",
+      "line": 14,
+      "symbol": "fractality_pod::resolve"
+    },
+    {
+      "crate_name": "fractality-pod",
+      "file": "crates/fractality-pod/src/supervise.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "fractality_pod::supervise"
+    },
+    {
+      "crate_name": "fractality-pod",
+      "file": "crates/fractality-pod/src/worker_env.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "fractality_pod::worker_env"
+    }
+  ],
+  "edges": [
+    {
+      "file": "crates/fractality-backend-claude-code/src/lib.rs",
+      "from_symbol": "fractality_backend_claude_code",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-backend-claude-code/src/env.rs",
+      "from_symbol": "fractality_backend_claude_code::env",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-backend-claude-code/src/envbuild.rs",
+      "from_symbol": "fractality_backend_claude_code::envbuild",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-backend-claude-code/src/invocation.rs",
+      "from_symbol": "fractality_backend_claude_code::invocation",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-backend-claude-code/src/stream.rs",
+      "from_symbol": "fractality_backend_claude_code::stream",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/main.rs",
+      "from_symbol": "fractality_cli",
+      "line": 37,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/advise.rs",
+      "from_symbol": "fractality_cli::advise",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/boss.rs",
+      "from_symbol": "fractality_cli::boss",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/broker.rs",
+      "from_symbol": "fractality_cli::broker",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/fetch.rs",
+      "from_symbol": "fractality_cli::fetch",
+      "line": 7,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/gate_cmd.rs",
+      "from_symbol": "fractality_cli::gate_cmd",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/harness.rs",
+      "from_symbol": "fractality_cli::harness",
+      "line": 21,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#sessions",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/hook.rs",
+      "from_symbol": "fractality_cli::hook",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#sessions",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/mc_cmd.rs",
+      "from_symbol": "fractality_cli::mc_cmd",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/out.rs",
+      "from_symbol": "fractality_cli::out",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/route_cmd.rs",
+      "from_symbol": "fractality_cli::route_cmd",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#sessions",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/scoreboard.rs",
+      "from_symbol": "fractality_cli::scoreboard",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#sessions",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/session.rs",
+      "from_symbol": "fractality_cli::session",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/statusline.rs",
+      "from_symbol": "fractality_cli::statusline",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#sessions",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-cli/src/swarm.rs",
+      "from_symbol": "fractality_cli::swarm",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/api.rs",
+      "from_symbol": "fractality_core::api",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/credibility.rs",
+      "from_symbol": "fractality_core::credibility",
+      "line": 21,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/error.rs",
+      "from_symbol": "fractality_core::error",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/error.rs",
+      "from_symbol": "fractality_core::error::CoreError",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/fileref.rs",
+      "from_symbol": "fractality_core::fileref",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/ids.rs",
+      "from_symbol": "fractality_core::ids",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/journal.rs",
+      "from_symbol": "fractality_core::journal",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/journal_fold.rs",
+      "from_symbol": "fractality_core::journal_fold",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/needgate.rs",
+      "from_symbol": "fractality_core::needgate",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/node.rs",
+      "from_symbol": "fractality_core::node",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/packet.rs",
+      "from_symbol": "fractality_core::packet",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/profile.rs",
+      "from_symbol": "fractality_core::profile",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/routing.rs",
+      "from_symbol": "fractality_core::routing",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/run.rs",
+      "from_symbol": "fractality_core::run",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/session.rs",
+      "from_symbol": "fractality_core::session",
+      "line": 19,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/time.rs",
+      "from_symbol": "fractality_core::time",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-core/src/worker.rs",
+      "from_symbol": "fractality_core::worker",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-initiative/src/nudge.rs",
+      "from_symbol": "fractality_initiative::nudge",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#sessions",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-initiative/src/route.rs",
+      "from_symbol": "fractality_initiative::route",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://delegation-rules/DECISION-MATRIX#verdict",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-initiative/src/scoreboard.rs",
+      "from_symbol": "fractality_initiative::scoreboard",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#sessions",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "from_symbol": "fractality_mc_client",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "from_symbol": "fractality_mc_client::ClientError",
+      "line": 40,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/decisions.rs",
+      "from_symbol": "fractality_mc_client::decisions",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/home.rs",
+      "from_symbol": "fractality_mc_client::home",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "from_symbol": "fractality_mc_client::inherit_guard::Guard::restore_inherit",
+      "line": 523,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "deviates",
+      "reason": "the restore half of the F17 guard: one SetHandleInformation call re-arming the flag strip_std_handles removed"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/lib.rs",
+      "from_symbol": "fractality_mc_client::inherit_guard::Guard::strip_std_handles",
+      "line": 495,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "deviates",
+      "reason": "three kernel32 calls at one recorded OS seam (F17): stripping HANDLE_FLAG_INHERIT from our own std handles around a detached spawn; an audit crate for this would be pure ceremony"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/lock.rs",
+      "from_symbol": "fractality_mc_client::lock",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mc-client/src/pod_leg.rs",
+      "from_symbol": "fractality_mc_client::pod_leg",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/lib.rs",
+      "from_symbol": "fractality_mission_control",
+      "line": 39,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/main.rs",
+      "from_symbol": "fractality_mission_control",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/lib.rs",
+      "from_symbol": "fractality_mission_control::ServerError",
+      "line": 79,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/admission.rs",
+      "from_symbol": "fractality_mission_control::admission",
+      "line": 24,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/http.rs",
+      "from_symbol": "fractality_mission_control::http",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/http_decisions.rs",
+      "from_symbol": "fractality_mission_control::http_decisions",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/http_escalate.rs",
+      "from_symbol": "fractality_mission_control::http_escalate",
+      "line": 18,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/http_pods.rs",
+      "from_symbol": "fractality_mission_control::http_pods",
+      "line": 29,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/http_questions.rs",
+      "from_symbol": "fractality_mission_control::http_questions",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/http_sessions.rs",
+      "from_symbol": "fractality_mission_control::http_sessions",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#sessions",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/identity.rs",
+      "from_symbol": "fractality_mission_control::identity",
+      "line": 10,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/journal_store.rs",
+      "from_symbol": "fractality_mission_control::journal_store",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/kill.rs",
+      "from_symbol": "fractality_mission_control::kill",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/metrics.rs",
+      "from_symbol": "fractality_mission_control::metrics",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/registry.rs",
+      "from_symbol": "fractality_mission_control::registry",
+      "line": 28,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/scopes.rs",
+      "from_symbol": "fractality_mission_control::scopes",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/sessions.rs",
+      "from_symbol": "fractality_mission_control::sessions",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/sessions.rs",
+      "from_symbol": "fractality_mission_control::sessions::SessionError",
+      "line": 26,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/state.rs",
+      "from_symbol": "fractality_mission_control::state",
+      "line": 22,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/state.rs",
+      "from_symbol": "fractality_mission_control::state::RecordError",
+      "line": 68,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-mission-control/src/workspace.rs",
+      "from_symbol": "fractality_mission_control::workspace",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-pod/src/main.rs",
+      "from_symbol": "fractality_pod",
+      "line": 35,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-pod/src/collect.rs",
+      "from_symbol": "fractality_pod::collect",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-pod/src/pump.rs",
+      "from_symbol": "fractality_pod::pump",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-pod/src/resolve.rs",
+      "from_symbol": "fractality_pod::resolve",
+      "line": 14,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#architecture",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-pod/src/supervise.rs",
+      "from_symbol": "fractality_pod::supervise",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#invariants",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/fractality-pod/src/worker_env.rs",
+      "from_symbol": "fractality_pod::worker_env",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://fractality/PROP-001#invariants",
+      "verb": "implements"
+    }
+  ],
+  "schema": 2,
+  "spec_units": [
+    {
+      "anchor": "root",
+      "content_hash": "sha256:f8b65e846dff50dfdafc01adb4db4f054cdb60415c072c71003f642d05076c12",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-foundation.md",
+      "heading": "PROP-001 — fractality: foundation",
+      "line": 1,
+      "uri": "spec://fractality/PROP-001#root"
+    },
+    {
+      "anchor": "vision",
+      "content_hash": "sha256:eab1dcacf9dc9927a8e5c131161a0134eab5db6c789e3a30a5b74feb15a89864",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-foundation.md",
+      "heading": "1. Vision",
+      "line": 8,
+      "uri": "spec://fractality/PROP-001#vision"
+    },
+    {
+      "anchor": "model",
+      "content_hash": "sha256:29e5cbf5afba3cb2393367bf1a2783f0728a5ef864dcf61452930afb5a997701",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-foundation.md",
+      "heading": "2. System model and glossary",
+      "line": 47,
+      "uri": "spec://fractality/PROP-001#model"
+    },
+    {
+      "anchor": "architecture",
+      "content_hash": "sha256:d542bffcb8d8a5bdf3035bf6fcc6bfb362dbec1032b1a422ae9cff44e081a4a0",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-foundation.md",
+      "heading": "3. Architecture",
+      "line": 81,
+      "uri": "spec://fractality/PROP-001#architecture"
+    },
+    {
+      "anchor": "sessions",
+      "content_hash": "sha256:139f21a7306c73f1559bef791ccd3ed1c02fd2bbc835d5fa40a5d8bd7a0e39c9",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-foundation.md",
+      "heading": "3b. Boss sessions",
+      "line": 110,
+      "uri": "spec://fractality/PROP-001#sessions"
+    },
+    {
+      "anchor": "invariants",
+      "content_hash": "sha256:cab9eb0e6159a06c3f2f5f767d7a4fb153cef55f209c6f7504795f72f17e223a",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-foundation.md",
+      "heading": "4. Invariants",
+      "line": 128,
+      "uri": "spec://fractality/PROP-001#invariants"
+    },
+    {
+      "anchor": "tos",
+      "content_hash": "sha256:d3010ed139fe30a2e3ea5575885301062b1927f5a7eb1eac156f4f869f69881a",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-foundation.md",
+      "heading": "5. Usage & terms-of-service posture",
+      "line": 177,
+      "uri": "spec://fractality/PROP-001#tos"
+    },
+    {
+      "anchor": "host",
+      "content_hash": "sha256:1f1ea93641bdfec116a41dbfd8bd9e733bfe009555ceaef01146e63af96f62db",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-foundation.md",
+      "heading": "6. Relationship to the host repository",
+      "line": 194,
+      "uri": "spec://fractality/PROP-001#host"
+    },
+    {
+      "anchor": "horizons",
+      "content_hash": "sha256:548bbc9b44dd751ac1f5866751e74b31d2a685783c0ed40c7e1311186b71d230",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001-foundation.md",
+      "heading": "7. Evolution horizons (designed-for, not built)",
+      "line": 204,
+      "uri": "spec://fractality/PROP-001#horizons"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:b86ffa1f473cc79cafb5830b00a71fa3aa9d7865bfc94c503c00a293af8cd01c",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "VISION — the recursive fabric",
+      "line": 1,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#root"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:ee4100193f52c31df3b47d9fb53de0ff2e9363e14f066b0ec44ad5eae5341e52",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "0. The mandate (owner, 2026-07-10, verbatim)",
+      "line": 12,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#mandate"
+    },
+    {
+      "anchor": "mandate-addendum",
+      "content_hash": "sha256:0a1e712a9a9f29621b8944130bc7156e71cead300b6b291e5e18b5e85226fc8b",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "Addendum — attachable terminals (owner, 2026-07-10, later the same session, verbatim)",
+      "line": 45,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#mandate-addendum"
+    },
+    {
+      "anchor": "pillars",
+      "content_hash": "sha256:192e0759e3b8b6c93f5627e361397b021130bd5e8767a82b9e7347f262011588",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "1. The pillars",
+      "line": 61,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#pillars"
+    },
+    {
+      "anchor": "v1-promotion",
+      "content_hash": "sha256:09796f50eaa97c0201231cc39274b17eb415f7ec7fd3941692e0a7dcb2aa8d93",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "V1 — any agent can become a boss",
+      "line": 63,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#v1-promotion"
+    },
+    {
+      "anchor": "v2-rlm",
+      "content_hash": "sha256:b12f98d443569e3f4e26cb1401715367663d7928d67ab98da828ffb9dd0d59fa",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "V2 — the RLM procedure, whole",
+      "line": 87,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#v2-rlm"
+    },
+    {
+      "anchor": "v3-escalation",
+      "content_hash": "sha256:747e6fbf83dfde8ea0b3a2ff5334e5036ba6dc14c6450dce4d8c5feeaf83241d",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "V3 — escalation up the hierarchy",
+      "line": 104,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#v3-escalation"
+    },
+    {
+      "anchor": "v4-advisor",
+      "content_hash": "sha256:ce8f68304af2d32ad3a9582d71f0195e5aad2335cfe0a3159f006620b6cddb97",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "V4 — advisor instead of escalation",
+      "line": 118,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#v4-advisor"
+    },
+    {
+      "anchor": "v5-terminals",
+      "content_hash": "sha256:33760329d70025a1bd19d41373e5fb1b4872c6e57fb7eb7cb1a7fabbe2ec6b9f",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "V5 — attachable headless terminals (the runtime upgrade)",
+      "line": 141,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#v5-terminals"
+    },
+    {
+      "anchor": "schematics",
+      "content_hash": "sha256:38b3735d5897cf62ffba74ebc0b9dfdb0be41dfe4cbb8cae066a9d99ce37a1bc",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "2. The two reference schematics",
+      "line": 175,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#schematics"
+    },
+    {
+      "anchor": "specifics",
+      "content_hash": "sha256:effea2519ea927f4e08defbaf90948b951ed02c9e4b5ebed41c57fd09f01b9d1",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "3. Fractality specifics the vision must respect",
+      "line": 206,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#specifics"
+    },
+    {
+      "anchor": "near-term",
+      "content_hash": "sha256:29f977e56ac076cbb7142b705ea7a0e3d47921b87a9239cf9f77320b7ad92171",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "4. Near-term steps through this lens",
+      "line": 234,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#near-term"
+    },
+    {
+      "anchor": "open-questions",
+      "content_hash": "sha256:ba8085b233c839155d80afa161adbf783c737444f16dc1b4a22dd77ec9170976",
+      "doc_path": "VISION-RECURSIVE-FABRIC",
+      "file": "spec/VISION-RECURSIVE-FABRIC.md",
+      "heading": "5. Open questions (for the Campaign 3 mandate)",
+      "line": 261,
+      "uri": "spec://fractality/VISION-RECURSIVE-FABRIC#open-questions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:964c03befa0316d90bffb0e3c90580f68225f1ec3130fb34571a8ba25885f16c",
+      "doc_path": "boot/75-tool-fractality",
+      "file": "spec/boot/75-tool-fractality.md",
+      "heading": "Tool: fractality",
+      "line": 1,
+      "uri": "spec://fractality/boot/75-tool-fractality#root"
+    },
+    {
+      "anchor": "trigger",
+      "content_hash": "sha256:6e34f47376fffc88a8c2f3a29bbb5e5135f4f533ec90df571de2b0eb4c672cf4",
+      "doc_path": "boot/75-tool-fractality",
+      "file": "spec/boot/75-tool-fractality.md",
+      "heading": "When a task smells delegable",
+      "line": 10,
+      "uri": "spec://fractality/boot/75-tool-fractality#trigger"
+    },
+    {
+      "anchor": "scoreboard",
+      "content_hash": "sha256:11023eb7505b59f8c7fa483d330311f486204108225bfaebb0cf4a176b5df559",
+      "doc_path": "boot/75-tool-fractality",
+      "file": "spec/boot/75-tool-fractality.md",
+      "heading": "Your scoreboard",
+      "line": 30,
+      "uri": "spec://fractality/boot/75-tool-fractality#scoreboard"
+    },
+    {
+      "anchor": "commands",
+      "content_hash": "sha256:8fded1e9632ca2a82f428ee1f381db7b8b9de5c8ab8cbe2760c3f66dd902f13d",
+      "doc_path": "boot/75-tool-fractality",
+      "file": "spec/boot/75-tool-fractality.md",
+      "heading": "One command per shape",
+      "line": 42,
+      "uri": "spec://fractality/boot/75-tool-fractality#commands"
+    },
+    {
+      "anchor": "packet",
+      "content_hash": "sha256:ad1b9631f723172b8b4a256120112f515bcd73ae5ea4331ad2f01de8a5ae88f3",
+      "doc_path": "boot/75-tool-fractality",
+      "file": "spec/boot/75-tool-fractality.md",
+      "heading": "The packet is the work order",
+      "line": 57,
+      "uri": "spec://fractality/boot/75-tool-fractality#packet"
+    },
+    {
+      "anchor": "never",
+      "content_hash": "sha256:be0fb087b83a0536fe8a966f7ca1b238cf30d4904484129f0b0b63c9bf7645f6",
+      "doc_path": "boot/75-tool-fractality",
+      "file": "spec/boot/75-tool-fractality.md",
+      "heading": "Never",
+      "line": 67,
+      "uri": "spec://fractality/boot/75-tool-fractality#never"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:0c1accfc2718b709ec5e90663dd5aa885faaefb0ed8cd9f0eb37c9399785e599",
+      "doc_path": "plans/FRACTALITY-ADVISOR-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-ADVISOR-PLAN-v0.1.md",
+      "heading": "FRACTALITY-ADVISOR-PLAN v0.1 — Stage C: the advisor channel (D-C3-7)",
+      "line": 1,
+      "uri": "spec://fractality/plans/FRACTALITY-ADVISOR-PLAN-v0.1#root"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:3f485eb959e8c1170834355aa27d20a43d37dfca410f91509033de00f187388c",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "FRACTALITY-FUGU-RESEARCH-PLAN v0.1 — Campaign 3 · Stage A2: the Sakana Fugu research",
+      "line": 1,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#root"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:f7807eed9c9b4533f0944feaa879730baaa81c90a5bcc700f9c66ec9877bf1c7",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "1. The mandate (owner, 2026-07-11, verbatim)",
+      "line": 18,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#mandate"
+    },
+    {
+      "anchor": "goal",
+      "content_hash": "sha256:2a97d52db5c0c07eabecf499154a803afed22d8153ddeef732274a4017725730",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "2. Goal and deliverables",
+      "line": 34,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#goal"
+    },
+    {
+      "anchor": "deviations",
+      "content_hash": "sha256:2185f4024cd6d5ac6180885e3ef9fa662adb720b695afc3579c8ff89936271f9",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "3. Deviations from the Stage A method",
+      "line": 52,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#deviations"
+    },
+    {
+      "anchor": "waves",
+      "content_hash": "sha256:76685aeb16699cbb442988fbd0492b3a0b343a5209c1dfd197dc62d6f4780ff2",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "4. The waves (frozen)",
+      "line": 65,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#waves"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "sha256:d35ca0530aec424b3fd6167875dda8971ecc05030938ddeeedaf81516a6a91d6",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "5. Phases",
+      "line": 106,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#phases"
+    },
+    {
+      "anchor": "predictions",
+      "content_hash": "sha256:7f98c79a3e285d1795d11e314a38fb499bfbcc516a3feb05e40951d017e24269",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "6. Predictions",
+      "line": 121,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#predictions"
+    },
+    {
+      "anchor": "review-points",
+      "content_hash": "sha256:3f9c292272ea221fa37db88e51fa9ffd9b7449f607d6a5f61839c0d5247f5728",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "7. Review points",
+      "line": 138,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#review-points"
+    },
+    {
+      "anchor": "ledger",
+      "content_hash": "sha256:c3c4eec58e2a14c1f9e82e4b799dd9f013aeaffa266fe1f17cd8211fb2026ae0",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "8. Ledger",
+      "line": 144,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#ledger"
+    },
+    {
+      "anchor": "log",
+      "content_hash": "sha256:1572a1d192e2f33b0a78c497330b8be8c4ed4c13122c231a3e6dbb427f827d47",
+      "doc_path": "plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1.md",
+      "heading": "9. Log",
+      "line": 155,
+      "uri": "spec://fractality/plans/FRACTALITY-FUGU-RESEARCH-PLAN-v0.1#log"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:1e36ffe60207f999bf4f44656b2f84802ca6b1b28588a26d1f9f062cf3a74a39",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "FRACTALITY-RLM-PLAN v0.1 — Campaign 3 · Stage B: the descent core (DRAFT)",
+      "line": 1,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#root"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:b1afb515c5c6495afb71e813a3c7ba9d8f9b8f31e8d4e0bb7a50eee1fcb963d8",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "1. The mandate",
+      "line": 15,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#mandate"
+    },
+    {
+      "anchor": "goal",
+      "content_hash": "sha256:b1732ce9928ebaa5c4f41af2333501dc2cefc8392ebc1a8e148b7c665dc36885",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "2. Goal",
+      "line": 46,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#goal"
+    },
+    {
+      "anchor": "scope",
+      "content_hash": "sha256:bf210e4769dab3fca343e8c303168f03a8c9dee8f74d79cb09609d332be38a43",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "3. Scope options for the mandate (pick one)",
+      "line": 56,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#scope"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:ec89862b7722340f851ff039ba55eb493466566f58eaa3d7f788f4f46266cc0d",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "4. Decisions (seeded from synthesis; finalized at commissioning)",
+      "line": 72,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#decisions"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:872b7c5115c4f62280ab1c90889188b9fe211121219baf9e8c4e6ce2d5626799",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "5. Current-state facts (verified at draft time)",
+      "line": 144,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#facts"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "sha256:e24192a7534a59c80a1b83258843f2f153eb4771364bd3cb2a72e6b98c1b1a13",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "6. Phases (shape; final counts at commissioning)",
+      "line": 157,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#phases"
+    },
+    {
+      "anchor": "predictions",
+      "content_hash": "sha256:bbbd42ede1826baf198012fca8fd63d710da8d4db8d8dfce86cc4bdefd8ea918",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "7. Prediction candidates (frozen at commissioning)",
+      "line": 178,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#predictions"
+    },
+    {
+      "anchor": "review-points",
+      "content_hash": "sha256:a75dddc15bea466b58b251fdfff076f9121d1bfd18b4ae015f0c499f491ae552",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "8. Review points",
+      "line": 205,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#review-points"
+    },
+    {
+      "anchor": "ledger",
+      "content_hash": "sha256:bb3e92b713b49d7e42dbee916eaa07ae1e6b6a6591198f713f9e2bc563854ea2",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "9. Ledger",
+      "line": 225,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#ledger"
+    },
+    {
+      "anchor": "executor-guide",
+      "content_hash": "sha256:30be00a50cf981f4b9881439f439d67c4f6eadcf17096778aa6b49c8fb2e4fe2",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "10. Executor's guide — read this before any code",
+      "line": 434,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#executor-guide"
+    },
+    {
+      "anchor": "eg-reading",
+      "content_hash": "sha256:22a5666be5848d685192fe38927a2411ec1e06ad87d94af7ca48f162d44ddf6f",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "10.1 Reading order for the executing session",
+      "line": 443,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-reading"
+    },
+    {
+      "anchor": "eg-glossary",
+      "content_hash": "sha256:43a40e1fe53792936264dd25536c09e7543bb25f1b22f7f997bd19b8dfb0928b",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "10.2 Glossary — our words, exact meanings",
+      "line": 458,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-glossary"
+    },
+    {
+      "anchor": "eg-needgate",
+      "content_hash": "sha256:c5039e5c4ec6fa83ee5fcb849b33ef6c21bb5de8f939989b6481b031be9a5e48",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "10.3 The need-gate decision procedure (v1, fixed order)",
+      "line": 510,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-needgate"
+    },
+    {
+      "anchor": "eg-cleanroom",
+      "content_hash": "sha256:785c1b622179a5790205cdee4bcb7ee451c61897364a16647fb8c7afe9c0cd1c",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "10.4 Clean-room rules for executors — legally load-bearing",
+      "line": 537,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-cleanroom"
+    },
+    {
+      "anchor": "eg-minimalism",
+      "content_hash": "sha256:397d16a8a67e8f942e6215706eb2572b7465767953f8a5d82f21742e6452491c",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "10.5 v1 minimalism — things you must NOT build",
+      "line": 551,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-minimalism"
+    },
+    {
+      "anchor": "eg-crates",
+      "content_hash": "sha256:49c5c8f55c9419c0d62ece07c3bceda57623428859837bb171d0a82cc1c08fdf",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "10.6 Where code lands",
+      "line": 562,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-crates"
+    },
+    {
+      "anchor": "eg-process",
+      "content_hash": "sha256:e0414dd27483c68e6efc9532dc0cbd43934910f455e8d1ec378f6b692bcf156c",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "10.7 Process laws, restated for you",
+      "line": 573,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-process"
+    },
+    {
+      "anchor": "eg-unsure",
+      "content_hash": "sha256:fc133d34ce6b050c0ea994fa9a6df2b40942c40ab74d10286b5366227aff3133",
+      "doc_path": "plans/FRACTALITY-RLM-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-PLAN-v0.1.md",
+      "heading": "10.8 When you are unsure",
+      "line": 601,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-PLAN-v0.1#eg-unsure"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:e026778e263e3efc5357d7db59cc5f5a323ec16dcdacd9f2c6550244a22f4081",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "FRACTALITY-RLM-RESEARCH-PLAN v0.1 — Campaign 3 · Stage A: the RLM research",
+      "line": 1,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#root"
+    },
+    {
+      "anchor": "mandate",
+      "content_hash": "sha256:aade4351f7431e3708274b59a44da03185fc9768eadf713fb92cd6bd0a49083d",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "1. The mandate (owner, 2026-07-10, verbatim)",
+      "line": 14,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#mandate"
+    },
+    {
+      "anchor": "goal",
+      "content_hash": "sha256:83cdd430ad45819229a2663de8068186877445c3f96f6b7d2c42abb1766ff16c",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "2. Goal and non-goals",
+      "line": 50,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#goal"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:bfdedfb59e2f2c2752249b8a9a84c8afdb21aad84056de454504275c7186af99",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "3. Current-state facts (verified 2026-07-10; do not re-discover)",
+      "line": 66,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:9d4d018581b9d1b5288c873998e05b8927a5309cd6760096885b154d20df24fa",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "4. Decisions",
+      "line": 107,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#decisions"
+    },
+    {
+      "anchor": "d-r1",
+      "content_hash": "sha256:b5438aa96fe0b0dbd9766c6fbc4618fbd4a497afc365e98eb898201d66d6f1ee",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "D-R1 — a new staged plan; Stage B is the exit deliverable",
+      "line": 109,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r1"
+    },
+    {
+      "anchor": "d-r2",
+      "content_hash": "sha256:64d08d1913d72c73cc71a38851449de83d224901f875820b4c2c1193ed9db7c2",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "D-R2 — three waves, first two independent",
+      "line": 123,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r2"
+    },
+    {
+      "anchor": "d-r3",
+      "content_hash": "sha256:cfa42dc0bf3484ddf66ce7b39cac658e1f9a0eccc069ac376fb447654845fe6a",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "D-R3 — what \"most important\" means (selection criteria)",
+      "line": 135,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r3"
+    },
+    {
+      "anchor": "d-r4",
+      "content_hash": "sha256:444a2816d972839d47e5a06cc14c1b41f618eb73d13578a928b0a9eb705066e5",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "D-R4 — the intake pipeline (clean-room, verbatim law)",
+      "line": 158,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r4"
+    },
+    {
+      "anchor": "d-r5",
+      "content_hash": "sha256:05e5edca0a6d598c039ffcd98e13c58c93224ac33052d3f18d8cb32b1ccfe331",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "D-R5 — tiered study depth + delegation posture",
+      "line": 175,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r5"
+    },
+    {
+      "anchor": "d-r6",
+      "content_hash": "sha256:144dc2c1be9d1f7dfa87db401660f6ecc59dec02b376725e8ea2346b917f2c28",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "D-R6 — note and synthesis formats",
+      "line": 192,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r6"
+    },
+    {
+      "anchor": "d-r7",
+      "content_hash": "sha256:84c83b57331f71404e8a6236dac055ed17783b22d7e51d4f9e140ce3b90ee54d",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "D-R7 — one project, one note",
+      "line": 207,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#d-r7"
+    },
+    {
+      "anchor": "waves",
+      "content_hash": "sha256:ef898bac177166308903163be6d97324ccf7f7a46e7f8f33dbe7f733fb1bf148",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "5. The three waves — frozen protocol",
+      "line": 216,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#waves"
+    },
+    {
+      "anchor": "wave-1",
+      "content_hash": "sha256:265eb117d34d746071b7e76f1eb0afddfc1adff852c12b5e35fcf1a93eb5f82f",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "Wave 1 — deep research",
+      "line": 218,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#wave-1"
+    },
+    {
+      "anchor": "wave-2",
+      "content_hash": "sha256:18fd53c7672a72b9d6815c657991ff0dc5b063e23394aa35adf18794a28afc66",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "Wave 2 — plain web search, independent",
+      "line": 246,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#wave-2"
+    },
+    {
+      "anchor": "wave-3",
+      "content_hash": "sha256:152820ac745856e523d6f60f77e250f5f61f88539ede21d789de0c329b8169b4",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "Wave 3 — the merge",
+      "line": 272,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#wave-3"
+    },
+    {
+      "anchor": "phases",
+      "content_hash": "sha256:222c34d85978adbc2c2ed68743ceb18d69e3c40743cd354ed89def01198e284d",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "6. Phases and gates",
+      "line": 283,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#phases"
+    },
+    {
+      "anchor": "predictions",
+      "content_hash": "sha256:9694408ba61974b8235ad0008d1e7985a5a2f4d8e75d30228dd17676858e5047",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "7. Predictions (checked at close)",
+      "line": 314,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#predictions"
+    },
+    {
+      "anchor": "baseline",
+      "content_hash": "sha256:ff9d8cf14dab8bf45b1198be0ea1bc9a3cb307962263a4bd7f72ba6c800e29f9",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "8. Baseline and exit state",
+      "line": 330,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#baseline"
+    },
+    {
+      "anchor": "risks",
+      "content_hash": "sha256:a19f97a121cea02eb16e44c346c175905fb8d322f3356ffeeb3403f5b9d19b3a",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "9. Risks and fallbacks",
+      "line": 346,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#risks"
+    },
+    {
+      "anchor": "review-points",
+      "content_hash": "sha256:681a58e26cc680005fad3f99814592972f4d159f2ded8f4e2d8bb9d9ba2c9af0",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "10. Review points",
+      "line": 373,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#review-points"
+    },
+    {
+      "anchor": "quick-start",
+      "content_hash": "sha256:e5e6a538d8ae19bce81b76152bef32e0128c339591d7e98a0479c5ebaabe8e2e",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "11. Quick-start for the executing session",
+      "line": 393,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#quick-start"
+    },
+    {
+      "anchor": "acceptance",
+      "content_hash": "sha256:8b8dfb77a52d7351db3b73432db3e532b7c851d10c2cbc6f2de698f203cfc095",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "12. Whole-stage acceptance",
+      "line": 414,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#acceptance"
+    },
+    {
+      "anchor": "ledger",
+      "content_hash": "sha256:4551d4ff5f7ecfe02ba4d4e2b4e6b3f1bf2ccef4e296c0bcc7694594710bff24",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "13. Execution ledger",
+      "line": 428,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#ledger"
+    },
+    {
+      "anchor": "log",
+      "content_hash": "sha256:2b88ac6ddc0507f199f5b438c63298b71ca4158485bda9db74feaef220f4e34c",
+      "doc_path": "plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1",
+      "file": "spec/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1.md",
+      "heading": "14. Log",
+      "line": 441,
+      "uri": "spec://fractality/plans/FRACTALITY-RLM-RESEARCH-PLAN-v0.1#log"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:fb49ab9badeabf490f3ac4ef7178796676d743be7d4072acf28a77a0e575f98b",
+      "doc_path": "refs/INVENTORY",
+      "file": "spec/refs/INVENTORY.md",
+      "heading": "Reference-source inventory (clean-room register)",
+      "line": 1,
+      "uri": "spec://fractality/refs/INVENTORY#root"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:adebcd768bd8352e5df1094c3d240a596b26a9b95291f0c7b52f83fdf8a12927",
+      "doc_path": "refs/notes/FUGU-FRACTALITY-MAPPING",
+      "file": "spec/refs/notes/FUGU-FRACTALITY-MAPPING.md",
+      "heading": "FUGU ↔ FRACTALITY — the mapping analysis",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/FUGU-FRACTALITY-MAPPING#root"
+    },
+    {
+      "anchor": "verdict",
+      "content_hash": "sha256:d2ffad0e3e9c08b0068d902cacd6d3a07f8bbb4dc6b024bc4f24ea1571aa7e57",
+      "doc_path": "refs/notes/FUGU-FRACTALITY-MAPPING",
+      "file": "spec/refs/notes/FUGU-FRACTALITY-MAPPING.md",
+      "heading": "1. The verdict in one paragraph",
+      "line": 15,
+      "uri": "spec://fractality/refs/notes/FUGU-FRACTALITY-MAPPING#verdict"
+    },
+    {
+      "anchor": "table",
+      "content_hash": "sha256:4a5f5c32cf7495bb65dd2685205346d7f6fbfa32e607b035e1f1c25c5b366425",
+      "doc_path": "refs/notes/FUGU-FRACTALITY-MAPPING",
+      "file": "spec/refs/notes/FUGU-FRACTALITY-MAPPING.md",
+      "heading": "2. The mapping table",
+      "line": 33,
+      "uri": "spec://fractality/refs/notes/FUGU-FRACTALITY-MAPPING#table"
+    },
+    {
+      "anchor": "changes",
+      "content_hash": "sha256:6d7816adf880bc7842a2408e6ad49fe5d75902096744037796107ffa7a3eab9c",
+      "doc_path": "refs/notes/FUGU-FRACTALITY-MAPPING",
+      "file": "spec/refs/notes/FUGU-FRACTALITY-MAPPING.md",
+      "heading": "3. Changes applied to the Stage B draft",
+      "line": 54,
+      "uri": "spec://fractality/refs/notes/FUGU-FRACTALITY-MAPPING#changes"
+    },
+    {
+      "anchor": "moats",
+      "content_hash": "sha256:35a1ceaa03209d8e966938bbe708ada759e6b1705579f319ecc5928712a142b1",
+      "doc_path": "refs/notes/FUGU-FRACTALITY-MAPPING",
+      "file": "spec/refs/notes/FUGU-FRACTALITY-MAPPING.md",
+      "heading": "4. What Fugu does not change",
+      "line": 78,
+      "uri": "spec://fractality/refs/notes/FUGU-FRACTALITY-MAPPING#moats"
+    },
+    {
+      "anchor": "pf4",
+      "content_hash": "sha256:d7da7a5413c8bb120afae4fb1d7fc346fe3449bb0a450a248f957fd7969bf68f",
+      "doc_path": "refs/notes/FUGU-FRACTALITY-MAPPING",
+      "file": "spec/refs/notes/FUGU-FRACTALITY-MAPPING.md",
+      "heading": "5. P-F4 verdict",
+      "line": 88,
+      "uri": "spec://fractality/refs/notes/FUGU-FRACTALITY-MAPPING#pf4"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:30a82840b59e5736c2a49c28cb13ca71f021a397785d2267dc258e5898627d4c",
+      "doc_path": "refs/notes/FUGU-SYNTHESIS",
+      "file": "spec/refs/notes/FUGU-SYNTHESIS.md",
+      "heading": "FUGU-SYNTHESIS — what Sakana's orchestrator teaches the fabric",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/FUGU-SYNTHESIS#root"
+    },
+    {
+      "anchor": "state",
+      "content_hash": "sha256:4dc12eac617bf98f1e17d9ca16afe1189a8d394fbadd750cb3a2f1fb4a677080",
+      "doc_path": "refs/notes/FUGU-SYNTHESIS",
+      "file": "spec/refs/notes/FUGU-SYNTHESIS.md",
+      "heading": "1. The state of the thing in one paragraph",
+      "line": 12,
+      "uri": "spec://fractality/refs/notes/FUGU-SYNTHESIS#state"
+    },
+    {
+      "anchor": "gaps",
+      "content_hash": "sha256:24c003ee40e6db4faab8b9ae326705fa8f7db2e201ef581d0f58d497f41c551a",
+      "doc_path": "refs/notes/FUGU-SYNTHESIS",
+      "file": "spec/refs/notes/FUGU-SYNTHESIS.md",
+      "heading": "2. Two-way gaps",
+      "line": 34,
+      "uri": "spec://fractality/refs/notes/FUGU-SYNTHESIS#gaps"
+    },
+    {
+      "anchor": "deltas",
+      "content_hash": "sha256:62e01a3b6914c067e40bcd4ba24155d72b8543318126b8a7bcf5b56dd28fe207",
+      "doc_path": "refs/notes/FUGU-SYNTHESIS",
+      "file": "spec/refs/notes/FUGU-SYNTHESIS.md",
+      "heading": "3. The deltas (FD-1 … FD-16)",
+      "line": 54,
+      "uri": "spec://fractality/refs/notes/FUGU-SYNTHESIS#deltas"
+    },
+    {
+      "anchor": "verdicts",
+      "content_hash": "sha256:a62441ba5f50795c51c829122437dd7ce359f5a5bf304bb96961e75ab49e0cd9",
+      "doc_path": "refs/notes/FUGU-SYNTHESIS",
+      "file": "spec/refs/notes/FUGU-SYNTHESIS.md",
+      "heading": "4. Prediction verdicts",
+      "line": 106,
+      "uri": "spec://fractality/refs/notes/FUGU-SYNTHESIS#verdicts"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:c0f90917636ef1243e313922a0049f2f8332d7fab43d9c9180e22a42a4aabb46",
+      "doc_path": "refs/notes/RLM-SYNTHESIS",
+      "file": "spec/refs/notes/RLM-SYNTHESIS.md",
+      "heading": "RLM-SYNTHESIS — what the field knows, what fractality takes",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/RLM-SYNTHESIS#root"
+    },
+    {
+      "anchor": "state",
+      "content_hash": "sha256:6c5269c209ae96d0620459f7df0e324b8e0a19b04760551460c356e0275baa54",
+      "doc_path": "refs/notes/RLM-SYNTHESIS",
+      "file": "spec/refs/notes/RLM-SYNTHESIS.md",
+      "heading": "1. The state of the field in one paragraph",
+      "line": 15,
+      "uri": "spec://fractality/refs/notes/RLM-SYNTHESIS#state"
+    },
+    {
+      "anchor": "gaps",
+      "content_hash": "sha256:6b9298fce73444001f09503ddd53fe6c4d236c8d14b861144ace8a2d87c178b8",
+      "doc_path": "refs/notes/RLM-SYNTHESIS",
+      "file": "spec/refs/notes/RLM-SYNTHESIS.md",
+      "heading": "2. Two-way gaps",
+      "line": 40,
+      "uri": "spec://fractality/refs/notes/RLM-SYNTHESIS#gaps"
+    },
+    {
+      "anchor": "deltas",
+      "content_hash": "sha256:54fe48a620f3da417728c2256e572c92a7b8b0b28ee1ee5ff3ca25bd03653cde",
+      "doc_path": "refs/notes/RLM-SYNTHESIS",
+      "file": "spec/refs/notes/RLM-SYNTHESIS.md",
+      "heading": "3. The deltas (RD-1 … RD-21)",
+      "line": 68,
+      "uri": "spec://fractality/refs/notes/RLM-SYNTHESIS#deltas"
+    },
+    {
+      "anchor": "vision-answers",
+      "content_hash": "sha256:dfaa918ac50862bad08c5f5199832de83fb51b02415f668c2f67bbd1f82d4054",
+      "doc_path": "refs/notes/RLM-SYNTHESIS",
+      "file": "spec/refs/notes/RLM-SYNTHESIS.md",
+      "heading": "4. What this settles from VISION §5",
+      "line": 182,
+      "uri": "spec://fractality/refs/notes/RLM-SYNTHESIS#vision-answers"
+    },
+    {
+      "anchor": "verdicts",
+      "content_hash": "sha256:010f10b21c48ab8a21acbbb03497f1474ce3fff40e8412b6d05480dc51be6ba9",
+      "doc_path": "refs/notes/RLM-SYNTHESIS",
+      "file": "spec/refs/notes/RLM-SYNTHESIS.md",
+      "heading": "5. Prediction verdicts for the plan close",
+      "line": 196,
+      "uri": "spec://fractality/refs/notes/RLM-SYNTHESIS#verdicts"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:ec219cb95f287e1154a89553b945deec5a04ab57c6d68b1e6b9193fe473710bc",
+      "doc_path": "refs/notes/barkain-study",
+      "file": "spec/refs/notes/barkain-study.md",
+      "heading": "Study note — barkain workflow-orchestration (clean-room)",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/barkain-study#root"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:2d0a109c020c6573b1d861098a39374d31c19b01841f0526d0782cef16ab2e2b",
+      "doc_path": "refs/notes/codex-first-study",
+      "file": "spec/refs/notes/codex-first-study.md",
+      "heading": "Study note — codex-first (clean-room)",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/codex-first-study#root"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:17d43ae0f650b2910f33db021fb0661099555458ba201e1166cc6abd3bbddcbf",
+      "doc_path": "refs/notes/conductor-study",
+      "file": "spec/refs/notes/conductor-study.md",
+      "heading": "Study note — Learning to Orchestrate (the Conductor)",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/conductor-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:b352a3599e0869bff095ae89a587288e1faa3b7e8d9f6ec786a36f340ba1d186",
+      "doc_path": "refs/notes/conductor-study",
+      "file": "spec/refs/notes/conductor-study.md",
+      "heading": "What it is",
+      "line": 8,
+      "uri": "spec://fractality/refs/notes/conductor-study#what"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:440474e753f1cb8ac6dea3e170731bf333e1a4f55999592d72334b7cb018d0d3",
+      "doc_path": "refs/notes/conductor-study",
+      "file": "spec/refs/notes/conductor-study.md",
+      "heading": "Facts",
+      "line": 24,
+      "uri": "spec://fractality/refs/notes/conductor-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:022bb467b8da08556aa58f57430bbafdef4c04b555b1ec02068707ffa6be9e27",
+      "doc_path": "refs/notes/conductor-study",
+      "file": "spec/refs/notes/conductor-study.md",
+      "heading": "Decisions we take",
+      "line": 38,
+      "uri": "spec://fractality/refs/notes/conductor-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:b77eddf390e412d7d22d35058844aa39c5757d82dbd55c2aefc75b85112587a5",
+      "doc_path": "refs/notes/context-folding-study",
+      "file": "spec/refs/notes/context-folding-study.md",
+      "heading": "Study note — Scaling Long-Horizon LLM Agent via Context-Folding",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/context-folding-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:98fa37fa8b28012558482ec179669b206fee858b7e3157b99a77d8167bdc7c28",
+      "doc_path": "refs/notes/context-folding-study",
+      "file": "spec/refs/notes/context-folding-study.md",
+      "heading": "What it is",
+      "line": 9,
+      "uri": "spec://fractality/refs/notes/context-folding-study#what"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:96cdc367410f250772bdfc0ebf7c2a38489d09540412f61a0e718629dfa0c419",
+      "doc_path": "refs/notes/context-folding-study",
+      "file": "spec/refs/notes/context-folding-study.md",
+      "heading": "Decisions we take",
+      "line": 35,
+      "uri": "spec://fractality/refs/notes/context-folding-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:493b39f9052953207dd548f3238b9a64dee8fc9a6d61ecba3f84d84fe8d45782",
+      "doc_path": "refs/notes/dnc-noise-study",
+      "file": "spec/refs/notes/dnc-noise-study.md",
+      "heading": "Study note — When Does Divide and Conquer Work for Long Context LLM?",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/dnc-noise-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:214e78b3be33bf8de1bee6920e91db9784349cd63256b96c0f103b152b4be423",
+      "doc_path": "refs/notes/dnc-noise-study",
+      "file": "spec/refs/notes/dnc-noise-study.md",
+      "heading": "What it is",
+      "line": 8,
+      "uri": "spec://fractality/refs/notes/dnc-noise-study#what"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:0b779b2abae61681b2aa7c8697909cb14fb98184b7d833ec40d1950fd2f9d1b3",
+      "doc_path": "refs/notes/dnc-noise-study",
+      "file": "spec/refs/notes/dnc-noise-study.md",
+      "heading": "Decisions we take",
+      "line": 41,
+      "uri": "spec://fractality/refs/notes/dnc-noise-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:0a0059d6317c5f24093a8dc67214ff12e9a047632babec9b2b54546b93468f1d",
+      "doc_path": "refs/notes/fast-rlm-study",
+      "file": "spec/refs/notes/fast-rlm-study.md",
+      "heading": "Study note — fast-rlm (the engineering-complete RLM runtime)",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/fast-rlm-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:cb8c05c625c94cbdda4634b409d07c8f62df5218f586fd431f2d8e279ca475e0",
+      "doc_path": "refs/notes/fast-rlm-study",
+      "file": "spec/refs/notes/fast-rlm-study.md",
+      "heading": "What it is",
+      "line": 10,
+      "uri": "spec://fractality/refs/notes/fast-rlm-study#what"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:b26f4fa6c19a6a666d258973faef4571fcd9e2d8bc37702d6861d88ff57eeaf2",
+      "doc_path": "refs/notes/fast-rlm-study",
+      "file": "spec/refs/notes/fast-rlm-study.md",
+      "heading": "Facts that matter to us",
+      "line": 20,
+      "uri": "spec://fractality/refs/notes/fast-rlm-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:18b198e327281c157f9c660c4e324fd8a34488edb9237b276f5c1cca27c1733a",
+      "doc_path": "refs/notes/fast-rlm-study",
+      "file": "spec/refs/notes/fast-rlm-study.md",
+      "heading": "Decisions we take",
+      "line": 59,
+      "uri": "spec://fractality/refs/notes/fast-rlm-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:574ea4b94c77dd5b06ad4db8de22fe1020d2f43d9f479532a24944843bda3152",
+      "doc_path": "refs/notes/fugu-study",
+      "file": "spec/refs/notes/fugu-study.md",
+      "heading": "Study note — Sakana Fugu (the anchor project)",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/fugu-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:ee7fc157ab856802beea779b2ce1d02c9bd9134e842e749ddfb1ce0d5eaabcfc",
+      "doc_path": "refs/notes/fugu-study",
+      "file": "spec/refs/notes/fugu-study.md",
+      "heading": "What it is",
+      "line": 11,
+      "uri": "spec://fractality/refs/notes/fugu-study#what"
+    },
+    {
+      "anchor": "architecture",
+      "content_hash": "sha256:c1ac9d4d85e764a9e4899d876965b888000110b40e912a5bf81a19944211aee8",
+      "doc_path": "refs/notes/fugu-study",
+      "file": "spec/refs/notes/fugu-study.md",
+      "heading": "Architecture facts",
+      "line": 27,
+      "uri": "spec://fractality/refs/notes/fugu-study#architecture"
+    },
+    {
+      "anchor": "results",
+      "content_hash": "sha256:31be0f651979a4b3ed8800325d39f54b589552b0011a82be05e9844819320ae3",
+      "doc_path": "refs/notes/fugu-study",
+      "file": "spec/refs/notes/fugu-study.md",
+      "heading": "Results facts",
+      "line": 71,
+      "uri": "spec://fractality/refs/notes/fugu-study#results"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:59467fd81ae3b01e98137e9b0b92c601831b986ee32173f7b8859b11d300a477",
+      "doc_path": "refs/notes/fugu-study",
+      "file": "spec/refs/notes/fugu-study.md",
+      "heading": "Decisions we take",
+      "line": 100,
+      "uri": "spec://fractality/refs/notes/fugu-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:eeb8cb6ee35544689cb75de6e1bf048351111a7ea4d2bb4955d7263831e9392f",
+      "doc_path": "refs/notes/landscape",
+      "file": "spec/refs/notes/landscape.md",
+      "heading": "Landscape note — where fractality sits",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/landscape#root"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:045f013d2027aa02c343675b87437f66057a80307094464fda2b39b797973fcc",
+      "doc_path": "refs/notes/openfugu-study",
+      "file": "spec/refs/notes/openfugu-study.md",
+      "heading": "Study note — OpenFugu (open reimplementation of Fugu)",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/openfugu-study#root"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:f54ad7055eca1a84d5eb73ea1028c5aa6d63f597998dffcf206e34fc3fba3bc4",
+      "doc_path": "refs/notes/openfugu-study",
+      "file": "spec/refs/notes/openfugu-study.md",
+      "heading": "Facts the API hides",
+      "line": 11,
+      "uri": "spec://fractality/refs/notes/openfugu-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:7151c35bdf2ba66eaf655dedc47f1be8da7d47392e28c9c6c133e195f011a23f",
+      "doc_path": "refs/notes/openfugu-study",
+      "file": "spec/refs/notes/openfugu-study.md",
+      "heading": "Decisions we take",
+      "line": 47,
+      "uri": "spec://fractality/refs/notes/openfugu-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:c690e8b1e6b6d83d910fa051f2849ce6e7464161ac519450900450f4f20ec422",
+      "doc_path": "refs/notes/rao-study",
+      "file": "spec/refs/notes/rao-study.md",
+      "heading": "Study note — Recursive Agent Optimization (RAO)",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/rao-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:46dae55d3f82264348606f466d0ddd1791186fb2b5d604ed6460e8239a250c8c",
+      "doc_path": "refs/notes/rao-study",
+      "file": "spec/refs/notes/rao-study.md",
+      "heading": "What it is",
+      "line": 7,
+      "uri": "spec://fractality/refs/notes/rao-study#what"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:ee5d6c25e9911624ed4654824e6eb46a4a115b66c33523bd370b881bc35e882e",
+      "doc_path": "refs/notes/rao-study",
+      "file": "spec/refs/notes/rao-study.md",
+      "heading": "Decisions we take",
+      "line": 31,
+      "uri": "spec://fractality/refs/notes/rao-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:f4f8ec4617bc0abf4be3e73722e4348b520be336d190c713c1faf12c1faed385",
+      "doc_path": "refs/notes/recursive-llm-study",
+      "file": "spec/refs/notes/recursive-llm-study.md",
+      "heading": "Study note — grishahq/recursive-llm (minimal RLM)",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/recursive-llm-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:fdf275dad1be87089b707835270908d8ea4e4b78652d85c7e08b20ac7a2ff749",
+      "doc_path": "refs/notes/recursive-llm-study",
+      "file": "spec/refs/notes/recursive-llm-study.md",
+      "heading": "What it is",
+      "line": 10,
+      "uri": "spec://fractality/refs/notes/recursive-llm-study#what"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:bad5cae6dcaad1984bbd8761a279ebeb0f1db4e7783127473a64e552e66a7993",
+      "doc_path": "refs/notes/recursive-llm-study",
+      "file": "spec/refs/notes/recursive-llm-study.md",
+      "heading": "Facts that matter to us",
+      "line": 19,
+      "uri": "spec://fractality/refs/notes/recursive-llm-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:9a2c805fd8c43e915970ef7f83f51930bc60066ed8d22ad144e8bc744435ad59",
+      "doc_path": "refs/notes/recursive-llm-study",
+      "file": "spec/refs/notes/recursive-llm-study.md",
+      "heading": "Decisions we take",
+      "line": 46,
+      "uri": "spec://fractality/refs/notes/recursive-llm-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:f30855c8120075f0250797f756eb3ba2553a0171ed8b90c8e6b4987ede741126",
+      "doc_path": "refs/notes/redel-study",
+      "file": "spec/refs/notes/redel-study.md",
+      "heading": "Study note — ReDel (recursive delegation toolkit)",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/redel-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:b94ecdf5919c577acbcad64685d8cc09d4e841180591be66fded9de5148d9fb4",
+      "doc_path": "refs/notes/redel-study",
+      "file": "spec/refs/notes/redel-study.md",
+      "heading": "What it is",
+      "line": 11,
+      "uri": "spec://fractality/refs/notes/redel-study#what"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:09448c817d73f028cf42afdcc9a14301d3ee3cca4446bbaa5c94cf85d5aa1b7e",
+      "doc_path": "refs/notes/redel-study",
+      "file": "spec/refs/notes/redel-study.md",
+      "heading": "Facts that matter to us",
+      "line": 19,
+      "uri": "spec://fractality/refs/notes/redel-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:c26c5806d44e1ca321f47bb21e6754f7aa353e14e1a1ff91b04882d0bb69c6df",
+      "doc_path": "refs/notes/redel-study",
+      "file": "spec/refs/notes/redel-study.md",
+      "heading": "Decisions we take",
+      "line": 58,
+      "uri": "spec://fractality/refs/notes/redel-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:0d4bd0a87004cef8c6cd3f08cf77e7fcacbc4696ca60c7b3f8226770faf8082f",
+      "doc_path": "refs/notes/rlm-articles-t3",
+      "file": "spec/refs/notes/rlm-articles-t3.md",
+      "heading": "Study note — the five articles (grouped T3)",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/rlm-articles-t3#root"
+    },
+    {
+      "anchor": "zhang-blog",
+      "content_hash": "sha256:7cbecd51536483fdf8c35e624cfb4be25e36cd4b8dd6e064b24552a02de7a0d5",
+      "doc_path": "refs/notes/rlm-articles-t3",
+      "file": "spec/refs/notes/rlm-articles-t3.md",
+      "heading": "S18 — Zhang's RLM blog (the origin post)",
+      "line": 10,
+      "uri": "spec://fractality/refs/notes/rlm-articles-t3#zhang-blog"
+    },
+    {
+      "anchor": "pi",
+      "content_hash": "sha256:a5fa2f5ecd277c4e14b9e0d1a9ea44dd574dd146d6885b4a82cb38abcacfdb04",
+      "doc_path": "refs/notes/rlm-articles-t3",
+      "file": "spec/refs/notes/rlm-articles-t3.md",
+      "heading": "S19 — Prime Intellect: \"RLM, the paradigm of 2026\"",
+      "line": 27,
+      "uri": "spec://fractality/refs/notes/rlm-articles-t3#pi"
+    },
+    {
+      "anchor": "cognition",
+      "content_hash": "sha256:30317fd19eebf946ae5d7c1879fd1d420f4f337ac3323fe0d6d32aedd5eda5ce",
+      "doc_path": "refs/notes/rlm-articles-t3",
+      "file": "spec/refs/notes/rlm-articles-t3.md",
+      "heading": "S20 — Cognition: the counterpoint arc (2025 → 2026)",
+      "line": 50,
+      "uri": "spec://fractality/refs/notes/rlm-articles-t3#cognition"
+    },
+    {
+      "anchor": "anthropic",
+      "content_hash": "sha256:a6c08227c5986099a9596c81bd14d3bc4b449dcc08b2f767542409ab98572861",
+      "doc_path": "refs/notes/rlm-articles-t3",
+      "file": "spec/refs/notes/rlm-articles-t3.md",
+      "heading": "S21 — Anthropic: multi-agent research system",
+      "line": 85,
+      "uri": "spec://fractality/refs/notes/rlm-articles-t3#anthropic"
+    },
+    {
+      "anchor": "minrlm",
+      "content_hash": "sha256:3f254217ba03ae9abd467a017ab015bac51d09cc85676eab16aad5be0b1a3e2c",
+      "doc_path": "refs/notes/rlm-articles-t3",
+      "file": "spec/refs/notes/rlm-articles-t3.md",
+      "heading": "S22 — minRLM: practical guide + benchmark",
+      "line": 112,
+      "uri": "spec://fractality/refs/notes/rlm-articles-t3#minrlm"
+    },
+    {
+      "anchor": "cross",
+      "content_hash": "sha256:c74243f669a244361ec60259603b26fc0581edba57a4889b4292cf187ad3180b",
+      "doc_path": "refs/notes/rlm-articles-t3",
+      "file": "spec/refs/notes/rlm-articles-t3.md",
+      "heading": "Cross-cutting (survey's synthesis, boss-endorsed)",
+      "line": 139,
+      "uri": "spec://fractality/refs/notes/rlm-articles-t3#cross"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:f9b0926804ae2173dfabb0843f45e533fab0bd4a132a6a070c7cb1ef1da85f17",
+      "doc_path": "refs/notes/rlm-runners-up-t3",
+      "file": "spec/refs/notes/rlm-runners-up-t3.md",
+      "heading": "Study note — RLM runners-up (grouped T3)",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/rlm-runners-up-t3#root"
+    },
+    {
+      "anchor": "thread",
+      "content_hash": "sha256:f51c6bb09e096a437a6da85a388b36c177eb3f55e07e1973f425d093b370b0cd",
+      "doc_path": "refs/notes/rlm-runners-up-t3",
+      "file": "spec/refs/notes/rlm-runners-up-t3.md",
+      "heading": "S23 — THREAD (arXiv 2405.17402, NAACL 2025)",
+      "line": 9,
+      "uri": "spec://fractality/refs/notes/rlm-runners-up-t3#thread"
+    },
+    {
+      "anchor": "overthink",
+      "content_hash": "sha256:5a077c1edadec72c390c932c753800ed88ded85200e0b7f841d601e54d7d1af3",
+      "doc_path": "refs/notes/rlm-runners-up-t3",
+      "file": "spec/refs/notes/rlm-runners-up-t3.md",
+      "heading": "S24 — Think, But Don't Overthink (arXiv 2603.02615)",
+      "line": 29,
+      "uri": "spec://fractality/refs/notes/rlm-runners-up-t3#overthink"
+    },
+    {
+      "anchor": "cc-rlm",
+      "content_hash": "sha256:16c44a630d6f6dc4fa7f58e0f5fddc2f8f7724e36c71ae4887ff0abaf3bd706b",
+      "doc_path": "refs/notes/rlm-runners-up-t3",
+      "file": "spec/refs/notes/rlm-runners-up-t3.md",
+      "heading": "S25 — brainqub3/claude_code_RLM (MIT, 393★)",
+      "line": 54,
+      "uri": "spec://fractality/refs/notes/rlm-runners-up-t3#cc-rlm"
+    },
+    {
+      "anchor": "tinyagents",
+      "content_hash": "sha256:365f0750062d5d6e7ebe5a70a8244b152b93783857145a97d75fe4675cfdd60f",
+      "doc_path": "refs/notes/rlm-runners-up-t3",
+      "file": "spec/refs/notes/rlm-runners-up-t3.md",
+      "heading": "S26 — tinyhumansai/tinyagents (GPL-3.0, Rust, crates v1.5)",
+      "line": 72,
+      "uri": "spec://fractality/refs/notes/rlm-runners-up-t3#tinyagents"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:82b0273d9ffd91e914a4a8ff9ce7f81e1435e820233fe1ba97ddcf862f23dd85",
+      "doc_path": "refs/notes/rlm-source-selection",
+      "file": "spec/refs/notes/rlm-source-selection.md",
+      "heading": "RLM source selection — the Wave 3 merge verdict",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/rlm-source-selection#root"
+    },
+    {
+      "anchor": "repos",
+      "content_hash": "sha256:f603c14cbd1dc1f2d0dbb0c1d8cba4ef30211cb42f07329f6b1b52180cbcb253",
+      "doc_path": "refs/notes/rlm-source-selection",
+      "file": "spec/refs/notes/rlm-source-selection.md",
+      "heading": "The 5 repositories (recursion load-bearing)",
+      "line": 15,
+      "uri": "spec://fractality/refs/notes/rlm-source-selection#repos"
+    },
+    {
+      "anchor": "papers",
+      "content_hash": "sha256:c56a7fe33a18dac3f015c379f98c2a6225fd79bbcf3ab2d667fa1807e911603d",
+      "doc_path": "refs/notes/rlm-source-selection",
+      "file": "spec/refs/notes/rlm-source-selection.md",
+      "heading": "The 5 papers",
+      "line": 40,
+      "uri": "spec://fractality/refs/notes/rlm-source-selection#papers"
+    },
+    {
+      "anchor": "articles",
+      "content_hash": "sha256:6253a09a258df1fc4e0eebee32c5b64e4cbaa149c2b02bf79f638c42e90e7fa5",
+      "doc_path": "refs/notes/rlm-source-selection",
+      "file": "spec/refs/notes/rlm-source-selection.md",
+      "heading": "The 5 articles",
+      "line": 67,
+      "uri": "spec://fractality/refs/notes/rlm-source-selection#articles"
+    },
+    {
+      "anchor": "overlap",
+      "content_hash": "sha256:bea1a759f16f84ecff4576590d51d3defdf4559d681daf91eeee4272d7d4aae9",
+      "doc_path": "refs/notes/rlm-source-selection",
+      "file": "spec/refs/notes/rlm-source-selection.md",
+      "heading": "Wave-disagreement notes (for P-R2's verdict at close)",
+      "line": 85,
+      "uri": "spec://fractality/refs/notes/rlm-source-selection#overlap"
+    },
+    {
+      "anchor": "intake-map",
+      "content_hash": "sha256:8ac1343f491b270b5428143363cc721fcdc74a05323a9d84ee26775d97ede0f7",
+      "doc_path": "refs/notes/rlm-source-selection",
+      "file": "spec/refs/notes/rlm-source-selection.md",
+      "heading": "Intake map (Ф3)",
+      "line": 98,
+      "uri": "spec://fractality/refs/notes/rlm-source-selection#intake-map"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:33adab3b584da8a9df7c815f23353b46e016b363069963e980e5f182082babdf",
+      "doc_path": "refs/notes/rlm-study",
+      "file": "spec/refs/notes/rlm-study.md",
+      "heading": "Study note — Recursive Language Models (the anchor project)",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/rlm-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:993c86fab3ca95101dd8bede623085fb1e737f2bef3593810a8d77954672a49f",
+      "doc_path": "refs/notes/rlm-study",
+      "file": "spec/refs/notes/rlm-study.md",
+      "heading": "What it is",
+      "line": 10,
+      "uri": "spec://fractality/refs/notes/rlm-study#what"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:d197fd8ae2aa64f4325ee06f938acc77c1914bec248f8bd699a6005e08e2b52d",
+      "doc_path": "refs/notes/rlm-study",
+      "file": "spec/refs/notes/rlm-study.md",
+      "heading": "Verified facts that matter to us",
+      "line": 33,
+      "uri": "spec://fractality/refs/notes/rlm-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:6b7a3348fd569521ccafb7ffa2a2746afbb6ee0491a710105a3631d8965e1d82",
+      "doc_path": "refs/notes/rlm-study",
+      "file": "spec/refs/notes/rlm-study.md",
+      "heading": "Decisions we take (→ synthesis deltas)",
+      "line": 91,
+      "uri": "spec://fractality/refs/notes/rlm-study#decisions"
+    },
+    {
+      "anchor": "open",
+      "content_hash": "sha256:c485503364def66242088d8c10cafc813be5bc3bbc87d6f7e81e4c6f48e54fd3",
+      "doc_path": "refs/notes/rlm-study",
+      "file": "spec/refs/notes/rlm-study.md",
+      "heading": "Open questions carried to synthesis",
+      "line": 137,
+      "uri": "spec://fractality/refs/notes/rlm-study#open"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:11d721c61d7d17e711fcce9fdfd1e26ef5c7eb3894150986f1e919cf27875384",
+      "doc_path": "refs/notes/roma-study",
+      "file": "spec/refs/notes/roma-study.md",
+      "heading": "Study note — ROMA (Recursive Open Meta-Agents)",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/roma-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:62358f93da41e6e900e244d798aa5842faf6d2f19672c8bef84ccb273c963435",
+      "doc_path": "refs/notes/roma-study",
+      "file": "spec/refs/notes/roma-study.md",
+      "heading": "What it is",
+      "line": 12,
+      "uri": "spec://fractality/refs/notes/roma-study#what"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:ad6aa7d4d55161eabf09cf41c3efaf55e6ca93f1fb1f93c2cf33a5684fc60a8b",
+      "doc_path": "refs/notes/roma-study",
+      "file": "spec/refs/notes/roma-study.md",
+      "heading": "Facts that matter to us",
+      "line": 25,
+      "uri": "spec://fractality/refs/notes/roma-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:86c6c87db16c5db142c418c6d7fc3248b71e1e7b218da2befc1b21c1cd5e1870",
+      "doc_path": "refs/notes/roma-study",
+      "file": "spec/refs/notes/roma-study.md",
+      "heading": "Decisions we take",
+      "line": 67,
+      "uri": "spec://fractality/refs/notes/roma-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:16730588bc69b0662e972274b53cc8692e20e444364db364dfb08a3a50a96bee",
+      "doc_path": "refs/notes/srlm-study",
+      "file": "spec/refs/notes/srlm-study.md",
+      "heading": "Study note — SRLM: Self-Reflective Program Search for Long Context",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/srlm-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:2a93f8ca0a6b502a092f5be98668da709362ed15589ada158d7f9d585465f2c6",
+      "doc_path": "refs/notes/srlm-study",
+      "file": "spec/refs/notes/srlm-study.md",
+      "heading": "What it is",
+      "line": 7,
+      "uri": "spec://fractality/refs/notes/srlm-study#what"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:f32154e3ce56b2e5278a6aa58ae646395d6b367b459865a3d1f72fcfd35a0fee",
+      "doc_path": "refs/notes/srlm-study",
+      "file": "spec/refs/notes/srlm-study.md",
+      "heading": "Decisions we take",
+      "line": 31,
+      "uri": "spec://fractality/refs/notes/srlm-study#decisions"
+    },
+    {
+      "anchor": "root",
+      "content_hash": "sha256:a8aad7ee6540cc2e98ba95a8035676597d92114cb6bca1837c42fc9d103d7d13",
+      "doc_path": "refs/notes/trinity-study",
+      "file": "spec/refs/notes/trinity-study.md",
+      "heading": "Study note — TRINITY: An Evolved LLM Coordinator",
+      "line": 1,
+      "uri": "spec://fractality/refs/notes/trinity-study#root"
+    },
+    {
+      "anchor": "what",
+      "content_hash": "sha256:f3c14894012918f5de9a9511a5960ab68657fdc4ce0c6866cc79440448950f15",
+      "doc_path": "refs/notes/trinity-study",
+      "file": "spec/refs/notes/trinity-study.md",
+      "heading": "What it is",
+      "line": 8,
+      "uri": "spec://fractality/refs/notes/trinity-study#what"
+    },
+    {
+      "anchor": "facts",
+      "content_hash": "sha256:033da36d6b618f0f201eb8c238f9ab302097cfd802a6e5e8ea95a9413d34ab6e",
+      "doc_path": "refs/notes/trinity-study",
+      "file": "spec/refs/notes/trinity-study.md",
+      "heading": "Facts",
+      "line": 21,
+      "uri": "spec://fractality/refs/notes/trinity-study#facts"
+    },
+    {
+      "anchor": "decisions",
+      "content_hash": "sha256:58128b30eef3af0dadcc0ddb68fe889a17c86a468ed5161ac8c4b3897b68161b",
+      "doc_path": "refs/notes/trinity-study",
+      "file": "spec/refs/notes/trinity-study.md",
+      "heading": "Decisions we take",
+      "line": 38,
+      "uri": "spec://fractality/refs/notes/trinity-study#decisions"
+    }
+  ],
+  "suspects": [],
+  "warnings": []
+}

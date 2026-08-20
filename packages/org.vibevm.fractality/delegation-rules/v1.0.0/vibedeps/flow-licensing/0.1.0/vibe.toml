@@ -1,0 +1,22 @@
+[package]
+name = "licensing"
+group = "org.vibevm"
+kind = "flow"
+version = "0.1.0"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Licensing posture for a product: a proprietary-with-relicense-intent placeholder, permissive-only dependencies, and the EULA-to-open path"
+keywords = ["license", "eula", "proprietary", "dependencies", "compliance"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []
+
+[boot_snippet]
+source = "spec/boot/60-flow-licensing.md"
+category = "flow"
+
+[[skill]]
+name = "draft-eula"
+path = "spec/skills/draft-eula"
+description = "Draft or review a project's license posture: the placeholder EULA with relicense intent, the dependency-permissiveness check, and the third-party carve-out"

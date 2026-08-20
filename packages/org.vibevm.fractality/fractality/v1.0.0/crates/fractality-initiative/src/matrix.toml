@@ -1,0 +1,77 @@
+# matrix.toml — the delegation decision matrix as data (Campaign 2, D6).
+#
+# The human-readable form of the verdict procedure from the delegation
+# decision matrix (spec://fractality/delegation-rules/DECISION-MATRIX).
+# The Rust constant tables in route.rs are the parsed executable form the
+# engine actually reads; the include_str! drift tripwire in route.rs
+# asserts this text mentions every axis value (present) and every rule
+# name (exactly once), so the two representations cannot silently drift.
+#
+# This file is DATA, not configuration the engine loads at runtime — the
+# crate gains no toml parser, by design (a full parser is deliberately
+# not the goal). It documents the four axes, the three ordered KEEP
+# gates, and the size × verify delegate routes for the humans and the
+# specs that cite it.
+
+# ---- the four axes (§axes) ----------------------------------------------
+# Each axis is flat and enumerable: no scales, no vibes. Score the task
+# on all four before routing.
+[axes]
+error_cost = ["reversible", "irreversible"]                     # what a wrong result destroys
+context    = ["compilable", "boot-loadable", "untransferable"]  # what the worker must know
+verify     = ["mechanical", "judgment"]                         # how the result is proven
+size       = ["S", "M", "L"]                                    # honest boss-time to do it directly
+
+# ---- the KEEP gates (§verdict steps 1–3) --------------------------------
+# Applied in order; the first whose `when` matches decides. A task that
+# survives all three is delegated by the routes below.
+[[gate]]
+name    = "never-delegate"
+when    = { error_cost = "irreversible" }
+verdict = "keep"
+reason  = "Error cost irreversible → KEEP. This rule enumerates the hard boundary the boss never hands off: secrets, publishes, force-pushes, deletions of shared state."
+
+[[gate]]
+name    = "untransferable-context"
+when    = { context = "untransferable" }
+verdict = "keep"
+reason  = "Context untransferable → KEEP. No prompt or corpus order can carry the context, so the delegation would ship a guess."
+
+[[gate]]
+name    = "judgment-small"
+when    = { verify = "judgment", size = ["S", "M"] }
+verdict = "keep"
+reason  = "Verifiability judgment AND size S|M → KEEP. Deep review of a small result costs as much as doing it — no margin."
+
+# ---- the delegate routes (§verdict step 4) ------------------------------
+# size × verify → slot and scenario. A task that survives the gates is
+# routed here. Scenario follows context on the big slot (compilable →
+# "1" precision-compiled, boot-loadable → "2" boot from named files);
+# the small one-shot is always precision-compiled (scenario "1"). The
+# L × judgment cell is the one discretionary delegation: a first draft
+# only, when a mechanical acceptance slice exists; the judgment residue
+# stays with the boss, or KEEP.
+[[route]]
+name     = "route-small-mechanical"
+size     = "S"
+verify   = "mechanical"
+slot     = "small"
+scenario = { compilable = "1", boot-loadable = "1" }
+reason   = "S × mechanical → small slot (model = small; one-shot, scenario 1). Bounded mechanical transforms where the spec is longer than the thinking."
+
+[[route]]
+name     = "route-big-mechanical"
+size     = ["M", "L"]
+verify   = "mechanical"
+slot     = "big"
+scenario = { compilable = "1", boot-loadable = "2" }
+reason   = "M|L × mechanical → big slot (model = big; coarse one-shot, scenario 1 when compilable, scenario 2 when boot-loadable)."
+
+[[route]]
+name          = "route-big-judgment-draft"
+size          = "L"
+verify        = "judgment"
+slot          = "big"
+discretionary = true
+scenario      = { compilable = "1", boot-loadable = "2" }
+reason        = "L × judgment → big slot, draft only (the one discretionary cell). Delegate a first draft when a mechanical acceptance slice exists; the judgment residue stays with the boss, or KEEP."

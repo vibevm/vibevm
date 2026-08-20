@@ -1,0 +1,297 @@
+[meta]
+generated_by = "vibe 0.1.0-dev"
+generated_at = "2026-07-10T00:45:27Z"
+schema_version = 5
+root_dependencies = [
+    "flow:org.vibevm/redbook@^0.2.0",
+    "stack:org.vibevm/rust-ai-native@^0.7.0",
+]
+
+[[package]]
+kind = "flow"
+name = "redbook"
+group = "org.vibevm"
+version = "0.2.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/redbook/v0.2.0"
+content_hash = "sha256:184fdf6395a5fac3ebf3b103542d2ce3497f66ffcf6f9cd49633c7f3277e4499"
+files_written = []
+dependencies = [
+    "flow:org.vibevm/addressable-specs@=0.1.0",
+    "flow:org.vibevm/atomic-commits@=0.1.0",
+    "flow:org.vibevm/attribution-policy@=0.1.0",
+    "flow:org.vibevm/campaign-plans@=0.1.0",
+    "flow:org.vibevm/comparative-research@=0.1.0",
+    "flow:org.vibevm/conflict-protocol@=0.1.0",
+    "flow:org.vibevm/decision-records@=0.1.0",
+    "flow:org.vibevm/discovery-prompt@=0.1.0",
+    "flow:org.vibevm/health-audit@=0.1.0",
+    "flow:org.vibevm/licensing@=0.1.0",
+    "flow:org.vibevm/managed-blocks@=0.1.0",
+    "flow:org.vibevm/manual-tests@=0.1.0",
+    "flow:org.vibevm/operating-modes@=0.1.0",
+    "flow:org.vibevm/qualified-naming@=0.1.0",
+    "flow:org.vibevm/secrets-hygiene@=0.1.0",
+    "flow:org.vibevm/source-mirrors@=0.1.0",
+    "flow:org.vibevm/spec-genres@=0.1.0",
+    "flow:org.vibevm/sync-from-code@=0.1.0",
+    "flow:org.vibevm/tool-design-lessons@=0.1.0",
+    "flow:org.vibevm/two-process-model@=0.1.0",
+    "flow:org.vibevm/wal@=0.2.0",
+]
+source_kind = "registry"
+
+[[package]]
+kind = "stack"
+name = "rust-ai-native"
+group = "org.vibevm"
+version = "0.7.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native/v0.7.0"
+content_hash = "sha256:08f6495e5d9eec5b1a94c704d336d2da84ba2c0af8fe0be273952386aed55e9d"
+files_written = []
+dependencies = [
+    "mcp:org.vibevm/rust-ai-native-mcp@=0.7.0",
+    "stack:org.vibevm/rust-ai-native-lang@=0.7.0",
+]
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "addressable-specs"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/addressable-specs/v0.1.0"
+content_hash = "sha256:047f72675d736595dcfa273d900f4027365e71f146d4f246c02efe0f4f7449a7"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "atomic-commits"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/atomic-commits/v0.1.0"
+content_hash = "sha256:60462a75734dacd1644bd38ea31ddd82882be99b51b5406822b0695c4509cb19"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "attribution-policy"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/attribution-policy/v0.1.0"
+content_hash = "sha256:53cf1d31013a2d40d2065fe0f8413f3bb6f138643d16db10e5f8e17933a60152"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "campaign-plans"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/campaign-plans/v0.1.0"
+content_hash = "sha256:2b0896d2deed36002793825ff3036089cc8db82a1becdbcb744e0e95ad379788"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "comparative-research"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/comparative-research/v0.1.0"
+content_hash = "sha256:019740a2d87d49b8b45a6c49731d97f8c3ba67f1ba56a0cd7ef0f131accca232"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "conflict-protocol"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/conflict-protocol/v0.1.0"
+content_hash = "sha256:2c6096e71f687750ac4c48cb084a2ce84d07fec75445d059b3fd276e918e1481"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "core-ai-native"
+group = "org.vibevm"
+version = "0.7.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/core-ai-native/v0.7.0"
+content_hash = "sha256:da6fed3d56087cff53eebb8e1843c85b75cc500d08ac57785ab6a154367a84e0"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "decision-records"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/decision-records/v0.1.0"
+content_hash = "sha256:969405002d6b7ca53bf1676507d22de8250cb559653b6b8c00f14f177a8f6278"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "discovery-prompt"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/discovery-prompt/v0.1.0"
+content_hash = "sha256:714efd964abb3ae1874994a04c0d6eddaf0fe2b0093b91515d29991ac2c3e804"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "health-audit"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/health-audit/v0.1.0"
+content_hash = "sha256:126fed103d152caf1641b0872d12fe026437dfb95afd6705ac9e302d7106ea42"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "licensing"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/licensing/v0.1.0"
+content_hash = "sha256:d71213c7a9f4a3fb147a4febe308ff95efaf8da58d96a73fa87310e1aabbf70d"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "managed-blocks"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/managed-blocks/v0.1.0"
+content_hash = "sha256:a9793f026844570f062055601edd25eb03a924f194c395227a5f6d135694a91c"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "manual-tests"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/manual-tests/v0.1.0"
+content_hash = "sha256:1e41090c41dec936cedaf105dbd65e2ce023a5a72e77cabeab8e455015b8ab8a"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "operating-modes"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/operating-modes/v0.1.0"
+content_hash = "sha256:fe8560ad22387a6f6d5bc87bf7ffcb9b2a16ab0fb2ce3884da3979856ce27002"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "qualified-naming"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/qualified-naming/v0.1.0"
+content_hash = "sha256:871dcb1cfa4326c0b4a7f1d8cd878e84430f4848ce1af3121d768fb94b628474"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "stack"
+name = "rust-ai-native-lang"
+group = "org.vibevm"
+version = "0.7.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native-lang/v0.7.0"
+content_hash = "sha256:e43b849732db548b25554309d67acd932d3006b4b053f472d8e16ec32dd8abaa"
+files_written = []
+dependencies = ["flow:org.vibevm/core-ai-native@=0.7.0"]
+source_kind = "registry"
+
+[[package]]
+kind = "mcp"
+name = "rust-ai-native-mcp"
+group = "org.vibevm"
+version = "0.7.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/rust-ai-native-mcp/v0.7.0"
+content_hash = "sha256:4e14b0b25211b5799129cb41e6ebcb86277301169be1ed0c44e166de4b28be97"
+files_written = []
+dependencies = ["stack:org.vibevm/rust-ai-native-lang@=0.7.0"]
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "secrets-hygiene"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/secrets-hygiene/v0.1.0"
+content_hash = "sha256:c79952c8b174fa3d25ba93dd0531e9b374c27cf960f43fb25052ccfecc78ba42"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "source-mirrors"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/source-mirrors/v0.1.0"
+content_hash = "sha256:fae9798c1fe359f393eaa8faa203b2f4c77b2db5ab2011d33dadc3005d34c828"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "spec-genres"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/spec-genres/v0.1.0"
+content_hash = "sha256:9eb39afe83fd363c321653a1ec46bbe56eacd0b56d8f1203beae859a4b0d9663"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "sync-from-code"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/sync-from-code/v0.1.0"
+content_hash = "sha256:68a61f9a00a5722a8820a4259ffa35d2dfa4d4a3886911b09645ae7b2989e40a"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "tool-design-lessons"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/tool-design-lessons/v0.1.0"
+content_hash = "sha256:1a6a71ee8ca143340db4b7ca5c947034d99ad65b6af4b15c0f164fe1d14a0369"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "two-process-model"
+group = "org.vibevm"
+version = "0.1.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/two-process-model/v0.1.0"
+content_hash = "sha256:3097ea6a55010815f61e66b5fe9fdbd89f4c802e5bb75e2206d3b20b04490a78"
+files_written = []
+source_kind = "registry"
+
+[[package]]
+kind = "flow"
+name = "wal"
+group = "org.vibevm"
+version = "0.2.0"
+source_url = "file:///C:/Users/olegc/gits/vibevm/packages/org.vibevm/wal/v0.2.0"
+content_hash = "sha256:56823f9f750e066c5645cd8ff54728aa5af8b90f13ade9c58f42106f3ae6622c"
+files_written = []
+source_kind = "registry"

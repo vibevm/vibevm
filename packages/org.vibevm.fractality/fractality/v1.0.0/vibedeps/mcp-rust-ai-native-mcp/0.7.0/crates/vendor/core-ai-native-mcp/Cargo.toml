@@ -1,0 +1,20 @@
+[package]
+name = "core-ai-native-mcp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The neutral MCP server transport (MCP-CORE v0.1): line-delimited JSON-RPC loop, tool registry seam, stderr capture guard"
+
+[dependencies]
+specmark.workspace = true
+thiserror.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
