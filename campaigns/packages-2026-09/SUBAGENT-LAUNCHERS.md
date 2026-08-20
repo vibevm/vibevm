@@ -130,6 +130,18 @@ worktree-cwd — правило (config dir, cwd) выше это уже доп�
 `danger-full-access`; первый cargo-прогон лейна мерит это живьём.
 @status:impl/done
 
+@fact:codexrunner-appcontainer-debris **Коробочный Codex (MSIX) оставляет
+неудаляемый без elevation мусор в target/ (2026-08-20).** Воркеры
+codexrunner через Store-установку Codex создают часть build-файлов
+(fingerprint timestamps, инкрементальные `.o`, `.pdb`) с
+DACL/владельцем AppContainer-SID пакета: обычному пользователю их не
+читает даже `icacls`, не берёт `takeown`, не сносит `rd` — «Access is
+denied» на ~26 файлах на worktree при чистой массе, снятой обычным
+`rd /s /q` (+`icacls /reset /T` добирает часть). Добор остатка — только
+elevated-терминал: `takeown /F <wt>\target /R /D Y`, затем
+`icacls <wt>\target /grant <user>:F /T /C`, затем `rd /s /q`.
+Учитывать при уборке дисков после codex-воркеров. @status:impl/done
+
 @fact:subagent-quiet-clause **Клауза субагентского режима — обязательный
 абзац КАЖДОГО пакета и указателя, любой лейн (владелец, 2026-08-20).**
 Экранный текст воркера не читает никто — деливерабл только артефакты
