@@ -25,6 +25,10 @@ desktop.ini
 # Claude Code per-developer local settings — machine-scoped, not shared.
 .claude/settings.local.json
 
+# The compaction breadcrumb log the PreCompact hook appends to — per-machine
+# session telemetry, grows unbounded, never project state.
+.claude/compact-log.txt
+
 # Agent skill projections — written by `vibe skill install` from the
 # installed packages' [[skill]] declarations; reproducible, per-developer.
 .claude/skills/
