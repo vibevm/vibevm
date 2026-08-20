@@ -254,7 +254,6 @@ mod tests {
     fn is_modified_is_false_initially_true_after_an_edit() {
         let dir = tempdir().unwrap();
         let mut form = Form::for_test(
-            "Palette",
             "a page",
             vec![field(
                 "vibe.tree.flag",
@@ -277,7 +276,6 @@ mod tests {
         let dir = tempdir().unwrap();
         let l3 = dir.path().join("settings.local.toml");
         let mut form = Form::for_test(
-            "Palette",
             "a page",
             vec![field(
                 "vibe.tree.flag",
@@ -304,7 +302,6 @@ mod tests {
         let dir = tempdir().unwrap();
         let l3 = dir.path().join("settings.local.toml");
         let mut form = Form::for_test(
-            "Palette",
             "a page",
             vec![field(
                 "vibe.tree.flag",
@@ -323,7 +320,6 @@ mod tests {
     fn apply_refuses_a_scope_forbidden_layer_citing_section_7() {
         let dir = tempdir().unwrap();
         let mut form = Form::for_test(
-            "Machine",
             "a page",
             vec![field(
                 "vibe.tree.machine_path",
@@ -359,7 +355,6 @@ mod tests {
         let dir = tempdir().unwrap();
         let schema = schema();
         let mut form = Form::for_test(
-            "Machine",
             "a page",
             vec![field(
                 "vibe.tree.machine_path",
@@ -401,7 +396,6 @@ mod tests {
     fn apply_refuses_an_invalid_int_value() {
         let dir = tempdir().unwrap();
         let mut form = Form::for_test(
-            "Tier",
             "a page",
             vec![field(
                 "vibe.tree.tier",
@@ -426,7 +420,6 @@ mod tests {
         let prefs = prefs();
         let dir = tempdir().unwrap();
         let mut form = Form::for_test(
-            "Palette",
             "a page",
             vec![field(
                 "vibe.tree.flag",
@@ -463,7 +456,6 @@ mod tests {
             toml::Table::new(),
         );
         let mut form = Form::for_test(
-            "Mode",
             "a page",
             vec![field(
                 "vibe.tree.mode",
@@ -495,7 +487,6 @@ mod tests {
         let l3 = dir.path().join("settings.local.toml");
         fs::write(&l3, "# L3 — user-project.\n[vibe.tree]\nflag = false\n").unwrap();
         let mut form = Form::for_test(
-            "Palette",
             "a page",
             vec![field(
                 "vibe.tree.flag",

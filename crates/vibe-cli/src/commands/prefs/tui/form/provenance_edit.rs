@@ -206,7 +206,6 @@ mod tests {
         };
         let prefs = resolve(raw, &schema(), toml::Table::new(), toml::Table::new());
         let mut form = Form::for_test(
-            "Palette",
             "a page",
             vec![field(
                 "vibe.tree.flag",
@@ -251,7 +250,6 @@ mod tests {
             Some(&toml::Value::Boolean(true))
         );
         let mut form = Form::for_test(
-            "Palette",
             "a page",
             vec![field(
                 "vibe.tree.flag",
@@ -280,7 +278,6 @@ mod tests {
             toml::Table::new(),
         );
         let mut form = Form::for_test(
-            "Machine",
             "a page",
             vec![field(
                 "vibe.tree.machine_path",

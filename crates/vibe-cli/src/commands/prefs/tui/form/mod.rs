@@ -7,8 +7,9 @@
 //!
 //! The per-type control derivation lives in [`control`]; the Configurable
 //! lifecycle (`is_modified` / `apply` / `reset`) in [`lifecycle`]; the render in
-//! [`render`]. This module owns the aggregate + the build from [`PrefsApp`] +
-//! the focus / write-layer navigation.
+//! [`render`]. This module owns the aggregate + the default lazy body
+//! constructor ([`default_body`], the §2 `#page-lazy-body` composition every
+//! built-in page pins) + the focus / write-layer navigation.
 //!
 //! The form is a **surface** over PROP-040's data layer (PROP-041 §1
 //! `#surface-not-engine`): it reads `ResolvedPrefs` + `Schema` and writes
@@ -36,7 +37,7 @@ use vibe_settings::schema::KeyMeta;
 
 use crate::commands::tree::tui::settings::TreeSettings;
 
-use super::state::PrefsApp;
+use super::registry::{BodyCtx, PageBody, PageDecl};
 use control::FieldControl;
 use control::build_control;
 
@@ -124,14 +125,10 @@ impl FormField {
 /// The per-type edit form over an open page's keys (PROP-041 §4). Owns one
 /// [`FormField`] per key, the field-focus index, the chosen write-layer, and the
 /// three layer file paths. The Configurable lifecycle (`is_modified` / `apply` /
-/// `reset`) lives in [`lifecycle`]; the render in [`render`].
+/// `reset`) lives in [`lifecycle`]; the render in [`render`]. Built through the
+/// page's lazy body constructor on first open — [`default_body`] for every
+/// built-in page (§2 `#page-lazy-body`).
 pub struct Form {
-    /// The open page id.
-    #[allow(dead_code)] // introspection: carried for the AIUI / a future jump-to-page.
-    pub page_id: String,
-    /// The page title (display name).
-    #[allow(dead_code)] // introspection: the border title is sourced from PrefsApp today.
-    pub title: String,
     /// The page description (rendered at the top of the form).
     pub description: String,
     /// One field per key, in page-declaration order.
@@ -149,63 +146,58 @@ pub struct Form {
     paths: LayerPaths,
 }
 
-impl Form {
-    /// Build the form for the open page over the app's resolved prefs + schema
-    /// (PROP-041 §4 `#form-per-type`). One field per page key, derived from the
-    /// key's `KeyMeta` + resolved value. The write-layer defaults per the session
-    /// context (#write-layer-choice). Returns `None` when no page is open.
-    #[spec(
-        implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#form-per-type"
-    )]
-    pub fn build(app: &PrefsApp) -> Option<Self> {
-        let page_id = app.open_page.as_deref()?;
-        let decl = app.registry.pages().iter().find(|d| d.id == page_id)?;
-        let paths = LayerPaths::from_env();
-        let write_layer = default_write_layer(app.ctx.has_project);
-        let fields = decl
-            .keys
-            .iter()
-            .filter_map(|key| {
-                let meta = app.schema.get(key)?.clone();
-                let resolved = app.prefs.get(key);
-                let baseline = resolved
-                    .cloned()
-                    .or_else(|| meta.default.clone())
-                    .unwrap_or_else(|| toml::Value::String(String::new()));
-                let control = build_control(&meta, resolved);
-                Some(FormField {
-                    key: key.clone(),
-                    meta,
-                    control,
-                    baseline,
-                })
+/// The default lazy body constructor (PROP-041 §2 `#page-lazy-body`, §4
+/// `#form-per-type`): the per-type form over the declaration's `keys` — one
+/// field per key, derived from the key's `KeyMeta` + resolved value, with the
+/// `#write-layer-choice` default for the session. Called on a page's **first
+/// open** only (the app caches the built body); every built-in page pins this
+/// as its [`PageDecl::body`].
+#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#form-per-type")]
+pub fn default_body(decl: &PageDecl, ctx: &BodyCtx<'_>) -> PageBody {
+    let paths = LayerPaths::from_env();
+    let write_layer = default_write_layer(ctx.has_project);
+    let fields = decl
+        .keys
+        .iter()
+        .filter_map(|key| {
+            let meta = ctx.schema.get(key)?.clone();
+            let resolved = ctx.prefs.get(key);
+            let baseline = resolved
+                .cloned()
+                .or_else(|| meta.default.clone())
+                .unwrap_or_else(|| toml::Value::String(String::new()));
+            let control = build_control(&meta, resolved);
+            Some(FormField {
+                key: key.clone(),
+                meta,
+                control,
+                baseline,
             })
-            .collect();
-        Some(Form {
-            page_id: page_id.to_owned(),
-            title: decl.display_name.clone(),
+        })
+        .collect();
+    PageBody {
+        form: Form {
             description: decl.description.clone(),
             fields,
             focus: 0,
             write_layer,
             provenance_open: false,
             paths,
-        })
+        },
     }
+}
 
+impl Form {
     /// Test constructor with explicit layer paths (so `apply` can be exercised
     /// against a tempdir without touching the operator's real `~/.vibe/`).
     #[cfg(test)]
     pub(crate) fn for_test(
-        title: impl Into<String>,
         description: impl Into<String>,
         fields: Vec<FormField>,
         write_layer: Layer,
         paths: LayerPaths,
     ) -> Self {
         Form {
-            page_id: "__test".to_owned(),
-            title: title.into(),
             description: description.into(),
             fields,
             focus: 0,
@@ -282,10 +274,9 @@ fn default_write_layer(has_project: bool) -> Layer {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::commands::prefs::tui::state::PrefsCtx;
     use crate::commands::tree::tui::settings::TreeSettings;
     use vibe_settings::loader::LayeredRaw;
-    use vibe_settings::resolver::resolve;
+    use vibe_settings::resolver::{ResolvedPrefs, resolve};
     use vibe_settings::schema::{KeyMeta, KeyType, Schema, Scope};
 
     /// A schema with one bool + one closed-set string (mode) key.
@@ -306,31 +297,34 @@ mod tests {
         s
     }
 
-    fn app() -> PrefsApp {
-        let prefs = resolve(
+    fn resolved() -> ResolvedPrefs {
+        resolve(
             LayeredRaw::default(),
             &schema(),
             toml::Table::new(),
             toml::Table::new(),
-        );
-        PrefsApp::new(prefs, schema(), PrefsCtx::new(true))
+        )
+    }
+
+    fn project_ctx<'a>(prefs: &'a ResolvedPrefs, schema: &'a Schema) -> BodyCtx<'a> {
+        BodyCtx {
+            prefs,
+            schema,
+            has_project: true,
+        }
     }
 
     #[test]
-    fn build_derives_one_field_per_key_with_controls() {
-        let mut app = app();
-        // Plant an open page with the two keys.
-        app.open_page = Some("test".into());
-        app.registry = super::super::registry::PageRegistry::from(vec![
-            super::super::registry::PageDecl::new("test", "Test", "a test page")
-                .with_keys(&["vibe.tree.flag", "vibe.tree.mode"]),
-        ]);
-        app.rebuild();
-        let form = Form::build(&app).unwrap();
+    fn default_body_derives_one_field_per_key_with_controls() {
+        let prefs = resolved();
+        let decl = PageDecl::new("test", "Test", "a test page")
+            .with_keys(&["vibe.tree.flag", "vibe.tree.mode"]);
+        let form = default_body(&decl, &project_ctx(&prefs, &schema())).form;
         assert_eq!(form.fields.len(), 2);
         assert!(matches!(form.fields[0].control, FieldControl::Toggle(_)));
         assert!(matches!(form.fields[1].control, FieldControl::Selection(_)));
         assert_eq!(form.focus, 0);
+        assert_eq!(form.description, "a test page");
     }
 
     #[test]
@@ -341,14 +335,10 @@ mod tests {
 
     #[test]
     fn move_up_down_advances_field_focus() {
-        let mut app = app();
-        app.open_page = Some("test".into());
-        app.registry = super::super::registry::PageRegistry::from(vec![
-            super::super::registry::PageDecl::new("test", "Test", "a test page")
-                .with_keys(&["vibe.tree.flag", "vibe.tree.mode"]),
-        ]);
-        app.rebuild();
-        let mut form = Form::build(&app).unwrap();
+        let prefs = resolved();
+        let decl = PageDecl::new("test", "Test", "a test page")
+            .with_keys(&["vibe.tree.flag", "vibe.tree.mode"]);
+        let mut form = default_body(&decl, &project_ctx(&prefs, &schema())).form;
         assert_eq!(form.focus, 0);
         form.move_down();
         assert_eq!(form.focus, 1);
@@ -362,14 +352,9 @@ mod tests {
 
     #[test]
     fn cycle_write_layer_wraps_l1_l2_l3() {
-        let mut app = app();
-        app.open_page = Some("test".into());
-        app.registry = super::super::registry::PageRegistry::from(vec![
-            super::super::registry::PageDecl::new("test", "Test", "a test page")
-                .with_keys(&["vibe.tree.flag"]),
-        ]);
-        app.rebuild();
-        let mut form = Form::build(&app).unwrap();
+        let prefs = resolved();
+        let decl = PageDecl::new("test", "Test", "a test page").with_keys(&["vibe.tree.flag"]);
+        let mut form = default_body(&decl, &project_ctx(&prefs, &schema())).form;
         assert_eq!(form.write_layer, Layer::L3); // project session default
         form.cycle_write_layer();
         assert_eq!(form.write_layer, Layer::L1);

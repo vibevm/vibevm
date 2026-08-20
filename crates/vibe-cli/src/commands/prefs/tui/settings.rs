@@ -15,6 +15,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#registry");
 
+use super::form::default_body;
 use super::registry::{PageDecl, PageRegistry};
 
 // ── the group ids (stable, #stable-id-law) ───────────────────────────────────
@@ -43,7 +44,9 @@ const KEY_STATIC_FIRST: &str = "vibe.tree.static-first";
 /// Declare the built-in page set over `vibe.tree.*` and return the registry
 /// (PROP-041 §2). Two groups — "Appearance" (palette + tier) and "Tree" (mode +
 /// sort + shape + static-first) — each carrying leaf pages whose `keys` point
-/// at the underlying preference paths. All pages are [`PageScope::Application`]
+/// at the underlying preference paths. Every leaf pins the default lazy body
+/// ([`default_body`], §2 `#page-lazy-body` — the §4 form over its keys; no
+/// built-in composes a bespoke body). All pages are [`PageScope::Application`]
 /// (the `vibe.tree.*` keys are all `Scope::User` in PROP-040 §7, so they show
 /// in every session).
 pub fn builtin_registry() -> PageRegistry {
@@ -51,7 +54,9 @@ pub fn builtin_registry() -> PageRegistry {
 }
 
 /// The built-in page declarations, in a stable registration order (groups
-/// before their children so the registry's parent-resolution sees them).
+/// before their children so the registry's parent-resolution sees them). The
+/// two group declarations carry no body — a group is never opened (it folds);
+/// each leaf's body is the default §4 form, built on first open.
 pub fn builtin_pages() -> Vec<PageDecl> {
     vec![
         // ── Appearance group ────────────────────────────────────────────────
@@ -68,7 +73,8 @@ pub fn builtin_pages() -> Vec<PageDecl> {
         )
         .with_parent(GROUP_APPEARANCE)
         .with_weight(10)
-        .with_keys(&[KEY_PALETTE]),
+        .with_keys(&[KEY_PALETTE])
+        .with_body(default_body),
         PageDecl::new(
             "vibe.prefs.appearance.tier",
             "Rendering tier",
@@ -76,7 +82,8 @@ pub fn builtin_pages() -> Vec<PageDecl> {
         )
         .with_parent(GROUP_APPEARANCE)
         .with_weight(20)
-        .with_keys(&[KEY_TIER]),
+        .with_keys(&[KEY_TIER])
+        .with_body(default_body),
         // ── Tree group ──────────────────────────────────────────────────────
         PageDecl::new(
             GROUP_TREE,
@@ -91,7 +98,8 @@ pub fn builtin_pages() -> Vec<PageDecl> {
         )
         .with_parent(GROUP_TREE)
         .with_weight(10)
-        .with_keys(&[KEY_MODE]),
+        .with_keys(&[KEY_MODE])
+        .with_body(default_body),
         PageDecl::new(
             "vibe.prefs.tree.sort",
             "Row ordering",
@@ -99,7 +107,8 @@ pub fn builtin_pages() -> Vec<PageDecl> {
         )
         .with_parent(GROUP_TREE)
         .with_weight(20)
-        .with_keys(&[KEY_SORT]),
+        .with_keys(&[KEY_SORT])
+        .with_body(default_body),
         PageDecl::new(
             "vibe.prefs.tree.shape",
             "Tree shape",
@@ -107,7 +116,8 @@ pub fn builtin_pages() -> Vec<PageDecl> {
         )
         .with_parent(GROUP_TREE)
         .with_weight(30)
-        .with_keys(&[KEY_SHAPE]),
+        .with_keys(&[KEY_SHAPE])
+        .with_body(default_body),
         PageDecl::new(
             "vibe.prefs.tree.static-first",
             "Block order",
@@ -115,7 +125,8 @@ pub fn builtin_pages() -> Vec<PageDecl> {
         )
         .with_parent(GROUP_TREE)
         .with_weight(40)
-        .with_keys(&[KEY_STATIC_FIRST]),
+        .with_keys(&[KEY_STATIC_FIRST])
+        .with_body(default_body),
     ]
 }
 
@@ -128,7 +139,7 @@ mod tests {
     fn builtin_registry_has_two_groups_and_six_leaf_pages() {
         let r = builtin_registry();
         // 2 group declarations + 6 leaf pages = 8 declarations.
-        assert_eq!(r.len(), 8);
+        assert_eq!(r.pages().len(), 8);
         let leaves = r.pages().iter().filter(|d| d.parent_id.is_some()).count();
         assert_eq!(leaves, 6, "six leaf pages under the two groups");
     }

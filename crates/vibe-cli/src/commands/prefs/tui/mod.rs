@@ -7,21 +7,22 @@
 //! `#built-on-tree-tui`): it composes the same components + glyph vocabulary as
 //! the `vibe tree` TUI without re-inventing widgets.
 //!
-//! ## S1 — the foundation
+//! ## Shape
 //!
-//! Phase S1 ships the rat-salsa wiring ([`run`]), the page registry
-//! ([`registry`]), the built-in `vibe.tree.*` page declarations ([`settings`]),
-//! the settings-tree widget ([`page_tree`]), the [`state::PrefsApp`] model, and
-//! the draw + key pass. The right pane renders a **placeholder** panel for the
-//! open page; the per-type edit form (§4 `#form-per-type`) is S2. The launch
-//! entry lives in [`super`](crate::commands::prefs) (`vibe prefs ui`).
+//! The rat-salsa wiring ([`run`]) drives the page registry ([`registry`]), the
+//! built-in `vibe.tree.*` page declarations ([`settings`]), the settings-tree
+//! widget ([`page_tree`]), the [`state::PrefsApp`] model, and the per-type
+//! edit form (§4, [`form`]) rendered in the open page's pane. Each page's body
+//! is built lazily on first open (§2 `#page-lazy-body`). The launch entry
+//! lives in [`super`](crate::commands::prefs) (`vibe prefs ui`).
 //!
 //! ## rat-salsa 4.x
 //!
 //! [`run`] takes four `fn` pointers — `init` / `render` / `event` / `error` —
 //! plus the global facilities and [`state::PrefsApp`], mirroring the tree TUI's
 //! structure. The state owns the resolved prefs + schema + context, the page
-//! registry, the fold set + selection, and the open page.
+//! registry, the fold set + selection, the open page, and the built page
+//! bodies.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#overview");
 
@@ -49,8 +50,9 @@ use vibe_settings::schema::Schema;
 use state::{PrefsApp, PrefsCtx};
 
 /// The rat-salsa application event. `PollCrossterm` turns every terminal event
-/// into one of these via the `From` impl below; the base settings TUI carries
-/// no application-specific events yet (S2 will add form-action events, §8).
+/// into one of these via the `From` impl below; the settings TUI carries no
+/// application-specific events — every action, form edits included, routes
+/// through the `vibe.prefs` catalogue + keymap (§8 `#commands-are-actions`).
 pub enum AppEvent {
     /// A raw crossterm terminal event.
     Event(Event),

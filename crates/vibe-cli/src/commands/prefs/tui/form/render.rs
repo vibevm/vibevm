@@ -172,7 +172,7 @@ fn render_warning(
 /// Render one field's control rows (the per-type surface, §4 `#form-per-type`).
 fn render_control(
     area: Rect,
-    mut y: u16,
+    y: u16,
     control: &FieldControl,
     focused: bool,
     theme: &Theme,
@@ -198,30 +198,21 @@ fn render_control(
             write_line_obj(area, y, line, buf) + 1
         }
         FieldControl::Selection(sel) => {
-            // One row per option: `  ● option` / `  ○ option` (RadioGroup vocab).
-            let on = theme.glyphs().flag_on;
-            let off = theme.glyphs().flag_off;
-            for (i, option) in sel.options().iter().enumerate() {
-                if y >= area.y + area.height {
-                    break;
-                }
-                let is_sel = i == sel.selected_index();
-                let glyph = if is_sel { on } else { off };
-                let g_style = if is_sel { theme.accent() } else { theme.dim() };
-                let o_style = if is_sel && focused {
-                    theme.title()
-                } else {
-                    theme.text()
-                };
-                let line = Line::from(vec![
-                    Span::styled("  ", theme.text()),
-                    Span::styled(glyph, g_style),
-                    Span::styled(" ", theme.text()),
-                    Span::styled(option.as_str(), o_style),
-                ]);
-                y = write_line_obj(area, y, line, buf) + 1;
-            }
-            y
+            // Composed through the shared `ui::RadioGroup` (PROP-041 §4
+            // `#form-per-type` + §1 `#built-on-tree-tui`): the widget owns the
+            // title row (the field's short name), the option marks, and the
+            // focused selected-option emphasis. The form hands it an indented
+            // block — one row for the title plus one per option.
+            let rows = 1 + sel.options().len() as u16;
+            let remaining = area.y + area.height - y;
+            let block = Rect {
+                x: area.x + 2,
+                y,
+                width: area.width.saturating_sub(2),
+                height: remaining.min(rows),
+            };
+            sel.render(block, buf, theme, focused);
+            y + block.height
         }
         FieldControl::Text { field, .. } => {
             // A one-row TextField; build a focused copy when this field is
@@ -379,8 +370,11 @@ mod tests {
         let meta = KeyMeta::new(name, KeyType::String, Scope::User, "a selection")
             .unwrap()
             .with_default(toml::Value::String(opts[selected].into()));
+        // The label is the key's short name — what `build_control` derives, and
+        // what the composed `RadioGroup` titles its block by.
+        let label = name.rsplit('.').next().unwrap_or(name);
         let sel = Selection::new(
-            "x",
+            label,
             opts.iter().map(|s| (*s).to_owned()).collect(),
             selected,
         );
@@ -422,7 +416,6 @@ mod tests {
     fn render_form_draws_label_badge_and_toggle_control() {
         let theme = Theme::default();
         let form = Form::for_test(
-            "Block",
             "block order",
             vec![bool_field("vibe.tree.flag", true, Applies::Live)],
             Layer::L3,
@@ -443,7 +436,6 @@ mod tests {
     fn render_form_draws_selection_options_with_on_off_glyphs() {
         let theme = Theme::default();
         let form = Form::for_test(
-            "Mode",
             "the mode",
             vec![selection_field("vibe.tree.mode", &["all", "tabs"], 0)],
             Layer::L3,
@@ -464,7 +456,6 @@ mod tests {
     fn render_form_draws_text_field_value() {
         let theme = Theme::default();
         let form = Form::for_test(
-            "Tier",
             "the tier",
             vec![text_field("vibe.tree.tier", "3", TextKind::Int)],
             Layer::L3,
@@ -482,7 +473,6 @@ mod tests {
     fn render_form_shows_write_layer_and_hints_at_the_bottom() {
         let theme = Theme::default();
         let form = Form::for_test(
-            "Palette",
             "the palette",
             vec![bool_field("vibe.tree.flag", true, Applies::Live)],
             Layer::L3,
@@ -505,7 +495,6 @@ mod tests {
     fn focused_field_label_carries_the_fold_glyph_marker() {
         let theme = Theme::default();
         let form = Form::for_test(
-            "Page",
             "two fields",
             vec![
                 bool_field("vibe.tree.a", true, Applies::Live),

@@ -8,19 +8,24 @@
 //!
 //! This is the clean-room IntelliJ `Configurable` EP shape (the research
 //! reference, §3.7) — **not** its code. The registry is the enumerable source
-//! for both the settings tree (§3) and the future search index (§7): adding a
-//! page means registering a declaration, which then appears in the tree with no
+//! for both the settings tree (§3) and the search index (§7): adding a page
+//! means registering a declaration, which then appears in the tree with no
 //! further wiring. A page `id` is immutable once published (#stable-id-law).
 //!
-//! Frontend-agnostic metadata only — no rendering here. The tree widget lives
-//! in [`super::page_tree`]; the built-in declarations live in
-//! [`super::settings`].
+//! Frontend-agnostic metadata + the lazy body seam — no rendering and no form
+//! construction happen here. The tree widget lives in [`super::page_tree`];
+//! the built-in declarations in [`super::settings`]; the default body (the §4
+//! form over a declaration's keys) in [`super::form::default_body`].
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#registry");
 
 use std::collections::{BTreeMap, BTreeSet};
 
 use specmark::spec;
+use vibe_settings::resolver::ResolvedPrefs;
+use vibe_settings::schema::Schema;
+
+use super::form::default_body;
 
 /// The synthetic group id under which pages with an **unresolved** parent land
 /// (PROP-041 §2 `#declarative-pages` — "unresolved groups land in 'Other'").
@@ -46,22 +51,27 @@ pub enum PageScope {
 
 /// The lazy page body (PROP-041 §2 `#declarative-pages` — a lazy page body
 /// created on first open; the registry metadata is cheap so the whole tree
-/// renders without constructing every form).
-///
-/// S1 ships the [`PageBody::Placeholder`] — the right pane renders a titled
-/// panel; S2 fills the per-type form (§4 `#form-per-type`).
-#[derive(Debug, Clone, Default)]
-pub enum PageBody {
-    /// S1 placeholder — the form is not built yet. S2 replaces this with the
-    /// per-type field composition (§4).
-    #[default]
-    Placeholder,
+/// renders without constructing every form). Today a page's body **is** its §4
+/// per-type edit form; [`PageDecl::body`] is the composition point a page
+/// overrides to build something else.
+pub struct PageBody {
+    /// The built per-type edit form (§4 `#form-per-type`).
+    pub form: super::form::Form,
 }
 
-/// The default body constructor — every S1 page uses this. S2 will let each
-/// page declare its own form-building function.
-fn default_body() -> PageBody {
-    PageBody::Placeholder
+/// What a body constructor builds from (PROP-041 §2 `#page-lazy-body`): the
+/// session's resolved prefs + schema (read-only — the surface owns no
+/// preference logic, §1 `#surface-not-engine`) and whether a project (L2) is
+/// active (the §4 `#write-layer-choice` default). Cheap to borrow — the app
+/// hands it to the body constructor on first open.
+pub struct BodyCtx<'a> {
+    /// The resolved preference snapshot (§1 `#surface-not-engine`).
+    pub prefs: &'a ResolvedPrefs,
+    /// The declared preference-key schema (the §4 per-type controls read it).
+    pub schema: &'a Schema,
+    /// Whether a project root (L2) is active — L3 is the default write-layer
+    /// with a project, L1 without (§4 `#write-layer-choice`).
+    pub has_project: bool,
 }
 
 /// One declared settings page (PROP-041 §2 `#declarative-pages`).
@@ -87,16 +97,20 @@ pub struct PageDecl {
     pub scope: PageScope,
     /// The preference keys this page owns (dotted paths). Read through
     /// `ResolvedPrefs::inspect` for the origin hint (§3
-    /// `#tree-shows-origin-hint`).
+    /// `#tree-shows-origin-hint`); the default body builds one §4 form field
+    /// per key.
     pub keys: Vec<String>,
-    /// Lazy body constructor — called on first open (§2 `#declarative-pages`).
-    pub body: fn() -> PageBody,
+    /// Lazy body constructor — the composition point called on **first open**
+    /// only (§2 `#page-lazy-body`; the app caches the built body, so the tree
+    /// enumerates declarations without ever calling it). The default
+    /// ([`super::form::default_body`]) builds the §4 form from `keys`.
+    pub body: fn(&PageDecl, &BodyCtx<'_>) -> PageBody,
 }
 
 impl PageDecl {
     /// Build a page declaration with the mandatory fields. The optional fields
     /// default to: no parent, `group_weight = 0`, `scope = Application`,
-    /// no keys, and the default placeholder body.
+    /// no keys, and the default form body ([`super::form::default_body`]).
     #[must_use]
     pub fn new(
         id: impl Into<String>,
@@ -130,7 +144,12 @@ impl PageDecl {
     }
 
     /// Set the scope flag (chains).
-    #[allow(dead_code)] // used in tests today; S2's project-scoped pages + the UI use it.
+    // The contract's required declaration surface: `#declarative-pages` carries
+    // `scope_flag` and `#tree-context` filters `PageScope::Project` pages out of
+    // a no-project session — live in `PageRegistry::tree`, covered by its tests.
+    // Every built-in page is Application-scoped today, so only tests exercise
+    // the Project branch.
+    #[allow(dead_code)]
     #[must_use]
     pub fn with_scope(mut self, scope: PageScope) -> Self {
         self.scope = scope;
@@ -144,10 +163,12 @@ impl PageDecl {
         self
     }
 
-    /// Set the lazy body constructor (chains).
-    #[allow(dead_code)] // S2 fills the form body; S1 ships the placeholder default.
+    /// Set the lazy body constructor (chains). The built-in leaf pages pin
+    /// [`super::form::default_body`] here explicitly (§2 `#page-lazy-body` —
+    /// the body is a declared part of the page, not an implicit default); a
+    /// page with its own composition overrides this.
     #[must_use]
-    pub fn with_body(mut self, body: fn() -> PageBody) -> Self {
+    pub fn with_body(mut self, body: fn(&PageDecl, &BodyCtx<'_>) -> PageBody) -> Self {
         self.body = body;
         self
     }
@@ -174,23 +195,17 @@ pub struct PageNode {
 }
 
 /// The resolved page registry (PROP-041 §2 `#registry-is-introspectable`) —
-/// the enumerable source for the settings tree and the future search index.
-#[derive(Debug, Clone, Default)]
+/// the enumerable source for the settings tree and the search index (§7).
+#[derive(Debug, Clone)]
 pub struct PageRegistry {
     /// All declarations, in registration order.
     decls: Vec<PageDecl>,
 }
 
 impl PageRegistry {
-    /// An empty registry.
-    #[allow(dead_code)] // used in tests; S2 plugins register into one.
-    #[must_use]
-    pub fn new() -> Self {
-        Self::default()
-    }
-
     /// Build a registry from a ready-made declaration list (the path
-    /// [`super::settings`] takes for the built-in `vibe.tree.*` pages).
+    /// [`super::settings`] takes for the built-in `vibe.tree.*` pages; an
+    /// empty list is the empty registry).
     #[must_use]
     pub fn from(decls: Vec<PageDecl>) -> Self {
         Self { decls }
@@ -199,18 +214,6 @@ impl PageRegistry {
     /// Every declaration, in registration order.
     pub fn pages(&self) -> &[PageDecl] {
         &self.decls
-    }
-
-    /// The number of declared pages.
-    #[allow(dead_code)] // introspection: used in tests + the future AIUI surface.
-    pub fn len(&self) -> usize {
-        self.decls.len()
-    }
-
-    /// Whether no pages are declared.
-    #[allow(dead_code)] // introspection: used in tests + the future AIUI surface.
-    pub fn is_empty(&self) -> bool {
-        self.decls.is_empty()
     }
 
     /// Resolve the page hierarchy into a tree of groups → pages (PROP-041 §2
@@ -372,8 +375,8 @@ mod tests {
 
     #[test]
     fn empty_registry_yields_no_tree() {
-        let r = PageRegistry::new();
-        assert!(r.is_empty());
+        let r = PageRegistry::from(Vec::new());
+        assert!(r.pages().is_empty());
         assert!(r.tree(true).is_empty());
     }
 
@@ -474,7 +477,31 @@ mod tests {
         ]);
         let ids: Vec<&str> = r.pages().iter().map(|d| d.id.as_str()).collect();
         assert_eq!(ids, ["palette", "mode"]);
-        assert_eq!(r.len(), 2);
+        assert_eq!(r.pages().len(), 2);
+    }
+
+    #[test]
+    fn tree_enumeration_never_builds_a_page_body() {
+        // #page-lazy-body — "the registry metadata is cheap so the whole tree
+        // renders without constructing every form": enumerating the tree (and
+        // reading the registry) never calls the body constructor.
+        static BUILDS: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+        fn counting_body(decl: &PageDecl, ctx: &BodyCtx<'_>) -> PageBody {
+            BUILDS.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+            super::super::form::default_body(decl, ctx)
+        }
+        let r = PageRegistry::from(vec![
+            page("g", "G"),
+            page_with_keys("a", "A", Some("g"), &["vibe.tree.palette"]).with_body(counting_body),
+        ]);
+        let _ = r.pages();
+        let _ = r.tree(true);
+        let _ = r.tree(false);
+        assert_eq!(
+            BUILDS.load(std::sync::atomic::Ordering::SeqCst),
+            0,
+            "enumeration must not build a body"
+        );
     }
 
     #[test]

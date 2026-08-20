@@ -1,10 +1,11 @@
 //! The per-type field controls (PROP-041 §4 `#form-per-type`). Each
 //! [`FieldControl`] is the editable shape for one preference key, derived from
 //! the key's [`KeyMeta`]: **bool → toggle**, **enum / closed-set string →
-//! selection** (renders as a `RadioGroup`, PROP-037 §2.7), **int / string →
-//! `TextField`** (PROP-037 §2.8), **array / table → not editable in this form
-//! yet** (no built-in `vibe.tree.*` key is Array/Table; §4 names them but S2
-//! does not compose a list/sub-form editor).
+//! selection** (composed through the shared `RadioGroup`, PROP-037 §2.7, per
+//! PROP-041 §1 `#built-on-tree-tui`), **int / string → `TextField`**
+//! (PROP-037 §2.8), **array / table → not editable in this form yet** (§4
+//! names them but no list/sub-form editor is composed — no built-in
+//! `vibe.tree.*` key is Array/Table).
 //!
 //! The closed-set `vibe.tree.*` string keys (palette, mode, sort, shape) are
 //! declared `KeyType::String` in the schema but take one of a fixed option set
@@ -16,9 +17,13 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#form-per-type");
 
+use ratatui_core::buffer::Buffer;
+use ratatui_core::layout::Rect;
 use specmark::spec;
 use vibe_settings::schema::{KeyMeta, KeyType};
 
+use crate::commands::tree::tui::theme::Theme;
+use crate::commands::tree::tui::ui::RadioGroup;
 use crate::commands::tree::tui::ui::TextField;
 
 // ── known closed-enum option sets for vibe.tree.* string keys ────────────────
@@ -52,15 +57,17 @@ fn short_label(path: &str) -> String {
 
 // ── Selection ────────────────────────────────────────────────────────────────
 
-/// A single-choice selection over a closed option set (renders as a `RadioGroup`,
-/// PROP-037 §2.7). Backs `KeyType::Enum` and the closed-set string keys.
+/// A single-choice selection over a closed option set, **composed through the
+/// shared `ui::RadioGroup`** (PROP-037 §2.7, per PROP-041 §4 `#form-per-type` +
+/// §1 `#built-on-tree-tui`): the widget owns the label (it titles the block),
+/// the options, the marks, the navigation, and the render; this type keeps the
+/// form's lifecycle surface — the current value for `is_modified` / `apply`
+/// and the Space/Enter cycle. Backs `KeyType::Enum` and the closed-set string
+/// keys.
 #[derive(Debug, Clone)]
 pub struct Selection {
-    /// The group's title (mirrors `RadioGroup`'s label — the field's short name).
-    #[allow(dead_code)] // carried so a future modal RadioGroup.render can title itself.
-    label: String,
-    options: Vec<String>,
-    selected: usize,
+    /// The composed radio group — the single source of label/options/selection.
+    group: RadioGroup,
 }
 
 impl Selection {
@@ -68,44 +75,40 @@ impl Selection {
     /// index (clamped into range; an empty option list leaves the selection 0).
     #[must_use]
     pub fn new(label: impl Into<String>, options: Vec<String>, selected: usize) -> Self {
-        let selected = if options.is_empty() {
-            0
-        } else {
-            selected.min(options.len() - 1)
-        };
         Self {
-            label: label.into(),
-            options,
-            selected,
+            group: RadioGroup::new(label, options).selected(selected),
         }
     }
 
     /// The option labels.
     #[must_use]
     pub fn options(&self) -> &[String] {
-        &self.options
-    }
-
-    /// The selected option index.
-    #[must_use]
-    pub fn selected_index(&self) -> usize {
-        self.selected
+        self.group.options()
     }
 
     /// The selected option's label.
     #[must_use]
     pub fn selected_option(&self) -> &str {
-        self.options
-            .get(self.selected)
+        self.group
+            .options()
+            .get(self.group.selected_index())
             .map(String::as_str)
             .unwrap_or("")
     }
 
-    /// Cycle to the next option, wrapping (Space/Enter, §4 `#form-per-type`).
+    /// Cycle to the next option, wrapping (Space/Enter, §4 `#form-per-type`) —
+    /// delegated to the widget's navigation verb.
     pub fn cycle_next(&mut self) {
-        if !self.options.is_empty() {
-            self.selected = (self.selected + 1) % self.options.len();
-        }
+        self.group.select_down();
+    }
+
+    /// Render through the composed `RadioGroup` (§1 `#built-on-tree-tui` — the
+    /// widget owns the draw: its label as the title row, then one marked row
+    /// per option). A per-frame copy carries the focus flag — render is pure,
+    /// the stored group keeps the edit state — the same pattern the form's
+    /// `TextField` cursor follows.
+    pub fn render(&self, area: Rect, buf: &mut Buffer, theme: &Theme, focused: bool) {
+        self.group.clone().focused(focused).render(area, buf, theme);
     }
 }
 
@@ -361,5 +364,47 @@ mod tests {
         assert_eq!(known_options("vibe.tree.sort").map(|o| o.len()), Some(2));
         assert_eq!(known_options("vibe.tree.shape").map(|o| o.len()), Some(3));
         assert!(known_options("vibe.tree.tier").is_none());
+    }
+
+    #[test]
+    fn selection_renders_through_the_shared_radio_group() {
+        // §1 #built-on-tree-tui — the widget owns the render: the label titles
+        // the block, the theme's on/off glyphs mark the options, and the focus
+        // flag emphasises the selected option without touching the stored
+        // group (render is pure).
+        let theme = Theme::default();
+        let sel = Selection::new("mode", vec!["all".into(), "tabs".into()], 1);
+        let area = Rect::new(0, 0, 20, 4);
+        let mut buf = Buffer::empty(area);
+        sel.render(area, &mut buf, &theme, true);
+        let rendered = buffer_string(&buf, area);
+        assert!(rendered.contains("mode"), "the widget titles by the label");
+        assert!(rendered.contains("all"));
+        assert!(rendered.contains("tabs"));
+        assert!(
+            rendered.contains('\u{25CF}'),
+            "the on-glyph marks the selected option"
+        );
+        assert!(
+            rendered.contains('\u{25CB}'),
+            "the off-glyph marks the rest"
+        );
+        assert_eq!(
+            sel.selected_option(),
+            "tabs",
+            "the stored group is untouched"
+        );
+    }
+
+    /// Flatten a buffer to its visible string (one line per row).
+    fn buffer_string(buf: &Buffer, area: Rect) -> String {
+        let mut out = String::new();
+        for y in area.y..area.y + area.height {
+            for x in area.x..area.x + area.width {
+                out.push_str(buf[ratatui_core::layout::Position::new(x, y)].symbol());
+            }
+            out.push('\n');
+        }
+        out
     }
 }

@@ -43,6 +43,10 @@ pub struct RadioGroup {
     label: String,
     options: Vec<String>,
     selected: usize,
+    /// Whether the composing surface holds the focus — the selected option's
+    /// label then renders in the title style. Set per frame by the caller; the
+    /// default is unfocused.
+    focused: bool,
 }
 
 impl RadioGroup {
@@ -55,17 +59,29 @@ impl RadioGroup {
             label: label.into(),
             options,
             selected: 0,
+            focused: false,
         }
     }
 
     /// Set the selected index (builder), clamped to the valid range. A radio
-    /// group with no options leaves the selection at 0.
-    #[cfg(test)]
+    /// group with no options leaves the selection at 0. Production caller:
+    /// the prefs form's enum control composes its `RadioGroup` with the
+    /// current value selected (PROP-041 §4 `#form-per-type`).
     #[must_use]
     pub fn selected(mut self, selected: usize) -> Self {
         if !self.options.is_empty() {
             self.selected = selected.min(self.options.len() - 1);
         }
+        self
+    }
+
+    /// Set the focus flag (builder). A focused group renders the selected
+    /// option's label in the title style — the composing surface builds a
+    /// per-frame focused copy so render stays pure (the same pattern the
+    /// prefs form uses for the `TextField` cursor).
+    #[must_use]
+    pub fn focused(mut self, focused: bool) -> Self {
+        self.focused = focused;
         self
     }
 
@@ -76,8 +92,8 @@ impl RadioGroup {
         &self.label
     }
 
-    /// The option labels.
-    #[cfg(test)]
+    /// The option labels. Production caller: the prefs form's enum control
+    /// walks them for value round-tripping.
     #[must_use]
     pub fn options(&self) -> &[String] {
         &self.options
@@ -139,12 +155,17 @@ impl RadioGroup {
                 theme.dim()
             };
             buf.set_stringn(area.x, y, glyph, area.width as usize, glyph_style);
+            let option_style = if is_selected && self.focused {
+                theme.title()
+            } else {
+                theme.text()
+            };
             buf.set_stringn(
                 area.x + 2,
                 y,
                 option,
                 area.width.saturating_sub(2) as usize,
-                theme.text(),
+                option_style,
             );
         }
     }
@@ -193,6 +214,32 @@ mod tests {
         assert_eq!(g.selected_index(), 1, "clamped to the last option");
         assert_eq!(g.label(), "Format");
         assert_eq!(g.options(), &["a", "b"]);
+    }
+
+    /// A focused group renders the selected option's label in the title
+    /// style; an unfocused one in the plain text style.
+    #[test]
+    fn focused_flag_styles_the_selected_option() {
+        let theme = Theme::default();
+        let g = RadioGroup::new("f", vec!["a".into(), "b".into()]).selected(1);
+        let area = Rect::new(0, 0, 10, 3);
+        let mut focused_buf = Buffer::empty(area);
+        g.clone()
+            .focused(true)
+            .render(area, &mut focused_buf, &theme);
+        let mut plain_buf = Buffer::empty(area);
+        g.render(area, &mut plain_buf, &theme);
+        // The selected option's label starts at x=2 on the second option row.
+        // A buffer cell's style carries patched bg/underline defaults, so
+        // compare the discriminating parts, not whole Style values.
+        let sel = Position::new(2, 2);
+        assert_eq!(focused_buf[sel].style().fg, theme.title().fg);
+        assert_eq!(
+            focused_buf[sel].style().add_modifier,
+            theme.title().add_modifier
+        );
+        assert_eq!(plain_buf[sel].style().fg, theme.text().fg);
+        assert_ne!(focused_buf[sel].style(), plain_buf[sel].style());
     }
 
     /// A too-short area (no room for label + an option) is a no-op.

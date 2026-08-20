@@ -166,7 +166,7 @@ mod tests {
     }
 
     fn form_with(fields: Vec<FormField>) -> Form {
-        Form::for_test("Page", "a page", fields, Layer::L3, paths())
+        Form::for_test("a page", fields, Layer::L3, paths())
     }
 
     #[test]

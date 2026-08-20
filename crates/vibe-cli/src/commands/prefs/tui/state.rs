@@ -10,7 +10,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#tree-widget");
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 use rat_widget::table::TableState;
 use vibe_settings::resolver::ResolvedPrefs;
@@ -21,7 +21,7 @@ use crate::commands::tree::tui::theme::Theme;
 
 use super::catalogue::PrefsActionCtx;
 use super::page_tree::{PageRow, flatten};
-use super::registry::PageRegistry;
+use super::registry::{BodyCtx, PageRegistry};
 use super::search::SearchState;
 use super::settings::builtin_registry;
 
@@ -63,13 +63,18 @@ pub struct PrefsApp {
     pub folded: BTreeSet<String>,
     /// rat-widget row selection + vertical scroll offset.
     pub table: TableState,
-    /// The open page id, if any (S1 renders a placeholder pane; S2 renders the
-    /// form, §4).
+    /// The open page id, if any (the page pane renders its §4 edit form).
     pub open_page: Option<String>,
-    /// The per-type edit form for the open page (PROP-041 §4). Built when a page
-    /// opens ([`PrefsApp::open_selected`]); cleared on
-    /// [`PrefsApp::close_page`]). `None` exactly when `open_page` is `None`.
+    /// The per-type edit form for the open page (PROP-041 §4). Built through
+    /// the page's lazy body constructor ([`PageDecl::body`]) on **first** open
+    /// (§2 `#page-lazy-body`); a later open reuses the cached body. `None`
+    /// exactly when `open_page` is `None`.
     pub form: Option<super::form::Form>,
+    /// The built page bodies (PROP-041 §2 `#page-lazy-body`): each page's body
+    /// is constructed on first open and kept for the session — close/reopen
+    /// (and a search/lint jump away and back) reuses the built form with its
+    /// unapplied edits; the constructor never fires twice for one page.
+    bodies: BTreeMap<String, super::form::Form>,
     /// The cross-layer lint modal state (PROP-041 §6 `#lint-all`). `Some` while
     /// the "check all layers" modal is open; `None` when it is closed. Built by
     /// [`PrefsApp::open_lint`] from the loaded layer files.
@@ -88,8 +93,9 @@ impl PrefsApp {
     /// Build the app over a resolved snapshot + schema + context. The theme is
     /// derived from the resolved `vibe.tree.*` palette/tier so the settings UI
     /// and the `vibe tree` TUI read as one surface (PROP-041 §1
-    /// `#built-on-tree-tui`). The built-in page registry is installed; S2 will
-    /// let plugins register more.
+    /// `#built-on-tree-tui`). The built-in page registry
+    /// ([`super::settings`]) is installed; more pages register declarations
+    /// the same way.
     pub fn new(prefs: ResolvedPrefs, schema: Schema, ctx: PrefsCtx) -> Self {
         let theme = build_theme(&prefs);
         let registry = builtin_registry();
@@ -104,6 +110,7 @@ impl PrefsApp {
             table: TableState::default(),
             open_page: None,
             form: None,
+            bodies: BTreeMap::new(),
             lint: None,
             search: None,
             fatal: None,
@@ -182,22 +189,58 @@ impl PrefsApp {
     }
 
     /// Open the focused leaf page (`Enter`). A group row is a no-op (it folds,
-    /// not opens). Sets [`PrefsApp::open_page`] and builds the per-type edit
-    /// form over the page's keys (§4 `#form-per-type`).
+    /// not opens). Sets [`PrefsApp::open_page`] and takes the page's body —
+    /// built through its lazy constructor on **first** open (§2
+    /// `#page-lazy-body`), reused from the cache afterwards (§4
+    /// `#form-per-type`).
     pub fn open_selected(&mut self) {
         let Some(row) = self.selected_row() else {
             return;
         };
         if row.is_openable() {
-            self.open_page = Some(row.id.clone());
-            self.form = super::form::Form::build(self);
+            let id = row.id.clone();
+            self.open_page_by_id(&id);
         }
     }
 
-    /// Close the open page (`Esc` from the page pane). Drops the edit form.
+    /// Close the open page (`Esc` from the page pane). The built body returns
+    /// to the cache — re-opening reuses it instead of re-calling the lazy
+    /// constructor (§2 `#page-lazy-body`: created on first open).
     pub fn close_page(&mut self) {
+        self.stash_open_form();
         self.open_page = None;
-        self.form = None;
+    }
+
+    /// Open page `id` through the one open path: stash the currently open form
+    /// back into the body cache (a search/lint jump can switch pages
+    /// directly), then take the cached body or build it through the page's
+    /// lazy constructor.
+    fn open_page_by_id(&mut self, id: &str) {
+        self.stash_open_form();
+        self.open_page = Some(id.to_owned());
+        self.form = self.take_or_build_body(id);
+    }
+
+    /// The page's body: the cached one when it was built before, else the
+    /// lazy constructor's product (first open — §2 `#page-lazy-body`).
+    fn take_or_build_body(&mut self, id: &str) -> Option<super::form::Form> {
+        if let Some(form) = self.bodies.remove(id) {
+            return Some(form);
+        }
+        let decl = self.registry.pages().iter().find(|d| d.id == id)?;
+        let ctx = BodyCtx {
+            prefs: &self.prefs,
+            schema: &self.schema,
+            has_project: self.ctx.has_project,
+        };
+        Some((decl.body)(decl, &ctx).form)
+    }
+
+    /// Return the open form to the body cache (close or page switch).
+    fn stash_open_form(&mut self) {
+        if let (Some(form), Some(id)) = (self.form.take(), self.open_page.clone()) {
+            self.bodies.insert(id, form);
+        }
     }
 
     /// Open the "check all layers" modal (PROP-041 §6 `#lint-all`, wired to `c`).
@@ -235,8 +278,7 @@ impl PrefsApp {
         if !self.registry.pages().iter().any(|d| d.id == page_id) {
             return;
         }
-        self.open_page = Some(page_id.to_owned());
-        self.form = super::form::Form::build(self);
+        self.open_page_by_id(page_id);
         if let Some(form) = &mut self.form {
             form.focus_key(key);
         }
@@ -449,5 +491,112 @@ mod tests {
         assert!(app.open_page_title().is_some());
         app.close_page();
         assert!(app.open_page_title().is_none());
+    }
+
+    #[test]
+    fn first_open_builds_the_body_once_reopen_reuses_it() {
+        // §2 #page-lazy-body — "a lazy page body (created on first open)":
+        // first open calls the constructor; close/reopen reuses the cached
+        // body (with its unapplied edits), so the constructor fires exactly
+        // once per page.
+        use std::sync::atomic::{AtomicUsize, Ordering};
+
+        use super::super::form::default_body;
+        use super::super::registry::BodyCtx;
+        use super::super::registry::PageBody;
+        use super::super::registry::PageDecl;
+
+        static BUILDS: AtomicUsize = AtomicUsize::new(0);
+        fn counting_body(decl: &PageDecl, ctx: &BodyCtx<'_>) -> PageBody {
+            BUILDS.fetch_add(1, Ordering::SeqCst);
+            default_body(decl, ctx)
+        }
+
+        let prefs = resolve(
+            LayeredRaw::default(),
+            &schema(),
+            toml::Table::new(),
+            toml::Table::new(),
+        );
+        let mut app = PrefsApp::new(prefs, schema(), PrefsCtx::new(true));
+        app.registry = PageRegistry::from(vec![
+            PageDecl::new("g", "G", "a group"),
+            PageDecl::new("leaf", "Leaf", "a leaf")
+                .with_parent("g")
+                .with_keys(&["vibe.tree.palette"])
+                .with_body(counting_body),
+        ]);
+        app.rebuild();
+        app.table.select(Some(1)); // the leaf under the group
+        app.open_selected();
+        assert_eq!(
+            BUILDS.load(Ordering::SeqCst),
+            1,
+            "first open builds the body"
+        );
+        // Edit the leaf's selection (palette cycles one step), then close.
+        let before = app
+            .form
+            .as_mut()
+            .and_then(|f| f.focused_field_mut())
+            .map(|f| f.control.current_value());
+        app.close_page();
+        app.open_selected();
+        assert_eq!(
+            BUILDS.load(Ordering::SeqCst),
+            1,
+            "reopen reuses the cached body"
+        );
+        assert_eq!(
+            app.form
+                .as_ref()
+                .and_then(|f| f.focused_field())
+                .map(|f| f.control.current_value()),
+            before,
+            "the reopened body is the same form (edits preserved)"
+        );
+    }
+
+    #[test]
+    fn switching_pages_stashes_the_open_form_and_builds_the_new_body_once() {
+        // A search/lint jump can open page B while page A is open: A's built
+        // body is stashed, and returning to A does not re-calls its
+        // constructor.
+        use std::sync::atomic::{AtomicUsize, Ordering};
+
+        use super::super::form::default_body;
+        use super::super::registry::{BodyCtx, PageBody, PageDecl};
+
+        static BUILDS_A: AtomicUsize = AtomicUsize::new(0);
+        fn counting_a(decl: &PageDecl, ctx: &BodyCtx<'_>) -> PageBody {
+            BUILDS_A.fetch_add(1, Ordering::SeqCst);
+            default_body(decl, ctx)
+        }
+
+        let prefs = resolve(
+            LayeredRaw::default(),
+            &schema(),
+            toml::Table::new(),
+            toml::Table::new(),
+        );
+        let mut app = PrefsApp::new(prefs, schema(), PrefsCtx::new(true));
+        app.registry = PageRegistry::from(vec![
+            PageDecl::new("a", "A", "page a")
+                .with_keys(&["vibe.tree.palette"])
+                .with_body(counting_a),
+            PageDecl::new("b", "B", "page b").with_keys(&["vibe.tree.palette"]),
+        ]);
+        app.rebuild();
+        app.open_page_focused("a", "vibe.tree.palette");
+        assert_eq!(BUILDS_A.load(Ordering::SeqCst), 1);
+        // Jump to B, then back to A — A's body comes from the cache.
+        app.open_page_focused("b", "vibe.tree.palette");
+        app.open_page_focused("a", "vibe.tree.palette");
+        assert_eq!(
+            BUILDS_A.load(Ordering::SeqCst),
+            1,
+            "the body is built on first open only"
+        );
+        assert_eq!(app.open_page.as_deref(), Some("a"));
     }
 }
