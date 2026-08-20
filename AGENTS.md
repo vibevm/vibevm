@@ -136,6 +136,23 @@ Keep it current-state; prune stale lines.
   `VIBEVM-SPEC.md` + specs (owner-frozen / historical mentions). Dogfood spec:
   `…/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md`.
 
+## Режим взаимодействия — владельческий переключатель `AGENT-MODE.toml`
+
+У сессии есть **глобальный режим взаимодействия с человеком**, живущий в
+[`AGENT-MODE.toml`](AGENT-MODE.toml) в корне (владелец, 2026-08-20):
+`mode = "auto"` — полностью автоматический (центральный агент пишет минимум
+текста: телеграфный трекинг прогресса; output-токены дороже всего; несущее
+уже в долговечных домах) или `mode = "collab"` — совместная разработка
+(обычные объяснения и рассуждения). Переключает ТОЛЬКО владелец — словом в
+чате (агент немедленно обновляет файл) или правкой файла; состояние обязано
+переживать компактификацию (пост-компакт-хук печатает действующую строку).
+Несжимаемый пол «auto»-режима и точные определения — в самом файле; главное:
+блокеры, владельческие развилки и прямые вопросы владельца полным ответом —
+всегда, в любом режиме. Субагенты (claudez / codexrunner / будущие) от
+переключателя не зависят: они ВСЕГДА в субагентском режиме — экранный текст
+воркера не читается никем, каждый пакет несёт обязательную клаузу
+`##subagent-quiet-clause` из `SUBAGENT-LAUNCHERS.md`.
+
 ## Specspaces — nested projects with their own WAL
 
 This repository can host **specspaces**: sub-projects registered in [`SPECSPACES.md`](SPECSPACES.md) that carry their own boot contract, WAL, and `CONTINUE.md`, worked on as independent projects. Canon (grammar, target resolution, the five laws) is the installed flow `flow:org.vibevm.world/wal-specspaces` — its snippet (`spec/boot/11-flow-wal-specspaces.md` in that package) is compiled into the static boot lane `spec/boot/STATIC.md`, and the full protocol is `spec/flows/wal-specspaces/SPECSPACES-PROTOCOL.md` inside that package. This section is the signpost; two rules bind regardless:
