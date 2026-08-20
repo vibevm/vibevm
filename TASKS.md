@@ -229,9 +229,12 @@ with nothing going red. **The producer must be a fact, never a field write.**
             `MultiRegistryResolver::with_offline` does not exist (measured);
             today the narrowing happens above the resolver, and the cache is
             not a resolution source at all.
-      - [ ] `feat(vibe-cli)`: **the `vibe cache …` family** — `path` / `list` /
-            `add` / `clean`. Nothing of it exists (measured against a control
-            that finds the live `vibe registry`).
+      - [x] `feat(vibe-cli)`: **the `vibe cache …` family** — `path` / `list` /
+            `add` / `clean`. **Landed 2026-08-20 (`537d0349`)**: top-level
+            family per the ruling; path/list/add work outside any project
+            (projectless resolver from the global registry sections needed
+            no surgery); clean's bare-invocation refusal proved red; help
+            smokes extended; 12 PROP-010 facts re-judged.
       - [x] `feat(vibe-cli)`: **the global `--offline` posture** — the flag on
             the root, `VIBE_OFFLINE`, a `[net]` config key, resolved like
             `--unattended`. **Landed 2026-08-20** (marathon, slice С1):
@@ -261,14 +264,12 @@ with nothing going red. **The producer must be a fact, never a field write.**
             re-fetch from scratch. **No fetch-and-merge step on that ladder:**
             repair restores the entry to what was recorded, and advancing it to
             a newer commit would guarantee the mismatch it is trying to fix.
-      - [ ] `fix(vibe-registry)`: **a refresh and a source switch stop being
-            the same operation** (owner, 2026-08-20). Refreshing a copy we hold
-            happens **in place**; a failed refresh is retried, never grounds for
-            deleting anything. Only a deliberate switch to a different source
-            fetches from scratch — and then clones into a temporary directory
-            beside the target and swaps in only on success. Today's code wipes
-            on **any** failed update, so the fix is to separate the two intents
-            first; the temp-and-swap is the easy half.
+      - [x] `fix(vibe-registry)`: **a refresh and a source switch stop being
+            the same operation** (owner, 2026-08-20). **Landed 2026-08-20
+            (`3d99a0c8`)**: the `BringIntent` split — refresh in place with
+            no deletion on failure; mirror failover = source switch into a
+            temp sibling swapped only on success; wipe-on-hash-mismatch died
+            the same way. Four oracles proved red on the pre-change code.
       - *(the three questions in
         [`PROP-010 §5`](spec/modules/vibe-registry/PROP-010-local-package-cache.md#open)
         — staleness signalling, eviction, scaffolding UX — stay open and block
