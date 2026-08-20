@@ -889,7 +889,7 @@ structure, and it goes when the file does.
 | @fact:B096-ANCHOR **anchor** | [`spec://org.vibevm.core/vibevm/modules/PROP-041#cli`](spec/modules/vibe-cli/PROP-041-prefs-tui.md) — контракт CLI-поверхности prefs |
 | @fact:B096-LOCATOR **locator** | `prefs ui` строит схему из `TreeSettings`; общий CLI-загрузчик (`list`/`get`/`check`) оставляет `Schema::new()` — на чистых настройках `list` = «0 keys», `get vibe.tree.palette` не видит built-in default `rose-pine`, `check` диагностирует собственный объявленный ключ TUI как `unknown setting` |
 | @fact:B096-SEVERITY **severity** | P2 |
-| @fact:B096-DISPOSITION **disposition** | `open` — найдена агентским пре-прогоном MT-03 (С10.2, отчёт `campaigns/packages-2026-09/MT-PRERUN-2026-08-20.md`); в 1.0.0-alpha записана в известные ограничения `docs/ALPHA-NOTES.md`; починка — прокинуть schema-регистрацию TUI в общий загрузчик |
+| @fact:B096-DISPOSITION **disposition** | `closed` — **закрыта 2026-08-20 (BACKLOG-волна P2, воркер claudez P2-PREFS)**: `prefs::load` строит схему вызовом той же `build_schema()` (`tree/tui/settings.rs`, теперь pub(crate) и документирована как общесхемная точка всего CLI) — одна точка истины, без второго списка ключей; все шесть не-TUI сабкоманд получили схему через `Loaded` без правок в себе; `prefs ui` перестал строить дубликат. Живой transcript: чистый temp — list 6 ключей с default-origin, get видит `rose-pine`, check чист по объявленному ключу и ловит опечатку; 4 новых юнита; строка ALPHA-NOTES снята |
 | @fact:B096-FILED **filed by** | марафон 1.0.0, пре-прогон ручных тестов, 2026-08-20 |
 
 ### B-097 — `vibe tree --quiet` не quiet {#b-097}
@@ -899,7 +899,7 @@ structure, and it goes when the file does.
 | @fact:B097-ANCHOR **anchor** | `vibe tree --help`: «Reduce output to a single summary line» |
 | @fact:B097-LOCATOR **locator** | наблюдение пре-прогона: `--quiet` печатает то же 51-строчное plain-дерево, exit 0 — флаг объявлен и не применён |
 | @fact:B097-SEVERITY **severity** | P3 |
-| @fact:B097-DISPOSITION **disposition** | `open` — найдена пре-прогоном MT-02 (там же); правка одного флага + тест |
+| @fact:B097-DISPOSITION **disposition** | `closed` — **закрыта 2026-08-20 (та же посадка P2-PREFS)**: `--quiet` даёт одну summary-строку (`plain::summary_line`: project/packages/roots), гасит plain/TUI/vibeterm; `--json` остаётся json (clap `conflicts_with`, живьём exit 2); юнит на форму строки; строка ALPHA-NOTES снята |
 | @fact:B097-FILED **filed by** | марафон 1.0.0, пре-прогон ручных тестов, 2026-08-20 |
 
 ### B-098 — origins-поверхность prefs: контракт называет флаг, бинарь даёт сабкоманду {#b-098}
@@ -919,7 +919,7 @@ structure, and it goes when the file does.
 | @fact:B099-ANCHOR **anchor** | `vibe prefs set --help` |
 | @fact:B099-LOCATOR **locator** | текст «basic write; phase 2.7 enriches with diff-from-default + comment-preserve» — а enriched-персистентность уже реализована и вызывается этим же кодом |
 | @fact:B099-SEVERITY **severity** | P3 |
-| @fact:B099-DISPOSITION **disposition** | `open` — правка одной help-строки |
+| @fact:B099-DISPOSITION **disposition** | `closed` — **закрыта 2026-08-20 (та же посадка P2-PREFS)**: help говорит правду об enriched write (diff-from-default + comment-preserve + role-marker через atomic rewrite), сверено по `vibe-settings/src/persist/mod.rs` |
 | @fact:B099-FILED **filed by** | марафон 1.0.0, пре-прогон ручных тестов, 2026-08-20 |
 
 ### B-078 — «у JTD нет nullable» оказалось ложью, и записанное расхождение журнала стало разрешимым {#b-078}

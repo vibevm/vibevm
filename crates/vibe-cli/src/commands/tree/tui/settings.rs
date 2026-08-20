@@ -398,9 +398,13 @@ impl std::error::Error for SetError {}
 
 /// Declare the `vibe.tree.*` keys: paths, types, built-in defaults, and
 /// metadata. Each key is [`Scope::User`] (roams L1→L2→L3); the palette + tier
-/// Declare the `vibe.tree.*` keys: paths, types, built-in defaults, and
-/// metadata. Each key is [`Scope::User`] (roams L1→L2→L3); the palette + tier
 /// take effect on restart, the rest live.
+///
+/// `pub(crate)` — this is the **whole CLI's** application schema, not just the
+/// tree TUI's: the `vibe prefs` loader (`commands::prefs::load`) builds its
+/// schema from this same function, so the non-TUI surface (`list`/`get`/
+/// `check`/…) sees exactly the keys the TUIs declare — one registration point,
+/// no second handwritten key list.
 ///
 /// The `.expect()` calls are on `KeyMeta::new` (which validates a non-empty
 /// description) and `Schema::register` (which rejects duplicates). Both are
@@ -416,7 +420,7 @@ impl std::error::Error for SetError {}
               invariant once at this single registration point is clearer than \
               propagating an unreachable Result through every caller"
 )]
-fn build_schema() -> Schema {
+pub(crate) fn build_schema() -> Schema {
     let mut schema = Schema::new();
     schema
         .register(

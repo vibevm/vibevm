@@ -4,7 +4,8 @@
 //! node manifests into a model that annotates every package with its
 //! *effective* boot load type and the flags that explain it (`T`ransitive /
 //! `C`ondition / `S`TATIC.md). Three surfaces: `--json` (the machine model,
-//! §2.7), a plain ASCII tree (non-tty / `--plain`), and — Phase 2 — the
+//! §2.7), a plain ASCII tree (non-tty / `--plain`; `--quiet` reduces it to a
+//! single summary line), and — Phase 2 — the
 //! interactive TUI. This module owns the command flow; the engine lives in
 //! [`build`], the serde model in [`model`], the artifact decompilers in
 //! [`artifacts`], and the renderer in [`plain`].
@@ -70,6 +71,15 @@ pub fn run(ctx: &output::Context, args: TreeArgs) -> Result<()> {
             }
         }
         ctx.emit_json(&payload)?;
+        return Ok(());
+    }
+
+    // `--quiet` collapses the human surface to the single summary line its
+    // help promises: no plain tree, no TUI, no desktop window — one line and
+    // out. It governs only human output: `--json` (returned above; also a clap
+    // conflict of `--quiet`) stays json.
+    if ctx.is_quiet() {
+        print!("{}", plain::summary_line(&tree));
         return Ok(());
     }
 

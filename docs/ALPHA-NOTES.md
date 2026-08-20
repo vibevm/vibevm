@@ -66,16 +66,14 @@ These rules prevent a wrong answer from looking correct; they do not promise tha
 Recorded honestly rather than fixed silently — each carries a tracked
 entry in the repository's `BACKLOG.md`:
 
-- `vibe tree --quiet` currently prints the full plain tree instead of
-  the promised single summary line (B-097).
-- The non-TUI `vibe prefs` commands (`list` / `get` / `check`) run
-  without the TUI's settings schema: on a clean profile `list` reports
-  no keys, `get` does not see built-in defaults, and `check` flags
-  keys the TUI itself declares. Writes and reads of explicitly-set
-  values work correctly; `vibe prefs ui` is unaffected (B-096).
 - Origins inspection is the `vibe prefs show-origins [key]` subcommand
   (the `--show-origins` flag form some documents mention does not
   exist) (B-098).
+
+*(Two limitations recorded here on 2026-08-20 — `vibe tree --quiet`
+printing the full tree (B-097) and the non-TUI `vibe prefs` surface
+running schema-less (B-096) — were fixed the same day by the P2
+backlog wave and are no longer shipped behaviour.)*
 
 ## Where to look before updating
 

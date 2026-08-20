@@ -131,6 +131,18 @@ fn walk(
     }
 }
 
+/// The single summary line `--quiet` prints — the plain header's project /
+/// packages / roots facts compressed to one line, no tree, no column key
+/// (help: "Reduce output to a single summary line").
+pub fn summary_line(tree: &PackageTree) -> String {
+    format!(
+        "project: {}   packages: {}   roots: {}\n",
+        tree.project.root,
+        tree.packages.len(),
+        tree.roots.len()
+    )
+}
+
 /// The effective-load column label.
 fn load_label(load: LoadType) -> &'static str {
     match load {
@@ -277,5 +289,26 @@ mod tests {
         ];
         let out = render(&tree(packages, &["g/a"]));
         assert!(out.contains("(*)"));
+    }
+
+    #[test]
+    fn summary_line_is_one_line_of_header_facts_no_tree() {
+        // The diamond fixture: 4 packages, 1 declared root.
+        let packages = vec![
+            pkg("g/a", LoadType::None, false, false, &["g/b", "g/c"]),
+            pkg("g/b", LoadType::Static, true, true, &["g/d"]),
+            pkg("g/c", LoadType::Dynamic, false, false, &["g/d"]),
+            pkg("g/d", LoadType::Static, true, true, &[]),
+        ];
+        let line = summary_line(&tree(packages, &["g/a"]));
+        assert_eq!(line.matches('\n').count(), 1, "exactly one line: {line:?}");
+        assert!(line.contains("project: /tmp/x"), "{line:?}");
+        assert!(line.contains("packages: 4"), "{line:?}");
+        assert!(line.contains("roots: 1"), "{line:?}");
+        // No tree glyphs, no column key, no package rows — the summary is not
+        // the tree.
+        assert!(!line.contains('├') && !line.contains('└'), "{line:?}");
+        assert!(!line.contains("g/a"), "{line:?}");
+        assert!(!line.contains("columns:"), "{line:?}");
     }
 }

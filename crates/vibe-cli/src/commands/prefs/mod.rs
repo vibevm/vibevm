@@ -108,9 +108,11 @@ pub(super) fn layer_paths(repo_root: &Path) -> Result<LayerPaths> {
 
 /// Load the three layers + build the schema. Each layer is loaded independently
 /// so one malformed file is a non-fatal warning (PROP-040 §3
-/// `#missing-is-default`), not a command abort. The schema is empty in phase
-/// 2.6 — populating it (the `tree.*` TUI keys, etc.) is the consumer's job
-/// (meta-plan D5; the TUI lands in Step 3).
+/// `#missing-is-default`), not a command abort. The schema is the whole CLI's
+/// application schema — the same single registration point the `vibe tree` TUI
+/// declares its `vibe.tree.*` keys in (see [`app_schema`]) — so the non-TUI
+/// surface sees the declared keys and their built-in defaults, exactly like
+/// `prefs ui` does.
 pub(super) fn load(repo_root: &Path) -> Result<Loaded> {
     let paths = layer_paths(repo_root)?;
     let mut warnings = Vec::new();
@@ -120,9 +122,19 @@ pub(super) fn load(repo_root: &Path) -> Result<Loaded> {
     Ok(Loaded {
         paths,
         raw: LayeredRaw { l1, l2, l3 },
-        schema: Schema::new(),
+        schema: app_schema(),
         warnings,
     })
+}
+
+/// The application schema every `vibe prefs` subcommand runs on — built at the
+/// one schema-registration point the `vibe tree` TUI's settings cell owns
+/// (`TreeSettings` → `build_schema`, PROP-040 §6 `#schema-first`). One point of
+/// truth: a key declared there materialises in `list`/`get` (built-in default,
+/// origin `default`) and validates in `check`; no surface keeps a second
+/// handwritten key list.
+fn app_schema() -> Schema {
+    crate::commands::tree::tui::settings::build_schema()
 }
 
 /// Load one layer, mapping a parse/I/O failure to an empty table + a warning
@@ -173,9 +185,9 @@ pub(super) fn parse_value(s: &str) -> Result<toml::Value> {
 /// Persist a layer table to disk via the enriched `vibe-settings::persist`
 /// cell: strip default-valued keys (§6 `#diff-from-default`), preserve an
 /// existing file's comments + role-marker header (§3 `#role-marker`), and
-/// install atomically (sibling `.tmp` + rename). The diff is a no-op while the
-/// schema is empty (phase 2.6 state) — unknown keys pass through unchanged — so
-/// `set`/`migrate` are safe before the TUI populates the schema.
+/// install atomically (sibling `.tmp` + rename). Against the real schema this
+/// is live: a declared key written at its built-in default is diffed away
+/// again, and unknown keys (no schema entry) pass through unchanged.
 pub(super) fn persist_layer(
     path: &Path,
     table: &toml::Table,
@@ -214,4 +226,154 @@ pub(super) fn display_value(v: &toml::Value) -> String {
 /// Convert a TOML value to a JSON value for `--json` envelopes.
 pub(super) fn value_to_json(v: &toml::Value) -> Result<serde_json::Value> {
     Ok(serde_json::to_value(v)?)
+}
+
+#[cfg(test)]
+mod tests {
+    //! The non-TUI surface runs on the real application schema (B-096): the
+    //! same single registration point the `vibe tree` TUI declares its
+    //! `vibe.tree.*` keys in — never an empty `Schema::new()`.
+
+    use vibe_settings::cli::{PrefsOp, PrefsOutcome, run_prefs};
+    use vibe_settings::loader::LayeredRaw;
+    use vibe_settings::resolver::Origin;
+
+    use super::app_schema;
+
+    #[test]
+    fn app_schema_declares_the_tree_keys_with_their_defaults() {
+        let schema = app_schema();
+        assert_eq!(schema.len(), 8, "the eight vibe.tree.* keys");
+        let palette = schema.get("vibe.tree.palette").expect("palette declared");
+        assert_eq!(
+            palette.default.as_ref().and_then(toml::Value::as_str),
+            Some("rose-pine"),
+            "the built-in default the TUI schema declares"
+        );
+        // Keys without a built-in default (tier override, last-project) stay
+        // default-less — they materialise only once a layer sets them.
+        assert!(
+            schema
+                .get("vibe.tree.tier")
+                .expect("tier declared")
+                .default
+                .is_none()
+        );
+        assert!(
+            schema
+                .get("vibe.tree.last-project")
+                .expect("last-project declared")
+                .default
+                .is_none()
+        );
+    }
+
+    #[test]
+    fn list_on_clean_layers_enumerates_the_declared_defaults() {
+        // Clean layers + the real schema → every key with a default resolves
+        // at origin `default` — not "(no preferences set) / 0 keys".
+        let raw = LayeredRaw::default();
+        let keys = match run_prefs(
+            PrefsOp::List,
+            &app_schema(),
+            &raw,
+            &toml::Table::new(),
+            &toml::Table::new(),
+        )
+        .expect("list never refuses")
+        {
+            PrefsOutcome::Keys(k) => k,
+            _ => panic!("run_prefs(List) returns Keys"),
+        };
+        let paths: Vec<&str> = keys.iter().map(|k| k.path.as_str()).collect();
+        assert_eq!(
+            paths.len(),
+            6,
+            "six of the eight keys carry a default: {paths:?}"
+        );
+        let palette = keys
+            .iter()
+            .find(|k| k.path == "vibe.tree.palette")
+            .expect("palette resolves from its default");
+        assert_eq!(palette.value.as_str(), Some("rose-pine"));
+        assert_eq!(palette.origin, Origin::Default);
+    }
+
+    #[test]
+    fn get_of_an_unset_declared_key_resolves_the_default() {
+        let raw = LayeredRaw::default();
+        let iv = match run_prefs(
+            PrefsOp::Get {
+                key: "vibe.tree.palette",
+            },
+            &app_schema(),
+            &raw,
+            &toml::Table::new(),
+            &toml::Table::new(),
+        )
+        .expect("get never refuses")
+        {
+            PrefsOutcome::Value(iv) => iv.expect("the default materialises"),
+            _ => panic!("run_prefs(Get) returns Value"),
+        };
+        assert_eq!(iv.value.as_str(), Some("rose-pine"));
+        assert_eq!(iv.origin, Origin::Default);
+        assert_eq!(
+            iv.default.as_ref().and_then(toml::Value::as_str),
+            Some("rose-pine")
+        );
+    }
+
+    #[test]
+    fn check_passes_a_set_declared_key_and_still_flags_a_typo() {
+        // What `vibe prefs set vibe.tree.palette … --layer L1` leaves in L1:
+        let declared: toml::Table =
+            toml::from_str(r#"vibe.tree.palette = "catppuccin-mocha""#).unwrap();
+        let typo: toml::Table = toml::from_str(r#"tree.palette = "catppuccin-mocha""#).unwrap();
+        let empty = toml::Table::new();
+
+        let clean = match run_prefs(
+            PrefsOp::Check,
+            &app_schema(),
+            &LayeredRaw {
+                l1: declared,
+                l2: empty.clone(),
+                l3: empty.clone(),
+            },
+            &empty,
+            &empty,
+        )
+        .unwrap()
+        {
+            PrefsOutcome::Diagnostics(d) => d,
+            _ => panic!("run_prefs(Check) returns Diagnostics"),
+        };
+        assert!(
+            clean.is_empty(),
+            "a declared key is never unknown: {clean:?}"
+        );
+
+        let flagged = match run_prefs(
+            PrefsOp::Check,
+            &app_schema(),
+            &LayeredRaw {
+                l1: typo,
+                l2: empty.clone(),
+                l3: empty,
+            },
+            &toml::Table::new(),
+            &toml::Table::new(),
+        )
+        .unwrap()
+        {
+            PrefsOutcome::Diagnostics(d) => d,
+            _ => panic!("run_prefs(Check) returns Diagnostics"),
+        };
+        assert!(
+            flagged
+                .iter()
+                .any(|d| d.contains("unknown setting `tree.palette`")),
+            "the undeclared short form still diagnoses: {flagged:?}"
+        );
+    }
 }

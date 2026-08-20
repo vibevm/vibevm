@@ -25,8 +25,9 @@ pub enum PrefsSubcommand {
     /// Print the resolved value of one key and which layer set it.
     Get(PrefsGetArgs),
 
-    /// Set one key in a file layer (basic write; phase 2.7 enriches with
-    /// diff-from-default + comment-preserve).
+    /// Set one key in a file layer — an enriched write: a value equal to the
+    /// key's built-in default is diffed away, and the layer's comments +
+    /// role-marker header survive the atomic rewrite.
     Set(PrefsSetArgs),
 
     /// List every resolved key with its value and origin.

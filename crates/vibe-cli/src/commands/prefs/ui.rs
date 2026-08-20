@@ -1,7 +1,7 @@
 //! `vibe prefs ui` — launch the interactive settings TUI (PROP-041). The
 //! command surface over the [`super::tui`] module: loads the three on-disk
-//! layers, builds the schema from the known `vibe.tree.*` keys (the only
-//! declared preferences today — the tree TUI's settings cell owns them), resolves
+//! layers plus the shared application schema ([`super::load`] builds it at the
+//! one registration point the tree TUI's settings cell owns), resolves
 //! the snapshot, determines whether there's an active project (L2) on disk, and
 //! hands all three to [`super::tui::run`].
 //!
@@ -20,7 +20,6 @@ use crate::cli::PrefsPathArgs;
 use crate::commands::prefs::tui;
 use crate::commands::prefs::tui::state::PrefsCtx;
 use crate::commands::prefs::{Loaded, load, resolve_repo, warn_load_warnings};
-use crate::commands::tree::tui::settings as tree_settings;
 use crate::output;
 
 /// Run `vibe prefs ui` — load + resolve + launch the settings TUI.
@@ -38,14 +37,18 @@ pub fn run(ctx: &output::Context, args: PrefsPathArgs) -> Result<()> {
     }
 
     let repo = resolve_repo(&args.path);
-    let Loaded { raw, warnings, .. } = load(&repo)?;
+    // `load` builds the schema at the one registration point the `vibe tree`
+    // TUI's settings cell owns, so the built-in `vibe.tree.*` defaults
+    // materialise in the resolved snapshot (the origin hint + the theme both
+    // read through them).
+    let Loaded {
+        raw,
+        schema,
+        warnings,
+        ..
+    } = load(&repo)?;
     warn_load_warnings(&warnings);
 
-    // Build the schema from the known `vibe.tree.*` keys so their built-in
-    // defaults materialise in the resolved snapshot (the origin hint + the
-    // theme both read through them). The `vibe tree` TUI's settings cell is the
-    // one declaration point; the only known preference keys today.
-    let schema = tree_settings::TreeSettings::new().schema().clone();
     let prefs = resolver::resolve(raw, &schema, toml::Table::new(), toml::Table::new());
 
     // An active project = the repo carries a `.vibe/` dir (an L2 context). A
