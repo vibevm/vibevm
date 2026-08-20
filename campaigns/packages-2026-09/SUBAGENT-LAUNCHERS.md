@@ -113,10 +113,10 @@ worktree-cwd — правило (config dir, cwd) выше это уже доп�
 | claudez | codexrunner |
 |---|---|
 | `claudez -p "…"` | `codexrunner exec "…"` |
-| `claudez -c -p "…"` | `codexrunner exec resume --last "…"` (сессии кейются на cwd-роллаутах — воркер продолжается в своём worktree) |
+| `claudez -c -p "…"` | `codexrunner exec resume --last "…"` — **ОСТОРОЖНО: cwd-скоуп resume НЕ проверен** (возможно, `--last` берёт последнюю сессию глобально, а не этого worktree; до верификации при двух+ живых codex-тредах предпочитать свежий `exec` с перечтением пакета — состояние на диске воркер дочитает сам) |
 | `--output-format stream-json --verbose` | `--json` (JSONL-события на stdout) |
-| `--allowedTools …` (позитивный список) | флаги песочницы/одобрений НА ВЫЗОВЕ: `--sandbox read-only\|workspace-write\|danger-full-access`; умолчание exec — read-only |
-| запреты инструментами | запреты ТЕКСТОМ пакета + песочницей: `workspace-write` МОЖЕТ запускать git в worktree — git-бан держится только текстом пакета (слабее claudez-формы; учитывать при приёмке) |
+| `--allowedTools …` (позитивный список) | **YOLO ПО УМОЛЧАНИЮ (владелец, 2026-08-20):** запускалка сама инжектирует `--dangerously-bypass-approvals-and-sandbox` — песочницы и одобрений НЕТ; причина: workspace-write глушил Windows Known-Folder API (`home_dir()=None`, 12 ложно-красных home-тестов). Возврат песочницы: `CODEXRUNNER_SANDBOXED=1` + свои `--sandbox`-флаги (с инжектом они конфликтуют) |
+| запреты инструментами | запреты ТОЛЬКО ТЕКСТОМ пакета: под yolo воркер может git/сеть/любую fs — принятая владельцем цена; боссово ревью диффа и перечень Deviations — единственный забор, приёмка соответственно строже |
 
 Проверено 2026-08-20: exec под дефолтной read-only песочницей честно
 отказал записи; под `--sandbox workspace-write` создал файл с точным
