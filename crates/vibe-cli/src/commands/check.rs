@@ -9,6 +9,7 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result, bail};
 use serde::Serialize;
 use vibe_check::{CheckId, CheckOptions, CheckReport, Finding, Severity};
+use vibe_core::machine_json_path;
 use vibe_core::manifest::Manifest;
 use vibe_workspace::Workspace;
 use vibe_workspace::install::verify_boot_graph;
@@ -88,10 +89,7 @@ fn emit_report(
             .map(|f| CheckJsonFinding {
                 check: f.check.as_str(),
                 severity: f.severity.as_str(),
-                path: f
-                    .path
-                    .as_ref()
-                    .map(|p| p.to_string_lossy().replace('\\', "/")),
+                path: f.path.as_ref().map(|p| machine_json_path(p)),
                 line: f.line,
                 message: f.message.as_str(),
             })

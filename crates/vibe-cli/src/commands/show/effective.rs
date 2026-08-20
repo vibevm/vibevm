@@ -9,6 +9,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
 use serde::Serialize;
+use vibe_core::machine_json_path;
 use vibe_core::manifest::Lockfile;
 
 use crate::cli::ShowEffectiveArgs;
@@ -121,7 +122,7 @@ pub(super) fn run_effective(ctx: &output::Context, args: ShowEffectiveArgs) -> R
                 .collect();
             paths.sort();
             for rel in paths {
-                let rel_str = rel.to_string_lossy().replace('\\', "/");
+                let rel_str = machine_json_path(&rel);
                 if rel_str.starts_with("spec/boot/") {
                     // Already emitted under step 1.
                     continue;
@@ -227,5 +228,5 @@ fn boot_origin(filename: &str, lockfile: Option<&Lockfile>) -> String {
 }
 
 fn normalize_rel_path(p: &Path) -> PathBuf {
-    PathBuf::from(p.to_string_lossy().replace('\\', "/"))
+    PathBuf::from(machine_json_path(p))
 }

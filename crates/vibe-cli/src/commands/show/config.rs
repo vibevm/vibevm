@@ -7,6 +7,7 @@ use std::path::Path;
 
 use anyhow::{Context, Result};
 use serde::Serialize;
+use vibe_core::machine_json_path;
 use vibe_core::manifest::Manifest;
 use vibe_core::user_config::UserConfig;
 
@@ -422,7 +423,7 @@ pub(super) fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<
 }
 
 fn forward_slash_display(path: &Path) -> String {
-    let mut s = path.to_string_lossy().replace('\\', "/");
+    let mut s = machine_json_path(path);
     if let Some(stripped) = s.strip_prefix("//?/") {
         s = stripped.to_string();
     }

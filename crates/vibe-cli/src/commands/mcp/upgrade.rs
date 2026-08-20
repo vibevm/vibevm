@@ -200,7 +200,7 @@ fn upgrade_mcp_entry(
         return Ok(AgentInstallReport {
             agent: agent.as_str().to_string(),
             scope: scope.as_str(),
-            config_path: config_path.display().to_string().replace('\\', "/"),
+            config_path: machine_json_path(config_path),
             status: "not-installed",
             note: Some("config file does not exist; use `vibe mcp install` to create".into()),
         });
@@ -225,7 +225,7 @@ fn upgrade_mcp_entry(
         return Ok(AgentInstallReport {
             agent: agent.as_str().to_string(),
             scope: scope.as_str(),
-            config_path: config_path.display().to_string().replace('\\', "/"),
+            config_path: machine_json_path(config_path),
             status: "not-installed",
             note: Some(format!(
                 "no `{SERVER_NAME}` entry in {section}; use `vibe mcp install` to create"
@@ -261,7 +261,7 @@ fn upgrade_skill(
         return Ok(Some(SkillInstallReport {
             agent: agent.as_str().to_string(),
             scope: scope.as_str(),
-            path: Some(path.display().to_string().replace('\\', "/")),
+            path: Some(machine_json_path(&path)),
             status: "not-installed",
             note: Some("SKILL.md does not exist; use `vibe mcp install` to create".into()),
         }));

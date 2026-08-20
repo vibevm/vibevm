@@ -196,7 +196,7 @@ fn uninstall_mcp_entry(
         return Ok(AgentInstallReport {
             agent: agent.as_str().to_string(),
             scope: scope.as_str(),
-            config_path: config_path.display().to_string().replace('\\', "/"),
+            config_path: machine_json_path(config_path),
             status: "not-installed",
             note: Some("config file does not exist".into()),
         });
@@ -217,7 +217,7 @@ fn uninstall_mcp_entry(
         return Ok(AgentInstallReport {
             agent: agent.as_str().to_string(),
             scope: scope.as_str(),
-            config_path: config_path.display().to_string().replace('\\', "/"),
+            config_path: machine_json_path(config_path),
             status: "not-installed",
             note: Some(format!("no `{SERVER_NAME}` entry in {section}")),
         });
@@ -227,7 +227,7 @@ fn uninstall_mcp_entry(
         return Ok(AgentInstallReport {
             agent: agent.as_str().to_string(),
             scope: scope.as_str(),
-            config_path: config_path.display().to_string().replace('\\', "/"),
+            config_path: machine_json_path(config_path),
             status: "would-remove",
             note: Some(format!("drop `{SERVER_NAME}` from {section}")),
         });
@@ -252,7 +252,7 @@ fn uninstall_mcp_entry(
     Ok(AgentInstallReport {
         agent: agent.as_str().to_string(),
         scope: scope.as_str(),
-        config_path: config_path.display().to_string().replace('\\', "/"),
+        config_path: machine_json_path(config_path),
         status: "removed",
         note: Some(format!("dropped `{SERVER_NAME}` from {section}")),
     })
@@ -283,7 +283,7 @@ fn uninstall_managed_entries(
             results.push(AgentInstallReport {
                 agent: agent.as_str().to_string(),
                 scope: scope.as_str(),
-                config_path: config_path.display().to_string().replace('\\', "/"),
+                config_path: machine_json_path(config_path),
                 status: "would-remove",
                 note: Some(format!("drop managed pkg server `{name}` from {section}")),
             });
@@ -299,7 +299,7 @@ fn uninstall_managed_entries(
         results.push(AgentInstallReport {
             agent: agent.as_str().to_string(),
             scope: scope.as_str(),
-            config_path: config_path.display().to_string().replace('\\', "/"),
+            config_path: machine_json_path(config_path),
             status: "removed",
             note: Some(format!(
                 "dropped managed pkg server `{name}` from {section}"
@@ -326,7 +326,7 @@ fn uninstall_skill(
         return Ok(Some(SkillInstallReport {
             agent: agent.as_str().to_string(),
             scope: scope.as_str(),
-            path: Some(path.display().to_string().replace('\\', "/")),
+            path: Some(machine_json_path(&path)),
             status: "not-installed",
             note: Some("SKILL.md does not exist".into()),
         }));
@@ -335,7 +335,7 @@ fn uninstall_skill(
         return Ok(Some(SkillInstallReport {
             agent: agent.as_str().to_string(),
             scope: scope.as_str(),
-            path: Some(path.display().to_string().replace('\\', "/")),
+            path: Some(machine_json_path(&path)),
             status: "would-remove",
             note: Some("delete SKILL.md (and parent vibevm/ dir if empty)".into()),
         }));
@@ -349,7 +349,7 @@ fn uninstall_skill(
     Ok(Some(SkillInstallReport {
         agent: agent.as_str().to_string(),
         scope: scope.as_str(),
-        path: Some(path.display().to_string().replace('\\', "/")),
+        path: Some(machine_json_path(&path)),
         status: "removed",
         note: None,
     }))

@@ -12,7 +12,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools"
 
 use serde_json::{Value, json};
 use specmark::{cell, spec};
-use vibe_core::{Group, PackageRef};
+use vibe_core::{Group, PackageRef, machine_json_path};
 
 use crate::{ServerContext, ToolDescriptor, ToolError};
 
@@ -164,9 +164,9 @@ impl McpTool for QueryPackageMcpTool {
             })
             .collect();
         let files: Vec<Value> = entry
-            .files_written_posix()
-            .into_iter()
-            .map(Value::String)
+            .files_written
+            .iter()
+            .map(|path| Value::String(machine_json_path(path)))
             .collect();
 
         Ok(json!({
@@ -282,7 +282,7 @@ impl McpTool for ReadSubskillMcpTool {
                 }
                 let bytes = std::fs::read(&abs)?;
                 let text = String::from_utf8_lossy(&bytes).into_owned();
-                let rel_str = rel.to_string_lossy().replace('\\', "/");
+                let rel_str = machine_json_path(rel);
                 content.push_str(&format!("--- {rel_str}\n"));
                 content.push_str(&text);
                 if !text.ends_with('\n') {
@@ -299,7 +299,7 @@ impl McpTool for ReadSubskillMcpTool {
                 }
                 let bytes = std::fs::read(&abs)?;
                 let text = String::from_utf8_lossy(&bytes).into_owned();
-                let rel_str = rel.to_string_lossy().replace('\\', "/");
+                let rel_str = machine_json_path(rel);
                 content.push_str(&format!("--- {rel_str}\n"));
                 content.push_str(&text);
                 if !text.ends_with('\n') {
@@ -427,14 +427,14 @@ impl McpTool for MaterialiseSubskillMcpTool {
             if !source.is_file() {
                 skipped.push(Value::String(format!(
                     "{} (cache miss)",
-                    rel.to_string_lossy()
+                    machine_json_path(rel)
                 )));
                 continue;
             }
             if target.exists() && !force {
                 skipped.push(Value::String(format!(
                     "{} (already exists; pass force=true to overwrite)",
-                    rel.to_string_lossy()
+                    machine_json_path(rel)
                 )));
                 continue;
             }
@@ -442,7 +442,7 @@ impl McpTool for MaterialiseSubskillMcpTool {
                 std::fs::create_dir_all(parent)?;
             }
             std::fs::copy(&source, &target)?;
-            written.push(Value::String(rel.to_string_lossy().replace('\\', "/")));
+            written.push(Value::String(machine_json_path(rel)));
         }
         Ok(json!({
             "package": package,

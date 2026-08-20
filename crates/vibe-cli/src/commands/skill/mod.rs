@@ -16,6 +16,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use dialoguer::Confirm;
+use vibe_core::machine_json_path;
 use vibe_core::manifest::{Lockfile, Manifest, SkillDecl};
 use vibe_mcp::agents::{Agent, Scope};
 use vibe_mcp::pkgskill::{
@@ -212,7 +213,7 @@ fn run_list(ctx: &output::Context, args: SkillListArgs) -> Result<()> {
                 serde_json::json!({
                     "name": s.decl.name,
                     "origin": s.origin,
-                    "source": s.source.display().to_string().replace('\\', "/"),
+                    "source": machine_json_path(&s.source),
                     "description": s.decl.description,
                     "agents": s.decl.agents,
                 })

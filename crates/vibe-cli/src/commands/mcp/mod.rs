@@ -56,6 +56,7 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result, bail};
 use dialoguer::Confirm;
 use serde::Serialize;
+use vibe_core::machine_json_path;
 use vibe_core::manifest::Manifest;
 use vibe_mcp::agent_config::{
     merge_json, merge_toml, read_json, read_toml, strip_json_entry, strip_toml_entry,
@@ -158,7 +159,7 @@ fn pkg_server_status(project_root: Option<&Path>) -> Vec<PkgServerStatus> {
                 name: s.decl.name.clone(),
                 package: s.binary.package.clone(),
                 version: s.version.clone(),
-                artifact: artifact.display().to_string().replace('\\', "/"),
+                artifact: machine_json_path(&artifact),
                 artifact_state: if built { "built" } else { "unbuilt" },
                 note: (!built).then(|| {
                     format!(
@@ -329,7 +330,7 @@ pub(super) fn preview_install_mcp(
     Ok(AgentInstallReport {
         agent: agent.as_str().to_string(),
         scope: scope.as_str(),
-        config_path: config_path.display().to_string().replace('\\', "/"),
+        config_path: machine_json_path(config_path),
         status: dry,
         note,
     })
@@ -346,7 +347,7 @@ pub(super) fn apply_install_mcp(
         return Ok(AgentInstallReport {
             agent: agent.as_str().to_string(),
             scope: scope.as_str(),
-            config_path: config_path.display().to_string().replace('\\', "/"),
+            config_path: machine_json_path(config_path),
             status: "unchanged",
             note,
         });
@@ -378,7 +379,7 @@ pub(super) fn apply_install_mcp(
     Ok(AgentInstallReport {
         agent: agent.as_str().to_string(),
         scope: scope.as_str(),
-        config_path: config_path.display().to_string().replace('\\', "/"),
+        config_path: machine_json_path(config_path),
         status,
         note,
     })
@@ -423,7 +424,7 @@ pub(super) fn preview_install_pkg_server(
     Ok(AgentInstallReport {
         agent: agent.as_str().to_string(),
         scope: "project",
-        config_path: config_path.display().to_string().replace('\\', "/"),
+        config_path: machine_json_path(config_path),
         status: dry,
         note: Some(match note {
             Some(n) => format!("pkg server `{name}` — {n}"),
@@ -455,7 +456,7 @@ pub(super) fn apply_install_pkg_server(
     Ok(AgentInstallReport {
         agent: agent.as_str().to_string(),
         scope: "project",
-        config_path: config_path.display().to_string().replace('\\', "/"),
+        config_path: machine_json_path(config_path),
         status,
         note: Some(match note {
             Some(n) => format!("pkg server `{name}` — {n}"),

@@ -422,7 +422,7 @@ fn walk_install_pkg_servers(
             results.push(AgentInstallReport {
                 agent: agent.as_str().to_string(),
                 scope: "project",
-                config_path: config_path.display().to_string().replace('\\', "/"),
+                config_path: machine_json_path(config_path),
                 status: "refused",
                 note: Some(format!("pkg server `{}` — {refusal}", s.decl.name)),
             });
@@ -437,7 +437,7 @@ fn walk_install_pkg_servers(
             };
             vibe_mcp::pkg_servers::verbatim_free(&abs)
         };
-        let command = artifact.to_string_lossy().replace('\\', "/");
+        let command = machine_json_path(&artifact);
         let args = vibe_mcp::pkg_servers::substituted_args(&s.decl.args, project_root);
         let payload = vibe_mcp::pkg_servers::entry_payload(agent, &command, &args);
         let ConfigPayload::Json(entry) = payload else {

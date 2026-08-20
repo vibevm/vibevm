@@ -14,6 +14,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-018#relay");
 
 use anyhow::Result;
+use vibe_core::machine_json_path;
 use vibe_mcp::agentic::{
     ActiveBackend, BackendOutcome, EXPLAIN_AFFINITY, InferenceBackend, RelayBackend,
     check_affinity, drain_intent, explain_intent, relay_dir,
@@ -38,11 +39,7 @@ fn run_explain(ctx: &output::Context, args: AgenticExplainArgs) -> Result<()> {
     let intent = explain_intent(&project_root);
     let backend = RelayBackend::for_project(&project_root);
     let outcome = backend.submit(&intent)?;
-    let mailbox = relay_dir(&project_root)
-        .join("command.md")
-        .display()
-        .to_string()
-        .replace('\\', "/");
+    let mailbox = machine_json_path(&relay_dir(&project_root).join("command.md"));
 
     match outcome {
         BackendOutcome::Delegated { pointer } => {

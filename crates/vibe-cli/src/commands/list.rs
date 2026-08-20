@@ -9,8 +9,8 @@ use std::str::FromStr;
 
 use anyhow::{Context, Result, anyhow, bail};
 use serde::Serialize;
-use vibe_core::PackageKind;
 use vibe_core::manifest::{LockedPackage, Lockfile};
+use vibe_core::{PackageKind, machine_json_path};
 
 use crate::cli::ListArgs;
 use crate::output;
@@ -87,7 +87,11 @@ pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
                 via_redirect: p.via_redirect.as_deref(),
                 content_hash: &p.content_hash,
                 boot_snippet: p.boot_snippet.as_deref(),
-                files_written: p.files_written_posix(),
+                files_written: p
+                    .files_written
+                    .iter()
+                    .map(|path| machine_json_path(path))
+                    .collect(),
                 overridden: p.overridden,
                 features: p.features.iter().map(|s| s.as_str()).collect(),
                 subskills_active: p

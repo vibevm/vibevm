@@ -13,6 +13,7 @@ use std::path::Path;
 use anyhow::{Context, Result};
 use serde::Serialize;
 use specmark::spec;
+use vibe_core::machine_json_path;
 
 use crate::agents::{Agent, Scope};
 
@@ -98,7 +99,7 @@ pub fn install_skill(
     };
 
     let body = SKILL_TEMPLATE;
-    let path_str = path.display().to_string().replace('\\', "/");
+    let path_str = machine_json_path(&path);
     let base = decide_skill_action(&path, body)?;
     let final_status = preview_status(base, dry_run);
 

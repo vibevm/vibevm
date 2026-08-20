@@ -34,4 +34,4 @@ pub use global_registry::{
 };
 pub use package_ref::{Group, PackageKind, PackageName, PackageRef, VersionSpec};
 pub use provenance::{SourceUrl, TraceId};
-pub use rel_path::RelPath;
+pub use rel_path::{RelPath, machine_json_path};

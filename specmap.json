@@ -6407,28 +6407,28 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/install.rs",
       "item_kind": "struct",
-      "line": 22,
+      "line": 23,
       "symbol": "vibe_mcp::install::AgentInstallReport",
-      "end_line": 46,
+      "end_line": 47,
       "fingerprint": "tok1:98b3f144f9ef26331f71c2284c451d22e4c9e5e6b315bd691b408de1dc5a7344"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/install.rs",
       "item_kind": "struct",
-      "line": 48,
+      "line": 49,
       "symbol": "vibe_mcp::install::SkillInstallReport",
-      "end_line": 69,
+      "end_line": 70,
       "fingerprint": "tok1:58f3f9788bdf6152a2b8518ce14516039a3010166adcc025c801ac628c232e06"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/install.rs",
       "item_kind": "fn",
-      "line": 71,
+      "line": 72,
       "symbol": "vibe_mcp::install::install_skill",
-      "end_line": 120,
-      "fingerprint": "tok1:ccae6c16e1a85244a1f31c0625ee7385e695c7b767dca07213e070d49e8c69cc"
+      "end_line": 121,
+      "fingerprint": "tok1:40164bd516d653849d1b0d2ae01d8e0a9904a29610bf7c511690fc2e1bfc8cd9"
     },
     {
       "crate_name": "vibe-mcp",
@@ -6470,37 +6470,37 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "item_kind": "enum",
-      "line": 24,
+      "line": 25,
       "symbol": "vibe_mcp::pkgskill::PackageSkillError",
-      "end_line": 64,
+      "end_line": 65,
       "fingerprint": "tok1:50e93253c9a3bd2f45a019480bc14b44b1b89bf0b63a2d7e3fd41781fd26daec"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "item_kind": "struct",
-      "line": 66,
+      "line": 67,
       "symbol": "vibe_mcp::pkgskill::PackageSkillReport",
-      "end_line": 92,
+      "end_line": 93,
       "fingerprint": "tok1:415119c3f214e33f346ac73019a5c29591662591213a3aee47b6e5d3b97c0508"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "item_kind": "fn",
-      "line": 94,
+      "line": 95,
       "symbol": "vibe_mcp::pkgskill::install_package_skill",
-      "end_line": 113,
+      "end_line": 114,
       "fingerprint": "tok1:d640819f4cbecc751b8189b08226926d9f2165bcbd7ad7ab96986505b85b33d4"
     },
     {
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "item_kind": "fn",
-      "line": 115,
+      "line": 116,
       "symbol": "vibe_mcp::pkgskill::install_package_skill_selecting",
-      "end_line": 192,
-      "fingerprint": "tok1:7963948eaf5377611c73601eb80f8f3c58e7657360e4ff006fce524c1df77326"
+      "end_line": 193,
+      "fingerprint": "tok1:336626b33609f2650de622baabfa5f12567db57f47bccb634e40c3ed450d3d56"
     },
     {
       "crate_name": "vibe-mcp",
@@ -6524,10 +6524,10 @@
       "crate_name": "vibe-mcp",
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "item_kind": "fn",
-      "line": 194,
+      "line": 195,
       "symbol": "vibe_mcp::pkgskill::uninstall_package_skill",
-      "end_line": 238,
-      "fingerprint": "tok1:f90cc35399b1eb835c06255ce1641c60d51a783fb0cee5f0e328dd690e774e13"
+      "end_line": 239,
+      "fingerprint": "tok1:e8223baf07f54e1a5259021340e4c14b2ee767b1936cbfc2d95c0ad3268c5f08"
     },
     {
       "crate_name": "vibe-mcp",
@@ -14959,7 +14959,7 @@
     {
       "file": "crates/vibe-mcp/src/install.rs",
       "from_symbol": "vibe_mcp::install::AgentInstallReport",
-      "line": 37,
+      "line": 38,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#lifecycle",
       "verb": "implements"
@@ -14967,7 +14967,7 @@
     {
       "file": "crates/vibe-mcp/src/install.rs",
       "from_symbol": "vibe_mcp::install::SkillInstallReport",
-      "line": 62,
+      "line": 63,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#lifecycle",
       "verb": "implements"
@@ -14975,7 +14975,7 @@
     {
       "file": "crates/vibe-mcp/src/install.rs",
       "from_symbol": "vibe_mcp::install::install_skill",
-      "line": 76,
+      "line": 77,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill",
       "verb": "implements"
@@ -15015,7 +15015,7 @@
     {
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "from_symbol": "vibe_mcp::pkgskill::PackageSkillError",
-      "line": 34,
+      "line": 35,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
       "verb": "implements"
@@ -15023,7 +15023,7 @@
     {
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "from_symbol": "vibe_mcp::pkgskill::PackageSkillReport",
-      "line": 82,
+      "line": 83,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
       "verb": "implements"
@@ -15031,7 +15031,7 @@
     {
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "from_symbol": "vibe_mcp::pkgskill::install_package_skill",
-      "line": 103,
+      "line": 104,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
       "verb": "implements"
@@ -15039,7 +15039,7 @@
     {
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "from_symbol": "vibe_mcp::pkgskill::install_package_skill_selecting",
-      "line": 120,
+      "line": 121,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill-include",
       "verb": "implements",
@@ -15066,7 +15066,7 @@
     {
       "file": "crates/vibe-mcp/src/pkgskill.rs",
       "from_symbol": "vibe_mcp::pkgskill::uninstall_package_skill",
-      "line": 198,
+      "line": 199,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill",
       "verb": "implements"
@@ -74282,7 +74282,7 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-mcp/src/pkgskill.rs",
-      "line": 120,
+      "line": 121,
       "message": "edge `vibe_mcp::pkgskill::install_package_skill_selecting` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill-include` carries no kind/revision line yet"
     },
     {

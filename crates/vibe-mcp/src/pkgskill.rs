@@ -18,6 +18,7 @@ use std::path::{Path, PathBuf};
 use serde::Serialize;
 use specmark::spec;
 use thiserror::Error;
+use vibe_core::machine_json_path;
 
 use crate::agents::{Agent, Scope};
 
@@ -143,7 +144,7 @@ pub fn install_package_skill_selecting(
         return Ok(skipped(skill_name, agent, scope_str));
     };
     let target = root.join(skill_name);
-    let path_str = target.display().to_string().replace('\\', "/");
+    let path_str = machine_json_path(&target);
 
     if !source.exists() {
         return Ok(PackageSkillReport {
@@ -214,7 +215,7 @@ pub fn uninstall_package_skill(
         return Ok(skipped(skill_name, agent, scope_str));
     };
     let target = root.join(skill_name);
-    let path_str = target.display().to_string().replace('\\', "/");
+    let path_str = machine_json_path(&target);
     let exists = target.exists();
     let status: &'static str = match (exists, dry_run) {
         (false, _) => "absent",

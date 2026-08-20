@@ -5,8 +5,18 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#workspace-section");
 
 use std::fmt;
+use std::path::Path;
 
 use serde::{Deserialize, Serialize};
+
+/// Render a filesystem path for machine-readable JSON.
+///
+/// Machine JSON prints paths in POSIX form on every operating system, so
+/// consumers receive stable `/` separators. Human-readable output keeps the
+/// operating system's native path display and should not use this helper.
+pub fn machine_json_path(path: &Path) -> String {
+    path.to_string_lossy().replace('\\', "/")
+}
 
 /// A forward-slashed path relative to a workspace's absolute root — a
 /// member node's *portable identity* (PROP-007 §2.4). It is what the
@@ -126,5 +136,27 @@ impl PartialEq<RelPath> for str {
 impl PartialEq<RelPath> for &str {
     fn eq(&self, other: &RelPath) -> bool {
         *self == other.0
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::machine_json_path;
+    use std::path::Path;
+
+    #[test]
+    fn machine_json_path_normalises_windows_separators() {
+        assert_eq!(
+            machine_json_path(Path::new(r"spec\flows\wal\PROTOCOL.md")),
+            "spec/flows/wal/PROTOCOL.md"
+        );
+    }
+
+    #[test]
+    fn machine_json_path_preserves_posix_paths() {
+        assert_eq!(
+            machine_json_path(Path::new("spec/flows/wal/PROTOCOL.md")),
+            "spec/flows/wal/PROTOCOL.md"
+        );
     }
 }
