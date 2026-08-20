@@ -764,7 +764,55 @@ check_lane_citations() {
 }
 run_step "lane-citation lint (B-011)" check_lane_citations || OVERALL=$?
 
-# 11c. PROP-000 §3 ##NO-CRATES-IO states that crates in this workspace set
+# 11c. A plan is temporary and a spec is permanent: once a plan is closed,
+# spec prose must not send a reader to that file for content. Active-plan
+# links remain lawful, and spec/WAL.md is excluded because it is a volatile
+# checkpoint rather than a contract. Dated provenance survives by plan name
+# and date, without a file path, so this deliberately dumb path gate does not
+# see that third genre.
+CLOSED_PLANS_REGISTRY="campaigns/CLOSED-PLANS.toml"
+
+check_closed_plan_links() {
+  local plan_path basename hits rc=0
+  if [ ! -f "$CLOSED_PLANS_REGISTRY" ]; then
+    printf 'self-check: `%s` is missing — closed plans have no gate input.\n' \
+      "$CLOSED_PLANS_REGISTRY" >&2
+    printf 'self-check: fix: restore the schema-1 closed-plan registry.\n' >&2
+    return 1
+  fi
+
+  # This is deliberately not a TOML parser: schema 1 gives every entry one
+  # literal `path = "…"` line, so grep plus quote stripping is sufficient.
+  while IFS= read -r plan_path; do
+    [ -n "$plan_path" ] || continue
+    basename="${plan_path##*/}"
+    hits=$(grep -rFn --include='*.md' \
+        -e "$plan_path" -e "$basename" spec/ 2>/dev/null \
+      | grep -v '^spec/WAL\.md:')
+    if [ -n "$hits" ]; then
+      printf '%s\n' "$hits" \
+        | sed -E 's/^([^:]+:[0-9]+):.*$/\1/' \
+        | while IFS= read -r location; do
+            printf '%s · закрытый план %s\n' "$location" "$basename" >&2
+          done
+      rc=1
+    fi
+  done < <(grep -E '^[[:space:]]*path[[:space:]]*=[[:space:]]*"[^"]+"[[:space:]]*$' \
+      "$CLOSED_PLANS_REGISTRY" | sed -E 's/^[^"]*"([^"]+)"[[:space:]]*$/\1/')
+
+  if [ "$rc" -ne 0 ]; then
+    printf 'self-check: fix: замени ссылку датированным provenance-упоминанием по имени\n' >&2
+    printf 'self-check: (жанр 3) или удали.\n' >&2
+  else
+    [ "$QUIET" -ne 0 ] ||
+      printf 'self-check: specs do not link to a closed plan.\n' >&2
+  fi
+  return "$rc"
+}
+run_step "spec does not link to a closed plan" \
+  check_closed_plan_links || OVERALL=$?
+
+# 11d. PROP-000 §3 ##NO-CRATES-IO states that crates in this workspace set
 # `license-file = "LICENSE.md"` and `publish = false` — so that none can be
 # pushed to crates.io by accident, and so the shipped surface carries one
 # licence. Nothing checked it, and one member drifted out of it silently for
