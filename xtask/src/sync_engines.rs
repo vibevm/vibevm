@@ -38,6 +38,15 @@ use crate::repo_root;
 pub(crate) struct SyncManifest {
     /// The sync sets, each mirrored independently.
     pub sync: Vec<SyncSet>,
+    /// Vendored engine dirs that are deliberately the target of NO sync
+    /// set: superseded version slots. A frozen slot ships the engine of
+    /// its own era, and syncing today's sources into it would rewrite
+    /// history — the exact opposite of what a version slot is. Every
+    /// entry is a recorded decision the coverage check accepts; a
+    /// pattern that stops matching a real dir is reported so the list
+    /// cannot rot (same law as conform.toml's dead-exclusion warning).
+    #[serde(default)]
+    pub frozen_targets: Vec<String>,
 }
 
 /// One authored-source → vendored-targets set.
@@ -121,11 +130,24 @@ fn uncovered_vendor_dirs(root: &Path, manifest: &SyncManifest) -> Result<(Vec<St
         .flat_map(|set| set.targets.iter())
         .map(|target| target.replace('\\', "/"))
         .collect();
+    let frozen: BTreeSet<String> = manifest
+        .frozen_targets
+        .iter()
+        .map(|target| target.replace('\\', "/"))
+        .collect();
     let found = vendored_dirs(root)?;
     let total = found.len();
+    // A frozen entry that names no real dir is a rotten record — say so
+    // (the dead-exclusion law), but do not fail the run over it.
+    for dead in frozen.iter().filter(|f| !found.contains(*f)) {
+        eprintln!(
+            "sync-engines: frozen_targets names `{dead}`, which holds no vendored \
+             engine copies — delete the stale entry."
+        );
+    }
     let uncovered = found
         .into_iter()
-        .filter(|dir| !declared.contains(dir))
+        .filter(|dir| !declared.contains(dir) && !frozen.contains(dir))
         .collect();
     Ok((uncovered, total))
 }
@@ -317,10 +339,13 @@ pub(crate) fn run_sync_engines(check: bool) -> Result<()> {
             );
         }
         if drift.is_empty() {
+            let frozen = manifest.frozen_targets.len();
             println!(
                 "sync-engines --check: every vendored crate matches its authored source \
-                 ({pairs} pair(s) across {sets} sync set(s)); all {vendor_dirs} vendored \
-                 engine dir(s) under {FAMILY_ROOT}/ are sync targets."
+                 ({pairs} pair(s) across {sets} sync set(s)); {vendor_dirs} vendored \
+                 engine dir(s) under {FAMILY_ROOT}/ accounted for ({} sync targets, \
+                 {frozen} recorded frozen slots).",
+                vendor_dirs - frozen,
             );
             return Ok(());
         }
@@ -356,6 +381,7 @@ mod tests {
 
     fn manifest() -> SyncManifest {
         SyncManifest {
+            frozen_targets: Vec::new(),
             sync: vec![SyncSet {
                 source_root: "core/crates".into(),
                 crates: vec!["engine".into()],
@@ -456,6 +482,7 @@ mod tests {
         );
 
         let m = SyncManifest {
+            frozen_targets: Vec::new(),
             sync: vec![SyncSet {
                 source_root: "core/crates".into(),
                 crates: vec!["engine".into()],
@@ -469,6 +496,7 @@ mod tests {
         // Declaring it closes the gap — nothing else about the manifest
         // changed, which is exactly why a pair count could never see it.
         let m = SyncManifest {
+            frozen_targets: Vec::new(),
             sync: vec![SyncSet {
                 source_root: "core/crates".into(),
                 crates: vec!["engine".into()],

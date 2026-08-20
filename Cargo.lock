@@ -569,7 +569,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-conform"
-version = "0.7.0"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
@@ -582,7 +582,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-specmap"
-version = "0.7.0"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
@@ -600,7 +600,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-specmark"
-version = "0.7.0"
+version = "1.0.0"
 dependencies = [
  "core-ai-native-specmark-grammar",
  "proc-macro2",
@@ -610,7 +610,7 @@ dependencies = [
 
 [[package]]
 name = "core-ai-native-specmark-grammar"
-version = "0.7.0"
+version = "1.0.0"
 dependencies = [
  "proc-macro2",
  "syn",
@@ -2933,7 +2933,7 @@ dependencies = [
 
 [[package]]
 name = "rust-ai-native-cli"
-version = "0.7.0"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -2948,7 +2948,7 @@ dependencies = [
 
 [[package]]
 name = "rust-ai-native-conform"
-version = "0.7.0"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -2959,7 +2959,7 @@ dependencies = [
 
 [[package]]
 name = "rust-ai-native-conform-frontend"
-version = "0.7.0"
+version = "1.0.0"
 dependencies = [
  "core-ai-native-conform",
  "core-ai-native-specmark",
@@ -2970,14 +2970,14 @@ dependencies = [
 
 [[package]]
 name = "rust-ai-native-env-audit"
-version = "0.7.0"
+version = "1.0.0"
 dependencies = [
  "core-ai-native-specmark",
 ]
 
 [[package]]
 name = "rust-ai-native-specmap"
-version = "0.7.0"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "clap",

@@ -73784,10 +73784,40 @@
   "suspects": [],
   "warnings": [
     {
+      "code": "dangling-edge",
+      "file": "crates/progress-core/src/baseline/tests.rs",
+      "line": 42,
+      "message": "edge `progress_core::baseline::tests::class_of` --deviates--> `spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`: no spec unit carries this anchor"
+    },
+    {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-check/src/checks/redirect_block.rs",
       "line": 26,
       "message": "edge `vibe_check::checks::redirect_block::RedirectBlockCheck::run` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-012#markers` carries no kind/revision line yet"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/cli/query.rs",
+      "line": 5,
+      "message": "edge `vibe_cli::cli::query` --implements--> `spec://core-ai-native/mechanisms/PROP-014#queries`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/cli/select.rs",
+      "line": 6,
+      "message": "edge `vibe_cli::cli::select` --implements--> `spec://core-ai-native/mechanisms/PROP-014#queries`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/commands/explain.rs",
+      "line": 8,
+      "message": "edge `vibe_cli::commands::explain` --implements--> `spec://core-ai-native/mechanisms/PROP-014#queries`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
+      "line": 60,
+      "message": "edge `vibe_cli::commands::install::flag_tests::empty_manifest` --deviates--> `spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`: no spec unit carries this anchor"
     },
     {
       "code": "pin-into-unmarked-unit",
@@ -73803,9 +73833,33 @@
     },
     {
       "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/commands/query.rs",
+      "line": 8,
+      "message": "edge `vibe_cli::commands::query` --implements--> `spec://core-ai-native/mechanisms/PROP-014#queries`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/commands/select.rs",
+      "line": 8,
+      "message": "edge `vibe_cli::commands::select` --implements--> `spec://core-ai-native/mechanisms/PROP-014#queries`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "crates/vibe-cli/src/commands/tools.rs",
       "line": 13,
       "message": "edge `vibe_cli::commands::tools` --implements--> `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#binaries`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/commands/trace.rs",
+      "line": 9,
+      "message": "edge `vibe_cli::commands::trace` --implements--> `spec://core-ai-native/mechanisms/PROP-014#index`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/commands/tree/tui/settings.rs",
+      "line": 411,
+      "message": "edge `vibe_cli::commands::tree::tui::settings::build_schema` --deviates--> `spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`: no spec unit carries this anchor"
     },
     {
       "code": "pin-into-unmarked-unit",
@@ -74034,6 +74088,18 @@
       "file": "crates/vibe-cli/src/commands/vvm/tools.rs",
       "line": 193,
       "message": "edge `vibe_cli::commands::vvm::tools::tests::version_ok_compares_semver` pins r1 but `spec://org.vibevm.core/vibevm/common/PROP-019#tools` carries no kind/revision line yet"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/commands/workspace/publish.rs",
+      "line": 492,
+      "message": "edge `vibe_cli::commands::workspace::publish::node_abs_dir` --deviates--> `spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-cli/src/main.rs",
+      "line": 366,
+      "message": "edge `vibe_cli::promote_user_config_env` --deviates--> `spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`: no spec unit carries this anchor"
     },
     {
       "code": "pin-into-unmarked-unit",
@@ -74276,6 +74342,18 @@
       "message": "edge `vibe_core::package_ref::tests::qualified_name_is_the_identity_string` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#identity` carries no kind/revision line yet"
     },
     {
+      "code": "dangling-edge",
+      "file": "crates/vibe-index/src/cli/stop.rs",
+      "line": 25,
+      "message": "edge `vibe_index::cli::stop::run` --deviates--> `spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-index/src/hash_recipe.rs",
+      "line": 68,
+      "message": "edge `vibe_index::hash_recipe::recipe1` --deviates--> `spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`: no spec unit carries this anchor"
+    },
+    {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-index/src/index/persistence.rs",
       "line": 21,
@@ -74474,6 +74552,12 @@
       "message": "edge `vibe_mcp::pkgskill::tests::include_projects_only_matching_files` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill-include` carries no kind/revision line yet"
     },
     {
+      "code": "dangling-edge",
+      "file": "crates/vibe-publish/src/redirect_sync.rs",
+      "line": 245,
+      "message": "edge `vibe_publish::redirect_sync::build_target_fetch_url` --deviates--> `spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`: no spec unit carries this anchor"
+    },
+    {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-registry/src/git_backend/shell/tests.rs",
       "line": 75,
@@ -74486,6 +74570,12 @@
       "message": "edge `vibe_registry::git_backend::shell::tests::submodule_step_is_a_noop_without_submodules` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#fetch` carries no kind/revision line yet"
     },
     {
+      "code": "dangling-edge",
+      "file": "crates/vibe-registry/src/git_package_registry/fetch.rs",
+      "line": 231,
+      "message": "edge `vibe_registry::git_package_registry::fetch::GitPerPackageRegistry::fetch_with_expected_hash` --deviates--> `spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`: no spec unit carries this anchor"
+    },
+    {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
       "line": 497,
@@ -74496,6 +74586,12 @@
       "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
       "line": 553,
       "message": "edge `vibe_registry::git_package_registry::fetch::tests::materialise_in_place_clones_then_updates_the_slot` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place` carries no kind/revision line yet"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-registry/src/hash_recipe.rs",
+      "line": 68,
+      "message": "edge `vibe_registry::hash_recipe::recipe1` --deviates--> `spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`: no spec unit carries this anchor"
     },
     {
       "code": "pin-into-unmarked-unit",
@@ -74514,6 +74610,12 @@
       "file": "crates/vibe-registry/src/index_client/locate.rs",
       "line": 204,
       "message": "edge `vibe_registry::index_client::locate::tests::ladder_defaults_to_registry_url_slash_index` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor` carries no kind/revision line yet"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-registry/src/lib.rs",
+      "line": 283,
+      "message": "edge `vibe_registry::CachedPackage::package_meta` --deviates--> `spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`: no spec unit carries this anchor"
     },
     {
       "code": "pin-into-unmarked-unit",
@@ -74550,6 +74652,12 @@
       "file": "crates/vibe-registry/tests/index_url_ladder.rs",
       "line": 279,
       "message": "edge `vibe_registry::tests::index_url_ladder::none_switches_the_index_off_even_where_a_default_would_answer` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor` carries no kind/revision line yet"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-resolver/src/activation.rs",
+      "line": 270,
+      "message": "edge `vibe_resolver::activation::command_resolves_on_path` --deviates--> `spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`: no spec unit carries this anchor"
     },
     {
       "code": "pin-into-unmarked-unit",
@@ -74655,9 +74763,39 @@
     },
     {
       "code": "dangling-edge",
+      "file": "crates/vibe-settings/src/schema/types/tests.rs",
+      "line": 4,
+      "message": "edge `vibe_settings::schema::types::tests::key` --deviates--> `spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-trace/src/foreign.rs",
+      "line": 19,
+      "message": "edge `vibe_trace::foreign` --implements--> `spec://core-ai-native/mechanisms/PROP-014#queries`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
       "file": "crates/vibe-trace/src/fragment.rs",
       "line": 22,
       "message": "edge `vibe_trace::fragment` --implements--> `spec://org.vibevm.ai-native/core-ai-native/mechanisms/PROP-014#addressing-code`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-trace/src/lib.rs",
+      "line": 19,
+      "message": "edge `vibe_trace` --implements--> `spec://core-ai-native/mechanisms/PROP-014#queries`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-trace/src/search.rs",
+      "line": 17,
+      "message": "edge `vibe_trace::search` --implements--> `spec://core-ai-native/mechanisms/PROP-014#queries`: no spec unit carries this anchor"
+    },
+    {
+      "code": "dangling-edge",
+      "file": "crates/vibe-trace/src/select.rs",
+      "line": 34,
+      "message": "edge `vibe_trace::select` --implements--> `spec://core-ai-native/mechanisms/PROP-014#queries`: no spec unit carries this anchor"
     },
     {
       "code": "pin-into-unmarked-unit",

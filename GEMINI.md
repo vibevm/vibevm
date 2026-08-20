@@ -17,13 +17,13 @@ verified operating facts (profiles, tokens, packet schema, build state) are the
 ledger below. The entry points between them: the launcher is
 `packages/org.vibevm.fractality/fractality.ps1` (PowerShell) / `fractality.sh`
 (Bash), built once via `cargo build -p fractality-cli` from
-`packages/org.vibevm.fractality/fractality/v0.1.0/` against the global
+`packages/org.vibevm.fractality/fractality/v1.0.0/` against the global
 `~/.fractality` home. Drive it — `./fractality.ps1 run --packet <task.toml>`
 (sync) or `spawn … ; wait <id>` (async); free `route` / `gate` helpers (no
 daemon, no spend); no-packet interim route
 `opencode run -m zai-coding-plan/glm-5.2 "<task>"`. RLM's need-gate is
 `fractality gate …`; its recursive-descent machinery is
-`packages/org.vibevm.fractality/fractality/v0.1.0/spec/plans/FRACTALITY-RLM-PLAN-v0.1.md`
+`packages/org.vibevm.fractality/fractality/v1.0.0/spec/plans/FRACTALITY-RLM-PLAN-v0.1.md`
 (Campaign 3 Stage B, maturing). On Claude Code, `ultracode` / the Workflow tool
 cannot spawn GLM workers directly, so a swarm under them still routes through
 fractality.
@@ -58,7 +58,7 @@ Keep it current-state; prune stale lines.
   default failure mode. Launcher verified live 2026-07-15.
 - **Build / run:** `cargo build -p fractality-cli` (also
   `-p fractality-mission-control -p fractality-pod`) from
-  `packages/org.vibevm.fractality/fractality/v0.1.0/`; drive via the launcher;
+  `packages/org.vibevm.fractality/fractality/v1.0.0/`; drive via the launcher;
   global home `~/.fractality`. Binaries verified built 2026-07-12.
 - **Daemon:** `mc start` is idempotent; read-verbs auto-start it
   (`connect_or_start`); one daemon already runs live on the global home
@@ -86,7 +86,7 @@ Keep it current-state; prune stale lines.
 - **Packets** (TOML, schema 1): `[task]` goal/acceptance,
   `[workspace] mode = "worktree" | "dir"` (worktree default → `repo`/`base`,
   deliverable branch), `[output]`, `[budget]`, `[routing]` profile/model.
-  Golden: `…/fractality/v0.1.0/spec/examples/hello-glm.toml`. Workers **cannot
+  Golden: `…/fractality/v1.0.0/spec/examples/hello-glm.toml`. Workers **cannot
   run git** — the boss commits/merges the `fractality/<id>` branch.
 - **Enable RLM (worker recursion):** profile `allow_tools = ["Bash"]` (worker
   may itself call `fractality spawn`) and/or `ask_boss = true` — both off by
@@ -134,7 +134,7 @@ Keep it current-state; prune stale lines.
   (regenerated dep copies), `fixtures/**` + `crates/**` test data (tests assert on
   `"EULA"`), the `licensing` package (legitimate eula-template), and
   `VIBEVM-SPEC.md` + specs (owner-frozen / historical mentions). Dogfood spec:
-  `…/fractality/v0.1.0/spec/manual-tests/MT-05-dogfood-relicense.md`.
+  `…/fractality/v1.0.0/spec/manual-tests/MT-05-dogfood-relicense.md`.
 
 ## Режим взаимодействия — владельческий переключатель `AGENT-MODE.toml`
 

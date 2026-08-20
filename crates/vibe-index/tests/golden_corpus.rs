@@ -120,22 +120,14 @@ fn corpus_surface(corpus: &Path) -> BTreeSet<PathBuf> {
     files
 }
 
-/// The corpus freezes the format epoch, not the version of the binary that
-/// happens to replay it. Keep the authored corpus byte-stable on disk while
-/// making its display-only generator stamp follow the running binary.
-fn expected_committed_bytes(rel: &Path, committed: Vec<u8>) -> Vec<u8> {
-    if rel != Path::new("repomd.json") {
-        return committed;
-    }
-
-    let mut repomd: serde_json::Value =
-        serde_json::from_slice(&committed).expect("the committed repomd is valid JSON");
-    repomd["generator"] =
-        serde_json::Value::String(format!("vibe-index {}", env!("CARGO_PKG_VERSION")));
-    let mut expected =
-        serde_json::to_vec_pretty(&repomd).expect("the normalised repomd serialises");
-    expected.push(b'\n');
-    expected
+/// The committed corpus IS the expectation, byte for byte — no field is
+/// normalised. A version bump that moves the display-only generator
+/// stamp regenerates the committed catalog (the C5 1.0.0 landing did
+/// exactly that), so the strict comparison never needed loosening; the
+/// brief normalisation that lived here between the bump and the corpus
+/// refresh is gone with its reason.
+fn expected_committed_bytes(_rel: &Path, committed: Vec<u8>) -> Vec<u8> {
+    committed
 }
 
 /// The first diverging line of two byte sequences, as `(line number,

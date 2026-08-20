@@ -509,7 +509,7 @@
   write-the-plan-to-run-cold-lead → org-vibevm-world--campaign-plans--write-the-plan-to-run-cold-lead (org.vibevm.world/campaign-plans)
 -->
 
-<!-- vibe:static org.vibevm.world/addressable-specs — vibedeps/org.vibevm.world.addressable-specs/0.1.0/spec/boot/15-flow-addressable-specs.md -->
+<!-- vibe:static org.vibevm.world/addressable-specs — vibedeps/org.vibevm.world.addressable-specs/1.0.0/spec/boot/15-flow-addressable-specs.md -->
 
 # Flow: Addressable Specs {#org-vibevm-world--addressable-specs--root}
 
@@ -581,7 +581,7 @@ invariant the reader statistically skipped. @status:spec/done
 - @fact:org-vibevm-world--addressable-specs--NEVER-INVENT-AN-ANCHOR Never invent an anchor — resolve the URI and read the unit before
   acting on it. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/campaign-plans — vibedeps/org.vibevm.world.campaign-plans/0.1.0/spec/boot/40-flow-campaign-plans.md -->
+<!-- vibe:static org.vibevm.world/campaign-plans — vibedeps/org.vibevm.world.campaign-plans/1.0.0/spec/boot/40-flow-campaign-plans.md -->
 
 # Flow: Campaign Plans {#org-vibevm-world--campaign-plans--root}
 
@@ -669,7 +669,7 @@ the record half:
   ledger is where deferrals live, and the next campaign's mandate
   drains from it. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/comparative-research — vibedeps/org.vibevm.world.comparative-research/0.1.0/spec/boot/52-flow-comparative-research.md -->
+<!-- vibe:static org.vibevm.world/comparative-research — vibedeps/org.vibevm.world.comparative-research/1.0.0/spec/boot/52-flow-comparative-research.md -->
 
 # Flow: Comparative Research {#org-vibevm-world--comparative-research--root}
 
@@ -721,7 +721,7 @@ and hold the laws: @status:impl/done
 - @fact:org-vibevm-world--comparative-research--NEVER-LET-A-STUDY-SILENTLY-GO-STALE Never let a study silently outlive its subject's next major
   release — stale-flag it and refresh via the re-fetch list. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/conflict-protocol — vibedeps/org.vibevm.world.conflict-protocol/0.1.0/spec/boot/35-flow-conflict-protocol.md -->
+<!-- vibe:static org.vibevm.world/conflict-protocol — vibedeps/org.vibevm.world.conflict-protocol/1.0.0/spec/boot/35-flow-conflict-protocol.md -->
 
 # Flow: Conflict Protocol {#org-vibevm-world--conflict-protocol--root}
 
@@ -798,7 +798,7 @@ silently invent semantic behavior. @status:impl/done
 @fact:org-vibevm-world--conflict-protocol--recovery-drills-pointer Recovery drills for when the protocol has already been broken:
 @spec://org.vibevm.world/conflict-protocol/flows/conflict-protocol/failure-modes#root. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/decision-records — vibedeps/org.vibevm.world.decision-records/0.1.0/spec/boot/25-flow-decision-records.md -->
+<!-- vibe:static org.vibevm.world/decision-records — vibedeps/org.vibevm.world.decision-records/1.0.0/spec/boot/25-flow-decision-records.md -->
 
 # Flow: Decision Records {#org-vibevm-world--decision-records--root}
 
@@ -879,7 +879,7 @@ hardening into dogma. @status:spec/done
 - @fact:org-vibevm-world--decision-records--NEVER-RECORD-A-MISSING-REASON-OR-TRIGGER Never record a decision with a missing reason or a missing revisit
   trigger — that is a fact with decoration, not a record. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/dev-runtime-docs — vibedeps/org.vibevm.world.dev-runtime-docs/0.1.0/spec/boot/58-flow-dev-runtime-docs.md -->
+<!-- vibe:static org.vibevm.world/dev-runtime-docs — vibedeps/org.vibevm.world.dev-runtime-docs/1.0.0/spec/boot/58-flow-dev-runtime-docs.md -->
 
 # Flow: Load-bearing setup docs {#org-vibevm-world--dev-runtime-docs--root}
 
@@ -905,7 +905,7 @@ exactly where the drift these files exist to prevent lives. @status:impl/done
 - @fact:org-vibevm-world--dev-runtime-docs--NEVER-DEFER-THE-DOC-UPDATE-TO-A-LATER-COMMIT Never ship a dev-env or runtime-setup change with its doc update in a later commit. @status:impl/done
 - @fact:org-vibevm-world--dev-runtime-docs--NEVER-LET-THE-DOCS-DESCRIBE-AN-ABANDONED-TOOLCHAIN Never let the setup docs describe a toolchain the project no longer uses. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/discovery-prompt — vibedeps/org.vibevm.world.discovery-prompt/0.1.0/spec/boot/50-flow-discovery-prompt.md -->
+<!-- vibe:static org.vibevm.world/discovery-prompt — vibedeps/org.vibevm.world.discovery-prompt/1.0.0/spec/boot/50-flow-discovery-prompt.md -->
 
 # Flow: Discovery Prompt {#org-vibevm-world--discovery-prompt--root}
 
@@ -953,7 +953,7 @@ failure. @status:impl/done
 - @fact:org-vibevm-world--discovery-prompt--NEVER-TREAT-CONFIDENCE-NUMBERS-AS-GUARANTEES Never treat the confidence numbers as guarantees — they are
   calibration aids, not measurements. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/git-atomic-commits — vibedeps/org.vibevm.world.git-atomic-commits/0.1.0/spec/boot/30-flow-atomic-commits.md -->
+<!-- vibe:static org.vibevm.world/git-atomic-commits — vibedeps/org.vibevm.world.git-atomic-commits/1.0.0/spec/boot/30-flow-atomic-commits.md -->
 
 # Flow: Atomic Commits {#org-vibevm-world--git-atomic-commits--root}
 
@@ -1020,7 +1020,7 @@ Commits and a violation of the atomic rule. @status:impl/done
 - @fact:org-vibevm-world--git-atomic-commits--NEVER-AMEND-A-PUSHED-COMMIT-WITHOUT-HUMAN-APPROVAL Never `git commit --amend` on a pushed commit without explicit human
   approval. Same for `git push --force`. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/org.vibevm.world.git-attribution-policy/0.1.0/spec/boot/55-flow-attribution-policy.md -->
+<!-- vibe:static org.vibevm.world/git-attribution-policy — vibedeps/org.vibevm.world.git-attribution-policy/1.0.0/spec/boot/55-flow-attribution-policy.md -->
 
 # Flow: Attribution Policy {#org-vibevm-world--git-attribution-policy--root}
 
@@ -1095,7 +1095,7 @@ itself is recorded openly here. @status:spec/done
 Per-surface checks:
 @spec://org.vibevm.world/git-attribution-policy/flows/attribution-policy/enforcement-checklist#root. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/git-autonomy — vibedeps/org.vibevm.world.git-autonomy/0.1.0/spec/boot/32-flow-autonomy.md -->
+<!-- vibe:static org.vibevm.world/git-autonomy — vibedeps/org.vibevm.world.git-autonomy/1.0.0/spec/boot/32-flow-autonomy.md -->
 
 # Flow: Commit autonomy {#org-vibevm-world--git-autonomy--root}
 
@@ -1130,7 +1130,7 @@ Per-surface checks:
 
 @fact:org-vibevm-world--git-autonomy--sibling-document-pointers Full protocol: @spec://org.vibevm.world/git-autonomy/flows/autonomy/AUTONOMY-PROTOCOL#root. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/git-conventional-commits — vibedeps/org.vibevm.world.git-conventional-commits/0.1.0/spec/boot/31-flow-conventional-commits.md -->
+<!-- vibe:static org.vibevm.world/git-conventional-commits — vibedeps/org.vibevm.world.git-conventional-commits/1.0.0/spec/boot/31-flow-conventional-commits.md -->
 
 # Flow: Conventional Commits {#org-vibevm-world--git-conventional-commits--root}
 
@@ -1177,9 +1177,9 @@ Commits *and* a violation of the atomic rule. @status:impl/done
 @fact:org-vibevm-world--git-conventional-commits--ATOMICITY-IS-THE-SEPARATE-FLOW-AND-THE-TWO-RUN-TOGETHER Atomicity is the separate `git-atomic-commits` flow;
 the two run together. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/git-practices — vibedeps/org.vibevm.world.git-practices/0.1.0/spec/boot/STATIC.md; zone elided: emitted member-by-member in this lane (once-each, B-006) -->
+<!-- vibe:static org.vibevm.world/git-practices — vibedeps/org.vibevm.world.git-practices/1.0.0/spec/boot/STATIC.md; zone elided: emitted member-by-member in this lane (once-each, B-006) -->
 
-<!-- vibe:static org.vibevm.world/health-audit — vibedeps/org.vibevm.world.health-audit/0.1.0/spec/boot/42-flow-health-audit.md -->
+<!-- vibe:static org.vibevm.world/health-audit — vibedeps/org.vibevm.world.health-audit/1.0.0/spec/boot/42-flow-health-audit.md -->
 
 # Flow: Health Audit {#org-vibevm-world--health-audit--root}
 
@@ -1251,7 +1251,7 @@ the run procedure:
   by construction to uncovered code, out-of-gate trees, drift, and
   slow debt — each individually invisible, collectively corrosive. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/licensing — vibedeps/org.vibevm.world.licensing/0.1.0/spec/boot/60-flow-licensing.md -->
+<!-- vibe:static org.vibevm.world/licensing — vibedeps/org.vibevm.world.licensing/1.0.0/spec/boot/60-flow-licensing.md -->
 
 # Flow: Licensing {#org-vibevm-world--licensing--root}
 
@@ -1312,7 +1312,7 @@ dependency on licence grounds regardless of how good it is. @status:impl/done
 - @fact:org-vibevm-world--licensing--NEVER-CLAIM-A-LICENCE-IS-PERMISSIVE-WITHOUT-CHECKING Never claim a licence is permissive without checking; when unsure,
   treat it as non-permissive and ask. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/managed-blocks — vibedeps/org.vibevm.world.managed-blocks/0.1.0/spec/boot/65-flow-managed-blocks.md -->
+<!-- vibe:static org.vibevm.world/managed-blocks — vibedeps/org.vibevm.world.managed-blocks/1.0.0/spec/boot/65-flow-managed-blocks.md -->
 
 # Flow: Managed Blocks {#org-vibevm-world--managed-blocks--root}
 
@@ -1358,7 +1358,7 @@ state machine, and what belongs inside the block:
   the human decides. @status:impl/done
 - @fact:org-vibevm-world--managed-blocks--NEVER-REWRITE-A-FILE-WHEN-THE-RESULT-IS-BYTE-IDENTICAL Never rewrite a file when the result is byte-identical. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/manual-tests — vibedeps/org.vibevm.world.manual-tests/0.1.0/spec/boot/44-flow-manual-tests.md -->
+<!-- vibe:static org.vibevm.world/manual-tests — vibedeps/org.vibevm.world.manual-tests/1.0.0/spec/boot/44-flow-manual-tests.md -->
 
 # Flow: Manual Tests {#org-vibevm-world--manual-tests--root}
 
@@ -1420,7 +1420,7 @@ pre-run; never record the pass. @status:impl/done
   test that caught something is working; file what it caught and fix
   the product, not the test. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/operating-modes — vibedeps/org.vibevm.world.operating-modes/0.1.0/spec/boot/45-flow-operating-modes.md -->
+<!-- vibe:static org.vibevm.world/operating-modes — vibedeps/org.vibevm.world.operating-modes/1.0.0/spec/boot/45-flow-operating-modes.md -->
 
 # Flow: Operating Modes {#org-vibevm-world--operating-modes--root}
 
@@ -1499,7 +1499,7 @@ I proceed?" is the exact overhead the codeword was spoken to remove. @status:imp
 - @fact:org-vibevm-world--operating-modes--NEVER-ASK-PERMISSION-FOR-WORK-A-MODE-PRE-AUTHORISED Never reply to your own completed work with a permission question
   when a mode pre-authorised it — report status and continue. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/qualified-naming — vibedeps/org.vibevm.world.qualified-naming/0.1.0/spec/boot/67-flow-qualified-naming.md -->
+<!-- vibe:static org.vibevm.world/qualified-naming — vibedeps/org.vibevm.world.qualified-naming/1.0.0/spec/boot/67-flow-qualified-naming.md -->
 
 # Flow: Qualified Naming {#org-vibevm-world--qualified-naming--root}
 
@@ -1551,7 +1551,7 @@ shipped flat namespace is a migration; getting it right first is free. @status:s
 - @fact:org-vibevm-world--qualified-naming--NEVER-TREAT-A-CHANGE-OF-GROUP-OR-NAME-AS-A-RENAME Never treat a change of group or name as a rename — it is a new
   package, and versions do not carry over. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/secrets-hygiene — vibedeps/org.vibevm.world.secrets-hygiene/0.1.0/spec/boot/57-flow-secrets-hygiene.md -->
+<!-- vibe:static org.vibevm.world/secrets-hygiene — vibedeps/org.vibevm.world.secrets-hygiene/1.0.0/spec/boot/57-flow-secrets-hygiene.md -->
 
 # Flow: Secrets Hygiene {#org-vibevm-world--secrets-hygiene--root}
 
@@ -1636,7 +1636,7 @@ may have been seen. @status:impl/done
 Scope rules: @spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/scope-discipline#root.
 Install-time code: @spec://org.vibevm.world/secrets-hygiene/flows/secrets-hygiene/third-party-code-consent#root. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/source-mirrors — vibedeps/org.vibevm.world.source-mirrors/0.1.0/spec/boot/62-flow-source-mirrors.md -->
+<!-- vibe:static org.vibevm.world/source-mirrors — vibedeps/org.vibevm.world.source-mirrors/1.0.0/spec/boot/62-flow-source-mirrors.md -->
 
 # Flow: Source Mirrors {#org-vibevm-world--source-mirrors--root}
 
@@ -1695,7 +1695,7 @@ uses `--force`. @status:impl/done
 - @fact:org-vibevm-world--source-mirrors--NEVER-TREAT-A-WEB-UI-MERGE-AS-INTEGRATED Never treat a web-UI merge as integrated until its commits are in
   mainline. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/spec-genres — vibedeps/org.vibevm.world.spec-genres/0.1.0/spec/boot/17-flow-spec-genres.md -->
+<!-- vibe:static org.vibevm.world/spec-genres — vibedeps/org.vibevm.world.spec-genres/1.0.0/spec/boot/17-flow-spec-genres.md -->
 
 # Flow: Spec Genres {#org-vibevm-world--spec-genres--root}
 
@@ -1765,7 +1765,7 @@ authority to a sentence without asking anyone. @status:spec/done
 - @fact:org-vibevm-world--spec-genres--NEVER-LET-LORE-GO-UNLINKED-FROM-ITS-CONTRACT Never let lore go unlinked from its contract — an unlinked design
   doc is invisible at the next cold start. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/sync-from-code — vibedeps/org.vibevm.world.sync-from-code/0.1.0/spec/boot/20-flow-sync-from-code.md -->
+<!-- vibe:static org.vibevm.world/sync-from-code — vibedeps/org.vibevm.world.sync-from-code/1.0.0/spec/boot/20-flow-sync-from-code.md -->
 
 # Flow: Sync-from-Code {#org-vibevm-world--sync-from-code--root}
 
@@ -1825,7 +1825,7 @@ caused the drift. @status:impl/done
 @fact:org-vibevm-world--sync-from-code--sibling-document-pointers Decision table for whether to run: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/when-to-apply#root.
 Human review checklist: @spec://org.vibevm.world/sync-from-code/flows/sync-from-code/review-workflow#root. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/tool-design-lessons — vibedeps/org.vibevm.world.tool-design-lessons/0.1.0/spec/boot/70-flow-tool-design-lessons.md -->
+<!-- vibe:static org.vibevm.world/tool-design-lessons — vibedeps/org.vibevm.world.tool-design-lessons/1.0.0/spec/boot/70-flow-tool-design-lessons.md -->
 
 # Flow: Tool Design Lessons {#org-vibevm-world--tool-design-lessons--root}
 
@@ -1871,7 +1871,7 @@ rationale is why it is not negotiable. @status:impl/done
 - @fact:org-vibevm-world--tool-design-lessons--NEVER-LET-A-PACKAGES-IDENTITY-INCLUDE-BUILD-ARTIFACTS Never let a package's identity include build artifacts — identity is
   the source. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/two-process-model — vibedeps/org.vibevm.world.two-process-model/0.1.0/spec/boot/05-flow-two-process-model.md -->
+<!-- vibe:static org.vibevm.world/two-process-model — vibedeps/org.vibevm.world.two-process-model/1.0.0/spec/boot/05-flow-two-process-model.md -->
 
 # Flow: Two-Process Model {#org-vibevm-world--two-process-model--root}
 
@@ -1937,7 +1937,7 @@ the work it is structurally good at. @status:impl/done
 
 @fact:org-vibevm-world--two-process-model--file-channel-pointer The file channel: @spec://org.vibevm.world/two-process-model/flows/two-process-model/files-as-ipc#root. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/wal — vibedeps/org.vibevm.world.wal/0.2.0/spec/boot/10-flow-wal.md -->
+<!-- vibe:static org.vibevm.world/wal — vibedeps/org.vibevm.world.wal/1.0.0/spec/boot/10-flow-wal.md -->
 
 # Flow: WAL (Write-Ahead Log) {#org-vibevm-world--wal--root}
 
@@ -2002,7 +2002,7 @@ carry it: @status:impl/done
 
 @fact:org-vibevm-world--wal--full-protocol-pointer Full protocol: @spec://org.vibevm.world/wal/flows/wal/WAL-PROTOCOL#root. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/wal-specspaces — vibedeps/org.vibevm.world.wal-specspaces/0.1.0/spec/boot/11-flow-wal-specspaces.md -->
+<!-- vibe:static org.vibevm.world/wal-specspaces — vibedeps/org.vibevm.world.wal-specspaces/1.0.0/spec/boot/11-flow-wal-specspaces.md -->
 
 # Flow: WAL Specspaces {#org-vibevm-world--wal-specspaces--root}
 
@@ -2083,7 +2083,7 @@ report, stop. @status:impl/done
 @fact:org-vibevm-world--wal-specspaces--sibling-document-pointers Full protocol:
 @spec://org.vibevm.world/wal-specspaces/flows/wal-specspaces/SPECSPACES-PROTOCOL#root. @status:impl/done
 
-<!-- vibe:static org.vibevm.world/redbook — vibedeps/org.vibevm.world.redbook/0.2.0/spec/boot/03-flow-redbook.md -->
+<!-- vibe:static org.vibevm.world/redbook — vibedeps/org.vibevm.world.redbook/1.0.0/spec/boot/03-flow-redbook.md -->
 
 # Flow: redbook {#org-vibevm-world--redbook--root}
 
@@ -2120,7 +2120,7 @@ not standing instructions. @status:impl/done
 actually arises; the members' boot snippets carry everything a
 session needs. @status:impl/done
 
-## The members (edition 0.2.0) {#org-vibevm-world--redbook--member-list}
+## The members (edition 1.0.0) {#org-vibevm-world--redbook--member-list}
 
 @fact:org-vibevm-world--redbook--books-core-list-lead The book's core — the four IPC requirements and the memory model: @status:impl/done
 
