@@ -109,13 +109,15 @@ instead of copying it, and `diff_from_default` is likewise called rather than
 re-written. The surface therefore already knows how to be thin in two places
 and is thick in a third — so the fix is a known shape, not a new design. @status:impl/done
 
-@fact:THE-REMAINING-WORK-IS-BOUNDED-AND-NAMED **The subsystem is therefore NOT
-finished, and exactly one bounded piece of work stands between it and
-finished:** collapse the three persist copies onto the library seam — the TUI
-calls `run_prefs(PrefsOp::Set { … })`, or `vibe-settings` exposes a public
-set-with-persist that swallows the host steps. Filed as
-[`BACKLOG.md` B-077](../../../BACKLOG.md#b-077). No other candidate in the
-perimeter survived the audit as a violation. @status:spec/plan
+@fact:THE-REMAINING-WORK-IS-BOUNDED-AND-NAMED **The one bounded piece of work
+that stood between this subsystem and finished is done (2026-08-20):** the
+three persist copies collapsed onto the library seam — B-077's landing gave
+`vibe-settings` the public `check_writable` + `set_in_layer` pair and every
+TUI write goes through them; the thinness audit's sole surviving violation is
+closed. What remains around the perimeter is not contract work but hygiene:
+the `#[allow(dead_code)]` shadow (the 2026-08-03-04 audit row), drained by
+the owner's «построить до конца» directive — each site wired, deleted, or
+carrying a recorded reason. @status:impl/done
 
 @fact:TWO-CANDIDATES-WERE-WEIGHED-AND-CLEARED **Two candidates were weighed and
 deliberately cleared, recorded so they are not re-opened as new findings.** The

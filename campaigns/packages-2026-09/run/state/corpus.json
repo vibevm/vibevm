@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-20T19:38:30Z",
+  "updated_at": "2026-08-20T19:40:31Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -152768,9 +152768,9 @@
         "coverage_note": "verdicts keyed by fact anchors; <status> elements judged as _elements",
         "fact_count": 161,
         "marker_count": 162,
-        "processed_hash": "bf20a4a3231a9ec97c332a76d8d3854f6461678df8bc3ce7daa687ce04655712",
+        "processed_hash": "99e79448fa8445fd616e5450cf5d708f99a6c1e634c6af4aaead9472e4dddd69",
         "summary": {
-          "confirmed": 182,
+          "confirmed": 183,
           "unverifiable": 1
         },
         "verdicts": {
@@ -153908,10 +153908,16 @@
               "the repair landed as commit 00401915, `fix(vibe-core): one renderer for the paths both surfaces print (Б6)`, on the date the fact names",
               "so the fact's claim is not `two surfaces might diverge` but `they did, on Windows, on this field, until this commit` — and every clause of that is checkable"
             ]
+          },
+          "DECISIONS-LIVE-INSIDE-PROPS": {
+            "v": "confirmed",
+            "ev": [
+              "the owner's verbatim ruling this session (2026-08-20): «в PROP файлах должна быть ADR часть, отдельных ADR-файлов не нужно» — recorded the same hour; the practice it names is already the tree's shape (PROPs carry Decision/rationale sections; zero standalone ADR files exist)"
+            ]
           }
         },
-        "verified_at": "2026-08-13T17:36:33Z",
-        "verify_batch": "c3b-prop-000 + d1 + D14 + D20 + H4-stale-host + H6-stale-host-tail + DEBT-2026-08-06-C + IDENT-2026-08-13-rejudge + COPY-2026-08-13"
+        "verified_at": "2026-08-20T19:38:35Z",
+        "verify_batch": "c3b-prop-000 + d1 + D14 + D20 + H4-stale-host + H6-stale-host-tail + DEBT-2026-08-06-C + IDENT-2026-08-13-rejudge + COPY-2026-08-13 + OWNER-RULINGS-0820"
       }
     },
     {
