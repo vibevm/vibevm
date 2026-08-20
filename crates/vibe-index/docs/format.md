@@ -89,12 +89,12 @@ inside the file's lines; the slug is only a lookup key.
   "package_count": 42,
   "version_count": 117,
   "files": {
-    "primary.jsonl":            { "kind": "file", "size": 184522, "sha256": "sha256:..." },
-    "primary.jsonl.gz":         { "kind": "file", "size": 42110,  "sha256": "sha256:..." },
+    "primary.jsonl":            { "kind": "file", "size": "184522", "sha256": "sha256:..." },
+    "primary.jsonl.gz":         { "kind": "file", "size": "42110",  "sha256": "sha256:..." },
     "by-name":                  { "kind": "directory", "entries": 42 },
-    "by-name/wal.json":         { "kind": "file", "size": 5120,  "sha256": "sha256:..." },
+    "by-name/wal.json":         { "kind": "file", "size": "5120",  "sha256": "sha256:..." },
     "by-cap":                   { "kind": "directory", "entries": 7 },
-    "by-cap/wal.jsonl":         { "kind": "file", "size": 890,   "sha256": "sha256:..." },
+    "by-cap/wal.jsonl":         { "kind": "file", "size": "890",   "sha256": "sha256:..." },
     "by-purl":                  { "kind": "directory", "entries": 3 }
   }
 }
@@ -102,6 +102,9 @@ inside the file's lines; the slug is only a lookup key.
 
 `files[*]` is a **tagged union**: every value carries `kind`, either
 `"file"` (with `size` + `sha256`) or `"directory"` (with `entries`).
+`size` is a **canonical decimal string** — ASCII digits only, no sign, no
+leading zeros except the bare `0`, value within u64 (integers wider than
+32 bits ride the wire as strings; `formats/breaks/003.md`).
 Tags are lowercase. Both arms carry the tag — a file entry without
 `kind` is **refused**, not guessed at, which is the whole point of the
 shape: an untagged union silently swallows a value it half-recognises,

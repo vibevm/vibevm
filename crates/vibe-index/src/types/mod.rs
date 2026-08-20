@@ -8,9 +8,9 @@
 //! (PROP-000 §16). PROP-005 §3.2's standalone-duplicate trade-off is
 //! retired: the wire edge is runtime now, because these types ARE the
 //! wire's types. Still hand-written and staying that way: `repomd`
-//! (its `size` is `u64` against the generated `u32` — an open owner
-//! decision, B-091 — and its file-entry union is tagged on this
-//! side's own law).
+//! (its `size` is `u64` riding the wire as a canonical decimal string —
+//! the B-091 fork, ruled 2026-08-20, `formats/breaks/003.md` — and its
+//! file-entry union is tagged on this side's own law).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 

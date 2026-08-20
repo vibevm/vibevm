@@ -41,8 +41,65 @@ impl Repomd {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "lowercase")]
 pub enum RepomdFileEntry {
-    Directory { entries: u32 },
-    File { size: u64, sha256: String },
+    Directory {
+        entries: u32,
+    },
+    File {
+        /// Serialised as a **canonical decimal string** — the owner's
+        /// standing rule for integers wider than 32 bits (2026-08-20):
+        /// JTD has no 64-bit integer, so the string is the only wire
+        /// form the schema can describe truthfully. See
+        /// [`wire_decimal_u64`] and `formats/breaks/003.md`.
+        #[serde(with = "wire_decimal_u64")]
+        size: u64,
+        sha256: String,
+    },
+}
+
+/// Wire form of an integer wider than 32 bits: a canonical decimal
+/// string — ASCII digits only, no sign, no leading zeros except the
+/// bare `0`, value within `u64` (the owner's standing rule, 2026-08-20;
+/// JTD has no 64-bit integer type, so the schema says `string` and the
+/// *value* carries the number — `schemas/index/e1/repomd.jtd.json`,
+/// `files.*.size`).
+///
+/// Both directions are loud: a non-string JSON value, a non-numeric or
+/// non-canonical string (`"007"`, `"-1"`, `""`, `"abc"`) is a refusal,
+/// never a coercion or a quiet `0` (PROP-044 law 1 — a wrong answer
+/// must never look like a right one). The Rust type stays `u64`, so
+/// the field's arithmetic use is unchanged.
+mod wire_decimal_u64 {
+    use serde::{Deserialize, Deserializer, Serializer};
+
+    pub(super) fn serialize<S: Serializer>(value: &u64, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.serialize_str(&value.to_string())
+    }
+
+    pub(super) fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<u64, D::Error> {
+        let raw = String::deserialize(deserializer)?;
+        parse_canonical(&raw).ok_or_else(|| {
+            serde::de::Error::custom(format!(
+                "`{raw}` is not a canonical decimal u64 (ASCII digits only, no sign, \
+                 no leading zeros except the bare `0`, value within u64)"
+            ))
+        })
+    }
+
+    /// The canonical form accepted on the wire — exactly what
+    /// `u64::from_str` accepts for digits, tightened to reject leading
+    /// zeros and the empty string so one number has one spelling.
+    fn parse_canonical(raw: &str) -> Option<u64> {
+        // The explicit digit check closes `from_str`'s one leniency: it
+        // accepts a leading `+`, which would give one number a second
+        // spelling.
+        if raw.is_empty()
+            || (raw.len() > 1 && raw.starts_with('0'))
+            || !raw.bytes().all(|b| b.is_ascii_digit())
+        {
+            return None;
+        }
+        raw.parse().ok()
+    }
 }
 
 impl RepomdFileEntry {
@@ -110,14 +167,17 @@ mod tests {
         let entry = RepomdFileEntry::file(99, "sha256:deadbeef");
         let json = serde_json::to_string(&entry).unwrap();
         assert!(json.contains("\"kind\":\"file\""));
-        assert!(json.contains("\"size\":99"));
+        // The size rides the wire as a canonical decimal STRING
+        // (formats/breaks/003.md): integers wider than 32 bits are not
+        // JSON numbers here.
+        assert!(json.contains("\"size\":\"99\""));
         assert!(json.contains("\"sha256\":\"sha256:deadbeef\""));
     }
 
     #[test]
     fn parses_real_world_shape() {
         let json = r#"{
-            "primary.jsonl": { "kind": "file", "size": 184522, "sha256": "sha256:abc" },
+            "primary.jsonl": { "kind": "file", "size": "184522", "sha256": "sha256:abc" },
             "by-name":       { "kind": "directory", "entries": 42 }
         }"#;
         let parsed: BTreeMap<String, RepomdFileEntry> = serde_json::from_str(json).unwrap();
@@ -139,8 +199,53 @@ mod tests {
         // The pre-Ф1.5 wire shape: a file entry with no `kind` tag. Under
         // `untagged` serde silently matched it to the `File` arm; the
         // symmetric tag makes the absence an error instead.
-        let json = r#"{ "size": 184522, "sha256": "sha256:abc" }"#;
+        let json = r#"{ "size": "184522", "sha256": "sha256:abc" }"#;
         let parsed = serde_json::from_str::<RepomdFileEntry>(json);
         assert!(parsed.is_err());
+    }
+
+    /// The canonical spellings round-trip: the bare zero, the first
+    /// value above 2^32 (the old `uint32` ceiling this change retires),
+    /// and the top of the range — each as the exact decimal string.
+    #[test]
+    fn size_wire_canon_round_trips_across_the_u64_range() {
+        for size in [0u64, 4_294_967_296, u64::MAX] {
+            let entry = RepomdFileEntry::file(size, "sha256:abc");
+            let json = serde_json::to_string(&entry).unwrap();
+            assert!(
+                json.contains(&format!("\"size\":\"{size}\"")),
+                "u64 {size} must ride the wire as its exact decimal string: {json}"
+            );
+            let back: RepomdFileEntry = serde_json::from_str(&json).unwrap();
+            assert_eq!(entry, back);
+        }
+    }
+
+    /// One number, one spelling: leading zeros, a sign, an empty
+    /// string, and non-digits are all refusals — never a coercion into
+    /// a plausible value (PROP-044 law 1).
+    #[test]
+    fn size_wire_refuses_non_canonical_strings() {
+        for raw in ["\"007\"", "\"-1\"", "\"+42\"", "\"\"", "\"abc\"", "\" 42\""] {
+            let json = format!(r#"{{"kind":"file","size":{raw},"sha256":"sha256:abc"}}"#);
+            let parsed = serde_json::from_str::<RepomdFileEntry>(&json);
+            assert!(
+                parsed.is_err(),
+                "a non-canonical size string must be refused, not coerced: {raw}"
+            );
+        }
+    }
+
+    /// The break itself: a JSON NUMBER where the string form is now
+    /// expected — the pre-2026-08-20 wire — is refused loudly by the
+    /// hand-written reader, exactly as the break note announces.
+    #[test]
+    fn size_wire_refuses_a_json_number() {
+        let json = r#"{"kind":"file","size":123,"sha256":"sha256:abc"}"#;
+        let parsed = serde_json::from_str::<RepomdFileEntry>(json);
+        assert!(
+            parsed.is_err(),
+            "the old numeric wire form must be refused, not coerced"
+        );
     }
 }

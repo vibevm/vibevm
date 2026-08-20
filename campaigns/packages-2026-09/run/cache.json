@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-20T06:49:17Z",
+  "updated_at": "2026-08-20T08:54:09Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -94403,7 +94403,7 @@
       }
     },
     "spec/common/PROP-044-change-native-formats.md": {
-      "content_hash": "5af0153ced70f23f0b67960df5cfbb22bf483e7f4c53a08747fc5d8056aa9894",
+      "content_hash": "0fe99c7680c2b90f547c703f064b8f3e55218283344586a8bf40b3b6604ea9d9",
       "rollup": {
         "explicit": [
           "spec",
@@ -94417,15 +94417,15 @@
           "spec",
           "done"
         ],
-        "marker_count": 55,
-        "fact_count": 54,
+        "marker_count": 56,
+        "fact_count": 55,
         "unmarked_facts": 0
       },
-      "marker_count": 55,
+      "marker_count": 56,
       "unit_count": 11,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "0911996699c2127304bcd091e268fbcbef7b3e0c1c2171840780a766785d6b76",
+        "processed_hash": "0fe99c7680c2b90f547c703f064b8f3e55218283344586a8bf40b3b6604ea9d9",
         "verdicts": {
           "PURPOSE": {
             "v": "confirmed",
@@ -94752,10 +94752,16 @@
               "Owner instruction 2026-08-19: mark it in the specification as something that can be implemented separately when it is needed, and do not build it now.",
               "Measured: nothing in the tree approximates it — the journal store offers append and replay only (crates/vibe-index/src/journal/store.rs), with no edit or truncate path."
             ]
+          },
+          "M-WIDE-INTEGERS-AS-STRINGS": {
+            "v": "confirmed",
+            "ev": [
+              "правило исполнено первой посадкой: писатель types/repomd.rs::wire_decimal_u64 (сериализация to_string, канон-разбор: только ASCII-цифры — включая отказ ведущему '+', без ведущих нулей, u64-диапазон, громкий custom-отказ); схема repomd size=string с канон-описанием; сгенерированный ридер String (codegen, руками не правлен); корпус переведён (11 значений); перелом поименован formats/breaks/003.md; красное — the_generated_reader_refuses_the_old_numeric_size_form (invalid type: integer, expected string — тип-ошибка, не коэрция); замер воркера: иных >32-битных полей в схемных типах нет, Timestamp = RFC3339 через словарь timestamp"
+            ]
           }
         },
-        "verified_at": "2026-08-13T17:55:48Z",
-        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING + PROVIDER-NEUTRALITY-RULING + FREEZE-MODEL-RULING + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge + COPY-2026-08-13 + RATIFY-2026-08-13 + W8"
+        "verified_at": "2026-08-20T08:54:09Z",
+        "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING + PROVIDER-NEUTRALITY-RULING + FREEZE-MODEL-RULING + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge + COPY-2026-08-13 + RATIFY-2026-08-13 + W8 + R2-WIRE64"
       }
     },
     "spec/design/README.md": {

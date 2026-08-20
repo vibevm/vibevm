@@ -265,6 +265,21 @@ discovery corpus recorded — tagging vs fallback values vs codegen, mutually
 incompatible — dissolves because the decision moved from the schema language
 into the generator. @status:spec/plan
 
+@fact:M-WIDE-INTEGERS-AS-STRINGS **4.2b Integers wider than 32 bits ride the
+wire as decimal strings** *(owner ruling 2026-08-20, the B-091 fork answered
+once and generally)*. JTD (RFC 8927) has no 64-bit integer type at all — the
+pinned generator rejects `uint64` and `int64` as InvalidType (measured
+2026-08-15) — so every field wider than 32 bits would otherwise re-litigate
+the same bad trilemma: a `uint32` that is false at and above 2³², a `float64`
+that loses precision past 2⁵³, or an untyped `{}` that loses the field
+entirely. The general answer: such a field is encoded as a **canonical decimal
+string** — ASCII digits only, no sign, no leading zeros except `"0"` itself —
+the schema says `string`, the Rust type stays the true integer, conversion
+lives at the serde boundary, and non-canonical input is refused loudly rather
+than coerced. Timestamps are not this rule's business: they ride as RFC 3339
+through the `timestamp` vocabulary. First application: the catalog manifest's
+file `size` (`formats/breaks/003.md`). @status:impl/done
+
 @fact:M-CANONICAL-BYTES **4.3 Canonical bytes, deterministic writers.** One
 state — one byte sequence: sorted keys, injected clocks (a writer never calls
 `now()`; time arrives as input), pinned encodings, deterministic compression.

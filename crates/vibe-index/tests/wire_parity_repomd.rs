@@ -13,10 +13,14 @@
 //! to any single-arm spot check, so the fixture exercises BOTH arms and
 //! the asserts count keys on each.
 //!
-//! `size` is the one field where schema and code deliberately part ways:
-//! the writer's `u64` has no JTD primitive (RFC 8927 stops at 32-bit
-//! integers), so the schema carries `uint32` — exact for every file under
-//! 4 GiB. The fixture pins the working range with a near-ceiling size.
+//! `size` rides the wire as a canonical decimal **string** — the owner's
+//! standing rule for integers wider than 32 bits (2026-08-20, BACKLOG
+//! `B-091` «вариант (б)»; `formats/breaks/003.md`): JTD has no 64-bit
+//! integer, so the schema says `string` and the value carries the number.
+//! The schema and the writer agree on this field again — the `uint32` era's
+//! recorded divergence is closed. The fixture pins the form with a size
+//! ABOVE the old `uint32` ceiling, which the numeric wire could not have
+//! carried truthfully at all.
 
 use std::collections::BTreeMap;
 
@@ -47,13 +51,14 @@ fn fixed_instant() -> DateTime<Utc> {
 }
 
 /// A `Repomd` with every collection non-empty and BOTH union arms
-/// exercised: a `file` entry with a near-ceiling size and a real hash,
-/// and a `directory` entry with a non-zero count.
+/// exercised: a `file` entry with a size ABOVE the retired `uint32`
+/// ceiling and a real hash, and a `directory` entry with a non-zero
+/// count.
 fn fully_populated_repomd() -> Repomd {
     let mut files: BTreeMap<String, RepomdFileEntry> = BTreeMap::new();
     files.insert(
         "primary.jsonl".to_string(),
-        RepomdFileEntry::file(4_000_000_000, "sha256:9f2c"),
+        RepomdFileEntry::file(4_294_967_296, "sha256:9f2c"),
     );
     files.insert("by-name".to_string(), RepomdFileEntry::directory(42));
     Repomd {
@@ -126,5 +131,34 @@ fn fully_populated_repomd_round_trips_through_the_generated_type() {
         "wire drift between the hand-written and the generated manifest — a \
          mapping arm or field the schema misses is dropped (or rejected) by \
          the generated reader"
+    );
+}
+
+/// The break itself, refused loudly (formats/breaks/003.md): a document
+/// of the OLD wire form — `"size"` as a JSON **number** — is rejected
+/// by the generated reader with a TYPE error, not coerced into a
+/// string or quietly parsed as `0`. The fixture is a full manifest so
+/// the refusal is attributable to the `size` field specifically: the
+/// string form of the same document parses (the round-trip test
+/// above), and only the number/string distinction differs.
+#[test]
+fn the_generated_reader_refuses_the_old_numeric_size_form() {
+    let handwritten = fully_populated_repomd();
+    let mut j = serde_json::to_value(&handwritten).expect("the hand-written type serialises");
+    // Rewrite one file entry's size into the pre-2026-08-20 numeric
+    // form — the document every older binary wrote.
+    j["files"]["primary.jsonl"]["size"] = serde_json::json!(4294967296u64);
+
+    let parsed = serde_json::from_value::<GeneratedRepomd>(j);
+    let err = parsed.expect_err("the old numeric size form must be refused");
+    let msg = err.to_string();
+    // The generated field is `size: String`, so the numeric form dies as
+    // a TYPE error at that field — serde's Value-path message names the
+    // types, not the field, and that is the load-bearing part: the old
+    // form is refused, never coerced into a string or a quiet `0`.
+    assert!(
+        msg.to_lowercase().contains("invalid type")
+            && msg.to_lowercase().contains("expected a string"),
+        "the refusal must be a TYPE error, not a coercion: {msg}"
     );
 }

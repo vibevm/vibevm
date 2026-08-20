@@ -61,9 +61,9 @@
         "file": {
           "properties": {
             "size": {
-              "type": "uint32",
+              "type": "string",
               "metadata": {
-                "description": "File size in bytes. The writer's field is `u64` and JTD (RFC 8927) has no 64-bit integer type at all — `uint64` and `int64` are both rejected by the pinned generator as InvalidType (measured 2026-08-15). `uint32` is therefore the narrowest TRUE claim this language can make below 2^32, and a FALSE one at or above it: our own writer can emit a document this schema calls invalid. That divergence is recorded, not resolved — see the campaign plan's ruling on the size ceiling. What is settled is the failure mode: a size >= 2^32 makes the generated reader refuse loudly rather than truncate, so no wrong answer is ever presented as a right one (PROP-044 law 1). The alternatives were measured and are worse: an empty schema generates `Option<Value>`, losing the type AND the field's requiredness; `float64` breaks value equality and loses precision past 2^53; a string-encoded size changes the wire."
+                "description": "File size in bytes, encoded as a canonical decimal string: ASCII digits only, no sign, no leading zeros (except the single digit `0` for zero), value within the unsigned 64-bit range. Integers wider than 32 bits travel as decimal strings by the owner's standing rule (2026-08-20): JTD (RFC 8927) has no 64-bit integer type at all — `uint64` and `int64` are both rejected by the pinned generator as InvalidType (measured 2026-08-15) — so the string form is the only way the schema can describe the writer's `u64` truthfully. Failure mode: a non-numeric or non-canonical string (or a JSON number where the string form is expected) is refused loudly by the consumer at value-parse time; the field's type is never silently loosened (PROP-044 law 1). Until 2026-08-20 this field was `uint32` with the divergence recorded in its description; the wire break is formats/breaks/003.md."
               }
             },
             "sha256": {

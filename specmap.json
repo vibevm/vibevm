@@ -5888,9 +5888,9 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/types/repomd.rs",
       "item_kind": "fn",
-      "line": 88,
+      "line": 145,
       "symbol": "vibe_index::types::repomd::tests::repomd_round_trips",
-      "end_line": 98,
+      "end_line": 155,
       "fingerprint": "tok1:05d6a885b2b1ce5f56ef8a2c04c494fc25dfc30400b539f3876e1b0f5941a7b1"
     },
     {
@@ -14382,7 +14382,7 @@
     {
       "file": "crates/vibe-index/src/types/repomd.rs",
       "from_symbol": "vibe_index::types::repomd::tests::repomd_round_trips",
-      "line": 89,
+      "line": 146,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout",
       "verb": "verifies",
@@ -29343,7 +29343,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:6c9540e9ac2ebf421c2e20b4cb899a7d5b42805b19b89f2398eb4d2ec6360d12",
+      "content_hash": "sha256:6bca21525c6a46a6c6228e0656aa59e4c633e7697b36664ea42b00725a0bb90b",
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "PROP-044: Change-native formats — surviving perpetual evolution",
@@ -29577,7 +29577,7 @@
     },
     {
       "anchor": "machinery",
-      "content_hash": "sha256:c77ae9cd888e049dc7edc902a66519cf4b4b525f0f8b5897c0b2d6f70f4d387c",
+      "content_hash": "sha256:1bb8832a333d907dbb623928e8a4e12e2b9b61434e62c76465d8b05a7733a7d0",
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "4. The machinery",
@@ -29621,12 +29621,21 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-OPEN-ENUM-FROM-CLOSED"
     },
     {
+      "anchor": "M-WIDE-INTEGERS-AS-STRINGS",
+      "content_hash": "sha256:0b9b60a46872daaa81c57b6b60c5f161430c860fd12bc7a188f64e7c64cf69f6",
+      "doc_path": "common/PROP-044",
+      "file": "spec/common/PROP-044-change-native-formats.md",
+      "heading": "**4.2b Integers wider than 32 bits ride the",
+      "line": 268,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-WIDE-INTEGERS-AS-STRINGS"
+    },
+    {
       "anchor": "M-CANONICAL-BYTES",
       "content_hash": "sha256:281f3406a75d59782e370d3771e7f73a224975f1e0e72ad7a35135b2d98655ef",
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**4.3 Canonical bytes, deterministic writers.** One",
-      "line": 268,
+      "line": 283,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-CANONICAL-BYTES"
     },
     {
@@ -29635,7 +29644,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**4.4 Journal and projection — no read-modify-write.**",
-      "line": 275,
+      "line": 290,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-JOURNAL-NOT-RMW"
     },
     {
@@ -29644,7 +29653,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**4.5 must-understand and record quarantine.** Each",
-      "line": 284,
+      "line": 299,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-MUST-UNDERSTAND"
     },
     {
@@ -29653,7 +29662,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**4.6 Epochs are parallel worlds, not mutations.** A heavy break",
-      "line": 293,
+      "line": 308,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-EPOCHS"
     },
     {
@@ -29662,7 +29671,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**4.7 Breaking is a switched resource; recipes are data.**",
-      "line": 301,
+      "line": 316,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-BREAK-WINDOW"
     },
     {
@@ -29671,7 +29680,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "5. Placement and computed policy",
-      "line": 314,
+      "line": 329,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#placement"
     },
     {
@@ -29680,7 +29689,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The placement ladder.** Cost of change grows",
-      "line": 316,
+      "line": 331,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#PLACEMENT-LADDER"
     },
     {
@@ -29689,7 +29698,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**A format's policy is computed, not chosen**, from",
-      "line": 323,
+      "line": 338,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#POLICY-IS-COMPUTED"
     },
     {
@@ -29698,7 +29707,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Migrations come in three kinds, and two must not",
-      "line": 333,
+      "line": 348,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MIGRATION-TAXONOMY"
     },
     {
@@ -29707,7 +29716,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "6. The formats of this project, by name",
-      "line": 345,
+      "line": 360,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#our-formats"
     },
     {
@@ -29716,7 +29725,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**6.1 The catalog is three things with three fates.** The",
-      "line": 347,
+      "line": 362,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-CATALOG"
     },
     {
@@ -29725,7 +29734,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The catalog's version stops being a number nobody",
-      "line": 362,
+      "line": 377,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-CATALOG-VERSION"
     },
     {
@@ -29734,7 +29743,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**6.2 `vibe.toml` is the most expensive format in the",
-      "line": 367,
+      "line": 382,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-MANIFEST"
     },
     {
@@ -29743,7 +29752,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**6.3 `vibe.lock` is the cheapest format and becomes free by",
-      "line": 382,
+      "line": 397,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-LOCKFILE"
     },
     {
@@ -29752,7 +29761,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**6.4 Configs are preferences, not data — failure is",
-      "line": 390,
+      "line": 405,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-CONFIGS"
     },
     {
@@ -29761,7 +29770,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**6.5 Surfaces nobody inventoried are formats too.**",
-      "line": 397,
+      "line": 412,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#FMT-UNINVENTORIED"
     },
     {
@@ -29770,7 +29779,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "7. Obligations have types; stability is a mechanism",
-      "line": 403,
+      "line": 418,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#obligations"
     },
     {
@@ -29779,7 +29788,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Three types of obligation, and only two eternal ones.**",
-      "line": 405,
+      "line": 420,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#OBLIGATION-TYPES"
     },
     {
@@ -29788,7 +29797,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**An obligation without a written breaking procedure",
-      "line": 414,
+      "line": 429,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#OBLIGATION-PROCEDURE"
     },
     {
@@ -29797,7 +29806,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**A period of stability is a closed break window plus",
-      "line": 423,
+      "line": 438,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#STABILITY-IS-A-FLAG"
     },
     {
@@ -29806,7 +29815,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The pre-publication regime, and the switch only the",
-      "line": 431,
+      "line": 446,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#THE-PUBLIC-SWITCH"
     },
     {
@@ -29815,7 +29824,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "8. Laws for AI agents — gates, not admonitions",
-      "line": 453,
+      "line": 468,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#agents"
     },
     {
@@ -29824,7 +29833,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Governing rule: a policy that exists only in",
-      "line": 455,
+      "line": 470,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-PROSE-IS-BROKEN"
     },
     {
@@ -29833,7 +29842,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The gate set.** G1: all wire I/O through",
-      "line": 462,
+      "line": 477,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-GATES"
     },
     {
@@ -29842,7 +29851,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**A gate's message is the only documentation that is",
-      "line": 481,
+      "line": 496,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#AGENT-MESSAGES"
     },
     {
@@ -29851,7 +29860,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**8a. The wire-work decision path — what an agent",
-      "line": 490,
+      "line": 505,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#WIRE-DECISION-PATH"
     },
     {
@@ -29860,7 +29869,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "9. Honest risks and revisit triggers",
-      "line": 507,
+      "line": 522,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#risks"
     },
     {
@@ -29869,7 +29878,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The recoverability bet.** Upstream sources vanish —",
-      "line": 509,
+      "line": 524,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RECOVERABILITY"
     },
     {
@@ -29878,7 +29887,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The journal/projection rework is a real rebuild, not an",
-      "line": 517,
+      "line": 532,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RMW-VOLUME"
     },
     {
@@ -29887,7 +29896,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Foreign `curl | jq` will happen regardless of",
-      "line": 524,
+      "line": 539,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-RAW-PARSERS"
     },
     {
@@ -29896,7 +29905,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**The degenerate-first guard.** The epoch machinery",
-      "line": 530,
+      "line": 545,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-OVERENGINEERING"
     },
     {
@@ -29905,7 +29914,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**Signature and authenticity remain parked by the",
-      "line": 538,
+      "line": 553,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#RISK-SECURITY-PARKED"
     },
     {
@@ -29914,7 +29923,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "10. Sources — the two-way links",
-      "line": 546,
+      "line": 561,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#sources"
     },
     {
@@ -29923,7 +29932,7 @@
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "**This contract's lore and evidence, so a cold reader entering",
-      "line": 548,
+      "line": 563,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#SOURCES"
     },
     {
@@ -73795,7 +73804,7 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-index/src/types/repomd.rs",
-      "line": 89,
+      "line": 146,
       "message": "edge `vibe_index::types::repomd::tests::repomd_round_trips` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout` carries no kind/revision line yet"
     },
     {
