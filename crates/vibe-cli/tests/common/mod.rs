@@ -75,20 +75,155 @@ pub fn git_available() -> bool {
         .unwrap_or(false)
 }
 
+/// Run `git <args>` in `cwd`, panicking with the FULL failure picture
+/// on a non-zero exit (B-075): the rendered argv, the raw exit status
+/// (Windows abnormal-termination codes decoded — a bare `-1073741819`
+/// read as a git exit code is how a flake turns undiagnosable), git's
+/// ENTIRE stdout and stderr, the cwd, and — for `clone`, where a
+/// half-written destination is the decisive evidence a silent
+/// `exit 1` leaves behind — whether the destination exists and a
+/// listing of what is inside it. Every fixture-building git call in
+/// these test binaries goes through here, so one loud message covers
+/// them all.
 pub fn run_git(cwd: &Path, args: &[&str]) {
+    let out = run_git_output(cwd, args);
+    assert!(
+        out.status.success(),
+        "{}",
+        render_git_failure(cwd, args, &out)
+    );
+}
+
+/// [`run_git`] for callers that need the successful output back (tag
+/// listings, `ls-remote`, verification clones). Panishes identically
+/// on failure; on success returns git's `Output` verbatim.
+pub fn run_git_output(cwd: &Path, args: &[&str]) -> std::process::Output {
     let out = std::process::Command::new("git")
         .args(args)
         .current_dir(cwd)
         .env("LC_ALL", "C")
         .env("LANG", "C")
         .output()
-        .expect("spawn git");
-    assert!(
-        out.status.success(),
-        "git {} failed: {}",
+        .unwrap_or_else(|e| {
+            panic!(
+                "failed to spawn `git {}` in {}: {e}",
+                args.join(" "),
+                cwd.display()
+            )
+        });
+    if !out.status.success() {
+        panic!("{}", render_git_failure(cwd, args, &out));
+    }
+    out
+}
+
+/// Render the full B-075 failure picture for a git invocation that
+/// exited non-zero. Everything the reporter of a one-in-a-workspace-run
+/// flake needs, in one panic message: what ran, where, how it died,
+/// both streams in full, and (for clones) the state of the destination.
+fn render_git_failure(cwd: &Path, args: &[&str], out: &std::process::Output) -> String {
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    let mut msg = format!(
+        "git invocation failed.\n\
+         \x20 command : git {}\n\
+         \x20 cwd     : {}\n\
+         \x20 exit    : {}\n\
+         \x20 stdout  : <{} bytes>\n{}\n\
+         \x20 stderr  : <{} bytes>\n{}",
         args.join(" "),
-        String::from_utf8_lossy(&out.stderr)
+        cwd.display(),
+        render_exit_status(&out.status),
+        stdout.len(),
+        indent_stream(&stdout),
+        stderr.len(),
+        indent_stream(&stderr),
     );
+    // For `clone` the destination directory is the one artifact a
+    // silent failure leaves: a half-populated tree, a stray `.git`,
+    // or nothing at all each point at a different failure family.
+    if args.first().is_some_and(|a| *a == "clone")
+        && !args.last().is_some_and(|a| a.starts_with('-'))
+    {
+        let dest = Path::new(args.last().expect("clone argv tail"));
+        let dest = if dest.is_absolute() {
+            dest.to_path_buf()
+        } else {
+            cwd.join(dest)
+        };
+        msg.push_str(&format!(
+            "\n\x20 clone destination `{}`: {}",
+            dest.display(),
+            describe_path(&dest)
+        ));
+    }
+    msg
+}
+
+/// The exit status as a diagnostic, not just a number: NTSTATUS-style
+/// abnormal terminations arrive as large negative `i32`s and are named
+/// here, because `git` itself never exits with those codes.
+fn render_exit_status(status: &std::process::ExitStatus) -> String {
+    match status.code() {
+        Some(code) => {
+            let named = match code as u32 {
+                0xC000_0005 => " (0xC0000005 — access violation)",
+                0xC000_0409 => " (0xC0000409 — stack buffer overrun / fail-fast)",
+                0x4000_0015 => " (0x40000015 — fatal application exit)",
+                0xC000_0135 => " (0xC0000135 — DLL initialization failure)",
+                0xC000_0142 => " (0xC0000142 — DLL initialization failed)",
+                _ => "",
+            };
+            format!("{code}{named}")
+        }
+        None => format!("{status} (terminated by signal; no exit code)"),
+    }
+}
+
+/// Prefix every line of a captured stream so it reads as a block
+/// inside the panic message; an empty stream says so explicitly
+/// instead of printing nothing (an empty stderr IS the symptom B-075
+/// chased — it must be visible as empty, not absent).
+fn indent_stream(text: &str) -> String {
+    let trimmed = text.trim_end();
+    if trimmed.is_empty() {
+        "<empty>".to_string()
+    } else {
+        trimmed
+            .lines()
+            .map(|l| format!("    | {l}"))
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
+}
+
+/// One line on whether `path` exists and what it is; a directory gets
+/// a short sorted listing so a half-written clone destination shows
+/// its contents (`.git` only? packed but unchecked out? empty?).
+fn describe_path(path: &Path) -> String {
+    match fs::metadata(path) {
+        Err(e) => format!("absent (lookup error: {e})"),
+        Ok(m) if m.is_dir() => {
+            let mut names: Vec<String> = fs::read_dir(path)
+                .map(|rd| {
+                    rd.filter_map(|e| e.ok())
+                        .map(|e| e.file_name().to_string_lossy().into_owned())
+                        .collect()
+                })
+                .unwrap_or_default();
+            names.sort();
+            let total = names.len();
+            let noun = if total == 1 { "entry" } else { "entries" };
+            let listing = names.into_iter().take(25).collect::<Vec<_>>().join(", ");
+            if listing.is_empty() {
+                format!("directory, {total} {noun}")
+            } else {
+                format!("directory, {total} {noun}: {listing}")
+            }
+        }
+        Ok(m) if m.is_file() => format!("file, {} bytes", m.len()),
+        Ok(_) => "exists (neither file nor directory)".to_string(),
+    }
 }
 
 /// Build a per-package bare git registry under `root/`: one bare repo

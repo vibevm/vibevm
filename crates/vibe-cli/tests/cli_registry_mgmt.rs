@@ -11,7 +11,7 @@ use std::path::{Path, PathBuf};
 
 use common::{
     UserScratch, git_available, make_per_package_registry, make_wal_dir_registry, run_git,
-    write_project_with_per_package_registry,
+    run_git_output, write_project_with_per_package_registry,
 };
 use predicates::prelude::*;
 
@@ -845,17 +845,12 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
 
     // Verify the bare repo is a usable git source. `git ls-remote
     // <vendor>/org.vibevm.world.wal.git` must list the v0.2.0 tag the
-    // install pulled in.
-    let ls_out = std::process::Command::new("git")
-        .args(["ls-remote", "--tags", bare_repo.to_str().unwrap()])
-        .env("LC_ALL", "C")
-        .env("LANG", "C")
-        .output()
-        .expect("spawn git ls-remote");
-    assert!(
-        ls_out.status.success(),
-        "git ls-remote against vendored repo failed: {}",
-        String::from_utf8_lossy(&ls_out.stderr)
+    // install pulled in. Routed through the loud `run_git_output`
+    // helper (B-075): a failing git here panics with argv, exit code,
+    // both streams, cwd, and the destination state — not just stderr.
+    let ls_out = run_git_output(
+        outer.path(),
+        &["ls-remote", "--tags", bare_repo.to_str().unwrap()],
     );
     let tags = String::from_utf8_lossy(&ls_out.stdout);
     assert!(
@@ -868,22 +863,15 @@ fn vendor_produces_bare_repo_per_lockfile_entry() {
     // operationally-relevant promise of `vibe registry vendor`:
     // the dir is a true git source.
     let worktree = outer.path().join("clone-from-vendor");
-    let clone_out = std::process::Command::new("git")
-        .args([
+    run_git_output(
+        outer.path(),
+        &[
             "clone",
             "--branch",
             "v0.2.0",
             bare_repo.to_str().unwrap(),
             worktree.to_str().unwrap(),
-        ])
-        .env("LC_ALL", "C")
-        .env("LANG", "C")
-        .output()
-        .expect("spawn git clone");
-    assert!(
-        clone_out.status.success(),
-        "git clone of vendored repo failed: {}",
-        String::from_utf8_lossy(&clone_out.stderr)
+        ],
     );
     assert!(
         worktree.join("vibe.toml").is_file(),
