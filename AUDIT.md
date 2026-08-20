@@ -1291,13 +1291,17 @@ truth; the P3 batch that caught it also paid two of the debts below.
   (`vibe-wire/src/generated/index/e1/by_name/mod.rs` re-exports the
   generated `shared::VersionEntry`) under `check-codegen` like every
   other wire type — the row's first branch happened.
-- **2026-08-06-01** (A1/E4, **P1**, per-fact evidence) — the built half
-  stands; the outstanding half (deliberate re-judgement of the PROP-008
-  anchors sharing the known-poisoned blob) was **still unpaid at this
-  run's first writing — measured live: 102 verdicts on the file, 84 on
-  the one shared blob, 18 own-evidence** — and is being paid by the
-  same P3 batch that corrected this block (an individual re-judgement
-  worker; its merge closes the half or records what refused).
+- **2026-08-06-01** (A1/E4, **P1**, per-fact evidence) — **the named
+  instance is paid, same evening**: an individual re-judgement worker
+  walked all 84 shared-blob anchors of PROP-008 against today's tree
+  (79 confirmed with own evidence — including the KIND-VALIDATION
+  class, whose code has since grown real: `kind_check.rs`, exit 4
+  mapped and tested; 5 drift), the five drifts were healed by truth
+  edits the same hour and re-judged confirmed, and the file sealed.
+  Census after: **102/102 verdicts carry unique evidence, biggest blob
+  reuse ×1** — the poisoned blob is gone. The row's general half (the
+  host's other document-level verdicts) remains the standing programme
+  the ruling describes: facts come due as their texts move.
 - **2026-06-12-11** (D, hygiene census) — superseded by the 08-03
   refresh (recorded there); header never updated — effectively closed.
 - **2026-06-12-01's rider** (owner to confirm the 2026-06-11 history

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-20T15:27:15Z",
+  "updated_at": "2026-08-20T18:02:47Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -176674,7 +176674,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (8 cells); document <status> judged as _elements",
         "fact_count": 99,
         "marker_count": 100,
-        "processed_hash": "b58fe6a744a2995b7970ea4c3a1cbdd191d38e31fe3dbb47047fcf037a6325af",
+        "processed_hash": "00927feae66cce11c0f738a1a4a500c461695f416d2c442e4e19f3dbc40ad6fa",
         "summary": {
           "confirmed": 102
         },
@@ -176691,97 +176691,97 @@
           "status-line": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "каждый компонент сверен: vibe-cli::commands::short_name существует; collision detection с exit 7 — InstallError::AmbiguousPackage; M1.19 ✅ SHIPPED 2026-05-22 (ROADMAP:582); типизация req-grain живёт в самом файле (2026-06-12)."
             ]
           },
           "related": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "все четыре цели живы и несут заявленное: PROP-002 §2.1 (content-addressed) + §3.4 (отказ от per-registry identity), PROP-005 per-org index (нужен для §2.6), PROP-007 companion, VIBEVM-SPEC §4.1 (kinds) + §7.1 (правило уникальности имени — теперь внутри group)."
             ]
           },
           "design-rationale": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "spec/design/workspace-and-qualified-naming.md существует; status-line: «non-normative design record», authority-line: «the PROPs are the contract» — ровно обещанный why/lore-жанр."
             ]
           },
           "discipline-line": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "packages/org.vibevm.world/qualified-naming/v1.0.0/spec/flows/qualified-naming/QUALIFIED-NAMING-PROTOCOL.md несёт все названные законы (flat fails, mandatory group, tuple, rename=new identity, short names at human boundary, collision≠conflict); vibevm-инстанция жива: short_name.rs + InstallError::AmbiguousPackage."
             ]
           },
           "OWNER-SANCTION": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "design doc §5 fork-r6-owner-sanction: «owner sanction to edit any specification, including the owner-frozen VIBEVM-SPEC.md. Granted 2026-05-20» — и §7.1 действительно отредактирован (MIG-SPEC-EDIT)."
             ]
           },
           "flat-namespace": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "healed 2026-08-20: rewritten to past tense as the motivation it always was; §7.1 today carries the group-qualified tuple and pkgref grammar [kind:][group/]name[@version], which this fact now cites"
             ]
           },
           "prior-art": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "design doc §6 precedents: ROW-PREC-NAMING «groupId:artifactId — reverse-FQDN groupId» (Maven), fork-separator разбирает npm @scope; §5 fork-group-mandatory ссылается на Maven groupId как прецедент обязательности."
             ]
           },
           "OWNER-REQUEST": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "design doc §3 ROW-AXIS-C: «Reverse-FQDN at the top, short aliases (wal) kept» + §5 fork-kind-out-of-repo-name — запрос сессии 2026-05-20; сегодня wal канонически org.vibevm.world/wal (packages/org.vibevm.world/wal/v1.0.0/vibe.toml)."
             ]
           },
           "collision-behavior-request": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "design doc §3 ROW-AXIS-D дословно: «Collision → show alternatives; conflict → fail without applying; full-auto → fail»; реализовано: render_collision печатает альтернативы, план до apply, никогда не угадывает."
             ]
           },
           "why-not-per-registry": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "PROP-002 §3.4 дословно: «vibespecs/flow:wal must not be a different identity from corporate/flow:wal... mirror-switching impossible» — обоснование не-reopening живо в соседней спеке."
             ]
           },
           "GROUP-NOT-REGISTRY": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "group живёт в [package] манифеста пакета (PackageMeta.group); RegistrySection ([[registry]]) поля group не имеет; PROP-002 §3.4: «the registry is a runtime resolution detail»."
             ]
           },
           "group-orthogonal": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "PROP-002 §3.4: registry — runtime resolution detail; group добавлен как атрибут пакета в [package] (не в [[registry]]), identity tuple расширен без registry-составляющей — §3.4 не reopening."
             ]
           },
           "naming-axis": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "design doc companion-line: PROP-007 (workspace) и PROP-008 (qualified naming) — companion-документы одной design-сессии 2026-05-20; PROP-007 лежит рядом в spec/modules/vibe-workspace/."
             ]
           },
           "req-group": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "решение §2.1 реализовано: PackageMeta.group обязателен (manifest/package.rs:82), Group::parse LDH-грамматика (package_ref.rs:50)."
             ]
           },
           "GROUP-MANDATORY": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "crates/vibe-core/src/manifest/package.rs:82 — PackageMeta.group: Group (не Option, без serde default): отсутствие поля в [package] — ошибка парса."
             ]
           },
           "GROUP-CONVENTION": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "Group::parse (vibe-core/src/package_ref.rs:50-88) принимает ≥1 LDH-сегмент — «acme» парсится; reverse-FQDN-форма не требуется; док-коммент типа: «Reverse-FQDN is the recommended convention, but the core does not enforce it»."
             ]
           },
           "GROUP-GRAMMAR": {
@@ -176793,121 +176793,121 @@
           "GROUP-CANONICAL": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "healed 2026-08-20: the fact now records the PROP-029 supersession by name and date; the mandatory-group law it keeps asserting is live in every packages/*/*/vibe.toml (groups org.vibevm.world / .ai-native / .fractality)"
             ]
           },
           "req-identity": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "решение §2.2 реализовано: tuple (group, name, version, content_hash) в VIBEVM-SPEC §7.1:539 и lockfile.rs:17; kind из tuple вышел."
             ]
           },
           "IDENTITY-TUPLE": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "VIBEVM-SPEC.md §7.1:539 «identity is the tuple (group, name, version, content_hash)»; lockfile.rs:17 тот же tuple дословно; kind в tuple отсутствует."
             ]
           },
           "NAME-UNIQUE-IN-GROUP": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "VIBEVM-SPEC.md §7.1:542 «kebab-case, unique within its group; (group, name) therefore identifies a package on its own»; док-коммент Group (package_ref.rs:30-31) — то же правило."
             ]
           },
           "HASH-UNCHANGED": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "PROP-002 §2.1 IDENTITY-TUPLE: digest — детерминированная конкатенация байтов файлов пакета; vibe.toml с group входит в хеш как обычный файловый контент, специального канала влияния у group нет."
             ]
           },
           "GROUP-CHANGE-NEW-PACKAGE": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "group — часть identity tuple (VIBEVM-SPEC §7.1:539, lockfile.rs:17), смена group = новая identity; QUALIFIED-NAMING-PROTOCOL Law 3 «a rename is a new identity»; живой прецедент — wal публикуется как пакет org.vibevm.world/wal после переезда группы (PROP-029)."
             ]
           },
           "req-kind": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "решение §2.3 реализовано: kind — обязательное поле [package] (PackageMeta.kind), чистая metadata вне identity и repo-нейминга."
             ]
           },
           "KIND-METADATA": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "PackageMeta.kind: PackageKind — обязательное поле манифеста (package.rs:83), но §7.1:546 «metadata, not identity»; в identity tuple и repo name kind не участвует."
             ]
           },
           "kind-still-needed-lead": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "все три названные потребности живы: placement по kind (§4.1), --kind фильтр (list.rs:22, search.rs:145), UX-сигнал kind-префикса (package_ref.rs:380-386)."
             ]
           },
           "KIND-PLACEMENT": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "VIBEVM-SPEC.md §4.1: flow → spec/flows/<name>/, feat → spec/feats/<name>/, stack → spec/stacks/<name>/ — размещение контента по kind живо."
             ]
           },
           "KIND-FILTER": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "--kind жив в обоих глаголах: crates/vibe-cli/src/commands/list.rs:22-30 (kind_filter из args.kind), search.rs:145-149 (парс в PackageKind, фильтрация hits)."
             ]
           },
           "KIND-UX": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "vibe-core/src/package_ref.rs:380-386: kind-префикс — UX-сигнал, валидируется после резолва (KindMismatch), но «never disambiguates»."
             ]
           },
           "TAXONOMY-UNCHANGED": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "healed 2026-08-20: counts six kinds (mcp per PROP-025/027, lang per the 2026-08-06 ruling) while keeping the load-bearing half — kind left identity and repo naming — which VIBEVM-SPEC §4.1 and the repo layout corroborate"
             ]
           },
           "req-pkgref": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "решение §2.4 реализовано: PackageRef::parse с опциональными kind/group сегментами и таблицей четырёх форм (package_ref.rs:347-449)."
             ]
           },
           "PKGREF-GRAMMAR": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "vibe-core/src/package_ref.rs:347-351 грамматика дословно; parse() (412-449) реализует: опциональный kind через ':', опциональный group через '/', name, опциональный '@'version."
             ]
           },
           "PKGREF-SEPARATOR": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "parse(): group↔name — split_once('/'); ':' занят kind-префиксом, '@' — версией; design doc fork-separator фиксирует то же рассуждение (npm @scope отвергнут из-за @-коллизии)."
             ]
           },
           "ROW-QUALIFIED": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "short_name.rs:130-131: qualified ref — pass-through, «resolved exactly»; §7.1:554: qualified-форма — то, что хранят manifests и lockfile."
             ]
           },
           "ROW-QUALIFIED-KIND": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "kind-валидация реализована (код дорос с 2026-08-06): vibe-resolver/src/kind_check.rs assert_kind_matches зовётся из naive process_one и resolvo solve_hard; SolveError::KindMismatch → exit 4 (exit_code.rs:100-110, тесты kind_mismatch_maps_to_four*)."
             ]
           },
           "ROW-SHORT": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "short_name.rs resolve(): bare name резолвится через resolver.candidate_groups (index by-name / local-скан) с lockfile-first — CLI-сахар через index."
             ]
           },
           "ROW-SHORT-KIND": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "qualify() сохраняет kind-префикс и сплайсит group (short_name.rs:133-139); после резолва префикс проверяется тем же kind_check (KindMismatch, exit 4) — «resolved via the index; kind validated» дословно."
             ]
           },
           "KIND-VALIDATION": {
@@ -176925,19 +176925,19 @@
           "SHORT-CLI-ONLY": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "§7.1:556 «Never written to a manifest»; qualify вызывается только на CLI-границе трёх глаголов (install/uninstall/update); манифест-запись — только qualified (record.rs)."
             ]
           },
           "req-repo-naming": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "решение §2.5 реализовано: naming = \"fqdn\" — новая конвенция и default (NamingConvention::Fqdn #[default]), repo name <group>.<name>."
             ]
           },
           "FQDN-NAMING": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "crates/vibe-core/src/manifest/project.rs:281-304: NamingConvention::Fqdn — #[default] («fqdn»), repo_name = format!(\"{group}.{name}\"); naming — поле [[registry]] RegistrySection."
             ]
           },
           "JOINER-UNDERSCORE": {
@@ -176955,13 +176955,13 @@
           "SHORT-CLI-FAT-REPO": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "package_repo_url (urls.rs:25-35): <org>/<group>.<name>.git — чистый reverse-FQDN в репозитории; короткий алиас живёт только в CLI (short_name.rs)."
             ]
           },
           "req-short-name": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "решение §2.6 реализовано: short_name.rs — резолюция только на CLI-границе, lockfile-first, index-кандидаты, collision → exit 7."
             ]
           },
           "SHORT-AT-BOUNDARY": {
@@ -176977,163 +176977,163 @@
           "RESOLVE-ONCE-WRITE-QUALIFIED": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "install/mod.rs:145-155: CLI pkgrefs квалифицируются один раз (short_name::qualify) до plan; record.rs:104-135 пишет qualified pkgref в [requires.packages] — ровно cargo/npm паттерн."
             ]
           },
           "NO-TRANSITIVE-COLLISIONS": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "short_name.rs модульный док:8-10: «Resolution never recurses into the dependency graph — every transitive [requires.packages] key is already group-qualified by construction»; граф строится из qualified ключей (vibe-install plan.rs)."
             ]
           },
           "INDEX-DEPENDENCY": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "PROP-005 §1: GitVerse не даёт org-listing, GitHub rate-limited (60/5000 req/h); crates/vibe-registry/src/index_client/mod.rs:295 — fetch \"{base}/by-name/{name}.json\", один GET на registry; multi-registry обходит каждый registry."
             ]
           },
           "LOCKFILE-AUTHORITATIVE": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "short_name.rs:66-79: locked_groups опрашивается первым, единственный locked → Resolved без сети; модульный док: «the short name prefers what is already locked»."
             ]
           },
           "req-collision": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "решение §2.7 реализовано: два класса фейлов (exit 3 vs 7 в exit_code.rs), collect-all кандидатов (resolver.rs union), render_collision с альтернативами."
             ]
           },
           "TWO-FAILURE-CLASSES": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "два класса разведены в коде и спеке: exit 3 PACKAGE_CONFLICT (конфликт зависимостей) vs exit 7 AMBIGUOUS_PACKAGE (naming ambiguity) — exit_code.rs:22,32 + VIBEVM-SPEC §9.4; терминология collision/conflict несётся сообщениями."
             ]
           },
           "COLLISION-DEF": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "ShortNameOutcome::Ambiguous(Vec<Group>) в short_name.rs:37 — разные group под одним bare name; ловится в коротком резолве (§2.6), не в графе зависимостей."
             ]
           },
           "CONFLICT-DEF": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "PROP-002 §2.9 SOLVER-SEMANTIC: resolvo native conflict-explanation chain; resolvo — shipped default (crates/vibe-resolver/src/lib.rs:15), [conflicts] — часть манифест-словаря (vibe-core manifest/package.rs deps)."
             ]
           },
           "collision-handling-lead": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "lead верен по дереву: collision-механика — новая часть PROP-008 (AmbiguousPackage, render_collision, by-name кандидаты), конфликт-половина уже существовала до него (resolvo/[conflicts])."
             ]
           },
           "COLLECT-ALL-CANDIDATES": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "crates/vibe-cli/src/commands/install/resolver.rs:275-287 — candidate_groups объединяет local-скан и каждый registry (union по всем), short_name.rs distinct_sorted дедуплицирует; резолвер не останавливается на первом registry."
             ]
           },
           "COLLISION-BEHAVIOR": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "short_name.rs resolve(): ровно один кандидат → ShortNameOutcome::Resolved; ≥2 групп → Ambiguous → InstallError::AmbiguousPackage (exit 7)."
             ]
           },
           "collision-interactive": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "render_collision (short_name.rs:97-116): нумерованный список альтернатив + re-run hint с qualified-формой, затем fail; интерактивного выбора нет вовсе — выбор фиксируется квалификацией в повторной команде."
             ]
           },
           "collision-unattended": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "qualify() возвращает Err(AmbiguousPackage) безусловно — единственное поведение для любого режима, резолвер никогда не угадывает; флаги неинтерактивности живут рядом: --unattended/--assume-yes (install/mod.rs:187, 245-248)."
             ]
           },
           "EXIT-CODE-7": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "crates/vibe-cli/src/exit_code.rs:32 AMBIGUOUS_PACKAGE: u8 = 7 рядом с PACKAGE_CONFLICT: u8 = 3; VIBEVM-SPEC.md §9.4 (строка 1079): «7 — ambiguous package», отдельно от 3."
             ]
           },
           "CONFLICT-UNCHANGED": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "crates/vibe-cli/src/commands/install/mod.rs:170-222: vibe_install::plan → user confirm → vibe_install::apply; ошибка резолва/плана падает до apply — «fail without applying the plan» держится структурой."
             ]
           },
           "req-index-ext": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "решение §2.8 реализовано: index entry несёт group (обязателен) + workspace_origin (опционален) — vibe-wire generated + vibe-index scanner."
             ]
           },
           "INDEX-FIELDS": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "index entry schema несёт оба поля: group обязателен (PackageEntry.group, vibe-wire generated/index/e1/by_name), workspace_origin опционален (Option<WorkspaceOriginEntry>, generated/shared/mod.rs:342; scanner/manifest.rs:174)."
             ]
           },
           "BY-NAME-CANDIDATES": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "crates/vibe-index/src/index/by_name.rs:24-32 — DIRNAME \"by-name\", файл <name>.json, кандидат-сет для одного bare name; каждая PackageEntry в vibe-wire generated несёт свой group — один GET даёт весь набор."
             ]
           },
           "draft-edit-note": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "healed 2026-08-20: PROP-005 status element reads stage=impl state=done «folded into the workspace 2026-05-22»; the fact now dates its draft claim historically"
             ]
           },
           "design-explorer": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "содержание §2.9 живо: explorer — M3+ запись ROADMAP (972-982) со всеми обещанными элементами; слой отдельный (serve + CORS), obligation по group/workspace_origin в index-схеме исполнена."
             ]
           },
           "EXPLORER-DIRECTION": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "ROADMAP.md:972-973, раздел M3+ Speculative directions: «vibevm registry explorer» — long-term direction; design doc parked-registry-explorer дублирует."
             ]
           },
           "explorer-group-tree": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "ROADMAP.md:974-975: «a reverse-FQDN group tree with drill-down, Maven-Central-style» — tree-визуализация записана как элемент explorer-направления."
             ]
           },
           "explorer-beyond-maven": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "ROADMAP.md:976-978 перечисляет весь beyond-Maven набор: filter by kind, capability graph ([provides]/[requires]), describes/PURL links, redirect-stub delegation, full dependency DAG, workspace provenance («sub-package of X», из [origin])."
             ]
           },
           "EXPLORER-SEPARATE-LAYER": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "ROADMAP.md:980: «A separate optional layer over the index — PROP-005 §2.10 already reserves the hook (vibe-index serve, CORS-open read endpoints)»; в дереве: crates/vibe-index/src/cli/serve.rs + server/mod.rs:46-49 CorsLayer permissive (Any)."
             ]
           },
           "EXPLORER-INDEX-OBLIGATION": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "обязательство исполнено в index-схеме: group обязателен в PackageEntry (vibe-wire generated by_name), workspace_origin — Option (generated/shared/mod.rs:342); scanner/manifest.rs:173 прямо цитирует PROP-008 §2.8."
             ]
           },
           "design-migration": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "миграция §3 исполнена деревом: фикстуры переложены (fixtures/registry/org.vibevm/...), манифест — vibe.toml с group, lockfile v5, §7.1 VIBEVM-SPEC отредактирован."
             ]
           },
           "breaking-window": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "PROP-003 §why-now: «vibevm has no public release, no external users... further schema churn before v0.1.0 is free»; lockfile.rs:10 «vibevm is pre-release and breaks lockfile compatibility freely»."
             ]
           },
           "MIG-CANONICAL": {
@@ -177145,97 +177145,97 @@
           "MIG-TEST-ORGS": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "локальные фикстуры переложены по group-структуре: fixtures/registry/org.vibevm/<name>/v*/vibe.toml с group = \"org.vibevm\"; live orgs vibespecstest1/2/3 — crates/vibe-cli/tests/cli_live_e2e.rs:8-10 (GitHub 1+2, GitVerse 3)."
             ]
           },
           "MIG-MANIFESTS": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "манифест — vibe.toml (crates/vibe-core/src/manifest/mod.rs и повсюду); строка \"vibe-package.toml\" в crates/ не встречается; поле group в [package] обязательно."
             ]
           },
           "MIG-LOCKFILE-V5": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "vibe-core/src/manifest/lockfile.rs:50 CURRENT_SCHEMA_VERSION = 5; док-история: «4 PROP-007 workspace path-source · 5 PROP-008 qualified naming (the per-package group field)»; LockedPackage.group: Group (lockfile.rs:261)."
             ]
           },
           "MIG-SPEC-EDIT": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "VIBEVM-SPEC.md §7.1 переписан под PROP-008: «name — unique within its group» (542), identity tuple с group (539), pkgref grammar с [group/] (551) — редакция под санкцией landed."
             ]
           },
           "REJ-PER-REGISTRY": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "PROP-002 §3.4 REJ-PER-REGISTRY-IDENTITY: per-registry identity отвергнута (mirror-switching невозможен); §1 PROP-008 объясняет не-reopening."
             ]
           },
           "REJ-KIND-IN-REPO": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "urls.rs package_repo_url вызывает naming.repo_name(None, group, name) — kind в URL не участвует; Fqdn-дефолт составляет имя без kind; legacy kind-* конвенции остаются для не-групповых registry (project.rs:292-303)."
             ]
           },
           "REJ-SHORT-IN-MANIFESTS": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "VIBEVM-SPEC.md §7.1:556: short-форма «Never written to a manifest»; record.rs merge_manifest_requires пишет в [requires.packages] только уже qualified root refs (qualify сделан на CLI-границе)."
             ]
           },
           "REJ-KIND-DISAMBIGUATOR": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "crates/vibe-resolver/src/kind_check.rs: «assert a pkgref's optional kind prefix matches... never disambiguates»; package_ref.rs:384-385 «(group, name) is already unique» — реальная неоднозначность всегда group-коллизия."
             ]
           },
           "OPEN-EXIT-CODE-7": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "healed 2026-08-20: exit_code.rs:32 AMBIGUOUS_PACKAGE: u8 = 7, VIBEVM-SPEC §9.4 «7 — ambiguous package» citing §2.7; status flipped spec/work → impl/done because the open question closed by the codes shipping"
             ]
           },
           "OPEN-EXPLORER-SCOPE": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "вопрос жив: explorer остаётся в ROADMAP M3+ Speculative directions (972); собственного PROP об explorer в spec/modules/ нет — «получит свой PROP, когда станет funded» остаётся верным."
             ]
           },
           "OPEN-FQDN-KIND-VARIANT": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "вопрос остаётся открытым: NamingConvention (project.rs:281-304) не имеет kind-несущего fqdn-варианта — Fqdn строго <group>.<name>, kind-name/name/kind-name — отдельные legacy-конвенции; решения в дереве нет."
             ]
           },
           "phase-plan": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "фактический порядок в ROADMAP соответствует: M1.17 workspace → PROP-005 (реализован, см. его status) → M1.19 qualified naming (Order: «Needs the short-name-resolution machinery from PROP-005... which is implemented»); поле/грамматика/Fqdn пришли раньше короткого резолва (Phases 1-4+7 vs 5-6-8)."
             ]
           },
           "HISTORY-DRAFT-1": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "design doc (status: «Captured 2026-05-20 in an owner design session») фиксирует весь перечень draft-1 решений: fork-group-mandatory, identity tuple, kind-as-metadata, pkgref grammar, fqdn-нейминг, fork-exit-code-7, index-backed resolution, parked-registry-explorer."
             ]
           },
           "HISTORY-PHASES-1-4-7": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "всё живо в дереве: Group newtype (package_ref.rs:45) + mandatory group (PackageMeta); lockfile v5 с per-package group; NamingConvention::Fqdn как default (project.rs:289); index group-native — by_name.rs + workspace_origin + vibe-publish/src/post_hook.rs:283 (payload workspace_origin)."
             ]
           },
           "HISTORY-PHASES-5-6-8": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "short_name.rs — boundary-резолюция (lockfile-first, index-кандидаты); AmbiguousPackage → exit 7; AUDIT.md 2026-05-23-02 «fixed (cc32d7e)» — scaffold-дефект vibe init/registry add (kind-name вместо fqdn); сегодня registry/config/mod.rs:72 принимает \"fqdn\"."
             ]
           },
           "HISTORY-UNIT-TYPING": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and live end-to-end: mandatory group in every manifest (this repo's lock carries qualified refs like stack:org.vibevm/rust-ai-native), identity (group,name,version,hash) with kind demoted to metadata, pkgref grammar with optional kind validated (KindMismatch), fqdn repo naming live on vibespecs (org.vibevm_wal-shape repos, the boot-resident registry fact), index-backed short-name resolution (vibe-cli commands/short_name.rs), collision exit code 7 = AMBIGUOUS_PACKAGE (c2-verified in exit_code.rs), lockfile v5 group migration (PROP-008 §7 history); open questions genuinely open (exit-7 spec finalisation, explorer scope, fqdn kind-variant); §2.9 explorer honestly design-only"
+              "файл несёт типизацию на месте: «req r1» в §2.1–2.8 (req-group…req-index-ext) и «design r1» в §2.9/§3; depth program упоминается в PROP-012 и campaigns/packages-2026-09/harvest/d12-health-audit-rulings.md."
             ]
           },
           "_elements": {
@@ -177310,8 +177310,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-13T16:50:24Z",
-        "verify_batch": "c4f1-registry-rest + d2a + RJ1 + B4-HOST-KIND-VALIDATION + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge"
+        "verified_at": "2026-08-20T18:02:45Z",
+        "verify_batch": "c4f1-registry-rest + d2a + RJ1 + B4-HOST-KIND-VALIDATION + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge + B08601 + B08601-HEAL"
       }
     },
     {

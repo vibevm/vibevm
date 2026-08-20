@@ -18,7 +18,7 @@
 
 ## 1. Motivation {#motivation}
 
-- @fact:flat-namespace vibevm's package namespace is flat: a pkgref is `<kind>:<name>`, and `name` is "globally unique within its kind" (`VIBEVM-SPEC.md` §7.1). This does not scale — two unrelated authors will both want `flow:wal`. @status:impl/done
+- @fact:flat-namespace Before this PROP, vibevm's package namespace was flat: a pkgref was `<kind>:<name>`, `name` "globally unique within its kind". That did not scale — two unrelated authors will both want `flow:wal` — and this PROP is what ended it: §7.1 now carries the group-qualified tuple and the pkgref grammar `[kind:][group/]name[@version]`. @status:impl/done
 - @fact:prior-art Maven solved exactly this with `groupId` (reverse-FQDN) for global uniqueness; npm with `@scope/`. @status:impl/done
 
 - @fact:OWNER-REQUEST The owner's request (design session 2026-05-20): introduce reverse-FQDN qualification at the top level (`org.vibevm`), while keeping short names usable — a user types `vibe install wal` in the CLI, but the package is canonically `org.vibevm.world/wal`. @status:impl/done
@@ -51,7 +51,7 @@ version = "0.3.0"
 - @fact:GROUP-CONVENTION Reverse-FQDN is the **recommended convention**; the core does **not** enforce it. Whether `group` looks like a reversed domain is a matter of style, left to humans and linters. (Maven likewise does not enforce groupId shape.) @status:impl/done
 - @fact:GROUP-GRAMMAR Grammar (owner ruling 2026-08-13 — «настоящие домены»): dot-separated segments, each an **LDH hostname label** — `[a-z0-9-]+`, ASCII lowercase, hyphen never at a label edge; `_` is forbidden (it is not legal in a domain). Interior doubled hyphens stay legal, as DNS itself allows (`xn--…` punycode). A group is therefore grammatically a valid reversed FQDN even though semantically it is a claim, not a credential (§2.10). Enforced by `Group::parse`. *Considered and rejected:* keeping `_` (groups would not even be formally domains, and the flat `<group>.<name>` carrier §2.5 would lose its unambiguous split); recording "FQDN-like, not FQDN-valid" as a deliberate looseness (the ruling chose real domain rules). *Revisit:* a real-world group needing `_` appears — it cannot, if groups track domains. @status:impl/done
 - @fact:SEGMENT-COUNT-IS-REGISTRY-POLICY The core grammar requires **≥ 1 segment** — `acme` parses. Requiring ≥ 2 segments, reverse-FQDN shape, or any other domain-likeness is **registry policy**, enforced at registration time by the registry's moderation or web surface (owner ruling 2026-08-13), never by the core. Short single-segment groups are the norm for local registries (§2.10). @status:impl/done
-- @fact:GROUP-CANONICAL `group` is mandatory as of this PROP. The three current canonical packages migrate to `group = "org.vibevm"` (§3) — the owner's reverse-FQDN, recorded here as the canonical group for all first-party vibevm packages (domain `vibevm.org`). @status:impl/done
+- @fact:GROUP-CANONICAL `group` is mandatory as of this PROP. The three then-current canonical packages migrated to `group = "org.vibevm"` (§3) — the owner's reverse-FQDN, recorded at the time as the one canonical group. Superseded on the group's NAME by PROP-029 (2026-07-12): first-party packages now live under `org.vibevm.world` and `org.vibevm.ai-native` (and `org.vibevm.fractality`); the mandatory-group law itself is unchanged and live in every manifest. @status:impl/done
 
 ### 2.2 Identity tuple — `(group, name, version, content_hash)` {#identity}
 
@@ -74,7 +74,7 @@ version = "0.3.0"
 - @fact:KIND-FILTER the `--kind` filter on `vibe list` / `vibe search`; @status:impl/done
 - @fact:KIND-UX the UX signal in a kind-prefixed pkgref (§2.4). @status:impl/done
 
-@fact:TAXONOMY-UNCHANGED The four-kinds taxonomy (`VIBEVM-SPEC.md` §4.1) is unchanged in importance — it simply stops being part of identity and repository naming. @status:impl/done
+@fact:TAXONOMY-UNCHANGED The kind taxonomy (`VIBEVM-SPEC.md` §4.1 — four kinds when this PROP was written; six today, `mcp` and `lang` joined by PROP-025/027 and the 2026-08-06 ruling) is unchanged in importance — it simply stops being part of identity and repository naming, whatever its member count. @status:impl/done
 
 ### 2.4 pkgref grammar {#pkgref}
 
@@ -160,7 +160,7 @@ Re-run with the qualified form, e.g. `vibe install org.vibevm.world/wal`.
 @fact:INDEX-FIELDS **Decision.** [PROP-005](../vibe-index/PROP-005-package-index.md)'s entry schema (§2.6) gains two fields: `group` (mandatory, §2.1) and `workspace_origin` (optional — set when the package was published from a workspace, [PROP-007 §2.8](../vibe-workspace/PROP-007-workspace.md) `[origin]`). @status:impl/done
 
 - @fact:BY-NAME-CANDIDATES The `by-name/` layer indexes by `name` and returns the candidate set with each candidate's `group`, so §2.6 short-name resolution is one GET per registry. @status:impl/done
-- @fact:draft-edit-note PROP-005 is currently a draft; these are edits to a draft, not a shipped contract. @status:spec/done
+- @fact:draft-edit-note PROP-005 was a draft when these edits were written; it has since shipped (implemented, folded into the workspace 2026-05-22), and the §2.8 edits below live in that implemented contract. @status:spec/done
 
 ### 2.9 Registry explorer {#explorer}
 
@@ -215,7 +215,7 @@ Re-run with the qualified form, e.g. `vibe install org.vibevm.world/wal`.
 
 ## 5. Open questions {#open}
 
-1. @fact:OPEN-EXIT-CODE-7 Exit code `7` — finalise the assignment against `VIBEVM-SPEC.md` §9.4 and confirm no clash with a future code. @status:spec/work
+1. @fact:OPEN-EXIT-CODE-7 Exit code `7` — the assignment is finalised: `VIBEVM-SPEC.md` §9.4 carries «7 — ambiguous package» citing this PROP's §2.7, `AMBIGUOUS_PACKAGE: u8 = 7` lives in `exit_code.rs`, and codes 0–7 are taken without collision. @status:impl/done
 2. @fact:OPEN-EXPLORER-SCOPE Registry explorer scope (§2.9) — when (if) it becomes a funded milestone, it gets its own PROP. @status:spec/work
 3. @fact:OPEN-FQDN-KIND-VARIANT Whether `naming = "fqdn"` should also offer a `kind`-bearing variant for registries that want it, or stay strictly `<group>.<name>`. @status:spec/work
 
