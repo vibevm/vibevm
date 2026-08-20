@@ -1,6 +1,6 @@
 # TZ-RELEASE-1.0 v0.1 — релиз vibevm 1.0.0 (закрытая альфа) {#root}
 
-_STATUS: 2026-08-20 · марафон ИДЁТ · С1 в работе: офлайн-постура СЕЛА (root --offline + VIBE_OFFLINE + [net], панель зелёная, суд 8 confirmed, долг 0/0); воркер R1-STORE строит склад; линия claudez2 в лимите — всё на claudez по слову владельца · next: ревью R1-STORE → R1-REFRESH → R1-RESOLVER → cache-семья → check/--repair
+_STATUS: 2026-08-20 · марафон ИДЁТ · С1: офлайн-постура СЕЛА (eb879a1b), СКЛАД СЕЛ (937df291 — write-once, гейт-до-вставки, проектный кэш снесён, 18 фактов пересужено, панель зелёная, долг 0/0) · в полёте: R1-REFRESH (-c, тёплый worktree) + R1-CACHE-CMDS (параллельно, claudez) · next: их ревью → R1-RESOLVER → R1-CHECK-REPAIR
 
 <status stage="impl" state="plan" comment="написано 2026-08-20 по рулингам владельца того же дня; исполняется марафон-сессией по NEXT-SESSION-PROMPT.md; жанр — план кампании (не контракт); живёт в зоне кампании packages-2026-09 и исполняет её выход"/>
 

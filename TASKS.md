@@ -200,7 +200,11 @@ with nothing going red. **The producer must be a fact, never a field write.**
       built; two-thirds of its 64 build claims already have code. A cut taken
       from its statuses would have been a plan about a tree that does not
       exist.
-      - [ ] `feat(vibe-registry)`: **the store, at `~/.vibe/cache/`** (owner,
+      - [x] **LANDED 2026-08-20 (marathon С1, `937df291`)** — write-once
+            store + hash-gate-before-insert + project cache removed same
+            commit + read-gate names a tampered entry; red-proved; 18
+            PROP-010 facts re-judged. `feat(vibe-registry)`: **the store,
+            at `~/.vibe/cache/`** (owner,
             2026-08-20). NOT from scratch — the extracted per-identity layout
             already exists, project-scoped, at
             `<workspace-root>/.vibe/cache/<group>/<name>/v<version>/` (created
