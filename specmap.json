@@ -580,6 +580,15 @@
     },
     {
       "crate_name": "progress-core",
+      "file": "crates/progress-core/src/parse/anchor_token.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "progress_core::parse::anchor_token",
+      "end_line": 8,
+      "fingerprint": "tok1:1d50785de2b85b7e71a8c6105c17ffb422fc1f0bc5e6d19dfdc116c18be6d005"
+    },
+    {
+      "crate_name": "progress-core",
       "file": "crates/progress-core/src/parse/anchors.rs",
       "item_kind": "mod",
       "line": 3,
@@ -600,9 +609,9 @@
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/parse/blocks.rs",
       "item_kind": "fn",
-      "line": 179,
+      "line": 182,
       "symbol": "progress_core::parse::blocks::frontmatter_len",
-      "end_line": 221,
+      "end_line": 224,
       "fingerprint": "tok1:40abc6129ba81b994a5f5578a781da02c758c9bf38377b05a6ea4e3a21174183"
     },
     {
@@ -620,8 +629,8 @@
       "item_kind": "fn",
       "line": 81,
       "symbol": "progress_core::parse::delimiters::blank_inline_code",
-      "end_line": 131,
-      "fingerprint": "tok1:3d1140c6e0399e0a7396aef7a218018da317ccfcb0d464c116f897344108095f"
+      "end_line": 132,
+      "fingerprint": "tok1:645c929a433412a5c8fe31fbcbc114feff53bb1c515cc5e6a62faf1ce55ebfd8"
     },
     {
       "crate_name": "progress-core",
@@ -636,18 +645,18 @@
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/parse/facts.rs",
       "item_kind": "fn",
-      "line": 104,
+      "line": 109,
       "symbol": "progress_core::parse::facts::blockquote_prefix_len",
-      "end_line": 124,
-      "fingerprint": "tok1:f1912345c19a5b6f5bc2e5dc6c209cdd840923649310ac668e0d31a528290ad0"
+      "end_line": 129,
+      "fingerprint": "tok1:c93d6b77766baeead84e4a87bd7c8dcccef03a4a06c042bbc914a83a63d489cb"
     },
     {
       "crate_name": "progress-core",
       "file": "crates/progress-core/src/parse/facts.rs",
       "item_kind": "fn",
-      "line": 36,
+      "line": 41,
       "symbol": "progress_core::parse::facts::task_box_len",
-      "end_line": 71,
+      "end_line": 76,
       "fingerprint": "tok1:caf4fa44382a018b6c0901319559899eaeb4b24dd90f4f634cb5c597643fbc55"
     },
     {
@@ -1255,162 +1264,162 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 173,
+      "line": 187,
       "symbol": "vibe-index add",
-      "end_line": 174,
+      "end_line": 188,
       "fingerprint": "tok1:da72f0df87568dbfdc20dc23f348ca10dd5c3edd8070fb00e6d0a05339bb3949"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 183,
+      "line": 197,
       "symbol": "vibe-index bury",
-      "end_line": 185,
+      "end_line": 199,
       "fingerprint": "tok1:e2c6f3395620b107e3b126d66495669b1e2250d48ed033e53e79d8d11fdeb918"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 164,
+      "line": 178,
       "symbol": "vibe-index capabilities",
-      "end_line": 165,
+      "end_line": 179,
       "fingerprint": "tok1:2a0ccfd8c2352f7d0af00320840c63768ef4ba67efa8468a53527b2a8652f1f1"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 199,
+      "line": 213,
       "symbol": "vibe-index config",
-      "end_line": 201,
+      "end_line": 215,
       "fingerprint": "tok1:881d4fd95bae73c7d7107c3f57477c0bcb5fdde61bfe838e11de05bdc5fa1781"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 190,
+      "line": 204,
       "symbol": "vibe-index dump",
-      "end_line": 191,
+      "end_line": 205,
       "fingerprint": "tok1:a206c19f42df3685f2347e0b7b556424aa8fcdfd0f6ea78238fcfa19caf4b71b"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 155,
+      "line": 169,
       "symbol": "vibe-index get",
-      "end_line": 156,
+      "end_line": 170,
       "fingerprint": "tok1:db09ea8a2ebcecf4b80f67ce2ccd200ca08c2ce6cd4128c1f97e731894ddbb37"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 145,
+      "line": 159,
       "symbol": "vibe-index init",
-      "end_line": 146,
+      "end_line": 160,
       "fingerprint": "tok1:1124983beaa454c2a1802f6ec233ff28fd4c29870f8ae6030a61244e89f4e196"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 158,
+      "line": 172,
       "symbol": "vibe-index list",
-      "end_line": 159,
+      "end_line": 173,
       "fingerprint": "tok1:9154fe0c8dae8744613bf10d0e04c8c273fb4a0b13dc6cb7627dcb9761c18178"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 170,
+      "line": 184,
       "symbol": "vibe-index outdated",
-      "end_line": 171,
+      "end_line": 185,
       "fingerprint": "tok1:352b0138e98bfbd26ad7ff8b7fd06075b49e6781ba7111f692b661b5d6311912"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 167,
+      "line": 181,
       "symbol": "vibe-index purls",
-      "end_line": 168,
+      "end_line": 182,
       "fingerprint": "tok1:cf9d55fc3632a13692df67f6961ffba52eacfb5197f3934cdf2d9df0d0c8185e"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 148,
+      "line": 162,
       "symbol": "vibe-index reindex",
-      "end_line": 149,
+      "end_line": 163,
       "fingerprint": "tok1:da0a457f351bbd8c9f01d4110a41ffb3c3328beb5ebba047c9b5bd01d1d3f602"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 176,
+      "line": 190,
       "symbol": "vibe-index remove",
-      "end_line": 177,
+      "end_line": 191,
       "fingerprint": "tok1:58a468f20ed2e6eefc34d53b59c6162eb1ff219b64a66d2c0c82b9db48f95ac2"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 151,
+      "line": 165,
       "symbol": "vibe-index rescan-org",
-      "end_line": 153,
+      "end_line": 167,
       "fingerprint": "tok1:ec81197e317aac67c280474f180fd138183c14ddba479ae85541fc7c04e44f80"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 161,
+      "line": 175,
       "symbol": "vibe-index search",
-      "end_line": 162,
+      "end_line": 176,
       "fingerprint": "tok1:f7e0a5aab208c2f3943399c7fcfbab11c3fbc331efe3d097fcef328492902107"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 193,
+      "line": 207,
       "symbol": "vibe-index serve",
-      "end_line": 194,
+      "end_line": 208,
       "fingerprint": "tok1:14100f023aec73b166740c53afe37f35a9eccf0e1e2ea3b7c53dedfa3a05bc37"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 196,
+      "line": 210,
       "symbol": "vibe-index stop",
-      "end_line": 197,
+      "end_line": 211,
       "fingerprint": "tok1:2d355ea8ac47c7b746adac12c1c3a88e86c814177321bc8f581accbd6b389470"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 187,
+      "line": 201,
       "symbol": "vibe-index verify",
-      "end_line": 188,
+      "end_line": 202,
       "fingerprint": "tok1:f39c23737cc545cfeaae23c2f06e0824966ee59f1be4ac3f2df1b4021856d632"
     },
     {
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/cli/mod.rs",
       "item_kind": "command",
-      "line": 179,
+      "line": 193,
       "symbol": "vibe-index yank",
-      "end_line": 181,
+      "end_line": 195,
       "fingerprint": "tok1:a98e389c6ab18408c6f59bfe1afa2c9cadcd4904baf1f650b0a309a9bcbcbc49"
     },
     {
@@ -2254,9 +2263,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/mod.rs",
       "item_kind": "fn",
-      "line": 152,
+      "line": 153,
       "symbol": "vibe_cli::commands::prefs::tui::form::Form::build",
-      "end_line": 193,
+      "end_line": 194,
       "fingerprint": "tok1:bd177d40934197c7cd567ea2c7a4d5a2cd571dc59c8761a146d8e1019ebb4140"
     },
     {
@@ -2290,27 +2299,27 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "item_kind": "fn",
-      "line": 56,
+      "line": 57,
       "symbol": "vibe_cli::commands::prefs::tui::form::lifecycle::Form::apply",
-      "end_line": 126,
+      "end_line": 127,
       "fingerprint": "tok1:6e8c5625a5b15f949753fbff3f3327fd9fbd69b80509097c9b3d884f1c8af4dd"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "item_kind": "fn",
-      "line": 43,
+      "line": 44,
       "symbol": "vibe_cli::commands::prefs::tui::form::lifecycle::Form::is_modified",
-      "end_line": 54,
+      "end_line": 55,
       "fingerprint": "tok1:23722ec3d90e8070df2f9415fcd933402c105daaf0547825c86f1f87a092dd3a"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "item_kind": "fn",
-      "line": 128,
+      "line": 129,
       "symbol": "vibe_cli::commands::prefs::tui::form::lifecycle::Form::reset",
-      "end_line": 145,
+      "end_line": 146,
       "fingerprint": "tok1:6f16bfd4574879b2dbd87efe95423b12c0431a7a0d515e5b8288fd027c89d0a8"
     },
     {
@@ -10188,6 +10197,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/progress-core/src/parse/anchor_token.rs",
+      "from_symbol": "progress_core::parse::anchor_token",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#parsing",
+      "verb": "implements"
+    },
+    {
       "file": "crates/progress-core/src/parse/anchors.rs",
       "from_symbol": "progress_core::parse::anchors",
       "line": 3,
@@ -10206,7 +10223,7 @@
     {
       "file": "crates/progress-core/src/parse/blocks.rs",
       "from_symbol": "progress_core::parse::blocks::frontmatter_len",
-      "line": 206,
+      "line": 209,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#granularity",
       "verb": "implements"
@@ -10214,7 +10231,7 @@
     {
       "file": "crates/progress-core/src/parse/blocks.rs",
       "from_symbol": "progress_core::parse::blocks::frontmatter_len",
-      "line": 207,
+      "line": 210,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#placement",
       "verb": "implements"
@@ -10230,7 +10247,7 @@
     {
       "file": "crates/progress-core/src/parse/delimiters.rs",
       "from_symbol": "progress_core::parse::delimiters::blank_inline_code",
-      "line": 101,
+      "line": 102,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#element",
       "verb": "implements"
@@ -10238,7 +10255,7 @@
     {
       "file": "crates/progress-core/src/parse/delimiters.rs",
       "from_symbol": "progress_core::parse::delimiters::blank_inline_code",
-      "line": 102,
+      "line": 103,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#shorthand",
       "verb": "implements"
@@ -10254,7 +10271,7 @@
     {
       "file": "crates/progress-core/src/parse/facts.rs",
       "from_symbol": "progress_core::parse::facts::blockquote_prefix_len",
-      "line": 113,
+      "line": 118,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#granularity",
       "verb": "implements"
@@ -10262,7 +10279,7 @@
     {
       "file": "crates/progress-core/src/parse/facts.rs",
       "from_symbol": "progress_core::parse::facts::task_box_len",
-      "line": 54,
+      "line": 59,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#granularity",
       "verb": "implements"
@@ -10270,7 +10287,7 @@
     {
       "file": "crates/progress-core/src/parse/facts.rs",
       "from_symbol": "progress_core::parse::facts::task_box_len",
-      "line": 55,
+      "line": 60,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#placement",
       "verb": "implements"
@@ -11178,7 +11195,7 @@
     {
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/mod.rs",
       "from_symbol": "vibe_cli::commands::prefs::tui::form::Form::build",
-      "line": 156,
+      "line": 157,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#form-per-type",
       "verb": "implements"
@@ -11210,7 +11227,7 @@
     {
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "from_symbol": "vibe_cli::commands::prefs::tui::form::lifecycle::Form::apply",
-      "line": 63,
+      "line": 64,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#write-layer-choice",
       "verb": "implements"
@@ -11218,7 +11235,7 @@
     {
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "from_symbol": "vibe_cli::commands::prefs::tui::form::lifecycle::Form::is_modified",
-      "line": 46,
+      "line": 47,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle",
       "verb": "implements"
@@ -11226,7 +11243,7 @@
     {
       "file": "crates/vibe-cli/src/commands/prefs/tui/form/lifecycle.rs",
       "from_symbol": "vibe_cli::commands::prefs::tui::form::lifecycle::Form::reset",
-      "line": 132,
+      "line": 133,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-041#configurable-lifecycle",
       "verb": "implements"
@@ -49039,7 +49056,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:324d7c556420ebc64caa3b88d883d9dc1b0467bb49206db3334b3823f46631a1",
+      "content_hash": "sha256:c190907081dea705501e89699215f20ea2fa3b7fa435f08373228971e8d5e399",
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "PROP-043 — Progress Control: inline status markup and the `vibe progress` tool",
@@ -50434,7 +50451,7 @@
     },
     {
       "anchor": "parsing",
-      "content_hash": "sha256:c612b6bfe1402deb5adffb517bcdf80985d4941e90f114c8113f475f938e9b12",
+      "content_hash": "sha256:f91b4bafaf5fbdbda89dcdd891acf41bb561462502a2fd7de4473982c2eb9029",
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "8. Parsing rules",
@@ -50469,12 +50486,21 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#PARSE-FACT-ANCHORS"
     },
     {
+      "anchor": "PARSE-TYPED-FACT-CODE",
+      "content_hash": "sha256:a02edd02062f09ad9d700187c5c9d2d045100c57e98f108f519f651650f18714",
+      "doc_path": "modules/vibe-progress/PROP-043",
+      "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
+      "heading": "**Typed fact — the fence joins the body** *(owner ruling variant D",
+      "line": 587,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#PARSE-TYPED-FACT-CODE"
+    },
+    {
       "anchor": "PARSE-XML-GRAMMAR",
       "content_hash": "sha256:30793f8f07dd62e338b709e749ed6f06b296ace69fd4e87a4d91b68034a3e008",
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "The element grammar is XML: attributes quoted, point markers self-closed.",
-      "line": 587,
+      "line": 600,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#PARSE-XML-GRAMMAR"
     },
     {
@@ -50483,7 +50509,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "Foreign inline grammars (`@spec://`, `#use`, `#embed`, `#source`,",
-      "line": 590,
+      "line": 603,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#PARSE-FOREIGN-OPAQUE"
     },
     {
@@ -50492,7 +50518,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "9. Genre semantics",
-      "line": 593,
+      "line": 606,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#genres"
     },
     {
@@ -50501,7 +50527,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**Every genre is in scope** — contracts, design docs, research, plans, manual",
-      "line": 595,
+      "line": 608,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#EVERY-GENRE-IN-SCOPE"
     },
     {
@@ -50510,7 +50536,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "Genre only",
-      "line": 597,
+      "line": 610,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#GENRE-TERMINALS"
     },
     {
@@ -50519,7 +50545,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "10. Maintenance discipline",
-      "line": 602,
+      "line": 615,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#maintenance"
     },
     {
@@ -50528,7 +50554,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "After the first campaign: @status:spec/done",
-      "line": 604,
+      "line": 617,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#maintenance-lead"
     },
     {
@@ -50537,7 +50563,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**Edit a unit ⇒ update its marker in the same commit.** `vibe progress",
-      "line": 606,
+      "line": 619,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#EDIT-UPDATES-MARKER"
     },
     {
@@ -50546,7 +50572,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "Task pipelines close the loop: an IMPL task cites markers on entry and",
-      "line": 608,
+      "line": 621,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#TASK-LOOP"
     },
     {
@@ -50555,7 +50581,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "`freeze/done` requires green evidence where a provider exists (§6). @status:spec/done",
-      "line": 610,
+      "line": 623,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#FREEZE-NEEDS-EVIDENCE"
     },
     {
@@ -50564,7 +50590,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "Doc-coverage (units lacking `documents` edges / doc-view closure) ratchets",
-      "line": 611,
+      "line": 624,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DOC-COVERAGE-RATCHET"
     },
     {
@@ -50573,7 +50599,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "Periodic re-verification runs as a recurring campaign",
-      "line": 613,
+      "line": 626,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#PERIODIC-REVERIFICATION"
     },
     {
@@ -50582,7 +50608,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "10.1 The life of a fact under an active campaign",
-      "line": 616,
+      "line": 629,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#fact-lifecycle"
     },
     {
@@ -50591,7 +50617,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**Editing the corpus while a campaign judges it is the normal",
-      "line": 618,
+      "line": 631,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#LIFECYCLE-WHY"
     },
     {
@@ -50600,7 +50626,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**A judged fact whose text moves comes due for",
-      "line": 623,
+      "line": 636,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#LIFECYCLE-EDITED"
     },
     {
@@ -50609,7 +50635,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**A fact added to an already-judged file is unjudged, and",
-      "line": 627,
+      "line": 640,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#LIFECYCLE-ADDED"
     },
     {
@@ -50618,7 +50644,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**A fact removed from a document leaves its verdict",
-      "line": 632,
+      "line": 645,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#LIFECYCLE-DELETED"
     },
     {
@@ -50627,7 +50653,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**«The file moved» and «a judged fact moved» are",
-      "line": 635,
+      "line": 648,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#STALE-IS-NOT-REJUDGE"
     },
     {
@@ -50636,7 +50662,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**Sealing refuses a file carrying any",
-      "line": 641,
+      "line": 654,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#SEAL-IS-A-WHOLE-FILE-ASSERTION"
     },
     {
@@ -50645,7 +50671,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "10.2 Incremental debt clearance",
-      "line": 647,
+      "line": 660,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#debt-clearance"
     },
     {
@@ -50654,7 +50680,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**The debt is enumerable, so it is paid item by",
-      "line": 649,
+      "line": 662,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-IS-A-LIST-NOT-A-RATIO"
     },
     {
@@ -50663,7 +50689,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**The unit of clearance is one file**, because sealing",
-      "line": 655,
+      "line": 668,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-UNIT-IS-THE-FILE"
     },
     {
@@ -50672,7 +50698,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**The cheapest debt is in the file you",
-      "line": 659,
+      "line": 672,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-CHEAPEST-IS-THE-FILE-YOU-OPENED"
     },
     {
@@ -50681,7 +50707,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**The procedure, run on demand and never automatically:** @status:impl/done",
-      "line": 665,
+      "line": 678,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-PROCEDURE"
     },
     {
@@ -50690,7 +50716,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**Measure.** Print the three kinds with the files behind",
-      "line": 667,
+      "line": 680,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-STEP-MEASURE"
     },
     {
@@ -50699,7 +50725,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**Pick one file** — either the heaviest, or the one this",
-      "line": 669,
+      "line": 682,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-STEP-PICK"
     },
     {
@@ -50708,7 +50734,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**Judge only its unjudged facts**, to the ordinary standard",
-      "line": 671,
+      "line": 684,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-STEP-JUDGE"
     },
     {
@@ -50717,7 +50743,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**Merge and seal.** A refusal to seal means something in the",
-      "line": 675,
+      "line": 688,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-STEP-SEAL"
     },
     {
@@ -50726,7 +50752,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**Report how much was cleared**, so the number moves",
-      "line": 677,
+      "line": 690,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-STEP-REPORT"
     },
     {
@@ -50735,7 +50761,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**Content moved into a specification is judged",
-      "line": 680,
+      "line": 693,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-CLOSING-INCLUDES-JUDGING"
     },
     {
@@ -50744,7 +50770,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**A session reports the debt when it restores",
-      "line": 686,
+      "line": 699,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-ASK-AT-SESSION-START"
     },
     {
@@ -50753,7 +50779,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**The debt is a question the tool answers, not a query",
-      "line": 692,
+      "line": 705,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-MUST-BE-ASKABLE"
     },
     {
@@ -50762,7 +50788,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "**What must not happen: clearing the count by",
-      "line": 701,
+      "line": 714,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DEBT-DO-NOT-JUDGE-BLIND"
     },
     {
@@ -50771,7 +50797,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "11. Out of scope / future",
-      "line": 706,
+      "line": 719,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#future"
     },
     {
@@ -50780,7 +50806,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "XML document storage (arrives with the PROP-035 XML frontend — this markup is",
-      "line": 708,
+      "line": 721,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#FUT-XML-STORAGE"
     },
     {
@@ -50789,7 +50815,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "second-wave corpora (`packages/org.vibevm.world`,",
-      "line": 710,
+      "line": 723,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#FUT-SECOND-WAVE"
     },
     {
@@ -50798,7 +50824,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "extraction into a",
-      "line": 713,
+      "line": 726,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#FUT-EXTRACTION"
     },
     {
@@ -50807,7 +50833,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "dashboard evolution beyond the minimal read-only page. @status:spec/done",
-      "line": 715,
+      "line": 728,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#FUT-DASHBOARD"
     },
     {
@@ -50816,7 +50842,7 @@
       "doc_path": "modules/vibe-progress/PROP-043",
       "file": "spec/modules/vibe-progress/PROP-043-progress-markup.md",
       "heading": "(Terminology note:",
-      "line": 716,
+      "line": 729,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-progress/PROP-043#DASHBOARD-TERM"
     },
     {
