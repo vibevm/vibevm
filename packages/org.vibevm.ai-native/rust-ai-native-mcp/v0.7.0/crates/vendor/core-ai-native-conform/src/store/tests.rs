@@ -115,3 +115,119 @@ fn in_crate_exclude_still_filters() {
     assert_eq!(files, vec!["crates/foo/src/lib.rs"]);
     assert!(log.dead_excludes.is_empty());
 }
+
+fn write_source(root: &Path, rel: &str, body: &str) {
+    let path = root.join(rel);
+    std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+    std::fs::write(path, body).unwrap();
+}
+
+fn fact_files(facts: &[SourceFacts]) -> Vec<&str> {
+    facts.iter().map(|facts| facts.file.as_str()).collect()
+}
+
+/// TypeScript keeps its ecosystem-wide `node_modules` rule while the
+/// consumer adds an unrelated project directory through policy.
+#[test]
+fn typescript_built_in_and_policy_skip_dirs_compose() {
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path();
+    write_source(root, "src/keep.ts", "export const keep = 1;\n");
+    write_source(
+        root,
+        "src/node_modules/dependency.ts",
+        "export const dependency = 1;\n",
+    );
+    write_source(
+        root,
+        "src/project-cache/generated.ts",
+        "export const generated = 1;\n",
+    );
+    let cfg: Config = toml::from_str(
+        "[typescript]\nroots=[\"src\"]\nskip_dirs=[\"project-cache\"]\n\
+         exclude_substrings=[]\n",
+    )
+    .unwrap();
+
+    let mut log = ExtractionLog::default();
+    let facts = Store::for_typescript(root, &cfg)
+        .extract_typescript(root, &NullFrontend, &mut log)
+        .unwrap();
+    assert_eq!(fact_files(&facts), ["src/keep.ts"]);
+}
+
+/// Go keeps its ecosystem-wide `vendor` rule while the consumer adds an
+/// unrelated project directory through policy.
+#[test]
+fn go_built_in_and_policy_skip_dirs_compose() {
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path();
+    write_source(root, "keep.go", "package keep\n");
+    write_source(root, "vendor/dependency.go", "package dependency\n");
+    write_source(root, "project-cache/generated.go", "package generated\n");
+    let cfg: Config = toml::from_str(
+        "[go]\nroots=[\".\"]\nskip_dirs=[\"project-cache\"]\n\
+         exclude_substrings=[]\n",
+    )
+    .unwrap();
+
+    let mut log = ExtractionLog::default();
+    let facts = Store::for_go(root, &cfg)
+        .extract_go(root, &NullFrontend, &mut log)
+        .unwrap();
+    assert_eq!(fact_files(&facts), ["keep.go"]);
+}
+
+/// Red proof for B-064 on the TypeScript walk: without consumer policy
+/// `vibedeps` is ordinary source; naming it in policy prunes the tree.
+#[test]
+fn typescript_vibedeps_is_consumer_policy_not_engine_knowledge() {
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path();
+    write_source(root, "src/vibedeps/probe.ts", "export const probe = 1;\n");
+
+    let unconfigured: Config =
+        toml::from_str("[typescript]\nroots=[\"src\"]\nskip_dirs=[]\nexclude_substrings=[]\n")
+            .unwrap();
+    let mut log = ExtractionLog::default();
+    let scanned = Store::for_typescript(root, &unconfigured)
+        .extract_typescript(root, &NullFrontend, &mut log)
+        .unwrap();
+    assert_eq!(fact_files(&scanned), ["src/vibedeps/probe.ts"]);
+
+    let configured: Config = toml::from_str(
+        "[typescript]\nroots=[\"src\"]\nskip_dirs=[\"vibedeps\"]\n\
+         exclude_substrings=[]\n",
+    )
+    .unwrap();
+    let mut log = ExtractionLog::default();
+    let skipped = Store::for_typescript(root, &configured)
+        .extract_typescript(root, &NullFrontend, &mut log)
+        .unwrap();
+    assert!(skipped.is_empty(), "consumer policy must skip vibedeps");
+}
+
+/// The same red proof at the second former hardcode site, the Go walk.
+#[test]
+fn go_vibedeps_is_consumer_policy_not_engine_knowledge() {
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path();
+    write_source(root, "vibedeps/probe.go", "package probe\n");
+
+    let unconfigured: Config =
+        toml::from_str("[go]\nroots=[\".\"]\nskip_dirs=[]\nexclude_substrings=[]\n").unwrap();
+    let mut log = ExtractionLog::default();
+    let scanned = Store::for_go(root, &unconfigured)
+        .extract_go(root, &NullFrontend, &mut log)
+        .unwrap();
+    assert_eq!(fact_files(&scanned), ["vibedeps/probe.go"]);
+
+    let configured: Config =
+        toml::from_str("[go]\nroots=[\".\"]\nskip_dirs=[\"vibedeps\"]\nexclude_substrings=[]\n")
+            .unwrap();
+    let mut log = ExtractionLog::default();
+    let skipped = Store::for_go(root, &configured)
+        .extract_go(root, &NullFrontend, &mut log)
+        .unwrap();
+    assert!(skipped.is_empty(), "consumer policy must skip vibedeps");
+}

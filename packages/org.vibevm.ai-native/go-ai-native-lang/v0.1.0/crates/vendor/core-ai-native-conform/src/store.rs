@@ -50,6 +50,7 @@ pub struct ExtractionLog {
 pub struct Store {
     root: PathBuf,
     roots: Vec<String>,
+    skip_dirs: Vec<String>,
     exclude: Vec<String>,
 }
 
@@ -62,6 +63,7 @@ impl Store {
         Store {
             root: repo.join("target").join("conform").join("facts"),
             roots: config.rust.roots.clone(),
+            skip_dirs: config.rust.skip_dirs.clone(),
             exclude: config.rust.exclude_substrings.clone(),
         }
     }
@@ -74,6 +76,7 @@ impl Store {
         Store {
             root: repo.join("target").join("conform").join("facts"),
             roots: config.typescript.roots.clone(),
+            skip_dirs: config.typescript.skip_dirs.clone(),
             exclude: config.typescript.exclude_substrings.clone(),
         }
     }
@@ -85,6 +88,7 @@ impl Store {
         Store {
             root: repo.join("target").join("conform").join("facts"),
             roots: config.go.roots.clone(),
+            skip_dirs: config.go.skip_dirs.clone(),
             exclude: config.go.exclude_substrings.clone(),
         }
     }
@@ -104,7 +108,7 @@ impl Store {
         frontend: &dyn Frontend,
         log: &mut ExtractionLog,
     ) -> Result<Vec<SourceFacts>> {
-        let (sources, dead) = workspace_sources(repo, &self.roots, &self.exclude);
+        let (sources, dead) = workspace_sources(repo, &self.roots, &self.skip_dirs, &self.exclude);
         announce_dead("rust", log, dead);
         self.extract_sources(sources, frontend, log)
     }
@@ -118,7 +122,7 @@ impl Store {
         frontend: &dyn Frontend,
         log: &mut ExtractionLog,
     ) -> Result<Vec<SourceFacts>> {
-        let sources = typescript_sources(repo, &self.roots, &self.exclude);
+        let sources = typescript_sources(repo, &self.roots, &self.skip_dirs, &self.exclude);
         self.extract_sources(sources, frontend, log)
     }
 
@@ -131,7 +135,7 @@ impl Store {
         frontend: &dyn Frontend,
         log: &mut ExtractionLog,
     ) -> Result<Vec<SourceFacts>> {
-        let sources = go_sources(repo, &self.roots, &self.exclude);
+        let sources = go_sources(repo, &self.roots, &self.skip_dirs, &self.exclude);
         self.extract_sources(sources, frontend, log)
     }
 
@@ -257,6 +261,7 @@ type SourceEntry = (String, String, String, PathBuf);
 fn workspace_sources(
     repo: &Path,
     roots: &[String],
+    skip_dirs: &[String],
     exclude: &[String],
 ) -> (Vec<SourceEntry>, Vec<String>) {
     let mut crate_dirs: Vec<PathBuf> = Vec::new();
@@ -264,7 +269,12 @@ fn workspace_sources(
         if let Some(parent) = root.strip_suffix("/*") {
             if let Ok(rd) = std::fs::read_dir(repo.join(parent)) {
                 for entry in rd.filter_map(Result::ok) {
-                    if entry.path().is_dir() {
+                    if entry.path().is_dir()
+                        && entry
+                            .file_name()
+                            .to_str()
+                            .is_none_or(|name| !skip_dirs.iter().any(|skip| skip == name))
+                    {
                         crate_dirs.push(entry.path());
                     }
                 }
@@ -294,6 +304,9 @@ fn workspace_sources(
             for entry in walkdir::WalkDir::new(&dir)
                 .sort_by_file_name()
                 .into_iter()
+                .filter_entry(|entry| {
+                    entry.depth() == 0 || keep_walk_entry(entry, &[], skip_dirs, false)
+                })
                 .filter_map(Result::ok)
             {
                 let path = entry.path();
@@ -340,17 +353,40 @@ fn workspace_sources(
 
 /// TypeScript source extensions the flat walk accepts.
 const TS_EXTENSIONS: &[&str] = &["ts", "tsx", "mts", "cts"];
-/// Directory names the TypeScript walk never descends into — resolved
-/// installs and build output, mirroring the extractor's own skip list.
+/// Ecosystem-wide directory names the TypeScript walk never descends
+/// into. Project-specific names come from `[typescript] skip_dirs`.
 const TS_SKIP_DIRS: &[&str] = &[
     "node_modules",
     "dist",
     "build",
     "coverage",
     ".git",
-    "vibedeps",
     "target",
 ];
+
+/// Whether one WalkDir entry remains in the traversal. Ecosystem-wide
+/// names are built in; exact project-specific names supplement them via
+/// the consumer's policy. Hidden-directory handling stays a property of
+/// the language walk, not of the configurable list.
+pub(crate) fn keep_walk_entry(
+    entry: &walkdir::DirEntry,
+    built_in: &[&str],
+    configured: &[String],
+    skip_hidden: bool,
+) -> bool {
+    if !entry.file_type().is_dir() {
+        return true;
+    }
+    entry
+        .file_name()
+        .to_str()
+        .map(|name| {
+            !built_in.contains(&name)
+                && !configured.iter().any(|skip| skip == name)
+                && (!skip_hidden || !name.starts_with('.'))
+        })
+        .unwrap_or(true)
+}
 
 /// Enumerate TypeScript sources as `(repo-rel file, root name, module,
 /// absolute path)`. Unlike the Rust walk there is no crate topology:
@@ -361,6 +397,7 @@ const TS_SKIP_DIRS: &[&str] = &[
 fn typescript_sources(
     repo: &Path,
     roots: &[String],
+    skip_dirs: &[String],
     exclude: &[String],
 ) -> Vec<(String, String, String, PathBuf)> {
     let mut root_dirs: Vec<PathBuf> = Vec::new();
@@ -389,13 +426,7 @@ fn typescript_sources(
         for entry in walkdir::WalkDir::new(&root_dir)
             .sort_by_file_name()
             .into_iter()
-            .filter_entry(|e| {
-                !e.file_type().is_dir()
-                    || e.file_name()
-                        .to_str()
-                        .map(|n| !TS_SKIP_DIRS.contains(&n) && !n.starts_with('.'))
-                        .unwrap_or(true)
-            })
+            .filter_entry(|entry| keep_walk_entry(entry, TS_SKIP_DIRS, skip_dirs, true))
             .filter_map(Result::ok)
         {
             let path = entry.path();
@@ -422,18 +453,11 @@ fn typescript_sources(
     out
 }
 
-/// Directory names the Go walk never descends into — vendored trees,
-/// goldens/fixtures, and build output, mirroring go-extract's own skip
-/// list. `pub(crate)` so the Go unit enumerator (`config::coverage`)
-/// reuses the one list.
-pub(crate) const GO_SKIP_DIRS: &[&str] = &[
-    "vendor",
-    "testdata",
-    "node_modules",
-    ".git",
-    "vibedeps",
-    "target",
-];
+/// Ecosystem-wide directory names the Go walk never descends into —
+/// vendored trees, goldens/fixtures, and build output. Project-specific
+/// names come from `[go] skip_dirs`. `pub(crate)` so the Go unit
+/// enumerator (`config::coverage`) reuses the one list.
+pub(crate) const GO_SKIP_DIRS: &[&str] = &["vendor", "testdata", "node_modules", ".git", "target"];
 
 /// Enumerate Go sources as `(repo-rel file, root name, module,
 /// absolute path)`. Like the TypeScript walk there is no crate
@@ -445,6 +469,7 @@ pub(crate) const GO_SKIP_DIRS: &[&str] = &[
 fn go_sources(
     repo: &Path,
     roots: &[String],
+    skip_dirs: &[String],
     exclude: &[String],
 ) -> Vec<(String, String, String, PathBuf)> {
     let mut root_dirs: Vec<PathBuf> = Vec::new();
@@ -476,12 +501,7 @@ fn go_sources(
             .filter_entry(|e| {
                 // depth 0 is the scan root itself — a literal `.` root
                 // must not be eaten by the hidden-dir filter below.
-                e.depth() == 0
-                    || !e.file_type().is_dir()
-                    || e.file_name()
-                        .to_str()
-                        .map(|n| !GO_SKIP_DIRS.contains(&n) && !n.starts_with('.'))
-                        .unwrap_or(true)
+                e.depth() == 0 || keep_walk_entry(e, GO_SKIP_DIRS, skip_dirs, true)
             })
             .filter_map(Result::ok)
         {

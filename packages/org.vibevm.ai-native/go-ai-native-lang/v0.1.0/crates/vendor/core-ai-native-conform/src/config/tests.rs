@@ -92,6 +92,7 @@ fn v2_parses_all_three_sections() {
 fn defaults_match_census_q1() {
     let r = RustConfig::default();
     assert_eq!(r.roots, ["crates/*"]);
+    assert!(r.skip_dirs.is_empty());
     assert_eq!(r.exclude_substrings, ["/generated/"]);
     assert!(r.gated.is_empty());
     assert!(r.exempt.is_empty());
@@ -103,11 +104,26 @@ fn defaults_match_census_q1() {
     assert_eq!(Config::default().max_file_lines, 600);
     let g = GoConfig::default();
     assert_eq!(g.roots, ["."]);
+    assert!(g.skip_dirs.is_empty());
     assert!(g.gated.is_empty() && g.exempt.is_empty());
     let t = TsConfig::default();
     assert_eq!(t.roots, ["src"]);
+    assert!(t.skip_dirs.is_empty());
     assert_eq!(t.seam, "index");
     assert!(t.gated.is_empty() && t.exempt.is_empty());
+}
+
+#[test]
+fn skip_dirs_are_uniform_per_language_policy() {
+    let cfg: Config = toml::from_str(
+        "[rust]\nskip_dirs=[\"rust-cache\"]\n\
+         [typescript]\nskip_dirs=[\"ts-cache\"]\n\
+         [go]\nskip_dirs=[\"go-cache\"]\n",
+    )
+    .unwrap();
+    assert_eq!(cfg.rust.skip_dirs, ["rust-cache"]);
+    assert_eq!(cfg.typescript.skip_dirs, ["ts-cache"]);
+    assert_eq!(cfg.go.skip_dirs, ["go-cache"]);
 }
 
 #[test]

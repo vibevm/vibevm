@@ -20,7 +20,7 @@ use walkdir::WalkDir;
 
 use super::{Config, ExemptEntry, GoConfig, RustConfig, TsConfig};
 use crate::facts::SourceFacts;
-use crate::store::GO_SKIP_DIRS;
+use crate::store::{GO_SKIP_DIRS, keep_walk_entry};
 
 /// The gated-or-exempt coverage invariant, parameterised by the unit
 /// noun and the section name. Six refusal classes, each message in the
@@ -100,7 +100,11 @@ pub fn rust_units(root: &Path, cfg: &RustConfig) -> BTreeSet<String> {
             && let Ok(rd) = std::fs::read_dir(root.join(parent))
         {
             for e in rd.filter_map(Result::ok) {
-                if e.path().is_dir() && e.path().join("Cargo.toml").exists() {
+                let kept = e
+                    .file_name()
+                    .to_str()
+                    .is_none_or(|name| !cfg.skip_dirs.iter().any(|skip| skip == name));
+                if kept && e.path().is_dir() && e.path().join("Cargo.toml").exists() {
                     units.insert(e.file_name().to_string_lossy().into_owned());
                 }
             }
@@ -146,12 +150,7 @@ pub fn go_units(root: &Path, cfg: &GoConfig) -> BTreeSet<String> {
                 // depth 0 is the scan root itself — a literal `.` root must
                 // not be eaten by the hidden-dir filter (parity with
                 // `go_sources`).
-                e.depth() == 0
-                    || !e.file_type().is_dir()
-                    || e.file_name()
-                        .to_str()
-                        .map(|n| !GO_SKIP_DIRS.contains(&n) && !n.starts_with('.'))
-                        .unwrap_or(true)
+                e.depth() == 0 || keep_walk_entry(e, GO_SKIP_DIRS, &cfg.skip_dirs, true)
             })
             .filter_map(Result::ok)
         {
@@ -189,6 +188,9 @@ pub fn ts_units(root: &Path, cfg: &TsConfig) -> BTreeSet<String> {
             continue;
         }
         let name = entry.file_name().to_string_lossy().into_owned();
+        if cfg.skip_dirs.iter().any(|skip| skip == &name) {
+            continue;
+        }
         let dir_rel = format!("{cells}/{name}");
         if cfg
             .exclude_substrings

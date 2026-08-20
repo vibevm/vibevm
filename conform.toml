@@ -19,6 +19,9 @@ max_file_lines = 600
 # Source roots to scan. A `<dir>/*` entry scans each subdir of <dir> as one
 # crate; any other entry is a literal crate dir.
 roots = ["crates/*", "xtask"]
+# Universal ecosystem directories stay built into the engine; this
+# consumer-specific resolved-package directory belongs to vibevm's policy.
+skip_dirs = ["vibedeps"]
 exclude_substrings = ["/generated/"]
 
 # R-001 flag-sites: cell constructors appear only in the selection registry.

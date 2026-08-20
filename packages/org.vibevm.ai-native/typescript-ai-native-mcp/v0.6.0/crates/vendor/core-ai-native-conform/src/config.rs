@@ -9,7 +9,7 @@
 //! **The v2 surface (B-029 + B-034, design `gate-parity-config.md`).**
 //! The policy is symmetric per language: the root table carries only
 //! the genuinely cross-language budget (`max_file_lines`); every
-//! language owns a section of one uniform shape (`roots`,
+//! language owns a section of one uniform shape (`roots`, `skip_dirs`,
 //! `exclude_substrings`, `gated`, `[[<lang>.exempt]] {unit, reason}`,
 //! plus its language-specific extras). The retired flat root keys die
 //! loudly — declared as tombstone fields whose presence is a targeted
@@ -198,6 +198,10 @@ pub struct RustConfig {
     /// Source roots to scan. A `<dir>/*` entry scans each subdirectory
     /// of `<dir>` as one crate; any other entry is a literal crate dir.
     pub roots: Vec<String>,
+    /// Project-specific directory names the source walk never descends
+    /// into. These exact names supplement the engine's ecosystem-wide
+    /// built-ins; consumer layout names belong here, not in the engine.
+    pub skip_dirs: Vec<String>,
     /// A source file whose repo-relative path contains any of these
     /// substrings is skipped (generated code, vendored trees).
     pub exclude_substrings: Vec<String>,
@@ -236,6 +240,7 @@ impl Default for RustConfig {
     fn default() -> Self {
         RustConfig {
             roots: vec!["crates/*".into()],
+            skip_dirs: Vec::new(),
             exclude_substrings: vec!["/generated/".into()],
             gated: Vec::new(),
             exempt: Vec::new(),
@@ -266,6 +271,9 @@ impl Default for RustConfig {
 pub struct GoConfig {
     /// Go source roots (flat walk; `<dir>/*` scans subdirs).
     pub roots: Vec<String>,
+    /// Project-specific directory names the source walk never descends
+    /// into, in addition to Go's ecosystem-wide built-ins.
+    pub skip_dirs: Vec<String>,
     /// A `.go` file whose repo-relative path contains any of these
     /// substrings is skipped (fixtures, goldens, vendored trees).
     pub exclude_substrings: Vec<String>,
@@ -304,6 +312,7 @@ impl Default for GoConfig {
     fn default() -> Self {
         GoConfig {
             roots: vec![".".into()],
+            skip_dirs: Vec::new(),
             exclude_substrings: vec!["/testdata/".into(), "/vendor/".into(), "/fixtures/".into()],
             gated: Vec::new(),
             exempt: Vec::new(),
@@ -332,6 +341,9 @@ impl Default for GoConfig {
 pub struct TsConfig {
     /// TypeScript source roots (flat walk; `<dir>/*` scans subdirs).
     pub roots: Vec<String>,
+    /// Project-specific directory names the source walk never descends
+    /// into, in addition to TypeScript's ecosystem-wide built-ins.
+    pub skip_dirs: Vec<String>,
     /// A `.ts` file whose repo-relative path contains any of these
     /// substrings is skipped (fixtures, generated output).
     pub exclude_substrings: Vec<String>,
@@ -364,6 +376,7 @@ impl Default for TsConfig {
     fn default() -> Self {
         TsConfig {
             roots: vec!["src".into()],
+            skip_dirs: Vec::new(),
             exclude_substrings: vec!["/fixtures/".into()],
             gated: Vec::new(),
             exempt: Vec::new(),
