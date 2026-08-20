@@ -9596,48 +9596,57 @@
     },
     {
       "crate_name": "vibe-workspace",
-      "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
-      "item_kind": "fn",
-      "line": 491,
-      "symbol": "vibe_workspace::install::tests_hooks::already_placed_in_place_slot_runs_hook_without_moving",
-      "end_line": 549,
-      "fingerprint": "tok1:5b9e3e0a27db5218a57b646763eb76a5cca9bc2c298ac3e496968bdc1a52625d"
+      "file": "crates/vibe-workspace/src/install/model.rs",
+      "item_kind": "mod",
+      "line": 6,
+      "symbol": "vibe_workspace::install::model",
+      "end_line": 6,
+      "fingerprint": "tok1:6e124561b3204d9a310f916e181d129be313c2ae025cceab7a70b8e1c3dc9e87"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 245,
+      "line": 497,
+      "symbol": "vibe_workspace::install::tests_hooks::already_placed_in_place_slot_runs_hook_without_moving",
+      "end_line": 556,
+      "fingerprint": "tok1:039f6fbd78de8a01cffdc7a4392c33f787cfddf9fd3da985664bfc970868ad19"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
+      "item_kind": "fn",
+      "line": 249,
       "symbol": "vibe_workspace::install::tests_hooks::apply_resolution_places_an_in_place_package_in_an_unversioned_slot",
-      "end_line": 317,
+      "end_line": 321,
       "fingerprint": "tok1:eeb09497160592599ae5838a0619aca71705a748de83e3ad64dc2ff8340ac7f8"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 184,
+      "line": 187,
       "symbol": "vibe_workspace::install::tests_hooks::post_install_runs_for_materialised_slots_and_flags_failure",
-      "end_line": 241,
-      "fingerprint": "tok1:93d88ca9d4b8c634e413c4644b481fbadd3760359c67004ceeb155bf3b2531a0"
+      "end_line": 245,
+      "fingerprint": "tok1:e6c927a6b11a0b991b8ed76f34186afbf1afa4e7ffda6aeec49ce08cd0de3ec6"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 419,
+      "line": 424,
       "symbol": "vibe_workspace::install::tests_hooks::pre_install_failure_rolls_back_an_in_place_slot",
-      "end_line": 443,
-      "fingerprint": "tok1:18f6ecd4cbff4e584dc4da1b45bbc916402a1a744d342480d0f08c0e6ae6b8fa"
+      "end_line": 449,
+      "fingerprint": "tok1:cd47de49424875f51d1ed2cd788a56943bb5acc3062a7ea6d898826a20420192"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 100,
+      "line": 101,
       "symbol": "vibe_workspace::install::tests_hooks::pre_install_failure_rolls_back_the_slot",
-      "end_line": 123,
-      "fingerprint": "tok1:7c69eea576775636022c2cee2584fbf91a51d81940fba0166273c4d7cf097373"
+      "end_line": 125,
+      "fingerprint": "tok1:be1b608aa0480699b0fb26bbebb26d5b9ea38a2f53c08a4b4a5989d17a8185bc"
     },
     {
       "crate_name": "vibe-workspace",
@@ -9645,35 +9654,35 @@
       "item_kind": "fn",
       "line": 77,
       "symbol": "vibe_workspace::install::tests_hooks::pre_install_hook_runs_for_an_allowed_group",
-      "end_line": 98,
-      "fingerprint": "tok1:6025d6697ddaba6febe89606007b17e698138ac9b7f3a94bbce0120787792714"
+      "end_line": 99,
+      "fingerprint": "tok1:f04f8fdba3c801437baaa6bbf67bac3c8f84098a70c8845ab19445d940462449"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 391,
+      "line": 395,
       "symbol": "vibe_workspace::install::tests_hooks::pre_install_hook_runs_in_an_in_place_slot",
-      "end_line": 417,
-      "fingerprint": "tok1:a75e89db832c628a52f5ff9a6bb33fa79f644ea2c90214c0d65399e820f349fe"
+      "end_line": 422,
+      "fingerprint": "tok1:97da403aea34659eacaacf79ce6ce640ff0a79e2f11ba486281121bfaf4f4f20"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 319,
+      "line": 323,
       "symbol": "vibe_workspace::install::tests_hooks::prune_leaves_an_in_place_slot_untouched",
-      "end_line": 356,
+      "end_line": 360,
       "fingerprint": "tok1:84537d7fa41eaac426605de6fa9654db0fe3a3520c74eecd907ec613cc206199"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "item_kind": "fn",
-      "line": 125,
+      "line": 127,
       "symbol": "vibe_workspace::install::tests_hooks::untrusted_group_skips_the_hook_without_running_it",
-      "end_line": 150,
-      "fingerprint": "tok1:fb762cc2640116820255be6b6e666333b6764b621ed6eb0e294f992a7f9ced44"
+      "end_line": 153,
+      "fingerprint": "tok1:c6361ad301395cc64052d90c83a749fdd749e0dc7becb00376c897a977244761"
     },
     {
       "crate_name": "vibe-workspace",
@@ -18024,9 +18033,17 @@
       "pinned_r": 1
     },
     {
+      "file": "crates/vibe-workspace/src/install/model.rs",
+      "from_symbol": "vibe_workspace::install::model",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#materialise-diff",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::already_placed_in_place_slot_runs_hook_without_moving",
-      "line": 492,
+      "line": 498,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -18035,7 +18052,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::apply_resolution_places_an_in_place_package_in_an_unversioned_slot",
-      "line": 246,
+      "line": 250,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -18044,7 +18061,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::post_install_runs_for_materialised_slots_and_flags_failure",
-      "line": 185,
+      "line": 188,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases",
       "verb": "verifies",
@@ -18053,7 +18070,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::pre_install_failure_rolls_back_an_in_place_slot",
-      "line": 420,
+      "line": 425,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#failure",
       "verb": "verifies",
@@ -18062,7 +18079,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::pre_install_failure_rolls_back_the_slot",
-      "line": 101,
+      "line": 102,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#failure",
       "verb": "verifies",
@@ -18080,7 +18097,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::pre_install_hook_runs_in_an_in_place_slot",
-      "line": 392,
+      "line": 396,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases",
       "verb": "verifies",
@@ -18089,7 +18106,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::prune_leaves_an_in_place_slot_untouched",
-      "line": 320,
+      "line": 324,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -18098,7 +18115,7 @@
     {
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
       "from_symbol": "vibe_workspace::install::tests_hooks::untrusted_group_skips_the_hook_without_running_it",
-      "line": 126,
+      "line": 128,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#trust-gate",
       "verb": "verifies",
@@ -29993,7 +30010,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:6bca21525c6a46a6c6228e0656aa59e4c633e7697b36664ea42b00725a0bb90b",
+      "content_hash": "sha256:f2606f40f010968eb01e3e56e3116eb6ea31cefecb61998118120264db7d76ee",
       "doc_path": "common/PROP-044",
       "file": "spec/common/PROP-044-change-native-formats.md",
       "heading": "PROP-044: Change-native formats — surviving perpetual evolution",
@@ -55184,7 +55201,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:89c8db7ba5c132fb89a5c300fb88bc6c9b2b9bd03cf4a6b9cb5acf20ca09d329",
+      "content_hash": "sha256:216ffbac421d994a0957533772ad0ce038fe93390abfd35704ac33177b99225c",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "PROP-008: Qualified package naming — groups, short aliases, collision detection",
@@ -55247,7 +55264,7 @@
     },
     {
       "anchor": "motivation",
-      "content_hash": "sha256:e3e0409e123fa054e6960675e1a211f7a043610eb54146366ec7e95a757d0518",
+      "content_hash": "sha256:ddb1503b05dd498d360286f403bd3472ebe1f69f0b08370977c96755801a6af8",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "1. Motivation",
@@ -55256,10 +55273,10 @@
     },
     {
       "anchor": "flat-namespace",
-      "content_hash": "sha256:c4205c9b87036d35915d38f25b2f37813626c8e2340c556b11e6d4a28c810b90",
+      "content_hash": "sha256:c5f1e92fa1adcd8fd8476a03e062e7064d439ba5afdfaaf7f72fce8f6b8f29fe",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
-      "heading": "vibevm's package namespace is flat: a pkgref is `<kind>:<name>`, and `name` is \"globally unique within its kind\" (`VIBEVM-SPEC.md` §7.1). This does not scale — two unrelated authors will both want `flow:wal`. @status:impl/done",
+      "heading": "Before this PROP, vibevm's package namespace was flat: a pkgref was `<kind>:<name>`, `name` \"globally unique within its kind\". That did not scale — two unrelated authors will both want `flow:wal` — and this PROP is what ended it: §7.1 now carries the group-qualified tuple and the pkgref grammar `[kind:][group/]name[@version]`. @status:impl/done",
       "line": 21,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#flat-namespace"
     },
@@ -55328,7 +55345,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:e8f2b8738d8e6e73c4c5aefcb6c457c8109d99b5f451f3fa59944c48c0cb99da",
+      "content_hash": "sha256:e43d1d3f6d1896b76738ce04d82d97c2c5f5a872890722a00f5dc1e019dfc117",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2. Decisions",
@@ -55337,7 +55354,7 @@
     },
     {
       "anchor": "group",
-      "content_hash": "sha256:2581a8aa39479b5e730bb92055812b065b87ff40aac5ef67c4f2cc06e583ed79",
+      "content_hash": "sha256:484351ee566f96944aaa4bfbcacf00dc57d5f21b270c7a49f614a1146247338a",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2.1 The `group` field",
@@ -55391,10 +55408,10 @@
     },
     {
       "anchor": "GROUP-CANONICAL",
-      "content_hash": "sha256:561839169f2eb5a5906e8de90606cc81e903adc27449746ce5b160f3bdb36330",
+      "content_hash": "sha256:fb852df7bdf615f0579f505c3d7bb184d9fd4f4ec498ba366a87ab2a1fe90f4f",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
-      "heading": "`group` is mandatory as of this PROP. The three current canonical packages migrate to `group = \"org.vibevm\"` (§3) — the owner's reverse-FQDN, recorded here as the canonical group for all first-party vibevm packages (domain `vibevm.org`). @status:impl/done",
+      "heading": "`group` is mandatory as of this PROP. The three then-current canonical packages migrated to `group = \"org.vibevm\"` (§3) — the owner's reverse-FQDN, recorded at the time as the one canonical group. Superseded on the group's NAME by PROP-029 (2026-07-12): first-party packages now live under `org.vibevm.world` and `org.vibevm.ai-native` (and `org.vibevm.fractality`); the mandatory-group law itself is unchanged and live in every manifest. @status:impl/done",
       "line": 54,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#GROUP-CANONICAL"
     },
@@ -55454,7 +55471,7 @@
     },
     {
       "anchor": "kind",
-      "content_hash": "sha256:de58cf1f6105c07812b8dd519bc4c3fcf98044306b20e3174694a94a640f5a74",
+      "content_hash": "sha256:d2d2d4de1b1239ae42d927607bd3644f6bef467090fbecc1f9109f7518ef1324",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2.3 `kind` becomes pure metadata",
@@ -55517,10 +55534,10 @@
     },
     {
       "anchor": "TAXONOMY-UNCHANGED",
-      "content_hash": "sha256:57b0f8eebd249c25e5b8763416915d3ba4d259d49ab8d458bdae6363a425ef6a",
+      "content_hash": "sha256:47bf466607a2921e1bb156285ed1c633e418d10ceff0b792b3935596e3d45d66",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
-      "heading": "The four-kinds taxonomy (`VIBEVM-SPEC.md` §4.1) is unchanged in importance — it simply stops being part of identity and repository naming. @status:impl/done",
+      "heading": "The kind taxonomy (`VIBEVM-SPEC.md` §4.1 — four kinds when this PROP was written; six today, `mcp` and `lang` joined by PROP-025/027 and the 2026-08-06 ruling) is unchanged in importance — it simply stops being part of identity and repository naming, whatever its member count. @status:impl/done",
       "line": 77,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#TAXONOMY-UNCHANGED"
     },
@@ -55814,7 +55831,7 @@
     },
     {
       "anchor": "index-ext",
-      "content_hash": "sha256:62afc9abf44c3cf6c4ad344f576b4a2c8f8275ea389fb31f03f7149580254dd5",
+      "content_hash": "sha256:2eeec28fbca97fb514ce6650d59bdccaf1c09aab79386fb6a381cc105679d24c",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "2.8 Index extension",
@@ -55850,10 +55867,10 @@
     },
     {
       "anchor": "draft-edit-note",
-      "content_hash": "sha256:3d62b1d52447419ed2f83c200caed93123cf2927faefc894fd90670203c20e23",
+      "content_hash": "sha256:e3fc8d671906df4053fb5a078973acdcb5ee872ffb84e76ed292aa8f08c1bf5b",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
-      "heading": "PROP-005 is currently a draft; these are edits to a draft, not a shipped contract. @status:spec/done",
+      "heading": "PROP-005 was a draft when these edits were written; it has since shipped (implemented, folded into the workspace 2026-05-22), and the §2.8 edits below live in that implemented contract. @status:spec/done",
       "line": 163,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#draft-edit-note"
     },
@@ -56120,7 +56137,7 @@
     },
     {
       "anchor": "open",
-      "content_hash": "sha256:b426311f218133c14113189c5dcfa992633c784a19161e704f3d5769fe7fb519",
+      "content_hash": "sha256:c36e31bb1b77ce432d1be70320abe3a093f654aaddfa6e0d7db9a6b7430082d3",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
       "heading": "5. Open questions",
@@ -56129,10 +56146,10 @@
     },
     {
       "anchor": "OPEN-EXIT-CODE-7",
-      "content_hash": "sha256:451517c7018a26fac181dc19fe14e2108d92f2c611c310deaf8caf9b3b91a6c7",
+      "content_hash": "sha256:611bf496a462a84717011b778b5fd8c4327a5959cedca5d48e930593973aea1f",
       "doc_path": "modules/vibe-registry/PROP-008",
       "file": "spec/modules/vibe-registry/PROP-008-qualified-naming.md",
-      "heading": "Exit code `7` — finalise the assignment against `VIBEVM-SPEC.md` §9.4 and confirm no clash with a future code. @status:spec/work",
+      "heading": "Exit code `7` — the assignment is finalised: `VIBEVM-SPEC.md` §9.4 carries «7 — ambiguous package» citing this PROP's §2.7, `AMBIGUOUS_PACKAGE: u8 = 7` lives in `exit_code.rs`, and codes 0–7 are taken without collision. @status:impl/done",
       "line": 218,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#OPEN-EXIT-CODE-7"
     },
@@ -75123,49 +75140,49 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
-      "line": 101,
+      "line": 102,
       "message": "edge `vibe_workspace::install::tests_hooks::pre_install_failure_rolls_back_the_slot` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#failure` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
-      "line": 126,
+      "line": 128,
       "message": "edge `vibe_workspace::install::tests_hooks::untrusted_group_skips_the_hook_without_running_it` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#trust-gate` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
-      "line": 185,
+      "line": 188,
       "message": "edge `vibe_workspace::install::tests_hooks::post_install_runs_for_materialised_slots_and_flags_failure` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
-      "line": 246,
+      "line": 250,
       "message": "edge `vibe_workspace::install::tests_hooks::apply_resolution_places_an_in_place_package_in_an_unversioned_slot` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
-      "line": 320,
+      "line": 324,
       "message": "edge `vibe_workspace::install::tests_hooks::prune_leaves_an_in_place_slot_untouched` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
-      "line": 392,
+      "line": 396,
       "message": "edge `vibe_workspace::install::tests_hooks::pre_install_hook_runs_in_an_in_place_slot` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
-      "line": 420,
+      "line": 425,
       "message": "edge `vibe_workspace::install::tests_hooks::pre_install_failure_rolls_back_an_in_place_slot` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#failure` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-workspace/src/install/tests_hooks.rs",
-      "line": 492,
+      "line": 498,
       "message": "edge `vibe_workspace::install::tests_hooks::already_placed_in_place_slot_runs_hook_without_moving` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place` carries no kind/revision line yet"
     },
     {
