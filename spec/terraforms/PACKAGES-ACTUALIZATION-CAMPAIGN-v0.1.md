@@ -1,8 +1,8 @@
 # Packages-Actualization Campaign v0.1 — wave 2: the authored packages measure themselves {#root}
 
-<status stage="impl" state="work" comment="RATIFIED 2026-07-26 with all six §4.5 amendments adopted; Phase D closed 2026-08-03 at a green floor; PHASE E AUTHORIZED 2026-08-03 («даю добро») — first slice wave А (B-011) + research pair B-022/B-023, claudez workers, boss Fable; starts next session"/>
+<status stage="impl" state="work" comment="RATIFIED 2026-07-26 with all six §4.5 amendments adopted; Phase D closed 2026-08-03 at a green floor; PHASE E AUTHORIZED 2026-08-03 («даю добро»); AMENDED 2026-08-20 by owner ruling — PHASE T CANCELLED, PHASE G SPLIT (alpha doc layer rides the release, the doc package moves post-1.0), CAMPAIGN EXIT = RELEASE 1.0.0 per campaigns/packages-2026-09/TZ-RELEASE-1.0-v0.1.md (see LOG 2026-08-20)"/>
 
-**status: RATIFIED 2026-07-26 · PHASE D CLOSED 2026-08-03 (floor green, CONVERGENCE met: 17 owed drifts, every one on an owner-ruled build) · PHASE E AUTHORIZED 2026-08-03 — the owner's «даю добро»: first slice = wave А (B-011, самый высокий приоритет) + the research pair B-022/B-023 in a parallel lane; executor = claudez workers per SUBAGENT-MODE.toml, boss = Fable; T/F/G still wait for their own word · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`, closed out 2026-07-26)**
+**status: RATIFIED 2026-07-26 · PHASE D CLOSED 2026-08-03 (floor green, CONVERGENCE met: 17 owed drifts, every one on an owner-ruled build) · PHASE E AUTHORIZED 2026-08-03 — the owner's «даю добро»: first slice = wave А (B-011, самый высокий приоритет) + the research pair B-022/B-023 in a parallel lane; executor = claudez workers per SUBAGENT-MODE.toml, boss = Fable; T/F/G still wait for their own word · all six [§4.5](#amendments) amendments adopted · wave 2 of the Progress-Control programme, the sibling of [SPEC-ACTUALIZATION-CAMPAIGN-v0.1](SPEC-ACTUALIZATION-CAMPAIGN-v0.1.md) (wave 1, host `spec/`, closed out 2026-07-26) · AMENDED 2026-08-20: Phase T cancelled by owner ruling, Phase G split, campaign exit = RELEASE 1.0.0 per [TZ-RELEASE-1.0](../../campaigns/packages-2026-09/TZ-RELEASE-1.0-v0.1.md)**
 
 Contract for everything used here: [PROP-043](../modules/vibe-progress/PROP-043-progress-markup.md).
 Owner's manual: [OWNER-GUIDE](../modules/vibe-progress/OWNER-GUIDE.md).
@@ -507,6 +507,19 @@ explicitly or the fix ships to one consumer and not the others.
 
 ### Phase T — Test coverage by swarm (owner amendment, 2026-07-26) {#phase-t}
 
+**CANCELLED 2026-08-20 by owner ruling (chat, near-verbatim):** «ФАЗУ T
+ЛУЧШЕ ОТМЕНИТЬ (она очень сложная и фиксирует форму созданного, а мы как
+оказалось еще не нашли много вещей финальной формы — фазу T убрать из
+кампании и сделать когда-нибудь потом).» The phase leaves THIS campaign;
+the work is deferred, not deleted — the ledger line is
+`campaigns/packages-2026-09/deferrals.md#release-1-0`, the root anchor is
+`BACKLOG.md#post-1-0`, and the specs below stay authored material for the
+future campaign. Phase F consequently answers the mandate in
+prose-judgement form (its report states so itself) — the «Placed before F
+on purpose» reasoning below is kept as written, as a dated record of the
+original design. The section itself is kept unedited below for the same
+reason.
+
 *Entry:* E closed. *Executor:* per the T-spec's own header — GLM writers,
 one packet per writer; **the transport is concrete since 2026-08-03**: the
 owner-owned switch
@@ -545,6 +558,14 @@ follow. The owner reads it and rules. **A green host floor is not an answer
 to this question and may not be cited as one.**
 
 ### Phase G — Documentation (owner amendment, 2026-07-26) {#phase-g}
+
+**SPLIT 2026-08-20 by owner ruling («вначале А»):** the release 1.0.0
+ships an interim alpha doc layer (README, ALPHA-NOTES, core command
+reference, a machine-readable `docs/SITE-MANIFEST.toml` so a website agent
+can harvest the tree — TZ-RELEASE-1.0 slice С8); THIS phase — the
+`org.vibevm.doc/doc` package, the `docs-legacy/` archive, the generated
+TOCs — moves to the post-1.0 campaign together with its prerequisites
+(the judgment-marking pass). `PHASE-G-SPEC.md` stays its spec, unedited.
 
 *Entry:* F closed, **and** the judgment-marking pass run — it supplies the
 `audience` axis and the `actionstage="doc"` markers the guides' tables of
@@ -5239,6 +5260,28 @@ aspirational — and every one is still live for the phases that remain.
   explicit wind-down). **Next:** the F-185 re-judge + backlog rows CLOSE batch
   2; then батч 3 (B-036 + B-037 + B-038, map fork №1 with B-038) → батч 4
   (B-025 + B-026) → M-PARITY → волны В/Г. @status:spec/done
+
+- **2026-08-20 · ПОПРАВКА РАМКИ — выход кампании = РЕЛИЗ 1.0.0; фаза T
+  отменена; фаза G расщеплена.** The owner's rulings of 2026-08-20 (quoted
+  verbatim in `campaigns/packages-2026-09/TZ-RELEASE-1.0-v0.1.md` §0)
+  commission the first outward release, versioned **1.0.0 across the
+  product and every canonical package**, executed as one autonomous
+  goal-driven marathon session. The TZ is this campaign's closing arc:
+  the remaining Phase-E slices (the store cut of 2026-08-19, the wire wave
+  B-091/B-073/B-078/B-072/B-079 while `public = false` keeps breaking
+  free, the config-truth wave B-083…B-086/B-069/B-071, the version wave,
+  the publication wave into the emptied `vibespecs` org) → **Phase F**
+  (kept; prose-judgement form, recorded in the report itself) → the alpha
+  doc layer (G's variant A) → the release gate, which ends at «ГОТОВО К
+  РУЧНОЙ ИНСПЕКЦИИ ВЛАДЕЛЬЦА» — the tag `v1.0.0` is the owner's act after
+  his manual inspection. **Phase T leaves the campaign** by the ruling
+  quoted at `#phase-t`; its specs stay authored material and its deferral
+  lives in `deferrals.md#release-1-0` + `BACKLOG.md#post-1-0` (nothing may
+  be lost — owner's words, with the exclamation marks). Between the
+  2026-08-04 entry above and this one the campaign ran the change-native
+  formats build (its own collapsed TZ carries that LOG), the identity
+  lane S1/S3/S6, and the withdrawal slice — recorded in their own
+  documents per the plan-mortality rule rather than duplicated here. @status:impl/done
 
 ### 7.1 Commit map — hashes bound to phases {#commit-map}
 

@@ -72359,7 +72359,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:fa5d8d365e8d1bb7547b9643cc888a639b16e00bc631fe2c694c7cda4f86d55b",
+      "content_hash": "sha256:415d33a8d13a61346ca7875ee9904f082c74443011a0f42180b5e20efa62e8f6",
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "Packages-Actualization Campaign v0.1 — wave 2: the authored packages measure themselves",
@@ -72458,7 +72458,7 @@
     },
     {
       "anchor": "phases",
-      "content_hash": "sha256:fe2f3ba6cbc3ed7ab430cb4264b4e0666771a832ee1534f907ffc70f58c5cd3d",
+      "content_hash": "sha256:bf30faffe9acd02d40aebcc87643550ce60a0ba413fdb67c9d0bc81dbfe37002",
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "5. Phases",
@@ -72521,7 +72521,7 @@
     },
     {
       "anchor": "phase-t",
-      "content_hash": "sha256:c8ffd748474e14fb71c35caef0c9619f95c15faba47a03338ed8325108653f66",
+      "content_hash": "sha256:b2c5dbe2f4c0d205753a573b16647ca1e2d5cd855634773287c4efba84a05345",
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "Phase T — Test coverage by swarm (owner amendment, 2026-07-26)",
@@ -72534,16 +72534,16 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "Phase F — The credibility report",
-      "line": 537,
+      "line": 550,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#phase-f"
     },
     {
       "anchor": "phase-g",
-      "content_hash": "sha256:54426b2ed62d6e8fb2f88166783f1c81ffb3429d47468baed25def7ef2f9a14f",
+      "content_hash": "sha256:56f62d6cd17d2ce6a98d6bb6da4139393d3feacf712358ef05504cb539970c12",
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "Phase G — Documentation (owner amendment, 2026-07-26)",
-      "line": 547,
+      "line": 560,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#phase-g"
     },
     {
@@ -72552,7 +72552,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "6. Predictions (falsifiable, campaign-wide)",
-      "line": 570,
+      "line": 591,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#predictions"
     },
     {
@@ -72561,7 +72561,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "6.5 Non-goals (named, with disposition)",
-      "line": 601,
+      "line": 622,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#non-goals"
     },
     {
@@ -72570,16 +72570,16 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "6.6 Risks and fallbacks",
-      "line": 660,
+      "line": 681,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#risks"
     },
     {
       "anchor": "log",
-      "content_hash": "sha256:4a663e012a4298dddab7129d8b65a18250e2e14c1796df8cd60c12188a3d9f1a",
+      "content_hash": "sha256:fb1a09f681340aa7220014258e783da54ecd8acd9f6918825573384734f7290c",
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "7. LOG",
-      "line": 728,
+      "line": 749,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#log"
     },
     {
@@ -72588,7 +72588,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "7.1 Commit map — hashes bound to phases",
-      "line": 5243,
+      "line": 5286,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#commit-map"
     },
     {
@@ -72597,7 +72597,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "Phase A and Phase B — EXECUTED 2026-07-26/27; 124 commits",
-      "line": 5269,
+      "line": 5312,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#cm-ab"
     },
     {
@@ -72606,7 +72606,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "Phase C — EXECUTED 2026-07-28/29; 146 commits",
-      "line": 5290,
+      "line": 5333,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#cm-c"
     },
     {
@@ -72615,7 +72615,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "Phase D — EXECUTED 2026-07-29 → 2026-08-03; 93 zone commits",
-      "line": 5311,
+      "line": 5354,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#cm-d"
     },
     {
@@ -72624,7 +72624,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "Phases D-close, E, T, F, G — PLANNED; subjects spelled in advance",
-      "line": 5345,
+      "line": 5388,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#cm-planned"
     },
     {
@@ -72633,7 +72633,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "8. Deferrals",
-      "line": 5381,
+      "line": 5424,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#deferrals"
     },
     {
@@ -72642,7 +72642,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "9. REPORT",
-      "line": 5390,
+      "line": 5433,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#report"
     },
     {
@@ -72651,7 +72651,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "10. Quick-start for the executing session",
-      "line": 5394,
+      "line": 5437,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#quick-start"
     },
     {
@@ -72660,7 +72660,7 @@
       "doc_path": "terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1",
       "file": "spec/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1.md",
       "heading": "11. Whole-campaign acceptance",
-      "line": 5414,
+      "line": 5457,
       "uri": "spec://org.vibevm.core/vibevm/terraforms/PACKAGES-ACTUALIZATION-CAMPAIGN-v0.1#acceptance"
     },
     {
