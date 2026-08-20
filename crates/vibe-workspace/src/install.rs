@@ -19,11 +19,10 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#
 
 use std::collections::HashSet;
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use vibe_core::manifest::{Manifest, Materialization};
 use vibe_core::user_config::SlotIntegrity;
-use vibe_core::{Group, PackageKind};
 
 use crate::hooks::{
     HookContext, HookError, HookPhase, HookPolicy, HookReport, HookRunner, InterpreterProbe,

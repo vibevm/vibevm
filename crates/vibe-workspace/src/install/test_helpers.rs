@@ -6,6 +6,7 @@
 
 use super::*;
 use tempfile::TempDir;
+use vibe_core::{Group, PackageKind};
 
 #[cfg(test)]
 pub(super) fn write(dir: &Path, rel: &str, body: &str) {

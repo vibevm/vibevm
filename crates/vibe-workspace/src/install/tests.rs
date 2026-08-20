@@ -7,6 +7,7 @@
 
 use super::test_helpers::*;
 use super::*;
+use std::path::PathBuf;
 use tempfile::TempDir;
 
 #[test]

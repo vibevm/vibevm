@@ -6,6 +6,7 @@ use super::test_helpers::*;
 use super::*;
 use specmark::verifies;
 use tempfile::TempDir;
+use vibe_core::{Group, PackageKind};
 
 /// A `ResolvedDep` whose manifest declares a `pre-install` hook, with the
 /// `.sh` script written into the content tree so it materialises into the
