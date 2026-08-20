@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-20T18:02:45Z",
+  "updated_at": "2026-08-20T19:09:25Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -153980,7 +153980,7 @@
       }
     },
     "spec/boot/90-user.md": {
-      "content_hash": "aae6bb1c98c673a31cd679c57d85abafff1dc1856c4dbe7af669a7f833dd8588",
+      "content_hash": "dbeda43e03c3510efa3ce97ebd38155e9785dae32427a7e57da7d8226ef63131",
       "rollup": {
         "computed": [
           "impl",
@@ -153990,15 +153990,15 @@
           "impl",
           "done"
         ],
-        "marker_count": 40,
-        "fact_count": 40,
+        "marker_count": 41,
+        "fact_count": 41,
         "unmarked_facts": 0
       },
-      "marker_count": 40,
+      "marker_count": 41,
       "unit_count": 8,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "0fdb7535965c45fb1002e89d13750f6013a37cf5704beeafab98fef54bf9f260",
+        "processed_hash": "dbeda43e03c3510efa3ce97ebd38155e9785dae32427a7e57da7d8226ef63131",
         "verdicts": {
           "user-overrides-intro": {
             "v": "confirmed",
@@ -154253,10 +154253,16 @@
               "конкретная потеря названа и она реальна: обычное чтение возвращает развёрнутую строку, где `%USERPROFILE%\\go\\bin` уже стал буквальным путём; запись такой строки обратно уничтожила бы ссылку на переменную",
               "приём проверен на обеих правках этой сессии: оба раза значение читалось неразвёрнутым, правилось строкой и записывалось с сохранением вида — после каждой правки тип перечитан и остался `ExpandString`, а `%USERPROFILE%\\go\\bin` уцелел"
             ]
+          },
+          "decode-identifiers-inline": {
+            "v": "confirmed",
+            "ev": [
+              "the owner's verbatim instruction this session (2026-08-20): «когда ты упоминаешь штуки типа B-007 сразу рассказывай что это такое»; recorded as a standing communication rule in the user-owned boot snippet the very hour it was given"
+            ]
           }
         },
-        "verified_at": "2026-08-09T19:28:09Z",
-        "verify_batch": "c0-boot + EFFORT-DIRECTIVE + MACHINE-FACTS-VVM-STORE-MOVE-2026-08-20"
+        "verified_at": "2026-08-20T19:09:25Z",
+        "verify_batch": "c0-boot + EFFORT-DIRECTIVE + MACHINE-FACTS-VVM-STORE-MOVE-2026-08-20 + P3-DECODE-RULE"
       }
     },
     "spec/common/PROP-000.md": {
