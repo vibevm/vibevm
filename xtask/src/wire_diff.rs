@@ -200,9 +200,19 @@ fn porcelain_line(line: &str) -> Option<(&str, &str)> {
 pub(crate) fn run_wire_diff() -> Result<()> {
     let root = crate::repo_root()?;
 
-    // (1) Every registered corpus is its journal's projection — the
+    // (1) Every PROJECTED corpus is its journal's projection — the
     // rebuild projector, reused. It refuses loudly on drift, under
     // every regime: that question has no epoch defence.
+    //
+    // Two corpus genres live under `formats/corpora/` since the B-079
+    // envelope mints, told apart by what they carry. A corpus with a
+    // `state/journal/` subtree is a PROJECTION (the catalog): its
+    // integrity IS "reproject and byte-compare", which is this step.
+    // A corpus without one is AUTHORED GOLDEN DOCUMENTS (the CLI/HTTP
+    // envelopes): there is no journal to fold and nothing to rebuild —
+    // its integrity lives in its own wire-parity oracle (writer emits
+    // the corpus bytes, generated reader round-trips them) and in the
+    // shift probe below, which watches every corpus alike.
     let corpora = corpus_dirs(&root)?;
     if corpora.is_empty() {
         bail!(
@@ -214,8 +224,13 @@ pub(crate) fn run_wire_diff() -> Result<()> {
              home, then re-run `cargo xtask wire-diff`."
         );
     }
+    let mut projected = 0usize;
     for dir in &corpora {
-        rebuild::run_rebuild(true, &root.join(dir))?;
+        let corpus_root = root.join(dir);
+        if corpus_root.join("state").join("journal").is_dir() {
+            rebuild::run_rebuild(true, &corpus_root)?;
+            projected += 1;
+        }
     }
 
     // (2) The etalon vs the commit, (3) the regime and the note.
@@ -226,9 +241,10 @@ pub(crate) fn run_wire_diff() -> Result<()> {
     match verdict(&epochs, !shifted.is_empty(), !notes.is_empty()) {
         Verdict::Quiet => {
             println!(
-                "wire-diff: {} corpus home(s) proven against their journals; \
-                 no corpus bytes shifted vs the commit — nothing to declare.",
-                corpora.len()
+                "wire-diff: {projected} projected corpus home(s) proven against \
+                 their journals, {} authored golden home(s) watched by the shift \
+                 probe; no corpus bytes shifted vs the commit — nothing to declare.",
+                corpora.len() - projected
             );
             Ok(())
         }
