@@ -203,6 +203,7 @@ impl MultiRegistryResolver {
             is_git_source: false,
             is_path_source: false,
             via_redirect: Some(stub_url),
+            from_store: false,
             redirect_target_auth: redirect.redirect.auth,
             redirect_target_token_env: redirect.redirect.token_env.clone(),
         })

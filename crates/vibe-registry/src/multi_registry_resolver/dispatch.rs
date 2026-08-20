@@ -43,6 +43,13 @@ impl MultiRegistryResolver {
         store_root: &Path,
         expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
+        // Store-backed resolution (PROP-010 §2.6): the entry IS the
+        // content source — serve its bytes off disk, with no source
+        // walk and no network; a pin, when present, is verified with
+        // the same entry gate the fetch path applies.
+        if resolution.from_store {
+            return self.fetch_from_store(resolution, expected_hash);
+        }
         if resolution.overridden {
             return self.fetch_override(resolution, store_root);
         }

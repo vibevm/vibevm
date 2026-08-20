@@ -1703,46 +1703,46 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "item_kind": "fn",
-      "line": 51,
+      "line": 57,
       "symbol": "vibe_cli::commands::install::flag_tests::empty_manifest",
-      "end_line": 65,
+      "end_line": 71,
       "fingerprint": "tok1:a8b6d1799434ea5f6cb6a693e2a80a917e7594ba7a935a04edf17b867eb69b6e"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "item_kind": "fn",
-      "line": 100,
+      "line": 107,
       "symbol": "vibe_cli::commands::install::flag_tests::offline_without_a_local_registry_bails_before_the_network",
-      "end_line": 131,
-      "fingerprint": "tok1:eafc128de5957b63b65a0beb916108979a81a9e5766a406a50cfae78ef32d455"
+      "end_line": 139,
+      "fingerprint": "tok1:21cac7624ebfda8cf4a909893fb016d801a7059ccf971dbb930f840708fb69ef"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "item_kind": "fn",
-      "line": 166,
+      "line": 175,
       "symbol": "vibe_cli::commands::install::flag_tests::prefer_local_conflicts_with_no_prefer_local",
-      "end_line": 192,
-      "fingerprint": "tok1:384d298947546527d4c0198ff1cd0295d95e2b255fc1d9a13609d53521158f57"
+      "end_line": 202,
+      "fingerprint": "tok1:7e40300e91eb3e62a7d0784e241121de410f5f81b973e23211914c303034241c"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "item_kind": "fn",
-      "line": 194,
+      "line": 204,
       "symbol": "vibe_cli::commands::install::flag_tests::project_local_packages_activate_resolver_without_vibe_embedded",
-      "end_line": 252,
-      "fingerprint": "tok1:8108302495a8ff70d87dcc08cb01440ad9db272185988a3e525bafdf3e7c0ae2"
+      "end_line": 263,
+      "fingerprint": "tok1:d25b81dac15ef9e1e6c6f2b08a4cd507114b3471755c2ea62b981f50e55c201b"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "item_kind": "fn",
-      "line": 67,
+      "line": 73,
       "symbol": "vibe_cli::commands::install::flag_tests::short_circuit_conflicts_with_embedded_last",
-      "end_line": 98,
-      "fingerprint": "tok1:7cb24e931bcc73737430cca15632ba4822e224f824e08fe23f1085fa2f8778bf"
+      "end_line": 105,
+      "fingerprint": "tok1:d6960c583a99df88a3b3945f0dffc1a2525c722d1ea8798292964002c2e1daa4"
     },
     {
       "crate_name": "vibe-cli",
@@ -6628,8 +6628,8 @@
       "item_kind": "enum",
       "line": 17,
       "symbol": "vibe_registry::error::RegistryError",
-      "end_line": 197,
-      "fingerprint": "tok1:89d7050d3d9d3dff7bdcc78d738f09abfe9eba89a32da9df8e661a83282db863"
+      "end_line": 216,
+      "fingerprint": "tok1:0dc54dd41b5e6c1b141986792245443dbe7ad395dcc31eab6f7291e5803a8eb5"
     },
     {
       "crate_name": "vibe-registry",
@@ -6754,8 +6754,8 @@
       "item_kind": "fn",
       "line": 181,
       "symbol": "vibe_registry::git_package_registry::fetch::GitPerPackageRegistry::fetch_with_expected_hash",
-      "end_line": 463,
-      "fingerprint": "tok1:9995b1ea4fcc9e249f7c7c4c2d65a6273f1298b51bf8bbf70a4fd428812f96d6"
+      "end_line": 457,
+      "fingerprint": "tok1:1b5efc9606243da21d214d8749300c9cb6df9ac7adff790931e569d4b9814712"
     },
     {
       "crate_name": "vibe-registry",
@@ -6966,6 +6966,33 @@
     },
     {
       "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/multi_registry_resolver/offline.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "vibe_registry::multi_registry_resolver::offline",
+      "end_line": 20,
+      "fingerprint": "tok1:073a54042a714ac0c09a1c976e7043858bc3df89bf453a33c48a6c17fbd2a964"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/multi_registry_resolver/offline_tests.rs",
+      "item_kind": "mod",
+      "line": 12,
+      "symbol": "vibe_registry::multi_registry_resolver::offline_tests",
+      "end_line": 12,
+      "fingerprint": "tok1:073a54042a714ac0c09a1c976e7043858bc3df89bf453a33c48a6c17fbd2a964"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/multi_registry_resolver/override_resolve.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_registry::multi_registry_resolver::override_resolve",
+      "end_line": 8,
+      "fingerprint": "tok1:073a54042a714ac0c09a1c976e7043858bc3df89bf453a33c48a6c17fbd2a964"
+    },
+    {
+      "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/multi_registry_resolver/redirect_follow.rs",
       "item_kind": "mod",
       "line": 5,
@@ -6980,6 +7007,15 @@
       "line": 6,
       "symbol": "vibe_registry::multi_registry_resolver::refresh",
       "end_line": 6,
+      "fingerprint": "tok1:073a54042a714ac0c09a1c976e7043858bc3df89bf453a33c48a6c17fbd2a964"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/multi_registry_resolver/resolution.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_registry::multi_registry_resolver::resolution",
+      "end_line": 9,
       "fingerprint": "tok1:073a54042a714ac0c09a1c976e7043858bc3df89bf453a33c48a6c17fbd2a964"
     },
     {
@@ -7042,8 +7078,8 @@
       "item_kind": "fn",
       "line": 45,
       "symbol": "vibe_registry::multi_registry_resolver::walk::MultiRegistryResolver::list_versions",
-      "end_line": 110,
-      "fingerprint": "tok1:6785db2ccabe982c0f805ae01129a507d83cb45023d2eb9058a06c3adc0dbbaf"
+      "end_line": 125,
+      "fingerprint": "tok1:f9bde9134b235a80431681f29cacd35b13ff220a743415a889f2ac7ace3541be"
     },
     {
       "crate_name": "vibe-registry",
@@ -10484,7 +10520,7 @@
     {
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "from_symbol": "vibe_cli::commands::install::flag_tests::empty_manifest",
-      "line": 54,
+      "line": 60,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -10493,7 +10529,7 @@
     {
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "from_symbol": "vibe_cli::commands::install::flag_tests::offline_without_a_local_registry_bails_before_the_network",
-      "line": 101,
+      "line": 108,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#knob",
       "verb": "verifies"
@@ -10501,7 +10537,7 @@
     {
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "from_symbol": "vibe_cli::commands::install::flag_tests::prefer_local_conflicts_with_no_prefer_local",
-      "line": 169,
+      "line": 178,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local",
       "verb": "verifies",
@@ -10510,7 +10546,7 @@
     {
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "from_symbol": "vibe_cli::commands::install::flag_tests::project_local_packages_activate_resolver_without_vibe_embedded",
-      "line": 201,
+      "line": 211,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local",
       "verb": "verifies",
@@ -10519,7 +10555,7 @@
     {
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
       "from_symbol": "vibe_cli::commands::install::flag_tests::short_circuit_conflicts_with_embedded_last",
-      "line": 68,
+      "line": 74,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#knob",
       "verb": "verifies"
@@ -15322,6 +15358,30 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-registry/src/multi_registry_resolver/offline.rs",
+      "from_symbol": "vibe_registry::multi_registry_resolver::offline",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/multi_registry_resolver/offline_tests.rs",
+      "from_symbol": "vibe_registry::multi_registry_resolver::offline_tests",
+      "line": 12,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/multi_registry_resolver/override_resolve.rs",
+      "from_symbol": "vibe_registry::multi_registry_resolver::override_resolve",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-registry/src/multi_registry_resolver/redirect_follow.rs",
       "from_symbol": "vibe_registry::multi_registry_resolver::redirect_follow",
       "line": 5,
@@ -15333,6 +15393,14 @@
       "file": "crates/vibe-registry/src/multi_registry_resolver/refresh.rs",
       "from_symbol": "vibe_registry::multi_registry_resolver::refresh",
       "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/multi_registry_resolver/resolution.rs",
+      "from_symbol": "vibe_registry::multi_registry_resolver::resolution",
+      "line": 9,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model",
       "verb": "implements"
@@ -55483,7 +55551,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:3d1fe603283c9083c22034a7cccd17d55bc385e559f1048f4a404e47e97b07e1",
+      "content_hash": "sha256:fd23d51b4019f38c7e09385173317c97143b56cc2761c060061a4e86c5262e86",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "PROP-010: The local package cache — a shared offline store",
@@ -55636,7 +55704,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:7b15c8d7171faecc7999531397d0aeddea41cea1e274d4c937a0e50c9e6c8614",
+      "content_hash": "sha256:b1f3c2a987581e505daf1dc620ea366b293adc74a824b7f273c7251294a44bb4",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "2. Decisions",
@@ -55906,7 +55974,7 @@
     },
     {
       "anchor": "offline",
-      "content_hash": "sha256:1b45c1da96652619cff8825c9c20129cd6361dcb53379bddab5e66578117132b",
+      "content_hash": "sha256:4a7922efa7e442fc04c907ceedf6c65f2aa95bd0be5e9f55d3cbe5f53cd1a7d0",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "2.5 `--offline` — the network-forbidden policy",
@@ -55933,28 +56001,28 @@
     },
     {
       "anchor": "OFFLINE-LOCAL-ONLY",
-      "content_hash": "sha256:d02ade4ce483bf0c48fcafc090af1bb16ccc9a525647c3b165a7cd2b03dd6e05",
+      "content_hash": "sha256:384850864d8698920b84b1f4f9be0db2e5da50a799e6a7cde0fe1b12231374f8",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "Under `--offline`, resolution and fetch must be satisfiable entirely from local sources — the cache (§2.7), `[[mirror]]` entries with a `file://` URL, and the project's own `vibe.lock` + `vibedeps/`. @status:impl/work",
+      "heading": "Under `--offline`, resolution and fetch must be satisfiable entirely from local sources — the cache (§2.7), `[[mirror]]` entries with a `file://` URL, and the project's own `vibe.lock` + `vibedeps/`. @status:impl/done",
       "line": 87,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-LOCAL-ONLY"
     },
     {
       "anchor": "OFFLINE-HARD-ERROR",
-      "content_hash": "sha256:90e09f7f1498a953ec52d46db828a456d03d0910d188852356c1bd7ceb5dd932",
+      "content_hash": "sha256:a62d1530f7b5415fbde06de82961b94ca8f16243abfa21dd1313d89e5d453370",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "Anything not available locally is a **hard error with an actionable message**: it names the missing package and version and tells the operator how to recover (run once online, `vibe cache add`, or `vibe registry vendor`). @status:impl/work",
+      "heading": "Anything not available locally is a **hard error with an actionable message**: it names the missing package and version and tells the operator how to recover (run once online, `vibe cache add`, or `vibe registry vendor`). @status:impl/done",
       "line": 88,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-HARD-ERROR"
     },
     {
       "anchor": "OFFLINE-NO-DEGRADE",
-      "content_hash": "sha256:589d9065fad1133ed2b406d96af603294a45fdd6e7e9282381b38333306b8c51",
+      "content_hash": "sha256:862217433f143b037599f0e7b58100b3bbf351a16f2e2a1d0866bff3b122eac7",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "`--offline` never silently degrades to a partial result. @status:impl/work",
+      "heading": "`--offline` never silently degrades to a partial result. @status:impl/done",
       "line": 89,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#OFFLINE-NO-DEGRADE"
     },
@@ -55969,7 +56037,7 @@
     },
     {
       "anchor": "resolution",
-      "content_hash": "sha256:f1e33c03d5c53d24d1f853990541c193a3d891abefabfda383243f94e5df9a7d",
+      "content_hash": "sha256:7e083a36ba600c1e162da9fe864ac7110e41e4bffe2a293882d0efbbf078d57a",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "2.6 Offline resolution",
@@ -55978,10 +56046,10 @@
     },
     {
       "anchor": "RESOLVER-OFFLINE-MODE",
-      "content_hash": "sha256:a6761a7644f6d4634a1d9c122abcb1669f9f2f4ab30b4052a49fd4b95ba99930",
+      "content_hash": "sha256:b3eeb27a5d3da4e02d5fff47af0e05c20243550d56c86375828c54f5ac07efa6",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Decision.** The resolver gains an offline mode — `MultiRegistryResolver::with_offline(true)`, a builder method beside the existing `with_strict_auth`. Offline resolution reads version lists and manifests from the cache, addressed by package identity (§2.3), and never runs `git fetch` / `git ls-remote` / archive fetch. @status:spec/done",
+      "heading": "**Decision.** The resolver gains an offline mode — `MultiRegistryResolver::with_offline(true)`, a builder method beside the existing `with_strict_auth`. Offline resolution reads version lists and manifests from the cache, addressed by package identity (§2.3), and never runs `git fetch` / `git ls-remote` / archive fetch. @status:impl/done",
       "line": 95,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#RESOLVER-OFFLINE-MODE"
     },
@@ -56014,10 +56082,10 @@
     },
     {
       "anchor": "A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY",
-      "content_hash": "sha256:dc99dea894d4f61a39bef85c91c2496af0f0b26b2eb34cecb9f0384a7ed92267",
+      "content_hash": "sha256:e11457c2f289fb55ed06e9fcb1c9c7e1cd71de769e28d6265d63af75b165df46",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Decision (owner, 2026-08-19).** A package version present in the cache is **usable, and materialises, even when it exists in no registry at all** — deleted upstream, the whole organisation gone, every mirror down. This is not the `--offline` policy: `--offline` forbids the network, while this governs a run where the network is allowed, was consulted, and answered \"no such package\". @status:spec/work",
+      "heading": "**Decision (owner, 2026-08-19).** A package version present in the cache is **usable, and materialises, even when it exists in no registry at all** — deleted upstream, the whole organisation gone, every mirror down. This is not the `--offline` policy: `--offline` forbids the network, while this governs a run where the network is allowed, was consulted, and answered \"no such package\". *(Built 2026-08-20: the fallback fires strictly on the absence forms and rides the LOCKFILE pin — provenance comes from the existing lock entry, so a version in the store but in no lock and no registry is not rescued; minting a store-provenance wire form for that case is an owner act, held open.)* @status:impl/done",
       "line": 101,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY"
     },
@@ -56122,7 +56190,7 @@
     },
     {
       "anchor": "layout",
-      "content_hash": "sha256:76f21dda32d217e70837926557547536b196636b13e3c0da128d56bdef90d6c5",
+      "content_hash": "sha256:45c4fea58642315fed3aa815b11f9a59a8da7afb9fec0d76a926315eb43912c4",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "2.7 Cache layout and population",
@@ -56176,10 +56244,10 @@
     },
     {
       "anchor": "CLONES-KEEP-THEIR-OWN-JOB",
-      "content_hash": "sha256:1ac061fe33766810991faead9d5ec749525fff78cd3c15a1f779a038bcf2422f",
+      "content_hash": "sha256:3335610166d07fd7473903839a8547560fe8128c8b142e47adaf24260163e1d5",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "The registry clone cache does not go away and is not in competition: it exists so one registry is not re-cloned for every project on the machine, which is a separate and still-valid purpose. What changes is that it stops being the only local copy of package content, and therefore stops being load-bearing for availability. @status:impl/work",
+      "heading": "The registry clone cache does not go away and is not in competition: it exists so one registry is not re-cloned for every project on the machine, which is a separate and still-valid purpose. What changes is that it stops being the only local copy of package content, and therefore stops being load-bearing for availability. @status:impl/done",
       "line": 136,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CLONES-KEEP-THEIR-OWN-JOB"
     },
@@ -56698,7 +56766,7 @@
     },
     {
       "anchor": "phases",
-      "content_hash": "sha256:3db3882462052bc74b687c869b5e86577ca3761145db4a71c81df96d8ea4f0d1",
+      "content_hash": "sha256:c20e9cb7906c3efd2ddf6f921b518c19d1c875edf9014cb6860510cdabf7e794",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "7. Phase plan",
@@ -56734,10 +56802,10 @@
     },
     {
       "anchor": "PHASE-3-OFFLINE",
-      "content_hash": "sha256:92eba7cd92a566bcac9d16600adc4829b4f0c239e9f383971f6e1b7de28f8bef",
+      "content_hash": "sha256:8a25a22a034b5ca627b5bfb3db177a7baf49e7600745579c763dde93f6f414f3",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**`--offline`** — the global flag, `VIBE_OFFLINE`, the resolved posture; `MultiRegistryResolver` offline mode (resolve from the cache, never touch the network); actionable cache-miss errors. @status:impl/work",
+      "heading": "**`--offline`** — the global flag, `VIBE_OFFLINE`, the resolved posture; `MultiRegistryResolver` offline mode (resolve from the cache, never touch the network); actionable cache-miss errors. @status:impl/done",
       "line": 241,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#PHASE-3-OFFLINE"
     },
@@ -73187,13 +73255,13 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
-      "line": 169,
+      "line": 178,
       "message": "edge `vibe_cli::commands::install::flag_tests::prefer_local_conflicts_with_no_prefer_local` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-cli/src/commands/install/flag_tests.rs",
-      "line": 201,
+      "line": 211,
       "message": "edge `vibe_cli::commands::install::flag_tests::project_local_packages_activate_resolver_without_vibe_embedded` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local` carries no kind/revision line yet"
     },
     {

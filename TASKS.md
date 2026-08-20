@@ -252,7 +252,11 @@ with nothing going red. **The producer must be a fact, never a field write.**
             is personal. The settings home is `~/.vibe`, never the XDG path the
             spec named. Both were already true in code; only the document was
             wrong, and it is corrected. Nothing to build.
-      - [ ] `feat(vibe-cli)`: **`vibe cache check` and `--repair`** (owner,
+      - [x] **LANDED 2026-08-20 (`71c0504f`)** — sidecar-запись хэша write-once
+            рядом с entry; sweep именует identity+оба хэша; repair лестницей
+            (recorded-now → re-fetch точной версии, доказано ловушкой с более
+            новой версией); git-ступень честно помечена impl/work (нет записи
+            коммита). `feat(vibe-cli)`: **`vibe cache check` and `--repair`** (owner,
             2026-08-20) — the answer to «you cannot forbid the operator from
             editing the store»: nothing forbids it, and this is what notices.
             `check` is the **only** place the store is fully re-hashed; the

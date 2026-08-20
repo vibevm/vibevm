@@ -349,12 +349,22 @@ fn open_multi_from(
     eff: &EffectiveRegistryConfig,
     manifest: &Manifest,
     args: &InstallArgs,
+    offline: bool,
+    locked: &[vibe_core::manifest::LockedPackage],
 ) -> Result<MultiRegistryResolver> {
+    // PROP-010 §2.6 — the store is threaded in as a builder parameter
+    // (never resolved per call) so the resolver's store reads stay
+    // isolated under `$VIBE_SETTINGS` in tests.
+    let store_root =
+        vibe_registry::store::store_root().context("resolving the machine package store root")?;
     Ok(
         MultiRegistryResolver::open(&eff.registries, &eff.mirrors, &eff.overrides)
             .context("opening multi-registry resolver")?
             .with_strict_auth(args.auth_required)
-            .with_git_packages(manifest.requires.git_packages.clone()),
+            .with_git_packages(manifest.requires.git_packages.clone())
+            .with_offline(offline)
+            .with_store_root(store_root)
+            .with_locked_packages(locked.to_vec()),
     )
 }
 
@@ -387,6 +397,7 @@ pub(crate) fn build_install_resolver(
     project_root: &Path,
     global: &GlobalRegistryConfig,
     offline: bool,
+    locked: &[vibe_core::manifest::LockedPackage],
 ) -> Result<InstallResolver> {
     let solver = validate_solver(args.solver.as_deref())?;
     if args.prefer_embedded && args.no_prefer_embedded {
@@ -465,7 +476,9 @@ pub(crate) fn build_install_resolver(
         let declared = if effective.registries.is_empty() {
             None
         } else {
-            Some(Box::new(open_multi_from(&effective, manifest, args)?))
+            Some(Box::new(open_multi_from(
+                &effective, manifest, args, offline, locked,
+            )?))
         };
         let precedence = if args.no_prefer_embedded {
             EmbeddedPrecedence::EmbeddedLast
@@ -490,6 +503,19 @@ pub(crate) fn build_install_resolver(
     // for a git-source-only resolution).
     let has_git_source = args.git.is_some() || !manifest.requires.git_packages.is_empty();
     if effective.registries.is_empty() && !has_git_source {
+        // PROP-010 §2.6: under the offline posture the machine store is
+        // a resolution source in its own right — a warm store serves
+        // with zero registries. The old "no local registry" bail fires
+        // only when nothing local can serve: no local registry AND an
+        // empty store.
+        if offline && !vibe_registry::store::list_all().is_empty() {
+            return Ok(InstallResolver::Multi(
+                Box::new(open_multi_from(
+                    &effective, manifest, args, offline, locked,
+                )?),
+                solver,
+            ));
+        }
         // PROP-002 §2.2.2.1: under the offline posture (root `--offline`,
         // `VIBE_OFFLINE`, or `[net].offline` — PROP-010 §2.5) the remote walk
         // is disabled and no local registry survived, so there is nothing to
@@ -501,7 +527,8 @@ pub(crate) fn build_install_resolver(
                  Offline resolution needs a local (`file://`) `[[registry]]` — in the \
                  project `vibe.toml` or `~/.vibe/registry.toml` — a project-local \
                  `packages/` directory, the embedded registry of a source install \
-                 (check `vibe self doctor`), or an explicit `--registry <dir>`; \
+                 (check `vibe self doctor`), an explicit `--registry <dir>`, or a \
+                 warmed machine store (`vibe cache add <pkgref>`); \
                  remote registries are disabled under --offline."
             );
         }
@@ -513,7 +540,9 @@ pub(crate) fn build_install_resolver(
     }
 
     Ok(InstallResolver::Multi(
-        Box::new(open_multi_from(&effective, manifest, args)?),
+        Box::new(open_multi_from(
+            &effective, manifest, args, offline, locked,
+        )?),
         solver,
     ))
 }

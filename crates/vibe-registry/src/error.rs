@@ -194,6 +194,25 @@ pub enum RegistryError {
     StoreEntryMismatch {
         detail: Box<StoreEntryMismatchDetail>,
     },
+
+    /// An offline resolution reached the end of its local sources —
+    /// the machine store and every local (`file://`) registry — without
+    /// the requested package (PROP-010 §2.5, `OFFLINE-HARD-ERROR`): a
+    /// hard error, never a silent degrade, naming the package and the
+    /// recovery recipes.
+    #[error(
+        "`{group}/{name}@{req}` is not resolvable offline — it is in no local \
+         (`file://`) registry and not in the machine store \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#offline; \
+          fix: run the install once online to warm the store, pre-warm it with \
+          `vibe cache add {group}/{name}`, or export a `file://` mirror with \
+          `vibe registry vendor`)"
+    )]
+    OfflinePackageUnavailable {
+        group: Group,
+        name: String,
+        req: String,
+    },
 }
 
 /// The structured payload of

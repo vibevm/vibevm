@@ -390,19 +390,13 @@ impl GitPerPackageRegistry {
                     // tax the ordinary path pays.
                     InsertOutcome::AlreadyPresent(entry) => {
                         if let Some(expected) = expected_hash {
-                            let actual = compute_content_hash(&entry)?;
-                            if actual != expected {
-                                return Err(RegistryError::StoreEntryMismatch {
-                                    detail: Box::new(crate::error::StoreEntryMismatchDetail {
-                                        group: resolved.group.clone(),
-                                        name: resolved.name.clone(),
-                                        version: resolved.version.clone(),
-                                        path: entry,
-                                        expected: expected.to_string(),
-                                        actual,
-                                    }),
-                                });
-                            }
+                            verify_store_entry_against_pin(
+                                &entry,
+                                expected,
+                                &resolved.group,
+                                &resolved.name,
+                                &resolved.version,
+                            )?;
                         }
                         entry
                     }
@@ -461,6 +455,37 @@ impl GitPerPackageRegistry {
         }
         Err(primary_err.expect("primary URL must exist"))
     }
+}
+
+/// The one entry-under-pin verification gate (PROP-010 §2.7,
+/// mismatch-is-named): re-hash the store entry and, when it no longer
+/// matches the lockfile pin, name the package and the entry. Shared by
+/// the fetch path's `AlreadyPresent` branch and the store-backed
+/// resolution's fetch short-circuit, so both apply the SAME gate, not
+/// a copy. `pub(crate)` for the multi-registry resolver's offline
+/// module; `Group`/version arrive by reference so the error carries
+/// the identity verbatim.
+pub(crate) fn verify_store_entry_against_pin(
+    entry: &Path,
+    expected: &str,
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+) -> Result<(), RegistryError> {
+    let actual = compute_content_hash(entry)?;
+    if actual != expected {
+        return Err(RegistryError::StoreEntryMismatch {
+            detail: Box::new(crate::error::StoreEntryMismatchDetail {
+                group: group.clone(),
+                name: name.to_string(),
+                version: version.clone(),
+                path: entry.to_path_buf(),
+                expected: expected.to_string(),
+                actual,
+            }),
+        });
+    }
+    Ok(())
 }
 
 /// A cheap, stable `content_hash` for an `in-place` package — `sha256` of the

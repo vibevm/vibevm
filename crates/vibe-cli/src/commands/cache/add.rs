@@ -106,6 +106,10 @@ pub(crate) fn cache_resolver(path: &Path, root_offline: bool) -> Result<(Install
     let global =
         GlobalRegistryConfig::load().map_err(|e| anyhow!("loading ~/.vibe/registry.toml: {e}"))?;
     let resolver = if in_project {
+        // No lock entries ride along (§2.8: a pre-warm fetches from the
+        // real sources — the availability fallback must NOT quietly
+        // serve an already-locked version instead of verifying the
+        // registry still provides it).
         build_install_resolver(
             &stub_install_args(cwd.clone()),
             &Manifest::read(cwd.join(Manifest::FILENAME))?,
@@ -113,6 +117,7 @@ pub(crate) fn cache_resolver(path: &Path, root_offline: bool) -> Result<(Install
             &cwd,
             &global,
             offline,
+            &[],
         )
         .context("building the project's registry resolver")?
     } else {

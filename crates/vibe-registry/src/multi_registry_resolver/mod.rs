@@ -44,7 +44,7 @@ use vibe_core::manifest::{
     GitPackageDep, Lockfile, Manifest, MirrorSection, OverrideSection, RedirectFile, RefPolicy,
     RegistrySection, parse_redirect_bytes,
 };
-use vibe_core::{Group, PackageKind, PackageRef, VersionSpec};
+use vibe_core::{Group, PackageRef, VersionSpec};
 
 use crate::git_backend::{GitBackend, GitError, ShellGit};
 use crate::git_package_registry::GitPerPackageRegistry;
@@ -56,14 +56,18 @@ use crate::{
 
 mod attempt;
 mod dispatch;
+mod offline;
+mod override_resolve;
 mod redirect_follow;
 mod refresh;
+mod resolution;
 mod source;
 mod sources;
 mod walk;
 
 pub use attempt::{RegistryWalkAttempt, WalkAttemptStatus};
 pub use refresh::{RefreshReport, RefreshedEntry, RefreshedVia, SkippedEntry};
+pub use resolution::{MultiResolution, ResolvedPathDep};
 pub use source::{LocalRegistrySource, RegistrySource};
 pub(crate) use source::{is_local_directory_url, local_path_from_url};
 
@@ -71,86 +75,6 @@ pub(crate) use source::{is_local_directory_url, local_path_from_url};
 /// will pin a tag or branch explicitly; `main` is the practical default
 /// for "just take HEAD on the canonical line".
 pub const DEFAULT_OVERRIDE_REF: &str = "main";
-
-/// A resolved package with provenance — which registry served it, the
-/// URL / ref recorded in the lockfile, and whether the resolution
-/// short-circuited via an override.
-#[derive(Debug, Clone)]
-pub struct MultiResolution {
-    pub resolved: ResolvedPackage,
-    /// Name of the `[[registry]]` that served this package. `None` for
-    /// override-resolved and git-source entries.
-    pub registry_name: Option<String>,
-    /// What goes into lockfile `source_url`.
-    pub source_url: String,
-    /// What goes into lockfile `source_ref` — typically the version tag
-    /// (`v0.3.0`) for registry resolutions, or the override's / git-source
-    /// `tag`/`branch`/`rev` value.
-    pub source_ref: Option<String>,
-    pub overridden: bool,
-    /// True when this package was resolved via a `[requires.packages]`
-    /// git-source declaration (PROP-002 §2.4.1) rather than through
-    /// the registry walk or `[[override]]`. Lockfile maps this to
-    /// `source_kind = "git"`.
-    pub is_git_source: bool,
-    /// True when this package was resolved via a `[requires.packages]`
-    /// path-source declaration (PROP-007 §2.5) — a package in a local
-    /// directory, typically a sibling workspace member — rather than the
-    /// registry walk, `[[override]]`, or git-source. Lockfile maps this
-    /// to `source_kind = "path"`, and `source_url` then carries the
-    /// member's path relative to the workspace root, not a URL.
-    pub is_path_source: bool,
-    /// When this package was resolved via a registry stub that
-    /// redirected to an external URL (PROP-002 §2.4.2), the **stub**
-    /// URL is recorded here while `source_url` carries the **target**
-    /// URL. `None` for non-redirected resolutions.
-    pub via_redirect: Option<String>,
-    /// Auth regime declared in the redirect's `[redirect].auth`. Only
-    /// meaningful when `via_redirect.is_some()`; for non-redirected
-    /// resolutions the registry's own auth applies via `registry_name`
-    /// → registry lookup. The fetch path uses this to synthesise a
-    /// target-side `GitPerPackageRegistry` with the right auth without
-    /// re-fetching the redirect marker.
-    pub redirect_target_auth: vibe_core::manifest::AuthKind,
-    /// Env-var name when `redirect_target_auth = TokenEnv`. `None`
-    /// otherwise.
-    pub redirect_target_token_env: Option<String>,
-}
-
-/// A `[requires.packages]` path-source declaration (PROP-007 §2.5) with
-/// the on-disk location already computed by the caller. A path-source
-/// dependency is a package living in a local directory — typically a
-/// sibling workspace member — so there is no registry walk and no git
-/// clone: the source is a directory the resolver reads and copies.
-///
-/// The resolver does **no** filesystem path arithmetic. The caller (the
-/// workspace layer, a later milestone) resolves `PathPackageDep.path`
-/// against the declaring manifest's directory, canonicalises it, and
-/// hands the absolute `package_dir` plus the workspace-relative
-/// `workspace_rel` in already-computed. The resolver just consumes them.
-#[derive(Debug, Clone)]
-pub struct ResolvedPathDep {
-    /// Optional `kind` prefix carried by the pkgref key (PROP-008 §2.4).
-    /// Metadata only — never used to resolve; `(group, name)` is identity.
-    pub kind: Option<PackageKind>,
-    /// Reverse-FQDN group — a manifest pkgref is always qualified.
-    pub group: Group,
-    pub name: String,
-    /// Optional dual-form version constraint from `{ path, version }`.
-    /// When present, the package's own `[package].version` must satisfy
-    /// it; mismatch is a hard error — same shape as the git-source
-    /// version check.
-    pub version: Option<VersionSpec>,
-    /// Absolute directory where the dependency package lives. The caller
-    /// resolves `PathPackageDep.path` against the declaring manifest's
-    /// directory and canonicalises it; the resolver just consumes it.
-    pub package_dir: PathBuf,
-    /// `package_dir` relative to the workspace absolute root,
-    /// forward-slashed. Recorded verbatim as the lockfile `source_url`
-    /// for this entry — a portable relative path, never a URL, never
-    /// absolute.
-    pub workspace_rel: String,
-}
 
 /// Resolver coordinating an ordered set of [`GitPerPackageRegistry`]
 /// instances plus the cross-cutting `[[mirror]]` and `[[override]]`
@@ -189,6 +113,29 @@ pub struct MultiRegistryResolver {
     /// rather than silently picking up a public substitute."
     /// Toggled by `MultiRegistryResolver::with_strict_auth`.
     strict_auth: bool,
+    /// Offline posture (PROP-010 §2.6, `RESOLVER-OFFLINE-MODE`): when
+    /// `true`, resolution runs against the machine store — version
+    /// candidates and dependency manifests are read from the store
+    /// (`as of its last refresh`), plus the local `file://` sources,
+    /// which never touch the network — and NO `git fetch` / `ls-remote`
+    /// / archive call is made. A store miss is a hard error naming the
+    /// package and the recovery recipes (`OFFLINE-HARD-ERROR`).
+    /// Toggled by [`MultiRegistryResolver::with_offline`].
+    offline: bool,
+    /// The machine store root this resolver reads (PROP-010 §2.7) —
+    /// handed in as a builder parameter (not resolved in place) so
+    /// resolver tests isolate the store by parameter, the same way the
+    /// whole store layer does; production callers pass
+    /// [`store::store_root`].
+    store_root: Option<PathBuf>,
+    /// The project's lockfile entries, keyed by `<group>/<name>` — the
+    /// provenance channel for store-backed resolutions: a store hit is
+    /// authoritative for AVAILABILITY, but `source_uri` still comes
+    /// from the existing lock record (the availability case is a
+    /// re-resolve of an earlier install; minting a new `store://`
+    /// wire value would be an owner act). Toggled by
+    /// [`MultiRegistryResolver::with_locked_packages`].
+    locked: HashMap<String, vibe_core::manifest::LockedPackage>,
 }
 
 impl MultiRegistryResolver {
@@ -224,6 +171,9 @@ impl MultiRegistryResolver {
             backend,
             cache_root,
             strict_auth: false,
+            offline: false,
+            store_root: None,
+            locked: HashMap::new(),
         }
     }
 
@@ -271,6 +221,46 @@ impl MultiRegistryResolver {
     /// strict-auth corollary). Builder-style consume-and-return.
     pub fn with_strict_auth(mut self, strict: bool) -> Self {
         self.strict_auth = strict;
+        self
+    }
+
+    /// Toggle the offline posture (PROP-010 §2.6,
+    /// `RESOLVER-OFFLINE-MODE`): resolution and fetch become
+    /// satisfiable entirely from local sources — the machine store
+    /// plus `file://` registries — and never run `git fetch` /
+    /// `ls-remote` / archive. Anything not available locally is a
+    /// hard error with an actionable message (PROP-010 §2.5,
+    /// `OFFLINE-HARD-ERROR`). Builder-style consume-and-return.
+    pub fn with_offline(mut self, offline: bool) -> Self {
+        self.offline = offline;
+        self
+    }
+
+    /// Whether the resolver is in the offline posture. The CLI
+    /// surface reads this to confirm the toggle flowed through.
+    pub fn offline(&self) -> bool {
+        self.offline
+    }
+
+    /// Hand in the machine store root this resolver reads (PROP-010
+    /// §2.7). A builder parameter, not an in-place resolve, so tests
+    /// isolate the store by parameter — the same discipline the whole
+    /// store layer uses; production callers pass `store::store_root()?`.
+    pub fn with_store_root(mut self, root: PathBuf) -> Self {
+        self.store_root = Some(root);
+        self
+    }
+
+    /// Hand in the project's lockfile entries — the provenance channel
+    /// for store-backed resolutions (PROP-010 §2.6): a store hit is
+    /// authoritative for availability, but `source_uri` comes from the
+    /// existing lock record; a package in no registry and in no lock
+    /// entry is NOT rescued by the store. Builder-style.
+    pub fn with_locked_packages(mut self, locked: Vec<vibe_core::manifest::LockedPackage>) -> Self {
+        self.locked = locked
+            .into_iter()
+            .map(|p| (format!("{}/{}", p.group, p.name), p))
+            .collect();
         self
     }
 
@@ -533,6 +523,10 @@ fn ensure_clone_at(
 #[cfg(test)]
 #[path = "test_support.rs"]
 pub(crate) mod test_support;
+
+#[cfg(test)]
+#[path = "offline_tests.rs"]
+mod offline_tests;
 
 #[cfg(test)]
 #[path = "tests.rs"]

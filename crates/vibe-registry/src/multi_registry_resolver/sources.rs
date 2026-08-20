@@ -80,6 +80,7 @@ impl MultiRegistryResolver {
             is_git_source: true,
             is_path_source: false,
             via_redirect: None,
+            from_store: false,
             redirect_target_auth: vibe_core::manifest::AuthKind::None,
             redirect_target_token_env: None,
         })
@@ -151,6 +152,7 @@ impl MultiRegistryResolver {
             is_git_source: false,
             is_path_source: true,
             via_redirect: None,
+            from_store: false,
             redirect_target_auth: vibe_core::manifest::AuthKind::None,
             redirect_target_token_env: None,
         })

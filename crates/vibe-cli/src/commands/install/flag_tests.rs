@@ -13,6 +13,12 @@ use std::path::PathBuf;
 
 use rust_ai_native_env_audit::EnvGuard;
 use specmark::verifies;
+// Linking this isolates this test binary's per-user settings home
+// before the first `#[test]` body runs. Load-bearing since R1-RESOLVER:
+// the offline bail consults the machine store (`store::list_all`), and
+// without isolation that read would hit the operator's real
+// `~/.vibe/cache` — a warm real store would break the bail tests.
+use vibe_test_support as _;
 
 use super::*;
 
@@ -88,6 +94,7 @@ fn short_circuit_conflicts_with_embedded_last() {
         &GlobalRegistryConfig::default(),
         // offline posture (PROP-010 §2.5) — online for this test.
         false,
+        &[],
     )
     .map(|_| ())
     .unwrap_err();
@@ -121,6 +128,7 @@ fn offline_without_a_local_registry_bails_before_the_network() {
         // the resolved posture — what `install::run` computes as
         // `resolve_offline(root_offline || args.offline, [net].offline)`.
         true,
+        &[],
     )
     .map(|_| ())
     .unwrap_err();
@@ -153,6 +161,7 @@ fn env_offline_alone_bails_before_the_network_with_the_same_message() {
         project_root.path(),
         &GlobalRegistryConfig::default(),
         offline,
+        &[],
     )
     .map(|_| ())
     .unwrap_err();
@@ -182,6 +191,7 @@ fn prefer_local_conflicts_with_no_prefer_local() {
         project_root.path(),
         &GlobalRegistryConfig::default(),
         false, // online posture — this test exercises the guard, not the bail
+        &[],
     )
     .map(|_| ())
     .unwrap_err();
@@ -241,6 +251,7 @@ fn project_local_packages_activate_resolver_without_vibe_embedded() {
         project_root.path(),
         &GlobalRegistryConfig::default(),
         false, // online posture — the resolver must build, not bail
+        &[],
     );
     match resolver {
         Ok(_) => { /* the load-bearing assertion: success, not the bail */ }

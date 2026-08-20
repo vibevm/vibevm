@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-20T05:44:25Z",
+  "updated_at": "2026-08-20T06:05:57Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -111725,7 +111725,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 92,
         "marker_count": 93,
-        "processed_hash": "29dfacb8c704bd763ace0ecc210b2959b5b02dd00c4a2f01acfcff37c18b0617",
+        "processed_hash": "778546f049834efa778106e309d6ae1b4cc4e5a5c701d333286d6ebd472e1d33",
         "summary": {
           "confirmed": 132
         },
@@ -111976,19 +111976,19 @@
           "OFFLINE-LOCAL-ONLY": {
             "v": "confirmed",
             "ev": [
-              "статус impl/work честен: local_only-сужение работает (resolver.rs:342), file://-реестры/зеркала/lock+vibedeps — по построенному PROP-002/030; склад (§2.7) источником резолва ещё НЕ является — это слайс R1-RESOLVER, недостающая часть названа статусом, не скрыта"
+              "все местные источники работают под офлайном: file://-реестры/зеркала (было), lock+vibedeps (было), склад §2.7 — эта посадка (резолв и фетч из entry)"
             ]
           },
           "OFFLINE-HARD-ERROR": {
             "v": "confirmed",
             "ev": [
-              "жёсткий actionable bail построен: resolver.rs:498 «--offline: no local registry available to resolve from…»; статус impl/work: cache-miss-сообщение с именем пакета и рецептом (add/vendor) ждёт склада-источника (R1-RESOLVER)"
+              "error.rs::OfflinePackageUnavailable — называет group/name@req и три рецепта (once online / vibe cache add / vibe registry vendor); e2e-вывод дословно в отчёте воркера; PROP-010#offline цитируется в самой ошибке"
             ]
           },
           "OFFLINE-NO-DEGRADE": {
             "v": "confirmed",
             "ev": [
-              "bail ДО сети доказан двумя e2e: flag_tests.rs:100 (флаг) и :140 (VIBE_OFFLINE=1 без флага, то же сообщение); тихой деградации нет ни на одной ступени лестницы; impl/work — глобальная политика на остальные сетевые глаголы доедет со складом"
+              "жёсткий отказ на промахе (OfflinePackageUnavailable, exit≠0), никакой частичной деградации; bail «нет ни реестров, ни склада» сохранён и дополнен рецептом warmed store"
             ]
           },
           "ONLINE-DEFAULT": {
@@ -112001,7 +112001,7 @@
           "RESOLVER-OFFLINE-MODE": {
             "v": "confirmed",
             "ev": [
-              "honest DRAFT throughout: ROADMAP M1.20 lists it as DRAFT design; the elevated machine-global accretive store, vibe cache surface, and reclaim flow are genuinely unbuilt (registry_cache.rs remains the PROP-001-era accelerator; no cache CLI family exists); the §5 open questions await the owner session exactly as the status says; motivation aged in two lines (the F-054 rows)"
+              "multi_registry_resolver/mod.rs — with_offline(bool) рядом с with_strict_auth (+with_store_root/with_locked_packages); walk.rs — под офлайном версии из local+склада, git-источники в обход не входят; fetch_manifest читает манифест из entry; offline.rs — докблок запрещает git fetch/ls-remote/archive, греп по офлайн-пути кода — ноль сетевых вызовов; e2e offline_install_resolves_from_the_store_with_zero_registries + in-crate bootstrap_count()==0"
             ]
           },
           "AS-OF-LAST-REFRESH": {
@@ -112259,7 +112259,7 @@
           "PHASE-3-OFFLINE": {
             "v": "confirmed",
             "ev": [
-              "фаза в работе (impl/work): глобальный флаг + VIBE_OFFLINE + [net] + резолв постуры построены этой посадкой (install/mod.rs:104, update.rs, reinstall.rs); осталось из текста фазы: MultiRegistryResolver offline-режим (with_offline) и cache-miss-ошибки — слайс R1-RESOLVER"
+              "фаза закрыта: постура (eb879a1b) + резолверный офлайн-режим и cache-miss ошибки (эта посадка)"
             ]
           },
           "PHASE-4-PREWARM": {
@@ -112321,14 +112321,13 @@
           "CLONES-KEEP-THEIR-OWN-JOB": {
             "v": "confirmed",
             "ev": [
-              "клон-кэш не тронут (registry_cache.rs, package_clone_dir); impl/work честен: «stops being load-bearing for availability» наступит с R1-RESOLVER (сегодня клон всё ещё обязателен на пути резолва)"
+              "клон-кэш жив своей работой; доступность больше не на нём: версия, удалённая из реестра, ставится из склада (канонический e2e)"
             ]
           },
           "A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY": {
             "v": "confirmed",
             "ev": [
-              "Owner ruling 2026-08-19: a package present in the local store is used and materialised even when it exists in no repository at all.",
-              "Distinct from --offline, which this document's §2.5 defines as a network-forbidden policy; this rule governs a run where the network was consulted and answered absent."
+              "offline.rs::store_availability_fallback — строго на формах отсутствия (NoMatchingVersion обеих ног + агрегация absent-everywhere), провенанс из лок-записи; канонический e2e a_version_deleted_from_the_registry_still_installs_from_the_store; красный прогон обезвреженного фолбэка — ровно прежняя ошибка отсутствия (вывод в отчёте воркера); операционная ошибка не маскируется (тест an_operational_error_is_not_masked_by_the_store); курсивная вставка факта честно держит открытым провенанс never-locked (владельческий акт)"
             ]
           },
           "WHY-THE-CACHE-OUTRANKS-A-SILENT-REGISTRY": {
@@ -112354,8 +112353,7 @@
           "ABSENCE-CACHED": {
             "v": "confirmed",
             "ev": [
-              "Row of the owner's 2026-08-19 ruling: a cached package is used and materialised, and the user is told nothing because nothing failed.",
-              "Consistent with this document's §2.9 OFFLINE-FLOW, where materialisation copies from the cache into vibedeps/."
+              "строка таблицы исполнена: пакет в складе используется и материализуется молча — фолбэк доступности + офлайн-резолв; e2e оба"
             ]
           },
           "ABSENCE-WITHDRAWN": {
@@ -112552,8 +112550,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-20T05:44:23Z",
-        "verify_batch": "c4f1-registry-rest + d2d + W8 + W10 + PROP010-ENV-VAR-NAME-2026-08-19 + OWNER-RULINGS-STORE-AND-RESCAN-2026-08-20 + R1-OFFLINE + R1-STORE + R1-REFRESH + R1-CACHE-CMDS + R1-CHECK-REPAIR"
+        "verified_at": "2026-08-20T06:05:56Z",
+        "verify_batch": "c4f1-registry-rest + d2d + W8 + W10 + PROP010-ENV-VAR-NAME-2026-08-19 + OWNER-RULINGS-STORE-AND-RESCAN-2026-08-20 + R1-OFFLINE + R1-STORE + R1-REFRESH + R1-CACHE-CMDS + R1-CHECK-REPAIR + R1-RESOLVER"
       }
     },
     {

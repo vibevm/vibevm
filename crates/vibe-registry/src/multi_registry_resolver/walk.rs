@@ -66,7 +66,22 @@ impl MultiRegistryResolver {
             || self.git_packages.contains_key(&qualified);
 
         if !pinned {
-            for src in &self.sources {
+            // PROP-010 §2.6: under the offline posture the candidate
+            // set is the local `file://` sources plus the machine
+            // store — a git registry is a network source and is not
+            // entered at all (no `ls-remote`, ever). The store's
+            // contribution surfaces through the probe-resolve below,
+            // which under offline resolves to the lockfile pin held in
+            // the store.
+            let offline_sources: Vec<&RegistrySource> = if self.offline {
+                self.sources
+                    .iter()
+                    .filter(|s| matches!(s, RegistrySource::Local(_)))
+                    .collect()
+            } else {
+                self.sources.iter().collect()
+            };
+            for src in offline_sources {
                 match src {
                     super::RegistrySource::Git(reg) => match reg.list_versions(group, name) {
                         Ok(versions) if !versions.is_empty() => return Ok(versions),
@@ -163,6 +178,18 @@ impl MultiRegistryResolver {
             .group
             .as_ref()
             .ok_or_else(|| RegistryError::UnqualifiedPkgref(pkgref.to_string()))?;
+
+        // Step 1.7: the offline posture (PROP-010 §2.6,
+        // `RESOLVER-OFFLINE-MODE`). The override / path-source /
+        // git-source short-circuits above are their own mechanisms
+        // (declared-URL or local-dir); the registry walk from here on
+        // would reach the network, so under `offline` it is replaced
+        // wholesale: local `file://` sources plus the machine store,
+        // nothing else — no `git fetch` / `ls-remote` / archive at all.
+        if self.offline {
+            return self.resolve_offline(pkgref, group);
+        }
+
         let mut attempts: Vec<RegistryWalkAttempt> = Vec::new();
         for src in &self.sources {
             match src {
@@ -190,6 +217,7 @@ impl MultiRegistryResolver {
                             is_git_source: false,
                             is_path_source: false,
                             via_redirect: None,
+                            from_store: false,
                             redirect_target_auth: vibe_core::manifest::AuthKind::None,
                             redirect_target_token_env: None,
                         });
@@ -202,6 +230,17 @@ impl MultiRegistryResolver {
                             status: WalkAttemptStatus::NotFound,
                         });
                         continue;
+                    }
+                    Err(err @ RegistryError::NoMatchingVersion { .. }) => {
+                        // PROP-010 §2.6 — "no such version" from a
+                        // registry is not the last word: a store hit is
+                        // authoritative for availability. Only this
+                        // absence shape consults the store; operational
+                        // failures below never do, so nothing is masked.
+                        if let Some(resolution) = self.store_availability_fallback(pkgref, group) {
+                            return Ok(resolution);
+                        }
+                        return Err(err);
                     }
                     Err(RegistryError::Git(crate::git_backend::GitError::AuthFailed {
                         ..
@@ -239,6 +278,7 @@ impl MultiRegistryResolver {
                             is_git_source: false,
                             is_path_source: false,
                             via_redirect: None,
+                            from_store: false,
                             redirect_target_auth: vibe_core::manifest::AuthKind::None,
                             redirect_target_token_env: None,
                         });
@@ -252,9 +292,32 @@ impl MultiRegistryResolver {
                         });
                         continue;
                     }
+                    Err(err @ RegistryError::NoMatchingVersion { .. }) => {
+                        // Same absence shape as the git branch above:
+                        // the store outranks a registry that no longer
+                        // lists the version (PROP-010 §2.6); the
+                        // original error survives byte-for-byte when
+                        // the store cannot serve.
+                        if let Some(resolution) = self.store_availability_fallback(pkgref, group) {
+                            return Ok(resolution);
+                        }
+                        return Err(err);
+                    }
                     Err(other) => return Err(other),
                 },
             }
+        }
+
+        // No registry had a satisfying answer — but a store hit is
+        // authoritative for availability even here (PROP-010 §2.6,
+        // `A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY`): the store
+        // holds bytes already verified against a lockfile pin, and a
+        // registry that no longer lists a version has only described
+        // ITS inventory, not the bytes on this disk. Only the absence
+        // shapes reach this point — operational errors halted above —
+        // so nothing real is masked.
+        if let Some(resolution) = self.store_availability_fallback(pkgref, group) {
+            return Ok(resolution);
         }
 
         // No registry had a satisfying answer. Two shapes:
@@ -277,59 +340,6 @@ impl MultiRegistryResolver {
             name: pkgref.name.to_string(),
             summary,
             attempts,
-        })
-    }
-
-    fn resolve_override(
-        &self,
-        pkgref: &PackageRef,
-        ovr: &OverrideSection,
-    ) -> Result<MultiResolution, RegistryError> {
-        let group = pkgref
-            .group
-            .as_ref()
-            .ok_or_else(|| RegistryError::UnqualifiedPkgref(pkgref.to_string()))?;
-        let refname = ovr
-            .r#ref
-            .clone()
-            .unwrap_or_else(|| DEFAULT_OVERRIDE_REF.to_string());
-        let manifest = self.read_override_manifest(&ovr.source_url, &refname)?;
-        let meta = manifest
-            .require_package()
-            .map_err(|e| RegistryError::MalformedMeta {
-                path: PathBuf::from(format!("{}@{}:vibe.toml", ovr.source_url, refname)),
-                reason: e.to_string(),
-            })?;
-        // Sanity: the override is supposed to point at *this* package. If
-        // the manifest at the pinned ref names a different `(group, name)`
-        // identity, installing it would silently misroute on disk. Refuse
-        // loudly. `kind` is metadata (PROP-008 §2.3) — not compared here.
-        if &meta.group != group || meta.name != pkgref.name {
-            return Err(RegistryError::MalformedMeta {
-                path: PathBuf::from(format!("{}@{}:vibe.toml", ovr.source_url, refname)),
-                reason: format!(
-                    "override for `{}/{}` points at a manifest declaring `{}/{}` — refusing to install",
-                    group, pkgref.name, meta.group, meta.name
-                ),
-            });
-        }
-        let resolved = ResolvedPackage {
-            group: group.clone(),
-            name: pkgref.name.to_string(),
-            version: meta.version.clone(),
-            source_dir: self.override_clone_dir(group, pkgref.name.as_str()),
-        };
-        Ok(MultiResolution {
-            resolved,
-            registry_name: None,
-            source_url: ovr.source_url.clone(),
-            source_ref: Some(refname),
-            overridden: true,
-            is_git_source: false,
-            is_path_source: false,
-            via_redirect: None,
-            redirect_target_auth: vibe_core::manifest::AuthKind::None,
-            redirect_target_token_env: None,
         })
     }
 
@@ -404,6 +414,15 @@ impl MultiRegistryResolver {
             }
             Err(other) => return Err(other),
         };
+
+        if resolution.from_store {
+            // Store-backed (offline posture or availability fallback,
+            // PROP-010 §2.6): the entry IS the manifest's home — the
+            // layout is the index (§2.7) — so transitive-dependency
+            // manifests read straight off disk. No network, no clone.
+            let manifest_path = resolution.resolved.source_dir.join(Manifest::FILENAME);
+            return Manifest::read(&manifest_path).map_err(RegistryError::from);
+        }
 
         if resolution.is_path_source {
             // Path-source: the package lives in a local directory.
@@ -523,22 +542,6 @@ impl MultiRegistryResolver {
             group: group.clone(),
             name: name.to_string(),
         }))
-    }
-
-    fn read_override_manifest(&self, url: &str, refname: &str) -> Result<Manifest, RegistryError> {
-        let bytes = self.backend.fetch_file_at_ref(
-            strip_git_plus_prefix(url),
-            refname,
-            Manifest::FILENAME,
-        )?;
-        let text = String::from_utf8(bytes).map_err(|e| RegistryError::MalformedMeta {
-            path: PathBuf::from(format!("{url}@{refname}:{}", Manifest::FILENAME)),
-            reason: format!("invalid UTF-8: {e}"),
-        })?;
-        Manifest::parse_str(&text).map_err(|e| RegistryError::MalformedMeta {
-            path: PathBuf::from(format!("{url}@{refname}:{}", Manifest::FILENAME)),
-            reason: e.to_string(),
-        })
     }
 }
 

@@ -116,23 +116,11 @@ pub fn run(
     }
 
     let global = vibe_core::GlobalRegistryConfig::load()?;
-    let resolver = build_install_resolver(
-        &args,
-        &manifest,
-        embedded_root.as_deref(),
-        &project_root,
-        &global,
-        offline,
-    )?;
-
-    // Parse the CLI pkgrefs and qualify short names at the input
-    // boundary (PROP-008 §2.6) — manifests only ever store the
-    // qualified form, and the orchestrator requires it.
-    let cli_roots: Vec<PackageRef> = args
-        .packages
-        .iter()
-        .map(|raw| PackageRef::parse(raw).with_context(|| format!("parsing `{raw}`")))
-        .collect::<Result<_>>()?;
+    // The workspace and its lockfile are read BEFORE the resolver is
+    // built: the lock entries are the provenance channel for
+    // store-backed resolutions (PROP-010 §2.6) and ride into the
+    // resolver as a builder input. The same snapshot serves short-name
+    // qualification below — one read, two consumers.
     let workspace = Workspace::discover(&project_root)
         .context("discovering the workspace enclosing the project")?;
     let lockfile_path = workspace.root.join(Lockfile::FILENAME);
@@ -144,6 +132,24 @@ pub fn run(
             crate::commands::init::current_timestamp_utc(),
         )
     };
+    let resolver = build_install_resolver(
+        &args,
+        &manifest,
+        embedded_root.as_deref(),
+        &project_root,
+        &global,
+        offline,
+        &lockfile_snapshot.packages,
+    )?;
+
+    // Parse the CLI pkgrefs and qualify short names at the input
+    // boundary (PROP-008 §2.6) — manifests only ever store the
+    // qualified form, and the orchestrator requires it.
+    let cli_roots: Vec<PackageRef> = args
+        .packages
+        .iter()
+        .map(|raw| PackageRef::parse(raw).with_context(|| format!("parsing `{raw}`")))
+        .collect::<Result<_>>()?;
     let cli_roots: Vec<PackageRef> = cli_roots
         .iter()
         .map(|r| short_name::qualify(&resolver, r, &lockfile_snapshot))

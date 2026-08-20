@@ -84,21 +84,21 @@
 
 @fact:OFFLINE-LAYERING It resolves through the established CLI config layering — flag, then a `VIBE_OFFLINE` environment variable, then a user-config `[net]` key; the flag wins. This mirrors the resolved-posture pattern already used for `--unattended` / `VIBE_UNATTENDED` (`output::resolve_unattended`). @status:impl/done
 
-- @fact:OFFLINE-LOCAL-ONLY Under `--offline`, resolution and fetch must be satisfiable entirely from local sources — the cache (§2.7), `[[mirror]]` entries with a `file://` URL, and the project's own `vibe.lock` + `vibedeps/`. @status:impl/work
-- @fact:OFFLINE-HARD-ERROR Anything not available locally is a **hard error with an actionable message**: it names the missing package and version and tells the operator how to recover (run once online, `vibe cache add`, or `vibe registry vendor`). @status:impl/work
-- @fact:OFFLINE-NO-DEGRADE `--offline` never silently degrades to a partial result. @status:impl/work
+- @fact:OFFLINE-LOCAL-ONLY Under `--offline`, resolution and fetch must be satisfiable entirely from local sources — the cache (§2.7), `[[mirror]]` entries with a `file://` URL, and the project's own `vibe.lock` + `vibedeps/`. @status:impl/done
+- @fact:OFFLINE-HARD-ERROR Anything not available locally is a **hard error with an actionable message**: it names the missing package and version and tells the operator how to recover (run once online, `vibe cache add`, or `vibe registry vendor`). @status:impl/done
+- @fact:OFFLINE-NO-DEGRADE `--offline` never silently degrades to a partial result. @status:impl/done
 
 @fact:ONLINE-DEFAULT Online remains the default and is unchanged: it walks the network for freshness and populates the cache as it goes. `--offline` is purely additive. @status:impl/done
 
 ### 2.6 Offline resolution {#resolution}
 
-@fact:RESOLVER-OFFLINE-MODE **Decision.** The resolver gains an offline mode — `MultiRegistryResolver::with_offline(true)`, a builder method beside the existing `with_strict_auth`. Offline resolution reads version lists and manifests from the cache, addressed by package identity (§2.3), and never runs `git fetch` / `git ls-remote` / archive fetch. @status:spec/done
+@fact:RESOLVER-OFFLINE-MODE **Decision.** The resolver gains an offline mode — `MultiRegistryResolver::with_offline(true)`, a builder method beside the existing `with_strict_auth`. Offline resolution reads version lists and manifests from the cache, addressed by package identity (§2.3), and never runs `git fetch` / `git ls-remote` / archive fetch. @status:impl/done
 
 - @fact:AS-OF-LAST-REFRESH Offline resolution is therefore computed against the cache **as of its last refresh**. This is correct and expected — Maven `mvn -o` and `cargo --offline` have the same property — but it must be explicit: a `--offline` resolve may pick an older version than an online resolve would. @status:spec/done
 - @fact:SYNC-COMPANION The companion is `vibe registry sync` (already implemented), the deliberate "refresh the cache while the network is available" step. @status:spec/done
 - @fact:intended-workflow The intended workflow is `vibe registry sync` online, then `vibe install --offline` later — the analogue of `mvn` then `mvn -o`. @status:spec/done
 
-@fact:A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY **Decision (owner, 2026-08-19).** A package version present in the cache is **usable, and materialises, even when it exists in no registry at all** — deleted upstream, the whole organisation gone, every mirror down. This is not the `--offline` policy: `--offline` forbids the network, while this governs a run where the network is allowed, was consulted, and answered "no such package". @status:spec/work
+@fact:A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY **Decision (owner, 2026-08-19).** A package version present in the cache is **usable, and materialises, even when it exists in no registry at all** — deleted upstream, the whole organisation gone, every mirror down. This is not the `--offline` policy: `--offline` forbids the network, while this governs a run where the network is allowed, was consulted, and answered "no such package". *(Built 2026-08-20: the fallback fires strictly on the absence forms and rides the LOCKFILE pin — provenance comes from the existing lock entry, so a version in the store but in no lock and no registry is not rescued; minting a store-provenance wire form for that case is an owner act, held open.)* @status:impl/done
 
 - @fact:WHY-THE-CACHE-OUTRANKS-A-SILENT-REGISTRY **Why the cache wins.** The store holds content validated against `content_hash` ([§2.3](#identity)) — bytes we already fetched and already verified. A registry that no longer lists a version has told us about *its* present inventory, which is not evidence that the verified bytes on this disk are wrong. Treating an upstream removal as a reason to refuse content we hold would make every consumer's build hostage to a repository we do not control, which is precisely the failure the store exists to prevent. @status:spec/work
 - @fact:THE-BEHAVIOUR-THIS-CONTRADICTS-TODAY **What this rule contradicted in the pre-2026-08-20 code, said here so it was not discovered during implementation — and resolved that day.** The per-package fetch path used to **delete** its local clone when an update failed — origin unreachable, ref missing, repository gone — and then re-bootstrap from the same URL, destroying the last local copy at exactly the moment this rule needs it. That wipe was not gratuitous: it existed so the next mirror in the chain takes over without stale state. The resolution is exactly the owed mechanism: failover runs as a source switch (clone beside, swap on success), so the mirror chain works without ever deleting the only copy — and the extracted store is separate from the clone, which is what makes both possible at once. @status:impl/done
@@ -114,7 +114,7 @@
 
 | the package | what the user is told |
 |---|---|
-| @fact:ABSENCE-CACHED is in the cache @status:spec/work | nothing — it is used and materialised ([`##A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY`](#resolution)) @status:spec/work |
+| @fact:ABSENCE-CACHED is in the cache @status:impl/done | nothing — it is used and materialised ([`##A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY`](#resolution)) @status:impl/done |
 | @fact:ABSENCE-WITHDRAWN is gone, but a tombstone stands for its name @status:spec/work | **the tombstone's reason and its successor** — we know it existed and why it went ([PROP-005 §2.4](../vibe-index/PROP-005-package-index.md#layout)) @status:spec/work |
 | @fact:ABSENCE-NEVER-THERE is gone with no record, or never existed @status:spec/work | **"no such package"** — the same error a typo in `vibe.toml` produces @status:spec/work |
 
@@ -133,7 +133,7 @@
 
 - @fact:WHY-EXTRACTED-AND-NOT-AN-ARCHIVE **Why extracted rather than an archive.** Materialisation into `vibedeps/` is a directory copy, and `content_hash` is computed over the shippable tree — so the extracted form is already the thing the integrity gate checks. An archive would add a packing step and a second on-disk representation of one artifact, which then has to be kept in agreement with the first. @status:spec/work
 - @fact:WHY-NOT-CLONES **Why not clones, and this is the load-bearing half.** A clone is bound to the liveness of its origin **by construction**: refreshing it *is* a call to the origin, and the refresh brings it to whatever the origin says now. A store whose entries heal toward upstream cannot be the thing that survives upstream — and surviving upstream is the entire purpose of [`##A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY`](#resolution). A clone is also keyed by *where the bytes came from*, which contradicts identity-keying ([§2.3](#identity)) rather than merely differing from it. @status:spec/work
-- @fact:CLONES-KEEP-THEIR-OWN-JOB The registry clone cache does not go away and is not in competition: it exists so one registry is not re-cloned for every project on the machine, which is a separate and still-valid purpose. What changes is that it stops being the only local copy of package content, and therefore stops being load-bearing for availability. @status:impl/work
+- @fact:CLONES-KEEP-THEIR-OWN-JOB The registry clone cache does not go away and is not in competition: it exists so one registry is not re-cloned for every project on the machine, which is a separate and still-valid purpose. What changes is that it stops being the only local copy of package content, and therefore stops being load-bearing for availability. @status:impl/done
 
 @fact:CACHE-FILLS The cache fills as a side effect of any online `vibe install` / `vibe update` / `vibe registry sync`, and by deliberate pre-warming (`vibe cache add`, §2.8). It is never auto-evicted (§2.1). @status:impl/done
 
@@ -238,7 +238,7 @@
 
 1. @fact:PHASE-1-IDENTITY-CACHE **The identity-keyed cache** — the cache keyed by PROP-008 package identity; a documented, stable layout (§5.1); the local index view; `vibe cache path` / `vibe cache list`. `vibe-registry` + `vibe-cli`. @status:impl/done
 2. @fact:PHASE-2-USER-REGISTRIES **User-level default registry configuration** — `[[registry]]` / `[[mirror]]` in `UserConfig`; `vibe init` seeds from it; project config overrides. `vibe-core` + `vibe-cli`. @status:impl/plan
-3. @fact:PHASE-3-OFFLINE **`--offline`** — the global flag, `VIBE_OFFLINE`, the resolved posture; `MultiRegistryResolver` offline mode (resolve from the cache, never touch the network); actionable cache-miss errors. @status:impl/work
+3. @fact:PHASE-3-OFFLINE **`--offline`** — the global flag, `VIBE_OFFLINE`, the resolved posture; `MultiRegistryResolver` offline mode (resolve from the cache, never touch the network); actionable cache-miss errors. @status:impl/done
 4. @fact:PHASE-4-PREWARM **Pre-warm + clean** — `vibe cache add` (deliberate population) and `vibe cache clean`. @status:impl/done
 5. @fact:PHASE-5-SCAFFOLDING **Scaffolding integration** — guarantee a new project (`vibe init` + `vibe install --offline`) and a new workspace member resolve and materialise from the cache, end to end; the §2.2 workflow plus any §5.5 UX hint. @status:impl/plan
 6. @fact:PHASE-6-DOCS **Docs + `VIBEVM-SPEC.md`** — §8.3 / §9 / §9.5 edits under owner sanction; a `docs/` page for the cache and offline mode. @status:impl/plan

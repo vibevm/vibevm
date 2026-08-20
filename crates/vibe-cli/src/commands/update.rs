@@ -149,6 +149,7 @@ pub fn run(
         &project_root,
         &global,
         offline,
+        &lockfile.packages,
     )?;
 
     ctx.heading(&format!(

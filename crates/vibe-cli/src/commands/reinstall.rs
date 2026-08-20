@@ -219,6 +219,7 @@ fn run_force(
         &workspace.root,
         &global,
         offline,
+        &lockfile.packages,
     )
     .context("building the install resolver")?;
 
