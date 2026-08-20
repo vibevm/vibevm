@@ -1,6 +1,6 @@
-# Subagent launchers — claudez/claudez2 as the E/T worker transport {#root}
+# Subagent launchers — claudez/claudez2/codexrunner as the worker transport {#root}
 
-<status stage="impl" state="done" comment="owner directive 2026-08-03; launchers reworked and verified the same day (the ALPHA/BRAVO matrix below); the mode switch is the owner's lever"/>
+<status stage="impl" state="done" comment="owner directive 2026-08-03; launchers reworked and verified the same day (the ALPHA/BRAVO matrix below); codexrunner added by owner directive 2026-08-20; the mode switch and the lane priority are the owner's levers"/>
 
 @fact:the-directive **The owner's directive (2026-08-03, chat, near-verbatim):**
 доработать запускаторы `claudez` / `claudez2`, чтобы они работали с `-c` как
@@ -74,12 +74,61 @@ prior thread errors — expected, same as plain `claude`.
 рулинг владельца (2026-08-20, чат, near-verbatim):** «можешь делегировать
 задачи на разработку в запускалки claudez2 (в первую очередь) и claudez
 (во вторую очередь), уровень параллельности — вплоть до 5 на каждую
-запускалку». То есть: приоритет `claudez2` → `claudez`; до **5**
-одновременных воркеров на запускалку (каждый в своём worktree-cwd — правило
-(config dir, cwd) выше это уже допускает: пять cwd под одним config dir —
-пять независимых продолжаемых тредов). Правило «конфликтоопасные
-многоместные правки — одним потоком» из директивы 2026-08-03 остаётся в
-силе и приоритетнее ширины. @status:impl/done
+запускалку». До **5** одновременных воркеров на запускалку (каждый в своём
+worktree-cwd — правило (config dir, cwd) выше это уже допускает: пять cwd
+под одним config dir — пять независимых продолжаемых тредов). Правило
+«конфликтоопасные многоместные правки — одним потоком» из директивы
+2026-08-03 остаётся в силе и приоритетнее ширины. *Названный здесь порядок
+лейнов — исторический; действующий порядок всегда в
+`##launchers-priority-is-the-owners` ниже.* @status:impl/done
+
+@fact:launchers-priority-is-the-owners **Приоритет лейнов выбирает
+ВЛАДЕЛЕЦ — правило и текущее состояние (директива 2026-08-20).** Какая
+запускалка приоритетная — не боссово суждение и не свойство машины:
+владелец назначает порядок в любой момент (чатом — босс тут же обновляет
+эту секцию, чтобы состояние пережило сессию). Босс перечитывает эту
+секцию перед КАЖДЫМ fan-out'ом, как и `SUBAGENT-MODE.toml`. История
+назначений — строками ниже, верхняя действует:
+
+- **2026-08-20 (действует): `codexrunner` — приоритетный лейн**; `claudez`
+  — второй; `claudez2` — ЗАПРЕЩЁН до отдельного слова владельца (его же
+  утреннее слово той же даты). Одновременно владелец: имя запускалки —
+  `~/opt/bin/codexrunner` (bash + ps1), модель `gpt-5.6-sol`, effort
+  `xhigh`.
+- 2026-08-20 (утро, снято тем же днём): claudez-only, claudez2 запрещён.
+- 2026-08-20 (ночь, снято утром): claudez2 → claudez.
+
+@fact:launchers-codexrunner **`codexrunner` — третий лейн: OpenAI Codex CLI
+(добавлен директивой владельца 2026-08-20, проверен в тот же день).**
+Машинные факты: `C:\Users\olegc\opt\bin\{codexrunner,codexrunner.ps1}`;
+тонкая обёртка над `codex` (0.148.0), пробрасывает все аргументы,
+инжектирует ТОЛЬКО модель и усилие через clap-глобальные `-c`-переопределения
+(`model="gpt-5.6-sol"`, `model_reasoning_effort="xhigh"`; переопределяемо
+`CODEXRUNNER_MODEL` / `CODEXRUNNER_EFFORT`, а поздние `-m`/`-c` в строке
+вызова побеждают — пин это умолчание, не клетка). Состояние — `CODEX_HOME`
+(умолчание `~/.codex`, где живёт auth.json; переопределение
+`CODEXRUNNER_CODEX_HOME`); лаунчер отказывает с рецептом, если auth.json
+нет. Таблица соответствий claudez-механикам:
+
+| claudez | codexrunner |
+|---|---|
+| `claudez -p "…"` | `codexrunner exec "…"` |
+| `claudez -c -p "…"` | `codexrunner exec resume --last "…"` (сессии кейются на cwd-роллаутах — воркер продолжается в своём worktree) |
+| `--output-format stream-json --verbose` | `--json` (JSONL-события на stdout) |
+| `--allowedTools …` (позитивный список) | флаги песочницы/одобрений НА ВЫЗОВЕ: `--sandbox read-only\|workspace-write\|danger-full-access`; умолчание exec — read-only |
+| запреты инструментами | запреты ТЕКСТОМ пакета + песочницей: `workspace-write` МОЖЕТ запускать git в worktree — git-бан держится только текстом пакета (слабее claudez-формы; учитывать при приёмке) |
+
+Проверено 2026-08-20: exec под дефолтной read-only песочницей честно
+отказал записи; под `--sandbox workspace-write` создал файл с точным
+содержимым; модель и xhigh-усилие подтверждены заголовком сессии.
+Известная острота: exit-код `codex exec` — про исход ПРОГОНА, не задачи
+(отказ песочницы дал exit 0) — приёмка строго по артефактам
+(`##obs-verify-by-artifacts` действует дословно). Cargo-задачам под
+`workspace-write` может понадобиться запись вне workspace
+(`~/.cargo`-локи) — лечится
+`-c sandbox_workspace_write.writable_roots=[…]` или, по слову владельца,
+`danger-full-access`; первый cargo-прогон лейна мерит это живьём.
+@status:impl/done
 
 ## 3. Phase E — the worker lifecycle {#phase-e}
 
