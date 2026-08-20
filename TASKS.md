@@ -166,13 +166,21 @@ with nothing going red. **The producer must be a fact, never a field write.**
       built; two-thirds of its 64 build claims already have code. A cut taken
       from its statuses would have been a plan about a tree that does not
       exist.
-      - [ ] `feat(vibe-registry)`: **the store.** NOT from scratch — the
-            extracted per-identity layout already exists, project-scoped, at
+      - [ ] `feat(vibe-registry)`: **the store, at `~/.vibe/cache/`** (owner,
+            2026-08-20). NOT from scratch — the extracted per-identity layout
+            already exists, project-scoped, at
             `<workspace-root>/.vibe/cache/<group>/<name>/v<version>/` (created
             by `init`, used by `reinstall` and `update`). The work is to
-            promote it: project scope → machine-global, rewritten → never
-            overwritten, incidental → **read as a source**, validated by the
-            `content_hash` the lockfile already pins. **The hard half is what
+            promote it: project scope → machine-global, rewritten → written
+            once, incidental → **read as a source**, validated by the
+            `content_hash` the lockfile already pins. **The project-local
+            `cache/` subdirectory is removed by this same commit** — it is what
+            the store replaces, and leaving both would make one word mean two
+            things for the whole transition. (The project's `.vibe/` directory
+            itself stays: it also holds project settings and parked agentic
+            commands.) «Written once» binds OUR code only — the disk is the
+            operator's, and noticing an edit is `vibe cache check`'s job, not a
+            promise the filesystem can keep. **The hard half is what
             it replaces:** the fetch path DELETES its clone when an update
             fails (`git_package_registry/fetch.rs`, the `update` → wipe →
             re-bootstrap branch), and that wipe serves mirror failover. It may
@@ -191,28 +199,49 @@ with nothing going red. **The producer must be a fact, never a field write.**
             `--unattended`. **Do not mistake it for the one that exists:**
             `vibe install --offline` is PROP-030/PROP-002's, subcommand-scoped
             and older than PROP-010's intent.
-      - [ ] *(owner fork — surfaced by the measurement, blocks the item above
-            it only)* **where user-level registry configuration lives.**
-            PROP-010 §2.4 proposes `UserConfig`. A functional predecessor
-            already ships in a DIFFERENT file under a different PROP:
-            `~/.vibe/registry.toml` (`GlobalRegistryConfig`, PROP-002 §2.2.2),
-            with hardcoded seeding and project-first merge. Extending the
-            shipped file and moving to `UserConfig` are both defensible and
-            they are not the same promise to an operator who already has one.
+      - [x] *(owner fork — **ruled 2026-08-20**)* **where user-level registry
+            configuration lives.** Answer: it stays where it already is —
+            `~/.vibe/registry.toml`, its own file beside `~/.vibe/config.toml`,
+            because one of the two is shareable with a colleague and the other
+            is personal. The settings home is `~/.vibe`, never the XDG path the
+            spec named. Both were already true in code; only the document was
+            wrong, and it is corrected. Nothing to build.
+      - [ ] `feat(vibe-cli)`: **`vibe cache check` and `--repair`** (owner,
+            2026-08-20) — the answer to «you cannot forbid the operator from
+            editing the store»: nothing forbids it, and this is what notices.
+            `check` is the **only** place the store is fully re-hashed; the
+            ordinary install path must not pay that cost, or a ten-gigabyte
+            dependency becomes unusable. `--repair` climbs a ladder, cheapest
+            rung first: establish whether the entry is a git working copy at
+            all (the store strips `.git`, so both shapes exist) → discard local
+            damage and hard-reset to the pinned commit → re-hash → only then
+            re-fetch from scratch. **No fetch-and-merge step on that ladder:**
+            repair restores the entry to what was recorded, and advancing it to
+            a newer commit would guarantee the mismatch it is trying to fix.
+      - [ ] `fix(vibe-registry)`: **a refresh and a source switch stop being
+            the same operation** (owner, 2026-08-20). Refreshing a copy we hold
+            happens **in place**; a failed refresh is retried, never grounds for
+            deleting anything. Only a deliberate switch to a different source
+            fetches from scratch — and then clones into a temporary directory
+            beside the target and swaps in only on success. Today's code wipes
+            on **any** failed update, so the fix is to separate the two intents
+            first; the temp-and-swap is the easy half.
       - *(the three questions in
         [`PROP-010 §5`](spec/modules/vibe-registry/PROP-010-local-package-cache.md#open)
         — staleness signalling, eviction, scaffolding UX — stay open and block
         none of the five.)*
-- [ ] *(owner fork, blocks nothing)* **what a full rescan does with a package
-      it can no longer see.** Narrowed by the 2026-08-19 rulings but not
-      closed: the client is now protected (a cache hit wins; index absence
-      falls back to git), so what remains is the index side. Today the scan
-      holds the prior set and the new set in memory at once and **never
-      compares them** — it uses the prior one for three config fields and
-      discards the rest — then records a claim that the scanned set IS the
-      whole published set. Computing and reporting the difference is a missing
-      check rather than a decision; whether an unexplained disappearance
-      should also raise, or bury with a reason, is the owner's.
+- [x] *(owner fork — **ruled 2026-08-20: nothing to build**)* **what a full
+      rescan does with a package it can no longer see.** Answer: nothing. No
+      comparison, no warning, no tombstone. What is declined is a real and
+      cheap capability — the scan already holds both sets in memory and simply
+      never compares them — and declining it is the point: a disappearance has
+      too many innocent causes (a repository made private, renamed, moved
+      between organisations, an enumeration that was narrower) for the index to
+      have an opinion. This does not contradict the no-silence law, which
+      governs **withdrawal** — an act someone performed and a record they chose
+      to leave. A package missing from a walk performed nothing; the walk is a
+      photograph, not a claim about intent. Burying stays the only way a name
+      is closed on purpose. Recorded at the rescan verb's own anchor.
 
 ---
 

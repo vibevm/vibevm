@@ -96,6 +96,36 @@ project policy: @status:impl/done
 - @fact:QUIRK-VAR-REDIRECT `bash … > "$VAR/file" 2>&1` with an unset `$VAR` writes to `/file` and
   silently never runs the command — inline the path or set the var on the
   same line. @status:impl/done
+- @fact:QUIRK-VVM-STORE-MOVED-UNDER-DOT-VIBE **The vibevm version store lives at
+  `~/.vibe/opt` on this box since 2026-08-20** (owner's instruction): `~/.vibe/opt/bin/`
+  holds the `vibe` shims, `~/.vibe/opt/vibevm/` the versions and the `current`
+  pointer. **`~/opt/bin` is NOT retired** — three sibling products (`vibeframe`,
+  `vibeterm`, `launcher`) still keep their stores under `~/opt/` and their shims
+  there, and the delegation launchers `claudez` / `claudez2` are still
+  `~/opt/bin/claudez*` (they belong to no store). The user `PATH` therefore
+  carries **both** directories, `~/.vibe/opt/bin` first. Verified live: `vibe
+  --version` answers from the new location. @status:impl/done
+- @fact:QUIRK-THE-OPT-NAME-IS-LORE-BEARING **The last path component `opt` is
+  load-bearing and that is why the new home is `~/.vibe/opt` rather than
+  `~/.vibe`.** The version manager recognises a managed install by the shape
+  `…/opt/<product>/versions/<kind>/<id>/<n>/`, matching the literal names
+  `opt`, the product, and `versions`. Keeping `opt` as the final component made
+  the move a pure file operation with **no code change**. Renaming it is a
+  product-wide decision, not a machine one — the sibling products key on the
+  same shape. @status:impl/done
+- @fact:QUIRK-A-SHIM-RESOLVES-RELATIVE-TO-ITSELF **A `vibe` shim finds its
+  version relative to its own directory** (`<shim dir>/../<product>/current`), so
+  moving the shims without moving the store beside them silently breaks the
+  command — the shim is found on `PATH`, runs, and reports no active version.
+  Met and reverted during the 2026-08-20 move; the working order is: move the
+  store and the shims together, rewrite the absolute path inside `current`, then
+  touch `PATH`. @status:impl/done
+- @fact:QUIRK-USER-PATH-IS-EXPANDABLE-AND-MUST-BE-READ-RAW **The user `PATH` in
+  `HKCU\Environment` is `REG_EXPAND_SZ` and contains `%USERPROFILE%`.** Reading it
+  through the ordinary accessor returns the EXPANDED string; writing that back
+  destroys the variable reference (here, `%USERPROFILE%\go\bin` would have become
+  a literal path). Read it unexpanded, edit the raw string, and write it back with
+  the value kind preserved. @status:impl/done
 
 ## Operating modes (codewords)
 

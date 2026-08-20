@@ -433,6 +433,11 @@ because a missed change is invisible from the inside: no freshness mechanism
 promises completeness, and a full walk does. Webhooks ([§2.16](#webhooks))
 reduce how often it is needed; they never remove the need. @status:impl/done
 
+@fact:A-FULL-WALK-DOES-NOT-REPORT-WHAT-IT-NO-LONGER-SEES **Decision (owner, 2026-08-20), closing a fork that had been open since the journal phase: a full walk says nothing about packages that were in the previous catalog and are not in this one.** No comparison, no warning, no tombstone. @status:spec/plan
+
+- @fact:THE-DIFFERENCE-WAS-BUILDABLE-AND-IS-DECLINED **What is being declined is a real, cheap capability, not an impossible one.** The walk already holds the previous set and the new set in memory at the same moment and simply never compares them — computing «forty before, thirty-nine now, this one is gone» costs almost nothing. The owner's answer is that the report is not wanted, which settles the question the machinery could not: a disappearance has too many innocent causes — a repository made private, renamed, moved between organisations, or an enumeration that was simply narrower — for the index to have an opinion about it. @status:spec/plan
+- @fact:SILENCE-HERE-IS-NOT-THE-SILENCE-THE-LAW-FORBIDS **Why this does not contradict the no-silence law.** The law that a name which ever existed must not answer with silence governs **withdrawal** — an act an operator performed and a record they chose to leave. A package absent from a walk performed nothing and chose nothing; the walk is a photograph, not a claim about intent. Burial is how a name is closed on purpose ([§2.11](#cli)), and it stays the only way one is. @status:spec/plan
+
 @fact:CACHE-ORG-APPLIES-WHERE-ENUMERATION-IS-EXPENSIVE The cache and its
 freshness check govern the host-API path. For a local-clone walk the enumeration
 is a directory read, and wrapping a validator around it would buy nothing and
