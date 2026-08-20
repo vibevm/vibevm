@@ -6698,10 +6698,28 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch.rs",
       "item_kind": "fn",
-      "line": 239,
+      "line": 181,
       "symbol": "vibe_registry::git_package_registry::fetch::GitPerPackageRegistry::fetch_with_expected_hash",
-      "end_line": 512,
-      "fingerprint": "tok1:732f6e446fe920c633e735076eb81ad517856bf098f1f8551c8139298035f6c4"
+      "end_line": 463,
+      "fingerprint": "tok1:9995b1ea4fcc9e249f7c7c4c2d65a6273f1298b51bf8bbf70a4fd428812f96d6"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_package_registry/fetch/bring.rs",
+      "item_kind": "mod",
+      "line": 8,
+      "symbol": "vibe_registry::git_package_registry::fetch::bring",
+      "end_line": 8,
+      "fingerprint": "tok1:073a54042a714ac0c09a1c976e7043858bc3df89bf453a33c48a6c17fbd2a964"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_package_registry/fetch/refresh_switch_tests.rs",
+      "item_kind": "mod",
+      "line": 13,
+      "symbol": "vibe_registry::git_package_registry::fetch::refresh_switch_tests",
+      "end_line": 13,
+      "fingerprint": "tok1:073a54042a714ac0c09a1c976e7043858bc3df89bf453a33c48a6c17fbd2a964"
     },
     {
       "crate_name": "vibe-registry",
@@ -6725,18 +6743,18 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
       "item_kind": "fn",
-      "line": 494,
+      "line": 496,
       "symbol": "vibe_registry::git_package_registry::fetch::tests::fetch_in_place_skips_the_cache_copy_and_keeps_git",
-      "end_line": 548,
+      "end_line": 550,
       "fingerprint": "tok1:d35c6b9c24567dc2de4c1eec8982985cfb72e504a870afffa94888fb43a07149"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
       "item_kind": "fn",
-      "line": 550,
+      "line": 552,
       "symbol": "vibe_registry::git_package_registry::fetch::tests::materialise_in_place_clones_then_updates_the_slot",
-      "end_line": 598,
+      "end_line": 600,
       "fingerprint": "tok1:ebd2632c2465ce71c5c539b3e2951453f2b9a7871f2181fc1ad435f91d15a831"
     },
     {
@@ -15007,11 +15025,27 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch::GitPerPackageRegistry::fetch_with_expected_hash",
-      "line": 286,
+      "line": 231,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
       "reason": "no-unwrap-in-domain: primary_err is Some whenever the source loop exhausts — the primary URL exists by package_urls' type and its failure is recorded before any continue; lifting the primary out of the loop (the try_lookup shape) would duplicate the three-step per-source body this fn shares between primary and mirrors"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_package_registry/fetch/bring.rs",
+      "from_symbol": "vibe_registry::git_package_registry::fetch::bring",
+      "line": 8,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_package_registry/fetch/refresh_switch_tests.rs",
+      "from_symbol": "vibe_registry::git_package_registry::fetch::refresh_switch_tests",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch/store_gate_tests.rs",
@@ -15032,7 +15066,7 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch::tests::fetch_in_place_skips_the_cache_copy_and_keeps_git",
-      "line": 495,
+      "line": 497,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -15041,7 +15075,7 @@
     {
       "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
       "from_symbol": "vibe_registry::git_package_registry::fetch::tests::materialise_in_place_clones_then_updates_the_slot",
-      "line": 551,
+      "line": 553,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place",
       "verb": "verifies",
@@ -55338,7 +55372,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:bba55e68e8b6155a735295f20266ba9e5b610c91b855ed1d183565ab9c4ddbc5",
+      "content_hash": "sha256:47b4d992ca6fcbb3caf9cd227e32016a3519f9b616c2de7419897b822fef9f18",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "PROP-010: The local package cache — a shared offline store",
@@ -55491,7 +55525,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:5821f398d73f9e4624a7c541425b6c11c179f52b8c761300c4a7ce777a767fad",
+      "content_hash": "sha256:75f5e6b45bcb4503299ba5916e2ff90ed9b4094a18c049f79bcf62b9e49e2246",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "2. Decisions",
@@ -55824,7 +55858,7 @@
     },
     {
       "anchor": "resolution",
-      "content_hash": "sha256:e4d0ae5d80e2daac6cf413b0afdbb60fb6cd019fa44c9484ada1d00f850d0b4f",
+      "content_hash": "sha256:f1e33c03d5c53d24d1f853990541c193a3d891abefabfda383243f94e5df9a7d",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
       "heading": "2.6 Offline resolution",
@@ -55887,55 +55921,55 @@
     },
     {
       "anchor": "THE-BEHAVIOUR-THIS-CONTRADICTS-TODAY",
-      "content_hash": "sha256:9538587b519d7b6d75437fa5fb7b78f59482a1fc439af6198f3af4fa0b54ce20",
+      "content_hash": "sha256:7274e6dfa2bc48b08ef01cdc25377e45b246bd37e77b7e6f9c3c8e465afc3f69",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**What this rule contradicts in today's code, said here so it is not discovered during implementation.** The per-package fetch path currently **deletes** its local clone when an update fails — origin unreachable, ref missing, repository gone — and then re-bootstraps from the same URL. So the present behaviour destroys the last local copy at exactly the moment this rule needs it. That wipe is not gratuitous: it exists so the next mirror in the chain takes over without stale state. Implementation therefore owes mirror failover a mechanism that is not \"delete the only copy\" — the extracted store is separate from the clone, which is what makes both possible at once. @status:spec/work",
+      "heading": "**What this rule contradicted in the pre-2026-08-20 code, said here so it was not discovered during implementation — and resolved that day.** The per-package fetch path used to **delete** its local clone when an update failed — origin unreachable, ref missing, repository gone — and then re-bootstrap from the same URL, destroying the last local copy at exactly the moment this rule needs it. That wipe was not gratuitous: it existed so the next mirror in the chain takes over without stale state. The resolution is exactly the owed mechanism: failover runs as a source switch (clone beside, swap on success), so the mirror chain works without ever deleting the only copy — and the extracted store is separate from the clone, which is what makes both possible at once. @status:impl/done",
       "line": 104,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-BEHAVIOUR-THIS-CONTRADICTS-TODAY"
     },
     {
       "anchor": "A-REFRESH-AND-A-SOURCE-SWITCH-ARE-DIFFERENT-OPERATIONS",
-      "content_hash": "sha256:7acce20876fcd9bbfb319ad7deff66061a59dd67978222eda19e783484feb81e",
+      "content_hash": "sha256:cbe5fb1daffef17a3c2b32b0e54757c4aae842b19b1b5b61b606c03063601573",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Decision (owner, 2026-08-20): the wipe stays legal for exactly one case and is forbidden for the other, and today's code does not tell them apart.** @status:spec/work",
+      "heading": "**Decision (owner, 2026-08-20): the wipe stays legal for exactly one case and is forbidden for the other** — and the code now tells them apart by construction (`BringIntent { RefreshExisting, SwitchSource }` in the per-package fetch machinery). @status:impl/done",
       "line": 106,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#A-REFRESH-AND-A-SOURCE-SWITCH-ARE-DIFFERENT-OPERATIONS"
     },
     {
       "anchor": "REFRESH-HAPPENS-IN-PLACE",
-      "content_hash": "sha256:49feeeaeb382646e75d3c8bbdabb28a7fa0909b6e3979ca5c2c5e71cb2c01364",
+      "content_hash": "sha256:eea9d8a890724576e89cebbd2098b88c83bdc581e118654f54ef4928ffc24df0",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Refreshing a copy we already hold happens IN PLACE** — update the existing working copy, never delete and re-download it. A failed refresh (network blinked, ref missing) is retried or repaired where it stands; it is not grounds for destroying anything. @status:spec/work",
+      "heading": "**Refreshing a copy we already hold happens IN PLACE** — update the existing working copy, never delete and re-download it. A failed refresh (network blinked, ref missing) is retried or repaired where it stands; it is not grounds for destroying anything. @status:impl/done",
       "line": 108,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#REFRESH-HAPPENS-IN-PLACE"
     },
     {
       "anchor": "A-SOURCE-SWITCH-CLONES-BESIDE-AND-SWAPS",
-      "content_hash": "sha256:a3f73068d3495d54c329b68ef340462ff50d076d9ba42f6944f4c5a30f462cfd",
+      "content_hash": "sha256:0bbde879e1490bd1bc9afd4a50eaf54fc2ae14bfea5cbe5971ce6fbabca9075f",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**Switching to a DIFFERENT source** — the next mirror, another registry — is the only case that fetches from scratch, and even then it clones **into a temporary directory beside the target and replaces the existing copy only after the clone succeeds.** An interrupted switch therefore leaves the previous copy exactly as it was. @status:spec/work",
+      "heading": "**Switching to a DIFFERENT source** — the next mirror, another registry — is the only case that fetches from scratch, and even then it clones **into a temporary directory beside the target and replaces the existing copy only after the clone succeeds.** An interrupted switch therefore leaves the previous copy exactly as it was. @status:impl/done",
       "line": 109,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#A-SOURCE-SWITCH-CLONES-BESIDE-AND-SWAPS"
     },
     {
       "anchor": "THE-TEN-GIGABYTE-TEST",
-      "content_hash": "sha256:b60aea7961f28ccb87f0118f638f3d910497f72633f22e130a11e1d0751fb6d8",
+      "content_hash": "sha256:4c1c679c08b208c535810cb09c04bb89ef498a93e2d528bf1bfa21fa67e75cdd",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**The measure that makes the distinction concrete, in the owner's words:** a dependency may weigh ten gigabytes. «Delete and re-download» as the response to any hiccup is then not a small inefficiency but an unusable tool — and the cost is invisible in every test fixture, which is exactly why the rule is written here rather than left to judgement at the call site. @status:spec/work",
+      "heading": "**The measure that makes the distinction concrete, in the owner's words:** a dependency may weigh ten gigabytes. «Delete and re-download» as the response to any hiccup is then not a small inefficiency but an unusable tool — and the cost is invisible in every test fixture, which is exactly why the rule is written here rather than left to judgement at the call site. @status:spec/done",
       "line": 110,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#THE-TEN-GIGABYTE-TEST"
     },
     {
       "anchor": "TODAYS-CODE-CONFLATES-THEM",
-      "content_hash": "sha256:de93d538ced63d58edca50bba605d2027dec68e7605e9748b68ffa540bebf897",
+      "content_hash": "sha256:915dbe29d411e929308c535f08298b4a047cc1bd2d3d1e5d251882c9f5f36f9a",
       "doc_path": "modules/vibe-registry/PROP-010",
       "file": "spec/modules/vibe-registry/PROP-010-local-package-cache.md",
-      "heading": "**What must change, named precisely.** The current path wipes on **any** failed update, not only on a deliberate source switch. The fix is therefore not «add a temporary directory» — it is to separate the two intents first, and only then give the switching one its temp-and-swap. @status:spec/work",
+      "heading": "**What had to change, named precisely — and changed 2026-08-20.** The path used to wipe on **any** failed update, not only on a deliberate source switch. The fix was, as written, not «add a temporary directory» but to separate the two intents first (the `BringIntent` split), and only then give the switching one its temp-and-swap. The four oracles were proved red on the pre-change code: a failed refresh really did delete the copy. @status:impl/done",
       "line": 111,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#TODAYS-CODE-CONFLATES-THEM"
     },
@@ -73738,13 +73772,13 @@
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
-      "line": 495,
+      "line": 497,
       "message": "edge `vibe_registry::git_package_registry::fetch::tests::fetch_in_place_skips_the_cache_copy_and_keeps_git` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place` carries no kind/revision line yet"
     },
     {
       "code": "pin-into-unmarked-unit",
       "file": "crates/vibe-registry/src/git_package_registry/fetch/tests.rs",
-      "line": 551,
+      "line": 553,
       "message": "edge `vibe_registry::git_package_registry::fetch::tests::materialise_in_place_clones_then_updates_the_slot` pins r1 but `spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022#in-place` carries no kind/revision line yet"
     },
     {

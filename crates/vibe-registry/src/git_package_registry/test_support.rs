@@ -28,8 +28,9 @@ mod fixtures {
         /// URLs that should make `update` fail with `RefNotFound`. Used
         /// to test the "primary's working clone is now stuck on a tag
         /// the remote no longer carries; fall through to mirror"
-        /// scenario — the mirror walk must wipe the local clone and
-        /// re-bootstrap from the next URL when `update` fails.
+        /// scenario — the failed refresh leaves the copy in place and
+        /// the mirror takes over as a source switch (clone-beside-
+        /// and-swap, PROP-010 §2.6).
         pub(crate) update_fail_urls: Mutex<HashSet<String>>,
         pub(crate) bootstrap_calls: Mutex<u32>,
         pub(crate) update_calls: Mutex<u32>,
@@ -62,8 +63,8 @@ mod fixtures {
         }
         /// Wire `update(dest, refname)` to fail with `RefNotFound` when
         /// the clone at `dest` was last bootstrapped from `url`. Used
-        /// to drive the "wipe and fall through" branch of
-        /// `bootstrap_or_update_at`.
+        /// to drive the "refresh fails; fail over as a source switch"
+        /// branch of `bring_clone_to_ref`.
         #[allow(dead_code)]
         pub(crate) fn fail_update_for_url(&self, url: impl Into<String>) {
             self.update_fail_urls.lock().unwrap().insert(url.into());

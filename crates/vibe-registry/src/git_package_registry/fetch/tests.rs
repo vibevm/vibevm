@@ -170,18 +170,14 @@ fn fetch_prefers_primary_when_both_reachable() {
 
 #[test]
 fn fetch_falls_through_when_primary_update_fails() {
-    // First fetch lands a working clone via primary. Then the
-    // primary's tag goes missing (we wire `fail_update_for_url`).
-    // Second fetch tries `update` against primary, fails,
-    // wipes-and-rebootstraps from primary (still fails — no seed
-    // after wipe? actually bootstrap is still seeded), …
-    //
-    // Actually — once `update` fails on the primary's existing
-    // clone, `bootstrap_or_update_at` wipes the clone and retries
-    // bootstrap on the SAME URL. The bootstrap then re-seeds
-    // (primary IS seeded), so the SAME URL succeeds. To force
-    // fall-through, primary must fail BOTH update AND bootstrap.
-    // Drop primary's bootstrap seed before the second fetch.
+    // First fetch lands a working clone via primary. Then the primary
+    // dies (update fails AND a re-clone would fail — the bootstrap
+    // seed is dropped). Second fetch: the refresh of the existing
+    // copy fails and the copy STAYS (PROP-010 §2.6,
+    // `REFRESH-HAPPENS-IN-PLACE` — no wipe-and-retry on the refresh
+    // path); the walk then falls through to the mirror as a SOURCE
+    // SWITCH — clone beside, swap in on success
+    // (`A-SOURCE-SWITCH-CLONES-BESIDE-AND-SWAPS`).
     let cache = tempdir().unwrap();
     let store_root = tempdir().unwrap();
     let upstream = tempdir().unwrap();
@@ -222,22 +218,28 @@ fn fetch_falls_through_when_primary_update_fails() {
     fake.fail_update_for_url(primary_url);
     fake.bootstrap_seeds.lock().unwrap().remove(primary_url);
 
-    // Second fetch: update primary fails → wipe+re-bootstrap from
-    // primary fails → fall through to mirror, which seeds a fresh
-    // clone via bootstrap.
+    // Second fetch: refresh via primary fails (update refused, the
+    // copy untouched) → the mirror takes over as a source switch:
+    // one clone into the temporary sibling, one swap.
     let _ = r.fetch(&resolved, store_root.path()).unwrap();
-    // Update was tried once (against primary, failed). Bootstrap
-    // counts: 1 (initial primary) + 1 (re-bootstrap primary, fails
-    // RepoNotFound after seed removed) + 1 (mirror, succeeds).
+    // One update (the failed refresh); bootstraps: initial primary +
+    // the mirror's switch clone — no wipe-and-retry of the dead primary.
     assert_eq!(fake.update_count(), 1);
-    assert_eq!(fake.bootstrap_count(), 3);
+    assert_eq!(fake.bootstrap_count(), 2);
     assert_eq!(
         fake.bootstrap_urls(),
         vec![
             primary_url.to_string(), // initial fetch
-            primary_url.to_string(), // retry after update fail
-            mirror_url.to_string(),  // mirror takes over
+            mirror_url.to_string(),  // the switch clone; the swap is a rename
         ]
+    );
+    // The switch replaced the clone with the mirror's: the recorded
+    // origin moved to the mirror that served it.
+    let clone_dir = r.package_clone_dir(&org(), "wal");
+    assert_eq!(
+        fs::read_to_string(clone_dir.join(".git/origin-url")).unwrap(),
+        mirror_url,
+        "the successful switch leaves the mirror's clone in place"
     );
 }
 

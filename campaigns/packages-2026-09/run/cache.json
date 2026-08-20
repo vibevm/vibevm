@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-20T04:39:17Z",
+  "updated_at": "2026-08-20T05:07:44Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -112659,7 +112659,7 @@
       }
     },
     "spec/modules/vibe-registry/PROP-010-local-package-cache.md": {
-      "content_hash": "794e9ef61fe0a8b2b1afe9bb0155d697d283e848a829574cf350e0f38e3e7081",
+      "content_hash": "a8bd35ca9aaa1ab74badecfbdf4b881ac0074a2d1dcd1d57acba43fc8b328a12",
       "rollup": {
         "explicit": [
           "spec",
@@ -112685,7 +112685,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 92,
         "marker_count": 93,
-        "processed_hash": "794e9ef61fe0a8b2b1afe9bb0155d697d283e848a829574cf350e0f38e3e7081",
+        "processed_hash": "a8bd35ca9aaa1ab74badecfbdf4b881ac0074a2d1dcd1d57acba43fc8b328a12",
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -113298,8 +113298,7 @@
           "THE-BEHAVIOUR-THIS-CONTRADICTS-TODAY": {
             "v": "confirmed",
             "ev": [
-              "Measured in crates/vibe-registry/src/git_package_registry/fetch.rs, bootstrap_or_update_at: when `update` fails the code calls remove_dir_all on the clone directory and re-bootstraps from the same URL.",
-              "The doc-comment at that site states the purpose of the wipe — letting the next mirror in the chain take over without stale state — so the constraint named here is the code's own stated reason, not an inference."
+              "факт переписан в резолюцию: failover работает сменой источника (клон рядом + свап при успехе) без удаления единственной копии; bring.rs:85 — пустое место = bootstrap (ни refresh, ни switch); ensure_clone_at (multi_registry_resolver/mod.rs:505) проверен воркером и уже не вытирал"
             ]
           },
           "AN-ABSENCE-HAS-THREE-SHAPES-AND-TWO-ANSWERS": {
@@ -113459,36 +113458,31 @@
           "A-REFRESH-AND-A-SOURCE-SWITCH-ARE-DIFFERENT-OPERATIONS": {
             "v": "confirmed",
             "ev": [
-              "рулинг владельца 2026-08-20, заданный как конструкция: клонировать во временный каталог и заменять только при успехе, а обновление кэшированной копии делать на месте",
-              "необходимость разделения измерена по коду: сегодняшний путь стирает клон при ЛЮБОМ неудачном обновлении, а не только при смене источника (`crates/vibe-registry/src/git_package_registry/fetch.rs`, ветвь update → wipe → re-bootstrap)"
+              "crates/vibe-registry/src/git_package_registry/fetch/bring.rs:17-31 — enum BringIntent { RefreshExisting, SwitchSource }; диспетчер bring_clone_to_ref ветвит по (intent, наличие .git); fetch-цепочка: primary=Refresh, зеркала=Switch (fetch.rs)"
             ]
           },
           "REFRESH-HAPPENS-IN-PLACE": {
             "v": "confirmed",
             "ev": [
-              "прямое указание владельца: «если ты просто обновляешь кэшированную копию, то прямо в ней нужно сделать git pull, а не перекачивать всё заново»",
-              "сегодняшнее поведение противоположно и потому подлежит правке: неудача обновления ведёт к удалению каталога, а не к повтору на месте"
+              "bring.rs:62-79 — ветка RefreshExisting: только backend.update + возврат ошибки, ни одного удаления; grep remove_dir_all по fetch.rs — ноль вхождений; оракул failed_refresh_leaves_the_existing_clone_alive доказан КРАСНЫМ до правки (панический текст «a failed refresh must NOT delete the working clone»), зелёным после"
             ]
           },
           "A-SOURCE-SWITCH-CLONES-BESIDE-AND-SWAPS": {
             "v": "confirmed",
             "ev": [
-              "форма задана владельцем дословно: клон во временный каталог рядом и замена существующего только в случае успешного клонирования",
-              "это тот же приём, который собственный урок этого проекта предписывает для любого переписывания используемого артефакта — писать новый каталог и переставлять указатель; и та же форма, отсутствие которой заведено находкой B-093 про генератор"
+              "bring.rs:146-186 — switch_source_at: клон в <dest>.switch-tmp-<pid> рядом (тот же родитель/том), замена remove-then-rename ТОЛЬКО после успешного клона, при неудаче temp прибирается и прежняя копия цела; оракулы failed_source_switch_keeps_the_old_clone_and_cleans_the_temp (красный до правки) и successful_source_switch_replaces_the_clone_content"
             ]
           },
           "THE-TEN-GIGABYTE-TEST": {
             "v": "confirmed",
             "ev": [
-              "мера принадлежит владельцу дословно: «Прикинь если у тебя зависимость будет весить 10 гигабайт, ты ее каждый раз удалять будешь что ли?»",
-              "она записана потому, что невидима в тестах: фикстуры этого дерева весят килобайты, поэтому цена «удалить и скачать заново» не проявляется ни в одном автоматическом прогоне"
+              "рациональ рулинга записан и исполнен кодом выше; вытирание при любой неудаче (fetch.rs старые :43/:52 и wipe при hash-mismatch) удалено — сентинел-оракул: посторонний файл переживает refresh и не переживает switch"
             ]
           },
           "TODAYS-CODE-CONFLATES-THEM": {
             "v": "confirmed",
             "ev": [
-              "измерено по коду: ветвь `update` → wipe → re-bootstrap в `crates/vibe-registry/src/git_package_registry/fetch.rs` срабатывает на любой ошибке обновления — недоступный источник, отсутствующая ссылка, пропавший репозиторий",
-              "вывод о порядке работ («сперва развести намерения, потом временный каталог») следует из этого замера, а не из вкуса: добавление временного каталога к неразведённым намерениям сохранило бы стирание на месте обычного обновления"
+              "текст факта переведён в прошедшее время этой посадкой; красные прогоны четырёх оракулов на ДОправочном коде — прямое доказательство, что смешение существовало ровно как записано (2 passed / 2 failed, вывод в отчёте воркера и в LOG ТЗ)"
             ]
           },
           "THE-SETTINGS-HOME-IS-DOT-VIBE-NOT-XDG": {
@@ -113524,8 +113518,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-20T04:39:17Z",
-        "verify_batch": "c4f1-registry-rest + d2d + W8 + W10 + PROP010-ENV-VAR-NAME-2026-08-19 + OWNER-RULINGS-STORE-AND-RESCAN-2026-08-20 + R1-OFFLINE + R1-STORE"
+        "verified_at": "2026-08-20T05:07:44Z",
+        "verify_batch": "c4f1-registry-rest + d2d + W8 + W10 + PROP010-ENV-VAR-NAME-2026-08-19 + OWNER-RULINGS-STORE-AND-RESCAN-2026-08-20 + R1-OFFLINE + R1-STORE + R1-REFRESH"
       }
     },
     "spec/modules/vibe-registry/PROP-021-submodule-sources.md": {

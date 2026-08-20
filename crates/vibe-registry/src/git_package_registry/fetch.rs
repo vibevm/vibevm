@@ -10,77 +10,10 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 use super::*;
 use crate::store::{self, InsertOutcome};
 
-impl GitPerPackageRegistry {
-    /// Bootstrap (or refresh) the per-package clone at `clone_dir`
-    /// against `url`. Used by [`Self::ensure_clone_against_sources`]
-    /// and the mirror-fallback variants of [`Self::fetch`] /
-    /// [`Self::refresh_package`].
-    ///
-    /// On entry: `clone_dir` is either absent, empty, or a previously
-    /// populated git working tree. If the working tree exists,
-    /// [`GitBackend::update`] is tried first — that preserves the local
-    /// clone and is the cheap path. If `update` fails (origin
-    /// unreachable, ref missing, etc.), the clone is wiped and we
-    /// retry via [`GitBackend::bootstrap`] against the same URL. The
-    /// wipe-and-rebootstrap branch is what allows the next mirror in
-    /// the chain to take over cleanly even if a previous clone left
-    /// stale state behind.
-    fn bootstrap_or_update_at(
-        &self,
-        url: &str,
-        refname: &str,
-        clone_dir: &Path,
-    ) -> Result<(), RegistryError> {
-        if clone_dir.join(".git").exists() {
-            match self.backend.update(clone_dir, refname) {
-                Ok(()) => return Ok(()),
-                Err(e) => {
-                    tracing::debug!(
-                        target: "vibe_registry",
-                        registry = %self.name,
-                        url = %url,
-                        error = %e,
-                        "update on existing clone failed; wiping and re-bootstrapping"
-                    );
-                    fs::remove_dir_all(clone_dir).map_err(|source| RegistryError::Io {
-                        path: clone_dir.to_path_buf(),
-                        source,
-                    })?;
-                }
-            }
-        }
-        if clone_dir.exists() {
-            // Half-populated dir from a prior failed bootstrap — clean.
-            fs::remove_dir_all(clone_dir).map_err(|source| RegistryError::Io {
-                path: clone_dir.to_path_buf(),
-                source,
-            })?;
-        }
-        if let Some(parent) = clone_dir.parent() {
-            fs::create_dir_all(parent).map_err(|source| RegistryError::Io {
-                path: parent.to_path_buf(),
-                source,
-            })?;
-        }
-        // PROP-002 §2.2.1 — under `auth = "token-env"` the bootstrap
-        // is performed with a credentialised URL, then the recorded
-        // origin URL is rewritten to the plain (token-free) form so
-        // the freshly-cloned `.git/config` does NOT carry the token
-        // on disk. Subsequent `update` calls hit the plain origin
-        // (and 401 on a still-private host); the
-        // `ensure_clone_against_sources` retry path handles that by
-        // wiping and re-bootstrapping. The token only ever lives in
-        // memory and inside the spawned `git clone` process.
-        let plain_url = strip_git_plus_prefix(url);
-        let fetch_url = inject_token(plain_url, self.effective_token.as_deref());
-        self.backend.bootstrap(&fetch_url, refname, clone_dir)?;
-        if self.effective_token.is_some() {
-            self.backend
-                .set_remote_url(clone_dir, "origin", plain_url)?;
-        }
-        Ok(())
-    }
+mod bring;
+use bring::BringIntent;
 
+impl GitPerPackageRegistry {
     /// Bring the per-package clone at `package_clone_dir(kind, name)`
     /// to `refname` by trying the primary URL first, then each mirror
     /// URL in priority order. Returns the URL that ultimately served
@@ -90,10 +23,10 @@ impl GitPerPackageRegistry {
     /// Mirror dispatch on this path is the cache-mutating sibling of
     /// [`Self::try_lookup`]: same primary-first ordering, same
     /// "primary's error is the most informative" semantics on full
-    /// failure. The crucial difference is per-source state — each
-    /// retry that goes through bootstrap wipes the local clone first,
-    /// so a flapping primary that left a half-populated dir cannot
-    /// poison the mirror attempt.
+    /// failure. The first attempt is a refresh of whatever copy is
+    /// already there; every later attempt is a source switch that
+    /// clones beside and swaps in only on success — a flapping primary
+    /// can never cost the copy already on disk (PROP-010 §2.6).
     ///
     /// **Mirror integrity** is **not** checked here: the content from
     /// whichever URL succeeds is taken verbatim. The caller (typically
@@ -109,11 +42,13 @@ impl GitPerPackageRegistry {
         self.bootstrap_chain_into(group, name, refname, &clone_dir)
     }
 
-    /// Bootstrap (or incrementally update) `dest` against the package's source
-    /// chain — the primary URL first, then each mirror — returning the URL
-    /// that served it. The mirror-aware, auth-aware core shared by the cache
-    /// clone ([`ensure_clone_against_sources`]) and the direct in-place slot
-    /// placement ([`materialise_in_place`]); only the destination differs.
+    /// Bring `dest` to `refname` against the package's source chain —
+    /// the primary URL first as a refresh of any existing copy, then
+    /// each mirror as a source switch (clone-beside-and-swap) —
+    /// returning the URL that served it. The mirror-aware, auth-aware
+    /// core shared by the cache clone ([`ensure_clone_against_sources`])
+    /// and the direct in-place slot placement ([`materialise_in_place`]);
+    /// only the destination differs.
     fn bootstrap_chain_into(
         &self,
         group: &Group,
@@ -123,12 +58,17 @@ impl GitPerPackageRegistry {
     ) -> Result<String, RegistryError> {
         let (primary, mirrors) = self.package_urls(group, name)?;
         // Primary outside the mirror loop — its error is a plain value.
-        let primary_err = match self.bootstrap_or_update_at(&primary, refname, dest) {
-            Ok(()) => return Ok(primary),
-            Err(e) => e,
-        };
+        // The primary attempt refreshes the existing copy in place; a
+        // failure surfaces without touching the copy.
+        let primary_err =
+            match self.bring_clone_to_ref(&primary, refname, dest, BringIntent::RefreshExisting) {
+                Ok(()) => return Ok(primary),
+                Err(e) => e,
+            };
         for (i, url) in mirrors.iter().enumerate() {
-            match self.bootstrap_or_update_at(url, refname, dest) {
+            // A mirror serves a DIFFERENT source than the copy on disk
+            // — the switch clones beside and swaps in only on success.
+            match self.bring_clone_to_ref(url, refname, dest, BringIntent::SwitchSource) {
                 Ok(()) => {
                     tracing::info!(
                         target: "vibe_registry",
@@ -146,7 +86,7 @@ impl GitPerPackageRegistry {
                         registry = %self.name,
                         mirror = %url,
                         error = %e,
-                        "mirror fetch failed; trying next"
+                        "mirror switch failed; trying next"
                     );
                 }
             }
@@ -160,11 +100,13 @@ impl GitPerPackageRegistry {
     /// so a version bump on a giant repo transfers only changed objects rather
     /// than re-downloading the whole tree (the deferred incremental update the
     /// move-based path could not do). Bypasses the `.git`-stripped cache copy
-    /// and the per-project cache clone entirely. Auth / mirror handling is the
-    /// same [`bootstrap_or_update_at`] the cache path uses — the token is
-    /// injected and stripped identically; only the working-tree destination
-    /// changes. Returns the canonical source URL, the version tag, the
-    /// resolved commit (the in-place identity, §2.5), and the slot's manifest.
+    /// and the machine store entirely. Auth / mirror handling is the
+    /// same [`Self::bring_clone_to_ref`] chain the cache path uses — the
+    /// token is injected and stripped identically, a present slot is
+    /// refreshed in place, a mirror is a source switch; only the
+    /// working-tree destination changes. Returns the canonical source URL,
+    /// the version tag, the resolved commit (the in-place identity, §2.5),
+    /// and the slot's manifest.
     pub fn materialise_in_place(
         &self,
         resolved: &ResolvedPackage,
@@ -248,9 +190,11 @@ impl GitPerPackageRegistry {
     /// - If `expected_hash` is `Some(h)`, accept the first source
     ///   whose computed hash equals `h`. Sources serving a disagreeing
     ///   hash trigger a `tracing::warn!` (mirror-integrity event) and
-    ///   the walk continues to the next URL — the clone is wiped
-    ///   between attempts so a poisoned source cannot leave bytes
-    ///   behind. This is the supply-chain check from
+    ///   the walk continues to the next URL — as a source switch
+    ///   (clone-beside-and-swap), so a poisoned source's bytes can
+    ///   never survive into the next attempt's clone while nothing on
+    ///   disk is deleted along the way (PROP-010 §2.6). This is the
+    ///   supply-chain check from
     ///   [PROP-002 §2.3](../../../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#mirror).
     ///
     /// **The store insert happens only for an accepted source** — the
@@ -273,8 +217,9 @@ impl GitPerPackageRegistry {
     /// responsibility — today `vibe-install`'s `plan_install` — to
     /// convert the stored hash vs. lockfile-pin mismatch into the
     /// user-actionable `ContentDrift` error. Its `cache_dir` points
-    /// at the wiped clone purely so the value is well-formed; the
-    /// caller consumes only `content_hash`, the drift signal. This
+    /// at the clone directory purely so the value is well-formed; the
+    /// caller consumes only `content_hash`, the drift signal, and the
+    /// clone itself stays as the last attempt left it. This
     /// split keeps registry-layer concerns (sources, fallback,
     /// integrity attempts) separate from install-layer concerns
     /// (lockfile-aware error rendering).
@@ -310,8 +255,18 @@ impl GitPerPackageRegistry {
         let mut last_cached: Option<CachedPackage> = None;
 
         for (i, url) in std::iter::once(&primary).chain(mirrors.iter()).enumerate() {
-            // 1. Bring the local clone to `tag` from this URL.
-            if let Err(e) = self.bootstrap_or_update_at(url, &tag, &clone_dir) {
+            // 1. Bring the local clone to `tag` from this URL. The
+            //    first attempt refreshes whatever copy is already on
+            //    disk (in place, never deleted on failure); every
+            //    later attempt serves a different source and is a
+            //    switch — clone beside, swap in only on success
+            //    (PROP-010 §2.6).
+            let intent = if i == 0 {
+                BringIntent::RefreshExisting
+            } else {
+                BringIntent::SwitchSource
+            };
+            if let Err(e) = self.bring_clone_to_ref(url, &tag, &clone_dir, intent) {
                 if i == 0 {
                     primary_err = Some(e);
                 } else {
@@ -383,8 +338,13 @@ impl GitPerPackageRegistry {
                 // `cache_dir` points at the clone purely so the
                 // disagreeing `CachedPackage` is well-formed; the
                 // caller consumes only `content_hash` (the drift
-                // signal). The clone is wiped below and nothing is
-                // ever materialised from this value.
+                // signal). Nothing is ever materialised from this
+                // value, and the clone is left as this attempt left
+                // it — the next URL in the chain takes over as a
+                // source switch (clone-beside-and-swap), so a
+                // poisoned mirror's tree can never survive INTO the
+                // next attempt's clone, without deleting anything on
+                // the way (PROP-010 §2.6).
                 last_cached = Some(CachedPackage {
                     resolved: resolved.clone(),
                     cache_dir: clone_dir.clone(),
@@ -401,15 +361,6 @@ impl GitPerPackageRegistry {
                     is_local: false,
                     via_redirect: None,
                 });
-                // Wipe the local clone state so the next URL bootstraps
-                // fresh — a poisoned mirror's working tree must not
-                // survive into the next attempt.
-                if clone_dir.exists() {
-                    fs::remove_dir_all(&clone_dir).map_err(|source| RegistryError::Io {
-                        path: clone_dir.clone(),
-                        source,
-                    })?;
-                }
                 continue;
             }
 
@@ -536,3 +487,7 @@ mod tests;
 #[cfg(test)]
 #[path = "fetch/store_gate_tests.rs"]
 mod store_gate_tests;
+
+#[cfg(test)]
+#[path = "fetch/refresh_switch_tests.rs"]
+mod refresh_switch_tests;
