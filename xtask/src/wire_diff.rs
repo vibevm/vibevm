@@ -14,20 +14,21 @@
 //!    report had just allowed. Drift here is red under every regime —
 //!    a derived artifact holding truth (`##FORBID-SECRET-TRUTH`) is not
 //!    an epoch matter.
-//! 2. *Did the corpus bytes shift relative to the COMMIT?* `git diff
-//!    --exit-code --name-only -- formats/corpora/` — the `check-codegen`
-//!    form. A separate question from (1): (1) asks whether the catalog
-//!    is a projection of its journal, (2) whether the etalon moved
-//!    since the last commit. The corpus's authored half counts too —
-//!    the `state/journal/` shards ARE the journal format's golden
-//!    bytes, and they are compared against the commit, never
-//!    reprojected.
+//! 2. *Did the watched wire surface shift relative to the COMMIT?* `git
+//!    diff --exit-code --name-only HEAD -- schemas/ formats/` — the
+//!    `check-codegen` form, widened to the whole surface the break-window
+//!    promise names. A separate question from (1): (1) asks whether the
+//!    catalog is a projection of its journal, (2) whether schemas,
+//!    corpora, or other format declarations moved since the last commit.
+//!    The corpus's authored half counts too — the `state/journal/` shards
+//!    ARE the journal format's golden bytes, and they are compared against
+//!    the commit, never reprojected.
 //! 3. *What does the regime say?* [`crate::epochs::Epochs::load`] — the
 //!    one loader; no reading of the flags goes around it.
 //!
 //! The verdict table (§ the law, PROP-044 §4.7):
 //!
-//! | `public` | window | corpus diff | verdict |
+//! | `public` | window | watched-surface diff | verdict |
 //! |----------|--------|-------------|---------|
 //! | `false` | any | empty | green, one line |
 //! | `false` | any | non-empty | green, REPORTING — names what shifted |
@@ -75,6 +76,24 @@ enum Verdict {
     Declared,
 }
 
+/// The operator-facing classes inside the watched wire surface. Keeping
+/// schema shifts distinct from corpus shifts matters: a changed schema with
+/// no regenerated corpus needs a different repair from bytes that moved with
+/// their declaration.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ShiftClass {
+    Schema,
+    Corpus,
+    OtherFormat,
+}
+
+#[derive(Debug, Default, PartialEq, Eq)]
+struct ShiftCounts {
+    schemas: usize,
+    corpora: usize,
+    other_formats: usize,
+}
+
 fn verdict(epochs: &Epochs, shifted: bool, declared: bool) -> Verdict {
     if !shifted {
         Verdict::Quiet
@@ -87,6 +106,57 @@ fn verdict(epochs: &Epochs, shifted: bool, declared: bool) -> Verdict {
     } else {
         Verdict::Undeclared
     }
+}
+
+/// Classify a repository-relative path against the exact perimeter promised
+/// by the break-window gate: everything below `schemas/` and `formats/`.
+fn shift_class(path: &str) -> Option<ShiftClass> {
+    let path = Path::new(path);
+    if path.starts_with("schemas") {
+        Some(ShiftClass::Schema)
+    } else if path.starts_with("formats/corpora") {
+        Some(ShiftClass::Corpus)
+    } else if path.starts_with("formats") {
+        Some(ShiftClass::OtherFormat)
+    } else {
+        None
+    }
+}
+
+fn shift_counts(shifted: &[String]) -> ShiftCounts {
+    let mut counts = ShiftCounts::default();
+    for file in shifted {
+        match shift_class(file) {
+            Some(ShiftClass::Schema) => counts.schemas += 1,
+            Some(ShiftClass::Corpus) => counts.corpora += 1,
+            Some(ShiftClass::OtherFormat) => counts.other_formats += 1,
+            None => {}
+        }
+    }
+    counts
+}
+
+/// Lines shared by every speaking verdict. The existing per-path `shifted`
+/// class remains stable; the summary makes a schema-only shift unmistakable
+/// and keeps its totals mechanically consistent with those path lines.
+fn shift_detail_lines(shifted: &[String]) -> Vec<String> {
+    let counts = shift_counts(shifted);
+    let mut lines = vec![format!(
+        "wire-diff: shift classes — schema: {}, corpus: {}, other formats: {}",
+        counts.schemas, counts.corpora, counts.other_formats
+    )];
+    if counts.schemas > 0 && counts.corpora == 0 {
+        lines.push(format!(
+            "wire-diff: schema changed without a corpus move — {} schema path(s), 0 corpus path(s)",
+            counts.schemas
+        ));
+    }
+    lines.extend(
+        shifted
+            .iter()
+            .map(|file| format!("  wire-diff: shifted `{file}`")),
+    );
+    lines
 }
 
 /// The distinct corpus homes the registry names — every `[format.*]`
@@ -111,26 +181,24 @@ fn corpus_dirs(root: &Path) -> Result<Vec<PathBuf>> {
     Ok(dirs)
 }
 
-/// The corpus files git sees as shifted vs the commit — `None` when the
-/// committed etalon and the working tree agree. The `check-codegen`
-/// form (`git diff --exit-code -- <paths>`), with `--name-only` added
-/// so the reporting verdict can NAME what moved instead of waving at
-/// it. Tracked modifications and staged changes count; a wholly
-/// untracked new file does not — the same surface `check-codegen`
-/// sees, taken deliberately so the two gates cannot disagree about
-/// what a diff is.
-fn corpus_shift(root: &Path) -> Result<Option<Vec<String>>> {
+/// The schema and format files git sees as shifted vs the commit — `None`
+/// when the committed wire surface and the working tree agree. `HEAD` makes
+/// both staged and unstaged tracked changes count; a wholly untracked new file
+/// does not. `--name-only` lets every speaking verdict name what moved.
+fn wire_shift(root: &Path) -> Result<Option<Vec<String>>> {
     let out = Command::new("git")
         .args([
             "diff",
             "--exit-code",
             "--name-only",
+            "HEAD",
             "--",
-            "formats/corpora/",
+            "schemas/",
+            "formats/",
         ])
         .current_dir(root)
         .output()
-        .context("wire-diff: spawning `git diff` over formats/corpora/")?;
+        .context("wire-diff: spawning `git diff` over schemas/ and formats/")?;
     match out.status.code() {
         Some(0) => Ok(None),
         Some(1) => Ok(Some(
@@ -141,7 +209,7 @@ fn corpus_shift(root: &Path) -> Result<Option<Vec<String>>> {
                 .collect(),
         )),
         code => bail!(
-            "wire-diff: `git diff --name-only -- formats/corpora/` failed \
+            "wire-diff: `git diff --name-only HEAD -- schemas/ formats/` failed \
              (exit {code:?}): {}. The shift probe needs a working git over \
              this tree; without it the verdict has no second question to \
              answer.",
@@ -233,8 +301,8 @@ pub(crate) fn run_wire_diff() -> Result<()> {
         }
     }
 
-    // (2) The etalon vs the commit, (3) the regime and the note.
-    let shifted: Vec<String> = corpus_shift(&root)?.unwrap_or_default();
+    // (2) The watched wire surface vs the commit, (3) the regime and the note.
+    let shifted: Vec<String> = wire_shift(&root)?.unwrap_or_default();
     let epochs = Epochs::load(&root)?;
     let notes = fresh_break_notes(&root)?;
 
@@ -243,18 +311,19 @@ pub(crate) fn run_wire_diff() -> Result<()> {
             println!(
                 "wire-diff: {projected} projected corpus home(s) proven against \
                  their journals, {} authored golden home(s) watched by the shift \
-                 probe; no corpus bytes shifted vs the commit — nothing to declare.",
+                 probe; no tracked path under `schemas/` or `formats/` shifted vs \
+                 the commit — nothing to declare.",
                 corpora.len() - projected
             );
             Ok(())
         }
         Verdict::Reporting => {
             println!(
-                "wire-diff: REPORTING (green, exit 0) — corpus bytes shifted \
-                 vs the commit while `public = false`:"
+                "wire-diff: REPORTING (green, exit 0) — the watched wire surface \
+                 shifted vs the commit while `public = false`:"
             );
-            for file in &shifted {
-                println!("  wire-diff: shifted `{file}`");
+            for line in shift_detail_lines(&shifted) {
+                println!("{line}");
             }
             println!(
                 "wire-diff: the pre-publication regime — breaking is free and \
@@ -264,14 +333,14 @@ pub(crate) fn run_wire_diff() -> Result<()> {
             );
             println!(
                 "wire-diff: green here does NOT mean «nothing changed» — it \
-                 means the change is allowed unannounced. The bytes above ARE \
+                 means the change is allowed unannounced. The paths above ARE \
                  different from the commit."
             );
             Ok(())
         }
         Verdict::ClosedWindow => {
-            for file in &shifted {
-                eprintln!("  wire-diff: shifted `{file}`");
+            for line in shift_detail_lines(&shifted) {
+                eprintln!("{line}");
             }
             bail!(
                 "wire-diff: RED — the break window is CLOSED.\n\
@@ -281,18 +350,19 @@ pub(crate) fn run_wire_diff() -> Result<()> {
                  why: a closed window is an owner decision — a period of \
                  stability is the state of this flag, and this change rides \
                  past it.\n\
-                 fix: `git checkout -- formats/corpora/` to drop the change, \
+                 fix: restore the named schema/format paths to drop the change, \
                  or have the owner reopen the window in `formats/EPOCHS.toml` \
                  — a wire change never lands through a closed window."
             );
         }
         Verdict::Undeclared => {
-            for file in &shifted {
-                eprintln!("  wire-diff: shifted `{file}`");
+            for line in shift_detail_lines(&shifted) {
+                eprintln!("{line}");
             }
             bail!(
                 "wire-diff: RED — the break is not declared.\n\
-                 rule: a wire-visible corpus change at `public = true` with an \
+                 rule: a change under `schemas/**` or `formats/**` at \
+                 `public = true` with an \
                  open window requires a break note added in the SAME change \
                  (PROP-044 §4.7 — the gate does not forbid breaks, it makes an \
                  unannounced break impossible).\n\
@@ -301,18 +371,19 @@ pub(crate) fn run_wire_diff() -> Result<()> {
                  fix: write `formats/breaks/NNN.md` after the pattern of \
                  `formats/breaks/001.md` — what changed on the wire · epoch · \
                  who fixes it · sunset · user recipe — in the same change as \
-                 the corpus bytes, then re-run `cargo xtask wire-diff`."
+                 the wire change, then re-run `cargo xtask wire-diff`."
             );
         }
         Verdict::Declared => {
-            for file in &shifted {
-                println!("  wire-diff: shifted `{file}`");
+            for line in shift_detail_lines(&shifted) {
+                println!("{line}");
             }
             for note in &notes {
                 println!("  wire-diff: declared by fresh note `{note}`");
             }
             println!(
-                "wire-diff: green — the corpus shift is announced by a fresh \
+                "wire-diff: green — the watched wire-surface shift is announced \
+                 by a fresh \
                  break note (public = true, window open). The break is \
                  declared; the gate holds."
             );
@@ -394,6 +465,41 @@ mod tests {
     #[test]
     fn a_closed_window_with_a_clean_corpus_is_quiet() {
         assert_eq!(verdict(&epochs(true, false), false, false), Verdict::Quiet);
+    }
+
+    /// The path classifier is the operator-visible mirror of the two roots
+    /// handed to the shift probe. It covers the old corpus surface, the newly
+    /// watched schema surface, and format control files without admitting
+    /// unrelated crate work.
+    #[test]
+    fn wire_shift_path_perimeter_is_schema_and_formats_only() {
+        let cases = [
+            ("formats/corpora/x", Some(ShiftClass::Corpus)),
+            ("schemas/a/b.jtd.json", Some(ShiftClass::Schema)),
+            ("formats/EPOCHS.toml", Some(ShiftClass::OtherFormat)),
+            ("crates/example/src/lib.rs", None),
+        ];
+
+        for (path, expected) in cases {
+            assert_eq!(shift_class(path), expected, "path: {path}");
+        }
+    }
+
+    /// The diagnostic tail is derived from the same path list as its totals,
+    /// including the repair-significant schema-without-corpus class.
+    #[test]
+    fn schema_only_shift_has_honest_distinct_output_class() {
+        let shifted = vec!["schemas/hello/e1/hello.jtd.json".to_string()];
+        let lines = shift_detail_lines(&shifted);
+
+        assert_eq!(
+            lines,
+            vec![
+                "wire-diff: shift classes — schema: 1, corpus: 0, other formats: 0",
+                "wire-diff: schema changed without a corpus move — 1 schema path(s), 0 corpus path(s)",
+                "  wire-diff: shifted `schemas/hello/e1/hello.jtd.json`",
+            ]
+        );
     }
 
     /// The «new note» test: untracked (`??`) and staged-add (`A…`)
