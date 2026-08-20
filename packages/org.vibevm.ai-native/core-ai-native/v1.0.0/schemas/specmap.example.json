@@ -1,0 +1,83 @@
+{
+  "code_items": [
+    {
+      "crate_name": "demo-core",
+      "file": "crates/demo-core/src/parse.rs",
+      "item_kind": "fn",
+      "line": 41,
+      "symbol": "demo_core::parse::Timeout::parse",
+      "end_line": 60,
+      "fingerprint": "tok1:9b1a3f2c8d4e5b6077f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0"
+    },
+    {
+      "crate_name": "demo-core",
+      "file": "crates/demo-core/src/parse.rs",
+      "item_kind": "fn",
+      "line": 88,
+      "symbol": "demo_core::parse::tests::rejects_negative",
+      "end_line": 96,
+      "fingerprint": "tok1:7e2d4c6b8a0f1e3d5c7b9a1f3e5d7c9b1a3f5e7d9c1b3a5f7e9d1c3b5a7f9e1d3"
+    }
+  ],
+  "edges": [
+    {
+      "file": "crates/demo-core/src/parse.rs",
+      "from_symbol": "demo_core::parse::Timeout::parse",
+      "line": 41,
+      "pinned_r": 2,
+      "provenance": "authored",
+      "uri": "spec://demo/PROP-001#req-parse",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/demo-core/src/parse.rs",
+      "from_symbol": "demo_core::parse::tests::rejects_negative",
+      "line": 88,
+      "pinned_r": 1,
+      "provenance": "authored",
+      "uri": "spec://demo/PROP-001#req-parse",
+      "verb": "verifies"
+    }
+  ],
+  "schema": 3,
+  "spec_units": [
+    {
+      "anchor": "root",
+      "content_hash": "sha256:0f3d418f2cc32233753f395349b700c160738e7aa51a613d081051c74a8ccd34",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "PROP-001 — the demo contract",
+      "line": 1,
+      "uri": "spec://demo/PROP-001#root"
+    },
+    {
+      "anchor": "req-parse",
+      "content_hash": "sha256:e830489a10618c22a97eb919ba7987328d4dc8cf9e7185117e296ed2db5213ab",
+      "doc_path": "PROP-001",
+      "file": "spec/PROP-001.md",
+      "heading": "Parse timeouts",
+      "kind": "req",
+      "line": 5,
+      "revision": 2,
+      "uri": "spec://demo/PROP-001#req-parse"
+    }
+  ],
+  "suspects": [
+    {
+      "current_r": 2,
+      "file": "crates/demo-core/src/parse.rs",
+      "from_symbol": "demo_core::parse::tests::rejects_negative",
+      "line": 88,
+      "pinned_r": 1,
+      "uri": "spec://demo/PROP-001#req-parse"
+    }
+  ],
+  "warnings": [
+    {
+      "code": "duplicate-anchor",
+      "file": "spec/PROP-002.md",
+      "line": 17,
+      "message": "anchor `req-parse` is already defined at spec/PROP-001.md:5"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+[package]
+name = "go-ai-native-extract-bridge"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Spawn-and-parse bridge to the go-extract stdlib-only extractor: NDJSON protocol 1 records in, typed facts + //spec: markers out, with the recipe-carrying error taxonomy"
+
+[dependencies]
+conform-core.workspace = true
+specmark.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

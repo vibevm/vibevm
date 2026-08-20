@@ -1,0 +1,20 @@
+[package]
+name = "go-ai-native-conform-frontend"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The go-extract conform frontend: a conform-core Frontend whose facts come from the stdlib-only go/parser extractor via the go-ai-native-extract-bridge protocol"
+
+[dependencies]
+conform-core.workspace = true
+go-ai-native-extract-bridge.workspace = true
+specmark.workspace = true
+anyhow.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

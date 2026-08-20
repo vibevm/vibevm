@@ -1,0 +1,12 @@
+{
+  "name": "@org.vibevm/ts-extract",
+  "private": true,
+  "type": "module",
+  "description": "Compiler-API fact extractor for the ts-tsc conform frontend and the TypeScript specmap scanner. Run directly with node >= 22.6 (type stripping); resolves the CONSUMER project's typescript install at runtime.",
+  "scripts": {
+    "test": "node --test \"test/*.test.ts\""
+  },
+  "devDependencies": {
+    "typescript": "^6.0.0"
+  }
+}

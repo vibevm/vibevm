@@ -1,0 +1,14 @@
+[package]
+name = "jtd-codegen"
+group = "org.vibevm.ai-native"
+kind = "tool"
+version = "1.0.0"
+epoch = 1
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Provisioning recipe for the vendored jtd-codegen binary - the JSON Type Definition (RFC 8927) code generator wire contracts regenerate through: pins the upstream version and gives per-platform install commands into a project-local tools/jtd-codegen/, keeping the binary itself out of git"
+keywords = ["jtd", "codegen", "wire", "toolchain", "vendoring"]
+
+[compatibility]
+min_vibe_version = "0.1.0"
+requires_kinds = []

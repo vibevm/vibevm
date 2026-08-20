@@ -1,0 +1,8 @@
+# The clean fixture's specmap policy — every export scoped or tagged;
+# the Go orphan gate's green half.
+namespace = "demo"
+scan_roots = ["internal"]
+spec_roots = ["spec"]
+root_spec_docs = []
+exempt = []
+dispositioned = []

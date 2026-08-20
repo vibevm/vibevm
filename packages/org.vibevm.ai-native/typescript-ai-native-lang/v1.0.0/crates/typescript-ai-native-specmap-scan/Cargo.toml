@@ -1,0 +1,16 @@
+[package]
+name = "typescript-ai-native-specmap-scan"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The specmap scanner seam's TypeScript implementation: s9 JSDoc spec markers (via the ts-extract bridge) into the PROP-014 index model, plus the TS orphan gate"
+
+[dependencies]
+specmap-core.workspace = true
+specmark-grammar.workspace = true
+typescript-ai-native-extract-bridge.workspace = true

@@ -1,0 +1,13 @@
+# The clean fixture's policy — same topology as dirty, zero findings.
+
+[go]
+roots = ["."]
+cells_dir = "internal/cells"
+registry_pkg = "internal/registry"
+gated = ["internal/cells/greet", "internal/registry"]
+
+# The invariant-comment-position green exhibit lives under `src/` (the
+# rule's in_src scope); the marker sits at the top, so it is not buried.
+[[go.exempt]]
+unit = "src"
+reason = "invariant-comment-position exhibit fixture, not a domain package"

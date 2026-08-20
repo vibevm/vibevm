@@ -1,0 +1,44 @@
+# specmap.toml — the go-ai-native-lang package's own traceability
+# policy (the D14 self-application: the stack that ships the gates
+# lives under them, at the rust-ai-native grade). Run as
+# `rust-ai-native-specmap --gate --path <this package>` — the
+# orphan-coverage gate over the RUST crates' scope!/#[spec] tags (the
+# code here is Rust; the Go scanner serves consumers' Go trees).
+#
+# Gate-only, not the full --check index: the scope! tags cite this
+# package's own spec units (namespace go-ai-native-lang) alongside
+# core-ai-native mechanisms that live in a SIBLING package — on the
+# package tree alone those edges are cross-package "dangling", so a
+# committed specmap.json would be noise. Coverage is what this gates:
+# every gated crate's public surface carries a scope!/#[spec] tag.
+
+namespace = "go-ai-native-lang"
+
+# Code roots scanned for tags: the package's OWN crates, named
+# explicitly. crates/vendor/* is deliberately absent — byte-synced
+# copies self-traced by their authored package.
+scan_roots = [
+    "crates/go-ai-native-conform-frontend",
+    "crates/go-ai-native-conform",
+    "crates/go-ai-native-cli",
+    "crates/go-ai-native-extract-bridge",
+    "crates/go-ai-native-specmap",
+    "crates/go-ai-native-specmap-scan",
+    "crates/go-ai-native-tcg-bridge",
+    "crates/go-ai-native-tcg",
+]
+
+# The package's prompt content (guide, cards, mechanisms, boot).
+spec_roots = ["spec"]
+
+root_spec_docs = []
+
+# Crates exempt from the orphan gate: the CLI driver binaries — entry
+# points, not discipline domain code.
+exempt = [
+    "go-ai-native-conform",
+    "go-ai-native-specmap",
+    "go-ai-native-cli",
+]
+
+dispositioned = []

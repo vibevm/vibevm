@@ -1,0 +1,17 @@
+[package]
+name = "go-ai-native-specmap-scan"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The scanner seam's Go implementation: //spec: directive markers from go-extract records, lowered into the PROP-014 index model, plus the package-grain orphan gate"
+
+[dependencies]
+go-ai-native-extract-bridge.workspace = true
+specmap-core.workspace = true
+specmark.workspace = true
+specmark-grammar.workspace = true

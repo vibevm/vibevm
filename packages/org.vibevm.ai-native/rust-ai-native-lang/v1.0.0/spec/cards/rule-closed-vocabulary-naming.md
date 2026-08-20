@@ -1,0 +1,49 @@
+# CARD: rule-closed-vocabulary-naming — A cell's name is computed from its manifest {#root}
+
+<status stage="spec" state="done"/>
+
+@fact:status-line **Discipline v0.2 · BETA · T2 · Rust (lineage home of the shared rule; the checker serves Go too)** @status:impl/done
+
+## Band 1 — Identity & Recognition {#band-one-identity}
+
+@fact:CLASSIFICATION Classification: layer=B (names & tokens) + H (weak-reader); mechanism=rule. *The slug names the broader R3-004 aspiration ("closed-vocabulary naming"). The SHIPPED checker enforces one half of it — the name is COMPUTED from the manifest; the closed-vocabulary, one-referent, and no-synonym/shadow halves are named below as unbuilt, not hidden.* @status:impl/done
+
+@fact:INTENT Intent: a cell's canonical type name is not chosen freely but COMPUTED from its manifest — `Pascal(variant)` followed by the seam SPELLED AS WRITTEN — so the type announces which variant of which seam it is, and a rename rides a compiler-checked edit of the manifest, not an author's memory. @status:impl/done
+
+@fact:ALSO-KNOWN-AS Also Known As: computed-cell-name; `cell-name-is-computed`; the `WalFreshnessCheck` house style; R3-004 (composition half); B-038 fork №1. @status:spec/done
+
+@fact:APPLICABILITY-RECOGNITION Applicability / Recognition: an item carries a `cell(seam = "…", variant = "…")` manifest attr — the Rust frontend lowers `#[cell(seam = "…", variant = "…")]` into it VERBATIM, and the Go extract bridge renders `//spec:cell seam=… variant=…` into the SAME `cell(seam = "…", variant = "…")` string (the single place the rust notation is born for Go) — and the declared type name's final path segment is not the composed name. *Detector seed:* for each item with a `cell(…)` attr, read `variant` and `seam`, compose `Pascal(variant)` (split the variant on `_` and `-`, title-case each word, keep the rest as written) concatenated with `seam` verbatim — never re-cased — and compare it to the declared name's last `::` segment (`SatDepSolver`, not `SatDepsolver`). A manifest missing either key composes nothing and is skipped (the vacuity guard — it never reds). @status:impl/done
+
+## Band 2 — Justification & Tradeoffs {#band-two-justification}
+
+@fact:MOTIVATION Motivation: a struct named `Sat` behind a `#[cell(seam = "DepSolver", variant = "sat")]` manifest hides which seam-variant it is — a reader must open the manifest to learn it, and the next author renames the type without touching the manifest, so the two drift. Computing the name (`SatDepSolver`) puts the announcement in the type itself, and a rename tracks a manifest edit through the compiler. The `WalFreshnessCheck` family already lived this way before the rule — `variant = "wal-freshness"` + `seam = "Check"` → `WalFreshnessCheck` — so the convention was house style in the largest cell family; the rule makes it machine-checked rather than remembered. @status:spec/done
+
+@fact:STRUCTURE-AND-PARTICIPANTS Structure & Participants: the conform fact `Fact::Item { symbol, attrs, … }` — the Rust frontend lowers the `#[cell]` manifest into `attrs` verbatim; the Go bridge renders the `//spec:cell` directive into the same `cell(seam = "…", variant = "…")` string, dropping the extra keys (`replaces`, `flag`) the Go directive carries — → `cell-name-is-computed` extracts `seam` and `variant` through one parser both attr shapes feed, composes `Pascal(variant) + seam`, and compares the declared name's final segment; a divergent name is one finding naming both names. Fingerprints key on `(file, declared_name)`, **never line** — the stop.rs lesson: a line-keyed baseline rots on any edit above the cell. @status:impl/done
+
+@fact:COLLABORATIONS Collaborations: rides the same conform gate, SARIF output, and ratchet baseline as the other structural rules; **one engine rule serves Rust AND Go** — both drivers mount `CellNameIsComputed`, so the Go convention (practised by hand until now, with no machine check anywhere) is closed in the same move rather than left as an asymmetry; the `rust-ai-native codemod add-cell` scaffolds from the same `pascal`, so the rule and the codemod agree on every name; every finding renders through the one `req_message` renderer (Class-F grammar, R3-011). @status:impl/done
+
+@fact:GOALS-AND-NON-GOALS Goals / Non-Goals: *Goals:* enforce that a cell's type name IS its manifest composed — `Pascal(variant)` + the seam as written. *Non-Goals (the honest boundary):* **the rule checks COMPOSITION ONLY.** It does NOT check — and the tree contains ZERO of — a closed vocabulary of structural tokens, one-name-one-referent repo-wide, or synonym/shadow detection on contract surfaces. Those are the other halves of R3-004, and **this section is their record** — they are specified and not built, and they are not built because they were **not chosen**: the owner's fork №1 took computed names over the closed-vocabulary variant that would have needed all three. Building them later needs a token vocabulary (none exists in the tree, neither as data nor as a constant) plus a referent/uniqueness checker; both are absent by decision, not by oversight. The rule is also NOT a general naming linter and does NOT touch items without a cell manifest. @status:impl/done
+
+@fact:CONSEQUENCES Consequences: (+) a cell's name announces its seam-variant at every call site; (+) renames are compiler-checked, riding a manifest edit; (+) one rule reads two languages through one attr string, so a second grammar form never appears. (−) a multi-word seam must already be spelled in the casing the name should carry (`DepSolver`, not `depsolver`) — the rule substitutes it verbatim by design, so a sloppily-cased seam reads oddly in the composed name, which is the price of the seam surviving intact; (−) the rule is near-vacuum where the convention already held (14 of 40 cells were pre-compliant), so its value is holding the line, not red-ing today. @status:spec/done
+
+@fact:ALTERNATIVES Alternatives: free naming plus a separate vocabulary/uniqueness lint — the closed-vocabulary variant the owner did not take; it needs a token vocabulary that does not exist in the tree. Pascal-both-halves composition (`SatDepsolver`) — mangles a multi-word seam and was explicitly rejected by fork №1. No check at all — the pre-rule state for Go: a convention held by memory, which decays (the failure mode this discipline exists to close). @status:spec/done
+
+@fact:RISKS-AND-ASSUMPTIONS Risks & Assumptions: assumes the manifest's `seam` is already in the spelling the name should carry, since the rule substitutes it verbatim and never re-cases it; assumes `variant` words compose cleanly under Pascal-case (the `pascal` splits on `_` and `-`). *Sunset:* if cell names become un-representable except through the codemod (the codemod as the sole authoring path makes a divergent name impossible to write), or if the manifest gains a richer naming scheme the composer must follow, the composition check is subsumed and this card retires with its checker (R-050). @status:impl/done
+
+@fact:EVIDENCE-AND-TRANSFER-STRENGTH Evidence & Transfer-strength: checker shipped (`cell-name-is-computed`, doctested in `core-ai-native-conform/src/rules/naming.rs`, mounted in `rust-ai-native-conform` and `go-ai-native-conform`); R3-004. Exhibited on fixtures — Go clean `FormalGreeting` / dirty `Wrongplanner`, Rust test cells brought to their computed names. Measurement (boss, whole tree, B-038 fork №1): **40** manifest-bearing cells; **14** already compliant (all of `vibe-check` → `WalFreshnessCheck`, so the convention was house style before the rule); **13** production renames in host `crates/` (`vibe-resolver` ×5, `vibe-mcp` ×4, `vibe-registry` ×2, `vibe-index` ×2), the rest test fixtures and regenerated `.vibe/cache/**`; **no name is wire-visible** (MCP tool names are separate string literals), so every rename is compiler-checked and internal. Portability: **Rust + Go** (both mount the rule); **TypeScript carries a recorded reason** — it has no cell manifest, so there is nothing to compute, held by the parity law `spec://org.vibevm.ai-native/core-ai-native/00-MANIFESTO#PARITY-GAP-IS-NEVER-SILENT`, not in silence. Tag: **[E-mid]** — the convention's pre-existence as house style is the strongest part of the evidence, but the comprehension gain is unmeasured (parallel to `rule-position-is-a-resource`). @status:spec/done
+
+## Band 3 — Operation {#band-three-operation}
+
+```card-ops
+trigger: WHEN an item carries a cell(seam = "…", variant = "…") manifest attr (Rust #[cell] lowered verbatim; Go //spec:cell rendered by the extract bridge into the same attr) whose declared type name's final segment is not Pascal(variant) + seam-as-written, THEN apply
+mode: gate            # a conform rule: runs over the scanned file set at conform time (per-merge), not per-edit (inline) or on a schedule (raid) — the finding arrives through the normal gate, like invariant-comment-position
+routine:
+  1. Read the finding: it names the declared name and the computed name (Pascal(variant) + the seam verbatim).
+  2. Rename the type to the computed name — the manifest is the source of truth; the name follows it, never the reverse.
+  3. Keep the seam's spelling intact: the rule substitutes it verbatim (DepSolver, not Depsolver); do not re-case it.
+  4. Re-run `rust-ai-native conform check --scope <crate>` (or `go-ai-native conform check`); the finding clears and the baseline only shrinks.
+  5. If the computed name itself looks wrong, fix the manifest (seam/variant) — the name is derived, so the manifest is always the edit site.
+checker: cell-name-is-computed (core-ai-native-conform, T-syn over Item cell attrs; mounted in rust-ai-native-conform and go-ai-native-conform; composition only)
+raid_role: layer=conform; order=after:cell-closure; batch=cell
+budget: active_rules=1; first_signal=conform scan (content-addressed, cached; <1s/file warm)
+```

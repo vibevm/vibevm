@@ -1,0 +1,35 @@
+# rust-ai-native-cli — the umbrella `rust-ai-native` binary (PROP-024
+# code-bearing packages; SELF-SUFFICIENCY-PLAN Phase 3): one shipped entry
+# point for everything the Discipline's procedures run — bootstrap (init),
+# the portable verification floor, the two engines (conform/specmap), and
+# the sweep/brownfield tooling (test-gate, tripwire, trace, health,
+# fast-loop, codemod). The library half is what a project-local wrapper
+# (e.g. a dev repo's task runner) delegates to.
+[package]
+name = "rust-ai-native-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[[bin]]
+name = "rust-ai-native"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace = true
+clap.workspace = true
+serde_json.workspace = true
+toml.workspace = true
+conform-core.workspace = true
+rust-ai-native-conform-frontend.workspace = true
+rust-ai-native-conform.workspace = true
+specmap-core.workspace = true
+rust-ai-native-specmap.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

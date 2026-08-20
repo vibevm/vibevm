@@ -1,0 +1,28 @@
+[package]
+name = "go-ai-native-mcp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The AI-Native Go discipline over MCP: the go-ai-native command surface + the tcg type oracle as agent tools (PROP-027)"
+
+[dependencies]
+mcp-core.workspace = true
+specmark.workspace = true
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+clap.workspace = true
+go-ai-native-conform.workspace = true
+go-ai-native-extract-bridge.workspace = true
+go-ai-native-specmap.workspace = true
+go-ai-native-cli.workspace = true
+go-ai-native-tcg.workspace = true
+go-ai-native-tcg-bridge.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
