@@ -1,6 +1,6 @@
 //! The interactive TUI application state and the fold-aware tree flatten
 //! (PROP-036 §2.11, §2.12). [`App`] owns the model and the derived, scrollable
-//! [`VisibleRow`] list; the tree flatten adapts the Phase-1
+//! [`VisibleRow`] list; the tree flatten adapts the plain-output
 //! [`super::super::plain`] DFS (`│├└` glyphs, `(*)` DAG dedup, orphan pass); the
 //! partitioned modes (SubTables / Tabs) build their stacked / per-tab trees in
 //! [`super::modes`] over the one [`super::flatten`] walk — every mode renders a
@@ -260,8 +260,7 @@ impl App {
             // reproduces the pre-shape walk byte-for-byte under the default
             // members-as-roots shape (the member set equals the declared roots,
             // so (a)'s root set + declared-root orphan pass is exactly the
-            // PROP-036 §2.12 flatten). Phase 5+ will swap this filter for the
-            // search/selection set.
+            // PROP-036 §2.12 flatten).
             DisplayMode::All => {
                 let filter: BTreeSet<String> = self.tree.roots.iter().cloned().collect();
                 super::flatten::flatten(
@@ -346,7 +345,6 @@ impl App {
 
     /// Set the tree shape to a specific value (the F2 sort menu, PROP-037 §3.3
     /// `#tree-shapes`). Mirrors [`App::set_ordering`]: rebuild + reset selection.
-    #[allow(dead_code)] // selected by the F2 sort menu (§7.2, Phase 5+); exercised in tests today.
     pub fn set_shape(&mut self, shape: TreeShape) {
         self.shape = shape;
         self.rebuild();
@@ -365,7 +363,6 @@ impl App {
     /// specific value (the F2 sort menu "Block order" group, PROP-037 §7.2).
     /// Mirrors [`App::set_ordering`] / [`App::set_shape`]: rebuild + reset the
     /// selection to the top.
-    #[allow(dead_code)] // selected by the F2 sort menu "Block order" group (§7.2, Phase 7); exercised in tests.
     pub fn set_static_first(&mut self, static_first: bool) {
         self.static_first = static_first;
         self.rebuild();

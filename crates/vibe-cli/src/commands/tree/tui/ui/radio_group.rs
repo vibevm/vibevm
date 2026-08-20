@@ -13,12 +13,12 @@
 //! before any single-choice dialog is ready to own it — the same trap `Button`
 //! avoids by inventing.
 //!
-//! Phase 7 therefore takes §2.1 option 3 (invent on `ratatui_core`) for the
+//! This component takes §2.1 option 3 (invent on `ratatui_core`) for the
 //! render surface, styled exclusively through [`theme`] — including the
 //! selected/unselected marks, which come from `theme.glyphs().flag_on` (●) and
 //! `theme.glyphs().flag_off` (○), never a hard-coded literal. `↑`/`↓`/`Enter`
 //! are wired at the controller layer when a single-choice dialog owns a
-//! `RadioGroup`; the primitive is render + navigate for now.
+//! `RadioGroup`; the primitive owns rendering and navigation.
 //!
 //! [`super::button`]: super::button
 
@@ -38,9 +38,6 @@ use super::super::theme::Theme;
 /// with `theme.glyphs().flag_off` (○) — the theme vocabulary, so the marks
 /// degrade through every rendering tier (PROP-037 §2.2.2/§2.2.3) and a restyle
 /// never touches this struct.
-// Phase-7 component foundation; lights up when a single-choice dialog (the
-// copy-settings §10.2 modal) composes it. Matches the `theme` module's allow.
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct RadioGroup {
     label: String,
@@ -48,11 +45,10 @@ pub struct RadioGroup {
     selected: usize,
 }
 
-#[allow(dead_code)]
 impl RadioGroup {
     /// Build a radio group with `label` (rendered as the title) and `options`.
     /// Starts with the first option selected (a radio group always has exactly
-    /// one); call [`RadioGroup::selected`] to move the selection.
+    /// one); navigation methods move the selection.
     #[must_use]
     pub fn new(label: impl Into<String>, options: Vec<String>) -> Self {
         Self {
@@ -64,6 +60,7 @@ impl RadioGroup {
 
     /// Set the selected index (builder), clamped to the valid range. A radio
     /// group with no options leaves the selection at 0.
+    #[cfg(test)]
     #[must_use]
     pub fn selected(mut self, selected: usize) -> Self {
         if !self.options.is_empty() {
@@ -73,12 +70,14 @@ impl RadioGroup {
     }
 
     /// The group's label (its title).
+    #[cfg(test)]
     #[must_use]
     pub fn label(&self) -> &str {
         &self.label
     }
 
     /// The option labels.
+    #[cfg(test)]
     #[must_use]
     pub fn options(&self) -> &[String] {
         &self.options

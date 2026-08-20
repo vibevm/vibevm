@@ -113,6 +113,7 @@ impl Glyphs {
 /// choice (PROP-037 §2.2.4). Tier 0 builds its [`Glyphs`] with `+` corners
 /// directly via [`Glyphs::ascii`].
 #[must_use]
+#[cfg(test)]
 pub fn corners(rounded: bool) -> [&'static str; 4] {
     if rounded {
         ["╭", "╮", "╰", "╯"]

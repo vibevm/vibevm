@@ -5,7 +5,7 @@
 //! and both are carried by one [`Theme`] value-type that projects onto the
 //! detected rendering [`Tier`] (§2.2.3).
 //!
-//! ## Phase 9a — the theme is threaded, not global (PROP-037 §9)
+//! ## The theme is threaded, not global (PROP-037 §9)
 //!
 //! Every component takes the active [`Theme`] *by reference* — there is no
 //! process-wide default singleton. [`App`](super::state::App) owns the one
@@ -28,23 +28,18 @@ use specmark::spec;
 // `&Theme`; the per-palette structs and `resolve` are the registration points
 // a palette identity flows through.
 #[allow(unused_imports)]
-pub use glyphs::{Glyphs, corners};
+pub use glyphs::Glyphs;
 pub use palette::{Palette, Rgb, Role};
 #[allow(unused_imports)]
 pub use palettes::{Frappe, Latte, Macchiato, Mocha, PaletteName, RosePine, resolve};
 #[allow(unused_imports)]
 pub use tier::{Tier, detect_tier, project_color};
 
-// The submodules are public so the staged Phase-3 API (`detect_tier`,
-// `corners`, the Catppuccin palettes, …) is reachable as `theme::tier::…`
-// etc.; `#[allow(dead_code)]` covers the items not yet wired through `App`.
-#[allow(dead_code)]
+// The submodules are public so the palette, glyph, and tier vocabulary remains
+// available under `theme::*` as well as through the curated re-exports above.
 pub mod glyphs;
-#[allow(dead_code)]
 pub mod palette;
-#[allow(dead_code)]
 pub mod palettes;
-#[allow(dead_code)]
 pub mod tier;
 
 // ---------------------------------------------------------------------------
@@ -97,21 +92,21 @@ impl Theme {
 
     /// The active palette's display name (e.g. `"rose-pine"`,
     /// `"catppuccin-mocha"`).
-    #[allow(dead_code)] // introspection: read by settings tests + a future settings UI.
+    #[cfg(test)]
     #[must_use]
     pub fn palette_name(&self) -> &'static str {
         self.palette.name()
     }
 
     /// The active rendering tier.
-    #[allow(dead_code)] // introspection: read by settings tests + a future settings UI.
+    #[cfg(test)]
     #[must_use]
     pub fn tier(&self) -> Tier {
         self.tier
     }
 
     /// Whether the active palette is a light-background palette.
-    #[allow(dead_code)] // introspection: read by a future settings UI / AIUI.
+    #[cfg(test)]
     #[must_use]
     pub fn is_light(&self) -> bool {
         self.palette.is_light()

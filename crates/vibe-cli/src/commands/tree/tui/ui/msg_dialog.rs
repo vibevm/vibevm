@@ -3,7 +3,7 @@
 //!
 //! This is the shared base both the standard `ComingSoon` modal (PROP-037 §2.10
 //! — the placeholder wired to every not-yet-built feature) and the quit-confirm
-//! dialog (PROP-037 §7.4) build on. Phase 3 keeps it minimal: a renderable
+//! dialog (PROP-037 §7.4) build on. It stays minimal: a renderable
 //! value struct, no state enum — `Enter`/`Esc` close at the controller layer
 //! when a dialog owns the frame.
 
@@ -27,16 +27,12 @@ use super::window::Window;
 /// The title is rendered in the window border; the body is a single line of
 /// plain text; the `OK` button is always focused (a one-button dialog has an
 /// unambiguous default).
-// Phase-3 component foundation; lights up when P6 (quit-confirm) / P7
-// (ComingSoon) compose it. Matches the `theme` module's Phase-3 `#[allow]`.
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct MsgDialog {
     title: String,
     body: String,
 }
 
-#[allow(dead_code)]
 impl MsgDialog {
     /// Build a dialog with `title` (shown in the window border) and `body` (the
     /// one content line).
@@ -49,12 +45,14 @@ impl MsgDialog {
     }
 
     /// The dialog title (rendered in the window border).
+    #[cfg(test)]
     #[must_use]
     pub fn title(&self) -> &str {
         &self.title
     }
 
     /// The body line.
+    #[cfg(test)]
     #[must_use]
     pub fn body(&self) -> &str {
         &self.body

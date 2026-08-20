@@ -57,6 +57,7 @@ impl Palette for RosePine {
         false
     }
 
+    #[cfg(test)]
     fn name(&self) -> &'static str {
         "rose-pine"
     }

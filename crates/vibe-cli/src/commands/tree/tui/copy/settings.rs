@@ -101,7 +101,7 @@ impl CopySettings {
     }
 
     /// The focused group (0 = format, 1 = destination).
-    #[allow(dead_code)] // introspection; exercised in tests.
+    #[cfg(test)]
     #[must_use]
     pub fn focused_group(&self) -> usize {
         self.focus

@@ -44,12 +44,9 @@ pub struct Group {
 }
 
 impl Group {
-    /// An unnamed group — a plain bordered frame.
-    ///
-    /// (Unnamed construction + the `name` accessor are reserved for callers that
-    /// build a frame dynamically; the F2 menu uses [`Group::named`] today.)
+    /// An unnamed group for component tests.
+    #[cfg(test)]
     #[must_use]
-    #[allow(dead_code)]
     pub fn new() -> Self {
         Self {
             name: None,
@@ -77,8 +74,8 @@ impl Group {
     }
 
     /// The group's name, if any.
+    #[cfg(test)]
     #[must_use]
-    #[allow(dead_code)]
     pub fn name(&self) -> Option<&str> {
         self.name.as_deref()
     }
@@ -116,6 +113,7 @@ impl Group {
     }
 }
 
+#[cfg(test)]
 impl Default for Group {
     fn default() -> Self {
         Self::new()

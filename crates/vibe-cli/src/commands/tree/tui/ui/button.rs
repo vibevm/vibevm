@@ -17,7 +17,7 @@
 //! through every render call or drag the whole focus subsystem in before any
 //! dialog is ready to own it —both worse than a minimal primitive.
 //!
-//! Phase 3 therefore takes §2.1 option 3 (invent on `ratatui_core`) for the
+//! This component takes §2.1 option 3 (invent on `ratatui_core`) for the
 //! render surface, styled exclusively through [`theme`] so no `Color` is
 //! hard-coded and the look degrades through every rendering tier (PROP-037
 //! §2.2.3). The wrap (option 1) is a deliberate later retrofit: once a dialog
@@ -42,19 +42,15 @@ use super::super::theme::Theme;
 /// theme yet). Construction is a builder; [`Button::render`] draws a single row.
 ///
 /// `Enter`-activates is wired at the controller layer when a dialog owns the
-/// button; this primitive is render-only for Phase 3.
+/// button; this primitive is render-only.
 ///
 /// [`Color`]: ratatui_core::style::Color
-// Phase-3 component foundation; lights up when P6 (quit-confirm) / P7
-// (ComingSoon) compose it. Matches the `theme` module's Phase-3 `#[allow]`.
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct Button {
     label: String,
     focused: bool,
 }
 
-#[allow(dead_code)]
 impl Button {
     /// New button with `label`. Starts unfocused; call [`Button::focused`] to
     /// mark it as the active control.
@@ -74,13 +70,8 @@ impl Button {
         self
     }
 
-    /// The button's label text.
-    #[must_use]
-    pub fn label(&self) -> &str {
-        &self.label
-    }
-
     /// Whether this button renders as focused.
+    #[cfg(test)]
     #[must_use]
     pub fn is_focused(&self) -> bool {
         self.focused

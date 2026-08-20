@@ -33,12 +33,14 @@ pub enum Tier {
 
 impl Tier {
     /// Whether this tier renders full RGB (`Tier::T3` only).
+    #[cfg(test)]
     #[must_use]
     pub fn supports_truecolor(self) -> bool {
         self == Tier::T3
     }
 
     /// Whether this tier falls back to ASCII `+-|` frames (`Tier::T0` only).
+    #[cfg(test)]
     #[must_use]
     pub fn uses_ascii_frames(self) -> bool {
         self == Tier::T0

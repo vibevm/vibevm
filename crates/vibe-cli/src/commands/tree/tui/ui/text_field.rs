@@ -13,7 +13,7 @@
 //! the focus subsystem in before the file-path modal (§10.5) is ready to own it
 //! — the same trap `Button`/`RadioGroup` avoid by inventing.
 //!
-//! Phase 7 therefore takes §2.1 option 3 (invent on `ratatui_core`) for a
+//! This component takes §2.1 option 3 (invent on `ratatui_core`) for a
 //! minimal primitive: append-only `type_char`/`backspace`, render the value with
 //! a `█` block cursor when focused, all colour through [`theme`]. The §2.8 "a
 //! later REQ enriches it" note covers the eventual wrap (cursor movement, selection,
@@ -37,16 +37,12 @@ use super::super::theme::Theme;
 /// value. The whole look flows through [`theme`]: a focused field paints the
 /// accent ground under the cursor, so focus reads consistently with the rest of
 /// the TUI and degrades through every rendering tier.
-// Phase-7 component foundation; lights up when the file-path modal (§10.5)
-// composes it. Matches the `theme` module's allow.
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct TextField {
     value: String,
     focused: bool,
 }
 
-#[allow(dead_code)]
 impl TextField {
     /// New empty, unfocused field.
     #[must_use]
@@ -81,6 +77,7 @@ impl TextField {
     }
 
     /// Whether this field renders as focused.
+    #[cfg(test)]
     #[must_use]
     pub fn is_focused(&self) -> bool {
         self.focused

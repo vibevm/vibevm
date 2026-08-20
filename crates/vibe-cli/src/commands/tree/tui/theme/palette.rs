@@ -60,25 +60,17 @@ pub enum Role {
 /// A canonical `sRGB` colour value — the single carrier a [`Palette`] emits.
 ///
 /// Stored as three `u8` channels so a palette's identity is terminal-agnostic;
-/// [`Rgb::to_color`] lifts it to a ratatui [`Color::Rgb`] for Tier 3 rendering,
-/// and [`crate::commands::tree::tui::theme::project_color`] projects it down to
-/// 256 / 16 / mono for the lower tiers (PROP-037 §2.2.3).
-///
-/// [`Color::Rgb`]: ratatui_core::style::Color::Rgb
+/// [`crate::commands::tree::tui::theme::project_color`] projects it onto the
+/// active rendering tier (PROP-037 §2.2.3).
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Rgb(pub u8, pub u8, pub u8);
 
 impl Rgb {
     /// const constructor — the only way to build a palette table at const time.
+    #[cfg(test)]
     #[must_use]
     pub const fn from_hex(r: u8, g: u8, b: u8) -> Self {
         Self(r, g, b)
-    }
-
-    /// Lift to a ratatui truecolour (Tier 3).
-    #[must_use]
-    pub fn to_color(self) -> ratatui_core::style::Color {
-        ratatui_core::style::Color::Rgb(self.0, self.1, self.2)
     }
 }
 
@@ -105,13 +97,11 @@ impl Rgb {
 ///         }
 ///     }
 ///     fn is_light(&self) -> bool { true }
-///     fn name(&self) -> &'static str { "mono" }
 /// }
 ///
 /// let p = Mono;
 /// assert_eq!(p.role(Role::Base), Rgb(240, 240, 240));
 /// assert!(p.is_light());
-/// assert_eq!(p.name(), "mono");
 /// ```
 pub trait Palette: Send + Sync {
     /// Resolve a semantic [`Role`] to its exact [`Rgb`] in this palette.
@@ -120,5 +110,6 @@ pub trait Palette: Send + Sync {
     /// inversion, PROP-037 §2.2.1).
     fn is_light(&self) -> bool;
     /// The palette's display name (e.g. `"rose-pine"`).
+    #[cfg(test)]
     fn name(&self) -> &'static str;
 }

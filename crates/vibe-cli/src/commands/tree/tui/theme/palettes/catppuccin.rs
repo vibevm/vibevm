@@ -119,6 +119,7 @@ impl Palette for Mocha {
     fn is_light(&self) -> bool {
         false
     }
+    #[cfg(test)]
     fn name(&self) -> &'static str {
         "catppuccin-mocha"
     }
@@ -132,6 +133,7 @@ impl Palette for Macchiato {
     fn is_light(&self) -> bool {
         false
     }
+    #[cfg(test)]
     fn name(&self) -> &'static str {
         "catppuccin-macchiato"
     }
@@ -145,6 +147,7 @@ impl Palette for Frappe {
     fn is_light(&self) -> bool {
         false
     }
+    #[cfg(test)]
     fn name(&self) -> &'static str {
         "catppuccin-frappe"
     }
@@ -158,6 +161,7 @@ impl Palette for Latte {
     fn is_light(&self) -> bool {
         true
     }
+    #[cfg(test)]
     fn name(&self) -> &'static str {
         "catppuccin-latte"
     }

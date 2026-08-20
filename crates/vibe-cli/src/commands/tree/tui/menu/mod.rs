@@ -103,7 +103,6 @@ impl MenuState {
     /// The ComingSoon placeholder menu (PROP-037 §2.10), titled with `feature`.
     /// Drawn through [`ComingSoon`]; `Enter`/`Esc` close it.
     #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#coming-soon")]
-    #[allow(dead_code)] // first user: copy::png_coming_soon (§10.4); wired when copy-settings lands.
     pub fn coming_soon(feature: impl Into<String>) -> Self {
         Self {
             title: feature.into(),

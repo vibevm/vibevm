@@ -37,6 +37,7 @@ pub enum PaletteName {
 
 impl PaletteName {
     /// The display name of the palette this variant resolves to.
+    #[cfg(test)]
     #[must_use]
     pub fn label(self) -> &'static str {
         match self {
@@ -51,8 +52,7 @@ impl PaletteName {
 
 /// The single registration point: turn a [`PaletteName`] into a boxed,
 /// dyn-dispatchable [`Palette`]. This is the only match a palette identity
-/// flows through — the [`Theme`](super::Theme) constructor calls it, and a
-/// future settings-driven palette switch calls nothing else.
+/// flows through — the [`Theme`](super::Theme) constructor calls it.
 ///
 /// [`Theme`](super::Theme): crate::commands::tree::tui::theme::Theme
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#palette-tokens")]

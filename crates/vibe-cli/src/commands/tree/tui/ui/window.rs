@@ -10,10 +10,8 @@
 //! recipe, once; callers pass a styled title line and their content's outer
 //! size, and get back the inner content rect.
 //!
-//! Phase 3 ships the centered-popup constructor. The full §2.2.4 window
-//! aesthetic (a solid shadow so the panel reads as raised, a top-right `[✕]`
-//! close affordance) layers on as fields on [`Window`] in a later phase; the
-//! frame/title/panel composition here is the stable base they compose over.
+//! The centered-popup constructor is the stable frame/title/panel composition
+//! shared by every popup caller.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-cli/PROP-037#window");
 
@@ -31,9 +29,7 @@ use super::super::theme::Theme;
 /// A bordered, titled panel — the base of every modal and the card (PROP-037
 /// §2.3).
 ///
-/// Phase 3 exposes the centered-popup constructor ([`Window::centered`]); a
-/// close affordance and shadow (§2.2.4) land as fields on this struct in a
-/// later phase. Every modal in the TUI composes a `Window` for its frame — call
+/// Every modal in the TUI composes [`Window::centered`] for its frame — call
 /// sites never touch `Block`/`Clear`/`Layout` directly for the popup pattern
 /// (PROP-037 §2.1, "call sites never touch `rat_widget::` directly").
 pub struct Window;

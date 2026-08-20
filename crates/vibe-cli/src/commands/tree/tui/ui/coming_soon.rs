@@ -27,7 +27,7 @@ const BODY: &str = "This feature is not built yet.";
 ///
 /// Composes [`MsgDialog`] for the whole render — the title, body, and focused OK
 /// button all flow through [`super::super::theme`], so this struct adds only the
-/// fixed-body policy and the feature-name accessor.
+/// fixed-body policy.
 #[derive(Debug, Clone)]
 pub struct ComingSoon {
     dialog: MsgDialog,
@@ -44,16 +44,16 @@ impl ComingSoon {
     }
 
     /// The feature name (rendered as the window title).
+    #[cfg(test)]
     #[must_use]
-    #[allow(dead_code)] // introspection; the render path reads the title through MsgDialog.
     pub fn feature(&self) -> &str {
         // The dialog's title is the feature name by construction.
         self.dialog.title()
     }
 
     /// The fixed body line ("This feature is not built yet.").
+    #[cfg(test)]
     #[must_use]
-    #[allow(dead_code)] // introspection; the render path carries the body through MsgDialog.
     pub fn body(&self) -> &'static str {
         BODY
     }

@@ -175,12 +175,6 @@ fn parse_launch_mode(value: Option<&str>) -> LaunchMode {
 /// yields the pre-settings look.
 #[derive(Debug, Clone)]
 pub struct TreePrefs {
-    /// The active palette name.
-    #[allow(dead_code)] // introspection: carried for a future settings UI / `vibe prefs show`.
-    pub palette: PaletteName,
-    /// The rendering tier — an explicit override, or `None` to auto-detect.
-    #[allow(dead_code)] // introspection: carried for a future settings UI / `vibe prefs show`.
-    pub tier_override: Option<Tier>,
     /// The display mode (`x` / F3).
     pub mode: DisplayMode,
     /// The row ordering (`n` / F2 sort).
@@ -192,12 +186,10 @@ pub struct TreePrefs {
 }
 
 impl Default for TreePrefs {
-    /// The built-in defaults: Rosé Pine, auto-detect tier, `all` mode,
-    /// topological sort, members-as-roots shape, static-first.
+    /// The built-in defaults: `all` mode, topological sort,
+    /// members-as-roots shape, static-first.
     fn default() -> Self {
         Self {
-            palette: PaletteName::RosePine,
-            tier_override: None,
             mode: DisplayMode::All,
             sort: Ordering::Topological,
             shape: TreeShape::MembersAsRoots,
@@ -251,9 +243,9 @@ impl TreeSettings {
         }
     }
 
-    /// The declared `vibe.tree.*` schema (introspection for the AIUI / `vibe prefs`).
+    /// The declared `vibe.tree.*` schema.
+    #[cfg(test)]
     #[must_use]
-    #[allow(dead_code)] // introspection: read by tests + a future `vibe prefs` surface.
     pub fn schema(&self) -> &Schema {
         &self.schema
     }
@@ -311,11 +303,6 @@ impl TreeSettings {
     #[must_use]
     pub fn snapshot(&self, prefs: &ResolvedPrefs) -> TreePrefs {
         TreePrefs {
-            palette: parse_palette(prefs.get(KEY_PALETTE).and_then(toml::Value::as_str)),
-            tier_override: prefs
-                .get(KEY_TIER)
-                .and_then(toml::Value::as_integer)
-                .and_then(tier_from_int),
             mode: parse_mode(prefs.get(KEY_MODE).and_then(toml::Value::as_str)),
             sort: parse_sort(prefs.get(KEY_SORT).and_then(toml::Value::as_str)),
             shape: parse_shape(prefs.get(KEY_SHAPE).and_then(toml::Value::as_str)),

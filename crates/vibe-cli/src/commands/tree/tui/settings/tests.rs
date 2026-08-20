@@ -100,8 +100,6 @@ fn tier_setting_overrides_detection() {
     let rp = s.load();
     let theme = s.theme(&rp);
     assert_eq!(theme.tier(), Tier::T1);
-    // And the snapshot carries the override.
-    assert_eq!(s.snapshot(&rp).tier_override, Some(Tier::T1));
 }
 
 #[test]
@@ -116,7 +114,6 @@ fn missing_settings_yield_defaults() {
     assert_eq!(snap.sort, Ordering::Topological);
     assert_eq!(snap.shape, TreeShape::MembersAsRoots);
     assert!(snap.static_first);
-    assert!(snap.tier_override.is_none());
 }
 
 #[test]

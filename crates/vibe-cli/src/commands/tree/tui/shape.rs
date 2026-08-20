@@ -33,12 +33,10 @@ pub enum TreeShape {
     /// member depends on it; children are its same-set dependencies (cross-set
     /// deps omitted). A shape that intentionally narrows never resurrects the
     /// pruned edges as orphans, so the orphan pass is suppressed.
-    #[allow(dead_code)] // selected by the F2 sort menu (Phase 5+); exercised in tests today.
     LoadTypeForest,
     /// **(c) pruned tree** — the tree from the declared roots, keeping only
     /// branches that reach a filter member. Orphan pass suppressed (a pruned
     /// shape must not resurrect the branches it just cut).
-    #[allow(dead_code)] // selected by the F2 sort menu (Phase 5+); exercised in tests today.
     PrunedTree,
 }
 

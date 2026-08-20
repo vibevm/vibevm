@@ -68,19 +68,11 @@ impl Card {
         });
     }
 
-    /// The field rows — the introspection surface for the card copy provider
-    /// (PROP-037 §10.1) and tests. Not read by `render` itself.
-    #[allow(dead_code)]
+    /// The field rows for component tests.
+    #[cfg(test)]
     #[must_use]
     pub fn rows(&self) -> &[CardRow] {
         &self.rows
-    }
-
-    /// Whether the card has any rows.
-    #[allow(dead_code)]
-    #[must_use]
-    pub fn is_empty(&self) -> bool {
-        self.rows.is_empty()
     }
 
     /// Serialize the card's rows as Markdown (PROP-037 §10.1/§10.3
@@ -88,7 +80,6 @@ impl Card {
     /// by a blank line. The copy provider's card serializer: the same [`Card`]
     /// the detail modal builds is serialized here, so the copy is byte-faithful
     /// to what is on screen ("what I see is what I copy", §10.1).
-    #[allow(dead_code)] // first user: copy::card_markdown (§10.1).
     #[must_use]
     pub fn to_markdown(&self) -> String {
         let mut out = String::new();

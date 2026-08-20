@@ -72,11 +72,8 @@ pub mod radio_group;
 pub mod text_field;
 pub mod window;
 
-// `Button`, `RadioGroup`, `TextField`, and `MsgDialog`/`ComingSoon` are the
-// component foundation; several light up as their owning dialogs land (P6
-// quit-confirm, P7 ComingSoon/PNG, and the later copy-settings §10.2 / file-path
-// §10.5 modals). `Window`, `Group`, and `Card` are live today. Matches the
-// `theme` module's Phase-3 `#[allow]`.
+// Component types are re-exported here so owning dialogs share one stable UI
+// vocabulary while their implementations remain split by file.
 #[allow(unused_imports)]
 pub use button::Button;
 pub use card::Card;
