@@ -16,8 +16,8 @@ use specmark::spec;
 
 use crate::error::{Error, Result};
 
-/// Write `bytes` to `path` atomically (tmp + fsync + rename). Creates
-/// the parent directory when missing.
+/// Write `bytes` to `path` atomically (tmp + file fsync + rename + parent
+/// directory fsync). Creates the parent directory when missing.
 #[spec(
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#persistence",
     r = 1
@@ -33,6 +33,24 @@ pub fn atomic_write(path: &Path, bytes: &[u8]) -> Result<()> {
         f.sync_all().map_err(|e| io_err(&tmp, e))?;
     }
     fs::rename(&tmp, path).map_err(|e| io_err(path, e))?;
+    fsync_parent_dir(path)?;
+    Ok(())
+}
+
+#[cfg(unix)]
+fn fsync_parent_dir(path: &Path) -> Result<()> {
+    let parent = path
+        .parent()
+        .filter(|parent| !parent.as_os_str().is_empty())
+        .unwrap_or(Path::new("."));
+    let dir = fs::File::open(parent).map_err(|e| io_err(parent, e))?;
+    dir.sync_all().map_err(|e| io_err(parent, e))
+}
+
+#[cfg(not(unix))]
+fn fsync_parent_dir(_path: &Path) -> Result<()> {
+    // Windows cannot fsync a directory through `File::open`; durability of
+    // the renamed directory entry is provided by the platform's rename path.
     Ok(())
 }
 

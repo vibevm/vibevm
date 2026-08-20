@@ -867,9 +867,10 @@ untouched by policy, and this is the route back to what it read:
 
 - [ ] **B-093** — codegen atomic-swap (новый каталог + перестановка
       указателя). Воркер: codex, `.wt/P2-CODEGEN`.
-- [ ] **B-087** — fsync каталога в атомарной записи vibe-index (4
-      сайта). Воркер: codex, `.wt/P2-FSYNC`. Посадка: + статус-флип
-      PROP-005 `##AW-FSYNC-DIR` (суд).
+- [x] **B-087** — **закрыт**: `fsync_parent_dir` после rename в одном
+      `atomic_write` (7 писателей проекций); замер сузил 4 сайта до 1
+      (journal append-in-place, lockfile/auth — fixtures). PROP-005
+      флипнут + суд confirmed×2 + seal. Воркер: codex, `.wt/P2-FSYNC`.
 - [x] **B-090** — **закрыт**: `check_tail` чистой fn + 5 оффлайн-тестов
       (инвариант «не „in sync“ над Behind/Drift»); живой прогон поймал
       настоящий Behind-хвост. Воркер: claudez, `.wt/P2-MIRROR`.

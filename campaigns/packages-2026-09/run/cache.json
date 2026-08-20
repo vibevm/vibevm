@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-20T12:55:41Z",
+  "updated_at": "2026-08-20T14:38:36Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -169773,7 +169773,7 @@
       }
     },
     "spec/modules/vibe-index/PROP-005-package-index.md": {
-      "content_hash": "2daaa099b24082fc6010eeb97b3f2e887ed71349ff7c7e80938ef753b1c47e1e",
+      "content_hash": "17235e021d709d76e5bae078fce9b6c36aa329c74ce0e1ebf3f90c815c9e3fad",
       "rollup": {
         "explicit": [
           "impl",
@@ -169799,7 +169799,7 @@
         "coverage_note": "verdicts keyed by fact anchors; cell-markers inherit their row anchor (0 cells); document <status> judged as _elements",
         "fact_count": 278,
         "marker_count": 279,
-        "processed_hash": "2daaa099b24082fc6010eeb97b3f2e887ed71349ff7c7e80938ef753b1c47e1e",
+        "processed_hash": "17235e021d709d76e5bae078fce9b6c36aa329c74ce0e1ebf3f90c815c9e3fad",
         "verdicts": {
           "milestone-line": {
             "v": "confirmed",
@@ -170782,7 +170782,8 @@
           "AW-FSYNC-DIR": {
             "v": "confirmed",
             "ev": [
-              "IMPLEMENTED and honestly marked, verified against the richest single-file evidence of the tail: crates/vibe-index ships as a workspace member (cli/ + index/ + lock/lockfile/content_hash modules; 91 specmap edges), the org-index layout is live and GROUP-NATIVE per the M1.19 realignment (primary.jsonl keyed (group,name,version), by-name/<name>.json candidate sets sorted by group, workspace_origin in the §2.6 entry schema AND the shipped JTD at crates/vibe-index/schemas/index-entry.jtd.json), vibe search walks index servers per registry (VIBEVM_INDEX_URL_<R>, its --help cites PROP-005 and M2.10), vibe outdated rides the consumer fast path, the publisher hook realigned (PROP-008 §2.8 record), and manual-tests/M2.10-index-smoke.md exists; opt-in-everywhere holds (no index URL -> live resolve unchanged)"
+              "crates/vibe-index/src/index/persistence.rs: fsync_parent_dir called by atomic_write strictly after fs::rename; cfg(unix) opens parent dir and sync_all with errors surfaced as Error::Io; cfg(not(unix)) no-op with the recorded reason — exactly the step as written including its Windows parenthesis",
+              "cargo test -p vibe-index persistence: 5 passed through the new path; clippy -D warnings clean"
             ]
           },
           "REPOMD-LAST-LAW": {
@@ -172253,7 +172254,8 @@
           "THE-DIRECTORY-FSYNC-IS-NOT-DONE": {
             "v": "confirmed",
             "ev": [
-              "crates/vibe-index/src/index/persistence.rs:25-37 is the whole of `atomic_write` — create_dir_all, tmp sibling, write_all, `sync_all` on the FILE, rename — with no directory flush; the crate's four `sync_all` call sites (persistence.rs:33, journal/store.rs:56, lockfile.rs:82, server/auth.rs:116) are all file-level"
+              "rewritten 2026-08-20 to record the closure it previously denied: rg over crates/vibe-index/src shows the only rename-protocol site is index/persistence.rs and every production projection writer (by_name, checkpoint, inverted, memory, primary, repomd, scanner/org_cache) reaches fsync via the one atomic_write",
+              "journal/store.rs is append-in-place NDJSON (no tmp→rename) so the protocol does not describe it; lockfile.rs:82 and server/auth.rs:116 sync_all sites are test fixtures on read-only production paths — the three exclusions are measured verdicts in the fact text"
             ]
           },
           "THE-HOOKS-TWO-SETTINGS-ARE-KEYED-BY-REGISTRY-NOT-BY-HOST": {
@@ -172563,8 +172565,8 @@
             ]
           }
         },
-        "verified_at": "2026-08-20T09:32:48Z",
-        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8 + W9 + W10 + B091-COORD-REPAIR-2026-08-19 + BURIED-RETIREMENT-FACT-2026-08-19 + YANK-VERB-AND-REFUSAL-RULES-2026-08-19 + BURY-VERB-AND-THE-PARTITION-2026-08-19 + OWNER-RULINGS-STORE-AND-RESCAN-2026-08-20 + C3-TRUTH + R3-INDEXURL + R3-LADDER"
+        "verified_at": "2026-08-20T14:38:36Z",
+        "verify_batch": "c4f3-index + G6-prop005-schema + A4-WEBHOOKS + A1-AUTOPUBLISH + A3-A5A + P1-PROP005-A + IDENT-2026-08-13-new + F1-3-RECIPE + F1-4-SLOTS + F1-5-TAGGED + F2-1-CLOCK + F2-2-VERSION + F2-3-IDEMPOTENT + F3-RECIPE-RECHECK + F32-PROJECTION-VERSION + F33-TOLERANCE + PROP005-REALIGN-2026-08-18 + PROP005-SUBSCRIBER-2026-08-18 + PROP005-HOMING-2026-08-18 + W8 + W9 + W10 + B091-COORD-REPAIR-2026-08-19 + BURIED-RETIREMENT-FACT-2026-08-19 + YANK-VERB-AND-REFUSAL-RULES-2026-08-19 + BURY-VERB-AND-THE-PARTITION-2026-08-19 + OWNER-RULINGS-STORE-AND-RESCAN-2026-08-20 + C3-TRUTH + R3-INDEXURL + R3-LADDER + P2-B087"
       }
     },
     "spec/modules/vibe-mcp/PROP-015-mcp-integration.md": {
