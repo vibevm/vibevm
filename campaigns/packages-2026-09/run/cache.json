@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-20T20:08:15Z",
+  "updated_at": "2026-08-21T18:26:46Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -161136,6 +161136,29 @@
         "verified_at": "2026-08-20T20:08:15Z",
         "verify_batch": "PROP044-SAME-PASS + VERDICT-LORE-SAME-PASS + PUBLIC-SWITCH-RULING + PROVIDER-NEUTRALITY-RULING + FREEZE-MODEL-RULING + IDENT-2026-08-13-new + IDENT-2026-08-13-rejudge + COPY-2026-08-13 + RATIFY-2026-08-13 + W8 + R2-WIRE64 + B095-BOUNDARY"
       }
+    },
+    "spec/common/PROP-045-xml-spec-sources.md": {
+      "content_hash": "17d55e799e51fa56a8f44e416b43e5bec0a713ef10a24c3277ffb3ef6ccd6620",
+      "rollup": {
+        "explicit": [
+          "spec",
+          "work"
+        ],
+        "computed": [
+          "spec",
+          "work"
+        ],
+        "effective": [
+          "spec",
+          "work"
+        ],
+        "marker_count": 17,
+        "fact_count": 16,
+        "unmarked_facts": 0
+      },
+      "marker_count": 17,
+      "unit_count": 7,
+      "issue_count": 0
     },
     "spec/design/README.md": {
       "content_hash": "0cc63bcb1ba1947e561c77d167d4eecb7e4070a2af8ba736ae3deebfc3c9067b",
