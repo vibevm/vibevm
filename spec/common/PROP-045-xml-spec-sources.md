@@ -303,6 +303,35 @@ owner says otherwise. The lane DEFAULT for work tasks is untouched: this
 tiering is the measurement protocol's, not the launcher's.
 @status:spec/work
 
+### 5b. Questions the build surfaced — dispositions {#surfaced}
+
+@fact:REVIEW-COMMENTS-LAW **REVIEW markers and comments (S4 finding,
+disposed).** The dialect legally SKIPS XML comments as layout and the
+pivot deliberately drops them, so a projection loses `<!-- REVIEW: -->`
+markers. The law therefore is: comment-consuming readers (review aging,
+managed-block scanners) read RAW SOURCE TEXT of both forms — the comment
+syntax is shared by MD and XML — and never the projection; S4 built
+review aging exactly so, with source-relative lines. A comment-carrying
+pivot was weighed and refused: comments are the one construct whose
+whole point is to be invisible to the document model. @status:impl/done
+
+@fact:NORMAL-FORMAT-RESIDUE **The `normal` boot format over XML slots is
+named residue (S4 finding, open).** `compile_normal_entry` reads its
+closure through vibe-spec's own MD section source, which the projection
+cannot feed without touching that crate; `simple` snippets and authored
+boot files carry XML materialisation fully today. The residue rides the
+S4b family (the engine/vibe-spec lane), recorded here so scenario №0's
+polygon states honestly which snippet formats its packages use.
+@status:spec/work
+
+@fact:BOOT-ORIGIN-LITERAL-MATCH **`show effective`'s boot-origin match is
+literal-name and will mis-classify a transformed snippet (S4 finding,
+open).** When a lock records a `boot_snippet` whose materialised
+extension changed, the literal-name match degrades the origin to
+`user` silently. Fix rides S5's polygon (the first place a transformed
+snippet meets `show effective`), keyed by logical document rather than
+literal file name. @status:spec/work
+
 ## 6. Build order {#build-order}
 
 @fact:SLICES S1 pivot + XML frontend/backend + golden round-trips over the

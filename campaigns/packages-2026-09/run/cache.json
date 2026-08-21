@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "updated_at": "2026-08-21T19:51:32Z",
+  "updated_at": "2026-08-21T20:31:22Z",
   "files": {
     "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md": {
       "content_hash": "0d648a740acebaa99d1b69c08ba38eaf1973107e562fe0be51e735bf30593917",
@@ -161138,7 +161138,7 @@
       }
     },
     "spec/common/PROP-045-xml-spec-sources.md": {
-      "content_hash": "c5b6fdf0790af59b64f0af65ee3f2f55a29966fd55426cc9bf6ec96d39061342",
+      "content_hash": "3a6f7a421c1569bf0dfcf8979c901f26c21f1cf2600c3bd2caf021ee4152aa55",
       "rollup": {
         "explicit": [
           "spec",
@@ -161152,15 +161152,15 @@
           "spec",
           "work"
         ],
-        "marker_count": 23,
-        "fact_count": 22,
+        "marker_count": 26,
+        "fact_count": 25,
         "unmarked_facts": 0
       },
-      "marker_count": 23,
-      "unit_count": 8,
+      "marker_count": 26,
+      "unit_count": 9,
       "issue_count": 0,
       "campaign": {
-        "processed_hash": "c5b6fdf0790af59b64f0af65ee3f2f55a29966fd55426cc9bf6ec96d39061342",
+        "processed_hash": "3a6f7a421c1569bf0dfcf8979c901f26c21f1cf2600c3bd2caf021ee4152aa55",
         "verdicts": {
           "MANDATE-VERBATIM": {
             "v": "confirmed",
@@ -161293,10 +161293,28 @@
             "ev": [
               "the dependency direction is measured, not assumed: vibe-specdoc's Cargo.toml carries progress-core as a path dependency (S1 landing 26ba7fc1), so the cycle the ADR avoids is real; determinism of the projection is S1's canonical-emitter law pinned by the XML→IR→XML byte-idempotence corpus tests; the recorded degradation names its mitigation and its follow-up home"
             ]
+          },
+          "REVIEW-COMMENTS-LAW": {
+            "v": "confirmed",
+            "ev": [
+              "built as stated in S4 (032a9d7d): review_aging walks spec/**/*.{md,xml} scanning raw bytes with source-relative lines (test review_marker_in_an_xml_spec_ages_like_the_md_form); the dialect's Event::Comment=>continue and the pivot's comment-drop are S1 code (xml_in.rs)"
+            ]
+          },
+          "NORMAL-FORMAT-RESIDUE": {
+            "v": "confirmed",
+            "ev": [
+              "the S4 worker measured it: compile_normal_entry reads through vibe-spec's FsSectionSource (an MD reader) and normal_seed strips .md — both outside S4's perimeter; simple snippets and authored boot files carry XML fully (render_static_projects_an_xml_snippet_deterministically et al.)"
+            ]
+          },
+          "BOOT-ORIGIN-LITERAL-MATCH": {
+            "v": "confirmed",
+            "ev": [
+              "the S4 worker's report names the exact degradation: effective.rs boot_origin matches literal snippet file names, so a lock-recorded transformed extension falls back to origin=user silently; the fix is scheduled where it first bites (S5)"
+            ]
           }
         },
-        "verified_at": "2026-08-21T19:51:32Z",
-        "verify_batch": "P045-DRAFT + P045-PROJECTION"
+        "verified_at": "2026-08-21T20:31:22Z",
+        "verify_batch": "P045-DRAFT + P045-PROJECTION + P045-5B"
       }
     },
     "spec/design/README.md": {

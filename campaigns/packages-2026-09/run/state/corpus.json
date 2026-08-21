@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-08-21T19:51:27Z",
+  "updated_at": "2026-08-21T20:31:17Z",
   "files": [
     {
       "path": "packages/org.vibevm.ai-native/core-ai-native/v0.8.0/README.md",
@@ -159579,15 +159579,15 @@
         "stage": "spec",
         "state": "work"
       },
-      "markers": 23,
-      "units": 8,
-      "facts": 22,
+      "markers": 26,
+      "units": 9,
+      "facts": 25,
       "unmarked": 0,
       "issues": 0,
       "campaign": {
-        "processed_hash": "f643d400124e253525c76aa4a2752617116f2308a07ebed26d720658091fa743",
+        "processed_hash": "c5b6fdf0790af59b64f0af65ee3f2f55a29966fd55426cc9bf6ec96d39061342",
         "summary": {
-          "confirmed": 21
+          "confirmed": 22
         },
         "verdicts": {
           "MANDATE-VERBATIM": {
@@ -159715,10 +159715,16 @@
             "ev": [
               "the order restates the wave plan with each slice's dependency named; S1 is dispatched (PACKET-XML-S1) as this verdict is written"
             ]
+          },
+          "PROJECTION-READ": {
+            "v": "confirmed",
+            "ev": [
+              "the dependency direction is measured, not assumed: vibe-specdoc's Cargo.toml carries progress-core as a path dependency (S1 landing 26ba7fc1), so the cycle the ADR avoids is real; determinism of the projection is S1's canonical-emitter law pinned by the XML→IR→XML byte-idempotence corpus tests; the recorded degradation names its mitigation and its follow-up home"
+            ]
           }
         },
-        "verified_at": "2026-08-21T18:55:39Z",
-        "verify_batch": "P045-DRAFT"
+        "verified_at": "2026-08-21T19:51:32Z",
+        "verify_batch": "P045-DRAFT + P045-PROJECTION"
       }
     },
     {
