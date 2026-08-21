@@ -7,7 +7,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-011#
 
 use std::path::{Path, PathBuf};
 
-use vibe_core::manifest::Manifest;
+use vibe_core::manifest::{Manifest, SpecFormat};
 use vibe_core::{Group, PackageKind};
 
 use crate::hooks::HookReport;
@@ -61,6 +61,9 @@ pub enum SlotCheck {
         /// The hash the present slot actually computed to.
         actual: String,
     },
+    /// A transformed slot's typed identity record or derived tree is stale.
+    /// The reason names the exact field/check that failed.
+    DivergedDetail { reason: String },
     /// The check could not run — no recorded hash to compare against, or
     /// the slot could not be hashed. Falls back to re-materialising, the
     /// pre-spot-check `verify` discipline, with no warn.
@@ -105,8 +108,25 @@ pub enum SlotCheck {
 /// assert!(consult(&AlwaysDiverged));
 /// ```
 pub trait SlotVerifier {
+    /// The fetched source tree's recipe-labelled content hash, used as the
+    /// immutable input identity in a transformed slot manifest.
+    fn source_hash<'a>(&'a self, _dep: &ResolvedDep) -> Option<&'a str> {
+        None
+    }
+
     /// Hash `slot_abs` and compare it against the hash recorded for `dep`.
     fn verify_slot(&self, dep: &ResolvedDep, slot_abs: &Path) -> SlotCheck;
+
+    /// Verify the slot under its effective representation. Implementations
+    /// that know only legacy mixed slots retain the old hash check by default.
+    fn verify_slot_for_format(
+        &self,
+        dep: &ResolvedDep,
+        slot_abs: &Path,
+        _spec_format: SpecFormat,
+    ) -> SlotCheck {
+        self.verify_slot(dep, slot_abs)
+    }
 }
 
 /// What [`apply_resolution`] did — for the caller to report.

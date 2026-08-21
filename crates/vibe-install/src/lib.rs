@@ -39,11 +39,11 @@ mod plan;
 mod record;
 mod slot_verify;
 
-pub use apply::{ApplyReport, apply};
+pub use apply::{ApplyReport, apply, apply_with_spec_format};
 pub use error::Error;
 pub use events::{NullObserver, PlanEvent, PlanObserver};
 pub use fetched::{Fetched, NodeInstallMeta};
-pub use plan::{InstallRequest, Plan, PlannedInstall, plan};
+pub use plan::{InstallRequest, Plan, PlannedInstall, plan, plan_with_spec_format};
 pub use record::{
     exact_pinned_pkgref, finalize_pkgref_for_manifest, merge_manifest_requires,
     merge_root_dependencies, record_git_source,

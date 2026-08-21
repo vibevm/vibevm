@@ -24,7 +24,7 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result, bail};
 use dialoguer::Confirm;
 use vibe_core::PackageRef;
-use vibe_core::manifest::{Lockfile, Manifest};
+use vibe_core::manifest::{Lockfile, Manifest, SpecFormat};
 use vibe_core::user_config::UserConfig;
 use vibe_install::{InstallRequest, Plan, PlanEvent, PlanObserver};
 use vibe_resolver::FeatureRequest;
@@ -104,6 +104,7 @@ pub fn run(
     let offline = output::resolve_offline(root_offline || args.offline, user_config.net.offline);
 
     let mut manifest = Manifest::read(project_root.join(Manifest::FILENAME))?;
+    let spec_format = resolve_spec_format(&manifest, &user_config);
 
     // M1.15: `vibe install <pkgref> --git <url> --tag/branch/rev <ref>`
     // adds a git-source declaration to `[requires.packages]` before
@@ -167,7 +168,13 @@ pub fn run(
         generated_by: generated_by(),
     };
 
-    let plan = vibe_install::plan(&resolver, &project_root, request, &CtxObserver(ctx))?;
+    let plan = vibe_install::plan_with_spec_format(
+        &resolver,
+        &project_root,
+        request,
+        spec_format,
+        &CtxObserver(ctx),
+    )?;
     match plan {
         Plan::Fresh => {
             // PROP-011 §2.2 — application is just a whole-tree boot
@@ -219,10 +226,27 @@ pub fn run(
             // than run third-party code unseen.
             let hook_policy = resolve_hook_policy(ctx, &args, &planned.resolution)?;
 
-            let applied = vibe_install::apply(&resolver, *planned, slot_integrity, &hook_policy)?;
+            let applied = vibe_install::apply_with_spec_format(
+                &resolver,
+                *planned,
+                slot_integrity,
+                spec_format,
+                &hook_policy,
+            )?;
             report::emit_report(ctx, &applied)
         }
     }
+}
+
+/// Effective PROP-045 setting: a project pin is reproducible and wins over
+/// the operator default; absence at both layers preserves legacy `mixed`.
+fn resolve_spec_format(manifest: &Manifest, user_config: &UserConfig) -> SpecFormat {
+    manifest
+        .project
+        .as_ref()
+        .and_then(|project| project.spec_format)
+        .or(user_config.install.spec_format)
+        .unwrap_or_default()
 }
 
 /// Resolve the install-hook trust policy for a planned resolution
@@ -306,4 +330,41 @@ fn resolve_project_root(path: &Path) -> Result<PathBuf> {
         );
     }
     Ok(stripped)
+}
+
+#[cfg(test)]
+mod spec_format_tests {
+    use super::*;
+
+    fn manifest(project_setting: Option<SpecFormat>) -> Manifest {
+        let mut manifest: Manifest =
+            toml::from_str("[project]\nname = \"demo\"\nversion = \"0.1.0\"\n")
+                .expect("valid manifest");
+        manifest.project.as_mut().expect("project").spec_format = project_setting;
+        manifest
+    }
+
+    #[test]
+    fn project_spec_format_wins_over_user_default() {
+        let mut user = UserConfig::default();
+        user.install.spec_format = Some(SpecFormat::Markdown);
+        assert_eq!(
+            resolve_spec_format(&manifest(Some(SpecFormat::Xml)), &user),
+            SpecFormat::Xml
+        );
+    }
+
+    #[test]
+    fn user_default_and_builtin_mixed_fill_absent_project_setting() {
+        let mut user = UserConfig::default();
+        user.install.spec_format = Some(SpecFormat::Markdown);
+        assert_eq!(
+            resolve_spec_format(&manifest(None), &user),
+            SpecFormat::Markdown
+        );
+        assert_eq!(
+            resolve_spec_format(&manifest(None), &UserConfig::default()),
+            SpecFormat::Mixed
+        );
+    }
 }

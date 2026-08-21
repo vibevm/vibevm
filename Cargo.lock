@@ -4162,6 +4162,7 @@ dependencies = [
 name = "vibe-specdoc"
 version = "1.0.0"
 dependencies = [
+ "core-ai-native-specmark",
  "progress-core",
  "quick-xml",
 ]
@@ -4216,6 +4217,7 @@ dependencies = [
  "toml 0.9.12+spec-1.1.0",
  "vibe-core",
  "vibe-spec",
+ "vibe-specdoc",
 ]
 
 [[package]]

@@ -1,0 +1,334 @@
+//! Deterministic transformed-slot materialisation (PROP-045).
+
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#materialisation");
+
+use std::collections::BTreeSet;
+use std::fs;
+use std::path::{Path, PathBuf};
+
+use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
+use vibe_core::Group;
+use vibe_core::manifest::SpecFormat;
+
+use super::{CopyMode, io_err, place_file, slot_abs_path};
+use crate::{WorkspaceError, path_to_slash};
+
+/// Name of the identity record present only in transformed slots.
+pub const DERIVED_MANIFEST_FILENAME: &str = ".vibe-derived.toml";
+/// Current specdoc pivot recipe recorded in transformed-slot manifests.
+pub const CONVERTER_RECIPE: &str = vibe_specdoc::CONVERTER_RECIPE;
+
+const DERIVED_MANIFEST_SCHEMA: u32 = 1;
+const LEGACY0_EXCLUDES: &[&str] = &[".git", ".vibe", "target", "node_modules", ".vibeignore"];
+
+/// One source-to-output decision recorded by the derived materialiser.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct DerivedFile {
+    pub source: String,
+    pub output: String,
+    pub disposition: DerivedFileDisposition,
+}
+
+/// Whether a derived-slot file passed through the pivot or copied unchanged.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum DerivedFileDisposition {
+    Converted,
+    Copied,
+}
+
+/// Identity and file-accounting record for one transformed dependency slot.
+///
+/// ```
+/// use vibe_core::manifest::SpecFormat;
+/// use vibe_workspace::vibedeps::{DerivedManifest, DERIVED_MANIFEST_FILENAME};
+///
+/// let wire = format!(
+///     "schema = 1\nsource_hash = \"sha256:source\"\n\
+///      output_format = \"xml\"\nconverter_recipe = \"specdoc/1\"\n\
+///      derived_hash = \"sha256:derived\"\n"
+/// );
+/// let manifest: DerivedManifest = toml::from_str(&wire).unwrap();
+/// assert_eq!(manifest.output_format, SpecFormat::Xml);
+/// assert_eq!(DERIVED_MANIFEST_FILENAME, ".vibe-derived.toml");
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DerivedManifest {
+    pub schema: u32,
+    pub source_hash: String,
+    pub output_format: SpecFormat,
+    pub converter_recipe: String,
+    pub derived_hash: String,
+    #[serde(default, rename = "file")]
+    pub files: Vec<DerivedFile>,
+}
+
+/// Materialise a package in the requested representation.
+///
+/// `Mixed` delegates to the existing byte-for-byte materialiser and writes no
+/// metadata. `Markdown` and `Xml` transform only spec-genre documents: any
+/// `.md`/`.xml` below `spec/`, plus the package-root `README.md`/`README.xml`.
+/// Files already in the target format and every non-spec file copy verbatim.
+/// An opposite-format candidate that the pivot rejects also copies verbatim
+/// and is recorded as `copied`, preserving install availability honestly.
+#[allow(clippy::too_many_arguments)]
+pub fn materialise_with_spec_format(
+    workspace_root: &Path,
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+    content_src: &Path,
+    mode: CopyMode,
+    spec_format: SpecFormat,
+    source_hash: &str,
+) -> Result<Vec<PathBuf>, WorkspaceError> {
+    if spec_format == SpecFormat::Mixed {
+        return super::materialise_with(workspace_root, group, name, version, content_src, mode);
+    }
+    let slot = slot_abs_path(workspace_root, group, name, version);
+    if !content_src.is_dir() {
+        return Err(WorkspaceError::SpecMaterialization {
+            path: content_src.to_path_buf(),
+            reason: "source content tree does not exist or is not a directory".to_string(),
+        });
+    }
+    if slot.exists() {
+        fs::remove_dir_all(&slot).map_err(|e| io_err(&slot, e))?;
+    }
+    fs::create_dir_all(&slot).map_err(|e| io_err(&slot, e))?;
+
+    let mut sources = Vec::new();
+    collect_files(content_src, content_src, &mut sources)?;
+    sources.sort_by(|a, b| a.0.cmp(&b.0));
+
+    let mut outputs = BTreeSet::new();
+    let mut written = Vec::new();
+    let mut files = Vec::new();
+    for (rel, source) in sources {
+        let transformed = transform_file(&source, &rel, spec_format)?;
+        let output_rel = transformed
+            .as_ref()
+            .map_or_else(|| rel.clone(), |(path, _)| path.clone());
+        let output_wire = path_to_slash(&output_rel);
+        if !outputs.insert(output_wire.clone()) {
+            return Err(WorkspaceError::SpecMaterialization {
+                path: slot.join(&output_rel),
+                reason: format!(
+                    "more than one source maps to `{output_wire}` under {} output",
+                    spec_format.as_str()
+                ),
+            });
+        }
+        let destination = slot.join(&output_rel);
+        if let Some(parent) = destination.parent() {
+            fs::create_dir_all(parent).map_err(|e| io_err(parent, e))?;
+        }
+        let disposition = if let Some((_, bytes)) = transformed {
+            fs::write(&destination, bytes).map_err(|e| io_err(&destination, e))?;
+            DerivedFileDisposition::Converted
+        } else {
+            place_file(&source, &destination, mode)?;
+            DerivedFileDisposition::Copied
+        };
+        files.push(DerivedFile {
+            source: path_to_slash(&rel),
+            output: output_wire,
+            disposition,
+        });
+        written.push(output_rel);
+    }
+
+    let derived_hash =
+        compute_derived_hash(&slot).map_err(|reason| WorkspaceError::SpecMaterialization {
+            path: slot.clone(),
+            reason: format!("derived tree cannot be hashed: {reason}"),
+        })?;
+    let manifest = DerivedManifest {
+        schema: DERIVED_MANIFEST_SCHEMA,
+        source_hash: source_hash.to_string(),
+        output_format: spec_format,
+        converter_recipe: CONVERTER_RECIPE.to_string(),
+        derived_hash,
+        files,
+    };
+    let manifest_path = slot.join(DERIVED_MANIFEST_FILENAME);
+    let wire =
+        toml::to_string_pretty(&manifest).map_err(|e| WorkspaceError::SpecMaterialization {
+            path: manifest_path.clone(),
+            reason: format!("derived manifest cannot be encoded: {e}"),
+        })?;
+    fs::write(&manifest_path, wire).map_err(|e| io_err(&manifest_path, e))?;
+    written.push(PathBuf::from(DERIVED_MANIFEST_FILENAME));
+    written.sort();
+    Ok(written)
+}
+
+/// Read and validate the typed derived manifest from `slot`.
+pub fn read_derived_manifest(slot: &Path) -> Result<DerivedManifest, String> {
+    let path = slot.join(DERIVED_MANIFEST_FILENAME);
+    let text = fs::read_to_string(&path).map_err(|e| format!("cannot read manifest: {e}"))?;
+    let manifest: DerivedManifest =
+        toml::from_str(&text).map_err(|e| format!("cannot parse manifest: {e}"))?;
+    if manifest.schema != DERIVED_MANIFEST_SCHEMA {
+        return Err(format!(
+            "schema is {}, current schema is {DERIVED_MANIFEST_SCHEMA}",
+            manifest.schema
+        ));
+    }
+    Ok(manifest)
+}
+
+/// Cheap freshness gate consulted before presence trust: mixed slots carry no
+/// manifest; transformed slots carry a valid schema-1 manifest naming the
+/// effective output format. No content hash is computed here.
+pub fn format_is_current(slot: &Path, expected: SpecFormat) -> bool {
+    let manifest_path = slot.join(DERIVED_MANIFEST_FILENAME);
+    match expected {
+        SpecFormat::Mixed => !manifest_path.exists(),
+        SpecFormat::Markdown | SpecFormat::Xml => {
+            read_derived_manifest(slot).is_ok_and(|manifest| manifest.output_format == expected)
+        }
+    }
+}
+
+/// Recipe-0 content hash over a transformed slot, excluding its own derived
+/// manifest on the caller side. The standard frozen exclusions and byte feed
+/// are unchanged: `normalised_path || NUL || bytes || NUL`.
+pub fn compute_derived_hash(slot: &Path) -> Result<String, String> {
+    let mut entries = Vec::new();
+    collect_hash_files(slot, slot, &mut entries)?;
+    entries.sort_by(|a, b| a.0.cmp(&b.0));
+    let mut hasher = Sha256::new();
+    for (rel, path) in entries {
+        hasher.update(path_to_slash(&rel).as_bytes());
+        hasher.update([0]);
+        let bytes =
+            fs::read(&path).map_err(|e| format!("cannot read `{}`: {e}", path.display()))?;
+        hasher.update(bytes);
+        hasher.update([0]);
+    }
+    let digest = hasher.finalize();
+    let mut hex = String::with_capacity(64);
+    for byte in digest {
+        use std::fmt::Write;
+        let _ = write!(&mut hex, "{byte:02x}");
+    }
+    Ok(format!("sha256:{hex}"))
+}
+
+fn collect_files(
+    dir: &Path,
+    root: &Path,
+    out: &mut Vec<(PathBuf, PathBuf)>,
+) -> Result<(), WorkspaceError> {
+    for entry in fs::read_dir(dir).map_err(|e| io_err(dir, e))? {
+        let entry = entry.map_err(|e| io_err(dir, e))?;
+        if entry.file_name() == ".git" {
+            continue;
+        }
+        let path = entry.path();
+        let kind = entry.file_type().map_err(|e| io_err(&path, e))?;
+        if kind.is_dir() {
+            collect_files(&path, root, out)?;
+        } else if kind.is_file() {
+            let rel = path
+                .strip_prefix(root)
+                .map_err(|_| WorkspaceError::SpecMaterialization {
+                    path: path.clone(),
+                    reason: "walked path escaped the source root".to_string(),
+                })?
+                .to_path_buf();
+            out.push((rel, path));
+        }
+    }
+    Ok(())
+}
+
+fn transform_file(
+    source: &Path,
+    rel: &Path,
+    format: SpecFormat,
+) -> Result<Option<(PathBuf, Vec<u8>)>, WorkspaceError> {
+    if !is_spec_document(rel) {
+        return Ok(None);
+    }
+    let extension = rel.extension().and_then(|s| s.to_str());
+    let opposite = matches!(
+        (format, extension),
+        (SpecFormat::Xml, Some("md")) | (SpecFormat::Markdown, Some("xml"))
+    );
+    if !opposite {
+        return Ok(None);
+    }
+    let Ok(text) = fs::read_to_string(source) else {
+        return Ok(None);
+    };
+    let (converted, target_extension) = match format {
+        SpecFormat::Xml => (
+            vibe_specdoc::from_markdown(&text)
+                .ok()
+                .map(|doc| vibe_specdoc::to_xml(&doc)),
+            "xml",
+        ),
+        SpecFormat::Markdown => (
+            vibe_specdoc::from_xml(&text)
+                .ok()
+                .map(|doc| vibe_specdoc::to_markdown(&doc)),
+            "md",
+        ),
+        SpecFormat::Mixed => return Ok(None),
+    };
+    let Some(converted) = converted else {
+        return Ok(None);
+    };
+    let output = rel.with_extension(target_extension);
+    Ok(Some((output, converted.into_bytes())))
+}
+
+fn is_spec_document(rel: &Path) -> bool {
+    let extension = rel.extension().and_then(|s| s.to_str());
+    if !matches!(extension, Some("md" | "xml")) {
+        return false;
+    }
+    let under_spec = rel
+        .components()
+        .next()
+        .is_some_and(|component| component.as_os_str() == "spec");
+    let root_readme = rel
+        .parent()
+        .is_some_and(|parent| parent.as_os_str().is_empty())
+        && matches!(rel.file_stem().and_then(|s| s.to_str()), Some("README"));
+    under_spec || root_readme
+}
+
+fn collect_hash_files(
+    dir: &Path,
+    root: &Path,
+    out: &mut Vec<(PathBuf, PathBuf)>,
+) -> Result<(), String> {
+    for entry in fs::read_dir(dir).map_err(|e| format!("cannot walk `{}`: {e}", dir.display()))? {
+        let entry = entry.map_err(|e| format!("cannot walk `{}`: {e}", dir.display()))?;
+        let name = entry.file_name();
+        let name_text = name.to_string_lossy();
+        if LEGACY0_EXCLUDES.contains(&name_text.as_ref()) || name_text == DERIVED_MANIFEST_FILENAME
+        {
+            continue;
+        }
+        let path = entry.path();
+        let kind = entry
+            .file_type()
+            .map_err(|e| format!("cannot inspect `{}`: {e}", path.display()))?;
+        if kind.is_dir() {
+            collect_hash_files(&path, root, out)?;
+        } else if kind.is_file() {
+            let rel = path
+                .strip_prefix(root)
+                .map_err(|_| format!("walked path `{}` escaped hash root", path.display()))?
+                .to_path_buf();
+            out.push((rel, path));
+        }
+    }
+    Ok(())
+}

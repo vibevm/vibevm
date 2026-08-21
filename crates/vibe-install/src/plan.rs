@@ -8,7 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-
 use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 
-use vibe_core::manifest::{Lockfile, Manifest};
+use vibe_core::manifest::{Lockfile, Manifest, SpecFormat};
 use vibe_core::{Group, PackageRef, VersionSpec};
 use vibe_registry::store;
 use vibe_registry::{CachedPackage, ResolvedPackage};
@@ -95,6 +95,19 @@ pub fn plan<S: InstallSource + ?Sized>(
     source: &S,
     project_root: &Path,
     request: InstallRequest,
+    observer: &dyn PlanObserver,
+) -> Result<Plan> {
+    plan_with_spec_format(source, project_root, request, SpecFormat::Mixed, observer)
+}
+
+/// Plan an install under the effective PROP-045 spec representation.
+/// A fresh dependency graph is not a fresh install when any existing slot
+/// carries a different representation, so that case proceeds to resolution.
+pub fn plan_with_spec_format<S: InstallSource + ?Sized>(
+    source: &S,
+    project_root: &Path,
+    request: InstallRequest,
+    spec_format: SpecFormat,
     observer: &dyn PlanObserver,
 ) -> Result<Plan> {
     let workspace = Workspace::discover(project_root)?;
@@ -196,8 +209,19 @@ pub fn plan<S: InstallSource + ?Sized>(
     if request.roots.is_empty() {
         let ws = Workspace::discover(project_root)?;
         match vibe_workspace::freshness::check(&ws, &lockfile) {
-            vibe_workspace::freshness::Freshness::Fresh => {
+            vibe_workspace::freshness::Freshness::Fresh
+                if slots_match_spec_format(&ws.root, &lockfile, spec_format) =>
+            {
                 return Ok(Plan::Fresh);
+            }
+            vibe_workspace::freshness::Freshness::Fresh => {
+                observer.on(PlanEvent::Reresolving {
+                    reason: format!(
+                        "materialised spec representation is not {}",
+                        spec_format.as_str()
+                    ),
+                });
+                solve_roots = vibe_workspace::freshness::hold_pins(&roots, &lockfile);
             }
             vibe_workspace::freshness::Freshness::Stale(reason) => {
                 observer.on(PlanEvent::Reresolving {
@@ -333,6 +357,26 @@ pub fn plan<S: InstallSource + ?Sized>(
         fetched,
         resolution,
     })))
+}
+
+fn slots_match_spec_format(
+    workspace_root: &Path,
+    lockfile: &Lockfile,
+    spec_format: SpecFormat,
+) -> bool {
+    lockfile.packages.iter().all(|package| {
+        if package.materialization.is_in_place() {
+            return spec_format == SpecFormat::Mixed
+                && vibedeps::is_in_place_slot(workspace_root, &package.group, &package.name);
+        }
+        let slot = vibedeps::slot_abs_path(
+            workspace_root,
+            &package.group,
+            &package.name,
+            &package.version,
+        );
+        slot.is_dir() && vibedeps::format_is_current(&slot, spec_format)
+    })
 }
 
 /// The acquisition half of planning — fetch/defer helpers and the

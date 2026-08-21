@@ -103,10 +103,14 @@ pub struct UserConfig {
 /// `[install]` section — install-behaviour settings (PROP-011 §5.2).
 ///
 /// ```
+/// use vibe_core::manifest::SpecFormat;
 /// use vibe_core::user_config::{InstallConfig, SlotIntegrity};
 ///
-/// let c: InstallConfig = toml::from_str(r#"slot_integrity = "verify""#).unwrap();
+/// let c: InstallConfig = toml::from_str(
+///     "slot_integrity = \"verify\"\nspec_format = \"xml\"",
+/// ).unwrap();
 /// assert_eq!(c.slot_integrity, SlotIntegrity::Verify);
+/// assert_eq!(c.spec_format, Some(SpecFormat::Xml));
 /// assert!(InstallConfig::default().is_default());
 /// ```
 #[derive(Debug, Default, Clone, PartialEq, Eq, Deserialize, Serialize)]
@@ -117,6 +121,10 @@ pub struct InstallConfig {
     /// [`SlotIntegrity::TrustPresence`].
     #[serde(default)]
     pub slot_integrity: SlotIntegrity,
+    /// Operator default for projects whose `[project]` table does not pin a
+    /// reproducible materialisation representation.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub spec_format: Option<crate::manifest::SpecFormat>,
 }
 
 impl InstallConfig {

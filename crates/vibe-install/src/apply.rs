@@ -7,13 +7,13 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-
 use std::collections::BTreeSet;
 
 use vibe_core::PackageRef;
-use vibe_core::manifest::Manifest;
+use vibe_core::manifest::{Manifest, SpecFormat};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_resolver::ResolvedNode;
 use vibe_workspace::Workspace;
 use vibe_workspace::hooks::{HookPolicy, HookReport};
 use vibe_workspace::install::{
-    InstallOutcome, ResolvedDep, apply_resolution_with, run_post_install_hooks,
+    InstallOutcome, ResolvedDep, apply_resolution_with_spec_format, run_post_install_hooks,
 };
 use vibe_workspace::vibedeps;
 
@@ -54,6 +54,17 @@ pub fn apply<S: InstallSource + ?Sized>(
     source: &S,
     planned: PlannedInstall,
     slot_integrity: SlotIntegrity,
+    hooks: &HookPolicy,
+) -> Result<ApplyReport> {
+    apply_with_spec_format(source, planned, slot_integrity, SpecFormat::Mixed, hooks)
+}
+
+/// Apply a confirmed plan using the effective PROP-045 representation.
+pub fn apply_with_spec_format<S: InstallSource + ?Sized>(
+    source: &S,
+    planned: PlannedInstall,
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
     hooks: &HookPolicy,
 ) -> Result<ApplyReport> {
     let PlannedInstall {
@@ -138,10 +149,11 @@ pub fn apply<S: InstallSource + ?Sized>(
     //    verifier reads is post-deferral, so an incrementally-updated
     //    in-place slot (which never consults it) still records fresh.
     let slot_verifier = RegistrySlotVerifier::from_fetched(&fetched);
-    let outcome = apply_resolution_with(
+    let outcome = apply_resolution_with_spec_format(
         &workspace,
         &resolution,
         slot_integrity,
+        spec_format,
         Some(&slot_verifier),
         Some(hooks),
     )?;

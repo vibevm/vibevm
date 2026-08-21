@@ -20,7 +20,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use tempfile::TempDir;
-use vibe_core::manifest::Manifest;
+use vibe_core::manifest::{Manifest, SpecFormat};
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{Group, PackageRef};
 use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan};
@@ -174,6 +174,23 @@ fn run_install(
     vibe_install::apply(source, *planned, integrity, &policy()).expect("apply succeeds")
 }
 
+fn run_install_format(
+    source: &FixtureSource,
+    project: &Path,
+    integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+) -> vibe_install::ApplyReport {
+    let plan =
+        vibe_install::plan_with_spec_format(source, project, request(), spec_format, &NullObserver)
+            .expect("plan succeeds");
+    let planned = match plan {
+        Plan::Ready(p) => p,
+        Plan::Fresh => panic!("explicit-root install must produce a real resolution, not Fresh"),
+    };
+    vibe_install::apply_with_spec_format(source, *planned, integrity, spec_format, &policy())
+        .expect("apply succeeds")
+}
+
 /// The shared harness: an outer temp dir with the two fixture trees and a
 /// standalone project, plus one install already applied so both slots are
 /// present. Returns (source, outer dir, project dir).
@@ -316,4 +333,97 @@ fn trust_presence_still_skips_by_presence_alone() {
         project.join(SLOT_A).join("SENTINEL").is_file(),
         "trust-presence leaves a present slot untouched"
     );
+}
+
+#[test]
+fn changing_format_rematerialises_even_under_trust_presence() {
+    let outer = TempDir::new().unwrap();
+    fixture_pkg(outer.path(), "pkg-a", "# package A content\n");
+    fixture_pkg(outer.path(), "pkg-b", "# package B content\n");
+    write(
+        outer.path(),
+        "project/vibe.toml",
+        "[project]\nname = \"demo\"\nversion = \"0.0.1\"\n",
+    );
+    let source = FixtureSource {
+        fixtures: outer.path().to_path_buf(),
+        graph: two_package_graph(),
+    };
+    let project = outer.path().join("project");
+
+    let xml = run_install_format(
+        &source,
+        &project,
+        SlotIntegrity::TrustPresence,
+        SpecFormat::Xml,
+    );
+    assert_eq!(xml.outcome.materialised.len(), 2);
+    assert!(
+        project
+            .join(SLOT_A)
+            .join("spec/flows/pkg-a/SPEC.xml")
+            .is_file()
+    );
+
+    let markdown = run_install_format(
+        &source,
+        &project,
+        SlotIntegrity::TrustPresence,
+        SpecFormat::Markdown,
+    );
+    assert_eq!(markdown.outcome.materialised.len(), 2);
+    assert!(markdown.outcome.skipped.is_empty());
+    assert!(
+        project
+            .join(SLOT_A)
+            .join("spec/flows/pkg-a/SPEC.md")
+            .is_file()
+    );
+    assert!(
+        !project
+            .join(SLOT_A)
+            .join("spec/flows/pkg-a/SPEC.xml")
+            .exists()
+    );
+    let manifest = vibe_workspace::vibedeps::read_derived_manifest(&project.join(SLOT_A)).unwrap();
+    assert_eq!(manifest.output_format, SpecFormat::Markdown);
+}
+
+#[test]
+fn transformed_verify_accepts_intact_and_repairs_derived_hash_divergence() {
+    let outer = TempDir::new().unwrap();
+    fixture_pkg(outer.path(), "pkg-a", "# package A content\n");
+    fixture_pkg(outer.path(), "pkg-b", "# package B content\n");
+    write(
+        outer.path(),
+        "project/vibe.toml",
+        "[project]\nname = \"demo\"\nversion = \"0.0.1\"\n",
+    );
+    let source = FixtureSource {
+        fixtures: outer.path().to_path_buf(),
+        graph: two_package_graph(),
+    };
+    let project = outer.path().join("project");
+    run_install_format(&source, &project, SlotIntegrity::Verify, SpecFormat::Xml);
+    write(&project, &format!("{SLOT_A}/target/SENTINEL"), "untouched");
+
+    let intact = run_install_format(&source, &project, SlotIntegrity::Verify, SpecFormat::Xml);
+    assert_eq!(intact.outcome.skipped, vec![SLOT_A, SLOT_B]);
+    assert!(project.join(SLOT_A).join("target/SENTINEL").is_file());
+
+    fs::write(
+        project.join(SLOT_B).join("spec/flows/pkg-b/SPEC.xml"),
+        "<tampered/>",
+    )
+    .unwrap();
+    let repaired = run_install_format(&source, &project, SlotIntegrity::Verify, SpecFormat::Xml);
+    assert_eq!(repaired.outcome.materialised, vec![SLOT_B]);
+    assert_eq!(repaired.outcome.skipped, vec![SLOT_A]);
+    assert_eq!(repaired.outcome.integrity_warnings.len(), 1);
+    assert!(
+        repaired.outcome.integrity_warnings[0].contains("derived_hash mismatch"),
+        "{}",
+        repaired.outcome.integrity_warnings[0]
+    );
+    assert!(project.join(SLOT_A).join("target/SENTINEL").is_file());
 }

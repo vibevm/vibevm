@@ -288,6 +288,7 @@ pub(super) fn ensure_project_manifest(
             name: name.to_string(),
             group: None,
             version: "0.0.1".to_string(),
+            spec_format: None,
             authors: authors.to_vec(),
         }),
         active: stack.map(|s| ActiveSection {

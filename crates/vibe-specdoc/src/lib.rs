@@ -65,6 +65,11 @@ pub use md_out::to_markdown;
 pub use xml_in::from_xml;
 pub use xml_out::to_xml;
 
+/// Versioned deterministic-converter identity recorded in every transformed
+/// dependency slot. Bump only when identical source may intentionally emit
+/// different canonical bytes.
+pub const CONVERTER_RECIPE: &str = "specdoc/1";
+
 use std::fmt;
 
 /// A parse or emit failure. Every dialect violation carries the 1-based

@@ -29,8 +29,10 @@ use crate::error::{Error, Result};
 /// let p: ProjectSection = toml::from_str(r#"
 ///     name = "my-app"
 ///     version = "0.1.0"
+///     spec_format = "xml"
 /// "#).unwrap();
 /// assert_eq!(p.name, "my-app");
+/// assert_eq!(p.spec_format, Some(SpecFormat::Xml));
 /// assert!(p.authors.is_empty()); // `authors` defaults to empty
 /// assert!(p.group.is_none());    // `group` defaults to absent
 /// ```
@@ -48,8 +50,56 @@ pub struct ProjectSection {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub group: Option<crate::Group>,
     pub version: String,
+    /// Reproducible representation of spec documents materialised into
+    /// `vibedeps/`. Absent means the operator default may supply the value;
+    /// the install composition root finally falls back to [`SpecFormat::Mixed`].
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub spec_format: Option<SpecFormat>,
     #[serde(default)]
     pub authors: Vec<String>,
+}
+
+/// The representation of spec documents in materialised dependency slots.
+///
+/// ```
+/// use vibe_core::manifest::SpecFormat;
+///
+/// let format: SpecFormat = toml::from_str(r#"value = "markdown""#)
+///     .map(|wire: Wire| wire.value)
+///     .unwrap();
+/// assert_eq!(format, SpecFormat::Markdown);
+/// assert_eq!(SpecFormat::default(), SpecFormat::Mixed);
+///
+/// # #[derive(serde::Deserialize)]
+/// # struct Wire { value: SpecFormat }
+/// ```
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum SpecFormat {
+    /// Preserve every authored file and byte verbatim.
+    #[default]
+    Mixed,
+    /// Convert XML spec documents to Markdown; keep Markdown sources.
+    Markdown,
+    /// Convert Markdown spec documents to XML; keep XML sources.
+    Xml,
+}
+
+impl SpecFormat {
+    /// Stable wire spelling used by the derived-slot manifest.
+    pub const fn as_str(self) -> &'static str {
+        match self {
+            SpecFormat::Mixed => "mixed",
+            SpecFormat::Markdown => "markdown",
+            SpecFormat::Xml => "xml",
+        }
+    }
+
+    /// Whether materialisation produces a derived tree rather than a
+    /// source-identical mixed tree.
+    pub const fn is_transformed(self) -> bool {
+        !matches!(self, SpecFormat::Mixed)
+    }
 }
 
 /// `[active]` — the workspace's currently-selected stack, if any.

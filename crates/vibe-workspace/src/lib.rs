@@ -152,6 +152,16 @@ pub enum WorkspaceError {
     )]
     Io { path: PathBuf, reason: String },
 
+    /// A transformed spec-document slot could not be produced without
+    /// violating the deterministic derived-tree contract.
+    #[error(
+        "cannot materialise spec documents at `{}`: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-045#materialisation; \
+         fix: repair the colliding path or unreadable source, then re-run install)",
+        .path.display()
+    )]
+    SpecMaterialization { path: PathBuf, reason: String },
+
     /// A `version.var` placeholder names no entry in any enclosing
     /// `[workspace.versions]` table.
     #[error(

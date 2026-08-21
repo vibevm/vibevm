@@ -23,6 +23,7 @@ use std::collections::HashMap;
 use std::path::Path;
 
 use vibe_core::Group;
+use vibe_core::manifest::SpecFormat;
 use vibe_registry::{RecipeId, compute_content_hash, compute_content_hash_with};
 use vibe_workspace::install::{ResolvedDep, SlotCheck, SlotVerifier};
 
@@ -60,6 +61,12 @@ impl RegistrySlotVerifier {
 }
 
 impl SlotVerifier for RegistrySlotVerifier {
+    fn source_hash<'a>(&'a self, dep: &ResolvedDep) -> Option<&'a str> {
+        self.expected
+            .get(&(dep.group.clone(), dep.name.clone()))
+            .map(String::as_str)
+    }
+
     fn verify_slot(&self, dep: &ResolvedDep, slot_abs: &Path) -> SlotCheck {
         let Some(expected) = self.expected.get(&(dep.group.clone(), dep.name.clone())) else {
             return SlotCheck::Unverifiable;
@@ -83,6 +90,66 @@ impl SlotVerifier for RegistrySlotVerifier {
             // An unhashable slot (locked file, permission denied) cannot be
             // vouched for — the re-copy both repairs and supersedes it.
             Err(_) => SlotCheck::Unverifiable,
+        }
+    }
+
+    fn verify_slot_for_format(
+        &self,
+        dep: &ResolvedDep,
+        slot_abs: &Path,
+        spec_format: SpecFormat,
+    ) -> SlotCheck {
+        if spec_format == SpecFormat::Mixed {
+            return self.verify_slot(dep, slot_abs);
+        }
+        let Some(expected_source) = self.source_hash(dep) else {
+            return SlotCheck::Unverifiable;
+        };
+        let manifest = match vibe_workspace::vibedeps::read_derived_manifest(slot_abs) {
+            Ok(manifest) => manifest,
+            Err(reason) => {
+                return SlotCheck::DivergedDetail {
+                    reason: format!("derived manifest is invalid: {reason}"),
+                };
+            }
+        };
+        if manifest.source_hash != expected_source {
+            return SlotCheck::DivergedDetail {
+                reason: format!(
+                    "derived manifest source_hash is {}, fetched source_hash is {expected_source}",
+                    manifest.source_hash
+                ),
+            };
+        }
+        if manifest.output_format != spec_format {
+            return SlotCheck::DivergedDetail {
+                reason: format!(
+                    "derived manifest output_format is {}, effective format is {}",
+                    manifest.output_format.as_str(),
+                    spec_format.as_str()
+                ),
+            };
+        }
+        if manifest.converter_recipe != vibe_workspace::vibedeps::CONVERTER_RECIPE {
+            return SlotCheck::DivergedDetail {
+                reason: format!(
+                    "derived manifest converter_recipe is {}, current recipe is {}",
+                    manifest.converter_recipe,
+                    vibe_workspace::vibedeps::CONVERTER_RECIPE
+                ),
+            };
+        }
+        match vibe_workspace::vibedeps::compute_derived_hash(slot_abs) {
+            Ok(actual) if actual == manifest.derived_hash => SlotCheck::Verified,
+            Ok(actual) => SlotCheck::DivergedDetail {
+                reason: format!(
+                    "derived_hash mismatch: manifest has {}, slot hashes to {actual}",
+                    manifest.derived_hash
+                ),
+            },
+            Err(reason) => SlotCheck::DivergedDetail {
+                reason: format!("derived_hash cannot be computed: {reason}"),
+            },
         }
     }
 }

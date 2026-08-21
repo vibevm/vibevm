@@ -21,7 +21,7 @@ use std::collections::HashSet;
 use std::fs;
 use std::path::Path;
 
-use vibe_core::manifest::{Manifest, Materialization};
+use vibe_core::manifest::{Manifest, Materialization, SpecFormat};
 use vibe_core::user_config::SlotIntegrity;
 
 use crate::hooks::{
@@ -67,7 +67,14 @@ pub fn apply_resolution(
     slot_integrity: SlotIntegrity,
     hooks: Option<&HookPolicy>,
 ) -> Result<InstallOutcome, WorkspaceError> {
-    apply_resolution_with(workspace, resolution, slot_integrity, None, hooks)
+    apply_resolution_with_spec_format(
+        workspace,
+        resolution,
+        slot_integrity,
+        SpecFormat::Mixed,
+        None,
+        hooks,
+    )
 }
 
 /// The seam-injectable form of [`apply_resolution`]: `slot_verifier` is
@@ -89,6 +96,26 @@ pub fn apply_resolution_with(
     slot_verifier: Option<&dyn SlotVerifier>,
     hooks: Option<&HookPolicy>,
 ) -> Result<InstallOutcome, WorkspaceError> {
+    apply_resolution_with_spec_format(
+        workspace,
+        resolution,
+        slot_integrity,
+        SpecFormat::Mixed,
+        slot_verifier,
+        hooks,
+    )
+}
+
+/// Apply a resolution with the effective PROP-045 spec representation.
+/// Legacy entry points above remain source-identical by selecting `mixed`.
+pub fn apply_resolution_with_spec_format(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    slot_verifier: Option<&dyn SlotVerifier>,
+    hooks: Option<&HookPolicy>,
+) -> Result<InstallOutcome, WorkspaceError> {
     // 0. Validate every node's `<vibevm>` instruction-file block before
     //    any mutation — a malformed block aborts here, not mid-install
     //    (PROP-012 §2.4).
@@ -106,14 +133,17 @@ pub fn apply_resolution_with(
         skipped,
         integrity_warnings,
         hook_reports,
-    } = materialise_resolution(
+    } = materialise_resolution_with_spec_format(
         &workspace.root,
         resolution,
-        slot_integrity,
-        slot_verifier,
-        hooks,
-        &SystemProbe,
-        &SystemHookRunner,
+        MaterialiseOptions {
+            slot_integrity,
+            spec_format,
+            slot_verifier,
+            hooks,
+            probe: &SystemProbe,
+            runner: &SystemHookRunner,
+        },
     )?;
 
     // 2. Prune any `vibedeps/` slot no longer in the resolution — a
@@ -148,6 +178,15 @@ struct Materialised {
     hook_reports: Vec<HookReport>,
 }
 
+struct MaterialiseOptions<'a> {
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    slot_verifier: Option<&'a dyn SlotVerifier>,
+    hooks: Option<&'a HookPolicy>,
+    probe: &'a dyn InterpreterProbe,
+    runner: &'a dyn HookRunner,
+}
+
 /// Materialise a resolution into `vibedeps/` and run each freshly-populated
 /// slot's `pre-install` hook (PROP-009 §2.7, PROP-020 §2.1). The interpreter
 /// `probe` and process `runner` are seams so the hook paths — run, skip, and
@@ -172,6 +211,33 @@ fn materialise_resolution(
     probe: &dyn InterpreterProbe,
     runner: &dyn HookRunner,
 ) -> Result<Materialised, WorkspaceError> {
+    materialise_resolution_with_spec_format(
+        workspace_root,
+        resolution,
+        MaterialiseOptions {
+            slot_integrity,
+            spec_format: SpecFormat::Mixed,
+            slot_verifier,
+            hooks,
+            probe,
+            runner,
+        },
+    )
+}
+
+fn materialise_resolution_with_spec_format(
+    workspace_root: &Path,
+    resolution: &[ResolvedDep],
+    options: MaterialiseOptions<'_>,
+) -> Result<Materialised, WorkspaceError> {
+    let MaterialiseOptions {
+        slot_integrity,
+        spec_format,
+        slot_verifier,
+        hooks,
+        probe,
+        runner,
+    } = options;
     let mut materialised = Vec::new();
     let mut skipped = Vec::new();
     let mut integrity_warnings = Vec::new();
@@ -182,6 +248,13 @@ fn materialise_resolution(
         // `.git`) into the slot instead of the per-file `copy`, and
         // `.gitignore` it (not vendored, §2.7).
         if is_in_place(dep) {
+            if spec_format.is_transformed() {
+                return Err(WorkspaceError::SpecMaterialization {
+                    path: dep.content_dir.clone(),
+                    reason: "transformed spec formats are unavailable for in-place packages"
+                        .to_string(),
+                });
+            }
             let rel = vibedeps::in_place_slot_rel_path(&dep.group, &dep.name);
             let slot_abs = vibedeps::in_place_slot_abs_path(workspace_root, &dep.group, &dep.name);
             // The install layer may have already placed the slot directly — an
@@ -234,6 +307,10 @@ fn materialise_resolution(
         let slot = vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version);
         let present =
             vibedeps::is_materialised(workspace_root, &dep.group, &dep.name, &dep.version);
+        let slot_abs = vibedeps::slot_abs_path(workspace_root, &dep.group, &dep.name, &dep.version);
+        // PROP-045: representation freshness precedes every presence-based
+        // trust decision. A changed project/user setting always re-materialises.
+        let format_current = present && vibedeps::format_is_current(&slot_abs, spec_format);
         // A mutable local `file://` source (PROP-011 §2.6) is never
         // presence-trusted: slot-present-for-a-version is not a proxy for
         // correctness when the source is a working tree edited in place, so it
@@ -249,24 +326,26 @@ fn materialise_resolution(
         // and no verifier at all (or an unverifiable slot) keeps the
         // shipped always-re-copy discipline.
         let trusted = present
+            && format_current
             && !dep.source_mutable
             && match slot_integrity {
                 SlotIntegrity::TrustPresence => true,
                 SlotIntegrity::Verify => match slot_verifier {
                     None => false,
                     Some(verifier) => {
-                        let slot_abs = vibedeps::slot_abs_path(
-                            workspace_root,
-                            &dep.group,
-                            &dep.name,
-                            &dep.version,
-                        );
-                        match verifier.verify_slot(dep, &slot_abs) {
+                        match verifier.verify_slot_for_format(dep, &slot_abs, spec_format) {
                             SlotCheck::Verified => true,
                             SlotCheck::Diverged { expected, actual } => {
                                 integrity_warnings.push(format!(
                                     "{}/{}@{}: vibedeps slot hashes {actual}, locked hash is \
                                      {expected} — re-materialising",
+                                    dep.group, dep.name, dep.version
+                                ));
+                                false
+                            }
+                            SlotCheck::DivergedDetail { reason } => {
+                                integrity_warnings.push(format!(
+                                    "{}/{}@{}: {reason} — re-materialising",
                                     dep.group, dep.name, dep.version
                                 ));
                                 false
@@ -280,13 +359,26 @@ fn materialise_resolution(
             skipped.push(slot);
             continue;
         }
-        vibedeps::materialise_with(
+        let source_hash = if spec_format.is_transformed() {
+            slot_verifier
+                .and_then(|verifier| verifier.source_hash(dep))
+                .ok_or_else(|| WorkspaceError::SpecMaterialization {
+                    path: dep.content_dir.clone(),
+                    reason: "transformed materialisation requires the fetched source hash"
+                        .to_string(),
+                })?
+        } else {
+            ""
+        };
+        vibedeps::materialise_with_spec_format(
             workspace_root,
             &dep.group,
             &dep.name,
             &dep.version,
             &dep.content_dir,
             copy_mode_for(&dep.manifest),
+            spec_format,
+            source_hash,
         )?;
         if let Some(policy) = hooks {
             match run_dep_hook(

@@ -28,6 +28,15 @@ use vibe_core::Group;
 
 use crate::WorkspaceError;
 
+#[path = "vibedeps/derived.rs"]
+mod derived;
+
+pub use derived::{
+    CONVERTER_RECIPE, DERIVED_MANIFEST_FILENAME, DerivedFile, DerivedFileDisposition,
+    DerivedManifest, compute_derived_hash, format_is_current, materialise_with_spec_format,
+    read_derived_manifest,
+};
+
 /// Directory name of the materialisation tree, at the workspace root.
 pub const VIBEDEPS_DIR: &str = "vibedeps";
 

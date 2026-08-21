@@ -31,9 +31,29 @@ version = "0.1.0"
     let p: ProjectSection = toml::from_str(raw).unwrap();
     assert_eq!(p.name, "my-app");
     assert!(p.group.is_none());
+    assert!(p.spec_format.is_none());
     // A groupless project serializes without a `group` key.
     let rendered = toml::to_string(&p).unwrap();
     assert!(!rendered.contains("group"));
+}
+
+#[test]
+fn project_section_parses_spec_format() {
+    let raw = r#"
+name = "my-app"
+version = "0.1.0"
+spec_format = "xml"
+"#;
+    let p: ProjectSection = toml::from_str(raw).unwrap();
+    assert_eq!(p.spec_format, Some(SpecFormat::Xml));
+    let rendered = toml::to_string(&p).unwrap();
+    assert!(rendered.contains("spec_format = \"xml\""), "{rendered}");
+}
+
+#[test]
+fn spec_format_rejects_unknown_value() {
+    let raw = "name = \"x\"\nversion = \"0.1.0\"\nspec_format = \"html\"\n";
+    assert!(toml::from_str::<ProjectSection>(raw).is_err());
 }
 
 #[test]

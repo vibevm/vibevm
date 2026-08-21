@@ -315,6 +315,7 @@ impl Manifest {
                 name: name.into(),
                 group: None,
                 version: version.into(),
+                spec_format: None,
                 authors: Vec::new(),
             }),
             ..Manifest::default()

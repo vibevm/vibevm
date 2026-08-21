@@ -98,6 +98,7 @@ fn load_from_malformed_toml_errors() {
 fn slot_integrity_defaults_to_trust_presence() {
     let cfg = UserConfig::default();
     assert_eq!(cfg.install.slot_integrity, SlotIntegrity::TrustPresence);
+    assert!(cfg.install.spec_format.is_none());
     assert!(cfg.install.is_default());
 }
 
@@ -116,6 +117,7 @@ fn install_section_round_trips() {
     let cfg = UserConfig {
         install: InstallConfig {
             slot_integrity: SlotIntegrity::Verify,
+            spec_format: Some(crate::manifest::SpecFormat::Xml),
         },
         ..Default::default()
     };
@@ -124,8 +126,21 @@ fn install_section_round_trips() {
         rendered.contains("slot_integrity = \"verify\""),
         "{rendered}"
     );
+    assert!(rendered.contains("spec_format = \"xml\""), "{rendered}");
     let back: UserConfig = toml::from_str(&rendered).unwrap();
     assert_eq!(cfg, back);
+}
+
+#[test]
+fn load_from_parses_install_spec_format() {
+    let dir = tempdir().unwrap();
+    let path = dir.path().join("config.toml");
+    std::fs::write(&path, "[install]\nspec_format = \"markdown\"\n").unwrap();
+    let cfg = UserConfig::load_from(&path).unwrap();
+    assert_eq!(
+        cfg.install.spec_format,
+        Some(crate::manifest::SpecFormat::Markdown)
+    );
 }
 
 #[test]
