@@ -42,10 +42,17 @@ parse → pivot → emit; there is no direct MD↔XML text rewriting.
 Alternatives weighed: per-pair converters (N² growth, drift between pairs)
 and a lossless-CST pivot preserving all whitespace (cost without a
 consumer; the degradation law below makes semantic-level fidelity the
-contract). *Уточни после замера: живёт ли pivot в `progress-core` (его
-parse уже строит это дерево) или в новом крейте, который progress-core и
-specmap потребляют — реши по фактическим зависимостям обоих движков.*
-@status:spec/work
+contract). **Resolved by the XML-MEASURE map (2026-08-21): there is no
+single Markdown frontend to widen — FOUR independent families read
+different MD subsets today (progress-core's scanner, the vendored
+specmap engine's mdspec, the boot/tree directive readers, vibe-check's
+point scanners), with real dialect drift already between them (fence
+grammar run-matching vs prefix-toggling). The pivot is therefore a NEW
+shared crate — `vibe-specdoc` — owning the document IR and both
+frontends/backends; host consumers converge on it. The vendored specmap
+engine is engine-workspace territory (sync-engines law): its XML
+frontend is built in the AUTHORED engine workspace and写-throughs as its
+own slice (S4b), never patched in the vendored copy.* @status:spec/work
 
 @fact:XML-DIALECT-IS-THE-MD-SUBSET **Decision (ADR-part).** The XML dialect
 is deliberately ISOMORPHIC to the Markdown-expressible structure — exactly
@@ -124,15 +131,19 @@ stack and docx readers ride it), not a first-hit pick. @status:spec/work
 
 ## 3. The materialisation setting and the three targets {#materialisation}
 
-@fact:SETTING **The user setting** (*построй: дом и имя по образцу
-`[install] slot_integrity` — user-config семья, слои L1/L2*):
-`[install] spec_format = "mixed" | "markdown" | "xml"`.
-**`mixed` is the introduction default** — every file materialises in its
-authored format, which for an all-MD world is byte-for-byte today's
-behaviour: the feature lands with zero change for existing projects. The
-owner's aim is recorded with it: XML is the intended FUTURE primary, and
-the default flips only by the owner's word, never silently.
-@status:spec/work
+@fact:SETTING **The setting and its home (revised by the measure —
+reproducibility rules).** The materialisation format is a REPRODUCIBLE
+project property, so its canonical home is the project manifest:
+`vibe.toml [project] spec_format = "mixed" | "markdown" | "xml"`, with
+the effective value recorded where derived state lives (the derived
+manifest below) so two machines materialise identically. The user-config
+family supplies only the operator DEFAULT for projects that do not pin
+one (`[install] spec_format`, beside `slot_integrity`), per the standing
+precedence CLI > env > project > user > built-in; vibe-settings is
+barred from this key by PROP-040's own boundary (app prefs never extend
+vibe.toml). **`mixed` is the built-in default** — for an all-MD world
+byte-for-byte today's behaviour; the flip of the default to XML is the
+owner's word, never silent. @status:spec/work
 
 @fact:TARGET-MD **`markdown` target:** XML sources emit as Markdown through
 the pivot (nested sections → heading levels, facts → anchored units,
@@ -149,18 +160,25 @@ it is the future primary. @status:spec/work
 @fact:TARGET-MIXED **`mixed` target:** copy-through; each file keeps its
 authored format. @status:spec/work
 
-@fact:HASH-LAW **The hash law under transformation (ADR-part).** The
-lockfile `content_hash` and the machine store keep hashing the SOURCE
-form — fetch, store, and identity are untouched by this PROP (PROP-010's
-verbatim store stands). A vibedeps slot materialised under `markdown` or
-`xml` is a DERIVED artifact: presence-trust still keys on the lockfile
-version; the `slot_integrity = verify` spot-check (PROP-011 §2.3, the
-P011V seam) applies as built ONLY to `mixed` slots (source-identical
-bytes); a transformed slot is honestly `Unverifiable` by source-hash and
-takes the pre-spot-check re-materialise discipline. *Уточни после замера:
-где именно verify узнаёт формат слота — кандидат: материализация пишет
-формат в свой существующий след; если следа нет — минимальный маркер,
-описанный здесь же.* @status:spec/work
+@fact:HASH-LAW **The hash law under transformation (ADR-part, upgraded by
+the measure).** Source identity is untouched: the lockfile
+`content_hash` and the machine store keep hashing the SOURCE form
+(PROP-010's verbatim store and collision law stand on source bytes). A
+transformed slot is a DERIVED artifact with its own recorded identity:
+materialisation under `markdown`/`xml` runs a VERSIONED deterministic
+converter and writes a **derived manifest** into the slot —
+`(source_hash, output_format, converter_recipe, derived_hash)` — where
+`derived_hash` is the standard content-hash recipe over the transformed
+tree. The P011V spot-check then stays MEANINGFUL for every format:
+`mixed` slots verify against the lock source hash as built; transformed
+slots verify against their derived manifest's `derived_hash`, and a
+missing/mismatched derived manifest (or a converter_recipe the binary no
+longer carries) is `Diverged` → honest re-materialise. The slot's
+freshness decision includes the output format: changing `spec_format`
+re-materialises even though `(kind, name, version)` did not move.
+Semantic equivalence of source and derivative is the converter's own
+proof through the shared IR (the golden corpus), never the hash's job.
+@status:spec/work
 
 @fact:BOOT-LANE-SCOPE **Boot-lane law under the setting (revised by the
 owner's scenario ruling, 2026-08-21).** Boot artifacts are generated
