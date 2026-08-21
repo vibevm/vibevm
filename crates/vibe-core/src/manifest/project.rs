@@ -24,7 +24,7 @@ use crate::error::{Error, Result};
 /// see [`Manifest::validate`](super::Manifest::validate).
 ///
 /// ```
-/// use vibe_core::manifest::ProjectSection;
+/// use vibe_core::manifest::{ProjectSection, SpecFormat};
 ///
 /// let p: ProjectSection = toml::from_str(r#"
 ///     name = "my-app"
