@@ -27,6 +27,35 @@ that produced this refresh stands for the next reader too: refresh before
 trusting a «measured gap», because several of the gaps below were measured before
 the landings above them.** @status:doc/work
 
+@fact:map-refreshed-2026-08-21 **Refreshed 2026-08-21, at the 1.0.0+P2/P3
+boundary — the two prior dated readings stand as history; this one is the
+current.** What moved since 2026-08-06, measured against the tree and the
+backlog, not recalled: **(a)** the three atoms the second refresh named as
+unarranged are done or narrowed — B-076 became the specmap resolve gate
+(every host-cited anchor must exist; two dead citations retargeted), B-077's
+persist collapse landed and PROP-037 records the TUI finished (the dead-code
+shadow then drained to zero tree-side, one justified allow prefs-side),
+B-075 is narrowed to «waiting for a loud red» with every fixture git call
+now fully diagnostic. **(b)** The markup fence gap this map's first refresh
+noted is built as `@fact/code` (a fence can be a fact's judgeable body —
+PROP-043 §8). **(c)** The «spec must not link a closed plan» norm got its
+panel gate and registry (B-088). **(d)** Волна Б's bar-2 list shrank by
+rulings recorded as tombstones in the backlog: B-048/B-049 closed
+(`68106a1c`/`e4314e83`), B-023/B-025/B-026/B-027/B-036/B-038 closed by the
+`245aedd6`/`1f048058`/`0c9c97dc` rulings; B-050 stays owner-parked, B-053
+deferred. **(e)** The wide-integer law gained its domain-honesty boundary
+as an ADR-part (PROP-044 §4.2b) and the wire surface was re-cut to it.
+**What волна В still owes is unchanged and is now the live frontier of
+this map:** B-016.2 (fragments by hash; fork 4 open), **B-020 (the LLM
+prose producer — the same unbuilt engine the product roadmap calls
+M1.5.1/vibe-llm: one build feeds both documents)**, B-021 (threshold
+warnings), B-017 (privacy profiles; fork 5 waits for a real closed-tree
+consumer), B-024 (vocabulary merge; fork 7). B-046's composition shape
+(fork 11) remains the owner's. The product side of «не построено» — the
+whole M1.5 generation milestone (vibe-llm, the tool-use loop, `vibe
+build`, `vibe sync`) plus M1.8/M2.x — lives in ROADMAP.md and is not this
+map's subject, but B-020 is where the two documents touch. @status:doc/work
+
 ---
 
 ## 1. What this document is {#what}
