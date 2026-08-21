@@ -220,6 +220,25 @@ on either source. *Построй по замеру: точный список �
 (`*.md`-фильтры) даёт XML-MEASURE; каждая точка получает парную `.xml»
 ветку, ни одна — молча.* @status:spec/work
 
+@fact:PROJECTION-READ **Decision (ADR-part): scanners read XML through its
+canonical Markdown projection — one dispatch layer above the parser, no
+dependency cycle.** `vibe-specdoc` depends on `progress-core` (its MD
+frontend is the adapter), so progress-core cannot itself call specdoc.
+The consumers dispatch instead: a `.xml` spec entering any scanner
+(progress, check, specmap-host, show) is first projected
+`from_xml → to_markdown` — deterministic and canonical by S1's emitter —
+and the projection feeds the existing MD machinery; units, facts,
+anchors, hashes and verdict staleness all work unchanged, and a source
+edit moves the projection exactly when it moves meaning. Alternatives
+weighed: a native XML unit-walker in every scanner (a fifth and sixth
+parser family — the disease the measure named), and inverting the crate
+dependency (progress-core consuming specdoc — a cycle). RECORDED
+DEGRADATION, honest: a diagnostic for an XML source cites
+projection-relative line numbers, and v1 marks such diagnostics with
+the projection notice rather than pretending; native source positions
+are follow-up work riding the specmap-engine slice (S4b).
+@status:spec/work
+
 @fact:ADDRESSING-UNCHANGED `spec://` addressing is format-blind: anchors
 are `id` attributes in XML and `{#…}`/first-token anchors in MD, minted
 into the same address space; a document's address does not change when
