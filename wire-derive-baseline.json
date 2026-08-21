@@ -11,7 +11,7 @@
     "vibe-registry": 7,
     "vibe-trace": 3,
     "vibe-wire": 1,
-    "vibe-workspace": 2,
+    "vibe-workspace": 3,
     "xtask": 12
   }
 }
