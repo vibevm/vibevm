@@ -2,6 +2,7 @@
 //! out-of-line per the file-length budget. Shares scaffolding with
 //! `tests` through `super::test_helpers`.
 
+use super::hooks_run::run_post_install_with;
 use super::test_helpers::*;
 use super::*;
 use specmark::verifies;
