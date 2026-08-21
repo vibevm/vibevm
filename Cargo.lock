@@ -3916,6 +3916,7 @@ dependencies = [
  "vibe-core",
  "vibe-registry",
  "vibe-resolver",
+ "vibe-specdoc",
  "walkdir",
 ]
 
@@ -3968,6 +3969,7 @@ dependencies = [
  "vibe-resolver",
  "vibe-settings",
  "vibe-spec",
+ "vibe-specdoc",
  "vibe-test-support",
  "vibe-trace",
  "vibe-wire",
@@ -4156,6 +4158,7 @@ version = "1.0.0"
 dependencies = [
  "tempfile",
  "thiserror 2.0.18",
+ "vibe-specdoc",
 ]
 
 [[package]]
@@ -4165,6 +4168,7 @@ dependencies = [
  "core-ai-native-specmark",
  "progress-core",
  "quick-xml",
+ "tempfile",
 ]
 
 [[package]]

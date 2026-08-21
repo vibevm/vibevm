@@ -17,7 +17,6 @@
 
 use std::collections::HashMap;
 use std::fmt::Write as _;
-use std::fs;
 
 use crate::address::SpecAddress;
 use crate::directives::{DirectiveKind, Directives};
@@ -111,8 +110,16 @@ fn expand_rec(
     Ok(out)
 }
 
-/// The real [`SectionSource`]: resolve the address to a file, parse it, and take
-/// the addressed node's text — the crate's layers composed end to end.
+/// The real [`SectionSource`]: resolve the address to a file (either
+/// serialisation), read it through the spec-source dispatch, and take the
+/// addressed node's text — the crate's layers composed end to end.
+///
+/// A `.xml` source never reaches the tree raw: `load_spec_text` delivers its
+/// canonical Markdown projection (PROP-045 ##PROJECTION-READ), so the fold,
+/// the embed expansion and the anchor resolution all work unchanged over
+/// either form — the recorded degradation being that a diagnostic naming a
+/// line inside an XML dependency cites the projection's line, not the
+/// XML source's.
 pub struct FsSectionSource {
     resolver: FileResolver,
 }
@@ -140,7 +147,7 @@ impl SectionSource for FsSectionSource {
             .resolver
             .resolve_file(addr)
             .map_err(|e| e.to_string())?;
-        let src = fs::read_to_string(&file).map_err(|e| e.to_string())?;
+        let (src, _kind) = vibe_specdoc::load_spec_text(&file).map_err(|e| e.to_string())?;
         let tree = DocTree::parse(&src);
         let node = match tree.resolve_path(&addr.anchor) {
             Some(node) => node,
@@ -157,7 +164,7 @@ impl SectionSource for FsSectionSource {
                     .map(|c| {
                         format!(
                             " (qualified candidates for `{}`: {})",
-                            addr.anchor.first().unwrap(),
+                            addr.anchor.first().map(String::as_str).unwrap_or(""),
                             c.join(", ")
                         )
                     })
@@ -175,6 +182,7 @@ impl SectionSource for FsSectionSource {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::fs;
 
     struct MockSource(HashMap<String, String>);
 
@@ -297,5 +305,74 @@ mod tests {
         assert!(!out.contains("##fact-b"), "spliced too much:\n{out}");
         assert!(out.contains("before") && out.contains("after"));
         assert!(!out.contains("#embed"));
+    }
+
+    // ----- XML dependencies (PROP-045 ##PROJECTION-READ) ---------------------
+
+    /// The XML twin of `DEP.md`'s section — the canonical projection of this
+    /// document is byte-exact the `.md` fixture above it, which is what makes
+    /// the two workspaces' compiles comparable.
+    const DEP_XML: &str = concat!(
+        "<spec xmlns=\"https://vibevm.org/spec/1\">\n",
+        "  <title id=\"d\">Dep</title>\n",
+        "  <section id=\"laws\" title=\"The laws\">\n",
+        "    <p>`req r1`</p>\n",
+        "    <p><fact id=\"FACT-ONE\" status=\"impl/done\">the fact body</fact></p>\n",
+        "  </section>\n",
+        "</spec>\n"
+    );
+
+    const DEP_MD_TWIN: &str = concat!(
+        "# Dep {#d}\n\n",
+        "## The laws {#laws}\n\n",
+        "`req r1`\n\n",
+        "@fact:FACT-ONE the fact body @status:impl/done\n\n"
+    );
+
+    /// A workspace whose authored `spec/` holds the dependency in `form`.
+    fn dep_ws(form: &str, text: &str) -> tempfile::TempDir {
+        let ws = tempfile::tempdir().unwrap();
+        let dir = ws.path().join("spec/common");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join(format!("DEP.{form}")), text).unwrap();
+        ws
+    }
+
+    fn dep_source(ws: &tempfile::TempDir) -> FsSectionSource {
+        let resolver = crate::resolver::FileResolver::new(
+            ws.path(),
+            crate::resolver::SelfCoordinate::new(Some("org.vibevm.core".into()), "vibevm".into()),
+        );
+        FsSectionSource::new(resolver)
+    }
+
+    #[test]
+    fn a_section_of_an_xml_dependency_reads_as_its_canonical_twin() {
+        // The same address resolves over either form and yields the SAME
+        // section text: the XML file arrives as its canonical Markdown
+        // projection, and the twin `.md` is that projection byte for byte.
+        // (A FACT-leaf address into an XML dependency does NOT resolve yet —
+        // the projection spells facts `@fact:`, and the tree's fact-leaf
+        // grammar reads only `##`; recorded as the slice's leftover.)
+        let md_ws = dep_ws("md", DEP_MD_TWIN);
+        let xml_ws = dep_ws("xml", DEP_XML);
+        let addr = SpecAddress::parse("spec://org.vibevm.core/vibevm/common/DEP#laws").unwrap();
+        let md_text = dep_source(&md_ws).section_text(&addr).unwrap();
+        let xml_text = dep_source(&xml_ws).section_text(&addr).unwrap();
+        assert_eq!(md_text, xml_text);
+        assert!(md_text.contains("## The laws {#laws}"), "{md_text}");
+        assert!(md_text.contains("@fact:FACT-ONE"), "{md_text}");
+    }
+
+    #[test]
+    fn a_dialect_violation_in_a_dependency_is_an_error_naming_the_file() {
+        let ws = dep_ws("xml", "<spec><p>x</p></spec>");
+        let addr = SpecAddress::parse("spec://org.vibevm.core/vibevm/common/DEP#laws").unwrap();
+        let err = dep_source(&ws).section_text(&addr).unwrap_err();
+        assert!(err.contains("DEP.xml"), "the file must ride: {err}");
+        assert!(
+            err.contains("xmlns"),
+            "the dialect message must ride: {err}"
+        );
     }
 }

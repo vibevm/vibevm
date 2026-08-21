@@ -482,3 +482,92 @@ fn the_fold_reaches_a_source_through_a_glob_expanded_edge() {
     assert!(out.contains("b-body"), "{out}");
     assert!(!out.contains("#source"), "{out}");
 }
+
+// ---- XML dependencies (PROP-045 ##PROJECTION-READ, the S4b residue) --------
+//
+// A `normal` boot entry compiles its `#use`/`#source` closure through
+// `FsSectionSource`. When a dependency document is authored (or
+// materialised) as dialect XML, the source reads it through
+// `load_spec_text`'s canonical Markdown projection — so the compiled lane
+// over the XML form is BYTE-EQUAL to the lane over the dependency's
+// canonical Markdown twin. That closes the `normal`-format residue PROP-045
+// §5b recorded: the entry itself stays authored Markdown; the closure no
+// longer cares which form each dependency ships in.
+
+/// The dependency in dialect XML.
+const XML_DEP: &str = concat!(
+    "<spec xmlns=\"https://vibevm.org/spec/1\">\n",
+    "  <title id=\"d\">Dep</title>\n",
+    "  <section id=\"laws\" title=\"The laws\">\n",
+    "    <p>`req r1`</p>\n",
+    "    <p><fact id=\"FACT-ONE\" status=\"impl/done\">the fact body</fact></p>\n",
+    "  </section>\n",
+    "</spec>\n"
+);
+
+/// The dependency's canonical Markdown twin — byte-exact the projection of
+/// [`XML_DEP`] (the trailing blank line included: blocks close with one).
+const MD_DEP_TWIN: &str = concat!(
+    "# Dep {#d}\n\n",
+    "## The laws {#laws}\n\n",
+    "`req r1`\n\n",
+    "@fact:FACT-ONE the fact body @status:impl/done\n\n"
+);
+
+/// The authored entry — a `normal` boot file whose closure reaches the
+/// dependency's section.
+const ENTRY_MD: &str =
+    "# Entry {#root}\n\n#use spec://org.vibevm.core/vibevm/common/DEP#laws\n\nEntry prose.\n";
+
+/// A workspace carrying the entry plus the dependency in `form`.
+fn entry_ws(form: &str, dep_text: &str) -> tempfile::TempDir {
+    let ws = tempfile::TempDir::new().unwrap();
+    let boot = ws.path().join("spec/boot");
+    std::fs::create_dir_all(&boot).unwrap();
+    std::fs::create_dir_all(ws.path().join("spec/common")).unwrap();
+    std::fs::write(boot.join("00-entry.md"), ENTRY_MD).unwrap();
+    std::fs::write(
+        ws.path().join("spec/common").join(format!("DEP.{form}")),
+        dep_text,
+    )
+    .unwrap();
+    ws
+}
+
+fn compile_entry(ws: &tempfile::TempDir) -> String {
+    use crate::embed::FsSectionSource;
+    use crate::resolver::{FileResolver, SelfCoordinate};
+    let resolver = FileResolver::new(
+        ws.path(),
+        SelfCoordinate::new(Some("org.vibevm.core".into()), "vibevm".into()),
+    );
+    let seed = SpecAddress::parse("spec://org.vibevm.core/vibevm/boot/00-entry#root").unwrap();
+    let (out, _) = compile_static_qualified(&seed, &FsSectionSource::new(resolver)).unwrap();
+    out
+}
+
+#[test]
+fn a_normal_entry_compiles_the_same_closure_over_an_xml_dependency() {
+    let md_ws = entry_ws("md", MD_DEP_TWIN);
+    let xml_ws = entry_ws("xml", XML_DEP);
+    let md_lane = compile_entry(&md_ws);
+    let xml_lane = compile_entry(&xml_ws);
+    assert_eq!(
+        md_lane, xml_lane,
+        "md lane:\n{md_lane}\nxml lane:\n{xml_lane}"
+    );
+    // The dependency's section really is inside the closure — fact and kind
+    // line included, each qualified under its own origin exactly as over the
+    // Markdown twin (the per-node qualify renames both lanes identically,
+    // which the byte-equality above already pins).
+    assert!(
+        md_lane.contains("## The laws {#org-vibevm-core--vibevm--laws}"),
+        "{md_lane}"
+    );
+    assert!(
+        md_lane.contains("@fact:org-vibevm-core--vibevm--FACT-ONE"),
+        "{md_lane}"
+    );
+    assert!(md_lane.contains("Entry prose."), "{md_lane}");
+    assert!(!md_lane.contains("#use"), "{md_lane}");
+}

@@ -12,6 +12,10 @@ description = "spec:// addressing, the document IR, and the deterministic router
 
 [dependencies]
 thiserror.workspace = true
+# The spec-source dispatch (PROP-045 ##PROJECTION-READ): `FsSectionSource`
+# reads a `.xml` dependency through `load_spec_text`'s canonical Markdown
+# projection, so the fold/embed closure works unchanged over either form.
+vibe-specdoc.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true
