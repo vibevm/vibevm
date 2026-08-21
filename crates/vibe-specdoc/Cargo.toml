@@ -11,6 +11,7 @@ homepage.workspace = true
 description = "The PROP-045 pivot: one document IR, a Markdown frontend over progress-core, an XML frontend/backend, and a Markdown backend"
 
 [dependencies]
+specmark = { workspace = true }
 # The XML machinery (PROP-045 ##XML-PARSER-DEPENDENCY): quick-xml carries
 # both the event reader the frontend walks and the Writer with correct
 # escaping — one new workspace dependency, pinned here. MIT.

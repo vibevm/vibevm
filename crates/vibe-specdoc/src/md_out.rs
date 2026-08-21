@@ -13,6 +13,8 @@
 //! three-backtick line is re-emitted with a longer opening run — the same
 //! run-matching law progress-core's scanner reads.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#materialisation");
+
 use crate::doc::{Block, Fact, Section, SpecDoc, StatusEl, Unit};
 
 /// Emit a document as house-style Markdown.

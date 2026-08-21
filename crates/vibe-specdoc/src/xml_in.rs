@@ -12,6 +12,8 @@
 //! One shared id namespace (the DuplicateId law, progress-core's message
 //! verbatim): the title anchor, section ids and fact ids all mint into it.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#shape");
+
 use super::xml_support::{
     decode_attrs, kind, last_unit_fact_id, name_of, only_attrs, pos_of, push_text,
 };

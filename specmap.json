@@ -9055,6 +9055,78 @@
       "fingerprint": "tok1:67aadcfc730d5094edfcdfe18288d2d530eb7f85ca83b8a6f2601ace986a2575"
     },
     {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/lib.rs",
+      "item_kind": "mod",
+      "line": 47,
+      "symbol": "vibe_specdoc",
+      "end_line": 47,
+      "fingerprint": "tok1:135ae76f09bee1d7e20f64f0c9ff24fc142f233d0e9b5a5597313065d352bf9f"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/doc.rs",
+      "item_kind": "mod",
+      "line": 25,
+      "symbol": "vibe_specdoc::doc",
+      "end_line": 25,
+      "fingerprint": "tok1:9543b0dbb97658dc0e5c9f46c573cbad4b6563f555ed4de5a1a2327aeb3d6581"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/md_in.rs",
+      "item_kind": "mod",
+      "line": 20,
+      "symbol": "vibe_specdoc::md_in",
+      "end_line": 20,
+      "fingerprint": "tok1:9543b0dbb97658dc0e5c9f46c573cbad4b6563f555ed4de5a1a2327aeb3d6581"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/md_out.rs",
+      "item_kind": "mod",
+      "line": 16,
+      "symbol": "vibe_specdoc::md_out",
+      "end_line": 16,
+      "fingerprint": "tok1:ba80ab5fb2c0aa9e3ed4f213fb5389b0b3f108097ebcbebb47dc5f25a290e9ca"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/xml_blocks.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_specdoc::xml_blocks",
+      "end_line": 3,
+      "fingerprint": "tok1:9543b0dbb97658dc0e5c9f46c573cbad4b6563f555ed4de5a1a2327aeb3d6581"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/xml_in.rs",
+      "item_kind": "mod",
+      "line": 15,
+      "symbol": "vibe_specdoc::xml_in",
+      "end_line": 15,
+      "fingerprint": "tok1:9543b0dbb97658dc0e5c9f46c573cbad4b6563f555ed4de5a1a2327aeb3d6581"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/xml_out.rs",
+      "item_kind": "mod",
+      "line": 9,
+      "symbol": "vibe_specdoc::xml_out",
+      "end_line": 9,
+      "fingerprint": "tok1:ba80ab5fb2c0aa9e3ed4f213fb5389b0b3f108097ebcbebb47dc5f25a290e9ca"
+    },
+    {
+      "crate_name": "vibe-specdoc",
+      "file": "crates/vibe-specdoc/src/xml_support.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_specdoc::xml_support",
+      "end_line": 3,
+      "fingerprint": "tok1:9543b0dbb97658dc0e5c9f46c573cbad4b6563f555ed4de5a1a2327aeb3d6581"
+    },
+    {
       "crate_name": "vibe-trace",
       "file": "crates/vibe-trace/src/lib.rs",
       "item_kind": "mod",
@@ -17518,6 +17590,70 @@
       "line": 127,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-settings/PROP-040#schema-first",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/lib.rs",
+      "from_symbol": "vibe_specdoc",
+      "line": 47,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#root",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/doc.rs",
+      "from_symbol": "vibe_specdoc::doc",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#shape",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/md_in.rs",
+      "from_symbol": "vibe_specdoc::md_in",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#shape",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/md_out.rs",
+      "from_symbol": "vibe_specdoc::md_out",
+      "line": 16,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#materialisation",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/xml_blocks.rs",
+      "from_symbol": "vibe_specdoc::xml_blocks",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#shape",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/xml_in.rs",
+      "from_symbol": "vibe_specdoc::xml_in",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#shape",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/xml_out.rs",
+      "from_symbol": "vibe_specdoc::xml_out",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#materialisation",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-specdoc/src/xml_support.rs",
+      "from_symbol": "vibe_specdoc::xml_support",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-045#shape",
       "verb": "implements"
     },
     {

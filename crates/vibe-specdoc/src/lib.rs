@@ -44,6 +44,8 @@
 //! vibevm subsystem — only on `progress-core` (the scanner and the status
 //! vocabulary) and `quick-xml`.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#root");
+
 pub mod doc;
 
 mod md_in;

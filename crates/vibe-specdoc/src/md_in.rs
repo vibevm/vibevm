@@ -17,6 +17,8 @@
 //! wrapper keeps its literal spelling inside the unit text while its
 //! payload also becomes the unit's status.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#shape");
+
 use crate::doc::{Block, Fact, Section, SpecDoc, StatusEl, Title, Unit};
 use crate::{Error, Result};
 use progress_core::doc::{BlockKind, FactKind, ParsedDoc};

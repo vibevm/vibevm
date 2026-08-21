@@ -6,6 +6,8 @@
 //! gives the idempotence law: `from_xml(to_xml(d)) == d`, hence
 //! XML→IR→XML is byte-in-byte.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#materialisation");
+
 use crate::doc::{Block, Fact, Section, SpecDoc, StatusEl, Unit};
 use quick_xml::Writer;
 use quick_xml::events::attributes::Attribute;

@@ -1,5 +1,7 @@
 //! Block and leaf descent for the closed XML dialect.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#shape");
+
 use super::xml_in::{Ev, Parser};
 use super::xml_support::{kind, only_attrs, status_from_attrs};
 use crate::doc::{Block, Fact, StatusEl, Unit};

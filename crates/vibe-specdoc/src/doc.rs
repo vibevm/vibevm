@@ -22,6 +22,8 @@
 //! stores the semantic payload alone and both frontends build it from their
 //! own parse.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#shape");
+
 use progress_core::model::{Action, Audience, Stage, State};
 
 /// One whole document: the H1 title, the document `<status>`, the

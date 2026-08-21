@@ -1,5 +1,7 @@
 //! Shared decoding and validation helpers for the XML frontend.
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-045#shape");
+
 use crate::doc::{Block, StatusEl};
 use crate::{Error, Result};
 use progress_core::model::{Action, Audience, Stage, State, nearest};
